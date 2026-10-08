@@ -1169,9 +1169,7 @@
 
     /* ── 3 Opening what drops from a button ─────────────────────────────── */
 
-    /* Swept in from its anchor is the grammar's own: the menu's line crosses its
-   footprint from the button's edge down, the dialog and the toast from their
-   start edge, the tooltip from its notch. */
+    /* The tooltip with its point above it (every option). */
     .dk-tipwrap {
         position: relative;
         display: inline-grid;
@@ -1191,6 +1189,78 @@
 
     .dk-scene .dk-tipwrap .kp-tooltip {
         margin: 0;
+    }
+
+    /* Swept in from its own left edge, left to right (Kenny, update 1): every
+   opening is a pass from left to right that starts at the left edge of the
+   element that opens (the menu panel, the dialog, the toast, the tooltip,
+   never the button) and crosses only that element's own box: the line is
+   the element's height and its width is the whole travel, so a menu is swept
+   over its own height, a tooltip over the tooltip's. The close is the pass
+   back, right to left. The halo of a panel is a drop-shadow of the part that
+   is laid (on the body, round the clipped panel), so it grows with the panel
+   behind the line instead of being cut square by the clip. */
+    .dk-scene[data-dk-opening='swept'] .dk-lay {
+        --dk-clip-0: inset(0 100% 0 0);
+        --dk-clip-1: inset(0);
+        --dk-line-0: -100% 0;
+        --dk-line-4: -96% 0;
+        --dk-line-92: -8% 0;
+        --dk-line-1: 0% 0;
+        --dk-halo-f: drop-shadow(0 10px 18px hsl(from var(--chart-2) h s l / 0.3)) drop-shadow(-10px 4px 16px hsl(from var(--chart-1) h s l / 0.24))
+            drop-shadow(10px 4px 16px hsl(from var(--chart-3) h s l / 0.24)) drop-shadow(0 -6px 14px hsl(from var(--chart-4) h s l / 0.18));
+    }
+
+    .dk-scene[data-dk-opening='swept'] .dk-lay > .dk-lay__line {
+        inset: 0;
+        background: var(--dk-vspectrum) 100% 0 / 2px 100% no-repeat;
+    }
+
+    /* The tooltip's box starts under its point: the line is the tooltip's
+   height, not the point's. */
+    .dk-scene[data-dk-opening='swept'] .dk-lay--tip > .dk-lay__line {
+        inset-block-start: 0.7rem;
+    }
+
+    /* The panels: the clip moves from the body to the panel itself, and the
+   body carries the halo as a drop-shadow of what is laid. */
+    .dk-scene[data-dk-opening='swept'] :is(.dk-lay--pop, .dk-lay--dlg, .dk-lay--toast) > .dk-lay__body {
+        clip-path: none;
+        filter: var(--dk-halo-f);
+    }
+
+    .dk-scene[data-dk-opening='swept'] :is(.dk-lay--pop, .dk-lay--dlg, .dk-lay--toast) > .dk-lay__body > * {
+        box-shadow: none;
+        clip-path: var(--dk-clip-1);
+    }
+
+    /* The toast and the tooltip are as wide as what they say, so the line
+   crosses them and not the empty width of their cell. */
+    .dk-scene[data-dk-opening='swept'] :is(.dk-lay--toast, .dk-lay--tip) {
+        justify-self: start;
+        max-inline-size: 100%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dk-scene[data-dk-opening='swept'][data-dk-phase] :is(.dk-lay--pop, .dk-lay--dlg, .dk-lay--toast) > .dk-lay__body {
+            clip-path: none;
+            animation: none;
+        }
+
+        .dk-scene[data-dk-opening='swept'][data-dk-phase='gap'] :is(.dk-lay--pop, .dk-lay--dlg, .dk-lay--toast) > .dk-lay__body > * {
+            clip-path: var(--dk-clip-0);
+        }
+
+        .dk-scene[data-dk-opening='swept']:is([data-dk-phase='in'], [data-dk-phase='hold'])
+            :is(.dk-lay--pop, .dk-lay--dlg, .dk-lay--toast)
+            > .dk-lay__body
+            > * {
+            animation: var(--dk-kf-clip) var(--dk-x) linear var(--dk-d) both;
+        }
+
+        .dk-scene[data-dk-opening='swept'][data-dk-phase='out'] :is(.dk-lay--pop, .dk-lay--dlg, .dk-lay--toast) > .dk-lay__body > * {
+            animation: var(--dk-kf-clip-out) var(--dk-x) linear calc(var(--dk-win) - var(--dk-d) - var(--dk-x)) both;
+        }
     }
 
     /* Developed (today): the register's dialog (a film flash over the panel
@@ -1556,119 +1626,130 @@
 
     /* ── 6 The corners (still) ──────────────────────────────────────────── */
 
-    /* Chamfered on two opposite corners is the register's own: controls 0.55 rem,
-   panels 1 rem, the key figure a panel, brackets close on a label. */
+    /* One cut per option, written as which of the four corners are cut (1 or
+   0, top-left, top-right, bottom-right, bottom-left) times the part's own
+   cut (--dk-k: 1 rem on panels, 0.55 rem on controls, 0.45 rem on the
+   tooltip). Every plate is drawn the same way (Kenny, update 1: "if it's the
+   glow or shadow causing this, it should adapt to the shape"):
 
-    /* Chamfered on all four corners: every corner cut, the same size, on plates
-   and small parts alike. */
-    .dk-scene[data-dk-corners='four'] .kp-card::after,
-    .dk-scene[data-dk-corners='four'] .kp-alert,
-    .dk-scene[data-dk-corners='four'] .kp-dialog::before {
-        clip-path: polygon(
-            var(--dk-cut-panel) 0,
-            calc(100% - var(--dk-cut-panel)) 0,
-            100% var(--dk-cut-panel),
-            100% calc(100% - var(--dk-cut-panel)),
-            calc(100% - var(--dk-cut-panel)) 100%,
-            var(--dk-cut-panel) 100%,
-            0 calc(100% - var(--dk-cut-panel)),
-            0 var(--dk-cut-panel)
-        );
+   - the plate (its ground and its edge) is a layer of its own, clipped to the
+     cut; its edge follows the cut all round, the diagonal too (the ground is
+     four corner gradients that stop 1.4 px short of the cut, so the edge
+     shows along it as a hairline as wide as the straight ones);
+   - the part itself is not clipped and carries the halo as a drop-shadow of
+     that plate, so the halo has the plate's shape: no square glow beyond a
+     cut corner and no black wedge between the glow and the cut.
+
+   The key figure carries no halo; it is its own plate. Two opposite corners
+   are the register's: top-right and bottom-left. */
+    .dk-scene[data-dk-corners] {
+        --dk-tl: 1;
+        --dk-tr: 1;
+        --dk-br: 1;
+        --dk-bl: 1;
+        --dk-halo-f: drop-shadow(0 10px 18px hsl(from var(--chart-2) h s l / 0.3)) drop-shadow(-10px 4px 16px hsl(from var(--chart-1) h s l / 0.24))
+            drop-shadow(10px 4px 16px hsl(from var(--chart-3) h s l / 0.24)) drop-shadow(0 -6px 14px hsl(from var(--chart-4) h s l / 0.18));
     }
 
-    .dk-scene[data-dk-corners='four'] .kp-card,
-    .dk-scene[data-dk-corners='four'] .kp-dialog {
+    .dk-scene[data-dk-corners='two'] {
+        --dk-tl: 0;
+        --dk-br: 0;
+    }
+
+    .dk-scene[data-dk-corners='square'] {
+        --dk-tl: 0;
+        --dk-tr: 0;
+        --dk-br: 0;
+        --dk-bl: 0;
+    }
+
+    /* Each part's cut, the four corners it gives, its shape and its plate. */
+    .dk-scene[data-dk-corners] :is(.kp-card, .kp-dialog, .kp-popover, .kp-kpi, .kp-tooltip, .kp-button, .kp-badge, .kp-tag, .kp-progressbar__track) {
+        --dk-k: var(--dk-cut-panel);
+        --dk-c1: calc(var(--dk-tl) * var(--dk-k));
+        --dk-c2: calc(var(--dk-tr) * var(--dk-k));
+        --dk-c3: calc(var(--dk-br) * var(--dk-k));
+        --dk-c4: calc(var(--dk-bl) * var(--dk-k));
+        --dk-shape: polygon(
+            var(--dk-c1) 0,
+            calc(100% - var(--dk-c2)) 0,
+            100% var(--dk-c2),
+            100% calc(100% - var(--dk-c3)),
+            calc(100% - var(--dk-c3)) 100%,
+            var(--dk-c4) 100%,
+            0 calc(100% - var(--dk-c4)),
+            0 var(--dk-c1)
+        );
+        --dk-pf: var(--dk-plate);
+        --dk-pe: var(--dk-film);
+        --dk-plate-paint:
+            linear-gradient(135deg, transparent calc(var(--dk-c1) * 0.7071), var(--dk-pf) 0) 0 0 / 51% 51% no-repeat padding-box,
+            linear-gradient(225deg, transparent calc(var(--dk-c2) * 0.7071), var(--dk-pf) 0) 100% 0 / 51% 51% no-repeat padding-box,
+            linear-gradient(315deg, transparent calc(var(--dk-c3) * 0.7071), var(--dk-pf) 0) 100% 100% / 51% 51% no-repeat padding-box,
+            linear-gradient(45deg, transparent calc(var(--dk-c4) * 0.7071), var(--dk-pf) 0) 0 100% / 51% 51% no-repeat padding-box,
+            var(--dk-pe) border-box;
+    }
+
+    .dk-scene[data-dk-corners] :is(.kp-button, .kp-badge, .kp-tag) {
+        --dk-k: var(--dk-notch);
+    }
+
+    .dk-scene[data-dk-corners] .kp-tooltip {
+        --dk-k: 0.45rem;
+    }
+
+    .dk-scene[data-dk-corners] .kp-progressbar__track {
+        --dk-k: calc(4px * var(--kp-progressbar-scale, 1));
+    }
+
+    /* The menu's edge is the register's grey hairline, not the film. */
+    .dk-scene[data-dk-corners] .kp-popover {
+        --dk-pe: linear-gradient(var(--border-strong), var(--border-strong));
+    }
+
+    /* The panels: the part unclipped, transparent, with the halo as a
+   drop-shadow of its plate. */
+    .dk-scene[data-dk-corners] :is(.kp-card, .kp-dialog, .kp-popover, .kp-tooltip) {
+        position: relative;
+        isolation: isolate;
+        overflow: visible;
+        border-color: transparent;
+        background: transparent;
+        box-shadow: none;
         clip-path: none;
+        filter: var(--dk-halo-f);
     }
 
-    .dk-scene[data-dk-corners='four'] .kp-kpi:not(.dk-column) {
-        clip-path: polygon(
-            var(--dk-cut-panel) 0,
-            calc(100% - var(--dk-cut-panel)) 0,
-            100% var(--dk-cut-panel),
-            100% calc(100% - var(--dk-cut-panel)),
-            calc(100% - var(--dk-cut-panel)) 100%,
-            var(--dk-cut-panel) 100%,
-            0 calc(100% - var(--dk-cut-panel)),
-            0 var(--dk-cut-panel)
-        );
+    /* The tooltip had no halo and has none. */
+    .dk-scene[data-dk-corners] .kp-tooltip {
+        filter: none;
     }
 
-    .dk-scene[data-dk-corners='four'] .kp-popover {
-        clip-path: polygon(
-            var(--dk-cut-panel) 0,
-            calc(100% - var(--dk-cut-panel)) 0,
-            100% var(--dk-cut-panel),
-            100% calc(100% - var(--dk-cut-panel)),
-            calc(100% - var(--dk-cut-panel)) 100%,
-            var(--dk-cut-panel) 100%,
-            0 calc(100% - var(--dk-cut-panel)),
-            0 var(--dk-cut-panel)
-        );
+    /* Their plates: the card's and the dialog's are the register's own layers,
+   the menu's and the tooltip's are added. */
+    .dk-scene[data-dk-corners] .kp-card::after,
+    .dk-scene[data-dk-corners] .kp-dialog::before,
+    .dk-scene[data-dk-corners] :is(.kp-popover, .kp-tooltip)::before {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        z-index: -1;
+        border: 1px solid transparent;
+        border-radius: 0;
+        background: var(--dk-plate-paint);
+        clip-path: var(--dk-shape);
+        pointer-events: none;
     }
 
-    .dk-scene[data-dk-corners='four'] :is(.kp-button, .kp-badge, .kp-tag, .kp-field__input) {
-        clip-path: polygon(
-            var(--dk-notch) 0,
-            calc(100% - var(--dk-notch)) 0,
-            100% var(--dk-notch),
-            100% calc(100% - var(--dk-notch)),
-            calc(100% - var(--dk-notch)) 100%,
-            var(--dk-notch) 100%,
-            0 calc(100% - var(--dk-notch)),
-            0 var(--dk-notch)
-        );
+    /* The key figure is its own plate (no halo, so nothing to cast). */
+    .dk-scene[data-dk-corners] .kp-kpi:not(.dk-column) {
+        background: var(--dk-plate-paint);
+        clip-path: var(--dk-shape);
     }
 
-    .dk-scene[data-dk-corners='four'] .kp-tooltip {
-        clip-path: polygon(
-            0.45rem 0,
-            calc(100% - 0.45rem) 0,
-            100% 0.45rem,
-            100% calc(100% - 0.45rem),
-            calc(100% - 0.45rem) 100%,
-            0.45rem 100%,
-            0 calc(100% - 0.45rem),
-            0 0.45rem
-        );
-    }
-
-    .dk-scene[data-dk-corners='four'] .kp-progressbar__track {
-        clip-path: polygon(
-            calc(4px * var(--kp-progressbar-scale, 1)) 0,
-            calc(100% - calc(4px * var(--kp-progressbar-scale, 1))) 0,
-            100% calc(4px * var(--kp-progressbar-scale, 1)),
-            100% calc(100% - calc(4px * var(--kp-progressbar-scale, 1))),
-            calc(100% - calc(4px * var(--kp-progressbar-scale, 1))) 100%,
-            calc(4px * var(--kp-progressbar-scale, 1)) 100%,
-            0 calc(100% - calc(4px * var(--kp-progressbar-scale, 1))),
-            0 calc(4px * var(--kp-progressbar-scale, 1))
-        );
-    }
-
-    /* Square: radius 0 and no cut anywhere. */
-    .dk-scene[data-dk-corners='square']
-        :is(
-            .kp-card,
-            .kp-dialog,
-            .kp-popover,
-            .kp-kpi,
-            .kp-alert,
-            .kp-button,
-            .kp-badge,
-            .kp-tag,
-            .kp-tooltip,
-            .kp-progressbar__track,
-            .kp-field__input
-        ),
-    .dk-scene[data-dk-corners='square'] :is(.kp-card, .kp-dialog)::after,
-    .dk-scene[data-dk-corners='square'] .kp-dialog::before {
-        clip-path: none;
-    }
-
-    .dk-scene[data-dk-corners='square'] .kp-card,
-    .dk-scene[data-dk-corners='square'] .kp-dialog {
-        box-shadow: var(--kp-halo);
+    /* The controls and the bar's track keep their own paint; only the cut. */
+    .dk-scene[data-dk-corners] :is(.kp-button, .kp-badge, .kp-tag, .kp-progressbar__track) {
+        clip-path: var(--dk-shape);
     }
 
     /* ── 7 The surface (still) ──────────────────────────────────────────── */
@@ -2282,13 +2363,20 @@
 
     /* ── 10 Loading (a loop) ────────────────────────────────────────────── */
 
-    /* A waiting part: its content stands dim, a surface over it carries the
-   option's picture. */
+    /* Ten variations on one idea (Kenny, update 1: "give me ten variations on
+   the line sweeps the slot, keep the colours"). Every waiting part (the tile,
+   the panel, the menu entry, each day of the month, the chart's plot and each
+   skeleton line) wears the same surface over it, `.dk-wait`, with three
+   layers (a, b, c) and its own two pseudo-elements; each option draws its
+   sweep with them, in the film's colours, 2.4 s a loop. Its content stands
+   dim under it. A part's place in a row (a day, a skeleton line) staggers it
+   by the option's step, so the row reads as one sweep. */
     .dk-waits {
         position: relative;
     }
 
     .dk-wait {
+        --dk-k: 0px;
         position: absolute;
         inset: 0;
         z-index: 2;
@@ -2296,8 +2384,15 @@
         pointer-events: none;
     }
 
+    .dk-wait > i {
+        display: none;
+        position: absolute;
+        pointer-events: none;
+    }
+
     .dk-scene .kp-card.dk-waits .dk-wait,
     .dk-scene .kp-kpi.dk-waits .dk-wait {
+        --dk-k: var(--dk-cut-panel);
         clip-path: polygon(
             0 0,
             calc(100% - var(--dk-cut-panel)) 0,
@@ -2308,16 +2403,38 @@
         );
     }
 
+    .dk-scene .dk-day.dk-waits .dk-wait {
+        --dk-k: var(--dk-cut-small);
+    }
+
+    .dk-scene .dk-plot.dk-waits .dk-wait {
+        --dk-k: var(--dk-notch);
+    }
+
+    .dk-scene .kp-skeleton.dk-waits .dk-wait {
+        --dk-k: var(--kp-sig-dark-c, 0.35rem);
+    }
+
     .dk-scene[data-dk-loading] .dk-waits > :not(.dk-wait) {
         opacity: 0.55;
     }
 
-    .dk-scene .dk-waits .dk-wait > * {
-        display: none;
-    }
-
+    /* A skeleton line is a slot of its own; the register's ghosts are off. */
     .dk-scene[data-dk-loading] .kp-skeleton {
         animation: none;
+    }
+
+    .dk-scene[data-dk-loading] .kp-skeleton::before,
+    .dk-scene[data-dk-loading] .kp-skeleton::after {
+        content: none;
+    }
+
+    .dk-scene[data-dk-loading] .kp-skeleton:nth-child(2) {
+        --i: 1;
+    }
+
+    .dk-scene[data-dk-loading] .kp-skeleton:nth-child(3) {
+        --i: 2;
     }
 
     .dk-scene .dk-days--month {
@@ -2353,7 +2470,9 @@
         aspect-ratio: auto;
     }
 
-    /* The slots of the line: the film it lays is soft, the line a slice of the film. */
+    /* The film's colours as the sweeps use them: the soft film the line lays
+   (a strip that slides as it turns), a stronger one, the fixed spectrum of a
+   place, and the line itself. */
     .dk-scene {
         --dk-soft: linear-gradient(
             90deg,
@@ -2367,161 +2486,870 @@
             hsl(from var(--chart-4) h s l / 0.3),
             hsl(from var(--chart-1) h s l / 0.3)
         );
+        --dk-rich: linear-gradient(
+            90deg,
+            hsl(from var(--chart-1) h s l / 0.5),
+            hsl(from var(--chart-2) h s l / 0.5),
+            hsl(from var(--chart-3) h s l / 0.5),
+            hsl(from var(--chart-4) h s l / 0.5),
+            hsl(from var(--chart-1) h s l / 0.5),
+            hsl(from var(--chart-2) h s l / 0.5),
+            hsl(from var(--chart-3) h s l / 0.5),
+            hsl(from var(--chart-4) h s l / 0.5),
+            hsl(from var(--chart-1) h s l / 0.5)
+        );
+        --dk-place: linear-gradient(
+            90deg,
+            hsl(from var(--chart-1) h s l / 0.42),
+            hsl(from var(--chart-2) h s l / 0.42),
+            hsl(from var(--chart-3) h s l / 0.42),
+            hsl(from var(--chart-4) h s l / 0.42)
+        );
+        --dk-ld-step: 120ms;
     }
 
-    /* The line sweeps the slot: on every waiting surface the line crosses from
-   start to end and the film it lays turns behind it, then dims as the line
-   leaves at the end; again from the start, 2.4 s a loop. The skeleton's lines
-   are the slots; the chart's plot is swept whole. */
-    .dk-scene[data-dk-loading='sweep'] .dk-wait::before {
+    .dk-scene[data-dk-loading] .dk-wait {
+        --dk-ld-d: calc(var(--i, 0) * var(--dk-ld-step) - var(--dk-lap));
+    }
+
+    /* What most options share: the laid film on ::before, the line on a. */
+    .dk-scene:is([data-dk-loading='sweep'], [data-dk-loading='afterglow'], [data-dk-loading='read'], [data-dk-loading='prism']) .dk-wait::before {
         content: '';
         position: absolute;
         inset: 0;
         background: var(--dk-soft) 0 0 / 200% 100% repeat-x;
     }
 
-    .dk-scene[data-dk-loading='sweep'] .dk-wait__line {
+    .dk-scene:is([data-dk-loading='sweep'], [data-dk-loading='afterglow'], [data-dk-loading='read']) .dk-wait__a {
         display: block;
-        position: absolute;
+        inset: 0;
+        background: var(--dk-vspectrum) 100% 0 / 2px 100% no-repeat;
+        filter: var(--dk-glow);
+        translate: -100% 0;
+        opacity: 0;
+    }
+
+    /* 1 The plain sweep: the line crosses from start to end and the film it lays
+   turns behind it, then dims as the line leaves at the end; again. */
+    @media (prefers-reduced-motion: no-preference) {
+        .dk-scene[data-dk-loading='sweep'] .dk-wait::before {
+            animation: dk-wash var(--dk-lap) linear var(--dk-ld-d) infinite;
+        }
+
+        .dk-scene[data-dk-loading='sweep'] .dk-wait__a {
+            animation: dk-wait-line var(--dk-lap) linear var(--dk-ld-d) infinite;
+        }
+    }
+
+    /* 2 A comet with a film tail: the line is the head of a tail a third of the
+   part long, full film at the head fading to nothing; it lays nothing. */
+    .dk-scene[data-dk-loading='comet'] .dk-wait__a {
+        display: block;
         inset-block: 0;
-        inset-inline: 0;
-        background: var(--dk-vspectrum) 100% 0 / 2px 100% no-repeat;
-        filter: var(--dk-glow);
-        translate: -100% 0;
-        opacity: 0;
-    }
-
-    .dk-scene[data-dk-loading='sweep'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before {
-        opacity: 1;
-        background: var(--dk-soft) 0 0 / 200% 100% repeat-x;
-    }
-
-    .dk-scene[data-dk-loading='sweep'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
-        opacity: 1;
-        inset-inline: 0;
-        background: var(--dk-vspectrum) 100% 0 / 2px 100% no-repeat;
-        filter: var(--dk-glow);
-        translate: -100% 0;
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        .dk-scene[data-dk-loading='sweep'] .dk-wait::before,
-        .dk-scene[data-dk-loading='sweep'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before {
-            animation: dk-wash var(--dk-lap) linear infinite;
-        }
-
-        .dk-scene[data-dk-loading='sweep'] .dk-wait__line,
-        .dk-scene[data-dk-loading='sweep'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
-            animation: dk-wait-line var(--dk-lap) linear infinite;
-        }
-
-        .dk-scene[data-dk-loading='sweep'] .dk-day.dk-waits .dk-wait::before,
-        .dk-scene[data-dk-loading='sweep'] .dk-day.dk-waits .dk-wait__line {
-            animation-delay: calc(var(--i, 0) * var(--dk-lap) * -0.05);
-        }
-
-        .dk-scene[data-dk-loading='sweep'] .kp-skeleton:nth-child(2)::before,
-        .dk-scene[data-dk-loading='sweep'] .kp-skeleton:nth-child(2)::after {
-            animation-delay: calc(var(--dk-lap) * -0.1667);
-        }
-
-        .dk-scene[data-dk-loading='sweep'] .kp-skeleton:nth-child(3)::before,
-        .dk-scene[data-dk-loading='sweep'] .kp-skeleton:nth-child(3)::after {
-            animation-delay: calc(var(--dk-lap) * -0.3333);
-        }
-    }
-
-    /* The ticker baseline (the picks): a dashed baseline under the waiting part
-   ticks along, as a ticker tape would. */
-    .dk-scene[data-dk-loading='ticker'] .dk-wait__ticker {
-        display: block;
-        position: absolute;
-        inset-inline: 1rem;
-        inset-block-end: 0.6rem;
-        block-size: 2px;
-        background-image: repeating-linear-gradient(to right, var(--primary) 0 8px, transparent 8px 14px);
-    }
-
-    .dk-scene[data-dk-loading='ticker'] .dk-days .dk-wait__ticker,
-    .dk-scene[data-dk-loading='ticker'] .kp-menu__item .dk-wait__ticker {
-        inset-inline: 0.4rem;
-        inset-block-end: 0.35rem;
-    }
-
-    .dk-scene[data-dk-loading='ticker'] .dk-skel .dk-wait__ticker {
-        inset-inline: 0;
-        inset-block-end: 0.1rem;
-    }
-
-    .dk-scene[data-dk-loading='ticker'] .dk-skel {
-        padding-block-end: 0.9rem;
-    }
-
-    .dk-scene[data-dk-loading='ticker'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before,
-    .dk-scene[data-dk-loading='ticker'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
-        opacity: 0;
-    }
-
-    .dk-scene[data-dk-loading='ticker'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        inset-inline-start: -36%;
+        inline-size: 36%;
         background:
-            linear-gradient(var(--accent), var(--accent)) top / 100% calc(100% - 1px) no-repeat,
-            var(--border-strong);
+            var(--dk-vspectrum) 100% 0 / 2px 100% no-repeat,
+            var(--dk-spectrum) 0 0 / 300% 100% repeat-x;
+        -webkit-mask: linear-gradient(90deg, transparent, hsl(from var(--foreground) h s l / 0.25) 45%, var(--foreground));
+        mask: linear-gradient(90deg, transparent, hsl(from var(--foreground) h s l / 0.25) 45%, var(--foreground));
+        opacity: 0;
     }
 
-    @keyframes dk-ticker {
-        to {
-            background-position: -14px 0;
+    @keyframes dk-ld-comet {
+        0% {
+            inset-inline-start: -36%;
+            background-position:
+                100% 0,
+                0% 0;
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        75% {
+            inset-inline-start: 100%;
+            background-position:
+                100% 0,
+                100% 0;
+            opacity: 1;
+        }
+
+        75.01%,
+        100% {
+            inset-inline-start: 100%;
+            opacity: 0;
         }
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        .dk-scene[data-dk-loading='ticker'] .dk-wait__ticker {
-            animation: dk-ticker 1s linear infinite;
+        .dk-scene[data-dk-loading='comet'] .dk-wait__a {
+            animation: dk-ld-comet var(--dk-lap) linear var(--dk-ld-d) infinite;
         }
     }
 
-    /* The ghosts drift (today): the register's skeleton, a cyan ghost and a
-   magenta ghost of each line drift 8 px apart and back; every waiting part
-   wears the same two ghosts. */
-    .dk-scene[data-dk-loading='ghosts'] .dk-wait::before,
-    .dk-scene[data-dk-loading='ghosts'] .dk-wait::after {
+    /* 3 The afterglow: the line lays a strong film in the first third, which
+   then dims slowly for 1.6 s while the next line comes; under it a floor of
+   film that never goes out, so the slot is never dark. */
+    .dk-scene[data-dk-loading='afterglow'] .dk-wait::before {
+        background: var(--dk-rich) 0 0 / 200% 100% repeat-x;
+    }
+
+    .dk-scene[data-dk-loading='afterglow'] .dk-wait__b {
+        display: block;
+        inset: 0;
+        background: var(--dk-soft) 0 0 / 200% 100% repeat-x;
+        opacity: 0.45;
+    }
+
+    @keyframes dk-ld-glow {
+        0% {
+            clip-path: inset(0 100% 0 0);
+            opacity: 1;
+            background-position: 0% 0;
+            animation-timing-function: linear;
+        }
+
+        33.33% {
+            clip-path: inset(0);
+            opacity: 1;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        100% {
+            clip-path: inset(0);
+            opacity: 0;
+            background-position: 100% 0;
+        }
+    }
+
+    @keyframes dk-ld-line3 {
+        0% {
+            translate: -100% 0;
+            opacity: 0;
+            animation-timing-function: linear;
+        }
+
+        2% {
+            translate: -94% 0;
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        31.33% {
+            translate: -6% 0;
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        33.33%,
+        100% {
+            translate: 0% 0;
+            opacity: 0;
+        }
+    }
+
+    @keyframes dk-ld-floor {
+        to {
+            background-position: 100% 0;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dk-scene[data-dk-loading='afterglow'] .dk-wait::before {
+            animation: dk-ld-glow var(--dk-lap) linear var(--dk-ld-d) infinite;
+        }
+
+        .dk-scene[data-dk-loading='afterglow'] .dk-wait__a {
+            animation: dk-ld-line3 var(--dk-lap) linear var(--dk-ld-d) infinite;
+        }
+
+        .dk-scene[data-dk-loading='afterglow'] .dk-wait__b {
+            animation: dk-ld-floor calc(var(--dk-lap) * 2) linear infinite;
+        }
+    }
+
+    /* 4 The ladder: a box is swept row by row, top to bottom, 120 ms apart
+   (the tile, the panel and the plot in three rows); a part with one line is
+   one rung, and the days and the skeleton lines are the rungs of their row.
+   Each rung is its laid film with the line at its edge. */
+    .dk-scene[data-dk-loading='ladder'] :is(.dk-wait__a, .dk-wait__b, .dk-wait__c) {
+        inset-inline: 0;
+        background:
+            var(--dk-vspectrum) 0 0 / 2px 100% no-repeat,
+            var(--dk-soft) 0 0 / 200% 100% repeat-x;
+        clip-path: inset(0);
+        opacity: 0.6;
+    }
+
+    .dk-scene[data-dk-loading='ladder'] :is(.kp-card, .kp-kpi, .dk-plot) > .dk-wait > i {
+        display: block;
+        block-size: calc(100% / 3);
+    }
+
+    .dk-scene[data-dk-loading='ladder'] .dk-wait__a {
+        inset-block-start: 0;
+    }
+
+    .dk-scene[data-dk-loading='ladder'] .dk-wait__b {
+        inset-block-start: calc(100% / 3);
+        --dk-rung: 1;
+    }
+
+    .dk-scene[data-dk-loading='ladder'] .dk-wait__c {
+        inset-block-start: calc(200% / 3);
+        --dk-rung: 2;
+    }
+
+    .dk-scene[data-dk-loading='ladder'] :is(.kp-menu__item, .dk-day, .kp-skeleton) > .dk-wait > .dk-wait__a {
+        display: block;
+        block-size: 100%;
+    }
+
+    @keyframes dk-ld-rung {
+        0% {
+            clip-path: inset(0 100% 0 0);
+            background-position:
+                0% 0,
+                0% 0;
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        45% {
+            clip-path: inset(0);
+            background-position:
+                100% 0,
+                60% 0;
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        80%,
+        100% {
+            clip-path: inset(0);
+            background-position:
+                100% 0,
+                100% 0;
+            opacity: 0;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dk-scene[data-dk-loading='ladder'] .dk-wait > i {
+            animation: dk-ld-rung var(--dk-lap) linear calc(var(--dk-ld-d) + var(--dk-rung, 0) * var(--dk-ld-step)) infinite;
+        }
+    }
+
+    /* 5 Two lines pass through each other: one from the start, one from the
+   end, at once; each lays its own film behind it, and where they pass the
+   colours add and flare for a beat. */
+    .dk-scene[data-dk-loading='cross'] :is(.dk-wait__a, .dk-wait__b) {
+        display: block;
+        inset: 0;
+        background: var(--dk-soft) 0 0 / 200% 100% repeat-x;
+        mix-blend-mode: plus-lighter;
+        opacity: 0;
+    }
+
+    .dk-scene[data-dk-loading='cross'] .dk-wait__b {
+        background-position: 50% 0;
+    }
+
+    .dk-scene[data-dk-loading='cross'] .dk-wait::before,
+    .dk-scene[data-dk-loading='cross'] .dk-wait::after {
         content: '';
         position: absolute;
         inset: 0;
+        z-index: 1;
+        filter: var(--dk-glow);
         opacity: 0;
     }
 
-    .dk-scene[data-dk-loading='ghosts'] .dk-wait::before {
-        background: hsl(from var(--chart-1) h s l / 0.55);
+    .dk-scene[data-dk-loading='cross'] .dk-wait::before {
+        background: var(--dk-vspectrum) 100% 0 / 2px 100% no-repeat;
+        translate: -100% 0;
     }
 
-    .dk-scene[data-dk-loading='ghosts'] .dk-wait::after {
-        background: hsl(from var(--chart-3) h s l / 0.55);
+    .dk-scene[data-dk-loading='cross'] .dk-wait::after {
+        background: linear-gradient(0deg, var(--chart-1), var(--chart-2), var(--chart-3), var(--chart-4)) 0 0 / 2px 100% no-repeat;
+        translate: 100% 0;
     }
 
-    .dk-scene[data-dk-loading='ghosts'] {
-        --kp-sig-dur: var(--dk-lap);
+    .dk-scene[data-dk-loading='cross'] .dk-wait__c {
+        display: block;
+        inset-block: 0;
+        inset-inline: 41%;
+        z-index: 2;
+        background:
+            linear-gradient(90deg, transparent 46%, hsl(from var(--foreground) h s l / 0.7) 50%, transparent 54%),
+            radial-gradient(closest-side, hsl(from var(--chart-2) h s l / 0.55), hsl(from var(--chart-3) h s l / 0.25) 55%, transparent);
+        mix-blend-mode: plus-lighter;
+        opacity: 0;
+    }
+
+    @keyframes dk-ld-xa {
+        0% {
+            clip-path: inset(0 100% 0 0);
+            opacity: 1;
+            background-position: 0% 0;
+            animation-timing-function: linear;
+        }
+
+        70% {
+            clip-path: inset(0);
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            clip-path: inset(0);
+            opacity: 0;
+            background-position: 100% 0;
+        }
+    }
+
+    @keyframes dk-ld-xb {
+        0% {
+            clip-path: inset(0 0 0 100%);
+            opacity: 1;
+            background-position: 50% 0;
+            animation-timing-function: linear;
+        }
+
+        70% {
+            clip-path: inset(0);
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            clip-path: inset(0);
+            opacity: 0;
+            background-position: -50% 0;
+        }
+    }
+
+    @keyframes dk-ld-line-back {
+        0% {
+            translate: 100% 0;
+            opacity: 0;
+            animation-timing-function: linear;
+        }
+
+        4% {
+            translate: 94.2857% 0;
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        66% {
+            translate: 5.7143% 0;
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        70%,
+        100% {
+            translate: 0% 0;
+            opacity: 0;
+        }
+    }
+
+    @keyframes dk-ld-flare {
+        0%,
+        29% {
+            opacity: 0;
+            scale: 0.4 1;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        35% {
+            opacity: 1;
+            scale: 1 1;
+            animation-timing-function: linear;
+        }
+
+        48%,
+        100% {
+            opacity: 0;
+            scale: 1.3 1;
+        }
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        .dk-scene[data-dk-loading='ghosts'] .dk-wait::before,
-        .dk-scene[data-dk-loading='ghosts'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before {
-            animation: kp-sig-dark-dark-ghost-l var(--dk-lap) ease-in-out infinite;
+        .dk-scene[data-dk-loading='cross'] .dk-wait__a {
+            animation: dk-ld-xa var(--dk-lap) linear var(--dk-ld-d) infinite;
         }
 
-        .dk-scene[data-dk-loading='ghosts'] .dk-wait::after,
-        .dk-scene[data-dk-loading='ghosts'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
-            animation: kp-sig-dark-dark-ghost-r var(--dk-lap) ease-in-out infinite;
+        .dk-scene[data-dk-loading='cross'] .dk-wait__b {
+            animation: dk-ld-xb var(--dk-lap) linear var(--dk-ld-d) infinite;
         }
 
-        .dk-scene[data-dk-loading='ghosts'] .kp-skeleton:nth-child(2)::before,
-        .dk-scene[data-dk-loading='ghosts'] .kp-skeleton:nth-child(2)::after {
-            animation-delay: calc(var(--dk-lap) * -5 / 6);
+        .dk-scene[data-dk-loading='cross'] .dk-wait::before {
+            animation: dk-wait-line var(--dk-lap) linear var(--dk-ld-d) infinite;
         }
 
-        .dk-scene[data-dk-loading='ghosts'] .kp-skeleton:nth-child(3)::before,
-        .dk-scene[data-dk-loading='ghosts'] .kp-skeleton:nth-child(3)::after {
-            animation-delay: calc(var(--dk-lap) * -2 / 3);
+        .dk-scene[data-dk-loading='cross'] .dk-wait::after {
+            animation: dk-ld-line-back var(--dk-lap) linear var(--dk-ld-d) infinite;
+        }
+
+        .dk-scene[data-dk-loading='cross'] .dk-wait__c {
+            animation: dk-ld-flare var(--dk-lap) linear var(--dk-ld-d) infinite;
+        }
+    }
+
+    /* 6 The diagonal sweep: the line leans 20° and crosses from the start
+   corner to the far corner, entering and leaving along the chamfers; the
+   film behind it is a wedge. The wash and the line are one skewed band, the
+   line its leading edge. */
+    .dk-scene[data-dk-loading='diagonal'] :is(.dk-wait__a, .dk-wait__b) {
+        display: block;
+        inset-block: 0;
+        inset-inline-start: -100%;
+        inline-size: 200%;
+        transform: skewX(-20deg);
+        translate: -60% 0;
+        opacity: 0;
+    }
+
+    .dk-scene[data-dk-loading='diagonal'] .dk-wait__a {
+        background: var(--dk-soft) 0 0 / 100% 100%;
+    }
+
+    .dk-scene[data-dk-loading='diagonal'] .dk-wait__b {
+        background: var(--dk-vspectrum) 100% 0 / 2px 100% no-repeat;
+        filter: var(--dk-glow);
+    }
+
+    @keyframes dk-ld-wedge {
+        0% {
+            translate: -60% 0;
+            opacity: 1;
+            background-position: 0% 0;
+            animation-timing-function: linear;
+        }
+
+        70% {
+            translate: 10% 0;
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            translate: 10% 0;
+            opacity: 0;
+            background-position: 100% 0;
+        }
+    }
+
+    @keyframes dk-ld-wedge-line {
+        0% {
+            translate: -60% 0;
+            opacity: 0;
+            animation-timing-function: linear;
+        }
+
+        4% {
+            translate: -56% 0;
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        66% {
+            translate: 6% 0;
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        70%,
+        100% {
+            translate: 10% 0;
+            opacity: 0;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dk-scene[data-dk-loading='diagonal'] .dk-wait__a {
+            animation: dk-ld-wedge var(--dk-lap) linear var(--dk-ld-d) infinite;
+        }
+
+        .dk-scene[data-dk-loading='diagonal'] .dk-wait__b {
+            animation: dk-ld-wedge-line var(--dk-lap) linear var(--dk-ld-d) infinite;
+        }
+    }
+
+    /* 7 The line stops to read: three strokes (to a third, to two thirds, to
+   the end) with a 200 ms stop after each, the film it has laid brightening
+   while it reads; then it goes and the film dims. */
+    @keyframes dk-ld-read {
+        0% {
+            clip-path: inset(0 100% 0 0);
+            filter: brightness(1);
+            opacity: 1;
+            background-position: 0% 0;
+            animation-timing-function: linear;
+        }
+
+        14% {
+            clip-path: inset(0 66.67% 0 0);
+            filter: brightness(1);
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        18% {
+            clip-path: inset(0 66.67% 0 0);
+            filter: brightness(2);
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+
+        22.33% {
+            clip-path: inset(0 66.67% 0 0);
+            filter: brightness(1);
+            animation-timing-function: linear;
+        }
+
+        36.33% {
+            clip-path: inset(0 33.33% 0 0);
+            filter: brightness(1);
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        40.33% {
+            clip-path: inset(0 33.33% 0 0);
+            filter: brightness(2);
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+
+        44.67% {
+            clip-path: inset(0 33.33% 0 0);
+            filter: brightness(1);
+            animation-timing-function: linear;
+        }
+
+        58.67% {
+            clip-path: inset(0);
+            filter: brightness(1);
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        62.67% {
+            clip-path: inset(0);
+            filter: brightness(2);
+            opacity: 1;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+
+        67% {
+            clip-path: inset(0);
+            filter: brightness(1);
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            clip-path: inset(0);
+            filter: brightness(1);
+            opacity: 0;
+            background-position: 100% 0;
+        }
+    }
+
+    @keyframes dk-ld-read-line {
+        0% {
+            translate: -100% 0;
+            opacity: 0;
+            animation-timing-function: linear;
+        }
+
+        1% {
+            translate: -97.6% 0;
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        14%,
+        22.33% {
+            translate: -66.67% 0;
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        36.33%,
+        44.67% {
+            translate: -33.33% 0;
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        58.67%,
+        65% {
+            translate: 0% 0;
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        67%,
+        100% {
+            translate: 0% 0;
+            opacity: 0;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dk-scene[data-dk-loading='read'] .dk-wait::before {
+            animation: dk-ld-read var(--dk-lap) linear var(--dk-ld-d) infinite;
+        }
+
+        .dk-scene[data-dk-loading='read'] .dk-wait__a {
+            animation: dk-ld-read-line var(--dk-lap) linear var(--dk-ld-d) infinite;
+        }
+    }
+
+    /* 8 The edge chase: a short bright segment runs round the part's cut edge,
+   clockwise from the top-left corner, laying the film along the edge behind
+   it, which dims before the next lap; the inside stays dark. The edge is a
+   2 px ring that follows the cut, the diagonals too. */
+    .dk-scene[data-dk-loading='edge'] .dk-wait__a {
+        --dk-ring: 2px;
+        display: block;
+        inset: 0;
+        background: conic-gradient(
+            from var(--dk-run),
+            transparent 0deg,
+            hsl(from var(--chart-4) h s l / 0.25) 90deg,
+            hsl(from var(--chart-3) h s l / 0.65) 190deg,
+            hsl(from var(--chart-2) h s l / 0.95) 260deg,
+            var(--chart-1) 292deg,
+            var(--foreground) 298deg 300deg,
+            transparent 300deg
+        );
+        -webkit-mask:
+            linear-gradient(var(--foreground) 0 0) 0 0 / 100% var(--dk-ring) no-repeat,
+            linear-gradient(var(--foreground) 0 0) 0 100% / 100% var(--dk-ring) no-repeat,
+            linear-gradient(var(--foreground) 0 0) 0 0 / var(--dk-ring) 100% no-repeat,
+            linear-gradient(var(--foreground) 0 0) 100% 0 / var(--dk-ring) 100% no-repeat,
+            linear-gradient(
+                    225deg,
+                    transparent calc(var(--dk-k) * 0.7071 - 1px),
+                    var(--foreground) 0 calc(var(--dk-k) * 0.7071 + var(--dk-ring)),
+                    transparent 0
+                )
+                100% 0 / 50% 50% no-repeat,
+            linear-gradient(
+                    45deg,
+                    transparent calc(var(--dk-k) * 0.7071 - 1px),
+                    var(--foreground) 0 calc(var(--dk-k) * 0.7071 + var(--dk-ring)),
+                    transparent 0
+                )
+                0 100% / 50% 50% no-repeat;
+        mask:
+            linear-gradient(var(--foreground) 0 0) 0 0 / 100% var(--dk-ring) no-repeat,
+            linear-gradient(var(--foreground) 0 0) 0 100% / 100% var(--dk-ring) no-repeat,
+            linear-gradient(var(--foreground) 0 0) 0 0 / var(--dk-ring) 100% no-repeat,
+            linear-gradient(var(--foreground) 0 0) 100% 0 / var(--dk-ring) 100% no-repeat,
+            linear-gradient(
+                    225deg,
+                    transparent calc(var(--dk-k) * 0.7071 - 1px),
+                    var(--foreground) 0 calc(var(--dk-k) * 0.7071 + var(--dk-ring)),
+                    transparent 0
+                )
+                100% 0 / 50% 50% no-repeat,
+            linear-gradient(
+                    45deg,
+                    transparent calc(var(--dk-k) * 0.7071 - 1px),
+                    var(--foreground) 0 calc(var(--dk-k) * 0.7071 + var(--dk-ring)),
+                    transparent 0
+                )
+                0 100% / 50% 50% no-repeat;
+    }
+
+    /* The skeleton line is cut by its own clip; its ring sits inside it. */
+    .dk-scene[data-dk-loading='edge'] .kp-skeleton .dk-wait__a {
+        --dk-ring: 1px;
+    }
+
+    @keyframes dk-ld-edge {
+        from {
+            --dk-run: 0deg;
+        }
+
+        to {
+            --dk-run: 360deg;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dk-scene[data-dk-loading='edge'] .dk-wait__a {
+            animation: dk-ld-edge var(--dk-lap) linear var(--dk-ld-d) infinite;
+        }
+    }
+
+    /* 9 The prism line: the line's own colour is its place (cyan at the start,
+   violet, magenta, lime at the end), and the film it lays is the colour of
+   the place it was laid in, standing, then dimming. */
+    .dk-scene[data-dk-loading='prism'] .dk-wait::before {
+        background: var(--dk-place);
+    }
+
+    .dk-scene[data-dk-loading='prism'] .dk-wait__a {
+        display: block;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: 3px;
+        color: var(--chart-1);
+        background: currentcolor;
+        box-shadow:
+            0 0 4px currentcolor,
+            0 0 14px 2px currentcolor;
+        opacity: 0;
+    }
+
+    @keyframes dk-ld-prism {
+        0% {
+            inset-inline-start: 0%;
+            color: var(--chart-1);
+            opacity: 0;
+            animation-timing-function: linear;
+        }
+
+        3% {
+            inset-inline-start: 4.2857%;
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        23.33% {
+            inset-inline-start: calc(33.33% - 1px);
+            color: var(--chart-2);
+            animation-timing-function: linear;
+        }
+
+        46.67% {
+            inset-inline-start: calc(66.67% - 2px);
+            color: var(--chart-3);
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        67% {
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        70%,
+        100% {
+            inset-inline-start: calc(100% - 3px);
+            color: var(--chart-4);
+            opacity: 0;
+        }
+    }
+
+    @keyframes dk-ld-prism-film {
+        0% {
+            clip-path: inset(0 100% 0 0);
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        70% {
+            clip-path: inset(0);
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            clip-path: inset(0);
+            opacity: 0;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dk-scene[data-dk-loading='prism'] .dk-wait::before {
+            animation: dk-ld-prism-film var(--dk-lap) linear var(--dk-ld-d) infinite;
+        }
+
+        .dk-scene[data-dk-loading='prism'] .dk-wait__a {
+            animation: dk-ld-prism var(--dk-lap) linear var(--dk-ld-d) infinite;
+        }
+    }
+
+    /* 10 A grating of three thin lines: three hairlines cross together, 90 ms
+   apart, each laying a fine band of film behind it (cyan, violet, magenta),
+   which turn and dim in turn, like light through a grating. */
+    .dk-scene[data-dk-loading='grating'] {
+        --dk-ld-step: 90ms;
+    }
+
+    .dk-scene[data-dk-loading='grating'] :is(.dk-wait__a, .dk-wait__b, .dk-wait__c) {
+        --dk-g: var(--chart-1);
+        display: block;
+        inset-block: 0;
+        inset-inline-start: -6%;
+        inline-size: 6%;
+        background:
+            linear-gradient(var(--dk-g), var(--dk-g)) 100% 0 / 1px 100% no-repeat,
+            linear-gradient(90deg, hsl(from var(--dk-g) h s l / 0.06), hsl(from var(--dk-g) h s l / 0.5));
+        filter: drop-shadow(0 0 4px hsl(from var(--dk-g) h s l / 0.6));
+        opacity: 0;
+    }
+
+    .dk-scene[data-dk-loading='grating'] .dk-wait__b {
+        --dk-g: var(--chart-2);
+        --dk-rung: 1;
+    }
+
+    .dk-scene[data-dk-loading='grating'] .dk-wait__c {
+        --dk-g: var(--chart-3);
+        --dk-rung: 2;
+    }
+
+    @keyframes dk-ld-grate {
+        0% {
+            inset-inline-start: -6%;
+            opacity: 0;
+            animation-timing-function: linear;
+        }
+
+        4% {
+            inset-inline-start: 0.6%;
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        50% {
+            opacity: 0.9;
+            animation-timing-function: linear;
+        }
+
+        70% {
+            inset-inline-start: 100%;
+            opacity: 0.35;
+        }
+
+        70.01%,
+        100% {
+            inset-inline-start: 100%;
+            opacity: 0;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dk-scene[data-dk-loading='grating'] .dk-wait > i {
+            animation: dk-ld-grate var(--dk-lap) linear calc(var(--dk-ld-d) + var(--dk-rung, 0) * 90ms) infinite;
+        }
+    }
+
+    /* Reduced motion: every waiting part stands with its film laid and no
+   line; the comet, the edge and the grating show their stroke at rest. */
+    @media (prefers-reduced-motion: reduce) {
+        .dk-scene[data-dk-loading] .dk-wait::before {
+            opacity: 0.7;
+        }
+
+        .dk-scene[data-dk-loading='comet'] .dk-wait__a,
+        .dk-scene[data-dk-loading='grating'] .dk-wait > i {
+            inset-inline-start: 40%;
+            opacity: 1;
         }
     }
 
@@ -2671,157 +3499,735 @@
 
     /* ── 12 The spinner (a loop) ────────────────────────────────────────── */
 
+    /* Ten new ideas in the film, the line, the chamfer, the brackets and the
+   grid (Kenny, update 1: "I feel like we can do better than this, give me
+   ten more examples"), and the two earlier ones for reference. Every one
+   loops at 2.4 s and draws in proportion to the spinner's size, so it reads
+   the same at 1.25, 2, 2.5 and 3.5 rem. The spinner holds eight empty parts
+   (`i`) that the options draw with; the two earlier ones leave them out.
+   The motions that turn a registered angle run on the spinner and its parts
+   themselves, never on a pseudo-element, so they can be paused and looked
+   at. */
     .dk-scene .kp-spinner {
+        --dk-s: var(--kp-spinner-size, 1.25rem);
+        --dk-sw: max(1.5px, calc(var(--dk-s) * 0.07));
+        --dk-sk: calc(var(--dk-s) * 0.28);
+        --dk-oct: polygon(
+            var(--dk-sk) 0,
+            calc(100% - var(--dk-sk)) 0,
+            100% var(--dk-sk),
+            100% calc(100% - var(--dk-sk)),
+            calc(100% - var(--dk-sk)) 100%,
+            var(--dk-sk) 100%,
+            0 calc(100% - var(--dk-sk)),
+            0 var(--dk-sk)
+        );
+        /* A ring of --dk-sw that follows the four cuts: four straight strips
+           and four diagonal ones, the clip trimming the strips' ends. */
+        --dk-ringmask:
+            linear-gradient(var(--foreground) 0 0) 0 0 / 100% var(--dk-sw) no-repeat,
+            linear-gradient(var(--foreground) 0 0) 0 100% / 100% var(--dk-sw) no-repeat,
+            linear-gradient(var(--foreground) 0 0) 0 0 / var(--dk-sw) 100% no-repeat,
+            linear-gradient(var(--foreground) 0 0) 100% 0 / var(--dk-sw) 100% no-repeat,
+            linear-gradient(
+                    135deg,
+                    transparent calc(var(--dk-sk) * 0.7071 - 1px),
+                    var(--foreground) 0 calc(var(--dk-sk) * 0.7071 + var(--dk-sw)),
+                    transparent 0
+                )
+                0 0 / 50% 50% no-repeat,
+            linear-gradient(
+                    225deg,
+                    transparent calc(var(--dk-sk) * 0.7071 - 1px),
+                    var(--foreground) 0 calc(var(--dk-sk) * 0.7071 + var(--dk-sw)),
+                    transparent 0
+                )
+                100% 0 / 50% 50% no-repeat,
+            linear-gradient(
+                    315deg,
+                    transparent calc(var(--dk-sk) * 0.7071 - 1px),
+                    var(--foreground) 0 calc(var(--dk-sk) * 0.7071 + var(--dk-sw)),
+                    transparent 0
+                )
+                100% 100% / 50% 50% no-repeat,
+            linear-gradient(
+                    45deg,
+                    transparent calc(var(--dk-sk) * 0.7071 - 1px),
+                    var(--foreground) 0 calc(var(--dk-sk) * 0.7071 + var(--dk-sw)),
+                    transparent 0
+                )
+                0 100% / 50% 50% no-repeat;
         flex: none;
     }
 
-    /* The line runs the ring: the register's ring in film colours, and the line
-   runs round it once per loop laying the film behind it, which turns and dims
-   by the time the line comes round; the ring itself never rotates. */
-    .dk-scene[data-dk-spinner='runs'] .kp-spinner {
-        position: relative;
-        background: hsl(from var(--border-strong) h s l / 0.7);
-        animation: none;
-    }
-
-    .dk-scene[data-dk-spinner='runs'] .kp-spinner::before,
-    .dk-scene[data-dk-spinner='runs'] .kp-spinner::after {
-        content: '';
+    .dk-scene .kp-spinner > i {
+        display: none;
         position: absolute;
-        inset: 0;
-        border-radius: 50%;
         pointer-events: none;
     }
 
-    /* the film laid behind the line: bright at the head, tailing off back round */
-    .dk-scene[data-dk-spinner='runs'] .kp-spinner::before {
-        background: conic-gradient(
-            from calc(var(--dk-run) - 270deg),
-            transparent,
-            var(--chart-1) 70deg,
-            var(--chart-2) 140deg,
-            var(--chart-3) 210deg,
-            var(--chart-4) 270deg,
-            transparent 270deg
-        );
-        opacity: 1;
-    }
-
-    /* the line: a slice of the film at the head */
-    .dk-scene[data-dk-spinner='runs'] .kp-spinner::after {
-        background: conic-gradient(from calc(var(--dk-run) - 5deg), transparent, var(--foreground) 0.5deg, var(--chart-1) 5deg, transparent 5deg);
-        filter: var(--dk-glow);
-        opacity: 1;
-    }
-
-    @keyframes dk-ring-run {
-        0% {
-            --dk-run: 0deg;
-            animation-timing-function: linear;
-        }
-
-        70%,
-        100% {
-            --dk-run: 360deg;
-        }
-    }
-
-    @keyframes dk-ring-dim {
-        0%,
-        70% {
-            opacity: 1;
-            animation-timing-function: linear;
-        }
-
-        100% {
-            opacity: 0;
-        }
-    }
-
-    @keyframes dk-ring-out {
-        0%,
-        66% {
-            opacity: 1;
-            animation-timing-function: linear;
-        }
-
-        70%,
-        100% {
-            opacity: 0;
-        }
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        .dk-scene[data-dk-spinner='runs'] .kp-spinner {
-            animation: dk-ring-run var(--dk-lap) linear infinite;
-        }
-
-        .dk-scene[data-dk-spinner='runs'] .kp-spinner::before {
-            animation: dk-ring-dim var(--dk-lap) linear infinite;
-        }
-
-        .dk-scene[data-dk-spinner='runs'] .kp-spinner::after {
-            animation: dk-ring-out var(--dk-lap) linear infinite;
-        }
-    }
-
-    /* Reduced motion: the ring stands laid, the film all the way round. */
-    @media (prefers-reduced-motion: reduce) {
-        .dk-scene[data-dk-spinner='runs'] .kp-spinner {
-            --dk-run: 360deg;
-        }
-
-        .dk-scene[data-dk-spinner='runs'] .kp-spinner::after {
-            opacity: 0;
-        }
-    }
-
-    /* The ring turns (today): the register's spinner, a ring in film colours
-   rotating linear. */
-    @media (prefers-reduced-motion: no-preference) {
-        .dk-scene[data-dk-spinner='turns'] .kp-spinner {
-            animation: kp-sig-dark-dark-turn 1400ms linear infinite;
-            animation-duration: calc(1400ms * var(--dk-sl));
-        }
-    }
-
-    /* The brackets turn: a pair of brackets `[ ]` turns round a centre, the film
-   laid on their inner edge. */
-    .dk-scene[data-dk-spinner='brackets'] .kp-spinner {
+    /* The ten new ones start from a bare box: no ring, no mask, no turn. */
+    .dk-scene:is(
+            [data-dk-spinner='prism'],
+            [data-dk-spinner='radar'],
+            [data-dk-spinner='pendulum'],
+            [data-dk-spinner='bars'],
+            [data-dk-spinner='slit'],
+            [data-dk-spinner='chase'],
+            [data-dk-spinner='ripple'],
+            [data-dk-spinner='brackets'],
+            [data-dk-spinner='dial'],
+            [data-dk-spinner='lissajous']
+        )
+        .kp-spinner {
         position: relative;
+        border: 0;
+        border-radius: 0;
         background: none;
         -webkit-mask: none;
         mask: none;
-        border: 0;
-        border-radius: 0;
+        clip-path: none;
+        animation: none;
     }
 
-    .dk-scene[data-dk-spinner='brackets'] .kp-spinner::before,
-    .dk-scene[data-dk-spinner='brackets'] .kp-spinner::after {
-        content: '';
-        position: absolute;
-        inset-block: 8%;
-        inline-size: 24%;
-        --dk-arm: max(2px, calc(var(--kp-spinner-size, 1.25rem) * 0.06));
+    @keyframes dk-sp-run {
+        from {
+            --dk-run: 0deg;
+        }
+
+        to {
+            --dk-run: 360deg;
+        }
+    }
+
+    /* 1 The prism turns its edge: a square cut on all four corners stands
+   still; its film edge turns colour round it (the film counter-turns once a
+   loop) while a short bright slice rides the edge the other way. */
+    .dk-scene[data-dk-spinner='prism'] .kp-spinner {
         background:
-            linear-gradient(var(--foreground), var(--foreground)) 0 0 / 100% var(--dk-arm) no-repeat,
-            linear-gradient(var(--foreground), var(--foreground)) 0 100% / 100% var(--dk-arm) no-repeat,
-            var(--dk-vspectrum) var(--edge, 0) 0 / var(--dk-arm) 100% no-repeat;
+            conic-gradient(
+                from calc(var(--dk-run) - 70deg),
+                transparent 0deg,
+                hsl(from var(--foreground) h s l / 0.35) 40deg,
+                hsl(from var(--foreground) h s l / 0.85) 62deg,
+                var(--foreground) 66deg 70deg,
+                transparent 70deg
+            ),
+            conic-gradient(from var(--dk-angle), var(--chart-1), var(--chart-2), var(--chart-3), var(--chart-4), var(--chart-1));
+        -webkit-mask: var(--dk-ringmask);
+        mask: var(--dk-ringmask);
+        clip-path: var(--dk-oct);
     }
 
-    .dk-scene[data-dk-spinner='brackets'] .kp-spinner::before {
-        --edge: 0%;
-        inset-inline-start: 6%;
-    }
+    @keyframes dk-sp-prism {
+        from {
+            --dk-run: 0deg;
+            --dk-angle: 0deg;
+        }
 
-    .dk-scene[data-dk-spinner='brackets'] .kp-spinner::after {
-        --edge: 100%;
-        inset-inline-end: 6%;
+        to {
+            --dk-run: 360deg;
+            --dk-angle: -360deg;
+        }
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        .dk-scene[data-dk-spinner='brackets'] .kp-spinner {
-            animation: kp-sig-dark-dark-turn var(--dk-lap) linear infinite;
+        .dk-scene[data-dk-spinner='prism'] .kp-spinner {
+            animation: dk-sp-prism var(--dk-lap) linear infinite;
+        }
+    }
+
+    /* 2 The radar line: a line sweeps round a thin ring from the centre and
+   lays a wedge of film behind it (the last 90°, from film to nothing); the
+   ring, an inner ring and the centre point stand. */
+    .dk-scene[data-dk-spinner='radar'] .kp-spinner {
+        border-radius: 50%;
+        background:
+            conic-gradient(
+                from calc(var(--dk-run) - 90deg),
+                transparent 0deg,
+                hsl(from var(--chart-3) h s l / 0.12) 30deg,
+                hsl(from var(--chart-2) h s l / 0.38) 62deg,
+                hsl(from var(--chart-1) h s l / 0.75) 86deg,
+                var(--foreground) 88.5deg 90deg,
+                transparent 90deg
+            ),
+            radial-gradient(closest-side, transparent calc(100% - 1px), var(--border-strong) calc(100% - 1px)),
+            radial-gradient(
+                closest-side,
+                transparent calc(55% - 0.5px),
+                hsl(from var(--border-strong) h s l / 0.7) calc(55% - 0.5px) calc(55% + 0.5px),
+                transparent calc(55% + 0.5px)
+            );
+    }
+
+    .dk-scene[data-dk-spinner='radar'] .kp-spinner > i:first-child {
+        display: block;
+        inset: calc(50% - max(1px, var(--dk-s) * 0.045));
+        border-radius: 50%;
+        background: var(--foreground);
+        box-shadow: 0 0 calc(var(--dk-s) * 0.12) var(--chart-1);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dk-scene[data-dk-spinner='radar'] .kp-spinner {
+            animation: dk-sp-run var(--dk-lap) linear infinite;
+        }
+    }
+
+    /* 3 The pendulum line: a line swings left and right across a small cut
+   box on the settle curve, laying film behind it on each stroke; the film of
+   one stroke dims while the next is laid. */
+    .dk-scene[data-dk-spinner='pendulum'] .kp-spinner {
+        --dk-sk: calc(var(--dk-s) * 0.2);
+        --dk-sw: max(1px, calc(var(--dk-s) * 0.045));
+    }
+
+    .dk-scene[data-dk-spinner='pendulum'] .kp-spinner::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--border-strong);
+        -webkit-mask: var(--dk-ringmask);
+        mask: var(--dk-ringmask);
+        clip-path: var(--dk-oct);
+    }
+
+    .dk-scene[data-dk-spinner='pendulum'] .kp-spinner > i:nth-child(-n + 3) {
+        display: block;
+        inset: 0;
+    }
+
+    .dk-scene[data-dk-spinner='pendulum'] .kp-spinner > i:nth-child(-n + 2) {
+        background: linear-gradient(
+            90deg,
+            hsl(from var(--chart-1) h s l / 0.38),
+            hsl(from var(--chart-2) h s l / 0.38),
+            hsl(from var(--chart-3) h s l / 0.38),
+            hsl(from var(--chart-4) h s l / 0.38)
+        );
+        clip-path: inset(22% 18% 22% 18%);
+    }
+
+    .dk-scene[data-dk-spinner='pendulum'] .kp-spinner > i:nth-child(2) {
+        opacity: 0;
+    }
+
+    .dk-scene[data-dk-spinner='pendulum'] .kp-spinner > i:nth-child(3) {
+        inset: 14% auto 14% 82%;
+        inline-size: max(1.5px, calc(var(--dk-s) * 0.05));
+        translate: -100% 0;
+        background: var(--dk-vspectrum);
+        filter: drop-shadow(0 0 calc(var(--dk-s) * 0.1) hsl(from var(--chart-1) h s l / 0.6));
+    }
+
+    @keyframes dk-sp-pend-line {
+        0% {
+            inset-inline-start: 18%;
+            translate: 0 0;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        50% {
+            inset-inline-start: 82%;
+            translate: -100% 0;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        100% {
+            inset-inline-start: 18%;
+            translate: 0 0;
+        }
+    }
+
+    /* the film of the stroke to the right: laid behind the line, then dimmed on the way back */
+    @keyframes dk-sp-pend-a {
+        0% {
+            clip-path: inset(22% 82% 22% 18%);
+            opacity: 1;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        50% {
+            clip-path: inset(22% 18% 22% 18%);
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            clip-path: inset(22% 18% 22% 18%);
+            opacity: 0;
+        }
+    }
+
+    /* the film of the stroke back, from the right */
+    @keyframes dk-sp-pend-b {
+        0% {
+            clip-path: inset(22% 18% 22% 18%);
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        49.99% {
+            clip-path: inset(22% 18% 22% 18%);
+            opacity: 0;
+        }
+
+        50% {
+            clip-path: inset(22% 18% 22% 82%);
+            opacity: 1;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        100% {
+            clip-path: inset(22% 18% 22% 18%);
+            opacity: 1;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dk-scene[data-dk-spinner='pendulum'] .kp-spinner > i:nth-child(1) {
+            animation: dk-sp-pend-a var(--dk-lap) linear infinite;
+        }
+
+        .dk-scene[data-dk-spinner='pendulum'] .kp-spinner > i:nth-child(2) {
+            animation: dk-sp-pend-b var(--dk-lap) linear infinite;
+        }
+
+        .dk-scene[data-dk-spinner='pendulum'] .kp-spinner > i:nth-child(3) {
+            animation: dk-sp-pend-line var(--dk-lap) linear infinite;
+        }
+    }
+
+    /* 4 The spectrum bars: five thin bars with cut tops, one per film colour
+   and a lime, rise and fall in turn like a spectrometer's reading, 120 ms
+   apart, on a hairline base. */
+    .dk-scene[data-dk-spinner='bars'] .kp-spinner {
+        background: linear-gradient(var(--border-strong), var(--border-strong)) 0 92% / 100% 1px no-repeat;
+    }
+
+    .dk-scene[data-dk-spinner='bars'] .kp-spinner > i:nth-child(-n + 5) {
+        --dk-bw: calc(var(--dk-s) * 0.12);
+        display: block;
+        inset-block: 12% 10%;
+        inset-inline-start: calc(10% + (var(--n) * 17%));
+        inline-size: var(--dk-bw);
+        transform-origin: 50% 100%;
+        scale: 1 0.35;
+        background: linear-gradient(0deg, hsl(from var(--dk-bc) h s l / 0.45), var(--dk-bc));
+        clip-path: polygon(0 calc(var(--dk-bw) * 0.5), 50% 0, 100% calc(var(--dk-bw) * 0.5), 100% 100%, 0 100%);
+    }
+
+    .dk-scene[data-dk-spinner='bars'] .kp-spinner > i:nth-child(1) {
+        --n: 0;
+        --dk-bc: var(--chart-1);
+    }
+
+    .dk-scene[data-dk-spinner='bars'] .kp-spinner > i:nth-child(2) {
+        --n: 1;
+        --dk-bc: var(--chart-2);
+    }
+
+    .dk-scene[data-dk-spinner='bars'] .kp-spinner > i:nth-child(3) {
+        --n: 2;
+        --dk-bc: var(--chart-3);
+    }
+
+    .dk-scene[data-dk-spinner='bars'] .kp-spinner > i:nth-child(4) {
+        --n: 3;
+        --dk-bc: var(--chart-4);
+    }
+
+    .dk-scene[data-dk-spinner='bars'] .kp-spinner > i:nth-child(5) {
+        --n: 4;
+        --dk-bc: hsl(from var(--chart-4) h s calc(l + 12));
+    }
+
+    @keyframes dk-sp-bars {
+        0%,
+        100% {
+            scale: 1 0.3;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        16% {
+            scale: 1 1;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+
+        38% {
+            scale: 1 0.45;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        56% {
+            scale: 1 0.8;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+
+        78% {
+            scale: 1 0.25;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dk-scene[data-dk-spinner='bars'] .kp-spinner > i:nth-child(-n + 5) {
+            animation: dk-sp-bars var(--dk-lap) linear calc(var(--n) * 120ms - var(--dk-lap)) infinite;
+        }
+    }
+
+    /* 5 The slit and the grating: a ring of fine lines turns behind a fixed
+   slit at the centre; in the slit the lines are lit in the film, whose
+   colour turns, so the slit shows a moving band of film colour. */
+    .dk-scene[data-dk-spinner='slit'] .kp-spinner {
+        --dk-grate: repeating-conic-gradient(from var(--dk-run), var(--foreground) 0deg 4deg, transparent 4deg 18deg);
+        --dk-annulus: radial-gradient(closest-side, transparent 18%, var(--foreground) 22% 97%, transparent 100%);
+    }
+
+    .dk-scene[data-dk-spinner='slit'] .kp-spinner > i:nth-child(-n + 3) {
+        display: block;
+        inset: 0;
+    }
+
+    .dk-scene[data-dk-spinner='slit'] .kp-spinner > i:nth-child(1) {
+        background: hsl(from var(--border-strong) h s l / 0.55);
+        -webkit-mask: var(--dk-grate), var(--dk-annulus);
+        -webkit-mask-composite: source-in;
+        mask: var(--dk-grate), var(--dk-annulus);
+        mask-composite: intersect;
+    }
+
+    .dk-scene[data-dk-spinner='slit'] .kp-spinner > i:nth-child(2) {
+        background: conic-gradient(from var(--dk-angle), var(--chart-1), var(--chart-2), var(--chart-3), var(--chart-4), var(--chart-1));
+        -webkit-mask: var(--dk-grate), var(--dk-annulus);
+        -webkit-mask-composite: source-in;
+        mask: var(--dk-grate), var(--dk-annulus);
+        mask-composite: intersect;
+        clip-path: inset(0 38%);
+        filter: brightness(1.3) drop-shadow(0 0 calc(var(--dk-s) * 0.06) hsl(from var(--chart-1) h s l / 0.6));
+    }
+
+    /* the slit's jaws */
+    .dk-scene[data-dk-spinner='slit'] .kp-spinner > i:nth-child(3) {
+        inset-inline: calc(38% - 1px);
+        background:
+            linear-gradient(hsl(from var(--foreground) h s l / 0.75), hsl(from var(--foreground) h s l / 0.75)) 0 0 / 1px 100% no-repeat,
+            linear-gradient(hsl(from var(--foreground) h s l / 0.75), hsl(from var(--foreground) h s l / 0.75)) 100% 0 / 1px 100% no-repeat;
+    }
+
+    @keyframes dk-sp-slit {
+        from {
+            --dk-run: 0deg;
+            --dk-angle: 0deg;
+        }
+
+        to {
+            --dk-run: 180deg;
+            --dk-angle: 360deg;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dk-scene[data-dk-spinner='slit'] .kp-spinner {
+            animation: dk-sp-slit var(--dk-lap) linear infinite;
+        }
+    }
+
+    /* 6 The chamfer chase: a short segment of film runs round a cut square's
+   edge, clockwise, laying the film behind it, which dims over the lap; the
+   edge is dark where the segment has not been. */
+    .dk-scene[data-dk-spinner='chase'] .kp-spinner {
+        --dk-sk: calc(var(--dk-s) * 0.32);
+        background:
+            conic-gradient(
+                from var(--dk-run),
+                transparent 0deg,
+                hsl(from var(--chart-4) h s l / 0.15) 120deg,
+                hsl(from var(--chart-3) h s l / 0.5) 210deg,
+                hsl(from var(--chart-2) h s l / 0.85) 262deg,
+                var(--chart-1) 284deg,
+                var(--foreground) 288deg 290deg,
+                transparent 290deg
+            ),
+            linear-gradient(hsl(from var(--border-strong) h s l / 0.8), hsl(from var(--border-strong) h s l / 0.8));
+        -webkit-mask: var(--dk-ringmask);
+        mask: var(--dk-ringmask);
+        clip-path: var(--dk-oct);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dk-scene[data-dk-spinner='chase'] .kp-spinner {
+            animation: dk-sp-run var(--dk-lap) linear infinite;
+        }
+    }
+
+    /* 7 The ripples: three rings grow from the centre one after another, 800
+   ms apart, their film colour turning as they grow and fading at the edge;
+   the centre holds a small bright point. */
+    .dk-scene[data-dk-spinner='ripple'] .kp-spinner > i:nth-child(-n + 3) {
+        display: block;
+        inset: 0;
+        border: max(1.5px, calc(var(--dk-s) * 0.055)) solid var(--chart-1);
+        border-radius: 50%;
+        scale: 0.15;
+        opacity: 0;
+    }
+
+    .dk-scene[data-dk-spinner='ripple'] .kp-spinner > i:nth-child(2) {
+        --n: 1;
+    }
+
+    .dk-scene[data-dk-spinner='ripple'] .kp-spinner > i:nth-child(3) {
+        --n: 2;
+    }
+
+    .dk-scene[data-dk-spinner='ripple'] .kp-spinner > i:nth-child(4) {
+        display: block;
+        inset: calc(50% - max(1.5px, var(--dk-s) * 0.06));
+        border-radius: 50%;
+        background: var(--foreground);
+        box-shadow: 0 0 calc(var(--dk-s) * 0.15) var(--chart-1);
+    }
+
+    @keyframes dk-sp-ripple {
+        0% {
+            scale: 0.15;
+            opacity: 0;
+            border-color: var(--chart-1);
+            animation-timing-function: linear;
+        }
+
+        8% {
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        50% {
+            border-color: var(--chart-2);
+            opacity: 0.85;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            scale: 1;
+            opacity: 0;
+            border-color: var(--chart-3);
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dk-scene[data-dk-spinner='ripple'] .kp-spinner > i:nth-child(-n + 3) {
+            animation: dk-sp-ripple var(--dk-lap) linear calc(var(--n, 0) * 800ms - var(--dk-lap)) infinite;
+        }
+    }
+
+    /* Reduced motion: the three rings stand at three sizes. */
+    @media (prefers-reduced-motion: reduce) {
+        .dk-scene[data-dk-spinner='ripple'] .kp-spinner > i:nth-child(-n + 3) {
+            scale: calc(0.4 + var(--n, 0) * 0.3);
+            opacity: calc(1 - var(--n, 0) * 0.3);
+        }
+    }
+
+    /* 8 The brackets breathe: the theme's `[ ]` open and close round a short
+   film line that turns colour in the middle, 2.4 s a breath. */
+    .dk-scene[data-dk-spinner='brackets'] .kp-spinner > i:nth-child(-n + 3) {
+        display: block;
+    }
+
+    .dk-scene[data-dk-spinner='brackets'] .kp-spinner > i:nth-child(-n + 2) {
+        inset-block: 14%;
+        inline-size: 20%;
+        border: max(1.5px, calc(var(--dk-s) * 0.06)) solid var(--foreground);
+    }
+
+    .dk-scene[data-dk-spinner='brackets'] .kp-spinner > i:nth-child(1) {
+        inset-inline-start: 12%;
+        border-inline-end: 0;
+    }
+
+    .dk-scene[data-dk-spinner='brackets'] .kp-spinner > i:nth-child(2) {
+        inset-inline-end: 12%;
+        border-inline-start: 0;
+    }
+
+    .dk-scene[data-dk-spinner='brackets'] .kp-spinner > i:nth-child(3) {
+        inset-inline: 34%;
+        inset-block: calc(50% - max(1px, var(--dk-s) * 0.04));
+        background: var(--dk-spectrum) 0 0 / 400% 100% repeat-x;
+        box-shadow: 0 0 calc(var(--dk-s) * 0.12) hsl(from var(--chart-1) h s l / 0.5);
+    }
+
+    @keyframes dk-sp-br-l {
+        0%,
+        100% {
+            translate: 0 0;
+            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+        }
+
+        50% {
+            translate: calc(var(--dk-s) * -0.1) 0;
+            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+        }
+    }
+
+    @keyframes dk-sp-br-r {
+        0%,
+        100% {
+            translate: 0 0;
+            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+        }
+
+        50% {
+            translate: calc(var(--dk-s) * 0.1) 0;
+            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+        }
+    }
+
+    @keyframes dk-sp-br-line {
+        0% {
+            scale: 0.35 1;
+            background-position: 0% 0;
+            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+        }
+
+        50% {
+            scale: 1.6 1;
+            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+        }
+
+        100% {
+            scale: 0.35 1;
+            background-position: 100% 0;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dk-scene[data-dk-spinner='brackets'] .kp-spinner > i:nth-child(1) {
+            animation: dk-sp-br-l var(--dk-lap) linear infinite;
+        }
+
+        .dk-scene[data-dk-spinner='brackets'] .kp-spinner > i:nth-child(2) {
+            animation: dk-sp-br-r var(--dk-lap) linear infinite;
+        }
+
+        .dk-scene[data-dk-spinner='brackets'] .kp-spinner > i:nth-child(3) {
+            animation: dk-sp-br-line var(--dk-lap) linear infinite;
+        }
+    }
+
+    /* 9 The hue dial: a disc of the film, cut on its eight sides, turns while
+   a fixed hairline needle at the top reads the colour under it; the hub is
+   open. */
+    .dk-scene[data-dk-spinner='dial'] .kp-spinner > i:nth-child(-n + 2) {
+        display: block;
+    }
+
+    .dk-scene[data-dk-spinner='dial'] .kp-spinner > i:nth-child(1) {
+        inset: 8%;
+        background: conic-gradient(from var(--dk-run), var(--chart-1), var(--chart-2), var(--chart-3), var(--chart-4), var(--chart-1));
+        clip-path: polygon(30% 0, 70% 0, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0 70%, 0 30%);
+        -webkit-mask: radial-gradient(closest-side, transparent 50%, var(--foreground) calc(50% + 0.5px));
+        mask: radial-gradient(closest-side, transparent 50%, var(--foreground) calc(50% + 0.5px));
+    }
+
+    /* the needle */
+    .dk-scene[data-dk-spinner='dial'] .kp-spinner > i:nth-child(2) {
+        inset-block: 0 52%;
+        inset-inline-start: calc(50% - max(0.5px, var(--dk-s) * 0.02));
+        inline-size: max(1px, calc(var(--dk-s) * 0.04));
+        background: var(--foreground);
+        box-shadow:
+            0 0 0 max(0.5px, calc(var(--dk-s) * 0.015)) var(--dk-ground),
+            0 0 calc(var(--dk-s) * 0.12) hsl(from var(--foreground) h s l / 0.6);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dk-scene[data-dk-spinner='dial'] .kp-spinner > i:nth-child(1) {
+            animation: dk-sp-run var(--dk-lap) linear infinite;
+        }
+    }
+
+    /* 10 The Lissajous trail: a point of light traces a 3:2 knot in a cut box
+   and leaves a trail of film behind it that fades, as an oscilloscope's beam
+   would: the head and seven points behind it, 45 ms apart. */
+    .dk-scene[data-dk-spinner='lissajous'] .kp-spinner::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        --dk-sk: calc(var(--dk-s) * 0.18);
+        --dk-sw: 1px;
+        background: hsl(from var(--border-strong) h s l / 0.9);
+        -webkit-mask: var(--dk-ringmask);
+        mask: var(--dk-ringmask);
+        clip-path: var(--dk-oct);
+    }
+
+    .dk-scene[data-dk-spinner='lissajous'] .kp-spinner > i {
+        --dk-dot-s: max(2px, calc(var(--dk-s) * 0.11 * (1 - var(--n) * 0.08)));
+        display: block;
+        inset-block-start: calc(50% + 34% * sin(2 * var(--dk-run)));
+        inset-inline-start: calc(50% + 34% * sin(3 * var(--dk-run)));
+        inline-size: var(--dk-dot-s);
+        block-size: var(--dk-dot-s);
+        translate: -50% -50%;
+        border-radius: 50%;
+        background: var(--dk-dot);
+        opacity: calc(1 - var(--n) * 0.12);
+    }
+
+    .dk-scene[data-dk-spinner='lissajous'] .kp-spinner > i:nth-child(1) {
+        --n: 0;
+        --dk-dot: var(--foreground);
+        box-shadow: 0 0 calc(var(--dk-s) * 0.14) var(--chart-1);
+    }
+
+    .dk-scene[data-dk-spinner='lissajous'] .kp-spinner > i:nth-child(2) {
+        --n: 1;
+        --dk-dot: var(--chart-1);
+    }
+
+    .dk-scene[data-dk-spinner='lissajous'] .kp-spinner > i:nth-child(3) {
+        --n: 2;
+        --dk-dot: var(--chart-1);
+    }
+
+    .dk-scene[data-dk-spinner='lissajous'] .kp-spinner > i:nth-child(4) {
+        --n: 3;
+        --dk-dot: var(--chart-2);
+    }
+
+    .dk-scene[data-dk-spinner='lissajous'] .kp-spinner > i:nth-child(5) {
+        --n: 4;
+        --dk-dot: var(--chart-2);
+    }
+
+    .dk-scene[data-dk-spinner='lissajous'] .kp-spinner > i:nth-child(6) {
+        --n: 5;
+        --dk-dot: var(--chart-3);
+    }
+
+    .dk-scene[data-dk-spinner='lissajous'] .kp-spinner > i:nth-child(7) {
+        --n: 6;
+        --dk-dot: var(--chart-3);
+    }
+
+    .dk-scene[data-dk-spinner='lissajous'] .kp-spinner > i:nth-child(8) {
+        --n: 7;
+        --dk-dot: var(--chart-4);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dk-scene[data-dk-spinner='lissajous'] .kp-spinner > i {
+            animation: dk-sp-run var(--dk-lap) linear calc(var(--n) * 45ms - var(--dk-lap)) infinite;
+        }
+    }
+
+    /* Reduced motion: the trail stands spread along the knot. */
+    @media (prefers-reduced-motion: reduce) {
+        .dk-scene[data-dk-spinner='lissajous'] .kp-spinner > i {
+            --dk-run: calc(40deg - var(--n) * 12deg);
         }
     }
 

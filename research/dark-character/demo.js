@@ -45,8 +45,8 @@ const shareBar = (value = 0.62, size = '') =>
         value * 100,
     )}" aria-valuemin="0" aria-valuemax="100" style="--kp-value: ${value}">${barInner}</div>`;
 
-/** What a waiting part wears: the slot the line sweeps and the film it lays behind it (the picks' ticker and the register's ghosts draw their own). */
-const WAIT = '<span class="dk-wait" aria-hidden="true"><span class="dk-wait__line"></span><span class="dk-wait__ticker"></span></span>';
+/** What a waiting part wears: a surface over it with three layers (a, b, c) and its own two pseudo-elements, which each loading option draws its sweep with (a line, the film it lays, a band, a flare). */
+const WAIT = '<span class="dk-wait" aria-hidden="true"><i class="dk-wait__a"></i><i class="dk-wait__b"></i><i class="dk-wait__c"></i></span>';
 
 /** The change on a key figure: the tone's plate and ink. */
 const note = (/** @type {string} */ text, dir = 'up', tone = 'good') =>
@@ -125,7 +125,7 @@ const PART = {
     column: (label = 'Open', value = '38') =>
         `<div class="kp-kpi dk-kpi dk-column"><span class="kp-kpi__label">${label}</span><span class="kp-kpi__value"><span class="dk-ink">${value}</span></span></div>`,
     skeleton: () =>
-        `<div class="dk-skel dk-waits" aria-hidden="true"><span class="kp-skeleton"></span><span class="kp-skeleton"></span><span class="kp-skeleton"></span>${WAIT}</div>`,
+        `<div class="dk-skel" aria-hidden="true">${[0, 1, 2].map(() => `<span class="kp-skeleton dk-waits">${WAIT}</span>`).join('')}</div>`,
     field: () =>
         `<label class="kp-field dk-field"><span class="kp-field__label">Pump house</span><input class="kp-field__input" value="North 4" /></label>`,
     menuStatic: (items = ['Open incident', 'Assign to…'], cls = '', pointed = true) =>
@@ -152,7 +152,7 @@ const DIRECTION = () =>
 
 const OPENING = () =>
     cell('A menu opens from its button', PART.menu()) +
-    cell('A dialog opens', lay(PART.dialog())) +
+    cell('A dialog opens', lay(PART.dialog(), 'dk-lay--dlg')) +
     cell('A toast appears', lay(PART.toast(), 'dk-lay--toast')) +
     cell('A tooltip appears', lay(PART.tooltip(), 'dk-lay--tip'));
 
@@ -178,6 +178,10 @@ const COLOUR = () =>
 const CORNERS = () =>
     cell('Panel', PART.tile('Reservoir North', 'Level 71 %').replace('kp-card dk-tile', 'kp-card dk-tile dk-corner-panel')) +
     cell('Menu', PART.menuStatic(['Open incident', 'Assign to…'], '', false)) +
+    cell(
+        'Dialog',
+        `<div class="kp-dialog dk-dialog" role="group" aria-label="A dialog"><p class="kp-dialog__title">Close INC-4471?</p><p class="kp-dialog__description">The vendor is told at once.</p></div>`,
+    ) +
     cell('Key figure', `<div class="kp-kpis">${PART.kpi('Flow now', '412')}</div>`) +
     cell(
         'Button, tag and chip',
@@ -276,8 +280,9 @@ const BUSYBAR = () =>
     ) +
     cell('Beside it, the same in every option: the bar with a share (62 %)', shareBar(0.62));
 
+/** The spinner: the package's span, with eight empty parts inside it that the options draw with (bars, rings, dots, a needle); the register's own options leave them out. */
 const spin = (size = '') =>
-    `<span class="kp-spinner dk-spin" role="status" aria-label="Working…"${size ? ` style="--kp-spinner-size: ${size}"` : ''}></span>`;
+    `<span class="kp-spinner dk-spin" role="status" aria-label="Working…"${size ? ` style="--kp-spinner-size: ${size}"` : ''}>${'<i aria-hidden="true"></i>'.repeat(8)}</span>`;
 
 const SPINNER = () =>
     cell('Three sizes', `<div class="dk-row dk-spins">${spin('1.25rem')}${spin('2rem')}${spin('3.5rem')}</div>`, 'dk-part--wide') +

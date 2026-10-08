@@ -88,7 +88,6 @@ export const PAGES = [
             {
                 href: 'research/dark-character/demo.html',
                 label: 'What makes dark dark',
-                rework: 'update 1: opening, corners, loading and spinner redrawn, as Kenny asked',
             },
             {
                 href: 'research/retro-character/demo.html',
