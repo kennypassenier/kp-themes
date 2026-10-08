@@ -1,0 +1,9 @@
+{
+    "decided": "2026-10-08 Brussels, Kenny: 1 of 1 approved in the review dialog, update 1 (research/phantom-anchor/README.md): Phantom's anchor element = Thrown as a screen, resolves at the slap (the jolt was recommended)",
+    "attributes": "the ANCHORS keys in research/phantom-anchor/anchors.js; the scenes in research/phantom-anchor/options.css",
+    "picks": {
+        "phantom": {
+            "anchor": "resolve"
+        }
+    }
+}

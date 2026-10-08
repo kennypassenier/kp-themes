@@ -1,6 +1,6 @@
 # What is dark's anchor element
 
-**Open (2026-10-08).**
+**Decided (Kenny, 08/10/2026): The line lays the film down, turning** ("dark-anchor · dark: The anchor element = The line lays the film down, turning (recommended)", update 1). Recorded in decided.json; the character round builds on it.
 
 **Update 1 (2026-10-08).** Kenny: "I love the colours of everything, especially the progress bar on option 1, but I also like the sleek
 animations of spectral line, can we combine these somehow?" The new candidates are five ways of making the film's turn (round one's option 1)

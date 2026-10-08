@@ -1,5 +1,7 @@
 # What is retro's anchor element
 
+**Decided (Kenny, 08/10/2026): Copying…: the sheet flies between the folders** ("retro-anchor · retro: The anchor element = Copying…: the sheet flies between the folders (recommended)", attempt 1 of 3; "I like the windows environment with the task bar and desktop that you created around it"). Recorded in decided.json; the character round builds on it, the 1995 desktop included.
+
 **Update 1 (2026-10-08).** Kenny: "None of these, I want 3 more attempts at this, redesign it completely from the ground up, based on an
 old windows UI. It needs to feel really retro and oldschool. This theme has the potential to be one of the most distinct ones we have, so it
 needs to feel professionally done. Let me see why they call you world class" — the new candidates are eight moments of the 1995 desktop

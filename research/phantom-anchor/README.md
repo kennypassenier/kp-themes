@@ -1,8 +1,9 @@
 # What is phantom's anchor element
 
 **Update 1 (2026-10-08).** Kenny: "I like both the card is thrown and half tone shift, make another attempt with those combined" — the new candidates
-are five ways of making the thrown card and the shifting halftone one gesture (round one's seven candidates are replaced); his verdict is pending in the
-review dialog (round `2026-10-08-r2`). Status: Open.
+are five ways of making the thrown card and the shifting halftone one gesture (round one's seven candidates are replaced); judged in the review dialog (round `2026-10-08-r2`).
+
+**Decided (Kenny, 08/10/2026): Thrown as a screen, resolves at the slap** ("phantom-anchor · phantom: The anchor element = Thrown as a screen, resolves at the slap"; the jolt was recommended and not chosen). Recorded in decided.json; the character round builds on it.
 
 **Why.** Kenny, 2026-10-07 18:13: every theme gets one recognisable anchor element, the thing every later decision of the theme departs
 from (forest: the tree progress bar, grotesk: the red plate that falls into register, synthwave: the page horizon, blueprint: the tracing

@@ -1,0 +1,27 @@
+{
+    "decided": "2026-10-08 Brussels, Kenny: 19 of 19 approved in the review dialog (research/light-character/README.md): every recommendation except How long things take = Unhurried: 200 · 700 (+120) · 3600 ms and The busy progress bar = The bead orbits the line",
+    "attributes": "data-lt-<question>=\"<key>\" on the .lt-scene, research/light-character/options.css",
+    "picks": {
+        "light": {
+            "curve": "settle",
+            "direction": "place",
+            "opening": "focus",
+            "durations": "unhurried",
+            "colour": "indigo",
+            "corners": "two",
+            "surface": "white",
+            "warning": "band",
+            "live": "reexposed",
+            "loading": "unfocused",
+            "busybar": "orbit",
+            "spinner": "burn",
+            "leave": "place",
+            "composites": "own",
+            "hover": "settle",
+            "focus": "di2",
+            "press": "flash",
+            "type": "one",
+            "motifs": "seam"
+        }
+    }
+}
