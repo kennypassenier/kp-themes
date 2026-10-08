@@ -1,8 +1,11 @@
-/* research/dark-anchor: every candidate of the one question, in the
-   theme's signature layer. Colours come from the theme's tokens only; every
-   motion sits under prefers-reduced-motion: no-preference, and the reduced
-   pose is the finished picture (the film settled, the brackets closed, the
-   panel developed). Durations are counted in units of the theme's beat
+/* research/dark-anchor, update 1 (2026-10-08): the five candidates that make
+   the film's turn and the spectral line one thing, in the theme's signature
+   layer. Round one's engine, panel, progress bar and bracketed button are kept;
+   the line is a 2px slice of the film with the one glow the theme allows
+   (10px of chart-1 at 40 %), sweeps are linear, turns settle on `--kp-settle`.
+   Colours come from the theme's tokens only; every motion sits under
+   prefers-reduced-motion: no-preference, and the reduced pose is the finished
+   picture (the film settled, the brackets closed, the panel lit). Durations are counted in units of the theme's beat
    (--an-unit, 110 ms, set by demo.js) and multiplied by --an-slow (1, 2 or
    4: the page's speed buttons).
 
@@ -315,11 +318,43 @@
             radial-gradient(ellipse 36% 22% at 50% 30%, hsl(from var(--chart-4) h s l / calc(0.18 * var(--dk-halo, 1))), transparent);
     }
 
-    .an-scene :is(.dk-k-stage, .dk-c-stage, .dk-l-stage, .dk-p-stage) {
+    /* The stage of each scene is the panel's size, and under the panel a dark
+   slab stands: the chamfered edge in `--border-strong` on the card ground, the
+   undrawn pose of the film, which the line (or lines) lays down. */
+    .an-scene :is(.dk-a-stage, .dk-b-stage, .dk-c-stage, .dk-d-stage, .dk-e-stage) {
         position: relative;
         display: grid;
         place-items: center;
         inline-size: min(88%, 24rem);
+        isolation: isolate;
+    }
+
+    .an-scene :is(.dk-a-stage, .dk-b-stage, .dk-c-stage, .dk-d-stage, .dk-e-stage)::before,
+    .an-scene :is(.dk-a-stage, .dk-b-stage, .dk-c-stage, .dk-d-stage, .dk-e-stage)::after {
+        content: '';
+        position: absolute;
+        pointer-events: none;
+    }
+
+    .an-scene :is(.dk-a-stage, .dk-b-stage, .dk-c-stage, .dk-d-stage, .dk-e-stage)::before {
+        inset: 0;
+        z-index: -2;
+        background: var(--border-strong);
+        clip-path: polygon(0 0, calc(100% - 1rem) 0, 100% 1rem, 100% 100%, 1rem 100%, 0 calc(100% - 1rem));
+    }
+
+    .an-scene :is(.dk-a-stage, .dk-b-stage, .dk-c-stage, .dk-d-stage, .dk-e-stage)::after {
+        inset: 2px;
+        z-index: -1;
+        background: var(--card);
+        clip-path: polygon(
+            0 0,
+            calc(100% - 1rem + 1.2px) 0,
+            100% calc(1rem - 1.2px),
+            100% 100%,
+            calc(1rem - 1.2px) 100%,
+            0 calc(100% - 1rem + 1.2px)
+        );
     }
 
     /* An instrument panel: ground and grid inside, the film for its edge, two
@@ -534,20 +569,20 @@
    units (the brackets slide in and close on the label, the label draws in),
    pressed at 7 units (the brackets close another 0.15rem, the label to 0.9).
    At rest and under reduced motion it stands pressed. */
-    .an-scene :is(.dk-f-press, .dk-k-press)::before,
-    .an-scene :is(.dk-f-press, .dk-k-press)::after {
+    .an-scene :is(.dk-a-press, .dk-b-press, .dk-c-press, .dk-d-press, .dk-e-press)::before,
+    .an-scene :is(.dk-a-press, .dk-b-press, .dk-c-press, .dk-d-press, .dk-e-press)::after {
         opacity: 1;
     }
 
-    .an-scene :is(.dk-f-press, .dk-k-press)::before {
+    .an-scene :is(.dk-a-press, .dk-b-press, .dk-c-press, .dk-d-press, .dk-e-press)::before {
         translate: 0.15rem 0;
     }
 
-    .an-scene :is(.dk-f-press, .dk-k-press)::after {
+    .an-scene :is(.dk-a-press, .dk-b-press, .dk-c-press, .dk-d-press, .dk-e-press)::after {
         translate: -0.15rem 0;
     }
 
-    .an-scene :is(.dk-f-press, .dk-k-press) .kp-button__label {
+    .an-scene :is(.dk-a-press, .dk-b-press, .dk-c-press, .dk-d-press, .dk-e-press) .kp-button__label {
         scale: 0.9;
     }
 
@@ -671,64 +706,79 @@
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        .an-scene[data-an-phase='gap'] .dk-f-press::before,
-        .an-scene[data-an-phase='gap'] .dk-k-press::before {
+        .an-scene[data-an-phase='gap'] :is(.dk-a-press, .dk-b-press, .dk-c-press, .dk-d-press, .dk-e-press)::before {
             opacity: 0;
             translate: -0.5rem 0;
         }
-        .an-scene[data-an-phase='in'] .dk-f-press::before,
-        .an-scene[data-an-phase='in'] .dk-k-press::before,
-        .an-scene[data-an-phase='hold'] .dk-f-press::before,
-        .an-scene[data-an-phase='hold'] .dk-k-press::before {
-            animation: dk-br-l calc(8 * var(--an-u)) linear calc(0 * var(--an-u)) both;
-        }
-        .an-scene[data-an-phase='out'] .dk-f-press::before,
-        .an-scene[data-an-phase='out'] .dk-k-press::before {
-            animation: dk-br-l-out calc(8 * var(--an-u)) linear calc(0 * var(--an-u)) both;
-        }
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        .an-scene[data-an-phase='gap'] .dk-f-press::after,
-        .an-scene[data-an-phase='gap'] .dk-k-press::after {
+        .an-scene[data-an-phase='gap'] :is(.dk-a-press, .dk-b-press, .dk-c-press, .dk-d-press, .dk-e-press)::after {
             opacity: 0;
             translate: 0.5rem 0;
         }
-        .an-scene[data-an-phase='in'] .dk-f-press::after,
-        .an-scene[data-an-phase='in'] .dk-k-press::after,
-        .an-scene[data-an-phase='hold'] .dk-f-press::after,
-        .an-scene[data-an-phase='hold'] .dk-k-press::after {
-            animation: dk-br-r calc(8 * var(--an-u)) linear calc(0 * var(--an-u)) both;
-        }
-        .an-scene[data-an-phase='out'] .dk-f-press::after,
-        .an-scene[data-an-phase='out'] .dk-k-press::after {
-            animation: dk-br-r-out calc(8 * var(--an-u)) linear calc(0 * var(--an-u)) both;
-        }
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        .an-scene[data-an-phase='gap'] .dk-f-press .kp-button__label,
-        .an-scene[data-an-phase='gap'] .dk-k-press .kp-button__label {
+        .an-scene[data-an-phase='gap'] :is(.dk-a-press, .dk-b-press, .dk-c-press, .dk-d-press, .dk-e-press) .kp-button__label {
             scale: 1;
         }
-        .an-scene[data-an-phase='in'] .dk-f-press .kp-button__label,
-        .an-scene[data-an-phase='in'] .dk-k-press .kp-button__label,
-        .an-scene[data-an-phase='hold'] .dk-f-press .kp-button__label,
-        .an-scene[data-an-phase='hold'] .dk-k-press .kp-button__label {
-            animation: dk-br-label calc(8 * var(--an-u)) linear calc(0 * var(--an-u)) both;
+
+        .an-scene[data-an-phase='in'] :is(.dk-a-press, .dk-b-press, .dk-c-press, .dk-d-press, .dk-e-press)::before,
+        .an-scene[data-an-phase='hold'] :is(.dk-a-press, .dk-b-press, .dk-c-press, .dk-d-press, .dk-e-press)::before {
+            animation: dk-br-l calc(8 * var(--an-u)) linear 0s both;
         }
-        .an-scene[data-an-phase='out'] .dk-f-press .kp-button__label,
-        .an-scene[data-an-phase='out'] .dk-k-press .kp-button__label {
-            animation: dk-br-label-out calc(8 * var(--an-u)) linear calc(0 * var(--an-u)) both;
+        .an-scene[data-an-phase='in'] :is(.dk-a-press, .dk-b-press, .dk-c-press, .dk-d-press, .dk-e-press)::after,
+        .an-scene[data-an-phase='hold'] :is(.dk-a-press, .dk-b-press, .dk-c-press, .dk-d-press, .dk-e-press)::after {
+            animation: dk-br-r calc(8 * var(--an-u)) linear 0s both;
+        }
+        .an-scene[data-an-phase='in'] :is(.dk-a-press, .dk-b-press, .dk-c-press, .dk-d-press, .dk-e-press) .kp-button__label,
+        .an-scene[data-an-phase='hold'] :is(.dk-a-press, .dk-b-press, .dk-c-press, .dk-d-press, .dk-e-press) .kp-button__label {
+            animation: dk-br-label calc(8 * var(--an-u)) linear 0s both;
+        }
+
+        .an-scene[data-an-phase='out'] :is(.dk-a-press, .dk-b-press, .dk-c-press, .dk-d-press, .dk-e-press)::before {
+            animation: dk-br-l-out calc(8 * var(--an-u)) linear 0s both;
+        }
+        .an-scene[data-an-phase='out'] :is(.dk-a-press, .dk-b-press, .dk-c-press, .dk-d-press, .dk-e-press)::after {
+            animation: dk-br-r-out calc(8 * var(--an-u)) linear 0s both;
+        }
+        .an-scene[data-an-phase='out'] :is(.dk-a-press, .dk-b-press, .dk-c-press, .dk-d-press, .dk-e-press) .kp-button__label {
+            animation: dk-br-label-out calc(8 * var(--an-u)) linear 0s both;
         }
     }
 
-    /* ── 1 · The film turns ──────────────────────────────────────────── */
+    /* ── What the five share: the line, the film's turn, round one's bar ── */
 
-    /* The panel arrives (opacity in the first 2 units) and the film is turned once
-   round its edge on the register's settle (7 units), cyan to cyan; the figure
-   takes the film through its letters in the last unit. Held, then turned back. */
-    .an-scene .dk-f-panel .dk-panel__figure {
+    /* The two registered values the scans and the meeting draw with: the head of a
+   scan round an edge, and how far two lines have come in from their ends. Both
+   inherit, so the pseudo-elements of the element that animates them read them. */
+    @property --dk-scan {
+        syntax: '<angle>';
+        inherits: true;
+        initial-value: 380deg;
+    }
+
+    @property --dk-p {
+        syntax: '<percentage>';
+        inherits: true;
+        initial-value: 50%;
+    }
+
+    /* The spectral line is a 2px slice of the film with the one glow the theme
+   allows: 10px of chart-1 at 40 %. */
+    .an-scene {
+        --dk-glow: drop-shadow(0 0 10px hsl(from var(--chart-1) h s l / 0.4));
+        --an-vstrip: linear-gradient(
+            180deg,
+            var(--chart-1),
+            var(--chart-2),
+            var(--chart-3),
+            var(--chart-4),
+            var(--chart-1),
+            var(--chart-2),
+            var(--chart-3),
+            var(--chart-4),
+            var(--chart-1)
+        );
+    }
+
+    /* The figure takes the film through its letters (round one's). */
+    .an-scene :is(.dk-a-panel, .dk-b-panel, .dk-c-panel, .dk-d-panel, .dk-e-panel) .dk-panel__figure {
         --dk-ink: 0;
         background:
             linear-gradient(hsl(from var(--foreground) h s l / var(--dk-ink)), hsl(from var(--foreground) h s l / var(--dk-ink))), var(--an-film);
@@ -737,62 +787,98 @@
         color: transparent;
     }
 
-    @keyframes dk-f-turn {
-        0% {
-            --an-angle: 0deg;
-            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        100% {
-            --an-angle: 360deg;
-        }
-    }
-    @keyframes dk-f-turn-out {
-        0% {
-            --an-angle: 360deg;
-            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
-        }
-        100% {
-            --an-angle: 0deg;
-        }
-    }
-
     @media (prefers-reduced-motion: no-preference) {
-        .an-scene[data-an-phase='gap'] .dk-f-panel {
-            opacity: 0;
-        }
-        .an-scene[data-an-phase='in'] .dk-f-panel,
-        .an-scene[data-an-phase='hold'] .dk-f-panel {
-            animation:
-                dk-fade calc(2 * var(--an-u)) linear calc(0 * var(--an-u)) both,
-                dk-f-turn calc(7 * var(--an-u)) cubic-bezier(0.22, 1, 0.36, 1) calc(0 * var(--an-u)) both;
-        }
-        .an-scene[data-an-phase='out'] .dk-f-panel {
-            animation:
-                dk-fade-out calc(2 * var(--an-u)) linear calc(6 * var(--an-u)) both,
-                dk-f-turn-out calc(7 * var(--an-u)) cubic-bezier(0.64, 0, 0.78, 0) calc(1 * var(--an-u)) both;
-        }
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        .an-scene[data-an-phase='gap'] .dk-f-panel .dk-panel__figure {
+        .an-scene[data-an-phase='gap'] :is(.dk-a-panel, .dk-b-panel, .dk-c-panel, .dk-d-panel, .dk-e-panel) .dk-panel__figure {
             --dk-ink: 1;
         }
-        .an-scene[data-an-phase='in'] .dk-f-panel .dk-panel__figure,
-        .an-scene[data-an-phase='hold'] .dk-f-panel .dk-panel__figure {
+
+        /* The figure takes the film in the last unit of the turn (A, B at 6 units)
+       or after it (C, D, E at 7). */
+        .an-scene[data-an-phase='in'] :is(.dk-a-panel, .dk-b-panel) .dk-panel__figure,
+        .an-scene[data-an-phase='hold'] :is(.dk-a-panel, .dk-b-panel) .dk-panel__figure {
+            animation: dk-ink calc(1 * var(--an-u)) linear calc(6 * var(--an-u)) both;
+        }
+        .an-scene[data-an-phase='out'] :is(.dk-a-panel, .dk-b-panel) .dk-panel__figure {
+            animation: dk-ink-out calc(1 * var(--an-u)) linear calc(1 * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='in'] :is(.dk-c-panel, .dk-d-panel, .dk-e-panel) .dk-panel__figure,
+        .an-scene[data-an-phase='hold'] :is(.dk-c-panel, .dk-d-panel, .dk-e-panel) .dk-panel__figure {
             animation: dk-ink calc(1 * var(--an-u)) linear calc(7 * var(--an-u)) both;
         }
-        .an-scene[data-an-phase='out'] .dk-f-panel .dk-panel__figure {
+        .an-scene[data-an-phase='out'] :is(.dk-c-panel, .dk-d-panel, .dk-e-panel) .dk-panel__figure {
             animation: dk-ink-out calc(1 * var(--an-u)) linear calc(0 * var(--an-u)) both;
         }
     }
 
-    /* The bar: the fill is the film, slid along itself by one full period as it
-   fills (7 units), so its colour turns while it grows. */
-    .an-scene .dk-f-bar .dk-bar__fill {
+    /* The line that sweeps a panel (A over 6 units, E over 4): a 2px slice of
+   the film standing at the right edge of a box as wide as the stage, so a
+   translate of -100 % to 0 % crosses the whole panel. It goes in at the start
+   and out at the end of the sweep. */
+    .an-scene :is(.dk-a-line, .dk-e-line) {
+        position: absolute;
+        inset-block: -5px;
+        inset-inline: 0;
+        z-index: 3;
+        pointer-events: none;
+        opacity: 0;
+        background: var(--an-vspectrum) 100% 0 / 2px 100% no-repeat;
+        filter: var(--dk-glow);
+    }
+
+    @keyframes dk-sweep {
+        0% {
+            translate: -100% 0;
+            opacity: 0;
+        }
+        3% {
+            translate: -97% 0;
+            opacity: 1;
+        }
+        92% {
+            translate: -8% 0;
+            opacity: 1;
+        }
+        100% {
+            translate: 0% 0;
+            opacity: 0;
+        }
+    }
+    @keyframes dk-sweep-out {
+        0% {
+            translate: 0% 0;
+            opacity: 0;
+        }
+        8% {
+            translate: -8% 0;
+            opacity: 1;
+        }
+        97% {
+            translate: -97% 0;
+            opacity: 1;
+        }
+        100% {
+            translate: -100% 0;
+            opacity: 0;
+        }
+    }
+
+    /* The film's colour, slid along itself by one full period (round one's
+   fill): its strip is twice the fill wide, so a slide of 100 % comes round to
+   where it began. */
+    .an-scene :is(.dk-a-bar, .dk-b-bar, .dk-c-bar, .dk-d-bar, .dk-e-bar) .dk-bar__fill {
         background: var(--an-spectrum) 0 0 / 200% 100% repeat-x;
     }
 
-    @keyframes dk-f-fill {
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] :is(.dk-a-bar, .dk-b-bar, .dk-c-bar, .dk-d-bar, .dk-e-bar) .dk-bar__fill {
+            clip-path: inset(-1em 100% -1em 0);
+            background-position: 0% 0;
+        }
+    }
+
+    /* Round one's fill, exactly: the clip and the colour's slide on the settle. */
+    @keyframes dk-fill {
         0% {
             clip-path: inset(-1em 100% -1em 0);
             background-position: 0% 0;
@@ -803,7 +889,7 @@
             background-position: 100% 0;
         }
     }
-    @keyframes dk-f-fill-out {
+    @keyframes dk-fill-out {
         0% {
             clip-path: inset(-1em var(--an-c1) -1em 0);
             background-position: 100% 0;
@@ -815,23 +901,201 @@
         }
     }
 
-    @media (prefers-reduced-motion: no-preference) {
-        .an-scene[data-an-phase='gap'] .dk-f-bar .dk-bar__fill {
-            clip-path: inset(-1em 100% -1em 0);
+    /* The colour's slide alone, for the bars whose clip runs linear with a line. */
+    @keyframes dk-slide {
+        0% {
             background-position: 0% 0;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
         }
-        .an-scene[data-an-phase='in'] .dk-f-bar .dk-bar__fill,
-        .an-scene[data-an-phase='hold'] .dk-f-bar .dk-bar__fill {
-            animation: dk-f-fill calc(7 * var(--an-u)) cubic-bezier(0.22, 1, 0.36, 1) calc(0 * var(--an-u)) both;
+        100% {
+            background-position: 100% 0;
         }
-        .an-scene[data-an-phase='out'] .dk-f-bar .dk-bar__fill {
-            animation: dk-f-fill-out calc(7 * var(--an-u)) cubic-bezier(0.64, 0, 0.78, 0) calc(1 * var(--an-u)) both;
+    }
+    @keyframes dk-slide-out {
+        0% {
+            background-position: 100% 0;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+        100% {
+            background-position: 0% 0;
         }
     }
 
-    /* The button: pointed at, the edge is drawn from the left along the foot
-   (the register's 2 px film); the press turns it a quarter, cyan to violet. */
-    .an-scene .dk-f-edge {
+    /* The same slide, down a vertical strip: the colour of a slit. */
+    @keyframes dk-vslide {
+        0% {
+            background-position: 0 0%;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        100% {
+            background-position: 0 100%;
+        }
+    }
+    @keyframes dk-vslide-out {
+        0% {
+            background-position: 0 100%;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+        100% {
+            background-position: 0 0%;
+        }
+    }
+
+    /* A line that is the head of a bar: it runs from the start to the fill's end
+   with the head (the bar's own clock), and goes in as it starts. */
+    .an-scene :is(.dk-a-bar__line, .dk-c-bar__cyan, .dk-e-bar__line) {
+        --an-kf: dk-bline;
+        --an-kf-out: dk-bline-out;
+        position: absolute;
+        inset-block: -5px;
+        inset-inline-start: var(--dk-v);
+        margin-inline-start: 3px;
+        inline-size: 2px;
+        z-index: 2;
+        pointer-events: none;
+        background: var(--an-vspectrum);
+        filter: var(--dk-glow);
+    }
+
+    .an-scene .dk-c-bar__cyan {
+        background: var(--chart-1);
+    }
+
+    @keyframes dk-bline {
+        0% {
+            inset-inline-start: 0%;
+            opacity: 0;
+        }
+        4% {
+            opacity: 1;
+        }
+        100% {
+            inset-inline-start: var(--dk-v);
+            opacity: 1;
+        }
+    }
+    @keyframes dk-bline-out {
+        0% {
+            inset-inline-start: var(--dk-v);
+            opacity: 1;
+        }
+        96% {
+            opacity: 1;
+        }
+        100% {
+            inset-inline-start: 0%;
+            opacity: 0;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] :is(.dk-a-bar__line, .dk-c-bar__cyan, .dk-e-bar__line) {
+            inset-inline-start: 0%;
+            opacity: 0;
+        }
+    }
+
+    /* The bars whose line is the head run it, and the fill, linear: an
+   instrument scanning. The line and the head are the same clock. */
+    .an-scene :is(.dk-a-bar, .dk-c-bar, .dk-e-bar) {
+        --an-ease: linear;
+        --an-ease-out: linear;
+    }
+
+    .an-scene :is(.dk-c-bar, .dk-e-bar) {
+        --an-l: 5;
+    }
+
+    /* The film turns on the stage, so the panel's edge, its figure and the line
+   all read the same angle. A turns 345 degrees while the line crosses (6 units,
+   linear: the line's pace) and settles the last 15 in the seventh unit on the
+   register's settle. */
+    @keyframes dk-a-turn {
+        0% {
+            --an-angle: 0deg;
+            animation-timing-function: linear;
+        }
+        85.7143% {
+            --an-angle: 345deg;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        100% {
+            --an-angle: 360deg;
+        }
+    }
+    @keyframes dk-a-turn-out {
+        0% {
+            --an-angle: 360deg;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+        14.2857% {
+            --an-angle: 345deg;
+            animation-timing-function: linear;
+        }
+        100% {
+            --an-angle: 0deg;
+        }
+    }
+
+    /* ── 1 · The line lays the film down, turning ────────────────────── */
+
+    /* The line sweeps the panel from the start over 6 units, linear; ahead of it
+   the edge is the dark slab, behind it the panel is lit (the clip opens with the
+   line) and the film it lays is turning: the angle runs 345 degrees while the
+   line crosses, then settles (the seventh unit) with cyan at the top, and the
+   figure takes the film. The close is the line sweeping back and taking the
+   film off, the angle turning back. */
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .dk-a-panel {
+            clip-path: inset(-1em 100% -1em 0);
+        }
+        .an-scene[data-an-phase='gap'] .dk-a-line {
+            translate: -100% 0;
+            opacity: 0;
+        }
+        .an-scene[data-an-phase='in'] .dk-a-stage,
+        .an-scene[data-an-phase='hold'] .dk-a-stage {
+            animation: dk-a-turn calc(7 * var(--an-u)) linear 0s both;
+        }
+        .an-scene[data-an-phase='in'] .dk-a-panel,
+        .an-scene[data-an-phase='hold'] .dk-a-panel {
+            animation: an-clip calc(6 * var(--an-u)) linear 0s both;
+        }
+        .an-scene[data-an-phase='in'] .dk-a-line,
+        .an-scene[data-an-phase='hold'] .dk-a-line {
+            animation: dk-sweep calc(6 * var(--an-u)) linear 0s both;
+        }
+        .an-scene[data-an-phase='out'] .dk-a-stage {
+            animation: dk-a-turn-out calc(7 * var(--an-u)) linear calc(1 * var(--an-u)) both;
+        }
+        .an-scene[data-an-phase='out'] .dk-a-panel {
+            animation: an-clip-out calc(6 * var(--an-u)) linear calc(2 * var(--an-u)) both;
+        }
+        .an-scene[data-an-phase='out'] .dk-a-line {
+            animation: dk-sweep-out calc(6 * var(--an-u)) linear calc(2 * var(--an-u)) both;
+        }
+    }
+
+    /* The bar: round one's bar, its clip run by the line (linear, 7 units) and its
+   colour slid on the settle, the line standing at the head. */
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='in'] .dk-a-bar .dk-bar__fill,
+        .an-scene[data-an-phase='hold'] .dk-a-bar .dk-bar__fill {
+            animation:
+                an-clip calc(7 * var(--an-u)) linear 0s both,
+                dk-slide calc(7 * var(--an-u)) linear 0s both;
+        }
+        .an-scene[data-an-phase='out'] .dk-a-bar .dk-bar__fill {
+            animation:
+                an-clip-out calc(7 * var(--an-u)) linear calc(1 * var(--an-u)) both,
+                dk-slide-out calc(7 * var(--an-u)) linear calc(1 * var(--an-u)) both;
+        }
+    }
+
+    /* The button: pointed at, the edge is drawn from the left (round one's); the
+   press sends the line across the face in the last unit, and the edge turns a
+   quarter as it passes. */
+    .an-scene :is(.dk-a-edge, .dk-e-edge) {
         position: absolute;
         inset-block-end: 0;
         inset-inline: 0;
@@ -842,7 +1106,19 @@
         pointer-events: none;
     }
 
-    @keyframes dk-f-edge {
+    .an-scene .dk-a-press__line {
+        position: absolute;
+        inset-block: 0;
+        inset-inline: 0;
+        z-index: 1;
+        pointer-events: none;
+        opacity: 0;
+        background:
+            linear-gradient(90deg, transparent, hsl(from var(--chart-1) h s l / 0.35)) 0 0 / calc(100% - 2px) 100% no-repeat,
+            var(--an-vspectrum) 100% 0 / 2px 100% no-repeat;
+    }
+
+    @keyframes dk-a-edge {
         0% {
             scale: 0 1;
             background-position: 0% 0;
@@ -862,7 +1138,7 @@
             background-position: 25% 0;
         }
     }
-    @keyframes dk-f-edge-out {
+    @keyframes dk-a-edge-out {
         0% {
             scale: 1 1;
             background-position: 25% 0;
@@ -883,542 +1159,7 @@
         }
     }
 
-    @media (prefers-reduced-motion: no-preference) {
-        .an-scene[data-an-phase='gap'] .dk-f-edge {
-            scale: 0 1;
-            background-position: 0% 0;
-        }
-        .an-scene[data-an-phase='in'] .dk-f-edge,
-        .an-scene[data-an-phase='hold'] .dk-f-edge {
-            animation: dk-f-edge calc(8 * var(--an-u)) linear calc(0 * var(--an-u)) both;
-        }
-        .an-scene[data-an-phase='out'] .dk-f-edge {
-            animation: dk-f-edge-out calc(8 * var(--an-u)) linear calc(0 * var(--an-u)) both;
-        }
-    }
-
-    /* ── 2 · The brackets close on it ────────────────────────────────── */
-
-    /* The panel appears in the first 2 units; the brackets slide in from 1.5rem
-   outside its sides and close on it (5 units, settle) and, locking, take the
-   film (the last unit). */
-    .an-scene .dk-k-stage {
-        --dk-bk: clamp(4.2rem, 20cqi, 7rem);
-        box-sizing: border-box;
-        inline-size: min(100%, 27rem);
-        padding-inline: calc(var(--dk-bk) * 0.36 + 0.4rem);
-    }
-
-    /* Each bracket is a mono glyph stretched tall and drawn narrow, its box the
-   width of the glyph and centred on the room beside the panel. */
-    .an-scene .dk-k-open,
-    .an-scene .dk-k-close {
-        --an-x1: 0rem;
-        position: absolute;
-        inset-block: 0;
-        z-index: 2;
-        display: grid;
-        place-items: center;
-        inline-size: 0.6em;
-        font-family: var(--theme-font-mono);
-        font-size: var(--dk-bk);
-        line-height: 1;
-        scale: 0.45 1.55;
-        pointer-events: none;
-        --dk-ink: 0;
-        background:
-            linear-gradient(hsl(from var(--foreground) h s l / var(--dk-ink)), hsl(from var(--foreground) h s l / var(--dk-ink))), var(--an-vspectrum);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-    }
-
-    .an-scene .dk-k-open {
-        inset-inline-start: -0.06em;
-        --an-x0: -1.5rem;
-    }
-
-    .an-scene .dk-k-close {
-        inset-inline-end: -0.06em;
-        --an-x0: 1.5rem;
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        .an-scene[data-an-phase='gap'] .dk-k-panel {
-            opacity: 0;
-        }
-        .an-scene[data-an-phase='in'] .dk-k-panel,
-        .an-scene[data-an-phase='hold'] .dk-k-panel {
-            animation: dk-fade calc(2 * var(--an-u)) linear calc(0 * var(--an-u)) both;
-        }
-        .an-scene[data-an-phase='out'] .dk-k-panel {
-            animation: dk-fade-out calc(2 * var(--an-u)) linear calc(6 * var(--an-u)) both;
-        }
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        .an-scene[data-an-phase='gap'] .dk-k-open,
-        .an-scene[data-an-phase='gap'] .dk-k-close {
-            translate: var(--an-x0) 0;
-            opacity: 0;
-            --dk-ink: 1;
-        }
-        .an-scene[data-an-phase='in'] .dk-k-open,
-        .an-scene[data-an-phase='in'] .dk-k-close,
-        .an-scene[data-an-phase='hold'] .dk-k-open,
-        .an-scene[data-an-phase='hold'] .dk-k-close {
-            animation:
-                an-move calc(5 * var(--an-u)) cubic-bezier(0.22, 1, 0.36, 1) calc(0 * var(--an-u)) both,
-                dk-fade calc(2 * var(--an-u)) linear calc(0 * var(--an-u)) both,
-                dk-ink calc(1 * var(--an-u)) linear calc(7 * var(--an-u)) both;
-        }
-        .an-scene[data-an-phase='out'] .dk-k-open,
-        .an-scene[data-an-phase='out'] .dk-k-close {
-            animation:
-                an-move-out calc(5 * var(--an-u)) cubic-bezier(0.64, 0, 0.78, 0) calc(3 * var(--an-u)) both,
-                dk-fade-out calc(2 * var(--an-u)) linear calc(6 * var(--an-u)) both,
-                dk-ink-out calc(1 * var(--an-u)) linear calc(0 * var(--an-u)) both;
-        }
-    }
-
-    /* The bar: a bracket "[" stands at the start (the mirror of the head), slid in
-   from the left while the fill runs, and the "]" head runs with the fill. */
-    .an-scene .dk-k-bar__open {
-        position: absolute;
-        inset-block: 0;
-        inset-inline-start: 0;
-        inline-size: calc(6px * var(--dk-s));
-        background:
-            linear-gradient(var(--primary), var(--primary)) 0 0 / 2px 100% no-repeat,
-            linear-gradient(var(--primary), var(--primary)) 0 0 / 100% 2px no-repeat,
-            linear-gradient(var(--primary), var(--primary)) 0 100% / 100% 2px no-repeat;
-        z-index: 1;
-    }
-
-    @keyframes dk-k-slide {
-        0% {
-            opacity: 0;
-            translate: -0.9rem 0;
-            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        100% {
-            opacity: 1;
-            translate: 0 0;
-        }
-    }
-    @keyframes dk-k-slide-out {
-        0% {
-            opacity: 1;
-            translate: 0 0;
-            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
-        }
-        100% {
-            opacity: 0;
-            translate: -0.9rem 0;
-        }
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        .an-scene[data-an-phase='gap'] .dk-k-bar__open {
-            opacity: 0;
-            translate: -0.9rem 0;
-        }
-        .an-scene[data-an-phase='in'] .dk-k-bar__open,
-        .an-scene[data-an-phase='hold'] .dk-k-bar__open {
-            animation: dk-k-slide calc(4 * var(--an-u)) cubic-bezier(0.22, 1, 0.36, 1) calc(0 * var(--an-u)) both;
-        }
-        .an-scene[data-an-phase='out'] .dk-k-bar__open {
-            animation: dk-k-slide-out calc(4 * var(--an-u)) cubic-bezier(0.64, 0, 0.78, 0) calc(4 * var(--an-u)) both;
-        }
-    }
-
-    /* ── 3 · Cut open from a slit ────────────────────────────────────── */
-
-    /* A slit of film light stands where the panel will be (0 to 2 units); the panel
-   is cut open from it to both sides (2 to 8 units, settle), the lit slit fading as
-   it widens (the slit stands for 2 units first). The panel is the tooltip's cut, a clip-path from a slit to the
-   chamfered shape. */
-    .an-scene .dk-c-panel {
-        clip-path: polygon(0 0, calc(100% - 1rem) 0, 100% 1rem, 100% 100%, 1rem 100%, 0 calc(100% - 1rem));
-    }
-
-    .an-scene .dk-c-slit {
-        position: absolute;
-        inset-block: 0;
-        inset-inline: 0;
-        margin-inline: auto;
-        inline-size: 3px;
-        z-index: 3;
-        pointer-events: none;
-        opacity: 0;
-        background: var(--an-vspectrum);
-        box-shadow: 0 0 12px 1px hsl(from var(--chart-1) h s l / 0.55);
-    }
-
-    @keyframes dk-c-open {
-        0% {
-            clip-path: polygon(49% 0, 51% 0, 51% 0, 51% 100%, 49% 100%, 49% 100%);
-            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        100% {
-            clip-path: polygon(0 0, calc(100% - 1rem) 0, 100% 1rem, 100% 100%, 1rem 100%, 0 calc(100% - 1rem));
-        }
-    }
-    @keyframes dk-c-open-out {
-        0% {
-            clip-path: polygon(0 0, calc(100% - 1rem) 0, 100% 1rem, 100% 100%, 1rem 100%, 0 calc(100% - 1rem));
-            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
-        }
-        100% {
-            clip-path: polygon(49% 0, 51% 0, 51% 0, 51% 100%, 49% 100%, 49% 100%);
-        }
-    }
-
-    @keyframes dk-c-slit {
-        0% {
-            opacity: 0;
-        }
-        10% {
-            opacity: 1;
-        }
-        36% {
-            opacity: 1;
-        }
-        60% {
-            opacity: 0;
-        }
-        100% {
-            opacity: 0;
-        }
-    }
-    @keyframes dk-c-slit-out {
-        0% {
-            opacity: 0;
-        }
-        40% {
-            opacity: 0;
-        }
-        64% {
-            opacity: 1;
-        }
-        90% {
-            opacity: 1;
-        }
-        100% {
-            opacity: 0;
-        }
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        .an-scene[data-an-phase='gap'] .dk-c-panel {
-            opacity: 0;
-            clip-path: polygon(49% 0, 51% 0, 51% 0, 51% 100%, 49% 100%, 49% 100%);
-        }
-        .an-scene[data-an-phase='in'] .dk-c-panel,
-        .an-scene[data-an-phase='hold'] .dk-c-panel {
-            animation:
-                dk-fade calc(0.5 * var(--an-u)) linear calc(0.3 * var(--an-u)) both,
-                dk-c-open calc(6 * var(--an-u)) cubic-bezier(0.22, 1, 0.36, 1) calc(2 * var(--an-u)) both;
-        }
-        .an-scene[data-an-phase='out'] .dk-c-panel {
-            animation:
-                dk-fade-out calc(0.5 * var(--an-u)) linear calc(7.2 * var(--an-u)) both,
-                dk-c-open-out calc(6 * var(--an-u)) cubic-bezier(0.64, 0, 0.78, 0) calc(0 * var(--an-u)) both;
-        }
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        .an-scene[data-an-phase='in'] .dk-c-slit,
-        .an-scene[data-an-phase='hold'] .dk-c-slit {
-            animation: dk-c-slit calc(6 * var(--an-u)) linear calc(0 * var(--an-u)) both;
-        }
-        .an-scene[data-an-phase='out'] .dk-c-slit {
-            animation: dk-c-slit-out calc(6 * var(--an-u)) linear calc(2 * var(--an-u)) both;
-        }
-    }
-
-    /* The bar: the fill's leading end is a chamfer, cut as the fill grows
-   (7 units); the head follows. */
-    .an-scene .dk-c-bar .dk-bar__fill {
-        clip-path: polygon(0 0, calc(100% - var(--an-c1)) 0, calc(100% - var(--an-c1) - 12px) 100%, 0 100%);
-    }
-
-    @keyframes dk-c-fill {
-        0% {
-            clip-path: polygon(0 0, calc(100% - 100%) 0, calc(100% - 100% - 12px) 100%, 0 100%);
-            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        100% {
-            clip-path: polygon(0 0, calc(100% - var(--an-c1)) 0, calc(100% - var(--an-c1) - 12px) 100%, 0 100%);
-        }
-    }
-    @keyframes dk-c-fill-out {
-        0% {
-            clip-path: polygon(0 0, calc(100% - var(--an-c1)) 0, calc(100% - var(--an-c1) - 12px) 100%, 0 100%);
-            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
-        }
-        100% {
-            clip-path: polygon(0 0, calc(100% - 100%) 0, calc(100% - 100% - 12px) 100%, 0 100%);
-        }
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        .an-scene[data-an-phase='gap'] .dk-c-bar .dk-bar__fill {
-            clip-path: polygon(0 0, calc(100% - 100%) 0, calc(100% - 100% - 12px) 100%, 0 100%);
-        }
-        .an-scene[data-an-phase='in'] .dk-c-bar .dk-bar__fill,
-        .an-scene[data-an-phase='hold'] .dk-c-bar .dk-bar__fill {
-            animation: dk-c-fill calc(7 * var(--an-u)) cubic-bezier(0.22, 1, 0.36, 1) calc(0 * var(--an-u)) both;
-        }
-        .an-scene[data-an-phase='out'] .dk-c-bar .dk-bar__fill {
-            animation: dk-c-fill-out calc(7 * var(--an-u)) cubic-bezier(0.64, 0, 0.78, 0) calc(1 * var(--an-u)) both;
-        }
-    }
-
-    /* The button: the press cuts its two corners deeper (0.55rem to 0.95rem, the
-   last unit). */
-    .an-scene .dk-c-press {
-        --an-face: dk-c-press;
-        --an-face-out: dk-c-press-out;
-        clip-path: polygon(0 0, calc(100% - 0.95rem) 0, 100% 0.95rem, 100% 100%, 0.95rem 100%, 0 calc(100% - 0.95rem));
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        .an-scene[data-an-phase='gap'] .dk-c-press {
-            clip-path: polygon(
-                0 0,
-                calc(100% - var(--kp-chamfer)) 0,
-                100% var(--kp-chamfer),
-                100% 100%,
-                var(--kp-chamfer) 100%,
-                0 calc(100% - var(--kp-chamfer))
-            );
-        }
-    }
-
-    @keyframes dk-c-press {
-        0% {
-            background-color: var(--card);
-            clip-path: polygon(
-                0 0,
-                calc(100% - var(--kp-chamfer)) 0,
-                100% var(--kp-chamfer),
-                100% 100%,
-                var(--kp-chamfer) 100%,
-                0 calc(100% - var(--kp-chamfer))
-            );
-        }
-        87.49% {
-            background-color: var(--card);
-            clip-path: polygon(
-                0 0,
-                calc(100% - var(--kp-chamfer)) 0,
-                100% var(--kp-chamfer),
-                100% 100%,
-                var(--kp-chamfer) 100%,
-                0 calc(100% - var(--kp-chamfer))
-            );
-        }
-        87.5% {
-            background-color: var(--secondary-active);
-            clip-path: polygon(
-                0 0,
-                calc(100% - var(--kp-chamfer)) 0,
-                100% var(--kp-chamfer),
-                100% 100%,
-                var(--kp-chamfer) 100%,
-                0 calc(100% - var(--kp-chamfer))
-            );
-            animation-timing-function: cubic-bezier(0.16, 0.84, 0.28, 1);
-        }
-        100% {
-            background-color: var(--secondary-active);
-            clip-path: polygon(0 0, calc(100% - 0.95rem) 0, 100% 0.95rem, 100% 100%, 0.95rem 100%, 0 calc(100% - 0.95rem));
-        }
-    }
-    @keyframes dk-c-press-out {
-        0% {
-            background-color: var(--secondary-active);
-            clip-path: polygon(0 0, calc(100% - 0.95rem) 0, 100% 0.95rem, 100% 100%, 0.95rem 100%, 0 calc(100% - 0.95rem));
-            animation-timing-function: cubic-bezier(0.72, 0, 0.84, 0.16);
-        }
-        12.5% {
-            background-color: var(--secondary-active);
-            clip-path: polygon(
-                0 0,
-                calc(100% - var(--kp-chamfer)) 0,
-                100% var(--kp-chamfer),
-                100% 100%,
-                var(--kp-chamfer) 100%,
-                0 calc(100% - var(--kp-chamfer))
-            );
-        }
-        12.51% {
-            background-color: var(--card);
-            clip-path: polygon(
-                0 0,
-                calc(100% - var(--kp-chamfer)) 0,
-                100% var(--kp-chamfer),
-                100% 100%,
-                var(--kp-chamfer) 100%,
-                0 calc(100% - var(--kp-chamfer))
-            );
-        }
-        100% {
-            background-color: var(--card);
-            clip-path: polygon(
-                0 0,
-                calc(100% - var(--kp-chamfer)) 0,
-                100% var(--kp-chamfer),
-                100% 100%,
-                var(--kp-chamfer) 100%,
-                0 calc(100% - var(--kp-chamfer))
-            );
-        }
-    }
-
-    /* ── 4 · The spectral line sweeps it ─────────────────────────────── */
-
-    /* A dark slab stands where the panel will be; a line of film light sweeps
-   across it from the start at an even pace (7 units, linear) and the panel is
-   lit behind the line, edge and figure. */
-    .an-scene .dk-l-stage {
-        isolation: isolate;
-    }
-
-    .an-scene .dk-l-stage::before,
-    .an-scene .dk-l-stage::after {
-        content: '';
-        position: absolute;
-        pointer-events: none;
-    }
-
-    .an-scene .dk-l-stage::before {
-        inset: 0;
-        z-index: -2;
-        background: var(--border-strong);
-        clip-path: polygon(0 0, calc(100% - 1rem) 0, 100% 1rem, 100% 100%, 1rem 100%, 0 calc(100% - 1rem));
-    }
-
-    .an-scene .dk-l-stage::after {
-        inset: 2px;
-        z-index: -1;
-        background: var(--card);
-        clip-path: polygon(
-            0 0,
-            calc(100% - 1rem + 1.2px) 0,
-            100% calc(1rem - 1.2px),
-            100% 100%,
-            calc(1rem - 1.2px) 100%,
-            0 calc(100% - 1rem + 1.2px)
-        );
-    }
-
-    .an-scene .dk-l-panel {
-        --an-ease: linear;
-        --an-ease-out: linear;
-        --an-l: 7;
-    }
-
-    .an-scene .dk-l-line {
-        position: absolute;
-        inset-block: -5px;
-        inset-inline: 0;
-        z-index: 3;
-        pointer-events: none;
-        opacity: 0;
-        background: var(--an-vspectrum) 100% 0 / 3px 100% no-repeat;
-        filter: drop-shadow(0 0 7px hsl(from var(--chart-1) h s l / 0.8));
-    }
-
-    @keyframes dk-l-sweep {
-        0% {
-            translate: -100% 0;
-            opacity: 0;
-        }
-        3% {
-            translate: -97% 0;
-            opacity: 1;
-        }
-        92% {
-            translate: -8% 0;
-            opacity: 1;
-        }
-        100% {
-            translate: 0% 0;
-            opacity: 0;
-        }
-    }
-    @keyframes dk-l-sweep-out {
-        0% {
-            translate: 0% 0;
-            opacity: 0;
-        }
-        8% {
-            translate: -8% 0;
-            opacity: 1;
-        }
-        97% {
-            translate: -97% 0;
-            opacity: 1;
-        }
-        100% {
-            translate: -100% 0;
-            opacity: 0;
-        }
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        .an-scene[data-an-phase='gap'] .dk-l-line {
-            translate: -100% 0;
-            opacity: 0;
-        }
-        .an-scene[data-an-phase='in'] .dk-l-line,
-        .an-scene[data-an-phase='hold'] .dk-l-line {
-            animation: dk-l-sweep calc(7 * var(--an-u)) linear calc(0 * var(--an-u)) both;
-        }
-        .an-scene[data-an-phase='out'] .dk-l-line {
-            animation: dk-l-sweep-out calc(7 * var(--an-u)) linear calc(1 * var(--an-u)) both;
-        }
-    }
-
-    /* The bar: the line is the head, the fill what it leaves. */
-    .an-scene .dk-l-bar {
-        --an-ease: linear;
-        --an-ease-out: linear;
-    }
-
-    .an-scene .dk-l-bar .dk-bar__head {
-        display: none;
-    }
-
-    .an-scene .dk-l-bar__line {
-        --an-kf: dk-head;
-        --an-kf-out: dk-head-out;
-        position: absolute;
-        inset-block: -5px;
-        inset-inline-start: var(--dk-v);
-        inline-size: 3px;
-        translate: -50% 0;
-        z-index: 2;
-        background: var(--an-vspectrum);
-        filter: drop-shadow(0 0 6px hsl(from var(--chart-1) h s l / 0.8));
-    }
-
-    /* The button: the press sends the line across the face (the last unit). */
-    .an-scene .dk-l-press__line {
-        position: absolute;
-        inset-block: 0;
-        inset-inline: 0;
-        z-index: 1;
-        pointer-events: none;
-        opacity: 0;
-        background:
-            linear-gradient(90deg, transparent, hsl(from var(--chart-1) h s l / 0.35)) 0 0 / calc(100% - 3px) 100% no-repeat,
-            var(--an-vspectrum) 100% 0 / 3px 100% no-repeat;
-    }
-
-    @keyframes dk-l-bsweep {
+    @keyframes dk-a-bsweep {
         0% {
             translate: -100% 0;
             opacity: 0;
@@ -1440,7 +1181,7 @@
             opacity: 0;
         }
     }
-    @keyframes dk-l-bsweep-out {
+    @keyframes dk-a-bsweep-out {
         0% {
             translate: 0% 0;
             opacity: 0;
@@ -1464,737 +1205,1101 @@
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        .an-scene[data-an-phase='gap'] .dk-l-press__line {
+        .an-scene[data-an-phase='gap'] .dk-a-edge {
+            scale: 0 1;
+            background-position: 0% 0;
+        }
+        .an-scene[data-an-phase='gap'] .dk-a-press__line {
             translate: -100% 0;
             opacity: 0;
         }
-        .an-scene[data-an-phase='in'] .dk-l-press__line,
-        .an-scene[data-an-phase='hold'] .dk-l-press__line {
-            animation: dk-l-bsweep calc(8 * var(--an-u)) linear calc(0 * var(--an-u)) both;
+        .an-scene[data-an-phase='in'] .dk-a-edge,
+        .an-scene[data-an-phase='hold'] .dk-a-edge {
+            animation: dk-a-edge calc(8 * var(--an-u)) linear 0s both;
         }
-        .an-scene[data-an-phase='out'] .dk-l-press__line {
-            animation: dk-l-bsweep-out calc(8 * var(--an-u)) linear calc(0 * var(--an-u)) both;
+        .an-scene[data-an-phase='in'] .dk-a-press__line,
+        .an-scene[data-an-phase='hold'] .dk-a-press__line {
+            animation: dk-a-bsweep calc(8 * var(--an-u)) linear 0s both;
         }
-    }
-
-    /* ── 5 · Brought into register ───────────────────────────────────── */
-
-    /* The register's own resolve: the figure (and the readout) start as two copies
-   0.22em apart, cyan and magenta, blurred and a little low, and converge as the
-   blur clears (6 units, settle); the panel's edge converges the same way. */
-
-    @keyframes dk-r-resolve {
-        0% {
-            opacity: 0;
-            filter: blur(0.06em);
-            translate: 0 0.22em;
-            color: transparent;
-            text-shadow:
-                -0.22em 0 0 hsl(from var(--chart-3) h s l / 1),
-                0.22em 0 0 hsl(from var(--chart-1) h s l / 1);
-            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        .an-scene[data-an-phase='out'] .dk-a-edge {
+            animation: dk-a-edge-out calc(8 * var(--an-u)) linear 0s both;
         }
-        60% {
-            opacity: 1;
-            filter: blur(0);
-            translate: 0 0.12em;
-            color: hsl(from var(--foreground) h s l / 0.4);
-            text-shadow:
-                -0.1em 0 0 hsl(from var(--chart-3) h s l / 0.8),
-                0.1em 0 0 hsl(from var(--chart-1) h s l / 0.8);
-            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        100% {
-            opacity: 1;
-            filter: blur(0);
-            translate: 0 0;
-            color: var(--foreground);
-            text-shadow:
-                0 0 0 hsl(from var(--chart-3) h s l / 0),
-                0 0 0 hsl(from var(--chart-1) h s l / 0);
-        }
-    }
-    @keyframes dk-r-resolve-out {
-        0% {
-            opacity: 1;
-            filter: blur(0);
-            translate: 0 0;
-            color: var(--foreground);
-            text-shadow:
-                0 0 0 hsl(from var(--chart-3) h s l / 0),
-                0 0 0 hsl(from var(--chart-1) h s l / 0);
-            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
-        }
-        40% {
-            opacity: 1;
-            filter: blur(0);
-            translate: 0 0.12em;
-            color: hsl(from var(--foreground) h s l / 0.4);
-            text-shadow:
-                -0.1em 0 0 hsl(from var(--chart-3) h s l / 0.8),
-                0.1em 0 0 hsl(from var(--chart-1) h s l / 0.8);
-            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
-        }
-        100% {
-            opacity: 0;
-            filter: blur(0.06em);
-            translate: 0 0.22em;
-            color: transparent;
-            text-shadow:
-                -0.22em 0 0 hsl(from var(--chart-3) h s l / 1),
-                0.22em 0 0 hsl(from var(--chart-1) h s l / 1);
+        .an-scene[data-an-phase='out'] .dk-a-press__line {
+            animation: dk-a-bsweep-out calc(8 * var(--an-u)) linear 0s both;
         }
     }
 
-    @keyframes dk-r-edge {
-        0% {
-            filter: drop-shadow(-7px 0 0 hsl(from var(--chart-3) h s l / 0.75)) drop-shadow(7px 0 0 hsl(from var(--chart-1) h s l / 0.75));
-            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        100% {
-            filter: drop-shadow(0 0 0 hsl(from var(--chart-3) h s l / 0)) drop-shadow(0 0 0 hsl(from var(--chart-1) h s l / 0));
-        }
-    }
-    @keyframes dk-r-edge-out {
-        0% {
-            filter: drop-shadow(0 0 0 hsl(from var(--chart-3) h s l / 0)) drop-shadow(0 0 0 hsl(from var(--chart-1) h s l / 0));
-            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
-        }
-        100% {
-            filter: drop-shadow(-7px 0 0 hsl(from var(--chart-3) h s l / 0.75)) drop-shadow(7px 0 0 hsl(from var(--chart-1) h s l / 0.75));
-        }
+    /* ── 2 · The line scans the edge round ───────────────────────────── */
+
+    /* The line is bent to the instrument: a short bright segment runs clockwise
+   round the panel's edge from the top-start corner (a conic mask whose head runs
+   0 to 380 degrees over 6 units, linear) and the film is laid along the edge
+   behind it (the film's own mask opens as far as the segment's tail). The
+   segment is a layer between the film and the card, so only its edge shows. The
+   film's colour turns behind it (the stage's angle, as in 1). */
+    .an-scene .dk-b-panel::before {
+        mask-image: conic-gradient(from -62deg at 50% 50%, var(--foreground) 0deg calc(var(--dk-scan) - 14deg), transparent 0deg);
     }
 
-    @media (prefers-reduced-motion: no-preference) {
-        .an-scene[data-an-phase='gap'] .dk-r-panel {
-            opacity: 0;
-        }
-        .an-scene[data-an-phase='in'] .dk-r-panel,
-        .an-scene[data-an-phase='hold'] .dk-r-panel {
-            animation: dk-fade calc(2 * var(--an-u)) linear calc(0 * var(--an-u)) both;
-        }
-        .an-scene[data-an-phase='out'] .dk-r-panel {
-            animation: dk-fade-out calc(2 * var(--an-u)) linear calc(6 * var(--an-u)) both;
-        }
+    /* An opaque card, so the conic wedges of the film and of the segment, which lie
+   under it, never show through the ground. */
+    .an-scene .dk-b-panel::after {
+        background:
+            repeating-linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.04) 0 1px, transparent 1px 1.25rem),
+            repeating-linear-gradient(0deg, hsl(from var(--foreground) h s l / 0.04) 0 1px, transparent 1px 1.25rem), var(--card);
     }
 
-    @media (prefers-reduced-motion: no-preference) {
-        .an-scene[data-an-phase='gap'] .dk-r-panel::before {
-            filter: drop-shadow(-7px 0 0 hsl(from var(--chart-3) h s l / 0.75)) drop-shadow(7px 0 0 hsl(from var(--chart-1) h s l / 0.75));
-        }
-        .an-scene[data-an-phase='in'] .dk-r-panel::before,
-        .an-scene[data-an-phase='hold'] .dk-r-panel::before {
-            animation: dk-r-edge calc(6 * var(--an-u)) cubic-bezier(0.22, 1, 0.36, 1) calc(0 * var(--an-u)) both;
-        }
-        .an-scene[data-an-phase='out'] .dk-r-panel::before {
-            animation: dk-r-edge-out calc(6 * var(--an-u)) cubic-bezier(0.64, 0, 0.78, 0) calc(2 * var(--an-u)) both;
-        }
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        .an-scene[data-an-phase='gap'] .dk-r-panel .dk-panel__figure,
-        .an-scene[data-an-phase='gap'] .dk-r-panel .dk-panel__readout,
-        .an-scene[data-an-phase='gap'] .dk-r-panel .dk-panel__line {
-            opacity: 0;
-            filter: blur(0.06em);
-            translate: 0 0.22em;
-            color: transparent;
-            text-shadow:
-                -0.22em 0 0 hsl(from var(--chart-3) h s l / 1),
-                0.22em 0 0 hsl(from var(--chart-1) h s l / 1);
-        }
-        .an-scene[data-an-phase='in'] .dk-r-panel .dk-panel__figure,
-        .an-scene[data-an-phase='in'] .dk-r-panel .dk-panel__readout,
-        .an-scene[data-an-phase='in'] .dk-r-panel .dk-panel__line,
-        .an-scene[data-an-phase='hold'] .dk-r-panel .dk-panel__figure,
-        .an-scene[data-an-phase='hold'] .dk-r-panel .dk-panel__readout,
-        .an-scene[data-an-phase='hold'] .dk-r-panel .dk-panel__line {
-            animation: dk-r-resolve calc(6 * var(--an-u)) cubic-bezier(0.22, 1, 0.36, 1) calc(0 * var(--an-u)) both;
-        }
-        .an-scene[data-an-phase='out'] .dk-r-panel .dk-panel__figure,
-        .an-scene[data-an-phase='out'] .dk-r-panel .dk-panel__readout,
-        .an-scene[data-an-phase='out'] .dk-r-panel .dk-panel__line {
-            animation: dk-r-resolve-out calc(6 * var(--an-u)) cubic-bezier(0.64, 0, 0.78, 0) calc(2 * var(--an-u)) both;
-        }
-    }
-
-    /* The bar: the fill arrives as two copies, cyan to the left and magenta to the
-   right, 6 px apart, that converge as it fills (7 units) while the film fill
-   comes up under them. */
-    .an-scene :is(.dk-r-bar__cyan, .dk-r-bar__magenta) {
-        position: absolute;
-        inset-block: calc(2px * var(--dk-s));
-        inset-inline: calc(var(--dk-cut) / 2) 0;
-        opacity: 0;
-        z-index: 1;
-    }
-
-    .an-scene .dk-r-bar__cyan {
-        background: var(--chart-1);
-    }
-
-    .an-scene .dk-r-bar__magenta {
-        background: var(--chart-3);
-    }
-
-    @keyframes dk-r-gc {
-        0% {
-            opacity: 0.9;
-            translate: -6px 0;
-            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        70% {
-            opacity: 0.9;
-            translate: 0 0;
-            animation-timing-function: linear;
-        }
-        100% {
-            opacity: 0;
-            translate: 0 0;
-        }
-    }
-    @keyframes dk-r-gc-out {
-        0% {
-            opacity: 0;
-            translate: 0 0;
-            animation-timing-function: linear;
-        }
-        30% {
-            opacity: 0.9;
-            translate: 0 0;
-            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
-        }
-        100% {
-            opacity: 0.9;
-            translate: -6px 0;
-        }
-    }
-
-    @keyframes dk-r-gm {
-        0% {
-            opacity: 0.9;
-            translate: 6px 0;
-            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        70% {
-            opacity: 0.9;
-            translate: 0 0;
-            animation-timing-function: linear;
-        }
-        100% {
-            opacity: 0;
-            translate: 0 0;
-        }
-    }
-    @keyframes dk-r-gm-out {
-        0% {
-            opacity: 0;
-            translate: 0 0;
-            animation-timing-function: linear;
-        }
-        30% {
-            opacity: 0.9;
-            translate: 0 0;
-            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
-        }
-        100% {
-            opacity: 0.9;
-            translate: 6px 0;
-        }
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        .an-scene[data-an-phase='gap'] .dk-r-bar .dk-bar__fill {
-            clip-path: inset(-1em 100% -1em 0);
-            opacity: 0;
-        }
-        .an-scene[data-an-phase='in'] .dk-r-bar .dk-bar__fill,
-        .an-scene[data-an-phase='hold'] .dk-r-bar .dk-bar__fill {
-            animation:
-                an-clip calc(7 * var(--an-u)) cubic-bezier(0.22, 1, 0.36, 1) calc(0 * var(--an-u)) both,
-                dk-fade calc(3 * var(--an-u)) linear calc(4 * var(--an-u)) both;
-        }
-        .an-scene[data-an-phase='out'] .dk-r-bar .dk-bar__fill {
-            animation:
-                an-clip-out calc(7 * var(--an-u)) cubic-bezier(0.64, 0, 0.78, 0) calc(1 * var(--an-u)) both,
-                dk-fade-out calc(3 * var(--an-u)) linear calc(1 * var(--an-u)) both;
-        }
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        .an-scene[data-an-phase='gap'] .dk-r-bar__cyan {
-            clip-path: inset(-1em 100% -1em 0);
-            opacity: 0.9;
-            translate: -6px 0;
-        }
-        .an-scene[data-an-phase='in'] .dk-r-bar__cyan,
-        .an-scene[data-an-phase='hold'] .dk-r-bar__cyan {
-            animation:
-                an-clip calc(7 * var(--an-u)) cubic-bezier(0.22, 1, 0.36, 1) calc(0 * var(--an-u)) both,
-                dk-r-gc calc(7 * var(--an-u)) cubic-bezier(0.22, 1, 0.36, 1) calc(0 * var(--an-u)) both;
-        }
-        .an-scene[data-an-phase='out'] .dk-r-bar__cyan {
-            animation:
-                an-clip-out calc(7 * var(--an-u)) cubic-bezier(0.64, 0, 0.78, 0) calc(1 * var(--an-u)) both,
-                dk-r-gc-out calc(7 * var(--an-u)) cubic-bezier(0.64, 0, 0.78, 0) calc(1 * var(--an-u)) both;
-        }
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        .an-scene[data-an-phase='gap'] .dk-r-bar__magenta {
-            clip-path: inset(-1em 100% -1em 0);
-            opacity: 0.9;
-            translate: 6px 0;
-        }
-        .an-scene[data-an-phase='in'] .dk-r-bar__magenta,
-        .an-scene[data-an-phase='hold'] .dk-r-bar__magenta {
-            animation:
-                an-clip calc(7 * var(--an-u)) cubic-bezier(0.22, 1, 0.36, 1) calc(0 * var(--an-u)) both,
-                dk-r-gm calc(7 * var(--an-u)) cubic-bezier(0.22, 1, 0.36, 1) calc(0 * var(--an-u)) both;
-        }
-        .an-scene[data-an-phase='out'] .dk-r-bar__magenta {
-            animation:
-                an-clip-out calc(7 * var(--an-u)) cubic-bezier(0.64, 0, 0.78, 0) calc(1 * var(--an-u)) both,
-                dk-r-gm-out calc(7 * var(--an-u)) cubic-bezier(0.64, 0, 0.78, 0) calc(1 * var(--an-u)) both;
-        }
-    }
-
-    /* The button: the press splits the label a hair (0.12em) into its two
-   wavelengths and the halves are back together half a unit later. */
-
-    @keyframes dk-r-split {
-        0% {
-            text-shadow:
-                0 0 0 hsl(from var(--chart-3) h s l / 0),
-                0 0 0 hsl(from var(--chart-1) h s l / 0);
-        }
-        87.49% {
-            text-shadow:
-                0 0 0 hsl(from var(--chart-3) h s l / 0),
-                0 0 0 hsl(from var(--chart-1) h s l / 0);
-        }
-        87.5% {
-            text-shadow:
-                -0.12em 0 0 hsl(from var(--chart-3) h s l / 0.9),
-                0.12em 0 0 hsl(from var(--chart-1) h s l / 0.9);
-            animation-timing-function: cubic-bezier(0.16, 0.84, 0.28, 1);
-        }
-        93.75% {
-            text-shadow:
-                0 0 0 hsl(from var(--chart-3) h s l / 0),
-                0 0 0 hsl(from var(--chart-1) h s l / 0);
-        }
-        100% {
-            text-shadow:
-                0 0 0 hsl(from var(--chart-3) h s l / 0),
-                0 0 0 hsl(from var(--chart-1) h s l / 0);
-        }
-    }
-    @keyframes dk-r-split-out {
-        0% {
-            text-shadow:
-                0 0 0 hsl(from var(--chart-3) h s l / 0),
-                0 0 0 hsl(from var(--chart-1) h s l / 0);
-        }
-        6.25% {
-            text-shadow:
-                0 0 0 hsl(from var(--chart-3) h s l / 0),
-                0 0 0 hsl(from var(--chart-1) h s l / 0);
-            animation-timing-function: cubic-bezier(0.72, 0, 0.84, 0.16);
-        }
-        12.5% {
-            text-shadow:
-                -0.12em 0 0 hsl(from var(--chart-3) h s l / 0.9),
-                0.12em 0 0 hsl(from var(--chart-1) h s l / 0.9);
-        }
-        12.51% {
-            text-shadow:
-                0 0 0 hsl(from var(--chart-3) h s l / 0),
-                0 0 0 hsl(from var(--chart-1) h s l / 0);
-        }
-        100% {
-            text-shadow:
-                0 0 0 hsl(from var(--chart-3) h s l / 0),
-                0 0 0 hsl(from var(--chart-1) h s l / 0);
-        }
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        .an-scene[data-an-phase='gap'] .dk-r-press .kp-button__label {
-            text-shadow:
-                0 0 0 hsl(from var(--chart-3) h s l / 0),
-                0 0 0 hsl(from var(--chart-1) h s l / 0);
-        }
-        .an-scene[data-an-phase='in'] .dk-r-press .kp-button__label,
-        .an-scene[data-an-phase='hold'] .dk-r-press .kp-button__label {
-            animation: dk-r-split calc(8 * var(--an-u)) linear calc(0 * var(--an-u)) both;
-        }
-        .an-scene[data-an-phase='out'] .dk-r-press .kp-button__label {
-            animation: dk-r-split-out calc(8 * var(--an-u)) linear calc(0 * var(--an-u)) both;
-        }
-    }
-
-    /* ── 6 · Developed in the darkroom ───────────────────────────────── */
-
-    /* The register's develop: the panel comes up as a print (opacity 0.2, contrast
-   0.2, brightness 1.8, sepia 0.6, to normal over 6 units) under a chamfered
-   flash of the film at 55 % that is gone by 5 units. */
-    .an-scene .dk-d-flash {
+    .an-scene .dk-b-seg {
         position: absolute;
         inset: 0;
+        z-index: -2;
+        pointer-events: none;
+        filter: var(--dk-glow);
+    }
+
+    .an-scene .dk-b-seg::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        clip-path: var(--dk-poly);
+        background: linear-gradient(hsl(from var(--foreground) h s l / 0.7), hsl(from var(--foreground) h s l / 0.7)), var(--an-film);
+        mask-image: conic-gradient(
+            from -62deg at 50% 50%,
+            transparent 0deg calc(var(--dk-scan) - 14deg),
+            var(--foreground) var(--dk-scan),
+            transparent var(--dk-scan)
+        );
+    }
+
+    @keyframes dk-b-scan {
+        0% {
+            --dk-scan: 0deg;
+        }
+        100% {
+            --dk-scan: 380deg;
+        }
+    }
+    @keyframes dk-b-scan-out {
+        0% {
+            --dk-scan: 380deg;
+        }
+        100% {
+            --dk-scan: 0deg;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .dk-b-panel {
+            opacity: 0;
+            --dk-scan: 0deg;
+        }
+        .an-scene[data-an-phase='in'] .dk-b-stage,
+        .an-scene[data-an-phase='hold'] .dk-b-stage {
+            animation: dk-a-turn calc(7 * var(--an-u)) linear 0s both;
+        }
+        .an-scene[data-an-phase='in'] .dk-b-panel,
+        .an-scene[data-an-phase='hold'] .dk-b-panel {
+            animation:
+                dk-fade calc(2 * var(--an-u)) linear 0s both,
+                dk-b-scan calc(6 * var(--an-u)) linear 0s both;
+        }
+        .an-scene[data-an-phase='out'] .dk-b-stage {
+            animation: dk-a-turn-out calc(7 * var(--an-u)) linear calc(1 * var(--an-u)) both;
+        }
+        .an-scene[data-an-phase='out'] .dk-b-panel {
+            animation:
+                dk-fade-out calc(2 * var(--an-u)) linear calc(6 * var(--an-u)) both,
+                dk-b-scan-out calc(6 * var(--an-u)) linear calc(2 * var(--an-u)) both;
+        }
+    }
+
+    /* The bar: round one's bar exactly (settle), the segment running along the top
+   of the fill with its head, then down round the ] and out. */
+    .an-scene .dk-b-bar__seg {
+        position: absolute;
+        inset-block-start: calc(2px * var(--dk-s));
+        inset-inline-start: var(--dk-v);
+        margin-inline-start: 3px;
+        inline-size: 1.75rem;
+        block-size: 2px;
+        translate: -100% 0;
+        z-index: 2;
+        pointer-events: none;
+        opacity: 0;
+        background: linear-gradient(90deg, transparent, hsl(from var(--foreground) h s l / 0.9));
+        filter: var(--dk-glow);
+    }
+
+    .an-scene .dk-b-bar__seg::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline-end: 0;
+        inline-size: 2px;
+        block-size: calc(12px);
+        background: linear-gradient(hsl(from var(--foreground) h s l / 0.9), var(--chart-1));
+        transform-origin: top center;
+        scale: 1 1;
+    }
+
+    @keyframes dk-b-bseg {
+        0% {
+            opacity: 0;
+        }
+        4% {
+            opacity: 1;
+        }
+        72% {
+            opacity: 1;
+        }
+        84% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 0;
+        }
+    }
+    @keyframes dk-b-bseg-out {
+        0% {
+            opacity: 0;
+        }
+        16% {
+            opacity: 0;
+        }
+        28% {
+            opacity: 1;
+        }
+        96% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0;
+        }
+    }
+
+    @keyframes dk-b-wrap {
+        0%,
+        52% {
+            scale: 1 0;
+        }
+        72%,
+        100% {
+            scale: 1 1;
+        }
+    }
+    @keyframes dk-b-wrap-out {
+        0%,
+        28% {
+            scale: 1 1;
+        }
+        48%,
+        100% {
+            scale: 1 0;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .dk-b-bar__seg {
+            inset-inline-start: 0%;
+            opacity: 0;
+        }
+        .an-scene[data-an-phase='in'] .dk-b-bar .dk-bar__fill,
+        .an-scene[data-an-phase='hold'] .dk-b-bar .dk-bar__fill {
+            animation: dk-fill calc(7 * var(--an-u)) linear 0s both;
+        }
+        .an-scene[data-an-phase='in'] .dk-b-bar__seg,
+        .an-scene[data-an-phase='hold'] .dk-b-bar__seg {
+            animation:
+                dk-head calc(7 * var(--an-u)) var(--an-ease) 0s both,
+                dk-b-bseg calc(7 * var(--an-u)) linear 0s both;
+        }
+        .an-scene[data-an-phase='in'] .dk-b-bar__seg::after,
+        .an-scene[data-an-phase='hold'] .dk-b-bar__seg::after {
+            animation: dk-b-wrap calc(7 * var(--an-u)) linear 0s both;
+        }
+        .an-scene[data-an-phase='out'] .dk-b-bar .dk-bar__fill {
+            animation: dk-fill-out calc(7 * var(--an-u)) linear calc(1 * var(--an-u)) both;
+        }
+        .an-scene[data-an-phase='out'] .dk-b-bar__seg {
+            animation:
+                dk-head-out calc(7 * var(--an-u)) var(--an-ease-out) calc(1 * var(--an-u)) both,
+                dk-b-bseg-out calc(7 * var(--an-u)) linear calc(1 * var(--an-u)) both;
+        }
+        .an-scene[data-an-phase='out'] .dk-b-bar__seg::after {
+            animation: dk-b-wrap-out calc(7 * var(--an-u)) linear calc(1 * var(--an-u)) both;
+        }
+    }
+
+    /* The button: the press runs the segment once round the button's edge in the
+   last unit, the 2px film edge drawn all round behind it. Both are rings: a mask
+   of the border box less the content box, cut by the same conic window. */
+    .an-scene .dk-b-press__seg {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+    }
+
+    .an-scene .dk-b-press__seg::before,
+    .an-scene .dk-b-press__seg::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        box-sizing: border-box;
+        padding: 2px;
+        mask-origin: border-box, content-box, border-box;
+        mask-clip: border-box, content-box, border-box;
+        mask-composite: intersect, exclude, add;
+    }
+
+    .an-scene .dk-b-press__seg::before {
+        background: var(--an-film);
+        mask-image:
+            conic-gradient(from -70deg at 50% 50%, var(--foreground) 0deg calc(var(--dk-scan) - 14deg), transparent 0deg),
+            linear-gradient(var(--foreground) 0 0), linear-gradient(var(--foreground) 0 0);
+    }
+
+    .an-scene .dk-b-press__seg::after {
+        background: linear-gradient(hsl(from var(--foreground) h s l / 0.8), hsl(from var(--foreground) h s l / 0.8)), var(--an-film);
+        mask-image:
+            conic-gradient(
+                from -70deg at 50% 50%,
+                transparent 0deg calc(var(--dk-scan) - 14deg),
+                var(--foreground) var(--dk-scan),
+                transparent var(--dk-scan)
+            ),
+            linear-gradient(var(--foreground) 0 0), linear-gradient(var(--foreground) 0 0);
+    }
+
+    .an-scene .dk-b-press {
+        --an-face: dk-b-press;
+        --an-face-out: dk-b-press-out;
+    }
+
+    @keyframes dk-b-press {
+        0%,
+        87.49% {
+            background-color: var(--card);
+            --dk-scan: 0deg;
+        }
+        87.5% {
+            background-color: var(--secondary-active);
+            --dk-scan: 0deg;
+            animation-timing-function: linear;
+        }
+        100% {
+            background-color: var(--secondary-active);
+            --dk-scan: 380deg;
+        }
+    }
+    @keyframes dk-b-press-out {
+        0% {
+            background-color: var(--secondary-active);
+            --dk-scan: 380deg;
+            animation-timing-function: linear;
+        }
+        12.5% {
+            background-color: var(--secondary-active);
+            --dk-scan: 0deg;
+        }
+        12.51%,
+        100% {
+            background-color: var(--card);
+            --dk-scan: 0deg;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .dk-b-press {
+            --dk-scan: 0deg;
+        }
+    }
+
+    /* ── 3 · Two wavelengths meet in the middle ──────────────────────── */
+
+    /* A cyan line from the start and a magenta line from the end sweep in over
+   5 units, linear; the panel is lit from both ends behind them (a mask that
+   opens from the two sides, as far as each line) and the film is laid with
+   cyan on the start side, magenta on the end side, violet over the top where
+   they meet. At 5 units they meet at the centre and the film settles into its
+   turn (cyan at the top, the register's settle); the figure takes it at 7. */
+    .an-scene .dk-c-panel {
+        mask-image: linear-gradient(
+            90deg,
+            var(--foreground) 0%,
+            var(--foreground) var(--dk-p),
+            transparent var(--dk-p),
+            transparent calc(100% - var(--dk-p)),
+            var(--foreground) calc(100% - var(--dk-p)),
+            var(--foreground) 100%
+        );
+    }
+
+    .an-scene :is(.dk-c-cyan, .dk-c-magenta) {
+        position: absolute;
+        inset-block: -5px;
+        inset-inline: 0;
         z-index: 3;
         pointer-events: none;
         opacity: 0;
-        background: var(--an-film);
-        clip-path: var(--dk-poly);
     }
 
-    @keyframes dk-d-develop {
+    .an-scene .dk-c-cyan {
+        background: linear-gradient(var(--chart-1), var(--chart-1)) 100% 0 / 2px 100% no-repeat;
+        filter: var(--dk-glow);
+    }
+
+    .an-scene .dk-c-magenta {
+        background: linear-gradient(var(--chart-3), var(--chart-3)) 0 0 / 2px 100% no-repeat;
+        filter: drop-shadow(0 0 10px hsl(from var(--chart-3) h s l / 0.4));
+    }
+
+    @keyframes dk-c-reveal {
         0% {
-            opacity: 0;
-            filter: contrast(0.2) brightness(1.8) sepia(0.6);
-        }
-        10% {
-            opacity: 0.2;
-            filter: contrast(0.2) brightness(1.8) sepia(0.6);
-            animation-timing-function: cubic-bezier(0, 0, 0.58, 1);
+            --dk-p: 0%;
         }
         100% {
-            opacity: 1;
-            filter: contrast(1) brightness(1) sepia(0);
+            --dk-p: 50%;
         }
     }
-    @keyframes dk-d-develop-out {
+    @keyframes dk-c-reveal-out {
         0% {
+            --dk-p: 50%;
+        }
+        100% {
+            --dk-p: 0%;
+        }
+    }
+
+    @keyframes dk-c-in {
+        0% {
+            translate: -100% 0;
+            opacity: 0;
+        }
+        4% {
+            translate: -98% 0;
             opacity: 1;
-            filter: contrast(1) brightness(1) sepia(0);
-            animation-timing-function: cubic-bezier(0.42, 0, 1, 1);
         }
         90% {
-            opacity: 0.2;
-            filter: contrast(0.2) brightness(1.8) sepia(0.6);
+            translate: -55% 0;
+            opacity: 1;
         }
         100% {
+            translate: -50% 0;
             opacity: 0;
-            filter: contrast(0.2) brightness(1.8) sepia(0.6);
+        }
+    }
+    @keyframes dk-c-in-out {
+        0% {
+            translate: -50% 0;
+            opacity: 0;
+        }
+        10% {
+            translate: -55% 0;
+            opacity: 1;
+        }
+        96% {
+            translate: -98% 0;
+            opacity: 1;
+        }
+        100% {
+            translate: -100% 0;
+            opacity: 0;
+        }
+    }
+    @keyframes dk-c-mag {
+        0% {
+            translate: 100% 0;
+            opacity: 0;
+        }
+        4% {
+            translate: 98% 0;
+            opacity: 1;
+        }
+        90% {
+            translate: 55% 0;
+            opacity: 1;
+        }
+        100% {
+            translate: 50% 0;
+            opacity: 0;
+        }
+    }
+    @keyframes dk-c-mag-out {
+        0% {
+            translate: 50% 0;
+            opacity: 0;
+        }
+        10% {
+            translate: 55% 0;
+            opacity: 1;
+        }
+        96% {
+            translate: 98% 0;
+            opacity: 1;
+        }
+        100% {
+            translate: 100% 0;
+            opacity: 0;
         }
     }
 
-    @keyframes dk-d-flash {
+    /* The film starts turned so its start side is cyan and its end side magenta
+   (270 degrees), and settles to cyan at the top over the last two units. */
+    @keyframes dk-c-turn {
+        0%,
+        71.4286% {
+            --an-angle: 270deg;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        100% {
+            --an-angle: 360deg;
+        }
+    }
+    @keyframes dk-c-turn-out {
         0% {
+            --an-angle: 360deg;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+        28.5714%,
+        100% {
+            --an-angle: 270deg;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .dk-c-panel {
+            --dk-p: 0%;
+        }
+        .an-scene[data-an-phase='gap'] .dk-c-cyan {
+            translate: -100% 0;
             opacity: 0;
         }
-        8% {
-            opacity: 0.55;
-            animation-timing-function: cubic-bezier(0, 0, 0.58, 1);
+        .an-scene[data-an-phase='gap'] .dk-c-magenta {
+            translate: 100% 0;
+            opacity: 0;
+        }
+        .an-scene[data-an-phase='in'] .dk-c-stage,
+        .an-scene[data-an-phase='hold'] .dk-c-stage {
+            animation: dk-c-turn calc(7 * var(--an-u)) linear 0s both;
+        }
+        .an-scene[data-an-phase='in'] .dk-c-panel,
+        .an-scene[data-an-phase='hold'] .dk-c-panel {
+            animation: dk-c-reveal calc(5 * var(--an-u)) linear 0s both;
+        }
+        .an-scene[data-an-phase='in'] .dk-c-cyan,
+        .an-scene[data-an-phase='hold'] .dk-c-cyan {
+            animation: dk-c-in calc(5 * var(--an-u)) linear 0s both;
+        }
+        .an-scene[data-an-phase='in'] .dk-c-magenta,
+        .an-scene[data-an-phase='hold'] .dk-c-magenta {
+            animation: dk-c-mag calc(5 * var(--an-u)) linear 0s both;
+        }
+        .an-scene[data-an-phase='out'] .dk-c-stage {
+            animation: dk-c-turn-out calc(7 * var(--an-u)) linear calc(1 * var(--an-u)) both;
+        }
+        .an-scene[data-an-phase='out'] .dk-c-panel {
+            animation: dk-c-reveal-out calc(5 * var(--an-u)) linear calc(3 * var(--an-u)) both;
+        }
+        .an-scene[data-an-phase='out'] .dk-c-cyan {
+            animation: dk-c-in-out calc(5 * var(--an-u)) linear calc(3 * var(--an-u)) both;
+        }
+        .an-scene[data-an-phase='out'] .dk-c-magenta {
+            animation: dk-c-mag-out calc(5 * var(--an-u)) linear calc(3 * var(--an-u)) both;
+        }
+    }
+
+    /* The bar: round one's fill grows from the start with the cyan line at its
+   head (5 units, linear) while a magenta line waits at the end and comes to
+   meet it; the fill is the film between them, its colour slid on the settle. */
+    .an-scene .dk-c-bar__cyan {
+        background: var(--chart-1);
+    }
+
+    .an-scene .dk-c-bar__magenta {
+        --an-kf: dk-c-bmag;
+        --an-kf-out: dk-c-bmag-out;
+        position: absolute;
+        inset-block: -5px;
+        inset-inline-start: calc(var(--dk-v) + 6px);
+        inline-size: 2px;
+        z-index: 2;
+        pointer-events: none;
+        background: var(--chart-3);
+        filter: drop-shadow(0 0 10px hsl(from var(--chart-3) h s l / 0.4));
+    }
+
+    @keyframes dk-c-bmag {
+        0% {
+            inset-inline-start: 100%;
+            opacity: 0;
+        }
+        4% {
+            opacity: 1;
+        }
+        100% {
+            inset-inline-start: calc(var(--dk-v) + 6px);
+            opacity: 1;
+        }
+    }
+    @keyframes dk-c-bmag-out {
+        0% {
+            inset-inline-start: calc(var(--dk-v) + 6px);
+            opacity: 1;
+        }
+        96% {
+            opacity: 1;
+        }
+        100% {
+            inset-inline-start: 100%;
+            opacity: 0;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .dk-c-bar__magenta {
+            inset-inline-start: 100%;
+            opacity: 0;
+        }
+        .an-scene[data-an-phase='in'] .dk-c-bar .dk-bar__fill,
+        .an-scene[data-an-phase='hold'] .dk-c-bar .dk-bar__fill {
+            animation:
+                an-clip calc(5 * var(--an-u)) linear 0s both,
+                dk-slide calc(7 * var(--an-u)) linear 0s both;
+        }
+        .an-scene[data-an-phase='out'] .dk-c-bar .dk-bar__fill {
+            animation:
+                an-clip-out calc(5 * var(--an-u)) linear calc(3 * var(--an-u)) both,
+                dk-slide-out calc(7 * var(--an-u)) linear calc(1 * var(--an-u)) both;
+        }
+    }
+
+    /* The button: in the last unit the two lines sweep in from the button's two
+   ends and meet under the label (the move block, one unit at the seventh); each
+   leaves its foot edge behind, cyan to violet and violet to magenta, so the
+   edge under the label is the film. */
+    .an-scene :is(.dk-c-press__cyan, .dk-c-press__magenta) {
+        --an-l: 1;
+        --an-d: 7;
+        --an-ease: linear;
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+    }
+
+    .an-scene .dk-c-press__cyan {
+        --an-x0: -100%;
+        --an-x1: -50%;
+        background: linear-gradient(90deg, var(--chart-1) 55%, var(--chart-2)) 0 100% / 100% 2px no-repeat;
+    }
+
+    .an-scene .dk-c-press__magenta {
+        --an-x0: 100%;
+        --an-x1: 50%;
+        background: linear-gradient(90deg, var(--chart-2), var(--chart-3) 45%) 0 100% / 100% 2px no-repeat;
+    }
+
+    .an-scene :is(.dk-c-press__cyan, .dk-c-press__magenta)::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inline-size: 2px;
+        opacity: 0;
+        filter: var(--dk-glow);
+    }
+
+    .an-scene .dk-c-press__cyan::after {
+        inset-inline-end: 0;
+        background: var(--chart-1);
+    }
+
+    .an-scene .dk-c-press__magenta::after {
+        inset-inline-start: 0;
+        background: var(--chart-3);
+        filter: drop-shadow(0 0 10px hsl(from var(--chart-3) h s l / 0.4));
+    }
+
+    @keyframes dk-c-tip {
+        0% {
+            opacity: 1;
+        }
+        70% {
+            opacity: 1;
         }
         100% {
             opacity: 0;
         }
     }
-    @keyframes dk-d-flash-out {
+    @keyframes dk-c-tip-out {
         0% {
             opacity: 0;
-            animation-timing-function: cubic-bezier(0.42, 0, 1, 1);
         }
-        92% {
-            opacity: 0.55;
+        30% {
+            opacity: 1;
         }
         100% {
-            opacity: 0;
+            opacity: 1;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='in'] :is(.dk-c-press__cyan, .dk-c-press__magenta)::after,
+        .an-scene[data-an-phase='hold'] :is(.dk-c-press__cyan, .dk-c-press__magenta)::after {
+            animation: dk-c-tip calc(1 * var(--an-u)) linear calc(7 * var(--an-u)) forwards;
+        }
+        .an-scene[data-an-phase='out'] :is(.dk-c-press__cyan, .dk-c-press__magenta)::after {
+            animation: dk-c-tip-out calc(1 * var(--an-u)) linear 0s forwards;
+        }
+    }
+
+    /* ── 4 · The slit stands, the film turns under it ────────────────── */
+
+    /* The line stands still as a slit at the panel's centre (it comes in over 2
+   units) and the film turns under it: the panel's whole ground is the film at
+   16 %, its angle running 0 to 360 over 5 units (2 to 7) on the register's
+   settle, and the slit's own colour slides through the film's wavelengths on the
+   same curve. The edge takes the film as the turn completes, and the figure
+   last. */
+    .an-scene .dk-d-panel::after {
+        background:
+            repeating-linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.04) 0 1px, transparent 1px 1.25rem),
+            repeating-linear-gradient(0deg, hsl(from var(--foreground) h s l / 0.04) 0 1px, transparent 1px 1.25rem),
+            conic-gradient(
+                from var(--an-angle),
+                hsl(from var(--chart-1) h s l / 0.16),
+                hsl(from var(--chart-2) h s l / 0.16),
+                hsl(from var(--chart-3) h s l / 0.16),
+                hsl(from var(--chart-4) h s l / 0.16),
+                hsl(from var(--chart-1) h s l / 0.16)
+            ),
+            hsl(from var(--card) h s l / 0.93);
+    }
+
+    .an-scene .dk-d-slit {
+        position: absolute;
+        inset-block: -5px;
+        inset-inline-start: calc(50% - 1px);
+        inline-size: 2px;
+        z-index: 3;
+        pointer-events: none;
+        background: var(--an-vstrip) 0 0 / 100% 200% repeat-y;
+        filter: var(--dk-glow);
+    }
+
+    @keyframes dk-d-turn {
+        0% {
+            --an-angle: 0deg;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        100% {
+            --an-angle: 360deg;
+        }
+    }
+    @keyframes dk-d-turn-out {
+        0% {
+            --an-angle: 360deg;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+        100% {
+            --an-angle: 0deg;
         }
     }
 
     @media (prefers-reduced-motion: no-preference) {
         .an-scene[data-an-phase='gap'] .dk-d-panel {
             opacity: 0;
-            filter: contrast(0.2) brightness(1.8) sepia(0.6);
+        }
+        .an-scene[data-an-phase='gap'] .dk-d-panel::before {
+            opacity: 0;
+        }
+        .an-scene[data-an-phase='gap'] .dk-d-slit {
+            opacity: 0;
+        }
+        .an-scene[data-an-phase='in'] .dk-d-stage,
+        .an-scene[data-an-phase='hold'] .dk-d-stage {
+            animation: dk-d-turn calc(5 * var(--an-u)) linear calc(2 * var(--an-u)) both;
         }
         .an-scene[data-an-phase='in'] .dk-d-panel,
         .an-scene[data-an-phase='hold'] .dk-d-panel {
-            animation: dk-d-develop calc(7 * var(--an-u)) cubic-bezier(0, 0, 0.58, 1) calc(0 * var(--an-u)) both;
+            animation: dk-fade calc(2 * var(--an-u)) linear 0s both;
+        }
+        .an-scene[data-an-phase='in'] .dk-d-panel::before,
+        .an-scene[data-an-phase='hold'] .dk-d-panel::before {
+            animation: dk-fade calc(2 * var(--an-u)) linear calc(5 * var(--an-u)) both;
+        }
+        .an-scene[data-an-phase='in'] .dk-d-slit,
+        .an-scene[data-an-phase='hold'] .dk-d-slit {
+            animation:
+                dk-fade calc(2 * var(--an-u)) linear 0s both,
+                dk-vslide calc(5 * var(--an-u)) linear calc(2 * var(--an-u)) both;
+        }
+        .an-scene[data-an-phase='out'] .dk-d-stage {
+            animation: dk-d-turn-out calc(5 * var(--an-u)) linear calc(1 * var(--an-u)) both;
         }
         .an-scene[data-an-phase='out'] .dk-d-panel {
-            animation: dk-d-develop-out calc(7 * var(--an-u)) cubic-bezier(0.42, 0, 1, 1) calc(1 * var(--an-u)) both;
+            animation: dk-fade-out calc(2 * var(--an-u)) linear calc(6 * var(--an-u)) both;
         }
+        .an-scene[data-an-phase='out'] .dk-d-panel::before {
+            animation: dk-fade-out calc(2 * var(--an-u)) linear calc(1 * var(--an-u)) both;
+        }
+        .an-scene[data-an-phase='out'] .dk-d-slit {
+            animation:
+                dk-fade-out calc(2 * var(--an-u)) linear calc(6 * var(--an-u)) both,
+                dk-vslide-out calc(5 * var(--an-u)) linear calc(1 * var(--an-u)) both;
+        }
+    }
+
+    /* The bar: round one's bar exactly (settle), the slit standing at the fill's
+   head while the fill's colour turns. */
+    .an-scene .dk-d-bar__slit {
+        position: absolute;
+        inset-block: -5px;
+        inset-inline-start: calc(var(--dk-v) + 3px);
+        inline-size: 2px;
+        z-index: 2;
+        pointer-events: none;
+        background: var(--an-vstrip) 0 0 / 100% 200% repeat-y;
+        filter: var(--dk-glow);
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        .an-scene[data-an-phase='in'] .dk-d-flash,
-        .an-scene[data-an-phase='hold'] .dk-d-flash {
-            animation: dk-d-flash calc(6 * var(--an-u)) cubic-bezier(0, 0, 0.58, 1) calc(0 * var(--an-u)) both;
-        }
-        .an-scene[data-an-phase='out'] .dk-d-flash {
-            animation: dk-d-flash-out calc(6 * var(--an-u)) cubic-bezier(0.42, 0, 1, 1) calc(2 * var(--an-u)) both;
-        }
-    }
-
-    @keyframes dk-d-fill {
-        0% {
-            clip-path: inset(-1em 100% -1em 0);
-            opacity: 0.2;
-            filter: contrast(0.2) brightness(1.8) sepia(0.6);
-            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        100% {
-            clip-path: inset(-1em var(--an-c1) -1em 0);
-            opacity: 1;
-            filter: contrast(1) brightness(1) sepia(0);
-        }
-    }
-    @keyframes dk-d-fill-out {
-        0% {
-            clip-path: inset(-1em var(--an-c1) -1em 0);
-            opacity: 1;
-            filter: contrast(1) brightness(1) sepia(0);
-            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
-        }
-        100% {
-            clip-path: inset(-1em 100% -1em 0);
-            opacity: 0.2;
-            filter: contrast(0.2) brightness(1.8) sepia(0.6);
-        }
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        .an-scene[data-an-phase='gap'] .dk-d-bar .dk-bar__fill {
-            clip-path: inset(-1em 100% -1em 0);
-            opacity: 0.2;
-            filter: contrast(0.2) brightness(1.8) sepia(0.6);
+        .an-scene[data-an-phase='gap'] .dk-d-bar__slit {
+            opacity: 0;
         }
         .an-scene[data-an-phase='in'] .dk-d-bar .dk-bar__fill,
         .an-scene[data-an-phase='hold'] .dk-d-bar .dk-bar__fill {
-            animation: dk-d-fill calc(7 * var(--an-u)) cubic-bezier(0.22, 1, 0.36, 1) calc(0 * var(--an-u)) both;
+            animation: dk-fill calc(7 * var(--an-u)) linear 0s both;
+        }
+        .an-scene[data-an-phase='in'] .dk-d-bar__slit,
+        .an-scene[data-an-phase='hold'] .dk-d-bar__slit {
+            animation:
+                dk-fade calc(2 * var(--an-u)) linear 0s both,
+                dk-vslide calc(7 * var(--an-u)) linear 0s both;
         }
         .an-scene[data-an-phase='out'] .dk-d-bar .dk-bar__fill {
-            animation: dk-d-fill-out calc(7 * var(--an-u)) cubic-bezier(0.64, 0, 0.78, 0) calc(1 * var(--an-u)) both;
+            animation: dk-fill-out calc(7 * var(--an-u)) linear calc(1 * var(--an-u)) both;
+        }
+        .an-scene[data-an-phase='out'] .dk-d-bar__slit {
+            animation:
+                dk-fade-out calc(2 * var(--an-u)) linear calc(6 * var(--an-u)) both,
+                dk-vslide-out calc(7 * var(--an-u)) linear calc(1 * var(--an-u)) both;
         }
     }
 
-    /* The button: the press flashes the face with the film at 35 %, which develops
-   away while the face goes to its pressed ground. */
-    .an-scene .dk-d-press::before {
-        inset: 0;
-        z-index: 0;
-        display: block;
-        translate: none;
-        opacity: 0;
-        background: var(--an-film);
+    /* The button: the press stands the slit at the label's middle for the last
+   unit, and the face's film ground (16 % over the face) turns a quarter under it. */
+    .an-scene .dk-d-press {
+        --an-face: dk-d-press;
+        --an-face-out: dk-d-press-out;
+        --an-angle: 90deg;
+        background-image: conic-gradient(
+            from var(--an-angle),
+            hsl(from var(--chart-1) h s l / 0.16),
+            hsl(from var(--chart-2) h s l / 0.16),
+            hsl(from var(--chart-3) h s l / 0.16),
+            hsl(from var(--chart-4) h s l / 0.16),
+            hsl(from var(--chart-1) h s l / 0.16)
+        );
     }
 
-    @keyframes dk-d-btn {
-        0% {
-            opacity: 0;
-        }
+    .an-scene .dk-d-press__slit {
+        position: absolute;
+        inset-block: 5px;
+        inset-inline-start: calc(50% - 1px);
+        inline-size: 2px;
+        z-index: 3;
+        pointer-events: none;
+        background: var(--an-vstrip) 0 25% / 100% 200% repeat-y;
+        filter: var(--dk-glow);
+    }
+
+    @keyframes dk-d-press {
+        0%,
         87.49% {
-            opacity: 0;
+            background-color: var(--card);
+            --an-angle: 0deg;
         }
         87.5% {
-            opacity: 0.35;
-            animation-timing-function: cubic-bezier(0, 0, 0.58, 1);
+            background-color: var(--secondary-active);
+            --an-angle: 0deg;
+            animation-timing-function: cubic-bezier(0.16, 0.84, 0.28, 1);
         }
         100% {
-            opacity: 0;
+            background-color: var(--secondary-active);
+            --an-angle: 90deg;
         }
     }
-    @keyframes dk-d-btn-out {
+    @keyframes dk-d-press-out {
         0% {
-            opacity: 0;
-            animation-timing-function: cubic-bezier(0.42, 0, 1, 1);
+            background-color: var(--secondary-active);
+            --an-angle: 90deg;
+            animation-timing-function: cubic-bezier(0.72, 0, 0.84, 0.16);
         }
         12.5% {
-            opacity: 0.35;
+            background-color: var(--secondary-active);
+            --an-angle: 0deg;
         }
-        12.51% {
+        12.51%,
+        100% {
+            background-color: var(--card);
+            --an-angle: 0deg;
+        }
+    }
+
+    @keyframes dk-d-bslit {
+        0%,
+        87.49% {
             opacity: 0;
+            background-position: 0 0%;
+        }
+        87.5% {
+            opacity: 0;
+            background-position: 0 0%;
+            animation-timing-function: cubic-bezier(0.16, 0.84, 0.28, 1);
+        }
+        93.75% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 1;
+            background-position: 0 25%;
+        }
+    }
+    @keyframes dk-d-bslit-out {
+        0% {
+            opacity: 1;
+            background-position: 0 25%;
+            animation-timing-function: cubic-bezier(0.72, 0, 0.84, 0.16);
+        }
+        6.25% {
+            opacity: 1;
+            animation-timing-function: cubic-bezier(0.72, 0, 0.84, 0.16);
+        }
+        12.5% {
+            opacity: 0;
+            background-position: 0 0%;
         }
         100% {
             opacity: 0;
+            background-position: 0 0%;
         }
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        .an-scene[data-an-phase='gap'] .dk-d-press::before {
+        .an-scene[data-an-phase='gap'] .dk-d-press {
+            --an-angle: 0deg;
+        }
+        .an-scene[data-an-phase='gap'] .dk-d-press__slit {
+            opacity: 0;
+            background-position: 0 0%;
+        }
+        .an-scene[data-an-phase='in'] .dk-d-press__slit,
+        .an-scene[data-an-phase='hold'] .dk-d-press__slit {
+            animation: dk-d-bslit calc(8 * var(--an-u)) linear 0s both;
+        }
+        .an-scene[data-an-phase='out'] .dk-d-press__slit {
+            animation: dk-d-bslit-out calc(8 * var(--an-u)) linear 0s both;
+        }
+    }
+
+    /* ── 5 · The line sweeps, then the film turns ────────────────────── */
+
+    /* Round one's sweep first, round one's turn second: the line sweeps the panel
+   0 to 4 units, linear, and lights it (the film laid with cyan at the top);
+   then, the line gone past the end, the film turns once (4 to 7, the register's
+   settle) and settles. The close is the turn back, then the sweep back. */
+    @keyframes dk-e-turn {
+        0% {
+            --an-angle: 0deg;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        100% {
+            --an-angle: 360deg;
+        }
+    }
+    @keyframes dk-e-turn-out {
+        0% {
+            --an-angle: 360deg;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+        100% {
+            --an-angle: 0deg;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .dk-e-panel {
+            clip-path: inset(-1em 100% -1em 0);
+        }
+        .an-scene[data-an-phase='gap'] .dk-e-line {
+            translate: -100% 0;
             opacity: 0;
         }
-        .an-scene[data-an-phase='in'] .dk-d-press::before,
-        .an-scene[data-an-phase='hold'] .dk-d-press::before {
-            animation: dk-d-btn calc(8 * var(--an-u)) linear calc(0 * var(--an-u)) both;
+        .an-scene[data-an-phase='in'] .dk-e-stage,
+        .an-scene[data-an-phase='hold'] .dk-e-stage {
+            animation: dk-e-turn calc(3 * var(--an-u)) linear calc(4 * var(--an-u)) both;
         }
-        .an-scene[data-an-phase='out'] .dk-d-press::before {
-            animation: dk-d-btn-out calc(8 * var(--an-u)) linear calc(0 * var(--an-u)) both;
+        .an-scene[data-an-phase='in'] .dk-e-panel,
+        .an-scene[data-an-phase='hold'] .dk-e-panel {
+            animation: an-clip calc(4 * var(--an-u)) linear 0s both;
+        }
+        .an-scene[data-an-phase='in'] .dk-e-line,
+        .an-scene[data-an-phase='hold'] .dk-e-line {
+            animation: dk-sweep calc(4 * var(--an-u)) linear 0s both;
+        }
+        .an-scene[data-an-phase='out'] .dk-e-stage {
+            animation: dk-e-turn-out calc(3 * var(--an-u)) linear calc(1 * var(--an-u)) both;
+        }
+        .an-scene[data-an-phase='out'] .dk-e-panel {
+            animation: an-clip-out calc(4 * var(--an-u)) linear calc(4 * var(--an-u)) both;
+        }
+        .an-scene[data-an-phase='out'] .dk-e-line {
+            animation: dk-sweep-out calc(4 * var(--an-u)) linear calc(4 * var(--an-u)) both;
         }
     }
 
-    /* ── 7 · The pool of light arrives ───────────────────────────────── */
-
-    /* The pool is the page's own (cyan at the body's weight, falling off to nothing);
-   it slides from off the stage's start to centre on the panel (6 units, settle),
-   and the panel lights under it: the edge goes from the ground's grey to the
-   film, the figure from muted to ink. */
-    .an-scene .dk-p-hero {
-        --dk-halo: 0;
+    /* The bar: the line is the head and the fill clips in with it (5 units,
+   linear), then the fill's colour turns once (5 to 7 units, the settle). */
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='in'] .dk-e-bar .dk-bar__fill,
+        .an-scene[data-an-phase='hold'] .dk-e-bar .dk-bar__fill {
+            animation:
+                an-clip calc(5 * var(--an-u)) linear 0s both,
+                dk-slide calc(2 * var(--an-u)) linear calc(5 * var(--an-u)) both;
+        }
+        .an-scene[data-an-phase='out'] .dk-e-bar .dk-bar__fill {
+            animation:
+                an-clip-out calc(5 * var(--an-u)) linear calc(3 * var(--an-u)) both,
+                dk-slide-out calc(2 * var(--an-u)) linear calc(1 * var(--an-u)) both;
+        }
     }
 
-    .an-scene .dk-p-pool {
-        --an-x0: -95%;
-        --an-x1: 0%;
-        --an-l: 6;
-        --an-ease: var(--an-settle);
-        --an-ease-out: var(--an-settle-out);
+    /* The button: the press sweeps the line across the face (7 to 7.5 units), then
+   the edge, drawn along the foot as the button was pointed at, turns a quarter
+   (7.5 to 8). */
+    .an-scene .dk-e-press__line {
         position: absolute;
         inset-block: 0;
         inset-inline: 0;
-        margin: auto;
-        z-index: 3;
-        inline-size: min(22rem, 90cqi);
-        block-size: min(14rem, 60cqi);
-        pointer-events: none;
-        background: radial-gradient(closest-side, hsl(from var(--chart-1) h s l / 0.26), hsl(from var(--chart-1) h s l / 0.1) 55%, transparent);
-    }
-
-    @keyframes dk-p-edge {
-        0% {
-            filter: grayscale(1) brightness(0.5);
-            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        100% {
-            filter: grayscale(0) brightness(1);
-        }
-    }
-    @keyframes dk-p-edge-out {
-        0% {
-            filter: grayscale(0) brightness(1);
-            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
-        }
-        100% {
-            filter: grayscale(1) brightness(0.5);
-        }
-    }
-
-    @keyframes dk-p-text {
-        0% {
-            color: var(--muted-foreground);
-            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        100% {
-            color: var(--foreground);
-        }
-    }
-    @keyframes dk-p-text-out {
-        0% {
-            color: var(--foreground);
-            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
-        }
-        100% {
-            color: var(--muted-foreground);
-        }
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        .an-scene[data-an-phase='gap'] .dk-p-panel::before {
-            filter: grayscale(1) brightness(0.5);
-        }
-        .an-scene[data-an-phase='in'] .dk-p-panel::before,
-        .an-scene[data-an-phase='hold'] .dk-p-panel::before {
-            animation: dk-p-edge calc(5 * var(--an-u)) cubic-bezier(0.22, 1, 0.36, 1) calc(1 * var(--an-u)) both;
-        }
-        .an-scene[data-an-phase='out'] .dk-p-panel::before {
-            animation: dk-p-edge-out calc(5 * var(--an-u)) cubic-bezier(0.64, 0, 0.78, 0) calc(2 * var(--an-u)) both;
-        }
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        .an-scene[data-an-phase='gap'] .dk-p-panel .dk-panel__figure {
-            color: var(--muted-foreground);
-        }
-        .an-scene[data-an-phase='in'] .dk-p-panel .dk-panel__figure,
-        .an-scene[data-an-phase='hold'] .dk-p-panel .dk-panel__figure {
-            animation: dk-p-text calc(5 * var(--an-u)) cubic-bezier(0.22, 1, 0.36, 1) calc(1 * var(--an-u)) both;
-        }
-        .an-scene[data-an-phase='out'] .dk-p-panel .dk-panel__figure {
-            animation: dk-p-text-out calc(5 * var(--an-u)) cubic-bezier(0.64, 0, 0.78, 0) calc(2 * var(--an-u)) both;
-        }
-    }
-
-    /* The bar: the pool follows the head of the fill. */
-    .an-scene .dk-p-bar__pool {
-        --an-kf: dk-head;
-        --an-kf-out: dk-head-out;
-        position: absolute;
-        inset-block-start: 50%;
-        inset-inline-start: var(--dk-v);
-        inline-size: 7rem;
-        block-size: 3.6rem;
-        margin: -1.8rem 0 0 -3.5rem;
-        pointer-events: none;
         z-index: 1;
-        background: radial-gradient(closest-side, hsl(from var(--chart-1) h s l / 0.38), hsl(from var(--chart-1) h s l / 0.12) 60%, transparent);
-    }
-
-    /* The button: the pool lies over the face and the press concentrates it (its
-   radius halves, its light doubles). */
-    .an-scene .dk-p-press__pool {
-        position: absolute;
-        inset: -70% -12%;
-        z-index: 0;
         pointer-events: none;
-        scale: 0.5;
-        background: radial-gradient(closest-side, hsl(from var(--chart-1) h s l / 0.7), hsl(from var(--chart-1) h s l / 0.25) 60%, transparent);
+        opacity: 0;
+        background:
+            linear-gradient(90deg, transparent, hsl(from var(--chart-1) h s l / 0.35)) 0 0 / calc(100% - 2px) 100% no-repeat,
+            var(--an-vspectrum) 100% 0 / 2px 100% no-repeat;
     }
 
-    @keyframes dk-p-btn {
+    @keyframes dk-e-edge {
         0% {
-            opacity: 0;
-            scale: 1.1;
+            scale: 0 1;
+            background-position: 0% 0;
             animation-timing-function: cubic-bezier(0.16, 0.84, 0.28, 1);
         }
-        28% {
-            opacity: 0.5;
-            scale: 1;
+        47.5% {
+            scale: 1 1;
+            background-position: 0% 0;
+        }
+        93.75% {
+            scale: 1 1;
+            background-position: 0% 0;
+            animation-timing-function: cubic-bezier(0.16, 0.84, 0.28, 1);
+        }
+        100% {
+            scale: 1 1;
+            background-position: 25% 0;
+        }
+    }
+    @keyframes dk-e-edge-out {
+        0% {
+            scale: 1 1;
+            background-position: 25% 0;
+            animation-timing-function: cubic-bezier(0.72, 0, 0.84, 0.16);
+        }
+        6.25% {
+            scale: 1 1;
+            background-position: 0% 0;
+        }
+        52.5% {
+            scale: 1 1;
+            background-position: 0% 0;
+            animation-timing-function: cubic-bezier(0.72, 0, 0.84, 0.16);
+        }
+        100% {
+            scale: 0 1;
+            background-position: 0% 0;
+        }
+    }
+
+    @keyframes dk-e-bsweep {
+        0%,
+        87.49% {
+            translate: -100% 0;
+            opacity: 0;
         }
         87.5% {
-            opacity: 0.5;
-            scale: 1;
-            animation-timing-function: cubic-bezier(0.16, 0.84, 0.28, 1);
+            translate: -100% 0;
+            opacity: 1;
+        }
+        93.5% {
+            translate: -4% 0;
+            opacity: 1;
+        }
+        93.75% {
+            translate: 0% 0;
+            opacity: 0;
         }
         100% {
-            opacity: 1;
-            scale: 0.5;
+            translate: 0% 0;
+            opacity: 0;
         }
     }
-    @keyframes dk-p-btn-out {
+    @keyframes dk-e-bsweep-out {
         0% {
+            translate: 0% 0;
+            opacity: 0;
+        }
+        6.25% {
+            translate: 0% 0;
+            opacity: 0;
+        }
+        6.5% {
+            translate: -4% 0;
             opacity: 1;
-            scale: 0.5;
-            animation-timing-function: cubic-bezier(0.72, 0, 0.84, 0.16);
         }
         12.5% {
-            opacity: 0.5;
-            scale: 1;
+            translate: -100% 0;
+            opacity: 1;
         }
-        72% {
-            opacity: 0.5;
-            scale: 1;
-            animation-timing-function: cubic-bezier(0.72, 0, 0.84, 0.16);
-        }
+        12.51%,
         100% {
+            translate: -100% 0;
             opacity: 0;
-            scale: 1.1;
         }
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        .an-scene[data-an-phase='gap'] .dk-p-press__pool {
+        .an-scene[data-an-phase='gap'] .dk-e-edge {
+            scale: 0 1;
+            background-position: 0% 0;
+        }
+        .an-scene[data-an-phase='gap'] .dk-e-press__line {
+            translate: -100% 0;
             opacity: 0;
-            scale: 1.1;
         }
-        .an-scene[data-an-phase='in'] .dk-p-press__pool,
-        .an-scene[data-an-phase='hold'] .dk-p-press__pool {
-            animation: dk-p-btn calc(8 * var(--an-u)) linear calc(0 * var(--an-u)) both;
+        .an-scene[data-an-phase='in'] .dk-e-edge,
+        .an-scene[data-an-phase='hold'] .dk-e-edge {
+            animation: dk-e-edge calc(8 * var(--an-u)) linear 0s both;
         }
-        .an-scene[data-an-phase='out'] .dk-p-press__pool {
-            animation: dk-p-btn-out calc(8 * var(--an-u)) linear calc(0 * var(--an-u)) both;
+        .an-scene[data-an-phase='in'] .dk-e-press__line,
+        .an-scene[data-an-phase='hold'] .dk-e-press__line {
+            animation: dk-e-bsweep calc(8 * var(--an-u)) linear 0s both;
+        }
+        .an-scene[data-an-phase='out'] .dk-e-edge {
+            animation: dk-e-edge-out calc(8 * var(--an-u)) linear 0s both;
+        }
+        .an-scene[data-an-phase='out'] .dk-e-press__line {
+            animation: dk-e-bsweep-out calc(8 * var(--an-u)) linear 0s both;
         }
     }
 }

@@ -80,7 +80,6 @@ export const PAGES = [
             {
                 href: 'research/dark-anchor/demo.html',
                 label: "What is dark's anchor element",
-                rework: 'update 1: film and spectral line combined, as Kenny asked',
             },
             {
                 href: 'research/retro-anchor/demo.html',
