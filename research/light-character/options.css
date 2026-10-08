@@ -1,0 +1,2473 @@
+/* research/light-character: every option of every question, in the theme's
+   signature layer, scoped by the option's attribute on its scene
+   (`.lt-scene[data-lt-<question>='<key>']`). Colours come from the theme's
+   tokens only (grammar.css holds the grammar as tokens and keyframes); every
+   motion sits under prefers-reduced-motion: no-preference, and the reduced
+   pose is the crisp, finished picture (a filter is never animated under
+   reduced motion). Durations are multiplied by --lt-slow (1, 2 or 4: the
+   page's speed buttons). The values of the "today" options are the register's
+   own (css/light-register.css); the values of "the pick" options are the
+   decided demos' (research/character-*).
+
+   SCOPE. The review dialog moves the section out of the page into its stage,
+   so nothing here hangs on `.lt-page` alone: every rule hangs on `.lt-scene`
+   (or on `.lt-sec` for the State buttons), which moves with its options.
+
+   THE CLOCK. One clock (demo.js) writes `data-lt-phase` on every scene of
+   kind `cycle`: gap (what arrives is away, in the glare), in (it comes into
+   focus), hold (it stands crisp), out (it goes back into the glare). The
+   base style of every part is its finished pose, so reduced motion and hold
+   show the crisp picture; `gap` sets the start pose; `in` and `hold` run the
+   open, `out` runs its mirror: every open is a pair of keyframes (`lt-x`,
+   `lt-x-out`) whose close is the open reversed (the timing function written
+   out in the keyframes, the inverse curve on the way back; steps(n,
+   jump-end) against steps(n, jump-start)), and a part's delay is mirrored
+   (window - delay - length), so what came last goes first. A scene's window
+   is --lt-win (1000 ms; 1500 ms for the unhurried durations). */
+
+@layer kp.signature {
+    /* ── The scene's clock and the arriving part ────────────────────── */
+
+    .lt-scene {
+        /* One exposure, one group step, the window the open and the close
+           are mirrored in; --lt-slow is the page's speed buttons. */
+        --lt-x: calc(var(--lt-exposure) * var(--lt-slow, 1));
+        --lt-step: calc(var(--lt-stagger) * var(--lt-slow, 1));
+        --lt-win: calc(1000ms * var(--lt-slow, 1));
+        --lt-upd: calc(var(--lt-update) * var(--lt-slow, 1));
+        --lt-lap: calc(var(--lt-loop) * var(--lt-slow, 1));
+        --lt-c: calc(var(--lt-contact) * var(--lt-slow, 1));
+        --lt-kf: lt-expose;
+        --lt-kf-out: lt-expose-out;
+        position: relative;
+        /* Nothing is translucent; the layout layer's busy dim stays off. */
+        --kp-busy-opacity: 1;
+    }
+
+    .lt-scene .lt-arrives {
+        --lt-l: var(--lt-x);
+        --lt-d: calc(var(--i, 0) * var(--lt-step));
+    }
+
+    /* ── The parts at rest ───────────────────────────────────────────── */
+
+    .lt-scene .lt-title {
+        margin: 0;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+    }
+
+    .lt-scene .kp-card {
+        position: relative;
+        display: grid;
+        gap: 0.25rem;
+        margin: 0;
+        padding: 0.85rem 1rem;
+    }
+
+    .lt-scene .kp-card__body {
+        margin: 0;
+    }
+
+    .lt-scene .kp-dialog {
+        position: relative;
+        margin: 0 0 1.25rem;
+        max-inline-size: none;
+        padding: 1rem;
+        animation: none;
+    }
+
+    .lt-scene .kp-dialog :is(.kp-dialog__title, .kp-dialog__description) {
+        margin: 0 0 0.5rem;
+    }
+
+    .lt-scene .kp-dialog__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .lt-menu-wrap {
+        position: relative;
+        display: grid;
+        justify-items: start;
+        align-content: start;
+        min-block-size: 10.5rem;
+    }
+
+    .lt-scene .lt-pop {
+        position: absolute;
+        inset-block-start: calc(var(--kp-control-height-sm, 2rem) + 0.35rem);
+        inset-inline-start: 0;
+        z-index: 2;
+        min-inline-size: 12rem;
+        animation: none;
+    }
+
+    .lt-scene .lt-pop--static {
+        position: relative;
+        inset: auto;
+    }
+
+    /* The register gives the popover and the menu inside it each the medium
+       shadow, so a menu casts two; one panel, one shadow. */
+    .lt-scene .lt-pop > .kp-menu {
+        box-shadow: none;
+    }
+
+    .lt-scene .kp-menu {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .lt-scene .kp-menu__item {
+        position: relative;
+        inline-size: 100%;
+        white-space: nowrap;
+    }
+
+    .lt-scene .kp-kpis {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.5rem;
+    }
+
+    .lt-scene .lt-kpi-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .lt-scene .kp-kpi {
+        position: relative;
+    }
+
+    .lt-scene .lt-in-kpi,
+    .lt-scene .kp-kpi--toggle,
+    .lt-scene a.kp-button {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .lt-carrier {
+        position: relative;
+        display: inline-block;
+        transform-origin: 0 60%;
+    }
+
+    .lt-scene .kp-kpi__value.lt-carrier {
+        justify-self: start;
+    }
+
+    /* The change is a soft pill in the tone's plate and ink. */
+    .lt-scene .lt-note {
+        border-radius: var(--lt-pill);
+        padding-inline: 0.55em;
+    }
+
+    .lt-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .lt-stack {
+        display: grid;
+        gap: 0.5rem;
+    }
+
+    .lt-gap {
+        block-size: 1.25rem;
+    }
+
+    /* The beads of question 1: the same bead twice, a white-ringed disc of
+       light on a hairline, one on the option's curve and one at an even pace. */
+    .lt-beads {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.25rem 1rem;
+    }
+
+    .lt-beads__ground {
+        position: relative;
+        display: grid;
+        place-items: center;
+        block-size: 4.5rem;
+    }
+
+    .lt-beads__ground::before {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: 50%;
+        block-size: 1px;
+        background: var(--border);
+    }
+
+    .lt-bead {
+        position: relative;
+        inline-size: 2.75rem;
+        block-size: 2.75rem;
+        border-radius: 50%;
+        background: var(--lt-light);
+        box-shadow:
+            inset 0 0 0 0.3rem var(--lt-paper),
+            0 0 0 1px var(--border);
+    }
+
+    .lt-bead--even {
+        background: var(--muted-foreground);
+    }
+
+    .lt-beads__name {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        text-align: center;
+    }
+
+    /* A day is a small white card on its softest shadow. */
+    .lt-days {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .lt-day {
+        position: relative;
+        display: grid;
+        place-items: center;
+        inline-size: 2.6rem;
+        block-size: 2.6rem;
+        border: 1px solid var(--border);
+        border-radius: var(--lt-plate);
+        background: var(--card);
+        box-shadow: var(--lt-shadow-sm);
+        color: var(--foreground);
+        font-size: 0.9rem;
+        font-weight: 500;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .lt-state {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45em;
+        inline-size: fit-content;
+    }
+
+    .lt-state__dot {
+        inline-size: 0.6em;
+        block-size: 0.6em;
+        border-radius: 50%;
+        background: var(--success-foreground);
+        transform-origin: 50% 50%;
+    }
+
+    .lt-state__word {
+        font-weight: 500;
+    }
+
+    .lt-spark,
+    .lt-run {
+        display: block;
+        color: var(--primary);
+    }
+
+    .lt-spark svg {
+        display: block;
+        inline-size: 100%;
+        block-size: 2.5rem;
+        overflow: visible;
+    }
+
+    .lt-spark--stale {
+        color: var(--muted-foreground);
+        opacity: 0.7;
+    }
+
+    .lt-run {
+        position: relative;
+    }
+
+    .lt-run svg {
+        display: block;
+        inline-size: 100%;
+        block-size: 2.5rem;
+        overflow: visible;
+    }
+
+    .lt-run__glare {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        filter: blur(3px) brightness(1.6);
+        pointer-events: none;
+    }
+
+    .lt-column {
+        display: grid;
+        gap: 0.15rem;
+        inline-size: fit-content;
+        padding: 0.5rem 1rem;
+        border: 1px solid var(--border);
+        border-radius: var(--lt-plate);
+        background: var(--card);
+        box-shadow: var(--lt-shadow-sm);
+        transform-origin: 50% 100%;
+    }
+
+    .lt-column__num {
+        font-size: 1.5rem;
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .lt-scene .lt-bar {
+        max-inline-size: none;
+    }
+
+    .lt-sizes {
+        display: grid;
+        gap: 0.9rem;
+    }
+
+    .lt-waits {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .lt-load {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        overflow: hidden;
+        border-radius: inherit;
+        pointer-events: none;
+    }
+
+    .lt-load > * {
+        display: none;
+    }
+
+    .lt-plot {
+        position: relative;
+        block-size: 5rem;
+        border: 1px solid var(--border);
+        border-radius: var(--lt-plate);
+        background: repeating-linear-gradient(to bottom, transparent 0 19px, hsl(from var(--border) h s l / 0.7) 19px 20px), var(--card);
+        color: var(--primary);
+    }
+
+    .lt-plot > svg {
+        position: absolute;
+        inset: 14% 5%;
+        inline-size: 90%;
+        block-size: 72%;
+        overflow: visible;
+    }
+
+    .lt-scene .lt-meter {
+        margin-inline-end: 1.25rem;
+    }
+
+    .lt-meter-wait {
+        position: relative;
+        padding-block: 0.6rem;
+    }
+
+    .lt-skel {
+        display: grid;
+        gap: 0.75rem;
+        padding-block: 0.3rem;
+    }
+
+    .lt-skel > .kp-skeleton + .kp-skeleton {
+        margin-block-start: 0;
+    }
+
+    .lt-scene .kp-tooltip.lt-tip {
+        position: relative;
+        inline-size: fit-content;
+        margin: 0.5rem 0 0 0.5rem;
+        animation: none;
+    }
+
+    .lt-scene .lt-tag {
+        inline-size: fit-content;
+    }
+
+    .lt-scene .lt-tile-link {
+        justify-self: start;
+    }
+
+    .lt-header-mini {
+        padding: 0.6rem;
+        border: 1px solid var(--border);
+        border-radius: var(--lt-plate);
+        background: var(--card);
+    }
+
+    .lt-scene .lt-header .kp-page-header__inner {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+    }
+
+    .lt-scene .lt-header :is(.kp-page-header__title, .kp-page-header__description) {
+        margin: 0;
+    }
+
+    .lt-scene .lt-header .kp-page-header__description {
+        color: var(--muted-foreground);
+    }
+
+    .lt-scene .lt-header .kp-page-header__actions {
+        display: flex;
+        flex-flow: row nowrap;
+        gap: 0.5rem;
+    }
+
+    .lt-scene .lt-header .kp-page-header__actions > .kp-button {
+        flex: none;
+        inline-size: auto;
+    }
+
+    .lt-busy-panel {
+        justify-items: center;
+        text-align: center;
+    }
+
+    .lt-busy-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        inline-size: fit-content;
+    }
+
+    .lt-scene .lt-bar--inline {
+        --kp-progressbar-scale: 0.8;
+        inline-size: 4.5rem;
+        flex: none;
+    }
+
+    .lt-spins {
+        gap: 1.5rem;
+    }
+
+    .lt-leaver {
+        position: relative;
+    }
+
+    .lt-scene .lt-link {
+        color: var(--primary);
+    }
+
+    .lt-prose {
+        margin: 0;
+    }
+
+    .lt-scene .lt-seam {
+        inline-size: 100%;
+        margin-block: 1.75rem;
+        margin-inline: 0;
+    }
+
+    .lt-scene .lt-cap--inner {
+        margin-block: 0;
+    }
+
+    /* The type sample. */
+    .lt-type {
+        gap: 0.4rem;
+    }
+
+    .lt-type :is(p, table) {
+        margin: 0;
+    }
+
+    .lt-type__label {
+        color: var(--muted-foreground);
+        font-size: 0.8125rem;
+        font-weight: 500;
+    }
+
+    .lt-type__head {
+        font-size: 1.15rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+    }
+
+    .lt-type__prose {
+        font-weight: 400;
+    }
+
+    .lt-type__figure {
+        display: flex;
+        align-items: baseline;
+        gap: 0.5rem;
+        font-size: 1.75rem;
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .lt-type__figure small {
+        color: var(--muted-foreground);
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .lt-type__figure .lt-note {
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .lt-type__table {
+        border-collapse: collapse;
+        font-size: 0.85rem;
+    }
+
+    .lt-type__table :is(th, td) {
+        padding: 0.15rem 1rem 0.15rem 0;
+        text-align: start;
+    }
+
+    .lt-type__table th {
+        color: var(--muted-foreground);
+        font-weight: 500;
+    }
+
+    .lt-type__ticks {
+        display: flex;
+        justify-content: space-between;
+        max-inline-size: 16rem;
+        border-block-start: 1px solid var(--border-strong);
+        color: var(--muted-foreground);
+        font-size: 0.75rem;
+    }
+
+    .lt-scene .lt-empty {
+        padding-block-end: 1.25rem;
+    }
+
+    /* Question 5: the glare, frozen in three frames. */
+    .lt-frames {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.75rem;
+    }
+
+    .lt-frame {
+        display: grid;
+        gap: 0.2rem;
+        padding: 0.65rem 0.75rem;
+        border: 1px solid var(--border);
+        border-radius: var(--lt-plate);
+        background: var(--card);
+        box-shadow: var(--lt-shadow-sm);
+    }
+
+    .lt-frame__num {
+        font-size: 1.6rem;
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+        line-height: 1.15;
+    }
+
+    .lt-frame:nth-child(1) {
+        filter: var(--lt-glare);
+    }
+
+    .lt-frame:nth-child(2) {
+        filter: blur(2px) brightness(1.25);
+    }
+
+    /* Question 7: three depths and a chart card. */
+    .lt-depths {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.9rem;
+        align-items: start;
+        padding-block-end: 1.25rem;
+    }
+
+    .lt-scene .lt-depths > .lt-depth {
+        margin: 0;
+        padding: 0.7rem 0.8rem;
+        min-inline-size: 0;
+    }
+
+    .lt-scene .lt-depths .kp-dialog.lt-depth {
+        padding: 0.7rem 0.8rem;
+    }
+
+    .lt-scene .lt-depths .lt-pop--static.lt-depth .kp-menu__item {
+        inline-size: 100%;
+    }
+
+    .lt-chart__plot {
+        display: block;
+        color: var(--primary);
+    }
+
+    .lt-chart__plot svg {
+        display: block;
+        inline-size: 100%;
+        block-size: 3.5rem;
+        overflow: visible;
+    }
+
+    /* ── The motion: what arrives, opens, updates or leaves ─────────────
+       One rule for every scene the clock plays: in `in` and `hold` the part
+       runs its open (`--lt-kf`), in `out` its mirror (`--lt-kf-out`) as late
+       as the open ended (the window less the delay less the length), so a
+       close is its open reversed frame by frame and what came last goes
+       first. Each option names its pair and its start pose (`gap`). */
+    @media (prefers-reduced-motion: no-preference) {
+        .lt-scene:is([data-lt-phase='in'], [data-lt-phase='hold']) .lt-arrives {
+            animation: var(--lt-kf) var(--lt-l) linear var(--lt-d) both;
+        }
+
+        .lt-scene[data-lt-phase='out'] .lt-arrives {
+            animation: var(--lt-kf-out) var(--lt-l) linear calc(var(--lt-win) - var(--lt-d) - var(--lt-l)) both;
+        }
+
+        /* The glare is the start pose of most options: a part is there as a
+           glare first, blurred and too bright (G1). */
+        .lt-scene:is(
+                [data-lt-curve='settle'],
+                [data-lt-curve='commit'],
+                [data-lt-curve='linear'],
+                [data-lt-direction='place'],
+                [data-lt-opening='focus'],
+                [data-lt-durations],
+                [data-lt-leave='place']
+            )[data-lt-phase='gap']
+            .lt-arrives:not(.lt-run) {
+            opacity: 0;
+            filter: var(--lt-glare);
+        }
+
+        /* 1 The curve. Every part comes out of the same glare for the same
+           420 ms, in place, so only the curve differs. */
+        .lt-scene[data-lt-curve='commit'] {
+            --lt-kf: lt-expose-commit;
+            --lt-kf-out: lt-expose-commit-out;
+        }
+
+        .lt-scene[data-lt-curve='linear'] {
+            --lt-kf: lt-expose-linear;
+            --lt-kf-out: lt-expose-linear-out;
+        }
+
+        .lt-scene[data-lt-curve] .lt-bead--even {
+            --lt-kf: lt-expose-linear;
+            --lt-kf-out: lt-expose-linear-out;
+        }
+
+        .lt-scene[data-lt-curve][data-lt-phase='gap'] .lt-bead--even {
+            opacity: 0;
+            filter: var(--lt-glare);
+        }
+
+        /* As today: the dialog's window opens from a slit on the settle
+           curve, the menu appears at once, the tile (and the bead) fade. */
+        .lt-scene[data-lt-curve='mix'] {
+            --lt-kf: lt-fade;
+            --lt-kf-out: lt-fade-out;
+        }
+
+        .lt-scene[data-lt-curve='mix'] .lt-dialog {
+            --lt-kf: lt-window;
+            --lt-kf-out: lt-window-out;
+        }
+
+        .lt-scene[data-lt-curve='mix'] .lt-pop {
+            --lt-kf: lt-cut;
+            --lt-kf-out: lt-cut-out;
+            --lt-l: 1ms;
+        }
+
+        .lt-scene[data-lt-curve='mix'][data-lt-phase='gap'] :is(.lt-tile, .lt-bead--own),
+        .lt-scene[data-lt-curve='mix'][data-lt-phase='gap'] .lt-pop {
+            opacity: 0;
+        }
+
+        .lt-scene[data-lt-curve='mix'][data-lt-phase='gap'] .lt-dialog {
+            opacity: 0;
+            translate: 0 6px;
+            clip-path: inset(40% 30% round var(--radius));
+        }
+
+        /* 2 The direction. In place: no travel, the line exposed along its
+           length with the glare running ahead of the focus. */
+        .lt-scene[data-lt-direction='place'] .lt-run {
+            --lt-kf: none;
+            --lt-kf-out: none;
+        }
+
+        .lt-scene[data-lt-direction='place']:is([data-lt-phase='in'], [data-lt-phase='hold']) .lt-run__line {
+            animation: lt-line var(--lt-l, var(--lt-x)) linear both;
+        }
+
+        .lt-scene[data-lt-direction='place']:is([data-lt-phase='in'], [data-lt-phase='hold']) .lt-run__glare {
+            animation: lt-line-glare var(--lt-l, var(--lt-x)) linear both;
+        }
+
+        .lt-scene[data-lt-direction='place'][data-lt-phase='out'] .lt-run__line {
+            animation: lt-line-out var(--lt-x) linear calc(var(--lt-win) - var(--lt-x)) both;
+        }
+
+        .lt-scene[data-lt-direction='place'][data-lt-phase='out'] .lt-run__glare {
+            animation: lt-line-glare-out var(--lt-x) linear calc(var(--lt-win) - var(--lt-x)) both;
+        }
+
+        .lt-scene[data-lt-direction='place'][data-lt-phase='gap'] .lt-run__line {
+            clip-path: inset(-1rem 100% -1rem -1rem);
+        }
+
+        .lt-scene[data-lt-direction='rise'] {
+            --lt-kf: lt-expose-rise;
+            --lt-kf-out: lt-expose-rise-out;
+        }
+
+        .lt-scene[data-lt-direction='feed'] {
+            --lt-kf: lt-expose-feed;
+            --lt-kf-out: lt-expose-feed-out;
+        }
+
+        .lt-scene[data-lt-direction='rise'][data-lt-phase='gap'] .lt-arrives {
+            opacity: 0;
+            translate: 0 8px;
+            filter: var(--lt-glare);
+        }
+
+        .lt-scene[data-lt-direction='feed'][data-lt-phase='gap'] .lt-arrives {
+            clip-path: inset(-1rem 100% -1rem -1rem);
+            filter: var(--lt-glare);
+        }
+
+        /* 3 Opening. Into focus under its anchor is the plain glare; the
+           window opens from a slit at its centre; the pop scales up. */
+        .lt-scene[data-lt-opening='window'] {
+            --lt-kf: lt-window;
+            --lt-kf-out: lt-window-out;
+        }
+
+        .lt-scene[data-lt-opening='window'][data-lt-phase='gap'] .lt-arrives {
+            opacity: 0;
+            translate: 0 6px;
+            clip-path: inset(40% 30% round var(--radius));
+        }
+
+        .lt-scene[data-lt-opening='pop'] {
+            --lt-kf: lt-pop;
+            --lt-kf-out: lt-pop-out;
+        }
+
+        .lt-scene[data-lt-opening='pop'] .lt-pop {
+            transform-origin: 1.25rem 0;
+        }
+
+        .lt-scene[data-lt-opening='pop'][data-lt-phase='gap'] .lt-arrives {
+            opacity: 0;
+            scale: 0.97;
+        }
+
+        /* 4 Durations. One picture (the exposure, in place, groups in
+           reading order, closing into the glare); only the times differ. */
+        .lt-scene[data-lt-durations='exposure'] {
+            --lt-x: calc(420ms * var(--lt-slow, 1));
+            --lt-step: calc(90ms * var(--lt-slow, 1));
+            --lt-c: calc(150ms * var(--lt-slow, 1));
+            --lt-lap: calc(2400ms * var(--lt-slow, 1));
+        }
+
+        .lt-scene[data-lt-durations='brisk'] {
+            --lt-x: calc(260ms * var(--lt-slow, 1));
+            --lt-step: calc(60ms * var(--lt-slow, 1));
+            --lt-c: calc(100ms * var(--lt-slow, 1));
+            --lt-lap: calc(1600ms * var(--lt-slow, 1));
+            --lt-win: calc(1000ms * var(--lt-slow, 1));
+        }
+
+        .lt-scene[data-lt-durations='unhurried'] {
+            --lt-x: calc(700ms * var(--lt-slow, 1));
+            --lt-step: calc(120ms * var(--lt-slow, 1));
+            --lt-c: calc(200ms * var(--lt-slow, 1));
+            --lt-lap: calc(3600ms * var(--lt-slow, 1));
+            --lt-win: calc(1500ms * var(--lt-slow, 1));
+        }
+
+        /* The contact: a press lands (settles flat) and flashes for the
+           time of the contact; it is let go at `hold`. */
+        .lt-scene[data-lt-durations] .lt-tap {
+            transition:
+                translate var(--lt-c) var(--lt-commit),
+                box-shadow var(--lt-c) var(--lt-commit),
+                background-color var(--lt-c) var(--lt-commit);
+        }
+
+        .lt-scene[data-lt-durations][data-lt-phase='in'] .lt-tap {
+            translate: 0 2px;
+            background-color: var(--secondary-active);
+            box-shadow: var(--lt-flat);
+            animation: lt-flash var(--lt-c) linear both;
+        }
+    }
+
+    /* Keyframe pairs of the options that are not the grammar's own. */
+    @keyframes lt-expose-commit {
+        from {
+            opacity: 0;
+            filter: var(--lt-glare);
+            animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        to {
+            opacity: 1;
+            filter: none;
+        }
+    }
+
+    @keyframes lt-expose-commit-out {
+        from {
+            opacity: 1;
+            filter: none;
+            animation-timing-function: cubic-bezier(1, 0, 0.8, 1);
+        }
+
+        to {
+            opacity: 0;
+            filter: var(--lt-glare);
+        }
+    }
+
+    @keyframes lt-expose-linear {
+        from {
+            opacity: 0;
+            filter: var(--lt-glare);
+            animation-timing-function: linear;
+        }
+
+        to {
+            opacity: 1;
+            filter: none;
+        }
+    }
+
+    @keyframes lt-expose-linear-out {
+        from {
+            opacity: 1;
+            filter: none;
+            animation-timing-function: linear;
+        }
+
+        to {
+            opacity: 0;
+            filter: var(--lt-glare);
+        }
+    }
+
+    /* A plain fade (today's tile): ease, and its inverse back. */
+    @keyframes lt-fade {
+        from {
+            opacity: 0;
+            animation-timing-function: ease;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes lt-fade-out {
+        from {
+            opacity: 1;
+            animation-timing-function: cubic-bezier(0.75, 0, 0.75, 0.9);
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    /* Appears at once (today's menu): a jump over 1 ms, mirrored exactly. */
+    @keyframes lt-cut {
+        from {
+            opacity: 0;
+            animation-timing-function: linear;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes lt-cut-out {
+        from {
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    /* The register's window: a small rounded slit at the centre widens to the
+       whole panel on the settle curve; the words are in by 40 %. */
+    @keyframes lt-window {
+        0% {
+            opacity: 0;
+            translate: 0 6px;
+            clip-path: inset(40% 30% round var(--radius));
+            animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        40% {
+            opacity: 1;
+            animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        100% {
+            opacity: 1;
+            translate: 0 0;
+            clip-path: inset(-3rem round var(--radius));
+        }
+    }
+
+    @keyframes lt-window-out {
+        0% {
+            opacity: 1;
+            translate: 0 0;
+            clip-path: inset(-3rem round var(--radius));
+            animation-timing-function: cubic-bezier(0.7, 0, 0.84, 0);
+        }
+
+        60% {
+            opacity: 1;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.84, 0);
+        }
+
+        100% {
+            opacity: 0;
+            translate: 0 6px;
+            clip-path: inset(40% 30% round var(--radius));
+        }
+    }
+
+    /* The pick for the menu: scales up from 97 % with a gentle overshoot. */
+    @keyframes lt-pop {
+        0% {
+            opacity: 0;
+            scale: 0.97;
+            animation-timing-function: cubic-bezier(0.2, 0.8, 0.3, 1);
+        }
+
+        55% {
+            opacity: 1;
+            scale: 1.015;
+            animation-timing-function: ease-in-out;
+        }
+
+        100% {
+            opacity: 1;
+            scale: 1;
+        }
+    }
+
+    @keyframes lt-pop-out {
+        0% {
+            opacity: 1;
+            scale: 1;
+            animation-timing-function: ease-in-out;
+        }
+
+        45% {
+            opacity: 1;
+            scale: 1.015;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.8, 0.2);
+        }
+
+        100% {
+            opacity: 0;
+            scale: 0.97;
+        }
+    }
+
+    /* 2 Rises 8 px while it comes into focus (the register's leave, backwards). */
+    @keyframes lt-expose-rise {
+        from {
+            opacity: 0;
+            translate: 0 8px;
+            filter: var(--lt-glare);
+            animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        to {
+            opacity: 1;
+            translate: 0 0;
+            filter: none;
+        }
+    }
+
+    @keyframes lt-expose-rise-out {
+        from {
+            opacity: 1;
+            translate: 0 0;
+            filter: none;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.84, 0);
+        }
+
+        to {
+            opacity: 0;
+            translate: 0 8px;
+            filter: var(--lt-glare);
+        }
+    }
+
+    /* 2 Start → end: exposed from its start edge to its end edge. */
+    @keyframes lt-expose-feed {
+        from {
+            clip-path: inset(-1rem 100% -1rem -1rem);
+            filter: var(--lt-glare);
+            animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        to {
+            clip-path: inset(-1rem);
+            filter: none;
+        }
+    }
+
+    @keyframes lt-expose-feed-out {
+        from {
+            clip-path: inset(-1rem);
+            filter: none;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.84, 0);
+        }
+
+        to {
+            clip-path: inset(-1rem 100% -1rem -1rem);
+            filter: var(--lt-glare);
+        }
+    }
+
+    /* 2 The trend's line, exposed along its length: the focused line is
+       drawn start → end and the glare runs ahead of its front (a window 18 %
+       wide, clipped by the end). */
+    @keyframes lt-line {
+        from {
+            clip-path: inset(-1rem 100% -1rem -1rem);
+            animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        to {
+            clip-path: inset(-1rem -2px -1rem -1rem);
+        }
+    }
+
+    @keyframes lt-line-out {
+        from {
+            clip-path: inset(-1rem -2px -1rem -1rem);
+            animation-timing-function: cubic-bezier(0.7, 0, 0.84, 0);
+        }
+
+        to {
+            clip-path: inset(-1rem 100% -1rem -1rem);
+        }
+    }
+
+    @keyframes lt-line-glare {
+        0% {
+            opacity: 0;
+            clip-path: inset(-1rem 82% -1rem 0%);
+            animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        6%,
+        94% {
+            opacity: 1;
+            animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        100% {
+            opacity: 0;
+            clip-path: inset(-1rem -18% -1rem 100%);
+        }
+    }
+
+    @keyframes lt-line-glare-out {
+        0% {
+            opacity: 0;
+            clip-path: inset(-1rem -18% -1rem 100%);
+            animation-timing-function: cubic-bezier(0.7, 0, 0.84, 0);
+        }
+
+        6%,
+        94% {
+            opacity: 1;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.84, 0);
+        }
+
+        100% {
+            opacity: 0;
+            clip-path: inset(-1rem 82% -1rem 0%);
+        }
+    }
+
+    /* ── 5 Colour (still) ────────────────────────────────────────────── */
+
+    /* Pointed at and focused, as the grammar has them (G15, G16): the pill
+       settles toward the paper; the ring is DI2's two channels. The same
+       look is the class's and the pointer's. */
+    .lt-scene[data-lt-colour] .kp-button.lt-pointed {
+        translate: 0 2px;
+        box-shadow: var(--lt-settled);
+    }
+
+    .lt-scene[data-lt-colour] .kp-button.lt-focused {
+        translate: 0 2px;
+        outline: 2px solid var(--focus-ring-contrast);
+        outline-offset: 2px;
+        box-shadow:
+            0 0 0 2px var(--focus-ring),
+            0 2px 5px hsl(from var(--foreground) h s l / 0.2);
+    }
+
+    /* The glare is cyan: the overexposure tints toward cyan on its way to white. */
+    .lt-scene[data-lt-colour='cyan'] .lt-frame:nth-child(1) {
+        background: color-mix(in oklab, var(--fx-signal) 38%, var(--card));
+        filter: var(--lt-glare) drop-shadow(0 0 0.9rem hsl(from var(--fx-signal) h s l / 0.8));
+    }
+
+    .lt-scene[data-lt-colour='cyan'] .lt-frame:nth-child(2) {
+        background: color-mix(in oklab, var(--fx-signal) 16%, var(--card));
+        filter: blur(2px) brightness(1.25) drop-shadow(0 0 0.5rem hsl(from var(--fx-signal) h s l / 0.6));
+    }
+
+    /* An amber warmth (the picks): hover and focus warm the control. */
+    .lt-scene[data-lt-colour='amber'] .kp-button.lt-pointed {
+        box-shadow:
+            0 0 0 0 transparent,
+            0 0 1.15rem 0.1rem hsl(from var(--chart-4) h s l / 0.65);
+    }
+
+    .lt-scene[data-lt-colour='amber'] .kp-button.lt-focused {
+        outline: 0;
+        box-shadow:
+            0 0 0 2px var(--focus-ring),
+            0 0 0 6px hsl(from var(--chart-4) h s l / 0.35),
+            0 0 1.15rem 0.2rem hsl(from var(--chart-4) h s l / 0.5);
+    }
+
+    .lt-scene[data-lt-colour='amber'] .lt-frame:nth-child(1) {
+        background: color-mix(in oklab, var(--chart-4) 18%, var(--card));
+    }
+
+    .lt-scene[data-lt-colour='amber'] .lt-link {
+        text-shadow: 0 0 0.6rem hsl(from var(--chart-4) h s l / 0.7);
+    }
+
+    /* ── 6 Corners (still) ───────────────────────────────────────────── */
+
+    /* Pills for acting, 0.5 rem for reading is the register itself. */
+    .lt-scene[data-lt-corners='pills'] :is(.kp-card, .kp-kpi, .kp-popover, .kp-dialog, .kp-field__input) {
+        border-radius: var(--lt-pill);
+        padding-inline: 1.5rem;
+    }
+
+    .lt-scene[data-lt-corners='pills'] .kp-popover {
+        padding-inline: 0.4rem;
+        padding-block: 0.3rem;
+        overflow: clip;
+    }
+
+    .lt-scene[data-lt-corners='pills'] :is(.kp-menu, .kp-menu__item) {
+        border-radius: var(--lt-pill);
+    }
+
+    .lt-scene[data-lt-corners='pills'] .kp-menu__item {
+        padding-inline: 1rem;
+    }
+
+    .lt-scene[data-lt-corners='pills'] :is(.kp-field__check, .kp-meter) {
+        border-radius: var(--lt-pill);
+    }
+
+    .lt-scene[data-lt-corners='half'] :is(.kp-button, .kp-badge, .kp-tag, .kp-tooltip) {
+        border-radius: var(--lt-plate);
+    }
+
+    .lt-scene[data-lt-corners='half'] .kp-switch {
+        --kp-switch-radius: var(--lt-plate);
+        --kp-switch-thumb-radius: 0.3rem;
+    }
+
+    .lt-scene[data-lt-corners='half'] :is(.kp-tooltip, .kp-badge, .kp-tag, .lt-note) {
+        border-radius: var(--lt-plate);
+    }
+
+    .lt-scene[data-lt-corners] .lt-check {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    /* ── 7 The surface (still) ───────────────────────────────────────── */
+
+    /* White, three soft shadows and the seam is the register itself. */
+    .lt-scene[data-lt-surface='flat'] {
+        --kp-shadow-sm: none;
+        --kp-shadow-md: none;
+        --kp-shadow-lg: none;
+    }
+
+    .lt-scene[data-lt-surface='flat'] :is(.kp-card, .kp-popover, .kp-dialog, .kp-kpi, .lt-day, .lt-frame) {
+        border-color: var(--border-strong);
+        box-shadow: none;
+    }
+
+    .lt-scene[data-lt-surface='flat'] .kp-button {
+        box-shadow: none;
+    }
+
+    .lt-scene[data-lt-surface='flat'] .kp-button:hover:not(:disabled) {
+        box-shadow: none;
+    }
+
+    /* Daylight skies (the picks): a pale sky at the top of the chart, a sun
+       just off frame in the key figure's corner, day cards lifted off a sky. */
+    .lt-scene[data-lt-surface='sky'] .lt-chart__plot {
+        margin: 0.3rem -1rem -0.85rem;
+        padding: 1.4rem 1rem 0.5rem;
+        border-radius: 0 0 var(--lt-plate) var(--lt-plate);
+        background:
+            radial-gradient(
+                circle at 105% -10%,
+                hsl(from var(--chart-4) h s l / 0.55) 0,
+                hsl(from var(--chart-4) h s l / 0.12) 2.2rem,
+                transparent 3.4rem
+            ),
+            linear-gradient(to bottom, hsl(from var(--fx-signal) h s l / 0.3), hsl(from var(--fx-signal) h s l / 0.04) 80%);
+    }
+
+    .lt-scene[data-lt-surface='sky'] .kp-kpi {
+        overflow: hidden;
+        background:
+            radial-gradient(
+                circle at 100% 0,
+                hsl(from var(--chart-4) h s l / 0.5) 0,
+                hsl(from var(--chart-4) h s l / 0.12) 2.4rem,
+                transparent 4.2rem
+            ),
+            var(--card);
+    }
+
+    .lt-scene[data-lt-surface='sky'] .lt-week {
+        padding: 0.7rem;
+        border-radius: var(--lt-plate);
+        background: linear-gradient(to bottom, var(--accent), hsl(from var(--accent) h s l / 0.35));
+    }
+
+    .lt-scene[data-lt-surface='sky'] .lt-week .lt-day {
+        border-color: transparent;
+        box-shadow: var(--lt-shadow-md);
+    }
+
+    .lt-scene[data-lt-surface='sky'] .lt-depths > .kp-card {
+        background: linear-gradient(to bottom, var(--accent), var(--card) 70%);
+    }
+
+    /* ── 8 A warning (still) ─────────────────────────────────────────── */
+
+    .lt-scene[data-lt-warning] .lt-warn {
+        --lt-tone: var(--warning-foreground);
+    }
+
+    .lt-scene[data-lt-warning] .lt-failed {
+        --lt-tone: var(--destructive);
+    }
+
+    .lt-scene[data-lt-warning] .lt-bad {
+        --lt-tone: var(--destructive);
+    }
+
+    .lt-scene[data-lt-warning] .lt-failed .lt-spark {
+        margin-block: 0.15rem;
+    }
+
+    /* A band along the top and a pill: a 3 px band of the tone's colour along
+       the card's top edge, the change on a soft pill in the tone's ink, the
+       card stays white. */
+    .lt-scene[data-lt-warning='band'] :is(.lt-warn, .lt-failed)::before {
+        content: '';
+        position: absolute;
+        inset: -1px -1px auto;
+        block-size: 3px;
+        border-radius: var(--lt-plate) var(--lt-plate) 0 0;
+        background: var(--lt-tone);
+    }
+
+    .lt-scene[data-lt-warning='band'] .lt-warn {
+        box-shadow: var(--lt-shadow-sm);
+    }
+
+    .lt-scene[data-lt-warning='band'] .lt-warn .kp-kpi__value {
+        padding-inline: 0;
+        background: transparent;
+        color: inherit;
+    }
+
+    .lt-scene[data-lt-warning='band'] :is(.lt-warn, .lt-failed) .lt-note {
+        background: hsl(from var(--lt-tone) h s l / 0.14);
+        color: var(--lt-tone);
+    }
+
+    .lt-scene[data-lt-warning='band'] .lt-bad {
+        color: var(--lt-tone);
+    }
+
+    .lt-scene[data-lt-warning='band'] .lt-bad::after {
+        content: 'irreversible';
+        margin-inline-start: 0.6em;
+        padding: 0.05rem 0.55em;
+        border-radius: var(--lt-pill);
+        background: hsl(from var(--lt-tone) h s l / 0.14);
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    /* The tinted card: the whole card takes the tone's pale tint with its ink. */
+    .lt-scene[data-lt-warning='tinted'] .lt-warn {
+        border-color: var(--warning-foreground);
+        background: var(--warning);
+        color: var(--warning-foreground);
+        box-shadow: none;
+    }
+
+    .lt-scene[data-lt-warning='tinted'] .lt-warn :is(.kp-kpi__label, .kp-kpi__trend) {
+        color: inherit;
+    }
+
+    .lt-scene[data-lt-warning='tinted'] .lt-warn .kp-kpi__value {
+        padding-inline: 0;
+        background: transparent;
+        color: inherit;
+    }
+
+    .lt-scene[data-lt-warning='tinted'] .lt-failed {
+        border-color: var(--destructive);
+        background: hsl(from var(--destructive) h s l / 0.1);
+        color: var(--destructive);
+        box-shadow: none;
+    }
+
+    .lt-scene[data-lt-warning='tinted'] .lt-failed .kp-card__body {
+        color: inherit;
+    }
+
+    .lt-scene[data-lt-warning='tinted'] .lt-bad {
+        background: hsl(from var(--destructive) h s l / 0.12);
+        color: var(--destructive);
+    }
+
+    /* The figure overexposed in the tone: it burns out in the tone's colour
+       for a beat whenever it is drawn (shown on a loop). */
+    .lt-scene[data-lt-warning='exposed'] .lt-warn {
+        box-shadow: var(--lt-shadow-sm);
+    }
+
+    .lt-scene[data-lt-warning='exposed'] .lt-bad {
+        color: var(--lt-tone);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .lt-scene[data-lt-warning='exposed'] :is(.lt-warn .kp-kpi__value, .lt-failed .lt-note, .lt-failed .lt-title, .lt-bad) {
+            animation: lt-burn-tone var(--lt-lap) ease-out infinite;
+        }
+    }
+
+    @keyframes lt-burn-tone {
+        0% {
+            filter: blur(2px) brightness(1.7) drop-shadow(0 0 0.5rem var(--lt-tone));
+            animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        28%,
+        100% {
+            filter: none;
+        }
+    }
+
+    /* ── 9 A live update ─────────────────────────────────────────────── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* Re-exposed: the changed figure goes into the glare for a beat
+           (brightness 1.4, blur 2 px) and comes back into focus, 420 ms; the
+           figure, the word and the line never move. */
+        .lt-scene[data-lt-live='reexposed']:is([data-lt-phase='in'], [data-lt-phase='hold']) .lt-carrier {
+            animation: lt-reexpose var(--lt-upd) linear both;
+        }
+
+        /* The soft swell (the picks): 112 %, 500 ms ease-in-out. */
+        .lt-scene[data-lt-live='swell']:is([data-lt-phase='in'], [data-lt-phase='hold']) .lt-carrier {
+            animation: lt-swell calc(500ms * var(--lt-slow, 1)) ease-in-out both;
+        }
+
+        .lt-scene[data-lt-live='swell']:is([data-lt-phase='in'], [data-lt-phase='hold']) .lt-state__dot {
+            animation-name: lt-swell-dot;
+        }
+
+        .lt-scene[data-lt-live='swell']:is([data-lt-phase='in'], [data-lt-phase='hold']) .lt-spark {
+            animation-name: lt-swell-line;
+        }
+    }
+
+    .lt-scene[data-lt-live] .lt-spark.lt-carrier {
+        transform-origin: 50% 100%;
+    }
+
+    @keyframes lt-swell {
+        0%,
+        100% {
+            scale: 1;
+        }
+
+        50% {
+            scale: 1.12;
+        }
+    }
+
+    @keyframes lt-swell-dot {
+        0%,
+        100% {
+            scale: 1;
+        }
+
+        50% {
+            scale: 1.9;
+        }
+    }
+
+    @keyframes lt-swell-line {
+        0%,
+        100% {
+            scale: 1 1;
+        }
+
+        50% {
+            scale: 1.02 1.35;
+        }
+    }
+
+    /* ── 10 Loading (a loop) ─────────────────────────────────────────── */
+
+    /* The register's skeleton opens once by a clip; every question-10 option
+       draws its own waiting picture instead, and the content under it is
+       faint unless the surface itself is the picture. */
+    .lt-scene[data-lt-loading] .kp-skeleton {
+        animation: none;
+    }
+
+    .lt-scene[data-lt-loading] .lt-skel > .kp-skeleton {
+        background: hsl(from var(--border-strong) h s l / 0.35);
+    }
+
+    .lt-scene[data-lt-loading]:not([data-lt-loading='unfocused']) .lt-waits > :not(.lt-load) {
+        opacity: 0.55;
+    }
+
+    .lt-scene[data-lt-loading] .lt-day.lt-waits {
+        color: var(--muted-foreground);
+    }
+
+    .lt-scene[data-lt-loading] .lt-meter-wait::after {
+        content: none;
+    }
+
+    /* Out of focus: the waiting surface stands in the glare and breathes. The
+       register's own daylight band on the meter yields to it. */
+    .lt-scene[data-lt-loading='unfocused'] .lt-meter-wait .kp-meter[data-kp-loading]::after,
+    .lt-scene[data-lt-loading='dashed'] .lt-meter-wait .kp-meter[data-kp-loading]::after,
+    .lt-scene[data-lt-loading='clip'] .lt-meter-wait .kp-meter[data-kp-loading]::after {
+        content: none;
+    }
+
+    /* What is waiting is the content: it stands in the glare on its plate (a
+       plate that is blurred and brighter as well is white on white, and
+       nothing is left to see), and the placeholders carry enough ink to be
+       there out of focus. */
+    .lt-scene[data-lt-loading='unfocused'] .lt-skel > .kp-skeleton {
+        background: var(--border-strong);
+    }
+
+    .lt-scene[data-lt-loading='unfocused'] .lt-meter-wait .kp-meter {
+        background: hsl(from var(--border-strong) h s l / 0.55);
+    }
+
+    .lt-scene[data-lt-loading='unfocused'] .lt-w {
+        display: inline-block;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .lt-scene[data-lt-loading='unfocused'] .lt-waits > :not(.lt-load) {
+            animation: lt-breathe var(--lt-lap) infinite;
+        }
+
+        .lt-scene[data-lt-loading='unfocused'] .lt-day.lt-waits > .lt-w {
+            animation-delay: calc(var(--i, 0) * -280ms);
+        }
+
+        .lt-scene[data-lt-loading='unfocused'] .lt-skel > .kp-skeleton:nth-child(2) {
+            animation-delay: -300ms;
+        }
+
+        .lt-scene[data-lt-loading='unfocused'] .lt-skel > .kp-skeleton:nth-child(3) {
+            animation-delay: -600ms;
+        }
+    }
+
+    /* The daylight band (the picks): a soft band of cyan light crosses the
+       waiting part, again and again. */
+    .lt-scene[data-lt-loading='daylight'] .lt-load__band {
+        display: block;
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: 45%;
+        background: linear-gradient(90deg, transparent, hsl(from var(--fx-signal) h s l / 0.4), transparent);
+        translate: -100% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .lt-scene[data-lt-loading='daylight'] .lt-load__band {
+            animation: lt-daylight calc(var(--lt-lap) * 1.25) ease-in-out infinite;
+        }
+
+        .lt-scene[data-lt-loading='dashed'] .lt-load__dash {
+            animation: lt-dash calc(1600ms * var(--lt-slow, 1)) linear infinite;
+        }
+
+        .lt-scene[data-lt-loading='clip'] .lt-load__pills i {
+            animation: lt-open-loop calc(3600ms * var(--lt-slow, 1)) infinite;
+        }
+
+        .lt-scene[data-lt-loading='clip'] .lt-load__pills i:nth-child(2) {
+            animation-delay: calc(120ms * var(--lt-slow, 1));
+        }
+
+        .lt-scene[data-lt-loading='clip'] .lt-skel > .kp-skeleton {
+            animation: lt-open-loop calc(3600ms * var(--lt-slow, 1)) infinite;
+        }
+
+        .lt-scene[data-lt-loading='clip'] .lt-skel > .kp-skeleton:nth-child(2) {
+            animation-delay: calc(120ms * var(--lt-slow, 1));
+        }
+
+        .lt-scene[data-lt-loading='clip'] .lt-skel > .kp-skeleton:nth-child(3) {
+            animation-delay: calc(240ms * var(--lt-slow, 1));
+        }
+    }
+
+    /* The skeleton's own pills are the daylight's and the baseline's and the
+       clip's picture only when the part has none of its own. */
+    /* The dashed baseline (the picks): a dashed line under the waiting part
+       drifts to the right. */
+    .lt-scene[data-lt-loading='dashed'] .lt-load__dash {
+        display: block;
+        position: absolute;
+        inset-inline: 0.75rem;
+        inset-block-end: 0.45rem;
+        block-size: 2px;
+        background: repeating-linear-gradient(90deg, var(--primary) 0 8px, transparent 8px 16px);
+    }
+
+    .lt-scene[data-lt-loading='dashed'] .lt-day .lt-load__dash,
+    .lt-scene[data-lt-loading='dashed'] .kp-menu__item .lt-load__dash {
+        inset-inline: 0.4rem;
+        inset-block-end: 0.3rem;
+    }
+
+    .lt-scene[data-lt-loading='dashed'] .lt-meter-wait .lt-load__dash {
+        inset-block: auto 0.2rem;
+        inset-inline: 0;
+    }
+
+    .lt-scene[data-lt-loading='dashed'] .lt-skel .lt-load__dash {
+        inset-block-end: 0;
+        inset-inline: 0;
+    }
+
+    /* The skeleton's clip (today): muted pills open from the start by a
+       clip, 120 ms apart, once (here once every 3.6 s). */
+    .lt-scene[data-lt-loading='clip'] .lt-load__pills {
+        display: grid;
+        position: absolute;
+        inset-inline: 0.75rem;
+        inset-block-end: 0.5rem;
+        gap: 0.4rem;
+    }
+
+    .lt-scene[data-lt-loading='clip'] .lt-day .lt-load__pills {
+        inset-inline: 0.4rem;
+        inset-block-end: 0.35rem;
+    }
+
+    .lt-scene[data-lt-loading='clip'] .lt-skel .lt-load__pills {
+        display: none;
+    }
+
+    .lt-scene[data-lt-loading='clip'] .lt-load__pills i {
+        display: block;
+        block-size: 0.5rem;
+        border-radius: var(--lt-pill);
+        background: var(--border-strong);
+    }
+
+    .lt-scene[data-lt-loading='clip'] .lt-day .lt-load__pills i:nth-child(2),
+    .lt-scene[data-lt-loading='clip'] .kp-menu__item .lt-load__pills i:nth-child(2) {
+        display: none;
+    }
+
+    .lt-scene[data-lt-loading] .lt-waits:not(.lt-day, .kp-menu__item, .lt-skel) {
+        padding-block-end: 1.5rem;
+    }
+
+    .lt-scene[data-lt-loading='clip'] .lt-waits:not(.lt-day, .kp-menu__item, .lt-skel, .lt-plot, .lt-meter-wait) {
+        padding-block-end: 2.3rem;
+    }
+
+    .lt-scene[data-lt-loading] .kp-menu__item.lt-waits {
+        padding-block-end: 1.6rem;
+    }
+
+    .lt-scene[data-lt-loading] .lt-meter-wait.lt-waits {
+        padding-block-end: 0.6rem;
+        overflow: visible;
+    }
+
+    @keyframes lt-daylight {
+        from {
+            translate: -100% 0;
+        }
+
+        to {
+            translate: 230% 0;
+        }
+    }
+
+    @keyframes lt-dash {
+        from {
+            background-position: 0 0;
+        }
+
+        to {
+            background-position: 16px 0;
+        }
+    }
+
+    @keyframes lt-open-loop {
+        0% {
+            clip-path: inset(0 100% 0 0 round 999px);
+            animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        25%,
+        100% {
+            clip-path: inset(0 0 0 0 round 999px);
+        }
+    }
+
+    /* ── 11 The busy progress bar (a loop) ───────────────────────────── */
+
+    /* A glare runs the line: the indigo line is drawn whole and a short
+       overexposed stretch (white, blurred) runs along it start → end with the
+       bead at its head, then comes round again. Question 4's loop is this. */
+    .lt-scene:is([data-lt-busybar='glare'], [data-lt-durations]) .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset-inline: 0;
+        inset-block: calc(50% - 2 * var(--kp-ps-px));
+        inline-size: auto;
+        block-size: calc(4 * var(--kp-ps-px));
+        background: var(--primary);
+        clip-path: inset(0 round 999px);
+    }
+
+    .lt-scene:is([data-lt-busybar='glare'], [data-lt-durations]) .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
+        display: block;
+        z-index: 1;
+    }
+
+    .lt-scene:is([data-lt-busybar='glare'], [data-lt-durations]) .kp-progressbar[data-kp-indeterminate] .kp-progressbar__track::after {
+        content: '';
+        position: absolute;
+        inset-block: calc(50% - 3 * var(--kp-ps-px));
+        inset-inline-start: 0;
+        inline-size: 26cqi;
+        border-radius: var(--lt-pill);
+        background: var(--lt-paper);
+        opacity: 0.92;
+        filter: blur(calc(2.5 * var(--kp-ps-px)));
+        translate: calc(100cqi - 26cqi) 0;
+    }
+
+    .lt-scene:is([data-lt-busybar='glare'], [data-lt-durations]) .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
+        transform: translateX(calc(100cqi - var(--kp-ps-bead)));
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .lt-scene:is([data-lt-busybar='glare'], [data-lt-durations]) .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
+            animation: lt-run-head var(--lt-lap) linear infinite;
+        }
+
+        .lt-scene:is([data-lt-busybar='glare'], [data-lt-durations]) .kp-progressbar[data-kp-indeterminate] .kp-progressbar__track::after {
+            animation: lt-run-glare var(--lt-lap) linear infinite;
+        }
+    }
+
+    /* The three beads walk: the register's three beads step along the track
+       one place at a time and come round. */
+    .lt-scene[data-lt-busybar='beads'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        animation: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .lt-scene[data-lt-busybar='beads'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+            animation: lt-beads-walk var(--lt-lap) steps(10, end) infinite;
+        }
+    }
+
+    /* The bead orbits the line: one cyan bead runs to the end of the hairline
+       and back. */
+    .lt-scene[data-lt-busybar='orbit'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        opacity: 0;
+    }
+
+    .lt-scene[data-lt-busybar='orbit'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
+        display: block;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .lt-scene[data-lt-busybar='orbit'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
+            animation: lt-bead-to-and-fro var(--lt-lap) ease-in-out infinite alternate;
+        }
+    }
+
+    @keyframes lt-beads-walk {
+        from {
+            translate: -62% 0;
+        }
+
+        to {
+            translate: 62% 0;
+        }
+    }
+
+    @keyframes lt-bead-to-and-fro {
+        from {
+            transform: translateX(0);
+        }
+
+        to {
+            transform: translateX(calc(100cqi - var(--kp-ps-bead)));
+        }
+    }
+
+    /* ── 12 The spinner (a loop) ─────────────────────────────────────── */
+
+    /* The bead burns out at the top: the register's ring and its two beads
+       orbiting on the settle curve, and the indigo bead overexposes where it
+       dwells at the top and is back in focus by the foot. */
+    @media (prefers-reduced-motion: no-preference) {
+        .lt-scene[data-lt-spinner='burn'] .kp-spinner.lt-spin::after {
+            animation:
+                kp-sig-light-light-orbit calc(var(--lt-orbit) * var(--lt-slow, 1)) var(--kp-sig-light-ease) infinite,
+                lt-burn calc(var(--lt-orbit) * var(--lt-slow, 1)) linear infinite;
+        }
+
+        .lt-scene[data-lt-spinner='orbit'] .kp-spinner.lt-spin::after {
+            animation-duration: calc(var(--lt-orbit) * var(--lt-slow, 1));
+        }
+
+        .lt-scene[data-lt-spinner='orbit'] .kp-spinner.lt-spin::before {
+            animation-duration: calc(var(--lt-orbit) * var(--lt-slow, 1));
+        }
+
+        .lt-scene[data-lt-spinner='breathe'] .kp-spinner.lt-spin {
+            animation: lt-ring-breathe calc(var(--lt-orbit) * var(--lt-slow, 1)) infinite;
+        }
+    }
+
+    /* A ring breathing into the glare: a hairline ring, no beads. */
+    .lt-scene[data-lt-spinner='breathe'] .kp-spinner.lt-spin {
+        border: 2px solid var(--primary);
+    }
+
+    .lt-scene[data-lt-spinner='breathe'] .kp-spinner.lt-spin::before,
+    .lt-scene[data-lt-spinner='breathe'] .kp-spinner.lt-spin::after {
+        content: none;
+    }
+
+    @keyframes lt-ring-breathe {
+        0%,
+        100% {
+            filter: none;
+            animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        35% {
+            filter: blur(2.5px) brightness(1.8);
+            animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+    }
+
+    /* ── 13 Leaving and arriving ─────────────────────────────────────── */
+
+    /* Out of the glare in place is the plain exposure; with the 8 px rise is
+       the register's leave (ease-in into the glare and up) and its arrival,
+       that played backwards; the window is the slit. */
+    .lt-scene[data-lt-leave='rise'] {
+        --lt-kf: lt-rise;
+        --lt-kf-out: lt-rise-out;
+    }
+
+    .lt-scene[data-lt-leave='window'] {
+        --lt-kf: lt-window;
+        --lt-kf-out: lt-window-out;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .lt-scene[data-lt-leave='rise'][data-lt-phase='gap'] .lt-arrives {
+            opacity: 0;
+            translate: 0 -8px;
+            filter: var(--lt-glare);
+        }
+
+        .lt-scene[data-lt-leave='window'][data-lt-phase='gap'] .lt-arrives {
+            opacity: 0;
+            translate: 0 6px;
+            clip-path: inset(40% 30% round var(--radius));
+        }
+    }
+
+    @keyframes lt-rise {
+        from {
+            opacity: 0;
+            translate: 0 -8px;
+            filter: var(--lt-glare);
+            animation-timing-function: cubic-bezier(0, 0, 0.58, 1);
+        }
+
+        to {
+            opacity: 1;
+            translate: 0 0;
+            filter: none;
+        }
+    }
+
+    @keyframes lt-rise-out {
+        from {
+            opacity: 1;
+            translate: 0 0;
+            filter: none;
+            animation-timing-function: cubic-bezier(0.42, 0, 1, 1);
+        }
+
+        to {
+            opacity: 0;
+            translate: 0 -8px;
+            filter: var(--lt-glare);
+        }
+    }
+
+    /* ── 14 Buttons inside composites (State forces a state) ─────────── */
+
+    /* One manner for every control, wherever it stands (G14): the pill
+       settles toward the paper on hover, DI2's ring on focus, lands flat and
+       flashes on press; a menu entry takes the muted wash, a link the pale
+       cyan, a key figure that is a link settles like a pill. */
+    .lt-sec[data-lt-show='hover'] .lt-scene[data-lt-composites]:not([data-lt-composites='mix']) :is(.kp-button, .lt-in-kpi) {
+        translate: 0 2px;
+        box-shadow: var(--lt-settled);
+    }
+
+    .lt-sec[data-lt-show='hover'] .lt-scene[data-lt-composites]:not([data-lt-composites='mix']) .kp-button--ghost {
+        background: var(--secondary);
+    }
+
+    .lt-sec[data-lt-show='hover'] .lt-scene[data-lt-composites]:not([data-lt-composites='mix']) .lt-in-kpi {
+        box-shadow: 0 1px 2px hsl(from var(--foreground) h s l / 0.08);
+    }
+
+    .lt-sec[data-lt-show='hover'] .lt-scene[data-lt-composites]:not([data-lt-composites='mix']) .kp-menu__item {
+        background: var(--muted);
+    }
+
+    .lt-sec[data-lt-show='focus'] .lt-scene[data-lt-composites]:not([data-lt-composites='mix']) :is(.kp-button, .kp-menu__item, .lt-in-kpi) {
+        outline: 2px solid var(--focus-ring-contrast);
+        outline-offset: 2px;
+        box-shadow: 0 0 0 2px var(--focus-ring);
+    }
+
+    .lt-sec[data-lt-show='focus'] .lt-scene[data-lt-composites]:not([data-lt-composites='mix']) .kp-button {
+        translate: 0 2px;
+        box-shadow:
+            0 0 0 2px var(--focus-ring),
+            0 2px 5px hsl(from var(--foreground) h s l / 0.2);
+    }
+
+    .lt-sec[data-lt-show='focus'] .lt-scene[data-lt-composites]:not([data-lt-composites='mix']) .kp-menu__item {
+        outline-offset: -2px;
+    }
+
+    .lt-sec[data-lt-show='press'] .lt-scene[data-lt-composites]:not([data-lt-composites='mix']) :is(.kp-button, .lt-in-kpi) {
+        translate: 0 2px;
+        box-shadow: var(--lt-flat);
+    }
+
+    .lt-sec[data-lt-show='press'] .lt-scene[data-lt-composites]:not([data-lt-composites='mix']) .kp-button:not(.kp-button--primary) {
+        background: var(--secondary-active);
+    }
+
+    .lt-sec[data-lt-show='press'] .lt-scene[data-lt-composites]:not([data-lt-composites='mix']) .kp-button--primary {
+        background: var(--primary-active);
+    }
+
+    .lt-sec[data-lt-show='press'] .lt-scene[data-lt-composites]:not([data-lt-composites='mix']) .kp-menu__item {
+        background: var(--secondary-active);
+    }
+
+    .lt-sec[data-lt-show='press'] .lt-scene[data-lt-composites]:not([data-lt-composites='mix']) .lt-in-kpi {
+        background: var(--muted);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .lt-sec[data-lt-show='press'] .lt-scene[data-lt-composites]:not([data-lt-composites='mix']) :is(.kp-button, .lt-in-kpi) {
+            animation: lt-flash var(--lt-c) linear 1;
+        }
+    }
+
+    /* On a soft card: the same manners, and the actions sit on a soft card of
+       their own with the small shadow. */
+    .lt-scene[data-lt-composites='card'] .lt-actions-card {
+        padding: 0.4rem;
+        border: 1px solid var(--border);
+        border-radius: var(--lt-plate);
+        background: var(--card);
+        box-shadow: var(--lt-shadow-sm);
+    }
+
+    /* As today: three manners. The header's warm glow, the filled Open pill,
+       the lifted entry, the key figure's sun corner. */
+    .lt-sec[data-lt-show='hover'] .lt-scene[data-lt-composites='mix'] :is(.lt-in-header, .lt-in-drawer) {
+        box-shadow:
+            0 0 0 0 transparent,
+            0 0 1.15rem 0.1rem hsl(from var(--chart-4) h s l / 0.6);
+    }
+
+    .lt-sec[data-lt-show='focus'] .lt-scene[data-lt-composites='mix'] :is(.lt-in-header, .lt-in-drawer) {
+        outline: 2px solid var(--focus-ring-contrast);
+        outline-offset: 2px;
+        box-shadow:
+            0 0 0 2px var(--focus-ring),
+            0 0 0 6px hsl(from var(--chart-4) h s l / 0.35);
+    }
+
+    .lt-sec[data-lt-show='press'] .lt-scene[data-lt-composites='mix'] :is(.lt-in-header, .lt-in-drawer) {
+        translate: 0 2px;
+        box-shadow: var(--lt-flat);
+    }
+
+    .lt-sec[data-lt-show='hover'] .lt-scene[data-lt-composites='mix'] .lt-tile-link {
+        background: var(--accent);
+        color: var(--accent-foreground);
+        box-shadow: var(--lt-shadow-sm);
+    }
+
+    .lt-sec[data-lt-show='focus'] .lt-scene[data-lt-composites='mix'] .lt-tile-link {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+        box-shadow: 0 0 0 6px hsl(from var(--primary) h s l / 0.15);
+    }
+
+    .lt-sec[data-lt-show='press'] .lt-scene[data-lt-composites='mix'] .lt-tile-link {
+        background: var(--accent-active);
+    }
+
+    .lt-sec[data-lt-show='hover'] .lt-scene[data-lt-composites='mix'] .kp-menu__item {
+        background: var(--secondary);
+        translate: 0 -2px;
+        box-shadow: var(--lt-shadow-md);
+    }
+
+    .lt-sec[data-lt-show='focus'] .lt-scene[data-lt-composites='mix'] .kp-menu__item {
+        outline: 2px solid var(--focus-ring-contrast);
+        outline-offset: -2px;
+        box-shadow: 0 0 0 2px var(--focus-ring);
+    }
+
+    .lt-sec[data-lt-show='press'] .lt-scene[data-lt-composites='mix'] .kp-menu__item {
+        background: var(--secondary-active);
+    }
+
+    .lt-sec[data-lt-show='hover'] .lt-scene[data-lt-composites='mix'] .lt-in-kpi {
+        background: radial-gradient(circle at 100% 0, hsl(from var(--chart-4) h s l / 0.5) 0, transparent 4.5rem), var(--card);
+        overflow: hidden;
+    }
+
+    .lt-sec[data-lt-show='focus'] .lt-scene[data-lt-composites='mix'] .lt-in-kpi {
+        outline: 2px solid var(--focus-ring-contrast);
+        outline-offset: 2px;
+        box-shadow:
+            0 0 0 2px var(--focus-ring),
+            0 0 0 6px hsl(from var(--chart-4) h s l / 0.35);
+    }
+
+    .lt-sec[data-lt-show='press'] .lt-scene[data-lt-composites='mix'] .lt-in-kpi {
+        background: radial-gradient(circle at 100% 0, hsl(from var(--chart-4) h s l / 0.25) 0, transparent 2.5rem), var(--card);
+        overflow: hidden;
+    }
+
+    .lt-sec[data-lt-show='hover'] .lt-scene[data-lt-composites='mix'] .lt-alone {
+        translate: 0 2px;
+        box-shadow: var(--lt-settled);
+    }
+
+    .lt-sec[data-lt-show='focus'] .lt-scene[data-lt-composites='mix'] .lt-alone {
+        translate: 0 2px;
+        outline: 2px solid var(--focus-ring-contrast);
+        outline-offset: 2px;
+        box-shadow:
+            0 0 0 2px var(--focus-ring),
+            0 2px 5px hsl(from var(--foreground) h s l / 0.2);
+    }
+
+    .lt-sec[data-lt-show='press'] .lt-scene[data-lt-composites='mix'] .lt-alone {
+        translate: 0 2px;
+        background: var(--secondary-active);
+        box-shadow: var(--lt-settled);
+    }
+
+    .lt-sec[data-lt-show='press'] .lt-scene[data-lt-composites='mix'] .lt-alone.kp-button--primary {
+        background: var(--primary-active);
+    }
+
+    /* ── 15 Pointing at something (still: the pointed part is marked) ── */
+
+    /* The class is the pointer: the review dialog gives it and takes it away
+       on a loop. The values are the register's own for the first option. */
+    .lt-scene[data-lt-hover] :is(.kp-button, .kp-menu__item, .lt-in-kpi, .lt-day, .lt-link, .lt-in-tile) {
+        transition-duration: var(--lt-c);
+        transition-timing-function: var(--lt-commit);
+    }
+
+    .lt-scene[data-lt-hover='settle'] :is(.kp-button, .lt-in-kpi, .lt-day):is(.lt-pointed, :hover) {
+        translate: 0 2px;
+        box-shadow: var(--lt-settled);
+    }
+
+    .lt-scene[data-lt-hover='settle'] :is(.lt-in-kpi, .lt-day):is(.lt-pointed, :hover) {
+        box-shadow: 0 1px 2px hsl(from var(--foreground) h s l / 0.08);
+    }
+
+    .lt-scene[data-lt-hover] .kp-button--ghost.lt-pointed {
+        background: var(--secondary);
+    }
+
+    .lt-scene[data-lt-hover] .kp-button:not(.kp-button--ghost, .kp-button--primary).lt-pointed {
+        background: var(--secondary-hover);
+    }
+
+    .lt-scene[data-lt-hover] .kp-button--primary.lt-pointed {
+        background: var(--primary-hover);
+        border-color: var(--primary-hover);
+    }
+
+    .lt-scene[data-lt-hover='settle'] .kp-menu__item.lt-pointed {
+        background: var(--muted);
+    }
+
+    .lt-scene[data-lt-hover='settle'] .lt-link:is(.lt-pointed, :hover) {
+        background: var(--accent);
+        box-shadow:
+            -0.15em 0 0 var(--accent),
+            0.15em 0 0 var(--accent);
+        text-decoration-color: var(--primary);
+    }
+
+    .lt-scene[data-lt-hover='settle'] .lt-in-kpi:is(.lt-pointed, :hover) {
+        border-color: var(--border-strong);
+    }
+
+    /* The shadow lifts (the picks): the hovered tile, entry or pill rises on
+       a wider shadow; the Open link becomes a filled soft pill. */
+    .lt-scene[data-lt-hover='lift'] :is(.kp-button, .lt-in-kpi, .lt-day):is(.lt-pointed, :hover) {
+        translate: 0 -2px;
+        box-shadow:
+            0 0 0 0 transparent,
+            0 10px 18px -8px hsl(from var(--foreground) h s l / 0.35);
+    }
+
+    .lt-scene[data-lt-hover='lift'] .lt-in-tile:has(.lt-pointed, :hover) {
+        translate: 0 -2px;
+        box-shadow: var(--lt-shadow-md);
+    }
+
+    .lt-scene[data-lt-hover='lift'] .lt-tile-link:is(.lt-pointed, :hover) {
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+
+    .lt-scene[data-lt-hover='lift'] .kp-menu__item.lt-pointed {
+        background: var(--secondary);
+        translate: 0 -2px;
+        box-shadow: var(--lt-shadow-md);
+    }
+
+    .lt-scene[data-lt-hover='lift'] .lt-link:is(.lt-pointed, :hover) {
+        translate: 0 -1px;
+        text-decoration-color: var(--primary);
+    }
+
+    /* A touch overexposed: the hovered control brightens 8 % and loses a hair
+       of sharpness. */
+    .lt-scene[data-lt-hover='bright'] :is(.kp-button, .kp-menu__item, .lt-in-kpi, .lt-day, .lt-link):is(.lt-pointed, :hover) {
+        filter: brightness(1.08) blur(0.4px);
+    }
+
+    .lt-scene[data-lt-hover='bright'] .lt-tile-link.lt-pointed {
+        background: var(--secondary);
+    }
+
+    /* ── 16 The focus ring (still: the focused part is marked) ───────── */
+
+    .lt-scene[data-lt-focus='di2'] :is(.lt-focused, :focus-visible),
+    .lt-scene[data-lt-focus='mix'] :is(.lt-focused, :focus-visible) {
+        outline: 2px solid var(--focus-ring-contrast);
+        outline-offset: 2px;
+        box-shadow: 0 0 0 2px var(--focus-ring);
+    }
+
+    .lt-scene[data-lt-focus='di2'] .kp-button:is(.lt-focused, :focus-visible),
+    .lt-scene[data-lt-focus='mix'] .kp-button:is(.lt-focused, :focus-visible),
+    .lt-scene[data-lt-focus='halo'] .kp-button:is(.lt-focused, :focus-visible) {
+        translate: 0 2px;
+    }
+
+    .lt-scene[data-lt-focus='di2'] .kp-menu__item.lt-focused,
+    .lt-scene[data-lt-focus='mix'] .kp-menu__item.lt-focused {
+        outline-offset: -2px;
+    }
+
+    .lt-scene[data-lt-focus='di2'] .kp-button.lt-focused,
+    .lt-scene[data-lt-focus='mix'] .kp-button.lt-focused {
+        box-shadow:
+            0 0 0 2px var(--focus-ring),
+            0 2px 5px hsl(from var(--foreground) h s l / 0.2);
+    }
+
+    /* A halo of light (the picks): a soft wide cyan halo instead of the ring. */
+    .lt-scene[data-lt-focus='halo'] :is(.lt-focused, :focus-visible) {
+        outline: 0;
+        box-shadow:
+            0 0 0 4px hsl(from var(--fx-signal) h s l / 0.3),
+            0 0 1.4rem 0.3rem hsl(from var(--fx-signal) h s l / 0.5);
+    }
+
+    /* As today: the register's ring plus the picks' amber halo and the tile's
+       soft focus ring. */
+    .lt-scene[data-lt-focus='mix'] :is(.lt-focused, :focus-visible) {
+        box-shadow:
+            0 0 0 2px var(--focus-ring),
+            0 0 0 6px hsl(from var(--chart-4) h s l / 0.35),
+            0 0 1.2rem 0.2rem hsl(from var(--chart-4) h s l / 0.35);
+    }
+
+    .lt-scene[data-lt-focus='mix'] .lt-tile-link.lt-focused {
+        outline: 2px solid var(--ring);
+        box-shadow: 0 0 0 6px hsl(from var(--primary) h s l / 0.16);
+    }
+
+    .lt-scene[data-lt-focus='mix'] .lt-in-header.lt-focused {
+        outline: 2px dotted var(--ring);
+    }
+
+    /* ── 17 The press (a loop; State: Press holds it) ───────────────── */
+
+    /* The pressed pill is shown on a loop, 3.2 s: at rest, landing, held,
+       let go. What each part rests and presses on is set per kind. */
+    .lt-scene[data-lt-press] .lt-press {
+        --lt-rest-bg: var(--secondary);
+        --lt-press-bg: var(--secondary-active);
+        --lt-rest-shadow: var(--lt-rest);
+        --lt-held-shadow: var(--lt-flat);
+        --lt-tap-time: calc(3200ms * var(--lt-slow, 1));
+    }
+
+    .lt-scene[data-lt-press] .kp-button--primary.lt-press {
+        --lt-rest-bg: var(--primary);
+        --lt-press-bg: var(--primary-active);
+    }
+
+    .lt-scene[data-lt-press] .kp-menu__item.lt-press {
+        --lt-rest-bg: transparent;
+        --lt-press-bg: var(--secondary-active);
+        --lt-rest-shadow: 0 0 0 0 transparent;
+        --lt-held-shadow: 0 0 0 0 transparent;
+    }
+
+    .lt-scene[data-lt-press] .lt-day.lt-press,
+    .lt-scene[data-lt-press] .kp-kpi.lt-press {
+        --lt-rest-bg: var(--card);
+        --lt-press-bg: var(--muted);
+        --lt-rest-shadow: var(--lt-shadow-sm);
+        --lt-held-shadow: 0 0 0 0 transparent;
+    }
+
+    .lt-scene[data-lt-press='none'] .lt-press {
+        --lt-held-shadow: var(--lt-settled);
+    }
+
+    .lt-scene[data-lt-press='none'] :is(.lt-day, .kp-kpi).lt-press {
+        --lt-held-shadow: 0 1px 2px hsl(from var(--foreground) h s l / 0.08);
+    }
+
+    .lt-scene[data-lt-press='none'] .kp-menu__item.lt-press {
+        --lt-held-shadow: 0 0 0 0 transparent;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .lt-scene[data-lt-press='flash'] .lt-press {
+            animation: lt-tap-flash var(--lt-tap-time) linear infinite;
+        }
+
+        .lt-scene[data-lt-press='flat'] .lt-press {
+            animation: lt-tap-flat var(--lt-tap-time) linear infinite;
+        }
+
+        .lt-scene[data-lt-press='none'] .lt-press {
+            animation: lt-tap-none var(--lt-tap-time) linear infinite;
+        }
+
+        .lt-scene[data-lt-press='flash'] .kp-button:active:not(:disabled) {
+            animation: lt-flash var(--lt-c) linear 1;
+        }
+    }
+
+    .lt-scene[data-lt-press='flash'] .kp-button:active:not(:disabled),
+    .lt-scene[data-lt-press='flat'] .kp-button:active:not(:disabled) {
+        translate: 0 2px;
+        box-shadow: var(--lt-flat);
+    }
+
+    /* State: Press holds the pressed ground (the shutter has already gone). */
+    .lt-sec[data-lt-show='press'] .lt-scene[data-lt-press] .lt-press {
+        animation: none;
+        translate: 0 2px;
+        background-color: var(--lt-press-bg);
+        box-shadow: var(--lt-held-shadow);
+    }
+
+    @keyframes lt-tap-flash {
+        0%,
+        26% {
+            translate: 0 0;
+            background-color: var(--lt-rest-bg);
+            box-shadow: var(--lt-rest-shadow);
+            filter: none;
+            animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        30% {
+            translate: 0 2px;
+            background-color: var(--lt-press-bg);
+            box-shadow: var(--lt-held-shadow);
+            filter: brightness(var(--lt-shutter));
+            animation-timing-function: ease-in-out;
+        }
+
+        36%,
+        62% {
+            translate: 0 2px;
+            background-color: var(--lt-press-bg);
+            box-shadow: var(--lt-held-shadow);
+            filter: none;
+            animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        70%,
+        100% {
+            translate: 0 0;
+            background-color: var(--lt-rest-bg);
+            box-shadow: var(--lt-rest-shadow);
+            filter: none;
+        }
+    }
+
+    @keyframes lt-tap-flat {
+        0%,
+        26% {
+            translate: 0 0;
+            background-color: var(--lt-rest-bg);
+            box-shadow: var(--lt-rest-shadow);
+            animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        32%,
+        62% {
+            translate: 0 2px;
+            background-color: var(--lt-press-bg);
+            box-shadow: var(--lt-held-shadow);
+            animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        70%,
+        100% {
+            translate: 0 0;
+            background-color: var(--lt-rest-bg);
+            box-shadow: var(--lt-rest-shadow);
+        }
+    }
+
+    @keyframes lt-tap-none {
+        0%,
+        26% {
+            translate: 0 0;
+            background-color: var(--lt-rest-bg);
+            box-shadow: var(--lt-rest-shadow);
+            animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        32%,
+        62% {
+            translate: 0 2px;
+            background-color: var(--lt-press-bg);
+            box-shadow: var(--lt-held-shadow);
+            animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        70%,
+        100% {
+            translate: 0 0;
+            background-color: var(--lt-rest-bg);
+            box-shadow: var(--lt-rest-shadow);
+        }
+    }
+
+    /* ── 18 The voice ────────────────────────────────────────────────── */
+
+    /* One face, two weights: Instrument Sans for everything; headings 600
+       tracked -0.01 em, figures 600 tabular, labels 500 at 0.8125 rem, prose
+       400; mono only for identifiers and timestamps. */
+    .lt-scene[data-lt-type] .lt-stamp {
+        font-family: var(--theme-font-mono);
+        font-size: 0.8125rem;
+    }
+
+    .lt-scene[data-lt-type='mono'] :is(.lt-type__figure, .lt-type__table td, .lt-type__ticks) {
+        font-family: var(--theme-font-mono);
+        letter-spacing: -0.02em;
+    }
+
+    .lt-scene[data-lt-type='mono'] .lt-type__figure .lt-note {
+        font-family: var(--theme-font-mono);
+    }
+
+    .lt-scene[data-lt-type='heavy'] :is(.lt-type__head, .lt-type__figure) {
+        font-weight: 700;
+    }
+
+    .lt-scene[data-lt-type='heavy'] .lt-type__head {
+        letter-spacing: -0.03em;
+    }
+
+    .lt-scene[data-lt-type='heavy'] .lt-type__figure {
+        letter-spacing: -0.03em;
+    }
+
+    .lt-scene[data-lt-type='heavy'] .lt-type__label {
+        font-weight: 600;
+    }
+
+    /* ── 19 Motifs ───────────────────────────────────────────────────── */
+
+    .lt-scene[data-lt-motifs] .lt-days--today .lt-picked {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+
+    /* The seam, its circle, the bead: the day that is today wears the bead
+       beneath its number; the meter's mark is a plain stroke; nothing else. */
+    .lt-scene[data-lt-motifs='seam'] .lt-today::after {
+        content: '';
+        position: absolute;
+        inset-block-end: 0.28rem;
+        inset-inline-start: calc(50% - 0.3rem);
+        inline-size: 0.6rem;
+        block-size: 0.6rem;
+        border-radius: 50%;
+        background: var(--lt-light);
+        box-shadow: inset 0 0 0 0.12rem var(--lt-paper);
+    }
+
+    .lt-scene[data-lt-motifs='seam'] .lt-meter {
+        --kp-sig-meter-mo-sign: '';
+    }
+
+    .lt-scene[data-lt-motifs='seam'] .kp-meter__mark {
+        box-shadow: 0 0 0 1px var(--card);
+    }
+
+    .lt-scene[data-lt-motifs='seam'] .kp-meter[data-kp-over]::after {
+        content: none;
+    }
+
+    .lt-scene[data-lt-motifs='seam'] .kp-meter__mark[data-kp-over] {
+        rotate: 0deg;
+    }
+
+    .lt-scene[data-lt-motifs='seam'] .kp-meter__mark[data-kp-over]::after {
+        content: none;
+    }
+
+    /* Plus the sun and the gnomon (the picks): the meter's gnomon with its
+       shadow and glint (the register's own), the calendar's ring of sunlight,
+       the sun corner on the key figure. */
+    .lt-scene[data-lt-motifs='sun'] .lt-today {
+        box-shadow:
+            0 0 0 2px var(--lt-paper),
+            0 0 0 4px hsl(from var(--chart-4) h s l / 0.75),
+            0 0 1rem 0.2rem hsl(from var(--chart-4) h s l / 0.55);
+    }
+
+    .lt-scene[data-lt-motifs='sun'] .kp-kpi {
+        overflow: hidden;
+        background:
+            radial-gradient(circle at 100% 0, hsl(from var(--chart-4) h s l / 0.5) 0, hsl(from var(--chart-4) h s l / 0.12) 2.2rem, transparent 4rem),
+            var(--card);
+    }
+
+    /* None: no seam circle, no bead; hairlines and lines only. */
+    .lt-scene[data-lt-motifs='none'] [data-kp-divider]::after,
+    .lt-scene[data-lt-motifs='none'] .kp-progressbar__head,
+    .lt-scene[data-lt-motifs='none'] .kp-meter__mark,
+    .lt-scene[data-lt-motifs='none'] .kp-meter[data-kp-over]::after {
+        display: none;
+    }
+
+    .lt-scene[data-lt-motifs='none'] .kp-empty::before {
+        content: none;
+    }
+
+    .lt-scene[data-lt-motifs='none'] .lt-today {
+        font-weight: 700;
+        text-decoration: underline;
+        text-underline-offset: 0.2em;
+    }
+
+    .lt-scene[data-lt-motifs='none'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        background: linear-gradient(var(--primary), var(--primary)) 0 50% / 40% 4px no-repeat;
+    }
+}

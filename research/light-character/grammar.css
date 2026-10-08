@@ -1,0 +1,213 @@
+/* research/light-character/grammar.css: light's proposed grammar as the
+   questions use it (Kenny's anchor verdict of 2026-10-08, research/light-
+   anchor: "Overexposed: out of the glare"; themes/light/CHARACTER.md G1-G21).
+   One file of tokens and keyframes, linked by demo.html before options.css;
+   options.css applies it to every option of every question.
+
+   - light EXPOSES. A part is a glare first, blurred and too bright
+     (brightness 1.6, blur 5 px), and comes down into focus and into its own
+     white; what leaves goes back into the glare. Nothing slides, nothing
+     grows, nothing is drawn: only the exposure changes (G1, G2, G13);
+   - the curve is light's settle, `--kp-ease-arrive` cubic-bezier(0.16, 1,
+     0.3, 1): most of the way at once, then a long settle into focus, the way a
+     lens pulls focus. A close is the same played backwards on the inverse
+     curve, cubic-bezier(0.7, 0, 0.84, 0) (a curve's inverse is its point
+     reflection: (1 - x2, 1 - y2, 1 - x1, 1 - y1));
+   - one exposure lasts 420 ms, contact 150 ms, a group is exposed 90 ms apart
+     in reading order, a re-exposure (a live update) 420 ms, a loop 2400 ms
+     (G4);
+   - indigo acts, cyan is light itself (a fill, never a word), the glare is
+     white and nothing else (G5); pills for what you act on, 0.5 rem for what
+     you read (G6); white on white with three soft shadows and the seam (G7);
+   - a live update is re-exposed (brightness 1.4, blur 2 px, 420 ms); loading
+     is out of focus, breathing (brightness 1.3 to 1.6, blur 3 to 5 px, 2400
+     ms); the busy bar is a glare running the line; the spinner's indigo bead
+     burns out at the top; a press lands and flashes (G9 to G12, G17).
+
+   Every one-shot motion is a pair of keyframes, `lt-x` and `lt-x-out`, so a
+   close is its open reversed: the timing function is written out inside the
+   keyframes (a `var()` there is invalid and falls back to `ease`), and an
+   eased open closes on the inverse curve. Colours come from the theme's
+   tokens only; every animation sits under prefers-reduced-motion:
+   no-preference, the reduced pose is the crisp picture, and a filter is
+   never animated under reduced motion. The tokens hang on `.lt-page,
+   .lt-scene`, because the review dialog moves a section into its stage. */
+
+@layer kp.signature {
+    :is(.lt-page, .lt-scene) {
+        /* G1: the curve. --lt-settle is the register's --kp-ease-arrive; the
+           inverse closes. Inside @keyframes both are written out. */
+        --lt-settle: var(--kp-ease-arrive, cubic-bezier(0.16, 1, 0.3, 1));
+        --lt-settle-out: cubic-bezier(0.7, 0, 0.84, 0);
+        --lt-commit: var(--fx-ease, cubic-bezier(0.2, 0, 0, 1));
+        /* G4: the durations. */
+        --lt-contact: var(--fx-duration, 150ms);
+        --lt-exposure: 420ms;
+        --lt-stagger: 90ms;
+        --lt-update: 420ms;
+        --lt-loop: 2400ms;
+        --lt-orbit: 1200ms;
+        /* G1: the glare. White is brightness, never a tint. */
+        --lt-bright: 1.6;
+        --lt-blur: 5px;
+        --lt-glare: blur(var(--lt-blur)) brightness(var(--lt-bright));
+        /* G9: the beat a changed figure goes into. */
+        --lt-beat: blur(2px) brightness(1.4);
+        /* G10: out of focus, breathing between these two. */
+        --lt-dim: blur(3px) brightness(1.3);
+        --lt-dazzle: blur(5px) brightness(1.6);
+        /* G17: the shutter. */
+        --lt-shutter: 1.25;
+        /* G6: the radii. */
+        --lt-pill: var(--kp-radius-pill, 999px);
+        --lt-plate: var(--radius, 0.5rem);
+        --lt-check: 0.3rem;
+        /* G5: the colours by role. */
+        --lt-acts: var(--primary);
+        --lt-light: var(--fx-signal);
+        --lt-paper: var(--background);
+        --lt-ink: var(--foreground);
+        /* G7: the three soft shadows and the seam. */
+        --lt-shadow-sm: var(--kp-shadow-sm, 0 1px 2px hsl(from var(--foreground) h s l / 0.06));
+        --lt-shadow-md: var(--kp-shadow-md, 0 8px 24px hsl(from var(--foreground) h s l / 0.12));
+        --lt-shadow-lg: var(--kp-shadow-lg, 0 20px 48px hsl(from var(--foreground) h s l / 0.22));
+        --lt-seam: var(--border-strong);
+        /* G15: the button at rest and settled toward the paper. */
+        --lt-rest: 0 0 0 0 transparent, 0 6px 14px hsl(from var(--foreground) h s l / 0.12);
+        --lt-settled: 0 0 0 0 transparent, 0 2px 5px hsl(from var(--foreground) h s l / 0.2);
+        --lt-flat: 0 0 0 0 transparent, 0 0 0 0 transparent;
+    }
+
+    /* ── G1 · G13: the exposure settles. A part comes out of the glare in
+       place and goes back into it; the open is the close played backwards
+       on the inverse curve. ───────────────────────────────────────────── */
+    @keyframes lt-expose {
+        from {
+            opacity: 0;
+            filter: var(--lt-glare);
+            animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        to {
+            opacity: 1;
+            filter: none;
+        }
+    }
+
+    @keyframes lt-expose-out {
+        from {
+            opacity: 1;
+            filter: none;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.84, 0);
+        }
+
+        to {
+            opacity: 0;
+            filter: var(--lt-glare);
+        }
+    }
+
+    /* ── G9: re-exposed. The changed figure goes into the glare for a beat
+       (it is the quick part) and comes back into focus on the settle. ──── */
+    @keyframes lt-reexpose {
+        0% {
+            filter: none;
+            animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        18% {
+            filter: var(--lt-beat);
+            animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        100% {
+            filter: none;
+        }
+    }
+
+    /* ── G10: out of focus. A waiting surface stands in the glare and its
+       exposure breathes. ──────────────────────────────────────────────── */
+    @keyframes lt-breathe {
+        0%,
+        100% {
+            filter: var(--lt-dim);
+            animation-timing-function: ease-in-out;
+        }
+
+        50% {
+            filter: var(--lt-dazzle);
+            animation-timing-function: ease-in-out;
+        }
+    }
+
+    /* ── G11: the busy bar. The line is drawn whole; a short overexposed
+       stretch runs along it start to end with the bead at its head, and
+       comes round again. The track is the container (100cqi is its width). */
+    @keyframes lt-run-head {
+        0% {
+            opacity: 0;
+            transform: translateX(0);
+        }
+
+        6% {
+            opacity: 1;
+        }
+
+        94% {
+            opacity: 1;
+        }
+
+        100% {
+            opacity: 0;
+            transform: translateX(calc(100cqi - var(--kp-ps-bead, 0.75rem)));
+        }
+    }
+
+    @keyframes lt-run-glare {
+        from {
+            translate: calc(var(--kp-ps-bead, 0.75rem) - 26cqi) 0;
+        }
+
+        to {
+            translate: calc(100cqi - 26cqi) 0;
+        }
+    }
+
+    /* ── G12: the spinner's indigo bead burns out where it passes the top
+       and is back in focus by the foot (the rotation is the register's own
+       orbit, on the settle curve, so the bead dwells at the top). ─────── */
+    @keyframes lt-burn {
+        0% {
+            filter: blur(4px) brightness(1.8);
+            animation-timing-function: ease-out;
+        }
+
+        16%,
+        66% {
+            filter: none;
+            animation-timing-function: ease-in;
+        }
+
+        100% {
+            filter: blur(4px) brightness(1.8);
+        }
+    }
+
+    /* ── G17: a press lands (the pill settles flat) and flashes, the
+       shutter, for the contact. ────────────────────────────────────────── */
+    @keyframes lt-flash {
+        0% {
+            filter: none;
+            animation-timing-function: ease-out;
+        }
+
+        35% {
+            filter: brightness(var(--lt-shutter));
+            animation-timing-function: ease-in-out;
+        }
+
+        100% {
+            filter: none;
+        }
+    }
+}

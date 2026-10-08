@@ -89,6 +89,10 @@ export const PAGES = [
                 href: 'research/phantom-anchor/demo.html',
                 label: "What is phantom's anchor element",
             },
+            // Kenny, 2026-10-08: what makes formal, light and deco themselves, the forest way (the analysis in themes/<theme>/CHARACTER.md), the nineteen questions each, every option a live scene that follows from the theme's decided anchor, the recommendation first.
+            { href: 'research/formal-character/demo.html', label: 'What makes formal formal' },
+            { href: 'research/light-character/demo.html', label: 'What makes light light' },
+            { href: 'research/deco-character/demo.html', label: 'What makes deco deco' },
             // The character round, sixth demo (2026-10-05): the key-figure strip with its columns in 22 themes, two characters each.
             // The character round, eighth component: the attention band, shape/arrival/leave/tone/empty/loading, one pick per aspect (formal and titanium built first).
             // The character round, ninth and tenth components: the action columns and the menu button.
