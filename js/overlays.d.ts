@@ -141,10 +141,11 @@ export declare const DISMISS_OWNED = "[data-kp-dismiss-owner]";
  * worse than no button at all. Delegated from `root`, so a toast raised
  * after attach is covered too.
  *
- * An alert is hidden (`hidden`, which the base layer holds above every
- * layout class) after ALERT_DISMISS_EVENT, which a consumer may cancel to
- * keep it or to animate it out first — setting `hidden = false` brings it
- * back. A toast leaves through its own `dismiss()` when `toast()` made it,
+ * An alert leaves the theme's way (js/motion.js leave(), its space folding
+ * shut) and is then hidden (`hidden`, which the base layer holds above
+ * every layout class), after ALERT_DISMISS_EVENT, which a consumer may
+ * cancel to keep it or to animate it out itself — setting `hidden = false`
+ * brings it back. A toast leaves through its own `dismiss()` when `toast()` made it,
  * so TOAST_HIDE_EVENT fires as it does on a timeout; otherwise it
  * leaves the theme's way (js/motion.js leave()) and the same event is
  * dispatched on its region once it is gone.

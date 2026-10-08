@@ -219,17 +219,50 @@ export function attachTabs(root = document, { activation = 'automatic', loop = t
             hidden: document.getElementById(tab.getAttribute('aria-controls') ?? '')?.hidden ?? false,
         }));
 
+        /** The panels on their way out, and the switch that sent them. */
+        /** @type {Map<HTMLElement, Promise<void>>} */
+        const leaving = new Map();
+        let turn = 0;
         /** @param {number} index @param {{ focus?: boolean }} [options] */
         const select = (index, { focus = true } = {}) => {
             const all = tabs();
             const previous = all.findIndex((t) => t.getAttribute('aria-selected') === 'true');
+            /** @type {HTMLElement | null} */
+            let shown = null;
+            /** @type {Promise<void>[]} */
+            const going = [];
             all.forEach((tab, i) => {
                 const selected = i === index;
                 tab.setAttribute('aria-selected', String(selected));
                 tab.tabIndex = selected ? 0 : -1;
                 const panel = document.getElementById(tab.getAttribute('aria-controls') ?? '');
-                if (panel) panel.hidden = !selected;
+                if (!panel) return;
+                if (selected) shown = panel;
+                else if (leaving.has(panel)) going.push(/** @type {Promise<void>} */ (leaving.get(panel)));
+                else if (!panel.hidden) {
+                    // The outgoing panel leaves the theme's way, its space
+                    // folding shut, and the new one arrives once it is gone
+                    // (as a leave turned around): so a switch is one panel's
+                    // exit followed by the other's entrance, never a jump.
+                    const gone = leave(panel, { hide: true }).finally(() => leaving.delete(panel));
+                    leaving.set(panel, gone);
+                    going.push(gone);
+                }
             });
+            const mine = ++turn;
+            const show = /** @type {HTMLElement | null} */ (shown);
+            if (show) {
+                // Still on its way out: it comes back once its leave is over.
+                const back = leaving.get(show);
+                if (back) going.push(back);
+                if (going.length === 0) show.hidden = false;
+                else {
+                    if (!back) show.hidden = true;
+                    void Promise.all(going).then(() => {
+                        if (turn === mine) show.hidden = false;
+                    });
+                }
+            }
             // Guarded because a caller computes this index. Found by
             // JobTracker's stricter typecheck (KT4): with
             // noUncheckedIndexedAccess an out-of-range index is a type
@@ -420,10 +453,11 @@ const dismissHandled = new WeakSet();
  * worse than no button at all. Delegated from `root`, so a toast raised
  * after attach is covered too.
  *
- * An alert is hidden (`hidden`, which the base layer holds above every
- * layout class) after ALERT_DISMISS_EVENT, which a consumer may cancel to
- * keep it or to animate it out first — setting `hidden = false` brings it
- * back. A toast leaves through its own `dismiss()` when `toast()` made it,
+ * An alert leaves the theme's way (js/motion.js leave(), its space folding
+ * shut) and is then hidden (`hidden`, which the base layer holds above
+ * every layout class), after ALERT_DISMISS_EVENT, which a consumer may
+ * cancel to keep it or to animate it out itself — setting `hidden = false`
+ * brings it back. A toast leaves through its own `dismiss()` when `toast()` made it,
  * so TOAST_HIDE_EVENT fires as it does on a timeout; otherwise it
  * leaves the theme's way (js/motion.js leave()) and the same event is
  * dispatched on its region once it is gone.
@@ -457,7 +491,8 @@ export function attachDismissals(root = document, { ownedBy = DISMISS_OWNED } = 
         const alert = /** @type {HTMLElement | null} */ (button.closest('.kp-alert'));
         if (!alert) return;
         const proceed = alert.dispatchEvent(new CustomEvent(ALERT_DISMISS_EVENT, { bubbles: true, cancelable: true, detail: { alert, button } }));
-        if (proceed) alert.hidden = true;
+        // It leaves the theme's way, its space folding shut, then is hidden.
+        if (proceed) void leave(alert, { hide: true });
     };
     root.addEventListener('click', onClick);
     return () => root.removeEventListener('click', onClick);

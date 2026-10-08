@@ -3407,10 +3407,12 @@ function arriveAsReversedLeave(el2) {
   if (el2 instanceof HTMLTableRowElement || !el2.isConnected) return false;
   const { size, ease } = themeMotion(el2);
   const before = getComputedStyle(el2).animationName;
+  const beforeSig = animationSignature(el2);
+  const rest = pseudoNames(el2);
   el2.setAttribute("data-kp-leaving", "");
   const style = getComputedStyle(el2);
   const ownName = style.animationName;
-  if (!ownName || ownName === "none" || ownName === before) {
+  if (!ownName || ownName === "none" || ownName === before && animationSignature(el2) === beforeSig) {
     el2.removeAttribute("data-kp-leaving");
     return false;
   }
@@ -3453,6 +3455,11 @@ function arriveAsReversedLeave(el2) {
       a.effect
     );
     const timing = effect.getTiming();
+    const pseudo = effect.pseudoElement;
+    if (pseudo && rest[pseudo] === animationSignature(actor, pseudo)) {
+      timing.direction = flipped(timing.direction);
+      timing.delay = 0;
+    }
     return {
       keyframes: effect.getKeyframes(),
       timing,
@@ -3527,6 +3534,12 @@ function arriveAsReversedLeave(el2) {
     el2.style.removeProperty("overflow");
     el2.style.removeProperty("box-sizing");
     el2.style.removeProperty("visibility");
+    getComputedStyle(el2).animationName;
+    for (const a of el2.getAnimations({ subtree: true })) {
+      if (a instanceof CSSAnimation && /** @type {KeyframeEffect} */
+      a.effect?.target === el2 && Number.isFinite(Number(a.effect?.getComputedTiming().activeDuration)))
+        a.finish();
+    }
   };
   entering.set(el2, stop);
   void Promise.all(plays.map((a) => a.finished.catch(() => void 0))).then(stop);
@@ -3611,6 +3624,8 @@ async function leaveOne(el2, hide, exited) {
   entering.get(el2)?.();
   if (!el2.isConnected || el2.hasAttribute("data-kp-leaving")) return exited();
   const before = getComputedStyle(el2).animationName;
+  const beforeSig = animationSignature(el2);
+  const rest = pseudoNames(el2);
   const arrival2 = arrivalOf(el2);
   const { size, ease } = themeMotion(el2);
   if (!arrival2 && size <= 0) {
@@ -3620,7 +3635,14 @@ async function leaveOne(el2, hide, exited) {
   el2.setAttribute("data-kp-leaving", "");
   const style = getComputedStyle(el2);
   const ownName = style.animationName;
-  const own = ownName && ownName !== "none" && ownName !== before ? { duration: firstMs(style.animationDuration) } : null;
+  const turned = ownName && ownName !== "none" && ownName === before && animationSignature(el2) !== beforeSig;
+  if (turned) {
+    el2.setAttribute(REVERSING_ATTRIBUTE, "reset");
+    getComputedStyle(el2).animationName;
+    el2.removeAttribute(REVERSING_ATTRIBUTE);
+    getComputedStyle(el2).animationName;
+  }
+  const own = ownName && ownName !== "none" && (ownName !== before || turned) ? { duration: firstMs(style.animationDuration) } : null;
   const running2 = [];
   const lasts = own ? own.duration : arrival2?.duration ?? 0;
   const fold = style.getPropertyValue("--kp-leave-fold").trim();
@@ -3650,6 +3672,39 @@ async function leaveOne(el2, hide, exited) {
     el2.style.setProperty("animation", "none");
   }
   if (!own && arrival2) actor.style.animation = `${arrival2.name} ${arrival2.duration}ms ${arrival2.ease} reverse forwards`;
+  if (Object.values(rest).some((sig) => !sig.startsWith("none "))) {
+    const inline = actor.style.animation;
+    actor.setAttribute(REVERSING_ATTRIBUTE, "reset");
+    for (const pseudo of [null, "::before", "::after"]) getComputedStyle(actor, pseudo).animationName;
+    actor.removeAttribute(REVERSING_ATTRIBUTE);
+    actor.style.animation = inline;
+  }
+  getComputedStyle(actor).animationName;
+  for (const a of actor.getAnimations({ subtree: true })) {
+    const effect = (
+      /** @type {KeyframeEffect | null} */
+      a.effect
+    );
+    const pseudo = effect?.pseudoElement;
+    if (!(a instanceof CSSAnimation) || effect?.target !== actor || !pseudo || rest[pseudo] !== animationSignature(actor, pseudo)) continue;
+    const timing = effect.getTiming();
+    if (!Number.isFinite(Number(timing.iterations))) continue;
+    const keyframes = effect.getKeyframes();
+    a.cancel();
+    try {
+      running2.push(
+        actor.animate(keyframes, {
+          duration: Number(timing.duration) || 0,
+          iterations: Number(timing.iterations),
+          easing: String(timing.easing ?? "linear"),
+          direction: flipped(timing.direction),
+          fill: "forwards",
+          pseudoElement: pseudo
+        }).finished.catch(() => void 0)
+      );
+    } catch {
+    }
+  }
   const exit = lasts > 0 ? playedOut(actor, lasts + 100) : Promise.resolve();
   const set = parseFloat(style.getPropertyValue("--kp-leave-stagger"));
   const stagger = Number.isNaN(set) ? 0.5 : set;
@@ -3978,7 +4033,7 @@ function attachMotion(root = document, { size = "", arrive: arrive2 = "all", arr
     detaches.clear();
   };
 }
-var SIZE_ATTRIBUTE, SIZE_SELECTOR, FOLD_SELECTOR, ARRIVE_KEYS, SKELETON, watching, CLOSE_SHARE, SIZE_SHARE, msOf, firstMs, reduced, entrances, closing, nativeClose, opensAsReversedClose, switching, REVERSING_ATTRIBUTE, CLOSING_ATTRIBUTE, PANEL_SELECTOR, ghosted, NAMED_EASES, entering, arriving, finiteMs, batch, FOLDING_OUT, heightFolds, followsAFold, arriveMode;
+var SIZE_ATTRIBUTE, SIZE_SELECTOR, FOLD_SELECTOR, ARRIVE_KEYS, SKELETON, watching, CLOSE_SHARE, SIZE_SHARE, msOf, firstMs, reduced, entrances, closing, nativeClose, opensAsReversedClose, switching, REVERSING_ATTRIBUTE, CLOSING_ATTRIBUTE, PANEL_SELECTOR, ghosted, NAMED_EASES, entering, animationSignature, pseudoNames, flipped, arriving, finiteMs, batch, FOLDING_OUT, heightFolds, followsAFold, arriveMode;
 var init_motion = __esm({
   "js/motion.js"() {
     "use strict";
@@ -4045,6 +4100,23 @@ var init_motion = __esm({
       "step-end": "steps(1, jump-end)"
     };
     entering = /* @__PURE__ */ new WeakMap();
+    animationSignature = (el2, pseudo = null) => {
+      const style = getComputedStyle(el2, pseudo);
+      return [style.animationName, style.animationDirection, style.animationDuration, style.animationTimingFunction, style.animationFillMode].join(" ");
+    };
+    pseudoNames = (el2) => ({
+      "::before": animationSignature(el2, "::before"),
+      "::after": animationSignature(el2, "::after")
+    });
+    flipped = (direction) => (
+      /** @type {Record<PlaybackDirection, PlaybackDirection>} */
+      {
+        normal: "reverse",
+        reverse: "normal",
+        alternate: "alternate-reverse",
+        "alternate-reverse": "alternate"
+      }[direction ?? "normal"]
+    );
     arriving = null;
     finiteMs = (ms) => Number.isFinite(ms) ? ms : 0;
     batch = null;
@@ -4728,16 +4800,46 @@ function attachTabs(root = document, { activation = "automatic", loop = true } =
       panel: document.getElementById(tab.getAttribute("aria-controls") ?? ""),
       hidden: document.getElementById(tab.getAttribute("aria-controls") ?? "")?.hidden ?? false
     }));
+    const leaving = /* @__PURE__ */ new Map();
+    let turn = 0;
     const select = (index, { focus = true } = {}) => {
       const all = tabs();
       const previous = all.findIndex((t) => t.getAttribute("aria-selected") === "true");
+      let shown2 = null;
+      const going = [];
       all.forEach((tab, i) => {
         const selected = i === index;
         tab.setAttribute("aria-selected", String(selected));
         tab.tabIndex = selected ? 0 : -1;
         const panel = document.getElementById(tab.getAttribute("aria-controls") ?? "");
-        if (panel) panel.hidden = !selected;
+        if (!panel) return;
+        if (selected) shown2 = panel;
+        else if (leaving.has(panel)) going.push(
+          /** @type {Promise<void>} */
+          leaving.get(panel)
+        );
+        else if (!panel.hidden) {
+          const gone = leave(panel, { hide: true }).finally(() => leaving.delete(panel));
+          leaving.set(panel, gone);
+          going.push(gone);
+        }
       });
+      const mine = ++turn;
+      const show = (
+        /** @type {HTMLElement | null} */
+        shown2
+      );
+      if (show) {
+        const back = leaving.get(show);
+        if (back) going.push(back);
+        if (going.length === 0) show.hidden = false;
+        else {
+          if (!back) show.hidden = true;
+          void Promise.all(going).then(() => {
+            if (turn === mine) show.hidden = false;
+          });
+        }
+      }
       if (focus) all[index]?.focus();
       revealTab(list, all[index]);
       if (previous !== index) {
@@ -4905,7 +5007,7 @@ function attachDismissals(root = document, { ownedBy = DISMISS_OWNED } = {}) {
     );
     if (!alert) return;
     const proceed = alert.dispatchEvent(new CustomEvent(ALERT_DISMISS_EVENT, { bubbles: true, cancelable: true, detail: { alert, button } }));
-    if (proceed) alert.hidden = true;
+    if (proceed) void leave(alert, { hide: true });
   };
   root.addEventListener("click", onClick);
   return () => root.removeEventListener("click", onClick);

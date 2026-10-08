@@ -23,7 +23,7 @@
         "js/log.js": { "digest": "3fc853eb5c0c4dfa", "when": "[data-kp-source]" },
         "js/menu-button.js": { "digest": "562c02d40528433f", "when": "[data-kp-menu-button]" },
         "js/motion.js": {
-            "digest": "f06019eeda150c00",
+            "digest": "4ddebe765cd91414",
             "when": "dialog.kp-dialog, .kp-accordion__item, .kp-tabs, .kp-datatable, .kp-toasts, .kp-upload__list, .kp-combobox__list, .kp-tree, .kp-wizard, .kp-field, [data-kp-size-motion]"
         },
         "js/palette.js": { "digest": "d3da386b0c1b5c72", "when": "[data-kp-palette], [data-kp-shortcuts]" },
@@ -6050,7 +6050,7 @@
             ]
         },
         "data": {
-            "modules": "ee2f395098ab93fd",
+            "modules": "1fa8a597764d4773",
             "families": [
                 "data-kp-activation",
                 "data-kp-calendar",
@@ -6357,7 +6357,7 @@
             ]
         },
         "feedback": {
-            "modules": "996bb50a763c7f0a",
+            "modules": "719dbebc4fd17adc",
             "families": [
                 "data-kp-activation",
                 "data-kp-ago",
@@ -6726,7 +6726,7 @@
             ]
         },
         "navigation": {
-            "modules": "b6e4b638d1d64ba7",
+            "modules": "0aab52c1ad0a17f7",
             "families": [
                 "data-kp-activation",
                 "data-kp-against",
@@ -6855,7 +6855,7 @@
             ]
         },
         "overlays": {
-            "modules": "72bf94e53f0ecaed",
+            "modules": "2102c71538529412",
             "families": [
                 "data-kp-activation",
                 "data-kp-armed",

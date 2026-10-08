@@ -960,6 +960,43 @@ function foldFrames(el, style) {
 const entering = new WeakMap();
 
 /**
+ * The animation an element (or one of its pseudo-elements) wears, every
+ * part a leave may turn around.
+ * @param {Element} el @param {string | null} [pseudo]
+ * @returns {string}
+ */
+const animationSignature = (el, pseudo = null) => {
+    const style = getComputedStyle(el, pseudo);
+    return [style.animationName, style.animationDirection, style.animationDuration, style.animationTimingFunction, style.animationFillMode].join(' ');
+};
+
+/**
+ * The animations `el`'s pseudo-elements wear now. A pseudo-element
+ * whose animation is the same with and without `[data-kp-leaving]` (a
+ * toast's rule drawn in at rest, and the register gives the leave nothing
+ * else for it) is part of the entrance, not of the exit: the leave plays it
+ * backwards and the arrival forwards, so the two stay each other's mirror
+ * (research/PACKAGE_FINDINGS.md, 2026-10-07: on the leave such a part did
+ * not move, or jumped, because a CSS animation whose name does not change is
+ * not restarted).
+ * @param {Element} el
+ * @returns {Record<string, string>}
+ */
+const pseudoNames = (el) => ({
+    '::before': animationSignature(el, '::before'),
+    '::after': animationSignature(el, '::after'),
+});
+
+/** @param {PlaybackDirection | undefined} direction @returns {PlaybackDirection} */
+const flipped = (direction) =>
+    /** @type {Record<PlaybackDirection, PlaybackDirection>} */ ({
+        normal: 'reverse',
+        reverse: 'normal',
+        alternate: 'alternate-reverse',
+        'alternate-reverse': 'alternate',
+    })[direction ?? 'normal'];
+
+/**
  * Let `el` arrive as its leave played backwards [research/open-reverse;
  * Kenny's pick, every theme since 2026-10-05]: the
  * timeline leaveOne() would play for it in its theme (the register's exit
@@ -977,10 +1014,13 @@ function arriveAsReversedLeave(el) {
     if (el instanceof HTMLTableRowElement || !el.isConnected) return false;
     const { size, ease } = themeMotion(el);
     const before = getComputedStyle(el).animationName;
+    const beforeSig = animationSignature(el);
+    const rest = pseudoNames(el);
     el.setAttribute('data-kp-leaving', '');
     const style = getComputedStyle(el);
     const ownName = style.animationName;
-    if (!ownName || ownName === 'none' || ownName === before) {
+    // The same keyframes turned around count as an exit of its own (see leaveOne()).
+    if (!ownName || ownName === 'none' || (ownName === before && animationSignature(el) === beforeSig)) {
         el.removeAttribute('data-kp-leaving');
         return false;
     }
@@ -1022,6 +1062,14 @@ function arriveAsReversedLeave(el) {
     const exits = css.map((a) => {
         const effect = /** @type {KeyframeEffect} */ (a.effect);
         const timing = effect.getTiming();
+        // An entrance part (see pseudoNames()): the leave plays it backwards.
+        const pseudo = effect.pseudoElement;
+        if (pseudo && rest[pseudo] === animationSignature(actor, pseudo)) {
+            timing.direction = flipped(timing.direction);
+            // Played backwards in the leave, from its first frame: its own
+            // wait comes after it there, so here it ends with the timeline.
+            timing.delay = 0;
+        }
         return {
             keyframes: effect.getKeyframes(),
             timing,
@@ -1110,6 +1158,17 @@ function arriveAsReversedLeave(el) {
         el.style.removeProperty('overflow');
         el.style.removeProperty('box-sizing');
         el.style.removeProperty('visibility');
+        // It has arrived: the register's own entrance, which takes over as
+        // the marks go, is already played (it would arrive a second time).
+        getComputedStyle(el).animationName;
+        for (const a of el.getAnimations({ subtree: true })) {
+            if (
+                a instanceof CSSAnimation &&
+                /** @type {KeyframeEffect} */ (a.effect)?.target === el &&
+                Number.isFinite(Number(a.effect?.getComputedTiming().activeDuration))
+            )
+                a.finish();
+        }
     };
     entering.set(el, stop);
     void Promise.all(plays.map((a) => a.finished.catch(() => undefined))).then(stop);
@@ -1250,6 +1309,8 @@ async function leaveOne(el, hide, exited) {
     entering.get(el)?.();
     if (!el.isConnected || el.hasAttribute('data-kp-leaving')) return exited();
     const before = getComputedStyle(el).animationName;
+    const beforeSig = animationSignature(el);
+    const rest = pseudoNames(el);
     const arrival = arrivalOf(el);
     const { size, ease } = themeMotion(el);
     if (!arrival && size <= 0) {
@@ -1262,7 +1323,17 @@ async function leaveOne(el, hide, exited) {
     // animaties per thema?"); one without plays its arrival backwards.
     const style = getComputedStyle(el);
     const ownName = style.animationName;
-    const own = ownName && ownName !== 'none' && ownName !== before ? { duration: firstMs(style.animationDuration) } : null;
+    // The same keyframes under the same name, turned around (forest's toast
+    // arrives as its leave reversed): the browser does not restart an
+    // animation whose name stays, so it is restarted here.
+    const turned = ownName && ownName !== 'none' && ownName === before && animationSignature(el) !== beforeSig;
+    if (turned) {
+        el.setAttribute(REVERSING_ATTRIBUTE, 'reset');
+        getComputedStyle(el).animationName;
+        el.removeAttribute(REVERSING_ATTRIBUTE);
+        getComputedStyle(el).animationName;
+    }
+    const own = ownName && ownName !== 'none' && (ownName !== before || turned) ? { duration: firstMs(style.animationDuration) } : null;
     /** @type {Promise<unknown>[]} */
     const running = [];
     const lasts = own ? own.duration : (arrival?.duration ?? 0);
@@ -1300,6 +1371,41 @@ async function leaveOne(el, hide, exited) {
         el.style.setProperty('animation', 'none');
     }
     if (!own && arrival) actor.style.animation = `${arrival.name} ${arrival.duration}ms ${arrival.ease} reverse forwards`;
+    // The entrance parts (pseudoNames()) play backwards, from their end.
+    // Restarted first: an arrival that took one over left none to read.
+    if (Object.values(rest).some((sig) => !sig.startsWith('none '))) {
+        const inline = actor.style.animation;
+        actor.setAttribute(REVERSING_ATTRIBUTE, 'reset');
+        for (const pseudo of [null, '::before', '::after']) getComputedStyle(actor, pseudo).animationName;
+        actor.removeAttribute(REVERSING_ATTRIBUTE);
+        actor.style.animation = inline;
+    }
+    getComputedStyle(actor).animationName;
+    for (const a of actor.getAnimations({ subtree: true })) {
+        const effect = /** @type {KeyframeEffect | null} */ (a.effect);
+        const pseudo = effect?.pseudoElement;
+        if (!(a instanceof CSSAnimation) || effect?.target !== actor || !pseudo || rest[pseudo] !== animationSignature(actor, pseudo)) continue;
+        const timing = effect.getTiming();
+        if (!Number.isFinite(Number(timing.iterations))) continue;
+        const keyframes = effect.getKeyframes();
+        a.cancel();
+        try {
+            running.push(
+                actor
+                    .animate(keyframes, {
+                        duration: Number(timing.duration) || 0,
+                        iterations: Number(timing.iterations),
+                        easing: String(timing.easing ?? 'linear'),
+                        direction: flipped(timing.direction),
+                        fill: 'forwards',
+                        pseudoElement: pseudo,
+                    })
+                    .finished.catch(() => undefined),
+            );
+        } catch {
+            /* an engine that cannot animate that pseudo-element skips it */
+        }
+    }
     const exit = lasts > 0 ? playedOut(actor, lasts + 100) : Promise.resolve();
     // The next in a row of leaves starts once this one's exit is
     // `--kp-leave-stagger` of the way through (0.5 by default; 1 waits for
