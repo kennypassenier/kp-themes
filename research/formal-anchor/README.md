@@ -1,6 +1,6 @@
 # What is formal's anchor element
 
-**Open (2026-10-08).** Kenny's verdict pending in the review dialog.
+**Decided (Kenny, 08/10/2026): The account is closed: the double rule** ("formal-anchor · formal: The anchor element = The account is closed: the double rule"); the seal (recommended), the signature, the redaction, the ribbon, squaring up and blotting were not chosen. Recorded in decided.json; the character round builds on it.
 
 **Why.** Kenny, 2026-10-07 18:13: every theme gets one recognisable anchor element, the thing every later decision of the theme departs
 from (forest: the tree progress bar, grotesk: the red plate that falls into register, synthwave: the page horizon, blueprint: the tracing

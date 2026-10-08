@@ -77,14 +77,23 @@ export const PAGES = [
         group: 'Research to look at',
         pages: [
             // Kenny, 2026-10-08: the anchor round for the nine themes without one, the grotesk way (one question, six to ten candidates, each in its own scene, as a progress bar and as a button press, the recommendation first).
-            { href: 'research/formal-anchor/demo.html', label: "What is formal's anchor element" },
-            { href: 'research/light-anchor/demo.html', label: "What is light's anchor element" },
-            { href: 'research/dark-anchor/demo.html', label: "What is dark's anchor element" },
+            {
+                href: 'research/dark-anchor/demo.html',
+                label: "What is dark's anchor element",
+                rework: 'update 1: film and spectral line combined, as Kenny asked',
+            },
             { href: 'research/high-contrast-anchor/demo.html', label: "What is high-contrast's anchor element" },
             { href: 'research/sepia-anchor/demo.html', label: "What is sepia's anchor element" },
-            { href: 'research/retro-anchor/demo.html', label: "What is retro's anchor element" },
-            { href: 'research/deco-anchor/demo.html', label: "What is deco's anchor element" },
-            { href: 'research/phantom-anchor/demo.html', label: "What is phantom's anchor element" },
+            {
+                href: 'research/retro-anchor/demo.html',
+                label: "What is retro's anchor element",
+                rework: 'update 1: redesigned from the ground up on an old Windows UI, as Kenny asked',
+            },
+            {
+                href: 'research/phantom-anchor/demo.html',
+                label: "What is phantom's anchor element",
+                rework: 'update 1: the thrown card and the halftone shift combined, as Kenny asked',
+            },
             // The character round, sixth demo (2026-10-05): the key-figure strip with its columns in 22 themes, two characters each.
             // The character round, eighth component: the attention band, shape/arrival/leave/tone/empty/loading, one pick per aspect (formal and titanium built first).
             // The character round, ninth and tenth components: the action columns and the menu button.
@@ -100,6 +109,12 @@ export const PAGES = [
         // down here once Kenny has decided on it [scope-81].
         group: 'Archived research',
         pages: [
+            // Decided 2026-10-08: Kenny picked the fan (and the progress bar is to be redone) as deco's anchor element (research/deco-anchor/decided.json).
+            { href: 'research/deco-anchor/demo.html', label: "What is deco's anchor element" },
+            // Decided 2026-10-08: Kenny picked the glare (overexposed) as light's anchor element (research/light-anchor/decided.json).
+            { href: 'research/light-anchor/demo.html', label: "What is light's anchor element" },
+            // Decided 2026-10-08: Kenny picked the double rule (the account is closed) as formal's anchor element (research/formal-anchor/decided.json).
+            { href: 'research/formal-anchor/demo.html', label: "What is formal's anchor element" },
             // Decided 2026-10-08 01:00: Kenny picked the floor as the page, behind the plates (research/synthwave-floor/decided.json).
             { href: 'research/synthwave-floor/demo.html', label: "Synthwave's floor depth" },
             // Decided 2026-10-08 01:02: Kenny approved all nineteen of nostromo's grammar questions (research/nostromo-character/decided.json); applied to css/nostromo-register.css.

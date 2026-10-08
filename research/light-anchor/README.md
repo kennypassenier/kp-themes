@@ -1,6 +1,6 @@
 # What is light's anchor element
 
-**Open (2026-10-08).** Kenny's verdict pending in the review dialog.
+**Decided (Kenny, 08/10/2026): Overexposed: out of the glare** ("light-anchor · light: The anchor element = Overexposed: out of the glare"); the bead of light (recommended), the window, the highlighter, daylight, the ring and the shadow were not chosen. Recorded in decided.json; the character round builds on it.
 
 **Why.** Kenny, 2026-10-07 18:13: every theme gets one recognisable anchor element, the thing every later decision of the theme departs
 from (forest: the tree progress bar, grotesk: the red plate that falls into register, synthwave: the page horizon, blueprint: the tracing
