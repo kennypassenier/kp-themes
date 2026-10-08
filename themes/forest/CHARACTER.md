@@ -118,7 +118,7 @@ past 1). Direction: S→E inline-start to end, ↑ up, ↓ down, ↔ back and fo
 | Leave                     | `kp-sig-forest-leave 560ms ease-in`: `sepia(1) saturate(0.6)`, `scale(0.94)`, fade (its comment promises "blown off by the wind, to the right"; nothing moves right)      | ∅        | 560                      | I    | outlier-11 (G10)       |
 | Arrival                   | the leave reversed (`--kp-open: reverse-close`): from sepia, from 94 %                                                                                                    | ∅        | 560                      | I⁻¹  | outlier-11 (G10)       |
 | Update in place           | none: forest declares no `--kp-update`                                                                                                                                    | —        | —                        | —    | outlier-10 (G8)        |
-| Contour texture           | none: a static page background, no motion (Kenny, 2026-10-07)                                                                                                                                    | —        | —                        | —    | G14 (map)              |
+| Contour texture           | none: a static page background, no motion (Kenny, 2026-10-07)                                                                                                             | —        | —                        | —    | G14 (map)              |
 | Meter (in the register)   | see 2.2                                                                                                                                                                   |          |                          |      |                        |
 
 ### 2.2 The decided component picks
