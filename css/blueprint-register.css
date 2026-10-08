@@ -2580,7 +2580,10 @@
         }
 
         [data-theme='blueprint']
-            :is(.kp-popover:not(.kp-tooltip), .kp-menu-button > .kp-menu, .kp-combobox__list, .kp-datepicker__panel, .kp-toast)[data-kp-leaving] {
+            :is(.kp-popover:not(.kp-tooltip), .kp-menu-button > .kp-menu, .kp-combobox__list, .kp-datepicker__panel, .kp-toast):is(
+                [data-kp-leaving],
+                [data-kp-closing]
+            ) {
             animation: kp-sig-blueprint-trace-out var(--kp-sig-dur, var(--kp-sig-bp-panel)) linear reverse forwards;
         }
 

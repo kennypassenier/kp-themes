@@ -205,7 +205,9 @@
                     <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
                             <tr><td><code>data-kp-arrive</code></td><td>selector, written, read</td></tr>
                             <tr><td><code>data-kp-arriving</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-closing</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-folding</code></td><td>written, selector</td></tr>
+                            <tr><td><code>data-kp-ghost</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-gliding</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-leaving</code></td><td>read, selector, written</td></tr>
                             <tr><td><code>data-kp-resizing</code></td><td>written</td></tr>
@@ -246,6 +248,8 @@
                             <tr><td><code>--kp-size-max</code></td><td>The longest a box may take to change size. It takes four fifths of the dialog entrance, never longer than this. Default 480ms.</td></tr>
                             <tr><td><code>data-kp-resizing</code></td><td>Written on a box while it glides to a new height, `grow` or `shrink`. A register draws its own character on it. Read it, do not set it.</td></tr>
                             <tr><td><code>data-kp-reversing</code></td><td>`reset` then `play` on an element while its CSS entrance is played backwards to hide it (a tooltip, the tour card); the stylesheet restarts the entrance in reverse, and the mark goes when it has played. Read it, do not set it.</td></tr>
+                            <tr><td><code>data-kp-closing</code></td><td>Written on a menu or a popover while it plays its close, its opening backwards (js/motion.js playClose). A register may draw a close of its own on it, or run its transitions to the closed state. Read it, do not set it.</td></tr>
+                            <tr><td><code>data-kp-ghost</code></td><td>On the stand-in copy of a popover the browser just hid: it takes the popover’s place in the top layer for as long as the close plays, then goes. Read it, do not set it.</td></tr>
                             <tr><td><code>data-kp-gliding</code></td><td>`column` on a box laid out as a column of flex items while it glides: its items keep their own size and the box clips them, rather than squeezing them. Read it, do not set it.</td></tr>
                             <tr><td><code>data-kp-arriving</code></td><td>Written for one arrival on what arrives in a box (a row, a shown panel or message). A register may give it its own arrival; without one it plays the theme’s toast entrance.</td></tr>
                             <tr><td><code>data-kp-leaving</code></td><td>Written on an element while `leave(el)` plays its arrival backwards and folds it shut, before it is removed. Read it, do not set it.</td></tr>

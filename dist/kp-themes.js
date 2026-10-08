@@ -2837,8 +2837,10 @@ var init_alarm = __esm({
 var motion_exports = {};
 __export(motion_exports, {
   ARRIVE_KEYS: () => ARRIVE_KEYS,
+  CLOSING_ATTRIBUTE: () => CLOSING_ATTRIBUTE,
   FOLDING_OUT: () => FOLDING_OUT,
   FOLD_SELECTOR: () => FOLD_SELECTOR,
+  PANEL_SELECTOR: () => PANEL_SELECTOR,
   REVERSING_ATTRIBUTE: () => REVERSING_ATTRIBUTE,
   SIZE_ATTRIBUTE: () => SIZE_ATTRIBUTE,
   SIZE_SELECTOR: () => SIZE_SELECTOR,
@@ -2848,10 +2850,12 @@ __export(motion_exports, {
   leave: () => leave,
   motionWatchCount: () => motionWatchCount,
   playArrivalBackwards: () => playArrivalBackwards,
+  playClose: () => playClose,
   playEntranceBackwards: () => playEntranceBackwards,
   repaintedIn: () => repaintedIn,
   reversedEase: () => reversedEase,
   sizeMotion: () => sizeMotion,
+  stopClose: () => stopClose,
   stopReversing: () => stopReversing,
   themeMotion: () => themeMotion,
   withoutOvershoot: () => withoutOvershoot
@@ -3066,6 +3070,121 @@ function stopReversing(el2) {
   delete own.__kpReversing;
   stop?.();
   el2.removeAttribute(REVERSING_ATTRIBUTE);
+}
+async function playClose(el2) {
+  stopClose(el2);
+  if (reduced() || !el2.isConnected) return true;
+  const before = getComputedStyle(el2).animationName;
+  el2.setAttribute(CLOSING_ATTRIBUTE, "");
+  const now = getComputedStyle(el2).animationName;
+  const own = Boolean(now) && now !== "none" && now !== before;
+  let stopped = false;
+  const me = (
+    /** @type {any} */
+    el2
+  );
+  const waits = [];
+  if (own) {
+    waits.push(playedOut(el2, 0));
+  } else {
+    waits.push(playEntranceBackwards(el2));
+  }
+  for (const a of el2.getAnimations({ subtree: true })) {
+    if (typeof CSSTransition !== "undefined" && a instanceof CSSTransition) waits.push(a.finished.catch(() => void 0));
+  }
+  me.__kpClosing = () => {
+    stopped = true;
+    stopReversing(el2);
+    el2.removeAttribute(CLOSING_ATTRIBUTE);
+  };
+  await Promise.all(waits);
+  if (me.__kpClosing === void 0) return false;
+  delete me.__kpClosing;
+  return !stopped;
+}
+function stopClose(el2) {
+  const me = (
+    /** @type {any} */
+    el2
+  );
+  const stop = me.__kpClosing;
+  delete me.__kpClosing;
+  stop?.();
+  stopReversing(el2);
+  el2.removeAttribute(CLOSING_ATTRIBUTE);
+}
+function closePopoverWithGhost(event) {
+  const toggle = (
+    /** @type {ToggleEvent} */
+    event
+  );
+  const el2 = (
+    /** @type {HTMLElement} */
+    toggle.target
+  );
+  if (toggle.newState !== "closed" || !(el2 instanceof HTMLElement) || !el2.matches(PANEL_SELECTOR)) return;
+  if (reduced() || ghosted.has(el2) || !el2.matches(":popover-open")) return;
+  const animated = [null, "::before", "::after"].some((pseudo) => {
+    const name = getComputedStyle(el2, pseudo).animationName;
+    return Boolean(name) && name !== "none";
+  });
+  const before = getComputedStyle(el2).animationName;
+  el2.setAttribute(CLOSING_ATTRIBUTE, "");
+  const leaveOwn = getComputedStyle(el2).animationName;
+  el2.removeAttribute(CLOSING_ATTRIBUTE);
+  if (!animated && (!leaveOwn || leaveOwn === "none" || leaveOwn === before)) return;
+  const box = el2.getBoundingClientRect();
+  if (box.width === 0 && box.height === 0) return;
+  const sized = getComputedStyle(el2);
+  const ghost = (
+    /** @type {HTMLElement} */
+    el2.cloneNode(true)
+  );
+  for (const one of [ghost, ...ghost.querySelectorAll("[id]")]) one.removeAttribute("id");
+  ghost.setAttribute("aria-hidden", "true");
+  ghost.setAttribute("popover", "manual");
+  ghost.setAttribute("data-kp-ghost", "");
+  ghost.inert = true;
+  Object.assign(ghost.style, {
+    position: "fixed",
+    inset: "auto",
+    top: `${box.top}px`,
+    left: `${box.left}px`,
+    width: sized.width,
+    height: sized.height,
+    margin: "0",
+    boxSizing: sized.boxSizing,
+    pointerEvents: "none",
+    positionAnchor: "none",
+    positionArea: "none"
+  });
+  el2.after(ghost);
+  ghosted.add(el2);
+  try {
+    ghost.showPopover();
+  } catch {
+    ghost.remove();
+    ghosted.delete(el2);
+    return;
+  }
+  const done = () => {
+    ghost.remove();
+    ghosted.delete(el2);
+  };
+  const back = (e) => {
+    if (
+      /** @type {ToggleEvent} */
+      e.newState !== "open"
+    ) return;
+    el2.removeEventListener("beforetoggle", back);
+    stopClose(ghost);
+    done();
+  };
+  el2.addEventListener("beforetoggle", back);
+  void playClose(ghost).then(() => {
+    el2.removeEventListener("beforetoggle", back);
+    done();
+  });
 }
 function withoutOvershoot(ease) {
   const m = /^cubic-bezier\(\s*([^,]+),\s*([^,]+),\s*([^,]+),\s*([^)]+)\)$/.exec(ease.trim());
@@ -3859,7 +3978,7 @@ function attachMotion(root = document, { size = "", arrive: arrive2 = "all", arr
     detaches.clear();
   };
 }
-var SIZE_ATTRIBUTE, SIZE_SELECTOR, FOLD_SELECTOR, ARRIVE_KEYS, SKELETON, watching, CLOSE_SHARE, SIZE_SHARE, msOf, firstMs, reduced, entrances, closing, nativeClose, opensAsReversedClose, switching, REVERSING_ATTRIBUTE, NAMED_EASES, entering, arriving, finiteMs, batch, FOLDING_OUT, heightFolds, followsAFold, arriveMode;
+var SIZE_ATTRIBUTE, SIZE_SELECTOR, FOLD_SELECTOR, ARRIVE_KEYS, SKELETON, watching, CLOSE_SHARE, SIZE_SHARE, msOf, firstMs, reduced, entrances, closing, nativeClose, opensAsReversedClose, switching, REVERSING_ATTRIBUTE, CLOSING_ATTRIBUTE, PANEL_SELECTOR, ghosted, NAMED_EASES, entering, arriving, finiteMs, batch, FOLDING_OUT, heightFolds, followsAFold, arriveMode;
 var init_motion = __esm({
   "js/motion.js"() {
     "use strict";
@@ -3912,6 +4031,10 @@ var init_motion = __esm({
       }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
     }
     REVERSING_ATTRIBUTE = "data-kp-reversing";
+    CLOSING_ATTRIBUTE = "data-kp-closing";
+    PANEL_SELECTOR = ".kp-popover:not(.kp-tooltip), .kp-menu, .kp-combobox__list, .kp-datepicker__panel";
+    ghosted = /* @__PURE__ */ new WeakSet();
+    if (typeof document !== "undefined") document.addEventListener("beforetoggle", closePopoverWithGhost, true);
     NAMED_EASES = /** @type {Record<string, string>} */
     {
       ease: "cubic-bezier(0.25, 0.1, 0.25, 1)",
@@ -15662,6 +15785,11 @@ function openMenu(wrapper, { focus = "first" } = {}) {
   const doc = s2.menu.ownerDocument;
   const view = doc.defaultView;
   s2.open = true;
+  const closing2 = !s2.menu.hidden;
+  stopClose(s2.menu);
+  s2.menu.inert = false;
+  if (closing2) unplaceMenu(s2.menu);
+  s2.menu.hidden = true;
   const covered = view ? coveredEdges(view, s2.wrapper) : null;
   s2.menu.hidden = false;
   if (view && covered) {
@@ -15708,16 +15836,23 @@ function closeMenu(wrapper, { focus = false } = {}) {
   const s2 = menus.get(wrapper);
   if (!s2 || !s2.open) return;
   s2.open = false;
-  s2.menu.hidden = true;
   s2.button.setAttribute("aria-expanded", "false");
   for (const off of s2.off.splice(0)) off();
-  unplaceMenu(s2.menu);
   if (focus) s2.button.focus();
-  if (s2.pending) {
-    const next = s2.pending;
-    s2.pending = null;
-    drawMenu(s2, next);
-  }
+  s2.menu.inert = true;
+  const menu = s2.menu;
+  void playClose(menu).then((played) => {
+    if (!played || s2.open) return;
+    menu.hidden = true;
+    menu.inert = false;
+    stopClose(menu);
+    unplaceMenu(menu);
+    if (s2.pending) {
+      const next = s2.pending;
+      s2.pending = null;
+      drawMenu(s2, next);
+    }
+  });
   s2.wrapper.dispatchEvent(new CustomEvent(MENU_CLOSE_EVENT, { bubbles: true }));
 }
 function setMenu(wrapper, groups) {
@@ -15860,6 +15995,7 @@ var init_menu_button = __esm({
   "js/menu-button.js"() {
     "use strict";
     init_strings();
+    init_motion();
     MENU_BUTTON = "[data-kp-menu-button]";
     MENU_OPEN_EVENT = "kp-menu-open";
     MENU_CLOSE_EVENT = "kp-menu-close";
@@ -18167,6 +18303,7 @@ export {
   CHART_TIME_ZONE,
   CHART_ZOOM_EVENT,
   CHOOSE_EVENT,
+  CLOSING_ATTRIBUTE,
   COLOR_EVENT,
   COLUMNS,
   COLUMNS_EVENT,
@@ -18245,6 +18382,7 @@ export {
   OPT_OUT,
   PAGE_SIZE,
   PAGE_SIZES,
+  PANEL_SELECTOR,
   PENDING_THEME_ATTRIBUTE,
   PICK_EVENT,
   POINTER,
@@ -18522,6 +18660,7 @@ export {
   placeNavMenu,
   placeNavPanel,
   playArrivalBackwards,
+  playClose,
   playEntranceBackwards,
   pointsOf,
   progressbar_exports as progressbarExports,
@@ -18574,6 +18713,7 @@ export {
   sparkPaths,
   startTour,
   stickyNav,
+  stopClose,
   stopReversing,
   storeTheme,
   storedTheme,

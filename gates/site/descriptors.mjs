@@ -2701,7 +2701,7 @@ export const DESCRIPTORS = [
         title: 'Closing and resizing',
         group: 'Theming',
         classes: [],
-        aliases: ['size-motion', 'resizing', 'arriving', 'leaving', 'arrive', 'folding', 'gliding', 'reversing', 'settling'],
+        aliases: ['size-motion', 'resizing', 'arriving', 'leaving', 'arrive', 'folding', 'gliding', 'reversing', 'settling', 'closing', 'ghost'],
         exports: [],
         intro: 'A dialog leaves the way it came, and a box that changes size eases to its new height, growing and shrinking alike. Nothing here has a speed of its own: every duration and curve is read from the theme’s dialog entrance.',
         whenToUse:
@@ -2724,6 +2724,8 @@ export const DESCRIPTORS = [
             { name: '--kp-size-max', what: 'The longest a box may take to change size. It takes four fifths of the dialog entrance, never longer than this. Default 480ms.' },
             { name: 'data-kp-resizing', what: 'Written on a box while it glides to a new height, `grow` or `shrink`. A register draws its own character on it. Read it, do not set it.' },
             { name: 'data-kp-reversing', what: '`reset` then `play` on an element while its CSS entrance is played backwards to hide it (a tooltip, the tour card); the stylesheet restarts the entrance in reverse, and the mark goes when it has played. Read it, do not set it.' },
+            { name: 'data-kp-closing', what: 'Written on a menu or a popover while it plays its close, its opening backwards (js/motion.js playClose). A register may draw a close of its own on it, or run its transitions to the closed state. Read it, do not set it.' },
+            { name: 'data-kp-ghost', what: 'On the stand-in copy of a popover the browser just hid: it takes the popover\u2019s place in the top layer for as long as the close plays, then goes. Read it, do not set it.' },
             { name: 'data-kp-gliding', what: '`column` on a box laid out as a column of flex items while it glides: its items keep their own size and the box clips them, rather than squeezing them. Read it, do not set it.' },
             { name: 'data-kp-arriving', what: 'Written for one arrival on what arrives in a box (a row, a shown panel or message). A register may give it its own arrival; without one it plays the theme\u2019s toast entrance.' },
             { name: 'data-kp-leaving', what: 'Written on an element while `leave(el)` plays its arrival backwards and folds it shut, before it is removed. Read it, do not set it.' },

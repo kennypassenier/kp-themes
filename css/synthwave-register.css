@@ -3231,7 +3231,7 @@
            sunrise one, which is its own reverse. The beam fades as it
            arrives; closing, it fades in as the panel goes (the same frames
            backwards). */
-        [data-theme='synthwave'] :is(.kp-popover[popover]:not(:popover-open), .kp-menu-button > .kp-menu[hidden]) {
+        [data-theme='synthwave'] :is(.kp-popover[popover]:not(:popover-open), .kp-menu-button > .kp-menu:is([hidden], [data-kp-closing])) {
             clip-path: inset(100% -4rem -4rem -4rem);
             transition:
                 clip-path calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun),
@@ -3239,7 +3239,7 @@
                 overlay calc(2 * var(--kp-sw-beat)) allow-discrete;
         }
 
-        [data-theme='synthwave'] :is(.kp-popover[popover]:not(:popover-open), .kp-menu-button > .kp-menu[hidden])::after {
+        [data-theme='synthwave'] :is(.kp-popover[popover]:not(:popover-open), .kp-menu-button > .kp-menu:is([hidden], [data-kp-closing]))::after {
             inset-block-start: calc(100% - 2px);
             opacity: 1;
             transition:
@@ -3247,7 +3247,7 @@
                 opacity calc(2 * var(--kp-sw-beat)) cubic-bezier(0, 0, 0.15, 1);
         }
 
-        [data-theme='synthwave'] :is(.kp-popover:popover-open, .kp-menu-button > .kp-menu:not([hidden])) {
+        [data-theme='synthwave'] :is(.kp-popover:popover-open, .kp-menu-button > .kp-menu:not([hidden], [data-kp-closing])) {
             clip-path: inset(-4rem);
             transition:
                 clip-path calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun),
@@ -3255,7 +3255,7 @@
                 overlay calc(2 * var(--kp-sw-beat)) allow-discrete;
         }
 
-        [data-theme='synthwave'] :is(.kp-popover:popover-open, .kp-menu-button > .kp-menu:not([hidden]))::after {
+        [data-theme='synthwave'] :is(.kp-popover:popover-open, .kp-menu-button > .kp-menu:not([hidden], [data-kp-closing]))::after {
             inset-block-start: 0;
             opacity: 0;
             transition:
@@ -3263,12 +3263,19 @@
                 opacity calc(2 * var(--kp-sw-beat)) cubic-bezier(0.85, 0, 1, 1);
         }
 
+        /* A menu has played its close on [data-kp-closing] (js/motion.js
+           playClose) by the time it is hidden: nothing is left to run. */
+        [data-theme='synthwave'] .kp-menu-button > .kp-menu[hidden],
+        [data-theme='synthwave'] .kp-menu-button > .kp-menu[hidden]::after {
+            transition: none;
+        }
+
         @starting-style {
-            [data-theme='synthwave'] :is(.kp-popover:popover-open, .kp-menu-button > .kp-menu:not([hidden])) {
+            [data-theme='synthwave'] :is(.kp-popover:popover-open, .kp-menu-button > .kp-menu:not([hidden], [data-kp-closing])) {
                 clip-path: inset(100% -4rem -4rem -4rem);
             }
 
-            [data-theme='synthwave'] :is(.kp-popover:popover-open, .kp-menu-button > .kp-menu:not([hidden]))::after {
+            [data-theme='synthwave'] :is(.kp-popover:popover-open, .kp-menu-button > .kp-menu:not([hidden], [data-kp-closing]))::after {
                 inset-block-start: calc(100% - 2px);
                 opacity: 1;
             }

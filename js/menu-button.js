@@ -38,6 +38,7 @@
 // runs on import; attachMenuButtons(root) returns a detach.
 
 import { resolveStrings } from './strings.js';
+import { playClose, stopClose } from './motion.js';
 
 /** A menu button's wrapper: a button, then its `[role=menu]`. */
 export const MENU_BUTTON = '[data-kp-menu-button]';
@@ -529,6 +530,12 @@ export function openMenu(wrapper, { focus = 'first' } = {}) {
     const doc = s.menu.ownerDocument;
     const view = doc.defaultView;
     s.open = true;
+    // Still closing: it turns round where it stands.
+    const closing = !s.menu.hidden;
+    stopClose(s.menu);
+    s.menu.inert = false;
+    if (closing) unplaceMenu(s.menu);
+    s.menu.hidden = true;
     // What the page has stuck over the screen's edges is read while the
     // menu is still hidden, so the probe cannot hit the menu itself.
     const covered = view ? coveredEdges(view, s.wrapper) : null;
@@ -587,16 +594,26 @@ export function closeMenu(wrapper, { focus = false } = {}) {
     const s = menus.get(wrapper);
     if (!s || !s.open) return;
     s.open = false;
-    s.menu.hidden = true;
     s.button.setAttribute('aria-expanded', 'false');
     for (const off of s.off.splice(0)) off();
-    unplaceMenu(s.menu);
     if (focus) s.button.focus();
-    if (s.pending) {
-        const next = s.pending;
-        s.pending = null;
-        drawMenu(s, next);
-    }
+    // It closes as it opened, backwards, before it is hidden (Kenny,
+    // 2026-10-06: every close is its open played backwards); meanwhile it
+    // takes no pointer or focus. Opened again before that, it turns round.
+    s.menu.inert = true;
+    const menu = s.menu;
+    void playClose(menu).then((played) => {
+        if (!played || s.open) return;
+        menu.hidden = true;
+        menu.inert = false;
+        stopClose(menu);
+        unplaceMenu(menu);
+        if (s.pending) {
+            const next = s.pending;
+            s.pending = null;
+            drawMenu(s, next);
+        }
+    });
     s.wrapper.dispatchEvent(new CustomEvent(MENU_CLOSE_EVENT, { bubbles: true }));
 }
 
