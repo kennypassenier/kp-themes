@@ -89,7 +89,6 @@ export const PAGES = [
             {
                 href: 'research/phantom-anchor/demo.html',
                 label: "What is phantom's anchor element",
-                rework: 'update 1: the thrown card and the halftone shift combined, as Kenny asked',
             },
             // The character round, sixth demo (2026-10-05): the key-figure strip with its columns in 22 themes, two characters each.
             // The character round, eighth component: the attention band, shape/arrival/leave/tone/empty/loading, one pick per aspect (formal and titanium built first).
