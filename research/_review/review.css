@@ -130,23 +130,32 @@
     min-block-size: 0;
 }
 
-/* The left column: the demo's controls on top, the sections under them. */
+/* The left column: the demo's controls on top, the sections under them.
+   The COLUMN scrolls, not the stage inside it: the option shown is always
+   whole, and the words under it are read by scrolling the column (Kenny,
+   2026-10-08: "zie dat de content zelf altijd helemaal zichtbaar is, en
+   maak het hele gedeelte scrollbaar"). The controls stay pinned on top. */
 .rv-dialog__view {
     display: grid;
-    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+    align-content: start;
     min-block-size: 0;
     min-inline-size: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
 }
 
 /* The demo's own buttons (states, variants, speed), mirrored by review.js;
-   the demo's copy inside a section is hidden in the stage. */
+   the demo's copy inside a section is hidden in the stage. One line: every
+   group (State, Replay, Speed) side by side, wrapping only when the window
+   is too narrow, so the option under it gets the height (Kenny, 2026-10-08). */
 .rv-controls {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 2;
     display: grid;
-    gap: var(--kp-space-sm, 0.5rem);
-    max-block-size: 45dvh;
-    overflow: auto;
-    overscroll-behavior: contain;
-    padding: var(--kp-space-sm, 0.5rem) 1.25rem;
+    gap: var(--kp-space-xs, 0.25rem);
+    padding: var(--kp-space-xs, 0.25rem) 1.25rem;
     border-block-end: 1px solid var(--border);
     background: var(--muted);
 }
@@ -157,22 +166,21 @@
 }
 
 .rv-controls__hint {
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
     font-weight: 600;
-    color: var(--foreground);
+    color: var(--muted-foreground);
     cursor: pointer;
 }
 
 .rv-controls__body,
 .rv-controls__set,
+.rv-controls__set > div,
 .rv-controls__set > div > * {
-    display: grid;
-    gap: var(--kp-space-xs, 0.25rem);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 1rem);
     min-inline-size: 0;
-}
-
-.rv-controls__body {
-    gap: var(--kp-space-sm, 0.5rem);
 }
 
 .rv-controls__title {
@@ -196,9 +204,10 @@
 }
 
 .rv-dialog__stage {
-    contain: strict;
-    overflow: auto;
-    overscroll-behavior: contain;
+    /* No size containment and no scrollbar of its own: the stage is as tall
+       as the section it holds, and the view column scrolls (above). */
+    contain: layout style;
+    overflow: visible;
     padding: 1rem 1.25rem;
 }
 
@@ -330,9 +339,7 @@
         padding: 0.75rem 16px;
     }
 
-    /* On a phone the bar scrolls on its own and folds away under its hint. */
     .rv-controls {
-        max-block-size: 30dvh;
         padding-inline: 16px;
     }
 
@@ -404,14 +411,17 @@
    block layout exactly as before. */
 .rv-flip {
     display: block;
-    min-block-size: 0;
+    /* The automatic minimum stays: with `min-block-size: 0` the view's grid
+       squeezed this row to the height left over and the option inside was
+       clipped (Kenny, 2026-10-08); the view column scrolls instead. */
+    min-block-size: auto;
 }
 
 .rv-flip--active {
     display: flex;
     align-items: stretch;
     gap: 0.5rem;
-    min-block-size: 0;
+    min-block-size: auto;
 }
 
 /* The stage stays a plain block (full width, scrollable) — only a flex ITEM
@@ -431,7 +441,11 @@
 
 .rv-flip__arrow {
     flex: 0 0 auto;
-    align-self: center;
+    /* The column scrolls under the arrows; they stay in reach mid-height. */
+    position: sticky;
+    inset-block-start: calc(50% - 1.25rem);
+    align-self: flex-start;
+    margin-block-start: 40vh;
     inline-size: 2.5rem;
     block-size: 2.5rem;
     display: flex;
@@ -449,9 +463,13 @@
 }
 
 .rv-flip__bar {
-    display: grid;
-    gap: 0.4rem;
-    justify-items: center;
+    /* One line of dots and tools; the option's name and words under it,
+       read by scrolling the column. */
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem 1rem;
     padding: 0.4rem 1rem 0.75rem;
     text-align: center;
 }
@@ -474,6 +492,8 @@
 }
 
 .rv-flip__label {
+    order: 2;
+    flex: 1 1 100%;
     margin: 0;
     font-size: 0.9rem;
 }
@@ -487,6 +507,7 @@
 }
 
 .rv-flip__tools {
+    order: 1;
     display: flex;
     flex-wrap: wrap;
     gap: 0.4rem;
