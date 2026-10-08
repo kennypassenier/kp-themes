@@ -36,3 +36,6 @@ tokens.tar
 research/progress-signature/out/
 research/signature-elements/out/
 test-timings/
+
+# Kenny's go for a release; the release-tests hook passes while it exists.
+.claude/release-go
