@@ -220,6 +220,14 @@
     display: none;
 }
 
+/* The catalogue's own judging panel under a row (catalogue/judging.js:
+   Approve, Not approved, the note) travels into the stage with the row;
+   the dialog's side already holds that verdict, so the panel is hidden
+   here and the option keeps the height (Kenny, 2026-10-08). */
+.rv-dialog__stage .cat-judge {
+    display: none !important;
+}
+
 /* Sections stacked as on "Every component, one page". */
 .rv-dialog__stage > * + * {
     margin-block-start: 1.5rem;
