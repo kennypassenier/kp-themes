@@ -28939,6 +28939,9 @@
        time"]. js/motion.js reads it. */
     [data-theme='terminal'] {
         --kp-size-steps: line;
+        /* One step per 136 ms line: a resize, a fold and an unfold keep the theme's clock
+           (js/motion.js steppedDuration). */
+        --kp-size-step: var(--kp-sig-tm-line);
     }
 
     /* The link signature is for links in running text; a link in a navigation,
@@ -54589,6 +54592,9 @@
            scan. ─────────────────────────────────────────────────────────── */
         [data-theme='nostromo'] {
             --kp-size-steps: line;
+            /* One step per 80 ms frame: a resize, a fold and an unfold keep the theme's clock
+               (js/motion.js steppedDuration). */
+            --kp-size-step: var(--kp-sig-no-frame);
         }
 
         [data-theme='nostromo'] [data-kp-resizing] {

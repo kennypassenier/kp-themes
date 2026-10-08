@@ -2722,6 +2722,7 @@ export const DESCRIPTORS = [
             { name: 'data-kp-size-motion', what: 'Ease this box to its new height whenever its content changes size.' },
             { name: '--kp-close-max', what: 'The longest a dialog may take to leave. It leaves in two thirds of its entrance, never longer than this. Default 600ms.' },
             { name: '--kp-size-max', what: 'The longest a box may take to change size. It takes four fifths of the dialog entrance, never longer than this. Default 480ms.' },
+            { name: '--kp-size-step', what: 'For a theme that counts its time in steps: the length of one step (nostromo 80ms, terminal 136ms). A stepped resize, fold or unfold then takes that long per step, and a fold waits a whole number of steps. Unset, the steps share the size time.' },
             { name: 'data-kp-resizing', what: 'Written on a box while it glides to a new height, `grow` or `shrink`. A register draws its own character on it. Read it, do not set it.' },
             { name: 'data-kp-reversing', what: '`reset` then `play` on an element while its CSS entrance is played backwards to hide it (a tooltip, the tour card); the stylesheet restarts the entrance in reverse, and the mark goes when it has played. Read it, do not set it.' },
             { name: 'data-kp-closing', what: 'Written on a menu or a popover while it plays its close, its opening backwards (js/motion.js playClose). A register may draw a close of its own on it, or run its transitions to the closed state. Read it, do not set it.' },

@@ -23,7 +23,7 @@
         "js/log.js": { "digest": "3fc853eb5c0c4dfa", "when": "[data-kp-source]" },
         "js/menu-button.js": { "digest": "562c02d40528433f", "when": "[data-kp-menu-button]" },
         "js/motion.js": {
-            "digest": "4ddebe765cd91414",
+            "digest": "34f222357a498556",
             "when": "dialog.kp-dialog, .kp-accordion__item, .kp-tabs, .kp-datatable, .kp-toasts, .kp-upload__list, .kp-combobox__list, .kp-tree, .kp-wizard, .kp-field, [data-kp-size-motion]"
         },
         "js/palette.js": { "digest": "d3da386b0c1b5c72", "when": "[data-kp-palette], [data-kp-shortcuts]" },
@@ -43,7 +43,7 @@
         "cyberpunk": "3595c22a9abd806b",
         "synthwave": "b2c5fc611ffe3c3a",
         "pastel": "46fa1e7800d9fc12",
-        "terminal": "11430bd29fbf3b55",
+        "terminal": "300a03bb44a504ee",
         "forest": "0c629b486ce520bc",
         "high-contrast": "ff67b92b51c6fdff",
         "sepia": "8c2df79663a54990",
@@ -54,7 +54,7 @@
         "phantom": "f4029b27463250db",
         "retro": "ef242647496c20d0",
         "grotesk": "260312787a7f7d57",
-        "nostromo": "766acf7f8b72c342",
+        "nostromo": "19fffa0ab7b47239",
         "titanium": "3e524cefb3597a1d"
     },
     "rules": {

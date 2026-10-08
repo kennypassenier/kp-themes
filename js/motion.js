@@ -619,6 +619,38 @@ function sizeEase(box, ease, change, plain = false) {
     return way(ease);
 }
 
+/**
+ * How long a stepped size motion takes in the theme `box` wears: a theme
+ * that counts its time in steps (`--kp-size-step`, the ms of one step:
+ * nostromo's 80 ms frame, terminal's 136 ms line) moves a box, a fold and
+ * an unfold one step per that time, so the steps keep the theme's own clock
+ * instead of dividing the size time among them (a fold of 400 ms in four
+ * steps ran 100 ms a step, off nostromo's 80 ms frame). Any other curve, or
+ * a theme without the knob, keeps `duration`.
+ * @param {Element} box @param {string} easing @param {number} duration
+ * @returns {number}
+ */
+function steppedDuration(box, easing, duration) {
+    const steps = /^steps\(\s*(\d+)/.exec(easing.trim());
+    if (!steps || duration <= 0) return duration;
+    const step = msOf(box, '--kp-size-step', 0);
+    if (step <= 0) return duration;
+    const root = box.ownerDocument?.documentElement ?? document.documentElement;
+    const scale = parseFloat(getComputedStyle(root).getPropertyValue('--kp-motion-scale')) || 1;
+    return Number(steps[1]) * step * scale;
+}
+
+/**
+ * A wait before a stepped fold, put on the theme's step clock
+ * (`--kp-size-step`): a whole number of steps.
+ * @param {Element} box @param {string} easing @param {number} ms
+ */
+function onStepClock(box, easing, ms) {
+    if (!/^steps\(/.test(easing.trim())) return ms;
+    const step = msOf(box, '--kp-size-step', 0);
+    return step > 0 ? Math.round(ms / step) * step : ms;
+}
+
 /** The keywords as the curves they name, for reversedEase(). */
 const NAMED_EASES = /** @type {Record<string, string>} */ ({
     ease: 'cubic-bezier(0.25, 0.1, 0.25, 1)',
@@ -704,7 +736,8 @@ function layoutHeight(el) {
 export function sizeMotion(box, change) {
     const { size, ease } = themeMotion(box);
     if (size <= 0 || switching) return { duration: 0, easing: 'linear' };
-    return { duration: size, easing: sizeEase(box, ease, change) };
+    const easing = sizeEase(box, ease, change);
+    return { duration: steppedDuration(box, easing, size), easing };
 }
 
 /**
@@ -987,6 +1020,22 @@ const pseudoNames = (el) => ({
     '::after': animationSignature(el, '::after'),
 });
 
+/**
+ * Whether `el` takes no space where it stands (placed absolutely or fixed,
+ * or raised into the top layer): a fold of its space would show nothing but
+ * a wait, with the element already gone or not yet there (a combobox list
+ * unfolded nothing for 466 ms before its opening, blueprint).
+ * @param {Element} el @param {CSSStyleDeclaration} style
+ */
+const floats = (el, style) => {
+    if (style.position === 'absolute' || style.position === 'fixed') return true;
+    try {
+        return el.matches(':popover-open, :modal');
+    } catch {
+        return false;
+    }
+};
+
 /** @param {PlaybackDirection | undefined} direction @returns {PlaybackDirection} */
 const flipped = (direction) =>
     /** @type {Record<PlaybackDirection, PlaybackDirection>} */ ({
@@ -1082,8 +1131,8 @@ function arriveAsReversedLeave(el) {
     if (actor !== el) for (const a of el.getAnimations()) if (a instanceof CSSAnimation) a.cancel();
     const after = fold === 'after';
     const pause = parseFloat(style.getPropertyValue('--kp-leave-pause')) || 0;
-    const foldFor = size > 0 ? Math.max(size, lasts) * 1.25 : 0;
-    const foldAt = after ? lasts + pause : lasts / 3;
+    const foldFor = size > 0 && !floats(el, style) ? steppedDuration(el, withoutOvershoot(ease), Math.max(size, lasts) * 1.25) : 0;
+    const foldAt = onStepClock(el, withoutOvershoot(ease), after ? lasts + pause : lasts / 3);
     // The leave is over when its last exit (a pseudo-element's may run
     // longer than the first) and its fold are.
     const total = Math.max(lasts, ...exits.map((exit) => exit.end), foldFor ? foldAt + foldFor : 0);
@@ -1418,7 +1467,7 @@ async function leaveOne(el, hide, exited) {
     running.push(exit);
     // A table row cannot be folded below its cells' content: it plays its
     // leave, and the table glides shut once it is out.
-    if (size > 0 && !(el instanceof HTMLTableRowElement)) {
+    if (size > 0 && !(el instanceof HTMLTableRowElement) && !floats(el, style)) {
         el.style.setProperty('overflow', 'clip');
         el.style.setProperty('box-sizing', 'border-box');
         const [from, to] = foldFrames(el, style);
@@ -1434,8 +1483,8 @@ async function leaveOne(el, hide, exited) {
         const after = fold === 'after';
         const pause = parseFloat(style.getPropertyValue('--kp-leave-pause')) || 0;
         const folding = el.animate([from, to], {
-            duration: Math.max(size, lasts) * 1.25,
-            delay: after ? lasts + pause : lasts / 3,
+            duration: steppedDuration(el, withoutOvershoot(ease), Math.max(size, lasts) * 1.25),
+            delay: onStepClock(el, withoutOvershoot(ease), after ? lasts + pause : lasts / 3),
             easing: withoutOvershoot(ease),
             fill: 'forwards',
         });
@@ -1669,7 +1718,8 @@ export function easeSize(box, { arrive: fallback = 'all', arriveKeys = [] } = {}
         // Shutting while rows fold out of it, the box ends as they end: the
         // open started its glide and their arrival together.
         const delay = to < from ? Math.max(0, foldingOutFor(box) - size) : 0;
-        const { animation: mine, done } = glide(box, from, to, size, sizeEase(box, ease, to - from), false, delay);
+        const easing = sizeEase(box, ease, to - from);
+        const { animation: mine, done } = glide(box, from, to, steppedDuration(box, easing, size), easing, false, delay);
         running = mine;
         mine.finished
             .then(() => {

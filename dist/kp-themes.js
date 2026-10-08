@@ -3205,6 +3205,20 @@ function sizeEase(box, ease, change, plain = false) {
   }
   return way(ease);
 }
+function steppedDuration(box, easing, duration) {
+  const steps = /^steps\(\s*(\d+)/.exec(easing.trim());
+  if (!steps || duration <= 0) return duration;
+  const step = msOf(box, "--kp-size-step", 0);
+  if (step <= 0) return duration;
+  const root = box.ownerDocument?.documentElement ?? document.documentElement;
+  const scale = parseFloat(getComputedStyle(root).getPropertyValue("--kp-motion-scale")) || 1;
+  return Number(steps[1]) * step * scale;
+}
+function onStepClock(box, easing, ms) {
+  if (!/^steps\(/.test(easing.trim())) return ms;
+  const step = msOf(box, "--kp-size-step", 0);
+  return step > 0 ? Math.round(ms / step) * step : ms;
+}
 function reversedEase(ease) {
   const curve = NAMED_EASES[ease.trim()] ?? ease.trim();
   const bezier = /^cubic-bezier\(\s*([^,]+),\s*([^,]+),\s*([^,]+),\s*([^)]+)\)$/.exec(curve);
@@ -3245,7 +3259,8 @@ function layoutHeight(el2) {
 function sizeMotion(box, change) {
   const { size, ease } = themeMotion(box);
   if (size <= 0 || switching) return { duration: 0, easing: "linear" };
-  return { duration: size, easing: sizeEase(box, ease, change) };
+  const easing = sizeEase(box, ease, change);
+  return { duration: steppedDuration(box, easing, size), easing };
 }
 function glide(box, from, to, duration, easing, plain = false, delay = 0) {
   box.style.setProperty("overflow", "clip");
@@ -3474,8 +3489,8 @@ function arriveAsReversedLeave(el2) {
   }
   const after = fold === "after";
   const pause = parseFloat(style.getPropertyValue("--kp-leave-pause")) || 0;
-  const foldFor = size > 0 ? Math.max(size, lasts) * 1.25 : 0;
-  const foldAt = after ? lasts + pause : lasts / 3;
+  const foldFor = size > 0 && !floats(el2, style) ? steppedDuration(el2, withoutOvershoot(ease), Math.max(size, lasts) * 1.25) : 0;
+  const foldAt = onStepClock(el2, withoutOvershoot(ease), after ? lasts + pause : lasts / 3);
   const total = Math.max(lasts, ...exits.map((exit) => exit.end), foldFor ? foldAt + foldFor : 0);
   const plays = [];
   for (const exit of exits) {
@@ -3711,7 +3726,7 @@ async function leaveOne(el2, hide, exited) {
   if (lasts > 0 && stagger > 0 && stagger < 1) void partway(actor, stagger, exit).then(exited);
   else void exit.then(exited);
   running2.push(exit);
-  if (size > 0 && !(el2 instanceof HTMLTableRowElement)) {
+  if (size > 0 && !(el2 instanceof HTMLTableRowElement) && !floats(el2, style)) {
     el2.style.setProperty("overflow", "clip");
     el2.style.setProperty("box-sizing", "border-box");
     const [from, to] = foldFrames(el2, style);
@@ -3719,8 +3734,8 @@ async function leaveOne(el2, hide, exited) {
     const after = fold === "after";
     const pause = parseFloat(style.getPropertyValue("--kp-leave-pause")) || 0;
     const folding = el2.animate([from, to], {
-      duration: Math.max(size, lasts) * 1.25,
-      delay: after ? lasts + pause : lasts / 3,
+      duration: steppedDuration(el2, withoutOvershoot(ease), Math.max(size, lasts) * 1.25),
+      delay: onStepClock(el2, withoutOvershoot(ease), after ? lasts + pause : lasts / 3),
       easing: withoutOvershoot(ease),
       fill: "forwards"
     });
@@ -3845,7 +3860,8 @@ function easeSize(box, { arrive: fallback2 = "all", arriveKeys = [] } = {}) {
     const { size, ease } = themeMotion(box);
     if (size <= 0) return;
     const delay = to < from ? Math.max(0, foldingOutFor(box) - size) : 0;
-    const { animation: mine, done } = glide(box, from, to, size, sizeEase(box, ease, to - from), false, delay);
+    const easing = sizeEase(box, ease, to - from);
+    const { animation: mine, done } = glide(box, from, to, steppedDuration(box, easing, size), easing, false, delay);
     running2 = mine;
     mine.finished.then(() => {
       done();
@@ -4033,7 +4049,7 @@ function attachMotion(root = document, { size = "", arrive: arrive2 = "all", arr
     detaches.clear();
   };
 }
-var SIZE_ATTRIBUTE, SIZE_SELECTOR, FOLD_SELECTOR, ARRIVE_KEYS, SKELETON, watching, CLOSE_SHARE, SIZE_SHARE, msOf, firstMs, reduced, entrances, closing, nativeClose, opensAsReversedClose, switching, REVERSING_ATTRIBUTE, CLOSING_ATTRIBUTE, PANEL_SELECTOR, ghosted, NAMED_EASES, entering, animationSignature, pseudoNames, flipped, arriving, finiteMs, batch, FOLDING_OUT, heightFolds, followsAFold, arriveMode;
+var SIZE_ATTRIBUTE, SIZE_SELECTOR, FOLD_SELECTOR, ARRIVE_KEYS, SKELETON, watching, CLOSE_SHARE, SIZE_SHARE, msOf, firstMs, reduced, entrances, closing, nativeClose, opensAsReversedClose, switching, REVERSING_ATTRIBUTE, CLOSING_ATTRIBUTE, PANEL_SELECTOR, ghosted, NAMED_EASES, entering, animationSignature, pseudoNames, floats, flipped, arriving, finiteMs, batch, FOLDING_OUT, heightFolds, followsAFold, arriveMode;
 var init_motion = __esm({
   "js/motion.js"() {
     "use strict";
@@ -4108,6 +4124,14 @@ var init_motion = __esm({
       "::before": animationSignature(el2, "::before"),
       "::after": animationSignature(el2, "::after")
     });
+    floats = (el2, style) => {
+      if (style.position === "absolute" || style.position === "fixed") return true;
+      try {
+        return el2.matches(":popover-open, :modal");
+      } catch {
+        return false;
+      }
+    };
     flipped = (direction) => (
       /** @type {Record<PlaybackDirection, PlaybackDirection>} */
       {
