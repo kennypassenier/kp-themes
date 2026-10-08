@@ -1,0 +1,1492 @@
+/* research/high-contrast-anchor: every candidate of the one question, in the
+   theme's signature layer. Colours come from the theme's tokens only; every
+   motion sits under prefers-reduced-motion: no-preference, and the reduced
+   pose is the finished picture (the plate said, the frame at its weight, the
+   square in the last cell). Durations are counted in units of the theme's
+   beat (--an-u, 120 ms, set by demo.js) and multiplied by --an-slow (1, 2 or
+   4: the page's speed buttons).
+
+   THE THEME'S RULES (Kenny: contrast may never go down). No opacity between
+   0 and 1, no blur, no grey but --muted-foreground, no gradient wash: every
+   change is a hard step (`steps()`, `step-end`) or a clip-path wipe, yellow
+   is a plate with black ink, every part keeps a 2 px ink edge. The only
+   `linear-gradient` / `repeating-linear-gradient` here are hard-stop
+   patterns (the register's own: the bar's ticks and the busy stripes).
+
+   SCOPE. The review dialog moves the section out of the page into its stage
+   (.rv-dialog__stage), so no rule here may hang on `.an-page`: the custom
+   properties and every rule hang on `.an-scene`, which moves with its
+   options (forest's demo lost every option animation in the dialog this way,
+   48bfa5b3).
+
+   THE CLOCK. One clock (demo.js) writes `data-an-phase` on every scene:
+   gap (the part is not drawn), in (8 units: it is drawn), hold (4 units: it
+   dwells, the press held), out (8 units: the drawing played backwards, the
+   same keyframes mirrored, what drew last going first). The base style of
+   every part is its drawn pose (so reduced motion and hold show the finished
+   picture); `gap` sets the undrawn pose; `in` and `hold` run the drawing,
+   `out` runs its mirror. Mirrored keyframes are written as a pair (`hc-x`
+   and `hc-x-out`) so every close is its open reversed: a keyframe's timing
+   function is written out (a var() there falls back to `ease`), a step-end
+   becomes a step-start, steps(n, jump-end) steps(n, jump-start), and an
+   eased animation sets --an-ease-out to the inverse curve.
+
+   THE ANCHOR'S THREE PLACES. Each candidate draws itself in its own scene
+   (`.an-hero`), as a progress bar (`.an-bar`) and as a button press
+   (`.an-btn`); the press lands at 7 units (87.5 %) and is held through the
+   dwell, and is released as the first unit of `out`. */
+
+@layer kp.signature {
+    /* ── The scene ───────────────────────────────────────────────────── */
+
+    .an-scene {
+        --an-ink: var(--foreground);
+        --an-signal: var(--accent);
+        --an-paper: var(--background);
+        /* One unit is the theme's beat; a loop is 22 units. */
+        --an-u: calc(var(--an-unit, 110ms) * var(--an-slow, 1));
+        --an-in: calc(8 * var(--an-u));
+        --an-loop: calc(22 * var(--an-u));
+        /* The register's own wipe curve (--kp-sig-hc-ease, the REMOVED caption's). */
+        --an-wipe: cubic-bezier(0.2, 0, 0, 1);
+        /* The same curves played backwards (a curve's inverse is its point reflection), so a close on them is its open reversed.
+           Inside @keyframes a timing function is written out (a var() there is invalid and falls back to `ease`). */
+        --an-wipe-out: cubic-bezier(1, 0, 0.8, 1);
+        container-type: inline-size;
+        position: relative;
+        overflow: clip;
+        overflow-clip-margin: 0.75rem;
+        /* Nothing is translucent; the layout layer's busy dim stays off. */
+        --kp-busy-opacity: 1;
+    }
+
+    .an-scene .an-hero {
+        position: relative;
+        display: grid;
+        place-items: center;
+        min-block-size: clamp(13rem, 36cqi, 20rem);
+        padding: 1.25rem 0.5rem;
+    }
+
+    .an-scene .an-bar,
+    .an-scene .an-btn {
+        display: grid;
+        min-block-size: 6rem;
+    }
+
+    .an-scene .an-bar {
+        align-content: center;
+    }
+
+    .an-scene .an-btn {
+        place-items: center;
+    }
+
+    /* ── The building blocks every candidate draws with ──────────────── */
+
+    /* A part that is drawn: its end pose is its base style, its start pose
+       is set at `gap`, and `in` / `out` run the pair of keyframes. */
+    .an-scene .an-a--scale {
+        --an-kf: an-scale;
+        --an-kf-out: an-scale-out;
+        scale: var(--an-s1, 1) 1;
+        transform-origin: left center;
+    }
+
+    .an-scene .an-a--clip {
+        --an-kf: an-clip;
+        --an-kf-out: an-clip-out;
+        clip-path: inset(-1em var(--an-c1, 0%) -1em 0);
+    }
+
+    .an-scene .an-a--move {
+        --an-kf: an-move;
+        --an-kf-out: an-move-out;
+        translate: var(--an-x1, 0%) var(--an-y1, 0%);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .an-a--scale {
+            scale: var(--an-s0, 0) 1;
+        }
+
+        .an-scene[data-an-phase='gap'] .an-a--clip {
+            clip-path: inset(-1em var(--an-c0, 100%) -1em 0);
+        }
+
+        .an-scene[data-an-phase='gap'] .an-a--move {
+            translate: var(--an-x0, 0%) var(--an-y0, 0%);
+        }
+
+        .an-scene[data-an-phase='in'] .an-a,
+        .an-scene[data-an-phase='hold'] .an-a {
+            animation: var(--an-kf) calc(var(--an-l, 8) * var(--an-u)) var(--an-ease, linear) calc(var(--an-d, 0) * var(--an-u)) both;
+        }
+
+        /* The mirror starts as late as the drawing ended: what drew last
+           goes first. */
+        .an-scene[data-an-phase='out'] .an-a {
+            animation: var(--an-kf-out) calc(var(--an-l, 8) * var(--an-u)) var(--an-ease-out, var(--an-ease, linear))
+                calc((8 - var(--an-d, 0) - var(--an-l, 8)) * var(--an-u)) both;
+        }
+    }
+
+    @keyframes an-scale {
+        from {
+            scale: var(--an-s0, 0) 1;
+        }
+
+        to {
+            scale: var(--an-s1, 1) 1;
+        }
+    }
+
+    @keyframes an-scale-out {
+        from {
+            scale: var(--an-s1, 1) 1;
+        }
+
+        to {
+            scale: var(--an-s0, 0) 1;
+        }
+    }
+
+    @keyframes an-clip {
+        from {
+            clip-path: inset(-1em var(--an-c0, 100%) -1em 0);
+        }
+
+        to {
+            clip-path: inset(-1em var(--an-c1, 0%) -1em 0);
+        }
+    }
+
+    @keyframes an-clip-out {
+        from {
+            clip-path: inset(-1em var(--an-c1, 0%) -1em 0);
+        }
+
+        to {
+            clip-path: inset(-1em var(--an-c0, 100%) -1em 0);
+        }
+    }
+
+    @keyframes an-move {
+        from {
+            translate: var(--an-x0, 0%) var(--an-y0, 0%);
+        }
+
+        to {
+            translate: var(--an-x1, 0%) var(--an-y1, 0%);
+        }
+    }
+
+    @keyframes an-move-out {
+        from {
+            translate: var(--an-x1, 0%) var(--an-y1, 0%);
+        }
+
+        to {
+            translate: var(--an-x0, 0%) var(--an-y0, 0%);
+        }
+    }
+
+    /* The pressed face: the package's own pressed ground (`--secondary-active`),
+       landing late (7 units) and held. */
+    @keyframes an-face-late {
+        0%,
+        87.49% {
+            background-color: var(--secondary);
+        }
+
+        87.5%,
+        100% {
+            background-color: var(--secondary-active);
+        }
+    }
+
+    @keyframes an-face-late-out {
+        0%,
+        12.5% {
+            background-color: var(--secondary-active);
+        }
+
+        12.51%,
+        100% {
+            background-color: var(--secondary);
+        }
+    }
+
+    /* A button that is pressed at the end of the drawing: its base is the
+       pressed face; `gap` is the rest face. */
+    .an-scene .an-press {
+        position: relative;
+        background-color: var(--secondary-active);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .an-press {
+            background-color: var(--secondary);
+        }
+
+        .an-scene[data-an-phase='in'] .an-press,
+        .an-scene[data-an-phase='hold'] .an-press {
+            animation: var(--an-face, an-face-late) var(--an-in) linear both;
+        }
+
+        .an-scene[data-an-phase='out'] .an-press {
+            animation: var(--an-face-out, an-face-late-out) var(--an-in) linear both;
+        }
+    }
+
+    /* ── High-contrast's sign: the board, the plate, the progress bar ──── */
+
+    /* A sign board: a white plate in a 3 px ink frame, a bold title ruled off
+       by 3 px of ink, a line of text. The title never wraps (an ellipsis
+       before a broken word); the line wraps between words only. */
+    .an-scene .hc-board {
+        position: relative;
+        display: grid;
+        gap: 0.5rem;
+        align-content: start;
+        box-sizing: border-box;
+        inline-size: min(100%, 22rem);
+        padding: 1.2rem 1.15rem 1.05rem;
+        border: 3px solid var(--border-strong);
+        border-radius: var(--radius);
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    .an-scene .hc-board > * {
+        min-inline-size: 0;
+    }
+
+    .an-scene .hc-board__title {
+        margin: 0;
+        padding-block-end: 0.35rem;
+        border-block-end: 3px solid currentcolor;
+        overflow: hidden;
+        font-size: clamp(1.15rem, 5.6cqi, 1.65rem);
+        font-weight: 700;
+        line-height: 1.15;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .an-scene .hc-board__line {
+        margin: 0;
+        font-size: clamp(0.875rem, 3.5cqi, 1.05rem);
+        line-height: 1.35;
+        overflow-wrap: normal;
+    }
+
+    /* A yellow plate with a 3 px ink frame and bold spaced capitals: the
+       register's REMOVED caption, saying something else. */
+    .an-scene .hc-plate {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        max-inline-size: 100%;
+        padding: 0.15rem 0.55rem;
+        border: 3px solid var(--border-strong);
+        background: var(--accent);
+        color: var(--accent-foreground);
+        font-size: clamp(0.7rem, 2.9cqi, 0.85rem);
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        line-height: 1.2;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    /* The package's progress bar in this register, drawn as it draws it, a
+       size up (1.5 rem): a 2 px ink-framed track with a 1 px tick at each of
+       ten steps along its foot, a solid ink fill with paper ticks, clipped to
+       the value, and the head at the leading edge, 9 px of signal yellow and
+       3 px of ink. */
+    .an-scene .hc-bar {
+        --hc-p: 1;
+        position: relative;
+        display: block;
+        inline-size: 100%;
+        block-size: 1.5rem;
+    }
+
+    .an-scene .hc-bar__track {
+        container-type: inline-size;
+        position: absolute;
+        inset: 0;
+        display: block;
+        box-sizing: border-box;
+        overflow: clip;
+        border: 2px solid var(--border-strong);
+        border-radius: var(--radius);
+        background:
+            linear-gradient(90deg, var(--foreground) 0 1px, var(--background) 1px calc(100% - 1px), var(--foreground) calc(100% - 1px)) 0 100% / 10%
+                40% repeat-x,
+            var(--background);
+    }
+
+    .an-scene .hc-bar__fill {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        background:
+            linear-gradient(90deg, var(--background) 0 1px, var(--foreground) 1px calc(100% - 1px), var(--background) calc(100% - 1px)) 0 100% / 10%
+                40% repeat-x,
+            var(--foreground);
+        --an-d: 0.001;
+        --an-l: 7;
+        --an-ease: steps(10, jump-end);
+        --an-ease-out: steps(10, jump-start);
+    }
+
+    .an-scene .hc-bar__head {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        z-index: 2;
+        inline-size: 12px;
+        background: linear-gradient(90deg, var(--accent) 0 9px, var(--foreground) 9px);
+        translate: calc(var(--hc-p) * 100cqi - 100%) 0;
+        --an-kf: hc-head;
+        --an-kf-out: hc-head-out;
+        --an-d: 0.001;
+        --an-l: 7;
+    }
+
+    @keyframes hc-head {
+        0% {
+            translate: -100% 0;
+            animation-timing-function: steps(10, jump-end);
+        }
+
+        100% {
+            translate: calc(var(--hc-p) * 100cqi - 100%) 0;
+        }
+    }
+
+    @keyframes hc-head-out {
+        0% {
+            translate: calc(var(--hc-p) * 100cqi - 100%) 0;
+            animation-timing-function: steps(10, jump-start);
+        }
+
+        100% {
+            translate: -100% 0;
+        }
+    }
+
+    /* A part that is placed whole in one hard step at its delay (the jump sits mid-duration: at the very end a rounding of the clock can leave it undone). */
+    @keyframes hc-place {
+        0% {
+            clip-path: inset(-0.5rem 100% -0.5rem 0);
+            animation-timing-function: step-end;
+        }
+
+        50%,
+        100% {
+            clip-path: inset(-0.5rem);
+        }
+    }
+
+    @keyframes hc-place-out {
+        0% {
+            clip-path: inset(-0.5rem);
+        }
+
+        50% {
+            clip-path: inset(-0.5rem);
+            animation-timing-function: step-start;
+        }
+
+        100% {
+            clip-path: inset(-0.5rem 100% -0.5rem 0);
+        }
+    }
+
+    /* The pressed face: the register's hover, the ink ground and the paper
+       label, landing at 7 units in one step and held. */
+    @keyframes hc-face-late {
+        0% {
+            background-color: var(--secondary);
+            color: var(--secondary-foreground);
+            animation-timing-function: step-end;
+        }
+
+        87.49%,
+        100% {
+            background-color: var(--border-strong);
+            color: var(--background);
+        }
+    }
+
+    @keyframes hc-face-late-out {
+        0% {
+            background-color: var(--border-strong);
+            color: var(--background);
+        }
+
+        12.51% {
+            background-color: var(--border-strong);
+            color: var(--background);
+            animation-timing-function: step-start;
+        }
+
+        100% {
+            background-color: var(--secondary);
+            color: var(--secondary-foreground);
+        }
+    }
+
+    .an-scene .an-press {
+        --an-face: hc-face-late;
+        --an-face-out: hc-face-late-out;
+        background-color: var(--border-strong);
+        color: var(--background);
+    }
+
+    /* The buttons in a scene are scenery: the pointer does nothing to them. */
+    .an-scene .an-btn .kp-button {
+        pointer-events: none;
+        min-block-size: 2.75rem;
+        min-inline-size: 0;
+        max-inline-size: 100%;
+        font-size: clamp(0.8125rem, 3.4cqi, 1rem);
+    }
+
+    .an-scene .an-btn > span {
+        position: relative;
+        display: inline-grid;
+        max-inline-size: 100%;
+    }
+
+    .an-scene .an-btn .kp-button__label {
+        display: block;
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* The parts that are placed whole in one step: their delay in units. */
+    .an-scene .hc-board > :is(.hc-board__title, .hc-board__line) {
+        --hc-d: 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .an-press {
+            color: var(--secondary-foreground);
+        }
+
+        .an-scene[data-an-phase='in'] :is(.hc-c-board, .hc-h-board) > :is(.hc-board__title, .hc-board__line),
+        .an-scene[data-an-phase='hold'] :is(.hc-c-board, .hc-h-board) > :is(.hc-board__title, .hc-board__line) {
+            animation: hc-place calc(0.001 * var(--an-u)) linear calc(var(--hc-d) * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] :is(.hc-c-board, .hc-h-board) > :is(.hc-board__title, .hc-board__line) {
+            animation: hc-place-out calc(0.001 * var(--an-u)) linear calc((8 - var(--hc-d) - 0.001) * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='gap'] :is(.hc-c-board, .hc-h-board) > :is(.hc-board__title, .hc-board__line) {
+            clip-path: inset(-0.5rem 100% -0.5rem 0);
+        }
+    }
+
+    /* ── 1 · Announced: the sign says it ─────────────────────────────── */
+
+    /* The board is placed in one step at 1 unit. The plate (signal yellow, a
+       3 px ink frame, bold spaced capitals, ✓ READY) wipes in across its top
+       edge from the start, from 2 to 5 units, on the register's wipe curve,
+       and stays. Out: the plate wipes off (3 to 6), the board goes in one step
+       at 7. */
+    .an-scene .hc-s-board {
+        padding-block-start: 1.55rem;
+        --an-kf: hc-s-board;
+        --an-kf-out: hc-s-board-out;
+    }
+
+    .an-scene .hc-s-plate {
+        position: absolute;
+        inset-block-start: -3px;
+        inset-inline-start: 1rem;
+        translate: 0 -50%;
+        --an-kf: hc-s-plate;
+        --an-kf-out: hc-s-plate-out;
+        --an-d: 2;
+        --an-l: 3;
+        --an-ease: var(--an-wipe);
+        --an-ease-out: var(--an-wipe-out);
+    }
+
+    @keyframes hc-s-board {
+        0% {
+            clip-path: inset(-2rem 100% -2rem 0);
+            animation-timing-function: step-end;
+        }
+
+        12.49%,
+        100% {
+            clip-path: inset(-2rem);
+        }
+    }
+
+    @keyframes hc-s-board-out {
+        0% {
+            clip-path: inset(-2rem);
+        }
+
+        87.51% {
+            clip-path: inset(-2rem);
+            animation-timing-function: step-start;
+        }
+
+        100% {
+            clip-path: inset(-2rem 100% -2rem 0);
+        }
+    }
+
+    @keyframes hc-s-plate {
+        from {
+            clip-path: inset(-0.5rem 100% -0.5rem -0.5rem);
+        }
+
+        to {
+            clip-path: inset(-0.5rem);
+        }
+    }
+
+    @keyframes hc-s-plate-out {
+        0% {
+            clip-path: inset(-0.5rem);
+        }
+
+        100% {
+            clip-path: inset(-0.5rem 100% -0.5rem -0.5rem);
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .hc-s-board {
+            clip-path: inset(-2rem 100% -2rem 0);
+        }
+
+        .an-scene[data-an-phase='gap'] .hc-s-plate {
+            clip-path: inset(-0.5rem 100% -0.5rem -0.5rem);
+        }
+    }
+
+    /* The bar: the ink fills tick by tick to 62 %, and a flag on the head, a
+       yellow plate reading 62 %, steps along with it. The track lets the flag
+       stand above it and cuts what would show to the left of the start. */
+    .an-scene .hc-s-bar {
+        --hc-p: 0.62;
+    }
+
+    .an-scene .hc-s-bar .hc-bar__fill {
+        --an-c1: 38%;
+    }
+
+    .an-scene .hc-s-bar .hc-bar__track {
+        overflow: visible;
+        border-radius: 0;
+        clip-path: inset(-3rem -1rem -1rem 0);
+    }
+
+    .an-scene .hc-s-bar__tag {
+        position: absolute;
+        inset-block-end: calc(100% + 0.35rem);
+        inset-inline-start: 0;
+        z-index: 3;
+        min-inline-size: 3.4rem;
+        translate: calc(var(--hc-p) * 100cqi - 3px) 0;
+        --an-kf: hc-s-tag;
+        --an-kf-out: hc-s-tag-out;
+        --an-d: 0.001;
+        --an-l: 7;
+    }
+
+    .an-scene .hc-s-bar__tag::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 100%;
+        inset-inline-start: -3px;
+        inline-size: 3px;
+        block-size: calc(0.35rem + 2px);
+        background: var(--foreground);
+    }
+
+    @keyframes hc-s-tag {
+        0% {
+            translate: -3px 0;
+            animation-timing-function: steps(10, jump-end);
+        }
+
+        100% {
+            translate: calc(var(--hc-p) * 100cqi - 3px) 0;
+        }
+    }
+
+    @keyframes hc-s-tag-out {
+        0% {
+            translate: calc(var(--hc-p) * 100cqi - 3px) 0;
+            animation-timing-function: steps(10, jump-start);
+        }
+
+        100% {
+            translate: -3px 0;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .hc-s-bar__tag {
+            visibility: hidden;
+        }
+    }
+
+    /* The button: the face inverts at 7 units, and a 0.5 rem yellow bar wipes
+       along its foot in the last unit (the register's rising bar, drawn
+       across). */
+    .an-scene .hc-s-foot {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 0;
+        block-size: 0.5rem;
+        background: var(--accent);
+        --an-d: 7;
+        --an-l: 1;
+        --an-ease: var(--an-wipe);
+        --an-ease-out: var(--an-wipe-out);
+    }
+
+    /* ── 2 · The marker walks to it ──────────────────────────────────── */
+
+    /* Five framed cells under the title, the spinner's three made five. The
+       yellow square walks from the first to the last in hard steps, 1.75
+       units in each, arriving at 7; every cell it leaves fills ink. */
+    .an-scene .hc-w-row {
+        --hc-w-gap: 0.5rem;
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: var(--hc-w-gap);
+        margin-block-start: 0.35rem;
+    }
+
+    .an-scene .hc-w-row i {
+        display: block;
+        box-sizing: border-box;
+        aspect-ratio: 1;
+        border: 2px solid var(--border-strong);
+        background-color: var(--background);
+    }
+
+    .an-scene .hc-w-row i:nth-child(-n + 4) {
+        background-color: var(--foreground);
+    }
+
+    .an-scene .hc-w-row i:nth-child(1) {
+        --hc-d: 1.75;
+    }
+
+    .an-scene .hc-w-row i:nth-child(2) {
+        --hc-d: 3.5;
+    }
+
+    .an-scene .hc-w-row i:nth-child(3) {
+        --hc-d: 5.25;
+    }
+
+    .an-scene .hc-w-row i:nth-child(4) {
+        --hc-d: 7;
+    }
+
+    .an-scene .hc-w-square {
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline-start: 0;
+        box-sizing: border-box;
+        inline-size: calc((100% - 4 * var(--hc-w-gap)) / 5);
+        aspect-ratio: 1;
+        border: 2px solid var(--border-strong);
+        background: var(--accent);
+        translate: calc(4 * (100% + var(--hc-w-gap))) 0;
+        --an-kf: hc-w-square;
+        --an-kf-out: hc-w-square-out;
+    }
+
+    @keyframes hc-w-square {
+        0% {
+            translate: 0 0;
+            animation-timing-function: step-end;
+        }
+
+        21.87% {
+            translate: calc(1 * (100% + var(--hc-w-gap))) 0;
+            animation-timing-function: step-end;
+        }
+
+        43.74% {
+            translate: calc(2 * (100% + var(--hc-w-gap))) 0;
+            animation-timing-function: step-end;
+        }
+
+        65.62% {
+            translate: calc(3 * (100% + var(--hc-w-gap))) 0;
+            animation-timing-function: step-end;
+        }
+
+        87.49%,
+        100% {
+            translate: calc(4 * (100% + var(--hc-w-gap))) 0;
+        }
+    }
+
+    @keyframes hc-w-square-out {
+        0% {
+            translate: calc(4 * (100% + var(--hc-w-gap))) 0;
+        }
+
+        12.51% {
+            translate: calc(4 * (100% + var(--hc-w-gap))) 0;
+            animation-timing-function: step-start;
+        }
+
+        34.38% {
+            translate: calc(3 * (100% + var(--hc-w-gap))) 0;
+            animation-timing-function: step-start;
+        }
+
+        56.26% {
+            translate: calc(2 * (100% + var(--hc-w-gap))) 0;
+            animation-timing-function: step-start;
+        }
+
+        78.13% {
+            translate: calc(1 * (100% + var(--hc-w-gap))) 0;
+            animation-timing-function: step-start;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* A cell fills ink the moment the square leaves it. */
+    @keyframes hc-w-ink {
+        0% {
+            background-color: var(--background);
+            animation-timing-function: step-end;
+        }
+
+        50%,
+        100% {
+            background-color: var(--foreground);
+        }
+    }
+
+    @keyframes hc-w-ink-out {
+        0% {
+            background-color: var(--foreground);
+        }
+
+        50% {
+            background-color: var(--foreground);
+            animation-timing-function: step-start;
+        }
+
+        100% {
+            background-color: var(--background);
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .hc-w-square {
+            translate: 0 0;
+        }
+
+        .an-scene[data-an-phase='gap'] .hc-w-row i {
+            background-color: var(--background);
+        }
+
+        .an-scene[data-an-phase='in'] .hc-w-row i:nth-child(-n + 4),
+        .an-scene[data-an-phase='hold'] .hc-w-row i:nth-child(-n + 4) {
+            animation: hc-w-ink calc(0.001 * var(--an-u)) linear calc(var(--hc-d) * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .hc-w-row i:nth-child(-n + 4) {
+            animation: hc-w-ink-out calc(0.001 * var(--an-u)) linear calc((8 - var(--hc-d) - 0.001) * var(--an-u)) both;
+        }
+    }
+
+    /* The bar: the track is ten framed cells (the ticks run the full height),
+       the ink fills them one a step, and the square stands on the leading
+       cell. The head is the square, so the register's head stays out. */
+    .an-scene .hc-w-bar .hc-bar__head {
+        display: none;
+    }
+
+    .an-scene .hc-w-bar .hc-bar__track {
+        background:
+            linear-gradient(90deg, var(--foreground) 0 1px, var(--background) 1px calc(100% - 1px), var(--foreground) calc(100% - 1px)) 0 0 / 10% 100%
+                repeat-x,
+            var(--background);
+    }
+
+    .an-scene .hc-w-bar .hc-bar__fill {
+        background:
+            linear-gradient(90deg, var(--background) 0 1px, var(--foreground) 1px calc(100% - 1px), var(--background) calc(100% - 1px)) 0 0 / 10% 100%
+                repeat-x,
+            var(--foreground);
+    }
+
+    .an-scene .hc-w-bar__square {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        z-index: 2;
+        box-sizing: border-box;
+        inline-size: 10%;
+        border: 2px solid var(--border-strong);
+        background: var(--accent);
+        translate: 900% 0;
+        --an-kf: hc-w-bar-square;
+        --an-kf-out: hc-w-bar-square-out;
+        --an-d: 0.001;
+        --an-l: 7;
+    }
+
+    @keyframes hc-w-bar-square {
+        0% {
+            translate: 0 0;
+            animation-timing-function: steps(9, jump-end);
+        }
+
+        90%,
+        100% {
+            translate: 900% 0;
+        }
+    }
+
+    @keyframes hc-w-bar-square-out {
+        0% {
+            translate: 900% 0;
+        }
+
+        10% {
+            translate: 900% 0;
+            animation-timing-function: steps(9, jump-start);
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .hc-w-bar__square {
+            translate: 0 0;
+        }
+    }
+
+    /* The button: a yellow square lands beside the label (scale 0 to 1 in
+       one step at 7 units) as the face inverts. */
+    .an-scene .hc-w-press {
+        padding-inline: 1.9rem;
+    }
+
+    .an-scene .hc-w-press__square {
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: 0.5rem;
+        box-sizing: border-box;
+        inline-size: 1rem;
+        aspect-ratio: 1;
+        margin-block-start: -0.5rem;
+        border: 2px solid var(--border-strong);
+        background: var(--accent);
+        --an-kf: hc-w-land;
+        --an-kf-out: hc-w-land-out;
+    }
+
+    @keyframes hc-w-land {
+        0% {
+            scale: 0;
+            animation-timing-function: step-end;
+        }
+
+        87.49%,
+        100% {
+            scale: 1;
+        }
+    }
+
+    @keyframes hc-w-land-out {
+        0% {
+            scale: 1;
+        }
+
+        12.51% {
+            scale: 1;
+            animation-timing-function: step-start;
+        }
+
+        100% {
+            scale: 0;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .hc-w-press__square {
+            scale: 0;
+        }
+    }
+
+    /* ── 3 · The frame thickens ──────────────────────────────────────── */
+
+    /* The board stands in a hairline (1 px, the decorative border) and its
+       frame thickens in three hard steps: 2 px at 2 units, 3 px at 4, 4 px at
+       6, where the title goes bold. The frame is an inset shadow, never a
+       border, so nothing moves. */
+    .an-scene .hc-t-board {
+        border: 0;
+        padding: 1.35rem 1.4rem 1.2rem;
+        box-shadow: inset 0 0 0 4px var(--foreground);
+        --an-kf: hc-t-board;
+        --an-kf-out: hc-t-board-out;
+    }
+
+    @keyframes hc-t-board {
+        0% {
+            box-shadow: inset 0 0 0 1px var(--border);
+            animation-timing-function: step-end;
+        }
+
+        24.99% {
+            box-shadow: inset 0 0 0 2px var(--foreground);
+            animation-timing-function: step-end;
+        }
+
+        49.99% {
+            box-shadow: inset 0 0 0 3px var(--foreground);
+            animation-timing-function: step-end;
+        }
+
+        74.99%,
+        100% {
+            box-shadow: inset 0 0 0 4px var(--foreground);
+        }
+    }
+
+    @keyframes hc-t-board-out {
+        0% {
+            box-shadow: inset 0 0 0 4px var(--foreground);
+        }
+
+        25.01% {
+            box-shadow: inset 0 0 0 4px var(--foreground);
+            animation-timing-function: step-start;
+        }
+
+        50.01% {
+            box-shadow: inset 0 0 0 3px var(--foreground);
+            animation-timing-function: step-start;
+        }
+
+        75.01% {
+            box-shadow: inset 0 0 0 2px var(--foreground);
+            animation-timing-function: step-start;
+        }
+
+        100% {
+            box-shadow: inset 0 0 0 1px var(--border);
+        }
+    }
+
+    @keyframes hc-t-title {
+        0% {
+            font-weight: 400;
+            animation-timing-function: step-end;
+        }
+
+        74.99%,
+        100% {
+            font-weight: 700;
+        }
+    }
+
+    @keyframes hc-t-title-out {
+        0% {
+            font-weight: 700;
+        }
+
+        25.01% {
+            font-weight: 700;
+            animation-timing-function: step-start;
+        }
+
+        100% {
+            font-weight: 400;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .hc-t-board {
+            box-shadow: inset 0 0 0 1px var(--border);
+        }
+
+        .an-scene[data-an-phase='gap'] .hc-t-board .hc-board__title {
+            font-weight: 400;
+        }
+
+        .an-scene[data-an-phase='in'] .hc-t-board .hc-board__title,
+        .an-scene[data-an-phase='hold'] .hc-t-board .hc-board__title {
+            animation: hc-t-title var(--an-in) linear both;
+        }
+
+        .an-scene[data-an-phase='out'] .hc-t-board .hc-board__title {
+            animation: hc-t-title-out var(--an-in) linear both;
+        }
+    }
+
+    /* The bar: the track's frame thickens 2, 3, 4 px as the ink fills (an
+       outer ring, so the fill never hides it). */
+    .an-scene .hc-t-bar .hc-bar__track {
+        box-shadow: 0 0 0 2px var(--foreground);
+    }
+
+    @keyframes hc-t-track {
+        0% {
+            box-shadow: 0 0 0 0 var(--foreground);
+            animation-timing-function: step-end;
+        }
+
+        31.24% {
+            box-shadow: 0 0 0 1px var(--foreground);
+            animation-timing-function: step-end;
+        }
+
+        62.49%,
+        100% {
+            box-shadow: 0 0 0 2px var(--foreground);
+        }
+    }
+
+    @keyframes hc-t-track-out {
+        0% {
+            box-shadow: 0 0 0 2px var(--foreground);
+        }
+
+        37.51% {
+            box-shadow: 0 0 0 2px var(--foreground);
+            animation-timing-function: step-start;
+        }
+
+        68.76% {
+            box-shadow: 0 0 0 1px var(--foreground);
+            animation-timing-function: step-start;
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 var(--foreground);
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .hc-t-bar .hc-bar__track {
+            box-shadow: 0 0 0 0 var(--foreground);
+        }
+
+        .an-scene[data-an-phase='in'] .hc-t-bar .hc-bar__track,
+        .an-scene[data-an-phase='hold'] .hc-t-bar .hc-bar__track {
+            animation: hc-t-track var(--an-in) linear both;
+        }
+
+        .an-scene[data-an-phase='out'] .hc-t-bar .hc-bar__track {
+            animation: hc-t-track-out var(--an-in) linear both;
+        }
+    }
+
+    /* The button: the face keeps its ground and its label; the 2 px frame
+       goes to 4 px in one step at 7 units (2 px more, inside). */
+    .an-scene .hc-t-press {
+        --an-face: hc-t-face;
+        --an-face-out: hc-t-face-out;
+        background-color: var(--secondary);
+        color: var(--secondary-foreground);
+        box-shadow: inset 0 0 0 2px var(--foreground);
+    }
+
+    @keyframes hc-t-face {
+        0% {
+            box-shadow: inset 0 0 0 0 var(--foreground);
+            animation-timing-function: step-end;
+        }
+
+        87.49%,
+        100% {
+            box-shadow: inset 0 0 0 2px var(--foreground);
+        }
+    }
+
+    @keyframes hc-t-face-out {
+        0% {
+            box-shadow: inset 0 0 0 2px var(--foreground);
+        }
+
+        12.51% {
+            box-shadow: inset 0 0 0 2px var(--foreground);
+            animation-timing-function: step-start;
+        }
+
+        100% {
+            box-shadow: inset 0 0 0 0 var(--foreground);
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .hc-t-press {
+            box-shadow: inset 0 0 0 0 var(--foreground);
+        }
+    }
+
+    /* ── 4 · A sign in the corner ────────────────────────────────────── */
+
+    /* The board's title is placed at 1 unit, its line at 3, and a 1.75 rem
+       sign (signal yellow, a 3 px ink frame, an ink tick) is cut into its
+       top-end corner in one step at 6. */
+    .an-scene .hc-c-board > .hc-board__title {
+        --hc-d: 1;
+        padding-inline-end: 1.2rem;
+    }
+
+    .an-scene .hc-c-board > .hc-board__line {
+        --hc-d: 3;
+    }
+
+    .an-scene :is(.hc-c-sign, .hc-c-bar__sign, .hc-c-press__sign) {
+        position: absolute;
+        z-index: 3;
+        display: grid;
+        place-items: center;
+        box-sizing: border-box;
+        border: 3px solid var(--border-strong);
+        background: var(--accent);
+        color: var(--accent-foreground);
+        font-weight: 700;
+        line-height: 1;
+        --an-kf: hc-c-sign;
+        --an-kf-out: hc-c-sign-out;
+    }
+
+    .an-scene .hc-c-sign {
+        inset-block-start: -0.8rem;
+        inset-inline-end: -0.8rem;
+        inline-size: 1.85rem;
+        aspect-ratio: 1;
+        font-size: 1.05rem;
+    }
+
+    .an-scene .hc-c-sign::before,
+    .an-scene .hc-c-bar__sign::before {
+        content: '✓';
+    }
+
+    .an-scene .hc-c-press__sign::before {
+        content: '●';
+    }
+
+    @keyframes hc-c-sign {
+        0% {
+            clip-path: inset(100% 0 0 0);
+            animation-timing-function: step-end;
+        }
+
+        74.99%,
+        100% {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes hc-c-sign-out {
+        0% {
+            clip-path: inset(0);
+        }
+
+        25.01% {
+            clip-path: inset(0);
+            animation-timing-function: step-start;
+        }
+
+        100% {
+            clip-path: inset(100% 0 0 0);
+        }
+    }
+
+    @keyframes hc-c-late {
+        0% {
+            clip-path: inset(100% 0 0 0);
+            animation-timing-function: step-end;
+        }
+
+        87.49%,
+        100% {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes hc-c-late-out {
+        0% {
+            clip-path: inset(0);
+        }
+
+        12.51% {
+            clip-path: inset(0);
+            animation-timing-function: step-start;
+        }
+
+        100% {
+            clip-path: inset(100% 0 0 0);
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene :is(.hc-c-sign, .hc-c-bar__sign, .hc-c-press__sign) {
+            clip-path: inset(0);
+        }
+
+        .an-scene[data-an-phase='gap'] :is(.hc-c-sign, .hc-c-bar__sign, .hc-c-press__sign) {
+            clip-path: inset(100% 0 0 0);
+        }
+    }
+
+    /* The bar: when the ink is full (7 units) a ✓ sign is cut in at the
+       track's end. */
+    .an-scene .hc-c-bar .hc-bar__track {
+        overflow: visible;
+        border-radius: 0;
+        clip-path: inset(-3rem -3rem -3rem 0);
+    }
+
+    .an-scene .hc-c-bar__sign {
+        inset-block-start: 50%;
+        inset-inline-end: -0.7rem;
+        inline-size: 1.85rem;
+        aspect-ratio: 1;
+        margin-block-start: -0.925rem;
+        font-size: 1.05rem;
+        --an-kf: hc-c-late;
+        --an-kf-out: hc-c-late-out;
+    }
+
+    /* The button: a ● sign is cut into the top-end corner as the face inverts. */
+    .an-scene .hc-c-press__sign {
+        inset-block-start: -0.65rem;
+        inset-inline-end: -0.65rem;
+        inline-size: 1.4rem;
+        aspect-ratio: 1;
+        border-width: 2px;
+        font-size: 0.7rem;
+        --an-kf: hc-c-late;
+        --an-kf-out: hc-c-late-out;
+    }
+
+    /* ── 5 · Inverted: the plate flips ───────────────────────────────── */
+
+    /* The board is placed in one step at 1 unit, and flips at 4: ink ground,
+       paper title and line, the frame kept with a paper rule inside it (a
+       paper frame alone would vanish on the page). One step each, nothing
+       between. */
+    .an-scene .hc-i-board {
+        background: var(--foreground);
+        color: var(--background);
+        box-shadow:
+            inset 0 0 0 3px var(--foreground),
+            inset 0 0 0 5px var(--background);
+        --an-kf: hc-i-board;
+        --an-kf-out: hc-i-board-out;
+    }
+
+    @keyframes hc-i-board {
+        0% {
+            clip-path: inset(-0.5rem 100% -0.5rem 0);
+            background-color: var(--card);
+            color: var(--card-foreground);
+            box-shadow:
+                inset 0 0 0 0 var(--foreground),
+                inset 0 0 0 0 var(--background);
+            animation-timing-function: step-end;
+        }
+
+        12.49% {
+            clip-path: inset(-0.5rem);
+            background-color: var(--card);
+            color: var(--card-foreground);
+            box-shadow:
+                inset 0 0 0 0 var(--foreground),
+                inset 0 0 0 0 var(--background);
+            animation-timing-function: step-end;
+        }
+
+        49.99%,
+        100% {
+            clip-path: inset(-0.5rem);
+            background-color: var(--foreground);
+            color: var(--background);
+            box-shadow:
+                inset 0 0 0 3px var(--foreground),
+                inset 0 0 0 5px var(--background);
+        }
+    }
+
+    @keyframes hc-i-board-out {
+        0% {
+            clip-path: inset(-0.5rem);
+            background-color: var(--foreground);
+            color: var(--background);
+            box-shadow:
+                inset 0 0 0 3px var(--foreground),
+                inset 0 0 0 5px var(--background);
+        }
+
+        50.01% {
+            clip-path: inset(-0.5rem);
+            background-color: var(--foreground);
+            color: var(--background);
+            box-shadow:
+                inset 0 0 0 3px var(--foreground),
+                inset 0 0 0 5px var(--background);
+            animation-timing-function: step-start;
+        }
+
+        87.51% {
+            clip-path: inset(-0.5rem);
+            background-color: var(--card);
+            color: var(--card-foreground);
+            box-shadow:
+                inset 0 0 0 0 var(--foreground),
+                inset 0 0 0 0 var(--background);
+            animation-timing-function: step-start;
+        }
+
+        100% {
+            clip-path: inset(-0.5rem 100% -0.5rem 0);
+            background-color: var(--card);
+            color: var(--card-foreground);
+            box-shadow:
+                inset 0 0 0 0 var(--foreground),
+                inset 0 0 0 0 var(--background);
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .hc-i-board {
+            clip-path: inset(-0.5rem 100% -0.5rem 0);
+        }
+    }
+
+    /* ── 6 · Tape is run across it ───────────────────────────────────── */
+
+    /* Hazard tape (6 px bands of ink and signal yellow at 45 degrees, the
+       register's busy stripes, in a 2 px ink frame) is run across the board's
+       top edge from the start over 5 units in ten hard steps; once it is
+       across the title and the line are placed beneath it at 6. Out: the lines
+       go first, then the tape is cut off. */
+    .an-scene .hc-h-board {
+        padding-block-start: 1.6rem;
+    }
+
+    .an-scene .hc-h-board > :is(.hc-board__title, .hc-board__line) {
+        --hc-d: 6;
+    }
+
+    .an-scene .hc-h-tape {
+        position: absolute;
+        inset-inline: -0.5rem;
+        inset-block-start: -0.45rem;
+        box-sizing: border-box;
+        block-size: 0.9rem;
+        border-block: 2px solid var(--border-strong);
+        background: repeating-linear-gradient(-45deg, var(--foreground) 0 6px, var(--accent) 6px 12px);
+        --an-d: 0.001;
+        --an-l: 5;
+        --an-ease: steps(10, jump-end);
+        --an-ease-out: steps(10, jump-start);
+    }
+
+    /* The bar: the stripes run in one cell ahead of the ink fill (jump-start against its jump-end), under it. */
+    .an-scene .hc-h-bar__stripes {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        background: repeating-linear-gradient(-45deg, var(--foreground) 0 9px, var(--accent) 9px 18px);
+        --an-d: 0.001;
+        --an-l: 7;
+        --an-ease: steps(10, jump-start);
+        --an-ease-out: steps(10, jump-end);
+    }
+
+    /* The button: a strip of tape runs across the foot in the last unit as
+       the face inverts. */
+    .an-scene .hc-h-press__strip {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 0;
+        block-size: 0.6rem;
+        border-block-start: 2px solid var(--border-strong);
+        background: repeating-linear-gradient(-45deg, var(--foreground) 0 6px, var(--accent) 6px 12px);
+        --an-d: 7.001;
+        --an-l: 0.998;
+        --an-ease: steps(3, jump-end);
+        --an-ease-out: steps(3, jump-start);
+    }
+
+    /* ── 7 · Placed cell by cell ─────────────────────────────────────── */
+
+    /* The board is built in whole steps: its frame at 1 unit, its title at
+       2.5, its line at 4, its foot rule at 5.5, each placed whole; out, taken
+       apart last first. */
+    .an-scene .hc-p-board {
+        border: 0;
+        padding: 1.35rem 1.4rem 1.2rem;
+    }
+
+    .an-scene .hc-p-board .an-a {
+        --an-kf: hc-place;
+        --an-kf-out: hc-place-out;
+        --an-l: 0.001;
+    }
+
+    .an-scene .hc-p-frame {
+        position: absolute;
+        inset: 0;
+        box-sizing: border-box;
+        border: 3px solid var(--border-strong);
+        border-radius: var(--radius);
+        --an-d: 1;
+    }
+
+    .an-scene .hc-p-board > .hc-board__title {
+        --an-d: 2.5;
+    }
+
+    .an-scene .hc-p-board > .hc-board__line {
+        --an-d: 4;
+    }
+
+    .an-scene .hc-p-rule {
+        display: block;
+        block-size: 3px;
+        margin-block-start: 0.2rem;
+        background: var(--foreground);
+        --an-d: 5.5;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .hc-p-board .an-a {
+            clip-path: inset(-0.5rem 100% -0.5rem 0);
+        }
+    }
+}
