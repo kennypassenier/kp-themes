@@ -81,6 +81,10 @@ export type MenuState = {
      * a fill that waits for the menu to close
      */
     pending: MenuGroup[] | 'loading' | null;
+    /**
+     * takes a menu raised over a clipping container out of the top layer again
+     */
+    lower?: (() => void) | null;
     open: boolean;
     empty: boolean;
     /**

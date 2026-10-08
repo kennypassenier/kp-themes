@@ -8650,6 +8650,15 @@
         display: none;
     }
 
+    /* Raised over a container that clips it (js/menu-button.js, the top
+ * layer): placed in window coordinates by the script, the popover's UA
+ * inset and margin put back to the menu's own. */
+    .kp-menu-button > .kp-menu:popover-open {
+        position: fixed;
+        inset: auto;
+        margin: 0;
+    }
+
     /* A menu still loading is a whole plate with its one grey entry on it:
      * the busy dim of layout.css ([aria-busy], 0.7) let the page under the
      * open menu show through it (Kenny, Shade (light), 2026-10-05). The entry

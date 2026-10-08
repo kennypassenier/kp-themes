@@ -490,7 +490,7 @@ composites own, hover invert, focus ring, press ground, voice shout, motifs one)
   a tile's mark and its tone (a mark element and `data-kp-tone` on the tile), the
   state word's tone (`data-kp-tone` on `.kp-state-word`), the chart's events as
   square bolts (the mark is a circle) and its arrival, the strip's arrival and live
-  moments beyond `aria-busy`, the tour card's next-step lift, and the drawer's own
+  moments beyond `aria-busy`, and the drawer's own
   300 ms (js/motion.js times every dialog by the theme's dialog); the busy
   overlay's leave (the package drops the layer at once); a table row's hover keeps
   its muted step.

@@ -12498,6 +12498,15 @@
         display: none;
     }
 
+    /* Raised over a container that clips it (js/menu-button.js, the top
+ * layer): placed in window coordinates by the script, the popover's UA
+ * inset and margin put back to the menu's own. */
+    .kp-menu-button > .kp-menu:popover-open {
+        position: fixed;
+        inset: auto;
+        margin: 0;
+    }
+
     /* A menu still loading is a whole plate with its one grey entry on it:
      * the busy dim of layout.css ([aria-busy], 0.7) let the page under the
      * open menu show through it (Kenny, Shade (light), 2026-10-05). The entry
@@ -20215,7 +20224,7 @@
         --kp-wipe: 720ms;
         --kp-rule-draw: 900ms;
         --kp-rule-weight: 2px;
-        --kp-tracking: 700ms;
+        --kp-tracking: 1400ms;
         --kp-shine: 1400ms;
         --kp-tube-on: 1100ms;
         --kp-sun-cut: 360ms;
@@ -22177,8 +22186,11 @@
        durations are literal because check-motion.mjs computes DI5's rate
        from them; the matching --kp-* knobs are what js/effects.js reads. */
     @media (prefers-reduced-motion: no-preference) {
+        /* 1400 ms (was 700): the band's four light changes (in, dip, back,
+           out) at 700 ms made 4 a second, over the 3 the flash gate allows;
+           the same steps at half the pace make 2.9 [port session, 2026-10-08]. */
         [data-theme='synthwave'] [data-kp-reveal='headline'].is-tracking::before {
-            animation: kp-tracking 700ms steps(1, end) 1;
+            animation: kp-tracking 1400ms steps(1, end) 1;
         }
 
         [data-theme='synthwave'] [data-kp-reveal='headline'].is-shine::after {
@@ -33895,6 +33907,13 @@
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='brutalism'] .kp-tour[open] {
             animation: kp-sig-brutalism-drop var(--kp-sig-br-time) var(--kp-sig-br-fall) backwards;
+        }
+
+        /* The next step: js/tour.js marks the card with the theme's update
+           (slam) on every step after the first; the card is slammed onto
+           its yellow offset as any changed value is. */
+        [data-theme='brutalism'] .kp-tour[open][data-kp-updating='slam'] {
+            animation: kp-sig-brutalism-update-slam calc(var(--kp-sig-br-time) + 12 * 100ms) linear both;
         }
     }
 

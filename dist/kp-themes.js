@@ -2313,7 +2313,7 @@ var init_effects = __esm({
       // slides square. No blur and no chromatic split — those belong to the
       // spectral instrument. Opacity 0 to 1 once, so no opposing change.
       "kp-mill": { durationMs: 340, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-      "kp-tracking": { durationMs: 700, cycles: 1, property: "opacity", luminanceSteps: [0, 1, 0.35, 1, 1, 0] },
+      "kp-tracking": { durationMs: 1400, cycles: 1, property: "opacity", luminanceSteps: [0, 1, 0.35, 1, 1, 0] },
       "kp-shine": { durationMs: 1400, cycles: 1, property: "background-position", luminanceSteps: [] },
       "kp-tube-on": { durationMs: 1100, cycles: 1, property: "color", luminanceSteps: [0, 1, 0, 1] },
       "kp-sun-cut": { durationMs: 360, cycles: 1, property: "opacity", luminanceSteps: [1, 1, 0] },
@@ -16136,6 +16136,33 @@ function coveredEdges(view, wrapper, skip) {
     right: Math.max(right, px(pad.scrollPaddingRight))
   };
 }
+function clipped(wrapper, view) {
+  const top = view.document.body;
+  for (let el2 = wrapper.parentElement; el2 && el2 !== top; el2 = el2.parentElement) {
+    const style = view.getComputedStyle(el2);
+    if (style.clipPath !== "none" || style.overflowX !== "visible" || style.overflowY !== "visible") return true;
+  }
+  return false;
+}
+function raiseMenu(s2, view) {
+  if (!clipped(s2.wrapper, view)) return;
+  const box = s2.menu.getBoundingClientRect();
+  const button = s2.button.getBoundingClientRect();
+  const dx = box.left - button.left;
+  const dy = box.top - button.top;
+  s2.lower = raiseOverlay(s2.menu, (menu) => {
+    const at = s2.button.getBoundingClientRect();
+    menu.style.setProperty("left", `${at.left + dx}px`);
+    menu.style.setProperty("top", `${at.top + dy}px`);
+    menu.style.setProperty("right", "auto");
+    menu.style.setProperty("bottom", "auto");
+    menu.style.setProperty("width", `${box.width}px`);
+  });
+}
+function lowerMenu(s2) {
+  s2.lower?.();
+  s2.lower = null;
+}
 function unplaceMenu(menu) {
   for (const name of PLACED) menu.style.removeProperty(name);
   menu.removeAttribute("data-kp-menu-side");
@@ -16186,18 +16213,23 @@ function openMenu(wrapper, { focus = "first" } = {}) {
   const closing2 = !s2.menu.hidden;
   stopClose(s2.menu);
   s2.menu.inert = false;
+  lowerMenu(s2);
   if (closing2) unplaceMenu(s2.menu);
   s2.menu.hidden = true;
   const covered = view ? coveredEdges(view, s2.wrapper) : null;
   s2.menu.hidden = false;
   if (view && covered) {
     placeMenu(s2, view, covered);
+    raiseMenu(s2, view);
     let frame = 0;
     const again = () => {
       if (frame) return;
       frame = view.requestAnimationFrame(() => {
         frame = 0;
-        if (s2.open) placeMenu(s2, view, coveredEdges(view, s2.wrapper, s2.menu));
+        if (!s2.open) return;
+        lowerMenu(s2);
+        placeMenu(s2, view, coveredEdges(view, s2.wrapper, s2.menu));
+        raiseMenu(s2, view);
       });
     };
     view.addEventListener("resize", again);
@@ -16242,6 +16274,7 @@ function closeMenu(wrapper, { focus = false } = {}) {
   void playClose(menu).then((played) => {
     if (!played || s2.open) return;
     menu.hidden = true;
+    lowerMenu(s2);
     menu.inert = false;
     stopClose(menu);
     unplaceMenu(menu);
@@ -16394,6 +16427,7 @@ var init_menu_button = __esm({
     "use strict";
     init_strings();
     init_motion();
+    init_top_layer();
     MENU_BUTTON = "[data-kp-menu-button]";
     MENU_OPEN_EVENT = "kp-menu-open";
     MENU_CLOSE_EVENT = "kp-menu-close";
@@ -18266,233 +18300,6 @@ __export(tour_exports, {
 init_motion();
 init_remember();
 init_strings();
-var TOUR_GUTTER = 16;
-var TOUR_GAP = 12;
-var TOUR_SLOT = "done";
-function tourMemory(name, storage2) {
-  const holder = (
-    /** @type {Element} */
-    /** @type {unknown} */
-    { getAttribute: (attr) => attr === REMEMBER_ATTRIBUTE ? name : null, isConnected: false }
-  );
-  return memoryFor(holder, "tour", storage2 === void 0 ? {} : { storage: storage2 });
-}
-var tourMemoryKey = (name) => tourMemory(name)?.key(TOUR_SLOT) ?? "";
-var tourRemembered = (name, { storage: storage2 } = {}) => tourMemory(name, storage2)?.read(
-  TOUR_SLOT,
-  /** @type {unknown} */
-  false
-) === true;
-var forgetTour = (name, { storage: storage2 } = {}) => tourMemory(name, storage2)?.forget(TOUR_SLOT);
-function shouldStartTour({ search = "", remembered = false, automated = false }) {
-  const asked = new URLSearchParams(search).get("tour");
-  if (asked != null) return Math.max(0, (Number.parseInt(asked, 10) || 1) - 1);
-  if (remembered || automated) return null;
-  return 0;
-}
-var tourStepsOnPage = (steps, find) => steps.filter((step) => !!find(step));
-function tourCardPlace(target, card, view, { gutter = TOUR_GUTTER, gap = TOUR_GAP } = {}) {
-  const left = Math.max(gutter, Math.min(view.width - card.width - gutter, target.left + target.width / 2 - card.width / 2));
-  const top = target.top + target.height / 2 > view.height / 2 ? target.top - gap - card.height : target.bottom + gap;
-  return { left, top };
-}
-var reducedMotion = (doc) => !!doc.defaultView?.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-var isShown2 = (el2) => !!el2 && el2.isConnected && el2.getClientRects().length > 0;
-function resolveTarget(step, doc) {
-  if (typeof step.target === "function") {
-    const el2 = step.target();
-    return el2 instanceof HTMLElement && isShown2(el2) ? el2 : null;
-  }
-  return (
-    /** @type {HTMLElement | null} */
-    [...doc.querySelectorAll(step.target)].find((el2) => isShown2(el2)) ?? null
-  );
-}
-var idSeq3 = 0;
-var nextId2 = (prefix) => `${prefix}-${idSeq3 += 1}`;
-var make4 = (doc, tag, className, text) => {
-  const el2 = doc.createElement(tag);
-  el2.className = className;
-  if (text != null) el2.textContent = text;
-  return el2;
-};
-var endRunning = null;
-function startTour(steps, { start = 0, remember: remember2, decorate, returnFocus, onEnd, strings: own } = {}) {
-  endRunning?.();
-  const doc = document;
-  const view = (
-    /** @type {Window} */
-    doc.defaultView
-  );
-  const strings = resolveStrings(own);
-  let live2 = tourStepsOnPage(steps, (s2) => resolveTarget(s2, doc));
-  if (!live2.length) return null;
-  const back = (
-    /** @type {HTMLElement | null} */
-    returnFocus ?? (doc.activeElement instanceof HTMLElement ? doc.activeElement : null)
-  );
-  let index = Math.min(Math.max(0, start), live2.length - 1);
-  let target = null;
-  let targetPosition = "";
-  const card = (
-    /** @type {HTMLDialogElement} */
-    make4(doc, "dialog", "kp-tour")
-  );
-  const title = make4(doc, "h3", "kp-tour__title");
-  title.id = nextId2("kp-tour-title");
-  const text = make4(doc, "p", "kp-tour__text");
-  text.id = nextId2("kp-tour-text");
-  card.setAttribute("aria-labelledby", title.id);
-  card.setAttribute("aria-describedby", text.id);
-  const foot = make4(doc, "footer", "kp-tour__foot");
-  const count = make4(doc, "span", "kp-tour__count");
-  const buttons = make4(doc, "span", "kp-tour__buttons");
-  const backButton = make4(doc, "button", "kp-button kp-button--sm", strings.tourBack);
-  backButton.type = "button";
-  backButton.title = strings.tourBackTitle;
-  const skipButton = make4(doc, "button", "kp-button kp-button--sm kp-button--ghost", strings.tourSkip);
-  skipButton.type = "button";
-  skipButton.title = strings.tourSkipTitle;
-  const nextButton = make4(doc, "button", "kp-button kp-button--sm kp-button--primary", strings.tourNext);
-  nextButton.type = "button";
-  buttons.append(backButton, skipButton, nextButton);
-  foot.append(count, buttons);
-  card.append(title, text, foot);
-  decorate?.(nextButton, { kind: "tour-next", host: card });
-  decorate?.(backButton, { kind: "tour-back", host: card });
-  decorate?.(skipButton, { kind: "tour-skip", host: card });
-  const unmark = () => {
-    if (!target) return;
-    target.removeAttribute("data-kp-tour-target");
-    target.style.position = targetPosition;
-    target = null;
-  };
-  const mark = (el2) => {
-    unmark();
-    target = el2;
-    targetPosition = el2.style.position;
-    el2.setAttribute("data-kp-tour-target", "");
-    if (view.getComputedStyle(el2).position === "static") el2.style.position = "relative";
-  };
-  const place2 = () => {
-    if (!target || !card.open) return;
-    if (!isShown2(target)) {
-      const again = resolveTarget(live2[index], doc);
-      if (again) mark(again);
-      else {
-        live2 = live2.filter((_, i) => i !== index);
-        if (!live2.length) {
-          finish(false);
-          return;
-        }
-        show(Math.min(index, live2.length - 1), false);
-        return;
-      }
-    }
-    const at = tourCardPlace(
-      /** @type {HTMLElement} */
-      target.getBoundingClientRect(),
-      card.getBoundingClientRect(),
-      {
-        width: view.innerWidth,
-        height: view.innerHeight
-      }
-    );
-    card.style.left = `${at.left}px`;
-    card.style.top = `${at.top}px`;
-  };
-  const show = (i, scroll = true) => {
-    index = i;
-    const step = live2[index];
-    const el2 = resolveTarget(step, doc);
-    if (!el2) {
-      live2 = live2.filter((_, k) => k !== index);
-      if (!live2.length) {
-        finish(false);
-        return;
-      }
-      show(Math.min(index, live2.length - 1), scroll);
-      return;
-    }
-    mark(el2);
-    const host = el2.closest("dialog[open]") ?? doc.body;
-    if (card.parentElement !== host) {
-      if (card.open) card.close();
-      host.append(card);
-    }
-    if (!card.open) card.show();
-    title.textContent = step.title;
-    text.textContent = step.text;
-    count.textContent = strings.tourCount(index + 1, live2.length);
-    backButton.hidden = index === 0;
-    const last = index === live2.length - 1;
-    nextButton.textContent = last ? strings.tourDone : strings.tourNext;
-    nextButton.title = last ? strings.tourDoneTitle : strings.tourNextTitle;
-    if (scroll) el2.scrollIntoView({ block: "nearest", inline: "nearest", behavior: reducedMotion(doc) ? "auto" : "smooth" });
-    place2();
-    nextButton.focus({ preventScroll: true });
-  };
-  let ended = false;
-  const finish = (finished) => {
-    if (ended) return;
-    ended = true;
-    unmark();
-    card.inert = true;
-    void playEntranceBackwards(card).then(() => {
-      if (card.open) card.close();
-      card.remove();
-      stopReversing(card);
-    });
-    view.removeEventListener("keydown", onKey, true);
-    view.removeEventListener("resize", onMove);
-    doc.removeEventListener("scroll", onMove, true);
-    endRunning = null;
-    if (remember2) tourMemory(remember2)?.write(TOUR_SLOT, true);
-    if (back?.isConnected) back.focus();
-    onEnd?.(finished);
-  };
-  let frame = 0;
-  const onMove = () => {
-    if (frame) return;
-    frame = view.requestAnimationFrame(() => {
-      frame = 0;
-      place2();
-    });
-  };
-  const onKey = (event) => {
-    if (event.key === "Escape") {
-      event.preventDefault();
-      event.stopPropagation();
-      finish(false);
-      return;
-    }
-    if (!card.contains(
-      /** @type {Node} */
-      event.target
-    )) return;
-    if (event.key === "ArrowRight") {
-      event.preventDefault();
-      nextButton.click();
-    } else if (event.key === "ArrowLeft" && index > 0) {
-      event.preventDefault();
-      backButton.click();
-    }
-  };
-  nextButton.addEventListener("click", () => index >= live2.length - 1 ? finish(true) : show(index + 1));
-  backButton.addEventListener("click", () => index > 0 && show(index - 1));
-  skipButton.addEventListener("click", () => finish(false));
-  view.addEventListener("keydown", onKey, true);
-  view.addEventListener("resize", onMove);
-  doc.addEventListener("scroll", onMove, true);
-  endRunning = () => finish(false);
-  show(index);
-  return {
-    end: () => finish(false),
-    goto: (i) => {
-      if (!ended) show(Math.min(Math.max(0, i), live2.length - 1));
-    }
-  };
-}
 
 // js/update.js
 var update_exports = {};
@@ -18638,6 +18445,257 @@ async function update(el2, next) {
   );
   else el2.textContent = String(next);
   return new Promise((resolve) => enqueue({ el: el2, host, spark, resolve }));
+}
+
+// js/tour.js
+var TOUR_GUTTER = 16;
+var TOUR_GAP = 12;
+var TOUR_SLOT = "done";
+function tourMemory(name, storage2) {
+  const holder = (
+    /** @type {Element} */
+    /** @type {unknown} */
+    { getAttribute: (attr) => attr === REMEMBER_ATTRIBUTE ? name : null, isConnected: false }
+  );
+  return memoryFor(holder, "tour", storage2 === void 0 ? {} : { storage: storage2 });
+}
+var tourMemoryKey = (name) => tourMemory(name)?.key(TOUR_SLOT) ?? "";
+var tourRemembered = (name, { storage: storage2 } = {}) => tourMemory(name, storage2)?.read(
+  TOUR_SLOT,
+  /** @type {unknown} */
+  false
+) === true;
+var forgetTour = (name, { storage: storage2 } = {}) => tourMemory(name, storage2)?.forget(TOUR_SLOT);
+function shouldStartTour({ search = "", remembered = false, automated = false }) {
+  const asked = new URLSearchParams(search).get("tour");
+  if (asked != null) return Math.max(0, (Number.parseInt(asked, 10) || 1) - 1);
+  if (remembered || automated) return null;
+  return 0;
+}
+var tourStepsOnPage = (steps, find) => steps.filter((step) => !!find(step));
+function tourCardPlace(target, card, view, { gutter = TOUR_GUTTER, gap = TOUR_GAP } = {}) {
+  const left = Math.max(gutter, Math.min(view.width - card.width - gutter, target.left + target.width / 2 - card.width / 2));
+  const top = target.top + target.height / 2 > view.height / 2 ? target.top - gap - card.height : target.bottom + gap;
+  return { left, top };
+}
+var reducedMotion = (doc) => !!doc.defaultView?.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+var isShown2 = (el2) => !!el2 && el2.isConnected && el2.getClientRects().length > 0;
+function resolveTarget(step, doc) {
+  if (typeof step.target === "function") {
+    const el2 = step.target();
+    return el2 instanceof HTMLElement && isShown2(el2) ? el2 : null;
+  }
+  return (
+    /** @type {HTMLElement | null} */
+    [...doc.querySelectorAll(step.target)].find((el2) => isShown2(el2)) ?? null
+  );
+}
+var idSeq3 = 0;
+var nextId2 = (prefix) => `${prefix}-${idSeq3 += 1}`;
+var make4 = (doc, tag, className, text) => {
+  const el2 = doc.createElement(tag);
+  el2.className = className;
+  if (text != null) el2.textContent = text;
+  return el2;
+};
+var endRunning = null;
+function startTour(steps, { start = 0, remember: remember2, decorate, returnFocus, onEnd, strings: own } = {}) {
+  endRunning?.();
+  const doc = document;
+  const view = (
+    /** @type {Window} */
+    doc.defaultView
+  );
+  const strings = resolveStrings(own);
+  let live2 = tourStepsOnPage(steps, (s2) => resolveTarget(s2, doc));
+  if (!live2.length) return null;
+  const back = (
+    /** @type {HTMLElement | null} */
+    returnFocus ?? (doc.activeElement instanceof HTMLElement ? doc.activeElement : null)
+  );
+  let index = Math.min(Math.max(0, start), live2.length - 1);
+  let target = null;
+  let targetPosition = "";
+  const card = (
+    /** @type {HTMLDialogElement} */
+    make4(doc, "dialog", "kp-tour")
+  );
+  const title = make4(doc, "h3", "kp-tour__title");
+  title.id = nextId2("kp-tour-title");
+  const text = make4(doc, "p", "kp-tour__text");
+  text.id = nextId2("kp-tour-text");
+  card.setAttribute("aria-labelledby", title.id);
+  card.setAttribute("aria-describedby", text.id);
+  const foot = make4(doc, "footer", "kp-tour__foot");
+  const count = make4(doc, "span", "kp-tour__count");
+  const buttons = make4(doc, "span", "kp-tour__buttons");
+  const backButton = make4(doc, "button", "kp-button kp-button--sm", strings.tourBack);
+  backButton.type = "button";
+  backButton.title = strings.tourBackTitle;
+  const skipButton = make4(doc, "button", "kp-button kp-button--sm kp-button--ghost", strings.tourSkip);
+  skipButton.type = "button";
+  skipButton.title = strings.tourSkipTitle;
+  const nextButton = make4(doc, "button", "kp-button kp-button--sm kp-button--primary", strings.tourNext);
+  nextButton.type = "button";
+  buttons.append(backButton, skipButton, nextButton);
+  foot.append(count, buttons);
+  card.append(title, text, foot);
+  decorate?.(nextButton, { kind: "tour-next", host: card });
+  decorate?.(backButton, { kind: "tour-back", host: card });
+  decorate?.(skipButton, { kind: "tour-skip", host: card });
+  const unmark = () => {
+    if (!target) return;
+    target.removeAttribute("data-kp-tour-target");
+    target.style.position = targetPosition;
+    target = null;
+  };
+  const mark = (el2) => {
+    unmark();
+    target = el2;
+    targetPosition = el2.style.position;
+    el2.setAttribute("data-kp-tour-target", "");
+    if (view.getComputedStyle(el2).position === "static") el2.style.position = "relative";
+  };
+  const place2 = () => {
+    if (!target || !card.open) return;
+    if (!isShown2(target)) {
+      const again = resolveTarget(live2[index], doc);
+      if (again) mark(again);
+      else {
+        live2 = live2.filter((_, i) => i !== index);
+        if (!live2.length) {
+          finish(false);
+          return;
+        }
+        show(Math.min(index, live2.length - 1), false);
+        return;
+      }
+    }
+    const at = tourCardPlace(
+      /** @type {HTMLElement} */
+      target.getBoundingClientRect(),
+      card.getBoundingClientRect(),
+      {
+        width: view.innerWidth,
+        height: view.innerHeight
+      }
+    );
+    card.style.left = `${at.left}px`;
+    card.style.top = `${at.top}px`;
+  };
+  let unmarkStep = () => {
+  };
+  const markStep = () => {
+    unmarkStep();
+    const view2 = doc.defaultView;
+    if (!view2) return;
+    const idea = updateIdea(view2.getComputedStyle(card).getPropertyValue("--kp-update"));
+    if (!updatePlays(idea)) return;
+    const timing = updateTiming(card);
+    void view2.getComputedStyle(card).animationName;
+    const before = markUpdating(card, idea, timing);
+    const done = view2.setTimeout(() => unmarkStep(), timing.duration || 1200);
+    unmarkStep = () => {
+      view2.clearTimeout(done);
+      unmarkUpdating(card, before);
+      unmarkStep = () => {
+      };
+    };
+  };
+  const show = (i, scroll = true) => {
+    const stepping = card.open;
+    index = i;
+    const step = live2[index];
+    const el2 = resolveTarget(step, doc);
+    if (!el2) {
+      live2 = live2.filter((_, k) => k !== index);
+      if (!live2.length) {
+        finish(false);
+        return;
+      }
+      show(Math.min(index, live2.length - 1), scroll);
+      return;
+    }
+    mark(el2);
+    const host = el2.closest("dialog[open]") ?? doc.body;
+    if (card.parentElement !== host) {
+      if (card.open) card.close();
+      host.append(card);
+    }
+    if (!card.open) card.show();
+    title.textContent = step.title;
+    text.textContent = step.text;
+    if (stepping) markStep();
+    count.textContent = strings.tourCount(index + 1, live2.length);
+    backButton.hidden = index === 0;
+    const last = index === live2.length - 1;
+    nextButton.textContent = last ? strings.tourDone : strings.tourNext;
+    nextButton.title = last ? strings.tourDoneTitle : strings.tourNextTitle;
+    if (scroll) el2.scrollIntoView({ block: "nearest", inline: "nearest", behavior: reducedMotion(doc) ? "auto" : "smooth" });
+    place2();
+    nextButton.focus({ preventScroll: true });
+  };
+  let ended = false;
+  const finish = (finished) => {
+    if (ended) return;
+    ended = true;
+    unmark();
+    unmarkStep();
+    card.inert = true;
+    void playEntranceBackwards(card).then(() => {
+      if (card.open) card.close();
+      card.remove();
+      stopReversing(card);
+    });
+    view.removeEventListener("keydown", onKey, true);
+    view.removeEventListener("resize", onMove);
+    doc.removeEventListener("scroll", onMove, true);
+    endRunning = null;
+    if (remember2) tourMemory(remember2)?.write(TOUR_SLOT, true);
+    if (back?.isConnected) back.focus();
+    onEnd?.(finished);
+  };
+  let frame = 0;
+  const onMove = () => {
+    if (frame) return;
+    frame = view.requestAnimationFrame(() => {
+      frame = 0;
+      place2();
+    });
+  };
+  const onKey = (event) => {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      event.stopPropagation();
+      finish(false);
+      return;
+    }
+    if (!card.contains(
+      /** @type {Node} */
+      event.target
+    )) return;
+    if (event.key === "ArrowRight") {
+      event.preventDefault();
+      nextButton.click();
+    } else if (event.key === "ArrowLeft" && index > 0) {
+      event.preventDefault();
+      backButton.click();
+    }
+  };
+  nextButton.addEventListener("click", () => index >= live2.length - 1 ? finish(true) : show(index + 1));
+  backButton.addEventListener("click", () => index > 0 && show(index - 1));
+  skipButton.addEventListener("click", () => finish(false));
+  view.addEventListener("keydown", onKey, true);
+  view.addEventListener("resize", onMove);
+  doc.addEventListener("scroll", onMove, true);
+  endRunning = () => finish(false);
+  show(index);
+  return {
+    end: () => finish(false),
+    goto: (i) => {
+      if (!ended) show(Math.min(Math.max(0, i), live2.length - 1));
+    }
+  };
 }
 
 // kp-themes-entry.js

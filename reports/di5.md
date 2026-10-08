@@ -12,7 +12,7 @@ reported here in capitals and corrected by nobody but Kenny.
 | `kp-sidenav-backdrop` | opacity | 220 ms | 1× | 0 → 1 | 1.00/s | under |
 | `kp-rake` | translate | 620 ms | 1× | — | 0.00/s | under |
 | `kp-mill` | opacity | 340 ms | 1× | 0 → 1 | 1.00/s | under |
-| `kp-tracking` | opacity | 700 ms | 1× | 1 → 0 | 1.00/s | under |
+| `kp-tracking` | opacity | 1400 ms | 1× | 0 → 1 → 0.35 → 1 → 1 → 0 | 2.86/s | under |
 | `kp-shine` | background-position | 1400 ms | 1× | — | 0.00/s | under |
 | `kp-tube-on` | color | 1100 ms | 1× | 0 → 1 → 0 → 1 | 0.00/s | under |
 | `kp-sun-cut` | opacity | 360 ms | 1× | 1 → 1 → 0 | 1.00/s | under |
@@ -30,6 +30,7 @@ reported here in capitals and corrected by nobody but Kenny.
 | `kp-sweep` | transform | 10000 ms | loops | — | 0.00/s | under |
 | `kp-tube-off` | opacity | 420 ms | 1× | 1 → 1 → 0 | 1.00/s | under |
 | `kp-caret` | background-size | 1000 ms | loops | 1 → 1 → 0 → 0 | 0.00/s | under |
+| `kp-caret-reverse` | color | 1000 ms | loops | 1 → 1 → 0 → 0 | 0.00/s | under |
 | `kp-alarm-ground-in` | opacity | 180 ms | 1× | 0 → 1 | 1.00/s | under |
 | `kp-alarm-settle` | opacity | 520 ms | 1× | 0 → 1 | 1.00/s | under |
 | `kp-alarm-arrive` | opacity | 480 ms | 1× | 0 → 1 | 1.00/s | under |
@@ -75,7 +76,9 @@ reported here in capitals and corrected by nobody but Kenny.
 | `kp-ember` | box-shadow | 840 ms | 1× | — | 0.00/s | under |
 | `kp-spin` | transform | 900 ms | loops | — | 0.00/s | under |
 | `kp-pulse` | opacity | 1600 ms | loops | 1 → 0.6 → 1 | 1.25/s | under |
-| `kp-progress-stripes` | background-position | 1200 ms | loops | — | 0.00/s | under |
+| `kp-drawer-in` | opacity | 200 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-tour-in` | opacity | 160 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-progressbar-sweep` | transform | 1400 ms | loops | — | 0.00/s | under |
 | `kp-stream-144` | mask-position | 8000 ms | loops | — | 0.00/s | under |
 | `kp-stream-216` | mask-position | 8000 ms | loops | — | 0.00/s | under |
 | `kp-marquee-pass` | transform | 42000 ms | loops | — | 0.00/s | under |
@@ -95,3 +98,289 @@ reported here in capitals and corrected by nobody but Kenny.
 | `kp-sharpen-in` | filter | 640 ms | 1× | — | 0.00/s | under |
 | `kp-headline-fade` | opacity | 300 ms | 1× | 0 → 1 | 1.00/s | under |
 | `kp-dim-label` | opacity | 300 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-sig-formal-update-stamp` | opacity | 300 ms | 1× | 0 → 0.9 → 0.6 → 0 | 2.00/s | under |
+| `kp-sig-cyberpunk-update-stutter` | text-shadow | 480 ms | 1× | — | 0.00/s | under |
+| `kp-sig-cyberpunk-update-still` | text-shadow | 1200 ms | 1× | — | 0.00/s | under |
+| `kp-sig-titanium-update-anodise` | opacity | 240 ms | 1× | 0 → 1 → 1 → 0 | 2.00/s | under |
+| `kp-sig-formal-meter-pos` | background-position | 2600 ms | loops | — | 0.00/s | under |
+| `kp-sig-formal-meter-wipe-d` | clip-path | 900 ms | 1× | — | 0.00/s | under |
+| `kp-sig-formal-meter-wipe-o` | clip-path | 900 ms | 1× | — | 0.00/s | under |
+| `kp-sig-formal-meter-wipe-w` | clip-path | 900 ms | 1× | — | 0.00/s | under |
+| `kp-sig-light-meter-day` | translate | 3000 ms | loops | — | 0.00/s | under |
+| `kp-sig-light-meter-bump-d` | scale | 260 ms | 1× | — | 0.00/s | under |
+| `kp-sig-light-meter-bump-o` | scale | 260 ms | 1× | — | 0.00/s | under |
+| `kp-sig-light-meter-bump-w` | scale | 260 ms | 1× | — | 0.00/s | under |
+| `kp-sig-light-meter-grow-o` | scale | 700 ms | 1× | — | 0.00/s | under |
+| `kp-sig-synthwave-meter-grow-o` | scale | 600 ms | 1× | — | 0.00/s | under |
+| `kp-sig-synthwave-meter-pos` | background-position | 1800 ms | loops | — | 0.00/s | under |
+| `kp-sig-pastel-meter-drift` | translate | 1600 ms | loops | — | 0.00/s | under |
+| `kp-sig-pastel-meter-drop-d` | translate | 600 ms | 1× | — | 0.00/s | under |
+| `kp-sig-pastel-meter-drop-o` | translate | 600 ms | 1× | — | 0.00/s | under |
+| `kp-sig-pastel-meter-drop-w` | translate | 600 ms | 1× | — | 0.00/s | under |
+| `kp-sig-terminal-meter-tone-w` | filter | 900 ms | 1× | — | 0.00/s | under |
+| `kp-sig-terminal-meter-tone-d` | filter | 900 ms | 1× | — | 0.00/s | under |
+| `kp-sig-terminal-tm-fill` | --kp-sig-tm-k | 1000 ms | loops | — | 0.00/s | under |
+| `kp-sig-terminal-tm-head` | --kp-sig-tm-head | 1000 ms | loops | — | 0.00/s | under |
+| `kp-sig-terminal-tm-k` | --kp-sig-tm-k | 1088 ms | 1× | — | 0.00/s | under |
+| `kp-sig-terminal-tm-feed` | inset-block-start | 816 ms | 1× | — | 0.00/s | under |
+| `kp-sig-terminal-update-blink` | color | 900 ms | 1× | — | 0.00/s | under |
+| `kp-sig-terminal-update-blink-line` | color | 900 ms | 1× | — | 0.00/s | under |
+| `kp-sig-forest-meter-wipe-o` | clip-path | 1200 ms | 1× | — | 0.00/s | under |
+| `kp-sig-sepia-meter-knock-d` | translate | 280 ms | 1× | — | 0.00/s | under |
+| `kp-sig-sepia-meter-knock-o` | translate | 280 ms | 1× | — | 0.00/s | under |
+| `kp-sig-sepia-meter-knock-w` | translate | 280 ms | 1× | — | 0.00/s | under |
+| `kp-sig-sepia-meter-slant-o` | clip-path | 1100 ms | 1× | — | 0.00/s | under |
+| `kp-sig-sepia-meter-width` | inline-size | 2200 ms | loops | — | 0.00/s | under |
+| `kp-sig-solstice-meter-bump-d` | scale | 500 ms | 1× | — | 0.00/s | under |
+| `kp-sig-solstice-meter-bump-o` | scale | 500 ms | 1× | — | 0.00/s | under |
+| `kp-sig-solstice-meter-bump-w` | scale | 500 ms | 1× | — | 0.00/s | under |
+| `kp-sig-solstice-meter-grow-o` | scale | 1400 ms | 1× | — | 0.00/s | under |
+| `kp-sig-solstice-meter-pos` | background-position | 4000 ms | loops | — | 0.00/s | under |
+| `kp-sig-deco-meter-knock-d` | translate | 300 ms | 1× | — | 0.00/s | under |
+| `kp-sig-deco-meter-knock-o` | translate | 300 ms | 1× | — | 0.00/s | under |
+| `kp-sig-deco-meter-knock-w` | translate | 300 ms | 1× | — | 0.00/s | under |
+| `kp-sig-deco-meter-pos` | background-position | 2400 ms | loops | — | 0.00/s | under |
+| `kp-sig-deco-meter-wipe-o` | clip-path | 900 ms | 1× | — | 0.00/s | under |
+| `kp-sig-phantom-meter-screen1` | background-position | 700 ms | loops | — | 0.00/s | under |
+| `kp-sig-phantom-meter-jolt-d` | translate | 200 ms | 1× | — | 0.00/s | under |
+| `kp-sig-phantom-meter-jolt-o` | translate | 200 ms | 1× | — | 0.00/s | under |
+| `kp-sig-phantom-meter-jolt-w` | translate | 200 ms | 1× | — | 0.00/s | under |
+| `kp-sig-phantom-meter-slant-o` | clip-path | 220 ms | 1× | — | 0.00/s | under |
+| `kp-sig-nostromo-meter-scan` | background-position | 2000 ms | loops | — | 0.00/s | under |
+| `kp-sig-nostromo-meter-wipe-o` | clip-path | 1600 ms | 1× | — | 0.00/s | under |
+| `kp-sig-titanium-bath` | background-position | 2200 ms | loops | — | 0.00/s | under |
+| `kp-sig-titanium-meter-grow-o` | scale | 300 ms | 1× | — | 0.00/s | under |
+| `kp-sig-titanium-meter-jolt-d` | translate | 160 ms | 1× | — | 0.00/s | under |
+| `kp-sig-titanium-meter-jolt-o` | translate | 160 ms | 1× | — | 0.00/s | under |
+| `kp-sig-titanium-meter-jolt-w` | translate | 160 ms | 1× | — | 0.00/s | under |
+| `kp-sig-dark-meter-bump-d` | scale | 200 ms | 1× | — | 0.00/s | under |
+| `kp-sig-dark-meter-bump-o` | scale | 200 ms | 1× | — | 0.00/s | under |
+| `kp-sig-dark-meter-bump-w` | scale | 200 ms | 1× | — | 0.00/s | under |
+| `kp-sig-dark-meter-pos` | background-position | 900 ms | loops | — | 0.00/s | under |
+| `kp-sig-dark-meter-press-o` | scale | 220 ms | 1× | — | 0.00/s | under |
+| `kp-sig-cyberpunk-meter-slip-o` | translate | 320 ms | 1× | — | 0.00/s | under |
+| `kp-sig-high-contrast-meter-march` | translate | 800 ms | loops | — | 0.00/s | under |
+| `kp-sig-high-contrast-meter-wipe-d` | clip-path | 120 ms | 1× | — | 0.00/s | under |
+| `kp-sig-high-contrast-meter-wipe-o` | clip-path | 120 ms | 1× | — | 0.00/s | under |
+| `kp-sig-high-contrast-meter-wipe-w` | clip-path | 120 ms | 1× | — | 0.00/s | under |
+| `kp-sig-retro-meter-knock-d` | translate | 160 ms | 1× | — | 0.00/s | under |
+| `kp-sig-retro-meter-knock-o` | translate | 160 ms | 1× | — | 0.00/s | under |
+| `kp-sig-retro-meter-knock-w` | translate | 160 ms | 1× | — | 0.00/s | under |
+| `kp-sig-retro-meter-shake` | background-position | 1400 ms | loops | — | 0.00/s | under |
+| `kp-sig-retro-meter-wipe-o` | clip-path | 600 ms | 1× | — | 0.00/s | under |
+| `kp-sig-grotesk-meter-grow-o` | scale | 400 ms | 1× | — | 0.00/s | under |
+| `kp-sig-cyberpunk-bars-1` | --kp-cp-h1 | 3000 ms | loops | — | 0.00/s | under |
+| `kp-sig-cyberpunk-bars-2` | --kp-cp-h2 | 3000 ms | 1× | — | 0.00/s | under |
+| `kp-sig-cyberpunk-bars-3` | --kp-cp-h3 | 3000 ms | 1× | — | 0.00/s | under |
+| `kp-sig-cyberpunk-bars-4` | --kp-cp-h4 | 3000 ms | 1× | — | 0.00/s | under |
+| `kp-sig-cyberpunk-tear` | filter | 3000 ms | 1× | — | 0.00/s | under |
+| `kp-sig-cyberpunk-word` | content | 1800 ms | loops | — | 0.00/s | under |
+| `kp-sig-cyberpunk-word-tear` | translate, clip-path, text-shadow | 1800 ms | 1× | — | 0.00/s | under |
+| `kp-sig-cyberpunk-lock` | --kp-cp-lk | 360 ms | 1× | — | 0.00/s | under |
+| `kp-sig-cyberpunk-pen` | clip-path | 180 ms | 1× | — | 0.00/s | under |
+| `kp-sig-cyberpunk-dot` | transform | 180 ms | 1× | — | 0.00/s | under |
+| `kp-sig-cyberpunk-split` | clip-path, box-shadow, text-shadow | 480 ms | 1× | — | 0.00/s | under |
+| `kp-sig-cyberpunk-split-out` | clip-path, box-shadow, text-shadow | 480 ms | 1× | — | 0.00/s | under |
+| `kp-cp-charge` | transform | 520 ms | 1× | — | 0.00/s | under |
+| `kp-cp-stream-144` | transform | 1800 ms | loops | — | 0.00/s | under |
+| `kp-cp-stream-216` | transform | 1200 ms | loops | — | 0.00/s | under |
+| `kp-sig-retro-turn` | transform | 2600 ms | loops | — | 0.00/s | under |
+| `kp-sig-retro-sand` | clip-path | 2600 ms | loops | — | 0.00/s | under |
+| `kp-sig-retro-dither` | opacity | 1600 ms | loops | 0.15 → 0.6 | 0.63/s | under |
+| `kp-sig-retro-drop` | transform | 240 ms | 1× | — | 0.00/s | under |
+| `kp-sig-retro-zoom` | transform | 280 ms | 1× | — | 0.00/s | under |
+| `kp-sig-retro-hold` | opacity | 500 ms | 1× | 0 → 0 | 0.00/s | under |
+| `kp-sig-retro-leave` | opacity | 280 ms | 1× | 0 | 0.00/s | under |
+| `kp-sw-flow` | background-position | 225 ms | loops | — | 0.00/s | under |
+| `kp-sw-floor-drive` | background-position | 225 ms | loops | — | 0.00/s | under |
+| `kp-sw-tile-flow` | background-position | 225 ms | loops | — | 0.00/s | under |
+| `kp-sw-tile-floor-drive` | background-position | 225 ms | loops | — | 0.00/s | under |
+| `kp-sw-bar-fill` | clip-path | 225 ms | 1× | — | 0.00/s | under |
+| `kp-sw-bar-head` | transform | 225 ms | 1× | — | 0.00/s | under |
+| `kp-sig-synthwave-sw-set` | transform | 2600 ms | loops | — | 0.00/s | under |
+| `kp-sig-synthwave-sw-sheen` | transform | 2600 ms | loops | — | 0.00/s | under |
+| `kp-sig-synthwave-sw-tube` | opacity | 2600 ms | 1× | 0.3 → 1 → 0.55 → 1 → 1 | 1.15/s | under |
+| `kp-sig-synthwave-climb` | clip-path | 2600 ms | 1× | — | 0.00/s | under |
+| `kp-sig-synthwave-beam` | inset-block-start | 2600 ms | 1× | — | 0.00/s | under |
+| `kp-sig-synthwave-glow` | opacity | 2600 ms | 1× | 1 → 1 → 1 → 0 | 0.38/s | under |
+| `kp-sig-synthwave-sw-horizon` | transform | 225 ms | 1× | — | 0.00/s | under |
+| `kp-sw-road` | transform | 600 ms | loops | — | 0.00/s | under |
+| `kp-sig-synthwave-size-rise` | translate, clip-path | 225 ms | 1× | — | 0.00/s | under |
+| `kp-sig-synthwave-sink` | translate, clip-path | 225 ms | 1× | — | 0.00/s | under |
+| `kp-sig-synthwave-sun` | translate, visibility | 225 ms | 1× | — | 0.00/s | under |
+| `kp-sig-synthwave-update-laser` | opacity | 225 ms | 1× | 1 → 1 → 0 | 1.00/s | under |
+| `kp-sig-phantom-phantom-snap` | transform | 260 ms | loops | — | 0.00/s | under |
+| `kp-sig-phantom-phantom-slash` | transform | 1400 ms | loops | — | 0.00/s | under |
+| `kp-sig-phantom-phantom-slam` | opacity | 260 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-sig-phantom-phantom-stick` | opacity | 260 ms | 1× | 0 → 1 → 1 | 1.00/s | under |
+| `kp-sig-phantom-phantom-card` | opacity | 380 ms | 1× | 0 → 1 → 1 | 1.00/s | under |
+| `kp-sig-phantom-phantom-card-big` | opacity | 420 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-sig-phantom-phantom-pop` | opacity | 260 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-progressbar-phantom-shove` | transform | 1500 ms | loops | — | 0.00/s | under |
+| `kp-sig-phantom-leave` | opacity | 650 ms | 1× | 1 → 0.55 → 0.3 → 0 | 1.00/s | under |
+| `kp-sig-terminal-tm-dot` | transform | 800 ms | loops | — | 0.00/s | under |
+| `kp-sig-terminal-tm-trail` | transform | 800 ms | loops | — | 0.00/s | under |
+| `kp-sig-terminal-tm-decay` | opacity | 800 ms | loops | 0.6 → 0.15 | 1.25/s | under |
+| `kp-sig-terminal-tm-type` | clip-path | 800 ms | 1× | — | 0.00/s | under |
+| `kp-sig-terminal-tm-rows` | clip-path | 800 ms | 1× | — | 0.00/s | under |
+| `kp-sig-terminal-tm-menu` | clip-path | 136 ms | 1× | — | 0.00/s | under |
+| `kp-sig-terminal-tm-menu-feed` | inset-block-start, visibility | 136 ms | 1× | — | 0.00/s | under |
+| `kp-sig-terminal-tm-wash` | opacity | 800 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-sig-terminal-tm-blink` | opacity | 1000 ms | 5× | 0 | 0.00/s | under |
+| `kp-tp-caret` | opacity | 1000 ms | loops | 0 | 0.00/s | under |
+| `kp-tp-walk` | transform | 2400 ms | loops | — | 0.00/s | under |
+| `kp-sig-terminal-leave` | clip-path | 480 ms | 1× | — | 0.00/s | under |
+| `kp-sig-terminal-leave-rtl` | clip-path | 480 ms | 1× | — | 0.00/s | under |
+| `kp-sig-terminal-leave-2` | inset-inline-end | 480 ms | 1× | — | 0.00/s | under |
+| `kp-progressbar-brutalism-hop` | translate | 2400 ms | loops | — | 0.00/s | under |
+| `kp-sig-brutalism-hoist` | background-position-y | 1200 ms | loops | — | 0.00/s | under |
+| `kp-sig-brutalism-tip` | transform | 34 ms | loops | — | 0.00/s | under |
+| `kp-sig-brutalism-set` | translate | 34 ms | 1× | — | 0.00/s | under |
+| `kp-sig-brutalism-drop` | translate, box-shadow | 34 ms | 1× | — | 0.00/s | under |
+| `kp-sig-brutalism-hold` | visibility | 1500 ms | 1× | — | 0.00/s | under |
+| `kp-sig-brutalism-leave` | translate, visibility | 300 ms | 1× | — | 0.00/s | under |
+| `kp-sig-brutalism-leave-slab` | translate, box-shadow, visibility | 300 ms | 1× | — | 0.00/s | under |
+| `kp-sig-brutalism-update-slam` | translate, filter | 300 ms | 12× | — | 0.00/s | under |
+| `kp-sig-brutalism-meter-throw` | translate | 300 ms | 1× | — | 0.00/s | under |
+| `kp-sig-titanium-ti-facing` | rotate | 120 ms | loops | — | 0.00/s | under |
+| `kp-sig-titanium-ti-stamp` | clip-path | 120 ms | 1× | — | 0.00/s | under |
+| `kp-sig-titanium-ti-rail` | opacity | 120 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-sig-titanium-ti-scribe` | transform | 160 ms | 1× | — | 0.00/s | under |
+| `kp-sig-titanium-ti-cut` | --kp-sig-ti-cut | 120 ms | 1× | — | 0.00/s | under |
+| `kp-sig-titanium-ti-cutter` | opacity | 240 ms | 1× | 1 → 1 | 0.00/s | under |
+| `kp-sig-titanium-ti-appear` | opacity | 120 ms | 1× | 0 | 0.00/s | under |
+| `kp-sig-titanium-size-drawer` | opacity | 260 ms | 1× | 0 | 0.00/s | under |
+| `kp-sig-titanium-leave` | opacity | 400 ms | 1× | 1 → 1 → 0 | 1.00/s | under |
+| `kp-sig-titanium-leave-2` | opacity | 400 ms | 1× | 0 → 1 → 1 | 1.00/s | under |
+| `kp-sig-pastel-pastel-hop` | transform | 420 ms | loops | — | 0.00/s | under |
+| `kp-sig-pastel-pastel-flow` | transform | 4000 ms | loops | — | 0.00/s | under |
+| `kp-sig-pastel-pastel-register-sm` | opacity | 420 ms | 1× | 0 → 0 → 1 | 1.00/s | under |
+| `kp-sig-pastel-pastel-pop` | opacity | 420 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-sig-pastel-pastel-slap` | opacity | 560 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-sig-pastel-pastel-sheet` | opacity | 640 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-sig-pastel-pastel-bubble` | opacity | 420 ms | 1× | 0 → 1 → 1 | 1.00/s | under |
+| `kp-progressbar-pastel-busy` | transform | 1600 ms | loops | — | 0.00/s | under |
+| `kp-sig-pastel-leave` | opacity | 520 ms | 1× | 0 | 0.00/s | under |
+| `kp-sig-forest-sprout` | clip-path | 1000 ms | 1× | — | 0.00/s | under |
+| `kp-sig-forest-plant` | opacity | 3200 ms | loops | 0.7 → 0.85 → 1 → 1 | 0.31/s | under |
+| `kp-sig-forest-draw` | clip-path | 34 ms | 1× | — | 0.00/s | under |
+| `kp-sig-forest-radio` | opacity | 34 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-sig-forest-grow` | translate, clip-path | 34 ms | 7× | — | 0.00/s | under |
+| `kp-sig-forest-root` | translate, clip-path | 34 ms | 1× | — | 0.00/s | under |
+| `kp-progressbar-forest-breath` | --kp-fo-breath | 6600 ms | loops | — | 0.00/s | under |
+| `kp-sig-forest-leave` | translate, clip-path, filter | 34 ms | 1× | — | 0.00/s | under |
+| `kp-sig-forest-meter-ring-d` | opacity | 1000 ms | 1× | 1 → 1 → 0 | 1.00/s | under |
+| `kp-sig-forest-meter-ring-w` | opacity | 1000 ms | 1× | 1 → 1 → 0 | 1.00/s | under |
+| `kp-skeleton-forest-treeline` | --kp-fo-grow | 3200 ms | loops | — | 0.00/s | under |
+| `kp-sig-forest-update-ring` | opacity | 34 ms | 1× | 1 → 1 → 0 | 1.00/s | under |
+| `kp-sig-forest-edge` | translate, clip-path | 1000 ms | 1× | — | 0.00/s | under |
+| `kp-sig-forest-edge-rtl` | translate, clip-path | 1000 ms | 1× | — | 0.00/s | under |
+| `kp-sig-deco-deco-turn` | transform | 3600 ms | loops | — | 0.00/s | under |
+| `kp-sig-deco-deco-open` | opacity | 2800 ms | loops | 1 → 1 → 1 → 0 | 0.36/s | under |
+| `kp-sig-deco-deco-unfold` | clip-path | 340 ms | 1× | — | 0.00/s | under |
+| `kp-sig-deco-deco-grow` | transform | 340 ms | 1× | — | 0.00/s | under |
+| `kp-sig-deco-deco-centre` | clip-path | 340 ms | 1× | — | 0.00/s | under |
+| `kp-sig-deco-deco-sunrise` | opacity | 340 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-sig-deco-deco-fan` | opacity | 1120 ms | 1× | 0 → 0 | 0.00/s | under |
+| `kp-progressbar-deco-ascent` | transform | 900 ms | loops | — | 0.00/s | under |
+| `kp-sig-deco-leave` | opacity | 480 ms | 1× | 0 | 0.00/s | under |
+| `kp-sig-light-light-orbit` | transform | 1200 ms | loops | — | 0.00/s | under |
+| `kp-sig-light-light-open-x` | clip-path | 900 ms | 1× | — | 0.00/s | under |
+| `kp-sig-light-light-tick` | clip-path | 280 ms | 1× | — | 0.00/s | under |
+| `kp-sig-light-light-bead` | transform | 280 ms | 1× | — | 0.00/s | under |
+| `kp-sig-light-light-window` | opacity | 520 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-sig-light-light-float` | opacity | 280 ms | 1× | 0 | 0.00/s | under |
+| `kp-sig-light-size-bloom` | opacity | 420 ms | 1× | 0 | 0.00/s | under |
+| `kp-sig-light-leave` | opacity | 420 ms | 1× | 0 | 0.00/s | under |
+| `kp-sig-grotesk-fall` | filter | 34 ms | 1× | — | 0.00/s | under |
+| `kp-sig-grotesk-fall-again` | filter | 960 ms | 1× | — | 0.00/s | under |
+| `kp-sig-grotesk-update-plate` | filter | 34 ms | 1× | — | 0.00/s | under |
+| `kp-sig-grotesk-loop` | --kp-sig-gr-a, --kp-sig-gr-q | 2640 ms | loops | — | 0.00/s | under |
+| `kp-sig-grotesk-turn` | rotate | 2640 ms | loops | — | 0.00/s | under |
+| `kp-sig-grotesk-gr-cut` | clip-path | 34 ms | 1× | — | 0.00/s | under |
+| `kp-sig-grotesk-gr-disc` | transform | 34 ms | 1× | — | 0.00/s | under |
+| `kp-sig-grotesk-gr-rule` | transform | 34 ms | 1× | — | 0.00/s | under |
+| `kp-sig-grotesk-leave` | --kp-sig-gr-a, --kp-sig-gr-q, visibility | 960 ms | 1× | — | 0.00/s | under |
+| `kp-sig-blueprint-callout` | color, border-color, background-color, --kp-bp-r | 300 ms | 1× | — | 0.00/s | under |
+| `kp-sig-blueprint-leader` | transform | 360 ms | 1× | — | 0.00/s | under |
+| `kp-sig-blueprint-node` | opacity | 360 ms | 1× | 0 → 0 → 1 → 1 | 1.00/s | under |
+| `kp-sig-blueprint-blueprint-compass` | opacity | 1600 ms | loops | 1 → 1 → 1 → 0 | 0.63/s | under |
+| `kp-sig-blueprint-blueprint-draw` | clip-path | 300 ms | 1× | — | 0.00/s | under |
+| `kp-sig-blueprint-blueprint-mark` | opacity | 300 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-sig-blueprint-read` | visibility, --kp-bp-rp, --kp-bp-nib, --kp-bp-pv, --kp-bp-rv | 34 ms | 1× | — | 0.00/s | under |
+| `kp-sig-blueprint-trace` | visibility, overflow, --kp-bp-r, --kp-bp-nib, --kp-bp-pv, --kp-bp-tv | 300 ms | 1× | — | 0.00/s | under |
+| `kp-sig-blueprint-trace-out` | visibility, overflow, --kp-bp-r, --kp-bp-nib, --kp-bp-pv, --kp-bp-tv | 300 ms | 1× | — | 0.00/s | under |
+| `kp-sig-blueprint-update-read` | --kp-bp-p, --kp-bp-rv | 34 ms | 1× | — | 0.00/s | under |
+| `kp-sig-blueprint-stroke` | --kp-bp-p, --kp-bp-nib, --kp-bp-pv, --kp-bp-tv | 34 ms | loops | — | 0.00/s | under |
+| `kp-sig-blueprint-place` | --kp-bp-p, --kp-bp-nib, --kp-bp-pv, --kp-bp-tv | 34 ms | loops | — | 0.00/s | under |
+| `kp-sig-blueprint-frame` | --kp-bp-r, --kp-bp-nib, --kp-bp-pv, --kp-bp-tv | 34 ms | loops | — | 0.00/s | under |
+| `kp-sig-blueprint-ring` | --kp-bp-p, --kp-bp-nib, --kp-bp-pv, --kp-bp-tv | 34 ms | loops | — | 0.00/s | under |
+| `kp-sig-nostromo-compute` | background-position-x | 1600 ms | loops | — | 0.00/s | under |
+| `kp-sig-nostromo-raster` | clip-path | 160 ms | 1× | — | 0.00/s | under |
+| `kp-sig-nostromo-beam` | opacity | 160 ms | 1× | 1 → 1 → 0 | 1.00/s | under |
+| `kp-sig-nostromo-beam-layer` | background-image, background-repeat, background-origin, background-size, background-position | 160 ms | 1× | — | 0.00/s | under |
+| `kp-sig-nostromo-beam-layer-erase` | background-image, background-repeat, background-origin, background-size, background-position | 320 ms | 1× | — | 0.00/s | under |
+| `kp-sig-nostromo-lamp-on` | opacity | 80 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-sig-nostromo-no-reel` | transform | 260 ms | loops | — | 0.00/s | under |
+| `kp-sig-nostromo-no-punch` | clip-path | 160 ms | 1× | — | 0.00/s | under |
+| `kp-sig-nostromo-hum` | background-position | 160 ms | loops | — | 0.00/s | under |
+| `kp-sig-nostromo-redraw` | clip-path, background-position | 160 ms | loops | — | 0.00/s | under |
+| `kp-sig-nostromo-redraw-row-1` | clip-path, background-position | 160 ms | loops | — | 0.00/s | under |
+| `kp-sig-nostromo-redraw-row-2` | clip-path, background-position | 160 ms | loops | — | 0.00/s | under |
+| `kp-sig-nostromo-redraw-row-3` | clip-path, background-position | 160 ms | loops | — | 0.00/s | under |
+| `kp-sig-nostromo-update-redraw` | -webkit-mask-position, mask-position | 640 ms | 1× | — | 0.00/s | under |
+| `kp-sig-nostromo-update-beam` | opacity | 320 ms | 1× | 1 → 1 → 0 | 1.00/s | under |
+| `kp-sig-nostromo-update-lamp` | opacity | 640 ms | 1× | 1 → 1 | 0.00/s | under |
+| `kp-sig-nostromo-size-scan` | clip-path, filter | 320 ms | 1× | — | 0.00/s | under |
+| `kp-sig-nostromo-erase` | clip-path | 320 ms | 1× | — | 0.00/s | under |
+| `kp-sig-dark-dark-turn` | transform | 1400 ms | loops | — | 0.00/s | under |
+| `kp-sig-dark-dark-ghost-l` | opacity | 1800 ms | loops | 0 → 0.5 → 0 | 1.11/s | under |
+| `kp-sig-dark-dark-ghost-r` | opacity | 1800 ms | loops | 0 → 0.5 → 0 | 1.11/s | under |
+| `kp-sig-dark-dark-resolve` | opacity | 260 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-sig-dark-dark-resolve-ghost` | opacity | 260 ms | 1× | 0.9 → 0 | 1.00/s | under |
+| `kp-sig-dark-dark-dot` | opacity | 260 ms | 1× | 0 | 0.00/s | under |
+| `kp-sig-dark-dark-dot-ghost` | opacity | 260 ms | 1× | 0.9 → 0 | 1.00/s | under |
+| `kp-sig-dark-dark-settle` | opacity | 520 ms | 1× | 0 | 0.00/s | under |
+| `kp-sig-dark-dark-settle-in` | opacity | 2400 ms | 1× | 0 | 0.00/s | under |
+| `kp-sig-dark-dark-develop` | opacity | 260 ms | 1× | 0.55 → 0 | 1.00/s | under |
+| `kp-sig-dark-dark-brackets-open` | clip-path | 260 ms | 1× | — | 0.00/s | under |
+| `kp-sig-dark-size-develop` | opacity | 480 ms | 1× | 0.2 | 0.00/s | under |
+| `kp-sig-dark-leave` | opacity | 460 ms | 1× | 0 | 0.00/s | under |
+| `kp-sig-formal-orbit` | transform | 1600 ms | loops | — | 0.00/s | under |
+| `kp-sig-formal-ink` | clip-path | 3000 ms | loops | — | 0.00/s | under |
+| `kp-sig-formal-pen` | clip-path | 200 ms | 1× | — | 0.00/s | under |
+| `kp-sig-formal-dot` | transform | 200 ms | 1× | — | 0.00/s | under |
+| `kp-sig-formal-rise` | opacity | 280 ms | 1× | 0 | 0.00/s | under |
+| `kp-sig-formal-rule` | transform | 560 ms | 1× | — | 0.00/s | under |
+| `kp-sig-formal-sheet` | opacity | 300 ms | 1× | 0 | 0.00/s | under |
+| `kp-sig-formal-tip-drop` | opacity | 200 ms | 1× | 0 | 0.00/s | under |
+| `kp-sig-formal-size-ink` | clip-path | 320 ms | 1× | — | 0.00/s | under |
+| `kp-sig-formal-leave` | opacity | 400 ms | 1× | 0.2 | 0.00/s | under |
+| `kp-sig-sepia-sepia-leaf` | transform | 1600 ms | loops | — | 0.00/s | under |
+| `kp-sig-sepia-sepia-soak` | opacity | 3200 ms | loops | 0 → 1 → 0 | 0.63/s | under |
+| `kp-sig-sepia-sepia-tick` | clip-path | 320 ms | 1× | — | 0.00/s | under |
+| `kp-sig-sepia-sepia-seal` | opacity | 320 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-sig-sepia-sepia-slip` | opacity | 520 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-sig-sepia-sepia-page` | opacity | 440 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-sig-sepia-sepia-gloss` | opacity | 320 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-progressbar-sepia-dinkus` | transform | 2600 ms | loops | — | 0.00/s | under |
+| `kp-sig-sepia-size-turn` | opacity | 440 ms | 1× | 0 | 0.00/s | under |
+| `kp-sig-sepia-leave` | opacity | 700 ms | 1× | 1 → 1 → 0 | 1.00/s | under |
+| `kp-sig-sepia-leave-2` | box-shadow | 700 ms | 1× | — | 0.00/s | under |
+| `kp-sig-solstice-solstice-arc` | opacity | 2400 ms | loops | 0 → 1 → 1 → 0 → 0 | 0.83/s | under |
+| `kp-sig-solstice-solstice-light` | transform | 3600 ms | loops | — | 0.00/s | under |
+| `kp-sig-solstice-solstice-warm` | opacity | 360 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-sig-solstice-solstice-rise` | transform, clip-path | 640 ms | 1× | — | 0.00/s | under |
+| `kp-sig-solstice-solstice-dawn` | opacity | 560 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-sig-solstice-solstice-ember` | opacity | 360 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-progressbar-solstice-arc` | transform | 2400 ms | loops | — | 0.00/s | under |
+| `kp-sig-solstice-size-rise` | opacity | 480 ms | 1× | 0 | 0.00/s | under |
+| `kp-sig-solstice-leave` | opacity | 540 ms | 1× | 0 | 0.00/s | under |
+| `kp-sig-high-contrast-hc-walk` | transform | 1400 ms | loops | — | 0.00/s | under |
+| `kp-sig-high-contrast-hc-march` | transform | 520 ms | loops | — | 0.00/s | under |
+| `kp-sig-high-contrast-hc-wipe-x` | clip-path | 300 ms | 1× | — | 0.00/s | under |
+| `kp-sig-high-contrast-hc-wipe-y` | clip-path | 360 ms | 1× | — | 0.00/s | under |
+| `kp-sig-high-contrast-hc-hold` | opacity | 140 ms | 1× | 0 → 0 | 0.00/s | under |
+| `kp-sig-high-contrast-size-mark` | outline, outline-offset | 600 ms | 1× | — | 0.00/s | under |
+| `kp-sig-high-contrast-leave` | opacity | 700 ms | 1× | 1 → 1 → 0 → 0 | 1.00/s | under |
+| `kp-sig-high-contrast-leave-2` | clip-path | 700 ms | 1× | — | 0.00/s | under |

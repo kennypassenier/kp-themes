@@ -3715,6 +3715,13 @@
         [data-theme='brutalism'] .kp-tour[open] {
             animation: kp-sig-brutalism-drop var(--kp-sig-br-time) var(--kp-sig-br-fall) backwards;
         }
+
+        /* The next step: js/tour.js marks the card with the theme's update
+           (slam) on every step after the first; the card is slammed onto
+           its yellow offset as any changed value is. */
+        [data-theme='brutalism'] .kp-tour[open][data-kp-updating='slam'] {
+            animation: kp-sig-brutalism-update-slam calc(var(--kp-sig-br-time) + 12 * 100ms) linear both;
+        }
     }
 
     /* highlight: the target keeps the rivet ring (the ink outline and the

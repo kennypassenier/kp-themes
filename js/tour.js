@@ -38,6 +38,7 @@
 import { playEntranceBackwards, stopReversing } from './motion.js';
 import { REMEMBER_ATTRIBUTE, memoryFor } from './remember.js';
 import { resolveStrings } from './strings.js';
+import { markUpdating, unmarkUpdating, updateIdea, updatePlays, updateTiming } from './update.js';
 
 /** @typedef {import('./strings.js').Strings} Strings */
 
@@ -278,8 +279,35 @@ export function startTour(steps, { start = 0, remember, decorate, returnFocus, o
         card.style.left = `${at.left}px`;
         card.style.top = `${at.top}px`;
     };
+    /** Takes the step-change mark off the card early (a step after a step). */
+    let unmarkStep = () => {};
+    /**
+     * The card changes in place on a step after the first: it carries the
+     * theme's update moment (js/update.js, `[data-kp-updating]` with the
+     * idea the register's `--kp-update` names), so the next step reads as
+     * news the way any value updated in place does.
+     */
+    const markStep = () => {
+        unmarkStep();
+        const view = doc.defaultView;
+        if (!view) return;
+        const idea = updateIdea(view.getComputedStyle(card).getPropertyValue('--kp-update'));
+        if (!updatePlays(idea)) return;
+        const timing = updateTiming(card);
+        // The mark that just came off is read once, so setting it again
+        // starts the register's keyframes again.
+        void view.getComputedStyle(card).animationName;
+        const before = markUpdating(card, idea, timing);
+        const done = view.setTimeout(() => unmarkStep(), timing.duration || 1200);
+        unmarkStep = () => {
+            view.clearTimeout(done);
+            unmarkUpdating(card, before);
+            unmarkStep = () => {};
+        };
+    };
     /** @param {number} i @param {boolean} [scroll] */
     const show = (i, scroll = true) => {
+        const stepping = card.open;
         index = i;
         const step = live[index];
         const el = resolveTarget(step, doc);
@@ -303,6 +331,7 @@ export function startTour(steps, { start = 0, remember, decorate, returnFocus, o
         if (!card.open) card.show();
         title.textContent = step.title;
         text.textContent = step.text;
+        if (stepping) markStep();
         count.textContent = strings.tourCount(index + 1, live.length);
         backButton.hidden = index === 0;
         const last = index === live.length - 1;
@@ -319,6 +348,7 @@ export function startTour(steps, { start = 0, remember, decorate, returnFocus, o
         if (ended) return;
         ended = true;
         unmark();
+        unmarkStep();
         // The card goes as it came: its entrance played backwards, then it
         // is closed and taken out (Kenny, 2026-10-05: it faded in and
         // vanished at once).

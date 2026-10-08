@@ -21,7 +21,7 @@
         "js/gridlayout.js": { "digest": "13ceeb82c7b8c760", "when": "[data-kp-grid]" },
         "js/kpi.js": { "digest": "303b7fb0c6477d3f", "when": "svg[data-kp-spark], button.kp-kpi--toggle, .kp-kpis[data-kp-kpis-columns]" },
         "js/log.js": { "digest": "3fc853eb5c0c4dfa", "when": "[data-kp-source]" },
-        "js/menu-button.js": { "digest": "562c02d40528433f", "when": "[data-kp-menu-button]" },
+        "js/menu-button.js": { "digest": "973fe2e4cff074e8", "when": "[data-kp-menu-button]" },
         "js/motion.js": {
             "digest": "5a03de6107b5d1c0",
             "when": "dialog.kp-dialog, .kp-accordion__item, .kp-tabs, .kp-datatable, .kp-toasts, .kp-upload__list, .kp-combobox__list, .kp-tree, .kp-wizard, .kp-field, [data-kp-size-motion]"
@@ -41,7 +41,7 @@
         "light": "a7e764e10d3112e7",
         "dark": "e06477ba536e9587",
         "cyberpunk": "3595c22a9abd806b",
-        "synthwave": "b2c5fc611ffe3c3a",
+        "synthwave": "9d85cf87c45d9d5c",
         "pastel": "46fa1e7800d9fc12",
         "terminal": "300a03bb44a504ee",
         "forest": "0c629b486ce520bc",
@@ -358,6 +358,7 @@
         "brutalism||@media (prefers-reduced-motion: no-preference)||.kp-tooltip)": "e695b75345ac4ed5",
         "brutalism||@media (prefers-reduced-motion: no-preference)||.kp-tooltip)[data-kp-leaving]": "8bb1f1e2d3dc271f",
         "brutalism||@media (prefers-reduced-motion: no-preference)||.kp-tour[open]": "0e059a7716b2fe3d",
+        "brutalism||@media (prefers-reduced-motion: no-preference)||.kp-tour[open][data-kp-updating='slam']": "8a89f955b82cae46",
         "brutalism||@media (prefers-reduced-motion: no-preference)||[data-kp-divider='alt']": "e193afb30d465d80",
         "brutalism||@media (prefers-reduced-motion: no-preference)||[data-kp-divider]": "5a440011eb2599a2",
         "brutalism||@media (prefers-reduced-motion: no-preference)||[data-kp-leaving]": "c8be06c92d170235",
@@ -4264,7 +4265,7 @@
         "synthwave||@media (prefers-reduced-motion: no-preference)||[data-kp-leaving]": "1ef3b2172b5778b3",
         "synthwave||@media (prefers-reduced-motion: no-preference)||[data-kp-resizing]": "def75370425e22cd",
         "synthwave||@media (prefers-reduced-motion: no-preference)||[data-kp-reveal='headline'].is-shine": "89f60a4489bc0a68",
-        "synthwave||@media (prefers-reduced-motion: no-preference)||[data-kp-reveal='headline'].is-tracking": "2fd5210a17eac6b0",
+        "synthwave||@media (prefers-reduced-motion: no-preference)||[data-kp-reveal='headline'].is-tracking": "f221caabf6e5dcd0",
         "synthwave||@media (prefers-reduced-motion: no-preference)||[data-kp-reveal='rule']": "92996853a75fb423",
         "synthwave||@media (prefers-reduced-motion: no-preference)||[data-kp-surface='hero']": "f004e12a54f0eeb1",
         "synthwave||@media (prefers-reduced-motion: no-preference)||[data-kp-updating='laser']": "0aa7c20978c22b37",
@@ -5645,6 +5646,7 @@
         "||||.kp-menu--rich": "cfe06ded02b592db",
         "||||.kp-menu-button": "96a4de0c3bddc16d",
         "||||.kp-menu-button[hidden]": "e78a3546f4ef2cb2",
+        "||||.kp-menu:popover-open": "bdcb29ed8554abf2",
         "||||.kp-menu[aria-busy='true']": "683aa104e2b8f4d5",
         "||||.kp-menu[hidden]": "ebe4528323f54e66",
         "||||.kp-menu__group": "b8ce4ba13bd10e9d",
@@ -6636,7 +6638,7 @@
             ]
         },
         "media": {
-            "modules": "23d38bbd161f936e",
+            "modules": "a034afe834b0c6e9",
             "families": [
                 "data-kp-columns",
                 "data-kp-commit-ms",
@@ -7163,7 +7165,7 @@
             ]
         },
         "overlays": {
-            "modules": "2102c71538529412",
+            "modules": "9b1fbf880289c861",
             "families": [
                 "data-kp-activation",
                 "data-kp-armed",
@@ -7210,6 +7212,7 @@
                 "data-kp-tooltip-owner",
                 "data-kp-tour-target",
                 "data-kp-undo",
+                "data-kp-updating",
                 "data-kp-value",
                 "data-kp-variant",
                 "data-kp-words",
@@ -7284,7 +7287,7 @@
             ]
         },
         "page-effects": {
-            "modules": "517483e08ffc59f8",
+            "modules": "3e72f64fb5e5bf4d",
             "families": [
                 "data-kp-count",
                 "data-kp-count-state",

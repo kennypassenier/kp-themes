@@ -39,6 +39,7 @@
 
 import { resolveStrings } from './strings.js';
 import { playClose, stopClose } from './motion.js';
+import { raiseOverlay } from './top-layer.js';
 
 /** A menu button's wrapper: a button, then its `[role=menu]`. */
 export const MENU_BUTTON = '[data-kp-menu-button]';
@@ -96,6 +97,7 @@ export const MENU_SELECT_EVENT = 'kp-menu-select';
  * @property {Partial<Strings> | undefined} strings
  * @property {string} drawn what the menu shows now, as `menuSignature` writes it
  * @property {MenuGroup[] | 'loading' | null} pending a fill that waits for the menu to close
+ * @property {(() => void) | null} [lower] takes a menu raised over a clipping container out of the top layer again
  * @property {boolean} open
  * @property {boolean} empty
  * @property {(() => void)[]} off what an open menu listens to, undone when it closes
@@ -456,6 +458,52 @@ function coveredEdges(view, wrapper, skip) {
     };
 }
 
+/**
+ * Whether a container round the menu button cuts off what hangs outside it
+ * (a clip-path, or overflow other than visible): cyberpunk's cut card hid
+ * the whole menu that opened above its button.
+ * @param {Element} wrapper
+ * @param {Window} view
+ */
+function clipped(wrapper, view) {
+    const top = view.document.body;
+    for (let el = wrapper.parentElement; el && el !== top; el = el.parentElement) {
+        const style = view.getComputedStyle(el);
+        if (style.clipPath !== 'none' || style.overflowX !== 'visible' || style.overflowY !== 'visible') return true;
+    }
+    return false;
+}
+
+/**
+ * Lift the placed menu into the top layer at the spot it was placed on,
+ * kept against its button as the page scrolls (js/top-layer.js), when a
+ * container would clip it. It stays the button's child, so every register
+ * selector still reaches it.
+ * @param {MenuState} s
+ * @param {Window} view
+ */
+function raiseMenu(s, view) {
+    if (!clipped(s.wrapper, view)) return;
+    const box = s.menu.getBoundingClientRect();
+    const button = s.button.getBoundingClientRect();
+    const dx = box.left - button.left;
+    const dy = box.top - button.top;
+    s.lower = raiseOverlay(s.menu, (menu) => {
+        const at = s.button.getBoundingClientRect();
+        menu.style.setProperty('left', `${at.left + dx}px`);
+        menu.style.setProperty('top', `${at.top + dy}px`);
+        menu.style.setProperty('right', 'auto');
+        menu.style.setProperty('bottom', 'auto');
+        menu.style.setProperty('width', `${box.width}px`);
+    });
+}
+
+/** @param {MenuState} s */
+function lowerMenu(s) {
+    s.lower?.();
+    s.lower = null;
+}
+
 /** The inline properties placeMenu() writes, undone when the menu closes. */
 const PLACED = ['left', 'right', 'top', 'bottom', 'width', 'max-block-size', 'max-inline-size'];
 
@@ -534,6 +582,7 @@ export function openMenu(wrapper, { focus = 'first' } = {}) {
     const closing = !s.menu.hidden;
     stopClose(s.menu);
     s.menu.inert = false;
+    lowerMenu(s);
     if (closing) unplaceMenu(s.menu);
     s.menu.hidden = true;
     // What the page has stuck over the screen's edges is read while the
@@ -542,6 +591,7 @@ export function openMenu(wrapper, { focus = 'first' } = {}) {
     s.menu.hidden = false;
     if (view && covered) {
         placeMenu(s, view, covered);
+        raiseMenu(s, view);
         // A turned phone or a resized window: the menu is placed again,
         // once a frame at most.
         let frame = 0;
@@ -549,7 +599,10 @@ export function openMenu(wrapper, { focus = 'first' } = {}) {
             if (frame) return;
             frame = view.requestAnimationFrame(() => {
                 frame = 0;
-                if (s.open) placeMenu(s, view, coveredEdges(view, s.wrapper, s.menu));
+                if (!s.open) return;
+                lowerMenu(s);
+                placeMenu(s, view, coveredEdges(view, s.wrapper, s.menu));
+                raiseMenu(s, view);
             });
         };
         view.addEventListener('resize', again);
@@ -604,7 +657,10 @@ export function closeMenu(wrapper, { focus = false } = {}) {
     const menu = s.menu;
     void playClose(menu).then((played) => {
         if (!played || s.open) return;
+        // Hidden first, then out of the top layer: hidden, it has no box
+        // for a second close to play on (js/motion.js).
         menu.hidden = true;
+        lowerMenu(s);
         menu.inert = false;
         stopClose(menu);
         unplaceMenu(menu);
