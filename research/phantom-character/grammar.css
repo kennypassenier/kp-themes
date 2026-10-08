@@ -53,6 +53,19 @@
     initial-value: 5.4px;
 }
 
+/* The diagonal resolve of a live update (the sweep) and the dot of its screen. */
+@property --ph-sw {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: -50%;
+}
+
+@property --ph-sd {
+    syntax: '<length>';
+    inherits: false;
+    initial-value: 5.4px;
+}
+
 @layer kp.signature {
     :is(.ph-page, .ph-scene) {
         /* G1: the throw is the shove (a hard start, a dead stop), its inverse
@@ -91,6 +104,11 @@
         --ph-s25: radial-gradient(circle at center, var(--foreground) 1.1284px, transparent 1.4784px);
         --ph-s50: radial-gradient(circle at center, var(--foreground) 1.5958px, transparent 1.9458px);
         --ph-s75: radial-gradient(circle at center, var(--foreground) 1.9544px, transparent 2.3044px);
+        /* The densities of a live update's six cuts: 10, 40 and 70 % of the cell
+           (the radius is sqrt(share x 49 / pi)). */
+        --ph-m10: radial-gradient(circle at center, var(--foreground) 1.2489px, transparent 1.5989px);
+        --ph-m40: radial-gradient(circle at center, var(--foreground) 2.4979px, transparent 2.8479px);
+        --ph-m70: radial-gradient(circle at center, var(--foreground) 3.3044px, transparent 3.6544px);
         /* The same from the centre outward (question 2): an ellipse that grows
            in hard cuts, seen through the 75 % screen. */
         --ph-e1: radial-gradient(ellipse closest-side at 50% 50%, var(--foreground) 24%, transparent 24.5%), var(--ph-m50);
@@ -197,5 +215,38 @@
 
     100% {
         mask-image: var(--ph-m25);
+    }
+}
+
+/* A part that has not arrived or has left is NOT DRAWN (Kenny, phantom verdict:
+   "things in a closed state should never be visible"): hidden before the first
+   frame of its throw and after the last frame of its close, whatever the width
+   of the window. Discrete: the part is hidden at progress 0 (open) or 1 (close)
+   and drawn in between, so the throw is not delayed by a frame. */
+@keyframes ph-vis {
+    0% {
+        visibility: hidden;
+    }
+
+    0.01% {
+        visibility: visible;
+    }
+
+    100% {
+        visibility: visible;
+    }
+}
+
+@keyframes ph-vis-out {
+    0% {
+        visibility: visible;
+    }
+
+    99.99% {
+        visibility: visible;
+    }
+
+    100% {
+        visibility: hidden;
     }
 }

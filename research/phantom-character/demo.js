@@ -54,11 +54,15 @@ const polyline = `<polyline points="${TREND}" fill="none" stroke="currentColor" 
 const plate = (inner, cls = '') => `<div class="ph-plate ${cls}">${inner}</div>`;
 
 const PART = {
-    dialog: (arrives = true) =>
+    dialog: (arrives = true, long = false) =>
         plate(
             `<div class="kp-dialog ph-dialog" role="group" aria-label="A dialog opening">
         <p class="kp-dialog__title ph-title">Close INC-4471?</p>
-        <p class="kp-dialog__description">The vendor is told at once.</p>
+        <p class="kp-dialog__description">${
+            long
+                ? 'The vendor is told at once, and the crew on call at pump house 4 gets the closing note by radio before the valve is shut.'
+                : 'The vendor is told at once.'
+        }</p>
         <div class="kp-dialog__actions">${button('Cancel', 'kp-button--sm')}${button('Close it', 'kp-button--sm kp-button--primary')}</div>
     </div>`,
             `ph-dialog-wrap${arrives ? ' ph-arrives' : ''}`,
@@ -173,10 +177,50 @@ const COLOUR = () =>
     cell('A key figure and a meter', `${PART.kpi('Flow now', '412', note('6 %'), '', '')}<div class="ph-gap"></div>${meter(0.62, 0.8)}`) +
     cell('A failed export', PART.alert('Export failed: the vendor did not answer.', 'kp-alert--destructive', false), 'ph-part--wide');
 
+/** One part in three sizes, side by side: small, long (tall and narrow) and wide, so a corner can be compared across them. */
+const sizes3 = (/** @type {(size: string, cls: string) => string} */ make) =>
+    `<div class="ph-sizes3">${make('small', 'ph-small')}${make('long', 'ph-long')}${make('wide', 'ph-wide')}</div>`;
+
 const CORNERS = () =>
-    cell('Card', PART.tile('Reservoir North', 'Level 71 %', false)) +
-    cell('Menu panel', PART.menuStatic(['Open incident', 'Assign to…'], '', false)) +
-    cell('Key figure', `<div class="kp-kpis">${PART.kpi('Flow now', '412')}</div>`) +
+    cell(
+        'Card: small, long, wide',
+        sizes3((size, cls) =>
+            plate(
+                `<div class="kp-card ph-tile"><p class="kp-card__title ph-title">${
+                    { small: 'Pump 4', long: 'Reservoir North', wide: 'Reservoir North, the whole northern network' }[size]
+                }</p><p class="kp-card__body">${
+                    {
+                        small: '71 %',
+                        long: 'Level 71 %, falling slowly since the night valve closed',
+                        wide: 'Level 71 %, falling slowly since the night valve closed at 02:10',
+                    }[size]
+                }</p></div>`,
+                cls,
+            ),
+        ),
+        'ph-part--wide',
+    ) +
+    cell(
+        'Menu panel: small, wide',
+        `<div class="ph-sizes3">${PART.menuStatic(['Open'], '', false).replace('ph-pop-wrap', 'ph-pop-wrap ph-small')}${PART.menuStatic(
+            ['Open incident', 'Assign to the crew on call', 'Rename'],
+            '',
+            false,
+        ).replace('ph-pop-wrap', 'ph-pop-wrap ph-wide')}</div>`,
+        'ph-part--wide',
+    ) +
+    cell(
+        'Key figure: small, long, wide',
+        sizes3((size, cls) => {
+            const kpi = PART.kpi(
+                { small: 'Flow', long: 'Flow now', wide: 'Flow now at the northern pump houses' }[size],
+                { small: '4', long: '412', wide: '412 m³/h' }[size],
+                size === 'small' ? '' : note('6 %'),
+            ).replace('class="kp-kpi ph-kpi"', `class="kp-kpi ph-kpi ${cls}"`);
+            return size === 'wide' ? `<div class="kp-kpis ph-wide">${kpi.replace(' ph-wide', '')}</div>` : kpi;
+        }),
+        'ph-part--wide',
+    ) +
     cell(
         'Button, tag and chip',
         `<div class="ph-row">${button('Export')}<span class="kp-badge ph-tag">12 new</span><span class="kp-tag ph-chip">Pumps</span></div>`,
@@ -185,7 +229,7 @@ const CORNERS = () =>
     cell('The bar and its head', shareBar(0.62));
 
 const SURFACE = () =>
-    cell('A dialog with its title', PART.dialog(false)) +
+    cell('A dialog with a title and a long line', PART.dialog(false, true)) +
     cell('A key figure', `<div class="kp-kpis">${PART.kpi('Readings', '18 240')}</div>`) +
     cell(
         'A trend tile',

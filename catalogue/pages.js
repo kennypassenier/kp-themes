@@ -98,7 +98,6 @@ export const PAGES = [
             {
                 href: 'research/phantom-character/demo.html',
                 label: 'What makes phantom phantom',
-                rework: 'update 1: opening, corners, surface, live update, spinner and leave redrawn, as Kenny asked',
             },
             // The character round, sixth demo (2026-10-05): the key-figure strip with its columns in 22 themes, two characters each.
             // The character round, eighth component: the attention band, shape/arrival/leave/tone/empty/loading, one pick per aspect (formal and titanium built first).

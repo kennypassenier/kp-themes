@@ -49,6 +49,11 @@
         --ph-fly-out: ph-fly-out;
         --ph-res: ph-resolve;
         --ph-res-out: ph-resolve-out;
+        /* A part that has not arrived or has left is not drawn at all: the third
+           animation of every arriving part, hidden before its first frame and
+           after its last (grammar.css, ph-vis). */
+        --ph-vis: ph-vis;
+        --ph-vis-out: ph-vis-out;
         position: relative;
         overflow: clip;
         overflow-clip-margin: 0.75rem;
@@ -763,19 +768,22 @@
         .ph-scene[data-ph-phase='gap'] .ph-arrives {
             animation:
                 var(--ph-fly-out) 1ms linear 0s both,
-                var(--ph-res-out) 1ms linear 0s both;
+                var(--ph-res-out) 1ms linear 0s both,
+                var(--ph-vis-out) 1ms linear 0s both;
         }
 
         .ph-scene:is([data-ph-phase='in'], [data-ph-phase='hold']) .ph-arrives {
             animation:
                 var(--ph-fly) var(--ph-L) linear var(--ph-d) both,
-                var(--ph-res) var(--ph-L) linear var(--ph-d) both;
+                var(--ph-res) var(--ph-L) linear var(--ph-d) both,
+                var(--ph-vis) var(--ph-L) linear var(--ph-d) both;
         }
 
         .ph-scene[data-ph-phase='out'] .ph-arrives {
             animation:
                 var(--ph-fly-out) var(--ph-L) linear calc(var(--ph-win) - var(--ph-d) - var(--ph-L)) both,
-                var(--ph-res-out) var(--ph-L) linear calc(var(--ph-win) - var(--ph-d) - var(--ph-L)) both;
+                var(--ph-res-out) var(--ph-L) linear calc(var(--ph-win) - var(--ph-d) - var(--ph-L)) both,
+                var(--ph-vis-out) var(--ph-L) linear calc(var(--ph-win) - var(--ph-d) - var(--ph-L)) both;
         }
     }
 
@@ -1011,6 +1019,8 @@
        dealt, the busy slab shoved, a press); only the times differ, printed
        under each part. */
     .ph-tap {
+        --ph-vis: ph-none;
+        --ph-vis-out: ph-none-out;
         --ph-fly: ph-drop;
         --ph-fly-out: ph-drop-out;
         --ph-res: ph-none;
@@ -1081,8 +1091,8 @@
         --ph-L: calc(400ms * var(--ph-slow, 1));
         --ph-fly: ph-none;
         --ph-fly-out: ph-none-out;
-        --ph-res: ph-reprint;
-        --ph-res-out: ph-reprint-out;
+        --ph-res: ph-redraw;
+        --ph-res-out: ph-redraw-out;
     }
 
     .ph-scene[data-ph-live] .ph-carrier {
@@ -1110,6 +1120,38 @@
                 var(--ph-res-out) var(--ph-L) linear calc(var(--ph-win) - var(--ph-L)) both;
         }
 
+        /* The dots shrink and grow: the same screen on a continuous dot size, the
+           radius of the dot running 5.4 px (the cell is full: solid) to nothing
+           and back, linear, over the 400 ms. The mask is the dot grid at that
+           radius; at rest the radius is its initial 5.4 px and nothing is masked. */
+        .ph-scene[data-ph-live='size'] {
+            --ph-res: ph-shrink;
+            --ph-res-out: ph-shrink-out;
+        }
+
+        .ph-scene[data-ph-live='size'] .ph-carrier {
+            mask-image: radial-gradient(circle at center, var(--foreground) var(--ph-r), transparent calc(var(--ph-r) + 0.35px));
+        }
+
+        /* A diagonal resolve: at once the figure is dots (50 %), and an edge on
+           the register's -8 deg skew crosses it from the start in 300 ms; behind
+           the edge the new value is solid, in front of it the dots remain. The mask
+           is the edge (a solid gradient up to --ph-sw) added to the dot grid at
+           --ph-sd; at rest the dot is its full 5.4 px and nothing is masked. */
+        .ph-scene[data-ph-live='sweep'] {
+            --ph-res: ph-sweep;
+            --ph-res-out: ph-sweep-out;
+        }
+
+        .ph-scene[data-ph-live='sweep'] .ph-carrier {
+            mask-image:
+                linear-gradient(98deg, var(--foreground) var(--ph-sw), transparent var(--ph-sw)),
+                radial-gradient(circle at center, var(--foreground) var(--ph-sd), transparent calc(var(--ph-sd) + 0.35px));
+            mask-size:
+                100% 100%,
+                var(--ph-dot) var(--ph-dot);
+        }
+
         /* The string twangs (the picks): the key figure's number jolts up, dips and
            lands in three sharp steps; the tile's figure punches out in a red ring and
            snaps back; the strip's figure shivers sideways; the state word jolts. */
@@ -1133,13 +1175,6 @@
         .ph-scene[data-ph-live='twang'] .ph-spark.ph-carrier {
             --ph-fly: ph-none;
             --ph-fly-out: ph-none-out;
-        }
-
-        /* Redrawn (the trend's pick): the line redraws in place at once and the
-           figure changes with no mark. */
-        .ph-scene[data-ph-live='redrawn'] {
-            --ph-res: ph-none;
-            --ph-res-out: ph-none-out;
         }
     }
 
@@ -1333,35 +1368,60 @@
     }
 
     /* ── 12 The spinner ───────────────────────────────────────────────────
-       Three sizes, a busy button and a busy panel in every option; every option
-       loops at 1.2 s. The register's star: white over its red second plate. */
+       Three sizes, a busy button and a busy panel in every option; each loops at
+       its own pace. The register's star: white over its red second plate. The
+       star snaps 72 deg at a time (five snaps a turn, each snap 80 ms on the
+       shove) and waits at rest between the snaps; in the air it is a screen,
+       on each landing it resolves from dots to solid in one cut, so it is
+       a print at rest. Slow: 2.8 s a turn (each dwell 480 ms), slower: 3.6 s
+       (640 ms), quick: 2.0 s (320 ms). The pace is stretched by --ph-slow. */
     @media (prefers-reduced-motion: no-preference) {
-        /* The star snaps and resolves: 72 deg at a time (five cuts a turn); in the
-           air it is a screen, on each landing it resolves from dots to solid in one
-           cut. */
-        .ph-scene[data-ph-spinner='resolves'] .kp-spinner::before,
-        .ph-scene[data-ph-spinner='resolves'] .kp-spinner::after {
-            mask-image: none;
+        .ph-scene[data-ph-spinner='slow'] {
+            --ph-star-time: 2800ms;
+        }
+
+        .ph-scene[data-ph-spinner='slower'] {
+            --ph-star-time: 3600ms;
+        }
+
+        .ph-scene[data-ph-spinner='quick'] {
+            --ph-star-time: 2000ms;
+        }
+
+        .ph-scene:is([data-ph-spinner='slow'], [data-ph-spinner='slower'], [data-ph-spinner='quick']) .kp-spinner::before,
+        .ph-scene:is([data-ph-spinner='slow'], [data-ph-spinner='slower'], [data-ph-spinner='quick']) .kp-spinner::after {
             mask-size: 4px 4px;
             animation:
-                ph-star-turn calc(1200ms * var(--ph-slow, 1)) linear infinite,
-                ph-star-dots calc(1200ms * var(--ph-slow, 1)) linear infinite;
+                var(--ph-star-turn) calc(var(--ph-star-time) * var(--ph-slow, 1)) linear infinite,
+                var(--ph-star-dots) calc(var(--ph-star-time) * var(--ph-slow, 1)) linear infinite;
         }
 
-        /* A dotted star shoved round: the star as a screen, smoothly on the shove
-           curve, once a loop, never solid. */
-        .ph-scene[data-ph-spinner='shoved'] .kp-spinner::before,
-        .ph-scene[data-ph-spinner='shoved'] .kp-spinner::after {
-            mask-image: radial-gradient(circle at center, var(--foreground) 1.5958px, transparent 1.9458px);
+        .ph-scene[data-ph-spinner='slow'] {
+            --ph-star-turn: ph-star-slow-turn;
+            --ph-star-dots: ph-star-slow-dots;
+        }
+
+        .ph-scene[data-ph-spinner='slower'] {
+            --ph-star-turn: ph-star-slower-turn;
+            --ph-star-dots: ph-star-slower-dots;
+        }
+
+        .ph-scene[data-ph-spinner='quick'] {
+            --ph-star-turn: ph-star-quick-turn;
+            --ph-star-dots: ph-star-quick-dots;
+        }
+
+        /* The star resolves and dissolves in place, 3 s: it does not turn; twelve
+           cuts of 250 ms take its dots from 85 % down to 10 % and back to solid,
+           and one snap of 72 deg opens each cycle (the star has five points, so
+           the loop's seam is the same picture). */
+        .ph-scene[data-ph-spinner='breath'] .kp-spinner::before,
+        .ph-scene[data-ph-spinner='breath'] .kp-spinner::after {
             mask-size: 4px 4px;
-            animation: ph-star-roll calc(1200ms * var(--ph-slow, 1)) linear infinite;
+            animation:
+                ph-star-breath-turn calc(3000ms * var(--ph-slow, 1)) linear infinite,
+                ph-star-breath-dots calc(3000ms * var(--ph-slow, 1)) linear infinite;
         }
-    }
-
-    .ph-scene[data-ph-spinner='shoved'] .kp-spinner::before,
-    .ph-scene[data-ph-spinner='shoved'] .kp-spinner::after {
-        mask-image: radial-gradient(circle at center, var(--foreground) 1.5958px, transparent 1.9458px);
-        mask-size: 4px 4px;
     }
 
     /* ── 13 Leaving and arriving ──────────────────────────────────────────
@@ -1530,6 +1590,72 @@
        head in every option; only the corners differ. Square, skewed, cut is the
        register's own, the base of every other question. */
 
+    /* Square, skewed, cut: the cut at each corner is FIXED, 14 px at 45 deg, drawn
+       in pixels (never a percentage of the box), so a small tag, a long card and a
+       wide panel have the same corner and the angle never changes; the content is
+       inset by the same amount on every size (the padding is never less than the
+       cut), so nothing is cut off. The hard shadow is the same polygon. */
+    .ph-scene[data-ph-corners='skewed'] {
+        --ph-cut: 14px;
+        --ph-clip: polygon(0 var(--ph-cut), var(--ph-cut) 0, 100% 0, 100% calc(100% - var(--ph-cut)), calc(100% - var(--ph-cut)) 100%, 0 100%);
+    }
+
+    .ph-scene[data-ph-corners='skewed'] :is(.kp-card, .kp-kpi, .ph-pop, .ph-day, .ph-column) {
+        clip-path: var(--ph-clip);
+    }
+
+    .ph-scene[data-ph-corners='skewed'] .ph-plate::before {
+        clip-path: var(--ph-clip);
+    }
+
+    .ph-scene[data-ph-corners='skewed'] .kp-card {
+        padding: max(1rem, calc(var(--ph-cut) + 0.2rem)) max(1.25rem, calc(var(--ph-cut) + 0.4rem));
+    }
+
+    .ph-scene[data-ph-corners='skewed'] .kp-kpi {
+        padding: max(0.9rem, calc(var(--ph-cut) + 0.1rem)) max(1.25rem, calc(var(--ph-cut) + 0.4rem));
+    }
+
+    .ph-scene[data-ph-corners='skewed'] .ph-pop {
+        padding: calc(var(--ph-cut) - 4px) 0.6rem calc(var(--ph-cut) - 4px) 0.8rem;
+    }
+
+    /* The three sizes of one shape: small, long (a tall narrow part) and wide. */
+    .ph-sizes3 {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        gap: 0.9rem 1.1rem;
+    }
+
+    .ph-sizes3 > * {
+        min-inline-size: 0;
+    }
+
+    .ph-sizes3 .ph-small {
+        flex: 0 0 auto;
+    }
+
+    .ph-sizes3 .ph-wide {
+        flex: 1 1 100%;
+    }
+
+    .ph-sizes3 .ph-long {
+        flex: 0 1 8rem;
+    }
+
+    .ph-sizes3 .ph-long :is(.kp-card, .kp-kpi) {
+        min-block-size: 9.5rem;
+    }
+
+    .ph-sizes3 .ph-plate:not(.ph-wide):not(.ph-long) {
+        inline-size: fit-content;
+    }
+
+    .ph-sizes3 .ph-small.kp-kpi {
+        inline-size: 7.5rem;
+    }
+
     /* Square and level: radius 0, no skew, no cut, nothing askew. */
     .ph-scene[data-ph-corners='level'] :is(.kp-card, .kp-kpi, .ph-pop, .ph-plate::before, .ph-day, .ph-column) {
         clip-path: none;
@@ -1615,16 +1741,27 @@
 
     /* Black under the screen, cards as plates, hard shadows: the base. The hero
        carries the red slash, here as the dialog's corner. */
+    .ph-scene[data-ph-surface='screen'] {
+        --ph-edge: 2.2rem;
+    }
+
     .ph-scene[data-ph-surface='screen'] .ph-dialog::after {
         content: '';
         position: absolute;
         inset-block: 0;
         inset-inline-end: 0;
-        inline-size: 2.2rem;
+        inline-size: var(--ph-edge);
         background: var(--primary);
         clip-path: polygon(40% 0, 100% 0, 100% 100%, 0 100%);
         opacity: 0.9;
         pointer-events: none;
+    }
+
+    /* The red edge sits outside the content box: the title, the words and the
+       buttons are inset from it by its own width plus 12 px, so no word sits on
+       the red. */
+    .ph-scene[data-ph-surface='screen'] .ph-dialog {
+        padding-inline-end: calc(var(--ph-edge) + 12px);
     }
 
     /* The evidence board (the picks): a bullseye behind the key figure, red string
@@ -3541,23 +3678,38 @@
         }
     }
     /* ── Question 9: a live update ── */
-    @keyframes ph-reprint {
+    @keyframes ph-redraw {
         0% {
-            mask-image: var(--ph-m50);
+            mask-image: none;
             animation-timing-function: steps(1, jump-end);
         }
 
-        24.9975% {
-            mask-image: var(--ph-m25);
+        0.0025% {
+            mask-image: var(--ph-m70);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        16.665% {
+            mask-image: var(--ph-m40);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        33.3325% {
+            mask-image: var(--ph-m10);
             animation-timing-function: steps(1, jump-end);
         }
 
         49.9975% {
-            mask-image: var(--ph-m50);
+            mask-image: var(--ph-m40);
             animation-timing-function: steps(1, jump-end);
         }
 
-        74.9975% {
+        66.665% {
+            mask-image: var(--ph-m70);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        83.3325% {
             mask-image: none;
             animation-timing-function: linear;
         }
@@ -3567,29 +3719,138 @@
         }
     }
 
-    @keyframes ph-reprint-out {
+    @keyframes ph-redraw-out {
         0% {
             mask-image: none;
-            animation-timing-function: linear;
+            animation-timing-function: steps(1, jump-start);
         }
 
-        25.0025% {
+        16.6675% {
             mask-image: none;
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        33.335% {
+            mask-image: var(--ph-m70);
             animation-timing-function: steps(1, jump-start);
         }
 
         50.0025% {
-            mask-image: var(--ph-m50);
+            mask-image: var(--ph-m40);
             animation-timing-function: steps(1, jump-start);
         }
 
-        75.0025% {
-            mask-image: var(--ph-m25);
+        66.6675% {
+            mask-image: var(--ph-m10);
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        83.335% {
+            mask-image: var(--ph-m40);
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        99.9975% {
+            mask-image: var(--ph-m70);
             animation-timing-function: steps(1, jump-start);
         }
 
         100% {
-            mask-image: var(--ph-m50);
+            mask-image: none;
+        }
+    }
+
+    @keyframes ph-shrink {
+        0% {
+            --ph-r: 5.4px;
+            animation-timing-function: linear;
+        }
+
+        50% {
+            --ph-r: -0.4px;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            --ph-r: 5.4px;
+        }
+    }
+
+    @keyframes ph-shrink-out {
+        0% {
+            --ph-r: 5.4px;
+            animation-timing-function: linear;
+        }
+
+        50% {
+            --ph-r: -0.4px;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            --ph-r: 5.4px;
+        }
+    }
+
+    @keyframes ph-sweep {
+        0% {
+            --ph-sw: -50%;
+            --ph-sd: 5.4px;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        0.0025% {
+            --ph-sw: -50%;
+            --ph-sd: 2.7926px;
+            animation-timing-function: linear;
+        }
+
+        25% {
+            --ph-sw: -50%;
+            --ph-sd: 2.7926px;
+            animation-timing-function: linear;
+        }
+
+        99.9975% {
+            --ph-sw: 120%;
+            --ph-sd: 2.7926px;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        100% {
+            --ph-sw: 120%;
+            --ph-sd: 5.4px;
+        }
+    }
+
+    @keyframes ph-sweep-out {
+        0% {
+            --ph-sw: 120%;
+            --ph-sd: 5.4px;
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        0.0025% {
+            --ph-sw: 120%;
+            --ph-sd: 2.7926px;
+            animation-timing-function: linear;
+        }
+
+        75% {
+            --ph-sw: -50%;
+            --ph-sd: 2.7926px;
+            animation-timing-function: linear;
+        }
+
+        99.9975% {
+            --ph-sw: -50%;
+            --ph-sd: 2.7926px;
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        100% {
+            --ph-sw: -50%;
+            --ph-sd: 5.4px;
         }
     }
 
@@ -4045,13 +4306,13 @@
     }
 
     /* ── Question 12: the spinner ── */
-    @keyframes ph-star-turn {
+    @keyframes ph-star-slow-turn {
         0% {
             rotate: 0deg;
             animation-timing-function: linear;
         }
 
-        12% {
+        17.1429% {
             rotate: 0deg;
             animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
         }
@@ -4061,7 +4322,7 @@
             animation-timing-function: linear;
         }
 
-        32% {
+        37.1429% {
             rotate: 72deg;
             animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
         }
@@ -4071,7 +4332,7 @@
             animation-timing-function: linear;
         }
 
-        52% {
+        57.1429% {
             rotate: 144deg;
             animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
         }
@@ -4081,7 +4342,7 @@
             animation-timing-function: linear;
         }
 
-        72% {
+        77.1429% {
             rotate: 216deg;
             animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
         }
@@ -4091,69 +4352,68 @@
             animation-timing-function: linear;
         }
 
-        92% {
+        97.1429% {
             rotate: 288deg;
             animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
         }
 
         100% {
             rotate: 360deg;
-            animation-timing-function: linear;
         }
     }
 
-    @keyframes ph-star-dots {
+    @keyframes ph-star-slow-dots {
         0% {
             mask-image: none;
             animation-timing-function: steps(1, jump-end);
         }
 
-        11.999167% {
+        17.1346% {
             mask-image: var(--ph-m50);
             animation-timing-function: steps(1, jump-end);
         }
 
-        19.999167% {
+        19.9917% {
             mask-image: none;
             animation-timing-function: steps(1, jump-end);
         }
 
-        31.999167% {
+        37.1346% {
             mask-image: var(--ph-m50);
             animation-timing-function: steps(1, jump-end);
         }
 
-        39.999167% {
+        39.9917% {
             mask-image: none;
             animation-timing-function: steps(1, jump-end);
         }
 
-        51.999167% {
+        57.1346% {
             mask-image: var(--ph-m50);
             animation-timing-function: steps(1, jump-end);
         }
 
-        59.999167% {
+        59.9917% {
             mask-image: none;
             animation-timing-function: steps(1, jump-end);
         }
 
-        71.999167% {
+        77.1346% {
             mask-image: var(--ph-m50);
             animation-timing-function: steps(1, jump-end);
         }
 
-        79.999167% {
+        79.9917% {
             mask-image: none;
             animation-timing-function: steps(1, jump-end);
         }
 
-        91.999167% {
+        97.1346% {
             mask-image: var(--ph-m50);
             animation-timing-function: steps(1, jump-end);
         }
 
-        99.999167% {
+        99.9917% {
             mask-image: none;
             animation-timing-function: linear;
         }
@@ -4163,14 +4423,319 @@
         }
     }
 
-    @keyframes ph-star-roll {
+    @keyframes ph-star-slower-turn {
         0% {
             rotate: 0deg;
+            animation-timing-function: linear;
+        }
+
+        17.7778% {
+            rotate: 0deg;
+            animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
+        }
+
+        20% {
+            rotate: 72deg;
+            animation-timing-function: linear;
+        }
+
+        37.7778% {
+            rotate: 72deg;
+            animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
+        }
+
+        40% {
+            rotate: 144deg;
+            animation-timing-function: linear;
+        }
+
+        57.7778% {
+            rotate: 144deg;
+            animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
+        }
+
+        60% {
+            rotate: 216deg;
+            animation-timing-function: linear;
+        }
+
+        77.7778% {
+            rotate: 216deg;
+            animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
+        }
+
+        80% {
+            rotate: 288deg;
+            animation-timing-function: linear;
+        }
+
+        97.7778% {
+            rotate: 288deg;
             animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
         }
 
         100% {
             rotate: 360deg;
+        }
+    }
+
+    @keyframes ph-star-slower-dots {
+        0% {
+            mask-image: none;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        17.7695% {
+            mask-image: var(--ph-m50);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        19.9917% {
+            mask-image: none;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        37.7695% {
+            mask-image: var(--ph-m50);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        39.9917% {
+            mask-image: none;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        57.7695% {
+            mask-image: var(--ph-m50);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        59.9917% {
+            mask-image: none;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        77.7695% {
+            mask-image: var(--ph-m50);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        79.9917% {
+            mask-image: none;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        97.7695% {
+            mask-image: var(--ph-m50);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        99.9917% {
+            mask-image: none;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            mask-image: none;
+        }
+    }
+
+    @keyframes ph-star-quick-turn {
+        0% {
+            rotate: 0deg;
+            animation-timing-function: linear;
+        }
+
+        16% {
+            rotate: 0deg;
+            animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
+        }
+
+        20% {
+            rotate: 72deg;
+            animation-timing-function: linear;
+        }
+
+        36% {
+            rotate: 72deg;
+            animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
+        }
+
+        40% {
+            rotate: 144deg;
+            animation-timing-function: linear;
+        }
+
+        56% {
+            rotate: 144deg;
+            animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
+        }
+
+        60% {
+            rotate: 216deg;
+            animation-timing-function: linear;
+        }
+
+        76% {
+            rotate: 216deg;
+            animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
+        }
+
+        80% {
+            rotate: 288deg;
+            animation-timing-function: linear;
+        }
+
+        96% {
+            rotate: 288deg;
+            animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
+        }
+
+        100% {
+            rotate: 360deg;
+        }
+    }
+
+    @keyframes ph-star-quick-dots {
+        0% {
+            mask-image: none;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        15.9917% {
+            mask-image: var(--ph-m50);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        19.9917% {
+            mask-image: none;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        35.9917% {
+            mask-image: var(--ph-m50);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        39.9917% {
+            mask-image: none;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        55.9917% {
+            mask-image: var(--ph-m50);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        59.9917% {
+            mask-image: none;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        75.9917% {
+            mask-image: var(--ph-m50);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        79.9917% {
+            mask-image: none;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        95.9917% {
+            mask-image: var(--ph-m50);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        99.9917% {
+            mask-image: none;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            mask-image: none;
+        }
+    }
+
+    @keyframes ph-star-breath-dots {
+        0% {
+            mask-image: radial-gradient(circle at center, var(--foreground) 3.6411px, transparent 3.9911px);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        8.3333% {
+            mask-image: radial-gradient(circle at center, var(--foreground) 3.3042px, transparent 3.6542px);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        16.6667% {
+            mask-image: radial-gradient(circle at center, var(--foreground) 2.9289px, transparent 3.2789px);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        25% {
+            mask-image: radial-gradient(circle at center, var(--foreground) 2.4978px, transparent 2.8478px);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        33.3333% {
+            mask-image: radial-gradient(circle at center, var(--foreground) 1.9747px, transparent 2.3247px);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        41.6667% {
+            mask-image: radial-gradient(circle at center, var(--foreground) 1.2489px, transparent 1.5989px);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        50% {
+            mask-image: radial-gradient(circle at center, var(--foreground) 1.9747px, transparent 2.3247px);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        58.3333% {
+            mask-image: radial-gradient(circle at center, var(--foreground) 2.4978px, transparent 2.8478px);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        66.6667% {
+            mask-image: radial-gradient(circle at center, var(--foreground) 2.9289px, transparent 3.2789px);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        75% {
+            mask-image: radial-gradient(circle at center, var(--foreground) 3.3042px, transparent 3.6542px);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        83.3333% {
+            mask-image: radial-gradient(circle at center, var(--foreground) 3.6411px, transparent 3.9911px);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        91.6667% {
+            mask-image: none;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        100% {
+            mask-image: none;
+        }
+    }
+
+    @keyframes ph-star-breath-turn {
+        0% {
+            rotate: 0deg;
+            animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
+        }
+
+        2.6667% {
+            rotate: 72deg;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            rotate: 72deg;
         }
     }
 
