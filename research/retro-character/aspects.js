@@ -8,6 +8,7 @@
 // added that the 1995 desktop drawn around it (teal ground, icons, taskbar
 // with Start and the clock, window chrome) is retro's world.
 // Update 1 (2026-10-09-r2): the questions Kenny did not approve are redrawn (his comments are in update.json); his picks stay as they were.
+// Update 2 (2026-10-09-r3): the questions Kenny did not approve are redrawn (his comments are in update.json); his picks stay as they were.
 
 export const THEME = 'retro';
 export const LABEL = 'Retro';
@@ -305,37 +306,55 @@ export const ASPECTS = [
         id: 'loading',
         label: 'Loading',
         rule: 'G10',
-        question: 'What does a waiting surface show, on each kind of part?',
-        why: 'A tile, a panel, a menu entry, a month of days, a chart’s plot and skeleton lines, waiting. Every option loops at 2.52 s. The Copying dialog is your pick: the options differ in how it fits a skeleton line, a day and a plot.',
+        question: 'What does a waiting surface show: which of the real Windows 95 waiting animations?',
+        why: 'A tile, a panel, a menu entry, a month of days, a chart’s plot and skeleton lines, waiting. Every option is a thing Windows 95 really showed while it worked, in whole 90 ms frames and nothing eased, loops at 2.52 s, and is fitted to each of the five parts.',
         kind: 'loop',
         scene: 'loading',
         options: [
             {
-                key: 'fitted',
-                name: 'The Copying dialog, fitted to each part',
-                see: 'A box (tile, panel, menu entry) shows two small folders and a sheet flying between them in eight frames with a short segmented bar under them that gains a block per landing and empties when full. A skeleton line is a sunken groove with one sheet hopping along its own length in eight frames and a block gained behind it, then emptied. A month of days passes one sheet from day to day, the day it lands on pressed in for a frame, one block gained per day along a bar under the month. The chart’s plot is crossed by one sheet flying along its baseline, the blocks filling the plot’s foot behind it.',
+                key: 'flashlight',
+                name: 'The Find flashlight',
+                see: 'The flashlight of the Find: Files dialog: a small pixel flashlight sweeps back and forth (eight frames each way) over the waiting part throwing a beam of light that lightens the 50 % dither under it, as the Find dialog’s flashlight swept over the file icons. On a box it sweeps across the middle; on a skeleton line it sweeps along the line; over the month it moves from day to day, lightening the day under it; across the plot it sweeps along the baseline.',
                 verdict:
-                    'Recommended: this one, because the one picture is kept and every part gets the form of it that fits it: a line is crossed, a row of days is walked, a plot is traversed, a box is copied into; nothing is stretched over a shape it does not fit.',
+                    'Recommended: this one, because it is the animation 1995 showed for “I am looking”, drawn in pixels everyone who used Find remembers, and a beam of light over a dithered ground fits a line, a day and a plot as well as a box.',
             },
             {
-                key: 'bars',
-                name: 'The Copying bar on every part',
-                see: 'Every waiting part, whatever its shape, carries the Copying dialog’s own segmented bar along its foot, with one small sheet hopping ahead of the blocks (the busy bar’s picture); a month’s days each carry a one-block bar under their number; a skeleton line is its bar; the plot has the bar under it.',
-                verdict:
-                    'Not recommended, because it fits every shape by using the bar only, and the flying sheet between folders, the picture you liked, is gone from most parts.',
+                key: 'startup',
+                name: 'The Starting Windows scroll',
+                see: 'The band of the Starting Windows 95 splash: a short band of eight blue blocks (the splash’s clouds reduced to its marching stripe) scrolls left to right along the foot of a sunken bar, wrapping at the right edge, in whole frames; every part carries the bar along its foot (a skeleton line is its own bar, each day carries a short one, the plot has the bar under it, a box has the bar at its foot).',
+                verdict: 'Not recommended, because the most authentic bar of the set and the plainest; it is the same picture on every part.',
             },
             {
-                key: 'folders',
-                name: 'Folders at the part’s ends',
-                see: 'On every part a small folder stands at its start and another at its end, and the sheet flies from one to the other along the part in eight frames (along a line, across a plot, over the days, diagonally over a box), the blocks filling a bar under or in the part.',
+                key: 'busy',
+                name: 'The busy pointer sits on it',
+                see: 'The pointer you saw while Windows worked: the hourglass cursor (the register’s hourglass, its sand draining in frames) sits at the part’s centre; a part that is loading in the background shows the arrow with a small hourglass instead; on a line the pointer sits at its start, on a day on the day, on the plot at its middle.',
                 verdict:
-                    'Not recommended, because the flight is the whole part’s length, so it is big on a plot and tiny on a day; the fitted version sizes it to each.',
+                    'Not recommended, because one cursor on a part says “wait” without saying how much; it is the hourglass spinner you already picked.',
+            },
+            {
+                key: 'defrag',
+                name: 'Defrag’s cells',
+                see: 'The Disk Defragmenter’s map: the part is a grid of small square cells (blue, white, a red one now and then) that change state one after another, left to right, row by row, a few cells a frame, as defragmenting rewrote blocks; a skeleton line is one row of cells, the month is its cells, the plot is a grid of cells under the line, a box is a grid.',
+                verdict: 'Not recommended, because it is dense and busy at once; on a day the cells are the day.',
+            },
+            {
+                key: 'setup',
+                name: 'The Setup installer’s bar',
+                see: 'The Setup wizard’s copying bar: a sunken bar with navy blocks gained one by one, and under it the label “Copying files… 37%” counting up in the DOS face (the percent in steps of three); on a skeleton line the bar is the line; on the month one bar under the days; on the plot one under it; a box carries the bar and the label at its foot.',
+                verdict:
+                    'Not recommended, because exactly the installer, and the percentage is a promise a loading part cannot keep when its length is not known.',
+            },
+            {
+                key: 'modem',
+                name: 'The dial-up lights',
+                see: 'The dial-up icon in the taskbar tray: two tiny monitors whose screens blink in turn (send, then receive, 360 ms each); on every part, two small monitors at its foot-end blink in turn with a short row of blocks; the part’s own content dithers at half density.',
+                verdict: 'Not recommended, because the most 1995 of the small marks, and the smallest; on a plot it is a tag in a corner.',
             },
             {
                 key: 'blocks',
                 name: 'The progress blocks (the picks)',
                 see: 'The picks’ loading on seven components: navy blocks fill the part’s foot block by block, clear, and restart; no sheet.',
-                verdict: 'Not recommended, because the bar without the sheet is half the dialog.',
+                verdict: 'Not recommended, because the bar without the sheet is half the dialog; kept as the reference.',
             },
         ],
     },

@@ -1,5 +1,5 @@
 {
-    "update": 2,
+    "update": 3,
     "picks": {
         "deco": {
             "curve": "unfold",
@@ -7,41 +7,26 @@
             "opening": "inlay",
             "durations": "fan",
             "colour": "inlay",
+            "corners": "cove",
             "surface": "lacquer",
             "warning": "figure",
             "live": "gilded",
+            "loading": "doors",
+            "bar": "double",
             "spinner": "rotate",
             "composites": "own",
+            "hover": "leaf",
             "focus": "double",
+            "press": "seal",
             "type": "poiret",
             "motifs": "inlay"
         }
     },
     "questions": {
         "deco": {
-            "corners": {
-                "comment": "I don' tlike any of these, it should be fancy, these shapes are very simple and franky unoriginal. It should exhume elegance",
-                "reply": "Six new corners, none of the earlier shapes, each drawn as the jewellery of a corner rather than a cut: a quarter sunburst of fine rays in every corner, a ziggurat of three steps with a jewel set at its point, a concave cove with a double hairline following it, nested chevrons like architectural moulding, a medallion set on the corner’s point, and fluted pilasters rising at the corners. Every shape is drawn in hairlines and a few jewels, in the same gold, and is the same at every size."
-            },
-            "loading": {
-                "comment": "the wallpaper breathes is the best one, but it's not close to being enough, as I said, I want something elegant and fancy. It should fit the style and look really luxurious. be creative, give me ten examples",
-                "reply": "Ten new waiting pictures, each luxurious rather than busy: a wave of light through the wallpaper’s lozenges, two hairlines tracing the inlay, a crest rising like a sun, a satin sheen sliding over the lacquer, a string of pearls, a turning jewel, a tide of deeper blue with a gold waterline, lift doors that part and close, a glint orbiting the inlay, and an engraver cutting lines. The breathing wallpaper stays as the eleventh, for reference."
-            },
-            "bar": {
-                "comment": "same remark, these look cheap. give me something elegant and worthy of this theme, at least five new options and remove all these besides 1, which i want two variations on",
-                "reply": "Everything but option 1 (the inlay hairline with a lozenge head) is gone. Option 1 has two variations (a double hairline with a small fan behind the head; a ruled track with a jewel in the head and a lozenge at every quarter) and there are five new bars: a horizon with a crest of rays at its head, a guilloche weave, a line with three emerald stations, a satin ribbon with gold edges, and a skyline of set-back hairlines."
-            },
             "leave": {
-                "comment": "it's missing somethiung, can we do a couple of variations on the 1st option and two options with curtains, but not these silly simple ones you suggested, actual curtains that look good and fancy",
-                "reply": "Option 1 (the inlay draws, the lacquer comes up; the reverse to leave) gets three variations: with a glint passing as it closes, with four jewels lighting first and the inlay drawn between them, and as a double rule (two lines, one after the other). And two curtains, drawn as curtains: velvet drapes with deep folds, a gold fringe and tassels that part from the centre to both sides; and a festoon curtain, scalloped swags with a gold-trimmed valance that gathers upward in folds."
-            },
-            "hover": {
-                "comment": "this doesn' tlook fancy or distinguished at all, it can be subtle but should look luxurious",
-                "reply": "Five new hovers, all subtle and made of what a luxurious thing does when you come near it: gold leaf warms the plate, an inner mat frame draws itself with jewels at its corners, a single gleam crosses the plate like light on satin, the plate comes into relief like an embossed seal, and two jewels set themselves beside the label. The rows are real now: the buttons, entries and tiles in the scene answer your own pointer and your own press, and the State buttons still force them."
-            },
-            "press": {
-                "comment": "this doesn' tlook fancy or distinguished at all, it can be subtle but should look luxurious",
-                "reply": "Five new presses, each a contact worth the name: a seal pressed into wax (the plate sinks, a single ring ripples out), an engraving (the inlay draws inward and the plate deepens), gilding (gold is pressed on from the middle), a brass plate pressed (the highlight and the shadow swap), and jewels that flash at the label’s ends. They answer your own press in the scene."
+                "comment": "I like five best becuse it's actually fancy and well drawn, i like the art style, bu tI'm not sure if curtains are the way to go. They also seem to stay in the window after they are open? So keep it in this art style, but come up with ten variations",
+                "reply": "The festoon (five) stays the standard of the drawing, and the curtains that stayed in the window are fixed: when a part has arrived nothing of the dressing is drawn any more, and when it has left nothing is left either (hidden, not pulled to the top). Ten variations in that art style, the satin, the gold trim, the rosettes, the tassels and the braid, and none of them a plain curtain: the festoon itself (fixed), a Roman blind, a folding screen, a ribbon and bow, a velvet rope and its posts, shutters, a lift gate, a great fan, a bead curtain and a scallop shell."
             }
         }
     }

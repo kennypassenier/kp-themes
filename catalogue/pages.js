@@ -82,19 +82,13 @@ export const PAGES = [
             {
                 href: 'research/deco-character/demo.html',
                 label: 'What makes deco deco',
+                rework: 'update 3: leaving and arriving redrawn as ten variations, as Kenny asked',
             },
             // Kenny, 2026-10-08: what makes dark, retro and phantom themselves, the forest way (the analysis in themes/<theme>/CHARACTER.md), the nineteen questions each, every option a live scene that follows from the theme's decided anchor, the recommendation first.
             {
-                href: 'research/dark-character/demo.html',
-                label: 'What makes dark dark',
-            },
-            {
                 href: 'research/retro-character/demo.html',
                 label: 'What makes retro retro',
-            },
-            {
-                href: 'research/phantom-character/demo.html',
-                label: 'What makes phantom phantom',
+                rework: 'update 2: loading redrawn from the real Windows 95 animations, as Kenny asked',
             },
             // The character round, sixth demo (2026-10-05): the key-figure strip with its columns in 22 themes, two characters each.
             // The character round, eighth component: the attention band, shape/arrival/leave/tone/empty/loading, one pick per aspect (formal and titanium built first).
@@ -123,6 +117,10 @@ export const PAGES = [
             { href: 'research/phantom-anchor/demo.html', label: "What is phantom's anchor element" },
             // Decided 2026-10-08: Kenny approved formal's grammar, every recommendation except the hover = a rule under the label and the motifs = plus the seal where picked (research/formal-character/decided.json).
             { href: 'research/formal-character/demo.html', label: 'What makes formal formal' },
+            // Decided 2026-10-09: Kenny approved dark's grammar after update 1 (research/dark-character/decided.json).
+            { href: 'research/dark-character/demo.html', label: 'What makes dark dark' },
+            // Decided 2026-10-09: Kenny approved phantom's grammar after update 1 (research/phantom-character/decided.json).
+            { href: 'research/phantom-character/demo.html', label: 'What makes phantom phantom' },
             // Decided 2026-10-08: Kenny approved light's grammar, every recommendation except the durations = unhurried and the busy bar = the bead orbits the line (research/light-character/decided.json).
             { href: 'research/light-character/demo.html', label: 'What makes light light' },
             // Decided 2026-10-08: Kenny picked the fan (and the progress bar is to be redone) as deco's anchor element (research/deco-anchor/decided.json).

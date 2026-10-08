@@ -1,0 +1,27 @@
+{
+    "decided": "2026-10-09 Brussels, Kenny: 19 of 19 approved in the review dialog (research/phantom-character/README.md), update 1: every recommendation except Loading = The red slash (today), The spinner = The star snaps (today), 1.2 s, and the questions answered by their option keys",
+    "attributes": "data-ph-<question>=\"<key>\" on the .ph-scene, research/phantom-character/options.css",
+    "picks": {
+        "phantom": {
+            "curve": "shove",
+            "direction": "start",
+            "opening": "thrown",
+            "durations": "throw",
+            "colour": "plate",
+            "corners": "skewed",
+            "surface": "screen",
+            "warning": "overprint",
+            "live": "resolve",
+            "loading": "slash",
+            "busybar": "screen",
+            "spinner": "snaps",
+            "leave": "thrown",
+            "composites": "own",
+            "hover": "bar",
+            "focus": "dashed",
+            "press": "drops",
+            "type": "condensed",
+            "motifs": "print"
+        }
+    }
+}

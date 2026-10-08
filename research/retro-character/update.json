@@ -1,5 +1,5 @@
 {
-    "update": 1,
+    "update": 2,
     "picks": {
         "retro": {
             "curve": "frames",
@@ -25,8 +25,8 @@
     "questions": {
         "retro": {
             "loading": {
-                "comment": "I like the copying one best, but it doesn't fit skeleton, month days and chart plot",
-                "reply": "The Copying dialog stays the loading, now fitted to every waiting part instead of one picture stretched over all of them: a part that is a box (tile, panel, menu entry) gets the two small folders and the flying sheet with the blocks under them; skeleton lines each carry the sheet hopping along their own length; the month’s days pass one sheet from day to day, a block gained per day; the chart’s plot is crossed by the sheet along its baseline with the blocks filling the plot’s foot. Four options: the fitted Copying (recommended), two variants of it, and your earlier second choice for reference."
+                "comment": "still don' tlike it, whaz tdoes the actual windows 95 animations look like? get inspiration from that",
+                "reply": "Out with my invented pictures; in with what Windows 95 really showed while it waited, one option each, each adapted to the five parts: the Find dialog’s flashlight sweeping over the files (a beam of light moving along a line, over the days, across the plot), the Starting Windows 95 splash’s scrolling band of blue blocks along the foot of a sunken bar, the busy pointer (the hourglass, and the arrow with a small hourglass for work in the background) sitting on the part, Defrag’s grid of small cells turning from state to state, the Setup installer’s sunken bar with its blocks and its percentage in the label, and the dial-up icon’s two blinking activity lights. The earlier progress blocks stay for reference; the Copying dialog and its variations are gone."
             }
         }
     }

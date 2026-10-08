@@ -8,6 +8,7 @@
 // wallpaper, the fan unfolding smoothly, nothing counted; his six picks
 // (durations, surface, live, spinner, focus, type) stay as round one wrote them.
 // Update 2 (2026-10-09-r3): the questions Kenny did not approve are redrawn (his comments are in update.json); his picks stay as they were.
+// Update 3 (2026-10-09-r4): the questions Kenny did not approve are redrawn (his comments are in update.json); his picks stay as they were.
 
 export const THEME = 'deco';
 export const LABEL = 'Art Deco';
@@ -555,46 +556,71 @@ export const ASPECTS = [
         label: 'Leaving and arriving',
         rule: 'G13',
         question: 'How does a part arrive, and how does it leave?',
-        why: 'An alert, a card and a key figure arrive and leave in every option, 480 ms each way; the leave is the arrival backwards. Option 1 has three variations and two real curtains.',
+        why: 'An alert, a card and a key figure arrive and leave in every option, 480 ms each way; the leave is the arrival backwards. All ten are dressed the way the festoon is: satin and lacquer, gold trim, rosettes, tassels and braid; when a part has arrived the dressing is gone, and when it has left nothing remains drawn.',
         kind: 'cycle',
         scene: 'leave',
         options: [
             {
-                key: 'inlay',
-                name: 'The inlay draws, the lacquer comes up',
-                see: 'Arriving: the part’s gold inlay draws from the centre of its top edge round both ways (320 ms), its lacquer, wallpaper and words come up behind it (160 ms). Leaving: the lacquer and words sink into the page, the inlay undraws to its start.',
-                verdict: 'Recommended: this one, because the anchor on a plate, and the thing you kept: a surface comes and goes by its frame.',
-            },
-            {
-                key: 'glint',
-                name: 'The inlay, and a glint as it closes',
-                see: 'Option 1 and, as the inlay closes (on the way in, at the moment the line meets at the bottom) one slim glint travels once round the inlay, clockwise, in 240 ms; on the way out the glint runs first and the inlay undraws behind it.',
-                verdict: 'Not recommended, because a glint on every arrival is a flourish; fine here, on every toast it tires.',
-            },
-            {
-                key: 'jewels',
-                name: 'Four jewels light, the inlay is drawn between them',
-                see: 'Four lozenge jewels (one at each corner) light first, 120 ms; the inlay is then drawn between them from each jewel to its neighbours (four hairlines meeting at the edges’ middles, 240 ms), and the lacquer comes up behind (120 ms); the leave is this backwards.',
-                verdict: 'Not recommended, because the jewels first is the richer entrance; a little slow on a toast.',
-            },
-            {
-                key: 'double',
-                name: 'The inlay as a double rule',
-                see: 'Option 1 with two lines: the outer inlay draws from the top centre round both ways, the inner line follows 120 ms later 4 px inside it, then the lacquer comes up; the leave is the reverse (the lacquer sinks, the inner line undraws, then the outer).',
-                verdict: 'Not recommended, because the double rule is deco’s mark for what matters; on a menu it is a lot.',
-            },
-            {
-                key: 'velvet',
-                name: 'Velvet curtains with a gold fringe',
-                see: 'Two heavy velvet drapes in deep blue lacquer with deep vertical folds (a gradient of light and shade drawn across 7 pleats, a gold braid down the inner edge, a gold fringe with small tassels along the hem) stand closed over the part’s footprint; they part from the centre to both sides, gathering at the sides in thicker folds with a gold tie-back cord, revealing the part, in 480 ms; to leave, they close the same way. A scalloped gold-trimmed valance (a fixed pelmet) rides across the top.',
-                verdict:
-                    'Recommended: this one, because an actual stage curtain in the lobby’s own blue and gold, the most luxurious way a thing can appear, and it is symmetric from the centre as every other deco gesture is.',
-            },
-            {
                 key: 'festoon',
-                name: 'A festoon curtain with swags',
-                see: 'A festoon curtain of deep-blue satin hangs over the part in scalloped swags, each gathered by a gold rosette; it gathers upward from the bottom in soft folds (each swag lifting in turn from the centre outward, 60 ms apart) to rest as a gold-trimmed valance along the top, revealing the part; to leave, it lowers in the same way.',
-                verdict: 'Not recommended, because softer than the velvet, and the swags are busy on a part that is only a line tall.',
+                name: 'The festoon curtain, fixed',
+                see: 'A festoon of deep-blue satin hangs over the part in scalloped swags, each gathered by a gold rosette with a tassel; it gathers upward from the bottom in soft folds, each swag lifting in turn from the centre outward 60 ms apart, to a gold-trimmed valance and then away entirely, revealing the part; to leave, a valance comes down and the swags lower. Nothing of it is drawn once the part has arrived, or after it has left.',
+                verdict:
+                    'Recommended: this one, because it is the drawing you liked, with the one fault fixed: the dressing exists only while the part is coming or going.',
+            },
+            {
+                key: 'roman',
+                name: 'A Roman blind',
+                see: 'A blind of deep-blue satin hangs flat over the part, ruled with gold braid every 22 px, a gold rosette pull-cord with a tassel hanging at the centre; it rises in horizontal folds (each fold gathering on the one above, 40 ms apart from the bottom) to a scalloped gold-trimmed hem at the top and then away; to leave it lowers the same way.',
+                verdict: 'Not recommended, because quieter than the festoon and the most tailored; a flat blind is plainer than swags.',
+            },
+            {
+                key: 'screen',
+                name: 'A folding screen',
+                see: 'A folding screen of four lacquered panels, each with a gold-trimmed frame and a fan motif in its upper half, stands over the part; the panels fold concertina to the two sides from the centre (the inner two first), their frames turning edge-on as they go, revealing the part; to leave they unfold back.',
+                verdict: 'Not recommended, because a screen is a piece of furniture, strong and flat; the concertina is the whole effect.',
+            },
+            {
+                key: 'ribbon',
+                name: 'A ribbon and bow',
+                see: 'Two satin ribbons with gold edges cross the part in an X and meet in a large bow with a gold clasp and two hanging tails; the clasp opens, the bow unties (the loops fall) and the ribbons slide off the part’s four corners; to leave they return and tie.',
+                verdict: 'Not recommended, because a gift is not a lobby; delightful on a card, silly on a toast.',
+            },
+            {
+                key: 'rope',
+                name: 'A velvet rope between brass posts',
+                see: 'A velvet rope in deep blue with gold braid hangs between two brass posts with gold balls at the part’s two sides; the rope unhooks from the right post and swings down to hang from the left one, revealing the part; to leave it swings back and hooks on.',
+                verdict:
+                    'Not recommended, because the lobby’s own barrier, and the part is only half dressed; the rope covers little of a large part.',
+            },
+            {
+                key: 'shutters',
+                name: 'Gilded shutters',
+                see: 'Louvred shutters of lacquer with a gold-trimmed frame cover the part in two leaves; their slats turn edge-on (a venetian turn, 60 ms apart from the top) and the leaves fold back to the sides, revealing the part; to leave they come back and close.',
+                verdict: 'Not recommended, because light and architectural; the turning slats are fine at the large sizes.',
+            },
+            {
+                key: 'gate',
+                name: 'A lift gate',
+                see: 'A brass pantograph lift gate (an accordion lattice of crossed gold bars with a rivet at every crossing) closes the part; it collapses to the left like a lift gate being opened by hand, its lattice narrowing to a bundle of bars at the side, revealing the part; to leave it extends again.',
+                verdict: 'Not recommended, because the most Deco of the ten and the busiest; the lattice is a lot to read on a toast.',
+            },
+            {
+                key: 'fan',
+                name: 'A great fan',
+                see: 'A great fan (gold ribs and panels of deep-blue satin with a gold-braid edge, closed it is a single pointed shape at the bottom centre) opens to cover the part and then folds away, rib by rib from the left, taking the satin with it, to reveal the part; to leave it opens over the part and folds shut.',
+                verdict: 'Not recommended, because the anchor again, large; lovely once, and it is the fan on every arrival.',
+            },
+            {
+                key: 'beads',
+                name: 'A bead curtain',
+                see: 'Strings of gold and pearl beads hang across the part every 8 px, each ending in a small tassel; they part from the centre to both sides (the beads swinging, each string 20 ms apart) revealing the part; to leave they swing back and hang still.',
+                verdict: 'Not recommended, because light and airy; a bead curtain is a doorway and the beads hide little.',
+            },
+            {
+                key: 'shell',
+                name: 'A scallop shell',
+                see: 'A shell of deep-blue lacquer with gold ribs, hinged at the bottom and shaped to the part, is closed over it; it opens by turning on its hinge (the upper half tilting up and away by its ribs, the ribs fanning) and then is gone, revealing the part; to leave it closes.',
+                verdict: 'Not recommended, because the shell is a Deco motif and the hinge turn the most theatrical; it asks for a tall part.',
             },
         ],
     },

@@ -1,5 +1,7 @@
 # What makes phantom phantom
 
+**Decided (Kenny, 09/10/2026): all nineteen questions approved after update 1** (research/phantom-character/decided.json; to be applied in css/phantom-register.css; see themes/phantom/CHARACTER.md §0).
+
 **Open (2026-10-08): nineteen questions wait for Kenny's verdicts in the review dialog** (research/phantom-character/demo.html, round `2026-10-08-r1`; the picks will go to `decided.json` and, once decided, to css/phantom-register.css; see themes/phantom/CHARACTER.md §0).
 
 **Why.** Kenny decided the anchor of phantom on 2026-10-08 in [research/phantom-anchor](../phantom-anchor/README.md), update 1: **Thrown as a screen, resolves at the slap**. The calling card flies in as its own halftone, a silhouette of white dots in the card's shape, title and all, on the shove `cubic-bezier(0.81, 0, 0, 1)`; it slaps down with a dead stop and the dots resolve into the solid white card in three hard cuts; it leaves by dissolving back into dots and being snatched off. Every later decision of the theme departs from it. The analysis is [themes/phantom/CHARACTER.md](../../themes/phantom/CHARACTER.md): the grammar G1 to G21 proposed from the anchor, the decided picks measured against it, six outliers and the questions. This page turns the proposals into the nineteen questions Kenny answers to fix phantom's grammar, the way research/forest-character and research/light-character did for forest and light.

@@ -1,5 +1,7 @@
 # What makes dark dark
 
+**Decided (Kenny, 09/10/2026): all nineteen questions approved after update 1** (research/dark-character/decided.json; to be applied in css/dark-register.css; see themes/dark/CHARACTER.md §0).
+
 **Open (2026-10-08): nineteen questions, waiting for Kenny's verdict per question in the review dialog.** Round `2026-10-08-r1`; nothing is decided yet (no `decided.json` until he answers).
 
 **Why.** Kenny decided the anchor of dark on 2026-10-08 in [research/dark-anchor](../dark-anchor/README.md), update 1: **The line lays the film down, turning**. A spectral line of film light sweeps a part from its start at an even pace and lays the oxide film along its edge behind it, turning; when the line reaches the end the figure takes the film through its letters and the turn settles, cyan at the top; the leave is the pass back. Round one's progress bar stays exactly (the chamfered ticked track, the film fill whose colour turns as it fills, the `]` head), now with the line at its head. Every later decision of the theme departs from it. The analysis is [themes/dark/CHARACTER.md](../../themes/dark/CHARACTER.md): the grammar G1 to G21 proposed from the anchor, the decided picks measured against it, eight outliers and the questions. This page turns the proposals into the nineteen questions Kenny answers to fix dark's grammar, the way research/forest-character did for forest and research/light-character for light.
