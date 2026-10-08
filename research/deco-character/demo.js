@@ -3,7 +3,12 @@
 // into rules for every other component. Update 1 (2026-10-08): thirteen of
 // them are redrawn in Kenny's direction (thin gold on deep blue lacquer with
 // the wallpaper, the fan unfolding smoothly, nothing counted, nothing loud);
-// his six picks keep their round-one scenes.
+// his six picks keep their round-one scenes. Update 2 (2026-10-09): six of
+// them are drawn again (corners, loading, the bar, leave, hover and the press)
+// as jewellery, with gold that reads as gold; their scenes take the option's
+// key, so each option builds only the parts it draws (curtains, jewels,
+// pearls, inline-SVG corners), and the hover and press rows answer the
+// reviewer's own pointer.
 //
 // A review-kit demo in aspect mode, deco only. aspects.js holds the nineteen
 // questions as data (the designer's text, used verbatim); this file gives each
@@ -34,15 +39,15 @@ const meter = (value = 0.62, mark = 0.8, extra = '') =>
         value * 100,
     )}" aria-valuemin="0" aria-valuemax="100" style="--kp-value: ${value}; --kp-mark: ${mark}" ${extra}><span class="kp-meter__mark"></span></div>`;
 
-const barBody =
-    '<span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span>';
-/** The package's progress bar: a share (0 to 1) or busy. */
-const bar = (share = null, size = '', label = 'Export') =>
+const barBody = (extra = '') =>
+    `<span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span>${extra}</span>`;
+/** The package's progress bar: a share (0 to 1) or busy; `extra` is what an option of question 11 sets on the track (its stations). */
+const bar = (share = null, size = '', label = 'Export', extra = '') =>
     share === null
-        ? `<div class="kp-progressbar dc-bar ${size}" role="progressbar" aria-label="${label}, busy" data-kp-indeterminate>${barBody}</div>`
+        ? `<div class="kp-progressbar dc-bar ${size}" role="progressbar" aria-label="${label}, busy" data-kp-indeterminate>${barBody(extra)}</div>`
         : `<div class="kp-progressbar dc-bar ${size}" role="progressbar" aria-label="${label}, ${Math.round(share * 100)} %" aria-valuenow="${Math.round(
               share * 100,
-          )}" aria-valuemin="0" aria-valuemax="100" style="--kp-value: ${share}">${barBody}</div>`;
+          )}" aria-valuemin="0" aria-valuemax="100" style="--kp-value: ${share}">${barBody(extra)}</div>`;
 
 const spin = (size = 1.5, label = 'Working…') =>
     `<span class="kp-spinner dc-spin" role="status" aria-label="${label}" style="--kp-spinner-size: ${size}rem"></span>`;
@@ -137,6 +142,245 @@ const LOBBY = {
     trendTile: (foot = '') => `<div class="kp-card dc-plate dc-trend2"><p class="kp-card__title dc-title">Flow, 24 h</p>${PART.spark()}${foot}</div>`,
 };
 
+/* ------------------------------------------- update 2: jewellery in gold */
+
+// Kenny, update 2: "it should be fancy … It should exhume elegance". Gold is
+// drawn as gold here: every hairline and jewel of the corners, the bar heads
+// and the curtains is inline SVG painted from one sprite of gradients
+// (`.dc-defs`, its stops coloured from --primary by options.css): a lighter
+// highlight, the gold and a darker shade in the same hue, never a flat fill.
+
+const r2 = (v) => Math.round(v * 100) / 100;
+
+/** A lozenge jewel centred at (x, y), half-diagonal r: four facets lit from the top left. */
+const gem = (x, y, r, cls = '') =>
+    `<g class="dc-gem ${cls}"><path class="dc-f-ul" d="M${r2(x)} ${r2(y)}L${r2(x - r)} ${r2(y)}L${r2(x)} ${r2(y - r)}Z"/><path class="dc-f-ur" d="M${r2(x)} ${r2(y)}L${r2(x)} ${r2(y - r)}L${r2(x + r)} ${r2(y)}Z"/><path class="dc-f-lr" d="M${r2(x)} ${r2(y)}L${r2(x + r)} ${r2(y)}L${r2(x)} ${r2(y + r)}Z"/><path class="dc-f-ll" d="M${r2(x)} ${r2(y)}L${r2(x)} ${r2(y + r)}L${r2(x - r)} ${r2(y)}Z"/></g>`;
+
+const line = (d, cls = 'dc-ln', w = 1) => `<path class="${cls}" d="${d}" stroke-width="${w}"/>`;
+const bead = (x, y, r, cls = 'dc-bd') => `<circle class="${cls}" cx="${r2(x)}" cy="${r2(y)}" r="${r2(r)}"/>`;
+const poly = (pts) => `M${pts.map(([x, y]) => `${r2(x)} ${r2(y)}`).join('L')}`;
+
+/** The sprite of gradients every ornament is painted from, once per page (outside the rows, so the dialog's stage reaches it too). */
+const DEFS = `<svg class="dc-defs" aria-hidden="true" focusable="false" width="0" height="0"><defs>
+    <linearGradient id="dc-leaf-L" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="24" y2="24"><stop offset="0" class="dc-st-hi"/><stop offset="0.3" class="dc-st-lt"/><stop offset="0.62" class="dc-st-au"/><stop offset="1" class="dc-st-lo"/></linearGradient>
+    <linearGradient id="dc-leaf-S" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="12" y2="12"><stop offset="0" class="dc-st-hi"/><stop offset="0.3" class="dc-st-lt"/><stop offset="0.62" class="dc-st-au"/><stop offset="1" class="dc-st-lo"/></linearGradient>
+    <linearGradient id="dc-leaf-H" gradientUnits="userSpaceOnUse" x1="2" y1="2" x2="18" y2="18"><stop offset="0" class="dc-st-hi"/><stop offset="0.35" class="dc-st-lt"/><stop offset="0.65" class="dc-st-au"/><stop offset="1" class="dc-st-lo"/></linearGradient>
+    <linearGradient id="dc-leaf-V" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="dc-st-hi"/><stop offset="0.45" class="dc-st-au"/><stop offset="1" class="dc-st-lo"/></linearGradient>
+    <radialGradient id="dc-bead" cx="0.36" cy="0.32" r="0.72"><stop offset="0" class="dc-st-hi"/><stop offset="0.45" class="dc-st-au"/><stop offset="1" class="dc-st-lo"/></radialGradient>
+    <radialGradient id="dc-emerald" cx="0.38" cy="0.32" r="0.75"><stop offset="0" class="dc-st-em-hi"/><stop offset="0.5" class="dc-st-em"/><stop offset="1" class="dc-st-em-lo"/></radialGradient>
+</defs></svg>`;
+
+/**
+ * The six corners of question 6, each the top-left corner of a part, in px
+ * for a large part (a plate) or a small one (`small`: a button, a tag, a
+ * tooltip). options.css turns the copy for the other three corners and draws
+ * the straight lines between them, so the ornament is the same at every size.
+ * @type {Record<string, (small: boolean) => { w: number, h: number, body: string }>}
+ */
+const CORNER = {
+    /** A quarter sunburst: nine rays from the corner point, an arc through the inlay, a pivot and a bead. */
+    fan: (small) => {
+        const R = small ? 7 : 14;
+        const r0 = small ? 1.5 : 2.8;
+        let rays = '';
+        for (let i = 1; i <= 9; i++) {
+            const a = (i * 9 * Math.PI) / 180;
+            const r1 = i % 2 ? R - 0.7 : R * 0.7;
+            rays += `M${r2(r0 * Math.cos(a))} ${r2(r0 * Math.sin(a))}L${r2(r1 * Math.cos(a))} ${r2(r1 * Math.sin(a))}`;
+        }
+        const p = small ? 1.7 : 3.2;
+        const b = (R + (small ? 1.9 : 3.4)) / Math.SQRT2;
+        return {
+            w: small ? 12 : 24,
+            h: small ? 12 : 24,
+            body:
+                line(rays, 'dc-ln', small ? 0.55 : 0.75) +
+                line(`M${R} 0.5A${R - 0.5} ${R - 0.5} 0 0 1 0.5 ${R}`, 'dc-ln', small ? 0.8 : 1) +
+                `<path class="dc-bd" d="M0 0H${p}A${p} ${p} 0 0 1 0 ${p}Z"/>` +
+                bead(b, b, small ? 0.8 : 1.45),
+        };
+    },
+    /** Three setbacks drawn as a double hairline, a faceted lozenge in the corner they leave. */
+    ziggurat: (small) => {
+        const s = small ? 2 : 4;
+        const d = small ? 2 : 3;
+        const c = 3 * s + d + 1;
+        const stair = (o) => [
+            [o + 0.5, c],
+            [o + 0.5, 3 * s + o + 0.5],
+            [s + o + 0.5, 3 * s + o + 0.5],
+            [s + o + 0.5, 2 * s + o + 0.5],
+            [2 * s + o + 0.5, 2 * s + o + 0.5],
+            [2 * s + o + 0.5, s + o + 0.5],
+            [3 * s + o + 0.5, s + o + 0.5],
+            [3 * s + o + 0.5, o + 0.5],
+            [c, o + 0.5],
+        ];
+        return {
+            w: c,
+            h: c,
+            body: line(poly(stair(0))) + line(poly(stair(d)), 'dc-ln dc-ln--soft') + gem(s * 0.9, s * 0.9, small ? 1.7 : 3.3),
+        };
+    },
+    /** A cove: a hollow quarter circle, two hairlines following it, a bead in the hollow. */
+    cove: (small) => {
+        const r = small ? 5 : 10;
+        const d = small ? 2 : 3;
+        const c = small ? 8 : 14;
+        const p1 = r + 0.5;
+        const y1 = Math.sqrt(p1 * p1 - 0.25);
+        const p2 = p1 + d;
+        const y2 = Math.sqrt(p2 * p2 - (d + 0.5) * (d + 0.5));
+        return {
+            w: c,
+            h: c,
+            body:
+                line(`M0.5 ${c}V${r2(y1)}A${p1} ${p1} 0 0 0 ${r2(y1)} 0.5H${c}`) +
+                line(`M${d + 0.5} ${c}V${r2(y2)}A${p2} ${p2} 0 0 0 ${r2(y2)} ${d + 0.5}H${c}`, 'dc-ln dc-ln--soft') +
+                bead(small ? 1.5 : 2.6, small ? 1.5 : 2.6, small ? 1 : 1.7),
+        };
+    },
+    /** Three nested brackets like a moulding turning the corner; the inlay runs on from the largest. */
+    chevrons: (small) => {
+        const c = small ? 10 : 20;
+        const at = small ? [3, 5, 7] : [6, 9, 12];
+        const ends = small ? [10, 10, 10] : [20, 19, 18];
+        return {
+            w: c,
+            h: c,
+            body: at.map((o, i) => line(`M${o + 0.5} ${ends[i]}V${o + 0.5}H${ends[i]}`, i ? 'dc-ln dc-ln--soft' : 'dc-ln')).join(''),
+        };
+    },
+    /** A medallion pinned on the corner's point, half over the page: a ring, eight rays, a jewel. */
+    medallion: (small) => {
+        const R = small ? 4.3 : 7.6;
+        const n = small ? 3 : 6;
+        const c = small ? 7 : 12;
+        let rays = '';
+        for (let i = 0; i < 8; i++) {
+            const a = (i * Math.PI) / 4 + Math.PI / 8;
+            const [a1, a2] = small ? [1.6, 3.2] : [2.8, 5.1];
+            rays += `M${r2(a1 * Math.cos(a))} ${r2(a1 * Math.sin(a))}L${r2(a2 * Math.cos(a))} ${r2(a2 * Math.sin(a))}`;
+        }
+        return {
+            w: c,
+            h: c,
+            body:
+                `<circle class="dc-back" cx="0" cy="0" r="${R + 1}"/>` +
+                `<circle class="dc-ln" cx="0" cy="0" r="${R}" stroke-width="${small ? 0.8 : 1.1}"/>` +
+                (small ? '' : `<circle class="dc-ln dc-ln--soft" cx="0" cy="0" r="${R - 1.9}" stroke-width="0.6"/>`) +
+                line(rays, 'dc-ln', small ? 0.55 : 0.75) +
+                bead(0, 0, small ? 1 : 1.7, 'dc-bd dc-bd--em') +
+                bead(c - 0.6, n + 0.5, small ? 0.6 : 1.05) +
+                bead(n + 0.5, c - 0.6, small ? 0.6 : 1.05),
+        };
+    },
+    /** A fluted pilaster at the corner: three flutes under an abacus, capped with a lozenge. */
+    pilaster: (small) => {
+        const w = small ? 9 : 12;
+        const h = small ? 12 : 24;
+        const xs = small ? [2.5, 4.5, 6.5] : [3.5, 6.5, 9.5];
+        const [top, foot] = small ? [5.5, 11.5] : [10.5, 22.5];
+        const ab = small ? 4.5 : 9.5;
+        return {
+            w,
+            h,
+            body:
+                line(xs.map((x) => `M${x} ${top}V${foot}`).join(''), 'dc-ln dc-ln--flute', small ? 0.7 : 0.9) +
+                line(`M${small ? 1 : 1.5} ${ab}H${w}`) +
+                line(`M${small ? 1.5 : 2} ${foot + (small ? 0 : 0)}H${small ? 7.5 : 11}`, 'dc-ln dc-ln--soft') +
+                gem(xs[1], small ? 2.3 : 5.2, small ? 1.9 : 3.1),
+        };
+    },
+};
+
+/** The four corners of one part, the top-left drawn and turned by options.css for the others. */
+const ornament = (key, small) => {
+    const c = CORNER[key];
+    if (!c) return '';
+    const { w, h, body } = c(small);
+    const one = (at) => `<svg class="dc-orn__c dc-orn__c--${at}" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" focusable="false">${body}</svg>`;
+    return `<span class="dc-orn dc-orn--${small ? 'S' : 'L'}" aria-hidden="true">${['tl', 'tr', 'bl', 'br'].map(one).join('')}</span>`;
+};
+
+/** The bar's head in the corners row, one per corner, centred on the share's end (a 20-unit box). */
+const HEAD = {
+    fan: () => {
+        let rays = '';
+        for (let i = 1; i <= 7; i++) {
+            const a = Math.PI + (i * Math.PI) / 8;
+            const r1 = i % 2 ? 8 : 6.2;
+            rays += `M${r2(10 + 2.4 * Math.cos(a))} ${r2(10 + 2.4 * Math.sin(a))}L${r2(10 + r1 * Math.cos(a))} ${r2(10 + r1 * Math.sin(a))}`;
+        }
+        return line(rays, 'dc-ln', 0.8) + line('M1.4 10A8.6 8.6 0 0 1 18.6 10', 'dc-ln', 0.9) + bead(10, 10, 2);
+    },
+    ziggurat: () =>
+        line(
+            `${poly([
+                [8, 1.5],
+                [12, 1.5],
+                [12, 4],
+                [14.5, 4],
+                [14.5, 5.5],
+                [16, 5.5],
+                [16, 8],
+                [18.5, 8],
+                [18.5, 12],
+                [16, 12],
+                [16, 14.5],
+                [14.5, 14.5],
+                [14.5, 16],
+                [12, 16],
+                [12, 18.5],
+                [8, 18.5],
+                [8, 16],
+                [5.5, 16],
+                [5.5, 14.5],
+                [4, 14.5],
+                [4, 12],
+                [1.5, 12],
+                [1.5, 8],
+                [4, 8],
+                [4, 5.5],
+                [5.5, 5.5],
+                [5.5, 4],
+                [8, 4],
+            ])}Z`,
+            'dc-ln dc-ln--fillback',
+        ) + gem(10, 10, 4.2),
+    cove: () =>
+        `<g transform="rotate(45 10 10)">${line('M7 3.5H13A3.5 3.5 0 0 0 16.5 7V13A3.5 3.5 0 0 0 13 16.5H7A3.5 3.5 0 0 0 3.5 13V7A3.5 3.5 0 0 0 7 3.5Z', 'dc-ln dc-ln--fillback')}${line(
+            'M8.4 6.2H11.6A2.2 2.2 0 0 0 13.8 8.4V11.6A2.2 2.2 0 0 0 11.6 13.8H8.4A2.2 2.2 0 0 0 6.2 11.6V8.4A2.2 2.2 0 0 0 8.4 6.2Z',
+            'dc-ln dc-ln--soft',
+            0.7,
+        )}</g>${bead(10, 10, 1.6)}`,
+    chevrons: () =>
+        `<path class="dc-back" d="M2 1.5L10.5 10L2 18.5Z"/>${line('M3 2L11 10L3 18', 'dc-ln', 1)}${line('M7 5L12 10L7 15', 'dc-ln dc-ln--soft', 0.9)}${line(
+            'M11 8L13 10L11 12',
+            'dc-ln',
+            0.9,
+        )}${gem(16, 10, 2.6)}`,
+    medallion: () => {
+        let rays = '';
+        for (let i = 0; i < 8; i++) {
+            const a = (i * Math.PI) / 4 + Math.PI / 8;
+            rays += `M${r2(10 + 2.4 * Math.cos(a))} ${r2(10 + 2.4 * Math.sin(a))}L${r2(10 + 4.6 * Math.cos(a))} ${r2(10 + 4.6 * Math.sin(a))}`;
+        }
+        return `<circle class="dc-back" cx="10" cy="10" r="8.4"/><circle class="dc-ln" cx="10" cy="10" r="7.6" stroke-width="1.1"/><circle class="dc-ln dc-ln--soft" cx="10" cy="10" r="5.8" stroke-width="0.6"/>${line(
+            rays,
+            'dc-ln',
+            0.8,
+        )}${bead(10, 10, 1.6, 'dc-bd dc-bd--em')}`;
+    },
+    pilaster: () =>
+        `<path class="dc-back" d="M5.5 6.5H14.5V17H5.5Z"/>${line('M7.5 7.8V16M10 7.8V16M12.5 7.8V16', 'dc-ln dc-ln--flute', 0.9)}${line('M5.5 7H14.5')}${line(
+            'M6 16.6H14',
+        )}${gem(10, 3.6, 2.6)}`,
+};
+
+const headSvg = (key) =>
+    HEAD[key] ? `<svg class="dc-head" viewBox="0 0 20 20" width="20" height="20" aria-hidden="true" focusable="false">${HEAD[key]()}</svg>` : '';
+
 /* ------------------------------------------------------------ the scenes */
 
 /** Question 1: every part arrives the same way for 480 ms; only the curve differs. */
@@ -208,56 +452,113 @@ const WARNING = () =>
     cell('A destructive menu entry', LOBBY.menuStatic(['Rename', 'Delete'])) +
     cell('A warning alert', LOBBY.alert('<b class="dc-failword">Low pressure:</b> below 1.2 bar since 07:12.', 'dc-warn'));
 
-/** A surface that waits: lacquer, the wallpaper, its inlay; the option draws what moves on it. */
-const waits = (html, cls = '') =>
-    `<div class="dc-waits dc-plate ${cls}" aria-busy="true">${html}<span class="dc-wait" aria-hidden="true">${fan('dc-fan--wait')}</span></div>`;
-const LOADERS = () =>
-    cell('A tile', waits('<p class="kp-card__title dc-title">Pump house 3</p><p class="kp-card__body">Reading…</p>', 'kp-card')) +
+/** What each loading picture of update 2 adds inside a waiting part (`.dc-wait`, the size of the part); the rest is drawn by options.css on the part and on `.dc-wait` itself. */
+const WAIT = {
+    crest: () => fan('dc-fan--wait'),
+    pearls: () => `<span class="dc-pearls">${[...Array(7).keys()].map((i) => `<i style="--i: ${i}"></i>`).join('')}</span>`,
+    jewel: () => '<span class="dc-gem"><i></i></span>',
+    doors: () => '<span class="dc-door"></span><span class="dc-door dc-door--r"></span>',
+};
+/** A surface that waits: a plate (lacquer, the wallpaper, its inlay); the option draws what moves on it. */
+const waitLayer = (key) => `<span class="dc-wait" aria-hidden="true">${WAIT[key] ? WAIT[key]() : ''}</span>`;
+const waits = (key, html, cls = '') => `<div class="dc-waits dc-plate ${cls}" aria-busy="true">${html}${waitLayer(key)}</div>`;
+const LOADERS = (key) =>
+    cell('A tile', waits(key, '<p class="kp-card__title dc-title">Pump house 3</p><p class="kp-card__body">Reading…</p>', 'kp-card')) +
     cell(
         'A panel',
         waits(
+            key,
             '<div class="dc-panel2"><span>Station</span><span>Flow</span><span class="dc-faint">North 4</span><span class="dc-faint">412</span></div>',
         ),
     ) +
     cell(
         'A menu entry',
-        `<div class="kp-popover dc-plate dc-pop2"><ul class="kp-menu" role="menu"><li role="none"><button type="button" role="menuitem" class="kp-menu__item dc-waits" aria-busy="true">Loading stations…<span class="dc-wait" aria-hidden="true">${fan(
-            'dc-fan--wait',
-        )}</span></button></li></ul></div>`,
+        `<div class="kp-popover dc-plate dc-pop2"><ul class="kp-menu" role="menu"><li role="none"><button type="button" role="menuitem" class="kp-menu__item dc-waits dc-plate" aria-busy="true"><span class="dc-entry-word">Loading stations…</span>${waitLayer(
+            key,
+        )}</button></li></ul></div>`,
     ) +
     cell(
         'A month of days',
-        waits(`<div class="dc-days dc-month">${[1, 2, 3, 4, 5].map((d) => `<span class="dc-day2">${d}</span>`).join('')}</div>`),
+        waits(key, `<div class="dc-days dc-month">${[1, 2, 3, 4, 5].map((d) => `<span class="dc-day2">${d}</span>`).join('')}</div>`),
     ) +
-    cell('A chart’s plot', waits('<div class="dc-plot2"></div>')) +
+    cell('A chart’s plot', waits(key, '<div class="dc-plot2"></div>')) +
     cell(
         'Skeleton lines',
-        `<div class="dc-skel dc-waits" aria-busy="true"><span class="kp-skeleton"></span><span class="kp-skeleton"></span><span class="kp-skeleton"></span><span class="dc-wait" aria-hidden="true">${fan(
-            'dc-fan--wait',
-        )}</span></div>`,
+        `<div class="dc-skel dc-waits dc-plate" aria-busy="true"><span class="kp-skeleton"></span><span class="kp-skeleton"></span><span class="kp-skeleton"></span>${waitLayer(
+            key,
+        )}</div>`,
     );
 
-const BARS = () =>
-    cell(
-        'A share of 62 %, three sizes',
-        `<div class="dc-bars">${bar(0.62, 'dc-bar2', 'Export')}${bar(0.62, 'dc-bar2 kp-progressbar--md', 'Export')}${bar(0.62, 'dc-bar2 kp-progressbar--lg', 'Export')}</div>`,
-        'dc-part--wide',
-    ) +
-    cell(
-        'Busy, three sizes',
-        `<div class="dc-bars">${bar(null, 'dc-bar2', 'Export')}${bar(null, 'dc-bar2 kp-progressbar--md', 'Export')}${bar(null, 'dc-bar2 kp-progressbar--lg', 'Export')}</div>`,
-        'dc-part--wide',
-    ) +
-    cell(
-        'Inside a busy button',
-        `<button type="button" class="kp-button dc-busy-button" aria-busy="true">Saving…${bar(null, 'dc-bar2', 'Saving')}</button>`,
-    ) +
-    cell('Beside a share of 62 %', `<div class="dc-bars dc-bars--pair">${bar(0.62, 'dc-bar2', 'Share')}${bar(null, 'dc-bar2', 'Busy')}</div>`);
+/** The stations an option of question 11 sets on its track: lozenges at every quarter (ruled) or three emeralds (stations). */
+const STATIONS = {
+    ruled: [0, 0.25, 0.5, 0.75, 1],
+    stations: [0.25, 0.5, 0.75],
+};
+const BARS = (key) => {
+    const st = (STATIONS[key] || []).map((x) => `<i class="dc-st" style="--x: ${x}"></i>`).join('');
+    const b = (share, size, label) => bar(share, `dc-bar2 ${size}`, label, st);
+    return (
+        cell(
+            'A share of 62 %, three sizes',
+            `<div class="dc-bars">${b(0.62, '', 'Export')}${b(0.62, 'kp-progressbar--md', 'Export')}${b(0.62, 'kp-progressbar--lg', 'Export')}</div>`,
+            'dc-part--wide',
+        ) +
+        cell(
+            'Busy, three sizes',
+            `<div class="dc-bars">${b(null, '', 'Export')}${b(null, 'kp-progressbar--md', 'Export')}${b(null, 'kp-progressbar--lg', 'Export')}</div>`,
+            'dc-part--wide',
+        ) +
+        cell(
+            'Inside a busy button',
+            `<button type="button" class="kp-button dc-busy-button" aria-busy="true">Saving…${b(null, '', 'Saving')}</button>`,
+        ) +
+        cell('Beside a share of 62 %', `<div class="dc-bars dc-bars--pair">${b(0.62, '', 'Share')}${b(null, '', 'Busy')}</div>`)
+    );
+};
 
-const LEAVE = () =>
-    cell('An alert', LOBBY.alert('Pump house 4 is back online.', 'dc-ar')) +
-    cell('A card', LOBBY.tile('Reservoir North', 'Level 71 %', 'dc-ar')) +
-    cell('A key figure', LOBBY.kpi('Flow now', '412', '', 'dc-ar'));
+/** Question 13's curtains, over a stage round the part (the stage is what arrives; the part stands behind the curtain). */
+const ROSETTE = `<circle class="dc-bd" cx="0" cy="-3" r="1.9"/><circle class="dc-bd" cx="2.6" cy="-1.5" r="1.9"/><circle class="dc-bd" cx="2.6" cy="1.5" r="1.9"/><circle class="dc-bd" cx="0" cy="3" r="1.9"/><circle class="dc-bd" cx="-2.6" cy="1.5" r="1.9"/><circle class="dc-bd" cx="-2.6" cy="-1.5" r="1.9"/>${bead(
+    0,
+    0,
+    1.7,
+    'dc-bd dc-bd--hi',
+)}${line('M0 5V9.6', 'dc-ln', 0.8)}${gem(0, 11.6, 2)}${line('M-1.3 13.4V17.6M0 13.6V18.4M1.3 13.4V17.6', 'dc-ln dc-ln--soft', 0.55)}`;
+const rosette = (side) => `<svg class="dc-ros dc-ros--${side}" viewBox="-6 -6 12 25" width="12" height="25" focusable="false">${ROSETTE}</svg>`;
+/** A tassel: a cord, a faceted lozenge, a skirt of three threads (a 8 x 18 box, its cord at the top centre). */
+const TASSEL = `${line('M0 0V5.4', 'dc-ln', 0.9)}${gem(0, 7.6, 2.3)}${line('M-1.7 9.6V15.4M0 9.9V17M1.7 9.6V15.4', 'dc-ln dc-ln--soft', 0.6)}`;
+const tassel = (cls = '') => `<svg class="dc-tassel ${cls}" viewBox="-4 0 8 18" width="8" height="18" focusable="false">${TASSEL}</svg>`;
+let patterns = 0;
+/** The valance's row of tassels, one under every point between two scallops (an SVG pattern, 18 px a scallop, centred like the scallops). */
+const tassels = () => {
+    const id = `dc-tassels-${(patterns += 1)}`;
+    return `<svg class="dc-valance__tassels" width="100%" height="14" focusable="false"><defs><pattern id="${id}" patternUnits="userSpaceOnUse" x="50%" y="0" width="18" height="14"><g transform="translate(9 0) scale(0.72)">${TASSEL}</g></pattern></defs><rect width="100%" height="14" fill="url(#${id})"/></svg>`;
+};
+const drape = (side) => `<span class="dc-drape dc-drape--${side}"><i class="dc-drape__braid"></i>${tassel('dc-tassel--hem')}</span>`;
+const CURTAIN = {
+    velvet: () =>
+        `<span class="dc-cur dc-cur--velvet" aria-hidden="true">${drape('l')}${drape('r')}<span class="dc-tie dc-tie--l"></span><span class="dc-tie dc-tie--r"></span><span class="dc-valance"></span>${tassels()}</span>`,
+    festoon: () =>
+        `<span class="dc-cur dc-cur--festoon" aria-hidden="true">${[0, 1, 2, 3, 4]
+            .map(
+                (i) =>
+                    `<span class="dc-swag" style="--i: ${Math.abs(i - 2)}; --x: ${i * 0.2}"><span class="dc-swag__body"></span><svg class="dc-swag__trim" viewBox="0 0 100 10" preserveAspectRatio="none" focusable="false"><path class="dc-ln" d="M0 0.5A50 9.5 0 0 0 100 0.5" stroke-width="1.6" vector-effect="non-scaling-stroke"/></svg>${
+                        i <= 2 ? rosette('l') : ''
+                    }${i >= 2 ? rosette('r') : ''}</span>`,
+            )
+            .join('')}<span class="dc-cur__rail"></span></span>`,
+};
+const JEWELS = '<i class="dc-jw dc-jw--tl"></i><i class="dc-jw dc-jw--tr"></i><i class="dc-jw dc-jw--bl"></i><i class="dc-jw dc-jw--br"></i>';
+const LEAVE = (key) => {
+    const stage = key in CURTAIN;
+    const ar = stage ? '' : 'dc-ar';
+    const wrap = (html) => (stage ? `<div class="dc-stage dc-ar">${html}${CURTAIN[/** @type {keyof typeof CURTAIN} */ (key)]()}</div>` : html);
+    const jw = (html) => (key === 'jewels' ? html.replace(/<\/div>$/, `${JEWELS}</div>`) : html);
+    return (
+        cell('An alert', wrap(jw(LOBBY.alert('Pump house 4 is back online.', ar)))) +
+        cell('A card', wrap(jw(LOBBY.tile('Reservoir North', 'Level 71 %', ar)))) +
+        cell('A key figure', wrap(jw(LOBBY.kpi('Flow now', '412', '', ar))))
+    );
+};
 
 const COMPOSITES = () =>
     cell(
@@ -285,12 +586,18 @@ const COMPOSITES = () =>
         `<div class="kp-kpis"><a class="kp-kpi dc-plate dc-kpi2 dc-in-kpi" href="#dc-intro"><span class="kp-kpi__label">Flow now</span><span class="kp-kpi__value">412</span><span class="kp-kpi__trend">avg 15 min</span></a></div>`,
     );
 
+/** A label in its own span, so a hover or a press can set jewels at its two ends. */
+const lbl = (t) => `<span class="dc-lbl">${t}</span>`;
+
 const HOVER = () =>
-    cell('Button, pointed at', `<div class="dc-row">${button('Export readings', 'dc-pointed')}${button('Add', 'kp-button--primary')}</div>`) +
-    cell('Menu entries, the first pointed at', LOBBY.menuStatic(['Open incident', 'Assign to…', 'Rename'], 0)) +
+    cell(
+        'Button, pointed at',
+        `<div class="dc-row">${button(lbl('Export readings'), 'dc-pointed')}${button(lbl('Add'), 'kp-button--primary')}</div>`,
+    ) +
+    cell('Menu entries, the first pointed at', LOBBY.menuStatic(['Open incident', 'Assign to…', 'Rename'].map(lbl), 0)) +
     cell(
         'Tile with its Open link pointed at',
-        `<div class="kp-card dc-plate dc-tile"><p class="kp-card__title dc-title">Pump house 1</p><a class="kp-button kp-button--ghost kp-button--sm dc-tile-link dc-pointed" href="#dc-intro">Open</a></div>`,
+        `<div class="kp-card dc-plate dc-tile"><p class="kp-card__title dc-title">Pump house 1</p><a class="kp-button kp-button--ghost kp-button--sm dc-tile-link dc-pointed" href="#dc-intro">${lbl('Open')}</a></div>`,
     ) +
     cell(
         'A link in a line, pointed at',
@@ -298,24 +605,32 @@ const HOVER = () =>
     ) +
     cell(
         'Key figures, the first pointed at',
-        `<div class="kp-kpis dc-kpi-row"><a class="kp-kpi dc-plate dc-kpi2 dc-in-kpi dc-pointed" href="#dc-intro"><span class="kp-kpi__label">Flow now</span><span class="kp-kpi__value">412</span></a><a class="kp-kpi dc-plate dc-kpi2 dc-in-kpi" href="#dc-intro"><span class="kp-kpi__label">Pressure</span><span class="kp-kpi__value">3.1</span></a></div>`,
+        `<div class="kp-kpis dc-kpi-row"><a class="kp-kpi dc-plate dc-kpi2 dc-in-kpi dc-pointed" href="#dc-intro"><span class="kp-kpi__label dc-lbl">Flow now</span><span class="kp-kpi__value">412</span></a><a class="kp-kpi dc-plate dc-kpi2 dc-in-kpi" href="#dc-intro"><span class="kp-kpi__label dc-lbl">Pressure</span><span class="kp-kpi__value">3.1</span></a></div>`,
     ) +
     cell(
         'Days of a month, one pointed at',
-        `<div class="dc-days dc-month">${[12, 13, 14, 15].map((d) => `<span class="dc-day2 dc-plate${d === 13 ? ' dc-pointed' : ''}">${d}</span>`).join('')}</div>`,
+        `<div class="dc-days dc-month">${[12, 13, 14, 15]
+            .map((d) => `<span class="dc-day2 dc-plate${d === 13 ? ' dc-pointed' : ''}" tabindex="0">${lbl(String(d))}</span>`)
+            .join('')}</div>`,
     );
 
 /** One specimen at rest beside the same one pressed. */
 const duo = (rest, pressed) => `<div class="dc-duo"><span class="dc-duo__one">${rest}</span><span class="dc-duo__one">${pressed}</span></div>`;
 const entry = (state) =>
-    `<div class="kp-popover dc-plate dc-pop2"><ul class="kp-menu" role="menu"><li role="none"><button type="button" role="menuitem" class="kp-menu__item ${state}">Assign to…</button></li></ul></div>`;
+    `<div class="kp-popover dc-plate dc-pop2"><ul class="kp-menu" role="menu"><li role="none"><button type="button" role="menuitem" class="kp-menu__item ${state}">${lbl('Assign to…')}</button></li></ul></div>`;
 const filter = (state) =>
-    `<div class="kp-kpis"><button type="button" class="kp-kpi kp-kpi--toggle dc-plate dc-kpi2 ${state}" aria-pressed="false"><span class="kp-kpi__label">Open incidents</span><span class="kp-kpi__value">3</span></button></div>`;
+    `<div class="kp-kpis"><button type="button" class="kp-kpi kp-kpi--toggle dc-plate dc-kpi2 ${state}" aria-pressed="false"><span class="kp-kpi__label dc-lbl">Open incidents</span><span class="kp-kpi__value">3</span></button></div>`;
 const PRESS = () =>
-    cell('Button, at rest and pressed', duo(button('Export readings', 'dc-rest'), button('Export readings', 'dc-press'))) +
-    cell('Primary button', duo(button('Add', 'kp-button--primary dc-rest'), button('Add', 'kp-button--primary dc-press'))) +
+    cell('Button, at rest and pressed', duo(button(lbl('Export readings'), 'dc-rest'), button(lbl('Export readings'), 'dc-press'))) +
+    cell('Primary button', duo(button(lbl('Add'), 'kp-button--primary dc-rest'), button(lbl('Add'), 'kp-button--primary dc-press'))) +
     cell('Menu entry', duo(entry('dc-rest'), entry('dc-press'))) +
-    cell('Calendar day', duo('<span class="dc-day2 dc-plate dc-rest">14</span>', '<span class="dc-day2 dc-plate dc-press">14</span>')) +
+    cell(
+        'Calendar day',
+        duo(
+            `<span class="dc-day2 dc-plate dc-rest" tabindex="0">${lbl('14')}</span>`,
+            `<span class="dc-day2 dc-plate dc-press" tabindex="0">${lbl('14')}</span>`,
+        ),
+    ) +
     cell('Key figure as a filter', duo(filter('dc-rest'), filter('dc-press')));
 
 const MOTIFS = () =>
@@ -414,6 +729,15 @@ const TYPE = () =>
         'dc-part--wide',
     );
 
+/** What a scene of update 2 adds once it stands in the page: question 6's ornaments on every part and its bar head. */
+const DECORATE = {
+    corners: (/** @type {HTMLElement} */ scene, /** @type {string} */ key) => {
+        for (const el of scene.querySelectorAll('.dc-plate, .kp-button, .dc-tag2'))
+            el.insertAdjacentHTML('beforeend', ornament(key, !el.matches('.kp-card, .kp-popover, .kp-kpi')));
+        for (const head of scene.querySelectorAll('.kp-progressbar__head')) head.insertAdjacentHTML('beforeend', headSvg(key));
+    },
+};
+
 const SCENES = {
     moving: MOVING,
     direction: DIRECTION,
@@ -437,7 +761,7 @@ const SCENES = {
 };
 
 /** The questions of aspects.js, each given its scene function. */
-const ROWS = ASPECTS.map((a) => ({ ...a, build: SCENES[/** @type {keyof typeof SCENES} */ (a.scene)] }));
+const ROWS = ASPECTS.map((a) => ({ ...a, build: /** @type {(key: string) => string} */ (SCENES[/** @type {keyof typeof SCENES} */ (a.scene)]) }));
 
 /** The thirteen questions update 1 redrew (their scenes carry `.dc-scene--r2`); the other six are Kenny's picks, kept as drawn. */
 const REDRAWN = new Set([
@@ -489,6 +813,8 @@ document.title = `kp-themes — ${TITLE.toLowerCase()}`;
 /* ---------------------------------------------------------------- the rows */
 
 const rows = /** @type {HTMLElement} */ (section.querySelector('[data-dc-aspects]'));
+// The sprite of gold gradients (update 2), once, beside the section, so the dialog's stage reaches it as well.
+if (!document.querySelector('.dc-defs')) document.body.insertAdjacentHTML('afterbegin', DEFS);
 const toc = document.querySelector('[data-dc-toc]');
 ROWS.forEach((a, n) => {
     const box = document.createElement('section');
@@ -509,12 +835,14 @@ ROWS.forEach((a, n) => {
         col.innerHTML = `<p class="dc-label"><span class="dc-label__no">${at + 1}</span> <span class="dc-label__name"></span>${
             at === 0 ? ' <span class="dc-label__rec">Recommended</span>' : ''
         }</p><p class="dc-see"></p><p class="dc-verdict"></p>
-        <div class="dc-scene${REDRAWN.has(a.id) ? ' dc-scene--r2' : ''}" data-dc-kind="${a.kind}" data-dc-${a.id}="${o.key}" data-dc-phase="in" data-dc-show="rest">${a.build()}</div>`;
+        <div class="dc-scene${REDRAWN.has(a.id) ? ' dc-scene--r2' : ''}" data-dc-kind="${a.kind}" data-dc-${a.id}="${o.key}" data-dc-phase="in" data-dc-show="rest">${a.build(o.key)}</div>`;
         /** @type {HTMLElement} */ (col.querySelector('.dc-label__name')).textContent = o.name;
         /** @type {HTMLElement} */ (col.querySelector('.dc-see')).textContent = o.see;
         const verdict = /** @type {HTMLElement} */ (col.querySelector('.dc-verdict'));
         verdict.textContent = o.verdict;
         verdict.classList.toggle('dc-verdict--rec', at === 0);
+        const scene = /** @type {HTMLElement} */ (col.querySelector('.dc-scene'));
+        DECORATE[/** @type {keyof typeof DECORATE} */ (a.id)]?.(scene, o.key);
         trio.append(col);
     });
     rows.append(box);
@@ -525,6 +853,42 @@ ROWS.forEach((a, n) => {
         toc.append(li);
     }
 });
+
+// Update 2: the hover and press rows answer the reviewer's own pointer (Kenny:
+// "make the elements actually pressable and hoverable so i can test
+// myself"). A press holds while the pointer or the key is down and lasts at
+// least as long as its motion, so a quick tap shows it whole once (`dc-on`,
+// beside the real :active); a part the pointer has left plays its hover
+// backwards (`data-dc-was`), never on the page's first paint. A touch
+// listener lets :active reach a finger on iOS.
+const HOLD = 440;
+for (const scene of section.querySelectorAll('.dc-scene:is([data-dc-hover], [data-dc-press])'))
+    for (const el of scene.querySelectorAll('.kp-button, .kp-menu__item, .dc-day2, .kp-kpi--toggle, a')) {
+        let t0 = 0;
+        let held = 0;
+        const down = () => {
+            clearTimeout(held);
+            t0 = performance.now();
+            el.classList.add('dc-on');
+        };
+        const up = () => {
+            if (!el.classList.contains('dc-on')) return;
+            clearTimeout(held);
+            held = window.setTimeout(() => el.classList.remove('dc-on'), Math.max(0, HOLD * slow - (performance.now() - t0)));
+        };
+        el.addEventListener('pointerdown', down);
+        for (const type of ['pointerup', 'pointercancel', 'pointerleave', 'blur']) el.addEventListener(type, up);
+        el.addEventListener('pointerleave', () => el.setAttribute('data-dc-was', ''));
+        el.addEventListener('keydown', (event) => {
+            const key = /** @type {KeyboardEvent} */ (event).key;
+            if ((key === ' ' || key === 'Enter') && !(/** @type {KeyboardEvent} */ (event).repeat)) down();
+        });
+        el.addEventListener('keyup', (event) => {
+            const key = /** @type {KeyboardEvent} */ (event).key;
+            if (key === ' ' || key === 'Enter') up();
+        });
+        el.addEventListener('touchstart', () => {}, { passive: true });
+    }
 
 // The durations row says its own numbers under each part (the same numbers
 // options.css plays): contact, a fan, a plate behind it, a group, a loop.

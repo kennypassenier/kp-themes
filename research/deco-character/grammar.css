@@ -36,6 +36,14 @@
    - nothing rises, slides, jumps or flashes solid gold; no sunburst behind a
      figure, no counted rays, no bulbs, no lamps, no curtain, no setbacks.
 
+   UPDATE 2 (2026-10-09). Kenny: "Do better, I'm very underwhelmed"; the
+   corners, loading, the bar, leave, hover and the press are drawn again as
+   jewellery, and gold now reads as gold: a highlight, the gold and a bronze
+   shade of one hue along every hairline (--dc-leaf-x/-y), faceted jewels
+   (--dc-gem), gold leaf with a grain (--dc-grain). Where he asked for them,
+   real curtains (velvet and a festoon) and a skyline of set-back hairlines
+   are back.
+
    Kenny's six picks keep their round-one drawing and the keyframes below that
    draw them (dcg-fan and dcg-plate for the durations, dcg-flash for the live
    update's first option, dcg-ring for the spinner's first option).
@@ -104,8 +112,69 @@
     initial-value: 0.85;
 }
 
+/* Update 2 (2026-10-09). The numbers the new options turn. --dc-w: a wave's
+   place along a string or a fade's strength (loops only); --dc-gl: a glint's
+   way once round an inlay (0 before, 1 after: unseen at both ends); --dc-d2:
+   a second inlay drawn; --dc-q: a festoon swag raised (0 down, 1 up); --dc-j:
+   four jewels lit; --dc-m: a hover's mat frame drawn; --dc-r: a plate in
+   relief; --dc-t: a jewel's turn; --dc-o: a glint's angle round an inlay.
+   The finished pose is every initial value. */
+@property --dc-w {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --dc-gl {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+@property --dc-d2 {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+@property --dc-q {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+@property --dc-j {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+@property --dc-m {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --dc-r {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --dc-t {
+    syntax: '<angle>';
+    inherits: true;
+    initial-value: 0deg;
+}
+
+@property --dc-o {
+    syntax: '<angle>';
+    inherits: true;
+    initial-value: 0deg;
+}
+
 @layer kp.signature {
-    :is(.dc-page, .dc-scene) {
+    :is(.dc-page, .dc-scene, .dc-defs) {
         /* One fan: 12 rays, 40 ms a ray. */
         --dc-ray: 40ms;
         --dc-fan: 480ms;
@@ -165,6 +234,57 @@
             var(--dc-gold) 0 var(--dc-rib),
             transparent var(--dc-rib) var(--dc-cell)
         );
+        /* Update 2: gold that reads as gold. One hue, four lights: the
+           highlight (a pale champagne), the lit gold, the gold and its shade
+           (a bronze); a hairline carries them along its length, a jewel in
+           facets lit from the top left, gold leaf with a fine grain. */
+        --dc-gold-hi: hsl(from var(--primary) calc(h + 6) calc(s + 16) calc(l + 30));
+        --dc-gold-lt: hsl(from var(--primary) calc(h + 3) calc(s + 8) calc(l + 14));
+        --dc-gold-lo: hsl(from var(--primary) calc(h - 8) calc(s + 4) calc(l - 20));
+        --dc-gold-dk: hsl(from var(--primary) calc(h - 12) calc(s - 6) calc(l - 33));
+        --dc-champagne: hsl(from var(--primary) calc(h + 4) calc(s + 10) calc(l + 27));
+        --dc-shadow: hsl(from var(--background) h s calc(l - 6));
+        --dc-em-hi: hsl(from var(--accent) calc(h - 4) calc(s + 6) calc(l + 26));
+        --dc-em-lo: hsl(from var(--accent) h s calc(l - 14));
+        /* Along a horizontal hairline, down a vertical one, across a plate. */
+        --dc-leaf-x: linear-gradient(
+            90deg,
+            var(--dc-gold-lo),
+            var(--dc-gold) 14%,
+            var(--dc-gold-hi) 30%,
+            var(--dc-gold-lt) 42%,
+            var(--dc-gold) 58%,
+            var(--dc-gold-lo) 76%,
+            var(--dc-gold) 90%,
+            var(--dc-gold-lt)
+        );
+        --dc-leaf-y: linear-gradient(180deg, var(--dc-gold-hi), var(--dc-gold-lt) 22%, var(--dc-gold) 48%, var(--dc-gold-lo) 78%, var(--dc-gold));
+        --dc-leaf: linear-gradient(
+            135deg,
+            var(--dc-gold-lo),
+            var(--dc-gold) 16%,
+            var(--dc-gold-hi) 32%,
+            var(--dc-gold-lt) 42%,
+            var(--dc-gold) 56%,
+            var(--dc-gold-lo) 74%,
+            var(--dc-gold) 88%,
+            var(--dc-gold-lt)
+        );
+        /* A lozenge jewel's four facets (a square box clipped to a lozenge). */
+        --dc-gem: conic-gradient(var(--dc-gold-lt) 0 90deg, var(--dc-gold-lo) 0 180deg, var(--dc-gold) 0 270deg, var(--dc-gold-hi) 0);
+        /* The same facets on a square turned 45 degrees (`rotate: 45deg`). */
+        --dc-gem-r: conic-gradient(from -45deg, var(--dc-gold-lt) 0 90deg, var(--dc-gold-lo) 0 180deg, var(--dc-gold) 0 270deg, var(--dc-gold-hi) 0);
+        --dc-gem-em-r: conic-gradient(from -45deg, var(--dc-emerald) 0 90deg, var(--dc-em-lo) 0 180deg, var(--accent) 0 270deg, var(--dc-em-hi) 0);
+        --dc-gem-em: conic-gradient(var(--dc-emerald) 0 90deg, var(--dc-em-lo) 0 180deg, var(--accent) 0 270deg, var(--dc-em-hi) 0);
+        --dc-lozenge: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+        /* A lozenge as a mask (alpha only), for a jewel set among lines. */
+        --dc-loz-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M5 0 10 5 5 10 0 5Z' fill='currentColor'/%3E%3C/svg%3E");
+        /* The grain of gold leaf: a fine noise, used as a mask (alpha 0.45 to 1). */
+        --dc-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.95 0 0 0 0.25'/%3E%3C/filter%3E%3Crect width='96' height='96' filter='url(%23n)'/%3E%3C/svg%3E");
+        /* Velvet and satin in the lobby's blue: the cloth, its sheen, its fold. */
+        --dc-velvet: hsl(from var(--card) calc(h + 16) calc(s + 22) calc(l + 1));
+        --dc-velvet-hi: hsl(from var(--card) calc(h + 12) calc(s + 18) calc(l + 14));
+        --dc-velvet-lo: hsl(from var(--card) calc(h + 18) calc(s + 26) calc(l - 7));
     }
 
     /* ── Counted: a fan opens ray by ray, its plate follows in four steps ── */

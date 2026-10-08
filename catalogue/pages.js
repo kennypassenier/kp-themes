@@ -82,7 +82,6 @@ export const PAGES = [
             {
                 href: 'research/deco-character/demo.html',
                 label: 'What makes deco deco',
-                rework: 'update 2: corners, loading, bar, leave, hover and press redrawn, as Kenny asked',
             },
             // Kenny, 2026-10-08: what makes dark, retro and phantom themselves, the forest way (the analysis in themes/<theme>/CHARACTER.md), the nineteen questions each, every option a live scene that follows from the theme's decided anchor, the recommendation first.
             {

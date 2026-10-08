@@ -30,6 +30,11 @@
    the opening ended (the window minus the part's own delay and length), so
    what opened last closes first.
 
+   UPDATE 2 (2026-10-09). Six questions (6, 10, 11, 13, 15, 17) are drawn
+   again at the end of this file, as jewellery with gold that reads as gold;
+   their earlier option rules are gone, every other question's drawing
+   stands as it was.
+
    ROUND ONE'S FAN (kept for question 4's picture). A part that opens stands
    in `.dc-fx`, the wrapper the clock's animation runs on; it carries the
    fan's angle `--dc-a` and the plate's `--dc-fill`; the part inside is
@@ -2015,12 +2020,12 @@
        Surface / sink: the plate comes up in place with its inlay (320 ms)
        and one glint crosses it as it lands (dcg-pass, 160 ms). */
 
-    .dc-scene:is([data-dc-opening='fan'], [data-dc-leave='fan']) {
+    .dc-scene[data-dc-opening='fan'] {
         --dc-k1: dcg-unfold;
         --dc-k1-out: dcg-unfold-out;
     }
 
-    .dc-scene:is([data-dc-opening='fan'], [data-dc-leave='fan']) .dc-plate {
+    .dc-scene[data-dc-opening='fan'] .dc-plate {
         --dc-vis: 1;
         --dc-o-inlay: var(--dc-up);
         --dc-o: 50% 0;
@@ -2040,12 +2045,7 @@
         --dc-o: calc(1.1rem + 3.5px) 0;
     }
 
-    .dc-scene[data-dc-leave='fan'] .dc-plate {
-        --dc-o: 50% 100%;
-        --dc-face: 0deg;
-    }
-
-    .dc-scene:is([data-dc-opening='fan'], [data-dc-leave='fan']) .dc-plate::before {
+    .dc-scene[data-dc-opening='fan'] .dc-plate::before {
         content: '';
         position: absolute;
         inset: 0;
@@ -2060,7 +2060,7 @@
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        .dc-scene:is([data-dc-opening='fan'], [data-dc-leave='fan']):not([data-dc-phase='hold']) .dc-ar {
+        .dc-scene[data-dc-opening='fan']:not([data-dc-phase='hold']) .dc-ar {
             mask-image: conic-gradient(
                 from calc(var(--dc-face) - var(--dc-a) * 0.51) at var(--dc-o),
                 var(--foreground) 0 calc(var(--dc-a) * 1.02),
@@ -2069,7 +2069,7 @@
         }
     }
 
-    .dc-scene:is([data-dc-opening='doors'], [data-dc-leave='doors'], [data-dc-opening='threads'], [data-dc-leave='threads']) {
+    .dc-scene:is([data-dc-opening='doors'], [data-dc-opening='threads']) {
         --dc-k1: dcg-up;
         --dc-k1-out: dcg-up-out;
         --dc-l1: var(--dc-up-t);
@@ -2078,12 +2078,12 @@
         --dc-l2: var(--dc-draw-t);
     }
 
-    .dc-scene:is([data-dc-opening='doors'], [data-dc-leave='doors'], [data-dc-opening='threads'], [data-dc-leave='threads']) .dc-plate {
+    .dc-scene:is([data-dc-opening='doors'], [data-dc-opening='threads']) .dc-plate {
         --dc-o-inlay: var(--dc-vis);
         overflow: clip;
     }
 
-    .dc-scene:is([data-dc-opening='doors'], [data-dc-leave='doors']) .dc-plate::before {
+    .dc-scene[data-dc-opening='doors'] .dc-plate::before {
         content: '';
         position: absolute;
         inset: 0;
@@ -2105,7 +2105,7 @@
             calc(100% + var(--dc-p) * 100%) 0;
     }
 
-    .dc-scene:is([data-dc-opening='threads'], [data-dc-leave='threads']) .dc-plate::before {
+    .dc-scene[data-dc-opening='threads'] .dc-plate::before {
         content: '';
         position: absolute;
         inset: 0;
@@ -2141,7 +2141,7 @@
         }
     }
 
-    .dc-scene:is([data-dc-opening='surface'], [data-dc-leave='sink']) {
+    .dc-scene[data-dc-opening='surface'] {
         --dc-k1: dcg-up;
         --dc-k1-out: dcg-up-out;
         --dc-l1: var(--dc-draw-t);
@@ -2150,12 +2150,12 @@
         --dc-l2: var(--dc-up-t);
     }
 
-    .dc-scene:is([data-dc-opening='surface'], [data-dc-leave='sink']) .dc-plate {
+    .dc-scene[data-dc-opening='surface'] .dc-plate {
         --dc-o-inlay: var(--dc-vis);
         overflow: clip;
     }
 
-    .dc-scene:is([data-dc-opening='surface'], [data-dc-leave='sink']) .dc-plate::before {
+    .dc-scene[data-dc-opening='surface'] .dc-plate::before {
         content: '';
         position: absolute;
         inset-block: -10%;
@@ -2548,173 +2548,6 @@
         color: var(--dc-bronze);
     }
 
-    /* ── 6 The corners ───────────────────────────────────────────────────
-       The same card, menu panel, key figure, button, tag, chip, tooltip and
-       bar head; only the corners differ. Inlay (recommended): square plates,
-       the inlay line with its stepped corners, and small parts square with a
-       lozenge point at one end (the tag, the chip, the change, the tooltip's
-       point, the bar's head). Bite: no inlay, the top-right corner of every
-       plate cut as the register's chevron. Chamfer: every corner of every
-       plate and small part cut at 45 degrees, 8 px, its edge a gold
-       hairline. Crown: the two top corners of a plate step in twice. Square:
-       radius 0, a hairline, no inlay, no bite, no point. The edge of a cut
-       shape is its gold ground showing 1 px round a lacquer ::before cut the
-       same way (`--dc-cut`), so the hairline follows the cut. */
-
-    .dc-scene[data-dc-corners] .dc-tag2 {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.45rem;
-        padding: 0.2rem 0.55rem;
-        border: 1px solid hsl(from var(--dc-gold) h s l / 0.55);
-        border-radius: 0;
-        background: var(--dc-lac);
-        color: var(--foreground);
-        font-size: 0.72rem;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-    }
-
-    .dc-scene[data-dc-corners='inlay'] :is(.dc-tag2, .dc-note)::after {
-        content: '';
-        display: inline-block;
-        inline-size: 6px;
-        block-size: 6px;
-        margin-inline-start: 0.45rem;
-        background: var(--dc-gold);
-        rotate: 45deg;
-    }
-
-    .dc-scene[data-dc-corners='inlay'] .dc-note::after {
-        margin-inline-start: 0.35rem;
-        vertical-align: 0.1em;
-    }
-
-    .dc-scene[data-dc-corners]:not([data-dc-corners='inlay']) .dc-plate::after,
-    .dc-scene[data-dc-corners]:not([data-dc-corners='inlay']) .dc-tip2__point {
-        content: none;
-        display: none;
-    }
-
-    .dc-scene[data-dc-corners]:not([data-dc-corners='inlay']) .dc-plate {
-        border-color: hsl(from var(--dc-gold) h s l / 0.6);
-    }
-
-    .dc-scene[data-dc-corners='bite'] .dc-plate {
-        clip-path: var(--dc-bite-poly);
-        background-image:
-            linear-gradient(225deg, var(--dc-gold) 0 calc(var(--dc-bite) * 0.7071 + 1px), transparent calc(var(--dc-bite) * 0.7071 + 1px)),
-            repeating-linear-gradient(135deg, hsl(from var(--dc-gold) h s l / var(--dc-wall-a)) 0 1px, transparent 1px 12px),
-            repeating-linear-gradient(45deg, hsl(from var(--dc-gold) h s l / var(--dc-wall-a)) 0 1px, transparent 1px 12px);
-        background-size:
-            var(--dc-bite) var(--dc-bite),
-            24px 24px,
-            24px 24px;
-        background-position:
-            right top,
-            0 0,
-            0 0;
-        background-repeat: no-repeat, repeat, repeat;
-    }
-
-    /* The cut shapes: the part is its gold edge, its ::before (inset 1 px,
-       cut the same way) the lacquer and the wallpaper under its words. */
-    .dc-scene.dc-scene--r2:is([data-dc-corners='chamfer'], [data-dc-corners='crown']) :is(.dc-plate, .dc-tag2, .kp-button) {
-        position: relative;
-        isolation: isolate;
-        border: 0;
-        padding: calc(var(--dc-pad-b, 0px) + 1px);
-        clip-path: var(--dc-cut);
-        background: hsl(from var(--dc-gold) h s l / 0.75);
-    }
-
-    .dc-scene:is([data-dc-corners='chamfer'], [data-dc-corners='crown']) :is(.dc-plate, .dc-tag2, .kp-button)::before {
-        all: unset;
-        content: '';
-        position: absolute;
-        inset: 1px;
-        z-index: -1;
-        opacity: 1;
-        clip-path: var(--dc-cut);
-        background-color: var(--dc-lac);
-        background-image:
-            repeating-linear-gradient(135deg, hsl(from var(--dc-gold) h s l / var(--dc-wall-a)) 0 1px, transparent 1px 12px),
-            repeating-linear-gradient(45deg, hsl(from var(--dc-gold) h s l / var(--dc-wall-a)) 0 1px, transparent 1px 12px);
-        background-size: 24px 24px;
-    }
-
-    .dc-scene:is([data-dc-corners='chamfer'], [data-dc-corners='crown']) .kp-card.dc-plate {
-        padding: calc(0.95rem + 1px) calc(1.1rem + 1px);
-    }
-
-    .dc-scene:is([data-dc-corners='chamfer'], [data-dc-corners='crown']) :is(.kp-kpi.dc-plate, .kp-alert.dc-plate) {
-        padding: calc(0.85rem + 1px) calc(1.1rem + 1px);
-    }
-
-    .dc-scene:is([data-dc-corners='chamfer'], [data-dc-corners='crown']) .kp-popover.dc-plate {
-        padding: calc(0.55rem + 1px);
-    }
-
-    .dc-scene:is([data-dc-corners='chamfer'], [data-dc-corners='crown']) .dc-tip2 {
-        padding: calc(0.65rem + 1px) calc(1rem + 1px);
-    }
-
-    .dc-scene:is([data-dc-corners='chamfer'], [data-dc-corners='crown']) .dc-tag2 {
-        padding: calc(0.2rem + 1px) calc(0.55rem + 1px);
-    }
-
-    .dc-scene:is([data-dc-corners='chamfer'], [data-dc-corners='crown']) .kp-button {
-        padding-block: 1px;
-        padding-inline: calc(1.3rem + 1px);
-    }
-
-    .dc-scene[data-dc-corners='chamfer'] {
-        --dc-cut: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
-    }
-
-    .dc-scene[data-dc-corners='crown'] .dc-plate {
-        --dc-cut: polygon(
-            0 10px,
-            5px 10px,
-            5px 5px,
-            10px 5px,
-            10px 0,
-            calc(100% - 10px) 0,
-            calc(100% - 10px) 5px,
-            calc(100% - 5px) 5px,
-            calc(100% - 5px) 10px,
-            100% 10px,
-            100% 100%,
-            0 100%
-        );
-    }
-
-    .dc-scene.dc-scene--r2[data-dc-corners='crown'] :is(.dc-tag2, .kp-button) {
-        --dc-cut: none;
-        background: hsl(from var(--dc-gold) h s l / 0.6);
-    }
-
-    /* The bar's head in the corners row: the bar is drawn as question 11's
-       recommendation; its head takes each option's corner. */
-    .dc-scene[data-dc-corners='bite'] .dc-bar2 .kp-progressbar__head::before {
-        rotate: none;
-        clip-path: polygon(0 0, 55% 0, 100% 45%, 100% 100%, 0 100%);
-    }
-
-    .dc-scene[data-dc-corners='chamfer'] .dc-bar2 .kp-progressbar__head::before {
-        rotate: none;
-        clip-path: polygon(30% 0, 70% 0, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0 70%, 0 30%);
-    }
-
-    .dc-scene[data-dc-corners='crown'] .dc-bar2 .kp-progressbar__head::before {
-        rotate: none;
-        clip-path: polygon(0 34%, 17% 34%, 17% 17%, 34% 17%, 34% 0, 66% 0, 66% 17%, 83% 17%, 83% 34%, 100% 34%, 100% 100%, 0 100%);
-    }
-
-    .dc-scene[data-dc-corners='square'] .dc-bar2 .kp-progressbar__head::before {
-        rotate: none;
-    }
-
     /* ── 8 A warning ─────────────────────────────────────────────────────
        A warning key figure, a failed trend tile, a destructive menu entry
        and a warning alert. Hairline (recommended): the plate stays lacquer;
@@ -2795,653 +2628,36 @@
         background-color: var(--dc-lac);
     }
 
-    /* ── 10 Loading ──────────────────────────────────────────────────────
-       A tile, a panel, a menu entry, a month of days, a chart's plot and
-       skeleton lines wait; every option loops at 2.4 s. The waiting parts
-       are plates (the menu entry stands in its menu's plate); `.dc-wait` is
-       the layer the option draws on, the size of the waiting part.
-       Glint (recommended): a soft band of gold light (12 %, 30 % of the
-       width, blurred) crosses each waiting part from its start edge to its
-       end and again (dc-load-glint); the skeleton's lines are gold hairlines
-       it lights as it passes (the band is added light, plus-lighter). Fan:
-       in the middle of each a fan of twelve hairlines unfolds (1.2 s) and
-       folds (1.2 s), the skeleton's lines unfold from their start with it
-       (dc-load-fan, dc-load-line). Frame: the inlay draws round from the
-       middle of the top edge and undraws, again and again
-       (dc-load-frame). Breathe: the wallpaper's gold goes from 8 % to 20 %
-       and back (dc-load-breathe). Strips (today): the register's own
-       skeleton strips, and the same strips on every waiting part. */
-
-    .dc-scene[data-dc-loading] .dc-waits {
-        position: relative;
-        overflow: clip;
-    }
-
-    .dc-scene[data-dc-loading] .dc-waits.dc-plate {
-        min-block-size: 4.6rem;
-    }
-
-    .dc-scene[data-dc-loading] .dc-waits > :not(.dc-wait) {
-        opacity: 0.5;
-    }
-
-    .dc-scene[data-dc-loading] .dc-wait {
-        display: grid;
-        place-items: center;
-        overflow: clip;
-    }
-
-    .dc-scene[data-dc-loading] .dc-wait > .dc-fan {
-        display: none;
-    }
-
-    .dc-scene[data-dc-loading] .dc-panel2 {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0.4rem;
-        padding: 0.85rem 1.1rem;
-        font-size: 0.8rem;
-    }
-
-    .dc-scene[data-dc-loading] .dc-panel2 > span:nth-child(-n + 2) {
-        color: var(--muted-foreground);
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-    }
-
-    .dc-scene[data-dc-loading] .dc-waits > .dc-month {
-        padding: 0.7rem 0.8rem;
-    }
-
-    .dc-scene[data-dc-loading] .dc-plot2 {
-        block-size: 5.5rem;
-        margin: 0.7rem;
-        background:
-            linear-gradient(hsl(from var(--dc-gold) h s l / 0.5) 0 0) 0 100% / 100% 1px no-repeat,
-            repeating-linear-gradient(to bottom, transparent 0 21px, hsl(from var(--dc-gold) h s l / 0.18) 21px 22px);
-    }
-
-    .dc-scene[data-dc-loading] .kp-menu__item.dc-waits {
-        min-block-size: 2.6rem;
-    }
-
-    .dc-scene[data-dc-loading] .dc-skel {
-        padding: 0.4rem 0;
-    }
-
-    /* The skeleton as gold hairlines (all but today's strips). */
-    .dc-scene[data-dc-loading]:not([data-dc-loading='strips']) .dc-skel .kp-skeleton::before {
-        inset: auto 0 calc(50% - 0.5px);
-        block-size: 1px;
-        border: 0;
-        clip-path: none;
-        background: hsl(from var(--dc-gold) h s l / 0.45);
-        animation: none;
-        transform-origin: 0 50%;
-    }
-
-    .dc-scene[data-dc-loading]:not([data-dc-loading='strips']) .dc-skel .kp-skeleton {
-        border: 0;
-        background: none;
-    }
-
-    .dc-scene[data-dc-loading]:not([data-dc-loading='strips']) .dc-skel .kp-skeleton:nth-child(2) {
-        --dc-len: 82%;
-    }
-
-    .dc-scene[data-dc-loading]:not([data-dc-loading='strips']) .dc-skel .kp-skeleton:nth-child(3) {
-        --dc-len: 58%;
-    }
-
-    .dc-scene[data-dc-loading]:not([data-dc-loading='strips'], [data-dc-loading='glint']) .dc-skel .kp-skeleton::before {
-        inset-inline-end: calc(100% - var(--dc-len, 100%));
-    }
-
-    .dc-scene[data-dc-loading='glint'] .dc-wait::before {
-        content: '';
-        position: absolute;
-        inset-block: -10%;
-        inset-inline-start: 0;
-        inline-size: var(--dc-glint-w);
-        background: linear-gradient(90deg, transparent, var(--dc-glint-ink) 30% 70%, transparent);
-        filter: blur(var(--dc-glint-blur));
-        mix-blend-mode: plus-lighter;
-        translate: calc(var(--dc-g) * 470% - 135%) 0;
-    }
-
-    /* The skeleton's hairlines are lit where the band passes: each line is
-       full width, drawn as far as its own length (--dc-len), and carries the
-       band's light at the same place as the band over it. */
-    .dc-scene[data-dc-loading='glint'] .dc-skel .kp-skeleton::before {
-        inline-size: 100%;
-        background:
-            linear-gradient(90deg, transparent, hsl(from var(--dc-gold) h s 72%) 40% 60%, transparent) calc(var(--dc-g) * 201.4% - 57.9%) 0 / 30% 100%
-                no-repeat,
-            hsl(from var(--dc-gold) h s l / 0.45);
-        mask-image: linear-gradient(90deg, var(--foreground) var(--dc-len, 100%), transparent var(--dc-len, 100%));
-    }
-
-    .dc-scene[data-dc-loading='fan'] .dc-wait > .dc-fan {
-        display: block;
-        inline-size: min(5rem, 60%);
-    }
-
-    .dc-scene[data-dc-loading='fan'] .kp-menu__item .dc-wait > .dc-fan {
-        inline-size: 2.6rem;
-        margin-inline-start: auto;
-        margin-inline-end: 0.75rem;
-    }
-
-    .dc-scene[data-dc-loading='fan'] .dc-skel .dc-wait > .dc-fan {
-        display: none;
-    }
-
-    .dc-scene[data-dc-loading='fan'] .dc-waits > :not(.dc-wait) {
-        opacity: 0.3;
-    }
-
-    .dc-scene[data-dc-loading='frame'] .dc-waits > :not(.dc-wait) {
-        opacity: 0.3;
-    }
-
-    /* The frame for the waiting menu entry and the skeleton block: the same
-       inlay as a plate's, on their own ::after. */
-    .dc-scene[data-dc-loading='frame'] :is(.kp-menu__item.dc-waits, .dc-skel) {
-        --dc-line: hsl(from var(--dc-gold) h s l / 0.85);
-        --dc-in: 3px;
-        --dc-n: 4px;
-    }
-
-    .dc-scene[data-dc-loading='frame'] :is(.kp-menu__item.dc-waits, .dc-skel)::after {
-        content: '';
-        position: absolute;
-        inset: var(--dc-in);
-        pointer-events: none;
-        border: 1px solid var(--dc-line);
-        mask-image: conic-gradient(from calc(var(--dc-draw) * -180deg) at 50% 50%, var(--foreground) 0 calc(var(--dc-draw) * 360deg), transparent 0);
-    }
-
-    .dc-scene[data-dc-loading='frame'] .dc-skel {
-        padding: 0.7rem 0.9rem;
-    }
-
-    .dc-scene[data-dc-loading='breathe'] .dc-waits:not(.dc-plate) {
-        background-image:
-            repeating-linear-gradient(135deg, hsl(from var(--dc-gold) h s l / var(--dc-wall-a)) 0 1px, transparent 1px 12px),
-            repeating-linear-gradient(45deg, hsl(from var(--dc-gold) h s l / var(--dc-wall-a)) 0 1px, transparent 1px 12px);
-        background-size: 24px 24px;
-    }
-
-    .dc-scene[data-dc-loading='strips'] .dc-wait {
-        inset: auto 1rem 0.65rem;
-        block-size: 0.55rem;
-        border-block: 1px solid hsl(from var(--primary) h s l / 0.5);
-        background: hsl(from var(--primary) h s l / 0.12);
-        clip-path: polygon(0.5rem 0, calc(100% - 0.5rem) 0, 100% 50%, calc(100% - 0.5rem) 100%, 0.5rem 100%, 0 50%);
-    }
-
-    .dc-scene[data-dc-loading='strips'] .dc-skel .dc-wait {
-        display: none;
-    }
-
-    @keyframes dc-load-glint {
-        0% {
-            --dc-g: 0;
-            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
-        }
-        88% {
-            --dc-g: 1;
-        }
-        100% {
-            --dc-g: 1;
-        }
-    }
-
-    @keyframes dc-load-fan {
-        0% {
-            --dc-a: 0deg;
-            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        50% {
-            --dc-a: 180deg;
-            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
-        }
-        100% {
-            --dc-a: 0deg;
-        }
-    }
-
-    @keyframes dc-load-line {
-        0% {
-            transform: scaleX(0);
-            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        50% {
-            transform: scaleX(1);
-            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
-        }
-        100% {
-            transform: scaleX(0);
-        }
-    }
-
-    @keyframes dc-load-frame {
-        0% {
-            --dc-draw: 0;
-            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        50% {
-            --dc-draw: 1;
-            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
-        }
-        100% {
-            --dc-draw: 0;
-        }
-    }
-
-    @keyframes dc-load-breathe {
-        0% {
-            --dc-wall-a: 0.08;
-            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
-        }
-        50% {
-            --dc-wall-a: 0.2;
-            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
-        }
-        100% {
-            --dc-wall-a: 0.08;
-        }
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        .dc-scene[data-dc-loading='glint'] .dc-wait::before,
-        .dc-scene[data-dc-loading='glint'] .dc-skel .kp-skeleton::before {
-            animation: dc-load-glint calc(var(--dc-loop) * var(--dc-slow, 1)) linear infinite;
-        }
-
-        .dc-scene[data-dc-loading='fan'] .dc-wait > .dc-fan {
-            animation: dc-load-fan calc(var(--dc-loop) * var(--dc-slow, 1)) linear infinite;
-        }
-
-        .dc-scene[data-dc-loading='fan'] .dc-skel .kp-skeleton::before {
-            animation: dc-load-line calc(var(--dc-loop) * var(--dc-slow, 1)) linear infinite;
-        }
-
-        .dc-scene[data-dc-loading='frame'] :is(.dc-waits.dc-plate, .kp-menu__item.dc-waits, .dc-skel) {
-            animation: dc-load-frame calc(var(--dc-loop) * var(--dc-slow, 1)) linear infinite;
-        }
-
-        .dc-scene[data-dc-loading='frame'] .dc-skel .kp-skeleton::before {
-            animation: dc-load-line calc(var(--dc-loop) * var(--dc-slow, 1)) linear infinite;
-            transform-origin: 50% 50%;
-        }
-
-        .dc-scene[data-dc-loading='breathe'] .dc-waits {
-            animation: dc-load-breathe calc(var(--dc-loop) * var(--dc-slow, 1)) linear infinite;
-        }
-
-        .dc-scene[data-dc-loading='strips'] .dc-wait {
-            animation: kp-sig-deco-deco-open 2800ms var(--fx-ease) infinite;
-        }
-    }
-
-    /* ── 11 The progress bar, redone ─────────────────────────────────────
-       Each option at a 62 % share and busy, three sizes, in a busy button
-       and beside a share. The package's markup: the track, the fill (the
-       share, clipped to --kp-value by the package) and the head (at the
-       share's end). `--dc-s` is the size (1, 1.5, 2).
-       Inlay (recommended): a gold hairline on lacquer with a small lozenge at
-       each end; the share a heavier gold line from the start, its head a
-       gold lozenge; busy, no share and a glint runs the hairline from start
-       to end, 2.4 s, and again (dc-load-glint on the fill). Lozenges: a row
-       of small hollow gold lozenges, the share filling them whole from the
-       start; busy, one filled lozenge travels the string and back
-       (dc-bar-travel). Double: two hairlines, the share muted gold between
-       them; busy, a fill sweeps across and fades (dc-bar-sweep). Stepped: a
-       gold band with a three-step head; busy, the three steps glint in turn
-       (dc-bar-steps). Fan laid flat: thin gold rays leaning as a fan along
-       the line, the share lit smoothly; busy, the light sweeps across and back
-       (dc-bar-light). */
-
-    .dc-scene:is([data-dc-bar], [data-dc-corners]) .dc-bar2 {
-        --dc-s: var(--kp-progressbar-scale, 1);
-        --kp-progressbar-height: calc(0.75rem * var(--dc-s));
-        contain: none;
-        max-inline-size: none;
-    }
-
-    .dc-scene:is([data-dc-bar], [data-dc-corners]) .dc-bar2 .kp-progressbar__track {
-        overflow: visible;
-        border: 0;
-        background: none;
-    }
-
-    .dc-scene:is([data-dc-bar], [data-dc-corners]) .dc-bar2 .kp-progressbar__fill,
-    .dc-scene:is([data-dc-bar], [data-dc-corners]) .dc-bar2 .kp-progressbar__head::before {
-        animation: none;
-    }
-
-    .dc-scene:is([data-dc-bar], [data-dc-corners]) .dc-bar2 .kp-progressbar__fill::before {
-        content: none;
-        animation: none;
-    }
-
-    /* Inlay, the recommendation (and the corners row's bar). */
-    .dc-scene:is([data-dc-bar='inlay'], [data-dc-corners]) .dc-bar2 .kp-progressbar__track {
-        inset-inline: calc(5px * var(--dc-s));
-        background: linear-gradient(hsl(from var(--primary) h s l / 0.55) 0 0) 0 50% / 100% 1px no-repeat;
-    }
-
-    .dc-scene:is([data-dc-bar='inlay'], [data-dc-corners]) .dc-bar2 .kp-progressbar__track::before,
-    .dc-scene:is([data-dc-bar='inlay'], [data-dc-corners]) .dc-bar2 .kp-progressbar__track::after {
-        content: '';
-        position: absolute;
-        inset-block-start: 50%;
-        inline-size: calc(5px * var(--dc-s));
-        block-size: calc(5px * var(--dc-s));
-        box-sizing: border-box;
-        border: 1px solid var(--primary);
-        background: var(--dc-lac);
-        translate: 0 -50%;
-        rotate: 45deg;
-    }
-
-    .dc-scene:is([data-dc-bar='inlay'], [data-dc-corners]) .dc-bar2 .kp-progressbar__track::before {
-        inset-inline-start: calc(-5px * var(--dc-s));
-    }
-
-    .dc-scene:is([data-dc-bar='inlay'], [data-dc-corners]) .dc-bar2 .kp-progressbar__track::after {
-        inset-inline-end: calc(-5px * var(--dc-s));
-    }
-
-    .dc-scene:is([data-dc-bar='inlay'], [data-dc-corners]) .dc-bar2:not([data-kp-indeterminate]) .kp-progressbar__fill {
-        inset: calc(50% - 1px * var(--dc-s)) 0 auto;
-        block-size: calc(2px * var(--dc-s));
-        background: var(--primary);
-        clip-path: inset(0 calc((1 - var(--kp-value)) * 100%) 0 0);
-    }
-
-    .dc-scene:is([data-dc-bar='inlay'], [data-dc-corners]) .dc-bar2 .kp-progressbar__head {
-        inline-size: 0;
-    }
-
-    .dc-scene:is([data-dc-bar='inlay'], [data-dc-corners]) .dc-bar2 .kp-progressbar__head::before {
-        content: '';
-        position: absolute;
-        inset-block-start: 50%;
-        inset-inline-start: 0;
-        inline-size: calc(8px * var(--dc-s));
-        block-size: calc(8px * var(--dc-s));
-        box-shadow: none;
-        background: var(--primary);
-        clip-path: none;
-        transform: none;
-        translate: -50% -50%;
-        rotate: 45deg;
-    }
-
-    .dc-scene:is([data-dc-bar='inlay'], [data-dc-corners]) .dc-bar2[data-kp-indeterminate] .kp-progressbar__fill {
-        inset: calc(50% - 3px * var(--dc-s)) 0 auto;
-        block-size: calc(6px * var(--dc-s));
-        overflow: clip;
-        background: none;
-    }
-
-    .dc-scene[data-dc-bar='inlay'] .dc-bar2[data-kp-indeterminate] .kp-progressbar__fill::before {
-        content: '';
-        position: absolute;
-        inset: 0 auto 0 0;
-        inline-size: 30%;
-        background: linear-gradient(90deg, transparent, hsl(from var(--primary) h s 82% / 0.95) 40% 60%, transparent);
-        filter: blur(calc(1.5px * var(--dc-s)));
-        mask-image: linear-gradient(transparent calc(50% - 1px), var(--foreground) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px));
-        translate: calc(var(--dc-g) * 470% - 135%) 0;
-    }
-
-    /* Lozenges: a string of hollow lozenges; the share fills them whole. */
-    .dc-scene[data-dc-bar='lozenges'] .dc-bar2 {
-        --dc-lz: calc(0.75rem * var(--dc-s));
-        --dc-lz-open: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M6 1.2 10.8 6 6 10.8 1.2 6Z' fill='none' stroke='currentColor' stroke-width='1'/%3E%3C/svg%3E");
-        --dc-lz-full: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M6 1.2 10.8 6 6 10.8 1.2 6Z' fill='currentColor'/%3E%3C/svg%3E");
-    }
-
-    .dc-scene[data-dc-bar='lozenges'] .dc-bar2 .kp-progressbar__track::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: hsl(from var(--primary) h s l / 0.8);
-        mask: var(--dc-lz-open) 0 50% / var(--dc-lz) var(--dc-lz) repeat-x;
-    }
-
-    .dc-scene[data-dc-bar='lozenges'] .dc-bar2 .kp-progressbar__fill {
-        inset: 0;
-        background: var(--primary);
-        mask: var(--dc-lz-full) 0 50% / var(--dc-lz) var(--dc-lz) repeat-x;
-        clip-path: inset(0 calc(100% - round(down, var(--kp-value) * 100cqi, var(--dc-lz))) 0 0);
-    }
-
-    .dc-scene[data-dc-bar='lozenges'] .dc-bar2 .kp-progressbar__head::before {
-        content: none;
-    }
-
-    .dc-scene[data-dc-bar='lozenges'] .dc-bar2[data-kp-indeterminate] .kp-progressbar__fill {
-        inset: 0 auto 0 0;
-        inline-size: var(--dc-lz);
-        background: var(--primary);
-        mask: var(--dc-lz-full) 0 50% / var(--dc-lz) var(--dc-lz) no-repeat;
-        clip-path: none;
-        translate: calc(var(--dc-g) * (100cqi - var(--dc-lz))) 0;
-    }
-
-    /* Double: between two hairlines, the share in muted gold. */
-    .dc-scene[data-dc-bar='double'] .dc-bar2 .kp-progressbar__track {
-        border-block: 1px solid var(--primary);
-    }
-
-    .dc-scene[data-dc-bar='double'] .dc-bar2 .kp-progressbar__fill {
-        inset: 2px 0;
-        background: hsl(from var(--primary) h s l / 0.4);
-        clip-path: inset(0 calc((1 - var(--kp-value)) * 100%) 0 0);
-    }
-
-    .dc-scene[data-dc-bar='double'] .dc-bar2 .kp-progressbar__head::before {
-        content: none;
-    }
-
-    .dc-scene[data-dc-bar='double'] .dc-bar2[data-kp-indeterminate] .kp-progressbar__fill {
-        background: hsl(from var(--primary) h s l / 0.4);
-        clip-path: inset(0 calc((1 - var(--dc-g)) * 100%) 0 0);
-        opacity: calc(1 - var(--dc-g) * var(--dc-g));
-    }
-
-    /* Stepped: a gold band, its head three steps like a ziggurat on its side. */
-    .dc-scene[data-dc-bar='stepped'] .dc-bar2 .kp-progressbar__track {
-        background: linear-gradient(hsl(from var(--primary) h s l / 0.3) 0 0) 0 50% / 100% 1px no-repeat;
-    }
-
-    .dc-scene[data-dc-bar='stepped'] .dc-bar2 {
-        --dc-st: calc(4px * var(--dc-s));
-    }
-
-    .dc-scene[data-dc-bar='stepped'] .dc-bar2:not([data-kp-indeterminate]) .kp-progressbar__fill {
-        --dc-at: calc(var(--kp-value) * 100%);
-        inset: 0;
-        background: var(--primary);
-        clip-path: polygon(
-            0 20%,
-            calc(var(--dc-at) - 2 * var(--dc-st)) 20%,
-            calc(var(--dc-at) - 2 * var(--dc-st)) 0,
-            calc(var(--dc-at) - var(--dc-st)) 0,
-            calc(var(--dc-at) - var(--dc-st)) 20%,
-            calc(var(--dc-at) - var(--dc-st)) 30%,
-            var(--dc-at) 30%,
-            var(--dc-at) 70%,
-            calc(var(--dc-at) - var(--dc-st)) 70%,
-            calc(var(--dc-at) - var(--dc-st)) 100%,
-            calc(var(--dc-at) - 2 * var(--dc-st)) 100%,
-            calc(var(--dc-at) - 2 * var(--dc-st)) 80%,
-            0 80%
-        );
-    }
-
-    .dc-scene[data-dc-bar='stepped'] .dc-bar2 .kp-progressbar__head::before {
-        content: none;
-    }
-
-    .dc-scene[data-dc-bar='stepped'] .dc-bar2[data-kp-indeterminate] .kp-progressbar__fill {
-        inset: 0;
-        background:
-            linear-gradient(90deg, transparent, hsl(from var(--primary) h s 86%) 30% 70%, transparent) right
-                calc((1 - var(--dc-g)) * 2 * var(--dc-st)) top 0 / var(--dc-st) 100% no-repeat,
-            hsl(from var(--primary) h s l / 0.6);
-        clip-path: polygon(
-            0 20%,
-            calc(100% - 2 * var(--dc-st)) 20%,
-            calc(100% - 2 * var(--dc-st)) 0,
-            calc(100% - var(--dc-st)) 0,
-            calc(100% - var(--dc-st)) 30%,
-            100% 30%,
-            100% 70%,
-            calc(100% - var(--dc-st)) 70%,
-            calc(100% - var(--dc-st)) 100%,
-            calc(100% - 2 * var(--dc-st)) 100%,
-            calc(100% - 2 * var(--dc-st)) 80%,
-            0 80%
-        );
-    }
-
-    /* Fan laid flat: hairline rays leaning as a fan whose pivot lies far
-       under the line; the share lights them smoothly from the start. */
-    .dc-scene[data-dc-bar='fanflat'] .dc-bar2 .kp-progressbar__track {
-        background: repeating-conic-gradient(from 0deg at 50% 2500%, hsl(from var(--primary) h s l / 0.32) 0 0.12deg, transparent 0.12deg 0.5deg);
-    }
-
-    .dc-scene[data-dc-bar='fanflat'] .dc-bar2 .kp-progressbar__fill {
-        inset: 0;
-        background: repeating-conic-gradient(from 0deg at 50% 2500%, var(--primary) 0 0.12deg, transparent 0.12deg 0.5deg);
-        mask-image: linear-gradient(90deg, var(--foreground) calc(var(--kp-value) * 100% - 6%), transparent calc(var(--kp-value) * 100%));
-        clip-path: none;
-    }
-
-    .dc-scene[data-dc-bar='fanflat'] .dc-bar2 .kp-progressbar__head::before {
-        content: none;
-    }
-
-    .dc-scene[data-dc-bar='fanflat'] .dc-bar2[data-kp-indeterminate] .kp-progressbar__fill {
-        background: repeating-conic-gradient(from 0deg at 50% 2500%, var(--primary) 0 0.12deg, transparent 0.12deg 0.5deg);
-        mask-image: linear-gradient(
-            90deg,
-            transparent calc(var(--dc-g) * 130% - 30%),
-            var(--foreground) calc(var(--dc-g) * 130% - 15%),
-            transparent calc(var(--dc-g) * 130%)
-        );
-    }
-
-    @keyframes dc-bar-travel {
-        0% {
-            --dc-g: 0;
-            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
-        }
-        50% {
-            --dc-g: 1;
-            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
-        }
-        100% {
-            --dc-g: 0;
-        }
-    }
-
-    @keyframes dc-bar-sweep {
-        0% {
-            --dc-g: 0;
-            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        100% {
-            --dc-g: 1;
-        }
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        .dc-scene[data-dc-bar='inlay'] .dc-bar2[data-kp-indeterminate] .kp-progressbar__fill::before {
-            animation: dc-load-glint calc(var(--dc-loop) * var(--dc-slow, 1)) linear infinite;
-        }
-
-        .dc-scene[data-dc-bar='lozenges'] .dc-bar2[data-kp-indeterminate] .kp-progressbar__fill {
-            animation: dc-bar-travel calc(var(--dc-loop) * var(--dc-slow, 1)) linear infinite;
-        }
-
-        .dc-scene[data-dc-bar='double'] .dc-bar2[data-kp-indeterminate] .kp-progressbar__fill {
-            animation: dc-bar-sweep calc(var(--dc-loop) * var(--dc-slow, 1)) linear infinite;
-        }
-
-        .dc-scene[data-dc-bar='stepped'] .dc-bar2[data-kp-indeterminate] .kp-progressbar__fill {
-            animation: dc-load-glint calc(var(--dc-loop) * var(--dc-slow, 1)) linear infinite;
-        }
-
-        .dc-scene[data-dc-bar='fanflat'] .dc-bar2[data-kp-indeterminate] .kp-progressbar__fill {
-            animation: dc-bar-travel calc(var(--dc-loop) * var(--dc-slow, 1)) linear infinite;
-        }
-    }
-
-    /* ── 14 to 17: the hand ──────────────────────────────────────────────
-       Pointing at something, the press and the buttons inside composites
-       share one drawing, so each question changes only its own part. A
-       control is shown pointed at (`.dc-pointed`), pressed (`.dc-press`;
-       `.dc-rest` stays at rest), or every one is, by the State buttons
-       (`data-dc-show` on the scene).
-
-       Deco's own manner (question 15's recommendation, and every composite
-       option but "as today"): the control's gold hairline brightens from 55 %
+    /* ── 14 Buttons inside composites: deco's own manner ─────────────────
+       Kenny's pick (update 1, "own"), kept as approved. A control is shown
+       pointed at (`.dc-pointed`), or every one is, by the State buttons
+       (`data-dc-show` on the scene). Questions 15 and 17 (update 2) have
+       their own drawing further down.
+
+       Deco's own manner (every composite option but "as today"): the control's gold hairline brightens from 55 %
        to full gold (--dc-line-a, 160 ms each way) and one glint crosses it
        from the start edge to the end (dcg-pass, 480 ms) and is gone; a menu
        entry gains a hairline at its start edge, a link's underline brightens;
-       the label stays. Its press (question 17's recommendation): for the
+       the label stays. Its press: for the
        contact the hairline doubles (a second line 2 px inside) and the ground
        sinks a shade; the primary's gold darkens and gains the inner line in
        lacquer. Its focus: Kenny's pick, a 3px double gold ring. */
 
-    .dc-scene:is([data-dc-hover], [data-dc-composites], [data-dc-press]) .kp-menu__item {
+    .dc-scene[data-dc-composites] .kp-menu__item {
         overflow: clip;
         background: transparent;
         color: var(--foreground);
     }
 
-    .dc-scene:is([data-dc-hover], [data-dc-composites], [data-dc-press]) :is(.dc-in-kpi, .kp-kpi--toggle, .dc-day2) {
+    .dc-scene[data-dc-composites] :is(.dc-in-kpi, .kp-kpi--toggle, .dc-day2) {
         overflow: clip;
         cursor: pointer;
     }
 
-    .dc-scene[data-dc-hover] .dc-prose {
-        font-size: 0.9rem;
-        line-height: 1.6;
-    }
-
-    .dc-scene[data-dc-hover] .dc-prose a {
-        position: relative;
-        display: inline-block;
-        overflow: clip;
-        color: var(--foreground);
-        text-decoration: underline 1px hsl(from var(--dc-gold) h s l / var(--dc-line-a));
-        text-underline-offset: 0.25em;
-        --dc-line-a: 0.55;
-    }
-
     /* The glint, on each control's free pseudo-element. */
-    .dc-scene:is(
-            [data-dc-hover='glint'],
-            [data-dc-composites='own'],
-            [data-dc-composites='ghost'],
-            [data-dc-composites='text'],
-            [data-dc-composites='plaque']
-        )
+    .dc-scene:is([data-dc-composites='own'], [data-dc-composites='ghost'], [data-dc-composites='text'], [data-dc-composites='plaque'])
         :is(.kp-button, .kp-menu__item, .dc-prose a)::after,
-    .dc-scene:is(
-            [data-dc-hover='glint'],
-            [data-dc-composites='own'],
-            [data-dc-composites='ghost'],
-            [data-dc-composites='text'],
-            [data-dc-composites='plaque']
-        )
+    .dc-scene:is([data-dc-composites='own'], [data-dc-composites='ghost'], [data-dc-composites='text'], [data-dc-composites='plaque'])
         :is(.dc-in-kpi, .dc-day2)::before {
         content: '';
         position: absolute;
@@ -3456,16 +2672,9 @@
         translate: calc(var(--dc-g) * 470% - 135%) 0;
     }
 
-    .dc-scene:is(
-            [data-dc-hover='glint'],
-            [data-dc-composites='own'],
-            [data-dc-composites='ghost'],
-            [data-dc-composites='text'],
-            [data-dc-composites='plaque']
-        )
+    .dc-scene:is([data-dc-composites='own'], [data-dc-composites='ghost'], [data-dc-composites='text'], [data-dc-composites='plaque'])
         :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day2, .dc-prose a):is(.dc-pointed, :hover),
     .dc-scene:is(
-            [data-dc-hover='glint'],
             [data-dc-composites='own'],
             [data-dc-composites='ghost'],
             [data-dc-composites='text'],
@@ -3475,16 +2684,9 @@
         --dc-line-a: 1;
     }
 
-    .dc-scene:is(
-            [data-dc-hover='glint'],
-            [data-dc-composites='own'],
-            [data-dc-composites='ghost'],
-            [data-dc-composites='text'],
-            [data-dc-composites='plaque']
-        )
+    .dc-scene:is([data-dc-composites='own'], [data-dc-composites='ghost'], [data-dc-composites='text'], [data-dc-composites='plaque'])
         .kp-menu__item:is(.dc-pointed, :hover),
     .dc-scene:is(
-            [data-dc-hover='glint'],
             [data-dc-composites='own'],
             [data-dc-composites='ghost'],
             [data-dc-composites='text'],
@@ -3494,13 +2696,12 @@
         box-shadow: inset 1px 0 0 hsl(from var(--dc-gold) h s l / var(--dc-line-a));
     }
 
-    .dc-scene:is([data-dc-hover], [data-dc-composites], [data-dc-press]) :is(.dc-in-kpi, .kp-kpi--toggle, .dc-day2) {
+    .dc-scene[data-dc-composites] :is(.dc-in-kpi, .kp-kpi--toggle, .dc-day2) {
         border-color: hsl(from var(--dc-gold) h s l / calc(var(--dc-line-a) * 0.5));
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        .dc-scene:is([data-dc-hover], [data-dc-composites], [data-dc-press])
-            :is(.kp-button, .kp-menu__item, .dc-in-kpi, .kp-kpi--toggle, .dc-day2, .dc-prose a) {
+        .dc-scene[data-dc-composites] :is(.kp-button, .kp-menu__item, .dc-in-kpi, .kp-kpi--toggle, .dc-day2, .dc-prose a) {
             transition:
                 --dc-line-a calc(var(--dc-contact) * var(--dc-slow, 1)) linear,
                 box-shadow calc(var(--dc-contact) * var(--dc-slow, 1)) linear,
@@ -3509,32 +2710,18 @@
                 color calc(var(--dc-contact) * var(--dc-slow, 1)) linear;
         }
 
-        .dc-scene:is(
-                [data-dc-hover='glint'],
-                [data-dc-composites='own'],
-                [data-dc-composites='ghost'],
-                [data-dc-composites='text'],
-                [data-dc-composites='plaque']
-            )
+        .dc-scene:is([data-dc-composites='own'], [data-dc-composites='ghost'], [data-dc-composites='text'], [data-dc-composites='plaque'])
             :is(.kp-button, .kp-menu__item, .dc-prose a):is(.dc-pointed, :hover)::after,
         .dc-scene:is(
-                [data-dc-hover='glint'],
                 [data-dc-composites='own'],
                 [data-dc-composites='ghost'],
                 [data-dc-composites='text'],
                 [data-dc-composites='plaque']
             )[data-dc-show='hover']
             :is(.kp-button, .kp-menu__item, .dc-prose a):not(.dc-rest)::after,
-        .dc-scene:is(
-                [data-dc-hover='glint'],
-                [data-dc-composites='own'],
-                [data-dc-composites='ghost'],
-                [data-dc-composites='text'],
-                [data-dc-composites='plaque']
-            )
+        .dc-scene:is([data-dc-composites='own'], [data-dc-composites='ghost'], [data-dc-composites='text'], [data-dc-composites='plaque'])
             :is(.dc-in-kpi, .dc-day2):is(.dc-pointed, :hover)::before,
         .dc-scene:is(
-                [data-dc-hover='glint'],
                 [data-dc-composites='own'],
                 [data-dc-composites='ghost'],
                 [data-dc-composites='text'],
@@ -3546,16 +2733,9 @@
     }
 
     /* Deco's own press (17's recommendation, and the composites but today). */
-    .dc-scene:is(
-            [data-dc-press='double'],
-            [data-dc-composites='own'],
-            [data-dc-composites='ghost'],
-            [data-dc-composites='text'],
-            [data-dc-composites='plaque']
-        )
+    .dc-scene:is([data-dc-composites='own'], [data-dc-composites='ghost'], [data-dc-composites='text'], [data-dc-composites='plaque'])
         :is(.kp-button:not(.kp-button--primary), .dc-in-kpi, .kp-kpi--toggle, .dc-day2):is(.dc-press, :active):not(.dc-rest),
     .dc-scene:is(
-            [data-dc-press='double'],
             [data-dc-composites='own'],
             [data-dc-composites='ghost'],
             [data-dc-composites='text'],
@@ -3570,16 +2750,9 @@
             inset 0 0 0 3px var(--dc-gold);
     }
 
-    .dc-scene:is(
-            [data-dc-press='double'],
-            [data-dc-composites='own'],
-            [data-dc-composites='ghost'],
-            [data-dc-composites='text'],
-            [data-dc-composites='plaque']
-        )
+    .dc-scene:is([data-dc-composites='own'], [data-dc-composites='ghost'], [data-dc-composites='text'], [data-dc-composites='plaque'])
         .kp-menu__item:is(.dc-press, :active):not(.dc-rest),
     .dc-scene:is(
-            [data-dc-press='double'],
             [data-dc-composites='own'],
             [data-dc-composites='ghost'],
             [data-dc-composites='text'],
@@ -3593,16 +2766,9 @@
             inset 0 0 0 4px var(--dc-gold);
     }
 
-    .dc-scene:is(
-            [data-dc-press='double'],
-            [data-dc-composites='own'],
-            [data-dc-composites='ghost'],
-            [data-dc-composites='text'],
-            [data-dc-composites='plaque']
-        )
+    .dc-scene:is([data-dc-composites='own'], [data-dc-composites='ghost'], [data-dc-composites='text'], [data-dc-composites='plaque'])
         .kp-button--primary:is(.dc-press, :active):not(.dc-rest),
     .dc-scene:is(
-            [data-dc-press='double'],
             [data-dc-composites='own'],
             [data-dc-composites='ghost'],
             [data-dc-composites='text'],
@@ -3623,148 +2789,6 @@
     .dc-scene[data-dc-composites]:not([data-dc-composites='mix']) :is(.kp-button, .kp-menu__item, .dc-in-kpi):focus-visible {
         outline: 3px double var(--primary);
         outline-offset: 3px;
-    }
-
-    /* ── 15 Pointing at something: the other four ────────────────────────
-       Underline: a thin gold rule draws under the label from its middle to
-       both ends (240 ms), the frame stays. Lighten: the ground lightens a
-       shade (the secondary surface), nothing else. Fan: behind the label a
-       fan of gold hairlines unfolds from the lower-left corner (480 ms) and
-       folds when the pointer leaves. Tracking: the capitals open from
-       0.08 em to 0.14 em (240 ms) and close when the pointer leaves. Every
-       leave is the arrival backwards (the rest state carries the inverse
-       curve, the pointed state the settle curve). */
-
-    .dc-scene[data-dc-hover='underline'] :is(.kp-button, .kp-menu__item, .dc-prose a)::after,
-    .dc-scene[data-dc-hover='underline'] :is(.dc-in-kpi, .dc-day2)::before {
-        content: '';
-        position: absolute;
-        inset-inline: 0.9rem;
-        inset-block-end: 0.4rem;
-        z-index: 3;
-        block-size: 1px;
-        pointer-events: none;
-        background: var(--dc-gold);
-        scale: 0 1;
-    }
-
-    .dc-scene[data-dc-hover='underline'] .dc-prose a {
-        text-decoration: none;
-    }
-
-    .dc-scene[data-dc-hover='underline'] .dc-prose a::after {
-        inset-inline: 0;
-        inset-block-end: 0.05em;
-    }
-
-    .dc-scene[data-dc-hover='underline'] .dc-day2::before {
-        inset-inline: 0.55rem;
-        inset-block-end: 0.45rem;
-    }
-
-    .dc-scene[data-dc-hover='underline'] :is(.kp-button, .kp-menu__item, .dc-prose a):is(.dc-pointed, :hover)::after,
-    .dc-scene[data-dc-hover='underline'][data-dc-show='hover'] :is(.kp-button, .kp-menu__item, .dc-prose a):not(.dc-rest)::after,
-    .dc-scene[data-dc-hover='underline'] :is(.dc-in-kpi, .dc-day2):is(.dc-pointed, :hover)::before,
-    .dc-scene[data-dc-hover='underline'][data-dc-show='hover'] :is(.dc-in-kpi, .dc-day2):not(.dc-rest)::before {
-        scale: 1 1;
-    }
-
-    .dc-scene[data-dc-hover='lighten'] :is(.kp-button:not(.kp-button--primary), .kp-menu__item, .dc-in-kpi, .dc-day2):is(.dc-pointed, :hover),
-    .dc-scene[data-dc-hover='lighten'][data-dc-show='hover']
-        :is(.kp-button:not(.kp-button--primary), .kp-menu__item, .dc-in-kpi, .dc-day2):not(.dc-rest) {
-        background-color: var(--secondary);
-    }
-
-    .dc-scene[data-dc-hover='lighten'] .dc-prose a:is(.dc-pointed, :hover),
-    .dc-scene[data-dc-hover='lighten'][data-dc-show='hover'] .dc-prose a {
-        background-color: var(--secondary);
-    }
-
-    .dc-scene[data-dc-hover='lighten'] .kp-button--primary:is(.dc-pointed, :hover),
-    .dc-scene[data-dc-hover='lighten'][data-dc-show='hover'] .kp-button--primary:not(.dc-rest) {
-        background: hsl(from var(--primary) h s calc(l + 8));
-    }
-
-    /* The fan behind the label (15's fan, 17's fold): ribs of gold hairline
-       from the lower-left corner over the quarter above it, unfolding by
-       angle as --dc-a goes from 0 to 180 degrees (90 degrees of spread). */
-    .dc-scene:is([data-dc-hover='fan'], [data-dc-press='fold']) :is(.kp-button, .kp-menu__item, .dc-in-kpi, .kp-kpi--toggle, .dc-day2, .dc-prose a) {
-        --dc-a: 0deg;
-    }
-
-    .dc-scene:is([data-dc-hover='fan'], [data-dc-press='fold'])
-        :is(.kp-button, .kp-menu__item, .dc-in-kpi, .kp-kpi--toggle, .dc-day2, .dc-prose a)::before {
-        all: unset;
-        content: '';
-        position: absolute;
-        inset: 0;
-        z-index: -1;
-        pointer-events: none;
-        background: repeating-conic-gradient(
-            from -0.3deg at 0 100%,
-            hsl(from var(--dc-gold) h s l / 0.45) 0 0.6deg,
-            transparent 0.6deg max(calc(var(--dc-a) / 22), 0.6deg)
-        );
-        mask-image: conic-gradient(from 0deg at 0 100%, var(--foreground) 0 calc(var(--dc-a) / 2), transparent 0);
-    }
-
-    .dc-scene:is([data-dc-hover='fan'], [data-dc-press='fold']) :is(.kp-menu__item, .dc-prose a) {
-        isolation: isolate;
-    }
-
-    .dc-scene[data-dc-hover='fan'] :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day2, .dc-prose a):is(.dc-pointed, :hover),
-    .dc-scene[data-dc-hover='fan'][data-dc-show='hover'] :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day2, .dc-prose a):not(.dc-rest) {
-        --dc-a: 180deg;
-    }
-
-    .dc-scene[data-dc-hover='tracking'] .kp-button {
-        letter-spacing: 0.08em;
-    }
-
-    .dc-scene[data-dc-hover='tracking'] :is(.kp-button, .kp-menu__item, .dc-in-kpi .kp-kpi__label, .dc-day2, .dc-prose a) {
-        letter-spacing: 0.08em;
-    }
-
-    .dc-scene[data-dc-hover='tracking'] :is(.kp-button, .kp-menu__item, .dc-day2, .dc-prose a):is(.dc-pointed, :hover),
-    .dc-scene[data-dc-hover='tracking'][data-dc-show='hover'] :is(.kp-button, .kp-menu__item, .dc-day2, .dc-prose a):not(.dc-rest),
-    .dc-scene[data-dc-hover='tracking'] .dc-in-kpi:is(.dc-pointed, :hover) .kp-kpi__label,
-    .dc-scene[data-dc-hover='tracking'][data-dc-show='hover'] .dc-in-kpi .kp-kpi__label {
-        letter-spacing: 0.14em;
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        .dc-scene[data-dc-hover='underline'] :is(.kp-button, .kp-menu__item, .dc-prose a)::after,
-        .dc-scene[data-dc-hover='underline'] :is(.dc-in-kpi, .dc-day2)::before {
-            transition: scale calc(240ms * var(--dc-slow, 1)) cubic-bezier(0.64, 0, 0.78, 0);
-        }
-
-        .dc-scene[data-dc-hover='underline'] :is(.kp-button, .kp-menu__item, .dc-prose a):is(.dc-pointed, :hover)::after,
-        .dc-scene[data-dc-hover='underline'][data-dc-show='hover'] :is(.kp-button, .kp-menu__item, .dc-prose a):not(.dc-rest)::after,
-        .dc-scene[data-dc-hover='underline'] :is(.dc-in-kpi, .dc-day2):is(.dc-pointed, :hover)::before,
-        .dc-scene[data-dc-hover='underline'][data-dc-show='hover'] :is(.dc-in-kpi, .dc-day2):not(.dc-rest)::before {
-            transition: scale calc(240ms * var(--dc-slow, 1)) cubic-bezier(0.22, 1, 0.36, 1);
-        }
-
-        .dc-scene:is([data-dc-hover='fan'], [data-dc-press='fold'])
-            :is(.kp-button, .kp-menu__item, .dc-in-kpi, .kp-kpi--toggle, .dc-day2, .dc-prose a) {
-            transition: --dc-a calc(var(--dc-arrive) * var(--dc-slow, 1)) cubic-bezier(0.64, 0, 0.78, 0);
-        }
-
-        .dc-scene[data-dc-hover='fan'] :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day2, .dc-prose a):is(.dc-pointed, :hover),
-        .dc-scene[data-dc-hover='fan'][data-dc-show='hover'] :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day2, .dc-prose a):not(.dc-rest) {
-            transition: --dc-a calc(var(--dc-arrive) * var(--dc-slow, 1)) cubic-bezier(0.22, 1, 0.36, 1);
-        }
-
-        .dc-scene[data-dc-hover='tracking'] :is(.kp-button, .kp-menu__item, .dc-in-kpi .kp-kpi__label, .dc-day2, .dc-prose a) {
-            transition: letter-spacing calc(240ms * var(--dc-slow, 1)) cubic-bezier(0.64, 0, 0.78, 0);
-        }
-
-        .dc-scene[data-dc-hover='tracking'] :is(.kp-button, .kp-menu__item, .dc-day2, .dc-prose a):is(.dc-pointed, :hover),
-        .dc-scene[data-dc-hover='tracking'][data-dc-show='hover'] :is(.kp-button, .kp-menu__item, .dc-day2, .dc-prose a):not(.dc-rest),
-        .dc-scene[data-dc-hover='tracking'] .dc-in-kpi:is(.dc-pointed, :hover) .kp-kpi__label,
-        .dc-scene[data-dc-hover='tracking'][data-dc-show='hover'] .dc-in-kpi .kp-kpi__label {
-            transition: letter-spacing calc(240ms * var(--dc-slow, 1)) cubic-bezier(0.22, 1, 0.36, 1);
-        }
     }
 
     /* ── 14 Buttons inside composites: the other options ──────────────────
@@ -3889,103 +2913,6 @@
 
     .dc-scene[data-dc-composites='mix'][data-dc-show='press'] :is(.kp-button:not(.kp-button--primary), .kp-menu__item, .dc-in-kpi) {
         background-color: var(--secondary-active);
-    }
-
-    /* ── 17 The press: the other four ────────────────────────────────────
-       Fill: the control fills solid gold with lacquer ink for the contact.
-       Fold: the hover's fan (were the fan the hover) stands open while the
-       pointer rests and folds shut on the press. Jewel: a small gold lozenge
-       lights before the label for the contact. Colour (today): the face takes
-       the pressed ground; no line, no motion. Each for the contact (160 ms). */
-
-    .dc-scene[data-dc-press='fill'] :is(.kp-button, .kp-menu__item, .kp-kpi--toggle, .dc-day2):is(.dc-press, :active):not(.dc-rest),
-    .dc-scene[data-dc-press='fill'][data-dc-show='press'] :is(.kp-button, .kp-menu__item, .kp-kpi--toggle, .dc-day2):not(.dc-rest) {
-        border-color: var(--dc-gold);
-        background-color: var(--dc-gold);
-        color: var(--primary-foreground);
-    }
-
-    .dc-scene[data-dc-press='fill'] .kp-kpi--toggle:is(.dc-press, :active):not(.dc-rest) :is(.kp-kpi__label, .kp-kpi__value),
-    .dc-scene[data-dc-press='fill'][data-dc-show='press'] .kp-kpi--toggle:not(.dc-rest) :is(.kp-kpi__label, .kp-kpi__value) {
-        color: var(--primary-foreground);
-    }
-
-    .dc-scene[data-dc-press='fill'] .kp-button--primary:is(.dc-press, :active):not(.dc-rest),
-    .dc-scene[data-dc-press='fill'][data-dc-show='press'] .kp-button--primary:not(.dc-rest) {
-        background-color: hsl(from var(--primary) h s calc(l + 14));
-    }
-
-    .dc-scene.dc-scene--r2[data-dc-press='fold'] :is(.kp-button, .kp-menu__item, .kp-kpi--toggle, .dc-day2) {
-        --dc-a: 180deg;
-    }
-
-    .dc-scene.dc-scene--r2[data-dc-press='fold'] :is(.kp-button, .kp-menu__item, .kp-kpi--toggle, .dc-day2):is(.dc-press, :active):not(.dc-rest),
-    .dc-scene.dc-scene--r2[data-dc-press='fold'][data-dc-show='press'] :is(.kp-button, .kp-menu__item, .kp-kpi--toggle, .dc-day2):not(.dc-rest) {
-        --dc-a: 0deg;
-    }
-
-    .dc-scene[data-dc-press='jewel'] :is(.kp-button, .kp-menu__item)::after,
-    .dc-scene[data-dc-press='jewel'] :is(.kp-kpi--toggle, .dc-day2)::before {
-        content: '';
-        position: absolute;
-        inset-block-start: calc(50% - 3px);
-        inset-inline-start: 0.5rem;
-        z-index: 3;
-        inline-size: 6px;
-        block-size: 6px;
-        background: var(--dc-gold);
-        rotate: 45deg;
-        opacity: 0;
-    }
-
-    .dc-scene[data-dc-press='jewel'] .kp-button--primary::after {
-        background: var(--dc-lac);
-    }
-
-    .dc-scene[data-dc-press='jewel'] .dc-day2::before {
-        inset-block-start: 5px;
-        inset-inline-start: calc(50% - 3px);
-    }
-
-    .dc-scene[data-dc-press='jewel'] .kp-kpi--toggle::before {
-        inset-block-start: 1.05rem;
-        inset-inline-start: auto;
-        inset-inline-end: 1.1rem;
-    }
-
-    .dc-scene[data-dc-press='jewel'] :is(.kp-button, .kp-menu__item):is(.dc-press, :active):not(.dc-rest)::after,
-    .dc-scene[data-dc-press='jewel'][data-dc-show='press'] :is(.kp-button, .kp-menu__item):not(.dc-rest)::after,
-    .dc-scene[data-dc-press='jewel'] :is(.kp-kpi--toggle, .dc-day2):is(.dc-press, :active):not(.dc-rest)::before,
-    .dc-scene[data-dc-press='jewel'][data-dc-show='press'] :is(.kp-kpi--toggle, .dc-day2):not(.dc-rest)::before {
-        opacity: 1;
-    }
-
-    .dc-scene[data-dc-press='colour'] :is(.kp-button, .kp-menu__item, .kp-kpi--toggle, .dc-day2):is(.dc-press, :active):not(.dc-rest),
-    .dc-scene[data-dc-press='colour'][data-dc-show='press'] :is(.kp-button, .kp-menu__item, .kp-kpi--toggle, .dc-day2):not(.dc-rest) {
-        border-color: var(--primary);
-        background-color: var(--secondary-active);
-    }
-
-    .dc-scene[data-dc-press='colour'] .kp-button--primary:is(.dc-press, :active):not(.dc-rest),
-    .dc-scene[data-dc-press='colour'][data-dc-show='press'] .kp-button--primary:not(.dc-rest) {
-        border-color: var(--primary-active);
-        background-color: var(--primary-active);
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        .dc-scene.dc-scene--r2[data-dc-press='fold'] :is(.kp-button, .kp-menu__item, .kp-kpi--toggle, .dc-day2) {
-            transition: --dc-a calc(var(--dc-contact) * var(--dc-slow, 1)) cubic-bezier(0.22, 1, 0.36, 1);
-        }
-
-        .dc-scene.dc-scene--r2[data-dc-press='fold'] :is(.kp-button, .kp-menu__item, .kp-kpi--toggle, .dc-day2):is(.dc-press, :active):not(.dc-rest),
-        .dc-scene.dc-scene--r2[data-dc-press='fold'][data-dc-show='press'] :is(.kp-button, .kp-menu__item, .kp-kpi--toggle, .dc-day2):not(.dc-rest) {
-            transition: --dc-a calc(var(--dc-contact) * var(--dc-slow, 1)) cubic-bezier(0.64, 0, 0.78, 0);
-        }
-
-        .dc-scene[data-dc-press='jewel'] :is(.kp-button, .kp-menu__item)::after,
-        .dc-scene[data-dc-press='jewel'] :is(.kp-kpi--toggle, .dc-day2)::before {
-            transition: opacity calc(var(--dc-contact) * var(--dc-slow, 1)) linear;
-        }
     }
 
     /* ── 19 Motifs ───────────────────────────────────────────────────────
@@ -4164,5 +3091,3141 @@
         inset-block-start: -2px;
         block-size: 2px;
         background: linear-gradient(90deg, transparent, hsl(from var(--primary) h s 88%), transparent) 30% 0 / 35% 100% no-repeat;
+    }
+
+    /* ══ Update 2 (2026-10-09): jewellery ═════════════════════════════════
+       Kenny: "Do better, I'm very underwhelmed". Six questions are drawn
+       again (6 the corners, 10 loading, 11 the bar, 13 leaving, 15 pointing,
+       17 the press); every other question above keeps its drawing. Gold
+       reads as gold: a hairline carries a highlight, the gold and a bronze
+       shade of one hue along its length (--dc-leaf-x/-y), a jewel has four
+       facets lit from the top left (--dc-gem), gold leaf has a grain
+       (--dc-grain); the inline SVG ornaments are painted from the sprite
+       `.dc-defs` (demo.js puts it beside the section once, outside the rows,
+       so its rules hang on it and not on a scene). */
+
+    .dc-defs {
+        position: absolute;
+        inline-size: 0;
+        block-size: 0;
+        overflow: hidden;
+    }
+
+    .dc-defs .dc-st-hi {
+        stop-color: var(--dc-gold-hi);
+    }
+
+    .dc-defs .dc-st-lt {
+        stop-color: var(--dc-gold-lt);
+    }
+
+    .dc-defs .dc-st-au {
+        stop-color: var(--dc-gold);
+    }
+
+    .dc-defs .dc-st-lo {
+        stop-color: var(--dc-gold-lo);
+    }
+
+    .dc-defs .dc-st-em-hi {
+        stop-color: var(--dc-em-hi);
+    }
+
+    .dc-defs .dc-st-em {
+        stop-color: var(--dc-emerald);
+    }
+
+    .dc-defs .dc-st-em-lo {
+        stop-color: var(--dc-em-lo);
+    }
+
+    /* The ornaments' strokes and fills. */
+    .dc-scene :is(.dc-orn, .dc-head) .dc-ln {
+        fill: none;
+        stroke: url(#dc-leaf-L);
+        stroke-linecap: round;
+        stroke-linejoin: miter;
+    }
+
+    .dc-scene .dc-orn--S .dc-ln {
+        stroke: url(#dc-leaf-S);
+    }
+
+    .dc-scene .dc-head .dc-ln {
+        stroke: url(#dc-leaf-H);
+    }
+
+    .dc-scene :is(.dc-orn, .dc-head, .dc-ros) .dc-ln--soft {
+        stroke-opacity: 0.72;
+    }
+
+    .dc-scene :is(.dc-orn, .dc-head) .dc-ln--flute {
+        stroke: url(#dc-leaf-V);
+        stroke-linecap: butt;
+    }
+
+    .dc-scene :is(.dc-orn, .dc-head) .dc-ln--fillback {
+        fill: var(--dc-lac);
+    }
+
+    .dc-scene :is(.dc-orn, .dc-head, .dc-ros) .dc-bd {
+        fill: url(#dc-bead);
+    }
+
+    .dc-scene :is(.dc-orn, .dc-head, .dc-ros) .dc-bd--em {
+        fill: url(#dc-emerald);
+        stroke: var(--dc-gold-lt);
+        stroke-width: 0.5;
+    }
+
+    .dc-scene :is(.dc-orn, .dc-head, .dc-ros) .dc-bd--hi {
+        fill: var(--dc-gold-hi);
+    }
+
+    .dc-scene :is(.dc-orn, .dc-head) .dc-back {
+        fill: var(--dc-lac);
+    }
+
+    .dc-scene .dc-gem .dc-f-ul {
+        fill: var(--dc-gold-hi);
+    }
+
+    .dc-scene .dc-gem .dc-f-ur {
+        fill: var(--dc-gold-lt);
+    }
+
+    .dc-scene .dc-gem .dc-f-lr {
+        fill: var(--dc-gold-lo);
+    }
+
+    .dc-scene .dc-gem .dc-f-ll {
+        fill: var(--dc-gold);
+    }
+
+    /* ── 6 The corners (update 2) ────────────────────────────────────────
+       The same card, menu panel, key figure, button, tag, chip, tooltip and
+       bar head in every option; only the corners differ. Each part is drawn
+       in three layers: its four corners (`.dc-orn`, inline SVG from demo.js:
+       the top-left drawn, the other three the same turned), the straight
+       hairlines between them (its ::after, gold leaf along each line: the
+       inner line at --dc-n, from --dc-c of each corner; the outer edge as
+       strips too where the shape is cut, --dc-on), and, where the shape is
+       cut, its lacquer and wallpaper on its ::before. A plate (card, panel,
+       key figure) takes the large corner, a button, a tag and the tooltip the
+       small one, half its size.
+       Fan (recommended): a quarter sunburst of nine rays from the corner
+       point, an arc through the square inlay, a gold pivot and a bead.
+       Ziggurat: three setbacks in a double hairline, a faceted lozenge set
+       in the corner they leave. Cove: a hollow quarter circle, two hairlines
+       following it, a bead in the hollow. Chevrons: three nested brackets,
+       the inlay running on from the largest. Medallion: a ring of eight rays
+       round an emerald, pinned on the corner's point, the inlay interrupted
+       there with a bead at each end. Pilaster: three flutes under an abacus,
+       capped with a lozenge, an architrave between the two capitals. */
+
+    .dc-scene[data-dc-corners] .dc-tag2 {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.3rem 0.7rem;
+        border: 1px solid hsl(from var(--dc-gold) h s l / 0.38);
+        border-radius: 0;
+        background: var(--dc-lac);
+        color: var(--foreground);
+        font-size: 0.72rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    .dc-scene[data-dc-corners] .kp-button {
+        padding-inline: 1.5rem;
+    }
+
+    .dc-scene[data-dc-corners] :is(.dc-plate, .kp-button, .dc-tag2) {
+        --dc-bw: 1px;
+        --dc-n: 6px;
+        --dc-c: var(--dc-n);
+        --dc-c2: 0px;
+        --dc-vn: 1;
+        --dc-on: 0;
+        position: relative;
+        isolation: isolate;
+        overflow: visible;
+        border-color: hsl(from var(--dc-gold) h s l / 0.38);
+    }
+
+    .dc-scene[data-dc-corners] :is(.kp-button, .dc-tag2, .dc-tip2) {
+        --dc-n: 3px;
+    }
+
+    .dc-scene[data-dc-corners] :is(.dc-plate, .kp-button, .dc-tag2)::after {
+        content: '';
+        position: absolute;
+        inset: calc(-1 * var(--dc-bw));
+        z-index: 2;
+        border: 0;
+        pointer-events: none;
+        opacity: 1;
+        background-image:
+            var(--dc-leaf-x), var(--dc-leaf-x), var(--dc-leaf-y), var(--dc-leaf-y), var(--dc-leaf-x), var(--dc-leaf-x), var(--dc-leaf-y),
+            var(--dc-leaf-y);
+        background-repeat: no-repeat;
+        background-position:
+            left var(--dc-c) top var(--dc-n),
+            left var(--dc-c) bottom var(--dc-n),
+            left var(--dc-n) top var(--dc-c),
+            right var(--dc-n) top var(--dc-c),
+            left var(--dc-c2) top 0,
+            left var(--dc-c2) bottom 0,
+            left 0 top var(--dc-c2),
+            right 0 top var(--dc-c2);
+        background-size:
+            calc(100% - 2 * var(--dc-c)) 1px,
+            calc(100% - 2 * var(--dc-c)) 1px,
+            calc(var(--dc-vn) * 1px) calc(100% - 2 * var(--dc-c)),
+            calc(var(--dc-vn) * 1px) calc(100% - 2 * var(--dc-c)),
+            calc((100% - 2 * var(--dc-c2)) * var(--dc-on)) 1px,
+            calc((100% - 2 * var(--dc-c2)) * var(--dc-on)) 1px,
+            calc(var(--dc-on) * 1px) calc(100% - 2 * var(--dc-c2)),
+            calc(var(--dc-on) * 1px) calc(100% - 2 * var(--dc-c2));
+        mask-image: none;
+        filter: drop-shadow(0 0 1.5px hsl(from var(--dc-gold) h s l / 0.35));
+    }
+
+    .dc-scene:is([data-dc-corners], [data-dc-loading], [data-dc-hover], [data-dc-press]) .dc-plate .kp-menu {
+        background: transparent;
+    }
+
+    .dc-scene[data-dc-corners='medallion'] .dc-row {
+        gap: 0.85rem;
+    }
+
+    .dc-scene[data-dc-corners] .dc-orn {
+        grid-area: auto;
+        position: absolute;
+        inset: calc(-1 * var(--dc-bw));
+        z-index: 3;
+        pointer-events: none;
+        filter: drop-shadow(0 0 1.5px hsl(from var(--dc-gold) h s l / 0.35));
+    }
+
+    .dc-scene[data-dc-corners] .dc-orn__c {
+        position: absolute;
+        overflow: visible;
+    }
+
+    .dc-scene[data-dc-corners] .dc-orn__c--tl {
+        inset-block-start: 0;
+        inset-inline-start: 0;
+    }
+
+    .dc-scene[data-dc-corners] .dc-orn__c--tr {
+        inset-block-start: 0;
+        inset-inline-end: 0;
+        scale: -1 1;
+    }
+
+    .dc-scene[data-dc-corners] .dc-orn__c--bl {
+        inset-block-end: 0;
+        inset-inline-start: 0;
+        scale: 1 -1;
+    }
+
+    .dc-scene[data-dc-corners] .dc-orn__c--br {
+        inset-block-end: 0;
+        inset-inline-end: 0;
+        scale: -1 -1;
+    }
+
+    /* The tooltip's point: a faceted lozenge on its inner line. */
+    .dc-scene[data-dc-corners] .dc-tip2__point {
+        display: block;
+        inset-block-start: calc(var(--dc-n) - 1px - 3.5px);
+        inline-size: 7px;
+        block-size: 7px;
+        background: var(--dc-gem-r);
+        opacity: 1;
+    }
+
+    .dc-scene[data-dc-corners] .dc-tip2 {
+        padding: 0.7rem 1.2rem;
+    }
+
+    /* The fan: the square inlay passes through the arcs. */
+    .dc-scene[data-dc-corners='fan'] .kp-card.dc-plate {
+        padding: 1.05rem 1.3rem;
+    }
+
+    /* The cut shapes: the edge is drawn as strips and corners, the
+       lacquer and its wallpaper cut on the ::before. */
+    .dc-scene:is([data-dc-corners='ziggurat'], [data-dc-corners='cove']) :is(.dc-plate, .kp-button, .dc-tag2) {
+        --dc-on: 1;
+        --dc-c2: var(--dc-c);
+        border-color: transparent;
+        background: transparent;
+    }
+
+    .dc-scene:is([data-dc-corners='ziggurat'], [data-dc-corners='cove']) :is(.dc-plate, .dc-tag2)::before {
+        all: unset;
+        content: '';
+        position: absolute;
+        inset: -1px;
+        z-index: -1;
+        pointer-events: none;
+        background-color: var(--dc-lac);
+        background-image:
+            repeating-linear-gradient(135deg, hsl(from var(--dc-gold) h s l / var(--dc-wall-a)) 0 1px, transparent 1px 12px),
+            repeating-linear-gradient(45deg, hsl(from var(--dc-gold) h s l / var(--dc-wall-a)) 0 1px, transparent 1px 12px);
+        background-size: 24px 24px;
+    }
+
+    .dc-scene[data-dc-corners='ziggurat'] :is(.dc-plate, .kp-button, .dc-tag2) {
+        --dc-zs: 4px;
+        --dc-n: 3px;
+        --dc-c: 16px;
+    }
+
+    .dc-scene[data-dc-corners='ziggurat'] :is(.kp-button, .dc-tag2, .dc-tip2) {
+        --dc-zs: 2px;
+        --dc-n: 2px;
+        --dc-c: 9px;
+    }
+
+    .dc-scene[data-dc-corners='ziggurat'] :is(.dc-plate, .dc-tag2)::before {
+        clip-path: polygon(
+            0 calc(3 * var(--dc-zs)),
+            var(--dc-zs) calc(3 * var(--dc-zs)),
+            var(--dc-zs) calc(2 * var(--dc-zs)),
+            calc(2 * var(--dc-zs)) calc(2 * var(--dc-zs)),
+            calc(2 * var(--dc-zs)) var(--dc-zs),
+            calc(3 * var(--dc-zs)) var(--dc-zs),
+            calc(3 * var(--dc-zs)) 0,
+            calc(100% - 3 * var(--dc-zs)) 0,
+            calc(100% - 3 * var(--dc-zs)) var(--dc-zs),
+            calc(100% - 2 * var(--dc-zs)) var(--dc-zs),
+            calc(100% - 2 * var(--dc-zs)) calc(2 * var(--dc-zs)),
+            calc(100% - var(--dc-zs)) calc(2 * var(--dc-zs)),
+            calc(100% - var(--dc-zs)) calc(3 * var(--dc-zs)),
+            100% calc(3 * var(--dc-zs)),
+            100% calc(100% - 3 * var(--dc-zs)),
+            calc(100% - var(--dc-zs)) calc(100% - 3 * var(--dc-zs)),
+            calc(100% - var(--dc-zs)) calc(100% - 2 * var(--dc-zs)),
+            calc(100% - 2 * var(--dc-zs)) calc(100% - 2 * var(--dc-zs)),
+            calc(100% - 2 * var(--dc-zs)) calc(100% - var(--dc-zs)),
+            calc(100% - 3 * var(--dc-zs)) calc(100% - var(--dc-zs)),
+            calc(100% - 3 * var(--dc-zs)) 100%,
+            calc(3 * var(--dc-zs)) 100%,
+            calc(3 * var(--dc-zs)) calc(100% - var(--dc-zs)),
+            calc(2 * var(--dc-zs)) calc(100% - var(--dc-zs)),
+            calc(2 * var(--dc-zs)) calc(100% - 2 * var(--dc-zs)),
+            var(--dc-zs) calc(100% - 2 * var(--dc-zs)),
+            var(--dc-zs) calc(100% - 3 * var(--dc-zs)),
+            0 calc(100% - 3 * var(--dc-zs))
+        );
+    }
+
+    .dc-scene[data-dc-corners='cove'] :is(.dc-plate, .kp-button, .dc-tag2) {
+        --dc-cr: 10.5px;
+        --dc-n: 3px;
+        --dc-c: 14px;
+    }
+
+    .dc-scene[data-dc-corners='cove'] :is(.kp-button, .dc-tag2, .dc-tip2) {
+        --dc-cr: 5.5px;
+        --dc-n: 2px;
+        --dc-c: 8px;
+    }
+
+    .dc-scene[data-dc-corners='cove'] :is(.dc-plate, .dc-tag2)::before {
+        mask:
+            radial-gradient(circle at 0 0, transparent var(--dc-cr), var(--foreground) calc(var(--dc-cr) + 0.5px)) 0 0 / 51% 51% no-repeat,
+            radial-gradient(circle at 100% 0, transparent var(--dc-cr), var(--foreground) calc(var(--dc-cr) + 0.5px)) 100% 0 / 51% 51% no-repeat,
+            radial-gradient(circle at 0 100%, transparent var(--dc-cr), var(--foreground) calc(var(--dc-cr) + 0.5px)) 0 100% / 51% 51% no-repeat,
+            radial-gradient(circle at 100% 100%, transparent var(--dc-cr), var(--foreground) calc(var(--dc-cr) + 0.5px)) 100% 100% / 51% 51% no-repeat;
+    }
+
+    .dc-scene[data-dc-corners='chevrons'] :is(.dc-plate, .kp-button, .dc-tag2) {
+        --dc-c: 20px;
+    }
+
+    .dc-scene[data-dc-corners='chevrons'] :is(.kp-button, .dc-tag2, .dc-tip2) {
+        --dc-c: 10px;
+    }
+
+    .dc-scene[data-dc-corners='chevrons'] .kp-card.dc-plate {
+        padding: 1.05rem 1.4rem;
+    }
+
+    .dc-scene[data-dc-corners='medallion'] :is(.dc-plate, .kp-button, .dc-tag2) {
+        --dc-c: 12px;
+    }
+
+    .dc-scene[data-dc-corners='medallion'] :is(.kp-button, .dc-tag2, .dc-tip2) {
+        --dc-c: 7px;
+    }
+
+    .dc-scene[data-dc-corners='pilaster'] :is(.dc-plate, .kp-button, .dc-tag2) {
+        --dc-n: 9px;
+        --dc-c: 12px;
+        --dc-vn: 0;
+    }
+
+    .dc-scene[data-dc-corners='pilaster'] :is(.kp-button, .dc-tag2, .dc-tip2) {
+        --dc-n: 4px;
+        --dc-c: 9px;
+    }
+
+    .dc-scene[data-dc-corners='pilaster'] :is(.kp-card, .kp-kpi).dc-plate {
+        padding-inline: 1.45rem;
+    }
+
+    .dc-scene[data-dc-corners='pilaster'] .kp-popover.dc-plate {
+        padding: 0.8rem 1rem;
+    }
+
+    .dc-scene[data-dc-corners='pilaster'] :is(.kp-button, .dc-tag2, .dc-tip2) {
+        padding-inline: 1.2rem;
+    }
+
+    .dc-scene[data-dc-corners='pilaster'] .dc-tip2 {
+        padding-block: 0.75rem;
+    }
+
+    /* The bar's head in the corners row: the bar is question 11's first;
+       its head is each option's corner as a jewel (`.dc-head`, demo.js). */
+    .dc-scene[data-dc-corners] .dc-bar2 .kp-progressbar__head::before {
+        content: none;
+    }
+
+    .dc-scene[data-dc-corners] .dc-bar2 .dc-head {
+        position: absolute;
+        inset-block-start: calc(50% - 7px * var(--dc-s));
+        inset-inline-start: calc(-7px * var(--dc-s));
+        inline-size: calc(14px * var(--dc-s));
+        block-size: calc(14px * var(--dc-s));
+        overflow: visible;
+        filter: drop-shadow(0 0 2px hsl(from var(--dc-gold) h s l / 0.45));
+    }
+
+    /* ── 10 Loading (update 2) ───────────────────────────────────────────
+       A tile, a panel, a menu entry, a month of days, a chart's plot and
+       skeleton lines wait, each a plate (the menu entry and the skeleton's
+       block too); every option loops at 2.4 s, under the content unless it
+       covers it (the doors). `.dc-wait` is the layer an option draws on, the
+       size of the part; demo.js puts in it what the option needs (the crest,
+       the pearls, the jewel, the doors).
+       Lattice (recommended): the wallpaper's lozenges light in a slow
+       diagonal wave from the top-left corner to the bottom-right, a band
+       three lozenges wide, the lines from 8 % to about 30 % gold
+       (dc-ld-lattice). Tracing: two bright points run the inlay from the top
+       centre both ways and meet at the bottom, the line brighter behind
+       them, then it fades (dc-ld-trace). Crest: a pale half-sun of fine rays
+       rises from the foot unfolding and sinks folding (dc-ld-crest). Satin:
+       a wide soft band of light with a satin weave in it slides across the
+       lacquer (dc-ld-satin). Pearls: seven ivory pearls in gold rings on a
+       gold thread at the foot, lit by a wave that runs along the string and
+       back, each lifting a little as it lights (dc-ld-pearls). Jewel: a
+       faceted gold lozenge set with an emerald turns about its vertical axis
+       and throws a glint as it faces you (dc-ld-turn). Tide: deeper blue
+       rises from the foot and sinks under a gold waterline (dc-ld-tide).
+       Doors: two lacquer doors with panels and a lozenge handle meet at a
+       double hairline, part by a third and close (dc-ld-doors). Orbit: one
+       glint circles the inlay clockwise, the line brighter behind it for a
+       quarter lap (dc-ld-orbit). Engraver: fine engraved lines are cut one
+       under the other, each from the centre to both sides, a spark at each
+       cutting tip, then they fade together (dc-ld-engrave). Breathe (the
+       earlier best, kept as drawn): the wallpaper from 8 % to 20 % gold and
+       back (dc-load-breathe). */
+
+    .dc-scene[data-dc-loading] .dc-waits {
+        position: relative;
+        overflow: clip;
+    }
+
+    .dc-scene[data-dc-loading] .dc-waits.dc-plate:not(.kp-menu__item) {
+        min-block-size: 4.6rem;
+    }
+
+    .dc-scene[data-dc-loading] .dc-waits > :not(.dc-wait) {
+        position: relative;
+        z-index: 2;
+        opacity: 0.55;
+    }
+
+    .dc-scene[data-dc-loading] .dc-wait {
+        display: grid;
+        place-items: center;
+        overflow: clip;
+    }
+
+    .dc-scene[data-dc-loading] .dc-panel2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.4rem;
+        padding: 0.85rem 1.1rem 1.1rem;
+        font-size: 0.8rem;
+    }
+
+    .dc-scene[data-dc-loading] .dc-panel2 > span:nth-child(-n + 2) {
+        color: var(--muted-foreground);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    .dc-scene[data-dc-loading] .dc-waits > .dc-month {
+        padding: 0.8rem 0.9rem 1.1rem;
+    }
+
+    .dc-scene[data-dc-loading] .dc-plot2 {
+        block-size: 5.5rem;
+        margin: 0.8rem 0.8rem 1rem;
+        background:
+            linear-gradient(hsl(from var(--dc-gold) h s l / 0.5) 0 0) 0 100% / 100% 1px no-repeat,
+            repeating-linear-gradient(to bottom, transparent 0 21px, hsl(from var(--dc-gold) h s l / 0.18) 21px 22px);
+    }
+
+    .dc-scene[data-dc-loading] .kp-menu__item.dc-waits {
+        --dc-in: 3px;
+        --dc-n: 3px;
+        display: flex;
+        align-items: center;
+        min-block-size: 2.9rem;
+        padding: 0.55rem 0.95rem;
+        background-color: var(--dc-lac);
+    }
+
+    .dc-scene[data-dc-loading] .dc-skel {
+        --dc-in: 4px;
+        --dc-n: 4px;
+        gap: 0.75rem;
+        padding: 1.05rem 1.2rem 1.15rem;
+    }
+
+    /* The skeleton's lines: gold hairlines with a jewel at their start,
+       100, 82 and 58 % long. */
+    .dc-scene[data-dc-loading] .dc-skel .kp-skeleton {
+        position: relative;
+        block-size: 0.7rem;
+        margin: 0;
+        border: 0;
+        background: none;
+    }
+
+    .dc-scene[data-dc-loading] .dc-skel .kp-skeleton:nth-child(2) {
+        --dc-len: 82%;
+    }
+
+    .dc-scene[data-dc-loading] .dc-skel .kp-skeleton:nth-child(3) {
+        --dc-len: 58%;
+    }
+
+    .dc-scene[data-dc-loading] .dc-skel .kp-skeleton::before {
+        content: '';
+        position: absolute;
+        inset: auto calc(100% - var(--dc-len, 100%)) calc(50% - 0.5px) 10px;
+        block-size: 1px;
+        border: 0;
+        clip-path: none;
+        background: var(--dc-leaf-x);
+        animation: none;
+    }
+
+    .dc-scene[data-dc-loading] .dc-skel .kp-skeleton::after {
+        content: '';
+        position: absolute;
+        inset-block-start: calc(50% - 3px);
+        inset-inline-start: 0;
+        inline-size: 6px;
+        block-size: 6px;
+        background: var(--dc-gem-r);
+        rotate: 45deg;
+    }
+
+    /* Lattice: a lit copy of the wallpaper, seen through a diagonal band. */
+    .dc-scene[data-dc-loading='lattice'] .dc-wait::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image:
+            repeating-linear-gradient(135deg, hsl(from var(--dc-gold-hi) h s l / 0.62) 0 1px, transparent 1px 12px),
+            repeating-linear-gradient(45deg, hsl(from var(--dc-gold-hi) h s l / 0.62) 0 1px, transparent 1px 12px),
+            linear-gradient(hsl(from var(--dc-gold) h s l / 0.08) 0 0);
+        background-size:
+            24px 24px,
+            24px 24px,
+            auto;
+        mask-image: linear-gradient(
+            135deg,
+            transparent calc(50% - 64px),
+            var(--foreground) calc(50% - 20px) calc(50% + 20px),
+            transparent calc(50% + 64px)
+        );
+        mask-size: 300% 300%;
+        mask-repeat: no-repeat;
+        mask-position: 100% 100%;
+        mix-blend-mode: plus-lighter;
+    }
+
+    /* Tracing and orbit: a bright copy of the inlay (the trail) and its
+       bright points (the heads), the same lines as the plate's ::after. The
+       leave's glint and double rule use the same copy on the plate. */
+    .dc-scene[data-dc-loading='tracing'] .dc-wait::before,
+    .dc-scene[data-dc-loading='tracing'] .dc-wait::after,
+    .dc-scene[data-dc-loading='orbit'] .dc-wait::before,
+    .dc-scene[data-dc-loading='orbit'] .dc-wait::after,
+    .dc-scene:is([data-dc-leave='glint'], [data-dc-leave='double']) .dc-plate::before {
+        content: '';
+        position: absolute;
+        inset: calc(var(--dc-in) - 1px);
+        pointer-events: none;
+        background-image:
+            linear-gradient(var(--dc-trace) 0 0), linear-gradient(var(--dc-trace) 0 0), linear-gradient(var(--dc-trace) 0 0),
+            linear-gradient(var(--dc-trace) 0 0), linear-gradient(var(--dc-trace) 0 0), linear-gradient(var(--dc-trace) 0 0),
+            linear-gradient(var(--dc-trace) 0 0), linear-gradient(var(--dc-trace) 0 0), linear-gradient(var(--dc-trace) 0 0),
+            linear-gradient(var(--dc-trace) 0 0), linear-gradient(var(--dc-trace) 0 0), linear-gradient(var(--dc-trace) 0 0);
+        background-repeat: no-repeat;
+        background-position:
+            left var(--dc-n) top 0,
+            left var(--dc-n) bottom 0,
+            left 0 top var(--dc-n),
+            right 0 top var(--dc-n),
+            left var(--dc-n) top 0,
+            left 0 top var(--dc-n),
+            right var(--dc-n) top 0,
+            right 0 top var(--dc-n),
+            left var(--dc-n) bottom 0,
+            left 0 bottom var(--dc-n),
+            right var(--dc-n) bottom 0,
+            right 0 bottom var(--dc-n);
+        background-size:
+            calc(100% - 2 * var(--dc-n)) 1px,
+            calc(100% - 2 * var(--dc-n)) 1px,
+            1px calc(100% - 2 * var(--dc-n)),
+            1px calc(100% - 2 * var(--dc-n)),
+            1px calc(var(--dc-n) + 1px),
+            calc(var(--dc-n) + 1px) 1px,
+            1px calc(var(--dc-n) + 1px),
+            calc(var(--dc-n) + 1px) 1px,
+            1px calc(var(--dc-n) + 1px),
+            calc(var(--dc-n) + 1px) 1px,
+            1px calc(var(--dc-n) + 1px),
+            calc(var(--dc-n) + 1px) 1px;
+    }
+
+    .dc-scene:is([data-dc-loading='tracing'], [data-dc-loading='orbit']) .dc-wait {
+        --dc-trace: hsl(from var(--dc-gold-hi) h s 90%);
+    }
+
+    .dc-scene:is([data-dc-loading='tracing'], [data-dc-loading='orbit']) .dc-wait::before {
+        filter: drop-shadow(0 0 2px var(--dc-gold-hi)) drop-shadow(0 0 4px hsl(from var(--dc-gold) h s l / 0.7));
+    }
+
+    .dc-scene:is([data-dc-loading='tracing'], [data-dc-loading='orbit']) .dc-wait::after {
+        --dc-trace: hsl(from var(--foreground) h s 97%);
+        filter: drop-shadow(0 0 2px var(--dc-gold-hi)) drop-shadow(0 0 5px hsl(from var(--dc-gold) h s l / 0.9));
+    }
+
+    .dc-scene[data-dc-loading='tracing'] .dc-wait {
+        --dc-p: 0;
+    }
+
+    .dc-scene[data-dc-loading='tracing'] .dc-wait::before {
+        opacity: var(--dc-w);
+        mask-image: conic-gradient(from calc(var(--dc-p) * -180deg) at 50% 50%, var(--foreground) 0 calc(var(--dc-p) * 360deg), transparent 0);
+    }
+
+    .dc-scene[data-dc-loading='tracing'] .dc-wait::after {
+        opacity: calc(min(1, var(--dc-p) * 30) * min(1, (1 - var(--dc-p)) * 14));
+        mask-image: conic-gradient(
+            from calc(var(--dc-p) * -180deg - 6deg) at 50% 50%,
+            var(--foreground) 0 12deg,
+            transparent 0 calc(var(--dc-p) * 360deg),
+            var(--foreground) 0 calc(var(--dc-p) * 360deg + 12deg),
+            transparent 0
+        );
+    }
+
+    .dc-scene[data-dc-loading='orbit'] .dc-wait::before {
+        opacity: 0.95;
+        mask-image: conic-gradient(from calc(var(--dc-o) - 90deg) at 50% 50%, transparent 0deg, var(--foreground) 90deg, transparent 0);
+    }
+
+    .dc-scene[data-dc-loading='orbit'] .dc-wait::after {
+        mask-image: conic-gradient(from calc(var(--dc-o) - 7deg) at 50% 50%, var(--foreground) 0 14deg, transparent 0);
+    }
+
+    /* Crest: a pale half-sun at the foot, rising as it unfolds. */
+    .dc-scene[data-dc-loading='crest'] .dc-wait {
+        place-items: end center;
+        --dc-w: 1;
+    }
+
+    .dc-scene[data-dc-loading='crest'] .dc-wait > .dc-fan {
+        --dc-a: calc(var(--dc-w) * 180deg);
+        inline-size: min(40%, 9rem);
+        translate: 0 calc((1 - var(--dc-w)) * 62%);
+        background:
+            radial-gradient(circle 4px at 50% 100%, hsl(from var(--dc-gold-hi) h s l / 0.55) 0 2.5px, transparent 3.5px),
+            radial-gradient(
+                50% 100% at 50% 100%,
+                transparent calc(100% - 1.4px),
+                hsl(from var(--dc-gold-hi) h s l / 0.32) calc(100% - 1px) 99.4%,
+                transparent 100%
+            ),
+            radial-gradient(
+                50% 100% at 50% 100%,
+                hsl(from var(--dc-gold-hi) h s l / 0.16),
+                hsl(from var(--dc-gold) h s l / 0.06) 62%,
+                transparent 100%
+            );
+    }
+
+    .dc-scene[data-dc-loading='crest'] .dc-wait > .dc-fan::before {
+        background: repeating-conic-gradient(
+            from calc(var(--dc-a) / -2 - 0.35deg) at 50% 100%,
+            hsl(from var(--dc-gold-hi) h s l / 0.42) 0 0.7deg,
+            transparent 0.7deg var(--dc-rp)
+        );
+        mask-image: radial-gradient(50% 100% at 50% 100%, transparent 14%, var(--foreground) 34%, hsl(from var(--foreground) h s l / 0.5) 100%);
+    }
+
+    .dc-scene[data-dc-loading='crest'] .dc-waits > :not(.dc-wait) {
+        opacity: 0.6;
+    }
+
+    /* Satin: a soft band of light with a satin weave, leaning, sliding. */
+    .dc-scene[data-dc-loading='satin'] .dc-wait::before {
+        content: '';
+        position: absolute;
+        inset-block: -30%;
+        inset-inline-start: 0;
+        inline-size: 40%;
+        background:
+            repeating-linear-gradient(90deg, hsl(from var(--dc-gold-hi) h s l / 0.06) 0 1px, transparent 1px 3px),
+            linear-gradient(
+                90deg,
+                transparent 0,
+                hsl(from var(--dc-gold-hi) h s l / 0.035) 18%,
+                hsl(from var(--dc-gold-hi) h s l / 0.1) 44% 56%,
+                hsl(from var(--dc-gold-hi) h s l / 0.035) 82%,
+                transparent
+            );
+        mask-image: linear-gradient(90deg, transparent, var(--foreground) 32% 68%, transparent);
+        mix-blend-mode: plus-lighter;
+        transform: translateX(calc(var(--dc-g) * 360% - 110%)) skewX(-24deg);
+    }
+
+    /* Pearls: seven on a gold thread at the foot; the wave --dc-w runs from
+       before the first to past the last and back, and each pearl lights as
+       it passes (--dc-k, 0 to 1, from its rank --i). */
+    .dc-scene[data-dc-loading='pearls'] .dc-waits.dc-plate:not(.kp-menu__item, .kp-card) {
+        padding-block-end: 0.95rem;
+    }
+
+    .dc-scene[data-dc-loading='pearls'] .kp-card.dc-waits {
+        padding-block-end: 1.6rem;
+    }
+
+    .dc-scene[data-dc-loading='pearls'] .dc-skel {
+        padding-block-end: 1.7rem;
+    }
+
+    .dc-scene[data-dc-loading='pearls'] .kp-menu__item.dc-waits {
+        padding-block-end: 0.95rem;
+    }
+
+    .dc-scene[data-dc-loading='pearls'] .dc-pearls {
+        --dc-pz: 7px;
+        position: absolute;
+        inset-inline: 13%;
+        inset-block-end: 9px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        block-size: 10px;
+    }
+
+    .dc-scene[data-dc-loading='pearls'] .kp-menu__item .dc-pearls {
+        --dc-pz: 5px;
+        inset-block-end: 6px;
+    }
+
+    .dc-scene[data-dc-loading='pearls'] .dc-pearls::before {
+        content: '';
+        position: absolute;
+        inset-inline: 2px;
+        inset-block-start: calc(50% - 0.5px);
+        block-size: 1px;
+        background: var(--dc-leaf-x);
+        opacity: 0.55;
+    }
+
+    .dc-scene[data-dc-loading='pearls'] .dc-pearls > i {
+        --dc-k: max(0, 1 - max(var(--dc-w) * 6 - var(--i), var(--i) - var(--dc-w) * 6) / 1.6);
+        position: relative;
+        inline-size: var(--dc-pz);
+        block-size: var(--dc-pz);
+        border-radius: 50%;
+        background: radial-gradient(
+            circle at 34% 30%,
+            hsl(from var(--foreground) h s 99%) 0 14%,
+            var(--foreground) 36%,
+            hsl(from var(--foreground) calc(h - 8) calc(s - 30) calc(l - 32)) 100%
+        );
+        box-shadow:
+            0 0 0 1px hsl(from var(--dc-gold) h s l / calc(0.6 + 0.4 * var(--dc-k))),
+            0 0 calc(1px + 7px * var(--dc-k)) hsl(from var(--dc-gold-hi) h s l / calc(0.75 * var(--dc-k)));
+        filter: brightness(calc(0.62 + 0.48 * var(--dc-k)));
+        translate: 0 calc(-2.5px * var(--dc-k));
+    }
+
+    /* Jewel: a gold lozenge set with an emerald, turning; its facets take
+       the light as they face it, a glint is thrown each time it faces you. */
+    .dc-scene[data-dc-loading='jewel'] .dc-gem {
+        --dc-gz: 30px;
+        position: relative;
+        display: grid;
+        inline-size: var(--dc-gz);
+        block-size: var(--dc-gz);
+        perspective: calc(var(--dc-gz) * 4.5);
+        filter: drop-shadow(0 0 4px hsl(from var(--dc-gold) h s l / 0.45));
+    }
+
+    .dc-scene[data-dc-loading='jewel'] .kp-menu__item .dc-wait {
+        justify-items: end;
+        padding-inline-end: 0.95rem;
+    }
+
+    .dc-scene[data-dc-loading='jewel'] .kp-menu__item .dc-gem {
+        --dc-gz: 20px;
+    }
+
+    .dc-scene[data-dc-loading='jewel'] .dc-gem > i {
+        --dc-sn: sin(var(--dc-t));
+        clip-path: var(--dc-lozenge);
+        background: conic-gradient(
+            hsl(from var(--primary) calc(h + 3) calc(s + 8) calc(l + 12 - 8 * var(--dc-sn))) 0 90deg,
+            hsl(from var(--primary) calc(h - 8) calc(s + 4) calc(l - 18 + 6 * var(--dc-sn))) 0 180deg,
+            hsl(from var(--primary) h s calc(l - 2 + 6 * var(--dc-sn))) 0 270deg,
+            hsl(from var(--primary) calc(h + 6) calc(s + 14) calc(l + 26 + 6 * var(--dc-sn))) 0
+        );
+        transform: rotateY(var(--dc-t));
+    }
+
+    .dc-scene[data-dc-loading='jewel'] .dc-gem > i::before {
+        content: '';
+        position: absolute;
+        inset: 27%;
+        clip-path: var(--dc-lozenge);
+        background: conic-gradient(
+            hsl(from var(--accent) h s calc(l + 12 - 8 * var(--dc-sn))) 0 90deg,
+            hsl(from var(--accent) h s calc(l - 12 + 5 * var(--dc-sn))) 0 180deg,
+            hsl(from var(--accent) h s calc(l + 2 + 5 * var(--dc-sn))) 0 270deg,
+            hsl(from var(--accent) calc(h - 4) calc(s + 6) calc(l + 26 + 6 * var(--dc-sn))) 0
+        );
+    }
+
+    .dc-scene[data-dc-loading='jewel'] .dc-gem > i {
+        position: relative;
+    }
+
+    .dc-scene[data-dc-loading='jewel'] .dc-gem::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 8%;
+        inset-inline-start: 4%;
+        inline-size: 60%;
+        aspect-ratio: 1;
+        background:
+            radial-gradient(circle, hsl(from var(--foreground) h s 98%) 0 1px, transparent 2.6px),
+            linear-gradient(90deg, transparent 8%, hsl(from var(--foreground) h s 97%) 50%, transparent 92%) 50% 50% / 100% 1px no-repeat,
+            linear-gradient(transparent 8%, hsl(from var(--foreground) h s 97%) 50%, transparent 92%) 50% 50% / 1px 100% no-repeat;
+        opacity: pow(max(0, cos(var(--dc-t))), 14);
+        scale: calc(0.4 + 0.6 * pow(max(0, cos(var(--dc-t))), 14));
+    }
+
+    .dc-scene[data-dc-loading='jewel'] .dc-waits:not(.kp-menu__item) > :not(.dc-wait) {
+        opacity: 0.35;
+    }
+
+    /* Tide: deeper blue from the foot, a gold waterline on it. */
+    .dc-scene[data-dc-loading='tide'] .dc-wait::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            to top,
+            hsl(from var(--dc-lac) calc(h + 6) calc(s + 28) calc(l - 5) / 0.94),
+            hsl(from var(--dc-lac) calc(h + 4) calc(s + 22) calc(l - 2) / 0.8)
+        );
+        translate: 0 calc((1 - var(--dc-p)) * 100%);
+    }
+
+    .dc-scene[data-dc-loading='tide'] .dc-wait::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: calc((1 - var(--dc-p)) * 100% - 0.5px);
+        block-size: 4px;
+        background:
+            radial-gradient(ellipse 22px 1.5px at calc(var(--dc-p) * 100%) 0.5px, hsl(from var(--foreground) h s 97%), transparent) 0 0 / 100% 2px
+                no-repeat,
+            var(--dc-leaf-x) 0 0 / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--dc-gold-hi) h s l / 0.22) 0 0) 0 3px / 100% 1px no-repeat;
+        filter: drop-shadow(0 0 3px hsl(from var(--dc-gold) h s l / 0.7));
+    }
+
+    .dc-scene[data-dc-loading='tide'] .dc-waits > :not(.dc-wait) {
+        opacity: 0.75;
+    }
+
+    /* Doors: two lacquer doors over the part, a double hairline where they
+       meet, a panel and a lozenge handle on each; the wallpaper runs on
+       across both. */
+    .dc-scene[data-dc-loading='doors'] .dc-wait {
+        z-index: 3;
+        container-type: size;
+    }
+
+    .dc-scene[data-dc-loading='doors'] .dc-waits.dc-plate::after {
+        z-index: 4;
+    }
+
+    .dc-scene[data-dc-loading='doors'] .dc-door {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: calc(50% + 0.5px);
+        background-color: hsl(from var(--dc-lac) h s calc(l + 1.5));
+        background-image:
+            linear-gradient(var(--dc-gold) 0 0), linear-gradient(90deg, transparent, hsl(from var(--dc-gold-hi) h s l / 0.05) 60%, transparent),
+            repeating-linear-gradient(135deg, hsl(from var(--dc-gold) h s l / var(--dc-wall-a)) 0 1px, transparent 1px 12px),
+            repeating-linear-gradient(45deg, hsl(from var(--dc-gold) h s l / var(--dc-wall-a)) 0 1px, transparent 1px 12px);
+        background-repeat: no-repeat, no-repeat, repeat, repeat;
+        background-position:
+            right 1px top 0,
+            0 0,
+            0 0,
+            0 0;
+        background-size:
+            1px 100%,
+            100% 100%,
+            24px 24px,
+            24px 24px;
+        box-shadow: inset -1px 0 0 hsl(from var(--dc-gold-lo) h s l / 0.6);
+        translate: calc(var(--dc-p) * -33.4%) 0;
+    }
+
+    .dc-scene[data-dc-loading='doors'] .dc-door--r {
+        inset-inline: auto 0;
+        background-position:
+            left 1px top 0,
+            0 0,
+            calc(-50cqw + 0.5px) 0,
+            calc(-50cqw + 0.5px) 0;
+        box-shadow: inset 1px 0 0 hsl(from var(--dc-gold-lo) h s l / 0.6);
+        translate: calc(var(--dc-p) * 33.4%) 0;
+    }
+
+    .dc-scene[data-dc-loading='doors'] .dc-door::before {
+        content: '';
+        position: absolute;
+        inset: 8px 9px 8px 8px;
+        border: 1px solid hsl(from var(--dc-gold) h s l / 0.32);
+    }
+
+    .dc-scene[data-dc-loading='doors'] .dc-door--r::before {
+        inset: 8px 8px 8px 9px;
+    }
+
+    .dc-scene[data-dc-loading='doors'] .dc-door::after {
+        content: '';
+        position: absolute;
+        inset-block-start: calc(50% - 3.5px);
+        inset-inline-end: 14px;
+        inline-size: 7px;
+        block-size: 7px;
+        background: var(--dc-gem-r);
+        rotate: 45deg;
+        filter: drop-shadow(0 0 2px hsl(from var(--dc-gold) h s l / 0.6));
+    }
+
+    .dc-scene[data-dc-loading='doors'] .dc-door--r::after {
+        inset-inline: 14px auto;
+    }
+
+    .dc-scene[data-dc-loading='doors'] .kp-menu__item .dc-door::before {
+        inset: 5px 6px 5px 5px;
+    }
+
+    .dc-scene[data-dc-loading='doors'] .kp-menu__item .dc-door--r::before {
+        inset: 5px 5px 5px 6px;
+    }
+
+    .dc-scene[data-dc-loading='doors'] .kp-menu__item .dc-door::after {
+        inset-block-start: calc(50% - 2.5px);
+        inline-size: 5px;
+        block-size: 5px;
+    }
+
+    /* Engraver: engraved lines (a cut in shade, its lit lip under it) cut
+       under a wedge that runs down the part from the centre outward, and a
+       spark at each cutting tip. */
+    .dc-scene[data-dc-loading='engraver'] .dc-wait {
+        --dc-p: 1;
+        --dc-w: 1;
+    }
+
+    .dc-scene[data-dc-loading='engraver'] .dc-wait::before,
+    .dc-scene[data-dc-loading='engraver'] .dc-wait::after {
+        content: '';
+        position: absolute;
+        inset: 10px 13px;
+        --dc-y: calc(var(--dc-p) * (100% + 56px));
+    }
+
+    .dc-scene[data-dc-loading='engraver'] .dc-wait::before {
+        background: repeating-linear-gradient(
+            to bottom,
+            transparent 0 8px,
+            hsl(from var(--dc-gold-lo) h s l / 0.6) 8px 9px,
+            hsl(from var(--dc-gold-hi) h s l / 0.24) 9px 10px
+        );
+        mask-image: conic-gradient(from -74deg at 50% var(--dc-y), var(--foreground) 0 148deg, transparent 0);
+        opacity: var(--dc-w);
+    }
+
+    .dc-scene[data-dc-loading='engraver'] .dc-wait::after {
+        background: repeating-linear-gradient(to bottom, transparent 0 8px, var(--dc-gold-hi) 8px 9px, transparent 9px 10px);
+        mask-image: conic-gradient(
+            from -74deg at 50% var(--dc-y),
+            var(--foreground) 0 1.2deg,
+            transparent 0 146.8deg,
+            var(--foreground) 0 148deg,
+            transparent 0
+        );
+        filter: drop-shadow(0 0 1.5px var(--dc-gold-hi));
+        opacity: calc(0.85 * var(--dc-w) * min(1, (1 - var(--dc-p)) * 20));
+    }
+
+    @keyframes dc-ld-lattice {
+        0% {
+            mask-position: 100% 100%;
+            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+        }
+        88% {
+            mask-position: 0% 0%;
+        }
+        100% {
+            mask-position: 0% 0%;
+        }
+    }
+
+    @keyframes dc-ld-trace {
+        0% {
+            --dc-p: 0;
+            --dc-w: 1;
+            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+        }
+        58% {
+            --dc-p: 1;
+            --dc-w: 1;
+            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+        }
+        92% {
+            --dc-p: 1;
+            --dc-w: 0;
+        }
+        100% {
+            --dc-p: 1;
+            --dc-w: 0;
+        }
+    }
+
+    @keyframes dc-ld-crest {
+        0% {
+            --dc-w: 0;
+            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+        }
+        50% {
+            --dc-w: 1;
+            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+        }
+        100% {
+            --dc-w: 0;
+        }
+    }
+
+    @keyframes dc-ld-satin {
+        0% {
+            --dc-g: 0;
+            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+        }
+        86% {
+            --dc-g: 1;
+        }
+        100% {
+            --dc-g: 1;
+        }
+    }
+
+    @keyframes dc-ld-pearls {
+        0% {
+            --dc-w: -0.3;
+            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+        }
+        50% {
+            --dc-w: 1.3;
+            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+        }
+        100% {
+            --dc-w: -0.3;
+        }
+    }
+
+    @keyframes dc-ld-turn {
+        from {
+            --dc-t: 0deg;
+        }
+        to {
+            --dc-t: 360deg;
+        }
+    }
+
+    @keyframes dc-ld-tide {
+        0% {
+            --dc-p: 0.1;
+            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+        }
+        50% {
+            --dc-p: 0.9;
+            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+        }
+        100% {
+            --dc-p: 0.1;
+        }
+    }
+
+    @keyframes dc-ld-doors {
+        0% {
+            --dc-p: 0;
+        }
+        12% {
+            --dc-p: 0;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        50% {
+            --dc-p: 1;
+        }
+        62% {
+            --dc-p: 1;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+        100% {
+            --dc-p: 0;
+        }
+    }
+
+    @keyframes dc-ld-orbit {
+        from {
+            --dc-o: 0deg;
+        }
+        to {
+            --dc-o: 360deg;
+        }
+    }
+
+    @keyframes dc-ld-engrave {
+        0% {
+            --dc-p: 0;
+            --dc-w: 1;
+        }
+        66% {
+            --dc-p: 1;
+            --dc-w: 1;
+            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+        }
+        90% {
+            --dc-p: 1;
+            --dc-w: 0;
+        }
+        100% {
+            --dc-p: 1;
+            --dc-w: 0;
+        }
+    }
+
+    @keyframes dc-load-breathe {
+        0% {
+            --dc-wall-a: 0.08;
+            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+        }
+        50% {
+            --dc-wall-a: 0.2;
+            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+        }
+        100% {
+            --dc-wall-a: 0.08;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dc-scene[data-dc-loading='lattice'] .dc-wait::before {
+            animation: dc-ld-lattice calc(var(--dc-loop) * var(--dc-slow, 1)) linear infinite;
+        }
+
+        .dc-scene[data-dc-loading='tracing'] .dc-wait {
+            animation: dc-ld-trace calc(var(--dc-loop) * var(--dc-slow, 1)) linear infinite;
+        }
+
+        .dc-scene[data-dc-loading='crest'] .dc-wait {
+            animation: dc-ld-crest calc(var(--dc-loop) * var(--dc-slow, 1)) linear infinite;
+        }
+
+        .dc-scene[data-dc-loading='satin'] .dc-wait {
+            animation: dc-ld-satin calc(var(--dc-loop) * var(--dc-slow, 1)) linear infinite;
+        }
+
+        .dc-scene[data-dc-loading='pearls'] .dc-pearls {
+            animation: dc-ld-pearls calc(var(--dc-loop) * var(--dc-slow, 1)) linear infinite;
+        }
+
+        .dc-scene[data-dc-loading='jewel'] .dc-gem {
+            animation: dc-ld-turn calc(var(--dc-loop) * var(--dc-slow, 1)) linear infinite;
+        }
+
+        .dc-scene[data-dc-loading='tide'] .dc-wait {
+            animation: dc-ld-tide calc(var(--dc-loop) * var(--dc-slow, 1)) linear infinite;
+        }
+
+        .dc-scene[data-dc-loading='doors'] .dc-wait {
+            animation: dc-ld-doors calc(var(--dc-loop) * var(--dc-slow, 1)) linear infinite;
+        }
+
+        .dc-scene[data-dc-loading='orbit'] .dc-wait {
+            animation: dc-ld-orbit calc(var(--dc-loop) * var(--dc-slow, 1)) linear infinite;
+        }
+
+        .dc-scene[data-dc-loading='engraver'] .dc-wait {
+            animation: dc-ld-engrave calc(var(--dc-loop) * var(--dc-slow, 1)) linear infinite;
+        }
+
+        .dc-scene[data-dc-loading='breathe'] .dc-waits {
+            animation: dc-load-breathe calc(var(--dc-loop) * var(--dc-slow, 1)) linear infinite;
+        }
+    }
+
+    /* ── 11 The progress bar (update 2) ──────────────────────────────────
+       Each option at a 62 % share and busy, three sizes, in a busy button
+       and beside a share. The package's markup: the track, the fill (the
+       share, clipped to --kp-value by the package) and the head (at the
+       share's end); demo.js adds the stations of `ruled` and `stations` to
+       the track (`.dc-st`, at --x). `--dc-s` is the size (1, 1.5, 2). Busy,
+       the track carries the loop's --dc-g (0 to 1 across, 2.4 s) for every
+       part inside it.
+       Inlay (recommended, kept as you chose it, its gold now shaded): a gold
+       hairline with a hollow lozenge at each end, the share a heavier line
+       brightening toward its head, a faceted lozenge; busy, a glint runs the
+       hairline (dc-load-glint). Double: two hairlines 3 px apart, the share
+       fills between them, its head a larger lozenge with a fan of nine rays
+       behind it; busy, a glint with an afterglow runs between the lines.
+       Ruled: a rule marked at every quarter by a hollow lozenge that fills
+       as the share passes; the head a faceted lozenge with an emerald;
+       busy, each lozenge lights as the glint passes it. Crest: a horizon,
+       the share a glow of gold under it, a half-sun at the head whose rays
+       open with the share; busy, the crest travels and breathes
+       (dc-bar-crest). Guilloche: two fine sine waves interlaced; the share
+       lights the weave, the rest a ghost; busy, a glint runs the weave.
+       Stations: a line with three emerald lozenges at 25, 50 and 75 %, lit
+       as the head passes; busy, a glint lights each in turn. Ribbon: a
+       satin ribbon with gold edges and swallowtail ends, the share gold
+       leaf with a gloss line; busy, the sheen slides along. Setback: five
+       hairlines, each 12 % shorter than the one under it, lit together by
+       the share, a lozenge on the top line; busy, a glint climbs them in
+       turn. */
+
+    .dc-scene:is([data-dc-bar], [data-dc-corners]) .dc-bar2 {
+        --dc-s: var(--kp-progressbar-scale, 1);
+        --kp-progressbar-height: calc(0.75rem * var(--dc-s));
+        contain: none;
+        max-inline-size: none;
+    }
+
+    .dc-scene:is([data-dc-bar], [data-dc-corners]) .dc-bar2 .kp-progressbar__track {
+        overflow: visible;
+        border: 0;
+        background: none;
+    }
+
+    .dc-scene:is([data-dc-bar], [data-dc-corners]) .dc-bar2 .kp-progressbar__fill {
+        inset: 0;
+        background: none;
+        animation: none;
+    }
+
+    .dc-scene:is([data-dc-bar], [data-dc-corners]) .dc-bar2:not([data-kp-indeterminate]) .kp-progressbar__fill {
+        clip-path: inset(0 calc((1 - var(--kp-value)) * 100%) 0 0);
+    }
+
+    .dc-scene:is([data-dc-bar], [data-dc-corners]) .dc-bar2[data-kp-indeterminate] .kp-progressbar__fill {
+        inline-size: auto;
+        overflow: visible;
+        clip-path: none;
+        transform: none;
+    }
+
+    .dc-scene:is([data-dc-bar], [data-dc-corners]) .dc-bar2 .kp-progressbar__fill::before,
+    .dc-scene:is([data-dc-bar], [data-dc-corners]) .dc-bar2 .kp-progressbar__head::before {
+        content: none;
+        animation: none;
+    }
+
+    .dc-scene:is([data-dc-bar], [data-dc-corners]) .dc-bar2 .kp-progressbar__head {
+        inline-size: 0;
+    }
+
+    .dc-scene:is([data-dc-bar], [data-dc-corners]) .dc-bar2 .kp-progressbar__head::before,
+    .dc-scene:is([data-dc-bar], [data-dc-corners]) .dc-bar2 .kp-progressbar__head::after {
+        box-shadow: none;
+        transform: none;
+    }
+
+    /* A dim gold hairline along the track, the share's leaf along the share. */
+    .dc-scene:is([data-dc-bar], [data-dc-corners]) .dc-bar2 {
+        --dc-dim: linear-gradient(
+            90deg,
+            hsl(from var(--dc-gold-lo) h s l / 0.7),
+            hsl(from var(--dc-gold-lt) h s l / 0.62) 30%,
+            hsl(from var(--dc-gold) h s l / 0.5) 62%,
+            hsl(from var(--dc-gold-lo) h s l / 0.7)
+        );
+        --dc-share: linear-gradient(90deg, var(--dc-gold-lo), var(--dc-gold) 34%, var(--dc-gold-lt) 76%, var(--dc-gold-hi));
+    }
+
+    /* 1 Inlay (and the corners row's bar). */
+    .dc-scene:is([data-dc-bar='inlay'], [data-dc-corners]) .dc-bar2 .kp-progressbar__track {
+        inset-inline: calc(5px * var(--dc-s));
+        background: var(--dc-dim) 0 50% / 100% 1px no-repeat;
+    }
+
+    .dc-scene:is([data-dc-bar='inlay'], [data-dc-corners]) .dc-bar2 .kp-progressbar__track::before,
+    .dc-scene:is([data-dc-bar='inlay'], [data-dc-corners]) .dc-bar2 .kp-progressbar__track::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 50%;
+        inline-size: calc(5px * var(--dc-s));
+        block-size: calc(5px * var(--dc-s));
+        box-sizing: border-box;
+        border: 1px solid var(--dc-gold-lt);
+        background: var(--dc-lac);
+        translate: 0 -50%;
+        rotate: 45deg;
+    }
+
+    .dc-scene:is([data-dc-bar='inlay'], [data-dc-corners]) .dc-bar2 .kp-progressbar__track::before {
+        inset-inline-start: calc(-5px * var(--dc-s));
+    }
+
+    .dc-scene:is([data-dc-bar='inlay'], [data-dc-corners]) .dc-bar2 .kp-progressbar__track::after {
+        inset-inline-end: calc(-5px * var(--dc-s));
+    }
+
+    .dc-scene:is([data-dc-bar='inlay'], [data-dc-corners]) .dc-bar2:not([data-kp-indeterminate]) .kp-progressbar__fill {
+        inset: calc(50% - 1px * var(--dc-s)) 0 auto;
+        block-size: calc(2px * var(--dc-s));
+        background:
+            linear-gradient(hsl(from var(--dc-gold-hi) h s l / 0.55) 0 0) 0 0 / calc(var(--kp-value) * 100%) 34% no-repeat,
+            var(--dc-share) 0 0 / calc(var(--kp-value) * 100%) 100% no-repeat;
+    }
+
+    .dc-scene[data-dc-bar='inlay'] .dc-bar2 .kp-progressbar__head::before {
+        content: '';
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: 0;
+        inline-size: calc(8px * var(--dc-s));
+        block-size: calc(8px * var(--dc-s));
+        background: var(--dc-gem-r);
+        translate: -50% -50%;
+        rotate: 45deg;
+        filter: drop-shadow(0 0 calc(2px * var(--dc-s)) hsl(from var(--dc-gold) h s l / 0.6));
+    }
+
+    .dc-scene:is([data-dc-bar='inlay'], [data-dc-corners]) .dc-bar2[data-kp-indeterminate] .kp-progressbar__fill {
+        inset: calc(50% - 3px * var(--dc-s)) 0 auto;
+        block-size: calc(6px * var(--dc-s));
+        overflow: clip;
+    }
+
+    .dc-scene[data-dc-bar='inlay'] .dc-bar2[data-kp-indeterminate] .kp-progressbar__fill::before {
+        content: '';
+        position: absolute;
+        inset: 0 auto 0 0;
+        inline-size: 30%;
+        background: linear-gradient(
+            90deg,
+            transparent,
+            hsl(from var(--dc-gold-hi) h s l / 0.9) 38%,
+            hsl(from var(--foreground) h s 97%) 50%,
+            hsl(from var(--dc-gold-hi) h s l / 0.9) 62%,
+            transparent
+        );
+        filter: blur(calc(1px * var(--dc-s)));
+        mask-image: linear-gradient(transparent calc(50% - 1px), var(--foreground) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px));
+        translate: calc(var(--dc-g) * 470% - 135%) 0;
+    }
+
+    /* 2 Double: two hairlines, the share filling between them. */
+    .dc-scene[data-dc-bar='double'] .dc-bar2 .kp-progressbar__track {
+        --dc-y1: calc(4px * var(--dc-s));
+        --dc-y2: calc(7px * var(--dc-s));
+        inset-inline: calc(6px * var(--dc-s));
+        background:
+            var(--dc-dim) 0 var(--dc-y1) / 100% 1px no-repeat,
+            var(--dc-dim) 0 var(--dc-y2) / 100% 1px no-repeat;
+    }
+
+    .dc-scene[data-dc-bar='double'] .dc-bar2 .kp-progressbar__track::before,
+    .dc-scene[data-dc-bar='double'] .dc-bar2 .kp-progressbar__track::after {
+        content: '';
+        position: absolute;
+        inset-block-start: calc(5.5px * var(--dc-s) + 0.5px);
+        inline-size: calc(7px * var(--dc-s));
+        block-size: calc(7px * var(--dc-s));
+        box-sizing: border-box;
+        border: 1px solid var(--dc-gold-lt);
+        background: var(--dc-gem-r);
+        translate: 0 -50%;
+        rotate: 45deg;
+    }
+
+    .dc-scene[data-dc-bar='double'] .dc-bar2 .kp-progressbar__track::before {
+        inset-inline-start: calc(-7.5px * var(--dc-s));
+    }
+
+    .dc-scene[data-dc-bar='double'] .dc-bar2 .kp-progressbar__track::after {
+        inset-inline-end: calc(-7.5px * var(--dc-s));
+    }
+
+    .dc-scene[data-dc-bar='double'] .dc-bar2:not([data-kp-indeterminate]) .kp-progressbar__fill {
+        inset: calc(4px * var(--dc-s)) 0 auto;
+        block-size: calc(3px * var(--dc-s) + 1px);
+        background:
+            linear-gradient(hsl(from var(--dc-gold-hi) h s l / 0.7) 0 0) 0 50% / calc(var(--kp-value) * 100%) 1px no-repeat,
+            var(--dc-share) 0 0 / calc(var(--kp-value) * 100%) 100% no-repeat;
+    }
+
+    .dc-scene[data-dc-bar='double'] .dc-bar2 .kp-progressbar__head::before {
+        content: '';
+        position: absolute;
+        inset-block-start: calc(5.5px * var(--dc-s) + 0.5px);
+        inset-inline-start: 0;
+        inline-size: calc(10px * var(--dc-s));
+        block-size: calc(10px * var(--dc-s));
+        background: var(--dc-gem-r);
+        box-shadow: 0 0 0 1px var(--dc-lac);
+        translate: -50% -50%;
+        rotate: 45deg;
+        filter: drop-shadow(0 0 calc(2px * var(--dc-s)) hsl(from var(--dc-gold) h s l / 0.6));
+    }
+
+    .dc-scene[data-dc-bar='double'] .dc-bar2 .kp-progressbar__head::after {
+        content: '';
+        position: absolute;
+        inset-block-start: calc(5.5px * var(--dc-s) + 0.5px);
+        inset-inline-start: 0;
+        inline-size: calc(24px * var(--dc-s));
+        block-size: calc(24px * var(--dc-s));
+        background: repeating-conic-gradient(from 209.4deg, var(--dc-gold-lt) 0 1.2deg, transparent 1.2deg 15deg);
+        mask:
+            conic-gradient(from 209deg, var(--foreground) 0 122deg, transparent 0),
+            radial-gradient(
+                circle closest-side,
+                transparent 30%,
+                var(--foreground) 36%,
+                hsl(from var(--foreground) h s l / 0.35) 80%,
+                transparent 100%
+            );
+        mask-composite: intersect;
+        translate: -50% -50%;
+    }
+
+    .dc-scene[data-dc-bar='double'] .dc-bar2[data-kp-indeterminate] .kp-progressbar__fill {
+        inset: calc(5px * var(--dc-s)) 0 auto;
+        block-size: calc(2px * var(--dc-s));
+        background: linear-gradient(
+            90deg,
+            transparent calc(var(--dc-g) * 140% - 48%),
+            hsl(from var(--dc-gold) h s l / 0.3) calc(var(--dc-g) * 140% - 30%),
+            hsl(from var(--dc-gold-lt) h s l / 0.85) calc(var(--dc-g) * 140% - 8%),
+            hsl(from var(--foreground) h s 97%) calc(var(--dc-g) * 140% - 3%),
+            transparent calc(var(--dc-g) * 140% - 1%)
+        );
+        filter: drop-shadow(0 0 calc(2px * var(--dc-s)) hsl(from var(--dc-gold) h s l / 0.7));
+    }
+
+    /* 3 Ruled: a rule with a hollow lozenge at every quarter. */
+    .dc-scene[data-dc-bar='ruled'] .dc-bar2 .kp-progressbar__track {
+        inset-inline: calc(5px * var(--dc-s));
+        background: var(--dc-dim) 0 50% / 100% 1px no-repeat;
+    }
+
+    .dc-scene[data-dc-bar='ruled'] .dc-bar2:not([data-kp-indeterminate]) .kp-progressbar__fill {
+        inset: calc(50% - 0.75px * var(--dc-s)) 0 auto;
+        block-size: calc(1.5px * var(--dc-s));
+        background: var(--dc-share) 0 0 / calc(var(--kp-value) * 100%) 100% no-repeat;
+    }
+
+    .dc-scene:is([data-dc-bar='ruled'], [data-dc-bar='stations']) .dc-bar2 .dc-st {
+        --dc-sz: calc(7px * var(--dc-s));
+        --dc-lit: min(1, max(0, (var(--kp-value) - var(--x) + 0.001) * 400));
+        position: absolute;
+        inset-block-start: calc(50% - var(--dc-sz) / 2);
+        inset-inline-start: calc(var(--x) * 100% - var(--dc-sz) / 2);
+        z-index: 1;
+        box-sizing: border-box;
+        inline-size: var(--dc-sz);
+        block-size: var(--dc-sz);
+        border: 1px solid var(--dc-gold-lt);
+        background: var(--dc-lac);
+        rotate: 45deg;
+    }
+
+    .dc-scene:is([data-dc-bar='ruled'], [data-dc-bar='stations']) .dc-bar2[data-kp-indeterminate] .dc-st {
+        --dc-lit: max(0, 1 - max(var(--dc-g) * 1.3 - 0.15 - var(--x), var(--x) - var(--dc-g) * 1.3 + 0.15) * 7);
+    }
+
+    .dc-scene:is([data-dc-bar='ruled'], [data-dc-bar='stations']) .dc-bar2 .dc-st::before {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        background: var(--dc-gem-r);
+        opacity: var(--dc-lit);
+    }
+
+    .dc-scene:is([data-dc-bar='ruled'], [data-dc-bar='stations']) .dc-bar2[data-kp-indeterminate] .dc-st {
+        filter: drop-shadow(0 0 calc(3px * var(--dc-lit) * var(--dc-s)) hsl(from var(--dc-gold-hi) h s l / calc(0.8 * var(--dc-lit))));
+    }
+
+    .dc-scene[data-dc-bar='ruled'] .dc-bar2 .kp-progressbar__head::before,
+    .dc-scene[data-dc-bar='ruled'] .dc-bar2 .kp-progressbar__head::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: 0;
+        inline-size: calc(10px * var(--dc-s));
+        block-size: calc(10px * var(--dc-s));
+        background: var(--dc-gem-r);
+        translate: -50% -50%;
+        rotate: 45deg;
+        z-index: 2;
+        filter: drop-shadow(0 0 calc(2px * var(--dc-s)) hsl(from var(--dc-gold) h s l / 0.6));
+    }
+
+    .dc-scene[data-dc-bar='ruled'] .dc-bar2 .kp-progressbar__head::after {
+        inline-size: calc(4px * var(--dc-s));
+        block-size: calc(4px * var(--dc-s));
+        background: var(--dc-gem-em-r);
+        filter: none;
+        z-index: 3;
+    }
+
+    .dc-scene[data-dc-bar='ruled'] .dc-bar2[data-kp-indeterminate] .kp-progressbar__fill {
+        inset: calc(50% - 1px) 0 auto;
+        block-size: 2px;
+        background: linear-gradient(
+            90deg,
+            transparent calc(var(--dc-g) * 130% - 30%),
+            hsl(from var(--dc-gold-hi) h s l / 0.9) calc(var(--dc-g) * 130% - 17%),
+            transparent calc(var(--dc-g) * 130% - 4%)
+        );
+        filter: drop-shadow(0 0 2px var(--dc-gold));
+    }
+
+    /* 4 Crest: a horizon, a glow of gold under it, a half-sun at the head. */
+    .dc-scene[data-dc-bar='crest'] .dc-bar2 .kp-progressbar__track {
+        inset-inline: calc(4px * var(--dc-s));
+        background: linear-gradient(90deg, transparent, var(--dc-gold-lo) 8%, var(--dc-gold-lt) 50%, var(--dc-gold-lo) 92%, transparent) 0 62% / 100%
+            1px no-repeat;
+    }
+
+    .dc-scene[data-dc-bar='crest'] .dc-bar2:not([data-kp-indeterminate]) .kp-progressbar__fill {
+        inset: 62% 0 auto;
+        block-size: calc(4px * var(--dc-s));
+        background:
+            var(--dc-share) 0 0 / calc(var(--kp-value) * 100%) 1.5px no-repeat,
+            linear-gradient(hsl(from var(--dc-gold) h s l / 0.5), transparent) 0 0 / calc(var(--kp-value) * 100%) 100% no-repeat;
+    }
+
+    .dc-scene[data-dc-bar='crest'] .dc-bar2:not([data-kp-indeterminate]) .kp-progressbar__head {
+        --dc-a: calc(var(--kp-value) * 180deg);
+    }
+
+    .dc-scene[data-dc-bar='crest'] .dc-bar2 .kp-progressbar__head::before {
+        content: '';
+        position: absolute;
+        inset-block: auto 38%;
+        inset-inline-start: calc(-10px * var(--dc-s));
+        inline-size: calc(20px * var(--dc-s));
+        block-size: calc(10px * var(--dc-s));
+        background:
+            radial-gradient(
+                circle calc(2.6px * var(--dc-s)) at 50% 100%,
+                var(--dc-gold-hi),
+                var(--dc-gold) 60%,
+                var(--dc-gold-lo) 98%,
+                transparent 100%
+            ),
+            radial-gradient(
+                50% 100% at 50% 100%,
+                transparent calc(100% - 1.2px),
+                hsl(from var(--dc-gold-lt) h s l / 0.7) calc(100% - 0.8px) 99.5%,
+                transparent 100%
+            ),
+            repeating-conic-gradient(from -90.5deg at 50% 100%, var(--dc-gold-lt) 0 1.1deg, transparent 1.1deg 12deg),
+            radial-gradient(50% 100% at 50% 100%, hsl(from var(--dc-gold) h s l / 0.22), transparent 100%);
+        mask:
+            conic-gradient(from calc(var(--dc-a) / -2 - 0.6deg) at 50% 100%, var(--foreground) 0 calc(var(--dc-a) + 1.2deg), transparent 0),
+            radial-gradient(50% 100% at 50% 100%, var(--foreground) 99.5%, transparent 100%);
+        mask-composite: intersect;
+        filter: drop-shadow(0 0 calc(2px * var(--dc-s)) hsl(from var(--dc-gold) h s l / 0.5));
+    }
+
+    .dc-scene[data-dc-bar='crest'] .dc-bar2[data-kp-indeterminate] .kp-progressbar__head {
+        display: block;
+        transform: translateX(calc((0.06 + var(--dc-g) * 0.88) * 100cqi));
+    }
+
+    .dc-scene[data-dc-bar='crest'] .dc-bar2[data-kp-indeterminate] .kp-progressbar__fill {
+        inset: 62% 0 auto;
+        block-size: calc(4px * var(--dc-s));
+        background: radial-gradient(
+            ellipse calc(26px * var(--dc-s)) 100% at calc((0.06 + var(--dc-g) * 0.88) * 100%) 0,
+            hsl(from var(--dc-gold) h s l / 0.55),
+            transparent
+        );
+    }
+
+    /* 5 Guilloche: two sine waves interlaced, between two faint rules. */
+    .dc-scene[data-dc-bar='guilloche'] .dc-bar2 {
+        --dc-weave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 6' preserveAspectRatio='none'%3E%3Cpath d='M0 3C1.6 0.5 4.4 0.5 6 3S10.4 5.5 12 3M0 3C1.6 5.5 4.4 5.5 6 3S10.4 0.5 12 3' fill='none' stroke='currentColor' stroke-width='0.75'/%3E%3C/svg%3E");
+    }
+
+    .dc-scene[data-dc-bar='guilloche'] .dc-bar2 .kp-progressbar__track {
+        inset: calc(50% - 4px * var(--dc-s)) 0 auto;
+        block-size: calc(8px * var(--dc-s));
+        background:
+            linear-gradient(hsl(from var(--dc-gold) h s l / 0.3) 0 0) 0 0 / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--dc-gold) h s l / 0.3) 0 0) 0 100% / 100% 1px no-repeat;
+    }
+
+    .dc-scene[data-dc-bar='guilloche'] .dc-bar2 .kp-progressbar__track::before {
+        content: '';
+        position: absolute;
+        inset: calc(1px * var(--dc-s)) 0;
+        background: hsl(from var(--dc-gold) h s l / 0.32);
+        mask: var(--dc-weave) 0 50% / calc(12px * var(--dc-s)) 100% repeat-x;
+    }
+
+    .dc-scene[data-dc-bar='guilloche'] .dc-bar2 .kp-progressbar__fill {
+        inset: calc(1px * var(--dc-s)) 0;
+        mask: var(--dc-weave) 0 50% / calc(12px * var(--dc-s)) 100% repeat-x;
+    }
+
+    .dc-scene[data-dc-bar='guilloche'] .dc-bar2:not([data-kp-indeterminate]) .kp-progressbar__fill {
+        background: var(--dc-share) 0 0 / calc(var(--kp-value) * 100%) 100% no-repeat;
+        filter: drop-shadow(0 0 1px hsl(from var(--dc-gold) h s l / 0.6));
+    }
+
+    .dc-scene[data-dc-bar='guilloche'] .dc-bar2[data-kp-indeterminate] .kp-progressbar__fill {
+        background: linear-gradient(
+            90deg,
+            transparent calc(var(--dc-g) * 130% - 30%),
+            var(--dc-gold-lt) calc(var(--dc-g) * 130% - 18%),
+            hsl(from var(--foreground) h s 96%) calc(var(--dc-g) * 130% - 15%),
+            var(--dc-gold-lt) calc(var(--dc-g) * 130% - 12%),
+            transparent calc(var(--dc-g) * 130%)
+        );
+    }
+
+    /* 6 Stations: a line, three emeralds at 25, 50 and 75 %. */
+    .dc-scene[data-dc-bar='stations'] .dc-bar2 .kp-progressbar__track {
+        inset-inline: calc(5px * var(--dc-s));
+        background: var(--dc-dim) 0 50% / 100% 1px no-repeat;
+    }
+
+    .dc-scene[data-dc-bar='stations'] .dc-bar2 .dc-st {
+        --dc-sz: calc(8px * var(--dc-s));
+        border-color: hsl(from var(--dc-gold-lt) h s l / 0.75);
+        background: conic-gradient(
+            from -45deg,
+            hsl(from var(--accent) h calc(s - 20) calc(l - 12)) 0 90deg,
+            hsl(from var(--accent) h calc(s - 20) calc(l - 18)) 0 180deg,
+            hsl(from var(--accent) h calc(s - 20) calc(l - 15)) 0 270deg,
+            hsl(from var(--accent) h calc(s - 20) calc(l - 6)) 0
+        );
+    }
+
+    .dc-scene[data-dc-bar='stations'] .dc-bar2 .dc-st::before {
+        background: var(--dc-gem-em-r);
+    }
+
+    .dc-scene[data-dc-bar='stations'] .dc-bar2:not([data-kp-indeterminate]) .dc-st {
+        filter: drop-shadow(0 0 calc(3px * var(--dc-lit) * var(--dc-s)) hsl(from var(--dc-emerald) h s l / calc(0.7 * var(--dc-lit))));
+    }
+
+    .dc-scene[data-dc-bar='stations'] .dc-bar2:not([data-kp-indeterminate]) .kp-progressbar__fill {
+        inset: calc(50% - 0.75px * var(--dc-s)) 0 auto;
+        block-size: calc(1.5px * var(--dc-s));
+        background: var(--dc-share) 0 0 / calc(var(--kp-value) * 100%) 100% no-repeat;
+    }
+
+    .dc-scene[data-dc-bar='stations'] .dc-bar2 .kp-progressbar__head::before {
+        content: '';
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: 0;
+        z-index: 2;
+        inline-size: calc(8px * var(--dc-s));
+        block-size: calc(8px * var(--dc-s));
+        background: var(--dc-gem-r);
+        translate: -50% -50%;
+        rotate: 45deg;
+        filter: drop-shadow(0 0 calc(2px * var(--dc-s)) hsl(from var(--dc-gold) h s l / 0.6));
+    }
+
+    .dc-scene[data-dc-bar='stations'] .dc-bar2[data-kp-indeterminate] .kp-progressbar__fill {
+        inset: calc(50% - 1px) 0 auto;
+        block-size: 2px;
+        background: linear-gradient(
+            90deg,
+            transparent calc(var(--dc-g) * 130% - 30%),
+            hsl(from var(--dc-gold-hi) h s l / 0.95) calc(var(--dc-g) * 130% - 17%),
+            transparent calc(var(--dc-g) * 130% - 4%)
+        );
+        filter: drop-shadow(0 0 2px var(--dc-gold));
+    }
+
+    /* 7 Ribbon: satin in the lobby's blue, gold edges, swallowtail ends. */
+    .dc-scene[data-dc-bar='ribbon'] .dc-bar2 .kp-progressbar__track {
+        inset: calc(50% - 4px * var(--dc-s)) 0 auto;
+        block-size: calc(8px * var(--dc-s));
+        overflow: clip;
+        clip-path: polygon(0 0, 100% 0, calc(100% - 3.5px * var(--dc-s)) 50%, 100% 100%, 0 100%, calc(3.5px * var(--dc-s)) 50%);
+        background:
+            var(--dc-leaf-x) 0 0 / 100% 1px no-repeat,
+            var(--dc-leaf-x) 0 100% / 100% 1px no-repeat,
+            repeating-linear-gradient(115deg, hsl(from var(--dc-velvet-hi) h s l / 0.22) 0 1px, transparent 1px 4px),
+            linear-gradient(var(--dc-velvet-lo), var(--dc-velvet-hi) 42%, var(--dc-velvet) 64%, var(--dc-velvet-lo));
+    }
+
+    .dc-scene[data-dc-bar='ribbon'] .dc-bar2 .kp-progressbar__fill {
+        inset: calc(1.5px * var(--dc-s)) 0;
+    }
+
+    .dc-scene[data-dc-bar='ribbon'] .dc-bar2:not([data-kp-indeterminate]) .kp-progressbar__fill {
+        background:
+            linear-gradient(hsl(from var(--dc-gold-hi) h s l / 0.9) 0 0) 0 0 / calc(var(--kp-value) * 100%) 1px no-repeat,
+            linear-gradient(transparent 55%, hsl(from var(--dc-gold-lo) h s l / 0.55)) 0 0 / calc(var(--kp-value) * 100%) 100% no-repeat,
+            var(--dc-leaf) 0 0 / calc(var(--kp-value) * 100%) 100% no-repeat;
+    }
+
+    .dc-scene[data-dc-bar='ribbon'] .dc-bar2:not([data-kp-indeterminate]) .kp-progressbar__fill::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: hsl(from var(--dc-gold-hi) h s l / 0.35);
+        mask:
+            var(--dc-grain) 0 0 / 48px 48px,
+            linear-gradient(90deg, var(--foreground) calc(var(--kp-value) * 100%), transparent 0);
+        mask-composite: intersect;
+        mix-blend-mode: plus-lighter;
+    }
+
+    .dc-scene[data-dc-bar='ribbon'] .dc-bar2[data-kp-indeterminate] .kp-progressbar__fill {
+        inset: 0;
+        background: linear-gradient(
+            105deg,
+            transparent calc(var(--dc-g) * 150% - 40%),
+            hsl(from var(--dc-velvet-hi) h s calc(l + 22) / 0.55) calc(var(--dc-g) * 150% - 22%),
+            hsl(from var(--dc-gold-hi) h s l / 0.5) calc(var(--dc-g) * 150% - 18%),
+            hsl(from var(--dc-velvet-hi) h s calc(l + 22) / 0.55) calc(var(--dc-g) * 150% - 14%),
+            transparent calc(var(--dc-g) * 150% + 4%)
+        );
+        mix-blend-mode: plus-lighter;
+    }
+
+    /* 8 Setback: five hairlines, each 12 % shorter than the one under it. */
+    .dc-scene[data-dc-bar='setback'] .dc-bar2 {
+        --dc-lines: 50% calc(10px * var(--dc-s)) / 100% 1px no-repeat;
+    }
+
+    .dc-scene[data-dc-bar='setback'] .dc-bar2 .kp-progressbar__track {
+        background:
+            var(--dc-dim) 50% calc(10px * var(--dc-s)) / 100% 1px no-repeat,
+            var(--dc-dim) 50% calc(7.8px * var(--dc-s)) / 88% 1px no-repeat,
+            var(--dc-dim) 50% calc(5.6px * var(--dc-s)) / 76% 1px no-repeat,
+            var(--dc-dim) 50% calc(3.4px * var(--dc-s)) / 64% 1px no-repeat,
+            var(--dc-dim) 50% calc(1.2px * var(--dc-s)) / 52% 1px no-repeat;
+    }
+
+    .dc-scene[data-dc-bar='setback'] .dc-bar2:not([data-kp-indeterminate]) .kp-progressbar__fill {
+        background:
+            var(--dc-leaf-x) 50% calc(10px * var(--dc-s)) / 100% 1px no-repeat,
+            var(--dc-leaf-x) 50% calc(7.8px * var(--dc-s)) / 88% 1px no-repeat,
+            var(--dc-leaf-x) 50% calc(5.6px * var(--dc-s)) / 76% 1px no-repeat,
+            var(--dc-leaf-x) 50% calc(3.4px * var(--dc-s)) / 64% 1px no-repeat,
+            var(--dc-leaf-x) 50% calc(1.2px * var(--dc-s)) / 52% 1px no-repeat;
+        filter: drop-shadow(0 0 1px hsl(from var(--dc-gold) h s l / 0.6));
+    }
+
+    .dc-scene[data-dc-bar='setback'] .dc-bar2 .kp-progressbar__head::before {
+        content: '';
+        position: absolute;
+        inset-block-start: calc(1.2px * var(--dc-s) + 0.5px);
+        inset-inline-start: 0;
+        inline-size: calc(7px * var(--dc-s));
+        block-size: calc(7px * var(--dc-s));
+        background: var(--dc-gem-r);
+        translate: -50% -50%;
+        rotate: 45deg;
+        filter: drop-shadow(0 0 calc(2px * var(--dc-s)) hsl(from var(--dc-gold) h s l / 0.6));
+    }
+
+    .dc-scene[data-dc-bar='setback'] .dc-bar2[data-kp-indeterminate] .kp-progressbar__fill {
+        --dc-hot: hsl(from var(--foreground) h s 96%);
+        background:
+            linear-gradient(
+                    90deg,
+                    transparent calc(min(1, max(0, var(--dc-g) * 5.6 - 0)) * 118% - 20%),
+                    var(--dc-hot) calc(min(1, max(0, var(--dc-g) * 5.6 - 0)) * 118% - 4%),
+                    transparent calc(min(1, max(0, var(--dc-g) * 5.6 - 0)) * 118% - 2%)
+                )
+                50% calc(10px * var(--dc-s)) / 100% 1px no-repeat,
+            linear-gradient(
+                    90deg,
+                    transparent calc(min(1, max(0, var(--dc-g) * 5.6 - 1)) * 118% - 20%),
+                    var(--dc-hot) calc(min(1, max(0, var(--dc-g) * 5.6 - 1)) * 118% - 4%),
+                    transparent calc(min(1, max(0, var(--dc-g) * 5.6 - 1)) * 118% - 2%)
+                )
+                50% calc(7.8px * var(--dc-s)) / 88% 1px no-repeat,
+            linear-gradient(
+                    90deg,
+                    transparent calc(min(1, max(0, var(--dc-g) * 5.6 - 2)) * 118% - 20%),
+                    var(--dc-hot) calc(min(1, max(0, var(--dc-g) * 5.6 - 2)) * 118% - 4%),
+                    transparent calc(min(1, max(0, var(--dc-g) * 5.6 - 2)) * 118% - 2%)
+                )
+                50% calc(5.6px * var(--dc-s)) / 76% 1px no-repeat,
+            linear-gradient(
+                    90deg,
+                    transparent calc(min(1, max(0, var(--dc-g) * 5.6 - 3)) * 118% - 20%),
+                    var(--dc-hot) calc(min(1, max(0, var(--dc-g) * 5.6 - 3)) * 118% - 4%),
+                    transparent calc(min(1, max(0, var(--dc-g) * 5.6 - 3)) * 118% - 2%)
+                )
+                50% calc(3.4px * var(--dc-s)) / 64% 1px no-repeat,
+            linear-gradient(
+                    90deg,
+                    transparent calc(min(1, max(0, var(--dc-g) * 5.6 - 4)) * 118% - 20%),
+                    var(--dc-hot) calc(min(1, max(0, var(--dc-g) * 5.6 - 4)) * 118% - 4%),
+                    transparent calc(min(1, max(0, var(--dc-g) * 5.6 - 4)) * 118% - 2%)
+                )
+                50% calc(1.2px * var(--dc-s)) / 52% 1px no-repeat;
+        filter: drop-shadow(0 0 1.5px var(--dc-gold-hi));
+    }
+
+    @keyframes dc-load-glint {
+        0% {
+            --dc-g: 0;
+            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+        }
+        88% {
+            --dc-g: 1;
+        }
+        100% {
+            --dc-g: 1;
+        }
+    }
+
+    @keyframes dc-bar-crest {
+        0% {
+            --dc-g: 0;
+            --dc-a: 120deg;
+            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+        }
+        25% {
+            --dc-a: 180deg;
+        }
+        50% {
+            --dc-g: 1;
+            --dc-a: 120deg;
+            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+        }
+        75% {
+            --dc-a: 180deg;
+        }
+        100% {
+            --dc-g: 0;
+            --dc-a: 120deg;
+        }
+    }
+
+    @keyframes dc-bar-run {
+        0% {
+            --dc-g: 0;
+        }
+        100% {
+            --dc-g: 1;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dc-scene[data-dc-bar='inlay'] .dc-bar2[data-kp-indeterminate] .kp-progressbar__track,
+        .dc-scene:is([data-dc-bar='double'], [data-dc-bar='ruled'], [data-dc-bar='guilloche'], [data-dc-bar='stations'], [data-dc-bar='ribbon'])
+            .dc-bar2[data-kp-indeterminate]
+            .kp-progressbar__track {
+            animation: dc-load-glint calc(var(--dc-loop) * var(--dc-slow, 1)) linear infinite;
+        }
+
+        .dc-scene[data-dc-bar='crest'] .dc-bar2[data-kp-indeterminate] .kp-progressbar__track {
+            animation: dc-bar-crest calc(var(--dc-loop) * 2 * var(--dc-slow, 1)) linear infinite;
+        }
+
+        .dc-scene[data-dc-bar='setback'] .dc-bar2[data-kp-indeterminate] .kp-progressbar__track {
+            animation: dc-bar-run calc(var(--dc-loop) * var(--dc-slow, 1)) cubic-bezier(0.37, 0, 0.63, 1) infinite;
+        }
+    }
+
+    /* ── 13 Leaving and arriving (update 2) ──────────────────────────────
+       An alert, a card and a key figure arrive and leave in every option;
+       every leave is its arrival backwards, frame for frame (the `-out`
+       twins start as late as the window allows, W - start - length).
+       Inlay (recommended): the lobby's clock as it stands (dcg-draw 320 ms,
+       then dcg-up 160 ms). Glint: the same, and as the line meets at the
+       bottom one glint runs once round the inlay clockwise (dc-gl, 240 ms);
+       leaving, the glint runs back first and the inlay undraws behind it
+       (W 560 ms). Jewels: four faceted lozenges light at the inlay's corners
+       (dc-jw, 120 ms), the inlay is drawn from each to the middles of the
+       edges (dcg-draw, 240 ms), the lacquer comes up (dcg-up, 120 ms).
+       Double: the inlay draws (300 ms), a second line 4 px inside it
+       follows 120 ms later (dc-d2, 300 ms), the lacquer comes up (160 ms).
+       Velvet: the part stands on a stage behind two velvet drapes (eight
+       pleats each, a twisted gold braid on the inner edge, a beaded fringe
+       and a tassel at the hem) under a scalloped, gold-trimmed valance with
+       a tassel at every point; the drapes part from the centre to both
+       sides and gather into deeper folds, a gold cord tying each back
+       (dc-part, 480 ms). Festoon: five swags of satin, each with a gold
+       trim on its scallop and a gold rosette with a tassel at each gather,
+       rise from the centre outward 60 ms apart (dc-lift, 360 ms each) into a
+       valance under a double rail. Closed, a curtain covers the whole
+       stage; the part is never drawn before its arrival or after its leave. */
+
+    .dc-scene[data-dc-leave] .dc-ar {
+        --dc-trace: var(--dc-line);
+    }
+
+    /* Glint. */
+    .dc-scene[data-dc-leave='glint'] {
+        --dc-W: 560ms;
+    }
+
+    .dc-scene[data-dc-leave='glint'] .dc-plate {
+        --dc-trace: hsl(from var(--foreground) h s 97%);
+    }
+
+    .dc-scene[data-dc-leave='glint'] .dc-plate::before {
+        z-index: 3;
+        opacity: calc(min(1, var(--dc-gl) * 24) * min(1, (1 - var(--dc-gl)) * 24));
+        mask-image: conic-gradient(from calc(var(--dc-gl) * 360deg - 34deg) at 50% 50%, transparent 0, var(--foreground) 30deg, transparent 34deg);
+        filter: drop-shadow(0 0 2px var(--dc-gold-hi)) drop-shadow(0 0 5px hsl(from var(--dc-gold) h s l / 0.9));
+    }
+
+    /* Jewels: the inlay drawn from its four corners, a jewel on each. */
+    .dc-scene[data-dc-leave='jewels'] .dc-plate::after {
+        background-image:
+            linear-gradient(var(--dc-line) 0 0), linear-gradient(var(--dc-line) 0 0), linear-gradient(var(--dc-line) 0 0),
+            linear-gradient(var(--dc-line) 0 0), linear-gradient(var(--dc-line) 0 0), linear-gradient(var(--dc-line) 0 0),
+            linear-gradient(var(--dc-line) 0 0), linear-gradient(var(--dc-line) 0 0);
+        background-position:
+            left 0 top 0,
+            right 0 top 0,
+            left 0 bottom 0,
+            right 0 bottom 0,
+            left 0 top 0,
+            left 0 bottom 0,
+            right 0 top 0,
+            right 0 bottom 0;
+        background-size:
+            calc(var(--dc-draw) * 50%) 1px,
+            calc(var(--dc-draw) * 50%) 1px,
+            calc(var(--dc-draw) * 50%) 1px,
+            calc(var(--dc-draw) * 50%) 1px,
+            1px calc(var(--dc-draw) * 50%),
+            1px calc(var(--dc-draw) * 50%),
+            1px calc(var(--dc-draw) * 50%),
+            1px calc(var(--dc-draw) * 50%);
+        mask-image: none;
+    }
+
+    .dc-scene[data-dc-leave='jewels'] .dc-plate > .dc-jw {
+        grid-area: auto;
+        position: absolute;
+        z-index: 3;
+        inline-size: 9px;
+        block-size: 9px;
+        clip-path: var(--dc-lozenge);
+        background: var(--dc-gem);
+        opacity: min(1, var(--dc-j) * 3);
+        scale: var(--dc-j);
+        filter: brightness(calc(1 + 0.6 * (1 - var(--dc-up)) * var(--dc-j)));
+    }
+
+    .dc-scene[data-dc-leave='jewels'] .dc-jw--tl {
+        inset-block-start: calc(var(--dc-in) - 1px - 4px);
+        inset-inline-start: calc(var(--dc-in) - 1px - 4px);
+    }
+
+    .dc-scene[data-dc-leave='jewels'] .dc-jw--tr {
+        inset-block-start: calc(var(--dc-in) - 1px - 4px);
+        inset-inline-end: calc(var(--dc-in) - 1px - 4px);
+    }
+
+    .dc-scene[data-dc-leave='jewels'] .dc-jw--bl {
+        inset-block-end: calc(var(--dc-in) - 1px - 4px);
+        inset-inline-start: calc(var(--dc-in) - 1px - 4px);
+    }
+
+    .dc-scene[data-dc-leave='jewels'] .dc-jw--br {
+        inset-block-end: calc(var(--dc-in) - 1px - 4px);
+        inset-inline-end: calc(var(--dc-in) - 1px - 4px);
+    }
+
+    /* Double: a second inlay 4 px inside the first. */
+    .dc-scene[data-dc-leave='double'] .dc-plate::before {
+        inset: calc(var(--dc-in) + 4px - 1px);
+        z-index: 2;
+        opacity: 0.8;
+        mask-image: conic-gradient(from calc(var(--dc-d2) * -180deg) at 50% 50%, var(--foreground) 0 calc(var(--dc-d2) * 360deg), transparent 0);
+    }
+
+    .dc-scene[data-dc-leave='double'] .kp-kpi.dc-plate,
+    .dc-scene[data-dc-leave='double'] .kp-alert.dc-plate {
+        padding: 1rem 1.3rem;
+    }
+
+    .dc-scene[data-dc-leave='double'] .kp-card.dc-plate {
+        padding: 1.1rem 1.3rem;
+    }
+
+    @keyframes dc-gl {
+        from {
+            --dc-gl: 0;
+            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+        }
+        to {
+            --dc-gl: 1;
+        }
+    }
+
+    @keyframes dc-gl-out {
+        from {
+            --dc-gl: 1;
+            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+        }
+        to {
+            --dc-gl: 0;
+        }
+    }
+
+    @keyframes dc-jw {
+        from {
+            --dc-j: 0;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        to {
+            --dc-j: 1;
+        }
+    }
+
+    @keyframes dc-jw-out {
+        from {
+            --dc-j: 1;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+        to {
+            --dc-j: 0;
+        }
+    }
+
+    @keyframes dc-d2 {
+        from {
+            --dc-d2: 0;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        to {
+            --dc-d2: 1;
+        }
+    }
+
+    @keyframes dc-d2-out {
+        from {
+            --dc-d2: 1;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+        to {
+            --dc-d2: 0;
+        }
+    }
+
+    @keyframes dc-lift {
+        from {
+            --dc-q: 0;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        to {
+            --dc-q: 1;
+        }
+    }
+
+    @keyframes dc-lift-out {
+        from {
+            --dc-q: 1;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+        to {
+            --dc-q: 0;
+        }
+    }
+
+    /* ── The curtains: a stage round the part ─────────────────────────── */
+
+    .dc-scene:is([data-dc-leave='velvet'], [data-dc-leave='festoon']) .dc-stage {
+        position: relative;
+        display: grid;
+        overflow: clip;
+        isolation: isolate;
+    }
+
+    .dc-scene[data-dc-leave='velvet'] .dc-stage {
+        --dc-gw: 30px;
+        padding: 31px var(--dc-gw) 6px;
+    }
+
+    .dc-scene[data-dc-leave='festoon'] .dc-stage {
+        --dc-hv: 27px;
+        --dc-lr: 10px;
+        padding: calc(var(--dc-hv) + 5px) 0 6px;
+    }
+
+    .dc-scene:is([data-dc-leave='velvet'], [data-dc-leave='festoon']) .dc-cur {
+        position: absolute;
+        inset: 0;
+        z-index: 5;
+        pointer-events: none;
+    }
+
+    .dc-scene :is(.dc-tassel, .dc-valance__tassels, .dc-ros) .dc-ln {
+        fill: none;
+        stroke: var(--dc-gold-lt);
+        stroke-linecap: round;
+    }
+
+    .dc-scene :is(.dc-tassel, .dc-valance__tassels, .dc-ros) .dc-ln--soft {
+        stroke: var(--dc-gold);
+    }
+
+    .dc-scene .dc-swag__trim .dc-ln {
+        fill: none;
+        stroke: url(#dc-leaf-V);
+    }
+
+    /* Velvet: the drapes. --dc-p is how far they have parted (0 closed). */
+    .dc-scene[data-dc-leave='velvet'] .dc-cur {
+        --dc-pinch: calc(10px * var(--dc-p));
+    }
+
+    .dc-scene[data-dc-leave='velvet'] .dc-drape {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: calc((1 - var(--dc-p)) * (50% + 1px) + var(--dc-p) * var(--dc-gw));
+        background-color: var(--dc-velvet);
+        background-image:
+            linear-gradient(
+                hsl(from var(--dc-shadow) h s l / 0.6),
+                transparent 18%,
+                transparent 66%,
+                hsl(from var(--dc-shadow) h s l / 0.25) 86%,
+                hsl(from var(--dc-shadow) h s l / 0.55)
+            ),
+            radial-gradient(ellipse 140% 9% at 50% 57%, hsl(from var(--dc-shadow) h s l / calc(0.7 * var(--dc-p))), transparent),
+            repeating-linear-gradient(90deg, hsl(from var(--dc-velvet-hi) h s l / 0.06) 0 1px, transparent 1px 2px),
+            linear-gradient(
+                90deg,
+                hsl(from var(--dc-velvet-lo) h s calc(l - 3 * var(--dc-p))) 0%,
+                var(--dc-velvet) 12%,
+                hsl(from var(--dc-velvet-hi) h s calc(l - 3)) 30%,
+                var(--dc-velvet-hi) 38%,
+                var(--dc-velvet) 54%,
+                hsl(from var(--dc-velvet-lo) h s calc(l + 2)) 78%,
+                hsl(from var(--dc-velvet-lo) h s calc(l - 3 - 3 * var(--dc-p))) 92%,
+                var(--dc-velvet-lo) 100%
+            );
+        background-size:
+            100% 100%,
+            100% 100%,
+            auto,
+            12.5% 100%;
+        background-repeat: no-repeat, no-repeat, repeat, repeat-x;
+        clip-path: polygon(
+            0 0,
+            100% 0,
+            calc(100% - 0.12 * var(--dc-pinch)) 10%,
+            calc(100% - 0.38 * var(--dc-pinch)) 22%,
+            calc(100% - 0.66 * var(--dc-pinch)) 34%,
+            calc(100% - 0.9 * var(--dc-pinch)) 46%,
+            calc(100% - 1 * var(--dc-pinch)) 57%,
+            calc(100% - 0.93 * var(--dc-pinch)) 66%,
+            calc(100% - 0.7 * var(--dc-pinch)) 76%,
+            calc(100% - 0.4 * var(--dc-pinch)) 86%,
+            calc(100% - 0.12 * var(--dc-pinch)) 95%,
+            100% 100%,
+            0 100%
+        );
+    }
+
+    .dc-scene[data-dc-leave='velvet'] .dc-drape--r {
+        inset-inline: auto 0;
+        scale: -1 1;
+    }
+
+    /* The braid on the inner edge: a twisted gold cord following the edge. */
+    .dc-scene[data-dc-leave='velvet'] .dc-drape__braid {
+        position: absolute;
+        inset: 0;
+        background:
+            linear-gradient(
+                90deg,
+                hsl(from var(--dc-gold-lo) h s l / 0.9),
+                transparent 45%,
+                hsl(from var(--dc-gold-hi) h s l / 0.5) 70%,
+                transparent
+            ),
+            repeating-linear-gradient(150deg, var(--dc-gold-hi) 0 1px, var(--dc-gold-lt) 1px 2px, var(--dc-gold) 2px 3px, var(--dc-gold-lo) 3px 4.2px);
+        clip-path: polygon(
+            calc(100% - 3px) 0,
+            100% 0,
+            calc(100% - 0.12 * var(--dc-pinch)) 10%,
+            calc(100% - 0.38 * var(--dc-pinch)) 22%,
+            calc(100% - 0.66 * var(--dc-pinch)) 34%,
+            calc(100% - 0.9 * var(--dc-pinch)) 46%,
+            calc(100% - 1 * var(--dc-pinch)) 57%,
+            calc(100% - 0.93 * var(--dc-pinch)) 66%,
+            calc(100% - 0.7 * var(--dc-pinch)) 76%,
+            calc(100% - 0.4 * var(--dc-pinch)) 86%,
+            calc(100% - 0.12 * var(--dc-pinch)) 95%,
+            100% 100%,
+            calc(100% - 3px) 100%,
+            calc(100% - 3px - 0.12 * var(--dc-pinch)) 95%,
+            calc(100% - 3px - 0.4 * var(--dc-pinch)) 86%,
+            calc(100% - 3px - 0.7 * var(--dc-pinch)) 76%,
+            calc(100% - 3px - 0.93 * var(--dc-pinch)) 66%,
+            calc(100% - 3px - 1 * var(--dc-pinch)) 57%,
+            calc(100% - 3px - 0.9 * var(--dc-pinch)) 46%,
+            calc(100% - 3px - 0.66 * var(--dc-pinch)) 34%,
+            calc(100% - 3px - 0.38 * var(--dc-pinch)) 22%,
+            calc(100% - 3px - 0.12 * var(--dc-pinch)) 10%
+        );
+    }
+
+    /* The hem: a gold rule and a fringe of short threads, a bead at each end. */
+    .dc-scene[data-dc-leave='velvet'] .dc-drape::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0 4px;
+        inset-block-end: 2px;
+        block-size: 10px;
+        background:
+            var(--dc-leaf-x) 0 0 / 100% 1px no-repeat,
+            radial-gradient(circle 1.25px at 50% 50%, var(--dc-gold-hi), var(--dc-gold) 55%, var(--dc-gold-lo)) 0 1.5px / 4px 3px repeat-x,
+            linear-gradient(90deg, transparent 1.5px, var(--dc-gold) 1.5px 2.4px, transparent 2.4px) 0 3px / 4px 5px repeat-x,
+            radial-gradient(circle 1.4px at 50% 50%, var(--dc-gold-hi), var(--dc-gold) 55%, var(--dc-gold-lo)) 0 7px / 4px 3px repeat-x;
+    }
+
+    .dc-scene[data-dc-leave='velvet'] .dc-tassel--hem {
+        position: absolute;
+        inset-block-end: 1px;
+        inset-inline-end: 6px;
+        overflow: visible;
+    }
+
+    /* The tie-back: a twisted cord in a sagging arc round the gathered
+       drape, its tassel hanging at the wall; seen only as the drape
+       gathers. */
+    .dc-scene[data-dc-leave='velvet'] .dc-tie {
+        position: absolute;
+        inset-block-start: calc(57% - 5px);
+        inset-inline-start: -2px;
+        z-index: 1;
+        inline-size: calc((1 - var(--dc-p)) * 50% + var(--dc-p) * var(--dc-gw) - var(--dc-pinch) + 6px);
+        block-size: 9px;
+        opacity: min(1, max(0, (var(--dc-p) - 0.55) * 3));
+        background: repeating-linear-gradient(
+            60deg,
+            var(--dc-gold-hi) 0 1px,
+            var(--dc-gold-lt) 1px 2px,
+            var(--dc-gold) 2px 3px,
+            var(--dc-gold-lo) 3px 4px
+        );
+        mask: radial-gradient(ellipse 50% 100% at 50% 0, transparent 58%, var(--foreground) 62% 88%, transparent 92%);
+        filter: drop-shadow(0 1px 1px var(--dc-shadow));
+    }
+
+    .dc-scene[data-dc-leave='velvet'] .dc-tie--r {
+        inset-inline: auto -2px;
+        scale: -1 1;
+    }
+
+    /* The valance: a pelmet of gathered velvet under a double gold rule and
+       a row of beads, its foot cut in semicircular scallops trimmed in gold;
+       a tassel hangs from every point between two scallops. */
+    .dc-scene[data-dc-leave='velvet'] .dc-valance {
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline: 0;
+        z-index: 2;
+        block-size: 24px;
+        background:
+            var(--dc-leaf-x) 0 0 / 100% 1px no-repeat,
+            var(--dc-leaf-x) 0 3px / 100% 1px no-repeat,
+            radial-gradient(circle 1.3px at 50% 50%, var(--dc-gold-hi), var(--dc-gold) 60%, var(--dc-gold-lo)) 50% 6px / 9px 3px repeat-x,
+            radial-gradient(
+                    circle 9px at 50% 100%,
+                    transparent 8.4px,
+                    var(--dc-gold-hi) 8.6px,
+                    var(--dc-gold) 9.6px,
+                    var(--dc-gold-lo) 10.6px,
+                    transparent 11px
+                )
+                50% 0 / 18px 100% repeat-x,
+            linear-gradient(hsl(from var(--dc-shadow) h s l / 0.35), transparent 40%, hsl(from var(--dc-shadow) h s l / 0.45)),
+            linear-gradient(90deg, var(--dc-velvet-lo), var(--dc-velvet) 26%, var(--dc-velvet-hi) 46%, var(--dc-velvet) 64%, var(--dc-velvet-lo)) 50%
+                0 / 9px 100% repeat-x,
+            var(--dc-velvet);
+        mask: radial-gradient(circle 9px at 50% 100%, transparent 8.4px, var(--foreground) 8.8px) 50% 0 / 18px 100% repeat-x;
+        filter: drop-shadow(0 2px 2px var(--dc-shadow));
+    }
+
+    .dc-scene[data-dc-leave='velvet'] .dc-valance__tassels {
+        position: absolute;
+        inset-block-start: 22px;
+        inset-inline-start: 0;
+        z-index: 2;
+        overflow: visible;
+    }
+
+    /* Festoon: the swags. --dc-q is how far a swag is raised (0 down). */
+    .dc-scene[data-dc-leave='festoon'] .dc-swag {
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline-start: calc(var(--x) * 100%);
+        inline-size: calc(20% + 1px);
+        block-size: calc(var(--dc-hv) + (1 - var(--dc-q)) * (100% + var(--dc-lr) - var(--dc-hv)));
+    }
+
+    .dc-scene[data-dc-leave='festoon'] .dc-swag__body {
+        position: absolute;
+        inset: 0;
+        background:
+            linear-gradient(90deg, hsl(from var(--dc-shadow) h s l / 0.7), transparent 16% 84%, hsl(from var(--dc-shadow) h s l / 0.7)),
+            repeating-radial-gradient(
+                ellipse 78% 22% at 50% -6%,
+                var(--dc-velvet-lo) 0%,
+                var(--dc-velvet) 28%,
+                hsl(from var(--dc-velvet-hi) h calc(s - 6) calc(l + 4)) 50%,
+                var(--dc-velvet) 70%,
+                var(--dc-velvet-lo) 100%
+            ),
+            var(--dc-velvet);
+        mask:
+            linear-gradient(var(--foreground) 0 0) 0 0 / 100% calc(100% - var(--dc-lr)) no-repeat,
+            radial-gradient(ellipse 50% var(--dc-lr) at 50% calc(100% - var(--dc-lr)), var(--foreground) 99%, transparent 100%) 0 0 / 100% 100%
+                no-repeat;
+    }
+
+    .dc-scene[data-dc-leave='festoon'] .dc-swag__trim {
+        position: absolute;
+        inset-block-end: 0;
+        inset-inline-start: 0;
+        inline-size: 100%;
+        block-size: var(--dc-lr);
+        overflow: visible;
+        filter: drop-shadow(0 1px 1px var(--dc-shadow));
+    }
+
+    .dc-scene[data-dc-leave='festoon'] .dc-ros {
+        position: absolute;
+        inset-block-start: calc(100% - var(--dc-lr) - 6px);
+        inset-inline-start: -6px;
+        z-index: 2;
+        overflow: visible;
+        filter: drop-shadow(0 1px 1px var(--dc-shadow));
+    }
+
+    .dc-scene[data-dc-leave='festoon'] .dc-ros--r {
+        inset-inline: auto -6px;
+    }
+
+    .dc-scene[data-dc-leave='festoon'] .dc-cur__rail {
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline: 0;
+        z-index: 3;
+        block-size: 5px;
+        background:
+            var(--dc-leaf-x) 0 0 / 100% 1px no-repeat,
+            var(--dc-leaf-x) 0 4px / 100% 1px no-repeat,
+            var(--dc-velvet-lo);
+    }
+
+    /* The clocks of the options that do not take the lobby's two stages. */
+    .dc-scene[data-dc-leave='velvet'] {
+        --dc-k1: dc-part;
+        --dc-k1-out: dc-part-out;
+        --dc-l1: var(--dc-arrive);
+        --dc-k2: none;
+        --dc-k2-out: none;
+        --dc-l2: 0ms;
+    }
+
+    .dc-scene[data-dc-leave='festoon'] {
+        --dc-k1: none;
+        --dc-k1-out: none;
+        --dc-k2: none;
+        --dc-k2-out: none;
+        --dc-l1: 0ms;
+        --dc-l2: 0ms;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dc-scene--r2[data-dc-leave='glint'][data-dc-phase='gap'] .dc-ar {
+            --dc-gl: 0;
+        }
+
+        .dc-scene--r2[data-dc-leave='glint'][data-dc-phase='in'] .dc-ar {
+            animation:
+                dcg-draw calc(320ms * var(--dc-slow, 1)) linear 0ms both,
+                dcg-up calc(160ms * var(--dc-slow, 1)) linear calc(320ms * var(--dc-slow, 1)) both,
+                dc-gl calc(240ms * var(--dc-slow, 1)) linear calc(320ms * var(--dc-slow, 1)) both;
+        }
+
+        .dc-scene--r2[data-dc-leave='glint'][data-dc-phase='out'] .dc-ar {
+            animation:
+                dc-gl-out calc(240ms * var(--dc-slow, 1)) linear 0ms both,
+                dcg-up-out calc(160ms * var(--dc-slow, 1)) linear calc(80ms * var(--dc-slow, 1)) both,
+                dcg-draw-out calc(320ms * var(--dc-slow, 1)) linear calc(240ms * var(--dc-slow, 1)) both;
+        }
+
+        .dc-scene--r2[data-dc-leave='jewels'][data-dc-phase='gap'] .dc-ar {
+            --dc-j: 0;
+        }
+
+        .dc-scene--r2[data-dc-leave='jewels'][data-dc-phase='in'] .dc-ar {
+            animation:
+                dc-jw calc(120ms * var(--dc-slow, 1)) linear 0ms both,
+                dcg-draw calc(240ms * var(--dc-slow, 1)) linear calc(120ms * var(--dc-slow, 1)) both,
+                dcg-up calc(120ms * var(--dc-slow, 1)) linear calc(360ms * var(--dc-slow, 1)) both;
+        }
+
+        .dc-scene--r2[data-dc-leave='jewels'][data-dc-phase='out'] .dc-ar {
+            animation:
+                dcg-up-out calc(120ms * var(--dc-slow, 1)) linear 0ms both,
+                dcg-draw-out calc(240ms * var(--dc-slow, 1)) linear calc(120ms * var(--dc-slow, 1)) both,
+                dc-jw-out calc(120ms * var(--dc-slow, 1)) linear calc(360ms * var(--dc-slow, 1)) both;
+        }
+
+        .dc-scene--r2[data-dc-leave='double'][data-dc-phase='gap'] .dc-ar {
+            --dc-d2: 0;
+        }
+
+        .dc-scene--r2[data-dc-leave='double'][data-dc-phase='in'] .dc-ar {
+            animation:
+                dcg-draw calc(300ms * var(--dc-slow, 1)) linear 0ms both,
+                dc-d2 calc(300ms * var(--dc-slow, 1)) linear calc(120ms * var(--dc-slow, 1)) both,
+                dcg-up calc(160ms * var(--dc-slow, 1)) linear calc(320ms * var(--dc-slow, 1)) both;
+        }
+
+        .dc-scene--r2[data-dc-leave='double'][data-dc-phase='out'] .dc-ar {
+            animation:
+                dcg-up-out calc(160ms * var(--dc-slow, 1)) linear 0ms both,
+                dc-d2-out calc(300ms * var(--dc-slow, 1)) linear calc(60ms * var(--dc-slow, 1)) both,
+                dcg-draw-out calc(300ms * var(--dc-slow, 1)) linear calc(180ms * var(--dc-slow, 1)) both;
+        }
+
+        .dc-scene--r2[data-dc-leave='festoon'][data-dc-phase='gap'] .dc-swag {
+            --dc-q: 0;
+        }
+
+        .dc-scene--r2[data-dc-leave='festoon'][data-dc-phase='in'] .dc-swag {
+            animation: dc-lift calc(360ms * var(--dc-slow, 1)) linear calc(var(--i) * 60ms * var(--dc-slow, 1)) both;
+        }
+
+        .dc-scene--r2[data-dc-leave='festoon'][data-dc-phase='out'] .dc-swag {
+            animation: dc-lift-out calc(360ms * var(--dc-slow, 1)) linear calc((2 - var(--i)) * 60ms * var(--dc-slow, 1)) both;
+        }
+    }
+
+    /* ── 15 Pointing at something, 17 The press (update 2) ────────────────
+       The controls of both rows answer the reviewer's own pointer, keys and
+       finger: a hover is `:hover` or `:focus-visible` (and `.dc-pointed`, the
+       first of each, shown pointed at); a press is `:active` or `.dc-on`
+       (demo.js holds it at least as long as its motion, so a quick tap shows
+       it whole); the State buttons force either on every control but the
+       one at rest. A hover turns one number, --dc-m (0 to 1), a press
+       --dc-r; each option draws from it, and each goes back on the inverse
+       of the curve it came on, so every leave is its arrival reversed. The
+       focus ring is Kenny's pick: a 3px double gold ring.
+       Hover. Leaf (recommended): a wash of gold leaf with a grain fades in,
+       the hairline goes to full gold, the label warms to champagne (320 ms).
+       Mat: a second hairline frame draws itself 4 px inside the first from
+       the corners to the middles, a lozenge at each corner (320 ms). Gleam:
+       one slim ivory gleam crosses once (dc-gleam, 480 ms), the frame
+       brightening behind it; leaving, it crosses back (dc-gleam-out). Relief:
+       a highlight along the top, a shadow along the foot, a lift of 1 px, a
+       faint reflection of the label under it (240 ms). Jewels: two faceted
+       lozenges at the label's ends and 0.01 em more tracking (240 ms).
+       Press. Seal: the plate sinks 1 px into its own shadow and one gold ring
+       ripples out from the centre (dc-seal, 400 ms). Engrave: the frame draws
+       2 px inward and the lacquer deepens (160 ms). Gild: gold leaf is
+       pressed on from the middle outward and rests at 16 % (240 ms). Brass:
+       the highlight and the shadow swap, the label goes 1 px down (160 ms).
+       Flash: two jewels flash at the label's ends, gold to ivory to gold
+       (dc-flash, 200 ms), the label brightens while held. */
+
+    .dc-scene:is([data-dc-hover], [data-dc-press]) :is(.kp-button, .kp-menu__item, .dc-in-kpi, .kp-kpi--toggle, .dc-day2, .dc-prose a) {
+        position: relative;
+        isolation: isolate;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .dc-scene:is([data-dc-hover], [data-dc-press]) :is(.kp-menu__item, .dc-in-kpi, .kp-kpi--toggle, .dc-day2) {
+        overflow: clip;
+    }
+
+    .dc-scene:is([data-dc-hover], [data-dc-press]) .kp-menu__item {
+        background: transparent;
+        color: var(--foreground);
+    }
+
+    .dc-scene:is([data-dc-hover], [data-dc-press]) :is(.dc-in-kpi, .kp-kpi--toggle, .dc-day2) {
+        border-color: hsl(from var(--dc-gold) h s l / calc(var(--dc-line-a) * 0.5));
+    }
+
+    .dc-scene:is([data-dc-hover], [data-dc-press]) .dc-lbl {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dc-scene:is([data-dc-hover], [data-dc-press]) .dc-day2 > .dc-lbl {
+        line-height: 1;
+    }
+
+    .dc-scene[data-dc-hover] .dc-prose {
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+
+    .dc-scene[data-dc-hover] .dc-prose a {
+        --dc-line-a: 0.55;
+        display: inline-block;
+        color: var(--foreground);
+        text-decoration: underline 1px hsl(from var(--dc-gold) h s l / var(--dc-line-a));
+        text-underline-offset: 0.25em;
+    }
+
+    .dc-scene:is([data-dc-hover], [data-dc-press]) :is(.kp-button, .kp-menu__item, .dc-in-kpi, .kp-kpi--toggle, .dc-day2, .dc-prose a):focus-visible,
+    .dc-scene:is([data-dc-hover], [data-dc-press])[data-dc-show='focus']
+        :is(.kp-button, .kp-menu__item, .dc-in-kpi, .kp-kpi--toggle, .dc-day2, .dc-prose a) {
+        outline: 3px double var(--primary);
+        outline-offset: 3px;
+    }
+
+    /* The hover's number. */
+    .dc-scene[data-dc-hover] :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day2, .dc-prose a):is(.dc-pointed, :hover, :focus-visible),
+    .dc-scene[data-dc-hover][data-dc-show='hover'] :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day2, .dc-prose a) {
+        --dc-m: 1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dc-scene[data-dc-hover] :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day2, .dc-prose a) {
+            --dc-ht: 320ms;
+            transition: --dc-m calc(var(--dc-ht) * var(--dc-slow, 1)) cubic-bezier(0.64, 0, 0.78, 0);
+        }
+
+        .dc-scene[data-dc-hover] :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day2, .dc-prose a):is(.dc-pointed, :hover, :focus-visible),
+        .dc-scene[data-dc-hover][data-dc-show='hover'] :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day2, .dc-prose a) {
+            transition: --dc-m calc(var(--dc-ht) * var(--dc-slow, 1)) cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .dc-scene:is([data-dc-hover='relief'], [data-dc-hover='jewels']) :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day2, .dc-prose a) {
+            --dc-ht: 240ms;
+        }
+    }
+
+    /* Leaf: a wash of gold leaf with its grain, the frame to full gold, the
+       label to champagne. */
+    .dc-scene[data-dc-hover='leaf'] :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day2, .dc-prose a) {
+        --dc-line-a: calc(0.55 + 0.45 * var(--dc-m));
+    }
+
+    .dc-scene[data-dc-hover='leaf'] :is(.kp-button:not(.kp-button--primary), .kp-menu__item, .dc-in-kpi, .dc-day2, .dc-prose a) {
+        color: hsl(from var(--foreground) calc(h + 4 * var(--dc-m)) calc(s + 14 * var(--dc-m)) calc(l - 7 * var(--dc-m)));
+    }
+
+    .dc-scene[data-dc-hover='leaf'] .dc-in-kpi :is(.kp-kpi__label, .kp-kpi__value) {
+        color: hsl(from var(--foreground) calc(h + 4 * var(--dc-m)) calc(s + 14 * var(--dc-m)) calc(l - 7 * var(--dc-m)));
+    }
+
+    .dc-scene[data-dc-hover='leaf'] .dc-in-kpi .kp-kpi__label {
+        opacity: calc(0.75 + 0.25 * var(--dc-m));
+    }
+
+    .dc-scene[data-dc-hover='leaf'] .kp-menu__item {
+        box-shadow: inset 0 0 0 1px hsl(from var(--dc-gold) h s l / calc(0.9 * var(--dc-m)));
+    }
+
+    .dc-scene[data-dc-hover='leaf'] :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day2, .dc-prose a)::before {
+        all: unset;
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        background: linear-gradient(
+            135deg,
+            hsl(from var(--dc-gold-hi) h s l / 0.13),
+            hsl(from var(--dc-gold) h s l / 0.07) 38%,
+            hsl(from var(--dc-gold-lt) h s l / 0.12) 64%,
+            hsl(from var(--dc-gold) h s l / 0.06)
+        );
+        mask: var(--dc-grain) 0 0 / 64px 64px;
+        opacity: var(--dc-m);
+    }
+
+    .dc-scene[data-dc-hover='leaf'] .kp-button--primary::before {
+        background: linear-gradient(135deg, hsl(from var(--dc-gold-hi) h s l / 0.5), transparent 45%, hsl(from var(--dc-gold-hi) h s l / 0.35));
+    }
+
+    .dc-scene[data-dc-hover='leaf'] .dc-prose a::before {
+        inset: -1px -3px;
+    }
+
+    /* Mat: a second frame inside the first, drawn from the corners, a
+       lozenge at each corner; the pseudo stands 3 px outside the frame so
+       the lozenges have room. */
+    .dc-scene[data-dc-hover='mat'] :is(.kp-button, .kp-menu__item, .dc-prose a)::after,
+    .dc-scene[data-dc-hover='mat'] :is(.dc-in-kpi, .dc-day2)::before {
+        all: unset;
+        --dc-mi: 3px;
+        content: '';
+        position: absolute;
+        inset: calc(var(--dc-mi) - 3px);
+        z-index: 3;
+        pointer-events: none;
+        background: var(--dc-leaf);
+        mask:
+            linear-gradient(var(--foreground) 0 0) left 3px top 3px / calc(var(--dc-m) * (50% - 3px)) 1px no-repeat,
+            linear-gradient(var(--foreground) 0 0) right 3px top 3px / calc(var(--dc-m) * (50% - 3px)) 1px no-repeat,
+            linear-gradient(var(--foreground) 0 0) left 3px bottom 3px / calc(var(--dc-m) * (50% - 3px)) 1px no-repeat,
+            linear-gradient(var(--foreground) 0 0) right 3px bottom 3px / calc(var(--dc-m) * (50% - 3px)) 1px no-repeat,
+            linear-gradient(var(--foreground) 0 0) left 3px top 3px / 1px calc(var(--dc-m) * (50% - 3px)) no-repeat,
+            linear-gradient(var(--foreground) 0 0) left 3px bottom 3px / 1px calc(var(--dc-m) * (50% - 3px)) no-repeat,
+            linear-gradient(var(--foreground) 0 0) right 3px top 3px / 1px calc(var(--dc-m) * (50% - 3px)) no-repeat,
+            linear-gradient(var(--foreground) 0 0) right 3px bottom 3px / 1px calc(var(--dc-m) * (50% - 3px)) no-repeat,
+            var(--dc-loz-mask) left calc(3.5px - 3px * var(--dc-m)) top calc(3.5px - 3px * var(--dc-m)) / calc(6px * var(--dc-m))
+                calc(6px * var(--dc-m)) no-repeat,
+            var(--dc-loz-mask) right calc(3.5px - 3px * var(--dc-m)) top calc(3.5px - 3px * var(--dc-m)) / calc(6px * var(--dc-m))
+                calc(6px * var(--dc-m)) no-repeat,
+            var(--dc-loz-mask) left calc(3.5px - 3px * var(--dc-m)) bottom calc(3.5px - 3px * var(--dc-m)) / calc(6px * var(--dc-m))
+                calc(6px * var(--dc-m)) no-repeat,
+            var(--dc-loz-mask) right calc(3.5px - 3px * var(--dc-m)) bottom calc(3.5px - 3px * var(--dc-m)) / calc(6px * var(--dc-m))
+                calc(6px * var(--dc-m)) no-repeat;
+    }
+
+    .dc-scene[data-dc-hover='mat'] .dc-in-kpi::before {
+        --dc-mi: calc(var(--dc-in) + 3px);
+    }
+
+    .dc-scene[data-dc-hover='mat'] .dc-day2::before {
+        --dc-mi: calc(var(--dc-in) + 3px);
+    }
+
+    .dc-scene[data-dc-hover='mat'] .kp-button--primary::after {
+        background: hsl(from var(--dc-lac) h s calc(l - 2));
+    }
+
+    .dc-scene[data-dc-hover='mat'] .dc-prose a::after {
+        --dc-mi: -5px;
+    }
+
+    .dc-scene[data-dc-hover='mat'] .dc-prose a {
+        margin-inline: 0.3em;
+    }
+
+    .dc-scene[data-dc-hover='mat'] :is(.kp-button, .dc-in-kpi, .dc-day2, .dc-prose a) {
+        --dc-line-a: calc(0.55 + 0.2 * var(--dc-m));
+    }
+
+    /* Gleam: one slim ivory band crosses once; the frame brightens behind
+       it and stays bright while the pointer rests; leaving, it crosses back. */
+    .dc-scene[data-dc-hover='gleam'] :is(.kp-button, .kp-menu__item, .dc-prose a)::after,
+    .dc-scene[data-dc-hover='gleam'] :is(.dc-in-kpi, .dc-day2)::before {
+        all: unset;
+        content: '';
+        position: absolute;
+        inset-block: -40%;
+        inset-inline-start: calc(var(--dc-g) * (100% + 32px) - 28px);
+        z-index: 3;
+        inline-size: 24px;
+        pointer-events: none;
+        background: linear-gradient(
+            90deg,
+            transparent,
+            hsl(from var(--foreground) h s 96% / 0.05) 25%,
+            hsl(from var(--foreground) h s 97% / 0.14) 50%,
+            hsl(from var(--foreground) h s 96% / 0.05) 75%,
+            transparent
+        );
+        filter: blur(1px);
+        transform: skewX(-22deg);
+    }
+
+    .dc-scene[data-dc-hover='gleam'] .dc-prose a {
+        overflow: clip;
+    }
+
+    .dc-scene[data-dc-hover='gleam'] :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day2, .dc-prose a)[data-dc-was],
+    .dc-scene[data-dc-hover='gleam'] :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day2, .dc-prose a):is(.dc-pointed, :hover, :focus-visible),
+    .dc-scene[data-dc-hover='gleam'][data-dc-show='hover'] :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day2, .dc-prose a) {
+        --dc-line-a: calc(0.55 + 0.45 * min(1, var(--dc-g) * 1.6));
+    }
+
+    .dc-scene[data-dc-hover='gleam'] .kp-menu__item[data-dc-was],
+    .dc-scene[data-dc-hover='gleam'] .kp-menu__item:is(.dc-pointed, :hover, :focus-visible),
+    .dc-scene[data-dc-hover='gleam'][data-dc-show='hover'] .kp-menu__item {
+        box-shadow: inset 1px 0 0 hsl(from var(--dc-gold) h s l / calc(min(1, var(--dc-g) * 1.6)));
+    }
+
+    /* Relief: lit along the top, shadowed along the foot, lifted 1 px, a
+       faint reflection of the label under it. */
+    .dc-scene[data-dc-hover='relief'] :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day2) {
+        --dc-line-a: calc(0.55 + 0.45 * var(--dc-m));
+        box-shadow:
+            inset 0 1px 0 hsl(from var(--dc-gold-hi) h s l / calc(0.55 * var(--dc-m))),
+            inset 0 -1px 0 hsl(from var(--dc-shadow) h s l / calc(0.95 * var(--dc-m))),
+            0 calc(2px * var(--dc-m)) calc(6px * var(--dc-m)) hsl(from var(--dc-shadow) h s l / calc(0.8 * var(--dc-m)));
+        translate: 0 calc(-1px * var(--dc-m));
+    }
+
+    .dc-scene[data-dc-hover='relief'] :is(.kp-button:not(.kp-button--primary), .kp-menu__item, .dc-in-kpi, .dc-day2) {
+        background-image: linear-gradient(
+            hsl(from var(--dc-gold-hi) h s l / calc(0.07 * var(--dc-m))),
+            transparent 55%,
+            hsl(from var(--dc-shadow) h s l / calc(0.3 * var(--dc-m)))
+        );
+    }
+
+    .dc-scene[data-dc-hover='relief'] :is(.dc-in-kpi, .dc-day2) {
+        background-image:
+            linear-gradient(
+                hsl(from var(--dc-gold-hi) h s l / calc(0.07 * var(--dc-m))),
+                transparent 55%,
+                hsl(from var(--dc-shadow) h s l / calc(0.3 * var(--dc-m)))
+            ),
+            repeating-linear-gradient(135deg, hsl(from var(--dc-gold) h s l / var(--dc-wall-a)) 0 1px, transparent 1px 12px),
+            repeating-linear-gradient(45deg, hsl(from var(--dc-gold) h s l / var(--dc-wall-a)) 0 1px, transparent 1px 12px);
+        background-size:
+            100% 100%,
+            24px 24px,
+            24px 24px;
+    }
+
+    .dc-scene[data-dc-hover='relief'] .kp-button--primary {
+        box-shadow:
+            inset 0 1px 0 hsl(from var(--dc-gold-hi) h s l / calc(0.9 * var(--dc-m))),
+            inset 0 -1px 0 hsl(from var(--dc-gold-lo) h s l / calc(0.9 * var(--dc-m))),
+            0 calc(2px * var(--dc-m)) calc(6px * var(--dc-m)) hsl(from var(--dc-shadow) h s l / calc(0.8 * var(--dc-m)));
+    }
+
+    .dc-scene[data-dc-hover='relief'] .dc-lbl::after,
+    .dc-scene[data-dc-hover='relief'] .dc-prose a::after {
+        content: '';
+        position: absolute;
+        inset-inline: 12%;
+        inset-block-end: -3px;
+        block-size: 1px;
+        pointer-events: none;
+        background: linear-gradient(90deg, transparent, var(--dc-gold-lt), transparent);
+        opacity: calc(0.7 * var(--dc-m));
+    }
+
+    .dc-scene[data-dc-hover='relief'] .kp-button--primary .dc-lbl::after {
+        background: linear-gradient(90deg, transparent, var(--dc-lac), transparent);
+    }
+
+    .dc-scene[data-dc-hover='relief'] .dc-prose a {
+        --dc-line-a: calc(0.55 - 0.3 * var(--dc-m));
+        text-shadow:
+            0 -1px 0 hsl(from var(--dc-gold-hi) h s l / calc(0.35 * var(--dc-m))),
+            0 1px 1px hsl(from var(--dc-shadow) h s l / var(--dc-m));
+    }
+
+    .dc-scene[data-dc-hover='relief'] .dc-prose a::after {
+        inset-inline: 0;
+        inset-block-end: -1px;
+    }
+
+    /* Jewels: two faceted lozenges at the label's ends. */
+    .dc-scene[data-dc-hover='jewels'] :is(.dc-lbl, .dc-prose a) {
+        letter-spacing: calc(var(--dc-ls, 0em) + 0.01em * var(--dc-m));
+    }
+
+    .dc-scene[data-dc-hover='jewels'] .kp-button {
+        --dc-ls: 0.08em;
+    }
+
+    .dc-scene[data-dc-hover='jewels'] .kp-menu__item {
+        --dc-ls: 0.06em;
+    }
+
+    .dc-scene[data-dc-hover='jewels'] .kp-kpi__label {
+        --dc-ls: 0.12em;
+    }
+
+    .dc-scene[data-dc-hover='jewels'] :is(.dc-lbl, .dc-prose a)::before,
+    .dc-scene[data-dc-hover='jewels'] :is(.dc-lbl, .dc-prose a)::after {
+        all: unset;
+        content: '';
+        position: absolute;
+        inset-block-start: calc(50% - 2.5px);
+        inline-size: 5px;
+        block-size: 5px;
+        pointer-events: none;
+        clip-path: var(--dc-lozenge);
+        background: var(--dc-gem);
+        opacity: var(--dc-m);
+        scale: calc(0.3 + 0.7 * var(--dc-m));
+        filter: drop-shadow(0 0 2px hsl(from var(--dc-gold) h s l / 0.8));
+    }
+
+    .dc-scene[data-dc-hover='jewels'] :is(.dc-lbl, .dc-prose a)::before {
+        inset-inline-start: -10px;
+    }
+
+    .dc-scene[data-dc-hover='jewels'] :is(.dc-lbl, .dc-prose a)::after {
+        inset-inline-end: -10px;
+    }
+
+    .dc-scene[data-dc-hover='jewels'] .kp-button--primary .dc-lbl::before,
+    .dc-scene[data-dc-hover='jewels'] .kp-button--primary .dc-lbl::after {
+        background: var(--dc-lac);
+    }
+
+    .dc-scene[data-dc-hover='jewels'] .dc-prose a {
+        margin-inline: 0.55em;
+    }
+
+    .dc-scene[data-dc-hover='jewels'] :is(.kp-button, .dc-in-kpi, .dc-day2, .dc-prose a) {
+        --dc-line-a: calc(0.55 + 0.3 * var(--dc-m));
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dc-scene[data-dc-hover='gleam']
+            :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day2, .dc-prose a)[data-dc-was]:not(:hover, :focus-visible, .dc-pointed) {
+            animation: dc-gleam-out calc(var(--dc-arrive) * var(--dc-slow, 1)) linear both;
+        }
+
+        .dc-scene[data-dc-hover='gleam'] :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day2, .dc-prose a):is(.dc-pointed, :hover, :focus-visible),
+        .dc-scene[data-dc-hover='gleam'][data-dc-show='hover'] :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day2, .dc-prose a) {
+            animation: dc-gleam calc(var(--dc-arrive) * var(--dc-slow, 1)) linear both;
+        }
+    }
+
+    @keyframes dc-gleam {
+        from {
+            --dc-g: 0;
+            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+        }
+        to {
+            --dc-g: 1;
+        }
+    }
+
+    @keyframes dc-gleam-out {
+        from {
+            --dc-g: 1;
+            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+        }
+        to {
+            --dc-g: 0;
+        }
+    }
+
+    /* The press's number. */
+    .dc-scene[data-dc-press] :is(.kp-button, .kp-menu__item, .dc-day2, .kp-kpi--toggle):is(.dc-press, .dc-on, :active),
+    .dc-scene[data-dc-press][data-dc-show='press'] :is(.kp-button, .kp-menu__item, .dc-day2, .kp-kpi--toggle):not(.dc-rest) {
+        --dc-r: 1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dc-scene[data-dc-press] :is(.kp-button, .kp-menu__item, .dc-day2, .kp-kpi--toggle) {
+            --dc-pt: 160ms;
+            transition: --dc-r calc(var(--dc-pt) * var(--dc-slow, 1)) cubic-bezier(0.64, 0, 0.78, 0);
+        }
+
+        .dc-scene[data-dc-press] :is(.kp-button, .kp-menu__item, .dc-day2, .kp-kpi--toggle):is(.dc-press, .dc-on, :active),
+        .dc-scene[data-dc-press][data-dc-show='press'] :is(.kp-button, .kp-menu__item, .dc-day2, .kp-kpi--toggle):not(.dc-rest) {
+            transition: --dc-r calc(var(--dc-pt) * var(--dc-slow, 1)) cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .dc-scene[data-dc-press='gild'] :is(.kp-button, .kp-menu__item, .dc-day2, .kp-kpi--toggle) {
+            --dc-pt: 240ms;
+        }
+    }
+
+    /* Seal: in 1 px, into its own shadow; one gold ring ripples out. */
+    .dc-scene[data-dc-press='seal'] :is(.kp-button, .kp-menu__item, .dc-day2, .kp-kpi--toggle) {
+        translate: 0 calc(1px * var(--dc-r));
+        box-shadow:
+            inset calc(1px * var(--dc-r)) calc(1px * var(--dc-r)) calc(3px * var(--dc-r)) hsl(from var(--dc-shadow) h s l / calc(0.95 * var(--dc-r))),
+            inset calc(-1px * var(--dc-r)) calc(-1px * var(--dc-r)) 0 hsl(from var(--dc-gold-hi) h s l / calc(0.3 * var(--dc-r)));
+    }
+
+    .dc-scene[data-dc-press='seal'] :is(.kp-button:not(.kp-button--primary), .kp-menu__item) {
+        background-color: hsl(from var(--dc-lac) h s calc(l - 3 * var(--dc-r)) / var(--dc-r));
+    }
+
+    .dc-scene[data-dc-press='seal'] :is(.dc-day2, .kp-kpi--toggle) {
+        background-color: hsl(from var(--dc-lac) h s calc(l - 3 * var(--dc-r)));
+    }
+
+    .dc-scene[data-dc-press='seal'] .kp-button--primary {
+        background-color: hsl(from var(--primary) h s calc(l - 7 * var(--dc-r)));
+        box-shadow:
+            inset calc(1px * var(--dc-r)) calc(1px * var(--dc-r)) calc(3px * var(--dc-r)) hsl(from var(--dc-gold-dk) h s l / calc(0.9 * var(--dc-r))),
+            inset calc(-1px * var(--dc-r)) calc(-1px * var(--dc-r)) 0 hsl(from var(--dc-gold-hi) h s l / calc(0.6 * var(--dc-r)));
+    }
+
+    .dc-scene[data-dc-press='seal'] :is(.kp-button, .kp-menu__item)::after,
+    .dc-scene[data-dc-press='seal'] :is(.dc-day2, .kp-kpi--toggle)::before {
+        all: unset;
+        content: '';
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: 50%;
+        z-index: 3;
+        inline-size: 150%;
+        aspect-ratio: 1;
+        pointer-events: none;
+        border-radius: 50%;
+        background: radial-gradient(
+            closest-side,
+            transparent calc(100% - 3px),
+            hsl(from var(--dc-gold-hi) h s l / 0.9) calc(100% - 1.6px),
+            var(--dc-gold) calc(100% - 0.6px),
+            transparent
+        );
+        opacity: 0;
+        translate: -50% -50%;
+    }
+
+    .dc-scene[data-dc-press='seal'] .kp-button--primary::after {
+        background: radial-gradient(
+            closest-side,
+            transparent calc(100% - 3px),
+            hsl(from var(--dc-gold-hi) h s 92%) calc(100% - 1.6px),
+            var(--dc-gold-lt) calc(100% - 0.6px),
+            transparent
+        );
+    }
+
+    /* Engrave: the frame draws 2 px inward, the lacquer deepens. */
+    .dc-scene[data-dc-press='engrave'] :is(.kp-button:not(.kp-button--primary), .kp-menu__item) {
+        border-color: hsl(from var(--dc-gold) h s l / calc(0.55 - 0.35 * var(--dc-r)));
+        background-color: hsl(from var(--dc-lac) h s calc(l - 4 * var(--dc-r)) / var(--dc-r));
+        box-shadow:
+            inset 0 0 0 calc(2px * var(--dc-r)) hsl(from var(--dc-lac) h s calc(l - 4) / var(--dc-r)),
+            inset 0 0 0 calc(2px * var(--dc-r) + 1px) hsl(from var(--dc-gold) h s l / var(--dc-r));
+    }
+
+    .dc-scene[data-dc-press='engrave'] .kp-button--primary {
+        background-color: hsl(from var(--primary) h s calc(l - 6 * var(--dc-r)));
+        box-shadow:
+            inset 0 0 0 calc(2px * var(--dc-r)) hsl(from var(--primary) h s calc(l - 6) / var(--dc-r)),
+            inset 0 0 0 calc(2px * var(--dc-r) + 1px) hsl(from var(--dc-lac) h s l / var(--dc-r));
+    }
+
+    .dc-scene[data-dc-press='engrave'] :is(.dc-day2, .kp-kpi--toggle) {
+        --dc-line-a: calc(0.55 + 0.45 * var(--dc-r));
+        background-color: hsl(from var(--dc-lac) h s calc(l - 4 * var(--dc-r)));
+    }
+
+    .dc-scene[data-dc-press='engrave'] :is(.dc-day2, .kp-kpi--toggle)::after {
+        inset: calc(var(--dc-in) - 1px + 2px * var(--dc-r));
+    }
+
+    /* Gild: gold leaf pressed on from the middle outward, resting at 16 %,
+       a brighter rim where it spreads. */
+    .dc-scene[data-dc-press='gild'] :is(.kp-button, .kp-menu__item, .dc-day2, .kp-kpi--toggle)::before {
+        all: unset;
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        background: radial-gradient(
+            circle farthest-corner at 50% 50%,
+            hsl(from var(--dc-gold) h calc(s + 10) l / 0.2) 0 calc(var(--dc-r) * 100% - 14%),
+            hsl(from var(--dc-gold-hi) h s l / 0.45) calc(var(--dc-r) * 100% - 4%),
+            transparent calc(var(--dc-r) * 100%)
+        );
+        mask: var(--dc-grain) 0 0 / 64px 64px;
+    }
+
+    .dc-scene[data-dc-press='gild'] .kp-button--primary::before {
+        background: radial-gradient(
+            circle farthest-corner at 50% 50%,
+            hsl(from var(--dc-gold-hi) h s l / 0.5) 0 calc(var(--dc-r) * 100% - 14%),
+            hsl(from var(--foreground) h s 96% / 0.55) calc(var(--dc-r) * 100% - 4%),
+            transparent calc(var(--dc-r) * 100%)
+        );
+    }
+
+    .dc-scene[data-dc-press='gild'] :is(.kp-button:not(.kp-button--primary), .kp-menu__item, .dc-day2, .kp-kpi--toggle) {
+        --dc-line-a: calc(0.55 + 0.45 * var(--dc-r));
+        color: hsl(from var(--foreground) h s calc(l + 8 * var(--dc-r)));
+    }
+
+    /* Brass: the highlight on top and the shadow at the foot swap. */
+    .dc-scene[data-dc-press='brass'] :is(.kp-button, .kp-menu__item, .dc-day2, .kp-kpi--toggle) {
+        box-shadow:
+            inset 0 1px 0 hsl(from var(--dc-gold-hi) h s l / calc(0.45 * (1 - var(--dc-r)))),
+            inset 0 -1px 0 hsl(from var(--dc-shadow) h s l / calc(0.95 * (1 - var(--dc-r)))),
+            inset 0 1px 0 hsl(from var(--dc-shadow) h s l / calc(0.95 * var(--dc-r))),
+            inset 0 calc(2px * var(--dc-r)) calc(4px * var(--dc-r)) hsl(from var(--dc-shadow) h s l / calc(0.7 * var(--dc-r))),
+            inset 0 -1px 0 hsl(from var(--dc-gold-hi) h s l / calc(0.4 * var(--dc-r)));
+    }
+
+    .dc-scene[data-dc-press='brass'] :is(.kp-button:not(.kp-button--primary), .kp-menu__item) {
+        background-image: linear-gradient(
+            hsl(from var(--dc-gold-hi) h s l / calc(0.06 * (1 - var(--dc-r)))),
+            transparent 55%,
+            hsl(from var(--dc-shadow) h s l / calc(0.28 * (1 - var(--dc-r))))
+        );
+    }
+
+    .dc-scene[data-dc-press='brass'] .kp-button--primary {
+        background-image: linear-gradient(
+            hsl(from var(--dc-gold-hi) h s l / calc(0.45 - 0.45 * var(--dc-r))),
+            transparent 50%,
+            hsl(from var(--dc-gold-lo) h s l / calc(0.5 - 0.2 * var(--dc-r)))
+        );
+        box-shadow:
+            inset 0 1px 0 hsl(from var(--dc-gold-hi) h s l / calc(0.9 * (1 - var(--dc-r)))),
+            inset 0 -1px 0 hsl(from var(--dc-gold-dk) h s l / calc(0.8 * (1 - var(--dc-r)))),
+            inset 0 1px 0 hsl(from var(--dc-gold-dk) h s l / calc(0.8 * var(--dc-r))),
+            inset 0 calc(2px * var(--dc-r)) calc(4px * var(--dc-r)) hsl(from var(--dc-gold-dk) h s l / calc(0.5 * var(--dc-r))),
+            inset 0 -1px 0 hsl(from var(--dc-gold-hi) h s l / calc(0.9 * var(--dc-r)));
+    }
+
+    .dc-scene[data-dc-press='brass'] :is(.dc-lbl, .kp-kpi__value) {
+        translate: 0 calc(1px * var(--dc-r));
+    }
+
+    /* Flash: two jewels at the label's ends, the label brightening. */
+    .dc-scene[data-dc-press='flash'] .dc-lbl::before,
+    .dc-scene[data-dc-press='flash'] .dc-lbl::after {
+        content: '';
+        position: absolute;
+        inset-block-start: calc(50% - 3px);
+        inline-size: 6px;
+        block-size: 6px;
+        pointer-events: none;
+        clip-path: var(--dc-lozenge);
+        background: var(--dc-gem);
+        opacity: var(--dc-r);
+        filter: drop-shadow(0 0 3px hsl(from var(--dc-gold) h s l / 0.9));
+    }
+
+    .dc-scene[data-dc-press='flash'] .dc-lbl::before {
+        inset-inline-start: -11px;
+    }
+
+    .dc-scene[data-dc-press='flash'] .dc-lbl::after {
+        inset-inline-end: -11px;
+    }
+
+    .dc-scene[data-dc-press='flash'] .kp-button--primary .dc-lbl::before,
+    .dc-scene[data-dc-press='flash'] .kp-button--primary .dc-lbl::after {
+        background: conic-gradient(
+            hsl(from var(--dc-lac) h s calc(l + 10)) 0 90deg,
+            var(--dc-lac) 0 180deg,
+            hsl(from var(--dc-lac) h s calc(l + 4)) 0 270deg,
+            hsl(from var(--dc-lac) h s calc(l + 22)) 0
+        );
+        filter: none;
+    }
+
+    .dc-scene[data-dc-press='flash'] :is(.kp-button:not(.kp-button--primary), .kp-menu__item, .dc-day2, .kp-kpi--toggle) .dc-lbl,
+    .dc-scene[data-dc-press='flash'] .kp-kpi--toggle .kp-kpi__value {
+        color: hsl(from var(--foreground) calc(h + 2) calc(s - 30 * var(--dc-r)) calc(l + 9 * var(--dc-r)));
+        text-shadow: 0 0 calc(6px * var(--dc-r)) hsl(from var(--dc-gold) h s l / calc(0.45 * var(--dc-r)));
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dc-scene[data-dc-press='seal'] :is(.kp-button, .kp-menu__item):is(.dc-press, .dc-on, :active)::after,
+        .dc-scene[data-dc-press='seal'][data-dc-show='press'] :is(.kp-button, .kp-menu__item):not(.dc-rest)::after,
+        .dc-scene[data-dc-press='seal'] :is(.dc-day2, .kp-kpi--toggle):is(.dc-press, .dc-on, :active)::before,
+        .dc-scene[data-dc-press='seal'][data-dc-show='press'] :is(.dc-day2, .kp-kpi--toggle):not(.dc-rest)::before {
+            animation: dc-seal calc(400ms * var(--dc-slow, 1)) linear both;
+        }
+
+        .dc-scene[data-dc-press='flash'] :is(.kp-button, .kp-menu__item, .dc-day2, .kp-kpi--toggle):is(.dc-press, .dc-on, :active) .dc-lbl::before,
+        .dc-scene[data-dc-press='flash'] :is(.kp-button, .kp-menu__item, .dc-day2, .kp-kpi--toggle):is(.dc-press, .dc-on, :active) .dc-lbl::after,
+        .dc-scene[data-dc-press='flash'][data-dc-show='press']
+            :is(.kp-button, .kp-menu__item, .dc-day2, .kp-kpi--toggle):not(.dc-rest)
+            .dc-lbl::before,
+        .dc-scene[data-dc-press='flash'][data-dc-show='press']
+            :is(.kp-button, .kp-menu__item, .dc-day2, .kp-kpi--toggle):not(.dc-rest)
+            .dc-lbl::after {
+            animation: dc-flash calc(200ms * var(--dc-slow, 1)) linear both;
+        }
+    }
+
+    @keyframes dc-seal {
+        0% {
+            opacity: 0.95;
+            scale: 0.08;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        100% {
+            opacity: 0;
+            scale: 1;
+        }
+    }
+
+    @keyframes dc-flash {
+        0% {
+            filter: drop-shadow(0 0 3px hsl(from var(--dc-gold) h s l / 0.9)) brightness(1) saturate(1);
+            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+        }
+        50% {
+            filter: drop-shadow(0 0 5px var(--dc-gold-hi)) brightness(1.9) saturate(0.25);
+            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+        }
+        100% {
+            filter: drop-shadow(0 0 3px hsl(from var(--dc-gold) h s l / 0.9)) brightness(1) saturate(1);
+        }
     }
 }

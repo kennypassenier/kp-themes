@@ -1,5 +1,13 @@
 # What makes deco deco
 
+**Update 2 (2026-10-09).** Kenny: "Do better, I'm very underwhelmed". Reopened: the corners, loading, the bar, leave, hover and
+the press, each drawn again as jewellery with gold that reads as gold (a highlight, the gold and a bronze shade of one hue along
+every hairline, faceted lozenges, gold leaf with a grain; inline-SVG ornaments painted from one gradient sprite, `.dc-defs`):
+six corners (sunburst, ziggurat, cove, chevrons, medallion, pilaster), ten waiting pictures and the breathing wallpaper, the inlay
+bar with two variations and five new bars, three variations of the inlay arrival and two real curtains (velvet drapes and a
+festoon), five hovers and five presses. The hover and press rows answer the reviewer's own pointer, keys and finger (a press
+holds while it is down and lasts at least its motion). The other thirteen questions keep their drawing.
+
 **Update 1 (2026-10-08).** Kenny did not approve thirteen of the nineteen questions, with one comment on all of them: "I don't like
 this direction at all, you should take a look at what art deco represents again, this should be the fancy, distinguished theme, with
 lots of gold accents and fancy blue backgrounds (maybe even with a background wallpaper style like it already has for most pages), it
