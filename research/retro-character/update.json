@@ -1,0 +1,33 @@
+{
+    "update": 1,
+    "picks": {
+        "retro": {
+            "curve": "frames",
+            "direction": "folder",
+            "opening": "dealt",
+            "durations": "flight",
+            "colour": "palette",
+            "corners": "bevel",
+            "surface": "desktop",
+            "warning": "messagebox",
+            "live": "copied",
+            "busybar": "hops",
+            "spinner": "hourglass",
+            "leave": "copied",
+            "composites": "own",
+            "hover": "nothing",
+            "focus": "dotted",
+            "press": "bevel",
+            "type": "three",
+            "motifs": "desktop"
+        }
+    },
+    "questions": {
+        "retro": {
+            "loading": {
+                "comment": "I like the copying one best, but it doesn't fit skeleton, month days and chart plot",
+                "reply": "The Copying dialog stays the loading, now fitted to every waiting part instead of one picture stretched over all of them: a part that is a box (tile, panel, menu entry) gets the two small folders and the flying sheet with the blocks under them; skeleton lines each carry the sheet hopping along their own length; the month’s days pass one sheet from day to day, a block gained per day; the chart’s plot is crossed by the sheet along its baseline with the blocks filling the plot’s foot. Four options: the fitted Copying (recommended), two variants of it, and your earlier second choice for reference."
+            }
+        }
+    }
+}

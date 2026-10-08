@@ -79,11 +79,27 @@ export const PAGES = [
             // Kenny, 2026-10-08: the anchor round for the nine themes without one, the grotesk way (one question, six to ten candidates, each in its own scene, as a progress bar and as a button press, the recommendation first).
             // Kenny, 2026-10-08: what makes formal, light and deco themselves, the forest way (the analysis in themes/<theme>/CHARACTER.md), the nineteen questions each, every option a live scene that follows from the theme's decided anchor, the recommendation first.
             // Kenny, 2026-10-08 (update 1): deco's grammar did not convince him ("fancy, distinguished … lots of gold accents and fancy blue backgrounds … elegance without being too in your face"); thirteen questions redrawn as thin gold on lacquer with the wallpaper, his six picks kept.
-            { href: 'research/deco-character/demo.html', label: 'What makes deco deco' },
+            {
+                href: 'research/deco-character/demo.html',
+                label: 'What makes deco deco',
+                rework: 'update 2: corners, loading, bar, leave, hover and press redrawn, as Kenny asked',
+            },
             // Kenny, 2026-10-08: what makes dark, retro and phantom themselves, the forest way (the analysis in themes/<theme>/CHARACTER.md), the nineteen questions each, every option a live scene that follows from the theme's decided anchor, the recommendation first.
-            { href: 'research/dark-character/demo.html', label: 'What makes dark dark' },
-            { href: 'research/retro-character/demo.html', label: 'What makes retro retro' },
-            { href: 'research/phantom-character/demo.html', label: 'What makes phantom phantom' },
+            {
+                href: 'research/dark-character/demo.html',
+                label: 'What makes dark dark',
+                rework: 'update 1: opening, corners, loading and spinner redrawn, as Kenny asked',
+            },
+            {
+                href: 'research/retro-character/demo.html',
+                label: 'What makes retro retro',
+                rework: 'update 1: loading fitted to every waiting part, as Kenny asked',
+            },
+            {
+                href: 'research/phantom-character/demo.html',
+                label: 'What makes phantom phantom',
+                rework: 'update 1: opening, corners, surface, live update, spinner and leave redrawn, as Kenny asked',
+            },
             // The character round, sixth demo (2026-10-05): the key-figure strip with its columns in 22 themes, two characters each.
             // The character round, eighth component: the attention band, shape/arrival/leave/tone/empty/loading, one pick per aspect (formal and titanium built first).
             // The character round, ninth and tenth components: the action columns and the menu button.

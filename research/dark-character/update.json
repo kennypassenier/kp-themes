@@ -1,0 +1,42 @@
+{
+    "update": 1,
+    "picks": {
+        "dark": {
+            "curve": "pass",
+            "direction": "start",
+            "durations": "pass",
+            "colour": "film",
+            "surface": "instrument",
+            "warning": "coral",
+            "live": "pass",
+            "busybar": "runs",
+            "leave": "pass",
+            "composites": "own",
+            "hover": "rests",
+            "focus": "di2",
+            "press": "quarter",
+            "type": "archivo",
+            "motifs": "film"
+        }
+    },
+    "questions": {
+        "dark": {
+            "opening": {
+                "comment": "I like option one, but even the ones tha topen from a button should open from left to right. And the firs toption here scans starting from the button, it should only scan the actual menu element, bu tthat's probably fixed when it's from left to right. Although at th etooltip, the scan is also too high, it should only be the height of the menu that actually opens",
+                "reply": "Option 1 stays with the rule you gave: every opening is a pass from LEFT to RIGHT, the menu too. The line starts at the left edge of the opened element itself (never at the button) and crosses only that element’s own box, so a menu is swept over its own height only, a tooltip over the tooltip’s height only, a dialog over the dialog. The close is the pass back, right to left. The other two options are as before."
+            },
+            "corners": {
+                "comment": "options 2 looks quite good, but the panel (and menu?) stil whos a black corner where the colour stops, key figure looks perfect, that's the shape I want, if it's the glow or shadow causing this, it should adapt to the shape",
+                "reply": "Option 2 (the four chamfers) is now the first and recommended option, drawn as the key figure draws it. The black corner was the halo and the grey shadow of the panel and the menu, which were cut square and did not follow the chamfer: the halo, the shadow and the film edge are now one shape, cut by the same clip-path as the panel (the halo is a drop-shadow of the clipped element, so it takes the cut), on the panel, the menu, the dialog and the tooltip alike. The two-corner cut and the square stay as options."
+            },
+            "loading": {
+                "comment": "give me ten variations on the line sweeps the slot, keep the colours",
+                "reply": "Ten variations on the line sweeping the slot, all in the film’s colours and all one line passing a waiting part: the plain sweep, a comet with a film tail, the afterglow, a ladder down the lines, two lines passing through each other, a diagonal sweep, a sweep that stops to read, the edge chase, a prism line whose colour follows its place, and a grating of three thin lines."
+            },
+            "spinner": {
+                "comment": "I feel like we can do better than this, give me ten more examples",
+                "reply": "Ten more spinners, new ones, all in the film and the line, each a different idea: a prism turning its edge, a radar line with a fading wedge, a pendulum line, spectrum bars, a grating, the chamfer chase, ripples, breathing brackets, a hue dial and a Lissajous trail. Your earlier choices stay for reference: the line running the ring and the register’s ring."
+            }
+        }
+    }
+}

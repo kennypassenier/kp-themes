@@ -7,9 +7,7 @@
 // oxide film along its edge behind it, turning; when the line reaches the
 // end the figure takes the film through its letters and the turn settles,
 // cyan at the top; the leave is the pass back.
-
-const rec = (why) => `Recommended: this one, because ${why}`;
-const not = (why) => `Not recommended, because ${why}`;
+// Update 1 (2026-10-09-r2): the questions Kenny did not approve are redrawn (his comments are in update.json); his picks stay as they were.
 
 export const THEME = 'dark';
 export const LABEL = 'Dark';
@@ -39,29 +37,27 @@ export const ASPECTS = [
                 key: 'pass',
                 name: 'An even pass, the turn settles',
                 see: 'The line crosses at one pace (linear) and stops dead at the end; the film it lays turns through its angle on dark’s settle curve, cubic-bezier(0.22, 1, 0.36, 1): most of the turn at once, then a long settle to cyan at the top, 220 ms after the line has stopped. The close is the pass back at the same pace and the turn back on the inverse curve.',
-                verdict: rec(
-                    'a line of light has one speed and a film settles after it, which is the anchor exactly: the sweep’s sleekness and the turn’s settle in one gesture; formal’s pass is even too but stops dead with nothing after it, and titanium’s wash never turns.',
-                ),
+                verdict:
+                    'Recommended: this one, because a line of light has one speed and a film settles after it, which is the anchor exactly: the sweep’s sleekness and the turn’s settle in one gesture; formal’s pass is even too but stops dead with nothing after it, and titanium’s wash never turns.',
             },
             {
                 key: 'register',
                 name: 'The register’s curve (today)',
                 see: 'cubic-bezier(0.16, 0.84, 0.28, 1), the register’s --fx-ease on both the line and the turn: the line starts fast and slows into the end, the turn with it.',
-                verdict: not(
-                    'a line that slows down reads as a slide, not a sweep; the turn and the line on one curve are one thing instead of a cause and its effect.',
-                ),
+                verdict:
+                    'Not recommended, because a line that slows down reads as a slide, not a sweep; the turn and the line on one curve are one thing instead of a cause and its effect.',
             },
             {
                 key: 'settle',
                 name: 'The settle on everything',
                 see: 'The line and the turn both on the settle curve: the line is most of the way across at once and creeps to the end.',
-                verdict: not('a line that creeps to its end never stops dead, and the sweep you liked is the even one.'),
+                verdict: 'Not recommended, because a line that creeps to its end never stops dead, and the sweep you liked is the even one.',
             },
             {
                 key: 'mix',
                 name: 'As today',
                 see: 'Each part on its motion today: the dialog develops (a flash that fades on the register’s curve), the menu fades in, the tile strikes on like a tube in hard steps.',
-                verdict: not('a develop, a fade and a strike; none of them the pass.'),
+                verdict: 'Not recommended, because a develop, a fade and a strike; none of them the pass.',
             },
         ],
     },
@@ -78,23 +74,21 @@ export const ASPECTS = [
                 key: 'start',
                 name: 'From the start, along the edge',
                 see: 'The line enters at the part’s start edge and crosses to its end, laying the film along the edge it has passed; a group of days is crossed by one line, each day lit as the line reaches it, 60 ms apart; the trend line is lit along its length as the line runs it from its start.',
-                verdict: rec(
-                    'a spectral line is read from its start, as a spectrum is; one line crossing a group makes the group one instrument instead of seven; nothing rises, nothing scales.',
-                ),
+                verdict:
+                    'Recommended: this one, because a spectral line is read from its start, as a spectrum is; one line crossing a group makes the group one instrument instead of seven; nothing rises, nothing scales.',
             },
             {
                 key: 'switch',
                 name: 'Switched on in place (the picks)',
                 see: 'Every part strikes on where it stands, like a tube: dark, a flash, dark, on, in hard steps; a group all at once; the trend line appears whole.',
-                verdict: not(
-                    'a strike is the console dialect of the picks (lamps and tubes), not the film; and a hard step is terminal’s and nostromo’s gait.',
-                ),
+                verdict:
+                    'Not recommended, because a strike is the console dialect of the picks (lamps and tubes), not the film; and a hard step is terminal’s and nostromo’s gait.',
             },
             {
                 key: 'centre',
                 name: 'From the centre out',
                 see: 'The line starts at the part’s centre and runs to both ends at once; a group from its middle outward; the trend line from its middle to both ends.',
-                verdict: not('a line that splits in two is two lines; a spectrum has one start.'),
+                verdict: 'Not recommended, because a line that splits in two is two lines; a spectrum has one start.',
             },
         ],
     },
@@ -109,25 +103,24 @@ export const ASPECTS = [
         options: [
             {
                 key: 'swept',
-                name: 'Swept in from its anchor',
-                see: 'The line crosses the menu’s footprint from its button’s edge downward and lays the panel behind it, its film edge turning; the dialog is swept from its start edge where it stands; the toast from its start edge; the tooltip from its notch. The close is the pass back: the line returns and the panel goes dark behind it.',
-                verdict: rec(
-                    'it is the anchor on a panel: what opens is laid by the line from the thing that opened it, and the close is the line taking it off; no fade, no flash, no rise.',
-                ),
+                name: 'Swept in from its own left edge, left to right',
+                see: 'Every opening is a pass from left to right: the line starts at the left edge of the element that opens (the menu panel, the dialog, the toast, the tooltip, never at the button) and crosses only that element’s own box, laying its panel behind it, its film edge turning. A menu is swept over its own height only, a tooltip over the tooltip’s height only. The close is the pass back, right to left, taking the panel off behind it.',
+                verdict:
+                    'Recommended: this one, because the pass is the anchor on a panel, and one direction for every opening makes the open and the close readable as one gesture: what opens is laid by the line from its left and taken off by the line to its left.',
             },
             {
                 key: 'develop',
                 name: 'Developed (today)',
                 see: 'The register’s dialog: a film flash over the panel that fades out while the panel scales from 1.02 to 1, 420 ms; the menu fades in; the toast rises 6 px; the tooltip opens from a slit.',
-                verdict: not('a darkroom develop is a flash fading; nothing in it is a line crossing, and the register has four different openings.'),
+                verdict:
+                    'Not recommended, because a darkroom develop is a flash fading; nothing in it is a line crossing, and the register has four different openings.',
             },
             {
                 key: 'scanned',
                 name: 'Scanned open by a lit band (the pick)',
                 see: 'The header’s pick: a lit band sweeps down over the menu’s footprint and reveals it, and back up to close; the dialog the same.',
-                verdict: not(
-                    'close to the pass, but the band is a lamp’s light, white and wide; the anchor’s line is a slice of the film, thin, with the turn behind it.',
-                ),
+                verdict:
+                    'Not recommended, because close to the pass, but the band is a lamp’s light, white and wide; the anchor’s line is a slice of the film, thin, with the turn behind it.',
             },
         ],
     },
@@ -144,21 +137,20 @@ export const ASPECTS = [
                 key: 'pass',
                 name: 'One pass: 220 · 660 (+220, +60) · 2400 ms',
                 see: 'A press answers in 220 ms; the line crosses a part in 660 ms (the anchor’s six units); the turn settles 220 ms after the line stops; a group is lit 60 ms apart along the line; a loop (the busy bar, the spinner, loading) runs 2.4 s.',
-                verdict: rec(
-                    'it is the anchor’s own clock (the sweep in six units of 110 ms, the settle in two), quick enough for a menu and slow enough for the turn to be seen.',
-                ),
+                verdict:
+                    'Recommended: this one, because it is the anchor’s own clock (the sweep in six units of 110 ms, the settle in two), quick enough for a menu and slow enough for the turn to be seen.',
             },
             {
                 key: 'brisk',
                 name: 'Brisk: 150 · 440 (+150, +40) · 1600 ms',
                 see: 'A press in 150 ms, the pass in 440 ms, the settle 150 ms after, a group 40 ms apart, the loop 1.6 s.',
-                verdict: not('at 440 ms the turn is not seen; the film flips instead of turning.'),
+                verdict: 'Not recommended, because at 440 ms the turn is not seen; the film flips instead of turning.',
             },
             {
                 key: 'unhurried',
                 name: 'Unhurried: 300 · 990 (+330, +90) · 3600 ms',
                 see: 'A press in 300 ms, the pass in 990 ms, the settle 330 ms after, a group 90 ms apart, the loop 3.6 s.',
-                verdict: not('a menu that takes a second to be laid is slow to use; the instrument should answer, not perform.'),
+                verdict: 'Not recommended, because a menu that takes a second to be laid is slow to use; the instrument should answer, not perform.',
             },
         ],
     },
@@ -175,23 +167,21 @@ export const ASPECTS = [
                 key: 'film',
                 name: 'The film and meaning',
                 see: 'The film (cyan, violet, magenta, lime) is every edge that matters, the line, the fill, the head and the ring; ink is near-white; an act is a light plate, not a hue; danger is coral and nothing else is a colour. The line is a 2 px slice of the film with the one glow the theme allows (10 px of cyan at 40 %).',
-                verdict: rec(
-                    'colour that means something (the film says “live”, coral says “wrong”) and nothing that is merely coloured; the anatomy’s rule, and the thing that keeps dark from being cyberpunk or synthwave, which colour everything.',
-                ),
+                verdict:
+                    'Recommended: this one, because colour that means something (the film says “live”, coral says “wrong”) and nothing that is merely coloured; the anatomy’s rule, and the thing that keeps dark from being cyberpunk or synthwave, which colour everything.',
             },
             {
                 key: 'console',
                 name: 'The lit console (the picks)',
                 see: 'The picks’ palette on top of the film: a green scope trace behind the key figure, a red alarm lamp on a warning, lit square chips on the header, a status lamp before the state word.',
-                verdict: not(
-                    'lamps and traces are a second colour language next to the film; a reader cannot tell a lamp’s red from coral’s meaning.',
-                ),
+                verdict:
+                    'Not recommended, because lamps and traces are a second colour language next to the film; a reader cannot tell a lamp’s red from coral’s meaning.',
             },
             {
                 key: 'ink',
                 name: 'Ink only',
                 see: 'No film: every edge is a grey hairline, the line is white, the act plate is white; coral for danger.',
-                verdict: not('without the film dark is a grey instrument; the film is the one thing the theme owns.'),
+                verdict: 'Not recommended, because without the film dark is a grey instrument; the film is the one thing the theme owns.',
             },
         ],
     },
@@ -200,29 +190,29 @@ export const ASPECTS = [
         label: 'The corners',
         rule: 'G6',
         question: 'How are the corners cut?',
-        why: 'The same panel, menu, key figure, button, tag, chip, tooltip and bar head in every option; only the corners differ.',
+        why: 'The same panel, menu, dialog, key figure, button, tag, chip, tooltip and bar head in every option; only the corners differ. The halo and the shadow follow the cut in every option.',
         kind: 'still',
         scene: 'corners',
         options: [
             {
+                key: 'four',
+                name: 'Chamfered on all four corners, as the key figure',
+                see: 'Every corner cut at 45° (0.55 rem on controls, 1 rem on panels), the key figure’s shape: its film edge follows the cut all round and the panel’s halo and shadow are cut by the same shape (a drop-shadow of the clipped element), so the panel, the menu, the dialog and the tooltip show no black or grey corner where the colour stops.',
+                verdict:
+                    'Recommended: this one, because it is the shape you called perfect on the key figure, now the same on every plate: one cut, edge, halo and shadow together.',
+            },
+            {
                 key: 'two',
                 name: 'Chamfered on two opposite corners',
                 see: 'Radius 0; controls cut 0.55 rem on the top-left and bottom-right corners, panels 1 rem; brackets close on a label. As the register has it.',
-                verdict: rec(
-                    'two opposite chamfers are a machined part seen from one side, the register’s own cut; four would be nostromo’s panel, none would be brutalism.',
-                ),
-            },
-            {
-                key: 'four',
-                name: 'Chamfered on all four corners',
-                see: 'Every corner cut, the same size, on plates and small parts alike.',
-                verdict: not('four chamfers are nostromo’s and cyberpunk’s; dark cuts two.'),
+                verdict:
+                    'Not recommended, because two opposite chamfers is the register’s cut and the one that left square corners behind the halo; the four-corner cut is the key figure you want.',
             },
             {
                 key: 'square',
                 name: 'Square',
                 see: 'Radius 0 and no cut anywhere.',
-                verdict: not('a square panel on black with a film edge is a terminal; the chamfer is what says instrument.'),
+                verdict: 'Not recommended, because a square panel on black with a film edge is a terminal; the chamfer is what says instrument.',
             },
         ],
     },
@@ -239,21 +229,20 @@ export const ASPECTS = [
                 key: 'instrument',
                 name: 'Near-black, the grid, the film on the edge',
                 see: 'The ground carries the instrument grid (hairlines at 4.5 %) and the pointer’s pool of light; a panel is one shade lighter with the film along its edge where it matters and the four-colour halo behind a lit panel; no texture, no grey shadow, no scanline, no board.',
-                verdict: rec(
-                    'quiet so the film can be seen: the one rule the anatomy wrote; every other surface in the set has a ground of its own colour.',
-                ),
+                verdict:
+                    'Recommended: this one, because quiet so the film can be seen: the one rule the anatomy wrote; every other surface in the set has a ground of its own colour.',
             },
             {
                 key: 'board',
                 name: 'The status board (the picks)',
                 see: 'The header’s and the key figure’s picks: a black-ops panel with a fine grid behind the text, the title in the ticker mono, lit square chips, a scope trace behind the figure.',
-                verdict: not('a status board is a console, terminal’s and nostromo’s world; it buries the film under hardware.'),
+                verdict: 'Not recommended, because a status board is a console, terminal’s and nostromo’s world; it buries the film under hardware.',
             },
             {
                 key: 'halo',
                 name: 'The halo on everything',
                 see: 'Every panel carries the four-colour halo and the film on all its edges.',
-                verdict: not('a halo on every panel is a glow on every panel, and the film everywhere is the film nowhere.'),
+                verdict: 'Not recommended, because a halo on every panel is a glow on every panel, and the film everywhere is the film nowhere.',
             },
         ],
     },
@@ -270,21 +259,20 @@ export const ASPECTS = [
                 key: 'coral',
                 name: 'The film gone coral',
                 see: 'The warning part’s film edge takes the tone’s colour along its whole length (coral for a failure, the warning colour for a warning) and its change is set in that ink; the plate stays near-black. A destructive menu entry has a coral edge at its start and coral ink.',
-                verdict: rec(
-                    'the warning is told by the one coloured thing the part already has (its film) changing colour; nothing is added and the instrument stays dark.',
-                ),
+                verdict:
+                    'Recommended: this one, because the warning is told by the one coloured thing the part already has (its film) changing colour; nothing is added and the instrument stays dark.',
             },
             {
                 key: 'lamp',
                 name: 'The alarm lamp (the picks)',
                 see: 'A red lamp lights the number on the tone’s plate; the state word’s console line lights red; a tile’s chip lights.',
-                verdict: not('a lamp is hardware from another dialect; it says “console”, not “film”.'),
+                verdict: 'Not recommended, because a lamp is hardware from another dialect; it says “console”, not “film”.',
             },
             {
                 key: 'tinted',
                 name: 'The tinted plate',
                 see: 'The whole plate takes a deep tint of the tone with the tone’s luminous ink; the film edge stays.',
-                verdict: not('a tinted plate is every default theme’s warning; the film does not take part.'),
+                verdict: 'Not recommended, because a tinted plate is every default theme’s warning; the film does not take part.',
             },
         ],
     },
@@ -301,21 +289,20 @@ export const ASPECTS = [
                 key: 'pass',
                 name: 'One pass over the figure',
                 see: 'The line crosses the changed figure once from its start, the figure takes the film through its letters as the line passes and settles back to ink; the figure never moves. The trend line is re-laid by the line from its start; the tile’s edge is re-laid.',
-                verdict: rec(
-                    'it is the anchor on a figure (re-laid, so the eye knows it is new) and nothing moves, flares or jolts; nostromo refreshes a readout, cyberpunk glitches, dark passes a line.',
-                ),
+                verdict:
+                    'Recommended: this one, because it is the anchor on a figure (re-laid, so the eye knows it is new) and nothing moves, flares or jolts; nostromo refreshes a readout, cyberpunk glitches, dark passes a line.',
             },
             {
                 key: 'flare',
                 name: 'The trace flares (the picks)',
                 see: 'The key figure’s pick: the number’s glow flares for a third of a second; the tile’s mark jolts like a needle; the lamp flares.',
-                verdict: not('a flare is a glow, and a jolt is a needle; both are the console, and neither is the line.'),
+                verdict: 'Not recommended, because a flare is a glow, and a jolt is a needle; both are the console, and neither is the line.',
             },
             {
                 key: 'none',
                 name: 'Nothing (today)',
                 see: 'The register declares no update: the figure changes and nothing marks it.',
-                verdict: not('a reader who missed the change has no way to find it.'),
+                verdict: 'Not recommended, because a reader who missed the change has no way to find it.',
             },
         ],
     },
@@ -323,30 +310,72 @@ export const ASPECTS = [
         id: 'loading',
         label: 'Loading',
         rule: 'G10',
-        question: 'What does a waiting surface show?',
-        why: 'A tile, a panel, a menu entry, a month of days, a chart’s plot and skeleton lines, waiting. Every option loops at 2.4 s.',
+        question: 'The line sweeps the slot: which sweep?',
+        why: 'Ten variations on one idea, a line of film light passing a waiting part, all in the film’s colours. A tile, a panel, a menu entry, a month of days, a chart’s plot and skeleton lines, waiting. Every option loops at 2.4 s.',
         kind: 'loop',
         scene: 'loading',
         options: [
             {
                 key: 'sweep',
-                name: 'The line sweeps the slot',
-                see: 'On every waiting surface the line crosses from start to end and the film it lays turns behind it, then dims as the line leaves at the end; again from the start, 2.4 s a loop. The skeleton’s lines are the slots the line sweeps; the chart’s plot is swept whole.',
-                verdict: rec(
-                    'the anchor on a loop: a slot swept by light that never lands, which is what waiting is; it fills the whole part, it is slow, and it is the same line as everywhere else.',
-                ),
+                name: 'The plain sweep',
+                see: 'The line crosses from start to end and the film it lays turns behind it, then dims as the line leaves at the end; again from the start. The skeleton’s lines are the slots; the chart’s plot is swept whole.',
+                verdict:
+                    'Recommended: this one, because it is the anchor on a loop, the baseline the nine others vary: a slot swept by light that never lands.',
             },
             {
-                key: 'ticker',
-                name: 'The ticker baseline (the picks)',
-                see: 'A dashed baseline under the waiting part ticks along, as a ticker tape would.',
-                verdict: not('a ticker is the console dialect, and a dashed line drifting is the loading of a stock board, not an instrument.'),
+                key: 'comet',
+                name: 'A comet with a film tail',
+                see: 'The line is the head of a comet: a long tail of the film’s colours trails it (a third of the part’s length, fading from full film to nothing) and lays nothing; the slot stays dark behind the tail.',
+                verdict:
+                    'Not recommended, because a tail is a streak of light, close to a loading shimmer; the laid film is what makes it the anchor.',
             },
             {
-                key: 'ghosts',
-                name: 'The ghosts drift (today)',
-                see: 'The register’s skeleton: a cyan ghost and a magenta ghost of each line drift 8 px apart and back.',
-                verdict: not('a misregistration is cyberpunk’s glitch in dark’s colours; Kenny rejected it there for that reason.'),
+                key: 'afterglow',
+                name: 'The afterglow',
+                see: 'The line crosses and lays the film, and the film stays lit for the rest of the loop, dimming very slowly (1.6 s) while the next line starts; the slot is never dark.',
+                verdict: 'Not recommended, because a slot that is never dark is hard to tell from a loaded part.',
+            },
+            {
+                key: 'ladder',
+                name: 'The ladder',
+                see: 'On a part with several lines, the line sweeps the first line, then the second, then the third, 120 ms apart, top to bottom, and repeats; on a box the line sweeps its rows in turn.',
+                verdict: 'Not recommended, because it reads as typing; a part with one line is the plain sweep.',
+            },
+            {
+                key: 'cross',
+                name: 'Two lines pass through each other',
+                see: 'A line crosses from the start and another from the end at the same time; where they pass the film flares for a beat (the colours add) and each lays its own film behind it.',
+                verdict: 'Not recommended, because two lines are two sources, closer to cyberpunk’s two wavelengths meeting.',
+            },
+            {
+                key: 'diagonal',
+                name: 'The diagonal sweep',
+                see: 'The line is tilted 20° and crosses the part from the start corner to the far corner, so it enters and leaves along the chamfers; the film is laid behind it as a wedge.',
+                verdict: 'Not recommended, because a tilted line fits a panel but crosses a thin skeleton line as a blink.',
+            },
+            {
+                key: 'read',
+                name: 'The line stops to read',
+                see: 'The line crosses in three strokes with a short stop between (a third of the part, then two thirds, then the end), 200 ms stops with the film brightening as if reading; then it returns.',
+                verdict: 'Not recommended, because stops are steps; the anchor’s pass is one even pace.',
+            },
+            {
+                key: 'edge',
+                name: 'The edge chase',
+                see: 'A short bright segment runs round the part’s chamfered edge, clockwise from the top-left corner, laying the film along the edge behind it and dimming it ahead of the next lap; the inside stays dark.',
+                verdict: 'Not recommended, because on a wide panel the segment is small and the inside says nothing is loading.',
+            },
+            {
+                key: 'prism',
+                name: 'The prism line',
+                see: 'The line’s own colour follows its place: cyan at the start, violet, magenta, lime at the end, the film along its length as a spectrum; the film it lays takes the colour of the place it was laid in, then dims.',
+                verdict: 'Not recommended, because a line that shows the whole spectrum at once is the loudest of the ten.',
+            },
+            {
+                key: 'grating',
+                name: 'A grating of three thin lines',
+                see: 'Three thin lines, 90 ms apart, cross together from the start; between them the film is laid in three fine bands that turn and dim in turn, like light through a grating.',
+                verdict: 'Not recommended, because three lines are a stripe pattern; fine on a panel, noisy on a skeleton line.',
             },
         ],
     },
@@ -363,21 +392,20 @@ export const ASPECTS = [
                 key: 'runs',
                 name: 'The line runs the track',
                 see: 'Busy: the line runs the empty track from start to end laying a short stretch of film behind it that turns and dims, 2.4 s, and again; with a share known, the fill is laid to the share with the line at its head.',
-                verdict: rec(
-                    'the bar you loved with the line as its head, and busy is the line looking for the end: one line, one track, one picture for both states.',
-                ),
+                verdict:
+                    'Recommended: this one, because the bar you loved with the line as its head, and busy is the line looking for the end: one line, one track, one picture for both states.',
             },
             {
                 key: 'hatch',
                 name: 'The hatch (today)',
                 see: 'The register’s busy bar: a static diagonal hatch in the film’s colours that does not move.',
-                verdict: not('a hatch that stands still does not say busy; and it is the one still loader in the set.'),
+                verdict: 'Not recommended, because a hatch that stands still does not say busy; and it is the one still loader in the set.',
             },
             {
                 key: 'breathe',
                 name: 'The fill breathes',
                 see: 'The film fill is laid whole and its brightness breathes slowly, up and down.',
-                verdict: not('a breathing bar is light’s exposure and titanium’s drift; the line is dark’s.'),
+                verdict: 'Not recommended, because a breathing bar is light’s exposure and titanium’s drift; the line is dark’s.',
             },
         ],
     },
@@ -386,29 +414,82 @@ export const ASPECTS = [
         label: 'The spinner',
         rule: 'G12',
         question: 'What does the spinner draw?',
-        why: 'Three sizes, a busy button and a busy panel in every option; every option loops at 2.4 s.',
+        why: 'Three sizes, a busy button and a busy panel in every option; every option loops at 2.4 s. Ten new ideas in the film, the line, the chamfer, the brackets and the grid, and the two earlier ones for reference.',
         kind: 'loop',
         scene: 'spinner',
         options: [
             {
+                key: 'prism',
+                name: 'The prism turns its edge',
+                see: 'A chamfered square stands still; its film edge turns colour round it (the conic film rotates once a loop, cyan → violet → magenta → lime) while a short bright slice rides the edge; the square never rotates.',
+                verdict:
+                    'Recommended: this one, because the film’s own turn made the spinner: the shape is fixed and the colour moves, so it is dark’s alone and reads at 1 rem as well as at 3 rem.',
+            },
+            {
+                key: 'radar',
+                name: 'The radar line',
+                see: 'A line sweeps round a thin ring from the centre like a radar, laying a fading wedge of film behind it (the last 90°, fading from film to nothing), 2.4 s a turn.',
+                verdict: 'Not recommended, because close to blueprint’s and the graph’s target devices; strong at large sizes.',
+            },
+            {
+                key: 'pendulum',
+                name: 'The pendulum line',
+                see: 'A vertical line swings left and right across a small chamfered box on the settle curve, laying film behind it that dims, once every 2.4 s.',
+                verdict: 'Not recommended, because a swing is the one motion here that goes backwards; it reads as a metronome.',
+            },
+            {
+                key: 'bars',
+                name: 'The spectrum bars',
+                see: 'Five thin vertical bars, one per film colour and a lime, rise and fall in turn like a spectrometer’s reading, 120 ms apart, chamfered tops.',
+                verdict: 'Not recommended, because bars are an equaliser; the line, the anchor, is not in it.',
+            },
+            {
+                key: 'slit',
+                name: 'The slit and the grating',
+                see: 'A fixed slit of light at the centre; a ring of fine lines turns behind it so that the slit shows a moving band of film colour, 2.4 s a loop.',
+                verdict: 'Not recommended, because subtle at 1 rem; the effect needs the larger sizes.',
+            },
+            {
+                key: 'chase',
+                name: 'The chamfer chase',
+                see: 'A short segment of film runs round a chamfered square’s edge, clockwise, laying the film behind it that dims over the lap; at three sizes the segment keeps its proportion.',
+                verdict: 'Not recommended, because the edge chase again; here it is the whole spinner.',
+            },
+            {
+                key: 'ripple',
+                name: 'The ripples',
+                see: 'Three rings expand from the centre one after another (800 ms apart), their film colour turning as they grow and fading at the edge; the centre holds a small bright point.',
+                verdict: 'Not recommended, because ripples are a sonar ping, a different instrument.',
+            },
+            {
+                key: 'brackets',
+                name: 'The brackets breathe',
+                see: 'A pair of brackets `[ ]` opens and closes round a small film line that turns colour in the middle, 2.4 s a breath; the brackets are the theme’s own on a label.',
+                verdict: 'Not recommended, because breathing is light’s and titanium’s drift; the brackets carry nothing moving.',
+            },
+            {
+                key: 'dial',
+                name: 'The hue dial',
+                see: 'A small disc of conic film turns slowly while a fixed hairline needle at the top reads the colour under it; the disc is chamfered and never stops.',
+                verdict: 'Not recommended, because a spinning disc is a colour wheel; the line is only a needle.',
+            },
+            {
+                key: 'lissajous',
+                name: 'The Lissajous trail',
+                see: 'A point of light traces a Lissajous figure (a 3:2 knot) in a chamfered box and leaves a trail of film that fades over a loop, as an oscilloscope’s beam would.',
+                verdict: 'Not recommended, because an oscilloscope is the console dialect of the picks.',
+            },
+            {
                 key: 'runs',
-                name: 'The line runs the ring',
+                name: 'The line runs the ring (the earlier recommendation)',
                 see: 'The register’s ring in film colours, and the line runs round it once per loop laying the film behind it, which turns and dims by the time the line comes round; the ring itself never rotates.',
-                verdict: rec(
-                    'the anchor bent into a ring: the line passing and the film settling behind it, the same at 1 rem and at 3 rem; a plain rotation is every theme’s spinner.',
-                ),
+                verdict: 'Not recommended, because you asked for better than this; kept as the reference.',
             },
             {
                 key: 'turns',
                 name: 'The ring turns (today)',
                 see: 'The register’s spinner: a ring in film colours rotating linear, 1.2 s a turn.',
-                verdict: not('a rotating ring is the default spinner of the web with the film as its paint.'),
-            },
-            {
-                key: 'brackets',
-                name: 'The brackets turn',
-                see: 'A pair of brackets `[ ]` turns round a centre, the film laid on their inner edge.',
-                verdict: not('turning brackets read as a target reticle, blueprint’s and the graph’s device.'),
+                verdict: 'Not recommended, because the register’s ring, the default spinner of the web with the film as its paint.',
             },
         ],
     },
@@ -425,19 +506,20 @@ export const ASPECTS = [
                 key: 'pass',
                 name: 'The pass lays, the pass back takes off',
                 see: 'Arriving: the line crosses from the part’s start and the part is laid behind it, the film edge turning, settling cyan at the top. Leaving: the line crosses back from the end and the part goes dark behind it, the film taken with it.',
-                verdict: rec('the anchor exactly, both ways; one gesture for arriving, opening and leaving, and nothing ends in black.'),
+                verdict:
+                    'Recommended: this one, because the anchor exactly, both ways; one gesture for arriving, opening and leaving, and nothing ends in black.',
             },
             {
                 key: 'black',
                 name: 'To black (today)',
                 see: 'The register’s leave: brightness to 0 and scale to 0.98 in 460 ms, ease-in; arriving is the same backwards.',
-                verdict: not('a fade to black is a switch-off; the line never takes part.'),
+                verdict: 'Not recommended, because a fade to black is a switch-off; the line never takes part.',
             },
             {
                 key: 'powered',
                 name: 'Powered up and down (the picks)',
                 see: 'The menu button’s pick: the part strikes on like a tube (dark, flash, dark, on) in hard steps; it strikes off the same way.',
-                verdict: not('a tube’s strike is hardware and hard steps; the instrument has one light, the line.'),
+                verdict: 'Not recommended, because a tube’s strike is hardware and hard steps; the instrument has one light, the line.',
             },
         ],
     },
@@ -454,19 +536,19 @@ export const ASPECTS = [
                 key: 'own',
                 name: 'Exactly dark’s own',
                 see: 'Every button, link and entry inside a composite is dark’s bracketed button as it stands alone (the brackets, the film edge from the start, the chamfer); it hovers, focuses and presses exactly the same wherever it stands.',
-                verdict: rec('one manner for every control, wherever it stands; the instrument has one kind of key.'),
+                verdict: 'Recommended: this one, because one manner for every control, wherever it stands; the instrument has one kind of key.',
             },
             {
                 key: 'lit',
                 name: 'Dark’s own on a lit panel',
                 see: 'The same manners, and the header’s actions and the drawer’s buttons stand on a panel with the film along all its edges and the halo behind it.',
-                verdict: not('a lit panel round the buttons is a glow round the buttons; it adds light for no act.'),
+                verdict: 'Not recommended, because a lit panel round the buttons is a glow round the buttons; it adds light for no act.',
             },
             {
                 key: 'mix',
                 name: 'As today',
                 see: 'The header’s pick lights the rim and adds a square glow ring, the tiles’ Open lights, the drawer’s buttons take a glow ring: three hovers on one page.',
-                verdict: not('three hovers on one page.'),
+                verdict: 'Not recommended, because three hovers on one page.',
             },
         ],
     },
@@ -483,21 +565,20 @@ export const ASPECTS = [
                 key: 'rests',
                 name: 'The line rests at the start',
                 see: 'The line stands at the control’s start edge (a 2 px slice of film with its glow) and the brackets close one step; a menu entry takes the line at its start; a link’s underline takes the film; a tile’s Open takes the line. Leaving, the line goes.',
-                verdict: rec(
-                    'the anchor at rest: the line waiting at the start of the thing it would lay; it is the register’s own film edge, and nothing lights or lifts.',
-                ),
+                verdict:
+                    'Recommended: this one, because the anchor at rest: the line waiting at the start of the thing it would lay; it is the register’s own film edge, and nothing lights or lifts.',
             },
             {
                 key: 'lights',
                 name: 'The panel lights (the picks)',
                 see: 'The key figure’s and the tiles’ pick: the panel’s bevel lip brightens, the rim lights, Open lights.',
-                verdict: not('a panel that lights is a lamp; and it moves the whole plate for a pointer.'),
+                verdict: 'Not recommended, because a panel that lights is a lamp; and it moves the whole plate for a pointer.',
             },
             {
                 key: 'brackets',
                 name: 'The brackets close',
                 see: 'Only the brackets close on the label, one step; no line.',
-                verdict: not('the brackets closing is the press’s mark; on hover it leaves nothing for the press.'),
+                verdict: 'Not recommended, because the brackets closing is the press’s mark; on hover it leaves nothing for the press.',
             },
         ],
     },
@@ -514,19 +595,20 @@ export const ASPECTS = [
                 key: 'di2',
                 name: 'The two-channel ring',
                 see: 'DI2’s ring exactly: the ink ring outside, the ring colour (cyan) inside, on every control, chamfered with it; nothing added.',
-                verdict: rec('a system constant; adding a glow to it would make the keyboard’s mark the one thing that glows.'),
+                verdict:
+                    'Recommended: this one, because a system constant; adding a glow to it would make the keyboard’s mark the one thing that glows.',
             },
             {
                 key: 'glow',
                 name: 'A square glow ring (the picks)',
                 see: 'The header’s pick: a square glow ring in the film’s cyan round the focused control instead of the two channels.',
-                verdict: not('a glow ring is one channel of light; DI2 was written for the contrast it lacks.'),
+                verdict: 'Not recommended, because a glow ring is one channel of light; DI2 was written for the contrast it lacks.',
             },
             {
                 key: 'mix',
                 name: 'As today',
                 see: 'The register’s ring plus the picks’ glow rings and dashed outlines where a pick drew them.',
-                verdict: not('three focus marks.'),
+                verdict: 'Not recommended, because three focus marks.',
             },
         ],
     },
@@ -543,21 +625,20 @@ export const ASPECTS = [
                 key: 'quarter',
                 name: 'A pass, the edge turns a quarter',
                 see: 'On contact the line crosses the face (220 ms) and the film edge turns a quarter and settles; the brackets close; the face takes the pressed ground. Release turns the edge back. Nothing moves.',
-                verdict: rec(
-                    'the anchor as a press: the line passes and the film answers by turning; a quarter is seen and is over before the hand lifts.',
-                ),
+                verdict:
+                    'Recommended: this one, because the anchor as a press: the line passes and the film answers by turning; a quarter is seen and is over before the hand lifts.',
             },
             {
                 key: 'dims',
                 name: 'The plate dims (today)',
                 see: 'The face takes the pressed ground; no line, no turn.',
-                verdict: not('the default press of the set; nothing of the film is in it.'),
+                verdict: 'Not recommended, because the default press of the set; nothing of the film is in it.',
             },
             {
                 key: 'snap',
                 name: 'The brackets snap shut',
                 see: 'The brackets close onto the label in one step and the face dims; no line.',
-                verdict: not('a snap is a hard step, the console’s gait; the brackets closing is the hover’s mark here.'),
+                verdict: 'Not recommended, because a snap is a hard step, the console’s gait; the brackets closing is the hover’s mark here.',
             },
         ],
     },
@@ -574,21 +655,21 @@ export const ASPECTS = [
                 key: 'archivo',
                 name: 'Archivo, the ticker mono for readings',
                 see: 'Headings Archivo 700, buttons 600, prose 400; readouts, brackets, microlabels, timestamps and identifiers in the ticker mono. As the register has it.',
-                verdict: rec(
-                    'one face for words and one for readings, the instrument’s own split; the picks’ titles in the ticker mono make every title a readout.',
-                ),
+                verdict:
+                    'Recommended: this one, because one face for words and one for readings, the instrument’s own split; the picks’ titles in the ticker mono make every title a readout.',
             },
             {
                 key: 'ticker',
                 name: 'The ticker mono for titles too (the picks)',
                 see: 'The header’s and the key figure’s pick: titles and captions in the ticker mono, uppercase, letter-spaced.',
-                verdict: not('mono titles are terminal’s voice; dark speaks in Archivo and reads in mono.'),
+                verdict: 'Not recommended, because mono titles are terminal’s voice; dark speaks in Archivo and reads in mono.',
             },
             {
                 key: 'everywhere',
                 name: 'Archivo everywhere',
                 see: 'No mono: readings and timestamps in Archivo 600 with tabular numerals.',
-                verdict: not('a reading without the ticker mono loses the brackets’ register; the readout is the instrument’s voice.'),
+                verdict:
+                    'Not recommended, because a reading without the ticker mono loses the brackets’ register; the readout is the instrument’s voice.',
             },
         ],
     },
@@ -605,21 +686,20 @@ export const ASPECTS = [
                 key: 'film',
                 name: 'The film, the line, the chamfer, the brackets, the grid',
                 see: 'The film on an edge that matters, the line where something happens, the chamfer on two corners, the brackets on a label, the instrument grid on the ground; nothing else is drawn. No lamps, tubes, ticker tapes, scope traces, status boards, misregistration ghosts or darkroom flashes.',
-                verdict: rec(
-                    'five marks that are one instrument; everything else in the picks is a console from another theme, and the register’s ghosts are cyberpunk’s.',
-                ),
+                verdict:
+                    'Recommended: this one, because five marks that are one instrument; everything else in the picks is a console from another theme, and the register’s ghosts are cyberpunk’s.',
             },
             {
                 key: 'console',
                 name: 'Plus the lamps and the scope (the picks)',
                 see: 'The same five, and the picks’ status lamps, tube switch-ons, ticker baselines and the oscilloscope trace behind the key figure.',
-                verdict: not('two dialects on one page; the lamp and the film both say “live” in different words.'),
+                verdict: 'Not recommended, because two dialects on one page; the lamp and the film both say “live” in different words.',
             },
             {
                 key: 'all',
                 name: 'As today (everything)',
                 see: 'Every mark the register and the picks carry: the film, the ghosts, the develop flash, the lamps, the scope, the boards, the glow rings.',
-                verdict: not('an instrument with every gauge of every era bolted on.'),
+                verdict: 'Not recommended, because an instrument with every gauge of every era bolted on.',
             },
         ],
     },

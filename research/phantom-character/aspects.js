@@ -6,9 +6,7 @@
 // flies in as its own halftone, a silhouette of dots in its shape, slaps
 // down with a dead stop and resolves into the solid card in three hard cuts;
 // it leaves by dissolving into dots and being snatched off.
-
-const rec = (why) => `Recommended: this one, because ${why}`;
-const not = (why) => `Not recommended, because ${why}`;
+// Update 1 (2026-10-09-r2): the questions Kenny did not approve are redrawn (his comments are in update.json); his picks stay as they were.
 
 export const THEME = 'phantom';
 export const LABEL = 'Phantom';
@@ -38,27 +36,26 @@ export const ASPECTS = [
                 key: 'shove',
                 name: 'The shove and cuts',
                 see: 'The throw is the register’s shove, cubic-bezier(0.81, 0, 0, 1): a hard start and a dead stop a degree and a half askew; the resolve is three hard cuts (steps, 100 ms each), the dots densifying to solid with nothing between two cuts. The close is the cuts backwards and the throw back on the inverse curve.',
-                verdict: rec(
-                    'a thrown card has one curve (fast, then it is there) and a print resolves in cuts, not a fade: the two gaits the anchor already has, kept apart; grotesk falls and dwells, cyberpunk cuts and jitters, phantom throws and resolves.',
-                ),
+                verdict:
+                    'Recommended: this one, because a thrown card has one curve (fast, then it is there) and a print resolves in cuts, not a fade: the two gaits the anchor already has, kept apart; grotesk falls and dwells, cyberpunk cuts and jitters, phantom throws and resolves.',
             },
             {
                 key: 'register',
                 name: 'The register’s curve (today)',
                 see: 'cubic-bezier(0.2, 0.9, 0.25, 1), the register’s --fx-ease on the throw: fast out, slowing into place with a touch of overshoot; the resolve on the same curve as a fade of the dots.',
-                verdict: not('a throw that slows down never slaps, and dots that fade are a blur: print has no fade.'),
+                verdict: 'Not recommended, because a throw that slows down never slaps, and dots that fade are a blur: print has no fade.',
             },
             {
                 key: 'eased',
                 name: 'Eased in and out (the picks)',
                 see: 'The trend’s and the menu’s pick: slashed in easing in and out (cubic-bezier(0.65, 0, 0.35, 1)); the resolve eased the same way.',
-                verdict: not('ease-in-out is a ceremony on a calling card; nothing in it stops dead.'),
+                verdict: 'Not recommended, because ease-in-out is a ceremony on a calling card; nothing in it stops dead.',
             },
             {
                 key: 'cuts',
                 name: 'All cuts',
                 see: 'The throw itself in four hard jumps (steps(4)) and the resolve in three; nothing moves between frames.',
-                verdict: not('a card thrown in jumps is retro’s flying sheet; the shove is phantom’s own.'),
+                verdict: 'Not recommended, because a card thrown in jumps is retro’s flying sheet; the shove is phantom’s own.',
             },
         ],
     },
@@ -75,21 +72,20 @@ export const ASPECTS = [
                 key: 'start',
                 name: 'Thrown from off the start edge',
                 see: 'A part comes from beyond its start edge along the −8° skew and lands a degree and a half askew; a group of days is thrown one after the other, 80 ms apart, each slapping where it lands; the trend line is cut in from its start in hard cuts.',
-                verdict: rec(
-                    'a card is thrown from one hand, so every part has one origin, and a group thrown one by one is a hand dealing; nothing rises, nothing scales, nothing comes from the centre.',
-                ),
+                verdict:
+                    'Recommended: this one, because a card is thrown from one hand, so every part has one origin, and a group thrown one by one is a hand dealing; nothing rises, nothing scales, nothing comes from the centre.',
             },
             {
                 key: 'jumps',
                 name: 'In hard jumps from the side (the picks)',
                 see: 'The tiles’ pick: each part jumps into place sideways in three hard jumps; a group all at once; the trend line slashed in from its end.',
-                verdict: not('jumps are retro’s frames, and from the end is backwards for a reader.'),
+                verdict: 'Not recommended, because jumps are retro’s frames, and from the end is backwards for a reader.',
             },
             {
                 key: 'centre',
                 name: 'From the centre out',
                 see: 'Every part resolves in place from its centre outward (the dots densify from the middle); a group from its middle outward; no throw.',
-                verdict: not('without the throw the slap is gone; resolving from the centre is deco’s fan in dots.'),
+                verdict: 'Not recommended, because without the throw the slap is gone; resolving from the centre is deco’s fan in dots.',
             },
         ],
     },
@@ -105,22 +101,21 @@ export const ASPECTS = [
             {
                 key: 'thrown',
                 name: 'Thrown from its anchor, resolves',
-                see: 'The menu is thrown from its button’s edge as a screen and resolves under it in three cuts; the dialog is thrown onto the board from off the start edge and resolves askew; the toast is thrown from the start edge; the tooltip is too small to fly and resolves in place in three cuts. The close: three cuts to dots, then the throw back.',
-                verdict: rec(
-                    'it is the anchor on every opening: what opens is a card thrown from the thing that opened it, and it is read as print the moment it lands; no scale, no rotate, no pop.',
-                ),
+                see: 'The menu is thrown from its button’s edge as a screen and resolves under it in three cuts; the dialog is thrown onto the board from off the start edge and resolves askew; the toast is thrown from the start edge; the tooltip is too small to fly and resolves in place in three cuts. The close: three cuts to dots, then the throw back. A closed part is NOT DRAWN: before its first frame and after its last, the menu, the tooltip, the dialog and the toast are hidden entirely (no sliver, no dots, no outline), and while it flies its dots are drawn only inside its own footprint.',
+                verdict:
+                    'Recommended: this one, because it is the anchor on every opening: what opens is a card thrown from the thing that opened it, and it is read as print the moment it lands; no scale, no rotate, no pop.',
             },
             {
                 key: 'scaled',
                 name: 'Scaled and rotated (today)',
                 see: 'The register’s dialog: enters at scale 1.25 rotated −7° and settles to rest; the tooltip pops from 0.4; the toast slides in skewed; the nav menu fades in three steps.',
-                verdict: not('a scale from large is a zoom, not a throw; four openings in one register.'),
+                verdict: 'Not recommended, because a scale from large is a zoom, not a throw; four openings in one register.',
             },
             {
                 key: 'slashed',
                 name: 'Slashed in easing (the picks)',
                 see: 'The menu’s pick: drawn in backwards from its end, easing in and out; drawn out to close.',
-                verdict: not('an eased wipe from the end is the one thing print cannot do; it is light’s feed in black.'),
+                verdict: 'Not recommended, because an eased wipe from the end is the one thing print cannot do; it is light’s feed in black.',
             },
         ],
     },
@@ -137,21 +132,20 @@ export const ASPECTS = [
                 key: 'throw',
                 name: 'One throw: 120 · 400 (+300, +80) · 1500 ms',
                 see: 'A press answers in 120 ms; a throw takes 400 ms (the anchor’s four units); the resolve 300 ms more (three cuts of 100); a group is dealt 80 ms apart; a loop (the busy slab, loading) runs 1.5 s, the register’s shove.',
-                verdict: rec(
-                    'it is the anchor’s own clock: a throw short enough to slap and cuts long enough to be seen as cuts; the register’s 120 ms contact and 1.5 s shove are kept.',
-                ),
+                verdict:
+                    'Recommended: this one, because it is the anchor’s own clock: a throw short enough to slap and cuts long enough to be seen as cuts; the register’s 120 ms contact and 1.5 s shove are kept.',
             },
             {
                 key: 'brisk',
                 name: 'Brisk: 80 · 260 (+200, +50) · 1000 ms',
                 see: 'A press in 80 ms, a throw in 260 ms, the resolve 200 ms (three cuts of 67), a group 50 ms apart, the loop 1 s.',
-                verdict: not('at 67 ms a cut is a flicker; the resolve has to be read cut by cut.'),
+                verdict: 'Not recommended, because at 67 ms a cut is a flicker; the resolve has to be read cut by cut.',
             },
             {
                 key: 'unhurried',
                 name: 'Unhurried: 180 · 600 (+450, +120) · 2250 ms',
                 see: 'A press in 180 ms, a throw in 600 ms, the resolve 450 ms, a group 120 ms apart, the loop 2.25 s.',
-                verdict: not('a card that takes 600 ms to arrive floats; a throw is quick or it is not a throw.'),
+                verdict: 'Not recommended, because a card that takes 600 ms to arrive floats; a throw is quick or it is not a throw.',
             },
         ],
     },
@@ -168,21 +162,20 @@ export const ASPECTS = [
                 key: 'plate',
                 name: 'Red is a plate, white and black print',
                 see: 'Red is a plate with black ink (a bar, a slab, a card’s edge, the primary button), never a word; cards are white with black ink or black with white; the halftone is white dots on black; the deep red is the second plate behind a red one and every hard shadow; yellow is the overprint for a warning only. Nothing glows, nothing is a gradient.',
-                verdict: rec(
-                    'print has one ink colour and it is a plate: red on black fails as text (4.12:1) and black on red reads; the anatomy’s rule, and the thing that tells phantom from grotesk, whose red is a word too.',
-                ),
+                verdict:
+                    'Recommended: this one, because print has one ink colour and it is a plate: red on black fails as text (4.12:1) and black on red reads; the anatomy’s rule, and the thing that tells phantom from grotesk, whose red is a word too.',
             },
             {
                 key: 'words',
                 name: 'Red words too',
                 see: 'Red may be a word: a red title, a red figure, a red link, on black or white.',
-                verdict: not('red words on black fail contrast and read as cyberpunk’s neon; a plate never fails.'),
+                verdict: 'Not recommended, because red words on black fail contrast and read as cyberpunk’s neon; a plate never fails.',
             },
             {
                 key: 'evidence',
                 name: 'The evidence board’s colours (the picks)',
                 see: 'The picks’ palette: red string, stamped rings in red ink, a target’s red rings, a yellow staple tag, bullet holes with a cracked halo.',
-                verdict: not('a board of red string and stamps is a detective’s wall; phantom is a calling card.'),
+                verdict: 'Not recommended, because a board of red string and stamps is a detective’s wall; phantom is a calling card.',
             },
         ],
     },
@@ -190,30 +183,29 @@ export const ASPECTS = [
         id: 'corners',
         label: 'The corners',
         rule: 'G6',
-        question: 'How are the corners drawn?',
-        why: 'The same card, menu panel, key figure, button, tag, chip, tooltip and bar head in every option; only the corners differ.',
+        question: 'How are the corners drawn, and do they stay the same on a long or wide part?',
+        why: 'The same card, menu panel, key figure, button, tag, chip, tooltip and bar head in every option, each shown small, long and wide, so the corner can be compared across sizes.',
         kind: 'still',
         scene: 'corners',
         options: [
             {
                 key: 'skewed',
                 name: 'Square, skewed, cut',
-                see: 'Radius 0; controls and bars are parallelograms (−8°, the label un-skewed); cards and menus are cut paper with their corners clipped; a landed card a degree and a half askew; the tooltip a slab at −3°. As the register has it.',
-                verdict: rec(
-                    'the skew is the one shape every control shares, and cut paper is the card; the anchor lands askew because a thrown thing does.',
-                ),
+                see: 'Radius 0; controls and bars are parallelograms (−8°, the label un-skewed); cards and menus are cut paper whose corners are cut at a fixed 45° and a FIXED 14 px whatever the part’s width or height (the cut is drawn in pixels, never as a percentage of the box, so it does not stretch on a long card); the content is inset from the cut by the same amount on every size, so nothing is cut off; a landed card a degree and a half askew; the tooltip a slab at −3°.',
+                verdict:
+                    'Recommended: this one, because the skew is the one shape every control shares, and cut paper is the card; the anchor lands askew because a thrown thing does.',
             },
             {
                 key: 'level',
                 name: 'Square and level',
                 see: 'Radius 0, no skew, no cut, nothing askew.',
-                verdict: not('level and square is brutalism and grotesk; the skew is phantom’s signature.'),
+                verdict: 'Not recommended, because level and square is brutalism and grotesk; the skew is phantom’s signature.',
             },
             {
                 key: 'torn',
                 name: 'Torn edges (the picks)',
                 see: 'The calendar’s and the busy table’s pick: torn tickets, a notch bitten from each side, a perforated dashed line.',
-                verdict: not('a torn ticket is one pick’s shape; on every plate it is a stub, not a card.'),
+                verdict: 'Not recommended, because a torn ticket is one pick’s shape; on every plate it is a stub, not a card.',
             },
         ],
     },
@@ -229,20 +221,21 @@ export const ASPECTS = [
             {
                 key: 'screen',
                 name: 'Black under the screen, cards as plates, hard shadows',
-                see: 'The ground is black under the 7 px halftone screen and the grain; a card is a white or black plate with a hard offset shadow in deep red; the hero carries the red slash. No glow, no blur, no soft shadow, no gradient, no board.',
-                verdict: rec('print on a screened black page: the register’s own ground, and the one surface in the set with a halftone on it.'),
+                see: 'The ground is black under the 7 px halftone screen and the grain; a card is a white or black plate with a hard offset shadow in deep red; the dialog’s red edge runs outside its content box: the title and the words are inset from it by the edge’s own width plus 12 px, so no word ever sits on the red; the hero carries the red slash. No glow, no blur, no soft shadow, no gradient, no board.',
+                verdict:
+                    'Recommended: this one, because print on a screened black page: the register’s own ground, and the one surface in the set with a halftone on it.',
             },
             {
                 key: 'board',
                 name: 'The evidence board (the picks)',
                 see: 'The picks’ surfaces: a bullseye behind the key figure, red string across the panel, stamped rings, a redaction bar before every heading, a ransom note over the header.',
-                verdict: not('a wall of evidence is a set, not a surface; it buries the card under props.'),
+                verdict: 'Not recommended, because a wall of evidence is a set, not a surface; it buries the card under props.',
             },
             {
                 key: 'ghost',
                 name: 'The ghost (the drawer’s pick)',
                 see: 'The drawer’s pick: a pale translucent panel, a soft inner shadow, a feathered border, a pale halo, vapour.',
-                verdict: not('the ghost reading of the name: blur, haze and glow, the three things print cannot do.'),
+                verdict: 'Not recommended, because the ghost reading of the name: blur, haze and glow, the three things print cannot do.',
             },
         ],
     },
@@ -259,21 +252,20 @@ export const ASPECTS = [
                 key: 'overprint',
                 name: 'The yellow overprint',
                 see: 'A warning figure’s change is stamped on a yellow plate with black ink, overprinted 2 px off register on the figure; a failure’s change on the red plate; the card stays its plate. A destructive menu entry is a red plate with black ink.',
-                verdict: rec(
-                    'the warning is told by the one colour the theme keeps for it, printed as a plate with black ink, a touch off register as an overprint is; nothing is tinted, nothing is framed.',
-                ),
+                verdict:
+                    'Recommended: this one, because the warning is told by the one colour the theme keeps for it, printed as a plate with black ink, a touch off register as an overprint is; nothing is tinted, nothing is framed.',
             },
             {
                 key: 'stamped',
                 name: 'Stamped askew (the picks)',
                 see: 'The tiles’ and the trend’s pick: the label stamped askew in the tone’s colour with a ruled border; the kpi’s stamped ring.',
-                verdict: not('a stamp is the evidence board; and a ruled stamp on a skewed card is two angles.'),
+                verdict: 'Not recommended, because a stamp is the evidence board; and a ruled stamp on a skewed card is two angles.',
             },
             {
                 key: 'redboth',
                 name: 'The red plate for both',
                 see: 'Warning and failure both on the red plate with black ink; no yellow.',
-                verdict: not('a warning and a failure that look the same cannot be told apart; yellow exists for this.'),
+                verdict: 'Not recommended, because a warning and a failure that look the same cannot be told apart; yellow exists for this.',
             },
         ],
     },
@@ -282,29 +274,35 @@ export const ASPECTS = [
         label: 'A live update',
         rule: 'G9',
         question: 'What happens when a figure changes?',
-        why: 'A key figure, a state word, a trend line, a strip column and a tile change in every option, 400 ms each; the value changes on the way in and again on the way out.',
+        why: 'A key figure, a state word, a trend line, a strip column and a tile change in every option, 400 ms each; the value changes on the way in and again on the way out. Nothing hangs: the density keeps changing from the first cut to the last.',
         kind: 'cycle',
         scene: 'live',
         options: [
             {
                 key: 'resolve',
-                name: 'Dissolves and resolves',
-                see: 'The changed figure dissolves into its dots (two cuts) and resolves to the new value (two cuts), in place; it never moves. The trend line dissolves and resolves; the tile’s mark the same.',
-                verdict: rec(
-                    'it is the anchor on a figure: a new print of it, read as new because it was a screen for a beat; and nothing moves, jolts, shivers or twangs.',
-                ),
+                name: 'Dissolves and resolves, six even cuts',
+                see: 'The changed figure dissolves into its dots and resolves to the new value in six even cuts (33 ms each way, the density 100 → 70 → 40 → 10 on the way out and 10 → 40 → 70 → 100 on the way back), with no hold at the lowest density; in place, the figure never moves. The trend line and the tile’s mark the same.',
+                verdict:
+                    'Recommended: this one, because it is the print you chose with the hang taken out: the dots never stand still, the eye follows one continuous change in hard cuts, and nothing moves, jolts or glows.',
+            },
+            {
+                key: 'size',
+                name: 'The dots shrink and grow',
+                see: 'The same on a continuous dot size: the figure’s dots shrink to nothing and grow back to solid over 400 ms, linear, so the change is fluid and still a print (a screen whose dot size changes, not a fade).',
+                verdict: 'Not recommended, because fluid, but a dot that shrinks smoothly is a blur in a mask, and phantom’s gait is cuts.',
+            },
+            {
+                key: 'sweep',
+                name: 'A diagonal resolve sweeps across',
+                see: 'The figure dissolves at once into dots, and a diagonal edge on the −8° skew sweeps across it from the start in 300 ms, behind which the new value is solid, in front of which it is still dots.',
+                verdict:
+                    'Not recommended, because a sweep is a wipe; it reads as a transition between two figures, not the one figure printed again.',
             },
             {
                 key: 'twang',
                 name: 'The string twangs (the picks)',
                 see: 'The kpi’s pick: the number jolts up, dips and lands in three sharp steps; the tiles’ mark punches out and snaps back; the columns’ figure shivers sideways.',
-                verdict: not('a jolt is cyberpunk’s jitter, and a figure that moves is hard to read while it moves.'),
-            },
-            {
-                key: 'redrawn',
-                name: 'Redrawn (the trend’s pick)',
-                see: 'The line redraws in place at once; the figure changes with no mark.',
-                verdict: not('a reader who missed the change has no way to find it.'),
+                verdict: 'Not recommended, because a jolt is cyberpunk’s jitter, and a figure that moves is hard to read while it moves.',
             },
         ],
     },
@@ -321,27 +319,26 @@ export const ASPECTS = [
                 key: 'screen',
                 name: 'A screen that will not resolve',
                 see: 'The waiting part is its own halftone silhouette, dissolving and resolving without landing (density 25 → 50 → 75 → 50 → 25 %, hard cuts), never solid; the skeleton’s lines are dot silhouettes doing the same; the chart’s plot is a dotted plot that will not resolve.',
-                verdict: rec(
-                    'the anchor stopped short: a print that never comes out of its screen is exactly what waiting is; it fills the whole part, keeps its shape, and is the same screen as everywhere else.',
-                ),
+                verdict:
+                    'Recommended: this one, because the anchor stopped short: a print that never comes out of its screen is exactly what waiting is; it fills the whole part, keeps its shape, and is the same screen as everywhere else.',
             },
             {
                 key: 'slash',
                 name: 'The red slash (today)',
                 see: 'The register’s skeleton: a red parallelogram slash sweeps across each dotted line, 1.4 s, and again.',
-                verdict: not('a sweep is a wipe; the slash is a hero decoration, not a wait.'),
+                verdict: 'Not recommended, because a sweep is a wipe; the slash is a hero decoration, not a wait.',
             },
             {
                 key: 'shuffle',
                 name: 'The shuffle (the picks)',
                 see: 'The kpi’s and the tiles’ pick: the halftone shuffles left and right like a slipping photocopy.',
-                verdict: not('a shuffle is the jolt you did not pick, on a loop.'),
+                verdict: 'Not recommended, because a shuffle is the jolt you did not pick, on a loop.',
             },
             {
                 key: 'stamp',
                 name: 'The stamp ring (the picks)',
                 see: 'The trend’s pick: a red ring stamped onto the plot again and again.',
-                verdict: not('a stamp is the evidence board, and a ring stamped forever says nothing about waiting.'),
+                verdict: 'Not recommended, because a stamp is the evidence board, and a ring stamped forever says nothing about waiting.',
             },
         ],
     },
@@ -358,21 +355,20 @@ export const ASPECTS = [
                 key: 'screen',
                 name: 'The slab shoved across as a screen',
                 see: 'Busy: the red slab is shoved across the well as a dot silhouette that never resolves, 1.5 s on the shove, and again; with a share known the slab resolves solid at its stop with the shard at its edge.',
-                verdict: rec(
-                    'the register’s shove with the anchor’s screen: a slab that will not resolve until the share is known, one picture for both states.',
-                ),
+                verdict:
+                    'Recommended: this one, because the register’s shove with the anchor’s screen: a slab that will not resolve until the share is known, one picture for both states.',
             },
             {
                 key: 'solid',
                 name: 'The slab solid (today)',
                 see: 'The register’s busy bar: the solid red slab shoved across and across.',
-                verdict: not('a solid slab says a share is there when it is not; the screen says waiting.'),
+                verdict: 'Not recommended, because a solid slab says a share is there when it is not; the screen says waiting.',
             },
             {
                 key: 'slides',
                 name: 'The screen slides (the meter’s pick)',
                 see: 'The meter’s loading pick: the halftone screen of the well slides sideways, linear, and again.',
-                verdict: not('a sliding screen is the shuffle on a loop; nothing crosses the track.'),
+                verdict: 'Not recommended, because a sliding screen is the shuffle on a loop; nothing crosses the track.',
             },
         ],
     },
@@ -380,30 +376,41 @@ export const ASPECTS = [
         id: 'spinner',
         label: 'The spinner',
         rule: 'G12',
-        question: 'What does the spinner draw?',
-        why: 'Three sizes, a busy button and a busy panel in every option; every option loops at 1.2 s.',
+        question: 'What does the spinner draw, and how slowly?',
+        why: 'Three sizes, a busy button and a busy panel in every option; each loops at its own pace, printed in its name.',
         kind: 'loop',
         scene: 'spinner',
         options: [
             {
-                key: 'resolves',
-                name: 'The star snaps and resolves',
-                see: 'The register’s white star over its red second plate snaps 72° at a time (five cuts a turn); on each landing it resolves from dots to solid in one cut, so it is a screen in the air and a print at rest.',
-                verdict: rec(
-                    'the anchor on the register’s own spinner: the star that snaps, printed on each landing; a smooth turn is every theme’s spinner.',
-                ),
+                key: 'slow',
+                name: 'The star snaps and resolves, 2.8 s a turn',
+                see: 'The register’s white star over its red second plate snaps 72° at a time (five snaps a turn) with a long dwell between the snaps (each snap 80 ms, each dwell 480 ms); on each landing it resolves from dots to solid in one cut, so it is a screen in the air and a print at rest; 2.8 s a turn.',
+                verdict:
+                    'Recommended: this one, because slow enough that every snap is read as a snap and every landing as a print, and still a turn: the middle pace.',
+            },
+            {
+                key: 'slower',
+                name: 'The same, 3.6 s a turn',
+                see: 'The same five snaps with dwells of 640 ms: 3.6 s a turn; the star is at rest most of the time and arrives at each position as dots.',
+                verdict: 'Not recommended, because very calm; on a short wait the star may not make a full turn.',
+            },
+            {
+                key: 'quick',
+                name: 'The same, 2.0 s a turn',
+                see: 'The same five snaps with dwells of 320 ms: 2.0 s a turn.',
+                verdict: 'Not recommended, because the quickest of the slow ones; close to the register’s 1.2 s in feel.',
+            },
+            {
+                key: 'breath',
+                name: 'The star resolves and dissolves in place, 3 s',
+                see: 'The star does not turn: it dissolves into dots and resolves again in place, twelve cuts over 3 s, with one snap of 72° at the top of each cycle.',
+                verdict: 'Not recommended, because calm, but the snap is what says phantom; here it is a single beat in a long breath.',
             },
             {
                 key: 'snaps',
-                name: 'The star snaps (today)',
-                see: 'The register’s spinner: the star snaps 72° at a time, solid throughout.',
-                verdict: not('close, but the star never passes through its screen; it is a jolt without the print.'),
-            },
-            {
-                key: 'shoved',
-                name: 'A dotted star shoved round',
-                see: 'The star as a screen shoved round smoothly on the shove curve, once a loop, never solid.',
-                verdict: not('a star that turns smoothly is a wheel; the snap is the gait.'),
+                name: 'The star snaps (today), 1.2 s',
+                see: 'The register’s spinner: the star snaps 72° at a time, solid throughout, 1.2 s a turn.',
+                verdict: 'Not recommended, because the reference you asked to go slower than.',
             },
         ],
     },
@@ -419,20 +426,23 @@ export const ASPECTS = [
             {
                 key: 'thrown',
                 name: 'Thrown and resolved, dissolved and snatched',
-                see: 'Arriving: thrown in as a screen from off the start edge (400 ms), slapped down askew, three cuts to solid. Leaving: three cuts to dots, then the throw back off the start edge.',
-                verdict: rec('the anchor exactly, both ways; one gesture for arriving, opening and leaving, and nothing ends in a blur.'),
+                see: 'Arriving: thrown in as a screen from off the start edge (400 ms), slapped down askew, three cuts to solid. Leaving: three cuts to dots, then the throw back off the start edge. Before the first frame and after the last the part is NOT DRAWN (hidden, not at zero density, not off to one side): the alert, the card and the key figure are not visible in their closed state, in the scene or in the package.',
+                verdict:
+                    'Recommended: this one, because the anchor exactly, both ways; one gesture for arriving, opening and leaving, and nothing ends in a blur.',
             },
             {
                 key: 'ghost',
                 name: 'The wavering ghost (today)',
                 see: 'The register’s leave: the part goes see-through and wavers (skew, a red glow, a blur) and rises 9 px away; arriving is the same backwards.',
-                verdict: not('the one blur and the one glow in a theme whose rule is no blur and no glow; it is the ghost reading of the name.'),
+                verdict:
+                    'Not recommended, because the one blur and the one glow in a theme whose rule is no blur and no glow; it is the ghost reading of the name.',
             },
             {
                 key: 'solid',
                 name: 'Thrown solid, snatched solid',
                 see: 'The card is thrown in solid and slaps down; it is snatched off solid; no screen, no cuts.',
-                verdict: not('round one’s throw, which you asked to combine with the halftone; the screen is the half you added.'),
+                verdict:
+                    'Not recommended, because round one’s throw, which you asked to combine with the halftone; the screen is the half you added.',
             },
         ],
     },
@@ -449,19 +459,19 @@ export const ASPECTS = [
                 key: 'own',
                 name: 'Exactly phantom’s own',
                 see: 'Every button, link and entry inside a composite is phantom’s key cap as it stands alone (skewed, the 2 px frame, the red bar on hover, the drop onto the shadow on press); it hovers, focuses and presses exactly the same wherever it stands.',
-                verdict: rec('one manner for every control, wherever it stands; a calling card has one hand.'),
+                verdict: 'Recommended: this one, because one manner for every control, wherever it stands; a calling card has one hand.',
             },
             {
                 key: 'card',
                 name: 'Phantom’s own on a card',
                 see: 'The same manners, and the header’s actions and the drawer’s buttons stand together on one white card askew with its hard shadow.',
-                verdict: not('a card inside a card is a plate on a plate; it adds a shadow for no act.'),
+                verdict: 'Not recommended, because a card inside a card is a plate on a plate; it adds a shadow for no act.',
             },
             {
                 key: 'mix',
                 name: 'As today',
                 see: 'The header’s pick stamps a ring round a hovered button, the tiles’ Open fills solid red and the card jumps, the kpi’s ring glints: three hovers on one page.',
-                verdict: not('three hovers on one page.'),
+                verdict: 'Not recommended, because three hovers on one page.',
             },
         ],
     },
@@ -478,21 +488,20 @@ export const ASPECTS = [
                 key: 'bar',
                 name: 'The red bar thrown in and resolved',
                 see: 'The register’s red bar behind the label (the parallelogram) is thrown in from the start edge as a screen and resolves solid in two cuts, the ink flipping to black; a menu entry the same; a link’s underline the same bar, thin; a card does not move. Leaving, the bar dissolves and is snatched.',
-                verdict: rec(
-                    'the register’s best device (the bar that slides behind a pointed-at item) with the anchor’s gait: thrown and printed; nothing glints, tilts, lifts or jumps.',
-                ),
+                verdict:
+                    'Recommended: this one, because the register’s best device (the bar that slides behind a pointed-at item) with the anchor’s gait: thrown and printed; nothing glints, tilts, lifts or jumps.',
             },
             {
                 key: 'glint',
                 name: 'The pin glints (the picks)',
                 see: 'The kpi’s pick: the red ring round the figure glints; the header’s stamps a faint ring; the card tilts.',
-                verdict: not('a glint is light, and a tilt is a card moving for a pointer.'),
+                verdict: 'Not recommended, because a glint is light, and a tilt is a card moving for a pointer.',
             },
             {
                 key: 'snatched',
                 name: 'Snatched off the board (the picks)',
                 see: 'The tiles’ pick: the card jumps up hard on a bigger offset shadow; Open fills solid red.',
-                verdict: not('a card that jumps on hover is a card that cannot be read on hover.'),
+                verdict: 'Not recommended, because a card that jumps on hover is a card that cannot be read on hover.',
             },
         ],
     },
@@ -509,19 +518,19 @@ export const ASPECTS = [
                 key: 'rings',
                 name: 'The two rings (DI2, today)',
                 see: 'The register’s focus: two rings outside the skewed plate, 2 px paper then 5 px red, skewed with it; nothing added.',
-                verdict: rec('DI2’s two channels in phantom’s own colours, already there; nothing to add.'),
+                verdict: 'Recommended: this one, because DI2’s two channels in phantom’s own colours, already there; nothing to add.',
             },
             {
                 key: 'dashed',
                 name: 'A dashed red ring (the picks)',
                 see: 'The kpi’s and the tiles’ pick: a dashed red outline round the focused control instead of the two rings.',
-                verdict: not('a dashed ring is one channel and reads as a selection marquee.'),
+                verdict: 'Not recommended, because a dashed ring is one channel and reads as a selection marquee.',
             },
             {
                 key: 'mix',
                 name: 'As today’s mix',
                 see: 'The register’s rings plus the picks’ dashed rings and skewed focus where a pick drew them.',
-                verdict: not('three focus marks.'),
+                verdict: 'Not recommended, because three focus marks.',
             },
         ],
     },
@@ -538,19 +547,20 @@ export const ASPECTS = [
                 key: 'drops',
                 name: 'The cap drops, the face resolves',
                 see: 'The key cap drops 5 px onto its deep-red shadow (the register’s press) and its face resolves from dots to solid red in two cuts; release lifts it and the face is solid. Nothing eases.',
-                verdict: rec('the register’s press with the anchor’s print: the cap lands and is printed; the anchor’s own button press.'),
+                verdict:
+                    'Recommended: this one, because the register’s press with the anchor’s print: the cap lands and is printed; the anchor’s own button press.',
             },
             {
                 key: 'today',
                 name: 'The cap drops (today)',
                 see: 'The register’s press: the cap drops onto its shadow; the face stays solid.',
-                verdict: not('close, but the press never passes through the screen; it is the one gesture without the print.'),
+                verdict: 'Not recommended, because close, but the press never passes through the screen; it is the one gesture without the print.',
             },
             {
                 key: 'tilts',
                 name: 'The card tilts (the picks)',
                 see: 'The kpi’s pick: the card tilts on press; the tiles’ Open fills; the header’s stamp flattens.',
-                verdict: not('a tilt is a card moving under the hand; a pressed thing should drop.'),
+                verdict: 'Not recommended, because a tilt is a card moving under the hand; a pressed thing should drop.',
             },
         ],
     },
@@ -567,21 +577,20 @@ export const ASPECTS = [
                 key: 'condensed',
                 name: 'Barlow Condensed shouts, Barlow speaks',
                 see: 'Titles, labels, buttons and tabs in Barlow Condensed 900 italic uppercase; prose and figures in Barlow; identifiers, help and errors in the monospace. As the register has it.',
-                verdict: rec(
-                    'a calling card shouts its title and says the rest plainly; a figure in the condensed italic cannot be read as a number.',
-                ),
+                verdict:
+                    'Recommended: this one, because a calling card shouts its title and says the rest plainly; a figure in the condensed italic cannot be read as a number.',
             },
             {
                 key: 'everywhere',
                 name: 'Condensed everywhere',
                 see: 'Figures and prose in Barlow Condensed too, italic, uppercase where it is a label.',
-                verdict: not('prose in a 900 italic condensed is unreadable past a line.'),
+                verdict: 'Not recommended, because prose in a 900 italic condensed is unreadable past a line.',
             },
             {
                 key: 'ransom',
                 name: 'The ransom note (the picks)',
                 see: 'The trend’s and the header’s pick: labels as cut-out scraps, each word on its own skewed paper, the figure with a red offset shadow.',
-                verdict: not('a ransom note is the evidence board’s voice; one scrap per word is noise on a dashboard.'),
+                verdict: 'Not recommended, because a ransom note is the evidence board’s voice; one scrap per word is noise on a dashboard.',
             },
         ],
     },
@@ -598,19 +607,20 @@ export const ASPECTS = [
                 key: 'print',
                 name: 'The screen, the skew, the red plate, the second plate, the slash, the star',
                 see: 'The halftone screen on every ground and on anything arriving; the skew on every control; the red plate with black ink; the deep-red second plate off register and the hard shadow; the slash as a cut, a corner and the divider; the five-point star as the spinner and the radio’s mark. Nothing else: no stamps, strings, pins, staples, bullet holes, targets, dossiers or ransom cuts.',
-                verdict: rec('six marks that are one print; the evidence board is a different film and the ghost a different name.'),
+                verdict:
+                    'Recommended: this one, because six marks that are one print; the evidence board is a different film and the ghost a different name.',
             },
             {
                 key: 'evidence',
                 name: 'Plus the evidence board (the picks)',
                 see: 'The same six, and the picks’ red string, stamped rings, pins, staple tags, bullet holes, targets and redaction bars.',
-                verdict: not('two worlds on one page: the card and the wall it was pinned to.'),
+                verdict: 'Not recommended, because two worlds on one page: the card and the wall it was pinned to.',
             },
             {
                 key: 'all',
                 name: 'As today (everything)',
                 see: 'Every mark the register and the picks carry: the print, the board, the ghost’s blur and glow, the vapour.',
-                verdict: not('a calling card, an evidence wall and a ghost at once.'),
+                verdict: 'Not recommended, because a calling card, an evidence wall and a ghost at once.',
             },
         ],
     },
