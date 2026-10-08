@@ -36,3 +36,6 @@ tokens.tar
 research/progress-signature/out/
 research/signature-elements/out/
 test-timings/
+
+# The coherence round's screenshot output (research/_coherence/README.md).
+research/_coherence/out/
