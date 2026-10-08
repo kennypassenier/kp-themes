@@ -77,3 +77,21 @@ Kenny's verdict: reopened opening, corners, surface, live, spinner, leave. His w
 - spinner: the star snaps and resolves at 2.8 s, 3.6 s and 2.0 s a turn with long dwells, the dissolving-in-place star, and the register's 1.2 s for reference.
 
 Also check the PACKAGE for the same two faults and report them (do not edit the register): does css/phantom-register.css show a closed tooltip, menu or leaving key figure (an animation whose first/last frame is not hidden)? Say where.
+
+---
+
+## Section: retro (update 2, prefix `rt-`, port 8791, model: opus)
+
+Kenny rejected the fitted Copying loading too: "still don't like it, what does the actual Windows 95 animations look like? get inspiration from that". The designer replaced the loading options in aspects.js with what Windows 95 really showed while it waited: the Find flashlight, the Starting Windows 95 scroll (a short band of blue blocks scrolling along a sunken bar), the busy pointer (the hourglass, the arrow with a small hourglass), Defrag's cells, the Setup installer's bar with its percentage, the dial-up lights, and the earlier progress blocks for reference. Draw each as pixel art in whole 90 ms frames, nothing eased, on every waiting part (tile, panel, menu entry, month of days, chart plot, skeleton lines), fitted to the part as the text says. Study what those animations looked like (Win95's Find dialog flashlight sweeping over file icons; the boot splash's marching stripe; the hourglass cursor; Defrag's colour-coded block map; Setup's copying bar) and draw them as faithfully as pixels allow. Remove the old `fitted`, `bars` and `folders` rules and keyframes.
+
+---
+
+## Section: deco (update 3, prefix `dc-`, port 8792, model: opus)
+
+Kenny on deco's leaving and arriving: he likes the festoon (option five) best "because it's actually fancy and well drawn, I like the art style", but is "not sure if curtains are the way to go", and the curtains "seem to stay in the window after they are open": a BUG. Fix it first: in the scene, when a part has arrived (phase hold) nothing of the dressing (the swags, the valance, the drapes, the braid) is drawn any more, and after it has left (the gap before the next arrival) the part itself is hidden but the dressing is drawn only while it moves; check with paused frames at gap, in, hold, out. Then draw the ten options of the leave question (festoon fixed, roman, screen, ribbon, rope, shutters, gate, fan, beads, shell) in the festoon's art style: deep-blue satin with sheen drawn as gradients, gold trim, braid, rosettes, tassels, fringe, rivets; each must look finished and luxurious; the other questions keep their drawing. Mirror: every leave prints "mirrored".
+
+---
+
+## Section: apply (dark and phantom, step 4)
+
+For the apply agents (dark, phantom) use research/_coherence/briefs/prompt-apply.md with THEME = dark or phantom and PORT 8793 / 8794. Additions learnt from formal and light (binding): you MAY (1) add a row to js/effects.js `TIMINGS` for every new `kp-sig-THEME-*` keyframe and a line to gates/check-motion.mjs `OUT_OF_SCOPE` for any registered-custom-property or clip animation the gate cannot measure, touching only your theme's rows; (2) change the theme's `fx-ease` and `fx-duration` in themes/THEME/tokens.json (css/themes.css is generated: never edit it; the designer regenerates); (3) update themes/THEME/signature.json proofs whose selector your register no longer has (the test gates/advice-signature.test.mjs checks them: run `node --test gates/advice-signature.test.mjs`); (4) never edit a comment so that it names a keyframe-looking word followed by a colon ("so each is" tripped check:motion once). Dark: Kenny picked the chamfer on two opposite corners (as the register has it, top-right and bottom-left), loading = the comet with a film tail, the spinner = the spectrum bars; the halo and shadow must follow the cut. Phantom: loading = the register's red slash (as today), the spinner = the register's star (as today, 1.2 s); a closed part is never drawn (the package too: check every phantom leave and entrance keyframe ends hidden), the corner cut fixed 14 px at 45 degrees, the dialog's red edge outside the content, the live update six even cuts.
