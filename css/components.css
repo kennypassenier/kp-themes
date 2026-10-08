@@ -97,7 +97,7 @@
  * a number typed here [HA2]. --fx-duration and --fx-ease were declared by
  * all eleven themes and used by nothing; the values differed and the
  * behaviour did not. Terminal steps rather than eases, pastel overshoots,
- * high-contrast is nearly instant — that is the theme's handwriting, and
+ * formal is brisk — that is the theme's handwriting, and
  * it costs no extra CSS. */
     @media (prefers-reduced-motion: no-preference) {
         [data-kp-theme-picker] [data-kp-theme] {
@@ -704,9 +704,9 @@
                 translate var(--fx-duration, 150ms) var(--fx-ease, ease);
         }
 
-        /* --fx-lift is how far a control rises under the cursor. Three themes
-     * answer 0px, which is not an oversight: formal, sepia and
-     * high-contrast do not move things, they only change their colour. */
+        /* --fx-lift is how far a control rises under the cursor. Many themes
+     * answer 0px, which is not an oversight: formal, for one, does not
+     * move things, it only changes its colour. */
         .kp-button:hover:not(:disabled) {
             translate: 0 calc(-1 * var(--fx-lift, 0px));
         }

@@ -103,23 +103,23 @@ theme walk without `@sweep`, and a file no rule covers.
 | building | `npm run test:tags -- --level building`   | the tags of the changed files, Firefox | formal, dark, cyberpunk |
 | commit   | `npm run test:tags -- --level commit`     | building plus every `@sweep`, Firefox  | formal, dark, cyberpunk |
 | engines  | `npm run test:tags -- --level engines`    | the commit selection, both engines, at a layer's close and after a paint, focus or keyboard fix [fix-51] | formal, dark, cyberpunk |
-| release  | `npm run test:browser` (or `--level release --go`) | everything, both engines, on Kenny's go | all 19 |
+| release  | `npm run test:browser` (or `--level release --go`) | everything, both engines, on Kenny's go | all 17 |
 
 **A theme sweep is a level too** (`scope-103`, 2026-09-16). Fourteen
 declarations loop over the 22 themes, which turned 804 written tests into
 1,593. A spec now asks `sweepThemes()` from
 `tests/helpers/sweep-themes.mjs` for the list; `gates/run-tags.mjs` sets
 `KP_SWEEP_THEMES` for the first two levels and nothing for release, and an
-unset variable means all 19, so a bare `npx playwright test` is unchanged.
+unset variable means all 17, so a bare `npx playwright test` is unchanged.
 Measured 2026-09-16 in firefox over the four loops narrowed
 (`fixtures.spec.mjs`, `surfaces.spec.mjs`, `concept-confirm.spec.mjs`,
 `registers.spec.mjs`): the whole suite 1,593 → 1,423 per engine, a commit
-level on `css/sepia-register.css` 430 → 266, `tests/fixtures.spec.mjs`
+level on the sepia register (since removed) 430 → 266, `tests/fixtures.spec.mjs`
 132 tests in 26.7 s → 18 in 5.4 s (132 in 25.3 s again at release). No
 assertion was removed. Four theme loops stay whole because each has a
 per-theme fault behind it — `focus-visible.spec.mjs` (fix-38),
 `registers.spec.mjs:91` (fix-12), `reflow.spec.mjs` (brutalism, firefox
-only) and `overflow.spec.mjs` (sepia and solstice, chromium only).
+only) and `overflow.spec.mjs` (solstice, chromium only; sepia too until its removal).
 
 `--dry-run` prints the selection per file, the `--grep` and the count from
 `playwright test --list`; `--files <paths>` and `--commit <sha>` change
@@ -248,8 +248,8 @@ to give — and he chose **Later**: both engines run after this release
 rather than before it.
 
 What that costs is measurable from this package's own record. The reflow
-spec states that brutalism overflows in firefox only, and sepia and
-solstice in chromium only; `gates/run-tags.mjs` records firefox as the
+spec states that brutalism overflows in firefox only, and solstice (and sepia, until
+its removal) in chromium only; `gates/run-tags.mjs` records firefox as the
 odd engine fourteen times against chromium's six. The properties this
 round measures are the engine-divergent kind: computed `clip-path` polygon
 serialisation, `scale` shorthand strings, pseudo-element `background-size`,

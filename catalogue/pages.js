@@ -82,8 +82,6 @@ export const PAGES = [
                 label: "What is dark's anchor element",
                 rework: 'update 1: film and spectral line combined, as Kenny asked',
             },
-            { href: 'research/high-contrast-anchor/demo.html', label: "What is high-contrast's anchor element" },
-            { href: 'research/sepia-anchor/demo.html', label: "What is sepia's anchor element" },
             {
                 href: 'research/retro-anchor/demo.html',
                 label: "What is retro's anchor element",
@@ -109,6 +107,10 @@ export const PAGES = [
         // down here once Kenny has decided on it [scope-81].
         group: 'Archived research',
         pages: [
+            // Dropped 2026-10-08: Kenny stopped the theme in the anchor round (research/high-contrast-anchor/decided.json).
+            { href: 'research/high-contrast-anchor/demo.html', label: "What is high-contrast's anchor element" },
+            // Dropped 2026-10-08: Kenny stopped the theme in the anchor round (research/sepia-anchor/decided.json).
+            { href: 'research/sepia-anchor/demo.html', label: "What is sepia's anchor element" },
             // Decided 2026-10-08: Kenny picked the fan (and the progress bar is to be redone) as deco's anchor element (research/deco-anchor/decided.json).
             { href: 'research/deco-anchor/demo.html', label: "What is deco's anchor element" },
             // Decided 2026-10-08: Kenny picked the glare (overexposed) as light's anchor element (research/light-anchor/decided.json).

@@ -82,26 +82,6 @@ Generated 2026-10-06 from the settled picks of the character round (meter, chart
 - **columns**: Shape: 3, The tree rings · While loading: 1, Light walks the trail · How the figures arrive: 1, Growing · The tone and the change: 2, The field note · Live update: 1, The post sways
 - **menu**: Shape: The canopy · While loading: The trail of light · Open and close: Unfurled · A destructive entry and a disabled reason: The trail blaze · Hover, focus and a press: The branch sways
 
-## high-contrast
-
-- **meter**: Shape: 2, The ink frame · While loading: 1, The stepping block · How the share arrives: 1, At once · When the tone changes: 1, At once · The mark past the end: 3, In quarters
-- **chart**: Shape: 1, The signal board · While loading: 3, The marching frame · How the series arrives: 3, At an even pace · How a new reading shows: 3, Just there · The event dots: 3, Beaded rings · The pinned tooltip: 1, The inverse plate
-- **calendar**: Shape: 3, The big print · While loading: 1, The hazard tape · How the month arrives: 3, Cell by cell · Tones and today: 1, The ink grid: its tones and today · The picked day: 2, The inverse plate: its pick
-- **graph**: Shape: 3, The signage · While loading: 1, The flap board turns · How the network arrives: 2, Placed · The picked node and the hidden kind: 2, The yellow ring, heavier · Live update: 2, The thick flash
-- **trend**: Shape: 1, Ink and frame · While loading: 2, The striped block · How the figure and the line arrive: 1, At once · The tone and the change: 3, The signal plate · Live update: 3, The bar flips
-- **columns**: Shape: 2, The inverse heads · While loading: 3, The tally · How the figures arrive: 2, Dropped · The tone and the change: 1, The framed plate · Live update: 1, Inverted
-- **menu**: Shape: Ink and frame · While loading: The dashed baseline · Open and close: Switched · A destructive entry and a disabled reason: The signal plate · Hover, focus and a press: The bar flips
-
-## sepia
-
-- **meter**: Shape: 1, The letterpress impression · While loading: 2, Quill stroke · How the share arrives: 2, Quill stroke · When the tone changes: 2, Quill stroke · The mark past the end: 2, Quill stroke
-- **chart**: Shape: 2, The letterpress specimen · While loading: 1, The galley sets · How the series arrives: 3, Pressed into the paper · How a new reading shows: 1, As approved: it appears · The event dots: 3, Wax-seal beads · The pinned tooltip: 2, The tooltip of the letterpress specimen
-- **calendar**: Shape: 3, The tipped-in plate · While loading: 1, The almanac page: its loading · How the month arrives: 2, Pressed · Tones and today: 1, The almanac page: its tones and today · The picked day: 1, The almanac page: its pick
-- **graph**: Shape: 2, The letterpress chart · While loading: 1, The nib inks each line · How the network arrives: 2, Written by hand · The picked node and the hidden kind: 3, Circled in red · Live update: 3, The seal
-- **trend**: Shape: 2, Letterpress · While loading: 3, The drum turns · How the figure and the line arrive: 2, The nib writes · The tone and the change: 3, The rubber stamp · Live update: 1, Redrawn
-- **columns**: Shape: 3, The index card · While loading: 3, The ink spreads · How the figures arrive: 2, The drawer pushed in · The tone and the change: 3, Plus and minus typed · Live update: 2, Retyped
-- **menu**: Shape: Letterpress · While loading: The drum turns · Open and close: Pressed · A destructive entry and a disabled reason: The rubber stamp · Hover, focus and a press: The paper warms
-
 ## blueprint
 
 - **meter**: Shape: 3, The dimension line · While loading: 1, The plotter · How the share arrives: 1, The plotter · When the tone changes: 1, The plotter · The mark past the end: 3, Redrawn

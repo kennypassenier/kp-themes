@@ -93,7 +93,7 @@ export const DESCRIPTORS = [
 <li role="presentation" class="kp-theme-group" data-kp-theme-group="light"><span class="kp-theme-group__label" aria-hidden="true">Light</span>
 <ul class="kp-theme-group__list" aria-label="Light">
 <li><button type="button" data-kp-theme="formal"><span class="kp-swatch" data-theme="formal"></span>Formal</button></li>
-<li><button type="button" data-kp-theme="sepia"><span class="kp-swatch" data-theme="sepia"></span>Sepia</button></li>
+<li><button type="button" data-kp-theme="light"><span class="kp-swatch" data-theme="light"></span>Light</button></li>
 </ul></li>
 <li role="presentation" class="kp-theme-group" data-kp-theme-group="dark"><span class="kp-theme-group__label" aria-hidden="true">Dark</span>
 <ul class="kp-theme-group__list" aria-label="Dark">

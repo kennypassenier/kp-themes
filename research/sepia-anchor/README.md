@@ -1,6 +1,6 @@
 # What is sepia's anchor element
 
-**Open (2026-10-08).** Kenny's verdict pending in the review dialog.
+**Decided (Kenny, 08/10/2026): the theme is dropped.** "We are also stopping with Sepia, it may be deleted" (review dialog). The theme was removed from the package; no anchor was chosen. Recorded in decided.json.
 
 **Why.** Kenny, 2026-10-07 18:13: every theme gets one recognisable anchor element, the thing every later decision of the theme departs
 from (forest: the tree progress bar, grotesk: the red plate that falls into register, synthwave: the page horizon, blueprint: the tracing

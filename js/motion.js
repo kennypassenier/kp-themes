@@ -753,7 +753,7 @@ export function sizeMotion(box, change) {
  * Glide `box` from one height to another. During the glide the box clips
  * what overflows it and measures its border box, so the last frame is the
  * size it keeps (a card with padding read its padding twice and then
- * clicked smaller, in forest and high-contrast).
+ * clicked smaller, in forest and the removed high-contrast).
  * @param {HTMLElement} box @param {number} from @param {number} to @param {number} duration @param {string} easing
  * @param {boolean} [plain] no `[data-kp-resizing]` character
  * @param {number} [delay] ms the box holds `from` before it moves

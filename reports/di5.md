@@ -52,14 +52,11 @@ reported here in capitals and corrected by nobody but Kenny.
 | `kp-resolve` | opacity | 640 ms | 1× | 0 → 1 → 1 | 1.00/s | under |
 | `kp-ignite` | color | 600 ms | 1× | 0 → 1 | 0.00/s | under |
 | `kp-sweep-in` | background-position | 600 ms | 1× | — | 0.00/s | under |
-| `kp-confirm-in` | opacity | 160 ms | 1× | 0 → 1 | 1.00/s | under |
 | `kp-cal-slide` | clip-path | 740 ms | 1× | — | 0.00/s | under |
 | `kp-cal-rule` | transform | 480 ms | 1× | — | 0.00/s | under |
 | `kp-cal-redact` | background-size | 320 ms | 1× | — | 0.00/s | under |
 | `kp-wipe` | mask-position | 600 ms | 1× | — | 0.00/s | under |
 | `kp-burnish` | clip-path | 900 ms | 1× | — | 0.00/s | under |
-| `kp-hc-headline-wipe` | clip-path | 550 ms | 1× | — | 0.00/s | under |
-| `kp-hc-rule-wipe` | transform | 400 ms | 1× | — | 0.00/s | under |
 | `kp-slam` | transform | 260 ms | 1× | — | 0.00/s | under |
 | `kp-marquee` | transform | 42000 ms | loops | — | 0.00/s | under |
 | `kp-strip-in` | opacity | 520 ms | 1× | 0 → 1 | 1.00/s | under |
@@ -126,11 +123,6 @@ reported here in capitals and corrected by nobody but Kenny.
 | `kp-sig-terminal-update-blink` | color | 900 ms | 1× | — | 0.00/s | under |
 | `kp-sig-terminal-update-blink-line` | color | 900 ms | 1× | — | 0.00/s | under |
 | `kp-sig-forest-meter-wipe-o` | clip-path | 1200 ms | 1× | — | 0.00/s | under |
-| `kp-sig-sepia-meter-knock-d` | translate | 280 ms | 1× | — | 0.00/s | under |
-| `kp-sig-sepia-meter-knock-o` | translate | 280 ms | 1× | — | 0.00/s | under |
-| `kp-sig-sepia-meter-knock-w` | translate | 280 ms | 1× | — | 0.00/s | under |
-| `kp-sig-sepia-meter-slant-o` | clip-path | 1100 ms | 1× | — | 0.00/s | under |
-| `kp-sig-sepia-meter-width` | inline-size | 2200 ms | loops | — | 0.00/s | under |
 | `kp-sig-solstice-meter-bump-d` | scale | 500 ms | 1× | — | 0.00/s | under |
 | `kp-sig-solstice-meter-bump-o` | scale | 500 ms | 1× | — | 0.00/s | under |
 | `kp-sig-solstice-meter-bump-w` | scale | 500 ms | 1× | — | 0.00/s | under |
@@ -159,10 +151,6 @@ reported here in capitals and corrected by nobody but Kenny.
 | `kp-sig-dark-meter-pos` | background-position | 900 ms | loops | — | 0.00/s | under |
 | `kp-sig-dark-meter-press-o` | scale | 220 ms | 1× | — | 0.00/s | under |
 | `kp-sig-cyberpunk-meter-slip-o` | translate | 320 ms | 1× | — | 0.00/s | under |
-| `kp-sig-high-contrast-meter-march` | translate | 800 ms | loops | — | 0.00/s | under |
-| `kp-sig-high-contrast-meter-wipe-d` | clip-path | 120 ms | 1× | — | 0.00/s | under |
-| `kp-sig-high-contrast-meter-wipe-o` | clip-path | 120 ms | 1× | — | 0.00/s | under |
-| `kp-sig-high-contrast-meter-wipe-w` | clip-path | 120 ms | 1× | — | 0.00/s | under |
 | `kp-sig-retro-meter-knock-d` | translate | 160 ms | 1× | — | 0.00/s | under |
 | `kp-sig-retro-meter-knock-o` | translate | 160 ms | 1× | — | 0.00/s | under |
 | `kp-sig-retro-meter-knock-w` | translate | 160 ms | 1× | — | 0.00/s | under |
@@ -356,17 +344,6 @@ reported here in capitals and corrected by nobody but Kenny.
 | `kp-sig-formal-tip-drop` | opacity | 200 ms | 1× | 0 | 0.00/s | under |
 | `kp-sig-formal-size-ink` | clip-path | 320 ms | 1× | — | 0.00/s | under |
 | `kp-sig-formal-leave` | opacity | 400 ms | 1× | 0.2 | 0.00/s | under |
-| `kp-sig-sepia-sepia-leaf` | transform | 1600 ms | loops | — | 0.00/s | under |
-| `kp-sig-sepia-sepia-soak` | opacity | 3200 ms | loops | 0 → 1 → 0 | 0.63/s | under |
-| `kp-sig-sepia-sepia-tick` | clip-path | 320 ms | 1× | — | 0.00/s | under |
-| `kp-sig-sepia-sepia-seal` | opacity | 320 ms | 1× | 0 → 1 | 1.00/s | under |
-| `kp-sig-sepia-sepia-slip` | opacity | 520 ms | 1× | 0 → 1 | 1.00/s | under |
-| `kp-sig-sepia-sepia-page` | opacity | 440 ms | 1× | 0 → 1 | 1.00/s | under |
-| `kp-sig-sepia-sepia-gloss` | opacity | 320 ms | 1× | 0 → 1 | 1.00/s | under |
-| `kp-progressbar-sepia-dinkus` | transform | 2600 ms | loops | — | 0.00/s | under |
-| `kp-sig-sepia-size-turn` | opacity | 440 ms | 1× | 0 | 0.00/s | under |
-| `kp-sig-sepia-leave` | opacity | 700 ms | 1× | 1 → 1 → 0 | 1.00/s | under |
-| `kp-sig-sepia-leave-2` | box-shadow | 700 ms | 1× | — | 0.00/s | under |
 | `kp-sig-solstice-solstice-arc` | opacity | 2400 ms | loops | 0 → 1 → 1 → 0 → 0 | 0.83/s | under |
 | `kp-sig-solstice-solstice-light` | transform | 3600 ms | loops | — | 0.00/s | under |
 | `kp-sig-solstice-solstice-warm` | opacity | 360 ms | 1× | 0 → 1 | 1.00/s | under |
@@ -376,11 +353,3 @@ reported here in capitals and corrected by nobody but Kenny.
 | `kp-progressbar-solstice-arc` | transform | 2400 ms | loops | — | 0.00/s | under |
 | `kp-sig-solstice-size-rise` | opacity | 480 ms | 1× | 0 | 0.00/s | under |
 | `kp-sig-solstice-leave` | opacity | 540 ms | 1× | 0 | 0.00/s | under |
-| `kp-sig-high-contrast-hc-walk` | transform | 1400 ms | loops | — | 0.00/s | under |
-| `kp-sig-high-contrast-hc-march` | transform | 520 ms | loops | — | 0.00/s | under |
-| `kp-sig-high-contrast-hc-wipe-x` | clip-path | 300 ms | 1× | — | 0.00/s | under |
-| `kp-sig-high-contrast-hc-wipe-y` | clip-path | 360 ms | 1× | — | 0.00/s | under |
-| `kp-sig-high-contrast-hc-hold` | opacity | 140 ms | 1× | 0 → 0 | 0.00/s | under |
-| `kp-sig-high-contrast-size-mark` | outline, outline-offset | 600 ms | 1× | — | 0.00/s | under |
-| `kp-sig-high-contrast-leave` | opacity | 700 ms | 1× | 1 → 1 → 0 → 0 | 1.00/s | under |
-| `kp-sig-high-contrast-leave-2` | clip-path | 700 ms | 1× | — | 0.00/s | under |

@@ -2204,7 +2204,7 @@ var init_effects = __esm({
       // The nostromo headline [S48, LIFT_PLAN row 19]: the whole line popping
       // down under a clip-path, its text never touched.
       popping: "is-popping",
-      // The sepia headline [S48, LIFT_PLAN row 9]: the ghost look before the
+      // The Sepia headline (theme removed 2026-10-08) [S48, LIFT_PLAN row 9]: the ghost look before the
       // ink-in settle, on only while the transition runs.
       settling: "is-settling",
       // The solstice headline [S48, LIFT_PLAN row 18]: an overlay of three
@@ -2390,11 +2390,6 @@ var init_effects = __esm({
       "kp-resolve": { durationMs: 640, cycles: 1, property: "opacity", luminanceSteps: [0, 1, 1] },
       "kp-ignite": { durationMs: 600, cycles: 1, property: "color", luminanceSteps: [0, 1] },
       "kp-sweep-in": { durationMs: 600, cycles: 1, property: "background-position", luminanceSteps: [] },
-      // The sepia register [S48, LIFT_PLAN row 9]: the confirmation dialog's
-      // backdrop fade — a keyframe rather than a transition, because a
-      // ::backdrop needs @starting-style to transition on its own appearance
-      // and this theme does not use it.
-      "kp-confirm-in": { durationMs: 160, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
       // The solstice register [S48, LIFT_PLAN row 18]: the calibration wipe
       // over the headline, the rule draw, and the dossier's redaction lift.
       "kp-cal-slide": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
@@ -2408,12 +2403,6 @@ var init_effects = __esm({
       // The Lapis register (theme removed 2026-10-06) [S48, LIFT_PLAN row 6]: the burnish, a single
       // clip-path wipe over the headline once, no loop.
       "kp-burnish": { durationMs: 900, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      // The high-contrast register [S48, LIFT_PLAN row 14]: the headline's
-      // ellipse wipe and the rule's horizontal scale, both plain CSS with no
-      // [data-kp-effects] gate — they run once on every load, not once per
-      // session (a deliberate divergence, recorded in that theme's anatomy).
-      "kp-hc-headline-wipe": { durationMs: 550, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-hc-rule-wipe": { durationMs: 400, cycles: 1, property: "transform", luminanceSteps: [] },
       // The brutalism register [BR1]: the words dropping onto their offset and
       // the seamless marquee.
       "kp-slam": { durationMs: 260, cycles: 1, property: "transform", luminanceSteps: [] },
@@ -2547,11 +2536,6 @@ var init_effects = __esm({
       "kp-sig-terminal-update-blink": { durationMs: 900, cycles: 1, property: "color", luminanceSteps: [] },
       "kp-sig-terminal-update-blink-line": { durationMs: 900, cycles: 1, property: "color", luminanceSteps: [] },
       "kp-sig-forest-meter-wipe-o": { durationMs: 1200, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-sepia-meter-knock-d": { durationMs: 280, cycles: 1, property: "translate", luminanceSteps: [] },
-      "kp-sig-sepia-meter-knock-o": { durationMs: 280, cycles: 1, property: "translate", luminanceSteps: [] },
-      "kp-sig-sepia-meter-knock-w": { durationMs: 280, cycles: 1, property: "translate", luminanceSteps: [] },
-      "kp-sig-sepia-meter-slant-o": { durationMs: 1100, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-sepia-meter-width": { durationMs: 2200, cycles: Infinity, property: "inline-size", luminanceSteps: [] },
       "kp-sig-solstice-meter-bump-d": { durationMs: 500, cycles: 1, property: "scale", luminanceSteps: [] },
       "kp-sig-solstice-meter-bump-o": { durationMs: 500, cycles: 1, property: "scale", luminanceSteps: [] },
       "kp-sig-solstice-meter-bump-w": { durationMs: 500, cycles: 1, property: "scale", luminanceSteps: [] },
@@ -2576,18 +2560,14 @@ var init_effects = __esm({
       "kp-sig-titanium-meter-jolt-o": { durationMs: 160, cycles: 1, property: "translate", luminanceSteps: [] },
       "kp-sig-titanium-meter-jolt-w": { durationMs: 160, cycles: 1, property: "translate", luminanceSteps: [] },
       // The meter, round 4 [Kenny's picks on research/character-meter, 2026-10-05]:
-      // dark (loading and arrival redrawn), cyberpunk, high-contrast, retro and
-      // grotesk. Every loading picture loops while loading.
+      // dark (loading and arrival redrawn), cyberpunk, retro and grotesk
+      // (high-contrast has since been removed). Every loading picture loops while loading.
       "kp-sig-dark-meter-bump-d": { durationMs: 200, cycles: 1, property: "scale", luminanceSteps: [] },
       "kp-sig-dark-meter-bump-o": { durationMs: 200, cycles: 1, property: "scale", luminanceSteps: [] },
       "kp-sig-dark-meter-bump-w": { durationMs: 200, cycles: 1, property: "scale", luminanceSteps: [] },
       "kp-sig-dark-meter-pos": { durationMs: 900, cycles: Infinity, property: "background-position", luminanceSteps: [] },
       "kp-sig-dark-meter-press-o": { durationMs: 220, cycles: 1, property: "scale", luminanceSteps: [] },
       "kp-sig-cyberpunk-meter-slip-o": { durationMs: 320, cycles: 1, property: "translate", luminanceSteps: [] },
-      "kp-sig-high-contrast-meter-march": { durationMs: 800, cycles: Infinity, property: "translate", luminanceSteps: [] },
-      "kp-sig-high-contrast-meter-wipe-d": { durationMs: 120, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-high-contrast-meter-wipe-o": { durationMs: 120, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-high-contrast-meter-wipe-w": { durationMs: 120, cycles: 1, property: "clip-path", luminanceSteps: [] },
       "kp-sig-retro-meter-knock-d": { durationMs: 160, cycles: 1, property: "translate", luminanceSteps: [] },
       "kp-sig-retro-meter-knock-o": { durationMs: 160, cycles: 1, property: "translate", luminanceSteps: [] },
       "kp-sig-retro-meter-knock-w": { durationMs: 160, cycles: 1, property: "translate", luminanceSteps: [] },
@@ -2836,18 +2816,6 @@ var init_effects = __esm({
       "kp-sig-formal-tip-drop": { durationMs: 200, cycles: 1, property: "opacity", luminanceSteps: [0] },
       "kp-sig-formal-size-ink": { durationMs: 320, cycles: 1, property: "clip-path", luminanceSteps: [] },
       "kp-sig-formal-leave": { durationMs: 400, cycles: 1, property: "opacity", luminanceSteps: [0.2] },
-      // sepia-register
-      "kp-sig-sepia-sepia-leaf": { durationMs: 1600, cycles: Infinity, property: "transform", luminanceSteps: [] },
-      "kp-sig-sepia-sepia-soak": { durationMs: 3200, cycles: Infinity, property: "opacity", luminanceSteps: [0, 1, 0] },
-      "kp-sig-sepia-sepia-tick": { durationMs: 320, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-sepia-sepia-seal": { durationMs: 320, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-      "kp-sig-sepia-sepia-slip": { durationMs: 520, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-      "kp-sig-sepia-sepia-page": { durationMs: 440, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-      "kp-sig-sepia-sepia-gloss": { durationMs: 320, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-      "kp-progressbar-sepia-dinkus": { durationMs: 2600, cycles: Infinity, property: "transform", luminanceSteps: [] },
-      "kp-sig-sepia-size-turn": { durationMs: 440, cycles: 1, property: "opacity", luminanceSteps: [0] },
-      "kp-sig-sepia-leave": { durationMs: 700, cycles: 1, property: "opacity", luminanceSteps: [1, 1, 0] },
-      "kp-sig-sepia-leave-2": { durationMs: 700, cycles: 1, property: "box-shadow", luminanceSteps: [] },
       // solstice-register
       "kp-sig-solstice-solstice-arc": { durationMs: 2400, cycles: Infinity, property: "opacity", luminanceSteps: [0, 1, 1, 0, 0] },
       "kp-sig-solstice-solstice-light": { durationMs: 3600, cycles: Infinity, property: "transform", luminanceSteps: [] },
@@ -2857,16 +2825,7 @@ var init_effects = __esm({
       "kp-sig-solstice-solstice-ember": { durationMs: 360, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
       "kp-progressbar-solstice-arc": { durationMs: 2400, cycles: Infinity, property: "transform", luminanceSteps: [] },
       "kp-sig-solstice-size-rise": { durationMs: 480, cycles: 1, property: "opacity", luminanceSteps: [0] },
-      "kp-sig-solstice-leave": { durationMs: 540, cycles: 1, property: "opacity", luminanceSteps: [0] },
-      // high-contrast-register
-      "kp-sig-high-contrast-hc-walk": { durationMs: 1400, cycles: Infinity, property: "transform", luminanceSteps: [] },
-      "kp-sig-high-contrast-hc-march": { durationMs: 520, cycles: Infinity, property: "transform", luminanceSteps: [] },
-      "kp-sig-high-contrast-hc-wipe-x": { durationMs: 300, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-high-contrast-hc-wipe-y": { durationMs: 360, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-high-contrast-hc-hold": { durationMs: 140, cycles: 1, property: "opacity", luminanceSteps: [0, 0] },
-      "kp-sig-high-contrast-size-mark": { durationMs: 600, cycles: 1, property: "outline, outline-offset", luminanceSteps: [] },
-      "kp-sig-high-contrast-leave": { durationMs: 700, cycles: 1, property: "opacity", luminanceSteps: [1, 1, 0, 0] },
-      "kp-sig-high-contrast-leave-2": { durationMs: 700, cycles: 1, property: "clip-path", luminanceSteps: [] }
+      "kp-sig-solstice-leave": { durationMs: 540, cycles: 1, property: "opacity", luminanceSteps: [0] }
       // ── end of the port session's rows
     });
     started = /* @__PURE__ */ new WeakSet();
@@ -17434,8 +17393,6 @@ var THEMES = Object.freeze([
   { name: "pastel", label: "Pastel", dark: false },
   { name: "terminal", label: "Terminal", dark: true },
   { name: "forest", label: "Forest", dark: false },
-  { name: "high-contrast", label: "High contrast", dark: false },
-  { name: "sepia", label: "Sepia", dark: false },
   { name: "blueprint", label: "Blueprint", dark: true },
   { name: "solstice", label: "Solstice", dark: true },
   { name: "brutalism", label: "Brutalism", dark: false },

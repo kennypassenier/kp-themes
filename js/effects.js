@@ -146,7 +146,7 @@ export const STATE = Object.freeze({
     // The nostromo headline [S48, LIFT_PLAN row 19]: the whole line popping
     // down under a clip-path, its text never touched.
     popping: 'is-popping',
-    // The sepia headline [S48, LIFT_PLAN row 9]: the ghost look before the
+    // The Sepia headline (theme removed 2026-10-08) [S48, LIFT_PLAN row 9]: the ghost look before the
     // ink-in settle, on only while the transition runs.
     settling: 'is-settling',
     // The solstice headline [S48, LIFT_PLAN row 18]: an overlay of three
@@ -296,7 +296,7 @@ export const LIGHT_FAR = 560;
  * The knob a theme sets to have the point a press started at written to the
  * button it started on [scope-25, built at scope-101]: `--kp-press: point`.
  *
- * Sepia's approved gesture is the ink spreading into the paper on a press,
+ * The removed Sepia theme's approved gesture was the ink spreading into the paper on a press,
  * and ink spreads from where the nib touched down, not from the middle of
  * the plate. CSS knows a button is being pressed; it cannot know WHERE, so
  * something has to write the two numbers down. That is all this does — the
@@ -307,7 +307,7 @@ export const LIGHT_FAR = 560;
  * place, and the register gives them the same stain with no transition.
  *
  * Without the module, on a key press, or after `detach()`, the two
- * properties are whatever the stylesheet declared — sepia's own default is
+ * properties are whatever the stylesheet declared — the removed Sepia theme's default was
  * the middle of the button, so the gesture is whole before a pointer has
  * ever touched it [KT6].
  */
@@ -485,11 +485,6 @@ export const TIMINGS = Object.freeze({
     'kp-resolve': { durationMs: 640, cycles: 1, property: 'opacity', luminanceSteps: [0, 1, 1] },
     'kp-ignite': { durationMs: 600, cycles: 1, property: 'color', luminanceSteps: [0, 1] },
     'kp-sweep-in': { durationMs: 600, cycles: 1, property: 'background-position', luminanceSteps: [] },
-    // The sepia register [S48, LIFT_PLAN row 9]: the confirmation dialog's
-    // backdrop fade — a keyframe rather than a transition, because a
-    // ::backdrop needs @starting-style to transition on its own appearance
-    // and this theme does not use it.
-    'kp-confirm-in': { durationMs: 160, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
     // The solstice register [S48, LIFT_PLAN row 18]: the calibration wipe
     // over the headline, the rule draw, and the dossier's redaction lift.
     'kp-cal-slide': { durationMs: 740, cycles: 1, property: 'clip-path', luminanceSteps: [] },
@@ -503,12 +498,6 @@ export const TIMINGS = Object.freeze({
     // The Lapis register (theme removed 2026-10-06) [S48, LIFT_PLAN row 6]: the burnish, a single
     // clip-path wipe over the headline once, no loop.
     'kp-burnish': { durationMs: 900, cycles: 1, property: 'clip-path', luminanceSteps: [] },
-    // The high-contrast register [S48, LIFT_PLAN row 14]: the headline's
-    // ellipse wipe and the rule's horizontal scale, both plain CSS with no
-    // [data-kp-effects] gate — they run once on every load, not once per
-    // session (a deliberate divergence, recorded in that theme's anatomy).
-    'kp-hc-headline-wipe': { durationMs: 550, cycles: 1, property: 'clip-path', luminanceSteps: [] },
-    'kp-hc-rule-wipe': { durationMs: 400, cycles: 1, property: 'transform', luminanceSteps: [] },
     // The brutalism register [BR1]: the words dropping onto their offset and
     // the seamless marquee.
     'kp-slam': { durationMs: 260, cycles: 1, property: 'transform', luminanceSteps: [] },
@@ -642,11 +631,6 @@ export const TIMINGS = Object.freeze({
     'kp-sig-terminal-update-blink': { durationMs: 900, cycles: 1, property: 'color', luminanceSteps: [] },
     'kp-sig-terminal-update-blink-line': { durationMs: 900, cycles: 1, property: 'color', luminanceSteps: [] },
     'kp-sig-forest-meter-wipe-o': { durationMs: 1200, cycles: 1, property: 'clip-path', luminanceSteps: [] },
-    'kp-sig-sepia-meter-knock-d': { durationMs: 280, cycles: 1, property: 'translate', luminanceSteps: [] },
-    'kp-sig-sepia-meter-knock-o': { durationMs: 280, cycles: 1, property: 'translate', luminanceSteps: [] },
-    'kp-sig-sepia-meter-knock-w': { durationMs: 280, cycles: 1, property: 'translate', luminanceSteps: [] },
-    'kp-sig-sepia-meter-slant-o': { durationMs: 1100, cycles: 1, property: 'clip-path', luminanceSteps: [] },
-    'kp-sig-sepia-meter-width': { durationMs: 2200, cycles: Infinity, property: 'inline-size', luminanceSteps: [] },
     'kp-sig-solstice-meter-bump-d': { durationMs: 500, cycles: 1, property: 'scale', luminanceSteps: [] },
     'kp-sig-solstice-meter-bump-o': { durationMs: 500, cycles: 1, property: 'scale', luminanceSteps: [] },
     'kp-sig-solstice-meter-bump-w': { durationMs: 500, cycles: 1, property: 'scale', luminanceSteps: [] },
@@ -671,18 +655,14 @@ export const TIMINGS = Object.freeze({
     'kp-sig-titanium-meter-jolt-o': { durationMs: 160, cycles: 1, property: 'translate', luminanceSteps: [] },
     'kp-sig-titanium-meter-jolt-w': { durationMs: 160, cycles: 1, property: 'translate', luminanceSteps: [] },
     // The meter, round 4 [Kenny's picks on research/character-meter, 2026-10-05]:
-    // dark (loading and arrival redrawn), cyberpunk, high-contrast, retro and
-    // grotesk. Every loading picture loops while loading.
+    // dark (loading and arrival redrawn), cyberpunk, retro and grotesk
+    // (high-contrast has since been removed). Every loading picture loops while loading.
     'kp-sig-dark-meter-bump-d': { durationMs: 200, cycles: 1, property: 'scale', luminanceSteps: [] },
     'kp-sig-dark-meter-bump-o': { durationMs: 200, cycles: 1, property: 'scale', luminanceSteps: [] },
     'kp-sig-dark-meter-bump-w': { durationMs: 200, cycles: 1, property: 'scale', luminanceSteps: [] },
     'kp-sig-dark-meter-pos': { durationMs: 900, cycles: Infinity, property: 'background-position', luminanceSteps: [] },
     'kp-sig-dark-meter-press-o': { durationMs: 220, cycles: 1, property: 'scale', luminanceSteps: [] },
     'kp-sig-cyberpunk-meter-slip-o': { durationMs: 320, cycles: 1, property: 'translate', luminanceSteps: [] },
-    'kp-sig-high-contrast-meter-march': { durationMs: 800, cycles: Infinity, property: 'translate', luminanceSteps: [] },
-    'kp-sig-high-contrast-meter-wipe-d': { durationMs: 120, cycles: 1, property: 'clip-path', luminanceSteps: [] },
-    'kp-sig-high-contrast-meter-wipe-o': { durationMs: 120, cycles: 1, property: 'clip-path', luminanceSteps: [] },
-    'kp-sig-high-contrast-meter-wipe-w': { durationMs: 120, cycles: 1, property: 'clip-path', luminanceSteps: [] },
     'kp-sig-retro-meter-knock-d': { durationMs: 160, cycles: 1, property: 'translate', luminanceSteps: [] },
     'kp-sig-retro-meter-knock-o': { durationMs: 160, cycles: 1, property: 'translate', luminanceSteps: [] },
     'kp-sig-retro-meter-knock-w': { durationMs: 160, cycles: 1, property: 'translate', luminanceSteps: [] },
@@ -923,18 +903,6 @@ export const TIMINGS = Object.freeze({
     'kp-sig-formal-tip-drop': { durationMs: 200, cycles: 1, property: 'opacity', luminanceSteps: [0] },
     'kp-sig-formal-size-ink': { durationMs: 320, cycles: 1, property: 'clip-path', luminanceSteps: [] },
     'kp-sig-formal-leave': { durationMs: 400, cycles: 1, property: 'opacity', luminanceSteps: [0.2] },
-    // sepia-register
-    'kp-sig-sepia-sepia-leaf': { durationMs: 1600, cycles: Infinity, property: 'transform', luminanceSteps: [] },
-    'kp-sig-sepia-sepia-soak': { durationMs: 3200, cycles: Infinity, property: 'opacity', luminanceSteps: [0, 1, 0] },
-    'kp-sig-sepia-sepia-tick': { durationMs: 320, cycles: 1, property: 'clip-path', luminanceSteps: [] },
-    'kp-sig-sepia-sepia-seal': { durationMs: 320, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
-    'kp-sig-sepia-sepia-slip': { durationMs: 520, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
-    'kp-sig-sepia-sepia-page': { durationMs: 440, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
-    'kp-sig-sepia-sepia-gloss': { durationMs: 320, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
-    'kp-progressbar-sepia-dinkus': { durationMs: 2600, cycles: Infinity, property: 'transform', luminanceSteps: [] },
-    'kp-sig-sepia-size-turn': { durationMs: 440, cycles: 1, property: 'opacity', luminanceSteps: [0] },
-    'kp-sig-sepia-leave': { durationMs: 700, cycles: 1, property: 'opacity', luminanceSteps: [1, 1, 0] },
-    'kp-sig-sepia-leave-2': { durationMs: 700, cycles: 1, property: 'box-shadow', luminanceSteps: [] },
     // solstice-register
     'kp-sig-solstice-solstice-arc': { durationMs: 2400, cycles: Infinity, property: 'opacity', luminanceSteps: [0, 1, 1, 0, 0] },
     'kp-sig-solstice-solstice-light': { durationMs: 3600, cycles: Infinity, property: 'transform', luminanceSteps: [] },
@@ -945,15 +913,6 @@ export const TIMINGS = Object.freeze({
     'kp-progressbar-solstice-arc': { durationMs: 2400, cycles: Infinity, property: 'transform', luminanceSteps: [] },
     'kp-sig-solstice-size-rise': { durationMs: 480, cycles: 1, property: 'opacity', luminanceSteps: [0] },
     'kp-sig-solstice-leave': { durationMs: 540, cycles: 1, property: 'opacity', luminanceSteps: [0] },
-    // high-contrast-register
-    'kp-sig-high-contrast-hc-walk': { durationMs: 1400, cycles: Infinity, property: 'transform', luminanceSteps: [] },
-    'kp-sig-high-contrast-hc-march': { durationMs: 520, cycles: Infinity, property: 'transform', luminanceSteps: [] },
-    'kp-sig-high-contrast-hc-wipe-x': { durationMs: 300, cycles: 1, property: 'clip-path', luminanceSteps: [] },
-    'kp-sig-high-contrast-hc-wipe-y': { durationMs: 360, cycles: 1, property: 'clip-path', luminanceSteps: [] },
-    'kp-sig-high-contrast-hc-hold': { durationMs: 140, cycles: 1, property: 'opacity', luminanceSteps: [0, 0] },
-    'kp-sig-high-contrast-size-mark': { durationMs: 600, cycles: 1, property: 'outline, outline-offset', luminanceSteps: [] },
-    'kp-sig-high-contrast-leave': { durationMs: 700, cycles: 1, property: 'opacity', luminanceSteps: [1, 1, 0, 0] },
-    'kp-sig-high-contrast-leave-2': { durationMs: 700, cycles: 1, property: 'clip-path', luminanceSteps: [] },
     // ── end of the port session's rows
 });
 

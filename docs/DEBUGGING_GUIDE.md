@@ -326,7 +326,7 @@ css/grotesk-register.css: a hover background on `.kp-button` outranks the compon
 ```
 
 ```
-css/grotesk-register.css: the hover rule for .kp-button (hover 6, press 4) outranks this register's own pressed rule, so the press never paints. Add `:not(:active)` to the hover selector, the way css/high-contrast-register.css does [fix-12].
+css/grotesk-register.css: the hover rule for .kp-button (hover 6, press 4) outranks this register's own pressed rule, so the press never paints. Add `:not(:active)` to the hover selector, the way css/brutalism-register.css does [fix-12].
 ```
 
 ```
@@ -357,7 +357,7 @@ None of these blocks anything. They are readings.
 | `<file>:NN: <declaration> sits outside a prefers-reduced-motion guard (DI7).` | `gates/check-motion.mjs` | wrap it in `@media (prefers-reduced-motion: no-preference)` |
 | `<file>: kp-<name> animates something this gate cannot measure and is not listed as out of scope. Add it to OUT_OF_SCOPE with the reason, or teach the gate to read it.` | `gates/check-motion.mjs` | a new keyframe on a property with no opacity stops |
 | `css/<theme>-register.css:NN <selector>: texture paints at 0.14 (layer 0.14 × alpha 1), over DI9's ceiling of 0.06` | `gates/check-texture.mjs` | the effective opacity is the layer opacity times the strongest alpha |
-| `N invariant violation(s) across 19 themes.` | `gates/check-invariants.mjs` | the closing line, and the reason `npm run advice` exits non-zero |
+| `N invariant violation(s) across 17 themes.` | `gates/check-invariants.mjs` | the closing line, and the reason `npm run advice` exits non-zero |
 
 Under S49 a value an approved demo showed is not changed because a
 reading disagrees with it. The reading becomes a **finding** put to
@@ -437,7 +437,7 @@ presses. Measured: hovered `rgb(245, 245, 245)`, held down
 `rgb(245, 245, 245)` — the same.
 
 The idiom is `:not(:active)` on the hover selector.
-`css/high-contrast-register.css` already wrote it that way, which is how
+`css/brutalism-register.css` already wrote it that way, which is how
 the gate knows what right looks like.
 
 ### Family 3 · The absence of a value read as the value

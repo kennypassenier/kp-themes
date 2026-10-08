@@ -79,7 +79,7 @@ node -e "import('@kp-soft/themes/js/registry').then(m => console.log(m.THEMES.le
 
 ---
 
-## The nineteen themes
+## The seventeen themes
 
 | `data-theme` | Label | Dark |
 | --- | --- | --- |
@@ -91,8 +91,6 @@ node -e "import('@kp-soft/themes/js/registry').then(m => console.log(m.THEMES.le
 | `pastel` | Pastel | no |
 | `terminal` | Terminal | yes |
 | `forest` | Forest | no |
-| `high-contrast` | High contrast | no |
-| `sepia` | Sepia | no |
 | `blueprint` | Blueprint | yes |
 | `solstice` | Solstice | yes |
 | `brutalism` | Brutalism | no |
@@ -114,7 +112,8 @@ is the third, its 3.1.0 bevel register grown into the whole desktop from
 remaining nineteen were lifted the same way over 2026-09-08, each from
 its own approved demo, so every theme carries a register. Three were
 removed again on 2026-10-06 (Lapis, Shade (light) and Shade (dark);
-see MIGRATION.md), which leaves the nineteen above.
+see MIGRATION.md), and two more on 2026-10-08 (High contrast and Sepia),
+which leaves the seventeen above.
 
 That table is generated from the token sources into
 `js/theme-registry.js`; import it rather than typing the list:
@@ -127,7 +126,7 @@ Each theme's character is written down — what it is, what is load-bearing,
 what it deliberately does not do — in `themes/<name>/anatomy.md`. Read the
 one you are about to change before you change it.
 
-The `Theme` type is the union of exactly those nineteen names since 1.1.0,
+The `Theme` type is the union of exactly those seventeen names since 1.1.0,
 not `string`. A name that is not one of them is a compile error rather
 than a silent fallback to `formal`. What a function *accepts* stayed
 lenient — `storeTheme` and `initializeTheme` still take a plain string —
@@ -172,7 +171,7 @@ matches descendants, and an inner theme has the same specificity, so file
 order decides rather than depth.
 
 So: theme a page, and theme a pane inside it. Do not nest a third. The
-fix is `@scope ([data-theme='x']) to ([data-theme])` in all nineteen
+fix is `@scope ([data-theme='x']) to ([data-theme])` in all seventeen
 registers, which is a round of its own rather than a patch.
 
 ### As an icon with a dropdown
@@ -529,8 +528,7 @@ curve rule, exported for a page that animates its own boxes.
 What leaves goes with its theme's own exit: `leave(el)` marks it
 `[data-kp-leaving]`, the theme's register draws the exit on it (formal folds
 it up like a letter, retro shrinks it in pixel steps, titanium runs it through
-the colours titanium takes under heat, high-contrast lays a REMOVED caption
-across it, and so on: one per theme, picked by Kenny on 2026-10-04), its space
+the colours titanium takes under heat, and so on: one per theme, picked by Kenny on 2026-10-04), its space
 closes during the exit so the box around it shrinks along, and then it is
 removed (`leave(el, { hide: true })` sets `hidden` instead). A theme without
 an exit of its own plays the element's arrival backwards.
@@ -611,7 +609,7 @@ research/update-motion (2026-10-05): formal lands a stamp's frame round the
 value and lets it soak in (`stamp`), cyberpunk tears off cyan and magenta
 copies, jitters for a beat and locks (`glitch`), titanium runs the anodised
 colours across it and cools away (`anodise`). A register names its idea in
-`--kp-update`; the other nineteen declare none yet, and there the value simply
+`--kp-update`; the other seven declare none yet, and there the value simply
 changes.
 
 ```js
@@ -2673,11 +2671,11 @@ its 4.x props `delay`, `direction`, `preserve` and `glyphs` are gone —
 
 Every theme has a register — the opt-in stylesheet carrying its
 expression — and a page with a picker can end up on any of the
-nineteen. There are two ways to handle that, and the package supports
+seventeen. There are two ways to handle that, and the package supports
 both.
 
-The simple one is `dist/kp-themes.css`: twenty-three stylesheets in one
-file, including all nineteen registers, each scoped to
+The simple one is `dist/kp-themes.css`: twenty-one stylesheets in one
+file, including all seventeen registers, each scoped to
 `[data-theme='name']`. Load it once and a theme change fetches nothing —
 `applyTheme()` sets the attribute and the right register is already
 there. It costs 693 kB minified.
@@ -3152,14 +3150,15 @@ leaves the window and when the module is detached.
 
 A theme that declares `--kp-press: point` has `--kp-press-x` and
 `--kp-press-y` written to the button a press started on, in pixels from
-that button's own top left corner. Sepia asks for it, because its press
+that button's own top left corner. Sepia asked for it (it was dropped on
+2026-10-08; no theme asks today), because its press
 grows a stain of ink and ink spreads from where the nib touched down, not
 from the middle of the plate. CSS knows a button is being pressed; it
 cannot know where.
 
 The theme declares its own default for both, so the gesture is whole
 before a pointer has ever touched it: a key press, a page with no module,
-and a detached module all fall back to that value, and sepia's is the
+and a detached module all fall back to that value, and Sepia's was the
 middle of the button. Unlike the pointer bus this one stays armed under
 reduced motion — someone asking for less movement is not asking for the
 stain to appear in the wrong place; the register gives them the same
@@ -3174,9 +3173,9 @@ the flash threshold, so they are literals rather than knobs:
 
 | Token | What it decides |
 | --- | --- |
-| `--fx-duration` | how long anything takes — 90 ms in terminal, 220 ms in sepia, 240 ms in solstice |
-| `--fx-ease` | how it accelerates. Pastel overshoots, terminal uses `steps(2, end)` because a character display jumps rather than sweeps, blueprint and high-contrast are `linear` |
-| `--fx-lift` | how far a control rises under the cursor. Twelve of the nineteen answer `0px` — formal, sepia and high-contrast among them — which is a character rather than an omission |
+| `--fx-duration` | how long anything takes — 90 ms in terminal, 220 ms in pastel, 240 ms in solstice |
+| `--fx-ease` | how it accelerates. Pastel overshoots, terminal uses `steps(2, end)` because a character display jumps rather than sweeps, blueprint is `linear` |
+| `--fx-lift` | how far a control rises under the cursor. Eleven of the seventeen answer `0px` — formal among them — which is a character rather than an omission |
 | `--fx-shadow-offset` | how far a hard, unblurred shadow sits from a button, card or input — brutalism's `4px`; `0px` everywhere else, which paints nothing (3.1.0) |
 | `--chart-pattern-1` … `-5` | an image drawn over the matching `--chart-*` colour so a series is told apart without hue — mono's five SVG fills; `none` everywhere else (3.1.0) |
 | `--kp-highlight` | the hover and keyboard-highlight wash on rows and options — the foreground at 8% alpha by default, so it is quiet in every theme; a theme or a page sets it for more (3.1.0) |
@@ -3200,12 +3199,10 @@ groove under a heading and as divider, the POST on arrival), and since
 5.0.0 the horizon register in
 synthwave — a striped sun and a drifting floor on the hero, a neon tube
 that a `<mark>` switches on, a laser line under a heading, a boot line
-with a Skip once per session. Every theme has one now: the nineteen lifts
-of 2026-09-08 gave sepia, high-contrast, ticker, mono and both halves of
-shade a register of their own. What differs is how far it goes — the
-restful theme, the accessible one, the data-dense one and the
-medium-contrast pair each answer the six hooks quietly, because a loud
-gesture there works against the reason the theme exists.
+with a Skip once per session. Every theme has one now. What differs is how far it goes — the
+data-dense one and the medium-contrast pair each answer the six hooks
+quietly, because a loud gesture there works against the reason the theme
+exists.
 
 All of it sits inside `prefers-reduced-motion: no-preference`, and the
 flash threshold is measured rather than assumed.

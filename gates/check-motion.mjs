@@ -25,7 +25,7 @@ const LUMINANCE_STEP = 0.1;
  * duration is a calc() over that token is bounded by this, so the gate
  * measures the worst case rather than giving up.
  */
-// A theme that declares 0ms runs no motion at all (high-contrast since
+// A theme that declares 0ms runs no motion at all (the removed High contrast theme did, since
 // 2026-09-05), so it cannot flash: the bound is the shortest duration a
 // theme that moves declares. At 0 every computed duration read as Infinity
 // flashes, which is what the compliance table published once it was
@@ -166,11 +166,6 @@ const OUT_OF_SCOPE = {
         'a mark’s ink and underline colour resolving once as the reader scrolls past it; a colour property this gate cannot parse from opacity stops, and it cannot oscillate because it is scroll-bound, not timed',
     'kp-sweep-in':
         'a rule sweeping in under a heading once as it enters the viewport (background-position); the rule keeps its colours, only its position moves, and it is scroll-bound so it cannot loop',
-    // The high-contrast register [S48, LIFT_PLAN row 14]: the headline's
-    // ellipse wipe (a clip-path reveal, once, on load) and the rule's
-    // horizontal scale (a transform on a 3px bar, once, under 341x256 px).
-    'kp-hc-headline-wipe': 'a clip-path ellipse wipe across the hero headline, once, on load; no opacity change anywhere',
-    'kp-hc-rule-wipe': 'a horizontal scale on a 3px rule under a heading, once, on load; no luminance change and under 341x256 px',
     // The solstice register [S48, LIFT_PLAN row 18].
     'kp-cal-slide':
         'a clip-path sweep, once, over the headline overlay (mix-blend-mode: difference); strictly monotonic in one direction, so it has zero opposing luminance changes, which is the threshold DI5 measures',
@@ -258,11 +253,6 @@ const OUT_OF_SCOPE = {
         'a changed value taking the bright then the dim phosphor three times in 900 ms, once; text colour, never hidden, under 341x256 px',
     'kp-sig-terminal-update-blink-line': 'a changed sparkline taking the bright then the dim phosphor three times in 900 ms, once; under 341x256 px',
     'kp-sig-forest-meter-wipe-o': "a clip-path wipe revealing a meter's share once; the share keeps its colour, under 341x256 px",
-    'kp-sig-sepia-meter-knock-d': 'a meter knocked up 3px and back once as it turns to the destructive tone; a transform, under 341x256 px',
-    'kp-sig-sepia-meter-knock-o': 'a meter knocked up 3px and back once as its tone clears; a transform, under 341x256 px',
-    'kp-sig-sepia-meter-knock-w': 'a meter knocked up 3px and back once as it turns to the warning tone; a transform, under 341x256 px',
-    'kp-sig-sepia-meter-slant-o': "a slanted clip-path wipe revealing a meter's share once; the share keeps its colour, under 341x256 px",
-    'kp-sig-sepia-meter-width': 'the loading picture of a meter a few px tall widening across it; its colour never changes, only the area',
     'kp-sig-solstice-meter-bump-d': 'a meter swelling once as it turns to the destructive tone; a transform, under 341x256 px',
     'kp-sig-solstice-meter-bump-o': 'a meter swelling once as its tone clears; a transform, under 341x256 px',
     'kp-sig-solstice-meter-bump-w': 'a meter swelling once as it turns to the warning tone; a transform, under 341x256 px',
@@ -295,10 +285,6 @@ const OUT_OF_SCOPE = {
         'a background-position slide of the loading picture inside a meter a few px tall; the picture keeps its colours, only its position moves',
     'kp-sig-dark-meter-press-o': "a meter's share pressed in from its edge once; a transform, under 341x256 px",
     'kp-sig-cyberpunk-meter-slip-o': "a meter's share landing with a few px sideways jumps and offset ghosts once; a transform, under 341x256 px",
-    'kp-sig-high-contrast-meter-march': 'a row of chevrons translating one step along a loading meter; a transform, the chevrons keep their colour',
-    'kp-sig-high-contrast-meter-wipe-d': "a clip-path wipe revealing a meter's share once, replayed in the destructive tone; under 341x256 px",
-    'kp-sig-high-contrast-meter-wipe-o': "a clip-path wipe revealing a meter's share once; the share keeps its colour, under 341x256 px",
-    'kp-sig-high-contrast-meter-wipe-w': "a clip-path wipe revealing a meter's share once, replayed in the warning tone; under 341x256 px",
     'kp-sig-retro-meter-knock-d': 'a meter knocked up 3px and back once as it turns to the destructive tone; a transform, under 341x256 px',
     'kp-sig-retro-meter-knock-o': 'a meter knocked up 3px and back once as its tone clears; a transform, under 341x256 px',
     'kp-sig-retro-meter-knock-w': 'a meter knocked up 3px and back once as it turns to the warning tone; a transform, under 341x256 px',
@@ -363,11 +349,8 @@ const OUT_OF_SCOPE = {
         'custom properties for the angle and radius of a translate on a busy mark, looping; the mark keeps its colour, only its position moves',
     'kp-sig-grotesk-update-plate':
         'the red plate falling into register once on a changed value (a drop-shadow filter offset closing); far under 341x256 px',
-    'kp-sig-high-contrast-size-mark': 'an outline drawn round an arriving part for 600 ms, then removed in one step; one change on and one off, once',
     'kp-sig-nostromo-size-scan':
         'an arriving part revealed in four scan frames (clip-path) while a brightness filter settles from 1.8 to none once; one monotone change, 80 ms a frame',
-    'kp-sig-sepia-leave-2':
-        'a leaving part burnt in from its edges once: an inset shadow that grows from nothing through the primary to the ink; one monotone darkening on a pseudo-element',
     'kp-sig-synthwave-sun': 'the sun sinking below the horizon once (a translate) and hidden at the end; one change from shown to hidden',
     'kp-sig-terminal-tm-menu-feed':
         "a panel's paper fed line by line once (the top of a pseudo-element, four 136 ms steps), visible from the first step; one monotone change",

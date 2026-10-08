@@ -19,7 +19,7 @@
 //   - the glitch and the flicker run only in cyberpunk, in all 22 themes,
 //     and the DI5 report rates what cyberpunk keeps [scope-98]
 //   - the headline, the reason and the button read at 4.5:1 or more on their
-//     ground in every theme, 7:1 in high-contrast
+//     ground in every theme
 //   - the two channels render the same tree, and the words the component
 //     adds come from the dictionary
 //
@@ -247,7 +247,7 @@ for (const channel of CHANNELS) {
 
         test(`reduced motion: no animation or transition runs inside, and the words are there at once, ${channel.name}`, async ({ page }) => {
             await open(page);
-            for (const theme of ['cyberpunk', 'formal', 'pastel', 'sepia']) {
+            for (const theme of ['cyberpunk', 'formal', 'pastel']) {
                 await wear(page, theme);
                 for (const id of [`${p}-ack`, `${p}-auto`]) {
                     await page.locator(at(id)).click();
@@ -411,7 +411,7 @@ const READ_CONTRAST = () => {
 };
 
 test(
-    'the headline reads at 4.5:1 or more on its ground, in every theme (7:1 in high-contrast), and the detail line and the button too',
+    'the headline reads at 4.5:1 or more on its ground, in every theme, and the detail line and the button too',
     { tag: ['@component:alarm', '@sweep'] },
     async ({ page }) => {
         await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -426,7 +426,7 @@ test(
             await expect(page.locator(OPEN)).toBeVisible();
             const numbers = await page.evaluate(READ_CONTRAST);
             console.log(`[alarm] contrast ${theme}: ${JSON.stringify(numbers)}`);
-            const floor = theme === 'high-contrast' ? 7 : 4.5;
+            const floor = 4.5;
             if (numbers.title < floor) low.push(`${theme}: headline ${numbers.title}`);
             if (numbers.detail < floor) low.push(`${theme}: detail ${numbers.detail}`);
             if (numbers.button < floor) low.push(`${theme}: button label ${numbers.button}`);
@@ -459,11 +459,11 @@ const GLITCH = [
     'kp-alarm-march',
     'kp-alarm-sweep',
 ];
-test('the glitch and the flicker run only in cyberpunk, in all 19 themes [scope-98]', { tag: ['@component:alarm', '@sweep'] }, async ({ page }) => {
+test('the glitch and the flicker run only in cyberpunk, in all 17 themes [scope-98]', { tag: ['@component:alarm', '@sweep'] }, async ({ page }) => {
     test.setTimeout(120_000);
     await page.emulateMedia({ reducedMotion: 'no-preference' });
     const errors = await open(page);
-    expect(THEMES.length).toBe(19);
+    expect(THEMES.length).toBe(17);
     /** @type {Record<string, string[]>} */
     const seen = {};
     for (const theme of THEMES) {
@@ -540,7 +540,7 @@ test('the DI5 report rates every flicker cyberpunk keeps under 2.5 per second [s
  * what a Harding analyser does, not a certified one. WCAG allows 3; this
  * holds 2, a margin of one.
  */
-const FLASH_THEMES = ['cyberpunk', 'synthwave', 'nostromo', 'terminal', 'formal', 'pastel', 'retro', 'sepia'];
+const FLASH_THEMES = ['cyberpunk', 'synthwave', 'nostromo', 'terminal', 'formal', 'pastel', 'retro'];
 for (const theme of FLASH_THEMES) {
     test(
         `flash rate in ${theme}: at most 2 per second, measured from rendered frames [WCAG 2.3.1]`,
@@ -824,7 +824,7 @@ for (const view of FIT_VIEWPORTS) {
                     const allowed = FIT_ALLOWED[theme] ?? 0;
                     if (fit.out > allowed) broken.push(`${theme} ${view.label} ${alarm.label}: "${fit.where}" ${fit.out}px out of the frame`);
                     if (fit.clipped > 1) broken.push(`${theme} ${view.label} ${alarm.label}: the panel clips ${fit.clipped}px of its content`);
-                    const floor = theme === 'high-contrast' ? 7 : 4.5;
+                    const floor = 4.5;
                     if (numbers.title < floor) low.push(`${theme} ${view.label}: headline ${numbers.title}`);
                     if (numbers.detail < floor) low.push(`${theme} ${view.label}: detail ${numbers.detail}`);
                     if (numbers.button < floor) low.push(`${theme} ${view.label}: button label ${numbers.button}`);

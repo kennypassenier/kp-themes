@@ -1,12 +1,12 @@
 # @kp-soft/themes
 
-The house themes as a shared package: nineteen `data-theme` palettes
-— nine light (formal, light, pastel, forest, high-contrast, sepia,
-brutalism, retro, grotesk) and ten dark (dark, titanium, cyberpunk,
+The house themes as a shared package: seventeen `data-theme` palettes
+— seven light (formal, light, pastel, forest, brutalism, retro,
+grotesk) and ten dark (dark, titanium, cyberpunk,
 synthwave, terminal, blueprint, solstice, deco, phantom, nostromo) — as plain CSS custom properties, the
 element-level rules that make a theme complete (links, code, selection,
 form fields, print), twenty-one components, a theme picker, and a register
-for every one of the nineteen themes — the opt-in stylesheet that
+for every one of the seventeen themes — the opt-in stylesheet that
 carries a theme's own expression, from cyberpunk's notches and data stream
 to titanium's oxide film.
 
@@ -99,7 +99,7 @@ and `Theme` is the union of the twenty-five names rather than `string`.
 Plain CSS (any stack):
 
 ```css
-@import '@kp-soft/themes/css'; /* the nineteen themes + textures + body colours */
+@import '@kp-soft/themes/css'; /* the seventeen themes + textures + body colours */
 @import '@kp-soft/themes/css/register'; /* optional: cyberpunk HUD chrome and motion */
 @import '@kp-soft/themes/css/titanium-register'; /* optional: and one like it for each of the other 21 */
 ```
@@ -233,13 +233,13 @@ verdict above it — the showcase publishes one at `showcase/diagnostics.html`.
 
 ## Loading the registers when a visitor can pick any theme
 
-Nineteen themes, nineteen registers, one picker: which of them does
+Seventeen themes, seventeen registers, one picker: which of them does
 a page load? Two answers, and both are right for someone. Measured
 2026-09-09 on this repository's own build.
 
 **The bundle — load everything once, switch by attribute.**
-`dist/kp-themes.css` is twenty-three stylesheets concatenated: the palette,
-the components, **all nineteen registers**, layout and utilities. Every
+`dist/kp-themes.css` is twenty-one stylesheets concatenated: the palette,
+the components, **all seventeen registers**, layout and utilities. Every
 register rule is scoped to `[data-theme='name']`, so with that one file
 loaded a theme change needs nothing fetched — flipping the attribute on
 `<html>` is the whole mechanism, which is what `applyTheme()` already
@@ -827,7 +827,7 @@ beside it.
 ### Theme names
 
 The labels are English in the token source since 3.0.0 — "Formal",
-"Light", "Dark", "High contrast", "Blueprint", "Solstice", "Forest",
+"Light", "Dark", "Blueprint", "Solstice", "Forest",
 and the rest are names; the thirteen themes of 3.1.0 arrived with English
 labels ("Art Deco"). The interface names (`formal`, `forest`) did not
 change. Override any label in

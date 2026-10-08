@@ -28,8 +28,8 @@ import { expect, test } from '@playwright/test';
 import { waitForJudging } from './helpers/catalogue.mjs';
 import { useEmptyRegister } from './helpers/empty-register.mjs';
 
-const THEMES = ['formal', 'pastel', 'sepia'];
-/** The themes with a portrait under research/theme-portraits/; sepia has none. */
+const THEMES = ['formal', 'pastel', 'light'];
+/** The themes with a portrait under research/theme-portraits/; light has none. */
 const PORTRAITS = new Set(['formal', 'pastel']);
 const WIDTHS = [220, 360, 640];
 /** How far around the card the screenshot reaches, so a stamp placed off the card is still seen. */

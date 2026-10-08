@@ -409,7 +409,7 @@
         body {
             /* Twice the theme's own duration: a full-page sweep should be
          * slower than a button, but it is still the incoming theme that
-         * decides how it arrives. Terminal snaps, sepia drifts. */
+         * decides how it arrives. Terminal snaps, pastel eases slowly. */
             transition:
                 background-color calc(var(--fx-duration, 200ms) * 2) var(--fx-ease, ease),
                 color calc(var(--fx-duration, 200ms) * 2) var(--fx-ease, ease);
@@ -708,10 +708,6 @@
         [data-theme='solstice'] [data-slot='card'] {
             animation: kp-ember calc(var(--fx-duration) * 6) var(--fx-ease) both;
         }
-
-        /* sepia and high-contrast have no signature, deliberately. Sepia is
-       the restful theme and high-contrast is the accessible one; in both,
-       a gesture would be working against the reason the theme exists. */
     }
 
     @keyframes kp-slide-in {

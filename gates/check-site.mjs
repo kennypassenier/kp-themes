@@ -254,7 +254,7 @@ function main() {
     console.log(
         `Site: ${DESCRIPTORS.length} pages cover ${families.size} class families, ${props.components.length} React exports, ` +
             `${attributesOwned.size} data attributes and ${eventsOwned.size} events; every example is on its page as written. ` +
-            `Its ${inks.length} code inks read at 4.5:1 or better in all 19 themes [fix-58].`,
+            `Its ${inks.length} code inks read at 4.5:1 or better in all 17 themes [fix-58].`,
     );
 }
 

@@ -85,9 +85,7 @@ ${noFlashSnippet()}
         <link rel="stylesheet" href="${up}css/nostromo-register.css" />
         <link rel="stylesheet" href="${up}css/dark-register.css" />
         <link rel="stylesheet" href="${up}css/formal-register.css" />
-        <link rel="stylesheet" href="${up}css/sepia-register.css" />
         <link rel="stylesheet" href="${up}css/solstice-register.css" />
-        <link rel="stylesheet" href="${up}css/high-contrast-register.css" />
         <link rel="stylesheet" href="${up}site/site.css" />
     </head>
     <body>

@@ -113,7 +113,7 @@ test('at 390 px, every D7 row keeps the rules, with no sideways scroll (D7) [sco
 });
 
 test(
-    'in 19 themes, at full width, at 700 px and in a 334 px pane: one height in every state and set, every label one line and uncut, the frame at 3:1, the change on its pair [fix-101]',
+    'in 17 themes, at full width, at 700 px and in a 334 px pane: one height in every state and set, every label one line and uncut, the frame at 3:1, the change on its pair [fix-101]',
     { tag: ['@component:data'] },
     async ({ page }) => {
         // fix-101: the plain strip's height moved with its state and its

@@ -33,11 +33,11 @@ first section.
 Check `document.documentElement.dataset.theme` in the console. If it is
 empty, nothing is applying the theme: either the snippet is absent or the
 picker module never loaded. If it says `formal` while `localStorage` says
-something else, the stored value is not one of the nineteen names — the
+something else, the stored value is not one of the seventeen names — the
 picker corrects an unknown value rather than putting it on the document.
 
 ```js
-localStorage.getItem('theme'); // must be one of the nineteen
+localStorage.getItem('theme'); // must be one of the seventeen
 ```
 
 ### One picker updates, another does not
@@ -164,9 +164,11 @@ The effects read `prefers-reduced-motion` through a subscribing hook and
 stop within the same session. If yours does not, you are on a copy from
 before that fix — the components used to read the setting once at mount.
 
-### In sepia the ink of a press always starts in the middle of the button
+### In a theme that declares a press point, the ink of a press always starts in the middle of the button
 
-That is the theme's own declared default, and it is what you get without
+(Sepia was the one theme that declared one, until it was dropped on
+2026-10-08; the mechanism stays for a theme that wants it.) That is the
+theme's own declared default, and it is what you get without
 the module: `js/effects.js` is what writes `--kp-press-x` and
 `--kp-press-y` onto the button a pointer went down on, and only for a
 theme that declares `--kp-press: point`. So either the module is not

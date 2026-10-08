@@ -38,7 +38,7 @@ const rows = (cal) =>
     });
 
 test(
-    "October back to February: six rows every month, all one height (I.1.7 1) [scope-143]; today's ring and a title on one line in 19 themes [fix-98]",
+    "October back to February: six rows every month, all one height (I.1.7 1) [scope-143]; today's ring and a title on one line in 17 themes [fix-98]",
     { tag: ['@component:data', '@component:catalogue'] },
     async ({ page }) => {
         await open(page);

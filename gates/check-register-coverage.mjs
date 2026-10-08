@@ -52,9 +52,7 @@ export const REGISTERS = [
     'css/nostromo-register.css',
     'css/dark-register.css',
     'css/formal-register.css',
-    'css/sepia-register.css',
     'css/solstice-register.css',
-    'css/high-contrast-register.css',
 ];
 /** The first register, kept for the callers that measure one. */
 export const REGISTER = REGISTERS[0];

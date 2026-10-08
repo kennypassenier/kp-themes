@@ -940,7 +940,7 @@ test('CF1: the tarball is the manifest minus the fonts and the source maps', asy
     for (const file of ['js/theme-core.js', 'js/components.js', 'css/cyberpunk-register.css', 'css/layout.css', 'css/utilities.css']) {
         assert.ok(files.includes(file), `${file} is what CF1 exists about and is not in the tarball`);
     }
-    assert.equal(files.filter((f) => /^css\/[a-z-]+-register\.css$/.test(f)).length, 19, 'all nineteen registers travel in the tarball');
+    assert.equal(files.filter((f) => /^css\/[a-z-]+-register\.css$/.test(f)).length, 17, 'all seventeen registers travel in the tarball');
     // A malformed manifest line must not smuggle an empty path into tar.
     assert.deepEqual(contents('abc  a.css\n\n   \nxyz  b.css\n'), ['a.css', 'b.css']);
 });
@@ -1433,7 +1433,7 @@ test("every showcase page carries its own theme's register [Phase 7]", () => {
     // dark for a knob dark's own register declares.
     const dir = new URL('../showcase/themes/', import.meta.url);
     const pages = readdirSync(dir).filter((f) => f.endsWith('.html'));
-    assert.ok(pages.length >= 19, `only ${pages.length} showcase pages, which cannot be right`);
+    assert.ok(pages.length >= 17, `only ${pages.length} showcase pages, which cannot be right`);
 
     const registers = readdirSync(new URL('../css/', import.meta.url)).filter((f) => f.endsWith('-register.css'));
     const missing = [];
@@ -1457,7 +1457,7 @@ test('the frozen list does not describe a theme the package no longer ships [Pha
     const features = readFileSync(new URL('../docs/FEATURES.md', import.meta.url), 'utf8');
     const order = JSON.parse(readFileSync(new URL('../themes/order.json', import.meta.url), 'utf8'));
     const live = new Set(Array.isArray(order) ? order : Object.keys(order));
-    assert.ok(live.size >= 19, `only ${live.size} themes, which cannot be right`);
+    assert.ok(live.size >= 17, `only ${live.size} themes, which cannot be right`);
 
     const unmarked = [];
     for (const line of features.split('\n')) {

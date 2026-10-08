@@ -103,7 +103,7 @@ export function outrankedPressedStates(source, base) {
         let heaviestHover = -1;
         for (const m of source.matchAll(new RegExp(`(\\[data-theme='[^']+'\\][^{,]*${escaped}:hover[^{,]*)\\s*(?:,[^{]*)?\\{([^}]*)\\}`, 'g'))) {
             // A hover rule that excludes `:active` steps aside by design and
-            // never competes — high-contrast writes it that way, and it is
+            // never competes — brutalism writes it that way, and it is
             // the idiom this gate recommends.
             if (m[1].includes(':not(:active)')) continue;
             if (/background\s*:/.test(m[2])) heaviestHover = Math.max(heaviestHover, weight(m[1]));
@@ -136,7 +136,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
             failed++;
             console.error(
                 `css/${name}: the hover rule for ${problem} outranks this register's own pressed rule, so the press never paints. ` +
-                    `Add \`:not(:active)\` to the hover selector, the way css/high-contrast-register.css does [fix-12].`,
+                    `Add \`:not(:active)\` to the hover selector, the way css/brutalism-register.css does [fix-12].`,
             );
         }
         for (const selector of cancelledPressedStates(source, base)) {

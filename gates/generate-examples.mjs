@@ -58,9 +58,7 @@ const SHEETS = [
     'nostromo-register.css',
     'dark-register.css',
     'formal-register.css',
-    'sepia-register.css',
     'solstice-register.css',
-    'high-contrast-register.css',
 ];
 
 /**

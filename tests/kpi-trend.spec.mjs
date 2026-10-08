@@ -196,7 +196,7 @@ test(
 );
 
 test(
-    'in 19 themes, wide and in the phone pane: a figure in a tone and the change on their status pairs, and every label on one line, uncut, the tile growing to it [fix-99]',
+    'in 17 themes, wide and in the phone pane: a figure in a tone and the change on their status pairs, and every label on one line, uncut, the tile growing to it [fix-99]',
     { tag: ['@component:data'] },
     async ({ page }) => {
         await ready(page);

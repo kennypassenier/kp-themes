@@ -348,6 +348,19 @@
   Serif 4, Vazirmatn, Markazi Text), their showcase, compare and concept
   pages, and their theme-specific tests. A page that stores one of the
   three names falls back to the default theme. See MIGRATION.md.
+- **Removed: two more themes, `high-contrast` and `sepia`** [breaking, next
+  major release; Kenny, 2026-10-08, in the review dialog: "we are actually
+  not going further with high contrast, the theme can be removed from
+  everywhere" and "We are also stopping with Sepia, it may be deleted"].
+  Seventeen themes remain. Gone with them: their token sources
+  (`themes/<name>/`), their registers (`css/<name>-register.css` and the
+  `./css/<name>-register` and `/min` exports), their blocks in
+  `css/themes.css` and entries in `js/theme-registry.js` (and so in the
+  `ThemeName` type), their `kp-hc-*` and `kp-sig-<theme>-*` TIMINGS rows,
+  their hooks, the font family only high-contrast used (Atkinson
+  Hyperlegible), their showcase, compare and concept pages, their verdict
+  rows and their theme-specific tests. A page that stores one of the two
+  names falls back to the default theme. See MIGRATION.md.
 - **The meter draws itself each theme's way in all 22 registers** [feature,
   9.3.0; research/character-meter round 4, Kenny's picks of 2026-10-05]:
   cyberpunk 2/3/2/3/3, high-contrast 2/3/1/1/3, shade-light 1/3/1/1/2,

@@ -41,7 +41,7 @@ test.describe('the round page [fix-48]', { tag: ['@component:catalogue'] }, () =
         await expect(status(page)).toContainText(/0 of \d+ block\/theme pair\(s\) carry a verdict/, { timeout: 60_000 });
         await expect(banner(page)).toContainText('Not yet through');
         const rows = page.locator('[data-cat-round-rows] tr');
-        await expect(rows).toHaveCount(19);
+        await expect(rows).toHaveCount(17);
         await expect(rows.first()).toContainText('Formal');
         await expect(rows.first()).toContainText('open the first one');
     });

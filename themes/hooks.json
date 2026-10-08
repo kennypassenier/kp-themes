@@ -208,52 +208,6 @@
                 "selector": "[data-theme='forest'] [data-kp-divider]"
             }
         },
-        "high-contrast": {
-            "surface": {
-                "css": "css/themes.css",
-                "selector": "[data-theme='high-contrast'] [data-kp-surface='hero']"
-            },
-            "emphasis": {
-                "css": "css/high-contrast-register.css",
-                "selector": "[data-theme='high-contrast'] .kp-card[data-kp-reveal='emphasis'] mark"
-            },
-            "reveal": {
-                "css": "css/high-contrast-register.css",
-                "selector": "[data-theme='high-contrast'] [data-kp-reveal='headline']"
-            },
-            "divider": {
-                "css": "css/high-contrast-register.css",
-                "selector": "[data-theme='high-contrast'] [data-kp-divider]"
-            },
-            "accent": {
-                "quiet": "the heading carries no accent beyond its own type; the demo's headline is styled by clamp() size and weight alone, no colour or rule on the letters themselves"
-            }
-        },
-        "sepia": {
-            "surface": {
-                "css": "css/themes.css",
-                "selector": "[data-theme='sepia'] [data-kp-surface='hero']"
-            },
-            "emphasis": {
-                "css": "css/sepia-register.css",
-                "selector": "[data-theme='sepia'] mark"
-            },
-            "reveal": {
-                "css": "css/sepia-register.css",
-                "selector": "[data-theme='sepia'] [data-kp-reveal='rule']::after"
-            },
-            "divider": {
-                "css": "css/sepia-register.css",
-                "selector": "[data-theme='sepia'] [data-kp-divider]"
-            },
-            "accent": {
-                "css": "css/sepia-register.css",
-                "selector": "[data-theme='sepia'] [data-kp-surface] h1"
-            },
-            "arrival": {
-                "quiet": "no full-page overlay; the headline's own ink-in is the reveal hook's answer and this theme (anatomy.md) ships no boot sequence at all"
-            }
-        },
         "blueprint": {
             "surface": {
                 "css": "css/themes.css",

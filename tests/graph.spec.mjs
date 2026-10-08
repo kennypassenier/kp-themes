@@ -132,7 +132,7 @@ for (const width of [1280, 390]) {
 // All 22, not a narrowed sweep: both faults were one theme's (terminal's
 // mono wrapped the change, Shade (light)'s warning ink hid the dot) [fix-97].
 test(
-    "The time chart's pinned tooltip: every change on one line, the warning dot at 3:1 or more, in all 19 themes [fix-97]",
+    "The time chart's pinned tooltip: every change on one line, the warning dot at 3:1 or more, in all 17 themes [fix-97]",
     { tag: ['@component:data', '@component:catalogue'] },
     async ({ page }) => {
         await open(page);
