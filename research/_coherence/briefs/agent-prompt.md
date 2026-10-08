@@ -21,7 +21,7 @@ Build:
 Check (mandatory, repeat until clean):
 
 - Start a static server from the repository root on port PORT: `(python3 -m http.server PORT --bind 127.0.0.1 > /dev/null 2>&1 &)`.
-- Run the screenshot and clipping check: `cp research/_coherence/out/shots.mjs tests/tmp-shots.mjs && node tests/tmp-shots.mjs research/THEME-anchor PORT; rm tests/tmp-shots.mjs`. It writes PNGs to research/_coherence/out/shots/research-THEME-anchor/ (1280-mid, 1280-hold, 1280-out, 390-mid, 390-hold, 390-out, dialog-390, dialog-1280) and prints clipping and console errors (a 404 on update.json is expected and fine).
+- Run the screenshot and clipping check: `cp research/_coherence/tools/shots.mjs tests/tmp-shots.mjs && node tests/tmp-shots.mjs research/THEME-anchor PORT; rm tests/tmp-shots.mjs`. It writes PNGs to research/_coherence/out/shots/research-THEME-anchor/ (1280-mid, 1280-hold, 1280-out, 390-mid, 390-hold, 390-out, dialog-390, dialog-1280) and prints clipping and console errors (a 404 on update.json is expected and fine).
 - READ the PNGs (the Read tool shows images) and judge them as a designer: is each candidate's drawing recognisable at `mid` (half drawn), `hold` (finished) and `out` (half taken off)? Is the hero centred and large? Does the bar read as the theme's bar? Does the button press read? Fix what is wrong and re-run. For a closer look at one option use: `cat > tests/tmp-one.mjs` with a small Playwright script (chromium at executablePath '/opt/pw-browsers/chromium') that screenshots `.an-col[data-an-option="N"] .an-scene` at a chosen delay after clicking `[data-an-replay]`; delete it afterwards.
 - Clipping lines that name a part sitting off-stage at `gap`/`out` under an `overflow: clip` parent are fine; any other clipping line is a defect to fix.
 

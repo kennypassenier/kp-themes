@@ -10,7 +10,7 @@ Context (read these first, in this order):
 2. research/formal-anchor/options.css — the finished template of the engine (the `.an-scene` block, the building blocks `.an-a--scale/--clip/--move`, the `an-*` keyframe pairs, the press face `an-face-late`) and of the style: section comments per candidate, every open a keyframe pair (`xx-foo` / `xx-foo-out`) so every close is its open reversed, base style = the drawn pose, `gap` = the undrawn pose, everything under `prefers-reduced-motion: no-preference`, all scoped to `.an-scene` (never to `.an-page`: the review dialog moves the section into its own stage).
 3. research/formal-anchor/anchors.js, demo.html, demo.css, demo.js, README.md — the template files.
 4. css/retro-register.css — the theme's own register: its tokens (`--kp-*` custom properties, bevel stacks, curves, `--kp-sig-*`), its keyframes and its signature elements (progress bar, spinner, leave, dialog, button hover/press). Reuse the theme's own curves and devices; the demo must look like it was drawn by the theme's register.
-5. The brief of what the theme is today: research/_coherence/out/brief-retro.md (sections 1, 2 and 4 matter most).
+5. The brief of what the theme is today: research/_coherence/briefs/brief-retro.md (sections 1, 2 and 4 matter most).
 
 Build:
 
@@ -25,7 +25,7 @@ Build:
 Check (mandatory, repeat until clean):
 
 - Start a static server from the repository root on port 8755: `(python3 -m http.server 8755 --bind 127.0.0.1 > /dev/null 2>&1 &)`.
-- Run the screenshot and clipping check: `cp research/_coherence/out/shots.mjs tests/tmp-shots.mjs && node tests/tmp-shots.mjs research/retro-anchor 8755; rm tests/tmp-shots.mjs`. It writes PNGs to research/_coherence/out/shots/research-retro-anchor/ (1280-mid, 1280-hold, 1280-out, 390-mid, 390-hold, 390-out, dialog-390, dialog-1280) and prints clipping and console errors (a 404 on update.json is expected and fine).
+- Run the screenshot and clipping check: `cp research/_coherence/tools/shots.mjs tests/tmp-shots.mjs && node tests/tmp-shots.mjs research/retro-anchor 8755; rm tests/tmp-shots.mjs`. It writes PNGs to research/_coherence/out/shots/research-retro-anchor/ (1280-mid, 1280-hold, 1280-out, 390-mid, 390-hold, 390-out, dialog-390, dialog-1280) and prints clipping and console errors (a 404 on update.json is expected and fine).
 - READ the PNGs (the Read tool shows images) and judge them as a designer: is each candidate's drawing recognisable at `mid` (half drawn), `hold` (finished) and `out` (half taken off)? Is the hero centred and large? Does the bar read as the theme's bar? Does the button press read? Fix what is wrong and re-run. For a closer look at one option use: `cat > tests/tmp-one.mjs` with a small Playwright script (chromium at executablePath '/opt/pw-browsers/chromium') that screenshots `.an-col[data-an-option="N"] .an-scene` at a chosen delay after clicking `[data-an-replay]`; delete it afterwards.
 - Clipping lines that name a part sitting off-stage at `gap`/`out` under an `overflow: clip` parent are fine; any other clipping line is a defect to fix.
 
@@ -33,4 +33,4 @@ Do not: edit catalogue/pages.js, any file outside research/retro-anchor/, run gi
 
 Report in at most 15 lines: what each candidate draws (one line each, with the keyframe pair names), any deviation from the designer's notes and why, the final clipping output, and anything you could not solve.
 
-Mirror rules (binding): inside @keyframes a timing function is written out literally (a var() there is invalid and falls back to `ease`); a close is its open reversed only on the INVERSE curve (cubic-bezier(1-x2, 1-y2, 1-x1, 1-y1); steps(n, jump-end) ↔ steps(n, jump-start); linear and ease-in-out are their own inverse). After the screenshot check run the mirror check and fix every fault: `cp research/_coherence/out/mirror.mjs tests/tmp-mirror.mjs && node tests/tmp-mirror.mjs research/retro-anchor 8755; rm tests/tmp-mirror.mjs`. Include its final output in your report. Use unique temp names (tests/tmp-retro-*.mjs) and delete them.
+Mirror rules (binding): inside @keyframes a timing function is written out literally (a var() there is invalid and falls back to `ease`); a close is its open reversed only on the INVERSE curve (cubic-bezier(1-x2, 1-y2, 1-x1, 1-y1); steps(n, jump-end) ↔ steps(n, jump-start); linear and ease-in-out are their own inverse). After the screenshot check run the mirror check and fix every fault: `cp research/_coherence/tools/mirror.mjs tests/tmp-mirror.mjs && node tests/tmp-mirror.mjs research/retro-anchor 8755; rm tests/tmp-mirror.mjs`. Include its final output in your report. Use unique temp names (tests/tmp-retro-*.mjs) and delete them.
