@@ -1,0 +1,266 @@
+/* research/formal-character/grammar.css: formal's proposed grammar as the
+   demo's recommended options use it (themes/formal/CHARACTER.md G1-G21; the
+   anchor is the double rule, Kenny 2026-10-08, research/formal-anchor). One
+   file of tokens and keyframes, linked after demo.css and before options.css;
+   the options only choose between these values and the alternatives the
+   questions put beside them. Nothing here is in the register yet: the port
+   follows Kenny's verdicts.
+
+   THE CLERK RULES A LEDGER.
+   - a rule is ruled at an even pace and stops dead at the margin (`linear`,
+     G1); the register's commit curve stays for colour changes only;
+   - along the line start -> end, lines top -> bottom, 60 ms apart (G2, G13);
+   - one ruling time: a contact 180 ms, a rule 400 ms, a group 400 ms per rule
+     60 ms apart, a loop 2400 ms (G4); the busy bar rules and closes in 1200 ms
+     and lifts in as long;
+   - navy rules, red ink marks, gold never acts (G5); plates keep their
+     corner, a ruled thing is square (G6);
+   - a close is its open reversed: every one-shot motion is a keyframe pair
+     (`fm-x` and `fm-x-out`), played forward in both phases, the close with the
+     inverse curve and the mirrored delay, so what was ruled last is lifted
+     first. A timing function inside @keyframes is written out (a var() there
+     is invalid and falls back to `ease`); the curve of a whole animation is
+     the shorthand's, and the close's is its inverse, cubic-bezier(1-x2,
+     1-y2, 1-x1, 1-y1).
+
+   Colours come from the theme's tokens only; every animation sits under
+   prefers-reduced-motion: no-preference, and the reduced pose is the ruled,
+   closed picture. Nothing hangs on `.fm-page` alone: the review dialog moves
+   the sections into its stage, so every rule hangs on `.fm-page, .fm-scene`. */
+
+@property --fm-a0 {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+}
+
+@property --fm-a1 {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 360deg;
+}
+
+@property --fm-n {
+    syntax: '<integer>';
+    inherits: false;
+    initial-value: 99;
+}
+
+@layer kp.signature {
+    .fm-page,
+    .fm-scene {
+        /* The curves. A rule: linear, dead stop. The register's commit curve
+           (--fx-ease) is for a colour change; its inverse plays a close. */
+        --fm-rule-ease: linear;
+        --fm-commit: cubic-bezier(0.2, 0, 0, 1);
+        --fm-commit-out: cubic-bezier(1, 0, 0.8, 1);
+        /* The ruling time. */
+        --fm-contact: 180ms;
+        --fm-len: 400ms;
+        --fm-st: 60ms;
+        --fm-loop: 2400ms;
+        --fm-bar-time: 1200ms;
+        /* One cycle of the page's clock: what is ruled in `in` is lifted in
+           `out` inside the same span (demo.js reads this value). */
+        --fm-T: 1400ms;
+        /* The lines. */
+        --fm-rule-w: 2px;
+        --fm-second-w: 1px;
+        --fm-inner: 2px;
+        --fm-inner-2: 5px;
+        /* The corners: a plate keeps the register's, a ruled thing is square. */
+        --fm-plate: var(--radius);
+        --fm-small: calc(var(--radius) / 2);
+        --fm-ruled: 0;
+        /* The colours by role. */
+        --fm-act: var(--primary);
+        --fm-ink: var(--destructive);
+        --fm-hair: var(--border);
+        --fm-strong: var(--border-strong);
+        --fm-wash: var(--accent);
+        --fm-ribbon: var(--fx-signal);
+    }
+
+    /* ── Ruled in, ruled off: the rule along its line, start -> end ───── */
+
+    @keyframes fm-wipe {
+        from {
+            clip-path: inset(-3rem 100% -3rem -3rem);
+        }
+
+        to {
+            clip-path: inset(-3rem);
+        }
+    }
+
+    @keyframes fm-wipe-out {
+        from {
+            clip-path: inset(-3rem);
+        }
+
+        to {
+            clip-path: inset(-3rem 100% -3rem -3rem);
+        }
+    }
+
+    /* The pen: a 2 px navy rule that runs ahead of the words and is lifted
+       when it has reached the margin (transient: the finished pose is bare).
+       Two animations in a list, the lift starting where the ruling ended. */
+    @keyframes fm-pen-ruled {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes fm-pen-ruled-out {
+        from {
+            clip-path: inset(0);
+        }
+
+        to {
+            clip-path: inset(0 100% 0 0);
+        }
+    }
+
+    @keyframes fm-pen-lift {
+        from {
+            clip-path: inset(0);
+        }
+
+        to {
+            clip-path: inset(0 0 0 100%);
+        }
+    }
+
+    @keyframes fm-pen-lift-out {
+        from {
+            clip-path: inset(0 0 0 100%);
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    /* ── Loading is ruling the lines: ruled, held, lifted from the start ── */
+
+    @keyframes fm-ledger {
+        0% {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        17% {
+            clip-path: inset(0);
+        }
+
+        62% {
+            clip-path: inset(0);
+        }
+
+        79%,
+        100% {
+            clip-path: inset(0 0 0 100%);
+        }
+    }
+
+    /* ── The busy bar: ruled, closed, lifted, ruled again (2400 ms) ───── */
+
+    @keyframes fm-bar-band {
+        0% {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        48%,
+        52% {
+            clip-path: inset(0);
+        }
+
+        100% {
+            clip-path: inset(0 0 0 100%);
+        }
+    }
+
+    @keyframes fm-bar-second {
+        0%,
+        48% {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        52% {
+            clip-path: inset(0);
+        }
+
+        100% {
+            clip-path: inset(0 0 0 100%);
+        }
+    }
+
+    @keyframes fm-bar-head {
+        0% {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        48% {
+            transform: translateX(100cqi);
+            opacity: 1;
+        }
+
+        48.1%,
+        100% {
+            transform: translateX(100cqi);
+            opacity: 0;
+        }
+    }
+
+    /* ── The spinner: an arc ruled round a double ring (2400 ms) ───────── */
+
+    @keyframes fm-arc-outer {
+        0% {
+            --fm-a0: 0deg;
+            --fm-a1: 0deg;
+        }
+
+        50% {
+            --fm-a0: 0deg;
+            --fm-a1: 360deg;
+        }
+
+        60% {
+            --fm-a0: 0deg;
+            --fm-a1: 360deg;
+        }
+
+        100% {
+            --fm-a0: 360deg;
+            --fm-a1: 360deg;
+        }
+    }
+
+    @keyframes fm-arc-inner {
+        0%,
+        50% {
+            --fm-a0: 0deg;
+            --fm-a1: 0deg;
+        }
+
+        58% {
+            --fm-a0: 0deg;
+            --fm-a1: 360deg;
+        }
+
+        60% {
+            --fm-a0: 0deg;
+            --fm-a1: 360deg;
+        }
+
+        100% {
+            --fm-a0: 360deg;
+            --fm-a1: 360deg;
+        }
+    }
+}

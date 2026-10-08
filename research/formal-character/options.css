@@ -1,0 +1,2851 @@
+/* research/formal-character: every option of every question, in the theme's
+   signature layer, scoped by the option's attribute on its scene
+   (`.fm-scene[data-fm-<question>='<key>']`). Colours come from the theme's
+   tokens only (no hex); every motion sits under prefers-reduced-motion:
+   no-preference, and the reduced pose is the ruled, closed picture. The
+   grammar (tokens and the shared keyframes) is grammar.css.
+
+   SCOPE. The review dialog moves the section out of the page into its stage
+   (.rv-dialog__stage), so no rule here hangs on `.fm-page` alone: every rule
+   hangs on `.fm-scene`, which moves with its options.
+
+   THE CLOCK. One clock (demo.js) writes `data-fm-phase` on every cycle scene:
+   gap (what is ruled in is away), in (T = 1400 ms: it is ruled in), hold (it
+   stands), out (T: it is ruled off). The base style of every part is its
+   finished pose, `gap` sets the start pose, `in` and `hold` run the opening
+   keyframes (`fm-x`, fill both), `out` runs the pair (`fm-x-out`): a close is
+   its open reversed. Every delay of a close is mirrored inside T, so what was
+   ruled last is lifted first: delay = T - d - l. The curve of a close is the
+   inverse of its open's (cubic-bezier(1-x2, 1-y2, 1-x1, 1-y1); steps(n,
+   jump-end) <-> steps(n, jump-start)). Durations are multiplied by --fm-slow
+   (1, 2 or 4: the page's speed buttons). The values of the "today" options are
+   the register's own (css/formal-register.css), the values of "the pick"
+   options the decided demos' (research/character-*). */
+
+@layer kp.signature {
+    /* ── The parts at rest ───────────────────────────────────────────── */
+
+    .fm-scene .fm-title {
+        margin: 0;
+        font-family: var(--theme-font-display);
+        font-variation-settings: 'opsz' 60;
+        font-weight: 600;
+    }
+
+    .fm-scene .kp-card {
+        position: relative;
+        display: grid;
+        gap: 0.25rem;
+        margin: 0;
+        padding: 0.85rem 1rem;
+    }
+
+    .fm-scene .kp-card__body {
+        margin: 0;
+    }
+
+    .fm-scene .fm-frame,
+    .fm-scene .fm-line {
+        position: relative;
+    }
+
+    .fm-scene .kp-dialog {
+        position: relative;
+        margin: 0;
+        max-inline-size: none;
+        padding: 1rem;
+        animation: none;
+    }
+
+    .fm-scene .kp-dialog :is(.kp-dialog__title, .kp-dialog__description) {
+        margin: 0 0 0.5rem;
+    }
+
+    .fm-scene .kp-dialog__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .fm-menu-wrap {
+        position: relative;
+        display: grid;
+        justify-items: start;
+        align-content: start;
+        min-block-size: 10.5rem;
+    }
+
+    .fm-menu-wrap--6 {
+        min-block-size: 16.5rem;
+    }
+
+    .fm-scene .fm-pop {
+        position: absolute;
+        inset-block-start: calc(var(--kp-control-height-sm, 2rem) + 0.35rem);
+        inset-inline-start: 0;
+        z-index: 2;
+        min-inline-size: 12rem;
+        overflow: clip;
+    }
+
+    .fm-scene .fm-pop--static {
+        position: relative;
+        inset: auto;
+    }
+
+    .fm-scene .kp-menu {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .fm-scene .kp-menu__item {
+        position: relative;
+        inline-size: 100%;
+        white-space: nowrap;
+    }
+
+    .fm-scene .kp-kpis {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.5rem;
+    }
+
+    .fm-scene .fm-kpi-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .fm-scene .kp-kpi {
+        position: relative;
+    }
+
+    /* A figure that can carry the anchor's two rules under it. */
+    .fm-carrier {
+        position: relative;
+        display: inline-block;
+    }
+
+    .fm-carrier > [data-fm-text] {
+        position: relative;
+        display: inline-block;
+    }
+
+    .fm-scene .fm-rules {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: -0.2em;
+        display: block;
+        pointer-events: none;
+    }
+
+    .fm-scene .fm-rule {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: 0;
+        display: block;
+        block-size: var(--fm-rule-w);
+        background: var(--fm-act);
+        --fm-d: 0ms;
+        --fm-l: var(--fm-len);
+    }
+
+    .fm-scene .fm-rule--2 {
+        inset-block-start: calc(var(--fm-rule-w) + 2px);
+        block-size: var(--fm-second-w);
+        --fm-d: var(--fm-len);
+        --fm-l: calc(var(--fm-len) * 0.4);
+    }
+
+    .fm-scene .fm-spark > .fm-rules {
+        inset-block-end: -0.35rem;
+    }
+
+    /* The change on a square plate: a ruled thing has no rounded corner (G6). */
+    .fm-scene .fm-note {
+        border-radius: var(--fm-ruled);
+        padding-inline: 0.35em;
+    }
+
+    .fm-scene .fm-note[data-kp-direction='up']::before {
+        content: '+\00a0';
+    }
+
+    .fm-scene .fm-note[data-kp-direction='down']::before {
+        content: '−\00a0';
+    }
+
+    /* Question 1's rulers: one on this curve, one beside it at an even pace
+       (grey), so you see whether the curve is ahead or behind. */
+    .fm-rulers {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.25rem 1rem;
+    }
+
+    .fm-ruler {
+        position: relative;
+        display: block;
+        block-size: 2.25rem;
+        background:
+            linear-gradient(var(--border-strong) 0 0) 0 100% / 1px 0.6rem no-repeat,
+            linear-gradient(var(--border-strong) 0 0) 100% 100% / 1px 0.6rem no-repeat,
+            linear-gradient(var(--border) 0 0) 0 100% / 100% 1px no-repeat;
+    }
+
+    .fm-ruler__rule {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 0;
+        display: block;
+        block-size: var(--fm-rule-w);
+        background: var(--fm-act);
+    }
+
+    .fm-ruler__rule--ref {
+        background: var(--muted-foreground);
+    }
+
+    .fm-rulers__name {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+        text-align: center;
+    }
+
+    /* A day of the month: card stock in a hairline, its figure top-left. */
+    .fm-days {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .fm-day {
+        position: relative;
+        display: grid;
+        place-items: start;
+        inline-size: 2.75rem;
+        block-size: 2.75rem;
+        padding: 0.2rem 0.35rem;
+        border: 1px solid var(--border);
+        border-radius: var(--fm-small);
+        background: var(--card);
+        color: var(--foreground);
+        font-family: var(--theme-font-display);
+        font-size: 0.9rem;
+        font-variant-numeric: tabular-nums;
+        font-weight: 560;
+    }
+
+    .fm-state {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5em;
+        inline-size: fit-content;
+    }
+
+    .fm-state__dot {
+        inline-size: 0.55em;
+        block-size: 0.55em;
+        border-radius: 50%;
+        background: var(--success-foreground);
+    }
+
+    .fm-state__word {
+        font-family: var(--theme-font-display);
+        font-weight: 560;
+    }
+
+    .fm-spark,
+    .fm-walk {
+        display: block;
+        color: var(--primary);
+    }
+
+    .fm-spark svg,
+    .fm-walk svg {
+        display: block;
+        inline-size: 100%;
+        block-size: 2.5rem;
+        overflow: visible;
+    }
+
+    .fm-spark__retrace {
+        stroke-dasharray: 1;
+        stroke-dashoffset: 1;
+        opacity: 0;
+    }
+
+    .fm-column {
+        display: grid;
+        gap: 0.15rem;
+        inline-size: fit-content;
+        padding: 0.5rem 1rem;
+        border: 1px solid var(--border);
+        border-radius: var(--fm-plate);
+        background: var(--card);
+    }
+
+    .fm-column__num {
+        font-family: var(--theme-font-display);
+        font-size: 1.5rem;
+        font-variant-numeric: tabular-nums;
+        font-weight: 560;
+    }
+
+    .fm-scene .fm-bar {
+        max-inline-size: none;
+    }
+
+    .fm-waits {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .fm-faint {
+        opacity: 0.45;
+    }
+
+    .fm-load {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+    }
+
+    .fm-load > * {
+        display: none;
+    }
+
+    .fm-scene .fm-waits:not(.fm-day, .fm-plot, .fm-skel) {
+        padding-block-end: 2rem;
+    }
+
+    .fm-scene .kp-menu__item.fm-waits {
+        padding-block-end: 1.75rem;
+    }
+
+    .fm-table {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.4rem;
+        padding: 0.5rem 0.75rem;
+        border: 1px solid var(--border);
+        border-radius: var(--fm-plate);
+        background: var(--card);
+        font-size: 0.8rem;
+    }
+
+    .fm-table > span:nth-child(-n + 2) {
+        color: var(--muted-foreground);
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+    }
+
+    .fm-plot {
+        position: relative;
+        block-size: 5rem;
+        border: 1px solid var(--border);
+        border-radius: var(--fm-plate);
+        background: var(--card);
+        color: var(--primary);
+    }
+
+    .fm-plot svg {
+        box-sizing: border-box;
+        display: block;
+        inline-size: 100%;
+        block-size: 100%;
+        padding: 0.5rem;
+    }
+
+    .fm-skel {
+        display: grid;
+        gap: 0;
+    }
+
+    .fm-scene .kp-tooltip.fm-tip {
+        position: relative;
+        inline-size: fit-content;
+        margin: 0.5rem 0 0;
+        animation: none;
+    }
+
+    .fm-scene .fm-tag {
+        inline-size: fit-content;
+    }
+
+    .fm-scene .fm-tile-link {
+        justify-self: start;
+    }
+
+    .fm-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .fm-header-mini {
+        padding: 0.6rem;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--fm-plate);
+        background: var(--card);
+    }
+
+    .fm-scene .fm-header .kp-page-header__inner {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+    }
+
+    .fm-scene .fm-header :is(.kp-page-header__title, .kp-page-header__description) {
+        margin: 0;
+    }
+
+    .fm-scene .fm-header .kp-page-header__title {
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+    }
+
+    .fm-scene .fm-header .kp-page-header__description {
+        color: var(--muted-foreground);
+        font-style: italic;
+    }
+
+    .fm-scene .fm-header .kp-page-header__actions {
+        display: flex;
+        flex-flow: row nowrap;
+        gap: 0.5rem;
+    }
+
+    .fm-scene .fm-header .kp-page-header__actions > .kp-button {
+        flex: none;
+        inline-size: auto;
+    }
+
+    .fm-scene .fm-in-kpi,
+    .fm-scene .kp-kpi--toggle {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .fm-busy-panel {
+        justify-items: center;
+        text-align: center;
+    }
+
+    .fm-busy-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        inline-size: fit-content;
+    }
+
+    .fm-spins {
+        gap: 1.5rem;
+    }
+
+    .fm-prose {
+        margin: 0;
+    }
+
+    /* The sizes of the busy bar, and the pair beside the share bar. */
+    .fm-sizes,
+    .fm-pair {
+        display: grid;
+        gap: 0.6rem;
+    }
+
+    .fm-size {
+        display: grid;
+        gap: 0.2rem;
+    }
+
+    .fm-size__name {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+    }
+
+    .fm-scene .fm-bar--inline {
+        --kp-progressbar-scale: 0.8;
+        inline-size: 4.5rem;
+    }
+
+    .fm-scene .fm-busy-button {
+        gap: 0.75rem;
+    }
+
+    /* ── The darker parts of the question scenes ──────────────────────── */
+
+    .fm-heading {
+        display: grid;
+        gap: 0.2rem;
+    }
+
+    .fm-heading__title {
+        margin: 0;
+        font-size: 1.15rem;
+    }
+
+    .fm-heading__sub {
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.875rem);
+    }
+
+    .fm-figures {
+        display: grid;
+    }
+
+    .fm-figures__row {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 1rem;
+        padding-block: 0.4rem;
+    }
+
+    .fm-figures__row b {
+        font-family: var(--theme-font-display);
+        font-variant-numeric: tabular-nums;
+        font-weight: 560;
+    }
+
+    .fm-cert {
+        display: grid;
+        justify-items: center;
+        gap: 0.1rem;
+        padding: 0.75rem 1rem;
+        border-radius: var(--fm-plate);
+        background: var(--card);
+        text-align: center;
+    }
+
+    .fm-cert__num {
+        font-family: var(--theme-font-display);
+        font-size: 1.75rem;
+        font-variant-numeric: tabular-nums;
+        font-weight: 560;
+    }
+
+    .fm-plain {
+        display: grid;
+        gap: 0.5rem;
+    }
+
+    .fm-closed {
+        display: grid;
+        gap: 0.75rem;
+    }
+
+    .fm-closed__line {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 1rem;
+        margin: 0;
+        padding-block-end: 0.5rem;
+    }
+
+    .fm-closed__line .fm-carrier {
+        font-family: var(--theme-font-display);
+        font-variant-numeric: tabular-nums;
+        font-weight: 560;
+        color: var(--primary);
+    }
+
+    .fm-ruleplate {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 0;
+        block-size: 1.6rem;
+    }
+
+    .fm-ruleplate__rule {
+        flex: 1;
+        block-size: var(--fm-rule-w);
+        background: var(--fm-act);
+    }
+
+    .fm-stamp {
+        display: none;
+    }
+
+    .fm-divider {
+        block-size: 4px;
+        margin: 0.25rem 0 0.75rem;
+        border: 0;
+        background:
+            linear-gradient(var(--primary) 0 0) 0 100% / 3rem 4px no-repeat,
+            linear-gradient(var(--border-strong) 0 0) 0 0 / 100% 1px no-repeat;
+    }
+
+    .fm-seal,
+    .fm-leader,
+    .fm-guilloche,
+    .fm-laurel {
+        display: none;
+    }
+
+    .fm-panel {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.75rem;
+        border: 1px solid var(--border);
+        border-radius: var(--fm-plate);
+        background: var(--card);
+    }
+
+    .fm-seals {
+        display: grid;
+        gap: 0.75rem;
+    }
+
+    .fm-all {
+        display: grid;
+        justify-items: start;
+        gap: 0.75rem;
+    }
+
+    /* The type sample. */
+    .fm-type {
+        gap: 0.4rem;
+    }
+
+    .fm-type :is(p, table) {
+        margin: 0;
+    }
+
+    .fm-type__label {
+        color: var(--muted-foreground);
+        font-size: 0.8rem;
+    }
+
+    .fm-type__head {
+        font-family: var(--theme-font-display);
+        font-size: 1.15rem;
+        font-weight: 600;
+    }
+
+    .fm-type__figure {
+        display: flex;
+        align-items: baseline;
+        gap: 0.5rem;
+        font-size: 1.75rem;
+    }
+
+    .fm-type__figure small {
+        font-size: 0.9rem;
+        font-weight: 400;
+    }
+
+    .fm-type__figure .fm-note {
+        font-family: var(--theme-font-body);
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .fm-type__table {
+        border-collapse: collapse;
+        font-size: 0.85rem;
+    }
+
+    .fm-type__table :is(th, td) {
+        padding: 0.15rem 1rem 0.15rem 0;
+        text-align: start;
+    }
+
+    .fm-type__table th {
+        color: var(--muted-foreground);
+        font-weight: 500;
+    }
+
+    .fm-type__ticks {
+        display: flex;
+        justify-content: space-between;
+        max-inline-size: 16rem;
+        border-block-start: 1px solid var(--border-strong);
+        color: var(--muted-foreground);
+        font-size: 0.75rem;
+    }
+
+    /* ── What every scene shares ─────────────────────────────────────── */
+
+    .fm-scene {
+        /* Nothing is translucent; the layout layer's busy dim stays off. */
+        --kp-busy-opacity: 1;
+    }
+
+    /* The voice (G18) in every scene: figures in the display face, labels in
+       small capitals. Question 18 puts its own options over this. */
+    .fm-scene :is(.kp-kpi__value, .fm-column__num, .fm-cert__num) {
+        font-family: var(--theme-font-display);
+        font-variant-numeric: tabular-nums;
+        font-weight: 560;
+    }
+
+    .fm-scene :is(.kp-kpi__label, .kp-badge, .kp-tag) {
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+        text-transform: none;
+    }
+
+    .fm-scene .kp-kpi__label {
+        font-size: 0.95rem;
+    }
+
+    .fm-scene a.kp-button {
+        text-decoration: none;
+    }
+
+    .fm-scene .kp-kpi__value > .fm-carrier {
+        margin-block-end: 0.35rem;
+    }
+
+    .fm-scene .kp-menu__item--destructive {
+        color: var(--destructive);
+    }
+
+    /* The register's dial on a primary button: its hand on the button's ink. */
+    .fm-scene[data-fm-spinner='dial'] .kp-button--primary .kp-spinner {
+        --primary: var(--primary-foreground);
+    }
+
+    /* The ink picture is the register's skeleton: one line on a small part, three on a plot. */
+    .fm-load__ink .kp-skeleton:nth-child(n + 2) {
+        display: none;
+    }
+
+    .fm-scene .fm-plot .fm-load__ink {
+        inset: 0.4rem 0.5rem;
+    }
+
+    .fm-scene .fm-plot .fm-load__ink .kp-skeleton:nth-child(n + 2) {
+        display: block;
+    }
+
+    .fm-scene[data-fm-hover='under'] .fm-pointed > a {
+        text-decoration-style: solid;
+    }
+
+    /* ── The pen: the rule that runs ahead of the words and is lifted ──── */
+
+    /* A line has its rule under it, a frame along its top edge. At rest they
+       are lifted (the finished pose is bare); the opening keyframes of the
+       ruled options draw them and lift them again. */
+    .fm-scene .fm-line::after,
+    .fm-scene .fm-frame::before {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        block-size: var(--fm-rule-w);
+        background: var(--fm-act);
+        clip-path: inset(0 0 0 100%);
+        pointer-events: none;
+    }
+
+    .fm-scene .fm-line::after {
+        inset-block-end: 0;
+    }
+
+    .fm-scene .fm-frame::before {
+        inset-block-start: 0;
+        z-index: 1;
+    }
+
+    /* ── The red-ink entry (G8): shared by the questions that show one ──── */
+
+    /* The figure is ruled off along its start edge in 3 px red ink, its
+       change sits on a square plate inside a hairline, the ground stays
+       paper. */
+    .fm-scene:is([data-fm-colour], [data-fm-warning='redink'], [data-fm-motifs]) .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) {
+        border-color: var(--border);
+        background: var(--card);
+        box-shadow: inset 3px 0 0 var(--fm-ink);
+    }
+
+    .fm-scene:is([data-fm-colour], [data-fm-warning='redink'], [data-fm-motifs])
+        .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive'])
+        .kp-kpi__value {
+        padding-inline: 0;
+        background: none;
+        color: var(--fm-ink);
+    }
+
+    .fm-scene:is([data-fm-colour], [data-fm-warning='redink'], [data-fm-motifs]) .kp-kpi__delta[data-kp-tone='bad'] {
+        border: 1px solid var(--fm-ink);
+        background: var(--card);
+        color: var(--fm-ink);
+    }
+
+    /* ── 5 · Colour ──────────────────────────────────────────────────── */
+
+    .fm-scene[data-fm-colour] .fm-today {
+        box-shadow:
+            inset 0 0 0 2px var(--card),
+            inset 0 0 0 3px var(--primary);
+        border-color: var(--primary);
+    }
+
+    .fm-scene[data-fm-colour] .fm-picked {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+
+    .fm-scene[data-fm-colour] .fm-closed .fm-share {
+        --kp-progressbar-scale: 1;
+    }
+
+    /* The closing rule is gold: on the bar, under a figure, inside a pressed button. */
+    .fm-scene[data-fm-colour='gold'] .fm-rule--2,
+    .fm-scene[data-fm-colour='gold'] .fm-share .kp-progressbar__track::after {
+        background: var(--fx-signal);
+    }
+
+    .fm-scene[data-fm-colour='gold'] .kp-button.fm-static {
+        box-shadow:
+            inset 0 0 0 5px var(--secondary-active),
+            inset 0 0 0 6px var(--fx-signal);
+    }
+
+    /* Ink only: every rule near-black, navy only on the primary button. */
+    .fm-scene[data-fm-colour='ink'] :is(.fm-rule, .fm-ruleplate__rule) {
+        background: var(--foreground);
+    }
+
+    .fm-scene[data-fm-colour='ink'] .fm-closed__line .fm-carrier {
+        color: var(--foreground);
+    }
+
+    .fm-scene[data-fm-colour='ink'] .kp-progressbar__fill,
+    .fm-scene[data-fm-colour='ink'] .kp-progressbar__head,
+    .fm-scene[data-fm-colour='ink'] .fm-share .kp-progressbar__track::after {
+        background: var(--foreground);
+    }
+
+    .fm-scene[data-fm-colour='ink'] .kp-button.fm-static {
+        box-shadow:
+            inset 0 0 0 5px var(--secondary-active),
+            inset 0 0 0 6px var(--foreground);
+    }
+
+    .fm-scene[data-fm-colour='ink'] .kp-button.fm-static::after {
+        border-color: var(--foreground);
+    }
+
+    .fm-scene[data-fm-colour='ink'] :is(.fm-today, .fm-picked) {
+        border-color: var(--foreground);
+        outline-color: var(--foreground);
+    }
+
+    .fm-scene[data-fm-colour='ink'] .fm-today {
+        box-shadow:
+            inset 0 0 0 2px var(--card),
+            inset 0 0 0 3px var(--foreground);
+    }
+
+    .fm-scene[data-fm-colour='ink'] .fm-state__dot {
+        background: var(--foreground);
+    }
+
+    .fm-scene[data-fm-colour='ink'] .kp-meter {
+        --kp-meter-fill-colour: var(--foreground);
+    }
+
+    .fm-scene[data-fm-colour='ink'] .kp-kpi__delta[data-kp-tone='good'] {
+        background: none;
+        color: var(--foreground);
+    }
+
+    /* ── 6 · Corners ─────────────────────────────────────────────────── */
+
+    .fm-scene[data-fm-corners='plates'] :is(.fm-tag, .fm-chip, .fm-tip, .fm-note, .kp-kpi__delta) {
+        border-radius: var(--fm-ruled);
+    }
+
+    .fm-scene[data-fm-corners='plates'] :is(.kp-card, .kp-popover, .kp-kpi, .kp-button) {
+        border-radius: var(--fm-plate);
+    }
+
+    .fm-scene[data-fm-corners='square']
+        :is(.kp-card, .kp-popover, .kp-menu, .kp-kpi, .kp-button, .fm-tag, .fm-chip, .fm-tip, .fm-note, .kp-kpi__delta, .kp-meter, .kp-meter::before),
+    .fm-scene[data-fm-corners='square'] .kp-button::after {
+        border-radius: 0;
+    }
+
+    .fm-scene[data-fm-corners='mix'] :is(.fm-tag, .fm-chip) {
+        border-radius: calc(var(--radius) - 2px);
+    }
+
+    .fm-scene[data-fm-corners='mix'] .fm-tip {
+        border-radius: calc(var(--radius) / 2);
+    }
+
+    .fm-scene[data-fm-corners='mix'] :is(.fm-note, .kp-kpi__delta) {
+        border-radius: 0;
+    }
+
+    .fm-scene[data-fm-corners] .fm-tag {
+        border: 1px solid var(--border-strong);
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }
+
+    .fm-scene[data-fm-corners] .fm-chip {
+        border: 1px solid var(--border-strong);
+    }
+
+    .fm-scene[data-fm-corners] .fm-state__dot {
+        inline-size: 0.6em;
+        block-size: 0.6em;
+    }
+
+    .fm-scene[data-fm-corners] .fm-state {
+        font-size: 0.9rem;
+    }
+
+    .fm-scene[data-fm-corners='plates'] .fm-stamp,
+    .fm-scene[data-fm-corners='square'] .fm-stamp {
+        display: none;
+    }
+
+    .fm-scene[data-fm-corners='mix'] .fm-stamp.fm-if-today {
+        display: inline-block;
+        justify-self: start;
+        padding: 0.1rem 0.5rem;
+        border: 1.5px solid var(--destructive);
+        border-radius: 3px;
+        color: var(--destructive);
+        font-family: var(--theme-font-display);
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        rotate: -3deg;
+        text-transform: uppercase;
+    }
+
+    /* ── 7 · The surface ─────────────────────────────────────────────── */
+
+    .fm-scene[data-fm-surface] .fm-cert,
+    .fm-scene[data-fm-surface] .fm-heading {
+        --fm-double: inset 0 0 0 3px var(--card), inset 0 0 0 4px var(--border-strong);
+    }
+
+    .fm-scene[data-fm-surface='ledger'] .fm-figures__row {
+        border-block-end: 1px solid var(--border);
+    }
+
+    .fm-scene[data-fm-surface='ledger'] .fm-plot {
+        background: repeating-linear-gradient(to bottom, transparent 0 15px, var(--border) 15px 16px), var(--card);
+    }
+
+    .fm-scene[data-fm-surface='ledger'] .fm-heading {
+        padding-block-end: 0.5rem;
+        border-block-end: 3px double var(--border-strong);
+    }
+
+    .fm-scene[data-fm-surface='ledger'] .fm-cert {
+        border: 1px solid var(--border-strong);
+        box-shadow: var(--fm-double);
+    }
+
+    .fm-scene[data-fm-surface='ledger'] :is(.fm-plain .kp-card, .fm-plain .kp-popover) {
+        box-shadow: none;
+    }
+
+    /* Plain paper: no ledger line, no double rule at rest. */
+    .fm-scene[data-fm-surface='plain'] .fm-figures__row {
+        border-block-end: 0;
+    }
+
+    .fm-scene[data-fm-surface='plain'] .fm-empty {
+        border-block-start: 0;
+        background: none;
+        padding-block-end: 1.25rem;
+    }
+
+    .fm-scene[data-fm-surface='plain'] .fm-cert {
+        border: 1px solid var(--border);
+    }
+
+    .fm-scene[data-fm-surface='plain'] .fm-heading {
+        border-block-end: 0;
+    }
+
+    .fm-scene[data-fm-surface='plain'] .fm-dialog.fm-static {
+        box-shadow: none;
+        border: 1px solid var(--border);
+    }
+
+    .fm-scene[data-fm-surface='plain'] .fm-plot {
+        border-color: var(--border);
+        background: var(--card);
+    }
+
+    /* As today: the engraved double frame on everything. */
+    .fm-scene[data-fm-surface='engraved'] :is(.kp-card, .fm-pop, .fm-plot, .fm-cert, .fm-heading, .fm-empty) {
+        border: 1px solid var(--border-strong);
+        box-shadow: var(--fm-double, inset 0 0 0 3px var(--card), inset 0 0 0 4px var(--border-strong));
+    }
+
+    .fm-scene[data-fm-surface='engraved'] .fm-heading {
+        padding: 0.6rem 0.75rem;
+        background: var(--card);
+    }
+
+    .fm-scene[data-fm-surface='engraved'] .fm-empty {
+        padding-block-start: 1rem;
+    }
+
+    .fm-scene[data-fm-surface='engraved'] .fm-figures {
+        padding: 0.4rem 0.75rem;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--fm-plate);
+        background: var(--card);
+        box-shadow:
+            inset 0 0 0 3px var(--card),
+            inset 0 0 0 4px var(--border-strong);
+    }
+
+    .fm-scene[data-fm-surface='engraved'] .fm-plot {
+        background: var(--card);
+    }
+
+    /* ── 8 · A warning ───────────────────────────────────────────────── */
+
+    .fm-scene[data-fm-warning] .kp-kpis {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .fm-scene[data-fm-warning='redink'] .kp-menu__item--destructive {
+        border-radius: 0;
+        box-shadow: inset 3px 0 0 var(--fm-ink);
+    }
+
+    .fm-scene[data-fm-warning='redink'] .kp-alert--warning {
+        border-color: var(--border);
+        background: var(--card);
+        box-shadow: inset 3px 0 0 var(--fm-ink);
+        color: var(--foreground);
+    }
+
+    .fm-scene[data-fm-warning='tinted'] .kp-kpi[data-kp-tone='warning'] {
+        border-color: var(--warning);
+        border-block-start: 3px solid var(--warning-foreground);
+        background: var(--warning);
+        box-shadow: none;
+    }
+
+    .fm-scene[data-fm-warning='tinted'] .kp-kpi[data-kp-tone='warning'] .kp-kpi__value {
+        padding-inline: 0;
+        background: none;
+    }
+
+    .fm-scene[data-fm-warning='tinted'] .fm-failed {
+        border-color: hsl(from var(--destructive) h s l / 0.4);
+        border-block-start: 3px solid var(--destructive);
+        background: hsl(from var(--destructive) h s l / 0.12);
+        box-shadow: none;
+    }
+
+    .fm-scene[data-fm-warning='tinted'] .fm-failed .kp-kpi__value {
+        padding-inline: 0;
+        background: none;
+        color: var(--destructive);
+    }
+
+    .fm-scene[data-fm-warning='tinted'] .kp-menu__item--destructive {
+        background: hsl(from var(--destructive) h s l / 0.12);
+        box-shadow: inset 0 3px 0 var(--destructive);
+    }
+
+    .fm-scene[data-fm-warning='stamp'] .fm-failed {
+        overflow: hidden;
+    }
+
+    .fm-scene[data-fm-warning='stamp'] .fm-stamp.fm-if-void {
+        position: absolute;
+        inset-block-start: 38%;
+        inset-inline-start: 18%;
+        display: inline-block;
+        padding: 0.1rem 0.6rem;
+        border: 3px double var(--destructive);
+        border-radius: 3px;
+        background: hsl(from var(--card) h s l / 0.6);
+        color: var(--destructive);
+        font-family: var(--theme-font-display);
+        font-size: 1.15rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        rotate: -8deg;
+        text-transform: uppercase;
+    }
+
+    .fm-scene[data-fm-warning] .fm-failed {
+        min-block-size: 6.5rem;
+    }
+
+    /* ── 18 · The voice ──────────────────────────────────────────────── */
+
+    .fm-scene[data-fm-type] :is(.fm-type__label, .fm-type__ticks, .fm-type__table th, .fm-tag, .kp-timestamp, .kp-id) {
+        font-family: var(--theme-font-body);
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+        text-transform: none;
+    }
+
+    .fm-scene[data-fm-type] :is(.fm-type__label, .fm-type__ticks) {
+        font-size: 0.95rem;
+    }
+
+    .fm-scene[data-fm-type] .fm-type__prose {
+        font-family: var(--theme-font-body);
+    }
+
+    .fm-scene[data-fm-type='fraunces'] :is(.fm-type__num, .fm-type__fig) {
+        font-family: var(--theme-font-display);
+        font-variant-numeric: tabular-nums;
+        font-weight: 560;
+    }
+
+    .fm-scene[data-fm-type='sans'] :is(.fm-type__num, .fm-type__fig) {
+        font-family: var(--theme-font-body);
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+    }
+
+    .fm-scene[data-fm-type='sans'] .fm-type__head {
+        font-family: var(--theme-font-display);
+    }
+
+    .fm-scene[data-fm-type='mono'] :is(.fm-type__num, .fm-type__fig, .kp-timestamp, .kp-id) {
+        font-family: var(--theme-font-mono);
+        font-variant-caps: normal;
+        font-variant-numeric: tabular-nums;
+        font-weight: 500;
+        letter-spacing: 0;
+    }
+
+    /* ── 19 · Motifs ─────────────────────────────────────────────────── */
+
+    .fm-scene[data-fm-motifs] .fm-heading {
+        padding-block-end: 0.5rem;
+        border-block-end: 3px double var(--border-strong);
+    }
+
+    .fm-scene[data-fm-motifs] .fm-cert {
+        border: 1px solid var(--border-strong);
+        box-shadow:
+            inset 0 0 0 3px var(--card),
+            inset 0 0 0 4px var(--border-strong);
+    }
+
+    .fm-scene[data-fm-motifs] .fm-cert--small {
+        margin-block-start: 0.6rem;
+    }
+
+    .fm-scene[data-fm-motifs='rules'] .fm-seal,
+    .fm-scene[data-fm-motifs='rules'] .fm-stamp {
+        display: none;
+    }
+
+    .fm-scene:is([data-fm-motifs='seal'], [data-fm-motifs='all']) .fm-seal {
+        display: inline-block;
+        inline-size: 1.15em;
+        block-size: 1.15em;
+        border-radius: 50%;
+        background: radial-gradient(
+            circle,
+            var(--primary) 0 56%,
+            var(--card) 56% 60%,
+            var(--primary) 60% 80%,
+            var(--card) 80% 84%,
+            var(--primary) 84% 100%
+        );
+        rotate: -8deg;
+    }
+
+    .fm-scene:is([data-fm-motifs='seal'], [data-fm-motifs='all']) .fm-seal--big {
+        inline-size: 2.2rem;
+        block-size: 2.2rem;
+    }
+
+    .fm-scene:is([data-fm-motifs='seal'], [data-fm-motifs='all']) .fm-if-rules {
+        display: none;
+    }
+
+    .fm-scene[data-fm-motifs='all'] .fm-stamp {
+        display: inline-block;
+        padding: 0.1rem 0.5rem;
+        border: 1.5px solid var(--primary);
+        border-radius: 3px;
+        color: var(--primary);
+        font-family: var(--theme-font-display);
+        font-size: 0.85rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        rotate: -4deg;
+        text-transform: uppercase;
+    }
+
+    .fm-scene[data-fm-motifs='all'] .fm-leader {
+        display: block;
+        inline-size: 100%;
+        block-size: 4px;
+        background: radial-gradient(circle, var(--primary) 0 1.4px, transparent 1.9px) 0 50% / 7px 4px repeat-x;
+    }
+
+    .fm-scene[data-fm-motifs='all'] .fm-guilloche {
+        display: inline-grid;
+        padding: 0.5rem 1rem;
+        border: 1px solid var(--border-strong);
+        background:
+            repeating-radial-gradient(circle at 15% 130%, transparent 0 5px, hsl(from var(--primary) h s l / 0.22) 5px 6px),
+            repeating-radial-gradient(circle at 85% -30%, transparent 0 5px, hsl(from var(--primary) h s l / 0.16) 5px 6px), var(--card);
+        font-family: var(--theme-font-display);
+        font-size: 1.4rem;
+        font-weight: 560;
+    }
+
+    .fm-scene[data-fm-motifs='all'] .fm-laurel {
+        display: block;
+        inline-size: 6.5rem;
+        color: var(--fx-signal);
+    }
+
+    .fm-panel__words {
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+    }
+
+    /* ── 10 · Loading: the pictures every waiting surface wears ──────── */
+
+    .fm-scene .fm-load__lines i {
+        display: block;
+        block-size: var(--fm-rule-w);
+        background: var(--fm-act);
+    }
+
+    .fm-scene .fm-load__lines {
+        position: absolute;
+        inset-block-end: 0.55rem;
+        inset-inline: 0.75rem;
+        gap: 0.4rem;
+    }
+
+    .fm-scene .fm-day .fm-load__lines {
+        inset-block-end: 0.3rem;
+        inset-inline: 0.3rem;
+        gap: 0.2rem;
+    }
+
+    .fm-scene .fm-plot .fm-load__lines {
+        inset-block: 0.5rem;
+        align-content: space-evenly;
+        gap: 0;
+    }
+
+    .fm-scene .kp-menu__item .fm-load__lines {
+        inset-block-end: 0.45rem;
+        inset-inline: 0.625rem;
+        gap: 0.3rem;
+    }
+
+    .fm-scene .fm-skel .fm-load__lines {
+        inset: 0;
+        grid-auto-rows: 1.5rem;
+        align-content: start;
+        gap: 0;
+    }
+
+    .fm-scene .fm-skel .fm-load__lines i {
+        align-self: end;
+    }
+
+    /* The picture a question shows: every scene but the loading question
+       wears the recommendation (the lines); the loading question shows each
+       option's own. */
+    .fm-scene:not([data-fm-loading]) .fm-load__lines,
+    .fm-scene[data-fm-loading='lines'] .fm-load__lines {
+        display: grid;
+    }
+
+    .fm-scene[data-fm-loading='leader'] .fm-load__leader,
+    .fm-scene[data-fm-loading='seal'] .fm-load__seal {
+        display: block;
+    }
+
+    .fm-scene[data-fm-loading='ink'] .fm-load__ink {
+        display: grid;
+    }
+
+    /* The skeleton part is the register's own lines; only the ink option keeps
+       the register's ink across them. */
+    .fm-scene:not([data-fm-loading='ink']) .fm-skel .kp-skeleton::before,
+    .fm-scene:not([data-fm-loading='ink']) .fm-skel .kp-skeleton::after {
+        content: none;
+    }
+
+    .fm-scene[data-fm-loading='ink'] .fm-skel .fm-load,
+    .fm-scene[data-fm-loading='ink'] .fm-skel .fm-load__ink {
+        display: none;
+    }
+
+    .fm-scene .fm-skel .kp-skeleton {
+        --kp-sig-dur: 3000ms;
+    }
+
+    /* The dotted leader: dots written one by one across the part. */
+    .fm-load__leader {
+        position: absolute;
+        inset-block-end: 0.7rem;
+        inset-inline: 0.75rem;
+        block-size: 4px;
+        background: radial-gradient(circle, var(--fm-act) 0 1.4px, transparent 1.9px) 0 50% / 7px 4px repeat-x;
+        clip-path: inset(0 calc(100% - min(var(--fm-n) * 7px, round(down, 100%, 7px))) 0 0);
+    }
+
+    .fm-scene .fm-day .fm-load__leader {
+        inset-block-end: 0.4rem;
+        inset-inline: 0.3rem;
+    }
+
+    .fm-scene .fm-plot .fm-load__leader {
+        inset-block-end: auto;
+        inset-block-start: 50%;
+    }
+
+    .fm-scene .fm-skel .fm-load__leader {
+        inset-block-end: auto;
+        inset-block-start: 1.1rem;
+    }
+
+    .fm-scene .kp-menu__item .fm-load__leader {
+        inset-block-end: 0.5rem;
+    }
+
+    /* The seal ring pressed on the middle of the waiting part. */
+    .fm-load__seal {
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: 50%;
+        inline-size: 1.7rem;
+        block-size: 1.7rem;
+        margin: -0.85rem 0 0 -0.85rem;
+        border: 2px solid var(--primary);
+        border-radius: 50%;
+        box-shadow:
+            inset 0 0 0 3px var(--card),
+            inset 0 0 0 4px var(--primary);
+    }
+
+    .fm-scene .fm-day .fm-load__seal {
+        inline-size: 1.1rem;
+        block-size: 1.1rem;
+        margin: -0.55rem 0 0 -0.55rem;
+        box-shadow: none;
+    }
+
+    .fm-load__ink {
+        position: absolute;
+        inset-block-end: 0;
+        inset-inline: 0.5rem;
+    }
+
+    .fm-load__ink .kp-skeleton {
+        position: relative;
+    }
+
+    /* ── 11 · The busy progress bar ──────────────────────────────────── */
+
+    /* The finished picture of the ruled bar: the band across, the account
+       closed under it (reduced motion shows it still). */
+    .fm-scene:is([data-fm-busybar='closed'], [data-fm-durations]) .fm-bar:not(.fm-share) .kp-progressbar__fill {
+        inset-inline: 0;
+        inline-size: auto;
+        background: var(--fm-act);
+        clip-path: none;
+        transition: none;
+    }
+
+    .fm-scene:is([data-fm-busybar='closed'], [data-fm-durations]) .fm-bar:not(.fm-share) .kp-progressbar__track::after {
+        opacity: 1;
+        transition: none;
+    }
+
+    .fm-scene:is([data-fm-busybar='closed'], [data-fm-durations]) .fm-bar:not(.fm-share) .kp-progressbar__head {
+        display: none;
+    }
+
+    .fm-scene[data-fm-busybar='slides'] .fm-bar:not(.fm-share) .kp-progressbar__fill {
+        inset-inline: 0 auto;
+        inline-size: 28%;
+        background: var(--fm-act);
+        clip-path: none;
+        transition: none;
+    }
+
+    /* ── 12 · The spinner ────────────────────────────────────────────── */
+
+    .fm-spin {
+        color: var(--primary);
+    }
+
+    .kp-button--primary .fm-spin {
+        color: var(--primary-foreground);
+    }
+
+    .fm-spin > span {
+        display: none;
+    }
+
+    .fm-scene:is([data-fm-spinner='arc'], [data-fm-spinner='dots']) .kp-spinner.fm-spin {
+        position: relative;
+        border: 1px solid var(--border-strong);
+        border-radius: 50%;
+        background: none;
+        animation: none;
+    }
+
+    .fm-scene:is([data-fm-spinner='arc'], [data-fm-spinner='dots']) .kp-spinner.fm-spin::before,
+    .fm-scene:is([data-fm-spinner='arc'], [data-fm-spinner='dots']) .kp-spinner.fm-spin::after {
+        content: none;
+        animation: none;
+    }
+
+    /* The double ring: the hairline ring and a thinner ring inside it, an
+       arc ruled round the outer one and a thinner arc closing it. */
+    .fm-scene[data-fm-spinner='arc'] .fm-spin > .fm-spin__a,
+    .fm-scene[data-fm-spinner='arc'] .fm-spin > .fm-spin__b,
+    .fm-scene[data-fm-spinner='arc'] .fm-spin > .fm-spin__c {
+        position: absolute;
+        display: block;
+        border-radius: 50%;
+    }
+
+    .fm-scene[data-fm-spinner='arc'] .fm-spin__a {
+        inset: -1px;
+        border: max(1.5px, calc(var(--kp-spinner-size, 1.25rem) * 0.1)) solid currentColor;
+        mask-image: conic-gradient(from 0deg, transparent 0 var(--fm-a0), #000 var(--fm-a0) var(--fm-a1), transparent var(--fm-a1) 360deg);
+    }
+
+    .fm-scene[data-fm-spinner='arc'] .fm-spin__b {
+        inset: 20%;
+        border: 1px solid var(--border);
+    }
+
+    .fm-scene[data-fm-spinner='arc'] .fm-spin__c {
+        inset: 20%;
+        border: 1px solid currentColor;
+        mask-image: conic-gradient(from 0deg, transparent 0 var(--fm-a0), #000 var(--fm-a0) var(--fm-a1), transparent var(--fm-a1) 360deg);
+    }
+
+    /* A dotted leader bent round the ring. */
+    .fm-scene[data-fm-spinner='dots'] .fm-spin > .fm-spin__dots {
+        position: absolute;
+        inset: 0;
+        display: block;
+        mask-image: conic-gradient(from 0deg, transparent 0 var(--fm-a0), #000 var(--fm-a0) var(--fm-a1), transparent var(--fm-a1) 360deg);
+    }
+
+    .fm-scene[data-fm-spinner='dots'] .fm-spin__dots i {
+        position: absolute;
+        inset-block-start: 4%;
+        inset-inline-start: calc(50% - var(--kp-spinner-size, 1.25rem) * 0.07);
+        inline-size: calc(var(--kp-spinner-size, 1.25rem) * 0.14);
+        block-size: calc(var(--kp-spinner-size, 1.25rem) * 0.14);
+        border-radius: 50%;
+        background: currentColor;
+        rotate: calc(var(--i) * 30deg);
+        transform-origin: 50% calc(var(--kp-spinner-size, 1.25rem) * 0.46);
+    }
+
+    .fm-spin__dots {
+        display: none;
+    }
+
+    .fm-scene[data-fm-spinner='dots'] .kp-spinner.fm-spin {
+        border-color: var(--border);
+    }
+
+    /* ── The motion ──────────────────────────────────────────────────── */
+
+    /* The ruling time of a scene, and the curves it rules on: a rule is
+       linear; its close is the same curve backwards. Questions 1 and 4
+       replace them option by option. */
+    .fm-scene {
+        --fm-c: linear;
+        --fm-co: linear;
+        --fm-lift: 160ms;
+    }
+
+    .fm-scene .fm-line,
+    .fm-scene .fm-day {
+        --fm-d: calc(var(--i, 0) * var(--fm-st));
+    }
+
+    .fm-scene .fm-frame {
+        --fm-d: 0ms;
+    }
+
+    .fm-scene[data-fm-curve='commit'],
+    .fm-scene[data-fm-curve='mix'],
+    .fm-scene[data-fm-opening='unrolled'] {
+        --fm-c: cubic-bezier(0.2, 0, 0, 1);
+        --fm-co: cubic-bezier(1, 0, 0.8, 1);
+    }
+
+    .fm-scene[data-fm-curve='hand'] {
+        --fm-c: cubic-bezier(0.42, 0, 0.58, 1);
+        --fm-co: cubic-bezier(0.42, 0, 0.58, 1);
+    }
+
+    /* 4 · Durations: one picture, only the times differ. */
+    .fm-scene[data-fm-durations='ruling'] {
+        --fm-contact: 180ms;
+        --fm-len: 400ms;
+        --fm-st: 60ms;
+        --fm-loop: 2400ms;
+    }
+
+    .fm-scene[data-fm-durations='brisk'] {
+        --fm-contact: 120ms;
+        --fm-len: 240ms;
+        --fm-st: 40ms;
+        --fm-loop: 1600ms;
+        --fm-lift: 100ms;
+    }
+
+    .fm-scene[data-fm-durations='unhurried'] {
+        --fm-contact: 240ms;
+        --fm-len: 700ms;
+        --fm-st: 90ms;
+        --fm-loop: 3600ms;
+        --fm-lift: 240ms;
+    }
+
+    /* Today's pictures, at the length of the grammar's (the sheet and the
+       fold of the register, the unrolled scroll of the picks). */
+    .fm-scene .fm-pop,
+    .fm-scene .fm-dialog {
+        transform-origin: 50% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── The ruled family: the frame, then the lines top down ──────── */
+
+        /* gap: what is ruled in is away (the first frame of the ruling). */
+        .fm-scene:is(
+                [data-fm-curve='ruled'],
+                [data-fm-curve='commit'],
+                [data-fm-curve='hand'],
+                [data-fm-direction='along'],
+                [data-fm-opening='ruled'],
+                [data-fm-durations],
+                [data-fm-leave='ruled']
+            )[data-fm-phase='gap']
+            :is(.fm-frame, .fm-line) {
+            clip-path: inset(-3rem 100% -3rem -3rem);
+        }
+
+        .fm-scene:is(
+                [data-fm-curve='ruled'],
+                [data-fm-curve='commit'],
+                [data-fm-curve='hand'],
+                [data-fm-direction='along'],
+                [data-fm-opening='ruled'],
+                [data-fm-durations],
+                [data-fm-leave='ruled']
+            ):is([data-fm-phase='in'], [data-fm-phase='hold'])
+            :is(.fm-frame, .fm-line) {
+            animation: fm-wipe calc(var(--fm-len) * var(--fm-slow, 1)) var(--fm-c) calc(var(--fm-d) * var(--fm-slow, 1)) both;
+        }
+
+        .fm-scene:is(
+                [data-fm-curve='ruled'],
+                [data-fm-curve='commit'],
+                [data-fm-curve='hand'],
+                [data-fm-direction='along'],
+                [data-fm-opening='ruled'],
+                [data-fm-durations],
+                [data-fm-leave='ruled']
+            )[data-fm-phase='out']
+            :is(.fm-frame, .fm-line) {
+            animation: fm-wipe-out calc(var(--fm-len) * var(--fm-slow, 1)) var(--fm-co)
+                calc((var(--fm-T) - var(--fm-d) - var(--fm-len)) * var(--fm-slow, 1)) both;
+        }
+
+        /* The pen: ruled ahead of the words, lifted when it reaches the margin. */
+        .fm-scene:is(
+                [data-fm-curve='ruled'],
+                [data-fm-curve='commit'],
+                [data-fm-curve='hand'],
+                [data-fm-direction='along'],
+                [data-fm-opening='ruled'],
+                [data-fm-durations],
+                [data-fm-leave='ruled']
+            ):is([data-fm-phase='in'], [data-fm-phase='hold'])
+            .fm-line::after,
+        .fm-scene:is(
+                [data-fm-curve='ruled'],
+                [data-fm-curve='commit'],
+                [data-fm-curve='hand'],
+                [data-fm-direction='along'],
+                [data-fm-opening='ruled'],
+                [data-fm-durations],
+                [data-fm-leave='ruled']
+            ):is([data-fm-phase='in'], [data-fm-phase='hold'])
+            .fm-frame::before {
+            animation:
+                fm-pen-ruled calc(var(--fm-len) * var(--fm-slow, 1)) var(--fm-c) calc(var(--fm-d) * var(--fm-slow, 1)) both,
+                fm-pen-lift calc(var(--fm-lift) * var(--fm-slow, 1)) linear calc((var(--fm-d) + var(--fm-len)) * var(--fm-slow, 1)) forwards;
+        }
+
+        .fm-scene:is(
+                [data-fm-curve='ruled'],
+                [data-fm-curve='commit'],
+                [data-fm-curve='hand'],
+                [data-fm-direction='along'],
+                [data-fm-opening='ruled'],
+                [data-fm-durations],
+                [data-fm-leave='ruled']
+            )[data-fm-phase='out']
+            .fm-line::after,
+        .fm-scene:is(
+                [data-fm-curve='ruled'],
+                [data-fm-curve='commit'],
+                [data-fm-curve='hand'],
+                [data-fm-direction='along'],
+                [data-fm-opening='ruled'],
+                [data-fm-durations],
+                [data-fm-leave='ruled']
+            )[data-fm-phase='out']
+            .fm-frame::before {
+            animation:
+                fm-pen-lift-out calc(var(--fm-lift) * var(--fm-slow, 1)) linear
+                    calc((var(--fm-T) - var(--fm-d) - var(--fm-len) - var(--fm-lift)) * var(--fm-slow, 1)) both,
+                fm-pen-ruled-out calc(var(--fm-len) * var(--fm-slow, 1)) var(--fm-co)
+                    calc((var(--fm-T) - var(--fm-d) - var(--fm-len)) * var(--fm-slow, 1)) forwards;
+        }
+
+        /* ── The two rules under a figure (the anchor): ruled, then closed ── */
+
+        .fm-scene:is([data-fm-durations], [data-fm-live='closed'])[data-fm-phase='gap'] .fm-rule {
+            clip-path: inset(-3rem 100% -3rem -3rem);
+        }
+
+        .fm-scene:is([data-fm-durations], [data-fm-live='closed']):is([data-fm-phase='in'], [data-fm-phase='hold']) .fm-rule {
+            animation: fm-wipe calc(var(--fm-l) * var(--fm-slow, 1)) linear calc(var(--fm-d) * var(--fm-slow, 1)) both;
+        }
+
+        .fm-scene:is([data-fm-durations], [data-fm-live='closed'])[data-fm-phase='out'] .fm-rule {
+            animation: fm-wipe-out calc(var(--fm-l) * var(--fm-slow, 1)) linear calc((var(--fm-T) - var(--fm-d) - var(--fm-l)) * var(--fm-slow, 1))
+                both;
+        }
+
+        .fm-scene[data-fm-durations][data-fm-phase='gap'] .fm-ruled-in > [data-fm-text] {
+            clip-path: inset(-3rem 100% -3rem -3rem);
+        }
+
+        .fm-scene[data-fm-durations]:is([data-fm-phase='in'], [data-fm-phase='hold']) .fm-ruled-in > [data-fm-text] {
+            animation: fm-wipe calc(var(--fm-len) * var(--fm-slow, 1)) linear both;
+        }
+
+        .fm-scene[data-fm-durations][data-fm-phase='out'] .fm-ruled-in > [data-fm-text] {
+            animation: fm-wipe-out calc(var(--fm-len) * var(--fm-slow, 1)) linear calc((var(--fm-T) - var(--fm-len)) * var(--fm-slow, 1)) both;
+        }
+
+        /* ── 1 · The curve: the rulers beside the parts ─────────────────── */
+
+        .fm-scene[data-fm-curve][data-fm-phase='gap'] .fm-ruler__rule {
+            clip-path: inset(-3rem 100% -3rem -3rem);
+        }
+
+        .fm-scene[data-fm-curve]:is([data-fm-phase='in'], [data-fm-phase='hold']) .fm-ruler__rule {
+            animation: fm-wipe calc(var(--fm-len) * var(--fm-slow, 1)) var(--fm-c) both;
+        }
+
+        .fm-scene[data-fm-curve][data-fm-phase='out'] .fm-ruler__rule {
+            animation: fm-wipe-out calc(var(--fm-len) * var(--fm-slow, 1)) var(--fm-co) calc((var(--fm-T) - var(--fm-len)) * var(--fm-slow, 1)) both;
+        }
+
+        .fm-scene[data-fm-curve] .fm-ruler__rule--ref {
+            --fm-c: linear;
+            --fm-co: linear;
+        }
+
+        /* Today's mix: the dialog fades and rises 14 px on the commit curve,
+           the menu appears at once, the tile fades (the register's own). */
+        .fm-scene:is([data-fm-curve='mix'], [data-fm-opening='mix'])[data-fm-phase='gap'] .fm-dialog {
+            opacity: 0;
+            transform: translateY(14px) scale(0.985);
+        }
+
+        .fm-scene:is([data-fm-curve='mix'], [data-fm-opening='mix']):is([data-fm-phase='in'], [data-fm-phase='hold']) .fm-dialog {
+            animation: fm-sheet calc(var(--fm-len) * var(--fm-slow, 1)) var(--fm-c) both;
+        }
+
+        .fm-scene:is([data-fm-curve='mix'], [data-fm-opening='mix'])[data-fm-phase='out'] .fm-dialog {
+            animation: fm-sheet-out calc(var(--fm-len) * var(--fm-slow, 1)) var(--fm-co) calc((var(--fm-T) - var(--fm-len)) * var(--fm-slow, 1)) both;
+        }
+
+        .fm-scene:is([data-fm-curve='mix'], [data-fm-opening='mix']):is([data-fm-phase='gap'], [data-fm-phase='out']) .fm-pop {
+            visibility: hidden;
+        }
+
+        .fm-scene[data-fm-curve='mix'][data-fm-phase='gap'] .fm-tile {
+            opacity: 0;
+        }
+
+        .fm-scene[data-fm-curve='mix']:is([data-fm-phase='in'], [data-fm-phase='hold']) .fm-tile {
+            animation: fm-fade calc(var(--fm-len) * var(--fm-slow, 1)) var(--fm-c) both;
+        }
+
+        .fm-scene[data-fm-curve='mix'][data-fm-phase='out'] .fm-tile {
+            animation: fm-fade-out calc(var(--fm-len) * var(--fm-slow, 1)) var(--fm-co) calc((var(--fm-T) - var(--fm-len)) * var(--fm-slow, 1)) both;
+        }
+
+        /* ── 2 · The direction ─────────────────────────────────────────── */
+
+        /* Along the line: the days in reading order, the tile's frame then
+           its lines, the figure, the trend's line left to right. */
+        .fm-scene[data-fm-direction='along'][data-fm-phase='gap'] :is(.fm-day, .fm-column) {
+            clip-path: inset(-3rem 100% -3rem -3rem);
+        }
+
+        .fm-scene[data-fm-direction='along']:is([data-fm-phase='in'], [data-fm-phase='hold']) :is(.fm-day, .fm-column) {
+            animation: fm-wipe calc(var(--fm-len) * var(--fm-slow, 1)) linear calc(var(--fm-d, 0ms) * var(--fm-slow, 1)) both;
+        }
+
+        .fm-scene[data-fm-direction='along'][data-fm-phase='out'] :is(.fm-day, .fm-column) {
+            animation: fm-wipe-out calc(var(--fm-len) * var(--fm-slow, 1)) linear
+                calc((var(--fm-T) - var(--fm-d, 0ms) - var(--fm-len)) * var(--fm-slow, 1)) both;
+        }
+
+        .fm-scene[data-fm-direction] .fm-column {
+            --fm-d: calc(2 * var(--fm-st));
+        }
+
+        .fm-scene[data-fm-direction='along'][data-fm-phase='gap'] .fm-walk polyline,
+        .fm-scene[data-fm-direction='mix'][data-fm-phase='gap'] .fm-walk polyline {
+            stroke-dashoffset: 1;
+        }
+
+        .fm-scene[data-fm-direction] .fm-walk polyline {
+            stroke-dasharray: 1;
+        }
+
+        .fm-scene[data-fm-direction] .fm-walk .fm-spark__retrace {
+            display: none;
+        }
+
+        .fm-scene[data-fm-direction='along']:is([data-fm-phase='in'], [data-fm-phase='hold']) .fm-walk polyline {
+            animation: fm-draw calc(var(--fm-len) * var(--fm-slow, 1)) linear both;
+        }
+
+        .fm-scene[data-fm-direction='along'][data-fm-phase='out'] .fm-walk polyline {
+            animation: fm-draw-out calc(var(--fm-len) * var(--fm-slow, 1)) linear calc((var(--fm-T) - var(--fm-len)) * var(--fm-slow, 1)) both;
+        }
+
+        /* Up from the base line: each part rises into its line from below it,
+           clipped at the line (forest's and solstice's arrival). */
+        .fm-scene[data-fm-direction='rise'][data-fm-phase='gap'] :is(.fm-day, .fm-column, .fm-tile.fm-frame) {
+            translate: 0 100%;
+            clip-path: inset(0 -1rem 100% -1rem);
+        }
+
+        .fm-scene[data-fm-direction='rise']:is([data-fm-phase='in'], [data-fm-phase='hold']) :is(.fm-day, .fm-column, .fm-tile.fm-frame) {
+            animation: fm-rise calc(var(--fm-len) * var(--fm-slow, 1)) linear calc(var(--fm-d, 0ms) * var(--fm-slow, 1)) both;
+        }
+
+        .fm-scene[data-fm-direction='rise'][data-fm-phase='out'] :is(.fm-day, .fm-column, .fm-tile.fm-frame) {
+            animation: fm-rise-out calc(var(--fm-len) * var(--fm-slow, 1)) linear
+                calc((var(--fm-T) - var(--fm-d, 0ms) - var(--fm-len)) * var(--fm-slow, 1)) both;
+        }
+
+        .fm-scene[data-fm-direction='rise'] .fm-walk svg {
+            transform-origin: 50% 100%;
+        }
+
+        .fm-scene[data-fm-direction='rise'][data-fm-phase='gap'] .fm-walk svg {
+            scale: 1 0;
+        }
+
+        .fm-scene[data-fm-direction='rise']:is([data-fm-phase='in'], [data-fm-phase='hold']) .fm-walk svg {
+            animation: fm-grow calc(var(--fm-len) * var(--fm-slow, 1)) linear both;
+        }
+
+        .fm-scene[data-fm-direction='rise'][data-fm-phase='out'] .fm-walk svg {
+            animation: fm-grow-out calc(var(--fm-len) * var(--fm-slow, 1)) linear calc((var(--fm-T) - var(--fm-len)) * var(--fm-slow, 1)) both;
+        }
+
+        /* As today: the days turn down like diary leaves, the tile is written
+           from the left, the trend by hand, the figure set in type in hard
+           steps. */
+        .fm-scene[data-fm-direction='mix'] .fm-days {
+            perspective: 300px;
+        }
+
+        .fm-scene[data-fm-direction='mix'] .fm-day {
+            transform-origin: 50% 0;
+        }
+
+        .fm-scene[data-fm-direction='mix'][data-fm-phase='gap'] .fm-day {
+            transform: rotateX(-90deg);
+        }
+
+        .fm-scene[data-fm-direction='mix']:is([data-fm-phase='in'], [data-fm-phase='hold']) .fm-day {
+            animation: fm-leaf calc(520ms * var(--fm-slow, 1)) cubic-bezier(0.2, 0, 0, 1) calc(var(--i, 0) * 40ms * var(--fm-slow, 1)) both;
+        }
+
+        .fm-scene[data-fm-direction='mix'][data-fm-phase='out'] .fm-day {
+            animation: fm-leaf-out calc(520ms * var(--fm-slow, 1)) cubic-bezier(1, 0, 0.8, 1)
+                calc((var(--fm-T) - var(--i, 0) * 40ms - 520ms) * var(--fm-slow, 1)) both;
+        }
+
+        .fm-scene[data-fm-direction='mix'][data-fm-phase='gap'] .fm-tile.fm-frame {
+            clip-path: inset(-3rem 100% -3rem -3rem);
+        }
+
+        .fm-scene[data-fm-direction='mix']:is([data-fm-phase='in'], [data-fm-phase='hold']) .fm-tile.fm-frame {
+            animation: fm-wipe calc(450ms * var(--fm-slow, 1)) cubic-bezier(0.2, 0, 0, 1) both;
+        }
+
+        .fm-scene[data-fm-direction='mix'][data-fm-phase='out'] .fm-tile.fm-frame {
+            animation: fm-wipe-out calc(450ms * var(--fm-slow, 1)) cubic-bezier(1, 0, 0.8, 1) calc((var(--fm-T) - 450ms) * var(--fm-slow, 1)) both;
+        }
+
+        .fm-scene[data-fm-direction='mix']:is([data-fm-phase='in'], [data-fm-phase='hold']) .fm-walk polyline {
+            animation: fm-draw calc(900ms * var(--fm-slow, 1)) cubic-bezier(0.42, 0, 0.58, 1) both;
+        }
+
+        .fm-scene[data-fm-direction='mix'][data-fm-phase='out'] .fm-walk polyline {
+            animation: fm-draw-out calc(900ms * var(--fm-slow, 1)) cubic-bezier(0.42, 0, 0.58, 1) calc((var(--fm-T) - 900ms) * var(--fm-slow, 1)) both;
+        }
+
+        .fm-scene[data-fm-direction='mix'][data-fm-phase='gap'] .fm-column {
+            translate: 0 100%;
+            clip-path: inset(0 -1rem 100% -1rem);
+        }
+
+        .fm-scene[data-fm-direction='mix']:is([data-fm-phase='in'], [data-fm-phase='hold']) .fm-column {
+            animation: fm-rise calc(500ms * var(--fm-slow, 1)) steps(4, jump-end) both;
+        }
+
+        .fm-scene[data-fm-direction='mix'][data-fm-phase='out'] .fm-column {
+            animation: fm-rise-out calc(500ms * var(--fm-slow, 1)) steps(4, jump-start) calc((var(--fm-T) - 500ms) * var(--fm-slow, 1)) both;
+        }
+
+        /* The waiting tile's lines: ruled top down in the ruled option, rising
+           from the base line in the other, the register's leader in today's. */
+        .fm-scene[data-fm-direction='mix'] .fm-load__lines {
+            display: none;
+        }
+
+        .fm-scene[data-fm-direction='mix'] .fm-load__leader {
+            display: block;
+            --fm-n: 40;
+            clip-path: none;
+            animation: fm-footsteps calc(1600ms * var(--fm-slow, 1)) steps(4, end) infinite alternate;
+        }
+
+        /* ── 3 · Opening: the scroll and today's sheet ──────────────────── */
+
+        .fm-scene[data-fm-opening='unrolled'][data-fm-phase='gap'] :is(.fm-pop, .fm-dialog) {
+            transform: scaleY(0);
+        }
+
+        .fm-scene[data-fm-opening='unrolled']:is([data-fm-phase='in'], [data-fm-phase='hold']) :is(.fm-pop, .fm-dialog) {
+            animation: fm-unroll calc(var(--fm-len) * var(--fm-slow, 1)) var(--fm-c) both;
+        }
+
+        .fm-scene[data-fm-opening='unrolled'][data-fm-phase='out'] :is(.fm-pop, .fm-dialog) {
+            animation: fm-unroll-out calc(var(--fm-len) * var(--fm-slow, 1)) var(--fm-co) calc((var(--fm-T) - var(--fm-len)) * var(--fm-slow, 1)) both;
+        }
+
+        /* ── 4 · Durations: a contact, and the loop ────────────────────── */
+
+        /* A press answers in the contact time: the inner rule is drawn, the
+           second rule closes it and the face takes the pressed ground; it is
+           let go at the last moment of `out`. */
+        .fm-scene[data-fm-durations] .fm-tap {
+            box-shadow:
+                inset 0 0 0 5px var(--secondary-active),
+                inset 0 0 0 6px var(--primary);
+            background-color: var(--secondary-active);
+        }
+
+        .fm-scene[data-fm-durations] .fm-tap::after {
+            opacity: 1;
+        }
+
+        .fm-scene[data-fm-durations][data-fm-phase='gap'] .fm-tap {
+            box-shadow:
+                inset 0 0 0 5px var(--secondary),
+                inset 0 0 0 6px transparent;
+            background-color: var(--secondary);
+        }
+
+        .fm-scene[data-fm-durations][data-fm-phase='gap'] .fm-tap::after {
+            opacity: 0;
+        }
+
+        .fm-scene[data-fm-durations]:is([data-fm-phase='in'], [data-fm-phase='hold']) .fm-tap {
+            animation: fm-press calc(var(--fm-contact) * var(--fm-slow, 1)) linear both;
+        }
+
+        .fm-scene[data-fm-durations][data-fm-phase='out'] .fm-tap {
+            animation: fm-press-out calc(var(--fm-contact) * var(--fm-slow, 1)) linear calc((var(--fm-T) - var(--fm-contact)) * var(--fm-slow, 1))
+                both;
+        }
+
+        .fm-scene[data-fm-durations]:is([data-fm-phase='in'], [data-fm-phase='hold']) .fm-tap::after {
+            animation: fm-inner calc(var(--fm-contact) * var(--fm-slow, 1)) linear both;
+        }
+
+        .fm-scene[data-fm-durations][data-fm-phase='out'] .fm-tap::after {
+            animation: fm-inner-out calc(var(--fm-contact) * var(--fm-slow, 1)) linear calc((var(--fm-T) - var(--fm-contact)) * var(--fm-slow, 1))
+                both;
+        }
+
+        /* The busy bar: ruled, closed, lifted, ruled again. Never a clock
+           phase: it loops by itself. */
+        .fm-scene:is([data-fm-busybar='closed'], [data-fm-durations]) .fm-bar:not(.fm-share) .kp-progressbar__fill {
+            animation: fm-bar-band calc(var(--fm-loop) * var(--fm-slow, 1)) linear infinite;
+        }
+
+        .fm-scene:is([data-fm-busybar='closed'], [data-fm-durations]) .fm-bar:not(.fm-share) .kp-progressbar__track::after {
+            animation: fm-bar-second calc(var(--fm-loop) * var(--fm-slow, 1)) linear infinite;
+        }
+
+        .fm-scene:is([data-fm-busybar='closed'], [data-fm-durations]) .fm-bar:not(.fm-share) .kp-progressbar__head {
+            display: block;
+            animation: fm-bar-head calc(var(--fm-loop) * var(--fm-slow, 1)) linear infinite;
+        }
+
+        .fm-scene[data-fm-busybar='leader'] .fm-bar:not(.fm-share) .kp-progressbar__fill {
+            clip-path: inset(0 calc(100% - min(var(--fm-n) * 7 * var(--kp-ps-px), round(down, 100%, 7 * var(--kp-ps-px)))) 0 0);
+            animation: fm-leader calc(2400ms * var(--fm-slow, 1)) linear infinite;
+        }
+
+        .fm-scene[data-fm-busybar='slides'] .fm-bar:not(.fm-share) .kp-progressbar__fill {
+            animation: fm-slide calc(2600ms * var(--fm-slow, 1)) cubic-bezier(0.42, 0, 0.58, 1) infinite alternate;
+        }
+
+        /* ── 9 · A live update ─────────────────────────────────────────── */
+
+        .fm-scene:is([data-fm-live='stamp'], [data-fm-live='signed']) .fm-rules {
+            display: none;
+        }
+
+        .fm-scene[data-fm-live='stamp'] .fm-carrier::before {
+            content: '';
+            position: absolute;
+            inset: -4px -8px;
+            border: 1.5px solid var(--fm-act);
+            opacity: 0;
+            pointer-events: none;
+            rotate: -2deg;
+        }
+
+        .fm-scene[data-fm-live='stamp'] .fm-state__dot {
+            position: relative;
+        }
+
+        .fm-scene[data-fm-live='stamp'] .fm-spark::before {
+            inset: -12% -3% auto auto;
+            inline-size: 1.5rem;
+            block-size: 1.5rem;
+        }
+
+        .fm-scene[data-fm-live='stamp']:is([data-fm-phase='in'], [data-fm-phase='hold']) .fm-carrier::before {
+            animation: fm-stamp calc(1000ms * var(--fm-slow, 1)) cubic-bezier(0.2, 0, 0, 1) both;
+        }
+
+        .fm-scene[data-fm-live='stamp'][data-fm-phase='out'] .fm-carrier::before {
+            animation: fm-stamp-out calc(1000ms * var(--fm-slow, 1)) cubic-bezier(1, 0, 0.8, 1) calc((var(--fm-T) - 1000ms) * var(--fm-slow, 1)) both;
+        }
+
+        /* Signed again: the figure is retraced in its own serif, eased in and out. */
+        .fm-scene[data-fm-live='signed'] .fm-carrier > [data-fm-text]::after {
+            content: attr(data-fm-text);
+            position: absolute;
+            inset: 0;
+            color: var(--fm-act);
+            clip-path: inset(0 100% 0 0);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .fm-scene[data-fm-live='signed']:is([data-fm-phase='in'], [data-fm-phase='hold']) .fm-carrier > [data-fm-text]::after {
+            animation: fm-retrace calc(1000ms * var(--fm-slow, 1)) cubic-bezier(0.42, 0, 0.58, 1) both;
+        }
+
+        .fm-scene[data-fm-live='signed'][data-fm-phase='out'] .fm-carrier > [data-fm-text]::after {
+            animation: fm-retrace-out calc(1000ms * var(--fm-slow, 1)) cubic-bezier(0.42, 0, 0.58, 1) calc((var(--fm-T) - 1000ms) * var(--fm-slow, 1))
+                both;
+        }
+
+        .fm-scene[data-fm-live='signed']:is([data-fm-phase='in'], [data-fm-phase='hold']) .fm-spark__retrace {
+            animation: fm-retrace-line calc(1000ms * var(--fm-slow, 1)) cubic-bezier(0.42, 0, 0.58, 1) both;
+        }
+
+        .fm-scene[data-fm-live='signed'][data-fm-phase='out'] .fm-spark__retrace {
+            animation: fm-retrace-line-out calc(1000ms * var(--fm-slow, 1)) cubic-bezier(0.42, 0, 0.58, 1)
+                calc((var(--fm-T) - 1000ms) * var(--fm-slow, 1)) both;
+        }
+
+        /* ── 10 · Loading: every picture loops by itself ───────────────── */
+
+        .fm-scene:is(:not([data-fm-loading]), [data-fm-loading='lines']) .fm-load__lines i {
+            animation: fm-ledger calc(var(--fm-loop) * var(--fm-slow, 1)) linear infinite;
+            animation-delay: calc(var(--i) * 300ms * var(--fm-slow, 1));
+        }
+
+        .fm-scene[data-fm-direction='rise'] .fm-load__lines i {
+            animation-name: fm-ledger-up;
+            animation-delay: calc((2 - var(--i)) * 300ms * var(--fm-slow, 1));
+        }
+
+        .fm-scene[data-fm-loading='leader'] .fm-load__leader {
+            animation: fm-leader calc(var(--fm-loop) * var(--fm-slow, 1)) linear infinite;
+        }
+
+        .fm-scene[data-fm-loading='seal'] .fm-load__seal {
+            animation: fm-seal calc(1600ms * var(--fm-slow, 1)) cubic-bezier(0.42, 0, 0.58, 1) infinite;
+        }
+
+        /* ── 12 · The spinner: arcs ruled round the ring ────────────────── */
+
+        .fm-scene[data-fm-spinner='arc'] .fm-spin__a {
+            animation: fm-arc-outer calc(var(--fm-loop) * var(--fm-slow, 1)) linear infinite;
+        }
+
+        .fm-scene[data-fm-spinner='arc'] .fm-spin__c {
+            animation: fm-arc-inner calc(var(--fm-loop) * var(--fm-slow, 1)) linear infinite;
+        }
+
+        .fm-scene[data-fm-spinner='dots'] .fm-spin__dots {
+            animation: fm-dots calc(var(--fm-loop) * var(--fm-slow, 1)) linear infinite;
+        }
+
+        /* ── 13 · Leaving and arriving ─────────────────────────────────── */
+
+        /* Folded up like a letter (the register): the part collapses into its
+           top edge and arrives unfolding from it. */
+        .fm-scene[data-fm-leave='folded'] .fm-frame {
+            transform-origin: 50% 0;
+        }
+
+        .fm-scene[data-fm-leave='folded'][data-fm-phase='gap'] .fm-frame {
+            transform: scaleY(0);
+            opacity: 0.2;
+        }
+
+        .fm-scene[data-fm-leave='folded']:is([data-fm-phase='in'], [data-fm-phase='hold']) .fm-frame {
+            animation: fm-fold calc(var(--fm-len) * var(--fm-slow, 1)) cubic-bezier(0, 0, 0.6, 1) both;
+        }
+
+        .fm-scene[data-fm-leave='folded'][data-fm-phase='out'] .fm-frame {
+            animation: fm-fold-out calc(var(--fm-len) * var(--fm-slow, 1)) cubic-bezier(0.4, 0, 1, 1)
+                calc((var(--fm-T) - var(--fm-len)) * var(--fm-slow, 1)) both;
+        }
+
+        /* Struck through: a rule through the middle, the part revealed behind
+           it, the rule lifted; it leaves the same way backwards. */
+        .fm-scene[data-fm-leave='struck'] .fm-frame::before {
+            inset-block-start: calc(50% - 1px);
+        }
+
+        .fm-scene[data-fm-leave='struck'][data-fm-phase='gap'] .fm-frame {
+            clip-path: inset(-3rem 100% -3rem -3rem);
+        }
+
+        .fm-scene[data-fm-leave='struck']:is([data-fm-phase='in'], [data-fm-phase='hold']) .fm-frame {
+            animation: fm-wipe calc(var(--fm-len) * var(--fm-slow, 1)) linear both;
+        }
+
+        .fm-scene[data-fm-leave='struck']:is([data-fm-phase='in'], [data-fm-phase='hold']) .fm-frame::before {
+            animation:
+                fm-pen-ruled calc(var(--fm-len) * var(--fm-slow, 1)) linear both,
+                fm-pen-lift calc(var(--fm-lift) * var(--fm-slow, 1)) linear calc(var(--fm-len) * var(--fm-slow, 1)) forwards;
+        }
+
+        .fm-scene[data-fm-leave='struck'][data-fm-phase='out'] .fm-frame {
+            animation: fm-wipe-out calc(var(--fm-len) * var(--fm-slow, 1)) linear calc((var(--fm-T) - var(--fm-len)) * var(--fm-slow, 1)) both;
+        }
+
+        .fm-scene[data-fm-leave='struck'][data-fm-phase='out'] .fm-frame::before {
+            animation:
+                fm-pen-lift-out calc(var(--fm-lift) * var(--fm-slow, 1)) linear
+                    calc((var(--fm-T) - var(--fm-len) - var(--fm-lift)) * var(--fm-slow, 1)) both,
+                fm-pen-ruled-out calc(var(--fm-len) * var(--fm-slow, 1)) linear calc((var(--fm-T) - var(--fm-len)) * var(--fm-slow, 1)) forwards;
+        }
+    }
+
+    /* ── 14 to 17 · Pointing, focus and the press ────────────────────── */
+
+    /* One manner for every control, wherever it stands (G14). The pose
+       classes are the page's (`fm-pointed`, `fm-pointed-focus`,
+       `fm-pointed-press`; the State buttons give them to every control, the
+       review dialog takes them away and gives them back), the register
+       draws the same on :hover, :focus-visible and :active. */
+
+    @media (prefers-reduced-motion: no-preference) {
+        .fm-scene :is(.kp-button, .kp-menu__item, .fm-day, .kp-kpi) {
+            transition:
+                background-color var(--fx-duration, 180ms) var(--fx-ease, ease),
+                border-color var(--fx-duration, 180ms) var(--fx-ease, ease),
+                box-shadow var(--fx-duration, 180ms) var(--fx-ease, ease),
+                text-decoration-color var(--fx-duration, 180ms) var(--fx-ease, ease),
+                translate var(--fx-duration, 180ms) var(--fx-ease, ease);
+        }
+    }
+
+    /* Pointing draws the inner rule (G15). */
+    .fm-scene .kp-button.fm-pointed {
+        background-color: var(--secondary-hover);
+    }
+
+    .fm-scene .kp-button--primary.fm-pointed {
+        background-color: var(--primary-hover);
+        border-color: var(--primary-hover);
+    }
+
+    .fm-scene .kp-button--ghost.fm-pointed {
+        background-color: var(--kp-highlight, hsl(from var(--foreground) h s l / 0.08));
+    }
+
+    .fm-scene .kp-button.fm-pointed::after {
+        opacity: 1;
+    }
+
+    .fm-scene .kp-menu__item.fm-pointed {
+        background: var(--muted);
+        text-decoration: underline 2px var(--fm-act);
+        text-underline-offset: 0.3em;
+    }
+
+    .fm-scene :is(.fm-in-kpi, .fm-day).fm-pointed {
+        box-shadow:
+            inset 0 0 0 2px var(--card),
+            inset 0 0 0 3px var(--fm-act);
+    }
+
+    .fm-scene .fm-day.fm-pointed {
+        text-decoration: underline 2px var(--fm-act);
+        text-underline-offset: 0.2em;
+    }
+
+    .fm-scene .fm-pointed > a {
+        text-decoration-style: double;
+        text-decoration-thickness: 1px;
+        text-decoration-color: currentColor;
+    }
+
+    /* Focus is DI2's two-channel ring, a system constant (G16); the inner
+       rule stays drawn under it when the part is also pointed at. */
+    .fm-scene .fm-pointed-focus {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast);
+        outline-offset: var(--kp-focus-ring-inner-width, 2px);
+        box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring);
+    }
+
+    .fm-scene :is(.fm-in-kpi, .fm-day).fm-pointed.fm-pointed-focus {
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 0 0 2px var(--card),
+            inset 0 0 0 3px var(--fm-act);
+    }
+
+    /* A press doubles the rule (G17): the second rule 3 px further in, the
+       face takes the pressed ground, nothing moves. */
+    .fm-scene .kp-button.fm-pointed-press {
+        background-color: var(--secondary-active);
+        box-shadow:
+            inset 0 0 0 5px var(--secondary-active),
+            inset 0 0 0 6px var(--fm-act);
+    }
+
+    .fm-scene .kp-button--primary.fm-pointed-press {
+        background-color: var(--primary-active);
+        border-color: var(--primary-active);
+        box-shadow:
+            inset 0 0 0 5px var(--primary-active),
+            inset 0 0 0 6px var(--primary-foreground);
+    }
+
+    .fm-scene .kp-button.fm-pointed-press::after {
+        opacity: 1;
+    }
+
+    .fm-scene .kp-menu__item.fm-pointed-press {
+        background: var(--muted);
+        text-decoration: underline double var(--fm-act);
+        text-decoration-thickness: 1px;
+        text-underline-offset: 0.3em;
+    }
+
+    .fm-scene :is(.fm-in-kpi, .fm-day).fm-pointed-press {
+        background-color: color-mix(in oklab, var(--secondary-active) 35%, var(--card));
+        box-shadow:
+            inset 0 0 0 2px var(--card),
+            inset 0 0 0 3px var(--fm-act),
+            inset 0 0 0 5px var(--card),
+            inset 0 0 0 6px var(--fm-act);
+    }
+
+    .fm-scene .fm-day.fm-pointed-press {
+        text-decoration: underline double var(--fm-act);
+        text-decoration-thickness: 1px;
+        text-underline-offset: 0.2em;
+    }
+
+    /* ── 14 · Buttons inside composites ──────────────────────────────── */
+
+    /* Framed: the same manners, the header's actions and the drawer's buttons
+       on a ruled plate the composite adds. */
+    .fm-scene[data-fm-composites='framed'] .fm-group {
+        inline-size: fit-content;
+        padding: 3px;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--fm-plate);
+    }
+
+    /* As today: the header's ruled plate that thickens and presses inward,
+       the key figure's guilloche, the tile's lift: three manners. */
+    .fm-scene[data-fm-composites='mix'] .fm-in-header {
+        border: 1px solid var(--primary);
+        border-radius: 0.25rem;
+        box-shadow: inset 0 -1px 0 0 var(--primary);
+    }
+
+    .fm-scene[data-fm-composites='mix'] .fm-in-header::after {
+        content: none;
+    }
+
+    .fm-scene[data-fm-composites='mix'] .fm-in-header.fm-pointed {
+        background-color: var(--secondary);
+        box-shadow: inset 0 -3px 0 0 var(--primary);
+    }
+
+    .fm-scene[data-fm-composites='mix'] .fm-in-header.kp-button--primary.fm-pointed {
+        background-color: var(--primary);
+    }
+
+    .fm-scene[data-fm-composites='mix'] .fm-in-header.fm-pointed-focus {
+        outline: 2px dotted var(--ring);
+        outline-offset: 2px;
+        box-shadow: inset 0 -1px 0 0 var(--primary);
+    }
+
+    .fm-scene[data-fm-composites='mix'] .fm-in-header.fm-pointed-press {
+        translate: 0 1px;
+        box-shadow: inset 0 2px 0 0 var(--primary);
+    }
+
+    .fm-scene[data-fm-composites='mix'] .fm-in-kpi.fm-pointed {
+        box-shadow: none;
+        background: repeating-radial-gradient(circle at 78% 130%, transparent 0 6px, hsl(from var(--primary) h s l / 0.14) 6px 7px), var(--card);
+    }
+
+    .fm-scene[data-fm-composites='mix'] .fm-in-kpi.fm-pointed-focus {
+        outline: 2px solid var(--ring);
+        outline-offset: 3px;
+        box-shadow: none;
+    }
+
+    .fm-scene[data-fm-composites='mix'] .fm-in-kpi.fm-pointed-press {
+        box-shadow: none;
+        background: color-mix(in oklab, var(--foreground) 7%, var(--card));
+    }
+
+    .fm-scene[data-fm-composites='mix'] .fm-in-tile {
+        transition: translate var(--fx-duration, 180ms) var(--fx-ease, ease);
+    }
+
+    .fm-scene[data-fm-composites='mix'] .fm-in-tile:has(.fm-pointed) {
+        translate: 0 -2px;
+        box-shadow: 0 6px 14px -8px color-mix(in srgb, var(--foreground) 35%, transparent);
+    }
+
+    .fm-scene[data-fm-composites='mix'] .fm-tile-link.fm-pointed {
+        text-decoration: underline;
+        text-decoration-color: var(--primary);
+    }
+
+    .fm-scene[data-fm-composites='mix'] .fm-tile-link.fm-pointed::after {
+        opacity: 0;
+    }
+
+    /* ── 15 · Pointing at something ──────────────────────────────────── */
+
+    /* A rule under the label (the menu's quill underline carried to every control). */
+    .fm-scene[data-fm-hover='under'] :is(.kp-button, .kp-menu__item, .fm-day, .fm-in-kpi).fm-pointed {
+        box-shadow: none;
+        text-decoration: underline 2px var(--fm-act);
+        text-underline-offset: 0.3em;
+    }
+
+    .fm-scene[data-fm-hover='under'] .kp-button--primary.fm-pointed {
+        text-decoration-color: currentColor;
+    }
+
+    .fm-scene[data-fm-hover='under'] .kp-button.fm-pointed::after {
+        opacity: 0;
+    }
+
+    .fm-scene[data-fm-hover='under'] .fm-in-kpi.fm-pointed {
+        text-decoration: none;
+    }
+
+    .fm-scene[data-fm-hover='under'] .fm-in-kpi.fm-pointed .kp-kpi__label {
+        text-decoration: underline 2px var(--fm-act);
+        text-underline-offset: 0.3em;
+    }
+
+    /* The lift (the tiles'): a rise on a soft shadow, the Open link underlined. */
+    .fm-scene[data-fm-hover='lift'] :is(.kp-button, .kp-menu__item, .fm-day, .fm-in-kpi).fm-pointed,
+    .fm-scene[data-fm-hover='lift'] .fm-pointed-tile:has(.fm-pointed) {
+        translate: 0 -2px;
+        box-shadow: 0 6px 14px -8px color-mix(in srgb, var(--foreground) 35%, transparent);
+        text-decoration: none;
+    }
+
+    .fm-scene[data-fm-hover='lift'] .kp-button.fm-pointed::after {
+        opacity: 0;
+    }
+
+    .fm-scene[data-fm-hover='lift'] .fm-tile-link.fm-pointed {
+        translate: none;
+        box-shadow: none;
+        text-decoration: underline;
+        text-decoration-color: var(--fm-act);
+    }
+
+    .fm-scene[data-fm-hover='lift'] .fm-pointed > a {
+        text-decoration-style: solid;
+    }
+
+    /* ── 16 · The focus ring ─────────────────────────────────────────── */
+
+    /* The double rule as the ring: a thin rule just round the control and a
+       strong one outside it. */
+    .fm-scene[data-fm-focus='double'] .fm-pointed-focus {
+        outline: 2px solid var(--fm-act);
+        outline-offset: 5px;
+        box-shadow:
+            0 0 0 2px var(--background),
+            0 0 0 3px var(--fm-act);
+    }
+
+    .fm-scene[data-fm-focus='double'] :is(.fm-in-kpi, .fm-day).fm-pointed.fm-pointed-focus {
+        box-shadow:
+            0 0 0 2px var(--background),
+            0 0 0 3px var(--fm-act),
+            inset 0 0 0 2px var(--card),
+            inset 0 0 0 3px var(--fm-act);
+    }
+
+    /* As today: the register's ring plus the header's dotted outline and the
+       key figure's single 2 px ring. */
+    .fm-scene[data-fm-focus='mix'] .fm-in-header.fm-pointed-focus {
+        outline: 2px dotted var(--ring);
+        outline-offset: 2px;
+        box-shadow: none;
+    }
+
+    .fm-scene[data-fm-focus='mix'] .fm-in-kpi.fm-pointed-focus {
+        outline: 2px solid var(--ring);
+        outline-offset: 3px;
+        box-shadow: none;
+    }
+
+    /* ── 17 · The press ──────────────────────────────────────────────── */
+
+    /* The plate pressed a shade: the face darkens, no rule. */
+    .fm-scene[data-fm-press='pressed'] .kp-button.fm-pointed-press {
+        background-color: color-mix(in oklab, var(--secondary-active) 92%, var(--foreground));
+        box-shadow: none;
+    }
+
+    .fm-scene[data-fm-press='pressed'] .kp-button--primary.fm-pointed-press {
+        background-color: color-mix(in oklab, var(--primary-active) 85%, var(--foreground));
+        border-color: transparent;
+    }
+
+    .fm-scene[data-fm-press='pressed'] .kp-button.fm-pointed-press::after {
+        opacity: 0;
+    }
+
+    .fm-scene[data-fm-press='pressed'] .kp-menu__item.fm-pointed-press {
+        background: color-mix(in oklab, var(--muted) 90%, var(--foreground));
+        text-decoration: none;
+    }
+
+    .fm-scene[data-fm-press='pressed'] :is(.fm-in-kpi, .fm-day).fm-pointed-press {
+        background-color: color-mix(in oklab, var(--card) 92%, var(--foreground));
+        box-shadow: none;
+        text-decoration: none;
+    }
+
+    /* As today: the register's pressed ground and nothing else. */
+    .fm-scene[data-fm-press='none'] .kp-button.fm-pointed-press {
+        box-shadow: none;
+    }
+
+    .fm-scene[data-fm-press='none'] .kp-button--primary.fm-pointed-press {
+        border-color: var(--primary-active);
+    }
+
+    .fm-scene[data-fm-press='none'] .kp-button.fm-pointed-press::after {
+        opacity: 0;
+    }
+
+    .fm-scene[data-fm-press='none'] .kp-menu__item.fm-pointed-press {
+        background: transparent;
+        text-decoration: none;
+    }
+
+    .fm-scene[data-fm-press='none'] :is(.fm-in-kpi, .fm-day).fm-pointed-press {
+        background-color: var(--card);
+        box-shadow: none;
+        text-decoration: none;
+    }
+
+    /* ── The keyframes the options draw with ─────────────────────────── */
+
+    @keyframes fm-sheet {
+        from {
+            opacity: 0;
+            transform: translateY(14px) scale(0.985);
+        }
+
+        to {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    @keyframes fm-sheet-out {
+        from {
+            opacity: 1;
+            transform: none;
+        }
+
+        to {
+            opacity: 0;
+            transform: translateY(14px) scale(0.985);
+        }
+    }
+
+    @keyframes fm-fade {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes fm-fade-out {
+        from {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    @keyframes fm-unroll {
+        from {
+            transform: scaleY(0);
+        }
+
+        to {
+            transform: scaleY(1);
+        }
+    }
+
+    @keyframes fm-unroll-out {
+        from {
+            transform: scaleY(1);
+        }
+
+        to {
+            transform: scaleY(0);
+        }
+    }
+
+    @keyframes fm-fold {
+        from {
+            transform: scaleY(0);
+            opacity: 0.2;
+        }
+
+        to {
+            transform: scaleY(1);
+            opacity: 1;
+        }
+    }
+
+    @keyframes fm-fold-out {
+        from {
+            transform: scaleY(1);
+            opacity: 1;
+        }
+
+        to {
+            transform: scaleY(0);
+            opacity: 0.2;
+        }
+    }
+
+    @keyframes fm-rise {
+        from {
+            translate: 0 100%;
+            clip-path: inset(0 -1rem 100% -1rem);
+        }
+
+        to {
+            translate: 0 0;
+            clip-path: inset(-1rem);
+        }
+    }
+
+    @keyframes fm-rise-out {
+        from {
+            translate: 0 0;
+            clip-path: inset(-1rem);
+        }
+
+        to {
+            translate: 0 100%;
+            clip-path: inset(0 -1rem 100% -1rem);
+        }
+    }
+
+    @keyframes fm-grow {
+        from {
+            scale: 1 0;
+        }
+
+        to {
+            scale: 1 1;
+        }
+    }
+
+    @keyframes fm-grow-out {
+        from {
+            scale: 1 1;
+        }
+
+        to {
+            scale: 1 0;
+        }
+    }
+
+    @keyframes fm-leaf {
+        from {
+            transform: rotateX(-90deg);
+        }
+
+        to {
+            transform: rotateX(0deg);
+        }
+    }
+
+    @keyframes fm-leaf-out {
+        from {
+            transform: rotateX(0deg);
+        }
+
+        to {
+            transform: rotateX(-90deg);
+        }
+    }
+
+    @keyframes fm-draw {
+        from {
+            stroke-dashoffset: 1;
+        }
+
+        to {
+            stroke-dashoffset: 0;
+        }
+    }
+
+    @keyframes fm-draw-out {
+        from {
+            stroke-dashoffset: 0;
+        }
+
+        to {
+            stroke-dashoffset: 1;
+        }
+    }
+
+    /* A contact: the face goes to the pressed ground and the second rule closes the first. */
+    @keyframes fm-press {
+        from {
+            background-color: var(--secondary);
+            box-shadow:
+                inset 0 0 0 5px var(--secondary),
+                inset 0 0 0 6px transparent;
+        }
+
+        to {
+            background-color: var(--secondary-active);
+            box-shadow:
+                inset 0 0 0 5px var(--secondary-active),
+                inset 0 0 0 6px var(--primary);
+        }
+    }
+
+    @keyframes fm-press-out {
+        from {
+            background-color: var(--secondary-active);
+            box-shadow:
+                inset 0 0 0 5px var(--secondary-active),
+                inset 0 0 0 6px var(--primary);
+        }
+
+        to {
+            background-color: var(--secondary);
+            box-shadow:
+                inset 0 0 0 5px var(--secondary),
+                inset 0 0 0 6px transparent;
+        }
+    }
+
+    @keyframes fm-inner {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes fm-inner-out {
+        from {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    /* The checked stamp (the register's update): a frame lands askew from a
+       third larger and soaks in. */
+    @keyframes fm-stamp {
+        0% {
+            opacity: 1;
+            scale: 1.3;
+            rotate: -5deg;
+        }
+
+        25% {
+            opacity: 0.9;
+        }
+
+        65% {
+            opacity: 0.6;
+        }
+
+        100% {
+            opacity: 0;
+            scale: 1;
+            rotate: -2deg;
+        }
+    }
+
+    @keyframes fm-stamp-out {
+        0% {
+            opacity: 0;
+            scale: 1;
+            rotate: -2deg;
+        }
+
+        35% {
+            opacity: 0.6;
+        }
+
+        75% {
+            opacity: 0.9;
+        }
+
+        100% {
+            opacity: 1;
+            scale: 1.3;
+            rotate: -5deg;
+        }
+    }
+
+    /* Signed again: the figure retraced in its own serif, then dry. */
+    @keyframes fm-retrace {
+        0% {
+            clip-path: inset(0 100% 0 0);
+            opacity: 1;
+        }
+
+        70% {
+            clip-path: inset(0);
+            opacity: 1;
+        }
+
+        100% {
+            clip-path: inset(0);
+            opacity: 0;
+        }
+    }
+
+    @keyframes fm-retrace-out {
+        0% {
+            clip-path: inset(0);
+            opacity: 0;
+        }
+
+        30% {
+            clip-path: inset(0);
+            opacity: 1;
+        }
+
+        100% {
+            clip-path: inset(0 100% 0 0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes fm-retrace-line {
+        0% {
+            stroke-dashoffset: 1;
+            opacity: 1;
+        }
+
+        70% {
+            stroke-dashoffset: 0;
+            opacity: 1;
+        }
+
+        100% {
+            stroke-dashoffset: 0;
+            opacity: 0;
+        }
+    }
+
+    @keyframes fm-retrace-line-out {
+        0% {
+            stroke-dashoffset: 0;
+            opacity: 0;
+        }
+
+        30% {
+            stroke-dashoffset: 0;
+            opacity: 1;
+        }
+
+        100% {
+            stroke-dashoffset: 1;
+            opacity: 1;
+        }
+    }
+
+    /* The loops. */
+    @keyframes fm-ledger-up {
+        0% {
+            translate: 0 10px;
+            clip-path: inset(100% 0 0 0);
+        }
+
+        17% {
+            translate: 0 0;
+            clip-path: inset(0);
+        }
+
+        62% {
+            translate: 0 0;
+            clip-path: inset(0);
+        }
+
+        79%,
+        100% {
+            translate: 0 -10px;
+            clip-path: inset(0 0 100% 0);
+        }
+    }
+
+    @keyframes fm-footsteps {
+        to {
+            background-position: 7px 50%;
+        }
+    }
+
+    @keyframes fm-leader {
+        0% {
+            --fm-n: 0;
+        }
+
+        85%,
+        100% {
+            --fm-n: 40;
+        }
+    }
+
+    @keyframes fm-seal {
+        0%,
+        100% {
+            scale: 0.6;
+        }
+
+        50% {
+            scale: 1.08;
+        }
+    }
+
+    @keyframes fm-slide {
+        from {
+            translate: 0 0;
+        }
+
+        to {
+            translate: 257% 0;
+        }
+    }
+
+    @keyframes fm-dots {
+        0% {
+            --fm-a0: 0deg;
+            --fm-a1: 0deg;
+            animation-timing-function: steps(12, jump-end);
+        }
+
+        75% {
+            --fm-a0: 0deg;
+            --fm-a1: 360deg;
+            animation-timing-function: linear;
+        }
+
+        85% {
+            --fm-a0: 0deg;
+            --fm-a1: 360deg;
+            animation-timing-function: steps(12, jump-end);
+        }
+
+        100% {
+            --fm-a0: 360deg;
+            --fm-a1: 360deg;
+        }
+    }
+}
