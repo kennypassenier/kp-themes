@@ -81,10 +81,10 @@ gate pressed-state node gates/check-pressed-state.mjs || exit 1
 # the import closure of the modules chassis-rs vendors (AR28)
 gate closure node gates/check-closure.mjs || exit 1
 
-# The motion gate [DI5, DI7]: every keyframe under the flash threshold,
-# described in TIMINGS, inside a reduced-motion guard. Out of the gate set
-# while it reported 412 violations; joined once it read zero (the port
-# session, 2026-10-08).
+# The motion gate [DI5, DI7]: every keyframe described in TIMINGS, inside a
+# reduced-motion guard. A flash rate over 3 a second is printed as a
+# warning, never a refusal (Kenny, 2026-10-08: a guideline). Joined the
+# gate set at the port session, 2026-10-08.
 gate motion node gates/check-motion.mjs || exit 1
 
 # the utility API matches its source and its documented list (TH93)

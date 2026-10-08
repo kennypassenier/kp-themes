@@ -408,7 +408,7 @@ export const TIMINGS = Object.freeze({
     // slides square. No blur and no chromatic split — those belong to the
     // spectral instrument. Opacity 0 to 1 once, so no opposing change.
     'kp-mill': { durationMs: 340, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
-    'kp-tracking': { durationMs: 1400, cycles: 1, property: 'opacity', luminanceSteps: [0, 1, 0.35, 1, 1, 0] },
+    'kp-tracking': { durationMs: 700, cycles: 1, property: 'opacity', luminanceSteps: [0, 1, 0.35, 1, 1, 0] },
     'kp-shine': { durationMs: 1400, cycles: 1, property: 'background-position', luminanceSteps: [] },
     'kp-tube-on': { durationMs: 1100, cycles: 1, property: 'color', luminanceSteps: [0, 1, 0, 1] },
     'kp-sun-cut': { durationMs: 360, cycles: 1, property: 'opacity', luminanceSteps: [1, 1, 0] },

@@ -35,15 +35,15 @@ the selectors and their order are identical, which is what
 | `css/retro-register.css` | 130.1 kB | 66.0 kB | 49% |
 | `css/sepia-register.css` | 92.5 kB | 45.2 kB | 51% |
 | `css/solstice-register.css` | 82.5 kB | 44.8 kB | 46% |
-| `css/synthwave-register.css` | 141.5 kB | 73.7 kB | 48% |
+| `css/synthwave-register.css` | 141.3 kB | 73.7 kB | 48% |
 | `css/terminal-register.css` | 117.7 kB | 61.4 kB | 48% |
 | `css/themes.css` | 173.9 kB | 114.4 kB | 34% |
 | `css/titanium-register.css` | 103.9 kB | 50.6 kB | 51% |
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 45% |
-| `dist/kp-themes.css` | 2547.6 kB | 1292.2 kB | 49% |
+| `dist/kp-themes.css` | 2547.3 kB | 1292.2 kB | 49% |
 | `dist/kp-themes.js` | 744.1 kB | 408.1 kB | 45% |
 
-The loose stylesheets together weigh **2610.9 kB** authored and
+The loose stylesheets together weigh **2610.7 kB** authored and
 **1331.9 kB** minified, 49% less. A page loading one theme's
 register rather than the whole bundle carries only that register's row.
 

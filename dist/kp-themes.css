@@ -20224,7 +20224,7 @@
         --kp-wipe: 720ms;
         --kp-rule-draw: 900ms;
         --kp-rule-weight: 2px;
-        --kp-tracking: 1400ms;
+        --kp-tracking: 700ms;
         --kp-shine: 1400ms;
         --kp-tube-on: 1100ms;
         --kp-sun-cut: 360ms;
@@ -22186,11 +22186,8 @@
        durations are literal because check-motion.mjs computes DI5's rate
        from them; the matching --kp-* knobs are what js/effects.js reads. */
     @media (prefers-reduced-motion: no-preference) {
-        /* 1400 ms (was 700): the band's four light changes (in, dip, back,
-           out) at 700 ms made 4 a second, over the 3 the flash gate allows;
-           the same steps at half the pace make 2.9 [port session, 2026-10-08]. */
         [data-theme='synthwave'] [data-kp-reveal='headline'].is-tracking::before {
-            animation: kp-tracking 1400ms steps(1, end) 1;
+            animation: kp-tracking 700ms steps(1, end) 1;
         }
 
         [data-theme='synthwave'] [data-kp-reveal='headline'].is-shine::after {

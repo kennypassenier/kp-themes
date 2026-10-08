@@ -41,7 +41,7 @@
         "light": "a7e764e10d3112e7",
         "dark": "e06477ba536e9587",
         "cyberpunk": "3595c22a9abd806b",
-        "synthwave": "9d85cf87c45d9d5c",
+        "synthwave": "b2c5fc611ffe3c3a",
         "pastel": "46fa1e7800d9fc12",
         "terminal": "300a03bb44a504ee",
         "forest": "0c629b486ce520bc",
@@ -4265,7 +4265,7 @@
         "synthwave||@media (prefers-reduced-motion: no-preference)||[data-kp-leaving]": "1ef3b2172b5778b3",
         "synthwave||@media (prefers-reduced-motion: no-preference)||[data-kp-resizing]": "def75370425e22cd",
         "synthwave||@media (prefers-reduced-motion: no-preference)||[data-kp-reveal='headline'].is-shine": "89f60a4489bc0a68",
-        "synthwave||@media (prefers-reduced-motion: no-preference)||[data-kp-reveal='headline'].is-tracking": "f221caabf6e5dcd0",
+        "synthwave||@media (prefers-reduced-motion: no-preference)||[data-kp-reveal='headline'].is-tracking": "2fd5210a17eac6b0",
         "synthwave||@media (prefers-reduced-motion: no-preference)||[data-kp-reveal='rule']": "92996853a75fb423",
         "synthwave||@media (prefers-reduced-motion: no-preference)||[data-kp-surface='hero']": "f004e12a54f0eeb1",
         "synthwave||@media (prefers-reduced-motion: no-preference)||[data-kp-updating='laser']": "0aa7c20978c22b37",
@@ -6638,7 +6638,7 @@
             ]
         },
         "media": {
-            "modules": "a034afe834b0c6e9",
+            "modules": "23d38bbd161f936e",
             "families": [
                 "data-kp-columns",
                 "data-kp-commit-ms",
@@ -7287,7 +7287,7 @@
             ]
         },
         "page-effects": {
-            "modules": "3e72f64fb5e5bf4d",
+            "modules": "517483e08ffc59f8",
             "families": [
                 "data-kp-count",
                 "data-kp-count-state",

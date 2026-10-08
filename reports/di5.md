@@ -12,7 +12,7 @@ reported here in capitals and corrected by nobody but Kenny.
 | `kp-sidenav-backdrop` | opacity | 220 ms | 1× | 0 → 1 | 1.00/s | under |
 | `kp-rake` | translate | 620 ms | 1× | — | 0.00/s | under |
 | `kp-mill` | opacity | 340 ms | 1× | 0 → 1 | 1.00/s | under |
-| `kp-tracking` | opacity | 1400 ms | 1× | 0 → 1 → 0.35 → 1 → 1 → 0 | 2.86/s | under |
+| `kp-tracking` | opacity | 700 ms | 1× | 0 → 1 → 0.35 → 1 → 1 → 0 | 4.00/s | **OVER THE THRESHOLD (S42: reported)** |
 | `kp-shine` | background-position | 1400 ms | 1× | — | 0.00/s | under |
 | `kp-tube-on` | color | 1100 ms | 1× | 0 → 1 → 0 → 1 | 0.00/s | under |
 | `kp-sun-cut` | opacity | 360 ms | 1× | 1 → 1 → 0 | 1.00/s | under |

@@ -666,6 +666,12 @@ export function reachableKeyframes(source, shared) {
 if (import.meta.url === `file://${process.argv[1]}`) {
     let failed = 0;
     let checked = 0;
+    // The flash threshold is a guideline, not a refusal (Kenny, 2026-10-08):
+    // a rate over it is printed as a warning and the gate still passes. What
+    // fails is a keyframe the gate cannot describe, a missing or drifted
+    // TIMINGS row, and motion outside a reduced-motion guard.
+    /** @type {string[]} */
+    const warnings = [];
     /** @type {string[]} */
     const skipped = [];
     /** @type {Map<string, {stop: number, opacity: number}[]>} */
@@ -691,8 +697,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
                 checked++;
                 const rate = flashesPerSecond(stops, shortest, anim.cycles);
                 if (rate > MAX_FLASHES_PER_SECOND) {
-                    failed++;
-                    console.error(
+                    warnings.push(
                         `${name}: ${anim.name} has a computed duration (${anim.duration}) and would make ${rate.toFixed(1)} ` +
                             `opposing luminance changes per second at the shortest duration any theme declares (${shortest}ms).`,
                     );
@@ -721,8 +726,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
             // case is handled above and returns before here.
             const rate = flashesPerSecond(stops, durationBound(anim, source), anim.cycles);
             if (rate > MAX_FLASHES_PER_SECOND) {
-                failed++;
-                console.error(
+                warnings.push(
                     `${name}: ${anim.name} makes ${rate.toFixed(1)} opposing luminance changes per second ` +
                         `over ${anim.durationMs}ms — SC 2.3.1 allows ${MAX_FLASHES_PER_SECOND}.`,
                 );
@@ -776,11 +780,12 @@ if (import.meta.url === `file://${process.argv[1]}`) {
         console.error('gate broke: found nothing to check, which cannot be right while the register ships animations.');
         process.exit(1);
     }
+    for (const w of warnings) console.warn(`warning (guideline, not a refusal): ${w}`);
     if (failed > 0) {
         console.error(`\n${failed} motion violation(s).`);
         process.exit(1);
     }
-    console.log(`Motion: ${checked} animation(s) under the flash threshold, none outside a reduced-motion guard.`);
+    console.log(`Motion: ${checked} animation(s) read, ${warnings.length} over the flash guideline, none outside a reduced-motion guard.`);
     for (const s of skipped) console.log(`  out of scope: ${s}`);
     console.log(`DI5 report, ${report.length} effect(s) from TIMINGS [TH129]:`);
     for (const line of report) console.log(line);
