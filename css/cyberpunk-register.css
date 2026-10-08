@@ -2914,7 +2914,9 @@
     [data-theme='cyberpunk'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before,
     [data-theme='cyberpunk'] .kp-progressbar[data-kp-indeterminate]::before,
     [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
-        content: 'LOADING';
+        /* The word comes from js/strings.js (`loadingWord`, through
+           setStrings()); the English is the fallback. */
+        content: var(--kp-loading-word-7, 'LOADING');
         position: absolute;
         inset: 0;
         z-index: 4;
@@ -3390,38 +3392,40 @@
         }
     }
 
-    /* The word: deciphered start to end in seven ticks, held, gone at 90 % of the loop. */
+    /* The word: deciphered start to end in seven ticks, held, gone at 90 % of the
+       loop. Each tick is a property js/strings.js writes (stringProperties()), so a
+       consumer's own word deciphers the same way; the English is the fallback. */
     @keyframes kp-sig-cyberpunk-word {
         0% {
-            content: '#&$?%@/';
+            content: var(--kp-loading-word-0, '#&$?%@/');
         }
 
         3.33% {
-            content: 'L@/#&$?';
+            content: var(--kp-loading-word-1, 'L@/#&$?');
         }
 
         6.67% {
-            content: 'LO?%@/#';
+            content: var(--kp-loading-word-2, 'LO?%@/#');
         }
 
         10% {
-            content: 'LOA&$?%';
+            content: var(--kp-loading-word-3, 'LOA&$?%');
         }
 
         13.33% {
-            content: 'LOAD/#&';
+            content: var(--kp-loading-word-4, 'LOAD/#&');
         }
 
         16.67% {
-            content: 'LOADI%@';
+            content: var(--kp-loading-word-5, 'LOADI%@');
         }
 
         20% {
-            content: 'LOADIN$';
+            content: var(--kp-loading-word-6, 'LOADIN$');
         }
 
         23.33% {
-            content: 'LOADING';
+            content: var(--kp-loading-word-7, 'LOADING');
         }
 
         90% {

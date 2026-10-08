@@ -2947,5 +2947,785 @@
             animation: kp-sig-brutalism-drop var(--kp-sig-dur) var(--kp-sig-br-fall) backwards;
         }
     }
+
+    /* ══ The dashboard components, ported from the decided character demos
+       (research/character-*/
+    brutalism.css on the picks in each decided.json,
+       Kenny 2026-10-06, redrawn on the grammar of 2026-10-07 23:44). Every
+       demo-only option attribute is gone: the picked option is this theme's
+       drawing. What needs a hook the package does not have yet is left out
+       (a tile's mark and tone, the state word's tone, the chart's arrival
+       and its square bolts, the tour's next step, the strip's live moment). ══ */
+
+    /* ── Tiles [research/character-tiles: shape 2, loading 1, arrival 3,
+       hover 1, live 2]. The slab is the card's own (white, the 3 px line,
+       the 6 px shadow); loading is the busy card's lintel well above; a new
+       reading is the update slam above. ── */
+
+    /* hover 1: a tile pointed at is inverted, nothing moves; its Open button
+       stays brutalism's own ghost button. */
+    [data-theme='brutalism'] .kp-tiles > .kp-card:hover:not(:active) {
+        background: var(--foreground);
+        color: var(--secondary);
+        box-shadow: var(--kp-shadow);
+    }
+
+    [data-theme='brutalism']
+        .kp-tiles
+        > .kp-card:hover
+        :is(.kp-card__title, .kp-card__body, .kp-timestamp, h2, h3, h4, p, span, small, b):not(.kp-button, .kp-button *) {
+        color: inherit;
+    }
+
+    [data-theme='brutalism'] .kp-tiles > .kp-card:has(.kp-button:focus-visible) {
+        box-shadow: var(--kp-shadow);
+    }
+
+    /* arrival 3: tile after tile is dropped onto its footprint from up-left,
+       100 ms after the one before, 300 ms on the fall curve. It plays when a
+       tile is shown and when its grid or the tile stops being busy. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism']
+            .kp-tiles:not([aria-busy='true'])
+            > .kp-card:not([aria-busy='true'], [data-kp-leaving], [data-kp-arriving], [data-kp-reversing], [data-kp-updating]) {
+            --kp-sig-br-h: var(--kp-sig-br-h-plate);
+            --kp-sig-br-sh: var(--kp-sig-br-drop);
+            animation: kp-sig-brutalism-drop var(--kp-sig-br-time) var(--kp-sig-br-fall) calc(var(--kp-sig-br-i, 0) * 100ms) both;
+        }
+    }
+
+    /* The place in the row, for the stagger. */
+    [data-theme='brutalism'] .kp-tiles > .kp-card:nth-child(2) {
+        --kp-sig-br-i: 1;
+    }
+
+    [data-theme='brutalism'] .kp-tiles > .kp-card:nth-child(3) {
+        --kp-sig-br-i: 2;
+    }
+
+    [data-theme='brutalism'] .kp-tiles > .kp-card:nth-child(4) {
+        --kp-sig-br-i: 3;
+    }
+
+    [data-theme='brutalism'] .kp-tiles > .kp-card:nth-child(5) {
+        --kp-sig-br-i: 4;
+    }
+
+    [data-theme='brutalism'] .kp-tiles > .kp-card:nth-child(n + 6) {
+        --kp-sig-br-i: 5;
+    }
+
+    /* ── Key figures [research/character-kpi: shape 2, loading 3, tone 2,
+       interactive 3, live 1]. A plain key figure: not a trend tile and not
+       a tile of a strip with columns, which draw their own below. ── */
+
+    /* shape 2: a white slab on the 6 px hard shadow, the 3 px line; paint is
+       flat and full; the figure in 800. */
+    [data-theme='brutalism'] .kp-kpi {
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        background-color: var(--card);
+        box-shadow: var(--kp-shadow);
+    }
+
+    [data-theme='brutalism'] .kp-kpi > .kp-kpi__value {
+        font-weight: 800;
+    }
+
+    /* loading 3: the reading's place at the tile's foot is a well with the
+       lintel hoisted in it (`aria-busy` on the tile). */
+    [data-theme='brutalism'] .kp-kpi[aria-busy='true']:not(.kp-kpi--trend, .kp-kpis[data-kp-kpis-columns] > *) {
+        position: relative;
+    }
+
+    [data-theme='brutalism'] .kp-kpi[aria-busy='true']:not(.kp-kpi--trend, .kp-kpis[data-kp-kpis-columns] > *)::before {
+        content: '';
+        position: absolute;
+        inset: auto 1rem 0.7rem;
+        z-index: 1;
+        box-sizing: border-box;
+        block-size: 1.1rem;
+        border: 2px solid var(--border-strong);
+        background-color: var(--card);
+        background-image: var(--kp-sig-br-lintel);
+        background-size: var(--kp-sig-br-lintel-size);
+        background-position-x: 50%, 21%, 79%;
+        background-position-y: 100%;
+        background-repeat: no-repeat;
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-kpi[aria-busy='true']:not(.kp-kpi--trend, .kp-kpis[data-kp-kpis-columns] > *)::before {
+            animation: kp-sig-brutalism-hoist var(--kp-sig-br-loop) linear infinite backwards;
+        }
+    }
+
+    /* tone 2: the change is a square small slab (no sticker, no tilt); a
+       warning or a failure prints its figure on the tone's plate framed in
+       ink on a 3 px shadow and is taped off along the tile's foot [G13]. */
+    [data-theme='brutalism'] .kp-kpi:not(.kp-kpi--trend, .kp-kpis[data-kp-kpis-columns] > *) .kp-kpi__delta {
+        padding-inline: 0.3em;
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+        box-shadow: 3px 3px 0 0 var(--border-strong);
+        font-weight: 800;
+    }
+
+    [data-theme='brutalism']
+        .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']):not(.kp-kpi--trend, .kp-kpis[data-kp-kpis-columns] > *) {
+        border-color: var(--border-strong);
+        background-position: 0 100%;
+        background-size: 100% 0.5rem;
+        background-repeat: no-repeat;
+        box-shadow: var(--kp-shadow);
+    }
+
+    [data-theme='brutalism'] .kp-kpi[data-kp-tone='warning']:not(.kp-kpi--trend, .kp-kpis[data-kp-kpis-columns] > *) {
+        background-image: repeating-linear-gradient(45deg, var(--warning) 0 6px, var(--border-strong) 6px 12px);
+    }
+
+    [data-theme='brutalism'] .kp-kpi[data-kp-tone='destructive']:not(.kp-kpi--trend, .kp-kpis[data-kp-kpis-columns] > *) {
+        background-image: repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px);
+    }
+
+    [data-theme='brutalism']
+        .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']):not(.kp-kpi--trend, .kp-kpis[data-kp-kpis-columns] > *)
+        > .kp-kpi__value {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: 3px 3px 0 0 var(--border-strong);
+    }
+
+    /* interactive 3: a link tile or a toggle stands on its shadow; pointed
+       at it is inverted, focused it is lifted under the two-channel ring,
+       pressed it is driven onto its footprint on the yellow active plate
+       [G8, G14, G17]. */
+    /* A filter that is on keeps the package's primary edge over the primary
+       wash, as the demo's base drew it under every character. */
+    [data-theme='brutalism'] .kp-kpi--toggle[aria-pressed='true'] {
+        border-color: var(--primary);
+        background-color: color-mix(in oklab, var(--primary) 9%, var(--card));
+    }
+
+    [data-theme='brutalism'] :is(a.kp-kpi, .kp-kpi--toggle):hover:not(:active) {
+        border-color: var(--border-strong);
+        background-color: var(--foreground);
+        color: var(--secondary);
+        box-shadow: var(--kp-shadow);
+    }
+
+    [data-theme='brutalism']
+        :is(a.kp-kpi, .kp-kpi--toggle):hover:not(:active)
+        :is(.kp-kpi__label, .kp-kpi__value, .kp-kpi__value small, .kp-kpi__note, .kp-kpi__trend, .kp-kpi__hint) {
+        color: var(--secondary);
+    }
+
+    [data-theme='brutalism'] :is(a.kp-kpi, .kp-kpi--toggle):focus-visible:not(:active) {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: 2px;
+        translate: -2px -2px;
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring-contrast),
+            var(--kp-shadow-up);
+    }
+
+    [data-theme='brutalism'] :is(a.kp-kpi, .kp-kpi--toggle):active {
+        background-color: var(--secondary-active);
+        translate: var(--kp-drop) var(--kp-drop);
+        box-shadow: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] :is(a.kp-kpi, .kp-kpi--toggle) {
+            transition:
+                translate var(--fx-duration) var(--kp-sig-br-up),
+                box-shadow var(--fx-duration) var(--kp-sig-br-up);
+        }
+    }
+
+    /* ── The trend tile [research/character-trend: shape r3-br-shape-1,
+       loading r3-br-load-1, arrival r3-br-arr-1 (cast: there at once, so
+       nothing moves), tone 3, live 1 (the update slam above)]. ── */
+
+    /* shape: the slab's 3 px line on the 6 px shadow; the foot ruled off by
+       the six-pixel bar, hazard tape only where the tile carries a tone
+       [G16]; the line a square 4 px stroke on the plot's own well. */
+    [data-theme='brutalism'] .kp-kpi--trend {
+        --kp-kpi-value-size: 2.25rem;
+        border: var(--kp-line) solid var(--foreground);
+        border-radius: 0;
+        background: linear-gradient(var(--foreground), var(--foreground)) 0 100% / 100% 6px no-repeat;
+        background-color: var(--card);
+        box-shadow: var(--kp-shadow);
+    }
+
+    [data-theme='brutalism'] .kp-kpi--trend[data-kp-tone='warning'] {
+        background-image: repeating-linear-gradient(45deg, var(--warning) 0 6px, var(--foreground) 6px 12px);
+        background-size: 100% 0.5rem;
+    }
+
+    [data-theme='brutalism'] .kp-kpi--trend[data-kp-tone='destructive'] {
+        background-image: repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--foreground) 6px 12px);
+        background-size: 100% 0.5rem;
+    }
+
+    [data-theme='brutalism'] .kp-kpi--trend[data-kp-tone] {
+        border-color: var(--foreground);
+        box-shadow: var(--kp-shadow);
+    }
+
+    [data-theme='brutalism'] .kp-kpi--trend > .kp-kpi__label {
+        font-weight: 800;
+        letter-spacing: 0.1em;
+    }
+
+    [data-theme='brutalism'] .kp-kpi--trend > .kp-kpi__value {
+        font-weight: 900;
+    }
+
+    [data-theme='brutalism'] .kp-kpi--trend .kp-kpi__chart-plot {
+        isolation: isolate;
+        border-radius: 0;
+        background-color: var(--card);
+        box-shadow: inset 0 0 0 3px var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-kpi--trend .kp-kpi__spark-line {
+        stroke-width: 4;
+        stroke-linecap: square;
+        stroke-linejoin: miter;
+    }
+
+    [data-theme='brutalism'] .kp-kpi--trend .kp-kpi__spark-area {
+        opacity: 0;
+    }
+
+    /* tone 3: the figure on the tone's plate (the package's pair), square;
+       the change keeps its small slab on a 3 px shadow. */
+    [data-theme='brutalism'] .kp-kpi--trend .kp-kpi__delta {
+        border: 2px solid var(--foreground);
+        border-radius: 0;
+        box-shadow: 3px 3px 0 var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-kpi--trend[data-kp-tone] > .kp-kpi__value {
+        border-radius: 0;
+    }
+
+    /* loading: the lintel hoisted in the plot's own well while the tile is
+       busy; the skeletons stand still under it, the plot is what moves. */
+    [data-theme='brutalism'] .kp-kpi--trend[aria-busy='true'] .kp-kpi__chart-plot {
+        overflow: clip;
+    }
+
+    [data-theme='brutalism'] .kp-kpi--trend[aria-busy='true'] .kp-kpi__chart-plot::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            linear-gradient(to bottom, transparent calc(100% - max(3px, 11%)), var(--foreground) 0) 50% 100% / 76% 200% no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) 21% 100% / var(--kp-sig-br-cable) 200% no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) 79% 100% / var(--kp-sig-br-cable) 200% no-repeat,
+            var(--card);
+        pointer-events: none;
+    }
+
+    [data-theme='brutalism'] .kp-kpi--trend .kp-skeleton,
+    [data-theme='brutalism'] .kp-kpi--trend .kp-skeleton::before,
+    [data-theme='brutalism'] .kp-kpi--trend .kp-skeleton::after {
+        animation: none;
+    }
+
+    [data-theme='brutalism'] .kp-kpi--trend .kp-skeleton {
+        background: color-mix(in oklch, var(--card-foreground) 14%, var(--card));
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-kpi--trend[aria-busy='true'] .kp-kpi__chart-plot::before {
+            animation: kp-sig-brutalism-hoist var(--kp-sig-br-loop) linear infinite backwards;
+        }
+    }
+
+    /* ── The strip of key figures with columns [research/character-columns:
+       shape 1, loading 1, arrival 2, tone 2, live 2 (the update slam above)].
+       ── */
+
+    /* shape 1, the poster grid: the columns butted together under the 3 px
+       line on the 6 px shadow, an ink rule between them, every other one on
+       the lavender plate. */
+    [data-theme='brutalism'] .kp-kpis[data-kp-kpis-columns] {
+        --kp-kpis-gap: 0px;
+        overflow: clip;
+        border: var(--kp-line) solid var(--foreground);
+        box-shadow: 6px 6px 0 var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-kpis[data-kp-kpis-columns] > .kp-kpi {
+        --kp-sig-br-ink: var(--card-foreground);
+        position: relative;
+        border: 0;
+        border-radius: 0;
+        background: var(--card);
+        color: var(--kp-sig-br-ink);
+        box-shadow: -3px 0 0 var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-kpis[data-kp-kpis-columns] > .kp-kpi:nth-child(even) {
+        --kp-sig-br-ink: var(--accent-foreground);
+        background: var(--accent);
+    }
+
+    [data-theme='brutalism']
+        .kp-kpis[data-kp-kpis-columns]
+        > .kp-kpi:nth-child(even)
+        :is(.kp-kpi__label, .kp-kpi__value small, .kp-kpi__note, .kp-kpi__trend) {
+        color: var(--kp-sig-br-ink);
+    }
+
+    [data-theme='brutalism'] .kp-kpis[data-kp-kpis-columns] > .kp-kpi > .kp-kpi__label {
+        font-weight: 800;
+        letter-spacing: 0.08em;
+    }
+
+    [data-theme='brutalism'] .kp-kpis[data-kp-kpis-columns] > .kp-kpi > .kp-kpi__trend {
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    /* tone 2: the change a square slab on a hard shadow in the column's ink,
+       its sign plus or minus. */
+    [data-theme='brutalism'] .kp-kpis[data-kp-kpis-columns] .kp-kpi__delta {
+        border-radius: 0;
+        box-shadow: 3px 3px 0 var(--kp-sig-br-ink);
+        font-weight: 800;
+    }
+
+    [data-theme='brutalism'] .kp-kpis[data-kp-kpis-columns] .kp-kpi__delta[data-kp-direction='up']::before {
+        content: '+';
+    }
+
+    [data-theme='brutalism'] .kp-kpis[data-kp-kpis-columns] .kp-kpi__delta[data-kp-direction='down']::before {
+        content: '\2212';
+    }
+
+    /* loading 1: every column's reading is a well at its foot with the
+       lintel hoisted in it, while the strip is busy; the skeletons stand
+       still. */
+    [data-theme='brutalism'] .kp-kpis[data-kp-kpis-columns][aria-busy='true'] > .kp-kpi::after {
+        content: '';
+        position: absolute;
+        inset: auto 0.75rem 0.75rem;
+        z-index: 2;
+        box-sizing: border-box;
+        block-size: 1.25rem;
+        border: 2px solid var(--foreground);
+        background:
+            linear-gradient(to bottom, transparent calc(100% - max(3px, 11%)), var(--foreground) 0) 50% 100% / 76% 200% no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) 21% 100% / var(--kp-sig-br-cable) 200% no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) 79% 100% / var(--kp-sig-br-cable) 200% no-repeat,
+            var(--card);
+        pointer-events: none;
+    }
+
+    [data-theme='brutalism'] .kp-kpis[data-kp-kpis-columns] .kp-skeleton,
+    [data-theme='brutalism'] .kp-kpis[data-kp-kpis-columns] .kp-skeleton::before,
+    [data-theme='brutalism'] .kp-kpis[data-kp-kpis-columns] .kp-skeleton::after {
+        animation: none;
+    }
+
+    /* arrival 2: every column is dropped onto its footprint from up-left,
+       100 ms after the one before, 300 ms on the fall curve: the leave
+       played backwards (the lifting curve turned round is the fall), its
+       divider staying where it is. It plays when the strip is shown and
+       when it stops being busy. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-kpis[data-kp-kpis-columns][aria-busy='true'] > .kp-kpi::after {
+            animation: kp-sig-brutalism-hoist var(--kp-sig-br-loop) linear infinite backwards;
+        }
+
+        [data-theme='brutalism']
+            .kp-kpis[data-kp-kpis-columns]:not([aria-busy='true'])
+            > .kp-kpi:not([data-kp-leaving], [data-kp-arriving], [data-kp-reversing], [data-kp-updating]) {
+            --kp-sig-br-h: var(--kp-sig-br-h-plate);
+            animation: kp-sig-brutalism-leave var(--kp-sig-br-time) var(--kp-sig-br-up) calc(var(--kp-sig-br-i, 0) * 100ms) reverse backwards;
+        }
+    }
+
+    [data-theme='brutalism'] .kp-kpis[data-kp-kpis-columns] > .kp-kpi:nth-child(2) {
+        --kp-sig-br-i: 1;
+    }
+
+    [data-theme='brutalism'] .kp-kpis[data-kp-kpis-columns] > .kp-kpi:nth-child(3) {
+        --kp-sig-br-i: 2;
+    }
+
+    [data-theme='brutalism'] .kp-kpis[data-kp-kpis-columns] > .kp-kpi:nth-child(4) {
+        --kp-sig-br-i: 3;
+    }
+
+    [data-theme='brutalism'] .kp-kpis[data-kp-kpis-columns] > .kp-kpi:nth-child(5) {
+        --kp-sig-br-i: 4;
+    }
+
+    [data-theme='brutalism'] .kp-kpis[data-kp-kpis-columns] > .kp-kpi:nth-child(n + 6) {
+        --kp-sig-br-i: 5;
+    }
+
+    /* ── The page header [research/character-header: shape 1, menu 1,
+       interactive 1]. The slab around the title; its actions are
+       brutalism's own buttons as they stand, and its menu is dropped as
+       every menu is (the block below). ── */
+    [data-theme='brutalism'] .kp-page-header {
+        padding: var(--kp-space-md, 1rem) var(--kp-space-lg, 1.5rem);
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+        box-shadow: var(--kp-shadow);
+    }
+
+    [data-theme='brutalism'] .kp-page-header__title {
+        font-family: var(--theme-font-display, sans-serif);
+        font-weight: 900;
+        text-transform: uppercase;
+    }
+
+    /* ── The time chart [research/character-chart: shape br1's legend keys
+       and tip r3c-bru-tip-1; loading is the package's block skeleton, the
+       lintel above; update is the slam above]. ── */
+
+    /* The legend keys are small brutalism buttons, a 2 px line on a 3 px
+       shadow, the swatch a square: pointed at, inverted; kept on, driven
+       onto the footprint on the yellow active plate. */
+    [data-theme='brutalism'] :is(.kp-chart__source, .kp-chart__show-all) {
+        border: 2px solid var(--foreground);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--foreground);
+        box-shadow: 3px 3px 0 var(--foreground);
+        font-weight: 700;
+    }
+
+    [data-theme='brutalism'] :is(.kp-chart__source, .kp-chart__show-all):not([aria-pressed='true']):hover {
+        background: var(--foreground);
+        color: var(--secondary);
+    }
+
+    [data-theme='brutalism'] .kp-chart__source[aria-pressed='true'] {
+        background: var(--secondary-active);
+        color: var(--secondary-foreground);
+        box-shadow: none;
+        transform: translate(3px, 3px);
+    }
+
+    [data-theme='brutalism'] .kp-chart__source > b {
+        color: inherit;
+    }
+
+    [data-theme='brutalism'] .kp-chart__swatch {
+        inline-size: 14px;
+        block-size: 14px;
+        border-radius: 0;
+        box-shadow: 0 0 0 2px var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-chart__source:is([aria-pressed='true'], :hover) .kp-chart__swatch {
+        box-shadow: 0 0 0 2px currentColor;
+    }
+
+    /* The tip is a white slab in the ink line on a 3 px shadow, its words
+       bold ink (a small part, G7); tape means danger only (G16), so there
+       is no hazard corner. Pinned keeps the package's ring beside it. */
+    [data-theme='brutalism'] .kp-chart__tip {
+        border: 2px solid var(--foreground);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+        box-shadow: 3px 3px 0 0 var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-chart__tip[data-kp-pinned] {
+        box-shadow:
+            0 0 0 1px var(--ring),
+            3px 3px 0 0 var(--foreground);
+    }
+
+    [data-theme='brutalism']
+        .kp-chart__tip
+        :is(.kp-chart__tip-head, .kp-chart__tip-row, .kp-chart__tip-event, .kp-chart__num, b, span, a):not(.kp-chart__delta[data-kp-direction]) {
+        color: var(--card-foreground);
+        font-weight: 700;
+    }
+
+    /* ── The month heatmap [research/character-calendar: shape 1, loading 1,
+       arrival 1, tone 1, select 3]. ── */
+
+    /* shape 1: a day is a small slab, a 2 px line on a 3 px shadow, square;
+       its number in the display face, its count in 700. */
+    [data-theme='brutalism'] .kp-calendar {
+        --kp-calendar-gap: 9px;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__day {
+        position: relative;
+        isolation: isolate;
+        border-width: 2px;
+        border-radius: 0;
+        box-shadow: 3px 3px 0 var(--foreground);
+    }
+
+    [data-theme='brutalism']
+        .kp-calendar__day:is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad'], [data-kp-tone='muted'], [data-kp-tone='loading']) {
+        border-color: var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-calendar__swatch {
+        border-radius: 0;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__num {
+        font-family: var(--theme-font-display);
+        font-size: 1.15em;
+        font-weight: 400;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__count {
+        font-size: max(0.75rem, 0.7em);
+        font-weight: 700;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__title {
+        font-family: var(--theme-font-display);
+        font-size: 0.875rem;
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__grid th {
+        color: var(--foreground);
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    /* tone 1: every plate framed in ink; a day without data, a day to come
+       and one before the record are flat card, dashed or dotted, and lie
+       on the page without a shadow; today is ruled off by the six-pixel
+       bar along its top, no tape (tape means danger only, G16). */
+    [data-theme='brutalism'] .kp-calendar__day:is([data-kp-tone='none'], [data-kp-tone='future'], [data-kp-tone='before']) {
+        border-color: var(--foreground);
+        background: var(--card);
+        box-shadow: none;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__day[data-kp-tone='none'] {
+        border-style: dashed;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__day[data-kp-tone='before'] {
+        border-style: dotted;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__day[data-kp-today]:not(:is([data-kp-tone='none'], [data-kp-tone='future'], [data-kp-tone='before'])) {
+        box-shadow: 3px 3px 0 var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-calendar__day[data-kp-today]:is([data-kp-tone='none'], [data-kp-tone='future'], [data-kp-tone='before']) {
+        box-shadow: none;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__grid td:has(> .kp-calendar__day[data-kp-today])::after {
+        content: '';
+        position: absolute;
+        inset: -3px 0 auto;
+        block-size: 6px;
+        background: var(--foreground);
+        pointer-events: none;
+    }
+
+    /* A day's column and week, for the hoist and the drop to go one unit
+       (100 ms) apart. */
+    [data-theme='brutalism'] .kp-calendar__grid td:nth-child(2) {
+        --kp-sig-br-col: 1;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__grid td:nth-child(3) {
+        --kp-sig-br-col: 2;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__grid td:nth-child(4) {
+        --kp-sig-br-col: 3;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__grid td:nth-child(5) {
+        --kp-sig-br-col: 4;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__grid td:nth-child(6) {
+        --kp-sig-br-col: 5;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__grid td:nth-child(7) {
+        --kp-sig-br-col: 6;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__grid tbody > tr:nth-child(2) {
+        --kp-sig-br-row: 1;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__grid tbody > tr:nth-child(3) {
+        --kp-sig-br-row: 2;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__grid tbody > tr:nth-child(4) {
+        --kp-sig-br-row: 3;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__grid tbody > tr:nth-child(5) {
+        --kp-sig-br-row: 4;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__grid tbody > tr:nth-child(6) {
+        --kp-sig-br-row: 5;
+    }
+
+    /* loading 1: a day's own figure place, inset, is the well with the
+       lintel hoisted in it; the days of a week hoist one unit (100 ms) apart;
+       the day itself does not pulse (nothing fades). */
+    [data-theme='brutalism'] .kp-calendar__day[data-kp-tone='loading'] {
+        background: var(--card);
+        animation: none;
+    }
+
+    [data-theme='brutalism'] .kp-calendar__day[data-kp-tone='loading']::after {
+        content: '';
+        position: absolute;
+        inset: 0.35rem;
+        z-index: -1;
+        box-sizing: border-box;
+        border: 2px solid var(--border-strong);
+        background-color: var(--card);
+        background-image: var(--kp-sig-br-lintel);
+        background-size: var(--kp-sig-br-lintel-size);
+        background-position-x: 50%, 21%, 79%;
+        background-position-y: 100%;
+        background-repeat: no-repeat;
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-calendar__day[data-kp-tone='loading']::after {
+            animation: kp-sig-brutalism-hoist var(--kp-sig-br-loop) linear calc(var(--kp-sig-br-col, 0) * 100ms) infinite backwards;
+        }
+
+        /* arrival 1: every day is dropped onto its footprint from up-left,
+           row by row, 300 ms on the fall curve: when the month is shown, and
+           when a day or the whole grid stops loading. */
+        [data-theme='brutalism'] .kp-calendar__grid:not([aria-busy='true']) .kp-calendar__day:not([data-kp-tone='loading']) {
+            --kp-sig-br-h: var(--kp-sig-br-h-part);
+            --kp-sig-br-sh: 3px;
+            animation: kp-sig-brutalism-drop var(--kp-sig-br-time) var(--kp-sig-br-fall) calc(var(--kp-sig-br-row, 0) * 100ms) backwards;
+        }
+    }
+
+    /* select 3: the pick is the yellow plate in the 5 px fat frame, its count
+       in brackets; a day under the pointer is inverted, nothing moves [G8]. */
+    [data-theme='brutalism'] .kp-calendar__day:hover {
+        background: var(--foreground);
+        color: var(--secondary);
+    }
+
+    [data-theme='brutalism'] .kp-calendar__grid td[aria-selected='true'] > .kp-calendar__day {
+        z-index: 1;
+        outline: 5px solid var(--foreground);
+        outline-offset: 0;
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }
+
+    [data-theme='brutalism'] .kp-calendar__grid td[aria-selected='true'] > .kp-calendar__day:focus-visible {
+        outline: 3px solid var(--ring);
+    }
+
+    [data-theme='brutalism'] .kp-calendar__grid td[aria-selected='true'] > .kp-calendar__day .kp-calendar__count::before {
+        content: '[';
+    }
+
+    [data-theme='brutalism'] .kp-calendar__grid td[aria-selected='true'] > .kp-calendar__day .kp-calendar__count::after {
+        content: ']';
+    }
+
+    /* ── The drawer and the tour [research/character-drawer: shape
+       r2-br-shape-2, openclose r2-br-openclose-2, highlight r2-br-highlight-1,
+       card 1]. ── */
+
+    /* shape: the poster plate, the slab with the yellow head. */
+    [data-theme='brutalism'] .kp-drawer {
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+        box-shadow: var(--kp-shadow);
+    }
+
+    [data-theme='brutalism'] .kp-drawer__head {
+        border-block-end: var(--kp-line) solid var(--border-strong);
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }
+
+    [data-theme='brutalism'] .kp-drawer__desc {
+        color: var(--secondary-foreground);
+    }
+
+    [data-theme='brutalism'] .kp-drawer__foot {
+        border-block-start: var(--kp-line) solid var(--border-strong);
+    }
+
+    /* openclose: the drawer dialog is dropped onto its footprint from
+       up-left, its shadow on the page from the first frame, and lifted off
+       as the drop played backwards (js/motion.js); no slide from the edge. */
+    [data-theme='brutalism'] dialog.kp-drawer {
+        --kp-sig-br-h: var(--kp-sig-br-h-plate);
+        --kp-sig-br-sh: var(--kp-sig-br-drop);
+    }
+
+    /* card 1: the tour card is a slab, the 3 px line on the 6 px shadow,
+       square, its title ruled off; it is dropped as a menu is, and leaves as
+       that drop played backwards (js/tour.js), in place of the fade. */
+    [data-theme='brutalism'] .kp-tour {
+        --kp-sig-br-h: var(--kp-sig-br-h-plate);
+        --kp-sig-br-sh: var(--kp-sig-br-drop);
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--card-foreground);
+        box-shadow: var(--kp-shadow);
+    }
+
+    [data-theme='brutalism'] .kp-tour__title {
+        padding-block-end: var(--kp-space-xs, 0.25rem);
+        border-block-end: 2px solid var(--border-strong);
+        font-weight: 800;
+        letter-spacing: -0.02em;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-tour[open] {
+            animation: kp-sig-brutalism-drop var(--kp-sig-br-time) var(--kp-sig-br-fall) backwards;
+        }
+    }
+
+    /* highlight: the target keeps the rivet ring (the ink outline and the
+       pixel outline) and the veil around it is solid ink: nothing is
+       translucent. */
+    [data-theme='brutalism'] [data-kp-tour-target] {
+        outline: var(--kp-line) solid var(--border-strong);
+        outline-offset: 6px;
+        box-shadow:
+            var(--kp-pixel),
+            0 0 0 100vmax var(--foreground);
+    }
 }
 /* ── End of the signature ── */

@@ -241,9 +241,6 @@ const OUT_OF_SCOPE = {
     'kp-sig-light-meter-bump-o': 'a meter swelling once as its tone clears; a transform, under 341x256 px',
     'kp-sig-light-meter-bump-w': 'a meter swelling once as it turns to the warning tone; a transform, under 341x256 px',
     'kp-sig-light-meter-grow-o': "a meter's share scaling in from its start once; a transform, under 341x256 px",
-    'kp-sig-synthwave-meter-bump-d': 'a meter swelling once as it turns to the destructive tone; a transform, under 341x256 px',
-    'kp-sig-synthwave-meter-bump-o': 'a meter swelling once as its tone clears; a transform, under 341x256 px',
-    'kp-sig-synthwave-meter-bump-w': 'a meter swelling once as it turns to the warning tone; a transform, under 341x256 px',
     'kp-sig-synthwave-meter-grow-o': "a meter's share scaling in from its start once; a transform, under 341x256 px",
     'kp-sig-synthwave-meter-pos':
         'a background-position slide of the loading picture inside a meter a few px tall; the picture keeps its colours, only its position moves',
@@ -260,33 +257,18 @@ const OUT_OF_SCOPE = {
     'kp-sig-terminal-update-blink':
         'a changed value taking the bright then the dim phosphor three times in 900 ms, once; text colour, never hidden, under 341x256 px',
     'kp-sig-terminal-update-blink-line': 'a changed sparkline taking the bright then the dim phosphor three times in 900 ms, once; under 341x256 px',
-    'kp-sig-forest-meter-bump-d': 'a meter swelling once as it turns to the destructive tone; a transform, under 341x256 px',
-    'kp-sig-forest-meter-bump-o': 'a meter swelling once as its tone clears; a transform, under 341x256 px',
-    'kp-sig-forest-meter-bump-w': 'a meter swelling once as it turns to the warning tone; a transform, under 341x256 px',
-    'kp-sig-forest-meter-pos':
-        'a background-position slide of the loading picture inside a meter a few px tall; the picture keeps its colours, only its position moves',
     'kp-sig-forest-meter-wipe-o': "a clip-path wipe revealing a meter's share once; the share keeps its colour, under 341x256 px",
     'kp-sig-sepia-meter-knock-d': 'a meter knocked up 3px and back once as it turns to the destructive tone; a transform, under 341x256 px',
     'kp-sig-sepia-meter-knock-o': 'a meter knocked up 3px and back once as its tone clears; a transform, under 341x256 px',
     'kp-sig-sepia-meter-knock-w': 'a meter knocked up 3px and back once as it turns to the warning tone; a transform, under 341x256 px',
     'kp-sig-sepia-meter-slant-o': "a slanted clip-path wipe revealing a meter's share once; the share keeps its colour, under 341x256 px",
     'kp-sig-sepia-meter-width': 'the loading picture of a meter a few px tall widening across it; its colour never changes, only the area',
-    'kp-sig-blueprint-meter-plot': 'the plotted line sliding across a loading meter; the picture keeps its colours, only its position moves',
-    'kp-sig-blueprint-meter-wipe-d': "a clip-path wipe revealing a meter's share once, replayed in the destructive tone; under 341x256 px",
-    'kp-sig-blueprint-meter-wipe-o': "a clip-path wipe revealing a meter's share once; the share keeps its colour, under 341x256 px",
-    'kp-sig-blueprint-meter-wipe-w': "a clip-path wipe revealing a meter's share once, replayed in the warning tone; under 341x256 px",
     'kp-sig-solstice-meter-bump-d': 'a meter swelling once as it turns to the destructive tone; a transform, under 341x256 px',
     'kp-sig-solstice-meter-bump-o': 'a meter swelling once as its tone clears; a transform, under 341x256 px',
     'kp-sig-solstice-meter-bump-w': 'a meter swelling once as it turns to the warning tone; a transform, under 341x256 px',
     'kp-sig-solstice-meter-grow-o': "a meter's share scaling in from its start once; a transform, under 341x256 px",
     'kp-sig-solstice-meter-pos':
         'a background-position slide of the loading picture inside a meter a few px tall; the picture keeps its colours, only its position moves',
-    'kp-sig-brutalism-meter-stack':
-        'a clip-path revealing the stacked blocks across a loading meter, then again; the blocks keep their colours, under 341x256 px',
-    'kp-sig-brutalism-meter-bump-d': 'a meter swelling once as it turns to the destructive tone; a transform, under 341x256 px',
-    'kp-sig-brutalism-meter-bump-o': 'a meter swelling once as its tone clears; a transform, under 341x256 px',
-    'kp-sig-brutalism-meter-bump-w': 'a meter swelling once as it turns to the warning tone; a transform, under 341x256 px',
-    'kp-sig-brutalism-meter-drop-o': "a meter's share dropping into its track once; a transform, under 341x256 px",
     'kp-sig-deco-meter-knock-d': 'a meter knocked up 3px and back once as it turns to the destructive tone; a transform, under 341x256 px',
     'kp-sig-deco-meter-knock-o': 'a meter knocked up 3px and back once as its tone clears; a transform, under 341x256 px',
     'kp-sig-deco-meter-knock-w': 'a meter knocked up 3px and back once as it turns to the warning tone; a transform, under 341x256 px',
@@ -299,11 +281,7 @@ const OUT_OF_SCOPE = {
     'kp-sig-phantom-meter-jolt-w': 'a meter shaking 2px sideways once as it turns to the warning tone; a transform, under 341x256 px',
     'kp-sig-phantom-meter-slant-o': "a slanted clip-path wipe revealing a meter's share once; the share keeps its colour, under 341x256 px",
     'kp-sig-nostromo-meter-scan': 'a lit band sliding along the tube of a loading meter; the band keeps its colour, only its position moves',
-    'kp-sig-nostromo-meter-jolt-d': 'a meter shaking 2px sideways once as it turns to the destructive tone; a transform, under 341x256 px',
-    'kp-sig-nostromo-meter-jolt-o': 'a meter shaking 2px sideways once as its tone clears; a transform, under 341x256 px',
-    'kp-sig-nostromo-meter-jolt-w': 'a meter shaking 2px sideways once as it turns to the warning tone; a transform, under 341x256 px',
     'kp-sig-nostromo-meter-wipe-o': "a clip-path wipe revealing a meter's share once; the share keeps its colour, under 341x256 px",
-    'kp-sig-titanium-meter-cut': 'a bright cut sliding along the groove of a loading meter; the cut keeps its colour, only its position moves',
     'kp-sig-titanium-meter-grow-o': "a meter's share scaling in from its start once; a transform, under 341x256 px",
     'kp-sig-titanium-meter-jolt-d': 'a meter shaking 2px sideways once as it turns to the destructive tone; a transform, under 341x256 px',
     'kp-sig-titanium-meter-jolt-o': 'a meter shaking 2px sideways once as its tone clears; a transform, under 341x256 px',
@@ -316,11 +294,6 @@ const OUT_OF_SCOPE = {
     'kp-sig-dark-meter-pos':
         'a background-position slide of the loading picture inside a meter a few px tall; the picture keeps its colours, only its position moves',
     'kp-sig-dark-meter-press-o': "a meter's share pressed in from its edge once; a transform, under 341x256 px",
-    'kp-sig-cyberpunk-meter-knock-d': 'a meter knocked up 3px and back once as it turns to the destructive tone; a transform, under 341x256 px',
-    'kp-sig-cyberpunk-meter-knock-o': 'a meter knocked up 3px and back once as its tone clears; a transform, under 341x256 px',
-    'kp-sig-cyberpunk-meter-knock-w': 'a meter knocked up 3px and back once as it turns to the warning tone; a transform, under 341x256 px',
-    'kp-sig-cyberpunk-meter-noise':
-        'three thin slivers jumping to new places along a loading meter in hard steps; they keep their colours, only their position moves',
     'kp-sig-cyberpunk-meter-slip-o': "a meter's share landing with a few px sideways jumps and offset ghosts once; a transform, under 341x256 px",
     'kp-sig-high-contrast-meter-march': 'a row of chevrons translating one step along a loading meter; a transform, the chevrons keep their colour',
     'kp-sig-high-contrast-meter-wipe-d': "a clip-path wipe revealing a meter's share once, replayed in the destructive tone; under 341x256 px",
@@ -333,17 +306,132 @@ const OUT_OF_SCOPE = {
         'two lamps sliding in from both ends of a loading meter and apart again; they keep their colours, only their position moves',
     'kp-sig-retro-meter-wipe-o': "a clip-path wipe revealing a meter's share once; the share keeps its colour, under 341x256 px",
     'kp-sig-grotesk-meter-grow-o': "a meter's share scaling in from its start once; a transform, under 341x256 px",
-    'kp-sig-grotesk-meter-jolt-d': 'a meter shaking 2px sideways once as it turns to the destructive tone; a transform, under 341x256 px',
-    'kp-sig-grotesk-meter-jolt-o': 'a meter shaking 2px sideways once as its tone clears; a transform, under 341x256 px',
-    'kp-sig-grotesk-meter-jolt-w': 'a meter shaking 2px sideways once as it turns to the warning tone; a transform, under 341x256 px',
-    'kp-sig-grotesk-meter-pos':
-        'a background-position slide of the loading picture inside a meter a few px tall; the picture keeps its colours, only its position moves',
     // Information that updates in place [research/update-motion, 2026-10-05].
     'kp-sig-cyberpunk-update-stutter':
         'two unblurred text-shadow copies of a changed value ticking home from 6px to nothing in four steps, once per update for 480 ms; the value itself keeps its colour and place, far under 341x256 px [research/cyberpunk-live]',
     'kp-sig-cyberpunk-update-still':
         'under reduced motion: two text-shadow copies of a changed value standing 2px out for 1.2 s, once, and going; nothing moves, far under 341x256 px [research/cyberpunk-live]',
+    // The character rounds [scope-143], listed by the port session
+    // (2026-10-08). The keyframes that only move or reshape are classified by
+    // the gate itself (GEOMETRY_ONLY); these animate a custom property, a
+    // filter, a shadow, a colour, visibility or content, so each says why it
+    // cannot flash. What a custom property drives was read from the rules
+    // that use it in the same register.
+    'kp-progressbar-forest-breath':
+        'a custom property that sets how far the rows of trees on a busy bar have grown (a background size, rounded to whole trees); the trees keep their colours, only their extent changes',
+    'kp-skeleton-forest-treeline':
+        'a custom property that grows a treeline drawn in a skeleton (its radii and width); the trees keep their colours, only their extent changes, 3.2 s a loop',
+    'kp-sig-blueprint-callout':
+        'a tooltip being traced once: its line drawn round the box and its ink and ground set at the end; one change from blank to drawn, under 341x256 px',
+    'kp-sig-blueprint-frame':
+        'a pen tracing a skeleton block frame: custom properties for the length drawn and the nib; the line keeps its colour, only its length grows, and the nib is a dot',
+    'kp-sig-blueprint-place':
+        'a pen tracing a skeleton line: custom properties for the length drawn and the nib; the line keeps its colour, only its length grows, and the nib is a dot',
+    'kp-sig-blueprint-ring':
+        'a pen tracing a skeleton circle: custom properties for the length drawn and the nib; the line keeps its colour, only its length grows, and the nib is a dot',
+    'kp-sig-blueprint-stroke':
+        'a pen tracing a busy bar or meter: custom properties for the length drawn and the nib; the line keeps its colour, only its length grows, and the nib is a dot',
+    'kp-sig-blueprint-read':
+        "a meter's reading traced once, or untraced on its leave: custom properties for the length drawn; one monotone change, under 341x256 px",
+    'kp-sig-blueprint-trace':
+        'a panel or toast being traced once: its outline drawn segment by segment (custom properties for the length), visible from the first frame; one monotone change',
+    'kp-sig-blueprint-trace-out': 'the trace above played backwards once on a close or leave; one monotone change',
+    'kp-sig-blueprint-update-read':
+        'the revision mark on a changed value traced once (custom properties for the length drawn); one monotone change, far under 341x256 px',
+    'kp-sig-brutalism-drop':
+        'a slab dropped onto its footprint once: a translate and its hard shadow shrinking to the resting offset; the slab keeps its colours',
+    'kp-sig-brutalism-hold': "a dialog's veil held visible for the length of the dialog's close, then gone in one step; one change",
+    'kp-sig-brutalism-leave': 'a slab hoisted out once and hidden at the end; one change from shown to hidden',
+    'kp-sig-brutalism-update-slam':
+        'a changed value slammed onto its yellow offset once: a translate with a yellow drop-shadow whose offset grows from 3 to 9 px and settles; the colours stay, only the offset moves, under 341x256 px',
+    'kp-sig-cyberpunk-bars-1':
+        "a custom property setting the height of one of the spinner's bars, stepped every half second over 3 s; the bar keeps its colour, only its height changes, under 341x256 px",
+    'kp-sig-cyberpunk-lock':
+        'a custom property setting where the four lock corners sit round a toned part, in six steps over 360 ms, once; the corners keep their colour, only their position moves',
+    'kp-sig-cyberpunk-split':
+        'a toast or dialog arriving as clip-path slices with offset shadow copies, in hard steps, once; the copies keep their colours, the change is where they are cut',
+    'kp-sig-cyberpunk-split-out': 'the split above played as the leave, once',
+    'kp-sig-cyberpunk-word': "a loading word's text stepped letter by letter (content) every 1.8 s; the word keeps its colour, under 341x256 px",
+    'kp-sig-forest-leave':
+        'a part withering away once: it sinks, is clipped from the top and fades through a desaturating filter; one monotone change',
+    'kp-sig-grotesk-fall':
+        'the red plate falling into register once: a drop-shadow filter offset that closes to nothing; the plate keeps its colour, only its offset moves',
+    'kp-sig-grotesk-fall-again': 'the same fall replayed once when a meter turns destructive',
+    'kp-sig-grotesk-leave':
+        'a part spiralling out once (custom properties for the angle and the radius of a translate) and hidden at the end; one change from shown to hidden',
+    'kp-sig-grotesk-loop':
+        'custom properties for the angle and radius of a translate on a busy mark, looping; the mark keeps its colour, only its position moves',
+    'kp-sig-grotesk-update-plate':
+        'the red plate falling into register once on a changed value (a drop-shadow filter offset closing); far under 341x256 px',
+    'kp-sig-high-contrast-size-mark': 'an outline drawn round an arriving part for 600 ms, then removed in one step; one change on and one off, once',
+    'kp-sig-nostromo-size-scan':
+        'an arriving part revealed in four scan frames (clip-path) while a brightness filter settles from 1.8 to none once; one monotone change, 80 ms a frame',
+    'kp-sig-sepia-leave-2':
+        'a leaving part burnt in from its edges once: an inset shadow that grows from nothing through the primary to the ink; one monotone darkening on a pseudo-element',
+    'kp-sig-synthwave-sun': 'the sun sinking below the horizon once (a translate) and hidden at the end; one change from shown to hidden',
+    'kp-sig-terminal-tm-menu-feed':
+        "a panel's paper fed line by line once (the top of a pseudo-element, four 136 ms steps), visible from the first step; one monotone change",
+    'kp-sig-titanium-ti-cut':
+        "a custom property setting where a dialog's chamfer cut sits as it opens, once; the dialog keeps its colours, only its outline changes",
 };
+
+/**
+ * Properties that move or reshape what is drawn without changing its
+ * colours: a keyframe that animates nothing else cannot change luminance,
+ * so it cannot flash, and the gate says so itself instead of waiting for a
+ * line in OUT_OF_SCOPE [scope-143, the port session, 2026-10-08]. Anything
+ * outside this list (opacity without stops, filter, a shadow, a colour,
+ * visibility, content, a custom property that may drive any of these)
+ * still needs its line with the reason.
+ */
+export const GEOMETRY_ONLY = new Set([
+    'transform',
+    'translate',
+    'rotate',
+    'scale',
+    'clip-path',
+    'background-position',
+    'background-position-x',
+    'background-position-y',
+    'mask-position',
+    '-webkit-mask-position',
+    'inset',
+    'inset-block-start',
+    'inset-block-end',
+    'inset-inline-start',
+    'inset-inline-end',
+    'top',
+    'right',
+    'bottom',
+    'left',
+    'width',
+    'height',
+    'animation-timing-function',
+]);
+
+/**
+ * Every keyframe's animated properties, by name.
+ * @param {string} source
+ * @returns {Map<string, Set<string>>}
+ */
+export function keyframeProperties(source) {
+    const out = new Map();
+    const head = /@keyframes\s+([\w-]+)\s*\{/g;
+    for (let m = head.exec(source); m !== null; m = head.exec(source)) {
+        let depth = 1;
+        let i = m.index + m[0].length;
+        const from = i;
+        while (i < source.length && depth > 0) {
+            if (source[i] === '{') depth += 1;
+            else if (source[i] === '}') depth -= 1;
+            i += 1;
+        }
+        const found = new Set();
+        for (const b of source.slice(from, i - 1).matchAll(/\{([^}]*)\}/g)) for (const d of b[1].matchAll(/(?:^|;)\s*([\w-]+)\s*:/g)) found.add(d[1]);
+        out.set(m[1], found);
+    }
+    return out;
+}
 
 /** @param {string} source @returns {Map<string, {stop: number, opacity: number}[]>} */
 export function parseOpacityKeyframes(source) {
@@ -365,11 +453,14 @@ export function parseOpacityKeyframes(source) {
         const body = source.slice(from, i - 1);
         const stops = [];
         // A block is `0%, 100% { ... }` — several selectors, one body.
-        for (const b of body.matchAll(/([\d.%,\s]+)\{([^}]*)\}/g)) {
-            const o = b[2].match(/opacity:\s*([\d.]+)/);
+        // `from` and `to` are 0% and 100%: until the port session
+        // (2026-10-08) they were not read, and every keyframe written with
+        // them was reported as something the gate could not measure.
+        for (const b of body.matchAll(/((?:[\d.]+%|from|to)(?:\s*,\s*(?:[\d.]+%|from|to))*)\s*\{([^}]*)\}/g)) {
+            const o = b[2].match(/(?:^|;|\s)opacity:\s*([\d.]+)/);
             if (!o) continue;
-            for (const p of b[1].match(/[\d.]+(?=%)/g) ?? []) {
-                stops.push({ stop: Number(p), opacity: Number(o[1]) });
+            for (const p of b[1].split(',').map((x) => x.trim())) {
+                stops.push({ stop: p === 'from' ? 0 : p === 'to' ? 100 : parseFloat(p), opacity: Number(o[1]) });
             }
         }
         if (stops.length > 0)
@@ -580,6 +671,9 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     /** @type {Map<string, {stop: number, opacity: number}[]>} */
     const shared = new Map();
     for (const rel of CSS) for (const [k, v] of parseOpacityKeyframes(readFileSync(new URL(rel, import.meta.url), 'utf8'))) shared.set(k, v);
+    /** @type {Map<string, Set<string>>} */
+    const moved = new Map();
+    for (const rel of CSS) for (const [k, v] of keyframeProperties(readFileSync(new URL(rel, import.meta.url), 'utf8'))) moved.set(k, v);
 
     for (const rel of CSS) {
         const path = new URL(rel, import.meta.url);
@@ -606,6 +700,11 @@ if (import.meta.url === `file://${process.argv[1]}`) {
                 continue;
             }
             if (!stops) {
+                const props = moved.get(anim.name);
+                if (OUT_OF_SCOPE[anim.name] === undefined && props && props.size > 0 && [...props].every((p) => GEOMETRY_ONLY.has(p))) {
+                    skipped.push(`${anim.name} — moves only (${[...props].join(', ')}); nothing that changes luminance`);
+                    continue;
+                }
                 if (OUT_OF_SCOPE[anim.name] === undefined) {
                     failed++;
                     console.error(

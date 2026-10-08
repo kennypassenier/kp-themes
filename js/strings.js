@@ -275,6 +275,7 @@
  * @property {string} meterUsed  A meter's share, in the words a screen reader hears, when the page names it nothing else ("62% used") [scope-143]
  * @property {string} meterNotMeasured  A meter with no share, for a screen reader [scope-143]
  * @property {string} meterMeasuring  A loading meter, for a screen reader [scope-143]
+ * @property {string} loadingWord  The word a busy picture spells on screen, deciphered letter by letter (cyberpunk's skeletons, busy bars and meters); `setStrings()` hands it to the stylesheet [scope-143]
  * @property {string} calendarNav  The name of a month heatmap's row of month buttons (js/calendar.js) [scope-143]
  * @property {string} calendarPrev  A month heatmap's button to the month before; its name and title are `previousMonth` [scope-143]
  * @property {string} calendarNext  Its button to the month after; its name and title are `nextMonth` [scope-143]
@@ -657,6 +658,7 @@ export const DEFAULT_STRINGS = Object.freeze({
     meterUsed: 'used',
     meterNotMeasured: 'not measured',
     meterMeasuring: 'being measured',
+    loadingWord: 'LOADING',
     calendarNav: 'Month',
     calendarPrev: '‹ Prev',
     calendarNext: 'Next ›',
@@ -745,7 +747,47 @@ let current = DEFAULT_STRINGS;
  */
 export function setStrings(next) {
     current = Object.freeze({ ...current, ...next });
+    if (typeof document !== 'undefined') applyStringProperties(document.documentElement, current);
     return current;
+}
+
+/** The noise a deciphered word starts from, seven glyphs. */
+const CIPHER = '#&$?%@/';
+
+/**
+ * The words the stylesheets draw themselves, as custom properties
+ * [scope-143]. A keyframe cannot read this module, so the word a busy
+ * picture spells reaches it as `--kp-loading-word-0` to `-7`: the eight
+ * ticks of cyberpunk's decipher, from all noise to the whole word. The
+ * register keeps the English as each property's fallback, so a page that
+ * never calls `setStrings()` draws what it always drew.
+ *
+ * @param {Strings} [strings] the strings to draw from, the current ones by default
+ * @returns {Record<string, string>} property name to a CSS string value
+ */
+export function stringProperties(strings = current) {
+    const word = strings.loadingWord;
+    /** @type {Record<string, string>} */
+    const out = {};
+    for (let tick = 0; tick <= 7; tick++) {
+        const shown = Math.round((tick * word.length) / 7);
+        const turn = (tick * 5) % CIPHER.length;
+        const noise = (CIPHER.slice(turn) + CIPHER.slice(0, turn)).repeat(Math.ceil(word.length / CIPHER.length) + 1);
+        out[`--kp-loading-word-${tick}`] = JSON.stringify(word.slice(0, shown) + noise.slice(0, word.length - shown));
+    }
+    return out;
+}
+
+/**
+ * Write `stringProperties()` onto an element, so every stylesheet under it
+ * draws the consumer's words. `setStrings()` does this on the document
+ * root; call it yourself for a subtree that speaks another language.
+ *
+ * @param {HTMLElement} root
+ * @param {Strings} [strings]
+ */
+export function applyStringProperties(root, strings = current) {
+    for (const [name, value] of Object.entries(stringProperties(strings))) root.style.setProperty(name, value);
 }
 
 /** @returns {Strings} the strings as they stand */

@@ -2312,6 +2312,8 @@
             .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
             .kp-button[aria-busy='true'],
             .kp-card[aria-busy='true'],
+            .kp-tiles[aria-busy='true'] > .kp-card,
+            .kp-kpi__chart .kp-chart__state[data-kp-state='loading'],
             .kp-calendar--busy-whole > .kp-calendar__busy
         ) {
         --kp-fo-h: var(--kp-fo-size, 1rem);
@@ -2361,6 +2363,8 @@
             .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
             .kp-button[aria-busy='true'],
             .kp-card[aria-busy='true'],
+            .kp-tiles[aria-busy='true'] > .kp-card,
+            .kp-kpi__chart .kp-chart__state[data-kp-state='loading'],
             .kp-calendar--busy-whole > .kp-calendar__busy
         )::before,
     [data-theme='forest']
@@ -2372,6 +2376,8 @@
             .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
             .kp-button[aria-busy='true'],
             .kp-card[aria-busy='true'],
+            .kp-tiles[aria-busy='true'] > .kp-card,
+            .kp-kpi__chart .kp-chart__state[data-kp-state='loading'],
             .kp-calendar--busy-whole > .kp-calendar__busy
         )::after {
         content: '';
@@ -2397,6 +2403,8 @@
             .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
             .kp-button[aria-busy='true'],
             .kp-card[aria-busy='true'],
+            .kp-tiles[aria-busy='true'] > .kp-card,
+            .kp-kpi__chart .kp-chart__state[data-kp-state='loading'],
             .kp-calendar--busy-whole > .kp-calendar__busy
         )::before {
         background: var(--border-strong);
@@ -2413,6 +2421,8 @@
             .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
             .kp-button[aria-busy='true'],
             .kp-card[aria-busy='true'],
+            .kp-tiles[aria-busy='true'] > .kp-card,
+            .kp-kpi__chart .kp-chart__state[data-kp-state='loading'],
             .kp-calendar--busy-whole > .kp-calendar__busy
         )::after {
         background: var(--primary);
@@ -2430,6 +2440,8 @@
                 .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
                 .kp-button[aria-busy='true'],
                 .kp-card[aria-busy='true'],
+                .kp-tiles[aria-busy='true'] > .kp-card,
+                .kp-kpi__chart .kp-chart__state[data-kp-state='loading'],
                 .kp-calendar--busy-whole > .kp-calendar__busy
             ) {
             animation: kp-progressbar-forest-breath 6600ms linear infinite;
@@ -2456,6 +2468,8 @@
                 .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
                 .kp-button[aria-busy='true'],
                 .kp-card[aria-busy='true'],
+                .kp-tiles[aria-busy='true'] > .kp-card,
+                .kp-kpi__chart .kp-chart__state[data-kp-state='loading'],
                 .kp-calendar--busy-whole > .kp-calendar__busy
             ) {
             --kp-fo-breath: 0.5;
@@ -2742,6 +2756,378 @@
 
         [data-theme='forest'] .kp-menu-button > .kp-menu[data-kp-menu-side='above'] {
             animation-name: kp-sig-forest-grow;
+        }
+    }
+
+    /* ── The dashboard port [themes/forest/CHARACTER.md §5, Kenny's picks on
+       research/character-{tiles,kpi,trend,columns,calendar,drawer}, decided
+       2026-10-06; drawn on forest's grammar 2026-10-07]. Each block names its
+       demo and pick; a demo's option attribute is the package's own markup
+       here. Loading on these parts is the planting strip above (the tile
+       grid, the trend's plot); the network graph is left alone (G16). ── */
+
+    /* Tiles · shape 3, the herbarium sheet: the leaf corner is the plate's
+       (above); a tile's title is the field-note voice, the body face in
+       italic, no Georgia (G13, proposal-15). */
+    [data-theme='forest'] .kp-tiles > .kp-card .kp-card__title {
+        font-family: var(--theme-font-body);
+        font-style: italic;
+    }
+
+    /* Tiles · hover 3, the light breaks through → the blaze: pointing at a
+       sheet lays the dashed trail ring round it (G12); pointing at its Open
+       link blazes the link alone (a forest ghost button, above). */
+    [data-theme='forest'] .kp-tiles > .kp-card {
+        outline: 2px dashed transparent;
+        outline-offset: 2px;
+    }
+
+    [data-theme='forest'] .kp-tiles > .kp-card:hover:not(:has(:is(a, button, .kp-button):hover)) {
+        outline-color: var(--primary);
+        box-shadow: none;
+    }
+
+    /* Key figures · tone 3, the field note: a change without a tone is a note
+       on the plain plate (the toned ones keep their status pair, the leaf
+       corner and the italic from above); a warning or failed tile keeps the
+       package's 3 px start blaze in the tone's ink (G5). */
+    [data-theme='forest'] .kp-kpi__delta:not([data-kp-tone]) {
+        padding-inline: 0.3em;
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }
+
+    /* Key figures · live 3, the growth ring round the changed figure: the
+       figure hugs its digits while the ring plays, so the ring is drawn round
+       the number and not across the tile. */
+    [data-theme='forest'] .kp-kpi > .kp-kpi__value[data-kp-updating='ring'] {
+        justify-self: start;
+        inline-size: fit-content;
+    }
+
+    /* Trend · loading 3, fireflies → the plot is planted too: the trend's
+       loading panel (js/chart.js draws it as a block skeleton) is not the
+       treeline here but the planting strip at the plot's foot (listed with
+       the waiting surfaces above), on the tile's own ground. */
+    [data-theme='forest'] .kp-kpi__chart .kp-chart__state[data-kp-state='loading'] {
+        background-color: transparent;
+    }
+
+    /* Calendar · the rows and columns of the month, for the stagger of the
+       arrival (reading order) and of the planting (the days of a week). */
+    [data-theme='forest'] .kp-calendar__grid td:nth-child(2) {
+        --kp-fo-col: 1;
+    }
+
+    [data-theme='forest'] .kp-calendar__grid td:nth-child(3) {
+        --kp-fo-col: 2;
+    }
+
+    [data-theme='forest'] .kp-calendar__grid td:nth-child(4) {
+        --kp-fo-col: 3;
+    }
+
+    [data-theme='forest'] .kp-calendar__grid td:nth-child(5) {
+        --kp-fo-col: 4;
+    }
+
+    [data-theme='forest'] .kp-calendar__grid td:nth-child(6) {
+        --kp-fo-col: 5;
+    }
+
+    [data-theme='forest'] .kp-calendar__grid td:nth-child(7) {
+        --kp-fo-col: 6;
+    }
+
+    [data-theme='forest'] .kp-calendar__grid tbody tr:nth-child(2) {
+        --kp-fo-row: 1;
+    }
+
+    [data-theme='forest'] .kp-calendar__grid tbody tr:nth-child(3) {
+        --kp-fo-row: 2;
+    }
+
+    [data-theme='forest'] .kp-calendar__grid tbody tr:nth-child(4) {
+        --kp-fo-row: 3;
+    }
+
+    [data-theme='forest'] .kp-calendar__grid tbody tr:nth-child(5) {
+        --kp-fo-row: 4;
+    }
+
+    [data-theme='forest'] .kp-calendar__grid tbody tr:nth-child(6) {
+        --kp-fo-row: 5;
+    }
+
+    /* Calendar · shape 3, the round logs: a day is a log's end, round in a
+       wood, a 3 px rim with its rings faint inside; the numbers in the display
+       face, the month and the weekdays in italic. */
+    [data-theme='forest'] .kp-calendar__day {
+        position: relative;
+        isolation: isolate;
+        border-width: 3px;
+        border-radius: 50%;
+        box-shadow: inset 0 0 0 5px hsl(from var(--foreground) h s l / 0.08);
+        font-family: var(--theme-font-display);
+    }
+
+    [data-theme='forest'] .kp-calendar__swatch {
+        border-radius: 50%;
+    }
+
+    [data-theme='forest'] .kp-calendar__title {
+        font-family: var(--theme-font-display);
+        font-style: italic;
+    }
+
+    [data-theme='forest'] .kp-calendar__grid th {
+        font-style: italic;
+    }
+
+    /* Calendar · tone 2, the trail map: each state is a patch of map. A kept
+       night carries the trail blaze along its start edge in its own ink, a
+       night with nothing done a double blaze; a night not known is a dashed
+       patch with a question mark, a day to come a dotted one, a day before
+       the record hatched; today is ringed in green with a map pin. */
+    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch):is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad']) {
+        background-image: linear-gradient(var(--kp-fo-blaze) 0 0);
+        background-position: left 3px center;
+        background-size: 4px calc(100% - 10px);
+        background-repeat: no-repeat;
+    }
+
+    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='ok'] {
+        --kp-fo-blaze: var(--success-foreground);
+        border-color: hsl(from var(--success-foreground) h s l / 0.3);
+    }
+
+    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='warn'] {
+        --kp-fo-blaze: var(--warning-foreground);
+        border-color: hsl(from var(--warning-foreground) h s l / 0.3);
+    }
+
+    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='bad'] {
+        --kp-fo-blaze: var(--destructive-foreground);
+        background-image: linear-gradient(var(--kp-fo-blaze) 0 0), linear-gradient(var(--kp-fo-blaze) 0 0);
+        background-position:
+            left 3px center,
+            left 9px center;
+        background-size: 3px calc(100% - 10px);
+    }
+
+    [data-theme='forest'] .kp-calendar__day[data-kp-tone='bad'] {
+        padding-inline-start: 0.8rem;
+    }
+
+    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='muted'] {
+        border-color: var(--border);
+    }
+
+    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='none'] {
+        border-style: dashed;
+        border-color: var(--border-strong);
+        background: var(--card);
+    }
+
+    [data-theme='forest'] .kp-calendar__day[data-kp-tone='none']::before {
+        content: '?';
+        position: absolute;
+        z-index: -1;
+        inset-block-start: 0.125rem;
+        inset-inline-end: 0.25rem;
+        color: var(--border-strong);
+        font-size: 0.6rem;
+        font-weight: 700;
+        line-height: 1;
+        pointer-events: none;
+    }
+
+    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='future'] {
+        border-style: dotted;
+        border-color: var(--border-strong);
+        background: transparent;
+    }
+
+    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='before'] {
+        border-color: transparent;
+        background: repeating-linear-gradient(-45deg, hsl(from var(--border-strong) h s l / 0.3) 0 1px, transparent 1px 5px);
+    }
+
+    [data-theme='forest'] .kp-calendar__day[data-kp-today] {
+        box-shadow:
+            inset 0 0 0 2px var(--primary),
+            inset 0 0 0 5px hsl(from var(--foreground) h s l / 0.08);
+    }
+
+    [data-theme='forest'] .kp-calendar__grid td:has(> .kp-calendar__day[data-kp-today])::after {
+        content: '';
+        position: absolute;
+        inset: -5px -3px auto auto;
+        inline-size: 12px;
+        block-size: 12px;
+        border-radius: 50% 50% 50% 0;
+        rotate: -45deg;
+        background: radial-gradient(circle, var(--card) 0 2px, transparent 2.5px), var(--chart-2);
+        box-shadow: 0 0 0 1px var(--foreground);
+        pointer-events: none;
+    }
+
+    /* Calendar · select 3, the pick is the person's act, so it is forest
+       green (G5, proposal-13), 2 px out; the field note's brackets stay round
+       the picked day's count, and a pointed day underlines its number. */
+    [data-theme='forest'] td[aria-selected='true'] > .kp-calendar__day {
+        z-index: 1;
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+
+    [data-theme='forest'] td[aria-selected='true'] > .kp-calendar__day .kp-calendar__count::before {
+        content: '[';
+    }
+
+    [data-theme='forest'] td[aria-selected='true'] > .kp-calendar__day .kp-calendar__count::after {
+        content: ']';
+    }
+
+    [data-theme='forest'] .kp-calendar__day:hover .kp-calendar__num {
+        text-decoration: underline 2px;
+        text-underline-offset: 2px;
+    }
+
+    /* Calendar · loading 1, the falling leaf → a day has no room for a row,
+       so it plants one tree on its mound in three whole stages (§6.7), the
+       spinner's own drawing; the date stands faint over it. Where the package
+       already puts the spinner (a tree) in a loading day, the day draws none. */
+    [data-theme='forest']
+        :is(.kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole), .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']))
+        .kp-calendar__day[data-kp-tone='loading'] {
+        border-color: var(--border);
+        background: var(--card);
+        color: hsl(from var(--foreground) h s l / 0.25);
+        animation: none;
+    }
+
+    [data-theme='forest']
+        :is(.kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole), .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']))
+        .kp-calendar__day[data-kp-tone='loading']::before,
+    [data-theme='forest']
+        :is(.kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole), .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']))
+        .kp-calendar__day[data-kp-tone='loading']::after {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        inset: 14% 36% 10%;
+        background: var(--primary);
+        pointer-events: none;
+    }
+
+    [data-theme='forest']
+        :is(.kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole), .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']))
+        .kp-calendar__day[data-kp-tone='loading']::before {
+        opacity: 0.6;
+        mask: var(--kp-fo-mound) 50% 100% / 100% 100% no-repeat;
+    }
+
+    [data-theme='forest']
+        :is(.kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole), .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']))
+        .kp-calendar__day[data-kp-tone='loading']::after {
+        /* Standing still (reduced motion) it is the grown tree. */
+        mask: var(--kp-fo-stages) 100% 100% / 300% 100% no-repeat;
+    }
+
+    /* Tiles · live 2 and columns · live 1, the sway → a growth ring round the
+       tile or the column whose value js/update.js changed (G8): drawn once on
+       the plate's own leaf, clockwise from the top; the figure never moves,
+       and the ring round the value itself is not drawn twice. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest']
+            :is(.kp-tiles > .kp-card, .kp-kpis[data-kp-kpis-columns] > .kp-kpi):has([data-kp-updating='ring']):not([aria-busy='true']) {
+            position: relative;
+        }
+
+        [data-theme='forest']
+            :is(.kp-tiles > .kp-card, .kp-kpis[data-kp-kpis-columns] > .kp-kpi):has([data-kp-updating='ring']):not([aria-busy='true'])::after {
+            content: '';
+            position: absolute;
+            inset: -5px;
+            border: 1.5px solid var(--primary);
+            border-radius: 0 calc(var(--kp-sig-fo-leaf) + 5px);
+            mask: conic-gradient(var(--foreground) var(--kp-fo-arc), transparent 0);
+            opacity: 0;
+            pointer-events: none;
+            animation: kp-sig-forest-update-ring var(--kp-sig-fo-time) linear both;
+        }
+
+        [data-theme='forest']
+            :is(.kp-tiles > .kp-card, .kp-kpis[data-kp-kpis-columns] > .kp-kpi)
+            [data-kp-updating='ring']:not(.kp-state-word)::after,
+        [data-theme='forest'] :is(.kp-tiles > .kp-card, .kp-kpis[data-kp-kpis-columns] > .kp-kpi) .kp-state-word[data-kp-updating='ring']::before {
+            content: none;
+        }
+
+        /* Tiles · hover 3: the blaze is laid in contact time. */
+        [data-theme='forest'] .kp-tiles > .kp-card {
+            transition:
+                outline-color var(--fx-duration) var(--fx-ease),
+                outline-offset var(--fx-duration) var(--fx-ease);
+        }
+
+        /* Calendar · arrival 3, the swing → every day grows up out of its own
+           line once the month is drawn, in reading order 20 ms apart, one
+           growth on the growth curve (G2, proposal-5). */
+        [data-theme='forest'] .kp-calendar__grid:not([aria-busy='true']) .kp-calendar__day {
+            animation: kp-sig-forest-grow var(--kp-sig-fo-time) var(--kp-sig-fo-grow)
+                calc((var(--kp-fo-row, 0) * 7 + var(--kp-fo-col, 0)) * var(--kp-sig-fo-stagger) / 4) backwards;
+        }
+
+        /* Calendar · loading 1: one tree a half loop, the days of a week
+           150 ms apart. */
+        [data-theme='forest']
+            :is(
+                .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole),
+                .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true'])
+            )
+            .kp-calendar__day[data-kp-tone='loading']::after {
+            animation: kp-sig-forest-plant calc(var(--kp-sig-fo-loop) / 2) step-end calc(var(--kp-fo-col, 0) * -150ms) infinite;
+        }
+
+        /* Drawer · openclose 1, the drawer grows out of its edge (the trunk),
+           far side first, clipped at the edge, one growth on the growth curve
+           (G3); js/motion.js closes it as this growth reversed, in the same
+           time. Mirrored on a right-to-left page. */
+        [data-theme='forest'] dialog.kp-drawer {
+            animation: kp-sig-forest-edge var(--kp-sig-dur) var(--kp-sig-fo-grow) backwards;
+        }
+
+        [data-theme='forest'] dialog.kp-drawer:dir(rtl) {
+            animation-name: kp-sig-forest-edge-rtl;
+        }
+    }
+
+    /* Growth out of an edge [G3]: what lives at the window's end edge grows
+       out of it, its far side first, moved in from behind the edge and
+       clipped there, so its words keep their shape. */
+    @keyframes kp-sig-forest-edge {
+        from {
+            translate: 100% 0;
+            clip-path: inset(calc(-1 * var(--kp-sig-fo-reach)) 100% calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)));
+        }
+
+        to {
+            translate: 0 0;
+            clip-path: inset(calc(-1 * var(--kp-sig-fo-reach)));
+        }
+    }
+
+    @keyframes kp-sig-forest-edge-rtl {
+        from {
+            translate: -100% 0;
+            clip-path: inset(calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)) 100%);
+        }
+
+        to {
+            translate: 0 0;
+            clip-path: inset(calc(-1 * var(--kp-sig-fo-reach)));
         }
     }
 }

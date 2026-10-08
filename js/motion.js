@@ -99,8 +99,17 @@ const firstMs = (raw) => {
     return first.endsWith('ms') ? n : n * 1000;
 };
 
+// The reader's motion preference, kept current: read once and updated on
+// every change, so a reader who turns reduced motion on mid-page gets it on
+// the next motion (DI7).
+const reducedQuery = typeof matchMedia === 'function' ? matchMedia('(prefers-reduced-motion: reduce)') : null;
+let reducedNow = reducedQuery?.matches ?? false;
+reducedQuery?.addEventListener('change', (event) => {
+    reducedNow = event.matches;
+});
+
 /** @returns {boolean} */
-const reduced = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+const reduced = () => reducedNow;
 
 /**
  * The theme's motion, read from its dialog entrance: a dialog drawn for an

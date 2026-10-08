@@ -323,14 +323,16 @@ proposal as its first option; nothing is applied before his verdicts.
 - **proposal-2, 3, 4 (loading): applied** on every waiting surface the package
   has (skeleton lines, loading meter, the table's busy panel, a loading menu
   entry, busy button and card, busy calendar, loading chart); the spinner plants
-  a tree. The page-level kit parts without a waiting state in the package (tiles,
-  columns, trend, kpi tile loading) wait for the port.
+  a tree. Since the port (2026-10-08) a busy tile grid, the key figures' and
+  columns' skeleton lines and the trend's plot are planted too.
 - **proposal-5 (arrivals): applied** to the dialog and the toast; the
-  dashboard components have no register hook yet (the port).
+  calendar's days grow in reading order, 20 ms apart, since the port; the
+  arrival of tiles, columns and the trend line waits for a package hook.
 - **proposal-6 (live): applied** as `--kp-update: ring` and the meter's tone ring.
 - **proposal-7 (opening): applied** to the dialog (up out of its base) and the
-  tooltip (down out of its trigger); menus, popovers and the drawer have no
-  register entrance in the package yet (the port).
+  tooltip (down out of its trigger); menus and popovers grow from their button,
+  and the drawer grows out of its edge, far side first, and closes as that
+  growth reversed (the port, 2026-10-08).
 - **proposal-10 (leave): applied**, one animation, the arrival is its reverse.
 - **proposal-12, 18-23 (blaze, composites): applied** to every `.kp-button`,
   icon button, menu entry and key-figure link, so a composite's inner button is
@@ -342,7 +344,9 @@ proposal as its first option; nothing is applied before his verdicts.
   leave in the demos is the arrival reversed (`fog-grow-back`).
 - **proposal-13, 15, 16, 17 (pick colour, type, motifs): applied** where the
   package has the part (tags and the change in italic, wood tags); the
-  calendar, tiles and chart-research parts wait for the port.
+  calendar's green pick and the tiles' italic title are ported; proposal-16's
+  arc is not in the decided drawing (the straight blaze is ported); the chart
+  parts wait for a package hook.
 
 - **Skeleton block and circle, empty state (Kenny, 2026-10-07: stripes and rings
   "not convinced"): applied.** Block and circle = the treeline fills in (option 1

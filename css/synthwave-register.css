@@ -3770,4 +3770,14 @@
     :where([data-theme='synthwave'] .kp-page-header ~ :not(dialog, [popover])) {
         position: relative;
     }
+
+    /* An inline `position: static` beats the rule above (no stylesheet rule
+       outranks a style attribute without !important), and the part would
+       paint under the floor: the header is a stacking context (its container
+       query containment), painted after every unpositioned block. Isolating
+       the part paints it in the same layer, after the header, without
+       touching the position it asked for [port session, 2026-10-08]. */
+    :where([data-theme='synthwave'] .kp-page-header ~ :is([style*='position: static' i], [style*='position:static' i]):not(dialog, [popover])) {
+        isolation: isolate;
+    }
 }

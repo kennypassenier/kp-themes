@@ -652,6 +652,10 @@ export type Strings = {
      */
     meterMeasuring: string;
     /**
+     * The word a busy picture spells on screen, deciphered letter by letter (cyberpunk's skeletons, busy bars and meters); `setStrings()` hands it to the stylesheet [scope-143]
+     */
+    loadingWord: string;
+    /**
      * The name of a month heatmap's row of month buttons (js/calendar.js) [scope-143]
      */
     calendarNav: string;
@@ -983,6 +987,7 @@ export type Strings = {
  * @property {string} meterUsed  A meter's share, in the words a screen reader hears, when the page names it nothing else ("62% used") [scope-143]
  * @property {string} meterNotMeasured  A meter with no share, for a screen reader [scope-143]
  * @property {string} meterMeasuring  A loading meter, for a screen reader [scope-143]
+ * @property {string} loadingWord  The word a busy picture spells on screen, deciphered letter by letter (cyberpunk's skeletons, busy bars and meters); `setStrings()` hands it to the stylesheet [scope-143]
  * @property {string} calendarNav  The name of a month heatmap's row of month buttons (js/calendar.js) [scope-143]
  * @property {string} calendarPrev  A month heatmap's button to the month before; its name and title are `previousMonth` [scope-143]
  * @property {string} calendarNext  Its button to the month after; its name and title are `nextMonth` [scope-143]
@@ -1046,6 +1051,27 @@ export declare const DEFAULT_STRINGS: Strings;
  * @returns {Strings} the merged result
  */
 export declare function setStrings(next: Partial<Strings>): Strings;
+/**
+ * The words the stylesheets draw themselves, as custom properties
+ * [scope-143]. A keyframe cannot read this module, so the word a busy
+ * picture spells reaches it as `--kp-loading-word-0` to `-7`: the eight
+ * ticks of cyberpunk's decipher, from all noise to the whole word. The
+ * register keeps the English as each property's fallback, so a page that
+ * never calls `setStrings()` draws what it always drew.
+ *
+ * @param {Strings} [strings] the strings to draw from, the current ones by default
+ * @returns {Record<string, string>} property name to a CSS string value
+ */
+export declare function stringProperties(strings?: Strings): Record<string, string>;
+/**
+ * Write `stringProperties()` onto an element, so every stylesheet under it
+ * draws the consumer's words. `setStrings()` does this on the document
+ * root; call it yourself for a subtree that speaks another language.
+ *
+ * @param {HTMLElement} root
+ * @param {Strings} [strings]
+ */
+export declare function applyStringProperties(root: HTMLElement, strings?: Strings): void;
 /** @returns {Strings} the strings as they stand */
 export declare function getStrings(): Strings;
 /**

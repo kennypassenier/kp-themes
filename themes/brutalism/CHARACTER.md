@@ -480,16 +480,21 @@ composites own, hover invert, focus ring, press ground, voice shout, motifs one)
   well, the card and panels' slab, the dossier's stamp, the headline's slam and the
   mark, the six-pixel bar, the marquee divider, the wizard's lifted current step, the
   empty state's stamped zero, the link's plate in its ink box, the alarm and the band.
-- **Waits for the port (no register hook in the package yet, nothing invented):** the
-  dashboard components' own parts: tiles, key figures (`.kp-kpi` loading and tone), the
-  trend tile, the action columns, the page header, the state word's tone, the chart's
-  events as square bolts (a mark is a circle) and its tip's hazard corner, the calendar's
-  today bar and day slabs, the drawer's and the tour's drop and veil, and the menu button's
-  panel drop; the toast and tooltip close asymmetries of research/PACKAGE_FINDINGS.md;
-  the busy overlay's leave (the package drops the layer at once); a table row's hover
-  keeps its muted step. The research demos draw these in each
-  `research/character-*/brutalism.css` (the network graph untouched, G18).
-- **Needs a shared file (listed for the port session):** a TIMINGS row in
+- **Ported (2026-10-08):** the tiles' hover inversion and their drop, the key
+  figures' slab, busy well, square delta and hazard foot, the trend tile's frame,
+  foot bar and plot well, the strip of columns, the page header's slab and title,
+  the chart's legend keys and tip slab, the calendar's five picks, the drawer's
+  and the tour's drop and veil, and the menu button's panel drop. The tip has no
+  hazard corner: tape means danger only (G16).
+- **Waits for the port (no register hook in the package yet, nothing invented):**
+  a tile's mark and its tone (a mark element and `data-kp-tone` on the tile), the
+  state word's tone (`data-kp-tone` on `.kp-state-word`), the chart's events as
+  square bolts (the mark is a circle) and its arrival, the strip's arrival and live
+  moments beyond `aria-busy`, the tour card's next-step lift, and the drawer's own
+  300 ms (js/motion.js times every dialog by the theme's dialog); the busy
+  overlay's leave (the package drops the layer at once); a table row's hover keeps
+  its muted step.
+- **Needs a shared file (done by the port session, 2026-10-08):** a TIMINGS row in
   `js/effects.js` and an OUT_OF_SCOPE line in `gates/check-motion.mjs` for the new
   keyframes `kp-sig-brutalism-hoist`, `-tip`, `-set`, `-drop`, `-hold`, `-leave`,
   `-leave-slab`, `-update-slam`, `-meter-throw` and `kp-progressbar-brutalism-hop` (the
