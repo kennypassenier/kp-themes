@@ -84,7 +84,6 @@ export const PAGES = [
             {
                 href: 'research/retro-anchor/demo.html',
                 label: "What is retro's anchor element",
-                rework: 'update 1: redesigned from the ground up on an old Windows UI, as Kenny asked',
             },
             {
                 href: 'research/phantom-anchor/demo.html',

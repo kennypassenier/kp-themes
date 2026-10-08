@@ -1,30 +1,48 @@
-// Retro's candidates for its anchor element: the data demo.js builds the
-// page from, and options.css draws. Retro is the 1995 desktop: a teal
-// desktop, the page one application window on it (navy title-bar ramp,
-// raised bevel, hard drop), grey chrome, sunken wells, the 50 % dither,
-// navy progress blocks, the selection bar, the hourglass, marching ants;
-// nothing eases (`--fx-duration: 0ms`), everything moves in hard `steps()`.
-// Kenny on the drawer round: "make me feel the retro vibe of an old
-// windows". Each candidate is one thing Windows 95 did: a window zoomed
-// open in outline steps, the hourglass turned, the selection bar snapped
-// on, a thing dissolved through the dither, the marching ants selected it,
-// the progress blocks filled, a window became active.
+// Retro's candidates for its anchor element, UPDATE 1 (Kenny, 2026-10-08:
+// "None of these, I want 3 more attempts at this, redesign it completely
+// from the ground up, based on an old windows UI. It needs to feel really
+// retro and oldschool. This theme has the potential to be one of the most
+// distinct ones we have, so it needs to feel professionally done.")
+//
+// Round one drew mechanics (an outline zoom, a selection bar, a dither, a
+// bevel) on a neutral window. This round draws 1995 itself: every scene is
+// the desktop (teal ground, a taskbar with its Start button and clock, a
+// window with its title-bar ramp, its menu bar File Edit View Help, its
+// status bar), drawn in the chrome palette with the 16-colour feel the
+// tokens allow, and the anchor is a MOMENT everyone who sat at that desktop
+// remembers: the sheet of paper flying between two folders in the Copying
+// dialog, the cards cascading when Solitaire is won, Defrag reading and
+// writing its blocks, the Start menu sliding up, the error box with its
+// ding, Minesweeper's face, the starfield screensaver, a window dragged by
+// its outline. Nothing eases; everything moves in the whole frames of a
+// 1995 machine (`steps()`), and every close is its open played backwards.
 //
 // The other themes' anchors steered clear of: terminal's block cursor and
-// typed lines (the DOS voice stays a label), nostromo's raster (no
-// scanlines, no CRT: this is a desktop), brutalism's hard slab (retro's
-// drop is 3–4 px grey, its box a bevel), high-contrast's hard steps as a
-// rhythm (retro's steps draw 1995 things, not signs).
+// typed lines (the DOS prompt is not a candidate), nostromo's raster and
+// CRT (no scanlines; this is a desktop on a monitor seen as pixels, not
+// as phosphor), brutalism's slab (the bevel is 1995's, grey on grey),
+// high-contrast's hard steps as signage (dropped in any case).
 //
-// Implementation notes for options.css: NOTHING eases: every keyframe pair
-// runs on `steps(n, jump-end)` or `step-end`; the bevels are the register's
-// own stacks (`--kp-raised`, `--kp-pressed`, `--kp-sunken`), the ramp is
-// `--kp-ramp`, the dither `--kp-brush` and the densities `--kp-dd-100/75/50/25`
-// (as ground) / `--kp-dm-*` (as mask). See the comment above each candidate.
+// Implementation notes for options.css: see the comment above each
+// candidate. The window chrome is the register's own: `--kp-raised`,
+// `--kp-pressed`, `--kp-sunken` bevel stacks, `--kp-ramp` for an active
+// title bar, `--kp-groove-line`, `--kp-brush` (the 50 % dither),
+// `--kp-dd-*`/`--kp-dm-*` densities, `--kp-drop-hard`. Chrome text (titles,
+// menu bar, buttons, labels, dialog text) is set in 'Pixelify Sans' at
+// 12–13 px (the bitmap sans of 1995; the body face stays for the page
+// around the scenes); DOS text in `--kp-dos` (VT323). The 16-colour feel
+// comes from the tokens and their relative colours only (DI9): teal
+// `--kp-desktop`, navy `--primary`, chrome `--background`/`--card`/
+// `--popover`, ink `--foreground`, yellow `--warning`, maroon
+// `--destructive`, green `--success`, blue `--info`, purple `--chart-4`;
+// a brighter red/green/blue is `hsl(from var(--destructive) h 100% 50%)`
+// and the like. Icons (folder, sheet, computer, bin, cards, the smiley)
+// are drawn with CSS boxes, borders and gradients on a 2 px grid, never
+// an image.
 
 export const THEME = 'retro';
 export const LABEL = 'Retro';
-/** One unit of the clock, ms: 1995 drew in frames of about 70 ms (its outline zoom had four); the clock keeps whole frames. */
+/** One unit of the clock, ms: 1995 drew in frames of about 70 ms; the clock keeps whole frames. */
 export const UNIT = 90;
 
 /** A package button; `inner` goes before its label (a fill, a lane), `after` behind it. */
@@ -34,9 +52,23 @@ const button = (label, cls = '', inner = '', after = '') =>
 /** A drawn part: its class carries the building block (scale, clip or move), or none when it runs its own keyframes. */
 const a = (block, cls = '') => `<span class="an-a${block ? ` an-a--${block}` : ''} ${cls}" aria-hidden="true"></span>`;
 
-/** A 1995 window: raised bevel, a title bar (navy ramp, Pixelify title, three drawn controls), a body with two lines. */
-const win = (cls = '', inner = '', title = 'Pump house 3') =>
-    `<div class="rt-win ${cls}"><div class="rt-win__title"><span>${title}</span><span class="rt-win__controls" aria-hidden="true"><i></i><i></i><i></i></span></div><div class="rt-win__body"><p>Flow: 1284 l/min</p><p>Pressure: steady</p></div>${inner}</div>`;
+/** The 1995 desktop every hero stands on: teal ground, two icons at the top-left, the taskbar with its Start button and clock. */
+const desktop = (cls = '', inner = '') =>
+    `<div class="rt-desk ${cls}"><div class="rt-desk__icons" aria-hidden="true"><span class="rt-icon rt-icon--pc"><i></i><b>My Computer</b></span><span class="rt-icon rt-icon--bin"><i></i><b>Recycle Bin</b></span></div>${inner}<div class="rt-taskbar" aria-hidden="true"><span class="rt-start"><i></i>Start</span><span class="rt-taskbar__tray"><span class="rt-taskbar__clock">9:41 AM</span></span></div></div>`;
+
+/** A 1995 window: raised bevel, a title bar (navy ramp, three controls), a menu bar, a body, a status bar. */
+const win = (cls = '', title = 'Pump house 3', body = '<p>Flow: 1284 l/min</p><p>Pressure: steady</p>', menu = true) =>
+    `<div class="rt-win ${cls}"><div class="rt-win__title"><span class="rt-win__sysicon" aria-hidden="true"></span><span>${title}</span><span class="rt-win__controls" aria-hidden="true"><i></i><i></i><i></i></span></div>${
+        menu
+            ? '<div class="rt-win__menu" aria-hidden="true"><span><u>F</u>ile</span><span><u>E</u>dit</span><span><u>V</u>iew</span><span><u>H</u>elp</span></div>'
+            : ''
+    }<div class="rt-win__body">${body}</div><div class="rt-win__status" aria-hidden="true"><span>Ready</span><span class="rt-win__grip"></span></div></div>`;
+
+/** A 1995 dialog box: no menu bar, a message with an icon, OK with the dotted focus rectangle. */
+const dialog = (cls = '', title, icon, text, buttons = ['OK']) =>
+    `<div class="rt-dlg ${cls}"><div class="rt-win__title"><span>${title}</span><span class="rt-win__controls rt-win__controls--one" aria-hidden="true"><i></i></span></div><div class="rt-dlg__body"><span class="rt-dlg__icon rt-dlg__icon--${icon}" aria-hidden="true"></span><p>${text}</p></div><div class="rt-dlg__buttons">${buttons
+        .map((b, i) => `<span class="rt-btn${i === 0 ? ' rt-btn--default' : ''}">${b}</span>`)
+        .join('')}</div></div>`;
 
 /** Retro's own progress bar: a sunken well with navy blocks that fill whole, block by block. */
 const bar = (cls, extra = '') =>
@@ -44,188 +76,289 @@ const bar = (cls, extra = '') =>
 
 export const QUESTION = 'Which one element is retro’s anchor, the thing every later decision of the theme departs from?';
 export const WHY =
-    'Colours are settled and shared. The anchor is the one recognisable element that decides how retro loads, arrives, points, presses, updates and leaves: forest has its tree bar, grotesk its plate falling into register, terminal its block cursor. Each candidate below is only what the 1995 desktop already owned, moves in hard steps and never eases, and is told apart from the other themes’ anchors, terminal’s cursor and nostromo’s raster first of all.';
+    'Colours are settled and shared. The anchor is the one recognisable element that decides how retro loads, arrives, points, presses, updates and leaves. Update 1: every candidate is now a moment of the 1995 desktop itself, drawn as it was (the teal desktop, the taskbar, the window with its menu bar and status bar, the dialog box with its icon), in whole frames and never eased; none of round one’s mechanics returns.';
 export const LOOK =
-    'Seven candidates for retro’s anchor, each shown in its own scene, as a progress bar and as a button press; the first is the recommendation. Nothing eases in any of them. Pick the one that is retro to you, or “None of these” with a note.';
+    'Update 1: eight new candidates for retro’s anchor, each a moment of the 1995 desktop, shown in its own scene, as a progress bar and as a button press; the first is the recommendation. Nothing eases. Pick the one that is retro to you, or “None of these” with a note.';
 
 /**
  * @type {{ key: string, name: string, see: string, follows: string, why: string, caps: [string, string, string], hero: string, bar: string, button: string }[]}
  */
 export const ANCHORS = [
-    // CSS: the 1995 window zoom: four dotted outline rectangles (`.rt-z-box
-    // i`, 1px dotted ink, no fill) are drawn one per frame from a small
-    // rectangle at the stage's foot-start (the taskbar's place) up to the
-    // window's full rectangle, each held one frame and the previous erased
-    // (`steps(1)`, 1 u each, 1–5 u: box 1 at 25 % size, 2 at 50 %, 3 at
-    // 75 %, 4 at 100 %); then the window is painted whole at 6 u (clip
-    // inset 100% → 0 in one step). Out: the window erased in one step, the
-    // outlines stepping down. Bar: the blocks fill whole, one block a step
-    // (`steps(n)` on the clip, 7 u). Button: press at 7 u = the register's
-    // press: the face repainted with `--kp-pressed`, the label 1px down and
-    // right, in one step, held.
+    // CSS: the Copying dialog (a dialog box titled "Copying…" with two
+    // folder icons `.rt-folder` 2.5rem wide, yellow `--warning` body, darker
+    // tab, drawn with borders on a 2px grid, 5rem apart; a sheet `.rt-sheet`
+    // (white 1rem × 1.3rem with a folded corner and three ink lines) that
+    // flies from the left folder to the right in an arc of 8 frames
+    // (`steps(1)` between 8 fixed translate poses, 1 u each: up out of the
+    // folder, over the top, down into the other); at the 8th frame it drops
+    // in and the dialog's segmented bar gains one block; the text under the
+    // folders reads "pumps.dat" then "From 'Pump house 3' to 'Backup'". Out:
+    // the sheet flies back the same arc, the block is taken away. Bar: the
+    // Copying dialog's bar, a block per sheet: 7 blocks over 7 u, the sheet's
+    // arc above it in 7 small flights. Button: press at 7 u = the register's
+    // bevel press (face `--kp-pressed`, label 1px down and right), one step.
     {
-        key: 'zoom',
-        name: 'The window zooms open in outline',
-        see: 'What Windows 95 drew when a window opened: four dotted outline rectangles, one per frame, each larger than the last, stepping up from where the window’s button sits to where the window will be, and then the window is painted whole. Held, then erased in one step and the outlines step back down. As a progress bar, the navy blocks fill one block a step, as retro’s bar already does. As a button press, the bevel is pressed in one step and the label moves a pixel, as retro’s buttons already do.',
+        key: 'copy',
+        name: 'Copying…: the sheet flies between the folders',
+        see: 'The Copying dialog of 1995: two folders, and a sheet of paper that flies out of the left one, over, and down into the right one in eight whole frames, again and again, while the segmented bar underneath gains a block each time a sheet lands. Held with the sheet in the folder, then it flies back and the block is taken away. As a progress bar, it is that dialog’s bar with the sheet’s flight above it. As a button press, the bevel is pressed in one step and the label moves a pixel, as 1995 pressed every button.',
         follows:
-            'Every window, dialog, menu and toast zooms open in outline and zooms shut; a tile or a panel that arrives is zoomed from its button; loading is the hourglass; a live update is the changed figure repainted in one step; hover is nothing (1995 had none) and the press the bevel; the leave is the outline zooming down to where it came from.',
-        why: 'it is the single most remembered motion of that desktop and nobody else can have it (every other theme opens by a clip, a fold, a rise or a fall; none zooms in outline), it is hard steps by nature so it keeps retro’s one law, and it decides at once how everything opens and closes, where the bevel press, the blocks and the hourglass already decide the rest.',
+            'Everything that arrives is copied in: it flies in as a sheet in frames and lands whole; everything that leaves flies out to the Recycle Bin; loading is sheets flying between folders with the bar filling under them; a live update is one sheet landing on the changed figure; the press is the bevel; hover is nothing, as in 1995; a menu is dealt from its edge in frames.',
+        why: 'it is the single most remembered animation of that desktop (nobody who waited for a copy forgets the flying sheet), it is only retro’s (no other theme flies paper between folders), it moves in frames by nature, and it gives arrival, loading, live and leave as one picture, where the bevel press and the segmented bar it already carries decide the rest.',
         caps: [
-            'In its own scene: four outlines step up, the window is painted',
-            'As a progress bar: a block per step',
+            'In its own scene: the Copying dialog, the sheet flies',
+            'As a progress bar: a block per sheet',
             'As a button press: the bevel pressed, the label a pixel over',
         ],
-        hero: `<div class="an-hero rt-z-hero" role="img" aria-label="Four dotted outline rectangles step up from the bottom corner, each larger than the last, then a 1995 window is painted whole"><div class="rt-z-stage"><span class="rt-z-box" aria-hidden="true"><i class="an-a"></i><i class="an-a"></i><i class="an-a"></i><i class="an-a"></i></span>${win('rt-z-win an-a')}</div></div>`,
-        bar: `<div class="an-bar">${bar('rt-z-bar')}</div>`,
-        button: `<div class="an-btn"><span class="rt-z-btn">${button('Open', 'an-press rt-z-press')}</span></div>`,
+        hero: `<div class="an-hero rt-c-hero" role="img" aria-label="A 1995 desktop with a Copying dialog: a sheet of paper flies from one folder to the other in whole frames and the segmented bar gains a block">${desktop(
+            'rt-c-desk',
+            `<div class="rt-dlg rt-c-dlg"><div class="rt-win__title"><span>Copying…</span><span class="rt-win__controls rt-win__controls--one" aria-hidden="true"><i></i></span></div><div class="rt-c-stage" aria-hidden="true"><span class="rt-folder rt-folder--from"></span>${a(
+                '',
+                'rt-sheet',
+            )}<span class="rt-folder rt-folder--to"></span></div><p class="rt-c-text">pumps.dat<br />From ’Pump house 3’ to ’Backup’</p><div class="rt-c-bar"><span class="rt-bar__well">${a('clip', 'rt-bar__blocks rt-c-blocks')}</span></div><div class="rt-dlg__buttons"><span class="rt-btn">Cancel</span></div></div>`,
+        )}</div>`,
+        bar: `<div class="an-bar">${bar('rt-c-bar-p', a('', 'rt-sheet rt-sheet--small'))}</div>`,
+        button: `<div class="an-btn"><span class="rt-c-btn">${button('OK', 'an-press rt-c-press')}</span></div>`,
     },
-    // CSS: the hourglass (`.rt-h-glass`, the register's spinner drawing:
-    // two ink caps, a glass polygon clipped, sand in the dither brush) stands
-    // large beside the window; the sand drains through 6 stepped frames
-    // (0–6 u, `steps(1)` between clip-path polygons, the register's
-    // `kp-sig-retro-sand` stops), then the glass turns 180deg in one step at
-    // 7 u; the window's body is painted at 7 u in one step (it was waiting).
-    // Out: the glass turns back, the sand runs up, the body erased. Bar: the
-    // blocks fill a block a step and a small hourglass (1rem) stands at the
-    // well's end, its sand draining in step with the blocks. Button: press at
-    // 7 u = the pointer over the button becomes the hourglass (a 1rem glass
-    // drawn beside the label in one step), face pressed.
+    // CSS: Solitaire won: a window titled "Solitaire" with the green felt
+    // (`hsl(from var(--success) h 100% 25%)`) and four foundation stacks at
+    // the top; a card (`.rt-card`, white 2.2rem × 3rem, 2px ink frame, a red
+    // heart `♥` glyph in `hsl(from var(--destructive) h 100% 45%)` top-left
+    // and bottom-right) bounces out of the first stack: it falls, hits the
+    // window's foot, bounces lower each time while travelling right (6
+    // frames, 1 u each, `steps(1)` between fixed poses), and every pose it
+    // leaves STAYS painted (a trail of card copies: 6 copies `.rt-card--trail`
+    // revealed one per frame behind it, the famous painting artefact); the
+    // last card lands at the foot. Out: the trail is erased copy by copy
+    // and the card bounces back up into its stack. Bar: the fill is cards
+    // laid along the track one per step (7 small cards, `steps(7)`) each
+    // overlapping the last. Button: press at 7 u = the card is flipped: the
+    // button's face flips through 0 width to its back (a navy card back with
+    // a dither pattern) in 2 frames; release flips it face up.
     {
-        key: 'hourglass',
-        name: 'The hourglass turns',
-        see: 'The cursor of 1995: an hourglass stands beside the window while its body waits; the sand drains in whole frames, and when it is through the glass is turned over in one step and the window’s body is painted. Held, then the glass turns back, the sand runs up and the body is erased. As a progress bar, the blocks fill a block a step and a small hourglass at the end drains with them. As a button press, the pointer over the button becomes the hourglass.',
+        key: 'solitaire',
+        name: 'Solitaire is won: the cards cascade',
+        see: 'A Solitaire window on the felt. The game is won: a card bounces out of its stack, hits the window’s foot, bounces lower and lower as it travels across, and every place it has been stays painted, the trail of cards nobody who won a game in 1995 forgets. Held with the trail across the felt, then the trail is erased copy by copy and the card bounces back. As a progress bar, the cards are laid along the track one per step. As a button press, the card is flipped to its back in two frames.',
         follows:
-            'Waiting is the hourglass (the spinner already is), so every loading part shows it and nothing else moves meanwhile; an arrival is the body painted when the sand is through; a live update is one turn of the glass beside the changed figure; a press shows the hourglass while the press works; the leave is the glass turned and the thing erased.',
-        why: 'it is the theme’s one bespoke moving object today and the second thing anyone remembers of that desktop; but it is a cursor and a wait, not a way of opening or closing anything, so arrivals, leaves and presses need the window zoom beside it, and the zoom then decides more of the theme than the glass.',
+            'What is done cascades (a finished export, a closed incident bounces out and leaves its trail for a beat); an arrival bounces in in frames; loading is a card bouncing with its trail; a live update is the changed figure’s card flipped; the press flips; the leave bounces off; the bevel and the dither stay.',
+        why: 'it is the one piece of joy that desktop had and the most quoted animation of it, it is only retro’s, and bouncing in whole frames with a painted trail is a 1995 fact (the screen was not cleared); but it is a celebration, so a plain arrival or a wait wears a party hat, and a card flipping on every press says “game” where the Copying dialog says “work”.',
         caps: [
-            'In its own scene: the sand drains, the glass turns, the body is painted',
-            'As a progress bar: a block per step, the glass drains',
-            'As a button press: the pointer becomes the hourglass',
+            'In its own scene: the won game, a card cascades leaving its trail',
+            'As a progress bar: cards laid one per step',
+            'As a button press: the card flipped to its back',
         ],
-        hero: `<div class="an-hero rt-h-hero" role="img" aria-label="An hourglass cursor stands beside a 1995 window; its sand drains in frames, it turns over, and the window's body is painted"><div class="rt-h-stage">${win('rt-h-win')}<span class="rt-h-glass an-a" aria-hidden="true"><i class="rt-h-glass__sand an-a"></i></span></div></div>`,
-        bar: `<div class="an-bar">${bar('rt-h-bar', '<span class="rt-h-bar__glass an-a" aria-hidden="true"><i class="an-a"></i></span>')}</div>`,
-        button: `<div class="an-btn"><span class="rt-h-btn">${button('Open', 'an-press rt-h-press', '', '<span class="rt-h-press__glass an-a" aria-hidden="true"></span>')}</span></div>`,
+        hero: `<div class="an-hero rt-s-hero" role="img" aria-label="A Solitaire window: a card bounces across the green felt in whole frames and leaves a trail of painted copies">${desktop(
+            'rt-s-desk',
+            `<div class="rt-win rt-s-win"><div class="rt-win__title"><span class="rt-win__sysicon" aria-hidden="true"></span><span>Solitaire</span><span class="rt-win__controls" aria-hidden="true"><i></i><i></i><i></i></span></div><div class="rt-win__menu" aria-hidden="true"><span><u>G</u>ame</span><span><u>H</u>elp</span></div><div class="rt-s-felt" aria-hidden="true"><span class="rt-s-stacks"><i></i><i></i><i></i><i></i></span>${[
+                1, 2, 3, 4, 5, 6,
+            ]
+                .map((n) => `<span class="rt-card rt-card--trail an-a" data-rt-pose="${n}">♥</span>`)
+                .join('')}<span class="rt-card rt-card--live an-a">♥</span></div></div>`,
+        )}</div>`,
+        bar: `<div class="an-bar">${bar('rt-s-bar')}</div>`,
+        button: `<div class="an-btn"><span class="rt-s-btn">${button('Deal', 'an-press rt-s-press')}</span></div>`,
     },
-    // CSS: a list of four rows in the window's body (Start-menu style); the
-    // navy selection bar (`.rt-s-bar`, `--primary` ground, white text via a
-    // copy of the row text in white clipped to the bar) snaps on whole over
-    // row 1 at 2 u, row 2 at 3.5 u, row 3 at 5 u (one step each, the previous
-    // released), and stays on row 3; out: back up. Bar: the blocks are the
-    // selection bar painted a block a step. Button: press at 7 u = the face
-    // is selected: navy ground, white label, in one step (the Start menu's
-    // pick), held.
+    // CSS: Defrag: a window titled "Disk Defragmenter" whose body is a grid
+    // of 14 × 6 blocks (`.rt-d-grid i`, 0.6rem squares with a 1px lighter
+    // top-left edge), at `gap` a scatter of used (blue `--info`), free (white)
+    // and bad (maroon) blocks; the head reads a block (it turns to the
+    // reading colour, green `hsl(from var(--success) h 100% 35%)`) and
+    // writes it at the first free slot from the start (that slot turns
+    // blue, the read one turns white), one block per half unit, `steps(1)`,
+    // so the used blocks gather at the front over 7 u; a legend under the
+    // grid ("■ Used ■ Free ■ Reading ■ Writing ■ Bad"). Out: the blocks are
+    // scattered back the same way. Bar: the fill is the defrag bar (the
+    // window's own blocks walking to the front, one per step). Button: press
+    // at 7 u = the face reads (goes the reading green for one frame) and
+    // writes (pressed bevel), one step.
     {
-        key: 'selection',
-        name: 'The selection bar snaps on',
-        see: 'A list in the window, as in the Start menu. The navy selection bar snaps on whole over the first row, white text on it, then over the next, then the next, one step each and never a slide, and stays on the chosen row. Held, then it snaps back up and off. As a progress bar, the blocks are the selection bar painted a block a step. As a button press, the button is selected: navy face, white label, in one step.',
+        key: 'defrag',
+        name: 'Defrag: the blocks are read and written',
+        see: 'The Disk Defragmenter of 1995: a grid of coloured blocks, used ones scattered among free ones. One block at a time is read (it lights green) and written to the first free place from the start (it turns blue there, white where it was), so the used blocks gather at the front, block by block, with the legend underneath. Held with the disk tidy, then it is scattered back the same way. As a progress bar, the blocks walk to the front one per step. As a button press, the face is read for a frame and written pressed.',
         follows:
-            'Every hover and every pick is the selection bar (the register already does it on links, menus, marks, days); a press holds it; an arrival is a row painted and then selected; a live update is the changed row selected for a beat; loading is the bar stepping down a list of nothing; the leave is the row deselected and erased.',
-        why: 'it is already everywhere in the register (“every hover is the selection bar, instantly”) and the Start menu’s pick, so the theme would speak with one voice; but it is a state of a row and says nothing of how a window, a dialog or a chart opens or waits, and a solid bar snapping on under the pointer is close to brutalism’s invert and terminal’s reverse video.',
+            'Loading is blocks being read and written (the bar, the busy table, the strip, the tiles, the menu: every waiting surface is a small grid gathering itself); an arrival is the part’s blocks written to their place; a live update is the changed figure’s blocks re-written; the press reads and writes; the leave scatters the blocks; nothing eases.',
+        why: 'it is the screen people watched for an hour and could not look away from, it is counting in whole blocks (retro’s own law), and it decides loading, arrival and live at once; but it is a grid, so a dialog, a toast or a menu has to carry a little grid to arrive, and brutalism’s ruled bar and high-contrast’s cells already count in hard steps.',
         caps: [
-            'In its own scene: the bar snaps down the list, stays',
-            'As a progress bar: the bar painted a block a step',
-            'As a button press: the button selected in one step',
+            'In its own scene: the blocks are read and written to the front',
+            'As a progress bar: the blocks walk to the front',
+            'As a button press: read for a frame, written pressed',
         ],
-        hero: `<div class="an-hero rt-s-hero" role="img" aria-label="A navy selection bar snaps on whole over one row of a list, then the next, in hard steps"><div class="rt-win rt-s-win"><div class="rt-win__title"><span>Pumps</span><span class="rt-win__controls" aria-hidden="true"><i></i><i></i><i></i></span></div><ul class="rt-s-list"><li><span>Pump house 1</span></li><li><span>Pump house 2</span></li><li><span>Pump house 3</span></li><li><span>Pump house 4</span></li>${a('', 'rt-s-bar')}</ul></div></div>`,
-        bar: `<div class="an-bar">${bar('rt-s-bar-p')}</div>`,
-        button: `<div class="an-btn"><span class="rt-s-btn">${button('Open', 'an-press rt-s-press')}</span></div>`,
+        hero: `<div class="an-hero rt-d-hero" role="img" aria-label="A Disk Defragmenter window: scattered blue blocks are read one by one and written to the front of the grid">${desktop(
+            'rt-d-desk',
+            win(
+                'rt-d-win',
+                'Disk Defragmenter',
+                `<div class="rt-d-grid" aria-hidden="true">${'<i class="an-a"></i>'.repeat(84)}</div><p class="rt-d-legend" aria-hidden="true"><span class="rt-d-key rt-d-key--used">Used</span><span class="rt-d-key rt-d-key--free">Free</span><span class="rt-d-key rt-d-key--read">Reading</span><span class="rt-d-key rt-d-key--write">Writing</span><span class="rt-d-key rt-d-key--bad">Bad</span></p>`,
+                false,
+            ),
+        )}</div>`,
+        bar: `<div class="an-bar">${bar('rt-d-bar', `<span class="rt-d-bar__grid" aria-hidden="true">${'<i class="an-a"></i>'.repeat(14)}</span>`)}</div>`,
+        button: `<div class="an-btn"><span class="rt-d-btn">${button('Defragment', 'an-press rt-d-press')}</span></div>`,
     },
-    // CSS: the window dissolves in through the four dither densities: a mask
-    // over the window in `--kp-dm-100` → `-75` → `-50` → `-25` → none, one
-    // step each (1.5 u each, 0–6 u, `steps(1)`), the boot's `kp-dither-out`
-    // reversed; out: the densities back up. Bar: the blocks fill, but each
-    // new block dissolves in through the four densities (4 quick steps per
-    // block). Button: press at 7 u = the face dissolves to `--kp-pressed`
-    // through two densities (50, 100) in two steps, label 1px over.
+    // CSS: the taskbar's Start button is pressed (sunken, one step at 1 u)
+    // and the Start menu (`.rt-m-menu`: a raised panel with the vertical
+    // navy banner down its left edge reading "Windows 95" rotated -90deg in
+    // the display face, and six entries with 1rem icons: Programs,
+    // Documents, Settings, Find, Help, Run…, Shut Down… with a groove above
+    // the last) slides up out of the taskbar in 6 hard frames (clip-path
+    // inset from the bottom, `steps(6)`, 2–5 u), then the pointer (a 1995
+    // arrow `.rt-pointer`, white with an ink outline, drawn with clip-path)
+    // moves down the entries in 3 frames and the third entry takes the
+    // navy selection bar (6–7 u). Out: the selection off, the pointer back,
+    // the menu slides down into the taskbar, Start released. Bar: the blocks
+    // fill one per step. Button: press at 7 u = the Start-style press: the
+    // bevel sunken and held (the register's), the label 1px over.
     {
-        key: 'dither',
-        name: 'Dissolved through the dither',
-        see: 'The window is not faded in: it comes through the checkerboard, four densities of dither, 25, 50, 75, 100 per cent, one hard step each, the way the boot screen already goes out. Held, then it dissolves away through the same four. As a progress bar, every new block comes in through the four densities. As a button press, the face dissolves to pressed through two densities.',
+        key: 'start',
+        name: 'Start: the menu slides up',
+        see: 'The Start button is pressed and the Start menu slides up out of the taskbar in six whole frames, the navy banner down its side, its entries with their little icons; the pointer walks down and an entry takes the navy selection bar. Held open, then the entry is released, the menu slides down into the taskbar and Start pops out. As a progress bar, a block per step. As a button press, the bevel sinks and stays sunk while the menu is open, as Start did.',
         follows:
-            'Every arrival and leave is a dither dissolve (the headline and the boot already are); loading is a surface stuck at 50 per cent (the skeleton and busy bar already are); a live update is the changed figure dissolved and redrawn; hover is nothing, the press two densities; redactions lift through it.',
-        why: 'it is the theme’s own material (“the dither every gradient was”) and the boot, the headline, the skeleton, the busy bar and the redactions already use it, and no other theme dissolves; but it is a way of appearing, not an object, and four densities of checkerboard over a window are a dissolve any fade can be mistaken for at a glance.',
+            'Every menu, list and panel slides out of its edge in frames (the Start menu up from the taskbar, a dropdown down from its bar, a drawer in from its side) and slides back; the pressed thing stays sunk while what it opened is open; arrival is a slide-in, loading the hourglass, a live update the selection bar passing over the changed row; nothing fades.',
+        why: 'it is the first thing every 1995 user did and the one the desktop was named for, it opens from its edge in frames (so every menu and panel of the theme follows without a new idea), and the stay-sunk press is a true 1995 manner; but it is an opening, not an object, so loading and live updates must come from the hourglass and the selection bar, and sliding a panel out of its edge is titanium’s drawer and toast in grey.',
         caps: [
-            'In its own scene: the window comes through four densities',
-            'As a progress bar: each block through the dither',
-            'As a button press: pressed through two densities',
+            'In its own scene: Start pressed, the menu slides up, an entry selected',
+            'As a progress bar: a block per step',
+            'As a button press: sunk and held, as Start',
         ],
-        hero: `<div class="an-hero rt-d-hero" role="img" aria-label="A 1995 window comes in through four densities of checkerboard dither, one hard step each">${win('rt-d-win an-a')}</div>`,
-        bar: `<div class="an-bar">${bar('rt-d-bar')}</div>`,
-        button: `<div class="an-btn"><span class="rt-d-btn">${button('Open', 'an-press rt-d-press')}</span></div>`,
+        hero: `<div class="an-hero rt-m-hero" role="img" aria-label="A 1995 desktop: the Start button is pressed and the Start menu slides up out of the taskbar in whole frames">${desktop(
+            'rt-m-desk',
+            `<div class="rt-m-menu an-a" aria-hidden="true"><span class="rt-m-banner">Windows<b>95</b></span><ul><li><i class="rt-m-ico rt-m-ico--programs"></i>Programs<span class="rt-m-arrow">▸</span></li><li><i class="rt-m-ico rt-m-ico--documents"></i>Documents<span class="rt-m-arrow">▸</span></li><li class="rt-m-pick an-a"><i class="rt-m-ico rt-m-ico--settings"></i>Settings<span class="rt-m-arrow">▸</span></li><li><i class="rt-m-ico rt-m-ico--find"></i>Find<span class="rt-m-arrow">▸</span></li><li><i class="rt-m-ico rt-m-ico--help"></i>Help</li><li><i class="rt-m-ico rt-m-ico--run"></i>Run…</li><li class="rt-m-sep"><i class="rt-m-ico rt-m-ico--off"></i>Shut Down…</li></ul></div>${a(
+                '',
+                'rt-pointer rt-m-pointer',
+            )}`,
+        )}</div>`,
+        bar: `<div class="an-bar">${bar('rt-m-bar')}</div>`,
+        button: `<div class="an-btn"><span class="rt-m-btn">${button('Start', 'an-press rt-m-press', '<span class="rt-m-flag" aria-hidden="true"></span>')}</span></div>`,
     },
-    // CSS: marching ants (`.rt-m-ants`, a 1px dashed ink outline, dash 4px,
-    // `background` of four repeating gradients or `outline: 1px dashed` with
-    // an animated `outline-offset`? Better: a border-image or four edge
-    // gradients whose `background-position` steps 1px a frame) are drawn
-    // round the window's body in one step at 1 u and march (8 px per u in
-    // 2 px steps) through the hold; the body's text is selected (navy bar on
-    // the lines, white text) at 5 u in one step. Out: deselected, the ants
-    // erased. Bar: the blocks' leading edge is marching ants ahead of the
-    // fill (the fill `steps`), the ants marching through the hold. Button:
-    // press at 7 u = the ants are drawn round the button (the 1995 focus
-    // rectangle) in one step, face pressed.
+    // CSS: a message box (`dialog()` with the `--warn` icon: a yellow
+    // `--warning` triangle with an ink "!" drawn with borders/clip-path, or
+    // the `--stop` icon: a red circle with a white X) titled "Pump house 3"
+    // pops up centred over the desktop in ONE frame at 2 u (clip inset 100%
+    // → 0 in `steps(1)`), its OK button carrying the dotted focus
+    // rectangle; then the ding: the title bar flashes three times (ramp →
+    // inactive grey → ramp, `steps(1)`, 0.5 u per flash, 3–6 u), the way
+    // 1995 flashed a modal's title bar when the user clicked elsewhere; the
+    // text reads "Pressure dropped below 1.0 bar." Out: the flashes, then the
+    // box vanishes in one frame. Bar: the message box's own segmented bar
+    // (a block per step). Button: press at 7 u = OK pressed (the register's
+    // bevel press) with the dotted focus rectangle drawn inside the face.
     {
-        key: 'ants',
-        name: 'Marching ants select it',
-        see: 'A dashed line is drawn round the window’s body in one step and marches, the way a selection did in 1995, the dashes stepping along the edge; then what is inside is selected, navy with white text. Held with the ants marching, then deselected and the ants erased. As a progress bar, the ants march ahead of the blocks at the fill’s edge. As a button press, the ants are drawn round the button, the focus rectangle of that desktop.',
+        key: 'ding',
+        name: 'The message box dings',
+        see: 'A message box pops up in one frame, centred, with its yellow warning triangle, its line of text and an OK button wearing the dotted focus rectangle; and it dings: the title bar flashes three times, grey, navy, grey, navy, the way 1995 called you back to a dialog you had to answer. Held, then it flashes again and is gone in one frame. As a progress bar, the message box’s own segmented bar. As a button press, OK is pressed with the focus rectangle inside its face.',
         follows:
-            'What is being worked on is lassoed (loading is the ants marching round an empty well; the graph already loads so), what is chosen is selected inside them, focus is the ants (the dotted focus line of 1995), a press draws them, an arrival is the lasso then the paint, a live update the changed figure lassoed for a beat, the leave the selection cut.',
-        why: 'it is the one looping motion that desktop had besides the hourglass, it is already the graph’s loading and the tiles’ focus, and nobody else marches a dashed line; but it says “selected” and “busy” only, so a dialog or a toast cannot arrive by it without the zoom, and a dashed ring under the pointer is forest’s blaze and terminal’s dashed box in grey.',
+            'Everything that needs you is a message box: it pops in one frame and dings; a live update is the title bar flashing on the changed window; loading is a dialog with its bar and its Cancel; arrival is a window popped in one frame (no slide, no zoom); the leave is one frame; the press is OK; focus is the dotted rectangle, as 1995 drew it.',
+        why: 'it is the moment that desktop interrupted you (the triangle, the ding, the flashing title bar) and nobody else flashes a title bar; it keeps every 1995 manner (one-frame pops, the dotted focus, the default button’s ring); but a flash is the one motion the flash gate counts, three in a second is its limit, and a box that pops in one frame has no way of arriving that reads as motion at all.',
         caps: [
-            'In its own scene: the ants march, the body is selected',
-            'As a progress bar: the ants ahead of the blocks',
-            'As a button press: the ants round the button',
+            'In its own scene: the box pops, the title bar flashes',
+            'As a progress bar: the box’s segmented bar',
+            'As a button press: OK pressed, the focus rectangle inside',
         ],
-        hero: `<div class="an-hero rt-m-hero" role="img" aria-label="A dashed selection outline marches round a window's body, then the body is selected navy with white text">${win('rt-m-win', a('', 'rt-m-ants'))}</div>`,
-        bar: `<div class="an-bar">${bar('rt-m-bar', a('', 'rt-m-bar__ants'))}</div>`,
-        button: `<div class="an-btn"><span class="rt-m-btn">${button('Open', 'an-press rt-m-press', '', a('', 'rt-m-press__ants'))}</span></div>`,
+        hero: `<div class="an-hero rt-g-hero" role="img" aria-label="A 1995 desktop: a message box with a yellow warning triangle pops up in one frame and its title bar flashes three times">${desktop(
+            'rt-g-desk',
+            `<div class="rt-dlg rt-g-dlg an-a"><div class="rt-win__title an-a"><span>Pump house 3</span><span class="rt-win__controls rt-win__controls--one" aria-hidden="true"><i></i></span></div><div class="rt-dlg__body"><span class="rt-dlg__icon rt-dlg__icon--warn" aria-hidden="true"></span><p>Pressure dropped below 1.0 bar.</p></div><div class="rt-dlg__buttons"><span class="rt-btn rt-btn--default rt-btn--focus">OK</span></div></div>`,
+        )}</div>`,
+        bar: `<div class="an-bar">${bar('rt-g-bar')}</div>`,
+        button: `<div class="an-btn"><span class="rt-g-btn">${button('OK', 'an-press rt-g-press', '', a('', 'rt-g-focus'))}</span></div>`,
     },
-    // CSS: a sunken well in the window's body (the install wizard's bar) fills
-    // with navy blocks one block a step (12 blocks over 6 u, `steps(12)` on
-    // the clip), and when it is full the window's lines are painted in one
-    // step at 7 u; out: the lines erased, the blocks emptied a block a step.
-    // Bar: the register's bar. Button: press at 7 u = the face is filled in
-    // blocks (navy blocks across the face under the label, in 4 steps over
-    // the last unit), label white.
+    // CSS: Minesweeper: a window titled "Minesweeper" with the sunken
+    // counter panel (two red 7-segment LED displays `.rt-w-led` on black,
+    // "010" and "000", digits drawn with VT323 or seven CSS bars; the one on
+    // the right counts up a digit per unit as the timer) and the smiley
+    // button between them (`.rt-w-face`, a 1.6rem raised bevel with a yellow
+    // disc, two ink eyes and a smile drawn with borders); the field is 9 × 6
+    // raised cells; at 2 u the pointer presses a cell: the face goes "o"
+    // (round mouth) for the frame the cell is held, the cell sinks (pressed
+    // bevel); at 3 u the reveal floods: empty cells open outward from the
+    // pressed one in rings, one ring per frame (`steps(1)`), each opened cell
+    // flat with a number in its colour (1 blue `--info`, 2 green, 3 red) at
+    // the ring's edge; at 7 u the field is cleared and the face puts on
+    // sunglasses (two ink rectangles over the eyes). Out: the glasses off,
+    // the cells close ring by ring, the counter counts back. Bar: the fill
+    // is cells opening left to right one per step with the numbers. Button:
+    // press at 7 u = the face's "o" on a small smiley beside the label, and
+    // the cell-like bevel pressed; release = the smile.
     {
-        key: 'blocks',
-        name: 'The progress blocks fill',
-        see: 'The install wizard: a sunken well in the window fills with navy blocks, one whole block a step, never a pixel between, and when the last block is in the window’s lines are painted. Held, then the lines are erased and the blocks emptied one a step. As a progress bar, it is retro’s own bar. As a button press, the face is filled in blocks under the label.',
+        key: 'mines',
+        name: 'Minesweeper: the face reacts, the field floods open',
+        see: 'A Minesweeper window: the red LED counters, the smiley between them, a field of raised cells. A cell is pressed and the face goes “o” for the frame it is held; the field floods open from that cell outward in rings, one ring per frame, the numbers in their colours at the edge; the timer counts; and when the field is clear the face puts on its sunglasses. Held, then the glasses come off and the field closes ring by ring. As a progress bar, the cells open left to right one per step. As a button press, a small face beside the label goes “o” and the cell bevel sinks.',
         follows:
-            'Loading is the blocks filling (Kenny picked it for the chart, the trend, the strip, the menu, the tiles and the busy table); an arrival is the paint after the last block; a live update is the changed figure’s blocks refilled; a press fills the face; the leave is the blocks emptied. The boot already counts so.',
-        why: 'it is the loading picture Kenny picked seven times for retro and it is already the bar, so the theme would have one waiting picture; but it is a bar, and a bar that fills in steps can only say “so far”: a dialog, a hover and a leave have nothing to fill, and brutalism’s ruled bar fills in ten hard steps too.',
+            'Arrival is a flood reveal in rings from where you clicked (a panel, a tile grid, a menu opens outward in frames); the press is the “o” and the sunken cell; a live update is the LED counter ticking; done is the sunglasses; loading is the timer counting with the face watching; the leave closes ring by ring. Every figure is an LED, every cell a bevel.',
+        why: 'it is the most played program of that desktop and the one with a face, so the theme would answer every press with a reaction no other theme has, and the flood reveal in rings is a real 1995 arrival in frames; but a smiley is a joke on a dashboard of pump readings, and the LED counter is nostromo’s and terminal’s dialect in red.',
         caps: [
-            'In its own scene: the well fills a block a step, then the paint',
-            'As a progress bar: retro’s own bar',
-            'As a button press: the face filled in blocks',
+            'In its own scene: the cell pressed, the field floods open, sunglasses',
+            'As a progress bar: cells open one per step',
+            'As a button press: the face goes “o”, the cell sinks',
         ],
-        hero: `<div class="an-hero rt-b-hero" role="img" aria-label="A sunken well in a 1995 window fills with navy blocks one at a time, then the window's lines are painted">${win('rt-b-win', `<div class="rt-b-well" aria-hidden="true">${a('clip', 'rt-b-well__blocks')}</div>`, 'Setup')}</div>`,
-        bar: `<div class="an-bar">${bar('rt-b-bar')}</div>`,
-        button: `<div class="an-btn"><span class="rt-b-btn">${button('Open', 'an-press rt-b-press', a('clip', 'rt-b-press__blocks'))}</span></div>`,
+        hero: `<div class="an-hero rt-w-hero" role="img" aria-label="A Minesweeper window: a cell is pressed, the smiley reacts, the field floods open in rings and the face puts on sunglasses">${desktop(
+            'rt-w-desk',
+            `<div class="rt-win rt-w-win"><div class="rt-win__title"><span class="rt-win__sysicon" aria-hidden="true"></span><span>Minesweeper</span><span class="rt-win__controls" aria-hidden="true"><i></i><i></i><i></i></span></div><div class="rt-win__menu" aria-hidden="true"><span><u>G</u>ame</span><span><u>H</u>elp</span></div><div class="rt-w-panel" aria-hidden="true"><span class="rt-w-led">010</span><span class="rt-w-face an-a"><i></i></span><span class="rt-w-led rt-w-led--timer an-a">000</span></div><div class="rt-w-field" aria-hidden="true">${[
+                ...Array(54).keys(),
+            ]
+                .map((i) => `<i class="an-a" data-rt-cell="${i}"></i>`)
+                .join('')}</div>${a('', 'rt-pointer rt-w-pointer')}</div>`,
+        )}</div>`,
+        bar: `<div class="an-bar">${bar('rt-w-bar', `<span class="rt-w-bar__cells" aria-hidden="true">${'<i class="an-a"></i>'.repeat(12)}</span>`)}</div>`,
+        button: `<div class="an-btn"><span class="rt-w-btn">${button('Sweep', 'an-press rt-w-press', '<span class="rt-w-face rt-w-face--small an-a" aria-hidden="true"><i></i></span>')}</span></div>`,
     },
-    // CSS: an inactive window (title bar `--kp-raised` grey, title in
-    // `--muted-foreground`, controls flat) becomes active: at 3 u the title
-    // bar takes the navy ramp and the title goes white in one step, at 4 u
-    // the window's bevel takes `--kp-raised` (from a flat 1px line) and its
-    // hard drop appears, at 5 u the body's text goes ink; out: deactivated
-    // in reverse. Bar: the blocks fill a block a step, the well's frame goes
-    // from inactive grey to the sunken bevel at 1 u. Button: press at 7 u =
-    // the button becomes the default (the 1px ink ring of `--mirror` drawn
-    // round it) and is pressed, one step.
+    // CSS: the screensaver kicks in: the desktop goes black in one frame at
+    // 1 u (a `.rt-f-space` black plate over the desktop) and the starfield
+    // ("Flying Through Space") runs: 24 white dots (`.rt-f-star i`, 2–4 px
+    // squares) stream from the centre outward in 6-frame runs (`steps(6)`,
+    // each star on its own radial, translate from 0 to its edge, staggered
+    // 0.25 u, looping through the hold), the way the 1995 screensaver flew;
+    // at 7 u a key is pressed (the pointer appears) and the desktop is back
+    // in one frame with the window on it. Out: black again, the stars run,
+    // the desktop returns. Bar: the fill is a black well with stars
+    // streaming right and the blocks appearing in front of them, one per
+    // step. Button: press at 7 u = the face goes black with three stars for
+    // one frame, then the pressed bevel.
     {
-        key: 'active',
-        name: 'The window becomes active',
-        see: 'An inactive window, its title bar grey and flat. It is clicked: the title bar takes the navy ramp and the title goes white in one step, the frame raises on its bevel with its hard drop, and the body’s text comes up from grey to ink. Held, then it goes inactive again, step by step. As a progress bar, the well takes its sunken bevel first and the blocks fill. As a button press, the button becomes the default (the ink ring round it) and is pressed.',
+        key: 'stars',
+        name: 'The screensaver: flying through space',
+        see: 'Nothing was touched for a while: the desktop goes black in one frame and the stars fly, white squares streaming from the centre to the edges in whole frames, the Flying Through Space screensaver; then a key is pressed and the desktop is back in one frame with the window on it. Held with the window, then black again, the stars, and back. As a progress bar, the blocks appear in front of a star stream. As a button press, the face goes to space for one frame and is pressed.',
         follows:
-            'What is current is active (navy title bar, raised, dropped) and everything else is grey and flat: the open dialog, the hovered tile, the picked card; an arrival is a window painted inactive and made active; loading is a window still inactive; a live update is the changed window re-activated; the press makes the default; the leave is the window deactivated and erased.',
-        why: 'it is the quiet moment every 1995 user knew (a window waking up when clicked), it is one step and costs nothing, and the navy ramp is retro’s one colour statement; but it is a state of the whole window and says nothing about how it opens or waits, and a title bar going from grey to navy is a colour step a theme switch could do.',
+            'Waiting is the screensaver (a loading surface goes black and the stars fly until the reading is there); an arrival is the desktop coming back in one frame; a live update is a star burst behind the changed figure; the leave is the screen going black; the press is one frame of space; everything else is the 1995 window chrome as it stands.',
+        why: 'it is the one 1995 motion that was pure spectacle (every unattended monitor flew through space), it moves in frames with nothing eased, and black with white stars is nobody else’s loading; but a screen going black is the opposite of a page answering you, so every arrival begins with a blackout, and a starfield is synthwave’s and cyberpunk’s neighbourhood in the dark.',
         caps: [
-            'In its own scene: the title bar lights, the frame raises',
-            'As a progress bar: the well wakes, the blocks fill',
-            'As a button press: the default ring, pressed',
+            'In its own scene: black, the stars fly, the desktop is back',
+            'As a progress bar: the blocks in front of the stars',
+            'As a button press: one frame of space, then pressed',
         ],
-        hero: `<div class="an-hero rt-a-hero" role="img" aria-label="A grey, inactive 1995 window is clicked: its title bar turns navy, its frame raises and its text goes ink, in hard steps">${win('rt-a-win an-a')}</div>`,
-        bar: `<div class="an-bar">${bar('rt-a-bar')}</div>`,
-        button: `<div class="an-btn"><span class="rt-a-btn">${button('Open', 'an-press rt-a-press')}</span></div>`,
+        hero: `<div class="an-hero rt-f-hero" role="img" aria-label="A 1995 desktop goes black and white squares stream from the centre like the Flying Through Space screensaver, then the desktop returns">${desktop(
+            'rt-f-desk',
+            `${win('rt-f-win')}<div class="rt-f-space an-a" aria-hidden="true"><span class="rt-f-star">${'<i class="an-a"></i>'.repeat(24)}</span></div>`,
+        )}</div>`,
+        bar: `<div class="an-bar">${bar('rt-f-bar', `<span class="rt-f-bar__space" aria-hidden="true">${'<i class="an-a"></i>'.repeat(10)}</span>`)}</div>`,
+        button: `<div class="an-btn"><span class="rt-f-btn">${button('Resume', 'an-press rt-f-press', a('', 'rt-f-press__space'))}</span></div>`,
+    },
+    // CSS: a window is dragged: the pointer grabs its title bar at 1 u; from
+    // 2 u only the window's OUTLINE moves (a 2px dotted ink/paper XOR-style
+    // frame `.rt-x-frame`, `background` of four dashed edges), stepping
+    // across the desktop in 5 frames (translate, `steps(5)`, 2–6 u) while the
+    // window itself stays where it was; at 7 u the frame lands and the
+    // window is painted at the new place in one frame (the old place is
+    // erased: a teal patch). Out: the frame drags back, the window is
+    // painted at the old place. Bar: the fill's edge is the dotted frame
+    // moving in steps, the blocks painted behind it. Button: press at 7 u =
+    // the button's outline is drawn (the dotted frame, grabbed) and the
+    // bevel pressed.
+    {
+        key: 'drag',
+        name: 'Dragged by its outline',
+        see: '1995 could not move a window whole: the title bar is grabbed and only the window’s dotted outline moves, stepping across the desktop in five frames while the window stays put; when the mouse lets go, the window is painted at the new place in one frame and the old place is wiped. Held, then the outline is dragged back and the window painted where it was. As a progress bar, the dotted frame steps ahead and the blocks are painted behind it. As a button press, the button is grabbed: its dotted outline drawn, the bevel pressed.',
+        follows:
+            'Everything moves as its outline and is painted at the drop (a tile reordered, a drawer, a dialog placed, a card moved); arrival is the outline arriving then the paint; the leave is the outline dragged to the Recycle Bin and the thing wiped; loading is the hourglass; a live update is the changed figure wiped and repainted; the press grabs.',
+        why: 'it is a true 1995 fact that no other theme can claim (the XOR outline that moved while the window waited), it is frames by nature and it keeps the desktop honest (nothing moves whole); but it is close to round one’s outline zoom, which you rejected, and it says how things move, not how they wait or update.',
+        caps: [
+            'In its own scene: the outline dragged, the window painted at the drop',
+            'As a progress bar: the dotted frame ahead of the blocks',
+            'As a button press: grabbed, outlined, pressed',
+        ],
+        hero: `<div class="an-hero rt-x-hero" role="img" aria-label="A 1995 desktop: a window's dotted outline is dragged across in whole frames while the window stays, then the window is painted at the new place">${desktop(
+            'rt-x-desk',
+            `${win('rt-x-win an-a')}${a('', 'rt-x-frame')}${a('', 'rt-pointer rt-x-pointer')}`,
+        )}</div>`,
+        bar: `<div class="an-bar">${bar('rt-x-bar', a('', 'rt-x-bar__frame'))}</div>`,
+        button: `<div class="an-btn"><span class="rt-x-btn">${button('Move', 'an-press rt-x-press', '', a('', 'rt-x-press__frame'))}</span></div>`,
     },
 ];
