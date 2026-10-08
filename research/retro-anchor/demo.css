@@ -1,0 +1,237 @@
+/* research/<theme>-anchor: the page only (shared by every anchor demo). A centred column; an intro, then
+   one section with one question: its the options side by side on a desk
+   (in a grid that wraps), one under the other on a phone. In the review
+   dialog one option is shown alone and large. Every drawing is in
+   options.css, scoped by the option's attribute on `.an-scene`; nothing here
+   is scoped to `.an-page`, because the dialog moves the section out of the
+   page into its stage. */
+.an-page {
+    display: grid;
+    /* One track that never grows past the column. */
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 96rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) 16px 4rem;
+}
+
+.an-intro,
+.an-sec__head {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.an-intro :is(h1, p),
+.an-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+.an-intro p,
+.an-sec__head p {
+    max-inline-size: 78ch;
+}
+
+.an-motion,
+.an-sec__head p {
+    color: var(--muted-foreground);
+}
+
+.an-sec {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.an-controls {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.an-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+button[data-an-show][aria-pressed='true'],
+button[data-an-speed][aria-pressed='true'] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+[data-review-look] p {
+    margin: 0;
+}
+
+.an-aspects {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+}
+
+.an-aspect {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+}
+
+.an-aspect__head {
+    display: grid;
+    gap: 0.35rem;
+}
+
+.an-aspect__head :is(h3, p) {
+    max-inline-size: 90ch;
+    margin: 0;
+}
+
+.an-aspect__q {
+    font-weight: 600;
+}
+
+.an-aspect__why {
+    color: var(--muted-foreground);
+}
+
+.an-aspect__no {
+    margin-inline-end: 0.35rem;
+    color: var(--primary);
+    font-family: var(--theme-font-display);
+    font-size: 1.35rem;
+    font-weight: 900;
+    letter-spacing: -0.04em;
+}
+
+/* The options: as many columns as fit, each a plain column of its name, the
+   words and the scene. */
+.an-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr));
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+.an-col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+/* In the review dialog one option is shown alone and large; its words are
+   in the dialog's hint, so only the scene stays. */
+[data-rv-flip-trio] .an-col:not([hidden]) {
+    grid-column: 1 / -1;
+    --rv-flip-max: 100%;
+}
+
+[data-rv-flip-trio] .an-col > :is(.an-label-row, .an-see, .an-follows, .an-verdict) {
+    display: none;
+}
+
+.an-label-row {
+    margin: 0;
+    font-weight: 700;
+}
+
+.an-label-row__no {
+    font-family: var(--theme-font-display);
+    color: var(--muted-foreground);
+}
+
+.an-label-row__rec {
+    display: inline-block;
+    margin-inline-start: 0.25rem;
+    padding: 0.05rem 0.45rem;
+    border-radius: var(--radius);
+    background: var(--primary);
+    color: var(--primary-foreground);
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.an-see,
+.an-follows,
+.an-verdict {
+    margin: 0;
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.an-follows,
+.an-verdict {
+    color: var(--muted-foreground);
+}
+
+.an-verdict--rec {
+    color: var(--foreground);
+    font-weight: 600;
+}
+
+/* The scene: the anchor in its own scene, centred and large, and the same
+   anchor in two other places, a progress bar and a button press. */
+.an-scene {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+        'hero hero'
+        'bar button';
+    gap: var(--kp-space-md, 1rem);
+    align-content: start;
+    padding: 1.1rem 1.4rem 1.4rem 1.1rem;
+    border: 2px solid var(--border);
+    background: var(--background);
+}
+
+.an-part {
+    display: grid;
+    gap: 0.5rem;
+    align-content: start;
+    min-inline-size: 0;
+}
+
+.an-part--hero {
+    grid-area: hero;
+}
+
+.an-part--bar {
+    grid-area: bar;
+}
+
+.an-part--button {
+    grid-area: button;
+}
+
+.an-cap {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: 0.75rem;
+}
+
+/* Show one place alone (the Show buttons). */
+[data-an-show='hero'] .an-part:not(.an-part--hero),
+[data-an-show='bar'] .an-part:not(.an-part--bar),
+[data-an-show='button'] .an-part:not(.an-part--button) {
+    display: none;
+}
+
+[data-an-show='bar'] .an-part--bar,
+[data-an-show='button'] .an-part--button {
+    grid-column: 1 / -1;
+}
+
+@media (max-width: 40rem) {
+    .an-scene {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas:
+            'hero'
+            'bar'
+            'button';
+    }
+}

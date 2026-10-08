@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en" data-theme="retro" data-cat-theme="retro" data-cat-theme-fixed data-review="retro-anchor" data-review-themes="retro">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — what is retro's anchor element</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <link rel="stylesheet" href="../../css/retro-register.css" data-kp-register="retro" />
+        <link rel="stylesheet" href="demo.css" />
+        <link rel="stylesheet" href="options.css" />
+    </head>
+    <body>
+        <main class="an-page">
+            <header class="an-intro" id="an-intro">
+                <h1>What is retro's anchor element</h1>
+                <p>
+                    Kenny, 2026-10-07 18:13: every theme gets <b>one</b> recognisable anchor element, the one thing every later decision of the theme
+                    departs from (forest: the tree progress bar, grotesk: the red plate that falls into register, synthwave: the page horizon,
+                    blueprint: the tracing pen). The colours are already right everywhere and stay the shared base. Retro has no anchor yet: its
+                    register draws the 1995 desktop (the page one application window on the teal, a navy title-bar ramp, grey chrome and bevels,
+                    sunken wells, the dither, the navy progress blocks, the selection bar, the hourglass) and moves it in hard steps, nothing easing,
+                    but it has no one moving thing that decides how the rest arrives, waits, points, presses and leaves; today a dialog is a stepped
+                    scale and every other arrival is a stepped copy of it.
+                </p>
+                <p>
+                    One question, seven bold candidates, each drawn only from what retro's world already owns (the window that zooms open in outline,
+                    the hourglass that turns, the selection bar, the dither dissolve, the marching ants, the install wizard's progress blocks, the
+                    window that becomes active). Each one is shown the same three ways, on one clock: in its own scene, as a progress bar and as a
+                    button press, so you see whether it carries the theme. Pick one in the review dialog (arrow keys flip between the options); the
+                    first option is the recommendation, and each option says what follows from it and why it is or is not recommended.
+                </p>
+                <p class="an-motion" data-an-motion hidden>
+                    <b>Your system asks for reduced motion</b>, so nothing on this page moves: every scene shows its finished pose. Turn it off in the
+                    system settings to judge the candidates.
+                </p>
+            </header>
+
+            <section
+                class="an-sec"
+                data-review-item="retro-anchor"
+                data-review-mode="aspects"
+                data-review-rows="data-an-aspect"
+                data-review-components="retro-anchor"
+                data-review-title="What is retro's anchor element"
+                aria-labelledby="h-an"
+            >
+                <div class="an-sec__head">
+                    <h2 id="h-an">The anchor</h2>
+                    <p>
+                        Every scene plays by itself on the same clock: <b>drawn</b> (8 units of 90 ms), <b>held</b> (4 units: the press held, the
+                        window painted), <b>taken off</b> (8 units, the drawing played backwards), a short rest. Replay starts them together, the
+                        speed buttons slow every motion down, and Show looks at one place alone and large.
+                    </p>
+                </div>
+                <div class="an-controls" data-review-controls>
+                    <div class="an-actions" role="group" aria-label="Show">
+                        <b>Show:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-an-show="all" aria-pressed="true">All three</button>
+                        <button type="button" class="kp-button kp-button--sm" data-an-show="hero" aria-pressed="false">The scene</button>
+                        <button type="button" class="kp-button kp-button--sm" data-an-show="bar" aria-pressed="false">The progress bar</button>
+                        <button type="button" class="kp-button kp-button--sm" data-an-show="button" aria-pressed="false">The button</button>
+                    </div>
+                    <div class="an-actions" role="group" aria-label="Replay">
+                        <button type="button" class="kp-button kp-button--sm" data-an-replay data-review-plays="anchor">Replay</button>
+                    </div>
+                    <div class="an-actions" role="group" aria-label="Animation speed">
+                        <b>Speed of every animation:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-an-speed="1" aria-pressed="true">Full</button>
+                        <button type="button" class="kp-button kp-button--sm" data-an-speed="0.5" aria-pressed="false">½</button>
+                        <button type="button" class="kp-button kp-button--sm" data-an-speed="0.25" aria-pressed="false">¼</button>
+                    </div>
+                </div>
+                <div data-review-look></div>
+                <div class="an-aspects" data-an-aspects></div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "2026-10-08-r1", "reopen": [] }
+        </script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

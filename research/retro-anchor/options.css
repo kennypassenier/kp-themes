@@ -1,0 +1,2331 @@
+/* research/retro-anchor: every candidate of the one question, in the
+   theme's signature layer. Colours come from the theme's tokens only; every
+   motion sits under prefers-reduced-motion: no-preference, and the reduced
+   pose is the finished picture (the window painted, the sand turned, the bar
+   full, the face pressed). Durations are counted in units of the theme's beat
+   (--an-u, 90 ms: 1995 drew in frames of about 70 ms and the clock keeps
+   whole frames; set by demo.js as --an-unit) and multiplied by --an-slow
+   (1, 2 or 4: the page's speed buttons).
+
+   NOTHING EASES. Every animation here runs on steps(n, jump-end), on
+   step-end (hold, then snap) or on step-start (snap, then hold); there is no
+   curve in this file. The bevels are the register's own stacks (--kp-raised,
+   --kp-pressed, --kp-sunken), the title bar is --kp-ramp, the dither is
+   --kp-brush and the --kp-dd-* densities, the type is Pixelify Sans for a
+   window title (--theme-font-display) and VT323 (--kp-dos) for a small
+   label, the radius is 0 and the drop is hard, 3 to 4 px, no blur.
+
+   SCOPE. The review dialog moves the section out of the page into its stage
+   (.rv-dialog__stage), so no rule here may hang on `.an-page`: the custom
+   properties and every rule hang on `.an-scene`, which moves with its
+   options (forest's demo lost every option animation in the dialog this way,
+   48bfa5b3).
+
+   THE CLOCK. One clock (demo.js) writes `data-an-phase` on every scene:
+   gap (the part is not drawn), in (8 units: it is drawn), hold (4 units: it
+   dwells, the press held, the window painted), out (8 units: the drawing
+   played backwards, the same keyframes mirrored, what drew last going
+   first). The base style of every part is its drawn pose (so reduced motion
+   and hold show the finished picture); `gap` sets the undrawn pose; `in` and
+   `hold` run the drawing, `out` runs its mirror. Mirrored keyframes are
+   written as a pair (`rt-x` and `rt-x-out`) so every close is its open
+   reversed; a run of steps is mirrored by swapping its jump (jump-end in,
+   jump-start out) so the frames come back in the order they went.
+
+   THE ANCHOR'S THREE PLACES. Each candidate draws itself in its own scene
+   (`.an-hero`), as a progress bar (`.an-bar`) and as a button press
+   (`.an-btn`); the press lands at 7 units (87.5 %) and is held through the
+   dwell, and is released as the first unit of `out`. */
+
+@layer kp.signature {
+    /* ── The scene ───────────────────────────────────────────────────── */
+
+    .an-scene {
+        --an-ink: var(--foreground);
+        --an-navy: var(--primary);
+        --an-grey: var(--background);
+        /* One unit is the theme's beat; a loop is 22 units. */
+        --an-u: calc(var(--an-unit, 90ms) * var(--an-slow, 1));
+        --an-in: calc(8 * var(--an-u));
+        --an-loop: calc(22 * var(--an-u));
+        /* Retro's two curves, the only two the register uses: nothing eases. A leave and a window zoom in four hard steps
+           (kp-sig-retro-leave, kp-sig-retro-zoom: steps(4, jump-end)); a tooltip and a one-frame repaint hold and then snap
+           (kp-sig-retro-hold: step-end). A close plays the same steps with the jump at the start (steps(n, jump-start)), the
+           exact mirror of a jump-end open; inside @keyframes a timing function is written out, a var() there is invalid. */
+        --an-leave: steps(4, jump-end);
+        --an-snap: step-end;
+        /* A step is a jump at an instant, and the mirror of a jump is a jump at the same instant: the open is run half a
+           millisecond early and the close half a millisecond late, so that at the very instant of any jump both sides
+           agree on which frame stands (the mirror check samples exactly there) and no rounding can tip it. */
+        --an-eps: 0.5ms;
+        container-type: inline-size;
+        position: relative;
+        overflow: clip;
+        overflow-clip-margin: 0.75rem;
+        /* Nothing is translucent; the layout layer's busy dim stays off. */
+        --kp-busy-opacity: 1;
+    }
+
+    .an-scene .an-hero {
+        position: relative;
+        display: grid;
+        place-items: center;
+        min-block-size: clamp(13rem, 36cqi, 20rem);
+        padding: 1.25rem 0.5rem;
+    }
+
+    .an-scene .an-bar,
+    .an-scene .an-btn {
+        display: grid;
+        min-block-size: 6rem;
+    }
+
+    .an-scene .an-bar {
+        align-content: center;
+    }
+
+    .an-scene .an-btn {
+        place-items: center;
+    }
+
+    /* ── The building blocks every candidate draws with ──────────────── */
+
+    /* A part that is drawn: its end pose is its base style, its start pose
+       is set at `gap`, and `in` / `out` run the pair of keyframes. */
+    .an-scene .an-a--scale {
+        --an-kf: an-scale;
+        --an-kf-out: an-scale-out;
+        scale: var(--an-s1, 1) 1;
+        transform-origin: left center;
+    }
+
+    .an-scene .an-a--clip {
+        --an-kf: an-clip;
+        --an-kf-out: an-clip-out;
+        clip-path: inset(-1em var(--an-c1, 0%) -1em 0);
+    }
+
+    .an-scene .an-a--move {
+        --an-kf: an-move;
+        --an-kf-out: an-move-out;
+        translate: var(--an-x1, 0%) var(--an-y1, 0%);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .an-a--scale {
+            scale: var(--an-s0, 0) 1;
+        }
+
+        .an-scene[data-an-phase='gap'] .an-a--clip {
+            clip-path: inset(-1em var(--an-c0, 100%) -1em 0);
+        }
+
+        .an-scene[data-an-phase='gap'] .an-a--move {
+            translate: var(--an-x0, 0%) var(--an-y0, 0%);
+        }
+
+        .an-scene[data-an-phase='in'] .an-a,
+        .an-scene[data-an-phase='hold'] .an-a {
+            animation: var(--an-kf) calc(var(--an-l, 8) * var(--an-u)) var(--an-ease, var(--an-snap))
+                calc(var(--an-d, 0) * var(--an-u) - var(--an-eps)) both;
+        }
+
+        /* The mirror starts as late as the drawing ended: what drew last
+           goes first. */
+        .an-scene[data-an-phase='out'] .an-a {
+            animation: var(--an-kf-out) calc(var(--an-l, 8) * var(--an-u)) var(--an-ease-out, var(--an-ease, var(--an-snap)))
+                calc((8 - var(--an-d, 0) - var(--an-l, 8)) * var(--an-u) + var(--an-eps)) both;
+        }
+    }
+
+    @keyframes an-scale {
+        from {
+            scale: var(--an-s0, 0) 1;
+        }
+
+        to {
+            scale: var(--an-s1, 1) 1;
+        }
+    }
+
+    @keyframes an-scale-out {
+        from {
+            scale: var(--an-s1, 1) 1;
+        }
+
+        to {
+            scale: var(--an-s0, 0) 1;
+        }
+    }
+
+    @keyframes an-clip {
+        from {
+            clip-path: inset(-1em var(--an-c0, 100%) -1em 0);
+        }
+
+        to {
+            clip-path: inset(-1em var(--an-c1, 0%) -1em 0);
+        }
+    }
+
+    @keyframes an-clip-out {
+        from {
+            clip-path: inset(-1em var(--an-c1, 0%) -1em 0);
+        }
+
+        to {
+            clip-path: inset(-1em var(--an-c0, 100%) -1em 0);
+        }
+    }
+
+    @keyframes an-move {
+        from {
+            translate: var(--an-x0, 0%) var(--an-y0, 0%);
+        }
+
+        to {
+            translate: var(--an-x1, 0%) var(--an-y1, 0%);
+        }
+    }
+
+    @keyframes an-move-out {
+        from {
+            translate: var(--an-x1, 0%) var(--an-y1, 0%);
+        }
+
+        to {
+            translate: var(--an-x0, 0%) var(--an-y0, 0%);
+        }
+    }
+
+    /* The pressed face: the register's own press (`.kp-button:active`): the
+       bevel inverts from --kp-raised to --kp-pressed and the label steps one
+       pixel down and right, in one step, landing late (7 units) and held. The
+       box never moves; only the label does. */
+    @keyframes an-face-late {
+        0%,
+        87.49% {
+            box-shadow: var(--kp-raised);
+        }
+
+        87.5%,
+        100% {
+            box-shadow: var(--kp-pressed);
+        }
+    }
+
+    @keyframes an-face-late-out {
+        0%,
+        12.5% {
+            box-shadow: var(--kp-pressed);
+        }
+
+        12.51%,
+        100% {
+            box-shadow: var(--kp-raised);
+        }
+    }
+
+    @keyframes an-label-late {
+        0%,
+        87.49% {
+            translate: 0 0;
+        }
+
+        87.5%,
+        100% {
+            translate: 1px 1px;
+        }
+    }
+
+    @keyframes an-label-late-out {
+        0%,
+        12.5% {
+            translate: 1px 1px;
+        }
+
+        12.51%,
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* A button that is pressed at the end of the drawing: its base is the
+       pressed face; `gap` is the rest face. A 1995 command button is a fixed
+       width, so the press changes nothing of its box. */
+    .an-scene .an-press {
+        position: relative;
+        min-inline-size: clamp(6.5rem, 34cqi, 9rem);
+        min-block-size: 2.2rem;
+        box-shadow: var(--kp-pressed);
+    }
+
+    .an-scene .an-press .kp-button__label {
+        position: relative;
+        z-index: 1;
+        translate: 1px 1px;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .an-press {
+            box-shadow: var(--kp-raised);
+        }
+
+        .an-scene[data-an-phase='gap'] .an-press .kp-button__label {
+            translate: 0 0;
+        }
+
+        .an-scene[data-an-phase='in'] .an-press,
+        .an-scene[data-an-phase='hold'] .an-press {
+            animation: var(--an-face, an-face-late) var(--an-in) var(--an-snap) calc(-1 * var(--an-eps)) both;
+        }
+
+        .an-scene[data-an-phase='in'] .an-press .kp-button__label,
+        .an-scene[data-an-phase='hold'] .an-press .kp-button__label {
+            animation: var(--an-label, an-label-late) var(--an-in) var(--an-snap) calc(-1 * var(--an-eps)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .an-press {
+            animation: var(--an-face-out, an-face-late-out) var(--an-in) var(--an-snap) var(--an-eps) both;
+        }
+
+        .an-scene[data-an-phase='out'] .an-press .kp-button__label {
+            animation: var(--an-label-out, an-label-late-out) var(--an-in) var(--an-snap) var(--an-eps) both;
+        }
+    }
+
+    /* The parts that are not `.an-a` but draw on the same clock (a window's
+       lines, a row's ink, a title bar): each sets --an-kf, --an-kf-out,
+       --an-d and --an-l in its candidate's section, and this one rule runs
+       them exactly as the engine runs an `.an-a`. */
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='in']
+            :is(
+                .rt-h-win .rt-win__body p,
+                .rt-b-win .rt-win__body p,
+                .rt-m-win .rt-win__body p,
+                .rt-s-list li > span,
+                .rt-a-win .rt-win__title,
+                .rt-a-win .rt-win__controls i,
+                .rt-a-win .rt-win__body,
+                .rt-a-bar .rt-bar__well
+            ),
+        .an-scene[data-an-phase='hold']
+            :is(
+                .rt-h-win .rt-win__body p,
+                .rt-b-win .rt-win__body p,
+                .rt-m-win .rt-win__body p,
+                .rt-s-list li > span,
+                .rt-a-win .rt-win__title,
+                .rt-a-win .rt-win__controls i,
+                .rt-a-win .rt-win__body,
+                .rt-a-bar .rt-bar__well
+            ) {
+            animation: var(--an-kf) calc(var(--an-l, 8) * var(--an-u)) var(--an-ease, var(--an-snap))
+                calc(var(--an-d, 0) * var(--an-u) - var(--an-eps)) both;
+        }
+
+        .an-scene[data-an-phase='out']
+            :is(
+                .rt-h-win .rt-win__body p,
+                .rt-b-win .rt-win__body p,
+                .rt-m-win .rt-win__body p,
+                .rt-s-list li > span,
+                .rt-a-win .rt-win__title,
+                .rt-a-win .rt-win__controls i,
+                .rt-a-win .rt-win__body,
+                .rt-a-bar .rt-bar__well
+            ) {
+            animation: var(--an-kf-out) calc(var(--an-l, 8) * var(--an-u)) var(--an-ease-out, var(--an-ease, var(--an-snap)))
+                calc((8 - var(--an-d, 0) - var(--an-l, 8)) * var(--an-u) + var(--an-eps)) both;
+        }
+    }
+
+    /* A line painted in one step (visibility), for the parts that wait. */
+    @keyframes rt-paint {
+        from {
+            visibility: hidden;
+        }
+
+        to {
+            visibility: visible;
+        }
+    }
+
+    @keyframes rt-paint-out {
+        from {
+            visibility: visible;
+        }
+
+        to {
+            visibility: hidden;
+        }
+    }
+
+    /* ── Retro's desktop: the window, the progress bar ─────────────────── */
+
+    .an-scene {
+        /* The sand of the hourglass in seven frames, from the register's own kp-sig-retro-sand
+           (0, 10, 30, 50, 60, 70 and 76 %): full above, a stream, a falling heap, drained below. */
+        --rt-sand-0: polygon(0% 0%, 100% 0%, 56% 48%, 56% 52%, 56% 52%, 56% 52%, 56% 52%, 44% 52%, 44% 52%, 44% 52%, 44% 52%, 44% 48%);
+        --rt-sand-1: polygon(3% 3.27%, 97% 3.27%, 56% 48%, 53% 52%, 53% 100%, 100% 100%, 100% 100%, 0% 100%, 0% 100%, 47% 100%, 47% 52%, 44% 48%);
+        --rt-sand-2: polygon(
+            9.77% 10.66%,
+            90.23% 10.66%,
+            56% 48%,
+            53% 52%,
+            53% 85.85%,
+            92.73% 92.07%,
+            100% 100%,
+            0% 100%,
+            7.27% 92.07%,
+            47% 85.85%,
+            47% 52%,
+            44% 48%
+        );
+        --rt-sand-3: polygon(
+            18.26% 19.92%,
+            81.74% 19.92%,
+            56% 48%,
+            53% 52%,
+            53% 76.42%,
+            83.62% 82.13%,
+            100% 100%,
+            0% 100%,
+            16.38% 82.13%,
+            47% 76.42%,
+            47% 52%,
+            44% 48%
+        );
+        --rt-sand-4: polygon(
+            23.81% 25.98%,
+            76.19% 25.98%,
+            56% 48%,
+            53% 52%,
+            53% 72.88%,
+            77.66% 75.63%,
+            100% 100%,
+            0% 100%,
+            22.34% 75.63%,
+            47% 72.88%,
+            47% 52%,
+            44% 48%
+        );
+        --rt-sand-5: polygon(
+            31.64% 34.51%,
+            68.36% 34.51%,
+            56% 48%,
+            53% 52%,
+            53% 66.47%,
+            69.27% 66.47%,
+            100% 100%,
+            0% 100%,
+            30.73% 66.47%,
+            47% 66.47%,
+            47% 52%,
+            44% 48%
+        );
+        --rt-sand-6: polygon(44% 48%, 56% 48%, 56% 48%, 56% 52%, 56% 52%, 56% 52%, 100% 100%, 0% 100%, 44% 52%, 44% 52%, 44% 52%, 44% 48%);
+        /* The hourglass glass, as the register's spinner cuts it. */
+        --rt-glass: polygon(0 0, 100% 0, 56% 48%, 56% 52%, 100% 100%, 0 100%, 44% 52%, 44% 48%);
+        /* The 25, 50 and 75 % dither in the sunken well's own ground, for a block that is still arriving. */
+        --rt-well-25: conic-gradient(var(--popover) 0 90deg, transparent 0);
+        --rt-well-50: conic-gradient(var(--popover) 0 90deg, transparent 0 180deg, var(--popover) 0 270deg, transparent 0);
+        --rt-well-75: conic-gradient(var(--popover) 0 270deg, transparent 0);
+    }
+
+    .an-scene :is(.rt-z-hero, .rt-h-hero, .rt-s-hero, .rt-d-hero, .rt-m-hero, .rt-b-hero, .rt-a-hero) {
+        min-block-size: clamp(14rem, 56cqi, 22rem);
+    }
+
+    /* A 1995 window: raised bevel on the grey, a navy-ramp title bar with the
+       three drawn controls, a sunken body, the hard drop. */
+    .an-scene .rt-win {
+        --rt-title: clamp(1.4rem, 7cqi, 1.75rem);
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: var(--rt-title) minmax(0, 1fr);
+        gap: 2px;
+        inline-size: min(100%, 24rem);
+        padding: 3px;
+        background: var(--background);
+        border: 1px solid var(--border-strong);
+        box-shadow: var(--kp-raised), var(--kp-drop-hard);
+        color: var(--foreground);
+    }
+
+    .an-scene .rt-win > * {
+        min-inline-size: 0;
+    }
+
+    .an-scene .rt-win__title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        padding: 0 2px 0 0.45rem;
+        background: var(--kp-ramp);
+        color: var(--primary-foreground);
+        font-family: var(--theme-font-display);
+        font-size: clamp(0.8rem, 3.9cqi, 1.1rem);
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .an-scene .rt-win__title > span:first-child {
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .an-scene .rt-win__controls {
+        display: flex;
+        flex: none;
+        gap: 2px;
+    }
+
+    .an-scene .rt-win__controls i {
+        position: relative;
+        display: block;
+        inline-size: clamp(0.95rem, 4.6cqi, 1.25rem);
+        aspect-ratio: 20 / 18;
+        background: var(--card);
+        box-shadow:
+            inset 1px 1px 0 var(--popover),
+            inset -1px -1px 0 var(--foreground),
+            inset -2px -2px 0 var(--border);
+    }
+
+    .an-scene .rt-win__controls i::before {
+        content: '';
+        position: absolute;
+    }
+
+    /* minimise, maximise, close: drawn, never typed. */
+    .an-scene .rt-win__controls i:nth-child(1)::before {
+        inset: 62% 28% 22% 28%;
+        background: var(--foreground);
+    }
+
+    .an-scene .rt-win__controls i:nth-child(2)::before {
+        inset: 24% 26% 26% 26%;
+        border: 1px solid var(--foreground);
+        border-block-start-width: 2px;
+    }
+
+    .an-scene .rt-win__controls i:nth-child(3)::before {
+        inset: 22% 26%;
+        background:
+            linear-gradient(45deg, transparent 40%, var(--foreground) 40% 60%, transparent 60%),
+            linear-gradient(-45deg, transparent 40%, var(--foreground) 40% 60%, transparent 60%);
+    }
+
+    .an-scene .rt-win__body {
+        display: grid;
+        align-content: center;
+        gap: 0.1rem;
+        padding: 0.45rem 0.6rem 0.55rem;
+        background: var(--popover);
+        border: 1px solid var(--border-strong);
+        box-shadow: var(--kp-sunken);
+        font-size: clamp(0.8rem, 3.9cqi, 1.1rem);
+        line-height: 1.45;
+    }
+
+    .an-scene .rt-win__body p {
+        min-inline-size: 0;
+        margin: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* The package's progress bar in retro: a sunken field, navy blocks a
+       whole block at a time, inset 3 px, drawn like the register's
+       .kp-progressbar. The register sizes its blocks in pixels and rounds the
+       run down to whole blocks; here the number of blocks is fixed (--rt-n)
+       and the block takes the width that leaves, so a fill that steps
+       n times lands on whole blocks at any width. */
+    .an-scene .rt-bar {
+        container: rt-bar / inline-size;
+        box-sizing: border-box;
+        inline-size: 100%;
+    }
+
+    .an-scene .rt-bar__well,
+    .an-scene .rt-b-well {
+        --rt-n: 16;
+        --rt-gap: 2px;
+        --rt-area: calc(100cqi - 6px);
+        --rt-pitch: calc((var(--rt-area) + var(--rt-gap)) / var(--rt-n));
+        position: relative;
+        display: block;
+        block-size: 1.25rem;
+        background: var(--popover);
+        box-shadow:
+            inset 0 0 0 1px var(--border-strong),
+            inset 2px 2px 0 0 var(--border),
+            inset -2px -2px 0 0 var(--card);
+    }
+
+    @container rt-bar (min-width: 17rem) {
+        .an-scene .rt-bar__well {
+            --rt-n: 22;
+        }
+    }
+
+    .an-scene .rt-b-well {
+        container: rt-bw / inline-size;
+        --rt-n: 12;
+    }
+
+    .an-scene .rt-bar__blocks,
+    .an-scene .rt-b-well__blocks {
+        position: absolute;
+        inset: 3px;
+        background: repeating-linear-gradient(
+            90deg,
+            var(--primary) 0 calc(var(--rt-pitch) - var(--rt-gap)),
+            transparent calc(var(--rt-pitch) - var(--rt-gap)) var(--rt-pitch)
+        );
+        --an-l: 7;
+        --an-d: 0;
+        --an-ease: steps(var(--rt-n), jump-end);
+        --an-ease-out: steps(var(--rt-n), jump-start);
+    }
+
+    .an-scene .rt-b-well__blocks {
+        --an-l: 6;
+    }
+
+    /* ── 1 · The window zooms open in outline ────────────────────────── */
+
+    /* A small desktop: the teal, a taskbar along its foot with the window's
+       button on it. Four dotted outline rectangles step up from that button
+       to the window's place, one frame each (1 unit, the previous erased);
+       the last stays until the window is painted whole in one step at 6
+       units (clip inset 100 % to 0). The window's button sinks as the first
+       outline is drawn. Out: the window erased in one step, the outlines
+       stepping down to the button. At rest the window stands painted. */
+    .an-scene .rt-z-stage {
+        /* The window's rectangle (1) and the taskbar button's (0), as insets of the stage. */
+        --z-l1: 1rem;
+        --z-r1: 1rem;
+        --z-t1: 1rem;
+        --z-b1: 2.6rem;
+        --z-l0: 0.35rem;
+        --z-r0: calc(100% - 7rem);
+        --z-t0: calc(100% - 1.5rem);
+        --z-b0: 0.4rem;
+        position: relative;
+        inline-size: min(100%, 26rem);
+        aspect-ratio: 26 / 17;
+        overflow: clip;
+        background: var(--kp-desktop);
+        outline: 1px solid var(--foreground);
+        box-shadow: var(--kp-sunken);
+    }
+
+    .an-scene .rt-z-stage::before {
+        content: '';
+        position: absolute;
+        inset: auto 2px 2px;
+        block-size: 1.75rem;
+        background: var(--background);
+        box-shadow:
+            inset 0 1px 0 var(--card),
+            inset 0 2px 0 var(--popover);
+    }
+
+    /* The window's taskbar button: sunk (and dithered, as an active one was) while the window is open. */
+    .an-scene .rt-z-stage::after {
+        --an-kf: rt-z-task;
+        --an-kf-out: rt-z-task-out;
+        content: '';
+        position: absolute;
+        inset: var(--z-t0) var(--z-r0) var(--z-b0) var(--z-l0);
+        background:
+            linear-gradient(var(--primary), var(--primary)) 0.3rem 50% / 0.6rem 0.6rem no-repeat,
+            repeating-linear-gradient(90deg, var(--foreground) 0 3px, transparent 3px 4px) 1.25rem 50% / calc(100% - 1.7rem) 3px no-repeat,
+            repeating-conic-gradient(var(--popover) 0 25%, var(--card) 0 50%) 0 0 / 2px 2px;
+        box-shadow: var(--kp-pressed);
+    }
+
+    .an-scene .rt-z-box {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    .an-scene .rt-z-box i {
+        --f: 0.25;
+        position: absolute;
+        box-sizing: border-box;
+        inset-inline-start: calc(var(--z-l0) + (var(--z-l1) - var(--z-l0)) * var(--f));
+        inset-inline-end: calc(var(--z-r0) + (var(--z-r1) - var(--z-r0)) * var(--f));
+        inset-block-start: calc(var(--z-t0) + (var(--z-t1) - var(--z-t0)) * var(--f));
+        inset-block-end: calc(var(--z-b0) + (var(--z-b1) - var(--z-b0)) * var(--f));
+        border: 2px dotted var(--popover);
+        visibility: hidden;
+        --an-l: 8;
+        --an-d: 0;
+    }
+
+    .an-scene .rt-z-box i:nth-child(1) {
+        --an-kf: rt-z-b1;
+        --an-kf-out: rt-z-b1-out;
+    }
+
+    .an-scene .rt-z-box i:nth-child(2) {
+        --f: 0.5;
+        --an-kf: rt-z-b2;
+        --an-kf-out: rt-z-b2-out;
+    }
+
+    .an-scene .rt-z-box i:nth-child(3) {
+        --f: 0.75;
+        --an-kf: rt-z-b3;
+        --an-kf-out: rt-z-b3-out;
+    }
+
+    .an-scene .rt-z-box i:nth-child(4) {
+        --f: 1;
+        --an-kf: rt-z-b4;
+        --an-kf-out: rt-z-b4-out;
+    }
+
+    .an-scene .rt-z-win {
+        --an-kf: rt-z-paint;
+        --an-kf-out: rt-z-paint-out;
+        --an-d: 6;
+        --an-l: 2;
+        --an-ease: step-start;
+        --an-ease-out: step-end;
+        position: absolute;
+        inset: var(--z-t1) var(--z-r1) var(--z-b1) var(--z-l1);
+        inline-size: auto;
+        clip-path: inset(-8px);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .rt-z-win {
+            clip-path: inset(100%);
+        }
+
+        .an-scene[data-an-phase='gap'] .rt-z-stage::after {
+            box-shadow: var(--kp-raised);
+            background:
+                linear-gradient(var(--primary), var(--primary)) 0.3rem 50% / 0.6rem 0.6rem no-repeat,
+                repeating-linear-gradient(90deg, var(--foreground) 0 3px, transparent 3px 4px) 1.25rem 50% / calc(100% - 1.7rem) 3px no-repeat,
+                var(--card);
+        }
+
+        .an-scene[data-an-phase='in'] .rt-z-stage::after,
+        .an-scene[data-an-phase='hold'] .rt-z-stage::after {
+            animation: var(--an-kf) var(--an-in) var(--an-snap) calc(-1 * var(--an-eps)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .rt-z-stage::after {
+            animation: var(--an-kf-out) var(--an-in) var(--an-snap) var(--an-eps) both;
+        }
+    }
+
+    @keyframes rt-z-task {
+        0%,
+        12.49% {
+            box-shadow: var(--kp-raised);
+            background:
+                linear-gradient(var(--primary), var(--primary)) 0.3rem 50% / 0.6rem 0.6rem no-repeat,
+                repeating-linear-gradient(90deg, var(--foreground) 0 3px, transparent 3px 4px) 1.25rem 50% / calc(100% - 1.7rem) 3px no-repeat,
+                var(--card);
+        }
+
+        12.5%,
+        100% {
+            box-shadow: var(--kp-pressed);
+            background:
+                linear-gradient(var(--primary), var(--primary)) 0.3rem 50% / 0.6rem 0.6rem no-repeat,
+                repeating-linear-gradient(90deg, var(--foreground) 0 3px, transparent 3px 4px) 1.25rem 50% / calc(100% - 1.7rem) 3px no-repeat,
+                repeating-conic-gradient(var(--popover) 0 25%, var(--card) 0 50%) 0 0 / 2px 2px;
+        }
+    }
+
+    @keyframes rt-z-task-out {
+        0%,
+        87.5% {
+            box-shadow: var(--kp-pressed);
+            background:
+                linear-gradient(var(--primary), var(--primary)) 0.3rem 50% / 0.6rem 0.6rem no-repeat,
+                repeating-linear-gradient(90deg, var(--foreground) 0 3px, transparent 3px 4px) 1.25rem 50% / calc(100% - 1.7rem) 3px no-repeat,
+                repeating-conic-gradient(var(--popover) 0 25%, var(--card) 0 50%) 0 0 / 2px 2px;
+        }
+
+        87.51%,
+        100% {
+            box-shadow: var(--kp-raised);
+            background:
+                linear-gradient(var(--primary), var(--primary)) 0.3rem 50% / 0.6rem 0.6rem no-repeat,
+                repeating-linear-gradient(90deg, var(--foreground) 0 3px, transparent 3px 4px) 1.25rem 50% / calc(100% - 1.7rem) 3px no-repeat,
+                var(--card);
+        }
+    }
+
+    /* Each outline is on for its own frame (the fourth stays two, until the window is painted). */
+    @keyframes rt-z-b1 {
+        0%,
+        100% {
+            visibility: hidden;
+        }
+
+        12.5% {
+            visibility: visible;
+        }
+
+        25% {
+            visibility: hidden;
+        }
+    }
+
+    @keyframes rt-z-b1-out {
+        0%,
+        100% {
+            visibility: hidden;
+        }
+
+        75% {
+            visibility: visible;
+        }
+
+        87.5% {
+            visibility: hidden;
+        }
+    }
+
+    @keyframes rt-z-b2 {
+        0%,
+        100% {
+            visibility: hidden;
+        }
+
+        25% {
+            visibility: visible;
+        }
+
+        37.5% {
+            visibility: hidden;
+        }
+    }
+
+    @keyframes rt-z-b2-out {
+        0%,
+        100% {
+            visibility: hidden;
+        }
+
+        62.5% {
+            visibility: visible;
+        }
+
+        75% {
+            visibility: hidden;
+        }
+    }
+
+    @keyframes rt-z-b3 {
+        0%,
+        100% {
+            visibility: hidden;
+        }
+
+        37.5% {
+            visibility: visible;
+        }
+
+        50% {
+            visibility: hidden;
+        }
+    }
+
+    @keyframes rt-z-b3-out {
+        0%,
+        100% {
+            visibility: hidden;
+        }
+
+        50% {
+            visibility: visible;
+        }
+
+        62.5% {
+            visibility: hidden;
+        }
+    }
+
+    @keyframes rt-z-b4 {
+        0%,
+        100% {
+            visibility: hidden;
+        }
+
+        50% {
+            visibility: visible;
+        }
+
+        75% {
+            visibility: hidden;
+        }
+    }
+
+    @keyframes rt-z-b4-out {
+        0%,
+        100% {
+            visibility: hidden;
+        }
+
+        25% {
+            visibility: visible;
+        }
+
+        50% {
+            visibility: hidden;
+        }
+    }
+
+    @keyframes rt-z-paint {
+        from {
+            clip-path: inset(100%);
+        }
+
+        to {
+            clip-path: inset(-8px);
+        }
+    }
+
+    @keyframes rt-z-paint-out {
+        from {
+            clip-path: inset(-8px);
+        }
+
+        to {
+            clip-path: inset(100%);
+        }
+    }
+
+    /* The bar and the press are retro's own, unchanged. */
+    .an-scene .rt-z-btn {
+        display: inline-grid;
+    }
+
+    /* ── 2 · The hourglass turns ─────────────────────────────────────── */
+
+    /* The register's spinner drawn large beside a window whose body is still
+       waiting: two ink caps, a glass, sand in the 50 % dither. The sand
+       drains through seven stepped frames (0 to 6 units, one hard frame
+       each), the glass is turned in one step at 7 units and the body is
+       painted in the same step. Out: the glass turns back at 1 unit, the
+       sand runs up frame by frame, the body is erased with the turn. At rest
+       the glass stands turned and the body painted. */
+    .an-scene .rt-h-stage {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: clamp(0.7rem, 5cqi, 1.3rem);
+        inline-size: min(100%, 28rem);
+    }
+
+    .an-scene .rt-h-win {
+        flex: 1 1 0;
+        min-inline-size: 0;
+        inline-size: auto;
+    }
+
+    .an-scene .rt-h-glass,
+    .an-scene .rt-h-bar__glass,
+    .an-scene .rt-h-press__glass {
+        --rt-edge: 1px;
+        position: relative;
+        flex: none;
+        aspect-ratio: 7 / 10;
+        background:
+            linear-gradient(var(--foreground), var(--foreground)) top / 100% 11% no-repeat,
+            linear-gradient(var(--foreground), var(--foreground)) bottom / 100% 11% no-repeat;
+        /* The one-pixel outline of the glass, the cursor's black edge. */
+        filter: drop-shadow(var(--rt-edge) 0 0 var(--foreground)) drop-shadow(calc(-1 * var(--rt-edge)) 0 0 var(--foreground))
+            drop-shadow(0 var(--rt-edge) 0 var(--foreground)) drop-shadow(0 calc(-1 * var(--rt-edge)) 0 var(--foreground));
+    }
+
+    .an-scene .rt-h-glass::before,
+    .an-scene .rt-h-bar__glass::before,
+    .an-scene .rt-h-press__glass::before {
+        content: '';
+        position: absolute;
+        inset: 11% 14%;
+        background: var(--popover);
+        clip-path: var(--rt-glass);
+    }
+
+    .an-scene .rt-h-glass__sand,
+    .an-scene .rt-h-bar__glass > i,
+    .an-scene .rt-h-press__glass::after {
+        content: '';
+        position: absolute;
+        inset: 11% 14%;
+        background-image: var(--kp-brush);
+        background-size: 2px 2px;
+        image-rendering: pixelated;
+        clip-path: var(--rt-sand-6);
+    }
+
+    .an-scene .rt-h-glass {
+        --rt-edge: 2px;
+        --an-kf: rt-h-turn;
+        --an-kf-out: rt-h-turn-out;
+        --an-d: 7;
+        --an-l: 1;
+        --an-ease: step-start;
+        --an-ease-out: step-end;
+        block-size: clamp(5.5rem, 34cqi, 9rem);
+        rotate: 180deg;
+    }
+
+    .an-scene .rt-h-glass__sand {
+        --an-kf: rt-h-sand;
+        --an-kf-out: rt-h-sand-out;
+        --an-d: 0;
+        --an-l: 8;
+        --an-ease: step-end;
+        --an-ease-out: step-end;
+        background-size: 4px 4px;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .rt-h-glass {
+            rotate: 0deg;
+        }
+
+        .an-scene[data-an-phase='gap'] .rt-h-glass__sand {
+            clip-path: var(--rt-sand-0);
+        }
+
+        .an-scene[data-an-phase='gap'] .rt-h-win .rt-win__body p {
+            visibility: hidden;
+        }
+    }
+
+    @keyframes rt-h-turn {
+        from {
+            rotate: 0deg;
+        }
+
+        to {
+            rotate: 180deg;
+        }
+    }
+
+    @keyframes rt-h-turn-out {
+        from {
+            rotate: 180deg;
+        }
+
+        to {
+            rotate: 0deg;
+        }
+    }
+
+    @keyframes rt-h-sand {
+        0% {
+            clip-path: var(--rt-sand-0);
+        }
+
+        12.5% {
+            clip-path: var(--rt-sand-1);
+        }
+
+        25% {
+            clip-path: var(--rt-sand-2);
+        }
+
+        37.5% {
+            clip-path: var(--rt-sand-3);
+        }
+
+        50% {
+            clip-path: var(--rt-sand-4);
+        }
+
+        62.5% {
+            clip-path: var(--rt-sand-5);
+        }
+
+        75%,
+        100% {
+            clip-path: var(--rt-sand-6);
+        }
+    }
+
+    @keyframes rt-h-sand-out {
+        0%,
+        100% {
+            clip-path: var(--rt-sand-6);
+        }
+
+        25% {
+            clip-path: var(--rt-sand-5);
+        }
+
+        37.5% {
+            clip-path: var(--rt-sand-4);
+        }
+
+        50% {
+            clip-path: var(--rt-sand-3);
+        }
+
+        62.5% {
+            clip-path: var(--rt-sand-2);
+        }
+
+        75% {
+            clip-path: var(--rt-sand-1);
+        }
+
+        87.5% {
+            clip-path: var(--rt-sand-0);
+        }
+    }
+
+    .an-scene .rt-h-win .rt-win__body p {
+        --an-kf: rt-paint;
+        --an-kf-out: rt-paint-out;
+        --an-d: 7;
+        --an-l: 1;
+        --an-ease: step-start;
+        --an-ease-out: step-end;
+    }
+
+    /* The bar: a small glass stands past the well's end and drains with the blocks. */
+    .an-scene .rt-h-bar {
+        padding-inline-end: 1.7rem;
+    }
+
+    .an-scene .rt-h-bar__glass {
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: calc(100% + 0.55rem);
+        translate: 0 -50%;
+        block-size: 1.4rem;
+    }
+
+    .an-scene .rt-h-bar__glass > i {
+        --an-kf: rt-h-sand-b;
+        --an-kf-out: rt-h-sand-b-out;
+        --an-d: 0;
+        --an-l: 7;
+        --an-ease: step-end;
+        --an-ease-out: step-end;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .rt-h-bar__glass > i {
+            clip-path: var(--rt-sand-0);
+        }
+    }
+
+    @keyframes rt-h-sand-b {
+        0% {
+            clip-path: var(--rt-sand-0);
+        }
+
+        14.2857% {
+            clip-path: var(--rt-sand-1);
+        }
+
+        28.5714% {
+            clip-path: var(--rt-sand-2);
+        }
+
+        42.8571% {
+            clip-path: var(--rt-sand-3);
+        }
+
+        57.1429% {
+            clip-path: var(--rt-sand-4);
+        }
+
+        71.4286% {
+            clip-path: var(--rt-sand-5);
+        }
+
+        85.7143%,
+        100% {
+            clip-path: var(--rt-sand-6);
+        }
+    }
+
+    @keyframes rt-h-sand-b-out {
+        0%,
+        100% {
+            clip-path: var(--rt-sand-6);
+        }
+
+        14.2857% {
+            clip-path: var(--rt-sand-5);
+        }
+
+        28.5714% {
+            clip-path: var(--rt-sand-4);
+        }
+
+        42.8571% {
+            clip-path: var(--rt-sand-3);
+        }
+
+        57.1429% {
+            clip-path: var(--rt-sand-2);
+        }
+
+        71.4286% {
+            clip-path: var(--rt-sand-1);
+        }
+
+        85.7143% {
+            clip-path: var(--rt-sand-0);
+        }
+    }
+
+    /* The press: the pointer over the button becomes the hourglass, drawn
+       beside the label in one step with the pressed face. */
+    .an-scene .rt-h-press {
+        padding-inline: 2.1rem;
+    }
+
+    .an-scene .rt-h-press__glass {
+        --an-kf: rt-paint;
+        --an-kf-out: rt-paint-out;
+        --an-d: 7;
+        --an-l: 1;
+        --an-ease: step-start;
+        --an-ease-out: step-end;
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-end: 0.6rem;
+        translate: 0 -50%;
+        block-size: 1.2rem;
+    }
+
+    .an-scene .rt-h-press__glass::after {
+        clip-path: var(--rt-sand-3);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .rt-h-press__glass {
+            visibility: hidden;
+        }
+    }
+
+    /* ── 3 · The selection bar snaps on ──────────────────────────────── */
+
+    /* A list in a window, as in the Start menu. The navy bar (--primary, the
+       register's selection) snaps on whole over row 1 at 2 units, over row 2
+       at 3.5 and over row 3 at 5, one step each and never a slide, the row's
+       ink going white under it in the same step. At rest it stands on row 3.
+       Out: it snaps back up the list and off. */
+    .an-scene .rt-s-win {
+        --rt-row: clamp(1.35rem, 7cqi, 1.75rem);
+    }
+
+    .an-scene .rt-s-list {
+        position: relative;
+        display: grid;
+        align-content: start;
+        margin: 0;
+        padding: 3px;
+        list-style: none;
+        background: var(--popover);
+        border: 1px solid var(--border-strong);
+        box-shadow: var(--kp-sunken);
+        font-size: clamp(0.8rem, 3.9cqi, 1.1rem);
+    }
+
+    .an-scene .rt-s-list li {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        min-inline-size: 0;
+        block-size: var(--rt-row);
+        padding-inline: 0.4rem;
+    }
+
+    /* A small 1995 icon before each row: a raised square with a hole. */
+    .an-scene .rt-s-list li::before {
+        content: '';
+        flex: none;
+        inline-size: 0.8em;
+        aspect-ratio: 1;
+        background:
+            linear-gradient(var(--foreground), var(--foreground)) 50% 50% / 36% 36% no-repeat,
+            var(--card);
+        box-shadow: var(--kp-raised);
+    }
+
+    .an-scene .rt-s-list li > span {
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: var(--foreground);
+        --an-d: 0;
+        --an-l: 8;
+    }
+
+    .an-scene .rt-s-list li:nth-child(1) > span {
+        --an-kf: rt-s-ink-1;
+        --an-kf-out: rt-s-ink-1-out;
+    }
+
+    .an-scene .rt-s-list li:nth-child(2) > span {
+        --an-kf: rt-s-ink-2;
+        --an-kf-out: rt-s-ink-2-out;
+    }
+
+    .an-scene .rt-s-list li:nth-child(3) > span {
+        --an-kf: rt-s-ink-3;
+        --an-kf-out: rt-s-ink-3-out;
+        color: var(--primary-foreground);
+    }
+
+    .an-scene .rt-s-bar {
+        --an-kf: rt-s-snap;
+        --an-kf-out: rt-s-snap-out;
+        --an-d: 0;
+        --an-l: 8;
+        position: absolute;
+        z-index: 0;
+        inset-inline: 3px;
+        inset-block-start: 3px;
+        block-size: var(--rt-row);
+        background: var(--primary);
+        translate: 0 calc(2 * var(--rt-row));
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .rt-s-bar {
+            visibility: hidden;
+        }
+
+        .an-scene[data-an-phase='gap'] .rt-s-list li:nth-child(3) > span {
+            color: var(--foreground);
+        }
+    }
+
+    @keyframes rt-s-snap {
+        0% {
+            visibility: hidden;
+            translate: 0 0;
+        }
+
+        25% {
+            visibility: visible;
+            translate: 0 0;
+        }
+
+        43.75% {
+            translate: 0 var(--rt-row);
+        }
+
+        62.5%,
+        100% {
+            translate: 0 calc(2 * var(--rt-row));
+        }
+    }
+
+    @keyframes rt-s-snap-out {
+        0%,
+        37.5% {
+            visibility: visible;
+            translate: 0 calc(2 * var(--rt-row));
+        }
+
+        37.51%,
+        56.25% {
+            translate: 0 var(--rt-row);
+        }
+
+        56.26%,
+        75% {
+            translate: 0 0;
+        }
+
+        75.01%,
+        100% {
+            visibility: hidden;
+            translate: 0 0;
+        }
+    }
+
+    @keyframes rt-s-ink-1 {
+        0%,
+        24.99% {
+            color: var(--foreground);
+        }
+
+        25%,
+        43.74% {
+            color: var(--primary-foreground);
+        }
+
+        43.75%,
+        100% {
+            color: var(--foreground);
+        }
+    }
+
+    @keyframes rt-s-ink-1-out {
+        0%,
+        56.24% {
+            color: var(--foreground);
+        }
+
+        56.25%,
+        74.99% {
+            color: var(--primary-foreground);
+        }
+
+        75%,
+        100% {
+            color: var(--foreground);
+        }
+    }
+
+    @keyframes rt-s-ink-2 {
+        0%,
+        43.74% {
+            color: var(--foreground);
+        }
+
+        43.75%,
+        62.49% {
+            color: var(--primary-foreground);
+        }
+
+        62.5%,
+        100% {
+            color: var(--foreground);
+        }
+    }
+
+    @keyframes rt-s-ink-2-out {
+        0%,
+        37.49% {
+            color: var(--foreground);
+        }
+
+        37.5%,
+        56.24% {
+            color: var(--primary-foreground);
+        }
+
+        56.25%,
+        100% {
+            color: var(--foreground);
+        }
+    }
+
+    @keyframes rt-s-ink-3 {
+        0%,
+        62.49% {
+            color: var(--foreground);
+        }
+
+        62.5%,
+        100% {
+            color: var(--primary-foreground);
+        }
+    }
+
+    @keyframes rt-s-ink-3-out {
+        0%,
+        37.49% {
+            color: var(--primary-foreground);
+        }
+
+        37.5%,
+        100% {
+            color: var(--foreground);
+        }
+    }
+
+    /* The bar: the blocks butt together, the selection bar painted a block a step. */
+    .an-scene .rt-s-bar-p .rt-bar__well {
+        --rt-gap: 0px;
+        --rt-n: 8;
+    }
+
+    @container rt-bar (min-width: 17rem) {
+        .an-scene .rt-s-bar-p .rt-bar__well {
+            --rt-n: 12;
+        }
+    }
+
+    /* The press: the button is selected, navy face, white label, in one step (the Start menu's pick). */
+    .an-scene .rt-s-press {
+        --an-face: rt-s-press;
+        --an-face-out: rt-s-press-out;
+        background: var(--primary);
+        color: var(--primary-foreground);
+        border-color: var(--kp-navy-deep);
+        box-shadow: var(--kp-pressed-navy);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .rt-s-press {
+            background: var(--card);
+            color: var(--foreground);
+            border-color: var(--border-strong);
+            box-shadow: var(--kp-raised);
+        }
+    }
+
+    @keyframes rt-s-press {
+        0%,
+        87.49% {
+            background-color: var(--card);
+            color: var(--foreground);
+            border-color: var(--border-strong);
+            box-shadow: var(--kp-raised);
+        }
+
+        87.5%,
+        100% {
+            background-color: var(--primary);
+            color: var(--primary-foreground);
+            border-color: var(--kp-navy-deep);
+            box-shadow: var(--kp-pressed-navy);
+        }
+    }
+
+    @keyframes rt-s-press-out {
+        0%,
+        12.5% {
+            background-color: var(--primary);
+            color: var(--primary-foreground);
+            border-color: var(--kp-navy-deep);
+            box-shadow: var(--kp-pressed-navy);
+        }
+
+        12.51%,
+        100% {
+            background-color: var(--card);
+            color: var(--foreground);
+            border-color: var(--border-strong);
+            box-shadow: var(--kp-raised);
+        }
+    }
+
+    /* ── 4 · Dissolved through the dither ────────────────────────────── */
+
+    /* A cover of the ground's own grey in the register's four densities
+       (--kp-dd-100, -75, -50, -25) lies over the window and lifts in four
+       hard steps, 1.5 units each, then is gone, the boot's kp-dither-out
+       played the other way. Out: the cover comes down through the same four.
+       At rest there is no cover. */
+    .an-scene .rt-d-win::after {
+        --an-kf: rt-d-cover;
+        --an-kf-out: rt-d-cover-out;
+        content: '';
+        position: absolute;
+        inset: -6px;
+        background-size: 4px 4px;
+        image-rendering: pixelated;
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .rt-d-win::after {
+            background-image: var(--kp-dd-100);
+        }
+
+        .an-scene[data-an-phase='in'] .rt-d-win::after,
+        .an-scene[data-an-phase='hold'] .rt-d-win::after {
+            animation: var(--an-kf) var(--an-in) var(--an-snap) calc(-1 * var(--an-eps)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .rt-d-win::after {
+            animation: var(--an-kf-out) var(--an-in) var(--an-snap) var(--an-eps) both;
+        }
+    }
+
+    @keyframes rt-d-cover {
+        0% {
+            background-image: var(--kp-dd-100);
+        }
+
+        18.75% {
+            background-image: var(--kp-dd-75);
+        }
+
+        37.5% {
+            background-image: var(--kp-dd-50);
+        }
+
+        56.25% {
+            background-image: var(--kp-dd-25);
+        }
+
+        75%,
+        100% {
+            background-image: none;
+        }
+    }
+
+    @keyframes rt-d-cover-out {
+        0%,
+        100% {
+            background-image: none;
+        }
+
+        25% {
+            background-image: var(--kp-dd-25);
+        }
+
+        43.75% {
+            background-image: var(--kp-dd-50);
+        }
+
+        62.5% {
+            background-image: var(--kp-dd-75);
+        }
+
+        81.25% {
+            background-image: var(--kp-dd-100);
+        }
+    }
+
+    /* The bar: the blocks fill, and the block that is arriving is still
+       dissolving: a one-block cover in the well's grey steps along with the
+       fill and clears through three densities inside every block. */
+    .an-scene .rt-d-bar .rt-bar__well::after {
+        content: '';
+        position: absolute;
+        inset-block: 3px;
+        inset-inline-start: 3px;
+        inline-size: calc(var(--rt-pitch) - var(--rt-gap));
+        background-image: var(--rt-well-75);
+        background-size: 2px 2px;
+        image-rendering: pixelated;
+        pointer-events: none;
+        visibility: hidden;
+        translate: calc((var(--rt-n) - 1) * var(--rt-pitch)) 0;
+    }
+
+    .an-scene .rt-d-bar .rt-bar__well {
+        --rt-n: 12;
+        overflow: clip;
+    }
+
+    @container rt-bar (min-width: 17rem) {
+        .an-scene .rt-d-bar .rt-bar__well {
+            --rt-n: 16;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='in'] .rt-d-bar .rt-bar__well::after,
+        .an-scene[data-an-phase='hold'] .rt-d-bar .rt-bar__well::after {
+            animation:
+                rt-d-lead calc(7 * var(--an-u)) steps(var(--rt-n), jump-end) calc(-1 * var(--an-eps)) both,
+                rt-d-grain calc(7 * var(--an-u) / var(--rt-n)) step-end calc(-1 * var(--an-eps)) var(--rt-n) both;
+        }
+
+        .an-scene[data-an-phase='out'] .rt-d-bar .rt-bar__well::after {
+            animation:
+                rt-d-lead-out calc(7 * var(--an-u)) steps(var(--rt-n), jump-start) calc(var(--an-u) + var(--an-eps)) both,
+                rt-d-grain-out calc(7 * var(--an-u) / var(--rt-n)) step-end calc(var(--an-u) + var(--an-eps)) var(--rt-n) both;
+        }
+    }
+
+    @keyframes rt-d-lead {
+        from {
+            visibility: visible;
+            translate: calc(-1 * var(--rt-pitch)) 0;
+        }
+
+        to {
+            visibility: hidden;
+            translate: calc((var(--rt-n) - 1) * var(--rt-pitch)) 0;
+        }
+    }
+
+    @keyframes rt-d-lead-out {
+        from {
+            visibility: hidden;
+            translate: calc((var(--rt-n) - 1) * var(--rt-pitch)) 0;
+        }
+
+        to {
+            visibility: visible;
+            translate: calc(-1 * var(--rt-pitch)) 0;
+        }
+    }
+
+    @keyframes rt-d-grain {
+        0% {
+            background-image: var(--rt-well-75);
+        }
+
+        33.33% {
+            background-image: var(--rt-well-50);
+        }
+
+        66.66% {
+            background-image: var(--rt-well-25);
+        }
+    }
+
+    @keyframes rt-d-grain-out {
+        0% {
+            background-image: var(--rt-well-25);
+        }
+
+        33.33% {
+            background-image: var(--rt-well-50);
+        }
+
+        66.66% {
+            background-image: var(--rt-well-75);
+        }
+    }
+
+    /* The press: the face dissolves to the pressed one through two densities
+       (6.5 and 7 units): first half the face is dithered in the card's
+       shades, then the pressed bevel lands with the dither under the label, as
+       a checked button of 1995 was. */
+    .an-scene .rt-d-press::after {
+        content: '';
+        position: absolute;
+        inset: 2px;
+        z-index: 0;
+        background-image: var(--kp-dm-50);
+        background-size: 2px 2px;
+        image-rendering: pixelated;
+        opacity: 0.22;
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .rt-d-press::after {
+            visibility: hidden;
+        }
+
+        .an-scene[data-an-phase='in'] .rt-d-press::after,
+        .an-scene[data-an-phase='hold'] .rt-d-press::after {
+            animation: rt-d-face var(--an-in) var(--an-snap) calc(-1 * var(--an-eps)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .rt-d-press::after {
+            animation: rt-d-face-out var(--an-in) var(--an-snap) var(--an-eps) both;
+        }
+    }
+
+    @keyframes rt-d-face {
+        0%,
+        81.24% {
+            visibility: hidden;
+            background-image: var(--kp-dm-25);
+        }
+
+        81.25%,
+        87.49% {
+            visibility: visible;
+            background-image: var(--kp-dm-25);
+        }
+
+        87.5%,
+        100% {
+            visibility: visible;
+            background-image: var(--kp-dm-50);
+        }
+    }
+
+    @keyframes rt-d-face-out {
+        0%,
+        12.5% {
+            visibility: visible;
+            background-image: var(--kp-dm-50);
+        }
+
+        12.51%,
+        18.75% {
+            visibility: visible;
+            background-image: var(--kp-dm-25);
+        }
+
+        18.76%,
+        100% {
+            visibility: hidden;
+            background-image: var(--kp-dm-25);
+        }
+    }
+
+    /* ── 5 · Marching ants select it ─────────────────────────────────── */
+
+    /* A dashed line is drawn round the window's body in one step (1 unit)
+       and marches, the dashes stepping 2 px a frame along the edge, round and
+       round for as long as it is there; at 5 units what is inside is
+       selected, navy with white text, in one step. Out: deselected at 3, the
+       ants erased at 7. At rest the ants march and the lines are selected.
+       The march is a loop of its own, on no phase: it is the one part that is
+       not mirrored, and says so. */
+    .an-scene .rt-m-ants,
+    .an-scene .rt-m-bar__ants,
+    .an-scene .rt-m-press__ants {
+        --rt-per: 8px;
+        --rt-w: 1px;
+        position: absolute;
+        pointer-events: none;
+    }
+
+    .an-scene .rt-m-ants::before,
+    .an-scene .rt-m-bar__ants::before,
+    .an-scene .rt-m-press__ants::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            linear-gradient(90deg, var(--foreground) 0 calc(var(--rt-per) / 2), transparent 0) 0 0 / var(--rt-per) var(--rt-w) repeat-x,
+            linear-gradient(180deg, var(--foreground) 0 calc(var(--rt-per) / 2), transparent 0) 100% 0 / var(--rt-w) var(--rt-per) repeat-y,
+            linear-gradient(90deg, var(--foreground) 0 calc(var(--rt-per) / 2), transparent 0) 0 100% / var(--rt-per) var(--rt-w) repeat-x,
+            linear-gradient(180deg, var(--foreground) 0 calc(var(--rt-per) / 2), transparent 0) 0 0 / var(--rt-w) var(--rt-per) repeat-y;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene .rt-m-ants::before,
+        .an-scene .rt-m-bar__ants::before,
+        .an-scene .rt-m-press__ants::before {
+            animation: rt-m-march calc(4 * var(--an-u)) steps(4, jump-end) infinite;
+        }
+    }
+
+    @keyframes rt-m-march {
+        from {
+            background-position:
+                0 0,
+                100% 0,
+                0 100%,
+                0 0;
+        }
+
+        to {
+            background-position:
+                var(--rt-per) 0,
+                100% var(--rt-per),
+                calc(-1 * var(--rt-per)) 100%,
+                0 calc(-1 * var(--rt-per));
+        }
+    }
+
+    .an-scene .rt-m-ants {
+        --rt-w: 2px;
+        --an-kf: rt-paint;
+        --an-kf-out: rt-paint-out;
+        --an-d: 1;
+        --an-l: 1;
+        --an-ease: step-start;
+        --an-ease-out: step-end;
+        inset: calc(3px + var(--rt-title) + 2px) 3px 3px 3px;
+    }
+
+    .an-scene .rt-m-win .rt-win__body p {
+        --an-kf: rt-m-select;
+        --an-kf-out: rt-m-select-out;
+        --an-d: 5;
+        --an-l: 1;
+        --an-ease: step-start;
+        --an-ease-out: step-end;
+        inline-size: fit-content;
+        max-inline-size: 100%;
+        padding-inline: 0.25rem;
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .rt-m-ants {
+            visibility: hidden;
+        }
+
+        .an-scene[data-an-phase='gap'] .rt-m-win .rt-win__body p {
+            background: transparent;
+            color: var(--foreground);
+        }
+    }
+
+    @keyframes rt-m-select {
+        from {
+            background: transparent;
+            color: var(--foreground);
+        }
+
+        to {
+            background: var(--primary);
+            color: var(--primary-foreground);
+        }
+    }
+
+    @keyframes rt-m-select-out {
+        from {
+            background: var(--primary);
+            color: var(--primary-foreground);
+        }
+
+        to {
+            background: transparent;
+            color: var(--foreground);
+        }
+    }
+
+    /* The bar: a dashed box marches ahead of the fill, round the block that is
+       about to be filled, and steps along with it; when the last block is in
+       it is gone. */
+    .an-scene .rt-m-bar .rt-bar__well {
+        --rt-n: 12;
+    }
+
+    @container rt-bar (min-width: 17rem) {
+        .an-scene .rt-m-bar .rt-bar__well {
+            --rt-n: 16;
+        }
+    }
+
+    .an-scene .rt-m-bar__ants {
+        --rt-per: 4px;
+        --an-kf: rt-m-ahead;
+        --an-kf-out: rt-m-ahead-out;
+        --an-d: 0;
+        --an-l: 7;
+        --an-ease: steps(var(--rt-n), jump-end);
+        --an-ease-out: steps(var(--rt-n), jump-start);
+        inset-block: 2px;
+        inset-inline-start: 2px;
+        inline-size: calc(var(--rt-pitch) - var(--rt-gap) + 2px);
+        visibility: hidden;
+    }
+
+    @keyframes rt-m-ahead {
+        from {
+            visibility: visible;
+            translate: 0 0;
+        }
+
+        to {
+            visibility: hidden;
+            translate: calc(var(--rt-n) * var(--rt-pitch)) 0;
+        }
+    }
+
+    @keyframes rt-m-ahead-out {
+        from {
+            visibility: hidden;
+            translate: calc(var(--rt-n) * var(--rt-pitch)) 0;
+        }
+
+        to {
+            visibility: visible;
+            translate: 0 0;
+        }
+    }
+
+    /* The press: the 1995 focus rectangle, dotted ants drawn inside the button's edge in the pressing step. */
+    .an-scene .rt-m-press__ants {
+        --rt-per: 4px;
+        --an-kf: rt-paint;
+        --an-kf-out: rt-paint-out;
+        --an-d: 7;
+        --an-l: 1;
+        --an-ease: step-start;
+        --an-ease-out: step-end;
+        inset: 4px;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .rt-m-press__ants {
+            visibility: hidden;
+        }
+    }
+
+    /* ── 6 · The progress blocks fill ────────────────────────────────── */
+
+    /* The install wizard: a sunken well under the title fills with navy
+       blocks, one whole block a step (twelve in 6 units), and when the last
+       block is in the window's lines are painted in one step at 7 units.
+       Out: the lines erased, the blocks emptied a block a step. At rest the
+       well is full and the lines are there. */
+    .an-scene .rt-b-win {
+        grid-template-rows: var(--rt-title) auto minmax(0, 1fr);
+    }
+
+    .an-scene .rt-b-win .rt-win__body {
+        order: 3;
+    }
+
+    .an-scene .rt-b-well {
+        order: 2;
+        margin-block: 0.2rem;
+    }
+
+    .an-scene .rt-b-win .rt-win__body p {
+        --an-kf: rt-paint;
+        --an-kf-out: rt-paint-out;
+        --an-d: 7;
+        --an-l: 1;
+        --an-ease: step-start;
+        --an-ease-out: step-end;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .rt-b-win .rt-win__body p {
+            visibility: hidden;
+        }
+    }
+
+    /* The press: the face is filled in four blocks under the label (6 to 8 units), the bevel pressed at 6 and the label white once three are in. */
+    .an-scene .rt-b-press {
+        --an-face: rt-b-press;
+        --an-face-out: rt-b-press-out;
+        --an-label: rt-b-label;
+        --an-label-out: rt-b-label-out;
+    }
+
+    .an-scene .rt-b-press__blocks {
+        --an-d: 6;
+        --an-l: 2;
+        --an-ease: steps(4, jump-end);
+        --an-ease-out: steps(4, jump-start);
+        position: absolute;
+        inset: 3px;
+        background: linear-gradient(90deg, var(--primary) calc(100% - 2px), transparent 0) 0 0 / 25% 100% repeat-x;
+    }
+
+    .an-scene .rt-b-press .kp-button__label {
+        color: var(--primary-foreground);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .rt-b-press .kp-button__label {
+            color: var(--foreground);
+        }
+    }
+
+    @keyframes rt-b-press {
+        0%,
+        74.99% {
+            box-shadow: var(--kp-raised);
+        }
+
+        75%,
+        100% {
+            box-shadow: var(--kp-pressed);
+        }
+    }
+
+    @keyframes rt-b-press-out {
+        0%,
+        25% {
+            box-shadow: var(--kp-pressed);
+        }
+
+        25.01%,
+        100% {
+            box-shadow: var(--kp-raised);
+        }
+    }
+
+    @keyframes rt-b-label {
+        0%,
+        74.99% {
+            translate: 0 0;
+            color: var(--foreground);
+        }
+
+        75%,
+        93.74% {
+            translate: 1px 1px;
+            color: var(--foreground);
+        }
+
+        93.75%,
+        100% {
+            translate: 1px 1px;
+            color: var(--primary-foreground);
+        }
+    }
+
+    @keyframes rt-b-label-out {
+        0%,
+        6.25% {
+            translate: 1px 1px;
+            color: var(--primary-foreground);
+        }
+
+        6.26%,
+        25% {
+            translate: 1px 1px;
+            color: var(--foreground);
+        }
+
+        25.01%,
+        100% {
+            translate: 0 0;
+            color: var(--foreground);
+        }
+    }
+
+    /* ── 7 · The window becomes active ───────────────────────────────── */
+
+    /* An inactive window: a flat grey frame, a grey title bar with a pale
+       title, flat controls, grey text. Clicked: at 3 units the title bar takes
+       the navy ramp and the title goes white (and the controls their bevel),
+       at 4 the frame takes its raised bevel and its hard drop, at 5 the body's
+       text comes up from grey to ink, each in one step. Out: deactivated in
+       the reverse order. At rest the window is active. */
+    .an-scene .rt-a-win {
+        --an-kf: rt-a-frame;
+        --an-kf-out: rt-a-frame-out;
+        --an-d: 4;
+        --an-l: 1;
+        --an-ease: step-start;
+        --an-ease-out: step-end;
+    }
+
+    .an-scene .rt-a-win .rt-win__title {
+        --an-kf: rt-a-title;
+        --an-kf-out: rt-a-title-out;
+        --an-d: 3;
+        --an-l: 1;
+        --an-ease: step-start;
+        --an-ease-out: step-end;
+    }
+
+    .an-scene .rt-a-win .rt-win__controls i {
+        --an-kf: rt-a-control;
+        --an-kf-out: rt-a-control-out;
+        --an-d: 3;
+        --an-l: 1;
+        --an-ease: step-start;
+        --an-ease-out: step-end;
+    }
+
+    .an-scene .rt-a-win .rt-win__body {
+        --an-kf: rt-a-ink;
+        --an-kf-out: rt-a-ink-out;
+        --an-d: 5;
+        --an-l: 1;
+        --an-ease: step-start;
+        --an-ease-out: step-end;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .rt-a-win {
+            box-shadow: none;
+        }
+
+        .an-scene[data-an-phase='gap'] .rt-a-win .rt-win__title {
+            background: var(--border);
+            color: var(--card);
+        }
+
+        .an-scene[data-an-phase='gap'] .rt-a-win .rt-win__controls i {
+            box-shadow: none;
+        }
+
+        .an-scene[data-an-phase='gap'] .rt-a-win .rt-win__body {
+            color: var(--muted-foreground);
+        }
+    }
+
+    @keyframes rt-a-frame {
+        from {
+            box-shadow: none;
+        }
+
+        to {
+            box-shadow: var(--kp-raised), var(--kp-drop-hard);
+        }
+    }
+
+    @keyframes rt-a-frame-out {
+        from {
+            box-shadow: var(--kp-raised), var(--kp-drop-hard);
+        }
+
+        to {
+            box-shadow: none;
+        }
+    }
+
+    @keyframes rt-a-title {
+        from {
+            background: var(--border);
+            color: var(--card);
+        }
+
+        to {
+            background: var(--kp-ramp);
+            color: var(--primary-foreground);
+        }
+    }
+
+    @keyframes rt-a-title-out {
+        from {
+            background: var(--kp-ramp);
+            color: var(--primary-foreground);
+        }
+
+        to {
+            background: var(--border);
+            color: var(--card);
+        }
+    }
+
+    @keyframes rt-a-control {
+        from {
+            box-shadow: none;
+        }
+
+        to {
+            box-shadow:
+                inset 1px 1px 0 var(--popover),
+                inset -1px -1px 0 var(--foreground),
+                inset -2px -2px 0 var(--border);
+        }
+    }
+
+    @keyframes rt-a-control-out {
+        from {
+            box-shadow:
+                inset 1px 1px 0 var(--popover),
+                inset -1px -1px 0 var(--foreground),
+                inset -2px -2px 0 var(--border);
+        }
+
+        to {
+            box-shadow: none;
+        }
+    }
+
+    @keyframes rt-a-ink {
+        from {
+            color: var(--muted-foreground);
+        }
+
+        to {
+            color: var(--foreground);
+        }
+    }
+
+    @keyframes rt-a-ink-out {
+        from {
+            color: var(--foreground);
+        }
+
+        to {
+            color: var(--muted-foreground);
+        }
+    }
+
+    /* The bar: the well takes its sunken bevel from a flat grey line at 1 unit and the blocks fill. */
+    .an-scene .rt-a-bar .rt-bar__well {
+        --an-kf: rt-a-well;
+        --an-kf-out: rt-a-well-out;
+        --an-d: 1;
+        --an-l: 1;
+        --an-ease: step-start;
+        --an-ease-out: step-end;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .rt-a-bar .rt-bar__well {
+            box-shadow: inset 0 0 0 1px var(--border);
+        }
+    }
+
+    @keyframes rt-a-well {
+        from {
+            box-shadow: inset 0 0 0 1px var(--border);
+        }
+
+        to {
+            box-shadow:
+                inset 0 0 0 1px var(--border-strong),
+                inset 2px 2px 0 0 var(--border),
+                inset -2px -2px 0 0 var(--card);
+        }
+    }
+
+    @keyframes rt-a-well-out {
+        from {
+            box-shadow:
+                inset 0 0 0 1px var(--border-strong),
+                inset 2px 2px 0 0 var(--border),
+                inset -2px -2px 0 0 var(--card);
+        }
+
+        to {
+            box-shadow: inset 0 0 0 1px var(--border);
+        }
+    }
+
+    /* The press: the button becomes the default, the one-pixel ink ring of the register's --mirror drawn round it, and is pressed. */
+    .an-scene .rt-a-press {
+        --an-face: rt-a-press;
+        --an-face-out: rt-a-press-out;
+        margin: 1px;
+        box-shadow:
+            var(--kp-pressed),
+            0 0 0 1px var(--foreground);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .rt-a-press {
+            box-shadow:
+                var(--kp-raised),
+                0 0 0 1px transparent;
+        }
+    }
+
+    @keyframes rt-a-press {
+        0%,
+        87.49% {
+            box-shadow:
+                var(--kp-raised),
+                0 0 0 1px transparent;
+        }
+
+        87.5%,
+        100% {
+            box-shadow:
+                var(--kp-pressed),
+                0 0 0 1px var(--foreground);
+        }
+    }
+
+    @keyframes rt-a-press-out {
+        0%,
+        12.5% {
+            box-shadow:
+                var(--kp-pressed),
+                0 0 0 1px var(--foreground);
+        }
+
+        12.51%,
+        100% {
+            box-shadow:
+                var(--kp-raised),
+                0 0 0 1px transparent;
+        }
+    }
+}
