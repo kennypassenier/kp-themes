@@ -1,0 +1,2133 @@
+/* research/sepia-anchor: every candidate of the one question, in the
+   theme's signature layer. Colours come from the theme's tokens only; every
+   motion sits under prefers-reduced-motion: no-preference, and the reduced
+   pose is the finished picture (the ink spread, the rule drawn, the page
+   pressed, the leaf flat, the dinkus set, the page unburned, the page
+   foxed). Durations are counted in units of the theme's beat (--an-unit,
+   130 ms, set by demo.js) and multiplied by --an-slow (1, 2 or 4: the
+   page's speed buttons).
+
+   SCOPE. The review dialog moves the section out of the page into its stage
+   (.rv-dialog__stage), so no rule here may hang on `.an-page`: the custom
+   properties and every rule hang on `.an-scene`, which moves with its
+   options (forest's demo lost every option animation in the dialog this way,
+   48bfa5b3).
+
+   THE CLOCK. One clock (demo.js) writes `data-an-phase` on every scene:
+   gap (the part is not drawn), in (8 units: it is drawn), hold (4 units: it
+   dwells, the press held, the ink standing), out (8 units: the drawing played
+   backwards, the same keyframes mirrored, what drew last going first). The
+   base style of every part is its drawn pose (so reduced motion and hold
+   show the finished picture); `gap` sets the undrawn pose; `in` and `hold`
+   run the drawing, `out` runs its mirror. Mirrored keyframes are written
+   as a pair (`se-x` and `se-x-out`) on the inverse curve, so every close is
+   its open reversed.
+
+   THE ANCHOR'S THREE PLACES. Each candidate draws itself in its own scene
+   (`.an-hero`), as a progress bar (`.an-bar`) and as a button press
+   (`.an-btn`); the press lands at 7 units (87.5 %) and is held through the
+   dwell, and is released as the first unit of `out`. */
+
+@layer kp.signature {
+    /* ── The scene ───────────────────────────────────────────────────── */
+
+    .an-scene {
+        --an-ink: var(--foreground);
+        --an-sienna: var(--primary);
+        --an-paper: var(--background);
+        /* One unit is the theme's beat; a loop is 22 units. */
+        --an-u: calc(var(--an-unit, 130ms) * var(--an-slow, 1));
+        --an-in: calc(8 * var(--an-u));
+        --an-loop: calc(22 * var(--an-u));
+        /* Sepia's own curves: the hand-drawn settle (the register's --kp-hand), the
+           curve the ink spreads in on a press (the register's spread-in), and a
+           press that stops dead. Each is followed by its inverse (a curve's
+           point reflection: for cubic-bezier(x1, y1, x2, y2) it is
+           cubic-bezier(1-x2, 1-y2, 1-x1, 1-y1)), so a close on them is its open
+           reversed. Inside @keyframes a timing function is written out (a var()
+           there is invalid and falls back to `ease`). */
+        --an-hand: cubic-bezier(0.785, 0.135, 0.15, 0.86);
+        --an-hand-out: cubic-bezier(0.85, 0.14, 0.215, 0.865);
+        --an-soak: cubic-bezier(0.2, 0.7, 0.3, 1);
+        --an-soak-out: cubic-bezier(0.7, 0, 0.8, 0.3);
+        --an-stop: cubic-bezier(0.4, 0, 1, 1);
+        --an-stop-out: cubic-bezier(0, 0, 0.6, 1);
+        container-type: inline-size;
+        position: relative;
+        overflow: clip;
+        overflow-clip-margin: 0.75rem;
+        /* Nothing is translucent; the layout layer's busy dim stays off. */
+        --kp-busy-opacity: 1;
+    }
+
+    .an-scene .an-hero {
+        position: relative;
+        display: grid;
+        place-items: center;
+        min-block-size: clamp(13rem, 36cqi, 20rem);
+        padding: 1.25rem 0.5rem;
+    }
+
+    .an-scene .an-bar,
+    .an-scene .an-btn {
+        display: grid;
+        min-block-size: 6rem;
+    }
+
+    .an-scene .an-bar {
+        align-content: center;
+    }
+
+    .an-scene .an-btn {
+        place-items: center;
+    }
+
+    /* ── The building blocks every candidate draws with ──────────────── */
+
+    /* A part that is drawn: its end pose is its base style, its start pose
+       is set at `gap`, and `in` / `out` run the pair of keyframes. */
+    .an-scene .an-a--scale {
+        --an-kf: an-scale;
+        --an-kf-out: an-scale-out;
+        scale: var(--an-s1, 1) 1;
+        transform-origin: left center;
+    }
+
+    .an-scene .an-a--clip {
+        --an-kf: an-clip;
+        --an-kf-out: an-clip-out;
+        clip-path: inset(-1em var(--an-c1, 0%) -1em 0);
+    }
+
+    .an-scene .an-a--move {
+        --an-kf: an-move;
+        --an-kf-out: an-move-out;
+        translate: var(--an-x1, 0%) var(--an-y1, 0%);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .an-a--scale {
+            scale: var(--an-s0, 0) 1;
+        }
+
+        .an-scene[data-an-phase='gap'] .an-a--clip {
+            clip-path: inset(-1em var(--an-c0, 100%) -1em 0);
+        }
+
+        .an-scene[data-an-phase='gap'] .an-a--move {
+            translate: var(--an-x0, 0%) var(--an-y0, 0%);
+        }
+
+        .an-scene[data-an-phase='in'] .an-a,
+        .an-scene[data-an-phase='hold'] .an-a {
+            animation: var(--an-kf) calc(var(--an-l, 8) * var(--an-u)) var(--an-ease, linear) calc(var(--an-d, 0) * var(--an-u)) both;
+        }
+
+        /* The mirror starts as late as the drawing ended: what drew last
+           goes first. */
+        .an-scene[data-an-phase='out'] .an-a {
+            animation: var(--an-kf-out) calc(var(--an-l, 8) * var(--an-u)) var(--an-ease-out, var(--an-ease, linear))
+                calc((8 - var(--an-d, 0) - var(--an-l, 8)) * var(--an-u)) both;
+        }
+    }
+
+    @keyframes an-scale {
+        from {
+            scale: var(--an-s0, 0) 1;
+        }
+
+        to {
+            scale: var(--an-s1, 1) 1;
+        }
+    }
+
+    @keyframes an-scale-out {
+        from {
+            scale: var(--an-s1, 1) 1;
+        }
+
+        to {
+            scale: var(--an-s0, 0) 1;
+        }
+    }
+
+    @keyframes an-clip {
+        from {
+            clip-path: inset(-1em var(--an-c0, 100%) -1em 0);
+        }
+
+        to {
+            clip-path: inset(-1em var(--an-c1, 0%) -1em 0);
+        }
+    }
+
+    @keyframes an-clip-out {
+        from {
+            clip-path: inset(-1em var(--an-c1, 0%) -1em 0);
+        }
+
+        to {
+            clip-path: inset(-1em var(--an-c0, 100%) -1em 0);
+        }
+    }
+
+    @keyframes an-move {
+        from {
+            translate: var(--an-x0, 0%) var(--an-y0, 0%);
+        }
+
+        to {
+            translate: var(--an-x1, 0%) var(--an-y1, 0%);
+        }
+    }
+
+    @keyframes an-move-out {
+        from {
+            translate: var(--an-x1, 0%) var(--an-y1, 0%);
+        }
+
+        to {
+            translate: var(--an-x0, 0%) var(--an-y0, 0%);
+        }
+    }
+
+    /* The pressed face: the package's own pressed ground (`--secondary-active`),
+       landing late (7 units) and held. */
+    @keyframes an-face-late {
+        0%,
+        87.49% {
+            background-color: var(--secondary);
+        }
+
+        87.5%,
+        100% {
+            background-color: var(--secondary-active);
+        }
+    }
+
+    @keyframes an-face-late-out {
+        0%,
+        12.5% {
+            background-color: var(--secondary-active);
+        }
+
+        12.51%,
+        100% {
+            background-color: var(--secondary);
+        }
+    }
+
+    /* A button that is pressed at the end of the drawing: its base is the
+       pressed face; `gap` is the rest face. */
+    .an-scene .an-press {
+        position: relative;
+        background-color: var(--secondary-active);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .an-press {
+            background-color: var(--secondary);
+        }
+
+        .an-scene[data-an-phase='in'] .an-press,
+        .an-scene[data-an-phase='hold'] .an-press {
+            animation: var(--an-face, an-face-late) var(--an-in) linear both;
+        }
+
+        .an-scene[data-an-phase='out'] .an-press {
+            animation: var(--an-face-out, an-face-late-out) var(--an-in) linear both;
+        }
+    }
+
+    /* ── Sepia's paper: the page of the book, the progress bar ────────── */
+
+    /* A page of the book, drawn the way the register draws its dialog: popover
+       paper, a 2 px corner, a hairline mat 6 px inside the edge in sienna at
+       30 %, an italic serif title and two lines of text. The title sits in the
+       first column and its width decides where the second column starts (the
+       ink drop lands there); the lines span both. */
+    .an-scene .an-hero > * {
+        min-inline-size: 0;
+    }
+
+    .an-scene .se-page {
+        position: relative;
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        align-content: start;
+        inline-size: min(100%, 24rem);
+        text-align: start;
+        padding: clamp(1.1rem, 5.5cqi, 1.7rem) clamp(1.2rem, 6.5cqi, 2rem);
+        border-radius: 2px;
+        background: var(--popover);
+        color: var(--popover-foreground);
+        box-shadow:
+            0 0 0 1px var(--border),
+            0 0.35rem 1rem hsl(from var(--foreground) h s l / 0.1);
+    }
+
+    .an-scene .se-page::before {
+        content: '';
+        position: absolute;
+        inset: 6px;
+        border: 1px solid hsl(from var(--primary) h s l / 0.3);
+        pointer-events: none;
+    }
+
+    .an-scene .se-page__title {
+        grid-column: 1;
+        grid-row: 1;
+        min-inline-size: 0;
+        max-inline-size: 100%;
+        margin: 0;
+        padding-inline-end: 0.12em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-family: var(--theme-font-display);
+        font-style: italic;
+        font-weight: 400;
+        font-size: clamp(1.7rem, 9cqi, 2.8rem);
+        line-height: 1.25;
+        color: var(--foreground);
+    }
+
+    .an-scene .se-page__line {
+        grid-column: 1 / -1;
+        margin: 0.6rem 0 0;
+        font-size: clamp(0.85rem, 3.4cqi, 1.05rem);
+        line-height: 1.5;
+        color: var(--muted-foreground);
+        text-wrap: pretty;
+    }
+
+    .an-scene .se-page__title + .se-page__line {
+        margin-block-start: 0.7rem;
+    }
+
+    .an-scene .se-page__line--short {
+        margin-block-start: 0.35rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: clamp(0.78rem, 3cqi, 0.95rem);
+        font-variant: small-caps;
+        letter-spacing: 0.12em;
+        text-transform: lowercase;
+    }
+
+    /* A page that carries only its title and one drawn thing under it. */
+    .an-scene .se-page--one {
+        grid-template-columns: minmax(0, 1fr);
+        justify-items: start;
+        padding-block: clamp(1.3rem, 7cqi, 2.1rem);
+    }
+
+    .an-scene .se-page--one .se-page__line {
+        display: none;
+    }
+
+    .an-scene .se-page--one .se-page__title {
+        font-size: clamp(2rem, 11.5cqi, 3.4rem);
+    }
+
+    /* The package's progress bar in sepia, as the register draws it
+       (css/sepia-register.css, kp.signature): a track of tiny dots, a 3 px
+       sienna rule over a hairline on a card-coloured band as the fill, a
+       diamond riding the end of it. Drawn here at 1.5 times, as the bar's
+       `md` size is, so that it reads at the size of a small part; `100cqi`
+       is the bar's own width, as in the register. */
+    .an-scene .se-bar {
+        --se-sc: 1.5;
+        --se-v: 0.76;
+        --se-head: calc(0.75rem * var(--se-sc));
+        /* Where the fill's edge sits for the value: under the middle of the head. */
+        --se-p: calc(var(--se-v) * (100% - var(--se-head)) + var(--se-head) / 2);
+        --an-c1: calc(100% - var(--se-p));
+        --an-l: 7;
+        --an-ease: var(--an-hand);
+        --an-ease-out: var(--an-hand-out);
+        container-type: inline-size;
+        inline-size: 100%;
+    }
+
+    .an-scene .se-bar__track {
+        position: relative;
+        display: block;
+        block-size: calc(0.875rem * var(--se-sc));
+        overflow: clip;
+        border-radius: 0;
+        background: radial-gradient(circle closest-side, var(--border-strong) calc(100% - 0.5px), transparent 100%) center /
+            calc(0.4375rem * var(--se-sc)) calc(0.1875rem * var(--se-sc)) space no-repeat;
+    }
+
+    .an-scene .se-bar__fill {
+        position: absolute;
+        inset-block: 0;
+        inset-inline: 0;
+        background:
+            linear-gradient(var(--primary), var(--primary)) 0 calc(50% - 2px * var(--se-sc)) / 100% calc(3px * var(--se-sc)) no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 0 calc(50% + 3px * var(--se-sc)) / 100% calc(1px * var(--se-sc)) no-repeat,
+            linear-gradient(var(--card), var(--card)) center / 100% calc(0.5rem * var(--se-sc)) no-repeat;
+    }
+
+    .an-scene .se-bar__head {
+        --an-kf: se-bar-head;
+        --an-kf-out: se-bar-head-out;
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: var(--se-head);
+        background: var(--primary);
+        clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+        translate: calc(var(--se-v) * (100cqi - var(--se-head))) 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .se-bar__head {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes se-bar-head {
+        from {
+            translate: 0 0;
+        }
+
+        to {
+            translate: calc(var(--se-v) * (100cqi - var(--se-head))) 0;
+        }
+    }
+
+    @keyframes se-bar-head-out {
+        from {
+            translate: calc(var(--se-v) * (100cqi - var(--se-head))) 0;
+        }
+
+        to {
+            translate: 0 0;
+        }
+    }
+
+    /* ── 1 · The ink spreads into the paper ───────────────────────────── */
+
+    /* A drop of sienna ink lands at the end of the title at 1 unit and
+       spreads into the paper over 5 (the register's spread-in curve), four
+       offset blots and a tide mark, multiplied into the page and feathered by
+       the filter the hero's markup declares; the title's ink darkens under
+       it. The close draws the stain back into its drop on the inverse curve.
+       At rest and under reduced motion the stain stands. */
+    .an-scene .se-i-defs {
+        position: absolute;
+        inline-size: 0;
+        block-size: 0;
+        overflow: hidden;
+    }
+
+    .an-scene .se-i-blot {
+        --an-kf: se-i-spread;
+        --an-kf-out: se-i-spread-out;
+        --an-d: 0;
+        --an-l: 6;
+        --an-ease: var(--an-soak);
+        --an-ease-out: var(--an-soak-out);
+        --se-bw: clamp(6rem, 34cqi, 10.5rem);
+        grid-column: 2;
+        grid-row: 1;
+        align-self: center;
+        justify-self: start;
+        inline-size: var(--se-bw);
+        block-size: calc(var(--se-bw) * 0.72);
+        margin-inline-start: calc(var(--se-bw) * -0.42);
+        pointer-events: none;
+        background:
+            radial-gradient(closest-side at 46% 52%, transparent 74%, hsl(from var(--primary) h s l / 0.45) 88%, transparent 99%),
+            radial-gradient(ellipse 31% 37% at 45% 50%, var(--primary), hsl(from var(--primary) h s l / 0.8) 50%, transparent),
+            radial-gradient(ellipse 27% 21% at 71% 36%, hsl(from var(--primary) h s l / 0.85), transparent),
+            radial-gradient(ellipse 22% 27% at 24% 66%, hsl(from var(--primary) h s l / 0.8), transparent),
+            radial-gradient(ellipse 18% 16% at 62% 80%, hsl(from var(--primary) h s l / 0.75), transparent),
+            radial-gradient(ellipse 16% 14% at 17% 30%, hsl(from var(--primary) h s l / 0.7), transparent),
+            radial-gradient(ellipse 12% 12% at 87% 62%, hsl(from var(--primary) h s l / 0.6), transparent),
+            radial-gradient(ellipse 10% 10% at 40% 12%, hsl(from var(--primary) h s l / 0.55), transparent);
+        mix-blend-mode: multiply;
+        filter: url('#se-feather');
+        opacity: 0.7;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .se-i-blot {
+            scale: 0.12;
+            opacity: 0;
+        }
+
+        .an-scene[data-an-phase='gap'] .se-i-page .se-page__title {
+            color: var(--muted-foreground);
+        }
+
+        .an-scene[data-an-phase='in'] .se-i-page .se-page__title,
+        .an-scene[data-an-phase='hold'] .se-i-page .se-page__title {
+            animation: se-i-title calc(5 * var(--an-u)) var(--an-soak) calc(1 * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .se-i-page .se-page__title {
+            animation: se-i-title-out calc(5 * var(--an-u)) var(--an-soak-out) calc(2 * var(--an-u)) both;
+        }
+    }
+
+    .an-scene .se-i-page .se-page__title {
+        color: var(--accent-foreground);
+    }
+
+    @keyframes se-i-spread {
+        0% {
+            scale: 0.12;
+            opacity: 0;
+            animation-timing-function: linear;
+        }
+
+        8% {
+            scale: 0.2;
+            opacity: 0.9;
+        }
+
+        100% {
+            scale: 1;
+            opacity: 0.7;
+        }
+    }
+
+    @keyframes se-i-spread-out {
+        0% {
+            scale: 1;
+            opacity: 0.7;
+        }
+
+        92% {
+            scale: 0.2;
+            opacity: 0.9;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            scale: 0.12;
+            opacity: 0;
+        }
+    }
+
+    @keyframes se-i-title {
+        from {
+            color: var(--muted-foreground);
+        }
+
+        to {
+            color: var(--accent-foreground);
+        }
+    }
+
+    @keyframes se-i-title-out {
+        from {
+            color: var(--accent-foreground);
+        }
+
+        to {
+            color: var(--muted-foreground);
+        }
+    }
+
+    /* The bar: the fill is ink soaking along the dotted track, its leading
+       edge feathered over the last 1.5rem (a mask whose width is the fill's
+       width), on the spread curve. */
+    .an-scene .se-i-bar {
+        --an-ease: var(--an-soak);
+        --an-ease-out: var(--an-soak-out);
+    }
+
+    .an-scene .se-i-bar .se-bar__fill {
+        --an-kf: se-i-soak;
+        --an-kf-out: se-i-soak-out;
+        clip-path: none;
+        mask-image: linear-gradient(to right, var(--foreground) calc(100% - 1.5rem), transparent);
+        mask-repeat: no-repeat;
+        mask-size: var(--se-p) 100%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .se-i-bar .se-bar__fill {
+            clip-path: none;
+            mask-size: 0 100%;
+        }
+    }
+
+    @keyframes se-i-soak {
+        from {
+            mask-size: 0 100%;
+        }
+
+        to {
+            mask-size: var(--se-p) 100%;
+        }
+    }
+
+    @keyframes se-i-soak-out {
+        from {
+            mask-size: var(--se-p) 100%;
+        }
+
+        to {
+            mask-size: 0 100%;
+        }
+    }
+
+    /* The button: sepia's own stain (css/sepia-register.css, "The ink on a
+       press"): four blots grow from the press point, here the middle, 12 px
+       past the button, feathered by a noise mask outside it and smooth under
+       the label. It grows in the last unit of the drawing, stands through the
+       dwell and shrinks in the first unit of the close. The registered
+       `--kp-ink-spread` of the register is the number that grows. */
+    .an-scene .se-i-stain {
+        --an-kf: se-i-stain;
+        --an-kf-out: se-i-stain-out;
+        --an-l: 8;
+        --an-ease: var(--an-soak);
+        --an-ease-out: var(--an-soak-out);
+        --kp-ink-spread: 1;
+        --kp-ink-r: calc(var(--kp-ink-spread) * 58px);
+        --kp-press-x: calc(50% - 12px);
+        --kp-press-y: calc(50% - 12px);
+        position: absolute;
+        inset: -12px;
+        z-index: -1;
+        padding: 12px;
+        pointer-events: none;
+        border-radius: 18px;
+        background:
+            radial-gradient(
+                calc(var(--kp-ink-r) * 1.15) calc(var(--kp-ink-r) * 0.62) at calc(var(--kp-press-x) + 12px) calc(var(--kp-press-y) + 12px),
+                hsl(from var(--primary) h s l / 0.3),
+                hsl(from var(--primary) h s l / 0.16) 55%,
+                transparent
+            ),
+            radial-gradient(
+                calc(var(--kp-ink-r) * 0.62) calc(var(--kp-ink-r) * 0.5) at calc(var(--kp-press-x) + 12px + var(--kp-ink-r) * 0.55)
+                    calc(var(--kp-press-y) + 12px - var(--kp-ink-r) * 0.16),
+                hsl(from var(--primary) h s l / 0.2),
+                transparent
+            ),
+            radial-gradient(
+                calc(var(--kp-ink-r) * 0.5) calc(var(--kp-ink-r) * 0.4) at calc(var(--kp-press-x) + 12px - var(--kp-ink-r) * 0.62)
+                    calc(var(--kp-press-y) + 12px + var(--kp-ink-r) * 0.2),
+                hsl(from var(--primary) h s l / 0.18),
+                transparent
+            ),
+            radial-gradient(
+                calc(var(--kp-ink-r) * 0.34) calc(var(--kp-ink-r) * 0.3) at calc(var(--kp-press-x) + 12px + var(--kp-ink-r) * 0.12)
+                    calc(var(--kp-press-y) + 12px + var(--kp-ink-r) * 0.42),
+                hsl(from var(--primary) h s l / 0.16),
+                transparent
+            );
+        mask-image:
+            linear-gradient(currentColor 0 0),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.3' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1.2 1.4'/%3E%3C/filter%3E%3Crect width='90' height='90' filter='url(%23f)'/%3E%3C/svg%3E");
+        mask-clip: content-box, border-box;
+        mask-size:
+            auto,
+            90px 90px;
+        mask-composite: add;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .se-i-stain {
+            --kp-ink-spread: 0;
+        }
+    }
+
+    @keyframes se-i-stain {
+        0%,
+        87.5% {
+            --kp-ink-spread: 0;
+        }
+
+        100% {
+            --kp-ink-spread: 1;
+        }
+    }
+
+    @keyframes se-i-stain-out {
+        0% {
+            --kp-ink-spread: 1;
+        }
+
+        12.5%,
+        100% {
+            --kp-ink-spread: 0;
+        }
+    }
+
+    /* ── 2 · The rule that is thickest in the middle ──────────────────── */
+
+    /* The register's swelled rule (`--kp-swell`, hairline at both ends, 3 px
+       in the middle) drawn by hand from the start under the title over 6
+       units, on the hand curve; the close draws it back on the inverse. */
+    .an-scene .se-r-rule {
+        --an-d: 1;
+        --an-l: 6;
+        --an-ease: var(--an-hand);
+        --an-ease-out: var(--an-hand-out);
+        grid-column: 1 / -1;
+        display: block;
+        inline-size: min(100%, 20rem);
+        block-size: 6px;
+        margin-block-start: 0.45rem;
+        background: var(--primary);
+        mask: var(--kp-swell);
+    }
+
+    /* The bar: the stroke itself is the fill; its mask scales with it, so the
+       swell stays in the middle of what is drawn. The register's fill is not
+       drawn, the dotted track and the head are. */
+    .an-scene .se-r-bar .se-bar__fill {
+        display: none;
+    }
+
+    .an-scene .se-r-bar__swell {
+        position: absolute;
+        inset-inline-start: 0;
+        inset-block-start: calc(50% - 2px * var(--se-sc));
+        inline-size: var(--se-p);
+        block-size: calc(4px * var(--se-sc));
+        background: var(--primary);
+        mask: var(--kp-swell);
+    }
+
+    /* The button: a short swelled stroke (2.4rem) is drawn under the label in
+       the last unit, and the face goes to the card's paper. */
+    .an-scene .se-r-press {
+        --an-face: se-r-face;
+        --an-face-out: se-r-face-out;
+    }
+
+    .an-scene .se-r-press {
+        background-color: var(--card);
+    }
+
+    .an-scene .se-r-stroke {
+        --an-d: 7;
+        --an-l: 1;
+        --an-ease: var(--an-hand);
+        --an-ease-out: var(--an-hand-out);
+        position: absolute;
+        inset-inline-start: calc(50% - 1.2rem);
+        inset-block-end: 0.12rem;
+        inline-size: 2.4rem;
+        block-size: 4px;
+        background: var(--primary);
+        mask: var(--kp-swell);
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .se-r-press {
+            background-color: var(--secondary);
+        }
+    }
+
+    @keyframes se-r-face {
+        0%,
+        87.49% {
+            background-color: var(--secondary);
+        }
+
+        87.5%,
+        100% {
+            background-color: var(--card);
+        }
+    }
+
+    @keyframes se-r-face-out {
+        0%,
+        12.5% {
+            background-color: var(--card);
+        }
+
+        12.51%,
+        100% {
+            background-color: var(--secondary);
+        }
+    }
+
+    /* ── 3 · Pressed by the platen ────────────────────────────────────── */
+
+    /* The platen's shadow comes down on the page (0 to 3 units, a dead stop),
+       the page gives a hair and takes a blind impression (3 to 5), the
+       title goes from a blind impression to ink with the speckle of the
+       bite, and the platen lifts (5 to 7). The close runs it backwards, the
+       curves inverted. At rest the page stands pressed and inked. */
+    .an-scene .se-p-stage {
+        position: relative;
+        display: grid;
+        justify-items: center;
+        inline-size: 100%;
+    }
+
+    .an-scene .se-p-platen {
+        --an-kf: se-p-platen;
+        --an-kf-out: se-p-platen-out;
+        --an-l: 8;
+        position: absolute;
+        inset: -9% -3% -3%;
+        z-index: 2;
+        pointer-events: none;
+        border-radius: 3px;
+        background: hsl(from var(--primary) h s l / 0.16);
+        mix-blend-mode: multiply;
+        box-shadow:
+            0 0 0 1px hsl(from var(--primary) h s l / 0.3),
+            0 1.4rem 2rem hsl(from var(--foreground) h s l / 0.22);
+        opacity: 0;
+        translate: 0% -42%;
+    }
+
+    .an-scene .se-p-page {
+        --an-kf: se-p-page;
+        --an-kf-out: se-p-page-out;
+        --an-l: 8;
+        box-shadow:
+            0 0 0 1px var(--border),
+            0 0.2rem 0.6rem hsl(from var(--foreground) h s l / 0.08),
+            inset 0 1px 2px hsl(from var(--foreground) h s l / 0.3),
+            inset 0 -1px 0 var(--card);
+    }
+
+    /* The speckle: a fractal-noise mask thins the ink in a few small bites,
+       the register's own device for the stain's fibres. */
+    .an-scene .se-p-page .se-page__title {
+        --se-to: var(--foreground);
+        mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='70'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' seed='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -14 10.6'/%3E%3C/filter%3E%3Crect width='70' height='70' filter='url(%23f)'/%3E%3C/svg%3E");
+        mask-size: 70px 70px;
+        color: var(--se-to);
+    }
+
+    .an-scene .se-p-page .se-page__line {
+        --se-to: var(--muted-foreground);
+        color: var(--se-to);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .se-p-platen {
+            opacity: 0;
+            translate: 0% -42%;
+        }
+
+        .an-scene[data-an-phase='gap'] .se-p-page {
+            scale: 1.03;
+            box-shadow:
+                0 0 0 1px var(--border),
+                0 0.5rem 1rem hsl(from var(--foreground) h s l / 0.12),
+                inset 0 1px 2px transparent,
+                inset 0 -1px 0 transparent;
+        }
+
+        .an-scene[data-an-phase='gap'] .se-p-page :is(.se-page__title, .se-page__line) {
+            color: hsl(from var(--popover) h s calc(l - 7));
+            text-shadow:
+                0 1px 0 var(--card),
+                0 -1px 0 hsl(from var(--foreground) h s l / 0.18);
+        }
+
+        .an-scene[data-an-phase='in'] .se-p-page :is(.se-page__title, .se-page__line),
+        .an-scene[data-an-phase='hold'] .se-p-page :is(.se-page__title, .se-page__line) {
+            animation: se-p-ink calc(2 * var(--an-u)) var(--an-stop) calc(3 * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .se-p-page :is(.se-page__title, .se-page__line) {
+            animation: se-p-ink-out calc(2 * var(--an-u)) var(--an-stop-out) calc(3 * var(--an-u)) both;
+        }
+    }
+
+    @keyframes se-p-platen {
+        0% {
+            translate: 0% -42%;
+            opacity: 0;
+            animation-timing-function: cubic-bezier(0.4, 0, 1, 1);
+        }
+
+        37.5% {
+            translate: 0% 0%;
+            opacity: 1;
+        }
+
+        62.5% {
+            translate: 0% 0%;
+            opacity: 1;
+            animation-timing-function: cubic-bezier(0, 0, 0.6, 1);
+        }
+
+        87.5%,
+        100% {
+            translate: 0% -42%;
+            opacity: 0;
+        }
+    }
+
+    @keyframes se-p-platen-out {
+        0%,
+        12.5% {
+            translate: 0% -42%;
+            opacity: 0;
+            animation-timing-function: cubic-bezier(0.4, 0, 1, 1);
+        }
+
+        37.5% {
+            translate: 0% 0%;
+            opacity: 1;
+        }
+
+        62.5% {
+            translate: 0% 0%;
+            opacity: 1;
+            animation-timing-function: cubic-bezier(0, 0, 0.6, 1);
+        }
+
+        100% {
+            translate: 0% -42%;
+            opacity: 0;
+        }
+    }
+
+    @keyframes se-p-page {
+        0%,
+        37.5% {
+            scale: 1.03;
+            box-shadow:
+                0 0 0 1px var(--border),
+                0 0.5rem 1rem hsl(from var(--foreground) h s l / 0.12),
+                inset 0 1px 2px transparent,
+                inset 0 -1px 0 transparent;
+            animation-timing-function: cubic-bezier(0.4, 0, 1, 1);
+        }
+
+        62.5%,
+        100% {
+            scale: 1;
+            box-shadow:
+                0 0 0 1px var(--border),
+                0 0.2rem 0.6rem hsl(from var(--foreground) h s l / 0.08),
+                inset 0 1px 2px hsl(from var(--foreground) h s l / 0.3),
+                inset 0 -1px 0 var(--card);
+        }
+    }
+
+    @keyframes se-p-page-out {
+        0%,
+        37.5% {
+            scale: 1;
+            box-shadow:
+                0 0 0 1px var(--border),
+                0 0.2rem 0.6rem hsl(from var(--foreground) h s l / 0.08),
+                inset 0 1px 2px hsl(from var(--foreground) h s l / 0.3),
+                inset 0 -1px 0 var(--card);
+            animation-timing-function: cubic-bezier(0, 0, 0.6, 1);
+        }
+
+        62.5%,
+        100% {
+            scale: 1.03;
+            box-shadow:
+                0 0 0 1px var(--border),
+                0 0.5rem 1rem hsl(from var(--foreground) h s l / 0.12),
+                inset 0 1px 2px transparent,
+                inset 0 -1px 0 transparent;
+        }
+    }
+
+    @keyframes se-p-ink {
+        from {
+            color: hsl(from var(--popover) h s calc(l - 7));
+            text-shadow:
+                0 1px 0 var(--card),
+                0 -1px 0 hsl(from var(--foreground) h s l / 0.18);
+        }
+
+        to {
+            color: var(--se-to);
+            text-shadow:
+                0 1px 0 transparent,
+                0 -1px 0 transparent;
+        }
+    }
+
+    @keyframes se-p-ink-out {
+        from {
+            color: var(--se-to);
+            text-shadow:
+                0 1px 0 transparent,
+                0 -1px 0 transparent;
+        }
+
+        to {
+            color: hsl(from var(--popover) h s calc(l - 7));
+            text-shadow:
+                0 1px 0 var(--card),
+                0 -1px 0 hsl(from var(--foreground) h s l / 0.18);
+        }
+    }
+
+    /* The bar: the rule grows blind (a groove with a lip) over 4 units and is
+       pressed into ink at once (the ink's height 0 to 1 at 4 to 5), the head
+       inked with it. */
+    .an-scene .se-p-bar {
+        --an-l: 4;
+    }
+
+    .an-scene .se-p-bar .se-bar__fill {
+        background:
+            linear-gradient(hsl(from var(--popover) h s calc(l - 9)), hsl(from var(--popover) h s calc(l - 9))) 0 calc(50% - 2px * var(--se-sc)) /
+                100% calc(3px * var(--se-sc)) no-repeat,
+            linear-gradient(var(--card), var(--card)) 0 calc(50% + 1px * var(--se-sc)) / 100% calc(1px * var(--se-sc)) no-repeat;
+    }
+
+    .an-scene .se-p-bar .se-bar__fill::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            linear-gradient(var(--primary), var(--primary)) 0 calc(50% - 2px * var(--se-sc)) / 100% calc(3px * var(--se-sc)) no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 0 calc(50% + 3px * var(--se-sc)) / 100% calc(1px * var(--se-sc)) no-repeat;
+    }
+
+    .an-scene .se-p-bar .se-bar__head {
+        --an-kf: se-p-head;
+        --an-kf-out: se-p-head-out;
+        --an-l: 5;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .se-p-bar .se-bar__fill::after {
+            scale: 1 0;
+        }
+
+        .an-scene[data-an-phase='gap'] .se-p-bar .se-bar__head {
+            background: hsl(from var(--popover) h s calc(l - 9));
+        }
+
+        .an-scene[data-an-phase='in'] .se-p-bar .se-bar__fill::after,
+        .an-scene[data-an-phase='hold'] .se-p-bar .se-bar__fill::after {
+            animation: se-p-bar-ink calc(1 * var(--an-u)) var(--an-stop) calc(4 * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .se-p-bar .se-bar__fill::after {
+            animation: se-p-bar-ink-out calc(1 * var(--an-u)) var(--an-stop-out) calc(3 * var(--an-u)) both;
+        }
+    }
+
+    @keyframes se-p-bar-ink {
+        from {
+            scale: 1 0;
+        }
+
+        to {
+            scale: 1 1;
+        }
+    }
+
+    @keyframes se-p-bar-ink-out {
+        from {
+            scale: 1 1;
+        }
+
+        to {
+            scale: 1 0;
+        }
+    }
+
+    @keyframes se-p-head {
+        0% {
+            translate: 0 0;
+            background-color: hsl(from var(--popover) h s calc(l - 9));
+        }
+
+        80% {
+            translate: calc(var(--se-v) * (100cqi - var(--se-head))) 0;
+            background-color: hsl(from var(--popover) h s calc(l - 9));
+        }
+
+        100% {
+            translate: calc(var(--se-v) * (100cqi - var(--se-head))) 0;
+            background-color: var(--primary);
+        }
+    }
+
+    @keyframes se-p-head-out {
+        0% {
+            translate: calc(var(--se-v) * (100cqi - var(--se-head))) 0;
+            background-color: var(--primary);
+        }
+
+        20% {
+            translate: calc(var(--se-v) * (100cqi - var(--se-head))) 0;
+            background-color: hsl(from var(--popover) h s calc(l - 9));
+        }
+
+        100% {
+            translate: 0 0;
+            background-color: hsl(from var(--popover) h s calc(l - 9));
+        }
+    }
+
+    /* The button: the face is pressed in (a bite at its edge, the label a
+       shade darker and a pixel down). */
+    .an-scene .se-p-press {
+        --an-face: se-p-face;
+        --an-face-out: se-p-face-out;
+        box-shadow:
+            inset 0 1px 3px hsl(from var(--foreground) h s l / 0.3),
+            inset 0 0 0 1px hsl(from var(--foreground) h s l / 0.1);
+    }
+
+    .an-scene .se-p-press .kp-button__label {
+        translate: 0 1px;
+        color: hsl(from var(--secondary-foreground) h s calc(l - 7));
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .se-p-press {
+            box-shadow:
+                inset 0 1px 3px transparent,
+                inset 0 0 0 1px transparent;
+        }
+
+        .an-scene[data-an-phase='gap'] .se-p-press .kp-button__label {
+            translate: 0 0;
+            color: var(--secondary-foreground);
+        }
+
+        .an-scene[data-an-phase='in'] .se-p-press .kp-button__label,
+        .an-scene[data-an-phase='hold'] .se-p-press .kp-button__label {
+            animation: se-p-label var(--an-in) linear both;
+        }
+
+        .an-scene[data-an-phase='out'] .se-p-press .kp-button__label {
+            animation: se-p-label-out var(--an-in) linear both;
+        }
+    }
+
+    @keyframes se-p-face {
+        0%,
+        87.49% {
+            background-color: var(--secondary);
+            box-shadow:
+                inset 0 1px 3px transparent,
+                inset 0 0 0 1px transparent;
+        }
+
+        87.5%,
+        100% {
+            background-color: var(--secondary-active);
+            box-shadow:
+                inset 0 1px 3px hsl(from var(--foreground) h s l / 0.3),
+                inset 0 0 0 1px hsl(from var(--foreground) h s l / 0.1);
+        }
+    }
+
+    @keyframes se-p-face-out {
+        0%,
+        12.5% {
+            background-color: var(--secondary-active);
+            box-shadow:
+                inset 0 1px 3px hsl(from var(--foreground) h s l / 0.3),
+                inset 0 0 0 1px hsl(from var(--foreground) h s l / 0.1);
+        }
+
+        12.51%,
+        100% {
+            background-color: var(--secondary);
+            box-shadow:
+                inset 0 1px 3px transparent,
+                inset 0 0 0 1px transparent;
+        }
+    }
+
+    @keyframes se-p-label {
+        0%,
+        87.49% {
+            translate: 0 0;
+            color: var(--secondary-foreground);
+        }
+
+        87.5%,
+        100% {
+            translate: 0 1px;
+            color: hsl(from var(--secondary-foreground) h s calc(l - 7));
+        }
+    }
+
+    @keyframes se-p-label-out {
+        0%,
+        12.5% {
+            translate: 0 1px;
+            color: hsl(from var(--secondary-foreground) h s calc(l - 7));
+        }
+
+        12.51%,
+        100% {
+            translate: 0 0;
+            color: var(--secondary-foreground);
+        }
+    }
+
+    /* ── 4 · The page turns ───────────────────────────────────────────── */
+
+    /* A leaf turns down from its top edge over 6 units on the hand curve
+       (the register's size-turn, slower), the curl's shadow under it
+       fading as it lies flat, a sheet a shade darker waiting beneath. The
+       close lifts it the same way. At rest the leaf lies flat. */
+    .an-scene .se-l-stage {
+        position: relative;
+        display: grid;
+        justify-items: center;
+        inline-size: 100%;
+    }
+
+    .an-scene .se-l-stage::before {
+        content: '';
+        position: absolute;
+        inset: 0.5rem 0.9rem -0.5rem;
+        border-radius: 2px;
+        background: hsl(from var(--popover) h s calc(l - 7));
+        box-shadow: 0 0 0 1px var(--border);
+    }
+
+    .an-scene .se-l-page {
+        --an-kf: se-l-turn;
+        --an-kf-out: se-l-lift;
+        --an-d: 1;
+        --an-l: 6;
+        --an-ease: var(--an-hand);
+        --an-ease-out: var(--an-hand-out);
+        transform-origin: 50% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .se-l-page {
+            transform: perspective(700px) rotateX(-85deg);
+            filter: drop-shadow(0 0.5rem 0.35rem hsl(from var(--foreground) h s l / 0.35)) brightness(0.88);
+        }
+    }
+
+    @keyframes se-l-turn {
+        from {
+            transform: perspective(700px) rotateX(-85deg);
+            filter: drop-shadow(0 0.5rem 0.35rem hsl(from var(--foreground) h s l / 0.35)) brightness(0.88);
+        }
+
+        to {
+            transform: perspective(700px) rotateX(0deg);
+            filter: drop-shadow(0 0 0 hsl(from var(--foreground) h s l / 0)) brightness(1);
+        }
+    }
+
+    @keyframes se-l-lift {
+        from {
+            transform: perspective(700px) rotateX(0deg);
+            filter: drop-shadow(0 0 0 hsl(from var(--foreground) h s l / 0)) brightness(1);
+        }
+
+        to {
+            transform: perspective(700px) rotateX(-85deg);
+            filter: drop-shadow(0 0.5rem 0.35rem hsl(from var(--foreground) h s l / 0.35)) brightness(0.88);
+        }
+    }
+
+    /* The bar: the fill turns in as a leaf from its top edge while the clip
+       reveals it. */
+    .an-scene .se-l-bar .se-bar__fill {
+        --an-kf: se-l-fill;
+        --an-kf-out: se-l-fill-out;
+        transform-origin: 50% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .se-l-bar .se-bar__fill {
+            transform: perspective(240px) rotateX(-80deg);
+        }
+    }
+
+    @keyframes se-l-fill {
+        from {
+            clip-path: inset(-1em var(--an-c0, 100%) -1em 0);
+            transform: perspective(240px) rotateX(-80deg);
+        }
+
+        to {
+            clip-path: inset(-1em var(--an-c1, 0%) -1em 0);
+            transform: perspective(240px) rotateX(0deg);
+        }
+    }
+
+    @keyframes se-l-fill-out {
+        from {
+            clip-path: inset(-1em var(--an-c1, 0%) -1em 0);
+            transform: perspective(240px) rotateX(0deg);
+        }
+
+        to {
+            clip-path: inset(-1em var(--an-c0, 100%) -1em 0);
+            transform: perspective(240px) rotateX(-80deg);
+        }
+    }
+
+    /* The button: under the finger the face turns a few degrees from its
+       top edge, the label on it, and lies flat on release. */
+    .an-scene .se-l-press {
+        --an-face: se-l-face;
+        --an-face-out: se-l-face-out;
+        transform-origin: 50% 0;
+        transform: perspective(400px) rotateX(14deg);
+        filter: drop-shadow(0 0.25rem 0.2rem hsl(from var(--foreground) h s l / 0.3));
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .se-l-press {
+            transform: perspective(400px) rotateX(0deg);
+            filter: drop-shadow(0 0 0 hsl(from var(--foreground) h s l / 0));
+        }
+    }
+
+    @keyframes se-l-face {
+        0%,
+        87.49% {
+            background-color: var(--secondary);
+            transform: perspective(400px) rotateX(0deg);
+            filter: drop-shadow(0 0 0 hsl(from var(--foreground) h s l / 0));
+        }
+
+        87.5% {
+            background-color: var(--secondary-active);
+            transform: perspective(400px) rotateX(0deg);
+            filter: drop-shadow(0 0 0 hsl(from var(--foreground) h s l / 0));
+            animation-timing-function: cubic-bezier(0.785, 0.135, 0.15, 0.86);
+        }
+
+        100% {
+            background-color: var(--secondary-active);
+            transform: perspective(400px) rotateX(14deg);
+            filter: drop-shadow(0 0.25rem 0.2rem hsl(from var(--foreground) h s l / 0.3));
+        }
+    }
+
+    @keyframes se-l-face-out {
+        0% {
+            background-color: var(--secondary-active);
+            transform: perspective(400px) rotateX(14deg);
+            filter: drop-shadow(0 0.25rem 0.2rem hsl(from var(--foreground) h s l / 0.3));
+            animation-timing-function: cubic-bezier(0.85, 0.14, 0.215, 0.865);
+        }
+
+        12.5% {
+            background-color: var(--secondary-active);
+            transform: perspective(400px) rotateX(0deg);
+            filter: drop-shadow(0 0 0 hsl(from var(--foreground) h s l / 0));
+        }
+
+        12.51%,
+        100% {
+            background-color: var(--secondary);
+            transform: perspective(400px) rotateX(0deg);
+            filter: drop-shadow(0 0 0 hsl(from var(--foreground) h s l / 0));
+        }
+    }
+
+    /* ── 5 · The dinkus is set ────────────────────────────────────────── */
+
+    /* Three sienna diamonds are set under the title, the middle one first
+       and then the outer two, each dropping from a little above in 0.8
+       units (2.5 to 5.5), and the title's initial takes the sienna at 6.
+       The close takes them up in the reverse order. */
+    .an-scene .se-d-page {
+        justify-items: center;
+        text-align: center;
+    }
+
+    .an-scene .se-d-page .se-page__title {
+        justify-self: center;
+    }
+
+    .an-scene .se-d-page .se-page__title::first-letter {
+        color: var(--primary);
+    }
+
+    .an-scene .se-d-dinkus {
+        grid-column: 1 / -1;
+        display: flex;
+        gap: 0.5em;
+        margin-block-start: 0.5rem;
+        font-size: clamp(1.7rem, 8cqi, 2.5rem);
+    }
+
+    .an-scene .se-d-dinkus i {
+        --an-kf: se-d-set;
+        --an-kf-out: se-d-set-out;
+        --an-l: 0.8;
+        --an-ease: var(--an-hand);
+        --an-ease-out: var(--an-hand-out);
+        display: block;
+        inline-size: 0.55em;
+        block-size: 0.55em;
+        background: var(--primary);
+        clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+    }
+
+    .an-scene .se-d-dinkus i:nth-child(2) {
+        --an-d: 2.5;
+    }
+
+    .an-scene .se-d-dinkus i:nth-child(1) {
+        --an-d: 3.6;
+    }
+
+    .an-scene .se-d-dinkus i:nth-child(3) {
+        --an-d: 4.7;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .se-d-dinkus i {
+            opacity: 0;
+            scale: 1.6;
+            translate: 0 -0.4em;
+        }
+
+        .an-scene[data-an-phase='gap'] .se-d-page .se-page__title::first-letter {
+            color: var(--foreground);
+        }
+
+        .an-scene[data-an-phase='in'] .se-d-page .se-page__title::first-letter,
+        .an-scene[data-an-phase='hold'] .se-d-page .se-page__title::first-letter {
+            animation: se-d-initial calc(1 * var(--an-u)) var(--an-hand) calc(6 * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .se-d-page .se-page__title::first-letter {
+            animation: se-d-initial-out calc(1 * var(--an-u)) var(--an-hand-out) calc(1 * var(--an-u)) both;
+        }
+    }
+
+    @keyframes se-d-set {
+        from {
+            opacity: 0;
+            scale: 1.6;
+            translate: 0 -0.4em;
+        }
+
+        to {
+            opacity: 1;
+            scale: 1;
+            translate: 0 0;
+        }
+    }
+
+    @keyframes se-d-set-out {
+        from {
+            opacity: 1;
+            scale: 1;
+            translate: 0 0;
+        }
+
+        to {
+            opacity: 0;
+            scale: 1.6;
+            translate: 0 -0.4em;
+        }
+    }
+
+    @keyframes se-d-initial {
+        from {
+            color: var(--foreground);
+        }
+
+        to {
+            color: var(--primary);
+        }
+    }
+
+    @keyframes se-d-initial-out {
+        from {
+            color: var(--primary);
+        }
+
+        to {
+            color: var(--foreground);
+        }
+    }
+
+    /* The bar: the register's busy dinkus, the three diamonds on a patch of
+       paper, slide in along the dotted track and sit as the head; the rule
+       follows them. */
+    .an-scene .se-d-bar {
+        --se-sc: 1.25;
+    }
+
+    .an-scene .se-d-bar {
+        --se-head: calc(3.25rem * var(--se-sc));
+    }
+
+    .an-scene .se-d-bar .se-bar__head {
+        display: none;
+    }
+
+    .an-scene .se-d-bar__dinkus {
+        --an-kf: se-d-run;
+        --an-kf-out: se-d-run-out;
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: var(--se-head);
+        translate: calc(var(--se-v) * (100cqi - var(--se-head))) 0;
+    }
+
+    .an-scene .se-d-bar__dinkus::before,
+    .an-scene .se-d-bar__dinkus::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: var(--se-head);
+    }
+
+    .an-scene .se-d-bar__dinkus::before {
+        background: var(--card);
+    }
+
+    .an-scene .se-d-bar__dinkus::after {
+        --d: calc(0.3125rem * var(--se-sc));
+        --g: calc(0.5rem * var(--se-sc));
+        --o: calc(0.3125rem * var(--se-sc));
+        background: var(--primary);
+        clip-path: polygon(
+            var(--o) 50%,
+            calc(var(--o) + var(--d)) 10%,
+            calc(var(--o) + var(--d) * 2) 50%,
+            calc(var(--o) + var(--d) * 2 + var(--g)) 50%,
+            calc(var(--o) + var(--d) * 3 + var(--g)) 10%,
+            calc(var(--o) + var(--d) * 4 + var(--g)) 50%,
+            calc(var(--o) + var(--d) * 4 + var(--g) * 2) 50%,
+            calc(var(--o) + var(--d) * 5 + var(--g) * 2) 10%,
+            calc(var(--o) + var(--d) * 6 + var(--g) * 2) 50%,
+            calc(var(--o) + var(--d) * 5 + var(--g) * 2) 90%,
+            calc(var(--o) + var(--d) * 4 + var(--g) * 2) 50%,
+            calc(var(--o) + var(--d) * 4 + var(--g)) 50%,
+            calc(var(--o) + var(--d) * 3 + var(--g)) 90%,
+            calc(var(--o) + var(--d) * 2 + var(--g)) 50%,
+            calc(var(--o) + var(--d) * 2) 50%,
+            calc(var(--o) + var(--d)) 90%
+        );
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .se-d-bar__dinkus {
+            translate: calc(var(--se-head) * -1) 0;
+        }
+    }
+
+    @keyframes se-d-run {
+        from {
+            translate: calc(var(--se-head) * -1) 0;
+        }
+
+        to {
+            translate: calc(var(--se-v) * (100cqi - var(--se-head))) 0;
+        }
+    }
+
+    @keyframes se-d-run-out {
+        from {
+            translate: calc(var(--se-v) * (100cqi - var(--se-head))) 0;
+        }
+
+        to {
+            translate: calc(var(--se-head) * -1) 0;
+        }
+    }
+
+    /* The button: a diamond is set beside the label in the last unit, the
+       face goes to the card's paper. */
+    .an-scene .se-d-press {
+        --an-face: se-r-face;
+        --an-face-out: se-r-face-out;
+        background-color: var(--card);
+    }
+
+    .an-scene .se-d-mark {
+        --an-kf: se-d-set;
+        --an-kf-out: se-d-set-out;
+        --an-d: 7;
+        --an-l: 1;
+        --an-ease: var(--an-hand);
+        --an-ease-out: var(--an-hand-out);
+        flex: none;
+        inline-size: 0.6em;
+        block-size: 0.6em;
+        background: var(--primary);
+        clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .se-d-mark {
+            opacity: 0;
+            scale: 1.6;
+            translate: 0 -0.4em;
+        }
+
+        .an-scene[data-an-phase='gap'] .se-d-press {
+            background-color: var(--secondary);
+        }
+    }
+
+    /* ── 6 · Burned at the edge ───────────────────────────────────────── */
+
+    /* The register's leave played backwards for an arrival: the page comes
+       up out of its own char (the black drawing back from the middle to the
+       edges, ease-out, 6 units) and leaves by the register's burn (ease-in).
+       The char is an overlay on the page, above the text, as in the
+       register; a hairline of it is left at rest. */
+    .an-scene .se-b-page {
+        --an-kf: se-b-page;
+        --an-kf-out: se-b-page-out;
+        --an-d: 1;
+        --an-l: 6;
+        --an-ease: ease-out;
+        --an-ease-out: ease-in;
+    }
+
+    .an-scene .se-b-page::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        pointer-events: none;
+        border-radius: inherit;
+        box-shadow:
+            inset 0 0 6px 1px hsl(from var(--primary) h s l / 0.4),
+            inset 0 0 1px 1px hsl(from var(--foreground) h s l / 0.35);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .se-b-page {
+            opacity: 0;
+        }
+
+        .an-scene[data-an-phase='gap'] .se-b-page::after {
+            box-shadow:
+                inset 0 0 40px 60px var(--foreground),
+                inset 0 0 4px 4px hsl(from var(--foreground) h s calc(l - 10));
+        }
+
+        .an-scene[data-an-phase='in'] .se-b-page::after,
+        .an-scene[data-an-phase='hold'] .se-b-page::after {
+            animation: se-b-char calc(6 * var(--an-u)) ease-out calc(1 * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .se-b-page::after {
+            animation: se-b-char-out calc(6 * var(--an-u)) ease-in calc(1 * var(--an-u)) both;
+        }
+    }
+
+    @keyframes se-b-page {
+        0% {
+            opacity: 0;
+        }
+
+        20%,
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes se-b-page-out {
+        0%,
+        80% {
+            opacity: 1;
+        }
+
+        100% {
+            opacity: 0;
+        }
+    }
+
+    @keyframes se-b-char {
+        0% {
+            box-shadow:
+                inset 0 0 40px 60px var(--foreground),
+                inset 0 0 4px 4px hsl(from var(--foreground) h s calc(l - 10));
+        }
+
+        60% {
+            box-shadow:
+                inset 0 0 12px 6px var(--primary),
+                inset 0 0 2px 2px var(--foreground);
+        }
+
+        100% {
+            box-shadow:
+                inset 0 0 6px 1px hsl(from var(--primary) h s l / 0.4),
+                inset 0 0 1px 1px hsl(from var(--foreground) h s l / 0.35);
+        }
+    }
+
+    @keyframes se-b-char-out {
+        0% {
+            box-shadow:
+                inset 0 0 6px 1px hsl(from var(--primary) h s l / 0.4),
+                inset 0 0 1px 1px hsl(from var(--foreground) h s l / 0.35);
+        }
+
+        40% {
+            box-shadow:
+                inset 0 0 12px 6px var(--primary),
+                inset 0 0 2px 2px var(--foreground);
+        }
+
+        100% {
+            box-shadow:
+                inset 0 0 40px 60px var(--foreground),
+                inset 0 0 4px 4px hsl(from var(--foreground) h s calc(l - 10));
+        }
+    }
+
+    /* The bar: the rule is drawn out of its char (a charred, feathered end
+       that clears as it is drawn), from the start. */
+    .an-scene .se-b-bar .se-bar__fill {
+        --an-kf: se-b-fill;
+        --an-kf-out: se-b-fill-out;
+        --an-c0: 0%;
+        --an-c1: 0%;
+        inline-size: var(--se-p);
+        transform-origin: left center;
+    }
+
+    .an-scene .se-b-bar .se-bar__fill::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to right, transparent, var(--foreground));
+        opacity: 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .se-b-bar .se-bar__fill {
+            scale: 0 1;
+        }
+
+        .an-scene[data-an-phase='gap'] .se-b-bar .se-bar__fill::after {
+            opacity: 1;
+        }
+
+        .an-scene[data-an-phase='in'] .se-b-bar .se-bar__fill::after,
+        .an-scene[data-an-phase='hold'] .se-b-bar .se-bar__fill::after {
+            animation: se-b-uncharr calc(7 * var(--an-u)) var(--an-hand) both;
+        }
+
+        .an-scene[data-an-phase='out'] .se-b-bar .se-bar__fill::after {
+            animation: se-b-uncharr-out calc(7 * var(--an-u)) var(--an-hand-out) calc(1 * var(--an-u)) both;
+        }
+    }
+
+    @keyframes se-b-fill {
+        from {
+            scale: 0 1;
+        }
+
+        to {
+            scale: 1 1;
+        }
+    }
+
+    @keyframes se-b-fill-out {
+        from {
+            scale: 1 1;
+        }
+
+        to {
+            scale: 0 1;
+        }
+    }
+
+    @keyframes se-b-uncharr {
+        from {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    @keyframes se-b-uncharr-out {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    /* The button: the face chars at its edge for the last unit (a sienna
+       glow) and keeps a hairline of it. */
+    .an-scene .se-b-press {
+        --an-face: se-b-face;
+        --an-face-out: se-b-face-out;
+        box-shadow:
+            inset 0 0 4px 0 hsl(from var(--primary) h s l / 0.5),
+            inset 0 0 1px 1px hsl(from var(--foreground) h s l / 0.4);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .se-b-press {
+            box-shadow:
+                inset 0 0 0 0 transparent,
+                inset 0 0 0 0 transparent;
+        }
+    }
+
+    @keyframes se-b-face {
+        0%,
+        87.49% {
+            background-color: var(--secondary);
+            box-shadow:
+                inset 0 0 0 0 transparent,
+                inset 0 0 0 0 transparent;
+        }
+
+        87.5% {
+            background-color: var(--secondary-active);
+            box-shadow:
+                inset 0 0 0 0 transparent,
+                inset 0 0 0 0 transparent;
+        }
+
+        93.75% {
+            background-color: var(--secondary-active);
+            box-shadow:
+                inset 0 0 8px 2px hsl(from var(--primary) h s l / 0.75),
+                inset 0 0 2px 1px hsl(from var(--foreground) h s l / 0.6);
+        }
+
+        100% {
+            background-color: var(--secondary-active);
+            box-shadow:
+                inset 0 0 4px 0 hsl(from var(--primary) h s l / 0.5),
+                inset 0 0 1px 1px hsl(from var(--foreground) h s l / 0.4);
+        }
+    }
+
+    @keyframes se-b-face-out {
+        0% {
+            background-color: var(--secondary-active);
+            box-shadow:
+                inset 0 0 4px 0 hsl(from var(--primary) h s l / 0.5),
+                inset 0 0 1px 1px hsl(from var(--foreground) h s l / 0.4);
+        }
+
+        6.25% {
+            background-color: var(--secondary-active);
+            box-shadow:
+                inset 0 0 8px 2px hsl(from var(--primary) h s l / 0.75),
+                inset 0 0 2px 1px hsl(from var(--foreground) h s l / 0.6);
+        }
+
+        12.5% {
+            background-color: var(--secondary-active);
+            box-shadow:
+                inset 0 0 0 0 transparent,
+                inset 0 0 0 0 transparent;
+        }
+
+        12.51%,
+        100% {
+            background-color: var(--secondary);
+            box-shadow:
+                inset 0 0 0 0 transparent,
+                inset 0 0 0 0 transparent;
+        }
+    }
+
+    /* ── 7 · The page foxes ───────────────────────────────────────────── */
+
+    /* Seven spots of ochre and sienna (25 %, multiplied) bloom across the
+       page one after another over 5 units, each in 0.8; the title's ink
+       comes up from the muted to the full ink as they come. The close fades
+       the last one first. At rest the spots stand. */
+    .an-scene .se-f-spots {
+        position: absolute;
+        inset: 0;
+        overflow: clip;
+        pointer-events: none;
+        mix-blend-mode: multiply;
+    }
+
+    .an-scene .se-f-spots i {
+        --an-kf: se-f-bloom;
+        --an-kf-out: se-f-bloom-out;
+        --an-l: 0.8;
+        --an-ease: var(--an-soak);
+        --an-ease-out: var(--an-soak-out);
+        position: absolute;
+        aspect-ratio: 1;
+        border-radius: 56% 44% 52% 48% / 47% 55% 45% 53%;
+        background:
+            radial-gradient(
+                closest-side,
+                hsl(from var(--warning-foreground) h s l / 0.6),
+                hsl(from var(--warning-foreground) h s l / 0.42) 24%,
+                hsl(from var(--primary) h s l / 0.24) 50%,
+                hsl(from var(--warning-foreground) h s l / 0.12) 72%,
+                transparent 100%
+            ),
+            radial-gradient(closest-side at 66% 38%, hsl(from var(--primary) h s l / 0.3), transparent 60%);
+    }
+
+    .an-scene .se-f-spots i:nth-child(1) {
+        --an-d: 0;
+        inset: 14% auto auto 5%;
+        inline-size: 15%;
+    }
+
+    .an-scene .se-f-spots i:nth-child(2) {
+        --an-d: 2.1;
+        inset: 6% auto auto 62%;
+        inline-size: 9%;
+    }
+
+    .an-scene .se-f-spots i:nth-child(3) {
+        --an-d: 0.7;
+        inset: 52% auto auto 33%;
+        inline-size: 7%;
+    }
+
+    .an-scene .se-f-spots i:nth-child(4) {
+        --an-d: 3.5;
+        inset: 30% auto auto 78%;
+        inline-size: 17%;
+    }
+
+    .an-scene .se-f-spots i:nth-child(5) {
+        --an-d: 1.4;
+        inset: 62% auto auto 6%;
+        inline-size: 11%;
+    }
+
+    .an-scene .se-f-spots i:nth-child(6) {
+        --an-d: 4.2;
+        inset: 68% auto auto 56%;
+        inline-size: 13%;
+    }
+
+    .an-scene .se-f-spots i:nth-child(7) {
+        --an-d: 2.8;
+        inset: 14% auto auto 40%;
+        inline-size: 6%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .se-f-spots i {
+            opacity: 0;
+            scale: 0;
+        }
+
+        .an-scene[data-an-phase='gap'] .se-f-page .se-page__title {
+            color: var(--muted-foreground);
+        }
+
+        .an-scene[data-an-phase='in'] .se-f-page .se-page__title,
+        .an-scene[data-an-phase='hold'] .se-f-page .se-page__title {
+            animation: se-f-title calc(5 * var(--an-u)) linear both;
+        }
+
+        .an-scene[data-an-phase='out'] .se-f-page .se-page__title {
+            animation: se-f-title-out calc(5 * var(--an-u)) linear calc(3 * var(--an-u)) both;
+        }
+    }
+
+    @keyframes se-f-bloom {
+        from {
+            opacity: 0;
+            scale: 0;
+        }
+
+        to {
+            opacity: 1;
+            scale: 1;
+        }
+    }
+
+    @keyframes se-f-bloom-out {
+        from {
+            opacity: 1;
+            scale: 1;
+        }
+
+        to {
+            opacity: 0;
+            scale: 0;
+        }
+    }
+
+    @keyframes se-f-title {
+        from {
+            color: var(--muted-foreground);
+        }
+
+        to {
+            color: var(--foreground);
+        }
+    }
+
+    @keyframes se-f-title-out {
+        from {
+            color: var(--foreground);
+        }
+
+        to {
+            color: var(--muted-foreground);
+        }
+    }
+
+    /* The bar: the rule arrives on a foxed track (spots bloom on it over 3
+       units, and stay) and is itself foxed, the spots on it clearing as it
+       is drawn. */
+    .an-scene .se-f-bar__spots {
+        --an-kf: se-f-track;
+        --an-kf-out: se-f-track-out;
+        --an-l: 3;
+        --an-ease: var(--an-soak);
+        --an-ease-out: var(--an-soak-out);
+        position: absolute;
+        inset: -2px 0;
+        pointer-events: none;
+        mix-blend-mode: multiply;
+        background:
+            radial-gradient(ellipse 14% 40% at 10% 55%, hsl(from var(--warning-foreground) h s l / 0.45), transparent),
+            radial-gradient(ellipse 9% 34% at 31% 40%, hsl(from var(--primary) h s l / 0.35), transparent),
+            radial-gradient(ellipse 13% 42% at 55% 60%, hsl(from var(--warning-foreground) h s l / 0.45), transparent),
+            radial-gradient(ellipse 8% 30% at 76% 38%, hsl(from var(--primary) h s l / 0.35), transparent),
+            radial-gradient(ellipse 12% 40% at 93% 56%, hsl(from var(--warning-foreground) h s l / 0.4), transparent);
+    }
+
+    .an-scene .se-f-bar .se-bar__fill::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        mix-blend-mode: multiply;
+        background:
+            radial-gradient(ellipse 12% 55% at 14% 50%, hsl(from var(--warning-foreground) h s l / 0.6), transparent),
+            radial-gradient(ellipse 9% 45% at 40% 50%, hsl(from var(--warning-foreground) h s l / 0.55), transparent),
+            radial-gradient(ellipse 12% 55% at 66% 50%, hsl(from var(--warning-foreground) h s l / 0.6), transparent),
+            radial-gradient(ellipse 8% 45% at 88% 50%, hsl(from var(--warning-foreground) h s l / 0.5), transparent);
+        opacity: 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .se-f-bar__spots {
+            opacity: 0;
+            scale: 0.85 0.4;
+        }
+
+        .an-scene[data-an-phase='gap'] .se-f-bar .se-bar__fill::after {
+            opacity: 1;
+        }
+
+        .an-scene[data-an-phase='in'] .se-f-bar .se-bar__fill::after,
+        .an-scene[data-an-phase='hold'] .se-f-bar .se-bar__fill::after {
+            animation: se-f-clear calc(3 * var(--an-u)) var(--an-hand) calc(4 * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .se-f-bar .se-bar__fill::after {
+            animation: se-f-clear-out calc(3 * var(--an-u)) var(--an-hand-out) calc(1 * var(--an-u)) both;
+        }
+    }
+
+    @keyframes se-f-track {
+        from {
+            opacity: 0;
+            scale: 0.85 0.4;
+        }
+
+        to {
+            opacity: 1;
+            scale: 1 1;
+        }
+    }
+
+    @keyframes se-f-track-out {
+        from {
+            opacity: 1;
+            scale: 1 1;
+        }
+
+        to {
+            opacity: 0;
+            scale: 0.85 0.4;
+        }
+    }
+
+    @keyframes se-f-clear {
+        from {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    @keyframes se-f-clear-out {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    /* The button: one spot blooms under the finger, at the press point (the
+       middle), in the last unit; the face goes to the card's paper. */
+    .an-scene .se-f-press {
+        --an-face: se-r-face;
+        --an-face-out: se-r-face-out;
+        background-color: var(--card);
+    }
+
+    .an-scene .se-f-spot {
+        --an-kf: se-f-bloom;
+        --an-kf-out: se-f-bloom-out;
+        --an-d: 7;
+        --an-l: 1;
+        --an-ease: var(--an-soak);
+        --an-ease-out: var(--an-soak-out);
+        position: absolute;
+        inset: -0.3rem calc(50% - 2.6rem);
+        z-index: -1;
+        pointer-events: none;
+        border-radius: 56% 44% 52% 48% / 47% 55% 45% 53%;
+        mix-blend-mode: multiply;
+        background:
+            radial-gradient(
+                closest-side,
+                hsl(from var(--warning-foreground) h s l / 0.5),
+                hsl(from var(--primary) h s l / 0.25) 60%,
+                transparent 100%
+            ),
+            radial-gradient(closest-side at 64% 40%, hsl(from var(--primary) h s l / 0.3), transparent 70%);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .se-f-spot {
+            opacity: 0;
+            scale: 0;
+        }
+
+        .an-scene[data-an-phase='gap'] .se-f-press {
+            background-color: var(--secondary);
+        }
+    }
+}
