@@ -1,0 +1,1608 @@
+/* research/formal-anchor: every candidate of the one question, in the
+   theme's signature layer. Colours come from the theme's tokens only; every
+   motion sits under prefers-reduced-motion: no-preference, and the reduced
+   pose is the finished picture (the seal down, the account closed, the
+   signature dry). Durations are counted in units of the theme's beat
+   (--an-unit, 110 ms, set by demo.js) and multiplied by --an-slow (1, 2 or
+   4: the page's speed buttons).
+
+   SCOPE. The review dialog moves the section out of the page into its stage
+   (.rv-dialog__stage), so no rule here may hang on `.an-page`: the custom
+   properties and every rule hang on `.an-scene`, which moves with its
+   options (forest's demo lost every option animation in the dialog this way,
+   48bfa5b3).
+
+   THE CLOCK. One clock (demo.js) writes `data-an-phase` on every scene:
+   gap (the part is not drawn), in (8 units: it is drawn), hold (4 units: it
+   dwells, the press held, the seal down), out (8 units: the drawing played
+   backwards, the same keyframes mirrored, what drew last going first). The
+   base style of every part is its drawn pose (so reduced motion and hold
+   show the finished picture); `gap` sets the undrawn pose; `in` and `hold`
+   run the drawing, `out` runs its mirror. Mirrored keyframes are written
+   as a pair (`fm-x` and `fm-x-out`) so every close is its open reversed.
+
+   THE ANCHOR'S THREE PLACES. Each candidate draws itself in its own scene
+   (`.an-hero`), as a progress bar (`.an-bar`) and as a button press
+   (`.an-btn`); the press lands at 7 units (87.5 %) and is held through the
+   dwell, and is released as the first unit of `out`. */
+
+@layer kp.signature {
+    /* ── The scene ───────────────────────────────────────────────────── */
+
+    .an-scene {
+        --an-ink: var(--foreground);
+        --an-navy: var(--primary);
+        --an-paper: var(--background);
+        /* One unit is the theme's beat; a loop is 22 units. */
+        --an-u: calc(var(--an-unit, 110ms) * var(--an-slow, 1));
+        --an-in: calc(8 * var(--an-u));
+        --an-loop: calc(22 * var(--an-u));
+        /* Formal's own curve for a laid, committed move; a drop that stops dead for the seal. */
+        --an-commit: cubic-bezier(0.2, 0, 0, 1);
+        --an-drop: cubic-bezier(0.4, 0, 1, 1);
+        /* The same curves played backwards (a curve's inverse is its point reflection), so a close on them is its open reversed.
+           Inside @keyframes a timing function is written out (a var() there is invalid and falls back to `ease`). */
+        --an-commit-out: cubic-bezier(1, 0, 0.8, 1);
+        --an-drop-out: cubic-bezier(0, 0, 0.6, 1);
+        container-type: inline-size;
+        position: relative;
+        overflow: clip;
+        overflow-clip-margin: 0.75rem;
+        /* Nothing is translucent; the layout layer's busy dim stays off. */
+        --kp-busy-opacity: 1;
+    }
+
+    .an-scene .an-hero {
+        position: relative;
+        display: grid;
+        place-items: center;
+        min-block-size: clamp(13rem, 36cqi, 20rem);
+        padding: 1.25rem 0.5rem;
+    }
+
+    .an-scene .an-bar,
+    .an-scene .an-btn {
+        display: grid;
+        min-block-size: 6rem;
+    }
+
+    .an-scene .an-bar {
+        align-content: center;
+    }
+
+    .an-scene .an-btn {
+        place-items: center;
+    }
+
+    /* ── The building blocks every candidate draws with ──────────────── */
+
+    /* A part that is drawn: its end pose is its base style, its start pose
+       is set at `gap`, and `in` / `out` run the pair of keyframes. */
+    .an-scene .an-a--scale {
+        --an-kf: an-scale;
+        --an-kf-out: an-scale-out;
+        scale: var(--an-s1, 1) 1;
+        transform-origin: left center;
+    }
+
+    .an-scene .an-a--clip {
+        --an-kf: an-clip;
+        --an-kf-out: an-clip-out;
+        clip-path: inset(-1em var(--an-c1, 0%) -1em 0);
+    }
+
+    .an-scene .an-a--move {
+        --an-kf: an-move;
+        --an-kf-out: an-move-out;
+        translate: var(--an-x1, 0%) var(--an-y1, 0%);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .an-a--scale {
+            scale: var(--an-s0, 0) 1;
+        }
+
+        .an-scene[data-an-phase='gap'] .an-a--clip {
+            clip-path: inset(-1em var(--an-c0, 100%) -1em 0);
+        }
+
+        .an-scene[data-an-phase='gap'] .an-a--move {
+            translate: var(--an-x0, 0%) var(--an-y0, 0%);
+        }
+
+        .an-scene[data-an-phase='in'] .an-a,
+        .an-scene[data-an-phase='hold'] .an-a {
+            animation: var(--an-kf) calc(var(--an-l, 8) * var(--an-u)) var(--an-ease, linear) calc(var(--an-d, 0) * var(--an-u)) both;
+        }
+
+        /* The mirror starts as late as the drawing ended: what drew last
+           goes first. */
+        .an-scene[data-an-phase='out'] .an-a {
+            animation: var(--an-kf-out) calc(var(--an-l, 8) * var(--an-u)) var(--an-ease-out, var(--an-ease, linear))
+                calc((8 - var(--an-d, 0) - var(--an-l, 8)) * var(--an-u)) both;
+        }
+    }
+
+    @keyframes an-scale {
+        from {
+            scale: var(--an-s0, 0) 1;
+        }
+
+        to {
+            scale: var(--an-s1, 1) 1;
+        }
+    }
+
+    @keyframes an-scale-out {
+        from {
+            scale: var(--an-s1, 1) 1;
+        }
+
+        to {
+            scale: var(--an-s0, 0) 1;
+        }
+    }
+
+    @keyframes an-clip {
+        from {
+            clip-path: inset(-1em var(--an-c0, 100%) -1em 0);
+        }
+
+        to {
+            clip-path: inset(-1em var(--an-c1, 0%) -1em 0);
+        }
+    }
+
+    @keyframes an-clip-out {
+        from {
+            clip-path: inset(-1em var(--an-c1, 0%) -1em 0);
+        }
+
+        to {
+            clip-path: inset(-1em var(--an-c0, 100%) -1em 0);
+        }
+    }
+
+    @keyframes an-move {
+        from {
+            translate: var(--an-x0, 0%) var(--an-y0, 0%);
+        }
+
+        to {
+            translate: var(--an-x1, 0%) var(--an-y1, 0%);
+        }
+    }
+
+    @keyframes an-move-out {
+        from {
+            translate: var(--an-x1, 0%) var(--an-y1, 0%);
+        }
+
+        to {
+            translate: var(--an-x0, 0%) var(--an-y0, 0%);
+        }
+    }
+
+    /* The pressed face: the package's own pressed ground (`--secondary-active`),
+       landing late (7 units) and held. */
+    @keyframes an-face-late {
+        0%,
+        87.49% {
+            background-color: var(--secondary);
+        }
+
+        87.5%,
+        100% {
+            background-color: var(--secondary-active);
+        }
+    }
+
+    @keyframes an-face-late-out {
+        0%,
+        12.5% {
+            background-color: var(--secondary-active);
+        }
+
+        12.51%,
+        100% {
+            background-color: var(--secondary);
+        }
+    }
+
+    /* A button that is pressed at the end of the drawing: its base is the
+       pressed face; `gap` is the rest face. */
+    .an-scene .an-press {
+        position: relative;
+        background-color: var(--secondary-active);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .an-press {
+            background-color: var(--secondary);
+        }
+
+        .an-scene[data-an-phase='in'] .an-press,
+        .an-scene[data-an-phase='hold'] .an-press {
+            animation: var(--an-face, an-face-late) var(--an-in) linear both;
+        }
+
+        .an-scene[data-an-phase='out'] .an-press {
+            animation: var(--an-face-out, an-face-late-out) var(--an-in) linear both;
+        }
+    }
+
+    /* ── Formal's paper: the sheet, the ledger line, the progress bar ──── */
+
+    /* A sheet of the minute book: card stock, a hairline, ruled rows. */
+    .an-scene .fm-sheet {
+        position: relative;
+        display: grid;
+        inline-size: min(100%, 30rem);
+        padding: 1rem 1.25rem;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: var(--card);
+        color: var(--card-foreground);
+        box-shadow:
+            0 0 0 4px var(--card),
+            0 0 0 5px var(--border);
+    }
+
+    .an-scene .fm-sheet > *,
+    .an-scene .an-hero > * {
+        min-inline-size: 0;
+    }
+
+    .an-scene .fm-sheet--one {
+        padding-block: 1.1rem 1.4rem;
+    }
+
+    .an-scene .fm-ledger {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 1rem;
+        align-items: baseline;
+        padding-block: 0.45rem;
+        border-block-end: 1px solid var(--border);
+        font-size: clamp(0.95rem, 3.6cqi, 1.15rem);
+    }
+
+    .an-scene .fm-sheet--one .fm-ledger {
+        border-block-end: 0;
+        padding-block-end: 0.3rem;
+    }
+
+    .an-scene .fm-ledger__label {
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .an-scene .fm-ledger__figure {
+        font-family: var(--theme-font-display);
+        font-variant-numeric: tabular-nums;
+        font-weight: 560;
+        color: var(--an-navy);
+    }
+
+    /* The package's progress bar in formal (the docket cut): a hairline
+       along the top with a tick at each end, a 4 px navy band 4 px under it,
+       entered from the start. */
+    .an-scene .fm-bar {
+        inline-size: 100%;
+    }
+
+    .an-scene .fm-bar__track {
+        --fm-tick: 7px;
+        position: relative;
+        display: block;
+        block-size: 1.5rem;
+        background:
+            linear-gradient(var(--border-strong) 0 0) 0 0 / 1px var(--fm-tick) no-repeat,
+            linear-gradient(var(--border-strong) 0 0) 100% 0 / 1px var(--fm-tick) no-repeat,
+            linear-gradient(var(--border-strong) 0 0) 0 0 / 100% 1px no-repeat;
+    }
+
+    .an-scene .fm-bar__fill {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: 5px;
+        block-size: 4px;
+        background: var(--an-navy);
+        --an-l: 7;
+        --an-ease: var(--an-commit);
+        --an-ease-out: var(--an-commit-out);
+    }
+
+    /* ── 1 · The seal is pressed ─────────────────────────────────────── */
+
+    /* A navy seal: a disc with two paper rings and the clerk's tick, pressed
+       onto the paper from above (it drops on formal's stopping curve and
+       lands at 4 units), its rim spreading a hair into the paper after the
+       landing (4 to 7), held, and lifted the way it came. At rest and under
+       reduced motion the seal stands pressed. */
+    .an-scene .fm-seal {
+        position: absolute;
+        display: block;
+        aspect-ratio: 1;
+        rotate: -8deg;
+    }
+
+    .an-scene .fm-seal__disc,
+    .an-scene .fm-seal__rim {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+    }
+
+    .an-scene .fm-seal__disc {
+        --an-kf: fm-s-land;
+        --an-kf-out: fm-s-lift;
+        display: grid;
+        place-items: center;
+        background: radial-gradient(
+            circle,
+            var(--an-navy) 0 56%,
+            var(--card) 56% 60%,
+            var(--an-navy) 60% 80%,
+            var(--card) 80% 84%,
+            var(--an-navy) 84% 100%
+        );
+        color: var(--card);
+        font-family: var(--theme-font-display);
+        font-weight: 600;
+    }
+
+    .an-scene .fm-seal__disc::after {
+        content: '✓';
+        font-size: 0.5em;
+        line-height: 1;
+    }
+
+    .an-scene .fm-seal__rim {
+        --an-kf: fm-s-rim;
+        --an-kf-out: fm-s-rim-out;
+        border: 2px solid var(--an-navy);
+        opacity: 0;
+        scale: 1.22;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .fm-seal__disc {
+            scale: 1.4;
+            opacity: 0;
+        }
+
+        .an-scene[data-an-phase='gap'] .fm-seal__rim {
+            scale: 0.9;
+        }
+    }
+
+    @keyframes fm-s-land {
+        0% {
+            scale: 1.4;
+            opacity: 0;
+            filter: drop-shadow(0 12px 10px hsl(from var(--foreground) h s l / 0.3));
+            animation-timing-function: cubic-bezier(0.4, 0, 1, 1);
+        }
+
+        50%,
+        100% {
+            scale: 1;
+            opacity: 1;
+            filter: drop-shadow(0 0 0 hsl(from var(--foreground) h s l / 0));
+        }
+    }
+
+    @keyframes fm-s-lift {
+        0%,
+        50% {
+            scale: 1;
+            opacity: 1;
+            filter: drop-shadow(0 0 0 hsl(from var(--foreground) h s l / 0));
+            animation-timing-function: cubic-bezier(0, 0, 0.6, 1);
+        }
+
+        100% {
+            scale: 1.4;
+            opacity: 0;
+            filter: drop-shadow(0 12px 10px hsl(from var(--foreground) h s l / 0.3));
+        }
+    }
+
+    @keyframes fm-s-rim {
+        0%,
+        50% {
+            scale: 0.9;
+            opacity: 0;
+        }
+
+        55% {
+            scale: 1;
+            opacity: 0.6;
+        }
+
+        87.5%,
+        100% {
+            scale: 1.22;
+            opacity: 0;
+        }
+    }
+
+    @keyframes fm-s-rim-out {
+        0%,
+        12.5% {
+            scale: 1.22;
+            opacity: 0;
+        }
+
+        45% {
+            scale: 1;
+            opacity: 0.6;
+        }
+
+        50%,
+        100% {
+            scale: 0.9;
+            opacity: 0;
+        }
+    }
+
+    .an-scene .fm-s-hero .fm-sheet {
+        padding-block-end: clamp(5rem, 20cqi, 7.5rem);
+    }
+
+    .an-scene .fm-s-hero__seal {
+        inset-inline-end: 1.5rem;
+        inset-block-end: 0.8rem;
+        inline-size: clamp(4.5rem, 18cqi, 7rem);
+        font-size: clamp(4.5rem, 18cqi, 7rem);
+    }
+
+    /* The bar: the band is entered in 6 units; when the account is full the
+       seal is pressed at its end (lands 6 to 7, the rim 7 to 8). */
+    .an-scene .fm-s-bar .fm-bar__fill {
+        --an-l: 6;
+    }
+
+    .an-scene .fm-s-bar__seal {
+        inset-inline-end: -0.4rem;
+        inset-block-start: 50%;
+        translate: 0 -50%;
+        inline-size: 1.6rem;
+        font-size: 1.6rem;
+        rotate: 0deg;
+    }
+
+    .an-scene .fm-s-bar__seal .fm-seal__disc {
+        --an-kf: fm-s-land-late;
+        --an-kf-out: fm-s-lift-early;
+    }
+
+    .an-scene .fm-s-bar__seal .fm-seal__rim {
+        --an-kf: fm-s-rim-late;
+        --an-kf-out: fm-s-rim-early;
+    }
+
+    @keyframes fm-s-land-late {
+        0%,
+        75% {
+            scale: 1.4;
+            opacity: 0;
+            animation-timing-function: cubic-bezier(0.4, 0, 1, 1);
+        }
+
+        87.5%,
+        100% {
+            scale: 1;
+            opacity: 1;
+        }
+    }
+
+    @keyframes fm-s-lift-early {
+        0%,
+        12.5% {
+            scale: 1;
+            opacity: 1;
+            animation-timing-function: cubic-bezier(0, 0, 0.6, 1);
+        }
+
+        25%,
+        100% {
+            scale: 1.4;
+            opacity: 0;
+        }
+    }
+
+    @keyframes fm-s-rim-late {
+        0%,
+        87.5% {
+            scale: 0.9;
+            opacity: 0;
+        }
+
+        90% {
+            scale: 1;
+            opacity: 0.6;
+        }
+
+        100% {
+            scale: 1.3;
+            opacity: 0;
+        }
+    }
+
+    @keyframes fm-s-rim-early {
+        0% {
+            scale: 1.3;
+            opacity: 0;
+        }
+
+        10% {
+            scale: 1;
+            opacity: 0.6;
+        }
+
+        12.5%,
+        100% {
+            scale: 0.9;
+            opacity: 0;
+        }
+    }
+
+    /* The button is the seal: the face goes grey under the press (7 units)
+       and a ring spreads out of its edge into the paper (7 to 8). */
+    .an-scene .fm-s-press {
+        --an-face: fm-s-press;
+        --an-face-out: fm-s-press-out;
+        box-shadow: 0 0 0 7px hsl(from var(--primary) h s l / 0);
+    }
+
+    @keyframes fm-s-press {
+        0%,
+        87.49% {
+            background-color: var(--secondary);
+            box-shadow: 0 0 0 0 hsl(from var(--primary) h s l / 0.55);
+        }
+
+        87.5% {
+            background-color: var(--secondary-active);
+            box-shadow: 0 0 0 0 hsl(from var(--primary) h s l / 0.55);
+        }
+
+        100% {
+            background-color: var(--secondary-active);
+            box-shadow: 0 0 0 7px hsl(from var(--primary) h s l / 0);
+        }
+    }
+
+    @keyframes fm-s-press-out {
+        0% {
+            background-color: var(--secondary-active);
+            box-shadow: 0 0 0 7px hsl(from var(--primary) h s l / 0);
+        }
+
+        12.5% {
+            background-color: var(--secondary-active);
+            box-shadow: 0 0 0 0 hsl(from var(--primary) h s l / 0.55);
+        }
+
+        12.51%,
+        100% {
+            background-color: var(--secondary);
+            box-shadow: 0 0 0 0 hsl(from var(--primary) h s l / 0.55);
+        }
+    }
+
+    /* ── 2 · The account is closed: the double rule ───────────────────── */
+
+    /* A navy rule is ruled under the line from the start at an even pace
+       (6 units), and a thinner second rule under it (6 to 8): the account
+       closed. */
+    .an-scene .fm-r-rule {
+        position: absolute;
+        inset-inline: 1.25rem;
+        inset-block-end: 0.95rem;
+        block-size: 2px;
+        background: var(--an-navy);
+        --an-l: 6;
+    }
+
+    .an-scene .fm-r-rule--second {
+        inset-block-end: 0.6rem;
+        block-size: 1px;
+        --an-d: 6;
+        --an-l: 2;
+    }
+
+    .an-scene .fm-r-bar__second {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: 12px;
+        block-size: 1px;
+        background: var(--an-navy);
+        --an-d: 7;
+        --an-l: 1;
+    }
+
+    /* The button: formal's own inner rule (`.kp-button::after`, 2 px inside)
+       is drawn in the first unit, as on a hover; the press doubles it with a
+       second rule 3 px further in, and greys the face. */
+    .an-scene .fm-r-press {
+        --an-face: fm-r-press;
+        --an-face-out: fm-r-press-out;
+        box-shadow:
+            inset 0 0 0 5px var(--secondary-active),
+            inset 0 0 0 6px var(--primary);
+    }
+
+    .an-scene .fm-r-press::after {
+        opacity: 1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .fm-r-press::after {
+            opacity: 0;
+        }
+
+        .an-scene[data-an-phase='in'] .fm-r-press::after,
+        .an-scene[data-an-phase='hold'] .fm-r-press::after {
+            animation: fm-r-inner var(--an-in) linear both;
+        }
+
+        .an-scene[data-an-phase='out'] .fm-r-press::after {
+            animation: fm-r-inner-out var(--an-in) linear both;
+        }
+    }
+
+    @keyframes fm-r-inner {
+        0% {
+            opacity: 0;
+        }
+
+        12.5%,
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes fm-r-inner-out {
+        0%,
+        87.5% {
+            opacity: 1;
+        }
+
+        100% {
+            opacity: 0;
+        }
+    }
+
+    @keyframes fm-r-press {
+        0%,
+        87.49% {
+            background-color: var(--secondary);
+            box-shadow:
+                inset 0 0 0 5px var(--secondary),
+                inset 0 0 0 6px transparent;
+        }
+
+        87.5%,
+        100% {
+            background-color: var(--secondary-active);
+            box-shadow:
+                inset 0 0 0 5px var(--secondary-active),
+                inset 0 0 0 6px var(--primary);
+        }
+    }
+
+    @keyframes fm-r-press-out {
+        0%,
+        12.5% {
+            background-color: var(--secondary-active);
+            box-shadow:
+                inset 0 0 0 5px var(--secondary-active),
+                inset 0 0 0 6px var(--primary);
+        }
+
+        12.51%,
+        100% {
+            background-color: var(--secondary);
+            box-shadow:
+                inset 0 0 0 5px var(--secondary),
+                inset 0 0 0 6px transparent;
+        }
+    }
+
+    /* ── 3 · Countersigned: the signature dries ───────────────────────── */
+
+    /* One flourish and its cross-stroke, written by path length at a pen's
+       pace (0 to 5.5 units, the cross 5.5 to 7), wet while written (a hair
+       blurred, a touch heavier) and dry in the last unit. */
+    .an-scene .fm-g-line {
+        display: block;
+        padding-block-start: 0.4rem;
+    }
+
+    .an-scene .fm-sign {
+        --an-kf: fm-g-dry;
+        --an-kf-out: fm-g-wet;
+        display: block;
+        inline-size: min(100%, 18rem);
+        block-size: auto;
+        overflow: visible;
+        fill: none;
+        stroke: var(--an-navy);
+        stroke-width: 2.2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .an-scene .fm-sign path {
+        stroke-dasharray: 1;
+        stroke-dashoffset: 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .fm-sign path {
+            stroke-dashoffset: 1;
+        }
+
+        .an-scene[data-an-phase='gap'] .fm-sign {
+            filter: blur(0.6px);
+            opacity: 0.85;
+        }
+
+        .an-scene[data-an-phase='in'] .fm-sign path,
+        .an-scene[data-an-phase='hold'] .fm-sign path {
+            animation: fm-g-write calc(5.5 * var(--an-u)) linear both;
+        }
+
+        .an-scene[data-an-phase='in'] .fm-sign .fm-sign__cross,
+        .an-scene[data-an-phase='hold'] .fm-sign .fm-sign__cross {
+            animation: fm-g-write calc(1.5 * var(--an-u)) linear calc(5.5 * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .fm-sign path {
+            animation: fm-g-unwrite calc(5.5 * var(--an-u)) linear calc(2.5 * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .fm-sign .fm-sign__cross {
+            animation: fm-g-unwrite calc(1.5 * var(--an-u)) linear calc(1 * var(--an-u)) both;
+        }
+    }
+
+    @keyframes fm-g-write {
+        from {
+            stroke-dashoffset: 1;
+        }
+
+        to {
+            stroke-dashoffset: 0;
+        }
+    }
+
+    @keyframes fm-g-unwrite {
+        from {
+            stroke-dashoffset: 0;
+        }
+
+        to {
+            stroke-dashoffset: 1;
+        }
+    }
+
+    @keyframes fm-g-dry {
+        0%,
+        87.5% {
+            filter: blur(0.6px);
+            opacity: 0.85;
+        }
+
+        100% {
+            filter: blur(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes fm-g-wet {
+        0% {
+            filter: blur(0);
+            opacity: 1;
+        }
+
+        12.5%,
+        100% {
+            filter: blur(0.6px);
+            opacity: 0.85;
+        }
+    }
+
+    /* The bar: the pen writes the band (7 units, an even pace) with a nib
+       running at its head. */
+    .an-scene .fm-g-bar .fm-bar__fill {
+        --an-ease: linear;
+        --an-ease-out: linear;
+    }
+
+    .an-scene .fm-g-nib {
+        --an-kf: fm-g-run;
+        --an-kf-out: fm-g-run-out;
+        --an-l: 7;
+        position: absolute;
+        inset-block-start: 1px;
+        inset-inline-start: calc(100% - 0.55rem);
+        inline-size: 0.55rem;
+        block-size: 0.9rem;
+        background: var(--an-navy);
+        clip-path: polygon(50% 0, 100% 45%, 50% 100%, 0 45%);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .fm-g-nib {
+            inset-inline-start: 0;
+        }
+    }
+
+    @keyframes fm-g-run {
+        from {
+            inset-inline-start: 0;
+        }
+
+        to {
+            inset-inline-start: calc(100% - 0.55rem);
+        }
+    }
+
+    @keyframes fm-g-run-out {
+        from {
+            inset-inline-start: calc(100% - 0.55rem);
+        }
+
+        to {
+            inset-inline-start: 0;
+        }
+    }
+
+    /* The button: the press lands at 7 units and a short stroke is signed
+       beside the label in the last unit. */
+    .an-scene .fm-g-press {
+        gap: 0.4rem;
+    }
+
+    .an-scene .fm-g-tick {
+        --an-kf: fm-g-tick;
+        --an-kf-out: fm-g-tick-out;
+        inline-size: 1.1em;
+        block-size: 1.1em;
+        overflow: visible;
+        fill: none;
+        stroke: var(--an-navy);
+        stroke-width: 2.4;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .an-scene .fm-g-tick path {
+        stroke-dasharray: 1;
+        stroke-dashoffset: 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .fm-g-tick path {
+            stroke-dashoffset: 1;
+        }
+
+        .an-scene[data-an-phase='in'] .fm-g-tick path,
+        .an-scene[data-an-phase='hold'] .fm-g-tick path {
+            animation: fm-g-tick var(--an-in) linear both;
+        }
+
+        .an-scene[data-an-phase='out'] .fm-g-tick path {
+            animation: fm-g-tick-out var(--an-in) linear both;
+        }
+    }
+
+    @keyframes fm-g-tick {
+        0%,
+        87.5% {
+            stroke-dashoffset: 1;
+        }
+
+        100% {
+            stroke-dashoffset: 0;
+        }
+    }
+
+    @keyframes fm-g-tick-out {
+        0% {
+            stroke-dashoffset: 0;
+        }
+
+        12.5%,
+        100% {
+            stroke-dashoffset: 1;
+        }
+    }
+
+    /* ── 4 · Cleared: the redaction is lifted ─────────────────────────── */
+
+    /* Every line of the minutes under an ink-black bar; the bars are cleared
+       toward the start (the bar shrinks from its end to its start, 4 units),
+       one line 1.5 units after the other. The base pose is the text
+       released; `gap` is every line barred. */
+    .an-scene .fm-dossier {
+        display: grid;
+        gap: 0.35rem;
+        font-size: clamp(0.9rem, 3.3cqi, 1.05rem);
+        line-height: 1.5;
+    }
+
+    .an-scene .fm-dossier__line {
+        position: relative;
+        display: block;
+        min-inline-size: 0;
+    }
+
+    .an-scene .fm-dossier__line > span {
+        overflow: hidden;
+        display: block;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .an-scene .fm-dossier__bar {
+        position: absolute;
+        inset: 0.1em 0;
+        background: var(--an-ink);
+        --an-s0: 1;
+        --an-s1: 0;
+        --an-l: 4;
+        --an-ease: var(--an-commit);
+        --an-ease-out: var(--an-commit-out);
+    }
+
+    .an-scene .fm-dossier__line:nth-child(2) .fm-dossier__bar {
+        --an-d: 1.5;
+    }
+
+    .an-scene .fm-dossier__line:nth-child(3) .fm-dossier__bar {
+        --an-d: 3;
+    }
+
+    /* The bar: the band is full and black over it lies the bar; what is
+       done is cleared from the start (the bar shrinks toward the end). */
+    .an-scene .fm-d-bar .fm-bar__fill {
+        --an-s0: 1;
+    }
+
+    .an-scene .fm-d-bar__black {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: 0;
+        block-size: 10px;
+        background: var(--an-ink);
+        transform-origin: right center;
+        --an-s0: 1;
+        --an-s1: 0;
+        --an-l: 7;
+        --an-ease: var(--an-commit);
+        --an-ease-out: var(--an-commit-out);
+    }
+
+    /* The button: a bar strikes under the label when the press lands. */
+    .an-scene .fm-d-strike {
+        position: absolute;
+        inset-inline: 0.9rem;
+        inset-block-end: 0.4rem;
+        block-size: 3px;
+        background: var(--an-ink);
+        --an-d: 7;
+        --an-l: 1;
+    }
+
+    /* ── 5 · The ribbon marks the place ──────────────────────────────── */
+
+    /* The bound volume's gold ribbon drops in from the page's top edge at a
+       steady pace (7 units), its swallowtail last, and the line it lands
+       beside takes the navy in the last unit. */
+    .an-scene .fm-sheet--page {
+        overflow: clip;
+        padding-block: 0.6rem 1.4rem;
+    }
+
+    .an-scene .fm-b-ribbon {
+        position: absolute;
+        inset-inline-start: 56%;
+        inset-block-start: -2px;
+        inline-size: 0.8rem;
+        block-size: calc(100% - 1.9rem);
+        background: var(--fx-signal);
+        box-shadow: inset -2px 0 0 hsl(from var(--fx-signal) h s calc(l - 12));
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 0.5rem), 0 100%);
+        --an-y0: -105%;
+        --an-y1: 0%;
+        --an-l: 7;
+    }
+
+    .an-scene .fm-b-hero .fm-ledger:nth-child(3) {
+        color: var(--an-navy);
+        font-weight: 600;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .fm-b-hero .fm-ledger:nth-child(3) {
+            color: inherit;
+            font-weight: 400;
+        }
+
+        .an-scene[data-an-phase='in'] .fm-b-hero .fm-ledger:nth-child(3),
+        .an-scene[data-an-phase='hold'] .fm-b-hero .fm-ledger:nth-child(3) {
+            animation: fm-b-mark var(--an-in) linear both;
+        }
+
+        .an-scene[data-an-phase='out'] .fm-b-hero .fm-ledger:nth-child(3) {
+            animation: fm-b-mark-out var(--an-in) linear both;
+        }
+    }
+
+    @keyframes fm-b-mark {
+        0%,
+        87.49% {
+            color: var(--card-foreground);
+            font-weight: 400;
+        }
+
+        87.5%,
+        100% {
+            color: var(--primary);
+            font-weight: 600;
+        }
+    }
+
+    @keyframes fm-b-mark-out {
+        0%,
+        12.5% {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        12.51%,
+        100% {
+            color: var(--card-foreground);
+            font-weight: 400;
+        }
+    }
+
+    /* The bar: the ribbon hangs under the hairline at the band's head and
+       runs with it (the meter's ribbon). */
+    .an-scene .fm-b-bar__ribbon {
+        --an-kf: fm-b-run;
+        --an-kf-out: fm-b-run-out;
+        --an-l: 7;
+        --an-ease: var(--an-commit);
+        --an-ease-out: var(--an-commit-out);
+        position: absolute;
+        inset-block-start: 1px;
+        inset-inline-start: calc(100% - 0.5rem);
+        inline-size: 0.5rem;
+        block-size: 1.2rem;
+        background: var(--fx-signal);
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 0.3rem), 0 100%);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .fm-b-bar__ribbon {
+            inset-inline-start: 0;
+        }
+    }
+
+    @keyframes fm-b-run {
+        from {
+            inset-inline-start: 0;
+        }
+
+        to {
+            inset-inline-start: calc(100% - 0.5rem);
+        }
+    }
+
+    @keyframes fm-b-run-out {
+        from {
+            inset-inline-start: calc(100% - 0.5rem);
+        }
+
+        to {
+            inset-inline-start: 0;
+        }
+    }
+
+    /* The button: a short ribbon drops over the button's end when the press
+       lands. */
+    .an-scene .fm-b-press {
+        overflow: clip;
+    }
+
+    .an-scene .fm-b-tab {
+        position: absolute;
+        inset-inline-end: 0.6rem;
+        inset-block-start: -1px;
+        inline-size: 0.45rem;
+        block-size: 72%;
+        background: var(--fx-signal);
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 0.22rem), 0 100%);
+        --an-y0: -105%;
+        --an-y1: 0%;
+        --an-d: 7;
+        --an-l: 1;
+    }
+
+    /* ── 6 · Squared up on the desk ──────────────────────────────────── */
+
+    /* A sheet laid down two and a half degrees off, slowing and stopping
+       (5 units, formal's committing curve), then tapped square in the last
+       two units. The base pose is the sheet square. */
+    .an-scene .fm-q-sheet {
+        --an-kf: fm-q-lay;
+        --an-kf-out: fm-q-pick;
+        transform-origin: 10% 90%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .fm-q-sheet {
+            opacity: 0;
+            translate: 0 1.6rem;
+            rotate: -2.5deg;
+        }
+    }
+
+    @keyframes fm-q-lay {
+        0% {
+            opacity: 0;
+            translate: 0 1.6rem;
+            rotate: -2.5deg;
+            animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        62.5% {
+            opacity: 1;
+            translate: 0 0;
+            rotate: -2.5deg;
+        }
+
+        75% {
+            rotate: -2.5deg;
+            animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        100% {
+            opacity: 1;
+            translate: 0 0;
+            rotate: 0deg;
+        }
+    }
+
+    @keyframes fm-q-pick {
+        0% {
+            opacity: 1;
+            translate: 0 0;
+            rotate: 0deg;
+            animation-timing-function: cubic-bezier(1, 0, 0.8, 1);
+        }
+
+        25% {
+            rotate: -2.5deg;
+        }
+
+        37.5% {
+            opacity: 1;
+            translate: 0 0;
+            rotate: -2.5deg;
+            animation-timing-function: cubic-bezier(1, 0, 0.8, 1);
+        }
+
+        100% {
+            opacity: 0;
+            translate: 0 1.6rem;
+            rotate: -2.5deg;
+        }
+    }
+
+    /* The bar: the band is laid in from the start at a slight tilt and
+       squared at the end. */
+    .an-scene .fm-q-bar .fm-bar__track {
+        overflow: clip;
+    }
+
+    .an-scene .fm-q-bar .fm-bar__fill {
+        --an-kf: fm-q-band;
+        --an-kf-out: fm-q-band-out;
+        --an-s0: 1;
+        --an-l: 8;
+        transform-origin: left center;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .fm-q-bar .fm-bar__fill {
+            translate: -100% 0;
+            rotate: -1.5deg;
+        }
+    }
+
+    @keyframes fm-q-band {
+        0% {
+            translate: -100% 0;
+            rotate: -1.5deg;
+            animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        62.5% {
+            translate: 0 0;
+            rotate: -1.5deg;
+        }
+
+        75% {
+            rotate: -1.5deg;
+            animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        100% {
+            translate: 0 0;
+            rotate: 0deg;
+        }
+    }
+
+    @keyframes fm-q-band-out {
+        0% {
+            translate: 0 0;
+            rotate: 0deg;
+            animation-timing-function: cubic-bezier(1, 0, 0.8, 1);
+        }
+
+        25% {
+            rotate: -1.5deg;
+        }
+
+        37.5% {
+            translate: 0 0;
+            rotate: -1.5deg;
+            animation-timing-function: cubic-bezier(1, 0, 0.8, 1);
+        }
+
+        100% {
+            translate: -100% 0;
+            rotate: -1.5deg;
+        }
+    }
+
+    /* The button: the press lands on a corner (the face tilts a degree and
+       goes grey, 7 units); the release squares it. */
+    .an-scene .fm-q-press {
+        --an-face: fm-q-press;
+        --an-face-out: fm-q-press-out;
+        transform-origin: 0% 100%;
+        rotate: -1deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .fm-q-press {
+            rotate: 0deg;
+        }
+    }
+
+    @keyframes fm-q-press {
+        0%,
+        87.49% {
+            background-color: var(--secondary);
+            rotate: 0deg;
+        }
+
+        87.5%,
+        100% {
+            background-color: var(--secondary-active);
+            rotate: -1deg;
+        }
+    }
+
+    @keyframes fm-q-press-out {
+        0%,
+        12.5% {
+            background-color: var(--secondary-active);
+            rotate: -1deg;
+        }
+
+        12.51%,
+        100% {
+            background-color: var(--secondary);
+            rotate: 0deg;
+        }
+    }
+
+    /* ── 7 · Blotted: the wet ink dries under the blotter ─────────────── */
+
+    /* The figure written wet (a hair spread into the paper) and a copy of it
+       dry; the blotter is rocked across from the start (3 to 7 units) and
+       what it has passed is the dry copy. The base pose is dry. */
+    .an-scene .fm-t-hero .fm-sheet {
+        overflow: clip;
+    }
+
+    .an-scene .fm-t-line {
+        position: relative;
+        display: block;
+    }
+
+    .an-scene .fm-t-wet,
+    .an-scene .fm-t-dry {
+        display: block;
+    }
+
+    .an-scene .fm-t-wet {
+        --an-kf: fm-t-wet-off;
+        --an-kf-out: fm-t-wet-on;
+        color: var(--an-navy);
+        filter: blur(0.7px);
+        text-shadow: 0 0 2px hsl(from var(--primary) h s l / 0.55);
+        clip-path: inset(-0.5em 0 -0.5em 100%);
+    }
+
+    .an-scene .fm-t-wet .fm-ledger__label {
+        color: var(--an-navy);
+    }
+
+    .an-scene .fm-t-dry {
+        --an-kf: fm-t-dry-on;
+        --an-kf-out: fm-t-dry-off;
+        position: absolute;
+        inset: 0;
+        clip-path: inset(-0.5em 0 -0.5em 0);
+    }
+
+    .an-scene .fm-t-blotter {
+        --an-kf: fm-t-rock;
+        --an-kf-out: fm-t-rock-back;
+        position: absolute;
+        inset-block: -0.4em;
+        inset-inline-start: 102%;
+        inline-size: 28%;
+        border: 1px solid var(--border-strong);
+        border-radius: 0 0 40% 40% / 0 0 100% 100%;
+        background: var(--muted);
+        box-shadow: 0 3px 6px -3px hsl(from var(--foreground) h s l / 0.35);
+        opacity: 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .fm-t-wet {
+            clip-path: inset(-0.5em 0 -0.5em 0);
+        }
+
+        .an-scene[data-an-phase='gap'] .fm-t-dry {
+            clip-path: inset(-0.5em 100% -0.5em 0);
+        }
+
+        .an-scene[data-an-phase='gap'] .fm-t-blotter {
+            inset-inline-start: -30%;
+        }
+    }
+
+    @keyframes fm-t-wet-off {
+        0%,
+        37.5% {
+            clip-path: inset(-0.5em 0 -0.5em 0);
+        }
+
+        87.5%,
+        100% {
+            clip-path: inset(-0.5em 0 -0.5em 100%);
+        }
+    }
+
+    @keyframes fm-t-wet-on {
+        0%,
+        12.5% {
+            clip-path: inset(-0.5em 0 -0.5em 100%);
+        }
+
+        62.5%,
+        100% {
+            clip-path: inset(-0.5em 0 -0.5em 0);
+        }
+    }
+
+    @keyframes fm-t-dry-on {
+        0%,
+        37.5% {
+            clip-path: inset(-0.5em 100% -0.5em 0);
+        }
+
+        87.5%,
+        100% {
+            clip-path: inset(-0.5em 0 -0.5em 0);
+        }
+    }
+
+    @keyframes fm-t-dry-off {
+        0%,
+        12.5% {
+            clip-path: inset(-0.5em 0 -0.5em 0);
+        }
+
+        62.5%,
+        100% {
+            clip-path: inset(-0.5em 100% -0.5em 0);
+        }
+    }
+
+    @keyframes fm-t-rock {
+        0%,
+        35% {
+            inset-inline-start: -30%;
+            opacity: 0;
+        }
+
+        37.5% {
+            inset-inline-start: -30%;
+            opacity: 1;
+        }
+
+        87.5% {
+            inset-inline-start: 102%;
+            opacity: 1;
+        }
+
+        90%,
+        100% {
+            inset-inline-start: 102%;
+            opacity: 0;
+        }
+    }
+
+    @keyframes fm-t-rock-back {
+        0%,
+        10% {
+            inset-inline-start: 102%;
+            opacity: 0;
+        }
+
+        12.5% {
+            inset-inline-start: 102%;
+            opacity: 1;
+        }
+
+        62.5% {
+            inset-inline-start: -30%;
+            opacity: 1;
+        }
+
+        65%,
+        100% {
+            inset-inline-start: -30%;
+            opacity: 0;
+        }
+    }
+
+    /* The bar: the wet band stands whole (blurred into the paper); the
+       blotter passes along it (7 units) and the dry band is revealed
+       behind it. */
+    .an-scene .fm-t-bar .fm-bar__fill {
+        --an-s0: 1;
+        filter: blur(1.4px);
+        opacity: 0.8;
+    }
+
+    .an-scene .fm-bar__dry {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: 5px;
+        block-size: 4px;
+        background: var(--an-navy);
+        --an-l: 7;
+        --an-ease: linear;
+    }
+
+    .an-scene .fm-t-bar__blotter {
+        --an-kf: fm-t-bar-rock;
+        --an-kf-out: fm-t-bar-rock-back;
+        --an-l: 7;
+        position: absolute;
+        inset-block: -0.1rem;
+        inset-inline-start: calc(100% - 1.4rem);
+        inline-size: 1.4rem;
+        border: 1px solid var(--border-strong);
+        border-radius: 0 0 40% 40% / 0 0 100% 100%;
+        background: var(--muted);
+        box-shadow: 0 3px 6px -3px hsl(from var(--foreground) h s l / 0.35);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .fm-t-bar__blotter {
+            inset-inline-start: 0;
+        }
+    }
+
+    @keyframes fm-t-bar-rock {
+        from {
+            inset-inline-start: 0;
+        }
+
+        to {
+            inset-inline-start: calc(100% - 1.4rem);
+        }
+    }
+
+    @keyframes fm-t-bar-rock-back {
+        from {
+            inset-inline-start: calc(100% - 1.4rem);
+        }
+
+        to {
+            inset-inline-start: 0;
+        }
+    }
+
+    /* The button: the press is the blotter laid on the face (a pale sheet
+       comes down over it in the last unit) and the label dries crisp. */
+    .an-scene .fm-t-press {
+        overflow: clip;
+    }
+
+    .an-scene .fm-t-press .kp-button__label {
+        position: relative;
+        z-index: 1;
+        --an-kf: fm-t-label-dry;
+        --an-kf-out: fm-t-label-wet;
+    }
+
+    .an-scene .fm-t-press__blotter {
+        position: absolute;
+        inset: 0;
+        background: var(--secondary-active);
+        --an-y0: -102%;
+        --an-y1: 0%;
+        --an-d: 7;
+        --an-l: 1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .fm-t-press .kp-button__label {
+            filter: blur(0.5px);
+            text-shadow: 0 0 1.5px hsl(from var(--foreground) h s l / 0.5);
+        }
+
+        .an-scene[data-an-phase='in'] .fm-t-press .kp-button__label,
+        .an-scene[data-an-phase='hold'] .fm-t-press .kp-button__label {
+            animation: fm-t-label-dry var(--an-in) linear both;
+        }
+
+        .an-scene[data-an-phase='out'] .fm-t-press .kp-button__label {
+            animation: fm-t-label-wet var(--an-in) linear both;
+        }
+    }
+
+    @keyframes fm-t-label-dry {
+        0%,
+        87.5% {
+            filter: blur(0.5px);
+            text-shadow: 0 0 1.5px hsl(from var(--foreground) h s l / 0.5);
+        }
+
+        100% {
+            filter: blur(0);
+            text-shadow: 0 0 0 hsl(from var(--foreground) h s l / 0);
+        }
+    }
+
+    @keyframes fm-t-label-wet {
+        0% {
+            filter: blur(0);
+            text-shadow: 0 0 0 hsl(from var(--foreground) h s l / 0);
+        }
+
+        12.5%,
+        100% {
+            filter: blur(0.5px);
+            text-shadow: 0 0 1.5px hsl(from var(--foreground) h s l / 0.5);
+        }
+    }
+}
