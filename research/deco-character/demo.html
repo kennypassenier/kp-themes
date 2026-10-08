@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en" data-theme="deco" data-cat-theme="deco" data-cat-theme-fixed data-review="deco-character" data-review-themes="deco">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — what makes deco deco</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <link rel="stylesheet" href="../../css/deco-register.css" data-kp-register="deco" />
+        <link rel="stylesheet" href="demo.css" />
+        <link rel="stylesheet" href="grammar.css" />
+        <link rel="stylesheet" href="options.css" />
+    </head>
+    <body>
+        <main class="dc-page">
+            <header class="dc-intro" id="dc-intro">
+                <h1>What makes deco deco</h1>
+                <p>
+                    You picked the anchor in the last round: the fan opens. Nineteen questions follow, each one rule of the theme, each turning that
+                    anchor into how deco loads, arrives, points, presses, warns, updates and leaves. Every option is a live scene built from the
+                    package's own components in deco, so you see the rule at work; the first option of each question is the recommendation, and each
+                    option says what you see and why it is or is not recommended. Pick per question in the review dialog (one question per page, the
+                    arrow keys flip between the options).
+                </p>
+                <p>
+                    Where a decided pick of an earlier round is at odds with the rule, it is on the page as an option named “the pick”; where the
+                    register does something today, the option says “today”. Gold is flat in every option that is recommended: a fan is counted, never
+                    smeared.
+                </p>
+                <p class="dc-motion" data-dc-motion hidden>
+                    <b>Your system asks for reduced motion</b>, so nothing on this page moves: every scene shows its finished pose, the fan open. Turn
+                    it off in the system settings to judge the motion questions (1 to 4, 9 to 13, 15 and 17).
+                </p>
+            </header>
+
+            <section class="dc-story" aria-labelledby="h-story">
+                <h2 id="h-story">What deco is</h2>
+                <div class="dc-story__grid">
+                    <div class="dc-story__text">
+                        <p data-dc-story="what"></p>
+                        <p data-dc-story="so"></p>
+                        <p data-dc-story="decided"></p>
+                        <p>
+                            The full analysis (the grammar G1 to G21, every decided pick measured against it, the outliers and the proposals) is in
+                            <a href="https://github.com/kennypassenier/kp-themes/blob/main/themes/deco/CHARACTER.md">themes/deco/CHARACTER.md</a>.
+                        </p>
+                    </div>
+                    <div class="dc-story__parts" aria-label="Deco's own parts, as the package draws them">
+                        <div class="dc-row">
+                            <button type="button" class="kp-button">Export</button>
+                            <button type="button" class="kp-button kp-button--primary">Add a pump house</button>
+                            <span class="kp-badge">Draft</span>
+                        </div>
+                        <div class="kp-alert" role="status"><span class="kp-alert__body">The export runs at 02:00 from Monday.</span></div>
+                        <div class="dc-row">
+                            <span class="kp-spinner" role="status" aria-label="Working…"></span>
+                            <div class="kp-progressbar dc-story__bar" role="progressbar" aria-label="Waiting for the export" data-kp-indeterminate>
+                                <span class="kp-progressbar__track" aria-hidden="true"
+                                    ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                                ></span>
+                            </div>
+                        </div>
+                        <div
+                            class="kp-progressbar dc-story__bar"
+                            role="progressbar"
+                            aria-label="Export, 62 %"
+                            aria-valuenow="62"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                            style="--kp-value: 0.62"
+                        >
+                            <span class="kp-progressbar__track" aria-hidden="true"
+                                ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                            ></span>
+                        </div>
+                        <div class="dc-story__skel" aria-hidden="true">
+                            <span class="kp-skeleton"></span><span class="kp-skeleton"></span><span class="kp-skeleton"></span>
+                        </div>
+                    </div>
+                </div>
+                <details class="dc-gallery" data-dc-gallery>
+                    <summary>The decided deco components as they are today (opens six live demos)</summary>
+                    <div class="dc-gallery__grid">
+                        <figure>
+                            <figcaption>Key-figure strip (the arrival and tone families)</figcaption>
+                            <iframe
+                                title="Key-figure strip, deco as decided"
+                                data-src="../character-columns/demo.html?embed=shape&amp;theme=deco"
+                            ></iframe>
+                        </figure>
+                        <figure>
+                            <figcaption>Trend tile (the live family)</figcaption>
+                            <iframe title="Trend tile, deco as decided" data-src="../character-trend/demo.html?embed=shape&amp;theme=deco"></iframe>
+                        </figure>
+                        <figure>
+                            <figcaption>Network graph (the hover family; never changes)</figcaption>
+                            <iframe
+                                title="Network graph, deco as decided"
+                                data-src="../character-graph/demo.html?embed=focus&amp;theme=deco"
+                            ></iframe>
+                        </figure>
+                        <figure>
+                            <figcaption>Key figure</figcaption>
+                            <iframe title="Key figure, deco as decided" data-src="../character-kpi/demo.html?embed=shape&amp;theme=deco"></iframe>
+                        </figure>
+                        <figure>
+                            <figcaption>Month heatmap</figcaption>
+                            <iframe
+                                title="Month heatmap, deco as decided"
+                                data-src="../character-calendar/demo.html?embed=shape&amp;theme=deco"
+                            ></iframe>
+                        </figure>
+                        <figure>
+                            <figcaption>Page header</figcaption>
+                            <iframe title="Page header, deco as decided" data-src="../character-header/demo.html?embed=shape&amp;theme=deco"></iframe>
+                        </figure>
+                    </div>
+                </details>
+            </section>
+
+            <section
+                class="dc-sec"
+                data-review-item="deco"
+                data-review-mode="aspects"
+                data-review-rows="data-dc-aspect"
+                data-review-components="deco-character"
+                data-review-title="What makes deco deco"
+                data-dc-show="rest"
+                aria-labelledby="h-dc"
+            >
+                <div class="dc-sec__head">
+                    <h2 id="h-dc">Nineteen questions</h2>
+                    <p>
+                        Each row is one question, its options side by side, the recommended one first. The scenes replay by themselves every few
+                        seconds; the Replay button starts them together, the Speed buttons slow every motion down to a half or a quarter, and the
+                        State buttons show every button, entry and link of the rows on composites, pointing, focus and the press (questions 14 to 17)
+                        as hovered, focused or pressed.
+                    </p>
+                    <ol class="dc-toc" data-dc-toc></ol>
+                </div>
+                <div class="dc-controls" data-review-controls>
+                    <div class="dc-actions" role="group" aria-label="State of every button">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-dc-state="rest" aria-pressed="true">Rest</button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-dc-state="hover"
+                            aria-pressed="false"
+                            data-review-plays="composites"
+                        >
+                            Hover
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-dc-state="focus" aria-pressed="false" data-review-plays="focus">
+                            Focus
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-dc-state="press" aria-pressed="false" data-review-plays="press">
+                            Press
+                        </button>
+                    </div>
+                    <div class="dc-actions" role="group" aria-label="Replay">
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-dc-replay
+                            data-review-plays="curve direction opening durations live leave"
+                        >
+                            Replay
+                        </button>
+                    </div>
+                    <div class="dc-actions" role="group" aria-label="Animation speed">
+                        <b>Speed of every animation:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-dc-speed="1" aria-pressed="true">Full</button>
+                        <button type="button" class="kp-button kp-button--sm" data-dc-speed="0.5" aria-pressed="false">½</button>
+                        <button type="button" class="kp-button kp-button--sm" data-dc-speed="0.25" aria-pressed="false">¼</button>
+                    </div>
+                </div>
+                <div data-review-look></div>
+                <div class="dc-aspects" data-dc-aspects></div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "2026-10-08-r1", "reopen": [] }
+        </script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

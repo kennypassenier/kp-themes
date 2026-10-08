@@ -1,0 +1,310 @@
+/* research/deco-character/grammar.css: deco's proposed grammar as the demo
+   draws it (themes/deco/CHARACTER.md G1-G21, the anchor of
+   research/deco-anchor: the fan opens). One file of tokens, registered
+   properties and keyframes, linked by demo.html before options.css; once
+   Kenny has judged the nineteen questions, the per-component demos apply
+   the answers from here, as forest's grammar.css is applied.
+
+   - the one idea is the FAN: a crest of gold rays folded to a point opens ray
+     by ray and folds back the same way. Twelve rays across 180 degrees (a
+     15 degree cell each, the ray 4 degrees wide and centred in its cell),
+     one ray per step, `steps(12, jump-end)` opening and
+     `steps(12, jump-start)` folding, 40 ms a ray (480 ms a fan); the plate
+     behind its fan follows in four steps (160 ms more); a group comes 80 ms
+     apart from its centre outward; a loop is 2400 ms. A colour change keeps
+     the register's 160 ms. Never a smooth sweep, never a spring, nothing
+     fades, nothing slides, nothing rises;
+   - what opens opens from a point: a menu from its button's base, a dialog
+     from the base of its crest, a tile and a day from their base, a tooltip
+     from its notch, a toast from its mark; it folds to that point, the same
+     steps backwards (a close is its open reversed: every keyframe pair
+     below is written `name` / `name-out`, the timing function written
+     literally inside the @keyframes, an eased open closing on the inverse
+     curve and `steps(n, jump-end)` on `steps(n, jump-start)`);
+   - gold is flat `--primary` and never a gradient (a fan is counted, never
+     smeared); emerald marks what is current or done, ruby warns on a plate
+     with ivory ink, ivory reads;
+   - plates have radius 0 and one corner bitten as a chevron, small parts end
+     in a lozenge point; the ground is lacquer with the lattice felt, one
+     double gold rule on what matters, one crest on a title;
+   - Poiret One capitals tracked 0.16 em for titles, Josefin Sans for the
+     rest, figures Josefin 600 tabular;
+   - the network graph is never a target (Kenny, 2026-10-07 02:54).
+
+   Colours come from the theme's tokens only; every animation sits under
+   prefers-reduced-motion: no-preference, and the reduced pose is the fan
+   open. The tokens hang on `.dc-page, .dc-scene` (the review dialog moves a
+   section into its stage, which is neither). */
+
+/* The angle a fan has opened to (0 folded, 180 open; 360 for a ring of rays). */
+@property --dc-a {
+    syntax: '<angle>';
+    inherits: true;
+    initial-value: 180deg;
+}
+
+/* How far a plate has followed its fan (0 none, 1 whole): the four steps of
+   the plate behind the rays, also the width of the pleats' fold lines. */
+@property --dc-fill {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+/* How far a line or a plate has been counted open, 0 to 1 (pleats, a line lit
+   from its start). */
+@property --dc-p {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+@layer kp.signature {
+    :is(.dc-page, .dc-scene) {
+        /* One fan: 12 rays, 40 ms a ray. */
+        --dc-ray: 40ms;
+        --dc-fan: 480ms;
+        --dc-plate: 160ms;
+        --dc-group: 80ms;
+        --dc-contact: 160ms;
+        --dc-loop: 2400ms;
+        /* A fan of 12 rays is 180 degrees: a cell is 15, the ray 4. */
+        --dc-cell: 15deg;
+        --dc-rib: 4deg;
+        /* Curves: counted is the grammar's, the other two are the
+           alternatives of question 1. Each with its inverse (the point
+           reflection) so a close is its open reversed. */
+        --dc-count: steps(12, jump-end);
+        --dc-count-out: steps(12, jump-start);
+        --dc-ease: cubic-bezier(0.4, 0, 0.2, 1);
+        --dc-ease-out: cubic-bezier(0.8, 0, 0.6, 1);
+        /* Roles of colour (G5). */
+        --dc-gold: var(--primary);
+        --dc-jewel: var(--accent);
+        --dc-ruby: var(--destructive);
+        --dc-ivory: var(--foreground);
+        --dc-lacquer: var(--background);
+        /* The bite of a plate (G6): one corner cut as a chevron. */
+        --dc-bite: 1.25rem;
+        --dc-bite-poly: polygon(0 0, calc(100% - var(--dc-bite)) 0, 100% var(--dc-bite), 100% 100%, 0 100%);
+        /* A lozenge end for small parts: pointed left and right. */
+        --dc-lozenge-poly: polygon(0.5em 0, calc(100% - 0.5em) 0, 100% 50%, calc(100% - 0.5em) 100%, 0.5em 100%, 0 50%);
+        /* Poiret One capitals for titles, Josefin for the rest (G18). */
+        --dc-title-font: var(--theme-font-display);
+        --dc-title-track: 0.16em;
+        /* The crest: twelve gold rays from the foot, flat gold. */
+        --dc-crest-rays: repeating-conic-gradient(
+            from calc(-90deg + (var(--dc-cell) - var(--dc-rib)) / 2) at 50% 100%,
+            var(--dc-gold) 0 var(--dc-rib),
+            transparent var(--dc-rib) var(--dc-cell)
+        );
+    }
+
+    /* ── Counted: a fan opens ray by ray, its plate follows in four steps ── */
+    @keyframes dcg-fan {
+        from {
+            --dc-a: 0deg;
+            animation-timing-function: steps(12, jump-end);
+        }
+        to {
+            --dc-a: 180deg;
+        }
+    }
+
+    @keyframes dcg-fan-out {
+        from {
+            --dc-a: 180deg;
+            animation-timing-function: steps(12, jump-start);
+        }
+        to {
+            --dc-a: 0deg;
+        }
+    }
+
+    @keyframes dcg-plate {
+        from {
+            --dc-fill: 0;
+            animation-timing-function: steps(4, jump-end);
+        }
+        to {
+            --dc-fill: 1;
+        }
+    }
+
+    @keyframes dcg-plate-out {
+        from {
+            --dc-fill: 1;
+            animation-timing-function: steps(4, jump-start);
+        }
+        to {
+            --dc-fill: 0;
+        }
+    }
+
+    /* A plate with no crest of its own is counted in vertical pleats from its
+       centre out, twelve of them, a fold line at each (the register's
+       scaleX fold, counted). */
+    @keyframes dcg-pleat {
+        from {
+            --dc-p: 0;
+            animation-timing-function: steps(12, jump-end);
+        }
+        to {
+            --dc-p: 1;
+        }
+    }
+
+    @keyframes dcg-pleat-out {
+        from {
+            --dc-p: 1;
+            animation-timing-function: steps(12, jump-start);
+        }
+        to {
+            --dc-p: 0;
+        }
+    }
+
+    /* A live update: one flash of the fan behind the changed figure, 480 ms
+       open and 480 ms folded; the same going and coming, so its close is its
+       open reversed. */
+    @keyframes dcg-flash {
+        0% {
+            --dc-a: 0deg;
+            animation-timing-function: steps(12, jump-end);
+        }
+        50% {
+            --dc-a: 180deg;
+            animation-timing-function: steps(12, jump-start);
+        }
+        100% {
+            --dc-a: 0deg;
+        }
+    }
+
+    @keyframes dcg-flash-out {
+        0% {
+            --dc-a: 0deg;
+            animation-timing-function: steps(12, jump-end);
+        }
+        50% {
+            --dc-a: 180deg;
+            animation-timing-function: steps(12, jump-start);
+        }
+        100% {
+            --dc-a: 0deg;
+        }
+    }
+
+    /* A line lit from its start, as a fan from its first ray: twelve steps. */
+    @keyframes dcg-line {
+        from {
+            --dc-p: 0;
+            animation-timing-function: steps(12, jump-end);
+        }
+        to {
+            --dc-p: 1;
+        }
+    }
+
+    @keyframes dcg-line-out {
+        from {
+            --dc-p: 1;
+            animation-timing-function: steps(12, jump-start);
+        }
+        to {
+            --dc-p: 0;
+        }
+    }
+
+    /* Loading: a crest opens from the foot ray by ray (80 ms a ray), stands,
+       folds ray by ray, rests: one loop of 2400 ms. */
+    @keyframes dcg-load {
+        0% {
+            --dc-a: 0deg;
+            animation-timing-function: steps(12, jump-end);
+        }
+        40% {
+            --dc-a: 180deg;
+            animation-timing-function: linear;
+        }
+        56.67% {
+            --dc-a: 180deg;
+            animation-timing-function: steps(12, jump-start);
+        }
+        96.67% {
+            --dc-a: 0deg;
+        }
+        100% {
+            --dc-a: 0deg;
+        }
+    }
+
+    /* The same for a skeleton line: lit from its start, ray by ray, then
+       folded back. */
+    @keyframes dcg-load-line {
+        0% {
+            --dc-p: 0;
+            animation-timing-function: steps(12, jump-end);
+        }
+        40% {
+            --dc-p: 1;
+            animation-timing-function: linear;
+        }
+        56.67% {
+            --dc-p: 1;
+            animation-timing-function: steps(12, jump-start);
+        }
+        96.67% {
+            --dc-p: 0;
+        }
+        100% {
+            --dc-p: 0;
+        }
+    }
+
+    /* The spinner: a crest of twelve rays round a centre dot, a ring of 30
+       degree cells; opens, stands, folds, 2400 ms, never turning. */
+    @keyframes dcg-ring {
+        0% {
+            --dc-a: 0deg;
+            animation-timing-function: steps(12, jump-end);
+        }
+        40% {
+            --dc-a: 360deg;
+            animation-timing-function: linear;
+        }
+        56.67% {
+            --dc-a: 360deg;
+            animation-timing-function: steps(12, jump-start);
+        }
+        96.67% {
+            --dc-a: 0deg;
+        }
+        100% {
+            --dc-a: 0deg;
+        }
+    }
+
+    /* The bar laid flat: rays lit across and folded back, 2400 ms, forty
+       rays to the track. */
+    @keyframes dcg-lay {
+        0% {
+            --dc-p: 0;
+            animation-timing-function: steps(40, jump-end);
+        }
+        40% {
+            --dc-p: 1;
+            animation-timing-function: linear;
+        }
+        56.67% {
+            --dc-p: 1;
+            animation-timing-function: steps(40, jump-start);
+        }
+        96.67% {
+            --dc-p: 0;
+        }
+        100% {
+            --dc-p: 0;
+        }
+    }
+}

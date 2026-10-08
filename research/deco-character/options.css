@@ -1,0 +1,2960 @@
+/* research/deco-character: every option of every question, in the theme's
+   signature layer, scoped by the option's attribute on its scene
+   (`.dc-scene[data-dc-<question>='<key>']`). Colours come from the theme's
+   tokens only (relative colours allowed, no hex); every motion sits under
+   prefers-reduced-motion: no-preference, and the reduced pose is the fan open.
+   Durations are multiplied by --dc-slow (1, 2 or 4: the page's speed
+   buttons). The values of the "today" options are the register's own
+   (css/deco-register.css) and the values of "the pick" options are the
+   decided demos' (themes/deco/CHARACTER.md §2). The grammar's tokens,
+   registered properties and the recommended keyframes are in grammar.css.
+
+   SCOPE. The review dialog moves the section out of the page into its stage
+   (.rv-dialog__stage), so nothing here hangs on `.dc-page` alone: every rule
+   hangs on `.dc-scene` (or `.dc-sec`), which move with their options.
+
+   THE CLOCK. One clock (demo.js) writes `data-dc-phase` on every scene that
+   moves: gap (the part is away), in (it opens), hold (it stands), out (its
+   opening played backwards). The base style of every part is its finished
+   pose (so reduced motion and hold show the fan open); `gap` sets the start
+   pose; `in` runs the opening and `out` its mirror. Every one-shot motion is
+   a pair of keyframes (`name` / `name-out`), the timing function written
+   literally inside the @keyframes, an eased open closing on the inverse curve
+   and `steps(n, jump-end)` on `steps(n, jump-start)`; `out` starts as late as
+   the opening ended (`--dc-T` minus the part's own delay and length), so what
+   opened last folds first. Each option names its keyframes in `--dc-kf-*`;
+   one animation rule at the end of the file plays them.
+
+   THE FAN. Every part that opens stands in `.dc-fx`, the wrapper the clock's
+   animation runs on (the part inside stays still). The wrapper carries the
+   fan's angle `--dc-a` (0 to 180deg, one 15deg cell per ray) and the plate's
+   `--dc-fill` (0 to 1); the part inside is masked into blades, one per ray,
+   and the gold rays are the wrapper's ::before, drawn over it. The origin
+   (`--dc-o`), the first cell (`--dc-s`) and the direction of the sweep
+   (`--dc-ccw`) are set per kind of part. */
+
+@layer kp.signature {
+    /* ── The scene ───────────────────────────────────────────────────── */
+
+    .dc-scene {
+        position: relative;
+        overflow: clip;
+        container-type: inline-size;
+        /* Nothing is translucent; the layout layer's busy dim stays off. */
+        --kp-busy-opacity: 1;
+        --dc-T: calc(var(--dc-fan) + var(--dc-plate) + var(--dc-grp, 0) * var(--dc-group));
+    }
+
+    .dc-scene .dc-title {
+        margin: 0;
+        font-family: var(--dc-title-font);
+        font-weight: 400;
+        letter-spacing: var(--dc-title-track);
+        text-transform: uppercase;
+    }
+
+    .dc-scene .kp-card {
+        position: relative;
+        display: grid;
+        gap: 0.25rem;
+        margin: 0;
+        padding: 0.85rem 1rem;
+    }
+
+    .dc-scene .kp-card__body {
+        margin: 0;
+    }
+
+    .dc-scene .kp-dialog {
+        position: relative;
+        margin: 0;
+        max-inline-size: none;
+        padding: 1rem;
+        animation: none;
+    }
+
+    .dc-scene .kp-dialog :is(.kp-dialog__title, .kp-dialog__description) {
+        margin: 0 0 0.5rem;
+    }
+
+    .dc-scene .kp-dialog__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    /* The register's crest is the dialog's ::before; here the crest is its own
+       element (it opens before the panel does), so the ::before steps aside. */
+    .dc-scene .dc-dialog::before {
+        content: none;
+    }
+
+    .dc-scene .dc-dialog {
+        padding-block-start: 3.1rem;
+    }
+
+    .dc-menu-wrap {
+        position: relative;
+        display: grid;
+        justify-items: start;
+        align-content: start;
+        min-block-size: 10.5rem;
+    }
+
+    .dc-scene .dc-fx--pop {
+        position: absolute;
+        inset-block-start: calc(var(--kp-control-height-sm, 2rem) + 0.35rem);
+        inset-inline-start: 0;
+        z-index: 2;
+        min-inline-size: 12rem;
+    }
+
+    .dc-scene .kp-popover {
+        position: relative;
+        inset: auto;
+        margin: 0;
+        padding: 0.25rem;
+    }
+
+    .dc-scene .kp-menu {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        list-style: none;
+    }
+
+    .dc-scene .kp-menu__item {
+        position: relative;
+        inline-size: 100%;
+        white-space: nowrap;
+    }
+
+    .dc-scene .kp-kpis {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.5rem;
+    }
+
+    .dc-scene .dc-kpi-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dc-scene .kp-kpi {
+        position: relative;
+    }
+
+    .dc-scene .kp-kpi__value {
+        font-weight: 600;
+    }
+
+    .dc-carrier {
+        position: relative;
+        display: inline-block;
+        isolation: isolate;
+    }
+
+    .dc-scene .kp-kpi__value.dc-carrier {
+        justify-self: start;
+    }
+
+    /* The change on a tag with lozenge ends only where the corners question
+       draws it; elsewhere it is the package's change with ↑ and ↓. */
+    .dc-scene .dc-note {
+        border-radius: 0;
+        padding-inline: 0.35em;
+    }
+
+    .dc-scene .dc-toast {
+        position: relative;
+        inline-size: fit-content;
+        max-inline-size: 100%;
+        margin: 0;
+        animation: none;
+    }
+
+    .dc-scene .dc-tip-wrap {
+        padding-block-start: 0.6rem;
+    }
+
+    .dc-scene .kp-tooltip {
+        position: relative;
+        inline-size: fit-content;
+        margin: 0.5rem 0 0;
+        animation: none;
+    }
+
+    /* A crest: twelve gold rays folded to a point at its foot, a dot on the
+       foot, a rule under it. `--dc-a` is how far it has opened. */
+    :is(.dc-crest, .dc-scene[data-dc-loading='fan'] .dc-wait) {
+        --dc-sweep: conic-gradient(from -90deg at 50% 100%, var(--foreground) 0 var(--dc-a), transparent var(--dc-a));
+        --dc-room: radial-gradient(ellipse 50% 100% at 50% 100%, var(--foreground) 0 99%, transparent 100%);
+        position: relative;
+        display: block;
+        inline-size: 7rem;
+        aspect-ratio: 3;
+        border-block-end: 1px solid var(--dc-gold);
+        background: radial-gradient(circle at 50% 100%, var(--dc-gold) 0 0.35rem, transparent 0.4rem), var(--dc-crest-rays);
+        mask-image: var(--dc-sweep), var(--dc-room);
+        mask-composite: intersect;
+    }
+
+    .dc-scene .dc-crest--dialog {
+        position: absolute;
+        inset-block-start: 0.75rem;
+        inset-inline: 0;
+        z-index: 3;
+        margin-inline: auto;
+        inline-size: 6.5rem;
+    }
+
+    .dc-fx {
+        position: relative;
+        display: block;
+        --dc-o: 50% 100%;
+        --dc-s: -90deg;
+        --dc-ccw: 0;
+    }
+
+    .dc-fx--dialog {
+        position: relative;
+    }
+
+    /* The fans of question 1 and the one of question 4. */
+    .dc-fans {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.25rem 1rem;
+    }
+
+    .dc-fans--one {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .dc-fans__ground {
+        display: grid;
+        place-items: end center;
+        block-size: 4.25rem;
+        overflow: clip;
+    }
+
+    .dc-fans__name {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        text-align: center;
+    }
+
+    .dc-fx--probe {
+        display: grid;
+        justify-items: center;
+    }
+
+    .dc-days {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .dc-fx--day {
+        display: block;
+    }
+
+    /* A day: a lacquer lozenge-cornered panel between double hairlines. */
+    .dc-day {
+        position: relative;
+        display: grid;
+        place-items: center;
+        inline-size: clamp(1.9rem, 11.5cqi, 2.6rem);
+        block-size: clamp(1.9rem, 11.5cqi, 2.6rem);
+        border: 3px double hsl(from var(--border-strong) h s l / 0.7);
+        background: var(--card);
+        color: var(--foreground);
+        font-family: var(--theme-font-display);
+        font-size: 0.95rem;
+        font-weight: 600;
+    }
+
+    .dc-state {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5em;
+        inline-size: fit-content;
+    }
+
+    .dc-state__dot {
+        inline-size: 0.6em;
+        block-size: 0.6em;
+        background: var(--dc-jewel);
+        clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+    }
+
+    .dc-state__word {
+        font-size: 0.95em;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    .dc-spark {
+        display: block;
+        color: var(--primary);
+    }
+
+    .dc-spark svg {
+        display: block;
+        inline-size: 100%;
+        block-size: 2.5rem;
+        overflow: visible;
+    }
+
+    .dc-carrier--line {
+        display: block;
+        margin-inline: 0.6rem;
+    }
+
+    .dc-column {
+        display: grid;
+        gap: 0.15rem;
+        inline-size: fit-content;
+        padding: 0.5rem 1rem;
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+    }
+
+    .dc-column__num {
+        font-size: 1.5rem;
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .dc-bars {
+        display: grid;
+        gap: 0.9rem;
+    }
+
+    .dc-bars--pair {
+        gap: 0.9rem;
+    }
+
+    .dc-scene .dc-bar {
+        max-inline-size: none;
+    }
+
+    .dc-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .dc-spins {
+        gap: 1.5rem;
+    }
+
+    .dc-busy-panel {
+        justify-items: center;
+        text-align: center;
+    }
+
+    .dc-busy-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        inline-size: fit-content;
+    }
+
+    .dc-scene .dc-busy-button .dc-bar {
+        inline-size: 4rem;
+    }
+
+    .dc-skel {
+        display: grid;
+        gap: 0.6rem;
+    }
+
+    .dc-faint {
+        opacity: 0.45;
+    }
+
+    .dc-waits {
+        position: relative;
+    }
+
+    .dc-wait {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+    }
+
+    .dc-panel {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.4rem;
+        padding: 0.5rem 0.75rem 0.9rem;
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+        font-size: 0.8rem;
+    }
+
+    .dc-panel > span:nth-child(-n + 2) {
+        color: var(--muted-foreground);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .dc-plot {
+        block-size: 5rem;
+        border: 1px solid var(--border-strong);
+        background: repeating-linear-gradient(to bottom, transparent 0 19px, hsl(from var(--primary) h s l / 0.2) 19px 20px), var(--card);
+    }
+
+    .dc-colours {
+        display: grid;
+        gap: 0.75rem;
+    }
+
+    .dc-header-mini {
+        padding: 0.6rem;
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+    }
+
+    .dc-scene .dc-header .kp-page-header__inner {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+    }
+
+    .dc-scene .dc-header :is(.kp-page-header__title, .kp-page-header__description) {
+        margin: 0;
+    }
+
+    .dc-scene .dc-header .kp-page-header__description {
+        color: var(--muted-foreground);
+    }
+
+    .dc-scene .dc-header .kp-page-header__actions {
+        display: flex;
+        flex-flow: row nowrap;
+        gap: 0.5rem;
+    }
+
+    .dc-scene .dc-header .kp-page-header__actions > .kp-button {
+        flex: none;
+        inline-size: auto;
+    }
+
+    .dc-scene .dc-in-kpi,
+    .dc-scene .kp-kpi--toggle {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .dc-scene .dc-tile-link {
+        justify-self: start;
+    }
+
+    .dc-scene .dc-tag {
+        inline-size: fit-content;
+    }
+
+    .dc-prose {
+        margin: 0;
+    }
+
+    .dc-duo {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.75rem 1.25rem;
+    }
+
+    .dc-duo__one {
+        display: grid;
+        min-inline-size: 0;
+    }
+
+    .dc-duo .kp-kpis {
+        inline-size: 9.5rem;
+    }
+
+    .dc-surface-head {
+        display: grid;
+        justify-items: center;
+        gap: 0.4rem;
+        padding: 0.9rem 0.75rem;
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+        text-align: center;
+    }
+
+    .dc-surface-head .dc-cap {
+        margin: 0;
+    }
+
+    .dc-surface-head__title {
+        font-size: 1.15rem;
+    }
+
+    .dc-state-plate {
+        padding: 0.5rem 0.75rem;
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+    }
+
+    .dc-menu-head {
+        padding: 0.35rem 0.625rem 0.15rem;
+        color: var(--primary);
+        font-family: var(--dc-title-font);
+        font-size: 0.8rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+    }
+
+    /* The type sample. */
+    .dc-type {
+        gap: 0.4rem;
+    }
+
+    .dc-type :is(p, table) {
+        margin: 0;
+    }
+
+    .dc-type__label {
+        color: var(--muted-foreground);
+        font-size: 0.8rem;
+    }
+
+    .dc-type__head {
+        font-size: 1.15rem;
+    }
+
+    .dc-type__figure {
+        display: flex;
+        align-items: baseline;
+        gap: 0.5rem;
+        font-size: 1.75rem;
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .dc-type__figure small {
+        font-size: 0.9rem;
+        font-weight: 400;
+    }
+
+    .dc-type__figure .dc-note {
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .dc-type__table {
+        border-collapse: collapse;
+        font-size: 0.85rem;
+    }
+
+    .dc-type__table :is(th, td) {
+        padding: 0.15rem 1rem 0.15rem 0;
+        text-align: start;
+    }
+
+    .dc-type__table th {
+        color: var(--muted-foreground);
+        font-weight: 500;
+    }
+
+    .dc-type__ticks {
+        display: flex;
+        justify-content: space-between;
+        max-inline-size: 16rem;
+        border-block-start: 1px solid var(--border-strong);
+        color: var(--muted-foreground);
+        font-size: 0.75rem;
+    }
+
+    /* The motifs sample. */
+    .dc-events {
+        position: relative;
+        color: var(--primary);
+    }
+
+    .dc-events svg {
+        display: block;
+        inline-size: 100%;
+        block-size: 3rem;
+    }
+
+    .dc-events__mark {
+        position: absolute;
+        inset-block-start: 0.35rem;
+        inset-inline-start: calc(var(--x) - 0.35rem);
+        inline-size: 0.7rem;
+        block-size: 0.7rem;
+        background: var(--accent);
+        box-shadow:
+            0 0 0 1px var(--background),
+            0 0 0 2px var(--primary);
+        clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+    }
+
+    .dc-motif-list {
+        margin: 0.5rem 0 0;
+        padding-inline-start: 1.25rem;
+    }
+
+    .dc-scene .dc-motif-empty {
+        padding: 1rem 0.75rem;
+    }
+
+    .dc-scene .dc-divider {
+        inline-size: 100%;
+        margin-inline: 0;
+        margin-block: 0.5rem;
+    }
+
+    /* ── The fan: every part that opens ─────────────────────────────────
+       The origins: a tile and a day from their base (an upward fan, swept
+       from the left); a menu and a tooltip from their anchor above them (a
+       downward fan, swept from the left); a toast from its mark (a fan to
+       the right, swept from the top); the dialog and the pleated plates
+       have their own masks below. */
+
+    .dc-scene .dc-fx--pop {
+        --dc-o: 2.5rem -0.5rem;
+        --dc-s: 90deg;
+        --dc-ccw: 1;
+    }
+
+    .dc-scene .dc-fx--tip {
+        display: inline-block;
+        --dc-o: 1.3rem -0.4rem;
+        --dc-s: 90deg;
+        --dc-ccw: 1;
+    }
+
+    .dc-scene .dc-fx--toast {
+        display: inline-block;
+        max-inline-size: 100%;
+        --dc-o: 0.8rem 50%;
+        --dc-s: 0deg;
+        --dc-ccw: 0;
+    }
+
+    .dc-scene .dc-fx--day {
+        --dc-rib: 8deg;
+    }
+
+    .dc-scene .dc-fx:is(.dc-fx--tile, .dc-fx--pop, .dc-fx--toast, .dc-fx--tip) {
+        --dc-rib: 3deg;
+    }
+
+    /* The blades: the part is masked into one blade per ray, each as wide as
+       the plate has followed (--dc-fill of the 15deg cell, a little more at
+       full so two blades never leave a seam), and only as many rays as the
+       fan has opened (--dc-a). The rays: the wrapper's ::before. Both exist
+       only while the fan is moving; at hold the part stands unmasked. */
+    @media (prefers-reduced-motion: no-preference) {
+        .dc-scene:is([data-dc-curve], [data-dc-direction='point'], [data-dc-opening='fan'], [data-dc-durations]):not([data-dc-phase='hold'])
+            .dc-fx:is(.dc-fx--tile, .dc-fx--pop, .dc-fx--toast, .dc-fx--tip, .dc-fx--day)
+            > * {
+            mask-image:
+                repeating-conic-gradient(
+                    from calc(var(--dc-s) + 7.5deg - var(--dc-fill) * 7.65deg) at var(--dc-o),
+                    var(--foreground) 0 calc(var(--dc-fill) * 15.3deg),
+                    transparent calc(var(--dc-fill) * 15.3deg) 15deg
+                ),
+                conic-gradient(
+                    from calc(var(--dc-s) + var(--dc-ccw) * (180deg - var(--dc-a))) at var(--dc-o),
+                    var(--foreground) 0 var(--dc-a),
+                    transparent var(--dc-a)
+                );
+            mask-composite: intersect;
+        }
+
+        .dc-scene:is([data-dc-curve], [data-dc-direction='point'], [data-dc-opening='fan'], [data-dc-durations]):not([data-dc-phase='hold'])
+            .dc-fx:is(.dc-fx--tile, .dc-fx--pop, .dc-fx--toast, .dc-fx--tip, .dc-fx--day)::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+            background: repeating-conic-gradient(
+                from calc(var(--dc-s) + 7.5deg - (1 - var(--dc-fill)) * var(--dc-rib) / 2) at var(--dc-o),
+                var(--dc-gold) 0 calc((1 - var(--dc-fill)) * var(--dc-rib)),
+                transparent calc((1 - var(--dc-fill)) * var(--dc-rib)) 15deg
+            );
+            mask-image: conic-gradient(
+                from calc(var(--dc-s) + var(--dc-ccw) * (180deg - var(--dc-a))) at var(--dc-o),
+                var(--foreground) 0 var(--dc-a),
+                transparent var(--dc-a)
+            );
+        }
+
+        /* The dialog: its crest opens first (its own rays, --dc-a), the panel
+           follows in four pleats from its centre out (--dc-fill). */
+        .dc-scene:is([data-dc-curve], [data-dc-opening='fan'], [data-dc-durations]):not([data-dc-phase='hold']) .dc-fx--dialog > .dc-dialog {
+            mask-image: linear-gradient(
+                90deg,
+                transparent calc(50% - var(--dc-fill) * 50%),
+                var(--foreground) calc(50% - var(--dc-fill) * 50%) calc(50% + var(--dc-fill) * 50%),
+                transparent calc(50% + var(--dc-fill) * 50%)
+            );
+        }
+    }
+
+    /* ── 1 The motion curve ──────────────────────────────────────────────
+       Every part fans open from its own base for the same 480 ms, its rays
+       first and the plate behind them 160 ms after; only the curve differs.
+       The grammar's keyframes are in grammar.css (dcg-fan, dcg-plate); the
+       sweep and the register's curve are written here. */
+
+    .dc-scene[data-dc-curve='counted'] {
+        --dc-kf-fan: dcg-fan;
+        --dc-kf-fan-out: dcg-fan-out;
+        --dc-kf-plate: dcg-plate;
+        --dc-kf-plate-out: dcg-plate-out;
+    }
+
+    .dc-scene[data-dc-curve='sweep'] {
+        --dc-kf-fan: dc-sweep;
+        --dc-kf-fan-out: dc-sweep-out;
+        --dc-kf-plate: dc-sweep-plate;
+        --dc-kf-plate-out: dc-sweep-plate-out;
+    }
+
+    .dc-scene[data-dc-curve='register'] {
+        --dc-kf-fan: dc-ease;
+        --dc-kf-fan-out: dc-ease-out;
+        --dc-kf-plate: dc-ease-plate;
+        --dc-kf-plate-out: dc-ease-plate-out;
+    }
+
+    /* The reference beside the probe: an even sweep, whatever the option. */
+    .dc-scene[data-dc-curve] .dc-fx--ref {
+        --dc-kf-fan: dc-sweep;
+        --dc-kf-fan-out: dc-sweep-out;
+        --dc-kf-plate: none;
+        --dc-kf-plate-out: none;
+        opacity: 1;
+    }
+
+    @keyframes dc-sweep {
+        from {
+            --dc-a: 0deg;
+            animation-timing-function: linear;
+        }
+        to {
+            --dc-a: 180deg;
+        }
+    }
+
+    @keyframes dc-sweep-out {
+        from {
+            --dc-a: 180deg;
+            animation-timing-function: linear;
+        }
+        to {
+            --dc-a: 0deg;
+        }
+    }
+
+    @keyframes dc-sweep-plate {
+        from {
+            --dc-fill: 0;
+            animation-timing-function: linear;
+        }
+        to {
+            --dc-fill: 1;
+        }
+    }
+
+    @keyframes dc-sweep-plate-out {
+        from {
+            --dc-fill: 1;
+            animation-timing-function: linear;
+        }
+        to {
+            --dc-fill: 0;
+        }
+    }
+
+    /* The register's curve (today): the Material curve, and the fan fades in
+       on it. */
+    @keyframes dc-ease {
+        from {
+            --dc-a: 0deg;
+            opacity: 0;
+            animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        to {
+            --dc-a: 180deg;
+            opacity: 1;
+        }
+    }
+
+    @keyframes dc-ease-out {
+        from {
+            --dc-a: 180deg;
+            opacity: 1;
+            animation-timing-function: cubic-bezier(0.8, 0, 0.6, 1);
+        }
+        to {
+            --dc-a: 0deg;
+            opacity: 0;
+        }
+    }
+
+    @keyframes dc-ease-plate {
+        from {
+            --dc-fill: 0;
+            animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        to {
+            --dc-fill: 1;
+        }
+    }
+
+    @keyframes dc-ease-plate-out {
+        from {
+            --dc-fill: 1;
+            animation-timing-function: cubic-bezier(0.8, 0, 0.6, 1);
+        }
+        to {
+            --dc-fill: 0;
+        }
+    }
+
+    /* ── 2 The direction ─────────────────────────────────────────────────
+       Point: each day fans open from its base, the group from its centre out
+       (the middle first, then one on each side, 80 ms apart), the tile from its
+       base, the line lit from its start in twelve counted steps.
+       Rise: everything rises from its foot into place, slowing as it lands.
+       Feed: everything is revealed from its start edge to its end. The
+       reading order of the days is --dc-k. */
+
+    .dc-days > :nth-child(1) {
+        --dc-k: 0;
+    }
+    .dc-days > :nth-child(2) {
+        --dc-k: 1;
+    }
+    .dc-days > :nth-child(3) {
+        --dc-k: 2;
+    }
+    .dc-days > :nth-child(4) {
+        --dc-k: 3;
+    }
+    .dc-days > :nth-child(5) {
+        --dc-k: 4;
+    }
+    .dc-days > :nth-child(6) {
+        --dc-k: 5;
+    }
+    .dc-days > :nth-child(7) {
+        --dc-k: 6;
+    }
+
+    .dc-scene[data-dc-direction='point'] {
+        --dc-kf-fan: dcg-fan;
+        --dc-kf-fan-out: dcg-fan-out;
+        --dc-kf-plate: dcg-plate;
+        --dc-kf-plate-out: dcg-plate-out;
+        --dc-grp: 3;
+    }
+
+    .dc-scene[data-dc-direction='point'] .dc-fx--day {
+        --dc-d: calc(var(--i, 0) * var(--dc-group));
+    }
+
+    .dc-scene[data-dc-direction='point'] .dc-fx--line {
+        --dc-kf-fan: dcg-line;
+        --dc-kf-fan-out: dcg-line-out;
+        --dc-kf-plate: none;
+        --dc-kf-plate-out: none;
+        clip-path: inset(-1rem calc((1 - var(--dc-p)) * 100%) -1rem -1rem);
+    }
+
+    .dc-scene[data-dc-direction='rise'] {
+        --dc-kf-fan: dc-rise;
+        --dc-kf-fan-out: dc-rise-out;
+        --dc-kf-plate: none;
+        --dc-kf-plate-out: none;
+        --dc-fan: 640ms;
+        --dc-plate: 0ms;
+        --dc-grp: 6;
+    }
+
+    .dc-scene[data-dc-direction='feed'] {
+        --dc-kf-fan: dc-feed;
+        --dc-kf-fan-out: dc-feed-out;
+        --dc-kf-plate: none;
+        --dc-kf-plate-out: none;
+        --dc-fan: 640ms;
+        --dc-plate: 0ms;
+        --dc-grp: 6;
+    }
+
+    .dc-scene:is([data-dc-direction='rise'], [data-dc-direction='feed']) .dc-fx--day {
+        --dc-d: calc(var(--dc-k, 0) * var(--dc-group));
+    }
+
+    @keyframes dc-rise {
+        from {
+            translate: 0 100%;
+            clip-path: inset(0 -1rem 100% -1rem);
+            animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        to {
+            translate: 0 0;
+            clip-path: inset(-1rem);
+        }
+    }
+
+    @keyframes dc-rise-out {
+        from {
+            translate: 0 0;
+            clip-path: inset(-1rem);
+            animation-timing-function: cubic-bezier(0.8, 0, 0.8, 0.2);
+        }
+        to {
+            translate: 0 100%;
+            clip-path: inset(0 -1rem 100% -1rem);
+        }
+    }
+
+    @keyframes dc-feed {
+        from {
+            clip-path: inset(-1rem 100% -1rem -1rem);
+            animation-timing-function: linear;
+        }
+        to {
+            clip-path: inset(-1rem);
+        }
+    }
+
+    @keyframes dc-feed-out {
+        from {
+            clip-path: inset(-1rem);
+            animation-timing-function: linear;
+        }
+        to {
+            clip-path: inset(-1rem 100% -1rem -1rem);
+        }
+    }
+
+    /* ── 3 Opening what drops from a button ──────────────────────────────
+       Fans: the menu from its button's base point, rays first, then the
+       plate behind them; the dialog from the base of its crest, the crest
+       first, then the panel; the tooltip from its notch; the toast from its
+       mark. Curtain: a pleated lacquer curtain lifts off the panel from its
+       hem. Today: the dialog's smooth sunrise, the toast's and the tooltip's
+       centre-line clip, the menu at once. */
+
+    .dc-scene[data-dc-opening='fan'] {
+        --dc-kf-fan: dcg-fan;
+        --dc-kf-fan-out: dcg-fan-out;
+        --dc-kf-plate: dcg-plate;
+        --dc-kf-plate-out: dcg-plate-out;
+    }
+
+    .dc-scene[data-dc-opening='curtain'] {
+        --dc-kf-fan: dc-lift;
+        --dc-kf-fan-out: dc-lift-out;
+        --dc-kf-plate: none;
+        --dc-kf-plate-out: none;
+        --dc-fan: 640ms;
+        --dc-plate: 0ms;
+    }
+
+    .dc-scene[data-dc-opening='curtain'] .dc-fx::before {
+        content: '';
+        position: absolute;
+        inset: 0 0 auto 0;
+        z-index: 4;
+        block-size: calc((1 - var(--dc-p)) * 100%);
+        overflow: clip;
+        pointer-events: none;
+        background: repeating-linear-gradient(90deg, hsl(from var(--primary) h s l / 0.35) 0 1px, transparent 1px 0.9rem), var(--popover);
+        box-shadow:
+            inset 0 -1px 0 var(--primary),
+            inset 0 -4px 0 var(--popover),
+            inset 0 -5px 0 var(--primary);
+    }
+
+    @keyframes dc-lift {
+        from {
+            --dc-p: 0;
+            animation-timing-function: cubic-bezier(0.6, 0, 0.2, 1);
+        }
+        to {
+            --dc-p: 1;
+        }
+    }
+
+    @keyframes dc-lift-out {
+        from {
+            --dc-p: 1;
+            animation-timing-function: cubic-bezier(0.8, 0, 0.4, 1);
+        }
+        to {
+            --dc-p: 0;
+        }
+    }
+
+    .dc-scene[data-dc-opening='mix'] {
+        --dc-T: 1120ms;
+    }
+
+    .dc-scene[data-dc-opening='mix'] .dc-dialog::before {
+        content: none;
+    }
+
+    @keyframes dc-centre {
+        from {
+            clip-path: inset(-12px 50%);
+            animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        to {
+            clip-path: inset(-12px 0);
+        }
+    }
+
+    @keyframes dc-centre-out {
+        from {
+            clip-path: inset(-12px 0);
+            animation-timing-function: cubic-bezier(0.8, 0, 0.6, 1);
+        }
+        to {
+            clip-path: inset(-12px 50%);
+        }
+    }
+
+    /* The register's sunrise: the panel unfolds down from its top edge and
+       fades in (opaque by 40 %); the crest opens from 35 %. */
+    @keyframes dc-sunrise {
+        from {
+            opacity: 0;
+            transform: scaleY(0.82);
+            animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        40% {
+            opacity: 1;
+            animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        to {
+            transform: none;
+        }
+    }
+
+    @keyframes dc-sunrise-out {
+        from {
+            transform: none;
+            animation-timing-function: cubic-bezier(0.8, 0, 0.6, 1);
+        }
+        60% {
+            opacity: 1;
+            animation-timing-function: cubic-bezier(0.8, 0, 0.6, 1);
+        }
+        to {
+            opacity: 0;
+            transform: scaleY(0.82);
+        }
+    }
+
+    @keyframes dc-crest-sun {
+        from,
+        35% {
+            opacity: 0;
+            transform: scale(0.15, 0.4);
+            animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        to {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    @keyframes dc-crest-sun-out {
+        from {
+            opacity: 1;
+            transform: none;
+            animation-timing-function: cubic-bezier(0.8, 0, 0.6, 1);
+        }
+        65%,
+        to {
+            opacity: 0;
+            transform: scale(0.15, 0.4);
+        }
+    }
+
+    /* ── 4 How long things take ──────────────────────────────────────────
+       One picture, only the times differ: a contact, a fan of twelve rays,
+       the plate behind it, a group from its centre, a loop. */
+
+    .dc-scene[data-dc-durations] {
+        --dc-kf-fan: dcg-fan;
+        --dc-kf-fan-out: dcg-fan-out;
+        --dc-kf-plate: dcg-plate;
+        --dc-kf-plate-out: dcg-plate-out;
+        --dc-grp: 2;
+    }
+
+    .dc-scene[data-dc-durations] .dc-fx--day {
+        --dc-d: calc(var(--i, 0) * var(--dc-group));
+    }
+
+    .dc-scene[data-dc-durations='fan'] {
+        --dc-contact: 160ms;
+        --dc-fan: 480ms;
+        --dc-plate: 160ms;
+        --dc-group: 80ms;
+        --dc-loop: 2400ms;
+    }
+
+    .dc-scene[data-dc-durations='brisk'] {
+        --dc-contact: 120ms;
+        --dc-fan: 320ms;
+        --dc-plate: 100ms;
+        --dc-group: 50ms;
+        --dc-loop: 1600ms;
+    }
+
+    .dc-scene[data-dc-durations='grand'] {
+        --dc-contact: 200ms;
+        --dc-fan: 720ms;
+        --dc-plate: 240ms;
+        --dc-group: 120ms;
+        --dc-loop: 3600ms;
+    }
+
+    /* The probe's plate is not drawn (a crest has none). */
+    .dc-readout {
+        margin: 0;
+        font-family: var(--theme-font-mono);
+        font-size: 0.8rem;
+    }
+
+    /* ── The clock: one rule for every scene it plays ────────────────────
+       `gap` is the start pose; `in` plays the options' keyframes (the fan,
+       then the plate behind it); `hold` is the finished pose; `out` plays the
+       mirror pair, as late as the opening ended, so what opened last folds
+       first. The keyframes themselves are named by `--dc-kf-*`. */
+    @media (prefers-reduced-motion: no-preference) {
+        .dc-scene[data-dc-phase='gap'] .dc-fx {
+            --dc-a: 0deg;
+            --dc-fill: 0;
+            --dc-p: 0;
+        }
+
+        .dc-scene:is(
+                [data-dc-direction='rise'],
+                [data-dc-direction='feed'],
+                [data-dc-opening='mix'],
+                [data-dc-leave='flat'],
+                [data-dc-leave='curtain']
+            )[data-dc-phase='gap']
+            .dc-fx:not(.dc-fx--dialog),
+        .dc-scene[data-dc-curve='register'][data-dc-phase='gap'] .dc-fx {
+            visibility: hidden;
+        }
+
+        .dc-scene[data-dc-curve='register'][data-dc-phase='gap'] .dc-fx {
+            opacity: 0;
+            visibility: visible;
+        }
+
+        .dc-scene[data-dc-phase='in'] .dc-fx {
+            animation:
+                var(--dc-kf-fan, none) calc(var(--dc-fan) * var(--dc-slow, 1)) linear calc(var(--dc-d, 0ms) * var(--dc-slow, 1)) both,
+                var(--dc-kf-plate, none) calc(var(--dc-plate) * var(--dc-slow, 1)) linear calc((var(--dc-d, 0ms) + var(--dc-fan)) * var(--dc-slow, 1))
+                    both;
+        }
+
+        .dc-scene[data-dc-phase='out'] .dc-fx {
+            animation:
+                var(--dc-kf-fan-out, none) calc(var(--dc-fan) * var(--dc-slow, 1)) linear
+                    calc((var(--dc-T) - var(--dc-d, 0ms) - var(--dc-fan)) * var(--dc-slow, 1)) both,
+                var(--dc-kf-plate-out, none) calc(var(--dc-plate) * var(--dc-slow, 1)) linear
+                    calc((var(--dc-T) - var(--dc-d, 0ms) - var(--dc-fan) - var(--dc-plate)) * var(--dc-slow, 1)) both;
+        }
+
+        /* Today's opening: the dialog's own sunrise and crest, the toast and
+           the tooltip's centre-line clip, the menu at once. */
+        .dc-scene[data-dc-opening='mix'][data-dc-phase='gap'] .dc-fx--dialog > .dc-dialog,
+        .dc-scene[data-dc-opening='mix'][data-dc-phase='gap'] .dc-fx--dialog > .dc-crest {
+            opacity: 0;
+        }
+
+        .dc-scene[data-dc-opening='mix'] .dc-fx--dialog > .dc-dialog {
+            transform-origin: 50% 0;
+        }
+
+        .dc-scene[data-dc-opening='mix'] .dc-fx--dialog > .dc-crest {
+            transform-origin: 50% 100%;
+        }
+
+        .dc-scene[data-dc-opening='mix'][data-dc-phase='in'] .dc-fx--dialog > .dc-dialog {
+            animation: dc-sunrise calc(1120ms * var(--dc-slow, 1)) linear both;
+        }
+
+        .dc-scene[data-dc-opening='mix'][data-dc-phase='in'] .dc-fx--dialog > .dc-crest {
+            animation: dc-crest-sun calc(1120ms * var(--dc-slow, 1)) linear both;
+        }
+
+        .dc-scene[data-dc-opening='mix'][data-dc-phase='out'] .dc-fx--dialog > .dc-dialog {
+            animation: dc-sunrise-out calc(1120ms * var(--dc-slow, 1)) linear both;
+        }
+
+        .dc-scene[data-dc-opening='mix'][data-dc-phase='out'] .dc-fx--dialog > .dc-crest {
+            animation: dc-crest-sun-out calc(1120ms * var(--dc-slow, 1)) linear both;
+        }
+
+        .dc-scene[data-dc-opening='mix'] .dc-fx--toast {
+            --dc-kf-fan: dc-centre;
+            --dc-kf-fan-out: dc-centre-out;
+            --dc-kf-plate: none;
+            --dc-kf-plate-out: none;
+            --dc-fan: 520ms;
+            --dc-plate: 0ms;
+        }
+
+        .dc-scene[data-dc-opening='mix'] .dc-fx--tip {
+            --dc-kf-fan: dc-centre;
+            --dc-kf-fan-out: dc-centre-out;
+            --dc-kf-plate: none;
+            --dc-kf-plate-out: none;
+            --dc-fan: 340ms;
+            --dc-plate: 0ms;
+        }
+
+        /* A contact (question 4's press): pressed, held, let go, centred in
+           the opening's time, so the pulse is the same going and coming. */
+        .dc-scene[data-dc-durations][data-dc-phase='in'] .dc-tap {
+            animation: dc-tap calc(var(--dc-contact) * 4 * var(--dc-slow, 1)) linear
+                calc((var(--dc-T) - var(--dc-contact) * 4) / 2 * var(--dc-slow, 1)) both;
+        }
+
+        .dc-scene[data-dc-durations][data-dc-phase='out'] .dc-tap {
+            animation: dc-tap-out calc(var(--dc-contact) * 4 * var(--dc-slow, 1)) linear
+                calc((var(--dc-T) - var(--dc-contact) * 4) / 2 * var(--dc-slow, 1)) both;
+        }
+    }
+
+    @keyframes dc-tap {
+        0% {
+            background-color: transparent;
+            border-color: var(--border-strong);
+            color: var(--foreground);
+        }
+        25%,
+        75% {
+            background-color: var(--secondary-active);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        100% {
+            background-color: transparent;
+            border-color: var(--border-strong);
+            color: var(--foreground);
+        }
+    }
+
+    @keyframes dc-tap-out {
+        0% {
+            background-color: transparent;
+            border-color: var(--border-strong);
+            color: var(--foreground);
+        }
+        25%,
+        75% {
+            background-color: var(--secondary-active);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        100% {
+            background-color: transparent;
+            border-color: var(--border-strong);
+            color: var(--foreground);
+        }
+    }
+
+    /* Today's menu appears at once: away at gap. */
+    @media (prefers-reduced-motion: no-preference) {
+        .dc-scene[data-dc-opening='mix'][data-dc-phase='gap'] .dc-fx--pop {
+            visibility: hidden;
+        }
+    }
+
+    /* ── 5 Where the colour goes ─────────────────────────────────────────
+       Flat: gold acts (every rule, ray, act and pick), emerald marks what
+       is current or done (the head, the picked day, the switch on), ruby
+       warns on a plate, ivory reads; no gradient, no glow. Glint (the
+       picks): a bright glint runs along the gold rules and the lit bulbs
+       glow. Ivory: gold and ivory only, no jewels. */
+
+    .dc-scene[data-dc-colour] .dc-days--today .dc-day {
+        border: 3px double hsl(from var(--border-strong) h s l / 0.7);
+    }
+
+    .dc-scene[data-dc-colour='flat'] .dc-picked {
+        border-color: var(--primary);
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+
+    .dc-scene[data-dc-colour='flat'] .dc-today {
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+
+    .dc-scene[data-dc-colour='flat'] .kp-switch__input:checked {
+        border-color: var(--primary);
+        background: var(--accent);
+    }
+
+    .dc-scene[data-dc-colour='flat'] .kp-switch__input:checked::before {
+        background: var(--primary);
+    }
+
+    .dc-scene[data-dc-colour='ivory'] .dc-picked {
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+
+    .dc-scene[data-dc-colour='ivory'] .dc-today {
+        border-style: solid;
+        border-color: var(--foreground);
+        color: var(--foreground);
+    }
+
+    .dc-scene[data-dc-colour='ivory'] .kp-progressbar__head::before {
+        background: var(--primary);
+    }
+
+    .dc-scene[data-dc-colour='ivory'] .kp-kpi__delta[data-kp-tone] {
+        background: transparent;
+        color: var(--foreground);
+        box-shadow: inset 0 -2px 0 var(--foreground);
+    }
+
+    .dc-scene[data-dc-colour='ivory'] .kp-alert--destructive {
+        border: 4px double var(--foreground);
+        background: var(--card);
+        color: var(--foreground);
+    }
+
+    .dc-scene[data-dc-colour='ivory'] .dc-kpi--fail {
+        border-color: var(--foreground);
+        box-shadow: inset 4px 0 0 var(--foreground);
+    }
+
+    .dc-scene[data-dc-colour='ivory'] .dc-kpi--fail .kp-kpi__value {
+        background: transparent;
+        color: var(--foreground);
+    }
+
+    .dc-scene[data-dc-colour='flat'] .kp-alert--destructive {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    /* The glint: a bright run along the gold rules, and bulbs that glow. */
+    .dc-scene[data-dc-colour='glint'] .dc-divider,
+    .dc-scene[data-dc-colour='glint'] .dc-tile {
+        position: relative;
+    }
+
+    .dc-scene[data-dc-colour='glint'] .dc-divider::after,
+    .dc-scene[data-dc-colour='glint'] .dc-tile::before {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: calc(50% - 1px);
+        block-size: 2px;
+        background: linear-gradient(90deg, transparent, hsl(from var(--primary) h s 88%), transparent) -40% 0 / 35% 100% no-repeat;
+        pointer-events: none;
+    }
+
+    .dc-scene[data-dc-colour='glint'] .dc-tile::before {
+        inset-block-start: -1px;
+    }
+
+    .dc-scene[data-dc-colour='glint'] .dc-tile::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0.5rem;
+        inset-block-end: 0.3rem;
+        block-size: 8px;
+        background: radial-gradient(circle, var(--primary) 0 2.2px, transparent 3px) 0 50% / 14px 100% repeat-x;
+        filter: drop-shadow(0 0 3px var(--primary));
+        pointer-events: none;
+    }
+
+    .dc-scene[data-dc-colour='glint'] .kp-progressbar__fill {
+        background-image: linear-gradient(90deg, transparent, hsl(from var(--primary) h s 90% / 0.9), transparent);
+        background-size: 30% 100%;
+        background-repeat: no-repeat;
+        background-position: -40% 0;
+    }
+
+    /* ── 6 The corners ───────────────────────────────────────────────────
+       Cut: plates have radius 0 and one corner bitten as a chevron, small
+       parts end in a lozenge point. Stepped: every plate's corners in three
+       setbacks. Square: radius 0, no bite, no point. */
+
+    .dc-scene[data-dc-corners='cut'] :is(.kp-card, .kp-popover, .kp-kpi) {
+        clip-path: var(--dc-bite-poly);
+        background-image: linear-gradient(
+            225deg,
+            var(--primary) 0 calc(var(--dc-bite) * 0.7071 + 1px),
+            transparent calc(var(--dc-bite) * 0.7071 + 1px)
+        );
+        background-size: var(--dc-bite) var(--dc-bite);
+        background-position: right top;
+        background-repeat: no-repeat;
+    }
+
+    .dc-scene[data-dc-corners='cut'] :is(.dc-tag, .dc-chip, .dc-note, .dc-tip) {
+        padding-inline: 0.95em;
+        border: 0;
+        border-block: 1px solid var(--primary);
+        background-color: hsl(from var(--primary) h s l / 0.18);
+        clip-path: var(--dc-lozenge-poly);
+    }
+
+    .dc-scene[data-dc-corners='cut'] .dc-note {
+        border-block-color: transparent;
+        background-color: var(--success);
+    }
+
+    .dc-scene[data-dc-corners='cut'] .dc-tip {
+        background-color: var(--popover);
+        clip-path: polygon(
+            0.5em 0,
+            calc(0.9rem - 1px) 0,
+            calc(0.9rem - 1px) -7px,
+            calc(0.9rem + 15px) -7px,
+            calc(0.9rem + 15px) 0,
+            calc(100% - 0.5em) 0,
+            100% 50%,
+            calc(100% - 0.5em) 100%,
+            0.5em 100%,
+            0 50%
+        );
+        box-shadow: none;
+    }
+
+    .dc-scene[data-dc-corners='stepped'] :is(.kp-card, .kp-popover, .kp-kpi, .dc-tip, .dc-tag, .dc-chip) {
+        clip-path: polygon(
+            0 12px,
+            4px 12px,
+            4px 8px,
+            8px 8px,
+            8px 4px,
+            12px 4px,
+            12px 0,
+            calc(100% - 12px) 0,
+            calc(100% - 12px) 4px,
+            calc(100% - 8px) 4px,
+            calc(100% - 8px) 8px,
+            calc(100% - 4px) 8px,
+            calc(100% - 4px) 12px,
+            100% 12px,
+            100% calc(100% - 12px),
+            calc(100% - 4px) calc(100% - 12px),
+            calc(100% - 4px) calc(100% - 8px),
+            calc(100% - 8px) calc(100% - 8px),
+            calc(100% - 8px) calc(100% - 4px),
+            calc(100% - 12px) calc(100% - 4px),
+            calc(100% - 12px) 100%,
+            12px 100%,
+            12px calc(100% - 4px),
+            8px calc(100% - 4px),
+            8px calc(100% - 8px),
+            4px calc(100% - 8px),
+            4px calc(100% - 12px),
+            0 calc(100% - 12px)
+        );
+    }
+
+    .dc-scene[data-dc-corners='stepped'] :is(.dc-tip, .dc-tag, .dc-chip) {
+        clip-path: polygon(
+            0 6px,
+            3px 6px,
+            3px 3px,
+            6px 3px,
+            6px 0,
+            calc(100% - 6px) 0,
+            calc(100% - 6px) 3px,
+            calc(100% - 3px) 3px,
+            calc(100% - 3px) 6px,
+            100% 6px,
+            100% calc(100% - 6px),
+            calc(100% - 3px) calc(100% - 6px),
+            calc(100% - 3px) calc(100% - 3px),
+            calc(100% - 6px) calc(100% - 3px),
+            calc(100% - 6px) 100%,
+            6px 100%,
+            6px calc(100% - 3px),
+            3px calc(100% - 3px),
+            3px calc(100% - 6px),
+            0 calc(100% - 6px)
+        );
+    }
+
+    .dc-scene[data-dc-corners='stepped'] .kp-progressbar__head::before {
+        clip-path: polygon(0 25%, 25% 25%, 25% 0, 75% 0, 75% 25%, 100% 25%, 100% 75%, 75% 75%, 75% 100%, 25% 100%, 25% 75%, 0 75%);
+        transform: translateY(-50%);
+    }
+
+    .dc-scene[data-dc-corners='square'] .kp-progressbar__head::before {
+        transform: translateY(-50%);
+    }
+
+    /* ── 7 The surface ───────────────────────────────────────────────────
+       Lacquer: the lattice felt on the ground, the double rule on what
+       matters (the header), one crest on its title; a card, a tile, a menu
+       a hairline. Sunburst (the picks): a faint sunburst behind every
+       figure. Setbacks (the picks): fine gold setback lines behind the
+       plates. */
+
+    .dc-scene[data-dc-surface='lacquer'] {
+        background-image:
+            repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / 0.05) 0 1px, transparent 1px 12px),
+            repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / 0.05) 0 1px, transparent 1px 12px);
+    }
+
+    .dc-scene[data-dc-surface='lacquer'] .dc-surface-head {
+        border: 3px double var(--primary);
+    }
+
+    .dc-scene[data-dc-surface='lacquer'] .dc-crest--head {
+        inline-size: 4rem;
+    }
+
+    .dc-scene[data-dc-surface]:not([data-dc-surface='lacquer']) .dc-crest--head {
+        display: none;
+    }
+
+    .dc-scene[data-dc-surface='sunburst'] :is(.dc-surface-head, .kp-kpi, .dc-menu-head, .dc-state-plate),
+    .dc-scene[data-dc-surface='setbacks'] :is(.dc-trend, .kp-kpi, .dc-surface-head) {
+        position: relative;
+        isolation: isolate;
+    }
+
+    .dc-scene[data-dc-surface='sunburst'] :is(.dc-surface-head, .kp-kpi, .dc-menu-head, .dc-state-plate)::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background: repeating-conic-gradient(from -90deg at 50% 130%, hsl(from var(--primary) h s l / 0.16) 0 4deg, transparent 4deg 15deg);
+        pointer-events: none;
+    }
+
+    .dc-scene[data-dc-surface='sunburst'] .dc-menu-head {
+        isolation: isolate;
+    }
+
+    .dc-scene[data-dc-surface='setbacks'] :is(.dc-trend, .kp-kpi, .dc-surface-head)::before {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 0;
+        z-index: -1;
+        block-size: 80%;
+        background: var(--primary);
+        opacity: 0.45;
+        mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'%3E%3Cpath d='M0 40V32H10V24H20V16H30V8H40V0H60V8H70V16H80V24H90V32H100V40M4 40V34H14V26H24V18H34V10H44V4H56V10H66V18H76V26H86V34H96V40' fill='none' stroke='currentColor' stroke-width='1' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E")
+            50% 100% / 100% 100% no-repeat;
+        pointer-events: none;
+    }
+
+    /* ── 8 A warning ─────────────────────────────────────────────────────
+       The gilt notice: a plaque ringed twice in the tone's colour, ivory
+       ink, the change on a lozenge-ended tag; the plate behind stays
+       lacquer. Tinted (the state's pick): a sunburst behind the figure
+       tinted toward the tone. Framed: the whole card in a heavy double gold
+       frame. */
+
+    .dc-scene[data-dc-warning] {
+        --dc-warn-ring: hsl(from var(--warning) h s 50%);
+    }
+
+    .dc-scene[data-dc-warning='notice'] .dc-kpi--warn,
+    .dc-scene[data-dc-warning='notice'] .dc-trend--fail,
+    .dc-scene[data-dc-warning='notice'] .kp-alert--warning,
+    .dc-scene[data-dc-warning='notice'] .kp-menu__item--destructive {
+        background: var(--card);
+        color: var(--foreground);
+        box-shadow: none;
+    }
+
+    .dc-scene[data-dc-warning='notice'] .dc-kpi--warn {
+        border: 3px double var(--dc-warn-ring);
+    }
+
+    .dc-scene[data-dc-warning='notice'] .dc-kpi--warn .kp-kpi__value {
+        background: transparent;
+        color: var(--foreground);
+        padding-inline: 0;
+    }
+
+    .dc-scene[data-dc-warning='notice'] .dc-trend--fail {
+        border: 3px double var(--destructive);
+    }
+
+    .dc-scene[data-dc-warning='notice'] .kp-alert--warning {
+        border: 3px double var(--dc-warn-ring);
+    }
+
+    .dc-scene[data-dc-warning='notice'] .kp-menu__item--destructive {
+        border: 3px double var(--destructive);
+        color: var(--foreground);
+    }
+
+    .dc-scene[data-dc-warning='notice'] .dc-note {
+        padding-inline: 0.95em;
+        clip-path: var(--dc-lozenge-poly);
+    }
+
+    .dc-scene[data-dc-warning='tinted'] :is(.dc-kpi--warn, .dc-trend--fail, .kp-alert--warning, .kp-menu__item--destructive) {
+        position: relative;
+        isolation: isolate;
+        --dc-tone: var(--warning);
+    }
+
+    .dc-scene[data-dc-warning='tinted'] :is(.dc-trend--fail, .kp-menu__item--destructive) {
+        --dc-tone: var(--destructive);
+    }
+
+    .dc-scene[data-dc-warning='tinted'] :is(.dc-kpi--warn, .dc-trend--fail, .kp-alert--warning, .kp-menu__item--destructive)::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background: repeating-conic-gradient(from -90deg at 75% 135%, hsl(from var(--dc-tone) h s 55% / 0.65) 0 5deg, transparent 5deg 15deg);
+        pointer-events: none;
+    }
+
+    .dc-scene[data-dc-warning='framed'] :is(.dc-kpi--warn, .dc-trend--fail, .kp-alert--warning, .kp-menu__item--destructive) {
+        border: 4px double var(--primary);
+        box-shadow: inset 0 0 0 4px var(--card);
+    }
+
+    /* ── 9 A live update ─────────────────────────────────────────────────
+       One flash of the fan: behind the changed figure a small fan opens ray
+       by ray and folds (480 ms each way); the figure never moves, swells or
+       flares. Gilded (the picks): the figure flares gold, swells once and
+       settles. Glint (the picks): a glint runs along the changed figure's
+       rule. The clock updates the values on the way in and on the way out;
+       both ways play the same pair, so a close is its open reversed. */
+
+    .dc-scene[data-dc-live] .dc-carrier {
+        --dc-a: 0deg;
+        transform-origin: 0 60%;
+    }
+
+    .dc-scene[data-dc-live='flash'] .dc-carrier::before {
+        content: '';
+        position: absolute;
+        inset: -0.55em -0.7em -0.15em;
+        z-index: -1;
+        background: repeating-conic-gradient(from -84.5deg at 50% 100%, hsl(from var(--primary) h s l / 0.6) 0 4deg, transparent 4deg 15deg);
+        mask-image:
+            conic-gradient(from -90deg at 50% 100%, var(--foreground) 0 var(--dc-a), transparent var(--dc-a)),
+            radial-gradient(ellipse 50% 100% at 50% 100%, var(--foreground) 0 99%, transparent 100%);
+        mask-composite: intersect;
+        pointer-events: none;
+    }
+
+    .dc-scene[data-dc-live='flash'] .dc-state__dot::before {
+        inset: -1.1em -1.1em -0.3em;
+    }
+
+    .dc-scene[data-dc-live='flash'] .dc-carrier--line::before {
+        inset: -0.5rem 0 -0.2rem 72%;
+    }
+
+    .dc-scene[data-dc-live='glint'] .dc-carrier::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: -0.2em;
+        block-size: 2px;
+        background:
+            linear-gradient(90deg, transparent, hsl(from var(--primary) h s 90%), transparent) -60% 0 / 45% 100% no-repeat,
+            hsl(from var(--primary) h s l / 0.35);
+        pointer-events: none;
+    }
+
+    @keyframes dc-gilded {
+        0% {
+            animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+        }
+        30% {
+            color: var(--primary);
+            filter: drop-shadow(0 0 0.4em var(--primary));
+            scale: 1.1;
+            animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+        }
+        100% {
+            filter: drop-shadow(0 0 0 transparent);
+        }
+    }
+
+    @keyframes dc-gilded-out {
+        0% {
+            filter: drop-shadow(0 0 0 transparent);
+            animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+        }
+        70% {
+            color: var(--primary);
+            filter: drop-shadow(0 0 0.4em var(--primary));
+            scale: 1.1;
+            animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+        }
+        100% {
+            scale: 1;
+        }
+    }
+
+    @keyframes dc-glint {
+        from {
+            background-position:
+                -60% 0,
+                0 0;
+        }
+        to {
+            background-position:
+                160% 0,
+                0 0;
+        }
+    }
+
+    @keyframes dc-glint-out {
+        from {
+            background-position:
+                160% 0,
+                0 0;
+        }
+        to {
+            background-position:
+                -60% 0,
+                0 0;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dc-scene[data-dc-live='flash'][data-dc-phase='in'] .dc-carrier {
+            animation: dcg-flash calc(var(--dc-fan) * 2 * var(--dc-slow, 1)) linear both;
+        }
+
+        .dc-scene[data-dc-live='flash'][data-dc-phase='out'] .dc-carrier {
+            animation: dcg-flash-out calc(var(--dc-fan) * 2 * var(--dc-slow, 1)) linear both;
+        }
+
+        .dc-scene[data-dc-live='gilded'][data-dc-phase='in'] .dc-carrier {
+            animation: dc-gilded calc(1000ms * var(--dc-slow, 1)) linear both;
+        }
+
+        .dc-scene[data-dc-live='gilded'][data-dc-phase='out'] .dc-carrier {
+            animation: dc-gilded-out calc(1000ms * var(--dc-slow, 1)) linear both;
+        }
+
+        .dc-scene[data-dc-live='glint'][data-dc-phase='in'] .dc-carrier::after {
+            animation: dc-glint calc(1000ms * var(--dc-slow, 1)) linear both;
+        }
+
+        .dc-scene[data-dc-live='glint'][data-dc-phase='out'] .dc-carrier::after {
+            animation: dc-glint-out calc(1000ms * var(--dc-slow, 1)) linear both;
+        }
+    }
+
+    /* ── 10 Loading ──────────────────────────────────────────────────────
+       Fan: a crest of rays opens from the surface's foot-centre ray by ray
+       and folds, and opens again; the skeleton's lines are lit ray by ray
+       from the start. Glint (the picks): a glint runs along the waiting
+       part's gilt. Bulbs (the picks): marquee bulbs light in turn in hard
+       steps. Strips (today): the register's lozenge strips open from their
+       centre, hold, fade, 2.8 s. */
+
+    .dc-scene[data-dc-loading] .dc-waits > :not(.dc-wait) {
+        opacity: 0.55;
+    }
+
+    .dc-scene[data-dc-loading] .dc-waits .kp-card {
+        padding-block-end: 2.5rem;
+    }
+
+    .dc-scene[data-dc-loading] .dc-panel {
+        padding-block-end: 2.5rem;
+    }
+
+    .dc-scene[data-dc-loading] .kp-menu__item.dc-waits {
+        padding-block-end: 1.9rem;
+    }
+
+    .dc-scene[data-dc-loading] .dc-day.dc-waits {
+        overflow: clip;
+    }
+
+    .dc-scene[data-dc-loading='fan'] .dc-wait {
+        position: absolute;
+        inset: auto 0 0;
+        margin-inline: auto;
+        inline-size: min(100%, 6.5rem);
+        block-size: auto;
+        --dc-a: 180deg;
+    }
+
+    .dc-scene[data-dc-loading='fan'] .kp-menu__item .dc-wait {
+        inline-size: 4.5rem;
+    }
+
+    .dc-scene[data-dc-loading='fan'] .dc-day .dc-wait {
+        inline-size: 100%;
+        aspect-ratio: 2;
+        border-block-end: 0;
+    }
+
+    .dc-scene[data-dc-loading='fan'] .dc-plot .dc-wait,
+    .dc-scene[data-dc-loading='fan'] .dc-waits:has(> .dc-plot) .dc-wait {
+        inline-size: 9rem;
+    }
+
+    .dc-scene[data-dc-loading='fan'] .kp-skeleton {
+        --dc-p: 1;
+    }
+
+    .dc-scene[data-dc-loading] .dc-skel .kp-skeleton::before {
+        animation: none;
+    }
+
+    .dc-scene[data-dc-loading='fan'] .dc-skel .kp-skeleton::before {
+        background: hsl(from var(--primary) h s l / 0.4);
+        mask-image: linear-gradient(90deg, var(--foreground) 0 calc(var(--dc-p) * 100%), transparent 0);
+    }
+
+    .dc-scene[data-dc-loading='glint'] .dc-wait {
+        background:
+            linear-gradient(90deg, transparent, hsl(from var(--primary) h s 90%), transparent) -50% 0 / 40% 2px no-repeat,
+            linear-gradient(90deg, transparent, hsl(from var(--primary) h s 90%), transparent) -50% 100% / 40% 2px no-repeat;
+    }
+
+    .dc-scene[data-dc-loading='glint'] .dc-skel .kp-skeleton::before {
+        background:
+            linear-gradient(90deg, transparent, hsl(from var(--primary) h s 90% / 0.9), transparent) -50% 0 / 40% 100% no-repeat,
+            hsl(from var(--primary) h s l / 0.12);
+    }
+
+    .dc-scene[data-dc-loading='bulbs'] .dc-wait {
+        inset: auto 0.5rem 0.35rem;
+        block-size: 10px;
+        background:
+            radial-gradient(circle at 7px 50%, var(--primary) 0 2.6px, transparent 3.4px) 0 50% / 42px 100% repeat-x,
+            radial-gradient(circle at 7px 50%, hsl(from var(--primary) h s l / 0.28) 0 2.6px, transparent 3.2px) 0 50% / 14px 100% repeat-x;
+    }
+
+    .dc-scene[data-dc-loading='bulbs'] .dc-skel .kp-skeleton::before {
+        inset-block: 3px;
+        border: 0;
+        clip-path: none;
+        background:
+            radial-gradient(circle at 7px 50%, var(--primary) 0 2.6px, transparent 3.4px) 0 50% / 42px 100% repeat-x,
+            radial-gradient(circle at 7px 50%, hsl(from var(--primary) h s l / 0.28) 0 2.6px, transparent 3.2px) 0 50% / 14px 100% repeat-x;
+    }
+
+    .dc-scene[data-dc-loading='strips'] .dc-wait {
+        inset: auto 0.75rem 0.5rem;
+        block-size: 0.55rem;
+        border-block: 1px solid hsl(from var(--primary) h s l / 0.5);
+        background: hsl(from var(--primary) h s l / 0.12);
+        clip-path: polygon(0.5rem 0, calc(100% - 0.5rem) 0, 100% 50%, calc(100% - 0.5rem) 100%, 0.5rem 100%, 0 50%);
+    }
+
+    .dc-scene[data-dc-loading='strips'] .dc-day .dc-wait {
+        inset: auto 0.3rem 0.35rem;
+    }
+
+    @keyframes dc-glint-run {
+        from {
+            background-position:
+                -50% 0,
+                -50% 100%;
+        }
+        to {
+            background-position:
+                150% 0,
+                150% 100%;
+        }
+    }
+
+    @keyframes dc-glint-skel {
+        from {
+            background-position:
+                -50% 0,
+                0 0;
+        }
+        to {
+            background-position:
+                150% 0,
+                0 0;
+        }
+    }
+
+    @keyframes dc-bulbs {
+        from {
+            background-position:
+                0 50%,
+                0 50%;
+            animation-timing-function: steps(3, jump-end);
+        }
+        to {
+            background-position:
+                42px 50%,
+                0 50%;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dc-scene[data-dc-loading='fan'] .dc-wait {
+            animation: dcg-load var(--dc-loop) linear infinite;
+            animation-delay: calc(var(--i, 0) * -300ms);
+        }
+
+        .dc-scene[data-dc-loading='fan'] .dc-skel .kp-skeleton {
+            animation: dcg-load-line var(--dc-loop) linear infinite;
+        }
+
+        .dc-scene[data-dc-loading='fan'] .dc-skel .kp-skeleton:nth-child(2) {
+            animation-delay: -200ms;
+        }
+
+        .dc-scene[data-dc-loading='fan'] .dc-skel .kp-skeleton:nth-child(3) {
+            animation-delay: -400ms;
+        }
+
+        .dc-scene[data-dc-loading='glint'] .dc-wait {
+            animation: dc-glint-run 2000ms linear infinite;
+            animation-delay: calc(var(--i, 0) * -250ms);
+        }
+
+        .dc-scene[data-dc-loading='glint'] .dc-skel .kp-skeleton::before {
+            animation: dc-glint-skel 2000ms linear infinite;
+        }
+
+        .dc-scene[data-dc-loading='bulbs'] .dc-wait,
+        .dc-scene[data-dc-loading='bulbs'] .dc-skel .kp-skeleton::before {
+            animation: dc-bulbs 900ms linear infinite;
+        }
+
+        .dc-scene[data-dc-loading='strips'] .dc-wait {
+            animation: kp-sig-deco-deco-open 2800ms var(--fx-ease) infinite;
+            animation-delay: calc(var(--i, 0) * 200ms);
+        }
+
+        .dc-scene[data-dc-loading='strips'] .dc-skel .kp-skeleton::before {
+            animation: kp-sig-deco-deco-open 2800ms var(--fx-ease) infinite;
+        }
+    }
+
+    /* ── 11 The progress bar, redone ─────────────────────────────────────
+       Every option keeps the double-rule track and the flat gold and
+       differs in what the share is made of. Rays: the track is a row of
+       forty thin lozenge-ended rays at 22 %, the share lights them one by
+       one from the start (whole rays), the head is the last lit ray's
+       lozenge in emerald; busy: the rays light across and fold back, 2.4 s.
+       Band: a flat band with a chevron tip. Lamps: the lift's lamps. Tiers:
+       a stepped staircase. Pennant: today's, the register's own. */
+
+    .dc-scene[data-dc-bar] .kp-progressbar {
+        --dc-lit: round(var(--kp-value), 0.025);
+    }
+
+    /* Rays */
+    .dc-scene[data-dc-bar='rays'] .kp-progressbar {
+        --dc-ray-shape: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 20' preserveAspectRatio='none'%3E%3Cpolygon points='5,0 8,3 8,17 5,20 2,17 2,3'/%3E%3C/svg%3E");
+    }
+
+    .dc-scene[data-dc-bar='rays'] .kp-progressbar__track {
+        border: 3px double var(--border-strong);
+        background: var(--background);
+    }
+
+    .dc-scene[data-dc-bar='rays'] .kp-progressbar__track::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: hsl(from var(--primary) h s l / 0.22);
+        mask: var(--dc-ray-shape) 0 50% / calc(100% / 40) 100% repeat-x;
+    }
+
+    .dc-scene[data-dc-bar='rays'] .kp-progressbar__fill,
+    .dc-scene[data-dc-bar='rays'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset: 0;
+        inline-size: auto;
+        background: var(--primary);
+        overflow: visible;
+        mask: var(--dc-ray-shape) 0 50% / calc(100% / 40) 100% repeat-x;
+        clip-path: inset(0 calc(100% - var(--dc-lit) * 100%) 0 0);
+        transition: clip-path 200ms steps(8, jump-end);
+        animation: none;
+    }
+
+    .dc-scene[data-dc-bar='rays'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        clip-path: inset(0 calc(100% - var(--dc-p) * 100%) 0 0);
+        transition: none;
+    }
+
+    .dc-scene[data-dc-bar='rays'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
+        content: none;
+    }
+
+    .dc-scene[data-dc-bar='rays'] .kp-progressbar__head,
+    .dc-scene[data-dc-bar='rays'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
+        display: block;
+        transform: translateX(calc(var(--dc-lit) * 100cqi));
+        transition: transform 200ms steps(8, jump-end);
+    }
+
+    .dc-scene[data-dc-bar='rays'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
+        transform: translateX(calc(var(--dc-p) * 100cqi));
+        transition: none;
+    }
+
+    .dc-scene[data-dc-bar='rays'] .kp-progressbar__head::before {
+        inset-inline-start: calc(-0.5 * 100cqi / 40 - var(--dc-jewel) * 0.5 - 0.5px);
+        inline-size: calc(var(--dc-jewel) * 1.25);
+        block-size: calc(var(--dc-jewel) * 1.25);
+    }
+
+    .dc-scene[data-dc-bar='rays'] .kp-progressbar[data-kp-indeterminate] {
+        --dc-lit: 1;
+        --dc-p: 1;
+    }
+
+    /* Band */
+    .dc-scene[data-dc-bar='band'] .kp-progressbar__track {
+        border: 3px double var(--border-strong);
+        background: var(--background);
+    }
+
+    .dc-scene[data-dc-bar='band'] .kp-progressbar__fill {
+        inset: 1px;
+        background: var(--primary);
+        clip-path: polygon(
+            0 0,
+            max(0px, calc(var(--kp-value) * 100% - var(--dc-tip))) 0,
+            calc(var(--kp-value) * 100%) 50%,
+            max(0px, calc(var(--kp-value) * 100% - var(--dc-tip))) 100%,
+            0 100%
+        );
+    }
+
+    .dc-scene[data-dc-bar='band'] .kp-progressbar__head {
+        display: none;
+    }
+
+    .dc-scene[data-dc-bar='band'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset: 1px auto 1px 0;
+        inline-size: 30%;
+        background: var(--primary);
+        clip-path: polygon(0 0, calc(100% - var(--dc-tip)) 0, 100% 50%, calc(100% - var(--dc-tip)) 100%, 0 100%);
+        overflow: visible;
+    }
+
+    .dc-scene[data-dc-bar='band'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
+        content: none;
+    }
+
+    /* Lamps */
+    .dc-scene[data-dc-bar='lamps'] .kp-progressbar {
+        --dc-lamp: calc(5px * var(--kp-progressbar-scale, 1));
+    }
+
+    .dc-scene[data-dc-bar='lamps'] .kp-progressbar__track {
+        border: 0;
+        box-shadow: 0 0 0 1px var(--border-strong);
+        background:
+            linear-gradient(90deg, hsl(from var(--primary) h s l / 0.22) 0 calc(var(--dc-lamp) * 0.6), transparent calc(var(--dc-lamp) * 0.6)) 1px
+                50% / var(--dc-lamp) 70% repeat-x,
+            var(--background);
+    }
+
+    .dc-scene[data-dc-bar='lamps'] .kp-progressbar__fill {
+        inset: 0;
+        background: linear-gradient(90deg, var(--primary) 0 calc(var(--dc-lamp) * 0.6), transparent calc(var(--dc-lamp) * 0.6)) 1px 50% /
+            var(--dc-lamp) 70% repeat-x;
+        clip-path: inset(0 calc(100% - round(down, var(--kp-value) * 100%, var(--dc-lamp))) 0 0);
+        filter: drop-shadow(0 0 2px hsl(from var(--primary) h s l / 0.55));
+    }
+
+    .dc-scene[data-dc-bar='lamps'] .kp-progressbar__head {
+        display: none;
+    }
+
+    .dc-scene[data-dc-bar='lamps'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset: 0 auto 0 0;
+        inline-size: calc(var(--dc-lamp) * 2);
+        clip-path: none;
+        overflow: visible;
+        background: linear-gradient(90deg, var(--primary) 0 calc(var(--dc-lamp) * 0.6), transparent calc(var(--dc-lamp) * 0.6)) 1px 50% /
+            var(--dc-lamp) 70% repeat-x;
+    }
+
+    .dc-scene[data-dc-bar='lamps'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
+        content: none;
+    }
+
+    /* Tiers */
+    .dc-scene[data-dc-bar='tiers'] .kp-progressbar__track {
+        border: 3px double var(--border-strong);
+        background: var(--background);
+    }
+
+    .dc-scene[data-dc-bar='tiers'] .kp-progressbar {
+        --dc-w: calc(var(--kp-value) * 100%);
+        --dc-tiers: polygon(
+            0 100%,
+            0 calc(100% - 20% * var(--dc-p)),
+            calc(var(--dc-w) * 0.2) calc(100% - 20% * var(--dc-p)),
+            calc(var(--dc-w) * 0.2) calc(100% - 40% * var(--dc-p)),
+            calc(var(--dc-w) * 0.4) calc(100% - 40% * var(--dc-p)),
+            calc(var(--dc-w) * 0.4) calc(100% - 60% * var(--dc-p)),
+            calc(var(--dc-w) * 0.6) calc(100% - 60% * var(--dc-p)),
+            calc(var(--dc-w) * 0.6) calc(100% - 80% * var(--dc-p)),
+            calc(var(--dc-w) * 0.8) calc(100% - 80% * var(--dc-p)),
+            calc(var(--dc-w) * 0.8) calc(100% - 100% * var(--dc-p)),
+            var(--dc-w) calc(100% - 100% * var(--dc-p)),
+            var(--dc-w) 100%
+        );
+    }
+
+    .dc-scene[data-dc-bar='tiers'] .kp-progressbar[data-kp-indeterminate] {
+        --dc-w: 100%;
+    }
+
+    .dc-scene[data-dc-bar='tiers'] .kp-progressbar__fill,
+    .dc-scene[data-dc-bar='tiers'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset: 1px;
+        inline-size: auto;
+        overflow: visible;
+        background: var(--primary);
+        clip-path: var(--dc-tiers);
+        animation: none;
+    }
+
+    .dc-scene[data-dc-bar='tiers'] .kp-progressbar__head {
+        display: none;
+    }
+
+    .dc-scene[data-dc-bar='tiers'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
+        content: none;
+    }
+
+    .dc-scene[data-dc-bar] .dc-bar {
+        --dc-tip: calc(0.45rem * var(--kp-progressbar-scale, 1));
+    }
+
+    @keyframes dc-band-run {
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(calc(100cqi * 0.7 / 0.3 - 0.35 * 0.7 * 100cqi));
+        }
+    }
+
+    @keyframes dc-lamps-run {
+        from {
+            transform: translateX(0);
+            animation-timing-function: steps(34, jump-end);
+        }
+        to {
+            transform: translateX(calc(100cqi - var(--dc-lamp) * 2));
+        }
+    }
+
+    @keyframes dc-tiers {
+        0% {
+            --dc-p: 0;
+            animation-timing-function: steps(5, jump-end);
+        }
+        40% {
+            --dc-p: 1;
+            animation-timing-function: linear;
+        }
+        56.67% {
+            --dc-p: 1;
+            animation-timing-function: steps(5, jump-start);
+        }
+        96.67% {
+            --dc-p: 0;
+        }
+        100% {
+            --dc-p: 0;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dc-scene[data-dc-bar='rays'] .kp-progressbar[data-kp-indeterminate] {
+            animation: dcg-lay var(--dc-loop) linear infinite;
+        }
+
+        .dc-scene[data-dc-bar='band'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+            animation: dc-band-run 1400ms ease-in-out infinite alternate;
+        }
+
+        .dc-scene[data-dc-bar='lamps'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+            animation: dc-lamps-run var(--dc-loop) linear infinite alternate;
+        }
+
+        .dc-scene[data-dc-bar='tiers'] .kp-progressbar[data-kp-indeterminate] {
+            animation: dc-tiers var(--dc-loop) linear infinite;
+        }
+    }
+
+    /* ── 12 The spinner ──────────────────────────────────────────────────
+       Fan: a crest of twelve rays opens ray by ray and folds ray by ray
+       round a gold centre dot, 2.4 s a loop, never turning. Rotate (today):
+       the register's sunburst turning in 3.6 s. Lamps: lamps round a ring
+       lit one after the other. */
+
+    .dc-scene:is([data-dc-spinner='fan'], [data-dc-durations]) .kp-spinner,
+    .dc-scene[data-dc-spinner='lamps'] .kp-spinner {
+        --dc-a: 360deg;
+        position: relative;
+        border: 0;
+        border-radius: 0;
+        background: radial-gradient(circle, var(--dc-ink, var(--primary)) 0 12%, transparent 13%);
+        animation: none;
+    }
+
+    .dc-scene[data-dc-spinner='lamps'] .kp-spinner {
+        background: none;
+    }
+
+    .dc-scene:is([data-dc-spinner='fan'], [data-dc-durations]) .kp-spinner::before {
+        inset: 0;
+        border-radius: 0;
+        background: repeating-conic-gradient(from 11deg, var(--dc-ink, var(--primary)) 0 8deg, transparent 8deg 30deg);
+        mask:
+            conic-gradient(from 0deg, var(--foreground) 0 var(--dc-a), transparent var(--dc-a)),
+            radial-gradient(circle closest-side, transparent 0 28%, var(--foreground) 30%);
+        mask-composite: intersect;
+        animation: none;
+        transform: none;
+    }
+
+    .dc-scene[data-dc-spinner='lamps'] .kp-spinner::before {
+        inset: 0;
+        border-radius: 0;
+        background: repeating-conic-gradient(from 11deg, hsl(from var(--primary) h s l / 0.25) 0 8deg, transparent 8deg 30deg);
+        mask: radial-gradient(circle closest-side, transparent 0 60%, var(--foreground) 62%);
+        animation: none;
+        transform: none;
+    }
+
+    .dc-scene[data-dc-spinner='lamps'] .kp-spinner::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: conic-gradient(from 11deg, var(--primary) 0 8deg, transparent 8deg);
+        mask: radial-gradient(circle closest-side, transparent 0 60%, var(--foreground) 62%);
+        filter: drop-shadow(0 0 2px var(--primary));
+    }
+
+    @keyframes dc-lamp-round {
+        to {
+            rotate: 360deg;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dc-scene:is([data-dc-spinner='fan'], [data-dc-durations]) .kp-spinner {
+            animation: dcg-ring var(--dc-loop) linear infinite;
+        }
+
+        .dc-scene[data-dc-spinner='lamps'] .kp-spinner::after {
+            animation: dc-lamp-round var(--dc-lamp-loop, 1200ms) steps(12, jump-end) infinite;
+        }
+    }
+
+    /* ── 13 Leaving and arriving ─────────────────────────────────────────
+       Fan: a plate without a crest is counted in vertical pleats from its
+       centre out (twenty-four, a fold line at each) and folds the same
+       steps backwards. Flat (today): the register's squeeze to nothing on
+       its centre and fade, arriving the reverse. Curtain (the picks): a
+       pleated curtain lifts to reveal the part and falls to hide it. */
+
+    .dc-scene[data-dc-leave='fan'] {
+        --dc-kf-fan: dcg-pleat;
+        --dc-kf-fan-out: dcg-pleat-out;
+        --dc-kf-plate: dcg-plate;
+        --dc-kf-plate-out: dcg-plate-out;
+    }
+
+    .dc-scene[data-dc-leave='flat'] {
+        --dc-kf-fan: dc-squeeze;
+        --dc-kf-fan-out: dc-squeeze-out;
+        --dc-kf-plate: none;
+        --dc-kf-plate-out: none;
+        --dc-plate: 0ms;
+    }
+
+    .dc-scene[data-dc-leave='curtain'] {
+        --dc-kf-fan: dc-lift;
+        --dc-kf-fan-out: dc-lift-out;
+        --dc-kf-plate: none;
+        --dc-kf-plate-out: none;
+        --dc-fan: 640ms;
+        --dc-plate: 0ms;
+    }
+
+    .dc-scene[data-dc-leave='curtain'] .dc-fx::before {
+        content: '';
+        position: absolute;
+        inset: 0 0 auto 0;
+        z-index: 4;
+        block-size: calc((1 - var(--dc-p)) * 100%);
+        overflow: clip;
+        pointer-events: none;
+        background: repeating-linear-gradient(90deg, hsl(from var(--primary) h s l / 0.35) 0 1px, transparent 1px 0.9rem), var(--popover);
+        box-shadow:
+            inset 0 -1px 0 var(--primary),
+            inset 0 -4px 0 var(--popover),
+            inset 0 -5px 0 var(--primary);
+    }
+
+    @keyframes dc-squeeze {
+        from {
+            opacity: 0;
+            transform: scaleX(0);
+            animation-timing-function: cubic-bezier(0.8, 0, 0.6, 1);
+        }
+        to {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    @keyframes dc-squeeze-out {
+        from {
+            opacity: 1;
+            transform: none;
+            animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        to {
+            opacity: 0;
+            transform: scaleX(0);
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dc-scene[data-dc-leave='fan']:not([data-dc-phase='hold']) .dc-fx--pleat > * {
+            mask-image: linear-gradient(
+                90deg,
+                transparent calc(50% - var(--dc-p) * 50%),
+                var(--foreground) calc(50% - var(--dc-p) * 50%) calc(50% + var(--dc-p) * 50%),
+                transparent calc(50% + var(--dc-p) * 50%)
+            );
+        }
+
+        .dc-scene[data-dc-leave='fan']:not([data-dc-phase='hold']) .dc-fx--pleat::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+            background: repeating-linear-gradient(
+                90deg,
+                transparent 0 calc(100% / 24 - (1 - var(--dc-fill)) * 2px),
+                var(--primary) calc(100% / 24 - (1 - var(--dc-fill)) * 2px) calc(100% / 24)
+            );
+            mask-image: linear-gradient(
+                90deg,
+                transparent calc(50% - var(--dc-p) * 50%),
+                var(--foreground) calc(50% - var(--dc-p) * 50%) calc(50% + var(--dc-p) * 50%),
+                transparent calc(50% + var(--dc-p) * 50%)
+            );
+        }
+    }
+
+    /* ── 14 to 17: the hand ──────────────────────────────────────────────
+       Pointing at something, focus, the press and the buttons inside
+       composites share one drawing, so each question changes only its own
+       part. A control is shown pointed at (`.dc-pointed`), focused
+       (`.dc-focused`) or pressed (`.dc-press`; `.dc-rest` stays at rest),
+       or every one is, by the State buttons (`data-dc-show` on the scene).
+
+       Deco's own manner (question 15's fan, 14's own, 17's full press): the
+       fan the register already opens behind a button's label, counted. Its
+       rays leave the lower-left corner, one 9deg cell each; pointing opens
+       six of the ten (240 ms, `steps(6)`), the press all ten (160 ms more,
+       `steps(4)`), and a release folds them (`steps(…, jump-start)`). A day
+       gets a small crest under its figure (12 rays, six and twelve). */
+
+    .dc-scene:is([data-dc-hover='fan'], [data-dc-composites='own'], [data-dc-composites='plaque'], [data-dc-press='full'], [data-dc-press='shut'])
+        :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day) {
+        position: relative;
+        isolation: isolate;
+        overflow: hidden;
+        --dc-a: 0deg;
+        --dc-hv: 54deg;
+        --dc-pr: 90deg;
+    }
+
+    .dc-scene:is([data-dc-hover='fan'], [data-dc-composites='own'], [data-dc-composites='plaque'], [data-dc-press='full'], [data-dc-press='shut'])
+        .dc-day {
+        --dc-hv: 90deg;
+        --dc-pr: 180deg;
+    }
+
+    .dc-scene[data-dc-press='shut'] :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day) {
+        --dc-pr: 0deg;
+    }
+
+    .dc-scene:is([data-dc-hover='fan'], [data-dc-composites='own'], [data-dc-composites='plaque'], [data-dc-press='full'], [data-dc-press='shut'])
+        .kp-button::before {
+        opacity: 1;
+        mask-image: conic-gradient(from 0deg at 0% 120%, var(--foreground) 0 var(--dc-a), transparent var(--dc-a));
+    }
+
+    .dc-scene:is([data-dc-hover='fan'], [data-dc-composites='own'], [data-dc-composites='plaque'], [data-dc-press='full'], [data-dc-press='shut'])
+        :is(.kp-menu__item, .dc-in-kpi)::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        background: repeating-conic-gradient(from 200deg at 0% 130%, hsl(from var(--primary) h s l / 0.34) 0deg 3deg, transparent 3deg 9deg);
+        mask-image: conic-gradient(from 0deg at 0% 130%, var(--foreground) 0 var(--dc-a), transparent var(--dc-a));
+    }
+
+    .dc-scene:is([data-dc-hover='fan'], [data-dc-composites='own'], [data-dc-composites='plaque'], [data-dc-press='full'], [data-dc-press='shut'])
+        .dc-day::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        background: repeating-conic-gradient(from -84.5deg at 50% 100%, hsl(from var(--primary) h s l / 0.4) 0 4deg, transparent 4deg 15deg);
+        mask-image: conic-gradient(from -90deg at 50% 100%, var(--foreground) 0 var(--dc-a), transparent var(--dc-a));
+    }
+
+    /* The states: pointed at, pressed. */
+    .dc-scene:is([data-dc-hover='fan'], [data-dc-composites='own'], [data-dc-composites='plaque'], [data-dc-press='full'], [data-dc-press='shut'])
+        :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day):is(.dc-pointed, :hover),
+    .dc-scene:is(
+            [data-dc-hover='fan'],
+            [data-dc-composites='own'],
+            [data-dc-composites='plaque'],
+            [data-dc-press='full'],
+            [data-dc-press='shut']
+        )[data-dc-show='hover']
+        :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day):not(.dc-rest) {
+        --dc-a: var(--dc-hv);
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+
+    .dc-scene:is([data-dc-hover='fan'], [data-dc-composites='own'], [data-dc-composites='plaque'], [data-dc-press='full'], [data-dc-press='shut'])
+        :is(.kp-menu__item, .dc-in-kpi):is(.dc-pointed, :hover),
+    .dc-scene:is(
+            [data-dc-hover='fan'],
+            [data-dc-composites='own'],
+            [data-dc-composites='plaque'],
+            [data-dc-press='full'],
+            [data-dc-press='shut']
+        )[data-dc-show='hover']
+        :is(.kp-menu__item, .dc-in-kpi):not(.dc-rest) {
+        background: var(--secondary);
+    }
+
+    .dc-scene:is([data-dc-hover='fan'], [data-dc-composites='own'], [data-dc-composites='plaque'], [data-dc-press='full'], [data-dc-press='shut'])
+        .kp-button--primary:is(.dc-pointed, :hover),
+    .dc-scene:is(
+            [data-dc-hover='fan'],
+            [data-dc-composites='own'],
+            [data-dc-composites='plaque'],
+            [data-dc-press='full'],
+            [data-dc-press='shut']
+        )[data-dc-show='hover']
+        .kp-button--primary:not(.dc-rest) {
+        background: var(--selected);
+        color: var(--primary-foreground);
+    }
+
+    .dc-scene:is([data-dc-hover='fan'], [data-dc-composites='own'], [data-dc-composites='plaque'], [data-dc-press='full'], [data-dc-press='shut'])
+        :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day):is(.dc-press, :active):not(.dc-rest),
+    .dc-scene:is(
+            [data-dc-hover='fan'],
+            [data-dc-composites='own'],
+            [data-dc-composites='plaque'],
+            [data-dc-press='full'],
+            [data-dc-press='shut']
+        )[data-dc-show='press']
+        :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day):not(.dc-rest) {
+        --dc-a: var(--dc-pr);
+        border-color: var(--primary);
+        color: var(--foreground);
+        background: var(--secondary-active);
+    }
+
+    .dc-scene:is([data-dc-hover='fan'], [data-dc-composites='own'], [data-dc-composites='plaque'], [data-dc-press='full'], [data-dc-press='shut'])
+        .kp-button--primary:is(.dc-press, :active):not(.dc-rest),
+    .dc-scene:is(
+            [data-dc-hover='fan'],
+            [data-dc-composites='own'],
+            [data-dc-composites='plaque'],
+            [data-dc-press='full'],
+            [data-dc-press='shut']
+        )[data-dc-show='press']
+        .kp-button--primary:not(.dc-rest) {
+        background: var(--primary-active);
+        border-color: var(--primary-active);
+        color: var(--primary-foreground);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .dc-scene:is([data-dc-hover='fan'], [data-dc-composites='own'], [data-dc-composites='plaque'], [data-dc-press='full'], [data-dc-press='shut'])
+            :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day) {
+            transition:
+                --dc-a 240ms steps(6, jump-start),
+                color var(--dc-contact) linear,
+                border-color var(--dc-contact) linear,
+                background-color var(--dc-contact) linear;
+        }
+
+        .dc-scene:is([data-dc-hover='fan'], [data-dc-composites='own'], [data-dc-composites='plaque'], [data-dc-press='full'], [data-dc-press='shut'])
+            :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day):is(.dc-pointed, :hover),
+        .dc-scene:is(
+                [data-dc-hover='fan'],
+                [data-dc-composites='own'],
+                [data-dc-composites='plaque'],
+                [data-dc-press='full'],
+                [data-dc-press='shut']
+            )[data-dc-show='hover']
+            :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day) {
+            transition:
+                --dc-a 240ms steps(6, jump-end),
+                color var(--dc-contact) linear,
+                border-color var(--dc-contact) linear,
+                background-color var(--dc-contact) linear;
+        }
+
+        .dc-scene:is([data-dc-hover='fan'], [data-dc-composites='own'], [data-dc-composites='plaque'], [data-dc-press='full'])
+            :is(.kp-button, .kp-menu__item, .dc-in-kpi):is(.dc-press, :active):not(.dc-rest),
+        .dc-scene:is([data-dc-hover='fan'], [data-dc-composites='own'], [data-dc-composites='plaque'], [data-dc-press='full'])[data-dc-show='press']
+            :is(.kp-button, .kp-menu__item, .dc-in-kpi):not(.dc-rest) {
+            transition:
+                --dc-a 160ms steps(4, jump-end),
+                color var(--dc-contact) linear,
+                border-color var(--dc-contact) linear,
+                background-color var(--dc-contact) linear;
+        }
+    }
+
+    /* A link: it gains its overline (the register's). */
+    .dc-scene[data-dc-hover] .dc-prose a {
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-decoration-color: hsl(from var(--primary) h s l / 0.7);
+        text-underline-offset: 0.25em;
+    }
+
+    .dc-scene[data-dc-hover='fan'] .dc-prose a:is(.dc-pointed, :hover),
+    .dc-scene[data-dc-hover='fan'][data-dc-show='hover'] .dc-prose a {
+        text-decoration-line: underline overline;
+        text-decoration-color: var(--primary);
+    }
+
+    /* Edge (the picks): the hovered control's gold edge brightens with a
+       flare. */
+    .dc-scene[data-dc-hover='edge'] .kp-button::before,
+    .dc-scene[data-dc-hover='bulbs'] .kp-button::before {
+        opacity: 0;
+    }
+
+    .dc-scene[data-dc-hover='edge'] :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day):is(.dc-pointed, :hover),
+    .dc-scene[data-dc-hover='edge'][data-dc-show='hover'] :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day) {
+        border-color: var(--primary);
+        color: var(--primary);
+        box-shadow:
+            inset 0 0 0 1px var(--primary),
+            0 0 0.75rem hsl(from var(--primary) h s l / 0.7);
+    }
+
+    .dc-scene[data-dc-hover='edge'] .kp-menu__item:is(.dc-pointed, :hover) {
+        border: 1px solid var(--primary);
+    }
+
+    /* Bulbs (the picks): a row of bulbs along the hovered control lights steady. */
+    .dc-scene[data-dc-hover='bulbs'] :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day) {
+        position: relative;
+        isolation: isolate;
+    }
+
+    .dc-scene[data-dc-hover='bulbs'] :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day):is(.dc-pointed, :hover)::before,
+    .dc-scene[data-dc-hover='bulbs'][data-dc-show='hover'] :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day)::before {
+        content: '';
+        position: absolute;
+        inset: auto 4px 2px;
+        block-size: 7px;
+        z-index: 1;
+        opacity: 1;
+        pointer-events: none;
+        background: radial-gradient(circle, var(--primary) 0 2px, transparent 2.8px) 0 50% / 11px 100% repeat-x;
+        filter: drop-shadow(0 0 3px var(--primary));
+    }
+
+    .dc-scene[data-dc-hover='bulbs'] :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day):is(.dc-pointed, :hover),
+    .dc-scene[data-dc-hover='bulbs'][data-dc-show='hover'] :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day) {
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+
+    /* ── 14 Buttons inside composites: the plaque and today ──────────────
+       Own: the same manners, in a header, a menu, a tile, a drawer, a key
+       figure (the shared drawing above). Plaque: the header's actions and
+       the drawer's buttons sit on a gold-framed plaque. Today: the header's
+       gilded flare, the tile's Open plaque, the menu's chasing bulbs. */
+
+    .dc-scene[data-dc-composites='plaque'] :is(.dc-header .kp-page-header__actions, .dc-drawer .dc-row) {
+        padding: 0.35rem;
+        border: 3px double var(--primary);
+    }
+
+    .dc-scene[data-dc-composites='mix'] .dc-in-header:not(.kp-button--primary):is(.dc-pointed, :hover),
+    .dc-scene[data-dc-composites='mix'][data-dc-show='hover'] .dc-in-header:not(.kp-button--primary) {
+        border-color: var(--primary);
+        color: var(--primary);
+        box-shadow: 0 0 0.7rem hsl(from var(--primary) h s l / 0.7);
+    }
+
+    .dc-scene[data-dc-composites='mix'][data-dc-show='focus'] .dc-in-header {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+        box-shadow: 0 0 0.7rem hsl(from var(--primary) h s l / 0.7);
+    }
+
+    .dc-scene[data-dc-composites='mix'][data-dc-show='press'] .dc-in-header {
+        box-shadow: inset 0 0 0.5rem hsl(from var(--primary) h s l / 0.6);
+    }
+
+    .dc-scene[data-dc-composites='mix'] .dc-tile-link:is(:hover),
+    .dc-scene[data-dc-composites='mix'][data-dc-show='hover'] .dc-tile-link,
+    .dc-scene[data-dc-composites='mix'][data-dc-show='focus'] .dc-tile-link {
+        border: 3px double var(--primary);
+        background: var(--card);
+        color: var(--primary);
+    }
+
+    .dc-scene[data-dc-composites='mix'] .kp-menu__item {
+        position: relative;
+        isolation: isolate;
+    }
+
+    .dc-scene[data-dc-composites='mix'] .kp-menu__item:hover::before,
+    .dc-scene[data-dc-composites='mix'][data-dc-show='hover'] .kp-menu__item::before,
+    .dc-scene[data-dc-composites='mix'][data-dc-show='focus'] .kp-menu__item::before {
+        content: '';
+        position: absolute;
+        inset: auto 4px 2px;
+        block-size: 7px;
+        pointer-events: none;
+        background: radial-gradient(circle, var(--primary) 0 2px, transparent 2.8px) 0 50% / 11px 100% repeat-x;
+        filter: drop-shadow(0 0 3px var(--primary));
+    }
+
+    .dc-scene[data-dc-composites='mix'][data-dc-show='focus'] :is(.kp-menu__item, .dc-in-kpi, .kp-button:not(.dc-in-header, .dc-tile-link)) {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+
+    .dc-scene[data-dc-composites='mix'][data-dc-show='hover'] :is(.dc-in-kpi, .dc-drawer .kp-button:not(.kp-button--primary)),
+    .dc-scene[data-dc-composites='mix'] .dc-in-kpi:hover {
+        border-color: var(--primary);
+        background: hsl(from var(--primary) h s l / 0.12);
+    }
+
+    /* Today the button standing alone keeps the register's hover: its fan
+       faded in, whole. */
+    .dc-scene[data-dc-composites='mix'][data-dc-show='hover'] .kp-button:not(.dc-in-header, .dc-tile-link, .kp-button--primary) {
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+
+    .dc-scene[data-dc-composites='mix'][data-dc-show='hover'] .kp-button:not(.dc-in-header, .dc-tile-link)::before {
+        opacity: 1;
+    }
+
+    /* ── 16 The focus ring ───────────────────────────────────────────────
+       DI2's two-channel ring is a system constant; the picks ring the control
+       in gold. */
+
+    .dc-scene[data-dc-focus='di2'] :is(.dc-focused, :focus-visible),
+    .dc-scene[data-dc-focus='mix'] :is(.kp-button, .dc-day):not(.dc-in-header, .dc-tile-link):is(.dc-focused, :focus-visible),
+    .dc-scene[data-dc-composites]:is([data-dc-composites='own'], [data-dc-composites='plaque'])[data-dc-show='focus']
+        :is(.kp-button, .kp-menu__item, .dc-in-kpi),
+    .dc-scene[data-dc-composites='mix'][data-dc-show='focus'] .kp-menu__item {
+        outline: 2px solid var(--focus-ring-contrast);
+        outline-offset: 2px;
+        box-shadow: 0 0 0 2px var(--focus-ring);
+    }
+
+    .dc-scene[data-dc-focus='double'] :is(.dc-focused, :focus-visible) {
+        outline: 3px double var(--primary);
+        outline-offset: 3px;
+    }
+
+    .dc-scene[data-dc-focus='mix'] .dc-in-header.dc-focused {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+        box-shadow: 0 0 0.7rem hsl(from var(--primary) h s l / 0.7);
+    }
+
+    .dc-scene[data-dc-focus='mix'] .dc-in-kpi.dc-focused {
+        outline: 2px solid var(--primary);
+        outline-offset: 3px;
+        box-shadow: 0 0 0.6rem hsl(from var(--primary) h s l / 0.6);
+    }
+
+    .dc-scene[data-dc-focus='mix'] .kp-menu__item.dc-focused {
+        outline: 3px dotted var(--primary);
+        outline-offset: 1px;
+        box-shadow: 0 0 0.5rem hsl(from var(--primary) h s l / 0.6);
+    }
+
+    .dc-scene[data-dc-focus='mix'] .dc-tile-link.dc-focused {
+        outline: 3px double var(--primary);
+        outline-offset: 2px;
+    }
+
+    .dc-scene[data-dc-show='focus'][data-dc-focus] :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day) {
+        outline: 2px solid var(--focus-ring-contrast);
+        outline-offset: 2px;
+        box-shadow: 0 0 0 2px var(--focus-ring);
+    }
+
+    .dc-scene[data-dc-show='focus'][data-dc-focus='double'] :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day) {
+        outline: 3px double var(--primary);
+        outline-offset: 3px;
+        box-shadow: none;
+    }
+
+    /* ── 17 The press, today ─────────────────────────────────────────────
+       A colour step: the face takes the pressed ground, the register's
+       fan stands as it stands on hover, nothing moves. */
+
+    .dc-scene[data-dc-press='colour'] :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day):is(.dc-press):not(.dc-rest),
+    .dc-scene[data-dc-press='colour'][data-dc-show='press'] :is(.kp-button, .kp-menu__item, .dc-in-kpi, .dc-day):not(.dc-rest) {
+        border-color: var(--primary);
+        color: var(--foreground);
+        background: var(--secondary-active);
+    }
+
+    .dc-scene[data-dc-press='colour'] .kp-button--primary:is(.dc-press):not(.dc-rest),
+    .dc-scene[data-dc-press='colour'][data-dc-show='press'] .kp-button--primary:not(.dc-rest) {
+        background: var(--primary-active);
+        border-color: var(--primary-active);
+        color: var(--primary-foreground);
+    }
+
+    .dc-scene[data-dc-press='colour'] .kp-button:is(.dc-press):not(.dc-rest)::before,
+    .dc-scene[data-dc-press='colour'][data-dc-show='press'] .kp-button:not(.dc-rest)::before {
+        opacity: 1;
+    }
+
+    .dc-scene[data-dc-press='colour'] :is(.kp-menu__item, .dc-day, .dc-in-kpi) {
+        position: relative;
+    }
+
+    /* ── 18 The voice ────────────────────────────────────────────────────
+       Poiret capitals for titles, Josefin for figures, labels and prose.
+       Figures too (Poiret figures); or Josefin throughout. */
+
+    .dc-scene[data-dc-type='poiret'] .dc-type__head,
+    .dc-scene[data-dc-type='figures'] .dc-type__head {
+        font-family: var(--theme-font-display);
+        font-size: 1.3rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+    }
+
+    .dc-scene[data-dc-type='poiret'] .dc-type__figure {
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .dc-scene[data-dc-type='figures'] .dc-type__figure {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        font-size: 2rem;
+    }
+
+    .dc-scene[data-dc-type='josefin'] .dc-type__head {
+        font-family: var(--theme-font-body);
+        font-size: 1.15rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    .dc-scene[data-dc-type='josefin'] .dc-type__figure {
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+    }
+
+    .dc-scene[data-dc-type] :is(.dc-type__label, .dc-type__table th) {
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .dc-scene[data-dc-type] :is(.dc-type__prose, .dc-type__table td, .dc-type__ticks, .kp-button) {
+        font-family: var(--theme-font-body);
+    }
+
+    .dc-scene[data-dc-type] .kp-timestamp {
+        font-family: var(--theme-font-mono);
+    }
+
+    .dc-scene[data-dc-type='josefin'] .kp-card__title {
+        font-family: var(--theme-font-body);
+    }
+
+    /* ── 19 Motifs ───────────────────────────────────────────────────────
+       Four: the fan where something happens (the empty state's crest), the
+       double rule on what matters, the lozenge as a point and a jewel, the
+       chevron as a corner's bite; the bulbs, the curtain and the glint are
+       retired, so the meter's lamps become a flat rule. Plus the picks:
+       marquee bulbs round the tiles and setbacks behind the trend. As today:
+       every mark at once. */
+
+    .dc-scene[data-dc-motifs] .dc-motif-card {
+        position: relative;
+        isolation: isolate;
+    }
+
+    .dc-scene:is([data-dc-motifs='four']) .dc-motif-card {
+        clip-path: var(--dc-bite-poly);
+        background-image: linear-gradient(
+            225deg,
+            var(--primary) 0 calc(var(--dc-bite) * 0.7071 + 1px),
+            transparent calc(var(--dc-bite) * 0.7071 + 1px)
+        );
+        background-size: var(--dc-bite) var(--dc-bite);
+        background-position: right top;
+        background-repeat: no-repeat;
+        border: 3px double var(--primary);
+    }
+
+    .dc-scene[data-dc-motifs='four'] .kp-meter {
+        background: var(--background);
+        box-shadow: 0 0 0 1px var(--border-strong);
+    }
+
+    .dc-scene[data-dc-motifs='four'] .kp-meter::before {
+        background: var(--kp-meter-fill-colour);
+        filter: none;
+    }
+
+    .dc-scene[data-dc-motifs='four'] .kp-meter__mark::before {
+        inline-size: 9px;
+        block-size: 9px;
+        clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+        inset-block-end: calc(100% + 1px);
+    }
+
+    .dc-scene[data-dc-motifs] .dc-motif-list {
+        list-style: none;
+        padding-inline-start: 0.25rem;
+    }
+
+    .dc-scene[data-dc-motifs='four'] .dc-motif-list li::before {
+        content: '';
+        display: inline-block;
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        margin-inline-end: 0.5rem;
+        background: var(--primary);
+        clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+    }
+
+    .dc-scene:is([data-dc-motifs='bulbs'], [data-dc-motifs='all']) .dc-motif-list li::before {
+        content: '';
+        display: inline-block;
+        inline-size: 0.45rem;
+        block-size: 0.45rem;
+        margin-inline-end: 0.5rem;
+        border-radius: 50%;
+        background: var(--primary);
+        filter: drop-shadow(0 0 3px var(--primary));
+    }
+
+    .dc-scene:is([data-dc-motifs='bulbs'], [data-dc-motifs='all']) .dc-motif-card {
+        border: 1px solid var(--border-strong);
+    }
+
+    .dc-scene:is([data-dc-motifs='bulbs'], [data-dc-motifs='all']) .dc-motif-card::after {
+        content: '';
+        position: absolute;
+        inset: 3px;
+        z-index: -1;
+        border: 6px solid transparent;
+        background: radial-gradient(circle, var(--primary) 0 1.8px, transparent 2.6px) 0 0 / 12px 12px round;
+        mask:
+            linear-gradient(var(--foreground) 0 0) border-box,
+            linear-gradient(var(--foreground) 0 0) padding-box;
+        mask-composite: exclude;
+        filter: drop-shadow(0 0 2px var(--primary));
+        pointer-events: none;
+    }
+
+    .dc-scene:is([data-dc-motifs='bulbs'], [data-dc-motifs='all']) .dc-motif-card::before {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 0;
+        z-index: -1;
+        block-size: 70%;
+        background: var(--primary);
+        opacity: 0.3;
+        mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'%3E%3Cpath d='M0 40V32H10V24H20V16H30V8H40V0H60V8H70V16H80V24H90V32H100V40M4 40V34H14V26H24V18H34V10H44V4H56V10H66V18H76V26H86V34H96V40' fill='none' stroke='currentColor' stroke-width='1' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E")
+            50% 100% / 100% 100% no-repeat;
+        pointer-events: none;
+    }
+
+    .dc-scene[data-dc-motifs='all'] .dc-motif-card .dc-title::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background: repeating-conic-gradient(from -90deg at 50% 130%, hsl(from var(--primary) h s l / 0.12) 0 4deg, transparent 4deg 15deg);
+    }
+
+    .dc-scene[data-dc-motifs='all'] .dc-motif-button {
+        box-shadow:
+            0 0 0.6rem hsl(from var(--primary) h s l / 0.5),
+            inset 0 -3px 0 var(--primary);
+    }
+
+    .dc-scene:is([data-dc-motifs='bulbs'], [data-dc-motifs='all']) .dc-divider {
+        border-block-style: solid;
+    }
+
+    .dc-scene[data-dc-motifs='all'] .dc-divider::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: calc(50% - 1px);
+        block-size: 2px;
+        background: linear-gradient(90deg, transparent, hsl(from var(--primary) h s 88%), transparent) 30% 0 / 35% 100% no-repeat;
+    }
+
+    .dc-scene[data-dc-motifs='all'] .dc-divider {
+        position: relative;
+    }
+}
