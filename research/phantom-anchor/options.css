@@ -1,0 +1,3009 @@
+/* research/phantom-anchor: every candidate of the one question, in the
+   theme's signature layer. Colours come from the theme's tokens only; every
+   motion sits under prefers-reduced-motion: no-preference, and the reduced
+   pose is the finished picture (the card down, the stamp on, the string taut). Durations are counted in units of the theme's beat
+   (--an-unit, 100 ms, set by demo.js) and multiplied by --an-slow (1, 2 or
+   4: the page's speed buttons).
+
+   SCOPE. The review dialog moves the section out of the page into its stage
+   (.rv-dialog__stage), so no rule here may hang on `.an-page`: the custom
+   properties and every rule hang on `.an-scene`, which moves with its
+   options (forest's demo lost every option animation in the dialog this way,
+   48bfa5b3).
+
+   THE CLOCK. One clock (demo.js) writes `data-an-phase` on every scene:
+   gap (the part is not drawn), in (8 units: it is drawn), hold (4 units: it
+   dwells, the press held, the card down), out (8 units: the drawing played
+   backwards, the same keyframes mirrored, what drew last going first). The
+   base style of every part is its drawn pose (so reduced motion and hold
+   show the finished picture); `gap` sets the undrawn pose; `in` and `hold`
+   run the drawing, `out` runs its mirror. Mirrored keyframes are written
+   as a pair (`ph-x` and `ph-x-out`) so every close is its open reversed.
+
+   THE ANCHOR'S THREE PLACES. Each candidate draws itself in its own scene
+   (`.an-hero`), as a progress bar (`.an-bar`) and as a button press
+   (`.an-btn`); the press lands at 7 units (87.5 %) and is held through the
+   dwell, and is released as the first unit of `out`. */
+
+@layer kp.signature {
+    /* ── The scene ───────────────────────────────────────────────────── */
+
+    .an-scene {
+        --an-ink: var(--foreground);
+        --an-red: var(--primary);
+        --an-void: var(--background);
+        /* One unit is the theme's beat; a loop is 22 units. */
+        --an-u: calc(var(--an-unit, 100ms) * var(--an-slow, 1));
+        --an-in: calc(8 * var(--an-u));
+        --an-loop: calc(22 * var(--an-u));
+        /* Phantom's own curves: the cut (a hard S that stops dead) and the shove (slow to start, a dead stop).
+           The cut is its own inverse; the shove played backwards is its point reflection. Inside @keyframes a
+           timing function is written out (a var() there is invalid and falls back to `ease`), as the literal
+           of these same curves; css/phantom-register.css owns them (--kp-cut, --kp-shove, --fx-ease). */
+        --an-cut: var(--kp-cut);
+        --an-shove: var(--kp-shove);
+        --an-cut-out: cubic-bezier(0.7, 0, 0.3, 1);
+        --an-shove-out: cubic-bezier(1, 0, 0.19, 1.01);
+        container-type: inline-size;
+        position: relative;
+        overflow: clip;
+        overflow-clip-margin: 0.75rem;
+        /* Nothing is translucent; the layout layer's busy dim stays off. */
+        --kp-busy-opacity: 1;
+    }
+
+    .an-scene .an-hero {
+        position: relative;
+        display: grid;
+        place-items: center;
+        min-block-size: clamp(13rem, 36cqi, 20rem);
+        padding: 1.25rem 0.5rem;
+    }
+
+    .an-scene .an-bar,
+    .an-scene .an-btn {
+        display: grid;
+        min-block-size: 6rem;
+    }
+
+    .an-scene .an-bar {
+        align-content: center;
+    }
+
+    .an-scene .an-btn {
+        place-items: center;
+    }
+
+    /* ── The building blocks every candidate draws with ──────────────── */
+
+    /* A part that is drawn: its end pose is its base style, its start pose
+       is set at `gap`, and `in` / `out` run the pair of keyframes. */
+    .an-scene .an-a--scale {
+        --an-kf: an-scale;
+        --an-kf-out: an-scale-out;
+        scale: var(--an-s1, 1) 1;
+        transform-origin: left center;
+    }
+
+    .an-scene .an-a--clip {
+        --an-kf: an-clip;
+        --an-kf-out: an-clip-out;
+        clip-path: inset(-1em var(--an-c1, 0%) -1em 0);
+    }
+
+    .an-scene .an-a--move {
+        --an-kf: an-move;
+        --an-kf-out: an-move-out;
+        translate: var(--an-x1, 0%) var(--an-y1, 0%);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .an-a--scale {
+            scale: var(--an-s0, 0) 1;
+        }
+
+        .an-scene[data-an-phase='gap'] .an-a--clip {
+            clip-path: inset(-1em var(--an-c0, 100%) -1em 0);
+        }
+
+        .an-scene[data-an-phase='gap'] .an-a--move {
+            translate: var(--an-x0, 0%) var(--an-y0, 0%);
+        }
+
+        .an-scene[data-an-phase='in'] .an-a,
+        .an-scene[data-an-phase='hold'] .an-a {
+            animation: var(--an-kf) calc(var(--an-l, 8) * var(--an-u)) var(--an-ease, linear) calc(var(--an-d, 0) * var(--an-u)) both;
+        }
+
+        /* The mirror starts as late as the drawing ended: what drew last
+           goes first. */
+        .an-scene[data-an-phase='out'] .an-a {
+            animation: var(--an-kf-out) calc(var(--an-l, 8) * var(--an-u)) var(--an-ease-out, var(--an-ease, linear))
+                calc((8 - var(--an-d, 0) - var(--an-l, 8)) * var(--an-u)) both;
+        }
+    }
+
+    @keyframes an-scale {
+        from {
+            scale: var(--an-s0, 0) 1;
+        }
+
+        to {
+            scale: var(--an-s1, 1) 1;
+        }
+    }
+
+    @keyframes an-scale-out {
+        from {
+            scale: var(--an-s1, 1) 1;
+        }
+
+        to {
+            scale: var(--an-s0, 0) 1;
+        }
+    }
+
+    @keyframes an-clip {
+        from {
+            clip-path: inset(-1em var(--an-c0, 100%) -1em 0);
+        }
+
+        to {
+            clip-path: inset(-1em var(--an-c1, 0%) -1em 0);
+        }
+    }
+
+    @keyframes an-clip-out {
+        from {
+            clip-path: inset(-1em var(--an-c1, 0%) -1em 0);
+        }
+
+        to {
+            clip-path: inset(-1em var(--an-c0, 100%) -1em 0);
+        }
+    }
+
+    @keyframes an-move {
+        from {
+            translate: var(--an-x0, 0%) var(--an-y0, 0%);
+        }
+
+        to {
+            translate: var(--an-x1, 0%) var(--an-y1, 0%);
+        }
+    }
+
+    @keyframes an-move-out {
+        from {
+            translate: var(--an-x1, 0%) var(--an-y1, 0%);
+        }
+
+        to {
+            translate: var(--an-x0, 0%) var(--an-y0, 0%);
+        }
+    }
+
+    /* The pressed face. Phantom's key cap has no ground to change: the rest face is the outline (a 2 px white frame,
+       transparent) and the pressed face is the same outline shoved 3 px down and right (`.kp-button:active`); the
+       primary is shoved 5 px with its deep-red shadow gone (css/phantom-register.css, fix-12 and scope-80). Landing
+       late (7 units) on the cut, and held. */
+    @keyframes an-face-late {
+        0% {
+            translate: 0 0;
+            animation-timing-function: linear;
+        }
+
+        87.5% {
+            translate: 0 0;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        100% {
+            translate: 3px 3px;
+        }
+    }
+
+    @keyframes an-face-late-out {
+        0% {
+            translate: 3px 3px;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        12.5% {
+            translate: 0 0;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* A button that is pressed at the end of the drawing: its base is the pressed face; `gap` is the rest face. */
+    .an-scene .an-press {
+        position: relative;
+        translate: 3px 3px;
+        min-block-size: clamp(2.75rem, 11cqi, 3.5rem);
+        font-size: clamp(1.05rem, 4.4cqi, 1.4rem);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .an-press {
+            translate: 0 0;
+        }
+
+        .an-scene[data-an-phase='in'] .an-press,
+        .an-scene[data-an-phase='hold'] .an-press {
+            animation: var(--an-face, an-face-late) var(--an-in) linear both;
+        }
+
+        .an-scene[data-an-phase='out'] .an-press {
+            animation: var(--an-face-out, an-face-late-out) var(--an-in) linear both;
+        }
+    }
+
+    /* ── Phantom's board: the calling card, the dot screen, the progress bar ── */
+
+    .an-scene {
+        /* How far a clip may reach past a part's box, so the hard shadow and what overhangs a card are never cut. */
+        --ph-ext: 2rem;
+        --ph-dots: radial-gradient(circle at center, hsl(from var(--foreground) h s l / 0.14) 0.9px, transparent 1px) 0 0 / 7px 7px;
+    }
+
+    /* Every scene is a dark board under the register's halftone screen (the hero's own, 0.22 at 0.55, as 0.14 here). */
+    .an-scene :is(.ph-t-hero, .ph-r-hero, .ph-s-hero, .ph-p-hero, .ph-m-hero, .ph-x-hero) {
+        background: var(--ph-dots);
+    }
+
+    .an-scene :is(.ph-t-hero, .ph-r-hero, .ph-s-hero, .ph-p-hero, .ph-h-hero) {
+        padding: 0;
+        place-items: stretch;
+    }
+
+    .an-scene :is(.ph-t-stage, .ph-r-stage, .ph-s-stage, .ph-h-stage) {
+        position: relative;
+        display: grid;
+        place-items: center;
+        align-content: center;
+        min-inline-size: 0;
+        padding: 1.4rem 1rem;
+    }
+
+    .an-scene :is(.ph-m-hero, .ph-x-hero) {
+        padding-block: 2.4rem;
+    }
+
+    /* The calling card: a white plate skewed -8° behind an upright title and line, a hard deep-red shadow, a red slab on its end. */
+    .an-scene .ph-card {
+        position: relative;
+        isolation: isolate;
+        display: grid;
+        gap: 0.3rem;
+        inline-size: min(100% - 1.5rem, 24rem);
+        min-inline-size: 0;
+        padding: clamp(0.9rem, 5cqi, 1.6rem) clamp(1.6rem, 8cqi, 4rem) clamp(0.9rem, 5cqi, 1.6rem) clamp(1rem, 4.5cqi, 2.4rem);
+        color: var(--background);
+    }
+
+    .an-scene .ph-card::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background: var(--foreground);
+        box-shadow: var(--ph-plate-shadow, 6px 6px 0 var(--kp-red-deep));
+        transform: skewX(var(--kp-skew));
+    }
+
+    .an-scene .ph-card__title,
+    .an-scene .ph-card__line {
+        min-inline-size: 0;
+        margin: 0;
+    }
+
+    .an-scene .ph-card__title {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .an-scene .ph-card__title {
+        font-family: var(--theme-font-display);
+        font-size: clamp(1.05rem, 7.2cqi, 2.6rem);
+        font-style: italic;
+        font-weight: 900;
+        letter-spacing: 0.01em;
+        line-height: 1;
+        text-transform: uppercase;
+    }
+
+    .an-scene .ph-card__line {
+        font-family: var(--theme-font-mono);
+        font-size: clamp(0.6rem, 2.7cqi, 0.85rem);
+        line-height: 1.25;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    .an-scene .ph-card__slash {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-end: -1px;
+        inline-size: clamp(1.2rem, 6.5cqi, 2.6rem);
+        background: var(--primary);
+        clip-path: polygon(34% 0, 100% 0, 100% 100%, 0 100%);
+        transform: skewX(var(--kp-skew));
+        z-index: -1;
+    }
+
+    /* Phantom's progress bar as the register draws it (`.kp-progressbar`): a slanted well with a halftone floor, a red fill
+       cut on a diagonal at the value, the deep-red plate standing 3 px behind the cut, a white shard riding the cut. */
+    .an-scene .ph-bar {
+        --ph-v: 0.72;
+        --ph-h: clamp(1.15rem, 5.4cqi, 1.6rem);
+        --ph-slant: calc(var(--ph-h) * 0.375);
+        --ph-shard: calc(var(--ph-h) * 0.3125);
+        --ph-gap: 3px;
+        --ph-edge: calc(var(--ph-v) * (100% - var(--ph-slant)));
+        inline-size: 100%;
+    }
+
+    .an-scene .ph-bar__well {
+        position: relative;
+        isolation: isolate;
+        display: block;
+        block-size: var(--ph-h);
+    }
+
+    .an-scene .ph-bar__well::before,
+    .an-scene .ph-bar__well::after {
+        content: '';
+        position: absolute;
+        z-index: 0;
+    }
+
+    .an-scene .ph-bar__well::before {
+        inset: 0;
+        background: var(--border-strong);
+        clip-path: polygon(var(--ph-slant) 0, 100% 0, calc(100% - var(--ph-slant)) 100%, 0 100%);
+    }
+
+    .an-scene .ph-bar__well::after {
+        inset: 2px;
+        background:
+            radial-gradient(circle at center, color-mix(in srgb, var(--foreground) 28%, transparent) 0.9px, transparent 1px) 0 0 / 5px 5px,
+            var(--background);
+        clip-path: polygon(calc(var(--ph-slant) - 1px) 0, 100% 0, calc(100% - var(--ph-slant) + 1px) 100%, 0 100%);
+    }
+
+    .an-scene .ph-bar__fill {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        isolation: isolate;
+        clip-path: polygon(var(--ph-slant) 0, 100% 0, calc(100% - var(--ph-slant)) 100%, 0 100%);
+        /* The fill is drawn by its two plates, not by the clip engine. */
+        --an-kf: none;
+        --an-kf-out: none;
+    }
+
+    .an-scene .ph-bar__fill::before,
+    .an-scene .ph-bar__fill::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+    }
+
+    .an-scene .ph-bar__fill::before {
+        background: var(--primary);
+        clip-path: polygon(var(--ph-slant) 0, calc(var(--ph-edge) * 1 + var(--ph-slant)) 0, calc(var(--ph-edge) * 1) 100%, 0 100%);
+    }
+
+    .an-scene .ph-bar__fill::after {
+        z-index: -1;
+        background: var(--kp-red-deep);
+        clip-path: polygon(
+            var(--ph-slant) 0,
+            calc(var(--ph-edge) * 1 + var(--ph-slant) + var(--ph-gap)) 0,
+            calc(var(--ph-edge) * 1 + var(--ph-gap)) 100%,
+            0 100%
+        );
+    }
+
+    .an-scene .ph-bar__shard {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: calc(var(--ph-edge) + var(--ph-gap) * 2 + 1px);
+        z-index: 3;
+        inline-size: calc(var(--ph-slant) + var(--ph-shard));
+        background: var(--foreground);
+        clip-path: polygon(var(--ph-slant) 0, 100% 0, var(--ph-shard) 100%, 0 100%);
+        --an-kf: ph-shard-drop;
+        --an-kf-out: ph-shard-drop-out;
+    }
+
+    .an-scene .ph-bar__well > .an-a:not(.ph-bar__fill, .ph-bar__shard) {
+        z-index: 4;
+    }
+
+    @keyframes ph-shard-drop {
+        0% {
+            scale: 1 0;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        100% {
+            scale: 1 1;
+        }
+    }
+
+    @keyframes ph-shard-drop-out {
+        0% {
+            scale: 1 1;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        100% {
+            scale: 1 0;
+        }
+    }
+
+    /* A pin: a red disc with a black head and a hard deep-red shadow. */
+    .an-scene :is(.ph-p-pin, .ph-p-bar__pin, .ph-p-press__pin) {
+        position: absolute;
+        z-index: 5;
+        inline-size: clamp(0.85rem, 4.2cqi, 1.25rem);
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: radial-gradient(circle, var(--background) 0 24%, var(--primary) 26%);
+        box-shadow: 2px 2px 0 var(--kp-red-deep);
+        translate: -50% -50%;
+    }
+
+    /* A button in the scenes: the register's key cap, a little larger so the press is seen. */
+    .an-scene .an-btn .kp-button {
+        padding-inline: clamp(1.4rem, 7cqi, 2.4rem);
+    }
+
+    /* ── 1 · The card is thrown ──────────────────────────────────────── */
+
+    /* The calling card flies in from off the stage, turning, and slaps down a degree and a half askew on the shove's dead
+       stop (4 units); at the stop its deep-red shadow is cut in (the last unit of 5) and the board's halftone jolts 2 px
+       (a one-step translate, 4 to 5). Out: snatched off the way it came. */
+    .an-scene .ph-t-hero {
+        overflow: clip;
+    }
+
+    .an-scene .ph-t-stage {
+        background: var(--ph-dots);
+        --an-kf: ph-t-jolt;
+        --an-kf-out: ph-t-jolt-out;
+        --an-l: 1;
+        --an-d: 4;
+    }
+
+    .an-scene .ph-t-card {
+        --ph-plate-shadow: none;
+        rotate: -1.5deg;
+        filter: drop-shadow(6px 6px 0 var(--kp-red-deep));
+        --an-kf: ph-t-fly;
+        --an-kf-out: ph-t-fly-out;
+        --an-l: 5;
+        --an-d: 0;
+    }
+
+    @keyframes ph-t-fly {
+        0% {
+            translate: -125% 30%;
+            rotate: -22deg;
+            scale: 1.15;
+            filter: drop-shadow(0 0 0 var(--kp-red-deep));
+            animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
+        }
+
+        79.9% {
+            translate: 0 0;
+            rotate: -1.5deg;
+            scale: 1;
+            filter: drop-shadow(0 0 0 var(--kp-red-deep));
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        100% {
+            translate: 0 0;
+            rotate: -1.5deg;
+            scale: 1;
+            filter: drop-shadow(6px 6px 0 var(--kp-red-deep));
+        }
+    }
+
+    @keyframes ph-t-fly-out {
+        0% {
+            translate: 0 0;
+            rotate: -1.5deg;
+            scale: 1;
+            filter: drop-shadow(6px 6px 0 var(--kp-red-deep));
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        20.1% {
+            translate: 0 0;
+            rotate: -1.5deg;
+            scale: 1;
+            filter: drop-shadow(0 0 0 var(--kp-red-deep));
+            animation-timing-function: cubic-bezier(1, 0, 0.19, 1);
+        }
+
+        100% {
+            translate: -125% 30%;
+            rotate: -22deg;
+            scale: 1.15;
+            filter: drop-shadow(0 0 0 var(--kp-red-deep));
+        }
+    }
+
+    @keyframes ph-t-jolt {
+        0% {
+            background-position: 0 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        20% {
+            background-position: 2px 2px;
+            animation-timing-function: steps(1, end);
+        }
+
+        60% {
+            background-position: 0 0;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            background-position: 0 0;
+        }
+    }
+
+    @keyframes ph-t-jolt-out {
+        0% {
+            background-position: 0 0;
+            animation-timing-function: linear;
+        }
+
+        40% {
+            background-position: 0 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        80% {
+            background-position: 2px 2px;
+            animation-timing-function: steps(1, start);
+        }
+
+        100% {
+            background-position: 0 0;
+        }
+    }
+
+    /* The bar: the red slab (both plates) is shoved across the well on the shove and slaps to the value (5 units); the
+       shard drops onto the cut as it stops (4 to 5). */
+    .an-scene .ph-t-bar .ph-bar__shard {
+        --an-d: 4;
+        --an-l: 1;
+    }
+
+    @keyframes ph-t-slab {
+        0% {
+            translate: -105% 0;
+            animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes ph-t-slab-out {
+        0% {
+            translate: 0 0;
+            animation-timing-function: cubic-bezier(1, 0, 0.19, 1);
+        }
+
+        100% {
+            translate: -105% 0;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .ph-t-bar .ph-bar__fill::before,
+        .an-scene[data-an-phase='gap'] .ph-t-bar .ph-bar__fill::after {
+            translate: -105% 0;
+        }
+
+        .an-scene[data-an-phase='in'] .ph-t-bar .ph-bar__fill::before,
+        .an-scene[data-an-phase='hold'] .ph-t-bar .ph-bar__fill::before,
+        .an-scene[data-an-phase='in'] .ph-t-bar .ph-bar__fill::after,
+        .an-scene[data-an-phase='hold'] .ph-t-bar .ph-bar__fill::after {
+            animation: ph-t-slab calc(5 * var(--an-u)) linear calc(0 * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .ph-t-bar .ph-bar__fill::before,
+        .an-scene[data-an-phase='out'] .ph-t-bar .ph-bar__fill::after {
+            animation: ph-t-slab-out calc(5 * var(--an-u)) linear calc(3 * var(--an-u)) both;
+        }
+    }
+
+    /* The button: the primary key cap drops onto its own shadow in one cut (7 to 8), held; the shadow is gone under it. */
+    .an-scene .ph-t-press {
+        translate: 5px 5px;
+        filter: drop-shadow(0 0 0 var(--kp-red-deep));
+        --an-face: ph-t-press;
+        --an-face-out: ph-t-press-out;
+    }
+
+    @keyframes ph-t-press {
+        0% {
+            translate: 0 0;
+            filter: drop-shadow(5px 5px 0 var(--kp-red-deep));
+            animation-timing-function: linear;
+        }
+
+        87.5% {
+            translate: 0 0;
+            filter: drop-shadow(5px 5px 0 var(--kp-red-deep));
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        100% {
+            translate: 5px 5px;
+            filter: drop-shadow(0 0 0 var(--kp-red-deep));
+        }
+    }
+
+    @keyframes ph-t-press-out {
+        0% {
+            translate: 5px 5px;
+            filter: drop-shadow(0 0 0 var(--kp-red-deep));
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        12.5% {
+            translate: 0 0;
+            filter: drop-shadow(5px 5px 0 var(--kp-red-deep));
+            animation-timing-function: linear;
+        }
+
+        100% {
+            translate: 0 0;
+            filter: drop-shadow(5px 5px 0 var(--kp-red-deep));
+        }
+    }
+
+    /* ── 2 · The red bar slides behind it ────────────────────────────── */
+
+    /* A red parallelogram (skewed like the register's hover bar) slides out from behind the capitals in 3 units on the cut,
+       and the ink flips to black exactly where the red passes: the white text is clipped to what the bar has not reached,
+       a black copy to what it has, both on the bar's own edge. The line below follows one unit later. */
+    .an-scene .ph-r-stage {
+        padding-inline: 0.4rem;
+        gap: clamp(0.5rem, 3cqi, 0.9rem);
+        justify-items: center;
+    }
+
+    .an-scene :is(.ph-r-title, .ph-r-line) {
+        --s: 0.34em;
+        display: inline-grid;
+        max-inline-size: 100%;
+        margin: 0;
+        font-family: var(--theme-font-display);
+        font-style: italic;
+        font-weight: 900;
+        letter-spacing: 0.02em;
+        line-height: 1;
+        text-transform: uppercase;
+    }
+
+    .an-scene .ph-r-title {
+        font-size: clamp(1.1rem, 7.8cqi, 3.4rem);
+    }
+
+    .an-scene .ph-r-line {
+        font-size: clamp(0.9rem, 5.4cqi, 2.2rem);
+    }
+
+    .an-scene :is(.ph-r-title, .ph-r-line) > * {
+        grid-area: 1 / 1;
+        min-inline-size: 0;
+        padding: 0.12em 0.52em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .an-scene .ph-r-text {
+        color: var(--foreground);
+        clip-path: polygon(100% 0, calc(100% + 1em) 0, calc(100% + 1em) 100%, calc(100% - var(--s)) 100%);
+        --an-kf: ph-r-keep;
+        --an-kf-out: ph-r-keep-out;
+        --an-l: 3;
+    }
+
+    .an-scene .ph-r-bar {
+        padding: 0;
+        background: var(--primary);
+        clip-path: polygon(var(--s) 0, 100% 0, calc(100% - var(--s)) 100%, 0 100%);
+        --an-kf: ph-r-slab;
+        --an-kf-out: ph-r-slab-out;
+        --an-l: 3;
+    }
+
+    .an-scene .ph-r-ink {
+        color: var(--background);
+        clip-path: polygon(var(--s) 0, 100% 0, calc(100% - var(--s)) 100%, 0 100%);
+        --an-kf: ph-r-slab;
+        --an-kf-out: ph-r-slab-out;
+        --an-l: 3;
+    }
+
+    .an-scene .ph-r-line > .an-a {
+        --an-d: 1;
+    }
+
+    @keyframes ph-r-slab {
+        0% {
+            clip-path: polygon(var(--s) 0, var(--s) 0, 0 100%, 0 100%);
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        100% {
+            clip-path: polygon(var(--s) 0, 100% 0, calc(100% - var(--s)) 100%, 0 100%);
+        }
+    }
+
+    @keyframes ph-r-slab-out {
+        0% {
+            clip-path: polygon(var(--s) 0, 100% 0, calc(100% - var(--s)) 100%, 0 100%);
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        100% {
+            clip-path: polygon(var(--s) 0, var(--s) 0, 0 100%, 0 100%);
+        }
+    }
+
+    @keyframes ph-r-keep {
+        0% {
+            clip-path: polygon(var(--s) 0, calc(100% + 1em) 0, calc(100% + 1em) 100%, 0 100%);
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        100% {
+            clip-path: polygon(100% 0, calc(100% + 1em) 0, calc(100% + 1em) 100%, calc(100% - var(--s)) 100%);
+        }
+    }
+
+    @keyframes ph-r-keep-out {
+        0% {
+            clip-path: polygon(100% 0, calc(100% + 1em) 0, calc(100% + 1em) 100%, calc(100% - var(--s)) 100%);
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        100% {
+            clip-path: polygon(var(--s) 0, calc(100% + 1em) 0, calc(100% + 1em) 100%, 0 100%);
+        }
+    }
+
+    /* The bar: the red slab slides across the well on the cut, as the register's hover bar does (5 units). */
+    .an-scene .ph-r-barp .ph-bar__shard {
+        --an-d: 5;
+        --an-l: 1;
+    }
+
+    @keyframes ph-r-slide {
+        0% {
+            translate: -105% 0;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes ph-r-slide-out {
+        0% {
+            translate: 0 0;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        100% {
+            translate: -105% 0;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .ph-r-barp .ph-bar__fill::before,
+        .an-scene[data-an-phase='gap'] .ph-r-barp .ph-bar__fill::after {
+            translate: -105% 0;
+        }
+
+        .an-scene[data-an-phase='in'] .ph-r-barp .ph-bar__fill::before,
+        .an-scene[data-an-phase='hold'] .ph-r-barp .ph-bar__fill::before,
+        .an-scene[data-an-phase='in'] .ph-r-barp .ph-bar__fill::after,
+        .an-scene[data-an-phase='hold'] .ph-r-barp .ph-bar__fill::after {
+            animation: ph-r-slide calc(5 * var(--an-u)) linear calc(0 * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .ph-r-barp .ph-bar__fill::before,
+        .an-scene[data-an-phase='out'] .ph-r-barp .ph-bar__fill::after {
+            animation: ph-r-slide-out calc(5 * var(--an-u)) linear calc(3 * var(--an-u)) both;
+        }
+    }
+
+    /* The button: the register's hover, fired by the press. The red bar fills the key cap from its start in one cut (7 to 8)
+       and the label's ink flips black as it goes. */
+    .an-scene .ph-r-press::after {
+        width: calc(100% - 4px);
+    }
+
+    .an-scene .ph-r-press .kp-button__label {
+        color: var(--primary-foreground);
+    }
+
+    @keyframes ph-r-fill {
+        0% {
+            width: 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        87.5% {
+            width: 0;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        100% {
+            width: calc(100% - 4px);
+        }
+    }
+
+    @keyframes ph-r-fill-out {
+        0% {
+            width: calc(100% - 4px);
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        12.5% {
+            width: 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        100% {
+            width: 0;
+        }
+    }
+
+    @keyframes ph-r-ink-flip {
+        0% {
+            color: var(--foreground);
+            animation-timing-function: steps(1, end);
+        }
+
+        91% {
+            color: var(--primary-foreground);
+            animation-timing-function: linear;
+        }
+
+        100% {
+            color: var(--primary-foreground);
+        }
+    }
+
+    @keyframes ph-r-ink-flip-out {
+        0% {
+            color: var(--primary-foreground);
+            animation-timing-function: linear;
+        }
+
+        9% {
+            color: var(--primary-foreground);
+            animation-timing-function: steps(1, start);
+        }
+
+        100% {
+            color: var(--foreground);
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .ph-r-press::after {
+            width: 0;
+        }
+
+        .an-scene[data-an-phase='in'] .ph-r-press::after,
+        .an-scene[data-an-phase='hold'] .ph-r-press::after {
+            animation: ph-r-fill calc(8 * var(--an-u)) linear calc(0 * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .ph-r-press::after {
+            animation: ph-r-fill-out calc(8 * var(--an-u)) linear calc(0 * var(--an-u)) both;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .ph-r-press .kp-button__label {
+            color: var(--foreground);
+        }
+
+        .an-scene[data-an-phase='in'] .ph-r-press .kp-button__label,
+        .an-scene[data-an-phase='hold'] .ph-r-press .kp-button__label {
+            animation: ph-r-ink-flip calc(8 * var(--an-u)) linear calc(0 * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .ph-r-press .kp-button__label {
+            animation: ph-r-ink-flip-out calc(8 * var(--an-u)) linear calc(0 * var(--an-u)) both;
+        }
+    }
+
+    /* ── 3 · Slashed: torn in at an angle ────────────────────────────── */
+
+    /* A red slash cuts across the board from its top end to its foot in 2 units on the cut; behind it the card is torn in:
+       a jagged edge opens from the slash's line to both sides (2 to 5); the slash is cut back (5 to 6) and the card keeps
+       its own red slab. Out: the tear closes, the slash is cut again. */
+    .an-scene .ph-s-hero {
+        overflow: clip;
+    }
+
+    .an-scene .ph-s-slash {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: calc(50% - min(100% - 2.5rem, 24rem) * 0.34);
+        z-index: 3;
+        inline-size: clamp(0.5rem, 2.6cqi, 0.8rem);
+        background: var(--primary);
+        box-shadow: inset -3px 0 0 var(--kp-red-deep);
+        rotate: 20deg;
+        clip-path: inset(100% 0 0 0);
+        --an-kf: ph-s-cut;
+        --an-kf-out: ph-s-cut-out;
+        --an-l: 8;
+    }
+
+    .an-scene .ph-s-card {
+        clip-path: polygon(
+            calc(-1 * var(--ph-ext)) calc(-1 * var(--ph-ext)),
+            calc(100% + var(--ph-ext)) calc(-1 * var(--ph-ext)),
+            calc(100% + var(--ph-ext)) calc(100% + var(--ph-ext)),
+            calc(-1 * var(--ph-ext)) calc(100% + var(--ph-ext))
+        );
+        --an-kf: ph-s-tear;
+        --an-kf-out: ph-s-tear-out;
+        --an-l: 3;
+        --an-d: 2;
+    }
+
+    @keyframes ph-s-cut {
+        0% {
+            clip-path: inset(0 0 100% 0);
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        25% {
+            clip-path: inset(0 0 0 0);
+            animation-timing-function: linear;
+        }
+
+        62.5% {
+            clip-path: inset(0 0 0 0);
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        75% {
+            clip-path: inset(100% 0 0 0);
+            animation-timing-function: linear;
+        }
+
+        100% {
+            clip-path: inset(100% 0 0 0);
+        }
+    }
+
+    @keyframes ph-s-cut-out {
+        0% {
+            clip-path: inset(100% 0 0 0);
+            animation-timing-function: linear;
+        }
+
+        25% {
+            clip-path: inset(100% 0 0 0);
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        37.5% {
+            clip-path: inset(0 0 0 0);
+            animation-timing-function: linear;
+        }
+
+        75% {
+            clip-path: inset(0 0 0 0);
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        100% {
+            clip-path: inset(0 0 100% 0);
+        }
+    }
+
+    @keyframes ph-s-tear {
+        0% {
+            clip-path: polygon(25% 0%, 25% 0%, 21.4% 20%, 17.8% 40%, 14.2% 60%, 10.6% 80%, 7% 100%, 7% 100%);
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        100% {
+            clip-path: polygon(
+                calc(-1 * var(--ph-ext) - 1%) calc(-1 * var(--ph-ext)),
+                calc(115% + var(--ph-ext) + 9%) calc(-1 * var(--ph-ext)),
+                calc(115% + var(--ph-ext) + 9.4%) 20%,
+                calc(115% + var(--ph-ext) + -1.2%) 40%,
+                calc(115% + var(--ph-ext) + 3.2%) 60%,
+                calc(115% + var(--ph-ext) + -7.4%) 80%,
+                calc(115% + var(--ph-ext) + -9%) calc(100% + var(--ph-ext)),
+                calc(-1 * var(--ph-ext) - 19%) calc(100% + var(--ph-ext))
+            );
+        }
+    }
+
+    @keyframes ph-s-tear-out {
+        0% {
+            clip-path: polygon(
+                calc(-1 * var(--ph-ext) - 1%) calc(-1 * var(--ph-ext)),
+                calc(115% + var(--ph-ext) + 9%) calc(-1 * var(--ph-ext)),
+                calc(115% + var(--ph-ext) + 9.4%) 20%,
+                calc(115% + var(--ph-ext) + -1.2%) 40%,
+                calc(115% + var(--ph-ext) + 3.2%) 60%,
+                calc(115% + var(--ph-ext) + -7.4%) 80%,
+                calc(115% + var(--ph-ext) + -9%) calc(100% + var(--ph-ext)),
+                calc(-1 * var(--ph-ext) - 19%) calc(100% + var(--ph-ext))
+            );
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        100% {
+            clip-path: polygon(25% 0%, 25% 0%, 21.4% 20%, 17.8% 40%, 14.2% 60%, 10.6% 80%, 7% 100%, 7% 100%);
+        }
+    }
+
+    /* The bar: the register's diagonal cut sweeps the well on the cut (5 units) with a slash at its head, which is cut back
+       once the fill has landed (5 to 6). */
+    .an-scene .ph-s-bar .ph-bar__shard {
+        --an-d: 5;
+        --an-l: 1;
+    }
+
+    .an-scene .ph-s-bar__slash {
+        position: absolute;
+        inset-block: -45% -45%;
+        inline-size: clamp(0.25rem, 1.4cqi, 0.4rem);
+        background: var(--primary);
+        rotate: 28deg;
+        translate: -50% 0;
+        inset-inline-start: calc(var(--ph-edge) + var(--ph-slant) * 0.5);
+        clip-path: inset(100% 0 0 0);
+        --an-kf: ph-s-head;
+        --an-kf-out: ph-s-head-out;
+        --an-l: 6;
+    }
+
+    @keyframes ph-s-head {
+        0% {
+            inset-inline-start: calc(var(--ph-slant) * 0.5);
+            clip-path: inset(0 0 0 0);
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        83.3333% {
+            inset-inline-start: calc(var(--ph-edge) + var(--ph-slant) * 0.5);
+            clip-path: inset(0 0 0 0);
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        100% {
+            inset-inline-start: calc(var(--ph-edge) + var(--ph-slant) * 0.5);
+            clip-path: inset(100% 0 0 0);
+        }
+    }
+
+    @keyframes ph-s-head-out {
+        0% {
+            inset-inline-start: calc(var(--ph-edge) + var(--ph-slant) * 0.5);
+            clip-path: inset(100% 0 0 0);
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        16.6667% {
+            inset-inline-start: calc(var(--ph-edge) + var(--ph-slant) * 0.5);
+            clip-path: inset(0 0 0 0);
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        100% {
+            inset-inline-start: calc(var(--ph-slant) * 0.5);
+            clip-path: inset(0 0 0 0);
+        }
+    }
+
+    @keyframes ph-grow-red {
+        0% {
+            clip-path: polygon(var(--ph-slant) 0, calc(var(--ph-edge) * 0 + var(--ph-slant)) 0, calc(var(--ph-edge) * 0) 100%, 0 100%);
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        100% {
+            clip-path: polygon(var(--ph-slant) 0, calc(var(--ph-edge) * 1 + var(--ph-slant)) 0, calc(var(--ph-edge) * 1) 100%, 0 100%);
+        }
+    }
+
+    @keyframes ph-grow-red-out {
+        0% {
+            clip-path: polygon(var(--ph-slant) 0, calc(var(--ph-edge) * 1 + var(--ph-slant)) 0, calc(var(--ph-edge) * 1) 100%, 0 100%);
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        100% {
+            clip-path: polygon(var(--ph-slant) 0, calc(var(--ph-edge) * 0 + var(--ph-slant)) 0, calc(var(--ph-edge) * 0) 100%, 0 100%);
+        }
+    }
+
+    @keyframes ph-grow-plate {
+        0% {
+            clip-path: polygon(var(--ph-slant) 0, var(--ph-slant) 0, 0 100%, 0 100%);
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        100% {
+            clip-path: polygon(
+                var(--ph-slant) 0,
+                calc(var(--ph-edge) * 1 + var(--ph-slant) + var(--ph-gap)) 0,
+                calc(var(--ph-edge) * 1 + var(--ph-gap)) 100%,
+                0 100%
+            );
+        }
+    }
+
+    @keyframes ph-grow-plate-out {
+        0% {
+            clip-path: polygon(
+                var(--ph-slant) 0,
+                calc(var(--ph-edge) * 1 + var(--ph-slant) + var(--ph-gap)) 0,
+                calc(var(--ph-edge) * 1 + var(--ph-gap)) 100%,
+                0 100%
+            );
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        100% {
+            clip-path: polygon(var(--ph-slant) 0, var(--ph-slant) 0, 0 100%, 0 100%);
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .ph-s-bar .ph-bar__fill::before {
+            clip-path: polygon(var(--ph-slant) 0, calc(var(--ph-edge) * 0 + var(--ph-slant)) 0, calc(var(--ph-edge) * 0) 100%, 0 100%);
+        }
+
+        .an-scene[data-an-phase='in'] .ph-s-bar .ph-bar__fill::before,
+        .an-scene[data-an-phase='hold'] .ph-s-bar .ph-bar__fill::before {
+            animation: ph-grow-red calc(5 * var(--an-u)) linear calc(0 * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .ph-s-bar .ph-bar__fill::before {
+            animation: ph-grow-red-out calc(5 * var(--an-u)) linear calc(3 * var(--an-u)) both;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .ph-s-bar .ph-bar__fill::after {
+            clip-path: polygon(var(--ph-slant) 0, var(--ph-slant) 0, 0 100%, 0 100%);
+        }
+
+        .an-scene[data-an-phase='in'] .ph-s-bar .ph-bar__fill::after,
+        .an-scene[data-an-phase='hold'] .ph-s-bar .ph-bar__fill::after {
+            animation: ph-grow-plate calc(5 * var(--an-u)) linear calc(0 * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .ph-s-bar .ph-bar__fill::after {
+            animation: ph-grow-plate-out calc(5 * var(--an-u)) linear calc(3 * var(--an-u)) both;
+        }
+    }
+
+    /* The button: a red slash cuts steeply across the face in the last unit (clip along its length, on the cut), behind the
+       label, between the two words. */
+    .an-scene .ph-s-press__slash {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background: var(--primary);
+        clip-path: polygon(55% 0, 63% 0, 52% 100%, 44% 100%);
+        --an-kf: ph-s-pslash;
+        --an-kf-out: ph-s-pslash-out;
+        --an-l: 1;
+        --an-d: 7;
+    }
+
+    @keyframes ph-s-pslash {
+        0% {
+            clip-path: polygon(55% 0, 63% 0, 63% 0, 55% 0);
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        100% {
+            clip-path: polygon(55% 0, 63% 0, 52% 100%, 44% 100%);
+        }
+    }
+
+    @keyframes ph-s-pslash-out {
+        0% {
+            clip-path: polygon(55% 0, 63% 0, 52% 100%, 44% 100%);
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        100% {
+            clip-path: polygon(55% 0, 63% 0, 63% 0, 55% 0);
+        }
+    }
+
+    /* ── 4 · Pinned with red string ──────────────────────────────────── */
+
+    /* The evidence board. A red pin is pushed into the board in one cut (1 unit); a red string is pulled from it across
+       the board over 3 units, hanging slack at a few degrees and snapping straight on the shove's stop; the card is
+       pinned at the string's end at 4 units with a jolt. The card hangs from its own pin. Out: unpinned, the string
+       goes slack and is pulled back, the first pin out. */
+    .an-scene .ph-p-stage {
+        position: relative;
+        display: grid;
+        grid-template-columns: clamp(1.6rem, 11cqi, 4.6rem) minmax(0, 1fr);
+        grid-template-rows: clamp(3rem, 15cqi, 5rem) auto;
+        align-content: center;
+        inline-size: min(100%, 27rem);
+        margin-inline: auto;
+        padding: 1.4rem 0.8rem;
+        box-sizing: border-box;
+    }
+
+    .an-scene .ph-p-pin--start {
+        grid-area: 1 / 1;
+        inset-block-start: 0;
+        inset-inline-start: 0;
+        --an-kf: ph-pin;
+        --an-kf-out: ph-pin-out;
+        --an-l: 1.2;
+        --an-d: 1;
+    }
+
+    .an-scene .ph-p-string {
+        grid-area: 1 / 1;
+        background: linear-gradient(
+            to top right,
+            transparent calc(50% - 1.5px),
+            var(--primary) calc(50% - 1.5px) calc(50% + 1.5px),
+            transparent calc(50% + 1.5px)
+        );
+        transform-origin: 0 0;
+        --an-kf: ph-p-pull;
+        --an-kf-out: ph-p-pull-out;
+        --an-l: 3;
+        --an-d: 1;
+    }
+
+    .an-scene .ph-p-card {
+        grid-area: 2 / 2;
+        inline-size: auto;
+        transform-origin: 0 0;
+        rotate: -2deg;
+        --ph-plate-shadow: 6px 6px 0 var(--kp-red-deep);
+        --an-kf: ph-p-pinned;
+        --an-kf-out: ph-p-pinned-out;
+        --an-l: 3;
+        --an-d: 3.4;
+    }
+
+    .an-scene .ph-p-card .ph-card__title {
+        font-size: clamp(1rem, 5.8cqi, 2.4rem);
+    }
+
+    .an-scene .ph-p-card::before {
+        transform-origin: 0 0;
+    }
+
+    .an-scene .ph-p-pin--card {
+        inset-block-start: 0;
+        inset-inline-start: 0;
+        --an-kf: ph-pin;
+        --an-kf-out: ph-pin-out;
+        --an-l: 1.2;
+        --an-d: 0.6;
+    }
+
+    @keyframes ph-pin {
+        0% {
+            scale: 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        1% {
+            scale: 1.8;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        100% {
+            scale: 1;
+        }
+    }
+
+    @keyframes ph-pin-out {
+        0% {
+            scale: 1;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        99% {
+            scale: 1.8;
+            animation-timing-function: steps(1, start);
+        }
+
+        100% {
+            scale: 0;
+        }
+    }
+
+    @keyframes ph-p-pull {
+        0% {
+            clip-path: inset(0 100% 100% 0);
+            rotate: 4deg;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        80% {
+            clip-path: inset(0 0 0 0);
+            rotate: 3deg;
+            animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
+        }
+
+        100% {
+            clip-path: inset(0 0 0 0);
+            rotate: 0deg;
+        }
+    }
+
+    @keyframes ph-p-pull-out {
+        0% {
+            clip-path: inset(0 0 0 0);
+            rotate: 0deg;
+            animation-timing-function: cubic-bezier(1, 0, 0.19, 1);
+        }
+
+        20% {
+            clip-path: inset(0 0 0 0);
+            rotate: 3deg;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        100% {
+            clip-path: inset(0 100% 100% 0);
+            rotate: 4deg;
+        }
+    }
+
+    @keyframes ph-p-pinned {
+        0% {
+            scale: 0;
+            translate: 0 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        1% {
+            scale: 1.12;
+            translate: 0 0;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        20% {
+            scale: 1;
+            translate: 0 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        23% {
+            scale: 1;
+            translate: 3px 2px;
+            animation-timing-function: steps(1, end);
+        }
+
+        36% {
+            scale: 1;
+            translate: 0 0;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            scale: 1;
+            translate: 0 0;
+        }
+    }
+
+    @keyframes ph-p-pinned-out {
+        0% {
+            scale: 1;
+            translate: 0 0;
+            animation-timing-function: linear;
+        }
+
+        64% {
+            scale: 1;
+            translate: 0 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        77% {
+            scale: 1;
+            translate: 3px 2px;
+            animation-timing-function: steps(1, start);
+        }
+
+        80% {
+            scale: 1;
+            translate: 0 0;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        99% {
+            scale: 1.12;
+            translate: 0 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        100% {
+            scale: 0;
+            translate: 0 0;
+        }
+    }
+
+    /* The bar: a string is pulled across the well from a pin at its start to the shard (the fill as string, 5 units). */
+    .an-scene .ph-p-bar .ph-bar__fill {
+        display: none;
+    }
+
+    .an-scene .ph-p-bar__pin {
+        inset-block-start: 50%;
+        inset-inline-start: calc(var(--ph-slant) * 0.5);
+        --an-kf: ph-pin;
+        --an-kf-out: ph-pin-out;
+        --an-l: 1.2;
+        --an-d: 0;
+    }
+
+    .an-scene .ph-p-bar__string {
+        position: absolute;
+        inset-block-start: calc(50% - 1.5px);
+        inset-inline-start: calc(var(--ph-slant) * 0.5);
+        z-index: 3;
+        inline-size: calc(var(--ph-edge) + var(--ph-slant) * 0.5);
+        block-size: 3px;
+        background: var(--primary);
+        --an-l: 5;
+        --an-d: 1;
+        --an-ease: var(--an-cut);
+        --an-ease-out: var(--an-cut-out);
+    }
+
+    .an-scene .ph-p-bar .ph-bar__shard {
+        --an-d: 5.5;
+        --an-l: 1;
+    }
+
+    /* The button: a pin is pushed into the key cap's corner in one cut, as the face is pressed. */
+    .an-scene .ph-p-press__pin {
+        inset-block-start: 0.15rem;
+        inset-inline-start: calc(100% - 0.4rem);
+        --an-kf: ph-pin;
+        --an-kf-out: ph-pin-out;
+        --an-l: 1;
+        --an-d: 7;
+    }
+
+    /* ── 5 · The halftone shifts ─────────────────────────────────────── */
+
+    /* The board's dot screen slips sideways in hard cuts, a photocopy slipping in the machine (4, -3, 2, then back: 1 to 4
+       units, each held), while the card is laid under it in one cut (2 units); when the screen locks (4) the title's ink
+       goes from halftone to full black. Out: the screen slips again as the card is cut out. */
+    .an-scene .ph-h-screen {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        background: radial-gradient(circle at center, hsl(from var(--foreground) h s l / 0.3) 1.5px, transparent 1.9px) 0 0 / 9px 9px;
+        pointer-events: none;
+        --an-kf: ph-h-slip;
+        --an-kf-out: ph-h-slip-out;
+        --an-l: 4;
+    }
+
+    .an-scene .ph-h-card {
+        z-index: 1;
+        clip-path: polygon(
+            calc(-1 * var(--ph-ext)) calc(-1 * var(--ph-ext)),
+            calc(100% + var(--ph-ext)) calc(-1 * var(--ph-ext)),
+            calc(100% + var(--ph-ext)) calc(100% + var(--ph-ext)),
+            calc(-1 * var(--ph-ext)) calc(100% + var(--ph-ext))
+        );
+        --an-kf: ph-cut;
+        --an-kf-out: ph-cut-out;
+        --an-l: 1.2;
+        --an-d: 2;
+    }
+
+    .an-scene .ph-h-card .ph-card__title {
+        color: var(--background);
+        background-size: 4px 4px;
+        -webkit-background-clip: text;
+        background-clip: text;
+    }
+
+    @keyframes ph-h-slip {
+        0% {
+            background-position: 0 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        24.8% {
+            background-position: 4px 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        49.8% {
+            background-position: -3px 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        74.8% {
+            background-position: 2px 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        99.8% {
+            background-position: 0 0;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            background-position: 0 0;
+        }
+    }
+
+    @keyframes ph-h-slip-out {
+        0% {
+            background-position: 0 0;
+            animation-timing-function: linear;
+        }
+
+        0.2% {
+            background-position: 0 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        25.2% {
+            background-position: 2px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        50.2% {
+            background-position: -3px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        75.2% {
+            background-position: 4px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        100% {
+            background-position: 0 0;
+        }
+    }
+
+    @keyframes ph-cut {
+        0% {
+            clip-path: polygon(
+                calc(-1 * var(--ph-ext)) calc(-1 * var(--ph-ext)),
+                calc(-1 * var(--ph-ext)) calc(-1 * var(--ph-ext)),
+                calc(-1 * var(--ph-ext)) calc(100% + var(--ph-ext)),
+                calc(-1 * var(--ph-ext)) calc(100% + var(--ph-ext))
+            );
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        100% {
+            clip-path: polygon(
+                calc(-1 * var(--ph-ext)) calc(-1 * var(--ph-ext)),
+                calc(100% + var(--ph-ext)) calc(-1 * var(--ph-ext)),
+                calc(100% + var(--ph-ext)) calc(100% + var(--ph-ext)),
+                calc(-1 * var(--ph-ext)) calc(100% + var(--ph-ext))
+            );
+        }
+    }
+
+    @keyframes ph-cut-out {
+        0% {
+            clip-path: polygon(
+                calc(-1 * var(--ph-ext)) calc(-1 * var(--ph-ext)),
+                calc(100% + var(--ph-ext)) calc(-1 * var(--ph-ext)),
+                calc(100% + var(--ph-ext)) calc(100% + var(--ph-ext)),
+                calc(-1 * var(--ph-ext)) calc(100% + var(--ph-ext))
+            );
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        100% {
+            clip-path: polygon(
+                calc(-1 * var(--ph-ext)) calc(-1 * var(--ph-ext)),
+                calc(-1 * var(--ph-ext)) calc(-1 * var(--ph-ext)),
+                calc(-1 * var(--ph-ext)) calc(100% + var(--ph-ext)),
+                calc(-1 * var(--ph-ext)) calc(100% + var(--ph-ext))
+            );
+        }
+    }
+
+    @keyframes ph-h-ink {
+        0% {
+            color: transparent;
+            background-image: radial-gradient(circle, var(--background) 1.15px, transparent 1.7px);
+            animation-timing-function: linear;
+        }
+
+        49.5% {
+            color: transparent;
+            background-image: radial-gradient(circle, var(--background) 1.15px, transparent 1.7px);
+            animation-timing-function: linear;
+        }
+
+        49.6% {
+            color: var(--background);
+            background-image: none;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            color: var(--background);
+            background-image: none;
+        }
+    }
+
+    @keyframes ph-h-ink-out {
+        0% {
+            color: var(--background);
+            background-image: none;
+            animation-timing-function: linear;
+        }
+
+        50.4% {
+            color: var(--background);
+            background-image: none;
+            animation-timing-function: linear;
+        }
+
+        50.5% {
+            color: transparent;
+            background-image: radial-gradient(circle, var(--background) 1.15px, transparent 1.7px);
+            animation-timing-function: linear;
+        }
+
+        100% {
+            color: transparent;
+            background-image: radial-gradient(circle, var(--background) 1.15px, transparent 1.7px);
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .ph-h-card .ph-card__title {
+            color: transparent;
+            background-image: radial-gradient(circle, var(--background) 1.15px, transparent 1.7px);
+        }
+
+        .an-scene[data-an-phase='in'] .ph-h-card .ph-card__title,
+        .an-scene[data-an-phase='hold'] .ph-h-card .ph-card__title {
+            animation: ph-h-ink calc(8 * var(--an-u)) linear calc(0 * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .ph-h-card .ph-card__title {
+            animation: ph-h-ink-out calc(8 * var(--an-u)) linear calc(0 * var(--an-u)) both;
+        }
+    }
+
+    /* The bar: the well's own dot screen slips a step as the fill is cut in (2 to 3.2) and locks. */
+    .an-scene .ph-h-bar .ph-bar__well::after {
+        background: var(--background);
+    }
+
+    .an-scene .ph-h-bar__screen {
+        position: absolute;
+        inset: 2px;
+        z-index: 1;
+        background: radial-gradient(circle at center, color-mix(in srgb, var(--foreground) 28%, transparent) 0.9px, transparent 1px) 0 0 / 5px 5px;
+        clip-path: polygon(calc(var(--ph-slant) - 1px) 0, 100% 0, calc(100% - var(--ph-slant) + 1px) 100%, 0 100%);
+        --an-kf: ph-h-bslip;
+        --an-kf-out: ph-h-bslip-out;
+        --an-l: 5;
+    }
+
+    .an-scene .ph-h-bar .ph-bar__shard {
+        --an-d: 3.5;
+        --an-l: 1;
+    }
+
+    @keyframes ph-h-bslip {
+        0% {
+            background-position: 0 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        19.8% {
+            background-position: 3px 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        39.8% {
+            background-position: -2px 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        59.8% {
+            background-position: 1px 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        79.8% {
+            background-position: 0 0;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            background-position: 0 0;
+        }
+    }
+
+    @keyframes ph-h-bslip-out {
+        0% {
+            background-position: 0 0;
+            animation-timing-function: linear;
+        }
+
+        20.2% {
+            background-position: 0 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        40.2% {
+            background-position: 1px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        60.2% {
+            background-position: -2px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        80.2% {
+            background-position: 3px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        100% {
+            background-position: 0 0;
+        }
+    }
+
+    @keyframes ph-grow-cut {
+        0% {
+            clip-path: polygon(var(--ph-slant) 0, calc(var(--ph-edge) * 0 + var(--ph-slant)) 0, calc(var(--ph-edge) * 0) 100%, 0 100%);
+            animation-timing-function: steps(1, end);
+        }
+
+        100% {
+            clip-path: polygon(var(--ph-slant) 0, calc(var(--ph-edge) * 1 + var(--ph-slant)) 0, calc(var(--ph-edge) * 1) 100%, 0 100%);
+        }
+    }
+
+    @keyframes ph-grow-cut-out {
+        0% {
+            clip-path: polygon(var(--ph-slant) 0, calc(var(--ph-edge) * 1 + var(--ph-slant)) 0, calc(var(--ph-edge) * 1) 100%, 0 100%);
+            animation-timing-function: steps(1, start);
+        }
+
+        100% {
+            clip-path: polygon(var(--ph-slant) 0, calc(var(--ph-edge) * 0 + var(--ph-slant)) 0, calc(var(--ph-edge) * 0) 100%, 0 100%);
+        }
+    }
+
+    @keyframes ph-grow-cut-plate {
+        0% {
+            clip-path: polygon(var(--ph-slant) 0, var(--ph-slant) 0, 0 100%, 0 100%);
+            animation-timing-function: steps(1, end);
+        }
+
+        100% {
+            clip-path: polygon(
+                var(--ph-slant) 0,
+                calc(var(--ph-edge) * 1 + var(--ph-slant) + var(--ph-gap)) 0,
+                calc(var(--ph-edge) * 1 + var(--ph-gap)) 100%,
+                0 100%
+            );
+        }
+    }
+
+    @keyframes ph-grow-cut-plate-out {
+        0% {
+            clip-path: polygon(
+                var(--ph-slant) 0,
+                calc(var(--ph-edge) * 1 + var(--ph-slant) + var(--ph-gap)) 0,
+                calc(var(--ph-edge) * 1 + var(--ph-gap)) 100%,
+                0 100%
+            );
+            animation-timing-function: steps(1, start);
+        }
+
+        100% {
+            clip-path: polygon(var(--ph-slant) 0, var(--ph-slant) 0, 0 100%, 0 100%);
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .ph-h-bar .ph-bar__fill::before {
+            clip-path: polygon(var(--ph-slant) 0, calc(var(--ph-edge) * 0 + var(--ph-slant)) 0, calc(var(--ph-edge) * 0) 100%, 0 100%);
+        }
+
+        .an-scene[data-an-phase='in'] .ph-h-bar .ph-bar__fill::before,
+        .an-scene[data-an-phase='hold'] .ph-h-bar .ph-bar__fill::before {
+            animation: ph-grow-cut calc(1.2 * var(--an-u)) linear calc(2 * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .ph-h-bar .ph-bar__fill::before {
+            animation: ph-grow-cut-out calc(1.2 * var(--an-u)) linear calc(4.8 * var(--an-u)) both;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .ph-h-bar .ph-bar__fill::after {
+            clip-path: polygon(var(--ph-slant) 0, var(--ph-slant) 0, 0 100%, 0 100%);
+        }
+
+        .an-scene[data-an-phase='in'] .ph-h-bar .ph-bar__fill::after,
+        .an-scene[data-an-phase='hold'] .ph-h-bar .ph-bar__fill::after {
+            animation: ph-grow-cut-plate calc(1.2 * var(--an-u)) linear calc(2 * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .ph-h-bar .ph-bar__fill::after {
+            animation: ph-grow-cut-plate-out calc(1.2 * var(--an-u)) linear calc(4.8 * var(--an-u)) both;
+        }
+    }
+
+    /* The button: the key cap's own dot screen shifts one step and locks as the face is pressed (7). */
+    .an-scene .ph-h-press__screen {
+        position: absolute;
+        inset: 2px;
+        z-index: -1;
+        background: radial-gradient(circle at center, hsl(from var(--foreground) h s l / 0.3) 1px, transparent 1.4px) 4px 0 / 6px 6px;
+        --an-kf: ph-h-pscreen;
+        --an-kf-out: ph-h-pscreen-out;
+        --an-l: 8;
+    }
+
+    @keyframes ph-h-pscreen {
+        0% {
+            background-position: 0 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        87.3% {
+            background-position: 4px 0;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            background-position: 4px 0;
+        }
+    }
+
+    @keyframes ph-h-pscreen-out {
+        0% {
+            background-position: 4px 0;
+            animation-timing-function: linear;
+        }
+
+        12.7% {
+            background-position: 4px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        100% {
+            background-position: 0 0;
+        }
+    }
+
+    /* ── 6 · Stamped askew ───────────────────────────────────────────── */
+
+    /* The card is cut in (1 unit, one cut), then a red stamp is slammed onto it askew (3 to 6): it comes down from large,
+       bites, bounces a hair and sticks, in the register's own tick (`kp-sig-phantom-phantom-stick`); the card jolts 2 px at
+       the bite (4). The stamp is a red plate with black ink, as red always is here. Out: the stamp lifts, the card is cut out. */
+    .an-scene .ph-m-card {
+        rotate: -1deg;
+        clip-path: polygon(
+            calc(-1 * var(--ph-ext)) calc(-1 * var(--ph-ext)),
+            calc(100% + var(--ph-ext)) calc(-1 * var(--ph-ext)),
+            calc(100% + var(--ph-ext)) calc(100% + var(--ph-ext)),
+            calc(-1 * var(--ph-ext)) calc(100% + var(--ph-ext))
+        );
+        --an-kf: ph-m-card;
+        --an-kf-out: ph-m-card-out;
+        --an-l: 5;
+    }
+
+    .an-scene :is(.ph-m-stamp, .ph-m-bar__stamp, .ph-m-press__stamp) {
+        position: absolute;
+        z-index: 5;
+        display: grid;
+        place-items: center;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: var(--primary);
+        box-shadow:
+            inset 0 0 0 3px var(--primary),
+            inset 0 0 0 5px var(--background),
+            3px 3px 0 var(--kp-red-deep);
+        color: var(--background);
+        rotate: -12deg;
+        --an-kf: ph-m-slam;
+        --an-kf-out: ph-m-slam-out;
+        --an-l: 3;
+        --an-d: 3;
+    }
+
+    .an-scene .ph-m-stamp {
+        --ph-stamp: clamp(3.6rem, 19cqi, 6rem);
+        inset-block-end: calc(var(--ph-stamp) * -0.5);
+        inset-inline-end: clamp(0.9rem, 6cqi, 2.4rem);
+        inline-size: var(--ph-stamp);
+    }
+
+    .an-scene .ph-m-stamp::after {
+        content: 'TAKEN';
+        font-family: var(--theme-font-display);
+        font-size: clamp(0.9rem, 4.4cqi, 1.45rem);
+        font-style: italic;
+        font-weight: 900;
+        letter-spacing: 0.04em;
+    }
+
+    @keyframes ph-m-card {
+        0% {
+            clip-path: polygon(
+                calc(-1 * var(--ph-ext)) calc(-1 * var(--ph-ext)),
+                calc(-1 * var(--ph-ext)) calc(-1 * var(--ph-ext)),
+                calc(-1 * var(--ph-ext)) calc(100% + var(--ph-ext)),
+                calc(-1 * var(--ph-ext)) calc(100% + var(--ph-ext))
+            );
+            translate: 0 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        19.5% {
+            clip-path: polygon(
+                calc(-1 * var(--ph-ext)) calc(-1 * var(--ph-ext)),
+                calc(-1 * var(--ph-ext)) calc(-1 * var(--ph-ext)),
+                calc(-1 * var(--ph-ext)) calc(100% + var(--ph-ext)),
+                calc(-1 * var(--ph-ext)) calc(100% + var(--ph-ext))
+            );
+            translate: 0 0;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        36% {
+            clip-path: polygon(
+                calc(-1 * var(--ph-ext)) calc(-1 * var(--ph-ext)),
+                calc(100% + var(--ph-ext)) calc(-1 * var(--ph-ext)),
+                calc(100% + var(--ph-ext)) calc(100% + var(--ph-ext)),
+                calc(-1 * var(--ph-ext)) calc(100% + var(--ph-ext))
+            );
+            translate: 0 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        81% {
+            clip-path: polygon(
+                calc(-1 * var(--ph-ext)) calc(-1 * var(--ph-ext)),
+                calc(100% + var(--ph-ext)) calc(-1 * var(--ph-ext)),
+                calc(100% + var(--ph-ext)) calc(100% + var(--ph-ext)),
+                calc(-1 * var(--ph-ext)) calc(100% + var(--ph-ext))
+            );
+            translate: 2px 2px;
+            animation-timing-function: steps(1, end);
+        }
+
+        89.5% {
+            clip-path: polygon(
+                calc(-1 * var(--ph-ext)) calc(-1 * var(--ph-ext)),
+                calc(100% + var(--ph-ext)) calc(-1 * var(--ph-ext)),
+                calc(100% + var(--ph-ext)) calc(100% + var(--ph-ext)),
+                calc(-1 * var(--ph-ext)) calc(100% + var(--ph-ext))
+            );
+            translate: 0 0;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            clip-path: polygon(
+                calc(-1 * var(--ph-ext)) calc(-1 * var(--ph-ext)),
+                calc(100% + var(--ph-ext)) calc(-1 * var(--ph-ext)),
+                calc(100% + var(--ph-ext)) calc(100% + var(--ph-ext)),
+                calc(-1 * var(--ph-ext)) calc(100% + var(--ph-ext))
+            );
+            translate: 0 0;
+        }
+    }
+
+    @keyframes ph-m-card-out {
+        0% {
+            clip-path: polygon(
+                calc(-1 * var(--ph-ext)) calc(-1 * var(--ph-ext)),
+                calc(100% + var(--ph-ext)) calc(-1 * var(--ph-ext)),
+                calc(100% + var(--ph-ext)) calc(100% + var(--ph-ext)),
+                calc(-1 * var(--ph-ext)) calc(100% + var(--ph-ext))
+            );
+            translate: 0 0;
+            animation-timing-function: linear;
+        }
+
+        10.5% {
+            clip-path: polygon(
+                calc(-1 * var(--ph-ext)) calc(-1 * var(--ph-ext)),
+                calc(100% + var(--ph-ext)) calc(-1 * var(--ph-ext)),
+                calc(100% + var(--ph-ext)) calc(100% + var(--ph-ext)),
+                calc(-1 * var(--ph-ext)) calc(100% + var(--ph-ext))
+            );
+            translate: 0 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        19% {
+            clip-path: polygon(
+                calc(-1 * var(--ph-ext)) calc(-1 * var(--ph-ext)),
+                calc(100% + var(--ph-ext)) calc(-1 * var(--ph-ext)),
+                calc(100% + var(--ph-ext)) calc(100% + var(--ph-ext)),
+                calc(-1 * var(--ph-ext)) calc(100% + var(--ph-ext))
+            );
+            translate: 2px 2px;
+            animation-timing-function: steps(1, start);
+        }
+
+        64% {
+            clip-path: polygon(
+                calc(-1 * var(--ph-ext)) calc(-1 * var(--ph-ext)),
+                calc(100% + var(--ph-ext)) calc(-1 * var(--ph-ext)),
+                calc(100% + var(--ph-ext)) calc(100% + var(--ph-ext)),
+                calc(-1 * var(--ph-ext)) calc(100% + var(--ph-ext))
+            );
+            translate: 0 0;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        80.5% {
+            clip-path: polygon(
+                calc(-1 * var(--ph-ext)) calc(-1 * var(--ph-ext)),
+                calc(-1 * var(--ph-ext)) calc(-1 * var(--ph-ext)),
+                calc(-1 * var(--ph-ext)) calc(100% + var(--ph-ext)),
+                calc(-1 * var(--ph-ext)) calc(100% + var(--ph-ext))
+            );
+            translate: 0 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        100% {
+            clip-path: polygon(
+                calc(-1 * var(--ph-ext)) calc(-1 * var(--ph-ext)),
+                calc(-1 * var(--ph-ext)) calc(-1 * var(--ph-ext)),
+                calc(-1 * var(--ph-ext)) calc(100% + var(--ph-ext)),
+                calc(-1 * var(--ph-ext)) calc(100% + var(--ph-ext))
+            );
+            translate: 0 0;
+        }
+    }
+
+    @keyframes ph-m-slam {
+        0% {
+            opacity: 0;
+            scale: 1.4;
+            rotate: -26deg;
+            animation-timing-function: cubic-bezier(0.5, 0, 0.9, 0.6);
+        }
+
+        35% {
+            opacity: 1;
+            scale: 0.86;
+            rotate: -10deg;
+            animation-timing-function: cubic-bezier(0.2, 0.9, 0.25, 1);
+        }
+
+        65% {
+            opacity: 1;
+            scale: 1.08;
+            rotate: -13deg;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            opacity: 1;
+            scale: 1;
+            rotate: -12deg;
+        }
+    }
+
+    @keyframes ph-m-slam-out {
+        0% {
+            opacity: 1;
+            scale: 1;
+            rotate: -12deg;
+            animation-timing-function: linear;
+        }
+
+        35% {
+            opacity: 1;
+            scale: 1.08;
+            rotate: -13deg;
+            animation-timing-function: cubic-bezier(0.75, 0, 0.8, 0.1);
+        }
+
+        65% {
+            opacity: 1;
+            scale: 0.86;
+            rotate: -10deg;
+            animation-timing-function: cubic-bezier(0.1, 0.4, 0.5, 1);
+        }
+
+        100% {
+            opacity: 0;
+            scale: 1.4;
+            rotate: -26deg;
+        }
+    }
+
+    /* The bar: the fill slides to the value on the cut (5 units); a small stamp lands at the head (5 to 7.4). */
+    .an-scene .ph-m-bar .ph-bar__shard {
+        --an-d: 4.5;
+        --an-l: 1;
+    }
+
+    .an-scene .ph-m-bar__stamp {
+        inset-block-start: 50%;
+        inset-inline-start: calc(var(--ph-edge) + var(--ph-slant) * 0.5 + 0.2rem);
+        inline-size: calc(var(--ph-h) * 2.1);
+        translate: -50% -50%;
+        --an-l: 2.4;
+        --an-d: 5;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .ph-m-bar .ph-bar__fill::before {
+            clip-path: polygon(var(--ph-slant) 0, calc(var(--ph-edge) * 0 + var(--ph-slant)) 0, calc(var(--ph-edge) * 0) 100%, 0 100%);
+        }
+
+        .an-scene[data-an-phase='in'] .ph-m-bar .ph-bar__fill::before,
+        .an-scene[data-an-phase='hold'] .ph-m-bar .ph-bar__fill::before {
+            animation: ph-grow-red calc(5 * var(--an-u)) linear calc(0 * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .ph-m-bar .ph-bar__fill::before {
+            animation: ph-grow-red-out calc(5 * var(--an-u)) linear calc(3 * var(--an-u)) both;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .ph-m-bar .ph-bar__fill::after {
+            clip-path: polygon(var(--ph-slant) 0, var(--ph-slant) 0, 0 100%, 0 100%);
+        }
+
+        .an-scene[data-an-phase='in'] .ph-m-bar .ph-bar__fill::after,
+        .an-scene[data-an-phase='hold'] .ph-m-bar .ph-bar__fill::after {
+            animation: ph-grow-plate calc(5 * var(--an-u)) linear calc(0 * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .ph-m-bar .ph-bar__fill::after {
+            animation: ph-grow-plate-out calc(5 * var(--an-u)) linear calc(3 * var(--an-u)) both;
+        }
+    }
+
+    /* The button: a small stamp is slammed on the key cap's end in the last unit (7 to 8). */
+    .an-scene .ph-m-press__stamp {
+        inset-block-start: -0.55rem;
+        inset-inline-end: -0.7rem;
+        inline-size: 1.7rem;
+        --an-l: 1;
+        --an-d: 7;
+    }
+
+    /* ── 7 · The star snaps ──────────────────────────────────────────── */
+
+    /* The card is cut in (one cut), and a white five-point star over a red one snaps in at its corner, as the spinner does:
+       five hard turns of a fifth each, the turn quick and the hold long (1 to 6 units), upright at the sixth. Out: it snaps
+       back the other way. */
+    .an-scene .ph-x-card {
+        inline-size: min(100% - 3.4rem, 24rem);
+        rotate: -1deg;
+        clip-path: polygon(
+            calc(-1 * var(--ph-ext)) calc(-1 * var(--ph-ext)),
+            calc(100% + var(--ph-ext)) calc(-1 * var(--ph-ext)),
+            calc(100% + var(--ph-ext)) calc(100% + var(--ph-ext)),
+            calc(-1 * var(--ph-ext)) calc(100% + var(--ph-ext))
+        );
+        --an-kf: ph-cut;
+        --an-kf-out: ph-cut-out;
+        --an-l: 1.2;
+        --an-d: 0.3;
+    }
+
+    .an-scene :is(.ph-x-star, .ph-x-bar .ph-bar__shard, .ph-x-press__star) {
+        isolation: isolate;
+    }
+
+    .an-scene :is(.ph-x-star, .ph-x-bar .ph-bar__shard, .ph-x-press__star)::before,
+    .an-scene :is(.ph-x-star, .ph-x-bar .ph-bar__shard, .ph-x-press__star)::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    }
+
+    .an-scene :is(.ph-x-star, .ph-x-bar .ph-bar__shard, .ph-x-press__star)::before {
+        z-index: -1;
+        background: var(--primary);
+        translate: 2px 2px;
+    }
+
+    .an-scene :is(.ph-x-star, .ph-x-bar .ph-bar__shard, .ph-x-press__star)::after {
+        background: var(--foreground);
+    }
+
+    .an-scene .ph-x-star {
+        position: absolute;
+        z-index: 5;
+        inset-block-start: 50%;
+        inset-inline-end: calc(-1 * clamp(0.8rem, 4.2cqi, 1.6rem));
+        translate: 0 -50%;
+        inline-size: clamp(2.8rem, 15cqi, 5rem);
+        aspect-ratio: 1;
+        rotate: 360deg;
+        --an-kf: ph-x-snap;
+        --an-kf-out: ph-x-snap-out;
+        --an-l: 6;
+    }
+
+    @keyframes ph-x-snap {
+        0% {
+            rotate: 0deg;
+            animation-timing-function: linear;
+        }
+
+        27.5% {
+            rotate: 0deg;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        33.333333% {
+            rotate: 72deg;
+            animation-timing-function: linear;
+        }
+
+        44.166667% {
+            rotate: 72deg;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        50% {
+            rotate: 144deg;
+            animation-timing-function: linear;
+        }
+
+        60.833333% {
+            rotate: 144deg;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        66.666667% {
+            rotate: 216deg;
+            animation-timing-function: linear;
+        }
+
+        77.5% {
+            rotate: 216deg;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        83.333333% {
+            rotate: 288deg;
+            animation-timing-function: linear;
+        }
+
+        94.166667% {
+            rotate: 288deg;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        100% {
+            rotate: 360deg;
+        }
+    }
+
+    @keyframes ph-x-snap-out {
+        0% {
+            rotate: 360deg;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        5.833333% {
+            rotate: 288deg;
+            animation-timing-function: linear;
+        }
+
+        16.666667% {
+            rotate: 288deg;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        22.5% {
+            rotate: 216deg;
+            animation-timing-function: linear;
+        }
+
+        33.333333% {
+            rotate: 216deg;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        39.166667% {
+            rotate: 144deg;
+            animation-timing-function: linear;
+        }
+
+        50% {
+            rotate: 144deg;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        55.833333% {
+            rotate: 72deg;
+            animation-timing-function: linear;
+        }
+
+        66.666667% {
+            rotate: 72deg;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        72.5% {
+            rotate: 0deg;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            rotate: 0deg;
+        }
+    }
+
+    /* The bar: the fill is cut in five steps and the shard is a small star that snaps a fifth of a turn at each. */
+    .an-scene .ph-x-bar .ph-bar__shard {
+        inset-block: auto;
+        inset-block-start: 50%;
+        inline-size: calc(var(--ph-h) * 1.9);
+        aspect-ratio: 1;
+        background: none;
+        clip-path: none;
+        translate: -50% -50%;
+        rotate: 360deg;
+        z-index: 4;
+        --an-kf: ph-x-bstar;
+        --an-kf-out: ph-x-bstar-out;
+        --an-l: 5.5;
+        --an-d: 0.5;
+    }
+
+    @keyframes ph-x-bstar {
+        0% {
+            inset-inline-start: calc(var(--ph-edge) * 0 + var(--ph-slant) * 0.5 + 0.2rem);
+            rotate: 0deg;
+            scale: 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        3.636364% {
+            inset-inline-start: calc(var(--ph-edge) * 0.2 + var(--ph-slant) * 0.5 + 0.2rem);
+            rotate: 0deg;
+            scale: 1;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        9.090909% {
+            inset-inline-start: calc(var(--ph-edge) * 0.2 + var(--ph-slant) * 0.5 + 0.2rem);
+            rotate: 72deg;
+            scale: 1;
+            animation-timing-function: steps(1, end);
+        }
+
+        21.818182% {
+            inset-inline-start: calc(var(--ph-edge) * 0.4 + var(--ph-slant) * 0.5 + 0.2rem);
+            rotate: 72deg;
+            scale: 1;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        27.272727% {
+            inset-inline-start: calc(var(--ph-edge) * 0.4 + var(--ph-slant) * 0.5 + 0.2rem);
+            rotate: 144deg;
+            scale: 1;
+            animation-timing-function: steps(1, end);
+        }
+
+        40% {
+            inset-inline-start: calc(var(--ph-edge) * 0.6 + var(--ph-slant) * 0.5 + 0.2rem);
+            rotate: 144deg;
+            scale: 1;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        45.454545% {
+            inset-inline-start: calc(var(--ph-edge) * 0.6 + var(--ph-slant) * 0.5 + 0.2rem);
+            rotate: 216deg;
+            scale: 1;
+            animation-timing-function: steps(1, end);
+        }
+
+        58.181818% {
+            inset-inline-start: calc(var(--ph-edge) * 0.8 + var(--ph-slant) * 0.5 + 0.2rem);
+            rotate: 216deg;
+            scale: 1;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        63.636364% {
+            inset-inline-start: calc(var(--ph-edge) * 0.8 + var(--ph-slant) * 0.5 + 0.2rem);
+            rotate: 288deg;
+            scale: 1;
+            animation-timing-function: steps(1, end);
+        }
+
+        76.363636% {
+            inset-inline-start: calc(var(--ph-edge) * 1 + var(--ph-slant) * 0.5 + 0.2rem);
+            rotate: 288deg;
+            scale: 1;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        81.818182% {
+            inset-inline-start: calc(var(--ph-edge) * 1 + var(--ph-slant) * 0.5 + 0.2rem);
+            rotate: 360deg;
+            scale: 1;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            inset-inline-start: calc(var(--ph-edge) * 1 + var(--ph-slant) * 0.5 + 0.2rem);
+            rotate: 360deg;
+            scale: 1;
+        }
+    }
+
+    @keyframes ph-x-bstar-out {
+        0% {
+            inset-inline-start: calc(var(--ph-edge) * 1 + var(--ph-slant) * 0.5 + 0.2rem);
+            rotate: 360deg;
+            scale: 1;
+            animation-timing-function: linear;
+        }
+
+        18.181818% {
+            inset-inline-start: calc(var(--ph-edge) * 1 + var(--ph-slant) * 0.5 + 0.2rem);
+            rotate: 360deg;
+            scale: 1;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        23.636364% {
+            inset-inline-start: calc(var(--ph-edge) * 1 + var(--ph-slant) * 0.5 + 0.2rem);
+            rotate: 288deg;
+            scale: 1;
+            animation-timing-function: steps(1, start);
+        }
+
+        36.363636% {
+            inset-inline-start: calc(var(--ph-edge) * 0.8 + var(--ph-slant) * 0.5 + 0.2rem);
+            rotate: 288deg;
+            scale: 1;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        41.818182% {
+            inset-inline-start: calc(var(--ph-edge) * 0.8 + var(--ph-slant) * 0.5 + 0.2rem);
+            rotate: 216deg;
+            scale: 1;
+            animation-timing-function: steps(1, start);
+        }
+
+        54.545455% {
+            inset-inline-start: calc(var(--ph-edge) * 0.6 + var(--ph-slant) * 0.5 + 0.2rem);
+            rotate: 216deg;
+            scale: 1;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        60% {
+            inset-inline-start: calc(var(--ph-edge) * 0.6 + var(--ph-slant) * 0.5 + 0.2rem);
+            rotate: 144deg;
+            scale: 1;
+            animation-timing-function: steps(1, start);
+        }
+
+        72.727273% {
+            inset-inline-start: calc(var(--ph-edge) * 0.4 + var(--ph-slant) * 0.5 + 0.2rem);
+            rotate: 144deg;
+            scale: 1;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        78.181818% {
+            inset-inline-start: calc(var(--ph-edge) * 0.4 + var(--ph-slant) * 0.5 + 0.2rem);
+            rotate: 72deg;
+            scale: 1;
+            animation-timing-function: steps(1, start);
+        }
+
+        90.909091% {
+            inset-inline-start: calc(var(--ph-edge) * 0.2 + var(--ph-slant) * 0.5 + 0.2rem);
+            rotate: 72deg;
+            scale: 1;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        96.363636% {
+            inset-inline-start: calc(var(--ph-edge) * 0.2 + var(--ph-slant) * 0.5 + 0.2rem);
+            rotate: 0deg;
+            scale: 1;
+            animation-timing-function: steps(1, start);
+        }
+
+        100% {
+            inset-inline-start: calc(var(--ph-edge) * 0 + var(--ph-slant) * 0.5 + 0.2rem);
+            rotate: 0deg;
+            scale: 0;
+        }
+    }
+
+    @keyframes ph-x-bfill {
+        0% {
+            clip-path: polygon(var(--ph-slant) 0, calc(var(--ph-edge) * 0 + var(--ph-slant)) 0, calc(var(--ph-edge) * 0) 100%, 0 100%);
+            animation-timing-function: steps(1, end);
+        }
+
+        3.636364% {
+            clip-path: polygon(var(--ph-slant) 0, calc(var(--ph-edge) * 0.2 + var(--ph-slant)) 0, calc(var(--ph-edge) * 0.2) 100%, 0 100%);
+            animation-timing-function: steps(1, end);
+        }
+
+        21.818182% {
+            clip-path: polygon(var(--ph-slant) 0, calc(var(--ph-edge) * 0.4 + var(--ph-slant)) 0, calc(var(--ph-edge) * 0.4) 100%, 0 100%);
+            animation-timing-function: steps(1, end);
+        }
+
+        40% {
+            clip-path: polygon(var(--ph-slant) 0, calc(var(--ph-edge) * 0.6 + var(--ph-slant)) 0, calc(var(--ph-edge) * 0.6) 100%, 0 100%);
+            animation-timing-function: steps(1, end);
+        }
+
+        58.181818% {
+            clip-path: polygon(var(--ph-slant) 0, calc(var(--ph-edge) * 0.8 + var(--ph-slant)) 0, calc(var(--ph-edge) * 0.8) 100%, 0 100%);
+            animation-timing-function: steps(1, end);
+        }
+
+        76.363636% {
+            clip-path: polygon(var(--ph-slant) 0, calc(var(--ph-edge) * 1 + var(--ph-slant)) 0, calc(var(--ph-edge) * 1) 100%, 0 100%);
+            animation-timing-function: linear;
+        }
+
+        100% {
+            clip-path: polygon(var(--ph-slant) 0, calc(var(--ph-edge) * 1 + var(--ph-slant)) 0, calc(var(--ph-edge) * 1) 100%, 0 100%);
+        }
+    }
+
+    @keyframes ph-x-bfill-out {
+        0% {
+            clip-path: polygon(var(--ph-slant) 0, calc(var(--ph-edge) * 1 + var(--ph-slant)) 0, calc(var(--ph-edge) * 1) 100%, 0 100%);
+            animation-timing-function: linear;
+        }
+
+        23.636364% {
+            clip-path: polygon(var(--ph-slant) 0, calc(var(--ph-edge) * 1 + var(--ph-slant)) 0, calc(var(--ph-edge) * 1) 100%, 0 100%);
+            animation-timing-function: steps(1, start);
+        }
+
+        41.818182% {
+            clip-path: polygon(var(--ph-slant) 0, calc(var(--ph-edge) * 0.8 + var(--ph-slant)) 0, calc(var(--ph-edge) * 0.8) 100%, 0 100%);
+            animation-timing-function: steps(1, start);
+        }
+
+        60% {
+            clip-path: polygon(var(--ph-slant) 0, calc(var(--ph-edge) * 0.6 + var(--ph-slant)) 0, calc(var(--ph-edge) * 0.6) 100%, 0 100%);
+            animation-timing-function: steps(1, start);
+        }
+
+        78.181818% {
+            clip-path: polygon(var(--ph-slant) 0, calc(var(--ph-edge) * 0.4 + var(--ph-slant)) 0, calc(var(--ph-edge) * 0.4) 100%, 0 100%);
+            animation-timing-function: steps(1, start);
+        }
+
+        96.363636% {
+            clip-path: polygon(var(--ph-slant) 0, calc(var(--ph-edge) * 0.2 + var(--ph-slant)) 0, calc(var(--ph-edge) * 0.2) 100%, 0 100%);
+            animation-timing-function: steps(1, start);
+        }
+
+        100% {
+            clip-path: polygon(var(--ph-slant) 0, calc(var(--ph-edge) * 0 + var(--ph-slant)) 0, calc(var(--ph-edge) * 0) 100%, 0 100%);
+        }
+    }
+
+    @keyframes ph-x-bplate {
+        0% {
+            clip-path: polygon(var(--ph-slant) 0, var(--ph-slant) 0, 0 100%, 0 100%);
+            animation-timing-function: steps(1, end);
+        }
+
+        3.636364% {
+            clip-path: polygon(
+                var(--ph-slant) 0,
+                calc(var(--ph-edge) * 0.2 + var(--ph-slant) + var(--ph-gap)) 0,
+                calc(var(--ph-edge) * 0.2 + var(--ph-gap)) 100%,
+                0 100%
+            );
+            animation-timing-function: steps(1, end);
+        }
+
+        21.818182% {
+            clip-path: polygon(
+                var(--ph-slant) 0,
+                calc(var(--ph-edge) * 0.4 + var(--ph-slant) + var(--ph-gap)) 0,
+                calc(var(--ph-edge) * 0.4 + var(--ph-gap)) 100%,
+                0 100%
+            );
+            animation-timing-function: steps(1, end);
+        }
+
+        40% {
+            clip-path: polygon(
+                var(--ph-slant) 0,
+                calc(var(--ph-edge) * 0.6 + var(--ph-slant) + var(--ph-gap)) 0,
+                calc(var(--ph-edge) * 0.6 + var(--ph-gap)) 100%,
+                0 100%
+            );
+            animation-timing-function: steps(1, end);
+        }
+
+        58.181818% {
+            clip-path: polygon(
+                var(--ph-slant) 0,
+                calc(var(--ph-edge) * 0.8 + var(--ph-slant) + var(--ph-gap)) 0,
+                calc(var(--ph-edge) * 0.8 + var(--ph-gap)) 100%,
+                0 100%
+            );
+            animation-timing-function: steps(1, end);
+        }
+
+        76.363636% {
+            clip-path: polygon(
+                var(--ph-slant) 0,
+                calc(var(--ph-edge) * 1 + var(--ph-slant) + var(--ph-gap)) 0,
+                calc(var(--ph-edge) * 1 + var(--ph-gap)) 100%,
+                0 100%
+            );
+            animation-timing-function: linear;
+        }
+
+        100% {
+            clip-path: polygon(
+                var(--ph-slant) 0,
+                calc(var(--ph-edge) * 1 + var(--ph-slant) + var(--ph-gap)) 0,
+                calc(var(--ph-edge) * 1 + var(--ph-gap)) 100%,
+                0 100%
+            );
+        }
+    }
+
+    @keyframes ph-x-bplate-out {
+        0% {
+            clip-path: polygon(
+                var(--ph-slant) 0,
+                calc(var(--ph-edge) * 1 + var(--ph-slant) + var(--ph-gap)) 0,
+                calc(var(--ph-edge) * 1 + var(--ph-gap)) 100%,
+                0 100%
+            );
+            animation-timing-function: linear;
+        }
+
+        23.636364% {
+            clip-path: polygon(
+                var(--ph-slant) 0,
+                calc(var(--ph-edge) * 1 + var(--ph-slant) + var(--ph-gap)) 0,
+                calc(var(--ph-edge) * 1 + var(--ph-gap)) 100%,
+                0 100%
+            );
+            animation-timing-function: steps(1, start);
+        }
+
+        41.818182% {
+            clip-path: polygon(
+                var(--ph-slant) 0,
+                calc(var(--ph-edge) * 0.8 + var(--ph-slant) + var(--ph-gap)) 0,
+                calc(var(--ph-edge) * 0.8 + var(--ph-gap)) 100%,
+                0 100%
+            );
+            animation-timing-function: steps(1, start);
+        }
+
+        60% {
+            clip-path: polygon(
+                var(--ph-slant) 0,
+                calc(var(--ph-edge) * 0.6 + var(--ph-slant) + var(--ph-gap)) 0,
+                calc(var(--ph-edge) * 0.6 + var(--ph-gap)) 100%,
+                0 100%
+            );
+            animation-timing-function: steps(1, start);
+        }
+
+        78.181818% {
+            clip-path: polygon(
+                var(--ph-slant) 0,
+                calc(var(--ph-edge) * 0.4 + var(--ph-slant) + var(--ph-gap)) 0,
+                calc(var(--ph-edge) * 0.4 + var(--ph-gap)) 100%,
+                0 100%
+            );
+            animation-timing-function: steps(1, start);
+        }
+
+        96.363636% {
+            clip-path: polygon(
+                var(--ph-slant) 0,
+                calc(var(--ph-edge) * 0.2 + var(--ph-slant) + var(--ph-gap)) 0,
+                calc(var(--ph-edge) * 0.2 + var(--ph-gap)) 100%,
+                0 100%
+            );
+            animation-timing-function: steps(1, start);
+        }
+
+        100% {
+            clip-path: polygon(var(--ph-slant) 0, var(--ph-slant) 0, 0 100%, 0 100%);
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .ph-x-bar .ph-bar__fill::before {
+            clip-path: polygon(var(--ph-slant) 0, calc(var(--ph-edge) * 0 + var(--ph-slant)) 0, calc(var(--ph-edge) * 0) 100%, 0 100%);
+        }
+
+        .an-scene[data-an-phase='in'] .ph-x-bar .ph-bar__fill::before,
+        .an-scene[data-an-phase='hold'] .ph-x-bar .ph-bar__fill::before {
+            animation: ph-x-bfill calc(5.5 * var(--an-u)) linear calc(0.5 * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .ph-x-bar .ph-bar__fill::before {
+            animation: ph-x-bfill-out calc(5.5 * var(--an-u)) linear calc(2 * var(--an-u)) both;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .ph-x-bar .ph-bar__fill::after {
+            clip-path: polygon(var(--ph-slant) 0, var(--ph-slant) 0, 0 100%, 0 100%);
+        }
+
+        .an-scene[data-an-phase='in'] .ph-x-bar .ph-bar__fill::after,
+        .an-scene[data-an-phase='hold'] .ph-x-bar .ph-bar__fill::after {
+            animation: ph-x-bplate calc(5.5 * var(--an-u)) linear calc(0.5 * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .ph-x-bar .ph-bar__fill::after {
+            animation: ph-x-bplate-out calc(5.5 * var(--an-u)) linear calc(2 * var(--an-u)) both;
+        }
+    }
+
+    /* The button: a star snaps in at the key cap's corner in one cut as the face is pressed (7 to 8). */
+    .an-scene .ph-x-press__star {
+        position: absolute;
+        z-index: 5;
+        inset-block-start: -0.7rem;
+        inset-inline-end: -0.8rem;
+        inline-size: 1.9rem;
+        aspect-ratio: 1;
+        --an-kf: ph-x-pstar;
+        --an-kf-out: ph-x-pstar-out;
+        --an-l: 1;
+        --an-d: 7;
+    }
+
+    @keyframes ph-x-pstar {
+        0% {
+            scale: 0;
+            rotate: 72deg;
+            animation-timing-function: steps(1, end);
+        }
+
+        1% {
+            scale: 2;
+            rotate: 72deg;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        100% {
+            scale: 1;
+            rotate: 0deg;
+        }
+    }
+
+    @keyframes ph-x-pstar-out {
+        0% {
+            scale: 1;
+            rotate: 0deg;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        99% {
+            scale: 2;
+            rotate: 72deg;
+            animation-timing-function: steps(1, start);
+        }
+
+        100% {
+            scale: 0;
+            rotate: 72deg;
+        }
+    }
+
+    /* The undrawn pose: each part stands at its first keyframe at gap. */
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .ph-bar__shard {
+            scale: 1 0;
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-t-stage {
+            background-position: 0 0;
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-t-card {
+            translate: -125% 30%;
+            rotate: -22deg;
+            scale: 1.15;
+            filter: drop-shadow(0 0 0 var(--kp-red-deep));
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-t-press {
+            translate: 0 0;
+            filter: drop-shadow(5px 5px 0 var(--kp-red-deep));
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-r-text {
+            clip-path: polygon(var(--s) 0, calc(100% + 1em) 0, calc(100% + 1em) 100%, 0 100%);
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-r-bar {
+            clip-path: polygon(var(--s) 0, var(--s) 0, 0 100%, 0 100%);
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-r-ink {
+            clip-path: polygon(var(--s) 0, var(--s) 0, 0 100%, 0 100%);
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-s-slash {
+            clip-path: inset(0 0 100% 0);
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-s-card {
+            clip-path: polygon(25% 0%, 25% 0%, 21.4% 20%, 17.8% 40%, 14.2% 60%, 10.6% 80%, 7% 100%, 7% 100%);
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-s-bar__slash {
+            inset-inline-start: calc(var(--ph-slant) * 0.5);
+            clip-path: inset(0 0 0 0);
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-s-press__slash {
+            clip-path: polygon(55% 0, 63% 0, 63% 0, 55% 0);
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-p-pin--start {
+            scale: 0;
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-p-string {
+            clip-path: inset(0 100% 100% 0);
+            rotate: 4deg;
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-p-card {
+            scale: 0;
+            translate: 0 0;
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-p-pin--card {
+            scale: 0;
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-p-bar__pin {
+            scale: 0;
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-p-press__pin {
+            scale: 0;
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-h-screen {
+            background-position: 0 0;
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-h-card {
+            clip-path: polygon(
+                calc(-1 * var(--ph-ext)) calc(-1 * var(--ph-ext)),
+                calc(-1 * var(--ph-ext)) calc(-1 * var(--ph-ext)),
+                calc(-1 * var(--ph-ext)) calc(100% + var(--ph-ext)),
+                calc(-1 * var(--ph-ext)) calc(100% + var(--ph-ext))
+            );
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-h-bar__screen {
+            background-position: 0 0;
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-h-press__screen {
+            background-position: 0 0;
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-m-card {
+            clip-path: polygon(
+                calc(-1 * var(--ph-ext)) calc(-1 * var(--ph-ext)),
+                calc(-1 * var(--ph-ext)) calc(-1 * var(--ph-ext)),
+                calc(-1 * var(--ph-ext)) calc(100% + var(--ph-ext)),
+                calc(-1 * var(--ph-ext)) calc(100% + var(--ph-ext))
+            );
+            translate: 0 0;
+        }
+
+        .an-scene[data-an-phase='gap'] :is(.ph-m-stamp, .ph-m-bar__stamp, .ph-m-press__stamp) {
+            opacity: 0;
+            scale: 1.4;
+            rotate: -26deg;
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-x-card {
+            clip-path: polygon(
+                calc(-1 * var(--ph-ext)) calc(-1 * var(--ph-ext)),
+                calc(-1 * var(--ph-ext)) calc(-1 * var(--ph-ext)),
+                calc(-1 * var(--ph-ext)) calc(100% + var(--ph-ext)),
+                calc(-1 * var(--ph-ext)) calc(100% + var(--ph-ext))
+            );
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-x-star {
+            rotate: 0deg;
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-x-bar .ph-bar__shard {
+            inset-inline-start: calc(var(--ph-edge) * 0 + var(--ph-slant) * 0.5 + 0.2rem);
+            rotate: 0deg;
+            scale: 0;
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-x-press__star {
+            scale: 0;
+            rotate: 72deg;
+        }
+    }
+}

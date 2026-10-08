@@ -78,6 +78,13 @@ export const PAGES = [
         pages: [
             // Kenny, 2026-10-08: the anchor round for the nine themes without one, the grotesk way (one question, six to ten candidates, each in its own scene, as a progress bar and as a button press, the recommendation first).
             { href: 'research/formal-anchor/demo.html', label: "What is formal's anchor element" },
+            { href: 'research/light-anchor/demo.html', label: "What is light's anchor element" },
+            { href: 'research/dark-anchor/demo.html', label: "What is dark's anchor element" },
+            { href: 'research/high-contrast-anchor/demo.html', label: "What is high-contrast's anchor element" },
+            { href: 'research/sepia-anchor/demo.html', label: "What is sepia's anchor element" },
+            { href: 'research/retro-anchor/demo.html', label: "What is retro's anchor element" },
+            { href: 'research/deco-anchor/demo.html', label: "What is deco's anchor element" },
+            { href: 'research/phantom-anchor/demo.html', label: "What is phantom's anchor element" },
             // The character round, sixth demo (2026-10-05): the key-figure strip with its columns in 22 themes, two characters each.
             // The character round, eighth component: the attention band, shape/arrival/leave/tone/empty/loading, one pick per aspect (formal and titanium built first).
             // The character round, ninth and tenth components: the action columns and the menu button.
