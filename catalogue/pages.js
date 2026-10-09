@@ -80,12 +80,9 @@ export const PAGES = [
             // Kenny, 2026-10-08: what makes formal, light and deco themselves, the forest way (the analysis in themes/<theme>/CHARACTER.md), the nineteen questions each, every option a live scene that follows from the theme's decided anchor, the recommendation first.
             // Kenny, 2026-10-08 (update 1): deco's grammar did not convince him ("fancy, distinguished … lots of gold accents and fancy blue backgrounds … elegance without being too in your face"); thirteen questions redrawn as thin gold on lacquer with the wallpaper, his six picks kept.
             // Kenny, 2026-10-08: what makes dark, retro and phantom themselves, the forest way (the analysis in themes/<theme>/CHARACTER.md), the nineteen questions each, every option a live scene that follows from the theme's decided anchor, the recommendation first.
-            // Kenny, 2026-10-09: the uniformity audit of forest (what is still off the approved grammar: navbars, spinners, hover, closes), ten questions to judge.
-            { href: 'research/forest-uniformity/demo.html', label: 'Forest, straightened' },
             {
                 href: 'research/retro-character/demo.html',
                 label: 'What makes retro retro',
-                rework: 'update 3: loading redrawn as eight pictures from the screens of the nineties, as Kenny asked',
             },
             // The character round, sixth demo (2026-10-05): the key-figure strip with its columns in 22 themes, two characters each.
             // The character round, eighth component: the attention band, shape/arrival/leave/tone/empty/loading, one pick per aspect (formal and titanium built first).
@@ -118,6 +115,8 @@ export const PAGES = [
             { href: 'research/dark-character/demo.html', label: 'What makes dark dark' },
             // Decided 2026-10-09: Kenny approved deco's picks after update 3 (research/deco-character/decided.json).
             { href: 'research/deco-character/demo.html', label: 'What makes deco deco' },
+            // Decided 2026-10-09: Kenny approved all ten uniformity questions of forest (research/forest-uniformity/decided.json).
+            { href: 'research/forest-uniformity/demo.html', label: 'Forest, straightened' },
             // Decided 2026-10-09: Kenny approved phantom's grammar after update 1 (research/phantom-character/decided.json).
             { href: 'research/phantom-character/demo.html', label: 'What makes phantom phantom' },
             // Decided 2026-10-08: Kenny approved light's grammar, every recommendation except the durations = unhurried and the busy bar = the bead orbits the line (research/light-character/decided.json).

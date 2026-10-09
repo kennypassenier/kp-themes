@@ -1,4 +1,4 @@
-**Status (2026-10-09, round r1): waiting for Kenny's verdicts on ten questions; nothing in the package changed.**
+**Decided (Kenny, 09/10/2026): all ten questions approved, every recommendation** (research/forest-uniformity/decided.json); applied to css/forest-register.css, see the notes in themes/forest/CHARACTER.md.
 
 # Forest, straightened — the uniformity audit
 
