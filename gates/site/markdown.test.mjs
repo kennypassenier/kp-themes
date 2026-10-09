@@ -103,9 +103,9 @@ test('T10: an underscore inside a word stays a literal underscore', () => {
     assert.equal(html('the constant TAB_CHANGE_EVENT'), '<p>the constant TAB_CHANGE_EVENT</p>');
 });
 
-test('TH102: all 17 stories render, and every construct the source holds comes out', () => {
+test('TH102: all 16 stories render, and every construct the source holds comes out', () => {
     const paths = storyPaths();
-    assert.equal(paths.length, 17);
+    assert.equal(paths.length, 16);
     for (const path of paths) {
         const source = readFileSync(new URL(`../../${path}`, import.meta.url), 'utf8');
         const { html: rendered, counts } = renderMarkdown(source, { file: path });

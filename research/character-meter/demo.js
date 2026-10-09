@@ -1128,78 +1128,6 @@ const IDEAS = {
             },
         ],
     },
-    retro: {
-        shape: [
-            {
-                name: 'The system monitor',
-                text: 'New, unlike the installer bar and the defragmenter: a sunken black panel of LED segments as Task Manager and Winamp drew a level. Unlit segments glow dark green, the share is lit (yellow for a warning, red for danger), the mark is a white peak-hold segment in a black frame, and past the end the red clip lamp is lit.',
-            },
-            {
-                name: 'The dithered installer bar',
-                text: 'A sunken field with the bevel inside its boundary; the share is navy whose last few pixels are dithered, 1995-style. The mark is a raised grey slider thumb. Past the end a raised scroll-arrow button.',
-            },
-            {
-                name: 'The defragmenter',
-                text: 'Two rows of tiny cells, as the 1995 disk defragmenter drew a drive: navy cells up to the share, a few teal ones among them, white cells beyond. The mark is a white cell column in a black frame. Past the end two more cells sit outside the field.',
-            },
-        ],
-        loading: [
-            {
-                name: 'The marquee',
-                text: 'A block of three lit segments slides through the panel and comes round again, the way a busy progress bar did.',
-            },
-            {
-                name: 'The modem handshake',
-                text: 'A green and a yellow lamp run in from both ends, meet in the middle and part again.',
-            },
-            {
-                name: 'The rubber band',
-                text: 'A dotted selection line along the top and the bottom of the panel, marching in opposite directions.',
-            },
-        ],
-        arrival: [
-            {
-                name: 'Task Manager',
-                text: 'The share is drawn in from the left in 12 hard steps.',
-            },
-            {
-                name: 'Winamp',
-                text: 'The share stretches out from the start in 4 hard steps.',
-            },
-            {
-                name: 'Disk light',
-                text: 'The share is drawn in from the left in 4 hard steps.',
-            },
-        ],
-        tone: [
-            {
-                name: 'Task Manager',
-                text: 'A new tone draws the share again in the new colour, the way the picked arrival brings it.',
-            },
-            {
-                name: 'Winamp',
-                text: 'A new tone knocks the meter up and back once, in 2 hard steps.',
-            },
-            {
-                name: 'Disk light',
-                text: 'A new tone jolts the meter sideways, in 2 hard steps.',
-            },
-        ],
-        mark: [
-            {
-                name: 'Task Manager',
-                text: "The mark moves in 6 hard steps; a mark past the end stops at the meter's end, ▸ after it.",
-            },
-            {
-                name: 'Winamp',
-                text: 'The mark moves in 12 hard steps; a mark past the end stands just outside the end, » after it.',
-            },
-            {
-                name: 'Disk light',
-                text: "The mark moves in 2 hard steps; a mark past the end stops at the meter's end, ! after it.",
-            },
-        ],
-    },
     grotesk: {
         shape: [
             {
@@ -1445,7 +1373,6 @@ const PICKED = {
     titanium: ['1', '1', '3', '3', '3'],
     cyberpunk: ['2', '', '', '3', '3'],
     'high-contrast': ['2', '', '1', '1', '3'],
-    retro: ['1', '', '1', '2', '2'],
     grotesk: ['', '2', '3', '3', '2'],
 };
 /** The aspect's pick from round 3, or '' when it is open in round 4. */

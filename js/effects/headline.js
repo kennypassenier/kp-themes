@@ -397,7 +397,7 @@ export function install(ctx) {
             return;
         }
         if (routine === 'dissolve') {
-            // The retro headline [RT2]: the text is whole under a dither the
+            // The Retro headline (theme removed 2026-10-09) [RT2]: the text is whole under a dither the
             // register paints; the class runs the dither's clearing, then the
             // element rests. Without an animation the class comes off by the
             // table's duration.

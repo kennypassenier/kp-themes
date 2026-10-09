@@ -24,7 +24,7 @@ async function wear(page, theme) {
     await expect(page.locator('html')).toHaveAttribute('data-theme', theme);
 }
 
-for (const theme of ['retro', 'cyberpunk']) {
+for (const theme of ['cyberpunk']) {
     test(`a radio is round in ${theme}, a checkbox is not`, { tag: ['@component:field', `@theme:${theme}`] }, async ({ page }) => {
         await page.goto('/catalogue/field.html');
         await wear(page, theme);

@@ -290,7 +290,7 @@ test(
             if (!shows) without.push(`${theme}: ${JSON.stringify(read.marks[0])}`);
             if (new Set(read.labels).size !== 1) ragged.push(`${theme}: labels at ${[...new Set(read.labels)].join('/')}`);
         }
-        expect(names.length, 'the themes were read').toBe(17);
+        expect(names.length, 'the themes were read').toBe(16);
         expect(without, 'a theme whose submenu items carry no mark').toEqual([]);
         expect(ragged, 'a theme where the mark moved a label').toEqual([]);
     },

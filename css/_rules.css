@@ -177,22 +177,6 @@
         --kp-control-accent: var(--muted-foreground);
     }
 
-    /* Retro: a two-pixel checkerboard, the dither every gradient was [TH71]. */
-    [data-theme='retro'] {
-        --fx-texture: repeating-conic-gradient(hsl(from var(--foreground) h s l / 1) 0 25%, transparent 0 50%);
-        --fx-texture-size: 4px 4px;
-        --fx-texture-opacity: 0.04;
-    }
-
-    /* The title bar: the navy-to-blue gradient of a 1995 window, behind h1.
- * Static; the theme has no motion. */
-    [data-theme='retro'] h1 {
-        display: inline-block;
-        padding: 0.15em 0.6em;
-        background: linear-gradient(90deg, var(--primary), var(--info));
-        color: var(--primary-foreground);
-    }
-
     /* Grotesk: twelve columns, the grid every Swiss poster was set on [TH73].
  * Columns, not squares — that is what separates it from light's
  * millimetre grid. */

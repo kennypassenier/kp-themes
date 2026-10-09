@@ -1,0 +1,1572 @@
+<!doctype html>
+<html lang="en" data-theme="forest" data-cat-theme="forest" data-cat-theme-fixed data-review="forest-applied" data-review-themes="forest">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — forest, as applied: what changed</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <link rel="stylesheet" href="../../css/forest-register.css" data-kp-register="forest" />
+        <link rel="stylesheet" href="demo.css" />
+    </head>
+    <body>
+        <main class="fa-page">
+            <header class="fa-intro">
+                <h1>Forest, as applied: what changed</h1>
+                <p>
+                    Kenny, 2026-10-09: "Can you show in a demo which forest components you changed? Just a showcase where I can approve everything."
+                    Every block below is the package itself in forest, as an app gets it: the real components, the real stylesheets and the real
+                    scripts, nothing drawn for this page. Each heading says in one sentence what the component did before and what it does now. Point
+                    at the parts, press them, Tab onto them and open what opens; where a state needs a button (loading, right to left, play again),
+                    the button is in the block.
+                </p>
+                <p>
+                    Approve or not per block in the review dialog ("Review in a dialog" at the top), with a note where something is wrong. What this
+                    page found broken while it was built is listed in <code>research/forest-applied/README.md</code>; nothing in the package was
+                    changed by this page. Inside the review dialog, Escape closes the review dialog itself: close what you opened there with its own
+                    button or a click outside it.
+                </p>
+                <p class="fa-motion" data-fa-motion hidden>
+                    <b>Your system asks for reduced motion</b>, so nothing on this page grows or withers: every part shows its finished pose. Turn it
+                    off in the system settings to judge the openings and closes.
+                </p>
+                <ol class="fa-toc" aria-label="The blocks">
+                    <li><a href="#bar">The bar</a></li>
+                    <li><a href="#links">Tabs, breadcrumbs, pagination</a></li>
+                    <li><a href="#sidenav">Side navigation</a></li>
+                    <li><a href="#palette">Command palette</a></li>
+                    <li><a href="#datepicker">Date picker</a></li>
+                    <li><a href="#theme-menu">Theme menu</a></li>
+                    <li><a href="#combobox">Combobox</a></li>
+                    <li><a href="#tour">Tour</a></li>
+                    <li><a href="#dialogs">Dialog, drawer, backdrops</a></li>
+                    <li><a href="#alarm">Alarm</a></li>
+                    <li><a href="#fields">Fields, select, upload zone</a></li>
+                    <li><a href="#pairs">Checkbox, radio, switch</a></li>
+                    <li><a href="#table">Table</a></li>
+                    <li><a href="#tree">Tree and accordion</a></li>
+                    <li><a href="#legend">Reorder list, chart legend, swatches</a></li>
+                    <li><a href="#calendar">Calendar, the busy month</a></li>
+                    <li><a href="#buttons">Buttons</a></li>
+                    <li><a href="#prose">Links, headline, rule, alert edge, meter, back to top</a></li>
+                    <li><a href="#loading">Loading</a></li>
+                    <li><a href="#popover-menus">Popover menus</a></li>
+                </ol>
+            </header>
+
+            <!-- 1 · The bar -->
+            <section
+                class="fa-sec"
+                id="bar"
+                data-review-item="bar"
+                data-review-title="1 · The bar"
+                data-review-components="nav"
+                aria-labelledby="h-bar"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">1 · The bar</p>
+                    <h2 id="h-bar">
+                        The bar's dropdown and mega menu used to fade in and out, the phone menu appeared at once and the call to action and the
+                        toggle did not answer the pointer; now each menu grows down out of its link and closes as that growth backwards, and the call
+                        to action and the toggle take the dashed blaze.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="forest">
+                        Hover <b>Readings</b> (or Tab onto it): its dropdown grows down out of the link, far end first, clipped at the bar's line, and
+                        withers back up when you leave. Press <b>Equipment</b> for the mega menu, the same growth across the bar. Hover
+                        <b>Request access</b> and press it: the blaze is laid and closes in. In the narrow frame press the three-bar toggle: the links
+                        grow down out of the bar and go back into it.
+                    </p>
+                </div>
+                <div class="fa-stage fa-stage--block fa-stage--menus">
+                    <div class="kp-nav-wrap">
+                        <nav class="kp-nav" aria-label="Pump house navigation, wide">
+                            <a class="kp-nav__brand" href="#bar">Pump house 4 <span class="kp-nav__brand-tag">PH//04</span></a>
+                            <ul class="kp-nav__links">
+                                <li><a class="kp-nav__link" href="#bar" aria-current="page">Overview</a></li>
+                                <li>
+                                    <a class="kp-nav__link" href="#bar" aria-haspopup="true">Readings</a>
+                                    <ul class="kp-nav__menu" data-kp-menu-label="Readings · line 2">
+                                        <li><a href="#bar">Pressure</a></li>
+                                        <li><a href="#bar">Flow rate</a></li>
+                                        <li><a href="#bar">Pump cycles</a></li>
+                                        <li><a href="#bar">Valve positions</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <button type="button" class="kp-nav__link kp-nav__disclosure" data-kp-nav-disclosure>Equipment</button>
+                                    <div class="kp-nav__menu kp-nav__menu--wide">
+                                        <div class="kp-nav__group">
+                                            <h3 class="kp-nav__menu-heading">Pumps</h3>
+                                            <ul>
+                                                <li><a href="#bar">Main line pumps</a></li>
+                                                <li><a href="#bar">Booster sets</a></li>
+                                                <li><a href="#bar">Spare parts</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="kp-nav__group">
+                                            <h3 class="kp-nav__menu-heading">Valves</h3>
+                                            <ul>
+                                                <li><a href="#bar">Gate valves</a></li>
+                                                <li><a href="#bar">Check valves</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="kp-nav__group">
+                                            <h3 class="kp-nav__menu-heading">Sensors</h3>
+                                            <ul>
+                                                <li><a href="#bar">Pressure transducers</a></li>
+                                                <li><a href="#bar">Flow meters</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li><a class="kp-nav__link kp-nav__link--cta" href="#bar">Request access</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+                <p class="fa-label">A phone, 390 px wide</p>
+                <div class="fa-stage fa-stage--block">
+                    <div class="fa-phone">
+                        <div class="kp-nav-wrap">
+                            <nav class="kp-nav" aria-label="Pump house navigation, phone">
+                                <a class="kp-nav__brand" href="#bar">Pump house 4</a>
+                                <button type="button" class="kp-nav__toggle" data-kp-nav-toggle></button>
+                                <ul class="kp-nav__links">
+                                    <li><a class="kp-nav__link" href="#bar" aria-current="page">Overview</a></li>
+                                    <li>
+                                        <a class="kp-nav__link" href="#bar" aria-haspopup="true">Readings</a>
+                                        <ul class="kp-nav__menu" data-kp-menu-label="Readings · line 2">
+                                            <li><a href="#bar">Pressure</a></li>
+                                            <li><a href="#bar">Flow rate</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a class="kp-nav__link" href="#bar">Rota</a></li>
+                                    <li><a class="kp-nav__link kp-nav__link--cta" href="#bar">Request access</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                        <p class="fa-phone__body">Line 2 is locked out at the manifold until the day shift checks the gauge.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2 · Tabs, breadcrumbs, pagination -->
+            <section
+                class="fa-sec"
+                id="links"
+                data-review-item="links"
+                data-review-title="2 · Tabs, breadcrumbs, pagination"
+                data-review-components="tabs tab breadcrumb pagination"
+                aria-labelledby="h-links"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">2 · Tabs, breadcrumbs, pagination</p>
+                    <h2 id="h-links">
+                        Tabs, crumbs and page numbers did not answer the pointer and the crumbs and pages were set in the monospace; now each answers
+                        as forest's link, a 2 px green rule under the words in 200 ms, in the body face, and the page numbers take the leaf corner.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="forest">
+                        Point at an unselected tab, a crumb and a page number: the words turn green and the green rule comes in under them. The
+                        selected tab keeps its own rule, the current page its plate. The crumbs and the numbers are in the same face as the text.
+                    </p>
+                </div>
+                <div class="fa-stage fa-stage--block fa-stack">
+                    <div class="kp-tabs">
+                        <div class="kp-tabs__list" role="tablist" aria-label="Incident INC-4471">
+                            <button type="button" class="kp-tab" role="tab" id="fa-tab-1" aria-controls="fa-panel-1" aria-selected="true">
+                                Summary
+                            </button>
+                            <button type="button" class="kp-tab" role="tab" id="fa-tab-2" aria-controls="fa-panel-2" aria-selected="false">
+                                Readings
+                            </button>
+                            <button type="button" class="kp-tab" role="tab" id="fa-tab-3" aria-controls="fa-panel-3" aria-selected="false">
+                                Handover
+                            </button>
+                        </div>
+                        <div class="kp-tabs__panel" role="tabpanel" id="fa-panel-1" aria-labelledby="fa-tab-1">
+                            Pressure on line 2 dropped to 1.1 bar at 02:40. The line is locked out at the manifold.
+                        </div>
+                        <div class="kp-tabs__panel" role="tabpanel" id="fa-panel-2" aria-labelledby="fa-tab-2" hidden>
+                            Sixty readings from the last hour; the gauge and the sensor agree within 0.05 bar.
+                        </div>
+                        <div class="kp-tabs__panel" role="tabpanel" id="fa-panel-3" aria-labelledby="fa-tab-3" hidden>
+                            The day shift checks the gauge against the sensor before reopening the line.
+                        </div>
+                    </div>
+                    <nav class="kp-breadcrumb" aria-label="Breadcrumb">
+                        <ol>
+                            <li><a href="#links">Sites</a></li>
+                            <li><a href="#links">Pump house 4</a></li>
+                            <li><a href="#links">Line 2</a></li>
+                            <li><span aria-current="page">Incident INC-4471</span></li>
+                        </ol>
+                    </nav>
+                    <nav class="kp-pagination" aria-label="Readings, page 14 of 60">
+                        <ul>
+                            <li><a href="#links">Previous</a></li>
+                            <li><a href="#links">1</a></li>
+                            <li class="kp-pagination__gap" aria-hidden="true">…</li>
+                            <li><a href="#links">13</a></li>
+                            <li><a href="#links" aria-current="page">14</a></li>
+                            <li><a href="#links">15</a></li>
+                            <li class="kp-pagination__gap" aria-hidden="true">…</li>
+                            <li><a href="#links">60</a></li>
+                            <li><a href="#links">Next</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </section>
+
+            <!-- 3 · Side navigation -->
+            <section
+                class="fa-sec"
+                id="sidenav"
+                data-review-item="sidenav"
+                data-review-title="3 · Side navigation and its groups"
+                data-review-components="sidenav"
+                aria-labelledby="h-sidenav"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">3 · Side navigation and its groups</p>
+                    <h2 id="h-sidenav">
+                        The side navigation used to slide in over 200 ms and its groups unfolded in 200 ms with grey rows; now the panel grows out of
+                        its edge in one growth (1000 ms) with its backdrop fading on the growth curve, its groups unfold in the accordion's 1000 ms,
+                        and its rows answer as menu entries with the blaze and the leaf corner.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="forest">
+                        Point at the rows of the panel: kraft ground and the blaze laid inside. Press <b>Maintenance</b> and <b>Readings</b>: the
+                        groups unfold and fold in one growth. Press <b>Open the panel</b>: it grows out of the window's left edge, far side first, the
+                        backdrop fades in with it; close it with <b>Close</b>, Escape or the backdrop (the backdrop still goes at once on close, a
+                        known finding).
+                    </p>
+                </div>
+                <div class="fa-stage fa-stage--block">
+                    <div class="fa-sidebox">
+                        <nav class="kp-sidenav" id="fa-side" aria-label="North site sections">
+                            <div class="kp-sidenav__header"><p class="kp-sidenav__title">North site</p></div>
+                            <div class="kp-sidenav__scroll">
+                                <ul class="kp-sidenav__list">
+                                    <li>
+                                        <a class="kp-sidenav__link" href="#sidenav"
+                                            ><span class="kp-sidenav__icon" aria-hidden="true">◎</span
+                                            ><span class="kp-sidenav__label">Overview</span></a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="kp-sidenav__link" href="#sidenav" aria-current="page"
+                                            ><span class="kp-sidenav__icon" aria-hidden="true">▤</span><span class="kp-sidenav__label">Line 2</span
+                                            ><span class="kp-sidenav__badge">2</span></a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="kp-sidenav__link" href="#sidenav"
+                                            ><span class="kp-sidenav__icon" aria-hidden="true">!</span><span class="kp-sidenav__label">Alarms</span
+                                            ><span class="kp-sidenav__badge">14</span></a
+                                        >
+                                    </li>
+                                    <li><hr class="kp-sidenav__divider" /></li>
+                                    <li class="kp-sidenav__category" data-kp-sidenav-expanded>
+                                        <button type="button" class="kp-sidenav__category-toggle">
+                                            <span class="kp-sidenav__icon" aria-hidden="true">≋</span><span class="kp-sidenav__label">Readings</span>
+                                        </button>
+                                        <div class="kp-sidenav__submenu">
+                                            <ul class="kp-sidenav__list">
+                                                <li>
+                                                    <a class="kp-sidenav__link" href="#sidenav"><span class="kp-sidenav__label">Pressure</span></a>
+                                                </li>
+                                                <li>
+                                                    <a class="kp-sidenav__link" href="#sidenav"><span class="kp-sidenav__label">Flow rate</span></a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li class="kp-sidenav__category">
+                                        <button type="button" class="kp-sidenav__category-toggle">
+                                            <span class="kp-sidenav__icon" aria-hidden="true">⚙</span
+                                            ><span class="kp-sidenav__label">Maintenance</span>
+                                        </button>
+                                        <div class="kp-sidenav__submenu">
+                                            <ul class="kp-sidenav__list">
+                                                <li>
+                                                    <a class="kp-sidenav__link" href="#sidenav"><span class="kp-sidenav__label">Lock-outs</span></a>
+                                                </li>
+                                                <li>
+                                                    <a class="kp-sidenav__link" href="#sidenav"><span class="kp-sidenav__label">Spare parts</span></a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <a class="kp-sidenav__link" href="#sidenav"><span class="kp-sidenav__label">Rota</span></a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="kp-sidenav__footer"><span class="kp-sidenav__label">Signed in as the night shift</span></div>
+                        </nav>
+                        <div class="fa-sidebox__body">
+                            <p>Line 2 has two open incidents. The pressure dropped from 3.2 to 1.1 bar between 02:10 and 02:40.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="fa-stage">
+                    <button type="button" class="kp-sidenav__toggle kp-button kp-button--secondary" data-kp-sidenav-toggle aria-controls="fa-over">
+                        Open the panel
+                    </button>
+                    <nav class="kp-sidenav" id="fa-over" aria-label="Incident sections" data-kp-sidenav-mode="over" data-kp-sidenav-backdrop>
+                        <div class="kp-sidenav__header"><p class="kp-sidenav__title">INC-4471</p></div>
+                        <div class="kp-sidenav__scroll">
+                            <ul class="kp-sidenav__list">
+                                <li>
+                                    <a class="kp-sidenav__link" href="#sidenav" aria-current="page"><span class="kp-sidenav__label">Summary</span></a>
+                                </li>
+                                <li>
+                                    <a class="kp-sidenav__link" href="#sidenav"><span class="kp-sidenav__label">Readings</span></a>
+                                </li>
+                                <li>
+                                    <a class="kp-sidenav__link" href="#sidenav"><span class="kp-sidenav__label">Handover</span></a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="kp-sidenav__footer">
+                            <button type="button" class="kp-button kp-button--ghost" data-kp-sidenav-toggle aria-controls="fa-over">Close</button>
+                        </div>
+                    </nav>
+                </div>
+            </section>
+
+            <!-- 4 · Command palette -->
+            <section
+                class="fa-sec"
+                id="palette"
+                data-review-item="palette"
+                data-review-title="4 · Command palette"
+                data-review-components="palette"
+                aria-labelledby="h-palette"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">4 · Command palette</p>
+                    <h2 id="h-palette">
+                        The command palette opened and closed at once and its options did not answer the pointer; now it grows up out of its base like
+                        the dialog with its backdrop fading in, and its options take the blaze laid inside on the kraft ground.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="forest">
+                        Press <b>Open the commands</b>: the palette grows up out of its base line. Point at the options, type "lock" to filter. Escape
+                        closes it: in Chromium as the growth played backwards, in Firefox at once (a known finding: the palette's close still needs
+                        js/motion.js).
+                    </p>
+                </div>
+                <div class="fa-stage">
+                    <button type="button" class="kp-button kp-button--secondary" data-kp-palette-open="fa-pal">Open the commands</button>
+                    <dialog class="kp-palette" id="fa-pal" data-kp-palette aria-label="Commands">
+                        <input
+                            class="kp-palette__input"
+                            type="text"
+                            role="combobox"
+                            aria-label="Commands"
+                            aria-expanded="true"
+                            aria-controls="fa-pal-list"
+                            autocomplete="off"
+                            placeholder="Type a command…"
+                        />
+                        <ul class="kp-palette__list" id="fa-pal-list" role="listbox" aria-label="Commands">
+                            <li role="presentation" class="kp-palette__group" data-kp-group>
+                                <span class="kp-palette__group-label">Incidents</span>
+                                <ul role="group" aria-label="Incidents">
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="report" data-kp-keys="N">
+                                        Report an incident
+                                    </li>
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="lockout" data-kp-keys="L">
+                                        Lock out a line
+                                    </li>
+                                </ul>
+                            </li>
+                            <li role="presentation" class="kp-palette__group" data-kp-group>
+                                <span class="kp-palette__group-label">Go to</span>
+                                <ul role="group" aria-label="Go to">
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="readings">Readings for line 2</li>
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="handover">Handover notes</li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <p class="kp-palette__status" role="status" aria-live="polite"></p>
+                    </dialog>
+                </div>
+            </section>
+
+            <!-- 5 · Date picker -->
+            <section
+                class="fa-sec"
+                id="datepicker"
+                data-review-item="datepicker"
+                data-review-title="5 · Date picker"
+                data-review-components="datepicker"
+                aria-labelledby="h-datepicker"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">5 · Date picker</p>
+                    <h2 id="h-datepicker">
+                        The date picker's panel opened and closed at once and its days took a grey ground with rounded corners; now the panel grows
+                        down out of its field like a menu, and each day takes the blaze and the leaf corner, with the two-channel focus ring winning
+                        over the blaze.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="forest">
+                        Press the calendar button: the panel grows down out of the field. Point at the days, then use the arrow keys: the focused day
+                        shows the two-channel ring and no blaze. Pick a day or press Escape: the panel still goes at once (a known finding, the close
+                        needs a swap of two lines in js/datepicker.js).
+                    </p>
+                </div>
+                <div class="fa-stage">
+                    <div class="kp-datepicker" data-kp-datepicker lang="en-GB">
+                        <label class="kp-field__label" for="fa-date">Lock-out ends on</label>
+                        <input class="kp-field__input" id="fa-date" type="text" inputmode="numeric" data-kp-date-input value="09/10/2026" />
+                        <button type="button" class="kp-button" data-kp-date-open aria-label="Open the calendar" title="Open the calendar">
+                            <span aria-hidden="true">▦</span>
+                        </button>
+                        <div class="kp-datepicker__panel" data-kp-date-panel hidden></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6 · Theme menu -->
+            <section
+                class="fa-sec"
+                id="theme-menu"
+                data-review-item="theme-menu"
+                data-review-title="6 · Theme menu"
+                data-review-components="theme-menu theme-option"
+                aria-labelledby="h-theme-menu"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">6 · Theme menu</p>
+                    <h2 id="h-theme-menu">
+                        The theme menu's options took an 8 % wash, the React list opened at once, and an option's focus was one pale channel; now the
+                        options take the blaze laid inside with the leaf corner, the React list grows down out of its button, and focus is the
+                        two-channel ring.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="forest">
+                        Press the palette icon: the menu grows down out of it and closes as that growth backwards. Point at the options, then Tab
+                        through them: the ring of two channels, no blaze. The second button is the React shape: its list grows on opening and still
+                        goes at once on closing (a known finding). Choosing a theme here does not switch this page, which judges forest only.
+                    </p>
+                </div>
+                <div class="fa-stage fa-stage--menus">
+                    <div class="fa-theme-host" data-fa-theme-menu></div>
+                    <div class="kp-theme-menu" data-fa-react>
+                        <button
+                            type="button"
+                            class="kp-icon-button"
+                            aria-label="Choose a theme (React shape)"
+                            aria-haspopup="listbox"
+                            aria-expanded="false"
+                        >
+                            Aa
+                        </button>
+                    </div>
+                    <p class="fa-note" role="status" data-fa-theme-said>Nothing chosen yet.</p>
+                </div>
+            </section>
+
+            <!-- 7 · Combobox -->
+            <section
+                class="fa-sec"
+                id="combobox"
+                data-review-item="combobox"
+                data-review-title="7 · Combobox"
+                data-review-components="combobox"
+                aria-labelledby="h-combobox"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">7 · Combobox</p>
+                    <h2 id="h-combobox">
+                        The combobox's list grew up from its own foot and closed at once, and its input and options did not answer the pointer; now
+                        the list grows down out of its field and closes as that growth backwards, and the input and the options take the blaze.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="forest">
+                        Point at the input, then type "p" or press the down arrow: the list grows down out of the field. Point at the options. Press
+                        Escape or pick one: the list withers back into the field. The plain field beside it answers the same.
+                    </p>
+                </div>
+                <div class="fa-stage">
+                    <div class="kp-combobox" data-kp-combobox>
+                        <label class="kp-field__label" for="fa-cb">Site</label>
+                        <input
+                            class="kp-combobox__input"
+                            id="fa-cb"
+                            type="text"
+                            role="combobox"
+                            aria-expanded="false"
+                            aria-controls="fa-cb-list"
+                            autocomplete="off"
+                        />
+                        <ul class="kp-combobox__list" id="fa-cb-list" role="listbox" hidden>
+                            <li class="kp-combobox__option" role="option" data-kp-option data-value="ph4">Pump house 4</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option data-value="ph7">Pump house 7</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option data-value="cold">Cold store</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option data-value="weigh">Weighbridge</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option data-value="boiler">Boiler room</li>
+                        </ul>
+                        <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+                    </div>
+                    <div class="kp-field">
+                        <label class="kp-field__label" for="fa-cb-beside">A plain field, for comparison</label>
+                        <input class="kp-field__input" id="fa-cb-beside" type="text" />
+                    </div>
+                </div>
+            </section>
+
+            <!-- 8 · Tour -->
+            <section
+                class="fa-sec"
+                id="tour"
+                data-review-item="tour"
+                data-review-title="8 · Tour"
+                data-review-components="tour"
+                aria-labelledby="h-tour"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">8 · Tour</p>
+                    <h2 id="h-tour">
+                        The tour's card faded in over 160 ms and went at once; now it grows up out of its own line in one growth, and when the tour
+                        ends that growth plays backwards.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="forest">
+                        Press <b>Start the tour</b>: the card grows up beside each part in turn. Press Next, Back, then Skip or Escape: the card
+                        withers back into its line.
+                    </p>
+                </div>
+                <div class="fa-stage fa-stage--block fa-stack">
+                    <div class="kp-row">
+                        <button type="button" class="kp-button kp-button--primary" data-fa-tour-start>Start the tour</button>
+                    </div>
+                    <div class="fa-tour-app">
+                        <div class="kp-row" data-fa-tour="actions">
+                            <button type="button" class="kp-button kp-button--sm">Export readings</button>
+                            <button type="button" class="kp-button kp-button--sm">Schedule a visit</button>
+                        </div>
+                        <div class="kp-field" data-fa-tour="search">
+                            <label class="kp-field__label" for="fa-tour-search">Find a pump house</label>
+                            <input class="kp-field__input" id="fa-tour-search" type="search" />
+                        </div>
+                        <div class="kp-card" data-fa-tour="note">
+                            <h3 class="kp-card__title">Open incidents</h3>
+                            <p class="kp-card__body">Two open: a door contact at pump house 1, and no reading from pump house 7 since 06:00.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 9 · Dialog, drawer, backdrops -->
+            <section
+                class="fa-sec"
+                id="dialogs"
+                data-review-item="dialogs"
+                data-review-title="9 · Dialog, drawer and every backdrop"
+                data-review-components="dialog drawer"
+                aria-labelledby="h-dialogs"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">9 · Dialog, drawer and every backdrop</p>
+                    <h2 id="h-dialogs">
+                        The dialog's and the drawer's backdrops faded on the package's ease-in while their plates grew; now every backdrop comes and
+                        goes with its plate on the growth curve.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="forest">
+                        Open the dialog: the plate grows up out of its base and the backdrop darkens with it on the same curve. Close it with either
+                        button or Escape: both go back together. The same for the drawer, which grows out of its edge.
+                    </p>
+                </div>
+                <div class="fa-stage">
+                    <button type="button" class="kp-button kp-button--secondary" data-kp-dialog="fa-dialog">Open the dialog</button>
+                    <dialog class="kp-dialog" id="fa-dialog" aria-labelledby="fa-dialog-title">
+                        <h2 class="kp-dialog__title" id="fa-dialog-title">Close incident INC-4471?</h2>
+                        <p>The line is reopened and the vendor is told the fault is fixed. You can reopen the incident within seven days.</p>
+                        <div class="kp-dialog__actions">
+                            <button type="button" class="kp-button kp-button--ghost" data-kp-dialog-close="keep">Cancel</button>
+                            <button type="button" class="kp-button kp-button--primary" data-kp-dialog-close="close">Close incident</button>
+                        </div>
+                    </dialog>
+                    <button type="button" class="kp-button kp-button--secondary" data-kp-dialog="fa-drawer">Open Help in a drawer</button>
+                    <dialog class="kp-drawer kp-dialog" id="fa-drawer" aria-labelledby="fa-drawer-title">
+                        <header class="kp-drawer__head">
+                            <h2 class="kp-dialog__title" id="fa-drawer-title">Help</h2>
+                            <button
+                                type="button"
+                                class="kp-icon-button kp-dialog__close"
+                                aria-label="Close Help"
+                                title="Close Help"
+                                data-kp-dialog-close
+                            >
+                                ✕
+                            </button>
+                            <p class="kp-drawer__desc">Where things live on this site and the words it uses.</p>
+                        </header>
+                        <div class="kp-drawer__body">
+                            <div class="kp-help kp-card">
+                                <h3>Where things live</h3>
+                                <dl class="kp-help__list">
+                                    <dt>Overview</dt>
+                                    <dd>The network at a glance: what needs a visit, and what changed since this morning.</dd>
+                                    <dt>Readings</dt>
+                                    <dd>Pressure, flow and levels as charts, for an hour, a day or a week.</dd>
+                                    <dt>Incidents</dt>
+                                    <dd>What went wrong, who is on it, and what was done.</dd>
+                                </dl>
+                            </div>
+                        </div>
+                        <footer class="kp-drawer__foot">
+                            <button type="button" class="kp-button kp-button--primary" data-kp-dialog-close>Done</button>
+                        </footer>
+                    </dialog>
+                </div>
+            </section>
+
+            <!-- 10 · Alarm -->
+            <section
+                class="fa-sec"
+                id="alarm"
+                data-review-item="alarm"
+                data-review-title="10 · Alarm"
+                data-review-components="alarm"
+                aria-labelledby="h-alarm"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">10 · Alarm</p>
+                    <h2 id="h-alarm">
+                        The alarm used the package's entrance, scaling its words, with a glow pulsing every 1400 ms; now its panel and frame grow like
+                        the dialog with the leaf corner, the words do not scale, and a growth ring is drawn round the frame once every 3200 ms while
+                        it waits.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="forest">
+                        Press <b>Raise the alarm</b>: the ground comes in, the panel grows, then the ring is drawn clockwise from the top and fades,
+                        again and again. Acknowledge it (or Escape on the second): it still goes at once (a known finding). The alarm below waits in
+                        the page so the ring can be watched without raising one.
+                    </p>
+                </div>
+                <div class="fa-stage">
+                    <button
+                        type="button"
+                        class="kp-button kp-button--destructive"
+                        data-kp-alarm="Pressure lost"
+                        data-kp-alarm-code="Line 2 · manifold"
+                        data-kp-alarm-detail="Pressure fell below 1 bar on line 2. The line is locked out until someone acknowledges."
+                    >
+                        Raise the alarm
+                    </button>
+                    <button
+                        type="button"
+                        class="kp-button"
+                        data-kp-alarm="Clearance required"
+                        data-kp-alarm-code="Override refused"
+                        data-kp-alarm-detail="The ring main valves stay under the shift lead's control."
+                        data-kp-alarm-action="Understood"
+                        data-kp-alarm-escape
+                    >
+                        Raise it, Escape allowed
+                    </button>
+                </div>
+                <div class="fa-stage fa-stage--block">
+                    <div class="kp-alarm" data-kp-alarm-inline data-kp-alarm-mode="ack" inert>
+                        <div class="kp-alarm__scan" aria-hidden="true"></div>
+                        <div class="kp-alarm__bars" aria-hidden="true"></div>
+                        <div class="kp-alarm__panel">
+                            <p class="kp-alarm__code">Line 2 · manifold</p>
+                            <div class="kp-alarm__title" role="heading" aria-level="3">
+                                <span class="kp-alarm__glyphs" data-text="Pressure lost">Pressure lost</span>
+                            </div>
+                            <p class="kp-alarm__detail">Pressure fell below 1 bar on line 2. The line is locked out until someone acknowledges.</p>
+                            <div class="kp-alarm__actions">
+                                <button type="button" class="kp-button kp-alarm__ack">Acknowledge</button>
+                                <span class="kp-alarm__hint" aria-hidden="true">Press Enter</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 11 · Fields, select, upload zone -->
+            <section
+                class="fa-sec"
+                id="fields"
+                data-review-item="fields"
+                data-review-title="11 · Fields, select, upload zone"
+                data-review-components="field upload datatable"
+                aria-labelledby="h-fields"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">11 · Fields, select, upload zone</p>
+                    <h2 id="h-fields">
+                        Fields, selects and the drop zone did not answer the pointer at all; now each takes the dashed blaze when pointed at, and
+                        focus stays the two-channel ring with the green border.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="forest">
+                        Point at each field, the select and the drop zone: the blaze is laid round it. Click into one: the blaze gives way to the
+                        focus ring. The invalid ones keep their red. Drop a file on the zone, or press it to choose one.
+                    </p>
+                </div>
+                <div class="fa-stage">
+                    <div class="kp-field">
+                        <label class="kp-field__label" for="fa-f-site">Site</label>
+                        <input class="kp-field__input" id="fa-f-site" type="text" value="Pump house 4" />
+                    </div>
+                    <div class="kp-field">
+                        <label class="kp-field__label" for="fa-f-sev">Severity</label>
+                        <select class="kp-field__input" id="fa-f-sev">
+                            <option>Low</option>
+                            <option selected>High</option>
+                            <option>Critical: wake the on-call engineer</option>
+                        </select>
+                    </div>
+                    <div class="kp-field">
+                        <label class="kp-field__label" for="fa-f-note">Note for the day shift</label>
+                        <textarea class="kp-field__input kp-field__input--multiline" id="fa-f-note" rows="3">
+Gauge and sensor disagree by 2 bar.</textarea>
+                    </div>
+                    <div class="kp-field kp-field--invalid">
+                        <label class="kp-field__label" for="fa-f-mail">Escalation email <span class="kp-field__required">required</span></label>
+                        <input
+                            class="kp-field__input"
+                            id="fa-f-mail"
+                            type="email"
+                            value="night-shift@"
+                            aria-invalid="true"
+                            aria-describedby="fa-f-mail-error"
+                        />
+                        <span class="kp-field__error" id="fa-f-mail-error" data-kp-field-error
+                            >Enter an address with a domain after the @, such as night-shift@example.org.</span
+                        >
+                    </div>
+                    <div class="kp-field kp-field--check kp-field--invalid">
+                        <input class="kp-field__check" id="fa-f-ack" type="checkbox" aria-invalid="true" aria-describedby="fa-f-ack-error" />
+                        <label class="kp-field__label" for="fa-f-ack">I have read the lock-out procedure</label>
+                        <span class="kp-field__error" id="fa-f-ack-error" data-kp-field-error>Tick this before you reopen the line.</span>
+                    </div>
+                </div>
+                <div class="fa-stage fa-stage--block">
+                    <div class="kp-upload" data-kp-upload data-kp-max-bytes="5000000" data-kp-max-files="3">
+                        <input type="file" multiple class="kp-sr-only" id="fa-up" data-kp-upload-input />
+                        <label class="kp-upload__zone" for="fa-up" data-kp-upload-zone>Drop the telemetry exports here, or choose them</label>
+                        <ul class="kp-upload__list" data-kp-upload-list></ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 12 · Checkbox, radio, switch -->
+            <section
+                class="fa-sec"
+                id="pairs"
+                data-review-item="pairs"
+                data-review-title="12 · Checkbox, radio, switch"
+                data-review-components="field switch"
+                aria-labelledby="h-pairs"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">12 · Checkbox, radio, switch</p>
+                    <h2 id="h-pairs">
+                        The tick was drawn in 200 ms but cleared at once, and the radio's dot scaled in and vanished; now the tick and the dot are
+                        drawn and cleared as mirrors (growth curve in, withering curve out), the dot grows up out of its foot without scaling, and
+                        every check, radio and switch takes the blaze when pointed at.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="forest">
+                        Tick and untick the boxes: the tick is drawn and taken back the same way, and the plate turns only after the tick is gone.
+                        Move between the radios: the dot grows up out of its foot and goes back down. Flip the switches. Point at each: the blaze.
+                    </p>
+                </div>
+                <div class="fa-stage">
+                    <div>
+                        <div class="kp-field kp-field--check">
+                            <input class="kp-field__check" id="fa-c-weekly" type="checkbox" checked />
+                            <label class="kp-field__label" for="fa-c-weekly">Send me the weekly incident summary</label>
+                        </div>
+                        <div class="kp-field kp-field--check">
+                            <input class="kp-field__check" id="fa-c-sms" type="checkbox" />
+                            <label class="kp-field__label" for="fa-c-sms">Also text me when an alarm is raised at night</label>
+                        </div>
+                        <div class="kp-field kp-field--check kp-field--invalid">
+                            <input class="kp-field__check" id="fa-c-sign" type="checkbox" aria-invalid="true" aria-describedby="fa-c-sign-error" />
+                            <label class="kp-field__label" for="fa-c-sign">Signed by the shift lead</label>
+                            <span class="kp-field__error" id="fa-c-sign-error" data-kp-field-error>Needed before the line reopens.</span>
+                        </div>
+                    </div>
+                    <fieldset class="kp-fieldset">
+                        <legend class="kp-field__label">Who is told first?</legend>
+                        <label class="kp-field__option"
+                            ><input class="kp-field__check" type="radio" name="fa-first" value="manager" checked /> Site manager</label
+                        >
+                        <label class="kp-field__option"><input class="kp-field__check" type="radio" name="fa-first" value="deputy" /> Deputy</label>
+                        <label class="kp-field__option"
+                            ><input class="kp-field__check" type="radio" name="fa-first" value="vendor" /> Vendor's hotline</label
+                        >
+                    </fieldset>
+                    <div class="fa-col">
+                        <label class="kp-switch">
+                            <input class="kp-switch__input" type="checkbox" role="switch" />
+                            <span class="kp-switch__state" aria-hidden="true"></span>
+                            <span>Night alarms</span>
+                        </label>
+                        <label class="kp-switch">
+                            <input class="kp-switch__input" type="checkbox" role="switch" checked />
+                            <span class="kp-switch__state" aria-hidden="true"></span>
+                            <span>Weekly summary</span>
+                        </label>
+                        <label class="kp-switch">
+                            <input class="kp-switch__input" type="checkbox" role="switch" checked disabled />
+                            <span class="kp-switch__state" aria-hidden="true"></span>
+                            <span>Audit log (always on)</span>
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 13 · Table -->
+            <section
+                class="fa-sec"
+                id="table"
+                data-review-item="table"
+                data-review-title="13 · Table"
+                data-review-components="table datatable"
+                aria-labelledby="h-table"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">13 · Table</p>
+                    <h2 id="h-table">
+                        Table rows took a kraft ground at once, the search did not answer the pointer, the status and page numbers were in the
+                        monospace and the busy panel showed a spinner beside the planting row; now each row answers as a menu entry with the blaze
+                        laid inside, the search blazes, the status reads in the body face, and the busy panel shows the planting row alone.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="forest">
+                        Point at the rows and the search. Type in the search. Press <b>Load again</b>: the busy panel sits over the rows with one
+                        loading picture, the planting row; <b>Loaded</b> takes it away (it still goes at once, a known finding).
+                    </p>
+                </div>
+                <div class="fa-controls" data-review-controls>
+                    <div class="kp-row" role="group" aria-label="The table's state">
+                        <button type="button" class="kp-button kp-button--sm" data-fa-table="busy" aria-pressed="false">Load again</button>
+                        <button type="button" class="kp-button kp-button--sm" data-fa-table="ready" aria-pressed="true">Loaded</button>
+                    </div>
+                </div>
+                <div class="fa-stage fa-stage--block">
+                    <div class="kp-datatable" data-kp-datatable data-fa-dt>
+                        <div class="kp-datatable__bar">
+                            <input class="kp-datatable__search" type="search" data-kp-datatable-search aria-label="Search the pump houses" />
+                        </div>
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">
+                                    Pump houses
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col" data-kp-sort="text">Pump house</th>
+                                        <th scope="col" data-kp-sort="text">State</th>
+                                        <th scope="col" data-kp-sort="number" class="kp-text-end">Pressure, bar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-kp-row-key="ph1">
+                                        <td>Pump house 1</td>
+                                        <td>running</td>
+                                        <td class="kp-text-end kp-numeric">3.36</td>
+                                    </tr>
+                                    <tr data-kp-row-key="ph2">
+                                        <td>Pump house 2</td>
+                                        <td>running</td>
+                                        <td class="kp-text-end kp-numeric">3.12</td>
+                                    </tr>
+                                    <tr data-kp-row-key="ph3">
+                                        <td>Pump house 3</td>
+                                        <td>low pressure</td>
+                                        <td class="kp-text-end kp-numeric">1.92</td>
+                                    </tr>
+                                    <tr data-kp-row-key="ph4">
+                                        <td>Pump house 4</td>
+                                        <td>locked out</td>
+                                        <td class="kp-text-end kp-numeric">0.00</td>
+                                    </tr>
+                                    <tr data-kp-row-key="ph5">
+                                        <td>Pump house 5</td>
+                                        <td>running</td>
+                                        <td class="kp-text-end kp-numeric">2.98</td>
+                                    </tr>
+                                    <tr data-kp-row-key="ph6">
+                                        <td>Pump house 6</td>
+                                        <td>resting</td>
+                                        <td class="kp-text-end kp-numeric">2.71</td>
+                                    </tr>
+                                    <tr data-kp-row-key="ph7">
+                                        <td>Pump house 7</td>
+                                        <td>no reading</td>
+                                        <td class="kp-text-end kp-numeric">—</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="kp-datatable__bar">
+                            <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 14 · Tree and accordion -->
+            <section
+                class="fa-sec"
+                id="tree"
+                data-review-item="tree"
+                data-review-title="14 · Tree and accordion"
+                data-review-components="tree accordion"
+                aria-labelledby="h-tree"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">14 · Tree and accordion</p>
+                    <h2 id="h-tree">
+                        Tree rows took a grey ground at once with 5 px corners and the accordion heading did not answer the pointer; now a tree row
+                        answers as a menu entry on its own first line (kraft ground, blaze, leaf corner), and the accordion heading takes the blaze
+                        laid inside.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="forest">
+                        Point at the tree rows, also a branch with its children open: only the innermost row pointed at answers, on its first line.
+                        Open and close the branches. Point at the accordion headings and open them (the 1000 ms unfold was already there).
+                    </p>
+                </div>
+                <div class="fa-stage fa-stage--block fa-split">
+                    <ul class="kp-tree" role="tree" data-kp-tree data-kp-selectable aria-label="Pump house 4 files">
+                        <li role="treeitem" aria-expanded="false">
+                            Line 1
+                            <ul role="group">
+                                <li role="treeitem">readings-0100.csv</li>
+                                <li role="treeitem">readings-0200.csv</li>
+                            </ul>
+                        </li>
+                        <li role="treeitem" aria-expanded="true">
+                            Line 2
+                            <ul role="group">
+                                <li role="treeitem" aria-expanded="true">
+                                    Manifold
+                                    <ul role="group">
+                                        <li role="treeitem" aria-selected="true">readings-0240.csv</li>
+                                        <li role="treeitem">pump-log.txt</li>
+                                    </ul>
+                                </li>
+                                <li role="treeitem">lock-out-signed.pdf</li>
+                            </ul>
+                        </li>
+                        <li role="treeitem">site-plan.pdf</li>
+                    </ul>
+                    <div class="kp-accordion">
+                        <details class="kp-accordion__item" open>
+                            <summary class="kp-accordion__summary">Who may reopen a locked-out line?</summary>
+                            <div class="kp-accordion__body">
+                                Only the shift lead who signed the lock-out, or the site manager when that person has left the site.
+                            </div>
+                        </details>
+                        <details class="kp-accordion__item">
+                            <summary class="kp-accordion__summary">What counts as a pressure drop?</summary>
+                            <div class="kp-accordion__body">A fall of more than one bar within thirty minutes on any line.</div>
+                        </details>
+                        <details class="kp-accordion__item">
+                            <summary class="kp-accordion__summary">Which reading do we believe when the gauge and the sensor disagree?</summary>
+                            <div class="kp-accordion__body">Neither, on its own: close the line and log both readings at the same minute.</div>
+                        </details>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 15 · Reorder list, chart legend, swatches -->
+            <section
+                class="fa-sec"
+                id="legend"
+                data-review-item="legend"
+                data-review-title="15 · Reorder list, chart legend, swatches"
+                data-review-components="reorder chart colorpicker"
+                aria-labelledby="h-legend"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">15 · Reorder list, chart legend, swatches</p>
+                    <h2 id="h-legend">
+                        The reorder rows and the chart's legend keys took a grey edge, the keys were pills and the colour swatch was rounded 10 px;
+                        now the rows and the keys take the blaze, and the keys, the reorder handle and the swatch take the leaf corner.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="forest">
+                        Point at the reorder rows and drag one by its handle (or focus the handle and use the arrow keys). Point at the chart's legend
+                        keys under the plot and press one to single a source out, then <b>Show all</b>. The colour swatch beside the sliders has the
+                        leaf corner.
+                    </p>
+                </div>
+                <div class="fa-stage fa-stage--block fa-stack">
+                    <ul class="kp-reorder fa-narrow" data-kp-reorder aria-label="Columns in the handover report">
+                        <li data-kp-item="time" data-kp-label="Time"><button type="button" data-kp-handle aria-label="Move Time">⠿</button> Time</li>
+                        <li data-kp-item="pressure" data-kp-label="Pressure">
+                            <button type="button" data-kp-handle aria-label="Move Pressure">⠿</button> Pressure
+                        </li>
+                        <li data-kp-item="flow" data-kp-label="Flow rate">
+                            <button type="button" data-kp-handle aria-label="Move Flow rate">⠿</button> Flow rate
+                        </li>
+                        <li data-kp-item="signed" data-kp-label="Signed by">
+                            <button type="button" data-kp-handle aria-label="Move Signed by">⠿</button> Signed by
+                        </li>
+                    </ul>
+                    <div class="kp-chart-group" data-kp-chart-group data-kp-chart-span="24h">
+                        <figure class="kp-chart" data-kp-chart aria-label="Pressure">
+                            <figcaption class="kp-chart__title">Pressure, bar</figcaption>
+                            <script type="application/json" data-kp-chart-data>
+                                {
+                                    "label": "Pressure",
+                                    "unit": "bar",
+                                    "digits": 2,
+                                    "threshold": 2.1,
+                                    "series": [
+                                        {
+                                            "label": "Pump house 1",
+                                            "start": 1791010800000,
+                                            "step": 3600000,
+                                            "values": [
+                                                3.36, 3.38, 3.41, 3.43, 3.44, 3.45, 3.44, 3.43, 3.41, 3.38, 3.35, 3.33, 3.32, 3.34, 3.37, 3.4, 3.43,
+                                                3.46, 3.5, 3.53, 3.55, 3.52, 3.45, 3.36
+                                            ]
+                                        },
+                                        {
+                                            "label": "Pump house 3",
+                                            "start": 1791010800000,
+                                            "step": 3600000,
+                                            "values": [
+                                                2.8, 2.84, 2.86, 2.88, 2.88, 2.87, 2.85, 2.83, 2.79, 2.75, 2.73, 2.74, 2.77, 2.82, 2.85, 2.88, 2.91,
+                                                2.95, 2.99, 3.01, 2.96, 2.71, 1.93, 2.75
+                                            ]
+                                        },
+                                        {
+                                            "label": "Pump house 7",
+                                            "start": 1791010800000,
+                                            "step": 3600000,
+                                            "values": [
+                                                2.7, 2.73, 2.75, 2.77, 2.76, 2.75, 2.74, 2.72, 2.69, 2.66, 2.65, 2.67, 2.7, 2.73, 2.75, 2.77, 2.79,
+                                                2.81, 2.84, 2.85, 2.82, 2.76, 2.65, 2.7
+                                            ]
+                                        }
+                                    ]
+                                }
+                            </script>
+                        </figure>
+                    </div>
+                    <div class="kp-colorpicker" data-kp-colorpicker data-kp-against="--background">
+                        <label class="kp-field__label" for="fa-cp-h">Hue</label>
+                        <input id="fa-cp-h" type="range" data-kp-channel="h" min="0" max="360" value="140" />
+                        <label class="kp-field__label" for="fa-cp-s">Saturation</label>
+                        <input id="fa-cp-s" type="range" data-kp-channel="s" min="0" max="100" value="45" />
+                        <label class="kp-field__label" for="fa-cp-l">Lightness</label>
+                        <input id="fa-cp-l" type="range" data-kp-channel="l" min="0" max="100" value="32" />
+                        <span class="kp-colorpicker__swatch" data-kp-swatch aria-hidden="true"></span>
+                        <output class="kp-colorpicker__value" data-kp-colorpicker-value></output>
+                        <p class="kp-colorpicker__contrast" data-kp-colorpicker-contrast role="status" aria-live="polite"></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 16 · Calendar, the busy month -->
+            <section
+                class="fa-sec"
+                id="calendar"
+                data-review-item="calendar"
+                data-review-title="16 · Calendar and the busy month"
+                data-review-components="calendar"
+                aria-labelledby="h-calendar"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">16 · Calendar and the busy month</p>
+                    <h2 id="h-calendar">
+                        The busy month's card faded in over 200 ms with a spinner beside its planting row and went at once, its days planted a tree
+                        each under it, and a day's focus was one 2 px outline; now the card grows up out of its line and withers back with the
+                        planting row alone, the days under it stand faint without a tree, and a day's focus is the two-channel ring.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="forest">
+                        Press <b>Loading</b>: in the first month the whole month waits, the card grows up over it with one planting row and the days
+                        stand faint without a tree; in the second (each day waiting, unchanged) every day shows the spinner's one tree. Press
+                        <b>Read</b>: the card withers back into its line. Click a day and use the arrow keys: the two-channel ring, today's green ring
+                        kept inside.
+                    </p>
+                </div>
+                <div class="fa-controls" data-review-controls>
+                    <div class="kp-row" role="group" aria-label="The month's state">
+                        <button type="button" class="kp-button kp-button--sm" data-fa-calendar="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-fa-calendar="ready" aria-pressed="true">Read</button>
+                    </div>
+                </div>
+                <div class="fa-stage fa-stage--block fa-split">
+                    <div
+                        class="kp-calendar kp-calendar--busy-whole"
+                        data-kp-calendar
+                        data-kp-calendar-month="2026-10"
+                        lang="en-GB"
+                        aria-label="Nightly backups, one card while loading"
+                    ></div>
+                    <div
+                        class="kp-calendar kp-calendar--busy-days"
+                        data-kp-calendar
+                        data-kp-calendar-month="2026-10"
+                        lang="en-GB"
+                        aria-label="Nightly backups, each day waiting"
+                    ></div>
+                </div>
+            </section>
+
+            <!-- 17 · Buttons -->
+            <section
+                class="fa-sec"
+                id="buttons"
+                data-review-item="buttons"
+                data-review-title="17 · Buttons"
+                data-review-components="button icon-button"
+                aria-labelledby="h-buttons"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">17 · Buttons</p>
+                    <h2 id="h-buttons">
+                        A pressed primary or destructive button turned pale under its light words (1.8:1); now it keeps its own plate while pressed
+                        and only the blaze closes in, the plain button alone turning to its pressed ground, and every other variant answers as before.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="forest">
+                        Press and hold each button. The primary and the destructive keep their plate and their words stay readable; the plain one
+                        takes its pressed ground. Point at the ghost and the icon button: the blaze over a faint wash (kept on purpose, it shows a
+                        ghost is a button). Tab through them all: the focus ring wins over the blaze.
+                    </p>
+                </div>
+                <div class="fa-stage">
+                    <button type="button" class="kp-button kp-button--primary">Save changes</button>
+                    <button type="button" class="kp-button">Save as draft</button>
+                    <button type="button" class="kp-button kp-button--secondary">Preview</button>
+                    <button type="button" class="kp-button kp-button--ghost">Cancel</button>
+                    <button type="button" class="kp-button kp-button--destructive">Delete the reading</button>
+                    <button type="button" class="kp-button kp-button--mirror">Go back</button>
+                </div>
+                <div class="fa-stage fa-stage--baseline">
+                    <button type="button" class="kp-button kp-button--sm">Small</button>
+                    <button type="button" class="kp-button">Default</button>
+                    <button type="button" class="kp-button kp-button--lg">Large</button>
+                    <button type="button" class="kp-button kp-button--primary kp-button--sm">Small primary</button>
+                    <button type="button" class="kp-button kp-button--destructive kp-button--lg">Large destructive</button>
+                </div>
+                <div class="fa-stage">
+                    <button type="button" class="kp-button">
+                        <span aria-hidden="true">↻</span>
+                        <span class="kp-button__text">Retry</span>
+                    </button>
+                    <button type="button" class="kp-button kp-button--secondary">
+                        <span class="kp-button__text">Export</span>
+                        <span aria-hidden="true">↓</span>
+                    </button>
+                    <button type="button" class="kp-icon-button" aria-label="Close this panel" title="Close">
+                        <span aria-hidden="true">✕</span>
+                    </button>
+                    <button type="button" class="kp-button" disabled>Disabled</button>
+                    <button type="button" class="kp-button kp-button--primary" disabled>Disabled primary</button>
+                    <button type="button" class="kp-button" aria-busy="true">Working…</button>
+                </div>
+            </section>
+
+            <!-- 18 · Links, headline, rule, alert edge, meter, back to top -->
+            <section
+                class="fa-sec"
+                id="prose"
+                data-review-item="prose"
+                data-review-title="18 · Links, headline, rule, alert edge, meter, back to top"
+                data-review-components="alert meter to-top"
+                aria-labelledby="h-prose"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">18 · Links, headline, rule, alert edge, meter, back to top</p>
+                    <h2 id="h-prose">
+                        A link in running text changed at once, the headline slid in, and the section rule, the meter's wipe and the alert's edge
+                        always ran left to right; now the link answers in 200 ms, the headline grows up out of its line, the rule, the wipe and the
+                        edge start from the reading side in a right-to-left page too, and back to top withers out.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="forest">
+                        Point at the link in the text. Press <b>Play again</b> for the headline, the rule and the meters. Press
+                        <b>Right to left</b> and play again: the rule and the wipes start at the right, the alerts' edge stands at the right. Press
+                        <b>Show back to top</b>
+                        twice: it fades in and withers out.
+                    </p>
+                </div>
+                <div class="fa-controls" data-review-controls>
+                    <div class="kp-row" role="group" aria-label="Play and direction">
+                        <button type="button" class="kp-button kp-button--sm" data-fa-prose="replay">Play again</button>
+                        <button type="button" class="kp-button kp-button--sm" data-fa-prose="dir" aria-pressed="false">Right to left</button>
+                        <button type="button" class="kp-button kp-button--sm" data-fa-prose="top" aria-pressed="true">Show back to top</button>
+                    </div>
+                </div>
+                <div class="fa-stage fa-stage--block fa-stack" data-fa-dir>
+                    <div data-fa-reveal-host>
+                        <template>
+                            <div class="kp-section kp-stack" data-kp-surface="hero">
+                                <p class="microlabel">Pump house 4 · night shift</p>
+                                <h1 class="kp-text-balance" data-kp-reveal="headline">Every reading signed before the shift ends.</h1>
+                            </div>
+                            <div class="kp-section kp-stack" data-kp-surface="app">
+                                <h2 data-kp-reveal="rule">Sign the handover</h2>
+                                <p class="kp-prose">
+                                    The day shift reads this before it touches a valve. The <a href="#prose">lock-out procedure</a> says who may
+                                    reopen a line.
+                                </p>
+                            </div>
+                        </template>
+                    </div>
+                    <div class="fa-stack fa-stack--tight" data-fa-replay-host>
+                        <template>
+                            <div class="kp-alert" role="status"><span class="kp-alert__body">The export runs at 02:00 from Monday.</span></div>
+                            <div class="kp-alert kp-alert--success" role="status" data-kp-semantic>
+                                <span class="kp-alert__icon" aria-hidden="true">✓</span>
+                                <span class="kp-alert__body"><span class="kp-alert__label">Success: </span>The incident was closed.</span>
+                            </div>
+                            <div class="kp-alert kp-alert--warning" role="status" data-kp-semantic>
+                                <span class="kp-alert__icon" aria-hidden="true">!</span>
+                                <span class="kp-alert__body"
+                                    ><span class="kp-alert__label">Warning: </span>The service contract for pump house 4 ends in 12 days.</span
+                                >
+                            </div>
+                            <div class="kp-alert kp-alert--info" role="status" data-kp-semantic>
+                                <span class="kp-alert__icon" aria-hidden="true">i</span>
+                                <span class="kp-alert__body"
+                                    ><span class="kp-alert__label">Info: </span>Readings are late by up to five minutes.</span
+                                >
+                            </div>
+                            <div class="kp-alert kp-alert--destructive" role="alert" data-kp-semantic>
+                                <span class="kp-alert__icon" aria-hidden="true">✕</span>
+                                <span class="kp-alert__body"
+                                    ><span class="kp-alert__label">Error: </span>The alarm panel stopped reporting at 03:12.</span
+                                >
+                            </div>
+                            <div class="fa-meters">
+                                <span class="fa-meter-label">Reservoir North, 62 %, target 80 %</span>
+                                <span
+                                    class="kp-meter"
+                                    role="meter"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    aria-valuenow="62"
+                                    aria-valuetext="62% full; 80% the target level"
+                                    style="--kp-value: 0.62; --kp-mark: 0.8"
+                                    ><span class="kp-meter__mark" aria-hidden="true"></span
+                                ></span>
+                                <span class="fa-meter-label">Booked tonight, the mark past the end</span>
+                                <span
+                                    class="kp-meter"
+                                    role="meter"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    aria-valuenow="58"
+                                    aria-valuetext="58% running now; 130% booked for tonight"
+                                    style="--kp-value: 0.58; --kp-mark: 1.3"
+                                    ><span class="kp-meter__mark" aria-hidden="true" data-kp-over></span
+                                ></span>
+                                <span class="fa-meter-label">Past the end, a red piece</span>
+                                <span
+                                    class="kp-meter kp-meter--over-spill"
+                                    role="meter"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    aria-valuenow="100"
+                                    aria-valuetext="112% used"
+                                    data-kp-over
+                                    style="--kp-value: 1.12"
+                                ></span>
+                                <span class="fa-meter-label">Past the end, hatched</span>
+                                <span
+                                    class="kp-meter kp-meter--over-hatch"
+                                    role="meter"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    aria-valuenow="100"
+                                    aria-valuetext="120% used"
+                                    data-kp-over
+                                    style="--kp-value: 1.2"
+                                ></span>
+                                <span class="fa-meter-label">Past the end, the bar runs on</span>
+                                <span
+                                    class="kp-meter kp-meter--over-break"
+                                    role="meter"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    aria-valuenow="100"
+                                    aria-valuetext="115% used"
+                                    data-kp-over
+                                    style="--kp-value: 1.15"
+                                ></span>
+                                <span class="fa-meter-label">In a line of text</span>
+                                <p class="fa-meter-line">
+                                    Disk
+                                    <span
+                                        class="kp-meter kp-meter--inline"
+                                        role="meter"
+                                        aria-valuemin="0"
+                                        aria-valuemax="100"
+                                        aria-valuenow="61"
+                                        aria-valuetext="61% used"
+                                        style="--kp-value: 0.61"
+                                    ></span>
+                                    61 % used
+                                </p>
+                            </div>
+                        </template>
+                    </div>
+                    <div class="fa-to-top-box">
+                        <button type="button" class="kp-button kp-to-top" data-kp-to-top-shown data-fa-to-top>↑ Back to top</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 19 · Loading -->
+            <section
+                class="fa-sec"
+                id="loading"
+                data-review-item="loading"
+                data-review-title="19 · Skeletons, spinner, busy button, loading meter"
+                data-review-components="skeleton spinner progressbar"
+                aria-labelledby="h-loading"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">19 · Skeletons, spinner, busy button, loading meter</p>
+                    <h2 id="h-loading">
+                        The busy bar breathed in 6600 ms while the skeleton block and circle looped in 3200 ms; now the bar, the planting strips, the
+                        skeleton lines, block and circle and the measuring meter all breathe as one in 6600 ms (3000 in, 600 full, 3000 out), and the
+                        spinner keeps its tree every 1600 ms.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="forest">
+                        Watch a whole breath: every row fills start to end, holds, and empties end to start, together. Press <b>Start together</b> to
+                        set them all off on the same frame. The spinner plants one tree in three stages; the busy button and the loading meter show
+                        the planting strip.
+                    </p>
+                </div>
+                <div class="fa-controls" data-review-controls>
+                    <div class="kp-row" role="group" aria-label="Breath">
+                        <button type="button" class="kp-button kp-button--sm" data-fa-loading="restart">Start together</button>
+                    </div>
+                </div>
+                <div class="fa-stage fa-stage--block" data-fa-loading-host>
+                    <template>
+                        <div class="fa-loading">
+                            <div class="fa-stack">
+                                <div class="kp-progressbar" role="progressbar" aria-label="Waiting for the export, small" data-kp-indeterminate>
+                                    <span class="kp-progressbar__track" aria-hidden="true"
+                                        ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                                    ></span>
+                                </div>
+                                <div
+                                    class="kp-progressbar kp-progressbar--md"
+                                    role="progressbar"
+                                    aria-label="Waiting for the export, medium"
+                                    data-kp-indeterminate
+                                >
+                                    <span class="kp-progressbar__track" aria-hidden="true"
+                                        ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                                    ></span>
+                                </div>
+                                <div
+                                    class="kp-progressbar kp-progressbar--lg"
+                                    role="progressbar"
+                                    aria-label="Waiting for the export, large"
+                                    data-kp-indeterminate
+                                >
+                                    <span class="kp-progressbar__track" aria-hidden="true"
+                                        ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                                    ></span>
+                                </div>
+                                <span
+                                    class="kp-meter"
+                                    role="meter"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    aria-busy="true"
+                                    aria-valuetext="Measuring"
+                                    data-kp-loading
+                                ></span>
+                            </div>
+                            <div class="fa-stack">
+                                <div aria-hidden="true" class="fa-skel-lines">
+                                    <span class="kp-skeleton fa-w-100"></span>
+                                    <span class="kp-skeleton fa-w-90"></span>
+                                    <span class="kp-skeleton fa-w-60"></span>
+                                </div>
+                                <div class="fa-row">
+                                    <span aria-hidden="true" class="fa-skel-circle"
+                                        ><span class="kp-skeleton kp-skeleton--circle fa-w-100"></span
+                                    ></span>
+                                    <div class="kp-card fa-skel-card" aria-hidden="true">
+                                        <span class="kp-skeleton kp-skeleton--block fa-w-100"></span>
+                                        <span class="kp-skeleton fa-w-70"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="fa-row fa-row--center">
+                                <span class="kp-spinner" role="status" aria-label="Working…"></span>
+                                <span><span class="kp-spinner" role="status" aria-label="Loading readings"></span> Loading readings…</span>
+                                <span class="kp-spinner fa-spinner-lg" role="status" aria-label="Working…"></span>
+                                <button type="button" class="kp-button kp-button--secondary" aria-busy="true" disabled>
+                                    <span class="kp-spinner" aria-hidden="true"></span> Exporting
+                                </button>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </section>
+
+            <!-- 20 · Popover menus -->
+            <section
+                class="fa-sec"
+                id="popover-menus"
+                data-review-item="popover-menus"
+                data-review-title="20 · Popover menus"
+                data-review-components="popover menu menu-button"
+                aria-labelledby="h-popover-menus"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">20 · Popover menus</p>
+                    <h2 id="h-popover-menus">
+                        A menu in a popover showed two frames and two shadows, and while it grew it was drawn up to 3 rem over its own button; now it
+                        is one plate with the leaf corner, clipped at its button's edge for the whole growth.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="forest">
+                        Press <b>Row actions</b>: one plate grows down out of the button and never covers it; Escape or a click outside closes it as
+                        that growth backwards. Press <b>More ▾</b> for the menu of every other action, the same growth, its entries with the blaze
+                        laid inside. Found while building this page: in forest that menu opens about its own height below the button, often past the
+                        window's foot (scroll down to it); js/menu-button.js measures it while it still stands at the start of its growth. Judge its
+                        plate and entries here; the place is a finding for the package.
+                    </p>
+                </div>
+                <div class="fa-stage fa-stage--menus">
+                    <button
+                        type="button"
+                        class="kp-button kp-button--ghost"
+                        popovertarget="fa-menu"
+                        aria-haspopup="menu"
+                        style="anchor-name: --fa-menu"
+                    >
+                        Row actions
+                    </button>
+                    <div popover="auto" id="fa-menu" class="kp-popover" style="position-anchor: --fa-menu">
+                        <ul class="kp-menu" role="menu">
+                            <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Open incident</button></li>
+                            <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Assign to…</button></li>
+                            <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Copy reference</button></li>
+                            <li role="separator" class="kp-menu__separator"></li>
+                            <li role="none">
+                                <button type="button" role="menuitem" class="kp-menu__item kp-menu__item--destructive">Delete incident</button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="kp-menu-button" data-kp-menu-button data-kp-key="fa-pump-house-more">
+                        <button type="button" class="kp-button">More ▾</button>
+                        <div class="kp-menu kp-menu--rich" role="menu" aria-label="Every other action on this pump house" id="fa-mb" hidden>
+                            <div class="kp-menu__group" role="group" aria-labelledby="fa-mb-g0">
+                                <p class="kp-menu__heading" id="fa-mb-g0" role="presentation">Run</p>
+                                <button
+                                    type="button"
+                                    role="menuitem"
+                                    class="kp-menu__item"
+                                    tabindex="-1"
+                                    aria-labelledby="fa-mb-l1"
+                                    aria-describedby="fa-mb-h1"
+                                    data-kp-value="restart"
+                                >
+                                    <span class="kp-menu__label" id="fa-mb-l1">Restart the pumps</span>
+                                    <span class="kp-menu__hint" id="fa-mb-h1">Stop and start both pumps, one after the other</span>
+                                </button>
+                                <button
+                                    type="button"
+                                    role="menuitem"
+                                    class="kp-menu__item"
+                                    tabindex="-1"
+                                    aria-disabled="true"
+                                    aria-labelledby="fa-mb-l2"
+                                    aria-describedby="fa-mb-h2 fa-mb-r2"
+                                    data-kp-value="test"
+                                    data-kp-reason="Not while a field engineer is on site"
+                                >
+                                    <span class="kp-menu__label" id="fa-mb-l2">Run a pressure test</span>
+                                    <span class="kp-menu__hint" id="fa-mb-h2">Close the ring main valve and measure for ten minutes</span>
+                                    <span class="kp-menu__hint kp-menu__reason" id="fa-mb-r2">Not while a field engineer is on site</span>
+                                </button>
+                            </div>
+                            <div class="kp-menu__group" role="group" aria-labelledby="fa-mb-g1">
+                                <p class="kp-menu__heading" id="fa-mb-g1" role="presentation">Records</p>
+                                <button
+                                    type="button"
+                                    role="menuitem"
+                                    class="kp-menu__item"
+                                    tabindex="-1"
+                                    aria-labelledby="fa-mb-l3"
+                                    aria-describedby="fa-mb-h3"
+                                    data-kp-value="print"
+                                >
+                                    <span class="kp-menu__label" id="fa-mb-l3">Print the site sheet</span>
+                                    <span class="kp-menu__hint" id="fa-mb-h3">One page with the pumps, the valves and the contacts</span>
+                                </button>
+                                <button
+                                    type="button"
+                                    role="menuitem"
+                                    class="kp-menu__item kp-menu__item--destructive"
+                                    tabindex="-1"
+                                    aria-labelledby="fa-mb-l4"
+                                    aria-describedby="fa-mb-h4"
+                                    data-kp-value="archive"
+                                >
+                                    <span class="kp-menu__label" id="fa-mb-l4">Archive this pump house…</span>
+                                    <span class="kp-menu__hint" id="fa-mb-h4">Take it off the network; its readings are kept</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <!-- Round one: every block is new. -->
+        <script type="application/json" data-review-round>
+            { "round": "2026-10-09-r1", "reopen": [] }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

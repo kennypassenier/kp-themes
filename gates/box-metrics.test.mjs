@@ -198,12 +198,6 @@ export const MAY_KEEP = {
     // The call to action's entry followed the same day [scope-93]: its press
     // is painted the button's way.
     // Option B [scope-87]: block padding that is a painted bar's or a frame's inset, not the heading's size.
-    "_rules.css [data-theme='retro'] h1 padding":
-        "the h1 is a 1995 window's title bar, a gradient plate: its inset is the plate's, and without it the words touch the bar's edges.",
-    "retro-register.css [data-theme='retro'] [data-kp-surface] h1 padding":
-        "undoes the title-bar inset above on a surface's headline, which is not drawn as a bar: the headline keeps the package's zero.",
-    "retro-register.css [data-theme='retro'] .kp-dialog__title padding":
-        "the dialog's title is the window's title bar, the same gradient plate: three pixels of inset around the words.",
     "deco-register.css [data-theme='deco'] [data-kp-surface] h1[data-kp-reveal='headline'] padding":
         'the headline is set in a cartouche, a stepped frame drawn around it: the padding is the room between the frame and the words.',
     "terminal-register.css [data-theme='terminal'] [data-kp-surface] h1 min-block-size":

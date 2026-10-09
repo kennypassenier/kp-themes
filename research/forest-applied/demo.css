@@ -1,0 +1,268 @@
+/* research/forest-applied: the page only. A centred column of blocks, each
+   block the package's own components on a stage. Every rule hangs on a
+   block's own classes, never on `.fa-page` alone, because the review dialog
+   moves the blocks into its stage. Colours are the theme's tokens only;
+   nothing here restyles a component. */
+
+.fa-page {
+    display: grid;
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 72rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) 16px 4rem;
+}
+
+.fa-intro {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.fa-intro :is(h1, p) {
+    margin: 0;
+}
+
+.fa-intro p {
+    max-inline-size: 78ch;
+}
+
+.fa-motion,
+.fa-note,
+.fa-label,
+.fa-num,
+.fa-meter-label {
+    color: var(--muted-foreground);
+}
+
+.fa-toc {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    gap: 0.15rem var(--kp-space-md, 1rem);
+    margin: 0;
+    padding-inline-start: 1.75rem;
+}
+
+/* A block: its number, the one-sentence change, what to try, the stage. */
+.fa-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: 0 var(--kp-sig-fo-leaf, 1.25rem);
+    background: var(--background);
+    color: var(--foreground);
+}
+
+.fa-sec__head {
+    display: grid;
+    gap: 0.25rem;
+}
+
+.fa-sec__head :is(h2, p),
+.fa-look p,
+.fa-label {
+    margin: 0;
+}
+
+.fa-sec__head h2 {
+    font-size: 1.125rem;
+    line-height: 1.4;
+    max-inline-size: 80ch;
+}
+
+.fa-num {
+    font-size: 0.875rem;
+}
+
+.fa-look p {
+    max-inline-size: 80ch;
+}
+
+.fa-label {
+    font-size: 0.875rem;
+}
+
+/* The stage the components stand on: a row that wraps, or a block. */
+.fa-stage {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+}
+
+.fa-stage--block {
+    display: block;
+}
+
+.fa-stage--baseline {
+    align-items: baseline;
+}
+
+/* Room under a bar or a button for what hangs from it. */
+.fa-stage--menus {
+    min-block-size: 15rem;
+}
+
+.fa-stack {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+    min-inline-size: 0;
+}
+
+.fa-stack--tight {
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.fa-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--kp-space-md, 1rem);
+}
+
+.fa-row--center {
+    align-items: center;
+}
+
+.fa-col {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.fa-split {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+.fa-controls {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.fa-narrow {
+    max-inline-size: 28rem;
+}
+
+/* A phone, 390 px wide: the bar collapses behind its toggle in it. */
+.fa-phone {
+    inline-size: min(24.375rem, 100%);
+    min-block-size: 18rem;
+    border: 1px dashed var(--border-strong);
+}
+
+.fa-phone__body {
+    margin: 0;
+    padding: var(--kp-space-md, 1rem);
+}
+
+/* The side navigation beside its content, in a box of its own height. */
+.fa-sidebox {
+    display: flex;
+    align-items: stretch;
+    block-size: 24rem;
+    max-inline-size: 44rem;
+    overflow: hidden;
+    border: 1px dashed var(--border-strong);
+}
+
+.fa-sidebox__body {
+    min-inline-size: 0;
+    padding: var(--kp-space-md, 1rem);
+}
+
+.fa-sidebox__body p {
+    margin: 0;
+}
+
+.fa-tour-app {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
+    gap: var(--kp-space-md, 1rem);
+    align-items: start;
+    margin-block-start: var(--kp-space-md, 1rem);
+    padding: var(--kp-space-md, 1rem);
+    border: 1px dashed var(--border-strong);
+}
+
+.fa-meters {
+    display: grid;
+    gap: 0.35rem;
+    max-inline-size: 28rem;
+    padding-block: var(--kp-space-sm, 0.5rem);
+    padding-inline: 0 1rem;
+}
+
+.fa-meter-label {
+    margin-block-start: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.fa-meter-line {
+    margin: 0;
+}
+
+/* Back to top is fixed to the window in a page; here it is fixed to its
+   box, which `contain: layout` makes its containing block. */
+.fa-to-top-box {
+    contain: layout;
+    inline-size: 12rem;
+    block-size: 7rem;
+    border: 1px dashed var(--border);
+}
+
+/* Loading: three columns on a desk, one on a phone. */
+.fa-loading {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+.fa-skel-lines {
+    display: grid;
+    gap: 0.25rem;
+}
+
+.fa-skel-circle {
+    inline-size: 3rem;
+}
+
+.fa-skel-card {
+    flex: 1 1 10rem;
+    min-inline-size: 0;
+}
+
+.fa-w-100 {
+    inline-size: 100%;
+}
+
+.fa-w-90 {
+    inline-size: 92%;
+}
+
+.fa-w-70 {
+    inline-size: 70%;
+}
+
+.fa-w-60 {
+    inline-size: 60%;
+}
+
+.fa-spinner-lg {
+    --kp-spinner-size: 3rem;
+}
+
+@media (max-width: 40rem) {
+    .fa-sec {
+        padding: var(--kp-space-md, 1rem);
+    }
+
+    /* On a phone the panel takes the box; the words beside it would be
+       squeezed to a word a line. */
+    .fa-sidebox__body {
+        display: none;
+    }
+}

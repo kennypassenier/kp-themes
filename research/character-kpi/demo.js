@@ -27,7 +27,6 @@
 
 import { THEMES } from '../../js/theme-registry.js';
 import R2A from './round2-a.js';
-import R2B from './round2-b.js';
 import R2C from './round2-c.js';
 import R2D from './round2-d.js';
 
@@ -1080,66 +1079,6 @@ const IDEAS = {
             },
         ],
     },
-    retro: {
-        shape: [
-            {
-                name: 'The 1995 dialog',
-                text: 'A 1995 dialog, a raised grey bevel around the tile, the label in the system face without capitals, the change as its own status plate.',
-            },
-            {
-                name: 'The flat field',
-                text: 'A 1995 performance monitor, a black well with a green grid behind the number, the change as its own status plate.',
-            },
-            { name: 'The message box', text: 'A plain 1995 window, a 1px black frame with a hard drop shadow, the change as its own status plate.' },
-        ],
-        loading: [
-            {
-                name: 'The progress blocks',
-                text: 'While the figure loads, blue progress blocks fill under the label block by block, then start over; it keeps moving until the reading is drawn.',
-            },
-            {
-                name: 'The marquee bar',
-                text: 'While the figure loads, a group of three blue blocks slides across and comes round again; it keeps moving until the reading is drawn.',
-            },
-            {
-                name: 'The defragmenter',
-                text: 'While the figure loads, blocks of colour shift through the card in hard steps, as a defragmenter’s map; it keeps moving until the reading is drawn.',
-            },
-        ],
-        tone: [
-            {
-                name: 'The 1995 dialog',
-                text: 'The change as a raised button; a warning or destructive figure shows the note in the label on the tone’s plate.',
-            },
-            { name: 'The flat field', text: 'The change as a flat square field with a 1px rule, no bevel.' },
-            {
-                name: 'The message box',
-                text: 'The change as a sunken field; a warning or destructive figure is shown framed in its colour, as a message box asks for attention.',
-            },
-        ],
-        interactive: [
-            {
-                name: 'The bevel presses',
-                text: 'As a link or a filter: the raised grey bevel catches a brighter highlight on hover, a dotted Windows focus rectangle appears on focus, and the bevel inverts to sunken the instant it is pressed.',
-            },
-            {
-                name: 'The monitor glows',
-                text: 'As a link or a filter: the green phosphor grid glows brighter on hover, a dotted focus rectangle locks on for focus, and the grid dims a shade the instant it is pressed.',
-            },
-            {
-                name: 'The window drags',
-                text: 'As a link or a filter: the hard drop shadow grows a pixel on hover, a thin black outline marks focus, and the shadow flattens to nothing the instant it is pressed.',
-            },
-        ],
-        live: [
-            { name: 'Redrawn', text: 'A new reading: the number is replaced at once, as both characters had it.' },
-            { name: 'Repainted', text: 'A new reading: the number repaints in two hard jumps, like a screen redrawing line by line.' },
-            {
-                name: 'Scrolled one',
-                text: 'A new reading: the old figure scrolls up out of its well in one hard step and the new one drops in behind it.',
-            },
-        ],
-    },
     grotesk: {
         shape: [
             {
@@ -1359,7 +1298,6 @@ const PICKED = {
     brutalism: ['2', '3', '2', '3', '1'],
     deco: ['1', '3', '1', '1', '3'],
     phantom: ['2', '2', '1', '1', '3'],
-    retro: ['1', '6', '1', '1', '2'],
     grotesk: ['1', '6', '1', '2', '2'],
     nostromo: ['2', '2', '1', '2', '2'],
     titanium: ['1', '1', '1', '2', '3'],
@@ -1367,7 +1305,7 @@ const PICKED = {
 const keptOf = (/** @type {string} */ t, /** @type {Aspect} */ id) => PICKED[t]?.[ASPECTS.findIndex((a) => a.id === id)] ?? '';
 // Round 2's new options replace an aspect's, per aspect (each carries its
 // own key, the attribute value its CSS answers to; round 1's are 1, 2, 3).
-for (const file of [R2A, R2B, R2C, R2D])
+for (const file of [R2A, R2C, R2D])
     for (const [t, aspects] of Object.entries(file))
         for (const [id, options] of Object.entries(aspects)) if (options.length >= 3) IDEAS[t][id] = options;
 const keyOf = (/** @type {string} */ t, /** @type {Aspect} */ id, /** @type {string} */ n) => IDEAS[t]?.[id]?.[Number(n) - 1]?.key ?? n;

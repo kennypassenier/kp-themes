@@ -6,7 +6,7 @@
 //
 // A demo opts in with three attributes and one module:
 //
-//   <html data-review="<demo id>" data-review-themes="formal,retro">  (themes optional: default all)
+//   <html data-review="<demo id>" data-review-themes="formal,deco">  (themes optional: default all)
 //   <section data-review-item="spinner" data-review-title="Spinner">  (one per judged piece)
 //     <div data-review-look><p data-for="formal">what to look at in formal</p>…</div>
 //   <script type="module" src="../_review/review.js"></script>
@@ -36,7 +36,7 @@
 // step, each shown in its own theme through block.html:
 //
 //   <script type="application/json" data-review-extra>
-//     [{ "page": "catalogue/field.html", "block": "choices", "theme": "retro",
+//     [{ "page": "catalogue/field.html", "block": "choices", "theme": "deco",
 //        "engine": "firefox", "title": "Fields › Choices", "look": "…" }]
 //   </script>
 //

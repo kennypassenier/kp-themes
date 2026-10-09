@@ -33,11 +33,11 @@ first section.
 Check `document.documentElement.dataset.theme` in the console. If it is
 empty, nothing is applying the theme: either the snippet is absent or the
 picker module never loaded. If it says `formal` while `localStorage` says
-something else, the stored value is not one of the seventeen names — the
+something else, the stored value is not one of the sixteen names — the
 picker corrects an unknown value rather than putting it on the document.
 
 ```js
-localStorage.getItem('theme'); // must be one of the seventeen
+localStorage.getItem('theme'); // must be one of the sixteen
 ```
 
 ### One picker updates, another does not
@@ -179,7 +179,7 @@ no point of its own and puts the stain in the middle deliberately.
 
 Since scope-84 (2026-09-15) a theme with words of its own reads them
 first: synthwave's boot takes `arrivalWordsByTheme.synthwave`, terminal's
-and retro's take `arrivalLinesByTheme`. `arrivalLine`, `arrivalProgress`
+takes `arrivalLinesByTheme`. `arrivalLine`, `arrivalProgress`
 and `arrivalReady` are the neutral words for a theme without an entry.
 Set the theme's own entry with `setStrings({ arrivalWordsByTheme: { … } })`.
 

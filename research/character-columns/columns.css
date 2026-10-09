@@ -1210,65 +1210,6 @@
         --cl-label-track: 0.12em;
     }
 
-    /* ── retro ── */
-    /* The status bar: a raised grey bar holding a sunken pane per figure. */
-    [data-theme='retro'] [data-cs-shape='1'] .kp-kpis {
-        --cl-gap: 3px;
-        --cl-strip-bg: var(--muted);
-        --cl-strip-pad: 3px;
-        --cl-strip-shadow:
-            inset 1px 1px 0 color-mix(in oklch, var(--background) 70%, var(--card)),
-            inset -1px -1px 0 color-mix(in oklch, var(--foreground) 55%, var(--muted));
-        --cl-plate: var(--muted);
-        --cl-ink: var(--foreground);
-        --cl-mute: var(--foreground);
-        --cl-rule: color-mix(in oklch, var(--foreground) 60%, var(--muted));
-        --cl-frame: 0 solid transparent;
-        --cl-radius: 0;
-        --cl-shadow: inset 1px 1px 0 var(--cl-rule), inset -1px -1px 0 color-mix(in oklch, var(--background) 70%, var(--card));
-        --cl-label-case: none;
-        --cl-label-track: 0;
-        --cl-label-size: var(--kp-text-sm, 0.8125rem);
-        --cl-label-weight: 400;
-    }
-
-    /* The list view: each head a raised column-header button, the figure in
-       the white list under it, the whole set in a sunken frame. */
-    [data-theme='retro'] [data-cs-shape='2'] .kp-kpis {
-        --cl-gap: 0px;
-        --cl-strip-clip: clip;
-        --cl-strip-bg: var(--card);
-        --cl-strip-shadow:
-            inset 1px 1px 0 color-mix(in oklch, var(--foreground) 55%, var(--muted)),
-            inset -1px -1px 0 color-mix(in oklch, var(--background) 70%, var(--card));
-        --cl-strip-pad: 2px;
-        --cl-plate: var(--card);
-        --cl-rule: color-mix(in oklch, var(--foreground) 60%, var(--muted));
-        --cl-frame: 0 solid transparent;
-        --cl-radius: 0;
-        --cl-pad-top: 0;
-        --cl-label-bg: var(--muted);
-        --cl-label-ink: var(--foreground);
-        --cl-label-shadow: inset 1px 1px 0 color-mix(in oklch, var(--background) 70%, var(--card)), inset -1px -1px 0 var(--cl-rule);
-        --cl-label-pad: 0.1em var(--kp-space-md, 1rem);
-        --cl-label-bleed: 0 calc(-1 * var(--kp-space-md, 1rem));
-        --cl-label-case: none;
-        --cl-label-track: 0;
-        --cl-label-size: var(--kp-text-sm, 0.8125rem);
-        --cl-label-weight: 400;
-        --cl-num-gap: 0.4rem 0.125rem;
-    }
-
-    /* The group box. */
-    [data-theme='retro'] [data-cs-shape='3'] .kp-kpis {
-        --cl-frame: 2px groove var(--cl-rule);
-        --cl-radius: 0;
-        --cl-label-case: none;
-        --cl-label-track: 0;
-        --cl-label-size: var(--kp-text-sm, 0.875rem);
-        --cl-label-weight: 400;
-    }
-
     /* ── grotesk ── */
     /* The numbered grid: a heavy rule over the strip, a column number in
        each corner, the figures bold and flush left. */
@@ -1752,26 +1693,6 @@
         --cl-load-anim: cl-slide 2200ms ease-in-out infinite;
     }
 
-    /* ── retro ── */
-    /* The progress blocks. */
-    [data-theme='retro'] [data-cs-loading='1'] .kp-kpis {
-        --cl-load: repeating-linear-gradient(90deg, var(--primary) 0 8px, transparent 8px 10px) 0.5rem calc(100% - 0.4rem) / 0 0.6rem no-repeat;
-        --cl-load-anim: cl-write 2000ms steps(10) infinite;
-        --cl-load-h: 0.6rem;
-    }
-
-    /* The marquee. */
-    [data-theme='retro'] [data-cs-loading='2'] .kp-kpis {
-        --cl-load: linear-gradient(var(--primary), var(--primary)) -30% calc(100% - 0.4rem) / 25% 0.6rem no-repeat;
-        --cl-load-anim: cl-slide 1400ms steps(12) infinite;
-    }
-
-    /* The flying page. */
-    [data-theme='retro'] [data-cs-loading='3'] .kp-kpis {
-        --cl-load: linear-gradient(var(--cl-ink), var(--cl-ink)) 0 0.4rem / 0.7rem 0.9rem no-repeat;
-        --cl-load-anim: cl-slide 1200ms steps(6) infinite;
-    }
-
     /* ── grotesk ── */
     /* A line runs across. */
     [data-theme='grotesk'] [data-cs-loading='1'] .kp-kpis {
@@ -2160,28 +2081,6 @@
         --cl-arrive-stagger: 0ms;
     }
 
-    /* ── retro ── */
-    /* Painted. */
-    [data-theme='retro'] [data-cs-arrival='1'] .kp-kpis {
-        --cl-arrive-num: cl-a-wipe 320ms steps(4);
-        --cl-arrive-tile: none;
-        --cl-arrive-stagger: 80ms;
-    }
-
-    /* Dropped. */
-    [data-theme='retro'] [data-cs-arrival='2'] .kp-kpis {
-        --cl-arrive-num: none;
-        --cl-arrive-tile: cl-a-drop 300ms steps(3);
-        --cl-arrive-stagger: 60ms;
-    }
-
-    /* Progress. */
-    [data-theme='retro'] [data-cs-arrival='3'] .kp-kpis {
-        --cl-arrive-num: cl-a-wipe 640ms steps(8);
-        --cl-arrive-tile: none;
-        --cl-arrive-stagger: 0ms;
-    }
-
     /* ── grotesk ── */
     /* Slid in. */
     [data-theme='grotesk'] [data-cs-arrival='1'] .kp-kpis {
@@ -2562,30 +2461,6 @@
         --cl-delta-shadow: 0 0 0 2px var(--cl-plate);
     }
 
-    /* ── retro ── */
-    /* The flat tag. */
-    [data-theme='retro'] [data-cs-tone='1'] .kp-kpis {
-        --cl-delta-radius: 0;
-    }
-
-    /* The raised button. */
-    [data-theme='retro'] [data-cs-tone='2'] .kp-kpis {
-        --cl-delta-radius: 0;
-        --cl-delta-shadow:
-            inset 1px 1px 0 color-mix(in oklch, var(--card) 70%, transparent),
-            inset -1px -1px 0 color-mix(in oklch, var(--foreground) 45%, transparent);
-    }
-
-    /* The sunken field. */
-    [data-theme='retro'] [data-cs-tone='3'] .kp-kpis {
-        --cl-delta-radius: 0;
-        --cl-delta-shadow:
-            inset 1px 1px 0 color-mix(in oklch, var(--foreground) 45%, transparent),
-            inset -1px -1px 0 color-mix(in oklch, var(--card) 70%, transparent);
-        --cl-delta-up: '+';
-        --cl-delta-down: '-';
-    }
-
     /* ── grotesk ── */
     /* The flat block. */
     [data-theme='grotesk'] [data-cs-tone='1'] .kp-kpis {
@@ -2934,26 +2809,6 @@
     /* Inverted. */
     [data-theme='phantom'] [data-cs-live='3'] .kp-kpis {
         --cl-live-num: cl-l-invert 700ms steps(1);
-        --cl-live-tile: none;
-    }
-
-    /* ── retro ── */
-    /* Selected. */
-    [data-theme='retro'] [data-cs-live='1'] .kp-kpis {
-        --cl-live-num: cl-l-invert 700ms steps(1);
-        --cl-live-tile: none;
-        --cl-live-ink: var(--primary);
-    }
-
-    /* Repainted. */
-    [data-theme='retro'] [data-cs-live='2'] .kp-kpis {
-        --cl-live-num: cl-a-wipe 320ms steps(4);
-        --cl-live-tile: none;
-    }
-
-    /* Flipped. */
-    [data-theme='retro'] [data-cs-live='3'] .kp-kpis {
-        --cl-live-num: cl-l-flip 400ms steps(4);
         --cl-live-tile: none;
     }
 

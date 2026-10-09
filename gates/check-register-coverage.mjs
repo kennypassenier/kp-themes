@@ -39,7 +39,6 @@ export const REGISTERS = [
     'css/cyberpunk-register.css',
     'css/synthwave-register.css',
     'css/phantom-register.css',
-    'css/retro-register.css',
     'css/terminal-register.css',
     'css/brutalism-register.css',
     'css/titanium-register.css',

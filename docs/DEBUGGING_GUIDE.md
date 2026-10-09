@@ -357,7 +357,7 @@ None of these blocks anything. They are readings.
 | `<file>:NN: <declaration> sits outside a prefers-reduced-motion guard (DI7).` | `gates/check-motion.mjs` | wrap it in `@media (prefers-reduced-motion: no-preference)` |
 | `<file>: kp-<name> animates something this gate cannot measure and is not listed as out of scope. Add it to OUT_OF_SCOPE with the reason, or teach the gate to read it.` | `gates/check-motion.mjs` | a new keyframe on a property with no opacity stops |
 | `css/<theme>-register.css:NN <selector>: texture paints at 0.14 (layer 0.14 × alpha 1), over DI9's ceiling of 0.06` | `gates/check-texture.mjs` | the effective opacity is the layer opacity times the strongest alpha |
-| `N invariant violation(s) across 17 themes.` | `gates/check-invariants.mjs` | the closing line, and the reason `npm run advice` exits non-zero |
+| `N invariant violation(s) across 16 themes.` | `gates/check-invariants.mjs` | the closing line, and the reason `npm run advice` exits non-zero |
 
 Under S49 a value an approved demo showed is not changed because a
 reading disagrees with it. The reading becomes a **finding** put to
@@ -372,7 +372,7 @@ asking are what it exists about.
 | A test fails in a full run and passes on its own | a value that **settles** read once, under load. `opacity` can finish while the `filter` behind it is still running | use `style`, `pseudoStyle` or `measured` from `tests/paint.mjs` — they poll instead of reading one moment |
 | A test reads `animation-name` and gets `""` | a value that **passes**: the keyframe name is there while it runs and gone afterwards. Waiting is not patience, it is a race the fast machine loses | arm `recordAnimations(page)` **before** `goto`, then assert with `animationsSeen(page)` (`tests/paint.mjs`) |
 | A hover or a click lands on nothing | the boot overlay is still there. Clicking Skip resolves when the click is dispatched, not when the overlay is gone, and it is `position: fixed; inset: 0` | put `await bootGone(page)` between the skip and the first assertion |
-| A press test calls a theme red that plainly reacts | reading only `background-color` — retro presses by inverting its bevel and shifting its padding | `tests/registers.spec.mjs` reads background, box-shadow, translate, transform, both paddings, border, colour, the `::before` and the label's `--kp-baseline-weight` in one vector |
+| A press test calls a theme red that plainly reacts | reading only `background-color` — the removed retro theme pressed by inverting its bevel and shifting its padding | `tests/registers.spec.mjs` reads background, box-shadow, translate, transform, both paddings, border, colour, the `::before` and the label's `--kp-baseline-weight` in one vector |
 | Every fixture page 404s and the whole suite fails | another checkout of this repository is serving the fixture port, and `reuseExistingServer` handed this run the other one's files | `KP_TEST_PORT=4183 npx playwright test` (`playwright.config.mjs`) |
 | A test names a theme that no longer exists | a hand-written theme name in a spec outlives the theme | derive from `themes/order.json` or from the theme's own copy, never a literal (`fix-15`) |
 | `route.request is not a function`, before the page loads | `page.route()` called with one argument; the signature is `route(pattern, handler)`, so the handler was taken as the pattern | this hid `tests/bare.spec.mjs` — the whole framework-free channel's proof — for long enough that it had not actually run |

@@ -107,13 +107,6 @@
             "focus": "3",
             "live": "2"
         },
-        "retro": {
-            "shape": "1",
-            "loading": "r3-rt-load-1",
-            "arrival": "3",
-            "focus": "2",
-            "live": "2"
-        },
         "grotesk": {
             "shape": "1",
             "loading": "r5-gk-load-3",

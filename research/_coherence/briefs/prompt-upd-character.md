@@ -57,14 +57,6 @@ Specific work:
 
 ---
 
-## Section: retro (update 1, prefix `rt-`, port 8783, model: opus)
-
-Kenny's verdict: the demo is approved but for loading: "I like the copying one best, but it doesn't fit skeleton, month days and chart plot". Reopened: loading only. Options (aspects.js): `fitted` (the Copying dialog, fitted to each part), `bars`, `folders`, `blocks`. Whole frames only (steps on the 90 ms frame), the 1995 desktop around each scene as in the other rows, nothing eased.
-
-Specific work: draw `fitted` as the text says for each part: boxes (tile, panel, menu entry) the two small folders and the flying sheet with the segmented bar under; a skeleton line a sunken groove with one sheet hopping along its own length and a block gained behind it; the month's days a sheet passed from day to day, the day it lands on pressed in for a frame, a block per day on a bar under the month; the chart's plot crossed by one sheet along its baseline with the blocks filling the plot's foot. Reuse the anchor's pixel art (`research/retro-anchor/options.css`: `.rt-sheet`, `.rt-folder`, `.rt-bar`) and the existing `rt-fly-8`/`rt-load-*` keyframes where they fit; the other three options draw what their text says. Every close mirrors its open (steps(n, jump-end) / steps(n, jump-start)).
-
----
-
 ## Section: phantom (update 1, prefix `ph-`, port 8784, model: sonnet)
 
 Kenny's verdict: reopened opening, corners, surface, live, spinner, leave. His words and the fixes (aspects.js has the text):
@@ -80,12 +72,6 @@ Also check the PACKAGE for the same two faults and report them (do not edit the 
 
 ---
 
-## Section: retro (update 2, prefix `rt-`, port 8791, model: opus)
-
-Kenny rejected the fitted Copying loading too: "still don't like it, what does the actual Windows 95 animations look like? get inspiration from that". The designer replaced the loading options in aspects.js with what Windows 95 really showed while it waited: the Find flashlight, the Starting Windows 95 scroll (a short band of blue blocks scrolling along a sunken bar), the busy pointer (the hourglass, the arrow with a small hourglass), Defrag's cells, the Setup installer's bar with its percentage, the dial-up lights, and the earlier progress blocks for reference. Draw each as pixel art in whole 90 ms frames, nothing eased, on every waiting part (tile, panel, menu entry, month of days, chart plot, skeleton lines), fitted to the part as the text says. Study what those animations looked like (Win95's Find dialog flashlight sweeping over file icons; the boot splash's marching stripe; the hourglass cursor; Defrag's colour-coded block map; Setup's copying bar) and draw them as faithfully as pixels allow. Remove the old `fitted`, `bars` and `folders` rules and keyframes.
-
----
-
 ## Section: deco (update 3, prefix `dc-`, port 8792, model: opus)
 
 Kenny on deco's leaving and arriving: he likes the festoon (option five) best "because it's actually fancy and well drawn, I like the art style", but is "not sure if curtains are the way to go", and the curtains "seem to stay in the window after they are open": a BUG. Fix it first: in the scene, when a part has arrived (phase hold) nothing of the dressing (the swags, the valance, the drapes, the braid) is drawn any more, and after it has left (the gap before the next arrival) the part itself is hidden but the dressing is drawn only while it moves; check with paused frames at gap, in, hold, out. Then draw the ten options of the leave question (festoon fixed, roman, screen, ribbon, rope, shutters, gate, fan, beads, shell) in the festoon's art style: deep-blue satin with sheen drawn as gradients, gold trim, braid, rosettes, tassels, fringe, rivets; each must look finished and luxurious; the other questions keep their drawing. Mirror: every leave prints "mirrored".
@@ -97,13 +83,3 @@ Kenny on deco's leaving and arriving: he likes the festoon (option five) best "b
 For the apply agents (dark, phantom) use research/_coherence/briefs/prompt-apply.md with THEME = dark or phantom and PORT 8793 / 8794. Additions learnt from formal and light (binding): you MAY (1) add a row to js/effects.js `TIMINGS` for every new `kp-sig-THEME-*` keyframe and a line to gates/check-motion.mjs `OUT_OF_SCOPE` for any registered-custom-property or clip animation the gate cannot measure, touching only your theme's rows; (2) change the theme's `fx-ease` and `fx-duration` in themes/THEME/tokens.json (css/themes.css is generated: never edit it; the designer regenerates); (3) update themes/THEME/signature.json proofs whose selector your register no longer has (the test gates/advice-signature.test.mjs checks them: run `node --test gates/advice-signature.test.mjs`); (4) never edit a comment so that it names a keyframe-looking word followed by a colon ("so each is" tripped check:motion once). Dark: Kenny picked the chamfer on two opposite corners (as the register has it, top-right and bottom-left), loading = the comet with a film tail, the spinner = the spectrum bars; the halo and shadow must follow the cut. Phantom: loading = the register's red slash (as today), the spinner = the register's star (as today, 1.2 s); a closed part is never drawn (the package too: check every phantom leave and entrance keyframe ends hidden), the corner cut fixed 14 px at 45 degrees, the dialog's red edge outside the content, the live update six even cuts.
 
 ---
-
-## Section: retro (update 3, prefix `rt-`, port 8795, model: opus)
-
-Kenny on update 2's loading: "all of these are so bad that I am about to delete this whole theme. Come up with something better now!" Update 2 (the real Windows 95 dialogs) is gone from aspects.js; the designer replaced loading with eight pictures from the screens of the nineties: palette cycling (recommended), interlaced image passes, marching ants, Mystify your mind, the starfield, the DOS prompt, the bouncing ball and the spinning globe. These must be BEAUTIFUL pixel art, not dialogs: no bar, no label, no window chrome. Whole 90 ms frames, nothing eased, 28-frame loop (2.52 s), colours from the register's tokens (palette cycling uses a ramp of its blues, teals and greys; think Deluxe Paint waterfalls), fitted to tile, panel, menu entry, month, chart plot and skeleton lines. Remove the update 2 loading rules and keyframes (flashlight, startup, busy, defrag, setup, modem, blocks) and their markup; keep the `loading` data-attribute plumbing. Judge every drawing as Kenny: if it looks cheap, redo it.
-
----
-
-## Section: retro (update 4, prefix `rt-`, port 8799, model: opus)
-
-Kenny on update 3: "not even close, especially option 1 is far too loud, it must be much subtler". The designer replaced loading with eight QUIET options: the part stays exactly as it is and one small thing changes, in retro's greys, in whole 90 ms frames, 28-frame loop: the dither shimmer (recommended), one raster line, the blinking cursor, three dots counting, the bevel breathes, the ground steps through three greys, one ring of ants, the selection walks the lines. Nothing fills the part, nothing coloured (except the selection walk's palette navy, as the register's selected look), no picture, no bar, no label (the dots option is the one allowed mark). Remove update 3's loading rules, keyframes and markup (cycle, interlace, ants-as-before, mystify, stars, prompt, ball, globe); keep the `loading` data-attribute plumbing and the six parts. The part's content must stay readable underneath every option: judge it as Kenny, subtle means you almost have to look for it, but it must be visible in a paused frame comparison.

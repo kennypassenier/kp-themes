@@ -57,6 +57,21 @@
   Hyperlegible), their showcase, compare and concept pages, their verdict
   rows and their theme-specific tests. A page that stores one of the two
   names falls back to the default theme. See MIGRATION.md.
+- **Removed: the `retro` theme** [breaking, next major release; Kenny,
+  2026-10-09: "I am so disappointed in retro that we simply scrap the whole
+  theme for now; put it as an idea for future themes, in case we want
+  more"]. Sixteen themes remain. Gone with it: `themes/retro/`, its register
+  (`css/retro-register.css` and the `./css/retro-register` and `/min`
+  exports), its block in `css/themes.css` and its entry in
+  `js/theme-registry.js` (and so in the `ThemeName` type), its
+  `kp-sig-retro-*` TIMINGS rows, its BIOS lines in `arrivalLinesByTheme`,
+  its hooks, its texture and title-bar rules in `css/_rules.css`, the font
+  family only retro used (Pixelify Sans), its showcase, compare and concept
+  pages, its intro block in the catalogue, its verdict rows, its
+  theme-specific tests and its research demos (retro-anchor,
+  retro-character, retro-alarm-face, its variant sheets in the character
+  demos). The idea is kept in docs/FUTURE_THEMES.md. A page that stores
+  `retro` falls back to the default theme. See MIGRATION.md.
 
 ## 10.0.0 — 2026-10-08
 

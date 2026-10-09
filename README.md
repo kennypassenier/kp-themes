@@ -1,12 +1,11 @@
 # @kp-soft/themes
 
-The house themes as a shared package: seventeen `data-theme` palettes
-— seven light (formal, light, pastel, forest, brutalism, retro,
-grotesk) and ten dark (dark, titanium, cyberpunk,
+The house themes as a shared package: sixteen `data-theme` palettes
+— six light (formal, light, pastel, forest, brutalism, grotesk) and ten dark (dark, titanium, cyberpunk,
 synthwave, terminal, blueprint, solstice, deco, phantom, nostromo) — as plain CSS custom properties, the
 element-level rules that make a theme complete (links, code, selection,
 form fields, print), twenty-one components, a theme picker, and a register
-for every one of the seventeen themes — the opt-in stylesheet that
+for every one of the sixteen themes — the opt-in stylesheet that
 carries a theme's own expression, from cyberpunk's notches and data stream
 to titanium's oxide film.
 
@@ -99,7 +98,7 @@ and `Theme` is the union of the twenty-five names rather than `string`.
 Plain CSS (any stack):
 
 ```css
-@import '@kp-soft/themes/css'; /* the seventeen themes + textures + body colours */
+@import '@kp-soft/themes/css'; /* the sixteen themes + textures + body colours */
 @import '@kp-soft/themes/css/register'; /* optional: cyberpunk HUD chrome and motion */
 @import '@kp-soft/themes/css/titanium-register'; /* optional: and one like it for each of the other 21 */
 ```
@@ -233,13 +232,13 @@ verdict above it — the showcase publishes one at `showcase/diagnostics.html`.
 
 ## Loading the registers when a visitor can pick any theme
 
-Seventeen themes, seventeen registers, one picker: which of them does
+Sixteen themes, sixteen registers, one picker: which of them does
 a page load? Two answers, and both are right for someone. Measured
 2026-09-09 on this repository's own build.
 
 **The bundle — load everything once, switch by attribute.**
-`dist/kp-themes.css` is twenty-one stylesheets concatenated: the palette,
-the components, **all seventeen registers**, layout and utilities. Every
+`dist/kp-themes.css` is twenty stylesheets concatenated: the palette,
+the components, **all sixteen registers**, layout and utilities. Every
 register rule is scoped to `[data-theme='name']`, so with that one file
 loaded a theme change needs nothing fetched — flipping the attribute on
 `<html>` is the whole mechanism, which is what `applyTheme()` already
@@ -335,7 +334,6 @@ for.
 | `@kp-soft/themes/css/register`           | the cyberpunk HUD chrome, opt-in                         |
 | `@kp-soft/themes/css/synthwave-register` | synthwave's sun, floor, horizon and neon, opt-in         |
 | `@kp-soft/themes/css/phantom-register`   | phantom's cut paper, plates, rails and tears, opt-in     |
-| `@kp-soft/themes/css/retro-register`     | retro's bevels, grooves, dither and POST, opt-in         |
 | `@kp-soft/themes/css/terminal-register`  | terminal's glass, cursor, inverse video and POST, opt-in |
 | `@kp-soft/themes/css/brutalism-register` | brutalism's plates, slam, bars and marquee, opt-in       |
 | `@kp-soft/themes/css/layout`             | the nineteen layout classes                              |
@@ -664,6 +662,7 @@ rebuilt from a tag has the release asset's sha256.
 | [docs/TEST_PLAN.md](docs/TEST_PLAN.md)                           | what is tested, and what is not by decision                |
 | [docs/DESIGN_INVARIANTS.md](docs/DESIGN_INVARIANTS.md)           | the rules every theme must keep, with the compliance table |
 | [MIGRATION.md](MIGRATION.md)                                     | every break, from v1 to 6.0.0, and what to do about each   |
+| [docs/FUTURE_THEMES.md](docs/FUTURE_THEMES.md)                   | themes stopped for now, kept as ideas (retro)              |
 
 ## Provenance
 

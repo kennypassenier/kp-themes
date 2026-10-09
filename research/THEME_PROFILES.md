@@ -132,16 +132,6 @@ Generated 2026-10-06 from the settled picks of the character round (meter, chart
 - **columns**: Shape: 3, The redacted dossier · While loading: 2, The folders shuffle · How the figures arrive: 2, Typed into the report · The tone and the change: 1, The evidence tag · Live update: 2, A shiver
 - **menu**: Shape: The calling card · While loading: The string is pulled · Open and close: Slashed in · A destructive entry and a disabled reason: The calling card · Hover, focus and a press: Snatched
 
-## retro
-
-- **meter**: Shape: 1, The system monitor · While loading: 1, The marquee · How the share arrives: 1, Task Manager · When the tone changes: 2, Winamp · The mark past the end: 2, Winamp
-- **chart**: Shape: 1, The Excel 97 wizard · While loading: 3, The segmented progress bar · How the series arrives: 2, The window slides open · How a new reading shows: 3, The bevel pops · The event dots: 2, The rivet · The pinned tooltip: 3, The status bar readout
-- **calendar**: Shape: 3, The floppy label · While loading: 1, The tear-off pad: its loading · How the month arrives: 3, The dissolve · Tones and today: 1, The tear-off pad: its tones and today · The picked day: 1, The tear-off pad: its pick
-- **graph**: Shape: 1, The 1995 network diagram · While loading: 1, Marching ants select the network · How the network arrives: 3, The window opens · The picked node and the hidden kind: 2, Selected · Live update: 2, Repainted
-- **trend**: Shape: 1, The title bar · While loading: 1, The progress blocks · How the figure and the line arrive: 1, At once · The tone and the change: 3, The message box · Live update: 2, Repainted
-- **columns**: Shape: 1, The status bar · While loading: 1, The progress blocks · How the figures arrive: 1, Painted · The tone and the change: 3, The sunken field · Live update: 2, Repainted
-- **menu**: Shape: The 1995 dialog · While loading: The progress blocks · Open and close: Painted · A destructive entry and a disabled reason: The message box · Hover, focus and a press: The bevel presses
-
 ## grotesk
 
 - **meter**: Shape: 1, The rule and its cursor · While loading: 2, Express · How the share arrives: 3, Timetable · When the tone changes: 3, Timetable · The mark past the end: 2, Express

@@ -603,7 +603,6 @@ export const DEFAULT_STRINGS = Object.freeze({
         synthwave: { line: '▶ Play', progress: 'Tracking', ready: 'Press start' },
     },
     arrivalLinesByTheme: {
-        retro: ['KP Modular BIOS v4.51PG', 'kp-themes 95 — retro build', 'Memory Test : {count}K'],
         terminal: ['KP-THEMES BIOS v5.0.0', 'MEMORY TEST ......... 640K OK', 'PHOSPHOR PROFILE .... terminal', 'CRT WARM-UP ......... OK', 'READY.'],
     },
     arrivalProgress: 'Progress',

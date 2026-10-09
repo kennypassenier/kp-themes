@@ -15,14 +15,14 @@ the selectors and their order are identical, which is what
 
 | File | Authored | Minified | Saved |
 | ---- | -------: | -------: | ----: |
-| `css/_rules.css` | 40.3 kB | 21.0 kB | 48% |
+| `css/_rules.css` | 39.7 kB | 20.7 kB | 48% |
 | `css/blueprint-register.css` | 139.8 kB | 72.0 kB | 48% |
 | `css/brutalism-register.css` | 140.7 kB | 74.5 kB | 47% |
 | `css/components.css` | 319.6 kB | 129.6 kB | 59% |
 | `css/cyberpunk-register.css` | 147.5 kB | 81.8 kB | 45% |
 | `css/dark-register.css` | 135.7 kB | 62.4 kB | 54% |
 | `css/deco-register.css` | 141.8 kB | 79.9 kB | 44% |
-| `css/fonts.css` | 21.8 kB | 16.2 kB | 26% |
+| `css/fonts.css` | 21.3 kB | 15.8 kB | 26% |
 | `css/forest-register.css` | 155.1 kB | 79.4 kB | 49% |
 | `css/formal-register.css` | 126.8 kB | 64.9 kB | 49% |
 | `css/grotesk-register.css` | 102.0 kB | 49.6 kB | 51% |
@@ -31,18 +31,17 @@ the selectors and their order are identical, which is what
 | `css/nostromo-register.css` | 126.0 kB | 63.5 kB | 50% |
 | `css/pastel-register.css` | 87.4 kB | 44.6 kB | 49% |
 | `css/phantom-register.css` | 125.1 kB | 64.7 kB | 48% |
-| `css/retro-register.css` | 130.1 kB | 66.0 kB | 49% |
 | `css/solstice-register.css` | 82.5 kB | 44.8 kB | 46% |
 | `css/synthwave-register.css` | 141.3 kB | 73.7 kB | 48% |
 | `css/terminal-register.css` | 117.7 kB | 61.4 kB | 48% |
-| `css/themes.css` | 160.7 kB | 104.7 kB | 35% |
+| `css/themes.css` | 153.6 kB | 99.6 kB | 35% |
 | `css/titanium-register.css` | 103.9 kB | 50.6 kB | 51% |
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 45% |
-| `dist/kp-themes.css` | 2596.9 kB | 1317.0 kB | 49% |
-| `dist/kp-themes.js` | 743.2 kB | 406.8 kB | 45% |
+| `dist/kp-themes.css` | 2459.6 kB | 1245.9 kB | 49% |
+| `dist/kp-themes.js` | 741.7 kB | 405.6 kB | 45% |
 
-The loose stylesheets together weigh **2658.4 kB** authored and
-**1355.2 kB** minified, 49% less. A page loading one theme's
+The loose stylesheets together weigh **2520.0 kB** authored and
+**1283.3 kB** minified, 49% less. A page loading one theme's
 register rather than the whole bundle carries only that register's row.
 
 The wire is smaller again: gzip takes the minified bundle to roughly a

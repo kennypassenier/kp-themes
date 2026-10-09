@@ -88,18 +88,6 @@
                 "firefox": "content 567 wide in a box of 565"
             }
         ],
-        "retro": [
-            {
-                "where": "div.kp-stack",
-                "chromium": "content 276 wide in a box of 272",
-                "firefox": "content 276 wide in a box of 272"
-            },
-            {
-                "where": "h1.kp-text-balance",
-                "chromium": "content 276 wide in a box of 272",
-                "firefox": "content 276 wide in a box of 272"
-            }
-        ],
         "solstice": [
             {
                 "where": "div.kp-card__body",

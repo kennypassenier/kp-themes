@@ -600,39 +600,6 @@ const IDEAS = {
             ['The calling card', 'The changed site’s ring flashes red three times; its string is pulled again.'],
         ],
     },
-    retro: {
-        shape: [
-            ['The 1995 network diagram', 'A sunken white well, one-pixel links, bevelled grey discs; raised kind buttons that sink when off.'],
-            ['The paint program', 'Flat filled discs in a black outline, solid primary links; tool-button kinds.'],
-            [
-                'The dialog box',
-                'A window in a title bar: links as dotted one-pixel lines, every site an icon square (a ring cut square, a hue core), pixel-face labels; the kinds as check boxes.',
-            ],
-        ],
-        loading: [
-            ['The hourglass dither', 'Character 1’s dithered ring, now stepping round like the hourglass cursor.'],
-            ['Marching ants', 'Character 2’s dashed ring as a selection: the marching ants.'],
-            ['The progress blocks', 'Blue blocks fill the ring one by one, as the setup program’s progress bar.'],
-        ],
-        arrival: [
-            ['At once', 'As both characters had it: when the reading is done the whole network stands there in one frame; nothing moves in.'],
-            ['Painted in', 'Every site is painted in one click after another, the lines drawn in one-pixel steps.'],
-            ['The window opens', 'The network zooms out of the middle in outline steps, as a window opening.'],
-        ],
-        focus: [
-            [
-                'The package’s dimming',
-                'As character 2 had it: a pick takes a heavier ring in its own colour, the rest drops back to 30 %, a hidden kind’s key turns grey.',
-            ],
-            ['Selected', 'The pick gets the selection blue ring; the rest turns grey as disabled items do; a hidden kind is struck through.'],
-            ['Inverted', 'The pick is drawn in an inverted heavy ring; the rest stays at 40 %; a hidden kind’s button gets a dotted focus outline.'],
-        ],
-        live: [
-            ['In place', 'As both characters had it: the new numbers are simply there; nothing marks which site or link changed.'],
-            ['Repainted', 'The changed site blinks three times like an icon being repainted; its line flashes blue.'],
-            ['The marching ants', 'The changed link carries the marching ants for a moment and the site’s ring turns blue.'],
-        ],
-    },
     grotesk: {
         shape: [
             ['The transit map', '5px round-capped coloured lines, white interchange rings, bold labels; flat colour bars.'],
@@ -766,7 +733,6 @@ const PICKED = {
     brutalism: ['2', '3', '2', '2', '3'],
     deco: ['2', '3', '2', '3', '2'],
     phantom: ['1', '4', '2', '3', '2'],
-    retro: ['1', '1', '3', '2', '2'],
     grotesk: ['1', '3', '2', '2', '2'],
     nostromo: ['1', '2', '3', '3', '3'],
     titanium: ['2', '3', '1', '2', '2'],

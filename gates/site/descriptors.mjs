@@ -237,7 +237,7 @@ export const DESCRIPTORS = [
             },
             {
                 title: 'A label beside an icon',
-                why: 'The words go in their own `.kp-button__text` and the icon stays a hidden sibling. Retro underlines the first letter of the label when the button is pointed at, and CSS cannot tell a bare run of text from the icon next to it, so without the element that letter is never found. No other theme styles it: in the button’s flex row it lays out exactly as the bare text did. `<Button>` and the generated examples write it for you when the label mixes text with an element; by hand, add it yourself.',
+                why: 'The words go in their own `.kp-button__text` and the icon stays a hidden sibling. A register that underlines the first letter of the label when the button is pointed at (retro did, until it was removed on 2026-10-09) cannot tell a bare run of text from the icon next to it in CSS, so without the element that letter is never found. No theme styles it today: in the button’s flex row it lays out exactly as the bare text did. `<Button>` and the generated examples write it for you when the label mixes text with an element; by hand, add it yourself.',
                 markup: `
 <button type="button" class="kp-button"><span aria-hidden="true">↻</span><span class="kp-button__text">Retry</span></button>
 <button type="button" class="kp-button kp-button--primary"><span class="kp-button__text">Export</span><span aria-hidden="true">↓</span></button>

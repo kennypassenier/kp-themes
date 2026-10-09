@@ -1567,95 +1567,6 @@
         color: var(--primary-foreground);
     }
 
-    /* retro · shape 1 · The 1995 network diagram */
-
-    [data-theme='retro'] [data-cg-shape='1'] .kp-graph {
-        --gr-paper: var(--card);
-        --gr-frame: 2px solid;
-        --gr-radius: 0;
-        --gr-font: var(--theme-font-mono);
-        --gr-weight: 400;
-        --gr-size: 12px;
-        --gr-edge-w: 1;
-        --gr-edge-on-w: 2;
-        --gr-edge-mix: 55%;
-        --gr-ring: var(--foreground);
-        --gr-ring-w: 3;
-        --gr-ring-fill: var(--muted);
-        --gr-node-mix: 85%;
-        --gr-node-glow: drop-shadow(-1px -1px 0 var(--card)) drop-shadow(1px 1px 0 var(--muted-foreground));
-        --gr-chip-radius: 0;
-        --gr-chip-border: 0;
-        --gr-chip-bg: var(--muted);
-        --gr-chip-fg: var(--foreground);
-        --gr-chip-shadow: inset -1px -1px 0 var(--foreground), inset 1px 1px 0 var(--card);
-        --gr-chip-off-shadow: inset 1px 1px 0 var(--foreground), inset -1px -1px 0 var(--card);
-        --gr-chip-font: var(--theme-font-mono);
-    }
-
-    [data-theme='retro'] [data-cg-shape='1'] .kp-graph__box {
-        border-color: var(--muted-foreground) var(--card) var(--card) var(--muted-foreground);
-    }
-
-    /* retro · shape 2 · The paint program */
-
-    [data-theme='retro'] [data-cg-shape='2'] .kp-graph {
-        --gr-paper: var(--card);
-        --gr-radius: 0;
-        --gr-font: var(--theme-font-mono);
-        --gr-weight: 400;
-        --gr-edge-w: 2;
-        --gr-edge-mix: 80%;
-        --gr-ring: var(--foreground);
-        --gr-ring-w: 1;
-        --gr-core-op: 0;
-        --gr-node-mix: 90%;
-        --gr-chip-radius: 0;
-        --gr-chip-bg: var(--muted);
-        --gr-chip-border: 1px solid var(--foreground);
-        --gr-chip-font: var(--theme-font-mono);
-    }
-
-    [data-theme='retro'] [data-cg-shape='2'] .kp-graph__node {
-        --gr-ring-fill: var(--kp-graph-node-colour);
-    }
-
-    /* retro · shape 3 · The dialog box */
-
-    [data-theme='retro'] [data-cg-shape='3'] .kp-graph {
-        --gr-paper: var(--card);
-        --gr-frame: 2px solid var(--foreground);
-        --gr-shadow: inset 0 18px 0 var(--primary);
-        --gr-radius: 0;
-        --gr-font: var(--theme-font-mono);
-        --gr-weight: 400;
-        --gr-size: 12px;
-        --gr-edge-w: 1;
-        --gr-edge-mix: 50%;
-        --gr-dash: 2 2;
-        --gr-ring: var(--foreground);
-        --gr-ring-w: 1.5;
-        --gr-ring-fill: var(--card);
-        --gr-core-op: 1;
-        --gr-node-mix: 85%;
-        --gr-chip-radius: 0;
-        --gr-chip-border: 0;
-        --gr-chip-bg: transparent;
-        --gr-chip-font: var(--theme-font-mono);
-    }
-
-    [data-theme='retro'] [data-cg-shape='3'] .kp-graph__ring {
-        clip-path: inset(12%);
-    }
-
-    [data-theme='retro'] [data-cg-shape='3'] .kp-graph__kind::before {
-        content: '\2611 ';
-    }
-
-    [data-theme='retro'] [data-cg-shape='3'] .kp-graph__kind[aria-pressed='false']::before {
-        content: '\2610 ';
-    }
-
     /* grotesk · shape 1 · The transit map */
 
     [data-theme='grotesk'] [data-cg-shape='1'] .kp-graph {
@@ -2341,33 +2252,6 @@
         --gr-load-over-anim: gr-pan 1200ms steps(6) infinite;
     }
 
-    /* retro · loading 1 · The hourglass dither */
-
-    [data-theme='retro'] [data-cg-loading='1'] .kp-graph {
-        --gr-skel: var(--muted-foreground);
-        --gr-skel-w: 6;
-        --gr-skel-dash: 1 1;
-        --gr-skel-anim: gr-march 2000ms steps(8) infinite;
-    }
-
-    /* retro · loading 2 · Marching ants */
-
-    [data-theme='retro'] [data-cg-loading='2'] .kp-graph {
-        --gr-skel: var(--foreground);
-        --gr-skel-w: 2;
-        --gr-skel-dash: 4 4;
-        --gr-skel-anim: gr-march 4000ms steps(100) infinite;
-    }
-
-    /* retro · loading 3 · The progress blocks */
-
-    [data-theme='retro'] [data-cg-loading='3'] .kp-graph {
-        --gr-skel: var(--primary);
-        --gr-skel-w: 12;
-        --gr-skel-dash: 14 4;
-        --gr-skel-anim: gr-write 3000ms steps(18) infinite;
-    }
-
     /* grotesk · loading 1 · A line runs */
 
     [data-theme='grotesk'] [data-cg-loading='1'] .kp-graph {
@@ -2738,24 +2622,6 @@
         --gr-arr-node: gr-slash-in 300ms cubic-bezier(0.7, 0, 0.2, 1) both;
         --gr-stagger: 20ms;
         --gr-edge-at: 250ms;
-    }
-
-    /* retro · arrival 2 · Painted in */
-
-    [data-theme='retro'] [data-cg-arrival='2'] .kp-graph {
-        --gr-arr-edge: gr-draw-in 500ms steps(5) both;
-        --gr-arr-node: gr-appear 1ms both;
-        --gr-stagger: 60ms;
-        --gr-edge-at: 800ms;
-    }
-
-    /* retro · arrival 3 · The window opens */
-
-    [data-theme='retro'] [data-cg-arrival='3'] .kp-graph {
-        --gr-arr-edge: gr-zoom-in 300ms steps(4) both;
-        --gr-arr-node: gr-zoom-in 300ms steps(4) both;
-        --gr-arr-chip: gr-appear 1ms both;
-        --gr-arr-box: view-box;
     }
 
     /* grotesk · arrival 2 · Lines laid */
@@ -3164,34 +3030,6 @@
         --gr-off-deco: line-through 2px;
     }
 
-    /* the package’s own dimming: nothing to write */
-
-    /* the package’s own dimming: nothing to write */
-
-    /* retro · focus 1 · The package’s dimming */
-
-    /* the package’s own dimming: nothing to write */
-
-    /* retro · focus 2 · Selected */
-
-    [data-theme='retro'] [data-cg-focus='2'] .kp-graph {
-        --gr-pick: var(--primary);
-        --gr-pick-w: 4;
-        --gr-pick-dash: 2 2;
-        --gr-node-dim: 0.5;
-        --gr-dim-filter: grayscale(1);
-        --gr-off-deco: line-through;
-    }
-
-    /* retro · focus 3 · Inverted */
-
-    [data-theme='retro'] [data-cg-focus='3'] .kp-graph {
-        --gr-pick: var(--foreground);
-        --gr-pick-w: 6;
-        --gr-node-dim: 0.4;
-        --gr-off-outline: 1px dotted currentColor;
-    }
-
     /* grotesk · focus 1 · The package’s dimming */
 
     /* the package’s own dimming: nothing to write */
@@ -3506,22 +3344,6 @@
     [data-theme='phantom'] [data-cg-live='3'] .kp-graph {
         --gr-live-ring: gr-flash-ring 900ms steps(3);
         --gr-live-edge: gr-draw-in 500ms ease-in;
-        --gr-live-c: var(--primary);
-    }
-
-    /* retro · live 2 · Repainted */
-
-    [data-theme='retro'] [data-cg-live='2'] .kp-graph {
-        --gr-live-node: gr-blink3 900ms steps(1);
-        --gr-live-edge: gr-surge 900ms steps(2);
-        --gr-live-c: var(--primary);
-    }
-
-    /* retro · live 3 · The marching ants */
-
-    [data-theme='retro'] [data-cg-live='3'] .kp-graph {
-        --gr-live-ring: gr-flash-ring 1200ms steps(3);
-        --gr-live-edge: gr-packet 1200ms steps(12);
         --gr-live-c: var(--primary);
     }
 

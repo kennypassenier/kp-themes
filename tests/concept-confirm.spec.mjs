@@ -25,13 +25,13 @@ const PAGES = readdirSync(new URL('../examples/', import.meta.url))
     .map((n) => n.slice('concept-'.length, -'.html'.length));
 
 // The generator writes a concept page per theme; the confirmation behind
-// every one of them is the same `attachConfirmations` default, so three are
-// pressed at every level: formal, dark, and retro, whose arrival overlay
-// lies over the page and takes another path [Kenny, form v9, 2026-10-04,
+// every one of them is the same `attachConfirmations` default, so two are
+// pressed at every level: formal and dark (retro, whose arrival overlay
+// lay over the page, left with that theme on 2026-10-09) [Kenny, form v9, 2026-10-04,
 // trim-confirm; until then the release level pressed all 20]. cyberpunk and
 // synthwave have no concept page at all.
-const SWEEP = ['formal', 'dark', 'retro'].filter((n) => PAGES.includes(n));
-if (SWEEP.length === 0) throw new Error('no concept page for formal, dark or retro');
+const SWEEP = ['formal', 'dark'].filter((n) => PAGES.includes(n));
+if (SWEEP.length === 0) throw new Error('no concept page for formal or dark');
 
 for (const theme of SWEEP) {
     test(

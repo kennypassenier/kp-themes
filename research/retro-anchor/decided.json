@@ -1,9 +1,0 @@
-{
-    "decided": "2026-10-08 Brussels, Kenny: 1 of 1 approved in the review dialog, update 1 (research/retro-anchor/README.md): Retro's anchor element = Copying…: the sheet flies between the folders (recommended); \"I like the windows environment with the task bar and desktop that you created around it\"",
-    "attributes": "the ANCHORS keys in research/retro-anchor/anchors.js; the scenes in research/retro-anchor/options.css",
-    "picks": {
-        "retro": {
-            "anchor": "copy"
-        }
-    }
-}

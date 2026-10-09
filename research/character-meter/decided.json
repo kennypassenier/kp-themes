@@ -107,13 +107,6 @@
             "tone": "1",
             "mark": "2"
         },
-        "retro": {
-            "shape": "1",
-            "loading": "2",
-            "arrival": "1",
-            "tone": "2",
-            "mark": "2"
-        },
         "grotesk": {
             "shape": "1",
             "loading": "2",

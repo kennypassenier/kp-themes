@@ -54,23 +54,4 @@ export default {
             },
         ]),
     },
-    retro: {
-        shape: /** @type {Option[]} */ ([
-            {
-                key: 'r2-rt-shape-1',
-                name: 'The floppy label',
-                text: 'Echoes the calendar character’s shape pick of the same name: the raised-bevel plate from the 1995 dialog, its top-right corner cut off as a floppy disk’s shutter notch. The other two keep every corner square; this is the only one with a cut corner.',
-            },
-            {
-                key: 'r2-rt-shape-2',
-                name: 'The 1995 network diagram',
-                text: 'Echoes the graph character’s shape pick of the same name, "marching ants": the whole plate is ringed in a dashed selection outline instead of a solid frame, no bevel. The other two carry a solid or divided frame; this is the only dashed one.',
-            },
-            {
-                key: 'r2-rt-shape-3',
-                name: 'The status bar',
-                text: 'Echoes the trend and columns characters’ shape picks, the title bar and the status bar: a plain solid-framed plate, parted into three cells by two vertical divider rules, as a Windows status bar. The other two are undivided; this is the only segmented one.',
-            },
-        ]),
-    },
 };

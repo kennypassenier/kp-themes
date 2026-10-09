@@ -21,7 +21,6 @@ import { THEMES } from '../../js/theme-registry.js';
 import R2A from './round2-a.js';
 import R2B from './round2-b.js';
 import R2C from './round2-c.js';
-import R2D from './round2-d.js';
 
 /** @typedef {{ name: string, text: string, key?: string }} Option */
 /** @typedef {'shape' | 'loading' | 'arrival' | 'tone' | 'hover' | 'live'} Aspect */
@@ -599,38 +598,6 @@ const IDEAS = {
             { name: 'The string twangs', text: 'The tile jolts once, as a needle does.' },
         ],
     },
-    retro: {
-        shape: [
-            { name: 'The 1995 dialog', text: 'A raised grey bevel, the title in the system face, the mark a raised button dot.' },
-            { name: 'The performance monitor', text: 'A black well with a green grid, the mark a phosphor dot.' },
-            { name: 'The Notepad window', text: 'A 1px black frame with a hard drop shadow, the mark a black square.' },
-        ],
-        loading: [
-            { name: 'The progress blocks', text: 'Blue progress blocks fill the body block by block, then start over.' },
-            { name: 'The marquee bar', text: 'A group of three blue blocks slides across the body and comes round again.' },
-            { name: 'The defragmenter', text: 'Blocks of colour shift through the body in hard steps, as a defragmenter’s map.' },
-        ],
-        arrival: [
-            { name: 'At once', text: 'The title and the body are there the moment loading ends.' },
-            { name: 'Painted', text: 'The tile is drawn in from the left, in hard steps.' },
-            { name: 'Dragged in', text: 'Tile after tile drops into place from above, in hard steps.' },
-        ],
-        tone: [
-            { name: 'The raised button', text: 'A warning or destructive tile shows the note on a raised button.' },
-            { name: 'The flat field', text: 'A warning or destructive tile shows the note on a flat field with a 1px rule.' },
-            { name: 'The message box', text: 'A warning or destructive tile is shown framed in its colour, as a message box asks for attention.' },
-        ],
-        hover: [
-            { name: 'The bevel presses', text: 'The bevel inverts to a pressed look; Open underlines; focus draws a dotted marching-ants ring.' },
-            { name: 'The screen glows', text: 'The green grid brightens; Open underlines in phosphor; focus halos the tile faintly.' },
-            { name: 'The window raises', text: 'The drop shadow deepens; Open underlines; focus doubles the black frame.' },
-        ],
-        live: [
-            { name: 'Redrawn', text: 'The body text changes in place at once.' },
-            { name: 'Repainted', text: 'The tile flashes once, in hard jumps.' },
-            { name: 'Scrolled one', text: 'The footer’s timestamp steps forward, in hard jumps.' },
-        ],
-    },
     grotesk: {
         shape: [
             { name: 'The transit board', text: 'A column under its rule: no frame, a heavy ink rule along the top, the mark a flat colour bar.' },
@@ -777,7 +744,6 @@ const PICKED = {
     brutalism: ['2', '1', '3', '1', '1', '2'],
     deco: ['3', '2', '3', '1', '2', '2'],
     phantom: ['2', '2', '2', '3', '1', '1'],
-    retro: ['1', '1', '3', '1', '1', '3'],
     grotesk: ['1', '3', '2', '2', '1', '2'],
     nostromo: ['2', '1', '2', '3', '3', '1'],
     titanium: ['1', '2', '2', '1', '2', '3'],
@@ -785,7 +751,7 @@ const PICKED = {
 const keptOf = (/** @type {string} */ t, /** @type {Aspect} */ id) => PICKED[t]?.[ASPECTS.findIndex((a) => a.id === id)] ?? '';
 // Round 2's new options replace an aspect's, per aspect (each carries its
 // own key, the attribute value its CSS answers to; round 1's are 1, 2, 3).
-for (const file of [R2A, R2B, R2C, R2D])
+for (const file of [R2A, R2B, R2C])
     for (const [t, aspects] of Object.entries(file))
         for (const [id, options] of Object.entries(aspects)) if (options.length >= 3) IDEAS[t][id] = options;
 const keyOf = (/** @type {string} */ t, /** @type {Aspect} */ id, /** @type {string} */ n) => IDEAS[t]?.[id]?.[Number(n) - 1]?.key ?? n;

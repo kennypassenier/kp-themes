@@ -76,14 +76,12 @@ export const PAGES = [
         // (Kenny, 2026-10-07: only fresh verdicts left to give).
         group: 'Research to look at',
         pages: [
+            // Kenny, 2026-10-09: a showcase of every forest component changed by the uniformity round, to approve.
+            { href: 'research/forest-applied/demo.html', label: 'Forest, as applied' },
             // Kenny, 2026-10-08: the anchor round for the nine themes without one, the grotesk way (one question, six to ten candidates, each in its own scene, as a progress bar and as a button press, the recommendation first).
             // Kenny, 2026-10-08: what makes formal, light and deco themselves, the forest way (the analysis in themes/<theme>/CHARACTER.md), the nineteen questions each, every option a live scene that follows from the theme's decided anchor, the recommendation first.
             // Kenny, 2026-10-08 (update 1): deco's grammar did not convince him ("fancy, distinguished … lots of gold accents and fancy blue backgrounds … elegance without being too in your face"); thirteen questions redrawn as thin gold on lacquer with the wallpaper, his six picks kept.
-            // Kenny, 2026-10-08: what makes dark, retro and phantom themselves, the forest way (the analysis in themes/<theme>/CHARACTER.md), the nineteen questions each, every option a live scene that follows from the theme's decided anchor, the recommendation first.
-            {
-                href: 'research/retro-character/demo.html',
-                label: 'What makes retro retro',
-            },
+            // Kenny, 2026-10-08: what makes dark, retro and phantom themselves (retro dropped 2026-10-09, its demos removed; the idea is in docs/FUTURE_THEMES.md), the forest way (the analysis in themes/<theme>/CHARACTER.md), the nineteen questions each, every option a live scene that follows from the theme's decided anchor, the recommendation first.
             // The character round, sixth demo (2026-10-05): the key-figure strip with its columns in 22 themes, two characters each.
             // The character round, eighth component: the attention band, shape/arrival/leave/tone/empty/loading, one pick per aspect (formal and titanium built first).
             // The character round, ninth and tenth components: the action columns and the menu button.
@@ -105,8 +103,6 @@ export const PAGES = [
             { href: 'research/sepia-anchor/demo.html', label: "What is sepia's anchor element" },
             // Decided 2026-10-08: Kenny picked the line that lays the film down, turning, as dark's anchor element, update 1 (research/dark-anchor/decided.json).
             { href: 'research/dark-anchor/demo.html', label: "What is dark's anchor element" },
-            // Decided 2026-10-08: Kenny picked the Copying dialog's flying sheet as retro's anchor element, attempt 1 of 3, with the 1995 desktop around it (research/retro-anchor/decided.json).
-            { href: 'research/retro-anchor/demo.html', label: "What is retro's anchor element" },
             // Decided 2026-10-08: Kenny picked the card thrown as a screen that resolves at the slap as phantom's anchor element, update 1 (research/phantom-anchor/decided.json).
             { href: 'research/phantom-anchor/demo.html', label: "What is phantom's anchor element" },
             // Decided 2026-10-08: Kenny approved formal's grammar, every recommendation except the hover = a rule under the label and the motifs = plus the seal where picked (research/formal-character/decided.json).
@@ -241,7 +237,6 @@ export const PAGES = [
             { href: 'research/theme-portraits/cyberpunk.html', label: 'Portrait: cyberpunk' },
             { href: 'research/theme-portraits/formal.html', label: 'Portrait: formal' },
             { href: 'research/theme-portraits/pastel.html', label: 'Portrait: pastel' },
-            { href: 'research/retro-alarm-face/demo.html', label: "Retro's alarm headline: four faces" },
         ],
     },
 ];

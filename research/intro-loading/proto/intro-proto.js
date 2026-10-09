@@ -26,7 +26,7 @@
 (function (global) {
     'use strict';
 
-    var ARRIVALS = { synthwave: 'boot', terminal: 'boot', retro: 'boot', phantom: 'card' };
+    var ARRIVALS = { synthwave: 'boot', terminal: 'boot', phantom: 'card' };
     // A copy of js/strings.js's arrival words (scope-84), for the prototype only.
     var WORDS = {
         line: 'Loading',
@@ -35,7 +35,6 @@
         skip: 'Skip',
         byTheme: { synthwave: { line: '▶ Play', progress: 'Tracking', ready: 'Press start' } },
         lines: {
-            retro: ['KP Modular BIOS v4.51PG', 'kp-themes 95 — retro build', 'Memory Test : {count}K'],
             terminal: [
                 'KP-THEMES BIOS v5.0.0',
                 'MEMORY TEST ......... 640K OK',

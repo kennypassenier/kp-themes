@@ -26,7 +26,6 @@ import { NOW, sampleData } from '../../catalogue/chart-sample.js';
 import R3A from './round3-a.js';
 import R3B from './round3-b.js';
 import R3C from './round3-c.js';
-import R3D from './round3-d.js';
 import R3E from './round3-e.js';
 import R4A from './round4-a.js';
 import R4B from './round4-b.js';
@@ -190,16 +189,6 @@ const IDEAS = {
             text: 'Black under a halftone screen, the lines in the violent red with a white second plate off register, the tick labels in condensed capitals. The tooltip is a cut-paper ransom note, white, set at a slant with a red shadow; the legend cut-paper scraps. Loading shuffles the halftone in hard steps.',
         },
     },
-    retro: {
-        a: {
-            name: 'The plotter on fanfold paper',
-            text: 'Continuous fanfold paper with its green-bar bands (in the teal) and a perforation, the tick labels in the pixel face. The lines are a plotter pen, crisp and thin. The tooltip is a 1995 tooltip: a plain box with a 1px black line; the legend raised bevelled buttons that sink when pressed. Loading shows the bands still: nothing blinks.',
-        },
-        b: {
-            name: 'The spreadsheet chart of 1995',
-            text: 'A spreadsheet chart of 1995: a grey plot area sunk into a bevel, solid black grid lines, crisp lines over areas filled with the 50 % dither. The tooltip is a little window with a navy title bar; the legend sits in a raised frame. Loading fills the plot with the dither, still.',
-        },
-    },
     grotesk: {
         a: {
             name: 'The Swiss grid',
@@ -260,7 +249,6 @@ const PICK = {
     dark: 'b',
     terminal: 'b',
     phantom: 'b',
-    retro: 'b',
     cyberpunk: 'a',
     synthwave: 'a',
     pastel: 'a',
@@ -634,25 +622,6 @@ const R2 = {
             ['pin', 'Pinned notes'],
         ],
     },
-    retro: {
-        loading: [
-            ['dither', 'The dither bar', '--foreground', '--primary'],
-            ['segments', 'The 1995 progress bar', '--foreground', '--primary'],
-            ['type', 'The DOS prompt', '--foreground', , "'C:\\\\> LOAD GAUGES'"],
-        ],
-        arrival: [
-            ['steps', 'Painted in steps'],
-            ['scan', 'Redrawn top down'],
-        ],
-        update: [
-            ['tick', 'One step on'],
-            ['tail', 'The new column painted'],
-        ],
-        events: [
-            ['pin', 'Push pins'],
-            ['ring', 'Bevel rings'],
-        ],
-    },
     grotesk: {
         loading: [
             ['segments', 'The ruled bar', '--foreground', '--primary'],
@@ -833,7 +802,6 @@ const PICKED = {
     brutalism: ['1', '3', '1', '3', '2', '1'],
     deco: ['1', '1', '3', '1', '1', '1'],
     phantom: ['1', '2', '1', '1', '1', '1'],
-    retro: ['1', '3', '2', '3', '2', '3'],
     grotesk: ['1', '2', '3', '1', '1', '3'],
     nostromo: ['1', '1', '3', '1', '2', '1'],
     titanium: ['1', '1', '3', '1', '2', '1'],
@@ -841,7 +809,7 @@ const PICKED = {
 /** The settled pick of one aspect, or '' when it is open in round 4. */
 const keptOf = (/** @type {string} */ theme, /** @type {Aspect} */ aspect) => PICKED[theme]?.[ASPECTS.findIndex((a) => a.id === aspect)] ?? '';
 /** Round 3's new options, per theme and open aspect (one file per theme group). @type {Record<string, Partial<Record<Aspect, Option[]>>>} */
-const R3 = { ...R3A, ...R3B, ...R3C, ...R3D, ...R3E };
+const R3 = { ...R3A, ...R3B, ...R3C, ...R3E };
 /** Round 4's new options (six each), per theme and open aspect. @type {Record<string, Partial<Record<Aspect, Option[]>>>} */
 const R4 = { ...R4A, ...R4B, ...R4C, ...R4D, ...R4E };
 /** The most options any open aspect has. */

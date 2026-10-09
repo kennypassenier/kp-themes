@@ -102,6 +102,7 @@ Kenny.
 | docs/CORRECTIONS.md            | live-found faults and their approved measures                      |
 | docs/DESIGN_INVARIANTS.md      | what must hold in every theme (DI1–DI11)                           |
 | docs/FEATURES.md               | the frozen feature list with its test bars                         |
+| docs/FUTURE_THEMES.md          | themes stopped for now, kept as ideas (retro)                      |
 | docs/ARCHITECTURE_REFERENCE.md | the system as built, as opposed to as decided                      |
 | docs/USER_GUIDE.md             | how a consumer builds a page with this                             |
 | docs/UTILITIES.md              | the generated utility classes                                      |

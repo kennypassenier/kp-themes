@@ -37,7 +37,7 @@
    version meets a registry from another. js/diagnostics.js reads them. */
 :root {
     --kp-themes-version: '10.0.0';
-    --kp-themes-names: 'formal light dark cyberpunk synthwave pastel terminal forest blueprint solstice brutalism deco phantom retro grotesk nostromo titanium';
+    --kp-themes-names: 'formal light dark cyberpunk synthwave pastel terminal forest blueprint solstice brutalism deco phantom grotesk nostromo titanium';
 }
 
 :root,
@@ -1717,135 +1717,6 @@
     --destructive-disabled: hsl(352, 100%, 43%);
 }
 
-[data-theme='retro'] {
-    /* Retro: the Windows 95 desktop — grey chrome, a navy title bar, bevels around a gated boundary. Nothing blinks. */
-    --background: hsl(0, 0%, 75%);
-    --foreground: hsl(0, 0%, 10%);
-    --card: hsl(0, 0%, 84%);
-    --card-foreground: hsl(0, 0%, 10%);
-    --popover: hsl(0, 0%, 90%);
-    --popover-foreground: hsl(0, 0%, 10%);
-    --primary: hsl(240, 100%, 25%);
-    --primary-foreground: hsl(0, 0%, 100%);
-    --secondary: hsl(0, 0%, 87%);
-    --secondary-foreground: hsl(0, 0%, 10%);
-    --muted: hsl(0, 0%, 80%);
-    --muted-foreground: hsl(0, 0%, 25%);
-    --accent: hsl(180, 100%, 20%);
-    --accent-foreground: hsl(0, 0%, 100%);
-    --destructive: hsl(0, 100%, 25%);
-    --destructive-foreground: hsl(0, 0%, 100%);
-    --success: hsl(120, 100%, 20%);
-    --success-foreground: hsl(0, 0%, 100%);
-    --warning: hsl(50, 100%, 50%);
-    --warning-foreground: hsl(0, 0%, 10%);
-    --info: hsl(210, 100%, 30%);
-    --info-foreground: hsl(0, 0%, 100%);
-    --border: hsl(0, 0%, 50%);
-    --border-strong: hsl(0, 0%, 38%);
-    --input: hsl(0, 0%, 38%);
-    --ring: hsl(240, 100%, 25%);
-    --selected: hsl(240, 100%, 25%);
-    --chart-1: hsl(240, 100%, 25%);
-    --chart-2: hsl(180, 100%, 20%);
-    --chart-3: hsl(0, 100%, 25%);
-    --chart-4: hsl(300, 100%, 25%);
-    --chart-5: hsl(120, 100%, 20%);
-    /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
-    --code-keyword: hsl(240, 100%, 25%);
-    --code-string: hsl(180, 100%, 20%);
-    --sidebar-background: hsl(240, 100%, 25%);
-    --sidebar-foreground: hsl(0, 0%, 100%);
-    --sidebar-primary: hsl(0, 0%, 100%);
-    --sidebar-primary-foreground: hsl(240, 100%, 25%);
-    --sidebar-accent: hsl(208, 86%, 36%);
-    --sidebar-accent-foreground: hsl(0, 0%, 100%);
-    --sidebar-border: hsl(240, 60%, 45%);
-    --sidebar-ring: hsl(0, 0%, 100%);
-
-    /* Status badges (application pipeline): the sixteen-colour palette as plates. */
-    --status-draft: hsl(0, 0%, 95%);
-    --status-draft-foreground: hsl(0, 0%, 10%);
-    --status-sent: hsl(240, 100%, 25%);
-    --status-sent-foreground: hsl(0, 0%, 100%);
-    --status-screening: hsl(50, 100%, 50%);
-    --status-screening-foreground: hsl(0, 0%, 10%);
-    --status-interview: hsl(300, 100%, 25%);
-    --status-interview-foreground: hsl(0, 0%, 100%);
-    --status-offer: hsl(120, 100%, 26%);
-    --status-offer-foreground: hsl(0, 0%, 100%);
-    --status-rejected: hsl(0, 100%, 24%);
-    --status-rejected-foreground: hsl(0, 0%, 100%);
-    --status-withdrawn: hsl(0, 0%, 55%);
-    --status-withdrawn-foreground: hsl(0, 0%, 10%);
-    --color-scheme: light;
-    --theme-font-body: 'Instrument Sans', 'Segoe UI', Tahoma, ui-sans-serif, system-ui, sans-serif;
-    --radius: 0rem;
-    --fx-signal: hsl(180, 100%, 20%);
-    --fx-signal-foreground: hsl(0, 0%, 100%);
-    --fx-notch: 0px;
-    --fx-duration: 0ms;
-    --fx-ease: linear;
-    --theme-font-display: 'Pixelify Sans', 'Silkscreen', 'Courier New', ui-monospace, monospace;
-    --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
-    --fx-overprint: hsl(240, 100%, 25%);
-    --fx-scanline: hsl(0, 0%, 10%);
-    --fx-lift: 0px;
-    --fx-hot: hsl(0, 0%, 25%);
-    --fx-hot-alarm: hsl(0, 100%, 30%);
-    --fx-shadow-offset: 0px;
-    --chart-pattern-1: none;
-    --chart-pattern-2: none;
-    --chart-pattern-3: none;
-    --chart-pattern-4: none;
-    --chart-pattern-5: none;
-
-    /* The spacing scale [TH94, AR18]. xs, sm and md carry the values they already had as fallbacks in css/components.css, so declaring them shifts nothing (S20); lg, xl and 2xl are the new steps above them. A theme may retune the whole rhythm here. */
-    --kp-space-xs: 0.25rem;
-    --kp-space-sm: 0.5rem;
-    --kp-space-md: 0.75rem;
-    --kp-space-lg: 1rem;
-    --kp-space-xl: 1.5rem;
-    --kp-space-2xl: 2rem;
-    --kp-text-xs: 0.75rem;
-    --kp-text-sm: 0.8125rem;
-    --kp-text-md: 1rem;
-
-    /* The hero surface: the sources AR38 names, so a theme can give the opening surface its own ground [TH116, S47]. A one-ground theme points them at its app values. */
-    --surface-hero-bg: hsl(0, 0%, 75%);
-    --surface-hero-fg: hsl(0, 0%, 10%);
-    --surface-hero-fg-2: hsl(240, 100%, 25%);
-    --surface-hero-muted: hsl(0, 0%, 25%);
-    --surface-hero-border: hsl(0, 0%, 38%);
-    --surface-hero-primary: hsl(240, 100%, 25%);
-    --surface-hero-primary-foreground: hsl(0, 0%, 100%);
-    --surface-hero-danger: hsl(0, 100%, 25%);
-    --surface-hero-danger-foreground: hsl(0, 0%, 100%);
-    --surface-hero-card: hsl(0, 0%, 84%);
-    --surface-hero-card-foreground: hsl(0, 0%, 10%);
-
-    /* The display step of the typography scale: the size of a headline on a hero [S47, critic #19]. */
-    --kp-text-display: clamp(2rem, 4vw, 3rem);
-
-    /* Derived interaction states — see gates/generate-themes.mjs. */
-    --link: hsl(240, 100%, 25%);
-    --link-visited: hsl(278, 100%, 19%);
-    --focus-ring: hsl(0, 0%, 10%);
-    --focus-ring-contrast: hsl(0, 0%, 75%);
-    --primary-hover: hsl(243, 100%, 21%);
-    --primary-active: hsl(236, 71%, 16%);
-    --primary-disabled: hsl(225, 94%, 32%);
-    --secondary-hover: hsl(44, 0%, 79%);
-    --secondary-active: hsl(44, 0%, 72%);
-    --secondary-disabled: hsl(44, 0%, 99%);
-    --accent-hover: hsl(180, 100%, 17%);
-    --accent-active: hsl(180, 100%, 14%);
-    --accent-disabled: hsl(180, 48%, 34%);
-    --destructive-hover: hsl(0, 100%, 21%);
-    --destructive-active: hsl(2, 90%, 17%);
-    --destructive-disabled: hsl(5, 67%, 37%);
-}
-
 [data-theme='grotesk'] {
     /* Grotesk: the International Typographic Style — white, black, one red, and a grid. Identity by letter, not by colour. */
     --background: hsl(0, 0%, 100%);
@@ -2575,29 +2446,6 @@
         --destructive-active: hsl(1, 74%, 68%);
         --destructive-disabled: hsl(352, 100%, 43%);
     }
-    [data-theme='retro'] [data-kp-surface='hero'] {
-        --background: var(--surface-hero-bg);
-        --foreground: var(--surface-hero-fg);
-        --muted-foreground: var(--surface-hero-muted);
-        --border-strong: var(--surface-hero-border);
-        --input: var(--surface-hero-border);
-        --selected: var(--surface-hero-primary);
-        --primary: var(--surface-hero-primary);
-        --primary-foreground: var(--surface-hero-primary-foreground);
-        --destructive: var(--surface-hero-danger);
-        --destructive-foreground: var(--surface-hero-danger-foreground);
-        --card: var(--surface-hero-card);
-        --card-foreground: var(--surface-hero-card-foreground);
-        --link: var(--surface-hero-fg-2);
-        --focus-ring: var(--surface-hero-fg);
-        --focus-ring-contrast: var(--surface-hero-bg);
-        --primary-hover: hsl(243, 100%, 21%);
-        --primary-active: hsl(236, 71%, 16%);
-        --primary-disabled: hsl(225, 94%, 32%);
-        --destructive-hover: hsl(0, 100%, 21%);
-        --destructive-active: hsl(2, 90%, 17%);
-        --destructive-disabled: hsl(5, 67%, 37%);
-    }
     [data-theme='grotesk'] [data-kp-surface='hero'] {
         --background: var(--surface-hero-bg);
         --foreground: var(--surface-hero-fg);
@@ -2845,22 +2693,6 @@
  * checked box would look like an unchecked one [KT8]. */
     [data-theme='mono'] {
         --kp-control-accent: var(--muted-foreground);
-    }
-
-    /* Retro: a two-pixel checkerboard, the dither every gradient was [TH71]. */
-    [data-theme='retro'] {
-        --fx-texture: repeating-conic-gradient(hsl(from var(--foreground) h s l / 1) 0 25%, transparent 0 50%);
-        --fx-texture-size: 4px 4px;
-        --fx-texture-opacity: 0.04;
-    }
-
-    /* The title bar: the navy-to-blue gradient of a 1995 window, behind h1.
- * Static; the theme has no motion. */
-    [data-theme='retro'] h1 {
-        display: inline-block;
-        padding: 0.15em 0.6em;
-        background: linear-gradient(90deg, var(--primary), var(--info));
-        color: var(--primary-foreground);
     }
 
     /* Grotesk: twelve columns, the grid every Swiss poster was set on [TH73].

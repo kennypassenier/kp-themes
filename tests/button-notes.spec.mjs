@@ -196,66 +196,6 @@ test.describe('phantom: the primary is pressed like the others [scope-80]', { ta
     });
 });
 
-test.describe('retro: the accelerator on every button [scope-80]', { tag: ['@theme:retro', '@component:button'] }, () => {
-    test('every live button with a text label underlines a letter when pointed at', async ({ page }) => {
-        // Before: only the four buttons of #accelerator, which mark a letter
-        // with data-kp-key, drew one; 20 others drew none.
-        await open(page, 'retro');
-        const buttons = page.locator('.cat-stage .kp-button:not(:disabled)');
-        const unmarked = [];
-        for (let i = 0; i < (await buttons.count()); i++) {
-            const button = buttons.nth(i);
-            await button.hover();
-            const read = await button.evaluate((el) => {
-                const label = el.textContent?.trim() ?? '';
-                const drawn = (/** @type {CSSStyleDeclaration} */ cs) =>
-                    parseFloat(cs.borderBottomWidth) >= 1 && !/rgba\(0, 0, 0, 0\)|transparent/.test(cs.borderBottomColor);
-                const key = el.querySelector('[data-kp-key]');
-                if (key) return { label, marked: drawn(getComputedStyle(key)), icon: false };
-                // ::first-letter reaches only into a block container. Beside an
-                // icon the label's text is its own element, .kp-button__text
-                // [scope-83], so the icon is not the "first letter".
-                const carrier =
-                    el.querySelector(':scope > .kp-button__text, :scope > .kp-button__label > .kp-button__text') ??
-                    el.querySelector(':scope > .kp-button__label') ??
-                    el;
-                const block = /^(inline-block|block|flow-root)$/.test(getComputedStyle(carrier).display);
-                return { label, marked: block && drawn(getComputedStyle(carrier, '::first-letter')) };
-            });
-            if (!read.label) continue;
-            if (!read.marked) unmarked.push(read.label.replace(/\s+/g, ' '));
-        }
-        await page.mouse.move(0, 0);
-        // Before scope-83: ['↻ Retry', 'Export ↓'] — an icon beside an
-        // unmarked label drew no mark (Kenny, retro-accelerator "Alleen het teken").
-        expect(unmarked).toEqual([]);
-    });
-
-    test('the mark beside an icon is the first letter of the label, not the icon [scope-83]', async ({ page }) => {
-        await open(page, 'retro');
-        const read = await page.locator('#icons .cat-stage .kp-button').evaluateAll((buttons) =>
-            buttons.map((el) => {
-                const text = el.querySelector('.kp-button__text');
-                const icon = el.querySelector(':scope > [aria-hidden="true"]');
-                return {
-                    text: text?.textContent?.trim(),
-                    // The icon keeps its own font and draws no border of its own.
-                    iconBorder: icon ? getComputedStyle(icon).borderBottomWidth : null,
-                };
-            }),
-        );
-        expect(read).toEqual([
-            { text: 'Retry', iconBorder: '0px' },
-            { text: 'Export', iconBorder: '0px' },
-        ]);
-    });
-
-    test('no shortcut is promised: the derived mark writes no aria-keyshortcuts', async ({ page }) => {
-        await open(page, 'retro');
-        await expect(page.locator('.kp-button[aria-keyshortcuts]')).toHaveCount(0);
-    });
-});
-
 test.describe('titanium: the primary answers the pointer [scope-80]', { tag: ['@theme:titanium', '@component:button'] }, () => {
     test('hover moves the primary at least 10 from rest, and pressed at least 10 from hover', async ({ page }) => {
         // Before: rest to hover 4.9 in OKLab distance, hover to pressed 15.5.

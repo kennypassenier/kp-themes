@@ -188,9 +188,7 @@ export function diffs() {
             // the new side is compared as the same union.
             const oldRules = scopedRules(oldCss, was(theme.name));
             const nowRules = scopedRules(
-                newThemes +
-                    '\n' +
-                    newRegisters[/** @type {'cyberpunk' | 'retro' | 'synthwave' | 'phantom' | 'terminal' | 'brutalism'} */ (theme.name)],
+                newThemes + '\n' + newRegisters[/** @type {'cyberpunk' | 'synthwave' | 'phantom' | 'terminal' | 'brutalism'} */ (theme.name)],
                 theme.name,
             );
             register = !oldBlocks.has(was(theme.name))
@@ -271,7 +269,7 @@ export function diffs() {
                 'The register is rewritten from the approved demo: the navigation strip with its cut corner and stepped notch and the dash-prefixed dropdown; the notched buttons with the slit and the charge sweep; the fields with the clipped corner and the accent caret; the dossier card with the file stamp and the redactions that lift; the razor tear between surfaces; and the scanlines at exactly the DI9 ceiling. The old .fx-flicker, .fx-pulse, .fx-cellpop and .fx-media classes are gone with the 4.x theme.',
             );
             for (const cat of ['nav', 'buttons', 'fields', 'dossier', 'divider']) show.add(cat);
-        } else if (register === 'changed') lines.push('The register changed (rule for rule, the retro rules differ from 4.0.0).');
+        } else if (register === 'changed') lines.push('The register changed (rule for rule, its rules differ from 4.0.0).');
         else if (register === 'unchanged') lines.push('The register is unchanged, rule for rule.');
         if (texture.old !== null && texture.now !== null && texture.old !== texture.now) {
             lines.push(
@@ -300,7 +298,6 @@ const CURRENT = [
     'layout.css',
     'utilities.css',
     'cyberpunk-register.css',
-    'retro-register.css',
     'synthwave-register.css',
     'phantom-register.css',
     'terminal-register.css',

@@ -300,32 +300,6 @@
     padding-inline: 3.6px 3.6px;
 }
 
-/* retro */
-[data-option='d'][data-theme='retro'] .kp-badge {
-    font-size: 15px;
-}
-[data-option='d'][data-theme='retro'] .kp-tab {
-    padding-block: 6px 6px;
-    padding-inline: 14px 14px;
-    font-size: 14px;
-}
-[data-option='d'][data-theme='retro'] .kp-nav {
-    padding-block: 8.6px 8px;
-}
-[data-option='d'][data-theme='retro'] .kp-nav__link {
-    padding-block: 4.4px 4.4px;
-    padding-inline: 7.6px 7.6px;
-}
-[data-option='d'][data-theme='retro'] .kp-sidenav__link {
-    padding-block: 6px 6px;
-}
-[data-option='d'][data-theme='retro'] .kp-dialog {
-    padding-inline: 20px 22px;
-}
-[data-option='d'][data-theme='retro'] .kp-dialog__title {
-    font-size: 22px;
-}
-
 /* grotesk */
 [data-option='d'][data-theme='grotesk'] .kp-card__title {
     font-size: 18.4px;

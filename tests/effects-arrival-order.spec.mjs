@@ -1,7 +1,7 @@
 // The headline reveal waits for the arrival [scope-86, reveal-under-intro].
 //
-// In the four themes that perform an arrival (synthwave, terminal, retro
-// and phantom) the headline reveal used to start at the same moment as the
+// In the three themes that perform an arrival (synthwave, terminal and
+// phantom; retro did too until it left on 2026-10-09) the headline reveal used to start at the same moment as the
 // overlay and was over before the overlay went, so a first visit never saw
 // it (research/intro-loading/README.md, section 1). These tests time both
 // on the page's own clock: the moment the overlay leaves the document and
@@ -18,7 +18,7 @@ const CHANNELS = [
     ['React', '/tests/fixtures/examples.html?example=concept'],
 ];
 
-const INTRO_THEMES = ['synthwave', 'terminal', 'retro', 'phantom'];
+const INTRO_THEMES = ['synthwave', 'terminal', 'phantom'];
 
 /**
  * Record, from the first script on, when the arrival overlay was added and

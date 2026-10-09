@@ -1026,58 +1026,6 @@
         --tr-area-op: 0.08;
     }
 
-    /* retro · shape 1: The 1995 dialog */
-    [data-theme='retro'] [data-ct-shape='1'] .kp-kpi--trend {
-        --tr-plate: var(--background);
-        --tr-frame: 0;
-        --tr-radius: 0;
-        --tr-shadow: inset 2px 2px 0 var(--card), inset -2px -2px 0 color-mix(in oklch, var(--foreground) 60%, var(--background));
-        --tr-plot-bg: var(--card);
-        --tr-plot-frame: inset 2px 2px 0 color-mix(in oklch, var(--foreground) 60%, var(--card)), inset -2px -2px 0 var(--card);
-        --tr-plot-radius: 0;
-        --tr-line-w: 1;
-        --tr-area-op: 0;
-        --tr-line-join: miter;
-        --tr-label-case: none;
-        --tr-label-track: 0.01em;
-        --tr-label-size: 0.75rem;
-    }
-
-    /* retro · shape 2: The performance monitor */
-    [data-theme='retro'] [data-ct-shape='2'] .kp-kpi--trend {
-        --tr-radius: 0;
-        --tr-num-font: var(--theme-font-mono);
-        --tr-plot-bg: color-mix(in oklch, var(--foreground) 92%, var(--background));
-        --tr-plot-pat:
-            linear-gradient(color-mix(in oklch, var(--success) 55%, var(--background)) 1px, transparent 1px) 0 0 / 100% 25%,
-            linear-gradient(90deg, color-mix(in oklch, var(--success) 55%, var(--background)) 1px, transparent 1px) 0 0 / 10% 100%;
-        --tr-plot-radius: 0;
-        --tr-line-override: oklch(from var(--success) 0.82 0.2 h);
-        --tr-line-w: 1.5;
-        --tr-line-join: miter;
-        --tr-area-op: 0;
-        --tr-label-case: none;
-        --tr-label-track: 0.01em;
-        --tr-label-size: 0.75rem;
-    }
-
-    /* retro · shape 3: The Notepad window */
-    [data-theme='retro'] [data-ct-shape='3'] .kp-kpi--trend {
-        --tr-plate: var(--background);
-        --tr-frame: 1px solid var(--foreground);
-        --tr-radius: 0;
-        --tr-shadow: 2px 2px 0 var(--foreground);
-        --tr-plot-bg: var(--card);
-        --tr-plot-frame: inset 0 0 0 1px var(--foreground);
-        --tr-plot-radius: 0;
-        --tr-line-w: 1;
-        --tr-line-join: miter;
-        --tr-area-op: 0;
-        --tr-label-case: none;
-        --tr-label-track: 0.01em;
-        --tr-label-size: 0.75rem;
-    }
-
     /* grotesk · shape 1: The transit board */
     [data-theme='grotesk'] [data-ct-shape='1'] .kp-kpi--trend {
         --tr-pat: linear-gradient(var(--primary), var(--primary)) 0 0 / 100% 6px no-repeat;
@@ -1527,26 +1475,6 @@
         --tr-load-anim: tr-slide 1500ms steps(5) infinite;
     }
 
-    /* retro · loading 1: The progress blocks */
-    [data-theme='retro'] [data-ct-loading='1'] .kp-kpi--trend {
-        --tr-load: repeating-linear-gradient(90deg, var(--primary) 0 8px, transparent 8px 10px) 3px calc(100% - 3px) / 0% 10px no-repeat;
-        --tr-load-anim: tr-rule 2000ms steps(10) infinite;
-    }
-
-    /* retro · loading 2: The marquee bar */
-    [data-theme='retro'] [data-ct-loading='2'] .kp-kpi--trend {
-        --tr-load: repeating-linear-gradient(90deg, var(--primary) 0 8px, transparent 8px 10px) -50% calc(100% - 3px) / 30px 10px no-repeat;
-        --tr-load-anim: tr-slide 1800ms steps(12) infinite;
-    }
-
-    /* retro · loading 3: The defragmenter */
-    [data-theme='retro'] [data-ct-loading='3'] .kp-kpi--trend {
-        --tr-load:
-            linear-gradient(var(--primary), var(--primary)) 0 0 / 8px 8px,
-            conic-gradient(var(--chart-2) 0 25%, transparent 0 50%, var(--chart-3) 0 75%, transparent 0) 0 0 / 16px 16px;
-        --tr-load-anim: tr-march 2400ms steps(6) infinite;
-    }
-
     /* grotesk · loading 1: The transit board */
     [data-theme='grotesk'] [data-ct-loading='1'] .kp-kpi--trend {
         --tr-load: linear-gradient(var(--primary), var(--primary)) -50% 50% / 30% 3px no-repeat;
@@ -1890,24 +1818,6 @@
     [data-theme='phantom'] [data-ct-arrival='3'] .kp-kpi--trend {
         --tr-arr-line: tr-a-unroll 450ms cubic-bezier(0.7, 0, 0.3, 1) both;
         --tr-arr-num: tr-n-skew 450ms cubic-bezier(0.7, 0, 0.3, 1) both;
-    }
-
-    /* retro · arrival 1: At once */
-    [data-theme='retro'] [data-ct-arrival='1'] .kp-kpi--trend {
-        --tr-arr-line: none;
-        --tr-arr-num: none;
-    }
-
-    /* retro · arrival 2: Painted */
-    [data-theme='retro'] [data-ct-arrival='2'] .kp-kpi--trend {
-        --tr-arr-line: tr-a-wipe 600ms steps(6) both;
-        --tr-arr-num: none;
-    }
-
-    /* retro · arrival 3: Dragged in */
-    [data-theme='retro'] [data-ct-arrival='3'] .kp-kpi--trend {
-        --tr-arr-line: tr-a-drop 300ms steps(2) both;
-        --tr-arr-num: tr-n-drop 300ms steps(2) both;
     }
 
     /* grotesk · arrival 1: At once */
@@ -2280,33 +2190,6 @@
         --tr-note-border: 1px solid currentColor;
     }
 
-    /* retro · tone 1: The 1995 dialog */
-    [data-theme='retro'] [data-ct-tone='1'] .kp-kpi--trend {
-        --tr-delta-radius: 0;
-        --tr-delta-shadow:
-            inset 1px 1px 0 color-mix(in oklch, var(--foreground) 10%, transparent),
-            inset -1px -1px 0 color-mix(in oklch, var(--foreground) 55%, transparent);
-    }
-
-    /* retro · tone 2: The flat field */
-    [data-theme='retro'] [data-ct-tone='2'] .kp-kpi--trend {
-        --tr-delta-radius: 0;
-        --tr-delta-border: 1px solid currentColor;
-    }
-
-    /* retro · tone 3: The message box */
-    [data-theme='retro'] [data-ct-tone='3'] .kp-kpi--trend {
-        --tr-delta-radius: 0;
-        --tr-delta-shadow:
-            inset 1px 1px 0 color-mix(in oklch, var(--foreground) 55%, transparent),
-            inset -1px -1px 0 color-mix(in oklch, var(--foreground) 10%, transparent);
-        --tr-tone-over:
-            linear-gradient(var(--tr-tc), var(--tr-tc)) 0 0 / 100% 3px no-repeat,
-            linear-gradient(var(--tr-tc), var(--tr-tc)) 0 100% / 100% 3px no-repeat,
-            linear-gradient(var(--tr-tc), var(--tr-tc)) 0 0 / 3px 100% no-repeat,
-            linear-gradient(var(--tr-tc), var(--tr-tc)) 100% 0 / 3px 100% no-repeat;
-    }
-
     /* grotesk · tone 1: The transit board */
     [data-theme='grotesk'] [data-ct-tone='1'] .kp-kpi--trend {
         --tr-delta-radius: 0;
@@ -2640,24 +2523,6 @@
     [data-theme='phantom'] [data-ct-live='3'] .kp-kpi--trend {
         --tr-live-line: tr-l-jolt 400ms steps(3);
         --tr-live-area: tr-l-jolt 400ms steps(3);
-    }
-
-    /* retro · live 1: Redrawn */
-    [data-theme='retro'] [data-ct-live='1'] .kp-kpi--trend {
-        --tr-live-line: none;
-        --tr-live-area: none;
-    }
-
-    /* retro · live 2: Repainted */
-    [data-theme='retro'] [data-ct-live='2'] .kp-kpi--trend {
-        --tr-live-line: tr-l-flash 400ms steps(1);
-        --tr-live-area: none;
-    }
-
-    /* retro · live 3: Scrolled one */
-    [data-theme='retro'] [data-ct-live='3'] .kp-kpi--trend {
-        --tr-live-line: tr-l-shift 300ms steps(1);
-        --tr-live-area: tr-l-shift 300ms steps(1);
     }
 
     /* grotesk · live 1: Redrawn */

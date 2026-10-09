@@ -13,40 +13,6 @@
    can never collide with round 2's plain `1`/`2`/`3` or another group's
    keys. */
 export default {
-    retro: {
-        loading: [
-            [
-                'Marching ants select the network',
-                'Every link and every node ring turns into a dashed marquee, marching round and round at once, as if the whole network has just been lassoed and is waiting to be cut or copied.',
-                'r3-rt-load-1',
-            ],
-            [
-                'Each site takes its turn',
-                'One node ring after another flips over like an hourglass being turned, round the ring in order, while the rest sit still waiting for their turn to be checked.',
-                'r3-rt-load-2',
-            ],
-            [
-                'The progress blocks fill in',
-                'Every link fills in from the hub outward in chunky little blocks, like an old progress bar counting up, one site’s wire completing before the next one starts.',
-                'r3-rt-load-3',
-            ],
-            [
-                'The modem lights blink in turn',
-                'The node rings blink on and off round the ring, one at a time, like the little indicator lights on a modem working through a handshake before the call connects.',
-                'r3-rt-load-4',
-            ],
-            [
-                'The cursor steps along the wire',
-                'A short blinking segment steps jerkily along every link, square and mechanical, the way an old text cursor steps across a line one character at a time.',
-                'r3-rt-load-5',
-            ],
-            [
-                'The buttons press round the ring',
-                'Each node ring presses in and springs back like a bevelled button being clicked, one after another round the whole ring, as if something is being tested site by site.',
-                'r3-rt-load-6',
-            ],
-        ],
-    },
     grotesk: {
         loading: [
             [

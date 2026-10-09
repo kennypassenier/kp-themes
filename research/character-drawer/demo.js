@@ -1126,75 +1126,6 @@ const IDEAS = {
             },
         ],
     },
-    retro: {
-        shape: [
-            {
-                name: 'The CRT-cabinet panel',
-                text: 'A panel in warm brown with a rounded-corner “tube” silhouette, faint horizontal scanlines across the body, an orange head bar.',
-            },
-            {
-                name: 'The woodgrain tray',
-                text: 'A panel with a subtle woodgrain-looking texture (thin repeating streaks) on the head and foot, cream body between them.',
-            },
-            {
-                name: 'The console slab',
-                text: 'A panel styled like an old hi-fi console: a brushed-looking head band with small dial-shaped accents, body in warm beige.',
-            },
-        ],
-        openclose: [
-            {
-                name: 'It slides on with a scanline wipe',
-                text: 'The panel slides in from the end edge while a horizontal scanline sweeps down its face once as it arrives; closing slides out while the scanline sweeps up, reversed.',
-            },
-            {
-                name: 'It rolls up like a blind',
-                text: 'The panel unrolls down from a thin band at the top, like an old roller blind; closing rolls it back up into that band, reversed.',
-            },
-            {
-                name: 'It clunks open on a hinge',
-                text: 'The panel swings in from a hinge with a small mechanical overshoot-and-settle (a clunk), easing to flat; closing swings out the same way, reversed.',
-            },
-        ],
-        highlight: [
-            {
-                name: 'The dashed ring',
-                text: 'A dashed orange ring (evenly spaced dashes, like an old dial marking) surrounds the target; the stage dims to warm sepia-brown.',
-            },
-            {
-                name: 'The dial bracket',
-                text: 'Corner brackets shaped like old dial pointers (small triangular tips) frame the target; the rest of the stage dims to brown.',
-            },
-            {
-                name: 'The tube-glow halo',
-                text: 'A warm orange glow, slightly uneven like an old CRT’s corner glow, surrounds the target; the stage dims elsewhere.',
-            },
-        ],
-        card: [
-            {
-                name: 'The index card',
-                text: 'A cream card with a dashed orange border, the title in a slightly condensed retro weight, the foot plain.',
-            },
-            {
-                name: 'The ticket card',
-                text: 'A card with notched top corners (a ticket-stub look) in warm brown, the count in a chunky tabular numeral.',
-            },
-            { name: 'The dial tag', text: 'A card with a small dial-pointer accent beside the title, brushed-looking top rule, the foot plain.' },
-        ],
-        next: [
-            {
-                name: 'The dial clicks forward',
-                text: 'The dial-pointer brackets click (a hard stepped rotation, not a smooth one) to the new target’s position in two or three discrete steps; the card’s text changes on the last click.',
-            },
-            {
-                name: 'The blind re-rolls',
-                text: 'The card rolls up slightly and back down as it relocates to the new target, like a blind cycling; the text changes while it is rolled up.',
-            },
-            {
-                name: 'The scanline re-wipes',
-                text: 'A scanline sweeps once across the card as its text changes, then the dashed ring jumps to the new target.',
-            },
-        ],
-    },
     grotesk: {
         shape: [
             {
@@ -1425,7 +1356,6 @@ const PICKED = {
     brutalism: ['2', '2', '1', '1', '3'],
     deco: ['3', '2', '3', '1', '2'],
     phantom: ['1', '1', '1', '3', '2'],
-    retro: ['2', '1', '1', '1', '3'],
     grotesk: ['2', '2', '1', '1', '1'],
     nostromo: ['2', '2', '2', '1', '3'],
     titanium: ['3', '1', '1', '1', '2'],

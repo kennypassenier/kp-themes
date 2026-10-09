@@ -216,8 +216,6 @@
             "types": "./hooks/use-controllable.d.ts",
             "default": "./hooks/use-controllable.js"
         },
-        "./css/retro-register": "./css/retro-register.css",
-        "./css/retro-register/min": "./dist/css/retro-register.min.css",
         "./css/synthwave-register": "./css/synthwave-register.css",
         "./css/synthwave-register/min": "./dist/css/synthwave-register.min.css",
         "./css/phantom-register": "./css/phantom-register.css",

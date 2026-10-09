@@ -1160,78 +1160,6 @@ const IDEAS = {
             },
         ],
     },
-    retro: {
-        shape: [
-            {
-                name: 'The 1995 dialog',
-                text: 'A raised grey bevel frames the panel, a sunken white well behind the words.',
-            },
-            {
-                name: 'The performance monitor',
-                text: 'A black well with a green grid sits behind the words, a thin frame.',
-            },
-            {
-                name: 'The Notepad window',
-                text: 'A plain single-pixel frame, a title-bar-style rule above the words.',
-            },
-        ],
-        loading: [
-            {
-                name: 'The progress blocks',
-                text: 'Blocks fill the panel’s foot left to right, then clear and start again, in hard steps.',
-            },
-            {
-                name: 'The marquee bar',
-                text: 'A short bar slides back and forth along the panel’s foot, hard steps, bouncing at each end.',
-            },
-            {
-                name: 'The defragmenter',
-                text: 'Small blocks swap places across the panel’s face in short hard jumps, looping.',
-            },
-        ],
-        arrival: [
-            {
-                name: 'At once',
-                text: 'The panel is there the moment the table turns busy, full size, no entrance of its own.',
-            },
-            {
-                name: 'Painted',
-                text: 'The panel paints in from the top in a few hard rows, as a slow screen redraw.',
-            },
-            {
-                name: 'Dragged in',
-                text: 'The panel is dragged in from the side in one hard step, bevel first.',
-            },
-        ],
-        failure: [
-            {
-                name: 'The message box',
-                text: 'The failed alert is the 1995 dialog’s bevel with a destructive-coloured title rule.',
-            },
-            {
-                name: 'The flat field',
-                text: 'The alert loses its bevel for a flat destructive-coloured frame instead.',
-            },
-            {
-                name: 'The monitor fault',
-                text: 'The green grid turns to the destructive colour behind the alert’s words.',
-            },
-        ],
-        phone: [
-            {
-                name: 'The flat dialog',
-                text: 'The panel flattens, the raised bevel kept only along the top edge.',
-            },
-            {
-                name: 'The flat monitor',
-                text: 'The green grid narrows to one or two lines behind the words.',
-            },
-            {
-                name: 'The flat window',
-                text: 'The title-bar rule is kept as the one accent on the flattened panel.',
-            },
-        ],
-    },
     grotesk: {
         shape: [
             {
@@ -1480,7 +1408,6 @@ const KEPT = {
     brutalism: { loading: '2', arrival: '2', failure: '2', shape: '2', phone: '1' },
     deco: { loading: '2', arrival: '2', failure: '1', shape: '1', phone: '1' },
     phantom: { loading: '3', arrival: '2', failure: '1', shape: '3', phone: '1' },
-    retro: { loading: '1', arrival: '1', failure: '1', shape: '1', phone: '1' },
     grotesk: { loading: '2', arrival: '2', failure: '1', phone: '1', shape: '3' },
     nostromo: { loading: '1', arrival: '2', failure: '1', shape: '1', phone: '1' },
     titanium: { loading: '2', arrival: '2', failure: '1', shape: '2', phone: '1' },

@@ -20,9 +20,7 @@ import { THEMES } from '../../js/theme-registry.js';
 import R2A from './round2-a.js';
 import R2B from './round2-b.js';
 import R2C from './round2-c.js';
-import R2D from './round2-d.js';
 import R3A from './round3-a.js';
-import R3B from './round3-b.js';
 
 /** @typedef {{ name: string, text: string, key?: string }} Option */
 /** @typedef {'shape' | 'loading' | 'open' | 'tone' | 'interact'} Aspect */
@@ -742,54 +740,6 @@ const IDEAS = {
             { name: 'The halftone shifts', text: 'A hovered or focused entry’s halftone shifts a step; a press locks the shift in place.' },
         ],
     },
-    retro: {
-        shape: [
-            {
-                name: 'The 1995 dialog',
-                text: 'A raised grey bevel frames the plate, headings in the system face without capitals, a sunken rule between groups.',
-            },
-            { name: 'The performance monitor', text: 'A black well with a green grid behind the groups, entries in the phosphor mono.' },
-            {
-                name: 'The Notepad window',
-                text: 'A 1px black frame with a hard drop shadow, headings in the system face, a plain rule between groups.',
-            },
-        ],
-        loading: [
-            { name: 'The progress blocks', text: 'Blue progress blocks fill the loading row block by block, then start over.' },
-            { name: 'The marquee bar', text: 'A group of three blue blocks slides across the loading row and comes round again.' },
-            { name: 'The defragmenter', text: 'Blocks of colour shift through the loading row in hard steps, as a defragmenter’s map.' },
-        ],
-        open: [
-            { name: 'Painted', text: 'The menu is drawn in from the left in six hard steps, and erased the same six steps to close.' },
-            { name: 'Dragged in', text: 'The menu drops into place from above in two hard steps, and drags back up in two steps to close.' },
-            { name: 'Switched', text: 'The menu’s bevel pops out in one hard step to open, and pops back in to close.' },
-        ],
-        tone: [
-            {
-                name: 'The message box',
-                text: 'The destructive entry is framed in its colour like a message box asking for attention; the disabled reason sits in a sunken field.',
-            },
-            {
-                name: 'The flat field',
-                text: 'The destructive entry sits in a flat square field with a 1px rule; the disabled reason reads plainly below.',
-            },
-            {
-                name: 'The error beep',
-                text: 'The destructive entry’s plate flashes once on open, as an error beep; the disabled reason reads under a dotted rule.',
-            },
-        ],
-        interact: [
-            {
-                name: 'The bevel presses',
-                text: 'A hovered or focused entry’s bevel raises; a press sinks the bevel in for the duration of the press.',
-            },
-            { name: 'Repainted', text: 'A hovered or focused entry flashes in the ink for a moment, in hard jumps; a press holds the flash.' },
-            {
-                name: 'The highlight bar',
-                text: 'A hovered or focused entry gets the system’s blue highlight bar; a press darkens the bar by one shade.',
-            },
-        ],
-    },
     grotesk: {
         shape: [
             {
@@ -975,7 +925,6 @@ const PICKED = {
     brutalism: ['2', '5', '1', '1', '1'],
     deco: ['1', '1', '3', '1', '1'],
     phantom: ['2', '3', '2', '1', '3'],
-    retro: ['1', '1', '1', '1', '1'],
     grotesk: ['1', '2', '1', '1', '2'],
     nostromo: ['1', '2', '3', '1', '2'],
     titanium: ['3', '1', '2', '1', '3'],
@@ -984,7 +933,7 @@ const PICKED = {
 const keptOf = (/** @type {string} */ t, /** @type {Aspect} */ id) => PICKED[t]?.[ASPECTS.findIndex((a) => a.id === id)] ?? '';
 // Round 2's new options replace an open aspect's; each carries its own key,
 // the attribute value its CSS answers to (round 1's are keyed 1, 2, 3).
-for (const file of [R2A, R2B, R2C, R2D, R3A, R3B])
+for (const file of [R2A, R2B, R2C, R3A])
     for (const [t, aspects] of Object.entries(file))
         for (const [id, options] of Object.entries(aspects)) if (options.length >= 3) IDEAS[t][id] = options;
 const keyOf = (/** @type {string} */ t, /** @type {Aspect} */ id, /** @type {string} */ n) => IDEAS[t]?.[id]?.[Number(n) - 1]?.key ?? n;

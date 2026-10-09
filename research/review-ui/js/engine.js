@@ -16,7 +16,7 @@ export const DEMOS = [
         id: 'character-trend',
         path: '../character-trend/demo.html',
         title: 'Trend tile',
-        themes: ['brutalism', 'deco', 'retro', 'nostromo'],
+        themes: ['brutalism', 'deco', 'nostromo'],
     },
     {
         id: 'character-graph',

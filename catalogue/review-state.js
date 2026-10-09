@@ -189,7 +189,7 @@ export function promptItems() {
     for (const [page, blocks] of Object.entries(allNotes())) {
         for (const [block, themes] of Object.entries(blocks)) {
             for (const [theme, text] of Object.entries(themes)) {
-                // A dropped theme (lapis, shade-light, shade-dark, high-contrast, sepia) is never passed on.
+                // A dropped theme (lapis, shade-light, shade-dark, high-contrast, sepia, retro) is never passed on.
                 if (!isTheme(theme)) continue;
                 const line = text.trim().replace(/\n+/g, ' / ');
                 items.push({
@@ -211,7 +211,7 @@ export function promptItems() {
         const panel = document.querySelector(`.cat-judge[data-cat-block="${CSS.escape(key)}"]`);
         for (const [theme, engines] of Object.entries(themes)) {
             // Kept in this browser from before the theme was dropped (Kenny,
-            // 2026-10-07, 49 lapis and shade lines in a copied prompt; high-contrast and sepia dropped 2026-10-08): left out.
+            // 2026-10-07, 49 lapis and shade lines in a copied prompt; high-contrast and sepia dropped 2026-10-08, retro 2026-10-09): left out.
             if (!isTheme(theme)) continue;
             for (const [engine, entry] of Object.entries(engines ?? {})) {
                 const { verdict, hash, v, ratio } = entry;

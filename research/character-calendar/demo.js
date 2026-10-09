@@ -1153,78 +1153,6 @@ const IDEAS = {
             },
         ],
     },
-    retro: {
-        shape: [
-            {
-                name: 'The tear-off pad',
-                text: 'Still: nothing blinks.',
-            },
-            {
-                name: 'The 1995 date picker',
-                text: "The date picker of 1995: the month sunk into a white well in a two-pixel bevel, every day a raised bevelled button that sinks when picked, a night's state as the button's colour.",
-            },
-            {
-                name: 'The floppy label',
-                text: 'Every day a 3½" disk label: a square with a cut top corner, a ruled writing line, the figure handwritten-bold in the pixel face.',
-            },
-        ],
-        loading: [
-            {
-                name: 'The tear-off pad: its loading',
-                text: "A dotted line along each label's foot. Now it moves: the dotted line fills in steps, as a 1995 progress bar.",
-            },
-            {
-                name: 'The 1995 date picker: its loading',
-                text: 'Loading fills the buttons with the 50 % dither. Now it moves: the dither crawls a pixel at a time.',
-            },
-            {
-                name: 'The hourglass',
-                text: 'The 1995 hourglass cursor turns over in each label.',
-            },
-        ],
-        arrival: [
-            {
-                name: 'Repaint',
-                text: 'Windows 95 repaints the window: each row appears in one hard step.',
-            },
-            {
-                name: 'The wipe',
-                text: 'A PowerPoint-style wipe across each row, in hard steps.',
-            },
-            {
-                name: 'The dissolve',
-                text: 'Each label appears in a chequer dissolve of hard steps.',
-            },
-        ],
-        tone: [
-            {
-                name: 'The tear-off pad: its tones and today',
-                text: 'Every day a leaf of a perforated tear-off pad: a row of perforation holes along its top, the figure in the pixel face, a good night on green paper, a partial one on yellow, a night with nothing done on red. Today is ringed in the marker; the picked day in the dotted focus line of 1995.',
-            },
-            {
-                name: 'The 1995 date picker: its tones and today',
-                text: 'Today is ringed in red, as the picker did; the picked day sinks, in the navy frame.',
-            },
-            {
-                name: 'The status icons',
-                text: 'Plain labels with a coloured icon dot in the corner (✓ ! ✕); today ringed in red.',
-            },
-        ],
-        select: [
-            {
-                name: 'The tear-off pad: its pick',
-                text: 'Today is ringed in the marker; the picked day in the dotted focus line of 1995. New: the day pressed in on hover, the picked count boxed.',
-            },
-            {
-                name: 'The 1995 date picker: its pick',
-                text: "The date picker of 1995: the month sunk into a white well in a two-pixel bevel, every day a raised bevelled button that sinks when picked, a night's state as the button's colour. Today is ringed in red, as the picker did; the picked day sinks, in the navy frame. New: a dashed ring on hover, the picked count on an inverted label.",
-            },
-            {
-                name: 'The marching ants',
-                text: 'The picked label inside dashed marching ants; the figure underlined on hover; the count in heavy type.',
-            },
-        ],
-    },
     grotesk: {
         shape: [
             {
@@ -1468,7 +1396,6 @@ const PICKED = {
     brutalism: ['1', '1', '1', '1', '3'],
     deco: ['1', '1', '2', '1', '1'],
     phantom: ['3', '3', '3', '2', '1'],
-    retro: ['3', '1', '3', '1', '1'],
     grotesk: ['3', '3', '1', '1', '1'],
     nostromo: ['1', '2', '2', '1', '1'],
     titanium: ['1', '1', '2', '1', '1'],

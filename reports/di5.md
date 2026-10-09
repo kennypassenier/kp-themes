@@ -170,11 +170,6 @@ reported here in capitals and corrected by nobody but Kenny.
 | `kp-sig-titanium-meter-jolt-o` | translate | 160 ms | 1× | — | 0.00/s | under |
 | `kp-sig-titanium-meter-jolt-w` | translate | 160 ms | 1× | — | 0.00/s | under |
 | `kp-sig-cyberpunk-meter-slip-o` | translate | 320 ms | 1× | — | 0.00/s | under |
-| `kp-sig-retro-meter-knock-d` | translate | 160 ms | 1× | — | 0.00/s | under |
-| `kp-sig-retro-meter-knock-o` | translate | 160 ms | 1× | — | 0.00/s | under |
-| `kp-sig-retro-meter-knock-w` | translate | 160 ms | 1× | — | 0.00/s | under |
-| `kp-sig-retro-meter-shake` | background-position | 1400 ms | loops | — | 0.00/s | under |
-| `kp-sig-retro-meter-wipe-o` | clip-path | 600 ms | 1× | — | 0.00/s | under |
 | `kp-sig-grotesk-meter-grow-o` | scale | 400 ms | 1× | — | 0.00/s | under |
 | `kp-sig-cyberpunk-bars-1` | --kp-cp-h1 | 3000 ms | loops | — | 0.00/s | under |
 | `kp-sig-cyberpunk-bars-2` | --kp-cp-h2 | 3000 ms | 1× | — | 0.00/s | under |
@@ -191,13 +186,6 @@ reported here in capitals and corrected by nobody but Kenny.
 | `kp-cp-charge` | transform | 520 ms | 1× | — | 0.00/s | under |
 | `kp-cp-stream-144` | transform | 1800 ms | loops | — | 0.00/s | under |
 | `kp-cp-stream-216` | transform | 1200 ms | loops | — | 0.00/s | under |
-| `kp-sig-retro-turn` | transform | 2600 ms | loops | — | 0.00/s | under |
-| `kp-sig-retro-sand` | clip-path | 2600 ms | loops | — | 0.00/s | under |
-| `kp-sig-retro-dither` | opacity | 1600 ms | loops | 0.15 → 0.6 | 0.63/s | under |
-| `kp-sig-retro-drop` | transform | 240 ms | 1× | — | 0.00/s | under |
-| `kp-sig-retro-zoom` | transform | 280 ms | 1× | — | 0.00/s | under |
-| `kp-sig-retro-hold` | opacity | 500 ms | 1× | 0 → 0 | 0.00/s | under |
-| `kp-sig-retro-leave` | opacity | 280 ms | 1× | 0 | 0.00/s | under |
 | `kp-sw-flow` | background-position | 225 ms | loops | — | 0.00/s | under |
 | `kp-sw-floor-drive` | background-position | 225 ms | loops | — | 0.00/s | under |
 | `kp-sw-tile-flow` | background-position | 225 ms | loops | — | 0.00/s | under |

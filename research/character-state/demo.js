@@ -328,23 +328,6 @@ const IDEAS = {
             { name: 'Re-slashed', text: 'The corner slash is drawn once more, slowing as it lands.' },
         ],
     },
-    retro: {
-        shape: [
-            { name: 'The LED dot', text: 'A small square LED sits before the word, the word in the system face on no plate.' },
-            { name: 'The bevelled tag', text: 'A raised grey bevel frames a small tag holding the word, the dot a sunken well.' },
-            { name: 'The scope chip', text: 'The dot sits in a black well with a green grid, the word in the mono beside it.' },
-        ],
-        tone: [
-            { name: 'The LED colour only', text: 'Only the square LED takes the state’s colour; the word stays the system face colour.' },
-            { name: 'The bevel colour', text: 'The sunken well’s background takes the state’s colour, the word kept readable on it.' },
-            { name: 'The scope warning', text: 'A warning or failed state tints the scope grid itself toward that colour.' },
-        ],
-        change: [
-            { name: 'The LED blinks', text: 'The LED blinks twice quickly once, then returns to steady.' },
-            { name: 'Switched', text: 'The bevelled tag inverts once and back, in a single hard jump.' },
-            { name: 'A trace jumps', text: 'The scope’s trace jolts once, as a needle does, in two hard steps.' },
-        ],
-    },
     grotesk: {
         shape: [
             { name: 'The colour bar dot', text: 'A small flat-colour square sits before the word, the word in bold grotesque on no plate.' },
@@ -427,7 +410,6 @@ const PICKED = {
     brutalism: ['1', '3', '2'],
     deco: ['3', '3', '1'],
     phantom: ['3', '2', '1'],
-    retro: ['1', '3', '2'],
     grotesk: ['3', '3', '1'],
     nostromo: ['3', '3', '1'],
     titanium: ['3', '2', '3'],

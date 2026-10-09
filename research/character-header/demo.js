@@ -602,38 +602,6 @@ const IDEAS = {
             },
         ],
     },
-    retro: {
-        shape: [
-            { name: 'The 1995 dialog', text: 'A raised grey bevel round the header, the title in the system face, the actions as raised buttons.' },
-            { name: 'The performance monitor', text: 'A black well with a green grid behind the title, the actions in the phosphor mono.' },
-            {
-                name: 'The Notepad window',
-                text: 'A 1px black frame with a hard drop shadow, the title in the system face, the actions square and plain.',
-            },
-        ],
-        menu: [
-            {
-                name: 'Painted',
-                text: 'The menu is drawn in from the top in hard steps, like a screen repainting; it is undrawn the same way in reverse to close.',
-            },
-            {
-                name: 'Dragged in',
-                text: 'The menu drops into place from above in hard steps, like a window being dragged; it drags back up the same way to close.',
-            },
-            {
-                name: 'The marquee bar',
-                text: 'A group of blocks slides across to reveal the menu, as a progress marquee; it slides back the other way to close.',
-            },
-        ],
-        interactive: [
-            {
-                name: 'The raised button',
-                text: 'Hover lightens a button’s bevel, focus dashes a box round it, press inverts the bevel to sunken for the moment held.',
-            },
-            { name: 'The flat field', text: 'Hover rules a line under a button, focus dashes round it, press flattens the field for a moment.' },
-            { name: 'The message box', text: 'Hover frames a button, focus dashes it, press sinks the field as a message box answered.' },
-        ],
-    },
     grotesk: {
         shape: [
             {

@@ -457,7 +457,6 @@ var init_strings = __esm({
         synthwave: { line: "\u25B6 Play", progress: "Tracking", ready: "Press start" }
       },
       arrivalLinesByTheme: {
-        retro: ["KP Modular BIOS v4.51PG", "kp-themes 95 \u2014 retro build", "Memory Test : {count}K"],
         terminal: ["KP-THEMES BIOS v5.0.0", "MEMORY TEST ......... 640K OK", "PHOSPHOR PROFILE .... terminal", "CRT WARM-UP ......... OK", "READY."]
       },
       arrivalProgress: "Progress",
@@ -2325,7 +2324,7 @@ var init_effects = __esm({
       // pair, below).
       "kp-bar-run": { durationMs: 900, cycles: 1, property: "transform", luminanceSteps: [] },
       "kp-load-out": { durationMs: 640, cycles: 1, property: "transform", luminanceSteps: [] },
-      // The retro register [RT1]: the dither clearing off a headline and off
+      // The Retro register (theme removed 2026-10-09) [RT1]: the dither clearing off a headline and off
       // the boot screen (four densities, one direction), the selection bar
       // dragging across a mark, the redaction brush lifting.
       "kp-dither-clear": { durationMs: 640, cycles: 1, property: "opacity", luminanceSteps: [1, 1, 1, 1, 0] },
@@ -2588,14 +2587,9 @@ var init_effects = __esm({
       "kp-sig-titanium-meter-jolt-o": { durationMs: 160, cycles: 1, property: "translate", luminanceSteps: [] },
       "kp-sig-titanium-meter-jolt-w": { durationMs: 160, cycles: 1, property: "translate", luminanceSteps: [] },
       // The meter, round 4 [Kenny's picks on research/character-meter, 2026-10-05]:
-      // dark (loading and arrival redrawn), cyberpunk, retro and grotesk
-      // (high-contrast has since been removed). Every loading picture loops while loading.
+      // dark (loading and arrival redrawn), cyberpunk and grotesk
+      // (high-contrast and retro have since been removed). Every loading picture loops while loading.
       "kp-sig-cyberpunk-meter-slip-o": { durationMs: 320, cycles: 1, property: "translate", luminanceSteps: [] },
-      "kp-sig-retro-meter-knock-d": { durationMs: 160, cycles: 1, property: "translate", luminanceSteps: [] },
-      "kp-sig-retro-meter-knock-o": { durationMs: 160, cycles: 1, property: "translate", luminanceSteps: [] },
-      "kp-sig-retro-meter-knock-w": { durationMs: 160, cycles: 1, property: "translate", luminanceSteps: [] },
-      "kp-sig-retro-meter-shake": { durationMs: 1400, cycles: Infinity, property: "background-position", luminanceSteps: [] },
-      "kp-sig-retro-meter-wipe-o": { durationMs: 600, cycles: 1, property: "clip-path", luminanceSteps: [] },
       "kp-sig-grotesk-meter-grow-o": { durationMs: 400, cycles: 1, property: "scale", luminanceSteps: [] },
       // ── Rows added by the port session [scope-143, 2026-10-08]: every keyframe the
       // character rounds declared without a row. Generated from the stylesheets,
@@ -2619,14 +2613,6 @@ var init_effects = __esm({
       "kp-cp-charge": { durationMs: 520, cycles: 1, property: "transform", luminanceSteps: [] },
       "kp-cp-stream-144": { durationMs: 1800, cycles: Infinity, property: "transform", luminanceSteps: [] },
       "kp-cp-stream-216": { durationMs: 1200, cycles: Infinity, property: "transform", luminanceSteps: [] },
-      // retro-register
-      "kp-sig-retro-turn": { durationMs: 2600, cycles: Infinity, property: "transform", luminanceSteps: [] },
-      "kp-sig-retro-sand": { durationMs: 2600, cycles: Infinity, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-retro-dither": { durationMs: 1600, cycles: Infinity, property: "opacity", luminanceSteps: [0.15, 0.6] },
-      "kp-sig-retro-drop": { durationMs: 240, cycles: 1, property: "transform", luminanceSteps: [] },
-      "kp-sig-retro-zoom": { durationMs: 280, cycles: 1, property: "transform", luminanceSteps: [] },
-      "kp-sig-retro-hold": { durationMs: 500, cycles: 1, property: "opacity", luminanceSteps: [0, 0] },
-      "kp-sig-retro-leave": { durationMs: 280, cycles: 1, property: "opacity", luminanceSteps: [0] },
       // synthwave-register
       "kp-sw-flow": { durationMs: 225, cycles: Infinity, property: "background-position", luminanceSteps: [] },
       "kp-sw-floor-drive": { durationMs: 225, cycles: Infinity, property: "background-position", luminanceSteps: [] },
@@ -17433,7 +17419,6 @@ var THEMES = Object.freeze([
   { name: "brutalism", label: "Brutalism", dark: false },
   { name: "deco", label: "Art Deco", dark: true },
   { name: "phantom", label: "Phantom", dark: true },
-  { name: "retro", label: "Retro", dark: false },
   { name: "grotesk", label: "Grotesk", dark: false },
   { name: "nostromo", label: "Nostromo", dark: false },
   { name: "titanium", label: "Titanium", dark: true }

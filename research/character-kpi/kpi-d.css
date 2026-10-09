@@ -80,192 +80,7 @@
         }
     }
 
-    /* ════════════════════════════════════════════════════════════════
-       retro — the 1995 desktop: a raised bevel, a performance monitor,
-       a plain message box.
-       ════════════════════════════════════════════════════════════════ */
-
-    /* ── shape ───────────────────────────────────────────────────────── */
-
-    [data-theme='retro'] [data-kf-shape='1'] .kp-kpi {
-        --kf-radius: 0rem;
-        --kf-frame: 2px solid var(--border-strong);
-        box-shadow:
-            inset -1px -1px 0 color-mix(in oklch, var(--foreground) 55%, transparent),
-            inset 1px 1px 0 var(--popover);
-        --kf-label-case: none;
-        --kf-label-track: 0;
-    }
-
-    [data-theme='retro'] [data-kf-shape='2'] .kp-kpi {
-        --kf-radius: 0rem;
-        --kf-frame: 2px solid var(--border-strong);
-        --kf-pat: repeating-linear-gradient(0deg, color-mix(in oklch, var(--accent) 35%, transparent) 0 1px, transparent 1px 6px);
-        --kf-num-font: var(--theme-font-mono, monospace);
-        --kf-num-shadow: 0 0 4px color-mix(in oklch, var(--accent) 60%, transparent);
-    }
-
-    [data-theme='retro'] [data-kf-shape='3'] .kp-kpi {
-        --kf-radius: 0rem;
-        --kf-frame: 1px solid var(--foreground);
-        box-shadow: 4px 4px 0 color-mix(in oklch, var(--foreground) 55%, transparent);
-    }
-
-    /* ── while loading ──────────────────────────────────────────────── */
-
-    /* retro · loading 1: progress blocks fill under the label */
-    [data-theme='retro'] [data-kf-loading='1'] .kp-kpi[data-kp-loading]::before {
-        content: '';
-        position: absolute;
-        z-index: 1;
-        inset-inline: var(--kp-space-md, 1rem);
-        inset-block-end: var(--kp-space-sm, 0.5rem);
-        block-size: 8px;
-        background-image: repeating-linear-gradient(90deg, var(--primary) 0 6px, var(--card) 6px 8px);
-        background-size: 200% 100%;
-    }
-
-    /* retro · loading 2: a marquee of three blocks slides across */
-    [data-theme='retro'] [data-kf-loading='2'] .kp-kpi[data-kp-loading]::before {
-        content: '';
-        position: absolute;
-        z-index: 1;
-        inset-inline-start: var(--kp-space-md, 1rem);
-        inset-block-end: var(--kp-space-sm, 0.5rem);
-        inline-size: 1.5rem;
-        block-size: 8px;
-        background: repeating-linear-gradient(90deg, var(--primary) 0 6px, transparent 6px 8px);
-    }
-
-    /* retro · loading 3: blocks shift through the card, defragmenter-style */
-    [data-theme='retro'] [data-kf-loading='3'] .kp-kpi[data-kp-loading]::before {
-        content: '';
-        position: absolute;
-        z-index: 1;
-        inset-inline: var(--kp-space-md, 1rem);
-        inset-block-end: var(--kp-space-sm, 0.5rem);
-        block-size: 8px;
-        background: repeating-linear-gradient(90deg, var(--primary) 0 3px, var(--secondary) 3px 6px, var(--accent) 6px 9px);
-        background-size: 150% 100%;
-    }
-
-    /* ── tone and change ───────────────────────────────────────────── */
-
-    [data-theme='retro'] [data-kf-tone='1'] .kp-kpi .kp-kpi__delta {
-        --kf-delta-bg: var(--secondary);
-        --kf-delta-ink: var(--secondary-foreground);
-        box-shadow:
-            inset -1px -1px 0 color-mix(in oklch, var(--foreground) 45%, transparent),
-            inset 1px 1px 0 var(--popover);
-    }
-
-    [data-theme='retro'] [data-kf-tone='1'] .kp-kpi[data-kp-tone='warning'] > .kp-kpi__value {
-        --kf-tone-bg: var(--warning);
-        --kf-tone-ink: var(--warning-foreground);
-    }
-
-    [data-theme='retro'] [data-kf-tone='1'] .kp-kpi[data-kp-tone='destructive'] > .kp-kpi__value {
-        --kf-tone-bg: var(--destructive);
-        --kf-tone-ink: var(--destructive-foreground);
-    }
-
-    [data-theme='retro'] [data-kf-tone='2'] .kp-kpi .kp-kpi__delta {
-        --kf-delta-radius: 0;
-        --kf-delta-bg: var(--card);
-        --kf-delta-ink: var(--kf-ink);
-        border: 1px solid var(--border-strong);
-    }
-
-    [data-theme='retro'] [data-kf-tone='2'] .kp-kpi[data-kp-tone='warning'] > .kp-kpi__value {
-        --kf-tone-radius: 0;
-        --kf-tone-bg: var(--warning);
-        --kf-tone-ink: var(--warning-foreground);
-    }
-
-    [data-theme='retro'] [data-kf-tone='2'] .kp-kpi[data-kp-tone='destructive'] > .kp-kpi__value {
-        --kf-tone-radius: 0;
-        --kf-tone-bg: var(--destructive);
-        --kf-tone-ink: var(--destructive-foreground);
-    }
-
-    [data-theme='retro'] [data-kf-tone='3'] .kp-kpi .kp-kpi__delta {
-        --kf-delta-radius: 0;
-        --kf-delta-bg: var(--secondary);
-        --kf-delta-ink: var(--secondary-foreground);
-        box-shadow: inset 1px 1px 0 color-mix(in oklch, var(--foreground) 45%, transparent);
-    }
-
-    [data-theme='retro'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='warning'] > .kp-kpi__value {
-        --kf-tone-radius: 0;
-        --kf-tone-bg: var(--warning);
-        --kf-tone-ink: var(--warning-foreground);
-        border: 2px solid var(--border-strong);
-    }
-
-    [data-theme='retro'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='destructive'] > .kp-kpi__value {
-        --kf-tone-radius: 0;
-        --kf-tone-bg: var(--destructive);
-        --kf-tone-ink: var(--destructive-foreground);
-        border: 2px solid var(--border-strong);
-    }
-
-    /* ── hover, focus, press ──────────────────────────────────────── */
-
-    [data-theme='retro'] [data-kf-interactive='1'] a.kp-kpi,
-    [data-theme='retro'] [data-kf-interactive='1'] .kp-kpi--toggle {
-        --kf-hover-border: var(--border-strong);
-        --kf-hover-plate: color-mix(in oklab, var(--foreground) 4%, var(--card));
-    }
-
-    [data-theme='retro'] [data-kf-interactive='1'] a.kp-kpi:focus-visible,
-    [data-theme='retro'] [data-kf-interactive='1'] .kp-kpi--toggle:focus-visible {
-        --kf-focus-outline: 1px dotted var(--border-strong);
-        --kf-focus-offset: 1px;
-    }
-
-    [data-theme='retro'] [data-kf-interactive='1'] a.kp-kpi:active,
-    [data-theme='retro'] [data-kf-interactive='1'] .kp-kpi--toggle:active {
-        --kf-press-plate: var(--secondary);
-    }
-
-    [data-theme='retro'] [data-kf-interactive='2'] a.kp-kpi,
-    [data-theme='retro'] [data-kf-interactive='2'] .kp-kpi--toggle {
-        --kf-hover-plate: color-mix(in oklab, var(--accent) 10%, var(--card));
-    }
-
-    [data-theme='retro'] [data-kf-interactive='2'] a.kp-kpi:focus-visible,
-    [data-theme='retro'] [data-kf-interactive='2'] .kp-kpi--toggle:focus-visible {
-        --kf-focus-outline: 2px dotted var(--accent);
-    }
-
-    [data-theme='retro'] [data-kf-interactive='2'] a.kp-kpi:active,
-    [data-theme='retro'] [data-kf-interactive='2'] .kp-kpi--toggle:active {
-        --kf-press-plate: color-mix(in oklab, var(--accent) 4%, var(--card));
-    }
-
-    [data-theme='retro'] [data-kf-interactive='3'] a.kp-kpi,
-    [data-theme='retro'] [data-kf-interactive='3'] .kp-kpi--toggle {
-        --kf-hover-border: var(--foreground);
-    }
-
-    [data-theme='retro'] [data-kf-interactive='3'] a.kp-kpi:focus-visible,
-    [data-theme='retro'] [data-kf-interactive='3'] .kp-kpi--toggle:focus-visible {
-        --kf-focus-outline: 1px solid var(--foreground);
-        --kf-focus-offset: 2px;
-    }
-
-    /* ── live update ──────────────────────────────────────────────── */
-
-    [data-theme='retro'] [data-kf-live='2'] .kp-kpi.kf-flash > .kp-kpi__value,
-    [data-theme='retro'] [data-kf-live='3'] .kp-kpi.kf-flash > .kp-kpi__value {
-        transform-origin: left center;
-    }
-
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='retro'] [data-kf-loading='1'] .kp-kpi[data-kp-loading]::before {
-            animation: kf-rt-blocks calc(1s / var(--kf-speed, 1)) steps(4) infinite;
-        }
-
         @keyframes kf-rt-blocks {
             from {
                 background-position: 0 0;
@@ -273,10 +88,6 @@
             to {
                 background-position: -100% 0;
             }
-        }
-
-        [data-theme='retro'] [data-kf-loading='2'] .kp-kpi[data-kp-loading]::before {
-            animation: kf-rt-marquee calc(1.2s / var(--kf-speed, 1)) linear infinite;
         }
 
         @keyframes kf-rt-marquee {
@@ -288,10 +99,6 @@
             }
         }
 
-        [data-theme='retro'] [data-kf-loading='3'] .kp-kpi[data-kp-loading]::before {
-            animation: kf-rt-defrag calc(0.9s / var(--kf-speed, 1)) steps(3) infinite;
-        }
-
         @keyframes kf-rt-defrag {
             from {
                 background-position: 0 0;
@@ -299,10 +106,6 @@
             to {
                 background-position: -150% 0;
             }
-        }
-
-        [data-theme='retro'] [data-kf-live='2'] .kp-kpi.kf-flash > .kp-kpi__value {
-            animation: kf-rt-repaint calc(0.3s / var(--kf-speed, 1)) steps(2);
         }
 
         @keyframes kf-rt-repaint {
@@ -315,10 +118,6 @@
             100% {
                 background-color: transparent;
             }
-        }
-
-        [data-theme='retro'] [data-kf-live='3'] .kp-kpi.kf-flash > .kp-kpi__value {
-            animation: kf-rt-scroll calc(0.35s / var(--kf-speed, 1)) steps(2);
         }
 
         @keyframes kf-rt-scroll {

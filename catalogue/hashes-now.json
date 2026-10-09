@@ -77,12 +77,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "cdda812ae1906a2b54a498422294c2d911caa6c7a05668a0c473246148075c40",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "cdda812ae1906a2b54a498422294c2d911caa6c7a05668a0c473246148075c40",
@@ -176,12 +170,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "688284a835f2fa3468d0d9c7eba9f3c5802eabe003ca2f34fa9bfb9876487886",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "688284a835f2fa3468d0d9c7eba9f3c5802eabe003ca2f34fa9bfb9876487886",
                     "ratio": 2.222
@@ -285,12 +273,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "0a7ac0bd170662ff8e634ade2c6df0104ac9e5eddd298088a276fd599ed6a36f",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "0a7ac0bd170662ff8e634ade2c6df0104ac9e5eddd298088a276fd599ed6a36f",
@@ -384,12 +366,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "63e9ca4019d54dddbb1bec2e6ed6007986ca59838df56b0e756bdb0f0c88970f",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "63e9ca4019d54dddbb1bec2e6ed6007986ca59838df56b0e756bdb0f0c88970f",
                     "ratio": 2.222
@@ -493,12 +469,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "7e43bc436d64d6275caa7755594224417513f0afa156c61a6c856e775e7830bc",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "7e43bc436d64d6275caa7755594224417513f0afa156c61a6c856e775e7830bc",
@@ -592,12 +562,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "0997ca84b37eda0b269dfe57ae79fdc174322dc9f396725ccf9947a861e82e96",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "0997ca84b37eda0b269dfe57ae79fdc174322dc9f396725ccf9947a861e82e96",
                     "ratio": 2.222
@@ -701,12 +665,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "ad7b5364d2ee9a11a9a710eb0cd17e1aa280bb657c28ad64fabe8a9c975b603a",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "ad7b5364d2ee9a11a9a710eb0cd17e1aa280bb657c28ad64fabe8a9c975b603a",
@@ -800,12 +758,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "2085d4b18339035cc542b7c55a04fc05e742ce5f182accd05b3a3c0739e5d7eb",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "2085d4b18339035cc542b7c55a04fc05e742ce5f182accd05b3a3c0739e5d7eb",
                     "ratio": 2.222
@@ -909,12 +861,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "d2cf426f854b95db17a9312e313f30f4965b71e28076519a75b74e713a80a29c",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "d2cf426f854b95db17a9312e313f30f4965b71e28076519a75b74e713a80a29c",
@@ -1008,12 +954,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "288f3379f6a306c4f58a3621d86bde3871863906dbc3753edff4cc315fc62d68",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "288f3379f6a306c4f58a3621d86bde3871863906dbc3753edff4cc315fc62d68",
                     "ratio": 2.222
@@ -1117,12 +1057,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "cfd3c4ba98591c705afbd054ff1a3fc3707d231b2baf8b15187a8d480f9ea29f",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "cfd3c4ba98591c705afbd054ff1a3fc3707d231b2baf8b15187a8d480f9ea29f",
@@ -1216,12 +1150,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "a510b17b183692a09de003eff04cf19e281cbe935a0413c44b2039da359ded59",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "a510b17b183692a09de003eff04cf19e281cbe935a0413c44b2039da359ded59",
                     "ratio": 2.222
@@ -1325,12 +1253,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "732a037423186b7aa13621d6272869c1bd24bc5b053ad7c750c7e9df931111a3",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "732a037423186b7aa13621d6272869c1bd24bc5b053ad7c750c7e9df931111a3",
@@ -1424,12 +1346,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "a53e8f631e0774dbef2b0ec0f7d94367f1a7c14b21fb973645aa52d58845cdab",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "a53e8f631e0774dbef2b0ec0f7d94367f1a7c14b21fb973645aa52d58845cdab",
                     "ratio": 2.222
@@ -1533,12 +1449,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "9730b7511ab28d03fa9c49f5e4bf09bdde86fbbdf9fe879bf92d54a5e58fa7dd",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "9730b7511ab28d03fa9c49f5e4bf09bdde86fbbdf9fe879bf92d54a5e58fa7dd",
@@ -1632,12 +1542,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "158a9eb6ef379ece5855f6c137a5a73123750aec0f7f8abc4dea7e48e39ccfa7",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "158a9eb6ef379ece5855f6c137a5a73123750aec0f7f8abc4dea7e48e39ccfa7",
                     "ratio": 2.222
@@ -1741,12 +1645,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "1872ce35737ed8d32802cd59879e4c55ab4d147b4f5e8e6c05f397a7af984638",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "1872ce35737ed8d32802cd59879e4c55ab4d147b4f5e8e6c05f397a7af984638",
@@ -1840,12 +1738,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "ec9a2f9ca122f0ee3ea429f67729511417ee0354c75bb0e92e7cd1594367f709",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "ec9a2f9ca122f0ee3ea429f67729511417ee0354c75bb0e92e7cd1594367f709",
                     "ratio": 2.222
@@ -1949,12 +1841,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "a922e37a2a97ad9fc180d5b2e2828fe68f1370f2bb776278a15c8245cc382eaa",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "a922e37a2a97ad9fc180d5b2e2828fe68f1370f2bb776278a15c8245cc382eaa",
@@ -2048,12 +1934,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "5b032c71c2754ae0cfb7bd08a8cbaee3dccc5098e5afab0f5813c9c61903c5ce",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "5b032c71c2754ae0cfb7bd08a8cbaee3dccc5098e5afab0f5813c9c61903c5ce",
                     "ratio": 2.222
@@ -2157,12 +2037,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "0f5ffeafd2fc971fc4fc6dffcc0cbfb1c26c097c9f6d01e70fa036b634bfb441",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "0f5ffeafd2fc971fc4fc6dffcc0cbfb1c26c097c9f6d01e70fa036b634bfb441",
@@ -2256,12 +2130,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "95c8f88a5ff465fc31ed55359010cd275ea722bd2d7e2a1931ffbe38006e53f7",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "95c8f88a5ff465fc31ed55359010cd275ea722bd2d7e2a1931ffbe38006e53f7",
                     "ratio": 2.222
@@ -2365,12 +2233,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "b2132ec49f07887d10a57d586def61d5725116172db3cdfb66933c421ad19f0d",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "b2132ec49f07887d10a57d586def61d5725116172db3cdfb66933c421ad19f0d",
@@ -2464,12 +2326,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "5278a3997d2fbaa8faef7331c5ff61a2e89e1c5d88e5b622e7e27801223c91f0",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "5278a3997d2fbaa8faef7331c5ff61a2e89e1c5d88e5b622e7e27801223c91f0",
                     "ratio": 2.222
@@ -2573,12 +2429,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "036b2fccf8d35cd0c2f14cc5b018881b03da230a3784630405288b3dba7a2ada",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "036b2fccf8d35cd0c2f14cc5b018881b03da230a3784630405288b3dba7a2ada",
@@ -2672,12 +2522,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "7c8140633275d150cacea03becdd772dc6c089554ffb313d06cd6007016063af",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "7c8140633275d150cacea03becdd772dc6c089554ffb313d06cd6007016063af",
                     "ratio": 2.222
@@ -2781,12 +2625,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "27d89d4bdec6440017b6fff417cfca073db2bc467119eb70e296d5e2f78ad1db",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "27d89d4bdec6440017b6fff417cfca073db2bc467119eb70e296d5e2f78ad1db",
@@ -2880,12 +2718,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "41435a500a8b5fa1048cd124e9df3368e2db7ad9cbf9a8149b1da36a9b451654",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "41435a500a8b5fa1048cd124e9df3368e2db7ad9cbf9a8149b1da36a9b451654",
                     "ratio": 2.222
@@ -2989,12 +2821,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "62fec75bfb92be156711ebd2a29f0bfe91f0119707d44a73a35756b6a185ed89",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "62fec75bfb92be156711ebd2a29f0bfe91f0119707d44a73a35756b6a185ed89",
@@ -3088,12 +2914,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "71923bd1d1d7497e93f7727415b2a8c29b9b6bf2cb9d5a62c1f4664415227fd9",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "71923bd1d1d7497e93f7727415b2a8c29b9b6bf2cb9d5a62c1f4664415227fd9",
                     "ratio": 2.222
@@ -3197,12 +3017,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "38c3c0b7dab75342045a4362ec2be5f63d4304435d06f7c699b557e7681edc8f",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "38c3c0b7dab75342045a4362ec2be5f63d4304435d06f7c699b557e7681edc8f",
@@ -3296,12 +3110,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "817d2d3a50578d676d82934b5847246c5772010acd3c4cf4049e748543af6564",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "817d2d3a50578d676d82934b5847246c5772010acd3c4cf4049e748543af6564",
                     "ratio": 2.222
@@ -3405,12 +3213,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "d5dc4d8c04159fa8f9cec958cb09c648e2eb8b525b0c84b7c67518c7ca06907f",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "d5dc4d8c04159fa8f9cec958cb09c648e2eb8b525b0c84b7c67518c7ca06907f",
@@ -3504,12 +3306,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "915fbb81f812fffa6dcddc4d2db0f7f5d9f7c67c0facf64352fb6c035c7f0553",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "915fbb81f812fffa6dcddc4d2db0f7f5d9f7c67c0facf64352fb6c035c7f0553",
                     "ratio": 2.222
@@ -3613,12 +3409,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "daa349e06c04620632969d806ff4585916d7a0381d42ce5055d07db5ea881d94",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "daa349e06c04620632969d806ff4585916d7a0381d42ce5055d07db5ea881d94",
@@ -3712,12 +3502,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "4428dd2ec0b710c04e95d7c7132e5be12c352a65846cb58a66126e04bb064340",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "4428dd2ec0b710c04e95d7c7132e5be12c352a65846cb58a66126e04bb064340",
                     "ratio": 2.222
@@ -3821,12 +3605,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "6ddda3418a17a9144dae9665c5fd3af6fdf81e1837b08a4721ab400d20400172",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "6ddda3418a17a9144dae9665c5fd3af6fdf81e1837b08a4721ab400d20400172",
@@ -3920,12 +3698,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "d7baa2f92b280fec906b3e89d6fa4b6578c02f92602ee86d3e58125fd52cc80d",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "d7baa2f92b280fec906b3e89d6fa4b6578c02f92602ee86d3e58125fd52cc80d",
                     "ratio": 2.222
@@ -4029,12 +3801,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "f3f482e7febfb0f3123a31fba4d6c28878426feb1130fa59a44345b922be8d9e",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "f3f482e7febfb0f3123a31fba4d6c28878426feb1130fa59a44345b922be8d9e",
@@ -4128,12 +3894,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "307456c8a4b94c9fe2c9b418cbbbc6e3c13814a377291bd3ad963ed014d3725b",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "307456c8a4b94c9fe2c9b418cbbbc6e3c13814a377291bd3ad963ed014d3725b",
                     "ratio": 2.222
@@ -4237,12 +3997,6 @@
                     "ratio": 2
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "11ed19f559a9ca951cc1b605d0d6fb2c7137ebf3ef86aed95e2f10addc906686",
-                    "ratio": 2
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "11ed19f559a9ca951cc1b605d0d6fb2c7137ebf3ef86aed95e2f10addc906686",
@@ -4336,12 +4090,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "aabeceea0ddaa2c0131a68220ac0ab6913d11621ee96568b13a1a58f732d0735",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "aabeceea0ddaa2c0131a68220ac0ab6913d11621ee96568b13a1a58f732d0735",
                     "ratio": 2.222
@@ -4445,12 +4193,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "22e6d638e5752a1033958eb3775b35718821602f4155ff91a9c6690a1c252ce4",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "22e6d638e5752a1033958eb3775b35718821602f4155ff91a9c6690a1c252ce4",
@@ -4544,12 +4286,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "1c4dfc87dcb5a26ac71d5abbd72857f77c47daaf2171a719883908df6299a78f",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "1c4dfc87dcb5a26ac71d5abbd72857f77c47daaf2171a719883908df6299a78f",
                     "ratio": 2.222
@@ -4653,12 +4389,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "31c385868d2a14d2329763d955728daf280c852feb498221ceea405956acf846",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "31c385868d2a14d2329763d955728daf280c852feb498221ceea405956acf846",
@@ -4752,12 +4482,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "93139bea9c6dd1420bbfd0fd0ea55547ac0a3129dc2f85aa8ce749bee09c786f",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "93139bea9c6dd1420bbfd0fd0ea55547ac0a3129dc2f85aa8ce749bee09c786f",
                     "ratio": 2.222
@@ -4861,12 +4585,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "f72d91a08b38cd738b85032ae04d7a6b396330734ba71eef883390d357b37be2",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "f72d91a08b38cd738b85032ae04d7a6b396330734ba71eef883390d357b37be2",
@@ -4960,12 +4678,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "f25dd6c0404beec729a0b792192b5887430823466c11e6af67ddaa01451c5521",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "f25dd6c0404beec729a0b792192b5887430823466c11e6af67ddaa01451c5521",
                     "ratio": 2.222
@@ -5069,12 +4781,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "f37b0f5f74f8dbfa68fbe94669bf617368316f08d5ceadc6347eec685ceb295a",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "f37b0f5f74f8dbfa68fbe94669bf617368316f08d5ceadc6347eec685ceb295a",
@@ -5168,12 +4874,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "52d305f23b78c7e0c7b60036eaca4f68872e9cdd29fb07594692c40cea6855bc",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "52d305f23b78c7e0c7b60036eaca4f68872e9cdd29fb07594692c40cea6855bc",
                     "ratio": 2.222
@@ -5277,12 +4977,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "84de669dd5a5293e4289a790dbca256f02724312c8d97ad53e5f3ebef5d561e6",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "84de669dd5a5293e4289a790dbca256f02724312c8d97ad53e5f3ebef5d561e6",
@@ -5376,12 +5070,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "f86b87346e03006495c29931c19ddeba3ea41e216aff77485dabb34b752a353a",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "f86b87346e03006495c29931c19ddeba3ea41e216aff77485dabb34b752a353a",
                     "ratio": 2.222
@@ -5485,12 +5173,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "23735ebfc009e339f8943893b65a7eab29734fa1b34f9c80f3e5ce22283955df",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "23735ebfc009e339f8943893b65a7eab29734fa1b34f9c80f3e5ce22283955df",
@@ -5584,12 +5266,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "2fd1f6db2c21735493179069ddfd143440f1057d94da043acc061f6d29ffc32a",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "2fd1f6db2c21735493179069ddfd143440f1057d94da043acc061f6d29ffc32a",
                     "ratio": 2.222
@@ -5693,12 +5369,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "61d756a961b0892fd1fc6af3b93532b08a0010c158e9349326cfe3a01e1096cc",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "61d756a961b0892fd1fc6af3b93532b08a0010c158e9349326cfe3a01e1096cc",
@@ -5728,14 +5398,6 @@
             "phantom": {
                 "firefox": {
                     "hash": "087a4e5207e62165ad51804f1daf2eebbd06c54bd98bfa1917b9c57ba7265369",
-                    "ratio": 2.222
-                }
-            }
-        },
-        "intros--intro-retro": {
-            "retro": {
-                "firefox": {
-                    "hash": "afd7d61307ec9cdbb75a951abf2d79a3c5c8bc1729fa2d7715e2d5ed689a43ea",
                     "ratio": 2.222
                 }
             }
@@ -5824,12 +5486,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "fccff96e52841b06b7d25d08ab4133490fd314debbeaeb104551a217dd0b7454",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "fccff96e52841b06b7d25d08ab4133490fd314debbeaeb104551a217dd0b7454",
                     "ratio": 2.222
@@ -5933,12 +5589,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "d7d9cb84f8d61e76111cf33b92fbb1bb7db8ee84806c3ad3c33d7a3829cc0656",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "d7d9cb84f8d61e76111cf33b92fbb1bb7db8ee84806c3ad3c33d7a3829cc0656",
@@ -6032,12 +5682,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "b123bd0b961b17090bf3c833377c714bb64ab13f10ac777802896e704a7cf216",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "b123bd0b961b17090bf3c833377c714bb64ab13f10ac777802896e704a7cf216",
                     "ratio": 2.222
@@ -6141,12 +5785,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "fad7b4c54a1db74367cc29a05d87c93f58db672ffab6052c9b31c95f1e42d92d",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "fad7b4c54a1db74367cc29a05d87c93f58db672ffab6052c9b31c95f1e42d92d",
@@ -6240,12 +5878,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "98ab8a3eda25be0a93b519560c1723e7cfc94ff7eab269b2291f6e24cb644083",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "98ab8a3eda25be0a93b519560c1723e7cfc94ff7eab269b2291f6e24cb644083",
                     "ratio": 2.222
@@ -6349,12 +5981,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "07eb7ef4715fbc5c78e74ce663d5e7c1eb81823485debbe2e4ab322797386ba9",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "07eb7ef4715fbc5c78e74ce663d5e7c1eb81823485debbe2e4ab322797386ba9",
@@ -6448,12 +6074,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "62b9dc9aec73f6e10322ea46046918615c8d4e17c3e4dde9f124e4fbd28c188c",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "62b9dc9aec73f6e10322ea46046918615c8d4e17c3e4dde9f124e4fbd28c188c",
                     "ratio": 2.222
@@ -6557,12 +6177,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "c95d89a36b736538ac4736173b96230ad5158b4ebd916969cacc6ae290125c4c",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "c95d89a36b736538ac4736173b96230ad5158b4ebd916969cacc6ae290125c4c",
@@ -6656,12 +6270,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "002fb421124eb7448be7a791ac37745364f5b037a29af1c520006aa022e174e6",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "002fb421124eb7448be7a791ac37745364f5b037a29af1c520006aa022e174e6",
                     "ratio": 2.222
@@ -6765,12 +6373,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "8ebe7a5be43c48a9f0ccec58d46d45c902949cb7f44933cfac0bc4ed64771127",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "8ebe7a5be43c48a9f0ccec58d46d45c902949cb7f44933cfac0bc4ed64771127",
@@ -6864,12 +6466,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "a330dd1dd6aafa6aef81c72a710285a17d557d166c63b0fb9e45712f45ddb4ef",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "a330dd1dd6aafa6aef81c72a710285a17d557d166c63b0fb9e45712f45ddb4ef",
                     "ratio": 2.222
@@ -6973,12 +6569,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "ec190075e33f7f0f67a88b5c1221227cb559ed1c04ee91574aed856fb0e16818",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "ec190075e33f7f0f67a88b5c1221227cb559ed1c04ee91574aed856fb0e16818",
@@ -7072,12 +6662,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "ce9963061cbbc831086fac68d99ccb06a9484feb1443f87992c0158234bf79a1",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "ce9963061cbbc831086fac68d99ccb06a9484feb1443f87992c0158234bf79a1",
                     "ratio": 2.222
@@ -7181,12 +6765,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "34be7ec65ef6a48b04cc62d3a34b17d053ea0924831b5934355056560d960c74",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "34be7ec65ef6a48b04cc62d3a34b17d053ea0924831b5934355056560d960c74",
@@ -7280,12 +6858,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "02895ace0d3766628051d5a0f14567e76bd5a0b8cb44311ca3c25a2ddb1daaa9",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "02895ace0d3766628051d5a0f14567e76bd5a0b8cb44311ca3c25a2ddb1daaa9",
                     "ratio": 2.222
@@ -7389,12 +6961,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "2c1625c2cba5209557035b8a076f5ee09f192396606103562fa065dd6201bc84",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "2c1625c2cba5209557035b8a076f5ee09f192396606103562fa065dd6201bc84",
@@ -7488,12 +7054,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "9e93f1f709101a48fb11df4baf6e64318cd5baa0d1362003814bd05815180667",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "9e93f1f709101a48fb11df4baf6e64318cd5baa0d1362003814bd05815180667",
                     "ratio": 2.222
@@ -7597,12 +7157,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "a9f26d3972045006045f4e0256d84e261f3bb152e9d4412302dea30078718ef0",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "a9f26d3972045006045f4e0256d84e261f3bb152e9d4412302dea30078718ef0",
@@ -7696,12 +7250,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "d5fb87dc7ed9e1741c0b88a66ec75d2e89a50f21abbffd0c48b4c2d9b2ecf354",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "d5fb87dc7ed9e1741c0b88a66ec75d2e89a50f21abbffd0c48b4c2d9b2ecf354",
                     "ratio": 2.222
@@ -7805,12 +7353,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "80cf60a276afbca076ad3d033c932adc71fcf756bed0578696c9210cebb5edfd",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "80cf60a276afbca076ad3d033c932adc71fcf756bed0578696c9210cebb5edfd",
@@ -7904,12 +7446,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "8cf25fbcff4e137733ba43a53a4e7e26c10ef815b14c9b6d9be8f4b905c223d6",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "8cf25fbcff4e137733ba43a53a4e7e26c10ef815b14c9b6d9be8f4b905c223d6",
                     "ratio": 2.222
@@ -8013,12 +7549,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "5d027495cff3e8047ddf605e14571edeb92c308454c40f09a8b0dbffbab68606",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "5d027495cff3e8047ddf605e14571edeb92c308454c40f09a8b0dbffbab68606",
@@ -8112,12 +7642,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "351103692e142254932d0d56d64d6301b3b15f42bd526e894d3d8fb383060054",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "351103692e142254932d0d56d64d6301b3b15f42bd526e894d3d8fb383060054",
                     "ratio": 2.222
@@ -8221,12 +7745,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "23faf2306fe5b2c39fde8f692ef5511c58db4530c3f278b60aa0b0a94fccc603",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "23faf2306fe5b2c39fde8f692ef5511c58db4530c3f278b60aa0b0a94fccc603",
@@ -8320,12 +7838,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "bbe795cdd932f25adef29abce899a79268bd55bce9ca56c1da98ffcd80f868eb",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "bbe795cdd932f25adef29abce899a79268bd55bce9ca56c1da98ffcd80f868eb",
                     "ratio": 2.222
@@ -8429,12 +7941,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "7cb15e1c8129bcd59fbdaf79de2b5bc5e0c41342927253e222c5cb84215edbfb",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "7cb15e1c8129bcd59fbdaf79de2b5bc5e0c41342927253e222c5cb84215edbfb",
@@ -8528,12 +8034,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "65f6e19e34c12be83bd9a5abc4c9229c705c15aef0ebd0cf1a453c4bb6791b29",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "65f6e19e34c12be83bd9a5abc4c9229c705c15aef0ebd0cf1a453c4bb6791b29",
                     "ratio": 2.222
@@ -8637,12 +8137,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "933a3ab8cc3b733d0350a8b10c0a23c97e7abe0b1bc8b53de19f2562b733dbb7",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "933a3ab8cc3b733d0350a8b10c0a23c97e7abe0b1bc8b53de19f2562b733dbb7",
@@ -8736,12 +8230,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "9200de4d4cef83028554e5e8106e9c4307cd79d788ab1f0263f9b78d53542512",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "9200de4d4cef83028554e5e8106e9c4307cd79d788ab1f0263f9b78d53542512",
                     "ratio": 2.222
@@ -8845,12 +8333,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "b4282fd438c67d4a11432550deb0925e73f64f50c5fffce73841a8975d0ae1e5",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "b4282fd438c67d4a11432550deb0925e73f64f50c5fffce73841a8975d0ae1e5",
@@ -8944,12 +8426,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "12213cf8abea347f79bfc1b71ebc79d5a5635a32279368fe365db05fe3ef9bc6",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "12213cf8abea347f79bfc1b71ebc79d5a5635a32279368fe365db05fe3ef9bc6",
                     "ratio": 2.222
@@ -9053,12 +8529,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "a230f07af3876c0df965fed57d710c8c401d5798b7c1b6f7a67498bf9e63a371",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "a230f07af3876c0df965fed57d710c8c401d5798b7c1b6f7a67498bf9e63a371",
@@ -9152,12 +8622,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "e66af35b3e6a5f6c29df10933fb9c67d8c419ceb90e152d1f0f092f963eb85a0",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "e66af35b3e6a5f6c29df10933fb9c67d8c419ceb90e152d1f0f092f963eb85a0",
                     "ratio": 2.222
@@ -9261,12 +8725,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "357314314559c90574fa7341bfb5496cd724a3bcbdf8a4ca3d31f4ece4f77700",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "357314314559c90574fa7341bfb5496cd724a3bcbdf8a4ca3d31f4ece4f77700",
@@ -9360,12 +8818,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "83ccd3239ac5f9d66c0e3b67bc665e95362123f5442d737b477f896016540c3a",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "83ccd3239ac5f9d66c0e3b67bc665e95362123f5442d737b477f896016540c3a",
                     "ratio": 2.222
@@ -9469,12 +8921,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "b50634a6441ca8058f99739e671e8a5ecf1222a28ecec5e4092789795cdac6e5",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "b50634a6441ca8058f99739e671e8a5ecf1222a28ecec5e4092789795cdac6e5",
@@ -9568,12 +9014,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "bfc06801084fdc4c7113b368c1f7e186f1fba37f3f1db34a7b209f7f7d48fa1c",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "bfc06801084fdc4c7113b368c1f7e186f1fba37f3f1db34a7b209f7f7d48fa1c",
                     "ratio": 2.222
@@ -9677,12 +9117,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "9827ff3f24749d32c460f6e005dedb5c439a7fa4913abab79e5e19636a7b9eaa",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "9827ff3f24749d32c460f6e005dedb5c439a7fa4913abab79e5e19636a7b9eaa",
@@ -9776,12 +9210,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "0bac834f277e5cbe085834c5e90ec637a489af904eda2e7c0ff58f9ed6ee98b4",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "0bac834f277e5cbe085834c5e90ec637a489af904eda2e7c0ff58f9ed6ee98b4",
                     "ratio": 2.222
@@ -9885,12 +9313,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "43930ea62c432f7be2cad96a234f42196fa29457c861d44f1f8535dd51a45624",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "43930ea62c432f7be2cad96a234f42196fa29457c861d44f1f8535dd51a45624",
@@ -9984,12 +9406,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "d635c198cd723865c9fb4bffb7f809c2de7708e653b9863fba6dacb35dcef585",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "d635c198cd723865c9fb4bffb7f809c2de7708e653b9863fba6dacb35dcef585",
                     "ratio": 2.222
@@ -10093,12 +9509,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "e4bb6bb73497df046f6140551e2cbd0dbda929cd723e372d14f71fc16ff0bcd4",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "e4bb6bb73497df046f6140551e2cbd0dbda929cd723e372d14f71fc16ff0bcd4",
@@ -10192,12 +9602,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "5306df9daa2b2cc4876df08416fa4e782d60aa38e32d7d3c9a8b120d93e42a56",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "5306df9daa2b2cc4876df08416fa4e782d60aa38e32d7d3c9a8b120d93e42a56",
                     "ratio": 2.222
@@ -10301,12 +9705,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "041e854aef212d06e9397841a09139fcda77be4078d4548ddef447146804c132",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "041e854aef212d06e9397841a09139fcda77be4078d4548ddef447146804c132",
@@ -10400,12 +9798,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "9878f1324fb452746159fd24c0a4b394b675aa461214da2eff5ce3a60d0cb012",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "9878f1324fb452746159fd24c0a4b394b675aa461214da2eff5ce3a60d0cb012",
                     "ratio": 2.222
@@ -10509,12 +9901,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "acc4383602042b8f1ed8c5324e11de7f0de8caca05e108e80856954e159e00c3",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "acc4383602042b8f1ed8c5324e11de7f0de8caca05e108e80856954e159e00c3",
@@ -10608,12 +9994,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "e7d2955a8ae3170c1e9885e18e30444cd47617244b5dcae6582edb8559b2de16",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "e7d2955a8ae3170c1e9885e18e30444cd47617244b5dcae6582edb8559b2de16",
                     "ratio": 2.222
@@ -10717,12 +10097,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "6be0e451c4ba9c33daac8e7214d35311ab412867a1b016424b0077120cb0cde0",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "6be0e451c4ba9c33daac8e7214d35311ab412867a1b016424b0077120cb0cde0",
@@ -10816,12 +10190,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "8d2aaf62143915b605cf575e01f91396a09f6e9f9389d28cfc0a5fa895bce1ed",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "8d2aaf62143915b605cf575e01f91396a09f6e9f9389d28cfc0a5fa895bce1ed",
                     "ratio": 2.222
@@ -10925,12 +10293,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "f56687ae57f40b557610f5555e66ef23557d927463e24905580c1df2ae9ce56c",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "f56687ae57f40b557610f5555e66ef23557d927463e24905580c1df2ae9ce56c",
@@ -11024,12 +10386,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "43937986411216e7149c14395af189696ffe95e2749d26678ddbb36852f210df",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "43937986411216e7149c14395af189696ffe95e2749d26678ddbb36852f210df",
                     "ratio": 2.222
@@ -11133,12 +10489,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "d75cc9fbba2b2700b9f68750b3ea1cafa8b985309b81c7c352b0ee11406b0d89",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "d75cc9fbba2b2700b9f68750b3ea1cafa8b985309b81c7c352b0ee11406b0d89",
@@ -11232,12 +10582,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "3356302d9867bd400beb27ad55213d7165416622e6220e7e2db729c9cde2241a",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "3356302d9867bd400beb27ad55213d7165416622e6220e7e2db729c9cde2241a",
                     "ratio": 2.222
@@ -11341,12 +10685,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "1efbaa3ade0e762d43d95253874b3ec2f8c5cf357a20f4d94acfbed72da6dc8d",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "1efbaa3ade0e762d43d95253874b3ec2f8c5cf357a20f4d94acfbed72da6dc8d",
@@ -11440,12 +10778,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "6464d2a72125a3b2d457fe1372ef7a8fc4a579f0ed622f47ed0411f3c23e5a6a",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "6464d2a72125a3b2d457fe1372ef7a8fc4a579f0ed622f47ed0411f3c23e5a6a",
                     "ratio": 2.222
@@ -11549,12 +10881,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "96213ae97a9a385f6070702e1257c2f6f4f0c7d7a9359708b8651acffb8c4ded",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "96213ae97a9a385f6070702e1257c2f6f4f0c7d7a9359708b8651acffb8c4ded",
@@ -11648,12 +10974,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "7b19a70a147eea645d76c5dcaa3edb4e1b52924fc51f4c9538abdbfcf417c6dd",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "7b19a70a147eea645d76c5dcaa3edb4e1b52924fc51f4c9538abdbfcf417c6dd",
                     "ratio": 2.222
@@ -11757,12 +11077,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "ac005cbe4c113acff41d3f5f7579322ae181863deca908ff2ad4b96f4bf00108",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "ac005cbe4c113acff41d3f5f7579322ae181863deca908ff2ad4b96f4bf00108",
@@ -11856,12 +11170,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "1f8fdb8f12a898dbe89042dd8511578cb9b8015e3df2734593235d71796f3b09",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "1f8fdb8f12a898dbe89042dd8511578cb9b8015e3df2734593235d71796f3b09",
                     "ratio": 2.222
@@ -11965,12 +11273,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "8fd3756ec72eed022f5e83f8bc6ca02cb2064ac858ccdd98eb2f7dc7fed8ddc5",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "8fd3756ec72eed022f5e83f8bc6ca02cb2064ac858ccdd98eb2f7dc7fed8ddc5",
@@ -12064,12 +11366,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "c8182c2d84ea6d0604d78335f663521d3fea2f916396d1a0dc38f69d15560db9",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "c8182c2d84ea6d0604d78335f663521d3fea2f916396d1a0dc38f69d15560db9",
                     "ratio": 2.222
@@ -12173,12 +11469,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "58f8f9914151571d7e4f071e636bf8af62a27accf70cd71bbf18175d13b89640",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "58f8f9914151571d7e4f071e636bf8af62a27accf70cd71bbf18175d13b89640",
@@ -12272,12 +11562,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "ef797e2711ff78191548d5f947a7b8f22a5813a146477f260fc94ffd0716043f",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "ef797e2711ff78191548d5f947a7b8f22a5813a146477f260fc94ffd0716043f",
                     "ratio": 2.222
@@ -12381,12 +11665,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "ef972d97eaa6a7b88a397559fc8bdefd9695941a190b0acc8904e6720628b7a0",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "ef972d97eaa6a7b88a397559fc8bdefd9695941a190b0acc8904e6720628b7a0",
@@ -12480,12 +11758,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "845215128e78cfe680a7874040c6ef061ad40ba1632991e657ce1248fa68b7ef",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "845215128e78cfe680a7874040c6ef061ad40ba1632991e657ce1248fa68b7ef",
                     "ratio": 2.222
@@ -12589,12 +11861,6 @@
                     "ratio": 2
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "04563b18da03b1cfb99bfa88bd90ff3099ee56d1cdaa889272cf6a03376c3a1e",
-                    "ratio": 2
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "04563b18da03b1cfb99bfa88bd90ff3099ee56d1cdaa889272cf6a03376c3a1e",
@@ -12688,12 +11954,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "a774babc47aceb7d5142c754b329ceb9393680626659e2d18e8a32d95d21fe1f",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "a774babc47aceb7d5142c754b329ceb9393680626659e2d18e8a32d95d21fe1f",
                     "ratio": 2.222
@@ -12797,12 +12057,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "b44782388decc84374f87cf87ff88196ca09fc10412cf929a90559dbb6c29b61",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "b44782388decc84374f87cf87ff88196ca09fc10412cf929a90559dbb6c29b61",
@@ -12896,12 +12150,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "39432f6c9af98303daf602c3c62f3c15e930f1ca0b09974d107b2aecda936cf4",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "39432f6c9af98303daf602c3c62f3c15e930f1ca0b09974d107b2aecda936cf4",
                     "ratio": 2.222
@@ -13005,12 +12253,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "861e6727d05f785976f66bbb0de04fa36065c54217b26f6edafd6adf8b863b76",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "861e6727d05f785976f66bbb0de04fa36065c54217b26f6edafd6adf8b863b76",
@@ -13104,12 +12346,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "a13bc38d369eb55f65bd1ca78ead29c01746cc46d55048d7c3ea602791f9c643",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "a13bc38d369eb55f65bd1ca78ead29c01746cc46d55048d7c3ea602791f9c643",
                     "ratio": 2.222
@@ -13213,12 +12449,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "bb6d95d447d0e50e6d9e8dccb697e95a5045d5dc65737b41d2939aaf151d58bd",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "bb6d95d447d0e50e6d9e8dccb697e95a5045d5dc65737b41d2939aaf151d58bd",
@@ -13312,12 +12542,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "1e51d0d9f636921f7f92cdfe6a22800e876aa93660262523a1d45cdc712be17b",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "1e51d0d9f636921f7f92cdfe6a22800e876aa93660262523a1d45cdc712be17b",
                     "ratio": 2.222
@@ -13421,12 +12645,6 @@
                     "ratio": 2
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "fe4a3623a52bc2d54d1e1d50463af1fc170d7134bac9e19c0b4110cc8e16391f",
-                    "ratio": 2
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "fe4a3623a52bc2d54d1e1d50463af1fc170d7134bac9e19c0b4110cc8e16391f",
@@ -13520,12 +12738,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "7157df5c8d4bb7d9857f976b2dacbb4ea9435ab5102805ac7dde53075b6ccdf3",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "7157df5c8d4bb7d9857f976b2dacbb4ea9435ab5102805ac7dde53075b6ccdf3",
                     "ratio": 2.222
@@ -13629,12 +12841,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "905213328971332f91a1f688be9cec63cf5044e0a8a61262a033e2d4ead4db77",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "905213328971332f91a1f688be9cec63cf5044e0a8a61262a033e2d4ead4db77",
@@ -13728,12 +12934,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "d2226f5b2c461c0bd1f5eab04f87683a0bd75cacff54b34a8877ee49b7b06bb0",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "d2226f5b2c461c0bd1f5eab04f87683a0bd75cacff54b34a8877ee49b7b06bb0",
                     "ratio": 2.222
@@ -13837,12 +13037,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "cc43be9febe6961b5e648c380e229112253035071e3d1e7f43920ddafe848277",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "cc43be9febe6961b5e648c380e229112253035071e3d1e7f43920ddafe848277",
@@ -13936,12 +13130,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "77a661c43a05a44efa7faff4fabd2e67c7cc2c67c9f3ad3668dae8ce3eaa3014",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "77a661c43a05a44efa7faff4fabd2e67c7cc2c67c9f3ad3668dae8ce3eaa3014",
                     "ratio": 2.222
@@ -14045,12 +13233,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "aeedf37d17662bbd607b7827144fc92f2545e6906984d93f3ab73c980bff5a9a",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "aeedf37d17662bbd607b7827144fc92f2545e6906984d93f3ab73c980bff5a9a",
@@ -14144,12 +13326,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "b49a28ab4f08b95c234793be07abffa988d7127d56cefe543b62d567bf0d8d4d",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "b49a28ab4f08b95c234793be07abffa988d7127d56cefe543b62d567bf0d8d4d",
                     "ratio": 2.222
@@ -14253,12 +13429,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "2b01d758032a066f2dedeaaefaead6eaffcaa3c9a94ab419568c465ab64b5978",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "2b01d758032a066f2dedeaaefaead6eaffcaa3c9a94ab419568c465ab64b5978",
@@ -14352,12 +13522,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "2025697a412bb6d33eb22ea0775ebbe7f74fdfa061a891bd936553025af9b4af",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "2025697a412bb6d33eb22ea0775ebbe7f74fdfa061a891bd936553025af9b4af",
                     "ratio": 2.222
@@ -14461,12 +13625,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "d60168ed4992482a488953f2c8c8f38f02f2786fe77aa30ddefe57b779fe7a34",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "d60168ed4992482a488953f2c8c8f38f02f2786fe77aa30ddefe57b779fe7a34",
@@ -14565,12 +13723,6 @@
                     "ratio": 2.222
                 }
             },
-            "retro": {
-                "firefox": {
-                    "hash": "e64f926ce56cebd7b71036b152aac710bfe78ad7fcfb82cb0e60b6a95333e7b9",
-                    "ratio": 2.222
-                }
-            },
             "solstice": {
                 "firefox": {
                     "hash": "e64f926ce56cebd7b71036b152aac710bfe78ad7fcfb82cb0e60b6a95333e7b9",
@@ -14664,12 +13816,6 @@
                 }
             },
             "phantom": {
-                "firefox": {
-                    "hash": "a5d84d8aebb321aaac438c626daede5ba31540303f8438fb20b36fc45a9b609a",
-                    "ratio": 2.222
-                }
-            },
-            "retro": {
                 "firefox": {
                     "hash": "a5d84d8aebb321aaac438c626daede5ba31540303f8438fb20b36fc45a9b609a",
                     "ratio": 2.222

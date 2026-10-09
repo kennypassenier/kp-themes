@@ -5,37 +5,38 @@ a consumer does about it. A minor release that needs no action has no
 section. The break into v1 itself, the five numbered sections, is at the
 end.
 
-## Coming from 9.x to the next major release: five themes are gone
+## Coming from 9.x to the next major release: six themes are gone
 
 `lapis`, `shade-light` and `shade-dark` are no longer in the package
-(Kenny, 2026-10-06), and neither are `high-contrast` and `sepia` (Kenny,
-2026-10-08). Seventeen themes remain. What a consumer notices:
+(Kenny, 2026-10-06), neither are `high-contrast` and `sepia` (Kenny,
+2026-10-08), and neither is `retro` (Kenny, 2026-10-09). Sixteen themes
+remain. What a consumer notices:
 
 - **A stored or written name falls back.** `applyTheme('lapis')`, a
-  `data-theme="shade-dark"` in markup or one of the five names in
+  `data-theme="shade-dark"` in markup or one of the six names in
   localStorage now resolves to `DEFAULT_THEME` (`formal`), says so once in
   the console and fires the unknown-theme event, as any other unknown name
   does. The stored preference is left as it is; replace it in your own
   code if you want a different landing theme for those users. The nearest
-  of the seventeen: `dark` or `titanium` for Lapis and Shade (dark),
+  of the sixteen: `dark` or `titanium` for Lapis and Shade (dark),
   `light` for Shade (light) and Sepia, `formal` or `light` for High
-  contrast.
-- **TypeScript:** `ThemeName` (and `Theme`) no longer includes the five
+  contrast and Retro.
+- **TypeScript:** `ThemeName` (and `Theme`) no longer includes the six
   names, so code that names one of them is now a compile error.
 - **Imports that no longer resolve:** `@kp-soft/themes/css/lapis-register`,
   `.../css/shade-light-register`, `.../css/shade-dark-register`,
-  `.../css/high-contrast-register`, `.../css/sepia-register` and their
-  `/min` variants, and the five token files under themes/. Remove those imports; the bundle (`dist/kp-themes.css`)
+  `.../css/high-contrast-register`, `.../css/sepia-register`,
+  `.../css/retro-register` and their `/min` variants, and the six token files under themes/. Remove those imports; the bundle (`dist/kp-themes.css`)
   simply no longer carries them.
 - **Fonts:** the folders for Source Sans 3 (shipped as `KP Shade Sans`),
-  Source Serif 4, Vazirmatn, Markazi Text and Atkinson Hyperlegible are gone from fonts/, and `css/fonts.css`
+  Source Serif 4, Vazirmatn, Markazi Text, Atkinson Hyperlegible and Pixelify Sans are gone from fonts/, and `css/fonts.css`
   no longer declares them. A page that names one of those families in its
   own CSS falls back to its next family.
-- **A vendored `css/themes.css`** (Almanac, kyu) keeps the five blocks
+- **A vendored `css/themes.css`** (Almanac, kyu) keeps the six blocks
   until it is copied again; nothing breaks, it is only dead weight.
 - **The split theme repositories** (kp-themes-windows, -linux, -vscode,
   -ha, -jellyfin, -tui) are pinned to an earlier `tokens.tar` by checksum
-  and keep their copies of the five until they move to the new tarball.
+  and keep their copies of the six until they move to the new tarball.
 
 ## Coming from 8.x to 9.0.0: the progress bar is `.kp-progressbar`
 

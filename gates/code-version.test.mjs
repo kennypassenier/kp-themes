@@ -61,16 +61,16 @@ test('a CSS line lands with the family its innermost rule names, and a comment l
 test('the digests are there: a base, one per theme, one per rule and per module, and no loader [scope-116, scope-137]', () => {
     const version = codeVersion();
     assert.match(version.base, /^[0-9a-f]{16}$/);
-    assert.equal(Object.keys(version.themes).length, 17);
-    assert.equal(new Set(Object.values(version.themes)).size, 17, 'two themes do not share a digest');
+    assert.equal(Object.keys(version.themes).length, 16);
+    assert.equal(new Set(Object.values(version.themes)).size, 16, 'two themes do not share a digest');
     // One bucket per rule, keyed theme || condition || the compound the
     // selector ends on [scope-137]. The button has one in the shared sheets
     // and one in every register.
     assert.match(version.rules['||||.kp-button'], /^[0-9a-f]{16}$/);
     assert.equal(
         Object.keys(version.rules).filter((key) => key.endsWith('||||.kp-button')).length,
-        18,
-        'the shared sheets and all 17 registers style the button',
+        17,
+        'the shared sheets and all 16 registers style the button',
     );
     assert.match(version.modules['js/datatable.js'].digest, /^[0-9a-f]{16}$/);
     assert.equal(version.modules['js/datatable.js'].when, '[data-kp-datatable]');

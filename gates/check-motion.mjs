@@ -121,7 +121,7 @@ const CSS = stylesheets('motion').map((file) => `../${file}`);
 /** @type {Record<string, string>} */
 const OUT_OF_SCOPE = {
     // The phantom register [PH1]: the loader's bar and its shove out, both
-    // transforms; the retro register [RT1]: the selection bar and the
+    // transforms; the removed Retro register [RT1]: the selection bar and the
     // redaction brush, both clip-paths; the terminal register [TM1]: the
     // sweep band; the brutalism register [BR1]: the slam and the marquee.
     'kp-bar-run': 'a horizontal scale on a 3px bar, once; no luminance change and nothing over 341x256 px',
@@ -356,12 +356,6 @@ const OUT_OF_SCOPE = {
         "a registered number driving the heights of the spinner's five bars over 2400 ms a loop; the bars keep their colours, only their heights change, under 341x256 px",
     'kp-sig-dark-meter-lay': "a mask revealing a meter's share from its start once; the share keeps its colour, under 341x256 px",
     'kp-sig-cyberpunk-meter-slip-o': "a meter's share landing with a few px sideways jumps and offset ghosts once; a transform, under 341x256 px",
-    'kp-sig-retro-meter-knock-d': 'a meter knocked up 3px and back once as it turns to the destructive tone; a transform, under 341x256 px',
-    'kp-sig-retro-meter-knock-o': 'a meter knocked up 3px and back once as its tone clears; a transform, under 341x256 px',
-    'kp-sig-retro-meter-knock-w': 'a meter knocked up 3px and back once as it turns to the warning tone; a transform, under 341x256 px',
-    'kp-sig-retro-meter-shake':
-        'two lamps sliding in from both ends of a loading meter and apart again; they keep their colours, only their position moves',
-    'kp-sig-retro-meter-wipe-o': "a clip-path wipe revealing a meter's share once; the share keeps its colour, under 341x256 px",
     'kp-sig-grotesk-meter-grow-o': "a meter's share scaling in from its start once; a transform, under 341x256 px",
     // Information that updates in place [research/update-motion, 2026-10-05].
     'kp-sig-cyberpunk-update-stutter':

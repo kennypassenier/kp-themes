@@ -4,9 +4,8 @@
 // Save changes and Delete account showed no hover, because their hover ground
 // was their border colour, which is their fill. light-indigo "Ook daar weg",
 // and on navigation#app-shell "blauw moet uit navbar": no indigo left in a
-// navigation in light. retro-scrollbars "Tooltips zonder scrollbalk". Retro's
-// pressed destructive button, dark red on dark red. Retro's call to action,
-// which still stepped with padding when pressed. cta-plates "Gelijktrekken":
+// navigation in light. retro-scrollbars, retro's pressed destructive button and retro's call
+// to action (retro removed 2026-10-09, their tests went with it). cta-plates "Gelijktrekken":
 // room between a call to action's words and its plate. Each is a measured
 // property here, never a picture (scope-32, scope-73).
 //
@@ -305,117 +304,6 @@ test.describe(
             const hover = await read();
             expect(contrast(rgb(hover.ink), rgb(hover.ground)), 'hover').toBeGreaterThanOrEqual(4.5);
             expect(distance(rgb(hover.ground), rgb(rest.ground)), 'the pill fills under the pointer').toBeGreaterThan(20);
-        });
-    },
-);
-
-/* ───────────────────────────── 3 · retro: tooltips draw no scrollbar */
-
-test.describe('retro: a tooltip draws no scrollbar [overlays#tooltip]', { tag: ['@theme:retro', '@component:overlays'] }, () => {
-    test('the tooltips wear no drawn bar and take no room for one, while the menu beside them keeps its bar', async ({ page }) => {
-        // Before: both open tooltips painted the 1995 bar (35 gradient layers)
-        // with 26px of end padding against 8px at the start, 18px of it for the bar.
-        await open(page, '/catalogue/overlays.html', 'retro');
-        const read = (/** @type {string} */ selector) =>
-            page.locator(selector).evaluateAll((els) =>
-                els
-                    .filter((el) => /** @type {HTMLElement} */ (el).offsetParent !== null)
-                    .map((el) => {
-                        const s = getComputedStyle(el);
-                        return {
-                            layers: (s.backgroundImage.match(/linear-gradient\(/g) ?? []).length,
-                            end: s.paddingInlineEnd,
-                            start: s.paddingInlineStart,
-                        };
-                    }),
-            );
-        const tips = await read('#tooltip .cat-stage .kp-tooltip');
-        expect(tips.length).toBeGreaterThanOrEqual(2);
-        for (const tip of tips) {
-            expect(tip.layers, 'drawn scrollbar layers on a tooltip').toBe(0);
-            expect(tip.end, "the tooltip's end padding is its start padding").toBe(tip.start);
-        }
-        const menus = await read('#menu .cat-stage .kp-popover');
-        expect(menus.length).toBeGreaterThan(0);
-        for (const menu of menus) expect(menu.layers, 'a menu keeps its bar').toBeGreaterThanOrEqual(30);
-    });
-});
-
-/* ───────────────────────────── 4 · retro: the pressed destructive button reads */
-
-test.describe('retro: a pressed destructive button stays readable [button#variants]', { tag: ['@theme:retro', '@component:button'] }, () => {
-    test('held down, the dark-red label reads at 4.5:1 on the face drawn behind it', async ({ page }) => {
-        // Before: rgb(128, 0, 0) on the pressed face rgb(82, 7, 4), 1.38:1, on all three (Delete account, Delete, Discard).
-        await open(page, '/catalogue/button.html', 'retro');
-        const buttons = page.locator('.cat-stage .kp-button--destructive:not(:disabled)');
-        const faults = [];
-        for (let i = 0; i < (await buttons.count()); i++) {
-            const button = buttons.nth(i);
-            if (!(await button.isVisible())) continue;
-            await button.scrollIntoViewIfNeeded();
-            const box = await button.boundingBox();
-            if (!box) continue;
-            await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-            await page.mouse.down();
-            const read = await button.evaluate((el) => {
-                const w = /** @type {any} */ (window);
-                const s = getComputedStyle(el);
-                // The face is repainted by ::before; the control's own ground is clipped to its glyphs.
-                const face = getComputedStyle(el, '::before');
-                const ground = face.content !== 'none' ? w.kpRgba(face.backgroundColor) : w.kpRgba(s.backgroundColor);
-                return { label: (el.textContent ?? '').trim(), ink: w.kpRgba(s.color), ground };
-            });
-            await page.mouse.up();
-            await page.mouse.move(0, 0);
-            const ratio = contrast(rgb(read.ink), rgb(read.ground));
-            if (ratio < 4.5) faults.push(`${read.label}: ${ratio.toFixed(2)}:1 pressed`);
-        }
-        expect(faults).toEqual([]);
-    });
-});
-
-/* ───────────────────────────── 5 · retro: the call to action presses in paint */
-
-test.describe(
-    'retro: pressing the call to action moves its words, not the bar [page-effects#nav-cta]',
-    { tag: ['@theme:retro', '@component:navigation'] },
-    () => {
-        test('held down, the link and every neighbour keep their boxes, the label steps 1px, and the padding is the rest padding', async ({
-            page,
-        }) => {
-            // Before: padding 9px 13.4px 7px 15.4px pressed against 8px 14.4px at
-            // rest, translate "none".
-            await open(page, '/catalogue/page-effects.html', 'retro');
-            const cta = page.locator('#nav-cta .kp-nav__link--cta').first();
-            await cta.scrollIntoViewIfNeeded();
-            const read = () =>
-                cta.evaluate((el) => {
-                    const self = /** @type {HTMLElement} */ (el);
-                    const s = getComputedStyle(self);
-                    const bar = /** @type {HTMLElement} */ (self.closest('.kp-nav'));
-                    return {
-                        padding: s.padding,
-                        translate: s.translate,
-                        boxes: [
-                            `self ${self.offsetLeft},${self.offsetTop},${self.offsetWidth},${self.offsetHeight}`,
-                            ...[...bar.querySelectorAll('.kp-nav__brand, .kp-nav__link:not(.kp-nav__link--cta)')].map((n) => {
-                                const r = n.getBoundingClientRect();
-                                return `${n.textContent?.trim()} ${r.x.toFixed(2)},${r.y.toFixed(2)},${r.width.toFixed(2)},${r.height.toFixed(2)}`;
-                            }),
-                            `bar ${bar.getBoundingClientRect().height.toFixed(2)}`,
-                        ],
-                    };
-                });
-            const rest = await read();
-            const box = /** @type {{ x: number, y: number, width: number, height: number }} */ (await cta.boundingBox());
-            await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-            await page.mouse.down();
-            const pressed = await read();
-            await page.mouse.up();
-            await page.mouse.move(0, 0);
-            expect(pressed.boxes).toEqual(rest.boxes);
-            expect(pressed.padding, 'no padding moves on press').toBe(rest.padding);
-            expect(pressed.translate, 'the label steps a pixel down and right').toBe('1px 1px');
         });
     },
 );

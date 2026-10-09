@@ -246,18 +246,6 @@
         }
     }
 
-    /* retro: shrunk away in four pixel steps. */
-    [data-theme='retro'] [data-kp-leaving] {
-        animation: lv-retro-shrink 280ms steps(4, jump-end) forwards;
-    }
-
-    @keyframes lv-retro-shrink {
-        to {
-            transform: scale(0.1);
-            opacity: 0;
-        }
-    }
-
     /* grotesk: cut out from the left in three hard cuts. */
     [data-theme='grotesk'] [data-kp-leaving] {
         animation: lv-grotesk-cut 240ms steps(3, jump-end) forwards;
