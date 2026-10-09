@@ -8,7 +8,7 @@
         "js/calendar.js": { "digest": "5e956b78f9703ab8", "when": "[data-kp-calendar]" },
         "js/chart.js": { "digest": "5e1dc696e49ade31", "when": "[data-kp-chart]" },
         "js/colorpicker.js": { "digest": "6792f52017de9605", "when": "[data-kp-colorpicker]" },
-        "js/combobox.js": { "digest": "1fcdc5f4d5c06d96", "when": "[data-kp-combobox], select" },
+        "js/combobox.js": { "digest": "461a37f04e8c4498", "when": "[data-kp-combobox], select" },
         "js/components.js": {
             "digest": "81975bb4c92dc2c7",
             "when": "[data-kp-contract-error], [data-kp-destructive], [data-kp-semantic], [data-kp-confirm], .kp-skip-link, [data-kp-skip], [data-kp-to-top], [data-kp-nav-toggle], .kp-nav-wrap--sticky, .kp-nav"
@@ -21,9 +21,9 @@
         "js/gridlayout.js": { "digest": "13ceeb82c7b8c760", "when": "[data-kp-grid]" },
         "js/kpi.js": { "digest": "303b7fb0c6477d3f", "when": "svg[data-kp-spark], button.kp-kpi--toggle, .kp-kpis[data-kp-kpis-columns]" },
         "js/log.js": { "digest": "3fc853eb5c0c4dfa", "when": "[data-kp-source]" },
-        "js/menu-button.js": { "digest": "973fe2e4cff074e8", "when": "[data-kp-menu-button]" },
+        "js/menu-button.js": { "digest": "e94d4736181db117", "when": "[data-kp-menu-button]" },
         "js/motion.js": {
-            "digest": "bfb2ffb60a66af72",
+            "digest": "79682ca8013b4065",
             "when": "dialog.kp-dialog, .kp-accordion__item, .kp-tabs, .kp-datatable, .kp-toasts, .kp-upload__list, .kp-combobox__list, .kp-tree, .kp-wizard, .kp-field, [data-kp-size-motion]"
         },
         "js/palette.js": { "digest": "d3da386b0c1b5c72", "when": "[data-kp-palette], [data-kp-shortcuts]" },
@@ -5677,7 +5677,7 @@
             ]
         },
         "combobox": {
-            "modules": "58fda77c0d684111",
+            "modules": "bae7c9140a9dc40d",
             "families": [
                 "data-kp-arrive",
                 "data-kp-arriving",
@@ -6002,7 +6002,7 @@
             ]
         },
         "datepicker": {
-            "modules": "0e5f17f0b6631365",
+            "modules": "ccb4273864320f5c",
             "families": [
                 "data-kp-align",
                 "data-kp-close-on-select",
@@ -6103,7 +6103,7 @@
             ]
         },
         "field": {
-            "modules": "00e535d81b7ff097",
+            "modules": "5f12031d0b62f3d6",
             "families": [
                 "data-kp-arrive",
                 "data-kp-arriving",

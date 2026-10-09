@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- **Fixed: menus placed under their button in every theme, and a capped arrival queue** [2026-10-09]. `js/top-layer.js` `layoutRect()` measures a
+  box without its growth translate, so the menu button's menu, the drawn select and the date picker open at their trigger even when a theme grows
+  them from its edge (forest opened them about one menu height too low); `js/motion.js` `inTurnGap()` caps a row of three or more items arriving or
+  leaving one by one at about 600 ms in all.
 - **Changed: forest, straightened, as Kenny decided it on research/forest-uniformity** [2026-10-09, themes/forest/CHARACTER.md]. The bar's dropdown,
   mega menu and phone menu grow out of the bar and close as that growth reversed; the palette, date picker, theme list, combobox list, tour and
   side navigation grow like their family and every backdrop fades on the growth curve. Every pointable part, field and row blazes (tabs, crumbs

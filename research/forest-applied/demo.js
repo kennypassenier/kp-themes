@@ -33,19 +33,6 @@ const attached = new Promise((resolve) => {
     watch.observe(root, { attributes: true, attributeFilter: ['data-kp-auto-ready'] });
 });
 
-// The review dialog is a `.kp-dialog`, so js/motion.js lets what is put in
-// it arrive the theme's way, one by one: in forest twenty blocks and twenty
-// rows took about thirteen seconds (research/PACKAGE_FINDINGS.md, "Forest
-// applied"). The dialog's own furniture is not news; the components inside
-// each block still arrive as they would in an app.
-for (const section of document.querySelectorAll('[data-review-item]')) section.setAttribute('data-kp-arrive', 'all');
-const calm = () => {
-    for (const part of document.querySelectorAll('.rv-dialog [data-rv-stage], .rv-dialog [data-rv-list]'))
-        if (!part.hasAttribute('data-kp-arrive')) part.setAttribute('data-kp-arrive', 'none');
-};
-calm();
-new MutationObserver(calm).observe(document.body, { childList: true });
-
 /** Mark one button of a group pressed. @param {Element} group @param {Element} on */
 const press = (group, on) => {
     for (const b of group.querySelectorAll('button[aria-pressed]')) b.setAttribute('aria-pressed', String(b === on));

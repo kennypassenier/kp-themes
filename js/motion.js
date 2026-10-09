@@ -896,6 +896,51 @@ function partway(el, share, done) {
 }
 
 /**
+ * The gap inTurnGap() gives a leave of a row of `count`, in ms on its
+ * exit's clock, when it is shorter than the one partway() would wait for;
+ * else null. The same reading arrive() takes for its `lag`.
+ * @param {HTMLElement} el @param {number} share @param {number} lasts @param {number} count
+ * @returns {number | null}
+ */
+function cappedGap(el, share, lasts, count) {
+    const exits = el
+        .getAnimations({ subtree: true })
+        .filter((a) => typeof CSSAnimation !== 'undefined' && a instanceof CSSAnimation && /** @type {KeyframeEffect} */ (a.effect)?.target === el)
+        .map((a) => {
+            const effect = /** @type {KeyframeEffect} */ (a.effect);
+            const timing = effect.getTiming();
+            return { timing, end: (Number(timing.delay) || 0) + (Number(effect.getComputedTiming().activeDuration) || 0) };
+        });
+    if (exits.length === 0) return null;
+    const gap =
+        share > 0 && share < 1
+            ? Math.max(0, ...exits.map((exit) => reaches(exit.timing, exit.end, share)))
+            : Math.max(lasts, ...exits.map((exit) => exit.end));
+    if (!Number.isFinite(gap)) return null;
+    const next = inTurnGap(gap, count);
+    return next < gap ? next : null;
+}
+
+/**
+ * Settles once every CSS animation on `el` has run `ms` on its own clock (or
+ * is over), or when `done` does.
+ * @param {HTMLElement} el @param {number} ms @param {Promise<unknown>} done
+ */
+function atTime(el, ms, done) {
+    const css = el
+        .getAnimations({ subtree: true })
+        .filter((a) => typeof CSSAnimation !== 'undefined' && a instanceof CSSAnimation && /** @type {KeyframeEffect} */ (a.effect)?.target === el);
+    const reached = new Promise((resolve) => {
+        const tick = () => {
+            if (css.every((a) => a.playState === 'finished' || (Number(a.currentTime) || 0) >= ms)) resolve(undefined);
+            else requestAnimationFrame(tick);
+        };
+        tick();
+    });
+    return Promise.race([reached, done]);
+}
+
+/**
  * Settles when the CSS animations running on `el` have played out, at
  * whatever rate they play (a slowed-down review plays them at a quarter);
  * with none running, after `fallback` ms.
@@ -1267,7 +1312,7 @@ function arriveInTurn(items) {
     let start = 0;
     const ends = items.map((item) => {
         const end = start + item.total;
-        start += item.lag;
+        start += inTurnGap(item.lag, items.length);
         return end;
     });
     const last = Math.max(...ends);
@@ -1280,6 +1325,27 @@ function arriveInTurn(items) {
             effect.updateTiming({ delay: finiteMs((Number(effect.getTiming().delay) || 0) + later) });
         }
     });
+}
+
+/**
+ * The most a row of three or more arrivals or leaves may spend getting
+ * going, in ms, unless one gap alone is longer [Forest applied, 2026-10-09].
+ * Measured in forest: twenty rows put into a `.kp-dialog` at once waited
+ * 13 083 ms before the first showed, each a 690 ms gap after the one before.
+ */
+const IN_TURN_MS = 600;
+
+/**
+ * The gap after one of `count` elements arriving or leaving in turn: its own
+ * `gap` when the whole row's gaps fit in IN_TURN_MS (or in that one gap, so
+ * a pair is never hurried), else the row's share of that budget. Arrivals
+ * and leaves both take it, so a row's arrival stays its leave turned around.
+ * @param {number} gap ms @param {number} count
+ */
+function inTurnGap(gap, count) {
+    if (count < 3 || !(gap > 0)) return gap;
+    const budget = Math.max(IN_TURN_MS, gap);
+    return (count - 1) * gap <= budget ? gap : budget / (count - 1);
 }
 
 /**
@@ -1346,7 +1412,7 @@ async function leaveInTurn(items) {
     for (const item of items) {
         /** @type {Promise<void>} */
         const exited = new Promise((resolve) => {
-            void leaveOne(item.el, item.hide, resolve).then(item.resolve);
+            void leaveOne(item.el, item.hide, resolve, items.length).then(item.resolve);
         });
         await exited;
     }
@@ -1355,9 +1421,10 @@ async function leaveInTurn(items) {
 /**
  * @param {HTMLElement} el @param {boolean} hide
  * @param {() => void} exited called once its exit has played, or at once when it has none
+ * @param {number} [count] how many leave in this row (inTurnGap())
  * @returns {Promise<void>}
  */
-async function leaveOne(el, hide, exited) {
+async function leaveOne(el, hide, exited, count = 1) {
     const gone = () => {
         if (hide) el.hidden = true;
         else el.remove();
@@ -1471,7 +1538,11 @@ async function leaveOne(el, hide, exited) {
     // Halfway unless the page says otherwise (Kenny's pick, 2026-10-04).
     const set = parseFloat(style.getPropertyValue('--kp-leave-stagger'));
     const stagger = Number.isNaN(set) ? 0.5 : set;
-    if (lasts > 0 && stagger > 0 && stagger < 1) void partway(actor, stagger, exit).then(exited);
+    // A long row lets the next go sooner (inTurnGap()), on the exit's own
+    // clock, as arriveInTurn() delays its arrivals.
+    const capped = lasts > 0 && count > 2 ? cappedGap(actor, stagger, lasts, count) : null;
+    if (capped !== null) void atTime(actor, capped, exit).then(exited);
+    else if (lasts > 0 && stagger > 0 && stagger < 1) void partway(actor, stagger, exit).then(exited);
     else void exit.then(exited);
     running.push(exit);
     // A table row cannot be folded below its cells' content: it plays its

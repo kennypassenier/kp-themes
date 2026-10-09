@@ -54,8 +54,9 @@ Listed under "## Forest applied" in research/PACKAGE_FINDINGS.md; nothing in `cs
   the menu starts at 1006 px (below the window); in formal and titanium at 472 px. Block 20 says so.
 - **Many elements arriving at once take seconds in forest.** js/motion.js arrives them one by one (`arriveInTurn()`), each when the
   one before is `--kp-leave-stagger` (0.5 by default) through forest's 1000 ms leave, with no cap: the review dialog's twenty rows,
-  put into a `.kp-dialog`, waited 13 s before the first one showed. This page marks the review dialog's stage and list
-  `data-kp-arrive="none"` (demo.js) so the dialog is usable; the blocks' own components still arrive as in an app.
+  put into a `.kp-dialog`, waited 13 s before the first one showed. Fixed 2026-10-09 in js/motion.js (a row's gaps capped at
+  600 ms in all); the page's `data-kp-arrive="none"` workaround is gone. The menu button's placement is fixed the same day
+  (js/top-layer.js `layoutRect()`).
 - **Not the package, the review kit:** in the review dialog Escape closes the review dialog even while a dialog, palette, menu or
   alarm opened inside it is still open. The intro asks to close those with their own buttons there.
 

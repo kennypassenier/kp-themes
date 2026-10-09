@@ -35,7 +35,7 @@
 
 import { createListbox, OPTION_SELECTOR, subsequence } from './listbox.js';
 import { getStrings } from './strings.js';
-import { placeBlockSide, raiseInPlace, raiseOverlay, raised } from './top-layer.js';
+import { layoutRect, placeBlockSide, raiseInPlace, raiseOverlay, raised } from './top-layer.js';
 
 const COMBOBOX = '[data-kp-combobox]';
 const INPUT = 'input[role="combobox"]';
@@ -596,7 +596,7 @@ export function attachSelect(select, { loop = false, typeaheadMs = 500 } = {}) {
         list.style.top = `${select.offsetTop + select.offsetHeight}px`;
         list.style.width = `${select.offsetWidth}px`;
         const box = select.getBoundingClientRect();
-        const drawn = list.getBoundingClientRect();
+        const drawn = layoutRect(list);
         const margin = Math.min(Math.max(Number.parseFloat(getComputedStyle(list).marginTop) || 0, 0), 8);
         list.style.left = `${select.offsetLeft + (box.left - drawn.left)}px`;
         list.style.top = `${select.offsetTop + select.offsetHeight + (box.bottom + margin - drawn.top)}px`;

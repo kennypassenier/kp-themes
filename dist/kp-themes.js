@@ -3604,6 +3604,34 @@ function partway(el2, share, done) {
   });
   return Promise.race([reached, done]);
 }
+function cappedGap(el2, share, lasts, count) {
+  const exits = el2.getAnimations({ subtree: true }).filter((a) => typeof CSSAnimation !== "undefined" && a instanceof CSSAnimation && /** @type {KeyframeEffect} */
+  a.effect?.target === el2).map((a) => {
+    const effect = (
+      /** @type {KeyframeEffect} */
+      a.effect
+    );
+    const timing = effect.getTiming();
+    return { timing, end: (Number(timing.delay) || 0) + (Number(effect.getComputedTiming().activeDuration) || 0) };
+  });
+  if (exits.length === 0) return null;
+  const gap = share > 0 && share < 1 ? Math.max(0, ...exits.map((exit) => reaches(exit.timing, exit.end, share))) : Math.max(lasts, ...exits.map((exit) => exit.end));
+  if (!Number.isFinite(gap)) return null;
+  const next = inTurnGap(gap, count);
+  return next < gap ? next : null;
+}
+function atTime(el2, ms, done) {
+  const css = el2.getAnimations({ subtree: true }).filter((a) => typeof CSSAnimation !== "undefined" && a instanceof CSSAnimation && /** @type {KeyframeEffect} */
+  a.effect?.target === el2);
+  const reached = new Promise((resolve) => {
+    const tick2 = () => {
+      if (css.every((a) => a.playState === "finished" || (Number(a.currentTime) || 0) >= ms)) resolve(void 0);
+      else requestAnimationFrame(tick2);
+    };
+    tick2();
+  });
+  return Promise.race([reached, done]);
+}
 function playedOut(el2, fallback2) {
   const css = el2.getAnimations({ subtree: true }).filter((a) => typeof CSSAnimation !== "undefined" && a instanceof CSSAnimation && /** @type {KeyframeEffect} */
   a.effect?.target === el2);
@@ -3827,7 +3855,7 @@ function arriveInTurn(items) {
   let start = 0;
   const ends = items.map((item) => {
     const end = start + item.total;
-    start += item.lag;
+    start += inTurnGap(item.lag, items.length);
     return end;
   });
   const last = Math.max(...ends);
@@ -3840,6 +3868,11 @@ function arriveInTurn(items) {
       effect.updateTiming({ delay: finiteMs((Number(effect.getTiming().delay) || 0) + later) });
     }
   });
+}
+function inTurnGap(gap, count) {
+  if (count < 3 || !(gap > 0)) return gap;
+  const budget = Math.max(IN_TURN_MS, gap);
+  return (count - 1) * gap <= budget ? gap : budget / (count - 1);
 }
 function reaches(timing, end, share) {
   if (!Number.isFinite(end)) return 0;
@@ -3873,12 +3906,12 @@ async function leaveInTurn(items) {
   items.sort((a, b) => a.el.compareDocumentPosition(b.el) & Node.DOCUMENT_POSITION_FOLLOWING ? 1 : -1);
   for (const item of items) {
     const exited = new Promise((resolve) => {
-      void leaveOne(item.el, item.hide, resolve).then(item.resolve);
+      void leaveOne(item.el, item.hide, resolve, items.length).then(item.resolve);
     });
     await exited;
   }
 }
-async function leaveOne(el2, hide, exited) {
+async function leaveOne(el2, hide, exited, count = 1) {
   const gone = () => {
     if (hide) el2.hidden = true;
     else el2.remove();
@@ -3970,7 +4003,9 @@ async function leaveOne(el2, hide, exited) {
   const exit = lasts > 0 ? playedOut(actor, lasts + 100) : Promise.resolve();
   const set = parseFloat(style.getPropertyValue("--kp-leave-stagger"));
   const stagger = Number.isNaN(set) ? 0.5 : set;
-  if (lasts > 0 && stagger > 0 && stagger < 1) void partway(actor, stagger, exit).then(exited);
+  const capped = lasts > 0 && count > 2 ? cappedGap(actor, stagger, lasts, count) : null;
+  if (capped !== null) void atTime(actor, capped, exit).then(exited);
+  else if (lasts > 0 && stagger > 0 && stagger < 1) void partway(actor, stagger, exit).then(exited);
   else void exit.then(exited);
   running2.push(exit);
   if (size > 0 && !(el2 instanceof HTMLTableRowElement) && !floats(el2, style)) {
@@ -4296,7 +4331,7 @@ function attachMotion(root = document, { size = "", arrive: arrive2 = "all", arr
     detaches.clear();
   };
 }
-var SIZE_ATTRIBUTE, SIZE_SELECTOR, FOLD_SELECTOR, ARRIVE_KEYS, SKELETON, watching, CLOSE_SHARE, SIZE_SHARE, msOf, firstMs, reducedQuery, reducedNow, reduced, entrances, closing, nativeClose, opensAsReversedClose, switching, REVERSING_ATTRIBUTE, CLOSING_ATTRIBUTE, PANEL_SELECTOR, ghosted, NAMED_EASES, entering, animationSignature, pseudoNames, floats, flipped, arriving, finiteMs, batch, FOLDING_OUT, heightFolds, followsAFold, arriveMode;
+var SIZE_ATTRIBUTE, SIZE_SELECTOR, FOLD_SELECTOR, ARRIVE_KEYS, SKELETON, watching, CLOSE_SHARE, SIZE_SHARE, msOf, firstMs, reducedQuery, reducedNow, reduced, entrances, closing, nativeClose, opensAsReversedClose, switching, REVERSING_ATTRIBUTE, CLOSING_ATTRIBUTE, PANEL_SELECTOR, ghosted, NAMED_EASES, entering, animationSignature, pseudoNames, floats, flipped, arriving, finiteMs, IN_TURN_MS, batch, FOLDING_OUT, heightFolds, followsAFold, arriveMode;
 var init_motion = __esm({
   "js/motion.js"() {
     "use strict";
@@ -4395,6 +4430,7 @@ var init_motion = __esm({
     );
     arriving = null;
     finiteMs = (ms) => Number.isFinite(ms) ? ms : 0;
+    IN_TURN_MS = 600;
     batch = null;
     FOLDING_OUT = "out";
     heightFolds = /* @__PURE__ */ new WeakSet();
@@ -6829,6 +6865,38 @@ var init_listbox = __esm({
 });
 
 // js/top-layer.js
+function layoutRect(element) {
+  const box = element.getBoundingClientRect();
+  const view = element.ownerDocument.defaultView;
+  if (!view) return box;
+  const style = view.getComputedStyle(element);
+  const el2 = (
+    /** @type {HTMLElement} */
+    element
+  );
+  let x = 0;
+  let y = 0;
+  if (style.translate && style.translate !== "none") {
+    const parts = style.translate.split(/\s+/);
+    const length = (part, size) => {
+      if (!part) return 0;
+      const n = Number.parseFloat(part);
+      if (!Number.isFinite(n)) return 0;
+      return part.endsWith("%") ? n / 100 * size : n;
+    };
+    x += length(parts[0], el2.offsetWidth ?? box.width);
+    y += length(parts[1], el2.offsetHeight ?? box.height);
+  }
+  if (style.transform && style.transform !== "none" && typeof DOMMatrixReadOnly === "function") {
+    const m = new DOMMatrixReadOnly(style.transform);
+    if (m.is2D && m.a === 1 && m.b === 0 && m.c === 0 && m.d === 1) {
+      x += m.e;
+      y += m.f;
+    }
+  }
+  if (x === 0 && y === 0) return box;
+  return new DOMRect(box.x - x, box.y - y, box.width, box.height);
+}
 function raiseOverlay(element, place2) {
   if (typeof element.showPopover !== "function" || !element.isConnected) {
     place2(element);
@@ -6855,7 +6923,7 @@ function raiseOverlay(element, place2) {
 }
 function placeBlockSide(element, field) {
   clearBlockSide(element);
-  const drawn = element.getBoundingClientRect();
+  const drawn = layoutRect(element);
   const style = getComputedStyle(element);
   const height = drawn.height;
   const outside = style.boxSizing === "border-box" ? 0 : height - (Number.parseFloat(style.height) || 0);
@@ -6879,7 +6947,7 @@ function placeBlockSide(element, field) {
   return "above";
 }
 function raiseInPlace(element, anchor, field = anchor) {
-  const drawn = element.getBoundingClientRect();
+  const drawn = layoutRect(element);
   const from = anchor.getBoundingClientRect();
   const dx = drawn.left - from.left;
   const dy = drawn.top - from.top;
@@ -7304,7 +7372,7 @@ function attachSelect(select, { loop = false, typeaheadMs = 500 } = {}) {
     list.style.top = `${select.offsetTop + select.offsetHeight}px`;
     list.style.width = `${select.offsetWidth}px`;
     const box = select.getBoundingClientRect();
-    const drawn = list.getBoundingClientRect();
+    const drawn = layoutRect(list);
     const margin = Math.min(Math.max(Number.parseFloat(getComputedStyle(list).marginTop) || 0, 0), 8);
     list.style.left = `${select.offsetLeft + (box.left - drawn.left)}px`;
     list.style.top = `${select.offsetTop + select.offsetHeight + (box.bottom + margin - drawn.top)}px`;
@@ -16126,7 +16194,7 @@ function clipped(wrapper, view) {
 }
 function raiseMenu(s2, view) {
   if (!clipped(s2.wrapper, view)) return;
-  const box = s2.menu.getBoundingClientRect();
+  const box = layoutRect(s2.menu);
   const button = s2.button.getBoundingClientRect();
   const dx = box.left - button.left;
   const dy = box.top - button.top;
@@ -16162,7 +16230,7 @@ function placeMenu(s2, view, covered) {
     room.left = MENU_GUTTER;
     room.right = html.clientWidth - MENU_GUTTER;
   }
-  const box = menu.getBoundingClientRect();
+  const box = layoutRect(menu);
   const style = view.getComputedStyle(menu);
   const cap = parseFloat(style.maxBlockSize);
   const borders = box.height - menu.clientHeight;
