@@ -1,0 +1,103 @@
+/* research/character-kpi, phantom: the decided picks on phantom's grammar
+   (themes/phantom/CHARACTER.md G1-G21, Kenny, 2026-10-09 on
+   research/phantom-character; css/phantom-register.css holds the tokens and
+   the keyframes this file names). Only phantom's decided options change:
+   shape r2-ph-shape-2, loading 2, tone 1, interactive 1, live 3.
+
+   - shape: the target file (a bullseye and a ring) is retired, a target is not
+     one of the print's motifs (G19, G21); the tile is the anchor's card, a
+     white plate with black ink, the red edge and the fixed 14 px cut (G5, G6);
+   - loading: the askew hatch is the block of the screen with the red slash
+     across it, the register's skeleton (G10);
+   - tone: the figure stays plain; a warning's change is stamped on the yellow
+     overprint, a failure's on the red plate, both with black ink and 2 px off
+     register (G8);
+   - interactive: pointing throws the red bar in behind the label and resolves
+     it, focus is the dashed red ring (inside the cut), a press drops the tile
+     3 px and nothing tilts (G15-G17);
+   - live: the twang is the six cuts of a live update, in place (G9). */
+@layer kp.signature {
+    /* Shape r2-ph-shape-2 · the card. */
+    [data-theme='phantom'][data-theme='phantom'] [data-kf-shape='r2-ph-shape-2'] .kp-kpi {
+        --kf-frame: 0 solid transparent;
+        --kf-pat: none;
+        --kf-radius: 0;
+        --kf-plate: var(--foreground);
+        --kf-ink: var(--background);
+        --kf-mute: color-mix(in oklch, var(--background) 70%, var(--foreground));
+        --kf-num-font: var(--theme-font-body);
+        --kf-num-weight: 700;
+        --kf-label-font: var(--theme-font-display);
+        --kf-label-style: italic;
+        --kf-label-weight: 800;
+        border-inline-start: 5px solid var(--primary);
+        clip-path: var(--kp-paperclip);
+    }
+
+    /* Loading 2 · the block and the slash. */
+    [data-theme='phantom'][data-theme='phantom'] [data-kf-loading='2'] .kp-kpi[data-kp-loading]::before {
+        background: var(--kp-sig-ph-block);
+        animation: none;
+        transform: none;
+    }
+
+    [data-theme='phantom'][data-theme='phantom'] [data-kf-loading='2'] .kp-kpi[data-kp-loading]::after {
+        background: var(--primary);
+        clip-path: var(--kp-sig-ph-slash);
+        translate: -2.8rem 0;
+    }
+
+    /* Tone 1 · the overprint. */
+    [data-theme='phantom'][data-theme='phantom'] [data-kf-tone='1'] .kp-kpi .kp-kpi__delta {
+        border: 0;
+    }
+
+    [data-theme='phantom'][data-theme='phantom'] [data-kf-tone='1'] .kp-kpi[data-kp-tone='warning'] .kp-kpi__delta {
+        --kf-delta-bg: var(--fx-signal);
+        --kf-delta-ink: var(--fx-signal-foreground);
+        translate: 2px 2px;
+    }
+
+    [data-theme='phantom'][data-theme='phantom'] [data-kf-tone='1'] .kp-kpi[data-kp-tone='destructive'] .kp-kpi__delta,
+    [data-theme='phantom'][data-theme='phantom'] [data-kf-tone='1'] .kp-kpi .kp-kpi__delta[data-kp-tone='bad'] {
+        --kf-delta-bg: var(--primary);
+        --kf-delta-ink: var(--primary-foreground);
+        translate: 2px 2px;
+    }
+
+    [data-theme='phantom'][data-theme='phantom'] [data-kf-tone='1'] .kp-kpi[data-kp-tone='warning'] > .kp-kpi__value,
+    [data-theme='phantom'][data-theme='phantom'] [data-kf-tone='1'] .kp-kpi[data-kp-tone='destructive'] > .kp-kpi__value {
+        --kf-tone-bg: transparent;
+        --kf-tone-ink: var(--kf-ink);
+    }
+
+    /* Interactive 1 · the bar, the dashed ring inside the cut, the drop. */
+    [data-theme='phantom'][data-theme='phantom'] [data-kf-interactive='1'] a.kp-kpi:hover,
+    [data-theme='phantom'][data-theme='phantom'] [data-kf-interactive='1'] .kp-kpi--toggle:hover {
+        box-shadow: none;
+    }
+
+    [data-theme='phantom'][data-theme='phantom'] [data-kf-interactive='1'] a.kp-kpi,
+    [data-theme='phantom'][data-theme='phantom'] [data-kf-interactive='1'] .kp-kpi--toggle {
+        --kf-focus-outline: 3px dashed var(--primary);
+        --kf-focus-offset: -6px;
+    }
+
+    [data-theme='phantom'][data-theme='phantom'] [data-kf-interactive='1'] a.kp-kpi:active,
+    [data-theme='phantom'][data-theme='phantom'] [data-kf-interactive='1'] .kp-kpi--toggle:active {
+        transform: none;
+        translate: 3px 3px;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'][data-theme='phantom'] [data-kf-loading='2'] .kp-kpi[data-kp-loading]::after {
+            animation: kp-sig-phantom-phantom-slash 1400ms cubic-bezier(0.6, 0, 0.4, 1) infinite;
+        }
+
+        /* Live 3 · the twang → the six cuts. */
+        [data-theme='phantom'][data-theme='phantom'] [data-kf-live='3'] .kp-kpi.kf-flash > .kp-kpi__value {
+            mask-size: 7px 7px;
+            animation: kp-sig-phantom-update calc(400ms / var(--kf-speed, 1)) linear;
+        }
+    }
+}

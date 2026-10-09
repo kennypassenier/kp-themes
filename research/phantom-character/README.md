@@ -1,6 +1,6 @@
 # What makes phantom phantom
 
-**Decided (Kenny, 09/10/2026): all nineteen questions approved after update 1** (research/phantom-character/decided.json; to be applied in css/phantom-register.css; see themes/phantom/CHARACTER.md §0).
+**Decided (Kenny, 09/10/2026): all nineteen questions approved after update 1** (research/phantom-character/decided.json; applied in css/phantom-register.css and in the research/character-* variants, `phantom.css` in each; see themes/phantom/CHARACTER.md §0 and the notes at the end of §4).
 
 **Open (2026-10-08): nineteen questions wait for Kenny's verdicts in the review dialog** (research/phantom-character/demo.html, round `2026-10-08-r1`; the picks will go to `decided.json` and, once decided, to css/phantom-register.css; see themes/phantom/CHARACTER.md §0).
 

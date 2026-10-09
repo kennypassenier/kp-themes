@@ -82,13 +82,11 @@ export const PAGES = [
             {
                 href: 'research/deco-character/demo.html',
                 label: 'What makes deco deco',
-                rework: 'update 3: leaving and arriving redrawn as ten variations, as Kenny asked',
             },
             // Kenny, 2026-10-08: what makes dark, retro and phantom themselves, the forest way (the analysis in themes/<theme>/CHARACTER.md), the nineteen questions each, every option a live scene that follows from the theme's decided anchor, the recommendation first.
             {
                 href: 'research/retro-character/demo.html',
                 label: 'What makes retro retro',
-                rework: 'update 2: loading redrawn from the real Windows 95 animations, as Kenny asked',
             },
             // The character round, sixth demo (2026-10-05): the key-figure strip with its columns in 22 themes, two characters each.
             // The character round, eighth component: the attention band, shape/arrival/leave/tone/empty/loading, one pick per aspect (formal and titanium built first).

@@ -113,10 +113,8 @@
 }
 
 /* Update 2 (2026-10-09). The numbers the new options turn. --dc-w: a wave's
-   place along a string or a fade's strength (loops only); --dc-gl: a glint's
-   way once round an inlay (0 before, 1 after: unseen at both ends); --dc-d2:
-   a second inlay drawn; --dc-q: a festoon swag raised (0 down, 1 up); --dc-j:
-   four jewels lit; --dc-m: a hover's mat frame drawn; --dc-r: a plate in
+   place along a string or a fade's strength (loops only); --dc-q: a leave's
+   dressing undone (0 dressed, 1 undressed; a festoon swag raised); --dc-m: a hover's mat frame drawn; --dc-r: a plate in
    relief; --dc-t: a jewel's turn; --dc-o: a glint's angle round an inlay.
    The finished pose is every initial value. */
 @property --dc-w {
@@ -125,28 +123,32 @@
     initial-value: 0;
 }
 
-@property --dc-gl {
-    syntax: '<number>';
-    inherits: true;
-    initial-value: 1;
-}
-
-@property --dc-d2 {
-    syntax: '<number>';
-    inherits: true;
-    initial-value: 1;
-}
-
 @property --dc-q {
     syntax: '<number>';
     inherits: true;
     initial-value: 1;
 }
 
-@property --dc-j {
+/* Update 3 (2026-10-09). The leave's second stage (--dc-v: a dressing
+   there, 0, or gone, 1) and the great fan's two guard sticks (--dc-a1 the
+   left, --dc-a2 the right, from the left along its foot; 182 degrees is
+   folded away below it). */
+@property --dc-v {
     syntax: '<number>';
     inherits: true;
     initial-value: 1;
+}
+
+@property --dc-a1 {
+    syntax: '<angle>';
+    inherits: true;
+    initial-value: 182deg;
+}
+
+@property --dc-a2 {
+    syntax: '<angle>';
+    inherits: true;
+    initial-value: 182deg;
 }
 
 @property --dc-m {

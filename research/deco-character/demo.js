@@ -8,7 +8,8 @@
 // as jewellery, with gold that reads as gold; their scenes take the option's
 // key, so each option builds only the parts it draws (curtains, jewels,
 // pearls, inline-SVG corners), and the hover and press rows answer the
-// reviewer's own pointer.
+// reviewer's own pointer. Update 3 (2026-10-09): the leave is drawn in the
+// festoon's art style in ten dressings, each drawn only while it moves.
 //
 // A review-kit demo in aspect mode, deco only. aspects.js holds the nineteen
 // questions as data (the designer's text, used verbatim); this file gives each
@@ -167,6 +168,7 @@ const DEFS = `<svg class="dc-defs" aria-hidden="true" focusable="false" width="0
     <linearGradient id="dc-leaf-H" gradientUnits="userSpaceOnUse" x1="2" y1="2" x2="18" y2="18"><stop offset="0" class="dc-st-hi"/><stop offset="0.35" class="dc-st-lt"/><stop offset="0.65" class="dc-st-au"/><stop offset="1" class="dc-st-lo"/></linearGradient>
     <linearGradient id="dc-leaf-V" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="dc-st-hi"/><stop offset="0.45" class="dc-st-au"/><stop offset="1" class="dc-st-lo"/></linearGradient>
     <radialGradient id="dc-bead" cx="0.36" cy="0.32" r="0.72"><stop offset="0" class="dc-st-hi"/><stop offset="0.45" class="dc-st-au"/><stop offset="1" class="dc-st-lo"/></radialGradient>
+    <linearGradient id="dc-satin" x1="0" y1="0" x2="0.35" y2="1"><stop offset="0" class="dc-st-sa-hi"/><stop offset="0.38" class="dc-st-sa"/><stop offset="0.7" class="dc-st-sa-lo"/><stop offset="1" class="dc-st-sa"/></linearGradient>
     <radialGradient id="dc-emerald" cx="0.38" cy="0.32" r="0.75"><stop offset="0" class="dc-st-em-hi"/><stop offset="0.5" class="dc-st-em"/><stop offset="1" class="dc-st-em-lo"/></radialGradient>
 </defs></svg>`;
 
@@ -516,47 +518,121 @@ const BARS = (key) => {
     );
 };
 
-/** Question 13's curtains, over a stage round the part (the stage is what arrives; the part stands behind the curtain). */
+/* ------------------------------------------- update 3: the leave's dressing */
+
+// Kenny, update 3: the festoon is the art style ("actually fancy and well
+// drawn"), but the curtains stayed in the window once open. Every option of
+// question 13 now dresses the part on a stage (`.dc-stage`): the stage is
+// hidden at `gap`, so after a leave nothing of the part is drawn; the
+// dressing (`.dc-dress`) is drawn only while it moves (hidden at hold, and
+// from the last frame of an arrival). Inside it, `.dc-dq` turns --dc-q (0
+// dressed, 1 undressed) and `.dc-dv` turns --dc-v (0 there, 1 away), each
+// from its own start (`--i` its rank) on the settle curve.
+
+/** A rosette (six gold beads round a lit centre) with its cord, a faceted lozenge and a skirt of threads below (12 x 25, centred at the top). */
 const ROSETTE = `<circle class="dc-bd" cx="0" cy="-3" r="1.9"/><circle class="dc-bd" cx="2.6" cy="-1.5" r="1.9"/><circle class="dc-bd" cx="2.6" cy="1.5" r="1.9"/><circle class="dc-bd" cx="0" cy="3" r="1.9"/><circle class="dc-bd" cx="-2.6" cy="1.5" r="1.9"/><circle class="dc-bd" cx="-2.6" cy="-1.5" r="1.9"/>${bead(
     0,
     0,
     1.7,
     'dc-bd dc-bd--hi',
 )}${line('M0 5V9.6', 'dc-ln', 0.8)}${gem(0, 11.6, 2)}${line('M-1.3 13.4V17.6M0 13.6V18.4M1.3 13.4V17.6', 'dc-ln dc-ln--soft', 0.55)}`;
-const rosette = (side) => `<svg class="dc-ros dc-ros--${side}" viewBox="-6 -6 12 25" width="12" height="25" focusable="false">${ROSETTE}</svg>`;
-/** A tassel: a cord, a faceted lozenge, a skirt of three threads (a 8 x 18 box, its cord at the top centre). */
-const TASSEL = `${line('M0 0V5.4', 'dc-ln', 0.9)}${gem(0, 7.6, 2.3)}${line('M-1.7 9.6V15.4M0 9.9V17M1.7 9.6V15.4', 'dc-ln dc-ln--soft', 0.6)}`;
-const tassel = (cls = '') => `<svg class="dc-tassel ${cls}" viewBox="-4 0 8 18" width="8" height="18" focusable="false">${TASSEL}</svg>`;
-let patterns = 0;
-/** The valance's row of tassels, one under every point between two scallops (an SVG pattern, 18 px a scallop, centred like the scallops). */
-const tassels = () => {
-    const id = `dc-tassels-${(patterns += 1)}`;
-    return `<svg class="dc-valance__tassels" width="100%" height="14" focusable="false"><defs><pattern id="${id}" patternUnits="userSpaceOnUse" x="50%" y="0" width="18" height="14"><g transform="translate(9 0) scale(0.72)">${TASSEL}</g></pattern></defs><rect width="100%" height="14" fill="url(#${id})"/></svg>`;
+const rosette = (cls) => `<svg class="dc-ros ${cls}" viewBox="-6 -6 12 25" width="12" height="25" focusable="false">${ROSETTE}</svg>`;
+/** A rosette alone, no tassel (12 x 12). */
+const boss = (cls) =>
+    `<svg class="dc-ros ${cls}" viewBox="-6 -6 12 12" width="12" height="12" focusable="false">${ROSETTE.split('<path')[0].replace(
+        /<\/?g[^>]*>/g,
+        '',
+    )}</svg>`;
+/** A fan motif for a screen's panel: a half sunburst over a pivot, two arcs, a lozenge (scales with its panel). */
+const panelFan = () => {
+    let rays = '';
+    for (let i = 1; i < 12; i++) {
+        const a = Math.PI - (i * Math.PI) / 12;
+        const r1 = i % 2 ? 17 : 12.5;
+        rays += `M${r2(20 + 4.5 * Math.cos(a))} ${r2(20 - 4.5 * Math.sin(a))}L${r2(20 + r1 * Math.cos(a))} ${r2(20 - r1 * Math.sin(a))}`;
+    }
+    return `<svg class="dc-scrp__fan" viewBox="0 0 40 21" preserveAspectRatio="none" focusable="false"><path class="dc-ln" d="${rays}" vector-effect="non-scaling-stroke"/><path class="dc-ln" d="M1.5 20A18.5 18.5 0 0 1 38.5 20" vector-effect="non-scaling-stroke"/><path class="dc-ln dc-ln--soft" d="M5 20A15 15 0 0 1 35 20" vector-effect="non-scaling-stroke"/><path class="dc-bd" d="M15.5 20A4.5 4.5 0 0 1 24.5 20Z"/><path class="dc-ln" d="M0.5 20.5H39.5" vector-effect="non-scaling-stroke"/></svg>`;
 };
-const drape = (side) => `<span class="dc-drape dc-drape--${side}"><i class="dc-drape__braid"></i>${tassel('dc-tassel--hem')}</span>`;
-const CURTAIN = {
-    velvet: () =>
-        `<span class="dc-cur dc-cur--velvet" aria-hidden="true">${drape('l')}${drape('r')}<span class="dc-tie dc-tie--l"></span><span class="dc-tie dc-tie--r"></span><span class="dc-valance"></span>${tassels()}</span>`,
+/** A bow: two satin loops edged in gold, two tails cut as swallowtails, a knot and a gold clasp with a jewel (80 x 52, the knot at 40 20). */
+const BOW = `<svg class="dc-bow" viewBox="-40 -20 80 52" width="80" height="52" focusable="false">
+    <g class="dc-bow__tails dc-dq" style="--i: 1"><path class="dc-sat" d="M-3 3C-7 12-13 20-19 29L-14 27.4-12.8 32.2C-6 22-2 13 1 4Z"/><path class="dc-sat" d="M3 3C7 12 13 20 19 29L14 27.4 12.8 32.2C6 22 2 13-1 4Z"/><path class="dc-ln dc-ln--edge" d="M-3 3C-7 12-13 20-19 29M-12.8 32.2C-6 22-2 13 1 4M3 3C7 12 13 20 19 29M12.8 32.2C6 22 2 13-1 4"/></g>
+    <g class="dc-bow__loop dc-bow__loop--l dc-dq" style="--i: 1"><path class="dc-sat" d="M-4-1C-12-15-31-17-35-8-38 0-26 9-4 3Z"/><path class="dc-ln dc-ln--edge" d="M-4-1C-12-15-31-17-35-8-38 0-26 9-4 3"/><path class="dc-ln dc-ln--fold" d="M-6 1C-14-6-24-8-31-6"/></g>
+    <g class="dc-bow__loop dc-bow__loop--r dc-dq" style="--i: 1"><path class="dc-sat" d="M4-1C12-15 31-17 35-8 38 0 26 9 4 3Z"/><path class="dc-ln dc-ln--edge" d="M4-1C12-15 31-17 35-8 38 0 26 9 4 3"/><path class="dc-ln dc-ln--fold" d="M6 1C14-6 24-8 31-6"/></g>
+    <g class="dc-bow__clasp dc-dq" style="--i: 0"><rect class="dc-sat" x="-5.5" y="-5.5" width="11" height="11" rx="2.5"/><circle class="dc-ln dc-ln--edge" cx="0" cy="0" r="6.4"/>${gem(0, 0, 4.6)}${bead(0, -7.6, 1, 'dc-bd')}${bead(
+        0,
+        7.6,
+        1,
+        'dc-bd',
+    )}${bead(-7.6, 0, 1, 'dc-bd')}${bead(7.6, 0, 1, 'dc-bd')}</g>
+</svg>`;
+/** The rope's three strokes (a velvet core, its sheen, a gold braid wound round it) on one path each. */
+const ROPE = ['core', 'sheen', 'wind']
+    .map((k) => `<path class="dc-rope__${k}" d="M0 6C30 62 70 62 100 6" vector-effect="non-scaling-stroke"/>`)
+    .join('');
+const times = (count, html) => [...Array(count).keys()].map(html).join('');
+
+/** Each option's dressing (question 13); `--i` is a piece's rank in its stagger. */
+const DRESS = {
     festoon: () =>
-        `<span class="dc-cur dc-cur--festoon" aria-hidden="true">${[0, 1, 2, 3, 4]
+        `<span class="dc-dv">${[0, 1, 2, 3, 4]
             .map(
                 (i) =>
-                    `<span class="dc-swag" style="--i: ${Math.abs(i - 2)}; --x: ${i * 0.2}"><span class="dc-swag__body"></span><svg class="dc-swag__trim" viewBox="0 0 100 10" preserveAspectRatio="none" focusable="false"><path class="dc-ln" d="M0 0.5A50 9.5 0 0 0 100 0.5" stroke-width="1.6" vector-effect="non-scaling-stroke"/></svg>${
-                        i <= 2 ? rosette('l') : ''
-                    }${i >= 2 ? rosette('r') : ''}</span>`,
+                    `<span class="dc-swag dc-dq" style="--i: ${Math.abs(i - 2)}; --x: ${i * 0.2}"><span class="dc-swag__body"></span><svg class="dc-swag__trim" viewBox="0 0 100 10" preserveAspectRatio="none" focusable="false"><path class="dc-ln" d="M0 0.5A50 9.5 0 0 0 100 0.5" stroke-width="1.6" vector-effect="non-scaling-stroke"/></svg>${
+                        i <= 2 ? rosette('dc-ros--l') : ''
+                    }${i >= 2 ? rosette('dc-ros--r') : ''}</span>`,
             )
             .join('')}<span class="dc-cur__rail"></span></span>`,
+    roman: () =>
+        `<span class="dc-dv"><span class="dc-blind dc-dq" style="--i: 0"><span class="dc-blind__cloth"></span><span class="dc-blind__gather"></span>${rosette(
+            'dc-blind__pull',
+        )}</span><span class="dc-blind__head"></span></span>`,
+    screen: () =>
+        ['l', 'r']
+            .map(
+                (s) =>
+                    `<span class="dc-scr dc-scr--${s}"><span class="dc-scrp dc-dq" style="--i: 1"><i class="dc-scrp__face">${panelFan()}</i><span class="dc-scrp dc-scrp--in dc-dq" style="--i: 0"><i class="dc-scrp__face">${panelFan()}</i></span></span></span>`,
+            )
+            .join(''),
+    ribbon: () =>
+        `<span class="dc-ribn dc-dq" style="--i: 2">${['tl', 'tr', 'bl', 'br'].map((c) => `<i class="dc-ribn__arm dc-ribn__arm--${c}"></i>`).join('')}</span>${BOW}`,
+    rope: () =>
+        `<span class="dc-dv"><span class="dc-post dc-post--l"></span><span class="dc-post dc-post--r"></span><svg class="dc-rope dc-dq" viewBox="0 0 100 100" preserveAspectRatio="none" focusable="false">${ROPE}</svg><i class="dc-rope__hook dc-rope__hook--l"></i><i class="dc-rope__hook dc-rope__hook--r dc-dq"></i></span>`,
+    shutters: () =>
+        ['l', 'r']
+            .map(
+                (s) =>
+                    `<span class="dc-shut dc-shut--${s} dc-dv"><span class="dc-shut__slats">${times(8, (i) => `<i class="dc-slat dc-dq" style="--i: ${i}"></i>`)}</span>${boss(
+                        'dc-shut__knob',
+                    )}</span>`,
+            )
+            .join(''),
+    gate: () =>
+        `<span class="dc-dv"><span class="dc-gate dc-dq"><i class="dc-gate__veil"></i><i class="dc-gate__lattice"></i><i class="dc-gate__rail dc-gate__rail--t"></i><i class="dc-gate__rail dc-gate__rail--b"></i><i class="dc-gate__stile"></i><i class="dc-gate__handle"></i></span></span>`,
+    fan: () =>
+        `<span class="dc-gfan"><i class="dc-gfan__leaf"></i><svg class="dc-gfan__arcs" viewBox="0 0 100 100" preserveAspectRatio="none" focusable="false"><path class="dc-gfan__hair" d="M8 100A42 84 0 0 1 92 100" vector-effect="non-scaling-stroke"/><path class="dc-gfan__braid" d="M3 100A47 92 0 0 1 97 100" vector-effect="non-scaling-stroke"/><path class="dc-gfan__wind" d="M3 100A47 92 0 0 1 97 100" vector-effect="non-scaling-stroke"/><path class="dc-gfan__rim" d="M28 100A22 42 0 0 1 72 100" vector-effect="non-scaling-stroke"/></svg><i class="dc-gfan__guard"></i><i class="dc-gfan__pivot"></i></span>`,
+    beads: () =>
+        ['l', 'r']
+            .map(
+                (s) =>
+                    `<span class="dc-beads dc-beads--${s}"><i class="dc-beads__rail dc-dq" style="--i: 18"></i>${times(
+                        64,
+                        (i) => `<i class="dc-str dc-dq" style="--i: ${i}"></i>`,
+                    )}</span>`,
+            )
+            .join(''),
+    shell: () =>
+        `<span class="dc-shell dc-dq"><i class="dc-shell__flutes"></i><i class="dc-shell__trim"></i></span><span class="dc-hinge dc-dv"></span>`,
 };
-const JEWELS = '<i class="dc-jw dc-jw--tl"></i><i class="dc-jw dc-jw--tr"></i><i class="dc-jw dc-jw--bl"></i><i class="dc-jw dc-jw--br"></i>';
+/** The options whose dressing covers only part of the part: the part comes up behind it (the lobby's dcg-up). */
+const SEEN = new Set(['ribbon', 'rope', 'beads', 'gate', 'fan']);
 const LEAVE = (key) => {
-    const stage = key in CURTAIN;
-    const ar = stage ? '' : 'dc-ar';
-    const wrap = (html) => (stage ? `<div class="dc-stage dc-ar">${html}${CURTAIN[/** @type {keyof typeof CURTAIN} */ (key)]()}</div>` : html);
-    const jw = (html) => (key === 'jewels' ? html.replace(/<\/div>$/, `${JEWELS}</div>`) : html);
+    const ar = SEEN.has(key) ? 'dc-ar' : '';
+    const stage = (html) =>
+        `<div class="dc-stage">${html}<span class="dc-dress" aria-hidden="true">${DRESS[/** @type {keyof typeof DRESS} */ (key)]()}</span></div>`;
     return (
-        cell('An alert', wrap(jw(LOBBY.alert('Pump house 4 is back online.', ar)))) +
-        cell('A card', wrap(jw(LOBBY.tile('Reservoir North', 'Level 71 %', ar)))) +
-        cell('A key figure', wrap(jw(LOBBY.kpi('Flow now', '412', '', ar))))
+        cell('An alert', stage(LOBBY.alert('Pump house 4 is back online.', ar))) +
+        cell('A card', stage(LOBBY.tile('Reservoir North', 'Level 71 %', ar))) +
+        cell('A key figure', stage(LOBBY.kpi('Flow now', '412', '', ar)))
     );
 };
 

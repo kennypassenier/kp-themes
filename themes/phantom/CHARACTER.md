@@ -149,6 +149,77 @@ Only the meter is in `css/phantom-register.css` beyond the signature elements.
 | 18  | The voice                        | G18  | Barlow Condensed shouts, Barlow speaks · condensed everywhere · the ransom note (the picks)                                              |
 | 19  | Motifs                           | G19  | the screen, the skew, the red plate, the second plate, the slash, the star · plus the evidence board (the picks) · as today (everything) |
 
+**Applied 2026-10-09** (css/phantom-register.css, `kp.register` and `kp.signature`, tokens
+`--kp-shove`, `--kp-shove-out`, `--kp-cut-size`, `--kp-land` in the register and `--kp-sig-ph-*` for
+the masks, the block, the slash and the pose of a throw; `fx-ease` in themes/phantom/tokens.json;
+Kenny's picks on research/phantom-character, all nineteen approved 2026-10-09 after update 1):
+
+- **Q1 curve, Q4 durations: applied.** `--kp-cut`, `--kp-out` and `--kp-shove` are the shove
+  `cubic-bezier(0.81, 0, 0, 1)` (they were three other curves), the close runs
+  `--kp-shove-out` `cubic-bezier(1, 0, 0.19, 1)`; `fx-ease` in tokens.json is the shove (themes.css
+  takes it at the next generation), contact is `--fx-duration` 120 ms, a throw is 700 ms (400 of the
+  shove, 300 of the resolve), a group 80 ms apart (`--kp-reveal-stagger`, `--kp-redact-stagger`),
+  `--kp-wipe`, `--kp-plate` and `--kp-rail` 400 ms; `--kp-close-max` and `--kp-size-max` 700 ms so
+  js/motion.js does not cut a close or a glide short. Every eased keyframe was retired
+  (`kp-shout`, `kp-cut-in`, the slam, the stick, the card, the big card and the pop of the signature).
+- **Q2 direction, Q3 opening, Q13 leave: applied** as one pair of keyframes, played together:
+  `kp-sig-phantom-fly` (translate, rotate and scale from beyond the start edge, 0 to 57.142857 % on
+  the shove, hidden at its first instant) and `kp-sig-phantom-resolve` (a mask of the register's 7 px
+  dot grid at 25, 50 and 75 % of the cell, then none, three hard cuts); the leave is the pair on the
+  inverse, `kp-sig-phantom-fly-out` and `kp-sig-phantom-resolve-out`, hidden at its last instant, on
+  `[data-kp-leaving]`, 700 ms, so an arrival (the leave backwards) is thrown on the shove. The dialog,
+  the toast, the menu and the popover, the bar's dropdown, the tour card, the words of a headline and the
+  drawer (level, from its own edge) are thrown; the tooltip and a tick resolve in place
+  (`kp-sig-phantom-resolve-tip`, three cuts of 100 ms). A closed part is never drawn: no sliver of a
+  menu, a tooltip, a dialog, a toast or a leaving key figure. The unopened dialog runs 1050 ms and the open
+  one 700 ms (js/motion.js reads two thirds of the first as the close). RTL swaps the start edge
+  (`:dir(rtl)`).
+- **Q5 colour: applied.** No red word is left: the destructive button is white ink on a red frame, the
+  open accordion and the sorted column are white with a red underline, the copy that failed is white,
+  the card's label and the brand tag are red plates with black ink; links keep the red underline.
+- **Q6 corners: applied.** `--kp-paperclip` is the cut paper, a fixed 14 px at 45 degrees (top-start and
+  bottom-end) whatever the size of the part; menus and popovers pad their rows by the cut less the edge,
+  the tooltip is a slab (no cut), a landed card stands `--kp-land` -1.5 degrees askew (toast, dialog,
+  menus, tour, the hud tags and the wizard's numbers), the tooltip -3.
+- **Q7 surface: applied.** The dialog's red edge stands outside the content: `.kp-dialog::after` is the
+  hero's slash (a red plate cut at 40 %), 2.2 rem (1.25 rem under 30 rem) at the end edge, and the
+  content is inset by its width and 12 px. Hard shadows are the deep red second plate, never a
+  translucent one (`--kp-hard`, the media, back to top); the tour has no blur; the empty state lost its
+  feathered mask; the alarm's glow is off.
+- **Q8 warning: applied.** A warning alert is the yellow overprint with black ink and a black edge; on a
+  key figure the figure stays plain, the card stays its plate, and the change is stamped on the yellow
+  plate (warning) or the red plate (failure, destructive), black ink, 2 px off register; a destructive menu
+  entry is the red plate with black ink.
+- **Q9 live update: applied.** `--kp-update: resolve`; `[data-kp-updating='resolve']` plays
+  `kp-sig-phantom-update`, 400 ms, six cuts of the mask (70, 40, 10 %, then back), in place. The meter's
+  tone change is the same six cuts (`kp-sig-phantom-meter-redraw-d|o|w`, the jolts are gone).
+- **Q10 loading: applied** (the red slash, as today, 1400 ms on `cubic-bezier(0.6, 0, 0.4, 1)`, the
+  one place the grammar's curve is not used, because Kenny picked the register's own). A block of
+  the screen with the red slash across it, behind the part's words, on the skeleton's lines, blocks
+  and circles (the line's leaning sheet, the plate's cut, the circle), the loading meter, the table's
+  busy panel, the loading menu entry, a busy button and card, the tiles' cards, the calendar's days and
+  busy panel and the chart's plot; the layout layer's dim is off on each.
+- **Q11 busy bar: applied.** With no share known the slab is a silhouette of dots on a 4 px cell that
+  never resolves (`mask-image: var(--kp-sig-ph-dots)`), the shove 1500 ms on the shove's curve; reduced
+  motion shows the stripes unmasked. **Q12 spinner: unchanged** (the star that snaps, 1.2 s, as today).
+- **Q14 composites, Q15 hover: applied.** The key cap's manners are the same everywhere: a button,
+  an icon button, the nav's links and dropdown entries, the footer's links, the search trigger, a menu
+  entry, a calendar day and the label of a key figure that is a link have the red bar waiting at the
+  start edge; pointing throws it in on the shove in 60 ms and resolves it in two cuts across the 120 ms
+  (`kp-sig-phantom-bar`), the ink flips to black at the second (`kp-sig-phantom-ink`), leaving snatches it
+  back on the inverse after 30 ms; a link in running text gets the thin bar under its foot.
+- **Q16 focus: applied.** DI2's two channels, the dashed red ring (3 px, 2 px out, 4 px on a key cap)
+  over the contrast ring that hugs the part; on a menu entry, a day and a key figure it stands inside
+  the cut (-6 px). The keyboard throws no bar and a hover on a focused part leaves the ring.
+- **Q17 press: applied.** The cap drops 3 px (the primary 5 px, its shadow gone) with `translate`, so the
+  skew stays; nothing eases and the release lifts; the face resolves from dots in two cuts
+  (`kp-sig-phantom-face`).
+- **Q18 type: applied.** Key figure label and state word shout (Barlow Condensed italic), the figure
+  speaks (Barlow 700). **Q19 motifs: applied.** The stamp is a skewed plate, the hud tags and the wizard's
+  numbers land at -1.5 degrees, nothing is a stamp, string, pin, hole, target or ransom cut.
+- **Not applied here:** the network graph (G21, unchanged); the dashboard components' own plates, which
+  the port gives phantom (research/PACKAGE_FINDINGS.md, "Phantom").
+
 ---
 
 ## 5. Distinct from the other themes

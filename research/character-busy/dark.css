@@ -1,0 +1,75 @@
+/* research/character-busy, dark: the decided picks on dark's applied grammar
+   (themes/dark/CHARACTER.md G1-G21, "Applied 2026-10-09"; css/dark-register.css
+   holds the tokens and the keyframes this file names: kp-sig-dark-comet,
+   kp-sig-dark-sweep, kp-sig-dark-film). Dark's decided options are shape 1,
+   loading 1, arrival 1, failure 2, phone 1; the grammar changes the first
+   four:
+
+   - shape: the status board (a mono face, a bevel, a ticker rule) is retired,
+     a panel is the near-black plate with the chamfer on two opposite corners
+     and the film along its top edge (G6, G7, G19);
+   - loading: the ticker baseline is the comet: the 2 px line and a tail
+     36 % of the panel long cross it from start to end, 2400 ms a loop (G10);
+   - arrival: no arrival is a pass: the overlay is swept in from its start
+     edge, 660 ms at one pace, the film turning (G2, G13);
+   - failure: the red plate with its lit ring is the film gone coral: a
+     near-black plate, the coral along its whole top edge and in its ink (G8).
+   Phone 1 (the film rule under the panel) stays. */
+@layer kp.signature {
+    /* Shape 1 · the plate, the chamfer, the film along its top. */
+    [data-theme='dark'][data-theme='dark'] [data-bo-shape='1'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: 0;
+        --bo-panel-shadow: none;
+        --bo-font: var(--theme-font-body);
+        clip-path: var(--kp-sig-dark-cut);
+    }
+
+    [data-theme='dark'][data-theme='dark'] [data-bo-shape='1'] .kp-datatable__busy-panel::after {
+        inset-inline: 0;
+        inset-block: 0 auto;
+        block-size: 2px;
+        background: linear-gradient(90deg, var(--chart-1), var(--chart-2), var(--chart-3), var(--chart-4));
+    }
+
+    /* Loading 1 · the comet, drawn on the panel's own ::before. */
+    [data-theme='dark'][data-theme='dark'] [data-bo-loading='1'] .kp-datatable__busy-panel::before {
+        inset: 0;
+        block-size: auto;
+        border-radius: 0;
+        animation: none;
+        background-image: var(--kp-sig-dk-line), var(--kp-sig-dk-tail);
+        background-repeat: no-repeat;
+        background-size:
+            2px 100%,
+            calc(var(--kp-sig-dk-cw) * 100%) 100%;
+        background-position:
+            calc(50% * (1 + var(--kp-sig-dk-cw)) - 1px) 0,
+            50% 0;
+    }
+
+    /* Failure 2 · the film gone coral, on a near-black plate. */
+    [data-theme='dark'][data-theme='dark'] [data-bo-failure='2'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--card);
+        --bo-fail-ink: var(--destructive);
+        --bo-fail-border: 0;
+        --bo-fail-radius: 0;
+        --bo-fail-shadow: inset 0 2px 0 0 var(--destructive);
+        --bo-fail-from: none;
+        clip-path: var(--kp-sig-dark-cut);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'][data-theme='dark'] [data-bo-loading='1'] .kp-datatable__busy-panel::before {
+            animation: kp-sig-dark-comet var(--kp-sig-dk-loop) linear infinite;
+        }
+
+        /* Arrival 1 · the pass lays the overlay from its start edge. */
+        [data-theme='dark'][data-theme='dark'] [data-bo-arrival='1'] .kp-datatable__busy-overlay {
+            --kp-sig-dk-r: 0px;
+            --bo-arrival: kp-sig-dark-sweep;
+            --bo-arrival-dur: 880ms;
+            --bo-arrival-ease: linear;
+        }
+    }
+}

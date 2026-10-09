@@ -43,11 +43,6 @@ const shareBar = (value = 0.62, label = 'Copied') =>
         value * 100,
     )}" aria-valuemin="0" aria-valuemax="100" style="--kp-value: ${value}">${barInner}</div>`;
 
-/** What a waiting box wears: the Copying dialog in small (two folders, a sheet, the short segmented bar). Each option of question 10
- * places it on the part its own way: a plate in the box, the bar along the foot, the folders at the part's ends, or the bar alone. */
-const LOAD =
-    '<span class="rt-load" aria-hidden="true"><span class="rt-load__copy"><i class="rt-folder rt-load__from"></i><i class="rt-sheet rt-sheet--small rt-load__sheet"></i><i class="rt-folder rt-load__to"></i></span><span class="rt-load__bar"></span></span>';
-
 /** The change under a key figure: the tone's mark. */
 const note = (text, dir = 'up', tone = 'good') =>
     `<span class="kp-kpi__delta rt-note" data-kp-tone="${tone}" data-kp-direction="${dir}">${text}</span>`;
@@ -328,43 +323,44 @@ const LIVE = () =>
         `<div class="kp-card rt-tile rt-live-tile"><p class="kp-card__title rt-titlebar"><span>Pump house 4</span></p><p class="kp-card__body">4.2 bar · 412 m³/h</p><p class="rt-tile__foot"><span class="rt-carrier" data-rt-time>Updated 07:12</span></p></div>`,
     );
 
-/** A month of fourteen days waiting: each day with its one-block bar (option 2), the sheet that walks the days and the bar of
- * fourteen blocks under them (option 1). */
+/** A sunken bar with its track: the boot band scrolls in the track, Setup's and the progress blocks fill it. */
+const TRACK = '<i class="rt-w__track"><i class="rt-w__band"></i></i>';
+/** What every waiting part of question 10 carries, one overlay (`.rt-w`) with the pieces of all seven Windows 95 pictures; each
+ * option shows its own: the Find flashlight (`__beam`: the torch and its light), Defrag's cells (`__cells`), the busy pointer
+ * (`__busy`: the hourglass, or the arrow with a small hourglass on a part that loads in the background), and the foot (`__foot`:
+ * the sunken bar, Setup's label, the dial-up monitors). @param {'glass' | 'arrow'} busy */
+const WAIT = (busy = 'glass') =>
+    `<span class="rt-w" aria-hidden="true"><i class="rt-w__cells"></i><i class="rt-w__beam"></i><span class="rt-w__busy rt-w__busy--${busy}"><span class="kp-spinner rt-w__glass"></span></span><span class="rt-w__foot"><i class="rt-w__bar">${TRACK}</i><i class="rt-w__label"></i><i class="rt-w__lights"><i></i><i></i></i></span></span>`;
+/** A month of fourteen days waiting, each day with its own short bar (the boot band's). */
 const waitDays = () =>
-    `<div class="rt-walk" aria-hidden="true"><div class="rt-days rt-days--grid">${[...Array(14).keys()]
-        .map((i) => `<span class="rt-day" style="--i: ${i}"><span class="rt-day__num">${i + 1}</span><i class="rt-day__blk"></i></span>`)
-        .join('')}</div><i class="rt-sheet rt-sheet--small rt-walk__sheet"></i></div><span class="rt-walk__bar" aria-hidden="true"></span>`;
-/** A skeleton line as a groove: the blocks gained in it, the sheet that hops along it. */
-const groove = (/** @type {number} */ i) =>
-    `<span class="kp-skeleton rt-groove" style="--i: ${i}"><span class="rt-groove__blocks"></span><i class="rt-sheet rt-sheet--small rt-groove__sheet"></i></span>`;
+    `<div class="rt-days rt-days--grid" aria-hidden="true">${[...Array(14).keys()]
+        .map((i) => `<span class="rt-day" style="--i: ${i}"><span class="rt-day__num">${i + 1}</span><i class="rt-day__bar">${TRACK}</i></span>`)
+        .join('')}</div>`;
+/** A skeleton line: the register's sunken line, its own track (a bar) and its own row of cells. */
+const waitLine = (/** @type {number} */ i) => `<span class="kp-skeleton rt-line" style="--i: ${i}">${TRACK}<i class="rt-w__cells"></i></span>`;
 
 const LOADING = () =>
     cell(
         'Tile',
-        `<div class="kp-card rt-tile rt-waits rt-waits--box" aria-busy="true"><p class="kp-card__title rt-titlebar"><span>Pump house 4</span></p><div class="rt-waits__room">${LOAD}</div><p class="rt-tile__foot"><span>Reading…</span></p></div>`,
+        `<div class="kp-card rt-tile rt-waits rt-waits--box" aria-busy="true"><p class="kp-card__title rt-titlebar"><span>Pump house 4</span></p><div class="rt-waits__room">${WAIT()}</div><p class="rt-tile__foot"><span>Reading…</span></p></div>`,
     ) +
     cell(
         'Panel',
-        `<div class="kp-card rt-panel rt-waits rt-waits--box" aria-busy="true"><p class="rt-panel__words">Reading the pump houses…</p><div class="rt-waits__room">${LOAD}</div></div>`,
+        `<div class="kp-card rt-panel rt-waits rt-waits--box" aria-busy="true"><p class="rt-panel__words">Reading the pump houses…</p><div class="rt-waits__room">${WAIT()}</div></div>`,
     ) +
     cell(
         'Menu, loading entry',
-        `<div class="kp-popover rt-pop rt-pop--static"><ul class="kp-menu" role="menu"><li role="none"><button type="button" role="menuitem" class="kp-menu__item rt-waits rt-waits--row" aria-busy="true"><span class="rt-entry">Stations…</span>${LOAD}</button></li>${entries(
-            ['Rename'],
-        )}</ul></div>`,
+        `<div class="kp-popover rt-pop rt-pop--static"><ul class="kp-menu" role="menu"><li role="none"><button type="button" role="menuitem" class="kp-menu__item rt-waits rt-waits--row" aria-busy="true"><span class="rt-entry">Stations…</span>${WAIT(
+            'arrow',
+        )}</button></li>${entries(['Rename'])}</ul></div>`,
     ) +
-    cell('Month days', `<div class="rt-well rt-month-wait rt-waits" aria-busy="true">${waitDays()}${LOAD}</div>`) +
-    cell(
-        'Chart plot',
-        `<div class="rt-well rt-plotwait rt-waits" aria-busy="true">${plot(
-            'rt-plot--ghost',
-        )}<span class="rt-cross" aria-hidden="true"><span class="rt-cross__foot"></span><i class="rt-sheet rt-sheet--small rt-cross__sheet"></i></span>${LOAD}</div>`,
-    ) +
+    cell('Month days', `<div class="rt-well rt-month-wait rt-waits" aria-busy="true">${waitDays()}${WAIT('arrow')}</div>`) +
+    cell('Chart plot', `<div class="rt-well rt-plotwait rt-waits" aria-busy="true">${plot('rt-plot--ghost')}${WAIT()}</div>`) +
     cell(
         'Skeleton lines',
         `<div class="rt-skelwrap rt-waits rt-waits--skel" aria-busy="true"><div class="rt-skel" aria-hidden="true">${[0, 1, 2]
-            .map(groove)
-            .join('')}</div>${LOAD}</div>`,
+            .map(waitLine)
+            .join('')}</div>${WAIT()}</div>`,
     );
 
 const BUSYBAR = () =>

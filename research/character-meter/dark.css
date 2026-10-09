@@ -1,0 +1,75 @@
+/* research/character-meter, dark: the decided picks on dark's applied grammar
+   (themes/dark/CHARACTER.md G1-G21, "Applied 2026-10-09"; css/dark-register.css
+   holds the tokens and the keyframes this file names: kp-sig-dark-comet,
+   kp-sig-dark-meter-lay). Dark's decided options are shape 1, loading 2,
+   arrival 3, tone 3, mark 3; the machined channel (shape 1) is the
+   register's own and stays. The grammar changes the other four:
+
+   - loading: the oxide bands sliding along the channel are the comet: the
+     2 px line and a tail 36 % of the channel long cross it from start to end
+     and lay nothing, 2400 ms a loop (G10);
+   - arrival: the share pressed in (220 ms) is laid by the pass from the start
+     of the channel, 660 ms at one pace; a new share moves to its size in the
+     contact time on the settle (G2, G4);
+   - tone: the bump (a swell of the channel) is retired: a warning or a failure
+     takes the tone along the share's whole film edge, the channel does not
+     move (G8);
+   - mark: the notch past the end keeps its tilt and its sign; it turns on the
+     settle in the contact time (G1, G4). */
+@layer kp.signature {
+    /* Loading 2 · the comet over the whole channel. */
+    [data-theme='dark'][data-theme='dark'] [data-cm-loading='2'] .kp-meter[data-kp-loading]::after {
+        content: '';
+        position: absolute;
+        inset: 1px;
+        pointer-events: none;
+        animation: none;
+        background-image: var(--kp-sig-dk-line), var(--kp-sig-dk-tail);
+        background-repeat: no-repeat;
+        background-size:
+            2px 100%,
+            calc(var(--kp-sig-dk-cw) * 100%) 100%;
+        background-position:
+            calc(50% * (1 + var(--kp-sig-dk-cw)) - 1px) 0,
+            50% 0;
+    }
+
+    /* Tone 3 · the film gone coral; the channel does not swell. */
+    [data-theme='dark'][data-theme='dark'] [data-cm-tone='3'] .kp-meter[data-kp-tone='warning']::before {
+        background:
+            linear-gradient(var(--warning-foreground), var(--warning-foreground)) 0 0 / calc(100% / clamp(0.01, var(--kp-value, 0), 1)) 2px no-repeat,
+            var(--kp-meter-fill-colour);
+    }
+
+    [data-theme='dark'][data-theme='dark'] [data-cm-tone='3'] .kp-meter[data-kp-tone='destructive']::before {
+        background:
+            linear-gradient(var(--destructive), var(--destructive)) 0 0 / calc(100% / clamp(0.01, var(--kp-value, 0), 1)) 2px no-repeat,
+            var(--kp-meter-fill-colour);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'][data-theme='dark'] [data-cm-loading='2'] .kp-meter[data-kp-loading]::after {
+            animation: kp-sig-dark-comet var(--kp-sig-dk-loop) linear infinite;
+        }
+
+        /* Arrival 3 · the share is laid by the pass. */
+        [data-theme='dark'][data-theme='dark'] [data-cm-arrival='3'] .kp-meter::before {
+            animation: kp-sig-dark-meter-lay 660ms linear backwards;
+            transition: inline-size var(--fx-duration) var(--fx-ease);
+        }
+
+        /* Tone 3 · no bump. */
+        [data-theme='dark'][data-theme='dark'] [data-cm-tone='3'] .kp-meter:not([data-kp-loading], [data-kp-tone]),
+        [data-theme='dark'][data-theme='dark'] [data-cm-tone='3'] .kp-meter[data-kp-tone='warning']:not([data-kp-loading]),
+        [data-theme='dark'][data-theme='dark'] [data-cm-tone='3'] .kp-meter[data-kp-tone='destructive']:not([data-kp-loading]) {
+            animation: none;
+        }
+
+        /* Mark 3 · the notch turns on the settle. */
+        [data-theme='dark'][data-theme='dark'] [data-cm-mark='3'] .kp-meter__mark {
+            transition:
+                inset-inline-start var(--fx-duration) var(--fx-ease),
+                rotate var(--fx-duration) var(--fx-ease);
+        }
+    }
+}

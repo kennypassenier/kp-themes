@@ -375,7 +375,7 @@
     --fx-signal-foreground: hsl(220, 24%, 6%);
     --fx-notch: 0.55rem;
     --fx-duration: 220ms;
-    --fx-ease: cubic-bezier(0.16, 0.84, 0.28, 1);
+    --fx-ease: cubic-bezier(0.22, 1, 0.36, 1);
     --theme-font-display: 'Archivo', ui-sans-serif, system-ui, sans-serif;
     --theme-font-mono: 'KP Ticker Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(220, 16%, 13%);
@@ -1661,7 +1661,7 @@
     --fx-signal-foreground: hsl(0, 0%, 4%);
     --fx-notch: 6px;
     --fx-duration: 120ms;
-    --fx-ease: cubic-bezier(0.2, 0.9, 0.25, 1);
+    --fx-ease: cubic-bezier(0.81, 0, 0, 1);
     --theme-font-display: 'Barlow Condensed', 'Barlow', ui-sans-serif, sans-serif;
     --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(45, 100%, 55%);
@@ -23692,21 +23692,48 @@
         --kp-calendar-nav-fit: 23.75rem;
         /* The configuration surface [AR43], the demo's values as defaults. */
         --kp-reveal-threshold: 0.6;
-        --kp-reveal-stagger: 260ms;
-        --kp-redact-stagger: 140ms;
+        /* The clock [themes/phantom/CHARACTER.md G4; Kenny, 2026-10-09 on
+           research/phantom-character: one throw]: contact 120 ms (--fx-duration),
+           a throw 400 ms, its resolve 300 ms, parts of a group 80 ms apart, a
+           loop 1500 ms. */
+        --kp-reveal-stagger: 80ms;
+        --kp-redact-stagger: 80ms;
         --kp-classified-delay: 520ms;
         --kp-word-stagger: 28ms;
         --kp-card-hold: 300ms;
-        --kp-wipe: 420ms;
-        --kp-plate: 380ms;
-        --kp-rail: 900ms;
+        --kp-wipe: 400ms;
+        --kp-plate: 400ms;
+        --kp-rail: 400ms;
         --kp-rail-weight: 10px;
         --kp-tear-height: 58px;
-        --kp-cut: cubic-bezier(0.7, 0, 0.3, 1);
-        --kp-out: cubic-bezier(0.16, 1, 0.3, 1);
-        --kp-shove: cubic-bezier(0.81, -0.01, 0, 1);
+        /* G1: the throw is the shove, `cubic-bezier(0.81, 0, 0, 1)`: a hard
+           start and a dead stop. Every travel in this register is on it (the
+           old eased curves --kp-cut and --kp-out are the shove now), every
+           change of state is a hard cut (steps), and a close runs the shove
+           on its inverse, `cubic-bezier(1, 0, 0.19, 1)`. Timing functions
+           inside @keyframes are written out: a var() there falls back to
+           `ease`. */
+        --kp-cut: cubic-bezier(0.81, 0, 0, 1);
+        --kp-out: cubic-bezier(0.81, 0, 0, 1);
+        --kp-shove: cubic-bezier(0.81, 0, 0, 1);
+        --kp-shove-out: cubic-bezier(1, 0, 0.19, 1);
         --kp-skew: -8deg;
-        --kp-paperclip: polygon(0 6%, 3% 0, 100% 0, 100% 88%, 97% 100%, 0 100%);
+        /* G6: the corner is cut, never rounded; the cut is a fixed 14 px at
+           45 degrees on every part, long or wide, so the angle and the size of
+           the corner never change and content is inset from it by the same
+           amount (Kenny, 2026-10-09: "I don't want the angle of the corners
+           to change"). Top-start and bottom-end. */
+        --kp-cut-size: 14px;
+        --kp-paperclip: polygon(
+            0 var(--kp-cut-size),
+            var(--kp-cut-size) 0,
+            100% 0,
+            100% calc(100% - var(--kp-cut-size)),
+            calc(100% - var(--kp-cut-size)) 100%,
+            0 100%
+        );
+        /* A landed part stands a degree and a half askew. */
+        --kp-land: -1.5deg;
         /* The reveals this theme performs [S45]: js/effects.js reads these
            and leaves a theme that declares none at rest. */
         --kp-reveal-headline: shout;
@@ -23716,7 +23743,21 @@
         --kp-mono: var(--theme-font-mono);
         /* The second plate: the print misregistration under the red one. */
         --kp-red-deep: var(--sidebar-background);
-        --kp-hard: 4px 4px 0 hsl(from var(--background) h s l / 0.55);
+        --kp-hard: 4px 4px 0 var(--kp-red-deep);
+        /* The screen a part in the air is seen through [G13]: the register's
+           7 px dot grid, the dot at 25, 50 and 75 % of the cell (radius
+           sqrt(share x 49 / pi), its edge a third of a pixel soft). A part
+           drawn through it is its own silhouette of dots, title and all, and
+           the end of every animation that uses it has no mask at all. The
+           fine pair is the same on a 4 px cell (the busy slab, the skeleton),
+           the last three are the six cuts of a live update. */
+        --kp-sig-ph-m25: radial-gradient(circle at center, var(--foreground) 1.9747px, transparent 2.3247px);
+        --kp-sig-ph-m50: radial-gradient(circle at center, var(--foreground) 2.7926px, transparent 3.1426px);
+        --kp-sig-ph-m75: radial-gradient(circle at center, var(--foreground) 3.4202px, transparent 3.7702px);
+        --kp-sig-ph-m10: radial-gradient(circle at center, var(--foreground) 1.2489px, transparent 1.5989px);
+        --kp-sig-ph-m40: radial-gradient(circle at center, var(--foreground) 2.4979px, transparent 2.8479px);
+        --kp-sig-ph-m70: radial-gradient(circle at center, var(--foreground) 3.3044px, transparent 3.6544px);
+        --kp-sig-ph-dots: radial-gradient(circle at center, var(--foreground) 1.5958px, transparent 1.9458px);
         --kp-line: hsl(from var(--foreground) h s l / 0.14);
 
         /* The texture [DI9, AR46, S49]: the three static layers the
@@ -23733,15 +23774,19 @@
         --fx-texture-opacity: 0.14;
     }
 
-    /* ── The ring, in the demo's order [S49, A5 of 2026-09-08] ────────────
-       The base layer puts the contrast colour outside and the ring colour
-       against the element; this theme's approved demo does it the other
-       way round, and DI2's promise holds either way — two channels, one
-       of which always clears 3:1 on the surface behind it. The broad rule
-       sits here, before the register's own component rules, so a control
-       that composes its own shadow stack still wins. */
+    /* ── The ring: dashed and red [themes/phantom/CHARACTER.md G16; Kenny,
+       2026-10-09 on research/phantom-character: "a dashed red ring"] ──────
+       Two channels, as DI2 asks of every theme: the contrast ring hugs the
+       part (2 px, the surface colour, so the dashes never run into the red of
+       a plate), and the dashed red ring stands off it (3 px, 2 px out),
+       red on the board at 4.12:1. The broad rule sits here, before the
+       register's own component rules, so a control that composes its own
+       shadow stack still wins. Focus shows the ring alone: the bar a hover
+       throws in is not thrown in by the keyboard, and a hover on a focused
+       part leaves the ring. */
     [data-theme='phantom'] :focus-visible {
-        outline-color: var(--focus-ring);
+        outline: var(--focus-ring-width, 3px) dashed var(--primary);
+        outline-offset: 2px;
         box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring-contrast);
     }
 
@@ -24031,7 +24076,6 @@
     }
 
     [data-theme='phantom'] .kp-nav__link:hover,
-    [data-theme='phantom'] .kp-nav__link:focus-visible,
     [data-theme='phantom'] .kp-nav__link[aria-current],
     [data-theme='phantom'] .kp-nav__links > li:focus-within > .kp-nav__link {
         color: var(--primary-foreground);
@@ -24040,7 +24084,6 @@
     }
 
     [data-theme='phantom'] .kp-nav__link:hover::before,
-    [data-theme='phantom'] .kp-nav__link:focus-visible::before,
     [data-theme='phantom'] .kp-nav__link[aria-current]::before,
     [data-theme='phantom'] .kp-nav__links > li:focus-within > .kp-nav__link::before {
         width: 108%;
@@ -24072,11 +24115,10 @@
         display: none;
     }
 
-    [data-theme='phantom'] .kp-nav__link--cta:hover,
-    [data-theme='phantom'] .kp-nav__link--cta:focus-visible {
+    [data-theme='phantom'] .kp-nav__link--cta:hover {
         background: var(--primary);
         box-shadow: 2px 2px 0 var(--kp-red-deep);
-        transform: skewX(var(--kp-skew)) translate(3px, 3px);
+        translate: 3px 3px;
     }
 
     /* The dropdown: a cut-paper popover with the red edge, arriving on a
@@ -24087,9 +24129,10 @@
         border-left: 4px solid var(--primary);
         border-radius: 0;
         clip-path: var(--kp-paperclip);
-        padding: 0.4rem 0;
+        padding: calc(var(--kp-cut-size) - 4px) 0;
         min-width: 12.5rem;
         box-shadow: none;
+        rotate: var(--kp-land);
     }
 
     /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
@@ -24103,6 +24146,7 @@
             background: transparent;
             box-shadow: none;
             clip-path: none;
+            rotate: none;
         }
     }
 
@@ -24131,14 +24175,12 @@
         z-index: -1;
     }
 
-    [data-theme='phantom'] .kp-nav__menu a:hover,
-    [data-theme='phantom'] .kp-nav__menu a:focus-visible {
+    [data-theme='phantom'] .kp-nav__menu a:hover {
         color: var(--primary-foreground);
         background: none;
     }
 
-    [data-theme='phantom'] .kp-nav__menu a:hover::before,
-    [data-theme='phantom'] .kp-nav__menu a:focus-visible::before {
+    [data-theme='phantom'] .kp-nav__menu a:hover::before {
         width: 104%;
     }
 
@@ -24200,20 +24242,23 @@
         z-index: -1;
     }
 
-    [data-theme='phantom'] .kp-button:hover,
-    [data-theme='phantom'] .kp-button:focus-visible {
+    /* Pointing throws the red bar in behind the label and the ink flips to
+       black [G15; Kenny, 2026-10-09: "the red bar thrown in and resolved"]. The
+       bar is the plate's ::after, the label's ink flips at the second cut
+       (the motion, below). */
+    [data-theme='phantom'] .kp-button:hover {
         color: var(--primary-foreground);
         background: transparent;
         box-shadow: none;
     }
 
-    [data-theme='phantom'] .kp-button:hover::after,
-    [data-theme='phantom'] .kp-button:focus-visible::after {
+    [data-theme='phantom'] .kp-button:hover::after {
         width: calc(100% - 4px);
     }
 
+    /* A press drops the key cap onto its shadow, 3 px, and nothing eases. */
     [data-theme='phantom'] .kp-button:active {
-        transform: translate(3px, 3px);
+        translate: 3px 3px;
     }
 
     /* The demo's call-to-action row: wide buttons, as in the reference. A
@@ -24222,13 +24267,13 @@
         min-width: 12rem;
     }
 
-    /* Two channels, outside the plate: paper hugging the button, the void
-       around it (DI2, AR30). */
+    /* Two channels, outside the plate: the contrast ring hugging it and the
+       dashed red ring standing off it (DI2, AR30; Kenny, 2026-10-09). It
+       skews with the plate. */
     [data-theme='phantom'] .kp-button:focus-visible {
-        outline: none;
-        box-shadow:
-            0 0 0 2px var(--focus-ring-contrast),
-            0 0 0 5px var(--focus-ring);
+        outline: 3px dashed var(--primary);
+        outline-offset: 4px;
+        box-shadow: 0 0 0 2px var(--focus-ring-contrast);
     }
 
     /* The primary plate is painted twice, like the mark's: the skewed
@@ -24236,8 +24281,7 @@
        the button's own background for whatever measures the ink against
        its ground. */
     [data-theme='phantom'] .kp-button--primary,
-    [data-theme='phantom'] .kp-button--primary:hover,
-    [data-theme='phantom'] .kp-button--primary:focus-visible {
+    [data-theme='phantom'] .kp-button--primary:hover {
         --kp-plate-fill: var(--primary);
         --kp-plate-ink: var(--primary-foreground);
         --kp-plate-frame: var(--primary);
@@ -24252,15 +24296,16 @@
         background: var(--foreground);
     }
 
-    [data-theme='phantom'] .kp-button--primary:hover,
-    [data-theme='phantom'] .kp-button--primary:focus-visible {
+    [data-theme='phantom'] .kp-button--primary:hover {
         filter: drop-shadow(2px 2px 0 var(--kp-red-deep));
-        transform: translate(3px, 3px);
+        translate: 3px 3px;
     }
 
+    /* The destructive button is red on its frame, white in its ink: red is a
+       plate, never a word [G5]. */
     [data-theme='phantom'] .kp-button--destructive {
         --kp-plate-fill: transparent;
-        --kp-plate-ink: var(--primary);
+        --kp-plate-ink: var(--foreground);
         --kp-plate-frame: var(--primary);
     }
 
@@ -24268,14 +24313,13 @@
         --kp-plate-frame: transparent;
     }
 
-    [data-theme='phantom'] .kp-button--ghost:hover,
-    [data-theme='phantom'] .kp-button--ghost:focus-visible {
+    [data-theme='phantom'] .kp-button--ghost:hover {
         --kp-plate-frame: var(--foreground);
     }
 
     [data-theme='phantom'] .kp-button:disabled {
         opacity: 0.45;
-        transform: none;
+        translate: none;
         filter: none;
     }
 
@@ -24299,10 +24343,16 @@
         color: inherit;
     }
 
+    /* An icon button takes the same manners as the key cap [G14]: pointed at,
+       the red plate with black ink; pressed, it drops 3 px. */
     [data-theme='phantom'] .kp-icon-button:hover {
         border-color: var(--foreground);
         background: var(--primary);
         color: var(--primary-foreground);
+    }
+
+    [data-theme='phantom'] .kp-icon-button:active {
+        translate: 3px 3px;
     }
 
     /* ── Fields ───────────────────────────────────────────────────────── */
@@ -24400,9 +24450,10 @@
         text-shadow: 3px 3px 0 var(--background);
     }
 
-    /* The dossier: the stamp is a rotated red plate; the redactions are
-       censor plates that shear off, right edge first, when the file is
-       opened. */
+    /* The dossier: the label is a skewed red plate with black ink (no stamp:
+       the print's motifs are the screen, the skew, the red plate, the second
+       plate, the slash and the star [G19]); the redactions are censor plates
+       that shear off, right edge first, when the file is opened. */
     [data-theme='phantom'] .kp-card[data-kp-reveal='emphasis'] {
         position: relative;
     }
@@ -24412,10 +24463,10 @@
         position: absolute;
         top: 0.9rem;
         right: 0.9rem;
-        transform: rotate(-6deg);
+        transform: skewX(var(--kp-skew));
         background: var(--primary);
         color: var(--primary-foreground);
-        border: 2px solid var(--background);
+        border: 0;
         box-shadow: var(--kp-hard);
         font-family: var(--theme-font-display);
         font-weight: 800;
@@ -24515,6 +24566,14 @@
         clip-path: none;
     }
 
+    /* A dropdown and a menu are cut paper that has landed: the corner is cut
+       by the fixed 14 px, so the rows are inset by the cut less the edge
+       (the demo's menu), and the plate stands a degree and a half askew. */
+    [data-theme='phantom'] :is(.kp-popover:not(.kp-tooltip), .kp-menu-button > .kp-menu) {
+        padding: calc(var(--kp-cut-size) - 4px) 0.6rem calc(var(--kp-cut-size) - 4px) 0.8rem;
+        rotate: var(--kp-land);
+    }
+
     [data-theme='phantom'] .kp-toast--destructive,
     [data-theme='phantom'] .kp-toast--error {
         background: var(--destructive);
@@ -24543,10 +24602,70 @@
     /* The keyboard highlight is the skewed red bar with black ink (KT8:
        the list text keeps its colour where the bar is a wash — here the
        plate carries its own ink). */
-    [data-theme='phantom'] .kp-menu__item:hover,
     [data-theme='phantom'] .kp-combobox__option[aria-selected='true'],
     [data-theme='phantom'] .kp-palette__option[aria-selected='true'] {
         background: hsl(from var(--foreground) h s l / 0.14);
+    }
+
+    /* A menu entry, pointed at, is the red bar thrown in behind its label with
+       the ink flipped to black [G15, G14]; the bar waits off its start edge and
+       the entry clips it. The same bar is behind a calendar day and behind the
+       label of a key figure that is a link. */
+    [data-theme='phantom'] :is(.kp-menu__item, .kp-calendar__day) {
+        position: relative;
+        isolation: isolate;
+        overflow: clip;
+    }
+
+    [data-theme='phantom'] .kp-menu__item::before,
+    [data-theme='phantom'] .kp-calendar__day:not([data-kp-tone='loading'])::before,
+    [data-theme='phantom'] :is(a.kp-kpi, .kp-kpi--toggle) .kp-kpi__label::before {
+        content: '';
+        position: absolute;
+        inset: 0 0.2rem 0 -0.35rem;
+        z-index: -1;
+        background: var(--primary);
+        transform: skewX(var(--kp-skew));
+        translate: -115% 0;
+    }
+
+    [data-theme='phantom'] :is(a.kp-kpi, .kp-kpi--toggle) .kp-kpi__label {
+        position: relative;
+        isolation: isolate;
+        inline-size: fit-content;
+        padding-inline: 0.3rem;
+        margin-inline: -0.3rem;
+    }
+
+    [data-theme='phantom'] .kp-menu__item:hover,
+    [data-theme='phantom'] .kp-calendar__day:not([data-kp-tone='loading']):hover,
+    [data-theme='phantom'] :is(a.kp-kpi, .kp-kpi--toggle):hover .kp-kpi__label {
+        background: none;
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='phantom'] .kp-menu__item:hover::before,
+    [data-theme='phantom'] .kp-calendar__day:not([data-kp-tone='loading']):hover::before,
+    [data-theme='phantom'] :is(a.kp-kpi, .kp-kpi--toggle):hover .kp-kpi__label::before {
+        translate: 0 0;
+    }
+
+    [data-theme='phantom'] :is(.kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle):active {
+        translate: 3px 3px;
+    }
+
+    /* On a part that is cut or clipped the ring stands inside it. */
+    [data-theme='phantom'] :is(.kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle):focus-visible {
+        outline-offset: -6px;
+    }
+
+    /* A destructive entry is a red plate with black ink, never a red word [G5, G8]. */
+    [data-theme='phantom'] .kp-menu__item--destructive,
+    [data-theme='phantom'] .kp-menu__item--destructive:hover,
+    [data-theme='phantom'] .kp-menu__item--destructive .kp-menu__label {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        font-weight: 700;
     }
 
     /* The plain alert only [gap-1, Kenny 2026-09-10]. This rule used to
@@ -24572,8 +24691,14 @@
         border-left-color: var(--primary);
     }
 
+    /* A warning is the yellow overprint [G8; Kenny, 2026-10-09: "the yellow
+       overprint"]: the alert is the yellow plate with black ink and a black
+       edge; yellow is the overprint for a warning and for nothing else. */
     [data-theme='phantom'] .kp-alert--warning {
-        border-left-color: var(--fx-signal);
+        border: 2px solid var(--background);
+        border-inline-start: 5px solid var(--background);
+        background: var(--fx-signal);
+        color: var(--fx-signal-foreground);
     }
 
     [data-theme='phantom'] .kp-alert--success {
@@ -24652,13 +24777,11 @@
         z-index: -1;
     }
 
-    [data-theme='phantom'] .kp-footer a:hover,
-    [data-theme='phantom'] .kp-footer a:focus-visible {
+    [data-theme='phantom'] .kp-footer a:hover {
         color: var(--primary-foreground);
     }
 
-    [data-theme='phantom'] .kp-footer a:hover::before,
-    [data-theme='phantom'] .kp-footer a:focus-visible::before {
+    [data-theme='phantom'] .kp-footer a:hover::before {
         width: 108%;
     }
 
@@ -24749,7 +24872,7 @@
     [data-theme='phantom'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
         border-color: var(--destructive);
         border-style: dashed;
-        color: var(--destructive);
+        color: var(--foreground);
     }
 
     /* ── Data ─────────────────────────────────────────────────────────── */
@@ -24781,7 +24904,8 @@
     }
 
     [data-theme='phantom'] .kp-datatable__sort[aria-sort] {
-        color: var(--primary);
+        text-decoration: underline 3px var(--primary);
+        text-underline-offset: 0.25em;
     }
 
     [data-theme='phantom'] .kp-datatable__status,
@@ -24835,7 +24959,8 @@
     }
 
     [data-theme='phantom'] .kp-accordion__item[open] > .kp-accordion__summary {
-        color: var(--primary);
+        text-decoration: underline 3px var(--primary);
+        text-underline-offset: 0.25em;
     }
 
     [data-theme='phantom'] .kp-reorder {
@@ -25039,16 +25164,11 @@
         border: 2px solid var(--border);
         box-shadow: var(--kp-hard);
         padding: 0.45rem 0.85rem;
-        transform: rotate(-2deg);
+        rotate: var(--kp-land);
     }
 
     [data-theme='phantom'] .kp-laurels li:nth-child(2) {
-        transform: rotate(1.5deg);
         border-color: var(--primary);
-    }
-
-    [data-theme='phantom'] .kp-laurels li:nth-child(3) {
-        transform: rotate(-1deg);
     }
 
     [data-theme='phantom'] .kp-laurels b {
@@ -25198,17 +25318,32 @@
 
     /* Every animation and transition of this register lives here, inside
        the no-preference guard, so a reader who asked for reduced motion
-       never receives one: the rest states above are what they get. The
-       durations are literal because check-motion.mjs computes DI5's rate
-       from them; the matching --kp-* knobs are what js/effects.js reads. */
+       never receives one: the rest states above are what they get (the part
+       resolved, landed askew). The durations are literal because
+       check-motion.mjs computes DI5's rate from them; the matching --kp-*
+       knobs are what js/effects.js reads. The grammar: the throw is the shove
+       and every change of state is hard cuts (G1), so a hover throws the red
+       bar in on the shove and resolves it in two cuts, a press drops the cap
+       and resolves its face in two cuts, and nothing eases. */
     @media (prefers-reduced-motion: no-preference) {
+        /* The words of a headline are thrown in from the start edge one after
+           the other and resolve (the signature layer's pair, on the words'
+           own offsets); without the script every word stands at rest. */
         [data-theme='phantom'] [data-kp-reveal='headline'].is-words [data-word] {
-            animation: kp-shout 620ms cubic-bezier(0.22, 1, 0.36, 1) both;
+            --kp-sig-ph-x0: -0.6em;
+            --kp-sig-ph-y0: 0px;
+            --kp-sig-ph-r0: 0deg;
+            --kp-sig-ph-s0: 1;
+            --kp-sig-ph-land: 0deg;
+            mask-size: 7px 7px;
+            animation:
+                kp-sig-phantom-fly 700ms linear backwards,
+                kp-sig-phantom-resolve 700ms linear backwards;
             animation-delay: calc(var(--kp-i, 0) * var(--kp-word-stagger));
         }
 
         [data-theme='phantom'] [data-kp-reveal='rule']::after {
-            transition: background-position var(--kp-rail) linear;
+            transition: background-position var(--kp-rail) var(--kp-shove);
         }
 
         [data-theme='phantom'] mark::before {
@@ -25235,36 +25370,71 @@
         }
 
         [data-theme='phantom'] [data-kp-surface='hero']::after {
-            transition: transform 900ms var(--kp-shove);
+            transition: transform 400ms var(--kp-shove);
         }
 
-        /* Width and transform only — no colour transition: a theme applied
-           after first paint transitions every colour, and CI's chromium read
-           a nav link halfway (KT8; flake named, rule 8a). */
-        [data-theme='phantom'] .kp-nav__link::before,
-        [data-theme='phantom'] .kp-nav__menu a::before,
-        [data-theme='phantom'] .kp-footer a::before,
-        [data-theme='phantom'] .kp-tab::before,
+        /* The red bar behind a label [G15]: width only, no colour transition
+           (a theme applied after first paint transitions every colour, and
+           CI's chromium read a nav link halfway; KT8, rule 8a). Leaving, the
+           bar is snatched back: 60 ms on the shove's inverse, 30 ms after the
+           pointer left. Pointing, it is thrown in on the shove in 60 ms and
+           resolved from dots to solid in two cuts across the 120 ms of
+           contact (kp-sig-phantom-bar); the ink flips to black at the
+           second (kp-sig-phantom-ink). */
+        [data-theme='phantom'] :is(.kp-nav__link, .kp-nav__menu a, .kp-footer a, .kp-tab, .kp-nav__search-trigger)::before,
         [data-theme='phantom'] .kp-button::after {
-            transition: width var(--fx-duration) var(--kp-cut);
+            mask-size: 7px 7px;
+            transition: width 60ms var(--kp-shove-out) 30ms;
+        }
+
+        [data-theme='phantom'] :is(.kp-nav__link, .kp-nav__menu a, .kp-footer a, .kp-nav__search-trigger):hover::before,
+        [data-theme='phantom'] .kp-nav__links > li:focus-within > .kp-nav__link::before,
+        [data-theme='phantom'] .kp-tab[aria-selected='true']::before,
+        [data-theme='phantom'] .kp-button:hover::after {
+            transition: width 60ms var(--kp-shove);
+            animation: kp-sig-phantom-bar 120ms linear both;
+        }
+
+        [data-theme='phantom'] .kp-button:hover {
+            animation: kp-sig-phantom-ink 120ms linear both;
+        }
+
+        /* A press drops the cap (translate, instantly: nothing eases) and its
+           face resolves from dots to solid in two cuts; let go, the cap is
+           up and the face solid. */
+        [data-theme='phantom'] .kp-button:active:not(.kp-button--primary)::after,
+        [data-theme='phantom'] .kp-button--primary:active::before {
+            animation: kp-sig-phantom-face 120ms linear both;
+        }
+
+        [data-theme='phantom'] .kp-button--primary:active::before {
+            mask-size: 7px 7px;
         }
 
         [data-theme='phantom'] .kp-nav__link--cta,
-        [data-theme='phantom'] .kp-button {
-            transition: transform var(--fx-duration) var(--kp-cut);
+        [data-theme='phantom'] .kp-button,
+        [data-theme='phantom'] .kp-icon-button {
+            transition: none;
         }
 
-        /* The film cut: three steps, one monotonic change of opacity and
-           saturation together. */
-        [data-theme='phantom'] .kp-nav__menu {
-            transition:
-                opacity 180ms steps(3, end),
-                translate 180ms steps(3, end),
-                filter 180ms steps(3, end);
+        /* A menu entry, a calendar day and a key figure that is a link: the
+           bar is the part's ::before (a key figure's label's), thrown in from
+           the start edge, which the part clips; the same hand as the button's. */
+        [data-theme='phantom'] :is(.kp-menu__item, .kp-calendar__day, :is(a.kp-kpi, .kp-kpi--toggle) .kp-kpi__label)::before {
+            mask-size: 7px 7px;
+            transition: translate 60ms var(--kp-shove-out) 30ms;
         }
 
-        [data-theme='phantom'] .kp-toast {
-            animation: kp-cut-in 180ms steps(3, end) 1;
+        [data-theme='phantom'] :is(.kp-menu__item, .kp-calendar__day:not([data-kp-tone='loading'])):hover::before,
+        [data-theme='phantom'] :is(a.kp-kpi, .kp-kpi--toggle):hover .kp-kpi__label::before {
+            transition: translate 60ms var(--kp-shove);
+            animation: kp-sig-phantom-bar 120ms linear both;
+        }
+
+        /* A press drops these 3 px as it drops a key cap, and nothing eases. */
+        [data-theme='phantom'] :is(.kp-menu__item, .kp-calendar__day):active::before,
+        [data-theme='phantom'] :is(a.kp-kpi, .kp-kpi--toggle):active .kp-kpi__label::before {
+            animation: kp-sig-phantom-face 120ms linear both;
         }
 
         [data-theme='phantom'] .kp-boot::before {
@@ -25276,38 +25446,7 @@
         }
     }
 
-    /* ── Motion [DI5, DI7] ────────────────────────────────────────────── */
-
     /* Every keyframe here has its row in TIMINGS (js/effects.js). */
-    @keyframes kp-shout {
-        0% {
-            opacity: 0;
-            transform: translateY(0.28em) skewX(-14deg);
-        }
-
-        100% {
-            opacity: 1;
-            transform: none;
-        }
-    }
-
-    @keyframes kp-cut-in {
-        0% {
-            opacity: 0;
-            filter: saturate(0) contrast(1.7);
-        }
-
-        60% {
-            opacity: 0.6;
-            filter: saturate(0.6) contrast(1.25);
-        }
-
-        100% {
-            opacity: 1;
-            filter: none;
-        }
-    }
-
     @keyframes kp-bar-run {
         from {
             transform: translateY(-50%) scaleX(0);
@@ -25334,7 +25473,9 @@
 
     /* The card's file code, in the red the plates wear [S49, A3]. */
     [data-theme='phantom'] .kp-nav__brand-tag {
-        color: var(--primary);
+        padding-inline: 0.45em;
+        background: var(--primary);
+        color: var(--primary-foreground);
         font-style: normal;
         letter-spacing: 0.2em;
     }
@@ -25409,12 +25550,12 @@
        The plate that slides out from behind things, held still: the frame
        is offset from its own shadow rather than bordered. */
     [data-theme='phantom'] .kp-to-top {
-        box-shadow: 0.25rem 0.25rem 0 hsl(from var(--primary) h s l / 0.5);
+        box-shadow: 0.25rem 0.25rem 0 var(--kp-red-deep);
     }
 
     [data-theme='phantom'] .kp-media {
         border: 1px solid var(--border-strong);
-        box-shadow: 0.4rem 0.4rem 0 hsl(from var(--primary) h s l / 0.3);
+        box-shadow: 0.4rem 0.4rem 0 var(--kp-red-deep);
     }
 
     [data-theme='phantom'] .kp-media-figure > figcaption {
@@ -25446,7 +25587,7 @@
        rest of the way onto its own shadow: 5px, the shadow's full offset,
        with the shadow gone under it. */
     [data-theme='phantom'] .kp-button--primary:active:not(:disabled) {
-        transform: translate(5px, 5px);
+        translate: 5px 5px;
         filter: drop-shadow(0 0 0 var(--kp-red-deep));
     }
 
@@ -25485,8 +25626,7 @@
         color: var(--foreground);
     }
 
-    [data-theme='phantom'] .kp-nav__search .kp-nav__search-trigger:hover,
-    [data-theme='phantom'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+    [data-theme='phantom'] .kp-nav__search .kp-nav__search-trigger:hover {
         color: var(--primary-foreground);
         background: none;
         box-shadow: none;
@@ -25504,15 +25644,8 @@
         z-index: -1;
     }
 
-    [data-theme='phantom'] .kp-nav__search .kp-nav__search-trigger:hover::before,
-    [data-theme='phantom'] .kp-nav__search .kp-nav__search-trigger:focus-visible::before {
+    [data-theme='phantom'] .kp-nav__search .kp-nav__search-trigger:hover::before {
         width: 108%;
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='phantom'] .kp-nav__search .kp-nav__search-trigger::before {
-            transition: width var(--fx-duration) var(--kp-cut);
-        }
     }
 
     /* ── The alarm [scope-94] ──────────────────────────────────────────────
@@ -25527,7 +25660,7 @@
         --kp-alarm-soft: var(--foreground);
         --kp-alarm-split: var(--foreground);
         --kp-alarm-on-ink: var(--background);
-        --kp-alarm-glow: hsl(from var(--destructive) h s l / 0.5);
+        --kp-alarm-glow: hsl(from var(--destructive) h s l / 0);
         --kp-alarm-halo: hsl(from var(--destructive) h s l / 0);
         --kp-alarm-scan: hsl(from var(--destructive) h s l / 0);
         --kp-alarm-vignette: hsl(from var(--background) h s 1% / 0.8);
@@ -25668,7 +25801,13 @@
         inline-size: 34%;
         clip-path: polygon(var(--kp-ps-slant) 0, 100% 0, calc(100% - var(--kp-ps-slant)) 100%, 0 100%);
         box-shadow: none;
-        animation: kp-progressbar-phantom-shove 1500ms var(--kp-shove, cubic-bezier(0.81, -0.01, 0, 1)) infinite;
+        /* The slab shoved across as a screen [G11; Kenny, 2026-10-09 on
+           research/phantom-character: "the slab shoved across as a screen"]:
+           busy, with no share known, the red slab is a silhouette of dots on a
+           4 px cell that never resolves, 1500 ms, and again. */
+        mask-image: var(--kp-sig-ph-dots);
+        mask-size: 4px 4px;
+        animation: kp-progressbar-phantom-shove 1500ms cubic-bezier(0.81, 0, 0, 1) infinite;
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -25677,6 +25816,7 @@
             inline-size: auto;
             animation: none;
             transform: none;
+            mask-image: none;
             clip-path: none;
             background: repeating-linear-gradient(-69deg, var(--primary) 0 var(--kp-ps-stripe), transparent var(--kp-ps-stripe) var(--kp-ps-pitch));
         }
@@ -25713,30 +25853,152 @@
         background: var(--foreground);
     }
 
-    [data-theme='phantom'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+    /* ── Loading is the red slash across a halftone block [themes/phantom/
+       CHARACTER.md G10; Kenny, 2026-10-09 on research/phantom-character:
+       "the red slash (as today)"]. A part that waits is a block of the screen
+       with a red slash sweeping over it, 1400 ms a loop, the register's own
+       skeleton, drawn on every waiting surface the package has: the skeleton's
+       lines, blocks and circles, the loading meter, the table's busy panel,
+       the loading entry of a menu, a busy button and card, the tiles' cards,
+       the calendar's days and busy panel, the chart's plot. The block fills
+       the whole element and is shaped like the result (the line's leaning
+       sheet, the plate's cut corner, the circle); the part's words stand
+       above it. Nothing is translucent: the layout layer's busy dim is off. ── */
+    [data-theme='phantom'] {
+        --kp-sig-ph-block: radial-gradient(circle, hsl(from var(--foreground) h s l / 0.32) 1px, transparent 1.4px) 0 0 / 5px 5px, var(--muted);
+        --kp-sig-ph-slash: polygon(0.8rem 0, 2.6rem 0, 1.8rem 100%, 0 100%);
+    }
+
+    [data-theme='phantom'] .kp-skeleton {
         --kp-sig-dur: 1400ms;
         position: relative;
         overflow: hidden;
-        block-size: 0.95rem;
         border-radius: 0;
-        background:
-            radial-gradient(circle, hsl(from var(--foreground) h s l / 0.32) 1px, transparent 1.4px) 0 0 / 5px 5px,
-            var(--muted);
-        clip-path: var(--kp-sig-ph-cut);
+        background: var(--kp-sig-ph-block);
         animation: none;
+    }
+
+    [data-theme='phantom'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        block-size: 0.95rem;
+        clip-path: var(--kp-sig-ph-cut);
+    }
+
+    [data-theme='phantom'] .kp-skeleton--block {
+        clip-path: var(--kp-paperclip);
+    }
+
+    [data-theme='phantom'] .kp-skeleton--circle {
+        border-radius: 50%;
     }
 
     [data-theme='phantom'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) + .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
         margin-block-start: 0.55rem;
     }
 
-    [data-theme='phantom'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+    [data-theme='phantom'] .kp-skeleton::after {
         content: '';
         position: absolute;
         inset: 0;
         background: var(--primary);
-        clip-path: polygon(0.8rem 0, 2.6rem 0, 1.8rem 100%, 0 100%);
-        transform: translateX(-2.8rem);
+        clip-path: var(--kp-sig-ph-slash);
+        translate: -2.8rem 0;
+    }
+
+    /* The other surfaces that wait. */
+    [data-theme='phantom']
+        :is(
+            .kp-card[aria-busy='true'],
+            .kp-tiles[aria-busy='true'] > .kp-card,
+            .kp-chart__state[data-kp-state='loading'],
+            .kp-calendar__day[data-kp-tone='loading'],
+            .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading]
+        ) {
+        --kp-busy-opacity: 1;
+        position: relative;
+        isolation: isolate;
+        overflow: clip;
+        animation: none;
+    }
+
+    [data-theme='phantom'] :is(.kp-datatable__busy-panel, .kp-calendar--busy-whole > .kp-calendar__busy) {
+        --kp-busy-opacity: 1;
+        isolation: isolate;
+        overflow: clip;
+    }
+
+    [data-theme='phantom']
+        :is(
+            .kp-card[aria-busy='true'],
+            .kp-tiles[aria-busy='true'] > .kp-card,
+            .kp-chart__state[data-kp-state='loading'],
+            .kp-calendar__day[data-kp-tone='loading'],
+            .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+            .kp-datatable__busy-panel,
+            .kp-calendar--busy-whole > .kp-calendar__busy
+        )::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -2;
+        background: var(--kp-sig-ph-block);
+        transform: none;
+        translate: none;
+        mask-image: none;
+        pointer-events: none;
+    }
+
+    [data-theme='phantom']
+        :is(
+            .kp-card[aria-busy='true'],
+            .kp-tiles[aria-busy='true'] > .kp-card,
+            .kp-chart__state[data-kp-state='loading'],
+            .kp-calendar__day[data-kp-tone='loading'],
+            .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+            .kp-datatable__busy-panel,
+            .kp-calendar--busy-whole > .kp-calendar__busy
+        )::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background: var(--primary);
+        clip-path: var(--kp-sig-ph-slash);
+        translate: -2.8rem 0;
+        pointer-events: none;
+    }
+
+    /* A busy button is the key cap with its plate a block of the screen and the
+       slash across it; its label and spinner stand above. */
+    [data-theme='phantom'] .kp-button[aria-busy='true'] {
+        --kp-plate-fill: var(--kp-sig-ph-block);
+        --kp-plate-ink: var(--foreground);
+        --kp-busy-opacity: 1;
+        overflow: clip;
+    }
+
+    [data-theme='phantom'] .kp-button[aria-busy='true']::after {
+        width: calc(100% - 4px);
+        background: var(--primary);
+        clip-path: var(--kp-sig-ph-slash);
+        translate: -2.8rem 0;
+        transition: none;
+        mask-image: none;
+    }
+
+    /* The loading meter: its groove is the block and the slash crosses it. */
+    [data-theme='phantom'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::before {
+        display: block;
+        content: '';
+        position: absolute;
+        inset: 0;
+        inline-size: auto;
+        z-index: 1;
+        border-radius: 0;
+        background: var(--primary);
+        clip-path: var(--kp-sig-ph-slash);
+        translate: -2.8rem 0;
+        transition: none;
+        pointer-events: none;
     }
 
     [data-theme='phantom'] .kp-switch {
@@ -25823,12 +26085,13 @@
     }
 
     [data-theme='phantom'] .kp-toast {
-        --kp-sig-dur: 380ms;
+        --kp-sig-dur: 700ms;
         border: 2px solid var(--foreground);
         border-radius: 0;
         background: var(--background);
         color: var(--foreground);
         box-shadow: 6px 6px 0 var(--kp-sig-ph-plate);
+        rotate: var(--kp-land);
     }
 
     [data-theme='phantom'] .kp-toast--success {
@@ -25874,13 +26137,59 @@
             var(--background);
     }
 
+    /* The unopened dialog is the one js/motion.js measures for the theme's
+       time (a probe it adds and takes off), and it reads close = two thirds
+       of that: so it runs one and a half throws, and the dialog that is open
+       runs one, which is also its close and its opening [see the motion block
+       below]. */
+    [data-theme='phantom'] .kp-dialog[open] {
+        --kp-sig-dur: 700ms;
+    }
+
     [data-theme='phantom'] .kp-dialog {
-        --kp-sig-dur: 420ms;
+        --kp-sig-dur: 1050ms;
+        --kp-sig-ph-edge: 2.2rem;
         border: 3px solid var(--foreground);
         border-radius: 0;
         background: var(--background);
         box-shadow: 10px 10px 0 var(--kp-sig-ph-plate);
-        rotate: -1.5deg;
+        rotate: var(--kp-land);
+        /* The red edge stands outside the content: the title, the words and
+           the buttons are inset from it by its own width and 12 px, so no word
+           sits on the red [Kenny, 2026-10-09: "in a dialog with a title, the
+           red on the side makes some of the content hard to read"]. */
+        padding-inline-end: calc(var(--kp-sig-ph-edge) + 12px);
+    }
+
+    /* On a phone the edge is thinner, so the actions keep their words. */
+    @media (max-width: 30rem) {
+        [data-theme='phantom'] .kp-dialog {
+            --kp-sig-ph-edge: 1.25rem;
+            padding-inline-end: calc(var(--kp-sig-ph-edge) + 8px);
+        }
+    }
+
+    [data-theme='phantom'] .kp-dialog.kp-drawer {
+        padding-inline-end: 0;
+        rotate: none;
+    }
+
+    /* The slash the hero carries, here as the dialog's end edge: a red plate
+       cut at 40 %, behind nothing. */
+    [data-theme='phantom'] .kp-dialog:not(.kp-drawer)::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-end: 0;
+        inline-size: var(--kp-sig-ph-edge);
+        background: var(--primary);
+        clip-path: polygon(40% 0, 100% 0, 100% 100%, 0 100%);
+        opacity: 0.9;
+        pointer-events: none;
+    }
+
+    [data-theme='phantom'] .kp-dialog:not(.kp-drawer):dir(rtl)::after {
+        clip-path: polygon(0 0, 60% 0, 100% 100%, 0 100%);
     }
 
     [data-theme='phantom'] .kp-dialog__title {
@@ -25895,7 +26204,8 @@
     }
 
     [data-theme='phantom'] .kp-tooltip {
-        --kp-sig-dur: 260ms;
+        --kp-sig-dur: 300ms;
+        clip-path: none;
         margin-block-start: 0.6rem;
         /* Within 12px under its trigger and never over it (Kenny's phantom note,
            2026-09-15, tests/dark-themes-notes.spec.mjs). */
@@ -25947,11 +26257,7 @@
         font-family: var(--theme-font-display);
         font-size: 1rem;
         font-weight: 900;
-        rotate: 4deg;
-    }
-
-    [data-theme='phantom'] .kp-wizard__steps li:nth-child(even)::before {
-        rotate: -5deg;
+        rotate: var(--kp-land);
     }
 
     [data-theme='phantom'] .kp-wizard__steps li[data-state='done']::before {
@@ -25972,7 +26278,7 @@
         color: var(--primary-foreground);
         font-size: 1.25rem;
         box-shadow: 3px 3px 0 var(--foreground);
-        rotate: -8deg;
+        rotate: var(--kp-land);
     }
 
     [data-theme='phantom'] .kp-empty {
@@ -25982,8 +26288,7 @@
         background:
             radial-gradient(circle, hsl(from var(--foreground) h s l / 0.25) 1.3px, transparent 1.8px) 0 0 / 7px 7px,
             var(--card);
-        clip-path: polygon(0 4%, 100% 0, 98% 100%, 2% 94%);
-        mask: radial-gradient(ellipse 85% 120% at 50% 50%, black 45%, transparent 150%);
+        clip-path: var(--kp-paperclip);
     }
 
     [data-theme='phantom'] .kp-empty__title {
@@ -26006,31 +26311,91 @@
         color: var(--foreground);
     }
 
+    /* A link in running text is white with a red underline [G5]; pointed at,
+       a thin red bar is thrown in over its foot from the start edge [G15] (a
+       card does not move, and the link keeps its white ink). */
     [data-theme='phantom'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
         color: var(--foreground);
         font-weight: 600;
         text-decoration-color: var(--primary);
         text-decoration-thickness: 2px;
         text-underline-offset: 0.2em;
+        background: linear-gradient(var(--primary), var(--primary)) 0 100% / 0% 0.2em no-repeat;
         -webkit-box-decoration-break: clone;
         box-decoration-break: clone;
     }
 
     [data-theme='phantom'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a):hover {
-        padding-inline: 0.15em;
-        background: var(--primary);
-        color: var(--primary-foreground);
-        text-decoration-color: var(--primary-foreground);
+        background-size: 100% 0.2em;
+    }
+
+    /* ── Contact, the throw and the leave, on the shove [themes/phantom/
+       CHARACTER.md G1 to G4, G13; Kenny, 2026-10-09 on research/phantom-
+       character]. One throw is 700 ms: the part comes from beyond its start
+       edge along the skew, turning, and lands a degree and a half askew on the
+       shove's dead stop (400 ms), then its screen resolves in three hard cuts
+       (300 ms): kp-sig-phantom-fly and kp-sig-phantom-resolve, played
+       together. A close is the same backwards (js/motion.js plays an opening
+       backwards, frame for frame; a leave is the pair on the inverse curve,
+       below). A part that has not arrived or has left is not drawn at all:
+       the first frame of the throw and the last of the leave are
+       `visibility: hidden`, so a closed part never shows a sliver. Each part
+       names where it comes from (--kp-sig-ph-x0, -y0, -r0, -s0) and the pose
+       it lands in (--kp-sig-ph-land); the defaults are the dialog's: off the
+       start edge, 80 cqi along, 6 cqi down, turned -22 degrees, 1.15 larger.
+       The mask lives on the part only while the animation runs. ── */
+    [data-theme='phantom'] {
+        --kp-sig-ph-x0: -80cqi;
+        --kp-sig-ph-y0: 6cqi;
+        --kp-sig-ph-r0: -22deg;
+        --kp-sig-ph-s0: 1.15;
+        --kp-sig-ph-land: -1.5deg;
+    }
+
+    [data-theme='phantom']:dir(rtl) {
+        --kp-sig-ph-x0: 80cqi;
+        --kp-sig-ph-r0: 22deg;
+    }
+
+    /* A menu, a popover and a tour card are thrown from the edge of what opens
+       them, not from the edge of the board. */
+    [data-theme='phantom'] :is(.kp-popover:not(.kp-tooltip), .kp-menu-button > .kp-menu, .kp-nav__menu, .kp-tour) {
+        --kp-sig-dur: 700ms;
+        --kp-sig-ph-x0: -1.6rem;
+        --kp-sig-ph-y0: -2.4rem;
+        --kp-sig-ph-r0: -9deg;
+        --kp-sig-ph-s0: 1;
+    }
+
+    [data-theme='phantom']:dir(rtl) :is(.kp-popover:not(.kp-tooltip), .kp-menu-button > .kp-menu, .kp-nav__menu, .kp-tour) {
+        --kp-sig-ph-x0: 1.6rem;
+        --kp-sig-ph-r0: 9deg;
+    }
+
+    /* The tooltip is too small to fly: it resolves in place. */
+    [data-theme='phantom'] .kp-tooltip {
+        --kp-sig-ph-land: -3deg;
+    }
+
+    /* A full-height drawer lands level (a turned edge would show the board
+       beside it) and is thrown from its own edge. */
+    [data-theme='phantom'] dialog.kp-drawer {
+        --kp-sig-dur: 700ms;
+        --kp-sig-ph-x0: 100%;
+        --kp-sig-ph-y0: 0px;
+        --kp-sig-ph-r0: 0deg;
+        --kp-sig-ph-s0: 1;
+        --kp-sig-ph-land: 0deg;
+    }
+
+    [data-theme='phantom']:dir(rtl) dialog.kp-drawer {
+        --kp-sig-ph-x0: -100%;
     }
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='phantom'] .kp-spinner::before,
         [data-theme='phantom'] .kp-spinner::after {
             animation: kp-sig-phantom-phantom-snap var(--kp-sig-dur) infinite;
-        }
-
-        [data-theme='phantom'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
-            animation: kp-sig-phantom-phantom-slash var(--kp-sig-dur) cubic-bezier(0.6, 0, 0.4, 1) infinite;
         }
 
         [data-theme='phantom'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2)::after {
@@ -26042,27 +26407,57 @@
         }
 
         [data-theme='phantom'] .kp-switch__input::before {
-            transition: transform 200ms var(--fx-ease);
+            transition: transform var(--fx-duration) var(--fx-ease);
         }
 
+        /* A tick and a radio's star are thrown nowhere: they resolve in place,
+           from dots to solid in three cuts. */
         [data-theme='phantom'] .kp-field__check:checked::before {
-            animation: kp-sig-phantom-phantom-slam var(--kp-sig-dur) var(--fx-ease) both;
-        }
-
-        [data-theme='phantom'] .kp-field__check[type='checkbox']:checked::before {
-            animation: kp-sig-phantom-phantom-stick var(--kp-sig-dur) linear both;
+            mask-size: 7px 7px;
+            animation: kp-sig-phantom-resolve-tip var(--kp-sig-dur) linear backwards;
         }
 
         [data-theme='phantom'] .kp-toast {
-            animation: kp-sig-phantom-phantom-card var(--kp-sig-dur) var(--fx-ease) both;
+            mask-size: 7px 7px;
+            animation:
+                kp-sig-phantom-fly var(--kp-sig-dur) linear backwards,
+                kp-sig-phantom-resolve var(--kp-sig-dur) linear backwards;
         }
 
-        [data-theme='phantom'] .kp-dialog {
-            animation: kp-sig-phantom-phantom-card-big var(--kp-sig-dur) var(--fx-ease) both;
+        [data-theme='phantom'] .kp-dialog,
+        [data-theme='phantom'] dialog.kp-drawer[open] {
+            mask-size: 7px 7px;
+            animation:
+                kp-sig-phantom-fly var(--kp-sig-dur) linear backwards,
+                kp-sig-phantom-resolve var(--kp-sig-dur) linear backwards;
         }
 
         [data-theme='phantom'] .kp-tooltip {
-            animation: kp-sig-phantom-phantom-pop var(--kp-sig-dur) var(--fx-ease) both;
+            mask-size: 7px 7px;
+            animation: kp-sig-phantom-resolve-tip var(--kp-sig-dur) linear backwards;
+        }
+
+        [data-theme='phantom'] :is(.kp-popover:not(.kp-tooltip)[popover], .kp-menu-button > .kp-menu, .kp-tour) {
+            mask-size: 7px 7px;
+            animation:
+                kp-sig-phantom-fly var(--kp-sig-dur) linear backwards,
+                kp-sig-phantom-resolve var(--kp-sig-dur) linear backwards;
+        }
+
+        /* The dropdown of the bar opens as it is shown (display, from none):
+           the pair runs when it comes, and the retired fade and slide are
+           out. */
+        [data-theme='phantom'] .kp-nav__menu {
+            mask-size: 7px 7px;
+            transition: none;
+        }
+
+        [data-theme='phantom'] .kp-nav__links > li:hover > .kp-nav__menu,
+        [data-theme='phantom'] .kp-nav__links > li:focus-within > .kp-nav__menu,
+        [data-theme='phantom'] .kp-nav__links > li[data-kp-nav-menu-open] > .kp-nav__menu {
+            animation:
+                kp-sig-phantom-fly var(--kp-sig-dur) linear backwards,
+                kp-sig-phantom-resolve var(--kp-sig-dur) linear backwards;
         }
     }
 
@@ -26099,85 +26494,263 @@
 
     @keyframes kp-sig-phantom-phantom-slash {
         from {
-            transform: translateX(-2.8rem);
+            translate: -2.8rem 0;
         }
 
         to {
-            transform: translateX(100%);
+            translate: 100% 0;
         }
     }
 
-    @keyframes kp-sig-phantom-phantom-slam {
-        from {
-            opacity: 0;
-            transform: scale(2.2) rotate(-12deg);
+    /* The throw [G1, G2, G13]: 700 ms, the shove for the first 400 (57.142857 %),
+       then the part holds. It starts hidden: a part that has not arrived is not
+       drawn, and visibility is visible for the whole of the throw after its
+       first instant. */
+    @keyframes kp-sig-phantom-fly {
+        0% {
+            translate: var(--kp-sig-ph-x0, -80cqi) var(--kp-sig-ph-y0, 6cqi);
+            rotate: var(--kp-sig-ph-r0, -22deg);
+            scale: var(--kp-sig-ph-s0, 1.15);
+            visibility: hidden;
+            animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
         }
 
-        to {
-            opacity: 1;
-        }
-    }
-
-    @keyframes kp-sig-phantom-phantom-stick {
-        from {
-            opacity: 0;
-            transform: skewX(calc(var(--kp-skew, -8deg) * -1)) scale(2.6) rotate(-18deg);
-            animation-timing-function: cubic-bezier(0.5, 0, 0.9, 0.6);
+        57.142857% {
+            translate: 0 0;
+            rotate: var(--kp-sig-ph-land, -1.5deg);
+            scale: 1;
+            visibility: visible;
+            animation-timing-function: linear;
         }
 
-        35% {
-            opacity: 1;
-            transform: skewX(calc(var(--kp-skew, -8deg) * -1)) scale(0.86) rotate(2deg);
-            animation-timing-function: cubic-bezier(0.2, 0.9, 0.25, 1);
-        }
-
-        65% {
-            transform: skewX(calc(var(--kp-skew, -8deg) * -1)) scale(1.08) rotate(-1deg);
-        }
-
-        to {
-            opacity: 1;
-            transform: skewX(calc(var(--kp-skew, -8deg) * -1));
+        100% {
+            translate: 0 0;
+            rotate: var(--kp-sig-ph-land, -1.5deg);
+            scale: 1;
+            visibility: visible;
         }
     }
 
-    @keyframes kp-sig-phantom-phantom-card {
-        from {
-            opacity: 0;
-            transform: translateX(-48px) skewX(-14deg);
+    /* The resolve [G3]: the part is its own silhouette of dots while it
+       flies and cuts to 50 %, 75 % and solid, a hundred milliseconds a cut,
+       from the slap on; each cut is placed a hundredth of a millisecond early
+       so the instant it falls on shows the new picture in both directions
+       (a close plays this backwards). */
+    @keyframes kp-sig-phantom-resolve {
+        0% {
+            mask-image: var(--kp-sig-ph-m25);
+            animation-timing-function: steps(1, jump-end);
         }
 
-        40% {
-            opacity: 1;
+        57.141429% {
+            mask-image: var(--kp-sig-ph-m50);
+            animation-timing-function: steps(1, jump-end);
         }
 
-        to {
-            opacity: 1;
-            transform: none;
+        71.427143% {
+            mask-image: var(--kp-sig-ph-m75);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        85.712857% {
+            mask-image: none;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            mask-image: none;
         }
     }
 
-    @keyframes kp-sig-phantom-phantom-card-big {
-        from {
-            opacity: 0;
-            transform: scale(1.25) rotate(-7deg);
+    /* A tooltip, a tick: too small to fly, so it resolves in place in three
+       cuts, 300 ms. */
+    @keyframes kp-sig-phantom-resolve-tip {
+        0% {
+            mask-image: var(--kp-sig-ph-m25);
+            animation-timing-function: steps(1, jump-end);
         }
 
-        to {
-            opacity: 1;
-            transform: none;
+        33.332% {
+            mask-image: var(--kp-sig-ph-m50);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        66.665% {
+            mask-image: var(--kp-sig-ph-m75);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        99.998% {
+            mask-image: none;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            mask-image: none;
         }
     }
 
-    @keyframes kp-sig-phantom-phantom-pop {
-        from {
-            opacity: 0;
-            transform: scale(0.4);
+    /* The leave: the throw backwards on the inverse curve, `cubic-bezier(1, 0,
+       0.19, 1)` (a curve's inverse is its point reflection), so an arrival,
+       which js/motion.js plays as the leave backwards, is thrown on the shove.
+       The last instant is hidden. */
+    @keyframes kp-sig-phantom-fly-out {
+        0% {
+            translate: 0 0;
+            rotate: var(--kp-sig-ph-land, -1.5deg);
+            scale: 1;
+            visibility: visible;
+            animation-timing-function: linear;
         }
 
-        to {
-            opacity: 1;
-            transform: none;
+        42.857143% {
+            translate: 0 0;
+            rotate: var(--kp-sig-ph-land, -1.5deg);
+            scale: 1;
+            visibility: visible;
+            animation-timing-function: cubic-bezier(1, 0, 0.19, 1);
+        }
+
+        100% {
+            translate: var(--kp-sig-ph-x0, -80cqi) var(--kp-sig-ph-y0, 6cqi);
+            rotate: var(--kp-sig-ph-r0, -22deg);
+            scale: var(--kp-sig-ph-s0, 1.15);
+            visibility: hidden;
+        }
+    }
+
+    @keyframes kp-sig-phantom-resolve-out {
+        0% {
+            mask-image: none;
+            animation-timing-function: linear;
+        }
+
+        14.287143% {
+            mask-image: none;
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        28.572857% {
+            mask-image: var(--kp-sig-ph-m75);
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        42.858571% {
+            mask-image: var(--kp-sig-ph-m50);
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        100% {
+            mask-image: var(--kp-sig-ph-m25);
+        }
+    }
+
+    /* Contact [G15]: the red bar is thrown in and resolved in two cuts across
+       the 120 ms (dots at 25 %, 75 %, then solid at three quarters). */
+    @keyframes kp-sig-phantom-bar {
+        0% {
+            mask-image: var(--kp-sig-ph-m25);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        49.991667% {
+            mask-image: var(--kp-sig-ph-m75);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        74.991667% {
+            mask-image: none;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            mask-image: none;
+        }
+    }
+
+    /* A press: the face of the cap resolves from dots to solid in two cuts
+       [G17], once the cap has dropped. Its own name, so the press starts it
+       again from the dots. */
+    @keyframes kp-sig-phantom-face {
+        0% {
+            mask-image: var(--kp-sig-ph-m25);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        49.991667% {
+            mask-image: var(--kp-sig-ph-m75);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        74.991667% {
+            mask-image: none;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            mask-image: none;
+        }
+    }
+
+    /* The ink flips from the plate's own to black when the bar lands (the
+       second cut, 90 ms of 120). */
+    @keyframes kp-sig-phantom-ink {
+        0% {
+            color: var(--kp-plate-ink, var(--foreground));
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        74.991667% {
+            color: var(--primary-foreground);
+            animation-timing-function: linear;
+        }
+
+        100% {
+            color: var(--primary-foreground);
+        }
+    }
+
+    /* A live update [G9]: the changed part dissolves into its dots and
+       resolves to the new value, in place, in six even cuts in 400 ms
+       (10 %, 40 %, 70 %, then the same back); it never moves. */
+    @keyframes kp-sig-phantom-update {
+        0% {
+            mask-image: none;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        0.0025% {
+            mask-image: var(--kp-sig-ph-m70);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        16.665% {
+            mask-image: var(--kp-sig-ph-m40);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        33.3325% {
+            mask-image: var(--kp-sig-ph-m10);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        49.9975% {
+            mask-image: var(--kp-sig-ph-m40);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        66.665% {
+            mask-image: var(--kp-sig-ph-m70);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        83.3325% {
+            mask-image: none;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            mask-image: none;
         }
     }
 
@@ -26194,49 +26767,110 @@
         }
     }
 
-    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
-       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
-       the exit, and in a row of leaves starts the next one halfway through this one. */
+    /* Leaving, this theme's way [scope-142; Kenny, 2026-10-09 on research/
+       phantom-character, leaving and arriving 1: "thrown and resolved,
+       dissolved and snatched"]. js/motion.js marks what leaves
+       `[data-kp-leaving]`, closes its space during the exit, and in a row of
+       leaves starts the next one halfway through this one. A part dissolves
+       into its dots in three cuts and is snatched back off its start edge on
+       the shove's inverse, 700 ms, and is not drawn once it has gone. */
     @media (prefers-reduced-motion: no-preference) {
-        /* ── phantom: see-through and wavering, it rises a little and dissolves ── */
         /* Opening is closing turned around (Kenny's pick on research/open-reverse,
            2026-10-05): js/motion.js opens the dialog as its close played backwards,
-           in the close's time, and lets what arrives play this leave backwards. */
+           in the close's time, and lets what arrives play this leave backwards:
+           thrown on the shove, resolved in three cuts. */
         [data-theme='phantom'] {
             --kp-open: reverse-close;
+            /* A close or a glide of one throw is not cut short (its defaults,
+               600 and 480 ms, are other themes'). */
+            --kp-close-max: 700ms;
+            --kp-size-max: 700ms;
         }
 
         [data-theme='phantom'] [data-kp-leaving] {
-            animation: kp-sig-phantom-leave 650ms ease-in forwards;
+            mask-size: 7px 7px;
+            animation:
+                kp-sig-phantom-fly-out 700ms linear forwards,
+                kp-sig-phantom-resolve-out 700ms linear forwards;
         }
 
-        @keyframes kp-sig-phantom-leave {
-            0% {
-                opacity: 1;
-                filter: none;
-            }
-
-            25% {
-                opacity: 0.55;
-                transform: skewX(4deg);
-                filter: blur(0.5px) drop-shadow(0 0 8px var(--primary));
-            }
-
-            50% {
-                transform: translateY(-3px) skewX(-4deg);
-            }
-
-            75% {
-                transform: translateY(-6px) skewX(3deg);
-                opacity: 0.3;
-            }
-
-            to {
-                transform: translateY(-9px) scaleX(0.94);
-                opacity: 0;
-                filter: blur(6px) drop-shadow(0 0 12px var(--primary));
-            }
+        /* A live update, 400 ms [G9]: js/update.js writes the new value at
+           once and marks the element; the element dissolves into its dots and
+           resolves again. A spark is the svg's parent's, a state word's mask
+           is its own. */
+        [data-theme='phantom'] {
+            --kp-update: resolve;
         }
+
+        [data-theme='phantom'] [data-kp-updating='resolve'] {
+            mask-size: 7px 7px;
+            animation: kp-sig-phantom-update 400ms linear both;
+        }
+    }
+
+    /* ── The parts of a key figure, on the grammar [themes/phantom/CHARACTER.md
+       G8, G18; Kenny, 2026-10-09 on research/phantom-character]. A tone is not
+       a tinted card and not a frame: the figure stays plain, the card stays its
+       plate, and the change is stamped on the overprint (a warning's on the
+       yellow plate with black ink, a failure's on the red plate with black
+       ink), two pixels off register on the figure. The label shouts in the
+       condensed face, the figure speaks in the plain one, a state is a word
+       that shouts. ── */
+    [data-theme='phantom'] .kp-kpi__label {
+        font-family: var(--theme-font-display);
+        font-style: italic;
+        font-weight: 800;
+    }
+
+    [data-theme='phantom'] .kp-kpi__value {
+        font-family: var(--theme-font-body);
+        font-weight: 700;
+    }
+
+    [data-theme='phantom'] .kp-state-word {
+        font-family: var(--theme-font-display);
+        font-style: italic;
+        font-weight: 900;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='phantom'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) {
+        box-shadow: none;
+    }
+
+    [data-theme='phantom'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-kpi__value {
+        padding-inline: 0;
+        background: none;
+        color: inherit;
+    }
+
+    [data-theme='phantom'] .kp-kpi__delta[data-kp-tone] {
+        display: inline-block;
+    }
+
+    [data-theme='phantom'] .kp-kpi[data-kp-tone='warning'] .kp-kpi__delta {
+        background: var(--fx-signal);
+        color: var(--fx-signal-foreground);
+        translate: 2px 2px;
+    }
+
+    [data-theme='phantom'] .kp-kpi[data-kp-tone='destructive'] .kp-kpi__delta,
+    [data-theme='phantom'] .kp-kpi__delta[data-kp-tone='bad'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        translate: 2px 2px;
+    }
+
+    /* A tour card is cut paper that has landed, as the menu is, with its hard
+       shadow and no blur [G7]. */
+    [data-theme='phantom'] .kp-tour {
+        border: 0;
+        border-inline-start: 4px solid var(--primary);
+        border-radius: 0;
+        clip-path: var(--kp-paperclip);
+        box-shadow: none;
+        rotate: var(--kp-land);
     }
 
     /* ── The meter with a mark, this theme's way [picked by Kenny on
@@ -26320,6 +26954,8 @@
         --kp-sig-meter-mo-halo: var(--background);
         border-radius: 0;
         transform: skewX(-8deg);
+        /* The screen a tone's redraw is seen through (a live update). */
+        mask-size: 7px 7px;
         background:
             radial-gradient(circle, hsl(from var(--foreground) h s l / 0.24) 0 0.7px, transparent 1.1px) 0 0 / 3px 3px,
             var(--background);
@@ -26370,43 +27006,49 @@
         clip-path: polygon(50% 0, 61% 30%, 95% 18%, 74% 47%, 100% 74%, 63% 70%, 55% 100%, 40% 72%, 6% 90%, 26% 58%, 0 28%, 36% 32%);
     }
 
-    /* ── while loading: option 1 ── */
+    /* ── while loading: the block and the slash (the loading rules above and
+       the motion below); the screen no longer slides [G10] ── */
 
-    /* The halftone screen slides. */
     [data-theme='phantom'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
-        background:
-            radial-gradient(circle, hsl(from var(--foreground) h s l / 0.35) 0 0.8px, transparent 1.2px) 0 0 / 3px 3px,
-            hsl(from var(--primary) h s l / 0.28);
+        background: var(--kp-sig-ph-block);
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='phantom'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
-            animation: kp-sig-phantom-meter-screen1 700ms linear infinite;
-        }
-    }
-
-    /* ── how the share arrives: option 1 ── */
-
-    @media (prefers-reduced-motion: no-preference) {
+        /* ── how the share arrives: shoved in on the shove, 400 ms [G1, G4] ── */
         [data-theme='phantom'] :is(.kp-meter, .kp-kpi__meter)::before {
-            animation: kp-sig-phantom-meter-slant-o 220ms cubic-bezier(0.7, 0, 0.2, 1) backwards;
-            transition: inline-size 220ms cubic-bezier(0.7, 0, 0.2, 1);
+            animation: kp-sig-phantom-meter-slant-o 400ms cubic-bezier(0.81, 0, 0, 1) backwards;
+            transition: inline-size 400ms var(--kp-shove);
         }
-    }
 
-    /* ── when the tone changes: option 1 ── */
-
-    @media (prefers-reduced-motion: no-preference) {
+        /* ── when the tone changes: the meter dissolves into its dots and
+           resolves again, in place, in six cuts (G9: it never jolts) ── */
         [data-theme='phantom'] :is(.kp-meter, .kp-kpi__meter):not([data-kp-loading], [data-kp-tone]) {
-            animation: kp-sig-phantom-meter-jolt-o 200ms steps(3);
+            animation: kp-sig-phantom-meter-redraw-o 400ms linear;
         }
 
         [data-theme='phantom'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='warning']:not([data-kp-loading]) {
-            animation: kp-sig-phantom-meter-jolt-w 200ms steps(3);
+            animation: kp-sig-phantom-meter-redraw-w 400ms linear;
         }
 
         [data-theme='phantom'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='destructive']:not([data-kp-loading]) {
-            animation: kp-sig-phantom-meter-jolt-d 200ms steps(3);
+            animation: kp-sig-phantom-meter-redraw-d 400ms linear;
+        }
+
+        /* The slash crosses every block that waits, 1400 ms a loop. */
+        [data-theme='phantom']
+            :is(
+                .kp-skeleton,
+                .kp-card[aria-busy='true'],
+                .kp-tiles[aria-busy='true'] > .kp-card,
+                .kp-chart__state[data-kp-state='loading'],
+                .kp-calendar__day[data-kp-tone='loading'],
+                .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+                .kp-datatable__busy-panel,
+                .kp-calendar--busy-whole > .kp-calendar__busy,
+                .kp-button[aria-busy='true']
+            )::after,
+        [data-theme='phantom'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::before {
+            animation: kp-sig-phantom-phantom-slash 1400ms cubic-bezier(0.6, 0, 0.4, 1) infinite;
         }
     }
 
@@ -26435,95 +27077,129 @@
         }
     }
 
-    @keyframes kp-sig-phantom-meter-screen1 {
+    /* A tone that changes is a live update: the meter dissolves into its dots
+       and resolves again in place, six even cuts in 400 ms [G9]. Three names,
+       so a change from one tone to another starts it again. */
+    @keyframes kp-sig-phantom-meter-redraw-d {
         0% {
-            background-position:
-                0 0,
-                0 0;
+            mask-image: none;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        0.0025% {
+            mask-image: var(--kp-sig-ph-m70);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        16.665% {
+            mask-image: var(--kp-sig-ph-m40);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        33.3325% {
+            mask-image: var(--kp-sig-ph-m10);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        49.9975% {
+            mask-image: var(--kp-sig-ph-m40);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        66.665% {
+            mask-image: var(--kp-sig-ph-m70);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        83.3325% {
+            mask-image: none;
+            animation-timing-function: linear;
         }
 
         100% {
-            background-position:
-                3px 3px,
-                0 0;
+            mask-image: none;
         }
     }
 
-    @keyframes kp-sig-phantom-meter-jolt-d {
+    @keyframes kp-sig-phantom-meter-redraw-o {
         0% {
-            translate: 0 0;
+            mask-image: none;
+            animation-timing-function: steps(1, jump-end);
         }
 
-        20% {
-            translate: -2px 0;
+        0.0025% {
+            mask-image: var(--kp-sig-ph-m70);
+            animation-timing-function: steps(1, jump-end);
         }
 
-        40% {
-            translate: 2px 0;
+        16.665% {
+            mask-image: var(--kp-sig-ph-m40);
+            animation-timing-function: steps(1, jump-end);
         }
 
-        60% {
-            translate: -1px 0;
+        33.3325% {
+            mask-image: var(--kp-sig-ph-m10);
+            animation-timing-function: steps(1, jump-end);
         }
 
-        80% {
-            translate: 1px 0;
+        49.9975% {
+            mask-image: var(--kp-sig-ph-m40);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        66.665% {
+            mask-image: var(--kp-sig-ph-m70);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        83.3325% {
+            mask-image: none;
+            animation-timing-function: linear;
         }
 
         100% {
-            translate: 0 0;
+            mask-image: none;
         }
     }
 
-    @keyframes kp-sig-phantom-meter-jolt-o {
+    @keyframes kp-sig-phantom-meter-redraw-w {
         0% {
-            translate: 0 0;
+            mask-image: none;
+            animation-timing-function: steps(1, jump-end);
         }
 
-        20% {
-            translate: -2px 0;
+        0.0025% {
+            mask-image: var(--kp-sig-ph-m70);
+            animation-timing-function: steps(1, jump-end);
         }
 
-        40% {
-            translate: 2px 0;
+        16.665% {
+            mask-image: var(--kp-sig-ph-m40);
+            animation-timing-function: steps(1, jump-end);
         }
 
-        60% {
-            translate: -1px 0;
+        33.3325% {
+            mask-image: var(--kp-sig-ph-m10);
+            animation-timing-function: steps(1, jump-end);
         }
 
-        80% {
-            translate: 1px 0;
+        49.9975% {
+            mask-image: var(--kp-sig-ph-m40);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        66.665% {
+            mask-image: var(--kp-sig-ph-m70);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        83.3325% {
+            mask-image: none;
+            animation-timing-function: linear;
         }
 
         100% {
-            translate: 0 0;
-        }
-    }
-
-    @keyframes kp-sig-phantom-meter-jolt-w {
-        0% {
-            translate: 0 0;
-        }
-
-        20% {
-            translate: -2px 0;
-        }
-
-        40% {
-            translate: 2px 0;
-        }
-
-        60% {
-            translate: -1px 0;
-        }
-
-        80% {
-            translate: 1px 0;
-        }
-
-        100% {
-            translate: 0 0;
+            mask-image: none;
         }
     }
 
@@ -56309,6 +56985,38 @@
 }
 /* ── End of the signature ── */
 
+/* The numbers dark's motion is made of, registered at the top level because
+   Firefox does not register an @property inside a cascade layer; with no
+   registration every keyframe that moves one would flip between its two poses
+   instead of moving. --kp-sig-dk-turn is how far the film has turned on a
+   pass (0 at rest, a full turn is the same colour: cyan at the top);
+   --kp-sig-dk-at and --kp-sig-dk-ink are how far the line has come over a
+   changed figure and how much ink lies over the film in its letters (at
+   rest the figure is ink); --kp-sig-dk-ph is the spinner's loop, 0 to 1. */
+@property --kp-sig-dk-turn {
+    syntax: '<angle>';
+    inherits: true;
+    initial-value: 0deg;
+}
+
+@property --kp-sig-dk-at {
+    syntax: '<percentage>';
+    inherits: true;
+    initial-value: 100%;
+}
+
+@property --kp-sig-dk-ink {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+@property --kp-sig-dk-ph {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0.2;
+}
+
 @layer kp.register {
     /* @kp-soft/themes — css/dark-register.css
    The dark register, 5.0.0 [S48, LIFT_PLAN row 15]: the ordinary dark
@@ -56353,7 +57061,7 @@
         --kp-kpi-border: color-mix(in oklab, var(--border-strong) 80%, var(--foreground));
         /* The configuration surface [AR43], the demo's values as defaults. */
         --kp-reveal-threshold: 0.6;
-        --kp-word-stagger: 28ms;
+        --kp-word-stagger: 60ms;
         --kp-redact-stagger: 90ms;
         --kp-sweep-range-start: entry 10%;
         --kp-sweep-range-end: entry 85%;
@@ -56365,7 +57073,8 @@
         --kp-reveal-headline: resolve;
         --kp-reveal-emphasis: ignite;
         --kp-reveal-rule: sweep;
-        /* Dead North's shout-in ease, reused for the word resolve [S49]. */
+        /* The turn's curve: most of it at once, then a long settle to cyan at
+           the top [G1; Kenny, 2026-10-09]. The pass itself is linear. */
         --kp-settle: cubic-bezier(0.22, 1, 0.36, 1);
 
         /* No starfield. The approved demo had one — 102 points on the
@@ -56507,7 +57216,15 @@
        then the bottom-left bite in the same three moves; and the last
        corner closes it. */
     [data-theme='dark'] .kp-card,
-    [data-theme='dark'] .kp-dialog {
+    [data-theme='dark'] .kp-dialog,
+    [data-theme='dark'] .kp-menu,
+    [data-theme='dark'] .kp-popover:not(.kp-tooltip),
+    [data-theme='dark'] .kp-toast,
+    [data-theme='dark'] .kp-combobox__list,
+    [data-theme='dark'] .kp-datepicker__panel,
+    [data-theme='dark'] .kp-palette,
+    [data-theme='dark'] .kp-theme-menu__list,
+    [data-theme='dark'] .kp-nav__menu {
         clip-path: polygon(
             calc(-1 * var(--kp-halo-field)) calc(-1 * var(--kp-halo-field)),
             calc(100% - var(--kp-chamfer-panel) - var(--kp-halo-reach)) calc(-1 * var(--kp-halo-field)),
@@ -57064,6 +57781,7 @@
             border: 0;
             background: transparent;
             box-shadow: none;
+            clip-path: none;
         }
     }
 
@@ -57408,6 +58126,54 @@
 
     [data-theme='dark'] .kp-dialog__title {
         font-weight: 700;
+    }
+
+    /* The panels are cut on the same two corners as the card and the dialog
+       [G6; Kenny, 2026-10-09: two opposite corners, the halo and the shadow
+       follow the cut]. The clip above carries the halo through the cut; the
+       cut's own edge is a 1 px diagonal in the panel's edge colour at each
+       cut corner, so the border does not stop short of the corner. The
+       diagonal of a square of side c lies c * 0.7071 from its corner. */
+    [data-theme='dark']
+        :is(
+            .kp-menu,
+            .kp-popover:not(.kp-tooltip),
+            .kp-toast,
+            .kp-combobox__list,
+            .kp-datepicker__panel,
+            .kp-palette,
+            .kp-theme-menu__list,
+            .kp-nav__menu
+        ) {
+        --kp-sig-dk-diag: var(--border-strong);
+        background-image:
+            linear-gradient(
+                225deg,
+                transparent calc(var(--kp-chamfer-panel) * 0.7071 - 1px),
+                var(--kp-sig-dk-diag) calc(var(--kp-chamfer-panel) * 0.7071 - 1px) calc(var(--kp-chamfer-panel) * 0.7071),
+                transparent 0
+            ),
+            linear-gradient(
+                45deg,
+                transparent calc(var(--kp-chamfer-panel) * 0.7071 - 1px),
+                var(--kp-sig-dk-diag) calc(var(--kp-chamfer-panel) * 0.7071 - 1px) calc(var(--kp-chamfer-panel) * 0.7071),
+                transparent 0
+            );
+        background-repeat: no-repeat;
+        background-size: var(--kp-chamfer-panel) var(--kp-chamfer-panel);
+        background-position:
+            100% 0,
+            0 100%;
+    }
+
+    [data-theme='dark'] :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error) {
+        --kp-sig-dk-diag: transparent;
+    }
+
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='dark'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            background-image: none;
+        }
     }
 
     /* Phase 7, `focus-ring`. The keyboard landing on an item inside the
@@ -57821,13 +58587,11 @@
        the no-preference guard, so a reader who asked for reduced motion
        never receives one: the rest states above are what they get. */
     @media (prefers-reduced-motion: no-preference) {
+        /* A headline is laid word by word: the line crosses each word from its
+           start edge at one pace, 60 ms after the word before [G2, G19]. */
         [data-theme='dark'] [data-kp-reveal='headline'].is-words [data-word] {
-            animation: kp-resolve 640ms var(--kp-settle) both;
+            animation: kp-sig-dark-lay 660ms linear both;
             animation-delay: calc(var(--kp-i, 0) * var(--kp-word-stagger));
-        }
-
-        [data-theme='dark'] .kp-nav__menu {
-            transition: opacity var(--fx-duration) var(--fx-ease);
         }
 
         /* The redact bar: a size change, not a colour (KT8: no
@@ -57852,41 +58616,10 @@
 
     /* ── Motion [DI5, DI7] ────────────────────────────────────────────── */
 
-    /* Every keyframe here has its row in TIMINGS (js/effects.js). The
-       word resolve is one monotonic change (blur and translate settle
-       alongside the opacity move) [S49]. */
-    /* The word converges [scope-16]. It arrives split into two of the
-       oxide's own wavelengths, out of focus, and the two halves come
-       together as the blur clears — an instrument bringing a line into
-       register. The demo's own mechanism, values and all.
-
-       The split is a text-shadow rather than two copies of the word, so
-       there is nothing for a screen reader to read twice. */
-    @keyframes kp-resolve {
-        0% {
-            opacity: 0;
-            filter: blur(3px);
-            transform: translateY(0.22em);
-            text-shadow:
-                -0.22em 0 var(--chart-3),
-                0.22em 0 var(--chart-1);
-        }
-
-        60% {
-            opacity: 1;
-            filter: blur(0);
-        }
-
-        100% {
-            opacity: 1;
-            filter: blur(0);
-            transform: none;
-            text-shadow:
-                0 0 transparent,
-                0 0 transparent;
-        }
-    }
-
+    /* Every keyframe here has its row in TIMINGS (js/effects.js). A headline's
+       words are laid by the pass (kp-sig-dark-lay, below): a word's box is
+       revealed from the start edge at an even pace and stops dead at the end
+       (G1); nothing blurs, nothing splits into two wavelengths (G19). */
     /* Scroll-bound, not time-based: the browser scrubs this by the
        heading's own position, not a clock, so it cannot free-run and
        cannot loop — see gates/check-motion.mjs's OUT_OF_SCOPE entry. */
@@ -58249,9 +58982,34 @@
         mask: repeating-linear-gradient(-45deg, var(--foreground) 0 var(--kp-ps-stripe), transparent var(--kp-ps-stripe) var(--kp-ps-hatch));
     }
 
+    /* ── The numbers and pictures the grammar is made of [Kenny, 2026-10-09;
+       themes/dark/CHARACTER.md §1] ────────────────────────────────────────
+       Dark passes a line. A pass is 660 ms at one pace (linear) and stops
+       dead; the film it lays turns, and settles 220 ms after the line has
+       stopped (880 ms in all, `--kp-sig-dk-time`); a loop is 2400 ms; a
+       group is crossed 60 ms apart. The line is a 2 px slice of the film
+       with the one glow the theme allows, 10 px of --chart-1 at 40 %. */
     [data-theme='dark'] {
         --kp-sig-dark-ease: var(--kp-settle, cubic-bezier(0.22, 1, 0.36, 1));
         --kp-sig-dark-c: 0.35rem;
+        --kp-sig-dk-time: 880ms;
+        --kp-sig-dk-loop: 2400ms;
+        --kp-sig-dk-r: 0px;
+        --kp-sig-dk-cw: 0.36;
+        --kp-sig-dk-line: linear-gradient(180deg, var(--chart-1), var(--chart-2), var(--chart-3), var(--chart-4));
+        --kp-sig-dk-glow: drop-shadow(0 0 10px hsl(from var(--chart-1) h s l / 0.4));
+        /* A solid, for a mask: only its alpha is read. */
+        --kp-sig-dk-solid: linear-gradient(var(--foreground), var(--foreground));
+        /* A comet: the head is the line, the tail a third of the part long,
+           full film at the head and nothing at its end. */
+        --kp-sig-dk-tail: linear-gradient(
+            90deg,
+            transparent,
+            hsl(from var(--chart-4) h s l / 0.14) 38%,
+            hsl(from var(--chart-3) h s l / 0.3) 60%,
+            hsl(from var(--chart-2) h s l / 0.5) 80%,
+            hsl(from var(--chart-1) h s l / 0.8)
+        );
         --kp-sig-dark-cut: polygon(
             0 0,
             calc(100% - var(--kp-sig-dark-c)) 0,
@@ -58274,19 +59032,194 @@
             linear-gradient(var(--kp-sig-dark-bk), var(--kp-sig-dark-bk)) right bottom / 1px var(--kp-sig-dark-arm) no-repeat;
     }
 
+    /* The film turns on a pass: every part that is laid, taken off, pressed
+       or crossed writes the film on its own copy of the turn, so a turn of
+       one number turns every edge that wears it (and the parts inside it,
+       which inherit the number). At rest the turn is 0 and this is the
+       register's film. */
+    [data-theme='dark']
+        :is(
+            .kp-button,
+            .kp-icon-button,
+            .kp-dialog,
+            dialog.kp-drawer,
+            .kp-menu,
+            .kp-popover,
+            .kp-toast,
+            .kp-tooltip,
+            .kp-card,
+            .kp-alert,
+            .kp-kpi,
+            .kp-combobox__list,
+            .kp-datepicker__panel,
+            .kp-palette,
+            .kp-theme-menu__list,
+            .kp-nav__menu,
+            [data-kp-leaving],
+            [data-kp-arriving]
+        ) {
+        --kp-iris: conic-gradient(
+            from calc(var(--kp-px) * 1turn + var(--kp-sig-dk-turn)),
+            var(--chart-1),
+            var(--chart-2),
+            var(--chart-3),
+            var(--chart-4),
+            var(--chart-1)
+        );
+    }
+
+    /* ── The spinner is the spectrum bars [G12; Kenny, 2026-10-09, question
+       12: "The spectrum bars"]. Five thin bars, one per film colour and a
+       lime, rise and fall in turn like a spectrometer's reading, 120 ms
+       apart (a twentieth of the 2400 ms loop), each cut on two opposite
+       corners; a hairline stands under them. One number, --kp-sig-dk-ph (0
+       to 1 over the loop, @property at the top of this file), is the loop;
+       each bar's height is read from it a twentieth later than the bar
+       before. Standing still the five stand at their rest heights. The
+       three sizes are the package's own (--kp-spinner-size). ── */
     [data-theme='dark'] .kp-spinner {
-        --kp-sig-dur: 1400ms;
+        --kp-sig-dk-cutb: calc(var(--kp-spinner-size, 1.25rem) * 0.06);
+        --kp-sig-dk-h1: calc(
+            0.58 + 0.27 * sin(calc((var(--kp-sig-dk-ph) - 0 * 0.05) * 720deg)) + 0.15 * sin(calc((var(--kp-sig-dk-ph) - 0 * 0.05) * 1080deg))
+        );
+        --kp-sig-dk-h2: calc(
+            0.58 + 0.27 * sin(calc((var(--kp-sig-dk-ph) - 1 * 0.05) * 720deg)) + 0.15 * sin(calc((var(--kp-sig-dk-ph) - 1 * 0.05) * 1080deg))
+        );
+        --kp-sig-dk-h3: calc(
+            0.58 + 0.27 * sin(calc((var(--kp-sig-dk-ph) - 2 * 0.05) * 720deg)) + 0.15 * sin(calc((var(--kp-sig-dk-ph) - 2 * 0.05) * 1080deg))
+        );
+        --kp-sig-dk-h4: calc(
+            0.58 + 0.27 * sin(calc((var(--kp-sig-dk-ph) - 3 * 0.05) * 720deg)) + 0.15 * sin(calc((var(--kp-sig-dk-ph) - 3 * 0.05) * 1080deg))
+        );
+        --kp-sig-dk-h5: calc(
+            0.58 + 0.27 * sin(calc((var(--kp-sig-dk-ph) - 4 * 0.05) * 720deg)) + 0.15 * sin(calc((var(--kp-sig-dk-ph) - 4 * 0.05) * 1080deg))
+        );
         position: relative;
         border: 0;
-        border-radius: 50%;
-        background: var(--kp-iris);
-        -webkit-mask: radial-gradient(closest-side, transparent calc(100% - 3px), var(--foreground) calc(100% - 2.5px));
-        mask: radial-gradient(closest-side, transparent calc(100% - 3px), var(--foreground) calc(100% - 2.5px));
+        border-radius: 0;
+        -webkit-mask: none;
+        mask: none;
+        animation: none;
+        background-color: transparent;
+        background-image:
+            linear-gradient(var(--border-strong), var(--border-strong)),
+            linear-gradient(
+                225deg,
+                transparent 0 calc(var(--kp-sig-dk-cutb) * 0.7071),
+                var(--chart-1) 0 calc(100% - var(--kp-sig-dk-cutb) * 0.7071),
+                transparent 0
+            ),
+            linear-gradient(
+                225deg,
+                transparent 0 calc(var(--kp-sig-dk-cutb) * 0.7071),
+                var(--chart-2) 0 calc(100% - var(--kp-sig-dk-cutb) * 0.7071),
+                transparent 0
+            ),
+            linear-gradient(
+                225deg,
+                transparent 0 calc(var(--kp-sig-dk-cutb) * 0.7071),
+                var(--chart-3) 0 calc(100% - var(--kp-sig-dk-cutb) * 0.7071),
+                transparent 0
+            ),
+            linear-gradient(
+                225deg,
+                transparent 0 calc(var(--kp-sig-dk-cutb) * 0.7071),
+                var(--chart-4) 0 calc(100% - var(--kp-sig-dk-cutb) * 0.7071),
+                transparent 0
+            ),
+            linear-gradient(
+                225deg,
+                transparent 0 calc(var(--kp-sig-dk-cutb) * 0.7071),
+                hsl(from var(--chart-4) h s calc(l + 12)) 0 calc(100% - var(--kp-sig-dk-cutb) * 0.7071),
+                transparent 0
+            );
+        background-repeat: no-repeat;
+        background-size:
+            100% 1px,
+            12% calc(100% * var(--kp-sig-dk-h1)),
+            12% calc(100% * var(--kp-sig-dk-h2)),
+            12% calc(100% * var(--kp-sig-dk-h3)),
+            12% calc(100% * var(--kp-sig-dk-h4)),
+            12% calc(100% * var(--kp-sig-dk-h5));
+        background-position:
+            0 100%,
+            9.09% 100%,
+            29.5% 100%,
+            50% 100%,
+            70.45% 100%,
+            90.9% 100%;
+    }
+
+    /* ── Loading is a comet [G10; Kenny, 2026-10-09, question 10: "A comet
+       with a film tail"]. On every waiting surface the line is the head of a
+       tail a third of the part long, full film at the head and nothing at
+       its end; it crosses from start to end in the first three quarters of
+       the loop (1800 ms of 2400) and lays nothing, the slot stays dark behind
+       the tail, then the loop comes round. It fills the whole element and
+       takes its shape (a chamfered skeleton line is cut, a panel is swept
+       whole). The picture is the element's own ::before, laid over what is
+       waiting; a button has its brackets on ::before, so its comet is
+       painted on its own ground. The surfaces are the package's own: the
+       skeleton lines, blocks and circles (the key figures' and the
+       columns' skeleton lines are skeleton lines), the busy table's panel,
+       the loading menu entry, the busy button and card, the busy calendar
+       and its days, the loading chart, the busy tile grid, the loading
+       meter. One keyframe moves two background layers (the 2 px head and the
+       tail) from just before the start to just past the end; the comet's
+       width is --kp-sig-dk-cw. ── */
+    [data-theme='dark']
+        :where(
+            .kp-skeleton,
+            .kp-datatable__busy-panel,
+            .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+            .kp-card[aria-busy='true'],
+            .kp-tiles[aria-busy='true'] > .kp-card,
+            .kp-chart__state[data-kp-state='loading'],
+            .kp-calendar--busy-whole > .kp-calendar__busy,
+            .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading'],
+            .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) .kp-calendar__day[data-kp-tone='loading']
+        ) {
+        position: relative;
         animation: none;
     }
 
+    [data-theme='dark']
+        :where(
+            .kp-skeleton,
+            .kp-datatable__busy-panel,
+            .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+            .kp-card[aria-busy='true'],
+            .kp-tiles[aria-busy='true'] > .kp-card,
+            .kp-chart__state[data-kp-state='loading'],
+            .kp-calendar--busy-whole > .kp-calendar__busy,
+            .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading'],
+            .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) .kp-calendar__day[data-kp-tone='loading']
+        )::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        border-radius: inherit;
+        opacity: 1;
+        pointer-events: none;
+        background-image: var(--kp-sig-dk-line), var(--kp-sig-dk-tail);
+        background-repeat: no-repeat;
+        background-size:
+            2px 100%,
+            calc(var(--kp-sig-dk-cw) * 100%) 100%;
+        background-position:
+            calc(50% * (1 + var(--kp-sig-dk-cw)) - 1px) 0,
+            50% 0;
+    }
+
+    /* A chart's plot and a menu entry stand on the page's own ground. */
+    [data-theme='dark'] .kp-chart__state[data-kp-state='loading'] {
+        background-color: transparent;
+    }
+
+    /* The skeleton line is a slot: the accent plate, a hairline of film at its
+       foot, the chamfer; its sibling lines are crossed 120 ms apart. */
     [data-theme='dark'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
-        --kp-sig-dur: 1800ms;
         position: relative;
         block-size: 0.9rem;
         border-radius: 0;
@@ -58301,20 +59234,98 @@
         margin-block-start: 0.6rem;
     }
 
-    [data-theme='dark'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before,
     [data-theme='dark'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        opacity: 0;
+        content: none;
     }
 
-    [data-theme='dark'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before {
-        background: hsl(from var(--chart-1) h s l / 0.55);
+    /* The block and the circle are slots of the accent plate too. */
+    [data-theme='dark'] :is(.kp-skeleton--block, .kp-skeleton--circle) {
+        overflow: clip;
+        background: var(--accent);
     }
 
-    [data-theme='dark'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
-        background: hsl(from var(--chart-3) h s l / 0.55);
+    [data-theme='dark'] .kp-skeleton--block {
+        border-radius: 0;
+        clip-path: var(--kp-sig-dark-cut);
+    }
+
+    /* A busy button wears its comet on its own ground (its brackets are the
+       ::before and ::after). */
+    [data-theme='dark'] .kp-button[aria-busy='true'][aria-busy='true'] {
+        background-image: var(--kp-sig-dk-line), var(--kp-sig-dk-tail);
+        background-repeat: no-repeat;
+        background-size:
+            2px 100%,
+            calc(var(--kp-sig-dk-cw) * 100%) 100%;
+        background-position:
+            calc(50% * (1 + var(--kp-sig-dk-cw)) - 1px) 0,
+            50% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark']
+            :where(
+                .kp-skeleton,
+                .kp-datatable__busy-panel,
+                .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+                .kp-card[aria-busy='true'],
+                .kp-tiles[aria-busy='true'] > .kp-card,
+                .kp-chart__state[data-kp-state='loading'],
+                .kp-calendar--busy-whole > .kp-calendar__busy,
+                .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading'],
+                .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) .kp-calendar__day[data-kp-tone='loading']
+            )::before {
+            animation: kp-sig-dark-comet var(--kp-sig-dk-loop) linear infinite;
+        }
+
+        [data-theme='dark'] .kp-button[aria-busy='true'][aria-busy='true'] {
+            animation: kp-sig-dark-comet var(--kp-sig-dk-loop) linear infinite;
+        }
+
+        /* A part's place in a row staggers its comet by 120 ms, so a row of
+           skeleton lines or days reads as one pass. */
+        [data-theme='dark'] .kp-skeleton:nth-child(2)::before {
+            animation-delay: calc(120ms - var(--kp-sig-dk-loop));
+        }
+
+        [data-theme='dark'] .kp-skeleton:nth-child(3)::before {
+            animation-delay: calc(240ms - var(--kp-sig-dk-loop));
+        }
+
+        [data-theme='dark'] .kp-spinner {
+            animation: kp-sig-dark-bars var(--kp-sig-dk-loop) linear infinite;
+        }
+
+        /* The busy bar: no share is known, so the line runs the empty track
+           [G11; Kenny, 2026-10-09, question 11: "The line runs the track"]:
+           a short stretch of film (28 % of the track) crosses from the start
+           to the end, laying a tail that dims behind the line, 2400 ms, and
+           again. With a share known the fill is laid to the share, as round
+           one drew it. */
+        [data-theme='dark'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+            --kp-sig-dk-cw: 0.28;
+            -webkit-mask: none;
+            mask: none;
+            background-color: transparent;
+            background-image: var(--kp-sig-dk-line), var(--kp-sig-dk-tail);
+            background-repeat: no-repeat;
+            background-size:
+                2px 100%,
+                calc(var(--kp-sig-dk-cw) * 100%) 100%;
+            background-position:
+                calc(50% * (1 + var(--kp-sig-dk-cw)) - 1px) 0,
+                50% 0;
+            animation: kp-sig-dark-comet var(--kp-sig-dk-loop) linear infinite;
+        }
+
+        /* A tick and a radio's dot are laid by the pass, in the contact time. */
+        [data-theme='dark'] .kp-field__check:checked::before {
+            animation: kp-sig-dark-lay var(--fx-duration) linear both;
+        }
+
+        [data-theme='dark'] .kp-switch__input::before {
+            transition: transform var(--fx-duration) var(--kp-sig-dark-ease);
+        }
     }
 
     [data-theme='dark'] .kp-switch {
@@ -58348,7 +59359,6 @@
     }
 
     [data-theme='dark'] .kp-field__check {
-        --kp-sig-dur: 320ms;
         appearance: none;
         display: inline-grid;
         place-items: center;
@@ -58372,8 +59382,7 @@
             var(--kp-iris);
     }
 
-    [data-theme='dark'] .kp-field__check[type='checkbox']:checked::before,
-    [data-theme='dark'] .kp-field__check[type='checkbox']:checked::after {
+    [data-theme='dark'] .kp-field__check[type='checkbox']:checked::before {
         content: '';
         inline-size: 0.6rem;
         block-size: 0.3rem;
@@ -58382,11 +59391,6 @@
         border-inline-start: 2px solid var(--primary-foreground);
         border-block-end: 2px solid var(--primary-foreground);
         transform: translateY(-1px) rotate(-45deg);
-    }
-
-    [data-theme='dark'] .kp-field__check[type='checkbox']:checked::after {
-        border-color: var(--chart-3);
-        opacity: 0;
     }
 
     [data-theme='dark'] .kp-field__check[type='radio'] {
@@ -58398,8 +59402,7 @@
         background: var(--card);
     }
 
-    [data-theme='dark'] .kp-field__check[type='radio']:checked::before,
-    [data-theme='dark'] .kp-field__check[type='radio']:checked::after {
+    [data-theme='dark'] .kp-field__check[type='radio']:checked::before {
         content: '';
         inline-size: 0.5rem;
         block-size: 0.5rem;
@@ -58407,13 +59410,7 @@
         background: var(--primary);
     }
 
-    [data-theme='dark'] .kp-field__check[type='radio']:checked::after {
-        background: var(--chart-1);
-        opacity: 0;
-    }
-
     [data-theme='dark'] .kp-toast {
-        --kp-sig-dur: 520ms;
         position: relative;
     }
 
@@ -58424,33 +59421,7 @@
             var(--kp-iris) border-box;
     }
 
-    [data-theme='dark'] .kp-toast::after {
-        content: '';
-        position: absolute;
-        inset: -1px;
-        border-radius: inherit;
-        background: var(--kp-iris);
-        opacity: 0;
-        pointer-events: none;
-    }
-
-    [data-theme='dark'] .kp-dialog {
-        /* Kenny, 2026-10-03: the entrance at ¼ of its first speed ("I prefer this at 1/4 speed"). */
-        --kp-sig-dur: 2400ms;
-    }
-
-    [data-theme='dark'] .kp-dialog::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: var(--kp-iris);
-        clip-path: var(--kp-sig-dark-cut);
-        opacity: 0;
-        pointer-events: none;
-    }
-
     [data-theme='dark'] .kp-tooltip {
-        --kp-sig-dur: 260ms;
         margin-inline-start: 0.5rem;
         padding: 0.3rem 0.75rem;
         border: 1px solid transparent;
@@ -58551,223 +59522,618 @@
         }
     }
 
+    /* ── Pointing, the keyboard and the press: one manner for every control
+       [G14, G15, G17; Kenny, 2026-10-09, questions 14, 15 and 17]. A button
+       in a header, a menu, a drawer, a tile or a tour hovers, focuses and
+       presses exactly like dark's own bracketed button; a menu entry like
+       the button; a link by its underline taking the film (above). The line
+       rests at the start: a 2 px slice of the film with its glow stands at
+       the control's start edge and the brackets close one step (the
+       register's own, above). The keyboard's ring is DI2's two channels
+       inside the cut, and it wins over the pointer when both apply. A press
+       is a pass: on contact the line crosses the face (220 ms) and the film
+       edge turns a quarter (+90 degrees) and settles; the brackets close; the
+       release turns it back. Nothing moves. ── */
+    [data-theme='dark'] :is(.kp-button, .kp-icon-button, .kp-menu__item) {
+        background-image: var(--kp-sig-dk-line);
+        background-repeat: no-repeat;
+        background-position: 0 0;
+        background-size: 0 100%;
+    }
+
+    [data-theme='dark'] :is(.kp-button, .kp-icon-button, .kp-menu__item):hover:not(:disabled, [aria-disabled='true']) {
+        background-size: 2px 100%;
+    }
+
+    [data-theme='dark'] :is(.kp-button, .kp-icon-button, .kp-menu__item):hover:not(:disabled, [aria-disabled='true'], :focus-visible) {
+        box-shadow: inset 7px 0 9px -6px hsl(from var(--chart-1) h s l / 0.4);
+    }
+
+    /* The film's edge on a link tile or a filter tile: the line at the start. */
+    [data-theme='dark'] :is(a.kp-kpi, .kp-kpi--toggle)::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: 2px;
+        background: var(--kp-sig-dk-line);
+        box-shadow: 0 0 9px hsl(from var(--chart-1) h s l / 0.4);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    [data-theme='dark'] :is(a.kp-kpi, .kp-kpi--toggle):hover::before {
+        opacity: 1;
+    }
+
+    [data-theme='dark'] :is(a.kp-kpi, .kp-kpi--toggle):is(:focus-visible) {
+        outline: none;
+        box-shadow:
+            inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 0 0 calc(var(--kp-focus-ring-inner-width, 2px) + 2px) var(--focus-ring-contrast);
+    }
+
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='dark'] .kp-spinner {
-            animation: kp-sig-dark-dark-turn var(--kp-sig-dur) linear infinite;
+        [data-theme='dark'] :is(.kp-button, .kp-icon-button, .kp-menu__item) {
+            transition:
+                background-color var(--fx-duration) var(--fx-ease),
+                border-color var(--fx-duration) var(--fx-ease),
+                color var(--fx-duration) var(--fx-ease),
+                box-shadow var(--fx-duration) var(--fx-ease),
+                background-size var(--fx-duration) var(--fx-ease),
+                --kp-sig-dk-turn var(--fx-duration) cubic-bezier(0.64, 0, 0.78, 0);
         }
 
-        [data-theme='dark'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before {
-            animation: kp-sig-dark-dark-ghost-l var(--kp-sig-dur) ease-in-out infinite;
+        [data-theme='dark'] :is(a.kp-kpi, .kp-kpi--toggle)::before {
+            transition: opacity var(--fx-duration) var(--fx-ease);
         }
 
-        [data-theme='dark'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
-            animation: kp-sig-dark-dark-ghost-r var(--kp-sig-dur) ease-in-out infinite;
-        }
-
-        [data-theme='dark'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2)::before,
-        [data-theme='dark'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2)::after {
-            animation-delay: calc(var(--kp-sig-dur) * -5 / 6);
-        }
-
-        [data-theme='dark'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3)::before,
-        [data-theme='dark'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3)::after {
-            animation-delay: calc(var(--kp-sig-dur) * -2 / 3);
-        }
-
-        [data-theme='dark'] .kp-switch__input::before {
-            transition: transform 260ms var(--kp-sig-dark-ease);
-        }
-
-        [data-theme='dark'] .kp-field__check:checked::before {
-            animation: kp-sig-dark-dark-resolve var(--kp-sig-dur) var(--kp-sig-dark-ease) both;
-        }
-
-        [data-theme='dark'] .kp-field__check:checked::after {
-            animation: kp-sig-dark-dark-resolve-ghost var(--kp-sig-dur) var(--kp-sig-dark-ease) both;
-        }
-
-        [data-theme='dark'] .kp-field__check[type='radio']:checked::before {
-            animation-name: kp-sig-dark-dark-dot;
-        }
-
-        [data-theme='dark'] .kp-field__check[type='radio']:checked::after {
-            animation-name: kp-sig-dark-dark-dot-ghost;
-        }
-
-        [data-theme='dark'] .kp-toast {
-            animation: kp-sig-dark-dark-settle var(--kp-sig-dur) var(--kp-sig-dark-ease) both;
-        }
-
-        [data-theme='dark'] .kp-toast::after,
-        [data-theme='dark'] .kp-dialog::after {
-            /* backwards, not both: each ends where the rest state is, so a finished
-               entrance leaves nothing pinned on the dialog (scope-100 measures it bare). */
-            animation: kp-sig-dark-dark-develop var(--kp-sig-dur) ease-out backwards;
-        }
-
-        [data-theme='dark'] .kp-dialog {
-            animation: kp-sig-dark-dark-settle-in var(--kp-sig-dur) var(--kp-sig-dark-ease) backwards;
-        }
-
-        [data-theme='dark'] .kp-tooltip {
-            animation: kp-sig-dark-dark-brackets-open var(--kp-sig-dur) var(--kp-sig-dark-ease) backwards;
+        /* On contact: the edge turns a quarter on the settle, the ground and the
+           line answer at once; the line crosses the face in the contact time. */
+        [data-theme='dark'] :is(.kp-button, .kp-icon-button, .kp-menu__item):active:not(:disabled) {
+            --kp-sig-dk-turn: 90deg;
+            background-size: 2px 100%;
+            transition:
+                background-color 0s,
+                border-color 0s,
+                color 0s,
+                box-shadow 0s,
+                background-size 0s,
+                --kp-sig-dk-turn var(--fx-duration) var(--fx-ease);
+            animation: kp-sig-dark-tap var(--fx-duration) linear both;
         }
     }
 
-    @keyframes kp-sig-dark-dark-turn {
-        to {
-            transform: rotate(1turn);
-        }
-    }
-
-    @keyframes kp-sig-dark-dark-ghost-l {
-        0%,
-        100% {
-            opacity: 0;
-            transform: none;
-        }
-
-        50% {
-            opacity: 0.5;
-            transform: translateX(-8px);
-        }
-    }
-
-    @keyframes kp-sig-dark-dark-ghost-r {
-        0%,
-        100% {
-            opacity: 0;
-            transform: none;
-        }
-
-        50% {
-            opacity: 0.5;
-            transform: translateX(8px);
-        }
-    }
-
-    @keyframes kp-sig-dark-dark-resolve {
-        from {
-            opacity: 0;
-            transform: translateX(-4px) translateY(-1px) rotate(-45deg);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(-1px) rotate(-45deg);
-        }
-    }
-
-    @keyframes kp-sig-dark-dark-resolve-ghost {
-        from {
-            opacity: 0.9;
-            transform: translateX(4px) translateY(-1px) rotate(-45deg);
-        }
-
-        to {
-            opacity: 0;
-            transform: translateY(-1px) rotate(-45deg);
-        }
-    }
-
-    @keyframes kp-sig-dark-dark-dot {
-        from {
-            opacity: 0;
-            transform: translateX(-4px);
-        }
-    }
-
-    @keyframes kp-sig-dark-dark-dot-ghost {
-        from {
-            opacity: 0.9;
-            transform: translateX(4px);
-        }
-
-        to {
-            opacity: 0;
-            transform: none;
-        }
-    }
-
-    @keyframes kp-sig-dark-dark-settle {
-        from {
-            opacity: 0;
-            transform: translateY(6px);
-        }
-    }
-
-    @keyframes kp-sig-dark-dark-settle-in {
-        from {
-            opacity: 0;
-            transform: scale(1.02);
-        }
-    }
-
-    @keyframes kp-sig-dark-dark-develop {
-        0% {
-            opacity: 0.55;
-        }
-
-        100% {
-            opacity: 0;
-        }
-    }
-
-    @keyframes kp-sig-dark-dark-brackets-open {
-        from {
-            clip-path: polygon(45% 0, 55% 0, 55% 0, 55% 100%, 45% 100%, 45% 100%);
-        }
-
-        to {
-            clip-path: polygon(0 0, calc(100% - 0.45rem) 0, 100% 0.45rem, 100% 100%, 0.45rem 100%, 0 calc(100% - 0.45rem));
-        }
-    }
-
-    /* Growing and shrinking, this theme's way [scope-142; approved by Kenny
-       on research/size-motion, 2026-10-04]. js/motion.js marks a gliding box
-       `[data-kp-resizing]` and what arrives in it `[data-kp-arriving]`. */
+    /* ── A live update is one pass over the figure [G9; Kenny, 2026-10-09,
+       question 9: "One pass over the figure"]. js/update.js writes the new
+       value at once and marks the element `[data-kp-updating='pass']`; the
+       line crosses the changed figure once from its start (the theme's update
+       time, 660 ms), the letters behind it take the film and settle back to
+       ink once it has gone by; the figure never moves, flares or jolts and
+       the box keeps its space. Applies to the key figure, the state word, the
+       trend, the strip column and the tile alike. A state word keeps its
+       width-holding ::after, so its line is drawn on ::before; a spark (an
+       svg) has no letters, its line crosses the parent's box. Two numbers, how
+       far the line has come (--kp-sig-dk-at) and how much ink lies over the
+       film (--kp-sig-dk-ink), are @property at the top of this file. ── */
     @media (prefers-reduced-motion: no-preference) {
-        /* ── dark: the darkroom. The oxide halo glows while the box changes,
-           and new content develops, from a pale print to its own contrast. ─ */
-        [data-theme='dark'] [data-kp-resizing] {
-            filter: drop-shadow(0 0 16px hsl(from var(--primary) h s l / 0.45));
+        [data-theme='dark'] {
+            --kp-update: pass;
         }
 
-        [data-theme='dark'] [data-kp-arriving] {
-            animation: kp-sig-dark-size-develop 480ms ease-out backwards;
+        [data-theme='dark'] [data-kp-updating='pass'] {
+            position: relative;
+            --kp-sig-dk-ink-colour: var(--foreground);
         }
 
-        @keyframes kp-sig-dark-size-develop {
-            from {
-                opacity: 0.2;
-                filter: contrast(0.2) brightness(1.8) sepia(0.6);
+        [data-theme='dark'] .kp-kpi > .kp-kpi__value[data-kp-updating='pass'] {
+            justify-self: start;
+            inline-size: fit-content;
+        }
+
+        [data-theme='dark'] [data-kp-updating='pass']:not(:has(> svg)) {
+            background:
+                linear-gradient(90deg, transparent var(--kp-sig-dk-at), var(--kp-sig-dk-ink-colour) var(--kp-sig-dk-at)),
+                linear-gradient(
+                    hsl(from var(--kp-sig-dk-ink-colour) h s l / var(--kp-sig-dk-ink)),
+                    hsl(from var(--kp-sig-dk-ink-colour) h s l / var(--kp-sig-dk-ink))
+                ),
+                var(--kp-iris);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: kp-sig-dark-figure var(--kp-update-duration, 660ms) linear both;
+        }
+
+        [data-theme='dark'] [data-kp-updating='pass']:not(.kp-state-word)::after,
+        [data-theme='dark'] .kp-state-word[data-kp-updating='pass']::before {
+            content: '';
+            position: absolute;
+            inset: -2px -4px;
+            z-index: 1;
+            background: var(--kp-sig-dk-line) 100% 0 / 2px 100% no-repeat;
+            filter: var(--kp-sig-dk-glow);
+            opacity: 0;
+            pointer-events: none;
+            animation: kp-sig-dark-pass-live var(--kp-update-duration, 660ms) linear both;
+        }
+    }
+
+    /* ── The opening is a pass [G3, G13; Kenny, 2026-10-09, question 3:
+       "Swept in from its own left edge, left to right"]. A dialog, a menu, a
+       popover, a combobox list, a date picker, a palette, a toast, a tooltip
+       and a drawer open the same way: the line starts at the left edge of the
+       element that opens (never at its button) and crosses only that
+       element's own box at one pace, laying the panel behind it, the film
+       edge turning; it stops dead at the end and the turn settles 220 ms
+       later (880 ms in all). The close is the pass back, right to left,
+       taking the panel off behind it: js/motion.js plays this entrance
+       backwards (`--kp-open: reverse-close`), frame t of the close being
+       frame (T - t) of the open. The panel is revealed by a mask of three
+       layers (the box, and the reach of its halo on either side, which come
+       with the line's first and last 4 %), so the halo and the cut follow
+       what is laid instead of being cut square. The line is the panel's
+       ::after; the film turn is one number on the panel (the film's own
+       @property, kp-sig-dark-film). ── */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark']
+            :is(.kp-dialog, .kp-menu, .kp-popover, .kp-toast, .kp-combobox__list, .kp-datepicker__panel, .kp-palette, .kp-theme-menu__list) {
+            --kp-sig-dk-r: var(--kp-halo-reach, 2.5rem);
+        }
+
+        [data-theme='dark']
+            :is(
+                .kp-dialog,
+                dialog.kp-drawer,
+                .kp-menu,
+                .kp-popover,
+                .kp-tooltip,
+                .kp-toast,
+                .kp-combobox__list,
+                .kp-datepicker__panel,
+                .kp-palette,
+                .kp-theme-menu__list
+            ) {
+            animation:
+                kp-sig-dark-sweep var(--kp-sig-dk-time) linear backwards,
+                kp-sig-dark-film var(--kp-sig-dk-time) linear backwards;
+        }
+
+        [data-theme='dark']
+            :is(
+                .kp-dialog,
+                dialog.kp-drawer,
+                .kp-menu,
+                .kp-popover,
+                .kp-tooltip,
+                .kp-toast,
+                .kp-combobox__list,
+                .kp-datepicker__panel,
+                .kp-palette,
+                .kp-theme-menu__list,
+                .kp-nav__menu
+            )::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 3;
+            background: var(--kp-sig-dk-line) 100% 0 / 2px 100% no-repeat;
+            clip-path: none;
+            filter: var(--kp-sig-dk-glow);
+            opacity: 0;
+            pointer-events: none;
+            animation: kp-sig-dark-pass-line var(--kp-sig-dk-time) linear backwards;
+        }
+
+        /* A menu inside a popover is not swept twice: the popover is. */
+        [data-theme='dark'] .kp-popover :is(.kp-menu, .kp-popover) {
+            animation: none;
+        }
+
+        [data-theme='dark'] .kp-popover :is(.kp-menu, .kp-popover)::after {
+            content: none;
+        }
+
+        /* The drawer comes in from its own left edge too, over its own height
+           and width: it casts no halo, so there is no reach. */
+        [data-theme='dark'] dialog.kp-drawer {
+            --kp-sig-dk-r: 0px;
+        }
+
+        /* A dialog's backdrop is not swept; js/motion.js fades it with the
+           dialog. */
+
+        /* The nav dropdown opens by hovering or focusing its item, with no script
+           in between: the same pass, and the close is the pass back. While it
+           closes the item keeps the panel on screen for the whole pass back
+           (`display` is a discrete transition), and the closed style plays the
+           entrance reversed. */
+        @container kp-nav (width > 40rem) {
+            [data-theme='dark'] .kp-nav__menu {
+                --kp-sig-dk-r: var(--kp-halo-reach, 2.5rem);
+                opacity: 1;
+                transition: display var(--kp-sig-dk-time) allow-discrete;
+                animation:
+                    kp-sig-dark-sweep var(--kp-sig-dk-time) linear reverse forwards,
+                    kp-sig-dark-film var(--kp-sig-dk-time) linear reverse forwards;
+            }
+
+            [data-theme='dark'] .kp-nav__menu::after {
+                animation: kp-sig-dark-pass-line var(--kp-sig-dk-time) linear reverse forwards;
+            }
+
+            [data-theme='dark'] .kp-nav__links > li:hover > .kp-nav__menu,
+            [data-theme='dark'] .kp-nav__links > li:focus-within > .kp-nav__menu,
+            [data-theme='dark'] .kp-nav__links > li[data-kp-nav-menu-open] > .kp-nav__menu {
+                animation:
+                    kp-sig-dark-sweep var(--kp-sig-dk-time) linear backwards,
+                    kp-sig-dark-film var(--kp-sig-dk-time) linear backwards;
+            }
+
+            [data-theme='dark'] .kp-nav__links > li:hover > .kp-nav__menu::after,
+            [data-theme='dark'] .kp-nav__links > li:focus-within > .kp-nav__menu::after,
+            [data-theme='dark'] .kp-nav__links > li[data-kp-nav-menu-open] > .kp-nav__menu::after {
+                animation: kp-sig-dark-pass-line var(--kp-sig-dk-time) linear backwards;
             }
         }
+
+        /* The tooltip's halo is none: its reach is none. */
+        [data-theme='dark'] .kp-tooltip {
+            --kp-sig-dk-r: 0px;
+        }
     }
 
-    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
-       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
-       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='dark'] .kp-nav__menu::after {
+            content: none;
+        }
+    }
+
+    /* The mask is only ever on while the pass plays: both ends of the keyframe
+       are the finished pose, so a still part carries no mask. The panel is the
+       box (layer one, which the line sweeps) and the reach of its halo on the
+       left (layer two, laid in the first 4 % of the pass) and on the right
+       (layer three, laid in the last 4 %). Written out once, 0 to 75 % of the
+       880 ms is the pass of 660 ms (G4); the rest holds while the turn
+       settles. */
+    @keyframes kp-sig-dark-sweep {
+        0% {
+            mask-image: var(--kp-sig-dk-solid), var(--kp-sig-dk-solid), var(--kp-sig-dk-solid);
+            mask-repeat: no-repeat;
+            mask-origin: border-box;
+            mask-clip: no-clip;
+            mask-composite: add;
+            mask-position:
+                0 calc(-1 * var(--kp-sig-dk-r)),
+                calc(-1 * var(--kp-sig-dk-r)) calc(-1 * var(--kp-sig-dk-r)),
+                calc(100% + var(--kp-sig-dk-r)) calc(-1 * var(--kp-sig-dk-r));
+            mask-size:
+                0px calc(100% + 2 * var(--kp-sig-dk-r)),
+                0px calc(100% + 2 * var(--kp-sig-dk-r)),
+                0px calc(100% + 2 * var(--kp-sig-dk-r));
+        }
+
+        3% {
+            mask-size:
+                4% calc(100% + 2 * var(--kp-sig-dk-r)),
+                var(--kp-sig-dk-r) calc(100% + 2 * var(--kp-sig-dk-r)),
+                0px calc(100% + 2 * var(--kp-sig-dk-r));
+        }
+
+        72% {
+            mask-size:
+                96% calc(100% + 2 * var(--kp-sig-dk-r)),
+                var(--kp-sig-dk-r) calc(100% + 2 * var(--kp-sig-dk-r)),
+                0px calc(100% + 2 * var(--kp-sig-dk-r));
+        }
+
+        75%,
+        100% {
+            mask-image: var(--kp-sig-dk-solid), var(--kp-sig-dk-solid), var(--kp-sig-dk-solid);
+            mask-repeat: no-repeat;
+            mask-origin: border-box;
+            mask-clip: no-clip;
+            mask-composite: add;
+            mask-position:
+                0 calc(-1 * var(--kp-sig-dk-r)),
+                calc(-1 * var(--kp-sig-dk-r)) calc(-1 * var(--kp-sig-dk-r)),
+                calc(100% + var(--kp-sig-dk-r)) calc(-1 * var(--kp-sig-dk-r));
+            mask-size:
+                100% calc(100% + 2 * var(--kp-sig-dk-r)),
+                var(--kp-sig-dk-r) calc(100% + 2 * var(--kp-sig-dk-r)),
+                var(--kp-sig-dk-r) calc(100% + 2 * var(--kp-sig-dk-r));
+        }
+    }
+
+    /* The line crosses the panel's own box and goes in and out at its ends. */
+    @keyframes kp-sig-dark-pass-line {
+        0% {
+            translate: -100% 0;
+            opacity: 0;
+        }
+
+        3% {
+            translate: -96% 0;
+            opacity: 1;
+        }
+
+        69% {
+            translate: -8% 0;
+            opacity: 1;
+        }
+
+        75%,
+        100% {
+            translate: 0 0;
+            opacity: 0;
+        }
+    }
+
+    /* The film's turn, laid with the pass: the colour runs round the edge as
+       the line crosses (345 degrees at the pace of the line) and settles the
+       last 15 degrees on --kp-settle in the 220 ms after the line has stopped,
+       cyan at the top. */
+    @keyframes kp-sig-dark-film {
+        0% {
+            --kp-sig-dk-turn: 0deg;
+            animation-timing-function: linear;
+        }
+
+        75% {
+            --kp-sig-dk-turn: 345deg;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        100% {
+            --kp-sig-dk-turn: 360deg;
+        }
+    }
+
+    /* The figure takes the film through its letters while the line crosses it
+       and settles back to ink once it has gone by. */
+    @keyframes kp-sig-dark-figure {
+        0% {
+            --kp-sig-dk-at: 0%;
+            --kp-sig-dk-ink: 0;
+            animation-timing-function: linear;
+        }
+
+        75% {
+            --kp-sig-dk-at: 100%;
+            --kp-sig-dk-ink: 0;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        100% {
+            --kp-sig-dk-at: 100%;
+            --kp-sig-dk-ink: 1;
+        }
+    }
+
+    /* A live pass: the line goes in at the start and out at the end of the
+       update's own time. */
+    @keyframes kp-sig-dark-pass-live {
+        0% {
+            translate: -100% 0;
+            opacity: 0;
+        }
+
+        4% {
+            translate: -96% 0;
+            opacity: 1;
+        }
+
+        92% {
+            translate: -8% 0;
+            opacity: 1;
+        }
+
+        100% {
+            translate: 0 0;
+            opacity: 0;
+        }
+    }
+
+    /* The pass of a small part or of a word: its box, from the start edge, at
+       one pace, stopping dead. */
+    @keyframes kp-sig-dark-lay {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    /* A comet crosses a waiting surface. The head (the 2 px line) and the tail
+       (a third of the part, or the share the property --kp-sig-dk-cw says)
+       are two background layers moved together from just before the start to
+       just past the end in three quarters of the loop; the last quarter the
+       slot is dark. A percentage position is a share of the box less the
+       layer, so the head sits at (1 + cw) of the box less its own width and
+       the tail at 1 / (1 - cw). */
+    @keyframes kp-sig-dark-comet {
+        0% {
+            background-position:
+                calc(0% - 2px) 0,
+                calc(-100% * var(--kp-sig-dk-cw) / (1 - var(--kp-sig-dk-cw))) 0;
+        }
+
+        75%,
+        100% {
+            background-position:
+                calc(100% * (1 + var(--kp-sig-dk-cw)) - 2px) 0,
+                calc(100% / (1 - var(--kp-sig-dk-cw))) 0;
+        }
+    }
+
+    /* The spinner's loop: one number, 0 to 1. */
+    @keyframes kp-sig-dark-bars {
+        from {
+            --kp-sig-dk-ph: 0;
+        }
+
+        to {
+            --kp-sig-dk-ph: 1;
+        }
+    }
+
+    /* A press: the line crosses the face and stops at its end. */
+    @keyframes kp-sig-dark-tap {
+        from {
+            background-position: 0 0;
+        }
+
+        to {
+            background-position: 100% 0;
+        }
+    }
+
+    /* Growing and shrinking, this theme's way [scope-142; Kenny, 2026-10-09:
+       the darkroom is retired]. js/motion.js marks a gliding box
+       `[data-kp-resizing]` and what arrives in it `[data-kp-arriving]`. The
+       box keeps the line's glow while it changes; what arrives is laid by the
+       pass (below), and nothing develops from a pale print. */
     @media (prefers-reduced-motion: no-preference) {
-        /* ── dark: it slips left into shadow ── */
-        /* Opening is closing turned around (Kenny's pick on research/open-reverse,
-           2026-10-05): js/motion.js opens the dialog as its close played backwards,
-           in the close's time, and lets what arrives play this leave backwards. */
+        [data-theme='dark'] [data-kp-resizing] {
+            filter: var(--kp-sig-dk-glow);
+        }
+    }
+
+    /* Leaving, this theme's way [G13; Kenny, 2026-10-09, question 13: "The
+       pass lays, the pass back takes off"]. js/motion.js marks what leaves
+       `[data-kp-leaving]`, closes its space during the exit, and in a row of
+       leaves starts the next one a tenth into this one. The line crosses back
+       from the end and the part goes dark behind it, the film taken with it:
+       the opening played backwards, in the same time. Opening is closing
+       turned around (Kenny's pick on research/open-reverse, 2026-10-05): what
+       arrives plays this leave backwards (js/motion.js), so it is laid from
+       the start by the pass and the turn settles to cyan at the top, and
+       frame t of the arrival is frame (T - t) of the leave. The line is
+       drawn on the parts that can carry a pseudo-element: the alert, the key
+       figure and the card (on ::before, its ::after being the plate); a row
+       or any other part is taken off by the mask and the film alone. */
+    @media (prefers-reduced-motion: no-preference) {
         [data-theme='dark'] {
             --kp-open: reverse-close;
         }
 
-        [data-theme='dark'] [data-kp-leaving] {
-            animation: kp-sig-dark-leave 460ms ease-in forwards;
+        [data-theme='dark'] :is(.kp-card, .kp-alert, .kp-kpi) {
+            --kp-sig-dk-r: var(--kp-halo-reach, 2.5rem);
         }
 
-        @keyframes kp-sig-dark-leave {
-            to {
-                filter: brightness(0);
-                opacity: 0;
-                transform: scale(0.98);
-            }
+        [data-theme='dark'] .kp-kpi {
+            --kp-sig-dk-r: 0px;
         }
+
+        [data-theme='dark'] [data-kp-leaving] {
+            --kp-leave-stagger: 0.1;
+            animation:
+                kp-sig-dark-sweep var(--kp-sig-dk-time) linear reverse forwards,
+                kp-sig-dark-film var(--kp-sig-dk-time) linear reverse forwards;
+        }
+
+        [data-theme='dark'] [data-kp-leaving]:is(.kp-alert, .kp-kpi, .kp-card:not([data-kp-label])) {
+            position: relative;
+        }
+
+        [data-theme='dark'] [data-kp-leaving]:is(.kp-alert, .kp-kpi)::after,
+        [data-theme='dark'] [data-kp-leaving].kp-card:not([data-kp-label])::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 3;
+            background: var(--kp-sig-dk-line) 100% 0 / 2px 100% no-repeat;
+            filter: var(--kp-sig-dk-glow);
+            opacity: 0;
+            pointer-events: none;
+            animation: kp-sig-dark-pass-line var(--kp-sig-dk-time) linear reverse forwards;
+        }
+    }
+
+    /* ── A key figure is a panel, and a warning is the film gone coral [G6,
+       G7, G8; Kenny, 2026-10-09, questions 6, 7 and 8]. A tile that stands on
+       its own is cut on the same two corners as the card, with the film along
+       its edge; the plate stays near-black. A warning or a failure takes the
+       tone's colour along the whole film edge (the warning ink for a warning,
+       coral for a failure) and its change is set in that ink; there is no
+       lamp, no tinted plate and no lit number. A destructive menu entry has
+       a coral edge at its start and coral ink; a warning or failed alert is
+       the same, with its label in the tone. The strip's columns keep the
+       package's shared frames. ── */
+    [data-theme='dark'] .kp-kpi:not(.kp-kpis[data-kp-kpis-columns] > .kp-kpi) {
+        --kp-sig-dk-tone: transparent;
+        position: relative;
+        border-color: transparent;
+        background:
+            linear-gradient(var(--card), var(--card)) padding-box,
+            var(--kp-iris) border-box;
+        clip-path: polygon(
+            0 0,
+            calc(100% - var(--kp-chamfer-panel)) 0,
+            100% var(--kp-chamfer-panel),
+            100% 100%,
+            var(--kp-chamfer-panel) 100%,
+            0 calc(100% - var(--kp-chamfer-panel))
+        );
+    }
+
+    [data-theme='dark'] .kp-kpi[data-kp-tone='warning'] {
+        --kp-sig-dk-tone: var(--warning-foreground);
+    }
+
+    [data-theme='dark'] .kp-kpi[data-kp-tone='destructive'] {
+        --kp-sig-dk-tone: var(--destructive);
+    }
+
+    [data-theme='dark'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) {
+        box-shadow: none;
+        --kp-sig-dk-ink-colour: var(--kp-sig-dk-tone);
+    }
+
+    [data-theme='dark'] .kp-kpi:not(.kp-kpis[data-kp-kpis-columns] > .kp-kpi):is([data-kp-tone='warning'], [data-kp-tone='destructive']) {
+        border-color: transparent;
+        background:
+            linear-gradient(var(--card), var(--card)) padding-box,
+            linear-gradient(var(--kp-sig-dk-tone), var(--kp-sig-dk-tone)) border-box;
+    }
+
+    [data-theme='dark'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-kpi__value {
+        padding-inline: 0;
+        background: transparent;
+        color: var(--kp-sig-dk-tone);
+    }
+
+    [data-theme='dark'] .kp-kpi[data-kp-tone='destructive']:where(.kp-kpis[data-kp-kpis-columns] > .kp-kpi) {
+        border-color: var(--destructive);
+    }
+
+    [data-theme='dark'] .kp-kpi[data-kp-tone='warning']:where(.kp-kpis[data-kp-kpis-columns] > .kp-kpi) {
+        border-color: var(--warning-foreground);
+    }
+
+    [data-theme='dark'] .kp-alert:is(.kp-alert--warning, .kp-alert--destructive) {
+        background: var(--card);
+        color: var(--foreground);
+        border: 1px solid var(--kp-sig-dk-tone);
+    }
+
+    [data-theme='dark'] .kp-alert--warning {
+        --kp-sig-dk-tone: var(--warning-foreground);
+    }
+
+    [data-theme='dark'] .kp-alert--destructive {
+        --kp-sig-dk-tone: var(--destructive);
+    }
+
+    [data-theme='dark'] .kp-alert:is(.kp-alert--warning, .kp-alert--destructive) .kp-alert__label {
+        color: var(--kp-sig-dk-tone);
+    }
+
+    [data-theme='dark'] .kp-menu__item--destructive {
+        color: var(--destructive);
+        box-shadow: inset 2px 0 0 var(--destructive);
     }
 
     /* ── The meter with a mark, this theme's way [picked by Kenny on
@@ -58777,7 +60143,9 @@
        and states (setMeter(), js/kpi.js): the track on the meter, the share on
        ::before, the sign past the end or the loading picture on ::after, the
        mark `.kp-meter__mark`. Every animation and transition under
-       prefers-reduced-motion: no-preference; still frames otherwise. ── */
+       prefers-reduced-motion: no-preference; still frames otherwise.
+       Redrawn on the grammar [Kenny, 2026-10-09]: loading is the comet, the
+       share is laid by the pass, a tone is the film gone coral. ── */
 
     /* The shared part: room past the end, loading without the pulse, the mark
        centred on its width, the package's signs cleared for the shape's own.
@@ -58880,7 +60248,7 @@
         inline-size: calc(clamp(0, var(--kp-value, 0), 1) * (100% - 2px));
         border-radius: 0;
         background:
-            linear-gradient(90deg, var(--chart-1), var(--chart-2), var(--chart-3), var(--chart-4)) 0 0 /
+            var(--kp-sig-dk-meter-film, linear-gradient(90deg, var(--chart-1), var(--chart-2), var(--chart-3), var(--chart-4))) 0 0 /
                 calc(100% / clamp(0.01, var(--kp-value, 0), 1)) 2px no-repeat,
             var(--kp-meter-fill-colour);
         clip-path: polygon(
@@ -58928,56 +60296,53 @@
 
     /* ── while loading: option 2 ── */
 
-    /* Round 4. The oxide film runs: thin bands of the film's colours, the
-       way heat tints a polished part, slide along the whole channel. */
+    /* Loading is the comet, as everywhere [G10]: the 2 px line and its tail a
+       third of the channel long cross it from start to end and lay nothing.
+       The picture is the channel's own ::after, laid over the whole channel. */
     [data-theme='dark'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
         all: unset;
         content: '';
         position: absolute;
         inset: 1px;
         pointer-events: none;
-        background: linear-gradient(
-                90deg,
-                hsl(from var(--primary) h s l / 0.35) 0 6px,
-                transparent 6px 9px,
-                hsl(from var(--accent) h s l / 0.35) 9px 15px,
-                transparent 15px 18px
-            )
-            0 0 / 18px 100% repeat-x;
-        --kp-sig-meter-l0: 0 0;
-        --kp-sig-meter-l1: 18px 0;
+        background-image: var(--kp-sig-dk-line), var(--kp-sig-dk-tail);
+        background-repeat: no-repeat;
+        background-size:
+            2px 100%,
+            calc(var(--kp-sig-dk-cw) * 100%) 100%;
+        background-position:
+            calc(50% * (1 + var(--kp-sig-dk-cw)) - 1px) 0,
+            50% 0;
     }
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='dark'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
-            animation: kp-sig-dark-meter-pos 900ms linear infinite;
+            animation: kp-sig-dark-comet var(--kp-sig-dk-loop) linear infinite;
         }
     }
 
-    /* ── how the share arrives: option 3 ── */
+    /* ── how the share arrives: the pass ── */
 
+    /* The share is laid by the line from the start of the channel, 660 ms at
+       one pace; a new share moves to its size in the contact time on the
+       theme's curve. */
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='dark'] :is(.kp-meter, .kp-kpi__meter)::before {
-            animation: kp-sig-dark-meter-press-o 220ms linear backwards;
-            transition: inline-size 220ms linear;
-            transform-origin: 50% 50%;
+            animation: kp-sig-dark-meter-lay 660ms linear backwards;
+            transition: inline-size var(--fx-duration) var(--fx-ease);
         }
     }
 
-    /* ── when the tone changes: option 3 ── */
+    /* ── when the tone changes: the film goes coral ── */
 
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='dark'] :is(.kp-meter, .kp-kpi__meter):not([data-kp-loading], [data-kp-tone]) {
-            animation: kp-sig-dark-meter-bump-o 200ms linear;
-        }
+    /* A warning or a failure takes the tone's colour along the whole length of
+       the share's film edge; the channel does not swell [G8]. */
+    [data-theme='dark'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='warning'] {
+        --kp-sig-dk-meter-film: linear-gradient(var(--warning-foreground), var(--warning-foreground));
+    }
 
-        [data-theme='dark'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='warning']:not([data-kp-loading]) {
-            animation: kp-sig-dark-meter-bump-w 200ms linear;
-        }
-
-        [data-theme='dark'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='destructive']:not([data-kp-loading]) {
-            animation: kp-sig-dark-meter-bump-d 200ms linear;
-        }
+    [data-theme='dark'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='destructive'] {
+        --kp-sig-dk-meter-film: linear-gradient(var(--destructive), var(--destructive));
     }
 
     /* ── the mark past the end: option 3 ── */
@@ -59000,70 +60365,22 @@
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='dark'] .kp-meter__mark {
             transition:
-                inset-inline-start 300ms linear,
-                rotate 300ms linear;
+                inset-inline-start var(--fx-duration) var(--fx-ease),
+                rotate var(--fx-duration) var(--fx-ease);
         }
     }
 
-    @keyframes kp-sig-dark-meter-bump-d {
-        0% {
-            scale: 1;
+    @keyframes kp-sig-dark-meter-lay {
+        from {
+            mask-image: var(--kp-sig-dk-solid);
+            mask-repeat: no-repeat;
+            mask-size: 0px 100%;
         }
 
-        40% {
-            scale: 1.04 1.3;
-        }
-
-        100% {
-            scale: 1;
-        }
-    }
-
-    @keyframes kp-sig-dark-meter-bump-o {
-        0% {
-            scale: 1;
-        }
-
-        40% {
-            scale: 1.04 1.3;
-        }
-
-        100% {
-            scale: 1;
-        }
-    }
-
-    @keyframes kp-sig-dark-meter-bump-w {
-        0% {
-            scale: 1;
-        }
-
-        40% {
-            scale: 1.04 1.3;
-        }
-
-        100% {
-            scale: 1;
-        }
-    }
-
-    @keyframes kp-sig-dark-meter-pos {
-        0% {
-            background-position: var(--kp-sig-meter-l0);
-        }
-
-        100% {
-            background-position: var(--kp-sig-meter-l1);
-        }
-    }
-
-    @keyframes kp-sig-dark-meter-press-o {
-        0% {
-            scale: 1 0;
-        }
-
-        100% {
-            scale: 1 1;
+        to {
+            mask-image: var(--kp-sig-dk-solid);
+            mask-repeat: no-repeat;
+            mask-size: 100% 100%;
         }
     }
 }

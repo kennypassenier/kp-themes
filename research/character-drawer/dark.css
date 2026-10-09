@@ -1,0 +1,126 @@
+/* research/character-drawer, dark: the decided picks on dark's applied grammar
+   (themes/dark/CHARACTER.md G1-G21, "Applied 2026-10-09"; css/dark-register.css
+   holds the tokens and the keyframes this file names: kp-sig-dark-sweep,
+   kp-sig-dark-pass-line, kp-sig-dark-film). Dark's decided options are
+   shape 1, openclose 1, highlight 1, card 2, next 2; the grammar changes all
+   five:
+
+   - shape: the slate panel (a rounded corner, a lit ring under the head) is a
+     near-black plate chamfered on two opposite corners with the film along its
+     edge; it casts no halo (G6, G7);
+   - openclose: sliding from the glow is the pass: the line crosses the
+     drawer's own box from its start edge and lays the panel behind it, the
+     film turning, 660 ms at one pace and the turn settling to 880; the close
+     is that played backwards (G2, G3, G13);
+   - highlight: the glowing ring is DI2's ring, nothing glows; the veil over
+     the rest stays (G5, G16);
+   - card: the console readout keeps its ruled top as the film, the title in
+     the face for words, the count in the ticker mono; chamfered on two
+     corners (G6, G18);
+   - next: the readout refreshing (a flash of brightness) is the pass over
+     the card: the line crosses it once and lays it again (G9, G13). */
+@layer kp.signature {
+    /* Shape 1 · the plate with the film on its edge. */
+    [data-theme='dark'][data-theme='dark'] [data-dt-shape='1'] .dt-drawer {
+        --kp-iris: conic-gradient(
+            from calc(var(--kp-px, 0) * 1turn + var(--kp-sig-dk-turn)),
+            var(--chart-1),
+            var(--chart-2),
+            var(--chart-3),
+            var(--chart-4),
+            var(--chart-1)
+        );
+        border: 1px solid transparent;
+        border-radius: 0;
+        background:
+            linear-gradient(var(--dt-plate), var(--dt-plate)) padding-box,
+            var(--kp-iris) border-box;
+        clip-path: polygon(
+            0 0,
+            calc(100% - var(--kp-chamfer-panel, 1rem)) 0,
+            100% var(--kp-chamfer-panel, 1rem),
+            100% 100%,
+            var(--kp-chamfer-panel, 1rem) 100%,
+            0 calc(100% - var(--kp-chamfer-panel, 1rem))
+        );
+    }
+
+    [data-theme='dark'][data-theme='dark'] [data-dt-shape='1'] .dt-drawer .kp-drawer__head {
+        box-shadow: none;
+    }
+
+    /* Openclose 1 · swept in from the drawer's own edge; closed is not drawn. */
+    [data-theme='dark'][data-theme='dark'] [data-dt-openclose='1'] .dt-drawer {
+        --kp-sig-dk-r: 0px;
+        translate: 0 0;
+    }
+
+    [data-theme='dark'][data-theme='dark'] [data-dt-openclose='1'][data-dt-state='closed'] .dt-drawer {
+        translate: 0 0;
+        visibility: hidden;
+    }
+
+    /* Highlight 1 · DI2's ring, no glow. */
+    [data-theme='dark'][data-theme='dark'] [data-dt-highlight='1'] [data-kp-tour-target] {
+        box-shadow: 0 0 0 100vmax hsl(from var(--background) h s l / 0.75);
+    }
+
+    /* Card 2 · the film along the top, the chamfer, the words in Archivo. */
+    [data-theme='dark'][data-theme='dark'] [data-dt-card='2'] .dt-tour {
+        border: 1px solid transparent;
+        border-block-start-width: 2px;
+        border-image: linear-gradient(90deg, var(--chart-1), var(--chart-2), var(--chart-3), var(--chart-4)) 1;
+        clip-path: var(--kp-sig-dark-cut);
+    }
+
+    [data-theme='dark'][data-theme='dark'] [data-dt-card='2'] .dt-tour .kp-tour__title {
+        font-family: inherit;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'][data-theme='dark'] [data-dt-openclose='1'][data-dt-state='opening'] .dt-drawer {
+            animation:
+                kp-sig-dark-sweep var(--kp-sig-dk-time) linear backwards,
+                kp-sig-dark-film var(--kp-sig-dk-time) linear backwards;
+        }
+
+        [data-theme='dark'][data-theme='dark'] [data-dt-openclose='1'][data-dt-state='closing'] .dt-drawer {
+            animation:
+                kp-sig-dark-sweep var(--kp-sig-dk-time) linear reverse forwards,
+                kp-sig-dark-film var(--kp-sig-dk-time) linear reverse forwards;
+        }
+
+        [data-theme='dark'][data-theme='dark'] [data-dt-openclose='1'][data-dt-state='opening'] .dt-drawer::after,
+        [data-theme='dark'][data-theme='dark'] [data-dt-openclose='1'][data-dt-state='closing'] .dt-drawer::after,
+        [data-theme='dark'][data-theme='dark'] [data-dt-next='2'][data-dt-playing='next'] .dt-tour::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 3;
+            background: var(--kp-sig-dk-line) 100% 0 / 2px 100% no-repeat;
+            filter: var(--kp-sig-dk-glow);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        [data-theme='dark'][data-theme='dark'] [data-dt-openclose='1'][data-dt-state='opening'] .dt-drawer::after {
+            animation: kp-sig-dark-pass-line var(--kp-sig-dk-time) linear backwards;
+        }
+
+        [data-theme='dark'][data-theme='dark'] [data-dt-openclose='1'][data-dt-state='closing'] .dt-drawer::after {
+            animation: kp-sig-dark-pass-line var(--kp-sig-dk-time) linear reverse forwards;
+        }
+
+        /* Next 2 · the pass lays the card again. */
+        [data-theme='dark'][data-theme='dark'] [data-dt-next='2'][data-dt-playing='next'] .dt-tour {
+            --kp-sig-dk-r: 0px;
+            animation:
+                kp-sig-dark-sweep var(--kp-sig-dk-time) linear,
+                kp-sig-dark-film var(--kp-sig-dk-time) linear;
+        }
+
+        [data-theme='dark'][data-theme='dark'] [data-dt-next='2'][data-dt-playing='next'] .dt-tour::after {
+            animation: kp-sig-dark-pass-line var(--kp-sig-dk-time) linear;
+        }
+    }
+}

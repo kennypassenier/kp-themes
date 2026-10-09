@@ -1,0 +1,106 @@
+/* research/character-trend, dark: the decided picks on dark's applied grammar
+   (themes/dark/CHARACTER.md G1-G21, "Applied 2026-10-09"; css/dark-register.css
+   holds the tokens and the keyframes this file names: kp-sig-dark-comet,
+   kp-sig-dark-lay). Dark's decided options are shape 1, loading 2, arrival 2,
+   tone 3, live 3; the grammar changes all five:
+
+   - shape: the status board (a glow round the figure and the line, a lit
+     plot, rounded corners) is retired: a near-black plate with the film along
+     its edge and the chamfer on two opposite corners, the plot ruled by the
+     instrument grid, the figure in the ticker mono as a reading (G6, G7, G18,
+     G19);
+   - loading: the scanned slot is the comet: the 2 px line and a tail 36 % of
+     the plot long cross it from start to end, 2400 ms a loop (G10);
+   - arrival: switched on (a flicker) is the pass: the line and the figure are
+     laid from their start edge, 660 ms at one pace (G2, G4, G13);
+   - tone: the alarm lamp (a lit plate behind the figure) is the film gone
+     coral: a warning or a failure takes the tone along the whole film edge, in
+     the figure's ink and the change; the plate stays near-black (G8);
+   - live: the flare is one pass: the line crosses the redrawn line and its
+     wash once (660 ms) and lays them again; nothing flares or moves (G9). */
+@layer kp.signature {
+    /* Shape 1 · the plate, the grid, the film on the edge, the chamfer. */
+    [data-theme='dark'][data-theme='dark'] [data-ct-shape='1'] .kp-kpi--trend {
+        --tr-dk-tone: transparent;
+        --tr-font: inherit;
+        --tr-frame: 1px solid transparent;
+        --tr-radius: 0;
+        --tr-pat: linear-gradient(var(--card), var(--card)) padding-box, var(--kp-iris) border-box;
+        --tr-num-shadow: none;
+        --tr-glow: none;
+        --tr-plot-bg: transparent;
+        --tr-plot-radius: 0;
+        --tr-plot-pat:
+            linear-gradient(hsl(from var(--foreground) h s l / 0.045) 1px, transparent 1px) 0 0 / 100% 25%,
+            linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.045) 1px, transparent 1px) 0 0 / 12.5% 100%;
+        clip-path: polygon(
+            0 0,
+            calc(100% - var(--kp-chamfer-panel, 1rem)) 0,
+            100% var(--kp-chamfer-panel, 1rem),
+            100% 100%,
+            var(--kp-chamfer-panel, 1rem) 100%,
+            0 calc(100% - var(--kp-chamfer-panel, 1rem))
+        );
+    }
+
+    /* Loading 2 · the comet over the plot. */
+    [data-theme='dark'][data-theme='dark'] [data-ct-loading='2'] .kp-kpi--trend {
+        --tr-load:
+            var(--kp-sig-dk-line) calc(0% - 2px) 0 / 2px 100% no-repeat,
+            var(--kp-sig-dk-tail) calc(-100% * var(--kp-sig-dk-cw) / (1 - var(--kp-sig-dk-cw))) 0 / calc(var(--kp-sig-dk-cw) * 100%) 100% no-repeat;
+    }
+
+    /* Tone 3 · the film gone coral. */
+    [data-theme='dark'][data-theme='dark'] [data-ct-tone='3'] .kp-kpi--trend {
+        --tr-delta-radius: 0;
+        --tr-delta-shadow: none;
+        --tr-tone-num-bg: transparent;
+        --tr-tone-num-pad: 0;
+    }
+
+    [data-theme='dark'][data-theme='dark'] [data-ct-tone='3'] .kp-kpi--trend[data-kp-tone='warning'] {
+        --tr-dk-tone: var(--warning-foreground);
+        --tr-tone-num-fg: var(--warning-foreground);
+        --tr-pat:
+            linear-gradient(var(--card), var(--card)) padding-box, linear-gradient(var(--warning-foreground), var(--warning-foreground)) border-box;
+    }
+
+    [data-theme='dark'][data-theme='dark'] [data-ct-tone='3'] .kp-kpi--trend[data-kp-tone='destructive'] {
+        --tr-dk-tone: var(--destructive);
+        --tr-tone-num-fg: var(--destructive);
+        --tr-pat: linear-gradient(var(--card), var(--card)) padding-box, linear-gradient(var(--destructive), var(--destructive)) border-box;
+    }
+
+    [data-theme='dark'][data-theme='dark'] [data-ct-tone='3'] .kp-kpi--trend .kp-kpi__delta {
+        background: transparent;
+        color: var(--success-foreground);
+    }
+
+    [data-theme='dark'][data-theme='dark'] [data-ct-tone='3'] .kp-kpi--trend .kp-kpi__delta[data-kp-tone='bad'] {
+        background: transparent;
+        color: var(--destructive);
+    }
+
+    [data-theme='dark'][data-theme='dark'] [data-ct-tone='3'] .kp-kpi--trend[data-kp-tone] .kp-kpi__label-note {
+        background: transparent;
+        color: var(--tr-dk-tone);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'][data-theme='dark'] [data-ct-loading='2'] .kp-kpi--trend {
+            --tr-load-anim: kp-sig-dark-comet var(--kp-sig-dk-loop) linear infinite;
+        }
+
+        /* Arrival 2 · laid by the pass. */
+        [data-theme='dark'][data-theme='dark'] [data-ct-arrival='2'] .kp-kpi--trend {
+            --tr-arr-line: tr-a-wipe 660ms linear both;
+            --tr-arr-num: tr-n-wipe 660ms linear both;
+        }
+
+        /* Live 3 · the pass lays the line and its wash again. */
+        [data-theme='dark'][data-theme='dark'] [data-ct-live='3'] .kp-kpi--trend {
+            --tr-live-line: kp-sig-dark-lay 660ms linear;
+            --tr-live-area: kp-sig-dark-lay 660ms linear;
+        }
+    }
+}

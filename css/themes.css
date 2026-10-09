@@ -370,7 +370,7 @@
     --fx-signal-foreground: hsl(220, 24%, 6%);
     --fx-notch: 0.55rem;
     --fx-duration: 220ms;
-    --fx-ease: cubic-bezier(0.16, 0.84, 0.28, 1);
+    --fx-ease: cubic-bezier(0.22, 1, 0.36, 1);
     --theme-font-display: 'Archivo', ui-sans-serif, system-ui, sans-serif;
     --theme-font-mono: 'KP Ticker Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(220, 16%, 13%);
@@ -1656,7 +1656,7 @@
     --fx-signal-foreground: hsl(0, 0%, 4%);
     --fx-notch: 6px;
     --fx-duration: 120ms;
-    --fx-ease: cubic-bezier(0.2, 0.9, 0.25, 1);
+    --fx-ease: cubic-bezier(0.81, 0, 0, 1);
     --theme-font-display: 'Barlow Condensed', 'Barlow', ui-sans-serif, sans-serif;
     --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(45, 100%, 55%);

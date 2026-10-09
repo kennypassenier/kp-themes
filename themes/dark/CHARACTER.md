@@ -154,6 +154,19 @@ Only the meter is in `css/dark-register.css` beyond the signature elements.
 | 18  | The voice                        | G18  | Archivo, the ticker mono for readings · the ticker mono for titles too (the picks) · Archivo everywhere                    |
 | 19  | Motifs                           | G19  | the film, the line, the chamfer, the brackets, the grid · plus the lamps and the scope (the picks) · as today (everything) |
 
+**Applied 2026-10-09** (css/dark-register.css, `@property` rules at its top, TIMINGS rows in js/effects.js, `fx-ease` in tokens.json):
+
+- Q1, Q4 curve and times: `fx-ease` is the settle `cubic-bezier(0.22, 1, 0.36, 1)`, `--fx-duration` 220 ms; `--kp-sig-dk-time` 880 ms (pass 660 + settle 220), `--kp-sig-dk-loop` 2400 ms, word stagger 60 ms. Every pass is linear; the film turn runs 0 to 345deg linear, then to 360deg on the settle.
+- Q2, Q3, Q13 pass: `kp-sig-dark-sweep` (a three-layer mask over the part's own box and the reach of its halo, left to right) with the line on `::after` (`kp-sig-dark-pass-line`) on dialog, drawer, menu, popover, tooltip, toast, combobox list, date picker, palette and theme menu; the nav dropdown opens the same way and closes by the entrance reversed (`display` is a discrete transition). `[data-kp-leaving]` plays the same pair `reverse forwards`; `--kp-open: reverse-close` stays. Retired: the develop flash, the 6 px rise, the slit, the brightness(0) leave, the darkroom resize develop.
+- Q5, Q7, Q19: headline words are laid by `kp-sig-dark-lay` (the two-wavelength resolve is gone), the check tick and radio dot too (their ghosts removed).
+- Q6: the panels (menu, popover, toast, lists, nav dropdown) take the card's cut with the halo through it, plus a 1 px diagonal for the cut edge; `.kp-kpi` standing alone is a panel with the film edge.
+- Q8: a warning or failed key figure, alert and meter take the tone on the film edge and the figure's ink, plate near-black; `.kp-menu__item--destructive` has a coral edge and ink.
+- Q9: `--kp-update: pass`; `[data-kp-updating='pass']` crosses the figure with the line and the letters take the film.
+- Q10: the comet (`kp-sig-dark-comet`, a 2 px head and a 36 % tail, 2400 ms) on every waiting surface, the loading meter and a busy button's ground; skeleton lines are crossed 120 ms apart.
+- Q11, Q12: the busy bar's fill is a 28 % comet along the empty track; the spinner is five bars (`kp-sig-dark-bars`), 120 ms apart, cut on two corners.
+- Q14, Q15, Q17: buttons, icon buttons and menu entries share one manner: a 2 px film line at the start edge on hover, a quarter turn of the film edge on press and the line crossing the face (`kp-sig-dark-tap`). Q16: DI2's ring unchanged.
+- The meter: loading is the comet, the share is laid by `kp-sig-dark-meter-lay`, the tone swell is retired for a coral film strip.
+
 ---
 
 ## 5. Distinct from the other themes

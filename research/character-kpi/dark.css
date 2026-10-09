@@ -1,0 +1,159 @@
+/* research/character-kpi, dark: the decided picks on dark's applied grammar
+   (themes/dark/CHARACTER.md G1-G21, "Applied 2026-10-09"; css/dark-register.css
+   holds the tokens and the keyframes this file names: kp-sig-dark-comet,
+   kp-sig-dark-figure, kp-sig-dark-pass-live, kp-sig-dark-tap). Dark's decided
+   options are shape 3, loading 1, tone 3, interactive 1, live 3; the grammar
+   changes all five:
+
+   - shape: the alarm-lamp scope screen (a lit rim, a green grid, a mono glow)
+     is retired: the tile is a panel, a near-black plate with the film along its
+     edge and the chamfer on two opposite corners (G6, G7, G19);
+   - loading: the ticker baseline is the comet: the 2 px line and a tail 36 %
+     of the tile long cross it from start to end, 2400 ms a loop (G10);
+   - tone: the lamp and the lit number are the film gone coral: a warning
+     or a failure takes the tone along the whole film edge and in the figure's
+     ink and the change; the plate stays near-black (G8);
+   - interactive: the lit panel is the line resting at the start edge (the
+     register's own), a press is the line crossing the face while the film
+     edge turns a quarter, DI2's ring inside the cut; nothing moves
+     (G15, G16, G17);
+   - live: the flare is one pass over the figure: the line crosses it once
+     (660 ms), the letters take the film and settle back to ink (G9). */
+@layer kp.signature {
+    /* Shape 3 · the plate, the film on its edge, the chamfer. */
+    [data-theme='dark'][data-theme='dark'] [data-kf-shape='3'] .kp-kpi {
+        --kf-plate: var(--card);
+        --kf-frame: 1px solid transparent;
+        --kf-radius: 0;
+        --kf-shadow: none;
+        --kf-pat: linear-gradient(var(--card), var(--card)) padding-box, var(--kp-iris) border-box;
+        background-size: auto;
+        clip-path: polygon(
+            0 0,
+            calc(100% - var(--kp-chamfer-panel, 1rem)) 0,
+            100% var(--kp-chamfer-panel, 1rem),
+            100% 100%,
+            var(--kp-chamfer-panel, 1rem) 100%,
+            0 calc(100% - var(--kp-chamfer-panel, 1rem))
+        );
+    }
+
+    /* Loading 1 · the comet over the whole tile. */
+    [data-theme='dark'][data-theme='dark'] [data-kf-loading='1'] .kp-kpi[data-kp-loading]::before {
+        inset: 0;
+        block-size: auto;
+        border-radius: 0;
+        box-shadow: none;
+        animation: none;
+        background-image: var(--kp-sig-dk-line), var(--kp-sig-dk-tail);
+        background-repeat: no-repeat;
+        background-size:
+            2px 100%,
+            calc(var(--kp-sig-dk-cw) * 100%) 100%;
+        background-position:
+            calc(50% * (1 + var(--kp-sig-dk-cw)) - 1px) 0,
+            50% 0;
+    }
+
+    /* Tone 3 · the film gone coral; the change and the figure in the tone's ink. */
+    [data-theme='dark'][data-theme='dark'] [data-kf-tone='3'] .kp-kpi .kp-kpi__delta {
+        --kf-delta-bg: transparent;
+        --kf-delta-ink: inherit;
+        --kf-delta-radius: 0;
+        --kf-delta-shadow: none;
+    }
+
+    [data-theme='dark'][data-theme='dark'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='warning'] {
+        --kf-pat:
+            linear-gradient(var(--card), var(--card)) padding-box, linear-gradient(var(--warning-foreground), var(--warning-foreground)) border-box;
+    }
+
+    [data-theme='dark'][data-theme='dark'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='destructive'] {
+        --kf-pat: linear-gradient(var(--card), var(--card)) padding-box, linear-gradient(var(--destructive), var(--destructive)) border-box;
+    }
+
+    [data-theme='dark'][data-theme='dark'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='warning'] > .kp-kpi__value {
+        --kf-tone-ink: var(--warning-foreground);
+        --kf-num-shadow: none;
+    }
+
+    [data-theme='dark'][data-theme='dark'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='destructive'] > .kp-kpi__value {
+        --kf-tone-ink: var(--destructive);
+        --kf-num-shadow: none;
+    }
+
+    [data-theme='dark'][data-theme='dark'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='warning'] .kp-kpi__delta {
+        --kf-delta-ink: var(--warning-foreground);
+    }
+
+    [data-theme='dark'][data-theme='dark'] [data-kf-tone='3'] .kp-kpi[data-kp-tone='destructive'] .kp-kpi__delta {
+        --kf-delta-ink: var(--destructive);
+    }
+
+    /* Interactive 1 · the line rests at the start (the register's), the edge
+       does not change colour, DI2's ring inside the cut. */
+    [data-theme='dark'][data-theme='dark'] [data-kf-interactive='1'] a.kp-kpi,
+    [data-theme='dark'][data-theme='dark'] [data-kf-interactive='1'] .kp-kpi--toggle {
+        --kf-hover-border: transparent;
+        --kf-hover-plate: var(--kf-plate);
+        --kf-press-plate: var(--kf-plate);
+        --kf-focus-outline: none;
+        --kf-transition: none;
+    }
+
+    [data-theme='dark'][data-theme='dark'] [data-kf-interactive='1'] a.kp-kpi:focus-visible,
+    [data-theme='dark'][data-theme='dark'] [data-kf-interactive='1'] .kp-kpi--toggle:focus-visible {
+        outline: none;
+        box-shadow:
+            inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 0 0 calc(var(--kp-focus-ring-inner-width, 2px) + 2px) var(--focus-ring-contrast);
+    }
+
+    [data-theme='dark'][data-theme='dark'] [data-kf-interactive='1'] a.kp-kpi:active,
+    [data-theme='dark'][data-theme='dark'] [data-kf-interactive='1'] .kp-kpi--toggle:active {
+        --kp-sig-dk-turn: 90deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'][data-theme='dark'] [data-kf-loading='1'] .kp-kpi[data-kp-loading]::before {
+            animation: kp-sig-dark-comet var(--kp-sig-dk-loop) linear infinite;
+        }
+
+        [data-theme='dark'][data-theme='dark'] [data-kf-interactive='1'] a.kp-kpi:active::after,
+        [data-theme='dark'][data-theme='dark'] [data-kf-interactive='1'] .kp-kpi--toggle:active::after {
+            background: var(--kp-sig-dk-line) 0 0 / 2px 100% no-repeat;
+            animation: kp-sig-dark-tap var(--fx-duration) linear both;
+        }
+
+        /* Live 3 · one pass over the figure. */
+        [data-theme='dark'][data-theme='dark'] [data-kf-live='3'] .kp-kpi.kf-flash > .kp-kpi__value {
+            position: relative;
+            justify-self: start;
+            inline-size: fit-content;
+            --kp-sig-dk-ink-colour: var(--kf-tone-ink, var(--kf-ink));
+            background:
+                linear-gradient(90deg, transparent var(--kp-sig-dk-at), var(--kp-sig-dk-ink-colour) var(--kp-sig-dk-at)),
+                linear-gradient(
+                    hsl(from var(--kp-sig-dk-ink-colour) h s l / var(--kp-sig-dk-ink)),
+                    hsl(from var(--kp-sig-dk-ink-colour) h s l / var(--kp-sig-dk-ink))
+                ),
+                var(--kp-iris);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: kp-sig-dark-figure calc(660ms / var(--kf-speed, 1)) linear both;
+        }
+
+        [data-theme='dark'][data-theme='dark'] [data-kf-live='3'] .kp-kpi.kf-flash > .kp-kpi__value::after {
+            content: '';
+            position: absolute;
+            inset: -2px -4px;
+            z-index: 1;
+            background: var(--kp-sig-dk-line) 100% 0 / 2px 100% no-repeat;
+            filter: var(--kp-sig-dk-glow);
+            opacity: 0;
+            pointer-events: none;
+            animation: kp-sig-dark-pass-live calc(660ms / var(--kf-speed, 1)) linear both;
+        }
+    }
+}

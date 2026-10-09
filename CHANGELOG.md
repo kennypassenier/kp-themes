@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- **Changed: dark's grammar, as Kenny decided it on research/dark-character** [2026-10-09, themes/dark/CHARACTER.md]. Every opening is a pass
+  left to right over the part's own box and the close is the pass back; loading is a comet on every waiting surface and the busy bar, the
+  spinner is five spectrum bars; a live update is one pass over the figure (`--kp-update: pass`), a warning is the film gone coral; hover rests
+  a 2 px film line, a press turns the film edge a quarter; `fx-ease` is the settle curve. Removed: the develop flash, the misregistration
+  ghosts, the two-wavelength resolve, the tone swell, the darkroom resize.
+- **Changed: phantom's grammar, as Kenny decided it on research/phantom-character** [2026-10-09, themes/phantom/CHARACTER.md]. The shove and
+  its inverse on every travel; one 700 ms throw that resolves from halftone dots (dialog, toast, menu, popover, dropdown, tour, drawer,
+  headlines), the leave as its inverse, a closed part never drawn; a fixed 14 px corner cut; a warning is the yellow overprint, a failure the
+  red plate; a live update is six cuts of the halftone mask; every waiting surface is the red slash; `fx-ease` is `cubic-bezier(0.81, 0, 0, 1)`.
+- **Research: retro update 2 and deco update 3** [2026-10-09]. Retro's loading is redrawn from the real Windows 95 animations (torch, progress band,
+  hourglass, defrag, file copy, dial-up lights); deco's leaving and arriving are ten variations in the festoon's art style.
 - **Changed: formal's grammar, as Kenny decided it on research/formal-character** [2026-10-08, themes/formal/CHARACTER.md §4]. The
   clerk rules a ledger: `--fx-ease` is `linear` (css/themes.css); everything that opens, leaves, loads, spins or updates is a rule
   being ruled (400 ms, 60 ms apart, loop 2400 ms; `kp-sig-formal-line-k`/`-pen-k`/`-leave`/`-ruling`/`-loading`/`-update-closed`/

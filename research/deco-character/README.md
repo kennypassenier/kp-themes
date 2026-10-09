@@ -1,5 +1,12 @@
 # What makes deco deco
 
+**Update 3 (2026-10-09).** Kenny on leaving and arriving: the festoon (option five) is "actually fancy and well drawn, I like the art
+style", curtains maybe not, and the curtains stayed in the window once open (a bug, fixed: every part stands on a stage that is hidden
+after it has left, and its dressing is drawn only while it moves, never once the part has arrived). Ten options in the festoon's art
+style (satin and lacquer, gold trim, braid, rosettes, tassels, fringe, rivets): the festoon fixed, a Roman blind, a folding screen, a
+ribbon and bow, a velvet rope between brass posts, gilded shutters, a lift gate, a great fan, a bead curtain and a scallop shell. Every
+leave is its arrival backwards, frame for frame. The other eighteen questions keep their drawing.
+
 **Update 2 (2026-10-09).** Kenny: "Do better, I'm very underwhelmed". Reopened: the corners, loading, the bar, leave, hover and
 the press, each drawn again as jewellery with gold that reads as gold (a highlight, the gold and a bronze shade of one hue along
 every hairline, faceted lozenges, gold leaf with a grain; inline-SVG ornaments painted from one gradient sprite, `.dc-defs`):
@@ -55,7 +62,7 @@ you see and why it is or is not recommended, on the page and in its hint in the 
 | 10  | Loading (G10)                         | light on lacquer: a glint crosses · a small fan unfolds and folds · the inlay draws and undraws · the wallpaper breathes · the skeleton's strips (today)   |
 | 11  | The progress bar, redone (G11)        | a gold inlay with a lozenge head · a string of lozenges · between two hairlines · a stepped head · a fan laid flat, smooth                                 |
 | 12  | The spinner (G12)                     | **decided:** the sunburst rotates (today)                                                                                                                  |
-| 13  | Leaving and arriving (G13)            | the inlay draws, the lacquer comes up; undraws, sinks · unfolds from its base · sinks, a glint passes · the lift doors · the curtain of threads            |
+| 13  | Leaving and arriving (G13)            | festoon · Roman blind · folding screen · ribbon and bow · velvet rope · shutters · lift gate · great fan · bead curtain · scallop shell (update 3)         |
 | 14  | Buttons inside composites (G14)       | exactly deco's own · hairline inside, solid alone · gold text only inside · deco's own on a lacquer plaque · as today                                      |
 | 15  | Pointing at something (G15)           | the inlay brightens, a glint passes once · a hairline under the label · the lacquer lightens · a small fan unfolds · the capitals open their tracking      |
 | 16  | The focus ring (G16)                  | **decided:** a double gold ring                                                                                                                            |

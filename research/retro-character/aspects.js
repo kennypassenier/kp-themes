@@ -15,7 +15,7 @@ export const LABEL = 'Retro';
 export const TITLE = 'What makes retro retro';
 export const STORY = {
     what: 'Retro is the 1995 desktop: a teal ground with its icons, a taskbar with Start and the clock, windows of grey chrome with a navy title bar, bevels for what you press and sunken wells for what you read, a 16-colour palette, and a clock that ticks in whole frames because nothing in 1995 eased. The anchor you picked says what the desktop does: it copies. A sheet of paper flies out of one folder, over, and into the other in eight whole frames, and the segmented bar gains a block each time a sheet lands.',
-    so: 'So everything that happens on screen is copied in or out: a part flies in as a sheet and lands whole (arriving, opening), is copied over when it changes (a live update), waits while sheets fly and blocks fill (loading, the busy bar), and flies back to its folder when it goes (leaving). Every motion is whole frames, the bevel presses in one, and nothing fades, eases or blinks; the desktop you liked (the taskbar, the icons, the pointer, the window chrome) is the world every part lives in.',
+    so: 'So everything that happens on screen is copied in or out: a part flies in as a sheet and lands whole (arriving, opening), is copied over when it changes (a live update), waits the way Windows 95 waited: a torch, a progress band, an hourglass, a defrag grid, a copy counter (loading, the busy bar), and flies back to its folder when it goes (leaving). Every motion is whole frames, the bevel presses in one, and nothing fades, eases or blinks; the desktop you liked (the taskbar, the icons, the pointer, the window chrome) is the world every part lives in.',
     decided:
         'Already decided by you: the anchor = the Copying dialog’s flying sheet (the anchor round, attempt 1 of 3), with the 1995 desktop around it; the network graph changes in no theme. The questions below turn the anchor into rules for every other component; where a decided pick is at odds with the rule, the pick is on the page as an option named “the pick” or “today”. The full analysis is in themes/retro/CHARACTER.md.',
 };
@@ -133,7 +133,7 @@ export const ASPECTS = [
             {
                 key: 'flight',
                 name: 'One flight: 90 ms a frame, 8 frames, a loop of 2520 ms',
-                see: 'A frame is 90 ms; a flight is 8 frames (720 ms); a short motion 4 to 6 frames (360 to 540 ms); a group one frame apart; a loop (sheets flying while loading, the busy hop) 28 frames (2.52 s), the Copying dialog’s rhythm; a bevel presses at once.',
+                see: 'A frame is 90 ms; a flight is 8 frames (720 ms); a short motion 4 to 6 frames (360 to 540 ms); a group one frame apart; a loop (the loading animations, the busy hop) 28 frames (2.52 s), the Copying dialog’s rhythm; a bevel presses at once.',
                 verdict:
                     'Recommended: this one, because it is the anchor’s own clock (the Copying dialog at 90 ms a frame), fast enough for a menu and slow enough that each frame is seen.',
             },

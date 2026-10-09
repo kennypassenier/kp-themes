@@ -1,0 +1,68 @@
+/* research/character-state, dark: the decided picks on dark's applied grammar
+   (themes/dark/CHARACTER.md G1-G21, "Applied 2026-10-09"; css/dark-register.css
+   holds the tokens and the keyframes this file names: kp-sig-dark-figure,
+   kp-sig-dark-pass-live). Dark's decided options are shape 1, tone 3,
+   change 1; the grammar changes shape, tone and change:
+
+   - shape: the status lamp (a glowing round dot, the word in mono) is
+     retired: the dot is a square of the film's tone with no glow, the word in
+     Archivo (G5, G6, G18, G19);
+   - tone: the alarm line under the word keeps its place, the word of a
+     pending or a failed state is set in the tone's ink and the plate stays
+     as it is (G8);
+   - change: the lamp flaring is one pass over the word: the line crosses it
+     once (660 ms), the letters take the film and settle back to ink; the
+     word and its dot never move or flare (G9). */
+@layer kp.signature {
+    /* Shape 1 · a square dot, no glow, the word in Archivo. */
+    [data-theme='dark'][data-theme='dark'] [data-sw-shape='1'] {
+        --sw-dot-radius: 0;
+        --sw-dot-ring: none;
+        --sw-font: 600 0.9em var(--theme-font-body);
+        --sw-track: normal;
+    }
+
+    /* Tone 3 · the tone's ink on a pending or a failed word. */
+    [data-theme='dark'][data-theme='dark'] [data-sw-tone='3'][data-sw-kind='pending'] {
+        --sw-ink: var(--warning-foreground);
+    }
+
+    [data-theme='dark'][data-theme='dark'] [data-sw-tone='3'][data-sw-kind='bad'] {
+        --sw-ink: var(--destructive);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* Change 1 · one pass over the word. */
+        [data-theme='dark'][data-theme='dark'] [data-sw-change='1'][data-sw-playing]::before {
+            animation: none;
+        }
+
+        [data-theme='dark'][data-theme='dark'] [data-sw-change='1'][data-sw-playing] .kp-state-word {
+            position: relative;
+            --kp-sig-dk-ink-colour: var(--sw-ink, var(--foreground));
+            background:
+                linear-gradient(90deg, transparent var(--kp-sig-dk-at), var(--kp-sig-dk-ink-colour) var(--kp-sig-dk-at)),
+                linear-gradient(
+                    hsl(from var(--kp-sig-dk-ink-colour) h s l / var(--kp-sig-dk-ink)),
+                    hsl(from var(--kp-sig-dk-ink-colour) h s l / var(--kp-sig-dk-ink))
+                ),
+                var(--kp-iris);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: kp-sig-dark-figure 660ms linear both;
+        }
+
+        [data-theme='dark'][data-theme='dark'] [data-sw-change='1'][data-sw-playing] .kp-state-word::before {
+            content: '';
+            position: absolute;
+            inset: -2px -4px;
+            z-index: 1;
+            background: var(--kp-sig-dk-line) 100% 0 / 2px 100% no-repeat;
+            filter: var(--kp-sig-dk-glow);
+            opacity: 0;
+            pointer-events: none;
+            animation: kp-sig-dark-pass-live 660ms linear both;
+        }
+    }
+}

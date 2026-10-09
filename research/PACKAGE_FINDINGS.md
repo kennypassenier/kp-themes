@@ -133,3 +133,18 @@ Kenny released 10.0.0 with these open (form suite-red). Not triaged: some expect
 - tests/surfaces.spec.mjs:163:9 › two surfaces in one theme [TH116] › every text on both surfaces clears its contrast floor under solstice — Error: not a colour: oklch(0.899913 0.0162407 76.5606)
 - tests/tour.spec.mjs:40:1 › the tour end to end: an exact count, the card 12 px from its ringed target and following it, Esc, memory, decorate, ?tour (I.3.7 1-4, 6, 7) [sc — Error: expect(received).toEqual(expected) // deep equality
 - tests/tour.spec.mjs:87:1 › on a phone: the card 16 px from both edges, the drawer at the end edge at full height, Help gets the focus back, the tab bar toured (I.3.7 5) [ — Error: expect(received).toEqual(expected) // deep equality
+
+## Dark
+
+- Right-to-left: the pass (mask and line) is physical, left to right; a RTL page is swept from the left too. It would take mirrored keyframes under `:dir(rtl)` in css/dark-register.css.
+- js/motion.js plays a dialog's close in two thirds of the entrance and caps it at 600 ms, so the 880 ms pass is shown shorter than the decided 660 + 220 ms; an exact time needs a per-register close time.
+- The research/character-* variants carry no dark.css yet: the decided dark picks there still draw the retired lamps, scopes and develop flashes.
+
+## Phantom
+
+- A cut-paper part cannot show its hard shadow: `clip-path` clips the part's own `box-shadow`, `filter: drop-shadow` and its children, so no card, menu, dialog or toast of the register shows the deep red second plate (the character demo draws it on a wrapper). It would take a wrapper element, or a hook in css/components.css that draws a part's shadow on an element that is not clipped (a `::before` of the parent, or an `--kp-shadow-plate` the component reads).
+- A key figure in a tone shows no tone when it has no change: the decided warning (G8) retires the figure's own plate and the card's tinted edge, and the tone is the overprint on `.kp-kpi__delta`. tests/kpi-trend.spec.mjs and the fix-70 and fix-99 checks read the figure on its status pair, so they will disagree in phantom; a finding for Kenny, not a silent deviation.
+- The bar's dropdown (`.kp-nav__menu`) opens thrown and resolved, but it closes at once: it is shown by `:hover` and `:focus-within` with `display`, js/motion.js plays no close for it (PANEL_SELECTOR does not name it). It would take the nav's panel in PANEL_SELECTOR and a close state the CSS can hold.
+- A tone on a key figure's meter and on the figure itself share nothing in the package; the live update `[data-kp-updating]` of a spark sits on the svg's parent, so the six cuts mask the parent's whole box, not the line alone. It would take a mark js/update.js puts on the svg itself.
+- A `visibility: hidden` first frame (the closed part is never drawn) works for every CSS animation; a part that arrives by a framework's own transition (`@starting-style`) is hidden by no keyframe. None of the package's components arrives that way today.
+- The research/character-* variants: `phantom.css` is written in the twelve folders (not character-graph, which changes in no theme) but not linked from their demo.html (each is a shared file other themes' sessions edit). One line after the theme's own stylesheet in each: `<link rel="stylesheet" href="phantom.css" />`.

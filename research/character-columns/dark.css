@@ -1,0 +1,100 @@
+/* research/character-columns, dark: the decided picks on dark's applied
+   grammar (themes/dark/CHARACTER.md G1-G21, "Applied 2026-10-09";
+   css/dark-register.css holds the tokens and the keyframes this file names:
+   kp-sig-dark-comet, kp-sig-dark-lay, kp-sig-dark-figure,
+   kp-sig-dark-pass-live). Dark's decided options are shape 3, loading 1,
+   arrival 1, tone 1, live 3; the grammar changes all five:
+
+   - shape: the glow on the figures (a lamp) and the 6 px corners are retired;
+     the strip keeps its instrument grid and its ruled frame, square, the
+     readings in the ticker mono (G6, G7, G18);
+   - loading: the flicking flaps are the comet: the 2 px line and a tail 36 %
+     of the column long cross it from start to end, 2400 ms a loop (G10);
+   - arrival: the flip is the pass: the figure is laid from its start edge in
+     660 ms at one pace, a column 60 ms after the one before (G2, G4);
+   - tone: the flap tag's plate is the film gone coral: the change is set in
+     the tone's ink on the near-black plate with the tone along its start
+     edge (G8);
+   - live: rolled up is one pass over the figure: the line crosses it once
+     (660 ms), the letters take the film and settle back to ink; it never
+     moves (G9). */
+@layer kp.signature {
+    /* Shape 3 · square, no glow. */
+    [data-theme='dark'][data-theme='dark'] [data-cs-shape='3'] .kp-kpis {
+        --cl-radius: 0;
+        --cl-num-shadow: none;
+    }
+
+    /* Loading 1 · the comet on each column. */
+    [data-theme='dark'][data-theme='dark'] [data-cs-loading='1'] .kp-kpis {
+        --cl-load:
+            var(--kp-sig-dk-line) calc(0% - 2px) 0 / 2px 100% no-repeat,
+            var(--kp-sig-dk-tail) calc(-100% * var(--kp-sig-dk-cw) / (1 - var(--kp-sig-dk-cw))) 0 / calc(var(--kp-sig-dk-cw) * 100%) 100% no-repeat;
+        --cl-load-anim: kp-sig-dark-comet var(--kp-sig-dk-loop) linear infinite;
+    }
+
+    /* Arrival 1 · laid by the pass, a column after a column. */
+    [data-theme='dark'][data-theme='dark'] [data-cs-arrival='1'] .kp-kpis {
+        --cl-arrive-num: kp-sig-dark-lay 660ms linear backwards;
+        --cl-arrive-tile: none;
+        --cl-arrive-stagger: 60ms;
+    }
+
+    /* Tone 1 · the change in the tone's ink, the tone along its start edge. */
+    [data-theme='dark'][data-theme='dark'] [data-cs-tone='1'] .kp-kpis {
+        --cl-delta-radius: 0;
+    }
+
+    [data-theme='dark'][data-theme='dark'] [data-cs-tone='1'] .kp-kpis .kp-kpi__delta {
+        background: transparent;
+        box-shadow: inset 2px 0 0 var(--success-foreground);
+        color: var(--success-foreground);
+    }
+
+    [data-theme='dark'][data-theme='dark'] [data-cs-tone='1'] .kp-kpis .kp-kpi__delta[data-kp-tone='bad'],
+    [data-theme='dark'][data-theme='dark'] [data-cs-tone='1'] .kp-kpis .kp-kpi[data-kp-tone='destructive'] .kp-kpi__delta {
+        background: transparent;
+        box-shadow: inset 2px 0 0 var(--destructive);
+        color: var(--destructive);
+    }
+
+    [data-theme='dark'][data-theme='dark'] [data-cs-tone='1'] .kp-kpis .kp-kpi[data-kp-tone='warning'] .kp-kpi__delta {
+        background: transparent;
+        box-shadow: inset 2px 0 0 var(--warning-foreground);
+        color: var(--warning-foreground);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* Live 3 · one pass over the figure. */
+        [data-theme='dark'][data-theme='dark'] [data-cs-live='3'] .kp-kpis {
+            --cl-live-num: kp-sig-dark-figure 660ms linear both;
+        }
+
+        [data-theme='dark'][data-theme='dark'] [data-cs-live='3'] .kp-kpis[data-cs-moment='live'] > .kp-kpi[data-cs-changed] > .kp-kpi__value {
+            position: relative;
+            --kp-sig-dk-ink-colour: var(--foreground);
+            background:
+                linear-gradient(90deg, transparent var(--kp-sig-dk-at), var(--kp-sig-dk-ink-colour) var(--kp-sig-dk-at)),
+                linear-gradient(
+                    hsl(from var(--kp-sig-dk-ink-colour) h s l / var(--kp-sig-dk-ink)),
+                    hsl(from var(--kp-sig-dk-ink-colour) h s l / var(--kp-sig-dk-ink))
+                ),
+                var(--kp-iris);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        [data-theme='dark'][data-theme='dark'] [data-cs-live='3'] .kp-kpis[data-cs-moment='live'] > .kp-kpi[data-cs-changed] > .kp-kpi__value::after {
+            content: '';
+            position: absolute;
+            inset: -2px -4px;
+            z-index: 1;
+            background: var(--kp-sig-dk-line) 100% 0 / 2px 100% no-repeat;
+            filter: var(--kp-sig-dk-glow);
+            opacity: 0;
+            pointer-events: none;
+            animation: kp-sig-dark-pass-live 660ms linear both;
+        }
+    }
+}

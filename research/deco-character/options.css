@@ -3668,13 +3668,11 @@
     }
 
     /* Tracing and orbit: a bright copy of the inlay (the trail) and its
-       bright points (the heads), the same lines as the plate's ::after. The
-       leave's glint and double rule use the same copy on the plate. */
+       bright points (the heads), the same lines as the plate's ::after. */
     .dc-scene[data-dc-loading='tracing'] .dc-wait::before,
     .dc-scene[data-dc-loading='tracing'] .dc-wait::after,
     .dc-scene[data-dc-loading='orbit'] .dc-wait::before,
-    .dc-scene[data-dc-loading='orbit'] .dc-wait::after,
-    .dc-scene:is([data-dc-leave='glint'], [data-dc-leave='double']) .dc-plate::before {
+    .dc-scene[data-dc-loading='orbit'] .dc-wait::after {
         content: '';
         position: absolute;
         inset: calc(var(--dc-in) - 1px);
@@ -4996,436 +4994,125 @@
         }
     }
 
-    /* ── 13 Leaving and arriving (update 2) ──────────────────────────────
-       An alert, a card and a key figure arrive and leave in every option;
-       every leave is its arrival backwards, frame for frame (the `-out`
-       twins start as late as the window allows, W - start - length).
-       Inlay (recommended): the lobby's clock as it stands (dcg-draw 320 ms,
-       then dcg-up 160 ms). Glint: the same, and as the line meets at the
-       bottom one glint runs once round the inlay clockwise (dc-gl, 240 ms);
-       leaving, the glint runs back first and the inlay undraws behind it
-       (W 560 ms). Jewels: four faceted lozenges light at the inlay's corners
-       (dc-jw, 120 ms), the inlay is drawn from each to the middles of the
-       edges (dcg-draw, 240 ms), the lacquer comes up (dcg-up, 120 ms).
-       Double: the inlay draws (300 ms), a second line 4 px inside it
-       follows 120 ms later (dc-d2, 300 ms), the lacquer comes up (160 ms).
-       Velvet: the part stands on a stage behind two velvet drapes (eight
-       pleats each, a twisted gold braid on the inner edge, a beaded fringe
-       and a tassel at the hem) under a scalloped, gold-trimmed valance with
-       a tassel at every point; the drapes part from the centre to both
-       sides and gather into deeper folds, a gold cord tying each back
-       (dc-part, 480 ms). Festoon: five swags of satin, each with a gold
-       trim on its scallop and a gold rosette with a tassel at each gather,
-       rise from the centre outward 60 ms apart (dc-lift, 360 ms each) into a
-       valance under a double rail. Closed, a curtain covers the whole
-       stage; the part is never drawn before its arrival or after its leave. */
+    /* ── 13 Leaving and arriving (update 3) ──────────────────────────────
+       Kenny liked the festoon's art style and asked for ten variations in
+       it, and found the curtains staying in the window once open (a bug).
+       Every option stands the part on a stage (`.dc-stage`) and dresses it
+       (`.dc-dress`): at `gap` the stage is hidden, so nothing of a part that
+       has left is drawn; the dressing is hidden at rest and from the last
+       frame of an arrival (dc-dress: visible while it moves, hidden at its
+       end; dc-dress-out the same backwards), so nothing of it stays once the
+       part has arrived. Its pieces turn --dc-q (`.dc-dq`: 0 dressed, 1
+       undressed; dc-q) and --dc-v (`.dc-dv`: 0 there, 1 away; dc-v), each
+       from its own start --dc-t0 for --dc-tl (--dc-v0, --dc-vl) inside the
+       scene's window --dc-W on the settle curve; `out` plays the `-out` twin
+       of each as late as the window allows (W - start - length), so every
+       leave is its arrival backwards, frame for frame. The fan turns two
+       angles instead (dc-gfan), the rope its path (dc-rope).
+       Festoon (recommended, 600 ms): five swags rise from the centre outward
+       60 ms apart into a valance (300 ms each), which then lifts away
+       (200 ms). Roman (640 ms): the blind rises from its hem gathering its
+       folds (480 ms), then the gathered blind lifts away (160 ms). Screen
+       (600 ms): the inner panels fold back behind the outer ones (300 ms),
+       then the outer ones turn edge-on at the sides (300 ms). Ribbon (640 ms):
+       the clasp opens (200 ms), the loops and tails fall (320 ms from 120 ms),
+       the four ribbons slide off the corners (400 ms from 240 ms). Rope
+       (720 ms): it unhooks and swings down to the left post (520 ms), then
+       the posts sink away (200 ms). Shutters (840 ms): eight slats a leaf turn
+       edge-on from the top, 60 ms apart (180 ms each), then the leaves fold
+       back (240 ms). Gate (640 ms): the lattice collapses to the left (480 ms)
+       and the bundle slides away (160 ms). Fan (720 ms): it opens from a
+       closed stick (288 ms), stands open (72 ms), folds away from the left
+       (360 ms). Beads (720 ms): the strings part from the centre, 20 ms apart
+       (360 ms each). Where a dressing covers only some of the part (ribbon, rope,
+       gate, fan, beads) the part's lacquer comes up behind it (dcg-up). Shell (640 ms): the shell turns down on its hinge, its
+       ribs fanning (480 ms), then the hinge closes to its jewel (160 ms). */
 
-    .dc-scene[data-dc-leave] .dc-ar {
-        --dc-trace: var(--dc-line);
-    }
-
-    /* Glint. */
-    .dc-scene[data-dc-leave='glint'] {
-        --dc-W: 560ms;
-    }
-
-    .dc-scene[data-dc-leave='glint'] .dc-plate {
-        --dc-trace: hsl(from var(--foreground) h s 97%);
-    }
-
-    .dc-scene[data-dc-leave='glint'] .dc-plate::before {
-        z-index: 3;
-        opacity: calc(min(1, var(--dc-gl) * 24) * min(1, (1 - var(--dc-gl)) * 24));
-        mask-image: conic-gradient(from calc(var(--dc-gl) * 360deg - 34deg) at 50% 50%, transparent 0, var(--foreground) 30deg, transparent 34deg);
-        filter: drop-shadow(0 0 2px var(--dc-gold-hi)) drop-shadow(0 0 5px hsl(from var(--dc-gold) h s l / 0.9));
-    }
-
-    /* Jewels: the inlay drawn from its four corners, a jewel on each. */
-    .dc-scene[data-dc-leave='jewels'] .dc-plate::after {
-        background-image:
-            linear-gradient(var(--dc-line) 0 0), linear-gradient(var(--dc-line) 0 0), linear-gradient(var(--dc-line) 0 0),
-            linear-gradient(var(--dc-line) 0 0), linear-gradient(var(--dc-line) 0 0), linear-gradient(var(--dc-line) 0 0),
-            linear-gradient(var(--dc-line) 0 0), linear-gradient(var(--dc-line) 0 0);
-        background-position:
-            left 0 top 0,
-            right 0 top 0,
-            left 0 bottom 0,
-            right 0 bottom 0,
-            left 0 top 0,
-            left 0 bottom 0,
-            right 0 top 0,
-            right 0 bottom 0;
-        background-size:
-            calc(var(--dc-draw) * 50%) 1px,
-            calc(var(--dc-draw) * 50%) 1px,
-            calc(var(--dc-draw) * 50%) 1px,
-            calc(var(--dc-draw) * 50%) 1px,
-            1px calc(var(--dc-draw) * 50%),
-            1px calc(var(--dc-draw) * 50%),
-            1px calc(var(--dc-draw) * 50%),
-            1px calc(var(--dc-draw) * 50%);
-        mask-image: none;
-    }
-
-    .dc-scene[data-dc-leave='jewels'] .dc-plate > .dc-jw {
-        grid-area: auto;
-        position: absolute;
-        z-index: 3;
-        inline-size: 9px;
-        block-size: 9px;
-        clip-path: var(--dc-lozenge);
-        background: var(--dc-gem);
-        opacity: min(1, var(--dc-j) * 3);
-        scale: var(--dc-j);
-        filter: brightness(calc(1 + 0.6 * (1 - var(--dc-up)) * var(--dc-j)));
-    }
-
-    .dc-scene[data-dc-leave='jewels'] .dc-jw--tl {
-        inset-block-start: calc(var(--dc-in) - 1px - 4px);
-        inset-inline-start: calc(var(--dc-in) - 1px - 4px);
-    }
-
-    .dc-scene[data-dc-leave='jewels'] .dc-jw--tr {
-        inset-block-start: calc(var(--dc-in) - 1px - 4px);
-        inset-inline-end: calc(var(--dc-in) - 1px - 4px);
-    }
-
-    .dc-scene[data-dc-leave='jewels'] .dc-jw--bl {
-        inset-block-end: calc(var(--dc-in) - 1px - 4px);
-        inset-inline-start: calc(var(--dc-in) - 1px - 4px);
-    }
-
-    .dc-scene[data-dc-leave='jewels'] .dc-jw--br {
-        inset-block-end: calc(var(--dc-in) - 1px - 4px);
-        inset-inline-end: calc(var(--dc-in) - 1px - 4px);
-    }
-
-    /* Double: a second inlay 4 px inside the first. */
-    .dc-scene[data-dc-leave='double'] .dc-plate::before {
-        inset: calc(var(--dc-in) + 4px - 1px);
-        z-index: 2;
-        opacity: 0.8;
-        mask-image: conic-gradient(from calc(var(--dc-d2) * -180deg) at 50% 50%, var(--foreground) 0 calc(var(--dc-d2) * 360deg), transparent 0);
-    }
-
-    .dc-scene[data-dc-leave='double'] .kp-kpi.dc-plate,
-    .dc-scene[data-dc-leave='double'] .kp-alert.dc-plate {
-        padding: 1rem 1.3rem;
-    }
-
-    .dc-scene[data-dc-leave='double'] .kp-card.dc-plate {
-        padding: 1.1rem 1.3rem;
-    }
-
-    @keyframes dc-gl {
-        from {
-            --dc-gl: 0;
-            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
-        }
-        to {
-            --dc-gl: 1;
-        }
-    }
-
-    @keyframes dc-gl-out {
-        from {
-            --dc-gl: 1;
-            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
-        }
-        to {
-            --dc-gl: 0;
-        }
-    }
-
-    @keyframes dc-jw {
-        from {
-            --dc-j: 0;
-            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        to {
-            --dc-j: 1;
-        }
-    }
-
-    @keyframes dc-jw-out {
-        from {
-            --dc-j: 1;
-            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
-        }
-        to {
-            --dc-j: 0;
-        }
-    }
-
-    @keyframes dc-d2 {
-        from {
-            --dc-d2: 0;
-            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        to {
-            --dc-d2: 1;
-        }
-    }
-
-    @keyframes dc-d2-out {
-        from {
-            --dc-d2: 1;
-            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
-        }
-        to {
-            --dc-d2: 0;
-        }
-    }
-
-    @keyframes dc-lift {
-        from {
-            --dc-q: 0;
-            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        to {
-            --dc-q: 1;
-        }
-    }
-
-    @keyframes dc-lift-out {
-        from {
-            --dc-q: 1;
-            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
-        }
-        to {
-            --dc-q: 0;
-        }
-    }
-
-    /* ── The curtains: a stage round the part ─────────────────────────── */
-
-    .dc-scene:is([data-dc-leave='velvet'], [data-dc-leave='festoon']) .dc-stage {
+    .dc-scene[data-dc-leave] .dc-stage {
         position: relative;
         display: grid;
         overflow: clip;
         isolation: isolate;
     }
 
-    .dc-scene[data-dc-leave='velvet'] .dc-stage {
-        --dc-gw: 30px;
-        padding: 31px var(--dc-gw) 6px;
-    }
-
-    .dc-scene[data-dc-leave='festoon'] .dc-stage {
-        --dc-hv: 27px;
-        --dc-lr: 10px;
-        padding: calc(var(--dc-hv) + 5px) 0 6px;
-    }
-
-    .dc-scene:is([data-dc-leave='velvet'], [data-dc-leave='festoon']) .dc-cur {
+    .dc-scene[data-dc-leave] .dc-dress {
         position: absolute;
         inset: 0;
         z-index: 5;
+        container-type: size;
+        overflow: clip;
+        visibility: hidden;
         pointer-events: none;
     }
 
-    .dc-scene :is(.dc-tassel, .dc-valance__tassels, .dc-ros) .dc-ln {
+    .dc-scene[data-dc-leave] .dc-dress :where(span, i, svg) {
+        display: block;
+    }
+
+    .dc-scene[data-dc-leave] .dc-dq {
+        --dc-t0: 0ms;
+        --dc-tl: var(--dc-W);
+    }
+
+    .dc-scene[data-dc-leave] .dc-dv {
+        --dc-v0: 0ms;
+        --dc-vl: var(--dc-W);
+    }
+
+    /* The gold of the ornaments (rosettes, tassels, fans, the bow). */
+    .dc-scene[data-dc-leave] .dc-dress .dc-ln {
         fill: none;
         stroke: var(--dc-gold-lt);
         stroke-linecap: round;
     }
 
-    .dc-scene :is(.dc-tassel, .dc-valance__tassels, .dc-ros) .dc-ln--soft {
+    .dc-scene[data-dc-leave] .dc-dress .dc-ln--soft {
         stroke: var(--dc-gold);
     }
 
-    .dc-scene .dc-swag__trim .dc-ln {
-        fill: none;
-        stroke: url(#dc-leaf-V);
+    .dc-scene[data-dc-leave] .dc-dress .dc-bd {
+        fill: url(#dc-bead);
     }
 
-    /* Velvet: the drapes. --dc-p is how far they have parted (0 closed). */
-    .dc-scene[data-dc-leave='velvet'] .dc-cur {
-        --dc-pinch: calc(10px * var(--dc-p));
-    }
-
-    .dc-scene[data-dc-leave='velvet'] .dc-drape {
-        position: absolute;
-        inset-block: 0;
-        inset-inline-start: 0;
-        inline-size: calc((1 - var(--dc-p)) * (50% + 1px) + var(--dc-p) * var(--dc-gw));
-        background-color: var(--dc-velvet);
-        background-image:
-            linear-gradient(
-                hsl(from var(--dc-shadow) h s l / 0.6),
-                transparent 18%,
-                transparent 66%,
-                hsl(from var(--dc-shadow) h s l / 0.25) 86%,
-                hsl(from var(--dc-shadow) h s l / 0.55)
-            ),
-            radial-gradient(ellipse 140% 9% at 50% 57%, hsl(from var(--dc-shadow) h s l / calc(0.7 * var(--dc-p))), transparent),
-            repeating-linear-gradient(90deg, hsl(from var(--dc-velvet-hi) h s l / 0.06) 0 1px, transparent 1px 2px),
-            linear-gradient(
-                90deg,
-                hsl(from var(--dc-velvet-lo) h s calc(l - 3 * var(--dc-p))) 0%,
-                var(--dc-velvet) 12%,
-                hsl(from var(--dc-velvet-hi) h s calc(l - 3)) 30%,
-                var(--dc-velvet-hi) 38%,
-                var(--dc-velvet) 54%,
-                hsl(from var(--dc-velvet-lo) h s calc(l + 2)) 78%,
-                hsl(from var(--dc-velvet-lo) h s calc(l - 3 - 3 * var(--dc-p))) 92%,
-                var(--dc-velvet-lo) 100%
-            );
-        background-size:
-            100% 100%,
-            100% 100%,
-            auto,
-            12.5% 100%;
-        background-repeat: no-repeat, no-repeat, repeat, repeat-x;
-        clip-path: polygon(
-            0 0,
-            100% 0,
-            calc(100% - 0.12 * var(--dc-pinch)) 10%,
-            calc(100% - 0.38 * var(--dc-pinch)) 22%,
-            calc(100% - 0.66 * var(--dc-pinch)) 34%,
-            calc(100% - 0.9 * var(--dc-pinch)) 46%,
-            calc(100% - 1 * var(--dc-pinch)) 57%,
-            calc(100% - 0.93 * var(--dc-pinch)) 66%,
-            calc(100% - 0.7 * var(--dc-pinch)) 76%,
-            calc(100% - 0.4 * var(--dc-pinch)) 86%,
-            calc(100% - 0.12 * var(--dc-pinch)) 95%,
-            100% 100%,
-            0 100%
-        );
-    }
-
-    .dc-scene[data-dc-leave='velvet'] .dc-drape--r {
-        inset-inline: auto 0;
-        scale: -1 1;
-    }
-
-    /* The braid on the inner edge: a twisted gold cord following the edge. */
-    .dc-scene[data-dc-leave='velvet'] .dc-drape__braid {
-        position: absolute;
-        inset: 0;
-        background:
-            linear-gradient(
-                90deg,
-                hsl(from var(--dc-gold-lo) h s l / 0.9),
-                transparent 45%,
-                hsl(from var(--dc-gold-hi) h s l / 0.5) 70%,
-                transparent
-            ),
-            repeating-linear-gradient(150deg, var(--dc-gold-hi) 0 1px, var(--dc-gold-lt) 1px 2px, var(--dc-gold) 2px 3px, var(--dc-gold-lo) 3px 4.2px);
-        clip-path: polygon(
-            calc(100% - 3px) 0,
-            100% 0,
-            calc(100% - 0.12 * var(--dc-pinch)) 10%,
-            calc(100% - 0.38 * var(--dc-pinch)) 22%,
-            calc(100% - 0.66 * var(--dc-pinch)) 34%,
-            calc(100% - 0.9 * var(--dc-pinch)) 46%,
-            calc(100% - 1 * var(--dc-pinch)) 57%,
-            calc(100% - 0.93 * var(--dc-pinch)) 66%,
-            calc(100% - 0.7 * var(--dc-pinch)) 76%,
-            calc(100% - 0.4 * var(--dc-pinch)) 86%,
-            calc(100% - 0.12 * var(--dc-pinch)) 95%,
-            100% 100%,
-            calc(100% - 3px) 100%,
-            calc(100% - 3px - 0.12 * var(--dc-pinch)) 95%,
-            calc(100% - 3px - 0.4 * var(--dc-pinch)) 86%,
-            calc(100% - 3px - 0.7 * var(--dc-pinch)) 76%,
-            calc(100% - 3px - 0.93 * var(--dc-pinch)) 66%,
-            calc(100% - 3px - 1 * var(--dc-pinch)) 57%,
-            calc(100% - 3px - 0.9 * var(--dc-pinch)) 46%,
-            calc(100% - 3px - 0.66 * var(--dc-pinch)) 34%,
-            calc(100% - 3px - 0.38 * var(--dc-pinch)) 22%,
-            calc(100% - 3px - 0.12 * var(--dc-pinch)) 10%
-        );
-    }
-
-    /* The hem: a gold rule and a fringe of short threads, a bead at each end. */
-    .dc-scene[data-dc-leave='velvet'] .dc-drape::after {
-        content: '';
-        position: absolute;
-        inset-inline: 0 4px;
-        inset-block-end: 2px;
-        block-size: 10px;
-        background:
-            var(--dc-leaf-x) 0 0 / 100% 1px no-repeat,
-            radial-gradient(circle 1.25px at 50% 50%, var(--dc-gold-hi), var(--dc-gold) 55%, var(--dc-gold-lo)) 0 1.5px / 4px 3px repeat-x,
-            linear-gradient(90deg, transparent 1.5px, var(--dc-gold) 1.5px 2.4px, transparent 2.4px) 0 3px / 4px 5px repeat-x,
-            radial-gradient(circle 1.4px at 50% 50%, var(--dc-gold-hi), var(--dc-gold) 55%, var(--dc-gold-lo)) 0 7px / 4px 3px repeat-x;
-    }
-
-    .dc-scene[data-dc-leave='velvet'] .dc-tassel--hem {
-        position: absolute;
-        inset-block-end: 1px;
-        inset-inline-end: 6px;
+    .dc-scene[data-dc-leave] .dc-dress .dc-ros {
         overflow: visible;
-    }
-
-    /* The tie-back: a twisted cord in a sagging arc round the gathered
-       drape, its tassel hanging at the wall; seen only as the drape
-       gathers. */
-    .dc-scene[data-dc-leave='velvet'] .dc-tie {
-        position: absolute;
-        inset-block-start: calc(57% - 5px);
-        inset-inline-start: -2px;
-        z-index: 1;
-        inline-size: calc((1 - var(--dc-p)) * 50% + var(--dc-p) * var(--dc-gw) - var(--dc-pinch) + 6px);
-        block-size: 9px;
-        opacity: min(1, max(0, (var(--dc-p) - 0.55) * 3));
-        background: repeating-linear-gradient(
-            60deg,
-            var(--dc-gold-hi) 0 1px,
-            var(--dc-gold-lt) 1px 2px,
-            var(--dc-gold) 2px 3px,
-            var(--dc-gold-lo) 3px 4px
-        );
-        mask: radial-gradient(ellipse 50% 100% at 50% 0, transparent 58%, var(--foreground) 62% 88%, transparent 92%);
         filter: drop-shadow(0 1px 1px var(--dc-shadow));
     }
 
-    .dc-scene[data-dc-leave='velvet'] .dc-tie--r {
-        inset-inline: auto -2px;
-        scale: -1 1;
+    /* Satin, the cloth of every dressing: the lobby's blue with a sheen. */
+    .dc-defs .dc-st-sa-hi {
+        stop-color: var(--dc-velvet-hi);
     }
 
-    /* The valance: a pelmet of gathered velvet under a double gold rule and
-       a row of beads, its foot cut in semicircular scallops trimmed in gold;
-       a tassel hangs from every point between two scallops. */
-    .dc-scene[data-dc-leave='velvet'] .dc-valance {
+    .dc-defs .dc-st-sa {
+        stop-color: var(--dc-velvet);
+    }
+
+    .dc-defs .dc-st-sa-lo {
+        stop-color: var(--dc-velvet-lo);
+    }
+
+    /* ── Festoon ──────────────────────────────────────────────────────── */
+    .dc-scene[data-dc-leave='festoon'] {
+        --dc-W: 600ms;
+    }
+
+    .dc-scene[data-dc-leave='festoon'] .dc-dress {
+        --dc-hv: 27px;
+        --dc-lr: 10px;
+    }
+
+    .dc-scene[data-dc-leave='festoon'] .dc-dv {
+        --dc-v0: 400ms;
+        --dc-vl: 200ms;
         position: absolute;
-        inset-block-start: 0;
-        inset-inline: 0;
-        z-index: 2;
-        block-size: 24px;
-        background:
-            var(--dc-leaf-x) 0 0 / 100% 1px no-repeat,
-            var(--dc-leaf-x) 0 3px / 100% 1px no-repeat,
-            radial-gradient(circle 1.3px at 50% 50%, var(--dc-gold-hi), var(--dc-gold) 60%, var(--dc-gold-lo)) 50% 6px / 9px 3px repeat-x,
-            radial-gradient(
-                    circle 9px at 50% 100%,
-                    transparent 8.4px,
-                    var(--dc-gold-hi) 8.6px,
-                    var(--dc-gold) 9.6px,
-                    var(--dc-gold-lo) 10.6px,
-                    transparent 11px
-                )
-                50% 0 / 18px 100% repeat-x,
-            linear-gradient(hsl(from var(--dc-shadow) h s l / 0.35), transparent 40%, hsl(from var(--dc-shadow) h s l / 0.45)),
-            linear-gradient(90deg, var(--dc-velvet-lo), var(--dc-velvet) 26%, var(--dc-velvet-hi) 46%, var(--dc-velvet) 64%, var(--dc-velvet-lo)) 50%
-                0 / 9px 100% repeat-x,
-            var(--dc-velvet);
-        mask: radial-gradient(circle 9px at 50% 100%, transparent 8.4px, var(--foreground) 8.8px) 50% 0 / 18px 100% repeat-x;
-        filter: drop-shadow(0 2px 2px var(--dc-shadow));
+        inset: 0;
+        translate: 0 calc(var(--dc-v) * (-1 * var(--dc-hv) - 30px));
     }
 
-    .dc-scene[data-dc-leave='velvet'] .dc-valance__tassels {
-        position: absolute;
-        inset-block-start: 22px;
-        inset-inline-start: 0;
-        z-index: 2;
-        overflow: visible;
-    }
-
-    /* Festoon: the swags. --dc-q is how far a swag is raised (0 down). */
     .dc-scene[data-dc-leave='festoon'] .dc-swag {
+        --dc-t0: calc(var(--i) * 60ms);
+        --dc-tl: 300ms;
         position: absolute;
         inset-block-start: 0;
         inset-inline-start: calc(var(--x) * 100%);
@@ -5463,13 +5150,15 @@
         filter: drop-shadow(0 1px 1px var(--dc-shadow));
     }
 
+    .dc-scene[data-dc-leave='festoon'] .dc-swag__trim .dc-ln {
+        stroke: url(#dc-leaf-V);
+    }
+
     .dc-scene[data-dc-leave='festoon'] .dc-ros {
         position: absolute;
         inset-block-start: calc(100% - var(--dc-lr) - 6px);
         inset-inline-start: -6px;
         z-index: 2;
-        overflow: visible;
-        filter: drop-shadow(0 1px 1px var(--dc-shadow));
     }
 
     .dc-scene[data-dc-leave='festoon'] .dc-ros--r {
@@ -5488,90 +5177,1287 @@
             var(--dc-velvet-lo);
     }
 
-    /* The clocks of the options that do not take the lobby's two stages. */
-    .dc-scene[data-dc-leave='velvet'] {
-        --dc-k1: dc-part;
-        --dc-k1-out: dc-part-out;
-        --dc-l1: var(--dc-arrive);
+    /* ── Roman blind ──────────────────────────────────────────────────── */
+    .dc-scene[data-dc-leave='roman'] {
+        --dc-W: 640ms;
+    }
+
+    .dc-scene[data-dc-leave='roman'] .dc-dress {
+        --dc-hd: 13px;
+        --dc-gh: 15px;
+    }
+
+    .dc-scene[data-dc-leave='roman'] .dc-dv {
+        --dc-v0: 480ms;
+        --dc-vl: 160ms;
+        position: absolute;
+        inset: 0;
+        translate: 0 calc(var(--dc-v) * (-1 * var(--dc-hd) - var(--dc-gh) - 22px));
+    }
+
+    .dc-scene[data-dc-leave='roman'] .dc-blind {
+        --dc-tl: 480ms;
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline: 0;
+        padding-block-start: var(--dc-hd);
+        filter: drop-shadow(0 2px 2px hsl(from var(--dc-shadow) h s l / 0.8));
+    }
+
+    /* The cloth: satin with a soft pleat in every 22 px band and a gold braid
+       ruled under each, counted from the hem so they rise with it. */
+    .dc-scene[data-dc-leave='roman'] .dc-blind__cloth {
+        block-size: calc((1 - var(--dc-q)) * (100cqh - var(--dc-hd)));
+        background:
+            repeating-linear-gradient(
+                to top,
+                transparent 0 20px,
+                hsl(from var(--dc-gold-lo) h s l / 0.9) 20px 20.6px,
+                hsl(from var(--dc-gold-hi) h s l / 0.85) 20.6px 21.2px,
+                hsl(from var(--dc-gold-lo) h s l / 0.9) 21.2px 21.8px,
+                transparent 21.8px 22px
+            ),
+            repeating-linear-gradient(
+                to top,
+                hsl(from var(--dc-shadow) h s l / 0.75) 0,
+                hsl(from var(--dc-shadow) h s l / 0.2) 3px,
+                transparent 6px,
+                hsl(from var(--dc-velvet-hi) h s calc(l + 6) / 0.45) 11px,
+                hsl(from var(--dc-velvet-hi) h s l / 0.15) 15px,
+                hsl(from var(--dc-shadow) h s l / 0.35) 19.5px,
+                hsl(from var(--dc-shadow) h s l / 0.75) 20px 22px
+            ),
+            repeating-linear-gradient(45deg, hsl(from var(--dc-gold) h s l / 0.07) 0 1px, transparent 1px 11px),
+            repeating-linear-gradient(-45deg, hsl(from var(--dc-gold) h s l / 0.07) 0 1px, transparent 1px 11px),
+            repeating-linear-gradient(90deg, hsl(from var(--dc-velvet-hi) h s l / 0.06) 0 1px, transparent 1px 3px),
+            linear-gradient(
+                90deg,
+                var(--dc-velvet-lo),
+                var(--dc-velvet) 18%,
+                var(--dc-velvet-hi) 40%,
+                var(--dc-velvet) 58%,
+                hsl(from var(--dc-velvet-hi) h s calc(l - 4)) 76%,
+                var(--dc-velvet-lo)
+            );
+        background-position: 0 100%;
+        box-shadow:
+            inset 1px 0 0 hsl(from var(--dc-gold) h s l / 0.5),
+            inset -1px 0 0 hsl(from var(--dc-gold) h s l / 0.5);
+    }
+
+    /* The gathered folds under it: a stack that thickens as the blind rises,
+       each fold lit on its crest, a gold braid caught in every one, the hem
+       a gold rule with a beaded fringe. */
+    .dc-scene[data-dc-leave='roman'] .dc-blind__gather {
+        position: relative;
+        block-size: calc(var(--dc-q) * var(--dc-gh) + 3px);
+        background:
+            var(--dc-leaf-x) 0 100% / 100% 1.5px no-repeat,
+            repeating-linear-gradient(
+                to top,
+                var(--dc-gold-lo) 0 0.7px,
+                var(--dc-velvet-lo) 0.7px,
+                var(--dc-velvet) 1.6px,
+                var(--dc-velvet-hi) 2.6px,
+                hsl(from var(--dc-velvet-hi) h s calc(l + 6)) 3px,
+                var(--dc-velvet) 4px,
+                var(--dc-velvet-lo) 5px
+            ),
+            var(--dc-velvet-lo);
+        background-position: 0 100%;
+    }
+
+    .dc-scene[data-dc-leave='roman'] .dc-blind__gather::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: 100%;
+        block-size: 6px;
+        background:
+            radial-gradient(circle 1.2px at 50% 50%, var(--dc-gold-hi), var(--dc-gold) 55%, var(--dc-gold-lo)) 0 3px / 5px 3px repeat-x,
+            linear-gradient(90deg, transparent 2px, var(--dc-gold) 2px 2.8px, transparent 2.8px) 0 0 / 5px 4px repeat-x;
+    }
+
+    .dc-scene[data-dc-leave='roman'] .dc-blind__pull {
+        position: absolute;
+        inset-block-start: calc(100% - 24px);
+        inset-inline-start: calc(50% - 6px);
+        z-index: 2;
+    }
+
+    /* The head: a satin pelmet under a double gold rule, its foot cut in
+       scallops trimmed in gold. */
+    .dc-scene[data-dc-leave='roman'] .dc-blind__head {
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline: 0;
+        z-index: 3;
+        block-size: calc(var(--dc-hd) + 5px);
+        background:
+            var(--dc-leaf-x) 0 0 / 100% 1px no-repeat,
+            var(--dc-leaf-x) 0 3px / 100% 1px no-repeat,
+            radial-gradient(
+                    circle 6px at 50% 100%,
+                    transparent 5.2px,
+                    var(--dc-gold-hi) 5.4px,
+                    var(--dc-gold) 6.4px,
+                    var(--dc-gold-lo) 7.2px,
+                    transparent 7.6px
+                )
+                50% 0 / 12px 100% repeat-x,
+            linear-gradient(hsl(from var(--dc-shadow) h s l / 0.3), transparent 50%, hsl(from var(--dc-shadow) h s l / 0.4)),
+            linear-gradient(90deg, var(--dc-velvet-lo), var(--dc-velvet-hi) 50%, var(--dc-velvet-lo)) 50% 0 / 12px 100% repeat-x,
+            var(--dc-velvet);
+        mask: radial-gradient(circle 6px at 50% 100%, transparent 5.4px, var(--foreground) 5.8px) 50% 0 / 12px 100% repeat-x;
+        filter: drop-shadow(0 1px 1.5px var(--dc-shadow));
+    }
+
+    /* ── Folding screen ───────────────────────────────────────────────── */
+    .dc-scene[data-dc-leave='screen'] {
+        --dc-W: 600ms;
+    }
+
+    .dc-scene[data-dc-leave='screen'] .dc-scr {
+        position: absolute;
+        inset-block: 0;
+        inline-size: 50%;
+        perspective: 520px;
+        transform-style: preserve-3d;
+    }
+
+    .dc-scene[data-dc-leave='screen'] .dc-scr--l {
+        inset-inline-start: 0;
+    }
+
+    .dc-scene[data-dc-leave='screen'] .dc-scr--r {
+        inset-inline-end: 0;
+    }
+
+    .dc-scene[data-dc-leave='screen'] .dc-scrp {
+        --dc-t0: 300ms;
+        --dc-tl: 300ms;
+        position: absolute;
+        inset-block: 0;
+        inline-size: 50%;
+        transform-style: preserve-3d;
+    }
+
+    .dc-scene[data-dc-leave='screen'] .dc-scrp--in {
+        --dc-t0: 0ms;
+        inline-size: 100%;
+    }
+
+    .dc-scene[data-dc-leave='screen'] .dc-scr--l > .dc-scrp {
+        inset-inline-start: 0;
+        transform-origin: 0 50%;
+        transform: rotateY(calc(var(--dc-q) * 90deg));
+    }
+
+    .dc-scene[data-dc-leave='screen'] .dc-scr--l .dc-scrp--in {
+        inset-inline-start: 100%;
+        transform-origin: 0 50%;
+        transform: rotateY(calc(var(--dc-q) * 178deg));
+    }
+
+    .dc-scene[data-dc-leave='screen'] .dc-scr--r > .dc-scrp {
+        inset-inline-end: 0;
+        transform-origin: 100% 50%;
+        transform: rotateY(calc(var(--dc-q) * -90deg));
+    }
+
+    .dc-scene[data-dc-leave='screen'] .dc-scr--r .dc-scrp--in {
+        inset-inline: auto 100%;
+        transform-origin: 100% 50%;
+        transform: rotateY(calc(var(--dc-q) * -178deg));
+    }
+
+    /* A panel: lacquer with the wallpaper, a gold frame set in 3 px with a
+       bead in each corner, the fan in its upper half, a lozenge on a gold
+       rod below; it darkens as it turns from the light. */
+    .dc-scene[data-dc-leave='screen'] .dc-scrp__face {
+        position: absolute;
+        inset: 0;
+        border: 1px solid var(--dc-gold-lo);
+        background:
+            linear-gradient(hsl(from var(--dc-shadow) h s l / calc(var(--dc-q) * 0.75)) 0 0),
+            linear-gradient(
+                90deg,
+                hsl(from var(--dc-shadow) h s l / 0.55),
+                transparent 18% 70%,
+                hsl(from var(--dc-velvet-hi) h s l / 0.14) 84%,
+                hsl(from var(--dc-shadow) h s l / 0.45)
+            ),
+            repeating-linear-gradient(135deg, hsl(from var(--dc-gold) h s l / 0.07) 0 1px, transparent 1px 12px) 0 0 / 24px 24px,
+            repeating-linear-gradient(45deg, hsl(from var(--dc-gold) h s l / 0.07) 0 1px, transparent 1px 12px) 0 0 / 24px 24px,
+            linear-gradient(var(--dc-velvet), var(--dc-velvet-lo));
+        backface-visibility: hidden;
+    }
+
+    .dc-scene[data-dc-leave='screen'] .dc-scrp__face::before {
+        content: '';
+        position: absolute;
+        inset: 3px;
+        padding: 1px;
+        background: var(--dc-leaf);
+        mask:
+            linear-gradient(var(--foreground) 0 0) content-box,
+            linear-gradient(var(--foreground) 0 0);
+        mask-composite: exclude;
+    }
+
+    .dc-scene[data-dc-leave='screen'] .dc-scrp__face::after {
+        content: '';
+        position: absolute;
+        inset: 3px;
+        background:
+            radial-gradient(circle 1.6px, var(--dc-gold-hi), var(--dc-gold) 50%, var(--dc-gold-lo) 90%, transparent) 0 0 / 3px 3px no-repeat,
+            radial-gradient(circle 1.6px, var(--dc-gold-hi), var(--dc-gold) 50%, var(--dc-gold-lo) 90%, transparent) 100% 0 / 3px 3px no-repeat,
+            radial-gradient(circle 1.6px, var(--dc-gold-hi), var(--dc-gold) 50%, var(--dc-gold-lo) 90%, transparent) 0 100% / 3px 3px no-repeat,
+            radial-gradient(circle 1.6px, var(--dc-gold-hi), var(--dc-gold) 50%, var(--dc-gold-lo) 90%, transparent) 100% 100% / 3px 3px no-repeat,
+            linear-gradient(to bottom right, transparent 50%, var(--dc-gold-hi) 50%) calc(50% - 1.75px) calc(70% - 1.05px) / 3.5px 3.5px no-repeat,
+            linear-gradient(to bottom left, transparent 50%, var(--dc-gold-lt) 50%) calc(50% + 1.75px) calc(70% - 1.05px) / 3.5px 3.5px no-repeat,
+            linear-gradient(to top right, transparent 50%, var(--dc-gold) 50%) calc(50% - 1.75px) calc(70% + 2.45px) / 3.5px 3.5px no-repeat,
+            linear-gradient(to top left, transparent 50%, var(--dc-gold-lo) 50%) calc(50% + 1.75px) calc(70% + 2.45px) / 3.5px 3.5px no-repeat,
+            linear-gradient(var(--dc-gold) 0 0) 50% calc(70% - 12px) / 1px 14% no-repeat,
+            linear-gradient(var(--dc-gold) 0 0) 50% calc(70% + 12px) / 1px 14% no-repeat;
+    }
+
+    .dc-scene[data-dc-leave='screen'] .dc-scrp__fan {
+        position: absolute;
+        inset-block-start: 12%;
+        inset-inline: 16%;
+        block-size: 32%;
+        inline-size: auto;
+        overflow: visible;
+    }
+
+    .dc-scene[data-dc-leave='screen'] .dc-scrp__fan .dc-ln {
+        stroke: var(--dc-gold);
+        stroke-width: 0.8px;
+    }
+
+    .dc-scene[data-dc-leave='screen'] .dc-scrp__fan .dc-ln--soft {
+        stroke: var(--dc-gold-lo);
+    }
+
+    /* ── Ribbon and bow ───────────────────────────────────────────────── */
+    .dc-scene[data-dc-leave='ribbon'] {
+        --dc-W: 640ms;
+        --dc-k1: dcg-up;
+        --dc-k1-out: dcg-up-out;
+        --dc-l1: 200ms;
         --dc-k2: none;
         --dc-k2-out: none;
         --dc-l2: 0ms;
     }
 
-    .dc-scene[data-dc-leave='festoon'] {
-        --dc-k1: none;
-        --dc-k1-out: none;
+    .dc-scene[data-dc-leave='ribbon'] .dc-ribn {
+        --dc-t0: 240ms;
+        --dc-tl: 400ms;
+        --dc-half: calc(hypot(50cqw, 50cqh) + 14px);
+        position: absolute;
+        inset: 0;
+    }
+
+    /* An arm: a satin ribbon from the centre to a corner, gold at both edges,
+       sliding off along itself. */
+    .dc-scene[data-dc-leave='ribbon'] .dc-ribn__arm {
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: 50%;
+        inline-size: var(--dc-half);
+        block-size: 13px;
+        margin-block-start: -6.5px;
+        transform-origin: 0 50%;
+        transform: rotate(var(--dc-ang)) translateX(calc(var(--dc-q) * var(--dc-half)));
+        background:
+            linear-gradient(
+                180deg,
+                var(--dc-gold-lo) 0,
+                var(--dc-gold-hi) 1px,
+                var(--dc-gold) 1.8px,
+                transparent 2.2px calc(100% - 2.2px),
+                var(--dc-gold) calc(100% - 1.8px),
+                var(--dc-gold-hi) calc(100% - 1px),
+                var(--dc-gold-lo) 100%
+            ),
+            repeating-linear-gradient(90deg, hsl(from var(--dc-velvet-hi) h s l / 0.07) 0 1px, transparent 1px 3px),
+            linear-gradient(
+                180deg,
+                var(--dc-velvet-lo) 2px,
+                var(--dc-velvet) 26%,
+                hsl(from var(--dc-velvet-hi) h s calc(l + 4)) 44%,
+                var(--dc-velvet) 64%,
+                var(--dc-velvet-lo) calc(100% - 2px)
+            );
+        filter: drop-shadow(0 1px 1.5px hsl(from var(--dc-shadow) h s l / 0.9));
+    }
+
+    .dc-scene[data-dc-leave='ribbon'] .dc-ribn__arm--tl {
+        --dc-ang: atan2(-50cqh, -50cqw);
+        z-index: 2;
+    }
+
+    .dc-scene[data-dc-leave='ribbon'] .dc-ribn__arm--br {
+        --dc-ang: atan2(50cqh, 50cqw);
+        z-index: 2;
+    }
+
+    .dc-scene[data-dc-leave='ribbon'] .dc-ribn__arm--tr {
+        --dc-ang: atan2(-50cqh, 50cqw);
+    }
+
+    .dc-scene[data-dc-leave='ribbon'] .dc-ribn__arm--bl {
+        --dc-ang: atan2(50cqh, -50cqw);
+    }
+
+    .dc-scene[data-dc-leave='ribbon'] .dc-bow {
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: 50%;
+        z-index: 3;
+        overflow: visible;
+        translate: -50% -38.5%;
+        scale: 1.25;
+        filter: drop-shadow(0 1.5px 1.5px var(--dc-shadow));
+    }
+
+    .dc-scene[data-dc-leave='ribbon'] .dc-bow .dc-sat {
+        fill: url(#dc-satin);
+    }
+
+    .dc-scene[data-dc-leave='ribbon'] .dc-bow .dc-ln--edge {
+        stroke: url(#dc-leaf-V);
+        stroke-width: 1.2;
+        stroke-linejoin: round;
+    }
+
+    .dc-scene[data-dc-leave='ribbon'] .dc-bow .dc-ln--fold {
+        stroke: hsl(from var(--dc-velvet-hi) h s calc(l + 8) / 0.7);
+        stroke-width: 1.4;
+    }
+
+    .dc-scene[data-dc-leave='ribbon'] .dc-bow__clasp {
+        --dc-tl: 200ms;
+        transform-box: fill-box;
+        transform-origin: 50% 50%;
+        transform: rotate(calc(var(--dc-q) * 90deg)) scale(calc(1 - var(--dc-q)));
+        opacity: calc(1 - var(--dc-q));
+    }
+
+    .dc-scene[data-dc-leave='ribbon'] :is(.dc-bow__loop, .dc-bow__tails) {
+        --dc-t0: 120ms;
+        --dc-tl: 320ms;
+        opacity: calc(1 - var(--dc-q) * var(--dc-q));
+    }
+
+    .dc-scene[data-dc-leave='ribbon'] .dc-bow__loop--l {
+        transform-box: fill-box;
+        transform-origin: 100% 60%;
+        transform: translate(0, calc(var(--dc-q) * 16px)) rotate(calc(var(--dc-q) * -64deg)) scale(calc(1 - 0.4 * var(--dc-q)));
+    }
+
+    .dc-scene[data-dc-leave='ribbon'] .dc-bow__loop--r {
+        transform-box: fill-box;
+        transform-origin: 0 60%;
+        transform: translate(0, calc(var(--dc-q) * 16px)) rotate(calc(var(--dc-q) * 64deg)) scale(calc(1 - 0.4 * var(--dc-q)));
+    }
+
+    .dc-scene[data-dc-leave='ribbon'] .dc-bow__tails {
+        transform: translate(0, calc(var(--dc-q) * 22px));
+    }
+
+    /* ── Velvet rope ──────────────────────────────────────────────────── */
+    .dc-scene[data-dc-leave='rope'] {
+        --dc-W: 720ms;
+        --dc-k1: dcg-up;
+        --dc-k1-out: dcg-up-out;
+        --dc-l1: 200ms;
         --dc-k2: none;
         --dc-k2-out: none;
-        --dc-l1: 0ms;
         --dc-l2: 0ms;
+    }
+
+    .dc-scene[data-dc-leave='rope'] .dc-dv {
+        --dc-v0: 520ms;
+        --dc-vl: 200ms;
+        position: absolute;
+        inset: 0;
+        translate: 0 calc(var(--dc-v) * 100%);
+    }
+
+    /* A brass post: a turned column lit from the left, a collar, a gold
+       ball on top, a stepped foot. */
+    .dc-scene[data-dc-leave='rope'] .dc-post {
+        position: absolute;
+        inset-block: 12px 0;
+        inline-size: 6px;
+        background:
+            linear-gradient(var(--dc-gold-lo) 0 0) 0 4px / 100% 1px no-repeat,
+            linear-gradient(var(--dc-gold-hi) 0 0) 0 5px / 100% 1px no-repeat,
+            linear-gradient(
+                90deg,
+                var(--dc-gold-dk),
+                var(--dc-gold-lo) 15%,
+                var(--dc-gold-hi) 38%,
+                var(--dc-gold-lt) 50%,
+                var(--dc-gold) 68%,
+                var(--dc-gold-lo) 88%,
+                var(--dc-gold-dk)
+            );
+        filter: drop-shadow(1px 1px 1px var(--dc-shadow));
+    }
+
+    .dc-scene[data-dc-leave='rope'] .dc-post--l {
+        inset-inline-start: 9px;
+    }
+
+    .dc-scene[data-dc-leave='rope'] .dc-post--r {
+        inset-inline-end: 9px;
+    }
+
+    .dc-scene[data-dc-leave='rope'] .dc-post::before {
+        content: '';
+        position: absolute;
+        inset-block-start: -9px;
+        inset-inline-start: -3px;
+        inline-size: 12px;
+        block-size: 12px;
+        border-radius: 50%;
+        background: radial-gradient(
+            circle at 34% 30%,
+            var(--dc-gold-hi),
+            var(--dc-gold-lt) 22%,
+            var(--dc-gold) 48%,
+            var(--dc-gold-lo) 78%,
+            var(--dc-gold-dk)
+        );
+    }
+
+    .dc-scene[data-dc-leave='rope'] .dc-post::after {
+        content: '';
+        position: absolute;
+        inset-block-end: 0;
+        inset-inline-start: -6px;
+        inline-size: 18px;
+        block-size: 5px;
+        border-radius: 2px 2px 0 0;
+        background:
+            linear-gradient(var(--dc-gold-hi) 0 0) 50% 0 / 60% 1px no-repeat,
+            linear-gradient(90deg, var(--dc-gold-lo), var(--dc-gold-hi) 35%, var(--dc-gold) 60%, var(--dc-gold-dk));
+    }
+
+    .dc-scene[data-dc-leave='rope'] .dc-rope {
+        --dc-tl: 520ms;
+        position: absolute;
+        inset-block-start: 14px;
+        inset-inline-start: 12px;
+        inline-size: calc(100% - 24px);
+        block-size: calc(100% - 17px);
+        overflow: visible;
+        z-index: 2;
+        filter: drop-shadow(0 2px 1.5px var(--dc-shadow));
+    }
+
+    .dc-scene[data-dc-leave='rope'] .dc-rope path {
+        fill: none;
+        stroke-linecap: round;
+    }
+
+    .dc-scene[data-dc-leave='rope'] .dc-rope__core {
+        stroke: hsl(from var(--dc-velvet) h calc(s + 28) calc(l + 7));
+        stroke-width: 7px;
+    }
+
+    .dc-scene[data-dc-leave='rope'] .dc-rope__sheen {
+        stroke: hsl(from var(--dc-velvet-hi) h calc(s + 24) calc(l + 6));
+        stroke-width: 1.4px;
+        stroke-opacity: 0.6;
+    }
+
+    .dc-scene[data-dc-leave='rope'] .dc-rope__wind {
+        stroke: var(--dc-gold-lt);
+        stroke-width: 7px;
+        stroke-dasharray: 0.8 4;
+        stroke-linecap: butt;
+    }
+
+    /* The eyes on the posts the rope's hooks hold. */
+    .dc-scene[data-dc-leave='rope'] .dc-rope__hook {
+        position: absolute;
+        inset-block-start: 12px;
+        z-index: 3;
+        inline-size: 7px;
+        block-size: 7px;
+        border: 1.5px solid var(--dc-gold-lt);
+        border-radius: 50%;
+        box-shadow: inset 0 0 0 0.5px var(--dc-gold-lo);
+    }
+
+    .dc-scene[data-dc-leave='rope'] .dc-rope__hook--l {
+        inset-inline-start: 8.5px;
+    }
+
+    .dc-scene[data-dc-leave='rope'] .dc-rope__hook--r {
+        inset-inline-end: 8.5px;
+    }
+
+    /* ── Shutters ─────────────────────────────────────────────────────── */
+    .dc-scene[data-dc-leave='shutters'] {
+        --dc-W: 840ms;
+    }
+
+    .dc-scene[data-dc-leave='shutters'] .dc-shut {
+        --dc-v0: 600ms;
+        --dc-vl: 240ms;
+        position: absolute;
+        inset-block: 0;
+        inline-size: 50%;
+        border: 1px solid var(--dc-gold-lo);
+        background:
+            linear-gradient(90deg, hsl(from var(--dc-shadow) h s l / 0.4), transparent 20% 80%, hsl(from var(--dc-shadow) h s l / 0.4)),
+            linear-gradient(var(--dc-velvet), var(--dc-velvet-lo));
+    }
+
+    .dc-scene[data-dc-leave='shutters'] .dc-shut--l {
+        inset-inline-start: 0;
+        transform-origin: 0 50%;
+        transform: perspective(560px) rotateY(calc(var(--dc-v) * 90deg));
+    }
+
+    .dc-scene[data-dc-leave='shutters'] .dc-shut--r {
+        inset-inline-end: 0;
+        transform-origin: 100% 50%;
+        transform: perspective(560px) rotateY(calc(var(--dc-v) * -90deg));
+    }
+
+    /* The frame: a gold leaf rule set 2 px in, the meeting stiles a double
+       rule. */
+    .dc-scene[data-dc-leave='shutters'] .dc-shut::before {
+        content: '';
+        position: absolute;
+        inset: 2px;
+        padding: 1.5px;
+        background: var(--dc-leaf);
+        mask:
+            linear-gradient(var(--foreground) 0 0) content-box,
+            linear-gradient(var(--foreground) 0 0);
+        mask-composite: exclude;
+    }
+
+    .dc-scene[data-dc-leave='shutters'] .dc-shut__slats {
+        position: absolute;
+        inset: 6px 7px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .dc-scene[data-dc-leave='shutters'] .dc-slat {
+        --dc-t0: calc(var(--i) * 60ms);
+        --dc-tl: 180ms;
+        position: relative;
+        flex: 1;
+    }
+
+    /* A slat: lacquer lit along its upper edge, shaded under; turning
+       edge-on it narrows to its gold edge. */
+    .dc-scene[data-dc-leave='shutters'] .dc-slat::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        scale: 1 calc(1 - 0.9 * var(--dc-q));
+        background: linear-gradient(
+            180deg,
+            var(--dc-gold-lo) 0 0.8px,
+            hsl(from var(--dc-velvet-hi) h s calc(l + 6 - 10 * var(--dc-q))) 0.8px,
+            var(--dc-velvet) 45%,
+            var(--dc-velvet-lo) 88%,
+            hsl(from var(--dc-shadow) h s l) 100%
+        );
+    }
+
+    .dc-scene[data-dc-leave='shutters'] .dc-slat::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: calc(50% - 0.6px);
+        block-size: 1.2px;
+        background: var(--dc-leaf-x);
+        opacity: var(--dc-q);
+    }
+
+    .dc-scene[data-dc-leave='shutters'] .dc-shut__knob {
+        position: absolute;
+        inset-block-start: calc(50% - 6px);
+        z-index: 2;
+    }
+
+    .dc-scene[data-dc-leave='shutters'] .dc-shut--l .dc-shut__knob {
+        inset-inline-end: 1px;
+    }
+
+    .dc-scene[data-dc-leave='shutters'] .dc-shut--r .dc-shut__knob {
+        inset-inline-start: 1px;
+    }
+
+    /* ── Lift gate ────────────────────────────────────────────────────── */
+    .dc-scene[data-dc-leave='gate'] {
+        --dc-W: 640ms;
+        --dc-k1: dcg-up;
+        --dc-k1-out: dcg-up-out;
+        --dc-l1: 200ms;
+        --dc-k2: none;
+        --dc-k2-out: none;
+        --dc-l2: 0ms;
+    }
+
+    .dc-scene[data-dc-leave='gate'] .dc-dv {
+        --dc-v0: 480ms;
+        --dc-vl: 160ms;
+        position: absolute;
+        inset: 0;
+        translate: calc(var(--dc-v) * -32px) 0;
+    }
+
+    .dc-scene[data-dc-leave='gate'] .dc-gate {
+        --dc-tl: 480ms;
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: calc(13px + (1 - var(--dc-q)) * (100% - 13px));
+        filter: drop-shadow(1px 1px 1px var(--dc-shadow));
+    }
+
+    .dc-scene[data-dc-leave='gate'] .dc-gate__veil {
+        position: absolute;
+        inset: 5px 0;
+        background: hsl(from var(--dc-shadow) h s l / 0.42);
+    }
+
+    /* The lattice: seven cells of crossed brass bars, an upright at every
+       fold, a rivet at every crossing; the cells narrow as it collapses, so
+       the bars stand steeper and the rivets crowd together. */
+    .dc-scene[data-dc-leave='gate'] .dc-gate__lattice {
+        --dc-bar:
+            transparent calc(50% - 1.1px), var(--dc-gold-lo) calc(50% - 1.1px), var(--dc-gold-hi) calc(50% - 0.3px), var(--dc-gold) calc(50% + 0.4px),
+            var(--dc-gold-lo) calc(50% + 1.1px), transparent calc(50% + 1.1px);
+        --dc-rivet: var(--dc-gold-hi), var(--dc-gold-lt) 30%, var(--dc-gold-lo) 75%, transparent 100%;
+        position: absolute;
+        inset: 5px 6px 5px 0;
+        background:
+            radial-gradient(circle 2.3px at 50% 50%, var(--dc-rivet)), radial-gradient(circle 2.3px at 0 0, var(--dc-rivet)),
+            radial-gradient(circle 2.3px at 0 100%, var(--dc-rivet)), linear-gradient(to top right, var(--dc-bar)),
+            linear-gradient(to bottom right, var(--dc-bar)),
+            linear-gradient(
+                90deg,
+                var(--dc-gold-lo) 0 0.7px,
+                var(--dc-gold-hi) 0.7px 1.5px,
+                var(--dc-gold) 1.5px 2.2px,
+                var(--dc-gold-lo) 2.2px 2.8px,
+                transparent 2.8px
+            );
+        background-size: calc(100% / 7) 50%;
+        background-position: 0 0;
+    }
+
+    .dc-scene[data-dc-leave='gate'] .dc-gate__rail {
+        position: absolute;
+        inset-inline: 0;
+        block-size: 5px;
+        background:
+            radial-gradient(circle 1.1px, var(--dc-gold-hi), var(--dc-gold-lo) 80%, transparent) 3px 50% / 10px 100% repeat-x,
+            linear-gradient(var(--dc-gold-hi), var(--dc-gold-lt) 25%, var(--dc-gold) 55%, var(--dc-gold-lo) 85%, var(--dc-gold-dk));
+    }
+
+    .dc-scene[data-dc-leave='gate'] .dc-gate__rail--t {
+        inset-block-start: 0;
+    }
+
+    .dc-scene[data-dc-leave='gate'] .dc-gate__rail--b {
+        inset-block-end: 0;
+    }
+
+    .dc-scene[data-dc-leave='gate'] .dc-gate__stile {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-end: 0;
+        inline-size: 6px;
+        background: linear-gradient(
+            90deg,
+            var(--dc-gold-dk),
+            var(--dc-gold-lo) 15%,
+            var(--dc-gold-hi) 40%,
+            var(--dc-gold) 65%,
+            var(--dc-gold-lo) 90%,
+            var(--dc-gold-dk)
+        );
+    }
+
+    /* The handle: a lever on the leading stile, a gold ball at its end. */
+    .dc-scene[data-dc-leave='gate'] .dc-gate__handle {
+        position: absolute;
+        inset-block-start: calc(50% - 1.5px);
+        inset-inline-end: 4px;
+        inline-size: 14px;
+        block-size: 3px;
+        border-radius: 1.5px;
+        background: linear-gradient(var(--dc-gold-hi), var(--dc-gold) 50%, var(--dc-gold-lo));
+    }
+
+    .dc-scene[data-dc-leave='gate'] .dc-gate__handle::before {
+        content: '';
+        position: absolute;
+        inset-block-start: -3px;
+        inset-inline-start: -4px;
+        inline-size: 9px;
+        block-size: 9px;
+        border-radius: 50%;
+        background: radial-gradient(circle at 34% 30%, var(--dc-gold-hi), var(--dc-gold) 50%, var(--dc-gold-lo) 80%, var(--dc-gold-dk));
+    }
+
+    /* ── Great fan ────────────────────────────────────────────────────── */
+    .dc-scene[data-dc-leave='fan'] {
+        --dc-W: 720ms;
+        --dc-k1: dcg-up;
+        --dc-k1-out: dcg-up-out;
+        --dc-l1: 280ms;
+        --dc-k2: none;
+        --dc-k2-out: none;
+        --dc-l2: 0ms;
+    }
+
+    /* The fan is drawn over the whole stage from a pivot at the middle of
+       its foot, and shows only between its two guard sticks (--dc-a1 and
+       --dc-a2, measured from the left along the foot): satin leaves pleated
+       12 degrees apart with a gold rib on every fold, a gold braid edge on an
+       arc through the top, a lace border of gold points beyond it to the
+       corners, gold sticks on lacquer in the heart, a faceted pivot. */
+    .dc-scene[data-dc-leave='fan'] .dc-gfan {
+        --dc-at: from -90deg at 50% 100%;
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(circle 0.7px, var(--dc-gold-lt), transparent) 0 0 / 6px 6px,
+            repeating-conic-gradient(
+                var(--dc-at),
+                var(--dc-velvet-lo) 0deg,
+                hsl(from var(--dc-velvet) h s calc(l - 3)) 6deg,
+                var(--dc-velvet-lo) 12deg
+            );
+        mask: conic-gradient(
+            var(--dc-at),
+            transparent calc(var(--dc-a1) - 1deg),
+            var(--foreground) calc(var(--dc-a1) - 1deg) calc(var(--dc-a2) + 1deg),
+            transparent calc(var(--dc-a2) + 1deg)
+        );
+    }
+
+    .dc-scene[data-dc-leave='fan'] .dc-gfan__leaf {
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(ellipse 22% 42% at 50% 100%, var(--dc-lac) 99%, transparent 100%),
+            repeating-conic-gradient(
+                var(--dc-at),
+                var(--dc-gold-lo) 0deg,
+                var(--dc-gold-hi) 0.25deg,
+                var(--dc-gold-lo) 0.5deg,
+                var(--dc-velvet-lo) 0.6deg,
+                var(--dc-velvet) 3.5deg,
+                hsl(from var(--dc-velvet-hi) h s calc(l + 5)) 6deg,
+                var(--dc-velvet) 8.5deg,
+                var(--dc-velvet-lo) 12deg
+            ),
+            radial-gradient(ellipse 60% 100% at 50% 100%, transparent 55%, hsl(from var(--dc-shadow) h s l / 0.35));
+        mask: radial-gradient(ellipse 47% 92% at 50% 100%, var(--foreground) 99.4%, transparent 100%);
+    }
+
+    /* The sticks in the heart of the fan, over its lacquer. */
+    .dc-scene[data-dc-leave='fan'] .dc-gfan__leaf::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: repeating-conic-gradient(
+            var(--dc-at),
+            var(--dc-gold-lo) 0deg,
+            var(--dc-gold-hi) 0.9deg,
+            var(--dc-gold) 1.8deg,
+            var(--dc-gold-lo) 2.6deg,
+            transparent 2.7deg 12deg
+        );
+        mask: radial-gradient(ellipse 22% 42% at 50% 100%, var(--foreground) 99%, transparent 100%);
+    }
+
+    /* The arcs, drawn to the stage: the braid at the edge of the leaf (a
+       bronze cord wound with gold), a hairline inside it, the rim of the
+       sticks. */
+    .dc-scene[data-dc-leave='fan'] .dc-gfan__arcs {
+        position: absolute;
+        inset: 0;
+        inline-size: 100%;
+        block-size: 100%;
+        overflow: visible;
+    }
+
+    .dc-scene[data-dc-leave='fan'] .dc-gfan__arcs path {
+        fill: none;
+    }
+
+    .dc-scene[data-dc-leave='fan'] .dc-gfan__braid {
+        stroke: var(--dc-gold-lo);
+        stroke-width: 3.4px;
+    }
+
+    .dc-scene[data-dc-leave='fan'] .dc-gfan__wind {
+        stroke: var(--dc-gold-hi);
+        stroke-width: 3.4px;
+        stroke-dasharray: 1.4 1.6;
+    }
+
+    .dc-scene[data-dc-leave='fan'] .dc-gfan__hair {
+        stroke: hsl(from var(--dc-gold) h s l / 0.75);
+        stroke-width: 0.8px;
+    }
+
+    .dc-scene[data-dc-leave='fan'] .dc-gfan__rim {
+        stroke: var(--dc-gold-lt);
+        stroke-width: 1.4px;
+    }
+
+    /* The guard sticks at both edges, and the leaves already folded,
+       gathered dark against the moving stick. */
+    .dc-scene[data-dc-leave='fan'] .dc-gfan__guard {
+        --dc-gw: calc(var(--dc-a1) / 18);
+        position: absolute;
+        inset: 0;
+        background:
+            conic-gradient(
+                var(--dc-at),
+                transparent calc(var(--dc-a1) - 1deg),
+                var(--dc-gold-hi) calc(var(--dc-a1) - 1deg),
+                var(--dc-gold) calc(var(--dc-a1) + 0.4deg),
+                var(--dc-gold-lo) calc(var(--dc-a1) + 1.4deg),
+                transparent calc(var(--dc-a1) + 1.4deg) calc(var(--dc-a2) - 1.4deg),
+                var(--dc-gold-lo) calc(var(--dc-a2) - 1.4deg),
+                var(--dc-gold) calc(var(--dc-a2) - 0.4deg),
+                var(--dc-gold-hi) calc(var(--dc-a2) + 1deg),
+                transparent calc(var(--dc-a2) + 1deg)
+            ),
+            conic-gradient(
+                var(--dc-at),
+                transparent calc(var(--dc-a1) + 1.4deg),
+                hsl(from var(--dc-shadow) h s l / 0.75) calc(var(--dc-a1) + 1.4deg),
+                hsl(from var(--dc-gold) h s l / 0.8) calc(var(--dc-a1) + 1.4deg + var(--dc-gw) * 0.33),
+                hsl(from var(--dc-shadow) h s l / 0.6) calc(var(--dc-a1) + 1.6deg + var(--dc-gw) * 0.33),
+                hsl(from var(--dc-gold) h s l / 0.7) calc(var(--dc-a1) + 1.6deg + var(--dc-gw) * 0.66),
+                hsl(from var(--dc-shadow) h s l / 0.4) calc(var(--dc-a1) + 1.8deg + var(--dc-gw) * 0.66),
+                transparent calc(var(--dc-a1) + 1.4deg + var(--dc-gw))
+            );
+    }
+
+    .dc-scene[data-dc-leave='fan'] .dc-gfan__pivot {
+        position: absolute;
+        inset-block-end: -6px;
+        inset-inline-start: calc(50% - 6px);
+        inline-size: 12px;
+        block-size: 12px;
+        clip-path: var(--dc-lozenge);
+        background: var(--dc-gem);
+    }
+
+    /* ── Bead curtain ─────────────────────────────────────────────────── */
+    .dc-scene[data-dc-leave='beads'] {
+        --dc-W: 720ms;
+        --dc-k1: dcg-up;
+        --dc-k1-out: dcg-up-out;
+        --dc-l1: 200ms;
+        --dc-k2: none;
+        --dc-k2-out: none;
+        --dc-l2: 0ms;
+    }
+
+    .dc-scene[data-dc-leave='beads'] .dc-beads {
+        position: absolute;
+        inset: 0;
+    }
+
+    .dc-scene[data-dc-leave='beads'] .dc-beads--l {
+        --dc-dir: -1;
+    }
+
+    .dc-scene[data-dc-leave='beads'] .dc-beads--r {
+        --dc-dir: 1;
+    }
+
+    /* A string: gold beads and pearls on a gold thread, a lozenge and its
+       threads at the end; parting, each runs to the side it is on and
+       swings back from where it was pulled. */
+    .dc-scene[data-dc-leave='beads'] .dc-str {
+        --dc-t0: calc(min(var(--i), 18) * 20ms);
+        --dc-tl: 360ms;
+        --dc-x: calc(4px + var(--i) * 8px);
+        position: absolute;
+        inset-block: 4px 10px;
+        inline-size: 5px;
+        inset-inline-start: calc(50% - 2.5px + var(--dc-dir) * var(--dc-x));
+        transform-origin: 50% 0;
+        translate: calc(var(--dc-dir) * var(--dc-q) * max(0px, 50cqw - var(--dc-x) + 14px)) 0;
+        rotate: calc(var(--dc-dir) * sin(var(--dc-q) * 180deg) * -10deg);
+        background:
+            radial-gradient(circle 1.6px at 40% 1.6px, var(--dc-gold-hi), var(--dc-gold) 50%, var(--dc-gold-lo) 90%, transparent 100%) 0
+                calc(mod(var(--i), 2) * 6px) / 5px 12px repeat-y,
+            radial-gradient(
+                    circle 2.2px at 42% 7.6px,
+                    hsl(from var(--foreground) h calc(s - 30) calc(l + 8)),
+                    hsl(from var(--foreground) h calc(s - 18) calc(l - 8)) 50%,
+                    hsl(from var(--foreground) h calc(s - 10) calc(l - 42)) 92%,
+                    transparent 100%
+                )
+                0 calc(mod(var(--i), 2) * 6px) / 5px 12px repeat-y,
+            linear-gradient(90deg, transparent 2.1px, hsl(from var(--dc-gold-lo) h s l / 0.8) 2.1px 2.9px, transparent 2.9px);
+        filter: drop-shadow(0.5px 1px 0.5px var(--dc-shadow));
+    }
+
+    .dc-scene[data-dc-leave='beads'] .dc-str::after {
+        content: '';
+        position: absolute;
+        inset-block-start: calc(100% + 0.5px);
+        inset-inline-start: 0;
+        inline-size: 5px;
+        block-size: 9px;
+        background:
+            conic-gradient(from -45deg, var(--dc-gold-lt) 0 90deg, var(--dc-gold-lo) 0 180deg, var(--dc-gold) 0 270deg, var(--dc-gold-hi) 0) 0 0 / 5px
+                5px no-repeat,
+            linear-gradient(
+                    90deg,
+                    var(--dc-gold) 0 0.7px,
+                    transparent 0.7px 2.1px,
+                    var(--dc-gold) 2.1px 2.9px,
+                    transparent 2.9px 4.3px,
+                    var(--dc-gold) 4.3px
+                )
+                0 5px / 5px 4px no-repeat;
+        clip-path: polygon(50% 0, 100% 2.5px, 50% 5px, 100% 5px, 100% 100%, 0 100%, 0 5px, 50% 5px, 0 2.5px);
+    }
+
+    /* The rod they hang from, in two halves that part with them. */
+    .dc-scene[data-dc-leave='beads'] .dc-beads__rail {
+        --dc-t0: 360ms;
+        --dc-tl: 360ms;
+        position: absolute;
+        inset-block-start: 0;
+        inline-size: 50%;
+        block-size: 4px;
+        translate: calc(var(--dc-dir) * var(--dc-q) * (50cqw + 10px)) 0;
+        background: linear-gradient(var(--dc-gold-hi), var(--dc-gold-lt) 30%, var(--dc-gold) 60%, var(--dc-gold-lo) 90%);
+        filter: drop-shadow(0 1px 1px var(--dc-shadow));
+    }
+
+    .dc-scene[data-dc-leave='beads'] .dc-beads--l .dc-beads__rail {
+        inset-inline-start: 0;
+    }
+
+    .dc-scene[data-dc-leave='beads'] .dc-beads--r .dc-beads__rail {
+        inset-inline-end: 0;
+    }
+
+    .dc-scene[data-dc-leave='beads'] .dc-beads__rail::after {
+        content: '';
+        position: absolute;
+        inset-block-start: -2px;
+        inline-size: 8px;
+        block-size: 8px;
+        clip-path: var(--dc-lozenge);
+        background: var(--dc-gem);
+    }
+
+    .dc-scene[data-dc-leave='beads'] .dc-beads--l .dc-beads__rail::after {
+        inset-inline-end: -4px;
+    }
+
+    .dc-scene[data-dc-leave='beads'] .dc-beads--r .dc-beads__rail::after {
+        inset-inline-start: -4px;
+    }
+
+    /* ── Scallop shell ────────────────────────────────────────────────── */
+    .dc-scene[data-dc-leave='shell'] {
+        --dc-W: 640ms;
+    }
+
+    .dc-scene[data-dc-leave='shell'] .dc-shell {
+        --dc-tl: 480ms;
+        --dc-cell: calc(9deg + var(--dc-q) * 8deg);
+        position: absolute;
+        inset: 0 0 4px;
+        transform-origin: 50% 100%;
+        transform: perspective(320px) rotateX(calc(var(--dc-q) * 90deg));
+        clip-path: inset(0 round 26px 26px 0 0);
+    }
+
+    /* The flutes: lacquer cut in ridges from the hinge, a gold rib on each,
+       the growth lines of the shell in faint gold, light in its heart. */
+    .dc-scene[data-dc-leave='shell'] .dc-shell__flutes {
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(
+                ellipse 26px 20px at 50% 100%,
+                var(--dc-gold-hi) 0,
+                var(--dc-gold-lt) 30%,
+                var(--dc-gold) 55%,
+                var(--dc-gold-lo) 80%,
+                var(--dc-velvet-lo) 84%,
+                transparent 100%
+            ),
+            repeating-radial-gradient(ellipse 26px 20px at 50% 100%, transparent 0 3px, hsl(from var(--dc-gold-dk) h s l / 0.5) 3px 4px),
+            radial-gradient(ellipse 46% 80% at 50% 100%, hsl(from var(--dc-velvet-hi) h s l / 0.28), transparent 70%),
+            radial-gradient(ellipse 75% 120% at 50% 100%, transparent 45%, hsl(from var(--dc-shadow) h s l / 0.55)),
+            repeating-radial-gradient(ellipse at 50% 100%, transparent 0 13px, hsl(from var(--dc-gold) h s l / 0.16) 13px 14px),
+            repeating-conic-gradient(
+                from -90deg at 50% 100%,
+                var(--dc-gold-lo) 0deg,
+                var(--dc-gold-hi) 0.4deg,
+                var(--dc-gold-lo) 0.8deg,
+                var(--dc-velvet-lo) 0.9deg,
+                var(--dc-velvet) calc(var(--dc-cell) * 0.3),
+                hsl(from var(--dc-velvet-hi) h s calc(l + 4)) calc(var(--dc-cell) * 0.55),
+                var(--dc-velvet) calc(var(--dc-cell) * 0.78),
+                var(--dc-velvet-lo) var(--dc-cell)
+            );
+        mask:
+            linear-gradient(var(--foreground) 0 0) 0 9px / 100% 100% no-repeat,
+            radial-gradient(circle 9px at 50% 9px, var(--foreground) 98%, transparent 100%) 50% 0 / 18px 18px repeat-x;
+    }
+
+    /* The gold trim along its scalloped crown and down its sides. */
+    .dc-scene[data-dc-leave='shell'] .dc-shell__trim {
+        position: absolute;
+        inset: 0;
+        background: var(--dc-leaf);
+        mask:
+            radial-gradient(circle 9px at 50% 9px, transparent 7.4px, var(--foreground) 7.8px 9px, transparent 9.4px) 50% 0 / 18px 9px repeat-x,
+            linear-gradient(var(--foreground) 0 0) 0 9px / 1.5px 100% no-repeat,
+            linear-gradient(var(--foreground) 0 0) 100% 9px / 1.5px 100% no-repeat;
+        filter: drop-shadow(0 1px 1px var(--dc-shadow));
+    }
+
+    /* The hinge: gold knuckles along the foot, a lozenge in the middle; it
+       closes to that jewel. */
+    .dc-scene[data-dc-leave='shell'] .dc-hinge {
+        --dc-v0: 480ms;
+        --dc-vl: 160ms;
+        position: absolute;
+        inset-block-end: 0;
+        inset-inline: 0;
+        block-size: 6px;
+        scale: calc(1 - var(--dc-v)) 1;
+        background:
+            linear-gradient(hsl(from var(--dc-gold-hi) h s l / 0.6), transparent 45%, hsl(from var(--dc-gold-dk) h s l / 0.6)),
+            repeating-linear-gradient(
+                90deg,
+                var(--dc-gold-lo) 0,
+                var(--dc-gold-hi) 3px,
+                var(--dc-gold) 8px,
+                var(--dc-gold-lo) 11px,
+                var(--dc-gold-dk) 11px 12px
+            );
+    }
+
+    .dc-scene[data-dc-leave='shell'] .dc-hinge::after {
+        content: '';
+        position: absolute;
+        inset-block-start: -3px;
+        inset-inline-start: calc(50% - 6px);
+        inline-size: 12px;
+        block-size: 12px;
+        clip-path: var(--dc-lozenge);
+        background: var(--dc-gem-em);
+        scale: calc(1 / max(0.001, 1 - var(--dc-v))) 1;
+    }
+
+    /* ── The keyframes ────────────────────────────────────────────────── */
+    @keyframes dc-q {
+        from {
+            --dc-q: 0;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        to {
+            --dc-q: 1;
+        }
+    }
+
+    @keyframes dc-q-out {
+        from {
+            --dc-q: 1;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+        to {
+            --dc-q: 0;
+        }
+    }
+
+    @keyframes dc-v {
+        from {
+            --dc-v: 0;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        to {
+            --dc-v: 1;
+        }
+    }
+
+    @keyframes dc-v-out {
+        from {
+            --dc-v: 1;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+        to {
+            --dc-v: 0;
+        }
+    }
+
+    /* The dressing is drawn while it moves: visible from the first frame of
+       an arrival and hidden on its last; the leave the same backwards. */
+    @keyframes dc-dress {
+        from {
+            visibility: visible;
+        }
+        to {
+            visibility: hidden;
+        }
+    }
+
+    @keyframes dc-dress-out {
+        from {
+            visibility: hidden;
+        }
+        to {
+            visibility: visible;
+        }
+    }
+
+    /* The fan: open from a stick at the top (40 %), stand (10 %), fold
+       away from the left and below the foot (50 %). */
+    @keyframes dc-gfan {
+        0% {
+            --dc-a1: 90deg;
+            --dc-a2: 90deg;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        40% {
+            --dc-a1: 0deg;
+            --dc-a2: 180deg;
+            animation-timing-function: linear;
+        }
+        50% {
+            --dc-a1: 0deg;
+            --dc-a2: 180deg;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        100% {
+            --dc-a1: 182deg;
+            --dc-a2: 182deg;
+        }
+    }
+
+    @keyframes dc-gfan-out {
+        0% {
+            --dc-a1: 182deg;
+            --dc-a2: 182deg;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+        50% {
+            --dc-a1: 0deg;
+            --dc-a2: 180deg;
+            animation-timing-function: linear;
+        }
+        60% {
+            --dc-a1: 0deg;
+            --dc-a2: 180deg;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+        100% {
+            --dc-a1: 90deg;
+            --dc-a2: 90deg;
+        }
+    }
+
+    /* The rope: hooked between the posts, unhooked and swinging down, hanging
+       from the left post to the floor. */
+    @keyframes dc-rope {
+        0% {
+            d: path('M0 6C30 62 70 62 100 6');
+            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+        }
+        45% {
+            d: path('M0 6C16 64 44 92 66 84');
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        100% {
+            d: path('M0 6C3 40 3 78 9 100');
+        }
+    }
+
+    @keyframes dc-rope-out {
+        0% {
+            d: path('M0 6C3 40 3 78 9 100');
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+        55% {
+            d: path('M0 6C16 64 44 92 66 84');
+            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+        }
+        100% {
+            d: path('M0 6C30 62 70 62 100 6');
+        }
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        .dc-scene--r2[data-dc-leave='glint'][data-dc-phase='gap'] .dc-ar {
-            --dc-gl: 0;
+        .dc-scene[data-dc-leave][data-dc-phase='gap'] .dc-stage {
+            visibility: hidden;
         }
 
-        .dc-scene--r2[data-dc-leave='glint'][data-dc-phase='in'] .dc-ar {
-            animation:
-                dcg-draw calc(320ms * var(--dc-slow, 1)) linear 0ms both,
-                dcg-up calc(160ms * var(--dc-slow, 1)) linear calc(320ms * var(--dc-slow, 1)) both,
-                dc-gl calc(240ms * var(--dc-slow, 1)) linear calc(320ms * var(--dc-slow, 1)) both;
+        .dc-scene[data-dc-leave][data-dc-phase='in'] .dc-dress {
+            animation: dc-dress calc(var(--dc-W) * var(--dc-slow, 1)) linear both;
         }
 
-        .dc-scene--r2[data-dc-leave='glint'][data-dc-phase='out'] .dc-ar {
-            animation:
-                dc-gl-out calc(240ms * var(--dc-slow, 1)) linear 0ms both,
-                dcg-up-out calc(160ms * var(--dc-slow, 1)) linear calc(80ms * var(--dc-slow, 1)) both,
-                dcg-draw-out calc(320ms * var(--dc-slow, 1)) linear calc(240ms * var(--dc-slow, 1)) both;
+        .dc-scene[data-dc-leave][data-dc-phase='out'] .dc-dress {
+            animation: dc-dress-out calc(var(--dc-W) * var(--dc-slow, 1)) linear both;
         }
 
-        .dc-scene--r2[data-dc-leave='jewels'][data-dc-phase='gap'] .dc-ar {
-            --dc-j: 0;
+        .dc-scene[data-dc-leave][data-dc-phase='in'] .dc-dq {
+            animation: dc-q calc(var(--dc-tl) * var(--dc-slow, 1)) linear calc(var(--dc-t0) * var(--dc-slow, 1)) both;
         }
 
-        .dc-scene--r2[data-dc-leave='jewels'][data-dc-phase='in'] .dc-ar {
-            animation:
-                dc-jw calc(120ms * var(--dc-slow, 1)) linear 0ms both,
-                dcg-draw calc(240ms * var(--dc-slow, 1)) linear calc(120ms * var(--dc-slow, 1)) both,
-                dcg-up calc(120ms * var(--dc-slow, 1)) linear calc(360ms * var(--dc-slow, 1)) both;
+        .dc-scene[data-dc-leave][data-dc-phase='out'] .dc-dq {
+            animation: dc-q-out calc(var(--dc-tl) * var(--dc-slow, 1)) linear calc((var(--dc-W) - var(--dc-t0) - var(--dc-tl)) * var(--dc-slow, 1))
+                both;
         }
 
-        .dc-scene--r2[data-dc-leave='jewels'][data-dc-phase='out'] .dc-ar {
-            animation:
-                dcg-up-out calc(120ms * var(--dc-slow, 1)) linear 0ms both,
-                dcg-draw-out calc(240ms * var(--dc-slow, 1)) linear calc(120ms * var(--dc-slow, 1)) both,
-                dc-jw-out calc(120ms * var(--dc-slow, 1)) linear calc(360ms * var(--dc-slow, 1)) both;
+        .dc-scene[data-dc-leave][data-dc-phase='in'] .dc-dv {
+            animation: dc-v calc(var(--dc-vl) * var(--dc-slow, 1)) linear calc(var(--dc-v0) * var(--dc-slow, 1)) both;
         }
 
-        .dc-scene--r2[data-dc-leave='double'][data-dc-phase='gap'] .dc-ar {
-            --dc-d2: 0;
+        .dc-scene[data-dc-leave][data-dc-phase='out'] .dc-dv {
+            animation: dc-v-out calc(var(--dc-vl) * var(--dc-slow, 1)) linear calc((var(--dc-W) - var(--dc-v0) - var(--dc-vl)) * var(--dc-slow, 1))
+                both;
         }
 
-        .dc-scene--r2[data-dc-leave='double'][data-dc-phase='in'] .dc-ar {
-            animation:
-                dcg-draw calc(300ms * var(--dc-slow, 1)) linear 0ms both,
-                dc-d2 calc(300ms * var(--dc-slow, 1)) linear calc(120ms * var(--dc-slow, 1)) both,
-                dcg-up calc(160ms * var(--dc-slow, 1)) linear calc(320ms * var(--dc-slow, 1)) both;
+        .dc-scene[data-dc-leave='fan'][data-dc-phase='in'] .dc-gfan {
+            animation: dc-gfan calc(var(--dc-W) * var(--dc-slow, 1)) linear both;
         }
 
-        .dc-scene--r2[data-dc-leave='double'][data-dc-phase='out'] .dc-ar {
-            animation:
-                dcg-up-out calc(160ms * var(--dc-slow, 1)) linear 0ms both,
-                dc-d2-out calc(300ms * var(--dc-slow, 1)) linear calc(60ms * var(--dc-slow, 1)) both,
-                dcg-draw-out calc(300ms * var(--dc-slow, 1)) linear calc(180ms * var(--dc-slow, 1)) both;
+        .dc-scene[data-dc-leave='fan'][data-dc-phase='out'] .dc-gfan {
+            animation: dc-gfan-out calc(var(--dc-W) * var(--dc-slow, 1)) linear both;
         }
 
-        .dc-scene--r2[data-dc-leave='festoon'][data-dc-phase='gap'] .dc-swag {
-            --dc-q: 0;
+        .dc-scene[data-dc-leave='rope'][data-dc-phase='in'] .dc-rope path {
+            animation: dc-rope calc(var(--dc-tl) * var(--dc-slow, 1)) linear calc(var(--dc-t0) * var(--dc-slow, 1)) both;
         }
 
-        .dc-scene--r2[data-dc-leave='festoon'][data-dc-phase='in'] .dc-swag {
-            animation: dc-lift calc(360ms * var(--dc-slow, 1)) linear calc(var(--i) * 60ms * var(--dc-slow, 1)) both;
-        }
-
-        .dc-scene--r2[data-dc-leave='festoon'][data-dc-phase='out'] .dc-swag {
-            animation: dc-lift-out calc(360ms * var(--dc-slow, 1)) linear calc((2 - var(--i)) * 60ms * var(--dc-slow, 1)) both;
+        .dc-scene[data-dc-leave='rope'][data-dc-phase='out'] .dc-rope path {
+            animation: dc-rope-out calc(var(--dc-tl) * var(--dc-slow, 1)) linear calc((var(--dc-W) - var(--dc-t0) - var(--dc-tl)) * var(--dc-slow, 1))
+                both;
         }
     }
 
