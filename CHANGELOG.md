@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- **Changed: deco's grammar, as Kenny decided it on research/deco-character** [2026-10-09, themes/deco/CHARACTER.md]. Plates are lacquer with
+  the wallpaper and coved corners; the inlay draws itself on opening and the close is its reverse; a great fan leaves and arrives; lift doors
+  wait; the progress bar is the doubled inlay; hover is gold leaf, a press is a seal, focus is a double gold ring, a live update is gilded;
+  `fx-ease` is the settle curve `cubic-bezier(0.22, 1, 0.36, 1)`.
 - **Changed: dark's grammar, as Kenny decided it on research/dark-character** [2026-10-09, themes/dark/CHARACTER.md]. Every opening is a pass
   left to right over the part's own box and the close is the pass back; loading is a comet on every waiting surface and the busy bar, the
   spinner is five spectrum bars; a live update is one pass over the figure (`--kp-update: pass`), a warning is the film gone coral; hover rests

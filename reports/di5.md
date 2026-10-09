@@ -156,7 +156,6 @@ reported here in capitals and corrected by nobody but Kenny.
 | `kp-sig-deco-meter-knock-d` | translate | 300 ms | 1× | — | 0.00/s | under |
 | `kp-sig-deco-meter-knock-o` | translate | 300 ms | 1× | — | 0.00/s | under |
 | `kp-sig-deco-meter-knock-w` | translate | 300 ms | 1× | — | 0.00/s | under |
-| `kp-sig-deco-meter-pos` | background-position | 2400 ms | loops | — | 0.00/s | under |
 | `kp-sig-deco-meter-wipe-o` | clip-path | 900 ms | 1× | — | 0.00/s | under |
 | `kp-sig-phantom-meter-redraw-d` | mask-image | 400 ms | 1× | — | 0.00/s | under |
 | `kp-sig-phantom-meter-redraw-o` | mask-image | 400 ms | 1× | — | 0.00/s | under |
@@ -285,15 +284,16 @@ reported here in capitals and corrected by nobody but Kenny.
 | `kp-sig-forest-update-ring` | opacity | 34 ms | 1× | 1 → 1 → 0 | 1.00/s | under |
 | `kp-sig-forest-edge` | translate, clip-path | 1000 ms | 1× | — | 0.00/s | under |
 | `kp-sig-forest-edge-rtl` | translate, clip-path | 1000 ms | 1× | — | 0.00/s | under |
+| `kp-sig-deco-arrive` | custom-property | 480 ms | 1× | — | 0.00/s | under |
+| `kp-sig-deco-fan` | custom-property | 720 ms | 1× | — | 0.00/s | under |
+| `kp-sig-deco-wipe` | custom-property | 360 ms | 1× | — | 0.00/s | under |
+| `kp-sig-deco-gilded` | filter | 1000 ms | 1× | — | 0.00/s | under |
+| `kp-sig-deco-doors` | custom-property | 2400 ms | loops | — | 0.00/s | under |
+| `kp-sig-deco-glint` | custom-property | 2400 ms | loops | — | 0.00/s | under |
+| `kp-sig-deco-seal` | custom-property | 400 ms | 1× | — | 0.00/s | under |
 | `kp-sig-deco-deco-turn` | transform | 3600 ms | loops | — | 0.00/s | under |
-| `kp-sig-deco-deco-open` | opacity | 2800 ms | loops | 1 → 1 → 1 → 0 | 0.36/s | under |
 | `kp-sig-deco-deco-unfold` | clip-path | 340 ms | 1× | — | 0.00/s | under |
 | `kp-sig-deco-deco-grow` | transform | 340 ms | 1× | — | 0.00/s | under |
-| `kp-sig-deco-deco-centre` | clip-path | 340 ms | 1× | — | 0.00/s | under |
-| `kp-sig-deco-deco-sunrise` | opacity | 340 ms | 1× | 0 → 1 | 1.00/s | under |
-| `kp-sig-deco-deco-fan` | opacity | 1120 ms | 1× | 0 → 0 | 0.00/s | under |
-| `kp-progressbar-deco-ascent` | transform | 900 ms | loops | — | 0.00/s | under |
-| `kp-sig-deco-leave` | opacity | 480 ms | 1× | 0 | 0.00/s | under |
 | `kp-sig-light-light-orbit` | transform | 1200 ms | loops | — | 0.00/s | under |
 | `kp-sig-light-light-tick` | clip-path | 200 ms | 1× | — | 0.00/s | under |
 | `kp-sig-light-expose` | opacity | 700 ms | 1× | 0 → 1 | 1.00/s | under |

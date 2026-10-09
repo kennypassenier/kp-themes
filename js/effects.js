@@ -668,7 +668,6 @@ export const TIMINGS = Object.freeze({
     'kp-sig-deco-meter-knock-d': { durationMs: 300, cycles: 1, property: 'translate', luminanceSteps: [] },
     'kp-sig-deco-meter-knock-o': { durationMs: 300, cycles: 1, property: 'translate', luminanceSteps: [] },
     'kp-sig-deco-meter-knock-w': { durationMs: 300, cycles: 1, property: 'translate', luminanceSteps: [] },
-    'kp-sig-deco-meter-pos': { durationMs: 2400, cycles: Infinity, property: 'background-position', luminanceSteps: [] },
     'kp-sig-deco-meter-wipe-o': { durationMs: 900, cycles: 1, property: 'clip-path', luminanceSteps: [] },
     'kp-sig-phantom-meter-redraw-d': { durationMs: 400, cycles: 1, property: 'mask-image', luminanceSteps: [] },
     'kp-sig-phantom-meter-redraw-o': { durationMs: 400, cycles: 1, property: 'mask-image', luminanceSteps: [] },
@@ -823,15 +822,16 @@ export const TIMINGS = Object.freeze({
     'kp-sig-forest-edge': { durationMs: 1000, cycles: 1, property: 'translate, clip-path', luminanceSteps: [] }, // the drawer's --kp-sig-dur, the theme's growth time
     'kp-sig-forest-edge-rtl': { durationMs: 1000, cycles: 1, property: 'translate, clip-path', luminanceSteps: [] }, // swapped in by animation-name on the rule that runs its sibling
     // deco-register
+    'kp-sig-deco-arrive': { durationMs: 480, cycles: 1, property: 'custom-property', luminanceSteps: [] },
+    'kp-sig-deco-fan': { durationMs: 720, cycles: 1, property: 'custom-property', luminanceSteps: [] },
+    'kp-sig-deco-wipe': { durationMs: 360, cycles: 1, property: 'custom-property', luminanceSteps: [] },
+    'kp-sig-deco-gilded': { durationMs: 1000, cycles: 1, property: 'filter', luminanceSteps: [] },
+    'kp-sig-deco-doors': { durationMs: 2400, cycles: Infinity, property: 'custom-property', luminanceSteps: [] },
+    'kp-sig-deco-glint': { durationMs: 2400, cycles: Infinity, property: 'custom-property', luminanceSteps: [] },
+    'kp-sig-deco-seal': { durationMs: 400, cycles: 1, property: 'custom-property', luminanceSteps: [] },
     'kp-sig-deco-deco-turn': { durationMs: 3600, cycles: Infinity, property: 'transform', luminanceSteps: [] },
-    'kp-sig-deco-deco-open': { durationMs: 2800, cycles: Infinity, property: 'opacity', luminanceSteps: [1, 1, 1, 0] },
     'kp-sig-deco-deco-unfold': { durationMs: 340, cycles: 1, property: 'clip-path', luminanceSteps: [] },
     'kp-sig-deco-deco-grow': { durationMs: 340, cycles: 1, property: 'transform', luminanceSteps: [] },
-    'kp-sig-deco-deco-centre': { durationMs: 340, cycles: 1, property: 'clip-path', luminanceSteps: [] },
-    'kp-sig-deco-deco-sunrise': { durationMs: 340, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
-    'kp-sig-deco-deco-fan': { durationMs: 1120, cycles: 1, property: 'opacity', luminanceSteps: [0, 0] },
-    'kp-progressbar-deco-ascent': { durationMs: 900, cycles: Infinity, property: 'transform', luminanceSteps: [] },
-    'kp-sig-deco-leave': { durationMs: 480, cycles: 1, property: 'opacity', luminanceSteps: [0] },
     // light-register
     'kp-sig-light-light-orbit': { durationMs: 1200, cycles: Infinity, property: 'transform', luminanceSteps: [] },
     'kp-sig-light-light-tick': { durationMs: 200, cycles: 1, property: 'clip-path', luminanceSteps: [] },

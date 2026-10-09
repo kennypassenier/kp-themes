@@ -1,0 +1,190 @@
+/* research/character-columns, deco: the decided picks on deco's applied grammar (themes/deco/CHARACTER.md, "Applied 2026-10-09"). Deco's decided options are shape 2, loading 1, arrival 3, tone 2, live 1: the strip's tiles are plates (lacquer, coved corners, the double hairline), the numbers Josefin 600 (G18); the glint is the lift doors on each waiting tile (G10); the figures arrive with the tile, no rise (G2); the change carries no plate, its arrow in the tone's jewel (G8); the live update is gilded (G9). */
+@layer kp.signature {
+    [data-theme='deco'][data-theme='deco'] [data-cs-shape='2'] .kp-kpis {
+        --cl-rule: var(--primary);
+        --cl-strip-pat: none;
+        --cl-frame: 1px solid hsl(from var(--primary) h s l / 0.3);
+        --cl-frame-top: 1px solid hsl(from var(--primary) h s l / 0.3);
+        --cl-radius: 0;
+        --cl-plate: var(--kp-sig-deco-lac);
+        --cl-label-font: var(--theme-font-body);
+        --cl-label-track: 0.12em;
+        --cl-num-font: var(--theme-font-body);
+    }
+    [data-theme='deco'][data-theme='deco'] [data-cs-loading='1'] .kp-kpis {
+        --cl-load: none;
+        --cl-load-anim: none;
+    }
+    [data-theme='deco'][data-theme='deco'] [data-cs-loading='1'] .kp-kpi[aria-busy='true'] {
+        --kp-sig-deco-p: 1;
+        position: relative;
+        isolation: isolate;
+        overflow: clip;
+        animation: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'][data-theme='deco'] [data-cs-loading='1'] .kp-kpi[aria-busy='true'] {
+            animation: kp-sig-deco-doors var(--kp-sig-deco-loop) linear infinite;
+        }
+    }
+
+    [data-theme='deco'][data-theme='deco'] [data-cs-loading='1'] .kp-kpi[aria-busy='true']::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inset-inline-end: auto;
+        inline-size: calc(50% + 0.5px);
+        z-index: 3;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        border-radius: 0;
+        pointer-events: none;
+        opacity: 1;
+        clip-path: none;
+        mask-image: none;
+        filter: none;
+        animation: none;
+        transform: none;
+        background-color: hsl(from var(--kp-sig-deco-lac) h s calc(l + 1.5));
+        background-image:
+            linear-gradient(to bottom right, transparent 50%, var(--kp-sig-deco-gold-hi) 50%),
+            linear-gradient(to bottom left, transparent 50%, var(--kp-sig-deco-gold-lt) 50%),
+            linear-gradient(to bottom right, var(--kp-sig-deco-gold-lo) 50%, transparent 50%),
+            linear-gradient(to bottom left, var(--primary) 50%, transparent 50%),
+            linear-gradient(hsl(from var(--primary) h s l / calc(0.32 * var(--kp-sig-deco-frame, 1))) 0 0),
+            linear-gradient(hsl(from var(--primary) h s l / calc(0.32 * var(--kp-sig-deco-frame, 1))) 0 0),
+            linear-gradient(hsl(from var(--primary) h s l / calc(0.32 * var(--kp-sig-deco-frame, 1))) 0 0),
+            linear-gradient(hsl(from var(--primary) h s l / calc(0.32 * var(--kp-sig-deco-frame, 1))) 0 0), linear-gradient(var(--primary) 0 0),
+            linear-gradient(hsl(from var(--primary) h s l / 0.55) 0 0),
+            linear-gradient(90deg, transparent, hsl(from var(--kp-sig-deco-gold-hi) h s l / 0.05) 60%, transparent),
+            repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px),
+            repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px);
+        background-position:
+            right calc(var(--kp-sig-deco-hx, 14px) + var(--kp-sig-deco-hs, 3.5px)) top calc(50% - var(--kp-sig-deco-hs, 3.5px)),
+            right var(--kp-sig-deco-hx, 14px) top calc(50% - var(--kp-sig-deco-hs, 3.5px)),
+            right var(--kp-sig-deco-hx, 14px) top 50%,
+            right calc(var(--kp-sig-deco-hx, 14px) + var(--kp-sig-deco-hs, 3.5px)) top 50%,
+            var(--kp-sig-deco-di, 8px) var(--kp-sig-deco-di, 8px),
+            left var(--kp-sig-deco-di, 8px) bottom var(--kp-sig-deco-di, 8px),
+            left var(--kp-sig-deco-di, 8px) top var(--kp-sig-deco-di, 8px),
+            right calc(var(--kp-sig-deco-di, 8px) + 1px) top var(--kp-sig-deco-di, 8px),
+            right 1px top 0,
+            right 4px top 0,
+            0 0,
+            0 0,
+            0 0;
+        background-size:
+            var(--kp-sig-deco-hs, 3.5px) var(--kp-sig-deco-hs, 3.5px),
+            var(--kp-sig-deco-hs, 3.5px) var(--kp-sig-deco-hs, 3.5px),
+            var(--kp-sig-deco-hs, 3.5px) var(--kp-sig-deco-hs, 3.5px),
+            var(--kp-sig-deco-hs, 3.5px) var(--kp-sig-deco-hs, 3.5px),
+            calc(100% - var(--kp-sig-deco-di, 8px) - var(--kp-sig-deco-di, 8px) - 1px) 1px,
+            calc(100% - var(--kp-sig-deco-di, 8px) - var(--kp-sig-deco-di, 8px) - 1px) 1px,
+            1px calc(100% - 2 * var(--kp-sig-deco-di, 8px)),
+            1px calc(100% - 2 * var(--kp-sig-deco-di, 8px)),
+            1px 100%,
+            1px 100%,
+            100% 100%,
+            24px 24px,
+            24px 24px;
+        background-repeat:
+            no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat;
+        box-shadow: inset -1px 0 0 hsl(from var(--kp-sig-deco-gold-lo) h s l / 0.6);
+        translate: calc(var(--kp-sig-deco-p) * -33.4%) 0;
+        block-size: auto;
+        min-block-size: 0;
+        transform: none;
+        border-radius: 0;
+        outline: 0;
+    }
+
+    [data-theme='deco'][data-theme='deco'] [data-cs-loading='1'] .kp-kpi[aria-busy='true']::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-end: 0;
+        inset-inline-start: auto;
+        inline-size: calc(50% + 0.5px);
+        z-index: 3;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        border-radius: 0;
+        pointer-events: none;
+        opacity: 1;
+        clip-path: none;
+        mask-image: none;
+        filter: none;
+        animation: none;
+        transform: none;
+        background-color: hsl(from var(--kp-sig-deco-lac) h s calc(l + 1.5));
+        background-image:
+            linear-gradient(to bottom right, transparent 50%, var(--kp-sig-deco-gold-hi) 50%),
+            linear-gradient(to bottom left, transparent 50%, var(--kp-sig-deco-gold-lt) 50%),
+            linear-gradient(to bottom right, var(--kp-sig-deco-gold-lo) 50%, transparent 50%),
+            linear-gradient(to bottom left, var(--primary) 50%, transparent 50%),
+            linear-gradient(hsl(from var(--primary) h s l / calc(0.32 * var(--kp-sig-deco-frame, 1))) 0 0),
+            linear-gradient(hsl(from var(--primary) h s l / calc(0.32 * var(--kp-sig-deco-frame, 1))) 0 0),
+            linear-gradient(hsl(from var(--primary) h s l / calc(0.32 * var(--kp-sig-deco-frame, 1))) 0 0),
+            linear-gradient(hsl(from var(--primary) h s l / calc(0.32 * var(--kp-sig-deco-frame, 1))) 0 0), linear-gradient(var(--primary) 0 0),
+            linear-gradient(hsl(from var(--primary) h s l / 0.55) 0 0),
+            linear-gradient(90deg, transparent, hsl(from var(--kp-sig-deco-gold-hi) h s l / 0.05) 60%, transparent),
+            repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px),
+            repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px);
+        background-position:
+            left var(--kp-sig-deco-hx, 14px) top calc(50% - var(--kp-sig-deco-hs, 3.5px)),
+            left calc(var(--kp-sig-deco-hx, 14px) + var(--kp-sig-deco-hs, 3.5px)) top calc(50% - var(--kp-sig-deco-hs, 3.5px)),
+            left calc(var(--kp-sig-deco-hx, 14px) + var(--kp-sig-deco-hs, 3.5px)) top 50%,
+            left var(--kp-sig-deco-hx, 14px) top 50%,
+            right var(--kp-sig-deco-di, 8px) top var(--kp-sig-deco-di, 8px),
+            right var(--kp-sig-deco-di, 8px) bottom var(--kp-sig-deco-di, 8px),
+            right var(--kp-sig-deco-di, 8px) top var(--kp-sig-deco-di, 8px),
+            left calc(var(--kp-sig-deco-di, 8px) + 1px) top var(--kp-sig-deco-di, 8px),
+            left 1px top 0,
+            left 4px top 0,
+            0 0,
+            0 0,
+            0 0;
+        background-size:
+            var(--kp-sig-deco-hs, 3.5px) var(--kp-sig-deco-hs, 3.5px),
+            var(--kp-sig-deco-hs, 3.5px) var(--kp-sig-deco-hs, 3.5px),
+            var(--kp-sig-deco-hs, 3.5px) var(--kp-sig-deco-hs, 3.5px),
+            var(--kp-sig-deco-hs, 3.5px) var(--kp-sig-deco-hs, 3.5px),
+            calc(100% - var(--kp-sig-deco-di, 8px) - var(--kp-sig-deco-di, 8px) - 1px) 1px,
+            calc(100% - var(--kp-sig-deco-di, 8px) - var(--kp-sig-deco-di, 8px) - 1px) 1px,
+            1px calc(100% - 2 * var(--kp-sig-deco-di, 8px)),
+            1px calc(100% - 2 * var(--kp-sig-deco-di, 8px)),
+            1px 100%,
+            1px 100%,
+            100% 100%,
+            24px 24px,
+            24px 24px;
+        background-repeat:
+            no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat;
+        box-shadow: inset 1px 0 0 hsl(from var(--kp-sig-deco-gold-lo) h s l / 0.6);
+        translate: calc(var(--kp-sig-deco-p) * 33.4%) 0;
+        block-size: auto;
+        min-block-size: 0;
+        transform: none;
+        border-radius: 0;
+        outline: 0;
+    }
+    [data-theme='deco'][data-theme='deco'] [data-cs-arrival='3'] .kp-kpis {
+        --cl-arrive-num: none;
+        --cl-arrive-tile: none;
+    }
+    [data-theme='deco'][data-theme='deco'] [data-cs-tone='2'] .kp-kpis {
+        --cl-delta-radius: 0;
+        --cl-delta-border: 0;
+        --cl-delta-shadow: none;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'][data-theme='deco'] [data-cs-live='1'] .kp-kpis {
+            --cl-live-num: kp-sig-deco-gilded 1s linear;
+            --cl-live-ink: var(--primary);
+        }
+    }
+}

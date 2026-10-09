@@ -285,11 +285,27 @@ const OUT_OF_SCOPE = {
     'kp-sig-solstice-meter-grow-o': "a meter's share scaling in from its start once; a transform, under 341x256 px",
     'kp-sig-solstice-meter-pos':
         'a background-position slide of the loading picture inside a meter a few px tall; the picture keeps its colours, only its position moves',
+    // The deco grammar [themes/deco/CHARACTER.md §4, Kenny, 2026-10-09]: registered
+    // custom properties drive extents and angles (a conic mask, a translate, a
+    // background size); the gold keeps its colour throughout, nothing changes
+    // opacity or lightness by 10% twice in a second.
+    'kp-sig-deco-arrive':
+        "a registered custom property drawing a plate's gold inlay round once and then raising its lacquer (480 ms); the lines keep their colour, only their extent changes",
+    'kp-sig-deco-fan':
+        'a registered custom property opening a great fan over a part, hiding it, and folding the fan away once (720 ms); the fan keeps its colours, only its angle changes',
+    'kp-sig-deco-wipe':
+        "a registered custom property folding a mask's fan-shaped window shut once (360 ms); the part keeps its colours, only its extent changes",
+    'kp-sig-deco-gilded':
+        'a changed figure flaring gold with a drop shadow and a 10% swell once over a second, and settling; one flare per update, a filter on a figure, under 341x256 px',
+    'kp-sig-deco-doors':
+        'a registered custom property parting two lift doors by a third of a part and closing them, 2400 ms a loop; the doors keep their colours, only their place changes',
+    'kp-sig-deco-glint':
+        'a registered custom property running a glint between the two lines of a bar, 2400 ms a loop; a few px tall, a gradient position only',
+    'kp-sig-deco-seal':
+        'a registered custom property growing one fine gold ring from the centre of a pressed control and fading it in 400 ms, once per press; under 341x256 px',
     'kp-sig-deco-meter-knock-d': 'a meter knocked up 3px and back once as it turns to the destructive tone; a transform, under 341x256 px',
     'kp-sig-deco-meter-knock-o': 'a meter knocked up 3px and back once as its tone clears; a transform, under 341x256 px',
     'kp-sig-deco-meter-knock-w': 'a meter knocked up 3px and back once as it turns to the warning tone; a transform, under 341x256 px',
-    'kp-sig-deco-meter-pos':
-        'a background-position slide of the loading picture inside a meter a few px tall; the picture keeps its colours, only its position moves',
     'kp-sig-deco-meter-wipe-o': "a clip-path wipe revealing a meter's share once; the share keeps its colour, under 341x256 px",
     'kp-sig-phantom-meter-redraw-d':
         'a meter dissolving into its halftone dots and resolving again in six cuts of 67 ms, once, as it turns to the destructive tone; the mask changes how much of it is drawn and its colours stay, under 341x256 px',

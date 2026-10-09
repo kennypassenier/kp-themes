@@ -22,8 +22,8 @@
    - a menu is dealt from its edge, a dialog zooms open in outline frames, a
      tip waits and appears in one frame, a notice drops from its edge (G3);
    - a live value is a sheet copied over: four frames of flight and the
-     figure repaints as it lands (G9); loading is one of Windows 95's own waiting
-     pictures (G10, question 10); the busy bar is the segmented bar with the sheet hopping ahead
+     figure repaints as it lands (G9); loading is a picture from the screens of the
+     nineties (G10, question 10); the busy bar is the segmented bar with the sheet hopping ahead
      (G11); the spinner is the hourglass, in frames (G12); a press is the
      bevel inverted in one frame with the label a pixel over (G17);
    - the 16-colour palette by role (G5): chrome grey surfaces, navy for what
@@ -833,13 +833,12 @@
         }
     }
 
-    /* ── G10: loading is one of Windows 95's own waiting pictures (the
-       Find flashlight, the Starting Windows scroll, the busy pointer,
-       Defrag's cells, Setup's bar, the dial-up lights), fitted to each
-       waiting part: question 10 decides which; its keyframes are the
-       options' own (options.css, `rt-find-*`, `rt-boot-*`, `rt-defrag-*`,
-       `rt-setup-*`, `rt-dial-*`; the busy pointer runs the hourglass's
-       rt-glass-turn and rt-glass-sand). ──────────────────────────────── */
+    /* ── G10: loading is a picture from the screens of the nineties
+       (palette cycling, an interlaced image, marching ants, Mystify, the
+       starfield, the DOS prompt, the bouncing ball, the spinning globe),
+       pixel art fitted to each waiting part: question 10 decides which; its
+       keyframes are the options' own (options.css, `rt-cel`, `rt-flow`,
+       `rt-lace-*`, `rt-ants*`, `rt-trail`, `rt-type*`, `rt-ball-*`). ──── */
 
     /* ── G11: the sheet hops ahead, a loop of 28 frames: seven hops of three
        frames, two blocks a hop, the navy blocks filling whole behind it (the

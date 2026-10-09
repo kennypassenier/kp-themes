@@ -1527,7 +1527,7 @@
     --fx-signal-foreground: hsl(355, 60%, 8%);
     --fx-notch: 0px;
     --fx-duration: 160ms;
-    --fx-ease: cubic-bezier(0.4, 0, 0.2, 1);
+    --fx-ease: cubic-bezier(0.22, 1, 0.36, 1);
     --theme-font-display: 'Poiret One', 'Josefin Sans', ui-sans-serif, sans-serif;
     --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(43, 65%, 52%);

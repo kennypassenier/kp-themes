@@ -1,5 +1,7 @@
 # What makes deco deco
 
+**Decided (Kenny, 09/10/2026): all nineteen questions approved after update 3** (research/deco-character/decided.json; leaving and arriving = a great fan; the grammar is in themes/deco/CHARACTER.md §1, applied in css/deco-register.css).
+
 **Update 3 (2026-10-09).** Kenny on leaving and arriving: the festoon (option five) is "actually fancy and well drawn, I like the art
 style", curtains maybe not, and the curtains stayed in the window once open (a bug, fixed: every part stands on a stage that is hidden
 after it has left, and its dressing is drawn only while it moves, never once the part has arrived). Ten options in the festoon's art

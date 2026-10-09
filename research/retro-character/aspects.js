@@ -9,6 +9,7 @@
 // with Start and the clock, window chrome) is retro's world.
 // Update 1 (2026-10-09-r2): the questions Kenny did not approve are redrawn (his comments are in update.json); his picks stay as they were.
 // Update 2 (2026-10-09-r3): the questions Kenny did not approve are redrawn (his comments are in update.json); his picks stay as they were.
+// Update 3 (2026-10-09-r4): the questions Kenny did not approve are redrawn (his comments are in update.json); his picks stay as they were.
 
 export const THEME = 'retro';
 export const LABEL = 'Retro';
@@ -306,55 +307,62 @@ export const ASPECTS = [
         id: 'loading',
         label: 'Loading',
         rule: 'G10',
-        question: 'What does a waiting surface show: which of the real Windows 95 waiting animations?',
-        why: 'A tile, a panel, a menu entry, a month of days, a chart’s plot and skeleton lines, waiting. Every option is a thing Windows 95 really showed while it worked, in whole 90 ms frames and nothing eased, loops at 2.52 s, and is fitted to each of the five parts.',
+        question: 'What does a waiting surface show: eight pictures from the screens of the nineties',
+        why: 'A tile, a panel, a menu entry, a month of days, a chart’s plot and skeleton lines, waiting. No dialog, no bar, no label: a picture that is nice to watch by itself, drawn in the register’s own palette in whole 90 ms frames (nothing eased), looping every 2.52 s, fitted to each of the five parts.',
         kind: 'loop',
         scene: 'loading',
         options: [
             {
-                key: 'flashlight',
-                name: 'The Find flashlight',
-                see: 'The flashlight of the Find: Files dialog: a small pixel flashlight sweeps back and forth (eight frames each way) over the waiting part throwing a beam of light that lightens the 50 % dither under it, as the Find dialog’s flashlight swept over the file icons. On a box it sweeps across the middle; on a skeleton line it sweeps along the line; over the month it moves from day to day, lightening the day under it; across the plot it sweeps along the baseline.',
+                key: 'cycle',
+                name: 'Palette cycling',
+                see: 'The nineties trick that made a still picture move: the part is filled with soft diagonal bands in the register’s own blues, teals and greys, and the colours march along the bands one step each frame, so the picture seems to flow while no band ever moves. On a box the bands fill it; on a skeleton line they fill the line; on the month each day holds its slice of the same flowing bands; on the plot they fill the area under the line.',
                 verdict:
-                    'Recommended: this one, because it is the animation 1995 showed for “I am looking”, drawn in pixels everyone who used Find remembers, and a beam of light over a dithered ground fits a line, a day and a plot as well as a box.',
+                    'Recommended: this one, because it is the most beautiful of the eight and the most 1995 in spirit: Deluxe Paint waterfalls and demoscene backgrounds, a lot of motion from a handful of colours, and it needs no mark on the part.',
             },
             {
-                key: 'startup',
-                name: 'The Starting Windows scroll',
-                see: 'The band of the Starting Windows 95 splash: a short band of eight blue blocks (the splash’s clouds reduced to its marching stripe) scrolls left to right along the foot of a sunken bar, wrapping at the right edge, in whole frames; every part carries the bar along its foot (a skeleton line is its own bar, each day carries a short one, the plot has the bar under it, a box has the bar at its foot).',
-                verdict: 'Not recommended, because the most authentic bar of the set and the plainest; it is the same picture on every part.',
-            },
-            {
-                key: 'busy',
-                name: 'The busy pointer sits on it',
-                see: 'The pointer you saw while Windows worked: the hourglass cursor (the register’s hourglass, its sand draining in frames) sits at the part’s centre; a part that is loading in the background shows the arrow with a small hourglass instead; on a line the pointer sits at its start, on a day on the day, on the plot at its middle.',
+                key: 'interlace',
+                name: 'Interlaced, as an image loaded',
+                see: 'How a picture arrived in a nineties browser: the part is first drawn in coarse fat stripes, then four passes lay finer and finer rows over them (every eighth row, then every fourth, every second, every row) until it is sharp for a moment, then it clears and starts coarse again. The rows are the desktop’s teal over the grey dither; on the skeleton each line is drawn the same way, on the month the days resolve row by row.',
                 verdict:
-                    'Not recommended, because one cursor on a part says “wait” without saying how much; it is the hourglass spinner you already picked.',
+                    'Not recommended, because the pass count (four) is a literal GIF and reads as a glitch at tile size; it is the most faithful to the memory.',
             },
             {
-                key: 'defrag',
-                name: 'Defrag’s cells',
-                see: 'The Disk Defragmenter’s map: the part is a grid of small square cells (blue, white, a red one now and then) that change state one after another, left to right, row by row, a few cells a frame, as defragmenting rewrote blocks; a skeleton line is one row of cells, the month is its cells, the plot is a grid of cells under the line, a box is a grid.',
-                verdict: 'Not recommended, because it is dense and busy at once; on a day the cells are the day.',
+                key: 'ants',
+                name: 'Marching ants',
+                see: 'The selection rectangle of the Windows desktop and of Paint: a dotted black-and-white line runs around the part’s edge, the dots stepping one pixel per frame, and a second dotted rectangle runs inside it the other way round. On a skeleton line the ants run along the line; on the month around every day in turn; on the plot around the plot area.',
+                verdict: 'Not recommended, because it is exactly right and exactly small: an outline, with nothing inside the part to watch.',
             },
             {
-                key: 'setup',
-                name: 'The Setup installer’s bar',
-                see: 'The Setup wizard’s copying bar: a sunken bar with navy blocks gained one by one, and under it the label “Copying files… 37%” counting up in the DOS face (the percent in steps of three); on a skeleton line the bar is the line; on the month one bar under the days; on the plot one under it; a box carries the bar and the label at its foot.',
+                key: 'mystify',
+                name: 'Mystify your mind',
+                see: 'The Windows screensaver: two closed polygons of four points bounce around inside the part, each leaving a trail of older copies of itself that fade through the register’s blues, stepping a few pixels a frame. On a skeleton line the polygon is a flat quadrilateral running along the line; on the month it lives behind the days; on the plot it is the plot.',
+                verdict: 'Not recommended, because it reads as decoration at large sizes and as noise at menu-entry size; best on tile and panel.',
+            },
+            {
+                key: 'stars',
+                name: 'The starfield',
+                see: 'The warp starfield screensaver: white and pale-blue pixels stream out from the part’s centre toward its edges, growing from one pixel to a 2 by 2 square as they travel, each at its own speed, on the desktop’s dark blue. On a menu entry and a skeleton line they stream out of the start edge instead.',
                 verdict:
-                    'Not recommended, because exactly the installer, and the percentage is a promise a loading part cannot keep when its length is not known.',
+                    'Not recommended, because very recognisable and a little loud: it fills a tile like a window onto space, which suits a screen and not a menu entry.',
             },
             {
-                key: 'modem',
-                name: 'The dial-up lights',
-                see: 'The dial-up icon in the taskbar tray: two tiny monitors whose screens blink in turn (send, then receive, 360 ms each); on every part, two small monitors at its foot-end blink in turn with a short row of blocks; the part’s own content dithers at half density.',
-                verdict: 'Not recommended, because the most 1995 of the small marks, and the smallest; on a plot it is a tag in a corner.',
+                key: 'prompt',
+                name: 'The DOS prompt',
+                see: 'The black window of the nineties: a few lines of light-grey DOS text type themselves into the part one letter a frame, nonsense like a boot log (“HIMEM is testing extended memory… done”, “Loading…”), and a blinking block cursor follows. On a skeleton line the text runs along the line; on the month it fills the days one after another; on the plot it types under the line.',
+                verdict:
+                    'Not recommended, because it is the most readable of the eight, which is its fault: real words in a loading state say something the data does not.',
             },
             {
-                key: 'blocks',
-                name: 'The progress blocks (the picks)',
-                see: 'The picks’ loading on seven components: navy blocks fill the part’s foot block by block, clear, and restart; no sheet.',
-                verdict: 'Not recommended, because the bar without the sheet is half the dialog; kept as the reference.',
+                key: 'ball',
+                name: 'The bouncing ball',
+                see: 'The screen toy of the early Windows: a chunky pixel ball with a highlight and a hard shadow drops, squashes one frame, and bounces up again, a little lower each time, then starts over; on a skeleton line it hops along the line; on the month it hops from day to day; on the plot it bounces along the line.',
+                verdict: 'Not recommended, because charming and cheerful, but a single small thing in a large part reads as a pointer, not a state.',
+            },
+            {
+                key: 'globe',
+                name: 'The spinning globe',
+                see: 'The throbber of the browsers of the nineties: a pixel globe turns in eight frames in the part’s corner or at its centre, with a ring of dither around it. On a menu entry and a skeleton line the globe sits at the start; on the month in the first day; on the plot at its middle.',
+                verdict: 'Not recommended, because the throbber is the memory of waiting, and it is a mark, not a surface: it never fills the part.',
             },
         ],
     },

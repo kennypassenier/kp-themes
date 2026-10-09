@@ -1,0 +1,27 @@
+{
+    "decided": "2026-10-09 Brussels, Kenny: 19 of 19 approved in the review dialog (research/deco-character/README.md), after update 3: leaving and arriving = a great fan",
+    "attributes": "data-dc-<question>=\"<key>\" on the .dc-scene, research/deco-character/options.css",
+    "picks": {
+        "deco": {
+            "curve": "unfold",
+            "direction": "centre",
+            "opening": "inlay",
+            "durations": "fan",
+            "colour": "inlay",
+            "corners": "cove",
+            "surface": "lacquer",
+            "warning": "figure",
+            "live": "gilded",
+            "loading": "doors",
+            "bar": "double",
+            "spinner": "rotate",
+            "leave": "fan",
+            "composites": "own",
+            "hover": "leaf",
+            "focus": "double",
+            "press": "seal",
+            "type": "poiret",
+            "motifs": "inlay"
+        }
+    }
+}

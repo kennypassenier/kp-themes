@@ -1,0 +1,51 @@
+/* research/character-drawer, deco: the decided picks on deco's applied grammar (themes/deco/CHARACTER.md, "Applied 2026-10-09"). Deco's decided options are shape 3, openclose 2, highlight 3, card 1, next 2: the drawer and the tour card are the register's plates (lacquer, coved corners, double hairline) with the gold edge bar gone (G5-G7); the drawer opens as the inlay draws, no scale from its edge (G3); the highlighted target is ringed in the double gold ring (G16); the next step has no sliding flourish (G2). */
+@layer kp.signature {
+    [data-theme='deco'][data-theme='deco'] [data-dt-shape='3'] .dt-drawer {
+        border: 1px solid hsl(from var(--primary) h s l / 0.3);
+        background-color: var(--kp-sig-deco-lac);
+        background-image:
+            repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px),
+            repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px);
+        background-size: 24px 24px;
+        box-shadow: none;
+        color: var(--foreground);
+    }
+    [data-theme='deco'][data-theme='deco'] [data-dt-shape='3'] .dt-drawer .kp-drawer__head {
+        border-block-end: 3px double var(--primary);
+    }
+    [data-theme='deco'][data-theme='deco'] [data-dt-openclose='2'][data-dt-state='closed'] .dt-drawer {
+        scale: 1 1;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'][data-theme='deco'] [data-dt-openclose='2'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-deco-arrive var(--kp-sig-deco-arrive) linear both;
+        }
+        [data-theme='deco'][data-theme='deco'] [data-dt-openclose='2'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-deco-arrive var(--kp-sig-deco-arrive) linear both reverse;
+        }
+        [data-theme='deco'][data-theme='deco'] [data-dt-next='2'][data-dt-playing='next'] .dt-tour {
+            animation: none;
+        }
+    }
+    [data-theme='deco'][data-theme='deco'] [data-dt-highlight='3'] [data-kp-tour-target] {
+        outline: 3px double var(--primary);
+        outline-offset: 4px;
+        border-radius: 0;
+        box-shadow: 0 0 0 100vmax hsl(from var(--background) h s l / 0.55);
+    }
+    [data-theme='deco'][data-theme='deco'] [data-dt-card='1'] .dt-tour {
+        border: 1px solid hsl(from var(--primary) h s l / 0.3);
+        background-color: var(--kp-sig-deco-lac);
+        background-image:
+            repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px),
+            repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px);
+        background-size: 24px 24px;
+        box-shadow: none;
+        color: var(--foreground);
+    }
+    [data-theme='deco'][data-theme='deco'] [data-dt-card='1'] .dt-tour .kp-tour__title {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        letter-spacing: var(--kp-sig-deco-title-track);
+    }
+}

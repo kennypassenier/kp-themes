@@ -1532,7 +1532,7 @@
     --fx-signal-foreground: hsl(355, 60%, 8%);
     --fx-notch: 0px;
     --fx-duration: 160ms;
-    --fx-ease: cubic-bezier(0.4, 0, 0.2, 1);
+    --fx-ease: cubic-bezier(0.22, 1, 0.36, 1);
     --theme-font-display: 'Poiret One', 'Josefin Sans', ui-sans-serif, sans-serif;
     --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
     --fx-overprint: hsl(43, 65%, 52%);
@@ -42656,6 +42656,79 @@
 }
 /* ── End of the signature ── */
 
+/* The numbers deco's motion is made of, registered at the top level because
+   Firefox does not register an @property inside a cascade layer; with no
+   registration a number would not animate or transition. Each initial value
+   is the finished pose. --kp-sig-deco-draw: how far a plate's inlay is drawn
+   round from its start (0 none, 1 closed). --kp-sig-deco-up: how far its
+   lacquer, wallpaper and words are up. --kp-sig-deco-hv: a pointer's leaf
+   (0 away, 1 on it). --kp-sig-deco-pr: a press (0 rest, 1 sunk).
+   --kp-sig-deco-ring: the seal's ring (0 at the centre, 1 at its edge).
+   --kp-sig-deco-p: how far a waiting part's lift doors have parted (0 shut).
+   --kp-sig-deco-g: where a glint is along a busy bar (0 before the start, 1
+   past the end). --kp-sig-deco-a1 and -a2: the great fan's two guard sticks,
+   from the left along its foot (182deg is folded away below it).
+   --kp-sig-deco-v: how much of the fan's dressing is drawn. */
+@property --kp-sig-deco-draw {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+@property --kp-sig-deco-up {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+@property --kp-sig-deco-hv {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --kp-sig-deco-pr {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --kp-sig-deco-ring {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 1;
+}
+
+@property --kp-sig-deco-p {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --kp-sig-deco-g {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --kp-sig-deco-a1 {
+    syntax: '<angle>';
+    inherits: true;
+    initial-value: 182deg;
+}
+
+@property --kp-sig-deco-a2 {
+    syntax: '<angle>';
+    inherits: true;
+    initial-value: 182deg;
+}
+
+@property --kp-sig-deco-v {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
 @layer kp.register {
     /* @kp-soft/themes — css/deco-register.css
    The deco register, 5.0.0 [S48, LIFT_PLAN row 8]: Paris 1925, dark
@@ -43982,47 +44055,8 @@
         border-color: var(--destructive-active);
     }
 
-    /* ── The fan opens [gap-4, approved 2026-09-12] ────────────────────
-       The sunburst is the motif of this style — the Chrysler Building,
-       every lift door of 1930. Touching a control opens a fan of rays out
-       of its lower corner, clipped by the control itself, in the gold the
-       theme already has.
-
-       The loudest of the six gestures on purpose: deco is the theme that
-       draws a double gold rule under a heading. Quiet would sit stranger
-       here than loud.
-
-       Measured in firefox 2026-09-12: the rays sit behind the label at
-       34% and the label reads 10.36. */
-    [data-theme='deco'] .kp-button {
-        overflow: hidden;
-        isolation: isolate;
-    }
-
-    [data-theme='deco'] .kp-button::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        z-index: -1;
-        background: repeating-conic-gradient(
-            from var(--kp-fan-from, 200deg) at 0% 120%,
-            hsl(from var(--primary) h s l / var(--kp-fan-alpha, 0.34)) 0deg var(--kp-fan-ray, 3deg),
-            transparent var(--kp-fan-ray, 3deg) var(--kp-fan-step, 9deg)
-        );
-        opacity: 0;
-        pointer-events: none;
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='deco'] .kp-button::before {
-            transition: opacity calc(var(--fx-duration, 180ms) * 1.4) var(--fx-ease, ease);
-        }
-    }
-
-    [data-theme='deco'] .kp-button:hover:not(:disabled)::before,
-    [data-theme='deco'] .kp-button:focus-visible::before {
-        opacity: 1;
-    }
+    /* ── Pointing and pressing: see the grammar at the end of the signature layer
+       (the gold leaf and the seal replace the fan that opened behind the label). ── */
 
     /* ── Read-only fields [gap-11] ────────────────────────────────────── */
 
@@ -44131,96 +44165,6 @@
     /* The link signature is for links in running text; a link in a navigation,
        a menu, a breadcrumb (a nav) or the footer keeps its own component's look
        (scope-93: no link colour in a navigation). */
-    [data-theme='deco'] .kp-progressbar {
-        --kp-progressbar-height: calc(1.125rem * var(--kp-progressbar-scale, 1));
-        --dc-rib: calc(4px * var(--kp-progressbar-scale, 1));
-        --dc-rib-pitch: calc(5px * var(--kp-progressbar-scale, 1));
-        --dc-gold: var(--primary);
-        --dc-flute: color-mix(in oklab, var(--primary) 72%, var(--background));
-        --dc-tip: calc(0.45rem * var(--kp-progressbar-scale, 1));
-        --dc-jewel: calc(0.4rem * var(--kp-progressbar-scale, 1));
-        --dc-chevron: calc(0.8rem * var(--kp-progressbar-scale, 1));
-    }
-
-    [data-theme='deco'] .kp-progressbar__track {
-        border: 3px double var(--border-strong);
-        border-radius: 0;
-        background: var(--background);
-    }
-
-    [data-theme='deco'] .kp-progressbar__fill {
-        --dc-at: calc(var(--kp-value) * 100%);
-        inset: 1px;
-        background:
-            linear-gradient(90deg, var(--dc-gold) 0 var(--dc-rib), var(--dc-flute) var(--dc-rib)) 0 0 / var(--dc-rib-pitch) 100% repeat-x,
-            var(--dc-gold);
-        clip-path: polygon(
-            0 0,
-            max(0px, calc(var(--dc-at) - var(--dc-tip))) 0,
-            var(--dc-at) 50%,
-            max(0px, calc(var(--dc-at) - var(--dc-tip))) 100%,
-            0 100%,
-            min(calc(var(--dc-tip) * 0.6), calc(var(--dc-at) * 0.5)) 50%
-        );
-        transition: clip-path 320ms var(--fx-ease, cubic-bezier(0.4, 0, 0.2, 1));
-    }
-
-    [data-theme='deco'] .kp-progressbar__head {
-        inline-size: 0;
-        transition: transform 320ms var(--fx-ease, cubic-bezier(0.4, 0, 0.2, 1));
-    }
-
-    [data-theme='deco'] .kp-progressbar__head::before {
-        content: '';
-        position: absolute;
-        inset-block-start: 50%;
-        inset-inline-start: calc(-1 * var(--dc-tip) - var(--dc-jewel) * 0.9);
-        inline-size: var(--dc-jewel);
-        block-size: var(--dc-jewel);
-        background: var(--accent);
-        box-shadow:
-            0 0 0 1px var(--background),
-            0 0 0 2px var(--dc-gold);
-        transform: translateY(-50%) rotate(45deg);
-    }
-
-    [data-theme='deco'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
-        inset: 1px;
-        inline-size: auto;
-        clip-path: none;
-        animation: none;
-        background: none;
-        overflow: hidden;
-    }
-
-    [data-theme='deco'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
-        content: '';
-        position: absolute;
-        inset-block: 1px;
-        inset-inline-start: calc(-1 * var(--dc-chevron));
-        inline-size: calc(100% + var(--dc-chevron));
-        background:
-            linear-gradient(
-                    to bottom left,
-                    transparent calc(50% - 1.5px),
-                    var(--dc-gold) calc(50% - 1.5px) calc(50% + 1px),
-                    transparent calc(50% + 1px)
-                )
-                left top / var(--dc-chevron) 50% repeat-x,
-            linear-gradient(to top left, transparent calc(50% - 1.5px), var(--dc-gold) calc(50% - 1.5px) calc(50% + 1px), transparent calc(50% + 1px))
-                left bottom / var(--dc-chevron) 50% repeat-x;
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='deco'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
-            animation: kp-progressbar-deco-ascent 900ms var(--fx-ease, cubic-bezier(0.4, 0, 0.2, 1)) infinite;
-        }
-    }
-
-    [data-theme='deco'] {
-        --kp-sig-deco-rays: repeating-conic-gradient(from -90deg at 50% 100%, hsl(from var(--primary) h s l / 0.55) 0 4deg, transparent 4deg 15deg);
-    }
-
     [data-theme='deco'] .kp-spinner {
         --kp-sig-dur: 3600ms;
         position: relative;
@@ -44238,28 +44182,6 @@
         background:
             radial-gradient(circle, var(--primary) 0 1.6px, transparent 2px), repeating-conic-gradient(var(--primary) 0 8deg, transparent 8deg 30deg);
         mask: radial-gradient(circle, black 0 2px, transparent 2px 3.5px, black 3.5px);
-    }
-
-    [data-theme='deco'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
-        --kp-sig-dur: 2800ms;
-        position: relative;
-        block-size: 0.9rem;
-        border-radius: 0;
-        background: none;
-        animation: none;
-    }
-
-    [data-theme='deco'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) + .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
-        margin-block-start: 0.6rem;
-    }
-
-    [data-theme='deco'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        border-block: 1px solid hsl(from var(--primary) h s l / 0.5);
-        background: hsl(from var(--primary) h s l / 0.12);
-        clip-path: polygon(0.5rem 0, calc(100% - 0.5rem) 0, 100% 50%, calc(100% - 0.5rem) 100%, 0.5rem 100%, 0 50%);
     }
 
     [data-theme='deco'] .kp-switch {
@@ -44333,109 +44255,6 @@
         clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
     }
 
-    [data-theme='deco'] .kp-toast {
-        --kp-sig-dur: 520ms;
-        position: relative;
-        padding-inline-start: 1.6rem;
-        border: 1px solid var(--primary);
-        border-radius: 0;
-        box-shadow:
-            inset 0 0 0 3px var(--popover),
-            inset 0 0 0 4px hsl(from var(--primary) h s l / 0.5);
-    }
-
-    /* The plain and success toasts as approved; info, warning and destructive keep
-       the register's own plates, which the approved demo never showed and whose
-       words read at 4.5:1 only on them [scope-60]. */
-    [data-theme='deco'] .kp-toast:not(.kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error) {
-        background: var(--popover);
-    }
-
-    [data-theme='deco'] .kp-toast::before {
-        content: '';
-        position: absolute;
-        inset-block-start: calc(50% - 5px);
-        inset-inline-start: 0.6rem;
-        inline-size: 0.5rem;
-        block-size: 10px;
-        background: var(--primary);
-        clip-path: polygon(0 0, 45% 0, 100% 50%, 45% 100%, 0 100%, 55% 50%);
-    }
-
-    [data-theme='deco'] .kp-toast--success {
-        border-color: var(--accent);
-    }
-
-    [data-theme='deco'] .kp-toast--success::before {
-        background: var(--success-foreground, var(--accent));
-    }
-
-    [data-theme='deco'] .kp-dialog {
-        /* Kenny, 2026-10-03: the entrance at ½ of its first speed ("I prefer this at half speed"). */
-        --kp-sig-dur: 1120ms;
-        position: relative;
-        isolation: isolate;
-        border: 4px double var(--primary);
-        border-radius: 0;
-        background: var(--popover);
-        box-shadow:
-            inset 0 0 0 5px var(--popover),
-            inset 0 0 0 6px hsl(from var(--primary) h s l / 0.35);
-        text-align: center;
-    }
-
-    [data-theme='deco'] .kp-dialog::before {
-        content: '';
-        display: block;
-        inline-size: 6rem;
-        block-size: 1.4rem;
-        margin: -0.25rem auto 0.6rem;
-        border-block-end: 1px solid var(--primary);
-        background: radial-gradient(circle at 50% 100%, var(--primary) 0 0.4rem, transparent 0.45rem), var(--kp-sig-deco-rays);
-        mask: radial-gradient(ellipse 50% 100% at 50% 100%, black 55%, transparent);
-    }
-
-    [data-theme='deco'] .kp-dialog__title {
-        /* The title at the package's metrics [scope-87]: Kenny chose the fixed size
-           over the theme's own on 2026-10-03 (research/dialog-title). */
-        font-family: var(--theme-font-display);
-        font-weight: 400;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-    }
-
-    [data-theme='deco'] .kp-dialog__actions {
-        justify-content: center;
-    }
-
-    [data-theme='deco'] .kp-tooltip {
-        --kp-sig-dur: 340ms;
-        margin-block-start: 0.65rem;
-        margin-inline-start: 0.5rem;
-        padding: 0.35rem 0.85rem;
-        border: 1px solid var(--primary);
-        border-radius: 0;
-        background: var(--popover);
-        color: var(--popover-foreground);
-        box-shadow:
-            inset 0 0 0 2px var(--popover),
-            inset 0 0 0 3px hsl(from var(--primary) h s l / 0.4);
-        font-size: 0.72rem;
-        letter-spacing: 0.16em;
-        text-transform: uppercase;
-    }
-
-    [data-theme='deco'] .kp-tooltip::before {
-        content: '';
-        position: absolute;
-        inset-block-end: 100%;
-        inset-inline-start: 0.9rem;
-        inline-size: 14px;
-        block-size: 7px;
-        background: var(--primary);
-        clip-path: polygon(0 100%, 0 67%, 2px 67%, 2px 33%, 4px 33%, 4px 0, 10px 0, 10px 33%, 12px 33%, 12px 67%, 14px 67%, 14px 100%);
-    }
-
     [data-theme='deco'] .kp-wizard__steps {
         gap: 0.6rem 0;
     }
@@ -44487,33 +44306,6 @@
         color: var(--primary);
     }
 
-    [data-theme='deco'] .kp-empty {
-        padding: 1.25rem 1rem 1.4rem;
-        border: 4px double var(--border-strong);
-        border-radius: 0;
-        background: var(--card);
-    }
-
-    [data-theme='deco'] .kp-empty::before {
-        content: '';
-        display: block;
-        inline-size: 7rem;
-        block-size: 2.4rem;
-        margin: 0 auto 0.7rem;
-        border-block-end: 4px double var(--primary);
-        background: radial-gradient(circle at 50% 100%, var(--primary) 0 0.55rem, transparent 0.6rem), var(--kp-sig-deco-rays);
-        mask: radial-gradient(ellipse 50% 100% at 50% 100%, black 60%, transparent);
-    }
-
-    [data-theme='deco'] .kp-empty__title {
-        margin: 0 0 0.3rem;
-        color: var(--primary);
-        font-family: var(--theme-font-display);
-        font-size: 1.15rem;
-        letter-spacing: 0.16em;
-        text-transform: uppercase;
-    }
-
     [data-theme='deco'] .kp-empty__body {
         margin: 0;
     }
@@ -44534,18 +44326,6 @@
             animation: kp-sig-deco-deco-turn var(--kp-sig-dur) linear infinite;
         }
 
-        [data-theme='deco'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before {
-            animation: kp-sig-deco-deco-open var(--kp-sig-dur) var(--fx-ease) infinite;
-        }
-
-        [data-theme='deco'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2)::before {
-            animation-delay: 200ms;
-        }
-
-        [data-theme='deco'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3)::before {
-            animation-delay: 400ms;
-        }
-
         [data-theme='deco'] .kp-switch__input::before {
             transition: transform 280ms var(--fx-ease);
         }
@@ -44557,53 +44337,11 @@
         [data-theme='deco'] .kp-field__check[type='radio']:checked::before {
             animation: kp-sig-deco-deco-grow var(--kp-sig-dur) var(--fx-ease) both;
         }
-
-        [data-theme='deco'] .kp-toast {
-            animation: kp-sig-deco-deco-centre var(--kp-sig-dur) var(--fx-ease) backwards;
-        }
-
-        /* Remade without a clip (Kenny, 2026-10-04: "just remake the dialog on
-           art deco because it's still doing it"): the circle clip it opened
-           with stayed cut at its bottom corners in his Firefox, twice after a
-           fix. Now the sun rises: the dialog unfolds down from its top edge
-           and fades in, and the sunburst over the title fans open from its
-           centre. Nothing is clipped, so nothing can stay cut. */
-        [data-theme='deco'] .kp-dialog {
-            transform-origin: 50% 0;
-            animation: kp-sig-deco-deco-sunrise var(--kp-sig-dur) var(--fx-ease) backwards;
-        }
-
-        [data-theme='deco'] .kp-dialog::before {
-            transform-origin: 50% 100%;
-            animation: kp-sig-deco-deco-fan var(--kp-sig-dur) var(--fx-ease) backwards;
-        }
-
-        [data-theme='deco'] .kp-tooltip {
-            animation: kp-sig-deco-deco-centre var(--kp-sig-dur) var(--fx-ease) backwards;
-        }
     }
 
     @keyframes kp-sig-deco-deco-turn {
         to {
             transform: rotate(360deg);
-        }
-    }
-
-    @keyframes kp-sig-deco-deco-open {
-        0% {
-            opacity: 1;
-            transform: scaleX(0);
-        }
-
-        40%,
-        75% {
-            opacity: 1;
-            transform: none;
-        }
-
-        100% {
-            opacity: 0;
-            transform: none;
         }
     }
 
@@ -44623,70 +44361,1782 @@
         }
     }
 
-    @keyframes kp-sig-deco-deco-centre {
-        from {
-            clip-path: inset(-12px 50%);
-        }
+    /* ══ The grammar, applied 2026-10-09 [themes/deco/CHARACTER.md §1 and the
+       "Applied 2026-10-09" notes in §4; Kenny approved all nineteen picks of
+       research/deco-character on 2026-10-09]. The grand lobby of 1925 after
+       the lights go down: deep blue lacquer with the chevron wallpaper behind
+       every plate, gold as hairlines and small jewels (shaded, never a flat
+       fill), ivory type, symmetry, slow motion on the settle. Every close is
+       its open turned around (js/motion.js plays an arrival's keyframes
+       backwards, `--kp-open: reverse-close`); every motion sits under
+       prefers-reduced-motion: no-preference and the finished pose is the
+       base. ══ */
 
-        to {
-            clip-path: inset(-12px 0);
-        }
+    [data-theme='deco'] {
+        /* Q1 · the curve is the settle; its point reflection is what an
+           eased close would run on. Q4 · one clock: contact 160 ms, an
+           arrival 480 ms (the inlay drawn 320, the lacquer up 160), a leave
+           720 ms, a hover 320 ms, a press 160 ms, a loop 2400 ms. */
+        --kp-sig-deco-settle: cubic-bezier(0.22, 1, 0.36, 1);
+        --kp-sig-deco-settle-out: cubic-bezier(0.64, 0, 0.78, 0);
+        --kp-sig-deco-contact: 160ms;
+        --kp-sig-deco-draw-t: 320ms;
+        --kp-sig-deco-up-t: 160ms;
+        --kp-sig-deco-arrive: 480ms;
+        --kp-sig-deco-leave: 720ms;
+        --kp-sig-deco-hover-t: 320ms;
+        --kp-sig-deco-press-t: 160ms;
+        --kp-sig-deco-loop: 2400ms;
+        /* Q5, Q7 · the lacquer: the card's blue-black turned a few degrees
+           toward blue, the chevron wallpaper in gold at 8 %. */
+        --kp-sig-deco-lac: hsl(from var(--card) calc(h + 14) calc(s + 14) l);
+        --kp-sig-deco-wall: 0.08;
+        /* Gold that reads as gold: one hue, four lights. The highlight (a
+           pale champagne), the lit gold, the gold and its shade (a bronze). */
+        --kp-sig-deco-gold-hi: hsl(from var(--primary) calc(h + 6) calc(s + 16) calc(l + 30));
+        --kp-sig-deco-gold-lt: hsl(from var(--primary) calc(h + 3) calc(s + 8) calc(l + 14));
+        --kp-sig-deco-gold-lo: hsl(from var(--primary) calc(h - 8) calc(s + 4) calc(l - 20));
+        --kp-sig-deco-gold-dk: hsl(from var(--primary) calc(h - 12) calc(s - 6) calc(l - 33));
+        --kp-sig-deco-champagne: hsl(from var(--primary) calc(h + 4) calc(s + 10) calc(l + 27));
+        --kp-sig-deco-shadow: hsl(from var(--background) h s calc(l - 6));
+        --kp-sig-deco-emerald: var(--chart-2);
+        --kp-sig-deco-em-hi: hsl(from var(--accent) calc(h - 4) calc(s + 6) calc(l + 26));
+        --kp-sig-deco-em-lo: hsl(from var(--accent) h s calc(l - 14));
+        /* Along a horizontal hairline, down a vertical one. */
+        --kp-sig-deco-leaf-x: linear-gradient(
+            90deg,
+            var(--kp-sig-deco-gold-lo),
+            var(--primary) 14%,
+            var(--kp-sig-deco-gold-hi) 30%,
+            var(--kp-sig-deco-gold-lt) 42%,
+            var(--primary) 58%,
+            var(--kp-sig-deco-gold-lo) 76%,
+            var(--primary) 90%,
+            var(--kp-sig-deco-gold-lt)
+        );
+        --kp-sig-deco-leaf-y: linear-gradient(
+            180deg,
+            var(--kp-sig-deco-gold-hi),
+            var(--kp-sig-deco-gold-lt) 22%,
+            var(--primary) 48%,
+            var(--kp-sig-deco-gold-lo) 78%,
+            var(--primary)
+        );
+        --kp-sig-deco-arc: var(--kp-sig-deco-gold-lt);
+        /* The dim hairline of a track and the lit share along it. */
+        --kp-sig-deco-dim: linear-gradient(
+            90deg,
+            hsl(from var(--kp-sig-deco-gold-lo) h s l / 0.7),
+            hsl(from var(--kp-sig-deco-gold-lt) h s l / 0.62) 30%,
+            hsl(from var(--primary) h s l / 0.5) 62%,
+            hsl(from var(--kp-sig-deco-gold-lo) h s l / 0.7)
+        );
+        --kp-sig-deco-share: linear-gradient(
+            90deg,
+            var(--kp-sig-deco-gold-lo),
+            var(--primary) 34%,
+            var(--kp-sig-deco-gold-lt) 76%,
+            var(--kp-sig-deco-gold-hi)
+        );
+        /* A lozenge jewel's facets lit from the top left: the same four
+           facets on a square, cut to a lozenge by the part that wears them. */
+        --kp-sig-deco-gem: conic-gradient(
+            from -45deg,
+            var(--kp-sig-deco-gold-lt) 0 90deg,
+            var(--kp-sig-deco-gold-lo) 0 180deg,
+            var(--primary) 0 270deg,
+            var(--kp-sig-deco-gold-hi) 0
+        );
+        --kp-sig-deco-gem-em: conic-gradient(
+            from -45deg,
+            var(--kp-sig-deco-emerald) 0 90deg,
+            var(--kp-sig-deco-em-lo) 0 180deg,
+            var(--accent) 0 270deg,
+            var(--kp-sig-deco-em-hi) 0
+        );
+        /* The grain of gold leaf: a fine noise used as a mask. */
+        --kp-sig-deco-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.95 0 0 0 0.25'/%3E%3C/filter%3E%3Crect width='96' height='96' filter='url(%23n)'/%3E%3C/svg%3E");
+        /* Satin and velvet in the lobby's blue, for the great fan. */
+        --kp-sig-deco-velvet: hsl(from var(--card) calc(h + 16) calc(s + 22) calc(l + 1));
+        --kp-sig-deco-velvet-hi: hsl(from var(--card) calc(h + 12) calc(s + 18) calc(l + 14));
+        --kp-sig-deco-velvet-lo: hsl(from var(--card) calc(h + 18) calc(s + 26) calc(l - 7));
+        /* Q18 · Poiret capitals for titles, Josefin for the rest. */
+        --kp-sig-deco-title-track: 0.16em;
+        /* The wipe js/motion.js reads when a theme's dialog arrives: the
+           two numbers it measures (a close is two thirds of the dialog's own
+           time; the dialog that is open runs its 480 ms, the unopened probe
+           runs 720). */
+        --kp-close-max: 720ms;
+        --kp-size-max: 480ms;
     }
 
-    @keyframes kp-sig-deco-deco-sunrise {
-        from {
-            opacity: 0;
-            transform: scaleY(0.82);
-        }
-
-        40% {
-            opacity: 1;
-        }
+    /* ── Q6, Q7, Q19 · the plate: lacquer, the wallpaper behind it, the
+       inlay on it, its four corners coved. Every plate (a card, a key figure,
+       an alert, an empty state, a tile, a dialog, a menu, a popover, a toast,
+       a tour card, a drawer and the panels of the pickers) is blue lacquer
+       with the chevron wallpaper in gold at 8 % and a faint gold edge; each
+       corner is cut as a concave quarter circle (a cove, 10 px) and two
+       parallel gold hairlines follow the cove and the straight edges, 3 px
+       apart, with a tiny gold bead in each hollow. The cove is a mask on the
+       plate itself (the whole box and 24 px round it kept, the four quarter
+       circles taken out), so a focus ring or a notch outside its box is
+       never cut. The hairlines are the plate's ::after, drawn round from the
+       middle of the top edge both ways as far as --kp-sig-deco-draw; the
+       lacquer, wallpaper and words come up with --kp-sig-deco-up (both rest
+       at 1, the finished pose, and an arrival turns them: "Opening"). ── */
+    [data-theme='deco']
+        :where(
+            .kp-card,
+            .kp-kpi,
+            .kp-alert,
+            .kp-empty,
+            .kp-grid__tile,
+            .kp-dialog,
+            .kp-popover:not(.kp-tooltip),
+            .kp-menu-button > .kp-menu,
+            .kp-toast,
+            .kp-tour,
+            dialog.kp-drawer,
+            .kp-datepicker__panel,
+            .kp-combobox__list,
+            .kp-palette,
+            .kp-theme-menu__list,
+            .kp-confirm,
+            .kp-tooltip
+        ) {
+        --kp-sig-deco-r: 10px;
+        --kp-sig-deco-n: 3px;
+        --kp-sig-deco-c: calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 1px);
+        --kp-sig-deco-bead: calc(var(--kp-sig-deco-r) * 0.26);
+        isolation: isolate;
+        border: 1px solid hsl(from var(--primary) h s l / calc(0.3 * var(--kp-sig-deco-up)));
+        border-radius: 0;
+        background-color: hsl(from var(--kp-sig-deco-lac) h s l / var(--kp-sig-deco-up));
+        background-image:
+            repeating-linear-gradient(
+                135deg,
+                hsl(from var(--primary) h s l / calc(var(--kp-sig-deco-wall) * var(--kp-sig-deco-up))) 0 1px,
+                transparent 1px 12px
+            ),
+            repeating-linear-gradient(
+                45deg,
+                hsl(from var(--primary) h s l / calc(var(--kp-sig-deco-wall) * var(--kp-sig-deco-up))) 0 1px,
+                transparent 1px 12px
+            );
+        background-size: 24px 24px;
+        box-shadow: none;
+        color: var(--foreground);
+        mask-image:
+            linear-gradient(var(--foreground) 0 0),
+            radial-gradient(circle at 0 0, var(--foreground) var(--kp-sig-deco-r), transparent calc(var(--kp-sig-deco-r) + 0.8px)),
+            radial-gradient(circle at 100% 0, var(--foreground) var(--kp-sig-deco-r), transparent calc(var(--kp-sig-deco-r) + 0.8px)),
+            radial-gradient(circle at 0 100%, var(--foreground) var(--kp-sig-deco-r), transparent calc(var(--kp-sig-deco-r) + 0.8px)),
+            radial-gradient(circle at 100% 100%, var(--foreground) var(--kp-sig-deco-r), transparent calc(var(--kp-sig-deco-r) + 0.8px));
+        mask-size:
+            calc(100% + 48px) calc(100% + 48px),
+            calc(var(--kp-sig-deco-r) + 1px) calc(var(--kp-sig-deco-r) + 1px),
+            calc(var(--kp-sig-deco-r) + 1px) calc(var(--kp-sig-deco-r) + 1px),
+            calc(var(--kp-sig-deco-r) + 1px) calc(var(--kp-sig-deco-r) + 1px),
+            calc(var(--kp-sig-deco-r) + 1px) calc(var(--kp-sig-deco-r) + 1px);
+        mask-position:
+            -24px -24px,
+            0 0,
+            100% 0,
+            0 100%,
+            100% 100%;
+        mask-repeat: no-repeat;
+        mask-composite: subtract, add, add, add, add;
+        mask-clip: no-clip;
     }
 
-    @keyframes kp-sig-deco-deco-fan {
-        from {
-            opacity: 0;
-            transform: scale(0.15, 0.4);
-        }
-
-        35% {
-            opacity: 0;
-            transform: scale(0.15, 0.4);
-        }
+    /* The static plates are the box their ::after and a stretched link lie
+       over. The overlays are positioned already (and must stay so). */
+    [data-theme='deco'] :where(.kp-card, .kp-kpi, .kp-alert, .kp-empty, .kp-grid__tile, .kp-toast) {
+        position: relative;
     }
 
-    @keyframes kp-progressbar-deco-ascent {
-        from {
-            transform: translateX(0);
-        }
-        to {
-            transform: translateX(var(--dc-chevron));
-        }
+    /* A small part is a plate in little: the cove 5 px, the hairlines 2 px
+       apart (Q6: a button, a tag and the tooltip take half the size). */
+    [data-theme='deco'] :where(.kp-tooltip, .kp-button, .kp-icon-button, .kp-tag, .kp-badge:not([data-kp-dot])) {
+        --kp-sig-deco-r: 5px;
+        --kp-sig-deco-n: 2px;
+        --kp-sig-deco-bead: 1.5px;
     }
 
-    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
-       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
-       the exit, and in a row of leaves starts the next one halfway through this one. */
+    [data-theme='deco'] :where(.kp-button, .kp-icon-button, .kp-tag, .kp-badge:not([data-kp-dot])) {
+        --kp-sig-deco-c: calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 1px);
+        mask-image:
+            linear-gradient(var(--foreground) 0 0),
+            radial-gradient(circle at 0 0, var(--foreground) var(--kp-sig-deco-r), transparent calc(var(--kp-sig-deco-r) + 0.8px)),
+            radial-gradient(circle at 100% 0, var(--foreground) var(--kp-sig-deco-r), transparent calc(var(--kp-sig-deco-r) + 0.8px)),
+            radial-gradient(circle at 0 100%, var(--foreground) var(--kp-sig-deco-r), transparent calc(var(--kp-sig-deco-r) + 0.8px)),
+            radial-gradient(circle at 100% 100%, var(--foreground) var(--kp-sig-deco-r), transparent calc(var(--kp-sig-deco-r) + 0.8px));
+        mask-size:
+            calc(100% + 48px) calc(100% + 48px),
+            calc(var(--kp-sig-deco-r) + 1px) calc(var(--kp-sig-deco-r) + 1px),
+            calc(var(--kp-sig-deco-r) + 1px) calc(var(--kp-sig-deco-r) + 1px),
+            calc(var(--kp-sig-deco-r) + 1px) calc(var(--kp-sig-deco-r) + 1px),
+            calc(var(--kp-sig-deco-r) + 1px) calc(var(--kp-sig-deco-r) + 1px);
+        mask-position:
+            -24px -24px,
+            0 0,
+            100% 0,
+            0 100%,
+            100% 100%;
+        mask-repeat: no-repeat;
+        mask-composite: subtract, add, add, add, add;
+        mask-clip: no-clip;
+        border-radius: 0;
+    }
+
+    /* The hairlines: the outer edge as strips between the coves, the inner
+       line 3 px in, an arc round each cove on both, a bead in each hollow.
+       The gold runs along a line as leaf does: a highlight, the gold, its
+       shade. Twenty layers (kept in --kp-sig-deco-hair, with their places and
+       sizes, so a plate's ::after and a button itself draw the same): on the
+       plate's ::after, which the arrival draws round with its conic mask; on
+       a button, its own background, because its ::after is the seal's ring. */
+    [data-theme='deco']
+        :where(
+            .kp-card,
+            .kp-kpi,
+            .kp-alert,
+            .kp-empty,
+            .kp-grid__tile,
+            .kp-dialog,
+            .kp-popover:not(.kp-tooltip),
+            .kp-menu-button > .kp-menu,
+            .kp-toast,
+            .kp-tour,
+            dialog.kp-drawer,
+            .kp-datepicker__panel,
+            .kp-combobox__list,
+            .kp-palette,
+            .kp-theme-menu__list,
+            .kp-confirm,
+            .kp-tooltip,
+            .kp-button,
+            .kp-icon-button
+        ) {
+        --kp-sig-deco-hair:
+            var(--kp-sig-deco-leaf-x), var(--kp-sig-deco-leaf-x), var(--kp-sig-deco-leaf-y), var(--kp-sig-deco-leaf-y), var(--kp-sig-deco-leaf-x),
+            var(--kp-sig-deco-leaf-x), var(--kp-sig-deco-leaf-y), var(--kp-sig-deco-leaf-y),
+            radial-gradient(
+                circle at 0 0,
+                transparent calc(var(--kp-sig-deco-r) + 0.2px),
+                var(--kp-sig-deco-arc) calc(var(--kp-sig-deco-r) + 0.6px) calc(var(--kp-sig-deco-r) + 1.4px),
+                transparent calc(var(--kp-sig-deco-r) + 1.8px)
+            ),
+            radial-gradient(
+                circle at 100% 0,
+                transparent calc(var(--kp-sig-deco-r) + 0.2px),
+                var(--kp-sig-deco-arc) calc(var(--kp-sig-deco-r) + 0.6px) calc(var(--kp-sig-deco-r) + 1.4px),
+                transparent calc(var(--kp-sig-deco-r) + 1.8px)
+            ),
+            radial-gradient(
+                circle at 0 100%,
+                transparent calc(var(--kp-sig-deco-r) + 0.2px),
+                var(--kp-sig-deco-arc) calc(var(--kp-sig-deco-r) + 0.6px) calc(var(--kp-sig-deco-r) + 1.4px),
+                transparent calc(var(--kp-sig-deco-r) + 1.8px)
+            ),
+            radial-gradient(
+                circle at 100% 100%,
+                transparent calc(var(--kp-sig-deco-r) + 0.2px),
+                var(--kp-sig-deco-arc) calc(var(--kp-sig-deco-r) + 0.6px) calc(var(--kp-sig-deco-r) + 1.4px),
+                transparent calc(var(--kp-sig-deco-r) + 1.8px)
+            ),
+            radial-gradient(
+                circle at calc(-1 * var(--kp-sig-deco-n)) calc(-1 * var(--kp-sig-deco-n)),
+                transparent calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) - 0.3px),
+                var(--kp-sig-deco-arc) calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 0.2px)
+                    calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 0.8px),
+                transparent calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 1.3px)
+            ),
+            radial-gradient(
+                circle at calc(100% + var(--kp-sig-deco-n)) calc(-1 * var(--kp-sig-deco-n)),
+                transparent calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) - 0.3px),
+                var(--kp-sig-deco-arc) calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 0.2px)
+                    calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 0.8px),
+                transparent calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 1.3px)
+            ),
+            radial-gradient(
+                circle at calc(-1 * var(--kp-sig-deco-n)) calc(100% + var(--kp-sig-deco-n)),
+                transparent calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) - 0.3px),
+                var(--kp-sig-deco-arc) calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 0.2px)
+                    calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 0.8px),
+                transparent calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 1.3px)
+            ),
+            radial-gradient(
+                circle at calc(100% + var(--kp-sig-deco-n)) calc(100% + var(--kp-sig-deco-n)),
+                transparent calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) - 0.3px),
+                var(--kp-sig-deco-arc) calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 0.2px)
+                    calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 0.8px),
+                transparent calc(var(--kp-sig-deco-r) + var(--kp-sig-deco-n) + 1.3px)
+            ),
+            radial-gradient(
+                circle at 50% 50%,
+                var(--kp-sig-deco-gold-lt) 0 0.4px,
+                var(--primary) 0.8px,
+                var(--kp-sig-deco-gold-lo) 1.45px,
+                transparent 1.7px
+            ),
+            radial-gradient(
+                circle at 50% 50%,
+                var(--kp-sig-deco-gold-lt) 0 0.4px,
+                var(--primary) 0.8px,
+                var(--kp-sig-deco-gold-lo) 1.45px,
+                transparent 1.7px
+            ),
+            radial-gradient(
+                circle at 50% 50%,
+                var(--kp-sig-deco-gold-lt) 0 0.4px,
+                var(--primary) 0.8px,
+                var(--kp-sig-deco-gold-lo) 1.45px,
+                transparent 1.7px
+            ),
+            radial-gradient(
+                circle at 50% 50%,
+                var(--kp-sig-deco-gold-lt) 0 0.4px,
+                var(--primary) 0.8px,
+                var(--kp-sig-deco-gold-lo) 1.45px,
+                transparent 1.7px
+            );
+        --kp-sig-deco-hair-pos:
+            left var(--kp-sig-deco-r) top 0, left var(--kp-sig-deco-r) bottom 0, left 0 top var(--kp-sig-deco-r), right 0 top var(--kp-sig-deco-r),
+            left var(--kp-sig-deco-c) top var(--kp-sig-deco-n), left var(--kp-sig-deco-c) bottom var(--kp-sig-deco-n),
+            left var(--kp-sig-deco-n) top var(--kp-sig-deco-c), right var(--kp-sig-deco-n) top var(--kp-sig-deco-c), 0 0, 100% 0, 0 100%, 100% 100%,
+            left var(--kp-sig-deco-n) top var(--kp-sig-deco-n), right var(--kp-sig-deco-n) top var(--kp-sig-deco-n),
+            left var(--kp-sig-deco-n) bottom var(--kp-sig-deco-n), right var(--kp-sig-deco-n) bottom var(--kp-sig-deco-n),
+            left calc(var(--kp-sig-deco-bead) - 1.7px) top calc(var(--kp-sig-deco-bead) - 1.7px),
+            right calc(var(--kp-sig-deco-bead) - 1.7px) top calc(var(--kp-sig-deco-bead) - 1.7px),
+            left calc(var(--kp-sig-deco-bead) - 1.7px) bottom calc(var(--kp-sig-deco-bead) - 1.7px),
+            right calc(var(--kp-sig-deco-bead) - 1.7px) bottom calc(var(--kp-sig-deco-bead) - 1.7px);
+        --kp-sig-deco-hair-size:
+            calc(100% - 2 * var(--kp-sig-deco-r)) 1px, calc(100% - 2 * var(--kp-sig-deco-r)) 1px, 1px calc(100% - 2 * var(--kp-sig-deco-r)),
+            1px calc(100% - 2 * var(--kp-sig-deco-r)), calc(100% - 2 * var(--kp-sig-deco-c)) 1px, calc(100% - 2 * var(--kp-sig-deco-c)) 1px,
+            1px calc(100% - 2 * var(--kp-sig-deco-c)), 1px calc(100% - 2 * var(--kp-sig-deco-c)),
+            calc(var(--kp-sig-deco-r) + 2px) calc(var(--kp-sig-deco-r) + 2px), calc(var(--kp-sig-deco-r) + 2px) calc(var(--kp-sig-deco-r) + 2px),
+            calc(var(--kp-sig-deco-r) + 2px) calc(var(--kp-sig-deco-r) + 2px), calc(var(--kp-sig-deco-r) + 2px) calc(var(--kp-sig-deco-r) + 2px),
+            calc(var(--kp-sig-deco-c) - var(--kp-sig-deco-n) + 1px) calc(var(--kp-sig-deco-c) - var(--kp-sig-deco-n) + 1px),
+            calc(var(--kp-sig-deco-c) - var(--kp-sig-deco-n) + 1px) calc(var(--kp-sig-deco-c) - var(--kp-sig-deco-n) + 1px),
+            calc(var(--kp-sig-deco-c) - var(--kp-sig-deco-n) + 1px) calc(var(--kp-sig-deco-c) - var(--kp-sig-deco-n) + 1px),
+            calc(var(--kp-sig-deco-c) - var(--kp-sig-deco-n) + 1px) calc(var(--kp-sig-deco-c) - var(--kp-sig-deco-n) + 1px), 3.4px 3.4px, 3.4px 3.4px,
+            3.4px 3.4px, 3.4px 3.4px;
+    }
+
+    [data-theme='deco']
+        :where(
+            .kp-card,
+            .kp-kpi,
+            .kp-alert,
+            .kp-empty,
+            .kp-grid__tile,
+            .kp-dialog,
+            .kp-popover:not(.kp-tooltip),
+            .kp-menu-button > .kp-menu,
+            .kp-toast,
+            .kp-tour,
+            dialog.kp-drawer,
+            .kp-datepicker__panel,
+            .kp-combobox__list,
+            .kp-palette,
+            .kp-theme-menu__list,
+            .kp-confirm,
+            .kp-tooltip
+        )::after {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        z-index: 2;
+        pointer-events: none;
+        background-image: var(--kp-sig-deco-hair);
+        background-repeat: no-repeat;
+        background-position: var(--kp-sig-deco-hair-pos);
+        background-size: var(--kp-sig-deco-hair-size);
+        mask-image: conic-gradient(
+            from calc(var(--kp-sig-deco-draw) * -180deg) at var(--kp-sig-deco-at, 50% 50%),
+            var(--foreground) 0 calc(var(--kp-sig-deco-draw) * 360deg),
+            transparent 0
+        );
+    }
+
+    /* A plate's words come up with the lacquer, in an overlay that arrives (a
+       disabled entry keeps the dimming of its own). */
     @media (prefers-reduced-motion: no-preference) {
-        /* ── deco: it closes like a fan, folding to its centre ── */
-        /* Opening is closing turned around (Kenny's pick on research/open-reverse,
-           2026-10-05): js/motion.js opens the dialog as its close played backwards,
-           in the close's time, and lets what arrives play this leave backwards. */
+        [data-theme='deco']
+            :is(.kp-dialog, .kp-popover, .kp-menu-button > .kp-menu, .kp-toast, .kp-tour, dialog.kp-drawer, .kp-tooltip)
+            > :not(:disabled, [aria-disabled='true'], [hidden]) {
+            opacity: var(--kp-sig-deco-up);
+        }
+    }
+
+    /* The plates inside a plate: a menu in a popover, a card in a dialog are
+       the lacquer of the plate they stand on, not a second one. */
+    [data-theme='deco'] :is(.kp-popover, .kp-dialog) .kp-menu {
+        border: 0;
+        background: none;
+        mask-image: none;
+    }
+
+    [data-theme='deco'] :is(.kp-popover, .kp-dialog) .kp-menu::after {
+        content: none;
+    }
+
+    /* Tone toasts and alerts. A toast of meaning keeps its plate and its ink
+       (the pairs the contrast gate holds), coved like the rest, its hairlines
+       in its own ink; every alert is lacquer, its tone said in its word. */
+    [data-theme='deco'] :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error) {
+        --kp-sig-deco-arc: currentColor;
+        --kp-sig-deco-leaf-x: linear-gradient(currentColor, currentColor);
+        --kp-sig-deco-leaf-y: linear-gradient(currentColor, currentColor);
+        background-image: none;
+    }
+
+    [data-theme='deco'] .kp-toast--success {
+        background-color: var(--success);
+    }
+
+    [data-theme='deco'] .kp-toast--info {
+        background-color: var(--info);
+    }
+
+    [data-theme='deco'] .kp-toast--warning {
+        background-color: var(--warning);
+    }
+
+    [data-theme='deco'] :is(.kp-toast--destructive, .kp-toast--error) {
+        background-color: var(--destructive);
+    }
+
+    [data-theme='deco'] :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error) {
+        border-color: transparent;
+    }
+
+    /* The toast's own mark and padding: a lozenge in gold, set in the cove's
+       clear. */
+    [data-theme='deco'] .kp-toast {
+        padding-inline-start: 1.6rem;
+    }
+
+    [data-theme='deco'] .kp-toast::before {
+        z-index: 3;
+        background: var(--kp-sig-deco-gem);
+        clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        inset-block-start: calc(50% - 0.25rem);
+    }
+
+    [data-theme='deco'] .kp-toast--success::before {
+        background: var(--kp-sig-deco-gem-em);
+    }
+
+    [data-theme='deco'] :is(.kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error)::before {
+        background: currentColor;
+    }
+
+    /* The alert: lacquer, ivory words, its label in the colour of what it
+       says (Q8: a warning is the figure in ruby over a gold rule; emerald
+       marks what is done). */
+    [data-theme='deco'] .kp-alert {
+        color: var(--foreground);
+        padding: 0.85rem 1.1rem;
+    }
+
+    [data-theme='deco'] .kp-alert__label {
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='deco'] .kp-alert--success .kp-alert__label {
+        color: var(--kp-sig-deco-emerald);
+    }
+
+    [data-theme='deco'] .kp-alert--info .kp-alert__label {
+        color: var(--kp-sig-deco-champagne);
+    }
+
+    [data-theme='deco'] :is(.kp-alert--warning, .kp-alert--destructive) .kp-alert__label {
+        color: var(--destructive);
+        text-decoration: underline 1px var(--primary);
+        text-underline-offset: 0.3em;
+    }
+
+    /* The empty state: no crest (Q19), its title in capitals. */
+    [data-theme='deco'] .kp-empty {
+        display: grid;
+        justify-items: center;
+        gap: 0.3rem;
+        padding: 1.2rem 1.1rem;
+        text-align: center;
+    }
+
+    [data-theme='deco'] .kp-empty::before {
+        content: none;
+    }
+
+    [data-theme='deco'] .kp-empty__title {
+        font-size: 1.05rem;
+        letter-spacing: var(--kp-sig-deco-title-track);
+    }
+
+    /* The dialog: lacquer, the double rule under its title (the dialog is
+       what matters), no crest. */
+    [data-theme='deco'] .kp-dialog {
+        padding: 1.25rem 1.5rem 1.4rem;
+        text-align: center;
+    }
+
+    [data-theme='deco'] .kp-dialog__actions {
+        justify-content: center;
+    }
+
+    [data-theme='deco'] .kp-dialog::before {
+        content: none;
+    }
+
+    [data-theme='deco'] .kp-dialog__title {
+        border-block-end: 3px double var(--primary);
+        letter-spacing: var(--kp-sig-deco-title-track);
+    }
+
+    /* The tooltip: a small plate, a faceted lozenge set on its inlay under
+       what it names (the inlay starts there). */
+    [data-theme='deco'] .kp-tooltip {
+        --kp-sig-deco-at: calc(1.1rem + 3.5px) 50%;
+        margin-block-start: 0.65rem;
+        padding: 0.45rem 1.1rem;
+        border-color: hsl(from var(--primary) h s l / calc(0.3 * var(--kp-sig-deco-up)));
+        font-size: 0.72rem;
+        letter-spacing: 0.14em;
+    }
+
+    [data-theme='deco'] .kp-tooltip::before {
+        content: '';
+        position: absolute;
+        inset-block-start: calc(var(--kp-sig-deco-n) - 1px - 3.5px);
+        inset-inline-start: 1.1rem;
+        z-index: 3;
+        inline-size: 7px;
+        block-size: 7px;
+        background: var(--kp-sig-deco-gem);
+        clip-path: none;
+        rotate: 45deg;
+        filter: drop-shadow(0 0 2px hsl(from var(--primary) h s l / 0.5));
+        opacity: min(var(--kp-sig-deco-draw) * 8, 1);
+    }
+
+    /* The menu: lacquer, entries in capitals. */
+    [data-theme='deco'] .kp-menu-button > .kp-menu {
+        padding: 0.4rem;
+    }
+
+    [data-theme='deco'] .kp-menu__item {
+        letter-spacing: 0.06em;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+    }
+
+    /* The card, the key figure, the tile: lacquer under Poiret titles and
+       Josefin figures (Q18); the figure is tabular and 600. */
+    [data-theme='deco'] .kp-card {
+        padding: 0.95rem 1.1rem;
+    }
+
+    [data-theme='deco'] :is(.kp-card__title, .kp-dialog__title, .kp-empty__title, .kp-page-header__title) {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+
+    [data-theme='deco'] :is(.kp-card__title, .kp-page-header__title) {
+        letter-spacing: var(--kp-sig-deco-title-track);
+    }
+
+    [data-theme='deco'] .kp-kpi {
+        padding: 0.85rem 1.1rem;
+    }
+
+    [data-theme='deco'] .kp-kpi__label {
+        letter-spacing: 0.12em;
+    }
+
+    [data-theme='deco'] :is(.kp-kpi__value, .kp-numeric, .kp-state-word) {
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* The change on a tile: ivory words, its arrow in the jewel of its tone
+       (emerald for good, ruby for bad); no plate under it. */
+    [data-theme='deco'] .kp-kpi__delta[data-kp-tone] {
+        padding-inline: 0;
+        background: none;
+        color: var(--foreground);
+    }
+
+    [data-theme='deco'] .kp-kpi__delta[data-kp-tone='good']::before {
+        color: var(--kp-sig-deco-emerald);
+    }
+
+    [data-theme='deco'] .kp-kpi__delta[data-kp-tone='bad']::before {
+        color: var(--destructive);
+    }
+
+    /* Q8 · a warning: the figure itself in ruby with a thin gold rule under
+       it; the plate stays lacquer, its inlay gold. A tone on a key figure
+       (and so on the trend tile) is the figure, the plate stays; the
+       package's start edge, its frame and its plate under the figure are
+       retired. */
+    [data-theme='deco'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) {
+        border-color: hsl(from var(--primary) h s l / 0.3);
+        box-shadow: none;
+    }
+
+    [data-theme='deco'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-kpi__value {
+        padding-inline: 0;
+        background: none;
+        color: var(--destructive);
+        text-decoration: underline 1px var(--primary);
+        text-underline-offset: 0.3em;
+    }
+
+    [data-theme='deco'] .kp-menu__item--destructive {
+        color: var(--destructive);
+        text-decoration: underline 1px var(--primary);
+        text-underline-offset: 0.3em;
+    }
+
+    /* Q19 · the lozenge as a point (a bullet), a jewel (a done day) and the
+       divider's centre; the double rule under what matters. */
+    [data-theme='deco'] [data-kp-divider]::before {
+        background: var(--kp-sig-deco-gem);
+    }
+
+    [data-theme='deco'] .kp-page-header {
+        padding-block-end: 0.6rem;
+        border-block-end: 3px double var(--primary);
+    }
+
+    /* ── Q2, Q3 · opening: the gold inlay draws itself, the lacquer comes up.
+       A dialog, a menu, a popover, a tooltip, a toast, a drawer and a tour card
+       come in as ONE keyframe set on the settle: the inlay drawn from the
+       middle of its top edge round both ways until it meets at the bottom
+       (320 ms; the tooltip's starts at its lozenge), then the lacquer, the
+       wallpaper and the words come up behind it (160 ms). Each close is that
+       set played backwards, in the same time, by js/motion.js
+       (`--kp-open: reverse-close`): the lacquer sinks, the inlay undraws to
+       its start. The keyframes carry their easing per segment and name none
+       of their own, so the reversed play is the mirror frame for frame.
+       The dialog that is not yet open runs one and a half times as long, so
+       the close js/motion.js reads off it (two thirds) is the opening's own
+       480 ms. ── */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-dialog {
+            --kp-sig-deco-dur: calc(var(--kp-sig-deco-arrive) * 1.5);
+        }
+
+        [data-theme='deco'] .kp-dialog[open] {
+            --kp-sig-deco-dur: var(--kp-sig-deco-arrive);
+        }
+
+        [data-theme='deco']
+            :is(
+                .kp-dialog,
+                .kp-menu-button > .kp-menu,
+                .kp-popover[popover],
+                .kp-toast,
+                .kp-tooltip,
+                dialog.kp-drawer[open],
+                .kp-tour[open],
+                .kp-datepicker__panel,
+                .kp-combobox__list,
+                .kp-palette
+            ) {
+            animation: kp-sig-deco-arrive var(--kp-sig-deco-dur, var(--kp-sig-deco-arrive)) linear backwards;
+        }
+    }
+
+    @keyframes kp-sig-deco-arrive {
+        0% {
+            --kp-sig-deco-draw: 0;
+            --kp-sig-deco-up: 0;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        66.667% {
+            --kp-sig-deco-draw: 1;
+            --kp-sig-deco-up: 0;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        100% {
+            --kp-sig-deco-draw: 1;
+            --kp-sig-deco-up: 1;
+        }
+    }
+
+    /* ── Q13 · leaving and arriving: a great fan. A fan of gold ribs and panels
+       of deep-blue satin with a gold-braid edge opens over the part, hides it,
+       and folds away rib by rib, taking the satin with it; a part arrives as
+       that played backwards (js/motion.js turns it round, the hidden part
+       showing again as the fan folds off it). The fan is the part's own
+       ::before (the satin field, the guard sticks, the pivot) and ::after (the
+       leaf with its braid), standing over the whole box from a pivot at the
+       middle of its foot, between two guard sticks (--kp-sig-deco-a1 and -a2,
+       from the left along the foot). Closed it is nothing: the part is
+       `visibility: hidden` from the frame the fan covers it, the fan's own
+       parts go with --kp-sig-deco-v in its last frame, and without the
+       attribute neither pseudo-element exists, so nothing of the dressing is
+       drawn once a part has arrived or after it has left. ── */
+    @media (prefers-reduced-motion: no-preference) {
         [data-theme='deco'] {
             --kp-open: reverse-close;
         }
 
         [data-theme='deco'] [data-kp-leaving] {
-            animation: kp-sig-deco-leave 480ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            animation: kp-sig-deco-fan var(--kp-sig-deco-leave) linear forwards;
         }
 
-        @keyframes kp-sig-deco-leave {
-            to {
-                opacity: 0;
-                transform: scaleX(0);
-            }
+        [data-theme='deco'] [data-kp-leaving]:not(.kp-card, .kp-kpi, .kp-alert, .kp-empty, .kp-grid__tile) {
+            animation-name: kp-sig-deco-wipe;
+            animation-duration: calc(var(--kp-sig-deco-leave) / 2);
+            mask-image: conic-gradient(
+                from -90deg at 50% 100%,
+                transparent calc(var(--kp-sig-deco-a1) - 1deg),
+                var(--foreground) calc(var(--kp-sig-deco-a1) - 1deg) calc(var(--kp-sig-deco-a2) + 1deg),
+                transparent calc(var(--kp-sig-deco-a2) + 1deg)
+            );
         }
+
+        [data-theme='deco'] :is(.kp-toast, .kp-dialog, .kp-popover, .kp-menu-button > .kp-menu)[data-kp-leaving] {
+            animation: none;
+        }
+
+        [data-theme='deco'] :is(.kp-card, .kp-kpi, .kp-alert, .kp-empty, .kp-grid__tile):is([data-kp-leaving], [data-kp-arriving])::before,
+        [data-theme='deco'] :is(.kp-card, .kp-kpi, .kp-alert, .kp-empty, .kp-grid__tile):is([data-kp-leaving], [data-kp-arriving])::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            z-index: 5;
+            visibility: visible;
+            pointer-events: none;
+            opacity: var(--kp-sig-deco-v);
+            background-repeat: no-repeat;
+            mask-composite: intersect;
+        }
+
+        /* The satin field: pleats of the lobby's blue, 12 degrees apart, a
+           shade and a sheen in each, lace dots of gold along them; the
+           guard sticks at both edges of the fan, gold lit from the top; the
+           pivot's two upper facets. */
+        [data-theme='deco'] :is(.kp-card, .kp-kpi, .kp-alert, .kp-empty, .kp-grid__tile):is([data-kp-leaving], [data-kp-arriving])::before {
+            background-image:
+                linear-gradient(to bottom right, transparent 50%, var(--kp-sig-deco-gold-lt) 50%),
+                linear-gradient(to bottom left, transparent 50%, var(--primary) 50%),
+                conic-gradient(
+                    from -90deg at 50% 100%,
+                    transparent calc(var(--kp-sig-deco-a1) - 1deg),
+                    var(--kp-sig-deco-gold-hi) calc(var(--kp-sig-deco-a1) - 1deg),
+                    var(--primary) calc(var(--kp-sig-deco-a1) + 0.4deg),
+                    var(--kp-sig-deco-gold-lo) calc(var(--kp-sig-deco-a1) + 1.4deg),
+                    transparent calc(var(--kp-sig-deco-a1) + 1.4deg) calc(var(--kp-sig-deco-a2) - 1.4deg),
+                    var(--kp-sig-deco-gold-lo) calc(var(--kp-sig-deco-a2) - 1.4deg),
+                    var(--primary) calc(var(--kp-sig-deco-a2) - 0.4deg),
+                    var(--kp-sig-deco-gold-hi) calc(var(--kp-sig-deco-a2) + 1deg),
+                    transparent calc(var(--kp-sig-deco-a2) + 1deg)
+                ),
+                radial-gradient(circle 0.7px, var(--kp-sig-deco-gold-lt), transparent),
+                repeating-conic-gradient(
+                    from -90deg at 50% 100%,
+                    var(--kp-sig-deco-velvet-lo) 0deg,
+                    hsl(from var(--kp-sig-deco-velvet) h s calc(l - 3)) 6deg,
+                    var(--kp-sig-deco-velvet-lo) 12deg
+                );
+            background-position:
+                calc(50% - 6px) 100%,
+                calc(50% + 6px) 100%,
+                0 0,
+                0 0,
+                0 0;
+            background-size:
+                6px 6px,
+                6px 6px,
+                100% 100%,
+                6px 6px,
+                100% 100%;
+            background-repeat: no-repeat, no-repeat, no-repeat, repeat, no-repeat;
+            mask-image: conic-gradient(
+                from -90deg at 50% 100%,
+                transparent calc(var(--kp-sig-deco-a1) - 1deg),
+                var(--foreground) calc(var(--kp-sig-deco-a1) - 1deg) calc(var(--kp-sig-deco-a2) + 1deg),
+                transparent calc(var(--kp-sig-deco-a2) + 1deg)
+            );
+        }
+
+        /* The leaf: a heart of lacquer with gold sticks in it, the satin
+           panels pleated round it between gold ribs, a braid at its edge (a
+           bronze cord wound with gold), a hairline inside it and a rim round
+           the sticks; it is the ellipse of the fan, inside the sector. */
+        [data-theme='deco'] :is(.kp-card, .kp-kpi, .kp-alert, .kp-empty, .kp-grid__tile):is([data-kp-leaving], [data-kp-arriving])::after {
+            background-image:
+                radial-gradient(
+                    ellipse 22% 42% at 50% 100%,
+                    transparent calc(100% - 1.4px),
+                    var(--kp-sig-deco-gold-lt) calc(100% - 0.7px) 100%,
+                    transparent
+                ),
+                radial-gradient(
+                    ellipse 42% 84% at 50% 100%,
+                    transparent calc(100% - 1px),
+                    hsl(from var(--primary) h s l / 0.75) calc(100% - 0.4px) 100%,
+                    transparent
+                ),
+                radial-gradient(
+                    ellipse 47% 92% at 50% 100%,
+                    transparent calc(100% - 3.8px),
+                    var(--kp-sig-deco-gold-hi) calc(100% - 3.4px) calc(100% - 2.6px),
+                    var(--kp-sig-deco-gold-lo) calc(100% - 2.4px) calc(100% - 0.4px),
+                    transparent 100%
+                ),
+                repeating-conic-gradient(
+                    from -90deg at 50% 100%,
+                    transparent 0 9.4deg,
+                    var(--kp-sig-deco-gold-lo) 9.4deg 9.9deg,
+                    var(--primary) 9.9deg 10.5deg,
+                    var(--kp-sig-deco-gold-lo) 10.5deg 11deg,
+                    transparent 11deg 12deg
+                ),
+                radial-gradient(ellipse 22% 42% at 50% 100%, var(--kp-sig-deco-lac) 99%, transparent 100%),
+                repeating-conic-gradient(
+                    from -90deg at 50% 100%,
+                    var(--kp-sig-deco-gold-lo) 0deg,
+                    var(--kp-sig-deco-gold-hi) 0.25deg,
+                    var(--kp-sig-deco-gold-lo) 0.5deg,
+                    var(--kp-sig-deco-velvet-lo) 0.6deg,
+                    var(--kp-sig-deco-velvet) 3.5deg,
+                    hsl(from var(--kp-sig-deco-velvet-hi) h s calc(l + 5)) 6deg,
+                    var(--kp-sig-deco-velvet) 8.5deg,
+                    var(--kp-sig-deco-velvet-lo) 12deg
+                ),
+                radial-gradient(ellipse 60% 100% at 50% 100%, transparent 55%, hsl(from var(--kp-sig-deco-shadow) h s l / 0.35));
+            background-size: 100% 100%;
+            mask-image:
+                conic-gradient(
+                    from -90deg at 50% 100%,
+                    transparent calc(var(--kp-sig-deco-a1) - 1deg),
+                    var(--foreground) calc(var(--kp-sig-deco-a1) - 1deg) calc(var(--kp-sig-deco-a2) + 1deg),
+                    transparent calc(var(--kp-sig-deco-a2) + 1deg)
+                ),
+                radial-gradient(ellipse 47% 92% at 50% 100%, var(--foreground) 99.4%, transparent 100%);
+        }
+    }
+
+    /* The leave, and the arrival that is its reverse. A part is dressed (the
+       fan opens from where it was folded away), hidden once covered, and
+       gone; arriving it plays the same backwards. Easings are literal: the
+       opening on the settle's inverse (the reversed play is the settle),
+       the stand linear. */
+    @keyframes kp-sig-deco-fan {
+        0% {
+            --kp-sig-deco-a1: 182deg;
+            --kp-sig-deco-a2: 182deg;
+            --kp-sig-deco-v: 1;
+            visibility: visible;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+
+        50% {
+            --kp-sig-deco-a1: 0deg;
+            --kp-sig-deco-a2: 180deg;
+            --kp-sig-deco-v: 1;
+            visibility: visible;
+            animation-timing-function: linear;
+        }
+
+        55% {
+            --kp-sig-deco-a1: 0deg;
+            --kp-sig-deco-a2: 180deg;
+            visibility: hidden;
+        }
+
+        60% {
+            --kp-sig-deco-a1: 0deg;
+            --kp-sig-deco-a2: 180deg;
+            visibility: hidden;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+
+        98% {
+            --kp-sig-deco-v: 1;
+            visibility: hidden;
+        }
+
+        100% {
+            --kp-sig-deco-a1: 90deg;
+            --kp-sig-deco-a2: 90deg;
+            --kp-sig-deco-v: 0;
+            visibility: hidden;
+        }
+    }
+
+    /* A part that carries no dressing (a row, a step) folds away in the fan's
+       own shape: the part itself seen through the fan's sector, which folds
+       from the left. */
+    @keyframes kp-sig-deco-wipe {
+        from {
+            --kp-sig-deco-a1: 0deg;
+            --kp-sig-deco-a2: 180deg;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+
+        to {
+            --kp-sig-deco-a1: 182deg;
+            --kp-sig-deco-a2: 182deg;
+        }
+    }
+
+    /* ── Q9 · a live update: gilded. The figure flares gold, swells once and
+       settles; the box keeps its space (js/update.js). The update time the
+       theme reads is 600 ms; the flare is a second. ── */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] {
+            --kp-update: gilded;
+        }
+
+        [data-theme='deco'] [data-kp-updating='gilded'] {
+            animation: kp-sig-deco-gilded calc(var(--kp-update-duration, 600ms) * 5 / 3) linear both;
+        }
+    }
+
+    @keyframes kp-sig-deco-gilded {
+        0% {
+            animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+        }
+
+        30% {
+            color: var(--primary);
+            filter: drop-shadow(0 0 0.4em var(--primary));
+            scale: 1.1;
+            animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+        }
+
+        100% {
+            filter: drop-shadow(0 0 0 transparent);
+        }
+    }
+
+    /* ── Q10 · loading: lift doors that part and close. Every waiting surface
+       the package has (a skeleton line, block or circle, a busy card, the
+       tiles of a busy grid, a key figure that loads, the table's busy panel,
+       a loading day, the loading meter, the loading entry of a menu, a busy
+       button, the chart's loading plot) is drawn the same way: two doors of
+       lacquer, each with its panel and a faceted gold lozenge for a handle,
+       meet at a gold double hairline down the middle of the part; they part
+       to the sides by a third and close again, slowly, like a lift's doors
+       waiting, 2400 ms, the wallpaper running on across both. The doors are
+       the part's ::before and ::after, one half of its width each, and the
+       part's own `overflow: clip` is what keeps them in it; one registered
+       number (--kp-sig-deco-p) is how far they have parted. They fill the
+       whole element and take its shape, so a line is a slim pair, a block a
+       pair of panels. Standing still (reduced motion) they stand parted by a
+       third, so the words under them read. ── */
+    [data-theme='deco'] [aria-busy='true'] {
+        --kp-busy-opacity: 1;
+    }
+
+    [data-theme='deco'] .kp-skeleton,
+    [data-theme='deco'] .kp-card[aria-busy='true'],
+    [data-theme='deco'] .kp-tiles[aria-busy='true'] > .kp-card,
+    [data-theme='deco'] .kp-kpi[aria-busy='true'],
+    [data-theme='deco'] .kp-datatable__busy-panel,
+    [data-theme='deco'] .kp-calendar__day[data-kp-tone='loading'],
+    [data-theme='deco'] .kp-meter[data-kp-loading],
+    [data-theme='deco'] .kp-kpi__meter[data-kp-loading],
+    [data-theme='deco'] .kp-menu-button > .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+    [data-theme='deco'] .kp-button[aria-busy='true'] {
+        --kp-sig-deco-p: 1;
+        position: relative;
+        isolation: isolate;
+        overflow: clip;
+        animation: none;
+    }
+
+    [data-theme='deco'] .kp-skeleton {
+        --kp-sig-deco-hs: 2px;
+        --kp-sig-deco-hx: 10px;
+        --kp-sig-deco-di: 4px;
+        --kp-sig-deco-frame: 0;
+        border: 1px solid hsl(from var(--primary) h s l / 0.3);
+        border-radius: 0;
+        background-color: var(--kp-sig-deco-lac);
+        background-image:
+            repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px),
+            repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px);
+        background-size: 24px 24px;
+    }
+
+    [data-theme='deco'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        --kp-sig-deco-hs: 0px;
+        block-size: 0.9rem;
+    }
+
+    [data-theme='deco'] .kp-skeleton--circle {
+        --kp-sig-deco-hs: 0px;
+        --kp-sig-deco-frame: 0;
+        border-radius: 50%;
+    }
+
+    [data-theme='deco'] .kp-skeleton--block {
+        --kp-sig-deco-di: 6px;
+        --kp-sig-deco-frame: 1;
+    }
+
+    [data-theme='deco'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) + .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        margin-block-start: 0.6rem;
+    }
+
+    [data-theme='deco'] :is(.kp-menu__item[data-kp-loading], .kp-button[aria-busy='true'], .kp-calendar__day[data-kp-tone='loading']) {
+        --kp-sig-deco-hs: 2.5px;
+        --kp-sig-deco-hx: 10px;
+        --kp-sig-deco-di: 3px;
+    }
+
+    [data-theme='deco'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+        --kp-sig-deco-hs: 0px;
+        --kp-sig-deco-frame: 0;
+        background-color: var(--kp-sig-deco-lac);
+    }
+
+    [data-theme='deco'] .kp-skeleton::before,
+    [data-theme='deco'] .kp-card[aria-busy='true']::before,
+    [data-theme='deco'] .kp-tiles[aria-busy='true'] > .kp-card::before,
+    [data-theme='deco'] .kp-kpi[aria-busy='true']::before,
+    [data-theme='deco'] .kp-datatable__busy-panel::before,
+    [data-theme='deco'] .kp-calendar__day[data-kp-tone='loading']::before,
+    [data-theme='deco'] .kp-meter[data-kp-loading]::before,
+    [data-theme='deco'] .kp-kpi__meter[data-kp-loading]::before,
+    [data-theme='deco'] .kp-menu-button > .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading]::before,
+    [data-theme='deco'] .kp-button[aria-busy='true']::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inset-inline-end: auto;
+        inline-size: calc(50% + 0.5px);
+        z-index: 3;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        border-radius: 0;
+        pointer-events: none;
+        opacity: 1;
+        clip-path: none;
+        mask-image: none;
+        filter: none;
+        animation: none;
+        transform: none;
+        background-color: hsl(from var(--kp-sig-deco-lac) h s calc(l + 1.5));
+        background-image:
+            linear-gradient(to bottom right, transparent 50%, var(--kp-sig-deco-gold-hi) 50%),
+            linear-gradient(to bottom left, transparent 50%, var(--kp-sig-deco-gold-lt) 50%),
+            linear-gradient(to bottom right, var(--kp-sig-deco-gold-lo) 50%, transparent 50%),
+            linear-gradient(to bottom left, var(--primary) 50%, transparent 50%),
+            linear-gradient(hsl(from var(--primary) h s l / calc(0.32 * var(--kp-sig-deco-frame, 1))) 0 0),
+            linear-gradient(hsl(from var(--primary) h s l / calc(0.32 * var(--kp-sig-deco-frame, 1))) 0 0),
+            linear-gradient(hsl(from var(--primary) h s l / calc(0.32 * var(--kp-sig-deco-frame, 1))) 0 0),
+            linear-gradient(hsl(from var(--primary) h s l / calc(0.32 * var(--kp-sig-deco-frame, 1))) 0 0), linear-gradient(var(--primary) 0 0),
+            linear-gradient(hsl(from var(--primary) h s l / 0.55) 0 0),
+            linear-gradient(90deg, transparent, hsl(from var(--kp-sig-deco-gold-hi) h s l / 0.05) 60%, transparent),
+            repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px),
+            repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px);
+        background-position:
+            right calc(var(--kp-sig-deco-hx, 14px) + var(--kp-sig-deco-hs, 3.5px)) top calc(50% - var(--kp-sig-deco-hs, 3.5px)),
+            right var(--kp-sig-deco-hx, 14px) top calc(50% - var(--kp-sig-deco-hs, 3.5px)),
+            right var(--kp-sig-deco-hx, 14px) top 50%,
+            right calc(var(--kp-sig-deco-hx, 14px) + var(--kp-sig-deco-hs, 3.5px)) top 50%,
+            var(--kp-sig-deco-di, 8px) var(--kp-sig-deco-di, 8px),
+            left var(--kp-sig-deco-di, 8px) bottom var(--kp-sig-deco-di, 8px),
+            left var(--kp-sig-deco-di, 8px) top var(--kp-sig-deco-di, 8px),
+            right calc(var(--kp-sig-deco-di, 8px) + 1px) top var(--kp-sig-deco-di, 8px),
+            right 1px top 0,
+            right 4px top 0,
+            0 0,
+            0 0,
+            0 0;
+        background-size:
+            var(--kp-sig-deco-hs, 3.5px) var(--kp-sig-deco-hs, 3.5px),
+            var(--kp-sig-deco-hs, 3.5px) var(--kp-sig-deco-hs, 3.5px),
+            var(--kp-sig-deco-hs, 3.5px) var(--kp-sig-deco-hs, 3.5px),
+            var(--kp-sig-deco-hs, 3.5px) var(--kp-sig-deco-hs, 3.5px),
+            calc(100% - var(--kp-sig-deco-di, 8px) - var(--kp-sig-deco-di, 8px) - 1px) 1px,
+            calc(100% - var(--kp-sig-deco-di, 8px) - var(--kp-sig-deco-di, 8px) - 1px) 1px,
+            1px calc(100% - 2 * var(--kp-sig-deco-di, 8px)),
+            1px calc(100% - 2 * var(--kp-sig-deco-di, 8px)),
+            1px 100%,
+            1px 100%,
+            100% 100%,
+            24px 24px,
+            24px 24px;
+        background-repeat:
+            no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat;
+        box-shadow: inset -1px 0 0 hsl(from var(--kp-sig-deco-gold-lo) h s l / 0.6);
+        translate: calc(var(--kp-sig-deco-p) * -33.4%) 0;
+    }
+
+    [data-theme='deco'] .kp-skeleton::after,
+    [data-theme='deco'] .kp-card[aria-busy='true']::after,
+    [data-theme='deco'] .kp-tiles[aria-busy='true'] > .kp-card::after,
+    [data-theme='deco'] .kp-kpi[aria-busy='true']::after,
+    [data-theme='deco'] .kp-datatable__busy-panel::after,
+    [data-theme='deco'] .kp-calendar__day[data-kp-tone='loading']::after,
+    [data-theme='deco'] .kp-meter[data-kp-loading]::after,
+    [data-theme='deco'] .kp-kpi__meter[data-kp-loading]::after,
+    [data-theme='deco'] .kp-menu-button > .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading]::after,
+    [data-theme='deco'] .kp-button[aria-busy='true']::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-end: 0;
+        inset-inline-start: auto;
+        inline-size: calc(50% + 0.5px);
+        z-index: 3;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        border-radius: 0;
+        pointer-events: none;
+        opacity: 1;
+        clip-path: none;
+        mask-image: none;
+        filter: none;
+        animation: none;
+        transform: none;
+        background-color: hsl(from var(--kp-sig-deco-lac) h s calc(l + 1.5));
+        background-image:
+            linear-gradient(to bottom right, transparent 50%, var(--kp-sig-deco-gold-hi) 50%),
+            linear-gradient(to bottom left, transparent 50%, var(--kp-sig-deco-gold-lt) 50%),
+            linear-gradient(to bottom right, var(--kp-sig-deco-gold-lo) 50%, transparent 50%),
+            linear-gradient(to bottom left, var(--primary) 50%, transparent 50%),
+            linear-gradient(hsl(from var(--primary) h s l / calc(0.32 * var(--kp-sig-deco-frame, 1))) 0 0),
+            linear-gradient(hsl(from var(--primary) h s l / calc(0.32 * var(--kp-sig-deco-frame, 1))) 0 0),
+            linear-gradient(hsl(from var(--primary) h s l / calc(0.32 * var(--kp-sig-deco-frame, 1))) 0 0),
+            linear-gradient(hsl(from var(--primary) h s l / calc(0.32 * var(--kp-sig-deco-frame, 1))) 0 0), linear-gradient(var(--primary) 0 0),
+            linear-gradient(hsl(from var(--primary) h s l / 0.55) 0 0),
+            linear-gradient(90deg, transparent, hsl(from var(--kp-sig-deco-gold-hi) h s l / 0.05) 60%, transparent),
+            repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px),
+            repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px);
+        background-position:
+            left var(--kp-sig-deco-hx, 14px) top calc(50% - var(--kp-sig-deco-hs, 3.5px)),
+            left calc(var(--kp-sig-deco-hx, 14px) + var(--kp-sig-deco-hs, 3.5px)) top calc(50% - var(--kp-sig-deco-hs, 3.5px)),
+            left calc(var(--kp-sig-deco-hx, 14px) + var(--kp-sig-deco-hs, 3.5px)) top 50%,
+            left var(--kp-sig-deco-hx, 14px) top 50%,
+            right var(--kp-sig-deco-di, 8px) top var(--kp-sig-deco-di, 8px),
+            right var(--kp-sig-deco-di, 8px) bottom var(--kp-sig-deco-di, 8px),
+            right var(--kp-sig-deco-di, 8px) top var(--kp-sig-deco-di, 8px),
+            left calc(var(--kp-sig-deco-di, 8px) + 1px) top var(--kp-sig-deco-di, 8px),
+            left 1px top 0,
+            left 4px top 0,
+            0 0,
+            0 0,
+            0 0;
+        background-size:
+            var(--kp-sig-deco-hs, 3.5px) var(--kp-sig-deco-hs, 3.5px),
+            var(--kp-sig-deco-hs, 3.5px) var(--kp-sig-deco-hs, 3.5px),
+            var(--kp-sig-deco-hs, 3.5px) var(--kp-sig-deco-hs, 3.5px),
+            var(--kp-sig-deco-hs, 3.5px) var(--kp-sig-deco-hs, 3.5px),
+            calc(100% - var(--kp-sig-deco-di, 8px) - var(--kp-sig-deco-di, 8px) - 1px) 1px,
+            calc(100% - var(--kp-sig-deco-di, 8px) - var(--kp-sig-deco-di, 8px) - 1px) 1px,
+            1px calc(100% - 2 * var(--kp-sig-deco-di, 8px)),
+            1px calc(100% - 2 * var(--kp-sig-deco-di, 8px)),
+            1px 100%,
+            1px 100%,
+            100% 100%,
+            24px 24px,
+            24px 24px;
+        background-repeat:
+            no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat;
+        box-shadow: inset 1px 0 0 hsl(from var(--kp-sig-deco-gold-lo) h s l / 0.6);
+        translate: calc(var(--kp-sig-deco-p) * 33.4%) 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-skeleton,
+        [data-theme='deco'] .kp-card[aria-busy='true'],
+        [data-theme='deco'] .kp-tiles[aria-busy='true'] > .kp-card,
+        [data-theme='deco'] .kp-kpi[aria-busy='true'],
+        [data-theme='deco'] .kp-datatable__busy-panel,
+        [data-theme='deco'] .kp-calendar__day[data-kp-tone='loading'],
+        [data-theme='deco'] .kp-meter[data-kp-loading],
+        [data-theme='deco'] .kp-kpi__meter[data-kp-loading],
+        [data-theme='deco'] .kp-menu-button > .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+        [data-theme='deco'] .kp-button[aria-busy='true'] {
+            animation: kp-sig-deco-doors var(--kp-sig-deco-loop) linear infinite;
+        }
+
+        [data-theme='deco'] .kp-skeleton:nth-child(2) {
+            animation-delay: calc(var(--kp-sig-deco-loop) / -12);
+        }
+
+        [data-theme='deco'] .kp-skeleton:nth-child(3) {
+            animation-delay: calc(var(--kp-sig-deco-loop) / -6);
+        }
+    }
+
+    @keyframes kp-sig-deco-doors {
+        0% {
+            --kp-sig-deco-p: 0;
+        }
+
+        12% {
+            --kp-sig-deco-p: 0;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        50% {
+            --kp-sig-deco-p: 1;
+        }
+
+        62% {
+            --kp-sig-deco-p: 1;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+
+        100% {
+            --kp-sig-deco-p: 0;
+        }
+    }
+
+    /* ── Q11 · the progress bar: the inlay, doubled. The track is two gold
+       hairlines 3 px apart with a faceted lozenge at each end; the share is a
+       heavier gold line drawn between them, brightening toward its head; the
+       head is a larger lozenge with a small fan of nine rays opening behind
+       it. Busy (no share known): a glint with an afterglow runs between the two
+       lines, 2400 ms. The package's markup is used as it stands: the track,
+       the fill (the share, clipped to --kp-value) and the head (riding the
+       fill's end). One number, --kp-sig-deco-s (the bar's size: 1, 1.5, 2),
+       scales every part; the gold runs along each line as leaf does. ── */
+    [data-theme='deco'] .kp-progressbar {
+        --kp-sig-deco-s: var(--kp-progressbar-scale, 1);
+        --kp-progressbar-height: calc(0.75rem * var(--kp-sig-deco-s));
+        --kp-sig-deco-g: 0.5;
+        contain: none;
+    }
+
+    [data-theme='deco'] .kp-progressbar__track {
+        --kp-sig-deco-y1: calc(4px * var(--kp-sig-deco-s));
+        --kp-sig-deco-y2: calc(7px * var(--kp-sig-deco-s));
+        inset-inline: calc(6px * var(--kp-sig-deco-s));
+        overflow: visible;
+        border: 0;
+        border-radius: 0;
+        background:
+            var(--kp-sig-deco-dim) 0 var(--kp-sig-deco-y1) / 100% 1px no-repeat,
+            var(--kp-sig-deco-dim) 0 var(--kp-sig-deco-y2) / 100% 1px no-repeat;
+    }
+
+    [data-theme='deco'] .kp-progressbar__track::before,
+    [data-theme='deco'] .kp-progressbar__track::after {
+        content: '';
+        position: absolute;
+        inset-block-start: calc(5.5px * var(--kp-sig-deco-s) + 0.5px);
+        inline-size: calc(7px * var(--kp-sig-deco-s));
+        block-size: calc(7px * var(--kp-sig-deco-s));
+        box-sizing: border-box;
+        border: 1px solid var(--kp-sig-deco-gold-lt);
+        background: var(--kp-sig-deco-gem);
+        translate: 0 -50%;
+        rotate: 45deg;
+    }
+
+    [data-theme='deco'] .kp-progressbar__track::before {
+        inset-inline-start: calc(-7.5px * var(--kp-sig-deco-s));
+    }
+
+    [data-theme='deco'] .kp-progressbar__track::after {
+        inset-inline-end: calc(-7.5px * var(--kp-sig-deco-s));
+    }
+
+    [data-theme='deco'] .kp-progressbar__fill {
+        inset: calc(4px * var(--kp-sig-deco-s)) 0 auto;
+        block-size: calc(3px * var(--kp-sig-deco-s) + 1px);
+        background:
+            linear-gradient(hsl(from var(--kp-sig-deco-gold-hi) h s l / 0.7) 0 0) 0 50% / calc(var(--kp-value) * 100%) 1px no-repeat,
+            var(--kp-sig-deco-share) 0 0 / calc(var(--kp-value) * 100%) 100% no-repeat;
+        animation: none;
+        transition: clip-path 320ms var(--kp-sig-deco-settle);
+    }
+
+    [data-theme='deco'] .kp-progressbar__head {
+        inline-size: 0;
+        transition: transform 320ms var(--kp-sig-deco-settle);
+    }
+
+    [data-theme='deco'] .kp-progressbar__head::before {
+        content: '';
+        position: absolute;
+        inset-block-start: calc(5.5px * var(--kp-sig-deco-s) + 0.5px);
+        inset-inline-start: 0;
+        inline-size: calc(10px * var(--kp-sig-deco-s));
+        block-size: calc(10px * var(--kp-sig-deco-s));
+        background: var(--kp-sig-deco-gem);
+        box-shadow: 0 0 0 1px var(--kp-sig-deco-lac);
+        translate: -50% -50%;
+        rotate: 45deg;
+        filter: drop-shadow(0 0 calc(2px * var(--kp-sig-deco-s)) hsl(from var(--primary) h s l / 0.6));
+    }
+
+    [data-theme='deco'] .kp-progressbar__head::after {
+        content: '';
+        position: absolute;
+        inset-block-start: calc(5.5px * var(--kp-sig-deco-s) + 0.5px);
+        inset-inline-start: 0;
+        inline-size: calc(24px * var(--kp-sig-deco-s));
+        block-size: calc(24px * var(--kp-sig-deco-s));
+        background: repeating-conic-gradient(from 209.4deg, var(--kp-sig-deco-gold-lt) 0 1.2deg, transparent 1.2deg 15deg);
+        mask:
+            conic-gradient(from 209deg, var(--foreground) 0 122deg, transparent 0),
+            radial-gradient(
+                circle closest-side,
+                transparent 30%,
+                var(--foreground) 36%,
+                hsl(from var(--foreground) h s l / 0.35) 80%,
+                transparent 100%
+            );
+        mask-composite: intersect;
+        translate: -50% -50%;
+    }
+
+    /* Busy: the share's place is a glint with an afterglow between the two
+       lines; the package's sweeping band and its head go. */
+    [data-theme='deco'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset: calc(5px * var(--kp-sig-deco-s)) 0 auto;
+        inline-size: auto;
+        block-size: calc(2px * var(--kp-sig-deco-s));
+        clip-path: none;
+        transform: none;
+        background: linear-gradient(
+            90deg,
+            transparent calc(var(--kp-sig-deco-g) * 140% - 48%),
+            hsl(from var(--primary) h s l / 0.3) calc(var(--kp-sig-deco-g) * 140% - 30%),
+            hsl(from var(--kp-sig-deco-gold-lt) h s l / 0.85) calc(var(--kp-sig-deco-g) * 140% - 8%),
+            hsl(from var(--foreground) h s 97%) calc(var(--kp-sig-deco-g) * 140% - 3%),
+            transparent calc(var(--kp-sig-deco-g) * 140% - 1%)
+        );
+        filter: drop-shadow(0 0 calc(2px * var(--kp-sig-deco-s)) hsl(from var(--primary) h s l / 0.7));
+    }
+
+    [data-theme='deco'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head::before,
+    [data-theme='deco'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head::after {
+        content: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__track {
+            animation: kp-sig-deco-glint var(--kp-sig-deco-loop) linear infinite;
+        }
+    }
+
+    @keyframes kp-sig-deco-glint {
+        0% {
+            --kp-sig-deco-g: 0;
+            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+        }
+
+        88% {
+            --kp-sig-deco-g: 1;
+        }
+
+        100% {
+            --kp-sig-deco-g: 1;
+        }
+    }
+
+    /* The meter (the share against a limit) is the same inlay in little: a
+       gold hairline track, the share a heavier gold line, the mark a hollow
+       lozenge, nothing lit or glowing; loading is the doors, above. */
+    [data-theme='deco'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-meter-height: 0.75rem;
+        --kp-sig-meter-mo-ink: var(--primary);
+        --kp-sig-meter-mo-halo: var(--background);
+        --kp-sig-meter-mo-sign: '▼';
+        border-radius: 0;
+        background: var(--kp-sig-deco-dim, linear-gradient(hsl(from var(--primary) h s l / 0.5) 0 0)) 0 50% / 100% 1px no-repeat;
+        box-shadow: none;
+    }
+
+    [data-theme='deco'] :is(.kp-meter, .kp-kpi__meter):not([data-kp-loading])::before {
+        inset-block: calc(50% - 1px);
+        border-radius: 0;
+        background: var(--kp-sig-deco-share, var(--kp-meter-fill-colour));
+        filter: none;
+    }
+
+    [data-theme='deco'] .kp-meter__mark {
+        inset-block: 0;
+        border-radius: 0;
+        background: none;
+        box-shadow: none;
+    }
+
+    [data-theme='deco'] .kp-meter__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-start: 50%;
+        inset-block-end: auto;
+        inset-inline-start: 50%;
+        box-sizing: border-box;
+        inline-size: 9px;
+        block-size: 9px;
+        border: 1px solid var(--primary);
+        background: var(--kp-sig-deco-lac);
+        clip-path: none;
+        translate: -50% -50%;
+        rotate: 45deg;
+    }
+
+    /* ── Q5, Q14 to Q17 · the colour, the hover, the focus, the press. Every
+       button, icon button and menu entry, wherever it stands (a header, a
+       menu, a tile, a drawer, a tour), is deco's own: a gold hairline frame
+       with ivory capitals, the one primary solid gold with lacquer ink.
+       Pointing (Q15) warms the plate with gold leaf, a fine wash with a grain
+       that fades in over 320 ms, the frame brightening to full gold and the
+       label to champagne; leaving it fades out on the settle's inverse.
+       The press (Q17) is a seal in wax: the plate sinks 1 px (an inner shadow
+       at its top left, a highlight at its bottom right) and one fine gold
+       ring ripples out from the centre and fades in 400 ms; release lets it
+       rise. Focus (Q16) is a 3 px double gold ring and wins over both. Two
+       registered numbers, --kp-sig-deco-hv (0 to 1) and --kp-sig-deco-pr, are
+       turned by :hover and :active and moved by a transition each way. ── */
+    [data-theme='deco'] :is(.kp-button, .kp-icon-button) {
+        --kp-sig-deco-hv: 0;
+        --kp-sig-deco-pr: 0;
+        position: relative;
+        isolation: isolate;
+        overflow: hidden;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        border: 1px solid hsl(from var(--primary) h s l / calc(0.55 + 0.45 * var(--kp-sig-deco-hv)));
+        background-color: hsl(from var(--kp-sig-deco-lac) h s calc(l - 3 * var(--kp-sig-deco-pr)) / var(--kp-sig-deco-pr));
+        background-image: var(--kp-sig-deco-hair);
+        background-repeat: no-repeat;
+        background-position: var(--kp-sig-deco-hair-pos);
+        background-size: var(--kp-sig-deco-hair-size);
+        background-origin: border-box;
+        background-clip: border-box;
+        color: hsl(
+            from var(--foreground) calc(h + 4 * var(--kp-sig-deco-hv)) calc(s + 14 * var(--kp-sig-deco-hv)) calc(l - 7 * var(--kp-sig-deco-hv))
+        );
+        translate: 0 calc(1px * var(--kp-sig-deco-pr));
+        box-shadow:
+            inset calc(1px * var(--kp-sig-deco-pr)) calc(1px * var(--kp-sig-deco-pr)) calc(3px * var(--kp-sig-deco-pr))
+                hsl(from var(--kp-sig-deco-shadow) h s l / calc(0.95 * var(--kp-sig-deco-pr))),
+            inset calc(-1px * var(--kp-sig-deco-pr)) calc(-1px * var(--kp-sig-deco-pr)) 0
+                hsl(from var(--kp-sig-deco-gold-hi) h s l / calc(0.3 * var(--kp-sig-deco-pr)));
+    }
+
+    [data-theme='deco'] .kp-button--primary {
+        border-color: var(--primary);
+        background-color: hsl(from var(--primary) h s calc(l - 7 * var(--kp-sig-deco-pr)));
+        background-image: linear-gradient(
+            135deg,
+            hsl(from var(--kp-sig-deco-gold-hi) h s l / calc(0.32 + 0.2 * var(--kp-sig-deco-hv))),
+            transparent 46%,
+            hsl(from var(--kp-sig-deco-gold-lo) h s l / 0.3)
+        );
+        color: var(--primary-foreground);
+        box-shadow:
+            inset calc(1px * var(--kp-sig-deco-pr)) calc(1px * var(--kp-sig-deco-pr)) calc(3px * var(--kp-sig-deco-pr))
+                hsl(from var(--kp-sig-deco-gold-dk) h s l / calc(0.9 * var(--kp-sig-deco-pr))),
+            inset calc(-1px * var(--kp-sig-deco-pr)) calc(-1px * var(--kp-sig-deco-pr)) 0
+                hsl(from var(--kp-sig-deco-gold-hi) h s l / calc(0.6 * var(--kp-sig-deco-pr)));
+    }
+
+    [data-theme='deco'] .kp-button--destructive {
+        --kp-sig-deco-arc: var(--destructive);
+        --kp-sig-deco-leaf-x: linear-gradient(var(--destructive), var(--destructive));
+        --kp-sig-deco-leaf-y: linear-gradient(var(--destructive), var(--destructive));
+        border-color: hsl(from var(--destructive) h s l / calc(0.7 + 0.3 * var(--kp-sig-deco-hv)));
+        color: var(--destructive);
+    }
+
+    [data-theme='deco'] .kp-button--ghost {
+        border-color: transparent;
+        background-image: none;
+        color: hsl(
+            from var(--muted-foreground) calc(h + 4 * var(--kp-sig-deco-hv)) calc(s + 14 * var(--kp-sig-deco-hv)) calc(l + 8 * var(--kp-sig-deco-hv))
+        );
+    }
+
+    [data-theme='deco'] :is(.kp-button, .kp-icon-button):disabled {
+        border-color: var(--border);
+        background-image: none;
+        color: var(--muted-foreground);
+        cursor: not-allowed;
+    }
+
+    [data-theme='deco'] .kp-nav .kp-button--ghost,
+    [data-theme='deco'] :is(.kp-toast, .kp-alert) :is(.kp-button--ghost, .kp-icon-button) {
+        color: inherit;
+        background-image: none;
+        border-color: transparent;
+    }
+
+    /* The gold leaf: a wash of gold at 9 % with a fine irregular grain
+       (a few percent either way) behind the label. */
+    [data-theme='deco'] :is(.kp-button, .kp-icon-button, .kp-menu__item)::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        background: linear-gradient(
+            135deg,
+            hsl(from var(--kp-sig-deco-gold-hi) h s l / 0.13),
+            hsl(from var(--primary) h s l / 0.07) 38%,
+            hsl(from var(--kp-sig-deco-gold-lt) h s l / 0.12) 64%,
+            hsl(from var(--primary) h s l / 0.06)
+        );
+        mask: var(--kp-sig-deco-grain) 0 0 / 64px 64px;
+        opacity: var(--kp-sig-deco-hv);
+    }
+
+    [data-theme='deco'] .kp-button--primary::before {
+        background: linear-gradient(
+            135deg,
+            hsl(from var(--kp-sig-deco-gold-hi) h s l / 0.5),
+            transparent 45%,
+            hsl(from var(--kp-sig-deco-gold-hi) h s l / 0.35)
+        );
+    }
+
+    /* The seal's ring: one fine gold ring from the centre, outward and gone. */
+    [data-theme='deco'] :is(.kp-button, .kp-icon-button, .kp-menu__item)::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        pointer-events: none;
+        background-image: radial-gradient(
+            closest-side,
+            transparent calc(100% - 3px),
+            hsl(from var(--kp-sig-deco-gold-hi) h s l / 0.9) calc(100% - 1.6px),
+            var(--primary) calc(100% - 0.6px),
+            transparent
+        );
+        background-repeat: no-repeat;
+        background-position: 50% 50%;
+        background-size: calc(var(--kp-sig-deco-ring) * 170%) calc(var(--kp-sig-deco-ring) * 170%);
+        opacity: 0;
+    }
+
+    [data-theme='deco'] .kp-button--primary::after {
+        background-image: radial-gradient(
+            closest-side,
+            transparent calc(100% - 3px),
+            hsl(from var(--kp-sig-deco-gold-hi) h s 92%) calc(100% - 1.6px),
+            var(--kp-sig-deco-gold-lt) calc(100% - 0.6px),
+            transparent
+        );
+    }
+
+    /* A menu entry: no frame at rest; pointed at it draws its hairline round
+       itself in gold, the label warms; the press seals it like a button. */
+    [data-theme='deco'] .kp-menu__item {
+        --kp-sig-deco-hv: 0;
+        --kp-sig-deco-pr: 0;
+        position: relative;
+        isolation: isolate;
+        overflow: clip;
+        background: hsl(from var(--kp-sig-deco-lac) h s calc(l - 3 * var(--kp-sig-deco-pr)) / var(--kp-sig-deco-pr));
+        color: hsl(
+            from var(--foreground) calc(h + 4 * var(--kp-sig-deco-hv)) calc(s + 14 * var(--kp-sig-deco-hv)) calc(l - 7 * var(--kp-sig-deco-hv))
+        );
+        translate: 0 calc(1px * var(--kp-sig-deco-pr));
+        box-shadow:
+            inset 0 0 0 1px hsl(from var(--primary) h s l / calc(0.9 * var(--kp-sig-deco-hv))),
+            inset calc(1px * var(--kp-sig-deco-pr)) calc(1px * var(--kp-sig-deco-pr)) calc(3px * var(--kp-sig-deco-pr))
+                hsl(from var(--kp-sig-deco-shadow) h s l / calc(0.95 * var(--kp-sig-deco-pr)));
+    }
+
+    [data-theme='deco'] .kp-menu__item--destructive {
+        color: var(--destructive);
+    }
+
+    /* A key figure that is a link or a filter, and a day of the month: a
+       plate that answers the pointer the same way, the leaf as one more
+       layer on its lacquer, the ring on its ::before. */
+    [data-theme='deco'] :is(a.kp-kpi, .kp-kpi--toggle, .kp-kpi--trend:has(.kp-kpi__link)) {
+        --kp-sig-deco-hv: 0;
+        --kp-sig-deco-pr: 0;
+        cursor: pointer;
+        border-color: hsl(from var(--primary) h s l / calc(0.3 + 0.7 * var(--kp-sig-deco-hv)));
+        background-image:
+            linear-gradient(
+                135deg,
+                hsl(from var(--kp-sig-deco-gold-hi) h s l / calc(0.13 * var(--kp-sig-deco-hv))),
+                hsl(from var(--primary) h s l / calc(0.07 * var(--kp-sig-deco-hv))) 38%,
+                hsl(from var(--kp-sig-deco-gold-lt) h s l / calc(0.12 * var(--kp-sig-deco-hv))),
+                hsl(from var(--primary) h s l / calc(0.06 * var(--kp-sig-deco-hv)))
+            ),
+            repeating-linear-gradient(
+                135deg,
+                hsl(from var(--primary) h s l / calc(var(--kp-sig-deco-wall) * var(--kp-sig-deco-up))) 0 1px,
+                transparent 1px 12px
+            ),
+            repeating-linear-gradient(
+                45deg,
+                hsl(from var(--primary) h s l / calc(var(--kp-sig-deco-wall) * var(--kp-sig-deco-up))) 0 1px,
+                transparent 1px 12px
+            );
+        background-size:
+            100% 100%,
+            24px 24px,
+            24px 24px;
+        translate: 0 calc(1px * var(--kp-sig-deco-pr));
+    }
+
+    [data-theme='deco'] :is(a.kp-kpi, .kp-kpi--toggle, .kp-kpi--trend:has(.kp-kpi__link), .kp-calendar__day)::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 4;
+        pointer-events: none;
+        background-image: radial-gradient(
+            closest-side,
+            transparent calc(100% - 3px),
+            hsl(from var(--kp-sig-deco-gold-hi) h s l / 0.9) calc(100% - 1.6px),
+            var(--primary) calc(100% - 0.6px),
+            transparent
+        );
+        background-repeat: no-repeat;
+        background-position: 50% 50%;
+        background-size: calc(var(--kp-sig-deco-ring) * 170%) calc(var(--kp-sig-deco-ring) * 170%);
+        opacity: 0;
+    }
+
+    [data-theme='deco'] .kp-calendar__day {
+        --kp-sig-deco-hv: 0;
+        --kp-sig-deco-pr: 0;
+        position: relative;
+        isolation: isolate;
+        overflow: clip;
+        translate: 0 calc(1px * var(--kp-sig-deco-pr));
+        box-shadow:
+            inset calc(1px * var(--kp-sig-deco-pr)) calc(1px * var(--kp-sig-deco-pr)) calc(3px * var(--kp-sig-deco-pr))
+                hsl(from var(--kp-sig-deco-shadow) h s l / calc(0.95 * var(--kp-sig-deco-pr))),
+            inset 0 0 0 1px hsl(from var(--primary) h s l / calc(0.8 * var(--kp-sig-deco-hv)));
+    }
+
+    [data-theme='deco'] .kp-calendar__day[data-kp-today] {
+        box-shadow:
+            inset 0 0 0 2px currentColor,
+            inset calc(1px * var(--kp-sig-deco-pr)) calc(1px * var(--kp-sig-deco-pr)) calc(3px * var(--kp-sig-deco-pr))
+                hsl(from var(--kp-sig-deco-shadow) h s l / calc(0.95 * var(--kp-sig-deco-pr)));
+    }
+
+    /* The two turns of the numbers: pointed at on the settle, away on its
+       inverse; pressed in 160 ms, let go the same. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco']
+            :is(.kp-button, .kp-icon-button, .kp-menu__item, a.kp-kpi, .kp-kpi--toggle, .kp-kpi--trend:has(.kp-kpi__link), .kp-calendar__day) {
+            transition:
+                --kp-sig-deco-hv var(--kp-sig-deco-hover-t) var(--kp-sig-deco-settle-out),
+                --kp-sig-deco-pr var(--kp-sig-deco-press-t) var(--kp-sig-deco-settle-out),
+                background-color var(--kp-sig-deco-contact) var(--kp-sig-deco-settle);
+        }
+
+        [data-theme='deco']
+            :is(
+                .kp-button,
+                .kp-icon-button,
+                .kp-menu__item,
+                a.kp-kpi,
+                .kp-kpi--toggle,
+                .kp-kpi--trend:has(.kp-kpi__link),
+                .kp-calendar__day
+            ):hover:not(:disabled, [aria-disabled='true'], [aria-busy='true']) {
+            transition:
+                --kp-sig-deco-hv var(--kp-sig-deco-hover-t) var(--kp-sig-deco-settle),
+                --kp-sig-deco-pr var(--kp-sig-deco-press-t) var(--kp-sig-deco-settle-out),
+                background-color var(--kp-sig-deco-contact) var(--kp-sig-deco-settle);
+        }
+
+        [data-theme='deco']
+            :is(
+                .kp-button,
+                .kp-icon-button,
+                .kp-menu__item,
+                a.kp-kpi,
+                .kp-kpi--toggle,
+                .kp-kpi--trend:has(.kp-kpi__link),
+                .kp-calendar__day
+            ):active:not(:disabled, [aria-disabled='true'], [aria-busy='true']) {
+            transition:
+                --kp-sig-deco-hv var(--kp-sig-deco-hover-t) var(--kp-sig-deco-settle),
+                --kp-sig-deco-pr var(--kp-sig-deco-press-t) var(--kp-sig-deco-settle),
+                background-color var(--kp-sig-deco-contact) var(--kp-sig-deco-settle);
+        }
+
+        [data-theme='deco'] :is(.kp-button, .kp-icon-button, .kp-menu__item):active:not(:disabled, [aria-disabled='true'], [aria-busy='true'])::after,
+        [data-theme='deco'] :is(a.kp-kpi, .kp-kpi--toggle, .kp-kpi--trend:has(.kp-kpi__link), .kp-calendar__day):active::before {
+            animation: kp-sig-deco-seal 400ms linear both;
+        }
+    }
+
+    [data-theme='deco']
+        :is(.kp-button, .kp-icon-button, .kp-menu__item, a.kp-kpi, .kp-kpi--toggle, .kp-kpi--trend:has(.kp-kpi__link), .kp-calendar__day):hover:not(
+            :disabled,
+            [aria-disabled='true'],
+            [aria-busy='true']
+        ) {
+        --kp-sig-deco-hv: 1;
+    }
+
+    [data-theme='deco']
+        :is(.kp-button, .kp-icon-button, .kp-menu__item, a.kp-kpi, .kp-kpi--toggle, .kp-kpi--trend:has(.kp-kpi__link), .kp-calendar__day):active:not(
+            :disabled,
+            [aria-disabled='true'],
+            [aria-busy='true']
+        ) {
+        --kp-sig-deco-pr: 1;
+    }
+
+    @keyframes kp-sig-deco-seal {
+        0% {
+            opacity: 0.95;
+            --kp-sig-deco-ring: 0.08;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        100% {
+            opacity: 0;
+            --kp-sig-deco-ring: 1;
+        }
+    }
+
+    /* Q16 · focus: a 3 px double gold ring round the focused control, outside
+       its frame; it is written after the pointer's rules and stays through
+       a press, so it wins when both apply. */
+    [data-theme='deco']
+        :is(
+            .kp-button,
+            .kp-icon-button,
+            .kp-menu__item,
+            a.kp-kpi,
+            .kp-kpi--toggle,
+            .kp-calendar__day,
+            .kp-tab,
+            .kp-nav__link,
+            .kp-nav__toggle,
+            .kp-footer a,
+            a:not([class])
+        ):focus-visible,
+    [data-theme='deco'] .kp-kpi--trend:has(.kp-kpi__link:focus-visible) {
+        outline: 3px double var(--primary);
+        outline-offset: 3px;
     }
 
     /* ── The meter with a mark, this theme's way [picked by Kenny on
@@ -44761,49 +46211,6 @@
             0 0 2px var(--kp-sig-meter-mo-halo, var(--card));
     }
 
-    /* ── shape: option 1 ── */
-
-    /* ── deco · the lobby floor indicator ─────────────────────────── */
-    [data-theme='deco'] :is(.kp-meter, .kp-kpi__meter) {
-        --kp-meter-height: 0.5rem;
-        --kp-sig-meter-room: 0.75rem;
-        --kp-sig-meter-mo-ink: var(--primary);
-        --kp-sig-meter-mo-halo: var(--background);
-        border-radius: 0;
-        background:
-            linear-gradient(90deg, hsl(from var(--primary) h s l / 0.22) 0 3px, transparent 3px) 1px 50% / 5px 4px repeat-x,
-            var(--background);
-        box-shadow: 0 0 0 1px var(--border-strong);
-    }
-
-    /* The lamps lit in gold up to the share. */
-    [data-theme='deco'] :is(.kp-meter, .kp-kpi__meter)::before {
-        inset-block: 2px;
-        border-radius: 0;
-        background: linear-gradient(90deg, var(--kp-meter-fill-colour) 0 3px, transparent 3px) 1px 0 / 5px 100% repeat-x;
-        filter: drop-shadow(0 0 2px hsl(from var(--kp-meter-fill-colour) h s l / 0.55));
-    }
-
-    /* A gold arrow points down at the floor you want. */
-    [data-theme='deco'] .kp-meter__mark {
-        inset-block: -1px;
-        border-radius: 0;
-        background: var(--foreground);
-        box-shadow: 0 0 0 1px var(--background);
-    }
-
-    [data-theme='deco'] .kp-meter__mark::before {
-        content: '';
-        position: absolute;
-        inset-block-end: calc(100% + 1px);
-        inset-inline-start: 50%;
-        inline-size: 8px;
-        block-size: 6px;
-        translate: -50% 0;
-        background: var(--primary);
-        clip-path: polygon(30% 0, 70% 0, 70% 40%, 100% 40%, 50% 100%, 0 40%, 30% 40%);
-    }
-
     /* An arrow up: higher than the top floor. */
     [data-theme='deco'] :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
         inset-inline-start: calc(100% + 3px);
@@ -44811,29 +46218,6 @@
         inline-size: 0.4375rem;
         background: var(--primary);
         clip-path: polygon(50% 0, 100% 45%, 70% 45%, 70% 100%, 30% 100%, 30% 45%, 0 45%);
-    }
-
-    /* ── while loading: option 3 ── */
-
-    [data-theme='deco'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
-        animation: none;
-    }
-
-    [data-theme='deco'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
-        all: unset;
-        content: '';
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        background: linear-gradient(var(--primary), var(--primary)) 50% 50% / 8px 100% no-repeat;
-        --kp-sig-meter-l0: 0% 50%;
-        --kp-sig-meter-l1: 100% 50%;
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='deco'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
-            animation: kp-sig-deco-meter-pos 2400ms ease-in-out infinite alternate;
-        }
     }
 
     /* ── how the share arrives: option 2 ── */
@@ -44937,16 +46321,6 @@
 
         100% {
             translate: 0 0;
-        }
-    }
-
-    @keyframes kp-sig-deco-meter-pos {
-        0% {
-            background-position: var(--kp-sig-meter-l0);
-        }
-
-        100% {
-            background-position: var(--kp-sig-meter-l1);
         }
     }
 
