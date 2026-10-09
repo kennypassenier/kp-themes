@@ -1,0 +1,207 @@
+/* research/forest-uniformity: the page only. A centred column; the story at
+   the top, then one section of ten rows, each row a question with its three
+   options side by side on a desk and stacked on a phone. Every option's own
+   drawing is in options.css, hung on the scene; nothing here hangs on
+   `.fu-page` alone where the review dialog could move it. */
+.fu-page {
+    display: grid;
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 96rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) 16px 4rem;
+}
+
+.fu-intro,
+.fu-sec__head {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.fu-intro :is(h1, p),
+.fu-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+.fu-intro p,
+.fu-sec__head p {
+    max-inline-size: 78ch;
+}
+
+.fu-motion {
+    color: var(--muted-foreground);
+}
+
+.fu-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: 0 var(--kp-sig-fo-leaf, 1.25rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.fu-sec__head p,
+.fu-aspect__why {
+    color: var(--muted-foreground);
+}
+
+.fu-toc {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+    gap: 0.15rem var(--kp-space-md, 1rem);
+    margin: 0;
+    padding-inline-start: 1.5rem;
+}
+
+.fu-controls {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.fu-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+[data-fu-speed][aria-pressed='true'] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+[data-review-look] p {
+    margin: 0;
+}
+
+.fu-aspects {
+    display: grid;
+    gap: var(--kp-space-xl, 2rem);
+}
+
+.fu-aspect {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding-block-start: var(--kp-space-lg, 1.5rem);
+    border-block-start: 1px solid var(--border);
+    scroll-margin-block-start: 1rem;
+}
+
+.fu-aspect__head {
+    display: grid;
+    gap: 0.35rem;
+}
+
+.fu-aspect__head :is(h3, p) {
+    max-inline-size: 90ch;
+    margin: 0;
+}
+
+.fu-aspect__no {
+    display: inline-grid;
+    place-items: center;
+    min-inline-size: 1.75rem;
+    block-size: 1.75rem;
+    margin-inline-end: 0.35rem;
+    border-radius: 0 0.6rem;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    font-size: 0.85rem;
+}
+
+.fu-aspect__rule {
+    margin-inline-start: 0.35rem;
+    color: var(--muted-foreground);
+    font-size: 0.75rem;
+    font-style: italic;
+    font-weight: 400;
+    white-space: nowrap;
+}
+
+.fu-aspect__q {
+    font-weight: 600;
+}
+
+/* Three options in a subgrid, so the names, the words and the scenes line
+   up across the row whatever their length; one under the other below 64rem. */
+.fu-trio {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+.fu-col {
+    display: grid;
+    grid-row: span 4;
+    grid-template-rows: subgrid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+@media (max-width: 64rem) {
+    .fu-trio {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .fu-col {
+        grid-row: auto;
+        grid-template-rows: none;
+    }
+}
+
+.fu-label {
+    margin: 0;
+    font-weight: 700;
+}
+
+.fu-label__no {
+    color: var(--muted-foreground);
+}
+
+.fu-label__rec,
+.fu-label__today {
+    display: inline-block;
+    margin-inline-start: 0.25rem;
+    padding: 0.05rem 0.55rem;
+    border-radius: 0 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.fu-label__rec {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+.fu-label__today {
+    background: var(--muted);
+    color: var(--foreground);
+}
+
+.fu-see,
+.fu-verdict {
+    margin: 0;
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.fu-verdict {
+    color: var(--muted-foreground);
+}
+
+.fu-verdict--rec {
+    color: var(--foreground);
+    font-weight: 600;
+}
+
+/* In the review dialog one option is shown alone and large: its scene gets
+   the room of the stage, and its words are in the dialog's hint. */
+[data-rv-flip-trio] .fu-col:not([hidden]) {
+    grid-column: 1 / -1;
+}
+
+[data-rv-flip-trio] .fu-col > :is(.fu-label, .fu-see, .fu-verdict) {
+    display: none;
+}

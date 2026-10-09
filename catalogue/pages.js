@@ -80,6 +80,8 @@ export const PAGES = [
             // Kenny, 2026-10-08: what makes formal, light and deco themselves, the forest way (the analysis in themes/<theme>/CHARACTER.md), the nineteen questions each, every option a live scene that follows from the theme's decided anchor, the recommendation first.
             // Kenny, 2026-10-08 (update 1): deco's grammar did not convince him ("fancy, distinguished … lots of gold accents and fancy blue backgrounds … elegance without being too in your face"); thirteen questions redrawn as thin gold on lacquer with the wallpaper, his six picks kept.
             // Kenny, 2026-10-08: what makes dark, retro and phantom themselves, the forest way (the analysis in themes/<theme>/CHARACTER.md), the nineteen questions each, every option a live scene that follows from the theme's decided anchor, the recommendation first.
+            // Kenny, 2026-10-09: the uniformity audit of forest (what is still off the approved grammar: navbars, spinners, hover, closes), ten questions to judge.
+            { href: 'research/forest-uniformity/demo.html', label: 'Forest, straightened' },
             {
                 href: 'research/retro-character/demo.html',
                 label: 'What makes retro retro',
