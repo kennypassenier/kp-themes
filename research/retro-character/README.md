@@ -21,27 +21,27 @@ nineteen questions. Each question is one rule of the grammar and three options (
 says what you see and why it is or is not recommended, on the page and in its hint in the dialog. The options named "the pick" are the
 decided demos' values, the ones named "today" the register's own.
 
-| #   | Question (rule)                       | Options, recommended first                                                                                                                                     |
-| --- | ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | The motion curve (G1)                 | whole frames, eight a flight · four frames · sixteen frames · smooth (as 2026 would)                                                                           |
-| 2   | The direction (G2)                    | copied in from the folder, top-left · dragged in from above (the picks) · painted left to right (the picks)                                                    |
-| 3   | Opening what drops from a button (G3) | dealt from its edge, the dialog zooms in outline · painted from the edge (the picks) · pops whole (today)                                                      |
-| 4   | How long things take (G4)             | one flight: 90 ms a frame, 8 frames, a loop of 2520 ms · quick: 60 ms a frame · slow: 120 ms a frame                                                           |
-| 5   | Where the colour goes (G5)            | the 16-colour palette · the LED console (the picks) · navy and grey only                                                                                       |
-| 6   | The corners (G6)                      | square, bevelled · the floppy notch on plates (the picks) · square and flat                                                                                    |
-| 7   | The surface (G7)                      | the desktop behind, every surface a window part · the LED wells and scopes (the picks) · the woodgrain console (the drawer's pick)                             |
-| 8   | A warning (G8)                        | the message box · the LED and the scope (the picks) · the tinted plate                                                                                         |
-| 9   | A live update (G9)                    | a sheet copied over · the bevel pops (the picks) · repainted in jumps (the picks)                                                                              |
-| 10  | Loading (G10), update 3               | palette cycling · interlaced, as an image loaded · marching ants · Mystify your mind · the starfield · the DOS prompt · the bouncing ball · the spinning globe |
-| 11  | The busy progress bar (G11)           | the sheet hops ahead · the blocks stand in the dither (today) · the blocks fill and empty                                                                      |
-| 12  | The spinner (G12)                     | the hourglass (today) · the sheet flies round · the Find flashlight                                                                                            |
-| 13  | Leaving and arriving (G13)            | copied in, copied back out · flies to the Recycle Bin · shrunk to the centre (today) · the dissolve (the picks)                                                |
-| 14  | Buttons inside composites (G14)       | exactly retro's own · retro's own on a sunken panel · as today                                                                                                 |
-| 15  | Pointing at something (G15)           | nothing, as in 1995 · the selection bar on everything · the bevel raises (the picks)                                                                           |
-| 16  | The focus ring (G16)                  | the two-channel ring with the dotted rectangle inside · the two-channel ring alone (today) · the dotted rectangle alone                                        |
-| 17  | The press (G17)                       | the bevel pressed in one frame (today) · the bevel sinks in two frames (the picks) · the label only                                                            |
-| 18  | The voice (G18)                       | Pixelify for chrome, Instrument Sans for words, VT323 for DOS · Pixelify for figures too · VT323 everywhere                                                    |
-| 19  | Motifs (G19)                          | the bevel, the ramp, the selection bar, the dither, the blocks, the drop, the desktop · plus the floppies and the LEDs (the picks) · as today                  |
+| #   | Question (rule)                       | Options, recommended first                                                                                                                                                                      |
+| --- | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | The motion curve (G1)                 | whole frames, eight a flight · four frames · sixteen frames · smooth (as 2026 would)                                                                                                            |
+| 2   | The direction (G2)                    | copied in from the folder, top-left · dragged in from above (the picks) · painted left to right (the picks)                                                                                     |
+| 3   | Opening what drops from a button (G3) | dealt from its edge, the dialog zooms in outline · painted from the edge (the picks) · pops whole (today)                                                                                       |
+| 4   | How long things take (G4)             | one flight: 90 ms a frame, 8 frames, a loop of 2520 ms · quick: 60 ms a frame · slow: 120 ms a frame                                                                                            |
+| 5   | Where the colour goes (G5)            | the 16-colour palette · the LED console (the picks) · navy and grey only                                                                                                                        |
+| 6   | The corners (G6)                      | square, bevelled · the floppy notch on plates (the picks) · square and flat                                                                                                                     |
+| 7   | The surface (G7)                      | the desktop behind, every surface a window part · the LED wells and scopes (the picks) · the woodgrain console (the drawer's pick)                                                              |
+| 8   | A warning (G8)                        | the message box · the LED and the scope (the picks) · the tinted plate                                                                                                                          |
+| 9   | A live update (G9)                    | a sheet copied over · the bevel pops (the picks) · repainted in jumps (the picks)                                                                                                               |
+| 10  | Loading (G10), update 4               | the dither shimmer · one raster line · the blinking cursor · three dots counting · the bevel breathes · the ground steps through three greys · one ring of ants · the selection walks the lines |
+| 11  | The busy progress bar (G11)           | the sheet hops ahead · the blocks stand in the dither (today) · the blocks fill and empty                                                                                                       |
+| 12  | The spinner (G12)                     | the hourglass (today) · the sheet flies round · the Find flashlight                                                                                                                             |
+| 13  | Leaving and arriving (G13)            | copied in, copied back out · flies to the Recycle Bin · shrunk to the centre (today) · the dissolve (the picks)                                                                                 |
+| 14  | Buttons inside composites (G14)       | exactly retro's own · retro's own on a sunken panel · as today                                                                                                                                  |
+| 15  | Pointing at something (G15)           | nothing, as in 1995 · the selection bar on everything · the bevel raises (the picks)                                                                                                            |
+| 16  | The focus ring (G16)                  | the two-channel ring with the dotted rectangle inside · the two-channel ring alone (today) · the dotted rectangle alone                                                                         |
+| 17  | The press (G17)                       | the bevel pressed in one frame (today) · the bevel sinks in two frames (the picks) · the label only                                                                                             |
+| 18  | The voice (G18)                       | Pixelify for chrome, Instrument Sans for words, VT323 for DOS · Pixelify for figures too · VT323 everywhere                                                                                     |
+| 19  | Motifs (G19)                          | the bevel, the ramp, the selection bar, the dither, the blocks, the drop, the desktop · plus the floppies and the LEDs (the picks) · as today                                                   |
 
 **How.**
 
@@ -53,7 +53,7 @@ decided demos' values, the ones named "today" the register's own.
   stacks, the ramp, the hard drop, the dither and the 4 % checker, the three voices) and the keyframes of the recommended options: the sheet
   copied in (`rt-fly-8`, `rt-land-8`), the anchor's own stage flight (`rt-stage-8`), the window zoom in outline frames (`rt-zoom`,
   `rt-zoom-win`), the menu dealt (`rt-deal`), the notice dropped from its edge (`rt-drop-edge`), the tip (`rt-tip`), a value copied over
-  (`rt-fly-5`, `rt-redraw`), the loading options' own loops in options.css (`rt-find-*`, `rt-boot-band`, `rt-defrag-*`, `rt-setup-*`, `rt-dial-*`), the sheet hopping ahead
+  (`rt-fly-5`, `rt-redraw`), the loading options' quiet loops in options.css (`rt-q-crawl`, `rt-q-scan`, `rt-q-blink`, `rt-q-count`, `rt-q-breath*`, `rt-q-ground`, `rt-q-march`, `rt-q-walk-*`), the sheet hopping ahead
   (`rt-hop`, `rt-hop-fill`), the hourglass in frames (`rt-glass-sand`, `rt-glass-turn`), the leave copied back out (the same
   `rt-fly-8` / `rt-land-8` pair backwards; the Bin option's `rt-bin-part`, `rt-bin-ghost`) and the press (`rt-tap-bevel`, `rt-tap-label`, `rt-tap`).
 - `options.css` (in `@layer kp.signature`) draws the world and every option, scoped by `data-rt-<question>="<key>"` on the scene. The

@@ -323,428 +323,85 @@ const LIVE = () =>
         `<div class="kp-card rt-tile rt-live-tile"><p class="kp-card__title rt-titlebar"><span>Pump house 4</span></p><p class="kp-card__body">4.2 bar · 412 m³/h</p><p class="rt-tile__foot"><span class="rt-carrier" data-rt-time>Updated 07:12</span></p></div>`,
     );
 
-/* ------------------------------------------- question 10: loading (update 3) */
+/* ------------------------------------------- question 10: loading (update 4) */
 
-// Eight pictures from the screens of the nineties (Kenny on update 2: "all of
-// these are so bad that I am about to delete this whole theme. Come up with
-// something better now!"): no dialog, no bar, no label. Each is pixel art in
-// the register's palette, in whole 90 ms frames over a loop of 28 (2.52 s),
-// fitted to the six waiting parts: a box (the tile's and the panel's room), a
-// row (the menu entry's slot), the month, the chart's plot and the skeleton's
-// lines. The art is generated here once, seeded, so every page draws the same
-// picture: SVG paths of art pixels in token colours (`.rt-px--<colour>`,
-// options.css). A frame that changes the picture is a cel (`.rt-cel`, its
-// frame in `--i`), shown by options.css for exactly that frame.
+// Eight quiet ones (Kenny on update 3: "not even close, especially option 1 is
+// far too loud, it must be much subtler"): the six waiting parts stay exactly
+// as they are, with their words, days and line, and one small thing about them
+// changes in whole 90 ms frames. The marks an option adds are written here only
+// for the option that draws them: the dither (`shimmer`), the raster line
+// (`raster`), the ring of ants (`ants`), the cursor (`cursor`) and the dots
+// (`dots`). The bevel (`breath`), the ground (`ground`) and the walking
+// selection (`walk`) change the part's own edges, plates and lines in
+// options.css; each line, day and gridline carries its turn in `--i`.
 
-/** The loop, in frames. */
-const LOOP = 28;
-/** A seeded random in [0, 1). @param {number} seed */
-const seeded = (seed) => () => {
-    seed = (seed + 0x6d2b79f5) | 0;
-    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-};
-const frac = (/** @type {number} */ u) => u - Math.floor(u);
-/** A triangle wave, 0 → 1 → 0 once a unit: a point bouncing between two walls. */
-const tri = (/** @type {number} */ u) => 1 - Math.abs(2 * frac(u) - 1);
+/** A mark laid over a part's room, under its words. @param {string} key */
+const overMark = (key) =>
+    key === 'shimmer' ? '<i class="rt-q-dith" aria-hidden="true"></i>' : key === 'raster' ? '<i class="rt-q-scan" aria-hidden="true"></i>' : '';
+/** The ring of ants round a part, outside its edge. @param {string} key */
+const ring = (key) => (key === 'ants' ? '<i class="rt-q-ants" aria-hidden="true"></i>' : '');
+/** The text cursor, a block one letter wide and one line high. @param {string} key */
+const cursor = (key) => (key === 'cursor' ? '<i class="rt-q-cur" aria-hidden="true"></i>' : '');
+/** The status bar's ellipsis, counting. @param {string} key */
+const counting = (key) => (key === 'dots' ? '<span class="rt-q-dots" aria-hidden="true"><span>...</span></span>' : '');
 
-/**
- * Art pixels to one path per colour, row by row with runs merged. With `step`, every step-th row stands for the rows under it,
- * as an interlaced pass draws it. @param {number} w @param {number} h @param {(x: number, y: number) => string | null} at
- */
-const pixels = (w, h, at, step = 1) => {
-    /** @type {Record<string, string[]>} */
-    const runs = {};
-    for (let y = 0; y < h; y += step) {
-        const tall = Math.min(step, h - y);
-        for (let x = 0; x < w;) {
-            const c = at(x, y);
-            let e = x + 1;
-            while (e < w && at(e, y) === c) e += 1;
-            if (c) (runs[c] ||= []).push(`M${x} ${y}h${e - x}v${tall}h${x - e}z`);
-            x = e;
-        }
-    }
-    return Object.entries(runs)
-        .map(([c, d]) => `<path class="rt-px rt-px--${c}" d="${d.join('')}"/>`)
-        .join('');
-};
-/** Single cells, one path per colour. @param {Record<string, [number, number, number][]>} cells x, y, size */
-const dots = (cells) =>
-    Object.entries(cells)
-        .map(([c, list]) => `<path class="rt-px rt-px--${c}" d="${list.map(([x, y, s]) => `M${x} ${y}h${s}v${s}h${-s}z`).join('')}"/>`)
-        .join('');
-const svg = (/** @type {string} */ cls, /** @type {string} */ box, /** @type {string} */ inner, fit = 'xMidYMid slice') =>
-    `<svg class="${cls}" viewBox="${box}" preserveAspectRatio="${fit}" shape-rendering="crispEdges" aria-hidden="true" focusable="false">${inner}</svg>`;
-/** Pattern definitions, out of the layout. */
-const defs = (/** @type {string} */ inner) => `<svg class="rt-defs" aria-hidden="true" focusable="false"><defs>${inner}</defs></svg>`;
-
-/* 1 Palette cycling: a waterfall of fourteen blues, teals and greys in wavy diagonal bands two art pixels wide, each seam
-   dithered; one tile of 56 × 28 art pixels (2 px each) repeats under every part. The sheet steps down one band a frame (two
-   tiles a loop): at any one pixel the colours run through the ramp, as a cycled palette does. */
-const FLOW_DEFS = defs(
-    `<pattern id="rt-flow" width="112" height="56" patternUnits="userSpaceOnUse"><g transform="scale(2)">${pixels(56, 28, (x, y) => {
-        const wave = Math.round(2.6 * Math.sin((2 * Math.PI * x) / 56) + 1.2 * Math.sin((4 * Math.PI * x) / 56));
-        const d = (((x + y + wave) % 28) + 28) % 28;
-        const band = Math.floor(d / 2);
-        return `r${d % 2 === 0 && x % 2 === 0 ? (band + 13) % 14 : band}`;
-    })}</g></pattern>`,
-);
-const flow = (cls = '') =>
-    `<svg class="rt-flow ${cls}" aria-hidden="true" focusable="false"><rect class="rt-flow__sheet" y="-112" width="100%" height="1200" fill="url(#rt-flow)"/></svg>`;
-
-/* 2 Interlaced: the Windows 95 clouds over the desktop's teal, loaded in four passes (every eighth row standing for the eight
-   under it, then every fourth, every second, every row). The sky is five teals with a 2 × 2 dither between each two. */
-const LACE_DEFS = defs(
-    [0, 1, 2, 3]
-        .map(
-            (i) =>
-                `<pattern id="rt-lace-d${i}" width="2" height="2" patternUnits="userSpaceOnUse"><path class="rt-px rt-px--s${i}" d="M0 0h2v2h-2z"/><path class="rt-px rt-px--s${
-                    i + 1
-                }" d="M1 0h1v1h-1zM0 1h1v1h-1z"/></pattern>`,
-        )
-        .join(''),
-);
-/** The clouds picture, w × h art pixels: cumulus of five to seven puffs on a flat base, lit from the top left (white, a pale and a
- * deeper teal grey, dithered between), on the sky. @param {number} w @param {number} h @param {number} seed */
-const clouds = (w, h, seed) => {
-    const rnd = seeded(seed);
-    /** @type {{ base: number, top: number, left: number, right: number, puffs: { x: number, y: number, r: number }[] }[]} */
-    const list = [];
-    const unit = Math.max(h, 8);
-    for (let cx = rnd() * unit * 1.5; cx < w + unit; cx += unit * (1.7 + rnd() * 1.3)) {
-        const R = unit * (0.13 + rnd() * 0.15);
-        const base = Math.round(h * (0.42 + rnd() * 0.36));
-        const n = 5 + Math.floor(rnd() * 3);
-        const puffs = [...Array(n).keys()].map((k) => {
-            const at = k / (n - 1);
-            const r = R * (0.5 + 0.55 * Math.sin(Math.PI * at)) * (0.85 + rnd() * 0.3);
-            return { x: cx + (at - 0.5) * 3.4 * R + (rnd() - 0.5) * R * 0.4, y: base - r * 0.62, r };
-        });
-        const top = Math.min(...puffs.map((p) => p.y - p.r));
-        list.push({ base, top, left: cx - 1.75 * R, right: cx + 1.75 * R, puffs });
-    }
-    return (/** @type {number} */ x, /** @type {number} */ y) => {
-        const px = x + 0.5;
-        const py = y + 0.5;
-        for (const cl of list) {
-            if (py > cl.base || py < cl.top || px < cl.left - cl.base || px > cl.right + cl.base) continue;
-            let best = null;
-            for (const p of cl.puffs) {
-                const d = Math.hypot(px - p.x, py - p.y) / p.r;
-                if (d <= 1 && (!best || p.y - p.r < best.p.y - best.p.r || d < best.d)) best = { p, d };
-            }
-            if (!best) continue;
-            const nx = (px - best.p.x) / best.p.r;
-            const ny = (py - best.p.y) / best.p.r;
-            const t = (py - cl.top) / (cl.base - cl.top);
-            const lit = -0.35 * nx - 0.6 * ny - 0.85 * t + 0.55;
-            const odd = (x + y) % 2 === 1;
-            if (lit > 0.32) return 'c0';
-            if (lit > 0.18) return odd ? 'c1' : 'c0';
-            if (lit > 0.02) return 'c1';
-            if (lit > -0.14) return odd ? 'c2' : 'c1';
-            return 'c2';
-        }
-        const v = (y / Math.max(h - 1, 1)) * 4;
-        const i = Math.min(Math.floor(v), 3);
-        const f = v - i;
-        return f < 0.34 ? `s${i}` : f < 0.67 ? `d${i}` : `s${i + 1}`;
-    };
-};
-const lace = (/** @type {number} */ w, /** @type {number} */ h, /** @type {number} */ seed) => {
-    const at = clouds(w, h, seed);
-    return svg(
-        'rt-lace',
-        `0 0 ${w} ${h}`,
-        [8, 4, 2, 1].map((step, k) => `<g class="rt-lace__pass rt-lace__pass--${k + 1}">${pixels(w, h, at, step)}</g>`).join(''),
-    );
-};
-
-/* 4 Mystify your mind: two quadrilaterals whose corners bounce between the part's walls (a whole number of bounces a loop, so
-   the loop closes), each frame's copy standing five frames as it fades through the blues (the trail). */
-const mystify = (/** @type {number} */ w, /** @type {number} */ h, /** @type {number} */ seed) => {
-    const rnd = seeded(seed);
-    const shape = () => [...Array(4)].map((_, k) => [1, k / 4 + rnd() * 0.25, 1, rnd()]);
-    return svg(
-        'rt-myst',
-        `0 0 ${w} ${h}`,
-        [shape(), shape()]
-            .map((corners, n) =>
-                [...Array(LOOP).keys()]
-                    .map((f) => {
-                        const points = corners
-                            .map(
-                                ([kx, px, ky, py]) =>
-                                    `${(1 + (w - 2) * tri((kx * f) / LOOP + px)).toFixed(1)},${(1 + (h - 2) * tri((ky * f) / LOOP + py)).toFixed(1)}`,
-                            )
-                            .join(' ');
-                        const still = f <= 4 ? ` rt-myst__q--age${4 - f}` : '';
-                        return `<polygon class="rt-cel rt-myst__q rt-myst__q--${n ? 'b' : 'a'}${still}" style="--i: ${f}" points="${points}"/>`;
-                    })
-                    .join(''),
+const LOADING = (key = 'shimmer') =>
+    cell(
+        'Tile',
+        `<div class="kp-card rt-tile rt-q-tile" aria-busy="true">${ring(key)}<p class="kp-card__title rt-titlebar"><span>Pump house 4</span></p><div class="rt-q-room">${overMark(
+            key,
+        )}<p class="kp-card__body rt-q-line" style="--i: 0">${cursor(key)}<span>4.2 bar · 412 m³/h</span></p><p class="kp-card__body rt-q-line rt-q-line--second" style="--i: 1"><span>2 of 3 pumps running</span></p><p class="rt-tile__foot rt-q-line" style="--i: 2"><span>Updated 07:12</span>${counting(
+            key,
+        )}</p></div></div>`,
+    ) +
+    cell(
+        'Panel',
+        `<div class="kp-card rt-panel rt-q-panel" aria-busy="true">${ring(key)}${overMark(key)}<p class="rt-panel__words rt-q-line" style="--i: 0">${cursor(
+            key,
+        )}<span>Pump houses</span></p><ul class="rt-q-list">${['North 4 · 3.9 bar', 'North 5 · 4.1 bar', 'South 1 · 4.4 bar']
+            .map((t, i) => `<li class="rt-q-line" style="--i: ${i + 1}">${t}</li>`)
+            .join('')}</ul>${counting(key)}</div>`,
+    ) +
+    cell(
+        'Menu, loading entry',
+        `<div class="kp-popover rt-pop rt-pop--static rt-q-pop"><ul class="kp-menu" role="menu"><li role="none" class="rt-q-at">${ring(
+            key,
+        )}<button type="button" role="menuitem" class="kp-menu__item rt-q-entry" aria-busy="true">${overMark(key)}<span class="rt-entry">Stations</span>${cursor(
+            key,
+        )}${counting(key)}</button></li>${entries(['Rename', 'Export'])}</ul></div>`,
+    ) +
+    cell(
+        'Month days',
+        `<div class="rt-well rt-q-month" aria-busy="true">${ring(key)}<div class="rt-days rt-days--grid" aria-hidden="true">${overMark(key)}${[
+            ...Array(14).keys(),
+        ]
+            .map(
+                (i) =>
+                    `<span class="rt-day" style="--i: ${i}; --x: ${Math.floor(i / 7)}">${i === 0 ? cursor(key) : ''}<span class="rt-day__num">${i + 1}</span></span>`,
             )
-            .join(''),
-        'none',
+            .join('')}</div>${counting(key)}</div>`,
+    ) +
+    cell(
+        'Chart plot',
+        `<div class="rt-well rt-trendwell rt-q-plot" aria-busy="true">${ring(key)}<span class="rt-plot rt-q-chart" aria-hidden="true"><svg viewBox="0 0 120 32" preserveAspectRatio="none">${[
+            8, 16, 24,
+        ]
+            .map((y, i) => `<line class="rt-q-grid" style="--i: ${i}" x1="0" x2="120" y1="${y}" y2="${y}" vector-effect="non-scaling-stroke"/>`)
+            .join('')}${polyline()}</svg>${
+            key === 'shimmer' ? '<i class="rt-q-dith rt-q-dith--under" aria-hidden="true"></i>' : overMark(key)
+        }</span>${cursor(key)}${counting(key)}</div>`,
+    ) +
+    cell(
+        'Skeleton lines',
+        `<div class="rt-skel rt-q-skel" aria-busy="true">${key === 'raster' ? overMark(key) : ''}${[0, 1, 2]
+            .map(
+                (i) =>
+                    `<span class="kp-skeleton rt-q-bone" style="--i: ${i}">${ring(key)}${key === 'shimmer' ? overMark(key) : ''}${i === 0 ? cursor(key) : ''}${
+                        i === 2 ? counting(key) : ''
+                    }</span>`,
+            )
+            .join('')}</div>`,
     );
-};
-
-/* 5 The starfield: stars stream out from the centre (or from the start edge), faster as they come near, grey and one art pixel
-   far off, pale blue, then white and two by two near. Each star makes one, two or four passes a loop. */
-const starfield = (/** @type {number} */ w, /** @type {number} */ h, /** @type {number} */ seed, edge = false) => {
-    const rnd = seeded(seed);
-    const n = Math.max(8, Math.round((w * h) / (edge ? 30 : 40)));
-    const list = [...Array(n)].map(() => ({ a: rnd() * 2 * Math.PI, s: [1, 1, 2, 2, 4][Math.floor(rnd() * 5)], p: rnd(), y: rnd(), tint: rnd() }));
-    // How far a star travels, in art pixels: to the far corner, or along the whole part from its start edge; the colour and the
-    // size go by the distance it has come, so a near star is white and two by two wherever the part ends.
-    const reach = edge ? w : Math.hypot(w, h) / 2;
-    const near = edge ? Math.min(w * 0.45, 26) : Math.min(h * 0.55, 20);
-    const cels = [...Array(LOOP).keys()].map((f) => {
-        /** @type {Record<string, [number, number, number][]>} */
-        const cells = {};
-        const put = (/** @type {string} */ c, /** @type {number} */ x, /** @type {number} */ y, /** @type {number} */ s) => {
-            if (x >= 0 && y >= 0 && x <= w - s && y <= h - s) (cells[c] ||= []).push([Math.floor(x), Math.floor(y), s]);
-        };
-        for (const st of list) {
-            const u = frac((st.s * f) / LOOP + st.p);
-            const d = 2 + (reach - 2) * u ** 1.8;
-            const dx = edge ? 1 : Math.cos(st.a);
-            const dy = edge ? 0 : Math.sin(st.a);
-            const x = edge ? d - 2 : w / 2 + dx * d;
-            const y = edge ? st.y * h : h / 2 + dy * d;
-            if (d < near * 0.25) continue;
-            if (d < near * 0.5) put('far', x, y, 1);
-            else if (d < near) put(st.tint > 0.5 ? 'mid' : 'near', x, y, 1);
-            else {
-                // Near: two by two, with its streak behind it, dimmer the further back.
-                put('near', x, y, 2);
-                put(st.tint > 0.5 ? 'mid' : 'near', x - dx * 2, y - dy * 2, 1);
-                put('far', x - dx * 4, y - dy * 4, 1);
-            }
-        }
-        return `<g class="rt-cel" style="--i: ${f}">${dots(cells)}</g>`;
-    });
-    return svg('rt-stars', `0 0 ${w} ${h}`, cels.join(''));
-};
-
-/* 6 The DOS prompt: light grey text on black, typed a letter a frame from frame `at` (the line's own width grows a character a
-   frame), the block cursor after it, blinking two frames on and two off, from frame `from` to frame `until`. */
-const esc = (/** @type {string} */ t) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-const typed = (/** @type {string} */ text, /** @type {number} */ at, cursor = /** @type {[number, number] | null} */ (null), lead = '') =>
-    `<span class="rt-dos__line">${lead ? `<span>${esc(lead)}</span>` : ''}<span class="rt-dos__text" style="--i: ${at}; --x: ${text.length}">${esc(text)}</span>${
-        cursor ? `<span class="rt-dos__cur" style="--i: ${cursor[0]}"><i style="--x: ${cursor[1]}"></i></span>` : ''
-    }</span>`;
-const said = (/** @type {string} */ text) => `<span class="rt-dos__line">${esc(text)}</span>`;
-/** The frame each day's number starts typing in: days 1 to 9 take a frame, 10 to 14 two. */
-const dayAt = (/** @type {number} */ i) => i + Math.max(0, i - 9);
-
-/* 7 The bouncing ball: a chunky pixel marble lit from the top left, outlined in ink. @param {number} d */
-const ball = (d) => {
-    const r = d / 2;
-    const L = [-0.48, -0.56, 0.68];
-    return svg(
-        'rt-ball__sprite',
-        `0 0 ${d} ${d}`,
-        pixels(d, d, (x, y) => {
-            const nx = (x + 0.5 - r) / r;
-            const ny = (y + 0.5 - r) / r;
-            const q = nx * nx + ny * ny;
-            if (q > 1) return null;
-            if (q > 0.78) return 'ink';
-            const nz = Math.sqrt(1 - q);
-            const lit = nx * L[0] + ny * L[1] + nz * L[2];
-            if (lit > 0.94) return 'hi';
-            if (lit > 0.78) return 'b3';
-            if (lit > 0.5) return 'b2';
-            if (lit > 0.2) return 'b1';
-            return 'b0';
-        }),
-        'xMidYMid meet',
-    );
-};
-
-/* 8 The spinning globe: the world in a 32 × 16 map, turned an eighth a frame (eight cels), lit from the top left, in a ring of
-   dither. @param {boolean} ring */
-const EARTH = [
-    '..............XX................',
-    '...XXXXXXX...XXX....XXXXXXXXXX..',
-    '..XXXXXXXXXX..X...XXXXXXXXXXXXX.',
-    '...XXXXXXXX.......XXXXXXXXXXXX..',
-    '....XXXXXX.......XXXXXXXXXXXX...',
-    '.....XXXX........XXXXXXXXXXX....',
-    '......XX........XXXXXXX..XX.....',
-    '.......XX.......XXXXXX....X.....',
-    '........XXX......XXXX......XX...',
-    '........XXXX.....XXXX.....XXXX..',
-    '.........XXX......XX......XXXX..',
-    '.........XX.......XX............',
-    '.........X......................',
-    '................................',
-    '................................',
-    '..XXXXXXXXXXXXXXXXXXXXXXXXXXXX..',
-];
-const globe = (ring = true) => {
-    const size = ring ? 20 : 12;
-    const c = size / 2;
-    const R = ring ? 7.5 : 5.5;
-    const cels = [...Array(8).keys()].map((f) => {
-        const turn = (f * Math.PI) / 4;
-        return `<g class="rt-cel8" style="--i: ${f}">${pixels(size, size, (x, y) => {
-            const dx = x + 0.5 - c;
-            const dy = y + 0.5 - c;
-            const dist = Math.hypot(dx, dy);
-            if (dist > R) return ring && dist > 8.6 && dist < 9.9 && (x + y) % 2 === 0 ? 'ring' : null;
-            const nx = dx / R;
-            const ny = dy / R;
-            const nz = Math.sqrt(Math.max(0, 1 - nx * nx - ny * ny));
-            const row = Math.min(15, Math.floor(((Math.PI / 2 + Math.asin(ny)) / Math.PI) * 16));
-            const col = Math.floor(frac((Math.atan2(nx, nz) + turn) / (2 * Math.PI) + 0.5) * 32);
-            const land = EARTH[row][col] === 'X';
-            const lit = -0.45 * nx - 0.5 * ny + 0.74 * nz;
-            if (lit > 0.93) return 'hi';
-            if (land) return lit > 0.55 ? 'l2' : lit > 0.15 ? 'l1' : 'l0';
-            return lit > 0.7 ? 'o3' : lit > 0.4 ? 'o2' : lit > 0.05 ? 'o1' : 'o0';
-        })}</g>`;
-    });
-    return svg(`rt-globe${ring ? '' : ' rt-globe--bare'}`, `0 0 ${size} ${size}`, cels.join(''), 'xMidYMid meet');
-};
-
-/**
- * What each option draws into each waiting part: `box` (the tile's and the panel's room), `row` (the menu entry's slot), `line`
- * (a skeleton line, by index), `day` (a day of the month, its inside), `month` (under the days) and `cover` (over them), `plot`.
- * @type {Record<string, { defs?: string, plot?: string, box: (seed: number) => string, row: () => string, line: (i: number) => string,
- *   day?: (i: number) => string, month?: () => string, cover?: () => string, plotted: () => string }>}
- */
-const WAITS = {
-    cycle: {
-        defs: FLOW_DEFS,
-        plot: 'rt-plot--real',
-        box: () => flow(),
-        row: () => flow(),
-        line: () => flow(),
-        month: () => flow('rt-flow--month'),
-        plotted: () => flow('rt-flow--plot'),
-    },
-    interlace: {
-        defs: LACE_DEFS,
-        plot: 'rt-plot--real',
-        box: (seed) => lace(360, 35, seed),
-        row: () => lace(44, 10, 7),
-        line: (i) => lace(400, 6, 11 + i),
-        cover: () => '<i class="rt-lacecover"></i>',
-        plotted: () => '<i class="rt-lacecover"></i>',
-    },
-    ants: {
-        box: () => '<i class="rt-ants"></i>',
-        row: () => '<i class="rt-ants"></i>',
-        line: () => '<i class="rt-ants"></i>',
-        day: (i) => `<span class="rt-day__num">${i + 1}</span><i class="rt-ants rt-ants--day"></i>`,
-        plotted: () => '<i class="rt-ants"></i>',
-    },
-    mystify: {
-        box: (seed) => mystify(200, 70, seed),
-        row: () => mystify(88, 20, 5),
-        line: (i) => mystify(200, 12, 21 + i),
-        month: () => mystify(210, 66, 31),
-        plotted: () => mystify(210, 40, 41),
-    },
-    stars: {
-        box: (seed) => starfield(100, 35, seed),
-        row: () => starfield(44, 10, 9, true),
-        line: (i) => starfield(400, 6, 13 + i, true),
-        month: () => starfield(104, 33, 17),
-        plotted: () => starfield(104, 20, 19),
-    },
-    prompt: {
-        plot: 'rt-plot--dos',
-        box: () =>
-            `<span class="rt-dos">${said('Starting MS-DOS...')}${said('HIMEM is testing extended memory...done.')}${typed('READ PUMPS', 3, [0, 15], 'C:\\>')}${typed(
-                'Loading...',
-                15,
-                [15, LOOP],
-            )}</span>`,
-        row: () => `<span class="rt-dos">${typed('Loading...', 3, [0, LOOP])}</span>`,
-        line: (i) =>
-            `<span class="rt-dos">${[typed('C:\\>DIR /W', 0, [0, 11]), typed('12 file(s)', 11, [11, 22]), typed('C:\\>', 22, [22, LOOP])][i]}</span>`,
-        day: (i) => {
-            const at = dayAt(i);
-            return `<span class="rt-dos rt-dos--day">${typed(String(i + 1), at, [at, i === 13 ? LOOP : dayAt(i + 1)])}</span>`;
-        },
-        plotted: () => `<span class="rt-dos rt-dos--foot">${typed('Plotting PUMP.DAT', 2, [0, LOOP])}</span>`,
-    },
-    ball: {
-        plot: 'rt-plot--real',
-        box: () => `<i class="rt-ball__shadow"></i><i class="rt-ball">${ball(12)}</i>`,
-        row: () => `<i class="rt-ball__shadow"></i><i class="rt-ball">${ball(10)}</i>`,
-        line: () => `<i class="rt-ball__shadow"></i><i class="rt-ball">${ball(8)}</i>`,
-        day: (i) =>
-            `<span class="rt-day__num">${i + 1}</span><i class="rt-bounce rt-bounce--air" style="--i: ${2 * i}">${ball(10)}</i><i class="rt-bounce rt-bounce--land" style="--i: ${
-                2 * i + 1
-            }">${ball(10)}</i><i class="rt-bounce__press" style="--i: ${2 * i + 1}"></i>`,
-        plotted: () => `<i class="rt-ball">${ball(10)}</i>`,
-    },
-    globe: {
-        box: () => `<i class="rt-globe-at">${globe()}</i>`,
-        row: () => `<i class="rt-globe-at">${globe()}</i>`,
-        line: () => `<i class="rt-globe-at">${globe(false)}</i>`,
-        day: (i) => (i === 0 ? `<i class="rt-globe-at">${globe()}</i>` : `<span class="rt-day__num">${i + 1}</span>`),
-        plotted: () => `<i class="rt-globe-at">${globe()}</i>`,
-    },
-};
-
-/** The overlay a waiting part carries. @param {string} inner */
-const over = (inner, cls = '') => `<span class="rt-w ${cls}" aria-hidden="true">${inner}</span>`;
-/** A month of fourteen days waiting. */
-const waitDays = (/** @type {(typeof WAITS)[string]} */ w) =>
-    `<div class="rt-days rt-days--grid" aria-hidden="true">${[...Array(14).keys()]
-        .map((i) => `<span class="rt-day" style="--i: ${i}">${w.day ? w.day(i) : `<span class="rt-day__num">${i + 1}</span>`}</span>`)
-        .join('')}</div>`;
-/** A skeleton line, the register's sunken line, with the picture inside it. */
-const waitLine = (/** @type {(typeof WAITS)[string]} */ w, /** @type {number} */ i) =>
-    `<span class="kp-skeleton rt-line" style="--i: ${i}">${over(w.line(i), 'rt-w--line')}</span>`;
-
-const LOADING = (key = 'cycle') => {
-    const w = WAITS[key] || WAITS.cycle;
-    return (
-        (w.defs || '') +
-        cell(
-            'Tile',
-            `<div class="kp-card rt-tile rt-waits rt-waits--box" aria-busy="true"><p class="kp-card__title rt-titlebar"><span>Pump house 4</span></p><div class="rt-waits__room">${over(
-                w.box(3),
-            )}</div><p class="rt-tile__foot"><span>Reading…</span></p></div>`,
-        ) +
-        cell(
-            'Panel',
-            `<div class="kp-card rt-panel rt-waits rt-waits--box" aria-busy="true"><p class="rt-panel__words">Reading the pump houses…</p><div class="rt-waits__room">${over(
-                w.box(8),
-            )}</div></div>`,
-        ) +
-        cell(
-            'Menu, loading entry',
-            `<div class="kp-popover rt-pop rt-pop--static"><ul class="kp-menu" role="menu"><li role="none"><button type="button" role="menuitem" class="kp-menu__item rt-waits rt-waits--row" aria-busy="true"><span class="rt-entry">Stations…</span>${over(
-                w.row(),
-                'rt-w--row',
-            )}</button></li>${entries(['Rename'])}</ul></div>`,
-        ) +
-        cell(
-            'Month days',
-            `<div class="rt-well rt-month-wait rt-waits" aria-busy="true">${w.month ? over(w.month(), 'rt-w--under') : ''}${waitDays(w)}${
-                w.cover ? over(w.cover(), 'rt-w--cover') : ''
-            }</div>`,
-        ) +
-        cell(
-            'Chart plot',
-            `<div class="rt-well rt-plotwait rt-waits" aria-busy="true">${plot(w.plot || 'rt-plot--ghost')}${over(w.plotted(), 'rt-w--plot')}</div>`,
-        ) +
-        cell(
-            'Skeleton lines',
-            `<div class="rt-skelwrap rt-waits rt-waits--skel" aria-busy="true"><div class="rt-skel" aria-hidden="true">${[0, 1, 2]
-                .map((i) => waitLine(w, i))
-                .join('')}</div></div>`,
-        )
-    );
-};
 
 const BUSYBAR = () =>
     cell(

@@ -1,5 +1,5 @@
 {
-    "update": 3,
+    "update": 4,
     "picks": {
         "retro": {
             "curve": "frames",
@@ -25,8 +25,8 @@
     "questions": {
         "retro": {
             "loading": {
-                "comment": "Deze zijn allemaal zo slecht dat ik op het punt sta om dit hele thema te wissen. Bedenk nu is iets beters!",
-                "reply": "Understood, and I am sorry: two rounds of loading pictures in a row did not look good. I stopped copying dialogs. Retro already keeps seventeen picks you approved, so only loading changes. The new set is eight ideas from the screen of the nineties rather than the Windows dialogs: pictures that are lovely to watch on their own and that fit a tile, a menu entry, a month, a chart plot and skeleton lines without a bar or a label. Every motion is in whole 90 ms frames, nothing eased, and the loop is 28 frames (2.52 s). Palette cycling is the one I would pick: it is the nineties trick that made a still picture move, and it needs no extra mark on the part."
+                "comment": "not even close, zeker optie 1 is veel te schreeuwerig, het moet veel subtieler zijn",
+                "reply": "Too loud, yes: I filled the whole part with a picture, and a loading state should not be a picture. Update 4 goes the other way: eight quiet ones that leave the part exactly as it is and only change something small about it, in whole 90 ms frames in retro’s own greys, nothing coloured and nothing filling the part. The part stays readable underneath. My pick is the dither shimmer, the one thing on a 1995 screen that was always slightly moving."
             }
         }
     }

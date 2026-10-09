@@ -833,12 +833,11 @@
         }
     }
 
-    /* ── G10: loading is a picture from the screens of the nineties
-       (palette cycling, an interlaced image, marching ants, Mystify, the
-       starfield, the DOS prompt, the bouncing ball, the spinning globe),
-       pixel art fitted to each waiting part: question 10 decides which; its
-       keyframes are the options' own (options.css, `rt-cel`, `rt-flow`,
-       `rt-lace-*`, `rt-ants*`, `rt-trail`, `rt-type*`, `rt-ball-*`). ──── */
+    /* ── G10: loading is quiet: the waiting part stays as it is and one
+       small thing about it changes in retro's greys, in whole frames (the
+       dither, a raster line, the cursor, the dots, the bevel, the ground,
+       the ants, the selection): question 10 decides which; its keyframes
+       are the options' own (options.css, `rt-q-*`). ───────────────────── */
 
     /* ── G11: the sheet hops ahead, a loop of 28 frames: seven hops of three
        frames, two blocks a hop, the navy blocks filling whole behind it (the

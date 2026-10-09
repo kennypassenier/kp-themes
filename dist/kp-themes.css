@@ -39676,18 +39676,20 @@
         padding-top: var(--kp-space-md);
     }
 
+    /* Walked start to end in logical terms (G2), so a right-to-left page
+       draws it from the right. */
     [data-theme='forest'] [data-kp-reveal='rule']::before {
         content: '';
         position: absolute;
-        top: 0;
-        left: 0;
-        height: 3px;
-        width: 2.5rem;
+        inset-block-start: 0;
+        inset-inline-start: 0;
+        block-size: 3px;
+        inline-size: 2.5rem;
         background: var(--primary);
     }
 
     [data-theme='forest'][data-kp-effects] [data-kp-reveal='rule']:not(.is-in)::before {
-        width: 0;
+        inline-size: 0;
     }
 
     /* The redaction: emphasis is a plate of ink over the phrase, cleared
@@ -39961,6 +39963,25 @@
     [data-theme='forest'] .kp-nav__menu a:hover,
     [data-theme='forest'] .kp-nav__menu a:focus-visible {
         background: var(--secondary);
+        color: var(--foreground);
+    }
+
+    /* A tab, a crumb and a page number are links in a bar (G11; Kenny,
+       2026-10-09 on research/forest-uniformity, the bar: "a link answers as
+       a link"): pointed at, they take forest's link answer, the 2 px green
+       rule under the words with the words in green, drawn in contact time.
+       The rule is laid at rest in transparent ink, so only its colour moves.
+       The selected tab keeps its own rule and the current page its plate. */
+    [data-theme='forest'] :is(.kp-tab, .kp-breadcrumb a, .kp-pagination a) {
+        text-decoration-line: underline;
+        text-decoration-thickness: 2px;
+        text-decoration-color: transparent;
+        text-underline-offset: 0.35em;
+    }
+
+    [data-theme='forest'] :is(.kp-tab:not([aria-selected='true']), .kp-breadcrumb a, .kp-pagination a:not([aria-current])):hover {
+        color: var(--primary);
+        text-decoration-color: var(--primary);
     }
 
     /* ── Buttons ─────────────────────────────────────────────────────── */
@@ -39981,24 +40002,146 @@
        nothing, and its siblings are left alone. A menu entry fills its row
        edge to edge, so its ring is laid inside. The transition lives with
        the other motion, below. */
-    [data-theme='forest'] :is(.kp-button, .kp-icon-button, .kp-menu__item, a.kp-kpi, .kp-kpi--toggle) {
+    /* Every part a person acts on blazes (Kenny, 2026-10-09 on research/
+       forest-uniformity: pointing, fields and the bar "blaze"): the bar's
+       call to action and its toggle, a date picker's day, a chart's legend
+       key, a reorder row, a field, a select, a check, a switch and the drop
+       zone take the button's ring. A row that fills its list edge to edge
+       (a menu entry, a theme option, a combobox or palette option, an
+       accordion heading, a dropdown link, a side navigation row, a table
+       row) takes it laid just inside, on the entry's kraft ground (rows:
+       "every row answers as a menu entry"). A tree row draws the same on its
+       first line (below). Focus is the two-channel ring and wins: the blaze
+       is not laid on a part the keyboard is on. */
+    [data-theme='forest']
+        :where(
+            .kp-button,
+            .kp-icon-button,
+            .kp-menu__item,
+            a.kp-kpi,
+            .kp-kpi--toggle,
+            .kp-nav__link--cta,
+            .kp-nav__toggle,
+            .kp-datepicker__day,
+            .kp-chart__source,
+            .kp-chart__show-all,
+            .kp-reorder [data-kp-item],
+            .kp-field__input,
+            .kp-combobox__input,
+            .kp-datatable__search,
+            .kp-field__check,
+            .kp-switch__input,
+            .kp-upload__zone,
+            .kp-menu [data-kp-theme],
+            .kp-combobox__option,
+            .kp-palette__option,
+            .kp-accordion__summary,
+            .kp-nav__menu a,
+            .kp-sidenav__link,
+            .kp-sidenav__category-toggle,
+            .kp-table tbody tr
+        ) {
         outline: 2px dashed transparent;
         outline-offset: 5px;
     }
 
-    [data-theme='forest'] :is(.kp-button, .kp-icon-button, .kp-menu__item, a.kp-kpi, .kp-kpi--toggle):hover:not(:disabled, [aria-disabled='true']) {
+    [data-theme='forest']
+        :where(
+            .kp-button,
+            .kp-icon-button,
+            .kp-menu__item,
+            a.kp-kpi,
+            .kp-kpi--toggle,
+            .kp-nav__link--cta,
+            .kp-nav__toggle,
+            .kp-datepicker__day,
+            .kp-chart__source,
+            .kp-chart__show-all,
+            .kp-reorder [data-kp-item],
+            .kp-field__input,
+            .kp-combobox__input,
+            .kp-datatable__search,
+            .kp-field__check,
+            .kp-switch__input,
+            .kp-upload__zone,
+            .kp-menu [data-kp-theme],
+            .kp-combobox__option,
+            .kp-palette__option,
+            .kp-accordion__summary,
+            .kp-nav__menu a,
+            .kp-sidenav__link,
+            .kp-sidenav__category-toggle,
+            .kp-table tbody tr
+        ):hover:not(:disabled, [aria-disabled='true'], :focus-visible) {
         outline-color: var(--primary);
         outline-offset: 2px;
     }
 
-    [data-theme='forest'] :is(.kp-button, .kp-icon-button, .kp-menu__item, a.kp-kpi, .kp-kpi--toggle):active:not(:disabled, [aria-disabled='true']) {
+    [data-theme='forest']
+        :where(
+            .kp-button,
+            .kp-icon-button,
+            .kp-menu__item,
+            a.kp-kpi,
+            .kp-kpi--toggle,
+            .kp-nav__link--cta,
+            .kp-nav__toggle,
+            .kp-datepicker__day,
+            .kp-chart__source
+        ):active:not(:disabled, [aria-disabled='true']) {
         outline-style: solid;
         outline-color: var(--primary);
         outline-offset: 1px;
     }
 
-    [data-theme='forest'] .kp-menu__item:is(:hover, :active):not(:disabled, [aria-disabled='true']) {
+    [data-theme='forest']
+        :where(
+            .kp-menu__item,
+            .kp-menu [data-kp-theme],
+            .kp-combobox__option,
+            .kp-palette__option,
+            .kp-accordion__summary,
+            .kp-nav__menu a,
+            .kp-sidenav__link,
+            .kp-sidenav__category-toggle,
+            .kp-table tbody tr
+        ):is(:hover, :active):not(:disabled, [aria-disabled='true'], :focus-visible) {
         outline-offset: -3px;
+    }
+
+    /* The row's ground: the menu entry's kraft, its words in their own ink. */
+    [data-theme='forest']
+        :where(
+            .kp-menu [data-kp-theme],
+            .kp-combobox__option,
+            .kp-palette__option,
+            .kp-accordion__summary,
+            .kp-sidenav__link,
+            .kp-sidenav__category-toggle,
+            .kp-table tbody tr
+        ):hover:not([aria-disabled='true']) {
+        background: var(--secondary);
+    }
+
+    [data-theme='forest']
+        :where(
+            .kp-menu [data-kp-theme],
+            .kp-combobox__option,
+            .kp-palette__option,
+            .kp-accordion__summary,
+            .kp-sidenav__link,
+            .kp-sidenav__category-toggle
+        ):hover:not([aria-disabled='true'], [aria-current]) {
+        color: var(--foreground);
+    }
+
+    /* A small part shows the blaze alone, no grey ground and no grey edge. */
+    [data-theme='forest'] .kp-datepicker__day:hover:not([aria-selected='true']) {
+        background: none;
+    }
+
+    [data-theme='forest'] :is(.kp-chart__source, .kp-chart__show-all):hover:not([aria-pressed='true']) {
+        border-color: transparent;
     }
 
     /* On a toast's own plate the green would not read: the blaze takes the
@@ -40013,12 +40156,48 @@
        inner ring (box-shadow) is put back by restating it, not by removing
        the shadow — `box-shadow: none` took the ring's second channel with
        it, which tests/button.spec.mjs measured across every theme. */
-    [data-theme='forest'] :is(.kp-button, .kp-icon-button, .kp-menu__item, a.kp-kpi, .kp-kpi--toggle):focus-visible {
+    [data-theme='forest']
+        :where(
+            .kp-button,
+            .kp-icon-button,
+            .kp-menu__item,
+            a.kp-kpi,
+            .kp-kpi--toggle,
+            .kp-nav__link--cta,
+            .kp-nav__toggle,
+            .kp-datepicker__day,
+            .kp-chart__source,
+            .kp-chart__show-all,
+            .kp-reorder [data-kp-item],
+            .kp-field__input,
+            .kp-combobox__input,
+            .kp-datatable__search,
+            .kp-field__check,
+            .kp-switch__input,
+            .kp-accordion__summary,
+            .kp-nav__menu a,
+            .kp-sidenav__link,
+            .kp-sidenav__category-toggle
+        ):focus-visible,
+    [data-theme='forest'] :focus-visible + .kp-upload__zone,
+    [data-theme='forest'] [data-kp-upload]:has([data-kp-upload-input]:focus-visible) .kp-upload__zone {
         outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast);
         outline-offset: var(--kp-focus-ring-inner-width, 2px);
         box-shadow:
             0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
             var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 var(--border-strong);
+    }
+
+    /* A theme option fills a list that clips at its edge, so its two
+       channels are laid inside it: the inner ring at the edge, the
+       contrast ring within it (DI2; the pale outer channel alone read
+       about 1.03:1 on the card, research/forest-uniformity F-13). */
+    [data-theme='forest'] .kp-menu [data-kp-theme]:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid transparent;
+        outline-offset: calc(-1 * var(--focus-ring-width, 2px));
+        box-shadow:
+            inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 0 0 calc(var(--kp-focus-ring-inner-width, 2px) + var(--focus-ring-width, 2px)) var(--focus-ring-contrast);
     }
 
     [data-theme='forest'] .kp-button--primary {
@@ -40196,6 +40375,15 @@
         box-shadow: 0 20px 44px -16px color-mix(in srgb, var(--foreground) 45%, transparent);
     }
 
+    /* A menu inside a popover is the popover's list, not a second plate
+       (G6, G7: one plate, one leaf corner; F-24). */
+    [data-theme='forest'] .kp-popover > .kp-menu {
+        border: 0;
+        border-radius: 0;
+        background: none;
+        box-shadow: none;
+    }
+
     /* The wrapper round the theme picker's icon button is not a card: only its
        dropdown list is. */
     [data-theme='forest'] .kp-theme-menu {
@@ -40273,19 +40461,20 @@
     [data-theme='forest'] .kp-alert:not([class*='kp-alert--']) {
         background: var(--card);
         border: 1px solid var(--border);
-        border-left: 4px solid var(--accent);
+        border-inline-start: 4px solid var(--accent);
     }
 
+    /* The edge stands at the start, in logical terms (G2). */
     [data-theme='forest'] .kp-alert--destructive {
-        border-left-color: var(--destructive);
+        border-inline-start-color: var(--destructive);
     }
 
     [data-theme='forest'] .kp-alert--warning {
-        border-left-color: var(--warning-foreground);
+        border-inline-start-color: var(--warning-foreground);
     }
 
     [data-theme='forest'] .kp-alert--success {
-        border-left-color: var(--success-foreground);
+        border-inline-start-color: var(--success-foreground);
     }
 
     /* The success and info plates' own inks read 4.51 and 4.59:1; a
@@ -40455,9 +40644,10 @@
         color: var(--primary);
     }
 
+    /* Words, not identifiers: the body face (G13). */
     [data-theme='forest'] .kp-datatable__status,
     [data-theme='forest'] .kp-datatable__page {
-        font-family: var(--theme-font-mono);
+        font-family: var(--theme-font-body);
         font-size: 0.75rem;
     }
 
@@ -40521,15 +40711,18 @@
         border-bottom: 1px solid var(--border);
     }
 
+    /* Crumbs and page numbers are words in the bar, in the body face (G13). */
     [data-theme='forest'] .kp-breadcrumb,
     [data-theme='forest'] .kp-pagination {
-        font-family: var(--theme-font-mono);
+        font-family: var(--theme-font-body);
     }
 
     [data-theme='forest'] .kp-pagination a[aria-current],
     [data-theme='forest'] .kp-pagination [aria-current] {
         background: var(--primary);
         color: var(--primary-foreground);
+        /* Room round the number for the plate's leaf corner. */
+        padding-inline: 0.5em;
     }
 
     [data-theme='forest'] .kp-wizard__steps {
@@ -40635,10 +40828,10 @@
        the no-preference guard, so a reader who asked for reduced motion
        never receives one — the rest states above are what they get. */
     @media (prefers-reduced-motion: no-preference) {
+        /* The headline grows up out of its own line (G10), held at its
+           first frame through the delay; the finished line is the rest. */
         [data-theme='forest'] [data-kp-reveal='headline'] {
-            opacity: 0;
-            transform: translateY(0.5rem);
-            animation: kp-headline-in var(--kp-sig-fo-time, 1000ms) var(--fx-ease) var(--kp-headline-delay) forwards;
+            animation: kp-headline-in var(--kp-sig-fo-time, 1000ms) var(--fx-ease) var(--kp-headline-delay) backwards;
         }
 
         [data-theme='forest'] .kp-contour-trace path {
@@ -40647,7 +40840,7 @@
         }
 
         [data-theme='forest'] [data-kp-reveal='rule']::before {
-            transition: width var(--kp-sig-fo-time, 1000ms) var(--fx-ease);
+            transition: inline-size var(--kp-sig-fo-time, 1000ms) var(--fx-ease);
         }
 
         [data-theme='forest'] [data-kp-reveal='emphasis'] mark {
@@ -40679,7 +40872,27 @@
         [data-theme='forest'] .kp-kpi--toggle,
         [data-theme='forest'] .kp-nav__link,
         [data-theme='forest'] .kp-nav__link--cta,
+        [data-theme='forest'] .kp-nav__toggle,
         [data-theme='forest'] .kp-field__input,
+        [data-theme='forest'] .kp-combobox__input,
+        [data-theme='forest'] .kp-datatable__search,
+        [data-theme='forest'] .kp-switch__input,
+        [data-theme='forest'] .kp-upload__zone,
+        [data-theme='forest'] .kp-datepicker__day,
+        [data-theme='forest'] .kp-chart__source,
+        [data-theme='forest'] .kp-chart__show-all,
+        [data-theme='forest'] .kp-reorder [data-kp-item],
+        [data-theme='forest'] .kp-menu [data-kp-theme],
+        [data-theme='forest'] .kp-combobox__option,
+        [data-theme='forest'] .kp-palette__option,
+        [data-theme='forest'] .kp-accordion__summary,
+        [data-theme='forest'] .kp-nav__menu a,
+        [data-theme='forest'] .kp-sidenav__link,
+        [data-theme='forest'] .kp-sidenav__category-toggle,
+        [data-theme='forest'] .kp-table tbody tr,
+        [data-theme='forest'] .kp-tab,
+        [data-theme='forest'] .kp-breadcrumb a,
+        [data-theme='forest'] .kp-pagination a,
         [data-theme='forest'] .kp-footer a {
             transition:
                 outline-color var(--fx-duration) var(--fx-ease),
@@ -40688,7 +40901,8 @@
                 box-shadow var(--fx-duration) var(--fx-ease),
                 background-color var(--fx-duration) var(--fx-ease),
                 border-color var(--fx-duration) var(--fx-ease),
-                color var(--fx-duration) var(--fx-ease);
+                color var(--fx-duration) var(--fx-ease),
+                text-decoration-color var(--fx-duration) var(--fx-ease);
         }
 
         [data-theme='forest'] .kp-button--mirror {
@@ -40703,16 +40917,18 @@
 
     /* ── Motion [DI5, DI7] ────────────────────────────────────────────── */
 
-    /* Both keyframes have their row in TIMINGS (js/effects.js). */
+    /* Both keyframes have their row in TIMINGS (js/effects.js). The headline
+       comes up out of its own line, clipped there all the way, so its words
+       keep their shape and nothing fades. */
     @keyframes kp-headline-in {
         0% {
-            opacity: 0;
-            transform: translateY(0.5rem);
+            translate: 0 100%;
+            clip-path: inset(0 -0.5em 100% -0.5em);
         }
 
         100% {
-            opacity: 1;
-            transform: none;
+            translate: 0 0;
+            clip-path: inset(-0.5em -0.5em 0 -0.5em);
         }
     }
 
@@ -40795,7 +41011,11 @@
        Nothing new is decided here; what the components layer already said
        is put back where the cascade can reach it. */
 
-    [data-theme='forest'] .kp-button:active:not(:disabled) {
+    /* The plain button only: a primary or destructive plate stays its own
+       when pressed (G12: the blaze closes in, the part does not change). The
+       restatement reached them too and turned them pale under their light
+       words, 1.8:1 (research/forest-uniformity F-10). */
+    [data-theme='forest'] .kp-button:active:not(:disabled, .kp-button--primary, .kp-button--destructive) {
         background: var(--secondary-active);
     }
 
@@ -40937,6 +41157,14 @@
         --kp-sig-fo-time: 1000ms;
         --kp-sig-fo-loop: 3200ms;
         --kp-sig-fo-stagger: 80ms;
+        /* The one rhythm of everything that waits (Kenny, 2026-10-09 on
+           research/forest-uniformity, timing: "the bar's breath
+           everywhere"): the busy bar's breath, 3000 ms in, 600 ms full,
+           3000 ms out, for the bar, the planting strips, the skeleton lines,
+           the measuring meter, the busy panels and the treeline of a block
+           or a circle alike, so a page that loads breathes as one grove. The
+           spinner keeps its tree a half loop (1600 ms). */
+        --kp-sig-fo-breath: 6600ms;
         /* js/motion.js reads its caps from the root: a close or a size
            glide of one growth time is not cut short (its defaults, 600 and
            480 ms, are other themes'). */
@@ -41034,7 +41262,7 @@
             var(--kp-fo-margin) + round(down, var(--kp-fo-breath) * (var(--kp-fo-run) + var(--kp-fo-pitch)), var(--kp-fo-pitch)),
             100cqi
         );
-        animation: kp-progressbar-forest-breath 6600ms linear infinite;
+        animation: kp-progressbar-forest-breath var(--kp-sig-fo-breath) linear infinite;
     }
 
     [data-theme='forest'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
@@ -41130,7 +41358,6 @@
     }
 
     [data-theme='forest'] .kp-field__check {
-        --kp-sig-dur: var(--fx-duration);
         appearance: none;
         display: inline-grid;
         place-content: center;
@@ -41147,7 +41374,12 @@
         background: var(--primary);
     }
 
-    [data-theme='forest'] .kp-field__check[type='checkbox']:checked::before {
+    /* The tick and the dot are always there, cleared by their clip: a set
+       check draws its tick start to end and a cleared one takes it back the
+       same way, end to start (Kenny, 2026-10-09 on research/forest-
+       uniformity, pairs: "every pair mirrored"). A cleared part is never
+       drawn: the clip leaves nothing of it. */
+    [data-theme='forest'] .kp-field__check[type='checkbox']::before {
         content: '';
         inline-size: 0.62rem;
         block-size: 0.32rem;
@@ -41155,6 +41387,15 @@
         border-block-end: 2px solid var(--primary-foreground);
         border-end-start-radius: 1px;
         transform: translateY(-1px) rotate(-45deg);
+        clip-path: inset(0 100% 0 0);
+    }
+
+    [data-theme='forest'] .kp-field__check[type='checkbox']:dir(rtl)::before {
+        clip-path: inset(0 0 0 100%);
+    }
+
+    [data-theme='forest'] .kp-field__check[type='checkbox']:checked::before {
+        clip-path: inset(0);
     }
 
     [data-theme='forest'] .kp-field__check[type='radio'] {
@@ -41165,8 +41406,11 @@
         border-color: var(--primary);
     }
 
-    [data-theme='forest'] .kp-field__check[type='radio']:checked::before {
+    /* The dot grows up out of its foot and sinks back into it, never scaled
+       (G3). */
+    [data-theme='forest'] .kp-field__check[type='radio']::before {
         content: '';
+        clip-path: inset(100% 0 0);
         inline-size: 0.75rem;
         block-size: 0.75rem;
         border-radius: 50%;
@@ -41177,6 +41421,10 @@
             hsl(from var(--primary) h s l / 0.6) 72% calc(72% + 1.25px),
             transparent calc(72% + 1.25px)
         );
+    }
+
+    [data-theme='forest'] .kp-field__check[type='radio']:checked::before {
+        clip-path: inset(0);
     }
 
     [data-theme='forest'] .kp-toast {
@@ -41388,6 +41636,19 @@
     }
 
     @media (prefers-reduced-motion: no-preference) {
+        /* A link in running text answers in contact time, like the bar's
+           links (F-15); the dash turning solid is a step. */
+        [data-theme='forest'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
+            transition:
+                text-decoration-color var(--fx-duration) var(--fx-ease),
+                text-decoration-thickness var(--fx-duration) var(--fx-ease);
+        }
+
+        /* The switch's thumb goes back on the curve turned around. */
+        [data-theme='forest'] .kp-switch__input:not(:checked)::before {
+            transition-timing-function: var(--kp-sig-fo-wither);
+        }
+
         /* One tree is planted per half a loop. */
         [data-theme='forest'] .kp-spinner::after {
             animation: kp-sig-forest-plant calc(var(--kp-sig-fo-loop) / 2) step-end infinite;
@@ -41397,12 +41658,36 @@
             transition: transform var(--fx-duration) var(--fx-ease);
         }
 
-        [data-theme='forest'] .kp-field__check[type='checkbox']:checked::before {
-            animation: kp-sig-forest-draw var(--kp-sig-dur) var(--fx-ease) both;
+        /* A check is set in contact time on the growth curve and cleared as
+           that played backwards: the plate turns green at once and then the
+           tick is drawn; on clearing the tick is taken back on the curve
+           turned around and the plate turns kraft once it is gone. */
+        [data-theme='forest'] .kp-field__check {
+            transition:
+                outline-color var(--fx-duration) var(--fx-ease),
+                outline-offset var(--fx-duration) var(--fx-ease),
+                outline-style var(--fx-duration) allow-discrete,
+                box-shadow var(--fx-duration) var(--fx-ease),
+                background-color 0s linear var(--fx-duration),
+                border-color 0s linear var(--fx-duration);
         }
 
-        [data-theme='forest'] .kp-field__check[type='radio']:checked::before {
-            animation: kp-sig-forest-radio var(--kp-sig-dur) var(--fx-ease) both;
+        [data-theme='forest'] .kp-field__check:checked {
+            transition:
+                outline-color var(--fx-duration) var(--fx-ease),
+                outline-offset var(--fx-duration) var(--fx-ease),
+                outline-style var(--fx-duration) allow-discrete,
+                box-shadow var(--fx-duration) var(--fx-ease),
+                background-color 0s linear,
+                border-color 0s linear;
+        }
+
+        [data-theme='forest'] .kp-field__check::before {
+            transition: clip-path var(--fx-duration) var(--kp-sig-fo-wither);
+        }
+
+        [data-theme='forest'] .kp-field__check:checked::before {
+            transition-timing-function: var(--kp-sig-fo-grow);
         }
 
         /* A toast arrives as its leave played backwards, so that its leave
@@ -41449,34 +41734,13 @@
         }
     }
 
-    /* A tick is walked, start to end. */
-    @keyframes kp-sig-forest-draw {
-        from {
-            clip-path: inset(0 100% 0 0);
-        }
-
-        to {
-            clip-path: inset(0);
-        }
-    }
-
-    @keyframes kp-sig-forest-radio {
-        from {
-            opacity: 0;
-            transform: scale(1.6);
-        }
-
-        to {
-            opacity: 1;
-            transform: none;
-        }
-    }
-
     /* Growth [G2, G3]: a part grows up out of its own base line, its top
        edge first. It is moved up out of the ground and clipped at the line
        it grows from, so it comes out of that line (never squashed or
-       scaled: the words keep their shape). Its own shadow may show a little
-       past its edge when it is grown. */
+       scaled: the words keep their shape). The line it grows from stays the
+       clip's edge for the whole growth (F-23: the clip used to open past it
+       as the part travelled, drawing a menu over its own button); the other
+       sides reach out for its shadow. */
     @keyframes kp-sig-forest-grow {
         from {
             translate: 0 100%;
@@ -41485,7 +41749,7 @@
 
         to {
             translate: 0 0;
-            clip-path: inset(calc(-1 * var(--kp-sig-fo-reach)));
+            clip-path: inset(calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)) 0 calc(-1 * var(--kp-sig-fo-reach)));
         }
     }
 
@@ -41499,7 +41763,74 @@
 
         to {
             translate: 0 0;
-            clip-path: inset(calc(-1 * var(--kp-sig-fo-reach)));
+            clip-path: inset(0 calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)));
+        }
+    }
+
+    /* The same two growths under a second name, for a close a stylesheet
+       plays itself (the phone menu, the palette): played reverse, the
+       growth runs backwards on its own curve, frame for frame, and the new
+       name restarts it where the opening's name would not. */
+    @keyframes kp-sig-forest-root-back {
+        from {
+            translate: 0 -100%;
+            clip-path: inset(100% calc(-1 * var(--kp-sig-fo-reach)) 0 calc(-1 * var(--kp-sig-fo-reach)));
+        }
+
+        to {
+            translate: 0 0;
+            clip-path: inset(0 calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)));
+        }
+    }
+
+    @keyframes kp-sig-forest-grow-back {
+        from {
+            translate: 0 100%;
+            clip-path: inset(0 calc(-1 * var(--kp-sig-fo-reach)) 100% calc(-1 * var(--kp-sig-fo-reach)));
+        }
+
+        to {
+            translate: 0 0;
+            clip-path: inset(calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)) 0 calc(-1 * var(--kp-sig-fo-reach)));
+        }
+    }
+
+    /* An arrival that a script turns around (the tour's card,
+       js/motion.js playEntranceBackwards): it grows up out of its own line
+       from autumn to green on the growth curve, played forwards, so its
+       reverse is forest's leave. */
+    @keyframes kp-sig-forest-arrive {
+        from {
+            translate: 0 100%;
+            clip-path: inset(0 calc(-1 * var(--kp-sig-fo-reach)) 100% calc(-1 * var(--kp-sig-fo-reach)));
+            filter: sepia(1) saturate(0.6);
+        }
+
+        to {
+            translate: 0 0;
+            clip-path: inset(calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)) 0 calc(-1 * var(--kp-sig-fo-reach)));
+            filter: none;
+        }
+    }
+
+    /* A backdrop comes with its plate on the growth curve (F-25). */
+    @keyframes kp-sig-forest-fade {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes kp-sig-forest-fade-back {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
         }
     }
 
@@ -41555,7 +41886,7 @@
     @keyframes kp-sig-forest-leave {
         from {
             translate: 0 0;
-            clip-path: inset(calc(-1 * var(--kp-sig-fo-reach)));
+            clip-path: inset(calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)) 0 calc(-1 * var(--kp-sig-fo-reach)));
             filter: none;
         }
 
@@ -41705,6 +42036,11 @@
             animation: kp-sig-forest-meter-wipe-o var(--kp-sig-fo-time) var(--kp-sig-fo-grow) backwards;
             transition: inline-size var(--kp-sig-fo-time) var(--kp-sig-fo-grow);
         }
+
+        /* The share is walked from the start in a right-to-left page too (G2). */
+        [data-theme='forest'] :is(.kp-meter, .kp-kpi__meter):dir(rtl)::before {
+            animation-name: kp-sig-forest-meter-wipe-o-rtl;
+        }
     }
 
     /* ── when the tone changes: a growth ring is laid round the meter (G8),
@@ -41804,6 +42140,16 @@
     @keyframes kp-sig-forest-meter-wipe-o {
         0% {
             clip-path: inset(0 100% 0 0);
+        }
+
+        100% {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes kp-sig-forest-meter-wipe-o-rtl {
+        0% {
+            clip-path: inset(0 0 0 100%);
         }
 
         100% {
@@ -41967,7 +42313,7 @@
                 .kp-kpi__chart .kp-chart__state[data-kp-state='loading'],
                 .kp-calendar--busy-whole > .kp-calendar__busy
             ) {
-            animation: kp-progressbar-forest-breath 6600ms linear infinite;
+            animation: kp-progressbar-forest-breath var(--kp-sig-fo-breath) linear infinite;
         }
 
         /* Lines of a skeleton stand 400 ms apart. */
@@ -42005,9 +42351,11 @@
        paper-brown rise from the foot, the far one first, then the planted tree
        line (the lines' own trees, whole trees only, the lines' pitch, margin
        and edge arithmetic) walks across start to end on the ground line. One
-       clock, --kp-fo-grow, 0 to 1 over 3200 ms linear: it arrives for 1400 ms,
-       stands for 400 ms and leaves for 1400 ms as the arrival played
-       backwards. The ridges are heights in percent and the trees are a fixed
+       clock, --kp-fo-grow, 0 to 1 on the bar's own breath (Kenny, 2026-10-09
+       on research/forest-uniformity, timing: "the bar's breath
+       everywhere"): it arrives in 3000 ms, stands for 600 ms and leaves in
+       3000 ms as the arrival played backwards, on the bar's ease, so it
+       breathes with the lines and the bar beside it. The ridges are heights in percent and the trees are a fixed
        size per shape, so it fits any block height and the circle (clipped to
        the circle) alike. Standing still it is the finished picture
        (--kp-fo-grow stays 1). The chart's loading panel and legend stubs are
@@ -42073,22 +42421,22 @@
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='forest'] :is(.kp-skeleton--block, .kp-skeleton--circle) {
-            animation: kp-skeleton-forest-treeline 3200ms linear infinite;
+            animation: kp-skeleton-forest-treeline var(--kp-sig-fo-breath) linear infinite;
         }
     }
 
     @keyframes kp-skeleton-forest-treeline {
         0% {
             --kp-fo-grow: 0;
-            animation-timing-function: linear;
+            animation-timing-function: cubic-bezier(0.42, 0, 0.58, 1);
         }
-        43.75% {
+        45.4545% {
             --kp-fo-grow: 1;
             animation-timing-function: linear;
         }
-        56.25% {
+        54.5455% {
             --kp-fo-grow: 1;
-            animation-timing-function: linear;
+            animation-timing-function: cubic-bezier(0.42, 0, 0.58, 1);
         }
         100% {
             --kp-fo-grow: 0;
@@ -42223,9 +42571,30 @@
             .kp-tooltip,
             .kp-help kbd,
             .kp-shortcuts__row kbd,
-            .kp-field__check:not([type='radio'])
+            .kp-field__check:not([type='radio']),
+            .kp-nav__link--cta,
+            .kp-nav__menu a,
+            .kp-pagination a,
+            .kp-pagination [aria-current],
+            .kp-datepicker__day,
+            .kp-tree [role='treeitem'],
+            .kp-menu [data-kp-theme],
+            .kp-colorpicker__swatch,
+            .kp-chart__source,
+            .kp-chart__show-all,
+            .kp-reorder [data-kp-handle],
+            .kp-accordion__summary,
+            .kp-sidenav__link,
+            .kp-sidenav__category-toggle
         ),
     [data-theme='forest'] .kp-card[data-kp-label]::before {
+        /* The last small parts take the leaf too (Kenny, 2026-10-09 on
+           research/forest-uniformity, corners: "the leaf on every small
+           part"): the bar's call to action, page numbers, the days of the
+           date picker, tree rows, theme options, colour swatches, legend
+           keys, side navigation rows. What is round in a wood stays round
+           (the radio, the switch's thumb, the tag's remove button, the
+           month's logs). */
         border-radius: var(--kp-sig-fo-part);
     }
 
@@ -42267,17 +42636,41 @@
 
     /* A menu or a popover hangs from its button: it grows down out of the button's edge,
        its far end first, like a root; placed above its button it grows up out of it (G3),
-       one growth (G4). It closes as the growth reversed (js/motion.js playClose). */
-    [data-theme='forest'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip)) {
+       one growth (G4). It closes as the growth reversed (js/motion.js playClose). The
+       combobox's list and the date picker's panel grow down out of their field the same
+       way, and the React theme menu's list out of its button (Kenny, 2026-10-09 on
+       research/forest-uniformity: pairs "the list grows down out of its field", overlays
+       "each grows like its family"); a list raised into the top layer closes as that
+       growth reversed on js/motion.js's copy of it. */
+    [data-theme='forest']
+        :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip), .kp-combobox__list, .kp-datepicker__panel, .kp-theme-menu__list) {
         --kp-sig-dur: var(--kp-sig-fo-time);
     }
 
+    /* The list arrives as its own growth, not as the theme's leave turned
+       around, which grew it up out of its own foot (F-19). */
+    [data-theme='forest'] .kp-combobox__list {
+        --kp-open: own;
+    }
+
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='forest'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip)) {
+        [data-theme='forest']
+            :is(
+                .kp-menu-button > .kp-menu,
+                .kp-popover[popover]:not(.kp-tooltip),
+                .kp-combobox__list:popover-open,
+                .kp-datepicker__panel:popover-open,
+                .kp-theme-menu__list
+            ) {
             animation: kp-sig-forest-root var(--kp-sig-dur) var(--kp-sig-fo-grow) backwards;
         }
 
-        [data-theme='forest'] .kp-menu-button > .kp-menu[data-kp-menu-side='above'] {
+        [data-theme='forest']
+            :is(
+                .kp-menu-button > .kp-menu[data-kp-menu-side='above'],
+                .kp-combobox__list[data-kp-overlay-side='above']:popover-open,
+                .kp-datepicker__panel[data-kp-overlay-side='above']:popover-open
+            ) {
             animation-name: kp-sig-forest-grow;
         }
     }
@@ -42520,7 +42913,10 @@
     /* Calendar · loading 1, the falling leaf → a day has no room for a row,
        so it plants one tree on its mound in three whole stages (§6.7), the
        spinner's own drawing; the date stands faint over it. Where the package
-       already puts the spinner (a tree) in a loading day, the day draws none. */
+       already puts the spinner (a tree) in a loading day, the day draws none,
+       and while the whole month waits its card's planting row is the one
+       picture: the days stand faint without a tree (Kenny, 2026-10-09 on
+       research/forest-uniformity, loading: "one picture per waiting panel"). */
     [data-theme='forest']
         :is(.kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole), .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']))
         .kp-calendar__day[data-kp-tone='loading'] {
@@ -42530,12 +42926,8 @@
         animation: none;
     }
 
-    [data-theme='forest']
-        :is(.kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole), .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']))
-        .kp-calendar__day[data-kp-tone='loading']::before,
-    [data-theme='forest']
-        :is(.kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole), .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']))
-        .kp-calendar__day[data-kp-tone='loading']::after {
+    [data-theme='forest'] .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading']::before,
+    [data-theme='forest'] .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading']::after {
         content: '';
         position: absolute;
         z-index: -1;
@@ -42544,16 +42936,12 @@
         pointer-events: none;
     }
 
-    [data-theme='forest']
-        :is(.kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole), .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']))
-        .kp-calendar__day[data-kp-tone='loading']::before {
+    [data-theme='forest'] .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading']::before {
         opacity: 0.6;
         mask: var(--kp-fo-mound) 50% 100% / 100% 100% no-repeat;
     }
 
-    [data-theme='forest']
-        :is(.kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole), .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']))
-        .kp-calendar__day[data-kp-tone='loading']::after {
+    [data-theme='forest'] .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading']::after {
         /* Standing still (reduced motion) it is the grown tree. */
         mask: var(--kp-fo-stages) 100% 100% / 300% 100% no-repeat;
     }
@@ -42605,12 +42993,7 @@
 
         /* Calendar · loading 1: one tree a half loop, the days of a week
            150 ms apart. */
-        [data-theme='forest']
-            :is(
-                .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole),
-                .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true'])
-            )
-            .kp-calendar__day[data-kp-tone='loading']::after {
+        [data-theme='forest'] .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading']::after {
             animation: kp-sig-forest-plant calc(var(--kp-sig-fo-loop) / 2) step-end calc(var(--kp-fo-col, 0) * -150ms) infinite;
         }
 
@@ -42638,7 +43021,7 @@
 
         to {
             translate: 0 0;
-            clip-path: inset(calc(-1 * var(--kp-sig-fo-reach)));
+            clip-path: inset(calc(-1 * var(--kp-sig-fo-reach)) 0 calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)));
         }
     }
 
@@ -42650,8 +43033,407 @@
 
         to {
             translate: 0 0;
-            clip-path: inset(calc(-1 * var(--kp-sig-fo-reach)));
+            clip-path: inset(calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)) 0);
         }
+    }
+
+    /* ── Forest, straightened [Kenny, 2026-10-09: all ten questions of
+       research/forest-uniformity approved, every recommendation]. What the
+       first apply did not reach, on the same grammar: the bar, the overlays
+       that did not grow, the closes that were not their opens, the alarm,
+       and the busy panels' one picture. themes/forest/CHARACTER.md §5,
+       "Applied 2026-10-09 (uniformity)". ── */
+
+    /* The bar · the dropdown and the mega menu grow down out of their link,
+       far end first, clipped at the bar's line all the way, and close as
+       that growth backwards: a transition takes the curve of the state it
+       goes to, so the opening runs on the growth curve and the close on the
+       curve turned around, and a close begun halfway turns round where it
+       stands. Shown, it stays drawn through its close (display is held). */
+    [data-theme='forest'] .kp-nav__menu {
+        opacity: 1;
+        translate: var(--kp-nav-menu-shift, 0) -100%;
+        clip-path: inset(100% calc(-1 * var(--kp-sig-fo-reach)) 0 calc(-1 * var(--kp-sig-fo-reach)));
+    }
+
+    [data-theme='forest']
+        :is(
+            .kp-nav__links > li:is(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+            .kp-nav__links > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide
+        ) {
+        translate: var(--kp-nav-menu-shift, 0) 0;
+        clip-path: inset(0 calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)));
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-nav__menu {
+            transition:
+                translate var(--kp-sig-fo-time) var(--kp-sig-fo-wither),
+                clip-path var(--kp-sig-fo-time) var(--kp-sig-fo-wither),
+                display var(--kp-sig-fo-time) allow-discrete;
+        }
+
+        [data-theme='forest']
+            :is(
+                .kp-nav__links > li:is(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+                .kp-nav__links > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide
+            ) {
+            transition-timing-function: var(--kp-sig-fo-grow);
+        }
+
+        @starting-style {
+            [data-theme='forest']
+                :is(
+                    .kp-nav__links > li:is(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+                    .kp-nav__links > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide
+                ) {
+                translate: var(--kp-nav-menu-shift, 0) -100%;
+                clip-path: inset(100% calc(-1 * var(--kp-sig-fo-reach)) 0 calc(-1 * var(--kp-sig-fo-reach)));
+            }
+        }
+    }
+
+    /* The bar collapsed on a phone: its links grow down out of the bar, far
+       end first, and go back into it as that growth played backwards (the
+       same frames under a second name, so the close restarts); the lists
+       nested in it are the open panel's own rows and do not grow again. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__links .kp-nav__menu {
+            translate: none;
+            clip-path: none;
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+            [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__links .kp-nav__menu {
+                transition: none;
+            }
+
+            [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] > .kp-nav__links {
+                animation: kp-sig-forest-root var(--kp-sig-fo-time) var(--kp-sig-fo-grow) backwards;
+            }
+
+            [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle):not([data-kp-nav-open]) > .kp-nav__links {
+                animation: kp-sig-forest-root-back var(--kp-sig-fo-time) var(--kp-sig-fo-grow) reverse both;
+                transition: display var(--kp-sig-fo-time) allow-discrete;
+            }
+        }
+    }
+
+    /* The side navigation grows out of its edge like the drawer, far side
+       first, clipped at that edge, in one growth (Kenny, overlays: "each
+       grows like its family"), and goes back as that growth reversed; its
+       groups unfold in the same growth time as the accordion (pairs). */
+    [data-theme='forest'] .kp-sidenav {
+        --kp-sidenav-duration: var(--kp-sig-fo-time);
+        --kp-sidenav-ease: var(--kp-sig-fo-grow);
+    }
+
+    [data-theme='forest']
+        :is(.kp-sidenav:not([data-kp-sidenav-side='end']):dir(ltr), .kp-sidenav[data-kp-sidenav-side='end']:dir(rtl)):is(
+            [data-kp-sidenav-mode='over'],
+            [data-kp-sidenav-mode='push']
+        ) {
+        clip-path: inset(calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)) 100%);
+    }
+
+    [data-theme='forest']
+        :is(.kp-sidenav[data-kp-sidenav-side='end']:dir(ltr), .kp-sidenav:not([data-kp-sidenav-side='end']):dir(rtl)):is(
+            [data-kp-sidenav-mode='over'],
+            [data-kp-sidenav-mode='push']
+        ) {
+        clip-path: inset(calc(-1 * var(--kp-sig-fo-reach)) 100% calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)));
+    }
+
+    [data-theme='forest']
+        :is(.kp-sidenav:not([data-kp-sidenav-side='end']):dir(ltr), .kp-sidenav[data-kp-sidenav-side='end']:dir(rtl)):is(
+            [data-kp-sidenav-mode='over'],
+            [data-kp-sidenav-mode='push']
+        )[data-kp-sidenav-open='true'] {
+        clip-path: inset(calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)) 0);
+    }
+
+    [data-theme='forest']
+        :is(.kp-sidenav[data-kp-sidenav-side='end']:dir(ltr), .kp-sidenav:not([data-kp-sidenav-side='end']):dir(rtl)):is(
+            [data-kp-sidenav-mode='over'],
+            [data-kp-sidenav-mode='push']
+        )[data-kp-sidenav-open='true'] {
+        clip-path: inset(calc(-1 * var(--kp-sig-fo-reach)) 0 calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)));
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) {
+            transition:
+                translate var(--kp-sig-fo-time) var(--kp-sig-fo-grow),
+                clip-path var(--kp-sig-fo-time) var(--kp-sig-fo-grow),
+                inline-size var(--kp-sig-fo-time) var(--kp-sig-fo-grow);
+        }
+
+        [data-theme='forest']
+            .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']):is(
+                [data-kp-sidenav-open='false'],
+                [data-kp-sidenav-slim-collapsed]:not(:hover),
+                [data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-expand-on-hover])
+            ) {
+            transition-timing-function: var(--kp-sig-fo-wither);
+        }
+
+        /* Every backdrop comes with its plate, on the growth curve (F-25):
+           the side navigation's, the dialog's and the drawer's. */
+        [data-theme='forest'] .kp-sidenav__backdrop {
+            animation: kp-sig-forest-fade var(--kp-sig-fo-time) var(--kp-sig-fo-grow) both;
+        }
+
+        [data-theme='forest'] .kp-dialog[open]::backdrop {
+            animation: kp-sig-forest-fade var(--kp-sig-fo-time, 1000ms) var(--kp-sig-fo-grow, ease-out) backwards;
+        }
+    }
+
+    /* The command palette grows up out of its base like the dialog, its
+       backdrop with it. Where the browser can keep a closing dialog in the
+       top layer (overlay), it closes as that growth played backwards; where
+       it cannot, it goes at once until js/motion.js reverses it as it does
+       a .kp-dialog (research/PACKAGE_FINDINGS.md). */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] dialog.kp-palette[open] {
+            animation: kp-sig-forest-grow var(--kp-sig-fo-time) var(--kp-sig-fo-grow) backwards;
+        }
+
+        [data-theme='forest'] dialog.kp-palette[open]::backdrop {
+            animation: kp-sig-forest-fade var(--kp-sig-fo-time, 1000ms) var(--kp-sig-fo-grow, ease-out) backwards;
+        }
+
+        @supports (overlay: auto) {
+            [data-theme='forest'] dialog.kp-palette:not([open]) {
+                animation: kp-sig-forest-grow-back var(--kp-sig-fo-time) var(--kp-sig-fo-grow) reverse both;
+                transition:
+                    display var(--kp-sig-fo-time) allow-discrete,
+                    overlay var(--kp-sig-fo-time) allow-discrete;
+            }
+
+            [data-theme='forest'] dialog.kp-palette:not([open])::backdrop {
+                animation: kp-sig-forest-fade-back var(--kp-sig-fo-time, 1000ms) var(--kp-sig-fo-grow, ease-out) reverse both;
+            }
+        }
+
+        /* The tour's card grows up out of its own line from autumn to green
+           (pairs), and js/tour.js plays that backwards when the tour ends. */
+        [data-theme='forest'] .kp-tour[open] {
+            animation: kp-sig-forest-arrive var(--kp-sig-fo-time) var(--kp-sig-fo-grow) backwards;
+        }
+    }
+
+    /* The alarm · grows like the dialog; a growth ring keeps calling (Kenny,
+       2026-10-09 on research/forest-uniformity, the alarm: "a growth ring
+       instead of the glow pulse"). Its frame takes the plate's leaf and its
+       glow gives way to a ring laid just outside the frame: drawn clockwise
+       from the top on the growth curve in 550 ms, then it fades, once every
+       loop (3200 ms) after the growth, for as long as the alarm waits.
+       Standing still the ring stands whole. */
+    [data-theme='forest'] .kp-alarm::before {
+        border-radius: var(--kp-sig-fo-plate);
+    }
+
+    [data-theme='forest'] .kp-alarm::after {
+        inset: calc(var(--kp-alarm-bar, 0.9rem) + 0.75rem - 7px) calc(0.75rem - 7px);
+        border: 1.5px solid var(--primary);
+        border-radius: 0 calc(var(--kp-sig-fo-leaf) + 7px);
+        box-shadow: none;
+        mask: conic-gradient(var(--foreground) var(--kp-fo-arc), transparent 0);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+            animation: kp-sig-forest-ground var(--kp-sig-fo-time) var(--kp-sig-fo-grow) backwards;
+        }
+
+        [data-theme='forest'] .kp-alarm:not([data-kp-alarm-motion='still'])::before,
+        [data-theme='forest'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel {
+            animation: kp-sig-forest-grow var(--kp-sig-fo-time) var(--kp-sig-fo-grow) backwards;
+        }
+
+        [data-theme='forest'] .kp-alarm:not([data-kp-alarm-motion='still']) :is(.kp-alarm__title, .kp-alarm__detail) {
+            animation: none;
+        }
+
+        [data-theme='forest'] .kp-alarm:not([data-kp-alarm-motion='still'])::after {
+            animation: kp-sig-forest-alarm-ring var(--kp-sig-fo-loop) linear var(--kp-sig-fo-time) infinite both;
+        }
+    }
+
+    @keyframes kp-sig-forest-ground {
+        from {
+            background-color: transparent;
+        }
+    }
+
+    @keyframes kp-sig-forest-alarm-ring {
+        0% {
+            --kp-fo-arc: 0deg;
+            opacity: 1;
+            animation-timing-function: linear(
+                0 0%,
+                0.01 5%,
+                0.032 10%,
+                0.072 15%,
+                0.133 20%,
+                0.211 25%,
+                0.302 30%,
+                0.398 35%,
+                0.493 40%,
+                0.582 45%,
+                0.662 50%,
+                0.732 55%,
+                0.791 60%,
+                0.84 65%,
+                0.881 70%,
+                0.913 75%,
+                0.939 80%,
+                0.96 85%,
+                0.977 90%,
+                0.99 95%,
+                1 100%
+            );
+        }
+
+        17.1875% {
+            --kp-fo-arc: 360deg;
+            opacity: 1;
+            animation-timing-function: ease-in-out;
+        }
+
+        31.25%,
+        100% {
+            --kp-fo-arc: 360deg;
+            opacity: 0;
+        }
+    }
+
+    /* One picture per waiting panel (Kenny, loading: "the row where it fits,
+       the tree where it does not"): the busy table's panel and the busy
+       month's card show the planting row at their foot and no tree; the
+       spinner's tree stays where a row has no room (alone, in a day, beside
+       the status line's words). The month's card keeps room for a row. */
+    [data-theme='forest'] :is(.kp-datatable__busy-panel, .kp-calendar__busy) > .kp-spinner {
+        display: none;
+    }
+
+    [data-theme='forest'] .kp-datatable__busy-panel {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    [data-theme='forest'] .kp-calendar--busy-whole > .kp-calendar__busy {
+        min-inline-size: min(12rem, 100%);
+        min-block-size: 3.5rem;
+    }
+
+    /* The busy month's card grows up out of its own line and withers back
+       into it (F-33), like every arrival; the transitions run each way on
+       the curve of the state they go to. */
+    [data-theme='forest'] .kp-calendar--busy-whole > .kp-calendar__busy {
+        translate: 0 100%;
+        clip-path: inset(0 calc(-1 * var(--kp-sig-fo-reach)) 100% calc(-1 * var(--kp-sig-fo-reach)));
+    }
+
+    [data-theme='forest'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy {
+        translate: 0 0;
+        clip-path: inset(calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)) -1px calc(-1 * var(--kp-sig-fo-reach)));
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-calendar--busy-whole > .kp-calendar__busy {
+            transition:
+                translate var(--kp-sig-fo-time) var(--kp-sig-fo-wither),
+                clip-path var(--kp-sig-fo-time) var(--kp-sig-fo-wither),
+                display var(--kp-sig-fo-time) allow-discrete;
+        }
+
+        [data-theme='forest'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy {
+            transition-timing-function: var(--kp-sig-fo-grow);
+        }
+
+        @starting-style {
+            [data-theme='forest'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy {
+                translate: 0 100%;
+                clip-path: inset(0 calc(-1 * var(--kp-sig-fo-reach)) 100% calc(-1 * var(--kp-sig-fo-reach)));
+            }
+        }
+
+        /* Back to top fades in contact time and out on the curve turned
+           around; it keeps the button's contact answers. */
+        [data-theme='forest'] .kp-to-top {
+            transition:
+                opacity var(--fx-duration) var(--fx-ease),
+                visibility var(--fx-duration) var(--fx-ease),
+                outline-color var(--fx-duration) var(--fx-ease),
+                outline-offset var(--fx-duration) var(--fx-ease),
+                outline-style var(--fx-duration) allow-discrete,
+                box-shadow var(--fx-duration) var(--fx-ease);
+        }
+
+        [data-theme='forest'] .kp-to-top:not([data-kp-to-top-shown]) {
+            transition-timing-function: var(--kp-sig-fo-wither);
+        }
+    }
+
+    /* Rows · a tree row answers as a menu entry on its own line: a branch
+       holds its children inside it, so the kraft ground and the blaze are
+       drawn on a layer as tall as its first line, under its words, for the
+       innermost row pointed at only. */
+    [data-theme='forest'] .kp-tree [role='treeitem'] {
+        position: relative;
+        isolation: isolate;
+    }
+
+    [data-theme='forest'] .kp-tree [role='treeitem']:hover:not([aria-selected='true']) {
+        background: none;
+    }
+
+    [data-theme='forest'] .kp-tree [role='treeitem']::after {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        inset: 0 0 auto;
+        block-size: calc(1lh + 0.5rem);
+        border-radius: var(--kp-sig-fo-part);
+        outline: 2px dashed transparent;
+        outline-offset: 5px;
+        pointer-events: none;
+    }
+
+    [data-theme='forest'] .kp-tree [role='treeitem']:hover:not(:has([role='treeitem']:hover))::after {
+        outline-color: var(--primary);
+        outline-offset: -3px;
+    }
+
+    [data-theme='forest'] .kp-tree [role='treeitem']:not([aria-selected='true']):hover:not(:has([role='treeitem']:hover))::after {
+        background: var(--secondary);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-tree [role='treeitem']::after {
+            transition:
+                outline-color var(--fx-duration) var(--fx-ease),
+                outline-offset var(--fx-duration) var(--fx-ease),
+                background-color var(--fx-duration) var(--fx-ease);
+        }
+    }
+
+    /* A day of the month takes DI2's two channels (F-14), its log rings
+       kept inside, today's green ring too. */
+    [data-theme='forest'] .kp-calendar__day:focus-visible,
+    [data-theme='forest'] td[aria-selected='true'] > .kp-calendar__day:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast);
+        outline-offset: var(--kp-focus-ring-inner-width, 2px);
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 0 0 5px hsl(from var(--foreground) h s l / 0.08);
+    }
+
+    [data-theme='forest'] .kp-calendar__day[data-kp-today]:focus-visible {
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 0 0 2px var(--primary),
+            inset 0 0 0 5px hsl(from var(--foreground) h s l / 0.08);
     }
 }
 /* ── End of the signature ── */

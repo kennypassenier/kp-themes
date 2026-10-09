@@ -362,6 +362,60 @@ reference), the headline and the contour trace, the tooltip, the busy
 failure's tape, the dialog's backdrop and neat line, the empty state's
 rings, the texture (static since 2026-10-07), the drawer's lichen ring and its swelling card.
 
+**Applied 2026-10-09 (uniformity)** (css/forest-register.css; Kenny approved all ten
+questions of `research/forest-uniformity`, every recommendation; findings F-01 to F-39
+there):
+
+- **The bar (navigation = grown): applied.** `.kp-nav__menu` and `--wide` grow down
+  out of their link and close as that growth backwards: transitions on `translate` and
+  `clip-path` (growth curve opening, `--kp-sig-fo-wither` closing, `display`
+  allow-discrete, `@starting-style`), clipped at the bar's line all the way. The phone
+  menu (`.kp-nav[data-kp-nav-open] > .kp-nav__links`) plays `kp-sig-forest-root` and
+  closes on `kp-sig-forest-root-back` reversed. Tabs, crumbs and page numbers answer as
+  the link (2 px green rule under the words, 200 ms); the call to action and the toggle
+  blaze; crumbs, pages and the table's status in the body face.
+- **Loading (row): applied.** The busy table panel's and the busy month card's spinner
+  is not drawn; the planting row is the one picture; the busy month's days no longer
+  plant a tree each.
+- **Pointing (blaze): applied** to the date picker's day, legend keys (`.kp-chart__source`,
+  `__show-all`), the reorder row, and, laid 3 px inside on the kraft ground, theme
+  options, combobox and palette options and the accordion heading. Focus is DI2 on
+  every one (the theme option inset, F-13; the day of the month, F-14) and wins over
+  the blaze (`:not(:focus-visible)` on the hover rule).
+- **Pairs (mirror): applied.** The tick and the radio dot are always drawn and cleared
+  by `clip-path` transitions (200 ms, growth curve in, withering curve out; the plate
+  turns after the tick is taken back); the dot grows up out of its foot, no scale. The
+  combobox list grows down out of its field (`kp-sig-forest-root` on `:popover-open`,
+  `--kp-open: own`, closed by js/motion.js's copy). The tour card plays
+  `kp-sig-forest-arrive`, reversed by js/tour.js. The side navigation's groups unfold
+  in 1000 ms.
+- **Overlays (family): applied.** The palette grows like the dialog (`kp-sig-forest-grow`)
+  and, where `overlay` is supported, closes on `kp-sig-forest-grow-back` reversed; the
+  date picker panel and the React theme list grow like a menu; the side navigation
+  grows out of its edge (`translate` + `clip-path`, 1000 ms). Every backdrop fades on
+  the growth curve (`kp-sig-forest-fade`, F-25).
+- **Forms (blaze): applied** to fields, selects, the combobox input, the table search,
+  checks, radios, the switch and the drop zone; focus stays DI2 with the green border.
+- **Rows (entry): applied** to table rows, dropdown links, side navigation rows and
+  tree rows (a first-line layer, `::after`, since a branch holds its children).
+- **Feedback (grown): applied.** The alarm's panel and frame grow (`kp-sig-forest-grow`),
+  its ground comes in on the growth curve (`kp-sig-forest-ground`), the words do not
+  scale; a growth ring (`kp-sig-forest-alarm-ring`, 3200 ms loop, drawn in 550 ms) takes
+  the glow pulse's place; the frame takes the plate's leaf.
+- **Corners (leaf): applied** to the call to action, page numbers, the date picker's days,
+  tree rows, theme options, colour swatches, legend keys, side navigation rows, dropdown
+  links, the accordion heading and the reorder handle.
+- **Timing (breath): applied.** `--kp-sig-fo-breath: 6600ms` drives the bar, the strips
+  and the treeline (`kp-skeleton-forest-treeline` now 3000 / 600 / 3000 on the bar's ease).
+- **Fixes:** the pressed primary and destructive plates stay theirs (F-10); the growth
+  keyframes keep their anchor side at 0 (F-23); one plate for `.kp-popover > .kp-menu`
+  (F-24); the prose link's underline in 200 ms (F-15); the headline grows out of its
+  line, the rule, the meter's wipe and the alert edge are logical (F-34); the calendar's
+  busy card grows and withers, back-to-top fades out on the withering curve (F-33); the
+  DI5 table states what plays (F-35). Still needing a script: the date picker's and the
+  alarm's closes, the palette's close outside Chromium, the theme list's close, the
+  side navigation's backdrop leaving (research/PACKAGE_FINDINGS.md).
+
 ---
 
 ## 6. The loading picture: planting

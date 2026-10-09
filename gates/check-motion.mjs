@@ -377,7 +377,7 @@ const OUT_OF_SCOPE = {
     'kp-progressbar-forest-breath':
         'a custom property that sets how far the rows of trees on a busy bar have grown (a background size, rounded to whole trees); the trees keep their colours, only their extent changes',
     'kp-skeleton-forest-treeline':
-        'a custom property that grows a treeline drawn in a skeleton (its radii and width); the trees keep their colours, only their extent changes, 3.2 s a loop',
+        'a custom property that grows a treeline drawn in a skeleton (its radii and width); the trees keep their colours, only their extent changes, 6.6 s a loop',
     'kp-sig-blueprint-callout':
         'a tooltip being traced once: its line drawn round the box and its ink and ground set at the end; one change from blank to drawn, under 341x256 px',
     'kp-sig-blueprint-frame':
@@ -411,6 +411,10 @@ const OUT_OF_SCOPE = {
     'kp-sig-cyberpunk-word': "a loading word's text stepped letter by letter (content) every 1.8 s; the word keeps its colour, under 341x256 px",
     'kp-sig-forest-leave':
         'a part withering away once: it sinks, is clipped from the top and fades through a desaturating filter; one monotone change',
+    'kp-sig-forest-arrive':
+        'the withering above played as an arrival once (it grows up out of its line from a desaturating filter to none); one monotone change',
+    'kp-sig-forest-ground':
+        "the alarm's ground coming in once, from transparent to its own colour, on the growth curve over 1 s; one monotone change",
     'kp-sig-grotesk-fall':
         'the red plate falling into register once: a drop-shadow filter offset that closes to nothing; the plate keeps its colour, only its offset moves',
     'kp-sig-grotesk-fall-again': 'the same fall replayed once when a meter turns destructive',

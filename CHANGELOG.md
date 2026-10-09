@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **Changed: forest, straightened, as Kenny decided it on research/forest-uniformity** [2026-10-09, themes/forest/CHARACTER.md]. The bar's dropdown,
+  mega menu and phone menu grow out of the bar and close as that growth reversed; the palette, date picker, theme list, combobox list, tour and
+  side navigation grow like their family and every backdrop fades on the growth curve. Every pointable part, field and row blazes (tabs, crumbs
+  and pages answer as links), focus is the two-channel ring everywhere. The tick and radio dot are set and cleared as mirror images, the alarm
+  grows like the dialog with a growth ring instead of the glow, one loading picture per panel, one 6.6 s breath for everything that waits, the
+  leaf corner on the last small parts. Fixes: pressed primary and destructive button contrast, growth clip past its anchor, one-channel focus
+  rings, a double plate in popover menus, monospace crumbs and pages, right-to-left rule, meter and alert edge, DI5 table rows.
 - **Changed: deco's grammar, as Kenny decided it on research/deco-character** [2026-10-09, themes/deco/CHARACTER.md]. Plates are lacquer with
   the wallpaper and coved corners; the inlay draws itself on opening and the close is its reverse; a great fan leaves and arrives; lift doors
   wait; the progress bar is the doubled inlay; hover is gold leaf, a press is a seal, focus is a double gold ring, a live update is gilded;

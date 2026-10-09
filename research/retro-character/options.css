@@ -2577,350 +2577,134 @@
         }
     }
 
-    /* ── 10 Loading (a loop of 28 frames, 2.52 s) ───────────────────────
-       Update 3: eight pictures from the screens of the nineties, no dialog,
-       no bar, no label (Kenny on update 2: "all of these are so bad that I
-       am about to delete this whole theme"). Each is pixel art in the
-       register's palette, generated once by demo.js (`WAITS`) into the six
-       waiting parts: the tile's and the panel's room, the menu entry's
-       slot, the month, the chart's plot and the skeleton's lines. Every pose
-       is held for a whole 90 ms frame, nothing eases, every loop is 28
-       frames (the globe turns in its own 8). A cel (`.rt-cel`, its frame in
-       `--i`) is shown for exactly its frame. The reduced pose is a still of
-       the same picture. ──────────────────────────────────────────────── */
+    /* ── 10 Loading (update 4: eight quiet ones) ───────────────────────────
+       Kenny on update 3: "not even close, especially option 1 is far too
+       loud, it must be much subtler". The six waiting parts (a tile, a
+       panel, a menu entry, a month of days, a chart's plot, skeleton lines)
+       stay exactly as they are, words and all; one small thing about them
+       changes, in retro's greys, held a whole 90 ms frame at a time, nothing
+       eased. Nothing fills a part, nothing is coloured but the walking
+       selection (the register's navy), no picture, no bar, no label but the
+       counting dots. The marks are drawn in the base style, which is the
+       reduced pose (the dither still, the raster line at the top, the cursor
+       on, the three dots, the ants standing); the motion is in the media
+       block at the end of the section. ─────────────────────────────────── */
 
-    .rt-scene .rt-defs {
-        position: absolute;
-        inline-size: 0;
-        block-size: 0;
-        overflow: hidden;
-    }
-
-    .rt-scene .rt-waits {
+    .rt-scene :is(.rt-q-tile, .rt-q-panel, .rt-q-at, .rt-q-month, .rt-q-plot, .rt-q-skel) {
         position: relative;
     }
 
-    .rt-scene .rt-waits__room {
-        position: relative;
-        min-block-size: 4.6rem;
-        margin: 2px 0 0;
-        background: var(--rt-white);
-        box-shadow: var(--kp-sunken);
+    /* The mark colours: the dither's dots and the raster line, a faint ink
+       that reads as a lighter or a darker grey on every ground. */
+    .rt-scene[data-rt-loading] {
+        --rt-q-dot: hsl(from var(--foreground) h s l / 0.17);
+        --rt-q-line: hsl(from var(--foreground) h s l / 0.2);
     }
 
-    .rt-scene .rt-panel {
-        box-sizing: border-box;
+    /* The tile: the title bar, two lines of reading, the status strip. */
+    .rt-scene .rt-q-room {
+        position: relative;
         display: grid;
-        gap: 0.35rem;
-        inline-size: min(100%, 17rem);
+    }
+
+    .rt-scene .rt-q-tile .kp-card__body {
+        padding: 0.45rem 0.55rem 0.1rem;
+        white-space: nowrap;
+    }
+
+    .rt-scene .rt-q-tile .rt-q-line--second {
+        padding: 0.1rem 0.55rem 0.45rem;
+    }
+
+    /* The panel: its words in the DOS voice over a white list of three. */
+    .rt-scene .rt-q-panel .rt-panel__words {
+        padding: 0.1rem 0.2rem;
+        white-space: nowrap;
+    }
+
+    .rt-scene .rt-q-list {
+        display: grid;
         margin: 0;
-        padding: 0.5rem;
-        border: 1px solid var(--border-strong);
-        border-radius: 0;
-        background: var(--background) var(--rt-checker);
-        box-shadow: var(--kp-raised), var(--kp-drop-hard);
-    }
-
-    .rt-scene .rt-panel__words {
-        margin: 0;
-        font-family: var(--kp-dos);
-        font-size: 1.05rem;
-        line-height: 1;
-    }
-
-    /* The parts' common ground: the month in its white well (days 2rem
-       high), the plot a little taller than a trend's, the skeleton's three
-       lines with room between them. */
-    .rt-scene .rt-month-wait {
-        --rt-dh: 2rem;
-    }
-
-    .rt-scene .rt-month-wait .rt-days {
-        position: relative;
-        z-index: 1;
-        background: none;
-    }
-
-    .rt-scene .rt-month-wait .rt-day {
-        block-size: var(--rt-dh);
-    }
-
-    .rt-scene .rt-plotwait .rt-plot {
-        z-index: 1;
-        block-size: 2.5rem;
-    }
-
-    .rt-scene .rt-plot--ghost {
-        color: var(--border);
-    }
-
-    .rt-scene .rt-plot--ghost polyline {
-        stroke-dasharray: 2 3;
-    }
-
-    .rt-scene .rt-waits--skel {
-        --rt-lg: 1rem;
+        padding: 3px;
+        list-style: none;
         background: var(--rt-white);
         box-shadow: var(--kp-sunken);
+        font-size: 0.875rem;
     }
 
-    .rt-scene .rt-waits--skel .rt-skel {
-        gap: var(--rt-lg);
-        padding: 1rem 0.6rem 0.7rem;
-        background: none;
-        box-shadow: none;
+    .rt-scene .rt-q-list li {
+        padding: 0.12rem 0.35rem;
+        white-space: nowrap;
     }
 
-    .rt-scene .rt-waits--skel .rt-line {
-        block-size: 1.1rem;
-        overflow: clip;
+    /* The month: fourteen days in its white well, the plot with three
+       dotted gridlines under its navy line, three skeleton lines. */
+    .rt-scene .rt-q-month .rt-days {
+        position: relative;
     }
 
-    /* The register's dither loop is not an option here: the lines stand
-       still under every option, the picture drawn inside them. */
-    .rt-scene[data-rt-loading] .rt-skel .kp-skeleton::after {
+    .rt-scene .rt-q-month .rt-day {
+        block-size: 2rem;
+    }
+
+    .rt-scene .rt-q-chart {
+        block-size: 3.25rem;
+    }
+
+    .rt-scene .rt-q-grid {
+        stroke: hsl(from var(--border) h s calc(l + 14));
+        stroke-width: 1px;
+        stroke-dasharray: 1 2;
+    }
+
+    .rt-scene .rt-q-skel {
+        gap: 0.55rem;
+        padding: 0.7rem 0.6rem;
+    }
+
+    .rt-scene .rt-q-skel .rt-q-bone:nth-of-type(1) {
+        inline-size: 100%;
+    }
+
+    .rt-scene .rt-q-skel .rt-q-bone:nth-of-type(2) {
+        inline-size: 64%;
+    }
+
+    .rt-scene .rt-q-skel .rt-q-bone:nth-of-type(3) {
+        inline-size: 82%;
+    }
+
+    /* The register's skeleton dither stands still under every option. */
+    .rt-scene[data-rt-loading] .rt-q-skel .kp-skeleton::after {
         animation: none;
     }
 
-    /* The overlay: inside the room's bevel, the slot at the menu entry's
-       end, under the days or over them, over the plot, inside a line. */
-    .rt-scene .rt-w {
+    /* 1 The dither shimmer: one pixel in four (a 4 × 2 tile with a pixel at
+       its corner and one two across and one down), a faint ink, laid over
+       the part's room; over the lines only on a skeleton, over the days on
+       the month, under the line on the plot. */
+    .rt-scene .rt-q-dith {
+        --rt-q-px: conic-gradient(at 1px 1px, transparent 75%, var(--rt-q-dot) 0);
         position: absolute;
-        inset: 2px;
+        inset: 0;
         z-index: 2;
         display: block;
-        overflow: clip;
+        background:
+            var(--rt-q-px) 0 0 / 4px 2px,
+            var(--rt-q-px) 2px 1px / 4px 2px;
         pointer-events: none;
     }
 
-    .rt-scene .rt-pop .rt-waits--row {
-        justify-content: space-between;
-        gap: 0.6rem;
+    .rt-scene .rt-q-panel > .rt-q-dith,
+    .rt-scene .rt-q-entry > .rt-q-dith {
+        inset: 2px;
     }
 
-    .rt-scene .rt-w--row {
-        position: relative;
-        inset: auto;
-        flex: none;
-        inline-size: 5.5rem;
-        block-size: 1.25rem;
-        box-shadow: var(--rt-shallow);
-    }
-
-    .rt-scene :is(.rt-w--under, .rt-w--cover, .rt-w--plot, .rt-w--line) {
+    .rt-scene .rt-q-bone > .rt-q-dith {
         inset: 3px;
     }
 
-    .rt-scene .rt-w--under {
-        z-index: 0;
-    }
-
-    .rt-scene :is(.rt-flow, .rt-lace, .rt-myst, .rt-stars) {
-        position: absolute;
-        inset: 0;
-        display: block;
-        inline-size: 100%;
-        block-size: 100%;
-    }
-
-    .rt-scene .rt-cel,
-    .rt-scene .rt-cel8 {
-        visibility: hidden;
-    }
-
-    /* The palette every picture is drawn in: the register's navy, blues,
-       teals, greys, white and ink, and lighter and darker steps of them. */
-    .rt-scene[data-rt-loading] {
-        --rt-screen: var(--foreground);
-        --rt-night: hsl(from var(--primary) h s 10%);
-    }
-
-    .rt-scene .rt-px--r0 {
-        fill: var(--primary);
-    }
-
-    .rt-scene .rt-px--r1 {
-        fill: hsl(from var(--info) h s 28%);
-    }
-
-    .rt-scene .rt-px--r2 {
-        fill: hsl(from var(--info) h 90% 37%);
-    }
-
-    .rt-scene .rt-px--r3 {
-        fill: hsl(from var(--sidebar-accent) h s 46%);
-    }
-
-    .rt-scene .rt-px--r4 {
-        fill: hsl(from var(--accent) h 70% 40%);
-    }
-
-    .rt-scene .rt-px--r5 {
-        fill: hsl(from var(--accent) h 55% 52%);
-    }
-
-    .rt-scene .rt-px--r6 {
-        fill: hsl(from var(--accent) h 45% 68%);
-    }
-
-    .rt-scene .rt-px--r7 {
-        fill: hsl(from var(--accent) h 40% 84%);
-    }
-
-    .rt-scene .rt-px--r8 {
-        fill: var(--popover);
-    }
-
-    .rt-scene .rt-px--r9 {
-        fill: var(--background);
-    }
-
-    .rt-scene .rt-px--r10 {
-        fill: hsl(from var(--accent) h 14% 60%);
-    }
-
-    .rt-scene .rt-px--r11 {
-        fill: hsl(from var(--info) h 22% 47%);
-    }
-
-    .rt-scene .rt-px--r12 {
-        fill: hsl(from var(--info) h 45% 36%);
-    }
-
-    .rt-scene .rt-px--r13 {
-        fill: hsl(from var(--primary) h 70% 30%);
-    }
-
-    .rt-scene .rt-px--s0 {
-        fill: hsl(from var(--accent) h s 16%);
-    }
-
-    .rt-scene .rt-px--s1 {
-        fill: var(--kp-desktop);
-    }
-
-    .rt-scene .rt-px--s2 {
-        fill: hsl(from var(--accent) h 60% 36%);
-    }
-
-    .rt-scene .rt-px--s3 {
-        fill: hsl(from var(--accent) h 45% 50%);
-    }
-
-    .rt-scene .rt-px--s4 {
-        fill: hsl(from var(--accent) h 38% 68%);
-    }
-
-    .rt-scene .rt-px--d0 {
-        fill: url('#rt-lace-d0');
-    }
-
-    .rt-scene .rt-px--d1 {
-        fill: url('#rt-lace-d1');
-    }
-
-    .rt-scene .rt-px--d2 {
-        fill: url('#rt-lace-d2');
-    }
-
-    .rt-scene .rt-px--d3 {
-        fill: url('#rt-lace-d3');
-    }
-
-    .rt-scene :is(.rt-px--c0, .rt-px--hi) {
-        fill: var(--rt-white);
-    }
-
-    .rt-scene .rt-px--c1 {
-        fill: hsl(from var(--accent) h 20% 86%);
-    }
-
-    .rt-scene .rt-px--c2 {
-        fill: hsl(from var(--accent) h 18% 70%);
-    }
-
-    .rt-scene .rt-px--far {
-        fill: var(--border);
-    }
-
-    .rt-scene .rt-px--mid {
-        fill: hsl(from var(--info) h 70% 78%);
-    }
-
-    .rt-scene .rt-px--near {
-        fill: var(--rt-white);
-    }
-
-    .rt-scene .rt-px--ink {
-        fill: var(--foreground);
-    }
-
-    .rt-scene .rt-px--b3 {
-        fill: hsl(from var(--info) h 80% 72%);
-    }
-
-    .rt-scene .rt-px--b2 {
-        fill: hsl(from var(--info) h 100% 48%);
-    }
-
-    .rt-scene .rt-px--b1 {
-        fill: hsl(from var(--primary) h 90% 40%);
-    }
-
-    .rt-scene :is(.rt-px--b0, .rt-px--o0) {
-        fill: var(--primary);
-    }
-
-    .rt-scene .rt-px--o3 {
-        fill: hsl(from var(--info) h 80% 66%);
-    }
-
-    .rt-scene .rt-px--o2 {
-        fill: hsl(from var(--info) h 100% 42%);
-    }
-
-    .rt-scene .rt-px--o1 {
-        fill: hsl(from var(--primary) h 100% 36%);
-    }
-
-    .rt-scene .rt-px--l2 {
-        fill: hsl(from var(--success) h 55% 52%);
-    }
-
-    .rt-scene .rt-px--l1 {
-        fill: hsl(from var(--success) h s 30%);
-    }
-
-    .rt-scene .rt-px--l0 {
-        fill: var(--success);
-    }
-
-    .rt-scene .rt-px--ring {
-        fill: var(--border);
-    }
-
-    /* 1 Palette cycling. A waterfall of fourteen colours (navy through the
-       blues and teals to a pale crest, back down through the greys) in
-       wavy diagonal bands, each seam dithered; the sheet steps one band a
-       frame, so at every pixel the colours run through the ramp. It fills
-       the room, the slot and each line; under the month it shows through
-       every day (white gaps between, each number on its own white plate);
-       on the plot it fills the area under the line. */
-    .rt-scene[data-rt-loading='cycle'] .rt-month-wait .rt-day {
-        place-items: start;
-        padding: 2px;
-        box-shadow: 0 0 0 1px var(--rt-white);
-    }
-
-    .rt-scene[data-rt-loading='cycle'] .rt-month-wait .rt-day__num {
-        padding: 2px 3px 1px;
-        background: var(--rt-white);
-        box-shadow: 1px 1px 0 var(--primary);
-        font-size: 0.75rem;
-    }
-
-    .rt-scene[data-rt-loading='cycle'] .rt-w--plot {
-        z-index: 0;
+    .rt-scene .rt-q-dith--under {
         clip-path: polygon(
             0% 81.25%,
             12.5% 65.625%,
@@ -2936,497 +2720,258 @@
         );
     }
 
-    /* 2 Interlaced. The Windows 95 clouds over the desktop's teal arrive on
-       the grey dither in four passes, each streaming in from the top: every
-       eighth row standing for eight (fat stripes), every fourth, every
-       second, every row; sharp for ten frames, then the grey again. Over
-       the month and the plot a grey cover opens row by row instead. */
-    .rt-scene[data-rt-loading='interlace'] :is(.rt-lace, .rt-lacecover) {
-        background: repeating-conic-gradient(var(--border) 0 25%, var(--background) 0 50%) 0 0 / 2px 2px;
-    }
-
-    .rt-scene[data-rt-loading='interlace'] .rt-lace__pass:not(.rt-lace__pass--4) {
-        visibility: hidden;
-    }
-
-    .rt-scene .rt-lacecover {
+    /* 2 One raster line: a single pale pixel row across the part's room. */
+    .rt-scene .rt-q-scan {
         position: absolute;
-        inset: 0;
-        visibility: hidden;
+        inset-inline: 0;
+        inset-block-start: 0;
+        z-index: 2;
+        display: block;
+        block-size: 1px;
+        background: var(--rt-q-line);
+        pointer-events: none;
     }
 
-    /* 3 Marching ants. A dotted ink-and-white rectangle round the part, its
-       dashes stepping a pixel a frame clockwise, a second one 3 px inside
-       running the other way; round each line; on the month round one day
-       at a time, two frames a day. */
-    .rt-scene .rt-ants {
-        --rt-ax: linear-gradient(90deg, var(--foreground) 50%, var(--rt-white) 0);
-        --rt-ay: linear-gradient(var(--foreground) 50%, var(--rt-white) 0);
+    .rt-scene .rt-q-panel > .rt-q-scan,
+    .rt-scene .rt-q-entry > .rt-q-scan {
+        inset-inline: 2px;
+    }
+
+    .rt-scene .rt-q-skel > .rt-q-scan {
+        inset-inline: 3px;
+    }
+
+    /* 3 The blinking cursor: a solid block one letter wide and one text line
+       high, in the ink: at the start of the tile's first line and the
+       panel's words, after the entry's label, before the first day, at the
+       plot's foot-left, at the first skeleton line's start. */
+    .rt-scene .rt-q-cur {
+        display: inline-block;
+        inline-size: 0.5em;
+        block-size: 1.05em;
+        margin-inline-end: 0.3em;
+        vertical-align: -0.2em;
+        background: var(--foreground);
+    }
+
+    .rt-scene .rt-q-entry > .rt-q-cur {
+        margin-inline: -0.3rem 0;
+        margin-inline-end: auto;
+    }
+
+    .rt-scene .rt-q-month .rt-q-cur {
         position: absolute;
-        inset: 3px;
-        background:
-            var(--rt-ax) 0 0 / 4px 1px repeat-x,
-            var(--rt-ay) 100% 0 / 1px 4px repeat-y,
-            var(--rt-ax) 0 100% / 4px 1px repeat-x,
-            var(--rt-ay) 0 0 / 1px 4px repeat-y;
+        inset-block-start: calc(50% - 0.525em);
+        inset-inline-start: calc(50% - 0.95em);
+        margin: 0;
     }
 
-    .rt-scene .rt-ants::after {
-        content: '';
+    .rt-scene .rt-q-plot > .rt-q-cur {
         position: absolute;
-        inset: 3px;
-        background: inherit;
+        inset-block-end: 5px;
+        inset-inline-start: 6px;
+        margin: 0;
+        font-size: 0.875rem;
     }
 
-    .rt-scene[data-rt-loading='ants'] .rt-w--row {
-        box-shadow: none;
-    }
-
-    .rt-scene[data-rt-loading='ants'] :is(.rt-w--row, .rt-w--line) .rt-ants {
-        inset: 0;
-    }
-
-    .rt-scene[data-rt-loading='ants'] .rt-w--line {
-        inset: 1px;
-        background: var(--popover);
-    }
-
-    .rt-scene .rt-ants--day {
-        inset: 1px;
-        visibility: hidden;
-    }
-
-    .rt-scene .rt-day:first-child .rt-ants--day {
-        visibility: visible;
-    }
-
-    /* 4 Mystify your mind. On the black of a screen two quadrilaterals
-       bounce off the part's walls, each frame's copy standing five frames
-       while it fades: one through the blues, one through the teals. On a
-       line flat, behind the month's days (their numbers white), and as
-       the plot. */
-    .rt-scene[data-rt-loading='mystify'] :is(.rt-w:not(.rt-w--cover), .rt-month-wait, .rt-plotwait) {
-        background: var(--rt-screen);
-    }
-
-    .rt-scene[data-rt-loading='mystify'] .rt-myst__q {
-        fill: none;
-        stroke: var(--rt-t0);
-        stroke-width: 1.5px;
-        vector-effect: non-scaling-stroke;
-    }
-
-    .rt-scene .rt-myst__q--a {
-        --rt-t0: hsl(from var(--info) h 80% 84%);
-        --rt-t1: hsl(from var(--info) h 100% 64%);
-        --rt-t2: hsl(from var(--info) h 100% 46%);
-        --rt-t3: hsl(from var(--primary) h 100% 44%);
-        --rt-t4: hsl(from var(--primary) h 100% 30%);
-    }
-
-    .rt-scene .rt-myst__q--b {
-        --rt-t0: hsl(from var(--accent) h 60% 80%);
-        --rt-t1: hsl(from var(--accent) h 80% 52%);
-        --rt-t2: hsl(from var(--accent) h 100% 36%);
-        --rt-t3: hsl(from var(--accent) h 100% 26%);
-        --rt-t4: hsl(from var(--accent) h 100% 17%);
-    }
-
-    .rt-scene .rt-myst__q[class*='--age'] {
-        visibility: visible;
-    }
-
-    .rt-scene[data-rt-loading='mystify'] .rt-myst__q--age1 {
-        stroke: var(--rt-t1);
-    }
-
-    .rt-scene[data-rt-loading='mystify'] .rt-myst__q--age2 {
-        stroke: var(--rt-t2);
-    }
-
-    .rt-scene[data-rt-loading='mystify'] .rt-myst__q--age3 {
-        stroke: var(--rt-t3);
-    }
-
-    .rt-scene[data-rt-loading='mystify'] .rt-myst__q--age4 {
-        stroke: var(--rt-t4);
-    }
-
-    /* 5 The starfield. On the desktop's dark blue the stars stream out of
-       the part's centre (out of the start edge on the slot and the lines),
-       grey and one pixel far off, then pale blue and white, two by two as
-       they pass; behind the month's days, from the plot's middle. */
-    .rt-scene[data-rt-loading='stars'] :is(.rt-w, .rt-month-wait, .rt-plotwait) {
-        background: var(--rt-night);
-    }
-
-    .rt-scene .rt-stars > .rt-cel:first-child {
-        visibility: visible;
-    }
-
-    .rt-scene:is([data-rt-loading='mystify'], [data-rt-loading='stars']) .rt-month-wait .rt-day {
-        color: var(--rt-white);
-    }
-
-    .rt-scene:is([data-rt-loading='mystify'], [data-rt-loading='stars']) .rt-plot {
-        visibility: hidden;
-    }
-
-    /* 6 The DOS prompt. A black window, MS-DOS's light grey in the DOS face:
-       the boot log stands, the next lines type themselves a letter a frame,
-       the block cursor blinking after them. On the slot one line, on the
-       skeleton one line after the other, on the month each day's number
-       typed in turn, on the plot a line under the chart. */
-    .rt-scene[data-rt-loading='prompt'] :is(.rt-w:not(.rt-w--plot), .rt-month-wait, .rt-plotwait) {
-        background: var(--rt-screen);
-    }
-
-    .rt-scene .rt-dos {
+    .rt-scene .rt-q-bone > .rt-q-cur {
         position: absolute;
-        inset: 4px 6px;
-        display: flex;
-        flex-direction: column;
-        color: var(--background);
+        inset-block: 3px;
+        inset-inline-start: 4px;
+        z-index: 1;
+        block-size: auto;
+        margin: 0;
+        font-size: 0.875rem;
+    }
+
+    /* 4 Three dots counting: the status bar's ellipsis in the DOS face, at
+       the part's foot-end; its room is three letters wide, so nothing moves
+       as it counts. */
+    .rt-scene .rt-q-dots {
+        display: inline-block;
+        flex: none;
+        inline-size: 3ch;
+        color: var(--foreground);
         font: 400 1rem/1 var(--kp-dos);
-        white-space: pre;
+        white-space: nowrap;
+    }
+
+    .rt-scene .rt-q-dots > span {
+        display: inline-block;
+        inline-size: 3ch;
         overflow: clip;
+        vertical-align: bottom;
     }
 
-    .rt-scene .rt-dos__line {
-        display: flex;
-        block-size: 1em;
+    .rt-scene .rt-q-tile .rt-q-dots {
+        margin-inline-start: auto;
+        line-height: 1.2;
     }
 
-    .rt-scene .rt-dos__text {
-        display: block;
-        flex: none;
-        max-inline-size: calc(var(--x) * 1ch);
-        overflow: clip;
+    .rt-scene .rt-q-entry > .rt-q-dots {
+        margin-inline: -0.4rem auto;
+        font-size: 0.95rem;
     }
 
-    .rt-scene .rt-dos__cur {
-        display: none;
-        flex: none;
-        inline-size: 1ch;
-        max-inline-size: 1ch;
-        overflow: clip;
-    }
-
-    .rt-scene .rt-dos__cur > i {
-        display: block;
-        inline-size: 1ch;
-        max-inline-size: 1ch;
-        block-size: 0.85em;
-        margin-block-start: 0.05em;
-        background: var(--background);
-    }
-
-    .rt-scene .rt-dos__line:last-child .rt-dos__cur {
-        display: block;
-    }
-
-    .rt-scene .rt-w--row .rt-dos {
-        inset: 2px 4px;
-    }
-
-    .rt-scene .rt-w--line .rt-dos {
-        inset: 0 3px;
-        font-size: 0.8rem;
-    }
-
-    .rt-scene .rt-dos--day {
-        position: static;
-        inset: auto;
-    }
-
-    .rt-scene[data-rt-loading='prompt'] .rt-month-wait .rt-day {
-        place-items: center start;
-        padding-inline-start: 5px;
-    }
-
-    .rt-scene[data-rt-loading='prompt'] .rt-month-wait .rt-day:not(:last-child) .rt-dos__cur {
-        display: none;
-    }
-
-    .rt-scene .rt-dos--foot {
-        inset: auto auto 3px 36%;
-        font-size: 0.85rem;
-    }
-
-    .rt-scene[data-rt-loading='prompt'] .rt-plotwait .rt-plot {
-        block-size: 3.25rem;
-        color: var(--border);
-    }
-
-    .rt-scene[data-rt-loading='prompt'] .rt-plotwait .rt-plot polyline {
-        stroke-dasharray: 2 2;
-    }
-
-    /* 7 The bouncing ball. A chunky marble in the register's blues, lit from
-       the top left and outlined in ink, dropped into the room: it squashes
-       a frame on each landing and bounces lower each time, its hard shadow
-       on the floor, then it is dropped again. Along each skeleton line it
-       hops there and back, from day to day on the month (the day it lands
-       on pressed in for its frame), along the chart's line point to point. */
-    .rt-scene .rt-ball {
-        --rt-bs: 24px;
-        --rt-floor: 4px;
+    .rt-scene .rt-q-panel > .rt-q-dots {
         position: absolute;
-        z-index: 1;
-        inset-block-end: var(--rt-floor);
-        inset-inline-start: calc(50% - var(--rt-bs) / 2);
-        inline-size: var(--rt-bs);
-        block-size: var(--rt-bs);
-        transform-origin: 50% 100%;
+        inset-block-end: calc(0.5rem + 7px);
+        inset-inline-end: calc(0.5rem + 7px);
     }
 
-    .rt-scene :is(.rt-ball, .rt-bounce) .rt-ball__sprite {
-        display: block;
-        inline-size: 100%;
-        block-size: 100%;
-    }
-
-    .rt-scene .rt-ball__shadow {
-        --rt-bs: 24px;
-        --rt-floor: 4px;
+    .rt-scene :is(.rt-q-month, .rt-q-plot) > .rt-q-dots {
         position: absolute;
-        inset-block-end: calc(var(--rt-floor) - 3px);
-        inset-inline-start: calc(50% - var(--rt-bs) / 2);
-        inline-size: var(--rt-bs);
-        block-size: 3px;
-        background:
-            linear-gradient(var(--border-strong) 0 0) 2px 0 / calc(100% - 4px) 1px no-repeat,
-            linear-gradient(var(--border-strong) 0 0) 0 1px / 100% 2px no-repeat;
-    }
-
-    .rt-scene .rt-w--row :is(.rt-ball, .rt-ball__shadow) {
-        --rt-bs: 10px;
-        --rt-floor: 3px;
-    }
-
-    .rt-scene[data-rt-loading='ball'] .rt-waits--skel .rt-skel {
-        --rt-lg: 1.4rem;
-        padding-block-start: 1.4rem;
-    }
-
-    .rt-scene[data-rt-loading='ball'] .rt-waits--skel .rt-line {
-        overflow: visible;
-    }
-
-    .rt-scene[data-rt-loading='ball'] .rt-w--line {
-        inset: auto 0 100%;
-        block-size: 1.25rem;
-        overflow: visible;
-    }
-
-    .rt-scene .rt-w--line :is(.rt-ball, .rt-ball__shadow) {
-        --rt-bs: 8px;
-        --rt-floor: 1px;
-        inset-inline-start: 0;
-    }
-
-    .rt-scene .rt-w--line .rt-ball__shadow {
-        inset-block-end: -3px;
-        block-size: 2px;
-        background: linear-gradient(var(--border-strong) 0 0) 1px 0 / calc(100% - 2px) 2px no-repeat;
-    }
-
-    .rt-scene[data-rt-loading='ball'] .rt-w--plot {
-        overflow: visible;
-    }
-
-    .rt-scene .rt-w--plot .rt-ball {
-        --rt-bs: 10px;
-        inset-block: 81.25% auto;
-        inset-inline-start: calc(6.667% - var(--rt-bs) / 2);
-        translate: 0 -100%;
-    }
-
-    .rt-scene[data-rt-loading='ball'] .rt-month-wait .rt-day {
-        place-items: start center;
-        padding-block-start: 3px;
-    }
-
-    .rt-scene .rt-bounce {
-        position: absolute;
-        z-index: 1;
-        inset-inline-start: calc(50% - 5px);
-        inline-size: 10px;
-        block-size: 10px;
-        visibility: hidden;
-    }
-
-    .rt-scene .rt-bounce--air {
-        inset-block-start: 9px;
-        inset-inline-start: calc(-1px - 5px);
-    }
-
-    .rt-scene .rt-day:nth-child(7n + 1) .rt-bounce--air {
-        inset-inline-start: calc(50% - 5px);
-        inset-block-start: 4px;
-    }
-
-    .rt-scene .rt-bounce--land {
         inset-block-end: 2px;
-        transform-origin: 50% 100%;
-        scale: 1.3 0.7;
+        inset-inline-end: 4px;
+        z-index: 2;
     }
 
-    .rt-scene .rt-day:first-child .rt-bounce--land {
-        visibility: visible;
-    }
-
-    .rt-scene .rt-bounce__press {
+    .rt-scene .rt-q-bone > .rt-q-dots {
         position: absolute;
-        inset: 0;
-        box-shadow: var(--kp-pressed);
-        visibility: hidden;
+        inset-block-end: 1px;
+        inset-inline-start: calc(100% + 0.3rem);
     }
 
-    .rt-scene .rt-day:first-child .rt-bounce__press {
-        visibility: visible;
-    }
-
-    /* 8 The spinning globe. A pixel world turning an eighth a frame (its own
-       loop of eight frames), lit from the top left, in a ring of dither: at
-       the room's centre, at the start of the slot and of each line (there
-       without the ring), in the month's first day, at the plot's middle. */
-    .rt-scene .rt-globe-at {
+    /* 7 One ring of ants: the desktop's selection outline, ink and white two
+       pixels each, one pixel outside the part's edge. */
+    .rt-scene .rt-q-ants {
+        --rt-q-h: linear-gradient(90deg, var(--foreground) 0 2px, var(--rt-white) 0 4px);
+        --rt-q-v: linear-gradient(var(--foreground) 0 2px, var(--rt-white) 0 4px);
         position: absolute;
-        z-index: 1;
-        inset: calc(50% - 20px) auto auto calc(50% - 20px);
-        inline-size: 40px;
-        block-size: 40px;
-    }
-
-    .rt-scene .rt-globe-at svg {
+        inset: -3px;
+        z-index: 3;
         display: block;
-        inline-size: 100%;
-        block-size: 100%;
+        background:
+            var(--rt-q-h) 0 0 / 4px 1px repeat-x,
+            var(--rt-q-v) 100% 0 / 1px 4px repeat-y,
+            var(--rt-q-h) 0 100% / 4px 1px repeat-x,
+            var(--rt-q-v) 0 0 / 1px 4px repeat-y;
+        pointer-events: none;
     }
 
-    .rt-scene .rt-globe > .rt-cel8:first-child {
-        visibility: visible;
+    .rt-scene .rt-q-tile > .rt-q-ants {
+        inset: -4px;
     }
 
-    .rt-scene :is(.rt-w--row, .rt-day) .rt-globe-at {
-        inset: calc(50% - 10px) auto auto 2px;
-        inline-size: 20px;
-        block-size: 20px;
+    .rt-scene :is(.rt-q-at, .rt-q-bone) > .rt-q-ants {
+        inset: -2px;
     }
 
-    .rt-scene .rt-day .rt-globe-at {
-        inset-inline-start: calc(50% - 10px);
+    /* The parts' own bevel, ground and lines as the three CSS-only options
+       find them: the bevel a part turns to and back from (breath), the
+       three neighbouring greys of its ground (ground). */
+    .rt-scene :is(.rt-q-tile, .rt-q-panel) {
+        --rt-q-rest: var(--kp-raised), var(--kp-drop-hard);
+        --rt-q-flip: var(--kp-sunken), var(--kp-drop-hard);
+        --rt-q-g0: var(--background);
     }
 
-    .rt-scene .rt-w--line .rt-globe-at {
-        inset: 0 auto auto 2px;
-        inline-size: 12px;
-        block-size: 12px;
+    .rt-scene .rt-q-entry {
+        --rt-q-rest: none;
+        --rt-q-flip: var(--kp-sunken);
+        --rt-q-g0: var(--background);
     }
 
-    .rt-scene[data-rt-loading='globe'] .rt-w--line {
-        inset: 3px auto 3px 3px;
-        inline-size: 16px;
+    .rt-scene .rt-q-month .rt-day {
+        --rt-q-rest: none;
+        --rt-q-flip: var(--kp-sunken);
+        --rt-q-g0: var(--rt-white);
+    }
+
+    .rt-scene .rt-q-plot,
+    .rt-scene .rt-q-bone {
+        --rt-q-rest: var(--kp-sunken);
+        --rt-q-flip: var(--kp-raised);
+    }
+
+    .rt-scene .rt-q-plot {
+        --rt-q-g0: var(--rt-white);
+    }
+
+    .rt-scene .rt-q-bone {
+        --rt-q-g0: var(--popover);
+    }
+
+    .rt-scene :is(.rt-q-tile, .rt-q-panel, .rt-q-entry, .rt-q-month .rt-day, .rt-q-plot, .rt-q-bone) {
+        --rt-q-g1: hsl(from var(--rt-q-g0) h s calc(l - 6));
+        --rt-q-g2: hsl(from var(--rt-q-g0) h s calc(l - 12));
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        .rt-scene[data-rt-loading] .rt-cel {
-            animation: rt-cel var(--rt-lap) linear calc((var(--i) - var(--rt-loop)) * var(--rt-u)) infinite;
+        /* 1: the dither steps one pixel down and across every other frame,
+           three rounds of four, then rests a beat (rt-q-crawl, 28 frames). */
+        .rt-scene[data-rt-loading='shimmer'] .rt-q-dith {
+            animation: rt-q-crawl var(--rt-lap) linear infinite;
         }
 
-        .rt-scene[data-rt-loading] .rt-cel8 {
-            animation: rt-cel8 calc(8 * var(--rt-u)) linear calc((var(--i) - 8) * var(--rt-u)) infinite;
+        /* 2: the line steps down the room in 14 steps of two frames and
+           wraps (rt-q-scan, 28 frames). */
+        .rt-scene[data-rt-loading='raster'] .rt-q-scan {
+            animation: rt-q-scan var(--rt-lap) steps(14, jump-end) infinite;
         }
 
-        .rt-scene[data-rt-loading='cycle'] .rt-flow__sheet {
-            animation: rt-flow var(--rt-lap) steps(28, jump-end) infinite;
+        /* 3: on four frames, off four (rt-q-blink, 8 frames). */
+        .rt-scene[data-rt-loading='cursor'] .rt-q-cur {
+            animation: rt-q-blink calc(8 * var(--rt-u)) linear infinite;
         }
 
-        .rt-scene[data-rt-loading='interlace'] .rt-lace__pass--1 {
-            animation: rt-lace-1 var(--rt-lap) linear infinite;
+        /* 4: “.”, “..”, “...”, nothing, four frames each (rt-q-count, 16). */
+        .rt-scene[data-rt-loading='dots'] .rt-q-dots > span {
+            animation: rt-q-count calc(16 * var(--rt-u)) linear infinite;
         }
 
-        .rt-scene[data-rt-loading='interlace'] .rt-lace__pass--2 {
-            animation: rt-lace-2 var(--rt-lap) linear infinite;
+        /* 5: the part's bevel turns for four frames and back for four
+           (rt-q-breath, 8 frames); the skeleton's lines one after another
+           (rt-q-breath-3, 12 frames, four apart), the days one after another
+           round the month (rt-q-breath-14, 56 frames, four apart). */
+        .rt-scene[data-rt-loading='breath'] :is(.rt-q-tile, .rt-q-panel, .rt-q-entry, .rt-q-plot) {
+            animation: rt-q-breath calc(8 * var(--rt-u)) linear infinite;
         }
 
-        .rt-scene[data-rt-loading='interlace'] .rt-lace__pass--3 {
-            animation: rt-lace-3 var(--rt-lap) linear infinite;
+        .rt-scene[data-rt-loading='breath'] .rt-q-bone {
+            animation: rt-q-breath-3 calc(12 * var(--rt-u)) linear calc(4 * var(--i) * var(--rt-u)) infinite;
         }
 
-        .rt-scene[data-rt-loading='interlace'] .rt-lace__pass--4 {
-            animation: rt-lace-4 var(--rt-lap) linear infinite;
+        .rt-scene[data-rt-loading='breath'] .rt-q-month .rt-day {
+            animation: rt-q-breath-14 calc(56 * var(--rt-u)) linear calc(4 * var(--i) * var(--rt-u)) infinite;
         }
 
-        .rt-scene[data-rt-loading='interlace'] .rt-lacecover {
-            animation: rt-lace-cover var(--rt-lap) linear infinite;
+        /* 6: the ground light, a step darker, darkest, a step darker, four
+           frames each (rt-q-ground, 16 frames); the month's day plates, the
+           plot's well, the skeleton's line fills. */
+        .rt-scene[data-rt-loading='ground'] :is(.rt-q-tile, .rt-q-panel, .rt-q-entry, .rt-q-month .rt-day, .rt-q-plot, .rt-q-bone) {
+            animation: rt-q-ground calc(16 * var(--rt-u)) linear infinite;
         }
 
-        .rt-scene[data-rt-loading='ants'] .rt-ants {
-            animation: rt-ants var(--rt-lap) steps(28, jump-end) infinite;
+        /* 7: the dashes step a pixel a frame clockwise round the edge
+           (rt-q-march, a dash pair in 4 frames, seven a loop). */
+        .rt-scene[data-rt-loading='ants'] .rt-q-ants {
+            animation: rt-q-march calc(4 * var(--rt-u)) steps(4, jump-end) infinite;
         }
 
-        .rt-scene[data-rt-loading='ants'] .rt-ants::after {
-            animation: rt-ants-back var(--rt-lap) steps(28, jump-end) infinite;
+        /* 8: the menu's selected look rests four frames on each line in
+           turn: the tile's three, the panel's four, the entry (on four, off
+           four), the month's two weeks, the plot's three gridlines, the
+           skeleton's three lines (rt-q-walk-2, -3, -4, -week, -grid). */
+        .rt-scene[data-rt-loading='walk'] .rt-q-tile .rt-q-line,
+        .rt-scene[data-rt-loading='walk'] .rt-q-bone {
+            animation: rt-q-walk-3 calc(12 * var(--rt-u)) linear calc(4 * var(--i) * var(--rt-u)) infinite;
         }
 
-        .rt-scene[data-rt-loading='ants'] .rt-ants--day {
-            animation:
-                rt-ants var(--rt-lap) steps(28, jump-end) infinite,
-                rt-cel2 var(--rt-lap) linear calc((2 * var(--i) - var(--rt-loop)) * var(--rt-u)) infinite;
+        .rt-scene[data-rt-loading='walk'] .rt-q-panel .rt-q-line {
+            animation: rt-q-walk-4 calc(16 * var(--rt-u)) linear calc(4 * var(--i) * var(--rt-u)) infinite;
         }
 
-        .rt-scene[data-rt-loading='mystify'] .rt-myst__q {
-            animation: rt-trail var(--rt-lap) linear calc((var(--i) - var(--rt-loop)) * var(--rt-u)) infinite;
+        .rt-scene[data-rt-loading='walk'] .rt-q-entry {
+            animation: rt-q-walk-2 calc(8 * var(--rt-u)) linear infinite;
         }
 
-        .rt-scene[data-rt-loading='prompt'] .rt-dos__text {
-            animation: rt-type var(--rt-lap) steps(28, jump-end) infinite;
+        .rt-scene[data-rt-loading='walk'] .rt-q-month .rt-day {
+            animation: rt-q-walk-week calc(8 * var(--rt-u)) linear calc(4 * var(--x) * var(--rt-u)) infinite;
         }
 
-        .rt-scene[data-rt-loading='prompt'] .rt-dos__cur {
-            display: block;
-            animation: rt-type-on var(--rt-lap) steps(28, jump-end) infinite;
-        }
-
-        .rt-scene[data-rt-loading='prompt'] .rt-month-wait .rt-day:not(:last-child) .rt-dos__cur {
-            display: block;
-        }
-
-        .rt-scene[data-rt-loading='prompt'] .rt-dos__cur > i {
-            animation:
-                rt-type-off var(--rt-lap) steps(28, jump-end) infinite,
-                rt-blink calc(4 * var(--rt-u)) linear infinite;
-        }
-
-        .rt-scene[data-rt-loading='ball'] :is(.rt-waits__room, .rt-w--row) .rt-ball {
-            animation: rt-ball-box var(--rt-lap) linear infinite;
-        }
-
-        .rt-scene[data-rt-loading='ball'] :is(.rt-waits__room, .rt-w--row) .rt-ball__shadow {
-            animation: rt-ball-shadow-box var(--rt-lap) linear infinite;
-        }
-
-        .rt-scene[data-rt-loading='ball'] .rt-w--line .rt-ball {
-            animation:
-                rt-along var(--rt-lap) linear calc(var(--i, 0) * -3 * var(--rt-u)) infinite,
-                rt-hop4 calc(4 * var(--rt-u)) linear calc(var(--i, 0) * -3 * var(--rt-u)) infinite;
-        }
-
-        .rt-scene[data-rt-loading='ball'] .rt-w--line .rt-ball__shadow {
-            animation:
-                rt-along var(--rt-lap) linear calc(var(--i, 0) * -3 * var(--rt-u)) infinite,
-                rt-hop4-shadow calc(4 * var(--rt-u)) linear calc(var(--i, 0) * -3 * var(--rt-u)) infinite;
-        }
-
-        .rt-scene[data-rt-loading='ball'] .rt-w--plot .rt-ball {
-            translate: none;
-            animation: rt-ball-plot var(--rt-lap) linear infinite;
-        }
-
-        .rt-scene[data-rt-loading='ball'] :is(.rt-bounce, .rt-bounce__press) {
-            animation: rt-cel var(--rt-lap) linear calc((var(--i) - var(--rt-loop)) * var(--rt-u)) infinite;
+        .rt-scene[data-rt-loading='walk'] .rt-q-grid {
+            animation: rt-q-walk-grid calc(12 * var(--rt-u)) linear calc(4 * var(--i) * var(--rt-u)) infinite;
         }
     }
 
@@ -6472,888 +6017,323 @@
         }
     }
 
-    /* 10: the loading pictures (update 3). */
-    /* A cel: shown for its own frame of the loop (its delay puts the frame in place). */
-    @keyframes rt-cel {
+    /* 10: the quiet loading loops (update 4). */
+    /* The dither crawls one pixel down and across every other frame: three rounds of four, then a rest of four frames. */
+    @keyframes rt-q-crawl {
         0% {
-            visibility: visible;
-        }
-        3.5714% {
-            visibility: hidden;
-        }
-        100% {
-            visibility: hidden;
-        }
-    }
-
-    /* A cel of two frames (the marching ants on a day). */
-    @keyframes rt-cel2 {
-        0% {
-            visibility: visible;
-        }
-        7.1429% {
-            visibility: hidden;
-        }
-        100% {
-            visibility: hidden;
-        }
-    }
-
-    /* A cel of the globe's own turn of eight frames. */
-    @keyframes rt-cel8 {
-        0% {
-            visibility: visible;
-        }
-        12.5% {
-            visibility: hidden;
-        }
-        100% {
-            visibility: hidden;
-        }
-    }
-
-    /* Mystify: a copy stands five frames, its colour one step darker each frame, then it is gone. */
-    @keyframes rt-trail {
-        0% {
-            visibility: visible;
-            stroke: var(--rt-t0);
-            animation-timing-function: steps(1, jump-end);
-        }
-        3.5714% {
-            visibility: visible;
-            stroke: var(--rt-t1);
+            background-position:
+                0px 0px,
+                2px 1px;
             animation-timing-function: steps(1, jump-end);
         }
         7.1429% {
-            visibility: visible;
-            stroke: var(--rt-t2);
-            animation-timing-function: steps(1, jump-end);
-        }
-        10.7143% {
-            visibility: visible;
-            stroke: var(--rt-t3);
+            background-position:
+                1px 1px,
+                3px 2px;
             animation-timing-function: steps(1, jump-end);
         }
         14.2857% {
+            background-position:
+                2px 2px,
+                4px 3px;
+            animation-timing-function: steps(1, jump-end);
+        }
+        21.4286% {
+            background-position:
+                3px 3px,
+                5px 4px;
+            animation-timing-function: steps(1, jump-end);
+        }
+        28.5714% {
+            background-position:
+                0px 0px,
+                2px 1px;
+            animation-timing-function: steps(1, jump-end);
+        }
+        35.7143% {
+            background-position:
+                1px 1px,
+                3px 2px;
+            animation-timing-function: steps(1, jump-end);
+        }
+        42.8571% {
+            background-position:
+                2px 2px,
+                4px 3px;
+            animation-timing-function: steps(1, jump-end);
+        }
+        50% {
+            background-position:
+                3px 3px,
+                5px 4px;
+            animation-timing-function: steps(1, jump-end);
+        }
+        57.1429% {
+            background-position:
+                0px 0px,
+                2px 1px;
+            animation-timing-function: steps(1, jump-end);
+        }
+        64.2857% {
+            background-position:
+                1px 1px,
+                3px 2px;
+            animation-timing-function: steps(1, jump-end);
+        }
+        71.4286% {
+            background-position:
+                2px 2px,
+                4px 3px;
+            animation-timing-function: steps(1, jump-end);
+        }
+        78.5714% {
+            background-position:
+                3px 3px,
+                5px 4px;
+            animation-timing-function: steps(1, jump-end);
+        }
+        85.7143% {
+            background-position:
+                0px 0px,
+                2px 1px;
+            animation-timing-function: steps(1, jump-end);
+        }
+        100% {
+            background-position:
+                0px 0px,
+                2px 1px;
+        }
+    }
+
+    /* One raster line steps down the room and wraps (steps of the animation). */
+    @keyframes rt-q-scan {
+        from {
+            inset-block-start: 0;
+        }
+        to {
+            inset-block-start: calc((100% - 1px) * 14 / 13);
+        }
+    }
+
+    /* The cursor: on four frames, off four. */
+    @keyframes rt-q-blink {
+        0% {
             visibility: visible;
-            stroke: var(--rt-t4);
             animation-timing-function: steps(1, jump-end);
         }
-        17.8571% {
+        50% {
             visibility: hidden;
-            stroke: var(--rt-t4);
             animation-timing-function: steps(1, jump-end);
         }
         100% {
             visibility: hidden;
-            stroke: var(--rt-t4);
         }
     }
 
-    /* Palette cycling: the sheet steps one band (4 px) down a frame, two tiles a loop; the steps are the animation's own. */
-    @keyframes rt-flow {
+    /* The dots: one, two, three, none, four frames each. */
+    @keyframes rt-q-count {
         0% {
-            translate: 0 0;
+            inline-size: 1ch;
+            animation-timing-function: steps(1, jump-end);
+        }
+        25% {
+            inline-size: 2ch;
+            animation-timing-function: steps(1, jump-end);
+        }
+        50% {
+            inline-size: 3ch;
+            animation-timing-function: steps(1, jump-end);
+        }
+        75% {
+            inline-size: 0ch;
+            animation-timing-function: steps(1, jump-end);
         }
         100% {
-            translate: 0 112px;
+            inline-size: 0ch;
         }
     }
 
-    /* Marching ants: the dashes step a pixel a frame round the edge, clockwise outside, the other way inside (steps of the animation). */
-    @keyframes rt-ants {
+    /* The bevel turns for four frames of eight. */
+    @keyframes rt-q-breath {
         0% {
+            box-shadow: var(--rt-q-flip);
+            animation-timing-function: steps(1, jump-end);
+        }
+        50% {
+            box-shadow: var(--rt-q-rest);
+            animation-timing-function: steps(1, jump-end);
+        }
+        100% {
+            box-shadow: var(--rt-q-rest);
+        }
+    }
+
+    /* The same for four frames of twelve (a skeleton line of three). */
+    @keyframes rt-q-breath-3 {
+        0% {
+            box-shadow: var(--rt-q-flip);
+            animation-timing-function: steps(1, jump-end);
+        }
+        33.3333% {
+            box-shadow: var(--rt-q-rest);
+            animation-timing-function: steps(1, jump-end);
+        }
+        100% {
+            box-shadow: var(--rt-q-rest);
+        }
+    }
+
+    /* The same for four frames of fifty-six (a day of fourteen). */
+    @keyframes rt-q-breath-14 {
+        0% {
+            box-shadow: var(--rt-q-flip);
+            animation-timing-function: steps(1, jump-end);
+        }
+        7.1429% {
+            box-shadow: var(--rt-q-rest);
+            animation-timing-function: steps(1, jump-end);
+        }
+        100% {
+            box-shadow: var(--rt-q-rest);
+        }
+    }
+
+    /* The ground: light, a step darker, darkest, a step darker, four frames each. */
+    @keyframes rt-q-ground {
+        0% {
+            background-color: var(--rt-q-g0);
+            animation-timing-function: steps(1, jump-end);
+        }
+        25% {
+            background-color: var(--rt-q-g1);
+            animation-timing-function: steps(1, jump-end);
+        }
+        50% {
+            background-color: var(--rt-q-g2);
+            animation-timing-function: steps(1, jump-end);
+        }
+        75% {
+            background-color: var(--rt-q-g1);
+            animation-timing-function: steps(1, jump-end);
+        }
+        100% {
+            background-color: var(--rt-q-g1);
+        }
+    }
+
+    /* The ants: every edge's dashes a whole pair on, clockwise (steps of the animation). */
+    @keyframes rt-q-march {
+        from {
             background-position:
                 0 0,
                 100% 0,
                 0 100%,
                 0 0;
         }
-        100% {
+        to {
             background-position:
-                28px 0,
-                100% 28px,
-                -28px 100%,
-                0 -28px;
+                4px 0,
+                100% 4px,
+                -4px 100%,
+                0 -4px;
         }
     }
 
-    @keyframes rt-ants-back {
+    /* The selection on a line: four frames of eight (a list of two, or one entry on and off). */
+    @keyframes rt-q-walk-2 {
         0% {
-            background-position:
-                0 0,
-                100% 0,
-                0 100%,
-                0 0;
-        }
-        100% {
-            background-position:
-                -28px 0,
-                100% -28px,
-                28px 100%,
-                0 28px;
-        }
-    }
-
-    /* Interlaced: pass 1 comes in at frame 2, its top half first, and stands until the picture clears at frame 24. */
-    @keyframes rt-lace-1 {
-        0% {
-            visibility: hidden;
-            clip-path: inset(0 0 0 0);
-            animation-timing-function: steps(1, jump-end);
-        }
-        7.1429% {
-            visibility: visible;
-            clip-path: inset(0 0 50% 0);
-            animation-timing-function: steps(1, jump-end);
-        }
-        10.7143% {
-            visibility: visible;
-            clip-path: inset(0 0 0 0);
-            animation-timing-function: steps(1, jump-end);
-        }
-        85.7143% {
-            visibility: hidden;
-            clip-path: inset(0 0 0 0);
-            animation-timing-function: steps(1, jump-end);
-        }
-        100% {
-            visibility: hidden;
-            clip-path: inset(0 0 0 0);
-        }
-    }
-
-    /* Interlaced: pass 2 comes in at frame 6, its top half first, and stands until the picture clears at frame 24. */
-    @keyframes rt-lace-2 {
-        0% {
-            visibility: hidden;
-            clip-path: inset(0 0 0 0);
-            animation-timing-function: steps(1, jump-end);
-        }
-        21.4286% {
-            visibility: visible;
-            clip-path: inset(0 0 50% 0);
-            animation-timing-function: steps(1, jump-end);
-        }
-        25% {
-            visibility: visible;
-            clip-path: inset(0 0 0 0);
-            animation-timing-function: steps(1, jump-end);
-        }
-        85.7143% {
-            visibility: hidden;
-            clip-path: inset(0 0 0 0);
-            animation-timing-function: steps(1, jump-end);
-        }
-        100% {
-            visibility: hidden;
-            clip-path: inset(0 0 0 0);
-        }
-    }
-
-    /* Interlaced: pass 3 comes in at frame 10, its top half first, and stands until the picture clears at frame 24. */
-    @keyframes rt-lace-3 {
-        0% {
-            visibility: hidden;
-            clip-path: inset(0 0 0 0);
-            animation-timing-function: steps(1, jump-end);
-        }
-        35.7143% {
-            visibility: visible;
-            clip-path: inset(0 0 50% 0);
-            animation-timing-function: steps(1, jump-end);
-        }
-        39.2857% {
-            visibility: visible;
-            clip-path: inset(0 0 0 0);
-            animation-timing-function: steps(1, jump-end);
-        }
-        85.7143% {
-            visibility: hidden;
-            clip-path: inset(0 0 0 0);
-            animation-timing-function: steps(1, jump-end);
-        }
-        100% {
-            visibility: hidden;
-            clip-path: inset(0 0 0 0);
-        }
-    }
-
-    /* Interlaced: pass 4 comes in at frame 14, its top half first, and stands until the picture clears at frame 24. */
-    @keyframes rt-lace-4 {
-        0% {
-            visibility: hidden;
-            clip-path: inset(0 0 0 0);
-            animation-timing-function: steps(1, jump-end);
-        }
-        50% {
-            visibility: visible;
-            clip-path: inset(0 0 50% 0);
-            animation-timing-function: steps(1, jump-end);
-        }
-        53.5714% {
-            visibility: visible;
-            clip-path: inset(0 0 0 0);
-            animation-timing-function: steps(1, jump-end);
-        }
-        85.7143% {
-            visibility: hidden;
-            clip-path: inset(0 0 0 0);
-            animation-timing-function: steps(1, jump-end);
-        }
-        100% {
-            visibility: hidden;
-            clip-path: inset(0 0 0 0);
-        }
-    }
-
-    /* Interlaced, over real content: the grey cover opens every eighth row, then every fourth, every second, then all. */
-    @keyframes rt-lace-cover {
-        0% {
-            visibility: visible;
-            mask-image: none;
-            animation-timing-function: steps(1, jump-end);
-        }
-        7.1429% {
-            visibility: visible;
-            mask-image: repeating-linear-gradient(transparent 0 2px, var(--foreground) 2px 16px);
-            animation-timing-function: steps(1, jump-end);
-        }
-        21.4286% {
-            visibility: visible;
-            mask-image: repeating-linear-gradient(transparent 0 2px, var(--foreground) 2px 8px);
-            animation-timing-function: steps(1, jump-end);
-        }
-        35.7143% {
-            visibility: visible;
-            mask-image: repeating-linear-gradient(transparent 0 2px, var(--foreground) 2px 4px);
-            animation-timing-function: steps(1, jump-end);
-        }
-        50% {
-            visibility: hidden;
-            mask-image: none;
-            animation-timing-function: steps(1, jump-end);
-        }
-        85.7143% {
-            visibility: visible;
-            mask-image: none;
-            animation-timing-function: steps(1, jump-end);
-        }
-        100% {
-            visibility: visible;
-            mask-image: none;
-        }
-    }
-
-    /* The DOS prompt: a line grows a character a frame from its frame (--i); the cursor shows from its frame (--i) to its last
-       (--x); both with the animation's own steps, one a frame. */
-    @keyframes rt-type {
-        0% {
-            inline-size: calc(var(--i) * -1ch);
-        }
-        100% {
-            inline-size: calc((var(--rt-loop) - var(--i)) * 1ch);
-        }
-    }
-
-    @keyframes rt-type-on {
-        0% {
-            inline-size: calc((1 - var(--i)) * 1ch);
-        }
-        100% {
-            inline-size: calc((var(--rt-loop) + 1 - var(--i)) * 1ch);
-        }
-    }
-
-    @keyframes rt-type-off {
-        0% {
-            inline-size: calc(var(--x) * 1ch);
-        }
-        100% {
-            inline-size: calc((var(--x) - var(--rt-loop)) * 1ch);
-        }
-    }
-
-    /* The cursor blinks two frames on, two off. */
-    @keyframes rt-blink {
-        0% {
-            background-color: var(--background);
+            background-color: var(--primary);
+            color: var(--primary-foreground);
             animation-timing-function: steps(1, jump-end);
         }
         50% {
             background-color: transparent;
+            color: var(--foreground);
             animation-timing-function: steps(1, jump-end);
         }
         100% {
             background-color: transparent;
+            color: var(--foreground);
         }
     }
 
-    /* The bouncing ball in a box: dropped at the left, it squashes a frame on each landing, bounces lower each time drifting right, rests, and is dropped again. */
-    @keyframes rt-ball-box {
+    /* A week taken as the selection: its days' plates and the gaps between them, four frames of eight. */
+    @keyframes rt-q-walk-week {
         0% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.06), 2px);
-            inset-block-end: round(calc(var(--rt-floor) + (100% - var(--rt-floor) - var(--rt-bs) - 2px) * 1), 2px);
-            scale: 1;
+            background-color: var(--primary);
+            box-shadow:
+                -1px 0 0 0 var(--primary),
+                1px 0 0 0 var(--primary);
+            color: var(--primary-foreground);
             animation-timing-function: steps(1, jump-end);
         }
-        3.5714% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.1116), 2px);
-            inset-block-end: round(calc(var(--rt-floor) + (100% - var(--rt-floor) - var(--rt-bs) - 2px) * 0.96), 2px);
-            scale: 1;
+        50% {
+            background-color: transparent;
+            box-shadow: none;
+            color: var(--foreground);
             animation-timing-function: steps(1, jump-end);
         }
-        7.1429% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.162), 2px);
-            inset-block-end: round(calc(var(--rt-floor) + (100% - var(--rt-floor) - var(--rt-bs) - 2px) * 0.86), 2px);
-            scale: 1;
+        100% {
+            background-color: transparent;
+            box-shadow: none;
+            color: var(--foreground);
+        }
+    }
+
+    /* Four frames of twelve (a list of three). */
+    @keyframes rt-q-walk-3 {
+        0% {
+            background-color: var(--primary);
+            color: var(--primary-foreground);
             animation-timing-function: steps(1, jump-end);
         }
-        10.7143% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.2111), 2px);
-            inset-block-end: round(calc(var(--rt-floor) + (100% - var(--rt-floor) - var(--rt-bs) - 2px) * 0.7), 2px);
-            scale: 1;
+        33.3333% {
+            background-color: var(--rt-q-bg, transparent);
+            color: var(--foreground);
             animation-timing-function: steps(1, jump-end);
         }
-        14.2857% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.2591), 2px);
-            inset-block-end: round(calc(var(--rt-floor) + (100% - var(--rt-floor) - var(--rt-bs) - 2px) * 0.48), 2px);
-            scale: 1;
-            animation-timing-function: steps(1, jump-end);
+        100% {
+            background-color: var(--rt-q-bg, transparent);
+            color: var(--foreground);
         }
-        17.8571% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.3059), 2px);
-            inset-block-end: round(calc(var(--rt-floor) + (100% - var(--rt-floor) - var(--rt-bs) - 2px) * 0.2), 2px);
-            scale: 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        21.4286% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.3514), 2px);
-            inset-block-end: round(calc(var(--rt-floor) + (100% - var(--rt-floor) - var(--rt-bs) - 2px) * 0), 2px);
-            scale: 1.4 0.6;
+    }
+
+    /* Four frames of sixteen (a list of four). */
+    @keyframes rt-q-walk-4 {
+        0% {
+            background-color: var(--primary);
+            color: var(--primary-foreground);
             animation-timing-function: steps(1, jump-end);
         }
         25% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.3956), 2px);
-            inset-block-end: round(calc(var(--rt-floor) + (100% - var(--rt-floor) - var(--rt-bs) - 2px) * 0.26), 2px);
-            scale: 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        28.5714% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.4385), 2px);
-            inset-block-end: round(calc(var(--rt-floor) + (100% - var(--rt-floor) - var(--rt-bs) - 2px) * 0.44), 2px);
-            scale: 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        32.1429% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.48), 2px);
-            inset-block-end: round(calc(var(--rt-floor) + (100% - var(--rt-floor) - var(--rt-bs) - 2px) * 0.54), 2px);
-            scale: 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        35.7143% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.5202), 2px);
-            inset-block-end: round(calc(var(--rt-floor) + (100% - var(--rt-floor) - var(--rt-bs) - 2px) * 0.56), 2px);
-            scale: 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        39.2857% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.559), 2px);
-            inset-block-end: round(calc(var(--rt-floor) + (100% - var(--rt-floor) - var(--rt-bs) - 2px) * 0.5), 2px);
-            scale: 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        42.8571% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.5964), 2px);
-            inset-block-end: round(calc(var(--rt-floor) + (100% - var(--rt-floor) - var(--rt-bs) - 2px) * 0.36), 2px);
-            scale: 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        46.4286% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.6323), 2px);
-            inset-block-end: round(calc(var(--rt-floor) + (100% - var(--rt-floor) - var(--rt-bs) - 2px) * 0.16), 2px);
-            scale: 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        50% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.6667), 2px);
-            inset-block-end: round(calc(var(--rt-floor) + (100% - var(--rt-floor) - var(--rt-bs) - 2px) * 0), 2px);
-            scale: 1.35 0.65;
-            animation-timing-function: steps(1, jump-end);
-        }
-        53.5714% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.6996), 2px);
-            inset-block-end: round(calc(var(--rt-floor) + (100% - var(--rt-floor) - var(--rt-bs) - 2px) * 0.18), 2px);
-            scale: 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        57.1429% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.7308), 2px);
-            inset-block-end: round(calc(var(--rt-floor) + (100% - var(--rt-floor) - var(--rt-bs) - 2px) * 0.27), 2px);
-            scale: 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        60.7143% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.7604), 2px);
-            inset-block-end: round(calc(var(--rt-floor) + (100% - var(--rt-floor) - var(--rt-bs) - 2px) * 0.28), 2px);
-            scale: 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        64.2857% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.7883), 2px);
-            inset-block-end: round(calc(var(--rt-floor) + (100% - var(--rt-floor) - var(--rt-bs) - 2px) * 0.2), 2px);
-            scale: 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        67.8571% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.8143), 2px);
-            inset-block-end: round(calc(var(--rt-floor) + (100% - var(--rt-floor) - var(--rt-bs) - 2px) * 0), 2px);
-            scale: 1.25 0.75;
-            animation-timing-function: steps(1, jump-end);
-        }
-        71.4286% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.8385), 2px);
-            inset-block-end: round(calc(var(--rt-floor) + (100% - var(--rt-floor) - var(--rt-bs) - 2px) * 0.1), 2px);
-            scale: 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        75% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.8607), 2px);
-            inset-block-end: round(calc(var(--rt-floor) + (100% - var(--rt-floor) - var(--rt-bs) - 2px) * 0.14), 2px);
-            scale: 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        78.5714% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.8808), 2px);
-            inset-block-end: round(calc(var(--rt-floor) + (100% - var(--rt-floor) - var(--rt-bs) - 2px) * 0.1), 2px);
-            scale: 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        82.1429% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.8985), 2px);
-            inset-block-end: round(calc(var(--rt-floor) + (100% - var(--rt-floor) - var(--rt-bs) - 2px) * 0), 2px);
-            scale: 1.15 0.85;
-            animation-timing-function: steps(1, jump-end);
-        }
-        85.7143% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.9138), 2px);
-            inset-block-end: round(calc(var(--rt-floor) + (100% - var(--rt-floor) - var(--rt-bs) - 2px) * 0.04), 2px);
-            scale: 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        89.2857% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.9263), 2px);
-            inset-block-end: round(calc(var(--rt-floor) + (100% - var(--rt-floor) - var(--rt-bs) - 2px) * 0), 2px);
-            scale: 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        92.8571% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.9355), 2px);
-            inset-block-end: round(calc(var(--rt-floor) + (100% - var(--rt-floor) - var(--rt-bs) - 2px) * 0), 2px);
-            scale: 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        96.4286% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.94), 2px);
-            inset-block-end: round(calc(var(--rt-floor) + (100% - var(--rt-floor) - var(--rt-bs) - 2px) * 0), 2px);
-            scale: 1;
+            background-color: transparent;
+            color: var(--foreground);
             animation-timing-function: steps(1, jump-end);
         }
         100% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.94), 2px);
-            inset-block-end: round(calc(var(--rt-floor) + (100% - var(--rt-floor) - var(--rt-bs) - 2px) * 0), 2px);
-            scale: 1;
+            background-color: transparent;
+            color: var(--foreground);
         }
     }
 
-    /* Its hard shadow on the floor, narrower the higher the ball. */
-    @keyframes rt-ball-shadow-box {
+    /* A gridline taken as the selection: the navy bar on it, four frames of twelve. */
+    @keyframes rt-q-walk-grid {
         0% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.06 + var(--rt-bs) * 0.25), 2px);
-            inline-size: round(calc(var(--rt-bs) * 0.5), 2px);
+            stroke: var(--primary);
+            stroke-width: 6px;
+            stroke-dasharray: none;
             animation-timing-function: steps(1, jump-end);
         }
-        3.5714% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.1116 + var(--rt-bs) * 0.24), 2px);
-            inline-size: round(calc(var(--rt-bs) * 0.52), 2px);
-            animation-timing-function: steps(1, jump-end);
-        }
-        7.1429% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.162 + var(--rt-bs) * 0.215), 2px);
-            inline-size: round(calc(var(--rt-bs) * 0.57), 2px);
-            animation-timing-function: steps(1, jump-end);
-        }
-        10.7143% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.2111 + var(--rt-bs) * 0.175), 2px);
-            inline-size: round(calc(var(--rt-bs) * 0.65), 2px);
-            animation-timing-function: steps(1, jump-end);
-        }
-        14.2857% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.2591 + var(--rt-bs) * 0.12), 2px);
-            inline-size: round(calc(var(--rt-bs) * 0.76), 2px);
-            animation-timing-function: steps(1, jump-end);
-        }
-        17.8571% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.3059 + var(--rt-bs) * 0.05), 2px);
-            inline-size: round(calc(var(--rt-bs) * 0.9), 2px);
-            animation-timing-function: steps(1, jump-end);
-        }
-        21.4286% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.3514 + var(--rt-bs) * 0), 2px);
-            inline-size: round(calc(var(--rt-bs) * 1), 2px);
-            animation-timing-function: steps(1, jump-end);
-        }
-        25% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.3956 + var(--rt-bs) * 0.065), 2px);
-            inline-size: round(calc(var(--rt-bs) * 0.87), 2px);
-            animation-timing-function: steps(1, jump-end);
-        }
-        28.5714% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.4385 + var(--rt-bs) * 0.11), 2px);
-            inline-size: round(calc(var(--rt-bs) * 0.78), 2px);
-            animation-timing-function: steps(1, jump-end);
-        }
-        32.1429% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.48 + var(--rt-bs) * 0.135), 2px);
-            inline-size: round(calc(var(--rt-bs) * 0.73), 2px);
-            animation-timing-function: steps(1, jump-end);
-        }
-        35.7143% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.5202 + var(--rt-bs) * 0.14), 2px);
-            inline-size: round(calc(var(--rt-bs) * 0.72), 2px);
-            animation-timing-function: steps(1, jump-end);
-        }
-        39.2857% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.559 + var(--rt-bs) * 0.125), 2px);
-            inline-size: round(calc(var(--rt-bs) * 0.75), 2px);
-            animation-timing-function: steps(1, jump-end);
-        }
-        42.8571% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.5964 + var(--rt-bs) * 0.09), 2px);
-            inline-size: round(calc(var(--rt-bs) * 0.82), 2px);
-            animation-timing-function: steps(1, jump-end);
-        }
-        46.4286% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.6323 + var(--rt-bs) * 0.04), 2px);
-            inline-size: round(calc(var(--rt-bs) * 0.92), 2px);
-            animation-timing-function: steps(1, jump-end);
-        }
-        50% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.6667 + var(--rt-bs) * 0), 2px);
-            inline-size: round(calc(var(--rt-bs) * 1), 2px);
-            animation-timing-function: steps(1, jump-end);
-        }
-        53.5714% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.6996 + var(--rt-bs) * 0.045), 2px);
-            inline-size: round(calc(var(--rt-bs) * 0.91), 2px);
-            animation-timing-function: steps(1, jump-end);
-        }
-        57.1429% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.7308 + var(--rt-bs) * 0.068), 2px);
-            inline-size: round(calc(var(--rt-bs) * 0.865), 2px);
-            animation-timing-function: steps(1, jump-end);
-        }
-        60.7143% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.7604 + var(--rt-bs) * 0.07), 2px);
-            inline-size: round(calc(var(--rt-bs) * 0.86), 2px);
-            animation-timing-function: steps(1, jump-end);
-        }
-        64.2857% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.7883 + var(--rt-bs) * 0.05), 2px);
-            inline-size: round(calc(var(--rt-bs) * 0.9), 2px);
-            animation-timing-function: steps(1, jump-end);
-        }
-        67.8571% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.8143 + var(--rt-bs) * 0), 2px);
-            inline-size: round(calc(var(--rt-bs) * 1), 2px);
-            animation-timing-function: steps(1, jump-end);
-        }
-        71.4286% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.8385 + var(--rt-bs) * 0.025), 2px);
-            inline-size: round(calc(var(--rt-bs) * 0.95), 2px);
-            animation-timing-function: steps(1, jump-end);
-        }
-        75% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.8607 + var(--rt-bs) * 0.035), 2px);
-            inline-size: round(calc(var(--rt-bs) * 0.93), 2px);
-            animation-timing-function: steps(1, jump-end);
-        }
-        78.5714% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.8808 + var(--rt-bs) * 0.025), 2px);
-            inline-size: round(calc(var(--rt-bs) * 0.95), 2px);
-            animation-timing-function: steps(1, jump-end);
-        }
-        82.1429% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.8985 + var(--rt-bs) * 0), 2px);
-            inline-size: round(calc(var(--rt-bs) * 1), 2px);
-            animation-timing-function: steps(1, jump-end);
-        }
-        85.7143% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.9138 + var(--rt-bs) * 0.01), 2px);
-            inline-size: round(calc(var(--rt-bs) * 0.98), 2px);
-            animation-timing-function: steps(1, jump-end);
-        }
-        89.2857% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.9263 + var(--rt-bs) * 0), 2px);
-            inline-size: round(calc(var(--rt-bs) * 1), 2px);
-            animation-timing-function: steps(1, jump-end);
-        }
-        92.8571% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.9355 + var(--rt-bs) * 0), 2px);
-            inline-size: round(calc(var(--rt-bs) * 1), 2px);
-            animation-timing-function: steps(1, jump-end);
-        }
-        96.4286% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.94 + var(--rt-bs) * 0), 2px);
-            inline-size: round(calc(var(--rt-bs) * 1), 2px);
+        33.3333% {
+            stroke: hsl(from var(--border) h s calc(l + 14));
+            stroke-width: 1px;
+            stroke-dasharray: 1 2;
             animation-timing-function: steps(1, jump-end);
         }
         100% {
-            inset-inline-start: round(calc((100% - var(--rt-bs)) * 0.94 + var(--rt-bs) * 0), 2px);
-            inline-size: round(calc(var(--rt-bs) * 1), 2px);
-        }
-    }
-
-    /* Along a skeleton line: the ball travels to the end in fourteen frames and back in fourteen. */
-    @keyframes rt-along {
-        0% {
-            inset-inline-start: 0;
-            animation-timing-function: steps(14, jump-end);
-        }
-        50% {
-            inset-inline-start: calc(100% - var(--rt-bs));
-            animation-timing-function: steps(14, jump-end);
-        }
-        100% {
-            inset-inline-start: 0;
-        }
-    }
-
-    /* A hop of four frames: landed and squashed, up, at the top, down. */
-    @keyframes rt-hop4 {
-        0% {
-            translate: 0 0;
-            scale: 1.3 0.7;
-            animation-timing-function: steps(1, jump-end);
-        }
-        25% {
-            translate: 0 -6px;
-            scale: 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        50% {
-            translate: 0 -10px;
-            scale: 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        75% {
-            translate: 0 -6px;
-            scale: 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        100% {
-            translate: 0 -6px;
-            scale: 1;
-        }
-    }
-
-    /* The shadow under a hopping ball: wide when it lands, narrow at the top. */
-    @keyframes rt-hop4-shadow {
-        0% {
-            scale: 1.2 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        25% {
-            scale: 0.8 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        50% {
-            scale: 0.6 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        75% {
-            scale: 0.8 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        100% {
-            scale: 0.8 1;
-        }
-    }
-
-    /* The ball along the chart's line: it lands on eight points in turn and comes back, a hop of two frames each. */
-    @keyframes rt-ball-plot {
-        0% {
-            inset-inline-start: calc(6.667% - var(--rt-bs) / 2);
-            inset-block-start: max(0px, calc(72.917% - var(--rt-bs) - 0px));
-            scale: 1.3 0.7;
-            animation-timing-function: steps(1, jump-end);
-        }
-        3.5714% {
-            inset-inline-start: calc(12.857% - var(--rt-bs) / 2);
-            inset-block-start: max(0px, calc(65.804% - var(--rt-bs) - 7px));
-            scale: 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        7.1429% {
-            inset-inline-start: calc(19.048% - var(--rt-bs) / 2);
-            inset-block-start: max(0px, calc(68.899% - var(--rt-bs) - 0px));
-            scale: 1.3 0.7;
-            animation-timing-function: steps(1, jump-end);
-        }
-        10.7143% {
-            inset-inline-start: calc(25.238% - var(--rt-bs) / 2);
-            inset-block-start: max(0px, calc(71.399% - var(--rt-bs) - 7px));
-            scale: 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        14.2857% {
-            inset-inline-start: calc(31.429% - var(--rt-bs) / 2);
-            inset-block-start: max(0px, calc(59.018% - var(--rt-bs) - 0px));
-            scale: 1.3 0.7;
-            animation-timing-function: steps(1, jump-end);
-        }
-        17.8571% {
-            inset-inline-start: calc(37.619% - var(--rt-bs) / 2);
-            inset-block-start: max(0px, calc(46.935% - var(--rt-bs) - 7px));
-            scale: 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        21.4286% {
-            inset-inline-start: calc(43.81% - var(--rt-bs) / 2);
-            inset-block-start: max(0px, calc(50.03% - var(--rt-bs) - 0px));
-            scale: 1.3 0.7;
-            animation-timing-function: steps(1, jump-end);
-        }
-        25% {
-            inset-inline-start: calc(50% - var(--rt-bs) / 2);
-            inset-block-start: max(0px, calc(53.125% - var(--rt-bs) - 7px));
-            scale: 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        28.5714% {
-            inset-inline-start: calc(56.19% - var(--rt-bs) / 2);
-            inset-block-start: max(0px, calc(42.292% - var(--rt-bs) - 0px));
-            scale: 1.3 0.7;
-            animation-timing-function: steps(1, jump-end);
-        }
-        32.1429% {
-            inset-inline-start: calc(62.381% - var(--rt-bs) / 2);
-            inset-block-start: max(0px, calc(31.458% - var(--rt-bs) - 7px));
-            scale: 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        35.7143% {
-            inset-inline-start: calc(68.571% - var(--rt-bs) / 2);
-            inset-block-start: max(0px, calc(34.286% - var(--rt-bs) - 0px));
-            scale: 1.3 0.7;
-            animation-timing-function: steps(1, jump-end);
-        }
-        39.2857% {
-            inset-inline-start: calc(74.762% - var(--rt-bs) / 2);
-            inset-block-start: max(0px, calc(37.381% - var(--rt-bs) - 7px));
-            scale: 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        42.8571% {
-            inset-inline-start: calc(80.952% - var(--rt-bs) / 2);
-            inset-block-start: max(0px, calc(28.571% - var(--rt-bs) - 0px));
-            scale: 1.3 0.7;
-            animation-timing-function: steps(1, jump-end);
-        }
-        46.4286% {
-            inset-inline-start: calc(87.143% - var(--rt-bs) / 2);
-            inset-block-start: max(0px, calc(19.286% - var(--rt-bs) - 7px));
-            scale: 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        50% {
-            inset-inline-start: calc(93.333% - var(--rt-bs) / 2);
-            inset-block-start: max(0px, calc(21.667% - var(--rt-bs) - 0px));
-            scale: 1.3 0.7;
-            animation-timing-function: steps(1, jump-end);
-        }
-        53.5714% {
-            inset-inline-start: calc(87.143% - var(--rt-bs) / 2);
-            inset-block-start: max(0px, calc(19.286% - var(--rt-bs) - 7px));
-            scale: 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        57.1429% {
-            inset-inline-start: calc(80.952% - var(--rt-bs) / 2);
-            inset-block-start: max(0px, calc(28.571% - var(--rt-bs) - 0px));
-            scale: 1.3 0.7;
-            animation-timing-function: steps(1, jump-end);
-        }
-        60.7143% {
-            inset-inline-start: calc(74.762% - var(--rt-bs) / 2);
-            inset-block-start: max(0px, calc(37.381% - var(--rt-bs) - 7px));
-            scale: 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        64.2857% {
-            inset-inline-start: calc(68.571% - var(--rt-bs) / 2);
-            inset-block-start: max(0px, calc(34.286% - var(--rt-bs) - 0px));
-            scale: 1.3 0.7;
-            animation-timing-function: steps(1, jump-end);
-        }
-        67.8571% {
-            inset-inline-start: calc(62.381% - var(--rt-bs) / 2);
-            inset-block-start: max(0px, calc(31.458% - var(--rt-bs) - 7px));
-            scale: 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        71.4286% {
-            inset-inline-start: calc(56.19% - var(--rt-bs) / 2);
-            inset-block-start: max(0px, calc(42.292% - var(--rt-bs) - 0px));
-            scale: 1.3 0.7;
-            animation-timing-function: steps(1, jump-end);
-        }
-        75% {
-            inset-inline-start: calc(50% - var(--rt-bs) / 2);
-            inset-block-start: max(0px, calc(53.125% - var(--rt-bs) - 7px));
-            scale: 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        78.5714% {
-            inset-inline-start: calc(43.81% - var(--rt-bs) / 2);
-            inset-block-start: max(0px, calc(50.03% - var(--rt-bs) - 0px));
-            scale: 1.3 0.7;
-            animation-timing-function: steps(1, jump-end);
-        }
-        82.1429% {
-            inset-inline-start: calc(37.619% - var(--rt-bs) / 2);
-            inset-block-start: max(0px, calc(46.935% - var(--rt-bs) - 7px));
-            scale: 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        85.7143% {
-            inset-inline-start: calc(31.429% - var(--rt-bs) / 2);
-            inset-block-start: max(0px, calc(59.018% - var(--rt-bs) - 0px));
-            scale: 1.3 0.7;
-            animation-timing-function: steps(1, jump-end);
-        }
-        89.2857% {
-            inset-inline-start: calc(25.238% - var(--rt-bs) / 2);
-            inset-block-start: max(0px, calc(71.399% - var(--rt-bs) - 7px));
-            scale: 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        92.8571% {
-            inset-inline-start: calc(19.048% - var(--rt-bs) / 2);
-            inset-block-start: max(0px, calc(68.899% - var(--rt-bs) - 0px));
-            scale: 1.3 0.7;
-            animation-timing-function: steps(1, jump-end);
-        }
-        96.4286% {
-            inset-inline-start: calc(12.857% - var(--rt-bs) / 2);
-            inset-block-start: max(0px, calc(65.804% - var(--rt-bs) - 7px));
-            scale: 1;
-            animation-timing-function: steps(1, jump-end);
-        }
-        100% {
-            inset-inline-start: calc(12.857% - var(--rt-bs) / 2);
-            inset-block-start: max(0px, calc(65.804% - var(--rt-bs) - 7px));
-            scale: 1;
+            stroke: hsl(from var(--border) h s calc(l + 14));
+            stroke-width: 1px;
+            stroke-dasharray: 1 2;
         }
     }
 }

@@ -554,8 +554,8 @@ export const TIMINGS = Object.freeze({
     // The forest register [S48, LIFT_PLAN forest row]: the headline's own
     // fade-in and the contour trace that draws beside it, both CSS-only
     // (no routine — see css/forest-register.css's type section).
-    'kp-headline-in': { durationMs: 500, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
-    'kp-trace': { durationMs: 1800, cycles: 1, property: 'stroke-dashoffset', luminanceSteps: [] },
+    'kp-headline-in': { durationMs: 1000, cycles: 1, property: 'translate, clip-path', luminanceSteps: [] },
+    'kp-trace': { durationMs: 1000, cycles: 1, property: 'stroke-dashoffset', luminanceSteps: [] },
     // The deco register [S48, LIFT_PLAN row 8]: the cartouche's frame
     // scaling in once with the headline, and the dossier's jewel plates
     // clearing on the "Open the file" trigger, staggered 140ms apart.
@@ -659,7 +659,8 @@ export const TIMINGS = Object.freeze({
     'kp-sig-terminal-tm-feed': { durationMs: 816, cycles: 1, property: 'inset-block-start', luminanceSteps: [] },
     'kp-sig-terminal-update-blink': { durationMs: 900, cycles: 1, property: 'color', luminanceSteps: [] },
     'kp-sig-terminal-update-blink-line': { durationMs: 900, cycles: 1, property: 'color', luminanceSteps: [] },
-    'kp-sig-forest-meter-wipe-o': { durationMs: 1200, cycles: 1, property: 'clip-path', luminanceSteps: [] },
+    'kp-sig-forest-meter-wipe-o': { durationMs: 1000, cycles: 1, property: 'clip-path', luminanceSteps: [] },
+    'kp-sig-forest-meter-wipe-o-rtl': { durationMs: 1000, cycles: 1, property: 'clip-path', luminanceSteps: [] },
     'kp-sig-solstice-meter-bump-d': { durationMs: 500, cycles: 1, property: 'scale', luminanceSteps: [] },
     'kp-sig-solstice-meter-bump-o': { durationMs: 500, cycles: 1, property: 'scale', luminanceSteps: [] },
     'kp-sig-solstice-meter-bump-w': { durationMs: 500, cycles: 1, property: 'scale', luminanceSteps: [] },
@@ -808,17 +809,22 @@ export const TIMINGS = Object.freeze({
     'kp-sig-pastel-leave': { durationMs: 520, cycles: 1, property: 'opacity', luminanceSteps: [0] },
     // forest-register
     'kp-sig-forest-sprout': { durationMs: 1000, cycles: 1, property: 'clip-path', luminanceSteps: [] },
-    'kp-sig-forest-plant': { durationMs: 3200, cycles: Infinity, property: 'opacity', luminanceSteps: [0.7, 0.85, 1, 1] },
-    'kp-sig-forest-draw': { durationMs: 34, cycles: 1, property: 'clip-path', luminanceSteps: [] },
-    'kp-sig-forest-radio': { durationMs: 34, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
-    'kp-sig-forest-grow': { durationMs: 34, cycles: 7, property: 'translate, clip-path', luminanceSteps: [] },
-    'kp-sig-forest-root': { durationMs: 34, cycles: 1, property: 'translate, clip-path', luminanceSteps: [] },
+    'kp-sig-forest-plant': { durationMs: 1600, cycles: Infinity, property: 'opacity', luminanceSteps: [0.7, 0.85, 1, 1] },
+    'kp-sig-forest-grow': { durationMs: 1000, cycles: 1, property: 'translate, clip-path', luminanceSteps: [] },
+    'kp-sig-forest-grow-back': { durationMs: 1000, cycles: 1, property: 'translate, clip-path', luminanceSteps: [] }, // the palette's close, the growth played reverse
+    'kp-sig-forest-root': { durationMs: 1000, cycles: 1, property: 'translate, clip-path', luminanceSteps: [] },
+    'kp-sig-forest-root-back': { durationMs: 1000, cycles: 1, property: 'translate, clip-path', luminanceSteps: [] }, // the phone menu's close, the growth played reverse
+    'kp-sig-forest-arrive': { durationMs: 1000, cycles: 1, property: 'translate, clip-path, filter', luminanceSteps: [] },
+    'kp-sig-forest-fade': { durationMs: 1000, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
+    'kp-sig-forest-fade-back': { durationMs: 1000, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
+    'kp-sig-forest-ground': { durationMs: 1000, cycles: 1, property: 'background-color', luminanceSteps: [] },
+    'kp-sig-forest-alarm-ring': { durationMs: 3200, cycles: Infinity, property: 'opacity', luminanceSteps: [1, 1, 0, 0] },
     'kp-progressbar-forest-breath': { durationMs: 6600, cycles: Infinity, property: '--kp-fo-breath', luminanceSteps: [] },
-    'kp-sig-forest-leave': { durationMs: 34, cycles: 1, property: 'translate, clip-path, filter', luminanceSteps: [] },
+    'kp-sig-forest-leave': { durationMs: 1000, cycles: 1, property: 'translate, clip-path, filter', luminanceSteps: [] },
     'kp-sig-forest-meter-ring-d': { durationMs: 1000, cycles: 1, property: 'opacity', luminanceSteps: [1, 1, 0] },
     'kp-sig-forest-meter-ring-w': { durationMs: 1000, cycles: 1, property: 'opacity', luminanceSteps: [1, 1, 0] },
-    'kp-skeleton-forest-treeline': { durationMs: 3200, cycles: Infinity, property: '--kp-fo-grow', luminanceSteps: [] },
-    'kp-sig-forest-update-ring': { durationMs: 34, cycles: 1, property: 'opacity', luminanceSteps: [1, 1, 0] },
+    'kp-skeleton-forest-treeline': { durationMs: 6600, cycles: Infinity, property: '--kp-fo-grow', luminanceSteps: [] },
+    'kp-sig-forest-update-ring': { durationMs: 1000, cycles: 1, property: 'opacity', luminanceSteps: [1, 1, 0] },
     'kp-sig-forest-edge': { durationMs: 1000, cycles: 1, property: 'translate, clip-path', luminanceSteps: [] }, // the drawer's --kp-sig-dur, the theme's growth time
     'kp-sig-forest-edge-rtl': { durationMs: 1000, cycles: 1, property: 'translate, clip-path', luminanceSteps: [] }, // swapped in by animation-name on the rule that runs its sibling
     // deco-register

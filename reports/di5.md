@@ -84,8 +84,8 @@ reported here in capitals and corrected by nobody but Kenny.
 | `kp-draw` | width | 500 ms | 1× | — | 0.00/s | under |
 | `kp-word-in` | opacity | 520 ms | 1× | 0 → 1 | 1.00/s | under |
 | `kp-mark-in` | background-size | 300 ms | 1× | — | 0.00/s | under |
-| `kp-headline-in` | opacity | 500 ms | 1× | 0 → 1 | 1.00/s | under |
-| `kp-trace` | stroke-dashoffset | 1800 ms | 1× | — | 0.00/s | under |
+| `kp-headline-in` | translate, clip-path | 1000 ms | 1× | — | 0.00/s | under |
+| `kp-trace` | stroke-dashoffset | 1000 ms | 1× | — | 0.00/s | under |
 | `kp-cartouche-in` | opacity | 520 ms | 1× | 0 → 1 | 1.00/s | under |
 | `kp-redaction-clear` | opacity | 320 ms | 1× | 0 → 1 | 1.00/s | under |
 | `kp-clip-reveal` | opacity | 700 ms | 1× | 0 → 1 → 1 | 1.00/s | under |
@@ -147,7 +147,8 @@ reported here in capitals and corrected by nobody but Kenny.
 | `kp-sig-terminal-tm-feed` | inset-block-start | 816 ms | 1× | — | 0.00/s | under |
 | `kp-sig-terminal-update-blink` | color | 900 ms | 1× | — | 0.00/s | under |
 | `kp-sig-terminal-update-blink-line` | color | 900 ms | 1× | — | 0.00/s | under |
-| `kp-sig-forest-meter-wipe-o` | clip-path | 1200 ms | 1× | — | 0.00/s | under |
+| `kp-sig-forest-meter-wipe-o` | clip-path | 1000 ms | 1× | — | 0.00/s | under |
+| `kp-sig-forest-meter-wipe-o-rtl` | clip-path | 1000 ms | 1× | — | 0.00/s | under |
 | `kp-sig-solstice-meter-bump-d` | scale | 500 ms | 1× | — | 0.00/s | under |
 | `kp-sig-solstice-meter-bump-o` | scale | 500 ms | 1× | — | 0.00/s | under |
 | `kp-sig-solstice-meter-bump-w` | scale | 500 ms | 1× | — | 0.00/s | under |
@@ -271,17 +272,22 @@ reported here in capitals and corrected by nobody but Kenny.
 | `kp-progressbar-pastel-busy` | transform | 1600 ms | loops | — | 0.00/s | under |
 | `kp-sig-pastel-leave` | opacity | 520 ms | 1× | 0 | 0.00/s | under |
 | `kp-sig-forest-sprout` | clip-path | 1000 ms | 1× | — | 0.00/s | under |
-| `kp-sig-forest-plant` | opacity | 3200 ms | loops | 0.7 → 0.85 → 1 → 1 | 0.31/s | under |
-| `kp-sig-forest-draw` | clip-path | 34 ms | 1× | — | 0.00/s | under |
-| `kp-sig-forest-radio` | opacity | 34 ms | 1× | 0 → 1 | 1.00/s | under |
-| `kp-sig-forest-grow` | translate, clip-path | 34 ms | 7× | — | 0.00/s | under |
-| `kp-sig-forest-root` | translate, clip-path | 34 ms | 1× | — | 0.00/s | under |
+| `kp-sig-forest-plant` | opacity | 1600 ms | loops | 0.7 → 0.85 → 1 → 1 | 0.63/s | under |
+| `kp-sig-forest-grow` | translate, clip-path | 1000 ms | 1× | — | 0.00/s | under |
+| `kp-sig-forest-grow-back` | translate, clip-path | 1000 ms | 1× | — | 0.00/s | under |
+| `kp-sig-forest-root` | translate, clip-path | 1000 ms | 1× | — | 0.00/s | under |
+| `kp-sig-forest-root-back` | translate, clip-path | 1000 ms | 1× | — | 0.00/s | under |
+| `kp-sig-forest-arrive` | translate, clip-path, filter | 1000 ms | 1× | — | 0.00/s | under |
+| `kp-sig-forest-fade` | opacity | 1000 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-sig-forest-fade-back` | opacity | 1000 ms | 1× | 0 → 1 | 1.00/s | under |
+| `kp-sig-forest-ground` | background-color | 1000 ms | 1× | — | 0.00/s | under |
+| `kp-sig-forest-alarm-ring` | opacity | 3200 ms | loops | 1 → 1 → 0 → 0 | 0.31/s | under |
 | `kp-progressbar-forest-breath` | --kp-fo-breath | 6600 ms | loops | — | 0.00/s | under |
-| `kp-sig-forest-leave` | translate, clip-path, filter | 34 ms | 1× | — | 0.00/s | under |
+| `kp-sig-forest-leave` | translate, clip-path, filter | 1000 ms | 1× | — | 0.00/s | under |
 | `kp-sig-forest-meter-ring-d` | opacity | 1000 ms | 1× | 1 → 1 → 0 | 1.00/s | under |
 | `kp-sig-forest-meter-ring-w` | opacity | 1000 ms | 1× | 1 → 1 → 0 | 1.00/s | under |
-| `kp-skeleton-forest-treeline` | --kp-fo-grow | 3200 ms | loops | — | 0.00/s | under |
-| `kp-sig-forest-update-ring` | opacity | 34 ms | 1× | 1 → 1 → 0 | 1.00/s | under |
+| `kp-skeleton-forest-treeline` | --kp-fo-grow | 6600 ms | loops | — | 0.00/s | under |
+| `kp-sig-forest-update-ring` | opacity | 1000 ms | 1× | 1 → 1 → 0 | 1.00/s | under |
 | `kp-sig-forest-edge` | translate, clip-path | 1000 ms | 1× | — | 0.00/s | under |
 | `kp-sig-forest-edge-rtl` | translate, clip-path | 1000 ms | 1× | — | 0.00/s | under |
 | `kp-sig-deco-arrive` | custom-property | 480 ms | 1× | — | 0.00/s | under |
