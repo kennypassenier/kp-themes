@@ -7377,13 +7377,17 @@
         padding: var(--kp-space-md, 1rem) var(--kp-nav-pad-inline, 1.5rem);
     }
 
-    /* Hover and focus open a dropdown; they do not open this one. */
-    .kp-nav__links > li:not([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide {
+    /* Hover and focus open a dropdown; they do not open this one. One that is
+     * closing stays until its close has played (js/components.js). */
+    .kp-nav__links
+        > li:not([data-kp-nav-menu-open], [data-kp-nav-closing], :has(> [data-kp-nav-disclosure][aria-expanded='true']))
+        > .kp-nav__menu--wide {
         display: none;
         opacity: 0;
     }
 
     .kp-nav__links > li[data-kp-nav-menu-open] > .kp-nav__menu--wide,
+    .kp-nav__links > li[data-kp-nav-closing] > .kp-nav__menu--wide,
     .kp-nav__links > li:has(> [data-kp-nav-disclosure][aria-expanded='true']) > .kp-nav__menu--wide {
         display: grid;
         opacity: 1;
@@ -36376,11 +36380,25 @@
         border-bottom: 2px solid transparent;
     }
 
-    [data-theme='forest'] .kp-nav__link:hover,
-    [data-theme='forest'] .kp-nav__link:focus-visible,
-    [data-theme='forest'] .kp-nav__link[aria-current] {
+    [data-theme='forest'] .kp-nav__link:hover {
         border-bottom-color: var(--primary);
         color: var(--primary);
+    }
+
+    [data-theme='forest'] .kp-nav__link[aria-current] {
+        color: var(--primary);
+        font-weight: 600;
+        text-decoration: underline;
+        text-decoration-thickness: 2px;
+        text-underline-offset: 0.35em;
+        text-decoration-color: var(--primary);
+        border-bottom-color: transparent;
+    }
+
+    [data-theme='forest'] .kp-nav__link:focus-visible {
+        color: var(--primary);
+        border-bottom-color: transparent;
+        text-decoration: none;
     }
 
     [data-theme='forest'] .kp-nav__link--lang {
@@ -37542,6 +37560,7 @@
         --kp-alarm-scan: hsl(from var(--primary) h s l / 0.04);
         --kp-alarm-vignette: hsl(from var(--destructive) h s l / 0);
         --kp-alarm-frame: 2px solid;
+        --kp-sig-dur: var(--kp-sig-fo-time);
     }
 
     [data-theme='forest'] .kp-alarm:focus-visible {
@@ -39672,18 +39691,8 @@
             animation: kp-sig-forest-fade var(--kp-sig-fo-time, 1000ms) var(--kp-sig-fo-grow, ease-out) backwards;
         }
 
-        @supports (overlay: auto) {
-            [data-theme='forest'] dialog.kp-palette:not([open]) {
-                animation: kp-sig-forest-grow-back var(--kp-sig-fo-time) var(--kp-sig-fo-grow) reverse both;
-                transition:
-                    display var(--kp-sig-fo-time) allow-discrete,
-                    overlay var(--kp-sig-fo-time) allow-discrete;
-            }
-
-            [data-theme='forest'] dialog.kp-palette:not([open])::backdrop {
-                animation: kp-sig-forest-fade-back var(--kp-sig-fo-time, 1000ms) var(--kp-sig-fo-grow, ease-out) reverse both;
-            }
-        }
+        /* The close is js/motion.js's, in every engine: it keeps the palette
+           open while it plays the growth backwards, as it does for a dialog. */
 
         /* The tour's card grows up out of its own line from autumn to green
            (pairs), and js/tour.js plays that backwards when the tour ends. */
@@ -39852,6 +39861,7 @@
     [data-theme='forest'] .kp-tree [role='treeitem'] {
         position: relative;
         isolation: isolate;
+        padding-inline-start: calc(0.5rem + var(--kp-tree-depth, 0) * var(--kp-tree-indent, 1rem));
     }
 
     [data-theme='forest'] .kp-tree [role='treeitem']:hover:not([aria-selected='true']) {

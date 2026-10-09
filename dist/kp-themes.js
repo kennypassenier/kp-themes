@@ -3010,8 +3010,10 @@ function showAlarm(options) {
     });
     document.body.append(dialog);
     dialog.showModal();
-    if (mode === "auto") dialog.focus();
-    else ack.focus();
+    dialog.scrollTop = 0;
+    if (mode === "auto") dialog.focus({ preventScroll: true });
+    else ack.focus({ preventScroll: true });
+    dialog.scrollTop = 0;
     dialog.dispatchEvent(new CustomEvent(ALARM_OPEN_EVENT, { bubbles: true, detail: { id, mode: dialog.dataset.kpAlarmMode } }));
     if (mode === "auto") {
       const total = seconds * 1e3;
@@ -3248,7 +3250,10 @@ function attachClose(dialog) {
     openAsReversedClose(dialog);
   };
   own.close = (value) => void closeDialog(dialog, value);
-  if (dialog.open) rememberEntrance(dialog);
+  if (dialog.open) {
+    rememberEntrance(dialog);
+    openAsReversedClose(dialog);
+  }
   const onCancel = (event) => {
     if (event.defaultPrevented) return;
     event.preventDefault();
@@ -3407,13 +3412,6 @@ function closePopoverWithGhost(event) {
   });
   el2.after(ghost);
   ghosted.add(el2);
-  try {
-    ghost.showPopover();
-  } catch {
-    ghost.remove();
-    ghosted.delete(el2);
-    return;
-  }
   const done = () => {
     ghost.remove();
     ghosted.delete(el2);
@@ -3427,11 +3425,27 @@ function closePopoverWithGhost(event) {
     stopClose(ghost);
     done();
   };
-  el2.addEventListener("beforetoggle", back);
-  void playClose(ghost).then(() => {
-    el2.removeEventListener("beforetoggle", back);
-    done();
-  });
+  const play = () => {
+    el2.addEventListener("beforetoggle", back);
+    void playClose(ghost).then(() => {
+      el2.removeEventListener("beforetoggle", back);
+      done();
+    });
+  };
+  try {
+    ghost.showPopover();
+    play();
+  } catch {
+    setTimeout(() => {
+      if (!ghost.isConnected || el2.matches(":popover-open")) return done();
+      try {
+        ghost.showPopover();
+      } catch {
+        return done();
+      }
+      play();
+    }, 0);
+  }
 }
 function withoutOvershoot(ease) {
   const m = /^cubic-bezier\(\s*([^,]+),\s*([^,]+),\s*([^,]+),\s*([^)]+)\)$/.exec(ease.trim());
@@ -3556,7 +3570,7 @@ function arrival(scope) {
   }
 }
 function arrive(el2, motion) {
-  if (!motion || el2.style.animation || el2.hasAttribute("data-kp-arriving") || el2.hasAttribute("data-kp-leaving")) return;
+  if (!motion || el2.style.animation || el2.hasAttribute("data-kp-arriving") || el2.hasAttribute("data-kp-leaving") || el2.hasAttribute("data-kp-ghost")) return;
   if (opensAsReversedClose(el2) && arriveAsReversedLeave(el2)) return;
   el2.setAttribute("data-kp-arriving", "");
   const own = getComputedStyle(el2).animationName;
@@ -4180,7 +4194,7 @@ function easeSize(box, { arrive: fallback2 = "all", arriveKeys = [] } = {}) {
       }
       if (record.type === "childList")
         for (const node of record.addedNodes) {
-          if (!(node instanceof HTMLElement) || moved.has(node)) continue;
+          if (!(node instanceof HTMLElement) || moved.has(node) || node.hasAttribute("data-kp-ghost")) continue;
           if (mode === "new" && (repainted ??= repaintedIn(records, { keys })).has(node)) continue;
           arrive(node, motion);
         }
@@ -4291,16 +4305,16 @@ function attachMotion(root = document, { size = "", arrive: arrive2 = "all", arr
       ...scope instanceof Element && scope.matches(selector) ? [scope] : [],
       ...scope.querySelectorAll(selector)
     ];
-    for (const el2 of all("dialog.kp-dialog")) keep(el2, attachClose(
+    for (const el2 of all("dialog.kp-dialog, dialog.kp-palette, dialog.kp-alarm")) if (!el2.hasAttribute("data-kp-ghost")) keep(el2, attachClose(
       /** @type {HTMLDialogElement} */
       el2
     ));
-    for (const el2 of all(sizeSelector)) keep(el2, easeSize(
+    for (const el2 of all(sizeSelector)) if (!el2.hasAttribute("data-kp-ghost")) keep(el2, easeSize(
       /** @type {HTMLElement} */
       el2,
       { arrive: arrive2, arriveKeys }
     ));
-    for (const el2 of all(FOLD_SELECTOR)) if (el2 instanceof HTMLDetailsElement) keep(el2, attachFold(el2));
+    for (const el2 of all(FOLD_SELECTOR)) if (el2 instanceof HTMLDetailsElement && !el2.hasAttribute("data-kp-ghost")) keep(el2, attachFold(el2));
   };
   scan(root);
   let sweeping = false;
@@ -6072,13 +6086,26 @@ function attachNavMenus(root = document, { strings, ownedBy = NAV_OWNED } = {}) 
       wired.set(button, { panel, stamped });
     }
     const openButton = () => buttons.find((b) => b.getAttribute("aria-expanded") === "true") ?? null;
+    const settleClosing = (item, panel) => {
+      item.setAttribute("data-kp-nav-closing", "");
+      requestAnimationFrame(() => {
+        if (!item.hasAttribute("data-kp-nav-closing")) return;
+        const plays = (panel?.getAnimations() ?? []).filter((a) => typeof CSSTransition !== "undefined" && a instanceof CSSTransition);
+        void Promise.all(plays.map((a) => a.finished.catch(() => void 0))).then(() => item.removeAttribute("data-kp-nav-closing"));
+      });
+    };
     const set = (button, open) => {
       if (open) {
-        for (const other of buttons) if (other !== button) other.setAttribute("aria-expanded", "false");
+        for (const other of buttons)
+          if (other !== button && other.getAttribute("aria-expanded") === "true") set(other, false);
       }
-      button.setAttribute("aria-expanded", String(open));
+      const was = button.getAttribute("aria-expanded") === "true";
       const panel = wired.get(button)?.panel;
+      const item = button.parentElement;
+      if (open) item?.removeAttribute("data-kp-nav-closing");
+      button.setAttribute("aria-expanded", String(open));
       if (open && panel) placeNavPanel(panel);
+      if (!open && was && item) settleClosing(item, panel);
     };
     const onClick = (event) => {
       const button = (
@@ -6319,8 +6346,13 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
       }
     };
     const dropBackdrop = () => {
-      backdrop?.remove();
+      if (!backdrop) return;
+      const target = backdrop;
       backdrop = null;
+      void playEntranceBackwards(target).then(() => {
+        target.remove();
+        stopReversing(target);
+      });
     };
     const raiseBackdrop = () => {
       if (backdrop || !covering() || !on(OPTIONS.backdrop, true)) return;
@@ -7217,6 +7249,11 @@ function attachComboboxes(root = document, {
       else run();
     };
     const onKeyDown = (event) => {
+      if (list.hidden && (event.key === "ArrowDown" || event.altKey && event.key === "ArrowDown")) {
+        event.preventDefault();
+        if (filter() > 0) open();
+        return;
+      }
       if (!isTags) return;
       if ((event.key === "Enter" || event.key === ",") && !event.defaultPrevented && !event.isComposing) {
         if (event.key === "Enter" && listbox.index !== -1) return;
@@ -8420,8 +8457,10 @@ function attachDatePickers(root = document, {
     };
     let lower = () => {
     };
+    let wanted = !panel.hidden;
     const setOpen = (next) => {
-      if (panel.hidden === !next) return;
+      if (wanted === next) return;
+      wanted = next;
       view = "days";
       back = [];
       pin = null;
@@ -8430,16 +8469,25 @@ function attachDatePickers(root = document, {
         cursor = read() ?? /* @__PURE__ */ new Date();
         if (!panel.contains(live2)) panel.append(live2);
         draw();
+        stopClose(panel);
+        panel.inert = false;
+        if (panel.hidden) {
+          panel.hidden = false;
+          lower = raiseDatePanel(panel);
+        }
       } else {
         panel.style.removeProperty("min-inline-size");
         panel.style.removeProperty("min-block-size");
-      }
-      panel.hidden = !next;
-      if (next) lower = raiseDatePanel(panel);
-      else {
-        lower();
-        lower = () => {
-        };
+        panel.inert = true;
+        void playClose(panel).then((played) => {
+          if (!played || wanted) return;
+          panel.hidden = true;
+          lower();
+          lower = () => {
+          };
+          panel.inert = false;
+          stopClose(panel);
+        });
       }
       open.setAttribute("aria-expanded", String(next));
       if (next) focusCurrent();
@@ -8463,7 +8511,7 @@ function attachDatePickers(root = document, {
       if (closes) hide();
       if (refocus) input.focus();
     };
-    const onOpen = () => panel.hidden ? show() : hide();
+    const onOpen = () => wanted ? hide() : show();
     const onInput = () => commit(read(), "typed");
     const onPanelKey = (event) => {
       if (event.key === "Escape") {
@@ -8583,6 +8631,8 @@ function attachDatePickers(root = document, {
       panel.removeEventListener("keydown", onPanelKey);
       panel.removeEventListener("click", onPanelClick);
       picker.removeEventListener("focusout", onFocusOut);
+      stopClose(panel);
+      panel.inert = false;
       lower();
       panel.textContent = "";
       panel.style.removeProperty("min-inline-size");
@@ -8607,6 +8657,7 @@ var init_datepicker = __esm({
   "js/datepicker.js"() {
     "use strict";
     init_strings();
+    init_motion();
     init_top_layer();
     init_locale();
     PICKER2 = "[data-kp-datepicker]";
@@ -18683,11 +18734,10 @@ function startTour(steps, { start = 0, remember: remember2, decorate, returnFocu
   let ended = false;
   const finish = (finished) => {
     if (ended) return;
-    ended = true;
-    unmark();
     unmarkStep();
     card.inert = true;
     void playEntranceBackwards(card).then(() => {
+      unmark();
       if (card.open) card.close();
       card.remove();
       stopReversing(card);

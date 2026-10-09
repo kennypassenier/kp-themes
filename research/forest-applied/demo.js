@@ -6,6 +6,7 @@
 import { attachThemePickers, themeMenuMarkup } from '../../js/theme-picker.js';
 import { THEMES } from '../../js/theme-registry.js';
 import { startTour } from '../../js/tour.js';
+import { playClose } from '../../js/motion.js';
 import { dataTable } from '../../js/datatable.js';
 import { setCalendarDays, setCalendarLegend, setCalendarState } from '../../js/calendar.js';
 import { attachEffects, MEMO_PREFIX, REVEALS } from '../../js/effects.js';
@@ -92,9 +93,13 @@ if (react) {
     /** @type {HTMLElement | null} */
     let list = null;
     const close = () => {
-        list?.remove();
+        if (!list) return;
+        const target = list;
         list = null;
         button.setAttribute('aria-expanded', 'false');
+        void playClose(target).then(() => {
+            target.remove();
+        });
     };
     const open = () => {
         list = document.createElement('div');
@@ -219,6 +224,31 @@ calendarGroup?.addEventListener('click', async (event) => {
     }
 });
 
+const calShapeGroup = document.querySelector('[data-fa-cal-shapes]');
+const calStage = document.querySelector('[data-fa-calendar-stage]');
+const setCalShape = (shape) => {
+    if (!calStage || !shape) return;
+    calStage.setAttribute('data-cal-shape', shape);
+    if (calShapeGroup) {
+        for (const btn of calShapeGroup.querySelectorAll('[data-fa-shape]')) {
+            btn.setAttribute('aria-pressed', String(btn.getAttribute('data-fa-shape') === shape));
+        }
+    }
+};
+
+calShapeGroup?.addEventListener('click', (event) => {
+    const button = event.target instanceof Element ? event.target.closest('[data-fa-shape]') : null;
+    if (!button) return;
+    const shape = button.getAttribute('data-fa-shape');
+    if (shape) setCalShape(shape);
+});
+
+document.querySelector('#calendar')?.addEventListener('review:choice', (/** @type {any} */ event) => {
+    if (event.detail?.id === 'shape' && event.detail?.value) {
+        setCalShape(event.detail.value);
+    }
+});
+
 /* ------------------------------------------------- arrivals, played again */
 
 /** A copy of the host's template, in place of the last one. @param {Element | null} host */
@@ -281,3 +311,29 @@ proseGroup?.addEventListener('click', (event) => {
 const loadingHost = document.querySelector('[data-fa-loading-host]');
 stamp(loadingHost);
 document.querySelector('[data-fa-loading="restart"]')?.addEventListener('click', () => stamp(loadingHost));
+
+/* ------------------------------------------------- anchor positioning fallback */
+
+const faMenuBtn = document.querySelector('[popovertarget="fa-menu"]');
+const faMenuPop = document.querySelector('#fa-menu');
+if (faMenuBtn && faMenuPop) {
+    const positionFaMenu = () => {
+        if (CSS.supports && CSS.supports('position-anchor: --fa-menu')) return;
+        const rect = faMenuBtn.getBoundingClientRect();
+        faMenuPop.style.position = 'fixed';
+        faMenuPop.style.left = `${Math.round(rect.left)}px`;
+        faMenuPop.style.top = `${Math.round(rect.bottom + 4)}px`;
+        faMenuPop.style.margin = '0';
+    };
+    faMenuPop.addEventListener('toggle', (event) => {
+        if (/** @type {ToggleEvent} */ (event).newState === 'open') {
+            positionFaMenu();
+        }
+    });
+    window.addEventListener('resize', () => {
+        if (faMenuPop.matches(':popover-open')) positionFaMenu();
+    });
+    window.addEventListener('scroll', () => {
+        if (faMenuPop.matches(':popover-open')) positionFaMenu();
+    }, { capture: true, passive: true });
+}

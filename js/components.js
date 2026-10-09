@@ -954,12 +954,33 @@ export function attachNavMenus(root = document, { strings, ownedBy = NAV_OWNED }
         }
 
         const openButton = () => buttons.find((b) => b.getAttribute('aria-expanded') === 'true') ?? null;
+        /**
+         * A panel that is closing stays on screen, `[data-kp-nav-closing]` on its
+         * item, until the transitions the theme runs to the closed state have
+         * played; a panel with none is gone on the next frame, as before.
+         * @param {HTMLElement} item
+         * @param {Element | null | undefined} panel
+         */
+        const settleClosing = (item, panel) => {
+            item.setAttribute('data-kp-nav-closing', '');
+            requestAnimationFrame(() => {
+                if (!item.hasAttribute('data-kp-nav-closing')) return;
+                const plays = (panel?.getAnimations() ?? []).filter((a) => typeof CSSTransition !== 'undefined' && a instanceof CSSTransition);
+                void Promise.all(plays.map((a) => a.finished.catch(() => undefined))).then(() => item.removeAttribute('data-kp-nav-closing'));
+            });
+        };
         /** @param {HTMLElement} button @param {boolean} open */
         const set = (button, open) => {
-            if (open) for (const other of buttons) if (other !== button) other.setAttribute('aria-expanded', 'false');
-            button.setAttribute('aria-expanded', String(open));
+            if (open)
+                for (const other of buttons)
+                    if (other !== button && other.getAttribute('aria-expanded') === 'true') set(other, false);
+            const was = button.getAttribute('aria-expanded') === 'true';
             const panel = wired.get(button)?.panel;
+            const item = button.parentElement;
+            if (open) item?.removeAttribute('data-kp-nav-closing');
+            button.setAttribute('aria-expanded', String(open));
             if (open && panel) placeNavPanel(panel);
+            if (!open && was && item) settleClosing(item, panel);
         };
 
         /** @param {Event} event */

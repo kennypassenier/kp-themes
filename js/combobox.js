@@ -350,6 +350,11 @@ export function attachComboboxes(
 
         /** @param {KeyboardEvent} event */
         const onKeyDown = (event) => {
+            if (list.hidden && (event.key === 'ArrowDown' || (event.altKey && event.key === 'ArrowDown'))) {
+                event.preventDefault();
+                if (filter() > 0) open();
+                return;
+            }
             if (!isTags) return;
             // The listbox runs first: an Enter that took a highlighted option
             // is already spent, and the field is empty by now.

@@ -22,7 +22,7 @@
 
 import { getStrings } from './strings.js';
 import { paintRemembered, sidenavGroups } from './remember.js';
-import { reversedEase } from './motion.js';
+import { playEntranceBackwards, reversedEase, stopReversing } from './motion.js';
 
 export const SIDENAV_TOGGLE_EVENT = 'kp-sidenav-toggle';
 export const SIDENAV_SLIM_EVENT = 'kp-sidenav-slim';
@@ -214,8 +214,13 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
         };
 
         const dropBackdrop = () => {
-            backdrop?.remove();
+            if (!backdrop) return;
+            const target = backdrop;
             backdrop = null;
+            void playEntranceBackwards(target).then(() => {
+                target.remove();
+                stopReversing(target);
+            });
         };
 
         const raiseBackdrop = () => {

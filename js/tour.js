@@ -346,14 +346,14 @@ export function startTour(steps, { start = 0, remember, decorate, returnFocus, o
     const finish = (finished) => {
         // Once: a handle's end() after the tour already ended does nothing.
         if (ended) return;
-        ended = true;
-        unmark();
         unmarkStep();
         // The card goes as it came: its entrance played backwards, then it
         // is closed and taken out (Kenny, 2026-10-05: it faded in and
-        // vanished at once).
+        // vanished at once). The target's mark stays until the card is gone,
+        // so the screen un-dims together with the card.
         card.inert = true;
         void playEntranceBackwards(card).then(() => {
+            unmark();
             if (card.open) card.close();
             card.remove();
             stopReversing(card);

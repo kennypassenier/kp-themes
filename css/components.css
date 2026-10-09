@@ -4005,13 +4005,17 @@
         padding: var(--kp-space-md, 1rem) var(--kp-nav-pad-inline, 1.5rem);
     }
 
-    /* Hover and focus open a dropdown; they do not open this one. */
-    .kp-nav__links > li:not([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide {
+    /* Hover and focus open a dropdown; they do not open this one. One that is
+     * closing stays until its close has played (js/components.js). */
+    .kp-nav__links
+        > li:not([data-kp-nav-menu-open], [data-kp-nav-closing], :has(> [data-kp-nav-disclosure][aria-expanded='true']))
+        > .kp-nav__menu--wide {
         display: none;
         opacity: 0;
     }
 
     .kp-nav__links > li[data-kp-nav-menu-open] > .kp-nav__menu--wide,
+    .kp-nav__links > li[data-kp-nav-closing] > .kp-nav__menu--wide,
     .kp-nav__links > li:has(> [data-kp-nav-disclosure][aria-expanded='true']) > .kp-nav__menu--wide {
         display: grid;
         opacity: 1;

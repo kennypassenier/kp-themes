@@ -319,7 +319,10 @@ function attachClose(dialog) {
         openAsReversedClose(dialog);
     };
     own.close = (/** @type {string | undefined} */ value) => void closeDialog(dialog, value);
-    if (dialog.open) rememberEntrance(dialog);
+    if (dialog.open) {
+        rememberEntrance(dialog);
+        openAsReversedClose(dialog);
+    }
     // Escape: unless a listener before this one already decided (a page that
     // keeps the dialog open, or the React channel, which closes through its
     // own state and so through `close()` above).
@@ -559,13 +562,6 @@ function closePopoverWithGhost(event) {
     });
     el.after(ghost);
     ghosted.add(el);
-    try {
-        ghost.showPopover();
-    } catch {
-        ghost.remove();
-        ghosted.delete(el);
-        return;
-    }
     const done = () => {
         ghost.remove();
         ghosted.delete(el);
@@ -577,11 +573,31 @@ function closePopoverWithGhost(event) {
         stopClose(ghost);
         done();
     };
-    el.addEventListener('beforetoggle', back);
-    void playClose(ghost).then(() => {
-        el.removeEventListener('beforetoggle', back);
-        done();
-    });
+    const play = () => {
+        el.addEventListener('beforetoggle', back);
+        void playClose(ghost).then(() => {
+            el.removeEventListener('beforetoggle', back);
+            done();
+        });
+    };
+    // Firefox refuses to show a popover while another one is being hidden
+    // ("Cannot show a popover during the show or hide of another popover"),
+    // which is exactly now: it takes the ghost one task later, before the
+    // next frame in practice. Chromium takes it at once.
+    try {
+        ghost.showPopover();
+        play();
+    } catch {
+        setTimeout(() => {
+            if (!ghost.isConnected || el.matches(':popover-open')) return done();
+            try {
+                ghost.showPopover();
+            } catch {
+                return done();
+            }
+            play();
+        }, 0);
+    }
 }
 
 if (typeof document !== 'undefined') document.addEventListener('beforetoggle', closePopoverWithGhost, true);
@@ -824,7 +840,7 @@ function arrival(scope) {
  * @param {HTMLElement} el @param {string | null} motion
  */
 function arrive(el, motion) {
-    if (!motion || el.style.animation || el.hasAttribute('data-kp-arriving') || el.hasAttribute('data-kp-leaving')) return;
+    if (!motion || el.style.animation || el.hasAttribute('data-kp-arriving') || el.hasAttribute('data-kp-leaving') || el.hasAttribute('data-kp-ghost')) return;
     // A theme that opens as its close turned around lets it arrive as its
     // leave played backwards [research/open-reverse].
     if (opensAsReversedClose(el) && arriveAsReversedLeave(el)) return;
@@ -1871,7 +1887,7 @@ export function easeSize(box, { arrive: fallback = 'all', arriveKeys = [] } = {}
             // Added to the box, or to a list inside it (rows in a <ul>).
             if (record.type === 'childList')
                 for (const node of record.addedNodes) {
-                    if (!(node instanceof HTMLElement) || moved.has(node)) continue;
+                    if (!(node instanceof HTMLElement) || moved.has(node) || node.hasAttribute('data-kp-ghost')) continue;
                     if (mode === 'new' && (repainted ??= repaintedIn(records, { keys })).has(node)) continue;
                     arrive(node, motion);
                 }
@@ -2022,9 +2038,9 @@ export function attachMotion(root = document, { size = '', arrive = 'all', arriv
             ...(scope instanceof Element && scope.matches(selector) ? [scope] : []),
             ...scope.querySelectorAll(selector),
         ];
-        for (const el of all('dialog.kp-dialog')) keep(el, attachClose(/** @type {HTMLDialogElement} */ (el)));
-        for (const el of all(sizeSelector)) keep(el, easeSize(/** @type {HTMLElement} */ (el), { arrive, arriveKeys }));
-        for (const el of all(FOLD_SELECTOR)) if (el instanceof HTMLDetailsElement) keep(el, attachFold(el));
+        for (const el of all('dialog.kp-dialog, dialog.kp-palette, dialog.kp-alarm')) if (!el.hasAttribute('data-kp-ghost')) keep(el, attachClose(/** @type {HTMLDialogElement} */ (el)));
+        for (const el of all(sizeSelector)) if (!el.hasAttribute('data-kp-ghost')) keep(el, easeSize(/** @type {HTMLElement} */ (el), { arrive, arriveKeys }));
+        for (const el of all(FOLD_SELECTOR)) if (el instanceof HTMLDetailsElement && !el.hasAttribute('data-kp-ghost')) keep(el, attachFold(el));
     };
     scan(root);
     let sweeping = false;

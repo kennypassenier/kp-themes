@@ -1102,6 +1102,15 @@ Gauge and sensor disagree by 2 bar.</textarea>
                 data-review-title="16 · Calendar and the busy month"
                 data-review-components="calendar"
                 aria-labelledby="h-calendar"
+                data-review-choices='[{ "id": "shape", "label": "Vorm van de kalenderitems (Forest vibe)", "once": true, "options": [
+                    { "value": "leaf-corner", "label": "Leaf corner (Aanbevolen)", "hints": { "forest": "Zachte organische bladhoek (border-radius: 0 1.25rem 0 1.25rem op de maandplaat, subtiele 6px bladhoek op dagen) passend bij de rest van het thema." } },
+                    { "value": "trail-marker", "label": "Trail marker", "hints": { "forest": "Zachte afgeronde hoeken (4px) met een trail-blaze streepje aan de linkerkant." } },
+                    { "value": "contour-ring", "label": "Contour ring", "hints": { "forest": "Topografische hoogtelijn-contouren met subtiele ringen in kraft papier." } },
+                    { "value": "kraft-badge", "label": "Kraft badge", "hints": { "forest": "Rechthoekige kraft badge met lichte vezeltextuur en fijne stiknaadrand." } },
+                    { "value": "notched-tag", "label": "Notched tag", "hints": { "forest": "Ingekeepte veldgids-tag met afgeschuinde hoekjes." } },
+                    { "value": "wood-grain", "label": "Wood grain contour", "hints": { "forest": "Houtnerf-reliëf met warme bruingroene randen en zachte hoeken." } },
+                    { "value": "round-log", "label": "Round log (huidig)", "hints": { "forest": "Volledig ronde schijven (50% border-radius) zoals een doorgezaagde boomstam." } }
+                ] }]'
             >
                 <div class="fa-sec__head">
                     <p class="fa-num">16 · Calendar and the busy month</p>
@@ -1116,7 +1125,7 @@ Gauge and sensor disagree by 2 bar.</textarea>
                         Press <b>Loading</b>: in the first month the whole month waits, the card grows up over it with one planting row and the days
                         stand faint without a tree; in the second (each day waiting, unchanged) every day shows the spinner's one tree. Press
                         <b>Read</b>: the card withers back into its line. Click a day and use the arrow keys: the two-channel ring, today's green ring
-                        kept inside.
+                        kept inside. Kies hieronder de gewenste <b>Forest vibe</b> vorm voor de kalenderitems.
                     </p>
                 </div>
                 <div class="fa-controls" data-review-controls>
@@ -1124,8 +1133,18 @@ Gauge and sensor disagree by 2 bar.</textarea>
                         <button type="button" class="kp-button kp-button--sm" data-fa-calendar="loading" aria-pressed="false">Loading</button>
                         <button type="button" class="kp-button kp-button--sm" data-fa-calendar="ready" aria-pressed="true">Read</button>
                     </div>
+                    <div class="kp-row" role="group" aria-label="Calendar day shape proposals" data-fa-cal-shapes>
+                        <span class="fa-label" style="align-self: center; margin-inline-end: 0.5rem;">Vorm voorstel:</span>
+                        <button type="button" class="kp-button kp-button--sm" data-fa-shape="leaf-corner" aria-pressed="true">Leaf corner</button>
+                        <button type="button" class="kp-button kp-button--sm" data-fa-shape="trail-marker" aria-pressed="false">Trail marker</button>
+                        <button type="button" class="kp-button kp-button--sm" data-fa-shape="contour-ring" aria-pressed="false">Contour ring</button>
+                        <button type="button" class="kp-button kp-button--sm" data-fa-shape="kraft-badge" aria-pressed="false">Kraft badge</button>
+                        <button type="button" class="kp-button kp-button--sm" data-fa-shape="notched-tag" aria-pressed="false">Notched tag</button>
+                        <button type="button" class="kp-button kp-button--sm" data-fa-shape="wood-grain" aria-pressed="false">Wood grain</button>
+                        <button type="button" class="kp-button kp-button--sm" data-fa-shape="round-log" aria-pressed="false">Round log</button>
+                    </div>
                 </div>
-                <div class="fa-stage fa-stage--block fa-split">
+                <div class="fa-stage fa-stage--block fa-split" data-fa-calendar-stage data-cal-shape="leaf-corner">
                     <div
                         class="kp-calendar kp-calendar--busy-whole"
                         data-kp-calendar
