@@ -21,10 +21,22 @@ name: Documentation site
 # ten example pages became fixed pages of the catalogue's navigation
 # [scope-31]; they load nothing beyond css/, js/ and catalogue/.
 
+# A second review site rides along under /review-branch/, taken from a
+# work branch (Kenny, 2026-10-08: "publish there from another branch", so a
+# theme's rounds can be judged on the live site before they reach main).
+# The branch is named by the `review_ref` input of a manual run, else by the
+# repository variable REVIEW_BRANCH, else it is main itself. /review/ stays
+# main's, and the documentation stays main's whichever branch is named.
+
 on:
   push:
-    branches: [main]
+    branches: [main, review-branch]
   workflow_dispatch:
+    inputs:
+      review_ref:
+        description: 'Branch published under /review-branch/ (default: review-branch, else main)'
+        required: false
+        default: 'review-branch'
 
 permissions:
   contents: read
@@ -47,6 +59,10 @@ jobs:
         with:
           ref: main
           path: review
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.review_ref || (github.ref_name == 'review-branch' && 'review-branch') || vars.REVIEW_BRANCH || 'review-branch' }}
+          path: review-branch
       - uses: actions/setup-node@v4
         with:
           node-version-file: main/.nvmrc
@@ -73,6 +89,12 @@ jobs:
             cp -r "review/$dir" "_site/review/$dir"
           done
           printf '<!doctype html><meta http-equiv="refresh" content="0; url=./catalogue/index.html">\n' > _site/review/index.html
+          # The work branch's review site, the same cut, beside main's.
+          mkdir -p _site/review-branch
+          for dir in catalogue research examples css js fonts; do
+            cp -r "review-branch/$dir" "_site/review-branch/$dir"
+          done
+          printf '<!doctype html><meta http-equiv="refresh" content="0; url=./catalogue/changed.html">\n' > _site/review-branch/index.html
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
