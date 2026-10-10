@@ -115,7 +115,7 @@ import { attachTableRegions } from './tables.js';
 import { attachDatePickers, datePicker, DATE_EVENT } from './datepicker.js';
 import { attachSelect, drawsSelect } from './combobox.js';
 import { columnId, paintRemembered } from './remember.js';
-import { FOLDING_OUT, playArrivalBackwards, stopReversing } from './motion.js';
+import { FOLDING_OUT, playArrivalBackwards, playClose, stopReversing } from './motion.js';
 
 const TABLE = '[data-kp-datatable]';
 const SEARCH = '[data-kp-datatable-search]';
@@ -1009,9 +1009,20 @@ export function attachDataTables(
         const drawOverlay = (s) => {
             overlayUnwatch?.();
             overlayUnwatch = null;
-            overlayLayer?.remove();
-            overlayLayer = null;
-            overlayClock = null;
+            if (overlayLayer) {
+                const toClose = overlayLayer;
+                overlayLayer = null;
+                overlayClock = null;
+                const panel = toClose.querySelector('.kp-datatable__busy-panel');
+                if (panel && toClose.isConnected && state !== 'loading') {
+                    toClose.setAttribute('data-kp-closing', '');
+                    void playClose(panel).then(() => {
+                        toClose.remove();
+                    });
+                } else {
+                    toClose.remove();
+                }
+            }
             // Placed in the wrapper rather than in the box that scrolls, so a
             // panel taller than a few rows never adds a scrollbar there.
             const host = wrap;

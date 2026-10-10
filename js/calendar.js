@@ -85,7 +85,7 @@ export const CALENDAR_MONTH_EVENT = 'kp-calendar-month';
  *   strings: Strings, months: string[], decorate?: CalendarOptions['decorate'], title: HTMLElement,
  *   stateLine: HTMLElement, grid: HTMLTableElement,
  *   cells: { td: HTMLTableCellElement, button: HTMLButtonElement, num: HTMLElement, count: HTMLElement, pad: HTMLElement }[],
- *   legend: HTMLElement, shownMonth: string }} CalendarModel
+ *   legend: HTMLElement, shownMonth: string, busyText?: HTMLElement }} CalendarModel
  */
 
 /** @type {WeakMap<Element, CalendarModel>} */
@@ -210,8 +210,15 @@ function paintCalendar(c) {
         if (!cell) return;
         const mine = inMonth(iso);
         cell.button.hidden = !mine;
+        cell.pad.hidden = mine;
         cell.pad.textContent = mine ? '' : iso.slice(8, 10);
         cell.td.toggleAttribute('data-kp-pad', !mine);
+        if (monthChanged) {
+            const animTarget = mine ? cell.button : cell.pad;
+            animTarget.style.animation = 'none';
+            void animTarget.offsetHeight;
+            animTarget.style.animation = '';
+        }
         if (!mine) {
             cell.td.removeAttribute('aria-selected');
             delete cell.button.dataset.kpDate;
@@ -363,7 +370,10 @@ export function attachCalendars(root = document, options = {}) {
         // One spinner over the whole grid while it loads, shown only by `.kp-calendar--busy-whole`.
         const busy = make(doc, 'div', 'kp-calendar__busy');
         busy.setAttribute('aria-hidden', 'true');
-        busy.append(make(doc, 'span', 'kp-spinner'));
+        const busyText = make(doc, 'span', 'kp-calendar__busy-text');
+        busyText.textContent = s.loading ?? 'Loading…';
+        const spinner = make(doc, 'span', 'kp-spinner');
+        busy.append(busyText, spinner);
         el.replaceChildren(nav, stateLine, grid, busy, legend);
         if (!el.hasAttribute('aria-labelledby') && !el.hasAttribute('aria-label')) el.setAttribute('aria-labelledby', title.id);
         /** @type {CalendarModel} */
@@ -387,6 +397,7 @@ export function attachCalendars(root = document, options = {}) {
             cells,
             legend,
             shownMonth: '',
+            busyText,
         };
         calendars.set(el, c);
         decorate?.(prev, { kind: 'month-prev', host: el, key: keyOf(el) });
@@ -481,6 +492,7 @@ export function setCalendarState(el, state, words = '') {
     c.state = state;
     c.stateLine.textContent = words;
     c.stateLine.dataset.kpState = state;
+    if (c.busyText) c.busyText.textContent = words || (state === 'loading' ? (c.strings.loading ?? 'Loading…') : '');
     paintCalendar(c);
 }
 

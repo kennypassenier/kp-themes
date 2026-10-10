@@ -9326,9 +9326,20 @@ function attachDataTables(root = document, {
     const drawOverlay = (s2) => {
       overlayUnwatch?.();
       overlayUnwatch = null;
-      overlayLayer?.remove();
-      overlayLayer = null;
-      overlayClock = null;
+      if (overlayLayer) {
+        const toClose = overlayLayer;
+        overlayLayer = null;
+        overlayClock = null;
+        const panel3 = toClose.querySelector(".kp-datatable__busy-panel");
+        if (panel3 && toClose.isConnected && state !== "loading") {
+          toClose.setAttribute("data-kp-closing", "");
+          void playClose(panel3).then(() => {
+            toClose.remove();
+          });
+        } else {
+          toClose.remove();
+        }
+      }
       const host = wrap;
       if (state !== "loading" || !busyOverlay) return;
       const layer = make6("div", "kp-datatable__busy-overlay");
@@ -16672,8 +16683,15 @@ function paintCalendar(c) {
     if (!cell) return;
     const mine = inMonth(iso);
     cell.button.hidden = !mine;
+    cell.pad.hidden = mine;
     cell.pad.textContent = mine ? "" : iso.slice(8, 10);
     cell.td.toggleAttribute("data-kp-pad", !mine);
+    if (monthChanged) {
+      const animTarget = mine ? cell.button : cell.pad;
+      animTarget.style.animation = "none";
+      void animTarget.offsetHeight;
+      animTarget.style.animation = "";
+    }
     if (!mine) {
       cell.td.removeAttribute("aria-selected");
       delete cell.button.dataset.kpDate;
@@ -16809,7 +16827,10 @@ function attachCalendars(root = document, options = {}) {
     legend.hidden = true;
     const busy = make2(doc, "div", "kp-calendar__busy");
     busy.setAttribute("aria-hidden", "true");
-    busy.append(make2(doc, "span", "kp-spinner"));
+    const busyText = make2(doc, "span", "kp-calendar__busy-text");
+    busyText.textContent = s2.loading ?? "Loading\u2026";
+    const spinner = make2(doc, "span", "kp-spinner");
+    busy.append(busyText, spinner);
     el2.replaceChildren(nav, stateLine, grid2, busy, legend);
     if (!el2.hasAttribute("aria-labelledby") && !el2.hasAttribute("aria-label")) el2.setAttribute("aria-labelledby", title.id);
     const c = {
@@ -16831,7 +16852,8 @@ function attachCalendars(root = document, options = {}) {
       grid: grid2,
       cells,
       legend,
-      shownMonth: ""
+      shownMonth: "",
+      busyText
     };
     calendars.set(el2, c);
     decorate?.(prev, { kind: "month-prev", host: el2, key: keyOf2(el2) });
@@ -16903,6 +16925,7 @@ function setCalendarState(el2, state, words = "") {
   c.state = state;
   c.stateLine.textContent = words;
   c.stateLine.dataset.kpState = state;
+  if (c.busyText) c.busyText.textContent = words || (state === "loading" ? c.strings.loading ?? "Loading\u2026" : "");
   paintCalendar(c);
 }
 function calendarSelect(el2, iso) {
@@ -18748,17 +18771,20 @@ function startTour(steps, { start = 0, remember: remember2, decorate, returnFocu
     title.textContent = step.title;
     text.textContent = step.text;
     if (stepping) {
-      unmarkStep();
-      card.style.animation = "none";
-      void card.offsetHeight;
-      card.style.animation = "";
+      markStep();
     }
     count.textContent = strings.tourCount(index + 1, live2.length);
     backButton.hidden = index === 0;
     const last = index === live2.length - 1;
     nextButton.textContent = last ? strings.tourDone : strings.tourNext;
     nextButton.title = last ? strings.tourDoneTitle : strings.tourNextTitle;
-    if (scroll) el2.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "auto" });
+    if (scroll) {
+      const rect = el2.getBoundingClientRect();
+      const inView = rect.top >= 0 && rect.bottom <= (view.innerHeight || doc.documentElement.clientHeight) && rect.left >= 0 && rect.right <= (view.innerWidth || doc.documentElement.clientWidth);
+      if (!inView) {
+        el2.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "auto" });
+      }
+    }
     place2();
     nextButton.focus({ preventScroll: true });
   };

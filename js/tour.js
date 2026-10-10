@@ -332,17 +332,24 @@ export function startTour(steps, { start = 0, remember, decorate, returnFocus, o
         title.textContent = step.title;
         text.textContent = step.text;
         if (stepping) {
-            unmarkStep();
-            card.style.animation = 'none';
-            void card.offsetHeight;
-            card.style.animation = '';
+            markStep();
         }
         count.textContent = strings.tourCount(index + 1, live.length);
         backButton.hidden = index === 0;
         const last = index === live.length - 1;
         nextButton.textContent = last ? strings.tourDone : strings.tourNext;
         nextButton.title = last ? strings.tourDoneTitle : strings.tourNextTitle;
-        if (scroll) el.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'auto' });
+        if (scroll) {
+            const rect = el.getBoundingClientRect();
+            const inView =
+                rect.top >= 0 &&
+                rect.bottom <= (view.innerHeight || doc.documentElement.clientHeight) &&
+                rect.left >= 0 &&
+                rect.right <= (view.innerWidth || doc.documentElement.clientWidth);
+            if (!inView) {
+                el.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'auto' });
+            }
+        }
         place();
         nextButton.focus({ preventScroll: true });
     };

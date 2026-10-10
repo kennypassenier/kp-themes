@@ -3170,7 +3170,7 @@
                 .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open,
                 .kp-theme-menu__list
             ) {
-            animation: kp-sig-forest-root var(--kp-sig-dur) var(--kp-sig-fo-grow) backwards;
+            animation: kp-sig-forest-root var(--kp-sig-dur) var(--kp-sig-fo-grow) both;
         }
 
         [data-theme='forest']
@@ -3180,6 +3180,11 @@
                 .kp-datepicker__panel[data-kp-overlay-side='above']:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open
             ) {
             animation-name: kp-sig-forest-grow;
+        }
+
+        [data-theme='forest'] .kp-combobox__list > .kp-combobox__option,
+        [data-theme='forest'] .kp-combobox__list > * {
+            animation: none !important;
         }
     }
 
@@ -3623,6 +3628,28 @@
             clip-path: none;
         }
 
+        [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links {
+            overflow: clip;
+            max-block-size: 0;
+            transition: max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-wither);
+        }
+
+        [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
+            max-block-size: 25rem;
+            transition: max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-grow);
+        }
+
+        @starting-style {
+            [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
+                max-block-size: 0;
+            }
+        }
+
+        [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__links {
+            max-block-size: 0;
+            transition: max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-wither);
+        }
+
         @media (prefers-reduced-motion: no-preference) {
             [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__links .kp-nav__menu {
                 transition: none;
@@ -3830,9 +3857,39 @@
         grid-template-columns: minmax(0, 1fr);
     }
 
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-datatable__busy-panel {
+            animation: kp-sig-forest-grow var(--kp-sig-dur) var(--kp-sig-fo-grow) backwards;
+        }
+
+        [data-theme='forest'] .kp-datatable__busy-panel[data-kp-closing],
+        [data-theme='forest'] .kp-datatable__busy-overlay[data-kp-closing] .kp-datatable__busy-panel {
+            animation: kp-sig-forest-grow-back var(--kp-sig-dur) var(--kp-sig-fo-wither) reverse both;
+        }
+
+        [data-theme='forest'] .kp-datatable__busy-overlay[data-kp-closing] {
+            opacity: 0;
+            transition: opacity var(--kp-sig-dur) var(--kp-sig-fo-wither);
+        }
+    }
+
     [data-theme='forest'] .kp-calendar--busy-whole > .kp-calendar__busy {
-        min-inline-size: min(12rem, 100%);
-        min-block-size: 3.5rem;
+        min-inline-size: min(14rem, 100%);
+        min-block-size: 4rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding: var(--kp-space-sm, 0.5rem);
+    }
+
+    [data-theme='forest'] .kp-calendar__busy-text {
+        font-family: var(--theme-font-display, inherit);
+        font-size: 0.875rem;
+        font-weight: 500;
+        text-align: center;
+        color: var(--foreground);
+        margin-block-end: calc(var(--kp-fo-h, 1rem) + 0.35rem);
     }
 
     /* The busy month's card grows up out of its own line and withers back

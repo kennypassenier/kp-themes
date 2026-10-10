@@ -3627,7 +3627,6 @@
         .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links {
             display: none;
             flex-basis: 100%;
-            transition: display var(--fx-duration, 200ms) allow-discrete;
         }
 
         .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links {
@@ -8524,6 +8523,15 @@
         line-height: 0;
     }
 
+    .kp-calendar__busy-text {
+        display: block;
+        font-size: 0.875rem;
+        line-height: var(--kp-line-height, 1.4);
+        color: var(--card-foreground, var(--foreground));
+        text-align: center;
+        margin-block-end: 0.5rem;
+    }
+
     /* Both come in with an opacity fade on the theme's own timing. */
     @media (prefers-reduced-motion: no-preference) {
         .kp-calendar__day-busy,
@@ -8947,6 +8955,7 @@
         background: var(--card);
         color: var(--card-foreground);
         box-shadow: 0 0.5rem 1.5rem hsl(from var(--foreground) h s l / 0.18);
+        transition: left var(--fx-duration, 200ms) var(--fx-ease, ease), top var(--fx-duration, 200ms) var(--fx-ease, ease);
     }
 
     /* On a phone the card takes the width, less the gutters. */

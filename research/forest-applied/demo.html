@@ -40,6 +40,7 @@
                     <li><a href="#tour">4 · Tour</a></li>
                     <li><a href="#fields">5 · Fields, select, upload zone</a></li>
                     <li><a href="#calendar">6 · Calendar, the busy month</a></li>
+                    <li><a href="#table">7 · Table</a></li>
                 </ol>
             </header>
 
@@ -479,10 +480,103 @@ Gauge and sensor disagree by 2 bar.</textarea>
                     ></div>
                 </div>
             </section>
+
+
+            <!-- 7 · Table -->
+            <section
+                class="fa-sec"
+                id="table"
+                data-review-item="table"
+                data-review-title="7 · Table"
+                data-review-components="table datatable"
+                aria-labelledby="h-table"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">7 · Table</p>
+                    <h2 id="h-table">
+                        Table rows took a kraft ground at once, the search did not answer the pointer, the status and page numbers were in the
+                        monospace and the busy panel showed a spinner beside the planting row; now each row answers as a menu entry with the blaze
+                        laid inside, the search blazes, the status reads in the body face, and the busy panel shows the planting row alone and withers back down on completion.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="forest">
+                        Point at the rows and the search. Type in the search. Press <b>Load again</b>: the busy panel sits over the rows with one
+                        loading picture, the planting row; <b>Loaded</b> withers the panel back down into the line as that growth reversed.
+                    </p>
+                </div>
+                <div class="fa-controls" data-review-controls>
+                    <div class="kp-row" role="group" aria-label="The table's state">
+                        <button type="button" class="kp-button kp-button--sm" data-fa-table="busy" aria-pressed="false">Load again</button>
+                        <button type="button" class="kp-button kp-button--sm" data-fa-table="ready" aria-pressed="true">Loaded</button>
+                    </div>
+                </div>
+                <div class="fa-stage fa-stage--block">
+                    <div class="kp-datatable" data-kp-datatable data-fa-dt>
+                        <div class="kp-datatable__bar">
+                            <input class="kp-datatable__search" type="search" data-kp-datatable-search aria-label="Search the pump houses" />
+                        </div>
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">
+                                    Pump houses
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col" data-kp-sort="text">Pump house</th>
+                                        <th scope="col" data-kp-sort="text">State</th>
+                                        <th scope="col" data-kp-sort="number" class="kp-text-end">Pressure, bar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-kp-row-key="ph1">
+                                        <td>Pump house 1</td>
+                                        <td>running</td>
+                                        <td class="kp-text-end kp-numeric">3.36</td>
+                                    </tr>
+                                    <tr data-kp-row-key="ph2">
+                                        <td>Pump house 2</td>
+                                        <td>running</td>
+                                        <td class="kp-text-end kp-numeric">3.12</td>
+                                    </tr>
+                                    <tr data-kp-row-key="ph3">
+                                        <td>Pump house 3</td>
+                                        <td>low pressure</td>
+                                        <td class="kp-text-end kp-numeric">1.92</td>
+                                    </tr>
+                                    <tr data-kp-row-key="ph4">
+                                        <td>Pump house 4</td>
+                                        <td>locked out</td>
+                                        <td class="kp-text-end kp-numeric">0.00</td>
+                                    </tr>
+                                    <tr data-kp-row-key="ph5">
+                                        <td>Pump house 5</td>
+                                        <td>running</td>
+                                        <td class="kp-text-end kp-numeric">2.98</td>
+                                    </tr>
+                                    <tr data-kp-row-key="ph6">
+                                        <td>Pump house 6</td>
+                                        <td>resting</td>
+                                        <td class="kp-text-end kp-numeric">2.71</td>
+                                    </tr>
+                                    <tr data-kp-row-key="ph7">
+                                        <td>Pump house 7</td>
+                                        <td>no reading</td>
+                                        <td class="kp-text-end kp-numeric">—</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="kp-datatable__bar">
+                            <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </main>
-        <!-- Round three: review only open/non-approved components -->
+        <!-- Round four: review only open/non-approved components -->
         <script type="application/json" data-review-round>
-            { "round": "2026-10-10-r3", "reopen": ["forest|bar", "forest|sidenav", "forest|datepicker", "forest|tour", "forest|fields", "forest|calendar"] }
+            { "round": "2026-10-10-r4", "reopen": ["forest|bar", "forest|sidenav", "forest|datepicker", "forest|tour", "forest|fields", "forest|calendar", "forest|table"] }
         </script>
         <script type="module" src="../../js/auto.js"></script>
         <script type="module" src="demo.js"></script>

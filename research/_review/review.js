@@ -1601,11 +1601,26 @@ function rowFor(pair, only = null) {
         note.hidden = !box.checked && !note.value;
         li.classList.toggle('rv-row--rejected', box.checked);
         if (box.checked) note.focus();
+        if (!only) {
+            state[pair.key] = {
+                ...state[pair.key],
+                verdict: box.checked ? 'rejected' : 'approved',
+                note: note.value.trim(),
+                at: new Date().toISOString(),
+            };
+            save();
+            render();
+        }
         updateApprove();
     });
     note.addEventListener('input', () => {
         if (only) return; // kept when the step is answered, with the aspect's name
-        state[pair.key] = { ...state[pair.key], note: note.value.trim() };
+        state[pair.key] = {
+            ...state[pair.key],
+            verdict: box.checked ? 'rejected' : state[pair.key]?.verdict || 'approved',
+            note: note.value.trim(),
+            at: new Date().toISOString(),
+        };
         save();
         render();
     });
