@@ -213,7 +213,6 @@ export function startTour(steps, { start = 0, remember, decorate, returnFocus, o
     let index = Math.min(Math.max(0, start), live.length - 1);
     /** @type {HTMLElement | null} */
     let target = null;
-    let targetPosition = '';
     const card = /** @type {HTMLDialogElement} */ (make(doc, 'dialog', 'kp-tour'));
     const title = make(doc, 'h3', 'kp-tour__title');
     title.id = nextId('kp-tour-title');
@@ -242,18 +241,13 @@ export function startTour(steps, { start = 0, remember, decorate, returnFocus, o
     const unmark = () => {
         if (!target) return;
         target.removeAttribute('data-kp-tour-target');
-        target.style.position = targetPosition;
         target = null;
     };
     /** @param {HTMLElement} el */
     const mark = (el) => {
         unmark();
         target = el;
-        targetPosition = el.style.position;
         el.setAttribute('data-kp-tour-target', '');
-        // The ring and the dimming paint over what follows the target only
-        // when it is positioned; a static one becomes relative while marked.
-        if (view.getComputedStyle(el).position === 'static') el.style.position = 'relative';
     };
     const place = () => {
         if (!target || !card.open) return;
@@ -332,6 +326,7 @@ export function startTour(steps, { start = 0, remember, decorate, returnFocus, o
         title.textContent = step.title;
         text.textContent = step.text;
         if (stepping) {
+            card.setAttribute('data-kp-tour-stepping', '');
             markStep();
         }
         count.textContent = strings.tourCount(index + 1, live.length);
@@ -365,6 +360,7 @@ export function startTour(steps, { start = 0, remember, decorate, returnFocus, o
         // vanished at once). The target's mark stays until the card is gone,
         // so the screen un-dims together with the card.
         card.inert = true;
+        card.removeAttribute('data-kp-tour-stepping');
         void playEntranceBackwards(card).then(() => {
             unmark();
             if (card.open) card.close();

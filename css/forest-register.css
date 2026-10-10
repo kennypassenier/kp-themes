@@ -3631,36 +3631,32 @@
         [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links {
             overflow: clip;
             max-block-size: 0;
-            transition: max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-wither);
+            opacity: 0;
+            transition: max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-wither), opacity calc(var(--kp-sig-fo-time) * 0.7) var(--kp-sig-fo-wither);
         }
 
         [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
             max-block-size: 25rem;
-            transition: max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-grow);
+            opacity: 1;
+            transition: max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-grow), opacity calc(var(--kp-sig-fo-time) * 0.7) var(--kp-sig-fo-grow);
         }
 
         @starting-style {
             [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
                 max-block-size: 0;
+                opacity: 0;
             }
         }
 
         [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__links {
             max-block-size: 0;
-            transition: max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-wither);
+            opacity: 0;
+            transition: max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-wither), opacity calc(var(--kp-sig-fo-time) * 0.7) var(--kp-sig-fo-wither);
         }
 
         @media (prefers-reduced-motion: no-preference) {
             [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__links .kp-nav__menu {
                 transition: none;
-            }
-
-            [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
-                animation: kp-sig-forest-root var(--kp-sig-fo-time) var(--kp-sig-fo-grow) backwards;
-            }
-
-            [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__links {
-                animation: kp-sig-forest-root-back var(--kp-sig-fo-time) var(--kp-sig-fo-grow) reverse both;
             }
         }
     }
@@ -3720,13 +3716,20 @@
                 [data-kp-sidenav-slim-collapsed]:not(:hover),
                 [data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-expand-on-hover])
             ) {
-            transition-timing-function: var(--kp-sig-fo-wither);
+            transition:
+                translate var(--kp-sig-fo-time) var(--kp-sig-fo-wither),
+                clip-path var(--kp-sig-fo-time) var(--kp-sig-fo-wither),
+                inline-size var(--kp-sig-fo-time) var(--kp-sig-fo-wither);
         }
 
         /* Every backdrop comes with its plate, on the growth curve (F-25):
            the side navigation's, the dialog's and the drawer's. */
         [data-theme='forest'] .kp-sidenav__backdrop {
             animation: kp-sig-forest-fade var(--kp-sig-fo-time) var(--kp-sig-fo-grow) both;
+        }
+
+        [data-theme='forest'] .kp-sidenav__backdrop[data-kp-reversing='play'] {
+            animation: kp-sig-forest-fade var(--kp-sig-fo-time) var(--kp-sig-fo-wither) reverse both !important;
         }
 
         [data-theme='forest'] .kp-dialog[open]::backdrop {
@@ -3753,7 +3756,7 @@
 
         /* The tour's card grows up out of its own line from autumn to green
            (pairs), and js/tour.js plays that backwards when the tour ends. */
-        [data-theme='forest'] .kp-tour[open] {
+        [data-theme='forest'] .kp-tour[open]:not([data-kp-tour-stepping]) {
             animation: kp-sig-forest-arrive var(--kp-sig-fo-time) var(--kp-sig-fo-grow) backwards;
         }
     }

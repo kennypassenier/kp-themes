@@ -8497,12 +8497,9 @@ function attachDatePickers(root = document, {
           panel.hidden = false;
           panel.dataset.kpDateOpen = "";
           lower = raiseDatePanel(panel);
-          const dur = parseFloat(getComputedStyle(panel).animationDuration) * 1e3 || 500;
-          setTimeout(() => {
-            delete panel.dataset.kpDateOpen;
-          }, dur);
         }
       } else {
+        delete panel.dataset.kpDateOpen;
         panel.style.removeProperty("min-inline-size");
         panel.style.removeProperty("min-block-size");
         panel.inert = true;
@@ -18660,7 +18657,6 @@ function startTour(steps, { start = 0, remember: remember2, decorate, returnFocu
   );
   let index = Math.min(Math.max(0, start), live2.length - 1);
   let target = null;
-  let targetPosition = "";
   const card = (
     /** @type {HTMLDialogElement} */
     make4(doc, "dialog", "kp-tour")
@@ -18691,15 +18687,12 @@ function startTour(steps, { start = 0, remember: remember2, decorate, returnFocu
   const unmark = () => {
     if (!target) return;
     target.removeAttribute("data-kp-tour-target");
-    target.style.position = targetPosition;
     target = null;
   };
   const mark = (el2) => {
     unmark();
     target = el2;
-    targetPosition = el2.style.position;
     el2.setAttribute("data-kp-tour-target", "");
-    if (view.getComputedStyle(el2).position === "static") el2.style.position = "relative";
   };
   const place2 = () => {
     if (!target || !card.open) return;
@@ -18771,6 +18764,7 @@ function startTour(steps, { start = 0, remember: remember2, decorate, returnFocu
     title.textContent = step.title;
     text.textContent = step.text;
     if (stepping) {
+      card.setAttribute("data-kp-tour-stepping", "");
       markStep();
     }
     count.textContent = strings.tourCount(index + 1, live2.length);
@@ -18794,6 +18788,7 @@ function startTour(steps, { start = 0, remember: remember2, decorate, returnFocu
     ended = true;
     unmarkStep();
     card.inert = true;
+    card.removeAttribute("data-kp-tour-stepping");
     void playEntranceBackwards(card).then(() => {
       unmark();
       if (card.open) card.close();
