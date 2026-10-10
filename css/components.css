@@ -3630,7 +3630,7 @@
             transition: display var(--fx-duration, 200ms) allow-discrete;
         }
 
-        .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] > .kp-nav__links {
+        .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links {
             display: flex;
             flex-direction: column;
             align-items: flex-start;

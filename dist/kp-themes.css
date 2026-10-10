@@ -7002,7 +7002,7 @@
             transition: display var(--fx-duration, 200ms) allow-discrete;
         }
 
-        .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] > .kp-nav__links {
+        .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
@@ -38394,6 +38394,22 @@
         }
     }
 
+    @keyframes kp-sig-forest-pad-wither {
+        from {
+            translate: 0 0;
+            scale: 1;
+            opacity: 0.8;
+            filter: none;
+        }
+
+        to {
+            translate: 0 5px;
+            scale: 0.85;
+            opacity: 0.35;
+            filter: sepia(0.8) saturate(0.5);
+        }
+    }
+
     /* ── The meter with a mark, this theme's way [picked by Kenny on
        research/character-meter, round 3, 2026-10-05: shape 1, while
        loading 3, how the share arrives 1, when the tone changes 3,
@@ -39283,6 +39299,14 @@
         font-family: var(--theme-font-display);
     }
 
+    [data-theme='forest'] .kp-calendar__pad {
+        position: relative;
+        border: 1px dashed hsl(from var(--foreground) h s l / 0.15);
+        border-radius: 0 var(--kp-sig-fo-leaf, 0.5rem) 0 var(--kp-sig-fo-leaf, 0.5rem);
+        font-family: var(--theme-font-display);
+        box-sizing: border-box;
+    }
+
     [data-theme='forest'] .kp-calendar__swatch {
         border-radius: 0 4px 0 4px;
     }
@@ -39479,19 +39503,17 @@
                 outline-offset var(--fx-duration) var(--fx-ease);
         }
 
-        /* Calendar · arrival 3, the swing → every day grows up out of its own
-           line once the month is drawn, in reading order 20 ms apart, one
-           growth on the growth curve (G2, proposal-5).
+        /* Calendar · arrival: in-month days grow up out of the ground.
            Pad days (dates not part of selected month) do the exact opposite:
-           they wither back into the ground on kp-sig-forest-leave. */
+           they wither / sink down into the ground on kp-sig-forest-pad-wither. */
         [data-theme='forest'] .kp-calendar__grid:not([aria-busy='true']) .kp-calendar__day {
             animation: kp-sig-forest-grow var(--kp-sig-fo-time) var(--kp-sig-fo-grow)
                 calc((var(--kp-fo-row, 0) * 7 + var(--kp-fo-col, 0)) * var(--kp-sig-fo-stagger) / 4) backwards;
         }
 
         [data-theme='forest'] .kp-calendar__grid:not([aria-busy='true']) td[data-kp-pad] > .kp-calendar__pad {
-            animation: kp-sig-forest-leave var(--kp-sig-fo-time) var(--kp-sig-fo-wither)
-                calc((var(--kp-fo-row, 0) * 7 + var(--kp-fo-col, 0)) * var(--kp-sig-fo-stagger) / 4) backwards reverse;
+            animation: kp-sig-forest-pad-wither var(--kp-sig-fo-time) var(--kp-sig-fo-wither)
+                calc((var(--kp-fo-row, 0) * 7 + var(--kp-fo-col, 0)) * var(--kp-sig-fo-stagger) / 4) both;
         }
 
         /* Calendar · loading 1: one tree a half loop, the days of a week
@@ -39611,13 +39633,12 @@
                 transition: none;
             }
 
-            [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] > .kp-nav__links {
+            [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
                 animation: kp-sig-forest-root var(--kp-sig-fo-time) var(--kp-sig-fo-grow) backwards;
             }
 
-            [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle):not([data-kp-nav-open]) > .kp-nav__links {
+            [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__links {
                 animation: kp-sig-forest-root-back var(--kp-sig-fo-time) var(--kp-sig-fo-grow) reverse both;
-                transition: display var(--kp-sig-fo-time) allow-discrete;
             }
         }
     }

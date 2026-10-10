@@ -5882,12 +5882,32 @@ function attachNavToggles(root = document, { strings, ownedBy = NAV_OWNED } = {}
       button.setAttribute("aria-expanded", String(open));
       button.setAttribute("aria-label", label());
     };
+    let closing2 = false;
     const set = (open) => {
-      write(open);
-      nav.dispatchEvent(new CustomEvent(NAV_TOGGLE_EVENT, { bubbles: true, detail: { open } }));
+      if (open) {
+        closing2 = false;
+        nav.removeAttribute("data-kp-nav-closing");
+        write(true);
+        nav.dispatchEvent(new CustomEvent(NAV_TOGGLE_EVENT, { bubbles: true, detail: { open: true } }));
+      } else {
+        if (closing2 || !nav.hasAttribute("data-kp-nav-open")) return;
+        closing2 = true;
+        nav.setAttribute("data-kp-nav-closing", "");
+        button.setAttribute("aria-expanded", "false");
+        button.setAttribute("aria-label", label());
+        const durVal = getComputedStyle(nav).getPropertyValue("--kp-sig-fo-time").trim();
+        const dur = durVal ? durVal.endsWith("ms") ? parseFloat(durVal) : parseFloat(durVal) * 1e3 : 300;
+        setTimeout(() => {
+          if (!closing2) return;
+          closing2 = false;
+          nav.removeAttribute("data-kp-nav-closing");
+          write(false);
+          nav.dispatchEvent(new CustomEvent(NAV_TOGGLE_EVENT, { bubbles: true, detail: { open: false } }));
+        }, dur || 300);
+      }
     };
     write(nav.hasAttribute("data-kp-nav-open"));
-    const onClick = () => set(!nav.hasAttribute("data-kp-nav-open"));
+    const onClick = () => set(!nav.hasAttribute("data-kp-nav-open") && !closing2);
     const onKey = (event) => {
       if (event.key !== "Escape" || !nav.hasAttribute("data-kp-nav-open")) return;
       set(false);

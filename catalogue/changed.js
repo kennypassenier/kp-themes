@@ -313,7 +313,9 @@ function mountHub() {
     Promise.all(
         demos.map(async (demo) => {
             try {
-                const response = await fetch(demo.url, { cache: 'no-cache' });
+                const fetchUrl = new URL(demo.url);
+                fetchUrl.searchParams.set('_', String(Date.now()));
+                const response = await fetch(fetchUrl.href, { cache: 'no-cache' });
                 if (!response.ok) throw new Error(String(response.status));
                 const html = await response.text();
                 const shape = shapeOf(new DOMParser().parseFromString(html, 'text/html'));
@@ -332,7 +334,9 @@ function mountHub() {
     Promise.all(
         archived.map(async (entry) => {
             try {
-                const response = await fetch(new URL('decided.json', entry.url), { cache: 'no-cache' });
+                const decidedUrl = new URL('decided.json', entry.url);
+                decidedUrl.searchParams.set('_', String(Date.now()));
+                const response = await fetch(decidedUrl.href, { cache: 'no-cache' });
                 if (response.ok) entry.decided = String((await response.json())?.decided || 'Decided; see its decided.json.');
             } catch {
                 // No decision file: the row stays "Archived".
