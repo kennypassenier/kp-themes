@@ -30,13 +30,13 @@ name: Documentation site
 
 on:
   push:
-    branches: [main]
+    branches: [main, review-branch]
   workflow_dispatch:
     inputs:
       review_ref:
-        description: 'Branch published under /review-branch/ (default: the REVIEW_BRANCH variable, else main)'
+        description: 'Branch published under /review-branch/ (default: review-branch, else main)'
         required: false
-        default: ''
+        default: 'review-branch'
 
 permissions:
   contents: read
@@ -61,7 +61,7 @@ jobs:
           path: review
       - uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.review_ref || vars.REVIEW_BRANCH || 'main' }}
+          ref: ${{ inputs.review_ref || (github.ref_name == 'review-branch' && 'review-branch') || vars.REVIEW_BRANCH || 'review-branch' }}
           path: review-branch
       - uses: actions/setup-node@v4
         with:
