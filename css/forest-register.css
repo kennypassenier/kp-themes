@@ -3151,7 +3151,7 @@
                 .kp-menu-button > .kp-menu,
                 .kp-popover[popover]:not(.kp-tooltip),
                 .kp-combobox__list:popover-open,
-                .kp-datepicker__panel:popover-open,
+                .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open,
                 .kp-theme-menu__list
             ) {
             animation: kp-sig-forest-root var(--kp-sig-dur) var(--kp-sig-fo-grow) backwards;
@@ -3161,7 +3161,7 @@
             :is(
                 .kp-menu-button > .kp-menu[data-kp-menu-side='above'],
                 .kp-combobox__list[data-kp-overlay-side='above']:popover-open,
-                .kp-datepicker__panel[data-kp-overlay-side='above']:popover-open
+                .kp-datepicker__panel[data-kp-overlay-side='above']:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open
             ) {
             animation-name: kp-sig-forest-grow;
         }
@@ -3267,20 +3267,19 @@
         --kp-fo-row: 5;
     }
 
-    /* Calendar · shape 3, the round logs: a day is a log's end, round in a
-       wood, a 3 px rim with its rings faint inside; the numbers in the display
-       face, the month and the weekdays in italic. */
+    /* Calendar · shape: leaf corner (Kenny's choice, 2026-10-10): soft organic
+       leaf corner matching the theme's plate grammar, displayed in display face. */
     [data-theme='forest'] .kp-calendar__day {
         position: relative;
         isolation: isolate;
-        border-width: 3px;
-        border-radius: 50%;
-        box-shadow: inset 0 0 0 5px hsl(from var(--foreground) h s l / 0.08);
+        border-width: 1px;
+        border-radius: 0 var(--kp-sig-fo-leaf, 0.5rem) 0 var(--kp-sig-fo-leaf, 0.5rem);
+        box-shadow: none;
         font-family: var(--theme-font-display);
     }
 
     [data-theme='forest'] .kp-calendar__swatch {
-        border-radius: 50%;
+        border-radius: 0 4px 0 4px;
     }
 
     [data-theme='forest'] .kp-calendar__title {
@@ -3477,10 +3476,17 @@
 
         /* Calendar · arrival 3, the swing → every day grows up out of its own
            line once the month is drawn, in reading order 20 ms apart, one
-           growth on the growth curve (G2, proposal-5). */
+           growth on the growth curve (G2, proposal-5).
+           Pad days (dates not part of selected month) do the exact opposite:
+           they wither back into the ground on kp-sig-forest-leave. */
         [data-theme='forest'] .kp-calendar__grid:not([aria-busy='true']) .kp-calendar__day {
             animation: kp-sig-forest-grow var(--kp-sig-fo-time) var(--kp-sig-fo-grow)
                 calc((var(--kp-fo-row, 0) * 7 + var(--kp-fo-col, 0)) * var(--kp-sig-fo-stagger) / 4) backwards;
+        }
+
+        [data-theme='forest'] .kp-calendar__grid:not([aria-busy='true']) td[data-kp-pad] > .kp-calendar__pad {
+            animation: kp-sig-forest-leave var(--kp-sig-fo-time) var(--kp-sig-fo-wither)
+                calc((var(--kp-fo-row, 0) * 7 + var(--kp-fo-col, 0)) * var(--kp-sig-fo-stagger) / 4) backwards reverse;
         }
 
         /* Calendar · loading 1: one tree a half loop, the days of a week

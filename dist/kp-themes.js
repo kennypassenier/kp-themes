@@ -7061,6 +7061,7 @@ function attachComboboxes(root = document, {
     );
     if (input === null || list === null) continue;
     box.dataset.kpComboboxAttached = "";
+    list.dataset.kpArrive = "none";
     const status = (
       /** @type {HTMLElement | null} */
       box.querySelector(STATUS2)
@@ -7377,6 +7378,7 @@ function attachSelect(select, { loop = false, typeaheadMs = 500 } = {}) {
   list.id = `${select.id || "kp-select"}-drawn-${selectCount}`;
   list.setAttribute("role", "listbox");
   list.dataset.kpSelectList = "";
+  list.dataset.kpArrive = "none";
   list.hidden = true;
   const labelled = select.labels?.[0];
   if (labelled) {
@@ -8473,7 +8475,12 @@ function attachDatePickers(root = document, {
         panel.inert = false;
         if (panel.hidden) {
           panel.hidden = false;
+          panel.dataset.kpDateOpen = "";
           lower = raiseDatePanel(panel);
+          const dur = parseFloat(getComputedStyle(panel).animationDuration) * 1e3 || 500;
+          setTimeout(() => {
+            delete panel.dataset.kpDateOpen;
+          }, dur);
         }
       } else {
         panel.style.removeProperty("min-inline-size");
@@ -18574,7 +18581,6 @@ function tourCardPlace(target, card, view, { gutter = TOUR_GUTTER, gap = TOUR_GA
   const top = target.top + target.height / 2 > view.height / 2 ? target.top - gap - card.height : target.bottom + gap;
   return { left, top };
 }
-var reducedMotion = (doc) => !!doc.defaultView?.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 var isShown2 = (el2) => !!el2 && el2.isConnected && el2.getClientRects().length > 0;
 function resolveTarget(step, doc) {
   if (typeof step.target === "function") {
@@ -18721,19 +18727,25 @@ function startTour(steps, { start = 0, remember: remember2, decorate, returnFocu
     if (!card.open) card.show();
     title.textContent = step.title;
     text.textContent = step.text;
-    if (stepping) markStep();
+    if (stepping) {
+      unmarkStep();
+      card.style.animation = "none";
+      void card.offsetHeight;
+      card.style.animation = "";
+    }
     count.textContent = strings.tourCount(index + 1, live2.length);
     backButton.hidden = index === 0;
     const last = index === live2.length - 1;
     nextButton.textContent = last ? strings.tourDone : strings.tourNext;
     nextButton.title = last ? strings.tourDoneTitle : strings.tourNextTitle;
-    if (scroll) el2.scrollIntoView({ block: "nearest", inline: "nearest", behavior: reducedMotion(doc) ? "auto" : "smooth" });
+    if (scroll) el2.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "auto" });
     place2();
     nextButton.focus({ preventScroll: true });
   };
   let ended = false;
   const finish = (finished) => {
     if (ended) return;
+    ended = true;
     unmarkStep();
     card.inert = true;
     void playEntranceBackwards(card).then(() => {

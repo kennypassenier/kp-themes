@@ -331,13 +331,18 @@ export function startTour(steps, { start = 0, remember, decorate, returnFocus, o
         if (!card.open) card.show();
         title.textContent = step.title;
         text.textContent = step.text;
-        if (stepping) markStep();
+        if (stepping) {
+            unmarkStep();
+            card.style.animation = 'none';
+            void card.offsetHeight;
+            card.style.animation = '';
+        }
         count.textContent = strings.tourCount(index + 1, live.length);
         backButton.hidden = index === 0;
         const last = index === live.length - 1;
         nextButton.textContent = last ? strings.tourDone : strings.tourNext;
         nextButton.title = last ? strings.tourDoneTitle : strings.tourNextTitle;
-        if (scroll) el.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: reducedMotion(doc) ? 'auto' : 'smooth' });
+        if (scroll) el.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'auto' });
         place();
         nextButton.focus({ preventScroll: true });
     };
@@ -346,6 +351,7 @@ export function startTour(steps, { start = 0, remember, decorate, returnFocus, o
     const finish = (finished) => {
         // Once: a handle's end() after the tour already ended does nothing.
         if (ended) return;
+        ended = true;
         unmarkStep();
         // The card goes as it came: its entrance played backwards, then it
         // is closed and taken out (Kenny, 2026-10-05: it faded in and

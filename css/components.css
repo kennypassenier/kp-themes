@@ -3627,6 +3627,7 @@
         .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links {
             display: none;
             flex-basis: 100%;
+            transition: display var(--fx-duration, 200ms) allow-discrete;
         }
 
         .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] > .kp-nav__links {
@@ -9013,5 +9014,12 @@
         outline: 3px solid var(--ring);
         outline-offset: 3px;
         box-shadow: 0 0 0 100vmax hsl(from var(--background) h s l / 0.72);
+        transition: outline 250ms ease, box-shadow 350ms ease;
+    }
+
+    body:has(.kp-tour[data-kp-reversing]) [data-kp-tour-target] {
+        box-shadow: 0 0 0 100vmax transparent !important;
+        outline-color: transparent !important;
+        transition: box-shadow var(--kp-sig-fo-time, 1000ms) var(--kp-sig-fo-grow, ease-in), outline-color var(--kp-sig-fo-time, 1000ms) var(--kp-sig-fo-grow, ease-in) !important;
     }
 }

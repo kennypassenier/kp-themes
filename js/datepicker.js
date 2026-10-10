@@ -570,7 +570,12 @@ export function attachDatePickers(
                 panel.inert = false;
                 if (panel.hidden) {
                     panel.hidden = false;
+                    panel.dataset.kpDateOpen = '';
                     lower = raiseDatePanel(panel);
+                    const dur = parseFloat(getComputedStyle(panel).animationDuration) * 1000 || 500;
+                    setTimeout(() => {
+                        delete panel.dataset.kpDateOpen;
+                    }, dur);
                 }
             } else {
                 panel.style.removeProperty('min-inline-size');

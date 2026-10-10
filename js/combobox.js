@@ -128,6 +128,7 @@ export function attachComboboxes(
         const list = /** @type {HTMLElement | null} */ (box.querySelector(LIST));
         if (input === null || list === null) continue;
         box.dataset.kpComboboxAttached = '';
+        list.dataset.kpArrive = 'none';
 
         const status = /** @type {HTMLElement | null} */ (box.querySelector(STATUS));
         const tagList = /** @type {HTMLElement | null} */ (box.querySelector(TAGS));
@@ -559,6 +560,7 @@ export function attachSelect(select, { loop = false, typeaheadMs = 500 } = {}) {
     list.id = `${select.id || 'kp-select'}-drawn-${selectCount}`;
     list.setAttribute('role', 'listbox');
     list.dataset.kpSelectList = '';
+    list.dataset.kpArrive = 'none';
     list.hidden = true;
     const labelled = select.labels?.[0];
     if (labelled) {
