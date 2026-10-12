@@ -562,6 +562,10 @@ export function attachNavToggles(root = document, { strings, ownedBy = NAV_OWNED
                 closing = false;
                 nav.removeAttribute('data-kp-nav-closing');
                 write(true);
+                // The panel's own height, for a theme that grows it: a ceiling
+                // taller than the list hides the first and last part of the
+                // growth, and the close is not the open reversed.
+                if (links) /** @type {HTMLElement} */ (nav).style.setProperty('--kp-nav-links-height', `${links.scrollHeight}px`);
                 nav.dispatchEvent(new CustomEvent(NAV_TOGGLE_EVENT, { bubbles: true, detail: { open: true } }));
             } else {
                 if (closing || !nav.hasAttribute('data-kp-nav-open')) return;

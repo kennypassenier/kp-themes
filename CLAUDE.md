@@ -107,6 +107,7 @@ Kenny.
 | docs/USER_GUIDE.md             | how a consumer builds a page with this                             |
 | docs/UTILITIES.md              | the generated utility classes                                      |
 | docs/MINIFIED.md               | the minified build and its per-file sizes (generated)              |
+| docs/THEME_LESSONS.md          | what went wrong finishing a theme, and the pattern that fixes it  |
 | docs/TEST_PLAN.md              | what is tested, where, and what deliberately is not                |
 | docs/TROUBLESHOOTING.md        | when it looks wrong, or a check says no                            |
 | docs/DEBUGGING_GUIDE.md        | symptom to cause, and what to look at first                        |

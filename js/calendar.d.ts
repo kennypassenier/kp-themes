@@ -75,6 +75,7 @@ export type CalendarModel = {
     }[];
     legend: HTMLElement;
     shownMonth: string;
+    busyText?: HTMLElement;
 };
 /**
  * The day a moment falls on in `timeZone`, as `YYYY-MM-DD`: the wall clock of

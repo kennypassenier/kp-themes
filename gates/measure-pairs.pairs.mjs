@@ -1,3 +1,4 @@
+// @ts-nocheck: a measuring tool that drives a browser, not code the package ships
 // The pairs the meter plays: one opening and the closing that must be it backwards.
 // Each `open` / `close` runs the gesture; the meter pauses what it started.
 // `section` is scrolled into view first so every frame is the same picture.

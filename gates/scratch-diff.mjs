@@ -1,3 +1,4 @@
+// @ts-nocheck: a measuring tool that drives a browser, not code the package ships
 import { createServer } from 'node:http';
 import { readFileSync, existsSync, writeFileSync } from 'node:fs';
 import { extname, join, normalize, resolve } from 'node:path';

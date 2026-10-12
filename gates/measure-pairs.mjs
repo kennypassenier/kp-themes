@@ -1,3 +1,4 @@
+// @ts-nocheck: a measuring tool that drives a browser, not code the package ships
 // The open/close pair meter [Kenny, 2026-10-09: "sluiten moet het omgekeerde zijn van openen"].
 //
 // For every pair a theme opens and closes (a menu, a dialog, a panel, a tour

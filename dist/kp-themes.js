@@ -5888,6 +5888,7 @@ function attachNavToggles(root = document, { strings, ownedBy = NAV_OWNED } = {}
         closing2 = false;
         nav.removeAttribute("data-kp-nav-closing");
         write(true);
+        if (links) nav.style.setProperty("--kp-nav-links-height", `${links.scrollHeight}px`);
         nav.dispatchEvent(new CustomEvent(NAV_TOGGLE_EVENT, { bubbles: true, detail: { open: true } }));
       } else {
         if (closing2 || !nav.hasAttribute("data-kp-nav-open")) return;
@@ -9327,7 +9328,10 @@ function attachDataTables(root = document, {
         const toClose = overlayLayer;
         overlayLayer = null;
         overlayClock = null;
-        const panel3 = toClose.querySelector(".kp-datatable__busy-panel");
+        const panel3 = (
+          /** @type {HTMLElement | null} */
+          toClose.querySelector(".kp-datatable__busy-panel")
+        );
         if (panel3 && toClose.isConnected && state !== "loading") {
           toClose.setAttribute("data-kp-closing", "");
           void playClose(panel3).then(() => {

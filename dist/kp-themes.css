@@ -36641,6 +36641,14 @@
     }
 
     /* A small part shows the blaze alone, no grey ground and no grey edge. */
+    /* The day grid keeps the height of a six-week month: a month of four or
+       five weeks shortened the panel under the pointer, so the field below it
+       moved on every month. */
+    [data-theme='forest'] .kp-datepicker__grid[data-kp-view='days'] {
+        min-block-size: 15.125rem;
+        align-content: start;
+    }
+
     [data-theme='forest'] .kp-datepicker__day:hover:not([aria-selected='true']) {
         background: none;
     }
@@ -38979,7 +38987,9 @@
             --kp-update: ring;
         }
 
-        [data-theme='forest'] [data-kp-updating='ring'] {
+        /* The ring is positioned against the updated element; one that is
+           already positioned (the tour's card is fixed) keeps its own. */
+        [data-theme='forest'] [data-kp-updating='ring']:not(.kp-tour) {
             position: relative;
         }
 
@@ -39644,13 +39654,17 @@
 
         [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links {
             overflow: clip;
+            /* One column that never wraps: under a ceiling a wrapping column
+               moves its last rows into new columns, so the height grew in
+               whole rows and the items jumped sideways. */
+            flex-wrap: nowrap;
             max-block-size: 0;
             opacity: 0;
             transition: max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-wither), opacity calc(var(--kp-sig-fo-time) * 0.7) var(--kp-sig-fo-wither);
         }
 
         [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
-            max-block-size: 25rem;
+            max-block-size: var(--kp-nav-links-height, 25rem);
             opacity: 1;
             transition: max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-grow), opacity calc(var(--kp-sig-fo-time) * 0.7) var(--kp-sig-fo-grow);
         }
@@ -39743,7 +39757,7 @@
         }
 
         [data-theme='forest'] .kp-sidenav__backdrop[data-kp-reversing='play'] {
-            animation: kp-sig-forest-fade var(--kp-sig-fo-time) var(--kp-sig-fo-wither) reverse both !important;
+            animation: kp-sig-forest-fade-back var(--kp-sig-fo-time) var(--kp-sig-fo-grow) reverse both !important;
         }
 
         [data-theme='forest'] .kp-dialog[open]::backdrop {
@@ -39772,6 +39786,14 @@
            (pairs), and js/tour.js plays that backwards when the tour ends. */
         [data-theme='forest'] .kp-tour[open]:not([data-kp-tour-stepping]) {
             animation: kp-sig-forest-arrive var(--kp-sig-fo-time) var(--kp-sig-fo-grow) backwards;
+        }
+
+        /* A step walks the card to the next target on the growth time and
+           curve, its shape untouched. */
+        [data-theme='forest'] .kp-tour {
+            transition:
+                left var(--kp-sig-fo-time) var(--kp-sig-fo-grow),
+                top var(--kp-sig-fo-time) var(--kp-sig-fo-grow);
         }
     }
 

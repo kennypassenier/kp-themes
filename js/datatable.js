@@ -1013,7 +1013,7 @@ export function attachDataTables(
                 const toClose = overlayLayer;
                 overlayLayer = null;
                 overlayClock = null;
-                const panel = toClose.querySelector('.kp-datatable__busy-panel');
+                const panel = /** @type {HTMLElement | null} */ (toClose.querySelector('.kp-datatable__busy-panel'));
                 if (panel && toClose.isConnected && state !== 'loading') {
                     toClose.setAttribute('data-kp-closing', '');
                     void playClose(panel).then(() => {
