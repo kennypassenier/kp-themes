@@ -10,7 +10,7 @@
   `--kp-calendar-busy-leave`, `--kp-accordion-size: own`; every one set by cyberpunk only), the accordion opens in 8 ticks. Shape: plates take the 14 px
   notch, controls 8 px, small parts a share of their height; the navbar is a holo plate that arrives and leaves by the channel split. Type: prose is
   Rajdhani, labels carry `//`. Waiting: one picture per busy part (bars with the glitch copy, the word LOADING), no `kp-pulse`; contact transitions are
-  `steps(3)` ticks. The divider (8 s) and marquee (18 s) loops are recorded as decided exceptions (themes/cyberpunk/CHARACTER.md).
+  `steps(3)` ticks. The divider (8 s) and marquee (18 s) loops are recorded as decided exceptions (themes/cyberpunk/CHARACTER.md). A busy layer arrives with its siblings, not 240 ms behind them (`--kp-arrive-turn: siblings`, js/motion.js).
 
 - **Changed: cyberpunk, the open/close pairs of the audit, every close its open reversed** [2026-10-12, research/cyberpunk-applied/_audit/MISSING.md]. The date
   picker, combobox, theme menu, row-actions popover, palette, desktop dropdowns and the phone bar open by the channel split and close as that reversed (480 ms);
