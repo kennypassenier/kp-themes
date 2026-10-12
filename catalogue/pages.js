@@ -76,8 +76,6 @@ export const PAGES = [
         // (Kenny, 2026-10-07: only fresh verdicts left to give).
         group: 'Research to look at',
         pages: [
-            // Kenny, 2026-10-09: a showcase of every forest component changed by the uniformity round, to approve.
-            { href: 'research/forest-applied/demo.html', label: 'Forest, as applied' },
             // Kenny, 2026-10-08: the anchor round for the nine themes without one, the grotesk way (one question, six to ten candidates, each in its own scene, as a progress bar and as a button press, the recommendation first).
             // Kenny, 2026-10-08: what makes formal, light and deco themselves, the forest way (the analysis in themes/<theme>/CHARACTER.md), the nineteen questions each, every option a live scene that follows from the theme's decided anchor, the recommendation first.
             // Kenny, 2026-10-08 (update 1): deco's grammar did not convince him ("fancy, distinguished … lots of gold accents and fancy blue backgrounds … elegance without being too in your face"); thirteen questions redrawn as thin gold on lacquer with the wallpaper, his six picks kept.
@@ -97,6 +95,9 @@ export const PAGES = [
         // down here once Kenny has decided on it [scope-81].
         group: 'Archived research',
         pages: [
+            // Kenny, 2026-10-09: a showcase of every forest component changed by the uniformity round, to approve.
+            { href: 'research/forest-applied/demo.html', label: 'Forest, as applied' },
+            // Decided 2026-10-12 19:11: Kenny approved forest in full (round 6); nothing open.
             // Dropped 2026-10-08: Kenny stopped the theme in the anchor round (research/high-contrast-anchor/decided.json).
             { href: 'research/high-contrast-anchor/demo.html', label: "What is high-contrast's anchor element" },
             // Dropped 2026-10-08: Kenny stopped the theme in the anchor round (research/sepia-anchor/decided.json).
