@@ -630,3 +630,13 @@
 .rv-update__head {
     font-weight: 600;
 }
+
+.rv-hidden-note {
+    margin: 0 0 1rem;
+    font-size: 0.875rem;
+    opacity: 0.8;
+}
+
+[data-review-item][hidden] {
+    display: none !important;
+}

@@ -618,7 +618,10 @@ function reopenPair(key, aspects = []) {
     }
     const choices = { ...entry.choices };
     for (const aspect of aspects) delete choices[aspect];
-    state[key] = { choices, earlier: { ...entry.earlier, ...entry.redo } };
+    // The earlier words are wiped, only the fact that the question was open stays (Kenny, 2026-10-13:
+    // "wis de vorige commentaar").
+    const earlier = Object.fromEntries(Object.keys({ ...entry.earlier, ...entry.redo }).map((aspect) => [aspect, 'not approved']));
+    state[key] = { choices, earlier };
 }
 if (round?.round && state.__round !== round.round) {
     const reopened = [];
@@ -668,6 +671,22 @@ if (UPDATE && ASPECT_MODE) {
         state.__reopened = [...new Set([...(state.__reopened || []), ...reopened])];
     }
     save();
+}
+// A demo page shows only what is not approved yet (Kenny, 2026-10-13: "toon je wel geen al goedgekeurde
+// elementen meer"): a section whose every pair is approved is hidden behind one line, and ?review=all
+// brings it back. The dialog already walks only what is open.
+{
+    const all = new URLSearchParams(location.search).get('review') === 'all';
+    const approvedItems = [...new Set(pairs.filter((pair) => pair.item).map((pair) => pair.item))].filter((item) =>
+        pairs.filter((pair) => pair.item === item).every((pair) => state[pair.key]?.verdict === 'approved'),
+    );
+    if (!all && approvedItems.length) {
+        for (const item of approvedItems) item.section.hidden = true;
+        const note = document.createElement('p');
+        note.className = 'rv-hidden-note';
+        note.textContent = `${approvedItems.length} approved section(s) hidden. Add ?review=all to the address to see them again.`;
+        approvedItems[0].section.before(note);
+    }
 }
 const verdictOf = (pair) => state[pair.key]?.verdict;
 const noteOf = (pair) => state[pair.key]?.note || '';
@@ -1653,17 +1672,14 @@ function paintUpdate(step) {
     const pair = step.pairs[0];
     const asked = step.aspect && pair ? UPDATE?.questions?.[pair.theme]?.[step.aspect] : null;
     const earlier = step.aspect && pair ? state[pair.key]?.earlier?.[step.aspect] : '';
-    const comment = asked?.comment || (earlier && earlier !== 'not approved' ? earlier : '');
     box.replaceChildren();
     if (!asked && !earlier) return;
     const head = document.createElement('p');
     head.className = 'rv-update__head';
     head.textContent = UPDATE ? `Update ${UPDATE.update} · open again` : 'Open again';
     box.append(head);
-    for (const [label, text] of [
-        ['Your comment', comment || 'Not approved, without a comment.'],
-        ['Answer', asked?.reply || 'No answer recorded for this update.'],
-    ]) {
+    // Kenny's earlier comment is not repeated (2026-10-13): the answer says what changed.
+    for (const [label, text] of [['Answer', asked?.reply || 'No answer recorded for this update.']]) {
         const p = document.createElement('p');
         const b = document.createElement('b');
         b.textContent = `${label}: `;

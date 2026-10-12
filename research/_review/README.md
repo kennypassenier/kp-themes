@@ -103,6 +103,14 @@ A verdict of this round on other files is open again, in the dialog and in
 lists every demo in "Archived research", with the decision its `decided.json`
 records.
 
+## A later round shows only what is open
+
+Kenny, 2026-10-13: "toon je geen al goedgekeurde elementen meer en wis je de vorige commentaar". On the demo page a section
+whose every pair is approved is hidden behind one line ("N approved section(s) hidden"); add `?review=all` to the address to
+see them again. When a round, an update or a republished demo opens a question again, his earlier words are wiped: the
+dialog says only that the question is open again and, with an `update.json`, the session's answer; the comment is not
+repeated. The first round, before anything is approved, shows the whole page.
+
 ## An update after a verdict
 
 When a session republishes a demo after Kenny's verdict, it writes
