@@ -988,7 +988,7 @@ test('AR43: every knob the architecture names has its default in the cyberpunk r
     // The demo's values, as AR43 lists them. A knob missing here, or with
     // another default, is the register drifting from the decision.
     const KNOBS = {
-        '--kp-button-notch': 'var(--fx-notch, 14px)',
+        '--kp-button-notch': 'var(--fx-notch-sm, 8px)',
         '--kp-button-slit': '10px',
         '--kp-nav-notch': '13px',
         '--kp-nav-enter': '520ms',
@@ -1000,8 +1000,8 @@ test('AR43: every knob the architecture names has its default in the cyberpunk r
         '--kp-reveal-stagger': '260ms',
         '--kp-redact-stagger': '160ms',
         '--kp-classified-delay': '1500ms',
-        '--kp-wipe': '720ms',
-        '--kp-rule-draw': '900ms',
+        '--kp-wipe': '480ms',
+        '--kp-rule-draw': '480ms',
         '--kp-rule-weight': '3px',
         '--kp-slice': '600ms',
         '--kp-slice-hover': '320ms',

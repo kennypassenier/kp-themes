@@ -318,3 +318,62 @@ the close's t50 is the open's remaining 50 %, not its own.
   carried off with the scroll.
 - **Check:** content `getBoundingClientRect().left` tracks the panel's through the close, in a
   screenshot at 150 and 350 ms.
+
+## 32. A focus rule loses to a reset of higher specificity: the keyboard sees nothing
+
+- **Symptom:** a keyboard user tabs through every `.kp-button` in cyberpunk and sees no mark at all (60 button
+  signatures, outline none, zero channels).
+- **Cause:** the register's clock reset for buttons had specificity (0,4,0); the focus-bracket rule that should win after it
+  had (0,3,0), so the reset zeroed the focus variables on every button.
+- **Fix:** write the reset inside `:where(...)` (specificity 0) so any state rule wins; never let a reset out-rank the states
+  it resets.
+- **Check:** a real keyboard Tab through a page of every control, then `getComputedStyle` of the focus variables and the
+  pointing audit (`audit.mjs --focus-only`): every stop shows its mark.
+
+## 33. A lift token the theme does not decide moves every pressed part
+
+- **Symptom:** buttons rise on hover and press although the theme's press closes a circuit and moves nothing.
+- **Cause:** the package reads `--fx-lift` (default a pixel or two) for hover and press; only forest and a few others set 0.
+- **Fix:** set `--fx-lift: 0px` (css/themes.css and themes/<theme>/tokens.json) and add `translate: none` on pressed parts that
+  must not move. Applies to every theme whose grammar says a part does not move.
+- **Check:** the pointing audit: no signature moves on hover or press.
+
+## 34. Keyframes that clip with a rectangle square a notched corner while they play
+
+- **Symptom:** (Kenny, cyberpunk power flicker) a part with a cut corner draws a rectangle round itself during the animation and the
+  corner is square again; only the last frame puts the cut back.
+- **Cause:** `clip-path: inset(...)` in the keyframes replaces the part's polygon clip for as long as it runs.
+- **Fix:** keep the notch in every keyframe by clipping with the notch itself made wider than the part (`--cy-wide-clip`: the
+  same polygon with 40 px of room), and let glows come from a drop-shadow wrapper. Applies to every theme with a cut corner.
+- **Check:** `getComputedStyle(part).clipPath` is a `polygon(` in every frame.
+
+## 35. `steps()` animations sought to their exact start or end read the after-state
+
+- **Symptom:** the pair meter reads 11-26 % off at the last frame of dialog, drawer, palette and alarm while the per-frame
+  poses mirror.
+- **Cause:** at the boundary of a `steps(n, end)` tick the animation is already on the next pose; the meter seeks exactly to
+  fraction 0 and 1.
+- **Fix (meter):** seek 1 ms inside each tick (first and last frame). The theme's keyframes may also end on `75%, 100%` so the
+  last tick has a pose of its own; a close must not begin on a sharp one-frame state.
+- **Check:** all pairs read under 1 % in Firefox.
+
+## 36. Firefox does not hold `display` for a transition: a hover dropdown needs a hold
+
+- **Symptom:** a menu that opens on hover closes at once in Firefox while Chromium plays its close.
+- **Fix:** js/components.js holds the dropdown's `display` for the close time (`--kp-nav-close-time`, read only where a theme sets
+  it). Same pattern for any hover-opened part: a token-gated script hold, never `transition-behavior` alone.
+- **Check:** `getAnimations()` on the dropdown for the close time after the pointer leaves.
+
+## 37. Which of cyberpunk's faults sat in shared code (for the all-theme package)
+
+These were not cyberpunk's: the same wrong default is in every theme that has not set its token.
+- **Focus and pointing (B+E):** the reset-over-state specificity (32), `--fx-lift` (33), several part families that have no
+  hover/press/focus rule in any register (tabs, pagination, icon buttons, options, tree rows, sort heads, grid cells, check/switch
+  labels, fields and selects, calendar and datepicker days), and the package's own two-channel ring on non-buttons.
+- **Closing and folding (A+H):** `--kp-leave-state`, `--kp-arrive-unseen`, `--kp-leave-fold-grow`, `--kp-leave-fold-start` are set by
+  forest only (lessons 19, 23, 24); the accordion opens late and closes at once unless `--kp-accordion-size: own`; a calendar busy
+  layer leaves at once unless `--kp-calendar-busy-leave`; the tabs swap folds with `--kp-swap-fold-ease`; the tour's close reads
+  `--kp-tour-dim-time`, `--kp-tour-dim-close-ease` and `--kp-tour-dim-close-delay`; the side navigation's content shift is
+  `data-kp-sidenav-shift`; the hover dropdown hold is `--kp-nav-close-time` (36). Each theme must set the tokens its grammar needs.
+- **Check:** `node gates/measure-pairs.mjs --theme <theme> --engine firefox` and the audit in research/cyberpunk-applied/_audit
+  (a theme-neutral copy of forest's) before showing a theme to Kenny.

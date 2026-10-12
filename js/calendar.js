@@ -193,8 +193,40 @@ function dayFor(c, iso, today) {
     return { tone: 'none', label: s.calendarUnknown };
 }
 
+/** The marks of a busy layer: the whole grid's card and a day's spinner. */
+const BUSY_LAYERS = '.kp-calendar__busy, .kp-calendar__day-busy';
+
+/**
+ * The busy layers a theme holds on screen while their state goes (`--kp-calendar-busy-leave:
+ * hold`, set on the layers by cyberpunk): each is marked `[data-kp-leaving]`, which the
+ * register draws as the leave of its arrival played backwards and keeps displayed until it is
+ * over. Then the mark goes and the layer is hidden by the calendar's own rules.
+ * @param {Element[]} layers
+ */
+function leaveBusyLayers(layers) {
+    for (const layer of layers) {
+        layer.setAttribute('data-kp-leaving', '');
+        getComputedStyle(layer).animationName;
+        const plays = layer.getAnimations().filter((a) => a instanceof CSSAnimation && /** @type {KeyframeEffect} */ (a.effect)?.target === layer);
+        const done = () => layer.removeAttribute('data-kp-leaving');
+        if (plays.length === 0) done();
+        else void Promise.all(plays.map((a) => a.finished)).then(done, done);
+    }
+}
+
 /** Repaint the grid in place: tones, words and the tab stop, never new buttons. @param {CalendarModel} c */
 function paintCalendar(c) {
+    const busy = c.state === 'loading';
+    // The layers on screen now, which a theme may let leave first.
+    const leaving =
+        !busy && c.grid.getAttribute('aria-busy') === 'true'
+            ? [...c.el.querySelectorAll(BUSY_LAYERS)].filter(
+                  (layer) =>
+                      layer.getClientRects().length > 0 && getComputedStyle(layer).getPropertyValue('--kp-calendar-busy-leave').trim() === 'hold',
+              )
+            : [];
+    // Loading again while they leave: they stay, as they arrive.
+    if (busy) for (const layer of c.el.querySelectorAll(`:is(${BUSY_LAYERS})[data-kp-leaving]`)) layer.removeAttribute('data-kp-leaving');
     const ym = monthKey(c);
     const today = dayKey(c.now(), c.timeZone);
     const cells = monthCells(c.year, c.month, c.firstDay);
@@ -240,6 +272,7 @@ function paintCalendar(c) {
         cell.button.tabIndex = iso === stop ? 0 : -1;
         if (monthChanged) c.decorate?.(cell.button, { kind: 'day', host: c.el, key: keyOf(c.el), index: i, value: iso });
     });
+    if (leaving.length > 0) leaveBusyLayers(leaving);
 }
 
 /** @param {CalendarModel} c @param {number} year @param {number} month @param {boolean} announce */

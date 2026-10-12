@@ -503,7 +503,7 @@
     --fx-ease: cubic-bezier(0.2, 0.9, 0.2, 1);
     --fx-overprint: hsl(184, 100%, 50%);
     --fx-scanline: hsl(56, 98%, 51%);
-    --fx-lift: 1px;
+    --fx-lift: 0px;
     --fx-hot: hsl(50, 12%, 80%);
     --fx-hot-alarm: hsl(353, 84%, 75%);
     --fx-shadow-offset: 0px;

@@ -20,7 +20,7 @@
                 "kp-sig-cyberpunk-word::before:1800ms:loop:linear",
                 "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear",
                 "kp-cp-stream-144::before:1800ms:loop:linear",
-                "kp-cp-stream-216::after:1200ms:loop:linear"
+                "kp-cp-stream-216::after:1800ms:loop:linear"
             ],
             "bg": "none",
             "color": "rgb(215, 213, 204)"
@@ -35,7 +35,7 @@
                 "kp-sig-cyberpunk-word::before:1800ms:loop:linear",
                 "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear",
                 "kp-cp-stream-144::before:1800ms:loop:linear",
-                "kp-cp-stream-216::after:1200ms:loop:linear"
+                "kp-cp-stream-216::after:1800ms:loop:linear"
             ],
             "bg": "none",
             "color": "rgb(215, 213, 204)"
@@ -50,7 +50,7 @@
                 "kp-sig-cyberpunk-word::before:1800ms:loop:linear",
                 "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear",
                 "kp-cp-stream-144::before:1800ms:loop:linear",
-                "kp-cp-stream-216::after:1200ms:loop:linear"
+                "kp-cp-stream-216::after:1800ms:loop:linear"
             ],
             "bg": "none",
             "color": "rgb(215, 213, 204)"
@@ -81,8 +81,14 @@
             "text": "",
             "size": "48x48",
             "words": [],
-            "anims": ["kp-pulse:1600ms:loop:linear"],
-            "bg": "linear-gradient(90deg, rgb(19, 18, 22), rgb(34, 32, 39), rgb(19, 18, 2",
+            "anims": [
+                "kp-sig-cyberpunk-bars-1:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-2:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-3:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-4:3000ms:loop:linear",
+                "kp-sig-cyberpunk-tear:3000ms:loop:linear"
+            ],
+            "bg": "linear-gradient(rgb(0, 238, 255) 0px, rgb(0, 238, 255) 2px, rgb(253, 2",
             "color": "rgb(215, 213, 204)"
         },
         {
@@ -90,9 +96,9 @@
             "n": 1,
             "text": "",
             "size": "217x96",
-            "words": [],
-            "anims": ["kp-pulse:1600ms:loop:linear"],
-            "bg": "linear-gradient(90deg, rgb(19, 18, 22), rgb(34, 32, 39), rgb(19, 18, 2",
+            "words": ["::before \"LOADI%@\""],
+            "anims": ["kp-sig-cyberpunk-word::before:1800ms:loop:linear", "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear"],
+            "bg": "none",
             "color": "rgb(215, 213, 204)"
         },
         {
@@ -146,22 +152,6 @@
             "color": "rgb(215, 213, 204)"
         },
         {
-            "name": "span.kp-spinner",
-            "n": 6,
-            "text": "",
-            "size": "13x13",
-            "words": [],
-            "anims": [
-                "kp-sig-cyberpunk-bars-1:3000ms:loop:linear",
-                "kp-sig-cyberpunk-bars-2:3000ms:loop:linear",
-                "kp-sig-cyberpunk-bars-3:3000ms:loop:linear",
-                "kp-sig-cyberpunk-bars-4:3000ms:loop:linear",
-                "kp-sig-cyberpunk-tear:3000ms:loop:linear"
-            ],
-            "bg": "linear-gradient(rgb(0, 238, 255) 0px, rgb(0, 238, 255) 2px, rgb(253, 2",
-            "color": "rgb(149, 146, 131)"
-        },
-        {
             "name": "div.kp-datatable__busy-overlay",
             "n": 1,
             "text": "Asking the pump houses…",
@@ -194,6 +184,22 @@
             "color": "rgb(215, 213, 204)"
         },
         {
+            "name": "span.kp-spinner",
+            "n": 5,
+            "text": "",
+            "size": "40x40",
+            "words": [],
+            "anims": [
+                "kp-sig-cyberpunk-bars-1:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-2:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-3:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-4:3000ms:loop:linear",
+                "kp-sig-cyberpunk-tear:3000ms:loop:linear"
+            ],
+            "bg": "linear-gradient(rgb(0, 238, 255) 0px, rgb(0, 238, 255) 2px, rgb(253, 2",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
             "name": "button.kp-button[busy]",
             "n": 1,
             "text": "Working…",
@@ -213,7 +219,7 @@
                 "kp-sig-cyberpunk-word::before:1800ms:loop:linear",
                 "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear",
                 "kp-cp-stream-144::before:1800ms:loop:linear",
-                "kp-cp-stream-216::after:1200ms:loop:linear"
+                "kp-cp-stream-216::after:1800ms:loop:linear"
             ],
             "bg": "none",
             "color": "rgb(215, 213, 204)"
@@ -228,7 +234,7 @@
                 "kp-sig-cyberpunk-word::before:1800ms:loop:linear",
                 "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear",
                 "kp-cp-stream-144::before:1800ms:loop:linear",
-                "kp-cp-stream-216::after:1200ms:loop:linear"
+                "kp-cp-stream-216::after:1800ms:loop:linear"
             ],
             "bg": "none",
             "color": "rgb(215, 213, 204)"
@@ -243,7 +249,7 @@
                 "kp-sig-cyberpunk-word::before:1800ms:loop:linear",
                 "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear",
                 "kp-cp-stream-144::before:1800ms:loop:linear",
-                "kp-cp-stream-216::after:1200ms:loop:linear"
+                "kp-cp-stream-216::after:1800ms:loop:linear"
             ],
             "bg": "none",
             "color": "rgb(215, 213, 204)"
@@ -274,8 +280,14 @@
             "text": "",
             "size": "48x48",
             "words": [],
-            "anims": ["kp-pulse:1600ms:loop:linear"],
-            "bg": "linear-gradient(90deg, rgb(19, 18, 22), rgb(34, 32, 39), rgb(19, 18, 2",
+            "anims": [
+                "kp-sig-cyberpunk-bars-1:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-2:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-3:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-4:3000ms:loop:linear",
+                "kp-sig-cyberpunk-tear:3000ms:loop:linear"
+            ],
+            "bg": "linear-gradient(rgb(0, 238, 255) 0px, rgb(0, 238, 255) 2px, rgb(253, 2",
             "color": "rgb(215, 213, 204)"
         },
         {
@@ -283,9 +295,9 @@
             "n": 1,
             "text": "",
             "size": "217x96",
-            "words": [],
-            "anims": ["kp-pulse:1600ms:loop:linear"],
-            "bg": "linear-gradient(90deg, rgb(19, 18, 22), rgb(34, 32, 39), rgb(19, 18, 2",
+            "words": ["::before \"LO?%@/#\""],
+            "anims": ["kp-sig-cyberpunk-word::before:1800ms:loop:linear", "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear"],
+            "bg": "none",
             "color": "rgb(215, 213, 204)"
         },
         {
@@ -323,7 +335,7 @@
             "size": "62x52",
             "words": [],
             "anims": [],
-            "bg": "none",
+            "bg": "linear-gradient(rgb(215, 213, 204) 0px, rgb(215, 213, 204) 0px), linea",
             "color": "rgb(149, 146, 131)"
         },
         {
@@ -362,7 +374,7 @@
                 "kp-sig-cyberpunk-word::before:1800ms:loop:linear",
                 "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear",
                 "kp-cp-stream-144::before:1800ms:loop:linear",
-                "kp-cp-stream-216::after:1200ms:loop:linear"
+                "kp-cp-stream-216::after:1800ms:loop:linear"
             ],
             "bg": "none",
             "color": "rgb(215, 213, 204)"
@@ -377,7 +389,7 @@
                 "kp-sig-cyberpunk-word::before:1800ms:loop:linear",
                 "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear",
                 "kp-cp-stream-144::before:1800ms:loop:linear",
-                "kp-cp-stream-216::after:1200ms:loop:linear"
+                "kp-cp-stream-216::after:1800ms:loop:linear"
             ],
             "bg": "none",
             "color": "rgb(215, 213, 204)"
@@ -392,7 +404,7 @@
                 "kp-sig-cyberpunk-word::before:1800ms:loop:linear",
                 "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear",
                 "kp-cp-stream-144::before:1800ms:loop:linear",
-                "kp-cp-stream-216::after:1200ms:loop:linear"
+                "kp-cp-stream-216::after:1800ms:loop:linear"
             ],
             "bg": "none",
             "color": "rgb(215, 213, 204)"
@@ -423,8 +435,14 @@
             "text": "",
             "size": "48x48",
             "words": [],
-            "anims": ["kp-pulse:1600ms:loop:linear"],
-            "bg": "linear-gradient(90deg, rgb(19, 18, 22), rgb(34, 32, 39), rgb(19, 18, 2",
+            "anims": [
+                "kp-sig-cyberpunk-bars-1:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-2:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-3:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-4:3000ms:loop:linear",
+                "kp-sig-cyberpunk-tear:3000ms:loop:linear"
+            ],
+            "bg": "linear-gradient(rgb(0, 238, 255) 0px, rgb(0, 238, 255) 2px, rgb(253, 2",
             "color": "rgb(215, 213, 204)"
         },
         {
@@ -432,9 +450,9 @@
             "n": 1,
             "text": "",
             "size": "217x96",
-            "words": [],
-            "anims": ["kp-pulse:1600ms:loop:linear"],
-            "bg": "linear-gradient(90deg, rgb(19, 18, 22), rgb(34, 32, 39), rgb(19, 18, 2",
+            "words": ["::before \"LOADING\""],
+            "anims": ["kp-sig-cyberpunk-word::before:1800ms:loop:linear", "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear"],
+            "bg": "none",
             "color": "rgb(215, 213, 204)"
         },
         {
@@ -473,7 +491,7 @@
             "text": "",
             "size": "306x14",
             "words": [],
-            "anims": ["kp-cp-charge::after:520ms:once:linear"],
+            "anims": ["kp-cp-charge::after:480ms:once:linear"],
             "bg": "none",
             "color": "rgb(215, 213, 204)"
         },
@@ -487,7 +505,7 @@
                 "kp-sig-cyberpunk-word::before:1800ms:loop:linear",
                 "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear",
                 "kp-cp-stream-144::before:1800ms:loop:linear",
-                "kp-cp-stream-216::after:1200ms:loop:linear"
+                "kp-cp-stream-216::after:1800ms:loop:linear"
             ],
             "bg": "none",
             "color": "rgb(215, 213, 204)"
@@ -498,7 +516,7 @@
             "text": "",
             "size": "306x21",
             "words": [],
-            "anims": ["kp-cp-charge::after:520ms:once:linear"],
+            "anims": ["kp-cp-charge::after:480ms:once:linear"],
             "bg": "none",
             "color": "rgb(215, 213, 204)"
         },
@@ -512,7 +530,7 @@
                 "kp-sig-cyberpunk-word::before:1800ms:loop:linear",
                 "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear",
                 "kp-cp-stream-144::before:1800ms:loop:linear",
-                "kp-cp-stream-216::after:1200ms:loop:linear"
+                "kp-cp-stream-216::after:1800ms:loop:linear"
             ],
             "bg": "none",
             "color": "rgb(215, 213, 204)"
@@ -523,7 +541,7 @@
             "text": "",
             "size": "306x28",
             "words": [],
-            "anims": ["kp-cp-charge::after:520ms:once:linear"],
+            "anims": ["kp-cp-charge::after:480ms:once:linear"],
             "bg": "none",
             "color": "rgb(215, 213, 204)"
         },
@@ -537,7 +555,7 @@
                 "kp-sig-cyberpunk-word::before:1800ms:loop:linear",
                 "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear",
                 "kp-cp-stream-144::before:1800ms:loop:linear",
-                "kp-cp-stream-216::after:1200ms:loop:linear"
+                "kp-cp-stream-216::after:1800ms:loop:linear"
             ],
             "bg": "none",
             "color": "rgb(215, 213, 204)"
@@ -590,8 +608,14 @@
             "text": "",
             "size": "48x48",
             "words": [],
-            "anims": ["kp-pulse:1600ms:loop:linear"],
-            "bg": "linear-gradient(90deg, rgb(19, 18, 22), rgb(34, 32, 39), rgb(19, 18, 2",
+            "anims": [
+                "kp-sig-cyberpunk-bars-1:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-2:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-3:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-4:3000ms:loop:linear",
+                "kp-sig-cyberpunk-tear:3000ms:loop:linear"
+            ],
+            "bg": "linear-gradient(rgb(0, 238, 255) 0px, rgb(0, 238, 255) 2px, rgb(253, 2",
             "color": "rgb(215, 213, 204)"
         },
         {
@@ -599,9 +623,9 @@
             "n": 1,
             "text": "",
             "size": "224x96",
-            "words": [],
-            "anims": ["kp-pulse:1600ms:loop:linear"],
-            "bg": "linear-gradient(90deg, rgb(19, 18, 22), rgb(34, 32, 39), rgb(19, 18, 2",
+            "words": ["::before \"#&$?%@/\""],
+            "anims": ["kp-sig-cyberpunk-word::before:1800ms:loop:linear", "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear"],
+            "bg": "none",
             "color": "rgb(215, 213, 204)"
         }
     ],
@@ -679,7 +703,7 @@
         },
         {
             "name": "span.kp-spinner",
-            "n": 7,
+            "n": 5,
             "text": "",
             "size": "13x13",
             "words": [],
@@ -732,9 +756,9 @@
             "n": 1,
             "text": "Loading the readings…",
             "size": "950x168",
-            "words": [],
-            "anims": ["kp-pulse:1600ms:loop:linear"],
-            "bg": "none",
+            "words": ["div::before \"LOADING\""],
+            "anims": ["kp-sig-cyberpunk-word::before:1800ms:loop:linear", "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear"],
+            "bg": "linear-gradient(rgb(215, 213, 204) 0px, rgb(215, 213, 204) 0px), linea",
             "color": "rgb(215, 213, 204)"
         },
         {
@@ -742,9 +766,9 @@
             "n": 1,
             "text": "Loading the readings…",
             "size": "950x168",
-            "words": [],
-            "anims": ["kp-pulse:1600ms:loop:linear"],
-            "bg": "linear-gradient(90deg, rgb(19, 18, 22), rgb(34, 32, 39), rgb(19, 18, 2",
+            "words": ["::before \"LOADING\""],
+            "anims": ["kp-sig-cyberpunk-word::before:1800ms:loop:linear", "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear"],
+            "bg": "none",
             "color": "rgb(149, 146, 131)"
         },
         {
@@ -752,9 +776,9 @@
             "n": 3,
             "text": "",
             "size": "100x32",
-            "words": [],
-            "anims": ["kp-pulse:1600ms:loop:linear"],
-            "bg": "linear-gradient(90deg, rgb(19, 18, 22), rgb(34, 32, 39), rgb(19, 18, 2",
+            "words": ["::before \"LOADING\""],
+            "anims": ["kp-sig-cyberpunk-word::before:1800ms:loop:linear", "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear"],
+            "bg": "none",
             "color": "rgb(215, 213, 204)"
         }
     ],

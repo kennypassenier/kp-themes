@@ -1,15 +1,23 @@
 [
     {
         "part": "kp-accordion__item",
+        "shape": "notch 14",
+        "radius": 0,
+        "size": "950x77",
+        "n": 4,
+        "pages": ["structure"]
+    },
+    {
+        "part": "kp-accordion__summary",
         "shape": "RECT",
         "radius": 0,
-        "size": "950x78",
+        "size": "950x41",
         "n": 4,
         "pages": ["structure"]
     },
     {
         "part": "kp-alarm",
-        "shape": "RECT",
+        "shape": "notch 14",
         "radius": 0,
         "size": "950x352",
         "n": 2,
@@ -49,8 +57,8 @@
     },
     {
         "part": "kp-attention__icon",
-        "shape": "RECT",
-        "radius": 50,
+        "shape": "notch 8",
+        "radius": 0,
         "size": "28x28",
         "n": 6,
         "pages": ["feedback"]
@@ -59,29 +67,21 @@
         "part": "kp-badge",
         "shape": "notch 8",
         "radius": 0,
-        "size": "390x22",
+        "size": "411x22",
         "n": 563,
-        "pages": ["alarm", "button", "chart"]
-    },
-    {
-        "part": "kp-button",
-        "shape": "notch 14",
-        "radius": 0,
-        "size": "151x28",
-        "n": 1085,
         "pages": ["alarm", "button", "chart"]
     },
     {
         "part": "kp-button",
         "shape": "notch 8",
         "radius": 0,
-        "size": "59x36",
-        "n": 3,
-        "pages": ["navigation"]
+        "size": "151x28",
+        "n": 1088,
+        "pages": ["alarm", "button", "chart"]
     },
     {
         "part": "kp-calendar__day",
-        "shape": "RECT",
+        "shape": "notch 8",
         "radius": 0,
         "size": "92x52",
         "n": 62,
@@ -89,7 +89,7 @@
     },
     {
         "part": "kp-calendar__swatch",
-        "shape": "RECT",
+        "shape": "notch ",
         "radius": 0,
         "size": "16x16",
         "n": 12,
@@ -129,23 +129,31 @@
     },
     {
         "part": "kp-chart__dot",
-        "shape": "RECT",
-        "radius": 50,
+        "shape": "notch ",
+        "radius": 0,
         "size": "8x8",
         "n": 1,
         "pages": ["chart"]
     },
     {
-        "part": "kp-chart__source",
+        "part": "kp-chart__plot",
         "shape": "RECT",
-        "radius": 999,
+        "radius": 0,
+        "size": "950x168",
+        "n": 22,
+        "pages": ["chart"]
+    },
+    {
+        "part": "kp-chart__source",
+        "shape": "notch 8",
+        "radius": 0,
         "size": "147x26",
         "n": 34,
         "pages": ["chart"]
     },
     {
         "part": "kp-chart__source-stub",
-        "shape": "RECT",
+        "shape": "notch 8",
         "radius": 0,
         "size": "100x32",
         "n": 3,
@@ -153,7 +161,7 @@
     },
     {
         "part": "kp-chart__state",
-        "shape": "RECT",
+        "shape": "notch 8",
         "radius": 0,
         "size": "950x168",
         "n": 1,
@@ -161,7 +169,7 @@
     },
     {
         "part": "kp-code-block",
-        "shape": "RECT",
+        "shape": "notch 14",
         "radius": 0,
         "size": "992x194",
         "n": 4,
@@ -171,21 +179,29 @@
         "part": "kp-col-low",
         "shape": "RECT",
         "radius": 0,
-        "size": "307x40",
+        "size": "348x40",
         "n": 3,
         "pages": ["data"]
     },
     {
         "part": "kp-colorpicker__swatch",
-        "shape": "RECT",
+        "shape": "notch ",
         "radius": 0,
         "size": "42x42",
         "n": 7,
         "pages": ["colorpicker"]
     },
     {
+        "part": "kp-combobox__clear",
+        "shape": "notch 8",
+        "radius": 0,
+        "size": "16x26",
+        "n": 1,
+        "pages": ["combobox"]
+    },
+    {
         "part": "kp-combobox__input",
-        "shape": "RECT",
+        "shape": "notch 8",
         "radius": 0,
         "size": "199x36",
         "n": 9,
@@ -204,7 +220,7 @@
         "shape": "RECT",
         "radius": 0,
         "size": "942x36",
-        "n": 2,
+        "n": 49,
         "pages": ["combobox"]
     },
     {
@@ -233,15 +249,23 @@
     },
     {
         "part": "kp-datatable__edit",
-        "shape": "RECT",
+        "shape": "notch ",
         "radius": 0,
         "size": "112x21",
         "n": 58,
         "pages": ["table"]
     },
     {
+        "part": "kp-datatable__pill-edit",
+        "shape": "notch ",
+        "radius": 0,
+        "size": "167x17",
+        "n": 1,
+        "pages": ["table"]
+    },
+    {
         "part": "kp-datatable__search",
-        "shape": "RECT",
+        "shape": "notch 8",
         "radius": 0,
         "size": "491x42",
         "n": 7,
@@ -249,26 +273,18 @@
     },
     {
         "part": "kp-datatable__sort-order",
-        "shape": "RECT",
-        "radius": 999,
+        "shape": "notch ",
+        "radius": 0,
         "size": "16x13",
         "n": 2,
         "pages": ["table"]
     },
     {
         "part": "kp-datepicker__day",
-        "shape": "RECT",
-        "radius": 0,
-        "size": "32x34",
-        "n": 138,
-        "pages": ["datepicker"]
-    },
-    {
-        "part": "kp-datepicker__day",
         "shape": "notch 8",
         "radius": 0,
         "size": "32x34",
-        "n": 6,
+        "n": 144,
         "pages": ["datepicker"]
     },
     {
@@ -281,7 +297,7 @@
     },
     {
         "part": "kp-datepicker__title",
-        "shape": "RECT",
+        "shape": "notch 8",
         "radius": 0,
         "size": "123x30",
         "n": 5,
@@ -305,7 +321,7 @@
     },
     {
         "part": "kp-diff",
-        "shape": "RECT",
+        "shape": "notch 14",
         "radius": 0,
         "size": "950x806",
         "n": 1,
@@ -321,7 +337,7 @@
     },
     {
         "part": "kp-drawer",
-        "shape": "RECT",
+        "shape": "notch 14",
         "radius": 0,
         "size": "360x576",
         "n": 1,
@@ -352,8 +368,16 @@
         "pages": ["feedback", "table"]
     },
     {
-        "part": "kp-field__check",
+        "part": "kp-field",
         "shape": "RECT",
+        "radius": 0,
+        "size": "298x22",
+        "n": 47,
+        "pages": ["alarm", "button", "chart"]
+    },
+    {
+        "part": "kp-field__check",
+        "shape": "notch ",
         "radius": 0,
         "size": "18x18",
         "n": 82,
@@ -376,8 +400,16 @@
         "pages": ["alarm", "button", "chart"]
     },
     {
-        "part": "kp-footer",
+        "part": "kp-field__option",
         "shape": "RECT",
+        "radius": 0,
+        "size": "157x21",
+        "n": 12,
+        "pages": ["field", "table"]
+    },
+    {
+        "part": "kp-footer",
+        "shape": "notch 14",
         "radius": 0,
         "size": "950x149",
         "n": 3,
@@ -385,7 +417,7 @@
     },
     {
         "part": "kp-form__summary",
-        "shape": "RECT",
+        "shape": "notch 14",
         "radius": 0,
         "size": "250x107",
         "n": 1,
@@ -441,7 +473,7 @@
     },
     {
         "part": "kp-icon-button",
-        "shape": "RECT",
+        "shape": "notch 8",
         "radius": 0,
         "size": "36x36",
         "n": 15,
@@ -456,11 +488,27 @@
         "pages": ["data", "motion"]
     },
     {
+        "part": "kp-kpi__chart-plot",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "445x44",
+        "n": 12,
+        "pages": ["data"]
+    },
+    {
         "part": "kp-kpi__delta",
         "shape": "RECT",
         "radius": 0,
         "size": "40x16",
         "n": 3,
+        "pages": ["data"]
+    },
+    {
+        "part": "kp-kpi__link",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "57x22",
+        "n": 12,
         "pages": ["data"]
     },
     {
@@ -481,7 +529,7 @@
     },
     {
         "part": "kp-log",
-        "shape": "notch 18",
+        "shape": "notch 14",
         "radius": 0,
         "size": "950x128",
         "n": 2,
@@ -529,7 +577,7 @@
     },
     {
         "part": "kp-media",
-        "shape": "notch 11.2",
+        "shape": "notch 14",
         "radius": 0,
         "size": "306x174",
         "n": 10,
@@ -568,10 +616,10 @@
         "pages": ["table"]
     },
     {
-        "part": "kp-nav",
+        "part": "kp-nav__brand",
         "shape": "RECT",
         "radius": 0,
-        "size": "950x64",
+        "size": "274x37",
         "n": 14,
         "pages": ["navigation", "page-effects"]
     },
@@ -579,9 +627,9 @@
         "part": "kp-nav__link",
         "shape": "RECT",
         "radius": 0,
-        "size": "182x39",
-        "n": 2,
-        "pages": ["page-effects"]
+        "size": "112x39",
+        "n": 51,
+        "pages": ["navigation", "page-effects"]
     },
     {
         "part": "kp-nav__menu",
@@ -592,32 +640,32 @@
         "pages": ["navigation"]
     },
     {
+        "part": "kp-nav__search-trigger",
+        "shape": "notch 8",
+        "radius": 0,
+        "size": "164x39",
+        "n": 2,
+        "pages": ["navigation"]
+    },
+    {
         "part": "kp-nav__toggle",
-        "shape": "RECT",
+        "shape": "notch 8",
         "radius": 0,
         "size": "36x36",
         "n": 4,
         "pages": ["navigation"]
     },
     {
-        "part": "kp-nav-wrap",
-        "shape": "RECT",
-        "radius": 0,
-        "size": "950x64",
-        "n": 14,
-        "pages": ["navigation", "page-effects"]
-    },
-    {
         "part": "kp-numeric",
         "shape": "RECT",
         "radius": 0,
-        "size": "116x40",
+        "size": "110x40",
         "n": 128,
         "pages": ["overlays", "table"]
     },
     {
         "part": "kp-palette",
-        "shape": "RECT",
+        "shape": "notch 14",
         "radius": 0,
         "size": "578x341",
         "n": 3,
@@ -635,7 +683,7 @@
         "part": "kp-palette__keys",
         "shape": "RECT",
         "radius": 0,
-        "size": "57x21",
+        "size": "53x18",
         "n": 9,
         "pages": ["data", "navigation", "page"]
     },
@@ -644,7 +692,7 @@
         "shape": "RECT",
         "radius": 0,
         "size": "568x40",
-        "n": 2,
+        "n": 7,
         "pages": ["page"]
     },
     {
@@ -699,7 +747,7 @@
         "part": "kp-progressbar__fill",
         "shape": "inset(0px 78% 0px 0p",
         "radius": 0,
-        "size": "226x14",
+        "size": "216x14",
         "n": 3,
         "pages": ["feedback"]
     },
@@ -707,7 +755,7 @@
         "part": "kp-progressbar__fill",
         "shape": "inset(0px 36% 0px 0p",
         "radius": 0,
-        "size": "226x14",
+        "size": "216x14",
         "n": 3,
         "pages": ["feedback"]
     },
@@ -715,7 +763,7 @@
         "part": "kp-progressbar__fill",
         "shape": "inset(0px 39% 0px 0p",
         "radius": 0,
-        "size": "226x14",
+        "size": "216x14",
         "n": 3,
         "pages": ["feedback"]
     },
@@ -745,18 +793,34 @@
     },
     {
         "part": "kp-shortcuts",
-        "shape": "RECT",
+        "shape": "notch 14",
         "radius": 0,
-        "size": "490x320",
+        "size": "490x300",
         "n": 1,
         "pages": ["data"]
     },
     {
         "part": "kp-sidenav",
-        "shape": "RECT",
+        "shape": "notch 14",
         "radius": 0,
         "size": "240x900",
-        "n": 30,
+        "n": 28,
+        "pages": ["alarm", "button", "chart"]
+    },
+    {
+        "part": "kp-sidenav",
+        "shape": "notch ",
+        "radius": 0,
+        "size": "240x900",
+        "n": 2,
+        "pages": ["navigation"]
+    },
+    {
+        "part": "kp-sidenav__category-toggle",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "238x37",
+        "n": 99,
         "pages": ["alarm", "button", "chart"]
     },
     {
@@ -777,7 +841,15 @@
     },
     {
         "part": "kp-sidenav__link",
-        "shape": "notch 8.8",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "238x37",
+        "n": 2242,
+        "pages": ["alarm", "button", "chart"]
+    },
+    {
+        "part": "kp-sidenav__link",
+        "shape": "notch 8",
         "radius": 0,
         "size": "238x37",
         "n": 30,
@@ -785,7 +857,7 @@
     },
     {
         "part": "kp-sidenav__toggle",
-        "shape": "notch 14",
+        "shape": "notch 8",
         "radius": 0,
         "size": "165x36",
         "n": 2,
@@ -793,10 +865,10 @@
     },
     {
         "part": "kp-skeleton",
-        "shape": "notch 6",
+        "shape": "notch 8",
         "radius": 0,
         "size": "37x18",
-        "n": 42,
+        "n": 43,
         "pages": ["data", "feedback", "table"]
     },
     {
@@ -804,12 +876,12 @@
         "shape": "RECT",
         "radius": 0,
         "size": "48x48",
-        "n": 2,
+        "n": 1,
         "pages": ["feedback"]
     },
     {
         "part": "kp-skip-link",
-        "shape": "RECT",
+        "shape": "notch 8",
         "radius": 0,
         "size": "127x40",
         "n": 19,
@@ -817,7 +889,7 @@
     },
     {
         "part": "kp-spec",
-        "shape": "notch 18",
+        "shape": "notch 14",
         "radius": 0,
         "size": "480x310",
         "n": 1,
@@ -825,7 +897,7 @@
     },
     {
         "part": "kp-spec__swatch",
-        "shape": "RECT",
+        "shape": "notch ",
         "radius": 0,
         "size": "14x14",
         "n": 6,
@@ -836,7 +908,7 @@
         "shape": "RECT",
         "radius": 0,
         "size": "20x20",
-        "n": 11,
+        "n": 9,
         "pages": ["feedback", "table"]
     },
     {
@@ -865,15 +937,23 @@
     },
     {
         "part": "kp-swatch",
-        "shape": "RECT",
-        "radius": 50,
+        "shape": "notch ",
+        "radius": 0,
         "size": "18x18",
         "n": 56,
         "pages": ["page-effects", "page"]
     },
     {
-        "part": "kp-switch__input",
+        "part": "kp-switch",
         "shape": "RECT",
+        "radius": 0,
+        "size": "174x24",
+        "n": 8,
+        "pages": ["switch"]
+    },
+    {
+        "part": "kp-switch__input",
+        "shape": "notch 8",
         "radius": 0,
         "size": "40x24",
         "n": 8,
@@ -881,7 +961,7 @@
     },
     {
         "part": "kp-tab",
-        "shape": "RECT",
+        "shape": "notch 8",
         "radius": 0,
         "size": "100x42",
         "n": 14,
@@ -889,7 +969,7 @@
     },
     {
         "part": "kp-tabs__list",
-        "shape": "RECT",
+        "shape": "notch 14",
         "radius": 0,
         "size": "950x43",
         "n": 3,
@@ -897,25 +977,41 @@
     },
     {
         "part": "kp-tag",
-        "shape": "RECT",
+        "shape": "notch 8",
         "radius": 0,
-        "size": "99x26",
+        "size": "118x26",
         "n": 8,
+        "pages": ["combobox", "feedback", "table"]
+    },
+    {
+        "part": "kp-tag__remove",
+        "shape": "notch ",
+        "radius": 0,
+        "size": "20x20",
+        "n": 7,
         "pages": ["combobox", "feedback", "table"]
     },
     {
         "part": "kp-text-end",
         "shape": "RECT",
         "radius": 0,
-        "size": "259x40",
+        "size": "314x40",
         "n": 428,
         "pages": ["motion", "overlays", "table"]
+    },
+    {
+        "part": "kp-text-muted",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "950x21",
+        "n": 5,
+        "pages": ["data", "structure"]
     },
     {
         "part": "kp-text-nowrap",
         "shape": "RECT",
         "radius": 0,
-        "size": "260x40",
+        "size": "271x40",
         "n": 393,
         "pages": ["table"]
     },
@@ -929,7 +1025,7 @@
     },
     {
         "part": "kp-timeline",
-        "shape": "RECT",
+        "shape": "notch 14",
         "radius": 0,
         "size": "950x310",
         "n": 2,
@@ -947,7 +1043,7 @@
         "part": "kp-toast",
         "shape": "notch ",
         "radius": 0,
-        "size": "523x58",
+        "size": "405x58",
         "n": 6,
         "pages": ["feedback"]
     },
@@ -961,7 +1057,7 @@
     },
     {
         "part": "kp-upload__file",
-        "shape": "RECT",
+        "shape": "notch 14",
         "radius": 0,
         "size": "950x70",
         "n": 13,
@@ -969,10 +1065,18 @@
     },
     {
         "part": "kp-upload__zone",
-        "shape": "RECT",
+        "shape": "notch 14",
         "radius": 0,
         "size": "950x76",
         "n": 6,
         "pages": ["upload"]
+    },
+    {
+        "part": "kp-url",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "306x94",
+        "n": 1,
+        "pages": ["data"]
     }
 ]

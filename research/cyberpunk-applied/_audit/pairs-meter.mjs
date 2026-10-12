@@ -127,11 +127,20 @@ async function startPaused(page, act, label) {
     return ms;
 }
 
-const seek = (page, ms) =>
-    page.evaluate((t) => {
-        for (const a of window.__pair)
-            a.currentTime = Math.min(t, Number(a.effect.getComputedTiming().endTime) - (a.transitionProperty || a.animationName ? 0 : 0.5));
-    }, ms);
+const seek = (page, ms, nudge = 0) =>
+    page.evaluate(
+        ([t, d]) => {
+            // first and last frame 1 ms inside the animation (see gates/measure-pairs.mjs: a stepped animation stands at
+            // its after-state at exactly its end, and a close played backwards at that end for the instant it starts)
+            for (const a of window.__pair) {
+                const end = Number(a.effect.getComputedTiming().endTime);
+                // Inside a tick, not on its edge (a stepped animation's frames at 60 and 120 ms are edges):
+                // the opening 1 ms after the frame, the closing 1 ms before its mirror frame.
+                a.currentTime = Math.min(Math.max(t + d, Math.min(1, end / 2)), Math.max(0, end - 1));
+            }
+        },
+        [ms, nudge],
+    );
 
 /** Decode PNG frames in a scratch page and return mean absolute difference tools. */
 async function differ(browser) {
@@ -204,7 +213,7 @@ async function measure(browser, differPage, base, pair) {
     if (openMs <= 0) notes.push('the opening runs no animation at all');
     const opening = [];
     for (let i = 0; i <= FRAMES; i++) {
-        await seek(page, (openMs * i) / FRAMES);
+        await seek(page, (openMs * i) / FRAMES, 1);
         opening.push(await shot());
     }
     // Let it settle for real.
@@ -231,7 +240,7 @@ async function measure(browser, differPage, base, pair) {
     if (closeMs <= 0) notes.push('the closing runs no animation at all: it is gone at once');
     const closing = [];
     for (let i = 0; i <= FRAMES; i++) {
-        await seek(page, (closeMs * i) / FRAMES);
+        await seek(page, (closeMs * i) / FRAMES, -1);
         closing.push(await shot());
     }
     await page.evaluate(() => window.__pair.forEach((a) => a.finish()));

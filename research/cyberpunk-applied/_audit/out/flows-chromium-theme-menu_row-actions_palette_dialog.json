@@ -1,0 +1,434 @@
+{
+    "dialog": {
+        "open": {
+            "#fa-dialog": {
+                "present": true,
+                "movesMs": 479,
+                "startMs": 165,
+                "poses": 6,
+                "gapsMs": [165, 129, 117, 117, 116],
+                "w": [0, 512],
+                "h": [0, 180],
+                "op": [1, 1],
+                "maxJump": 512,
+                "anims": ["script:480:linear", "script::backdrop:480:linear"],
+                "maxAnims": 2,
+                "first": {
+                    "r": [0, 0, 0, 0],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [384, 360, 512, 180],
+                    "op": 1
+                },
+                "trace": [
+                    [0, 0, 0, 1],
+                    [165, 512, 180, 1],
+                    [294, 512, 180, 1],
+                    [411, 512, 180, 1],
+                    [528, 512, 180, 1],
+                    [644, 512, 180, 1]
+                ]
+            }
+        },
+        "close": {
+            "#fa-dialog": {
+                "present": true,
+                "movesMs": 487,
+                "startMs": 129,
+                "poses": 7,
+                "gapsMs": [129, 6, 89, 116, 117, 159],
+                "w": [0, 512],
+                "h": [0, 180],
+                "op": [1, 1],
+                "maxJump": 512,
+                "anims": ["sub:--kp-cp-t:180:steps(4, jump-st", "script:480:linear", "script::backdrop:480:linear"],
+                "maxAnims": 3,
+                "first": {
+                    "r": [384, 360, 512, 180],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [0, 0, 0, 0],
+                    "op": 1
+                },
+                "trace": [
+                    [0, 512, 180, 1],
+                    [129, 512, 180, 1],
+                    [135, 512, 180, 1],
+                    [224, 512, 180, 1],
+                    [340, 512, 180, 1],
+                    [457, 512, 180, 1],
+                    [616, 0, 0, 1]
+                ]
+            }
+        },
+        "mirror": {
+            "#fa-dialog": {
+                "openPoses": 6,
+                "closePoses": 7,
+                "samePoses": 5,
+                "ofMax": 0.71,
+                "openMs": 479,
+                "closeMs": 487
+            }
+        },
+        "pageErrors": []
+    },
+    "palette": {
+        "open": {
+            "#fa-pal": {
+                "present": true,
+                "movesMs": 0,
+                "startMs": 213,
+                "poses": 2,
+                "gapsMs": [213],
+                "w": [0, 578],
+                "h": [0, 316.5],
+                "op": [1, 1],
+                "maxJump": 578,
+                "anims": ["script::backdrop:480:linear", "sub:--kp-cp-ft:180:steps(4, jump-st"],
+                "maxAnims": 2,
+                "first": {
+                    "r": [0, 0, 0, 0],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [351, 90, 578, 316.5],
+                    "op": 1
+                },
+                "trace": [
+                    [0, 0, 0, 1],
+                    [213, 578, 316.5, 1]
+                ]
+            },
+            "#fa-pal .kp-palette__list": {
+                "present": true,
+                "movesMs": 0,
+                "startMs": 213,
+                "poses": 2,
+                "gapsMs": [213],
+                "w": [0, 576],
+                "h": [0, 225],
+                "op": [1, 1],
+                "maxJump": 576,
+                "anims": [],
+                "maxAnims": 0,
+                "first": {
+                    "r": [0, 0, 0, 0],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [352, 144, 576, 225],
+                    "op": 1
+                },
+                "trace": [
+                    [0, 0, 0, 1],
+                    [213, 576, 225, 1]
+                ]
+            }
+        },
+        "close": {
+            "#fa-pal": {
+                "present": true,
+                "movesMs": 564,
+                "startMs": 228,
+                "poses": 7,
+                "gapsMs": [228, 25, 117, 117, 116, 189],
+                "w": [0, 578],
+                "h": [0, 316.5],
+                "op": [1, 1],
+                "maxJump": 578,
+                "anims": ["script::backdrop:480:linear"],
+                "maxAnims": 1,
+                "first": {
+                    "r": [351, 90, 578, 316.5],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [0, 0, 0, 0],
+                    "op": 1
+                },
+                "trace": [
+                    [0, 578, 316.5, 1],
+                    [228, 578, 316.5, 1],
+                    [253, 578, 316.5, 1],
+                    [370, 578, 316.5, 1],
+                    [487, 578, 316.5, 1],
+                    [603, 578, 316.5, 1],
+                    [792, 0, 0, 1]
+                ]
+            },
+            "#fa-pal .kp-palette__list": {
+                "present": true,
+                "movesMs": 564,
+                "startMs": 228,
+                "poses": 7,
+                "gapsMs": [228, 25, 117, 117, 116, 189],
+                "w": [0, 576],
+                "h": [0, 225],
+                "op": [1, 1],
+                "maxJump": 576,
+                "anims": [],
+                "maxAnims": 0,
+                "first": {
+                    "r": [352, 144, 576, 225],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [0, 0, 0, 0],
+                    "op": 1
+                },
+                "trace": [
+                    [0, 576, 225, 1],
+                    [228, 576, 225, 1],
+                    [253, 576, 225, 1],
+                    [370, 576, 225, 1],
+                    [487, 576, 225, 1],
+                    [603, 576, 225, 1],
+                    [792, 0, 0, 1]
+                ]
+            }
+        },
+        "mirror": {
+            "#fa-pal": {
+                "openPoses": 2,
+                "closePoses": 7,
+                "samePoses": 1,
+                "ofMax": 0.14,
+                "openMs": 0,
+                "closeMs": 564
+            },
+            "#fa-pal .kp-palette__list": {
+                "openPoses": 2,
+                "closePoses": 7,
+                "samePoses": 1,
+                "ofMax": 0.14,
+                "openMs": 0,
+                "closeMs": 564
+            }
+        },
+        "pageErrors": []
+    },
+    "theme-menu": {
+        "open": {
+            "[data-fa-theme-menu] [popover]": {
+                "present": true,
+                "movesMs": 483,
+                "startMs": 95,
+                "poses": 6,
+                "gapsMs": [95, 133, 117, 117, 116],
+                "w": [0, 168],
+                "h": [0, 632],
+                "op": [1, 1],
+                "maxJump": 632,
+                "anims": ["kp-sig-cyberpunk-split:480:linear"],
+                "maxAnims": 1,
+                "first": {
+                    "r": [0, 0, 0, 0],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [76.5, 580, 168, 632],
+                    "op": 1
+                },
+                "trace": [
+                    [0, 0, 0, 1],
+                    [95, 168, 632, 1],
+                    [228, 168, 632, 1],
+                    [345, 168, 632, 1],
+                    [462, 168, 632, 1],
+                    [578, 168, 632, 1]
+                ]
+            }
+        },
+        "close": {
+            "[data-fa-theme-menu] [popover]": {
+                "present": true,
+                "movesMs": 568,
+                "startMs": 159,
+                "poses": 7,
+                "gapsMs": [159, 32, 114, 117, 117, 188],
+                "w": [0, 168],
+                "h": [0, 632],
+                "op": [1, 1],
+                "maxJump": 632,
+                "anims": [],
+                "maxAnims": 0,
+                "first": {
+                    "r": [76.5, 580, 168, 632],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [0, 0, 0, 0],
+                    "op": 1
+                },
+                "trace": [
+                    [0, 168, 632, 1],
+                    [159, 168, 632, 1],
+                    [191, 168, 632, 1],
+                    [305, 168, 632, 1],
+                    [422, 168, 632, 1],
+                    [539, 168, 632, 1],
+                    [727, 0, 0, 1]
+                ]
+            }
+        },
+        "mirror": {
+            "[data-fa-theme-menu] [popover]": {
+                "openPoses": 6,
+                "closePoses": 7,
+                "samePoses": 1,
+                "ofMax": 0.14,
+                "openMs": 483,
+                "closeMs": 568
+            }
+        },
+        "react": {
+            "open": {
+                "[data-fa-react] .kp-theme-menu__list": {
+                    "present": true,
+                    "movesMs": 483,
+                    "startMs": 86,
+                    "poses": 6,
+                    "gapsMs": [86, 133, 117, 117, 116],
+                    "w": [184, 184],
+                    "h": [632, 632],
+                    "op": [1, 1],
+                    "maxJump": 0,
+                    "anims": ["kp-sig-cyberpunk-split:480:linear"],
+                    "maxAnims": 1,
+                    "first": null,
+                    "lastp": {
+                        "r": [181, 277.5, 184, 632],
+                        "op": 1
+                    },
+                    "trace": [
+                        [0, null, null, null],
+                        [86, 184, 632, 1],
+                        [219, 184, 632, 1],
+                        [336, 184, 632, 1],
+                        [453, 184, 632, 1],
+                        [569, 184, 632, 1]
+                    ]
+                }
+            },
+            "close": {
+                "[data-fa-react] .kp-theme-menu__list": {
+                    "present": true,
+                    "movesMs": 484,
+                    "startMs": 92,
+                    "poses": 7,
+                    "gapsMs": [92, 17, 117, 117, 116, 117],
+                    "w": [184, 184],
+                    "h": [632, 632],
+                    "op": [1, 1],
+                    "maxJump": 0,
+                    "anims": ["kp-sig-cyberpunk-split:480:linear"],
+                    "maxAnims": 1,
+                    "first": {
+                        "r": [181, 277.5, 184, 632],
+                        "op": 1
+                    },
+                    "lastp": null,
+                    "trace": [
+                        [0, 184, 632, 1],
+                        [92, 184, 632, 1],
+                        [109, 184, 632, 1],
+                        [226, 184, 632, 1],
+                        [343, 184, 632, 1],
+                        [459, 184, 632, 1],
+                        [576, null, null, null]
+                    ]
+                }
+            },
+            "mirror": {
+                "[data-fa-react] .kp-theme-menu__list": {
+                    "openPoses": 6,
+                    "closePoses": 7,
+                    "samePoses": 5,
+                    "ofMax": 0.71,
+                    "openMs": 483,
+                    "closeMs": 484
+                }
+            }
+        },
+        "pageErrors": []
+    },
+    "row-actions": {
+        "open": {
+            "#fa-menu": {
+                "present": true,
+                "movesMs": 483,
+                "startMs": 95,
+                "poses": 6,
+                "gapsMs": [95, 133, 117, 117, 116],
+                "w": [0, 180.5],
+                "h": [0, 161],
+                "op": [1, 1],
+                "maxJump": 630,
+                "anims": ["kp-sig-cyberpunk-split:480:linear", "sub:kp-sig-cyberpunk-lock:360:linear"],
+                "maxAnims": 2,
+                "first": {
+                    "r": [0, 0, 0, 0],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [76.5, 630, 180.5, 161],
+                    "op": 1
+                },
+                "trace": [
+                    [0, 0, 0, 1],
+                    [95, 180.5, 161, 1],
+                    [228, 180.5, 161, 1],
+                    [345, 180.5, 161, 1],
+                    [462, 180.5, 161, 1],
+                    [578, 180.5, 161, 1]
+                ]
+            }
+        },
+        "close": {
+            "#fa-menu": {
+                "present": true,
+                "movesMs": 584,
+                "startMs": 167,
+                "poses": 7,
+                "gapsMs": [167, 27, 113, 117, 116, 211],
+                "w": [0, 180.5],
+                "h": [0, 161],
+                "op": [1, 1],
+                "maxJump": 630,
+                "anims": [],
+                "maxAnims": 0,
+                "first": {
+                    "r": [76.5, 630, 180.5, 161],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [0, 0, 0, 0],
+                    "op": 1
+                },
+                "trace": [
+                    [0, 180.5, 161, 1],
+                    [167, 180.5, 161, 1],
+                    [194, 180.5, 161, 1],
+                    [307, 180.5, 161, 1],
+                    [424, 180.5, 161, 1],
+                    [540, 180.5, 161, 1],
+                    [751, 0, 0, 1]
+                ]
+            }
+        },
+        "mirror": {
+            "#fa-menu": {
+                "openPoses": 6,
+                "closePoses": 7,
+                "samePoses": 1,
+                "ofMax": 0.14,
+                "openMs": 483,
+                "closeMs": 584
+            }
+        },
+        "pageErrors": []
+    }
+}

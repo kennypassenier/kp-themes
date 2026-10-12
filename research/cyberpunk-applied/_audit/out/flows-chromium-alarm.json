@@ -1,0 +1,121 @@
+{
+    "alarm": {
+        "open": {
+            "dialog.kp-alarm": {
+                "present": true,
+                "movesMs": 497,
+                "startMs": 201,
+                "poses": 20,
+                "gapsMs": [201, 54, 28, 23, 23, 31, 27, 32, 26, 25, 26, 25, 25, 25],
+                "w": [1280, 1280],
+                "h": [900, 900],
+                "op": [0, 1],
+                "maxJump": 0,
+                "anims": [
+                    "kp-alarm-pulse::after:1400:linear",
+                    "script:480:linear",
+                    "script::backdrop:480:linear",
+                    "sub:kp-alarm-sweep::after:6000:linear",
+                    "sub:kp-alarm-march::before:1600:linear",
+                    "sub:kp-alarm-march::after:1600:linear",
+                    "sub:kp-alarm-jitter:5000:linear",
+                    "sub:kp-alarm-slice::before:5000:linear",
+                    "sub:kp-alarm-slice::after:5000:linear",
+                    "sub:kp-alarm-caret::after:1000:linear",
+                    "sub:script:480:linear",
+                    "sub:script::before:480:linear"
+                ],
+                "maxAnims": 13,
+                "first": null,
+                "lastp": {
+                    "r": [0, 0, 1280, 900],
+                    "op": 1
+                },
+                "trace": [
+                    [0, null, null, null],
+                    [201, 1280, 900, 0],
+                    [255, 1280, 900, 0.06],
+                    [283, 1280, 900, 0.17],
+                    [306, 1280, 900, 0.22],
+                    [329, 1280, 900, 0.32],
+                    [360, 1280, 900, 0.42],
+                    [387, 1280, 900, 0.46],
+                    [419, 1280, 900, 0.55],
+                    [445, 1280, 900, 0.63],
+                    [470, 1280, 900, 0.67],
+                    [496, 1280, 900, 0.74],
+                    [521, 1280, 900, 0.78],
+                    [546, 1280, 900, 0.84],
+                    [571, 1280, 900, 0.87],
+                    [598, 1280, 900, 0.92],
+                    [623, 1280, 900, 0.94],
+                    [648, 1280, 900, 0.97]
+                ]
+            }
+        },
+        "close": {
+            "dialog.kp-alarm": {
+                "present": true,
+                "movesMs": 498,
+                "startMs": 198,
+                "poses": 20,
+                "gapsMs": [198, 29, 25, 27, 29, 27, 27, 26, 26, 26, 6, 24, 27, 27],
+                "w": [1280, 1280],
+                "h": [900, 900],
+                "op": [0.05, 1],
+                "maxJump": 0,
+                "anims": [
+                    "kp-alarm-pulse::after:1400:linear",
+                    "sub:kp-alarm-sweep::after:6000:linear",
+                    "sub:kp-alarm-march::before:1600:linear",
+                    "sub:kp-alarm-march::after:1600:linear",
+                    "sub:kp-alarm-jitter:5000:linear",
+                    "sub:kp-alarm-slice::before:5000:linear",
+                    "sub:kp-alarm-slice::after:5000:linear",
+                    "sub:kp-alarm-caret::after:1000:linear",
+                    "sub:--kp-cp-t:180:steps(4, jump-st",
+                    "script:480:linear",
+                    "script::backdrop:480:linear",
+                    "sub:script:480:linear"
+                ],
+                "maxAnims": 14,
+                "first": {
+                    "r": [0, 0, 1280, 900],
+                    "op": 1
+                },
+                "lastp": null,
+                "trace": [
+                    [0, 1280, 900, 1],
+                    [198, 1280, 900, 0.99],
+                    [227, 1280, 900, 0.97],
+                    [252, 1280, 900, 0.95],
+                    [279, 1280, 900, 0.91],
+                    [308, 1280, 900, 0.86],
+                    [335, 1280, 900, 0.83],
+                    [362, 1280, 900, 0.77],
+                    [388, 1280, 900, 0.74],
+                    [414, 1280, 900, 0.66],
+                    [440, 1280, 900, 0.62],
+                    [446, 1280, 900, 0.58],
+                    [470, 1280, 900, 0.54],
+                    [497, 1280, 900, 0.45],
+                    [524, 1280, 900, 0.36],
+                    [554, 1280, 900, 0.31],
+                    [580, 1280, 900, 0.21],
+                    [608, 1280, 900, 0.1]
+                ]
+            }
+        },
+        "mirror": {
+            "dialog.kp-alarm": {
+                "openPoses": 20,
+                "closePoses": 20,
+                "samePoses": 4,
+                "ofMax": 0.2,
+                "openMs": 497,
+                "closeMs": 498
+            }
+        },
+        "pageErrors": []
+    }
+}

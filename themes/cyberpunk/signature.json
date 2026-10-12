@@ -287,7 +287,7 @@
                 "demo": { "kind": "menu", "example": "nav-menu" },
                 "proof": [
                     { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-nav__menu" },
-                    { "file": "css/cyberpunk-register.css", "keyframes": "kp-strip-in" },
+                    { "file": "css/cyberpunk-register.css", "keyframes": "kp-sig-cyberpunk-split-bar" },
                     { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-nav__links" }
                 ]
             },
@@ -486,7 +486,7 @@
             "components": ["kp-button", "kp-nav"],
             "open": false,
             "proof": [
-                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-nav__links > li:hover > .kp-nav__link" },
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-nav__link" },
                 { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-nav__menu a:hover" }
             ]
         },

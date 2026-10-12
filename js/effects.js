@@ -501,8 +501,6 @@ export const TIMINGS = Object.freeze({
     // the seamless marquee.
     'kp-slam': { durationMs: 260, cycles: 1, property: 'transform', luminanceSteps: [] },
     'kp-marquee': { durationMs: 42000, cycles: Infinity, property: 'transform', luminanceSteps: [] },
-    'kp-strip-in': { durationMs: 520, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
-    'kp-strip-in-end': { durationMs: 520, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
     'kp-slice-a': { durationMs: 320, cycles: 1, property: 'opacity', luminanceSteps: [1, 1, 0] },
     'kp-slice-1': { durationMs: 600, cycles: 1, property: 'opacity', luminanceSteps: [1, 0, 0] },
     'kp-slice-2': { durationMs: 600, cycles: 1, property: 'opacity', luminanceSteps: [1, 0, 0] },
@@ -706,6 +704,7 @@ export const TIMINGS = Object.freeze({
     'kp-sig-cyberpunk-dot': { durationMs: 180, cycles: 1, property: 'transform', luminanceSteps: [] },
     'kp-sig-cyberpunk-split': { durationMs: 480, cycles: 1, property: 'clip-path, box-shadow, text-shadow', luminanceSteps: [] },
     'kp-sig-cyberpunk-split-out': { durationMs: 480, cycles: 1, property: 'clip-path, box-shadow, text-shadow', luminanceSteps: [] },
+    'kp-sig-cyberpunk-split-bar-out': { durationMs: 480, cycles: 1, property: 'filter', luminanceSteps: [] },
     'kp-cp-charge': { durationMs: 520, cycles: 1, property: 'transform', luminanceSteps: [] },
     'kp-cp-stream-144': { durationMs: 1800, cycles: Infinity, property: 'transform', luminanceSteps: [] },
     'kp-cp-stream-216': { durationMs: 1200, cycles: Infinity, property: 'transform', luminanceSteps: [] },

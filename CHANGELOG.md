@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- **Changed: cyberpunk, the audited rows A-H mended** [2026-10-12, research/cyberpunk-applied/_audit/MISSING.md, Firefox]. Keyboard focus: the clock reset
+  on buttons is `:where()`, so every button draws the four closing brackets; hover, focus and press (split edge, brackets, closed circuit) reach tabs,
+  pagination, icon buttons, options, tree rows, sort heads, checks, switches, fields, selects, nav links and days; `--fx-lift: 0px` stops the lift. Leaving:
+  a table busy layer, upload row, empty state, tree branch, tabs swap, alert re-show and calendar busy layer arrive and leave as the channel split
+  (`--kp-leave-state`, `--kp-arrive-unseen`, `--kp-leave-fold-grow`, `--kp-leave-fold-start`, `--kp-leave-fold-ease`, `--kp-swap-fold-ease`,
+  `--kp-calendar-busy-leave`, `--kp-accordion-size: own`; every one set by cyberpunk only), the accordion opens in 8 ticks. Shape: plates take the 14 px
+  notch, controls 8 px, small parts a share of their height; the navbar is a holo plate that arrives and leaves by the channel split. Type: prose is
+  Rajdhani, labels carry `//`. Waiting: one picture per busy part (bars with the glitch copy, the word LOADING), no `kp-pulse`; contact transitions are
+  `steps(3)` ticks. The divider (8 s) and marquee (18 s) loops are recorded as decided exceptions (themes/cyberpunk/CHARACTER.md).
+
 - **Changed: cyberpunk, the open/close pairs of the audit, every close its open reversed** [2026-10-12, research/cyberpunk-applied/_audit/MISSING.md]. The date
   picker, combobox, theme menu, row-actions popover, palette, desktop dropdowns and the phone bar open by the channel split and close as that reversed (480 ms);
   the tour card, its ring and dim, the alarm, the dialog backdrops and the side navigation (panel, backdrop, pushed content) follow, in four ticks each way.

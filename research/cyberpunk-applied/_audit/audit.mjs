@@ -370,10 +370,28 @@ function snapshot([id, PROPS]) {
         const b = blob(out[k]);
         return b && has(b, cy) && has(b, rd);
     });
-    out.brackets = ['::before', '::after', 'self'].some(
-        (k) => out[k] && out[k].maskImage && out[k].maskImage !== 'none' && parseFloat(out[k].borderTopWidth) > 0,
-    );
+    // focus brackets: the old border + mask pseudo-elements, or the layered gradients in the focus ring pair
+    // (a square part draws them on itself, a button on its ::before, a check or a switch on its label)
+    const ringRgb = col('var(--focus-ring)');
+    const host = el.parentElement ? grab(getComputedStyle(el.parentElement)) : null;
+    const lab = el.closest('label') ? grab(getComputedStyle(el.closest('label'))) : null;
+    // a check or a switch inside its label: the label draws the split edge
+    if (!out.split && lab)
+        out.split = !!lab.cpP && lab.cpP !== '0' && lab.backgroundImage.includes(`rgb(${cy})`) && lab.backgroundImage.includes(`rgb(${rd})`);
+    const zone = el.nextElementSibling ? grab(getComputedStyle(el.nextElementSibling)) : null;
+    const gradBrackets = (x) => !!x && x.cpFp === '1' && x.backgroundImage.includes(`rgb(${ringRgb})`);
+    out.brackets =
+        ['::before', '::after', 'self'].some(
+            (k) => out[k] && out[k].maskImage && out[k].maskImage !== 'none' && parseFloat(out[k].borderTopWidth) > 0,
+        ) ||
+        ['::before', '::after', 'self'].some((k) => gradBrackets(out[k])) ||
+        gradBrackets(host) ||
+        gradBrackets(lab) ||
+        gradBrackets(zone);
     out.cp = { p: out.self.cpP, fp: out.self.cpFp, before: out['::before']?.cpP ?? null };
+    out.cp.host = host?.cpP ?? null;
+    out.cp.lab = lab?.cpP ?? null;
+    out.cp.hostFp = host?.cpFp ?? null;
     out.yellowRing = ['self', '::before', '::after'].some((k) => {
         const b = blob(out[k]);
         return b && has(b, yl) && out[k].outlineStyle !== 'none';
@@ -456,7 +474,7 @@ for (const engine of engines) {
                     pointedSeen.add(sig);
                     const loc = page.locator(`[data-audit-id="${id}"]`);
                     try {
-                        await loc.scrollIntoViewIfNeeded({ timeout: 1500 });
+                        await loc.scrollIntoViewIfNeeded({ timeout: 8000 });
                         await page.mouse.move(2, 2);
                         await page.evaluate(() => document.activeElement?.blur?.());
                         await page.waitForTimeout(260);

@@ -625,6 +625,10 @@ export function withoutOvershoot(ease) {
  * @param {boolean} [plain] the entrance's curve alone, without the theme's size character (the accordion, approved as it is)
  */
 function sizeEase(box, ease, change, plain = false) {
+    // A theme that says `--kp-accordion-size: own` gives the parts that keep
+    // "the entrance's curve alone" (the accordion, a tree branch) its own
+    // size character as well; every other theme is untouched.
+    if (plain && getComputedStyle(box).getPropertyValue('--kp-accordion-size').trim() === 'own') plain = false;
     // A shrink is its grow played backwards: the same duration on the curve
     // turned around, so frame t of the shrink is frame (T - t) of the grow
     // (Kenny, 2026-10-05: "find out where else there is a discrepancy
@@ -840,7 +844,14 @@ function arrival(scope) {
  * @param {HTMLElement} el @param {string | null} motion
  */
 function arrive(el, motion) {
-    if (!motion || el.style.animation || el.hasAttribute('data-kp-arriving') || el.hasAttribute('data-kp-leaving') || el.hasAttribute('data-kp-ghost')) return;
+    if (
+        !motion ||
+        el.style.animation ||
+        el.hasAttribute('data-kp-arriving') ||
+        el.hasAttribute('data-kp-leaving') ||
+        el.hasAttribute('data-kp-ghost')
+    )
+        return;
     // A theme that opens as its close turned around lets it arrive as its
     // leave played backwards [research/open-reverse].
     // A theme that says `--kp-arrive-unseen: skip` lets what takes no box
@@ -1081,6 +1092,18 @@ function foldTiming(style) {
 }
 
 /**
+ * The curve a leave's fold of space runs on: the theme's entrance curve,
+ * unless the theme says `--kp-leave-fold-ease` (cyberpunk folds in whole
+ * ticks, not in the entrance's single step).
+ * @param {CSSStyleDeclaration} style the element's style while it carries `data-kp-leaving`
+ * @param {string} ease the entrance's curve
+ * @returns {string}
+ */
+function foldCurve(style, ease) {
+    return style.getPropertyValue('--kp-leave-fold-ease').trim() || ease;
+}
+
+/**
  * The space `el` takes, and nothing, as a leave folds it: in a row (a flex
  * row, an inline chip) its width, sideways; anywhere else its height, from
  * below; margins and paddings to 0, and the flex gap towards a neighbour
@@ -1283,8 +1306,9 @@ function arriveAsReversedLeave(el) {
     const after = fold === 'after';
     const pause = parseFloat(style.getPropertyValue('--kp-leave-pause')) || 0;
     const timing = foldTiming(style);
-    const foldFor = size > 0 && !floats(el, style) ? steppedDuration(el, withoutOvershoot(ease), Math.max(size, lasts) * timing.grow) : 0;
-    const foldAt = onStepClock(el, withoutOvershoot(ease), after ? lasts + pause : timing.start(lasts));
+    const foldEase = foldCurve(style, ease);
+    const foldFor = size > 0 && !floats(el, style) ? steppedDuration(el, withoutOvershoot(foldEase), Math.max(size, lasts) * timing.grow) : 0;
+    const foldAt = onStepClock(el, withoutOvershoot(foldEase), after ? lasts + pause : timing.start(lasts));
     // The leave is over when its last exit (a pseudo-element's may run
     // longer than the first) and its fold are.
     const total = Math.max(lasts, ...exits.map((exit) => exit.end), foldFor ? foldAt + foldFor : 0);
@@ -1340,7 +1364,9 @@ function arriveAsReversedLeave(el) {
             el.animate(frames, {
                 duration: foldFor,
                 delay: finiteMs(total - foldAt - foldFor),
-                easing: withoutOvershoot(ease),
+                // A panel that arrives while another leaves (a tab swap) folds on
+                // `--kp-swap-fold-ease` where the theme says so: see attachTabs().
+                easing: withoutOvershoot((el.hasAttribute('data-kp-tabs-swapping') && style.getPropertyValue('--kp-swap-fold-ease').trim()) || foldEase),
                 direction: 'reverse',
                 fill: 'backwards',
             }),
@@ -1673,10 +1699,11 @@ async function leaveOne(el, hide, exited, count = 1) {
         const after = fold === 'after';
         const pause = parseFloat(style.getPropertyValue('--kp-leave-pause')) || 0;
         const timing = foldTiming(style);
+        const foldEase = foldCurve(style, ease);
         const folding = el.animate([from, to], {
-            duration: steppedDuration(el, withoutOvershoot(ease), Math.max(size, lasts) * timing.grow),
-            delay: onStepClock(el, withoutOvershoot(ease), after ? lasts + pause : timing.start(lasts)),
-            easing: withoutOvershoot(ease),
+            duration: steppedDuration(el, withoutOvershoot(foldEase), Math.max(size, lasts) * timing.grow),
+            delay: onStepClock(el, withoutOvershoot(foldEase), after ? lasts + pause : timing.start(lasts)),
+            easing: withoutOvershoot(foldEase),
             fill: 'forwards',
         });
         running.push(folding.finished.catch(() => undefined));
@@ -1824,7 +1851,9 @@ const heightFolds = new WeakSet();
  * @param {HTMLElement} box
  */
 const followsAFold = (box) =>
-    [...box.querySelectorAll(`[data-kp-leaving], [${GROUP_FOLDING_ATTRIBUTE}]`)].some((el) => heightFolds.has(/** @type {HTMLElement} */ (el)) && el.getClientRects().length > 0);
+    [...box.querySelectorAll(`[data-kp-leaving], [${GROUP_FOLDING_ATTRIBUTE}]`)].some(
+        (el) => heightFolds.has(/** @type {HTMLElement} */ (el)) && el.getClientRects().length > 0,
+    );
 
 /**
  * Which arrivals play under `el`: its closest `data-kp-arrive` (`all`,
@@ -1876,6 +1905,8 @@ export function easeSize(box, { arrive: fallback = 'all', arriveKeys = [] } = {}
     let last = box.offsetHeight;
     /** @type {Animation | null} */
     let running = null;
+    /** When the box last left its size to a fold it follows. */
+    let followedAt = -Infinity;
     const fresh = firstRender(box);
     const settle = () => {
         if (!box.isConnected) return;
@@ -1900,10 +1931,25 @@ export function easeSize(box, { arrive: fallback = 'all', arriveKeys = [] } = {}
         running = null;
         const to = settledHeight(box);
         last = to;
-        if (switching || fresh() || Math.abs(to - from) < 1 || from === 0 || to === 0) return;
+        if (switching || fresh() || Math.abs(to - from) < 1 || from === 0 || to === 0) {
+            // A fold that changes nothing in the box this tick (a panel
+            // leaving while another arrives) is still a fold it follows.
+            if (Math.abs(to - from) < 1 && followsAFold(box)) followedAt = performance.now();
+            return;
+        }
         // Something in it is leaving and folds its height shut; the box
         // follows that fold frame by frame instead of gliding after it.
-        if (followsAFold(box)) return;
+        if (followsAFold(box)) {
+            followedAt = performance.now();
+            return;
+        }
+        // A theme that folds in whole ticks (`--kp-leave-fold-ease`) leaves
+        // the box at the size the fold ended on: a glide from the size of
+        // its last tick would replay that tick's step after the fold.
+        if (performance.now() - followedAt < 300 && getComputedStyle(box).getPropertyValue('--kp-leave-fold-ease').trim() !== '') {
+            followedAt = -Infinity;
+            return;
+        }
         const { size, ease } = themeMotion(box);
         if (size <= 0) return;
         // Shutting while rows fold out of it, the box ends as they end: the
@@ -2133,8 +2179,10 @@ export function attachMotion(root = document, { size = '', arrive = 'all', arriv
             ...(scope instanceof Element && scope.matches(selector) ? [scope] : []),
             ...scope.querySelectorAll(selector),
         ];
-        for (const el of all('dialog.kp-dialog, dialog.kp-palette, dialog.kp-alarm')) if (!el.hasAttribute('data-kp-ghost')) keep(el, attachClose(/** @type {HTMLDialogElement} */ (el)));
-        for (const el of all(sizeSelector)) if (!el.hasAttribute('data-kp-ghost')) keep(el, easeSize(/** @type {HTMLElement} */ (el), { arrive, arriveKeys }));
+        for (const el of all('dialog.kp-dialog, dialog.kp-palette, dialog.kp-alarm'))
+            if (!el.hasAttribute('data-kp-ghost')) keep(el, attachClose(/** @type {HTMLDialogElement} */ (el)));
+        for (const el of all(sizeSelector))
+            if (!el.hasAttribute('data-kp-ghost')) keep(el, easeSize(/** @type {HTMLElement} */ (el), { arrive, arriveKeys }));
         for (const el of all(FOLD_SELECTOR)) if (el instanceof HTMLDetailsElement && !el.hasAttribute('data-kp-ghost')) keep(el, attachFold(el));
     };
     scan(root);

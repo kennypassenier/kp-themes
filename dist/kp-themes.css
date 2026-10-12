@@ -508,7 +508,7 @@
     --fx-ease: cubic-bezier(0.2, 0.9, 0.2, 1);
     --fx-overprint: hsl(184, 100%, 50%);
     --fx-scanline: hsl(56, 98%, 51%);
-    --fx-lift: 1px;
+    --fx-lift: 0px;
     --fx-hot: hsl(50, 12%, 80%);
     --fx-hot-alarm: hsl(353, 84%, 75%);
     --fx-shadow-offset: 0px;
@@ -12442,7 +12442,7 @@
            widest month and the three buttons in this type [fix-98]. */
         --kp-calendar-nav-fit: 25.25rem;
         /* The configuration surface [AR43], the demo's values as defaults. */
-        --kp-button-notch: var(--fx-notch, 14px);
+        --kp-button-notch: var(--fx-notch-sm, 8px);
         --kp-button-slit: 10px;
         --kp-nav-notch: 13px;
         --kp-nav-enter: 520ms;
@@ -12456,8 +12456,8 @@
         --kp-reveal-stagger: 260ms;
         --kp-redact-stagger: 160ms;
         --kp-classified-delay: 1500ms;
-        --kp-wipe: 720ms;
-        --kp-rule-draw: 900ms;
+        --kp-wipe: 480ms;
+        --kp-rule-draw: 480ms;
         --kp-rule-weight: 3px;
         --kp-slice: 600ms;
         --kp-slice-hover: 320ms;
@@ -12679,12 +12679,15 @@
        corner and the stepped notch read off the reference. The strip lives
        on a pseudo-element, not on the list, because a clip-path clips
        descendants and would clip every dropdown with it. */
+    /* The bar's own plate is drawn on `.kp-nav::before` (a holo plate with its 14 px notch,
+       below), so the box and its wrapper stand clear: a clip on the bar would cut every
+       dropdown with it. */
     [data-theme='cyberpunk'] .kp-nav-wrap {
-        background: var(--surface-hero-bg);
+        background: transparent;
     }
 
     [data-theme='cyberpunk'] .kp-nav {
-        background: var(--surface-hero-bg);
+        background: transparent;
         color: var(--surface-hero-fg);
         border-bottom: 0;
         padding-block: calc(var(--kp-nav-pad-block, 1.2rem) * var(--kp-nav-pad-scale, 1))
@@ -12747,10 +12750,8 @@
         text-underline-offset: 0.3em;
     }
 
-    [data-theme='cyberpunk'] .kp-nav__links > li:hover > .kp-nav__link,
-    [data-theme='cyberpunk'] .kp-nav__links > li:focus-within > .kp-nav__link {
-        background: hsl(from var(--primary) h s l / 0.12);
-    }
+    /* Pointing, focus and press on a link of the bar are the split edge, four closing brackets and
+       the closed circuit (css, end of this file); a link no longer washes. */
 
     [data-theme='cyberpunk'] .kp-nav__link[aria-haspopup]::after {
         content: '';
@@ -12791,8 +12792,8 @@
         /* Always drawn: it opens and goes by the channel split (below), not by a fade, and a
            closing one keeps its display until the split is out. */
         opacity: 1;
-        --kp-cp-clip: var(--kp-cp-clip-ctl);
-        --kp-cp-wide: var(--kp-cp-wide-ctl);
+        --kp-cp-clip: var(--kp-cp-clip-plate);
+        --kp-cp-wide: var(--kp-cp-wide-plate);
         clip-path: var(--kp-cp-clip);
     }
 
@@ -12908,12 +12909,7 @@
     }
 
     [data-theme='cyberpunk'] .kp-button:hover:not(:disabled) {
-        transform: translateY(calc(-1 * var(--fx-lift)));
         background-color: var(--kp-btn-frame);
-    }
-
-    [data-theme='cyberpunk'] .kp-button:active:not(:disabled) {
-        transform: translateY(var(--fx-lift));
     }
 
     /* The mirrored notch, bottom-left [AR43]. A button that points backwards
@@ -13407,6 +13403,12 @@
         border-color: var(--kp-hairline);
     }
 
+    /* One loading picture: while the busy table's layer stands over the rows, the status line's
+       small spinner stays out, so it holds back no arrival of the layer (lesson 23). */
+    [data-theme='cyberpunk'] .kp-datatable:has(> .kp-datatable__busy-overlay) .kp-datatable__status > .kp-spinner {
+        display: none;
+    }
+
     [data-theme='cyberpunk'] .kp-datatable {
         border-radius: 0;
     }
@@ -13440,6 +13442,14 @@
 
     [data-theme='cyberpunk'] .kp-tree {
         font-family: var(--kp-mono);
+    }
+
+    /* A branch's children glide open and shut like the accordion (js/motion.js glideGroup()):
+       shutting, the state is already `aria-expanded="false"` and the group is kept drawn until
+       the glide is over. */
+    [data-theme='cyberpunk'] .kp-tree [role='treeitem'][aria-expanded='false'] > [role='group'][data-kp-group-folding],
+    [data-theme='cyberpunk'] .kp-tree [role='treeitem'][aria-expanded='false'] + [role='group'][data-kp-group-folding] {
+        display: block;
     }
 
     /* The accordion [gap-12]: mono capitals, spaced like its tabs, with the signal yellow for what is open. */
@@ -13645,7 +13655,14 @@
         color: var(--surface-hero-primary-foreground);
         border: 0;
         border-radius: 0;
-        clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+        clip-path: polygon(
+            0 0,
+            calc(100% - var(--fx-notch, 14px)) 0,
+            100% var(--fx-notch, 14px),
+            100% 100%,
+            var(--fx-notch, 14px) 100%,
+            0 calc(100% - var(--fx-notch, 14px))
+        );
         font-family: var(--kp-mono);
         font-size: 0.8rem;
         line-height: 1.7;
@@ -13666,7 +13683,14 @@
         color: var(--surface-hero-primary-foreground);
         border: 0;
         border-radius: 0;
-        clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+        clip-path: polygon(
+            0 0,
+            calc(100% - var(--fx-notch, 14px)) 0,
+            100% var(--fx-notch, 14px),
+            100% 100%,
+            var(--fx-notch, 14px) 100%,
+            0 calc(100% - var(--fx-notch, 14px))
+        );
         font-family: var(--kp-mono);
     }
 
@@ -13856,15 +13880,15 @@
         }
 
         [data-theme='cyberpunk'] [data-kp-reveal='rule']::after {
-            transition: transform var(--kp-rule-draw) var(--fx-ease);
+            transition: transform var(--kp-rule-draw) steps(4, jump-end);
         }
 
         [data-theme='cyberpunk'] mark {
-            transition: color 300ms 400ms;
+            transition: color 360ms steps(3, jump-end) 400ms;
         }
 
         [data-theme='cyberpunk'] mark::after {
-            transition: transform var(--kp-wipe) var(--fx-ease);
+            transition: transform var(--kp-wipe) steps(4, jump-end);
         }
 
         [data-theme='cyberpunk'] [data-kp-reveal='emphasis'] mark:nth-of-type(2)::after {
@@ -13879,17 +13903,8 @@
             transition-delay: calc(3 * var(--kp-redact-stagger));
         }
 
-        [data-theme='cyberpunk'] .kp-nav__links {
-            animation: kp-strip-in 520ms var(--fx-ease) 80ms both;
-        }
-
-        [data-theme='cyberpunk'] .kp-nav[data-kp-nav-side='end'] .kp-nav__links {
-            animation-name: kp-strip-in-end;
-        }
-
-        [data-theme='cyberpunk'] .kp-nav__link {
-            transition: background-color var(--fx-duration) var(--fx-ease);
-        }
+        /* The bar arrives by the channel split, as a whole picture (plate and links), and a bar
+           that leaves goes as that played backwards (end of this file). */
 
         [data-theme='cyberpunk'] .kp-nav__links > li:hover > .kp-nav__link[data-kp-text]::before,
         [data-theme='cyberpunk'] .kp-nav__links > li:focus-within > .kp-nav__link[data-kp-text]::before {
@@ -13976,28 +13991,6 @@
        measured opacity stops; check-motion.mjs holds the two in step and
        reports the rate of every one (S42: reported, never corrected). */
     @media (prefers-reduced-motion: no-preference) {
-        @keyframes kp-strip-in {
-            0% {
-                transform: translateX(-24px);
-                opacity: 0;
-            }
-            100% {
-                transform: none;
-                opacity: 1;
-            }
-        }
-
-        @keyframes kp-strip-in-end {
-            0% {
-                transform: translateX(24px);
-                opacity: 0;
-            }
-            100% {
-                transform: none;
-                opacity: 1;
-            }
-        }
-
         @keyframes kp-slice-a {
             0% {
                 opacity: 1;
@@ -14190,7 +14183,7 @@
     [data-theme='cyberpunk'] .kp-sidenav__link[aria-current='page'] {
         background: var(--primary);
         color: var(--primary-foreground);
-        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 0.55rem), calc(100% - 0.55rem) 100%, 0 100%);
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--fx-notch-sm, 8px)), calc(100% - var(--fx-notch-sm, 8px)) 100%, 0 100%);
     }
 
     /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
@@ -14203,7 +14196,7 @@
     [data-theme='cyberpunk'] .kp-media {
         border: 2px solid var(--border-strong);
         border-radius: 0;
-        clip-path: polygon(0.7rem 0, 100% 0, 100% 100%, 0 100%, 0 0.7rem);
+        clip-path: polygon(0 0, calc(100% - var(--fx-notch, 14px)) 0, 100% var(--fx-notch, 14px), 100% 100%, 0 100%);
     }
 
     [data-theme='cyberpunk'] .kp-media-figure > figcaption {
@@ -14583,6 +14576,9 @@
             linear-gradient(var(--foreground) 0 0) 0 100% / 9px 9px no-repeat, linear-gradient(var(--foreground) 0 0) 100% 100% / 9px 9px no-repeat;
         /* A box that changes size takes it in whole ticks: eight of 60 ms. */
         --kp-size-ease: steps(8, end);
+        /* The accordion and a tree branch take those ticks too (js/motion.js sizeEase()), not
+           the entrance's single step. */
+        --kp-accordion-size: own;
     }
 
     /* The two copies, as the part's own silhouette: yellow right and up, cyan right and
@@ -14627,7 +14623,8 @@
     /* The holo plate [G7]: a card, a key figure and the menu's popover are void plates with
        a yellow rim glowing 10 px inward, scan lines at 135 degrees, the rim running along the
        notch, cut at the dossier corner. A press lights the circuit grid on it. */
-    [data-theme='cyberpunk'] :is(.kp-card, .kp-kpi, .kp-popover, .kp-datepicker__panel, .kp-combobox__list) {
+    [data-theme='cyberpunk']
+        :is(.kp-card, .kp-kpi, .kp-popover, .kp-datepicker__panel, .kp-combobox__list, .kp-accordion__item:not(.kp-accordion__item--bare)) {
         --kp-cp-ground: var(--card);
         --kp-cp-grid-a: 0;
         --kp-cp-rest: inset 0 0 0 1px var(--primary), inset 0 0 10px hsl(from var(--primary) h s l / 0.35);
@@ -14782,6 +14779,7 @@
     [data-theme='cyberpunk'] .kp-button:hover:not(:disabled),
     [data-theme='cyberpunk'] .kp-button:active:not(:disabled) {
         transform: none;
+        translate: none;
     }
 
     /* ── The split edge: hover [Kenny: hover = split] ─────────────────────────
@@ -14790,7 +14788,7 @@
        own cut (a ring between the cut and the cut moved in), open at the start edge.
        A square part (a menu entry) takes the same two lines as inset shadows. */
     [data-theme='cyberpunk']
-        :is(.kp-button, a.kp-kpi, .kp-kpi--toggle, .kp-card:is(a, button, [tabindex]:not([tabindex='-1']), [role='button'], [role='link'])) {
+        :where(.kp-button, a.kp-kpi, .kp-kpi--toggle, .kp-card:is(a, button, [tabindex]:not([tabindex='-1']), [role='button'], [role='link'])) {
         --kp-cp-t: 4;
         --kp-cp-p: 0;
         --kp-cp-ft: 4;
@@ -14889,7 +14887,6 @@
        contrast colour inside it (DI2's two channels), so the ring reads on any ground. */
     [data-theme='cyberpunk']
         :is(
-            .kp-button,
             a.kp-kpi,
             .kp-kpi--toggle,
             .kp-card:is(a, button, [tabindex]:not([tabindex='-1']), [role='button'], [role='link']):not([data-kp-label])
@@ -15038,21 +15035,21 @@
             ) {
             transition:
                 --kp-cp-t 180ms steps(4, jump-end),
-                --kp-cp-p 0s 180ms,
+                --kp-cp-p 0s steps(1, end) 180ms,
                 --kp-cp-ft 180ms steps(4, jump-end),
-                --kp-cp-fp 0s 180ms;
+                --kp-cp-fp 0s steps(1, end) 180ms;
         }
 
         [data-theme='cyberpunk'] .kp-calendar__day {
             transition:
                 --kp-cp-t 180ms steps(4, jump-end),
-                --kp-cp-p 0s 180ms;
+                --kp-cp-p 0s steps(1, end) 180ms;
         }
 
         [data-theme='cyberpunk'] .kp-calendar__day:hover:not(:is(:disabled, [aria-disabled='true'], [data-kp-tone='loading'])) {
             transition:
                 --kp-cp-t 180ms steps(4, jump-start),
-                --kp-cp-p 0s;
+                --kp-cp-p 0s steps(1, end);
         }
 
         [data-theme='cyberpunk'] .kp-button:hover:not(:disabled),
@@ -15065,9 +15062,9 @@
             ):hover {
             transition:
                 --kp-cp-t 180ms steps(4, jump-start),
-                --kp-cp-p 0s,
+                --kp-cp-p 0s steps(1, end),
                 --kp-cp-ft 180ms steps(4, jump-end),
-                --kp-cp-fp 0s 180ms;
+                --kp-cp-fp 0s steps(1, end) 180ms;
         }
 
         [data-theme='cyberpunk']
@@ -15080,9 +15077,9 @@
             ):focus-visible {
             transition:
                 --kp-cp-t 180ms steps(4, jump-end),
-                --kp-cp-p 0s 180ms,
+                --kp-cp-p 0s steps(1, end) 180ms,
                 --kp-cp-ft 180ms steps(4, jump-start),
-                --kp-cp-fp 0s;
+                --kp-cp-fp 0s steps(1, end);
         }
 
         [data-theme='cyberpunk'] .kp-button:hover:not(:disabled):focus-visible,
@@ -15095,9 +15092,665 @@
             ):hover:focus-visible {
             transition:
                 --kp-cp-t 180ms steps(4, jump-start),
-                --kp-cp-p 0s,
+                --kp-cp-p 0s steps(1, end),
                 --kp-cp-ft 180ms steps(4, jump-start),
-                --kp-cp-fp 0s;
+                --kp-cp-fp 0s steps(1, end);
+        }
+    }
+
+    /* ── Pointing answers for every other part [Kenny: the same three for all] ─────────────
+       A tab, a link of the bars, a pager, an icon button, an option, a day, a row, a sort head, a field
+       answers a pointer with the split edge, a keyboard with the four closing brackets and a press
+       with the closed circuit, the way a button and a key figure do. Where a button is cut and draws
+       them on its pseudo-elements, a square part draws them as background layers of its own (no part
+       listed here has a background image of its own), so no pseudo-element a component already uses is
+       touched. The ink of the brackets is the focus ring pair, two channels, DI2. The clocks are the
+       ones above. The brackets keep clear of a notch they sit near: the corner inset is half the notch. */
+
+    [data-theme='cyberpunk']
+        :where(
+            button,
+            summary,
+            select,
+            textarea,
+            input:not([type='checkbox'], [type='radio'], [type='range'], [type='hidden'], [type='file'], [type='color']),
+            [role='tab'],
+            [role='option'],
+            [role='treeitem'],
+            :is(th, td)[tabindex]:not([tabindex='-1']),
+            a.kp-nav__link,
+            a.kp-nav__brand,
+            a.kp-sidenav__link,
+            a.kp-kpi__link,
+            .kp-nav a,
+            .kp-sidenav a,
+            .kp-pagination a,
+            .kp-breadcrumb a,
+            .kp-footer a,
+            .kp-chart__plot,
+            .kp-kpi__chart-plot,
+            .kp-grid__tile[tabindex],
+            .kp-skip-link,
+            .kp-field__option,
+            .kp-field--check,
+            .kp-switch,
+            .kp-upload__zone,
+            .kp-button,
+            input.kp-field__check,
+            a[href]:not([class]):not(.kp-nav a, .kp-sidenav a, .kp-pagination a, .kp-breadcrumb a, .kp-footer a),
+            a.kp-url
+        ) {
+        --kp-cp-t: 4;
+        --kp-cp-p: 0;
+        --kp-cp-ft: 4;
+        --kp-cp-fp: 0;
+        --kp-cp-grid-a: 0;
+        --kp-cp-d: calc(var(--kp-cp-p) * (2px + var(--kp-cp-t) * 1px));
+        --kp-cp-i: calc(var(--kp-cp-ft) * 3px);
+        --kp-cp-fa: calc(var(--kp-cp-fp) * 9px);
+        --kp-cp-fai: calc(var(--kp-cp-fp) * 7px);
+        --kp-cp-fw: calc(var(--kp-cp-fp) * 2px);
+        --kp-cp-ntr: 0px;
+        --kp-cp-nbr: 0px;
+        --kp-cp-nbl: 0px;
+        --kp-cp-itr: max(var(--kp-cp-i), calc(var(--kp-cp-ntr) / 2));
+        --kp-cp-ibr: max(var(--kp-cp-i), calc(var(--kp-cp-nbr) / 2));
+        --kp-cp-ibl: max(var(--kp-cp-i), calc(var(--kp-cp-nbl) / 2));
+        --kp-cp-br-img:
+            linear-gradient(var(--focus-ring) 0 0), linear-gradient(var(--focus-ring) 0 0), linear-gradient(var(--focus-ring-contrast) 0 0),
+            linear-gradient(var(--focus-ring-contrast) 0 0), linear-gradient(var(--focus-ring) 0 0), linear-gradient(var(--focus-ring) 0 0),
+            linear-gradient(var(--focus-ring-contrast) 0 0), linear-gradient(var(--focus-ring-contrast) 0 0), linear-gradient(var(--focus-ring) 0 0),
+            linear-gradient(var(--focus-ring) 0 0), linear-gradient(var(--focus-ring-contrast) 0 0), linear-gradient(var(--focus-ring-contrast) 0 0),
+            linear-gradient(var(--focus-ring) 0 0), linear-gradient(var(--focus-ring) 0 0), linear-gradient(var(--focus-ring-contrast) 0 0),
+            linear-gradient(var(--focus-ring-contrast) 0 0);
+        --kp-cp-br-pos:
+            var(--kp-cp-i) var(--kp-cp-i), var(--kp-cp-i) var(--kp-cp-i),
+            calc(var(--kp-cp-i) + var(--kp-cp-fw)) calc(var(--kp-cp-i) + var(--kp-cp-fw)),
+            calc(var(--kp-cp-i) + var(--kp-cp-fw)) calc(var(--kp-cp-i) + var(--kp-cp-fw)), calc(100% - var(--kp-cp-itr)) var(--kp-cp-itr),
+            calc(100% - var(--kp-cp-itr)) var(--kp-cp-itr), calc(100% - var(--kp-cp-itr) - var(--kp-cp-fw)) calc(var(--kp-cp-itr) + var(--kp-cp-fw)),
+            calc(100% - var(--kp-cp-itr) - var(--kp-cp-fw)) calc(var(--kp-cp-itr) + var(--kp-cp-fw)), var(--kp-cp-ibl) calc(100% - var(--kp-cp-ibl)),
+            var(--kp-cp-ibl) calc(100% - var(--kp-cp-ibl)), calc(var(--kp-cp-ibl) + var(--kp-cp-fw)) calc(100% - var(--kp-cp-ibl) - var(--kp-cp-fw)),
+            calc(var(--kp-cp-ibl) + var(--kp-cp-fw)) calc(100% - var(--kp-cp-ibl) - var(--kp-cp-fw)),
+            calc(100% - var(--kp-cp-ibr)) calc(100% - var(--kp-cp-ibr)), calc(100% - var(--kp-cp-ibr)) calc(100% - var(--kp-cp-ibr)),
+            calc(100% - var(--kp-cp-ibr) - var(--kp-cp-fw)) calc(100% - var(--kp-cp-ibr) - var(--kp-cp-fw)),
+            calc(100% - var(--kp-cp-ibr) - var(--kp-cp-fw)) calc(100% - var(--kp-cp-ibr) - var(--kp-cp-fw));
+        --kp-cp-br-size:
+            var(--kp-cp-fa) var(--kp-cp-fw), var(--kp-cp-fw) var(--kp-cp-fa), var(--kp-cp-fai) var(--kp-cp-fw), var(--kp-cp-fw) var(--kp-cp-fai),
+            var(--kp-cp-fa) var(--kp-cp-fw), var(--kp-cp-fw) var(--kp-cp-fa), var(--kp-cp-fai) var(--kp-cp-fw), var(--kp-cp-fw) var(--kp-cp-fai),
+            var(--kp-cp-fa) var(--kp-cp-fw), var(--kp-cp-fw) var(--kp-cp-fa), var(--kp-cp-fai) var(--kp-cp-fw), var(--kp-cp-fw) var(--kp-cp-fai),
+            var(--kp-cp-fa) var(--kp-cp-fw), var(--kp-cp-fw) var(--kp-cp-fa), var(--kp-cp-fai) var(--kp-cp-fw), var(--kp-cp-fw) var(--kp-cp-fai);
+        --kp-cp-sq-extra-img:
+            linear-gradient(var(--destructive) 0 0), linear-gradient(var(--accent) 0 0), linear-gradient(var(--accent) 0 0),
+            repeating-linear-gradient(to bottom, hsl(from var(--primary) h s l / var(--kp-cp-grid-a)) 0 1px, transparent 1px 14px),
+            repeating-linear-gradient(to right, hsl(from var(--primary) h s l / var(--kp-cp-grid-a)) 0 1px, transparent 1px 14px);
+        --kp-cp-sq-extra-pos: 0 100%, 0 0, 100% 0, 0 0, 0 0;
+        --kp-cp-sq-extra-size: 100% var(--kp-cp-d), 100% var(--kp-cp-d), var(--kp-cp-d) 100%, 100% 100%, 100% 100%;
+        --kp-cp-sq-img: var(--kp-cp-br-img), var(--kp-cp-sq-extra-img);
+        --kp-cp-sq-pos: var(--kp-cp-br-pos), var(--kp-cp-sq-extra-pos);
+        --kp-cp-sq-size: var(--kp-cp-br-size), var(--kp-cp-sq-extra-size);
+    }
+
+    [data-theme='cyberpunk']
+        :where(
+            :is(
+                button,
+                summary,
+                select,
+                textarea,
+                input:not([type='checkbox'], [type='radio'], [type='range'], [type='hidden'], [type='file'], [type='color']),
+                [role='tab'],
+                [role='option'],
+                [role='treeitem'],
+                :is(th, td)[tabindex]:not([tabindex='-1']),
+                a.kp-nav__link,
+                a.kp-nav__brand,
+                a.kp-sidenav__link,
+                a.kp-kpi__link,
+                .kp-nav a,
+                .kp-sidenav a,
+                .kp-pagination a,
+                .kp-breadcrumb a,
+                .kp-footer a,
+                .kp-chart__plot,
+                .kp-kpi__chart-plot,
+                .kp-grid__tile[tabindex],
+                .kp-skip-link
+            ):not(.kp-button, .kp-menu__item, .kp-kpi, .kp-calendar__day, .kp-card, .kp-sr-only),
+            .kp-field__option,
+            .kp-field--check,
+            .kp-switch,
+            .kp-upload__zone,
+            a[href]:not([class]):not(.kp-nav a, .kp-sidenav a, .kp-pagination a, .kp-breadcrumb a, .kp-footer a),
+            a.kp-url
+        ) {
+        background-image: var(--kp-cp-sq-img);
+        background-position: var(--kp-cp-sq-pos);
+        background-size: var(--kp-cp-sq-size);
+        background-repeat: no-repeat;
+        background-origin: border-box;
+    }
+
+    /* A branch holds its children inside its own element: the layers are sized to the item's own row
+       (one line plus the row's block padding), as the selected mark of the package is. */
+    [data-theme='cyberpunk'] .kp-tree [role='treeitem'] {
+        --kp-cp-rowh: calc(1lh + 0.5rem);
+        --kp-cp-tr-img:
+            linear-gradient(var(--focus-ring) 0 0), linear-gradient(var(--focus-ring) 0 0), linear-gradient(var(--focus-ring-contrast) 0 0),
+            linear-gradient(var(--focus-ring-contrast) 0 0), linear-gradient(var(--focus-ring) 0 0), linear-gradient(var(--focus-ring) 0 0),
+            linear-gradient(var(--focus-ring-contrast) 0 0), linear-gradient(var(--focus-ring-contrast) 0 0), linear-gradient(var(--focus-ring) 0 0),
+            linear-gradient(var(--focus-ring) 0 0), linear-gradient(var(--focus-ring-contrast) 0 0), linear-gradient(var(--focus-ring-contrast) 0 0),
+            linear-gradient(var(--focus-ring) 0 0), linear-gradient(var(--focus-ring) 0 0), linear-gradient(var(--focus-ring-contrast) 0 0),
+            linear-gradient(var(--focus-ring-contrast) 0 0), linear-gradient(var(--destructive) 0 0), linear-gradient(var(--accent) 0 0),
+            linear-gradient(var(--accent) 0 0),
+            repeating-linear-gradient(to bottom, hsl(from var(--primary) h s l / var(--kp-cp-grid-a)) 0 1px, transparent 1px 14px),
+            repeating-linear-gradient(to right, hsl(from var(--primary) h s l / var(--kp-cp-grid-a)) 0 1px, transparent 1px 14px);
+        --kp-cp-tr-pos:
+            var(--kp-cp-i) var(--kp-cp-i), var(--kp-cp-i) var(--kp-cp-i),
+            calc(var(--kp-cp-i) + var(--kp-cp-fw)) calc(var(--kp-cp-i) + var(--kp-cp-fw)),
+            calc(var(--kp-cp-i) + var(--kp-cp-fw)) calc(var(--kp-cp-i) + var(--kp-cp-fw)), calc(100% - var(--kp-cp-itr)) var(--kp-cp-itr),
+            calc(100% - var(--kp-cp-itr)) var(--kp-cp-itr), calc(100% - var(--kp-cp-itr) - var(--kp-cp-fw)) calc(var(--kp-cp-itr) + var(--kp-cp-fw)),
+            calc(100% - var(--kp-cp-itr) - var(--kp-cp-fw)) calc(var(--kp-cp-itr) + var(--kp-cp-fw)),
+            var(--kp-cp-ibl) calc(var(--kp-cp-rowh) - var(--kp-cp-ibl) - var(--kp-cp-fw)),
+            var(--kp-cp-ibl) calc(var(--kp-cp-rowh) - var(--kp-cp-ibl) - var(--kp-cp-fa)),
+            calc(var(--kp-cp-ibl) + var(--kp-cp-fw)) calc(var(--kp-cp-rowh) - var(--kp-cp-ibl) - var(--kp-cp-fw) - var(--kp-cp-fw)),
+            calc(var(--kp-cp-ibl) + var(--kp-cp-fw)) calc(var(--kp-cp-rowh) - var(--kp-cp-ibl) - var(--kp-cp-fw) - var(--kp-cp-fai)),
+            calc(100% - var(--kp-cp-ibr)) calc(var(--kp-cp-rowh) - var(--kp-cp-ibr) - var(--kp-cp-fw)),
+            calc(100% - var(--kp-cp-ibr)) calc(var(--kp-cp-rowh) - var(--kp-cp-ibr) - var(--kp-cp-fa)),
+            calc(100% - var(--kp-cp-ibr) - var(--kp-cp-fw)) calc(var(--kp-cp-rowh) - var(--kp-cp-ibr) - var(--kp-cp-fw) - var(--kp-cp-fw)),
+            calc(100% - var(--kp-cp-ibr) - var(--kp-cp-fw)) calc(var(--kp-cp-rowh) - var(--kp-cp-ibr) - var(--kp-cp-fw) - var(--kp-cp-fai)),
+            0 calc(var(--kp-cp-rowh) - var(--kp-cp-d)), 0 0, 100% 0, 0 0, 0 0;
+        --kp-cp-tr-size:
+            var(--kp-cp-fa) var(--kp-cp-fw), var(--kp-cp-fw) var(--kp-cp-fa), var(--kp-cp-fai) var(--kp-cp-fw), var(--kp-cp-fw) var(--kp-cp-fai),
+            var(--kp-cp-fa) var(--kp-cp-fw), var(--kp-cp-fw) var(--kp-cp-fa), var(--kp-cp-fai) var(--kp-cp-fw), var(--kp-cp-fw) var(--kp-cp-fai),
+            var(--kp-cp-fa) var(--kp-cp-fw), var(--kp-cp-fw) var(--kp-cp-fa), var(--kp-cp-fai) var(--kp-cp-fw), var(--kp-cp-fw) var(--kp-cp-fai),
+            var(--kp-cp-fa) var(--kp-cp-fw), var(--kp-cp-fw) var(--kp-cp-fa), var(--kp-cp-fai) var(--kp-cp-fw), var(--kp-cp-fw) var(--kp-cp-fai),
+            100% var(--kp-cp-d), 100% var(--kp-cp-d), var(--kp-cp-d) var(--kp-cp-rowh), 100% var(--kp-cp-rowh), 100% var(--kp-cp-rowh);
+        --kp-cp-sq-img: var(--kp-cp-tr-img);
+        --kp-cp-sq-pos: var(--kp-cp-tr-pos);
+        --kp-cp-sq-size: var(--kp-cp-tr-size);
+    }
+
+    [data-theme='cyberpunk'] .kp-tree [role='treeitem'][aria-selected='true'] {
+        --kp-cp-sq-img:
+            var(--kp-cp-tr-img), linear-gradient(var(--kp-tree-selected-bar, var(--primary)) 0 0),
+            linear-gradient(var(--kp-tree-selected, hsl(from var(--primary) h s l / 0.14)) 0 0);
+        --kp-cp-sq-pos: var(--kp-cp-tr-pos), 0 0, 0 0;
+        --kp-cp-sq-size: var(--kp-cp-tr-size), 3px var(--kp-cp-rowh), 100% var(--kp-cp-rowh);
+    }
+
+    [data-theme='cyberpunk'] .kp-button {
+        --kp-cp-nbr: var(--kp-button-notch);
+    }
+
+    [data-theme='cyberpunk'] .kp-button--mirror,
+    [data-theme='cyberpunk'] .kp-button[data-kp-direction='back'] {
+        --kp-cp-nbr: 0px;
+        --kp-cp-nbl: var(--kp-button-notch);
+    }
+
+    [data-theme='cyberpunk'] :is(.kp-field__input, .kp-datatable__select) {
+        --kp-cp-nbr: var(--fx-notch-sm, 8px);
+    }
+
+    /* The button's brackets: its own pseudo-element, the same layers, clear of its notch. */
+    [data-theme='cyberpunk'] .kp-button::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        border: 0;
+        background-image: var(--kp-cp-br-img);
+        background-position: var(--kp-cp-br-pos);
+        background-size: var(--kp-cp-br-size);
+        background-repeat: no-repeat;
+        background-origin: border-box;
+        transform: none;
+        pointer-events: none;
+    }
+
+    [data-theme='cyberpunk']
+        :where(
+            :is(
+                button,
+                summary,
+                select,
+                textarea,
+                input:not([type='checkbox'], [type='radio'], [type='range'], [type='hidden'], [type='file'], [type='color']),
+                [role='tab'],
+                [role='option'],
+                [role='treeitem'],
+                :is(th, td)[tabindex]:not([tabindex='-1']),
+                a.kp-nav__link,
+                a.kp-nav__brand,
+                a.kp-sidenav__link,
+                a.kp-kpi__link,
+                .kp-nav a,
+                .kp-sidenav a,
+                .kp-pagination a,
+                .kp-breadcrumb a,
+                .kp-footer a,
+                .kp-chart__plot,
+                .kp-kpi__chart-plot,
+                .kp-grid__tile[tabindex],
+                .kp-skip-link
+            ):not(.kp-button, .kp-menu__item, .kp-kpi, .kp-calendar__day, .kp-card, .kp-sr-only),
+            .kp-field__option,
+            .kp-field--check,
+            .kp-switch,
+            .kp-upload__zone,
+            input.kp-field__check:not(.kp-field__option *, .kp-field--check *, .kp-menu__item *)
+        ):hover:not(:disabled, [aria-disabled='true']),
+    [data-theme='cyberpunk'] :is(.kp-field__option, .kp-field--check, .kp-switch, .kp-upload__zone):hover:not(:has(input:disabled)) {
+        --kp-cp-t: 0;
+        --kp-cp-p: 1;
+    }
+
+    [data-theme='cyberpunk']
+        :where(
+            :is(
+                button,
+                summary,
+                select,
+                textarea,
+                input:not([type='checkbox'], [type='radio'], [type='range'], [type='hidden'], [type='file'], [type='color']),
+                [role='tab'],
+                [role='option'],
+                [role='treeitem'],
+                :is(th, td)[tabindex]:not([tabindex='-1']),
+                a.kp-nav__link,
+                a.kp-nav__brand,
+                a.kp-sidenav__link,
+                a.kp-kpi__link,
+                .kp-nav a,
+                .kp-sidenav a,
+                .kp-pagination a,
+                .kp-breadcrumb a,
+                .kp-footer a,
+                .kp-chart__plot,
+                .kp-kpi__chart-plot,
+                .kp-grid__tile[tabindex],
+                .kp-skip-link
+            ):not(.kp-button, .kp-menu__item, .kp-kpi, .kp-calendar__day, .kp-card, .kp-sr-only),
+            .kp-field__option,
+            .kp-field--check,
+            .kp-switch,
+            .kp-upload__zone,
+            input.kp-field__check:not(.kp-field__option *, .kp-field--check *, .kp-menu__item *)
+        ):focus-visible,
+    [data-theme='cyberpunk']
+        :where(a[href]:not([class]):not(.kp-nav a, .kp-sidenav a, .kp-pagination a, .kp-breadcrumb a, .kp-footer a), a.kp-url):focus-visible,
+    [data-theme='cyberpunk'] :is(.kp-field__option, .kp-field--check, .kp-switch):has(input:focus-visible),
+    [data-theme='cyberpunk'] :focus-visible + .kp-upload__zone,
+    [data-theme='cyberpunk'] [data-kp-upload]:has([data-kp-upload-input]:focus-visible) .kp-upload__zone {
+        --kp-cp-ft: 0;
+        --kp-cp-fp: 1;
+    }
+
+    /* The brackets are the focus mark: the package's outline and its inner ring step aside. */
+    [data-theme='cyberpunk']
+        :is(
+            :where(a[href]:not([class]):not(.kp-nav a, .kp-sidenav a, .kp-pagination a, .kp-breadcrumb a, .kp-footer a), a.kp-url),
+            :where(
+                :is(
+                    button,
+                    summary,
+                    select,
+                    textarea,
+                    input:not([type='checkbox'], [type='radio'], [type='range'], [type='hidden'], [type='file'], [type='color']),
+                    [role='tab'],
+                    [role='option'],
+                    [role='treeitem'],
+                    :is(th, td)[tabindex]:not([tabindex='-1']),
+                    a.kp-nav__link,
+                    a.kp-nav__brand,
+                    a.kp-sidenav__link,
+                    a.kp-kpi__link,
+                    .kp-nav a,
+                    .kp-sidenav a,
+                    .kp-pagination a,
+                    .kp-breadcrumb a,
+                    .kp-footer a,
+                    .kp-chart__plot,
+                    .kp-kpi__chart-plot,
+                    .kp-grid__tile[tabindex],
+                    .kp-skip-link
+                ):not(.kp-button, .kp-menu__item, .kp-kpi, .kp-calendar__day, .kp-card, .kp-sr-only),
+                .kp-field__option,
+                .kp-field--check,
+                .kp-switch,
+                .kp-upload__zone,
+                input.kp-field__check:not(.kp-field__option *, .kp-field--check *, .kp-menu__item *)
+            )
+        ):focus-visible {
+        outline: none;
+        box-shadow: none;
+    }
+
+    [data-theme='cyberpunk'] :is(.kp-field__option, .kp-field--check, .kp-switch) input:focus-visible,
+    [data-theme='cyberpunk'] [data-kp-upload-input]:focus-visible {
+        outline: none;
+        box-shadow: none;
+    }
+
+    [data-theme='cyberpunk']
+        :where(
+            :is(
+                button,
+                summary,
+                select,
+                textarea,
+                input:not([type='checkbox'], [type='radio'], [type='range'], [type='hidden'], [type='file'], [type='color']),
+                [role='tab'],
+                [role='option'],
+                [role='treeitem'],
+                :is(th, td)[tabindex]:not([tabindex='-1']),
+                a.kp-nav__link,
+                a.kp-nav__brand,
+                a.kp-sidenav__link,
+                a.kp-kpi__link,
+                .kp-nav a,
+                .kp-sidenav a,
+                .kp-pagination a,
+                .kp-breadcrumb a,
+                .kp-footer a,
+                .kp-chart__plot,
+                .kp-kpi__chart-plot,
+                .kp-grid__tile[tabindex],
+                .kp-skip-link
+            ):not(.kp-button, .kp-menu__item, .kp-kpi, .kp-calendar__day, .kp-card, .kp-sr-only),
+            .kp-field__option,
+            .kp-field--check,
+            .kp-switch,
+            .kp-upload__zone,
+            input.kp-field__check:not(.kp-field__option *, .kp-field--check *, .kp-menu__item *)
+        ):active:not(:disabled, [aria-disabled='true']) {
+        --kp-cp-grid-a: 0.6;
+    }
+
+    [data-theme='cyberpunk']
+        :where(
+            :is(
+                button,
+                summary,
+                select,
+                textarea,
+                input:not([type='checkbox'], [type='radio'], [type='range'], [type='hidden'], [type='file'], [type='color']),
+                [role='tab'],
+                [role='option'],
+                [role='treeitem'],
+                :is(th, td)[tabindex]:not([tabindex='-1']),
+                a.kp-nav__link,
+                a.kp-nav__brand,
+                a.kp-sidenav__link,
+                a.kp-kpi__link,
+                .kp-nav a,
+                .kp-sidenav a,
+                .kp-pagination a,
+                .kp-breadcrumb a,
+                .kp-footer a,
+                .kp-chart__plot,
+                .kp-kpi__chart-plot,
+                .kp-grid__tile[tabindex],
+                .kp-skip-link
+            ):not(.kp-button, .kp-menu__item, .kp-kpi, .kp-calendar__day, .kp-card, .kp-sr-only),
+            .kp-field__option,
+            .kp-field--check,
+            .kp-switch,
+            .kp-upload__zone,
+            input.kp-field__check:not(.kp-field__option *, .kp-field--check *, .kp-menu__item *)
+        ):active:not(:disabled, [aria-disabled='true'], [aria-selected='true'], [aria-current], [aria-pressed='true']) {
+        background-color: var(--secondary);
+    }
+
+    [data-theme='cyberpunk'] input.kp-field__check {
+        position: relative;
+    }
+
+    /* A check on its own (a table cell, a bar) is framed by its pseudo-element, a little outside its box. */
+    [data-theme='cyberpunk'] input.kp-field__check:not(.kp-field__option *, .kp-field--check *, .kp-menu__item *)::after {
+        content: '';
+        position: absolute;
+        inset: -6px;
+        background-image: var(--kp-cp-sq-img);
+        background-position: var(--kp-cp-sq-pos);
+        background-size: var(--kp-cp-sq-size);
+        background-repeat: no-repeat;
+        background-origin: border-box;
+        pointer-events: none;
+    }
+
+    /* A calendar day answers hover and press with its own two shadows and draws the brackets as layers. */
+    [data-theme='cyberpunk'] .kp-calendar__day {
+        background-image: var(--kp-cp-br-img);
+        background-position: var(--kp-cp-br-pos);
+        background-size: var(--kp-cp-br-size);
+        background-repeat: no-repeat;
+        background-origin: border-box;
+    }
+
+    [data-theme='cyberpunk'] .kp-calendar__day:focus-visible {
+        --kp-cp-ft: 0;
+        --kp-cp-fp: 1;
+        outline: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk']
+            :where(
+                :is(
+                    button,
+                    summary,
+                    select,
+                    textarea,
+                    input:not([type='checkbox'], [type='radio'], [type='range'], [type='hidden'], [type='file'], [type='color']),
+                    [role='tab'],
+                    [role='option'],
+                    [role='treeitem'],
+                    :is(th, td)[tabindex]:not([tabindex='-1']),
+                    a.kp-nav__link,
+                    a.kp-nav__brand,
+                    a.kp-sidenav__link,
+                    a.kp-kpi__link,
+                    .kp-nav a,
+                    .kp-sidenav a,
+                    .kp-pagination a,
+                    .kp-breadcrumb a,
+                    .kp-footer a,
+                    .kp-chart__plot,
+                    .kp-kpi__chart-plot,
+                    .kp-grid__tile[tabindex],
+                    .kp-skip-link
+                ):not(.kp-button, .kp-menu__item, .kp-kpi, .kp-calendar__day, .kp-card, .kp-sr-only),
+                .kp-field__option,
+                .kp-field--check,
+                .kp-switch,
+                .kp-upload__zone,
+                input.kp-field__check:not(.kp-field__option *, .kp-field--check *, .kp-menu__item *)
+            ),
+        [data-theme='cyberpunk']
+            :where(a[href]:not([class]):not(.kp-nav a, .kp-sidenav a, .kp-pagination a, .kp-breadcrumb a, .kp-footer a), a.kp-url),
+        [data-theme='cyberpunk'] :is(.kp-field__option, .kp-field--check, .kp-switch, .kp-upload__zone) {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-end),
+                --kp-cp-p 0s steps(1, end) 180ms,
+                --kp-cp-ft 180ms steps(4, jump-end),
+                --kp-cp-fp 0s steps(1, end) 180ms;
+        }
+
+        [data-theme='cyberpunk']
+            :where(
+                :is(
+                    button,
+                    summary,
+                    select,
+                    textarea,
+                    input:not([type='checkbox'], [type='radio'], [type='range'], [type='hidden'], [type='file'], [type='color']),
+                    [role='tab'],
+                    [role='option'],
+                    [role='treeitem'],
+                    :is(th, td)[tabindex]:not([tabindex='-1']),
+                    a.kp-nav__link,
+                    a.kp-nav__brand,
+                    a.kp-sidenav__link,
+                    a.kp-kpi__link,
+                    .kp-nav a,
+                    .kp-sidenav a,
+                    .kp-pagination a,
+                    .kp-breadcrumb a,
+                    .kp-footer a,
+                    .kp-chart__plot,
+                    .kp-kpi__chart-plot,
+                    .kp-grid__tile[tabindex],
+                    .kp-skip-link
+                ):not(.kp-button, .kp-menu__item, .kp-kpi, .kp-calendar__day, .kp-card, .kp-sr-only),
+                .kp-field__option,
+                .kp-field--check,
+                .kp-switch,
+                .kp-upload__zone,
+                input.kp-field__check:not(.kp-field__option *, .kp-field--check *, .kp-menu__item *)
+            ):hover:not(:disabled, [aria-disabled='true']),
+        [data-theme='cyberpunk'] :is(.kp-field__option, .kp-field--check, .kp-switch, .kp-upload__zone):hover:not(:has(input:disabled)) {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-start),
+                --kp-cp-p 0s steps(1, end),
+                --kp-cp-ft 180ms steps(4, jump-end),
+                --kp-cp-fp 0s steps(1, end) 180ms;
+        }
+
+        [data-theme='cyberpunk']
+            :where(
+                :is(
+                    button,
+                    summary,
+                    select,
+                    textarea,
+                    input:not([type='checkbox'], [type='radio'], [type='range'], [type='hidden'], [type='file'], [type='color']),
+                    [role='tab'],
+                    [role='option'],
+                    [role='treeitem'],
+                    :is(th, td)[tabindex]:not([tabindex='-1']),
+                    a.kp-nav__link,
+                    a.kp-nav__brand,
+                    a.kp-sidenav__link,
+                    a.kp-kpi__link,
+                    .kp-nav a,
+                    .kp-sidenav a,
+                    .kp-pagination a,
+                    .kp-breadcrumb a,
+                    .kp-footer a,
+                    .kp-chart__plot,
+                    .kp-kpi__chart-plot,
+                    .kp-grid__tile[tabindex],
+                    .kp-skip-link
+                ):not(.kp-button, .kp-menu__item, .kp-kpi, .kp-calendar__day, .kp-card, .kp-sr-only),
+                .kp-field__option,
+                .kp-field--check,
+                .kp-switch,
+                .kp-upload__zone,
+                input.kp-field__check:not(.kp-field__option *, .kp-field--check *, .kp-menu__item *)
+            ):focus-visible,
+        [data-theme='cyberpunk']
+            :where(a[href]:not([class]):not(.kp-nav a, .kp-sidenav a, .kp-pagination a, .kp-breadcrumb a, .kp-footer a), a.kp-url):focus-visible,
+        [data-theme='cyberpunk'] :is(.kp-field__option, .kp-field--check, .kp-switch):has(input:focus-visible),
+        [data-theme='cyberpunk'] :focus-visible + .kp-upload__zone,
+        [data-theme='cyberpunk'] [data-kp-upload]:has([data-kp-upload-input]:focus-visible) .kp-upload__zone {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-end),
+                --kp-cp-p 0s steps(1, end) 180ms,
+                --kp-cp-ft 180ms steps(4, jump-start),
+                --kp-cp-fp 0s steps(1, end);
+        }
+
+        [data-theme='cyberpunk']
+            :where(
+                :is(
+                    button,
+                    ,
+                    summary,
+                    ,
+                    select,
+                    ,
+                    textarea,
+                    ,
+                    input:not([type='checkbox'], [type='radio'], [type='range'], [type='hidden'], [type='file'], [type='color']),
+                    ,
+                    [role='tab'],
+                    ,
+                    [role='option'],
+                    ,
+                    [role='treeitem'],
+                    ,
+                    :is(th, td)[tabindex]:not([tabindex='-1']),
+                    ,
+                    a.kp-nav__link,
+                    ,
+                    a.kp-nav__brand,
+                    ,
+                    a.kp-sidenav__link,
+                    ,
+                    a.kp-kpi__link,
+                    ,
+                    .kp-nav a,
+                    ,
+                    .kp-sidenav a,
+                    ,
+                    .kp-pagination a,
+                    ,
+                    .kp-breadcrumb a,
+                    ,
+                    .kp-footer a,
+                    ,
+                    .kp-chart__plot,
+                    ,
+                    .kp-kpi__chart-plot,
+                    ,
+                    .kp-grid__tile[tabindex],
+                    ,
+                    .kp-skip-link
+                ):not(.kp-button, .kp-menu__item, .kp-kpi, .kp-calendar__day, .kp-card, .kp-sr-only),
+                .kp-field__option,
+                .kp-field--check,
+                .kp-switch,
+                .kp-upload__zone,
+                input.kp-field__check:not(.kp-field__option *, .kp-field--check *, .kp-menu__item *)
+            ):hover:not(:disabled, [aria-disabled='true']):focus-visible {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-start),
+                --kp-cp-p 0s steps(1, end),
+                --kp-cp-ft 180ms steps(4, jump-start),
+                --kp-cp-fp 0s steps(1, end);
+        }
+
+        [data-theme='cyberpunk'] .kp-calendar__day {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-end),
+                --kp-cp-p 0s steps(1, end) 180ms,
+                --kp-cp-ft 180ms steps(4, jump-end),
+                --kp-cp-fp 0s steps(1, end) 180ms;
+        }
+
+        [data-theme='cyberpunk'] .kp-calendar__day:hover:not(:is(:disabled, [aria-disabled='true'], [data-kp-tone='loading'])) {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-start),
+                --kp-cp-p 0s steps(1, end),
+                --kp-cp-ft 180ms steps(4, jump-end),
+                --kp-cp-fp 0s steps(1, end) 180ms;
+        }
+
+        [data-theme='cyberpunk'] .kp-calendar__day:focus-visible {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-end),
+                --kp-cp-p 0s steps(1, end) 180ms,
+                --kp-cp-ft 180ms steps(4, jump-start),
+                --kp-cp-fp 0s steps(1, end);
+        }
+
+        [data-theme='cyberpunk'] .kp-calendar__day:hover:not(:is(:disabled, [aria-disabled='true'], [data-kp-tone='loading'])):focus-visible {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-start),
+                --kp-cp-p 0s steps(1, end),
+                --kp-cp-ft 180ms steps(4, jump-start),
+                --kp-cp-fp 0s steps(1, end);
         }
     }
 
@@ -15112,6 +15765,81 @@
         --kp-cp-px: calc(1px * var(--kp-progressbar-scale, 1));
         --kp-cp-void: var(--sidebar-background);
         --kp-cp-cut: var(--kp-progressbar-height);
+    }
+
+    /* Progress: the fill and its head advance in three ticks of 60 ms (the package's knobs). */
+    [data-theme='cyberpunk'] .kp-progressbar {
+        --kp-progressbar-duration: 180ms;
+        --kp-progressbar-ease: steps(3, jump-end);
+    }
+
+    /* Contact on the parts that are not a button or a field [G1, G4]: three ticks of 60 ms,
+       never the register's smooth curve. A group of the side navigation unfolds and folds, its
+       chevron turns, on the same three ticks, the fold being the unfold's jump-start mirror; the
+       panel's own slide reads the token (js/sidenav.js turns it round for the close). */
+    [data-theme='cyberpunk'] .kp-sidenav {
+        --kp-sidenav-ease: steps(3, jump-end);
+    }
+
+    [data-theme='cyberpunk'] .kp-sidenav__category:not([data-kp-sidenav-expanded]) > .kp-sidenav__submenu,
+    [data-theme='cyberpunk'] .kp-sidenav__category-toggle[aria-expanded='false']::after {
+        transition-timing-function: steps(3, jump-start);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] :is(.kp-nav__link, .kp-nav) {
+            transition-timing-function: steps(3, jump-end);
+        }
+
+        [data-theme='cyberpunk'] .kp-switch__input,
+        [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter)::after {
+            transition-timing-function: steps(3, jump-end);
+        }
+
+        /* The calendar's busy layers (the whole grid's card and a day's spinner) arrive by the
+           channel split and leave as it played backwards (lesson 19): js/calendar.js marks a
+           layer `[data-kp-leaving]` while its state goes (`--kp-calendar-busy-leave: hold`), and the
+           rules below keep it drawn through the 480 ms of that leave. Firefox does not hold
+           `display` for a transition, so this is an animation in both engines. */
+        [data-theme='cyberpunk'] :is(.kp-calendar__day-busy, .kp-calendar__busy) {
+            --kp-calendar-busy-leave: hold;
+            transition: none;
+        }
+
+        [data-theme='cyberpunk']
+            :is(.kp-calendar--busy-days, .kp-calendar--busy-whole:not(:has(> .kp-calendar__grid[aria-busy='true'])))
+            .kp-calendar__day[data-kp-tone='loading']
+            > .kp-calendar__day-busy,
+        [data-theme='cyberpunk'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy {
+            animation: kp-sig-cyberpunk-split 480ms steps(1, end) backwards;
+        }
+
+        [data-theme='cyberpunk'] .kp-calendar__day:has(> .kp-calendar__day-busy[data-kp-leaving]) {
+            position: relative;
+        }
+
+        [data-theme='cyberpunk'] .kp-calendar__day-busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-spinner, 0.75rem);
+            position: absolute;
+            inset-inline: 0;
+            inset-block-end: 0.125rem;
+            display: flex;
+            justify-content: center;
+            line-height: 0;
+        }
+
+        [data-theme='cyberpunk'] .kp-calendar--busy-whole > .kp-calendar__busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-busy-spinner, 2.5rem);
+            z-index: 1;
+            display: grid;
+            place-self: center;
+            place-items: center;
+            padding: var(--kp-space-md, 1rem);
+            border-radius: var(--radius, 0.5rem);
+            background: var(--card);
+            box-shadow: 0 0 0 1px var(--border);
+            line-height: 0;
+        }
     }
 
     [data-theme='cyberpunk'] .kp-progressbar__track {
@@ -15150,7 +15878,7 @@
             var(--kp-cp-void) calc(50% - 1px) calc(50% + 1px),
             var(--primary) calc(50% + 1px)
         );
-        transition-timing-function: cubic-bezier(0.2, 0.9, 0.2, 1);
+        transition-timing-function: steps(3, jump-end);
     }
 
     [data-theme='cyberpunk'] .kp-progressbar__fill::after {
@@ -15165,7 +15893,7 @@
 
     [data-theme='cyberpunk'] .kp-progressbar__head {
         z-index: 1;
-        transition-timing-function: cubic-bezier(0.2, 0.9, 0.2, 1);
+        transition-timing-function: steps(3, jump-end);
     }
 
     [data-theme='cyberpunk'] .kp-progressbar__head::before,
@@ -15292,7 +16020,7 @@
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='cyberpunk'] .kp-progressbar:not([data-kp-indeterminate]) .kp-progressbar__fill::after {
-            animation: kp-cp-charge 520ms cubic-bezier(0.2, 0.9, 0.2, 1) 200ms 1 both;
+            animation: kp-cp-charge 480ms steps(4, jump-end) 180ms 1 both;
         }
 
         [data-theme='cyberpunk'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
@@ -15300,7 +16028,7 @@
         }
 
         [data-theme='cyberpunk'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::after {
-            animation: kp-cp-stream-216 1200ms linear infinite;
+            animation: kp-cp-stream-216 1800ms linear infinite;
         }
     }
 
@@ -15310,7 +16038,8 @@
        down, and it snaps back. The bars are four gradient layers of the one element, their
        heights four registered properties on four phases of the same loop. In a busy button every
        ink is the button's own. */
-    [data-theme='cyberpunk'] .kp-spinner {
+    [data-theme='cyberpunk'] .kp-spinner,
+    [data-theme='cyberpunk'] .kp-skeleton--circle {
         --kp-sig-dur: 3000ms;
         --kp-cp-sp-cap: var(--accent);
         --kp-cp-sp-body: var(--primary);
@@ -15342,12 +16071,21 @@
     }
 
     [data-theme='cyberpunk'] .kp-spinner::before,
-    [data-theme='cyberpunk'] .kp-spinner::after {
+    [data-theme='cyberpunk'] .kp-spinner::after,
+    [data-theme='cyberpunk'] .kp-skeleton--circle::before,
+    [data-theme='cyberpunk'] .kp-skeleton--circle::after {
         content: none;
     }
 
+    /* A round skeleton stands in for a portrait: waiting, it is the same bars with their glitch
+       copy, sized by its own box (the spinner's size property is its width). */
+    [data-theme='cyberpunk'] .kp-skeleton--circle {
+        --kp-spinner-size: var(--kp-skeleton-circle, 3rem);
+    }
+
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='cyberpunk'] .kp-spinner {
+        [data-theme='cyberpunk'] .kp-spinner,
+        [data-theme='cyberpunk'] .kp-skeleton--circle {
             animation:
                 kp-sig-cyberpunk-bars-1 3000ms steps(1, end) infinite,
                 kp-sig-cyberpunk-bars-2 3000ms steps(1, end) -975ms infinite,
@@ -15372,7 +16110,7 @@
         border-radius: 0;
         background: var(--sidebar-background);
         box-shadow: inset 0 0 0 1px var(--border);
-        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%);
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--fx-notch-sm, 8px)), calc(100% - var(--fx-notch-sm, 8px)) 100%, 0 100%);
         animation: none;
     }
 
@@ -15380,7 +16118,41 @@
         content: none;
     }
 
+    /* A block (a chart's waiting plot, its source stubs, a card's picture) keeps its own size and
+       takes the line's plate and its word. The package's pulse (css/components.css, 1600 ms
+       ease-in-out) is not this theme's picture: nothing but the word and the bars waits here. */
+    [data-theme='cyberpunk'] .kp-skeleton--block {
+        --kp-sig-dur: 1800ms;
+        position: relative;
+        overflow: hidden;
+        background: var(--sidebar-background);
+        box-shadow: inset 0 0 0 1px var(--border);
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--fx-notch-sm, 8px)), calc(100% - var(--fx-notch-sm, 8px)) 100%, 0 100%);
+        animation: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-skeleton--block::after {
+        content: none;
+    }
+
+    /* A day that waits keeps the bars of its spinner and stops pulsing. */
+    [data-theme='cyberpunk'] .kp-calendar__day[data-kp-tone='loading'] {
+        animation: none;
+    }
+
+    /* A busy table is one picture: the overlay's bars and words. The status line's own spinner and
+       the skeleton cells' word stand down while the overlay shows. */
+    [data-theme='cyberpunk'] .kp-datatable:has(> .kp-datatable__busy-overlay) .kp-datatable__status > .kp-spinner {
+        display: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-datatable:has(> .kp-datatable__busy-overlay) .kp-skeleton::before {
+        content: none;
+        animation: none;
+    }
+
     [data-theme='cyberpunk'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before,
+    [data-theme='cyberpunk'] .kp-skeleton--block::before,
     [data-theme='cyberpunk'] .kp-progressbar[data-kp-indeterminate]::before,
     [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
         /* The word comes from js/strings.js (`loadingWord`, through
@@ -15412,6 +16184,7 @@
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='cyberpunk'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before,
+        [data-theme='cyberpunk'] .kp-skeleton--block::before,
         [data-theme='cyberpunk'] .kp-progressbar[data-kp-indeterminate]::before,
         [data-theme='cyberpunk'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
             animation:
@@ -15458,7 +16231,7 @@
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='cyberpunk'] .kp-switch__input::before {
-            transition: transform 150ms steps(3, jump-end);
+            transition: transform 180ms steps(3, jump-end);
         }
     }
 
@@ -15667,7 +16440,17 @@
                 [class],
                 :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-breadcrumb, .kp-sidenav, .kp-footer) a
             )::after {
-            transition: transform 180ms cubic-bezier(0.2, 0, 0, 1);
+            transition: transform 180ms steps(3, jump-start);
+        }
+
+        /* Drawn in three ticks, wiped out in the same three backwards (jump-start is jump-end
+           reversed): contact is a tick count, never an ease [G1, G4]. */
+        [data-theme='cyberpunk']
+            a:not(
+                [class],
+                :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-breadcrumb, .kp-sidenav, .kp-footer) a
+            ):hover::after {
+            transition-timing-function: steps(3, jump-end);
         }
     }
 
@@ -16038,7 +16821,8 @@
                 2px -2px 0 var(--primary);
         }
 
-        75% {
+        75%,
+        100% {
             clip-path: var(--kp-cp-wide, none);
             box-shadow: var(--kp-cp-b3, 0 0 transparent), var(--kp-cp-rest, 0 0 transparent);
             text-shadow:
@@ -16075,7 +16859,8 @@
                 2px -2px 0 var(--primary);
         }
 
-        75% {
+        75%,
+        100% {
             clip-path: var(--kp-cp-wide, none);
             box-shadow: var(--kp-cp-b3, 0 0 transparent), var(--kp-cp-rest, 0 0 transparent);
             text-shadow:
@@ -16225,6 +17010,22 @@
            in the close's time, and lets what arrives play this leave backwards. */
         [data-theme='cyberpunk'] {
             --kp-open: reverse-close;
+            /* A part a script removes or hides (the busy table's layer, the empty state, a
+               file row, a tree branch's children, a swapped tab panel, a re-shown alert)
+               leaves first, as it arrives (js/motion.js leavesState(), lessons 19, 23-26);
+               what takes no box arrives as nothing; the space a leave folds shut takes the
+               leave's own four ticks and starts with it. */
+            --kp-leave-state: leave;
+            --kp-arrive-unseen: skip;
+            --kp-leave-fold-grow: 1;
+            --kp-leave-fold-start: 0;
+            /* ...in the split's four ticks (js/motion.js foldCurve()), so the space is never
+               held for a leave and dropped in one step at its end. */
+            --kp-leave-fold-ease: steps(4, end);
+            /* A tab swap: the new panel's fold is one tick behind the old one's (the old holds
+               48, 36, 24, 12; the new is 0, 12, 24, 36), so the two add up to one panel and the
+               box under them stays where it is (lesson 25). */
+            --kp-swap-fold-ease: steps(4, start);
         }
 
         [data-theme='cyberpunk'] [data-kp-leaving] {
@@ -16492,8 +17293,8 @@
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='cyberpunk'] .kp-meter__mark {
             transition:
-                inset-inline-start 200ms steps(2),
-                rotate 200ms steps(2);
+                inset-inline-start 180ms steps(3),
+                rotate 180ms steps(3);
         }
     }
 
@@ -16706,9 +17507,592 @@
             outline-color: transparent;
         }
     }
+    /* <<cfd-begin>> ─────────────────────────────────────────────────────────────────────────
+       Round 2, groups C, D and F [Kenny, 2026-10-12]: the navbar's plate and pointing, the cut
+       on every plate and control that was a rectangle, prose in the body face and the machine's
+       prefixes. Written last so it states the grammar once; the rules above it that these
+       replace were removed or are overruled by layer order. */
+
+    [data-theme='cyberpunk'] {
+        /* A cut for a part too small for the control's 8 px: a share of its own height. */
+        --kp-cp-clip-mini: polygon(
+            0 0,
+            100% 0,
+            100% calc(100% - min(var(--kp-cp-notch-sm), 38%)),
+            calc(100% - min(var(--kp-cp-notch-sm), 38%)) 100%,
+            0 100%
+        );
+        --kp-cp-wide-mini: polygon(
+            -40px -40px,
+            calc(100% + 40px) -40px,
+            calc(100% + 40px) calc(100% - min(var(--kp-cp-notch-sm), 38%) - 40px),
+            calc(100% - min(var(--kp-cp-notch-sm), 38%) - 40px) calc(100% + 40px),
+            -40px calc(100% + 40px)
+        );
+        /* A tab is cut at the head, the way a dossier tab is, so its selected line stays whole. */
+        --kp-cp-clip-ctl-top: polygon(0 0, calc(100% - var(--kp-cp-notch-sm)) 0, 100% var(--kp-cp-notch-sm), 100% 100%, 0 100%);
+        --kp-cp-wide-ctl-top: polygon(
+            -40px -40px,
+            calc(100% - var(--kp-cp-notch-sm) - 40px) -40px,
+            calc(100% + 40px) calc(var(--kp-cp-notch-sm) + 40px),
+            calc(100% + 40px) calc(100% + 40px),
+            -40px calc(100% + 40px)
+        );
+    }
+
+    /* ── C. The navbar [G3, G6, G8, G12, G14] ───────────────────────────────────────────────
+       The bar is a holo plate: its yellow ground with the scan lines at 135 degrees, cut by the
+       14 px notch at the dossier corner. It is drawn on a pseudo-element, not on the bar,
+       because a clip on the bar would cut its dropdowns with it. */
+    [data-theme='cyberpunk'] .kp-nav::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        background:
+            repeating-linear-gradient(135deg, hsl(from var(--surface-hero-fg) h s l / 0.06) 0 2px, transparent 2px 6px), var(--surface-hero-bg);
+        clip-path: var(--kp-cp-clip-plate);
+    }
+
+    /* The bar arrives by the channel split as one picture, plate and links together (the copies
+       are drawn by `filter`, which sees what the notch cut), and a bar that leaves goes as that
+       played backwards, held on its last pose until it is removed. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-nav {
+            animation: kp-sig-cyberpunk-split-bar 480ms steps(1, end) backwards;
+        }
+
+        [data-theme='cyberpunk'] :is(.kp-nav-wrap, .kp-nav)[data-kp-leaving] {
+            animation: kp-sig-cyberpunk-split-bar-out 480ms steps(1, end) forwards;
+        }
+
+        [data-theme='cyberpunk'] .kp-nav-wrap[data-kp-leaving] > .kp-nav {
+            animation: none;
+        }
+    }
+
+    /* The bar's leave: the arrival's four poses in the other order, the last held until the bar is
+       gone, so no frame of it is the bare bar. */
+    @keyframes kp-sig-cyberpunk-split-bar-out {
+        0% {
+            filter: drop-shadow(1px 1px 0 var(--accent)) drop-shadow(1px -1px 0 var(--primary));
+        }
+
+        25% {
+            filter: drop-shadow(2px 2px 0 var(--accent)) drop-shadow(2px -2px 0 var(--primary));
+        }
+
+        50% {
+            filter: drop-shadow(4px 3px 0 var(--accent)) drop-shadow(4px -3px 0 var(--primary));
+        }
+
+        75%,
+        100% {
+            filter: drop-shadow(6px 4px 0 var(--accent)) drop-shadow(6px -4px 0 var(--primary));
+        }
+    }
+
+    /* Pointing, focus and press on the bar's links, its brand, the pagination and the phone
+       toggle are the theme's own: the split edge (cyan along the head and the end, red along the
+       foot, 6 px settling to 2 px in four ticks), four closing brackets in two channels, and the
+       closed circuit while held; none of them moves the part. The brackets and the grid are
+       background layers, because a link's two pseudo-elements are its caret and its glitch copy. */
+    [data-theme='cyberpunk'] :is(.kp-nav__link, .kp-nav__brand, .kp-pagination :is(a, button)) {
+        --kp-cp-t: 4;
+        --kp-cp-p: 0;
+        --kp-cp-ft: 4;
+        --kp-cp-fp: 0;
+        --kp-cp-d: calc(var(--kp-cp-p) * (2px + var(--kp-cp-t) * 1px));
+        --kp-cp-grid-a: 0;
+        position: relative;
+        box-shadow:
+            inset 0 calc(-1 * var(--kp-cp-d)) 0 0 color-mix(in srgb, var(--destructive) calc(var(--kp-cp-p) * 100%), transparent),
+            inset calc(-1 * var(--kp-cp-d)) var(--kp-cp-d) 0 0 color-mix(in srgb, var(--accent) calc(var(--kp-cp-p) * 100%), transparent);
+        background-image:
+            linear-gradient(var(--focus-ring), var(--focus-ring)), linear-gradient(var(--focus-ring), var(--focus-ring)),
+            linear-gradient(var(--focus-ring), var(--focus-ring)), linear-gradient(var(--focus-ring), var(--focus-ring)),
+            linear-gradient(var(--focus-ring), var(--focus-ring)), linear-gradient(var(--focus-ring), var(--focus-ring)),
+            linear-gradient(var(--focus-ring), var(--focus-ring)), linear-gradient(var(--focus-ring), var(--focus-ring)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            repeating-linear-gradient(to bottom, hsl(from currentColor h s l / var(--kp-cp-grid-a)) 0 1px, transparent 1px 14px),
+            repeating-linear-gradient(to right, hsl(from currentColor h s l / var(--kp-cp-grid-a)) 0 1px, transparent 1px 14px);
+        background-size:
+            calc(9px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(9px * var(--kp-cp-fp)),
+            calc(9px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(9px * var(--kp-cp-fp)),
+            calc(9px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(9px * var(--kp-cp-fp)),
+            calc(9px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(9px * var(--kp-cp-fp)),
+            calc(7px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(7px * var(--kp-cp-fp)),
+            calc(7px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(7px * var(--kp-cp-fp)),
+            calc(7px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(7px * var(--kp-cp-fp)),
+            calc(7px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(7px * var(--kp-cp-fp)),
+            100% 100%,
+            100% 100%;
+        background-position:
+            left calc(var(--kp-cp-ft) * 3px + 0px) top calc(var(--kp-cp-ft) * 3px + 0px),
+            left calc(var(--kp-cp-ft) * 3px + 0px) top calc(var(--kp-cp-ft) * 3px + 0px),
+            right calc(var(--kp-cp-ft) * 3px + 0px) top calc(var(--kp-cp-ft) * 3px + 0px),
+            right calc(var(--kp-cp-ft) * 3px + 0px) top calc(var(--kp-cp-ft) * 3px + 0px),
+            left calc(var(--kp-cp-ft) * 3px + 0px) bottom calc(var(--kp-cp-ft) * 3px + 0px),
+            left calc(var(--kp-cp-ft) * 3px + 0px) bottom calc(var(--kp-cp-ft) * 3px + 0px),
+            right calc(var(--kp-cp-ft) * 3px + 0px) bottom calc(var(--kp-cp-ft) * 3px + 0px),
+            right calc(var(--kp-cp-ft) * 3px + 0px) bottom calc(var(--kp-cp-ft) * 3px + 0px),
+            left calc(var(--kp-cp-ft) * 3px + 2px) top calc(var(--kp-cp-ft) * 3px + 2px),
+            left calc(var(--kp-cp-ft) * 3px + 2px) top calc(var(--kp-cp-ft) * 3px + 2px),
+            right calc(var(--kp-cp-ft) * 3px + 2px) top calc(var(--kp-cp-ft) * 3px + 2px),
+            right calc(var(--kp-cp-ft) * 3px + 2px) top calc(var(--kp-cp-ft) * 3px + 2px),
+            left calc(var(--kp-cp-ft) * 3px + 2px) bottom calc(var(--kp-cp-ft) * 3px + 2px),
+            left calc(var(--kp-cp-ft) * 3px + 2px) bottom calc(var(--kp-cp-ft) * 3px + 2px),
+            right calc(var(--kp-cp-ft) * 3px + 2px) bottom calc(var(--kp-cp-ft) * 3px + 2px),
+            right calc(var(--kp-cp-ft) * 3px + 2px) bottom calc(var(--kp-cp-ft) * 3px + 2px),
+            0 0,
+            0 0;
+        background-repeat: no-repeat;
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__brand {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        margin: -0.25rem -0.5rem;
+    }
+
+    [data-theme='cyberpunk']
+        :is(
+            .kp-nav__link:hover,
+            .kp-nav__links > li:hover > .kp-nav__link,
+            .kp-nav__brand:hover,
+            .kp-pagination :is(a, button):hover:not(:disabled, [aria-disabled='true'])
+        ) {
+        --kp-cp-t: 0;
+        --kp-cp-p: 1;
+    }
+
+    [data-theme='cyberpunk'] :is(.kp-nav__link, .kp-nav__brand, .kp-pagination :is(a, button)):focus-visible {
+        --kp-cp-ft: 0;
+        --kp-cp-fp: 1;
+        outline: none;
+    }
+
+    [data-theme='cyberpunk'] :is(.kp-nav__link, .kp-nav__brand, .kp-pagination :is(a, button)):active:not(:disabled, [aria-disabled='true']) {
+        --kp-cp-grid-a: 0.6;
+        background-color: var(--secondary);
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__link.kp-nav__link--cta:active:not(:disabled, [aria-disabled='true']) {
+        background-color: var(--primary-active);
+    }
+
+    /* The phone bar's toggle is a cut control: its split edge follows the cut (a ring between the
+       cut and the cut moved in, as on a button) and the cut is drawn with its own line. */
+    [data-theme='cyberpunk'] .kp-nav__toggle {
+        --kp-cp-t: 4;
+        --kp-cp-p: 0;
+        --kp-cp-ft: 4;
+        --kp-cp-fp: 0;
+        --kp-cp-d: calc(var(--kp-cp-p) * (2px + var(--kp-cp-t) * 1px));
+        --kp-cp-ct: 0px;
+        --kp-cp-cb: var(--kp-cp-notch-sm);
+        --kp-cp-grid-a: 0;
+        --kp-cp-ring: polygon(
+            evenodd,
+            0 0,
+            calc(100% - var(--kp-cp-ct)) 0,
+            100% var(--kp-cp-ct),
+            100% calc(100% - var(--kp-cp-cb)),
+            calc(100% - var(--kp-cp-cb)) 100%,
+            0 100%,
+            0 0,
+            0 var(--kp-cp-d),
+            calc(100% - max(var(--kp-cp-d), var(--kp-cp-ct) + 0.414 * var(--kp-cp-d))) var(--kp-cp-d),
+            calc(100% - var(--kp-cp-d)) max(var(--kp-cp-d), var(--kp-cp-ct) + 0.414 * var(--kp-cp-d)),
+            calc(100% - var(--kp-cp-d)) calc(100% - max(var(--kp-cp-d), var(--kp-cp-cb) + 0.414 * var(--kp-cp-d))),
+            calc(100% - max(var(--kp-cp-d), var(--kp-cp-cb) + 0.414 * var(--kp-cp-d))) calc(100% - var(--kp-cp-d)),
+            0 calc(100% - var(--kp-cp-d)),
+            0 var(--kp-cp-d)
+        );
+        position: relative;
+        isolation: isolate;
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip-ctl);
+        background-image:
+            linear-gradient(var(--focus-ring), var(--focus-ring)), linear-gradient(var(--focus-ring), var(--focus-ring)),
+            linear-gradient(var(--focus-ring), var(--focus-ring)), linear-gradient(var(--focus-ring), var(--focus-ring)),
+            linear-gradient(var(--focus-ring), var(--focus-ring)), linear-gradient(var(--focus-ring), var(--focus-ring)),
+            linear-gradient(var(--focus-ring), var(--focus-ring)), linear-gradient(var(--focus-ring), var(--focus-ring)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            linear-gradient(var(--focus-ring-contrast), var(--focus-ring-contrast)),
+            linear-gradient(135deg, transparent calc(50% - 1px), var(--border-strong) calc(50% - 1px)),
+            repeating-linear-gradient(to bottom, hsl(from currentColor h s l / var(--kp-cp-grid-a)) 0 1px, transparent 1px 14px),
+            repeating-linear-gradient(to right, hsl(from currentColor h s l / var(--kp-cp-grid-a)) 0 1px, transparent 1px 14px);
+        background-size:
+            calc(9px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(9px * var(--kp-cp-fp)),
+            calc(9px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(9px * var(--kp-cp-fp)),
+            calc(9px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(9px * var(--kp-cp-fp)),
+            calc(9px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(9px * var(--kp-cp-fp)),
+            calc(7px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(7px * var(--kp-cp-fp)),
+            calc(7px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(7px * var(--kp-cp-fp)),
+            calc(7px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(7px * var(--kp-cp-fp)),
+            calc(7px * var(--kp-cp-fp)) calc(2px * var(--kp-cp-fp)),
+            calc(2px * var(--kp-cp-fp)) calc(7px * var(--kp-cp-fp)),
+            var(--kp-cp-notch-sm) var(--kp-cp-notch-sm),
+            100% 100%,
+            100% 100%;
+        background-position:
+            left calc(var(--kp-cp-ft) * 3px + 0px) top calc(var(--kp-cp-ft) * 3px + 0px),
+            left calc(var(--kp-cp-ft) * 3px + 0px) top calc(var(--kp-cp-ft) * 3px + 0px),
+            right calc(var(--kp-cp-ft) * 3px + 0px) top calc(var(--kp-cp-ft) * 3px + 0px),
+            right calc(var(--kp-cp-ft) * 3px + 0px) top calc(var(--kp-cp-ft) * 3px + 0px),
+            left calc(var(--kp-cp-ft) * 3px + 0px) bottom calc(var(--kp-cp-ft) * 3px + 0px),
+            left calc(var(--kp-cp-ft) * 3px + 0px) bottom calc(var(--kp-cp-ft) * 3px + 0px),
+            right calc(var(--kp-cp-ft) * 3px + 0px) bottom calc(var(--kp-cp-ft) * 3px + 0px),
+            right calc(var(--kp-cp-ft) * 3px + 0px) bottom calc(var(--kp-cp-ft) * 3px + 0px),
+            left calc(var(--kp-cp-ft) * 3px + 2px) top calc(var(--kp-cp-ft) * 3px + 2px),
+            left calc(var(--kp-cp-ft) * 3px + 2px) top calc(var(--kp-cp-ft) * 3px + 2px),
+            right calc(var(--kp-cp-ft) * 3px + 2px) top calc(var(--kp-cp-ft) * 3px + 2px),
+            right calc(var(--kp-cp-ft) * 3px + 2px) top calc(var(--kp-cp-ft) * 3px + 2px),
+            left calc(var(--kp-cp-ft) * 3px + 2px) bottom calc(var(--kp-cp-ft) * 3px + 2px),
+            left calc(var(--kp-cp-ft) * 3px + 2px) bottom calc(var(--kp-cp-ft) * 3px + 2px),
+            right calc(var(--kp-cp-ft) * 3px + 2px) bottom calc(var(--kp-cp-ft) * 3px + 2px),
+            right calc(var(--kp-cp-ft) * 3px + 2px) bottom calc(var(--kp-cp-ft) * 3px + 2px),
+            right bottom,
+            0 0,
+            0 0;
+        background-repeat: no-repeat;
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__toggle::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        background: linear-gradient(0deg, var(--destructive) 0 var(--kp-cp-d), var(--accent) var(--kp-cp-d));
+        clip-path: var(--kp-cp-ring);
+        pointer-events: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__toggle:hover {
+        --kp-cp-t: 0;
+        --kp-cp-p: 1;
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__toggle:focus-visible {
+        --kp-cp-ft: 0;
+        --kp-cp-fp: 1;
+        outline: none;
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__toggle:active {
+        --kp-cp-grid-a: 0.6;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] :is(.kp-nav__link, .kp-nav__brand, .kp-pagination :is(a, button), .kp-nav__toggle) {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-end),
+                --kp-cp-p 0s steps(1, end) 180ms,
+                --kp-cp-ft 180ms steps(4, jump-end),
+                --kp-cp-fp 0s steps(1, end) 180ms;
+        }
+
+        [data-theme='cyberpunk']
+            :is(
+                .kp-nav__link:hover,
+                .kp-nav__links > li:hover > .kp-nav__link,
+                .kp-nav__brand:hover,
+                .kp-pagination :is(a, button):hover:not(:disabled, [aria-disabled='true']),
+                .kp-nav__toggle:hover
+            ) {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-start),
+                --kp-cp-p 0s steps(1, end),
+                --kp-cp-ft 180ms steps(4, jump-end),
+                --kp-cp-fp 0s steps(1, end) 180ms;
+        }
+
+        [data-theme='cyberpunk'] :is(.kp-nav__link, .kp-nav__brand, .kp-pagination :is(a, button), .kp-nav__toggle):focus-visible {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-end),
+                --kp-cp-p 0s steps(1, end) 180ms,
+                --kp-cp-ft 180ms steps(4, jump-start),
+                --kp-cp-fp 0s steps(1, end);
+        }
+
+        [data-theme='cyberpunk']
+            :is(
+                .kp-nav__link:hover,
+                .kp-nav__links > li:hover > .kp-nav__link,
+                .kp-nav__brand:hover,
+                .kp-pagination :is(a, button):hover:not(:disabled, [aria-disabled='true']),
+                .kp-nav__toggle:hover
+            ):focus-visible {
+            transition:
+                --kp-cp-t 180ms steps(4, jump-start),
+                --kp-cp-p 0s steps(1, end),
+                --kp-cp-ft 180ms steps(4, jump-start),
+                --kp-cp-fp 0s steps(1, end);
+        }
+    }
+
+    /* ── F. Every plate is cut at its dossier corner, every control at its end [G6] ─────────
+       14 px on a plate, 8 px on a control, a share of its height on a part too small for 8;
+       nothing is round (the radio is the one exception, the graph's kind chips another). */
+    [data-theme='cyberpunk']
+        :is(
+            .kp-palette,
+            .kp-drawer,
+            .kp-accordion__item,
+            .kp-upload__zone,
+            .kp-upload__file,
+            .kp-code-block,
+            .kp-footer,
+            .kp-form__summary,
+            .kp-alarm,
+            .kp-timeline,
+            .kp-shortcuts,
+            .kp-diff,
+            .kp-sidenav,
+            .kp-tabs__list
+        ) {
+        --kp-cp-clip: var(--kp-cp-clip-plate);
+        --kp-cp-wide: var(--kp-cp-wide-plate);
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip);
+    }
+
+    /* The parts that open by the split carry its copies, as the other plates do. */
+    [data-theme='cyberpunk'] :is(.kp-palette, .kp-drawer, .kp-alarm, .kp-shortcuts) {
+        --kp-cp-b0: 6px 4px 0 var(--accent), 6px -4px 0 var(--primary);
+        --kp-cp-b1: 4px 3px 0 var(--accent), 4px -3px 0 var(--primary);
+        --kp-cp-b2: 2px 2px 0 var(--accent), 2px -2px 0 var(--primary);
+        --kp-cp-b3: 1px 1px 0 var(--accent), 1px -1px 0 var(--primary);
+    }
+
+    /* The side navigation's panel plays its copies outside its box while its clock runs, so its
+       cut is wide by the same clock: no room round the plate at rest, 40 px while it plays. */
+    [data-theme='cyberpunk'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) {
+        --kp-cp-e: calc(min(1, var(--kp-sn-t)) * 40px);
+        clip-path: polygon(
+            calc(-1 * var(--kp-cp-e)) calc(-1 * var(--kp-cp-e)),
+            calc(100% - var(--kp-cp-notch) - var(--kp-cp-e)) calc(-1 * var(--kp-cp-e)),
+            calc(100% + var(--kp-cp-e)) calc(var(--kp-cp-notch) + var(--kp-cp-e)),
+            calc(100% + var(--kp-cp-e)) calc(100% + var(--kp-cp-e)),
+            calc(-1 * var(--kp-cp-e)) calc(100% + var(--kp-cp-e))
+        );
+    }
+
+    [data-theme='cyberpunk']
+        :is(.kp-tag, .kp-icon-button, .kp-switch__input, .kp-chart__source, .kp-attention__icon, .kp-combobox__input, .kp-skip-link) {
+        --kp-cp-clip: var(--kp-cp-clip-ctl);
+        --kp-cp-wide: var(--kp-cp-wide-ctl);
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip);
+    }
+
+    [data-theme='cyberpunk'] .kp-tab {
+        --kp-cp-clip: var(--kp-cp-clip-ctl-top);
+        --kp-cp-wide: var(--kp-cp-wide-ctl-top);
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip);
+    }
+
+    [data-theme='cyberpunk'] :is(.kp-datatable__sort-order, .kp-chart__dot, .kp-swatch, .kp-tag__remove) {
+        --kp-cp-clip: var(--kp-cp-clip-mini);
+        --kp-cp-wide: var(--kp-cp-wide-mini);
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip);
+    }
+
+    /* A cut part has no room outside its box for an outline, so its focus is the ring drawn
+       inset in two channels, as the button's is. */
+    [data-theme='cyberpunk'] :is(.kp-icon-button, .kp-tab, .kp-switch__input, .kp-combobox__input, .kp-skip-link, .kp-chart__source):focus-visible {
+        outline: none;
+        box-shadow:
+            inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 0 0 calc(var(--kp-focus-ring-inner-width, 2px) + 2px) var(--focus-ring-contrast);
+    }
+
+    /* ── D. Prose is Rajdhani, the machine's names are mono [G15, lesson 18] ────────────────
+       The register had put the mono face on whole parts; the words inside them are prose. */
+    [data-theme='cyberpunk']
+        :is(
+            .kp-alarm__detail,
+            .kp-field__help,
+            .kp-field__error,
+            .kp-empty__body,
+            .kp-toast__body,
+            .kp-palette,
+            .kp-palette__option,
+            .kp-palette__description,
+            .kp-theme-menu__status,
+            .kp-cell-truncate,
+            .kp-truncate,
+            .kp-accordion__summary,
+            .kp-shortcuts__row dd,
+            .kp-error,
+            .kp-media-figure > figcaption
+        ) {
+        font-family: var(--theme-font-body);
+        letter-spacing: 0.02em;
+    }
+
+    [data-theme='cyberpunk'] .kp-media-figure > figcaption {
+        text-transform: none;
+        font-size: 0.8125rem;
+    }
+
+    [data-theme='cyberpunk'] .kp-palette__keys {
+        font-family: var(--kp-mono);
+    }
+
+    [data-theme='cyberpunk'] .kp-field__error::before {
+        font-family: var(--kp-mono);
+    }
+
+    /* The machine's prefixes [G15]: `//` before a badge, tag, table head, timestamp and a group
+       label, `!!` before a failure's badge; tracked as the labels are. */
+    [data-theme='cyberpunk']
+        :is(
+            .kp-badge,
+            .kp-tag,
+            .kp-table th:not(:has(input)),
+            .kp-timestamp,
+            .kp-theme-group__label,
+            .kp-shortcuts__group-label,
+            .kp-alert__label
+        )::before {
+        content: '// ';
+        content: '// ' / '';
+        opacity: 0.7;
+    }
+
+    [data-theme='cyberpunk'] :is(.kp-badge--destructive, .kp-badge--warning, .kp-badge[data-status='rejected'])::before {
+        content: '!! ';
+        content: '!! ' / '';
+    }
+
+    [data-theme='cyberpunk'] :is(.kp-theme-group__label, .kp-shortcuts__group-label, .kp-alert__label, .kp-progress__label) {
+        font-family: var(--kp-mono);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='cyberpunk'] .kp-timestamp {
+        letter-spacing: 0.12em;
+    }
+
+    /* ── Leftovers of the notch round [Kenny, 2026-10-12] ───────────────────────────────────
+       The check, the calendar and date picker days, the date picker's title and the table's search
+       field were still rectangles. A control is cut 8 px; a part too small for that (the check, 18 px)
+       by a share of its height (`--kp-cp-clip-mini`). The radio and the graph stay round (G6). The
+       focus brackets and the split edge are drawn inside the box, so the cut does not take them:
+       the corner brackets sit half a cut clear of the diagonal (`--kp-cp-nbr`). A bare accordion
+       item has no chrome, so no plate and no cut. */
+    [data-theme='cyberpunk'] :is(.kp-calendar__day, .kp-datepicker__day, .kp-datepicker__title, .kp-datatable__search) {
+        --kp-cp-clip: var(--kp-cp-clip-ctl);
+        --kp-cp-wide: var(--kp-cp-wide-ctl);
+        --kp-cp-nbr: calc(var(--kp-cp-notch-sm) + 2px);
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip);
+    }
+
+    [data-theme='cyberpunk'] .kp-nav__search-trigger {
+        --kp-cp-nbr: calc(var(--kp-cp-notch-sm) + 2px);
+    }
+
+    [data-theme='cyberpunk'] :is(.kp-nav__search-trigger, .kp-combobox__clear) {
+        --kp-cp-clip: var(--kp-cp-clip-ctl);
+        --kp-cp-wide: var(--kp-cp-wide-ctl);
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip);
+    }
+
+    /* A colour sample and a legend swatch are small parts: the cut is a share of their height. */
+    [data-theme='cyberpunk'] :is(.kp-colorpicker__swatch, .kp-calendar__swatch, .kp-spec__swatch, .kp-datatable__edit, .kp-datatable__pill-edit) {
+        --kp-cp-clip: var(--kp-cp-clip-mini);
+        --kp-cp-wide: var(--kp-cp-wide-mini);
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip);
+    }
+
+    [data-theme='cyberpunk'] .kp-accordion__item--bare {
+        clip-path: none;
+    }
+
+    /* The item is a plate now: its words keep clear of the rim and the notch. */
+    [data-theme='cyberpunk'] .kp-accordion__item:not(.kp-accordion__item--bare) > :is(.kp-accordion__summary, .kp-accordion__body) {
+        padding-inline: 1rem;
+    }
+
+    [data-theme='cyberpunk'] .kp-field__check:not([type='radio']) {
+        --kp-cp-clip: var(--kp-cp-clip-mini);
+        --kp-cp-wide: var(--kp-cp-wide-mini);
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip);
+        background-image: linear-gradient(135deg, transparent calc(50% - 1px), var(--primary) calc(50% - 1px));
+        background-position: right bottom;
+        background-size: 7px 7px;
+        background-repeat: no-repeat;
+    }
+
+    /* A check on its own is framed inside itself now (the cut would take a frame drawn outside): the
+       brackets are 6 px long and close from 4 px, the split edge is a third of the pair's. */
+    [data-theme='cyberpunk'] input.kp-field__check:not([type='radio']):not(.kp-field__option *, .kp-field--check *, .kp-menu__item *) {
+        --kp-cp-i: calc(var(--kp-cp-ft) * 1px);
+        --kp-cp-fa: calc(var(--kp-cp-fp) * 5px);
+        --kp-cp-fai: calc(var(--kp-cp-fp) * 3px);
+        --kp-cp-nbr: 10px;
+        --kp-cp-d: calc(var(--kp-cp-p) * (1px + var(--kp-cp-t) * 0.5px));
+    }
+
+    [data-theme='cyberpunk'] input.kp-field__check:not([type='radio']):not(.kp-field__option *, .kp-field--check *, .kp-menu__item *)::after {
+        inset: 0;
+    }
+
+    /* The check inside a label is framed by the label; its own outline would be cut, so it has none. */
+    [data-theme='cyberpunk'] .kp-field__check:not([type='radio']):focus-visible {
+        outline: none;
+    }
+    /* <<cfd-end>> */
 }
 
 /* ── End of the signature ── */
+
+/* <<cfd-layout-begin>> */
+/* The package's own rule for these lives in kp.layout, which a register's layers cannot beat. */
+@layer kp.layout {
+    [data-theme='cyberpunk'] .kp-code-block {
+        border-radius: 0;
+    }
+}
+/* <<cfd-layout-end>> */
 
 @layer kp.register {
     /* @kp-soft/themes — css/synthwave-register.css

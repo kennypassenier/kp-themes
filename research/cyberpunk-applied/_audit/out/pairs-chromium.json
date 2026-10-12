@@ -1,1994 +1,14 @@
 [
     {
-        "id": "dialog",
-        "ok": false,
-        "notes": ["the closing is not the opening backwards: 26.2 % off at frame 20/20"],
-        "worst": 0.26173757991377394,
-        "open": 480,
-        "close": 480,
-        "openDetail": [
-            {
-                "t": "kp-dialog",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-dialog::backdrop",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            }
-        ],
-        "closeDetail": [
-            {
-                "t": "kp-dialog",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-dialog::backdrop",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            }
-        ],
-        "radii": ["dialog.kp-dialog 512x180 radius 0px/0px/0px/0px font Rajdhani"],
-        "gone": 0
-    },
-    {
-        "id": "drawer",
-        "ok": false,
-        "notes": ["the closing is not the opening backwards: 20.6 % off at frame 20/20"],
-        "worst": 0.20603412438059354,
-        "open": 480,
-        "close": 480,
-        "openDetail": [
-            {
-                "t": "kp-drawer",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-drawer::backdrop",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            }
-        ],
-        "closeDetail": [
-            {
-                "t": "kp-drawer",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-drawer::backdrop",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            }
-        ],
-        "radii": ["dialog.kp-drawer 448x900 radius 0px/0px/0px/0px font Rajdhani"],
-        "gone": 0
-    },
-    {
-        "id": "palette",
-        "ok": false,
-        "notes": ["the closing is not the opening backwards: 10.6 % off at frame 20/20"],
-        "worst": 0.10598579181284767,
-        "open": 480,
-        "close": 480,
-        "openDetail": [
-            {
-                "t": "kp-palette::backdrop",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            }
-        ],
-        "closeDetail": [
-            {
-                "t": "kp-palette::backdrop",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            }
-        ],
-        "radii": ["dialog.kp-palette 578x317 radius 0px/0px/0px/0px font \"KP Tech Mono\""],
-        "gone": 0
-    },
-    {
-        "id": "datepicker",
-        "ok": true,
-        "notes": [],
-        "worst": 0.00006344285140451597,
-        "open": 480,
-        "close": 480,
-        "openDetail": [
-            {
-                "t": "kp-datepicker__panel",
-                "n": "kp-sig-cyberpunk-split",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            }
-        ],
-        "closeDetail": [
-            {
-                "t": "kp-datepicker__panel",
-                "n": "kp-sig-cyberpunk-split",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            }
-        ],
-        "radii": [],
-        "gone": 0
-    },
-    {
-        "id": "combobox",
-        "ok": false,
-        "notes": ["the closing runs no animation at all: it is gone at once"],
-        "worst": 1.7410783813958723,
-        "open": 480,
-        "close": 0,
-        "openDetail": [
-            {
-                "t": "kp-combobox__list",
-                "n": "kp-sig-cyberpunk-split",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            }
-        ],
-        "closeDetail": [],
-        "radii": ["ul.kp-combobox__list 213x188 radius 0px/0px/0px/0px font Rajdhani"],
-        "gone": 0
-    },
-    {
-        "id": "theme-menu",
-        "ok": true,
-        "notes": [],
-        "worst": 0,
-        "open": 480,
-        "close": 480,
-        "openDetail": [
-            {
-                "t": "kp-popover",
-                "n": "kp-sig-cyberpunk-split",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            }
-        ],
-        "closeDetail": [
-            {
-                "t": "kp-popover",
-                "n": "kp-sig-cyberpunk-split",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            }
-        ],
-        "radii": [
-            "div.kp-popover 168x632 radius 0px/0px/0px/0px font \"KP Tech Mono\"",
-            "ul.kp-menu 160x624 radius 0px/0px/0px/0px font \"KP Tech Mono\""
-        ],
-        "gone": 0
-    },
-    {
-        "id": "popover-row-actions",
-        "ok": false,
-        "notes": ["the closing runs no animation at all: it is gone at once"],
-        "worst": 1.5221935381311589,
-        "open": 480,
-        "close": 0,
-        "openDetail": [
-            {
-                "t": "kp-popover",
-                "n": "kp-sig-cyberpunk-split",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-menu__item",
-                "n": "kp-sig-cyberpunk-lock",
-                "ms": 360,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            }
-        ],
-        "closeDetail": [],
-        "radii": ["div.kp-popover 181x161 radius 0px/0px/0px/0px font Rajdhani"],
-        "gone": 0
-    },
-    {
-        "id": "tour",
-        "ok": true,
-        "notes": [],
-        "worst": 0,
-        "open": 480,
-        "close": 480,
-        "openDetail": [
-            {
-                "t": "kp-row",
-                "n": "box-shadow",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "steps(4)"
-            },
-            {
-                "t": "kp-row",
-                "n": "kp-sig-cyberpunk-tour-ring",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-tour",
-                "n": "kp-sig-cyberpunk-split",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            }
-        ],
-        "closeDetail": [
-            {
-                "t": "kp-row",
-                "n": "box-shadow",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear(0 0%, 0.25 "
-            },
-            {
-                "t": "kp-row",
-                "n": "outline-color",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear(0 0%, 0.25 "
-            },
-            {
-                "t": "kp-tour",
-                "n": "kp-sig-cyberpunk-split",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            }
-        ],
-        "radii": ["dialog.kp-tour 352x110 radius 0px/0px/0px/0px font Rajdhani"],
-        "gone": 0
-    },
-    {
-        "id": "alarm",
-        "ok": false,
-        "notes": ["the closing is not the opening backwards: 24.8 % off at frame 20/20"],
-        "worst": 0.24760739032894488,
-        "open": 480,
-        "close": 480,
-        "openDetail": [
-            {
-                "t": "kp-alarm",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm::backdrop",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__panel",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__glyphs::before",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__glyphs::after",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::before",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::after",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::before",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::after",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::before",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::after",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::before",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::after",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::before",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::after",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::before",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::after",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::before",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::after",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::before",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::after",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::before",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::after",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::before",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::after",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::before",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::after",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::before",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::after",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__detail",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            }
-        ],
-        "closeDetail": [
-            {
-                "t": "kp-alarm",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm::backdrop",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__panel",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__glyphs::before",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__glyphs::after",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::before",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::after",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::before",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::after",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::before",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::after",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::before",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::after",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::before",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::after",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::before",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::after",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::before",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::after",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::before",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::after",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::before",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::after",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::before",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::after",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::before",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::after",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::before",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__char::after",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alarm__detail",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            }
-        ],
-        "radii": [
-            "dialog.kp-alarm 1280x900 radius 0px/0px/0px/0px font Rajdhani",
-            "div.kp-alarm__panel 1152x345 radius 0px/0px/0px/0px font Rajdhani"
-        ],
-        "gone": 0
-    },
-    {
-        "id": "sidenav",
-        "ok": true,
-        "notes": [],
-        "worst": 0,
-        "open": 480,
-        "close": 480,
-        "openDetail": [
-            {
-                "t": "kp-sidenav",
-                "n": "--kp-sn-t",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "steps(4)"
-            },
-            {
-                "t": "kp-sidenav",
-                "n": "visibility",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-sidenav__backdrop",
-                "n": "kp-sig-cyberpunk-dim",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            }
-        ],
-        "closeDetail": [
-            {
-                "t": "kp-sidenav",
-                "n": "--kp-sn-t",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear(0 0%, 0.25 "
-            },
-            {
-                "t": "kp-sidenav",
-                "n": "visibility",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-sidenav__backdrop",
-                "n": "kp-sig-cyberpunk-dim",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            }
-        ],
-        "radii": [],
-        "gone": 0
-    },
-    {
-        "id": "bar-equipment",
-        "ok": true,
-        "notes": [],
-        "worst": 0.000759540554152597,
-        "open": 480,
-        "close": 480,
-        "openDetail": [
-            {
-                "t": "kp-nav__menu",
-                "n": "kp-sig-cyberpunk-split",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            }
-        ],
-        "closeDetail": [
-            {
-                "t": "kp-nav__menu",
-                "n": "--kp-cp-hold",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-nav__menu",
-                "n": "kp-sig-cyberpunk-split-back",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            }
-        ],
-        "radii": [],
-        "gone": 0
-    },
-    {
-        "id": "phone-bar",
-        "ok": false,
-        "notes": ["the closing is not the opening backwards: 100.2 % off at frame 0/20"],
-        "worst": 1.0015798057342844,
-        "open": 480,
-        "close": 480,
-        "openDetail": [
-            {
-                "t": "kp-nav__links",
-                "n": "kp-sig-cyberpunk-split-bar",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            }
-        ],
-        "closeDetail": [
-            {
-                "t": "kp-nav__links",
-                "n": "kp-sig-cyberpunk-split-bar-back",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            }
-        ],
-        "radii": [],
-        "gone": 0
-    },
-    {
-        "id": "sidenav-push",
-        "ok": true,
-        "notes": [],
-        "worst": 0,
-        "open": 480,
-        "close": 480,
-        "openDetail": [
-            {
-                "t": "kp-sidenav",
-                "n": "--kp-sn-t",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "steps(4)"
-            },
-            {
-                "t": "kp-sidenav",
-                "n": "visibility",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            }
-        ],
-        "closeDetail": [
-            {
-                "t": "kp-sidenav",
-                "n": "--kp-sn-t",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear(0 0%, 0.25 "
-            },
-            {
-                "t": "kp-sidenav",
-                "n": "visibility",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            }
-        ],
-        "radii": [],
-        "gone": 0
-    },
-    {
-        "id": "sidenav-group",
-        "ok": true,
-        "notes": [],
-        "worst": 0.005871683287569095,
-        "open": 180,
-        "close": 180,
-        "openDetail": [
-            {
-                "t": "kp-sidenav__category-toggle::after",
-                "n": "rotate",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-sidenav__submenu",
-                "n": "grid-template-rows",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            }
-        ],
-        "closeDetail": [
-            {
-                "t": "kp-sidenav__category-toggle::after",
-                "n": "rotate",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.8, "
-            },
-            {
-                "t": "kp-sidenav__submenu",
-                "n": "grid-template-rows",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.8, "
-            }
-        ],
-        "radii": [],
-        "gone": 0
-    },
-    {
         "id": "accordion",
         "ok": true,
         "notes": [],
-        "worst": 0.0000051166991150668884,
+        "worst": 0,
         "open": 480,
         "close": 480,
         "openDetail": [
             {
                 "t": "kp-accordion__item",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "steps(1)"
-            }
-        ],
-        "closeDetail": [
-            {
-                "t": "kp-accordion__item",
-                "n": "script",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "steps(1, jump-star"
-            }
-        ],
-        "radii": [],
-        "gone": 0.0000051166991150668884
-    },
-    {
-        "id": "tree",
-        "ok": false,
-        "notes": ["the opening runs no animation at all", "the closing runs no animation at all: it is gone at once"],
-        "worst": 1.0453685386692795,
-        "open": 0,
-        "close": 0,
-        "openDetail": [],
-        "closeDetail": [],
-        "radii": [],
-        "gone": 0.000004282980214701515
-    },
-    {
-        "id": "calendar-busy",
-        "ok": false,
-        "notes": ["the closing runs no animation at all: it is gone at once"],
-        "worst": 0.9999997398496658,
-        "open": 180,
-        "close": 0,
-        "openDetail": [
-            {
-                "t": "kp-calendar__busy",
-                "n": "opacity",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            }
-        ],
-        "closeDetail": [],
-        "radii": [],
-        "gone": 5.203006687489534e-7
-    },
-    {
-        "id": "table-busy",
-        "ok": false,
-        "notes": ["the closing runs no animation at all: it is gone at once"],
-        "worst": 1.0404731679221042,
-        "open": 1000,
-        "close": 0,
-        "openDetail": [
-            {
-                "t": "kp-spinner",
-                "n": "script",
-                "ms": 760,
-                "delay": 280,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-spinner",
-                "n": "script",
-                "ms": 600,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "steps(1)"
-            },
-            {
-                "t": "kp-datatable__busy-overlay",
-                "n": "script",
-                "ms": 1000,
-                "delay": 520,
-                "dir": "reverse",
-                "ease": "linear"
-            }
-        ],
-        "closeDetail": [],
-        "radii": [],
-        "gone": 0
-    },
-    {
-        "id": "upload-file",
-        "ok": false,
-        "notes": ["the closing runs no animation at all: it is gone at once"],
-        "worst": 1.0110965189277543,
-        "open": 760,
-        "close": 0,
-        "openDetail": [
-            {
-                "t": "kp-upload__file",
-                "n": "script",
-                "ms": 760,
-                "delay": 280,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-upload__file",
-                "n": "script",
-                "ms": 600,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "steps(1)"
-            }
-        ],
-        "closeDetail": [],
-        "radii": [],
-        "gone": 0.0000012273195386492936
-    },
-    {
-        "id": "toast",
-        "ok": false,
-        "notes": ["the closing is not the opening backwards: 242.7 % off at frame 0/20"],
-        "worst": 2.4271090812857743,
-        "open": 760,
-        "close": 760,
-        "openDetail": [
-            {
-                "t": "kp-toast",
-                "n": "script",
-                "ms": 760,
-                "delay": 280,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-toast",
-                "n": "script",
-                "ms": 600,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "steps(1)"
-            }
-        ],
-        "closeDetail": [
-            {
-                "t": "kp-toast",
-                "n": "kp-sig-cyberpunk-split-out",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-toast",
-                "n": "script",
-                "ms": 760,
-                "delay": 160,
-                "dir": "normal",
-                "ease": "steps(1)"
-            }
-        ],
-        "radii": ["div.kp-toast 156x41 radius 0px/0px/0px/0px font \"KP Tech Mono\""],
-        "gone": 0
-    },
-    {
-        "id": "alert-close",
-        "ok": false,
-        "notes": [
-            "the opening runs no animation at all",
-            "the closing lasts 760 ms, the opening 0 ms",
-            "the closing is not the opening backwards: 7.2 % off at frame 0/20"
-        ],
-        "worst": 0.07157076849893398,
-        "open": 0,
-        "close": 760,
-        "openDetail": [],
-        "closeDetail": [
-            {
-                "t": "kp-alert",
-                "n": "kp-sig-cyberpunk-split-out",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-alert",
-                "n": "script",
-                "ms": 760,
-                "delay": 160,
-                "dir": "normal",
-                "ease": "steps(1)"
-            }
-        ],
-        "radii": [],
-        "gone": 0
-    },
-    {
-        "id": "tooltip",
-        "ok": true,
-        "notes": [],
-        "worst": 0.0007774250704496563,
-        "open": 480,
-        "close": 480,
-        "openDetail": [
-            {
-                "t": "kp-popover",
-                "n": "kp-sig-cyberpunk-split",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            }
-        ],
-        "closeDetail": [
-            {
-                "t": "kp-popover",
-                "n": "kp-sig-cyberpunk-split",
-                "ms": 480,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "linear"
-            }
-        ],
-        "radii": [
-            "span.kp-popover 191x28 radius 0px/0px/0px/0px font \"KP Tech Mono\"",
-            "span.kp-popover 310x80 radius 0px/0px/0px/0px font \"KP Tech Mono\"",
-            "span.kp-popover 191x28 radius 0px/0px/0px/0px font \"KP Tech Mono\""
-        ],
-        "gone": 0
-    },
-    {
-        "id": "wizard-step",
-        "ok": false,
-        "notes": [
-            "the closing runs no animation at all: it is gone at once",
-            "after the closing the screen is not the one from before the opening: 100.0 % left over"
-        ],
-        "worst": 1,
-        "open": 760,
-        "close": 0,
-        "openDetail": [
-            {
-                "t": "kp-field__input",
-                "n": "border-bottom-color",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-field__input",
-                "n": "border-left-color",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-field__input",
-                "n": "border-right-color",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-field__input",
-                "n": "border-top-color",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-field__input",
-                "n": "box-shadow",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-field__error",
-                "n": "script",
-                "ms": 760,
-                "delay": 280,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-field__error",
-                "n": "script",
-                "ms": 600,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "steps(1)"
-            }
-        ],
-        "closeDetail": [],
-        "radii": [],
-        "gone": 1
-    },
-    {
-        "id": "empty-state",
-        "ok": false,
-        "notes": ["the closing lasts 480 ms, the opening 760 ms", "the closing is not the opening backwards: 135.7 % off at frame 6/20"],
-        "worst": 1.3566232190874776,
-        "open": 760,
-        "close": 480,
-        "openDetail": [
-            {
-                "t": "kp-empty",
-                "n": "script",
-                "ms": 760,
-                "delay": 280,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-empty",
-                "n": "script",
-                "ms": 600,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "steps(1)"
-            }
-        ],
-        "closeDetail": [
-            {
-                "t": "tr",
-                "n": "kp-sig-cyberpunk-split",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "tr",
-                "n": "kp-sig-cyberpunk-split",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "tr",
-                "n": "kp-sig-cyberpunk-split",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "tr",
-                "n": "kp-sig-cyberpunk-split",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "tr",
-                "n": "kp-sig-cyberpunk-split",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "tr",
-                "n": "kp-sig-cyberpunk-split",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "tr",
-                "n": "kp-sig-cyberpunk-split",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "tr",
-                "n": "kp-sig-cyberpunk-split",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "tr",
-                "n": "kp-sig-cyberpunk-split",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "tr",
-                "n": "kp-sig-cyberpunk-split",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "tr",
-                "n": "kp-sig-cyberpunk-split",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "tr",
-                "n": "kp-sig-cyberpunk-split",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "tr",
-                "n": "kp-sig-cyberpunk-split",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "tr",
-                "n": "kp-sig-cyberpunk-split",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "tr",
-                "n": "kp-sig-cyberpunk-split",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "tr",
-                "n": "kp-sig-cyberpunk-split",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "tr",
-                "n": "kp-sig-cyberpunk-split",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "tr",
-                "n": "kp-sig-cyberpunk-split",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "tr",
-                "n": "kp-sig-cyberpunk-split",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "tr",
-                "n": "kp-sig-cyberpunk-split",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "tr",
-                "n": "kp-sig-cyberpunk-split",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "tr",
-                "n": "kp-sig-cyberpunk-split",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "tr",
-                "n": "kp-sig-cyberpunk-split",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "tr",
-                "n": "kp-sig-cyberpunk-split",
-                "ms": 480,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-datatable",
                 "n": "script",
                 "ms": 480,
                 "delay": 0,
@@ -1996,19 +16,945 @@
                 "ease": "steps(8)"
             }
         ],
+        "closeDetail": [
+            {
+                "t": "kp-accordion__item",
+                "n": "script",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "steps(8, jump-star"
+            }
+        ],
         "radii": [],
-        "gone": 0.00000412313535144963
+        "gone": 0
+    },
+    {
+        "id": "tree",
+        "ok": true,
+        "notes": [],
+        "worst": 0.00029554671507473634,
+        "open": 480,
+        "close": 480,
+        "openDetail": [
+            {
+                "t": "ul",
+                "n": "script",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "steps(8)"
+            }
+        ],
+        "closeDetail": [
+            {
+                "t": "ul",
+                "n": "script",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "steps(8, jump-star"
+            }
+        ],
+        "radii": [],
+        "gone": 0.0000046348151867444275
+    },
+    {
+        "id": "calendar-busy",
+        "ok": false,
+        "notes": ["the closing is not the opening backwards: 96.2 % off at frame 0/20"],
+        "worst": 0.9622641853033188,
+        "open": 480,
+        "close": 480,
+        "openDetail": [
+            {
+                "t": "kp-calendar__busy",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            }
+        ],
+        "closeDetail": [
+            {
+                "t": "kp-calendar__busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            }
+        ],
+        "radii": [],
+        "gone": 5.20307402816658e-7
+    },
+    {
+        "id": "table-busy",
+        "ok": false,
+        "notes": ["the closing is not the opening backwards: 45.0 % off at frame 0/20"],
+        "worst": 0.44957366318577535,
+        "open": 480,
+        "close": 480,
+        "openDetail": [
+            {
+                "t": "kp-datatable__busy-overlay",
+                "n": "script",
+                "ms": 480,
+                "delay": 0,
+                "dir": "reverse",
+                "ease": "linear"
+            }
+        ],
+        "closeDetail": [
+            {
+                "t": "kp-datatable__busy-overlay",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            }
+        ],
+        "radii": [],
+        "gone": 0
+    },
+    {
+        "id": "upload-file",
+        "ok": true,
+        "notes": [],
+        "worst": 0.000001543818986194656,
+        "open": 480,
+        "close": 480,
+        "openDetail": [
+            {
+                "t": "kp-upload__file",
+                "n": "script",
+                "ms": 480,
+                "delay": 0,
+                "dir": "reverse",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-upload__file",
+                "n": "script",
+                "ms": 480,
+                "delay": 0,
+                "dir": "reverse",
+                "ease": "steps(4)"
+            }
+        ],
+        "closeDetail": [
+            {
+                "t": "kp-upload__file",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-upload__file",
+                "n": "script",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "steps(4)"
+            }
+        ],
+        "radii": [],
+        "gone": 0.0000025730316436577603
+    },
+    {
+        "id": "alert-close",
+        "ok": true,
+        "notes": [],
+        "worst": 0,
+        "open": 480,
+        "close": 480,
+        "openDetail": [
+            {
+                "t": "kp-alert",
+                "n": "script",
+                "ms": 480,
+                "delay": 0,
+                "dir": "reverse",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-alert",
+                "n": "script",
+                "ms": 480,
+                "delay": 0,
+                "dir": "reverse",
+                "ease": "steps(4)"
+            }
+        ],
+        "closeDetail": [
+            {
+                "t": "kp-alert",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-alert",
+                "n": "script",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "steps(4)"
+            }
+        ],
+        "radii": [],
+        "gone": 0
+    },
+    {
+        "id": "empty-state",
+        "ok": false,
+        "notes": ["the closing is not the opening backwards: 137.7 % off at frame 15/20"],
+        "worst": 1.377393847718887,
+        "open": 480,
+        "close": 480,
+        "openDetail": [
+            {
+                "t": "kp-empty",
+                "n": "script",
+                "ms": 480,
+                "delay": 0,
+                "dir": "reverse",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-empty",
+                "n": "script",
+                "ms": 480,
+                "delay": 0,
+                "dir": "reverse",
+                "ease": "steps(4)"
+            }
+        ],
+        "closeDetail": [
+            {
+                "t": "tr",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "tr",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "tr",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "tr",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "tr",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "tr",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "tr",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "tr",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "tr",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "tr",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "tr",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "tr",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "tr",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "tr",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "tr",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "tr",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "tr",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "tr",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "tr",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "tr",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "tr",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "tr",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "tr",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "tr",
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-empty",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-empty",
+                "n": "script",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "steps(4)"
+            }
+        ],
+        "radii": [],
+        "gone": 0.00000394561902590291
     },
     {
         "id": "tabs-panel",
         "ok": false,
         "notes": [
-            "the closing is not the opening backwards: 155.6 % off at frame 7/20",
-            "after the closing the screen is not the one from before the opening: 71.0 % left over"
+            "the closing is not the opening backwards: 90.1 % off at frame 17/20",
+            "after the closing the screen is not the one from before the opening: 48.6 % left over"
         ],
-        "worst": 1.5564963477736062,
-        "open": 760,
-        "close": 760,
+        "worst": 0.9012111060764206,
+        "open": 480,
+        "close": 480,
         "openDetail": [
             {
                 "t": "kp-tabs__panel",
@@ -2021,13 +967,53 @@
             {
                 "t": "kp-tabs__panel",
                 "n": "script",
-                "ms": 760,
-                "delay": 160,
+                "ms": 480,
+                "delay": 0,
                 "dir": "normal",
-                "ease": "steps(1)"
+                "ease": "steps(4)"
+            },
+            {
+                "t": "kp-tabs__panel",
+                "n": "script",
+                "ms": 480,
+                "delay": 0,
+                "dir": "reverse",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-tabs__panel",
+                "n": "script",
+                "ms": 480,
+                "delay": 0,
+                "dir": "reverse",
+                "ease": "steps(4)"
             }
         ],
         "closeDetail": [
+            {
+                "t": "kp-tab",
+                "n": "--kp-cp-ft",
+                "ms": 180,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "steps(4, jump-star"
+            },
+            {
+                "t": "kp-tab",
+                "n": "--kp-cp-fp",
+                "ms": 180,
+                "delay": 180,
+                "dir": "normal",
+                "ease": "ease"
+            },
+            {
+                "t": "kp-tab",
+                "n": "--kp-cp-ft",
+                "ms": 180,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "steps(4)"
+            },
             {
                 "t": "kp-tabs__panel",
                 "n": "kp-sig-cyberpunk-split-out",
@@ -2039,13 +1025,29 @@
             {
                 "t": "kp-tabs__panel",
                 "n": "script",
-                "ms": 760,
-                "delay": 160,
+                "ms": 480,
+                "delay": 0,
                 "dir": "normal",
-                "ease": "steps(1)"
+                "ease": "steps(4)"
+            },
+            {
+                "t": "kp-tabs__panel",
+                "n": "script",
+                "ms": 480,
+                "delay": 0,
+                "dir": "reverse",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-tabs__panel",
+                "n": "script",
+                "ms": 480,
+                "delay": 0,
+                "dir": "reverse",
+                "ease": "steps(4)"
             }
         ],
         "radii": [],
-        "gone": 0.7098308610128291
+        "gone": 0.48625416770929847
     }
 ]

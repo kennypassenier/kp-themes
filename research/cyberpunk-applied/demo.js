@@ -43,7 +43,7 @@ const press = (group, on) => {
 
 // The menu as a consumer writes it (themeMenuMarkup()) and attached as one is
 // (attachThemePickers()), without storing a choice. A choice is caught before
-// the picker hears it: this page judges forest and stays forest.
+// the picker hears it: this page judges cyberpunk and stays cyberpunk.
 const themeSaid = document.querySelector('[data-fa-theme-said]');
 /** @param {string} name */
 const sayTheme = (name) => {

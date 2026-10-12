@@ -2405,8 +2405,6 @@ var init_effects = __esm({
       // the seamless marquee.
       "kp-slam": { durationMs: 260, cycles: 1, property: "transform", luminanceSteps: [] },
       "kp-marquee": { durationMs: 42e3, cycles: Infinity, property: "transform", luminanceSteps: [] },
-      "kp-strip-in": { durationMs: 520, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-      "kp-strip-in-end": { durationMs: 520, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
       "kp-slice-a": { durationMs: 320, cycles: 1, property: "opacity", luminanceSteps: [1, 1, 0] },
       "kp-slice-1": { durationMs: 600, cycles: 1, property: "opacity", luminanceSteps: [1, 0, 0] },
       "kp-slice-2": { durationMs: 600, cycles: 1, property: "opacity", luminanceSteps: [1, 0, 0] },
@@ -2610,6 +2608,7 @@ var init_effects = __esm({
       "kp-sig-cyberpunk-dot": { durationMs: 180, cycles: 1, property: "transform", luminanceSteps: [] },
       "kp-sig-cyberpunk-split": { durationMs: 480, cycles: 1, property: "clip-path, box-shadow, text-shadow", luminanceSteps: [] },
       "kp-sig-cyberpunk-split-out": { durationMs: 480, cycles: 1, property: "clip-path, box-shadow, text-shadow", luminanceSteps: [] },
+      "kp-sig-cyberpunk-split-bar-out": { durationMs: 480, cycles: 1, property: "filter", luminanceSteps: [] },
       "kp-cp-charge": { durationMs: 520, cycles: 1, property: "transform", luminanceSteps: [] },
       "kp-cp-stream-144": { durationMs: 1800, cycles: Infinity, property: "transform", luminanceSteps: [] },
       "kp-cp-stream-216": { durationMs: 1200, cycles: Infinity, property: "transform", luminanceSteps: [] },
@@ -3459,6 +3458,7 @@ function withoutOvershoot(ease) {
   return `cubic-bezier(${x1}, ${hold(y1)}, ${x2}, ${hold(y2)})`;
 }
 function sizeEase(box, ease, change, plain = false) {
+  if (plain && getComputedStyle(box).getPropertyValue("--kp-accordion-size").trim() === "own") plain = false;
   const way = (curve) => withoutOvershoot(change < 0 ? reversedEase(curve) : curve);
   if (plain) return way(ease);
   const style = getComputedStyle(box);
@@ -3574,7 +3574,8 @@ function arrival(scope) {
   }
 }
 function arrive(el2, motion) {
-  if (!motion || el2.style.animation || el2.hasAttribute("data-kp-arriving") || el2.hasAttribute("data-kp-leaving") || el2.hasAttribute("data-kp-ghost")) return;
+  if (!motion || el2.style.animation || el2.hasAttribute("data-kp-arriving") || el2.hasAttribute("data-kp-leaving") || el2.hasAttribute("data-kp-ghost"))
+    return;
   if (getComputedStyle(el2).getPropertyValue("--kp-arrive-unseen").trim() === "skip" && el2.getClientRects().length === 0) return;
   if (opensAsReversedClose(el2) && arriveAsReversedLeave(el2)) return;
   el2.setAttribute("data-kp-arriving", "");
@@ -3713,6 +3714,9 @@ function foldTiming(style) {
     start: (lasts) => Number.isNaN(start) ? lasts / 3 : lasts * start
   };
 }
+function foldCurve(style, ease) {
+  return style.getPropertyValue("--kp-leave-fold-ease").trim() || ease;
+}
 function foldFrames(el2, style) {
   const parent = el2.parentElement ? getComputedStyle(el2.parentElement) : null;
   const sideways = style.display.startsWith("inline") || parent !== null && /flex/.test(parent.display) && !parent.flexDirection.startsWith("column");
@@ -3822,8 +3826,9 @@ function arriveAsReversedLeave(el2) {
   const after = fold === "after";
   const pause = parseFloat(style.getPropertyValue("--kp-leave-pause")) || 0;
   const timing = foldTiming(style);
-  const foldFor = size > 0 && !floats(el2, style) ? steppedDuration(el2, withoutOvershoot(ease), Math.max(size, lasts) * timing.grow) : 0;
-  const foldAt = onStepClock(el2, withoutOvershoot(ease), after ? lasts + pause : timing.start(lasts));
+  const foldEase = foldCurve(style, ease);
+  const foldFor = size > 0 && !floats(el2, style) ? steppedDuration(el2, withoutOvershoot(foldEase), Math.max(size, lasts) * timing.grow) : 0;
+  const foldAt = onStepClock(el2, withoutOvershoot(foldEase), after ? lasts + pause : timing.start(lasts));
   const total = Math.max(lasts, ...exits.map((exit) => exit.end), foldFor ? foldAt + foldFor : 0);
   const plays = [];
   for (const exit of exits) {
@@ -3863,7 +3868,9 @@ function arriveAsReversedLeave(el2) {
       el2.animate(frames, {
         duration: foldFor,
         delay: finiteMs(total - foldAt - foldFor),
-        easing: withoutOvershoot(ease),
+        // A panel that arrives while another leaves (a tab swap) folds on
+        // `--kp-swap-fold-ease` where the theme says so: see attachTabs().
+        easing: withoutOvershoot(el2.hasAttribute("data-kp-tabs-swapping") && style.getPropertyValue("--kp-swap-fold-ease").trim() || foldEase),
         direction: "reverse",
         fill: "backwards"
       })
@@ -4077,10 +4084,11 @@ async function leaveOne(el2, hide, exited, count = 1) {
     const after = fold === "after";
     const pause = parseFloat(style.getPropertyValue("--kp-leave-pause")) || 0;
     const timing = foldTiming(style);
+    const foldEase = foldCurve(style, ease);
     const folding = el2.animate([from, to], {
-      duration: steppedDuration(el2, withoutOvershoot(ease), Math.max(size, lasts) * timing.grow),
-      delay: onStepClock(el2, withoutOvershoot(ease), after ? lasts + pause : timing.start(lasts)),
-      easing: withoutOvershoot(ease),
+      duration: steppedDuration(el2, withoutOvershoot(foldEase), Math.max(size, lasts) * timing.grow),
+      delay: onStepClock(el2, withoutOvershoot(foldEase), after ? lasts + pause : timing.start(lasts)),
+      easing: withoutOvershoot(foldEase),
       fill: "forwards"
     });
     running2.push(folding.finished.catch(() => void 0));
@@ -4181,6 +4189,7 @@ function easeSize(box, { arrive: fallback2 = "all", arriveKeys = [] } = {}) {
   const keys = [...arriveKeys, ...ARRIVE_KEYS];
   let last = box.offsetHeight;
   let running2 = null;
+  let followedAt = -Infinity;
   const fresh = firstRender(box);
   const settle = () => {
     if (!box.isConnected) return;
@@ -4199,8 +4208,18 @@ function easeSize(box, { arrive: fallback2 = "all", arriveKeys = [] } = {}) {
     running2 = null;
     const to = settledHeight(box);
     last = to;
-    if (switching || fresh() || Math.abs(to - from) < 1 || from === 0 || to === 0) return;
-    if (followsAFold(box)) return;
+    if (switching || fresh() || Math.abs(to - from) < 1 || from === 0 || to === 0) {
+      if (Math.abs(to - from) < 1 && followsAFold(box)) followedAt = performance.now();
+      return;
+    }
+    if (followsAFold(box)) {
+      followedAt = performance.now();
+      return;
+    }
+    if (performance.now() - followedAt < 300 && getComputedStyle(box).getPropertyValue("--kp-leave-fold-ease").trim() !== "") {
+      followedAt = -Infinity;
+      return;
+    }
     const { size, ease } = themeMotion(box);
     if (size <= 0) return;
     const delay = to < from ? Math.max(0, foldingOutFor(box) - size) : 0;
@@ -4353,15 +4372,17 @@ function attachMotion(root = document, { size = "", arrive: arrive2 = "all", arr
       ...scope instanceof Element && scope.matches(selector) ? [scope] : [],
       ...scope.querySelectorAll(selector)
     ];
-    for (const el2 of all("dialog.kp-dialog, dialog.kp-palette, dialog.kp-alarm")) if (!el2.hasAttribute("data-kp-ghost")) keep(el2, attachClose(
-      /** @type {HTMLDialogElement} */
-      el2
-    ));
-    for (const el2 of all(sizeSelector)) if (!el2.hasAttribute("data-kp-ghost")) keep(el2, easeSize(
-      /** @type {HTMLElement} */
-      el2,
-      { arrive: arrive2, arriveKeys }
-    ));
+    for (const el2 of all("dialog.kp-dialog, dialog.kp-palette, dialog.kp-alarm"))
+      if (!el2.hasAttribute("data-kp-ghost")) keep(el2, attachClose(
+        /** @type {HTMLDialogElement} */
+        el2
+      ));
+    for (const el2 of all(sizeSelector))
+      if (!el2.hasAttribute("data-kp-ghost")) keep(el2, easeSize(
+        /** @type {HTMLElement} */
+        el2,
+        { arrive: arrive2, arriveKeys }
+      ));
     for (const el2 of all(FOLD_SELECTOR)) if (el2 instanceof HTMLDetailsElement && !el2.hasAttribute("data-kp-ghost")) keep(el2, attachFold(el2));
   };
   scan(root);
@@ -4498,10 +4519,12 @@ var init_motion = __esm({
     batch = null;
     FOLDING_OUT = "out";
     heightFolds = /* @__PURE__ */ new WeakSet();
-    followsAFold = (box) => [...box.querySelectorAll(`[data-kp-leaving], [${GROUP_FOLDING_ATTRIBUTE}]`)].some((el2) => heightFolds.has(
-      /** @type {HTMLElement} */
-      el2
-    ) && el2.getClientRects().length > 0);
+    followsAFold = (box) => [...box.querySelectorAll(`[data-kp-leaving], [${GROUP_FOLDING_ATTRIBUTE}]`)].some(
+      (el2) => heightFolds.has(
+        /** @type {HTMLElement} */
+        el2
+      ) && el2.getClientRects().length > 0
+    );
     arriveMode = (el2, fallback2) => el2.closest("[data-kp-arrive]")?.getAttribute("data-kp-arrive") || fallback2;
   }
 });
@@ -5209,8 +5232,11 @@ function attachTabs(root = document, { activation = "automatic", loop = true } =
         const back = leaving.get(show);
         if (back) going.push(back);
         if (going.length === 0) show.hidden = false;
-        else if (!back && leavesState(show)) show.hidden = false;
-        else {
+        else if (!back && leavesState(show)) {
+          show.setAttribute("data-kp-tabs-swapping", "");
+          setTimeout(() => show.removeAttribute("data-kp-tabs-swapping"), 400);
+          show.hidden = false;
+        } else {
           if (!back) show.hidden = true;
           void Promise.all(going).then(() => {
             if (turn === mine) show.hidden = false;
@@ -16808,7 +16834,23 @@ function dayFor(c, iso, today) {
   if (iso > today) return { tone: "future", label: s2.calendarFuture };
   return { tone: "none", label: s2.calendarUnknown };
 }
+function leaveBusyLayers(layers) {
+  for (const layer of layers) {
+    layer.setAttribute("data-kp-leaving", "");
+    getComputedStyle(layer).animationName;
+    const plays = layer.getAnimations().filter((a) => a instanceof CSSAnimation && /** @type {KeyframeEffect} */
+    a.effect?.target === layer);
+    const done = () => layer.removeAttribute("data-kp-leaving");
+    if (plays.length === 0) done();
+    else void Promise.all(plays.map((a) => a.finished)).then(done, done);
+  }
+}
 function paintCalendar(c) {
+  const busy = c.state === "loading";
+  const leaving = !busy && c.grid.getAttribute("aria-busy") === "true" ? [...c.el.querySelectorAll(BUSY_LAYERS)].filter(
+    (layer) => layer.getClientRects().length > 0 && getComputedStyle(layer).getPropertyValue("--kp-calendar-busy-leave").trim() === "hold"
+  ) : [];
+  if (busy) for (const layer of c.el.querySelectorAll(`:is(${BUSY_LAYERS})[data-kp-leaving]`)) layer.removeAttribute("data-kp-leaving");
   const ym = monthKey(c);
   const today = dayKey(c.now(), c.timeZone);
   const cells = monthCells(c.year, c.month, c.firstDay);
@@ -16855,6 +16897,7 @@ function paintCalendar(c) {
     cell.button.tabIndex = iso === stop ? 0 : -1;
     if (monthChanged) c.decorate?.(cell.button, { kind: "day", host: c.el, key: keyOf2(c.el), index: i, value: iso });
   });
+  if (leaving.length > 0) leaveBusyLayers(leaving);
 }
 function showMonth(c, year, month, announce2) {
   if (c.year === year && c.month === month) return;
@@ -17099,7 +17142,7 @@ function setCalendarLegend(el2, entries) {
   );
   c.legend.hidden = entries.length === 0;
 }
-var CALENDAR, CALENDAR_PICK_EVENT, CALENDAR_MONTH_EVENT, calendars, DAY_MS, two2, isoOf, formatDayKey, weekday, keyOf2, make2, idSeq2, monthKey, buttonFor;
+var CALENDAR, CALENDAR_PICK_EVENT, CALENDAR_MONTH_EVENT, calendars, DAY_MS, two2, isoOf, formatDayKey, weekday, keyOf2, make2, idSeq2, monthKey, BUSY_LAYERS, buttonFor;
 var init_calendar = __esm({
   "js/calendar.js"() {
     "use strict";
@@ -17124,6 +17167,7 @@ var init_calendar = __esm({
     };
     idSeq2 = 0;
     monthKey = (c) => `${c.year}-${two2(c.month)}`;
+    BUSY_LAYERS = ".kp-calendar__busy, .kp-calendar__day-busy";
     buttonFor = (c, iso) => c.cells.find((cell) => cell.button.dataset.kpDate === iso)?.button ?? null;
   }
 });

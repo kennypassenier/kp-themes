@@ -1,12 +1,36 @@
 [
     {
         "id": "dialog",
-        "ok": false,
-        "notes": ["the closing is not the opening backwards: 24.5 % off at frame 20/20"],
-        "worst": 0.24493492647002013,
+        "ok": true,
+        "notes": [],
+        "worst": 0.0025696033661077927,
         "open": 480,
         "close": 480,
         "openDetail": [
+            {
+                "t": "kp-button",
+                "n": "--kp-cp-fp",
+                "ms": 180,
+                "delay": 180,
+                "dir": "normal",
+                "ease": "steps(1)"
+            },
+            {
+                "t": "kp-button",
+                "n": "--kp-cp-ft",
+                "ms": 180,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "steps(4)"
+            },
+            {
+                "t": "kp-button",
+                "n": "--kp-cp-ft",
+                "ms": 180,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "steps(4, jump-star"
+            },
             {
                 "t": "kp-dialog",
                 "n": "script",
@@ -47,12 +71,36 @@
     },
     {
         "id": "drawer",
-        "ok": false,
-        "notes": ["the closing is not the opening backwards: 19.1 % off at frame 20/20"],
-        "worst": 0.19136125797643022,
+        "ok": true,
+        "notes": [],
+        "worst": 0.002479122514917192,
         "open": 480,
         "close": 480,
         "openDetail": [
+            {
+                "t": "kp-button",
+                "n": "--kp-cp-fp",
+                "ms": 180,
+                "delay": 180,
+                "dir": "normal",
+                "ease": "steps(1)"
+            },
+            {
+                "t": "kp-button",
+                "n": "--kp-cp-ft",
+                "ms": 180,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "steps(4)"
+            },
+            {
+                "t": "kp-icon-button",
+                "n": "--kp-cp-ft",
+                "ms": 180,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "steps(4, jump-star"
+            },
             {
                 "t": "kp-drawer",
                 "n": "script",
@@ -93,12 +141,36 @@
     },
     {
         "id": "palette",
-        "ok": false,
-        "notes": ["the closing is not the opening backwards: 11.2 % off at frame 20/20"],
-        "worst": 0.11168981539765623,
+        "ok": true,
+        "notes": [],
+        "worst": 0.007026633405967875,
         "open": 480,
         "close": 480,
         "openDetail": [
+            {
+                "t": "kp-button",
+                "n": "--kp-cp-fp",
+                "ms": 180,
+                "delay": 180,
+                "dir": "normal",
+                "ease": "steps(1)"
+            },
+            {
+                "t": "kp-button",
+                "n": "--kp-cp-ft",
+                "ms": 180,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "steps(4)"
+            },
+            {
+                "t": "kp-palette__input",
+                "n": "--kp-cp-ft",
+                "ms": 180,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "steps(4, jump-star"
+            },
             {
                 "t": "kp-palette::backdrop",
                 "n": "script",
@@ -118,17 +190,41 @@
                 "ease": "linear"
             }
         ],
-        "radii": ["dialog.kp-palette 578x317 radius 0px/0px/0px/0px font \"KP Tech Mono\""],
+        "radii": ["dialog.kp-palette 578x317 radius 0px/0px/0px/0px font \"Rajdhani\""],
         "gone": 0
     },
     {
         "id": "datepicker",
         "ok": true,
         "notes": [],
-        "worst": 0,
+        "worst": 0.05704527381176958,
         "open": 480,
         "close": 480,
         "openDetail": [
+            {
+                "t": "kp-button",
+                "n": "--kp-cp-fp",
+                "ms": 180,
+                "delay": 180,
+                "dir": "normal",
+                "ease": "steps(1)"
+            },
+            {
+                "t": "kp-button",
+                "n": "--kp-cp-ft",
+                "ms": 180,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "steps(4)"
+            },
+            {
+                "t": "kp-datepicker__day",
+                "n": "--kp-cp-ft",
+                "ms": 180,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "steps(4, jump-star"
+            },
             {
                 "t": "kp-datepicker__panel",
                 "n": "kp-sig-cyberpunk-split",
@@ -139,6 +235,30 @@
             }
         ],
         "closeDetail": [
+            {
+                "t": "kp-button",
+                "n": "--kp-cp-ft",
+                "ms": 180,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "steps(4, jump-star"
+            },
+            {
+                "t": "kp-datepicker__day",
+                "n": "--kp-cp-fp",
+                "ms": 180,
+                "delay": 180,
+                "dir": "normal",
+                "ease": "steps(1)"
+            },
+            {
+                "t": "kp-datepicker__day",
+                "n": "--kp-cp-ft",
+                "ms": 180,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "steps(4)"
+            },
             {
                 "t": "kp-datepicker__panel",
                 "n": "kp-sig-cyberpunk-split",
@@ -264,10 +384,26 @@
         "id": "tour",
         "ok": true,
         "notes": [],
-        "worst": 0.00401418556301195,
+        "worst": 0.007591137833672635,
         "open": 480,
         "close": 480,
         "openDetail": [
+            {
+                "t": "kp-button",
+                "n": "--kp-cp-fp",
+                "ms": 180,
+                "delay": 180,
+                "dir": "normal",
+                "ease": "steps(1)"
+            },
+            {
+                "t": "kp-button",
+                "n": "--kp-cp-ft",
+                "ms": 180,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "steps(4)"
+            },
             {
                 "t": "kp-row",
                 "n": "box-shadow",
@@ -283,6 +419,14 @@
                 "delay": 0,
                 "dir": "normal",
                 "ease": "steps(4)"
+            },
+            {
+                "t": "kp-button",
+                "n": "--kp-cp-ft",
+                "ms": 180,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "steps(4, jump-star"
             },
             {
                 "t": "kp-row",
@@ -319,6 +463,22 @@
                 "ease": "linear(0 0%, 0.25 "
             },
             {
+                "t": "kp-button",
+                "n": "--kp-cp-fp",
+                "ms": 180,
+                "delay": 180,
+                "dir": "normal",
+                "ease": "steps(1)"
+            },
+            {
+                "t": "kp-button",
+                "n": "--kp-cp-ft",
+                "ms": 180,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "steps(4)"
+            },
+            {
                 "t": "kp-tour",
                 "n": "kp-sig-cyberpunk-split",
                 "ms": 480,
@@ -332,12 +492,36 @@
     },
     {
         "id": "alarm",
-        "ok": false,
-        "notes": ["the closing is not the opening backwards: 23.4 % off at frame 20/20"],
-        "worst": 0.23443110648313772,
+        "ok": true,
+        "notes": [],
+        "worst": 0.0008572249451792798,
         "open": 480,
         "close": 480,
         "openDetail": [
+            {
+                "t": "kp-button",
+                "n": "--kp-cp-fp",
+                "ms": 180,
+                "delay": 180,
+                "dir": "normal",
+                "ease": "steps(1)"
+            },
+            {
+                "t": "kp-button",
+                "n": "--kp-cp-ft",
+                "ms": 180,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "steps(4)"
+            },
+            {
+                "t": "kp-button",
+                "n": "--kp-cp-ft",
+                "ms": 180,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "steps(4, jump-star"
+            },
             {
                 "t": "kp-alarm",
                 "n": "script",
@@ -1085,7 +1269,7 @@
         "id": "bar-equipment",
         "ok": true,
         "notes": [],
-        "worst": 0.0005994185847581716,
+        "worst": 0.0007033180100260788,
         "open": 480,
         "close": 480,
         "openDetail": [
@@ -1122,8 +1306,8 @@
     {
         "id": "phone-bar",
         "ok": false,
-        "notes": ["the closing is not the opening backwards: 100.2 % off at frame 0/20"],
-        "worst": 1.0015457107679633,
+        "notes": ["the closing is not the opening backwards: 100.4 % off at frame 0/20"],
+        "worst": 1.0041258299536335,
         "open": 480,
         "close": 480,
         "openDetail": [
@@ -1209,7 +1393,7 @@
                 "ms": 180,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
+                "ease": "steps(3)"
             },
             {
                 "t": "kp-sidenav__submenu",
@@ -1217,7 +1401,7 @@
                 "ms": 180,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
+                "ease": "steps(3)"
             }
         ],
         "closeDetail": [
@@ -1227,7 +1411,7 @@
                 "ms": 180,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.8, "
+                "ease": "steps(3, jump-star"
             },
             {
                 "t": "kp-sidenav__submenu",
@@ -1235,7 +1419,7 @@
                 "ms": 180,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.8, "
+                "ease": "steps(3, jump-star"
             }
         ],
         "radii": [],
@@ -1255,7 +1439,7 @@
                 "ms": 480,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "steps(1)"
+                "ease": "steps(8)"
             }
         ],
         "closeDetail": [
@@ -1265,7 +1449,7 @@
                 "ms": 480,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "steps(1, jump-star"
+                "ease": "steps(8, jump-star"
             }
         ],
         "radii": [],
@@ -1273,19 +1457,24 @@
     },
     {
         "id": "tree",
-        "ok": false,
-        "notes": [
-            "the opening runs no animation at all",
-            "the closing lasts 480 ms, the opening 0 ms",
-            "the closing is not the opening backwards: 94.4 % off at frame 8/20"
-        ],
-        "worst": 0.944480127101992,
-        "open": 0,
+        "ok": true,
+        "notes": [],
+        "worst": 0.00030081544087484023,
+        "open": 480,
         "close": 480,
-        "openDetail": [],
+        "openDetail": [
+            {
+                "t": "ul",
+                "n": "script",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "steps(8)"
+            }
+        ],
         "closeDetail": [
             {
-                "t": "kp-tree",
+                "t": "ul",
                 "n": "script",
                 "ms": 480,
                 "delay": 0,
@@ -1299,361 +1488,628 @@
     {
         "id": "calendar-busy",
         "ok": false,
-        "notes": ["the closing runs no animation at all: it is gone at once"],
-        "worst": 1,
-        "open": 180,
-        "close": 0,
+        "notes": ["the closing is not the opening backwards: 95.7 % off at frame 0/20"],
+        "worst": 0.9565005565530533,
+        "open": 480,
+        "close": 480,
         "openDetail": [
             {
                 "t": "kp-calendar__busy",
-                "n": "opacity",
-                "ms": 180,
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
+                "ease": "linear"
             },
             {
                 "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
+                "ease": "linear"
             },
             {
                 "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
+                "ease": "linear"
             },
             {
                 "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
+                "ease": "linear"
             },
             {
                 "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
+                "ease": "linear"
             },
             {
                 "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
+                "ease": "linear"
             },
             {
                 "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
+                "ease": "linear"
             },
             {
                 "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
+                "ease": "linear"
             },
             {
                 "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
+                "ease": "linear"
             },
             {
                 "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
+                "ease": "linear"
             },
             {
                 "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
+                "ease": "linear"
             },
             {
                 "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
+                "ease": "linear"
             },
             {
                 "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
+                "ease": "linear"
             },
             {
                 "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
+                "ease": "linear"
             },
             {
                 "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
+                "ease": "linear"
             },
             {
                 "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
+                "ease": "linear"
             },
             {
                 "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
+                "ease": "linear"
             },
             {
                 "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
+                "ease": "linear"
             },
             {
                 "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
+                "ease": "linear"
             },
             {
                 "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
+                "ease": "linear"
             },
             {
                 "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
+                "ease": "linear"
             },
             {
                 "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
+                "ease": "linear"
             },
             {
                 "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
+                "ease": "linear"
             },
             {
                 "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
+                "ease": "linear"
             },
             {
                 "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
+                "ease": "linear"
             },
             {
                 "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
+                "ease": "linear"
             },
             {
                 "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
+                "ease": "linear"
             },
             {
                 "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
+                "ease": "linear"
             },
             {
                 "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
+                "ease": "linear"
             },
             {
                 "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
+                "ease": "linear"
             },
             {
                 "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
+                "ease": "linear"
             },
             {
                 "t": "kp-calendar__day-busy",
-                "n": "opacity",
-                "ms": 180,
+                "n": "kp-sig-cyberpunk-split",
+                "ms": 480,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
+                "ease": "linear"
             }
         ],
-        "closeDetail": [],
+        "closeDetail": [
+            {
+                "t": "kp-calendar__busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-calendar__day-busy",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            }
+        ],
         "radii": [],
         "gone": 0
     },
     {
         "id": "table-busy",
         "ok": false,
-        "notes": ["the closing runs no animation at all: it is gone at once"],
-        "worst": 1.0451228031928335,
-        "open": 1000,
-        "close": 0,
+        "notes": ["the closing is not the opening backwards: 41.8 % off at frame 0/20"],
+        "worst": 0.4175519216996896,
+        "open": 480,
+        "close": 480,
         "openDetail": [
-            {
-                "t": "kp-spinner",
-                "n": "script",
-                "ms": 760,
-                "delay": 280,
-                "dir": "reverse",
-                "ease": "linear"
-            },
-            {
-                "t": "kp-spinner",
-                "n": "script",
-                "ms": 600,
-                "delay": 0,
-                "dir": "reverse",
-                "ease": "steps(1)"
-            },
             {
                 "t": "kp-datatable__busy-overlay",
                 "n": "script",
-                "ms": 1000,
-                "delay": 520,
+                "ms": 480,
+                "delay": 0,
                 "dir": "reverse",
                 "ease": "linear"
             }
         ],
-        "closeDetail": [],
+        "closeDetail": [
+            {
+                "t": "kp-datatable__busy-overlay",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            }
+        ],
         "radii": [],
         "gone": 0
     },
     {
         "id": "upload-file",
-        "ok": false,
-        "notes": ["the closing runs no animation at all: it is gone at once"],
-        "worst": 1.0088784889568294,
-        "open": 760,
-        "close": 0,
+        "ok": true,
+        "notes": [],
+        "worst": 0,
+        "open": 480,
+        "close": 480,
         "openDetail": [
             {
                 "t": "kp-upload__file",
                 "n": "script",
-                "ms": 760,
-                "delay": 280,
+                "ms": 480,
+                "delay": 0,
                 "dir": "reverse",
                 "ease": "linear"
             },
             {
                 "t": "kp-upload__file",
                 "n": "script",
-                "ms": 600,
+                "ms": 480,
                 "delay": 0,
                 "dir": "reverse",
-                "ease": "steps(1)"
+                "ease": "steps(4)"
             }
         ],
-        "closeDetail": [],
+        "closeDetail": [
+            {
+                "t": "kp-upload__file",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-upload__file",
+                "n": "script",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "steps(4)"
+            }
+        ],
         "radii": [],
         "gone": 0
     },
     {
         "id": "toast",
-        "ok": false,
-        "notes": ["the closing is not the opening backwards: 254.3 % off at frame 0/20"],
-        "worst": 2.5432175951331946,
-        "open": 760,
-        "close": 760,
+        "ok": true,
+        "notes": [],
+        "worst": 0,
+        "open": 480,
+        "close": 480,
         "openDetail": [
             {
                 "t": "kp-toast",
                 "n": "script",
-                "ms": 760,
-                "delay": 280,
+                "ms": 480,
+                "delay": 0,
                 "dir": "reverse",
                 "ease": "linear"
             },
             {
                 "t": "kp-toast",
                 "n": "script",
-                "ms": 600,
+                "ms": 480,
                 "delay": 0,
                 "dir": "reverse",
-                "ease": "steps(1)"
+                "ease": "steps(4)"
             }
         ],
         "closeDetail": [
@@ -1668,27 +2124,40 @@
             {
                 "t": "kp-toast",
                 "n": "script",
-                "ms": 760,
-                "delay": 160,
+                "ms": 480,
+                "delay": 0,
                 "dir": "normal",
-                "ease": "steps(1)"
+                "ease": "steps(4)"
             }
         ],
-        "radii": ["div.kp-toast 155x41 radius 0px/0px/0px/0px font \"KP Tech Mono\""],
+        "radii": ["div.kp-toast 121x41 radius 0px/0px/0px/0px font \"KP Tech Mono\""],
         "gone": 0
     },
     {
         "id": "alert-close",
-        "ok": false,
-        "notes": [
-            "the opening runs no animation at all",
-            "the closing lasts 760 ms, the opening 0 ms",
-            "the closing is not the opening backwards: 6.6 % off at frame 0/20"
+        "ok": true,
+        "notes": [],
+        "worst": 0,
+        "open": 480,
+        "close": 480,
+        "openDetail": [
+            {
+                "t": "kp-alert",
+                "n": "script",
+                "ms": 480,
+                "delay": 0,
+                "dir": "reverse",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-alert",
+                "n": "script",
+                "ms": 480,
+                "delay": 0,
+                "dir": "reverse",
+                "ease": "steps(4)"
+            }
         ],
-        "worst": 0.06610885766638072,
-        "open": 0,
-        "close": 760,
-        "openDetail": [],
         "closeDetail": [
             {
                 "t": "kp-alert",
@@ -1701,10 +2170,10 @@
             {
                 "t": "kp-alert",
                 "n": "script",
-                "ms": 760,
-                "delay": 160,
+                "ms": 480,
+                "delay": 0,
                 "dir": "normal",
-                "ease": "steps(1)"
+                "ease": "steps(4)"
             }
         ],
         "radii": [],
@@ -1751,65 +2220,49 @@
             "the closing runs no animation at all: it is gone at once",
             "after the closing the screen is not the one from before the opening: 100.0 % left over"
         ],
-        "worst": 1,
-        "open": 760,
+        "worst": 0.9229163560828327,
+        "open": 480,
         "close": 0,
         "openDetail": [
             {
                 "t": "kp-field__input",
-                "n": "border-bottom-color",
+                "n": "--kp-cp-ft",
                 "ms": 180,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
+                "ease": "steps(4, jump-star"
             },
             {
-                "t": "kp-field__input",
-                "n": "border-left-color",
+                "t": "kp-button",
+                "n": "--kp-cp-fp",
                 "ms": 180,
-                "delay": 0,
+                "delay": 180,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
+                "ease": "steps(1)"
             },
             {
-                "t": "kp-field__input",
-                "n": "border-right-color",
+                "t": "kp-button",
+                "n": "--kp-cp-ft",
                 "ms": 180,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-field__input",
-                "n": "border-top-color",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
-            },
-            {
-                "t": "kp-field__input",
-                "n": "box-shadow",
-                "ms": 180,
-                "delay": 0,
-                "dir": "normal",
-                "ease": "cubic-bezier(0.2, "
+                "ease": "steps(4)"
             },
             {
                 "t": "kp-field__error",
                 "n": "script",
-                "ms": 760,
-                "delay": 280,
+                "ms": 480,
+                "delay": 0,
                 "dir": "reverse",
                 "ease": "linear"
             },
             {
                 "t": "kp-field__error",
                 "n": "script",
-                "ms": 600,
+                "ms": 480,
                 "delay": 0,
                 "dir": "reverse",
-                "ease": "steps(1)"
+                "ease": "steps(4)"
             }
         ],
         "closeDetail": [],
@@ -1819,26 +2272,26 @@
     {
         "id": "empty-state",
         "ok": false,
-        "notes": ["the closing lasts 480 ms, the opening 760 ms", "the closing is not the opening backwards: 136.0 % off at frame 6/20"],
-        "worst": 1.3598764826001677,
-        "open": 760,
+        "notes": ["the closing is not the opening backwards: 137.7 % off at frame 15/20"],
+        "worst": 1.3767370706410602,
+        "open": 480,
         "close": 480,
         "openDetail": [
             {
                 "t": "kp-empty",
                 "n": "script",
-                "ms": 760,
-                "delay": 280,
+                "ms": 480,
+                "delay": 0,
                 "dir": "reverse",
                 "ease": "linear"
             },
             {
                 "t": "kp-empty",
                 "n": "script",
-                "ms": 600,
+                "ms": 480,
                 "delay": 0,
                 "dir": "reverse",
-                "ease": "steps(1)"
+                "ease": "steps(4)"
             }
         ],
         "closeDetail": [
@@ -2035,12 +2488,20 @@
                 "ease": "linear"
             },
             {
-                "t": "kp-datatable",
+                "t": "kp-empty",
+                "n": "kp-sig-cyberpunk-split-out",
+                "ms": 480,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-empty",
                 "n": "script",
                 "ms": 480,
                 "delay": 0,
                 "dir": "normal",
-                "ease": "steps(8)"
+                "ease": "steps(4)"
             }
         ],
         "radii": [],
@@ -2050,12 +2511,12 @@
         "id": "tabs-panel",
         "ok": false,
         "notes": [
-            "the closing is not the opening backwards: 139.7 % off at frame 7/20",
-            "after the closing the screen is not the one from before the opening: 64.9 % left over"
+            "the closing is not the opening backwards: 348.1 % off at frame 10/20",
+            "after the closing the screen is not the one from before the opening: 43.4 % left over"
         ],
-        "worst": 1.396929909883053,
-        "open": 760,
-        "close": 760,
+        "worst": 3.480970458948973,
+        "open": 480,
+        "close": 480,
         "openDetail": [
             {
                 "t": "kp-tabs__panel",
@@ -2068,13 +2529,53 @@
             {
                 "t": "kp-tabs__panel",
                 "n": "script",
-                "ms": 760,
-                "delay": 160,
+                "ms": 480,
+                "delay": 0,
                 "dir": "normal",
-                "ease": "steps(1)"
+                "ease": "steps(4)"
+            },
+            {
+                "t": "kp-tabs__panel",
+                "n": "script",
+                "ms": 480,
+                "delay": 0,
+                "dir": "reverse",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-tabs__panel",
+                "n": "script",
+                "ms": 480,
+                "delay": 0,
+                "dir": "reverse",
+                "ease": "steps(4, start)"
             }
         ],
         "closeDetail": [
+            {
+                "t": "kp-tab",
+                "n": "--kp-cp-ft",
+                "ms": 180,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "steps(4, jump-star"
+            },
+            {
+                "t": "kp-tab",
+                "n": "--kp-cp-fp",
+                "ms": 180,
+                "delay": 180,
+                "dir": "normal",
+                "ease": "steps(1)"
+            },
+            {
+                "t": "kp-tab",
+                "n": "--kp-cp-ft",
+                "ms": 180,
+                "delay": 0,
+                "dir": "normal",
+                "ease": "steps(4)"
+            },
             {
                 "t": "kp-tabs__panel",
                 "n": "kp-sig-cyberpunk-split-out",
@@ -2086,13 +2587,29 @@
             {
                 "t": "kp-tabs__panel",
                 "n": "script",
-                "ms": 760,
-                "delay": 160,
+                "ms": 480,
+                "delay": 0,
                 "dir": "normal",
-                "ease": "steps(1)"
+                "ease": "steps(4)"
+            },
+            {
+                "t": "kp-tabs__panel",
+                "n": "script",
+                "ms": 480,
+                "delay": 0,
+                "dir": "reverse",
+                "ease": "linear"
+            },
+            {
+                "t": "kp-tabs__panel",
+                "n": "script",
+                "ms": 480,
+                "delay": 0,
+                "dir": "reverse",
+                "ease": "steps(4, start)"
             }
         ],
         "radii": [],
-        "gone": 0.6485666428342248
+        "gone": 0.4344271803632317
     }
 ]

@@ -1,6 +1,6 @@
 // @ts-nocheck
 // node research/cyberpunk-applied/_audit/summarize.mjs <engine> <timing|running|corners|fonts|prefix|pointing|flows>
-import { readFileSync, readdirSync } from 'node:fs';
+import { readFileSync, readdirSync, statSync } from 'node:fs';
 const eng = process.argv[2] ?? 'firefox';
 const what = process.argv[3] ?? 'timing';
 const read = (f) => JSON.parse(readFileSync(new URL(`./out/${f}.json`, import.meta.url)));
@@ -49,7 +49,11 @@ if (what === 'flows') {
         }
     }
 } else if (what === 'pointing') {
-    const d = read(eng);
+    const newer = (a, b) =>
+        statSync(new URL(`./out/${a}.json`, import.meta.url)).mtimeMs >= statSync(new URL(`./out/${b}.json`, import.meta.url)).mtimeMs;
+    const d = read(
+        readdirSync(new URL('./out/', import.meta.url)).includes(`pointing-${eng}.json`) && newer(`pointing-${eng}`, eng) ? `pointing-${eng}` : eng,
+    );
     const rows = [];
     for (const [sig, r] of Object.entries(d.pointing)) {
         const s = sig.split('|');

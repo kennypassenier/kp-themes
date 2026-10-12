@@ -395,6 +395,57 @@ it carries to every other loading element:
     (transfer, G16). The network graph keeps its packet race (G18). Nothing
     else.
 
+**Applied 2026-10-12 (audit rows 18-20, 22, 23, 29): one picture per busy part.**
+
+- **What waits shows one of two pictures, never the package's pulse.** A line, a block
+  (a chart's waiting plot, its source stubs) and a table cell draw the word LOADING
+  (`.kp-skeleton--block::before` joins the line's word); a round skeleton draws the spinner's bars
+  with their glitch copy; a day that waits keeps its spinner and no longer pulses. The register
+  overrides the package's `kp-pulse` rules (css/components.css: meter, skeleton, graph skeleton,
+  calendar day) with `animation: none`; the package is not edited. The network graph's skeleton
+  keeps its pulse (G18).
+- **A busy table is one picture:** the overlay's bars and its words. The status line's own spinner
+  and the skeleton cells' word stand down while the overlay shows
+  (`.kp-datatable:has(> .kp-datatable__busy-overlay)`).
+- **The indeterminate bar has one clock:** the word, the dashes and the packets all run 1800 ms
+  (the packets were 1200 ms).
+- **Decided exceptions, the divider and the marquee:** the divider's stream drifts linearly in
+  8000 ms and the marquee band in 18000 ms (`--kp-marquee`), not in the 1800 ms loop. They are
+  ambient drifts, not a waiting picture: at 1800 ms a divider would race and the marquee's words
+  could not be read. They are the two loops outside G4's loop time; `linear` is right for them
+  (a stream is a walked line, G2). The divider's 8000 ms is pinned by
+  tests/cyberpunk-data-stream.spec.mjs.
+- **Contact is ticks, not an ease:** the link underline (180 ms, `steps(3)`, drawn in `jump-end`
+  and wiped out in `jump-start`, its mirror), the progress fill and head (180 ms, `steps(3)`), the
+  bar's charge (480 ms, `steps(4)`), the nav link, the nav bar, the switch, the calendar's busy
+  veil and the meter's word (180 ms, `steps(3)`), the highlight's wipe and rule (480 ms, `steps(4)`),
+  the mark's colour (360 ms, `steps(3)`) and the meter's mark (180 ms). `--fx-ease` itself stays
+  the register's curve for the buttons' and fields' paint, which their own group decides.
+- **A group of the side navigation** unfolds in `steps(3, jump-end)` and folds in `steps(3, jump-start)`
+  (the unfold reversed), its chevron turning on the same two; the panel's slide reads
+  `--kp-sidenav-ease: steps(3, jump-end)` and js/sidenav.js turns it round for the close.
+
+**Applied 2026-10-12 (leftovers round): the last rectangles, and the decided exceptions.**
+
+- **Cut:** the check (checkbox only; the radio is round, G6) is cut by a share of its height
+  (`--kp-cp-clip-mini`, 6.7 px on 17.6 px) with its own diagonal line; the calendar day, the date
+  picker's day and title and the table's search field are controls, cut 8 px. Their focus brackets
+  sit inside the box and keep half a cut clear of the diagonal (`--kp-cp-nbr`); a check on its own
+  draws its brackets 5 px long inside itself (a frame outside it would be cut away). The accordion
+  item takes the holo plate (ground, scan lines, rim, notch line) so its cut is seen; a bare item
+  (`--bare`) has no chrome and no cut.
+- **A tab swap does not move the box:** the old panel folds 48, 36, 24, 12 and the new one 0, 12, 24, 36
+  (`--kp-swap-fold-ease: steps(4, start)`, read only for a panel marked `data-kp-tabs-swapping` by
+  attachTabs), so the two always add up to one panel; before, the box held 12 px high for 480 ms and
+  dropped at the end.
+- **Decided exceptions to pointing and focus (inert parts).** These keep the package's solid
+  two-channel ring for focus and answer no hover, by decision: the table's scroll region
+  (`.kp-table-wrap`, a region the keyboard may scroll, not a control), the side navigation's scroll
+  region (`.kp-sidenav__scroll`), the range slider (a native control whose thumb already answers),
+  the split separator (a drag handle with its own state) and the graph's nodes (G18, the graph
+  changes in no theme). A label (`.kp-field__label`) is not pointable. The demo's own devtools link
+  is chrome of the review page, not a part.
+
 ---
 
 ## 7. Distinct from the other themes

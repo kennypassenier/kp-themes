@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>kp-themes — forest, as applied: what changed</title>
+        <title>kp-themes — cyberpunk, as applied: what changed</title>
         <link rel="stylesheet" href="../../css/fonts.css" />
         <link rel="stylesheet" href="../../css/themes.css" />
         <link rel="stylesheet" href="../../css/components.css" />
@@ -15,19 +15,18 @@
     <body>
         <main class="fa-page">
             <header class="fa-intro">
-                <h1>Forest, as applied: what changed</h1>
+                <h1>Cyberpunk, as applied: what changed</h1>
                 <p>
-                    Kenny, 2026-10-09: "Can you show in a demo which forest components you changed? Just a showcase where I can approve everything."
-                    Every block below is the package itself in forest, as an app gets it: the real components, the real stylesheets and the real
-                    scripts, nothing drawn for this page. Each heading says in one sentence what the component did before and what it does now. Point
-                    at the parts, press them, Tab onto them and open what opens; where a state needs a button (loading, right to left, play again),
-                    the button is in the block.
+                    Kenny, 2026-10-12: "finish cyberpunk the way forest was finished". Every block below is the package itself in cyberpunk, as an app
+                    gets it: the real components, the real stylesheets and the real scripts, nothing drawn for this page. The anchor is the glitch: a
+                    yellow and a cyan ghost 6, 4, 2 and 1 px away close in four 120 ms ticks (480 ms) to open, close and arrive. Look for notched
+                    corners, the split edge on hover, four focus brackets, a press that closes the circuit without lifting, and the word LOADING for
+                    anything that waits.
                 </p>
                 <p>
-                    Approve or not per block in the review dialog ("Review in a dialog" at the top), with a note where something is wrong. What this
-                    page found broken while it was built is listed in <code>research/cyberpunk-applied/README.md</code>; nothing in the package was
-                    changed by this page. Inside the review dialog, Escape closes the review dialog itself: close what you opened there with its own
-                    button or a click outside it.
+                    Judge each block in the review dialog ("Review in a dialog" at the top): approve or not, with a note where something is wrong. How
+                    this page was audited is in <code>research/cyberpunk-applied/README.md</code>. Inside the review dialog, Escape closes the review
+                    dialog itself: close what you opened there with its own button or a click outside it.
                 </p>
                 <p class="fa-motion" data-fa-motion hidden>
                     <b>Your system asks for reduced motion</b>, so nothing on this page grows or withers: every part shows its finished pose. Turn it
@@ -69,17 +68,15 @@
                 <div class="fa-sec__head">
                     <p class="fa-num">1 · The bar</p>
                     <h2 id="h-bar">
-                        The bar's dropdown and mega menu used to fade in and out, the phone menu appeared at once and the call to action and the
-                        toggle did not answer the pointer; now each menu grows down out of its link and closes as that growth backwards, and the call
-                        to action and the toggle take the dashed blaze.
+                        The bar is now a notched holo plate; its dropdown, mega menu and phone menu open by the channel split and close as that
+                        reversed, and its links, call to action and toggle answer the pointer.
                     </h2>
                 </div>
                 <div class="fa-look" data-review-look>
                     <p data-for="cyberpunk">
-                        Hover <b>Readings</b> (or Tab onto it): its dropdown grows down out of the link, far end first, clipped at the bar's line, and
-                        withers back up when you leave. Press <b>Equipment</b> for the mega menu, the same growth across the bar. Hover
-                        <b>Request access</b> and press it: the blaze is laid and closes in. In the narrow frame press the three-bar toggle: the links
-                        grow down out of the bar and go back into it.
+                        Hover <b>Readings</b> (or Tab onto it): the dropdown splits in as a yellow and a cyan ghost that meet, and splits out again
+                        when you leave. Press <b>Equipment</b> for the mega menu, then <b>Request access</b> and the toggle in the narrow frame: split
+                        edge on hover, closed circuit on press.
                     </p>
                 </div>
                 <div class="fa-stage fa-stage--block fa-stage--menus">
@@ -167,14 +164,14 @@
                 <div class="fa-sec__head">
                     <p class="fa-num">2 · Tabs, breadcrumbs, pagination</p>
                     <h2 id="h-links">
-                        Tabs, crumbs and page numbers did not answer the pointer and the crumbs and pages were set in the monospace; now each answers
-                        as forest's link, a 2 px green rule under the words in 200 ms, in the body face, and the page numbers take the leaf corner.
+                        Tabs, crumbs and page numbers now answer the pointer with the split edge, take the closed-circuit press and the four focus
+                        brackets, and the page numbers are cut with the notch.
                     </h2>
                 </div>
                 <div class="fa-look" data-review-look>
                     <p data-for="cyberpunk">
-                        Point at an unselected tab, a crumb and a page number: the words turn green and the green rule comes in under them. The
-                        selected tab keeps its own rule, the current page its plate. The crumbs and the numbers are in the same face as the text.
+                        Hover an unselected tab, a crumb and a page number to see the cyan and red split edge. Press one and hold: it closes, no lift.
+                        Tab along them to see the four brackets close in. Labels carry their <code>//</code> prefix, the prose is in Rajdhani.
                     </p>
                 </div>
                 <div class="fa-stage fa-stage--block fa-stack">
@@ -236,17 +233,14 @@
                 <div class="fa-sec__head">
                     <p class="fa-num">3 · Side navigation and its groups</p>
                     <h2 id="h-sidenav">
-                        The side navigation used to slide in over 200 ms and its groups unfolded in 200 ms with grey rows; now the panel grows out of
-                        its edge in one growth (1000 ms) with its backdrop fading on the growth curve, its groups unfold in the accordion's 1000 ms,
-                        and its rows answer as menu entries with the blaze and the leaf corner.
+                        The side navigation panel, its backdrop and the pushed content open by the channel split in four ticks and close as that
+                        reversed; its groups open in ticks and its rows take the split edge.
                     </h2>
                 </div>
                 <div class="fa-look" data-review-look>
                     <p data-for="cyberpunk">
-                        Point at the rows of the panel: kraft ground and the blaze laid inside. Press <b>Maintenance</b> and <b>Readings</b>: the
-                        groups unfold and fold in one growth. Press <b>Open the panel</b>: it grows out of the window's left edge, far side first, the
-                        backdrop fades in with it; close it with <b>Close</b>, Escape or the backdrop (the backdrop still goes at once on close, a
-                        known finding).
+                        Press <b>Maintenance</b> and <b>Readings</b>: the groups open and close in steps, not a glide. Press <b>Open the panel</b>,
+                        then close it with <b>Close</b> or Escape: the panel splits in and out together with its backdrop. Hover and Tab the rows.
                     </p>
                 </div>
                 <div class="fa-stage fa-stage--block">
@@ -362,15 +356,14 @@
                 <div class="fa-sec__head">
                     <p class="fa-num">4 · Command palette</p>
                     <h2 id="h-palette">
-                        The command palette opened and closed at once and its options did not answer the pointer; now it grows up out of its base like
-                        the dialog with its backdrop fading in, and its options take the blaze laid inside on the kraft ground.
+                        The command palette now opens by the channel split and closes as that reversed, with a notched plate, split-edge options and
+                        prose in Rajdhani.
                     </h2>
                 </div>
                 <div class="fa-look" data-review-look>
                     <p data-for="cyberpunk">
-                        Press <b>Open the commands</b>: the palette grows up out of its base line. Point at the options, type "lock" to filter. Escape
-                        closes it: in Chromium as the growth played backwards, in Firefox at once (a known finding: the palette's close still needs
-                        js/motion.js).
+                        Press <b>Open the commands</b>, hover the options and type &quot;lock&quot; to filter. Close it with Escape: it should split
+                        out the way it came in.
                     </p>
                 </div>
                 <div class="fa-stage">
@@ -423,16 +416,14 @@
                 <div class="fa-sec__head">
                     <p class="fa-num">5 · Date picker</p>
                     <h2 id="h-datepicker">
-                        The date picker's panel opened and closed at once and its days took a grey ground with rounded corners; now the panel grows
-                        down out of its field like a menu, and each day takes the blaze and the leaf corner, with the two-channel focus ring winning
-                        over the blaze.
+                        The date picker panel opens by the channel split and closes as that reversed; days take the split edge, the closed-circuit
+                        press and the focus brackets.
                     </h2>
                 </div>
                 <div class="fa-look" data-review-look>
                     <p data-for="cyberpunk">
-                        Press the calendar button: the panel grows down out of the field. Point at the days, then use the arrow keys: the focused day
-                        shows the two-channel ring and no blaze. Pick a day or press Escape: the panel still goes at once (a known finding, the close
-                        needs a swap of two lines in js/datepicker.js).
+                        Press the calendar button, hover the days, then move with the arrow keys to see the brackets on the focused day. Pick a day or
+                        press Escape and check the panel leaves as it arrived.
                     </p>
                 </div>
                 <div class="fa-stage">
@@ -459,16 +450,14 @@
                 <div class="fa-sec__head">
                     <p class="fa-num">6 · Theme menu</p>
                     <h2 id="h-theme-menu">
-                        The theme menu's options took an 8 % wash, the React list opened at once, and an option's focus was one pale channel; now the
-                        options take the blaze laid inside with the leaf corner, the React list grows down out of its button, and focus is the
-                        two-channel ring.
+                        The theme menu, in its attached and React shapes, opens by the channel split and closes as that reversed, with split-edge
+                        options and focus brackets.
                     </h2>
                 </div>
                 <div class="fa-look" data-review-look>
                     <p data-for="cyberpunk">
-                        Press the palette icon: the menu grows down out of it and closes as that growth backwards. Point at the options, then Tab
-                        through them: the ring of two channels, no blaze. The second button is the React shape: its list grows on opening and still
-                        goes at once on closing (a known finding). Choosing a theme here does not switch this page, which judges forest only.
+                        Press the palette icon, hover the options and Tab through them to see the brackets. Do the same with the second (React)
+                        button. Choosing a theme here does not switch this page.
                     </p>
                 </div>
                 <div class="fa-stage fa-stage--menus">
@@ -500,14 +489,14 @@
                 <div class="fa-sec__head">
                     <p class="fa-num">7 · Combobox</p>
                     <h2 id="h-combobox">
-                        The combobox's list grew up from its own foot and closed at once, and its input and options did not answer the pointer; now
-                        the list grows down out of its field and closes as that growth backwards, and the input and the options take the blaze.
+                        The combobox list opens by the channel split and closes as that reversed; the input and the options take the split edge and
+                        the focus brackets.
                     </h2>
                 </div>
                 <div class="fa-look" data-review-look>
                     <p data-for="cyberpunk">
-                        Point at the input, then type "p" or press the down arrow: the list grows down out of the field. Point at the options. Press
-                        Escape or pick one: the list withers back into the field. The plain field beside it answers the same.
+                        Hover the input, then type &quot;p&quot; or press the down arrow to open the list. Pick an option or press Escape and watch it
+                        split out. The plain field beside it should answer the same way.
                     </p>
                 </div>
                 <div class="fa-stage">
@@ -550,14 +539,13 @@
                 <div class="fa-sec__head">
                     <p class="fa-num">8 · Tour</p>
                     <h2 id="h-tour">
-                        The tour's card faded in over 160 ms and went at once; now it grows up out of its own line in one growth, and when the tour
-                        ends that growth plays backwards.
+                        The tour card, its ring and its dim open by the channel split in four ticks and close as that reversed when the tour ends.
                     </h2>
                 </div>
                 <div class="fa-look" data-review-look>
                     <p data-for="cyberpunk">
-                        Press <b>Start the tour</b>: the card grows up beside each part in turn. Press Next, Back, then Skip or Escape: the card
-                        withers back into its line.
+                        Press <b>Start the tour</b>, then Next and Back: the card should move between parts without changing shape. Press Skip or
+                        Escape and watch it split out.
                     </p>
                 </div>
                 <div class="fa-stage fa-stage--block fa-stack">
@@ -593,14 +581,13 @@
                 <div class="fa-sec__head">
                     <p class="fa-num">9 · Dialog, drawer and every backdrop</p>
                     <h2 id="h-dialogs">
-                        The dialog's and the drawer's backdrops faded on the package's ease-in while their plates grew; now every backdrop comes and
-                        goes with its plate on the growth curve.
+                        The dialog, the drawer and every backdrop come and go together by the channel split, in four ticks each way.
                     </h2>
                 </div>
                 <div class="fa-look" data-review-look>
                     <p data-for="cyberpunk">
-                        Open the dialog: the plate grows up out of its base and the backdrop darkens with it on the same curve. Close it with either
-                        button or Escape: both go back together. The same for the drawer, which grows out of its edge.
+                        Open the dialog and close it with a button or Escape; do the same with the drawer. Plate and backdrop should arrive and leave
+                        on the same four ticks, the close the exact reverse of the open.
                     </p>
                 </div>
                 <div class="fa-stage">
@@ -660,16 +647,14 @@
                 <div class="fa-sec__head">
                     <p class="fa-num">10 · Alarm</p>
                     <h2 id="h-alarm">
-                        The alarm used the package's entrance, scaling its words, with a glow pulsing every 1400 ms; now its panel and frame grow like
-                        the dialog with the leaf corner, the words do not scale, and a growth ring is drawn round the frame once every 3200 ms while
-                        it waits.
+                        The alarm panel and its backdrop open by the channel split and close as that reversed, with the red alarm look and prefixed
+                        mono labels.
                     </h2>
                 </div>
                 <div class="fa-look" data-review-look>
                     <p data-for="cyberpunk">
-                        Press <b>Raise the alarm</b>: the ground comes in, the panel grows, then the ring is drawn clockwise from the top and fades,
-                        again and again. Acknowledge it (or Escape on the second): it still goes at once (a known finding). The alarm below waits in
-                        the page so the ring can be watched without raising one.
+                        Press <b>Raise the alarm</b> and acknowledge it, then try the second button with Escape. The alarm shown below the buttons
+                        waits in the page so you can look at it without raising one.
                     </p>
                 </div>
                 <div class="fa-stage">
@@ -725,14 +710,14 @@
                 <div class="fa-sec__head">
                     <p class="fa-num">11 · Fields, select, upload zone</p>
                     <h2 id="h-fields">
-                        Fields, selects and the drop zone did not answer the pointer at all; now each takes the dashed blaze when pointed at, and
-                        focus stays the two-channel ring with the green border.
+                        Fields, selects and the upload zone now take the split edge on hover, keep the four focus brackets, and are cut by the 8 px
+                        control notch.
                     </h2>
                 </div>
                 <div class="fa-look" data-review-look>
                     <p data-for="cyberpunk">
-                        Point at each field, the select and the drop zone: the blaze is laid round it. Click into one: the blaze gives way to the
-                        focus ring. The invalid ones keep their red. Drop a file on the zone, or press it to choose one.
+                        Hover each field, the select and the drop zone: the cyan and red edge doubles. Click into one and Tab between them to see the
+                        brackets. The invalid ones keep their red. Drop a file on the zone, or press it to choose one.
                     </p>
                 </div>
                 <div class="fa-stage">
@@ -794,15 +779,13 @@ Gauge and sensor disagree by 2 bar.</textarea>
                 <div class="fa-sec__head">
                     <p class="fa-num">12 · Checkbox, radio, switch</p>
                     <h2 id="h-pairs">
-                        The tick was drawn in 200 ms but cleared at once, and the radio's dot scaled in and vanished; now the tick and the dot are
-                        drawn and cleared as mirrors (growth curve in, withering curve out), the dot grows up out of its foot without scaling, and
-                        every check, radio and switch takes the blaze when pointed at.
+                        Checkboxes, radios and switches now take the split edge on hover and the closed-circuit press, and change state in ticks.
                     </h2>
                 </div>
                 <div class="fa-look" data-review-look>
                     <p data-for="cyberpunk">
-                        Tick and untick the boxes: the tick is drawn and taken back the same way, and the plate turns only after the tick is gone.
-                        Move between the radios: the dot grows up out of its foot and goes back down. Flip the switches. Point at each: the blaze.
+                        Tick and untick the boxes, move between the radios and flip the switches. Hover each for the split edge and press and hold for
+                        the closed circuit.
                     </p>
                 </div>
                 <div class="fa-stage">
@@ -863,15 +846,14 @@ Gauge and sensor disagree by 2 bar.</textarea>
                 <div class="fa-sec__head">
                     <p class="fa-num">13 · Table</p>
                     <h2 id="h-table">
-                        Table rows took a kraft ground at once, the search did not answer the pointer, the status and page numbers were in the
-                        monospace and the busy panel showed a spinner beside the planting row; now each row answers as a menu entry with the blaze
-                        laid inside, the search blazes, the status reads in the body face, and the busy panel shows the planting row alone.
+                        Table rows, the search and the sort heads take the split edge; the busy layer arrives and leaves by the channel split and
+                        shows the on-screen word LOADING.
                     </h2>
                 </div>
                 <div class="fa-look" data-review-look>
                     <p data-for="cyberpunk">
-                        Point at the rows and the search. Type in the search. Press <b>Load again</b>: the busy panel sits over the rows with one
-                        loading picture, the planting row; <b>Loaded</b> takes it away (it still goes at once, a known finding).
+                        Hover the rows and the search and type in it. Press <b>Load again</b>: the busy layer splits in over the rows with the word
+                        LOADING and bars; <b>Loaded</b> splits it out.
                     </p>
                 </div>
                 <div class="fa-controls" data-review-controls>
@@ -955,15 +937,14 @@ Gauge and sensor disagree by 2 bar.</textarea>
                 <div class="fa-sec__head">
                     <p class="fa-num">14 · Tree and accordion</p>
                     <h2 id="h-tree">
-                        Tree rows took a grey ground at once with 5 px corners and the accordion heading did not answer the pointer; now a tree row
-                        answers as a menu entry on its own first line (kraft ground, blaze, leaf corner), and the accordion heading takes the blaze
-                        laid inside.
+                        Tree rows and accordion headings take the split edge, a tree branch glides open in ticks, and the accordion opens in eight
+                        ticks.
                     </h2>
                 </div>
                 <div class="fa-look" data-review-look>
                     <p data-for="cyberpunk">
-                        Point at the tree rows, also a branch with its children open: only the innermost row pointed at answers, on its first line.
-                        Open and close the branches. Point at the accordion headings and open them (the 1000 ms unfold was already there).
+                        Hover the tree rows and open and close the branches. Open and close the accordion headings and check the open and the close
+                        take the same time.
                     </p>
                 </div>
                 <div class="fa-stage fa-stage--block fa-split">
@@ -1021,15 +1002,14 @@ Gauge and sensor disagree by 2 bar.</textarea>
                 <div class="fa-sec__head">
                     <p class="fa-num">15 · Reorder list, chart legend, swatches</p>
                     <h2 id="h-legend">
-                        The reorder rows and the chart's legend keys took a grey edge, the keys were pills and the colour swatch was rounded 10 px;
-                        now the rows and the keys take the blaze, and the keys, the reorder handle and the swatch take the leaf corner.
+                        The reorder rows, the chart legend keys and the colour swatch now take the notch and the split edge, and the legend keys are
+                        no longer pills.
                     </h2>
                 </div>
                 <div class="fa-look" data-review-look>
                     <p data-for="cyberpunk">
-                        Point at the reorder rows and drag one by its handle (or focus the handle and use the arrow keys). Point at the chart's legend
-                        keys under the plot and press one to single a source out, then <b>Show all</b>. The colour swatch beside the sliders has the
-                        leaf corner.
+                        Hover the reorder rows and drag one by its handle (or focus the handle and use the arrow keys). Press a legend key under the
+                        plot to single a source out, then <b>Show all</b>. The swatch is cut, not round.
                     </p>
                 </div>
                 <div class="fa-stage fa-stage--block fa-stack">
@@ -1109,30 +1089,18 @@ Gauge and sensor disagree by 2 bar.</textarea>
                 data-review-title="16 · Calendar and the busy month"
                 data-review-components="calendar"
                 aria-labelledby="h-calendar"
-                data-review-choices='[{ "id": "shape", "label": "Vorm van de kalenderitems (Forest vibe)", "once": true, "options": [
-                    { "value": "leaf-corner", "label": "Leaf corner (Aanbevolen)", "hints": { "forest": "Zachte organische bladhoek (border-radius: 0 1.25rem 0 1.25rem op de maandplaat, subtiele 6px bladhoek op dagen) passend bij de rest van het thema." } },
-                    { "value": "trail-marker", "label": "Trail marker", "hints": { "forest": "Zachte afgeronde hoeken (4px) met een trail-blaze streepje aan de linkerkant." } },
-                    { "value": "contour-ring", "label": "Contour ring", "hints": { "forest": "Topografische hoogtelijn-contouren met subtiele ringen in kraft papier." } },
-                    { "value": "kraft-badge", "label": "Kraft badge", "hints": { "forest": "Rechthoekige kraft badge met lichte vezeltextuur en fijne stiknaadrand." } },
-                    { "value": "notched-tag", "label": "Notched tag", "hints": { "forest": "Ingekeepte veldgids-tag met afgeschuinde hoekjes." } },
-                    { "value": "wood-grain", "label": "Wood grain contour", "hints": { "forest": "Houtnerf-reliëf met warme bruingroene randen en zachte hoeken." } },
-                    { "value": "round-log", "label": "Round log (huidig)", "hints": { "forest": "Volledig ronde schijven (50% border-radius) zoals een doorgezaagde boomstam." } }
-                ] }]'
             >
                 <div class="fa-sec__head">
                     <p class="fa-num">16 · Calendar and the busy month</p>
                     <h2 id="h-calendar">
-                        The busy month's card faded in over 200 ms with a spinner beside its planting row and went at once, its days planted a tree
-                        each under it, and a day's focus was one 2 px outline; now the card grows up out of its line and withers back with the
-                        planting row alone, the days under it stand faint without a tree, and a day's focus is the two-channel ring.
+                        The calendar's busy layer arrives and leaves by the channel split with the word LOADING, and each day takes the split edge and
+                        the focus brackets.
                     </h2>
                 </div>
                 <div class="fa-look" data-review-look>
                     <p data-for="cyberpunk">
-                        Press <b>Loading</b>: in the first month the whole month waits, the card grows up over it with one planting row and the days
-                        stand faint without a tree; in the second (each day waiting, unchanged) every day shows the spinner's one tree. Press
-                        <b>Read</b>: the card withers back into its line. Click a day and use the arrow keys: the two-channel ring, today's green ring
-                        kept inside. Kies hieronder de gewenste <b>Forest vibe</b> vorm voor de kalenderitems.
+                        Press <b>Loading</b>: the first month shows one busy layer over the whole month, the second shows each day waiting. Press
+                        <b>Read</b> and the layer splits out. Click a day and use the arrow keys to see the brackets.
                     </p>
                 </div>
                 <div class="fa-controls" data-review-controls>
@@ -1140,18 +1108,8 @@ Gauge and sensor disagree by 2 bar.</textarea>
                         <button type="button" class="kp-button kp-button--sm" data-fa-calendar="loading" aria-pressed="false">Loading</button>
                         <button type="button" class="kp-button kp-button--sm" data-fa-calendar="ready" aria-pressed="true">Read</button>
                     </div>
-                    <div class="kp-row" role="group" aria-label="Calendar day shape proposals" data-fa-cal-shapes>
-                        <span class="fa-label" style="align-self: center; margin-inline-end: 0.5rem">Vorm voorstel:</span>
-                        <button type="button" class="kp-button kp-button--sm" data-fa-shape="leaf-corner" aria-pressed="true">Leaf corner</button>
-                        <button type="button" class="kp-button kp-button--sm" data-fa-shape="trail-marker" aria-pressed="false">Trail marker</button>
-                        <button type="button" class="kp-button kp-button--sm" data-fa-shape="contour-ring" aria-pressed="false">Contour ring</button>
-                        <button type="button" class="kp-button kp-button--sm" data-fa-shape="kraft-badge" aria-pressed="false">Kraft badge</button>
-                        <button type="button" class="kp-button kp-button--sm" data-fa-shape="notched-tag" aria-pressed="false">Notched tag</button>
-                        <button type="button" class="kp-button kp-button--sm" data-fa-shape="wood-grain" aria-pressed="false">Wood grain</button>
-                        <button type="button" class="kp-button kp-button--sm" data-fa-shape="round-log" aria-pressed="false">Round log</button>
-                    </div>
                 </div>
-                <div class="fa-stage fa-stage--block fa-split" data-fa-calendar-stage data-cal-shape="leaf-corner">
+                <div class="fa-stage fa-stage--block fa-split" data-fa-calendar-stage>
                     <div
                         class="kp-calendar kp-calendar--busy-whole"
                         data-kp-calendar
@@ -1181,15 +1139,14 @@ Gauge and sensor disagree by 2 bar.</textarea>
                 <div class="fa-sec__head">
                     <p class="fa-num">17 · Buttons</p>
                     <h2 id="h-buttons">
-                        A pressed primary or destructive button turned pale under its light words (1.8:1); now it keeps its own plate while pressed
-                        and only the blaze closes in, the plain button alone turning to its pressed ground, and every other variant answers as before.
+                        Every button now draws the four closing focus brackets, is cut by the notch (14 px for plates, 8 px for controls), splits its
+                        edge on hover and closes the circuit on press without lifting.
                     </h2>
                 </div>
                 <div class="fa-look" data-review-look>
                     <p data-for="cyberpunk">
-                        Press and hold each button. The primary and the destructive keep their plate and their words stay readable; the plain one
-                        takes its pressed ground. Point at the ghost and the icon button: the blaze over a faint wash (kept on purpose, it shows a
-                        ghost is a button). Tab through them all: the focus ring wins over the blaze.
+                        Tab through the buttons: the four brackets close in on each. Hover for the split edge, then press and hold: it closes the
+                        circuit and does not move. Check the primary and destructive plates stay readable while pressed.
                     </p>
                 </div>
                 <div class="fa-stage">
@@ -1237,17 +1194,15 @@ Gauge and sensor disagree by 2 bar.</textarea>
                 <div class="fa-sec__head">
                     <p class="fa-num">18 · Links, headline, rule, alert edge, meter, back to top</p>
                     <h2 id="h-prose">
-                        A link in running text changed at once, the headline slid in, and the section rule, the meter's wipe and the alert's edge
-                        always ran left to right; now the link answers in 200 ms, the headline grows up out of its line, the rule, the wipe and the
-                        edge start from the reading side in a right-to-left page too, and back to top withers out.
+                        Links, the headline, the rule, the alert edge, the meters and back to top now follow the glitch: prose in Rajdhani, prefixed
+                        labels, and everything that arrives or leaves does so by the channel split.
                     </h2>
                 </div>
                 <div class="fa-look" data-review-look>
                     <p data-for="cyberpunk">
-                        Point at the link in the text. Press <b>Play again</b> for the headline, the rule and the meters. Press
-                        <b>Right to left</b> and play again: the rule and the wipes start at the right, the alerts' edge stands at the right. Press
-                        <b>Show back to top</b>
-                        twice: it fades in and withers out.
+                        Point at the link in the text. Press <b>Play again</b> for the headline, the rule, the alerts and the meters. Press
+                        <b>Right to left</b> and play again to check the direction flips. Press <b>Show back to top</b> twice to see it arrive and
+                        leave.
                     </p>
                 </div>
                 <div class="fa-controls" data-review-controls>
@@ -1389,16 +1344,14 @@ Gauge and sensor disagree by 2 bar.</textarea>
                 <div class="fa-sec__head">
                     <p class="fa-num">19 · Skeletons, spinner, busy button, loading meter</p>
                     <h2 id="h-loading">
-                        The busy bar breathed in 6600 ms while the skeleton block and circle looped in 3200 ms; now the bar, the planting strips, the
-                        skeleton lines, block and circle and the measuring meter all breathe as one in 6600 ms (3000 in, 600 full, 3000 out), and the
-                        spinner keeps its tree every 1600 ms.
+                        Everything that waits now shows one picture: four bars with a glitch copy, or the on-screen word LOADING; the old pulsing
+                        loops are gone.
                     </h2>
                 </div>
                 <div class="fa-look" data-review-look>
                     <p data-for="cyberpunk">
-                        Watch a whole breath: every row fills start to end, holds, and empties end to start, together. Press <b>Start together</b> to
-                        set them all off on the same frame. The spinner plants one tree in three stages; the busy button and the loading meter show
-                        the planting strip.
+                        Watch the bars, the skeletons and the meter. Press <b>Start together</b> to restart them on the same frame. Look at the
+                        spinner (four bars and a glitch copy), the busy button and the loading meter.
                     </p>
                 </div>
                 <div class="fa-controls" data-review-controls>
@@ -1486,15 +1439,14 @@ Gauge and sensor disagree by 2 bar.</textarea>
                 <div class="fa-sec__head">
                     <p class="fa-num">20 · Popover menus</p>
                     <h2 id="h-popover-menus">
-                        A menu in a popover showed two frames and two shadows, and while it grew it was drawn up to 3 rem over its own button; now it
-                        is one plate with the leaf corner, clipped at its button's edge for the whole growth.
+                        A menu in a popover is one notched plate that opens by the channel split and closes as that reversed, with split-edge entries
+                        and a [TARGET] prefix on the destructive one.
                     </h2>
                 </div>
                 <div class="fa-look" data-review-look>
                     <p data-for="cyberpunk">
-                        Press <b>Row actions</b>: one plate grows down out of the button and never covers it; Escape or a click outside closes it as
-                        that growth backwards. Press <b>More ▾</b> for the menu of every other action, the same growth, its entries with the blaze
-                        laid inside. The menu opens right under its button (found while building this page, fixed in js/top-layer.js).
+                        Press <b>Row actions</b>, hover the entries and close with Escape or a click outside. Press <b>More ▾</b> for the richer menu
+                        and check it opens right under its button and never covers it.
                     </p>
                 </div>
                 <div class="fa-stage fa-stage--menus">
@@ -1585,7 +1537,7 @@ Gauge and sensor disagree by 2 bar.</textarea>
         </main>
         <!-- Round one: every block is new. -->
         <script type="application/json" data-review-round>
-            { "round": "2026-10-09-r1", "reopen": [] }
+            { "round": "2026-10-12-r1", "reopen": [] }
         </script>
         <script type="module" src="../../js/auto.js"></script>
         <script type="module" src="demo.js"></script>
