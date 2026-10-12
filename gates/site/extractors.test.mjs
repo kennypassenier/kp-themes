@@ -280,7 +280,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // (--kp-progress-group-scale): 315 + 3.
     // The skeleton circle's width, --kp-skeleton-circle (2026-10-07): 318 + 1.
     // Cyberpunk's tour close reads three tokens (--kp-tour-dim-time, --kp-tour-dim-close-ease, --kp-tour-dim-close-delay): 323 + 3.
-    assert.equal(result.expected, 326, 'AR21 counted the --kp-* properties in css/components.css');
+    // The tree row's inset, --kp-tree-inset (2026-10-12): 326 + 1.
+    assert.equal(result.expected, 327, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -333,7 +334,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // --kp-progressbar-scale, -text and --kp-progress-group-scale: 312 + 3.
     // The skeleton circle's width knob (2026-10-07): 315 + 1.
     // Cyberpunk's three tour-close tokens are read through var(): 320 + 3.
-    assert.equal(result.readCount, 323);
+    // And --kp-tree-inset, read through var(): 323 + 1.
+    assert.equal(result.readCount, 324);
     // `--kp-chart-height` is read by js/chart.js (the plot's height when the
     // data names none), not by a stylesheet [scope-143].
     assert.deepEqual(result.unread, ['--kp-busy-opacity', '--kp-chart-height', '--kp-steps']);

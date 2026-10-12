@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- **Changed: cyberpunk, the review of 2026-10-12 (round 2)** [Kenny, research/cyberpunk-applied]. The command palette and shortcuts open and close by the channel
+  split (they had only the plate shape), the phone bar panel and its toggle play it with text ghosts and a mirrored close, and an identity audit
+  (`research/cyberpunk-applied/_audit/identity.mjs`, animation names printed by `gates/measure-pairs.mjs`) now fails a pair that does not run the theme's signature.
+  The alarm's Acknowledge button reads 5.29:1 again (a `background:` shorthand had tiled the notch line over it). A tree row keeps its inset in every theme
+  (`--kp-tree-inset`, default 0.375rem, css/components.css; cyberpunk 0.5rem). Calendar days and alerts have a neon variant with 8:1 to 15:1 text.
 - **Changed: cyberpunk, the audited rows A-H mended** [2026-10-12, research/cyberpunk-applied/_audit/MISSING.md, Firefox]. Keyboard focus: the clock reset
   on buttons is `:where()`, so every button draws the four closing brackets; hover, focus and press (split edge, brackets, closed circuit) reach tabs,
   pagination, icon buttons, options, tree rows, sort heads, checks, switches, fields, selects, nav links and days; `--fx-lift: 0px` stops the lift. Leaving:

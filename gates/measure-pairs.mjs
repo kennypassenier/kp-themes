@@ -68,6 +68,9 @@ function serve() {
     return new Promise((done) => server.listen(0, '127.0.0.1', () => done(server)));
 }
 
+/** the animation names of the last startPaused() */
+let names = [];
+
 /**
  * Pause what the action started, then keep that set for seeking.
  * @param {import('@playwright/test').Page} page
@@ -106,6 +109,19 @@ async function startPaused(page, act, label) {
         };
     });
     if (probe) console.log(`  ${label}: ${list.length} animations\n    ${list.join('\n    ')}`);
+    // WHICH animation runs, not only how long: a part that fades for the theme's duration passes the
+    // timing and the mirror, and is still not the theme's own effect [Kenny, 2026-10-12]. A dialog's
+    // entrance is replayed by js/motion.js with element.animate() and has no name: its properties stand for it.
+    names = await page.evaluate(() => [
+        ...new Set(
+            window.__pair.map((a) => {
+                if (a.animationName) return a.animationName;
+                if (a.transitionProperty) return `transition:${a.transitionProperty}`;
+                const kf = a.effect.getKeyframes();
+                return `script[${[...new Set(kf.flatMap((k) => Object.keys(k)).filter((x) => !['offset', 'computedOffset', 'easing', 'composite'].includes(x)))].join(',')}]`;
+            }),
+        ),
+    ]);
     return ms;
 }
 
@@ -183,6 +199,7 @@ async function measure(browser, differPage, base, pair) {
     const closed = await shot();
 
     const openMs = await startPaused(page, pair.open, 'open');
+    const openNames = names;
     if (openMs <= 0) notes.push('the opening runs no animation at all');
     const opening = [];
     for (let i = 0; i <= FRAMES; i++) {
@@ -195,6 +212,7 @@ async function measure(browser, differPage, base, pair) {
     const open = await shot();
 
     const closeMs = await startPaused(page, pair.close, 'close');
+    const closeNames = names;
     if (closeMs <= 0) notes.push('the closing runs no animation at all: it is gone at once');
     const closing = [];
     for (let i = 0; i <= FRAMES; i++) {
@@ -202,6 +220,7 @@ async function measure(browser, differPage, base, pair) {
         closing.push(await shot());
     }
     await page.evaluate(() => window.__pair.forEach((a) => a.finish()));
+    await pair.release?.(page);
     await page.waitForTimeout(700);
     const after = await shot();
 
@@ -229,7 +248,7 @@ async function measure(browser, differPage, base, pair) {
         notes.push(`the closing is not the opening backwards: ${(worst * 100).toFixed(1)} % off at frame ${at}/${FRAMES}`);
     if (gone > 0.01) notes.push(`after the closing the screen is not the one from before the opening: ${(gone * 100).toFixed(1)} % left over`);
     await context.close();
-    return { id: pair.id, ok: notes.length === 0, notes, worst, open: openMs, close: closeMs };
+    return { id: pair.id, ok: notes.length === 0, notes, worst, open: openMs, close: closeMs, openNames, closeNames };
 }
 
 const server = await serve();
@@ -237,13 +256,15 @@ const base = `http://127.0.0.1:${server.address().port}`;
 const browser = await (engine === 'chromium' ? chromium : firefox).launch();
 const { page: differPage, compare } = await differ(browser);
 const results = [];
-for (const pair of PAIRS.filter((p) => only.length === 0 || only.includes(p.id))) {
+for (const pair of PAIRS.filter((p) => (only.length === 0 || only.includes(p.id)) && (!p.themes || p.themes.includes(theme)))) {
     try {
         const r = await measure(browser, { compare }, base, pair);
         results.push(r);
         console.log(
             `${r.ok ? 'ok  ' : 'FAIL'} ${r.id.padEnd(22)} open ${Math.round(r.open)} ms, close ${Math.round(r.close)} ms, worst ${(r.worst * 100).toFixed(1)} %`,
         );
+        const shown = (l) => l.filter((n) => !n.startsWith('transition:')).join(', ') || 'none';
+        console.log(`       open runs ${shown(r.openNames)}; close runs ${shown(r.closeNames)}`);
         for (const n of r.notes) console.log(`       - ${n}`);
     } catch (error) {
         results.push({ id: pair.id, ok: false });

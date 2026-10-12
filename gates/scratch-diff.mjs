@@ -25,7 +25,7 @@ const server = createServer((req, res) => {
     }
     res.writeHead(200, { 'content-type': MIME[extname(file)] ?? 'application/octet-stream' }).end(readFileSync(file));
 });
-await new Promise(r => server.listen(0, '127.0.0.1', r));
+await new Promise((r) => server.listen(0, '127.0.0.1', r));
 const port = server.address().port;
 
 const browser = await firefox.launch();
@@ -44,7 +44,7 @@ await page.addStyleTag({
             clip-path: inset(0 calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)));
         }
     }
-    `
+    `,
 });
 
 // Pause animations
@@ -56,7 +56,7 @@ await page.evaluate(() => {
 });
 
 await page.evaluate(() => {
-    const list = document.getAnimations().filter(a => !window.__ambient.has(a) && Number.isFinite(Number(a.effect?.getComputedTiming().endTime)));
+    const list = document.getAnimations().filter((a) => !window.__ambient.has(a) && Number.isFinite(Number(a.effect?.getComputedTiming().endTime)));
     for (const a of list) a.pause();
     window.__pair = list;
 });

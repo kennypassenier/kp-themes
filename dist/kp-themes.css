@@ -10489,7 +10489,12 @@
         cursor: pointer;
         /* The indent per level is a knob; the React tree sets the depth and
      * the framework-free markup may set aria-level [KT6]. */
-        padding-inline-start: calc(var(--kp-tree-depth, 0) * var(--kp-tree-indent, 1rem));
+        padding-inline-start: calc(var(--kp-tree-inset, 0.375rem) + var(--kp-tree-depth, 0) * var(--kp-tree-indent, 1rem));
+        /* The start inset is the row's own 0.375rem padding, which this
+         * longhand used to overwrite with the depth alone: a root row's text
+         * touched the edge of its selected wash and its hover plate (forest
+         * and cyberpunk, Kenny 2026-10-12). A register with its own inset
+         * (forest: 0.5rem) sets it, or overrides this longhand. */
         /* A file name with nowhere to break wraps inside its pane rather than
          * pushing it wider: 64 characters made a 320px pane 632px wide
          * [gap-12, DI11]. Inherited, so every level below has it too. */
@@ -14282,18 +14287,27 @@
         outline: none;
     }
 
+    /* The acknowledge button is the theme's own button, drawn by its three variables: the frame is
+       its background colour, the face and the notch line are background layers over it. A
+       `background:` shorthand here (what the other registers write) reset those layers' size and
+       repeat, so the notch line tiled over the whole face in the page's yellow and hid the label
+       [Kenny, 2026-10-12: "Ik kan niet lezen wat er op die knop staat"]. The variables keep the
+       layers and their hover, focus and press. Rest: dark label on the alarm's red, 5.3:1;
+       hover and focus: the red label on the dark face. */
     [data-theme='cyberpunk'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
     [data-theme='cyberpunk'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
     [data-theme='cyberpunk'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        --kp-btn-frame: var(--kp-alarm-ink);
+        --kp-btn-ground: var(--kp-alarm-ground);
+        --kp-btn-face: var(--kp-alarm-ink);
+        --kp-btn-fg: var(--kp-alarm-on-ink);
         border-color: var(--kp-alarm-ink);
-        background: var(--kp-alarm-ink);
-        color: var(--kp-alarm-on-ink);
         text-shadow: none;
     }
 
     [data-theme='cyberpunk'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
-        background: var(--kp-alarm-on-ink);
-        color: var(--kp-alarm-ink);
+        --kp-btn-face: var(--kp-alarm-on-ink);
+        --kp-btn-fg: var(--kp-alarm-ink);
     }
 
     [data-theme='cyberpunk'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
@@ -15007,8 +15021,103 @@
         --kp-cp-day-today: inset 0 0 0 2px currentColor;
     }
 
+    /* The neon variant of a status plate (calendar days, legend swatches, alerts): a void tinted
+       with the tone's hue, a neon edge, bright ink. The ink and the edge come from the theme's own
+       tokens (the status ink, red alarms in its hot tint); the tint is derived, never a colour of
+       its own. Every state is measured against its ground, AA 4.5:1. */
+    [data-theme='cyberpunk'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-alert) {
+        --kp-cp-neon-ground: hsl(from var(--kp-cp-neon-edge, transparent) h calc(s * 0.6) 8%);
+    }
+
+    [data-theme='cyberpunk'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='ok'],
+    [data-theme='cyberpunk'] .kp-alert--success {
+        --kp-cp-neon: var(--success-foreground);
+        --kp-cp-neon-edge: var(--success-foreground);
+    }
+
+    [data-theme='cyberpunk'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='warn'],
+    [data-theme='cyberpunk'] .kp-alert--warning {
+        --kp-cp-neon: var(--warning-foreground);
+        --kp-cp-neon-edge: var(--warning-foreground);
+    }
+
+    [data-theme='cyberpunk'] .kp-alert--info {
+        --kp-cp-neon: var(--info-foreground);
+        --kp-cp-neon-edge: var(--info-foreground);
+    }
+
+    [data-theme='cyberpunk'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='bad'],
+    [data-theme='cyberpunk'] .kp-alert--destructive {
+        --kp-cp-neon: var(--fx-hot-alarm, var(--destructive));
+        --kp-cp-neon-edge: var(--destructive);
+    }
+
+    [data-theme='cyberpunk']
+        :is(
+            .kp-calendar__day[data-kp-tone='ok'],
+            .kp-calendar__day[data-kp-tone='warn'],
+            .kp-calendar__day[data-kp-tone='bad'],
+            .kp-calendar__swatch[data-kp-tone='ok'],
+            .kp-calendar__swatch[data-kp-tone='warn'],
+            .kp-calendar__swatch[data-kp-tone='bad'],
+            .kp-alert--success,
+            .kp-alert--warning,
+            .kp-alert--info,
+            .kp-alert--destructive
+        ) {
+        background-color: var(--kp-cp-neon-ground);
+        color: var(--kp-cp-neon);
+        border-color: hsl(from var(--kp-cp-neon-edge) h s l / 0.85);
+    }
+
+    [data-theme='cyberpunk'] .kp-calendar__swatch:is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad']) {
+        box-shadow: inset 0 0 0 1px var(--kp-cp-neon-edge);
+    }
+
+    /* An alert's words are the tone's neon pulled toward white so a paragraph reads at a glance; its
+       label, icon bar and left edge keep the neon itself. */
+    [data-theme='cyberpunk'] .kp-alert:is(.kp-alert--success, .kp-alert--warning, .kp-alert--info, .kp-alert--destructive) {
+        color: hsl(from var(--kp-cp-neon) h calc(s * 0.6) 90%);
+        border-left-color: var(--kp-cp-neon-edge);
+    }
+
+    [data-theme='cyberpunk']
+        :is(.kp-alert--success, .kp-alert--warning, .kp-alert--info, .kp-alert--destructive)
+        :is(.kp-alert__label, .kp-alert__icon) {
+        color: var(--kp-cp-neon);
+    }
+
+    /* Days that have not happened yet, and the days of the neighbouring months, read in the cyan of
+       what is to be read, quietly; the neighbouring days keep their full ink instead of a veil. */
+    [data-theme='cyberpunk'] .kp-calendar__day:is([data-kp-tone='future'], [data-kp-tone='before']),
+    [data-theme='cyberpunk'] .kp-calendar__swatch:is([data-kp-tone='future'], [data-kp-tone='before']) {
+        border-color: hsl(from var(--accent) h s l / 0.5);
+    }
+
+    [data-theme='cyberpunk'] .kp-calendar__grid td[data-kp-pad] > .kp-calendar__pad {
+        opacity: 1;
+        color: hsl(from var(--muted-foreground) h s calc(l - 6));
+    }
+
     [data-theme='cyberpunk'] .kp-calendar__day[data-kp-tone='bad'] {
-        --kp-cp-day-low: var(--destructive-foreground);
+        --kp-cp-day-low: var(--destructive);
+    }
+
+    /* The count under a day's number clears the plate's lower edge (a plate's words stand 4 px clear). */
+    [data-theme='cyberpunk'] .kp-calendar__day {
+        padding-block-end: 0.3125rem;
+    }
+
+    /* A log line the reader is pointed at washes each cell it is made of: the wash grows a quarter
+       rem past the words on both sides (the cells keep their place, the gap is the sum of both). */
+    [data-theme='cyberpunk'] .kp-log__line[data-kp-current] > * {
+        padding-inline: 0.25rem;
+        margin-inline: -0.25rem;
+    }
+
+    /* A switch's words end a half rem before the label's edge, where its brackets are drawn. */
+    [data-theme='cyberpunk'] .kp-switch {
+        padding-inline-end: 0.5rem;
     }
 
     [data-theme='cyberpunk'] .kp-calendar__day:hover:not(:is(:disabled, [aria-disabled='true'], [data-kp-tone='loading'])) {
@@ -15233,6 +15342,8 @@
     /* A branch holds its children inside its own element: the layers are sized to the item's own row
        (one line plus the row's block padding), as the selected mark of the package is. */
     [data-theme='cyberpunk'] .kp-tree [role='treeitem'] {
+        /* A row's words stand clear of the plate's edge, as a menu entry's do (forest's inset). */
+        --kp-tree-inset: 0.5rem;
         --kp-cp-rowh: calc(1lh + 0.5rem);
         --kp-cp-tr-img:
             linear-gradient(var(--focus-ring) 0 0), linear-gradient(var(--focus-ring) 0 0), linear-gradient(var(--focus-ring-contrast) 0 0),
@@ -16913,36 +17024,60 @@
     @keyframes kp-sig-cyberpunk-split-bar {
         0% {
             filter: drop-shadow(6px 4px 0 var(--accent)) drop-shadow(6px -4px 0 var(--primary));
+            text-shadow:
+                6px 4px 0 var(--accent),
+                6px -4px 0 var(--primary);
         }
 
         25% {
             filter: drop-shadow(4px 3px 0 var(--accent)) drop-shadow(4px -3px 0 var(--primary));
+            text-shadow:
+                4px 3px 0 var(--accent),
+                4px -3px 0 var(--primary);
         }
 
         50% {
             filter: drop-shadow(2px 2px 0 var(--accent)) drop-shadow(2px -2px 0 var(--primary));
+            text-shadow:
+                2px 2px 0 var(--accent),
+                2px -2px 0 var(--primary);
         }
 
         75% {
             filter: drop-shadow(1px 1px 0 var(--accent)) drop-shadow(1px -1px 0 var(--primary));
+            text-shadow:
+                1px 1px 0 var(--accent),
+                1px -1px 0 var(--primary);
         }
     }
 
     @keyframes kp-sig-cyberpunk-split-bar-back {
         0% {
             filter: drop-shadow(6px 4px 0 var(--accent)) drop-shadow(6px -4px 0 var(--primary));
+            text-shadow:
+                6px 4px 0 var(--accent),
+                6px -4px 0 var(--primary);
         }
 
         25% {
             filter: drop-shadow(4px 3px 0 var(--accent)) drop-shadow(4px -3px 0 var(--primary));
+            text-shadow:
+                4px 3px 0 var(--accent),
+                4px -3px 0 var(--primary);
         }
 
         50% {
             filter: drop-shadow(2px 2px 0 var(--accent)) drop-shadow(2px -2px 0 var(--primary));
+            text-shadow:
+                2px 2px 0 var(--accent),
+                2px -2px 0 var(--primary);
         }
 
         75% {
             filter: drop-shadow(1px 1px 0 var(--accent)) drop-shadow(1px -1px 0 var(--primary));
+            text-shadow:
+                1px 1px 0 var(--accent),
+                1px -1px 0 var(--primary);
         }
     }
 
@@ -16960,6 +17095,24 @@
 
             [data-theme='cyberpunk'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__links {
                 animation: kp-sig-cyberpunk-split-bar-back 480ms steps(1, end) reverse forwards;
+            }
+
+            /* The toggle is the part that changes state (its plate turns cyan): a signal changing
+               splits, so it plays the same four poses as the panel it opens, in step with it. */
+            [data-theme='cyberpunk'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__toggle {
+                --kp-cp-wide: var(--kp-cp-wide-ctl);
+                --kp-cp-b0: 6px 4px 0 var(--accent), 6px -4px 0 var(--primary);
+                --kp-cp-b1: 4px 3px 0 var(--accent), 4px -3px 0 var(--primary);
+                --kp-cp-b2: 2px 2px 0 var(--accent), 2px -2px 0 var(--primary);
+                --kp-cp-b3: 1px 1px 0 var(--accent), 1px -1px 0 var(--primary);
+            }
+
+            [data-theme='cyberpunk'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__toggle {
+                animation: kp-sig-cyberpunk-split 480ms steps(1, end) backwards;
+            }
+
+            [data-theme='cyberpunk'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__toggle {
+                animation: kp-sig-cyberpunk-split-back 480ms steps(1, end) reverse forwards;
             }
         }
     }
@@ -17896,6 +18049,18 @@
         --kp-cp-b1: 4px 3px 0 var(--accent), 4px -3px 0 var(--primary);
         --kp-cp-b2: 2px 2px 0 var(--accent), 2px -2px 0 var(--primary);
         --kp-cp-b3: 1px 1px 0 var(--accent), 1px -1px 0 var(--primary);
+    }
+
+    /* ...and the arrival that goes with them [Kenny, 2026-10-12: "Command palette is hetzelfde, geen
+       glitch effect bij open/close?"]. These parts had the shape and the copies' tokens but no
+       `animation`: the package default (none for the palette) ran, so the pair meter, which times
+       and mirrors whatever runs, passed them. A dialog's entrance is kept by js/motion.js and its
+       close plays it backwards, so one declaration is the pair. The drawer is a `.kp-dialog` and
+       has the dialog's. The alarm keeps its own approved strike (scope-94, scope-100). */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] :is(.kp-palette, .kp-shortcuts) {
+            animation: kp-sig-cyberpunk-split 480ms steps(1, end) backwards;
+        }
     }
 
     /* The side navigation's panel plays its copies outside its box while its clock runs, so its

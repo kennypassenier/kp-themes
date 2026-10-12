@@ -80,7 +80,6 @@ export const PAGES = [
             {
                 href: 'research/cyberpunk-applied/demo.html',
                 label: 'Cyberpunk, as applied',
-                rework: 'round 2: the phone bar, command palette, alarm button, tree margin and the calendar and alert colours are being redone from your verdict',
             },
             // Kenny, 2026-10-08: the anchor round for the nine themes without one, the grotesk way (one question, six to ten candidates, each in its own scene, as a progress bar and as a button press, the recommendation first).
             // Kenny, 2026-10-08: what makes formal, light and deco themselves, the forest way (the analysis in themes/<theme>/CHARACTER.md), the nineteen questions each, every option a live scene that follows from the theme's decided anchor, the recommendation first.

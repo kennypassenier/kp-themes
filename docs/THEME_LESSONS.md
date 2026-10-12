@@ -377,3 +377,37 @@ These were not cyberpunk's: the same wrong default is in every theme that has no
   `data-kp-sidenav-shift`; the hover dropdown hold is `--kp-nav-close-time` (36). Each theme must set the tokens its grammar needs.
 - **Check:** `node gates/measure-pairs.mjs --theme <theme> --engine firefox` and the audit in research/cyberpunk-applied/_audit
   (a theme-neutral copy of forest's) before showing a theme to Kenny.
+
+## 38. A pair that is timed and mirrored can still run the package default: check which animation runs
+
+- **Symptom:** (Kenny, cyberpunk) the command palette and the phone bar open and close without the theme's glitch, although
+  `gates/measure-pairs.mjs` said both passed at 480 ms and 0 % off.
+- **Cause:** the meter checks duration and the close being the open reversed, never which animation plays. The register gave the
+  palette its plate shape and ghost tokens but no `animation:`; it faded in 480 ms on the theme's clock and passed. The phone bar's
+  panel ran the split as a drop-shadow filter only (the yellow ghost vanished on a yellow bar, the text had none) and its toggle
+  flipped colour with no animation at all.
+- **Rule:** a theme's signature effect (its open/close language, decided with Kenny) stands on EVERY part that opens, closes,
+  arrives or leaves, unless Kenny has said another effect belongs to that part (cyberpunk's alarm strike, scope-94/100, is the
+  recorded example). No exception is assumed; each one is written down in the theme's CHARACTER.md.
+- **Check:** `research/cyberpunk-applied/_audit/identity.mjs` lists, for every pair in the applied demo, the animation names that
+  run on open and on close and FAILS a pair whose open does not run the theme's signature family (or a listed decided
+  exception); `gates/measure-pairs.mjs` now prints the names under each pair. A new theme copies identity.mjs and lists its family.
+
+## 39. A shared row rule that resets the inset puts text against the edge in every theme
+
+- **Symptom:** (Kenny, forest then cyberpunk) a tree's file name touches the left edge of the row's wash.
+- **Cause:** css/components.css set a tree row's `padding-inline-start` to its depth alone, so the 0.375rem root inset was lost; forest
+  had mended it only inside its own register (0.5rem), so 15 of 16 themes still had it.
+- **Fix:** the shared rule reads `--kp-tree-inset` (default 0.375rem); a theme sets its own. Mend a shared default once, not per theme.
+- **Check:** `research/cyberpunk-applied/_audit/edges.mjs <theme|all>` measures every text node's distance to the visible edge of its
+  plate, row or chip (4 px, 8 px on plates; exclusions listed in its header); the other themes' remaining findings are in
+  edges-other-themes.md.
+
+## 40. A `background:` shorthand resets the layers' size and repeat
+
+- **Symptom:** the alarm's Acknowledge button is unreadable (about 1:1 at rest, 2.6:1 on hover): a yellow notch line tiles over the face.
+- **Cause:** the rule set `background:` as a shorthand, which resets `background-size` and `background-repeat` of the register's
+  layered gradients, so the notch line repeated across the button.
+- **Fix:** set the variables the layers read (or longhands) instead of the shorthand; the button now reads 5.29:1 in rest, hover,
+  focus and press.
+- **Check:** a contrast sweep of every button and link text in every state (`contrast-sweep.mjs`, 799 readings).

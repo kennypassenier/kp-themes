@@ -7117,7 +7117,12 @@
         cursor: pointer;
         /* The indent per level is a knob; the React tree sets the depth and
      * the framework-free markup may set aria-level [KT6]. */
-        padding-inline-start: calc(var(--kp-tree-depth, 0) * var(--kp-tree-indent, 1rem));
+        padding-inline-start: calc(var(--kp-tree-inset, 0.375rem) + var(--kp-tree-depth, 0) * var(--kp-tree-indent, 1rem));
+        /* The start inset is the row's own 0.375rem padding, which this
+         * longhand used to overwrite with the depth alone: a root row's text
+         * touched the edge of its selected wash and its hover plate (forest
+         * and cyberpunk, Kenny 2026-10-12). A register with its own inset
+         * (forest: 0.5rem) sets it, or overrides this longhand. */
         /* A file name with nowhere to break wraps inside its pane rather than
          * pushing it wider: 64 characters made a 320px pane 632px wide
          * [gap-12, DI11]. Inherited, so every level below has it too. */
