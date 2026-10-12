@@ -98,3 +98,34 @@ the close's t50 is the open's remaining 50 %, not its own.
   field below it moves on every month.
 - **Fix:** the day grid keeps the height of a six-week month (`min-block-size`).
 - **Check:** the panel's height series across twelve months is one value.
+
+## 10. The close plays the opening forwards when the opening's mark is removed first
+
+- **Symptom:** the date picker's panel vanishes at once, or re-grows for a second before it goes.
+- **Cause:** `js/motion.js` `playClose()` compares the panel's animation name before and after it
+  sets `[data-kp-closing]`; a script that removes the opening's mark (`data-kp-date-open`) *before*
+  calling it makes the opening look like a close of its own, which then plays forwards.
+- **Fix:** call `playClose()` first and remove the opening's mark right after (it reads its
+  snapshot synchronously). Keep the rule that draws the opening on the union of the opening mark,
+  `[data-kp-closing]` and `[data-kp-reversing]`, so the name stays the same.
+- **Check:** `node gates/measure-pairs.mjs --theme forest --only datepicker`.
+
+## 11. A page dim and a ring are part of the pair
+
+- **Symptom:** the tour's page dims in 350 ms and un-dims in 1000 ms, and the target's ring appears
+  at once and fades out: the close is not the open reversed, and the pair meter says 78 % off.
+- **Fix:** the dim and the ring take the growth time and curve to appear, and the reversed curve
+  (`--kp-sig-fo-wither`, read by css/components.css) to leave; the ring is drawn in from
+  `outline-color: transparent` by a keyframe, since an attribute change starts no `@starting-style`.
+  A focus ring that comes back at once at the start of a close is not the opening reversed either:
+  the opener takes its focus when the card is gone.
+- **Check:** the pair meter; the remaining difference is named in the list of what is still missing.
+
+## 12. The pair meter and Chromium
+
+- `gates/measure-pairs.mjs` reports "the closing runs no animation at all" in Chromium for a popover
+  that the browser hides itself (the ghost copy of js/motion.js plays its close one task later).
+  The close does play there: sampling the ghost's `translate` per frame goes from 0 to -100 % in
+  1000 ms for the combobox, the row-actions menu and the theme menu. Trust the per-frame sampling
+  (`research/forest-applied/measure.mjs` shows how) over the meter's verdict for these three in
+  Chromium.

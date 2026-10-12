@@ -9029,6 +9029,6 @@
     body:has(.kp-tour[data-kp-reversing]) [data-kp-tour-target] {
         box-shadow: 0 0 0 100vmax transparent !important;
         outline-color: transparent !important;
-        transition: box-shadow var(--kp-sig-fo-time, 1000ms) var(--kp-sig-fo-grow, ease-in), outline-color var(--kp-sig-fo-time, 1000ms) var(--kp-sig-fo-grow, ease-in) !important;
+        transition: box-shadow var(--kp-sig-fo-time, 1000ms) var(--kp-sig-fo-wither, var(--kp-sig-fo-grow, ease-in)), outline-color var(--kp-sig-fo-time, 1000ms) var(--kp-sig-fo-wither, var(--kp-sig-fo-grow, ease-in)) !important;
     }
 }

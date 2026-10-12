@@ -366,6 +366,10 @@ export function startTour(steps, { start = 0, remember, decorate, returnFocus, o
             if (card.open) card.close();
             card.remove();
             stopReversing(card);
+            // The focus ring on the opener comes back with the card gone, the
+            // way it left when the card came: a ring that appears at once at
+            // the start of the close is not the opening played backwards.
+            if (back?.isConnected) back.focus();
         });
         view.removeEventListener('keydown', onKey, true);
         view.removeEventListener('resize', onMove);
@@ -374,7 +378,6 @@ export function startTour(steps, { start = 0, remember, decorate, returnFocus, o
         // A tour that ended, finished or skipped, does not start by itself
         // again; Help can start it.
         if (remember) tourMemory(remember)?.write(TOUR_SLOT, true);
-        if (back?.isConnected) back.focus();
         onEnd?.(finished);
     };
     let frame = 0;

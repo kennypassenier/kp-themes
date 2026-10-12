@@ -8500,11 +8500,12 @@ function attachDatePickers(root = document, {
           lower = raiseDatePanel(panel);
         }
       } else {
-        delete panel.dataset.kpDateOpen;
         panel.style.removeProperty("min-inline-size");
         panel.style.removeProperty("min-block-size");
         panel.inert = true;
-        void playClose(panel).then((played) => {
+        const closed = playClose(panel);
+        delete panel.dataset.kpDateOpen;
+        void closed.then((played) => {
           if (!played || wanted) return;
           panel.hidden = true;
           lower();
@@ -18798,13 +18799,13 @@ function startTour(steps, { start = 0, remember: remember2, decorate, returnFocu
       if (card.open) card.close();
       card.remove();
       stopReversing(card);
+      if (back?.isConnected) back.focus();
     });
     view.removeEventListener("keydown", onKey, true);
     view.removeEventListener("resize", onMove);
     doc.removeEventListener("scroll", onMove, true);
     endRunning = null;
     if (remember2) tourMemory(remember2)?.write(TOUR_SLOT, true);
-    if (back?.isConnected) back.focus();
     onEnd?.(finished);
   };
   let frame = 0;

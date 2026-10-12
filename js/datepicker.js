@@ -574,13 +574,17 @@ export function attachDatePickers(
                     lower = raiseDatePanel(panel);
                 }
             } else {
-                delete panel.dataset.kpDateOpen;
                 panel.style.removeProperty('min-inline-size');
                 panel.style.removeProperty('min-block-size');
                 // It closes as it opened, backwards, before it is hidden; meanwhile
-                // it takes no pointer or focus.
+                // it takes no pointer or focus. The close reads the opening on the
+                // panel as it stands (`[data-kp-date-open]` still on it), so it plays
+                // that backwards instead of taking the opening's name as a close of
+                // its own and playing it forwards; the mark goes straight after.
                 panel.inert = true;
-                void playClose(panel).then((played) => {
+                const closed = playClose(panel);
+                delete panel.dataset.kpDateOpen;
+                void closed.then((played) => {
                     if (!played || wanted) return;
                     // Hidden first, then out of the top layer: hidden, it has no box
                     // for a second close to play on (js/motion.js).
