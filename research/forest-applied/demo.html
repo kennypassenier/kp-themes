@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en" data-theme="forest" data-cat-theme="forest" data-cat-theme-fixed data-review="forest-applied" data-review-themes="forest">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes — forest, as applied: what changed</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <link rel="stylesheet" href="../../css/forest-register.css" data-kp-register="forest" />
+        <link rel="stylesheet" href="demo.css" />
+    </head>
+    <body>
+        <main class="fa-page">
+            <header class="fa-intro">
+                <h1>Forest, as applied: what changed</h1>
+                <p>
+                    Kenny, 2026-10-09: "Can you show in a demo which forest components you changed? Just a showcase where I can approve everything."
+                    Every block below is the package itself in forest, as an app gets it: the real components, the real stylesheets and the real
+                    scripts, nothing drawn for this page. Each heading says in one sentence what the component did before and what it does now. Point
+                    at the parts, press them, Tab onto them and open what opens; where a state needs a button (loading, right to left, play again),
+                    the button is in the block.
+                </p>
+                <p>
+                    Approve or not per block in the review dialog ("Review in a dialog" at the top), with a note where something is wrong. What this
+                    page found broken while it was built is listed in <code>research/forest-applied/README.md</code>; nothing in the package was
+                    changed by this page. Inside the review dialog, Escape closes the review dialog itself: close what you opened there with its own
+                    button or a click outside it.
+                </p>
+                <p class="fa-motion" data-fa-motion hidden>
+                    <b>Your system asks for reduced motion</b>, so nothing on this page grows or withers: every part shows its finished pose. Turn it
+                    off in the system settings to judge the openings and closes.
+                </p>
+                <ol class="fa-toc" aria-label="The blocks">
+                    <li><a href="#sidenav">1 · Side navigation</a></li>
+                    <li><a href="#datepicker">2 · Date picker</a></li>
+                    <li><a href="#tour">3 · Tour</a></li>
+                </ol>
+            </header>
+
+            <!-- 1 · Side navigation -->
+            <section
+                class="fa-sec"
+                id="sidenav"
+                data-review-item="sidenav"
+                data-review-title="1 · Side navigation and its groups"
+                data-review-components="sidenav"
+                aria-labelledby="h-sidenav"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">1 · Side navigation and its groups</p>
+                    <h2 id="h-sidenav">
+                        The side navigation used to slide in over 200 ms and its groups unfolded in 200 ms with grey rows; now the panel grows out of
+                        its edge in one growth (1000 ms) with its backdrop fading on the growth curve, its groups unfold in the accordion's 1000 ms,
+                        and its rows answer as menu entries with the blaze and the leaf corner.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="forest">
+                        Point at the rows of the panel: kraft ground and the blaze laid inside. Press <b>Maintenance</b> and <b>Readings</b>: the
+                        groups unfold and fold in one growth. Press <b>Open the panel</b>: the panel slides out of the frame's left edge with everything in it, the backdrop fades in with it; close it with <b>Close</b>, Escape or the backdrop: the panel slides back with its content and the backdrop fades with it, the opening played backwards.
+                    </p>
+                </div>
+                <div class="fa-stage fa-stage--block">
+                    <div class="fa-sidebox">
+                        <nav class="kp-sidenav" id="fa-side" aria-label="North site sections">
+                            <div class="kp-sidenav__header"><p class="kp-sidenav__title">North site</p></div>
+                            <div class="kp-sidenav__scroll">
+                                <ul class="kp-sidenav__list">
+                                    <li>
+                                        <a class="kp-sidenav__link" href="#sidenav"
+                                            ><span class="kp-sidenav__icon" aria-hidden="true">◎</span
+                                            ><span class="kp-sidenav__label">Overview</span></a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="kp-sidenav__link" href="#sidenav" aria-current="page"
+                                            ><span class="kp-sidenav__icon" aria-hidden="true">▤</span><span class="kp-sidenav__label">Line 2</span
+                                            ><span class="kp-sidenav__badge">2</span></a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="kp-sidenav__link" href="#sidenav"
+                                            ><span class="kp-sidenav__icon" aria-hidden="true">!</span><span class="kp-sidenav__label">Alarms</span
+                                            ><span class="kp-sidenav__badge">14</span></a
+                                        >
+                                    </li>
+                                    <li><hr class="kp-sidenav__divider" /></li>
+                                    <li class="kp-sidenav__category" data-kp-sidenav-expanded>
+                                        <button type="button" class="kp-sidenav__category-toggle">
+                                            <span class="kp-sidenav__icon" aria-hidden="true">≋</span><span class="kp-sidenav__label">Readings</span>
+                                        </button>
+                                        <div class="kp-sidenav__submenu">
+                                            <ul class="kp-sidenav__list">
+                                                <li>
+                                                    <a class="kp-sidenav__link" href="#sidenav"><span class="kp-sidenav__label">Pressure</span></a>
+                                                </li>
+                                                <li>
+                                                    <a class="kp-sidenav__link" href="#sidenav"><span class="kp-sidenav__label">Flow rate</span></a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li class="kp-sidenav__category">
+                                        <button type="button" class="kp-sidenav__category-toggle">
+                                            <span class="kp-sidenav__icon" aria-hidden="true">⚙</span
+                                            ><span class="kp-sidenav__label">Maintenance</span>
+                                        </button>
+                                        <div class="kp-sidenav__submenu">
+                                            <ul class="kp-sidenav__list">
+                                                <li>
+                                                    <a class="kp-sidenav__link" href="#sidenav"><span class="kp-sidenav__label">Lock-outs</span></a>
+                                                </li>
+                                                <li>
+                                                    <a class="kp-sidenav__link" href="#sidenav"><span class="kp-sidenav__label">Spare parts</span></a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <a class="kp-sidenav__link" href="#sidenav"><span class="kp-sidenav__label">Rota</span></a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="kp-sidenav__footer"><span class="kp-sidenav__label">Signed in as the night shift</span></div>
+                        </nav>
+                        <div class="fa-sidebox__body">
+                            <p>Line 2 has two open incidents. The pressure dropped from 3.2 to 1.1 bar between 02:10 and 02:40.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="fa-stage fa-stage--frame">
+                    <button type="button" class="kp-sidenav__toggle kp-button kp-button--secondary" data-kp-sidenav-toggle aria-controls="fa-over">
+                        Open the panel
+                    </button>
+                    <nav
+                        class="kp-sidenav"
+                        id="fa-over"
+                        aria-label="Incident sections"
+                        data-kp-sidenav-mode="over"
+                        data-kp-sidenav-position="absolute"
+                        data-kp-sidenav-backdrop
+                    >
+                        <div class="kp-sidenav__header"><p class="kp-sidenav__title">INC-4471</p></div>
+                        <div class="kp-sidenav__scroll">
+                            <ul class="kp-sidenav__list">
+                                <li>
+                                    <a class="kp-sidenav__link" href="#sidenav" aria-current="page"><span class="kp-sidenav__label">Summary</span></a>
+                                </li>
+                                <li>
+                                    <a class="kp-sidenav__link" href="#sidenav"><span class="kp-sidenav__label">Readings</span></a>
+                                </li>
+                                <li>
+                                    <a class="kp-sidenav__link" href="#sidenav"><span class="kp-sidenav__label">Handover</span></a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="kp-sidenav__footer">
+                            <button type="button" class="kp-button kp-button--ghost" data-kp-sidenav-toggle aria-controls="fa-over">Close</button>
+                        </div>
+                    </nav>
+                </div>
+            </section>
+
+            <!-- 2 · Date picker -->
+            <section
+                class="fa-sec"
+                id="datepicker"
+                data-review-item="datepicker"
+                data-review-title="2 · Date picker"
+                data-review-components="datepicker"
+                aria-labelledby="h-datepicker"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">2 · Date picker</p>
+                    <h2 id="h-datepicker">
+                        The date picker's panel opened and closed at once and its days took a grey ground with rounded corners; now the panel grows
+                        down out of its field like a menu, and each day takes the blaze and the leaf corner, with the two-channel focus ring winning
+                        over the blaze.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="forest">
+                        Press the calendar button: the panel grows down out of the field. Point at the days, then use the arrow keys: the focused day
+                        shows the two-channel ring and no blaze. Pick a day or press Escape: the panel closes smoothly as the exact reverse of its opening,
+                        and switching month or year preserves the open panel without replaying the opening animation.
+                    </p>
+                </div>
+                <div class="fa-stage">
+                    <div class="kp-datepicker" data-kp-datepicker lang="en-GB">
+                        <label class="kp-field__label" for="fa-date">Lock-out ends on</label>
+                        <input class="kp-field__input" id="fa-date" type="text" inputmode="numeric" data-kp-date-input value="09/10/2026" />
+                        <button type="button" class="kp-button" data-kp-date-open aria-label="Open the calendar" title="Open the calendar">
+                            <span aria-hidden="true">▦</span>
+                        </button>
+                        <div class="kp-datepicker__panel" data-kp-date-panel hidden></div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- 3 · Tour -->
+            <section
+                class="fa-sec"
+                id="tour"
+                data-review-item="tour"
+                data-review-title="3 · Tour"
+                data-review-components="tour"
+                aria-labelledby="h-tour"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">3 · Tour</p>
+                    <h2 id="h-tour">
+                        The tour's card faded in over 160 ms and went at once; now it grows up out of its own line in one growth, and when the tour
+                        ends that growth plays backwards.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="forest">
+                        Press <b>Start the tour</b>: the card grows up beside each part in turn. Press Next, Back, then Skip or Escape: the card
+                        withers back into its line.
+                    </p>
+                </div>
+                <div class="fa-stage fa-stage--block fa-stack">
+                    <div class="kp-row">
+                        <button type="button" class="kp-button kp-button--primary" data-fa-tour-start>Start the tour</button>
+                    </div>
+                    <div class="fa-tour-app">
+                        <div class="kp-row" data-fa-tour="actions">
+                            <button type="button" class="kp-button kp-button--sm">Export readings</button>
+                            <button type="button" class="kp-button kp-button--sm">Schedule a visit</button>
+                        </div>
+                        <div class="kp-field" data-fa-tour="search">
+                            <label class="kp-field__label" for="fa-tour-search">Find a pump house</label>
+                            <input class="kp-field__input" id="fa-tour-search" type="search" />
+                        </div>
+                        <div class="kp-card" data-fa-tour="note">
+                            <h3 class="kp-card__title">Open incidents</h3>
+                            <p class="kp-card__body">Two open: a door contact at pump house 1, and no reading from pump house 7 since 06:00.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            </main>
+        <!-- Round five: review only open/non-approved components -->
+        <script type="application/json" data-review-round>
+            { "round": "2026-10-12-r6", "reopen": ["forest|sidenav", "forest|datepicker", "forest|tour"] }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

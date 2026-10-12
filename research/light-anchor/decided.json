@@ -1,0 +1,9 @@
+{
+    "decided": "2026-10-08 Brussels, Kenny: 1 of 1 approved in the review dialog (research/light-anchor/README.md): Light's anchor element = Overexposed: out of the glare",
+    "attributes": "the ANCHORS keys in research/light-anchor/anchors.js; the scenes in research/light-anchor/options.css",
+    "picks": {
+        "light": {
+            "anchor": "glare"
+        }
+    }
+}

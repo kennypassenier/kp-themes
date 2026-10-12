@@ -76,6 +76,10 @@ export const PAGES = [
         // (Kenny, 2026-10-07: only fresh verdicts left to give).
         group: 'Research to look at',
         pages: [
+            // Kenny, 2026-10-08: the anchor round for the nine themes without one, the grotesk way (one question, six to ten candidates, each in its own scene, as a progress bar and as a button press, the recommendation first).
+            // Kenny, 2026-10-08: what makes formal, light and deco themselves, the forest way (the analysis in themes/<theme>/CHARACTER.md), the nineteen questions each, every option a live scene that follows from the theme's decided anchor, the recommendation first.
+            // Kenny, 2026-10-08 (update 1): deco's grammar did not convince him ("fancy, distinguished … lots of gold accents and fancy blue backgrounds … elegance without being too in your face"); thirteen questions redrawn as thin gold on lacquer with the wallpaper, his six picks kept.
+            // Kenny, 2026-10-08: what makes dark, retro and phantom themselves (retro dropped 2026-10-09, its demos removed; the idea is in docs/FUTURE_THEMES.md), the forest way (the analysis in themes/<theme>/CHARACTER.md), the nineteen questions each, every option a live scene that follows from the theme's decided anchor, the recommendation first.
             // The character round, sixth demo (2026-10-05): the key-figure strip with its columns in 22 themes, two characters each.
             // The character round, eighth component: the attention band, shape/arrival/leave/tone/empty/loading, one pick per aspect (formal and titanium built first).
             // The character round, ninth and tenth components: the action columns and the menu button.
@@ -91,6 +95,35 @@ export const PAGES = [
         // down here once Kenny has decided on it [scope-81].
         group: 'Archived research',
         pages: [
+            // Kenny, 2026-10-09: a showcase of every forest component changed by the uniformity round, to approve.
+            { href: 'research/forest-applied/demo.html', label: 'Forest, as applied' },
+            // Decided 2026-10-12 19:11: Kenny approved forest in full (round 6); nothing open.
+            // Dropped 2026-10-08: Kenny stopped the theme in the anchor round (research/high-contrast-anchor/decided.json).
+            { href: 'research/high-contrast-anchor/demo.html', label: "What is high-contrast's anchor element" },
+            // Dropped 2026-10-08: Kenny stopped the theme in the anchor round (research/sepia-anchor/decided.json).
+            { href: 'research/sepia-anchor/demo.html', label: "What is sepia's anchor element" },
+            // Decided 2026-10-08: Kenny picked the line that lays the film down, turning, as dark's anchor element, update 1 (research/dark-anchor/decided.json).
+            { href: 'research/dark-anchor/demo.html', label: "What is dark's anchor element" },
+            // Decided 2026-10-08: Kenny picked the card thrown as a screen that resolves at the slap as phantom's anchor element, update 1 (research/phantom-anchor/decided.json).
+            { href: 'research/phantom-anchor/demo.html', label: "What is phantom's anchor element" },
+            // Decided 2026-10-08: Kenny approved formal's grammar, every recommendation except the hover = a rule under the label and the motifs = plus the seal where picked (research/formal-character/decided.json).
+            { href: 'research/formal-character/demo.html', label: 'What makes formal formal' },
+            // Decided 2026-10-09: Kenny approved dark's grammar after update 1 (research/dark-character/decided.json).
+            { href: 'research/dark-character/demo.html', label: 'What makes dark dark' },
+            // Decided 2026-10-09: Kenny approved deco's picks after update 3 (research/deco-character/decided.json).
+            { href: 'research/deco-character/demo.html', label: 'What makes deco deco' },
+            // Decided 2026-10-09: Kenny approved all ten uniformity questions of forest (research/forest-uniformity/decided.json).
+            { href: 'research/forest-uniformity/demo.html', label: 'Forest, straightened' },
+            // Decided 2026-10-09: Kenny approved phantom's grammar after update 1 (research/phantom-character/decided.json).
+            { href: 'research/phantom-character/demo.html', label: 'What makes phantom phantom' },
+            // Decided 2026-10-08: Kenny approved light's grammar, every recommendation except the durations = unhurried and the busy bar = the bead orbits the line (research/light-character/decided.json).
+            { href: 'research/light-character/demo.html', label: 'What makes light light' },
+            // Decided 2026-10-08: Kenny picked the fan (and the progress bar is to be redone) as deco's anchor element (research/deco-anchor/decided.json).
+            { href: 'research/deco-anchor/demo.html', label: "What is deco's anchor element" },
+            // Decided 2026-10-08: Kenny picked the glare (overexposed) as light's anchor element (research/light-anchor/decided.json).
+            { href: 'research/light-anchor/demo.html', label: "What is light's anchor element" },
+            // Decided 2026-10-08: Kenny picked the double rule (the account is closed) as formal's anchor element (research/formal-anchor/decided.json).
+            { href: 'research/formal-anchor/demo.html', label: "What is formal's anchor element" },
             // Decided 2026-10-08 01:00: Kenny picked the floor as the page, behind the plates (research/synthwave-floor/decided.json).
             { href: 'research/synthwave-floor/demo.html', label: "Synthwave's floor depth" },
             // Decided 2026-10-08 01:02: Kenny approved all nineteen of nostromo's grammar questions (research/nostromo-character/decided.json); applied to css/nostromo-register.css.
@@ -205,7 +238,6 @@ export const PAGES = [
             { href: 'research/theme-portraits/cyberpunk.html', label: 'Portrait: cyberpunk' },
             { href: 'research/theme-portraits/formal.html', label: 'Portrait: formal' },
             { href: 'research/theme-portraits/pastel.html', label: 'Portrait: pastel' },
-            { href: 'research/retro-alarm-face/demo.html', label: "Retro's alarm headline: four faces" },
         ],
     },
 ];

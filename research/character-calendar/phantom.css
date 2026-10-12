@@ -1,0 +1,67 @@
+/* research/character-calendar, phantom: the decided picks on phantom's grammar
+   (themes/phantom/CHARACTER.md G1-G21, Kenny, 2026-10-09 on
+   research/phantom-character; css/phantom-register.css holds the tokens and
+   the keyframes this file names). Only phantom's decided options change:
+   shape 3, loading 3, arrival 3, tone 2, select r2-ph-sel-1.
+
+   - shape: the torn ticket (a notch bitten from each side) is cut paper with
+     the fixed 14 px cut at 45 degrees on every size (G6, G19);
+   - loading: the red cut that stepped across a loading day is the register's
+     red slash across the block of the screen (G10);
+   - arrival: the stamp (steps, a scale) is the throw: each day comes from
+     beyond its start edge on the shove and resolves from dots in three cuts,
+     a column 80 ms after the one before (G2, G4, G13);
+   - tone: the scraps of paper stand level, no longer at their own slant (G6);
+   - select: the staple tag's corner stays (the slash is a motif); a day
+     pointed at is the register's red bar thrown in, it no longer tilts (G15). */
+@layer kp.signature {
+    /* Shape 3 · cut paper. */
+    [data-theme='phantom'][data-theme='phantom'] [data-cl-shape='3'] .kp-calendar__day {
+        clip-path: var(--kp-paperclip);
+    }
+
+    /* Loading 3 · the slash. */
+    [data-theme='phantom'][data-theme='phantom'] [data-cl-loading='3'] .kp-calendar__day[data-kp-tone='loading']::after {
+        background: var(--primary);
+        clip-path: var(--kp-sig-ph-slash);
+        translate: -2.8rem 0;
+        animation: none;
+    }
+
+    /* Tone 2 · the scraps stand level. */
+    [data-theme='phantom'][data-theme='phantom']
+        [data-cl-tone='2']
+        .kp-calendar__day:is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad'], [data-kp-tone='muted'])
+        .kp-calendar__num {
+        rotate: none;
+        clip-path: none;
+    }
+
+    /* Select r2-ph-sel-1 · a day is not tilted by the pointer. */
+    [data-theme='phantom'][data-theme='phantom'] [data-cl-select='r2-ph-sel-1'] .kp-calendar__day:hover {
+        rotate: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'][data-theme='phantom'] [data-cl-loading='3'] .kp-calendar__day[data-kp-tone='loading']::after {
+            animation: kp-sig-phantom-phantom-slash 1400ms cubic-bezier(0.6, 0, 0.4, 1) infinite;
+        }
+
+        /* Arrival 3 · thrown and resolved, a column after a column. */
+        [data-theme='phantom'][data-theme='phantom']
+            [data-cl-arrival='3']
+            .kp-calendar[data-cl-arrive]
+            .kp-calendar__grid:not([aria-busy='true'])
+            .kp-calendar__day {
+            --kp-sig-ph-x0: -1.5rem;
+            --kp-sig-ph-y0: 0px;
+            --kp-sig-ph-r0: -8deg;
+            --kp-sig-ph-s0: 1;
+            --kp-sig-ph-land: 0deg;
+            mask-size: 7px 7px;
+            animation:
+                kp-sig-phantom-fly 700ms linear calc(var(--cl-col, 0) * 80ms + var(--cl-row, 0) * 40ms) backwards,
+                kp-sig-phantom-resolve 700ms linear calc(var(--cl-col, 0) * 80ms + var(--cl-row, 0) * 40ms) backwards;
+        }
+    }
+}

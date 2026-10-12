@@ -141,7 +141,7 @@ test.describe('the intro inspector page [scope-84]', { tag: ['@component:catalog
         const line = page.locator('[data-cat-intro-none]');
         await expect(line).toHaveText(/^No intro: formal, /);
         await expect(line).not.toContainText('Declares an intro but has no block');
-        for (const theme of ['synthwave', 'terminal', 'retro', 'phantom']) await expect(line).not.toContainText(theme);
+        for (const theme of ['synthwave', 'terminal', 'phantom']) await expect(line).not.toContainText(theme);
     });
 });
 

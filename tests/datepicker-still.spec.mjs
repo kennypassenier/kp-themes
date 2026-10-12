@@ -1,6 +1,6 @@
 // The month grid's pill and the catalogue's still calendars [scope-90].
 //
-// month-ellipse "Een pil": formal and sepia draw the chosen day as a circle,
+// month-ellipse "Een pil": formal (and sepia, until its removal) draws the chosen day as a circle,
 // with a radius of 50%. A month or a year cell is wider than it is tall, so
 // the same rule drew it as a stretched ellipse; a chosen month or year is a
 // pill there now, and the chosen day stays a circle.
@@ -38,7 +38,7 @@ const drawnRadius = (cell) =>
         return { h: tl.h * scale, v: tl.v * scale, height, raw: style.borderTopLeftRadius };
     });
 
-for (const theme of ['formal', 'sepia']) {
+for (const theme of ['formal']) {
     test(
         `${theme}: a chosen month and a chosen year are pills, the chosen day a circle [scope-90]`,
         { tag: ['@component:datepicker'] },

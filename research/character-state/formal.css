@@ -1,0 +1,61 @@
+/* research/character-state, formal: the decided picks on formal's grammar
+   (themes/formal/CHARACTER.md G1-G21, decided by Kenny on
+   research/formal-character, 2026-10-08; css/formal-register.css has the
+   package's own drawing of the same). Only formal's decided change differs:
+   change 1 ("re-sealed", the seal swelling by half). Shape 1, the seal
+   before the word, and tone 2 stand: the wax seal stays before the state word
+   where Kenny placed it (question 19, G19).
+
+   - change: the swell is retired; the word never moves: a navy rule is ruled
+     under it, the second rule closes it, both are lifted (G9). The chip
+     carries its own seal, so the register's seal on the word is not drawn
+     twice. */
+@layer kp.signature {
+    [data-theme='formal'] [data-sw] .kp-state-word {
+        padding-inline-start: 0;
+        background-image: none;
+    }
+
+    [data-theme='formal'] [data-sw-change='1'][data-sw-playing] {
+        animation: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] [data-sw-change='1'][data-sw-playing] .kp-state-word {
+            position: relative;
+            animation: kp-sig-formal-update-closed 850ms linear both;
+        }
+
+        [data-theme='formal'] [data-sw-change='1'][data-sw-playing] .kp-state-word::before {
+            content: '';
+            position: absolute;
+            inset-inline: 0;
+            inset-block-start: calc(100% - 0.05em);
+            block-size: 5px;
+            pointer-events: none;
+            --kp-fm-r1: clamp(0, var(--kp-fm-u) / 0.47, 1);
+            --kp-fm-r2: clamp(0, (var(--kp-fm-u) - 0.47) / 0.19, 1);
+            --kp-fm-x: clamp(0, (var(--kp-fm-u) - 0.72) / 0.28, 1);
+            background-image:
+                linear-gradient(
+                    var(--kp-fm-dir, to right),
+                    transparent calc(var(--kp-fm-x) * 100%),
+                    var(--primary) calc(var(--kp-fm-x) * 100%) calc(var(--kp-fm-r1) * 100%),
+                    transparent calc(var(--kp-fm-r1) * 100%)
+                ),
+                linear-gradient(
+                    var(--kp-fm-dir, to right),
+                    transparent calc(var(--kp-fm-x) * 100%),
+                    var(--primary) calc(var(--kp-fm-x) * 100%) calc(var(--kp-fm-r2) * 100%),
+                    transparent calc(var(--kp-fm-r2) * 100%)
+                );
+            background-repeat: no-repeat;
+            background-size:
+                100% 2px,
+                100% 1px;
+            background-position:
+                0 0,
+                0 4px;
+        }
+    }
+}

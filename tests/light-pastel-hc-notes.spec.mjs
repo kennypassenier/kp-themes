@@ -1,4 +1,5 @@
-// Kenny's review notes of 2026-09-15 on light, pastel and high-contrast,
+// Kenny's review notes of 2026-09-15 on light, pastel and high-contrast
+// (high-contrast's part went with the theme, removed 2026-10-08),
 // read where he read them.
 //
 // He judged the catalogue in FireDragon and left three notes: light's nav
@@ -137,60 +138,5 @@ test.describe('light: no indigo in the nav bars [navigation#bar-collapsed]', { t
         const before = await ink();
         await link.hover();
         await expect.poll(async () => distance(rgb(await ink()), rgb(before)), 'the hovered link differs from the resting one').toBeGreaterThan(20);
-    });
-});
-
-test.describe('high-contrast: the hover takes the border colour [button#variants]', { tag: ['@theme:high-contrast', '@component:button'] }, () => {
-    test("every variant's hover ground is its own border colour, readable, with the inset bars on Cancel, Save changes and Delete account alone [scope-93]", async ({
-        page,
-    }) => {
-        // Before: every variant but the mirror hovered to rgb(0, 0, 0) — the
-        // primary under a rgb(0, 51, 153) border, the destructive under
-        // rgb(163, 0, 0) — each with a white inset bar down both sides.
-        await open(page, '/catalogue/button.html', 'high-contrast');
-        const buttons = page.locator('#variants .cat-stage').first().locator('.kp-button');
-        const faults = [];
-        for (let i = 0; i < (await buttons.count()); i++) {
-            const button = buttons.nth(i);
-            await button.hover();
-            const read = await button.evaluate((el) => {
-                const w = /** @type {any} */ (window);
-                const cs = getComputedStyle(el);
-                return {
-                    label: el.textContent?.trim(),
-                    bars: ['kp-button--ghost', 'kp-button--primary', 'kp-button--destructive'].some((c) => el.classList.contains(c)),
-                    ground: w.kpRgba(cs.backgroundColor),
-                    border: w.kpRgba(cs.borderTopColor),
-                    ink: w.kpRgba(cs.color),
-                    insetBars: /inset/.test(cs.boxShadow),
-                };
-            });
-            if (read.ground[3] < 1 || distance(rgb(read.ground), rgb(read.border)) > 0.5)
-                faults.push(
-                    `${read.label}: hover ground ${read.ground.map((v) => Math.round(v * 255))} against border ${read.border.map((v) => Math.round(v * 255))}`,
-                );
-            if (contrast(rgb(read.ink), rgb(read.ground)) < 4.5)
-                faults.push(`${read.label}: ink ${contrast(rgb(read.ink), rgb(read.ground)).toFixed(2)}:1 on hover`);
-            if (read.insetBars !== read.bars) faults.push(`${read.label}: inset bars ${read.insetBars ? 'drawn' : 'missing'}`);
-        }
-        await page.mouse.move(0, 0);
-        expect(faults).toEqual([]);
-    });
-
-    test('a pressed primary and destructive button keep their ink readable', async ({ page }) => {
-        // Before: both pressed to the secondary grey rgb(214, 214, 214) under
-        // their white ink, 1.45:1.
-        await open(page, '/catalogue/button.html', 'high-contrast');
-        for (const variant of ['primary', 'destructive']) {
-            const button = page.locator(`#variants .cat-stage .kp-button--${variant}`).first();
-            await button.hover();
-            await page.mouse.down();
-            const read = await button.evaluate((el) => {
-                const w = /** @type {any} */ (window);
-                return { ground: w.kpRgba(getComputedStyle(el).backgroundColor), ink: w.kpRgba(getComputedStyle(el).color) };
-            });
-            await page.mouse.up();
-            expect(contrast(rgb(read.ink), rgb(read.ground)), `${variant} pressed`).toBeGreaterThanOrEqual(4.5);
-        }
     });
 });

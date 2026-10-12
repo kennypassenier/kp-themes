@@ -1,0 +1,27 @@
+{
+    "decided": "2026-10-09 Brussels, Kenny: 19 of 19 approved in the review dialog (research/dark-character/README.md), update 1: every recommendation except The corners = chamfered on two opposite corners, Loading = A comet with a film tail and The spinner = The spectrum bars",
+    "attributes": "data-dk-<question>=\"<key>\" on the .dk-scene, research/dark-character/options.css",
+    "picks": {
+        "dark": {
+            "curve": "pass",
+            "direction": "start",
+            "opening": "swept",
+            "durations": "pass",
+            "colour": "film",
+            "corners": "two",
+            "surface": "instrument",
+            "warning": "coral",
+            "live": "pass",
+            "loading": "comet",
+            "busybar": "runs",
+            "spinner": "bars",
+            "leave": "pass",
+            "composites": "own",
+            "hover": "rests",
+            "focus": "di2",
+            "press": "quarter",
+            "type": "archivo",
+            "motifs": "film"
+        }
+    }
+}

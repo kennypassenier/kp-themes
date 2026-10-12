@@ -1,0 +1,40 @@
+/* research/character-state, deco: the decided picks on deco's applied grammar (themes/deco/CHARACTER.md, "Applied 2026-10-09"). Deco's decided options are shape 3, tone 3, change 1: the state word is a small lacquer plate with the wallpaper and a gold hairline, the sunburst chip retired (G7, G19); its dot is a lozenge jewel in the colour of what it says (G5); a change lights the lozenge once, gilded, instead of a bulb (G9). */
+@layer kp.signature {
+    [data-theme='deco'][data-theme='deco'] [data-sw-shape='3'] {
+        --sw-frame: 1px solid hsl(from var(--primary) h s l / 0.3);
+        --sw-radius: 0;
+        --sw-plate:
+            repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px),
+            repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px),
+            var(--kp-sig-deco-lac);
+    }
+    [data-theme='deco'][data-theme='deco'] [data-sw-tone='3'][data-sw-kind='good'] {
+        --sw-plate:
+            repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px),
+            repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px),
+            var(--kp-sig-deco-lac);
+    }
+    [data-theme='deco'][data-theme='deco'] [data-sw-tone='3'][data-sw-kind='pending'] {
+        --sw-plate:
+            repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px),
+            repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px),
+            var(--kp-sig-deco-lac);
+    }
+    [data-theme='deco'][data-theme='deco'] [data-sw-tone='3'][data-sw-kind='bad'] {
+        --sw-plate:
+            repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px),
+            repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px),
+            var(--kp-sig-deco-lac);
+    }
+    [data-theme='deco'][data-theme='deco'] [data-sw-tone='3'][data-sw-kind='muted'] {
+        --sw-plate:
+            repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px),
+            repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px),
+            var(--kp-sig-deco-lac);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'][data-theme='deco'] [data-sw-change='1'][data-sw-playing]::before {
+            animation: kp-sig-deco-gilded 1s linear;
+        }
+    }
+}

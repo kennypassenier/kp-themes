@@ -1,5 +1,5 @@
 // One catalogue block in one theme, for the demo review kit's last step
-// (review.js, `data-review-extra`): ?page=catalogue/field.html&block=choices&theme=retro.
+// (review.js, `data-review-extra`): ?page=catalogue/field.html&block=choices&theme=deco.
 // The block's stages are copied from the catalogue page itself, as the
 // compare column does (catalogue/frame/compare.js), so what is judged here is
 // what the catalogue shows; the theme is the address's, never the stored one.

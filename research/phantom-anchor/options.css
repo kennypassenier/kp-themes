@@ -1,0 +1,2375 @@
+/* research/phantom-anchor, update 1 (2026-10-08): five ways of making the thrown card and the shifting halftone one gesture, in the theme's
+   signature layer. Kenny: "I like both the card is thrown and half tone shift, make another attempt with those combined".
+   Colours come from the theme's tokens only; every motion sits under prefers-reduced-motion: no-preference, and the reduced pose is
+   the finished picture (the card down and lit, the screen locked). Durations are counted in units of the theme's beat (--an-unit, 100 ms,
+   set by demo.js) and multiplied by --an-slow (1, 2 or 4: the page's speed buttons).
+
+   SCOPE. The review dialog moves the section out of the page into its stage (.rv-dialog__stage), so no rule here may hang on
+   `.an-page`: the custom properties and every rule hang on `.an-scene`, which moves with its options.
+
+   THE CLOCK. One clock (demo.js) writes `data-an-phase` on every scene: gap (the part is not drawn), in (8 units: it is drawn), hold
+   (4 units: it dwells, the press held, the card down), out (8 units: the drawing played backwards). The base style of every part is its
+   drawn pose (so reduced motion and hold show the finished picture); `gap` sets the undrawn pose; `in` and `hold` run the drawing, `out`
+   runs its mirror. Every open is a keyframe pair (`ph-x` and `ph-x-out`): the out keys are the open's keys in reverse order, each
+   segment on the INVERSE curve (cubic-bezier(1-x2, 1-y2, 1-x1, 1-y1); steps(1, end) becomes steps(1, start)). The shove is written
+   literally, cubic-bezier(0.81, 0, 0, 1), its inverse cubic-bezier(1, 0, 0.19, 1) on the close.
+
+   THE SLIP. The halftone screen never moves smoothly and never ticks: it SLIPS between fixed background-position poses in hard
+   steps(1) cuts and LOCKS. A cut is placed 0.01 u before its nominal time, so that the close lands on the mirrored pose.
+
+   THE ANCHOR'S THREE PLACES. Each candidate draws itself in its own scene (`.an-hero`), as a progress bar (`.an-bar`) and as a button
+   press (`.an-btn`); the press lands at 7 units (87.5 %) and is held through the dwell, and is released as the first unit of `out`.
+
+   This file is GENERATED from research/phantom-anchor's design by a script kept outside the repository; edit with care. */
+
+@layer kp.signature {
+    /* ── The scene ───────────────────────────────────────────────────── */
+
+    .an-scene {
+        --an-ink: var(--foreground);
+        --an-red: var(--primary);
+        --an-void: var(--background);
+        /* One unit is the theme's beat; a loop is 22 units. */
+        --an-u: calc(var(--an-unit, 100ms) * var(--an-slow, 1));
+        --an-in: calc(8 * var(--an-u));
+        --an-loop: calc(22 * var(--an-u));
+        /* Phantom's own curves: the cut (a hard S that stops dead) and the shove (slow to start, a dead stop).
+           The cut is its own inverse; the shove played backwards is its point reflection. Inside @keyframes a
+           timing function is written out (a var() there is invalid and falls back to `ease`), as the literal
+           of these same curves; css/phantom-register.css owns them (--kp-cut, --kp-shove, --fx-ease). */
+        --an-cut: var(--kp-cut);
+        --an-shove: var(--kp-shove);
+        --an-cut-out: cubic-bezier(0.7, 0, 0.3, 1);
+        --an-shove-out: cubic-bezier(1, 0, 0.19, 1.01);
+        container-type: inline-size;
+        position: relative;
+        overflow: clip;
+        overflow-clip-margin: 0.75rem;
+        /* Nothing is translucent; the layout layer's busy dim stays off. */
+        --kp-busy-opacity: 1;
+    }
+
+    .an-scene .an-hero {
+        position: relative;
+        display: grid;
+        place-items: center;
+        min-block-size: clamp(13rem, 36cqi, 20rem);
+        padding: 1.25rem 0.5rem;
+    }
+
+    .an-scene .an-bar,
+    .an-scene .an-btn {
+        display: grid;
+        min-block-size: 6rem;
+    }
+
+    .an-scene .an-bar {
+        align-content: center;
+    }
+
+    .an-scene .an-btn {
+        place-items: center;
+    }
+
+    /* ── The building blocks every candidate draws with ──────────────── */
+
+    /* A part that is drawn: its end pose is its base style, its start pose
+       is set at `gap`, and `in` / `out` run the pair of keyframes. */
+    .an-scene .an-a--scale {
+        --an-kf: an-scale;
+        --an-kf-out: an-scale-out;
+        scale: var(--an-s1, 1) 1;
+        transform-origin: left center;
+    }
+
+    .an-scene .an-a--clip {
+        --an-kf: an-clip;
+        --an-kf-out: an-clip-out;
+        clip-path: inset(-1em var(--an-c1, 0%) -1em 0);
+    }
+
+    .an-scene .an-a--move {
+        --an-kf: an-move;
+        --an-kf-out: an-move-out;
+        translate: var(--an-x1, 0%) var(--an-y1, 0%);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .an-a--scale {
+            scale: var(--an-s0, 0) 1;
+        }
+
+        .an-scene[data-an-phase='gap'] .an-a--clip {
+            clip-path: inset(-1em var(--an-c0, 100%) -1em 0);
+        }
+
+        .an-scene[data-an-phase='gap'] .an-a--move {
+            translate: var(--an-x0, 0%) var(--an-y0, 0%);
+        }
+
+        .an-scene[data-an-phase='in'] .an-a,
+        .an-scene[data-an-phase='hold'] .an-a {
+            animation: var(--an-kf) calc(var(--an-l, 8) * var(--an-u)) var(--an-ease, linear) calc(var(--an-d, 0) * var(--an-u)) both;
+        }
+
+        /* The mirror starts as late as the drawing ended: what drew last
+           goes first. */
+        .an-scene[data-an-phase='out'] .an-a {
+            animation: var(--an-kf-out) calc(var(--an-l, 8) * var(--an-u)) var(--an-ease-out, var(--an-ease, linear))
+                calc((8 - var(--an-d, 0) - var(--an-l, 8)) * var(--an-u)) both;
+        }
+    }
+
+    @keyframes an-scale {
+        from {
+            scale: var(--an-s0, 0) 1;
+        }
+
+        to {
+            scale: var(--an-s1, 1) 1;
+        }
+    }
+
+    @keyframes an-scale-out {
+        from {
+            scale: var(--an-s1, 1) 1;
+        }
+
+        to {
+            scale: var(--an-s0, 0) 1;
+        }
+    }
+
+    @keyframes an-clip {
+        from {
+            clip-path: inset(-1em var(--an-c0, 100%) -1em 0);
+        }
+
+        to {
+            clip-path: inset(-1em var(--an-c1, 0%) -1em 0);
+        }
+    }
+
+    @keyframes an-clip-out {
+        from {
+            clip-path: inset(-1em var(--an-c1, 0%) -1em 0);
+        }
+
+        to {
+            clip-path: inset(-1em var(--an-c0, 100%) -1em 0);
+        }
+    }
+
+    @keyframes an-move {
+        from {
+            translate: var(--an-x0, 0%) var(--an-y0, 0%);
+        }
+
+        to {
+            translate: var(--an-x1, 0%) var(--an-y1, 0%);
+        }
+    }
+
+    @keyframes an-move-out {
+        from {
+            translate: var(--an-x1, 0%) var(--an-y1, 0%);
+        }
+
+        to {
+            translate: var(--an-x0, 0%) var(--an-y0, 0%);
+        }
+    }
+
+    /* The pressed face. Phantom's key cap has no ground to change: the rest face is the outline (a 2 px white frame,
+       transparent) and the pressed face is the same outline shoved 3 px down and right (`.kp-button:active`); the
+       primary is shoved 5 px with its deep-red shadow gone (css/phantom-register.css, fix-12 and scope-80). Landing
+       late (7 units) on the cut, and held. */
+    @keyframes an-face-late {
+        0% {
+            translate: 0 0;
+            animation-timing-function: linear;
+        }
+
+        87.5% {
+            translate: 0 0;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        100% {
+            translate: 3px 3px;
+        }
+    }
+
+    @keyframes an-face-late-out {
+        0% {
+            translate: 3px 3px;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        12.5% {
+            translate: 0 0;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* A button that is pressed at the end of the drawing: its base is the pressed face; `gap` is the rest face. */
+    .an-scene .an-press {
+        position: relative;
+        translate: 3px 3px;
+        min-block-size: clamp(2.75rem, 11cqi, 3.5rem);
+        font-size: clamp(1.05rem, 4.4cqi, 1.4rem);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .an-press {
+            translate: 0 0;
+        }
+
+        .an-scene[data-an-phase='in'] .an-press,
+        .an-scene[data-an-phase='hold'] .an-press {
+            animation: var(--an-face, an-face-late) var(--an-in) linear both;
+        }
+
+        .an-scene[data-an-phase='out'] .an-press {
+            animation: var(--an-face-out, an-face-late-out) var(--an-in) linear both;
+        }
+    }
+
+    /* ── Phantom's board: the calling card, the dot screen, the progress bar ── */
+
+    .an-scene {
+        /* The register's own halftone: a 7px grid of dots (white on the board, black on a white or red plate). */
+        --ph-dot-lt: hsl(from var(--foreground) h s l / 0.5);
+        --ph-dot-dk: hsl(from var(--background) h s l / 0.35);
+        --ph-dots: radial-gradient(circle at center, var(--ph-dot-lt) 1.1px, transparent 1.4px) 0 0 / 7px 7px;
+    }
+
+    /* Every scene is a dark board under the halftone screen. */
+    .an-scene :is(.ph-a-hero, .ph-b-hero, .ph-c-hero, .ph-d-hero, .ph-e-hero) {
+        padding: 0;
+        place-items: stretch;
+        overflow: clip;
+    }
+
+    .an-scene :is(.ph-a-stage, .ph-b-stage, .ph-c-stage, .ph-d-stage, .ph-e-stage) {
+        position: relative;
+        display: grid;
+        place-items: center;
+        align-content: center;
+        min-inline-size: 0;
+        padding: 1.4rem 1rem;
+    }
+
+    .an-scene .ph-b-stage {
+        background: var(--ph-dots);
+    }
+
+    /* The board's screen: a layer of the dot grid over the whole stage, under the card. */
+    .an-scene :is(.ph-a-screen, .ph-c-screen, .ph-d-screen, .ph-e-screen, .ph-d-wake) {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        background: var(--ph-dots);
+        pointer-events: none;
+    }
+
+    .an-scene .ph-c-screen--over {
+        z-index: 2;
+        background: radial-gradient(circle at center, var(--ph-dot-dk) 1.2px, transparent 1.5px) 0 0 / 7px 7px;
+    }
+
+    .an-scene .ph-d-wake {
+        background: radial-gradient(circle at center, hsl(from var(--foreground) h s l / 0.32) 1.1px, transparent 1.4px) 3px 0 / 7px 7px;
+    }
+
+    .an-scene :is(.ph-a-card, .ph-b-card, .ph-c-card, .ph-d-card, .ph-e-card) {
+        z-index: 1;
+        rotate: -1.5deg;
+    }
+
+    /* The calling card: a white plate skewed -8° behind an upright title and line, a hard deep-red shadow, a red slab on its end. */
+    .an-scene .ph-card {
+        position: relative;
+        isolation: isolate;
+        display: grid;
+        gap: 0.3rem;
+        inline-size: min(100% - 1.5rem, 24rem);
+        min-inline-size: 0;
+        padding: clamp(0.9rem, 5cqi, 1.6rem) clamp(1.6rem, 8cqi, 4rem) clamp(0.9rem, 5cqi, 1.6rem) clamp(1rem, 4.5cqi, 2.4rem);
+        color: var(--background);
+    }
+
+    .an-scene .ph-card::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background: var(--foreground);
+        box-shadow: var(--ph-plate-shadow, 6px 6px 0 var(--kp-red-deep));
+        transform: skewX(var(--kp-skew));
+    }
+
+    .an-scene .ph-card__title,
+    .an-scene .ph-card__line {
+        min-inline-size: 0;
+        margin: 0;
+    }
+
+    .an-scene .ph-card__title {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .an-scene .ph-card__title {
+        font-family: var(--theme-font-display);
+        font-size: clamp(1.05rem, 7.2cqi, 2.6rem);
+        font-style: italic;
+        font-weight: 900;
+        letter-spacing: 0.01em;
+        line-height: 1;
+        text-transform: uppercase;
+    }
+
+    .an-scene .ph-card__line {
+        font-family: var(--theme-font-mono);
+        font-size: clamp(0.6rem, 2.7cqi, 0.85rem);
+        line-height: 1.25;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    .an-scene .ph-card__slash {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-end: -1px;
+        inline-size: clamp(1.2rem, 6.5cqi, 2.6rem);
+        background: var(--primary);
+        clip-path: polygon(34% 0, 100% 0, 100% 100%, 0 100%);
+        transform: skewX(var(--kp-skew));
+        z-index: -1;
+    }
+
+    /* Phantom's progress bar as the register draws it (`.kp-progressbar`): a slanted well with a halftone floor, a red fill
+       cut on a diagonal at the value, the deep-red plate standing 3 px behind the cut, a white shard riding the cut. */
+    .an-scene .ph-bar {
+        --ph-v: 0.72;
+        --ph-h: clamp(1.15rem, 5.4cqi, 1.6rem);
+        --ph-slant: calc(var(--ph-h) * 0.375);
+        --ph-shard: calc(var(--ph-h) * 0.3125);
+        --ph-gap: 3px;
+        --ph-edge: calc(var(--ph-v) * (100% - var(--ph-slant)));
+        inline-size: 100%;
+    }
+
+    .an-scene .ph-bar__well {
+        position: relative;
+        isolation: isolate;
+        display: block;
+        block-size: var(--ph-h);
+    }
+
+    .an-scene .ph-bar__well::before,
+    .an-scene .ph-bar__well::after {
+        content: '';
+        position: absolute;
+        z-index: 0;
+    }
+
+    .an-scene .ph-bar__well::before {
+        inset: 0;
+        background: var(--border-strong);
+        clip-path: polygon(var(--ph-slant) 0, 100% 0, calc(100% - var(--ph-slant)) 100%, 0 100%);
+    }
+
+    .an-scene .ph-bar__well::after {
+        inset: 2px;
+        background: var(--background);
+        clip-path: polygon(calc(var(--ph-slant) - 1px) 0, 100% 0, calc(100% - var(--ph-slant) + 1px) 100%, 0 100%);
+    }
+
+    .an-scene .ph-bar__fill {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        isolation: isolate;
+        clip-path: polygon(var(--ph-slant) 0, 100% 0, calc(100% - var(--ph-slant)) 100%, 0 100%);
+        /* The fill is drawn by its two plates, not by the clip engine. */
+        --an-kf: none;
+        --an-kf-out: none;
+    }
+
+    .an-scene .ph-bar__fill::before,
+    .an-scene .ph-bar__fill::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+    }
+
+    .an-scene .ph-bar__fill::before {
+        background: var(--primary);
+        clip-path: polygon(var(--ph-slant) 0, calc(var(--ph-edge) * 1 + var(--ph-slant)) 0, calc(var(--ph-edge) * 1) 100%, 0 100%);
+    }
+
+    .an-scene .ph-bar__fill::after {
+        z-index: -1;
+        background: var(--kp-red-deep);
+        clip-path: polygon(
+            var(--ph-slant) 0,
+            calc(var(--ph-edge) * 1 + var(--ph-slant) + var(--ph-gap)) 0,
+            calc(var(--ph-edge) * 1 + var(--ph-gap)) 100%,
+            0 100%
+        );
+    }
+
+    .an-scene .ph-bar__shard {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: calc(var(--ph-edge) + var(--ph-gap) * 2 + 1px);
+        z-index: 3;
+        inline-size: calc(var(--ph-slant) + var(--ph-shard));
+        background: var(--foreground);
+        clip-path: polygon(var(--ph-slant) 0, 100% 0, var(--ph-shard) 100%, 0 100%);
+        --an-kf: ph-shard-drop;
+        --an-kf-out: ph-shard-drop-out;
+    }
+
+    .an-scene .ph-bar__well > .an-a:not(.ph-bar__fill, .ph-bar__shard, .ph-bar__screen) {
+        z-index: 4;
+    }
+
+    @keyframes ph-shard-drop {
+        0% {
+            scale: 1 0;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        100% {
+            scale: 1 1;
+        }
+    }
+
+    @keyframes ph-shard-drop-out {
+        0% {
+            scale: 1 1;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        100% {
+            scale: 1 0;
+        }
+    }
+
+    /* The well's screen: its own dot grid, a part of its own so that it can slip. */
+    .an-scene .ph-bar__well > .ph-bar__screen {
+        position: absolute;
+        inset: 2px;
+        z-index: 1;
+        background: radial-gradient(circle at center, hsl(from var(--foreground) h s l / 0.3) 0.9px, transparent 1px) 0 0 / 5px 5px;
+        clip-path: polygon(calc(var(--ph-slant) - 1px) 0, 100% 0, calc(100% - var(--ph-slant) + 1px) 100%, 0 100%);
+    }
+
+    /* A button in the scenes: the register's key cap, a little larger so the press is seen. */
+    .an-scene .an-btn .kp-button {
+        padding-inline: clamp(1.4rem, 7cqi, 2.4rem);
+    }
+
+    /* The key cap's own screen: black dots on the red face, under the label. */
+    .an-scene :is(.ph-a-press__screen, .ph-c-press__screen, .ph-d-press__screen, .ph-e-press__screen) {
+        position: absolute;
+        inset: 2px;
+        z-index: -1;
+        background: radial-gradient(circle at center, hsl(from var(--primary-foreground) h s l / 0.42) 1.1px, transparent 1.4px) 0 0 / 6px 6px;
+        pointer-events: none;
+    }
+
+    @keyframes ph-throw {
+        0% {
+            translate: -125% 30%;
+            rotate: -22deg;
+            scale: 1.15;
+            filter: drop-shadow(0 0 0 var(--kp-red-deep));
+            animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
+        }
+
+        79.8% {
+            translate: 0 0;
+            rotate: -1.5deg;
+            scale: 1;
+            filter: drop-shadow(0 0 0 var(--kp-red-deep));
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        100% {
+            translate: 0 0;
+            rotate: -1.5deg;
+            scale: 1;
+            filter: drop-shadow(6px 6px 0 var(--kp-red-deep));
+        }
+    }
+
+    @keyframes ph-throw-out {
+        0% {
+            translate: 0 0;
+            rotate: -1.5deg;
+            scale: 1;
+            filter: drop-shadow(6px 6px 0 var(--kp-red-deep));
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        20.2% {
+            translate: 0 0;
+            rotate: -1.5deg;
+            scale: 1;
+            filter: drop-shadow(0 0 0 var(--kp-red-deep));
+            animation-timing-function: cubic-bezier(1, 0, 0.19, 1);
+        }
+
+        100% {
+            translate: -125% 30%;
+            rotate: -22deg;
+            scale: 1.15;
+            filter: drop-shadow(0 0 0 var(--kp-red-deep));
+        }
+    }
+
+    @keyframes ph-fly {
+        0% {
+            translate: -125% 30%;
+            rotate: -22deg;
+            scale: 1.15;
+            animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
+        }
+
+        100% {
+            translate: 0 0;
+            rotate: -1.5deg;
+            scale: 1;
+        }
+    }
+
+    @keyframes ph-fly-out {
+        0% {
+            translate: 0 0;
+            rotate: -1.5deg;
+            scale: 1;
+            animation-timing-function: cubic-bezier(1, 0, 0.19, 1);
+        }
+
+        100% {
+            translate: -125% 30%;
+            rotate: -22deg;
+            scale: 1.15;
+        }
+    }
+
+    @keyframes ph-slab {
+        0% {
+            translate: -105% 0;
+            animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes ph-slab-out {
+        0% {
+            translate: 0 0;
+            animation-timing-function: cubic-bezier(1, 0, 0.19, 1);
+        }
+
+        100% {
+            translate: -105% 0;
+        }
+    }
+
+    @keyframes ph-press {
+        0% {
+            translate: 0 0;
+            filter: drop-shadow(5px 5px 0 var(--kp-red-deep));
+            animation-timing-function: linear;
+        }
+
+        87.5% {
+            translate: 0 0;
+            filter: drop-shadow(5px 5px 0 var(--kp-red-deep));
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        100% {
+            translate: 5px 5px;
+            filter: drop-shadow(0 0 0 var(--kp-red-deep));
+        }
+    }
+
+    @keyframes ph-press-out {
+        0% {
+            translate: 5px 5px;
+            filter: drop-shadow(0 0 0 var(--kp-red-deep));
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        12.5% {
+            translate: 0 0;
+            filter: drop-shadow(5px 5px 0 var(--kp-red-deep));
+            animation-timing-function: linear;
+        }
+
+        100% {
+            translate: 0 0;
+            filter: drop-shadow(5px 5px 0 var(--kp-red-deep));
+        }
+    }
+
+    @keyframes ph-a-slip {
+        0% {
+            background-position: 0 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        5.625% {
+            background-position: 4px 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        36.875% {
+            background-position: -3px 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        68.125% {
+            background-position: 2px 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        99.375% {
+            background-position: 0 0;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            background-position: 0 0;
+        }
+    }
+
+    @keyframes ph-a-slip-out {
+        0% {
+            background-position: 0 0;
+            animation-timing-function: linear;
+        }
+
+        0.625% {
+            background-position: 0 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        31.875% {
+            background-position: 2px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        63.125% {
+            background-position: -3px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        94.375% {
+            background-position: 4px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        100% {
+            background-position: 0 0;
+        }
+    }
+
+    @keyframes ph-a-bslip {
+        0% {
+            background-position: 0 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        5.625% {
+            background-position: 3px 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        36.875% {
+            background-position: -2px 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        68.125% {
+            background-position: 1px 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        99.375% {
+            background-position: 0 0;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            background-position: 0 0;
+        }
+    }
+
+    @keyframes ph-a-bslip-out {
+        0% {
+            background-position: 0 0;
+            animation-timing-function: linear;
+        }
+
+        0.625% {
+            background-position: 0 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        31.875% {
+            background-position: 1px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        63.125% {
+            background-position: -2px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        94.375% {
+            background-position: 3px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        100% {
+            background-position: 0 0;
+        }
+    }
+
+    @keyframes ph-a-pscreen {
+        0% {
+            background-position: 0 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        53.6364% {
+            background-position: 3px 0;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            background-position: 3px 0;
+        }
+    }
+
+    @keyframes ph-a-pscreen-out {
+        0% {
+            background-position: 3px 0;
+            animation-timing-function: linear;
+        }
+
+        46.3636% {
+            background-position: 3px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        100% {
+            background-position: 0 0;
+        }
+    }
+
+    @keyframes ph-b-dots {
+        0% {
+            background: radial-gradient(circle at center, var(--foreground) 1.9747px, transparent 2.3247px) 0 0 / 7px 7px;
+            animation-timing-function: steps(1, end);
+        }
+
+        5.625% {
+            background: radial-gradient(circle at center, var(--foreground) 2.7926px, transparent 3.1426px) 0 0 / 7px 7px;
+            animation-timing-function: steps(1, end);
+        }
+
+        52.5% {
+            background: radial-gradient(circle at center, var(--foreground) 3.4202px, transparent 3.7702px) 0 0 / 7px 7px;
+            animation-timing-function: steps(1, end);
+        }
+
+        99.375% {
+            background: var(--foreground);
+            animation-timing-function: linear;
+        }
+
+        100% {
+            background: var(--foreground);
+        }
+    }
+
+    @keyframes ph-b-dots-out {
+        0% {
+            background: var(--foreground);
+            animation-timing-function: linear;
+        }
+
+        0.625% {
+            background: var(--foreground);
+            animation-timing-function: steps(1, start);
+        }
+
+        47.5% {
+            background: radial-gradient(circle at center, var(--foreground) 3.4202px, transparent 3.7702px) 0 0 / 7px 7px;
+            animation-timing-function: steps(1, start);
+        }
+
+        94.375% {
+            background: radial-gradient(circle at center, var(--foreground) 2.7926px, transparent 3.1426px) 0 0 / 7px 7px;
+            animation-timing-function: steps(1, start);
+        }
+
+        100% {
+            background: radial-gradient(circle at center, var(--foreground) 1.9747px, transparent 2.3247px) 0 0 / 7px 7px;
+        }
+    }
+
+    @keyframes ph-b-sdots {
+        0% {
+            background: radial-gradient(circle at center, var(--primary) 1.9747px, transparent 2.3247px) 0 0 / 7px 7px;
+            animation-timing-function: steps(1, end);
+        }
+
+        5.625% {
+            background: radial-gradient(circle at center, var(--primary) 2.7926px, transparent 3.1426px) 0 0 / 7px 7px;
+            animation-timing-function: steps(1, end);
+        }
+
+        52.5% {
+            background: radial-gradient(circle at center, var(--primary) 3.4202px, transparent 3.7702px) 0 0 / 7px 7px;
+            animation-timing-function: steps(1, end);
+        }
+
+        99.375% {
+            background: var(--primary);
+            animation-timing-function: linear;
+        }
+
+        100% {
+            background: var(--primary);
+        }
+    }
+
+    @keyframes ph-b-sdots-out {
+        0% {
+            background: var(--primary);
+            animation-timing-function: linear;
+        }
+
+        0.625% {
+            background: var(--primary);
+            animation-timing-function: steps(1, start);
+        }
+
+        47.5% {
+            background: radial-gradient(circle at center, var(--primary) 3.4202px, transparent 3.7702px) 0 0 / 7px 7px;
+            animation-timing-function: steps(1, start);
+        }
+
+        94.375% {
+            background: radial-gradient(circle at center, var(--primary) 2.7926px, transparent 3.1426px) 0 0 / 7px 7px;
+            animation-timing-function: steps(1, start);
+        }
+
+        100% {
+            background: radial-gradient(circle at center, var(--primary) 1.9747px, transparent 2.3247px) 0 0 / 7px 7px;
+        }
+    }
+
+    @keyframes ph-b-shadow {
+        0% {
+            box-shadow: 0 0 0 var(--kp-red-deep);
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        100% {
+            box-shadow: 6px 6px 0 var(--kp-red-deep);
+        }
+    }
+
+    @keyframes ph-b-shadow-out {
+        0% {
+            box-shadow: 6px 6px 0 var(--kp-red-deep);
+            animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        100% {
+            box-shadow: 0 0 0 var(--kp-red-deep);
+        }
+    }
+
+    @keyframes ph-b-ldots {
+        0% {
+            background: radial-gradient(circle at center, var(--primary) 1.1942px, transparent 1.5442px) 0 0 / 4px 4px;
+            animation-timing-function: steps(1, end);
+        }
+
+        5.625% {
+            background: radial-gradient(circle at center, var(--primary) 1.5958px, transparent 1.9458px) 0 0 / 4px 4px;
+            animation-timing-function: steps(1, end);
+        }
+
+        52.5% {
+            background: radial-gradient(circle at center, var(--primary) 1.9544px, transparent 2.3044px) 0 0 / 4px 4px;
+            animation-timing-function: steps(1, end);
+        }
+
+        99.375% {
+            background: var(--primary);
+            animation-timing-function: linear;
+        }
+
+        100% {
+            background: var(--primary);
+        }
+    }
+
+    @keyframes ph-b-ldots-out {
+        0% {
+            background: var(--primary);
+            animation-timing-function: linear;
+        }
+
+        0.625% {
+            background: var(--primary);
+            animation-timing-function: steps(1, start);
+        }
+
+        47.5% {
+            background: radial-gradient(circle at center, var(--primary) 1.9544px, transparent 2.3044px) 0 0 / 4px 4px;
+            animation-timing-function: steps(1, start);
+        }
+
+        94.375% {
+            background: radial-gradient(circle at center, var(--primary) 1.5958px, transparent 1.9458px) 0 0 / 4px 4px;
+            animation-timing-function: steps(1, start);
+        }
+
+        100% {
+            background: radial-gradient(circle at center, var(--primary) 1.1942px, transparent 1.5442px) 0 0 / 4px 4px;
+        }
+    }
+
+    @keyframes ph-b-pdots {
+        0% {
+            background: radial-gradient(circle at center, var(--kp-red-deep) 1.1942px, transparent 1.5442px) 0 0 / 4px 4px;
+            animation-timing-function: steps(1, end);
+        }
+
+        5.625% {
+            background: radial-gradient(circle at center, var(--kp-red-deep) 1.5958px, transparent 1.9458px) 0 0 / 4px 4px;
+            animation-timing-function: steps(1, end);
+        }
+
+        52.5% {
+            background: radial-gradient(circle at center, var(--kp-red-deep) 1.9544px, transparent 2.3044px) 0 0 / 4px 4px;
+            animation-timing-function: steps(1, end);
+        }
+
+        99.375% {
+            background: var(--kp-red-deep);
+            animation-timing-function: linear;
+        }
+
+        100% {
+            background: var(--kp-red-deep);
+        }
+    }
+
+    @keyframes ph-b-pdots-out {
+        0% {
+            background: var(--kp-red-deep);
+            animation-timing-function: linear;
+        }
+
+        0.625% {
+            background: var(--kp-red-deep);
+            animation-timing-function: steps(1, start);
+        }
+
+        47.5% {
+            background: radial-gradient(circle at center, var(--kp-red-deep) 1.9544px, transparent 2.3044px) 0 0 / 4px 4px;
+            animation-timing-function: steps(1, start);
+        }
+
+        94.375% {
+            background: radial-gradient(circle at center, var(--kp-red-deep) 1.5958px, transparent 1.9458px) 0 0 / 4px 4px;
+            animation-timing-function: steps(1, start);
+        }
+
+        100% {
+            background: radial-gradient(circle at center, var(--kp-red-deep) 1.1942px, transparent 1.5442px) 0 0 / 4px 4px;
+        }
+    }
+
+    @keyframes ph-b-face {
+        0% {
+            background: radial-gradient(circle at center, var(--primary) 1.6205px, transparent 1.9705px) 0 0 / 5px 5px;
+            animation-timing-function: steps(1, end);
+        }
+
+        49.0909% {
+            background: radial-gradient(circle at center, var(--primary) 2.2917px, transparent 2.6417px) 0 0 / 5px 5px;
+            animation-timing-function: steps(1, end);
+        }
+
+        94.5455% {
+            background: var(--primary);
+            animation-timing-function: linear;
+        }
+
+        100% {
+            background: var(--primary);
+        }
+    }
+
+    @keyframes ph-b-face-out {
+        0% {
+            background: var(--primary);
+            animation-timing-function: linear;
+        }
+
+        5.4545% {
+            background: var(--primary);
+            animation-timing-function: steps(1, start);
+        }
+
+        50.9091% {
+            background: radial-gradient(circle at center, var(--primary) 2.2917px, transparent 2.6417px) 0 0 / 5px 5px;
+            animation-timing-function: steps(1, start);
+        }
+
+        100% {
+            background: radial-gradient(circle at center, var(--primary) 1.6205px, transparent 1.9705px) 0 0 / 5px 5px;
+        }
+    }
+
+    @keyframes ph-b-ink {
+        0% {
+            color: var(--foreground);
+            animation-timing-function: steps(1, end);
+        }
+
+        50% {
+            color: var(--primary-foreground);
+            animation-timing-function: linear;
+        }
+
+        100% {
+            color: var(--primary-foreground);
+        }
+    }
+
+    @keyframes ph-b-ink-out {
+        0% {
+            color: var(--primary-foreground);
+            animation-timing-function: linear;
+        }
+
+        50% {
+            color: var(--primary-foreground);
+            animation-timing-function: steps(1, start);
+        }
+
+        100% {
+            color: var(--foreground);
+        }
+    }
+
+    @keyframes ph-c-open {
+        0% {
+            background-position: 0px 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        1.9565% {
+            background-position: 6px 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        12.8261% {
+            background-position: 12px 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        88.913% {
+            background-position: 6px 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        99.7826% {
+            background-position: 0px 0;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            background-position: 0px 0;
+        }
+    }
+
+    @keyframes ph-c-open-out {
+        0% {
+            background-position: 0px 0;
+            animation-timing-function: linear;
+        }
+
+        0.2174% {
+            background-position: 0px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        11.087% {
+            background-position: 6px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        87.1739% {
+            background-position: 12px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        98.0435% {
+            background-position: 6px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        100% {
+            background-position: 0px 0;
+        }
+    }
+
+    @keyframes ph-c-slot {
+        0% {
+            clip-path: inset(0 100% 0 0);
+            animation-timing-function: steps(1, end);
+        }
+
+        1.9565% {
+            clip-path: inset(0 60% 0 0);
+            animation-timing-function: steps(1, end);
+        }
+
+        12.8261% {
+            clip-path: inset(0 0% 0 0);
+            animation-timing-function: steps(1, end);
+        }
+
+        88.913% {
+            clip-path: inset(0 60% 0 0);
+            animation-timing-function: steps(1, end);
+        }
+
+        99.7826% {
+            clip-path: inset(0 100% 0 0);
+            animation-timing-function: linear;
+        }
+
+        100% {
+            clip-path: inset(0 100% 0 0);
+        }
+    }
+
+    @keyframes ph-c-slot-out {
+        0% {
+            clip-path: inset(0 100% 0 0);
+            animation-timing-function: linear;
+        }
+
+        0.2174% {
+            clip-path: inset(0 100% 0 0);
+            animation-timing-function: steps(1, start);
+        }
+
+        11.087% {
+            clip-path: inset(0 60% 0 0);
+            animation-timing-function: steps(1, start);
+        }
+
+        87.1739% {
+            clip-path: inset(0 0% 0 0);
+            animation-timing-function: steps(1, start);
+        }
+
+        98.0435% {
+            clip-path: inset(0 60% 0 0);
+            animation-timing-function: steps(1, start);
+        }
+
+        100% {
+            clip-path: inset(0 100% 0 0);
+        }
+    }
+
+    @keyframes ph-c-shut {
+        0% {
+            background-position: 12px 0;
+            clip-path: inset(0 100% 0 0);
+            animation-timing-function: steps(1, end);
+        }
+
+        15% {
+            background-position: 6px 0;
+            clip-path: inset(0 50% 0 0);
+            animation-timing-function: steps(1, end);
+        }
+
+        98.3333% {
+            background-position: 0px 0;
+            clip-path: inset(0 0% 0 0);
+            animation-timing-function: linear;
+        }
+
+        100% {
+            background-position: 0px 0;
+            clip-path: inset(0 0% 0 0);
+        }
+    }
+
+    @keyframes ph-c-shut-out {
+        0% {
+            background-position: 0px 0;
+            clip-path: inset(0 0% 0 0);
+            animation-timing-function: linear;
+        }
+
+        1.6667% {
+            background-position: 0px 0;
+            clip-path: inset(0 0% 0 0);
+            animation-timing-function: steps(1, start);
+        }
+
+        85% {
+            background-position: 6px 0;
+            clip-path: inset(0 50% 0 0);
+            animation-timing-function: steps(1, start);
+        }
+
+        100% {
+            background-position: 12px 0;
+            clip-path: inset(0 100% 0 0);
+        }
+    }
+
+    @keyframes ph-c-bopen {
+        0% {
+            background-position: 0 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        1.9565% {
+            background-position: 4px 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        12.8261% {
+            background-position: 8px 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        88.913% {
+            background-position: 4px 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        99.7826% {
+            background-position: 0 0;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            background-position: 0 0;
+        }
+    }
+
+    @keyframes ph-c-bopen-out {
+        0% {
+            background-position: 0 0;
+            animation-timing-function: linear;
+        }
+
+        0.2174% {
+            background-position: 0 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        11.087% {
+            background-position: 4px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        87.1739% {
+            background-position: 8px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        98.0435% {
+            background-position: 4px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        100% {
+            background-position: 0 0;
+        }
+    }
+
+    @keyframes ph-c-bshut {
+        0% {
+            background-position: 6px 0;
+            clip-path: inset(0 100% 0 0);
+            animation-timing-function: steps(1, end);
+        }
+
+        15% {
+            background-position: 3px 0;
+            clip-path: inset(0 50% 0 0);
+            animation-timing-function: steps(1, end);
+        }
+
+        98.3333% {
+            background-position: 0px 0;
+            clip-path: inset(0 0% 0 0);
+            animation-timing-function: linear;
+        }
+
+        100% {
+            background-position: 0px 0;
+            clip-path: inset(0 0% 0 0);
+        }
+    }
+
+    @keyframes ph-c-bshut-out {
+        0% {
+            background-position: 0px 0;
+            clip-path: inset(0 0% 0 0);
+            animation-timing-function: linear;
+        }
+
+        1.6667% {
+            background-position: 0px 0;
+            clip-path: inset(0 0% 0 0);
+            animation-timing-function: steps(1, start);
+        }
+
+        85% {
+            background-position: 3px 0;
+            clip-path: inset(0 50% 0 0);
+            animation-timing-function: steps(1, start);
+        }
+
+        100% {
+            background-position: 6px 0;
+            clip-path: inset(0 100% 0 0);
+        }
+    }
+
+    @keyframes ph-c-pscreen {
+        0% {
+            background-position: 0px 0;
+            clip-path: inset(0 0 0 0%);
+            animation-timing-function: steps(1, end);
+        }
+
+        5.625% {
+            background-position: 4px 0;
+            clip-path: inset(0 0 0 50%);
+            animation-timing-function: steps(1, end);
+        }
+
+        99.375% {
+            background-position: 0px 0;
+            clip-path: inset(0 0 0 0%);
+            animation-timing-function: linear;
+        }
+
+        100% {
+            background-position: 0px 0;
+            clip-path: inset(0 0 0 0%);
+        }
+    }
+
+    @keyframes ph-c-pscreen-out {
+        0% {
+            background-position: 0px 0;
+            clip-path: inset(0 0 0 0%);
+            animation-timing-function: linear;
+        }
+
+        0.625% {
+            background-position: 0px 0;
+            clip-path: inset(0 0 0 0%);
+            animation-timing-function: steps(1, start);
+        }
+
+        94.375% {
+            background-position: 4px 0;
+            clip-path: inset(0 0 0 50%);
+            animation-timing-function: steps(1, start);
+        }
+
+        100% {
+            background-position: 0px 0;
+            clip-path: inset(0 0 0 0%);
+        }
+    }
+
+    @keyframes ph-d-drag {
+        0% {
+            background-position: 0 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        37.25% {
+            background-position: -12px 3px;
+            animation-timing-function: steps(1, end);
+        }
+
+        54.75% {
+            background-position: -8px 2px;
+            animation-timing-function: steps(1, end);
+        }
+
+        72.25% {
+            background-position: -4px 1px;
+            animation-timing-function: steps(1, end);
+        }
+
+        99.75% {
+            background-position: 0 0;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            background-position: 0 0;
+        }
+    }
+
+    @keyframes ph-d-drag-out {
+        0% {
+            background-position: 0 0;
+            animation-timing-function: linear;
+        }
+
+        0.25% {
+            background-position: 0 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        27.75% {
+            background-position: -4px 1px;
+            animation-timing-function: steps(1, start);
+        }
+
+        45.25% {
+            background-position: -8px 2px;
+            animation-timing-function: steps(1, start);
+        }
+
+        62.75% {
+            background-position: -12px 3px;
+            animation-timing-function: steps(1, start);
+        }
+
+        100% {
+            background-position: 0 0;
+        }
+    }
+
+    @keyframes ph-d-wake {
+        0% {
+            clip-path: inset(0 100% 0 0);
+            animation-timing-function: steps(1, end);
+        }
+
+        37.25% {
+            clip-path: inset(0 88% 0 0);
+            animation-timing-function: steps(1, end);
+        }
+
+        54.75% {
+            clip-path: inset(0 55% 0 0);
+            animation-timing-function: steps(1, end);
+        }
+
+        72.25% {
+            clip-path: inset(0 25% 0 0);
+            animation-timing-function: steps(1, end);
+        }
+
+        99.75% {
+            clip-path: inset(0 100% 0 0);
+            animation-timing-function: linear;
+        }
+
+        100% {
+            clip-path: inset(0 100% 0 0);
+        }
+    }
+
+    @keyframes ph-d-wake-out {
+        0% {
+            clip-path: inset(0 100% 0 0);
+            animation-timing-function: linear;
+        }
+
+        0.25% {
+            clip-path: inset(0 100% 0 0);
+            animation-timing-function: steps(1, start);
+        }
+
+        27.75% {
+            clip-path: inset(0 25% 0 0);
+            animation-timing-function: steps(1, start);
+        }
+
+        45.25% {
+            clip-path: inset(0 55% 0 0);
+            animation-timing-function: steps(1, start);
+        }
+
+        62.75% {
+            clip-path: inset(0 88% 0 0);
+            animation-timing-function: steps(1, start);
+        }
+
+        100% {
+            clip-path: inset(0 100% 0 0);
+        }
+    }
+
+    @keyframes ph-d-bdrag {
+        0% {
+            background-position: 0 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        37.25% {
+            background-position: -6px 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        54.75% {
+            background-position: -4px 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        72.25% {
+            background-position: -2px 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        99.75% {
+            background-position: 0 0;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            background-position: 0 0;
+        }
+    }
+
+    @keyframes ph-d-bdrag-out {
+        0% {
+            background-position: 0 0;
+            animation-timing-function: linear;
+        }
+
+        0.25% {
+            background-position: 0 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        27.75% {
+            background-position: -2px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        45.25% {
+            background-position: -4px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        62.75% {
+            background-position: -6px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        100% {
+            background-position: 0 0;
+        }
+    }
+
+    @keyframes ph-d-pscreen {
+        0% {
+            background-position: 0 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        8.1818% {
+            background-position: 4px 4px;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            background-position: 4px 4px;
+        }
+    }
+
+    @keyframes ph-d-pscreen-out {
+        0% {
+            background-position: 4px 4px;
+            animation-timing-function: linear;
+        }
+
+        91.8182% {
+            background-position: 4px 4px;
+            animation-timing-function: steps(1, start);
+        }
+
+        100% {
+            background-position: 0 0;
+        }
+    }
+
+    @keyframes ph-e-shuffle {
+        0% {
+            background-position: 0 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        2.9032% {
+            background-position: 4px 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        19.0323% {
+            background-position: 0px 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        35.1613% {
+            background-position: -4px 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        51.2903% {
+            background-position: 0px 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        67.4194% {
+            background-position: 2px 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        83.5484% {
+            background-position: 0px 0;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            background-position: 0px 0;
+        }
+    }
+
+    @keyframes ph-e-shuffle-out {
+        0% {
+            background-position: 0px 0;
+            animation-timing-function: linear;
+        }
+
+        16.4516% {
+            background-position: 0px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        32.5806% {
+            background-position: 2px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        48.7097% {
+            background-position: 0px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        64.8387% {
+            background-position: -4px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        80.9677% {
+            background-position: 0px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        97.0968% {
+            background-position: 4px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        100% {
+            background-position: 0 0;
+        }
+    }
+
+    @keyframes ph-e-bshuffle {
+        0% {
+            background-position: 0 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        2.9032% {
+            background-position: 3px 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        19.0323% {
+            background-position: 0px 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        35.1613% {
+            background-position: -3px 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        51.2903% {
+            background-position: 0px 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        67.4194% {
+            background-position: 2px 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        83.5484% {
+            background-position: 0px 0;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            background-position: 0px 0;
+        }
+    }
+
+    @keyframes ph-e-bshuffle-out {
+        0% {
+            background-position: 0px 0;
+            animation-timing-function: linear;
+        }
+
+        16.4516% {
+            background-position: 0px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        32.5806% {
+            background-position: 2px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        48.7097% {
+            background-position: 0px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        64.8387% {
+            background-position: -3px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        80.9677% {
+            background-position: 0px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        97.0968% {
+            background-position: 3px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        100% {
+            background-position: 0 0;
+        }
+    }
+
+    @keyframes ph-e-pscreen {
+        0% {
+            background-position: 0 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        8.1818% {
+            background-position: 3px 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        30.9091% {
+            background-position: 0px 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        53.6364% {
+            background-position: -3px 0;
+            animation-timing-function: steps(1, end);
+        }
+
+        76.3636% {
+            background-position: 0px 0;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            background-position: 0px 0;
+        }
+    }
+
+    @keyframes ph-e-pscreen-out {
+        0% {
+            background-position: 0px 0;
+            animation-timing-function: linear;
+        }
+
+        23.6364% {
+            background-position: 0px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        46.3636% {
+            background-position: -3px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        69.0909% {
+            background-position: 0px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        91.8182% {
+            background-position: 3px 0;
+            animation-timing-function: steps(1, start);
+        }
+
+        100% {
+            background-position: 0 0;
+        }
+    }
+
+    /* ── 1 · The card is thrown, the screen jolts ─────────────────────── */
+
+    /* Round one's throw exactly: the card flies in from off the stage, turning, on the shove (cubic-bezier(0.81, 0, 0, 1)), and
+       stops dead at 4 u, a degree and a half askew; the deep-red shadow is cut in on the last unit (4 to 5). AT the stop the
+       board's halftone screen jolts: +4px at 4, -3px at 4.5, +2px at 5, 0 at 5.5, whole cuts between fixed poses, and locks. The
+       card does not move after the stop. Out: the same, played backwards. */
+    .an-scene :is(.ph-a-card, .ph-c-card, .ph-d-card, .ph-e-card) {
+        --ph-plate-shadow: none;
+        filter: drop-shadow(6px 6px 0 var(--kp-red-deep));
+        --an-kf: ph-throw;
+        --an-kf-out: ph-throw-out;
+        --an-l: 5;
+    }
+
+    .an-scene :is(.ph-a-card, .ph-d-card, .ph-e-card) {
+        --an-d: 0;
+    }
+
+    .an-scene .ph-a-screen {
+        --an-kf: ph-a-slip;
+        --an-kf-out: ph-a-slip-out;
+        --an-d: 3.9;
+        --an-l: 1.6;
+    }
+
+    /* The bar: the red slab (both plates) is shoved across the well on the shove and stops dead at 4; the well's screen slips the
+       four cuts at the stop (3, -2, 1, 0 px); the shard drops onto the cut. */
+    .an-scene .ph-a-bar .ph-bar__screen {
+        --an-kf: ph-a-bslip;
+        --an-kf-out: ph-a-bslip-out;
+        --an-d: 3.9;
+        --an-l: 1.6;
+    }
+
+    .an-scene .ph-a-bar .ph-bar__shard {
+        --an-d: 4;
+        --an-l: 1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='in'] .ph-a-bar .ph-bar__fill::before,
+        .an-scene[data-an-phase='in'] .ph-a-bar .ph-bar__fill::after,
+        .an-scene[data-an-phase='hold'] .ph-a-bar .ph-bar__fill::before,
+        .an-scene[data-an-phase='hold'] .ph-a-bar .ph-bar__fill::after {
+            animation: ph-slab calc(4 * var(--an-u)) linear calc(0 * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .ph-a-bar .ph-bar__fill::before,
+        .an-scene[data-an-phase='out'] .ph-a-bar .ph-bar__fill::after {
+            animation: ph-slab-out calc(4 * var(--an-u)) linear calc(4 * var(--an-u)) both;
+        }
+    }
+
+    /* The button: the primary key cap drops onto its own shadow in one cut (7 to 8), held; the shadow is gone under it. At 7.5 the
+       key cap's dot screen slips one cut (+3px) and locks. */
+    .an-scene :is(.ph-a-press, .ph-b-press, .ph-c-press, .ph-d-press, .ph-e-press) {
+        translate: 5px 5px;
+        filter: drop-shadow(0 0 0 var(--kp-red-deep));
+        --an-face: ph-press;
+        --an-face-out: ph-press-out;
+    }
+
+    .an-scene .ph-a-press__screen {
+        background-position: 3px 0;
+        --an-kf: ph-a-pscreen;
+        --an-kf-out: ph-a-pscreen-out;
+        --an-d: 6.9;
+        --an-l: 1.0999999999999996;
+    }
+
+    /* ── 2 · Thrown as a screen, resolves at the slap ──────────────────── */
+
+    /* The card flies in (round one's throw, without the shadow) as its own halftone: the plate and the red slash are a grid of dots,
+       a silhouette in the card's shape (25 % of the plate), so the title is only the ink between the dots. At the dead stop (4) the
+       dots resolve into the solid card in three hard cuts (50 % at 4, 75 % at 4.75, solid at 5.5) while the hard shadow is cut in
+       (4 to 5). The board's screen does not move. Out: it dissolves back into dots and is snatched off as a silhouette. */
+    .an-scene .ph-b-card {
+        --an-kf: ph-fly;
+        --an-kf-out: ph-fly-out;
+        --an-d: 0;
+        --an-l: 4;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='in'] .ph-b-card::before,
+        .an-scene[data-an-phase='hold'] .ph-b-card::before {
+            animation:
+                ph-b-dots calc(1.6 * var(--an-u)) linear calc(3.9 * var(--an-u)) both,
+                ph-b-shadow calc(1.01 * var(--an-u)) linear calc(3.99 * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .ph-b-card::before {
+            animation:
+                ph-b-dots-out calc(1.6 * var(--an-u)) linear calc(2.5 * var(--an-u)) both,
+                ph-b-shadow-out calc(1.01 * var(--an-u)) linear calc(3 * var(--an-u)) both;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='in'] .ph-b-card .ph-card__slash,
+        .an-scene[data-an-phase='hold'] .ph-b-card .ph-card__slash {
+            animation: ph-b-sdots calc(1.6 * var(--an-u)) linear calc(3.9 * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .ph-b-card .ph-card__slash {
+            animation: ph-b-sdots-out calc(1.6 * var(--an-u)) linear calc(2.5 * var(--an-u)) both;
+        }
+    }
+
+    /* The bar: the slab is shoved across as a silhouette of red dots (both plates) and resolves solid at its stop, the same three cuts. */
+    .an-scene .ph-b-bar .ph-bar__shard {
+        --an-d: 5.5;
+        --an-l: 1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='in'] .ph-b-bar .ph-bar__fill::before,
+        .an-scene[data-an-phase='hold'] .ph-b-bar .ph-bar__fill::before {
+            animation:
+                ph-slab calc(4 * var(--an-u)) linear calc(0 * var(--an-u)) both,
+                ph-b-ldots calc(1.6 * var(--an-u)) linear calc(3.9 * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .ph-b-bar .ph-bar__fill::before {
+            animation:
+                ph-slab-out calc(4 * var(--an-u)) linear calc(4 * var(--an-u)) both,
+                ph-b-ldots-out calc(1.6 * var(--an-u)) linear calc(2.5 * var(--an-u)) both;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='in'] .ph-b-bar .ph-bar__fill::after,
+        .an-scene[data-an-phase='hold'] .ph-b-bar .ph-bar__fill::after {
+            animation:
+                ph-slab calc(4 * var(--an-u)) linear calc(0 * var(--an-u)) both,
+                ph-b-pdots calc(1.6 * var(--an-u)) linear calc(3.9 * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .ph-b-bar .ph-bar__fill::after {
+            animation:
+                ph-slab-out calc(4 * var(--an-u)) linear calc(4 * var(--an-u)) both,
+                ph-b-pdots-out calc(1.6 * var(--an-u)) linear calc(2.5 * var(--an-u)) both;
+        }
+    }
+
+    /* The button: the key cap drops onto its shadow (7 to 8) and its face resolves from dots to solid red in two cuts (7.44 and 7.94);
+       the label takes its black ink when the face is solid. */
+    .an-scene .ph-b-press {
+        background: none;
+    }
+
+    .an-scene .ph-b-press .kp-button__label {
+        color: var(--primary-foreground);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='in'] .ph-b-press::before,
+        .an-scene[data-an-phase='hold'] .ph-b-press::before {
+            animation: ph-b-face calc(1.1 * var(--an-u)) linear calc(6.9 * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .ph-b-press::before {
+            animation: ph-b-face-out calc(1.1 * var(--an-u)) linear calc(0 * var(--an-u)) both;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='in'] .ph-b-press .kp-button__label,
+        .an-scene[data-an-phase='hold'] .ph-b-press .kp-button__label {
+            animation: ph-b-ink calc(0.1 * var(--an-u)) linear calc(7.9 * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .ph-b-press .kp-button__label {
+            animation: ph-b-ink-out calc(0.1 * var(--an-u)) linear calc(0 * var(--an-u)) both;
+        }
+    }
+
+    /* ── 3 · The screen tears aside for the card ──────────────────────── */
+
+    /* The board's screen is shoved aside in two hard cuts at 1 (+6px, +12px) and a gap opens in it where the card will land (a black slot
+       in the card's footprint opens in the screen: 40 % of it, then all of it); the card flies in through the gap (1 to 5, the
+       throw) and stops dead; the screen shuts behind it in two cuts (5 and 5.5: back to +6px, then 0), and a second layer of black
+       dots lies over the card (the card is under the halftone, the title still readable). Out: played backwards. */
+    .an-scene .ph-c-stage {
+        /* The footprint of the card with a margin: half its width, half its height, the slant of the plate over that height. */
+        --ph-hw: calc(min(100% - 3.5rem, 24rem) / 2 + 0.9rem);
+        --ph-hh: calc(
+            (2 * clamp(0.9rem, 5cqi, 1.6rem) + clamp(1.05rem, 7.2cqi, 2.6rem) + 0.3rem + clamp(0.6rem, 2.7cqi, 0.85rem) * 1.25) / 2 + 0.9rem
+        );
+    }
+
+    .an-scene .ph-c-card {
+        --an-d: 1;
+    }
+
+    .an-scene .ph-c-screen--under {
+        --an-kf: ph-c-open;
+        --an-kf-out: ph-c-open-out;
+        --an-d: 0.9;
+        --an-l: 4.6;
+    }
+
+    /* The gap: a black slot in the shape of the card's footprint (the plate's slant, a margin round it) that opens from the left. */
+    .an-scene .ph-c-screen--under::before {
+        content: '';
+        position: absolute;
+        inset-inline-start: calc(50% - var(--ph-hw));
+        inset-block-start: calc(50% - var(--ph-hh));
+        inline-size: calc(2 * var(--ph-hw));
+        block-size: calc(2 * var(--ph-hh));
+        background: var(--background);
+        transform: skewX(var(--kp-skew));
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='in'] .ph-c-screen--under::before,
+        .an-scene[data-an-phase='hold'] .ph-c-screen--under::before {
+            animation: ph-c-slot calc(4.6 * var(--an-u)) linear calc(0.9 * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .ph-c-screen--under::before {
+            animation: ph-c-slot-out calc(4.6 * var(--an-u)) linear calc(2.5 * var(--an-u)) both;
+        }
+    }
+
+    .an-scene .ph-c-screen--over {
+        --an-kf: ph-c-shut;
+        --an-kf-out: ph-c-shut-out;
+        --an-d: 4.9;
+        --an-l: 0.5999999999999996;
+    }
+
+    /* The bar: the well's screen slips aside in two cuts (1 and 1.5), the slab is shoved in (1 to 5), the screen shuts over it (5 and
+       5.5): a layer of black dots over the red. */
+    .an-scene .ph-c-bar .ph-bar__screen {
+        --an-kf: ph-c-bopen;
+        --an-kf-out: ph-c-bopen-out;
+        --an-d: 0.9;
+        --an-l: 4.6;
+    }
+
+    .an-scene .ph-c-bar .ph-bar__shard {
+        --an-d: 5;
+        --an-l: 1;
+    }
+
+    .an-scene .ph-c-bar__over {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at center, hsl(from var(--background) h s l / 0.5) 1px, transparent 1.3px) 0 0 / 5px 5px;
+        pointer-events: none;
+        --an-kf: ph-c-bshut;
+        --an-kf-out: ph-c-bshut-out;
+        --an-d: 4.9;
+        --an-l: 0.5999999999999996;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='in'] .ph-c-bar .ph-bar__fill::before,
+        .an-scene[data-an-phase='in'] .ph-c-bar .ph-bar__fill::after,
+        .an-scene[data-an-phase='hold'] .ph-c-bar .ph-bar__fill::before,
+        .an-scene[data-an-phase='hold'] .ph-c-bar .ph-bar__fill::after {
+            animation: ph-slab calc(4 * var(--an-u)) linear calc(1 * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .ph-c-bar .ph-bar__fill::before,
+        .an-scene[data-an-phase='out'] .ph-c-bar .ph-bar__fill::after {
+            animation: ph-slab-out calc(4 * var(--an-u)) linear calc(3 * var(--an-u)) both;
+        }
+    }
+
+    /* The button: the button's screen (black dots on the face) opens in one cut at 6.5 (it slides 4px and half of it goes), the key cap
+       drops (7 to 8), the screen shuts over it in one cut at 8. */
+    .an-scene .ph-c-press__screen {
+        --an-kf: ph-c-pscreen;
+        --an-kf-out: ph-c-pscreen-out;
+        --an-d: 6.4;
+        --an-l: 1.5999999999999996;
+    }
+
+    /* ── 4 · The throw drags the screen ───────────────────────────────── */
+
+    /* The card flies in (the throw) and drags the board's screen with it: while it crosses (1.5 to 4) the dots are displaced against
+       the throw in four hard cuts (-12px, -8px, -4px, 0), and a second dot layer, 3px off, trails the card as a smear (it grows with
+       the card in three cuts and is cut at the slap); at the stop the screen locks. Out: played backwards. */
+    .an-scene .ph-d-screen {
+        --an-kf: ph-d-drag;
+        --an-kf-out: ph-d-drag-out;
+        --an-d: 0;
+        --an-l: 4;
+    }
+
+    .an-scene .ph-d-wake {
+        clip-path: inset(0 100% 0 0);
+        --an-kf: ph-d-wake;
+        --an-kf-out: ph-d-wake-out;
+        --an-d: 0;
+        --an-l: 4;
+    }
+
+    /* The bar: the well's screen is dragged along by the slab's shove in four cuts (-6px, -4px, -2px, 0) and locks at the stop. */
+    .an-scene .ph-d-bar .ph-bar__screen {
+        --an-kf: ph-d-bdrag;
+        --an-kf-out: ph-d-bdrag-out;
+        --an-d: 0;
+        --an-l: 4;
+    }
+
+    .an-scene .ph-d-bar .ph-bar__shard {
+        --an-d: 4;
+        --an-l: 1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='in'] .ph-d-bar .ph-bar__fill::before,
+        .an-scene[data-an-phase='in'] .ph-d-bar .ph-bar__fill::after,
+        .an-scene[data-an-phase='hold'] .ph-d-bar .ph-bar__fill::before,
+        .an-scene[data-an-phase='hold'] .ph-d-bar .ph-bar__fill::after {
+            animation: ph-slab calc(4 * var(--an-u)) linear calc(0 * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .ph-d-bar .ph-bar__fill::before,
+        .an-scene[data-an-phase='out'] .ph-d-bar .ph-bar__fill::after {
+            animation: ph-slab-out calc(4 * var(--an-u)) linear calc(4 * var(--an-u)) both;
+        }
+    }
+
+    /* The button: the key cap drops (7 to 8) and its screen is dragged one cut down and right with it (at 7) and locks. */
+    .an-scene .ph-d-press__screen {
+        background-position: 4px 4px;
+        --an-kf: ph-d-pscreen;
+        --an-kf-out: ph-d-pscreen-out;
+        --an-d: 6.9;
+        --an-l: 1.0999999999999996;
+    }
+
+    /* ── 5 · Slapped down, the screen shuffles and locks ────────────────── */
+
+    /* The throw and the slap (stop at 4), round one's; then, 4 to 7, the board's screen shuffles under the landed card as a copier
+       re-feeds the sheet: three slips and returns in whole cuts (+4/0, -4/0, +2/0px, half a unit each), the card's own faint dots
+       (black, on its plate) shuffling with it, and locks at 7. The card is still. Out: played backwards. */
+    .an-scene .ph-e-screen {
+        --an-kf: ph-e-shuffle;
+        --an-kf-out: ph-e-shuffle-out;
+        --an-d: 3.9;
+        --an-l: 3.1;
+    }
+
+    .an-scene .ph-e-dots {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background: radial-gradient(circle at center, hsl(from var(--background) h s l / 0.28) 1.1px, transparent 1.4px) 0 0 / 7px 7px;
+        transform: skewX(var(--kp-skew));
+        pointer-events: none;
+        --an-kf: ph-e-shuffle;
+        --an-kf-out: ph-e-shuffle-out;
+        --an-d: 3.9;
+        --an-l: 3.1;
+    }
+
+    /* The bar: the slab is shoved across (stop at 4), then the well's screen shuffles three times (5 to 8) and locks. */
+    .an-scene .ph-e-bar .ph-bar__screen {
+        --an-kf: ph-e-bshuffle;
+        --an-kf-out: ph-e-bshuffle-out;
+        --an-d: 4.9;
+        --an-l: 3.0999999999999996;
+    }
+
+    .an-scene .ph-e-bar .ph-bar__shard {
+        --an-d: 4;
+        --an-l: 1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='in'] .ph-e-bar .ph-bar__fill::before,
+        .an-scene[data-an-phase='in'] .ph-e-bar .ph-bar__fill::after,
+        .an-scene[data-an-phase='hold'] .ph-e-bar .ph-bar__fill::before,
+        .an-scene[data-an-phase='hold'] .ph-e-bar .ph-bar__fill::after {
+            animation: ph-slab calc(4 * var(--an-u)) linear calc(0 * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .ph-e-bar .ph-bar__fill::before,
+        .an-scene[data-an-phase='out'] .ph-e-bar .ph-bar__fill::after {
+            animation: ph-slab-out calc(4 * var(--an-u)) linear calc(4 * var(--an-u)) both;
+        }
+    }
+
+    /* The button: the key cap drops (7 to 8) and its screen shuffles twice in the last unit and locks. */
+    .an-scene .ph-e-press__screen {
+        --an-kf: ph-e-pscreen;
+        --an-kf-out: ph-e-pscreen-out;
+        --an-d: 6.9;
+        --an-l: 1.0999999999999996;
+    }
+
+    /* The undrawn pose: each part stands at its first keyframe at gap. */
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .ph-a-card,
+        .an-scene[data-an-phase='gap'] .ph-d-card,
+        .an-scene[data-an-phase='gap'] .ph-e-card {
+            translate: -125% 30%;
+            rotate: -22deg;
+            scale: 1.15;
+            filter: drop-shadow(0 0 0 var(--kp-red-deep));
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-c-card {
+            translate: -125% 30%;
+            rotate: -22deg;
+            scale: 1.15;
+            filter: drop-shadow(0 0 0 var(--kp-red-deep));
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-b-card {
+            translate: -125% 30%;
+            rotate: -22deg;
+            scale: 1.15;
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-bar__shard {
+            scale: 1 0;
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-a-press,
+        .an-scene[data-an-phase='gap'] .ph-b-press,
+        .an-scene[data-an-phase='gap'] .ph-c-press,
+        .an-scene[data-an-phase='gap'] .ph-d-press,
+        .an-scene[data-an-phase='gap'] .ph-e-press {
+            translate: 0 0;
+            filter: drop-shadow(5px 5px 0 var(--kp-red-deep));
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-b-card::before {
+            background: radial-gradient(circle at center, var(--foreground) 1.9747px, transparent 2.3247px) 0 0 / 7px 7px;
+            box-shadow: 0 0 0 var(--kp-red-deep);
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-b-card .ph-card__slash {
+            background: radial-gradient(circle at center, var(--primary) 1.9747px, transparent 2.3247px) 0 0 / 7px 7px;
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-b-bar .ph-bar__fill::before {
+            background: radial-gradient(circle at center, var(--primary) 1.1942px, transparent 1.5442px) 0 0 / 4px 4px;
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-b-bar .ph-bar__fill::after {
+            background: radial-gradient(circle at center, var(--kp-red-deep) 1.1942px, transparent 1.5442px) 0 0 / 4px 4px;
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-b-press::before {
+            background: radial-gradient(circle at center, var(--primary) 1.6205px, transparent 1.9705px) 0 0 / 5px 5px;
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-b-press .kp-button__label {
+            color: var(--foreground);
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-c-screen--under::before {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-c-screen--over {
+            background-position: 12px 0;
+            clip-path: inset(0 100% 0 0);
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-c-bar__over {
+            background-position: 6px 0;
+            clip-path: inset(0 100% 0 0);
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-d-wake {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-d-screen {
+            background-position: 0 0;
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-a-bar .ph-bar__fill::before,
+        .an-scene[data-an-phase='gap'] .ph-a-bar .ph-bar__fill::after {
+            translate: -105% 0;
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-b-bar .ph-bar__fill::before,
+        .an-scene[data-an-phase='gap'] .ph-b-bar .ph-bar__fill::after {
+            translate: -105% 0;
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-c-bar .ph-bar__fill::before,
+        .an-scene[data-an-phase='gap'] .ph-c-bar .ph-bar__fill::after {
+            translate: -105% 0;
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-d-bar .ph-bar__fill::before,
+        .an-scene[data-an-phase='gap'] .ph-d-bar .ph-bar__fill::after {
+            translate: -105% 0;
+        }
+
+        .an-scene[data-an-phase='gap'] .ph-e-bar .ph-bar__fill::before,
+        .an-scene[data-an-phase='gap'] .ph-e-bar .ph-bar__fill::after {
+            translate: -105% 0;
+        }
+    }
+}

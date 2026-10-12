@@ -48,33 +48,6 @@
    stagger`, not a division. */
 
 @layer kp.signature {
-    /* ═════════════════════════════ retro ═══════════════════════════════ */
-
-    /* retro · loading r3-rt-load-1 · Marching ants select the network */
-
-    [data-theme='retro'] [data-cg-loading='r3-rt-load-1'] .kp-graph__ghost .kp-graph__edge,
-    [data-theme='retro'] [data-cg-loading='r3-rt-load-1'] .kp-graph__ghost .kp-graph__ring {
-        stroke-dasharray: 4 4;
-    }
-
-    /* retro · loading r3-rt-load-2 · Each site takes its turn (no static knobs) */
-
-    /* retro · loading r3-rt-load-3 · The progress blocks fill in */
-
-    [data-theme='retro'] [data-cg-loading='r3-rt-load-3'] .kp-graph__ghost .kp-graph__edge {
-        stroke-dasharray: 14 8;
-    }
-
-    /* retro · loading r3-rt-load-4 · The modem lights blink in turn (no static knobs) */
-
-    /* retro · loading r3-rt-load-5 · The cursor steps along the wire */
-
-    [data-theme='retro'] [data-cg-loading='r3-rt-load-5'] .kp-graph__ghost .kp-graph__edge {
-        stroke-dasharray: 20 80;
-    }
-
-    /* retro · loading r3-rt-load-6 · The buttons press round the ring (no static knobs) */
-
     /* ═══════════════════════════ grotesk ═══════════════════════════════ */
 
     /* grotesk · loading r3-gk-load-1 · The transit line runs */
@@ -187,41 +160,6 @@
 
 @media (prefers-reduced-motion: no-preference) {
     @layer kp.signature {
-        /* ── retro ── */
-
-        [data-theme='retro'] [data-cg-loading='r3-rt-load-1'] .kp-graph__ghost .kp-graph__edge {
-            --cg-edge-anim: gr-march 700ms steps(4) infinite;
-        }
-
-        [data-theme='retro'] [data-cg-loading='r3-rt-load-1'] .kp-graph__ghost .kp-graph__ring {
-            animation: gr-march 700ms steps(4) infinite;
-        }
-
-        [data-theme='retro'] [data-cg-loading='r3-rt-load-2'] .kp-graph__ghost .kp-graph__node {
-            --cg-node-anim: r3-rt-load-2-hourglass 1700ms steps(6) infinite;
-            --cg-node-stagger: 140ms;
-        }
-
-        [data-theme='retro'] [data-cg-loading='r3-rt-load-3'] .kp-graph__ghost .kp-graph__edge {
-            --cg-edge-anim: r3-rt-load-3-fill 1200ms steps(8) infinite;
-            --cg-edge-stagger: 110ms;
-        }
-
-        [data-theme='retro'] [data-cg-loading='r3-rt-load-4'] .kp-graph__ghost .kp-graph__ring {
-            animation: gr-blink 900ms steps(1) infinite;
-            animation-delay: calc(var(--i) * 130ms);
-        }
-
-        [data-theme='retro'] [data-cg-loading='r3-rt-load-5'] .kp-graph__ghost .kp-graph__edge {
-            --cg-edge-anim: r3-rt-load-5-cursor 1400ms steps(8) infinite;
-            --cg-edge-stagger: 100ms;
-        }
-
-        [data-theme='retro'] [data-cg-loading='r3-rt-load-6'] .kp-graph__ghost .kp-graph__node {
-            --cg-node-anim: r3-rt-load-6-press 900ms steps(2) infinite;
-            --cg-node-stagger: 150ms;
-        }
-
         /* ── grotesk ── */
 
         [data-theme='grotesk'] [data-cg-loading='r3-gk-load-1'] .kp-graph__ghost .kp-graph__edge {

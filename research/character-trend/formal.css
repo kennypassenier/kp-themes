@@ -1,0 +1,46 @@
+/* research/character-trend, formal: the decided picks on formal's grammar
+   (themes/formal/CHARACTER.md G1-G21, decided by Kenny on
+   research/formal-character, 2026-10-08; css/formal-register.css has the
+   package's own drawing of the same). Only formal's decided options change:
+   shape 1, loading 2 and arrival 2 (tone 3, the red-ink entry, stands and is
+   the reference of G8; live 1, redrawn, draws nothing of its own, the
+   package's update rule is the register's).
+
+   - shape: the engraved plate keeps its corner and its hairline and loses
+     the double frame: a tile is paper with a hairline (G6, G7);
+   - loading: "the ledger is ruled" is the pick the whole grammar was taken
+     from (G10), here on the grammar's own numbers: three navy rules across
+     the whole of the plot (the register's --kp-fm-stack), one after the
+     other at the ruling pace, held, lifted from the start and ruled again,
+     2400 ms, linear;
+   - arrival: the line and the number are written in from the start at an even
+     pace and a dead stop, 400 ms (G1). */
+@layer kp.signature {
+    [data-theme='formal'] [data-ct-shape='1'] .kp-kpi--trend {
+        --tr-frame: 1px solid var(--border);
+        --tr-shadow: none;
+        --tr-radius: var(--radius);
+    }
+
+    /* Loading 2 · the ledger is ruled, on the grammar's numbers. */
+    [data-theme='formal'] [data-ct-loading='2'] .kp-kpi--trend {
+        --tr-load-anim: none;
+    }
+
+    [data-theme='formal'] [data-ct-loading='2'] .kp-kpi--trend[aria-busy='true'] .kp-kpi__chart-plot::before {
+        background-image: var(--kp-fm-stack);
+        background-repeat: no-repeat;
+        background-size: 100% 2px;
+        background-position:
+            0 0,
+            0 50%,
+            0 100%;
+        animation: none;
+    }
+
+    /* Arrival 2 · engraved, at the ruling pace. */
+    [data-theme='formal'] [data-ct-arrival='2'] .kp-kpi--trend {
+        --tr-arr-line: tr-a-wipe var(--kp-sig-fm-time, 400ms) linear both;
+        --tr-arr-num: tr-n-wipe var(--kp-sig-fm-time, 400ms) linear both;
+    }
+}

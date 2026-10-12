@@ -1,0 +1,52 @@
+/* research/character-state, phantom: the decided picks on phantom's grammar
+   (themes/phantom/CHARACTER.md G1-G21, Kenny, 2026-10-09 on
+   research/phantom-character; css/phantom-register.css holds the tokens and
+   the keyframes this file names). Only phantom's decided options change:
+   shape r2-ph-shape-3, tone 2, change 1.
+
+   - shape: the target mark (a bullseye and a ring round the word) is retired,
+     a target is not one of the print's motifs (G19); the state is a word that
+     shouts in the condensed face, beside a skewed square dot (G6, G18);
+   - tone: the kind still colours the dot; the ring that framed the word is
+     gone, a frame is never the tone (G8);
+   - change: the pin dropped onto the word is the six cuts of a live update:
+     the word dissolves into its dots and resolves to the new state, in place,
+     400 ms (G9). */
+@layer kp.signature {
+    /* Shape r2-ph-shape-3 · the shouting word and its skewed dot. */
+    [data-theme='phantom'][data-theme='phantom'] [data-sw-shape='r2-ph-shape-3'] {
+        --sw-dot-size: 0.7em;
+        --sw-dot-radius: 0;
+        --sw-dot-ring: none;
+        --sw-dot-transform: skewX(var(--kp-skew));
+    }
+
+    [data-theme='phantom'][data-theme='phantom'] [data-sw-shape='r2-ph-shape-3'] .kp-state-word {
+        --sw-frame: 0 solid transparent;
+        --sw-radius: 0;
+        --sw-pad: 0;
+        --sw-plate: transparent;
+        --sw-ink: var(--foreground);
+        --sw-font: 900 1.2em var(--theme-font-display);
+        font-style: italic;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    /* Tone 2 · no ring round the word. */
+    [data-theme='phantom'][data-theme='phantom'] [data-sw-tone='2'][data-sw-kind] {
+        --sw-plate-shadow: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* Change 1 · the pin is the six cuts. */
+        [data-theme='phantom'][data-theme='phantom'] [data-sw-change='1'][data-sw-playing]::before {
+            animation: none;
+        }
+
+        [data-theme='phantom'][data-theme='phantom'] [data-sw-change='1'][data-sw-playing] .kp-state-word {
+            mask-size: 7px 7px;
+            animation: kp-sig-phantom-update 400ms linear;
+        }
+    }
+}

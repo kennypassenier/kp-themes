@@ -37,6 +37,7 @@
 // the day cells can be decorated; and the panel's glyphs are attributes.
 
 import { DEFAULT_STRINGS, getStrings } from './strings.js';
+import { playClose, stopClose } from './motion.js';
 import { placeBlockSide, raiseOverlay, raised } from './top-layer.js';
 import { calendarNames, datePattern, formatDate, parseDate as parseLocale, resolveLocale, weekStartsOn } from './locale.js';
 
@@ -286,6 +287,9 @@ export function attachDatePickers(
         const panel = /** @type {HTMLElement | null} */ (picker.querySelector('[data-kp-date-panel]'));
         if (input === null || open === null || panel === null) continue;
         picker.dataset.kpDatepickerAttached = '';
+        // The panel redraws its days, months and years on every move; only opening it is an arrival
+        // (the theme's own entrance), so a redraw must not play the arrival of what was drawn.
+        panel.dataset.kpArrive = 'none';
 
         const locale = resolveLocale(picker.dataset.kpLocale ?? localeOption, picker);
         const firstDay = weekStartsOn(locale, picker.dataset.kpWeekStartsOn === undefined ? weekOption : Number(picker.dataset.kpWeekStartsOn));
@@ -549,9 +553,12 @@ export function attachDatePickers(
 
         /** Takes the open panel out of the top layer again. */
         let lower = () => {};
+        /** Whether the picker is meant to be open: the panel may still be closing on screen. */
+        let wanted = !panel.hidden;
         /** @param {boolean} next */
         const setOpen = (next) => {
-            if (panel.hidden === !next) return;
+            if (wanted === next) return;
+            wanted = next;
             // Every opening starts on the days.
             view = 'days';
             back = [];
@@ -561,15 +568,35 @@ export function attachDatePickers(
                 cursor = read() ?? new Date();
                 if (!panel.contains(live)) panel.append(live);
                 draw();
+                // Still closing: it turns round where it stands.
+                stopClose(panel);
+                panel.inert = false;
+                if (panel.hidden) {
+                    panel.hidden = false;
+                    panel.dataset.kpDateOpen = '';
+                    lower = raiseDatePanel(panel);
+                }
             } else {
                 panel.style.removeProperty('min-inline-size');
                 panel.style.removeProperty('min-block-size');
-            }
-            panel.hidden = !next;
-            if (next) lower = raiseDatePanel(panel);
-            else {
-                lower();
-                lower = () => {};
+                // It closes as it opened, backwards, before it is hidden; meanwhile
+                // it takes no pointer or focus. The close reads the opening on the
+                // panel as it stands (`[data-kp-date-open]` still on it), so it plays
+                // that backwards instead of taking the opening's name as a close of
+                // its own and playing it forwards; the mark goes straight after.
+                panel.inert = true;
+                const closed = playClose(panel);
+                delete panel.dataset.kpDateOpen;
+                void closed.then((played) => {
+                    if (!played || wanted) return;
+                    // Hidden first, then out of the top layer: hidden, it has no box
+                    // for a second close to play on (js/motion.js).
+                    panel.hidden = true;
+                    lower();
+                    lower = () => {};
+                    panel.inert = false;
+                    stopClose(panel);
+                });
             }
             open.setAttribute('aria-expanded', String(next));
             if (next) focusCurrent();
@@ -597,7 +624,7 @@ export function attachDatePickers(
             if (refocus) input.focus();
         };
 
-        const onOpen = () => (panel.hidden ? show() : hide());
+        const onOpen = () => (wanted ? hide() : show());
 
         /** Typing is the primary path, so it updates the value on its own. */
         const onInput = () => commit(read(), 'typed');
@@ -716,6 +743,8 @@ export function attachDatePickers(
             panel.removeEventListener('keydown', onPanelKey);
             panel.removeEventListener('click', onPanelClick);
             picker.removeEventListener('focusout', onFocusOut);
+            stopClose(panel);
+            panel.inert = false;
             lower();
             panel.textContent = '';
             panel.style.removeProperty('min-inline-size');

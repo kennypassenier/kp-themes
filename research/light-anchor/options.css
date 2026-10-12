@@ -1,0 +1,1537 @@
+/* research/light-anchor: every candidate of the one question, in the
+   theme's signature layer. Colours come from the theme's tokens only; every
+   motion sits under prefers-reduced-motion: no-preference, and the reduced
+   pose is the finished picture (the bead at rest, the window open, the
+   shadow lifted). Durations are counted in units of the theme's beat
+   (--an-unit, 100 ms, set by demo.js) and multiplied by --an-slow (1, 2 or
+   4: the page's speed buttons).
+
+   SCOPE. The review dialog moves the section out of the page into its stage
+   (.rv-dialog__stage), so no rule here may hang on `.an-page`: the custom
+   properties and every rule hang on `.an-scene`, which moves with its
+   options (forest's demo lost every option animation in the dialog this way,
+   48bfa5b3).
+
+   THE CLOCK. One clock (demo.js) writes `data-an-phase` on every scene:
+   gap (the part is not drawn), in (8 units: it is drawn), hold (4 units: it
+   dwells, the press held, the drawing standing), out (8 units: the drawing played
+   backwards, the same keyframes mirrored, what drew last going first). The
+   base style of every part is its drawn pose (so reduced motion and hold
+   show the finished picture); `gap` sets the undrawn pose; `in` and `hold`
+   run the drawing, `out` runs its mirror. Mirrored keyframes are written
+   as a pair (`fm-x` and `fm-x-out`) so every close is its open reversed.
+
+   THE ANCHOR'S THREE PLACES. Each candidate draws itself in its own scene
+   (`.an-hero`), as a progress bar (`.an-bar`) and as a button press
+   (`.an-btn`); the press lands at 7 units (87.5 %) and is held through the
+   dwell, and is released as the first unit of `out`. */
+
+@layer kp.signature {
+    /* ── The scene ───────────────────────────────────────────────────── */
+
+    .an-scene {
+        --an-ink: var(--foreground);
+        --an-indigo: var(--primary);
+        --an-paper: var(--background);
+        /* One unit is the theme's beat; a loop is 22 units. */
+        --an-u: calc(var(--an-unit, 110ms) * var(--an-slow, 1));
+        --an-in: calc(8 * var(--an-u));
+        --an-loop: calc(22 * var(--an-u));
+        /* Light's own settle (--kp-ease-arrive) and the same curve played backwards (a curve's inverse is its point reflection), so a close on it is its open reversed.
+           Inside @keyframes a timing function is written out (a var() there is invalid and falls back to `ease`). */
+        --an-arrive: var(--kp-ease-arrive, cubic-bezier(0.16, 1, 0.3, 1));
+        --an-arrive-out: cubic-bezier(0.7, 0, 0.84, 0);
+        container-type: inline-size;
+        position: relative;
+        overflow: clip;
+        overflow-clip-margin: 0.75rem;
+        /* Nothing is translucent; the layout layer's busy dim stays off. */
+        --kp-busy-opacity: 1;
+    }
+
+    .an-scene .an-hero {
+        position: relative;
+        display: grid;
+        place-items: center;
+        min-block-size: clamp(13rem, 36cqi, 20rem);
+        padding: 1.25rem 0.5rem;
+    }
+
+    .an-scene .an-bar,
+    .an-scene .an-btn {
+        display: grid;
+        min-block-size: 6rem;
+    }
+
+    .an-scene .an-bar {
+        align-content: center;
+    }
+
+    .an-scene .an-btn {
+        place-items: center;
+    }
+
+    /* ── The building blocks every candidate draws with ──────────────── */
+
+    /* A part that is drawn: its end pose is its base style, its start pose
+       is set at `gap`, and `in` / `out` run the pair of keyframes. */
+    .an-scene .an-a--scale {
+        --an-kf: an-scale;
+        --an-kf-out: an-scale-out;
+        scale: var(--an-s1, 1) 1;
+        transform-origin: left center;
+    }
+
+    .an-scene .an-a--clip {
+        --an-kf: an-clip;
+        --an-kf-out: an-clip-out;
+        clip-path: inset(-1em var(--an-c1, 0%) -1em 0);
+    }
+
+    .an-scene .an-a--move {
+        --an-kf: an-move;
+        --an-kf-out: an-move-out;
+        translate: var(--an-x1, 0%) var(--an-y1, 0%);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .an-a--scale {
+            scale: var(--an-s0, 0) 1;
+        }
+
+        .an-scene[data-an-phase='gap'] .an-a--clip {
+            clip-path: inset(-1em var(--an-c0, 100%) -1em 0);
+        }
+
+        .an-scene[data-an-phase='gap'] .an-a--move {
+            translate: var(--an-x0, 0%) var(--an-y0, 0%);
+        }
+
+        .an-scene[data-an-phase='in'] .an-a,
+        .an-scene[data-an-phase='hold'] .an-a {
+            animation: var(--an-kf) calc(var(--an-l, 8) * var(--an-u)) var(--an-ease, linear) calc(var(--an-d, 0) * var(--an-u)) both;
+        }
+
+        /* The mirror starts as late as the drawing ended: what drew last
+           goes first. */
+        .an-scene[data-an-phase='out'] .an-a {
+            animation: var(--an-kf-out) calc(var(--an-l, 8) * var(--an-u)) var(--an-ease-out, var(--an-ease, linear))
+                calc((8 - var(--an-d, 0) - var(--an-l, 8)) * var(--an-u)) both;
+        }
+    }
+
+    @keyframes an-scale {
+        from {
+            scale: var(--an-s0, 0) 1;
+        }
+
+        to {
+            scale: var(--an-s1, 1) 1;
+        }
+    }
+
+    @keyframes an-scale-out {
+        from {
+            scale: var(--an-s1, 1) 1;
+        }
+
+        to {
+            scale: var(--an-s0, 0) 1;
+        }
+    }
+
+    @keyframes an-clip {
+        from {
+            clip-path: inset(-1em var(--an-c0, 100%) -1em 0);
+        }
+
+        to {
+            clip-path: inset(-1em var(--an-c1, 0%) -1em 0);
+        }
+    }
+
+    @keyframes an-clip-out {
+        from {
+            clip-path: inset(-1em var(--an-c1, 0%) -1em 0);
+        }
+
+        to {
+            clip-path: inset(-1em var(--an-c0, 100%) -1em 0);
+        }
+    }
+
+    @keyframes an-move {
+        from {
+            translate: var(--an-x0, 0%) var(--an-y0, 0%);
+        }
+
+        to {
+            translate: var(--an-x1, 0%) var(--an-y1, 0%);
+        }
+    }
+
+    @keyframes an-move-out {
+        from {
+            translate: var(--an-x1, 0%) var(--an-y1, 0%);
+        }
+
+        to {
+            translate: var(--an-x0, 0%) var(--an-y0, 0%);
+        }
+    }
+
+    /* The pressed face: the package's own pressed ground (`--secondary-active`),
+       landing late (7 units) and held. */
+    @keyframes an-face-late {
+        0%,
+        87.49% {
+            background-color: var(--secondary);
+        }
+
+        87.5%,
+        100% {
+            background-color: var(--secondary-active);
+        }
+    }
+
+    @keyframes an-face-late-out {
+        0%,
+        12.5% {
+            background-color: var(--secondary-active);
+        }
+
+        12.51%,
+        100% {
+            background-color: var(--secondary);
+        }
+    }
+
+    /* A button that is pressed at the end of the drawing: its base is the
+       pressed face; `gap` is the rest face. */
+    .an-scene .an-press {
+        position: relative;
+        background-color: var(--secondary-active);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .an-press {
+            background-color: var(--secondary);
+        }
+
+        .an-scene[data-an-phase='in'] .an-press,
+        .an-scene[data-an-phase='hold'] .an-press {
+            animation: var(--an-face, an-face-late) var(--an-in) linear both;
+        }
+
+        .an-scene[data-an-phase='out'] .an-press {
+            animation: var(--an-face-out, an-face-late-out) var(--an-in) linear both;
+        }
+    }
+
+    /* ── Light's plate, progress bar and press ───────────────────────── */
+
+    .an-scene {
+        /* The bead of the register's bar (0.75rem) at the size of the scene; every other size of the bar hangs on it. */
+        --lt-bead: clamp(0.75rem, 3cqi, 1.05rem);
+        --lt-ring: calc(var(--lt-bead) / 6);
+        /* The register's button at rest and settled toward the paper (its hover): translate 2px, the shadow tightened. */
+        --lt-rest: 0 0 0 0 transparent, 0 6px 14px hsl(from var(--foreground) h s l / 0.12);
+        --lt-pressed: 0 0 0 0 transparent, 0 2px 5px hsl(from var(--foreground) h s l / 0.2);
+    }
+
+    /* Light's plate: a white card on its softest shadow, a title and two
+       lines. Words wrap between words and never inside one. */
+    .an-scene .lt-card {
+        position: relative;
+        display: grid;
+        box-sizing: border-box;
+        gap: 0.3rem;
+        inline-size: min(100%, 26rem);
+        padding: clamp(1rem, 5.5cqi, 1.75rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: var(--card);
+        color: var(--card-foreground);
+        box-shadow: var(--kp-shadow-sm);
+    }
+
+    .an-scene .lt-card > * {
+        min-inline-size: 0;
+    }
+
+    .an-scene .lt-card__title {
+        margin: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: clamp(1.05rem, 4.6cqi, 1.45rem);
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        line-height: 1.3;
+    }
+
+    .an-scene .lt-card__line {
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: clamp(0.76rem, 3.1cqi, 1rem);
+        font-variant-numeric: tabular-nums;
+        line-height: 1.5;
+        overflow-wrap: normal;
+        text-wrap: balance;
+    }
+
+    /* Light's progress bar, drawn as the register draws it: a 2 px hairline
+       in --border, a 4 px indigo line clipped to the value, and at its head
+       a cyan bead ringed in white that turns indigo when the bar is full.
+       The line is entered in 7 units on --kp-ease-arrive; the head rides its
+       end (the ::after of the track) and settles in the eighth. */
+    .an-scene .lt-bar {
+        inline-size: 100%;
+    }
+
+    .an-scene .lt-bar__track {
+        position: relative;
+        display: block;
+        block-size: var(--lt-bead);
+        isolation: isolate;
+    }
+
+    .an-scene .lt-bar__track::before {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: calc(50% - var(--lt-ring) / 2);
+        block-size: var(--lt-ring);
+        background: var(--border);
+    }
+
+    .an-scene .lt-bar__track::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline-start: calc(100% - var(--lt-bead));
+        inline-size: var(--lt-bead);
+        block-size: var(--lt-bead);
+        border-radius: 50%;
+        background: var(--an-indigo);
+        box-shadow: inset 0 0 0 var(--lt-ring) var(--an-paper);
+    }
+
+    .an-scene .lt-bar__fill {
+        --an-kf: lt-fill;
+        --an-kf-out: lt-fill-out;
+        --an-l: 7;
+        --an-ease: var(--an-arrive);
+        --an-ease-out: var(--an-arrive-out);
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: calc(50% - var(--lt-bead) / 6);
+        block-size: calc(var(--lt-bead) / 3);
+        background: var(--an-indigo);
+        clip-path: inset(0 0 0 0 round 999px);
+    }
+
+    /* The head, for a bar whose line runs: from the start to the end in 7 units, cyan, indigo in the eighth. */
+    @keyframes lt-head {
+        0% {
+            inset-inline-start: 0;
+            background-color: var(--fx-signal);
+            animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        87.5% {
+            inset-inline-start: calc(100% - var(--lt-bead));
+            background-color: var(--fx-signal);
+            animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        100% {
+            inset-inline-start: calc(100% - var(--lt-bead));
+            background-color: var(--an-indigo);
+        }
+    }
+
+    @keyframes lt-head-out {
+        0% {
+            inset-inline-start: calc(100% - var(--lt-bead));
+            background-color: var(--an-indigo);
+            animation-timing-function: cubic-bezier(1, 0, 0.8, 1);
+        }
+
+        12.5% {
+            inset-inline-start: calc(100% - var(--lt-bead));
+            background-color: var(--fx-signal);
+            animation-timing-function: cubic-bezier(0.7, 0, 0.84, 0);
+        }
+
+        100% {
+            inset-inline-start: 0;
+            background-color: var(--fx-signal);
+        }
+    }
+
+    /* The same head on an even, unhurried pace (daylight's ease-in-out is its own inverse). */
+    @keyframes lt-head-day {
+        0% {
+            inset-inline-start: 0;
+            background-color: var(--fx-signal);
+            animation-timing-function: ease-in-out;
+        }
+
+        87.5% {
+            inset-inline-start: calc(100% - var(--lt-bead));
+            background-color: var(--fx-signal);
+            animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        100% {
+            inset-inline-start: calc(100% - var(--lt-bead));
+            background-color: var(--an-indigo);
+        }
+    }
+
+    @keyframes lt-head-day-out {
+        0% {
+            inset-inline-start: calc(100% - var(--lt-bead));
+            background-color: var(--an-indigo);
+            animation-timing-function: cubic-bezier(1, 0, 0.8, 1);
+        }
+
+        12.5% {
+            inset-inline-start: calc(100% - var(--lt-bead));
+            background-color: var(--fx-signal);
+            animation-timing-function: ease-in-out;
+        }
+
+        100% {
+            inset-inline-start: 0;
+            background-color: var(--fx-signal);
+        }
+    }
+
+    /* The head, for a bar that is full at its end: it lands there in the last two units. */
+    @keyframes lt-head-pop {
+        0%,
+        75% {
+            scale: 0;
+            animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        100% {
+            scale: 1;
+        }
+    }
+
+    @keyframes lt-head-pop-out {
+        0% {
+            scale: 1;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.84, 0);
+        }
+
+        25%,
+        100% {
+            scale: 0;
+        }
+    }
+
+    /* The line entered from the start; its close is the same keyframes mirrored. */
+    @keyframes lt-fill {
+        from {
+            clip-path: inset(0 100% 0 0 round 999px);
+        }
+
+        to {
+            clip-path: inset(0 0 0 0 round 999px);
+        }
+    }
+
+    @keyframes lt-fill-out {
+        from {
+            clip-path: inset(0 0 0 0 round 999px);
+        }
+
+        to {
+            clip-path: inset(0 100% 0 0 round 999px);
+        }
+    }
+
+    /* A part that lands: a disc popped from nothing. */
+    @keyframes lt-pop {
+        from {
+            scale: 0;
+        }
+
+        to {
+            scale: 1;
+        }
+    }
+
+    @keyframes lt-pop-out {
+        from {
+            scale: 1;
+        }
+
+        to {
+            scale: 0;
+        }
+    }
+
+    /* The press, as the register's button takes it: the pill settles 2 px
+       toward the paper and its shadow tightens (its hover), and the face
+       takes the package's pressed ground, all in the eighth unit and held.
+       The release is the same keyframes mirrored. A candidate's own gesture
+       rides on top of it, or replaces it where it draws the shadow itself. */
+    .an-scene .an-press {
+        --an-face: lt-press;
+        --an-face-out: lt-press-out;
+        isolation: isolate;
+        transition: none;
+        translate: 0 2px;
+        box-shadow: var(--lt-pressed);
+    }
+
+    .an-btn .kp-button {
+        max-inline-size: 100%;
+        padding-inline: clamp(1rem, 4cqi, 1.5rem);
+        font-size: clamp(0.85rem, 3.2cqi, 1rem);
+        white-space: nowrap;
+    }
+
+    .an-scene .an-btn .kp-button__label {
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .an-press {
+            translate: 0 0;
+            box-shadow: var(--lt-rest);
+        }
+
+        .an-scene[data-an-phase='in'] .lt-bar__track::after,
+        .an-scene[data-an-phase='hold'] .lt-bar__track::after {
+            animation: var(--lt-head, lt-head) calc(var(--lt-head-l, 8) * var(--an-u)) linear calc(var(--lt-head-d, 0) * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .lt-bar__track::after {
+            animation: var(--lt-head-out, lt-head-out) calc(var(--lt-head-l, 8) * var(--an-u)) linear
+                calc((8 - var(--lt-head-d, 0) - var(--lt-head-l, 8)) * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='gap'] .lt-bar__track::after {
+            inset-inline-start: 0;
+            background-color: var(--fx-signal);
+        }
+
+        .an-scene[data-an-phase='gap'] .lt-bar__fill {
+            clip-path: inset(0 100% 0 0 round 999px);
+        }
+    }
+
+    @keyframes lt-press {
+        0%,
+        87.5% {
+            background-color: var(--secondary);
+            translate: 0 0;
+            box-shadow: var(--lt-rest);
+            animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        100% {
+            background-color: var(--secondary-active);
+            translate: 0 2px;
+            box-shadow: var(--lt-pressed);
+        }
+    }
+
+    @keyframes lt-press-out {
+        0% {
+            background-color: var(--secondary-active);
+            translate: 0 2px;
+            box-shadow: var(--lt-pressed);
+            animation-timing-function: cubic-bezier(1, 0, 0.8, 1);
+        }
+
+        12.5%,
+        100% {
+            background-color: var(--secondary);
+            translate: 0 0;
+            box-shadow: var(--lt-rest);
+        }
+    }
+
+    /* ── 1 · The bead of light runs the seam ─────────────────────────── */
+
+    /* The card's seam (a 1 px hairline) sits under its title. A bead of
+       light, the cyan disc ringed in white and in indigo, runs it from the
+       start in 7 units on --kp-ease-arrive, and the seam behind it is lit
+       indigo (a 2 px line that ends under the bead); in the eighth the bead
+       settles as the open circle every divider carries (its fill goes
+       white, the indigo ring stays). At rest and under reduced motion the
+       bead stands at the end. The close runs the bead back and greys the
+       seam, the same keyframes mirrored. */
+    .an-scene .lt-b-card .lt-card__title {
+        order: 0;
+    }
+
+    .an-scene .lt-b-seam {
+        order: 1;
+        position: relative;
+        display: block;
+        block-size: var(--lt-bead);
+        margin-block: 0.5rem 0.65rem;
+    }
+
+    .an-scene .lt-b-seam::before {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: calc(50% - 0.5px);
+        block-size: 1px;
+        background: var(--border);
+    }
+
+    .an-scene .lt-b-card .lt-card__line {
+        order: 2;
+    }
+
+    .an-scene .lt-b-lit {
+        --an-l: 7;
+        --an-ease: var(--an-arrive);
+        --an-ease-out: var(--an-arrive-out);
+        position: absolute;
+        inset-inline: calc(var(--lt-bead) / 2);
+        inset-block-start: calc(50% - 1px);
+        block-size: 2px;
+        border-radius: 999px;
+        background: var(--an-indigo);
+    }
+
+    .an-scene .lt-b-bead {
+        --an-kf: lt-b-run;
+        --an-kf-out: lt-b-run-out;
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline-start: calc(100% - var(--lt-bead));
+        inline-size: var(--lt-bead);
+        block-size: var(--lt-bead);
+        border-radius: 50%;
+        background: var(--an-paper);
+        box-shadow:
+            inset 0 0 0 var(--lt-ring) var(--an-paper),
+            0 0 0 1.5px var(--an-indigo);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .lt-b-bead {
+            inset-inline-start: 0;
+            background: var(--fx-signal);
+        }
+    }
+
+    @keyframes lt-b-run {
+        0% {
+            inset-inline-start: 0;
+            background-color: var(--fx-signal);
+            animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        87.5% {
+            inset-inline-start: calc(100% - var(--lt-bead));
+            background-color: var(--fx-signal);
+            animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        100% {
+            inset-inline-start: calc(100% - var(--lt-bead));
+            background-color: var(--an-paper);
+        }
+    }
+
+    @keyframes lt-b-run-out {
+        0% {
+            inset-inline-start: calc(100% - var(--lt-bead));
+            background-color: var(--an-paper);
+            animation-timing-function: cubic-bezier(1, 0, 0.8, 1);
+        }
+
+        12.5% {
+            inset-inline-start: calc(100% - var(--lt-bead));
+            background-color: var(--fx-signal);
+            animation-timing-function: cubic-bezier(0.7, 0, 0.84, 0);
+        }
+
+        100% {
+            inset-inline-start: 0;
+            background-color: var(--fx-signal);
+        }
+    }
+
+    /* The bar is the register's bar with the bead as its own part: it runs
+       the line and turns indigo when the bar is full. */
+    .an-scene .lt-b-bar .lt-bar__track::after {
+        display: none;
+    }
+
+    .an-scene .lt-b-bar__bead {
+        --an-kf: lt-head;
+        --an-kf-out: lt-head-out;
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline-start: calc(100% - var(--lt-bead));
+        inline-size: var(--lt-bead);
+        block-size: var(--lt-bead);
+        border-radius: 50%;
+        background: var(--an-indigo);
+        box-shadow: inset 0 0 0 var(--lt-ring) var(--an-paper);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .lt-b-bar__bead {
+            inset-inline-start: 0;
+            background: var(--fx-signal);
+        }
+    }
+
+    /* The press: the pill settles and a bead of light lands on its end edge in the last unit. */
+    .an-scene .lt-b-dot {
+        --an-kf: lt-pop;
+        --an-kf-out: lt-pop-out;
+        --an-d: 7;
+        --an-l: 1;
+        --an-ease: var(--an-arrive);
+        --an-ease-out: var(--an-arrive-out);
+        position: absolute;
+        inset-block-start: calc(50% - 0.45rem);
+        inset-inline-end: -0.45rem;
+        inline-size: 0.9rem;
+        block-size: 0.9rem;
+        border-radius: 50%;
+        background: var(--fx-signal);
+        box-shadow:
+            inset 0 0 0 2px var(--an-paper),
+            0 0 0 1px var(--an-indigo);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .lt-b-dot {
+            scale: 0;
+        }
+    }
+
+    /* ── 2 · A window opens ──────────────────────────────────────────── */
+
+    /* The card is not faded in: a rounded slit at its centre opens to the
+       whole card in 7 units on --kp-ease-arrive, and is opaque by the second
+       (the register's dialog and toast). The clip reaches past the card by
+       its own shadow, so the open window loses nothing. The close shuts the
+       window to the slit. */
+    .an-scene .lt-w-card {
+        --an-kf: lt-w-open;
+        --an-kf-out: lt-w-open-out;
+        --an-l: 7;
+        --an-ease: var(--an-arrive);
+        --an-ease-out: var(--an-arrive-out);
+        --lt-wr: calc(var(--radius) + 0.75rem);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .lt-w-card {
+            opacity: 0;
+            clip-path: inset(42% 34% round var(--lt-wr));
+        }
+
+        .an-scene[data-an-phase='gap'] .lt-w-bar .lt-bar__fill {
+            clip-path: inset(0 50% 0 50% round 999px);
+        }
+
+        .an-scene[data-an-phase='gap'] .lt-w-slit {
+            scale: 0 1;
+        }
+    }
+
+    @keyframes lt-w-open {
+        from {
+            opacity: 0;
+            clip-path: inset(42% 34% round var(--lt-wr));
+        }
+
+        28.5% {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 1;
+            clip-path: inset(-0.75rem round var(--lt-wr));
+        }
+    }
+
+    @keyframes lt-w-open-out {
+        from {
+            opacity: 1;
+            clip-path: inset(-0.75rem round var(--lt-wr));
+        }
+
+        71.5% {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+            clip-path: inset(42% 34% round var(--lt-wr));
+        }
+    }
+
+    /* The bar: the line opens from its middle outward; the head lands at the end. */
+    .an-scene .lt-w-bar {
+        --lt-head: lt-head-pop;
+        --lt-head-out: lt-head-pop-out;
+    }
+
+    .an-scene .lt-w-bar .lt-bar__fill {
+        --an-kf: lt-w-fill;
+        --an-kf-out: lt-w-fill-out;
+    }
+
+    @keyframes lt-w-fill {
+        from {
+            clip-path: inset(0 50% 0 50% round 999px);
+        }
+
+        to {
+            clip-path: inset(0 0 0 0 round 999px);
+        }
+    }
+
+    @keyframes lt-w-fill-out {
+        from {
+            clip-path: inset(0 0 0 0 round 999px);
+        }
+
+        to {
+            clip-path: inset(0 50% 0 50% round 999px);
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .lt-w-bar .lt-bar__track::after {
+            inset-inline-start: calc(100% - var(--lt-bead));
+            background-color: var(--an-indigo);
+            scale: 0;
+        }
+    }
+
+    /* The press: a thin slit of white light opens across the pill's middle, under the label, in the last unit. */
+    .an-scene .lt-w-slit {
+        --an-d: 7;
+        --an-l: 1;
+        --an-ease: var(--an-arrive);
+        --an-ease-out: var(--an-arrive-out);
+        position: absolute;
+        z-index: -1;
+        inset-inline: 0.7rem;
+        inset-block-start: calc(50% - 1.5px);
+        block-size: 3px;
+        border-radius: 999px;
+        background: hsl(from var(--an-paper) h s l / 0.9);
+        box-shadow: 0 0 6px hsl(from var(--an-paper) h s l / 0.9);
+        transform-origin: center;
+    }
+
+    /* ── 3 · The highlighter reads it ────────────────────────────────── */
+
+    /* A pale-cyan highlighter (--accent, 0.25 em radius, one box per line
+       box) is drawn behind each line from the start on --kp-ease-arrive
+       (the register's mark sweep): the title in 3 units, the lines from the
+       second to the fifth and from the fourth to the seventh; the words it
+       has passed turn from muted to full ink. The close lifts it last line
+       first. */
+    .an-scene .lt-h-card .lt-card__title {
+        padding-inline: 0.3em;
+        margin-inline: -0.3em;
+    }
+
+    .an-scene .lt-h-mark {
+        --an-kf: lt-h-sweep;
+        --an-kf-out: lt-h-sweep-out;
+        --an-l: 3;
+        --an-ease: var(--an-arrive);
+        --an-ease-out: var(--an-arrive-out);
+        padding: 0.08em 0.3em;
+        margin-inline: -0.3em;
+        border-radius: 0.25em;
+        background: linear-gradient(var(--accent) 0 0) 0 50% / 100% 100% no-repeat;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
+        color: var(--foreground);
+    }
+
+    .an-scene .lt-h-card > :nth-child(2) .lt-h-mark {
+        --an-d: 2;
+    }
+
+    .an-scene .lt-h-card > :nth-child(3) .lt-h-mark {
+        --an-d: 4;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .lt-h-mark {
+            background-size: 0% 100%;
+            color: var(--muted-foreground);
+        }
+    }
+
+    @keyframes lt-h-sweep {
+        from {
+            background-size: 0% 100%;
+            color: var(--muted-foreground);
+        }
+
+        to {
+            background-size: 100% 100%;
+            color: var(--foreground);
+        }
+    }
+
+    @keyframes lt-h-sweep-out {
+        from {
+            background-size: 100% 100%;
+            color: var(--foreground);
+        }
+
+        to {
+            background-size: 0% 100%;
+            color: var(--muted-foreground);
+        }
+    }
+
+    /* The bar: the track is highlighted a unit ahead of the indigo line. */
+    .an-scene .lt-h-bar__wash {
+        --an-kf: lt-fill;
+        --an-kf-out: lt-fill-out;
+        --an-d: 0;
+        --an-l: 6;
+        --an-ease: var(--an-arrive);
+        --an-ease-out: var(--an-arrive-out);
+        position: absolute;
+        z-index: -1;
+        inset-inline: 0;
+        inset-block: 0;
+        background: var(--accent);
+        clip-path: inset(0 0 0 0 round 999px);
+    }
+
+    .an-scene .lt-h-bar .lt-bar__fill {
+        --an-d: 1;
+        --an-l: 6;
+    }
+
+    .an-scene .lt-h-bar {
+        --lt-head-d: 1;
+        --lt-head-l: 7;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .lt-h-bar__wash {
+            clip-path: inset(0 100% 0 0 round 999px);
+        }
+    }
+
+    /* The press: the highlighter sweeps across the pill's face, under the label, in the last unit. */
+    .an-scene .lt-h-wash {
+        --an-d: 7;
+        --an-l: 1;
+        --an-ease: var(--an-arrive);
+        --an-ease-out: var(--an-arrive-out);
+        position: absolute;
+        z-index: -1;
+        inset: 0;
+        border-radius: inherit;
+        background: var(--accent);
+    }
+
+    /* ── 4 · Daylight crosses it ─────────────────────────────────────── */
+
+    /* The card lies in grey. A band of daylight (the register's meter band,
+       a soft cyan wash in a third of the width) comes over it from before its
+       start to past its end in 7 units, ease-in-out (its own inverse, so the
+       close is the band coming back), and the card is left white with its
+       edge lit. The band goes behind the words. */
+    .an-scene .lt-d-card {
+        overflow: clip;
+        isolation: isolate;
+        border-color: hsl(from var(--fx-signal) h s l / 0.3);
+    }
+
+    .an-scene .lt-d-band,
+    .an-scene .lt-d-bar__band,
+    .an-scene .lt-d-press__band {
+        --an-l: 7;
+        --an-ease: ease-in-out;
+        --an-ease-out: ease-in-out;
+        --an-x0: -100%;
+        position: absolute;
+        z-index: -1;
+        inset-block: 0;
+        inset-inline-start: 0;
+        background: linear-gradient(90deg, transparent, hsl(from var(--fx-signal) h s l / 0.3) 60%, transparent);
+    }
+
+    .an-scene .lt-d-band {
+        --an-x1: 286%;
+        inline-size: 35%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .lt-d-card {
+            background-color: var(--muted);
+            border-color: var(--border);
+        }
+
+        .an-scene[data-an-phase='in'] .lt-d-card,
+        .an-scene[data-an-phase='hold'] .lt-d-card {
+            animation: lt-d-lit var(--an-in) linear both;
+        }
+
+        .an-scene[data-an-phase='out'] .lt-d-card {
+            animation: lt-d-lit-out var(--an-in) linear both;
+        }
+    }
+
+    @keyframes lt-d-lit {
+        0% {
+            background-color: var(--muted);
+            border-color: var(--border);
+            animation-timing-function: ease-in-out;
+        }
+
+        87.5% {
+            background-color: var(--card);
+            border-color: var(--border);
+        }
+
+        100% {
+            background-color: var(--card);
+            border-color: hsl(from var(--fx-signal) h s l / 0.3);
+        }
+    }
+
+    @keyframes lt-d-lit-out {
+        0% {
+            background-color: var(--card);
+            border-color: hsl(from var(--fx-signal) h s l / 0.3);
+        }
+
+        12.5% {
+            background-color: var(--card);
+            border-color: var(--border);
+            animation-timing-function: ease-in-out;
+        }
+
+        100% {
+            background-color: var(--muted);
+            border-color: var(--border);
+        }
+    }
+
+    /* The bar: the band crosses the track and the indigo line is left behind it. */
+    .an-scene .lt-d-bar {
+        --lt-head: lt-head-day;
+        --lt-head-out: lt-head-day-out;
+    }
+
+    .an-scene .lt-d-bar .lt-bar__track {
+        overflow: clip;
+    }
+
+    .an-scene .lt-d-bar .lt-bar__fill {
+        --an-ease: ease-in-out;
+        --an-ease-out: ease-in-out;
+    }
+
+    .an-scene .lt-d-bar__band {
+        --an-x1: 286%;
+        inline-size: 35%;
+    }
+
+    /* The press: the band crosses the pill in the last unit. */
+    .an-scene .lt-d-press {
+        overflow: clip;
+    }
+
+    .an-scene .lt-d-press__band {
+        --an-d: 7;
+        --an-l: 1;
+        --an-ease: linear;
+        --an-ease-out: linear;
+        --an-x1: 230%;
+        inline-size: 45%;
+    }
+
+    /* ── 5 · Overexposed: out of the glare ───────────────────────────── */
+
+    /* The card is first a glare, blurred and too bright, and comes down into
+       focus and into its own white in 6 units on --kp-ease-arrive, rising the
+       8 px it leaves by (the register's arrival and leave, reversed); a
+       breath of the cyan that is light itself goes out with the blur. The
+       hold is crisp (no filter left). The close goes back into the glare. */
+    .an-scene .lt-g-card {
+        --an-kf: lt-g-bloom;
+        --an-kf-out: lt-g-bloom-out;
+        --an-l: 6;
+        --an-ease: var(--an-arrive);
+        --an-ease-out: var(--an-arrive-out);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .lt-g-card {
+            opacity: 0;
+            translate: 0 -8px;
+            filter: blur(4px) brightness(1.4) drop-shadow(0 0 1.2rem hsl(from var(--fx-signal) h s l / 0.55));
+        }
+
+        .an-scene[data-an-phase='gap'] .lt-g-bar .lt-bar__fill {
+            filter: blur(3px) brightness(1.6);
+        }
+    }
+
+    @keyframes lt-g-bloom {
+        from {
+            opacity: 0;
+            translate: 0 -8px;
+            filter: blur(4px) brightness(1.4) drop-shadow(0 0 1.2rem hsl(from var(--fx-signal) h s l / 0.55));
+        }
+
+        to {
+            opacity: 1;
+            translate: 0 0;
+            filter: blur(0) brightness(1) drop-shadow(0 0 0 hsl(from var(--fx-signal) h s l / 0));
+        }
+    }
+
+    @keyframes lt-g-bloom-out {
+        from {
+            opacity: 1;
+            translate: 0 0;
+            filter: blur(0) brightness(1) drop-shadow(0 0 0 hsl(from var(--fx-signal) h s l / 0));
+        }
+
+        to {
+            opacity: 0;
+            translate: 0 -8px;
+            filter: blur(4px) brightness(1.4) drop-shadow(0 0 1.2rem hsl(from var(--fx-signal) h s l / 0.55));
+        }
+    }
+
+    /* The bar: the line comes out of the glare (brightness 1.6, blur 3 px) as it clips in. */
+    .an-scene .lt-g-bar .lt-bar__fill {
+        --an-kf: lt-g-fill;
+        --an-kf-out: lt-g-fill-out;
+    }
+
+    @keyframes lt-g-fill {
+        from {
+            clip-path: inset(0 100% 0 0 round 999px);
+            filter: blur(3px) brightness(1.6);
+        }
+
+        to {
+            clip-path: inset(0 0 0 0 round 999px);
+            filter: blur(0) brightness(1);
+        }
+    }
+
+    @keyframes lt-g-fill-out {
+        from {
+            clip-path: inset(0 0 0 0 round 999px);
+            filter: blur(0) brightness(1);
+        }
+
+        to {
+            clip-path: inset(0 100% 0 0 round 999px);
+            filter: blur(3px) brightness(1.6);
+        }
+    }
+
+    /* The press: the face overexposes (brightness, a white inner glow) as the press lands at 7 units, and settles to the pressed face by the eighth. */
+    .an-scene .lt-g-press {
+        --an-face: lt-g-press;
+        --an-face-out: lt-g-press-out;
+    }
+
+    @keyframes lt-g-press {
+        0%,
+        75% {
+            background-color: var(--secondary);
+            translate: 0 0;
+            filter: brightness(1);
+            box-shadow:
+                var(--lt-rest),
+                inset 0 0 0 0 transparent;
+            animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        87.5% {
+            background-color: var(--secondary);
+            translate: 0 1px;
+            filter: brightness(1.3);
+            box-shadow:
+                var(--lt-rest),
+                inset 0 0 1rem 0.15rem hsl(from var(--an-paper) h s l / 0.95);
+            animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        100% {
+            background-color: var(--secondary-active);
+            translate: 0 2px;
+            filter: brightness(1);
+            box-shadow:
+                var(--lt-pressed),
+                inset 0 0 0 0 transparent;
+        }
+    }
+
+    @keyframes lt-g-press-out {
+        0% {
+            background-color: var(--secondary-active);
+            translate: 0 2px;
+            filter: brightness(1);
+            box-shadow:
+                var(--lt-pressed),
+                inset 0 0 0 0 transparent;
+            animation-timing-function: cubic-bezier(1, 0, 0.8, 1);
+        }
+
+        12.5% {
+            background-color: var(--secondary);
+            translate: 0 1px;
+            filter: brightness(1.3);
+            box-shadow:
+                var(--lt-rest),
+                inset 0 0 1rem 0.15rem hsl(from var(--an-paper) h s l / 0.95);
+            animation-timing-function: cubic-bezier(1, 0, 0.8, 1);
+        }
+
+        25%,
+        100% {
+            background-color: var(--secondary);
+            translate: 0 0;
+            filter: brightness(1);
+            box-shadow:
+                var(--lt-rest),
+                inset 0 0 0 0 transparent;
+        }
+    }
+
+    /* ── 6 · A ring of light settles on it ───────────────────────────── */
+
+    /* A ring of cyan light blooms up out of the card's centre to 9 px outside
+       its edge (5 units, --kp-ease-arrive) and tightens onto the edge (5 to
+       7), where it stays: the card is ringed in light. The close loosens it
+       and takes it back into the centre. */
+    .an-scene .lt-r-ring {
+        --an-kf: lt-r-ring;
+        --an-kf-out: lt-r-ring-out;
+        --an-l: 7;
+        position: absolute;
+        inset: -3px;
+        border: 2px solid var(--fx-signal);
+        border-radius: calc(var(--radius) + 3px);
+        box-shadow: 0 0 0.9rem hsl(from var(--fx-signal) h s l / 0.35);
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .lt-r-ring {
+            inset: 36% 28%;
+            border-radius: 4rem;
+            box-shadow: 0 0 0 hsl(from var(--fx-signal) h s l / 0);
+            opacity: 0;
+        }
+    }
+
+    @keyframes lt-r-ring {
+        0% {
+            inset: 36% 28%;
+            border-radius: 4rem;
+            box-shadow: 0 0 0 hsl(from var(--fx-signal) h s l / 0);
+            opacity: 0;
+            animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        71.5% {
+            inset: -9px;
+            border-radius: calc(var(--radius) + 9px);
+            box-shadow: 0 0 0.9rem hsl(from var(--fx-signal) h s l / 0.35);
+            opacity: 1;
+            animation-timing-function: ease-in-out;
+        }
+
+        100% {
+            inset: -3px;
+            border-radius: calc(var(--radius) + 3px);
+            box-shadow: 0 0 0.9rem hsl(from var(--fx-signal) h s l / 0.35);
+            opacity: 1;
+        }
+    }
+
+    @keyframes lt-r-ring-out {
+        0% {
+            inset: -3px;
+            border-radius: calc(var(--radius) + 3px);
+            box-shadow: 0 0 0.9rem hsl(from var(--fx-signal) h s l / 0.35);
+            opacity: 1;
+            animation-timing-function: ease-in-out;
+        }
+
+        28.5% {
+            inset: -9px;
+            border-radius: calc(var(--radius) + 9px);
+            box-shadow: 0 0 0.9rem hsl(from var(--fx-signal) h s l / 0.35);
+            opacity: 1;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.84, 0);
+        }
+
+        100% {
+            inset: 36% 28%;
+            border-radius: 4rem;
+            box-shadow: 0 0 0 hsl(from var(--fx-signal) h s l / 0);
+            opacity: 0;
+        }
+    }
+
+    /* The bar: the head lands, then a ring of light opens round it and settles where the line ends. */
+    .an-scene .lt-r-bar {
+        --lt-head: lt-head-pop;
+        --lt-head-out: lt-head-pop-out;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .lt-r-bar .lt-bar__track::after {
+            inset-inline-start: calc(100% - var(--lt-bead));
+            background-color: var(--an-indigo);
+            scale: 0;
+        }
+    }
+
+    .an-scene .lt-r-bar__ring {
+        --an-kf: lt-r-pulse;
+        --an-kf-out: lt-r-pulse-out;
+        --an-d: 5;
+        --an-l: 3;
+        position: absolute;
+        inset-block-start: calc(50% - var(--lt-bead));
+        inset-inline-end: calc(var(--lt-bead) / -2);
+        inline-size: calc(var(--lt-bead) * 2);
+        block-size: calc(var(--lt-bead) * 2);
+        border: var(--lt-ring) solid var(--fx-signal);
+        border-radius: 50%;
+        box-shadow: 0 0 0.6rem hsl(from var(--fx-signal) h s l / 0.35);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .lt-r-bar__ring {
+            scale: 0.5;
+            opacity: 0;
+        }
+    }
+
+    @keyframes lt-r-pulse {
+        0% {
+            scale: 0.5;
+            opacity: 0;
+            animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        55% {
+            scale: 1.3;
+            opacity: 1;
+            animation-timing-function: ease-in-out;
+        }
+
+        100% {
+            scale: 1;
+            opacity: 1;
+        }
+    }
+
+    @keyframes lt-r-pulse-out {
+        0% {
+            scale: 1;
+            opacity: 1;
+            animation-timing-function: ease-in-out;
+        }
+
+        45% {
+            scale: 1.3;
+            opacity: 1;
+            animation-timing-function: cubic-bezier(0.7, 0, 0.84, 0);
+        }
+
+        100% {
+            scale: 0.5;
+            opacity: 0;
+        }
+    }
+
+    /* The press: the ring blooms from the pill (6 to 7 units) and tightens onto it (7 to 8) as the pill settles. */
+    .an-scene .lt-r-press {
+        --an-face: lt-r-press;
+        --an-face-out: lt-r-press-out;
+        box-shadow:
+            0 0 0 2px var(--fx-signal),
+            0 2px 5px hsl(from var(--foreground) h s l / 0.2);
+    }
+
+    @keyframes lt-r-press {
+        0%,
+        75% {
+            background-color: var(--secondary);
+            translate: 0 0;
+            box-shadow:
+                0 0 0 0 hsl(from var(--fx-signal) h s l / 0),
+                0 6px 14px hsl(from var(--foreground) h s l / 0.12);
+            animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        87.5% {
+            background-color: var(--secondary);
+            translate: 0 0;
+            box-shadow:
+                0 0 0 7px hsl(from var(--fx-signal) h s l / 0.6),
+                0 6px 14px hsl(from var(--foreground) h s l / 0.12);
+            animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        100% {
+            background-color: var(--secondary-active);
+            translate: 0 2px;
+            box-shadow:
+                0 0 0 2px var(--fx-signal),
+                0 2px 5px hsl(from var(--foreground) h s l / 0.2);
+        }
+    }
+
+    @keyframes lt-r-press-out {
+        0% {
+            background-color: var(--secondary-active);
+            translate: 0 2px;
+            box-shadow:
+                0 0 0 2px var(--fx-signal),
+                0 2px 5px hsl(from var(--foreground) h s l / 0.2);
+            animation-timing-function: cubic-bezier(1, 0, 0.8, 1);
+        }
+
+        12.5% {
+            background-color: var(--secondary);
+            translate: 0 0;
+            box-shadow:
+                0 0 0 7px hsl(from var(--fx-signal) h s l / 0.6),
+                0 6px 14px hsl(from var(--foreground) h s l / 0.12);
+            animation-timing-function: cubic-bezier(0.7, 0, 0.84, 0);
+        }
+
+        25%,
+        100% {
+            background-color: var(--secondary);
+            translate: 0 0;
+            box-shadow:
+                0 0 0 0 hsl(from var(--fx-signal) h s l / 0),
+                0 6px 14px hsl(from var(--foreground) h s l / 0.12);
+        }
+    }
+
+    /* ── 7 · The shadow lifts ────────────────────────────────────────── */
+
+    /* The card is lifted off the white paper: it rises 6 px while its shadow
+       grows from the softest step to the deepest (--kp-shadow-sm to -lg) in
+       5 units on --kp-ease-arrive, and stays lifted. The close sets it back
+       down. */
+    .an-scene .lt-s-hero {
+        padding-block-end: 2.5rem;
+    }
+
+    .an-scene .lt-s-card {
+        --an-kf: lt-s-lift;
+        --an-kf-out: lt-s-lift-out;
+        --an-l: 5;
+        --an-ease: var(--an-arrive);
+        --an-ease-out: var(--an-arrive-out);
+        translate: 0 -6px;
+        box-shadow: var(--kp-shadow-lg);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .lt-s-card {
+            translate: 0 0;
+            box-shadow: var(--kp-shadow-sm);
+        }
+
+        .an-scene[data-an-phase='gap'] .lt-s-bar .lt-bar__fill {
+            filter: drop-shadow(0 0 0 hsl(from var(--foreground) h s l / 0));
+        }
+    }
+
+    @keyframes lt-s-lift {
+        from {
+            translate: 0 0;
+            box-shadow: var(--kp-shadow-sm);
+        }
+
+        to {
+            translate: 0 -6px;
+            box-shadow: var(--kp-shadow-lg);
+        }
+    }
+
+    @keyframes lt-s-lift-out {
+        from {
+            translate: 0 -6px;
+            box-shadow: var(--kp-shadow-lg);
+        }
+
+        to {
+            translate: 0 0;
+            box-shadow: var(--kp-shadow-sm);
+        }
+    }
+
+    /* The bar: the indigo line gains a soft shadow under it as it fills. The clip reaches past the line so the shadow is not cut. */
+    .an-scene .lt-s-bar .lt-bar__fill {
+        --an-kf: lt-s-fill;
+        --an-kf-out: lt-s-fill-out;
+        clip-path: inset(-12px 0 -12px 0 round 999px);
+        filter: drop-shadow(0 5px 3px hsl(from var(--foreground) h s l / 0.38));
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .lt-s-bar .lt-bar__fill {
+            clip-path: inset(-12px 100% -12px 0 round 999px);
+        }
+    }
+
+    @keyframes lt-s-fill {
+        from {
+            clip-path: inset(-12px 100% -12px 0 round 999px);
+            filter: drop-shadow(0 0 0 hsl(from var(--foreground) h s l / 0));
+        }
+
+        to {
+            clip-path: inset(-12px 0 -12px 0 round 999px);
+            filter: drop-shadow(0 5px 3px hsl(from var(--foreground) h s l / 0.38));
+        }
+    }
+
+    @keyframes lt-s-fill-out {
+        from {
+            clip-path: inset(-12px 0 -12px 0 round 999px);
+            filter: drop-shadow(0 5px 3px hsl(from var(--foreground) h s l / 0.38));
+        }
+
+        to {
+            clip-path: inset(-12px 100% -12px 0 round 999px);
+            filter: drop-shadow(0 0 0 hsl(from var(--foreground) h s l / 0));
+        }
+    }
+}

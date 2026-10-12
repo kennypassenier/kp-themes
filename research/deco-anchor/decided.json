@@ -1,0 +1,9 @@
+{
+    "decided": "2026-10-08 Brussels, Kenny: 1 of 1 approved in the review dialog (research/deco-anchor/README.md): Deco's anchor element = The fan opens (recommended); and the progress bar is to be redone (\"I'm really not a fan of the progress bar btw, that needs to be redone for sure\")",
+    "attributes": "the ANCHORS keys in research/deco-anchor/anchors.js; the scenes in research/deco-anchor/options.css",
+    "picks": {
+        "deco": {
+            "anchor": "fan"
+        }
+    }
+}

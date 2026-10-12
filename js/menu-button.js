@@ -39,7 +39,7 @@
 
 import { resolveStrings } from './strings.js';
 import { playClose, stopClose } from './motion.js';
-import { raiseOverlay } from './top-layer.js';
+import { layoutRect, raiseOverlay } from './top-layer.js';
 
 /** A menu button's wrapper: a button, then its `[role=menu]`. */
 export const MENU_BUTTON = '[data-kp-menu-button]';
@@ -484,7 +484,7 @@ function clipped(wrapper, view) {
  */
 function raiseMenu(s, view) {
     if (!clipped(s.wrapper, view)) return;
-    const box = s.menu.getBoundingClientRect();
+    const box = layoutRect(s.menu);
     const button = s.button.getBoundingClientRect();
     const dx = box.left - button.left;
     const dy = box.top - button.top;
@@ -538,7 +538,9 @@ function placeMenu(s, view, covered) {
         room.left = MENU_GUTTER;
         room.right = html.clientWidth - MENU_GUTTER;
     }
-    const box = menu.getBoundingClientRect();
+    // Measured where the layout put it: a theme's arrival may still be
+    // drawing it elsewhere on this frame (forest's growth, layoutRect).
+    const box = layoutRect(menu);
     const style = view.getComputedStyle(menu);
     const cap = parseFloat(style.maxBlockSize);
     const borders = box.height - menu.clientHeight;

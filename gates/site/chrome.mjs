@@ -70,7 +70,6 @@ ${noFlashSnippet()}
              is not that theme, which is what KT8 is about. The showcase
              loaded them all along; these pages did not. -->
         <link rel="stylesheet" href="${up}css/cyberpunk-register.css" />
-        <link rel="stylesheet" href="${up}css/retro-register.css" />
         <link rel="stylesheet" href="${up}css/synthwave-register.css" />
         <link rel="stylesheet" href="${up}css/phantom-register.css" />
         <link rel="stylesheet" href="${up}css/terminal-register.css" />
@@ -85,9 +84,7 @@ ${noFlashSnippet()}
         <link rel="stylesheet" href="${up}css/nostromo-register.css" />
         <link rel="stylesheet" href="${up}css/dark-register.css" />
         <link rel="stylesheet" href="${up}css/formal-register.css" />
-        <link rel="stylesheet" href="${up}css/sepia-register.css" />
         <link rel="stylesheet" href="${up}css/solstice-register.css" />
-        <link rel="stylesheet" href="${up}css/high-contrast-register.css" />
         <link rel="stylesheet" href="${up}site/site.css" />
     </head>
     <body>

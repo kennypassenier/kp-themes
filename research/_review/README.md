@@ -6,12 +6,12 @@ copy one structured answer back into the conversation [scope-141].
 ## Opting in
 
 ```html
-<html lang="en" data-review="my-topic" data-review-themes="formal,retro">
+<html lang="en" data-review="my-topic" data-review-themes="formal,deco">
     …
     <section data-review-item="spinner" data-review-title="Spinner">
         <div data-review-look>
             <p data-for="formal">What to look at in formal.</p>
-            <p data-for="retro">What to look at in retro.</p>
+            <p data-for="deco">What to look at in deco.</p>
         </div>
         …
     </section>
@@ -33,7 +33,7 @@ catalogue page itself):
         {
             "page": "catalogue/field.html",
             "block": "choices",
-            "theme": "retro",
+            "theme": "deco",
             "engine": "firefox",
             "title": "Fields › Choices",
             "look": "What changed."
@@ -62,7 +62,7 @@ Demo review · signature-elements · 228 of 228 judged, 227 approved, 1 not appr
 Approved in full: formal, light, dark, …
 
 Catalogue pairs approved:
-- field--choices · retro · firefox
+- field--choices · deco · firefox
 
 Not approved:
 - switch · light: the thumb is too small

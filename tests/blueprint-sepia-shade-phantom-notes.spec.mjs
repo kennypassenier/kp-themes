@@ -10,7 +10,7 @@
 //      de linkerbovenhoek?" The register printed `⌐` — one corner of the
 //      measurement frame — before each claim. Now each claim stands in the
 //      whole frame: four corner brackets, on its own box.
-//   2. sepia, `table--datatable-states`: "De 'Try again' tekst in die knop
+//   2. sepia (theme removed 2026-10-08; its test went with it), `table--datatable-states`: "De 'Try again' tekst in die knop
 //      moet hier in het wit zijn." The retry button is transparent over the
 //      destructive plate and took `--foreground`, dark brown on red.
 //   3. Shade (light), `button--variants`: "de primary knop heeft geen
@@ -85,20 +85,6 @@ const paint = (/** @type {import('@playwright/test').Page} */ page, /** @type {s
         probe.remove();
         return value;
     }, token);
-
-/** WCAG contrast of two `rgb()` strings. */
-function contrast(/** @type {string} */ a, /** @type {string} */ b) {
-    const channels = (/** @type {string} */ s) => (s.match(/[\d.]+/g) ?? []).slice(0, 3).map(Number);
-    const luminance = (/** @type {number[]} */ c) => {
-        const [r, g, bl] = c.map((v) => {
-            const n = v / 255;
-            return n <= 0.04045 ? n / 12.92 : ((n + 0.055) / 1.055) ** 2.4;
-        });
-        return 0.2126 * r + 0.7152 * g + 0.0722 * bl;
-    };
-    const [hi, lo] = [luminance(channels(a)), luminance(channels(b))].sort((m, n) => n - m);
-    return (hi + 0.05) / (lo + 0.05);
-}
 
 /**
  * The paint of a page rectangle, as device pixels.
@@ -235,42 +221,6 @@ test.describe('blueprint: the laurels stand in the measure frame [scope-107]', {
             }
         }
         expect(found, found.join('\n')).toEqual([]);
-    });
-});
-
-test.describe('sepia: the failed data table’s Try again [scope-107]', { tag: ['@theme:sepia', '@component:datatable'] }, () => {
-    test('Try again reads white on the destructive plate, and nothing else on an alert does', async ({ page }) => {
-        await open(page, '/catalogue/table.html', 'sepia');
-        const measured = await page.evaluate(() => {
-            // The failed table's own slot: since fix-85 every table carries a
-            // hidden failed slot of its own, the loading ones too.
-            const button = /** @type {HTMLElement} */ (
-                document.querySelector('#datatable-states [data-kp-state="failed"] [data-kp-datatable-retry]')
-            );
-            const alert = /** @type {HTMLElement} */ (button.closest('[data-kp-datatable-failed]'));
-            const own = getComputedStyle(button);
-            return {
-                ink: own.color,
-                ownGround: own.backgroundColor,
-                plate: getComputedStyle(alert).backgroundColor,
-                labelInk: getComputedStyle(/** @type {HTMLElement} */ (alert.querySelector('.kp-alert__label'))).color,
-            };
-        });
-        const white = await paint(page, '--destructive-foreground');
-        const pageInk = await paint(page, '--foreground');
-
-        // The button draws no plate of its own in this register, at rest or
-        // otherwise, so the ground under its label is the alert's.
-        expect(measured.ownGround, 'the retry button is transparent over the plate').toBe('rgba(0, 0, 0, 0)');
-        expect(measured.ink, 'the label is the plate’s own ink, not the page’s').toBe(white);
-        expect(measured.ink, 'the label is not the page ink Kenny rejected').not.toBe(pageInk);
-
-        const now = contrast(measured.ink, measured.plate);
-        const before = contrast(pageInk, measured.plate);
-        expect(before, `the rejected ink measured ${before.toFixed(2)}:1 on the plate`).toBeLessThan(3);
-        expect(now, `Try again measures ${now.toFixed(2)}:1 on the plate`).toBeGreaterThanOrEqual(4.5);
-        // It reads exactly as loud as the alert's own label beside it.
-        expect(measured.ink).toBe(measured.labelInk);
     });
 });
 

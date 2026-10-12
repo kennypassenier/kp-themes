@@ -11,8 +11,6 @@
 
     /* ── while loading ──────────────────────────────────────────────── */
 
-    @media (prefers-reduced-motion: no-preference) {
-    }
     @keyframes sd-hatch {
         0% {
             clip-path: inset(0 100% 0 0);
@@ -25,8 +23,6 @@
         }
     }
 
-    @media (prefers-reduced-motion: no-preference) {
-    }
     @keyframes sd-lamp-swell {
         0%,
         100% {
@@ -37,8 +33,6 @@
         }
     }
 
-    @media (prefers-reduced-motion: no-preference) {
-    }
     @keyframes sd-candle {
         0%,
         100% {
@@ -57,8 +51,6 @@
 
     /* ── how the tiles arrive ───────────────────────────────────────── */
 
-    @media (prefers-reduced-motion: no-preference) {
-    }
     @keyframes sd-arrive-silver {
         from {
             transform: translateX(-0.8rem);
@@ -82,8 +74,6 @@
 
     /* ── live update ────────────────────────────────────────────────── */
 
-    @media (prefers-reduced-motion: no-preference) {
-    }
     @keyframes sd-live-glint {
         0%,
         100% {
@@ -114,87 +104,6 @@
         }
     }
 
-    /* ════════════════════════════════════════════════════════════════
-       retro — Windows 95: grey chrome bevels, a phosphor monitor, a
-       Notepad window with a hard drop shadow. Hard steps, never eased.
-       ════════════════════════════════════════════════════════════════ */
-
-    /* ── shape ───────────────────────────────────────────────────────── */
-
-    /* retro · shape 1: The 1995 dialog */
-    [data-theme='retro'] [data-ti-shape='1'] .kp-card {
-        border-radius: 0;
-        border: 1px solid var(--border-strong);
-        box-shadow:
-            inset 1px 1px 0 color-mix(in oklch, var(--card) 140%, white),
-            inset -1px -1px 0 var(--border-strong),
-            inset 2px 2px 0 var(--card),
-            inset -2px -2px 0 color-mix(in oklch, var(--foreground) 55%, var(--card));
-    }
-    [data-theme='retro'] [data-ti-shape='1'] .kp-card__title {
-        font-family: var(--theme-font-mono, monospace);
-    }
-    [data-theme='retro'] [data-ti-shape='1'] [data-tl-mark] {
-        border-radius: 0;
-        --ti-mark: var(--primary);
-        box-shadow:
-            inset 1px 1px 0 color-mix(in oklch, var(--card) 140%, white),
-            inset -1px -1px 0 var(--border-strong);
-    }
-
-    /* retro · shape 2: The performance monitor */
-    [data-theme='retro'] [data-ti-shape='2'] .kp-card {
-        border-radius: 0;
-        background: color-mix(in oklch, var(--foreground) 92%, var(--background));
-        border: 2px solid color-mix(in oklch, var(--foreground) 45%, var(--background));
-    }
-    /* The Open link was left on its default colour (measured 2026-10-05:
-       1.14:1 against this near-black well, unreadable); it now reads in
-       the same phosphor green as the title and body. */
-    [data-theme='retro'] [data-ti-shape='2'] .kp-card__title,
-    [data-theme='retro'] [data-ti-shape='2'] .kp-card__body,
-    [data-theme='retro'] [data-ti-shape='2'] [data-tl-link] {
-        color: oklch(from var(--success) 0.82 0.2 h);
-        font-family: var(--theme-font-mono, monospace);
-    }
-    [data-theme='retro'] [data-ti-shape='2'] .kp-card__footer {
-        border-color: oklch(from var(--success) 0.5 0.16 h);
-    }
-    [data-theme='retro'] [data-ti-shape='2'] [data-tl-mark] {
-        border-radius: 50%;
-        --ti-mark: oklch(from var(--success) 0.82 0.2 h);
-    }
-
-    /* retro · shape 3: The Notepad window */
-    [data-theme='retro'] [data-ti-shape='3'] .kp-card {
-        border-radius: 0;
-        border: 1px solid var(--foreground);
-        background: var(--background);
-        box-shadow: 3px 3px 0 var(--foreground);
-    }
-    [data-theme='retro'] [data-ti-shape='3'] [data-tl-mark] {
-        border-radius: 0;
-        --ti-mark: var(--foreground);
-    }
-
-    /* ── while loading ──────────────────────────────────────────────── */
-
-    /* retro · loading 1: The progress blocks fill */
-    [data-theme='retro'] [data-ti-loading='1'] [data-kp-busy]::after {
-        inset-inline-start: 1rem;
-        inset-block-end: 0.75rem;
-        inline-size: calc(100% - 2rem);
-        block-size: 8px;
-        background-image: repeating-linear-gradient(to right, var(--primary) 0 4px, transparent 4px 6px);
-        background-size: 0% 100%;
-        background-repeat: no-repeat;
-        border: 1px solid var(--foreground);
-    }
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='retro'] [data-ti-loading='1'] [data-kp-busy]::after {
-            animation: rt-blocks 1.6s steps(8) infinite;
-        }
-    }
     @keyframes rt-blocks {
         0% {
             background-size: 0% 100%;
@@ -205,19 +114,6 @@
         }
     }
 
-    /* retro · loading 2: The marquee bar */
-    [data-theme='retro'] [data-ti-loading='2'] [data-kp-busy]::after {
-        inset-inline-start: 1rem;
-        inset-block-end: 0.75rem;
-        inline-size: 1.6rem;
-        block-size: 8px;
-        background-image: repeating-linear-gradient(to right, var(--primary) 0 4px, transparent 4px 6px);
-    }
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='retro'] [data-ti-loading='2'] [data-kp-busy]::after {
-            animation: rt-marquee 1.2s steps(10) infinite;
-        }
-    }
     @keyframes rt-marquee {
         from {
             inset-inline-start: 1rem;
@@ -227,26 +123,6 @@
         }
     }
 
-    /* retro · loading 3: The defragmenter */
-    [data-theme='retro'] [data-ti-loading='3'] [data-kp-busy]::after {
-        inset-inline-start: 1rem;
-        inset-block-end: 0.75rem;
-        inline-size: calc(100% - 2rem);
-        block-size: 8px;
-        background-image: repeating-linear-gradient(
-            to right,
-            var(--primary) 0 3px,
-            var(--warning) 3px 6px,
-            transparent 6px 9px,
-            var(--success) 9px 12px
-        );
-        background-size: 200% 100%;
-    }
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='retro'] [data-ti-loading='3'] [data-kp-busy]::after {
-            animation: rt-defrag 1s steps(6) infinite;
-        }
-    }
     @keyframes rt-defrag {
         from {
             background-position: 0 0;
@@ -258,17 +134,6 @@
 
     /* ── how the tiles arrive ───────────────────────────────────────── */
 
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='retro'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
-            animation: rt-arrive-paint 0.4s steps(5) both;
-        }
-        [data-theme='retro'] [data-ti-arrival='3'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
-            animation: rt-arrive-drag 0.36s steps(4) both;
-        }
-        [data-theme='retro'] [data-ti-arrival='3'] > .kp-card:nth-child(2):not([data-kp-busy], [data-tl-flash]) {
-            animation-delay: 0.08s;
-        }
-    }
     @keyframes rt-arrive-paint {
         from {
             transform: translateX(-0.9rem);
@@ -286,123 +151,8 @@
         }
     }
 
-    /* ── tone of a tile ─────────────────────────────────────────────── */
-
-    /* retro · tone 1: The raised button */
-    [data-theme='retro'] [data-ti-tone='1'] .kp-card[data-kp-tone] {
-        box-shadow:
-            inset 1px 1px 0 color-mix(in oklch, var(--primary) 150%, white),
-            inset -1px -1px 0 color-mix(in oklch, var(--primary) 50%, black),
-            inset 0 0 0 2px var(--primary);
-    }
-    [data-theme='retro'] [data-ti-tone='1'] .kp-card[data-kp-tone='ok'] {
-        box-shadow: inset 0 0 0 2px var(--success);
-    }
-    [data-theme='retro'] [data-ti-tone='1'] .kp-card[data-kp-tone='warning'] {
-        box-shadow: inset 0 0 0 2px var(--warning);
-    }
-    [data-theme='retro'] [data-ti-tone='1'] .kp-card[data-kp-tone='destructive'] {
-        box-shadow: inset 0 0 0 2px var(--destructive);
-    }
-
-    /* retro · tone 2: The flat field */
-    [data-theme='retro'] [data-ti-tone='2'] .kp-card[data-kp-tone] {
-        border: 1px solid var(--primary);
-    }
-    [data-theme='retro'] [data-ti-tone='2'] .kp-card[data-kp-tone='ok'] {
-        border-color: var(--success);
-    }
-    [data-theme='retro'] [data-ti-tone='2'] .kp-card[data-kp-tone='warning'] {
-        border-color: var(--warning);
-    }
-    [data-theme='retro'] [data-ti-tone='2'] .kp-card[data-kp-tone='destructive'] {
-        border-color: var(--destructive);
-    }
-
-    /* retro · tone 3: The message box */
-    [data-theme='retro'] [data-ti-tone='3'] .kp-card[data-kp-tone] {
-        border: 2px solid var(--primary);
-        box-shadow: 3px 3px 0 var(--primary);
-    }
-    [data-theme='retro'] [data-ti-tone='3'] .kp-card[data-kp-tone='ok'] {
-        border-color: var(--success);
-        box-shadow: 3px 3px 0 var(--success);
-    }
-    [data-theme='retro'] [data-ti-tone='3'] .kp-card[data-kp-tone='warning'] {
-        border-color: var(--warning);
-        box-shadow: 3px 3px 0 var(--warning);
-    }
-    [data-theme='retro'] [data-ti-tone='3'] .kp-card[data-kp-tone='destructive'] {
-        border-color: var(--destructive);
-        box-shadow: 3px 3px 0 var(--destructive);
-    }
-
-    /* ── hover, focus, the Open link ────────────────────────────────── */
-
-    /* retro · hover 1: The bevel presses */
-    [data-theme='retro'] [data-ti-hover='1'] .kp-card:hover,
-    [data-theme='retro'] [data-ti-hover='1'] .kp-card.tl-hover-sim,
-    [data-theme='retro'] [data-ti-hover='1'] .kp-card:has([data-tl-link]:focus-visible) {
-        box-shadow:
-            inset -1px -1px 0 color-mix(in oklch, var(--card) 140%, white),
-            inset 1px 1px 0 var(--border-strong),
-            inset -2px -2px 0 var(--card),
-            inset 2px 2px 0 color-mix(in oklch, var(--foreground) 55%, var(--card));
-    }
-    [data-theme='retro'] [data-ti-hover='1'] [data-tl-link]:hover,
-    [data-theme='retro'] [data-ti-hover='1'] [data-tl-link]:focus-visible {
-        text-decoration: underline;
-    }
-    [data-theme='retro'] [data-ti-hover='1'] [data-tl-link]:focus-visible {
-        outline: 1px dashed var(--foreground);
-        outline-offset: 2px;
-    }
-
-    /* retro · hover 2: The screen glows */
-    [data-theme='retro'] [data-ti-hover='2'] .kp-card:hover,
-    [data-theme='retro'] [data-ti-hover='2'] .kp-card.tl-hover-sim,
-    [data-theme='retro'] [data-ti-hover='2'] .kp-card:has([data-tl-link]:focus-visible) {
-        box-shadow: inset 0 0 0 2px oklch(from var(--success) 0.82 0.2 h);
-    }
-    [data-theme='retro'] [data-ti-hover='2'] [data-tl-link]:hover,
-    [data-theme='retro'] [data-ti-hover='2'] [data-tl-link]:focus-visible {
-        text-decoration: underline;
-        color: oklch(from var(--success) 0.82 0.2 h);
-    }
-    [data-theme='retro'] [data-ti-hover='2'] [data-tl-link]:focus-visible {
-        outline: 1px solid oklch(from var(--success) 0.82 0.2 h);
-        outline-offset: 2px;
-    }
-
-    /* retro · hover 3: The window raises */
-    [data-theme='retro'] [data-ti-hover='3'] .kp-card:hover,
-    [data-theme='retro'] [data-ti-hover='3'] .kp-card.tl-hover-sim,
-    [data-theme='retro'] [data-ti-hover='3'] .kp-card:has([data-tl-link]:focus-visible) {
-        box-shadow: 5px 5px 0 var(--foreground);
-    }
-    [data-theme='retro'] [data-ti-hover='3'] [data-tl-link]:hover,
-    [data-theme='retro'] [data-ti-hover='3'] [data-tl-link]:focus-visible {
-        text-decoration: underline;
-    }
-    [data-theme='retro'] [data-ti-hover='3'] [data-tl-link]:focus-visible {
-        outline: 1px solid var(--foreground);
-        outline-offset: 2px;
-        box-shadow: 0 0 0 3px var(--foreground);
-    }
-
     /* ── live update ────────────────────────────────────────────────── */
 
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='retro'] [data-ti-live='1'] [data-tl-flash] {
-            animation: rt-live-redraw 0.4s steps(2);
-        }
-        [data-theme='retro'] [data-ti-live='2'] [data-tl-flash] {
-            animation: rt-live-repaint 0.4s steps(2);
-        }
-        [data-theme='retro'] [data-ti-live='3'] [data-tl-flash] {
-            animation: rt-live-scroll 0.5s steps(3);
-        }
-    }
     @keyframes rt-live-redraw {
         0%,
         100% {
@@ -731,16 +481,12 @@
 
     /* ── while loading ──────────────────────────────────────────────── */
 
-    @media (prefers-reduced-motion: no-preference) {
-    }
     @keyframes lp-girih-glint {
         to {
             transform: rotate(360deg);
         }
     }
 
-    @media (prefers-reduced-motion: no-preference) {
-    }
     @keyframes lp-gold-leaf {
         0% {
             inset-inline-start: 0%;
@@ -753,8 +499,6 @@
         }
     }
 
-    @media (prefers-reduced-motion: no-preference) {
-    }
     @keyframes lp-star-turn {
         to {
             transform: rotate(360deg);
@@ -763,8 +507,6 @@
 
     /* ── how the tiles arrive ───────────────────────────────────────── */
 
-    @media (prefers-reduced-motion: no-preference) {
-    }
     @keyframes lp-arrive-illum {
         from {
             transform: scale(0.88);
@@ -788,8 +530,6 @@
 
     /* ── live update ────────────────────────────────────────────────── */
 
-    @media (prefers-reduced-motion: no-preference) {
-    }
     @keyframes lp-live-redraw {
         0%,
         100% {

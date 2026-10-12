@@ -97,7 +97,7 @@
  * a number typed here [HA2]. --fx-duration and --fx-ease were declared by
  * all eleven themes and used by nothing; the values differed and the
  * behaviour did not. Terminal steps rather than eases, pastel overshoots,
- * high-contrast is nearly instant — that is the theme's handwriting, and
+ * formal is brisk — that is the theme's handwriting, and
  * it costs no extra CSS. */
     @media (prefers-reduced-motion: no-preference) {
         [data-kp-theme-picker] [data-kp-theme] {
@@ -704,9 +704,9 @@
                 translate var(--fx-duration, 150ms) var(--fx-ease, ease);
         }
 
-        /* --fx-lift is how far a control rises under the cursor. Three themes
-     * answer 0px, which is not an oversight: formal, sepia and
-     * high-contrast do not move things, they only change their colour. */
+        /* --fx-lift is how far a control rises under the cursor. Many themes
+     * answer 0px, which is not an oversight: formal, for one, does not
+     * move things, it only changes its colour. */
         .kp-button:hover:not(:disabled) {
             translate: 0 calc(-1 * var(--fx-lift, 0px));
         }
@@ -3629,7 +3629,7 @@
             flex-basis: 100%;
         }
 
-        .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] > .kp-nav__links {
+        .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
@@ -4005,13 +4005,17 @@
         padding: var(--kp-space-md, 1rem) var(--kp-nav-pad-inline, 1.5rem);
     }
 
-    /* Hover and focus open a dropdown; they do not open this one. */
-    .kp-nav__links > li:not([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide {
+    /* Hover and focus open a dropdown; they do not open this one. One that is
+     * closing stays until its close has played (js/components.js). */
+    .kp-nav__links
+        > li:not([data-kp-nav-menu-open], [data-kp-nav-closing], :has(> [data-kp-nav-disclosure][aria-expanded='true']))
+        > .kp-nav__menu--wide {
         display: none;
         opacity: 0;
     }
 
     .kp-nav__links > li[data-kp-nav-menu-open] > .kp-nav__menu--wide,
+    .kp-nav__links > li[data-kp-nav-closing] > .kp-nav__menu--wide,
     .kp-nav__links > li:has(> [data-kp-nav-disclosure][aria-expanded='true']) > .kp-nav__menu--wide {
         display: grid;
         opacity: 1;
@@ -8519,6 +8523,15 @@
         line-height: 0;
     }
 
+    .kp-calendar__busy-text {
+        display: block;
+        font-size: 0.875rem;
+        line-height: var(--kp-line-height, 1.4);
+        color: var(--card-foreground, var(--foreground));
+        text-align: center;
+        margin-block-end: 0.5rem;
+    }
+
     /* Both come in with an opacity fade on the theme's own timing. */
     @media (prefers-reduced-motion: no-preference) {
         .kp-calendar__day-busy,
@@ -8942,6 +8955,7 @@
         background: var(--card);
         color: var(--card-foreground);
         box-shadow: 0 0.5rem 1.5rem hsl(from var(--foreground) h s l / 0.18);
+        transition: left var(--fx-duration, 200ms) var(--fx-ease, ease), top var(--fx-duration, 200ms) var(--fx-ease, ease);
     }
 
     /* On a phone the card takes the width, less the gutters. */
@@ -9009,5 +9023,14 @@
         outline: 3px solid var(--ring);
         outline-offset: 3px;
         box-shadow: 0 0 0 100vmax hsl(from var(--background) h s l / 0.72);
+        transition: outline 250ms ease, box-shadow 350ms ease;
+    }
+
+    body:has(.kp-tour[data-kp-reversing]) [data-kp-tour-target] {
+        /* A theme whose dim grows out of the target (forest) takes it back
+         * the same way: `--kp-tour-dim-close` names the shadow it fades to. */
+        box-shadow: var(--kp-tour-dim-close, 0 0 0 100vmax transparent) !important;
+        outline-color: transparent !important;
+        transition: box-shadow var(--kp-sig-fo-time, 1000ms) var(--kp-sig-fo-wither, var(--kp-sig-fo-grow, ease-in)), outline-color var(--kp-sig-fo-time, 1000ms) var(--kp-sig-fo-wither, var(--kp-sig-fo-grow, ease-in)) !important;
     }
 }

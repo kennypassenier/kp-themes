@@ -1,0 +1,1238 @@
+/* research/forest-uniformity: every option of every question, in the
+   theme's signature layer, hung on the scene (`.fu-scene[data-fu-<question>=
+   '<key>']`), so it travels with the section into the review dialog. The
+   package draws the parts as forest draws them today (css/forest-register.css
+   is linked as it stands); an option adds only what it changes. Colours come
+   from the theme's tokens only. Every motion sits under
+   prefers-reduced-motion: no-preference, and the reduced pose is the open,
+   finished part. Durations are multiplied by --fu-slow (1, 2 or 4: the
+   page's speed buttons). The "today" values are the ones measured in
+   Chromium on 2026-10-09 (README.md, findings.json). Every one-shot is a pair
+   of keyframes, `fu-x` and `fu-x-back`, the second played `reverse`, so a
+   close is its open played backwards (a second name restarts the animation;
+   the curve is reversed with the direction). The growth curve, the growth
+   time, the leaf corner and the ring's arc are the register's own tokens
+   (--kp-sig-fo-*, --kp-fo-arc, --kp-fo-grow). The growths here keep the
+   side they grow out of clipped at 0 all the way (the register's own
+   keyframes open that side to -3rem as they go, so a growing menu is drawn
+   over its button: README.md, finding F-23). */
+
+@layer kp.signature {
+    /* ── The scene ───────────────────────────────────────────────────── */
+
+    .fu-scene {
+        --fu-s: var(--fu-slow, 1);
+        --fu-grow: var(--kp-sig-fo-grow);
+        --fu-time: calc(var(--kp-sig-fo-time, 1000ms) * var(--fu-s));
+        --fu-contact: calc(200ms * var(--fu-s));
+        --fu-reach: 3rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+        gap: var(--kp-space-lg, 1rem) var(--kp-space-xl, 1.5rem);
+        align-content: start;
+        box-sizing: border-box;
+        min-block-size: 100%;
+        padding: 1.25rem 1.25rem 1.5rem;
+        border: 1px solid var(--border);
+        border-radius: var(--kp-sig-fo-plate);
+        background: var(--background);
+        color: var(--foreground);
+    }
+
+    .fu-scene .fu-part {
+        display: grid;
+        gap: 0.45rem;
+        align-content: start;
+        min-inline-size: 0;
+    }
+
+    .fu-scene .fu-part--wide {
+        grid-column: 1 / -1;
+    }
+
+    .fu-scene .fu-cap {
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: 0.75rem;
+        font-style: italic;
+    }
+
+    .fu-scene .fu-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem 0.75rem;
+    }
+
+    .fu-scene .fu-part > :is(.kp-button, a) {
+        justify-self: start;
+    }
+
+    /* What opens and closes: closed in the gap (never drawn), opened on `in`
+       by the option's --fu-in, closed on `out` by its --fu-back played
+       backwards, in the option's time and curve. */
+    @media (prefers-reduced-motion: no-preference) {
+        .fu-scene[data-fu-phase='gap'] .fu-opens {
+            visibility: hidden;
+        }
+
+        .fu-scene[data-fu-phase='in'] .fu-opens {
+            animation: var(--fu-in, none) var(--fu-dur, var(--fu-time)) var(--fu-ease, var(--fu-grow)) 0s both;
+        }
+
+        .fu-scene[data-fu-phase='out'] .fu-opens {
+            animation: var(--fu-back, none) var(--fu-dur, var(--fu-time)) var(--fu-ease, var(--fu-grow)) 0s reverse both;
+        }
+
+        /* Replay starts the loops together. */
+        .fu-scene.fu-restart *,
+        .fu-scene.fu-restart *::before,
+        .fu-scene.fu-restart *::after {
+            animation-name: none !important;
+        }
+    }
+
+    /* ── The keyframe pairs ──────────────────────────────────────────── */
+
+    /* Grows down out of what it hangs from, far end first (G3). */
+    @keyframes fu-root {
+        from {
+            translate: 0 -100%;
+            clip-path: inset(100% calc(-1 * var(--fu-reach)) 0 calc(-1 * var(--fu-reach)));
+        }
+        to {
+            translate: 0 0;
+            clip-path: inset(0 calc(-1 * var(--fu-reach)) calc(-1 * var(--fu-reach)) calc(-1 * var(--fu-reach)));
+        }
+    }
+
+    @keyframes fu-root-back {
+        from {
+            translate: 0 -100%;
+            clip-path: inset(100% calc(-1 * var(--fu-reach)) 0 calc(-1 * var(--fu-reach)));
+        }
+        to {
+            translate: 0 0;
+            clip-path: inset(0 calc(-1 * var(--fu-reach)) calc(-1 * var(--fu-reach)) calc(-1 * var(--fu-reach)));
+        }
+    }
+
+    /* Grows up out of its own base, top first (G3, the dialog). */
+    @keyframes fu-grow {
+        from {
+            translate: 0 100%;
+            clip-path: inset(0 calc(-1 * var(--fu-reach)) 100% calc(-1 * var(--fu-reach)));
+        }
+        to {
+            translate: 0 0;
+            clip-path: inset(calc(-1 * var(--fu-reach)) calc(-1 * var(--fu-reach)) 0 calc(-1 * var(--fu-reach)));
+        }
+    }
+
+    @keyframes fu-grow-back {
+        from {
+            translate: 0 100%;
+            clip-path: inset(0 calc(-1 * var(--fu-reach)) 100% calc(-1 * var(--fu-reach)));
+        }
+        to {
+            translate: 0 0;
+            clip-path: inset(calc(-1 * var(--fu-reach)) calc(-1 * var(--fu-reach)) 0 calc(-1 * var(--fu-reach)));
+        }
+    }
+
+    /* Grows up out of its own base from autumn to green (G10: the arrival is
+       the withering played backwards). */
+    @keyframes fu-wither {
+        from {
+            translate: 0 100%;
+            clip-path: inset(0 calc(-1 * var(--fu-reach)) 100% calc(-1 * var(--fu-reach)));
+            filter: sepia(1) saturate(0.6);
+        }
+        to {
+            translate: 0 0;
+            clip-path: inset(calc(-1 * var(--fu-reach)) calc(-1 * var(--fu-reach)) 0 calc(-1 * var(--fu-reach)));
+            filter: none;
+        }
+    }
+
+    @keyframes fu-wither-back {
+        from {
+            translate: 0 100%;
+            clip-path: inset(0 calc(-1 * var(--fu-reach)) 100% calc(-1 * var(--fu-reach)));
+            filter: sepia(1) saturate(0.6);
+        }
+        to {
+            translate: 0 0;
+            clip-path: inset(calc(-1 * var(--fu-reach)) calc(-1 * var(--fu-reach)) 0 calc(-1 * var(--fu-reach)));
+            filter: none;
+        }
+    }
+
+    /* Grows out of the start edge, far side first (the drawer's growth,
+       mirrored to the side the side navigation lives on). */
+    @keyframes fu-edge {
+        from {
+            translate: -100% 0;
+            clip-path: inset(calc(-1 * var(--fu-reach)) calc(-1 * var(--fu-reach)) calc(-1 * var(--fu-reach)) 100%);
+        }
+        to {
+            translate: 0 0;
+            clip-path: inset(calc(-1 * var(--fu-reach)) calc(-1 * var(--fu-reach)) calc(-1 * var(--fu-reach)) 0);
+        }
+    }
+
+    @keyframes fu-edge-back {
+        from {
+            translate: -100% 0;
+            clip-path: inset(calc(-1 * var(--fu-reach)) calc(-1 * var(--fu-reach)) calc(-1 * var(--fu-reach)) 100%);
+        }
+        to {
+            translate: 0 0;
+            clip-path: inset(calc(-1 * var(--fu-reach)) calc(-1 * var(--fu-reach)) calc(-1 * var(--fu-reach)) 0);
+        }
+    }
+
+    /* Today's side navigation: it slides in from the edge. */
+    @keyframes fu-slide {
+        from {
+            translate: -100% 0;
+        }
+        to {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes fu-slide-back {
+        from {
+            translate: -100% 0;
+        }
+        to {
+            translate: 0 0;
+        }
+    }
+
+    /* Today's dropdown, tour and backdrop: a fade. */
+    @keyframes fu-fade {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes fu-fade-back {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    /* Today's "gone at once": hidden for the whole close. */
+    @keyframes fu-cut {
+        from,
+        to {
+            visibility: hidden;
+        }
+    }
+
+    @keyframes fu-cut-back {
+        from,
+        to {
+            visibility: hidden;
+        }
+    }
+
+    /* A group unfolds (the accordion's motion, by its rows). */
+    @keyframes fu-fold {
+        from {
+            grid-template-rows: 0fr;
+        }
+        to {
+            grid-template-rows: 1fr;
+        }
+    }
+
+    @keyframes fu-fold-back {
+        from {
+            grid-template-rows: 0fr;
+        }
+        to {
+            grid-template-rows: 1fr;
+        }
+    }
+
+    /* A tick is walked start to end (the register's own draw). */
+    @keyframes fu-tick {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes fu-tick-back {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    /* A radio's dot grows up out of its foot (no scaling). */
+    @keyframes fu-dot {
+        from {
+            clip-path: inset(100% 0 0);
+        }
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes fu-dot-back {
+        from {
+            clip-path: inset(100% 0 0);
+        }
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    /* Today's alarm: the plate rises 1.25 rem and scales from 98 %, the
+       headline scales from 106 % (css/components.css, kp-alarm-settle and
+       kp-alarm-arrive). */
+    @keyframes fu-settle {
+        from {
+            opacity: 0;
+            translate: 0 1.25rem;
+            scale: 0.98;
+        }
+        to {
+            opacity: 1;
+            translate: 0 0;
+            scale: 1;
+        }
+    }
+
+    @keyframes fu-settle-back {
+        from {
+            opacity: 0;
+            translate: 0 1.25rem;
+            scale: 0.98;
+        }
+        to {
+            opacity: 1;
+            translate: 0 0;
+            scale: 1;
+        }
+    }
+
+    @keyframes fu-arrive {
+        from {
+            opacity: 0;
+            scale: 1.06;
+        }
+        to {
+            opacity: 1;
+            scale: 1;
+        }
+    }
+
+    /* Loops (not one-shots): the alarm's glow pulse today, a growth ring laid
+       once every 3200 ms, and the treeline on the bar's breath. */
+    @keyframes fu-pulse {
+        from {
+            opacity: 0.4;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes fu-ringloop {
+        0% {
+            --kp-fo-arc: 0deg;
+            opacity: 1;
+            animation-timing-function: var(--kp-sig-fo-grow);
+        }
+        17.2% {
+            --kp-fo-arc: 360deg;
+            opacity: 1;
+            animation-timing-function: ease-in-out;
+        }
+        31.25%,
+        100% {
+            --kp-fo-arc: 360deg;
+            opacity: 0;
+        }
+    }
+
+    @keyframes fu-treeline-breath {
+        0% {
+            --kp-fo-grow: 0;
+            animation-timing-function: cubic-bezier(0.42, 0, 0.58, 1);
+        }
+        45.4545% {
+            --kp-fo-grow: 1;
+            animation-timing-function: linear;
+        }
+        54.5455% {
+            --kp-fo-grow: 1;
+            animation-timing-function: cubic-bezier(0.42, 0, 0.58, 1);
+        }
+        100% {
+            --kp-fo-grow: 0;
+        }
+    }
+
+    /* ── 1 · The bar ─────────────────────────────────────────────────── */
+
+    .fu-scene .fu-barbox {
+        min-block-size: 13.5rem;
+    }
+
+    .fu-scene .fu-bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem 1.25rem;
+    }
+
+    .fu-scene .fu-bar__links {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem 1.25rem;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .fu-scene .fu-has-drop {
+        position: relative;
+    }
+
+    /* The dropdown, shown as the package shows it open, so the options can
+       draw its opening and its close. */
+    .fu-scene .fu-drop {
+        display: block;
+        position: absolute;
+        inset-block-start: 100%;
+        inset-inline-start: 0;
+        z-index: 2;
+        opacity: 1;
+        translate: none;
+        transition: none;
+    }
+
+    .fu-scene .fu-drop--still {
+        position: static;
+        justify-self: start;
+    }
+
+    .fu-scene .kp-nav__link.fu-pointed:not(.fu-cta) {
+        border-bottom-color: var(--primary);
+        color: var(--primary);
+    }
+
+    .fu-scene .fu-phonebox {
+        display: grid;
+        border: 1px solid var(--border);
+        background: var(--background);
+    }
+
+    .fu-scene .fu-phone {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+
+    .fu-scene .fu-toggle {
+        display: inline-flex;
+    }
+
+    .fu-scene .fu-phonepanel {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        margin: 0;
+        padding: 0.5rem 1rem 0.75rem;
+        list-style: none;
+    }
+
+    .fu-scene .fu-trail {
+        display: grid;
+        gap: 0.9rem;
+        justify-items: start;
+    }
+
+    .fu-scene[data-fu-navigation]:is([data-fu-navigation='grown'], [data-fu-navigation='blazed']) :is(.fu-drop, .fu-phonepanel) {
+        --fu-in: fu-root;
+        --fu-back: fu-root-back;
+    }
+
+    .fu-scene[data-fu-navigation='today'] .fu-drop {
+        --fu-in: fu-fade;
+        --fu-back: fu-fade-back;
+        --fu-dur: var(--fu-contact);
+    }
+
+    .fu-scene[data-fu-navigation='today'] .fu-phonepanel {
+        --fu-in: none;
+        --fu-back: fu-cut-back;
+    }
+
+    /* A link answers as forest's link: a 2 px green rule under the words. */
+    .fu-scene[data-fu-navigation='grown'] .fu-link {
+        text-decoration-line: underline;
+        text-decoration-thickness: 2px;
+        text-decoration-color: transparent;
+        text-underline-offset: 0.35em;
+    }
+
+    .fu-scene[data-fu-navigation='grown'] .fu-link.fu-pointed {
+        color: var(--primary);
+        text-decoration-color: var(--primary);
+    }
+
+    /* A button in the bar blazes (and the Report plate takes the leaf). */
+    .fu-scene[data-fu-navigation]:is([data-fu-navigation='grown'], [data-fu-navigation='blazed']) :is(.fu-cta, .fu-toggle),
+    .fu-scene[data-fu-navigation='blazed'] .fu-link {
+        outline: 2px dashed transparent;
+        outline-offset: 5px;
+    }
+
+    .fu-scene[data-fu-navigation]:is([data-fu-navigation='grown'], [data-fu-navigation='blazed']) :is(.fu-cta, .fu-toggle).fu-pointed,
+    .fu-scene[data-fu-navigation='blazed'] .fu-link.fu-pointed {
+        outline-color: var(--primary);
+        outline-offset: 2px;
+    }
+
+    .fu-scene[data-fu-navigation]:is([data-fu-navigation='grown'], [data-fu-navigation='blazed']) .fu-cta {
+        border-radius: var(--kp-sig-fo-part);
+    }
+
+    .fu-scene[data-fu-navigation]:is([data-fu-navigation='grown'], [data-fu-navigation='blazed']) :is(.kp-breadcrumb, .kp-pagination) {
+        font-family: var(--theme-font-body);
+    }
+
+    /* ── 2 · One picture per waiting panel ───────────────────────────── */
+
+    .fu-scene .fu-panel {
+        display: grid;
+        align-content: start;
+        gap: 0.25rem;
+        min-block-size: 8rem;
+        padding-block-end: 1.75rem;
+    }
+
+    .fu-scene .fu-panel--small {
+        min-block-size: 6.5rem;
+    }
+
+    .fu-scene .fu-panel :is(.kp-card__title, .kp-card__body) {
+        margin: 0;
+    }
+
+    .fu-scene .fu-panel__tree {
+        --kp-spinner-size: 2.25rem;
+        position: absolute;
+        inset-block-start: calc(58% - 1.125rem);
+        inset-inline-start: calc(50% - 1.125rem);
+    }
+
+    .fu-scene .fu-spin {
+        --kp-spinner-size: 1.5rem;
+    }
+
+    .fu-scene .fu-spin--big {
+        --kp-spinner-size: 2.5rem;
+    }
+
+    .fu-scene[data-fu-loading='row'] .fu-panel__tree {
+        display: none;
+    }
+
+    /* The tree only: the panel's planting row is taken off. */
+    .fu-scene[data-fu-loading='tree'] .kp-card.fu-panel[aria-busy='true'][data-fu-busy] {
+        background-image: none;
+        animation: none;
+    }
+
+    .fu-scene[data-fu-loading='tree'] .kp-card.fu-panel[aria-busy='true'][data-fu-busy]::before,
+    .fu-scene[data-fu-loading='tree'] .kp-card.fu-panel[aria-busy='true'][data-fu-busy]::after {
+        content: none;
+    }
+
+    /* ── 3 · Pointing and focus on small parts; 6 · fields ──────────── */
+
+    .fu-scene .fu-days {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+    }
+
+    .fu-scene .fu-days .kp-datepicker__day {
+        inline-size: 2.25rem;
+        block-size: 2.25rem;
+    }
+
+    .fu-scene .fu-days--month {
+        gap: 0.6rem;
+        padding: 0.4rem;
+    }
+
+    .fu-scene .fu-mday {
+        display: inline-grid;
+        place-items: center;
+        inline-size: 2.5rem;
+        block-size: 2.5rem;
+        border: 3px solid var(--border);
+    }
+
+    .fu-scene .fu-pop {
+        position: static;
+        justify-self: start;
+        min-inline-size: 11rem;
+    }
+
+    /* The list inside a popover is no second plate (as in the package's own
+       theme menu). */
+    .fu-scene .fu-pop > .kp-menu {
+        margin: 0;
+        padding: 0.25rem;
+        border: 0;
+        background: none;
+        box-shadow: none;
+        list-style: none;
+    }
+
+    .fu-scene .fu-pop :is(.kp-menu__item, [data-kp-theme]) {
+        inline-size: 100%;
+    }
+
+    .fu-scene .fu-pop [data-kp-theme] {
+        display: flex;
+        inline-size: 100%;
+        padding: 0.375rem 0.625rem;
+        border: 0;
+        background: none;
+        color: inherit;
+        font: inherit;
+        text-align: start;
+    }
+
+    .fu-scene .fu-still-list {
+        position: static;
+        justify-self: stretch;
+    }
+
+    .fu-scene .fu-acc {
+        justify-self: stretch;
+    }
+
+    .fu-scene .fu-key {
+        display: inline-block;
+        inline-size: 0.6rem;
+        block-size: 0.6rem;
+        border-radius: 50%;
+    }
+
+    .fu-scene .fu-key--a {
+        background: var(--chart-1);
+    }
+
+    .fu-scene .fu-key--b {
+        background: var(--chart-3);
+    }
+
+    .fu-scene .fu-checks {
+        display: grid;
+        gap: 0.6rem;
+        justify-items: start;
+    }
+
+    .fu-scene .fu-check-row {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .fu-scene .fu-switch {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .fu-scene .fu-zone {
+        display: grid;
+        place-items: center;
+        min-block-size: 5rem;
+        padding: 0.75rem;
+        text-align: center;
+    }
+
+    /* The blaze: a dashed green ring laid round the part pointed at, 2 px
+       out (just inside a part that fills its row), in contact time. */
+    .fu-scene:is([data-fu-pointing='blaze'], [data-fu-forms='blaze']) .fu-pt {
+        outline: 2px dashed transparent;
+        outline-offset: 5px;
+    }
+
+    .fu-scene:is([data-fu-pointing='blaze'], [data-fu-forms='blaze']) .fu-pt.fu-pointed {
+        outline-color: var(--primary);
+        outline-offset: 2px;
+    }
+
+    .fu-scene[data-fu-pointing='blaze'] .fu-pt--row.fu-pointed {
+        outline-offset: -3px;
+        background: var(--secondary);
+    }
+
+    .fu-scene[data-fu-pointing='wash'] .fu-pt.fu-pointed {
+        background: var(--secondary);
+    }
+
+    .fu-scene[data-fu-forms='edge'] .fu-pt.fu-pointed {
+        border-color: var(--primary);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .fu-scene:is([data-fu-pointing='blaze'], [data-fu-pointing='wash'], [data-fu-forms='blaze'], [data-fu-forms='edge']) .fu-pt {
+            transition:
+                outline-color var(--fu-contact) var(--fu-grow),
+                outline-offset var(--fu-contact) var(--fu-grow),
+                background-color var(--fu-contact) var(--fu-grow),
+                border-color var(--fu-contact) var(--fu-grow);
+        }
+
+        .fu-scene[data-fu-pointing='today'] [data-kp-theme].fu-pt {
+            transition: background-color var(--fu-contact) var(--fu-grow);
+        }
+    }
+
+    /* Today, as measured: a day takes the grey ground at once, a theme
+       option a grey wash, a legend key a thin grey edge; the rest nothing. */
+    .fu-scene[data-fu-pointing='today'] .kp-datepicker__day.fu-pointed {
+        background: var(--muted);
+    }
+
+    .fu-scene[data-fu-pointing='today'] [data-kp-theme].fu-pointed {
+        background: hsl(from var(--foreground) h s l / 0.08);
+    }
+
+    .fu-scene[data-fu-pointing='today'] .kp-chart__source.fu-pointed {
+        border-color: var(--border);
+        color: var(--foreground);
+    }
+
+    /* Focus: DI2's two channels, a dark ring on the part and a light one
+       outside it (laid inside a row that fills its list). */
+    .fu-scene:is([data-fu-pointing='blaze'], [data-fu-pointing='wash']) .fu-mday.fu-focused {
+        outline: 2px solid var(--focus-ring-contrast);
+        outline-offset: 2px;
+        box-shadow:
+            0 0 0 2px var(--focus-ring),
+            inset 0 0 0 5px hsl(from var(--foreground) h s l / 0.08);
+    }
+
+    .fu-scene:is([data-fu-pointing='blaze'], [data-fu-pointing='wash']) [data-kp-theme].fu-focused {
+        outline: 0;
+        box-shadow:
+            inset 0 0 0 2px var(--focus-ring),
+            inset 0 0 0 4px var(--focus-ring-contrast);
+    }
+
+    /* Today's focus on these two: the day one ring, the option the pale
+       outer channel and a 1 px line. */
+    .fu-scene[data-fu-pointing='today'] .fu-mday.fu-focused {
+        outline: 2px solid var(--ring);
+        outline-offset: 3px;
+    }
+
+    .fu-scene[data-fu-pointing='today'] [data-kp-theme].fu-focused {
+        outline: 2px solid var(--focus-ring-contrast);
+        outline-offset: 2px;
+        box-shadow: inset 0 0 0 1px var(--ring);
+    }
+
+    /* ── 4 · Every close is its open reversed ─────────────────────────── */
+
+    .fu-scene .fu-combo {
+        position: relative;
+        min-block-size: 7.5rem;
+    }
+
+    .fu-scene .fu-folds {
+        display: grid;
+        gap: 0.75rem;
+    }
+
+    .fu-scene .fu-group {
+        display: grid;
+        gap: 0.15rem;
+    }
+
+    .fu-scene .fu-fold {
+        display: grid;
+        grid-template-rows: 1fr;
+    }
+
+    .fu-scene .fu-fold__in {
+        display: grid;
+        min-block-size: 0;
+        overflow: hidden;
+    }
+
+    .fu-scene .fu-acc__body {
+        margin: 0;
+        padding: 0.25rem 0.75rem 0.5rem;
+    }
+
+    .fu-scene .fu-tour {
+        display: grid;
+        gap: 0.4rem;
+    }
+
+    .fu-scene .fu-tour :is(.kp-card__title, .kp-card__body) {
+        margin: 0;
+    }
+
+    .fu-scene[data-fu-pairs]:is([data-fu-pairs='mirror'], [data-fu-pairs='panels']) .fu-list {
+        --fu-in: fu-root;
+        --fu-back: fu-root-back;
+    }
+
+    .fu-scene[data-fu-pairs]:is([data-fu-pairs='mirror'], [data-fu-pairs='panels']) .fu-tour {
+        --fu-in: fu-wither;
+        --fu-back: fu-wither-back;
+    }
+
+    .fu-scene[data-fu-pairs='today'] .fu-list {
+        --fu-in: fu-wither;
+        --fu-back: fu-cut-back;
+    }
+
+    .fu-scene[data-fu-pairs='today'] .fu-tour {
+        --fu-in: fu-fade;
+        --fu-back: fu-cut-back;
+        --fu-dur: calc(160ms * var(--fu-s));
+        --fu-ease: ease-out;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .fu-scene[data-fu-pairs][data-fu-phase='gap'] .fu-fold {
+            grid-template-rows: 0fr;
+        }
+
+        .fu-scene[data-fu-pairs][data-fu-phase='in'] .fu-fold {
+            animation: fu-fold var(--fu-fold-dur, var(--fu-time)) var(--fu-grow) both;
+        }
+
+        .fu-scene[data-fu-pairs][data-fu-phase='out'] .fu-fold {
+            animation: fu-fold-back var(--fu-fold-dur, var(--fu-time)) var(--fu-grow) reverse both;
+        }
+
+        .fu-scene[data-fu-pairs='today'] .fu-fold--nav {
+            --fu-fold-dur: var(--fu-contact);
+        }
+
+        /* The tick taken back the way it was drawn, 200 ms. */
+        .fu-scene[data-fu-pairs='mirror'][data-fu-phase='out'] .fu-check:checked::before {
+            animation: fu-tick-back var(--fu-contact) var(--fu-grow) reverse both;
+        }
+
+        /* The dot grows up out of its foot and sinks back, no scaling. */
+        .fu-scene[data-fu-pairs='mirror']:is([data-fu-phase='in'], [data-fu-phase='hold']) .fu-radio:checked::before {
+            animation: fu-dot var(--fu-contact) var(--fu-grow) both;
+        }
+
+        .fu-scene[data-fu-pairs='mirror'][data-fu-phase='out'] .fu-radio:checked::before {
+            animation: fu-dot-back var(--fu-contact) var(--fu-grow) reverse both;
+        }
+    }
+
+    /* ── 5 · The overlays that do not grow yet ───────────────────────── */
+
+    .fu-scene .fu-part:has(.fu-anchor) {
+        min-block-size: 12.5rem;
+    }
+
+    .fu-scene .fu-anchor {
+        position: relative;
+        justify-self: start;
+    }
+
+    .fu-scene .fu-dp {
+        inset-block-start: 100%;
+        inset-inline-start: 0;
+        display: grid;
+        gap: 0.4rem;
+    }
+
+    .fu-scene .fu-dp .kp-datepicker__title {
+        margin: 0;
+    }
+
+    .fu-scene .fu-tm {
+        position: absolute;
+        inset-block-start: calc(100% + 0.35rem);
+        inset-inline-start: 0;
+        z-index: 2;
+    }
+
+    .fu-scene .fu-palette {
+        display: grid;
+        gap: 0.5rem;
+        padding: 0.75rem;
+    }
+
+    .fu-scene .fu-palette__list {
+        display: grid;
+        gap: 0.15rem;
+    }
+
+    .fu-scene .fu-palette .kp-palette__input {
+        box-sizing: border-box;
+        inline-size: 100%;
+        margin: 0;
+    }
+
+    .fu-scene .fu-palette .kp-palette__option {
+        padding: 0.35rem 0.6rem;
+    }
+
+    .fu-scene .fu-window {
+        position: relative;
+        min-block-size: 9.5rem;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: var(--kp-sig-fo-plate);
+        background: var(--card);
+    }
+
+    .fu-scene .fu-window__page {
+        margin: 0;
+        padding: 1rem 1rem 1rem 10rem;
+        color: var(--muted-foreground);
+    }
+
+    .fu-scene .fu-backdrop {
+        position: absolute;
+        inset: 0;
+        background: hsl(from var(--foreground) h s l / 0.25);
+    }
+
+    .fu-scene .fu-sidenav {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        display: grid;
+        align-content: start;
+        gap: 0.15rem;
+        inline-size: 9rem;
+        padding: 0.6rem;
+        border-inline-end: 1px solid var(--border-strong);
+        background: var(--card);
+    }
+
+    .fu-scene[data-fu-overlays]:is([data-fu-overlays='family'], [data-fu-overlays='quicknav']) .fu-palette {
+        --fu-in: fu-grow;
+        --fu-back: fu-grow-back;
+    }
+
+    .fu-scene[data-fu-overlays]:is([data-fu-overlays='family'], [data-fu-overlays='quicknav']) :is(.fu-dp, .fu-tm) {
+        --fu-in: fu-root;
+        --fu-back: fu-root-back;
+    }
+
+    .fu-scene[data-fu-overlays='family'] .fu-sidenav {
+        --fu-in: fu-edge;
+        --fu-back: fu-edge-back;
+    }
+
+    .fu-scene[data-fu-overlays] .fu-backdrop {
+        --fu-in: fu-fade;
+        --fu-back: fu-fade-back;
+    }
+
+    .fu-scene[data-fu-overlays]:is([data-fu-overlays='quicknav'], [data-fu-overlays='today']) .fu-sidenav {
+        --fu-in: fu-slide;
+        --fu-back: fu-slide-back;
+        --fu-dur: var(--fu-contact);
+    }
+
+    .fu-scene[data-fu-overlays]:is([data-fu-overlays='quicknav'], [data-fu-overlays='today']) .fu-backdrop {
+        --fu-dur: calc(220ms * var(--fu-s));
+    }
+
+    .fu-scene[data-fu-overlays='today'] :is(.fu-palette, .fu-dp, .fu-tm) {
+        --fu-in: none;
+        --fu-back: fu-cut-back;
+    }
+
+    /* ── 7 · Rows under the pointer ──────────────────────────────────── */
+
+    .fu-scene .fu-table {
+        inline-size: 100%;
+    }
+
+    .fu-scene .fu-tree {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .fu-scene .fu-tree [role='treeitem'] {
+        padding: 0.3rem 0.6rem;
+    }
+
+    .fu-scene .fu-sidelist {
+        display: grid;
+        gap: 0.15rem;
+    }
+
+    .fu-scene[data-fu-rows='entry'] .fu-r {
+        outline: 2px dashed transparent;
+        outline-offset: 5px;
+    }
+
+    .fu-scene[data-fu-rows='entry'] .fu-r.fu-pointed {
+        outline-color: var(--primary);
+        outline-offset: -3px;
+        background: var(--secondary);
+        color: var(--foreground);
+    }
+
+    .fu-scene[data-fu-rows='ground'] .fu-r.fu-pointed {
+        background: var(--secondary);
+        color: var(--foreground);
+    }
+
+    .fu-scene[data-fu-rows='ground'] .kp-menu__item.fu-r {
+        outline-color: transparent;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .fu-scene:is([data-fu-rows='entry'], [data-fu-rows='ground']) .fu-r {
+            transition:
+                outline-color var(--fu-contact) var(--fu-grow),
+                outline-offset var(--fu-contact) var(--fu-grow),
+                background-color var(--fu-contact) var(--fu-grow),
+                color var(--fu-contact) var(--fu-grow);
+        }
+    }
+
+    /* Today, as measured: four answers, two speeds. */
+    .fu-scene[data-fu-rows='today'] :is(tr, .fu-drop a).fu-r.fu-pointed {
+        background: var(--secondary);
+    }
+
+    .fu-scene[data-fu-rows='today'] [role='treeitem'].fu-r.fu-pointed {
+        background: var(--muted);
+    }
+
+    .fu-scene[data-fu-rows='today'] .kp-sidenav__link.fu-r.fu-pointed {
+        background: var(--muted);
+        color: var(--muted-foreground);
+    }
+
+    .fu-scene[data-fu-rows='today'] .kp-menu__item.fu-r.fu-pointed {
+        outline-color: var(--primary);
+        outline-offset: -3px;
+        background: var(--secondary);
+    }
+
+    /* ── 8 · The alarm ───────────────────────────────────────────────── */
+
+    .fu-scene .fu-alarmbox {
+        display: grid;
+        place-items: center;
+        min-block-size: 12rem;
+        padding: 1.25rem;
+        border-radius: var(--kp-sig-fo-plate);
+        background: hsl(from var(--background) h s l / 0.97);
+    }
+
+    .fu-scene .fu-alarm {
+        position: relative;
+        display: grid;
+        gap: 0.5rem;
+        justify-items: start;
+        max-inline-size: 26rem;
+        padding: 1rem 1.25rem;
+        border: 2px solid var(--destructive);
+        border-radius: var(--kp-sig-fo-plate);
+        background: var(--card);
+    }
+
+    .fu-scene .fu-alarm__title {
+        margin: 0;
+        color: var(--destructive);
+        font-family: var(--theme-font-display);
+        font-size: 1.15rem;
+        font-weight: 700;
+    }
+
+    .fu-scene .fu-alarm__detail {
+        margin: 0;
+    }
+
+    /* The package's glow: the alarm's split and glow in forest's green. */
+    .fu-scene .fu-alarm::after {
+        content: '';
+        position: absolute;
+        inset: -2px;
+        border-radius: inherit;
+        box-shadow: 0 0 1.25rem 0.3rem hsl(from var(--primary) h s l / 0.3);
+        pointer-events: none;
+    }
+
+    .fu-scene .fu-alarm__ring {
+        position: absolute;
+        inset: -7px;
+        border: 1.5px solid var(--primary);
+        border-radius: 0 calc(var(--kp-sig-fo-leaf) + 7px);
+        mask: conic-gradient(var(--foreground) var(--kp-fo-arc), transparent 0);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .fu-scene[data-fu-feedback='grown'] .fu-alarm::after {
+        content: none;
+    }
+
+    .fu-scene[data-fu-feedback]:is([data-fu-feedback='grown'], [data-fu-feedback='pulse']) .fu-alarm {
+        --fu-in: fu-grow;
+        --fu-back: fu-grow-back;
+    }
+
+    .fu-scene[data-fu-feedback='today'] .fu-alarm {
+        --fu-in: fu-settle;
+        --fu-back: fu-cut-back;
+        --fu-dur: calc(520ms * var(--fu-s));
+        --fu-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .fu-scene .fu-toast {
+        --fu-in: fu-wither;
+        --fu-back: fu-wither-back;
+        justify-self: start;
+        animation: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .fu-scene[data-fu-feedback]:is([data-fu-feedback='pulse'], [data-fu-feedback='today']) .fu-alarm::after {
+            animation: fu-pulse calc(1400ms * var(--fu-s)) ease-in-out infinite alternate;
+        }
+
+        .fu-scene[data-fu-feedback='grown']:is([data-fu-phase='hold'], [data-fu-phase='in']) .fu-alarm__ring {
+            animation: fu-ringloop calc(3200ms * var(--fu-s)) linear calc(var(--fu-time)) infinite both;
+        }
+
+        .fu-scene[data-fu-feedback='today'][data-fu-phase='in'] .fu-alarm__title {
+            animation: fu-arrive calc(480ms * var(--fu-s)) cubic-bezier(0.2, 0.8, 0.2, 1) calc(120ms * var(--fu-s)) both;
+        }
+
+        .fu-scene[data-fu-feedback='today'][data-fu-phase='in'] .fu-alarm__detail {
+            animation: fu-fade calc(300ms * var(--fu-s)) ease-out calc(360ms * var(--fu-s)) both;
+        }
+    }
+
+    /* ── 9 · The leaf corner on the last small parts ─────────────────── */
+
+    .fu-scene .fu-swatch {
+        display: inline-block;
+        inline-size: 2rem;
+        block-size: 2rem;
+    }
+
+    .fu-scene .fu-swatch--a {
+        background: var(--chart-1);
+    }
+
+    .fu-scene .fu-swatch--b {
+        background: var(--chart-3);
+    }
+
+    .fu-scene .fu-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+
+    /* A picked option and the current page show their plate, so their
+       corner can be seen. */
+    .fu-scene[data-fu-corners] [data-kp-theme][aria-checked='true'] {
+        background: var(--secondary);
+    }
+
+    .fu-scene[data-fu-corners] .kp-pagination a[aria-current] {
+        display: inline-block;
+        min-inline-size: 1.75rem;
+        text-align: center;
+    }
+
+    .fu-scene[data-fu-corners='leaf']
+        :is(.kp-pagination a, .fu-cta, .kp-datepicker__day, .kp-tree [role='treeitem'], [data-kp-theme], .kp-colorpicker__swatch, .kp-chart__source) {
+        border-radius: var(--kp-sig-fo-part);
+    }
+
+    .fu-scene[data-fu-corners='press'] :is(.kp-pagination a, .fu-cta, .kp-colorpicker__swatch, .kp-chart__source) {
+        border-radius: var(--kp-sig-fo-part);
+    }
+
+    .fu-scene[data-fu-corners='press'] :is(.kp-datepicker__day, .kp-tree [role='treeitem'], [data-kp-theme]) {
+        border-radius: 0;
+    }
+
+    /* ── 10 · One rhythm for every waiting surface ───────────────────── */
+
+    .fu-scene .fu-block {
+        display: block;
+        inline-size: 100%;
+        block-size: 6rem;
+    }
+
+    .fu-scene .fu-lines {
+        display: grid;
+    }
+
+    .fu-scene .fu-lines .fu-line {
+        display: block;
+        inline-size: 100%;
+    }
+
+    .fu-scene .fu-bar-busy {
+        inline-size: 100%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .fu-scene[data-fu-timing] .kp-skeleton.kp-skeleton--block.fu-block {
+            animation-duration: calc(3200ms * var(--fu-s));
+        }
+
+        .fu-scene[data-fu-timing='breath'] .kp-skeleton.kp-skeleton--block.fu-block {
+            animation: fu-treeline-breath calc(6600ms * var(--fu-s)) linear infinite;
+        }
+
+        .fu-scene[data-fu-timing] .fu-lines .kp-skeleton.fu-line.fu-line,
+        .fu-scene[data-fu-timing] .kp-progressbar.fu-bar-busy[data-kp-indeterminate] {
+            animation-duration: calc(6600ms * var(--fu-s));
+        }
+
+        .fu-scene[data-fu-timing='grove'] .fu-lines .kp-skeleton.fu-line.fu-line,
+        .fu-scene[data-fu-timing='grove'] .kp-progressbar.fu-bar-busy[data-kp-indeterminate] {
+            animation-duration: calc(3200ms * var(--fu-s));
+        }
+
+        .fu-scene[data-fu-timing] .kp-spinner.fu-spin::after {
+            animation-duration: calc(1600ms * var(--fu-s));
+        }
+    }
+}

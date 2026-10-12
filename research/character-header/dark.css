@@ -1,0 +1,123 @@
+/* research/character-header, dark: the decided picks on dark's applied grammar
+   (themes/dark/CHARACTER.md G1-G21, "Applied 2026-10-09"; css/dark-register.css
+   holds the tokens and the keyframes this file names: kp-sig-dark-sweep,
+   kp-sig-dark-pass-line, kp-sig-dark-film, kp-sig-dark-tap). Dark's decided
+   options are shape 1, menu 2, interactive 1; the grammar changes all three:
+
+   - shape: the status board (a mono, uppercase, lit title and a ruled grid) is
+     retired: a near-black plate with the instrument grid at 4.5 %, the film
+     along its edge and the chamfer on two opposite corners, the title in
+     Archivo in ink (G6, G7, G18, G19);
+   - menu: the lit band scanning down is the pass: the line crosses the panel's
+     own box from its start edge and lays it behind it, 660 ms at one pace,
+     the turn settling to 880; the close is that played backwards (G3, G13);
+   - interactive: the lit rim is the line resting at the start edge with its
+     glow, a press is the line crossing the face while the film edge turns a
+     quarter, nothing moves; DI2's ring stays (G15, G16, G17). */
+@layer kp.signature {
+    /* Shape 1 · the plate, the grid, the film on the edge. */
+    [data-theme='dark'][data-theme='dark'] [data-ph-shape='1'] .kp-page-header {
+        --kp-iris: conic-gradient(
+            from calc(var(--kp-px, 0) * 1turn + var(--kp-sig-dk-turn)),
+            var(--chart-1),
+            var(--chart-2),
+            var(--chart-3),
+            var(--chart-4),
+            var(--chart-1)
+        );
+        --ph-frame: 1px solid transparent;
+        --ph-radius: 0;
+        --ph-pat:
+            repeating-linear-gradient(0deg, hsl(from var(--foreground) h s l / 0.045) 0 1px, transparent 1px 1.25rem),
+            repeating-linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.045) 0 1px, transparent 1px 1.25rem),
+            linear-gradient(var(--card), var(--card)) padding-box, var(--kp-iris) border-box;
+        clip-path: polygon(
+            0 0,
+            calc(100% - var(--kp-chamfer-panel, 1rem)) 0,
+            100% var(--kp-chamfer-panel, 1rem),
+            100% 100%,
+            var(--kp-chamfer-panel, 1rem) 100%,
+            0 calc(100% - var(--kp-chamfer-panel, 1rem))
+        );
+    }
+
+    [data-theme='dark'][data-theme='dark'] [data-ph-shape='1'] .kp-page-header__title {
+        --ph-title-font: inherit;
+        --ph-title-case: none;
+        --ph-title-track: normal;
+        --ph-title-ink: var(--ph-ink);
+    }
+
+    [data-theme='dark'][data-theme='dark'] [data-ph-shape='1'] .kp-page-header__actions > .kp-button {
+        --ph-btn-shadow: none;
+    }
+
+    /* Interactive 1 · the line rests at the start; a press crosses the face. */
+    [data-theme='dark'][data-theme='dark'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button {
+        background-image: var(--kp-sig-dk-line);
+        background-repeat: no-repeat;
+        background-position: 0 0;
+        background-size: 0 100%;
+    }
+
+    [data-theme='dark'][data-theme='dark'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
+        background-size: 2px 100%;
+        box-shadow: inset 7px 0 9px -6px hsl(from var(--chart-1) h s l / 0.4);
+    }
+
+    [data-theme='dark'][data-theme='dark'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
+        --kp-sig-dk-turn: 90deg;
+        background-color: var(--ph-btn-bg, var(--secondary));
+        background-size: 2px 100%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'][data-theme='dark'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button {
+            transition:
+                background-size var(--fx-duration) var(--fx-ease),
+                box-shadow var(--fx-duration) var(--fx-ease),
+                --kp-sig-dk-turn var(--fx-duration) cubic-bezier(0.64, 0, 0.78, 0);
+        }
+
+        [data-theme='dark'][data-theme='dark'] [data-ph-interactive='1'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
+            transition: none;
+            animation: kp-sig-dark-tap var(--fx-duration) linear both;
+        }
+
+        /* Menu 2 · swept in from the panel's own start edge. */
+        [data-theme='dark'][data-theme='dark'] [data-ph-menu='2'] [data-ph-panel] {
+            --kp-sig-dk-r: var(--kp-halo-reach, 2.5rem);
+        }
+
+        [data-theme='dark'][data-theme='dark'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim='open'] {
+            animation:
+                kp-sig-dark-sweep var(--kp-sig-dk-time) linear backwards,
+                kp-sig-dark-film var(--kp-sig-dk-time) linear backwards;
+        }
+
+        [data-theme='dark'][data-theme='dark'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim='close'] {
+            animation:
+                kp-sig-dark-sweep var(--kp-sig-dk-time) linear reverse forwards,
+                kp-sig-dark-film var(--kp-sig-dk-time) linear reverse forwards;
+        }
+
+        [data-theme='dark'][data-theme='dark'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim]::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 3;
+            background: var(--kp-sig-dk-line) 100% 0 / 2px 100% no-repeat;
+            filter: var(--kp-sig-dk-glow);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        [data-theme='dark'][data-theme='dark'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim='open']::after {
+            animation: kp-sig-dark-pass-line var(--kp-sig-dk-time) linear backwards;
+        }
+
+        [data-theme='dark'][data-theme='dark'] [data-ph-menu='2'] [data-ph-panel][data-ph-anim='close']::after {
+            animation: kp-sig-dark-pass-line var(--kp-sig-dk-time) linear reverse forwards;
+        }
+    }
+}

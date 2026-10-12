@@ -122,14 +122,6 @@
             "events": "r3c-pha-ev-1",
             "tip": "b"
         },
-        "retro": {
-            "shape": "r3-rt-shape-1",
-            "loading": "r3-rt-load-3",
-            "arrival": "r3-rt-arr-2",
-            "update": "r3-rt-upd-3",
-            "events": "r3-rt-events-2",
-            "tip": "r3-rt-tip-3"
-        },
         "grotesk": {
             "shape": "a",
             "loading": "r3-gr-load-2",

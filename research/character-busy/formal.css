@@ -1,0 +1,68 @@
+/* research/character-busy, formal: the decided picks on formal's grammar
+   (themes/formal/CHARACTER.md G1-G21, decided by Kenny on
+   research/formal-character, 2026-10-08; applied in css/formal-register.css,
+   which these parts already wear). Only formal's decided options change:
+   shape 1, loading 3, arrival 3, failure 3.
+
+   - shape: the engraved plate keeps its corner and its hairline, and loses the
+     frame round it: a plate is paper with a hairline (G7); the spinner's own
+     ring is the register's double ring;
+   - loading: the seal pressed is retired; the panel is ruled with the
+     register's three navy lines (its --kp-fm-stack), one after the other, held,
+     lifted and ruled again, 2400 ms (G10);
+   - arrival: the hard steps are retired; the panel is ruled in, start to end,
+     400 ms at an even pace (G1, G13);
+   - failure: the voided stamp is retired; the failed alert is the red-ink
+     entry, ruled off along its start edge in 3 px red ink on paper (G8). */
+@layer kp.signature {
+    [data-theme='formal'] [data-bo-shape='1'] .kp-datatable__busy-panel {
+        --bo-panel-radius: var(--radius);
+        --bo-panel-shadow: none;
+        --bo-ring: none;
+    }
+
+    /* Loading 3 · the seal is pressed → the lines are ruled. */
+    [data-theme='formal'] [data-bo-loading='3'] .kp-datatable__busy-panel::before {
+        --bo-pic: var(--kp-fm-stack);
+        --bo-pic-inset: auto 0.5rem 0.2rem;
+        inline-size: auto;
+        block-size: var(--kp-fm-foot);
+        margin-inline-start: 0;
+        border-radius: 0;
+        background-repeat: no-repeat;
+        background-size: 100% 2px;
+        background-position:
+            0 0,
+            0 50%,
+            0 100%;
+        animation: none;
+    }
+
+    /* Arrival 3 · entered in the ledger → ruled in. */
+    [data-theme='formal'] [data-bo-arrival='3'] .kp-datatable__busy-overlay {
+        --bo-arrival: bo-formal-ruled;
+        --bo-arrival-dur: var(--kp-sig-fm-time, 400ms);
+        --bo-arrival-ease: linear;
+    }
+
+    /* Failure 3 · the voided stamp → the red-ink entry. */
+    [data-theme='formal'] [data-bo-failure='3'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--card);
+        --bo-fail-ink: var(--foreground);
+        --bo-fail-border: 1px solid var(--border);
+        --bo-fail-shadow: inset 3px 0 0 var(--destructive);
+        --bo-fail-from: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes bo-formal-ruled {
+            from {
+                clip-path: inset(-3rem 100% -3rem -3rem);
+            }
+
+            to {
+                clip-path: inset(-3rem);
+            }
+        }
+    }
+}

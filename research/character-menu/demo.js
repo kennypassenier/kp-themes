@@ -20,9 +20,7 @@ import { THEMES } from '../../js/theme-registry.js';
 import R2A from './round2-a.js';
 import R2B from './round2-b.js';
 import R2C from './round2-c.js';
-import R2D from './round2-d.js';
 import R3A from './round3-a.js';
-import R3B from './round3-b.js';
 
 /** @typedef {{ name: string, text: string, key?: string }} Option */
 /** @typedef {'shape' | 'loading' | 'open' | 'tone' | 'interact'} Aspect */
@@ -62,7 +60,7 @@ const IDEAS = {
         shape: [
             {
                 name: 'The engraved plate',
-                text: 'A ruled double frame around the menu, headings in the serif’s small capitals, hints in a lighter serif underneath.',
+                text: 'A paper plate with a hairline and the register’s corner, headings in small capitals, hints in a lighter serif underneath.',
             },
             { name: 'The ledger page', text: 'A fine rule under each heading like a ledger page, entries in the display serif, hints in italic.' },
             {
@@ -71,12 +69,18 @@ const IDEAS = {
             },
         ],
         loading: [
-            { name: 'The dotted leader', text: 'A dotted leader is written across the loading row, left to right, and starts again.' },
+            {
+                name: 'Ruling the lines',
+                text: 'Three navy rules are ruled across the loading row one after the other, held, lifted and ruled again.',
+            },
             { name: 'The seal is pressed', text: 'A small navy seal ring presses onto the loading row, lifts, and presses again.' },
             { name: 'The nib sweeps', text: 'A fine nib sweeps once across the loading row and lifts for the next pass.' },
         ],
         open: [
-            { name: 'Unrolled', text: 'The menu unrolls downward from the button like a scroll, and rolls back up the same way to close.' },
+            {
+                name: 'Ruled open',
+                text: 'The menu is ruled open under its button: its frame rule start to end, then each entry in turn, 60 ms apart; it closes as that played backwards.',
+            },
             {
                 name: 'The frame draws in',
                 text: 'The double rule draws in from the corners to its edges, and draws back out to the corners to leave.',
@@ -113,7 +117,7 @@ const IDEAS = {
         shape: [
             {
                 name: 'The soft card',
-                text: 'A white plate on a soft shadow with a wide radius, headings in muted small caps over a feather-light rule.',
+                text: 'A white menu of 0.5 rem on the medium shadow, plain headings in the regular face, a solid rule between groups.',
             },
             { name: 'Daylight', text: 'A pale wash lightens toward the top of the plate, headings sit on it plainly, entries keep generous air.' },
             {
@@ -123,18 +127,24 @@ const IDEAS = {
         ],
         loading: [
             { name: 'The dashed baseline', text: 'A dashed baseline under the loading row drifts to the right, then starts again.' },
-            { name: 'Daylight', text: 'A slow band of daylight crosses the loading row, left to right.' },
+            {
+                name: 'Out of focus',
+                text: 'The loading row’s words breathe out of focus (blur and brightness up and back); nothing crosses the row.',
+            },
             { name: 'A cloud passes', text: 'The soft shadow of a cloud drifts across the loading row, slowly, and returns.' },
         ],
         open: [
             { name: 'Unfolds', text: 'The menu opens from its middle like a folded card, and folds back to its middle to close.' },
             { name: 'Sunrise', text: 'The menu rises softly from the button’s edge, slowing as it lands, and sinks back the same way to close.' },
-            { name: 'A soft pop', text: 'The menu scales up from 97% with a gentle overshoot, and scales back down to leave.' },
+            {
+                name: 'Out of the glare',
+                text: 'The menu comes into focus under its button, out of a blurred, too bright glare, 700 ms on a long settle, and goes back into the glare to close.',
+            },
         ],
         tone: [
             {
-                name: 'The coloured tab',
-                text: 'The destructive entry carries a soft drop shadow in its colour; a disabled reason reads muted under a dashed rule.',
+                name: 'The band',
+                text: 'The destructive entry carries a 3 px band of the destructive colour along its top and its words in the same ink, with a soft pill under the pointer.',
             },
             {
                 name: 'The soft outline',
@@ -146,7 +156,10 @@ const IDEAS = {
             },
         ],
         interact: [
-            { name: 'The soft lift', text: 'A hovered or focused entry lifts on a soft shadow of its own; a press settles it flat again.' },
+            {
+                name: 'Settles toward the paper',
+                text: 'A hovered entry takes the muted wash, a focused one the two-channel ring inside the entry, a pressed one lands 2 px and flashes.',
+            },
             { name: 'The glow', text: 'A hovered or focused entry’s plate glows a touch warmer; a press dims it back for a moment.' },
             { name: 'The round pill', text: 'A hovered or focused entry gets a soft rounded fill behind it; a press shrinks the fill by a hair.' },
         ],
@@ -616,7 +629,10 @@ const IDEAS = {
             { name: 'The hammer', text: 'A black block hammers three places along the loading row in turn.' },
         ],
         open: [
-            { name: 'Dropped onto its footprint', text: 'The menu is dropped onto its footprint from up-left, 300 ms on the fall curve, and closes as that drop played backwards.' },
+            {
+                name: 'Dropped onto its footprint',
+                text: 'The menu is dropped onto its footprint from up-left, 300 ms on the fall curve, and closes as that drop played backwards.',
+            },
             { name: 'Shoved in', text: 'The menu is shoved in from the side in one hard step, and shoved back out the same step to close.' },
             { name: 'Stamped', text: 'The menu stamps down flat onto the button in one hard step, and is lifted off in one step to close.' },
         ],
@@ -635,7 +651,10 @@ const IDEAS = {
             },
         ],
         interact: [
-            { name: 'Inverted', text: 'A hovered entry inverts, nothing moves; a focused one is the yellow plate under the inner ring; a pressed one takes the active plate.' },
+            {
+                name: 'Inverted',
+                text: 'A hovered entry inverts, nothing moves; a focused one is the yellow plate under the inner ring; a pressed one takes the active plate.',
+            },
             { name: 'The block drops', text: 'A hovered or focused entry’s shadow drops harder; a press flattens the shadow to nothing.' },
             { name: 'The stamp presses', text: 'A hovered or focused entry’s frame thickens by a hard step; a press stamps it down flat.' },
         ],
@@ -719,54 +738,6 @@ const IDEAS = {
             { name: 'Snatched', text: 'A hovered or focused entry glitches sideways for a moment; a press holds it shifted while pressed.' },
             { name: 'The string twangs', text: 'A hovered or focused entry jolts once like a plucked string; a press stills it taut.' },
             { name: 'The halftone shifts', text: 'A hovered or focused entry’s halftone shifts a step; a press locks the shift in place.' },
-        ],
-    },
-    retro: {
-        shape: [
-            {
-                name: 'The 1995 dialog',
-                text: 'A raised grey bevel frames the plate, headings in the system face without capitals, a sunken rule between groups.',
-            },
-            { name: 'The performance monitor', text: 'A black well with a green grid behind the groups, entries in the phosphor mono.' },
-            {
-                name: 'The Notepad window',
-                text: 'A 1px black frame with a hard drop shadow, headings in the system face, a plain rule between groups.',
-            },
-        ],
-        loading: [
-            { name: 'The progress blocks', text: 'Blue progress blocks fill the loading row block by block, then start over.' },
-            { name: 'The marquee bar', text: 'A group of three blue blocks slides across the loading row and comes round again.' },
-            { name: 'The defragmenter', text: 'Blocks of colour shift through the loading row in hard steps, as a defragmenter’s map.' },
-        ],
-        open: [
-            { name: 'Painted', text: 'The menu is drawn in from the left in six hard steps, and erased the same six steps to close.' },
-            { name: 'Dragged in', text: 'The menu drops into place from above in two hard steps, and drags back up in two steps to close.' },
-            { name: 'Switched', text: 'The menu’s bevel pops out in one hard step to open, and pops back in to close.' },
-        ],
-        tone: [
-            {
-                name: 'The message box',
-                text: 'The destructive entry is framed in its colour like a message box asking for attention; the disabled reason sits in a sunken field.',
-            },
-            {
-                name: 'The flat field',
-                text: 'The destructive entry sits in a flat square field with a 1px rule; the disabled reason reads plainly below.',
-            },
-            {
-                name: 'The error beep',
-                text: 'The destructive entry’s plate flashes once on open, as an error beep; the disabled reason reads under a dotted rule.',
-            },
-        ],
-        interact: [
-            {
-                name: 'The bevel presses',
-                text: 'A hovered or focused entry’s bevel raises; a press sinks the bevel in for the duration of the press.',
-            },
-            { name: 'Repainted', text: 'A hovered or focused entry flashes in the ink for a moment, in hard jumps; a press holds the flash.' },
-            {
-                name: 'The highlight bar',
-                text: 'A hovered or focused entry gets the system’s blue highlight bar; a press darkens the bar by one shade.',
-            },
         ],
     },
     grotesk: {
@@ -954,7 +925,6 @@ const PICKED = {
     brutalism: ['2', '5', '1', '1', '1'],
     deco: ['1', '1', '3', '1', '1'],
     phantom: ['2', '3', '2', '1', '3'],
-    retro: ['1', '1', '1', '1', '1'],
     grotesk: ['1', '2', '1', '1', '2'],
     nostromo: ['1', '2', '3', '1', '2'],
     titanium: ['3', '1', '2', '1', '3'],
@@ -963,7 +933,7 @@ const PICKED = {
 const keptOf = (/** @type {string} */ t, /** @type {Aspect} */ id) => PICKED[t]?.[ASPECTS.findIndex((a) => a.id === id)] ?? '';
 // Round 2's new options replace an open aspect's; each carries its own key,
 // the attribute value its CSS answers to (round 1's are keyed 1, 2, 3).
-for (const file of [R2A, R2B, R2C, R2D, R3A, R3B])
+for (const file of [R2A, R2B, R2C, R3A])
     for (const [t, aspects] of Object.entries(file))
         for (const [id, options] of Object.entries(aspects)) if (options.length >= 3) IDEAS[t][id] = options;
 const keyOf = (/** @type {string} */ t, /** @type {Aspect} */ id, /** @type {string} */ n) => IDEAS[t]?.[id]?.[Number(n) - 1]?.key ?? n;

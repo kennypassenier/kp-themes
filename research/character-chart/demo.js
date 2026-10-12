@@ -26,7 +26,6 @@ import { NOW, sampleData } from '../../catalogue/chart-sample.js';
 import R3A from './round3-a.js';
 import R3B from './round3-b.js';
 import R3C from './round3-c.js';
-import R3D from './round3-d.js';
 import R3E from './round3-e.js';
 import R4A from './round4-a.js';
 import R4B from './round4-b.js';
@@ -57,7 +56,7 @@ const IDEAS = {
         },
         b: {
             name: 'Daylight',
-            text: 'The plot in the light: a pale sky at its top, the sun just out of frame in the top corner, and every line throwing a soft shadow on the paper below it. The tooltip is frosted glass; the legend is pills with a soft shadow. Loading lets a band of daylight cross the plot, slowly.',
+            text: 'The plot in the light: white paper, its lines crisp, the tooltip a white card on the medium shadow, the legend pills with a soft shadow. Loading stands the plot out of focus, breathing, until the readings come into focus.',
         },
     },
     dark: {
@@ -190,16 +189,6 @@ const IDEAS = {
             text: 'Black under a halftone screen, the lines in the violent red with a white second plate off register, the tick labels in condensed capitals. The tooltip is a cut-paper ransom note, white, set at a slant with a red shadow; the legend cut-paper scraps. Loading shuffles the halftone in hard steps.',
         },
     },
-    retro: {
-        a: {
-            name: 'The plotter on fanfold paper',
-            text: 'Continuous fanfold paper with its green-bar bands (in the teal) and a perforation, the tick labels in the pixel face. The lines are a plotter pen, crisp and thin. The tooltip is a 1995 tooltip: a plain box with a 1px black line; the legend raised bevelled buttons that sink when pressed. Loading shows the bands still: nothing blinks.',
-        },
-        b: {
-            name: 'The spreadsheet chart of 1995',
-            text: 'A spreadsheet chart of 1995: a grey plot area sunk into a bevel, solid black grid lines, crisp lines over areas filled with the 50 % dither. The tooltip is a little window with a navy title bar; the legend sits in a raised frame. Loading fills the plot with the dither, still.',
-        },
-    },
     grotesk: {
         a: {
             name: 'The Swiss grid',
@@ -260,7 +249,6 @@ const PICK = {
     dark: 'b',
     terminal: 'b',
     phantom: 'b',
-    retro: 'b',
     cyberpunk: 'a',
     synthwave: 'a',
     pastel: 'a',
@@ -344,11 +332,11 @@ const R2 = {
         loading: [
             ['pen', 'The fountain pen', '--primary', '--foreground'],
             ['dash', 'The ruling pen', '--primary', '--primary'],
-            ['stamp', 'The received stamp', '--primary'],
+            ['stamp', 'The lines are ruled', '--primary'],
         ],
         arrival: [
             ['wipe', 'Entered from the left'],
-            ['draw', 'Written in by hand'],
+            ['draw', 'Ruled in by the pen'],
         ],
         update: [
             ['tail', 'The new line entered'],
@@ -362,11 +350,11 @@ const R2 = {
     light: {
         loading: [
             ['glint', 'Sunlight along the seam', '--primary', '--chart-2'],
-            ['rise', 'Morning rising', '--primary', '--primary'],
+            ['rise', 'Out of focus', '--primary', '--primary'],
             ['hop', 'Three beads', '--primary', '--primary'],
         ],
         arrival: [
-            ['rise', 'Grows into the light'],
+            ['rise', 'Exposed along its length'],
             ['wipe', 'Drawn in, softly'],
         ],
         update: [
@@ -634,25 +622,6 @@ const R2 = {
             ['pin', 'Pinned notes'],
         ],
     },
-    retro: {
-        loading: [
-            ['dither', 'The dither bar', '--foreground', '--primary'],
-            ['segments', 'The 1995 progress bar', '--foreground', '--primary'],
-            ['type', 'The DOS prompt', '--foreground', , "'C:\\\\> LOAD GAUGES'"],
-        ],
-        arrival: [
-            ['steps', 'Painted in steps'],
-            ['scan', 'Redrawn top down'],
-        ],
-        update: [
-            ['tick', 'One step on'],
-            ['tail', 'The new column painted'],
-        ],
-        events: [
-            ['pin', 'Push pins'],
-            ['ring', 'Bevel rings'],
-        ],
-    },
     grotesk: {
         loading: [
             ['segments', 'The ruled bar', '--foreground', '--primary'],
@@ -833,7 +802,6 @@ const PICKED = {
     brutalism: ['1', '3', '1', '3', '2', '1'],
     deco: ['1', '1', '3', '1', '1', '1'],
     phantom: ['1', '2', '1', '1', '1', '1'],
-    retro: ['1', '3', '2', '3', '2', '3'],
     grotesk: ['1', '2', '3', '1', '1', '3'],
     nostromo: ['1', '1', '3', '1', '2', '1'],
     titanium: ['1', '1', '3', '1', '2', '1'],
@@ -841,7 +809,7 @@ const PICKED = {
 /** The settled pick of one aspect, or '' when it is open in round 4. */
 const keptOf = (/** @type {string} */ theme, /** @type {Aspect} */ aspect) => PICKED[theme]?.[ASPECTS.findIndex((a) => a.id === aspect)] ?? '';
 /** Round 3's new options, per theme and open aspect (one file per theme group). @type {Record<string, Partial<Record<Aspect, Option[]>>>} */
-const R3 = { ...R3A, ...R3B, ...R3C, ...R3D, ...R3E };
+const R3 = { ...R3A, ...R3B, ...R3C, ...R3E };
 /** Round 4's new options (six each), per theme and open aspect. @type {Record<string, Partial<Record<Aspect, Option[]>>>} */
 const R4 = { ...R4A, ...R4B, ...R4C, ...R4D, ...R4E };
 /** The most options any open aspect has. */
@@ -880,14 +848,31 @@ const OPTIONS = Object.fromEntries(
                 { key: other, name: `The tooltip of ${lower(IDEAS[theme][other].name)}`, text: "Round 1's other character's tooltip." },
                 { key: 'plain', name: 'The plain tooltip', text: "The package's popover, as today." },
             ],
-            loading: r2.loading.map(([key, name, ink, ink2, say]) => ({ key, name, text: KIND.loading[key], ink, ink2, say })),
+            loading: r2.loading.map(([key, name, ink, ink2, say]) => ({
+                key,
+                name,
+                // Light's "rise" is its grammar's out of focus (research/character-chart/light.css).
+                text:
+                    theme === 'light' && key === 'rise'
+                        ? 'The loading panel is a placeholder out of focus, breathing between a dim and a dazzling exposure; its sentence stays sharp.'
+                        : theme === 'formal' && key === 'stamp'
+                          ? 'Three navy rules are ruled across the whole plot one after the other, held, lifted and ruled again, as a ledger is ruled.'
+                          : KIND.loading[key],
+                ink,
+                ink2,
+                say,
+            })),
             arrival: [...(pick ? [['none', 'As approved: at once']] : []), ...r2.arrival].map(([key, name]) => ({
                 key,
                 name: theme === 'blueprint' && key === 'linear' ? 'Read out on its scales' : name,
                 text:
                     theme === 'blueprint' && key === 'linear'
                         ? 'The chart is read out on its scales: the pen is set down at its start corner and read along its diagonal, amber witness lines and a pointer on each scale, each line inked as the pen passes; the series is simply there, 3 units.'
-                        : KIND.arrival[key],
+                        : theme === 'light' && key === 'rise'
+                          ? 'The lines are exposed from the left to the right, out of a blurred, too bright glare, 700 ms on a long settle.'
+                          : theme === 'formal' && key === 'draw'
+                            ? 'The pen draws each line from its start, the area follows under it, at an even pace and a dead stop, 400 ms.'
+                            : KIND.arrival[key],
             })),
             update: [...(pick ? [['none', 'As approved: it appears']] : []), ...r2.update].map(([key, name]) => ({
                 key,

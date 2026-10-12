@@ -1,0 +1,27 @@
+{
+    "decided": "2026-10-08 Brussels, Kenny: 19 of 19 approved in the review dialog (research/formal-character/README.md): every recommendation except Pointing at something = A rule under the label and Motifs = Those plus the seal where picked",
+    "attributes": "data-fm-<question>=\"<key>\" on the .fm-scene, research/formal-character/options.css",
+    "picks": {
+        "formal": {
+            "curve": "ruled",
+            "direction": "along",
+            "opening": "ruled",
+            "durations": "ruling",
+            "colour": "navy",
+            "corners": "plates",
+            "surface": "ledger",
+            "warning": "redink",
+            "live": "closed",
+            "loading": "lines",
+            "busybar": "closed",
+            "spinner": "arc",
+            "leave": "ruled",
+            "composites": "own",
+            "hover": "under",
+            "focus": "di2",
+            "press": "double",
+            "type": "fraunces",
+            "motifs": "seal"
+        }
+    }
+}

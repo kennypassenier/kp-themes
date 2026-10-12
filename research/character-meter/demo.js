@@ -123,8 +123,8 @@ const IDEAS = {
     light: {
         shape: [
             {
-                name: 'Daylight',
-                text: 'A soft pill in the light: the indigo share brightens towards its end, the mark is a thin gnomon with a short shadow, and past the end the light spills out in a cyan glint.',
+                name: 'The hairline track',
+                text: 'A flat indigo share on a hairline track, the mark a plain stroke with a white edge; nothing brightens, shadows or glints.',
             },
             {
                 name: 'The seam and its circle',
@@ -137,8 +137,8 @@ const IDEAS = {
         ],
         loading: [
             {
-                name: 'Morning light',
-                text: 'A band of daylight crosses the track, slowly.',
+                name: 'Out of focus',
+                text: 'The track breathes out of focus (blur and brightness up and back) while it measures.',
             },
             {
                 name: 'The shadow swings',
@@ -155,8 +155,8 @@ const IDEAS = {
                 text: 'The share is drawn in from the left slowing as it lands.',
             },
             {
-                name: 'The shadow swings',
-                text: 'The share stretches out from the start slowing as it lands.',
+                name: 'Exposed along its length',
+                text: 'The share is exposed from its start to its end, out of a blurred, too bright glare, 700 ms on a long settle.',
             },
             {
                 name: 'Through the window',
@@ -169,8 +169,8 @@ const IDEAS = {
                 text: 'A new tone draws the share again in the new colour, the way the picked arrival brings it.',
             },
             {
-                name: 'The shadow swings',
-                text: 'A new tone swells the meter once, slowing as it lands.',
+                name: 'Re-exposed',
+                text: 'A new tone puts the meter into the glare for a beat and brings it back into focus, in place.',
             },
             {
                 name: 'Through the window',
@@ -183,8 +183,8 @@ const IDEAS = {
                 text: "The mark moves easing in and out; a mark past the end stops at the meter's end, › after it.",
             },
             {
-                name: 'The shadow swings',
-                text: 'The mark moves easing in and out; a mark past the end leans over the end, › beside it.',
+                name: 'The upright mark',
+                text: 'The mark moves on the settle; a mark past the end stops at the meter’s end, upright, with no sign after it.',
             },
             {
                 name: 'Through the window',
@@ -1128,78 +1128,6 @@ const IDEAS = {
             },
         ],
     },
-    retro: {
-        shape: [
-            {
-                name: 'The system monitor',
-                text: 'New, unlike the installer bar and the defragmenter: a sunken black panel of LED segments as Task Manager and Winamp drew a level. Unlit segments glow dark green, the share is lit (yellow for a warning, red for danger), the mark is a white peak-hold segment in a black frame, and past the end the red clip lamp is lit.',
-            },
-            {
-                name: 'The dithered installer bar',
-                text: 'A sunken field with the bevel inside its boundary; the share is navy whose last few pixels are dithered, 1995-style. The mark is a raised grey slider thumb. Past the end a raised scroll-arrow button.',
-            },
-            {
-                name: 'The defragmenter',
-                text: 'Two rows of tiny cells, as the 1995 disk defragmenter drew a drive: navy cells up to the share, a few teal ones among them, white cells beyond. The mark is a white cell column in a black frame. Past the end two more cells sit outside the field.',
-            },
-        ],
-        loading: [
-            {
-                name: 'The marquee',
-                text: 'A block of three lit segments slides through the panel and comes round again, the way a busy progress bar did.',
-            },
-            {
-                name: 'The modem handshake',
-                text: 'A green and a yellow lamp run in from both ends, meet in the middle and part again.',
-            },
-            {
-                name: 'The rubber band',
-                text: 'A dotted selection line along the top and the bottom of the panel, marching in opposite directions.',
-            },
-        ],
-        arrival: [
-            {
-                name: 'Task Manager',
-                text: 'The share is drawn in from the left in 12 hard steps.',
-            },
-            {
-                name: 'Winamp',
-                text: 'The share stretches out from the start in 4 hard steps.',
-            },
-            {
-                name: 'Disk light',
-                text: 'The share is drawn in from the left in 4 hard steps.',
-            },
-        ],
-        tone: [
-            {
-                name: 'Task Manager',
-                text: 'A new tone draws the share again in the new colour, the way the picked arrival brings it.',
-            },
-            {
-                name: 'Winamp',
-                text: 'A new tone knocks the meter up and back once, in 2 hard steps.',
-            },
-            {
-                name: 'Disk light',
-                text: 'A new tone jolts the meter sideways, in 2 hard steps.',
-            },
-        ],
-        mark: [
-            {
-                name: 'Task Manager',
-                text: "The mark moves in 6 hard steps; a mark past the end stops at the meter's end, ▸ after it.",
-            },
-            {
-                name: 'Winamp',
-                text: 'The mark moves in 12 hard steps; a mark past the end stands just outside the end, » after it.',
-            },
-            {
-                name: 'Disk light',
-                text: "The mark moves in 2 hard steps; a mark past the end stops at the meter's end, ! after it.",
-            },
-        ],
-    },
     grotesk: {
         shape: [
             {
@@ -1445,7 +1373,6 @@ const PICKED = {
     titanium: ['1', '1', '3', '3', '3'],
     cyberpunk: ['2', '', '', '3', '3'],
     'high-contrast': ['2', '', '1', '1', '3'],
-    retro: ['1', '', '1', '2', '2'],
     grotesk: ['', '2', '3', '3', '2'],
 };
 /** The aspect's pick from round 3, or '' when it is open in round 4. */

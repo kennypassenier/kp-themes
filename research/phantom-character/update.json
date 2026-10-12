@@ -1,0 +1,48 @@
+{
+    "update": 1,
+    "picks": {
+        "phantom": {
+            "curve": "shove",
+            "direction": "start",
+            "durations": "throw",
+            "colour": "plate",
+            "warning": "overprint",
+            "loading": "slash",
+            "busybar": "screen",
+            "composites": "own",
+            "hover": "bar",
+            "focus": "dashed",
+            "press": "drops",
+            "type": "condensed",
+            "motifs": "print"
+        }
+    },
+    "questions": {
+        "phantom": {
+            "opening": {
+                "comment": "I like 1, but at th etooltip and menu from the button, the closed state already shows part of the menu, it shouldn' tdo that",
+                "reply": "Option 1 stays, with one rule added: a closed part is not drawn at all. The menu, the tooltip, the dialog and the toast are hidden (not drawn, not clipped to a sliver) until the first frame of their throw, and hidden again from the last frame of their close; the dots of a half-resolved part are drawn only inside the part’s own footprint, never outside it. Option 1 is the fixed one; the other two are as before."
+            },
+            "corners": {
+                "comment": "number 1 is good, but make sure that it always looks the same, even when an element is long or wide, I don't want the angle of the corners to change and the corners themselves should probably remain at the same size as well, so content doesn't get cut off on large elements",
+                "reply": "Option 1 stays and its corners are now fixed in size: the cut at each corner is a fixed 14 px (the angle fixed at 45°, the skew −8°) whatever the width or height of the part, so a long card, a wide panel and a small tag all have the same corner and the content is inset from it by the same amount and never cut off. The scene shows a small, a long and a wide card side by side so the corner can be compared."
+            },
+            "surface": {
+                "comment": "1 is best, but in a dialog iwth a title, the red on the side makes soms of the content hard to read",
+                "reply": "Option 1 stays; the deep-red edge that ran down the side of a dialog is moved outside the content box (the title and the words are inset from it by the edge’s own width plus 12 px), so no word sits on the red. The dialog with a title and a long line of text is in the scene."
+            },
+            "live": {
+                "comment": "dissolve and resolve is best, but tweak the animation, because when it dissolves it seems to hang for a bit, it should be smoother and more fluid",
+                "reply": "Dissolve and resolve stays, redrawn without the hang: the dots now change density in six even cuts of 33 ms each way with no hold between dissolving and resolving (the old one waited a whole cut at the lowest density). Three options: the redrawn one (recommended), the same on a continuous dot size (the dots shrink and grow smoothly, still print), and a diagonal resolve that sweeps across the figure."
+            },
+            "spinner": {
+                "comment": "option one, but should be slower, give me a couple of slower options",
+                "reply": "Option 1 (the star snaps and resolves) stays, slower: the same five snaps at three slower paces (2.0 s, 2.8 s and 3.6 s a turn), each with a longer dwell between the snaps so the star is read at rest; the register’s 1.2 s is kept as the reference."
+            },
+            "leave": {
+                "comment": "again, the closed key figure is visible, maybe the others too but they are offscreen, but thingfs in a closed state should never be visible",
+                "reply": "Option 1 stays, with the same rule as the opening: a part that has not arrived or has left is not drawn at all (hidden, not merely off to one side or at zero density), in the scene and in the package: the key figure, the card and the alert are hidden before the first frame and after the last. Option 1 is the fixed one."
+            }
+        }
+    }
+}

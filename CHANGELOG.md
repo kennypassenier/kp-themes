@@ -1,5 +1,97 @@
 # Changelog
 
+## Unreleased
+
+- **Changed: forest, the CSS-only rows of the audit** [2026-10-12, research/forest-applied/_audit/MISSING.md rows 6-8, 11, 13-23, 25]. Prose is in the body face (the
+  alarm's detail, hint, countdown and button, the error page, platforms, health, status lines, truncated cells, microlabels); the busy table shows the planting row
+  alone; a pressed plain or ghost button keeps its plate (ghost words 4.35:1 to 6.7:1); the phone toggle's tint follows `aria-expanded`; the leaf corner on the
+  code block, date picker title, key figure value, log level, mono chip and palette keys; one swatch shape (the part leaf) and the sort-order pill; hover blaze on a
+  calendar day, the month title, a sortable header and a tag's remove button; the press closes the blaze on rows, checks and switches; one-channel focus rings
+  on the tile link and the palette link; the alarm's backdrop fades on the growth curve; the phone bar's links fade in the growth time; `outline-style` and the
+  progress bar's head use the register's curve. The marquee's 48 s loop is a decided exception (CHARACTER.md).
+- **Changed: forest, the motion rows of the audit, every close its open reversed** [2026-10-12, research/forest-applied/_audit/MISSING.md rows 1-5, 9, 10, 12].
+  The busy table's layer, the table's empty state and an upload's file row leave before they go (open and close 1000 ms, mirror within 6 %); a
+  tab switch grows the new panel while the old one withers (1000 ms in all, not 2000); a tree branch's children glide open and shut on the growth
+  curve; a dismissed alert arrives again when it is shown; the tour's ring and dim withers as they were drawn (14.4 % off to 2.2 %); the space a
+  leave folds takes the growth time (1000 ms, not 1583). Shared code: `js/motion.js` gains `leavesState()`, `arriveShown()`, `glideGroup()` and
+  the tokens `--kp-leave-state`, `--kp-leave-fold-grow`, `--kp-leave-fold-start`, `--kp-arrive-unseen`; `css/components.css` the token
+  `--kp-tour-dim-close`. Every one is set by forest alone, so no other theme changes. The calendar's busy pair (open 1000 ms, close 1820 ms: the days
+  grow in turn when the data arrives) is a decided exception (CHARACTER.md).
+- **Fixed: menus placed under their button in every theme, and a capped arrival queue** [2026-10-09]. `js/top-layer.js` `layoutRect()` measures a
+  box without its growth translate, so the menu button's menu, the drawn select and the date picker open at their trigger even when a theme grows
+  them from its edge (forest opened them about one menu height too low); `js/motion.js` `inTurnGap()` caps a row of three or more items arriving or
+  leaving one by one at about 600 ms in all.
+- **Changed: forest, straightened, as Kenny decided it on research/forest-uniformity** [2026-10-09, themes/forest/CHARACTER.md]. The bar's dropdown,
+  mega menu and phone menu grow out of the bar and close as that growth reversed; the palette, date picker, theme list, combobox list, tour and
+  side navigation grow like their family and every backdrop fades on the growth curve. Every pointable part, field and row blazes (tabs, crumbs
+  and pages answer as links), focus is the two-channel ring everywhere. The tick and radio dot are set and cleared as mirror images, the alarm
+  grows like the dialog with a growth ring instead of the glow, one loading picture per panel, one 6.6 s breath for everything that waits, the
+  leaf corner on the last small parts. Fixes: pressed primary and destructive button contrast, growth clip past its anchor, one-channel focus
+  rings, a double plate in popover menus, monospace crumbs and pages, right-to-left rule, meter and alert edge, DI5 table rows.
+- **Changed: deco's grammar, as Kenny decided it on research/deco-character** [2026-10-09, themes/deco/CHARACTER.md]. Plates are lacquer with
+  the wallpaper and coved corners; the inlay draws itself on opening and the close is its reverse; a great fan leaves and arrives; lift doors
+  wait; the progress bar is the doubled inlay; hover is gold leaf, a press is a seal, focus is a double gold ring, a live update is gilded;
+  `fx-ease` is the settle curve `cubic-bezier(0.22, 1, 0.36, 1)`.
+- **Changed: dark's grammar, as Kenny decided it on research/dark-character** [2026-10-09, themes/dark/CHARACTER.md]. Every opening is a pass
+  left to right over the part's own box and the close is the pass back; loading is a comet on every waiting surface and the busy bar, the
+  spinner is five spectrum bars; a live update is one pass over the figure (`--kp-update: pass`), a warning is the film gone coral; hover rests
+  a 2 px film line, a press turns the film edge a quarter; `fx-ease` is the settle curve. Removed: the develop flash, the misregistration
+  ghosts, the two-wavelength resolve, the tone swell, the darkroom resize.
+- **Changed: phantom's grammar, as Kenny decided it on research/phantom-character** [2026-10-09, themes/phantom/CHARACTER.md]. The shove and
+  its inverse on every travel; one 700 ms throw that resolves from halftone dots (dialog, toast, menu, popover, dropdown, tour, drawer,
+  headlines), the leave as its inverse, a closed part never drawn; a fixed 14 px corner cut; a warning is the yellow overprint, a failure the
+  red plate; a live update is six cuts of the halftone mask; every waiting surface is the red slash; `fx-ease` is `cubic-bezier(0.81, 0, 0, 1)`.
+- **Research: retro update 2 and deco update 3** [2026-10-09]. Retro's loading is redrawn from the real Windows 95 animations (torch, progress band,
+  hourglass, defrag, file copy, dial-up lights); deco's leaving and arriving are ten variations in the festoon's art style.
+- **Changed: formal's grammar, as Kenny decided it on research/formal-character** [2026-10-08, themes/formal/CHARACTER.md §4]. The
+  clerk rules a ledger: `--fx-ease` is `linear` (css/themes.css); everything that opens, leaves, loads, spins or updates is a rule
+  being ruled (400 ms, 60 ms apart, loop 2400 ms; `kp-sig-formal-line-k`/`-pen-k`/`-leave`/`-ruling`/`-loading`/`-update-closed`/
+  `-arc-*`/`-bar-*`, css/formal-register.css). Hover is a rule under the label, a press doubles the rule, a warning is a red-ink
+  entry on paper (alerts, key figures, menu entry, calendar days), a live update is ruled again and closed, gold is the meter's
+  ribbon only (the laurels are navy), tags and tooltips are square, labels are small capitals. The stamp, the dial, the dotted
+  leader, the fold and the fade-and-rise are gone.
+- **Changed: formal's research variants** [2026-10-08]. `formal.css` beside character-busy, -calendar, -chart, -columns, -drawer,
+  -header, -kpi, -menu, -meter, -state, -tiles and -trend redraws the picks on the grammar.
+- **Changed: light's grammar, as Kenny decided it on research/light-character** [2026-10-08, themes/light/CHARACTER.md §4]. Light
+  exposes: a part comes into focus out of a glare (brightness 1.6, blur 5 px) where it stands and leaves back into it
+  (`kp-sig-light-expose`/`-leave`, css/light-register.css), 700 ms on the settle `cubic-bezier(0.16, 1, 0.3, 1)`, closing on its
+  inverse. `--fx-ease` is the settle and `--fx-duration` is 200 ms (css/themes.css), a group is 120 ms apart and a loop 3600 ms;
+  the dialog, menu, popover, tooltip, toast, drawer, tour, headline, rule and mark all arrive this way. Waiting surfaces stand out
+  of focus and breathe; the busy bar's bead runs the hairline and back; the spinner's bead burns out at the top. A live update is
+  re-exposed (`--kp-update: reexpose`). A warning is a 3 px top band and a soft pill on the key figure, trend tile, alert and
+  destructive menu entry. Hover settles 2 px, the focus ring is DI2's, and a press lands and flashes. One face in two weights,
+  and the blueprint grid texture is off.
+- **Changed: the research demos' light picks** (busy, calendar, chart, columns, drawer, header, kpi, menu, meter, state, tiles,
+  trend) are redrawn on the grammar in a `light.css` each.
+- **Removed: two more themes, `high-contrast` and `sepia`** [breaking, next
+  major release; Kenny, 2026-10-08, in the review dialog: "we are actually
+  not going further with high contrast, the theme can be removed from
+  everywhere" and "We are also stopping with Sepia, it may be deleted"].
+  Seventeen themes remain. Gone with them: their token sources
+  (`themes/<name>/`), their registers (`css/<name>-register.css` and the
+  `./css/<name>-register` and `/min` exports), their blocks in
+  `css/themes.css` and entries in `js/theme-registry.js` (and so in the
+  `ThemeName` type), their `kp-hc-*` and `kp-sig-<theme>-*` TIMINGS rows,
+  their hooks, the font family only high-contrast used (Atkinson
+  Hyperlegible), their showcase, compare and concept pages, their verdict
+  rows and their theme-specific tests. A page that stores one of the two
+  names falls back to the default theme. See MIGRATION.md.
+- **Removed: the `retro` theme** [breaking, next major release; Kenny,
+  2026-10-09: "I am so disappointed in retro that we simply scrap the whole
+  theme for now; put it as an idea for future themes, in case we want
+  more"]. Sixteen themes remain. Gone with it: `themes/retro/`, its register
+  (`css/retro-register.css` and the `./css/retro-register` and `/min`
+  exports), its block in `css/themes.css` and its entry in
+  `js/theme-registry.js` (and so in the `ThemeName` type), its
+  `kp-sig-retro-*` TIMINGS rows, its BIOS lines in `arrivalLinesByTheme`,
+  its hooks, its texture and title-bar rules in `css/_rules.css`, the font
+  family only retro used (Pixelify Sans), its showcase, compare and concept
+  pages, its intro block in the catalogue, its verdict rows, its
+  theme-specific tests and its research demos (retro-anchor,
+  retro-character, retro-alarm-face, its variant sheets in the character
+  demos). The idea is kept in docs/FUTURE_THEMES.md. A page that stores
+  `retro` falls back to the default theme. See MIGRATION.md.
+
 ## 10.0.0 — 2026-10-08
 
 - **Released with open review pairs, on Kenny's word** [2026-10-08, forms open-blocks,

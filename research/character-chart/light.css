@@ -1,0 +1,74 @@
+/* research/character-chart, light: the decided picks on light's grammar
+   (themes/light/CHARACTER.md G1-G21, decided by Kenny on 2026-10-08;
+   css/light-register.css holds the tokens and keyframes, `--kp-sig-light-*`
+   and `kp-sig-light-*`). Only light's decided options change: shape b, tip
+   b, loading rise, arrival rise (update none and the halo events stay).
+
+   - shape: daylight's pale sky, the sun off frame in the corner and the
+     soft shadow every line threw are retired (G7, G19): the plot is white,
+     its lines crisp, the legend pills keep their soft shadow (a pill is
+     something you act on);
+   - tip: the frosted glass (a translucent plate with a backdrop blur) is
+     white (G7): the popover's plate, its seam and the medium shadow;
+   - loading: the band of light rising from the foot is retired (G10): the
+     plot's loading panel is a placeholder out of focus, breathing between
+     its dim and its dazzle (the register draws the same on every
+     placeholder), its sentence stays sharp;
+   - arrival: the grow (a scaleY from the foot, with an overshoot) is the
+     line exposed along its length, start to end, out of the glare (G2): the
+     series is clipped to its front while its blur and brightness come down
+     with it, 700 ms on the settle. */
+@layer kp.signature {
+    [data-theme='light'] [data-cc-shape='b'] .kp-chart {
+        --cc-paper: var(--card);
+        --cc-line-filter: none;
+    }
+
+    [data-theme='light'] [data-cc-shape='b'] .kp-chart__spark-line {
+        filter: none;
+    }
+
+    [data-theme='light'] [data-cc-tip='b'] .kp-chart__tip {
+        border: 1px solid var(--border);
+        background: var(--popover);
+        box-shadow: var(--kp-shadow-md);
+        backdrop-filter: none;
+    }
+
+    [data-theme='light'] [data-cc-shape='b'] .kp-chart__source[aria-pressed='true'] {
+        border-color: var(--primary);
+        background: var(--accent);
+        box-shadow: 0 1px 3px hsl(from var(--foreground) h s l / 0.12);
+    }
+
+    /* Loading rise · the placeholder stands out of focus. */
+    [data-theme='light'] [data-cc-loading='rise'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: 0;
+        block-size: auto;
+        border-radius: inherit;
+        background: hsl(from var(--border-strong) h s l / 0.55);
+        filter: var(--kp-sig-light-dim);
+    }
+
+    [data-theme='light'] [data-cc-loading='rise'] .kp-chart__state[data-kp-state='loading']::after {
+        content: none;
+        animation: none;
+    }
+
+    /* Arrival rise · exposed along its length. */
+    [data-theme='light'] [data-cc-arrival='rise'][data-cc-arriving] .kp-chart__series {
+        transform: none;
+        clip-path: inset(-10px calc((1 - var(--cca-k)) * 100%) -10px -10px);
+        filter: blur(calc((1 - var(--cca-k)) * 5px)) brightness(calc(1 + (1 - var(--cca-k)) * 0.6));
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='light'] [data-cc-loading='rise'] .kp-chart__state[data-kp-state='loading']::before {
+            animation: kp-sig-light-breathe var(--kp-sig-light-loop) infinite;
+        }
+
+        [data-theme='light'] [data-cc-arrival='rise'][data-cc-arriving] .kp-chart__plot {
+            animation: cca-k var(--kp-sig-light-time) var(--kp-sig-light-ease) both;
+        }
+    }
+}

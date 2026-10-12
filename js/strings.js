@@ -275,6 +275,7 @@
  * @property {string} meterUsed  A meter's share, in the words a screen reader hears, when the page names it nothing else ("62% used") [scope-143]
  * @property {string} meterNotMeasured  A meter with no share, for a screen reader [scope-143]
  * @property {string} meterMeasuring  A loading meter, for a screen reader [scope-143]
+ * @property {string} [loading]  The calendar's busy text when the page gives none (`Loading…`)
  * @property {string} loadingWord  The word a busy picture spells on screen, deciphered letter by letter (cyberpunk's skeletons, busy bars and meters); `setStrings()` hands it to the stylesheet [scope-143]
  * @property {string} calendarNav  The name of a month heatmap's row of month buttons (js/calendar.js) [scope-143]
  * @property {string} calendarPrev  A month heatmap's button to the month before; its name and title are `previousMonth` [scope-143]
@@ -603,7 +604,6 @@ export const DEFAULT_STRINGS = Object.freeze({
         synthwave: { line: '▶ Play', progress: 'Tracking', ready: 'Press start' },
     },
     arrivalLinesByTheme: {
-        retro: ['KP Modular BIOS v4.51PG', 'kp-themes 95 — retro build', 'Memory Test : {count}K'],
         terminal: ['KP-THEMES BIOS v5.0.0', 'MEMORY TEST ......... 640K OK', 'PHOSPHOR PROFILE .... terminal', 'CRT WARM-UP ......... OK', 'READY.'],
     },
     arrivalProgress: 'Progress',

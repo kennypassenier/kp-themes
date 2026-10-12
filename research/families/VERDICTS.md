@@ -24,7 +24,7 @@ Picked per theme (family = component whose pick the whole theme speaks):
 | high-contrast | Network graph         | Meter            | Trend tile            | Menu button       | Key-figure strip | Meter            |
 | sepia         | Busy table            | Time chart       | Trend tile            | Menu button       | Meter            | Busy table       |
 
-Still open: blueprint, solstice, brutalism, deco, phantom, retro, grotesk, nostromo, titanium.
+Still open: blueprint, solstice, brutalism, deco, phantom, grotesk, nostromo, titanium (retro dropped 2026-10-09).
 
 Decided since:
 

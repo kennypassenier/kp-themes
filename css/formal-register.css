@@ -1,3 +1,41 @@
+/* The numbers formal's motion is made of, registered at the top level
+   because Firefox does not register an @property inside a cascade layer;
+   with no registration every keyframe below would flip between its two
+   poses instead of moving. --kp-fm-t is how far a ruled opening or a leave
+   has come (0 to 1, finished = 1), --kp-fm-l the loop of the ruled lines of
+   a waiting surface (0 to 1; at rest the three lines are ruled), --kp-fm-u
+   the live update's rules (0 to 1), --kp-fm-a0 and --kp-fm-a1 the two ends
+   of the spinner's arc (at rest the ring is closed). */
+@property --kp-fm-t {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+@property --kp-fm-l {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0.5;
+}
+
+@property --kp-fm-u {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+@property --kp-fm-a0 {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+}
+
+@property --kp-fm-a1 {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 360deg;
+}
+
 @layer kp.register {
     /* @kp-soft/themes — css/formal-register.css
    The formal register, 5.0.0 [S48, LIFT_PLAN row 16]: paper and ink.
@@ -19,20 +57,21 @@
    root (56 of 64, TH124).
 
    Colour discipline (DI9): nothing here names a colour. Navy is the one
-   hue that acts (anatomy.md: "one colour acts"); bronze/gold are the
-   second voice, never a control. No ornament, no glow, no rounded
-   flourish beyond the token radius — anatomy.md's own rule, carried
-   into round six.
+   hue that acts (anatomy.md: "one colour acts"); red ink marks what needs
+   the eye; gold is the meter's ribbon (and the laurels), never a rule and
+   never a control. No ornament, no glow, no rounded flourish beyond the
+   token radius — anatomy.md's own rule, carried into round six.
 
-   The only motion is one-shot: the headline's fade and rise, the
-   section rule's draw-in, the lede's two marks washing in, the
-   dossier's redactions clearing. Nothing loops, nothing opposes its own
-   direction fast enough to approach the flash threshold (DI5) — rated
-   in the anatomy's closing section, not here, because none of it uses
-   `@keyframes` (every effect below is a plain CSS transition, guarded
-   under `@media (prefers-reduced-motion: no-preference)`, so DI5's
-   report has nothing to add to TIMINGS: a transition has no keyframe
-   for the table to describe). */
+   Applied 2026-10-08 (themes/formal/CHARACTER.md, "Applied 2026-10-08"):
+   formal's grammar, decided by Kenny on research/formal-character, is
+   that the clerk rules a ledger. This layer holds the quiet part of it:
+   the headline, the lede's marks, the section rule and the redactions
+   are ruled in on the ruling time (400 ms, linear, a dead stop), the
+   buttons, entries and links answer the pointer with a rule under the
+   label and a press that doubles the rule, a warning is a red-ink
+   entry; everything that opens, leaves, loads, spins or updates is in
+   kp.signature below, under the tokens `--kp-sig-fm-*`, every motion
+   under `@media (prefers-reduced-motion: no-preference)`. */
 
     [data-theme='formal'] {
         /* The configuration surface [AR43], the demo's own values as
@@ -73,30 +112,38 @@
         letter-spacing: -0.02em;
     }
 
+    /* The voice [G18; Kenny, 2026-10-08, question 18: Fraunces figures,
+       small-caps labels]: titles and large figures in Fraunces with tabular
+       numerals; labels, captions, menu headings and tags in all-small-caps
+       Instrument Sans tracked 0.06 em; prose in Instrument Sans; identifiers
+       and timestamps in small capitals too, no monospace. */
     [data-theme='formal'] .microlabel {
         display: inline-block;
         font-family: var(--theme-font-body);
-        font-size: 0.75rem;
+        font-size: 0.9375rem;
         font-weight: 600;
-        letter-spacing: 0.16em;
-        text-transform: uppercase;
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+        text-transform: none;
         color: var(--primary);
         margin-block-end: 0.75rem;
     }
 
     /* ── The headline hook [TH119, S45]: whole and untouched, the way an
-       editorial page commits to a line rather than glitching into it. It
-       fades and rises once; the underline the demo drew under one word
-       is a finding in the anatomy, not built here (see the file header). ── */
+       editorial page commits to a line rather than glitching into it. It is
+       ruled in once, start to end, at an even pace and a dead stop (G1, G13;
+       Kenny, 2026-10-08: nothing fades, nothing rises); the underline the
+       demo drew under one word is a finding in the anatomy, not built here
+       (see the file header). ── */
 
     [data-theme='formal'][data-kp-effects] [data-kp-reveal='headline']:not(.is-deciphered) {
-        opacity: 0;
-        transform: translateY(6px);
+        clip-path: inset(-0.5em 100% -0.5em -0.5em);
     }
 
     [data-theme='formal'] [data-kp-reveal='headline'] {
         opacity: 1;
         transform: none;
+        clip-path: inset(-0.5em);
     }
 
     /* ── The mark hook [TH120]: an ink wash under the lede's two phrases,
@@ -199,10 +246,11 @@
     [data-theme='formal'] .kp-nav__brand-tag {
         display: block;
         font-family: var(--theme-font-body);
-        font-size: 0.6875rem;
+        font-size: 0.8125rem;
         font-weight: 500;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+        text-transform: none;
         color: var(--muted-foreground);
     }
 
@@ -214,13 +262,10 @@
 
     [data-theme='formal'] .kp-nav__link--lang {
         color: var(--muted-foreground);
-        text-decoration: none;
-        text-underline-offset: 0.2em;
     }
 
     [data-theme='formal'] .kp-nav__link--lang:hover {
         color: var(--primary);
-        text-decoration: underline;
     }
 
     /* The call to action: a primary plate with the radius. The words sit
@@ -307,14 +352,15 @@
         background: var(--card);
     }
 
-    /* The mirror: a static navy-on-gold double-strike offset shadow, the
-       way a letterpress leaves its twin impression. Applies to whichever
-       variant carries it — the demo puts it on the primary CTA and the
-       shared markup also puts it on the destructive wipe button, which
-       the demo itself did not show for that button (a Class B carry: the
-       package's own markup, the demo's appearance kept where it can be). */
+    /* The mirror: a static double-strike offset shadow, the way a letterpress
+       leaves its twin impression. Applies to whichever variant carries it —
+       the demo puts it on the primary CTA and the shared markup also puts it
+       on the destructive wipe button, which the demo itself did not show for
+       that button (a Class B carry: the package's own markup, the demo's
+       appearance kept where it can be). The twin is struck in the strong
+       hairline, not in gold: gold never acts (G5; Kenny, 2026-10-08). */
     [data-theme='formal'] .kp-button--mirror {
-        box-shadow: 2px 2px 0 0 var(--fx-signal);
+        box-shadow: 2px 2px 0 0 var(--border-strong);
     }
 
     /* The mirror's static offset shadow and the two-channel focus ring
@@ -323,7 +369,7 @@
        both, exactly as the demo composes them. */
     [data-theme='formal'] .kp-button--mirror:focus-visible {
         box-shadow:
-            2px 2px 0 0 var(--fx-signal),
+            2px 2px 0 0 var(--border-strong),
             0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring);
     }
 
@@ -398,8 +444,10 @@
         font-weight: 600;
     }
 
-    /* The stamp: a rotated brick-bordered badge, static — the demo's own
-       "Draft — not for release" never changes text on reveal, so the
+    /* The docket label [G6, G19; Kenny, 2026-10-08: the stamp is retired,
+       a small plate inside a rule is square]: a square red-ink plate in
+       small capitals, set straight — the demo's own "Draft — not for
+       release" never changes text on reveal, so the
        package's data-kp-label-open swap is a no-op here by design (the
        copy entry repeats the same word).
        It floats at the card's top end rather than being placed absolutely
@@ -417,17 +465,16 @@
         margin-block: 0.15rem 0.4rem;
         margin-inline: 0.6rem 0.1rem;
         display: inline-block;
-        font-family: var(--theme-font-display);
-        font-variation-settings: 'opsz' 40;
-        font-weight: 700;
-        font-size: 0.75rem;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+        font-size: 0.9375rem;
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+        text-transform: none;
         color: var(--destructive);
-        border: 1.5px solid var(--destructive);
-        border-radius: 3px;
-        padding: 0.2rem 0.55rem;
-        rotate: -3deg;
+        border: 1px solid var(--destructive);
+        border-radius: 0;
+        padding: 0.1rem 0.5rem;
     }
 
     /* The header beside the stamp keeps at least its title's longest word,
@@ -552,25 +599,9 @@
         border-radius: var(--radius);
     }
 
-    /* The warning plate's own ink read 4.51:1; a twentieth of the page's
-       text in it reads 4.78 [alert-contrast-M1]. The band's items are left
-       alone: they keep the page's text on a soft tint. */
-    [data-theme='formal'] .kp-alert--warning:not(.kp-attention__item) {
-        color: color-mix(in oklab, var(--warning-foreground) 95%, var(--foreground));
-    }
-
-    /* The month heatmap's amber day, the same plate and the same nudge
-       [fix-98]: its count read 4.51:1 by the tokens and 4.44:1 on screen,
-       under the paper grain; 4.78:1 by the tokens now. */
-    [data-theme='formal'] .kp-calendar__day[data-kp-tone='warn'] {
-        color: color-mix(in oklab, var(--warning-foreground) 95%, var(--foreground));
-    }
-
-    /* A key figure in the warning tone, the same plate and the same nudge
-       [fix-99]: 4.51:1 by the tokens, under the paper grain on screen. */
-    [data-theme='formal'] .kp-kpi[data-kp-tone='warning'] .kp-kpi__value {
-        color: color-mix(in oklab, var(--warning-foreground) 95%, var(--foreground));
-    }
+    /* A warning is a red-ink entry on paper (G8): the amber plates, and the
+       ink nudges [alert-contrast-M1, fix-98, fix-99] their contrast needed,
+       are gone with them; see the red-ink entry in kp.signature. */
 
     [data-theme='formal'] .kp-toasts {
         gap: var(--kp-space-sm);
@@ -584,8 +615,9 @@
 
     [data-theme='formal'] .kp-footer h4 {
         font-weight: 700;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+        text-transform: none;
         color: var(--muted-foreground);
     }
 
@@ -597,16 +629,18 @@
 
     [data-theme='formal'] .kp-footer a:hover {
         color: var(--primary);
-        text-decoration: underline;
+        text-decoration: underline 2px var(--primary);
+        text-decoration-skip-ink: none;
     }
 
     /* ── The demo's own pieces [S46] ──────────────────────────────────── */
 
     [data-theme='formal'] .kp-side-note {
         font-family: var(--theme-font-body);
-        font-size: 0.6875rem;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
+        font-size: 0.875rem;
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+        text-transform: none;
         color: var(--muted-foreground);
         border-inline-start: 1px solid var(--border);
         padding-inline-start: 0.6rem;
@@ -620,7 +654,7 @@
 
     [data-theme='formal'] .kp-laurels svg,
     [data-theme='formal'] .kp-laurels [data-kp-icon] {
-        color: var(--fx-signal);
+        color: var(--primary);
     }
 
     [data-theme='formal'] .kp-platforms {
@@ -665,9 +699,14 @@
 
     /* ── Badges, tags, status ──────────────────────────────────────────── */
 
+    /* A tag or a badge is a small plate inside a rule: square (G6), its
+       words in small capitals (G18). */
     [data-theme='formal'] .kp-badge,
     [data-theme='formal'] .kp-tag {
-        border-radius: calc(var(--radius) - 2px);
+        border-radius: 0;
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+        text-transform: none;
     }
 
     [data-theme='formal'] .kp-health__dot {
@@ -675,12 +714,7 @@
     }
 
     [data-theme='formal'] .kp-skeleton {
-        border-radius: calc(var(--radius) / 2);
-    }
-
-    [data-theme='formal'] .kp-spinner {
-        border-color: var(--border);
-        border-top-color: var(--primary);
+        border-radius: 0;
     }
 
     [data-theme='formal'] .kp-error {
@@ -705,6 +739,8 @@
     [data-theme='formal'] .kp-timestamp,
     [data-theme='formal'] .kp-id {
         color: var(--muted-foreground);
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
     }
 
     [data-theme='formal'] .kp-copyable__button {
@@ -735,6 +771,8 @@
 
     [data-theme='formal'] .kp-table th {
         font-weight: 600;
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
         color: var(--muted-foreground);
         border-bottom: 1px solid var(--border-strong);
     }
@@ -842,10 +880,12 @@
     }
 
     [data-theme='formal'] .kp-shortcuts__group-label,
-    [data-theme='formal'] .kp-palette__group-label {
+    [data-theme='formal'] .kp-palette__group-label,
+    [data-theme='formal'] .kp-menu__heading {
         color: var(--muted-foreground);
+        font-variant-caps: all-small-caps;
         letter-spacing: 0.06em;
-        text-transform: uppercase;
+        text-transform: none;
     }
 
     [data-theme='formal'] .kp-theme-menu__status,
@@ -893,35 +933,32 @@
     /* Every transition of this register lives here, inside the
        no-preference guard, so a reader who asked for reduced motion never
        receives one: the rest states above (already the revealed look) are
-       what they get. There is no `@keyframes` in this register — every
-       reveal is a plain transition — so DI5's report has nothing to add
-       for formal: nothing here loops and every run is one-shot, well
-       under the three-opposing-changes-per-second bar. */
+       what they get. Every reveal here is a plain transition, ruled on
+       --fx-ease (linear) in the ruling time; the keyframes, which DI5's
+       report describes, are in kp.signature. */
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='formal'] [data-kp-reveal='headline'] {
-            transition:
-                opacity 450ms var(--fx-ease),
-                transform 450ms var(--fx-ease);
+            transition: clip-path var(--kp-sig-fm-time) var(--fx-ease);
         }
 
         [data-theme='formal'] mark {
-            transition: background-size 350ms var(--fx-ease);
+            transition: background-size var(--kp-sig-fm-time) var(--fx-ease);
         }
 
         [data-theme='formal'] [data-kp-reveal='rule']::after {
-            transition: transform 450ms var(--fx-ease);
+            transition: transform var(--kp-sig-fm-time) var(--fx-ease);
         }
 
         [data-theme='formal'] .kp-card[data-kp-reveal='emphasis'] mark {
-            transition: background-size 260ms var(--fx-ease);
+            transition: background-size var(--kp-sig-fm-time) var(--fx-ease);
         }
 
         [data-theme='formal'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2) {
-            transition-delay: var(--kp-redact-stagger, 80ms);
+            transition-delay: var(--kp-redact-stagger, var(--kp-sig-fm-stagger));
         }
 
         [data-theme='formal'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3) {
-            transition-delay: calc(2 * var(--kp-redact-stagger, 80ms));
+            transition-delay: calc(2 * var(--kp-redact-stagger, var(--kp-sig-fm-stagger)));
         }
     }
     /* The band [M1, M4]: Kenny picked this theme's own version over the
@@ -979,19 +1016,36 @@
         color: var(--muted-foreground);
     }
 
-    /* ── The rule doubles [gap-4, approved 2026-09-12] ─────────────────
-       A formal document frames what it wants noticed twice: a thin line
-       inside a thicker one, the way a diploma, a certificate or a
-       letterhead does. Touching a control draws that second line just
-       inside the first, in the theme's own navy.
+    /* ── Pointing, focus and the press [G14 to G17; the anchor, Kenny,
+       2026-10-08, research/formal-anchor: "the hover rule inside a button
+       doubled on press"; research/formal-character questions 14 to 17:
+       hover = a rule under the label, focus = DI2's two-channel ring, the
+       press = the rule doubles, every control inside a composite formal's
+       own]. The inner rule is the register's own gesture from gap-4
+       (2026-09-12): a thin navy line two pixels inside the control.
 
-       Formal is the package's default — what a consumer gets without
-       choosing anything — so the gesture must not draw attention. This is
-       the quietest of the six, and that is the point.
+       Hover rules a 2 px navy line under the label, inside the face
+       (the menu's quill underline carried to every control): the underline
+       is there at rest in no colour and takes navy in the contact time; on a
+       filled button it takes the label's colour. No lift, no shadow. A press
+       draws the inner rule and its second rule three pixels further in (the
+       first on ::after, the second on ::before) and the face takes its
+       pressed ground; nothing moves, and a release lifts the second rule.
+       Focus is the system's ring (DI2, in kp.components and kp.base), which
+       this block never replaces, so it wins when both apply and the rule
+       under the label stays drawn beneath it. One selector list serves every
+       button, link and entry wherever it stands: a header, a menu, a tile, a
+       drawer, a tour or alone. ─────────────────────────────────────────── */
+    [data-theme='formal'] :is(.kp-button, .kp-menu__item) {
+        text-decoration: underline 2px transparent;
+        text-decoration-skip-ink: none;
+        text-underline-offset: 0.3em;
+    }
 
-       Measured in firefox 2026-09-12: two pixels in, label contrast 11.67,
-       the box unchanged. */
-    [data-theme='formal'] .kp-button::after {
+    [data-theme='formal'] .kp-button::after,
+    [data-theme='formal'] .kp-button::before,
+    [data-theme='formal'] .kp-icon-button::after,
+    [data-theme='formal'] .kp-icon-button::before {
         content: '';
         position: absolute;
         inset: var(--kp-double-rule-inset, 2px);
@@ -1001,23 +1055,156 @@
         pointer-events: none;
     }
 
+    [data-theme='formal'] :is(.kp-button, .kp-icon-button)::before {
+        inset: calc(var(--kp-double-rule-inset, 2px) + 3px);
+        border-radius: calc(var(--radius) - 4px);
+    }
+
     /* On a filled button a primary-coloured rule vanishes into its own
        ground; there the rule takes the label's colour (Kenny, catalogue
        note 2026-09-13). */
-    [data-theme='formal'] .kp-button--primary::after,
-    [data-theme='formal'] .kp-button--destructive::after {
+    [data-theme='formal'] :is(.kp-button--primary, .kp-button--destructive)::after,
+    [data-theme='formal'] :is(.kp-button--primary, .kp-button--destructive)::before,
+    [data-theme='formal'] :is(.kp-toast, .kp-nav) :is(.kp-button, .kp-icon-button)::after,
+    [data-theme='formal'] :is(.kp-toast, .kp-nav) :is(.kp-button, .kp-icon-button)::before {
         border-color: currentColor;
     }
 
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='formal'] .kp-button::after {
-            transition: opacity var(--fx-duration, 200ms) var(--fx-ease, ease);
-        }
+    [data-theme='formal'] .kp-button:hover:not(:disabled, [aria-disabled='true']),
+    [data-theme='formal'] .kp-menu__item:hover:not(:disabled, [aria-disabled='true']) {
+        text-decoration-color: var(--primary);
     }
 
-    [data-theme='formal'] .kp-button:hover:not(:disabled)::after,
-    [data-theme='formal'] .kp-button:focus-visible::after {
+    [data-theme='formal'] :is(.kp-button--primary, .kp-button--destructive):hover:not(:disabled, [aria-disabled='true']),
+    [data-theme='formal'] :is(.kp-toast, .kp-nav) .kp-button:hover:not(:disabled, [aria-disabled='true']) {
+        text-decoration-color: currentColor;
+    }
+
+    /* An icon has no label: the rule is ruled under the glyph, start to end. */
+    [data-theme='formal'] .kp-icon-button {
+        background-image: linear-gradient(var(--primary), var(--primary));
+        background-repeat: no-repeat;
+        background-position: calc(50% - 0.6em) calc(50% + 0.9em);
+        background-size: 0 2px;
+    }
+
+    [data-theme='formal'] .kp-icon-button:hover:not(:disabled, [aria-disabled='true']) {
+        background-size: 1.2em 2px;
+    }
+
+    [data-theme='formal'] :is(.kp-toast, .kp-nav) .kp-icon-button {
+        background-image: linear-gradient(currentColor, currentColor);
+    }
+
+    /* The press: the rule doubles. */
+    [data-theme='formal'] :is(.kp-button, .kp-icon-button):active:not(:disabled, [aria-disabled='true'])::after,
+    [data-theme='formal'] :is(.kp-button, .kp-icon-button):active:not(:disabled, [aria-disabled='true'])::before {
         opacity: 1;
+    }
+
+    /* A menu entry takes the muted ground and the rule under its label; a
+       press doubles that rule (a double underline). */
+    [data-theme='formal'] .kp-menu__item:hover:not(:disabled, [aria-disabled='true']) {
+        background: var(--muted);
+    }
+
+    [data-theme='formal'] .kp-menu__item:active:not(:disabled, [aria-disabled='true']) {
+        background: var(--muted);
+        text-decoration-style: double;
+        text-decoration-thickness: 1px;
+        text-decoration-color: var(--primary);
+    }
+
+    /* A key figure that is a link or a toggle: the rule under its label; a
+       press doubles the rule round the plate. */
+    [data-theme='formal'] :is(a.kp-kpi, .kp-kpi--toggle) .kp-kpi__label {
+        text-decoration: underline 2px transparent;
+        text-decoration-skip-ink: none;
+        text-underline-offset: 0.3em;
+    }
+
+    [data-theme='formal'] :is(a.kp-kpi, .kp-kpi--toggle):hover {
+        border-color: var(--border);
+    }
+
+    [data-theme='formal'] :is(a.kp-kpi, .kp-kpi--toggle):hover .kp-kpi__label {
+        text-decoration-color: var(--primary);
+    }
+
+    [data-theme='formal'] :is(a.kp-kpi, .kp-kpi--toggle):active {
+        background: color-mix(in oklab, var(--secondary-active) 35%, var(--card));
+        box-shadow:
+            inset 0 0 0 2px var(--card),
+            inset 0 0 0 3px var(--primary),
+            inset 0 0 0 5px var(--card),
+            inset 0 0 0 6px var(--primary);
+    }
+
+    /* A day of the month: its figure is ruled under, twice when pressed. */
+    [data-theme='formal'] .kp-calendar__day .kp-calendar__num {
+        text-decoration: underline 2px transparent;
+        text-decoration-skip-ink: none;
+        text-underline-offset: 0.2em;
+    }
+
+    [data-theme='formal'] .kp-calendar__day:hover:not(:disabled, [aria-disabled='true']) .kp-calendar__num {
+        text-decoration-color: var(--primary);
+    }
+
+    [data-theme='formal'] .kp-calendar__day:active:not(:disabled, [aria-disabled='true']) .kp-calendar__num {
+        text-decoration-style: double;
+        text-decoration-thickness: 1px;
+        text-decoration-color: var(--primary);
+    }
+
+    /* A link in the navigation: the same rule under the words. */
+    [data-theme='formal'] .kp-nav__link {
+        text-decoration: underline 2px transparent;
+        text-decoration-skip-ink: none;
+        text-underline-offset: 0.3em;
+    }
+
+    [data-theme='formal'] .kp-nav__link:hover,
+    [data-theme='formal'] .kp-nav__link--lang:hover {
+        text-decoration-line: underline;
+        text-decoration-style: solid;
+        text-decoration-color: var(--primary);
+    }
+
+    [data-theme='formal'] .kp-nav__link--cta:hover {
+        text-decoration-color: currentColor;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] :is(.kp-button, .kp-menu__item, .kp-nav__link) {
+            transition:
+                background-color var(--fx-duration) var(--fx-ease),
+                border-color var(--fx-duration) var(--fx-ease),
+                text-decoration-color var(--fx-duration) var(--fx-ease);
+        }
+
+        [data-theme='formal'] :is(.kp-button, .kp-icon-button)::after,
+        [data-theme='formal'] :is(.kp-button, .kp-icon-button)::before {
+            transition: opacity var(--fx-duration) var(--fx-ease);
+        }
+
+        [data-theme='formal'] .kp-icon-button {
+            transition:
+                background-color var(--fx-duration) var(--fx-ease),
+                background-size var(--fx-duration) var(--fx-ease);
+        }
+
+        [data-theme='formal'] :is(a.kp-kpi, .kp-kpi--toggle) .kp-kpi__label,
+        [data-theme='formal'] .kp-calendar__day .kp-calendar__num {
+            transition: text-decoration-color var(--fx-duration) var(--fx-ease);
+        }
+
+        [data-theme='formal'] :is(a.kp-kpi, .kp-kpi--toggle) {
+            transition:
+                background-color var(--fx-duration) var(--fx-ease),
+                border-color var(--fx-duration) var(--fx-ease),
+                box-shadow var(--fx-duration) var(--fx-ease);
+        }
     }
 
     /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
@@ -1066,20 +1253,21 @@
          under it     the docket cut: a --border-strong hairline and a 3rem
                       navy tick
          the reason   the ink, in the body face (formal has no mono voice)
-         the button   the navy plate with the mirror's 2px gold impression
-                      (--fx-signal); pressing darkens it (--primary-active)
+         the button   the navy plate with the mirror's 2px impression in the
+                      primary ink (gold never acts, G5); pressing darkens it
+                      (--primary-active)
 
        Motion is the register's own, a transition once each, never a
-       keyframe (the header: this register holds none): the plate fades, the
-       sheet arrives as the headline does (opacity and a 6px rise, 450ms,
-       --fx-ease), the docket tick draws as the section rule does (a scaleX,
-       450ms, --fx-ease), the double rule fades in as a hovered button's does
-       (--fx-duration, --fx-ease), and the reason fades after. Under reduced
-       motion the finished notice stands at once. The button keeps this
+       keyframe: the plate, the sheet and the reason are ruled in start to
+       end (a clip-path, the ruling time, 60 ms apart, G13), the docket tick
+       is ruled as the section rule is (a scaleX), and the double rule comes
+       in as a hovered control's colour does (--fx-duration, --fx-ease). Under
+       reduced motion the finished notice stands at once. The button keeps this
        register's shape and takes the alarm's paint, on selectors long enough
        to outrank this register's own button states; the dialog takes no focus
        ring, because in the auto mode the whole screen is what has focus. */
     [data-theme='formal'] .kp-alarm {
+        clip-path: inset(0);
         --kp-alarm-ground: hsl(from var(--primary) h s l / 0.94);
         --kp-alarm-ink: var(--destructive);
         --kp-alarm-soft: var(--foreground);
@@ -1106,6 +1294,7 @@
 
     [data-theme='formal'] .kp-alarm__panel {
         inline-size: min(100%, 54rem);
+        clip-path: inset(-3rem);
     }
 
     [data-theme='formal'] .kp-alarm__panel::before {
@@ -1144,6 +1333,7 @@
 
     [data-theme='formal'] .kp-alarm__detail {
         font-family: var(--theme-font-body);
+        clip-path: inset(-0.5em);
     }
 
     [data-theme='formal'] .kp-alarm__hint,
@@ -1165,7 +1355,7 @@
         border-color: var(--primary);
         background: var(--primary);
         color: var(--primary-foreground);
-        box-shadow: 2px 2px 0 0 var(--fx-signal);
+        box-shadow: 2px 2px 0 0 hsl(from var(--primary-foreground) h s l / 0.45);
         font-family: var(--theme-font-body);
         font-weight: 600;
         letter-spacing: normal;
@@ -1179,7 +1369,8 @@
         color: var(--primary-foreground);
     }
 
-    [data-theme='formal'] .kp-alarm .kp-alarm__ack::after {
+    [data-theme='formal'] .kp-alarm .kp-alarm__ack::after,
+    [data-theme='formal'] .kp-alarm .kp-alarm__ack::before {
         border-color: currentColor;
     }
 
@@ -1198,36 +1389,36 @@
             animation: none;
         }
 
+        /* Ruled in, line by line (G13; Kenny, 2026-10-08): the ground, the
+           sheet, the docket tick and the reason are each ruled start to end
+           in the ruling time, 60 ms apart, top down; nothing fades or rises. */
         [data-theme='formal'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
-            transition: opacity 450ms var(--fx-ease);
+            transition: clip-path var(--kp-sig-fm-time) var(--fx-ease);
         }
 
         [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel {
-            transition:
-                opacity 450ms var(--fx-ease),
-                transform 450ms var(--fx-ease);
+            transition: clip-path var(--kp-sig-fm-time) var(--fx-ease);
         }
 
         [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel::before {
-            transition: opacity var(--fx-duration, 200ms) var(--fx-ease, ease) 450ms;
+            transition: opacity var(--fx-duration) var(--fx-ease) var(--kp-sig-fm-time);
         }
 
         [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__title::after {
-            transition: transform 450ms var(--fx-ease) 300ms;
+            transition: transform var(--kp-sig-fm-time) var(--fx-ease) var(--kp-sig-fm-stagger);
         }
 
         [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__detail {
-            transition: opacity 450ms var(--fx-ease) 250ms;
+            transition: clip-path var(--kp-sig-fm-time) var(--fx-ease) calc(2 * var(--kp-sig-fm-stagger));
         }
 
         @starting-style {
             [data-theme='formal'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
-                opacity: 0;
+                clip-path: inset(0 100% 0 0);
             }
 
             [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel {
-                opacity: 0;
-                transform: translateY(6px);
+                clip-path: inset(-3rem 100% -3rem -3rem);
             }
 
             [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel::before {
@@ -1239,7 +1430,7 @@
             }
 
             [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__detail {
-                opacity: 0;
+                clip-path: inset(-0.5em 100% -0.5em -0.5em);
             }
         }
     }
@@ -1259,6 +1450,36 @@
    orders after kp.register, so it draws over the register exactly as the
    approved demos did, whatever the weight of a register selector. */
 @layer kp.signature {
+    /* ── Formal's grammar, as tokens [themes/formal/CHARACTER.md §1, decided
+       by Kenny on research/formal-character, 2026-10-08]. The clerk rules a
+       ledger: everything that moves is a rule being ruled. One token per
+       rule; every rule below reads these and names no number of its own. ── */
+    [data-theme='formal'] {
+        /* G1: a rule is ruled at an even pace and stops dead at the margin:
+           the theme's --fx-ease is linear (css/themes.css). The old commit
+           curve, cubic-bezier(0.2, 0, 0, 1), is gone from the register. */
+        /* G4: one ruling time. A contact (a hover, a press, a switch) is
+           --fx-duration, 180 ms; a rule across a part is 400 ms; a group is
+           ruled 60 ms apart, the pen lifted 160 ms after the rule has
+           stopped; a loop is 2400 ms and the busy bar's half of it 1200.
+           The unitless forms are for the arithmetic of the ruled openings. */
+        --kp-sig-fm-len: 400;
+        --kp-sig-fm-st: 60;
+        --kp-sig-fm-lift: 160;
+        --kp-sig-fm-time: 400ms;
+        --kp-sig-fm-stagger: 60ms;
+        --kp-sig-fm-loop: 2400ms;
+        /* The pen, and how far past a ruled part's edge its own shadow may
+           show while it is clipped. */
+        --kp-sig-fm-pen: 2px;
+        --kp-sig-fm-reach: 3rem;
+        /* js/motion.js reads its caps from the root: a close of one dialog
+           (680 ms) or a glide of one ruling time is not cut short (its
+           defaults, 600 and 480 ms, are other themes'). */
+        --kp-close-max: 1000ms;
+        --kp-size-max: var(--kp-sig-fm-time);
+    }
+
     /* The link signature is for links in running text; a link in a navigation,
        a menu, a breadcrumb (a nav) or the footer keeps its own component's look
        (scope-93: no link colour in a navigation). */
@@ -1287,7 +1508,7 @@
         inset-block: calc(4 * var(--kp-ps-px)) auto;
         block-size: calc(4 * var(--kp-ps-px));
         background: var(--primary);
-        transition: clip-path 450ms var(--fx-ease, cubic-bezier(0.2, 0, 0, 1));
+        transition: clip-path var(--kp-sig-fm-time) var(--fx-ease);
     }
 
     [data-theme='formal'] .kp-progressbar__track::after {
@@ -1298,7 +1519,7 @@
         block-size: 1px;
         background: var(--primary);
         opacity: var(--kp-ps-closed);
-        transition: opacity 450ms var(--fx-ease, cubic-bezier(0.2, 0, 0, 1));
+        transition: opacity var(--kp-sig-fm-time) var(--fx-ease);
     }
 
     [data-theme='formal'] .kp-progressbar__head {
@@ -1308,84 +1529,130 @@
         background: var(--primary);
         opacity: calc(var(--kp-ps-entered) - var(--kp-ps-closed));
         transition:
-            transform 450ms var(--fx-ease, cubic-bezier(0.2, 0, 0, 1)),
-            opacity 450ms var(--fx-ease, cubic-bezier(0.2, 0, 0, 1));
+            transform var(--kp-sig-fm-time) var(--fx-ease),
+            opacity var(--kp-sig-fm-time) var(--fx-ease);
     }
 
+    /* ── The busy bar is a rule ruled and closed [G11; Kenny, 2026-10-08,
+       question 11: ruled and closed, lifted, ruled again]. The band is ruled
+       start to end (1200 ms), the second rule closes it, both are lifted from
+       the start (1200 ms), and it is ruled again: one loop of 2400 ms on an
+       even pace. Standing still it is the finished picture, the band across
+       and the account closed under it (the dotted leader is retired). With a
+       share known the bar above is unchanged: the band ruled to the share,
+       the second rule only at 100 %. ── */
     [data-theme='formal'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
         inset-inline: 0;
         inline-size: auto;
         clip-path: none;
         animation: none;
-        background: radial-gradient(circle, var(--primary) 0 calc(1.4 * var(--kp-ps-px)), transparent calc(1.9 * var(--kp-ps-px))) 0 50% /
-            calc(7 * var(--kp-ps-px)) calc(4 * var(--kp-ps-px)) repeat-x;
-        transform-origin: left center;
-        transition: transform 450ms var(--fx-ease, cubic-bezier(0.2, 0, 0, 1));
+        background: var(--primary);
+        transition: none;
     }
 
-    @starting-style {
+    [data-theme='formal'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__track::after {
+        opacity: 1;
+        transition: none;
+    }
+
+    [data-theme='formal'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
+        display: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
         [data-theme='formal'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
-            transform: scaleX(0);
+            animation: kp-sig-formal-bar-band var(--kp-sig-fm-loop) linear infinite;
+        }
+
+        [data-theme='formal'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__track::after {
+            animation: kp-sig-formal-bar-second var(--kp-sig-fm-loop) linear infinite;
+        }
+
+        [data-theme='formal'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
+            display: block;
+            animation: kp-sig-formal-bar-head var(--kp-sig-fm-loop) linear infinite;
         }
     }
 
+    /* ── The spinner rules an arc round a double ring [G12; Kenny,
+       2026-10-08, question 12]. A hairline ring with a thinner ring inside
+       it (the double rule, round); a navy arc is ruled round the outer ring at
+       an even pace, closes with a thinner arc inside it, both are lifted, and
+       it is ruled again, 2400 ms a loop. Three sizes (--kp-spinner-size), in
+       a busy button, in the busy panel; standing still it is the closed ring
+       (both arcs complete). The package's own turning head is retired. ── */
     [data-theme='formal'] .kp-spinner {
-        --kp-sig-dur: 1600ms;
         position: relative;
+        box-sizing: content-box;
         border: 1px solid var(--border-strong);
         border-radius: 50%;
-        background: none;
+        background: radial-gradient(circle closest-side, transparent calc(60% - 1px), var(--border) calc(60% - 1px) 60%, transparent 60%);
+        color: var(--primary);
         animation: none;
     }
 
-    [data-theme='formal'] .kp-spinner::before {
-        content: '';
-        position: absolute;
-        inset-block-start: 0;
-        inset-inline-start: calc(50% - 0.5px);
-        inline-size: 1px;
-        block-size: 16%;
-        background: var(--border-strong);
+    [data-theme='formal'] :is(.kp-button--primary, .kp-button--destructive, .kp-toast) .kp-spinner {
+        color: currentColor;
     }
 
+    [data-theme='formal'] .kp-spinner::before,
     [data-theme='formal'] .kp-spinner::after {
         content: '';
         position: absolute;
-        inset: 0;
         border-radius: 50%;
-        background:
-            radial-gradient(circle at 50% 50%, var(--primary) 0 1.75px, transparent 2.25px),
-            radial-gradient(circle at 50% 17%, var(--primary) 0 2.25px, transparent 2.75px),
-            linear-gradient(var(--primary), var(--primary)) 50% 30% / 1.5px 36% no-repeat;
+        pointer-events: none;
+        --kp-fm-a0: 0deg;
+        --kp-fm-a1: 360deg;
+    }
+
+    [data-theme='formal'] .kp-spinner::after {
+        inset: -1px;
+        border: max(1.5px, calc(var(--kp-spinner-size, 1.25rem) * 0.1)) solid currentColor;
+        mask-image: conic-gradient(
+            from 0deg,
+            transparent 0 var(--kp-fm-a0),
+            var(--foreground) var(--kp-fm-a0) var(--kp-fm-a1),
+            transparent var(--kp-fm-a1) 360deg
+        );
+    }
+
+    [data-theme='formal'] .kp-spinner::before {
+        inset: 20%;
+        background: currentColor;
+        mask-image:
+            radial-gradient(farthest-side, transparent calc(100% - 1px), var(--foreground) calc(100% - 1px)),
+            conic-gradient(
+                from 0deg,
+                transparent 0 var(--kp-fm-a0),
+                var(--foreground) var(--kp-fm-a0) var(--kp-fm-a1),
+                transparent var(--kp-fm-a1) 360deg
+            );
+        mask-composite: intersect;
     }
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='formal'] .kp-spinner::after {
-            animation: kp-sig-formal-orbit var(--kp-sig-dur) cubic-bezier(0.65, 0, 0.35, 1) infinite;
+            animation: kp-sig-formal-arc-outer var(--kp-sig-fm-loop) linear infinite;
+        }
+
+        [data-theme='formal'] .kp-spinner::before {
+            animation: kp-sig-formal-arc-inner var(--kp-sig-fm-loop) linear infinite;
         }
     }
 
+    /* ── Loading is ruling the lines [G10; Kenny, 2026-10-08, question 10;
+       the trend's pick, "The ledger is ruled", carried to every waiting
+       surface]. A skeleton line is one row of the ledger: a faint ledger line
+       at its foot and a 2 px navy rule ruled across it, held, lifted from the
+       start and ruled again, 2400 ms; the next line begins 300 ms later.
+       Standing still the rule is ruled and closed. Nothing is inked, nothing
+       shimmers (the words of the old ink picture are retired). ── */
     [data-theme='formal'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
-        --kp-sig-dur: 3000ms;
-        --kp-sig-fm-words: repeating-linear-gradient(
-            90deg,
-            currentColor 0 3.25em,
-            transparent 0 3.7em,
-            currentColor 0 5.4em,
-            transparent 0 5.85em,
-            currentColor 0 9.6em,
-            transparent 0 10.05em,
-            currentColor 0 11.4em,
-            transparent 0 11.85em,
-            currentColor 0 15.2em,
-            transparent 0 15.65em
-        );
         position: relative;
         block-size: 1.5rem;
-        border-block-end: 1px solid var(--border-strong);
+        border-block-end: 1px solid var(--border);
         border-radius: 0;
         background: none;
-        color: hsl(from var(--foreground) h s l / 0.12);
         animation: none;
     }
 
@@ -1393,35 +1660,31 @@
         margin-block-start: 0;
     }
 
-    [data-theme='formal'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):first-child {
-        border-block-start: 3px double var(--border-strong);
-    }
-
-    [data-theme='formal'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before,
-    [data-theme='formal'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+    [data-theme='formal'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before {
         content: '';
         position: absolute;
         inset-inline: 0;
-        inset-block: 0.6rem 0.4rem;
-        background: var(--kp-sig-fm-words);
-    }
-
-    [data-theme='formal'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
-        color: var(--primary);
-        clip-path: inset(0 100% 0 0);
+        inset-block-end: -1px;
+        block-size: 2px;
+        background: var(--primary);
+        pointer-events: none;
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='formal'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
-            animation: kp-sig-formal-ink var(--kp-sig-dur) linear infinite backwards;
+        [data-theme='formal'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before {
+            animation: kp-sig-formal-ledger var(--kp-sig-fm-loop) linear infinite backwards;
         }
 
-        [data-theme='formal'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2)::after {
-            animation-delay: calc(var(--kp-sig-dur) / 3);
+        [data-theme='formal'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2)::before {
+            animation-delay: calc(var(--kp-sig-fm-loop) / 8);
         }
 
-        [data-theme='formal'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3)::after {
-            animation-delay: calc(var(--kp-sig-dur) * 2 / 3);
+        [data-theme='formal'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3)::before {
+            animation-delay: calc(var(--kp-sig-fm-loop) / 4);
+        }
+
+        [data-theme='formal'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(n + 4)::before {
+            animation-delay: calc(var(--kp-sig-fm-loop) * 3 / 8);
         }
     }
 
@@ -1457,12 +1720,12 @@
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='formal'] .kp-switch__input::before {
-            transition: transform 240ms cubic-bezier(0.2, 0, 0, 1);
+            transition: transform var(--fx-duration) var(--fx-ease);
         }
     }
 
     [data-theme='formal'] .kp-field__check {
-        --kp-sig-dur: 260ms;
+        --kp-sig-dur: var(--fx-duration);
         appearance: none;
         display: inline-grid;
         place-content: center;
@@ -1470,7 +1733,7 @@
         block-size: 1.15rem;
         margin: 0;
         border: 1px solid var(--border-strong);
-        border-radius: 3px;
+        border-radius: 0;
         background: var(--background);
     }
 
@@ -1505,17 +1768,15 @@
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='formal'] .kp-field__check[type='checkbox']:checked::before {
-            animation: kp-sig-formal-pen var(--kp-sig-dur) cubic-bezier(0.4, 0, 0.2, 1) both;
-        }
-
+        [data-theme='formal'] .kp-field__check[type='checkbox']:checked::before,
         [data-theme='formal'] .kp-field__check[type='radio']:checked::before {
-            animation: kp-sig-formal-dot var(--kp-sig-dur) cubic-bezier(0.2, 0, 0, 1) both;
+            animation: kp-sig-formal-pen var(--kp-sig-dur) linear both;
         }
     }
 
+    /* The toast, the dialog and the tooltip are ruled open where they stand
+       (G3, G13: the engine below); this is how each looks at rest. */
     [data-theme='formal'] .kp-toast {
-        --kp-sig-dur: 560ms;
         position: relative;
     }
 
@@ -1526,7 +1787,6 @@
         inset-inline: var(--radius);
         block-size: 2px;
         background: var(--primary);
-        transform-origin: 0 50%;
     }
 
     [data-theme='formal'] .kp-toast--success::after {
@@ -1535,22 +1795,13 @@
         opacity: 0.6;
     }
 
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='formal'] .kp-toast {
-            animation: kp-sig-formal-rise 280ms cubic-bezier(0.2, 0, 0, 1) both;
-        }
-
-        [data-theme='formal'] .kp-toast::after {
-            animation: kp-sig-formal-rule var(--kp-sig-dur) cubic-bezier(0.4, 0, 0.2, 1) both;
-        }
-    }
-
     [data-theme='formal'] .kp-dialog::backdrop {
         background: color-mix(in oklab, var(--foreground) 20%, var(--background));
     }
 
+    /* The mat of a dialog is the double rule: a strong hairline and a thinner
+       one inside it (G7). */
     [data-theme='formal'] .kp-dialog {
-        --kp-sig-dur: 300ms;
         box-shadow:
             0 0 0 4px var(--popover),
             0 0 0 5px var(--border-strong),
@@ -1561,24 +1812,19 @@
         font-family: var(--theme-font-display);
     }
 
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='formal'] .kp-dialog {
-            animation: kp-sig-formal-sheet var(--kp-sig-dur) cubic-bezier(0.2, 0, 0, 1) both;
-        }
-    }
-
+    /* A tooltip is a small plate inside a rule: square (G6), its words in
+       small capitals (G18). */
     [data-theme='formal'] .kp-tooltip {
-        --kp-sig-dur: 200ms;
         margin-inline-start: 0.5rem;
         padding: 0.3rem 0.65rem;
         border: 1px solid var(--border-strong);
-        border-radius: calc(var(--radius) / 2);
+        border-radius: 0;
         background: var(--popover);
         color: var(--popover-foreground);
         box-shadow: 0 6px 16px -10px hsl(from var(--foreground) h s l / 0.4);
-        font-size: 0.875rem;
+        font-size: 0.9375rem;
         font-variant-caps: all-small-caps;
-        letter-spacing: 0.05em;
+        letter-spacing: 0.06em;
     }
 
     [data-theme='formal'] .kp-tooltip::before {
@@ -1592,12 +1838,6 @@
         border-inline-start: 1px solid var(--border-strong);
         background: var(--popover);
         transform: rotate(45deg);
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='formal'] .kp-tooltip {
-            animation: kp-sig-formal-tip-drop var(--kp-sig-dur) cubic-bezier(0.2, 0, 0, 1) both;
-        }
     }
 
     [data-theme='formal'] .kp-wizard__steps {
@@ -1662,28 +1902,979 @@
         text-decoration-color: currentColor;
     }
 
-    @keyframes kp-sig-formal-orbit {
-        to {
-            transform: rotate(1turn);
+    /* Growing and shrinking, this theme's way [scope-142; approved by Kenny
+       on research/size-motion, 2026-10-04]. js/motion.js marks a gliding box
+       `[data-kp-resizing]` and what arrives in it `[data-kp-arriving]` (which
+       is ruled in below, as every arrival is). The frame is ruled in as the
+       box changes. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] [data-kp-resizing] {
+            outline: 1px solid var(--border-strong);
+            outline-offset: 4px;
         }
     }
 
-    @keyframes kp-sig-formal-ink {
-        0% {
+    /* ── Ruled open, ruled off [G1 to G4, G13; Kenny, 2026-10-08, questions 1
+       to 4 and 13 of research/formal-character]. What opens is ruled open
+       where it stands: its frame rule is ruled start to end at an even pace
+       and stops dead at the margin (linear, 400 ms), the words revealed
+       behind it; then each line under it is ruled the same way, top down,
+       60 ms apart (a dialog's title, its sentence, its buttons; a menu's
+       entries one by one; a drawer's head, body and foot; a tour card's
+       title, text and foot); a 2 px navy pen runs ahead of the words and is
+       lifted, from the start, 160 ms after it has reached the margin (the
+       finished pose is bare). A close is the same motion played backwards,
+       bottom first, end to start; what arrives is the leave turned around
+       (`--kp-open: reverse-close`). Everything under prefers-reduced-motion:
+       no-preference; standing still nothing is clipped and nothing is drawn.
+       Mirrored by `dir` (`-rtl` keyframes, `--kp-fm-ltr`).
+
+       Two machines, because js/motion.js plays a close and a leave two ways.
+       (1) A dialog, a drawer, a tour card and what leaves or arrives are
+       turned round by js/motion.js from the keyframes the browser reports
+       (Element.getKeyframes, which leaves out custom properties), element by
+       element and pseudo-element by pseudo-element, each in the one time and
+       on the one curve and without the delay of its animation, so that each is
+       ruled by ordinary keyframes whose offsets carry its wait, one pair per
+       line (`kp-sig-formal-line-k`, the clip; `kp-sig-formal-pen-k`, the
+       pen), over 740 ms (400 + 160 + three lines 60 ms apart; a fourth line
+       and later share the fourth's offsets). The unopened dialog runs 1.5
+       times that: js/motion.js reads the theme's time from an unopened dialog
+       and takes a close as two thirds of it, so a dialog opens and closes in
+       exactly 740 ms, and `--kp-close-max` allows it. A leave is the
+       arrival's reverse in 560 ms (400 + 160): the pen is set again, then the
+       rule is taken off, end to start; the arrival is that played backwards
+       by js/motion.js, and a toast comes in as it. (2) A menu, a popover, a
+       tooltip and the other panels that hang from something are turned round
+       in CSS (`[data-kp-reversing]`, css/components.css), which can play a
+       custom property: one number, `--kp-fm-t` (0 to 1, @property at the
+       top of this file, finished = 1), runs over the time the lines of the
+       panel need (`--kp-fm-total`: 400 + 160 + 60 per line after the first,
+       in ms; `--kp-fm-n` counts them with :has(), so a short menu has no
+       dead time at its end); the panel's clip and pen and every entry's clip
+       and pen are computed from that number and the entry's index. ── */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] {
+            --kp-open: reverse-close;
+            --kp-fm-ltr: 1;
+            --kp-fm-dir: to right;
+        }
+
+        [data-theme='formal']:dir(rtl) {
+            --kp-fm-ltr: 0;
+            --kp-fm-dir: to left;
+        }
+
+        @keyframes kp-sig-formal-line-0 {
+            0% {
+                clip-path: inset(-3rem 100% -3rem -3rem);
+            }
+
+            54.054%,
+            100% {
+                clip-path: inset(-3rem);
+            }
+        }
+
+        @keyframes kp-sig-formal-pen-0 {
+            0% {
+                clip-path: inset(0 100% 0 0);
+            }
+
+            54.054% {
+                clip-path: inset(0);
+            }
+
+            75.676%,
+            100% {
+                clip-path: inset(0 0 0 100%);
+            }
+        }
+
+        @keyframes kp-sig-formal-line-0-rtl {
+            0% {
+                clip-path: inset(-3rem -3rem -3rem 100%);
+            }
+
+            54.054%,
+            100% {
+                clip-path: inset(-3rem);
+            }
+        }
+
+        @keyframes kp-sig-formal-pen-0-rtl {
+            0% {
+                clip-path: inset(0 0 0 100%);
+            }
+
+            54.054% {
+                clip-path: inset(0);
+            }
+
+            75.676%,
+            100% {
+                clip-path: inset(0 100% 0 0);
+            }
+        }
+
+        @keyframes kp-sig-formal-line-1 {
+            0%,
+            8.108% {
+                clip-path: inset(-3rem 100% -3rem -3rem);
+            }
+
+            62.162%,
+            100% {
+                clip-path: inset(-3rem);
+            }
+        }
+
+        @keyframes kp-sig-formal-pen-1 {
+            0%,
+            8.108% {
+                clip-path: inset(0 100% 0 0);
+            }
+
+            62.162% {
+                clip-path: inset(0);
+            }
+
+            83.784%,
+            100% {
+                clip-path: inset(0 0 0 100%);
+            }
+        }
+
+        @keyframes kp-sig-formal-line-1-rtl {
+            0%,
+            8.108% {
+                clip-path: inset(-3rem -3rem -3rem 100%);
+            }
+
+            62.162%,
+            100% {
+                clip-path: inset(-3rem);
+            }
+        }
+
+        @keyframes kp-sig-formal-pen-1-rtl {
+            0%,
+            8.108% {
+                clip-path: inset(0 0 0 100%);
+            }
+
+            62.162% {
+                clip-path: inset(0);
+            }
+
+            83.784%,
+            100% {
+                clip-path: inset(0 100% 0 0);
+            }
+        }
+
+        @keyframes kp-sig-formal-line-2 {
+            0%,
+            16.216% {
+                clip-path: inset(-3rem 100% -3rem -3rem);
+            }
+
+            70.27%,
+            100% {
+                clip-path: inset(-3rem);
+            }
+        }
+
+        @keyframes kp-sig-formal-pen-2 {
+            0%,
+            16.216% {
+                clip-path: inset(0 100% 0 0);
+            }
+
+            70.27% {
+                clip-path: inset(0);
+            }
+
+            91.892%,
+            100% {
+                clip-path: inset(0 0 0 100%);
+            }
+        }
+
+        @keyframes kp-sig-formal-line-2-rtl {
+            0%,
+            16.216% {
+                clip-path: inset(-3rem -3rem -3rem 100%);
+            }
+
+            70.27%,
+            100% {
+                clip-path: inset(-3rem);
+            }
+        }
+
+        @keyframes kp-sig-formal-pen-2-rtl {
+            0%,
+            16.216% {
+                clip-path: inset(0 0 0 100%);
+            }
+
+            70.27% {
+                clip-path: inset(0);
+            }
+
+            91.892%,
+            100% {
+                clip-path: inset(0 100% 0 0);
+            }
+        }
+
+        @keyframes kp-sig-formal-line-3 {
+            0%,
+            24.324% {
+                clip-path: inset(-3rem 100% -3rem -3rem);
+            }
+
+            78.378%,
+            100% {
+                clip-path: inset(-3rem);
+            }
+        }
+
+        @keyframes kp-sig-formal-pen-3 {
+            0%,
+            24.324% {
+                clip-path: inset(0 100% 0 0);
+            }
+
+            78.378% {
+                clip-path: inset(0);
+            }
+
+            100%,
+            100% {
+                clip-path: inset(0 0 0 100%);
+            }
+        }
+
+        @keyframes kp-sig-formal-line-3-rtl {
+            0%,
+            24.324% {
+                clip-path: inset(-3rem -3rem -3rem 100%);
+            }
+
+            78.378%,
+            100% {
+                clip-path: inset(-3rem);
+            }
+        }
+
+        @keyframes kp-sig-formal-pen-3-rtl {
+            0%,
+            24.324% {
+                clip-path: inset(0 0 0 100%);
+            }
+
+            78.378% {
+                clip-path: inset(0);
+            }
+
+            100%,
+            100% {
+                clip-path: inset(0 100% 0 0);
+            }
+        }
+
+        @keyframes kp-sig-formal-leave {
+            0%,
+            28.571% {
+                clip-path: inset(-3rem);
+            }
+
+            100% {
+                clip-path: inset(-3rem 100% -3rem -3rem);
+            }
+        }
+
+        @keyframes kp-sig-formal-leave-pen {
+            0% {
+                clip-path: inset(0 0 0 100%);
+            }
+
+            28.571% {
+                clip-path: inset(0);
+            }
+
+            100% {
+                clip-path: inset(0 100% 0 0);
+            }
+        }
+
+        @keyframes kp-sig-formal-leave-rtl {
+            0%,
+            28.571% {
+                clip-path: inset(-3rem);
+            }
+
+            100% {
+                clip-path: inset(-3rem -3rem -3rem 100%);
+            }
+        }
+
+        @keyframes kp-sig-formal-leave-pen-rtl {
+            0% {
+                clip-path: inset(0 100% 0 0);
+            }
+
+            28.571% {
+                clip-path: inset(0);
+            }
+
+            100% {
+                clip-path: inset(0 0 0 100%);
+            }
+        }
+
+        [data-theme='formal'] :is(.kp-dialog, dialog.kp-drawer, .kp-tour) {
+            --kp-fm-dur: 740ms;
+            animation: kp-sig-formal-line-0 var(--kp-fm-dur) linear backwards;
+        }
+
+        [data-theme='formal'] .kp-dialog:not([open]) {
+            --kp-fm-dur: 1110ms;
+        }
+
+        [data-theme='formal'] :is(.kp-dialog, dialog.kp-drawer, .kp-tour):dir(rtl) {
+            animation-name: kp-sig-formal-line-0-rtl;
+        }
+
+        /* The frame rule, along the top edge. */
+        [data-theme='formal'] :is(.kp-dialog, dialog.kp-drawer, .kp-tour)::before {
+            content: '';
+            position: absolute;
+            inset-block-start: 0;
+            inset-inline: 0;
+            z-index: 1;
+            block-size: var(--kp-sig-fm-pen);
+            background: var(--primary);
+            clip-path: inset(0 0 0 100%);
+            pointer-events: none;
+            animation: kp-sig-formal-pen-0 var(--kp-fm-dur) linear backwards;
+        }
+
+        [data-theme='formal'] :is(.kp-dialog, dialog.kp-drawer, .kp-tour):dir(rtl)::before {
+            clip-path: inset(0 100% 0 0);
+            animation-name: kp-sig-formal-pen-0-rtl;
+        }
+
+        /* Each line under it, and its rule under it. */
+        [data-theme='formal'] :is(.kp-dialog, dialog.kp-drawer, .kp-tour) > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]) {
+            position: relative;
+        }
+
+        [data-theme='formal'] :is(.kp-dialog, dialog.kp-drawer, .kp-tour) > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close])::after {
+            content: '';
+            position: absolute;
+            inset-block-end: 0;
+            inset-inline: 0;
+            block-size: var(--kp-sig-fm-pen);
+            background: var(--primary);
+            clip-path: inset(0 0 0 100%);
+            pointer-events: none;
+        }
+
+        [data-theme='formal']
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour)
+            > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):dir(rtl)::after {
             clip-path: inset(0 100% 0 0);
         }
 
-        40%,
-        55% {
-            clip-path: inset(0 0 0 0);
+        [data-theme='formal'] :is(.kp-dialog, dialog.kp-drawer, .kp-tour) > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(1) {
+            animation: kp-sig-formal-line-0 var(--kp-fm-dur) linear backwards;
         }
 
-        85%,
-        100% {
+        [data-theme='formal']
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour)
+            > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(1):dir(rtl) {
+            animation-name: kp-sig-formal-line-0-rtl;
+        }
+
+        [data-theme='formal']
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour)
+            > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(1)::after {
+            animation: kp-sig-formal-pen-0 var(--kp-fm-dur) linear backwards;
+        }
+
+        [data-theme='formal']
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour)
+            > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(1):dir(rtl)::after {
+            animation-name: kp-sig-formal-pen-0-rtl;
+        }
+
+        [data-theme='formal'] :is(.kp-dialog, dialog.kp-drawer, .kp-tour) > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(2) {
+            animation: kp-sig-formal-line-1 var(--kp-fm-dur) linear backwards;
+        }
+
+        [data-theme='formal']
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour)
+            > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(2):dir(rtl) {
+            animation-name: kp-sig-formal-line-1-rtl;
+        }
+
+        [data-theme='formal']
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour)
+            > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(2)::after {
+            animation: kp-sig-formal-pen-1 var(--kp-fm-dur) linear backwards;
+        }
+
+        [data-theme='formal']
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour)
+            > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(2):dir(rtl)::after {
+            animation-name: kp-sig-formal-pen-1-rtl;
+        }
+
+        [data-theme='formal'] :is(.kp-dialog, dialog.kp-drawer, .kp-tour) > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(3) {
+            animation: kp-sig-formal-line-2 var(--kp-fm-dur) linear backwards;
+        }
+
+        [data-theme='formal']
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour)
+            > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(3):dir(rtl) {
+            animation-name: kp-sig-formal-line-2-rtl;
+        }
+
+        [data-theme='formal']
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour)
+            > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(3)::after {
+            animation: kp-sig-formal-pen-2 var(--kp-fm-dur) linear backwards;
+        }
+
+        [data-theme='formal']
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour)
+            > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(3):dir(rtl)::after {
+            animation-name: kp-sig-formal-pen-2-rtl;
+        }
+
+        [data-theme='formal']
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour)
+            > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(n + 4) {
+            animation: kp-sig-formal-line-3 var(--kp-fm-dur) linear backwards;
+        }
+
+        [data-theme='formal']
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour)
+            > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(n + 4):dir(rtl) {
+            animation-name: kp-sig-formal-line-3-rtl;
+        }
+
+        [data-theme='formal']
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour)
+            > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(n + 4)::after {
+            animation: kp-sig-formal-pen-3 var(--kp-fm-dur) linear backwards;
+        }
+
+        [data-theme='formal']
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour)
+            > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(n + 4):dir(rtl)::after {
+            animation-name: kp-sig-formal-pen-3-rtl;
+        }
+
+        /* The shade behind a dialog is ruled across as well. */
+        [data-theme='formal'] .kp-dialog::backdrop {
+            animation: kp-sig-formal-backdrop var(--kp-sig-fm-time, 400ms) linear backwards;
+        }
+
+        @keyframes kp-sig-formal-backdrop {
+            from {
+                clip-path: inset(0 100% 0 0);
+            }
+
+            to {
+                clip-path: inset(0);
+            }
+        }
+
+        /* A toast, and anything else that arrives on its own, is ruled in; what
+           leaves has its rules taken off. */
+        [data-theme='formal'] :is(.kp-toast, [data-kp-arriving]) {
+            animation: kp-sig-formal-leave 560ms linear reverse backwards;
+        }
+
+        [data-theme='formal'] :is(.kp-toast, [data-kp-arriving]):dir(rtl) {
+            animation-name: kp-sig-formal-leave-rtl;
+        }
+
+        /* Leaving is ruled off, bottom first [G13]: the pen is set again, then
+           the rule is taken off, end to start. In a row of leaves the next one
+           goes when the one before has had its first 60 ms: `--kp-leave-stagger`. */
+        [data-theme='formal'] [data-kp-leaving] {
+            --kp-leave-stagger: 0.1;
+            animation: kp-sig-formal-leave 560ms linear forwards;
+        }
+
+        [data-theme='formal'] [data-kp-leaving]:dir(rtl) {
+            animation-name: kp-sig-formal-leave-rtl;
+        }
+
+        [data-theme='formal'] :is([data-kp-leaving], [data-kp-arriving]):is(.kp-alert, .kp-card:not([data-kp-label]), .kp-kpi) {
+            position: relative;
+        }
+
+        [data-theme='formal'] :is([data-kp-leaving], [data-kp-arriving]):is(.kp-alert, .kp-card:not([data-kp-label]), .kp-kpi)::before {
+            content: '';
+            position: absolute;
+            inset-block-start: 0;
+            inset-inline: 0;
+            z-index: 1;
+            block-size: var(--kp-sig-fm-pen);
+            background: var(--primary);
             clip-path: inset(0 0 0 100%);
+            pointer-events: none;
+            animation: kp-sig-formal-leave-pen 560ms linear forwards;
+        }
+
+        [data-theme='formal'] [data-kp-arriving]:is(.kp-alert, .kp-card:not([data-kp-label]), .kp-kpi)::before {
+            animation-direction: reverse;
+            animation-fill-mode: backwards;
+        }
+
+        [data-theme='formal'] :is([data-kp-leaving], [data-kp-arriving]):is(.kp-alert, .kp-card:not([data-kp-label]), .kp-kpi):dir(rtl)::before {
+            clip-path: inset(0 100% 0 0);
+            animation-name: kp-sig-formal-leave-pen-rtl;
+        }
+
+        [data-theme='formal'] .kp-menu-button > .kp-menu {
+            --kp-fm-n: 1;
+        }
+
+        [data-theme='formal'] .kp-menu-button > .kp-menu:has(> :nth-child(2)) {
+            --kp-fm-n: 2;
+        }
+
+        [data-theme='formal'] .kp-menu-button > .kp-menu:has(> :nth-child(3)) {
+            --kp-fm-n: 3;
+        }
+
+        [data-theme='formal'] .kp-menu-button > .kp-menu:has(> :nth-child(4)) {
+            --kp-fm-n: 4;
+        }
+
+        [data-theme='formal'] .kp-menu-button > .kp-menu:has(> :nth-child(5)) {
+            --kp-fm-n: 5;
+        }
+
+        [data-theme='formal'] .kp-menu-button > .kp-menu:has(> :nth-child(6)) {
+            --kp-fm-n: 6;
+        }
+
+        [data-theme='formal'] .kp-menu-button > .kp-menu:has(> :nth-child(7)) {
+            --kp-fm-n: 7;
+        }
+
+        [data-theme='formal'] .kp-menu-button > .kp-menu:has(> :nth-child(8)) {
+            --kp-fm-n: 8;
+        }
+
+        [data-theme='formal'] .kp-popover[popover]:not(.kp-tooltip) {
+            --kp-fm-n: 1;
+        }
+
+        [data-theme='formal'] .kp-popover[popover]:not(.kp-tooltip):has(> .kp-menu > :nth-child(2)) {
+            --kp-fm-n: 2;
+        }
+
+        [data-theme='formal'] .kp-popover[popover]:not(.kp-tooltip):has(> .kp-menu > :nth-child(3)) {
+            --kp-fm-n: 3;
+        }
+
+        [data-theme='formal'] .kp-popover[popover]:not(.kp-tooltip):has(> .kp-menu > :nth-child(4)) {
+            --kp-fm-n: 4;
+        }
+
+        [data-theme='formal'] .kp-popover[popover]:not(.kp-tooltip):has(> .kp-menu > :nth-child(5)) {
+            --kp-fm-n: 5;
+        }
+
+        [data-theme='formal'] .kp-popover[popover]:not(.kp-tooltip):has(> .kp-menu > :nth-child(6)) {
+            --kp-fm-n: 6;
+        }
+
+        [data-theme='formal'] .kp-popover[popover]:not(.kp-tooltip):has(> .kp-menu > :nth-child(7)) {
+            --kp-fm-n: 7;
+        }
+
+        [data-theme='formal'] .kp-popover[popover]:not(.kp-tooltip):has(> .kp-menu > :nth-child(8)) {
+            --kp-fm-n: 8;
+        }
+
+        [data-theme='formal'] :is(.kp-tooltip, .kp-combobox__list, .kp-datepicker__panel) {
+            --kp-fm-n: 1;
+        }
+
+        [data-theme='formal']
+            :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip), .kp-tooltip, .kp-combobox__list, .kp-datepicker__panel) {
+            --kp-fm-total: calc(var(--kp-sig-fm-len) + var(--kp-sig-fm-lift) + (var(--kp-fm-n, 1) - 1) * var(--kp-sig-fm-st));
+            --kp-fm-f: clamp(0, var(--kp-fm-t) * var(--kp-fm-total) / var(--kp-sig-fm-len), 1);
+            --kp-fm-lf: clamp(0, (var(--kp-fm-t) * var(--kp-fm-total) - var(--kp-sig-fm-len)) / var(--kp-sig-fm-lift), 1);
+            --kp-fm-open: calc(100% - var(--kp-fm-f) * (100% + var(--kp-sig-fm-reach)));
+            clip-path: inset(
+                calc(-1 * var(--kp-sig-fm-reach)) calc(var(--kp-fm-open) * var(--kp-fm-ltr) - var(--kp-sig-fm-reach) * (1 - var(--kp-fm-ltr)))
+                    calc(-1 * var(--kp-sig-fm-reach)) calc(var(--kp-fm-open) * (1 - var(--kp-fm-ltr)) - var(--kp-sig-fm-reach) * var(--kp-fm-ltr))
+            );
+            animation: kp-sig-formal-ruling calc(var(--kp-fm-total) * 1ms) linear backwards;
+        }
+
+        [data-theme='formal'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip), .kp-tooltip) {
+            background-image: linear-gradient(
+                var(--kp-fm-dir),
+                transparent calc(var(--kp-fm-lf) * 100%),
+                var(--primary) calc(var(--kp-fm-lf) * 100%) calc(var(--kp-fm-f) * 100%),
+                transparent calc(var(--kp-fm-f) * 100%)
+            );
+            background-repeat: no-repeat;
+            background-size: 100% var(--kp-sig-fm-pen);
+            background-position: 0 0;
+        }
+
+        [data-theme='formal'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip) > .kp-menu) > *:nth-child(1) {
+            --kp-fm-k: 0;
+        }
+
+        [data-theme='formal'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip) > .kp-menu) > *:nth-child(2) {
+            --kp-fm-k: 1;
+        }
+
+        [data-theme='formal'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip) > .kp-menu) > *:nth-child(3) {
+            --kp-fm-k: 2;
+        }
+
+        [data-theme='formal'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip) > .kp-menu) > *:nth-child(4) {
+            --kp-fm-k: 3;
+        }
+
+        [data-theme='formal'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip) > .kp-menu) > *:nth-child(5) {
+            --kp-fm-k: 4;
+        }
+
+        [data-theme='formal'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip) > .kp-menu) > *:nth-child(6) {
+            --kp-fm-k: 5;
+        }
+
+        [data-theme='formal'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip) > .kp-menu) > *:nth-child(7) {
+            --kp-fm-k: 6;
+        }
+
+        [data-theme='formal'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip) > .kp-menu) > *:nth-child(n + 8) {
+            --kp-fm-k: 7;
+        }
+
+        [data-theme='formal'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip) > .kp-menu) > * {
+            --kp-fm-f: clamp(0, (var(--kp-fm-t) * var(--kp-fm-total) - var(--kp-fm-k, 0) * var(--kp-sig-fm-st)) / var(--kp-sig-fm-len), 1);
+            --kp-fm-lf: clamp(
+                0,
+                (var(--kp-fm-t) * var(--kp-fm-total) - var(--kp-fm-k, 0) * var(--kp-sig-fm-st) - var(--kp-sig-fm-len)) / var(--kp-sig-fm-lift),
+                1
+            );
+            --kp-fm-open: calc(100% - var(--kp-fm-f) * (100% + var(--kp-sig-fm-reach)));
+            clip-path: inset(
+                calc(-1 * var(--kp-sig-fm-reach)) calc(var(--kp-fm-open) * var(--kp-fm-ltr) - var(--kp-sig-fm-reach) * (1 - var(--kp-fm-ltr)))
+                    calc(-1 * var(--kp-sig-fm-reach)) calc(var(--kp-fm-open) * (1 - var(--kp-fm-ltr)) - var(--kp-sig-fm-reach) * var(--kp-fm-ltr))
+            );
+            background-image: linear-gradient(
+                var(--kp-fm-dir),
+                transparent calc(var(--kp-fm-lf) * 100%),
+                var(--primary) calc(var(--kp-fm-lf) * 100%) calc(var(--kp-fm-f) * 100%),
+                transparent calc(var(--kp-fm-f) * 100%)
+            );
+            background-repeat: no-repeat;
+            background-size: 100% var(--kp-sig-fm-pen);
+            background-position: 0 100%;
+        }
+
+        @keyframes kp-sig-formal-ruling {
+            from {
+                --kp-fm-t: 0;
+            }
+
+            to {
+                --kp-fm-t: 1;
+            }
         }
     }
 
+    /* ── A live update is ruled again and closed [G9; Kenny, 2026-10-08,
+       question 9: "ruled again and closed"]. js/update.js writes the new
+       value at once and marks the element `[data-kp-updating='closed']`; a
+       navy rule is ruled under the changed figure from the start (400 of
+       850 ms), the second rule closes it at the end (the account closed on
+       the new figure), then both are lifted from the start; the figure, the
+       word, the line never move and the box keeps its space. The stamp that
+       landed askew (the register's old idea) is retired. Both rules are
+       drawn on one pseudo-element from one number, --kp-fm-u (0 to 1 over
+       the theme's update time, @property at the top of this file). A state
+       word keeps its width-holding ::after, so its rules are drawn on
+       ::before. Applies to the key figure, the state word, the trend, the
+       strip column and the tile alike. ── */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] {
+            --kp-update: closed;
+        }
+
+        [data-theme='formal'] [data-kp-updating='closed'] {
+            position: relative;
+        }
+
+        /* The rules lie under the digits, not across the tile. */
+        [data-theme='formal'] .kp-kpi > .kp-kpi__value[data-kp-updating='closed'] {
+            justify-self: start;
+            inline-size: fit-content;
+        }
+
+        [data-theme='formal'] [data-kp-updating='closed']:not(.kp-state-word)::after,
+        [data-theme='formal'] .kp-state-word[data-kp-updating='closed']::before {
+            content: '';
+            position: absolute;
+            inset-inline: 0;
+            inset-block-start: calc(100% - 0.05em);
+            block-size: 5px;
+            pointer-events: none;
+            --kp-fm-r1: clamp(0, var(--kp-fm-u) / 0.47, 1);
+            --kp-fm-r2: clamp(0, (var(--kp-fm-u) - 0.47) / 0.19, 1);
+            --kp-fm-x: clamp(0, (var(--kp-fm-u) - 0.72) / 0.28, 1);
+            background-image:
+                linear-gradient(
+                    var(--kp-fm-dir, to right),
+                    transparent calc(var(--kp-fm-x) * 100%),
+                    var(--primary) calc(var(--kp-fm-x) * 100%) calc(var(--kp-fm-r1) * 100%),
+                    transparent calc(var(--kp-fm-r1) * 100%)
+                ),
+                linear-gradient(
+                    var(--kp-fm-dir, to right),
+                    transparent calc(var(--kp-fm-x) * 100%),
+                    var(--primary) calc(var(--kp-fm-x) * 100%) calc(var(--kp-fm-r2) * 100%),
+                    transparent calc(var(--kp-fm-r2) * 100%)
+                );
+            background-repeat: no-repeat;
+            background-size:
+                100% 2px,
+                100% 1px;
+            background-position:
+                0 0,
+                0 4px;
+            animation: kp-sig-formal-update-closed var(--kp-update-duration, 850ms) linear both;
+        }
+    }
+
+    /* ── Loading is ruling the lines on every waiting surface [G10; Kenny,
+       2026-10-08, question 10: the trend's pick, "The ledger is ruled",
+       carried everywhere]. Three navy rules of 2 px are ruled across the
+       surface one after the other, top down, at the ruling pace (400 ms),
+       held, lifted from the start and ruled again: one loop of 2400 ms, the
+       next rule 300 ms behind the one before. The lines fill the whole
+       element and take its shape: a small part (a busy button, a loading menu
+       entry, a day) gets them at its foot, a panel or a tile at its foot with
+       room for its words, a chart's plot and a skeleton block over the whole
+       of it, and a skeleton line is a single ruled line (above). Standing
+       still the three are ruled and closed. One number, --kp-fm-l (0 to 1,
+       @property at the top of this file), is the loop; each line reads it
+       300 ms (an eighth) later than the one before. Nothing is dotted,
+       pressed or shimmering. The surfaces are the package's own: the skeleton
+       blocks and circles, the busy table's panel, the loading menu entry,
+       the busy button and card, the busy calendar and its days, the loading
+       chart, the busy tile grid; the key figures' and columns' skeleton lines
+       are skeleton lines. ── */
+    [data-theme='formal']
+        :where(
+            [aria-busy='true'],
+            [data-kp-busy],
+            [data-kp-loading],
+            [data-kp-state='loading'],
+            .kp-skeleton--block,
+            .kp-skeleton--circle,
+            .kp-datatable__busy-panel,
+            .kp-calendar__busy,
+            .kp-calendar__day[data-kp-tone='loading']
+        ) {
+        --kp-fm-ink: var(--primary);
+        /* The three rules, read from one loop: line i is ruled (17 % of its
+           own time), held (to 62 %), lifted from the start (to 79 %) and
+           gone, an eighth of the loop (300 ms) after the one before. The stack
+           is a custom property so that a research variant can lay it as its
+           own picture (research/character-*, formal.css). */
+        --kp-fm-u0: var(--kp-fm-l);
+        --kp-fm-u1: mod(var(--kp-fm-l) - 0.125, 1);
+        --kp-fm-u2: mod(var(--kp-fm-l) - 0.25, 1);
+        --kp-fm-r0: clamp(0, var(--kp-fm-u0) / 0.17, 1);
+        --kp-fm-r1: clamp(0, var(--kp-fm-u1) / 0.17, 1);
+        --kp-fm-r2: clamp(0, var(--kp-fm-u2) / 0.17, 1);
+        --kp-fm-x0: clamp(0, (var(--kp-fm-u0) - 0.62) / 0.17, 1);
+        --kp-fm-x1: clamp(0, (var(--kp-fm-u1) - 0.62) / 0.17, 1);
+        --kp-fm-x2: clamp(0, (var(--kp-fm-u2) - 0.62) / 0.17, 1);
+        --kp-fm-stack:
+            linear-gradient(
+                var(--kp-fm-dir, to right),
+                transparent calc(var(--kp-fm-x0) * 100%),
+                var(--kp-fm-ink) calc(var(--kp-fm-x0) * 100%) calc(var(--kp-fm-r0) * 100%),
+                transparent calc(var(--kp-fm-r0) * 100%)
+            ),
+            linear-gradient(
+                var(--kp-fm-dir, to right),
+                transparent calc(var(--kp-fm-x1) * 100%),
+                var(--kp-fm-ink) calc(var(--kp-fm-x1) * 100%) calc(var(--kp-fm-r1) * 100%),
+                transparent calc(var(--kp-fm-r1) * 100%)
+            ),
+            linear-gradient(
+                var(--kp-fm-dir, to right),
+                transparent calc(var(--kp-fm-x2) * 100%),
+                var(--kp-fm-ink) calc(var(--kp-fm-x2) * 100%) calc(var(--kp-fm-r2) * 100%),
+                transparent calc(var(--kp-fm-r2) * 100%)
+            );
+    }
+
+    [data-theme='formal']
+        :where(
+            .kp-skeleton--block,
+            .kp-skeleton--circle,
+            .kp-datatable__busy-panel,
+            .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+            .kp-button[aria-busy='true'],
+            .kp-card[aria-busy='true'],
+            .kp-tiles[aria-busy='true'] > .kp-card,
+            .kp-chart__state[data-kp-state='loading'],
+            .kp-calendar--busy-whole > .kp-calendar__busy,
+            .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading'],
+            .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) .kp-calendar__day[data-kp-tone='loading']
+        ) {
+        --kp-fm-ink: var(--primary);
+        --kp-fm-foot: 0.9rem;
+        position: relative;
+        animation: none;
+    }
+
+    [data-theme='formal']
+        :where(
+            .kp-skeleton--block,
+            .kp-skeleton--circle,
+            .kp-datatable__busy-panel,
+            .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+            .kp-button[aria-busy='true'],
+            .kp-card[aria-busy='true'],
+            .kp-tiles[aria-busy='true'] > .kp-card,
+            .kp-chart__state[data-kp-state='loading'],
+            .kp-calendar--busy-whole > .kp-calendar__busy,
+            .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading'],
+            .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) .kp-calendar__day[data-kp-tone='loading']
+        )::before {
+        content: '';
+        position: absolute;
+        inset: auto 0.75rem 0.5rem;
+        block-size: var(--kp-fm-foot);
+        border: 0;
+        border-radius: 0;
+        opacity: 1;
+        pointer-events: none;
+        background-image: var(--kp-fm-stack);
+        background-repeat: no-repeat;
+        background-size: 100% 2px;
+        background-position:
+            0 0,
+            0 50%,
+            0 100%;
+    }
+
+    /* A small part gets them tight at its foot; a panel makes room for its
+       words; a chart's plot and a skeleton block are ruled over the whole
+       of them. */
+    [data-theme='formal']
+        :is(
+            .kp-datatable__busy-panel,
+            .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+            .kp-button[aria-busy='true'],
+            .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading'],
+            .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) .kp-calendar__day[data-kp-tone='loading']
+        ) {
+        --kp-fm-foot: 0.5rem;
+    }
+
+    [data-theme='formal']
+        :is(
+            .kp-datatable__busy-panel,
+            .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+            .kp-button[aria-busy='true'],
+            .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading'],
+            .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) .kp-calendar__day[data-kp-tone='loading']
+        )::before {
+        inset-inline: 0.5rem;
+        inset-block-end: 0.2rem;
+    }
+
+    [data-theme='formal'] .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading] {
+        padding-block-end: calc(0.375rem + 0.9rem);
+    }
+
+    [data-theme='formal'] :is(.kp-button--primary, .kp-button--destructive)[aria-busy='true'] {
+        --kp-fm-ink: currentColor;
+    }
+
+    [data-theme='formal'] :is(.kp-skeleton--block, .kp-skeleton--circle, .kp-chart__state[data-kp-state='loading'])::before {
+        inset: 0.75rem;
+        block-size: auto;
+    }
+
+    [data-theme='formal'] .kp-skeleton--circle::before {
+        inset: 24% 12%;
+    }
+
+    /* The skeleton block and circle are plates of paper, not grey patches. */
+    [data-theme='formal'] :is(.kp-skeleton--block, .kp-skeleton--circle) {
+        overflow: clip;
+        background: var(--card);
+        box-shadow: inset 0 0 0 1px var(--border);
+    }
+
+    [data-theme='formal'] .kp-skeleton--block {
+        border-radius: var(--radius);
+    }
+
+    [data-theme='formal'] .kp-skeleton--circle {
+        border-radius: 50%;
+    }
+
+    [data-theme='formal'] .kp-kpi__chart .kp-chart__state[data-kp-state='loading'] {
+        background-color: transparent;
+    }
+
+    /* A loading day is paper, its date faint. */
+    [data-theme='formal']
+        :is(.kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole), .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']))
+        .kp-calendar__day[data-kp-tone='loading'] {
+        background: var(--card);
+        color: hsl(from var(--foreground) h s l / 0.35);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal']
+            :where(
+                [aria-busy='true'],
+                [data-kp-busy],
+                [data-kp-loading],
+                [data-kp-state='loading'],
+                .kp-skeleton--block,
+                .kp-skeleton--circle,
+                .kp-datatable__busy-panel,
+                .kp-calendar__busy,
+                .kp-calendar__day[data-kp-tone='loading']
+            ) {
+            animation: kp-sig-formal-loading var(--kp-sig-fm-loop) linear infinite;
+        }
+    }
+
+    /* ── Keyframes ───────────────────────────────────────────────────────
+       Timing functions are written out or left to the animation's shorthand
+       (linear: a rule at an even pace, a dead stop, G1); a close plays an
+       animation backwards, and linear is its own inverse. ── */
+
+    /* A tick, and a radio's dot, are ruled start to end. */
     @keyframes kp-sig-formal-pen {
         from {
             clip-path: inset(0 100% 0 0);
@@ -1694,142 +2885,133 @@
         }
     }
 
-    @keyframes kp-sig-formal-dot {
-        from {
-            transform: scale(0);
+    /* A rule on a waiting surface: ruled (17 %), held (to 62 %), lifted from
+       the start (to 79 %), gone until the loop comes round. */
+    @keyframes kp-sig-formal-ledger {
+        0% {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        17% {
+            clip-path: inset(0);
+        }
+
+        62% {
+            clip-path: inset(0);
+        }
+
+        79%,
+        100% {
+            clip-path: inset(0 0 0 100%);
         }
     }
 
-    @keyframes kp-sig-formal-rise {
+    @keyframes kp-sig-formal-loading {
         from {
-            opacity: 0;
-            transform: translateY(8px);
+            --kp-fm-l: 0;
+        }
+
+        to {
+            --kp-fm-l: 1;
         }
     }
 
-    @keyframes kp-sig-formal-rule {
-        0%,
-        35% {
-            transform: scaleX(0);
+    @keyframes kp-sig-formal-update-closed {
+        from {
+            --kp-fm-u: 0;
+        }
+
+        to {
+            --kp-fm-u: 1;
+        }
+    }
+
+    /* The busy bar: the band ruled across (48 %), the second rule closing
+       it (52 %), both lifted from the start (to 100 %). */
+    @keyframes kp-sig-formal-bar-band {
+        0% {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        48%,
+        52% {
+            clip-path: inset(0);
         }
 
         100% {
-            transform: scaleX(1);
+            clip-path: inset(0 0 0 100%);
         }
     }
 
-    @keyframes kp-sig-formal-sheet {
-        from {
+    @keyframes kp-sig-formal-bar-second {
+        0%,
+        48% {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        52% {
+            clip-path: inset(0);
+        }
+
+        100% {
+            clip-path: inset(0 0 0 100%);
+        }
+    }
+
+    @keyframes kp-sig-formal-bar-head {
+        0% {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        48% {
+            transform: translateX(100cqi);
+            opacity: 1;
+        }
+
+        48.1%,
+        100% {
+            transform: translateX(100cqi);
             opacity: 0;
-            transform: translateY(14px) scale(0.985);
         }
     }
 
-    @keyframes kp-sig-formal-tip-drop {
-        from {
-            opacity: 0;
-            transform: translateY(-3px);
+    /* The spinner: the arc ruled round the outer ring (to 50 %), the inner
+       arc closing it (58 %), both lifted from the start (60 % to 100 %). */
+    @keyframes kp-sig-formal-arc-outer {
+        0% {
+            --kp-fm-a0: 0deg;
+            --kp-fm-a1: 0deg;
+        }
+
+        50%,
+        60% {
+            --kp-fm-a0: 0deg;
+            --kp-fm-a1: 360deg;
+        }
+
+        100% {
+            --kp-fm-a0: 360deg;
+            --kp-fm-a1: 360deg;
         }
     }
 
-    /* Growing and shrinking, this theme's way [scope-142; approved by Kenny
-       on research/size-motion, 2026-10-04]. js/motion.js marks a gliding box
-       `[data-kp-resizing]` and what arrives in it `[data-kp-arriving]`. */
-    @media (prefers-reduced-motion: no-preference) {
-        /* ── formal: a ledger. The frame is ruled in as the box changes, and a
-           new line is written from left to right, as ink. ───────────────── */
-        [data-theme='formal'] [data-kp-resizing] {
-            outline: 1px solid var(--border-strong);
-            outline-offset: 4px;
+    @keyframes kp-sig-formal-arc-inner {
+        0%,
+        50% {
+            --kp-fm-a0: 0deg;
+            --kp-fm-a1: 0deg;
         }
 
-        [data-theme='formal'] [data-kp-arriving] {
-            animation: kp-sig-formal-size-ink 320ms cubic-bezier(0.2, 0, 0, 1) backwards;
+        58%,
+        60% {
+            --kp-fm-a0: 0deg;
+            --kp-fm-a1: 360deg;
         }
 
-        @keyframes kp-sig-formal-size-ink {
-            from {
-                clip-path: inset(0 100% 0 0);
-            }
-        }
-    }
-
-    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
-       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
-       the exit, and in a row of leaves starts the next one halfway through this one. */
-    @media (prefers-reduced-motion: no-preference) {
-        /* ── formal: folded up like a letter, from the bottom edge to the top ── */
-        /* Opening is closing turned around (Kenny's pick on research/open-reverse,
-           2026-10-05): js/motion.js opens the dialog as its close played backwards,
-           in the close's time, and lets what arrives play this leave backwards. */
-        [data-theme='formal'] {
-            --kp-open: reverse-close;
-        }
-
-        [data-theme='formal'] [data-kp-leaving] {
-            transform-origin: top;
-            animation: kp-sig-formal-leave 400ms cubic-bezier(0.4, 0, 1, 1) forwards;
-        }
-
-        @keyframes kp-sig-formal-leave {
-            to {
-                transform: scaleY(0);
-                opacity: 0.2;
-            }
-        }
-    }
-
-    /* Information that updates in place, this theme's way [picked by Kenny on
-       research/update-motion, 2026-10-05]. js/update.js writes the new value at
-       once and marks the element `[data-kp-updating]` with this register's
-       `--kp-update` while the keyframes play, at `--kp-update-duration` on
-       `--kp-update-ease` (themeMotion()). The value is never hidden or resized. */
-    @media (prefers-reduced-motion: no-preference) {
-        /* ── formal: a checked stamp. A stamp's frame lands round the value, slightly askew, and soaks in. ── */
-        [data-theme='formal'] {
-            --kp-update: stamp;
-        }
-
-        [data-theme='formal'] [data-kp-updating='stamp'] {
-            position: relative;
-        }
-
-        [data-theme='formal'] [data-kp-updating='stamp']::before {
-            content: '';
-            position: absolute;
-            inset: -0.15em -0.35em;
-            z-index: 1;
-            pointer-events: none;
-            border: 1.5px solid var(--primary);
-            border-radius: calc(var(--radius, 0.25rem) * 0.5);
-            animation: kp-sig-formal-update-stamp var(--kp-update-duration) var(--kp-update-ease) both;
-        }
-
-        /* A chart changes at its last point: the stamp lands on its last part. */
-        [data-theme='formal'] [data-kp-updating='stamp']:has(> svg)::before {
-            inset: -0.25rem -0.5rem -0.25rem 72%;
-        }
-
-        @keyframes kp-sig-formal-update-stamp {
-            0% {
-                opacity: 0;
-                transform: scale(1.3) rotate(-5deg);
-            }
-
-            25% {
-                opacity: 0.9;
-                transform: scale(1) rotate(-2deg);
-            }
-
-            65% {
-                opacity: 0.6;
-                transform: scale(1) rotate(-2deg);
-            }
-
-            to {
-                opacity: 0;
-                transform: scale(1) rotate(-2deg);
-            }
+        100% {
+            --kp-fm-a0: 360deg;
+            --kp-fm-a1: 360deg;
         }
     }
 
@@ -1964,7 +3146,11 @@
         clip-path: none;
     }
 
-    /* ── while loading: option 2 ── */
+    /* ── while loading: a rule is ruled along it [G10; Kenny, 2026-10-08,
+       question 10: loading is ruling the lines, the sliding bar is retired].
+       The meter's groove is one line high: one navy rule is ruled across it,
+       held, lifted from the start and ruled again, 2400 ms, even pace;
+       standing still it is ruled. ── */
 
     [data-theme='formal'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
         animation: none;
@@ -1974,16 +3160,16 @@
         all: unset;
         content: '';
         position: absolute;
-        inset: 0;
+        inset-inline: 0;
+        inset-block: calc(50% - 1px) auto;
+        block-size: 2px;
         pointer-events: none;
-        background: linear-gradient(var(--primary), var(--primary)) 50% 50% / 5px 100% no-repeat;
-        --kp-sig-meter-l0: 0% 50%;
-        --kp-sig-meter-l1: 100% 50%;
+        background: var(--primary);
     }
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='formal'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
-            animation: kp-sig-formal-meter-pos 2600ms ease-in-out infinite alternate;
+            animation: kp-sig-formal-ledger var(--kp-sig-fm-loop) linear infinite;
         }
     }
 
@@ -1991,8 +3177,8 @@
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='formal'] :is(.kp-meter, .kp-kpi__meter)::before {
-            animation: kp-sig-formal-meter-wipe-o 900ms cubic-bezier(0.3, 0, 0.2, 1) backwards;
-            transition: inline-size 900ms cubic-bezier(0.3, 0, 0.2, 1);
+            animation: kp-sig-formal-meter-wipe-o var(--kp-sig-fm-time) linear backwards;
+            transition: inline-size var(--kp-sig-fm-time) var(--fx-ease);
         }
     }
 
@@ -2025,18 +3211,8 @@
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='formal'] .kp-meter__mark {
             transition:
-                inset-inline-start 260ms ease-out,
-                rotate 260ms ease-out;
-        }
-    }
-
-    @keyframes kp-sig-formal-meter-pos {
-        0% {
-            background-position: var(--kp-sig-meter-l0);
-        }
-
-        100% {
-            background-position: var(--kp-sig-meter-l1);
+                inset-inline-start var(--fx-duration) var(--fx-ease),
+                rotate var(--fx-duration) var(--fx-ease);
         }
     }
 
@@ -2068,6 +3244,199 @@
         100% {
             clip-path: inset(0);
         }
+    }
+
+    /* ── A warning is a red-ink entry [G5, G8; Kenny, 2026-10-08, questions 5
+       and 8: navy rules, red ink marks, gold never acts; the red-ink entry].
+       A warning or failed key figure, trend tile, strip column, destructive
+       menu entry and alert is ruled off along its start edge in 3 px red
+       ink; its figure is in red ink on the paper, never on a tinted plate;
+       the change sits on a square plate inside a hairline, its ground
+       paper. Never a stamp, never a frame all round. The warning-ink nudges
+       the register held for the old amber plates went with the plates. ── */
+    [data-theme='formal'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) {
+        --kp-kpi-meter-fill: var(--destructive);
+        border-color: var(--border);
+        background: var(--card);
+        box-shadow: inset 3px 0 0 var(--destructive);
+    }
+
+    [data-theme='formal'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-kpi__value {
+        padding-inline: 0;
+        background: none;
+        color: var(--destructive);
+    }
+
+    [data-theme='formal'] .kp-kpi__delta {
+        border-radius: 0;
+    }
+
+    [data-theme='formal'] .kp-kpi__delta[data-kp-tone='bad'] {
+        border: 1px solid var(--destructive);
+        background: var(--card);
+        color: var(--destructive);
+    }
+
+    [data-theme='formal'] .kp-menu__item--destructive {
+        border-radius: 0;
+        box-shadow: inset 3px 0 0 var(--destructive);
+        color: var(--destructive);
+    }
+
+    [data-theme='formal'] .kp-alert:is(.kp-alert--warning, .kp-alert--destructive) {
+        border-color: var(--border);
+        background: var(--card);
+        box-shadow: inset 3px 0 0 var(--destructive);
+        color: var(--foreground);
+    }
+
+    [data-theme='formal'] .kp-alert:is(.kp-alert--warning, .kp-alert--destructive) .kp-alert__icon {
+        color: var(--destructive);
+    }
+
+    /* A day of the month: paper with a rule, not a tinted plate. A kept night
+       is ruled along its start edge in navy, a night to look at in red ink, a
+       failed one in two red rules; today stands in the double rule. */
+    [data-theme='formal'] :is(.kp-calendar__day, .kp-calendar__swatch):is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad']) {
+        --kp-fm-edge: inset 3px 0 0 var(--primary);
+        border-color: var(--border);
+        background: var(--card);
+        box-shadow: var(--kp-fm-edge);
+        color: var(--foreground);
+    }
+
+    [data-theme='formal'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='warn'] {
+        --kp-fm-edge: inset 3px 0 0 var(--destructive);
+        color: var(--destructive);
+    }
+
+    [data-theme='formal'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='bad'] {
+        --kp-fm-edge: inset 3px 0 0 var(--destructive), inset 6px 0 0 var(--card), inset 8px 0 0 var(--destructive);
+        color: var(--destructive);
+    }
+
+    [data-theme='formal'] .kp-calendar__day[data-kp-today] {
+        border-color: var(--primary);
+        box-shadow:
+            var(--kp-fm-edge, 0 0 transparent),
+            inset 0 0 0 2px var(--card),
+            inset 0 0 0 3px var(--primary);
+    }
+
+    /* ── The voice [G18; Kenny, 2026-10-08, question 18]: figures in the
+       display face with tabular numerals, labels in small capitals. ── */
+    [data-theme='formal'] :is(.kp-kpi__value, .kp-state-word, .kp-calendar__num, .kp-calendar__count, .kp-chart__num) {
+        font-family: var(--theme-font-display);
+        font-variant-numeric: tabular-nums;
+        font-weight: 560;
+    }
+
+    [data-theme='formal'] :is(.kp-kpi__label, .kp-calendar__title, .kp-calendar__grid th, .kp-chart__tick) {
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+        text-transform: none;
+    }
+
+    [data-theme='formal'] .kp-kpi__label {
+        font-size: 0.9375rem;
+    }
+
+    [data-theme='formal'] .kp-page-header__title {
+        font-family: var(--theme-font-display);
+        font-variation-settings: 'opsz' 60;
+        font-weight: 600;
+    }
+
+    /* ── What matters carries the double rule [G7; Kenny, 2026-10-08,
+       question 7]: the page header is a letterhead, a strip column is a
+       certificate, a drawer is a sheet like a dialog. A plain card, a tile,
+       a menu is paper with a hairline and no frame. ── */
+    [data-theme='formal'] .kp-page-header {
+        padding-block-end: var(--kp-space-md, 0.75rem);
+        border-block-end: 3px double var(--border-strong);
+    }
+
+    [data-theme='formal'] .kp-kpis[data-kp-kpis-columns] > .kp-kpi {
+        border: 1px solid var(--border-strong);
+        box-shadow:
+            inset 0 0 0 3px var(--card),
+            inset 0 0 0 4px var(--border-strong);
+    }
+
+    [data-theme='formal'] .kp-kpis[data-kp-kpis-columns] > .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) {
+        box-shadow:
+            inset 3px 0 0 var(--destructive),
+            inset 0 0 0 3px var(--card),
+            inset 0 0 0 4px var(--border-strong);
+    }
+
+    [data-theme='formal'] :is(dialog.kp-drawer, .kp-tour) {
+        box-shadow:
+            inset 0 0 0 3px var(--popover),
+            inset 0 0 0 4px var(--border-strong),
+            0 18px 40px -24px hsl(from var(--foreground) h s l / 0.5);
+    }
+
+    /* The seal stays before the state word and on the busy table, where
+       Kenny placed it (motifs, question 19: "those plus the seal where
+       picked"): a wax seal in two rings of navy, set, not pressed. */
+    [data-theme='formal'] .kp-state-word {
+        padding-inline-start: 1.5em;
+        background-image: radial-gradient(
+            circle closest-side,
+            var(--primary) 0 56%,
+            var(--card) 56% 60%,
+            var(--primary) 60% 80%,
+            var(--card) 80% 84%,
+            var(--primary) 84% 100%,
+            transparent 100%
+        );
+        background-repeat: no-repeat;
+        background-size: 1.15em 1.15em;
+        background-position: 0 50%;
+    }
+
+    [data-theme='formal'] .kp-datatable__busy-words::before {
+        content: '';
+        display: inline-block;
+        inline-size: 1.15em;
+        block-size: 1.15em;
+        margin-inline-end: 0.5em;
+        border-radius: 50%;
+        vertical-align: -0.2em;
+        background: radial-gradient(
+            circle closest-side,
+            var(--primary) 0 56%,
+            var(--card) 56% 60%,
+            var(--primary) 60% 80%,
+            var(--card) 80% 84%,
+            var(--primary) 84% 100%,
+            transparent 100%
+        );
+    }
+
+    /* A key figure's link ("Open"): the rule under its words, doubled on a
+       press (G15, G17). */
+    [data-theme='formal'] .kp-kpi__link {
+        border-radius: 0;
+        text-decoration: underline 2px transparent;
+        text-decoration-skip-ink: none;
+        text-underline-offset: 0.3em;
+    }
+
+    [data-theme='formal'] .kp-kpi__link:hover {
+        text-decoration-line: underline;
+        text-decoration-style: solid;
+        text-decoration-color: var(--primary);
+    }
+
+    [data-theme='formal'] .kp-kpi__link:active {
+        text-decoration-style: double;
+        text-decoration-thickness: 1px;
+    }
+
+    [data-theme='formal'] .kp-chart__tip {
+        border-radius: 0;
     }
 }
 /* ── End of the signature ── */

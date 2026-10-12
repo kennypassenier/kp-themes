@@ -107,13 +107,6 @@
             "tone": "1",
             "interact": "3"
         },
-        "retro": {
-            "shape": "1",
-            "loading": "1",
-            "open": "1",
-            "tone": "1",
-            "interact": "r3-re-interact-1"
-        },
         "grotesk": {
             "shape": "1",
             "loading": "r2-gro-load-2",

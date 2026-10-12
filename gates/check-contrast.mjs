@@ -22,7 +22,7 @@ const css = readFileSync(target, 'utf8');
 // Discovered from the stylesheet: every [data-theme='x'] block that
 // declares --background is a palette. The name pattern accepts digits and
 // hyphens - it used to accept lowercase letters only, so a theme called
-// `high-contrast` was silently skipped while the run reported that every
+// `high-contrast` (removed 2026-10-08) was silently skipped while the run reported that every
 // theme passed (AR8-D1, found by the Phase 4 critic pass). The count is
 // now checked against themes/order.json rather than a floor, so a theme
 // going missing is an error instead of a smaller green number.

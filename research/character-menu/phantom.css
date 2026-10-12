@@ -1,0 +1,59 @@
+/* research/character-menu, phantom: the decided picks on phantom's grammar
+   (themes/phantom/CHARACTER.md G1-G21, Kenny, 2026-10-09 on
+   research/phantom-character; css/phantom-register.css holds the tokens and
+   the keyframes this file names). Only phantom's decided options change:
+   loading 3, open 2, tone 1, interact 3 (shape 2, the calling card, is the
+   reference and stays).
+
+   - loading: the string pulled is the register's red slash across the block of
+     the screen, on the loading entry (G10);
+   - open: the slash drawn in (eased in and out) is the throw: the menu comes
+     from its button's edge on the shove and resolves from dots in three cuts,
+     and closes as that played backwards (G1, G3);
+   - tone: the destructive entry is a red plate with black ink, level, never
+     stamped askew (G5, G8);
+   - interact: the halftone that shifted is the red bar thrown in behind the
+     entry and resolved, the ink flipping to black (G15). */
+@layer kp.signature {
+    /* Loading 3 · the string is retired; the register draws the block. */
+    [data-theme='phantom'][data-theme='phantom'] [data-mb-loading='3'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+        background-image: none;
+        animation: none;
+    }
+
+    /* Tone 1 · the plate, level. */
+    [data-theme='phantom'][data-theme='phantom'] [data-mb-tone='1'] .kp-menu-button > .kp-menu .kp-menu__item--destructive {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        transform: none;
+    }
+
+    /* Interact 3 · the bar, not the shifting halftone. */
+    [data-theme='phantom'][data-theme='phantom']
+        [data-mb-interact='3']
+        .kp-menu-button
+        > .kp-menu
+        .kp-menu__item:is(:hover, :focus-visible, [data-mb-force-focus]) {
+        background-image: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* Open 2 · thrown from the button's edge, resolved; the close is it backwards. */
+        [data-theme='phantom'][data-theme='phantom'] [data-mb-open='2'] .kp-menu-button > .kp-menu:not([hidden]) {
+            --kp-sig-ph-x0: -1.6rem;
+            --kp-sig-ph-y0: -2.4rem;
+            --kp-sig-ph-r0: -9deg;
+            --kp-sig-ph-s0: 1;
+            mask-size: 7px 7px;
+            animation:
+                kp-sig-phantom-fly calc(700ms / var(--mb-speed, 1)) linear backwards,
+                kp-sig-phantom-resolve calc(700ms / var(--mb-speed, 1)) linear backwards;
+        }
+
+        [data-theme='phantom'][data-theme='phantom'] [data-mb-open='2'] .kp-menu-button > .kp-menu[data-mb-leaving] {
+            animation-name: kp-sig-phantom-fly, kp-sig-phantom-resolve;
+            animation-direction: reverse;
+            animation-fill-mode: both;
+        }
+    }
+}

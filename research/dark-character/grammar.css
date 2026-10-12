@@ -1,0 +1,414 @@
+/* research/dark-character/grammar.css: dark's proposed grammar as the
+   questions use it (Kenny's anchor verdict of 2026-10-08, research/dark-
+   anchor update 1: "The line lays the film down, turning";
+   themes/dark/CHARACTER.md G1-G21). One file of tokens and keyframes,
+   linked by demo.html before options.css; options.css applies it to every
+   option of every question.
+
+   - dark PASSES A LINE. A spectral line of film light (a 2 px slice of the
+     film with the one glow the theme allows, 10 px of --chart-1 at 40 %)
+     crosses a part from its start edge to its end at one even pace and stops
+     dead; the part is laid behind it, its film edge TURNING; when the line
+     reaches the end the figure takes the film through its letters and the
+     turn settles, cyan at the top. What leaves is the pass back (G1, G2, G13);
+   - the curve: the pass is linear, the turn settles on dark's own
+     --kp-settle, cubic-bezier(0.22, 1, 0.36, 1): most of the turn at once,
+     then a long settle, 220 ms after the line has stopped. A close is the same
+     played backwards: the pass back at the same pace, the turn back on the
+     inverse curve cubic-bezier(0.64, 0, 0.78, 0) (a curve's inverse is its
+     point reflection: (1 - x2, 1 - y2, 1 - x1, 1 - y1));
+   - contact 220 ms, a pass 660 ms (the anchor's six units of 110 ms), the turn
+     settles 220 ms after (880 ms in all), a group is lit 60 ms apart along the
+     line, a live pass 660 ms, a loop 2400 ms (G4);
+   - colour is the film and meaning: the film (--kp-iris, cyan, violet, magenta,
+     lime) is every edge that matters, the line, the fill, the head and the
+     ring; ink is near-white; an act is a light plate; danger is coral
+     (--destructive) and nothing else is a colour (G5);
+   - chamfered, never rounded: radius 0, two opposite corners cut, controls
+     --fx-notch 0.55 rem, panels 1 rem; brackets close on a label (G6);
+   - near-black ground ruled with the instrument grid (hairlines at 4.5 %), a
+     panel one shade lighter with the film along its edge (G7); a warning is
+     the film gone coral (G8); a live update is one pass over the figure (G9);
+     loading is the line sweeping an empty slot (G10); the busy bar is the line
+     running the track (G11); the spinner is the line running the ring (G12);
+     hover rests the line at the start (G15); a press is a pass that turns the
+     edge a quarter (G17); Archivo for words, the ticker mono for readings
+     (G18).
+
+   Every one-shot motion is a pair of keyframes, `dk-x` and `dk-x-out`, so a
+   close is its open reversed: the timing function is written out inside the
+   keyframes (a `var()` there is invalid and falls back to `ease`), and an
+   eased open closes on the inverse curve. Colours come from the theme's
+   tokens only; every animation sits under prefers-reduced-motion:
+   no-preference, and the reduced pose is the part laid, cyan at the top. The
+   tokens hang on `.dk-page, .dk-scene`, because the review dialog moves a
+   section into its stage. */
+
+@layer kp.signature {
+    /* The film turns on a registered angle: a custom property that is not
+       registered cannot be animated. The register's `--kp-iris` follows the
+       pointer, which a demo has not, so every element of a scene writes the
+       same conic on its own angle (options.css): 0 is cyan at the top, the
+       settled pose. */
+    @property --dk-angle {
+        syntax: '<angle>';
+        inherits: true;
+        initial-value: 0deg;
+    }
+
+    /* The figure takes the film through its letters: how far the line has
+       come over the letters (ahead of it they stay ink), and how much ink
+       lies over the film (1: all ink, 0: all film). */
+    @property --dk-at {
+        syntax: '<percentage>';
+        inherits: true;
+        initial-value: 100%;
+    }
+
+    @property --dk-ink-a {
+        syntax: '<number>';
+        inherits: true;
+        initial-value: 1;
+    }
+
+    /* How far the line has run round a ring, and the share of a track it
+       has laid (the spinner, the busy bar). */
+    /* The film as a strip (a bar's fill, a slot): how far it has slid, one full
+       period being 100 %. It turns with the angle. */
+    @property --dk-slide {
+        syntax: '<percentage>';
+        inherits: true;
+        initial-value: 0%;
+    }
+
+    @property --dk-run {
+        syntax: '<angle>';
+        inherits: true;
+        initial-value: 0deg;
+    }
+
+    :is(.dk-page, .dk-scene) {
+        /* G1: the curves. --dk-settle is the register's --kp-settle; the inverse
+           closes. The register's own --fx-ease is the "today" curve. Inside
+           @keyframes every one is written out. */
+        --dk-settle: var(--kp-settle, cubic-bezier(0.22, 1, 0.36, 1));
+        --dk-settle-out: cubic-bezier(0.64, 0, 0.78, 0);
+        --dk-quick: var(--fx-ease, cubic-bezier(0.16, 0.84, 0.28, 1));
+        --dk-quick-out: cubic-bezier(0.72, 0, 0.84, 0.16);
+        /* G4: the durations. */
+        --dk-contact: var(--fx-duration, 220ms);
+        --dk-pass: 660ms;
+        --dk-after: 220ms;
+        --dk-stride: 60ms;
+        --dk-loop: 2400ms;
+        /* G5: the colours by role. */
+        --dk-act: var(--primary);
+        --dk-ink: var(--foreground);
+        --dk-ground: var(--background);
+        --dk-plate: var(--card);
+        --dk-edge: var(--border-strong);
+        --dk-danger: var(--destructive);
+        --dk-caution: var(--warning-foreground);
+        /* The line: a 2 px slice of the film and the one glow the theme
+           allows (G5). */
+        --dk-glow: drop-shadow(0 0 10px hsl(from var(--chart-1) h s l / 0.4));
+        --dk-spectrum: linear-gradient(
+            90deg,
+            var(--chart-1),
+            var(--chart-2),
+            var(--chart-3),
+            var(--chart-4),
+            var(--chart-1),
+            var(--chart-2),
+            var(--chart-3),
+            var(--chart-4),
+            var(--chart-1)
+        );
+        --dk-vspectrum: linear-gradient(180deg, var(--chart-1), var(--chart-2), var(--chart-3), var(--chart-4));
+        /* G6: the cuts. */
+        --dk-notch: var(--fx-notch, 0.55rem);
+        --dk-cut-panel: var(--kp-chamfer-panel, 1rem);
+        --dk-cut-small: 0.35rem;
+        /* G7: the ruled ground. */
+        --dk-hair: hsl(from var(--foreground) h s l / 0.045);
+        --dk-grid: 2.75rem;
+        /* How far a part's halo reaches past its box, which the line crosses as well. */
+        --dk-reach: 3rem;
+    }
+
+    /* ── G1 · G2 · G13: the pass. A part is laid by a line that crosses it from
+       its start edge: the body is clipped to what the line has passed (from
+       `--dk-clip-0` to `--dk-clip-1`) and the line itself travels from `--dk-line-0`
+       to `--dk-line-1` with it. The line crosses the part and the reach of its
+       halo on either side, at one pace, and stops dead. ──────────────────── */
+    @keyframes dk-clip {
+        from {
+            clip-path: var(--dk-clip-0);
+            animation-timing-function: linear;
+        }
+
+        to {
+            clip-path: var(--dk-clip-1);
+        }
+    }
+
+    @keyframes dk-clip-out {
+        from {
+            clip-path: var(--dk-clip-1);
+            animation-timing-function: linear;
+        }
+
+        to {
+            clip-path: var(--dk-clip-0);
+        }
+    }
+
+    /* The line travels the stage (the part and the reach of its halo on either
+       side) and goes in at the start and out at the end of the pass. Its travel
+       and its going in and out are two animations of one duration. */
+    @keyframes dk-line-t {
+        from {
+            translate: var(--dk-line-0);
+            animation-timing-function: linear;
+        }
+
+        to {
+            translate: var(--dk-line-1);
+        }
+    }
+
+    @keyframes dk-line-t-out {
+        from {
+            translate: var(--dk-line-1);
+            animation-timing-function: linear;
+        }
+
+        to {
+            translate: var(--dk-line-0);
+        }
+    }
+
+    @keyframes dk-line-o {
+        0% {
+            opacity: 0;
+            animation-timing-function: linear;
+        }
+
+        4% {
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        92% {
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            opacity: 0;
+        }
+    }
+
+    @keyframes dk-line-o-out {
+        0% {
+            opacity: 0;
+            animation-timing-function: linear;
+        }
+
+        8% {
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        96% {
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            opacity: 0;
+        }
+    }
+
+    /* The film's turn, laid with the pass: the colour runs round the edge as the
+       line crosses (345 degrees at the pace of the line, three quarters of the
+       turn's 880 ms) and settles the last 15 degrees on --kp-settle in the 220
+       ms after the line has stopped, cyan at the top. The close turns it back:
+       the settle on the inverse curve, then the run backwards. */
+    @keyframes dk-turn {
+        0% {
+            --dk-angle: 0deg;
+            --dk-slide: 0%;
+            animation-timing-function: linear;
+        }
+
+        75% {
+            --dk-angle: 345deg;
+            --dk-slide: 95.83%;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        100% {
+            --dk-angle: 360deg;
+            --dk-slide: 100%;
+        }
+    }
+
+    @keyframes dk-turn-out {
+        0% {
+            --dk-angle: 360deg;
+            --dk-slide: 100%;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+
+        25% {
+            --dk-angle: 345deg;
+            --dk-slide: 95.83%;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            --dk-angle: 0deg;
+            --dk-slide: 0%;
+        }
+    }
+
+    /* The figure takes the film through its letters when the line has reached
+       the end (the pass is the first three quarters of the 880 ms), holds it
+       for a moment as the turn settles, and goes back to ink. */
+    @keyframes dk-fig {
+        0%,
+        75% {
+            --dk-ink-a: 1;
+            animation-timing-function: linear;
+        }
+
+        80% {
+            --dk-ink-a: 0;
+            animation-timing-function: linear;
+        }
+
+        88% {
+            --dk-ink-a: 0;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        100% {
+            --dk-ink-a: 1;
+        }
+    }
+
+    @keyframes dk-fig-out {
+        0% {
+            --dk-ink-a: 1;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+
+        12% {
+            --dk-ink-a: 0;
+            animation-timing-function: linear;
+        }
+
+        20% {
+            --dk-ink-a: 0;
+            animation-timing-function: linear;
+        }
+
+        25%,
+        100% {
+            --dk-ink-a: 1;
+        }
+    }
+
+    /* G9: a live pass over a figure. Behind the line the letters are film (the
+       line has come as far as --dk-at), ahead of it they are still ink; when
+       the line has crossed them the film settles back to ink. */
+    @keyframes dk-fig-live {
+        0% {
+            --dk-at: 0%;
+            --dk-ink-a: 0;
+            animation-timing-function: linear;
+        }
+
+        75% {
+            --dk-at: 100%;
+            --dk-ink-a: 0;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        100% {
+            --dk-at: 100%;
+            --dk-ink-a: 1;
+        }
+    }
+
+    @keyframes dk-fig-live-out {
+        0% {
+            --dk-at: 100%;
+            --dk-ink-a: 1;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+
+        25% {
+            --dk-at: 100%;
+            --dk-ink-a: 0;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            --dk-at: 0%;
+            --dk-ink-a: 0;
+        }
+    }
+
+    /* G10: a waiting surface. The line crosses it from start to end in the first
+       seven tenths of the loop (2400 ms) and the film it lays behind it turns
+       (the strip slides one period over the loop); when the line leaves at the
+       end the film dims; then again from the start. */
+    @keyframes dk-wash {
+        0% {
+            clip-path: inset(0 100% 0 0);
+            opacity: 1;
+            background-position: 0% 0;
+            animation-timing-function: linear;
+        }
+
+        70% {
+            clip-path: inset(0 0 0 0);
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            clip-path: inset(0 0 0 0);
+            opacity: 0;
+            background-position: 100% 0;
+        }
+    }
+
+    @keyframes dk-wait-line {
+        0% {
+            translate: -100% 0;
+            opacity: 0;
+            animation-timing-function: linear;
+        }
+
+        4% {
+            translate: -94.2857% 0;
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        66% {
+            translate: -5.7143% 0;
+            opacity: 1;
+            animation-timing-function: linear;
+        }
+
+        70%,
+        100% {
+            translate: 0% 0;
+            opacity: 0;
+        }
+    }
+}

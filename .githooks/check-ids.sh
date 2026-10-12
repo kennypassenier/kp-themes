@@ -34,8 +34,11 @@ fail=0
 # ID_MAP.md alike. The first drill blocked a perfectly good map for
 # containing exactly what it exists to contain, and binary-puzzle-toolkit's
 # real one then blocked every commit in that repository.
+# A theme's grammar table (themes/<name>/CHARACTER.md) numbers its rules G1, G2 ... as labels inside
+# one document, quoted all over the registers ("[G2, G19]"); they are not project items, so a new row
+# there is not a birth (kp-themes only, Kenny, 2026-10-12: "hook uitzonderen").
 born=$(git diff --cached --unified=0 -- '*.md' \
-  ':(exclude)*ID_TRANSLATIONS.md' ':(exclude)*ID_MAP.md' 2>/dev/null \
+  ':(exclude)*ID_TRANSLATIONS.md' ':(exclude)*ID_MAP.md' ':(exclude)themes/*/CHARACTER.md' 2>/dev/null \
   | grep -E '^\+' | grep -vE '^\+\+\+' \
   | grep -oE '^\+(\| ?|#{2,4} )[A-Z]{1,4}[0-9]+[a-z]?\b' \
   | grep -oE '[A-Z]{1,4}[0-9]+[a-z]?$' | sort -u || true)

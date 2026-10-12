@@ -2449,180 +2449,6 @@
         font: italic 900 0.75rem/1 var(--theme-font-display, sans-serif);
     }
 
-    /* ── retro · shape 1 ── */
-
-    /* ── retro · the system monitor ────────────────────────────────────── */
-
-    /* A sunken black panel of LED segments, as Task Manager and Winamp drew a
-       level: unlit segments in dark green, the share lit, a peak-hold segment
-       as the mark, the red clip lamp past the end. */
-    [data-theme='retro'] [data-cm-shape='1'] .kp-meter {
-        --kp-meter-height: 0.75rem;
-        --cm-room: 0.75rem;
-        --kp-meter-fill: hsl(from var(--success) h s calc(l * 2.2));
-        border-radius: 0;
-        background:
-            repeating-linear-gradient(90deg, hsl(from var(--success) h s l / 0.6) 0 3px, transparent 3px 4px) 2px 2px / calc(100% - 4px)
-                calc(100% - 4px) no-repeat,
-            var(--foreground);
-        box-shadow:
-            -1px -1px 0 var(--border-strong),
-            1px 1px 0 var(--popover);
-    }
-
-    /* The LEDs keep the panel's own colours for a tone: yellow for a warning,
-       a lit red for danger, both bright on the black panel. */
-    [data-theme='retro'] [data-cm-shape='1'] .kp-meter[data-kp-tone='warning'] {
-        --kp-meter-fill-colour: var(--warning);
-    }
-
-    [data-theme='retro'] [data-cm-shape='1'] .kp-meter[data-kp-tone='destructive'] {
-        --kp-meter-fill-colour: hsl(from var(--destructive) h s calc(l * 2));
-    }
-
-    [data-theme='retro'] [data-cm-shape='1'] .kp-meter::before {
-        inset-block: 2px;
-        inset-inline-start: 2px;
-        inline-size: calc(clamp(0, var(--kp-value, 0), 1) * (100% - 4px));
-        border-radius: 0;
-        background: repeating-linear-gradient(90deg, var(--kp-meter-fill-colour) 0 3px, transparent 3px 4px);
-    }
-
-    /* The peak-hold segment: a white bar in a black frame. */
-    [data-theme='retro'] [data-cm-shape='1'] .kp-meter__mark {
-        --cm-mw: 3px;
-        inset-block: -2px;
-        inset-inline-start: calc(2px + clamp(0, var(--kp-mark, 0), 1) * (100% - 4px) - var(--cm-mw) / 2);
-        border-radius: 0;
-        background: var(--popover);
-        box-shadow: 0 0 0 1px var(--foreground);
-    }
-
-    [data-theme='retro'] [data-cm-shape='1'] .kp-meter__mark[data-kp-over] {
-        inset-inline-start: calc(100% - 0.75rem);
-    }
-
-    /* The clip lamp, lit, past the end. */
-    [data-theme='retro'] [data-cm-shape='1'] .kp-meter[data-kp-over]::after {
-        inset-inline-start: calc(100% + 3px);
-        inset-block: 1px;
-        inline-size: 0.4375rem;
-        background: hsl(from var(--destructive) h s calc(l * 2));
-        box-shadow:
-            0 0 0 1px var(--foreground),
-            inset 1px 1px 0 hsl(from var(--primary-foreground) h s l / 0.5);
-    }
-
-    /* ── retro · shape 2 ── */
-
-    /* ── retro · 1 · the dithered installer bar ───────────────────────── */
-    [data-theme='retro'] [data-cm-shape='2'] .kp-meter {
-        --kp-meter-height: 0.75rem;
-        --cm-room: 1rem;
-        border-radius: 0;
-        background: var(--popover);
-        box-shadow:
-            inset 0 0 0 1px var(--border-strong),
-            inset 2px 2px 0 0 var(--border),
-            inset -2px -2px 0 0 var(--card);
-    }
-
-    /* Navy, its last pixels dithered. */
-    [data-theme='retro'] [data-cm-shape='2'] .kp-meter::before {
-        inset-block: 3px;
-        inset-inline-start: 3px;
-        inline-size: calc(clamp(0, var(--kp-value, 0), 1) * (100% - 6px));
-        border-radius: 0;
-        background:
-            linear-gradient(var(--kp-meter-fill-colour), var(--kp-meter-fill-colour)) 0 0 / calc(100% - 6px) 100% no-repeat,
-            repeating-conic-gradient(var(--kp-meter-fill-colour) 0 25%, transparent 0 50%) 0 0 / 2px 2px;
-        transition: none;
-    }
-
-    /* A raised grey slider thumb. */
-    [data-theme='retro'] [data-cm-shape='2'] .kp-meter__mark {
-        --cm-mw: 6px;
-        inset-block: -2px;
-        inset-inline-start: calc(3px + clamp(0, var(--kp-mark, 0), 1) * (100% - 6px) - var(--cm-mw) / 2);
-        border-radius: 0;
-        background: var(--background);
-        box-shadow:
-            inset 1px 1px 0 var(--popover),
-            inset -1px -1px 0 var(--foreground),
-            0 0 0 1px var(--foreground);
-    }
-
-    [data-theme='retro'] [data-cm-shape='2'] .kp-meter__mark[data-kp-over] {
-        inset-inline-start: calc(100% - 0.75rem);
-    }
-
-    /* A raised scroll-arrow button past the end. */
-    [data-theme='retro'] [data-cm-shape='2'] .kp-meter[data-kp-over]::after {
-        content: '▸';
-        display: grid;
-        place-items: center;
-        inset-inline-start: calc(100% + 2px);
-        inset-block: 0;
-        inline-size: 0.75rem;
-        background: var(--background);
-        box-shadow:
-            inset 1px 1px 0 var(--popover),
-            inset -1px -1px 0 var(--foreground);
-        color: var(--foreground);
-        font-size: 0.625rem;
-    }
-
-    /* ── retro · shape 3 ── */
-
-    /* ── retro · 2 · the defragmenter ─────────────────────────────────── */
-    [data-theme='retro'] [data-cm-shape='3'] .kp-meter {
-        --kp-meter-height: 0.75rem;
-        --cm-room: 0.625rem;
-        --cm-cells:
-            linear-gradient(90deg, transparent 0 4px, var(--popover) 4px) 0 0 / 5px 100%,
-            linear-gradient(to bottom, transparent 0 5px, var(--popover) 5px 6px) 0 0 / 100% 6px;
-        border-radius: 0;
-        background:
-            linear-gradient(90deg, transparent 0 4px, var(--border) 4px) 0 0 / 5px 100%,
-            linear-gradient(to bottom, transparent 0 5px, var(--border) 5px 6px) 0 0 / 100% 6px,
-            var(--popover);
-        box-shadow: 0 0 0 1px var(--border-strong);
-    }
-
-    /* Navy cells up to the share, a few teal ones among them. */
-    [data-theme='retro'] [data-cm-shape='3'] .kp-meter::before {
-        border-radius: 0;
-        background:
-            var(--cm-cells),
-            linear-gradient(90deg, transparent 0 20px, var(--accent) 20px 25px, transparent 25px) 0 0 / 35px 6px repeat-x,
-            linear-gradient(90deg, transparent 0 5px, var(--accent) 5px 10px, transparent 10px) 0 6px / 55px 6px repeat-x,
-            var(--kp-meter-fill-colour);
-        transition: none;
-    }
-
-    /* A white cell column in a black frame. */
-    [data-theme='retro'] [data-cm-shape='3'] .kp-meter__mark {
-        --cm-mw: 5px;
-        inset-block: -2px;
-        border-radius: 0;
-        background: var(--popover);
-        box-shadow: inset 0 0 0 1px var(--foreground);
-    }
-
-    /* Two more cells outside the field. */
-    [data-theme='retro'] [data-cm-shape='3'] .kp-meter[data-kp-over]::after {
-        inset-inline-start: calc(100% + 2px);
-        inset-block: 0;
-        inline-size: 4px;
-        background: linear-gradient(
-            to bottom,
-            var(--kp-meter-fill-colour) 0 5px,
-            transparent 5px 6px,
-            var(--kp-meter-fill-colour) 6px 11px,
-            transparent 11px
-        );
-    }
-
     /* ── grotesk · shape 1 ── */
 
     /* ── grotesk · 1 · the rule and its cursor (round 4) ──────────────── */
@@ -4087,100 +3913,6 @@
         }
     }
 
-    @media (prefers-reduced-motion: no-preference) {
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-    }
-
-    /* ── retro · loading 1 ── */
-
-    /* Round 4. The marquee: a block of three lit segments slides through the
-       panel and comes round again, the way a busy progress bar did. */
-    [data-theme='retro'] [data-cm-loading='1'] .kp-meter[data-kp-loading]::after {
-        all: unset;
-        content: '';
-        position: absolute;
-        inset: 2px;
-        pointer-events: none;
-        background: repeating-linear-gradient(90deg, hsl(from var(--success) h s calc(l * 2.2)) 0 3px, transparent 3px 4px) -12px 0 / 11px 100%
-            no-repeat;
-        --cm-l0: -12px 0;
-        --cm-l1: calc(100% + 12px) 0;
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='retro'] [data-cm-loading='1'] .kp-meter[data-kp-loading]::after {
-            animation: cm-x-pos 1600ms steps(24) infinite;
-        }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-        [data-theme='retro'] [data-cm-loading='1'] .kp-meter[data-kp-loading]::after {
-            background-position: 40% 0;
-        }
-    }
-
-    /* ── retro · loading 2 ── */
-
-    /* Round 4. The modem handshake: a green and a yellow lamp run in from
-       both ends, meet in the middle and part again. */
-    [data-theme='retro'] [data-cm-loading='2'] .kp-meter[data-kp-loading]::after {
-        all: unset;
-        content: '';
-        position: absolute;
-        inset: 2px;
-        pointer-events: none;
-        background:
-            linear-gradient(hsl(from var(--success) h s calc(l * 2.2)), hsl(from var(--success) h s calc(l * 2.2))) 0 0 / 3px 100% no-repeat,
-            linear-gradient(var(--warning), var(--warning)) 100% 0 / 3px 100% no-repeat;
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='retro'] [data-cm-loading='2'] .kp-meter[data-kp-loading]::after {
-            animation: cm-rt4-shake 1400ms steps(10, jump-none) infinite alternate;
-        }
-    }
-
-    /* ── retro · loading 3 ── */
-
-    /* Round 4. The rubber band: a dotted selection line along the top and
-       the bottom of the panel, marching in opposite directions. */
-    [data-theme='retro'] [data-cm-loading='3'] .kp-meter[data-kp-loading]::after {
-        all: unset;
-        content: '';
-        position: absolute;
-        inset: 2px;
-        pointer-events: none;
-        background:
-            linear-gradient(90deg, hsl(from var(--success) h s calc(l * 2.2)) 0 2px, transparent 2px) 0 0 / 4px 1px repeat-x,
-            linear-gradient(90deg, hsl(from var(--success) h s calc(l * 2.2)) 0 2px, transparent 2px) 0 100% / 4px 1px repeat-x;
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='retro'] [data-cm-loading='3'] .kp-meter[data-kp-loading]::after {
-            animation: cm-rt4-band 400ms steps(2) infinite;
-        }
-    }
-
     /* ── grotesk · loading 1 ── */
 
     /* A train, black, stopping at each station. */
@@ -4238,15 +3970,6 @@
         [data-theme='grotesk'] [data-cm-loading='3'] .kp-meter[data-kp-loading]::after {
             animation: cm-x-width 1800ms steps(6) infinite;
         }
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
     }
 
     /* ── nostromo · loading 1 ── */
@@ -5060,70 +4783,6 @@
         }
     }
 
-    @media (prefers-reduced-motion: no-preference) {
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-    }
-
-    /* ── retro · arrival 1 ── */
-
-    [data-theme='retro'] [data-cm-arrival='1'] .kp-meter {
-        --cm-arr-o: cm-x-wipe-o;
-        --cm-arr-w: cm-x-wipe-w;
-        --cm-arr-d: cm-x-wipe-d;
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='retro'] [data-cm-arrival='1'] .kp-meter::before {
-            animation: var(--cm-arr-o) 600ms steps(12) backwards;
-            transition: inline-size 600ms steps(12);
-        }
-    }
-
-    /* ── retro · arrival 2 ── */
-
-    [data-theme='retro'] [data-cm-arrival='2'] .kp-meter {
-        --cm-arr-o: cm-x-grow-o;
-        --cm-arr-w: cm-x-grow-w;
-        --cm-arr-d: cm-x-grow-d;
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='retro'] [data-cm-arrival='2'] .kp-meter::before {
-            animation: var(--cm-arr-o) 320ms steps(4) backwards;
-            transition: inline-size 320ms steps(4);
-            transform-origin: 0 50%;
-        }
-    }
-
-    /* ── retro · arrival 3 ── */
-
-    [data-theme='retro'] [data-cm-arrival='3'] .kp-meter {
-        --cm-arr-o: cm-x-wipe-o;
-        --cm-arr-w: cm-x-wipe-w;
-        --cm-arr-d: cm-x-wipe-d;
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='retro'] [data-cm-arrival='3'] .kp-meter::before {
-            animation: var(--cm-arr-o) 400ms steps(4) backwards;
-            transition: inline-size 400ms steps(4);
-        }
-    }
-
     /* ── grotesk · arrival 1 ── */
 
     [data-theme='grotesk'] [data-cm-arrival='1'] .kp-meter {
@@ -5168,15 +4827,6 @@
             transition: inline-size 400ms steps(4);
             transform-origin: 0 50%;
         }
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
     }
 
     /* ── nostromo · arrival 1 ── */
@@ -5933,68 +5583,6 @@
         }
     }
 
-    @media (prefers-reduced-motion: no-preference) {
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-    }
-
-    /* ── retro · tone 1 ── */
-
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='retro'] [data-cm-tone='1'] .kp-meter[data-kp-tone='warning']::before {
-            animation-name: var(--cm-arr-w);
-        }
-
-        [data-theme='retro'] [data-cm-tone='1'] .kp-meter[data-kp-tone='destructive']::before {
-            animation-name: var(--cm-arr-d);
-        }
-    }
-
-    /* ── retro · tone 2 ── */
-
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='retro'] [data-cm-tone='2'] .kp-meter:not([data-kp-loading], [data-kp-tone]) {
-            animation: cm-x-knock-o 160ms steps(2);
-        }
-
-        [data-theme='retro'] [data-cm-tone='2'] .kp-meter[data-kp-tone='warning']:not([data-kp-loading]) {
-            animation: cm-x-knock-w 160ms steps(2);
-        }
-
-        [data-theme='retro'] [data-cm-tone='2'] .kp-meter[data-kp-tone='destructive']:not([data-kp-loading]) {
-            animation: cm-x-knock-d 160ms steps(2);
-        }
-    }
-
-    /* ── retro · tone 3 ── */
-
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='retro'] [data-cm-tone='3'] .kp-meter:not([data-kp-loading], [data-kp-tone]) {
-            animation: cm-x-jolt-o 160ms steps(2);
-        }
-
-        [data-theme='retro'] [data-cm-tone='3'] .kp-meter[data-kp-tone='warning']:not([data-kp-loading]) {
-            animation: cm-x-jolt-w 160ms steps(2);
-        }
-
-        [data-theme='retro'] [data-cm-tone='3'] .kp-meter[data-kp-tone='destructive']:not([data-kp-loading]) {
-            animation: cm-x-jolt-d 160ms steps(2);
-        }
-    }
-
     /* ── grotesk · tone 1 ── */
 
     @media (prefers-reduced-motion: no-preference) {
@@ -6037,15 +5625,6 @@
         [data-theme='grotesk'] [data-cm-tone='3'] .kp-meter[data-kp-tone='destructive']:not([data-kp-loading]) {
             animation: cm-x-jolt-d 160ms steps(2);
         }
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
     }
 
     /* ── nostromo · tone 1 ── */
@@ -7053,74 +6632,6 @@
         }
     }
 
-    @media (prefers-reduced-motion: no-preference) {
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-    }
-
-    /* ── retro · mark 1 ── */
-
-    [data-theme='retro'] [data-cm-mark='1'] .kp-meter {
-        --cm-mo-sign: '▸';
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='retro'] [data-cm-mark='1'] .kp-meter__mark {
-            transition:
-                inset-inline-start 300ms steps(6),
-                rotate 300ms steps(6);
-        }
-    }
-
-    /* ── retro · mark 2 ── */
-
-    [data-theme='retro'] [data-cm-mark='2'] .kp-meter {
-        --cm-mo-sign: '»';
-    }
-
-    [data-theme='retro'] [data-cm-mark='2'] .kp-meter__mark[data-kp-over] {
-        inset-inline-start: calc(100% + 3px);
-    }
-
-    [data-theme='retro'] [data-cm-mark='2'] .kp-meter__mark[data-kp-over]::after {
-        inset-inline-start: calc(100% + 2px);
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='retro'] [data-cm-mark='2'] .kp-meter__mark {
-            transition:
-                inset-inline-start 600ms steps(12),
-                rotate 600ms steps(12);
-        }
-    }
-
-    /* ── retro · mark 3 ── */
-
-    [data-theme='retro'] [data-cm-mark='3'] .kp-meter {
-        --cm-mo-sign: '!';
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='retro'] [data-cm-mark='3'] .kp-meter__mark {
-            transition:
-                inset-inline-start 200ms steps(2),
-                rotate 200ms steps(2);
-        }
-    }
-
     /* ── grotesk · mark 1 ── */
 
     [data-theme='grotesk'] [data-cm-mark='1'] .kp-meter {
@@ -7180,15 +6691,6 @@
                 inset-inline-start 300ms steps(3),
                 rotate 300ms steps(3);
         }
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
     }
 
     /* ── nostromo · mark 1 ── */

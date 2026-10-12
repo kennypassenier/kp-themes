@@ -555,10 +555,34 @@ export function attachNavToggles(root = document, { strings, ownedBy = NAV_OWNED
             button.setAttribute('aria-expanded', String(open));
             button.setAttribute('aria-label', label());
         };
+        let closing = false;
         /** @param {boolean} open */
         const set = (open) => {
-            write(open);
-            nav.dispatchEvent(new CustomEvent(NAV_TOGGLE_EVENT, { bubbles: true, detail: { open } }));
+            if (open) {
+                closing = false;
+                nav.removeAttribute('data-kp-nav-closing');
+                write(true);
+                // The panel's own height, for a theme that grows it: a ceiling
+                // taller than the list hides the first and last part of the
+                // growth, and the close is not the open reversed.
+                if (links) /** @type {HTMLElement} */ (nav).style.setProperty('--kp-nav-links-height', `${links.scrollHeight}px`);
+                nav.dispatchEvent(new CustomEvent(NAV_TOGGLE_EVENT, { bubbles: true, detail: { open: true } }));
+            } else {
+                if (closing || !nav.hasAttribute('data-kp-nav-open')) return;
+                closing = true;
+                nav.setAttribute('data-kp-nav-closing', '');
+                button.setAttribute('aria-expanded', 'false');
+                button.setAttribute('aria-label', label());
+                const durVal = getComputedStyle(nav).getPropertyValue('--kp-sig-fo-time').trim();
+                const dur = durVal ? (durVal.endsWith('ms') ? parseFloat(durVal) : parseFloat(durVal) * 1000) : 300;
+                setTimeout(() => {
+                    if (!closing) return;
+                    closing = false;
+                    nav.removeAttribute('data-kp-nav-closing');
+                    write(false);
+                    nav.dispatchEvent(new CustomEvent(NAV_TOGGLE_EVENT, { bubbles: true, detail: { open: false } }));
+                }, dur || 300);
+            }
         };
         // Attaching is not a toggle. This wrote the starting state THROUGH
         // the dispatch, so every consumer listening heard a close that
@@ -566,7 +590,7 @@ export function attachNavToggles(root = document, { strings, ownedBy = NAV_OWNED
         // ever to listen.
         write(nav.hasAttribute('data-kp-nav-open'));
 
-        const onClick = () => set(!nav.hasAttribute('data-kp-nav-open'));
+        const onClick = () => set(!nav.hasAttribute('data-kp-nav-open') && !closing);
         /** @param {KeyboardEvent} event */
         const onKey = (event) => {
             if (event.key !== 'Escape' || !nav.hasAttribute('data-kp-nav-open')) return;
@@ -954,12 +978,33 @@ export function attachNavMenus(root = document, { strings, ownedBy = NAV_OWNED }
         }
 
         const openButton = () => buttons.find((b) => b.getAttribute('aria-expanded') === 'true') ?? null;
+        /**
+         * A panel that is closing stays on screen, `[data-kp-nav-closing]` on its
+         * item, until the transitions the theme runs to the closed state have
+         * played; a panel with none is gone on the next frame, as before.
+         * @param {HTMLElement} item
+         * @param {Element | null | undefined} panel
+         */
+        const settleClosing = (item, panel) => {
+            item.setAttribute('data-kp-nav-closing', '');
+            requestAnimationFrame(() => {
+                if (!item.hasAttribute('data-kp-nav-closing')) return;
+                const plays = (panel?.getAnimations() ?? []).filter((a) => typeof CSSTransition !== 'undefined' && a instanceof CSSTransition);
+                void Promise.all(plays.map((a) => a.finished.catch(() => undefined))).then(() => item.removeAttribute('data-kp-nav-closing'));
+            });
+        };
         /** @param {HTMLElement} button @param {boolean} open */
         const set = (button, open) => {
-            if (open) for (const other of buttons) if (other !== button) other.setAttribute('aria-expanded', 'false');
-            button.setAttribute('aria-expanded', String(open));
+            if (open)
+                for (const other of buttons)
+                    if (other !== button && other.getAttribute('aria-expanded') === 'true') set(other, false);
+            const was = button.getAttribute('aria-expanded') === 'true';
             const panel = wired.get(button)?.panel;
+            const item = button.parentElement;
+            if (open) item?.removeAttribute('data-kp-nav-closing');
+            button.setAttribute('aria-expanded', String(open));
             if (open && panel) placeNavPanel(panel);
+            if (!open && was && item) settleClosing(item, panel);
         };
 
         /** @param {Event} event */

@@ -1,0 +1,197 @@
+/* research/character-menu, deco: the decided picks on deco's applied grammar (themes/deco/CHARACTER.md, "Applied 2026-10-09"). Deco's decided options are shape 1, loading 1, open 3, tone 1, interact 1: the panel is the register's plate (the inset frame goes), its heading Poiret capitals without the glow (G5-G7, G18); the waiting entry is the lift doors (G10); the panel opens as the inlay draws, the gold sweep from the top is retired (G3); a destructive entry is ruby words over a gold rule (G8); pointing is the leaf, a press the seal (G15, G17). */
+@layer kp.signature {
+    [data-theme='deco'][data-theme='deco'] [data-mb-shape='1'] .kp-menu-button > .kp-menu {
+        box-shadow: none;
+    }
+    [data-theme='deco'][data-theme='deco'] [data-mb-shape='1'] .kp-menu-button > .kp-menu .kp-menu__heading {
+        background-image: none;
+        font-family: var(--theme-font-display);
+        letter-spacing: var(--kp-sig-deco-title-track);
+    }
+    [data-theme='deco'][data-theme='deco'] [data-mb-loading='1'] .kp-menu-button > .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading] {
+        --kp-sig-deco-p: 1;
+        position: relative;
+        isolation: isolate;
+        overflow: clip;
+        animation: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'][data-theme='deco'] [data-mb-loading='1'] .kp-menu-button > .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading] {
+            animation: kp-sig-deco-doors var(--kp-sig-deco-loop) linear infinite;
+        }
+    }
+
+    [data-theme='deco'][data-theme='deco']
+        [data-mb-loading='1']
+        .kp-menu-button
+        > .kp-menu[aria-busy='true']
+        .kp-menu__item[data-kp-loading]::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inset-inline-end: auto;
+        inline-size: calc(50% + 0.5px);
+        z-index: 3;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        border-radius: 0;
+        pointer-events: none;
+        opacity: 1;
+        clip-path: none;
+        mask-image: none;
+        filter: none;
+        animation: none;
+        transform: none;
+        background-color: hsl(from var(--kp-sig-deco-lac) h s calc(l + 1.5));
+        background-image:
+            linear-gradient(to bottom right, transparent 50%, var(--kp-sig-deco-gold-hi) 50%),
+            linear-gradient(to bottom left, transparent 50%, var(--kp-sig-deco-gold-lt) 50%),
+            linear-gradient(to bottom right, var(--kp-sig-deco-gold-lo) 50%, transparent 50%),
+            linear-gradient(to bottom left, var(--primary) 50%, transparent 50%),
+            linear-gradient(hsl(from var(--primary) h s l / calc(0.32 * var(--kp-sig-deco-frame, 1))) 0 0),
+            linear-gradient(hsl(from var(--primary) h s l / calc(0.32 * var(--kp-sig-deco-frame, 1))) 0 0),
+            linear-gradient(hsl(from var(--primary) h s l / calc(0.32 * var(--kp-sig-deco-frame, 1))) 0 0),
+            linear-gradient(hsl(from var(--primary) h s l / calc(0.32 * var(--kp-sig-deco-frame, 1))) 0 0), linear-gradient(var(--primary) 0 0),
+            linear-gradient(hsl(from var(--primary) h s l / 0.55) 0 0),
+            linear-gradient(90deg, transparent, hsl(from var(--kp-sig-deco-gold-hi) h s l / 0.05) 60%, transparent),
+            repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px),
+            repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px);
+        background-position:
+            right calc(var(--kp-sig-deco-hx, 14px) + var(--kp-sig-deco-hs, 3.5px)) top calc(50% - var(--kp-sig-deco-hs, 3.5px)),
+            right var(--kp-sig-deco-hx, 14px) top calc(50% - var(--kp-sig-deco-hs, 3.5px)),
+            right var(--kp-sig-deco-hx, 14px) top 50%,
+            right calc(var(--kp-sig-deco-hx, 14px) + var(--kp-sig-deco-hs, 3.5px)) top 50%,
+            var(--kp-sig-deco-di, 8px) var(--kp-sig-deco-di, 8px),
+            left var(--kp-sig-deco-di, 8px) bottom var(--kp-sig-deco-di, 8px),
+            left var(--kp-sig-deco-di, 8px) top var(--kp-sig-deco-di, 8px),
+            right calc(var(--kp-sig-deco-di, 8px) + 1px) top var(--kp-sig-deco-di, 8px),
+            right 1px top 0,
+            right 4px top 0,
+            0 0,
+            0 0,
+            0 0;
+        background-size:
+            var(--kp-sig-deco-hs, 3.5px) var(--kp-sig-deco-hs, 3.5px),
+            var(--kp-sig-deco-hs, 3.5px) var(--kp-sig-deco-hs, 3.5px),
+            var(--kp-sig-deco-hs, 3.5px) var(--kp-sig-deco-hs, 3.5px),
+            var(--kp-sig-deco-hs, 3.5px) var(--kp-sig-deco-hs, 3.5px),
+            calc(100% - var(--kp-sig-deco-di, 8px) - var(--kp-sig-deco-di, 8px) - 1px) 1px,
+            calc(100% - var(--kp-sig-deco-di, 8px) - var(--kp-sig-deco-di, 8px) - 1px) 1px,
+            1px calc(100% - 2 * var(--kp-sig-deco-di, 8px)),
+            1px calc(100% - 2 * var(--kp-sig-deco-di, 8px)),
+            1px 100%,
+            1px 100%,
+            100% 100%,
+            24px 24px,
+            24px 24px;
+        background-repeat:
+            no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat;
+        box-shadow: inset -1px 0 0 hsl(from var(--kp-sig-deco-gold-lo) h s l / 0.6);
+        translate: calc(var(--kp-sig-deco-p) * -33.4%) 0;
+        block-size: auto;
+        min-block-size: 0;
+        transform: none;
+        border-radius: 0;
+        outline: 0;
+    }
+
+    [data-theme='deco'][data-theme='deco'] [data-mb-loading='1'] .kp-menu-button > .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading]::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-end: 0;
+        inset-inline-start: auto;
+        inline-size: calc(50% + 0.5px);
+        z-index: 3;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        border-radius: 0;
+        pointer-events: none;
+        opacity: 1;
+        clip-path: none;
+        mask-image: none;
+        filter: none;
+        animation: none;
+        transform: none;
+        background-color: hsl(from var(--kp-sig-deco-lac) h s calc(l + 1.5));
+        background-image:
+            linear-gradient(to bottom right, transparent 50%, var(--kp-sig-deco-gold-hi) 50%),
+            linear-gradient(to bottom left, transparent 50%, var(--kp-sig-deco-gold-lt) 50%),
+            linear-gradient(to bottom right, var(--kp-sig-deco-gold-lo) 50%, transparent 50%),
+            linear-gradient(to bottom left, var(--primary) 50%, transparent 50%),
+            linear-gradient(hsl(from var(--primary) h s l / calc(0.32 * var(--kp-sig-deco-frame, 1))) 0 0),
+            linear-gradient(hsl(from var(--primary) h s l / calc(0.32 * var(--kp-sig-deco-frame, 1))) 0 0),
+            linear-gradient(hsl(from var(--primary) h s l / calc(0.32 * var(--kp-sig-deco-frame, 1))) 0 0),
+            linear-gradient(hsl(from var(--primary) h s l / calc(0.32 * var(--kp-sig-deco-frame, 1))) 0 0), linear-gradient(var(--primary) 0 0),
+            linear-gradient(hsl(from var(--primary) h s l / 0.55) 0 0),
+            linear-gradient(90deg, transparent, hsl(from var(--kp-sig-deco-gold-hi) h s l / 0.05) 60%, transparent),
+            repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px),
+            repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px);
+        background-position:
+            left var(--kp-sig-deco-hx, 14px) top calc(50% - var(--kp-sig-deco-hs, 3.5px)),
+            left calc(var(--kp-sig-deco-hx, 14px) + var(--kp-sig-deco-hs, 3.5px)) top calc(50% - var(--kp-sig-deco-hs, 3.5px)),
+            left calc(var(--kp-sig-deco-hx, 14px) + var(--kp-sig-deco-hs, 3.5px)) top 50%,
+            left var(--kp-sig-deco-hx, 14px) top 50%,
+            right var(--kp-sig-deco-di, 8px) top var(--kp-sig-deco-di, 8px),
+            right var(--kp-sig-deco-di, 8px) bottom var(--kp-sig-deco-di, 8px),
+            right var(--kp-sig-deco-di, 8px) top var(--kp-sig-deco-di, 8px),
+            left calc(var(--kp-sig-deco-di, 8px) + 1px) top var(--kp-sig-deco-di, 8px),
+            left 1px top 0,
+            left 4px top 0,
+            0 0,
+            0 0,
+            0 0;
+        background-size:
+            var(--kp-sig-deco-hs, 3.5px) var(--kp-sig-deco-hs, 3.5px),
+            var(--kp-sig-deco-hs, 3.5px) var(--kp-sig-deco-hs, 3.5px),
+            var(--kp-sig-deco-hs, 3.5px) var(--kp-sig-deco-hs, 3.5px),
+            var(--kp-sig-deco-hs, 3.5px) var(--kp-sig-deco-hs, 3.5px),
+            calc(100% - var(--kp-sig-deco-di, 8px) - var(--kp-sig-deco-di, 8px) - 1px) 1px,
+            calc(100% - var(--kp-sig-deco-di, 8px) - var(--kp-sig-deco-di, 8px) - 1px) 1px,
+            1px calc(100% - 2 * var(--kp-sig-deco-di, 8px)),
+            1px calc(100% - 2 * var(--kp-sig-deco-di, 8px)),
+            1px 100%,
+            1px 100%,
+            100% 100%,
+            24px 24px,
+            24px 24px;
+        background-repeat:
+            no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat;
+        box-shadow: inset 1px 0 0 hsl(from var(--kp-sig-deco-gold-lo) h s l / 0.6);
+        translate: calc(var(--kp-sig-deco-p) * 33.4%) 0;
+        block-size: auto;
+        min-block-size: 0;
+        transform: none;
+        border-radius: 0;
+        outline: 0;
+    }
+    [data-theme='deco'][data-theme='deco'] [data-mb-tone='1'] .kp-menu-button > .kp-menu .kp-menu__item--destructive {
+        box-shadow: none;
+        color: var(--destructive);
+        text-decoration: underline 1px var(--primary);
+        text-underline-offset: 0.3em;
+    }
+    [data-theme='deco'][data-theme='deco']
+        [data-mb-interact='1']
+        .kp-menu-button
+        > .kp-menu
+        .kp-menu__item:is(:hover, :focus-visible, [data-mb-force-focus]) {
+        box-shadow: inset 0 0 0 1px hsl(from var(--primary) h s l / 0.9);
+    }
+    [data-theme='deco'][data-theme='deco'] [data-mb-interact='1'] .kp-menu-button > .kp-menu .kp-menu__item:active {
+        background: hsl(from var(--kp-sig-deco-lac) h s calc(l - 3));
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'][data-theme='deco'] [data-mb-open='3'] .kp-menu-button > .kp-menu:not([hidden]) {
+            animation: kp-sig-deco-arrive var(--kp-sig-deco-arrive) linear backwards;
+        }
+        [data-theme='deco'][data-theme='deco'] [data-mb-open='3'] .kp-menu-button > .kp-menu[data-mb-leaving] {
+            animation-name: kp-sig-deco-arrive;
+            animation-direction: reverse;
+        }
+    }
+}

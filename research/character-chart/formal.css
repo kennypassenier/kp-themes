@@ -1,0 +1,39 @@
+/* research/character-chart, formal: the decided picks on formal's grammar
+   (themes/formal/CHARACTER.md G1-G21, decided by Kenny on
+   research/formal-character, 2026-10-08; css/formal-register.css has the
+   package's own drawing of the same). Only formal's decided options change:
+   loading "the received stamp" and arrival "written in by hand" (shape b,
+   tip b and update none stand).
+
+   - loading: the stamp is retired; the plot is ruled with the register's
+     three navy lines (its --kp-fm-stack) across the whole of it, one after
+     the other, held, lifted and ruled again, 2400 ms (G10, G19);
+   - arrival: the pen still draws each line from its start, the area under it,
+     but at an even pace and a dead stop, 400 ms (G1, G13). */
+@layer kp.signature {
+    [data-theme='formal'] [data-cc-loading='stamp'] .kp-chart__state[data-kp-state='loading']::before {
+        inset: 0.75rem;
+        border: 0;
+        border-radius: 0;
+        outline: 0;
+        transform: none;
+        background-image: var(--kp-fm-stack);
+        background-repeat: no-repeat;
+        background-size: 100% 2px;
+        background-position:
+            0 0,
+            0 50%,
+            0 100%;
+        animation: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] [data-cc-loading='stamp'] .kp-chart__state[data-kp-state='loading'] {
+            animation: kp-sig-formal-loading var(--kp-sig-fm-loop, 2400ms) linear infinite;
+        }
+
+        [data-theme='formal'] [data-cc-arrival='draw'][data-cc-arriving] .kp-chart__plot {
+            animation: cca-k var(--kp-sig-fm-time, 400ms) linear both;
+        }
+    }
+}

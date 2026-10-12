@@ -1,0 +1,125 @@
+/* research/character-tiles, phantom: the decided picks on phantom's grammar
+   (themes/phantom/CHARACTER.md G1-G21, Kenny, 2026-10-09 on
+   research/phantom-character; css/phantom-register.css holds the tokens and
+   the keyframes this file names). Only phantom's decided options change:
+   shape 2, loading 2, arrival 2, tone 3, hover r2-ph-hover-1, live r2-ph-live-1.
+
+   - shape: the tile is cut paper, the fixed 14 px cut at 45 degrees (G6);
+   - loading: the shuffling halftone is the block of the screen with the red
+     slash across it, 1400 ms a loop (G10);
+   - arrival: the throw in hard jumps is the throw on the shove from beyond the
+     start edge and the resolve from dots in three cuts, a tile 80 ms after the
+     one before (G2, G4, G13);
+   - tone: the card stands level on its coloured start edge, a warning's edge
+     and mark on the yellow overprint, a failure's on the red plate (G6, G8);
+   - hover: the card is no longer snatched off the board; a link is the red bar
+     thrown in behind its label, ink black, and a card does not move (G15);
+   - live: the punch (a scale and a ring) is the six cuts of a live update, in
+     place (G9). */
+@layer kp.signature {
+    /* Shape 2 · cut paper. */
+    [data-theme='phantom'][data-theme='phantom'] [data-ti-shape='2'] .kp-card {
+        clip-path: var(--kp-paperclip);
+    }
+
+    /* Loading 2 · the block and the slash on one layer. */
+    [data-theme='phantom'][data-theme='phantom'] [data-ti-loading='2'] [data-kp-busy]::after {
+        background:
+            linear-gradient(104deg, transparent 0 28%, var(--primary) 28% 72%, transparent 72% 100%) no-repeat 0 0 / 2.8rem 100%,
+            radial-gradient(circle, hsl(from var(--foreground) h s l / 0.32) 1px, transparent 1.4px) 0 0 / 5px 5px,
+            var(--muted);
+        animation: none;
+    }
+
+    /* Tone 3 · level, the edge in the tone's own plate. */
+    [data-theme='phantom'][data-theme='phantom'] [data-ti-tone='3'] .kp-card[data-kp-tone] {
+        transform: none;
+    }
+
+    [data-theme='phantom'][data-theme='phantom'] [data-ti-tone='3'] .kp-card[data-kp-tone='warning'] {
+        border-inline-start-color: var(--fx-signal);
+    }
+
+    [data-theme='phantom'][data-theme='phantom'] [data-ti-tone='3'] .kp-card[data-kp-tone='warning'] [data-tl-mark] {
+        background: var(--fx-signal);
+    }
+
+    /* Hover r2-ph-hover-1 · the card stays; the link is the bar. */
+    [data-theme='phantom'][data-theme='phantom'] [data-ti-hover='r2-ph-hover-1'] .kp-card:hover,
+    [data-theme='phantom'][data-theme='phantom'] [data-ti-hover='r2-ph-hover-1'] .kp-card.tl-hover-sim,
+    [data-theme='phantom'][data-theme='phantom'] [data-ti-hover='r2-ph-hover-1'] .kp-card:has([data-tl-link]:focus-visible) {
+        translate: none;
+        rotate: none;
+        box-shadow: none;
+    }
+
+    [data-theme='phantom'][data-theme='phantom'] [data-ti-hover='r2-ph-hover-1'] [data-tl-link] {
+        background: linear-gradient(var(--primary), var(--primary)) no-repeat 0 0 / 0% 100%;
+    }
+
+    [data-theme='phantom'][data-theme='phantom'] [data-ti-hover='r2-ph-hover-1'] [data-tl-link]:hover {
+        background-size: 100% 100%;
+        color: var(--primary-foreground);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'][data-theme='phantom'] [data-ti-loading='2'] [data-kp-busy]::after {
+            animation: tl-ph-slash 1400ms cubic-bezier(0.6, 0, 0.4, 1) infinite;
+        }
+
+        /* Arrival 2 · thrown and resolved, a tile after a tile. */
+        [data-theme='phantom'][data-theme='phantom'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy], [data-tl-flash]) {
+            --kp-sig-ph-x0: -12rem;
+            --kp-sig-ph-y0: 0px;
+            --kp-sig-ph-r0: -10deg;
+            --kp-sig-ph-s0: 1;
+            --kp-sig-ph-land: 0deg;
+            mask-size: 7px 7px;
+            animation:
+                kp-sig-phantom-fly 700ms linear backwards,
+                kp-sig-phantom-resolve 700ms linear backwards;
+        }
+
+        [data-theme='phantom'][data-theme='phantom'] [data-ti-arrival='2'] > .kp-card:nth-child(2):not([data-kp-busy], [data-tl-flash]) {
+            animation-delay: 80ms;
+        }
+
+        [data-theme='phantom'][data-theme='phantom'] [data-ti-arrival='2'] > .kp-card:nth-child(3):not([data-kp-busy], [data-tl-flash]) {
+            animation-delay: 160ms;
+        }
+
+        [data-theme='phantom'][data-theme='phantom'] [data-ti-arrival='2'] > .kp-card:nth-child(n + 4):not([data-kp-busy], [data-tl-flash]) {
+            animation-delay: 240ms;
+        }
+
+        [data-theme='phantom'][data-theme='phantom'] [data-ti-hover='r2-ph-hover-1'] [data-tl-link] {
+            transition: background-size 60ms cubic-bezier(1, 0, 0.19, 1) 30ms;
+        }
+
+        [data-theme='phantom'][data-theme='phantom'] [data-ti-hover='r2-ph-hover-1'] [data-tl-link]:hover {
+            transition: background-size 60ms cubic-bezier(0.81, 0, 0, 1);
+        }
+
+        /* Live r2-ph-live-1 · the six cuts. */
+        [data-theme='phantom'][data-theme='phantom'] [data-ti-live='r2-ph-live-1'] [data-tl-flash] [data-tl-mark] {
+            mask-size: 7px 7px;
+            animation: kp-sig-phantom-update 400ms linear both;
+        }
+    }
+
+    @keyframes tl-ph-slash {
+        from {
+            background-position:
+                -2.8rem 0,
+                0 0,
+                0 0;
+        }
+
+        to {
+            background-position:
+                calc(100% + 2.8rem) 0,
+                0 0,
+                0 0;
+        }
+    }
+}

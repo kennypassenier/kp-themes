@@ -1,0 +1,2039 @@
+/* research/deco-anchor: every candidate of the one question, in the
+   theme's signature layer. Colours come from the theme's tokens only; every
+   motion sits under prefers-reduced-motion: no-preference, and the reduced
+   pose is the finished picture (the fan open, the lamps lit, the curtain up,
+   the jewel set). Durations are counted in units of the theme's beat
+   (--an-unit, 120 ms, set by demo.js) and multiplied by --an-slow (1, 2 or
+   4: the page's speed buttons).
+
+   SCOPE. The review dialog moves the section out of the page into its stage
+   (.rv-dialog__stage), so no rule here may hang on `.an-page`: the custom
+   properties and every rule hang on `.an-scene`, which moves with its
+   options.
+
+   THE CLOCK. One clock (demo.js) writes `data-an-phase` on every scene:
+   gap (the part is not drawn), in (8 units: it is drawn), hold (4 units: it
+   dwells, the press held, the gold lit), out (8 units: the drawing played
+   backwards, the same keyframes mirrored, what drew last going first). The
+   base style of every part is its drawn pose (so reduced motion and hold
+   show the finished picture); `gap` sets the undrawn pose; `in` and `hold`
+   run the drawing, `out` runs its mirror. Mirrored keyframes are written
+   as a pair (`dc-x` and `dc-x-out`) so every close is its open reversed;
+   an eased open is mirrored on the inverse curve, written out literally
+   inside @keyframes (a var() there falls back to `ease`) and set in
+   `--an-ease-out` where the curve is on the animation.
+
+   THE ANCHOR'S THREE PLACES. Each candidate draws itself in its own scene
+   (`.an-hero`), as a progress bar (`.an-bar`) and as a button press
+   (`.an-btn`); the press lands at 7 units (87.5 %) and is held through the
+   dwell, and is released as the first unit of `out`.
+
+   THE RULES OF GOLD. Gold is flat `--primary`, never a gradient; rays are
+   repeating conic gradients from a point; radius 0 and corners cut by
+   clip-path; the only glow is the lamps' drop-shadow; titles are Poiret
+   One capitals tracked wide; the double rule is `3px double`. */
+
+@layer kp.signature {
+    /* ── The scene ───────────────────────────────────────────────────── */
+
+    .an-scene {
+        --an-ivory: var(--foreground);
+        --an-gold: var(--primary);
+        --an-lacquer: var(--background);
+        /* One unit is the theme's beat; a loop is 22 units. */
+        --an-u: calc(var(--an-unit, 110ms) * var(--an-slow, 1));
+        --an-in: calc(8 * var(--an-u));
+        --an-loop: calc(22 * var(--an-u));
+        /* Deco's own curves: the register's --fx-ease for a plate that opens, and the meter's gilt sweep for a
+           curtain that slows as it clears. Each with its inverse (a curve's point reflection), so a close on
+           them is its open reversed; inside @keyframes a timing function is written out, never a var(). */
+        --an-fx: var(--fx-ease, cubic-bezier(0.4, 0, 0.2, 1));
+        --an-fx-out: cubic-bezier(0.8, 0, 0.6, 1);
+        --an-sweep: cubic-bezier(0.6, 0, 0.2, 1);
+        --an-sweep-out: cubic-bezier(0.8, 0, 0.4, 1);
+        /* The cut corners of a plate: an octagon, the corners bitten by a clip-path. */
+        --dc-cut: clamp(0.5rem, 3cqi, 0.9rem);
+        --dc-cutpoly: polygon(
+            var(--dc-cut) 0,
+            calc(100% - var(--dc-cut)) 0,
+            100% var(--dc-cut),
+            100% calc(100% - var(--dc-cut)),
+            calc(100% - var(--dc-cut)) 100%,
+            var(--dc-cut) 100%,
+            0 calc(100% - var(--dc-cut)),
+            0 var(--dc-cut)
+        );
+        container-type: inline-size;
+        position: relative;
+        overflow: clip;
+        overflow-clip-margin: 0.75rem;
+        /* Nothing is translucent; the layout layer's busy dim stays off. */
+        --kp-busy-opacity: 1;
+    }
+
+    .an-scene .an-hero {
+        position: relative;
+        display: grid;
+        place-items: center;
+        min-block-size: clamp(13rem, 36cqi, 20rem);
+        padding: 1.25rem 0.5rem;
+    }
+
+    .an-scene .an-bar,
+    .an-scene .an-btn {
+        display: grid;
+        min-block-size: 6rem;
+    }
+
+    .an-scene .an-bar {
+        align-content: center;
+    }
+
+    .an-scene .an-btn {
+        place-items: center;
+    }
+
+    /* ── The building blocks every candidate draws with ──────────────── */
+
+    /* A part that is drawn: its end pose is its base style, its start pose
+       is set at `gap`, and `in` / `out` run the pair of keyframes. */
+    .an-scene .an-a--scale {
+        --an-kf: an-scale;
+        --an-kf-out: an-scale-out;
+        scale: var(--an-s1, 1) 1;
+        transform-origin: left center;
+    }
+
+    .an-scene .an-a--clip {
+        --an-kf: an-clip;
+        --an-kf-out: an-clip-out;
+        clip-path: inset(-1em var(--an-c1, 0%) -1em 0);
+    }
+
+    .an-scene .an-a--move {
+        --an-kf: an-move;
+        --an-kf-out: an-move-out;
+        translate: var(--an-x1, 0%) var(--an-y1, 0%);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .an-a--scale {
+            scale: var(--an-s0, 0) 1;
+        }
+
+        .an-scene[data-an-phase='gap'] .an-a--clip {
+            clip-path: inset(-1em var(--an-c0, 100%) -1em 0);
+        }
+
+        .an-scene[data-an-phase='gap'] .an-a--move {
+            translate: var(--an-x0, 0%) var(--an-y0, 0%);
+        }
+
+        .an-scene[data-an-phase='in'] .an-a,
+        .an-scene[data-an-phase='hold'] .an-a {
+            animation: var(--an-kf) calc(var(--an-l, 8) * var(--an-u)) var(--an-ease, linear) calc(var(--an-d, 0) * var(--an-u)) both;
+        }
+
+        /* The mirror starts as late as the drawing ended: what drew last
+           goes first. */
+        .an-scene[data-an-phase='out'] .an-a {
+            animation: var(--an-kf-out) calc(var(--an-l, 8) * var(--an-u)) var(--an-ease-out, var(--an-ease, linear))
+                calc((8 - var(--an-d, 0) - var(--an-l, 8)) * var(--an-u)) both;
+        }
+    }
+
+    @keyframes an-scale {
+        from {
+            scale: var(--an-s0, 0) 1;
+        }
+
+        to {
+            scale: var(--an-s1, 1) 1;
+        }
+    }
+
+    @keyframes an-scale-out {
+        from {
+            scale: var(--an-s1, 1) 1;
+        }
+
+        to {
+            scale: var(--an-s0, 0) 1;
+        }
+    }
+
+    @keyframes an-clip {
+        from {
+            clip-path: inset(-1em var(--an-c0, 100%) -1em 0);
+        }
+
+        to {
+            clip-path: inset(-1em var(--an-c1, 0%) -1em 0);
+        }
+    }
+
+    @keyframes an-clip-out {
+        from {
+            clip-path: inset(-1em var(--an-c1, 0%) -1em 0);
+        }
+
+        to {
+            clip-path: inset(-1em var(--an-c0, 100%) -1em 0);
+        }
+    }
+
+    @keyframes an-move {
+        from {
+            translate: var(--an-x0, 0%) var(--an-y0, 0%);
+        }
+
+        to {
+            translate: var(--an-x1, 0%) var(--an-y1, 0%);
+        }
+    }
+
+    @keyframes an-move-out {
+        from {
+            translate: var(--an-x1, 0%) var(--an-y1, 0%);
+        }
+
+        to {
+            translate: var(--an-x0, 0%) var(--an-y0, 0%);
+        }
+    }
+
+    /* The pressed face: deco's button rests transparent on a gold hairline
+       and the package's pressed ground is `--secondary-active`; it lands late
+       (7 units) and is held. */
+    @keyframes an-face-late {
+        0%,
+        87.49% {
+            background-color: transparent;
+        }
+
+        87.5%,
+        100% {
+            background-color: var(--secondary-active);
+        }
+    }
+
+    @keyframes an-face-late-out {
+        0%,
+        12.5% {
+            background-color: var(--secondary-active);
+        }
+
+        12.51%,
+        100% {
+            background-color: transparent;
+        }
+    }
+
+    /* A button that is pressed at the end of the drawing: its base is the
+       pressed face; `gap` is the rest face. */
+    .an-scene .an-press {
+        position: relative;
+        background-color: var(--secondary-active);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .an-press {
+            background-color: transparent;
+        }
+
+        .an-scene[data-an-phase='in'] .an-press,
+        .an-scene[data-an-phase='hold'] .an-press {
+            animation: var(--an-face, an-face-late) var(--an-in) linear both;
+        }
+
+        .an-scene[data-an-phase='out'] .an-press {
+            animation: var(--an-face-out, an-face-late-out) var(--an-in) linear both;
+        }
+    }
+
+    /* ── Deco's lobby: the plaque and the pennant bar ───────────────────
+       The angle the fan sweeps by, registered so a mask can animate. */
+    @property --dc-a {
+        syntax: '<angle>';
+        inherits: true;
+        initial-value: 0deg;
+    }
+
+    /* A gilt plaque: lacquer ground, a double gold rule, corners cut by a
+       clip-path, a Poiret title in capitals and a line under it. */
+    .an-scene .dc-plaque {
+        position: relative;
+        box-sizing: border-box;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        justify-items: center;
+        align-content: center;
+        row-gap: 0.4rem;
+        inline-size: min(100%, 25rem);
+        padding: clamp(0.8rem, 4.4cqi, 1.6rem) clamp(0.9rem, 5cqi, 1.8rem);
+        border: 3px double var(--primary);
+        background: var(--card);
+        box-shadow:
+            inset 0 0 0 4px var(--card),
+            inset 0 0 0 5px hsl(from var(--primary) h s l / 0.35);
+        color: var(--an-ivory);
+        text-align: center;
+        clip-path: var(--dc-cutpoly);
+    }
+
+    .an-scene .dc-plaque > * {
+        min-inline-size: 0;
+        max-inline-size: 100%;
+    }
+
+    .an-scene .dc-plaque__title {
+        grid-row: 1;
+        margin: 0;
+        padding-inline-start: 0.12em;
+        color: inherit;
+        font-family: var(--theme-font-display);
+        font-size: clamp(1rem, 5.8cqi, 1.8rem);
+        font-weight: 400;
+        letter-spacing: 0.12em;
+        line-height: 1.25;
+        text-transform: uppercase;
+        text-wrap: balance;
+        overflow-wrap: normal;
+    }
+
+    .an-scene .dc-plaque__line {
+        grid-row: 3;
+        margin: 0;
+        overflow: hidden;
+        color: var(--muted-foreground);
+        font-size: clamp(0.7rem, 3.2cqi, 0.95rem);
+        letter-spacing: 0.05em;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* Deco's own progress bar, drawn as the register draws it (the package
+       bar in its md size): a 3 px double track, a fluted gold fill clipped to
+       a pennant that ends in a chevron, an emerald lozenge at the head. */
+    .an-scene .dc-bar {
+        --dc-s: 1.5;
+        --dc-h: calc(1.125rem * var(--dc-s));
+        --dc-rib: calc(4px * var(--dc-s));
+        --dc-rib-pitch: calc(5px * var(--dc-s));
+        --dc-flute: color-mix(in oklab, var(--primary) 72%, var(--background));
+        --dc-tip: calc(0.45rem * var(--dc-s));
+        --dc-jewel: calc(0.4rem * var(--dc-s));
+        --dc-at: 80%;
+        --dc-pen: polygon(
+            0 0,
+            calc(var(--dc-at) - var(--dc-tip)) 0,
+            var(--dc-at) 50%,
+            calc(var(--dc-at) - var(--dc-tip)) 100%,
+            0 100%,
+            calc(var(--dc-tip) * 0.6) 50%
+        );
+        --an-d: 0;
+        --an-l: 6;
+        --an-ease: var(--an-fx);
+        --an-ease-out: var(--an-fx-out);
+        position: relative;
+        display: block;
+        inline-size: 100%;
+        block-size: var(--dc-h);
+    }
+
+    .an-scene .dc-bar__track {
+        position: absolute;
+        inset: 0;
+        display: block;
+        overflow: hidden;
+        border: 3px double var(--border-strong);
+        background: var(--background);
+    }
+
+    .an-scene .dc-bar__fill {
+        --an-kf: dc-grow;
+        --an-kf-out: dc-grow-out;
+        position: absolute;
+        inset: 1px;
+        background:
+            linear-gradient(90deg, var(--primary) 0 var(--dc-rib), var(--dc-flute) var(--dc-rib)) 0 0 / var(--dc-rib-pitch) 100% repeat-x,
+            var(--primary);
+        clip-path: var(--dc-clip, var(--dc-pen));
+    }
+
+    .an-scene .dc-bar__head {
+        --an-kf: dc-head;
+        --an-kf-out: dc-head-out;
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: var(--dc-at);
+        inline-size: 0;
+    }
+
+    .an-scene .dc-bar__head::before {
+        content: '';
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: var(--dc-head-off, calc(-1 * var(--dc-tip) - var(--dc-jewel) * 0.9));
+        inline-size: var(--dc-jewel);
+        block-size: var(--dc-jewel);
+        background: var(--accent);
+        box-shadow:
+            0 0 0 1px var(--background),
+            0 0 0 2px var(--primary);
+        transform: translateY(-50%) rotate(45deg);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .dc-bar__head {
+            inset-inline-start: 0%;
+        }
+    }
+
+    /* The pennant grows from the foot of the track (the same polygon the
+       register transitions) and the head rides its tip. */
+    @keyframes dc-grow {
+        from {
+            clip-path: polygon(0 0, 0 0, 0 50%, 0 100%, 0 100%, 0 50%);
+        }
+
+        to {
+            clip-path: var(--dc-pen);
+        }
+    }
+
+    @keyframes dc-grow-out {
+        from {
+            clip-path: var(--dc-pen);
+        }
+
+        to {
+            clip-path: polygon(0 0, 0 0, 0 50%, 0 100%, 0 100%, 0 50%);
+        }
+    }
+
+    @keyframes dc-head {
+        from {
+            inset-inline-start: 0%;
+        }
+
+        to {
+            inset-inline-start: var(--dc-at);
+        }
+    }
+
+    @keyframes dc-head-out {
+        from {
+            inset-inline-start: var(--dc-at);
+        }
+
+        to {
+            inset-inline-start: 0%;
+        }
+    }
+
+    /* A title that rises into its line: clipped from its foot, 0.4em up. */
+    @keyframes dc-rise {
+        from {
+            translate: 0 0.4em;
+            clip-path: inset(100% 0 0 0);
+        }
+
+        to {
+            translate: 0 0;
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes dc-rise-out {
+        from {
+            translate: 0 0;
+            clip-path: inset(0);
+        }
+
+        to {
+            translate: 0 0.4em;
+            clip-path: inset(100% 0 0 0);
+        }
+    }
+
+    /* A lamp or a bulb lit in one hard step: `in` lights at the end of its
+       span, `out` puts it out at the start of its mirrored span. */
+    @keyframes dc-lamp {
+        from {
+            background-color: hsl(from var(--primary) h s l / 0.22);
+            filter: drop-shadow(0 0 0 hsl(from var(--primary) h s l / 0));
+        }
+
+        to {
+            background-color: hsl(from var(--primary) h s l / 1);
+            filter: drop-shadow(0 0 4px hsl(from var(--primary) h s l / 0.7));
+        }
+    }
+
+    @keyframes dc-lamp-out {
+        from {
+            background-color: hsl(from var(--primary) h s l / 1);
+            filter: drop-shadow(0 0 4px hsl(from var(--primary) h s l / 0.7));
+        }
+
+        to {
+            background-color: hsl(from var(--primary) h s l / 0.22);
+            filter: drop-shadow(0 0 0 hsl(from var(--primary) h s l / 0));
+        }
+    }
+
+    /* The title takes the gold at 7 units (a hard step), and gives it up at 1. */
+    @keyframes dc-title-gold {
+        0%,
+        87.49% {
+            color: var(--an-ivory);
+        }
+
+        87.5%,
+        100% {
+            color: var(--primary);
+        }
+    }
+
+    @keyframes dc-title-gold-out {
+        0%,
+        12.5% {
+            color: var(--primary);
+        }
+
+        12.51%,
+        100% {
+            color: var(--an-ivory);
+        }
+    }
+
+    @keyframes dc-title-bright {
+        0%,
+        87.49% {
+            color: var(--border-strong);
+        }
+
+        87.5%,
+        100% {
+            color: var(--primary);
+        }
+    }
+
+    @keyframes dc-title-bright-out {
+        0%,
+        12.5% {
+            color: var(--primary);
+        }
+
+        12.51%,
+        100% {
+            color: var(--border-strong);
+        }
+    }
+
+    /* A lamp or a bulb that lights at 7 units inside a button. */
+    @keyframes dc-lit-late {
+        0%,
+        87.49% {
+            background-color: hsl(from var(--primary) h s l / 0.22);
+            filter: drop-shadow(0 0 0 hsl(from var(--primary) h s l / 0));
+        }
+
+        87.5%,
+        100% {
+            background-color: hsl(from var(--primary) h s l / 1);
+            filter: drop-shadow(0 0 4px hsl(from var(--primary) h s l / 0.7));
+        }
+    }
+
+    @keyframes dc-lit-late-out {
+        0%,
+        12.5% {
+            background-color: hsl(from var(--primary) h s l / 1);
+            filter: drop-shadow(0 0 4px hsl(from var(--primary) h s l / 0.7));
+        }
+
+        12.51%,
+        100% {
+            background-color: hsl(from var(--primary) h s l / 0.22);
+            filter: drop-shadow(0 0 0 hsl(from var(--primary) h s l / 0));
+        }
+    }
+
+    /* The finished title: gold; at gap the title is not yet gilt. */
+    .an-scene :is(.dc-l-plaque, .dc-m-plaque, .dc-g-plaque) .dc-plaque__title {
+        color: var(--primary);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] :is(.dc-l-plaque, .dc-m-plaque) .dc-plaque__title {
+            color: var(--an-ivory);
+        }
+
+        .an-scene[data-an-phase='gap'] .dc-g-plaque .dc-plaque__title {
+            color: var(--border-strong);
+        }
+
+        .an-scene[data-an-phase='in'] :is(.dc-l-plaque, .dc-m-plaque) .dc-plaque__title,
+        .an-scene[data-an-phase='hold'] :is(.dc-l-plaque, .dc-m-plaque) .dc-plaque__title {
+            animation: dc-title-gold var(--an-in) linear both;
+        }
+
+        .an-scene[data-an-phase='out'] :is(.dc-l-plaque, .dc-m-plaque) .dc-plaque__title {
+            animation: dc-title-gold-out var(--an-in) linear both;
+        }
+
+        .an-scene[data-an-phase='in'] .dc-g-plaque .dc-plaque__title,
+        .an-scene[data-an-phase='hold'] .dc-g-plaque .dc-plaque__title {
+            animation: dc-title-bright var(--an-in) linear both;
+        }
+
+        .an-scene[data-an-phase='out'] .dc-g-plaque .dc-plaque__title {
+            animation: dc-title-bright-out var(--an-in) linear both;
+        }
+    }
+
+    /* ── 1 · The fan opens ───────────────────────────────────────────────
+       A crest of gold rays (a repeating conic gradient from a point, the
+       dialog's crest) stands above the plaque's title, folded to its base.
+       It opens from that point, ray by ray from the start side to the end
+       side (a conic mask sweeping 0 to 180deg while it scales up from
+       0.15 x 0.4), 5 units; then the double rule is drawn under the title
+       from its centre, 5 to 7. At rest it stands open. */
+    .an-scene .dc-f-fan {
+        --an-kf: dc-f-open;
+        --an-kf-out: dc-f-open-out;
+        --an-l: 5;
+        --an-d: 0;
+        --an-ease: var(--an-fx);
+        --an-ease-out: var(--an-fx-out);
+        --dc-a: 180deg;
+        grid-row: 1;
+        position: relative;
+        display: block;
+        inline-size: clamp(5.5rem, 34cqi, 10rem);
+        aspect-ratio: 2;
+        margin-block-end: 0.15rem;
+        transform-origin: 50% 100%;
+        border-block-end: 1px solid var(--primary);
+        background: repeating-conic-gradient(from -90deg at 50% 100%, var(--primary) 0 4deg, transparent 4deg 15deg);
+        mask:
+            conic-gradient(from -90deg at 50% 100%, var(--foreground) 0 var(--dc-a), transparent var(--dc-a)),
+            radial-gradient(ellipse 50% 100% at 50% 100%, var(--foreground) 0 99%, transparent 100%);
+        mask-composite: intersect;
+    }
+
+    .an-scene .dc-f-fan::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 0;
+        margin-inline: auto;
+        inline-size: clamp(0.6rem, 3.6cqi, 0.95rem);
+        aspect-ratio: 2;
+        border-radius: 999px 999px 0 0;
+        background: var(--primary);
+    }
+
+    .an-scene .dc-f-plaque .dc-plaque__title {
+        grid-row: 2;
+    }
+
+    .an-scene .dc-f-rule {
+        --an-d: 5;
+        --an-l: 2;
+        --an-ease: var(--an-fx);
+        --an-ease-out: var(--an-fx-out);
+        grid-row: 3;
+        inline-size: 62%;
+        block-size: 0;
+        border-block-start: 3px double var(--primary);
+        transform-origin: center;
+    }
+
+    .an-scene .dc-f-plaque .dc-plaque__line {
+        grid-row: 4;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .dc-f-fan {
+            scale: 0.15 0.4;
+            opacity: 0;
+            --dc-a: 0deg;
+        }
+    }
+
+    @keyframes dc-f-open {
+        from {
+            scale: 0.15 0.4;
+            opacity: 0;
+            --dc-a: 0deg;
+        }
+
+        to {
+            scale: 1 1;
+            opacity: 1;
+            --dc-a: 180deg;
+        }
+    }
+
+    @keyframes dc-f-open-out {
+        from {
+            scale: 1 1;
+            opacity: 1;
+            --dc-a: 180deg;
+        }
+
+        to {
+            scale: 0.15 0.4;
+            opacity: 0;
+            --dc-a: 0deg;
+        }
+    }
+
+    /* The bar: the pennant grows 0 to 6 units, then a small fan opens
+       ahead of its tip, 6 to 7. */
+    .an-scene .dc-f-bar {
+        --dc-at: 74%;
+    }
+
+    .an-scene .dc-f-bar__fan {
+        --an-kf: dc-f-open;
+        --an-kf-out: dc-f-open-out;
+        --an-d: 6;
+        --an-l: 1;
+        --dc-a: 180deg;
+        position: absolute;
+        inset-block-end: 0;
+        inset-inline-start: calc(var(--dc-at) + 0.2rem);
+        inline-size: 2.2rem;
+        aspect-ratio: 2;
+        transform-origin: 50% 100%;
+        background: repeating-conic-gradient(from -90deg at 50% 100%, var(--primary) 0 4deg, transparent 4deg 15deg);
+        mask:
+            conic-gradient(from -90deg at 50% 100%, var(--foreground) 0 var(--dc-a), transparent var(--dc-a)),
+            radial-gradient(ellipse 50% 100% at 50% 100%, var(--foreground) 0 99%, transparent 100%);
+        mask-composite: intersect;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .dc-f-bar__fan {
+            scale: 0.15 0.4;
+            opacity: 0;
+            --dc-a: 0deg;
+        }
+    }
+
+    /* The button: the register's own fan (rays out of the lower-left
+       corner) opens behind the label in the last unit, with a conic sweep. */
+    .an-scene .dc-f-press::before {
+        opacity: 1;
+        --dc-a: 120deg;
+        mask: conic-gradient(from 0deg at 0% 120%, var(--foreground) 0 var(--dc-a), transparent var(--dc-a));
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .dc-f-press::before {
+            opacity: 0;
+            --dc-a: 0deg;
+        }
+
+        .an-scene[data-an-phase='in'] .dc-f-press::before,
+        .an-scene[data-an-phase='hold'] .dc-f-press::before {
+            animation: dc-f-btn var(--an-in) linear both;
+            transition: none;
+        }
+
+        .an-scene[data-an-phase='out'] .dc-f-press::before {
+            animation: dc-f-btn-out var(--an-in) linear both;
+            transition: none;
+        }
+    }
+
+    @keyframes dc-f-btn {
+        0%,
+        87.5% {
+            opacity: 0;
+            --dc-a: 0deg;
+            animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        100% {
+            opacity: 1;
+            --dc-a: 120deg;
+        }
+    }
+
+    @keyframes dc-f-btn-out {
+        0% {
+            opacity: 1;
+            --dc-a: 120deg;
+            animation-timing-function: cubic-bezier(0.8, 0, 0.6, 1);
+        }
+
+        12.5%,
+        100% {
+            opacity: 0;
+            --dc-a: 0deg;
+        }
+    }
+
+    /* ── 2 · The lift ascends ────────────────────────────────────────────
+       The lobby's floor indicator beside the plaque: eight lamps and an
+       arrow. The lamps light one a hard step from the foot up, 0.75 of a
+       unit each (0 to 6), the arrow lights at 6 and the title takes the
+       gold at 7: the floor is reached. Out: the lamps go out from the top
+       down. Lit is gold with the one glow deco allows, a drop-shadow. */
+    .an-scene .dc-l-stage {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: clamp(0.6rem, 4cqi, 1.2rem);
+        inline-size: min(100%, 27rem);
+    }
+
+    .an-scene .dc-l-lamps {
+        --dc-pitch: clamp(0.72rem, 3.7cqi, 1.05rem);
+        flex: none;
+        display: grid;
+        justify-items: center;
+        row-gap: calc(var(--dc-pitch) * 0.45);
+        padding: calc(var(--dc-pitch) * 0.5) calc(var(--dc-pitch) * 0.6);
+        border: 1px solid var(--border-strong);
+        background: var(--background);
+    }
+
+    .an-scene .dc-l-lamps i {
+        --an-kf: dc-lamp;
+        --an-kf-out: dc-lamp-out;
+        --an-l: 0.75;
+        --an-ease: steps(1, jump-end);
+        --an-ease-out: steps(1, jump-start);
+        inline-size: calc(var(--dc-pitch) * 1.3);
+        block-size: calc(var(--dc-pitch) * 0.55);
+        background-color: var(--primary);
+        filter: drop-shadow(0 0 4px hsl(from var(--primary) h s l / 0.7));
+    }
+
+    .an-scene .dc-l-arrow {
+        --an-kf: dc-arrow;
+        --an-kf-out: dc-arrow-out;
+        --an-d: 5.51;
+        --an-l: 0.5;
+        --an-ease: steps(1, jump-end);
+        --an-ease-out: steps(1, jump-start);
+        color: var(--primary);
+        font-size: calc(var(--dc-pitch) * 1.1);
+        font-style: normal;
+        font-weight: 400;
+        line-height: 1;
+        filter: drop-shadow(0 0 4px hsl(from var(--primary) h s l / 0.7));
+    }
+
+    .an-scene .dc-l-lamps i:nth-child(9) {
+        --an-d: 0.01;
+    }
+    .an-scene .dc-l-lamps i:nth-child(8) {
+        --an-d: 0.76;
+    }
+    .an-scene .dc-l-lamps i:nth-child(7) {
+        --an-d: 1.51;
+    }
+    .an-scene .dc-l-lamps i:nth-child(6) {
+        --an-d: 2.26;
+    }
+    .an-scene .dc-l-lamps i:nth-child(5) {
+        --an-d: 3.01;
+    }
+    .an-scene .dc-l-lamps i:nth-child(4) {
+        --an-d: 3.76;
+    }
+    .an-scene .dc-l-lamps i:nth-child(3) {
+        --an-d: 4.51;
+    }
+    .an-scene .dc-l-lamps i:nth-child(2) {
+        --an-d: 5.26;
+    }
+
+    .an-scene .dc-l-plaque {
+        flex: 1 1 0;
+        inline-size: auto;
+        min-inline-size: 0;
+        max-inline-size: 18rem;
+    }
+
+    .an-scene .dc-l-plaque .dc-plaque__title {
+        font-size: clamp(0.85rem, 4.6cqi, 1.5rem);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .dc-l-lamps i {
+            background-color: hsl(from var(--primary) h s l / 0.22);
+            filter: drop-shadow(0 0 0 hsl(from var(--primary) h s l / 0));
+        }
+
+        .an-scene[data-an-phase='gap'] .dc-l-arrow {
+            color: hsl(from var(--primary) h s l / 0.22);
+            filter: drop-shadow(0 0 0 hsl(from var(--primary) h s l / 0));
+        }
+    }
+
+    @keyframes dc-arrow {
+        from {
+            color: hsl(from var(--primary) h s l / 0.22);
+            filter: drop-shadow(0 0 0 hsl(from var(--primary) h s l / 0));
+        }
+
+        to {
+            color: hsl(from var(--primary) h s l / 1);
+            filter: drop-shadow(0 0 4px hsl(from var(--primary) h s l / 0.7));
+        }
+    }
+
+    @keyframes dc-arrow-out {
+        from {
+            color: hsl(from var(--primary) h s l / 1);
+            filter: drop-shadow(0 0 4px hsl(from var(--primary) h s l / 0.7));
+        }
+
+        to {
+            color: hsl(from var(--primary) h s l / 0.22);
+            filter: drop-shadow(0 0 0 hsl(from var(--primary) h s l / 0));
+        }
+    }
+
+    /* The bar: the meter's row of lamps, sixteen lit of twenty, one a hard
+       step along the track; the lozenge steps with them. */
+    .an-scene .dc-l-bar {
+        --an-d: 0.01;
+        --dc-at: 80%;
+        --dc-clip: inset(-1em 0 -1em 0);
+        --dc-head-off: calc(var(--dc-jewel) * -0.5);
+        --an-ease: steps(16, jump-end);
+        --an-ease-out: steps(16, jump-start);
+    }
+
+    .an-scene .dc-l-bar .dc-bar__track {
+        background:
+            linear-gradient(90deg, transparent 0 18%, hsl(from var(--primary) h s l / 0.22) 18% 82%, transparent 82%) 0 50% / calc(100% / 20) 62%
+                repeat-x,
+            var(--background);
+    }
+
+    .an-scene .dc-l-bar .dc-bar__fill {
+        --an-kf: an-clip;
+        --an-kf-out: an-clip-out;
+        inset: 0 auto 0 0;
+        inline-size: var(--dc-at);
+        background: linear-gradient(90deg, transparent 0 18%, var(--primary) 18% 82%, transparent 82%) 0 50% / calc(100% / 16) 62% repeat-x;
+        filter: drop-shadow(0 0 2px hsl(from var(--primary) h s l / 0.55));
+    }
+
+    /* The button: a lamp beside the label lights in one step at 7 units and
+       the face takes gold at 8 %. */
+    .an-scene .dc-l-press {
+        --an-face: dc-l-face;
+        --an-face-out: dc-l-face-out;
+        background-color: color-mix(in oklab, var(--secondary-active), var(--primary) 8%);
+    }
+
+    .an-scene .dc-l-press__lamp {
+        --an-kf: dc-lit-late;
+        --an-kf-out: dc-lit-late-out;
+        --an-l: 8;
+        --an-ease: linear;
+        --an-ease-out: linear;
+        flex: none;
+        inline-size: 0.8rem;
+        block-size: 0.38rem;
+        background-color: var(--primary);
+        filter: drop-shadow(0 0 4px hsl(from var(--primary) h s l / 0.7));
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .dc-l-press {
+            background-color: transparent;
+        }
+
+        .an-scene[data-an-phase='gap'] .dc-l-press__lamp {
+            background-color: hsl(from var(--primary) h s l / 0.22);
+            filter: drop-shadow(0 0 0 hsl(from var(--primary) h s l / 0));
+        }
+    }
+
+    @keyframes dc-l-face {
+        0%,
+        87.49% {
+            background-color: transparent;
+        }
+
+        87.5%,
+        100% {
+            background-color: color-mix(in oklab, var(--secondary-active), var(--primary) 8%);
+        }
+    }
+
+    @keyframes dc-l-face-out {
+        0%,
+        12.5% {
+            background-color: color-mix(in oklab, var(--secondary-active), var(--primary) 8%);
+        }
+
+        12.51%,
+        100% {
+            background-color: transparent;
+        }
+    }
+
+    /* ── 3 · The setbacks rise ───────────────────────────────────────────
+       A skyscraper is drawn behind the plaque's title: five tiers of gold
+       hairline, each narrower than the one below, appear one after another
+       from the foot in hard steps, a unit apart (1 to 6); the title rises
+       0.4em into its line (6 to 7). Out: the title sinks, the tiers are
+       taken down from the top. */
+    .an-scene .dc-s-plaque {
+        min-block-size: clamp(8.5rem, 42cqi, 12rem);
+        overflow: clip;
+    }
+
+    .an-scene .dc-s-tiers {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+        pointer-events: none;
+    }
+
+    .an-scene .dc-s-tiers i {
+        --an-kf: dc-s-tier;
+        --an-kf-out: dc-s-tier-out;
+        --an-l: 1;
+        --an-ease: steps(1, jump-end);
+        --an-ease-out: steps(1, jump-start);
+        flex: 1 1 0;
+        box-sizing: border-box;
+        border: 1px solid hsl(from var(--primary) h s l / 0.85);
+        border-block-end: 0;
+    }
+
+    .an-scene .dc-s-tiers i:nth-child(1) {
+        --an-d: 0.01;
+        inline-size: 92%;
+    }
+    .an-scene .dc-s-tiers i:nth-child(2) {
+        --an-d: 1.01;
+        inline-size: 74%;
+    }
+    .an-scene .dc-s-tiers i:nth-child(3) {
+        --an-d: 2.01;
+        inline-size: 56%;
+    }
+    .an-scene .dc-s-tiers i:nth-child(4) {
+        --an-d: 3.01;
+        inline-size: 38%;
+    }
+    .an-scene .dc-s-tiers i:nth-child(5) {
+        --an-d: 4.01;
+        inline-size: 22%;
+    }
+
+    .an-scene .dc-s-plaque .dc-plaque__title,
+    .an-scene .dc-s-plaque .dc-plaque__line {
+        position: relative;
+        z-index: 1;
+    }
+
+    .an-scene .dc-s-plaque .dc-plaque__title {
+        padding-inline: 0.5em 0.38em;
+        background: var(--card);
+    }
+
+    .an-scene .dc-s-plaque .dc-plaque__line {
+        padding-inline: 0.6em;
+        background: var(--card);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .dc-s-tiers i {
+            clip-path: inset(100% 0 0 0);
+        }
+
+        .an-scene[data-an-phase='gap'] .dc-s-plaque .dc-plaque__title {
+            translate: 0 0.4em;
+            clip-path: inset(100% 0 0 0);
+        }
+
+        .an-scene[data-an-phase='in'] .dc-s-plaque .dc-plaque__title,
+        .an-scene[data-an-phase='hold'] .dc-s-plaque .dc-plaque__title {
+            animation: dc-rise calc(1 * var(--an-u)) cubic-bezier(0.4, 0, 0.2, 1) calc(6 * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .dc-s-plaque .dc-plaque__title {
+            animation: dc-rise-out calc(1 * var(--an-u)) cubic-bezier(0.8, 0, 0.6, 1) calc(1 * var(--an-u)) both;
+        }
+    }
+
+    @keyframes dc-s-tier {
+        from {
+            clip-path: inset(100% 0 0 0);
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes dc-s-tier-out {
+        from {
+            clip-path: inset(0);
+        }
+
+        to {
+            clip-path: inset(100% 0 0 0);
+        }
+    }
+
+    /* The bar: the fill is a staircase of five tiers (a stepped top edge)
+       that fills in five hard steps, the lozenge on the top step. */
+    .an-scene .dc-s-bar {
+        --an-d: 0.01;
+        --dc-at: 80%;
+        --dc-clip: inset(-1em 0 -1em 0);
+        --dc-head-off: calc(var(--dc-jewel) * -1.4);
+        --an-ease: steps(5, jump-end);
+        --an-ease-out: steps(5, jump-start);
+    }
+
+    .an-scene .dc-s-bar .dc-bar__fill {
+        --an-kf: an-clip;
+        --an-kf-out: an-clip-out;
+        inset: 1px auto 1px 1px;
+        inline-size: calc(var(--dc-at) - 1px);
+        background: none;
+    }
+
+    .an-scene .dc-s-bar .dc-bar__fill::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            linear-gradient(90deg, var(--primary) 0 var(--dc-rib), var(--dc-flute) var(--dc-rib)) 0 0 / var(--dc-rib-pitch) 100% repeat-x,
+            var(--primary);
+        clip-path: polygon(0 56%, 20% 56%, 20% 42%, 40% 42%, 40% 28%, 60% 28%, 60% 14%, 80% 14%, 80% 0, 100% 0, 100% 100%, 0 100%);
+    }
+
+    /* The button: at 7 units its two top corners are cut in the tooltip's
+       steps, edged in gold, and the face takes gold at 8 %. */
+    .an-scene .dc-s-press {
+        --dc-n: 5px;
+        --dc-ln: linear-gradient(var(--primary) 0 0);
+        --an-face: dc-s-press;
+        --an-face-out: dc-s-press-out;
+        background-color: color-mix(in oklab, var(--secondary-active), var(--primary) 8%);
+        clip-path: polygon(
+            0 calc(var(--dc-n) * 2),
+            var(--dc-n) calc(var(--dc-n) * 2),
+            var(--dc-n) var(--dc-n),
+            calc(var(--dc-n) * 2) var(--dc-n),
+            calc(var(--dc-n) * 2) 0,
+            calc(100% - var(--dc-n) * 2) 0,
+            calc(100% - var(--dc-n) * 2) var(--dc-n),
+            calc(100% - var(--dc-n)) var(--dc-n),
+            calc(100% - var(--dc-n)) calc(var(--dc-n) * 2),
+            100% calc(var(--dc-n) * 2),
+            100% 100%,
+            0 100%
+        );
+    }
+
+    .an-scene .dc-s-press::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background:
+            var(--dc-ln) 0 calc(var(--dc-n) * 2) / calc(var(--dc-n) + 1px) 1px no-repeat,
+            var(--dc-ln) var(--dc-n) var(--dc-n) / 1px calc(var(--dc-n) + 1px) no-repeat,
+            var(--dc-ln) var(--dc-n) var(--dc-n) / calc(var(--dc-n) + 1px) 1px no-repeat,
+            var(--dc-ln) calc(var(--dc-n) * 2) 0 / 1px calc(var(--dc-n) + 1px) no-repeat,
+            var(--dc-ln) 100% calc(var(--dc-n) * 2) / calc(var(--dc-n) + 1px) 1px no-repeat,
+            var(--dc-ln) calc(100% - var(--dc-n)) var(--dc-n) / 1px calc(var(--dc-n) + 1px) no-repeat,
+            var(--dc-ln) 100% var(--dc-n) / calc(var(--dc-n) + 1px) 1px no-repeat,
+            var(--dc-ln) calc(100% - var(--dc-n) * 2) 0 / 1px calc(var(--dc-n) + 1px) no-repeat;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .dc-s-press {
+            background-color: transparent;
+            clip-path: polygon(0 0, 0 0, 0 0, 0 0, 0 0, 100% 0, 100% 0, 100% 0, 100% 0, 100% 0, 100% 100%, 0 100%);
+        }
+
+        .an-scene[data-an-phase='gap'] .dc-s-press::after {
+            opacity: 0;
+        }
+
+        .an-scene[data-an-phase='in'] .dc-s-press::after,
+        .an-scene[data-an-phase='hold'] .dc-s-press::after {
+            animation: dc-s-lines var(--an-in) linear both;
+        }
+
+        .an-scene[data-an-phase='out'] .dc-s-press::after {
+            animation: dc-s-lines-out var(--an-in) linear both;
+        }
+    }
+
+    @keyframes dc-s-press {
+        0%,
+        87.49% {
+            background-color: transparent;
+            clip-path: polygon(0 0, 0 0, 0 0, 0 0, 0 0, 100% 0, 100% 0, 100% 0, 100% 0, 100% 0, 100% 100%, 0 100%);
+        }
+
+        87.5%,
+        100% {
+            background-color: color-mix(in oklab, var(--secondary-active), var(--primary) 8%);
+            clip-path: polygon(
+                0 calc(var(--dc-n) * 2),
+                var(--dc-n) calc(var(--dc-n) * 2),
+                var(--dc-n) var(--dc-n),
+                calc(var(--dc-n) * 2) var(--dc-n),
+                calc(var(--dc-n) * 2) 0,
+                calc(100% - var(--dc-n) * 2) 0,
+                calc(100% - var(--dc-n) * 2) var(--dc-n),
+                calc(100% - var(--dc-n)) var(--dc-n),
+                calc(100% - var(--dc-n)) calc(var(--dc-n) * 2),
+                100% calc(var(--dc-n) * 2),
+                100% 100%,
+                0 100%
+            );
+        }
+    }
+
+    @keyframes dc-s-press-out {
+        0%,
+        12.5% {
+            background-color: color-mix(in oklab, var(--secondary-active), var(--primary) 8%);
+            clip-path: polygon(
+                0 calc(var(--dc-n) * 2),
+                var(--dc-n) calc(var(--dc-n) * 2),
+                var(--dc-n) var(--dc-n),
+                calc(var(--dc-n) * 2) var(--dc-n),
+                calc(var(--dc-n) * 2) 0,
+                calc(100% - var(--dc-n) * 2) 0,
+                calc(100% - var(--dc-n) * 2) var(--dc-n),
+                calc(100% - var(--dc-n)) var(--dc-n),
+                calc(100% - var(--dc-n)) calc(var(--dc-n) * 2),
+                100% calc(var(--dc-n) * 2),
+                100% 100%,
+                0 100%
+            );
+        }
+
+        12.51%,
+        100% {
+            background-color: transparent;
+            clip-path: polygon(0 0, 0 0, 0 0, 0 0, 0 0, 100% 0, 100% 0, 100% 0, 100% 0, 100% 0, 100% 100%, 0 100%);
+        }
+    }
+
+    @keyframes dc-s-lines {
+        0%,
+        87.49% {
+            opacity: 0;
+        }
+
+        87.5%,
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes dc-s-lines-out {
+        0%,
+        12.5% {
+            opacity: 1;
+        }
+
+        12.51%,
+        100% {
+            opacity: 0;
+        }
+    }
+
+    /* ── 4 · The curtain rises ───────────────────────────────────────────
+       A lacquer curtain with gold pleats and a double-rule hem hangs over
+       the plaque. It rises off the top over 6 units, slowing as it clears
+       (the meter's gilt sweep), and the title rises 0.4em into its line as
+       the hem passes it (3 to 5). Out: the curtain falls, the title sinks
+       first. The stage is clipped to the plaque, so the risen curtain is
+       off-stage. */
+    .an-scene .dc-c-stage {
+        position: relative;
+        inline-size: min(100%, 25rem);
+        overflow: clip;
+        clip-path: var(--dc-cutpoly);
+    }
+
+    .an-scene .dc-c-stage .dc-plaque {
+        inline-size: 100%;
+        min-block-size: clamp(8rem, 38cqi, 11rem);
+    }
+
+    .an-scene .dc-c-curtain {
+        --an-y0: 0%;
+        --an-y1: -104%;
+        --an-d: 0;
+        --an-l: 6;
+        --an-ease: var(--an-sweep);
+        --an-ease-out: var(--an-sweep-out);
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        border-block-end: 3px double var(--primary);
+        background:
+            repeating-linear-gradient(90deg, hsl(from var(--primary) h s l / 0.45) 0 1px, transparent 1px 0.9rem),
+            repeating-linear-gradient(90deg, transparent 0 0.45rem, hsl(from var(--background) h s l / 0.4) 0.45rem 0.9rem), var(--popover);
+    }
+
+    .an-scene .dc-c-plaque .dc-plaque__title {
+        position: relative;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .dc-c-plaque .dc-plaque__title {
+            translate: 0 0.4em;
+            clip-path: inset(100% 0 0 0);
+        }
+
+        .an-scene[data-an-phase='in'] .dc-c-plaque .dc-plaque__title,
+        .an-scene[data-an-phase='hold'] .dc-c-plaque .dc-plaque__title {
+            animation: dc-rise calc(2 * var(--an-u)) cubic-bezier(0.4, 0, 0.2, 1) calc(3 * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .dc-c-plaque .dc-plaque__title {
+            animation: dc-rise-out calc(2 * var(--an-u)) cubic-bezier(0.8, 0, 0.6, 1) calc(3 * var(--an-u)) both;
+        }
+    }
+
+    /* The bar: the pennant stands drawn under a pleated curtain that lifts
+       off the track over 7 units, hem first. */
+    .an-scene .dc-c-bar {
+        --dc-at: 80%;
+    }
+
+    .an-scene .dc-c-bar .dc-bar__fill,
+    .an-scene .dc-c-bar .dc-bar__head {
+        --an-kf: none;
+        --an-kf-out: none;
+    }
+
+    .an-scene .dc-c-bar .dc-bar__fill {
+        clip-path: var(--dc-pen);
+    }
+
+    .an-scene .dc-c-bar__curtain {
+        --an-kf: an-move;
+        --an-kf-out: an-move-out;
+        --an-x1: 0%;
+        --an-y0: 0%;
+        --an-y1: -105%;
+        --an-l: 7;
+        --an-ease: var(--an-sweep);
+        --an-ease-out: var(--an-sweep-out);
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        translate: 0 var(--an-y1);
+        border-block-end: 3px double var(--primary);
+        background:
+            repeating-linear-gradient(90deg, hsl(from var(--primary) h s l / 0.45) 0 1px, transparent 1px 0.5rem),
+            repeating-linear-gradient(90deg, transparent 0 0.25rem, hsl(from var(--background) h s l / 0.4) 0.25rem 0.5rem), var(--popover);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .dc-c-bar__curtain {
+            translate: 0 var(--an-y0);
+        }
+    }
+
+    /* The button: a pleated band drops over the top third of the face at
+       7 units, hem down, and the face darkens. */
+    .an-scene .dc-c-press {
+        --an-face: dc-c-face;
+        --an-face-out: dc-c-face-out;
+        background-color: color-mix(in oklab, var(--secondary-active), var(--background) 55%);
+    }
+
+    .an-scene .dc-c-press__band {
+        --an-y0: -105%;
+        --an-y1: 0%;
+        --an-d: 7;
+        --an-l: 1;
+        --an-ease: var(--an-sweep);
+        --an-ease-out: var(--an-sweep-out);
+        position: absolute;
+        inset: 0 0 auto 0;
+        block-size: 24%;
+        border-block-end: 3px double var(--primary);
+        background: repeating-linear-gradient(90deg, hsl(from var(--primary) h s l / 0.5) 0 1px, transparent 1px 0.5rem), var(--popover);
+    }
+
+    .an-scene .dc-c-press .kp-button__label {
+        position: relative;
+        z-index: 1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .dc-c-press {
+            background-color: transparent;
+        }
+    }
+
+    @keyframes dc-c-face {
+        0%,
+        87.49% {
+            background-color: transparent;
+        }
+
+        87.5%,
+        100% {
+            background-color: color-mix(in oklab, var(--secondary-active), var(--background) 55%);
+        }
+    }
+
+    @keyframes dc-c-face-out {
+        0%,
+        12.5% {
+            background-color: color-mix(in oklab, var(--secondary-active), var(--background) 55%);
+        }
+
+        12.51%,
+        100% {
+            background-color: transparent;
+        }
+    }
+
+    /* ── 5 · The jewel is set ────────────────────────────────────────────
+       An emerald lozenge comes down to the plaque's crest, turning a
+       quarter as it comes (5 units, the radio's grow), and its gold
+       setting, a double-ruled lozenge, closes round it (5 to 7). Out: the
+       setting opens, the jewel lifts turning back. */
+    .an-scene .dc-j-crest {
+        grid-row: 1;
+        position: relative;
+        display: grid;
+        place-items: center;
+        inline-size: clamp(3rem, 16cqi, 4.6rem);
+        aspect-ratio: 1;
+        margin-block-end: 0.15rem;
+    }
+
+    .an-scene .dc-j-plaque .dc-plaque__title {
+        grid-row: 2;
+    }
+
+    .an-scene .dc-j-plaque .dc-plaque__line {
+        grid-row: 3;
+    }
+
+    .an-scene .dc-j-setting,
+    .an-scene .dc-j-jewel {
+        grid-area: 1 / 1;
+        box-sizing: border-box;
+        aspect-ratio: 1;
+        transform: rotate(45deg);
+    }
+
+    .an-scene .dc-j-setting {
+        --an-kf: dc-j-set;
+        --an-kf-out: dc-j-set-out;
+        --an-d: 5;
+        --an-l: 2;
+        --an-ease: var(--an-fx);
+        --an-ease-out: var(--an-fx-out);
+        inline-size: 68%;
+        border: 3px double var(--primary);
+    }
+
+    .an-scene .dc-j-jewel {
+        --an-kf: dc-j-drop;
+        --an-kf-out: dc-j-drop-out;
+        --an-d: 0;
+        --an-l: 5;
+        --an-ease: var(--an-fx);
+        --an-ease-out: var(--an-fx-out);
+        inline-size: 38%;
+        background: linear-gradient(135deg, var(--accent-active) 0 50%, var(--accent) 50%);
+        box-shadow:
+            0 0 0 1px var(--card),
+            0 0 0 2px var(--primary);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .dc-j-setting {
+            scale: 1.3;
+            opacity: 0;
+        }
+
+        .an-scene[data-an-phase='gap'] .dc-j-jewel {
+            translate: 0 -2.4rem;
+            rotate: -90deg;
+            opacity: 0;
+        }
+    }
+
+    @keyframes dc-j-drop {
+        from {
+            translate: 0 -2.4rem;
+            rotate: -90deg;
+            opacity: 0;
+        }
+
+        to {
+            translate: 0 0;
+            rotate: 0deg;
+            opacity: 1;
+        }
+    }
+
+    @keyframes dc-j-drop-out {
+        from {
+            translate: 0 0;
+            rotate: 0deg;
+            opacity: 1;
+        }
+
+        to {
+            translate: 0 -2.4rem;
+            rotate: -90deg;
+            opacity: 0;
+        }
+    }
+
+    @keyframes dc-j-set {
+        from {
+            scale: 1.3;
+            opacity: 0;
+        }
+
+        to {
+            scale: 1;
+            opacity: 1;
+        }
+    }
+
+    @keyframes dc-j-set-out {
+        from {
+            scale: 1;
+            opacity: 1;
+        }
+
+        to {
+            scale: 1.3;
+            opacity: 0;
+        }
+    }
+
+    /* The bar: the pennant grows 0 to 6 with no head; the emerald lozenge
+       then drops into place at its tip, turning a quarter (6 to 7). */
+    .an-scene .dc-j-bar .dc-bar__head {
+        --an-kf: dc-j-head;
+        --an-kf-out: dc-j-head-out;
+        --an-d: 6;
+        --an-l: 1;
+        inset-inline-start: var(--dc-at);
+    }
+
+    .an-scene .dc-j-bar .dc-bar__head::before {
+        rotate: 0deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .dc-j-bar .dc-bar__head {
+            inset-inline-start: var(--dc-at);
+            translate: 0 -1.6rem;
+            opacity: 0;
+        }
+
+        .an-scene[data-an-phase='in'] .dc-j-bar .dc-bar__head::before,
+        .an-scene[data-an-phase='hold'] .dc-j-bar .dc-bar__head::before {
+            animation: dc-j-turn calc(1 * var(--an-u)) cubic-bezier(0.4, 0, 0.2, 1) calc(6 * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .dc-j-bar .dc-bar__head::before {
+            animation: dc-j-turn-out calc(1 * var(--an-u)) cubic-bezier(0.8, 0, 0.6, 1) calc(1 * var(--an-u)) both;
+        }
+    }
+
+    @keyframes dc-j-head {
+        from {
+            translate: 0 -1.6rem;
+            opacity: 0;
+        }
+
+        to {
+            translate: 0 0;
+            opacity: 1;
+        }
+    }
+
+    @keyframes dc-j-head-out {
+        from {
+            translate: 0 0;
+            opacity: 1;
+        }
+
+        to {
+            translate: 0 -1.6rem;
+            opacity: 0;
+        }
+    }
+
+    @keyframes dc-j-turn {
+        from {
+            rotate: -90deg;
+        }
+
+        to {
+            rotate: 0deg;
+        }
+    }
+
+    @keyframes dc-j-turn-out {
+        from {
+            rotate: 0deg;
+        }
+
+        to {
+            rotate: -90deg;
+        }
+    }
+
+    /* The button: in the last unit a lozenge is set beside the label,
+       turning a quarter as it settles; the face takes the pressed ground. */
+    .an-scene .dc-j-press {
+        padding-inline-end: 1rem;
+    }
+
+    .an-scene .dc-j-mark {
+        --an-kf: dc-j-mark;
+        --an-kf-out: dc-j-mark-out;
+        --an-d: 7;
+        --an-l: 1;
+        --an-ease: var(--an-fx);
+        --an-ease-out: var(--an-fx-out);
+        flex: none;
+        inline-size: 0.55rem;
+        aspect-ratio: 1;
+        margin-inline-start: 0.3rem;
+        background: var(--accent);
+        box-shadow:
+            0 0 0 1px var(--secondary-active),
+            0 0 0 2px var(--primary);
+        transform: rotate(45deg);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .dc-j-mark {
+            scale: 1.6;
+            rotate: -90deg;
+            opacity: 0;
+        }
+    }
+
+    @keyframes dc-j-mark {
+        from {
+            scale: 1.6;
+            rotate: -90deg;
+            opacity: 0;
+        }
+
+        to {
+            scale: 1;
+            rotate: 0deg;
+            opacity: 1;
+        }
+    }
+
+    @keyframes dc-j-mark-out {
+        from {
+            scale: 1;
+            rotate: 0deg;
+            opacity: 1;
+        }
+
+        to {
+            scale: 1.6;
+            rotate: -90deg;
+            opacity: 0;
+        }
+    }
+
+    /* ── 6 · The glint runs the gilt ─────────────────────────────────────
+       The plaque's double rule is quiet gold. A glint (a slanted band, an
+       ivory core between two bands of gold, hard-edged) runs along it from
+       the start to the end over 6 units, and the rule behind it stands in
+       full gold; the title brightens at 7. Out: the glint runs back and
+       the gold goes quiet. */
+    .an-scene .dc-g-plaque .dc-plaque__title {
+        grid-row: 1;
+    }
+
+    .an-scene .dc-g-plaque::after,
+    .an-scene .dc-g-rule {
+        grid-row: 2;
+        grid-column: 1;
+        justify-self: stretch;
+        align-self: center;
+        block-size: 0;
+        border-block-start: 3px double hsl(from var(--border-strong) h s l / 0.55);
+    }
+
+    .an-scene .dc-g-plaque::after {
+        content: '';
+    }
+
+    .an-scene .dc-g-rule {
+        --an-l: 6;
+        --an-ease: var(--an-fx);
+        --an-ease-out: var(--an-fx-out);
+        border-block-start-color: var(--primary);
+    }
+
+    .an-scene .dc-g-glint,
+    .an-scene .dc-g-bar__glint,
+    .an-scene .dc-g-press__glint {
+        --an-kf: dc-g-run;
+        --an-kf-out: dc-g-run-out;
+        --an-ease: var(--an-fx);
+        --an-ease-out: var(--an-fx-out);
+        position: relative;
+        inline-size: 0;
+        block-size: 0;
+        pointer-events: none;
+    }
+
+    .an-scene .dc-g-glint {
+        --dc-g0: 0%;
+        --dc-g1: 100%;
+        --an-l: 6;
+        grid-row: 2;
+        grid-column: 1;
+        justify-self: start;
+        align-self: center;
+        inset-inline-start: var(--dc-g1);
+    }
+
+    .an-scene .dc-g-bar__glint,
+    .an-scene .dc-g-press__glint {
+        position: absolute;
+        inset-block: 0;
+        block-size: auto;
+    }
+
+    .an-scene .dc-g-glint::before,
+    .an-scene .dc-g-bar__glint::before,
+    .an-scene .dc-g-press__glint::before {
+        content: '';
+        position: absolute;
+        inset-block: -0.65rem;
+        inset-inline-start: -0.4rem;
+        inline-size: 0.8rem;
+        background: linear-gradient(
+            90deg,
+            hsl(from var(--primary) h s l / 0.35) 0 32%,
+            hsl(from var(--foreground) h s l / 0.75) 32% 68%,
+            hsl(from var(--primary) h s l / 0.35) 68%
+        );
+        transform: skewX(-20deg);
+        opacity: 0;
+    }
+
+    .an-scene .dc-g-bar__glint::before,
+    .an-scene .dc-g-press__glint::before {
+        inset-block: 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .dc-g-glint,
+        .an-scene[data-an-phase='gap'] .dc-g-bar__glint,
+        .an-scene[data-an-phase='gap'] .dc-g-press__glint {
+            inset-inline-start: var(--dc-g0);
+        }
+
+        .an-scene[data-an-phase='in'] .dc-g-glint::before,
+        .an-scene[data-an-phase='in'] .dc-g-bar__glint::before,
+        .an-scene[data-an-phase='in'] .dc-g-press__glint::before,
+        .an-scene[data-an-phase='hold'] .dc-g-glint::before,
+        .an-scene[data-an-phase='hold'] .dc-g-bar__glint::before,
+        .an-scene[data-an-phase='hold'] .dc-g-press__glint::before {
+            animation: dc-g-pulse calc(var(--an-l) * var(--an-u)) linear calc(var(--an-d, 0) * var(--an-u)) both;
+        }
+
+        .an-scene[data-an-phase='out'] .dc-g-glint::before,
+        .an-scene[data-an-phase='out'] .dc-g-bar__glint::before,
+        .an-scene[data-an-phase='out'] .dc-g-press__glint::before {
+            animation: dc-g-pulse calc(var(--an-l) * var(--an-u)) linear calc((8 - var(--an-d, 0) - var(--an-l)) * var(--an-u)) both;
+        }
+    }
+
+    @keyframes dc-g-run {
+        from {
+            inset-inline-start: var(--dc-g0);
+        }
+
+        to {
+            inset-inline-start: var(--dc-g1);
+        }
+    }
+
+    @keyframes dc-g-run-out {
+        from {
+            inset-inline-start: var(--dc-g1);
+        }
+
+        to {
+            inset-inline-start: var(--dc-g0);
+        }
+    }
+
+    /* The band shows while it runs and is gone when it stops; the pulse is
+       its own mirror. */
+    @keyframes dc-g-pulse {
+        0%,
+        100% {
+            opacity: 0;
+        }
+
+        8%,
+        92% {
+            opacity: 1;
+        }
+    }
+
+    /* The bar: the pennant grows 0 to 6 and the glint runs it, 5 to 7. */
+    .an-scene .dc-g-bar__glint {
+        --dc-g0: 0%;
+        --dc-g1: var(--dc-at);
+        --an-d: 5;
+        --an-l: 2;
+        inset-inline-start: var(--dc-g1);
+    }
+
+    /* The button: the border goes full gold with the press, and in the last
+       unit the glint runs across the gold edge. */
+    .an-scene .dc-g-press {
+        --an-face: dc-g-face;
+        --an-face-out: dc-g-face-out;
+        border-color: var(--primary);
+    }
+
+    .an-scene .dc-g-press__glint {
+        --dc-g0: -6%;
+        --dc-g1: 106%;
+        --an-d: 7;
+        --an-l: 1;
+        inset-inline-start: var(--dc-g1);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .dc-g-press {
+            border-color: var(--border-strong);
+        }
+    }
+
+    @keyframes dc-g-face {
+        0%,
+        87.49% {
+            background-color: transparent;
+            border-color: var(--border-strong);
+        }
+
+        87.5%,
+        100% {
+            background-color: var(--secondary-active);
+            border-color: var(--primary);
+        }
+    }
+
+    @keyframes dc-g-face-out {
+        0%,
+        12.5% {
+            background-color: var(--secondary-active);
+            border-color: var(--primary);
+        }
+
+        12.51%,
+        100% {
+            background-color: transparent;
+            border-color: var(--border-strong);
+        }
+    }
+
+    /* ── 7 · The marquee bulbs chase ─────────────────────────────────────
+       A row of twelve bulbs runs along the plaque's top edge, dark. They
+       light in turn from the start in hard steps, half a unit each (0 to
+       6), each staying lit, and the title takes the gold at 7. Out: they go
+       out in reverse. Lit is gold with the lamps' drop-shadow. */
+    .an-scene .dc-m-plaque {
+        padding-block-start: clamp(1.7rem, 8cqi, 2.6rem);
+    }
+
+    .an-scene .dc-m-bulbs {
+        position: absolute;
+        inset-block-start: clamp(0.5rem, 2.4cqi, 0.8rem);
+        inset-inline: clamp(1.1rem, 6cqi, 1.9rem);
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .an-scene .dc-m-bulbs i {
+        --an-kf: dc-lamp;
+        --an-kf-out: dc-lamp-out;
+        --an-l: 0.5;
+        --an-ease: steps(1, jump-end);
+        --an-ease-out: steps(1, jump-start);
+        inline-size: clamp(0.3rem, 1.8cqi, 0.5rem);
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background-color: var(--primary);
+        filter: drop-shadow(0 0 4px hsl(from var(--primary) h s l / 0.7));
+    }
+
+    .an-scene .dc-m-bulbs i:nth-child(1) {
+        --an-d: 0.01;
+    }
+    .an-scene .dc-m-bulbs i:nth-child(2) {
+        --an-d: 0.51;
+    }
+    .an-scene .dc-m-bulbs i:nth-child(3) {
+        --an-d: 1.01;
+    }
+    .an-scene .dc-m-bulbs i:nth-child(4) {
+        --an-d: 1.51;
+    }
+    .an-scene .dc-m-bulbs i:nth-child(5) {
+        --an-d: 2.01;
+    }
+    .an-scene .dc-m-bulbs i:nth-child(6) {
+        --an-d: 2.51;
+    }
+    .an-scene .dc-m-bulbs i:nth-child(7) {
+        --an-d: 3.01;
+    }
+    .an-scene .dc-m-bulbs i:nth-child(8) {
+        --an-d: 3.51;
+    }
+    .an-scene .dc-m-bulbs i:nth-child(9) {
+        --an-d: 4.01;
+    }
+    .an-scene .dc-m-bulbs i:nth-child(10) {
+        --an-d: 4.51;
+    }
+    .an-scene .dc-m-bulbs i:nth-child(11) {
+        --an-d: 5.01;
+    }
+    .an-scene .dc-m-bulbs i:nth-child(12) {
+        --an-d: 5.51;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .dc-m-bulbs i {
+            background-color: hsl(from var(--primary) h s l / 0.22);
+            filter: drop-shadow(0 0 0 hsl(from var(--primary) h s l / 0));
+        }
+    }
+
+    /* The bar: the pennant fills in twelve hard steps, and under it a row
+       of twelve bulbs lights one at each step. */
+    .an-scene .dc-m-bar {
+        --an-d: 0.01;
+        --dc-h: 2.25rem;
+        --dc-at: 80%;
+        --an-ease: steps(12, jump-end);
+        --an-ease-out: steps(12, jump-start);
+    }
+
+    .an-scene .dc-m-bar .dc-bar__fill {
+        inset: 1px 1px 11px 1px;
+    }
+
+    .an-scene .dc-m-bar .dc-bar__head {
+        inset-block: 1px 11px;
+    }
+
+    .an-scene .dc-m-bar .dc-bar__track::after,
+    .an-scene .dc-m-bar__bulb {
+        content: '';
+        position: absolute;
+        inset-block-end: 3px;
+        inset-inline-start: 0;
+        inline-size: var(--dc-at);
+        block-size: 6px;
+    }
+
+    .an-scene .dc-m-bar .dc-bar__track::after {
+        background: radial-gradient(circle, hsl(from var(--primary) h s l / 0.22) 0 2.5px, transparent 3px) 0 0 / calc(100% / 12) 100% repeat-x;
+    }
+
+    .an-scene .dc-m-bar__bulb {
+        --an-kf: an-clip;
+        --an-kf-out: an-clip-out;
+        background: radial-gradient(circle, var(--primary) 0 2.5px, transparent 3px) 0 0 / calc(100% / 12) 100% repeat-x;
+        filter: drop-shadow(0 0 2px hsl(from var(--primary) h s l / 0.7));
+        clip-path: inset(-1em 0 -1em 0);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .dc-m-bar__bulb {
+            clip-path: inset(-1em 100% -1em 0);
+        }
+    }
+
+    /* The button: at 7 units its frame lights as a row of bulbs (a dotted
+       gold outline) in one step, and stays lit. */
+    .an-scene .dc-m-press {
+        --an-face: dc-m-face;
+        --an-face-out: dc-m-face-out;
+        outline: 3px dotted var(--primary);
+        outline-offset: 3px;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .an-scene[data-an-phase='gap'] .dc-m-press {
+            outline-color: hsl(from var(--primary) h s l / 0.22);
+        }
+    }
+
+    @keyframes dc-m-face {
+        0%,
+        87.49% {
+            background-color: transparent;
+            outline-color: hsl(from var(--primary) h s l / 0.22);
+        }
+
+        87.5%,
+        100% {
+            background-color: var(--secondary-active);
+            outline-color: hsl(from var(--primary) h s l / 1);
+        }
+    }
+
+    @keyframes dc-m-face-out {
+        0%,
+        12.5% {
+            background-color: var(--secondary-active);
+            outline-color: hsl(from var(--primary) h s l / 1);
+        }
+
+        12.51%,
+        100% {
+            background-color: transparent;
+            outline-color: hsl(from var(--primary) h s l / 0.22);
+        }
+    }
+}

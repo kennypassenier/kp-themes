@@ -25,7 +25,7 @@ const LUMINANCE_STEP = 0.1;
  * duration is a calc() over that token is bounded by this, so the gate
  * measures the worst case rather than giving up.
  */
-// A theme that declares 0ms runs no motion at all (high-contrast since
+// A theme that declares 0ms runs no motion at all (the removed High contrast theme did, since
 // 2026-09-05), so it cannot flash: the bound is the shortest duration a
 // theme that moves declares. At 0 every computed duration read as Infinity
 // flashes, which is what the compliance table published once it was
@@ -121,7 +121,7 @@ const CSS = stylesheets('motion').map((file) => `../${file}`);
 /** @type {Record<string, string>} */
 const OUT_OF_SCOPE = {
     // The phantom register [PH1]: the loader's bar and its shove out, both
-    // transforms; the retro register [RT1]: the selection bar and the
+    // transforms; the removed Retro register [RT1]: the selection bar and the
     // redaction brush, both clip-paths; the terminal register [TM1]: the
     // sweep band; the brutalism register [BR1]: the slam and the marquee.
     'kp-bar-run': 'a horizontal scale on a 3px bar, once; no luminance change and nothing over 341x256 px',
@@ -166,11 +166,6 @@ const OUT_OF_SCOPE = {
         'a mark’s ink and underline colour resolving once as the reader scrolls past it; a colour property this gate cannot parse from opacity stops, and it cannot oscillate because it is scroll-bound, not timed',
     'kp-sweep-in':
         'a rule sweeping in under a heading once as it enters the viewport (background-position); the rule keeps its colours, only its position moves, and it is scroll-bound so it cannot loop',
-    // The high-contrast register [S48, LIFT_PLAN row 14]: the headline's
-    // ellipse wipe (a clip-path reveal, once, on load) and the rule's
-    // horizontal scale (a transform on a 3px bar, once, under 341x256 px).
-    'kp-hc-headline-wipe': 'a clip-path ellipse wipe across the hero headline, once, on load; no opacity change anywhere',
-    'kp-hc-rule-wipe': 'a horizontal scale on a 3px rule under a heading, once, on load; no luminance change and under 341x256 px',
     // The solstice register [S48, LIFT_PLAN row 18].
     'kp-cal-slide':
         'a clip-path sweep, once, over the headline overlay (mix-blend-mode: difference); strictly monotonic in one direction, so it has zero opposing luminance changes, which is the threshold DI5 measures',
@@ -193,11 +188,10 @@ const OUT_OF_SCOPE = {
     // already own for their own, different mechanics).
     'kp-sharpen-in':
         "a blur+brightness filter resolving a headline from dim to full once, monotone, over 640ms — one change, well under the three DI5 allows, matching the demo's own worked example of a single fade [S49]",
-    // The light register [S48, LIFT_PLAN, A1]: the lede mark's
-    // background-size sweep, one colour swap on an inline phrase, once —
-    // matches the shape of the retro selection bar's kp-drag-select below;
-    // under 341x256 px.
-    'kp-mark-sweep': 'a background-size sweep with one colour swap on an inline phrase, once; under 341x256 px',
+    // The light register [S48, LIFT_PLAN, A1]: the lede mark coming into
+    // focus out of the glare, one blur and brightness filter on an inline
+    // phrase, once and monotone; under 341x256 px.
+    'kp-mark-sweep': 'a blur and brightness filter resolving one inline phrase to none, once and monotone; under 341x256 px',
     // The forest register [TP1]: the contour trace beside the headline.
     'kp-trace': 'a stroke-dashoffset draw on a 9rem SVG path once; no luminance change and well under 341x256 px',
     // The Shade (light) register [SL2]: the lede mark's ink-fill is a
@@ -236,11 +230,38 @@ const OUT_OF_SCOPE = {
     'kp-sig-formal-meter-wipe-d': "a clip-path wipe revealing a meter's share once, replayed in the destructive tone; under 341x256 px",
     'kp-sig-formal-meter-wipe-o': "a clip-path wipe revealing a meter's share once; the share keeps its colour, under 341x256 px",
     'kp-sig-formal-meter-wipe-w': "a clip-path wipe revealing a meter's share once, replayed in the warning tone; under 341x256 px",
-    'kp-sig-light-meter-day': 'a soft glint band translating across a loading meter a few px tall; a transform, the band keeps its colour',
-    'kp-sig-light-meter-bump-d': 'a meter swelling once as it turns to the destructive tone; a transform, under 341x256 px',
-    'kp-sig-light-meter-bump-o': 'a meter swelling once as its tone clears; a transform, under 341x256 px',
-    'kp-sig-light-meter-bump-w': 'a meter swelling once as it turns to the warning tone; a transform, under 341x256 px',
-    'kp-sig-light-meter-grow-o': "a meter's share scaling in from its start once; a transform, under 341x256 px",
+    // Formal's grammar [themes/formal/CHARACTER.md §4, Kenny, 2026-10-08]: a
+    // registered custom property drives the extent of rules and of an arc (a
+    // clip, a background size, a mask angle); the rules keep their colour.
+    'kp-sig-formal-ruling':
+        "a registered custom property ruling a menu's or a popover's lines top down once; the lines keep their colour, only their extent changes",
+    'kp-sig-formal-loading':
+        'a registered custom property ruling three ledger lines under a waiting part, again and again; the lines keep their colour, only their extent changes',
+    'kp-sig-formal-update-closed':
+        'a registered custom property ruling the two lines under a changed figure once; the lines keep their colour, only their extent changes',
+    'kp-sig-formal-arc-outer':
+        'a registered custom property driving a mask angle: an arc ruled round the outer ring of the spinner, 2400 ms a loop; the arc keeps its colour',
+    'kp-sig-formal-arc-inner':
+        'a registered custom property driving a mask angle: an arc ruled round the inner ring of the spinner, 2400 ms a loop; the arc keeps its colour',
+    // Light's grammar [themes/light/CHARACTER.md §4, Kenny, 2026-10-08]: every
+    // one is a blur and brightness filter or a clip-path, none a change of
+    // opacity or a colour, so none can flash.
+    'kp-sig-light-reexpose':
+        'a changed figure going into the glare for a beat (a blur of 2px and brightness 1.4) and back to none, once per update; a filter on a figure, under 341x256 px',
+    'kp-sig-light-meter-expose-d':
+        'a meter a few px tall re-exposed once as it turns to the destructive tone (a blur of 2px and brightness 1.4); under 341x256 px',
+    'kp-sig-light-meter-expose-o': 'a meter a few px tall re-exposed once as its tone clears (a blur of 2px and brightness 1.4); under 341x256 px',
+    'kp-sig-light-meter-expose-w':
+        'a meter a few px tall re-exposed once as it turns to the warning tone (a blur of 2px and brightness 1.4); under 341x256 px',
+    'kp-sig-light-breathe':
+        'a waiting surface (a placeholder, a meter, the words on a busy card) breathing between blur 3px with brightness 1.3 and blur 5px with brightness 1.6 over 3.6 s, on ease-in-out: a slow filter swell of well under one change a second, never a flash',
+    'kp-sig-light-breathe-ink':
+        'the label of a busy button breathing between a 3px and a 5px blur of its own text shadow over 3.6 s on ease-in-out, its ink moving toward the paper by under a third; a slow swell of well under one change a second, never a flash',
+    'kp-sig-light-burn':
+        'the spinner bead (a few px) burning out and back into focus once a turn of 1.2 s, a filter on a dot far under 341x256 px, two changes a turn',
+    'kp-sig-light-flash': 'a pressed pill flashing once, brightness 1.25 for 200 ms and back; a filter on a control, one change, under 341x256 px',
+    'kp-sig-light-feed':
+        "a meter's share exposed from its start to its end once, out of the glare (a clip-path and a blur with brightness); one monotone change, under 341x256 px",
     'kp-sig-synthwave-meter-grow-o': "a meter's share scaling in from its start once; a transform, under 341x256 px",
     'kp-sig-synthwave-meter-pos':
         'a background-position slide of the loading picture inside a meter a few px tall; the picture keeps its colours, only its position moves',
@@ -258,27 +279,60 @@ const OUT_OF_SCOPE = {
         'a changed value taking the bright then the dim phosphor three times in 900 ms, once; text colour, never hidden, under 341x256 px',
     'kp-sig-terminal-update-blink-line': 'a changed sparkline taking the bright then the dim phosphor three times in 900 ms, once; under 341x256 px',
     'kp-sig-forest-meter-wipe-o': "a clip-path wipe revealing a meter's share once; the share keeps its colour, under 341x256 px",
-    'kp-sig-sepia-meter-knock-d': 'a meter knocked up 3px and back once as it turns to the destructive tone; a transform, under 341x256 px',
-    'kp-sig-sepia-meter-knock-o': 'a meter knocked up 3px and back once as its tone clears; a transform, under 341x256 px',
-    'kp-sig-sepia-meter-knock-w': 'a meter knocked up 3px and back once as it turns to the warning tone; a transform, under 341x256 px',
-    'kp-sig-sepia-meter-slant-o': "a slanted clip-path wipe revealing a meter's share once; the share keeps its colour, under 341x256 px",
-    'kp-sig-sepia-meter-width': 'the loading picture of a meter a few px tall widening across it; its colour never changes, only the area',
     'kp-sig-solstice-meter-bump-d': 'a meter swelling once as it turns to the destructive tone; a transform, under 341x256 px',
     'kp-sig-solstice-meter-bump-o': 'a meter swelling once as its tone clears; a transform, under 341x256 px',
     'kp-sig-solstice-meter-bump-w': 'a meter swelling once as it turns to the warning tone; a transform, under 341x256 px',
     'kp-sig-solstice-meter-grow-o': "a meter's share scaling in from its start once; a transform, under 341x256 px",
     'kp-sig-solstice-meter-pos':
         'a background-position slide of the loading picture inside a meter a few px tall; the picture keeps its colours, only its position moves',
+    // The deco grammar [themes/deco/CHARACTER.md §4, Kenny, 2026-10-09]: registered
+    // custom properties drive extents and angles (a conic mask, a translate, a
+    // background size); the gold keeps its colour throughout, nothing changes
+    // opacity or lightness by 10% twice in a second.
+    'kp-sig-deco-arrive':
+        "a registered custom property drawing a plate's gold inlay round once and then raising its lacquer (480 ms); the lines keep their colour, only their extent changes",
+    'kp-sig-deco-fan':
+        'a registered custom property opening a great fan over a part, hiding it, and folding the fan away once (720 ms); the fan keeps its colours, only its angle changes',
+    'kp-sig-deco-wipe':
+        "a registered custom property folding a mask's fan-shaped window shut once (360 ms); the part keeps its colours, only its extent changes",
+    'kp-sig-deco-gilded':
+        'a changed figure flaring gold with a drop shadow and a 10% swell once over a second, and settling; one flare per update, a filter on a figure, under 341x256 px',
+    'kp-sig-deco-doors':
+        'a registered custom property parting two lift doors by a third of a part and closing them, 2400 ms a loop; the doors keep their colours, only their place changes',
+    'kp-sig-deco-glint':
+        'a registered custom property running a glint between the two lines of a bar, 2400 ms a loop; a few px tall, a gradient position only',
+    'kp-sig-deco-seal':
+        'a registered custom property growing one fine gold ring from the centre of a pressed control and fading it in 400 ms, once per press; under 341x256 px',
     'kp-sig-deco-meter-knock-d': 'a meter knocked up 3px and back once as it turns to the destructive tone; a transform, under 341x256 px',
     'kp-sig-deco-meter-knock-o': 'a meter knocked up 3px and back once as its tone clears; a transform, under 341x256 px',
     'kp-sig-deco-meter-knock-w': 'a meter knocked up 3px and back once as it turns to the warning tone; a transform, under 341x256 px',
-    'kp-sig-deco-meter-pos':
-        'a background-position slide of the loading picture inside a meter a few px tall; the picture keeps its colours, only its position moves',
     'kp-sig-deco-meter-wipe-o': "a clip-path wipe revealing a meter's share once; the share keeps its colour, under 341x256 px",
-    'kp-sig-phantom-meter-screen1': 'a halftone screen sliding by one dot on a loading meter; the dots keep their colours, only their position moves',
-    'kp-sig-phantom-meter-jolt-d': 'a meter shaking 2px sideways once as it turns to the destructive tone; a transform, under 341x256 px',
-    'kp-sig-phantom-meter-jolt-o': 'a meter shaking 2px sideways once as its tone clears; a transform, under 341x256 px',
-    'kp-sig-phantom-meter-jolt-w': 'a meter shaking 2px sideways once as it turns to the warning tone; a transform, under 341x256 px',
+    'kp-sig-phantom-meter-redraw-d':
+        'a meter dissolving into its halftone dots and resolving again in six cuts of 67 ms, once, as it turns to the destructive tone; the mask changes how much of it is drawn and its colours stay, under 341x256 px',
+    'kp-sig-phantom-meter-redraw-o':
+        'a meter dissolving into its halftone dots and resolving again in six cuts of 67 ms, once, as its tone clears; the mask changes how much of it is drawn and its colours stay, under 341x256 px',
+    'kp-sig-phantom-meter-redraw-w':
+        'a meter dissolving into its halftone dots and resolving again in six cuts of 67 ms, once, as it turns to the warning tone; the mask changes how much of it is drawn and its colours stay, under 341x256 px',
+    // The phantom grammar [themes/phantom/CHARACTER.md, Kenny, 2026-10-09]: each of
+    // these changes how much of a part is drawn (a mask of halftone dots in hard
+    // cuts, or visibility) or where it is, and none changes a colour.
+    'kp-sig-phantom-fly':
+        'a part thrown in once on the shove: a translate, a rotate and a scale, hidden at the first instant and drawn from the second; it keeps its colours, only its position moves',
+    'kp-sig-phantom-fly-out':
+        "a part snatched away once on the shove's inverse: a translate, a rotate and a scale, drawn until the last instant and hidden then; one change from shown to hidden",
+    'kp-sig-phantom-resolve':
+        'a part resolving from the dots of the screen to solid in three hard cuts, once (a mask of dots at 25, 50 and 75 % of the cell, then none); it keeps its colours, only how much of it is drawn changes',
+    'kp-sig-phantom-resolve-out': 'the cuts above played as the leave, once: solid to the dots of the screen in three hard cuts',
+    'kp-sig-phantom-resolve-tip':
+        'a tooltip or a tick resolving from dots to solid in three hard cuts of 100 ms, once; a mask of dots, the colours stay, far under 341x256 px',
+    'kp-sig-phantom-bar':
+        'the red bar behind a pointed-at label resolving from dots to solid in two cuts across 120 ms, once; a mask of dots on a bar a few px tall, the colours stay',
+    'kp-sig-phantom-face':
+        'the face of a pressed key cap resolving from dots to solid in two cuts across 120 ms, once; a mask of dots, the colours stay, under 341x256 px',
+    'kp-sig-phantom-ink':
+        'the label of a pointed-at key cap changing from its ink to black once, at the second cut, 90 ms in, as the red bar behind it lands; one change, never repeated, under 341x256 px',
+    'kp-sig-phantom-update':
+        'a changed value dissolving into its halftone dots and resolving again in six cuts of 67 ms, once per update; a mask, the colours stay, far under 341x256 px',
     'kp-sig-phantom-meter-slant-o': "a slanted clip-path wipe revealing a meter's share once; the share keeps its colour, under 341x256 px",
     'kp-sig-nostromo-meter-scan': 'a lit band sliding along the tube of a loading meter; the band keeps its colour, only its position moves',
     'kp-sig-nostromo-meter-wipe-o': "a clip-path wipe revealing a meter's share once; the share keeps its colour, under 341x256 px",
@@ -288,23 +342,20 @@ const OUT_OF_SCOPE = {
     'kp-sig-titanium-meter-jolt-w': 'a meter shaking 2px sideways once as it turns to the warning tone; a transform, under 341x256 px',
     // The meter, round 4 [research/character-meter, 2026-10-05]: dark again and the
     // six reopened themes; transforms, clip-paths and pattern slides on a meter a few px tall.
-    'kp-sig-dark-meter-bump-d': 'a meter swelling once as it turns to the destructive tone; a transform, under 341x256 px',
-    'kp-sig-dark-meter-bump-o': 'a meter swelling once as its tone clears; a transform, under 341x256 px',
-    'kp-sig-dark-meter-bump-w': 'a meter swelling once as it turns to the warning tone; a transform, under 341x256 px',
-    'kp-sig-dark-meter-pos':
-        'a background-position slide of the loading picture inside a meter a few px tall; the picture keeps its colours, only its position moves',
-    'kp-sig-dark-meter-press-o': "a meter's share pressed in from its edge once; a transform, under 341x256 px",
+    // Dark's grammar [themes/dark/CHARACTER.md §4, Kenny, 2026-10-09]: a pass is a mask
+    // revealing a part's own box from its start edge, a registered number or angle
+    // drives the film's turn, the figure's letters and the spinner's bars; the line
+    // keeps its colours, only its extent and place change.
+    'kp-sig-dark-sweep':
+        "a three-layer mask revealing a panel's own box from its start edge at one pace, once (open) or backwards (close); the panel keeps its colours, only the reveal edge moves",
+    'kp-sig-dark-film':
+        "a registered angle turning the conic film of a panel's edges once as the line crosses it; the film keeps its colours, only its angle changes",
+    'kp-sig-dark-figure':
+        'a registered percentage and number letting the film show through the letters of a changed figure once, behind the line, and settling back to ink; the figure never moves, under 341x256 px',
+    'kp-sig-dark-bars':
+        "a registered number driving the heights of the spinner's five bars over 2400 ms a loop; the bars keep their colours, only their heights change, under 341x256 px",
+    'kp-sig-dark-meter-lay': "a mask revealing a meter's share from its start once; the share keeps its colour, under 341x256 px",
     'kp-sig-cyberpunk-meter-slip-o': "a meter's share landing with a few px sideways jumps and offset ghosts once; a transform, under 341x256 px",
-    'kp-sig-high-contrast-meter-march': 'a row of chevrons translating one step along a loading meter; a transform, the chevrons keep their colour',
-    'kp-sig-high-contrast-meter-wipe-d': "a clip-path wipe revealing a meter's share once, replayed in the destructive tone; under 341x256 px",
-    'kp-sig-high-contrast-meter-wipe-o': "a clip-path wipe revealing a meter's share once; the share keeps its colour, under 341x256 px",
-    'kp-sig-high-contrast-meter-wipe-w': "a clip-path wipe revealing a meter's share once, replayed in the warning tone; under 341x256 px",
-    'kp-sig-retro-meter-knock-d': 'a meter knocked up 3px and back once as it turns to the destructive tone; a transform, under 341x256 px',
-    'kp-sig-retro-meter-knock-o': 'a meter knocked up 3px and back once as its tone clears; a transform, under 341x256 px',
-    'kp-sig-retro-meter-knock-w': 'a meter knocked up 3px and back once as it turns to the warning tone; a transform, under 341x256 px',
-    'kp-sig-retro-meter-shake':
-        'two lamps sliding in from both ends of a loading meter and apart again; they keep their colours, only their position moves',
-    'kp-sig-retro-meter-wipe-o': "a clip-path wipe revealing a meter's share once; the share keeps its colour, under 341x256 px",
     'kp-sig-grotesk-meter-grow-o': "a meter's share scaling in from its start once; a transform, under 341x256 px",
     // Information that updates in place [research/update-motion, 2026-10-05].
     'kp-sig-cyberpunk-update-stutter':
@@ -320,7 +371,7 @@ const OUT_OF_SCOPE = {
     'kp-progressbar-forest-breath':
         'a custom property that sets how far the rows of trees on a busy bar have grown (a background size, rounded to whole trees); the trees keep their colours, only their extent changes',
     'kp-skeleton-forest-treeline':
-        'a custom property that grows a treeline drawn in a skeleton (its radii and width); the trees keep their colours, only their extent changes, 3.2 s a loop',
+        'a custom property that grows a treeline drawn in a skeleton (its radii and width); the trees keep their colours, only their extent changes, 6.6 s a loop',
     'kp-sig-blueprint-callout':
         'a tooltip being traced once: its line drawn round the box and its ink and ground set at the end; one change from blank to drawn, under 341x256 px',
     'kp-sig-blueprint-frame':
@@ -354,6 +405,10 @@ const OUT_OF_SCOPE = {
     'kp-sig-cyberpunk-word': "a loading word's text stepped letter by letter (content) every 1.8 s; the word keeps its colour, under 341x256 px",
     'kp-sig-forest-leave':
         'a part withering away once: it sinks, is clipped from the top and fades through a desaturating filter; one monotone change',
+    'kp-sig-forest-arrive':
+        'the withering above played as an arrival once (it grows up out of its line from a desaturating filter to none); one monotone change',
+    'kp-sig-forest-ground':
+        "the alarm's ground coming in once, from transparent to its own colour, on the growth curve over 1 s; one monotone change",
     'kp-sig-grotesk-fall':
         'the red plate falling into register once: a drop-shadow filter offset that closes to nothing; the plate keeps its colour, only its offset moves',
     'kp-sig-grotesk-fall-again': 'the same fall replayed once when a meter turns destructive',
@@ -363,11 +418,8 @@ const OUT_OF_SCOPE = {
         'custom properties for the angle and radius of a translate on a busy mark, looping; the mark keeps its colour, only its position moves',
     'kp-sig-grotesk-update-plate':
         'the red plate falling into register once on a changed value (a drop-shadow filter offset closing); far under 341x256 px',
-    'kp-sig-high-contrast-size-mark': 'an outline drawn round an arriving part for 600 ms, then removed in one step; one change on and one off, once',
     'kp-sig-nostromo-size-scan':
         'an arriving part revealed in four scan frames (clip-path) while a brightness filter settles from 1.8 to none once; one monotone change, 80 ms a frame',
-    'kp-sig-sepia-leave-2':
-        'a leaving part burnt in from its edges once: an inset shadow that grows from nothing through the primary to the ink; one monotone darkening on a pseudo-element',
     'kp-sig-synthwave-sun': 'the sun sinking below the horizon once (a translate) and hidden at the end; one change from shown to hidden',
     'kp-sig-terminal-tm-menu-feed':
         "a panel's paper fed line by line once (the top of a pseudo-element, four 136 ms steps), visible from the first step; one monotone change",

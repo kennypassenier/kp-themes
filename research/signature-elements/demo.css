@@ -331,69 +331,6 @@
     transform: scale(0.6);
 }
 
-/* retro: the Windows 95 wait cursor, drawn as the cursor was. Two solid
-   black caps wider than the glass, a straight-sided glass with a one-pixel
-   black outline and a white inside, and the sand in the 50% checkerboard
-   dither the cursor's 16 colours forced. Busy means it moves (Kenny,
-   2026-10-03), so this is the animated cursor of the Windows 98 scheme:
-   the sand runs out of the top bulb through the neck as one body and piles
-   up in the bottom, then the glass turns over. Turned over, a full bottom
-   bulb is a full top bulb, so the last frame is the first and the loop has
-   no seam. This overrides the register's "nothing loops" for the spinner
-   only; the sand runs at a constant rate and the glass turns at a constant
-   speed, because nothing on this desktop eases. */
-[data-theme='retro'] .sx-sig .kp-spinner {
-    --sx-dur: 2600ms;
-    position: relative;
-    inline-size: calc(var(--kp-spinner-size, 1.25rem) * 0.7);
-    border: 0;
-    border-radius: 0;
-    background:
-        linear-gradient(var(--foreground), var(--foreground)) top / 100% 11% no-repeat,
-        linear-gradient(var(--foreground), var(--foreground)) bottom / 100% 11% no-repeat;
-    /* The one-pixel outline of the glass, the cursor's black edge. */
-    filter: drop-shadow(1px 0 0 var(--foreground)) drop-shadow(-1px 0 0 var(--foreground)) drop-shadow(0 1px 0 var(--foreground))
-        drop-shadow(0 -1px 0 var(--foreground));
-    animation: none;
-}
-
-/* The glass and the sand share one box and one outline: two bulbs meeting
-   at a neck 12% wide. */
-[data-theme='retro'] .sx-sig .kp-spinner::before,
-[data-theme='retro'] .sx-sig .kp-spinner::after {
-    content: '';
-    position: absolute;
-    inset-block: 11%;
-    inset-inline: 14%;
-    clip-path: polygon(0 0, 100% 0, 56% 48%, 56% 52%, 100% 100%, 0 100%, 44% 52%, 44% 48%);
-}
-
-[data-theme='retro'] .sx-sig .kp-spinner::before {
-    background: var(--popover);
-}
-
-/* At rest the top bulb is a third run out and the bottom one holds the
-   rest: the still cursor reads as an hourglass mid-run. */
-[data-theme='retro'] .sx-sig .kp-spinner::after {
-    background-image: var(--kp-brush);
-    background-size: 2px 2px;
-    image-rendering: pixelated;
-    clip-path: polygon(
-        13.72% 14.96%,
-        86.28% 14.96%,
-        56% 48%,
-        53% 52%,
-        53% 80.47%,
-        88.5% 87.45%,
-        100% 100%,
-        0% 100%,
-        11.5% 87.45%,
-        47% 80.47%,
-        47% 52%,
-        44% 48%
-    );
-}
-
 @media (prefers-reduced-motion: no-preference) {
     [data-theme='formal'] .sx-sig .kp-spinner::after {
         animation: sx-orbit var(--sx-dur) cubic-bezier(0.65, 0, 0.35, 1) infinite;
@@ -405,14 +342,6 @@
 
     [data-theme='cyberpunk'] .sx-sig .kp-spinner::after {
         animation: sx-core calc(var(--sx-dur) / 2) ease-in-out infinite alternate;
-    }
-
-    [data-theme='retro'] .sx-sig .kp-spinner {
-        animation: sx-turn var(--sx-dur) linear infinite;
-    }
-
-    [data-theme='retro'] .sx-sig .kp-spinner::after {
-        animation: sx-sand var(--sx-dur) linear infinite;
     }
 }
 
@@ -662,27 +591,6 @@
     transform: translateX(-100%);
 }
 
-/* retro: sunken wells of dither. */
-[data-theme='retro'] .sx-sig .kp-skeleton {
-    --sx-dur: 1600ms;
-    position: relative;
-    block-size: 1.1rem;
-    border-radius: 0;
-    background: var(--popover);
-    box-shadow: var(--kp-sunken);
-    animation: none;
-}
-
-[data-theme='retro'] .sx-sig .kp-skeleton::after {
-    content: '';
-    position: absolute;
-    inset: 3px;
-    background-image: var(--kp-brush);
-    background-size: 2px 2px;
-    image-rendering: pixelated;
-    opacity: 0.45;
-}
-
 @media (prefers-reduced-motion: no-preference) {
     [data-theme='formal'] .sx-sig .kp-skeleton::after {
         animation: sx-ink var(--sx-dur) linear infinite backwards;
@@ -706,10 +614,6 @@
 
     [data-theme='cyberpunk'] .sx-sig .kp-skeleton:nth-child(3)::after {
         animation-delay: 320ms;
-    }
-
-    [data-theme='retro'] .sx-sig .kp-skeleton::after {
-        animation: sx-dither var(--sx-dur) steps(4, jump-none) infinite alternate;
     }
 }
 
@@ -749,15 +653,6 @@
     to {
         opacity: 0.6;
     }
-}
-
-/* ── 3 · Switch ───────────────────────────────────────────────────────── */
-
-/* Every signature moves the thumb with transform, not inset-inline-start:
-   the package's thumb animates a layout property. */
-:is([data-theme='formal'], [data-theme='cyberpunk'], [data-theme='retro']) .sx-sig .kp-switch__input:checked::before {
-    inset-inline-start: var(--kp-switch-inset, 0.125rem);
-    transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem)));
 }
 
 /* formal: a double-ruled slot; on, an ink dot on the paper thumb. */
@@ -813,31 +708,6 @@
     background: var(--primary);
 }
 
-/* retro: a raised button in a sunken slot. */
-[data-theme='retro'] .sx-sig .kp-switch {
-    --kp-switch-border: 0px;
-    --kp-switch-inset: 3px;
-    --kp-switch-radius: 0;
-    --kp-switch-thumb-radius: 0;
-}
-
-[data-theme='retro'] .sx-sig .kp-switch__input {
-    border: 0;
-    background: var(--popover);
-    box-shadow: var(--kp-sunken);
-}
-
-[data-theme='retro'] .sx-sig .kp-switch__input:checked {
-    background: var(--primary);
-    box-shadow: var(--kp-sunken);
-}
-
-[data-theme='retro'] .sx-sig .kp-switch__input::before,
-[data-theme='retro'] .sx-sig .kp-switch__input:checked::before {
-    background: var(--card);
-    box-shadow: var(--kp-raised);
-}
-
 @media (prefers-reduced-motion: no-preference) {
     [data-theme='formal'] .sx-sig .kp-switch__input::before {
         transition: transform 240ms cubic-bezier(0.2, 0, 0, 1);
@@ -845,11 +715,6 @@
 
     [data-theme='cyberpunk'] .sx-sig .kp-switch__input::before {
         transition: transform 150ms steps(3, jump-end);
-    }
-
-    [data-theme='retro'] .sx-sig .kp-switch__input,
-    [data-theme='retro'] .sx-sig .kp-switch__input::before {
-        transition: none;
     }
 }
 
@@ -928,21 +793,6 @@
     clip-path: none;
 }
 
-/* retro: the register's pixel tick stays; the radio gets its round well. */
-[data-theme='retro'] .sx-sig .kp-field__check[type='radio'] {
-    inline-size: 14px;
-    block-size: 14px;
-    border: 0;
-    border-radius: 50%;
-}
-
-[data-theme='retro'] .sx-sig .kp-field__check[type='radio']:checked::before {
-    inline-size: 4px;
-    block-size: 4px;
-    border-radius: 50%;
-    background: var(--foreground);
-}
-
 @media (prefers-reduced-motion: no-preference) {
     [data-theme='formal'] .sx-sig .kp-field__check[type='checkbox']:checked::before {
         animation: sx-pen var(--sx-dur) cubic-bezier(0.4, 0, 0.2, 1) both;
@@ -1007,25 +857,6 @@
     --sx-dur: 360ms;
 }
 
-/* retro: a little window — raised bevel, a title-bar ramp. */
-[data-theme='retro'] .sx-sig .kp-toast {
-    --sx-dur: 240ms;
-    position: relative;
-    padding-block-start: calc(0.625rem + 7px);
-    border: 0;
-    border-radius: 0;
-    box-shadow: var(--kp-raised);
-}
-
-[data-theme='retro'] .sx-sig .kp-toast::before {
-    content: '';
-    position: absolute;
-    inset-block-start: 3px;
-    inset-inline: 3px;
-    block-size: 6px;
-    background: var(--kp-ramp);
-}
-
 @media (prefers-reduced-motion: no-preference) {
     [data-theme='formal'] .sx-sig .kp-toast {
         animation: sx-rise 280ms cubic-bezier(0.2, 0, 0, 1) both;
@@ -1037,10 +868,6 @@
 
     [data-theme='cyberpunk'] .sx-sig .kp-toast {
         animation: sx-slice var(--sx-dur) step-end backwards;
-    }
-
-    [data-theme='retro'] .sx-sig .kp-toast {
-        animation: sx-drop var(--sx-dur) steps(3, jump-end) both;
     }
 }
 
@@ -1149,11 +976,6 @@
         hsl(from var(--foreground) h s l / 0.1);
 }
 
-/* retro: the zoom — four hard frames from a quarter size. */
-[data-theme='retro'] .sx-sig .kp-dialog {
-    --sx-dur: 280ms;
-}
-
 @media (prefers-reduced-motion: no-preference) {
     [data-theme='formal'] .sx-sig .kp-dialog {
         animation: sx-sheet var(--sx-dur) cubic-bezier(0.2, 0, 0, 1) both;
@@ -1165,10 +987,6 @@
 
     [data-theme='cyberpunk'] .sx-sig .kp-dialog::after {
         animation: sx-crt-line var(--sx-dur) cubic-bezier(0.3, 0, 0.2, 1);
-    }
-
-    [data-theme='retro'] .sx-sig .kp-dialog {
-        animation: sx-zoom var(--sx-dur) steps(4, jump-end) both;
     }
 }
 
@@ -1261,20 +1079,6 @@
     color: var(--accent);
 }
 
-/* retro: the 1995 balloon, no fade. */
-[data-theme='retro'] .sx-sig .kp-tooltip {
-    --sx-dur: 500ms;
-    padding: 0 0.35rem;
-    border: 1px solid var(--foreground);
-    border-radius: 0;
-    background: color-mix(in oklab, var(--warning) 30%, var(--popover));
-    color: var(--foreground);
-    box-shadow: none;
-    font-family: var(--kp-dos);
-    font-size: 1.05rem;
-    line-height: 1.3;
-}
-
 @media (prefers-reduced-motion: no-preference) {
     [data-theme='formal'] .sx-sig .kp-tooltip {
         animation: sx-tip-drop var(--sx-dur) cubic-bezier(0.2, 0, 0, 1) both;
@@ -1282,10 +1086,6 @@
 
     [data-theme='cyberpunk'] .sx-sig .kp-tooltip {
         animation: sx-wipe var(--sx-dur) steps(4, jump-end) backwards;
-    }
-
-    [data-theme='retro'] .sx-sig .kp-tooltip {
-        animation: sx-hold var(--sx-dur) step-end;
     }
 }
 
@@ -1394,42 +1194,6 @@
     color: var(--primary-foreground);
 }
 
-/* retro: an installer's panels — done sunken, current a title-bar plate. */
-[data-theme='retro'] .sx-sig .kp-wizard__steps {
-    gap: 0.4rem;
-}
-
-[data-theme='retro'] .sx-sig .kp-wizard__steps li {
-    padding: 3px 0.6rem 3px 3px;
-    background: var(--background);
-    box-shadow: var(--kp-raised);
-}
-
-[data-theme='retro'] .sx-sig .kp-wizard__steps li[data-state='done'] {
-    background: var(--card);
-    box-shadow: var(--kp-sunken);
-}
-
-[data-theme='retro'] .sx-sig .kp-wizard__steps li[data-state='current'] {
-    background: var(--kp-ramp);
-    color: var(--primary-foreground);
-}
-
-[data-theme='retro'] .sx-sig .kp-wizard__steps li::before {
-    inline-size: 1.4rem;
-    block-size: 1.4rem;
-    border: 0;
-    border-radius: 0;
-    background: var(--popover);
-    box-shadow: var(--kp-sunken);
-    color: var(--foreground);
-}
-
-[data-theme='retro'] .sx-sig .kp-wizard__steps li[data-state='current']::before {
-    background: var(--popover);
-    color: var(--primary);
-}
-
 /* ── 9 · Empty state ──────────────────────────────────────────────────── */
 
 /* formal: a blank ledger page. */
@@ -1482,42 +1246,6 @@
     font-size: 0.8rem;
 }
 
-/* retro: an empty list view. */
-[data-theme='retro'] .sx-sig .kp-empty {
-    position: relative;
-    padding: 1rem 1rem 1rem 3.5rem;
-    border: 0;
-    border-radius: 0;
-    background: var(--popover);
-    box-shadow: var(--kp-sunken);
-    text-align: start;
-}
-
-[data-theme='retro'] .sx-sig .kp-empty::before {
-    content: '';
-    position: absolute;
-    inset-block-start: 1rem;
-    inset-inline-start: 1rem;
-    inline-size: 24px;
-    block-size: 24px;
-    background-image: var(--kp-brush);
-    background-size: 2px 2px;
-    image-rendering: pixelated;
-    box-shadow: var(--kp-raised);
-    opacity: 0.6;
-}
-
-[data-theme='retro'] .sx-sig .kp-empty__title {
-    margin: 0;
-    font-family: var(--kp-dos);
-    font-size: 1.3rem;
-    font-weight: 400;
-}
-
-[data-theme='retro'] .sx-sig .kp-empty__body {
-    margin: 0;
-}
-
 /* ── 10 · Link hover ──────────────────────────────────────────────────── */
 
 /* formal: the underline doubles under the pointer. */
@@ -1557,14 +1285,6 @@
 
 [data-theme='cyberpunk'] .sx-sig .sx-links a:is(:hover, .is-hover)::after {
     transform: scaleX(1);
-}
-
-/* retro: the link becomes the selection bar. */
-[data-theme='retro'] .sx-sig .sx-links a:is(:hover, .is-hover) {
-    background: var(--primary);
-    color: var(--primary-foreground);
-    -webkit-box-decoration-break: clone;
-    box-decoration-break: clone;
 }
 
 @media (prefers-reduced-motion: no-preference) {

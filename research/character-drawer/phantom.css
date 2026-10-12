@@ -1,0 +1,84 @@
+/* research/character-drawer, phantom: the decided picks on phantom's grammar
+   (themes/phantom/CHARACTER.md G1-G21, Kenny, 2026-10-09 on
+   research/phantom-character; css/phantom-register.css holds the tokens and
+   the keyframes this file names). Only phantom's decided options change:
+   shape 1, openclose 1, highlight 1, card 3, next 2.
+
+   - shape: the spectral panel (an inset glow, a pale halo, a feathered edge) is
+     retired, phantom is print and nothing glows or blurs (G7, outlier-1): the
+     drawer is a black plate framed in white;
+   - openclose: seeping in through the edge is the throw: the drawer comes from
+     beyond its own edge on the shove and resolves from dots in three cuts,
+     level; it closes as that played backwards (G1, G3, G13);
+   - highlight: the pale halo is a hard dashed red frame round the target, the
+     veil over the rest stays (G7, G16);
+   - card: the tour card is cut paper with the red edge and the fixed 14 px cut
+     (G5, G6);
+   - next: the pulse (a scale) is the six cuts of a live update: the card
+     dissolves into its dots and resolves to the next step, in place (G9). */
+@layer kp.signature {
+    /* Shape 1 · a black plate framed in white. */
+    [data-theme='phantom'][data-theme='phantom'] [data-dt-shape='1'] .dt-drawer {
+        border: 2px solid var(--foreground);
+        border-radius: 0;
+        background: var(--background);
+        color: var(--foreground);
+        box-shadow: none;
+    }
+
+    [data-theme='phantom'][data-theme='phantom'] [data-dt-shape='1'] .dt-drawer .kp-drawer__body {
+        box-shadow: none;
+    }
+
+    /* Highlight 1 · a hard dashed frame, no halo. */
+    [data-theme='phantom'][data-theme='phantom'] [data-dt-highlight='1'] [data-kp-tour-target] {
+        outline: 3px dashed var(--primary);
+        outline-offset: 6px;
+        box-shadow: 0 0 0 100vmax hsl(from var(--background) h s l / 0.25);
+    }
+
+    /* Card 3 · cut paper. */
+    [data-theme='phantom'][data-theme='phantom'] [data-dt-card='3'] .dt-tour {
+        border: 0;
+        border-inline-start: 4px solid var(--primary);
+        border-radius: 0;
+        clip-path: var(--kp-paperclip);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* Openclose 1 · thrown from the drawer's own edge, resolved, level. */
+        [data-theme='phantom'][data-theme='phantom'] [data-dt-openclose='1'] .dt-drawer {
+            scale: 1 1;
+            --kp-sig-ph-x0: 100%;
+            --kp-sig-ph-y0: 0px;
+            --kp-sig-ph-r0: 0deg;
+            --kp-sig-ph-s0: 1;
+            --kp-sig-ph-land: 0deg;
+            mask-size: 7px 7px;
+        }
+
+        [data-theme='phantom'][data-theme='phantom'] [data-dt-openclose='1'][data-dt-state='opening'] .dt-drawer {
+            animation:
+                kp-sig-phantom-fly 700ms linear backwards,
+                kp-sig-phantom-resolve 700ms linear backwards;
+        }
+
+        [data-theme='phantom'][data-theme='phantom'] [data-dt-openclose='1'][data-dt-state='closing'] .dt-drawer {
+            animation:
+                kp-sig-phantom-fly 700ms linear reverse forwards,
+                kp-sig-phantom-resolve 700ms linear reverse forwards;
+        }
+
+        /* Next 2 · the six cuts. */
+        [data-theme='phantom'][data-theme='phantom'] [data-dt-next='2'][data-dt-playing='next'] .dt-tour {
+            mask-size: 7px 7px;
+            animation: kp-sig-phantom-update 400ms linear;
+        }
+    }
+
+    /* A closed drawer is not drawn at all, not a sliver of it. */
+    [data-theme='phantom'][data-theme='phantom'] [data-dt-openclose='1'][data-dt-state='closed'] .dt-drawer {
+        scale: 1 1;
+        visibility: hidden;
+    }
+}

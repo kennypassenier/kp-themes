@@ -84,7 +84,7 @@ const IDEAS = {
         shape: [
             {
                 name: 'The engraved plate',
-                text: 'A ruled double frame around the panel, the words in the serif’s small capitals, a fine rule under the spinner row.',
+                text: 'A paper plate with a hairline and the register’s corner, the words in the serif’s small capitals; the spinner is the double ring.',
             },
             {
                 name: 'The docket',
@@ -105,8 +105,8 @@ const IDEAS = {
                 text: 'A fine rule sweeps down the panel from top to bottom and begins again, as a ledger page is ruled.',
             },
             {
-                name: 'The seal is pressed',
-                text: 'The seal ring scales up and back on its own centre, as if pressed and lifted, again and again.',
+                name: 'Ruling the lines',
+                text: 'Three navy rules are ruled across the panel’s foot one after the other, held, lifted and ruled again, as a ledger is ruled.',
             },
         ],
         arrival: [
@@ -119,8 +119,8 @@ const IDEAS = {
                 text: 'The panel grows in from a thin rule to its full height, slowing as it lands.',
             },
             {
-                name: 'Entered in the ledger',
-                text: 'The panel rises from the row below it in hard steps, as an entry is written line by line.',
+                name: 'Ruled in',
+                text: 'The panel is ruled in from its start to its end at an even pace and stops dead at the margin.',
             },
         ],
         failure: [
@@ -133,8 +133,8 @@ const IDEAS = {
                 text: 'A jagged clipped edge along the top of the alert, as a notice torn from a pad, the destructive pair on its plate.',
             },
             {
-                name: 'The voided stamp',
-                text: 'A double-ruled frame like a voided cheque sits around the alert, the reason stamped in the destructive ink.',
+                name: 'The entry ruled off',
+                text: 'The failed alert is ruled off along its start edge in 3 px red ink on paper, the reason in the plain ink.',
             },
         ],
         phone: [
@@ -159,8 +159,8 @@ const IDEAS = {
                 text: 'A white panel lifted on a soft shadow with a wide radius, the words in the regular face.',
             },
             {
-                name: 'Daylight',
-                text: 'A pale wash from the primary colour at the panel’s top fading toward the card at its foot, no hard frame.',
+                name: 'The white card',
+                text: 'A white panel on the veil, told apart by the medium shadow and a hairline seam: no wash from above and no frame all round.',
             },
             {
                 name: 'The paper sheet',
@@ -169,8 +169,8 @@ const IDEAS = {
         ],
         loading: [
             {
-                name: 'The dashed baseline',
-                text: 'A dashed baseline under the words drifts to the right and loops back, slow and even.',
+                name: 'Out of focus',
+                text: 'The panel’s words breathe out of focus (blur and brightness up and back, 3.6 s) while the spinner’s bead burns out and comes back into focus; nothing is drawn under them.',
             },
             {
                 name: 'Daylight crosses',
@@ -187,8 +187,8 @@ const IDEAS = {
                 text: 'The panel is there the moment the table turns busy, full size, no entrance of its own.',
             },
             {
-                name: 'Unfolds',
-                text: 'The panel opens from its middle, growing to full height and slowing as it lands.',
+                name: 'Out of the glare',
+                text: 'The panel comes into focus where it stands, out of a blurred, too bright glare, 700 ms on a long settle; it never rises or unfolds.',
             },
             {
                 name: 'Sunrise',
@@ -197,8 +197,8 @@ const IDEAS = {
         ],
         failure: [
             {
-                name: 'The soft alarm',
-                text: 'The failed alert keeps the soft card’s radius and shadow, its plate the destructive pair.',
+                name: 'The band and the pill',
+                text: 'The failed alert is a white card with a 3 px band of the destructive colour along its top and the medium shadow; it comes into focus where it stands.',
             },
             {
                 name: 'The outlined notice',
@@ -1160,78 +1160,6 @@ const IDEAS = {
             },
         ],
     },
-    retro: {
-        shape: [
-            {
-                name: 'The 1995 dialog',
-                text: 'A raised grey bevel frames the panel, a sunken white well behind the words.',
-            },
-            {
-                name: 'The performance monitor',
-                text: 'A black well with a green grid sits behind the words, a thin frame.',
-            },
-            {
-                name: 'The Notepad window',
-                text: 'A plain single-pixel frame, a title-bar-style rule above the words.',
-            },
-        ],
-        loading: [
-            {
-                name: 'The progress blocks',
-                text: 'Blocks fill the panel’s foot left to right, then clear and start again, in hard steps.',
-            },
-            {
-                name: 'The marquee bar',
-                text: 'A short bar slides back and forth along the panel’s foot, hard steps, bouncing at each end.',
-            },
-            {
-                name: 'The defragmenter',
-                text: 'Small blocks swap places across the panel’s face in short hard jumps, looping.',
-            },
-        ],
-        arrival: [
-            {
-                name: 'At once',
-                text: 'The panel is there the moment the table turns busy, full size, no entrance of its own.',
-            },
-            {
-                name: 'Painted',
-                text: 'The panel paints in from the top in a few hard rows, as a slow screen redraw.',
-            },
-            {
-                name: 'Dragged in',
-                text: 'The panel is dragged in from the side in one hard step, bevel first.',
-            },
-        ],
-        failure: [
-            {
-                name: 'The message box',
-                text: 'The failed alert is the 1995 dialog’s bevel with a destructive-coloured title rule.',
-            },
-            {
-                name: 'The flat field',
-                text: 'The alert loses its bevel for a flat destructive-coloured frame instead.',
-            },
-            {
-                name: 'The monitor fault',
-                text: 'The green grid turns to the destructive colour behind the alert’s words.',
-            },
-        ],
-        phone: [
-            {
-                name: 'The flat dialog',
-                text: 'The panel flattens, the raised bevel kept only along the top edge.',
-            },
-            {
-                name: 'The flat monitor',
-                text: 'The green grid narrows to one or two lines behind the words.',
-            },
-            {
-                name: 'The flat window',
-                text: 'The title-bar rule is kept as the one accent on the flattened panel.',
-            },
-        ],
-    },
     grotesk: {
         shape: [
             {
@@ -1480,7 +1408,6 @@ const KEPT = {
     brutalism: { loading: '2', arrival: '2', failure: '2', shape: '2', phone: '1' },
     deco: { loading: '2', arrival: '2', failure: '1', shape: '1', phone: '1' },
     phantom: { loading: '3', arrival: '2', failure: '1', shape: '3', phone: '1' },
-    retro: { loading: '1', arrival: '1', failure: '1', shape: '1', phone: '1' },
     grotesk: { loading: '2', arrival: '2', failure: '1', phone: '1', shape: '3' },
     nostromo: { loading: '1', arrival: '2', failure: '1', shape: '1', phone: '1' },
     titanium: { loading: '2', arrival: '2', failure: '1', shape: '2', phone: '1' },

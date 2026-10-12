@@ -130,8 +130,8 @@ const IDEAS = {
     light: {
         shape: [
             {
-                name: 'The soft card',
-                text: 'A white card lifted on a soft shadow, a wider radius, the line soft and round-capped over a fuller wash, the change as a soft pill.',
+                name: 'The white card',
+                text: 'A white card of 0.5 rem on its small shadow and a hairline seam, the line in a confident stroke.',
             },
             {
                 name: 'Daylight',
@@ -144,8 +144,8 @@ const IDEAS = {
         ],
         loading: [
             {
-                name: 'The dashed baseline',
-                text: 'The dashed baseline under the plot drifts to the right.',
+                name: 'Out of focus',
+                text: 'The plot stands out of focus in the seam’s grey, breathing between a dim and a dazzling exposure; no baseline is drawn.',
             },
             {
                 name: 'Daylight',
@@ -166,8 +166,8 @@ const IDEAS = {
                 text: 'The line opens from its middle, slowing as it lands; the number rises into its line.',
             },
             {
-                name: 'Sunrise',
-                text: 'The line rises from the baseline, slowing as it lands; the number drops into its line.',
+                name: 'Out of the glare',
+                text: 'The line and the figure come into focus where they stand, out of a blurred, too bright glare, 700 ms on a long settle.',
             },
         ],
         tone: [
@@ -180,8 +180,8 @@ const IDEAS = {
                 text: 'The change as a pill drawn in a soft outline of its own ink over its plate.',
             },
             {
-                name: 'The coloured tab',
-                text: 'The change as a pill with a soft drop shadow; a warning or destructive figure shows a band of its colour along the top of the card.',
+                name: 'The band and the pill',
+                text: 'A warning or failed trend carries a 3 px band of the tone’s colour along its top; its change sits on a soft pill with no shadow.',
             },
         ],
         live: [
@@ -190,8 +190,8 @@ const IDEAS = {
                 text: 'A new reading redraws the line in place at once, as both characters had it.',
             },
             {
-                name: 'A soft swell',
-                text: 'The line swells once and settles, slowing as it lands.',
+                name: 'Re-exposed',
+                text: 'The line goes into the glare for a beat and comes back into focus; it never swells.',
             },
             {
                 name: 'The page turns',
@@ -1135,78 +1135,6 @@ const IDEAS = {
             },
         ],
     },
-    retro: {
-        shape: [
-            {
-                name: 'The 1995 dialog',
-                text: 'A 1995 dialog: a raised grey bevel around the tile, the plot a sunken white well, one-pixel line with no wash, the label in the system face without capitals, the change as a raised button.',
-            },
-            {
-                name: 'The performance monitor',
-                text: 'A 1995 performance monitor: a black well with a green grid, the line in the phosphor, the number in the mono.',
-            },
-            {
-                name: 'The Notepad window',
-                text: 'A plain 1995 window: a 1px black frame with a hard drop shadow, the plot a white well with a black border, one-pixel line, no wash, the label in the system face.',
-            },
-        ],
-        loading: [
-            {
-                name: 'The progress blocks',
-                text: 'Blue progress blocks fill the foot of the well block by block, then start over.',
-            },
-            {
-                name: 'The marquee bar',
-                text: 'A group of three blue blocks slides across the well and comes round again.',
-            },
-            {
-                name: 'The defragmenter',
-                text: 'Blocks of colour shift through the well in hard steps, as a defragmenter’s map.',
-            },
-        ],
-        arrival: [
-            {
-                name: 'At once',
-                text: 'The number and the line are there the moment loading ends, as both characters had them.',
-            },
-            {
-                name: 'Painted',
-                text: 'The line is drawn in from the left, in 6 hard steps; the number is there at once.',
-            },
-            {
-                name: 'Dragged in',
-                text: 'The line drops into place from above, in 2 hard steps; the number drops into its line.',
-            },
-        ],
-        tone: [
-            {
-                name: 'The 1995 dialog',
-                text: 'The change as a raised button; a warning or destructive figure shows the note in the label on the tone’s plate.',
-            },
-            {
-                name: 'The flat field',
-                text: 'The change as a flat square field with a 1px rule, no bevel.',
-            },
-            {
-                name: 'The message box',
-                text: 'The change as a sunken field; a warning or destructive figure is shown framed in its colour, as a message box asks for attention.',
-            },
-        ],
-        live: [
-            {
-                name: 'Redrawn',
-                text: 'A new reading redraws the line in place at once, as both characters had it.',
-            },
-            {
-                name: 'Repainted',
-                text: 'The line flashes in the ink for a moment, in hard jumps.',
-            },
-            {
-                name: 'Scrolled one',
-                text: 'The line steps one reading to the left, as chart paper advances, in hard jumps.',
-            },
-        ],
-    },
     grotesk: {
         shape: [
             {
@@ -1450,7 +1378,6 @@ const PICKED = {
     brutalism: ['1', '1', '1', '3', '1'],
     deco: ['3', '1', '2', '3', '3'],
     phantom: ['3', '1', '3', '3', '1'],
-    retro: ['1', '1', '1', '3', '2'],
     grotesk: ['1', '1', '2', '3', '1'],
     nostromo: ['1', '1', '2', '3', '2'],
     titanium: ['2', '3', '2', '3', '3'],

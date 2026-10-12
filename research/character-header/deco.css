@@ -1,0 +1,47 @@
+/* research/character-header, deco: the decided picks on deco's applied grammar (themes/deco/CHARACTER.md, "Applied 2026-10-09"). Deco's decided options are shape 1, menu 1, interactive 2: the page header is lacquer with the double rule under its title, the gold glow gone (G5, G7); its buttons are deco's own with the coved frame (G14); the menu opens as the inlay draws (G3); pointing is the leaf, focus the double ring, a press the seal, the same wherever the button stands (G14-G17). */
+@layer kp.signature {
+    [data-theme='deco'][data-theme='deco'] [data-ph-shape='1'] .kp-page-header {
+        --ph-plate: var(--kp-sig-deco-lac);
+        --ph-ink: var(--foreground);
+        --ph-frame: 1px solid hsl(from var(--primary) h s l / 0.3);
+        --ph-shadow: none;
+        --ph-pat:
+            repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px),
+            repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px);
+        background-size: 24px 24px;
+        border-block-end: 3px double var(--primary);
+    }
+    [data-theme='deco'][data-theme='deco'] [data-ph-shape='1'] .kp-page-header__title {
+        --ph-title-track: var(--kp-sig-deco-title-track);
+    }
+    [data-theme='deco'][data-theme='deco'] [data-ph-shape='1'] .kp-page-header__actions > .kp-button {
+        --ph-btn-frame: 1px solid hsl(from var(--primary) h s l / 0.55);
+        --ph-btn-radius: 0;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'][data-theme='deco'] [data-ph-menu='1'] [data-ph-panel][data-ph-anim='open'] {
+            animation: kp-sig-deco-arrive var(--kp-sig-deco-arrive) linear backwards;
+        }
+        [data-theme='deco'][data-theme='deco'] [data-ph-menu='1'] [data-ph-panel][data-ph-anim='close'] {
+            animation: kp-sig-deco-arrive var(--kp-sig-deco-arrive) linear forwards reverse;
+        }
+    }
+    [data-theme='deco'][data-theme='deco'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:hover:not(:disabled) {
+        box-shadow:
+            inset calc(1px * var(--kp-sig-deco-pr)) calc(1px * var(--kp-sig-deco-pr)) calc(3px * var(--kp-sig-deco-pr))
+                hsl(from var(--kp-sig-deco-shadow) h s l / calc(0.95 * var(--kp-sig-deco-pr))),
+            inset calc(-1px * var(--kp-sig-deco-pr)) calc(-1px * var(--kp-sig-deco-pr)) 0
+                hsl(from var(--kp-sig-deco-gold-hi) h s l / calc(0.3 * var(--kp-sig-deco-pr)));
+    }
+    [data-theme='deco'][data-theme='deco'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:focus-visible {
+        outline: 3px double var(--primary);
+        outline-offset: 3px;
+    }
+    [data-theme='deco'][data-theme='deco'] [data-ph-interactive='2'] .kp-page-header__actions > .kp-button:active:not(:disabled) {
+        box-shadow:
+            inset calc(1px * var(--kp-sig-deco-pr)) calc(1px * var(--kp-sig-deco-pr)) calc(3px * var(--kp-sig-deco-pr))
+                hsl(from var(--kp-sig-deco-shadow) h s l / calc(0.95 * var(--kp-sig-deco-pr))),
+            inset calc(-1px * var(--kp-sig-deco-pr)) calc(-1px * var(--kp-sig-deco-pr)) 0
+                hsl(from var(--kp-sig-deco-gold-hi) h s l / calc(0.3 * var(--kp-sig-deco-pr)));
+    }
+}

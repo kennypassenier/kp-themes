@@ -2572,151 +2572,6 @@
         background: radial-gradient(circle, hsl(from var(--foreground) h s l / 0.3) 0 1.6px, transparent 2.2px) 0 0 / 7px 7px;
     }
 
-    /* ══ retro ══════════════════════════════════════════════════════════ */
-    /* ── retro · 1 · the tear-off pad ─────────────────────────────────── */
-    [data-theme='retro'] [data-cl-shape='1'] .kp-calendar {
-        --cl-r: 0;
-        --cl-swatch-r: 0;
-        --cl-edge-w: 1px;
-        --cl-day-pad: 0.45rem 0.125rem 0.125rem;
-        --cl-num-font: var(--theme-font-display);
-        --cl-num-weight: 400;
-        --cl-num-size: 1.2em;
-    }
-    [data-theme='retro'] [data-cl-tone='1'] .kp-calendar {
-        --cl-ok-edge: var(--foreground);
-        --cl-warn-edge: var(--foreground);
-        --cl-bad-edge: var(--foreground);
-        --cl-muted-edge: var(--border-strong);
-        --cl-none-bg: var(--card);
-        --cl-none-edge: var(--border-strong);
-        --cl-none-style: dashed;
-        --cl-future-bg: var(--card);
-        --cl-future-edge: var(--border);
-        --cl-future-style: dotted;
-        --cl-before-edge: var(--border-strong);
-        --cl-today: 0 0 transparent;
-    }
-    [data-theme='retro'] [data-cl-loading='1'] .kp-calendar {
-        --cl-loading-bg: var(--muted);
-        --cl-loading-edge: var(--border-strong);
-        --cl-busy-r: 0;
-        --cl-busy-shadow: inset -1px -1px 0 var(--foreground), inset 1px 1px 0 var(--primary-foreground), inset -2px -2px 0 var(--border);
-    }
-    [data-theme='retro'] [data-cl-select='1'] .kp-calendar {
-        --cl-pick: 2px dotted var(--foreground);
-        --cl-pick-offset: 2px;
-    }
-    /* The perforation along the top of every leaf. */
-    [data-theme='retro'] [data-cl-shape='1'] .kp-calendar__day {
-        background:
-            radial-gradient(circle, var(--card) 0 1.5px, transparent 2px) left 2px top 2px / 7px 5px repeat-x,
-            var(--cl-pat),
-            var(--cl-bg);
-    }
-    [data-theme='retro'] [data-cl-tone='1'] .kp-calendar__day:is([data-kp-tone='future'], [data-kp-tone='none']) {
-        background:
-            radial-gradient(circle, var(--background) 0 1.5px, transparent 2px) left 2px top 2px / 7px 5px repeat-x,
-            var(--cl-pat),
-            var(--cl-bg);
-    }
-    /* Today: ringed in marker, in the leaf's own ink. */
-    [data-theme='retro'] [data-cl-tone='1'] .kp-calendar__day[data-kp-today] .kp-calendar__num::before {
-        content: '';
-        inset: -0.2em -0.35em;
-        border: 2px solid currentColor;
-        border-radius: 50%;
-    }
-    [data-theme='retro'] [data-cl-shape='1'] .kp-calendar__title,
-    [data-theme='retro'] [data-cl-shape='1'] .kp-calendar__grid th,
-    [data-theme='retro'] [data-cl-shape='1'] .kp-calendar__pad {
-        font-family: var(--theme-font-display);
-        font-weight: 400;
-    }
-    /* Loading: a blank grey leaf with its rule, still. */
-    [data-theme='retro'] [data-cl-loading='1'] .kp-calendar__day[data-kp-tone='loading']::after {
-        content: '';
-        inset: auto 0.4rem 0.4rem;
-        block-size: 2px;
-        background: repeating-linear-gradient(90deg, var(--foreground) 0 2px, transparent 2px 4px);
-    }
-    /* ── retro · 2 · the 1995 date picker ─────────────────────────────── */
-    [data-theme='retro'] [data-cl-shape='2'] .kp-calendar {
-        --cl-r: 0;
-        --cl-swatch-r: 0;
-        --cl-edge-w: 0px;
-        --cl-gap: 3px;
-        --cl-num-weight: 400;
-        --cl-shadow: inset -1px -1px 0 var(--foreground), inset 1px 1px 0 var(--primary-foreground), inset -2px -2px 0 var(--border);
-        --cl-mark-size: 0.75rem;
-    }
-    [data-theme='retro'] [data-cl-tone='2'] .kp-calendar {
-        --cl-muted-bg: var(--muted);
-        --cl-none-bg: var(--card);
-        --cl-none-mark: '?';
-        --cl-none-ink: var(--foreground);
-        --cl-future-bg: var(--primary-foreground);
-        --cl-future-fg: var(--muted-foreground);
-        --cl-before-bg: var(--background);
-        --cl-before-fg: var(--muted-foreground);
-        --cl-today: 0 0 transparent;
-    }
-    [data-theme='retro'] [data-cl-loading='2'] .kp-calendar {
-        --cl-loading-bg: var(--card);
-        --cl-busy-r: 0;
-        --cl-busy-shadow:
-            inset -1px -1px 0 var(--foreground), inset 1px 1px 0 var(--primary-foreground), inset -2px -2px 0 var(--border),
-            0 0 0 1px var(--foreground);
-    }
-    [data-theme='retro'] [data-cl-select='2'] .kp-calendar {
-        --cl-pick: 2px solid var(--primary);
-        --cl-pick-offset: 1px;
-    }
-    /* The well: the grid sunk in a two-pixel bevel. */
-    [data-theme='retro'] [data-cl-shape='2'] .kp-calendar__grid {
-        background: var(--primary-foreground);
-        box-shadow:
-            inset 1px 1px 0 var(--border),
-            inset 2px 2px 0 var(--foreground),
-            inset -1px -1px 0 var(--primary-foreground),
-            inset -2px -2px 0 var(--card);
-    }
-    [data-theme='retro'] [data-cl-shape='2'] .kp-calendar__grid th {
-        padding-block: 0.2rem;
-        background: var(--primary);
-        color: var(--primary-foreground);
-        font-weight: 400;
-    }
-    [data-theme='retro'] [data-cl-tone='2'] .kp-calendar__day:is([data-kp-tone='future'], [data-kp-tone='before']) {
-        --cl-shadow: 0 0 transparent;
-    }
-    /* The picked day sinks. */
-    [data-theme='retro'] [data-cl-select='2'] td[aria-selected='true'] > .kp-calendar__day {
-        --cl-shadow: inset 1px 1px 0 var(--foreground), inset -1px -1px 0 var(--primary-foreground), inset 2px 2px 0 var(--border);
-        padding-block-start: 0.25rem;
-    }
-    /* Today: ringed in red, as the picker did, with a white halo. */
-    [data-theme='retro'] [data-cl-tone='2'] .kp-calendar__day[data-kp-today] .kp-calendar__num::before {
-        content: '';
-        inset: -0.2em -0.4em;
-        border: 2px solid var(--destructive);
-        border-radius: 50%;
-        box-shadow:
-            0 0 0 1px var(--primary-foreground),
-            inset 0 0 0 1px var(--primary-foreground);
-    }
-    /* Loading: the 50 % dither, still. */
-    [data-theme='retro'] [data-cl-loading='2'] .kp-calendar__day[data-kp-tone='loading']::after {
-        content: '';
-        inset: 2px;
-        background: conic-gradient(
-                hsl(from var(--foreground) h s l / 0.28) 25%,
-                transparent 0 50%,
-                hsl(from var(--foreground) h s l / 0.28) 0 75%,
-                transparent 0
-            )
-            0 0 / 2px 2px;
-    }
     /* ══ grotesk ════════════════════════════════════════════════════════ */
     /* ── grotesk · 1 · the Swiss grid ─────────────────────────────────── */
     [data-theme='grotesk'] [data-cl-shape='1'] .kp-calendar {
@@ -4104,27 +3959,6 @@
         clip-path: polygon(0 0, 100% 0, 100% 38%, calc(100% - 5px) 50%, 100% 62%, 100% 100%, 0 100%, 0 62%, 5px 50%, 0 38%);
     }
 
-    [data-theme='retro'] [data-cl-shape='3'] .kp-calendar {
-        --cl-cell-h: 3.25rem;
-        --cl-gap: 5px;
-        --cl-r: 0;
-        --cl-swatch-r: 0;
-        --cl-edge-w: 2px;
-        --cl-num-font: var(--theme-font-display);
-        --cl-num-weight: 400;
-        --cl-num-size: 1em;
-    }
-    [data-theme='retro'] [data-cl-shape='3'] .kp-calendar__title {
-        font-family: var(--theme-font-display);
-    }
-    [data-theme='retro'] [data-cl-shape='3'] .kp-calendar__grid th {
-        font-family: var(--theme-font-display);
-        background: var(--primary);
-        color: var(--primary-foreground);
-    }
-    [data-theme='retro'] [data-cl-shape='3'] .kp-calendar__day {
-        clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 9px, 100% 100%, 0 100%);
-    }
     [data-theme='grotesk'] [data-cl-shape='3'] .kp-calendar {
         --cl-cell-h: 3.5rem;
         --cl-gap: 2px;
@@ -4972,57 +4806,6 @@
         color: var(--foreground);
     }
 
-    [data-theme='retro'] [data-cl-tone='3'] .kp-calendar {
-        --cl-ok-bg: var(--card);
-        --cl-ok-fg: var(--foreground);
-        --cl-ok-ink: var(--success);
-        --cl-ok-edge: var(--border);
-        --cl-ok-pat: radial-gradient(circle at calc(100% - 7px) 7px, var(--cl-ink) 0 4px, transparent 4.5px);
-        --cl-warn-bg: var(--card);
-        --cl-warn-fg: var(--foreground);
-        --cl-warn-ink: var(--warning);
-        --cl-warn-edge: var(--border);
-        --cl-warn-pat: radial-gradient(circle at calc(100% - 7px) 7px, var(--cl-ink) 0 4px, transparent 4.5px);
-        --cl-bad-bg: var(--card);
-        --cl-bad-fg: var(--foreground);
-        --cl-bad-ink: var(--destructive);
-        --cl-bad-edge: var(--border);
-        --cl-bad-pat: radial-gradient(circle at calc(100% - 7px) 7px, var(--cl-ink) 0 4px, transparent 4.5px);
-        --cl-muted-bg: var(--card);
-        --cl-muted-fg: var(--foreground);
-        --cl-muted-ink: var(--muted-foreground);
-        --cl-muted-edge: var(--border);
-        --cl-muted-pat: radial-gradient(circle at calc(100% - 7px) 7px, var(--cl-ink) 0 4px, transparent 4.5px);
-        --cl-none-bg: var(--card);
-        --cl-none-fg: var(--foreground);
-        --cl-none-ink: var(--border-strong);
-        --cl-none-edge: var(--border);
-        --cl-none-pat: none;
-        --cl-future-bg: var(--card);
-        --cl-future-fg: var(--foreground);
-        --cl-future-ink: var(--border-strong);
-        --cl-future-edge: var(--border);
-        --cl-future-pat: none;
-        --cl-before-bg: var(--card);
-        --cl-before-fg: var(--foreground);
-        --cl-before-ink: var(--border);
-        --cl-before-edge: var(--border);
-        --cl-before-pat: none;
-        --cl-loading-bg: var(--card);
-        --cl-loading-fg: var(--foreground);
-        --cl-loading-ink: var(--border-strong);
-        --cl-loading-edge: var(--border);
-        --cl-future-style: dashed;
-        --cl-before-style: dotted;
-        --cl-none-edge: var(--border-strong);
-        --cl-today: inset 0 0 0 2px var(--destructive);
-        --cl-warn-mark: '!';
-        --cl-bad-mark: '✕';
-        --cl-before-pat: repeating-linear-gradient(-45deg, hsl(from var(--foreground) h s l / 0.12) 0 1px, transparent 1px 5px);
-    }
-    [data-theme='retro'] [data-cl-tone='3'] .kp-calendar__day::before {
-        color: var(--foreground);
-    }
     [data-theme='grotesk'] [data-cl-tone='3'] .kp-calendar {
         --cl-ok-bg: var(--card);
         --cl-ok-fg: var(--foreground);
@@ -5647,38 +5430,6 @@
         --cl-pick-offset: 3px;
     }
 
-    [data-theme='retro'] [data-cl-select='1'] .kp-calendar__day:hover {
-        translate: 1px 2px;
-    }
-    [data-theme='retro'] [data-cl-select='1'] td[aria-selected='true'] > .kp-calendar__day .kp-calendar__count {
-        outline: 1px solid currentColor;
-        outline-offset: 0;
-        padding-inline: 0.2em;
-    }
-    [data-theme='retro'] [data-cl-select='2'] .kp-calendar__day:hover {
-        outline: 2px dashed var(--ring);
-        outline-offset: -5px;
-    }
-    [data-theme='retro'] [data-cl-select='2'] td[aria-selected='true'] > .kp-calendar__day .kp-calendar__count {
-        padding-inline: 0.25em;
-        border-radius: 2px;
-        background: var(--foreground);
-        color: var(--background);
-        font-weight: 700;
-    }
-    [data-theme='retro'] [data-cl-select='3'] .kp-calendar__day:hover .kp-calendar__num {
-        text-decoration: underline 2px;
-        text-underline-offset: 2px;
-    }
-    [data-theme='retro'] [data-cl-select='3'] td[aria-selected='true'] > .kp-calendar__day .kp-calendar__count {
-        font-weight: 800;
-        text-decoration: underline 2px;
-        text-underline-offset: 1px;
-    }
-    [data-theme='retro'] [data-cl-select='3'] .kp-calendar {
-        --cl-pick: 2px dashed var(--foreground);
-        --cl-pick-offset: 1px;
-    }
     [data-theme='grotesk'] [data-cl-select='1'] .kp-calendar__day:hover .kp-calendar__num {
         text-decoration: underline 2px;
         text-underline-offset: 2px;
@@ -5954,18 +5705,6 @@
         background: linear-gradient(135deg, transparent 45%, var(--primary) 45% 55%, transparent 55%) no-repeat;
     }
 
-    [data-theme='retro'] [data-cl-loading='3'] .kp-calendar {
-        --cl-loading-bg: var(--card);
-        --cl-loading-edge: var(--border);
-        --cl-loading-fg: var(--foreground);
-    }
-    [data-theme='retro'] [data-cl-loading='3'] .kp-calendar__day[data-kp-tone='loading']::after {
-        content: '⌛';
-        inset: auto auto 0.15rem 0.25rem;
-        font-size: 0.7rem;
-        line-height: 1;
-        color: var(--foreground);
-    }
     [data-theme='grotesk'] [data-cl-loading='3'] .kp-calendar {
         --cl-loading-bg: var(--card);
         --cl-loading-edge: var(--border);
@@ -6180,20 +5919,6 @@
             }
         }
 
-        [data-theme='retro'] [data-cl-loading='3'] .kp-calendar__day[data-kp-tone='loading']::after {
-            animation: cl3-retro 1.4s steps(2, end) infinite;
-        }
-        @keyframes cl3-retro {
-            from {
-                rotate: 0deg;
-            }
-            50% {
-                rotate: 0deg;
-            }
-            to {
-                rotate: 180deg;
-            }
-        }
         [data-theme='grotesk'] [data-cl-loading='3'] .kp-calendar__day[data-kp-tone='loading']::after {
             animation: cl3-grotesk 1.1s cubic-bezier(0.6, 0, 0.4, 1) infinite;
         }
@@ -6241,12 +5966,7 @@
         [data-theme='high-contrast'] [data-cl-loading='2'] .kp-calendar__day[data-kp-tone='loading']::after {
             animation: clx-draw 1.2s steps(6, end) infinite;
         }
-        [data-theme='retro'] [data-cl-loading='1'] .kp-calendar__day[data-kp-tone='loading']::after {
-            animation: clx-draw 1.6s steps(8, end) infinite;
-        }
-        [data-theme='retro'] [data-cl-loading='2'] .kp-calendar__day[data-kp-tone='loading']::after {
-            animation: clx-dither 0.5s steps(2, end) infinite;
-        }
+
         [data-theme='light'] [data-cl-loading='2'] .kp-calendar__day[data-kp-tone='loading']::after {
             animation: clx-sweep 2.4s ease-in-out infinite;
         }
@@ -6479,18 +6199,6 @@
             animation: cla-stamp 240ms steps(3, end) calc((var(--cl-row, 0) * 7 + var(--cl-col, 0)) * var(--cl-step)) backwards;
         }
 
-        [data-theme='retro'] [data-cl-arrival='1'] .kp-calendar[data-cl-arrive] .kp-calendar__grid:not([aria-busy='true']) .kp-calendar__day {
-            --cl-step: 20ms;
-            animation: cla-wipe-down 120ms steps(1, end) calc(var(--cl-row, 0) * var(--cl-step) * 4) backwards;
-        }
-        [data-theme='retro'] [data-cl-arrival='2'] .kp-calendar[data-cl-arrive] .kp-calendar__grid:not([aria-busy='true']) .kp-calendar__day {
-            --cl-step: 20ms;
-            animation: cla-wipe-right 260ms steps(4, end) calc(var(--cl-row, 0) * var(--cl-step) * 4) backwards;
-        }
-        [data-theme='retro'] [data-cl-arrival='3'] .kp-calendar[data-cl-arrive] .kp-calendar__grid:not([aria-busy='true']) .kp-calendar__day {
-            --cl-step: 14ms;
-            animation: cla-checker 240ms steps(3, end) calc((var(--cl-row, 0) * 7 + var(--cl-col, 0)) * var(--cl-step)) backwards;
-        }
         [data-theme='grotesk'] [data-cl-arrival='1'] .kp-calendar[data-cl-arrive] .kp-calendar__grid:not([aria-busy='true']) .kp-calendar__day {
             --cl-step: 14ms;
             animation: cla-shove 260ms cubic-bezier(0.2, 0.9, 0.1, 1) calc((var(--cl-row, 0) * 7 + var(--cl-col, 0)) * var(--cl-step)) backwards;

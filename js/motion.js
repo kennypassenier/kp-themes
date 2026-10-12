@@ -319,7 +319,10 @@ function attachClose(dialog) {
         openAsReversedClose(dialog);
     };
     own.close = (/** @type {string | undefined} */ value) => void closeDialog(dialog, value);
-    if (dialog.open) rememberEntrance(dialog);
+    if (dialog.open) {
+        rememberEntrance(dialog);
+        openAsReversedClose(dialog);
+    }
     // Escape: unless a listener before this one already decided (a page that
     // keeps the dialog open, or the React channel, which closes through its
     // own state and so through `close()` above).
@@ -559,13 +562,6 @@ function closePopoverWithGhost(event) {
     });
     el.after(ghost);
     ghosted.add(el);
-    try {
-        ghost.showPopover();
-    } catch {
-        ghost.remove();
-        ghosted.delete(el);
-        return;
-    }
     const done = () => {
         ghost.remove();
         ghosted.delete(el);
@@ -577,11 +573,31 @@ function closePopoverWithGhost(event) {
         stopClose(ghost);
         done();
     };
-    el.addEventListener('beforetoggle', back);
-    void playClose(ghost).then(() => {
-        el.removeEventListener('beforetoggle', back);
-        done();
-    });
+    const play = () => {
+        el.addEventListener('beforetoggle', back);
+        void playClose(ghost).then(() => {
+            el.removeEventListener('beforetoggle', back);
+            done();
+        });
+    };
+    // Firefox refuses to show a popover while another one is being hidden
+    // ("Cannot show a popover during the show or hide of another popover"),
+    // which is exactly now: it takes the ghost one task later, before the
+    // next frame in practice. Chromium takes it at once.
+    try {
+        ghost.showPopover();
+        play();
+    } catch {
+        setTimeout(() => {
+            if (!ghost.isConnected || el.matches(':popover-open')) return done();
+            try {
+                ghost.showPopover();
+            } catch {
+                return done();
+            }
+            play();
+        }, 0);
+    }
 }
 
 if (typeof document !== 'undefined') document.addEventListener('beforetoggle', closePopoverWithGhost, true);
@@ -753,7 +769,7 @@ export function sizeMotion(box, change) {
  * Glide `box` from one height to another. During the glide the box clips
  * what overflows it and measures its border box, so the last frame is the
  * size it keeps (a card with padding read its padding twice and then
- * clicked smaller, in forest and high-contrast).
+ * clicked smaller, in forest and the removed high-contrast).
  * @param {HTMLElement} box @param {number} from @param {number} to @param {number} duration @param {string} easing
  * @param {boolean} [plain] no `[data-kp-resizing]` character
  * @param {number} [delay] ms the box holds `from` before it moves
@@ -824,9 +840,13 @@ function arrival(scope) {
  * @param {HTMLElement} el @param {string | null} motion
  */
 function arrive(el, motion) {
-    if (!motion || el.style.animation || el.hasAttribute('data-kp-arriving') || el.hasAttribute('data-kp-leaving')) return;
+    if (!motion || el.style.animation || el.hasAttribute('data-kp-arriving') || el.hasAttribute('data-kp-leaving') || el.hasAttribute('data-kp-ghost')) return;
     // A theme that opens as its close turned around lets it arrive as its
     // leave played backwards [research/open-reverse].
+    // A theme that says `--kp-arrive-unseen: skip` lets what takes no box
+    // (display none) arrive as nothing: its arrival would only hold back,
+    // in the row of arrivals, the visible part that was added with it.
+    if (getComputedStyle(el).getPropertyValue('--kp-arrive-unseen').trim() === 'skip' && el.getClientRects().length === 0) return;
     if (opensAsReversedClose(el) && arriveAsReversedLeave(el)) return;
     // A register that has its own arrival draws it on `[data-kp-arriving]`;
     // one that has not lends its toast's.
@@ -838,6 +858,64 @@ function arrive(el, motion) {
         el.removeAttribute('data-kp-arriving');
     };
     void playedOut(el, 1500).then(end);
+}
+
+/**
+ * Let `el` arrive the theme's way, now: for a part a script brings back by
+ * itself (an alert dismissed and shown again), outside any box motion
+ * watches. A part that already arrives, or leaves, is left alone.
+ * @param {HTMLElement} el
+ */
+export function arriveShown(el) {
+    arrive(el, arrival(el));
+}
+
+/** The attribute a group carries while glideGroup() moves its height. */
+export const GROUP_FOLDING_ATTRIBUTE = 'data-kp-group-folding';
+
+/** @type {WeakMap<HTMLElement, Animation>} */
+const groupGlides = new WeakMap();
+
+/**
+ * Open or shut a group whose shut state is not drawn (a tree branch's
+ * children, `display: none` while `aria-expanded="false"`) by gliding its
+ * height, the accordion's way: the theme's growth curve and time, and the
+ * same curve turned around to shut, so the close is the open played
+ * backwards. `apply()` flips the state (the caller's attribute); the group
+ * is kept drawn through a shutting glide by the theme's rule on
+ * `[data-kp-group-folding]`. The box around it follows the group instead of
+ * gliding itself (followsAFold()). Under reduced motion, in a theme that
+ * switches, or inside a group that glides already, the state is applied at
+ * once and the box glides as it always did.
+ * @param {HTMLElement} group @param {boolean} opening @param {() => void} apply
+ */
+export function glideGroup(group, opening, apply) {
+    const { size, ease } = themeMotion(group);
+    if (size <= 0 || switching || !group.isConnected || group.parentElement?.closest(`[${GROUP_FOLDING_ATTRIBUTE}]`)) return apply();
+    const own = groupGlides.get(group);
+    // Turned round mid-glide: from the height it stands at.
+    const standing = own ? group.getBoundingClientRect().height : null;
+    own?.cancel();
+    const from = standing ?? (opening ? 0 : layoutHeight(group));
+    group.setAttribute(GROUP_FOLDING_ATTRIBUTE, '');
+    group.style.setProperty('overflow', 'clip');
+    group.style.setProperty('box-sizing', 'border-box');
+    heightFolds.add(group);
+    apply();
+    const to = opening ? layoutHeight(group) : 0;
+    const easing = sizeEase(group, ease, to - from, true);
+    const mine = group.animate([{ height: `${from}px` }, { height: `${to}px` }], { duration: size, easing, fill: 'forwards' });
+    groupGlides.set(group, mine);
+    const done = () => {
+        if (groupGlides.get(group) !== mine) return;
+        groupGlides.delete(group);
+        heightFolds.delete(group);
+        group.removeAttribute(GROUP_FOLDING_ATTRIBUTE);
+        group.style.removeProperty('overflow');
+        group.style.removeProperty('box-sizing');
+        mine.cancel();
+    };
+    void mine.finished.then(done, () => undefined);
 }
 
 /**
@@ -896,6 +974,51 @@ function partway(el, share, done) {
 }
 
 /**
+ * The gap inTurnGap() gives a leave of a row of `count`, in ms on its
+ * exit's clock, when it is shorter than the one partway() would wait for;
+ * else null. The same reading arrive() takes for its `lag`.
+ * @param {HTMLElement} el @param {number} share @param {number} lasts @param {number} count
+ * @returns {number | null}
+ */
+function cappedGap(el, share, lasts, count) {
+    const exits = el
+        .getAnimations({ subtree: true })
+        .filter((a) => typeof CSSAnimation !== 'undefined' && a instanceof CSSAnimation && /** @type {KeyframeEffect} */ (a.effect)?.target === el)
+        .map((a) => {
+            const effect = /** @type {KeyframeEffect} */ (a.effect);
+            const timing = effect.getTiming();
+            return { timing, end: (Number(timing.delay) || 0) + (Number(effect.getComputedTiming().activeDuration) || 0) };
+        });
+    if (exits.length === 0) return null;
+    const gap =
+        share > 0 && share < 1
+            ? Math.max(0, ...exits.map((exit) => reaches(exit.timing, exit.end, share)))
+            : Math.max(lasts, ...exits.map((exit) => exit.end));
+    if (!Number.isFinite(gap)) return null;
+    const next = inTurnGap(gap, count);
+    return next < gap ? next : null;
+}
+
+/**
+ * Settles once every CSS animation on `el` has run `ms` on its own clock (or
+ * is over), or when `done` does.
+ * @param {HTMLElement} el @param {number} ms @param {Promise<unknown>} done
+ */
+function atTime(el, ms, done) {
+    const css = el
+        .getAnimations({ subtree: true })
+        .filter((a) => typeof CSSAnimation !== 'undefined' && a instanceof CSSAnimation && /** @type {KeyframeEffect} */ (a.effect)?.target === el);
+    const reached = new Promise((resolve) => {
+        const tick = () => {
+            if (css.every((a) => a.playState === 'finished' || (Number(a.currentTime) || 0) >= ms)) resolve(undefined);
+            else requestAnimationFrame(tick);
+        };
+        tick();
+    });
+    return Promise.race([reached, done]);
+}
+
+/**
  * Settles when the CSS animations running on `el` have played out, at
  * whatever rate they play (a slowed-down review plays them at a quarter);
  * with none running, after `fallback` ms.
@@ -936,6 +1059,25 @@ function arrivalOf(el) {
     if (!toast) return null;
     const [name, duration, ...ease] = toast.split(' ');
     return { name, duration: parseFloat(duration), ease: ease.slice(0, -1).join(' ') };
+}
+
+/**
+ * How a leave's fold of space is timed, read off the leaving element: its
+ * length as a multiple of the longer of the exit and the size glide
+ * (`--kp-leave-fold-grow`, 1.25 unless a theme says otherwise) and, with no
+ * `--kp-leave-fold: after`, where it starts as a share of the exit
+ * (`--kp-leave-fold-start`, a third unless a theme says otherwise; forest
+ * sets 1 and 0, so its space closes as long as, and with, its leave).
+ * @param {CSSStyleDeclaration} style the element's style while it carries `data-kp-leaving`
+ * @returns {{ grow: number, start: (lasts: number) => number }}
+ */
+function foldTiming(style) {
+    const grow = parseFloat(style.getPropertyValue('--kp-leave-fold-grow'));
+    const start = parseFloat(style.getPropertyValue('--kp-leave-fold-start'));
+    return {
+        grow: Number.isNaN(grow) ? 1.25 : grow,
+        start: (lasts) => (Number.isNaN(start) ? lasts / 3 : lasts * start),
+    };
 }
 
 /**
@@ -1140,8 +1282,9 @@ function arriveAsReversedLeave(el) {
     if (actor !== el) for (const a of el.getAnimations()) if (a instanceof CSSAnimation) a.cancel();
     const after = fold === 'after';
     const pause = parseFloat(style.getPropertyValue('--kp-leave-pause')) || 0;
-    const foldFor = size > 0 && !floats(el, style) ? steppedDuration(el, withoutOvershoot(ease), Math.max(size, lasts) * 1.25) : 0;
-    const foldAt = onStepClock(el, withoutOvershoot(ease), after ? lasts + pause : lasts / 3);
+    const timing = foldTiming(style);
+    const foldFor = size > 0 && !floats(el, style) ? steppedDuration(el, withoutOvershoot(ease), Math.max(size, lasts) * timing.grow) : 0;
+    const foldAt = onStepClock(el, withoutOvershoot(ease), after ? lasts + pause : timing.start(lasts));
     // The leave is over when its last exit (a pseudo-element's may run
     // longer than the first) and its fold are.
     const total = Math.max(lasts, ...exits.map((exit) => exit.end), foldFor ? foldAt + foldFor : 0);
@@ -1267,7 +1410,7 @@ function arriveInTurn(items) {
     let start = 0;
     const ends = items.map((item) => {
         const end = start + item.total;
-        start += item.lag;
+        start += inTurnGap(item.lag, items.length);
         return end;
     });
     const last = Math.max(...ends);
@@ -1280,6 +1423,27 @@ function arriveInTurn(items) {
             effect.updateTiming({ delay: finiteMs((Number(effect.getTiming().delay) || 0) + later) });
         }
     });
+}
+
+/**
+ * The most a row of three or more arrivals or leaves may spend getting
+ * going, in ms, unless one gap alone is longer [Forest applied, 2026-10-09].
+ * Measured in forest: twenty rows put into a `.kp-dialog` at once waited
+ * 13 083 ms before the first showed, each a 690 ms gap after the one before.
+ */
+const IN_TURN_MS = 600;
+
+/**
+ * The gap after one of `count` elements arriving or leaving in turn: its own
+ * `gap` when the whole row's gaps fit in IN_TURN_MS (or in that one gap, so
+ * a pair is never hurried), else the row's share of that budget. Arrivals
+ * and leaves both take it, so a row's arrival stays its leave turned around.
+ * @param {number} gap ms @param {number} count
+ */
+function inTurnGap(gap, count) {
+    if (count < 3 || !(gap > 0)) return gap;
+    const budget = Math.max(IN_TURN_MS, gap);
+    return (count - 1) * gap <= budget ? gap : budget / (count - 1);
 }
 
 /**
@@ -1300,6 +1464,18 @@ function reaches(timing, end, share) {
         if ((now.progress ?? 0) >= share || (now.currentIteration ?? 0) > 0) return t;
     }
     return end;
+}
+
+/**
+ * Whether the theme lets a part that a script is about to remove or hide
+ * (a state's layer, an empty state, a file row, a tree's children) leave
+ * first, as leave() plays it: a theme says so with `--kp-leave-state:
+ * leave`, and the others keep taking such a part out at once.
+ * @param {Element} el
+ * @returns {boolean}
+ */
+export function leavesState(el) {
+    return getComputedStyle(el).getPropertyValue('--kp-leave-state').trim() === 'leave';
 }
 
 /**
@@ -1346,7 +1522,7 @@ async function leaveInTurn(items) {
     for (const item of items) {
         /** @type {Promise<void>} */
         const exited = new Promise((resolve) => {
-            void leaveOne(item.el, item.hide, resolve).then(item.resolve);
+            void leaveOne(item.el, item.hide, resolve, items.length).then(item.resolve);
         });
         await exited;
     }
@@ -1355,9 +1531,10 @@ async function leaveInTurn(items) {
 /**
  * @param {HTMLElement} el @param {boolean} hide
  * @param {() => void} exited called once its exit has played, or at once when it has none
+ * @param {number} [count] how many leave in this row (inTurnGap())
  * @returns {Promise<void>}
  */
-async function leaveOne(el, hide, exited) {
+async function leaveOne(el, hide, exited, count = 1) {
     const gone = () => {
         if (hide) el.hidden = true;
         else el.remove();
@@ -1471,7 +1648,11 @@ async function leaveOne(el, hide, exited) {
     // Halfway unless the page says otherwise (Kenny's pick, 2026-10-04).
     const set = parseFloat(style.getPropertyValue('--kp-leave-stagger'));
     const stagger = Number.isNaN(set) ? 0.5 : set;
-    if (lasts > 0 && stagger > 0 && stagger < 1) void partway(actor, stagger, exit).then(exited);
+    // A long row lets the next go sooner (inTurnGap()), on the exit's own
+    // clock, as arriveInTurn() delays its arrivals.
+    const capped = lasts > 0 && count > 2 ? cappedGap(actor, stagger, lasts, count) : null;
+    if (capped !== null) void atTime(actor, capped, exit).then(exited);
+    else if (lasts > 0 && stagger > 0 && stagger < 1) void partway(actor, stagger, exit).then(exited);
     else void exit.then(exited);
     running.push(exit);
     // A table row cannot be folded below its cells' content: it plays its
@@ -1491,9 +1672,10 @@ async function leaveOne(el, hide, exited) {
         // faden en dan pas die accordion").
         const after = fold === 'after';
         const pause = parseFloat(style.getPropertyValue('--kp-leave-pause')) || 0;
+        const timing = foldTiming(style);
         const folding = el.animate([from, to], {
-            duration: steppedDuration(el, withoutOvershoot(ease), Math.max(size, lasts) * 1.25),
-            delay: onStepClock(el, withoutOvershoot(ease), after ? lasts + pause : lasts / 3),
+            duration: steppedDuration(el, withoutOvershoot(ease), Math.max(size, lasts) * timing.grow),
+            delay: onStepClock(el, withoutOvershoot(ease), after ? lasts + pause : timing.start(lasts)),
             easing: withoutOvershoot(ease),
             fill: 'forwards',
         });
@@ -1642,7 +1824,7 @@ const heightFolds = new WeakSet();
  * @param {HTMLElement} box
  */
 const followsAFold = (box) =>
-    [...box.querySelectorAll('[data-kp-leaving]')].some((el) => heightFolds.has(/** @type {HTMLElement} */ (el)) && el.getClientRects().length > 0);
+    [...box.querySelectorAll(`[data-kp-leaving], [${GROUP_FOLDING_ATTRIBUTE}]`)].some((el) => heightFolds.has(/** @type {HTMLElement} */ (el)) && el.getClientRects().length > 0);
 
 /**
  * Which arrivals play under `el`: its closest `data-kp-arrive` (`all`,
@@ -1800,7 +1982,7 @@ export function easeSize(box, { arrive: fallback = 'all', arriveKeys = [] } = {}
             // Added to the box, or to a list inside it (rows in a <ul>).
             if (record.type === 'childList')
                 for (const node of record.addedNodes) {
-                    if (!(node instanceof HTMLElement) || moved.has(node)) continue;
+                    if (!(node instanceof HTMLElement) || moved.has(node) || node.hasAttribute('data-kp-ghost')) continue;
                     if (mode === 'new' && (repainted ??= repaintedIn(records, { keys })).has(node)) continue;
                     arrive(node, motion);
                 }
@@ -1951,9 +2133,9 @@ export function attachMotion(root = document, { size = '', arrive = 'all', arriv
             ...(scope instanceof Element && scope.matches(selector) ? [scope] : []),
             ...scope.querySelectorAll(selector),
         ];
-        for (const el of all('dialog.kp-dialog')) keep(el, attachClose(/** @type {HTMLDialogElement} */ (el)));
-        for (const el of all(sizeSelector)) keep(el, easeSize(/** @type {HTMLElement} */ (el), { arrive, arriveKeys }));
-        for (const el of all(FOLD_SELECTOR)) if (el instanceof HTMLDetailsElement) keep(el, attachFold(el));
+        for (const el of all('dialog.kp-dialog, dialog.kp-palette, dialog.kp-alarm')) if (!el.hasAttribute('data-kp-ghost')) keep(el, attachClose(/** @type {HTMLDialogElement} */ (el)));
+        for (const el of all(sizeSelector)) if (!el.hasAttribute('data-kp-ghost')) keep(el, easeSize(/** @type {HTMLElement} */ (el), { arrive, arriveKeys }));
+        for (const el of all(FOLD_SELECTOR)) if (el instanceof HTMLDetailsElement && !el.hasAttribute('data-kp-ghost')) keep(el, attachFold(el));
     };
     scan(root);
     let sweeping = false;

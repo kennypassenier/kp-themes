@@ -1,0 +1,9 @@
+{
+    "decided": "2026-10-08 Brussels, Kenny: 1 of 1 approved in the review dialog, update 1 (research/dark-anchor/README.md): Dark's anchor element = The line lays the film down, turning (recommended)",
+    "attributes": "the ANCHORS keys in research/dark-anchor/anchors.js; the scenes in research/dark-anchor/options.css",
+    "picks": {
+        "dark": {
+            "anchor": "lays"
+        }
+    }
+}

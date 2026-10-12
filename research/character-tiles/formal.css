@@ -1,0 +1,120 @@
+/* research/character-tiles, formal: the decided picks on formal's grammar
+   (themes/formal/CHARACTER.md G1-G21, decided by Kenny on
+   research/formal-character, 2026-10-08; css/formal-register.css has the
+   package's own drawing of the same). Only formal's decided options change:
+   shape 1, loading 1, arrival 2, hover 1 and live 3 (tone 1 stands).
+
+   - shape: the engraved plate keeps its corner and its hairline and loses the
+     double frame: a tile is paper with a hairline (G6, G7); the title is in
+     Fraunces, not small capitals (G18);
+   - loading: the dotted leader is retired; a waiting tile is ruled with the
+     register's three navy lines (its --kp-fm-stack) across its foot, one
+     after the other, held, lifted and ruled again, 2400 ms (G10);
+   - arrival: the title and the body are still written in from the left, at
+     an even pace and a dead stop, 400 ms, the body 60 ms after the title
+     (G1, G2);
+   - hover: the raised seal (a lift on a shadow) is retired; the tile does not
+     move: pointing at its Open link rules the navy line under the label
+     (the register's own button), and the tile itself takes nothing (G15);
+   - live: signed again is retired; a navy rule is ruled under the tile's
+     reading, the second rule closes it, both are lifted (G9). */
+@layer kp.signature {
+    [data-theme='formal'] [data-ti-shape='1'] .kp-card {
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+    }
+
+    [data-theme='formal'] [data-ti-shape='1'] .kp-card__title {
+        font-variant-caps: normal;
+        letter-spacing: normal;
+    }
+
+    /* Loading 1 · the dotted leader → the lines are ruled. */
+    [data-theme='formal'] [data-ti-loading='1'] [data-kp-busy]::after {
+        inset-inline: 1rem;
+        inset-block-end: 0.5rem;
+        block-size: 0.9rem;
+        background-image: var(--kp-fm-stack);
+        background-repeat: no-repeat;
+        background-size: 100% 2px;
+        background-position:
+            0 0,
+            0 50%,
+            0 100%;
+        animation: none;
+    }
+
+    /* Hover 1 · the raised seal → the tile stays; the link is formal's own. */
+    [data-theme='formal'] [data-ti-hover='1'] .kp-card:hover,
+    [data-theme='formal'] [data-ti-hover='1'] .kp-card.tl-hover-sim {
+        transform: none;
+        box-shadow: none;
+    }
+
+    [data-theme='formal'] [data-ti-hover='1'] .kp-card:has([data-tl-link]:focus-visible) {
+        transform: none;
+        box-shadow: none;
+        border-color: var(--border);
+    }
+
+    [data-theme='formal'] [data-ti-hover='1'] [data-tl-link]:hover,
+    [data-theme='formal'] [data-ti-hover='1'] [data-tl-link]:focus-visible {
+        text-decoration: underline 2px var(--primary);
+        text-decoration-skip-ink: none;
+        text-underline-offset: 0.3em;
+    }
+
+    [data-theme='formal'] [data-ti-hover='1'] [data-tl-link]:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast);
+        outline-offset: var(--kp-focus-ring-inner-width, 2px);
+        box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring);
+    }
+
+    /* Live 3 · signed again → ruled again and closed. */
+    [data-theme='formal'] [data-ti-live='3'] [data-tl-flash]::after {
+        inset-inline: 1rem;
+        inset-block: auto 0.35rem;
+        inline-size: auto;
+        block-size: 5px;
+        background-color: transparent;
+        background-image:
+            linear-gradient(
+                var(--kp-fm-dir, to right),
+                transparent calc(var(--kp-fm-x) * 100%),
+                var(--primary) calc(var(--kp-fm-x) * 100%) calc(var(--kp-fm-r1) * 100%),
+                transparent calc(var(--kp-fm-r1) * 100%)
+            ),
+            linear-gradient(
+                var(--kp-fm-dir, to right),
+                transparent calc(var(--kp-fm-x) * 100%),
+                var(--primary) calc(var(--kp-fm-x) * 100%) calc(var(--kp-fm-r2) * 100%),
+                transparent calc(var(--kp-fm-r2) * 100%)
+            );
+        background-repeat: no-repeat;
+        background-size:
+            100% 2px,
+            100% 1px;
+        background-position:
+            0 0,
+            0 4px;
+        --kp-fm-r1: clamp(0, var(--kp-fm-u) / 0.47, 1);
+        --kp-fm-r2: clamp(0, (var(--kp-fm-u) - 0.47) / 0.19, 1);
+        --kp-fm-x: clamp(0, (var(--kp-fm-u) - 0.72) / 0.28, 1);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* Arrival 2 · engraved → written in at the ruling pace. */
+        [data-theme='formal'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy], [data-tl-flash]) .kp-card__title {
+            animation: tl-formal-engrave var(--kp-sig-fm-time, 400ms) linear both;
+        }
+
+        [data-theme='formal'] [data-ti-arrival='2'] > .kp-card:not([data-kp-busy], [data-tl-flash]) .kp-card__body {
+            animation: tl-formal-engrave var(--kp-sig-fm-time, 400ms) linear both;
+            animation-delay: var(--kp-sig-fm-stagger, 60ms);
+        }
+
+        [data-theme='formal'] [data-ti-live='3'] [data-tl-flash]::after {
+            animation: kp-sig-formal-update-closed 850ms linear both;
+        }
+    }
+}

@@ -1,0 +1,64 @@
+/* research/character-menu, formal: the decided picks on formal's grammar
+   (themes/formal/CHARACTER.md G1-G21, decided by Kenny on
+   research/formal-character, 2026-10-08; css/formal-register.css has the
+   package's own drawing of the same). Only formal's decided options change:
+   shape 1, loading 1 and open 1 (tone 1, the red-ink entry, and interact 1,
+   the quill underline, stand and are the register's own).
+
+   - shape: the engraved plate keeps its corner and its hairline and loses the
+     double frame: a menu is paper with a hairline (G7); headings in the
+     body face in small capitals (G18);
+   - loading: the dotted leader is retired; the waiting entry is ruled with the
+     register's three navy lines (its --kp-fm-stack) across its foot, one
+     after the other, held, lifted and ruled again, 2400 ms (G10);
+   - open: "unrolled" is retired; the menu is ruled open under its button, its
+     frame rule start to end, then each entry in turn 60 ms apart, a navy pen
+     ahead of the words, and closes as that played backwards, bottom first
+     (G3, G13; the register's kp-sig-formal-ruling, which turns round in CSS
+     for a menu);
+   - interact: the register draws the rule under the label, so the demo's own
+     shadow under it is not drawn twice. */
+@layer kp.signature {
+    [data-theme='formal'] [data-mb-shape='1'] .kp-menu-button > .kp-menu {
+        box-shadow: none;
+        border-radius: var(--radius);
+    }
+
+    [data-theme='formal'] [data-mb-shape='1'] .kp-menu-button > .kp-menu .kp-menu__heading {
+        font-family: var(--theme-font-body);
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+    }
+
+    /* Loading 1 · the dotted leader → the lines are ruled. */
+    [data-theme='formal'] [data-mb-loading='1'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+        background-image: none;
+        animation: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] [data-mb-loading='1'] .kp-menu-button > .kp-menu[aria-busy='true'] [data-kp-loading] {
+            animation: kp-sig-formal-loading var(--kp-sig-fm-loop, 2400ms) linear infinite;
+        }
+
+        /* Open 1 · unrolled → ruled open. */
+        [data-theme='formal'] [data-mb-open='1'] .kp-menu-button > .kp-menu:not([hidden]) {
+            animation: kp-sig-formal-ruling calc(var(--kp-fm-total) * 1ms) linear;
+        }
+
+        [data-theme='formal'] [data-mb-open='1'] .kp-menu-button > .kp-menu[data-mb-leaving] {
+            animation-name: kp-sig-formal-ruling;
+            animation-direction: reverse;
+        }
+    }
+
+    [data-theme='formal']
+        [data-mb-interact='1']
+        .kp-menu-button
+        > .kp-menu
+        .kp-menu__item:is(:hover, :focus-visible, [data-mb-force-focus])
+        .kp-menu__label,
+    [data-theme='formal'] [data-mb-interact='1'] .kp-menu-button > .kp-menu .kp-menu__item:active .kp-menu__label {
+        box-shadow: none;
+    }
+}

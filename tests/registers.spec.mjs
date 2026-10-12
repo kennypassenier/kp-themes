@@ -1,11 +1,3 @@
-// A register decorates around the boundary, never instead of it [TH87].
-//
-// The retro register draws a two-tone bevel inside every control. The
-// gates measure the token source and cannot see a stylesheet that
-// repaints a border; this test reads the painted border and the painted
-// ground of a control on the retro fixture and holds them at 3:1 (DI1),
-// with the register loaded.
-
 import { readdirSync } from 'node:fs';
 import { test, expect } from '@playwright/test';
 import { measured } from './paint.mjs';
@@ -26,36 +18,6 @@ const parse = (rgb) => {
     if (m[4] !== undefined && Number(m[4]) < 1) throw new Error(`a see-through boundary: ${rgb}`);
     return [Number(m[1]), Number(m[2]), Number(m[3])];
 };
-
-for (const control of ['.kp-button', '.kp-field__input']) {
-    test(
-        `the retro register keeps DI1 on ${control} [TH87]`,
-        { tag: ['@theme:retro', '@component:button', '@component:field', '@component:showcase'] },
-        async ({ page }) => {
-            await page.goto('/showcase/themes/retro.html');
-            await page.waitForSelector(control);
-            const painted = await page.evaluate((selector) => {
-                const el = document.querySelector(selector);
-                const style = getComputedStyle(el);
-                const ground = getComputedStyle(el.parentElement);
-                return {
-                    border: style.borderTopColor,
-                    shadows: style.boxShadow,
-                    ground: ground.backgroundColor === 'rgba(0, 0, 0, 0)' ? getComputedStyle(document.body).backgroundColor : ground.backgroundColor,
-                };
-            }, control);
-            // The register is on: a bevel is painted.
-            expect(painted.shadows).toContain('inset');
-            // And the boundary is still the gated one. Drill [KT3]: with
-            // `border-color: transparent` added to the register's control
-            // rule, the border reads rgba(0, 0, 0, 0) and parse() throws —
-            // the first version of parse() read that as black and stayed
-            // green, so the drill earned its keep on the test itself.
-            const ratio = contrast(parse(painted.border), parse(painted.ground));
-            expect(ratio, `${control} border ${painted.border} on ${painted.ground}`).toBeGreaterThanOrEqual(3);
-        },
-    );
-}
 
 // fix-12 — pressing a button changes what it paints, in every theme.
 //
@@ -218,7 +180,7 @@ for (const theme of SWEEP) {
 
 // CP1 — the arrival answers a click anywhere, not only on Skip.
 //
-// Four themes build one: phantom (`card`), retro, terminal and synthwave
+// Three themes build one: phantom (`card`), terminal and synthwave
 // (`boot`). The overlay is `position: fixed; inset: 0`, so until 6.0.0 it
 // ate every click for up to 1100ms and only the Skip button ended it — a
 // click elsewhere did nothing and gave no sign it had been lost.
@@ -229,7 +191,7 @@ for (const theme of SWEEP) {
 // Drilled 2026-09-12 in firefox: the overlay's own listener removed from
 // js/effects.js → red on all four, because the click lands and the
 // overlay stays. Restored green.
-for (const theme of ['phantom', 'retro', 'terminal', 'synthwave']) {
+for (const theme of ['phantom', 'terminal', 'synthwave']) {
     test(
         `the arrival lets go of a click anywhere under ${theme} [CP1]`,
         { tag: ['@sweep', `@theme:${theme}`, '@component:page-effects', '@component:showcase'] },

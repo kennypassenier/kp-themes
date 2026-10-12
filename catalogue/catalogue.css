@@ -559,7 +559,7 @@
         grid-template-rows: auto auto minmax(0, 1fr) auto;
     }
 
-    /* A theme's in-flow dialog ornament (deco, sepia and Lapis draw one as
+    /* A theme's in-flow dialog ornament (deco and Lapis drew one as
        ::before since 9.0.0) gets a row of its own, so it never takes the
        head's row (review-ornament-M1). An empty row is zero tall. */
     .cat-review-dialog::before {

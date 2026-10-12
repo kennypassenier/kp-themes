@@ -107,13 +107,6 @@
             "card": "3",
             "next": "2"
         },
-        "retro": {
-            "shape": "2",
-            "openclose": "1",
-            "highlight": "1",
-            "card": "1",
-            "next": "3"
-        },
         "grotesk": {
             "shape": "2",
             "openclose": "2",

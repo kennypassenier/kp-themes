@@ -1,0 +1,9 @@
+{
+    "decided": "2026-10-08 Brussels, Kenny: 1 of 1 approved in the review dialog (research/formal-anchor/README.md): Formal's anchor element = The account is closed: the double rule",
+    "attributes": "the ANCHORS keys in research/formal-anchor/anchors.js; the scenes in research/formal-anchor/options.css",
+    "picks": {
+        "formal": {
+            "anchor": "rule"
+        }
+    }
+}

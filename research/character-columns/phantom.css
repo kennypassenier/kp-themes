@@ -1,0 +1,96 @@
+/* research/character-columns, phantom: the decided picks on phantom's grammar
+   (themes/phantom/CHARACTER.md G1-G21, Kenny, 2026-10-09 on
+   research/phantom-character; css/phantom-register.css holds the tokens and
+   the keyframes this file names). Only phantom's decided options change:
+   shape 3, loading 2, arrival 2, tone 1, live 2.
+
+   - shape: the redacted dossier (a censor bar before every label, the
+     monospace for every word) keeps its ruled top and sheds the bar; the
+     label shouts in the condensed face and the figure speaks in the plain one
+     (G18, G19);
+   - loading: the marching hatch is the block of the screen with the red slash
+     across it, 1400 ms a loop (G10);
+   - arrival: the typing (eight steps) is the throw: a tile comes from beyond
+     its start edge on the shove and resolves from dots in three cuts, a column
+     80 ms after the one before (G2, G4, G13);
+   - tone: the evidence tag's change is stamped on the overprint, the yellow
+     plate for a warning and the red plate for a failure, 2 px off register (G8);
+   - live: the shiver is the six cuts of a live update, in place (G9). */
+@layer kp.signature {
+    /* Shape 3 · the ruled dossier without its bars or its typewriter. */
+    [data-theme='phantom'][data-theme='phantom'] [data-cs-shape='3'] .kp-kpis {
+        --cl-tag: none;
+        --cl-tag-bg: none;
+        --cl-font: var(--theme-font-body);
+        --cl-label-font: var(--theme-font-display);
+        --cl-num-font: var(--theme-font-body);
+    }
+
+    /* Loading 2 · the block and the slash. */
+    [data-theme='phantom'][data-theme='phantom'] [data-cs-loading='2'] .kp-kpis {
+        --cl-load:
+            linear-gradient(104deg, transparent 0 28%, var(--primary) 28% 72%, transparent 72% 100%) no-repeat 0 0 / 2.8rem 100%,
+            radial-gradient(circle, hsl(from var(--foreground) h s l / 0.32) 1px, transparent 1.4px) 0 0 / 5px 5px, var(--muted);
+        --cl-load-anim: cl-ph-slash 1400ms cubic-bezier(0.6, 0, 0.4, 1) infinite;
+    }
+
+    /* Arrival 2 · thrown and resolved, a column after a column. */
+    [data-theme='phantom'][data-theme='phantom'] [data-cs-arrival='2'] .kp-kpis {
+        --cl-arrive-num: none;
+        --cl-arrive-tile: kp-sig-phantom-fly 700ms linear, kp-sig-phantom-resolve 700ms linear;
+        --cl-arrive-stagger: 80ms;
+        --kp-sig-ph-x0: -12rem;
+        --kp-sig-ph-y0: 0px;
+        --kp-sig-ph-r0: -10deg;
+        --kp-sig-ph-s0: 1;
+        --kp-sig-ph-land: 0deg;
+    }
+
+    [data-theme='phantom'][data-theme='phantom'] [data-cs-arrival='2'] .kp-kpis[data-cs-moment='arrive'] > .kp-kpi {
+        mask-size: 7px 7px;
+    }
+
+    /* Tone 1 · the overprint. */
+    [data-theme='phantom'][data-theme='phantom'] [data-cs-tone='1'] .kp-kpis .kp-kpi .kp-kpi__delta {
+        display: inline-block;
+    }
+
+    [data-theme='phantom'][data-theme='phantom'] [data-cs-tone='1'] .kp-kpis .kp-kpi[data-kp-tone='warning'] .kp-kpi__delta {
+        background: var(--fx-signal);
+        color: var(--fx-signal-foreground);
+        translate: 2px 2px;
+    }
+
+    [data-theme='phantom'][data-theme='phantom'] [data-cs-tone='1'] .kp-kpis .kp-kpi[data-kp-tone='destructive'] .kp-kpi__delta,
+    [data-theme='phantom'][data-theme='phantom'] [data-cs-tone='1'] .kp-kpis .kp-kpi__delta[data-kp-tone='bad'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        translate: 2px 2px;
+    }
+
+    /* Live 2 · the six cuts. */
+    [data-theme='phantom'][data-theme='phantom'] [data-cs-live='2'] .kp-kpis {
+        --cl-live-num: kp-sig-phantom-update 400ms linear;
+        --cl-live-tile: none;
+    }
+
+    [data-theme='phantom'][data-theme='phantom'] [data-cs-live='2'] .kp-kpis[data-cs-moment='live'] > .kp-kpi[data-cs-changed] > .kp-kpi__value {
+        mask-size: 7px 7px;
+    }
+
+    @keyframes cl-ph-slash {
+        from {
+            background-position:
+                -2.8rem 0,
+                0 0,
+                0 0;
+        }
+
+        to {
+            background-position:
+                calc(100% + 2.8rem) 0,
+                0 0,
+                0 0;
+        }
+    }
+}

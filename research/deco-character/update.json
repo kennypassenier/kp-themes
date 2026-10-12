@@ -1,0 +1,33 @@
+{
+    "update": 3,
+    "picks": {
+        "deco": {
+            "curve": "unfold",
+            "direction": "centre",
+            "opening": "inlay",
+            "durations": "fan",
+            "colour": "inlay",
+            "corners": "cove",
+            "surface": "lacquer",
+            "warning": "figure",
+            "live": "gilded",
+            "loading": "doors",
+            "bar": "double",
+            "spinner": "rotate",
+            "composites": "own",
+            "hover": "leaf",
+            "focus": "double",
+            "press": "seal",
+            "type": "poiret",
+            "motifs": "inlay"
+        }
+    },
+    "questions": {
+        "deco": {
+            "leave": {
+                "comment": "I like five best becuse it's actually fancy and well drawn, i like the art style, bu tI'm not sure if curtains are the way to go. They also seem to stay in the window after they are open? So keep it in this art style, but come up with ten variations",
+                "reply": "The festoon (five) stays the standard of the drawing, and the curtains that stayed in the window are fixed: when a part has arrived nothing of the dressing is drawn any more, and when it has left nothing is left either (hidden, not pulled to the top). Ten variations in that art style, the satin, the gold trim, the rosettes, the tassels and the braid, and none of them a plain curtain: the festoon itself (fixed), a Roman blind, a folding screen, a ribbon and bow, a velvet rope and its posts, shutters, a lift gate, a great fan, a bead curtain and a scallop shell."
+            }
+        }
+    }
+}

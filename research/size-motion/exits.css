@@ -137,18 +137,6 @@
         }
     }
 
-    /* retro, option 2: It falls off the screen in four pixel steps. */
-    [data-theme='retro'] [data-sm-exit='2'] [data-kp-leaving] {
-        animation: lx-retro-2 320ms steps(4, jump-end) forwards;
-    }
-
-    @keyframes lx-retro-2 {
-        to {
-            transform: translateY(40px);
-            opacity: 0;
-        }
-    }
-
     /* nostromo, option 2: The phosphor glows up and fades out. */
     [data-theme='nostromo'] [data-sm-exit='2'] [data-kp-leaving] {
         animation: lx-nostromo-2 480ms ease-in forwards;

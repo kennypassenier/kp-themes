@@ -1,0 +1,84 @@
+/* research/character-chart, phantom: the decided picks on phantom's grammar
+   (themes/phantom/CHARACTER.md G1-G21, Kenny, 2026-10-09 on
+   research/phantom-character; css/phantom-register.css holds the tokens and
+   the keyframes this file names). Only phantom's decided options change:
+   shape b (its drop shadow), loading r3c-pha-load-2, arrival r3c-pha-arr-1,
+   events r3c-pha-ev-1, tip b.
+
+   - shape: the line's hard shadow is the solid deep red, the second plate,
+     never a translucent one (G5, G7); a chip is not at its own slant (G6);
+   - loading: the jittering plates are the register's red slash across the
+     block of the screen (G10);
+   - arrival: the line is cut in from its start in four hard cuts on the
+     400 ms of a throw, then it resolves from dots to solid in three cuts; it is
+     no longer skewed or eased in and out (G1, G2, G13);
+   - events: an event is a red slash cut into the line; the bullet hole with
+     its white halo is not one of the print's motifs (G19);
+   - tip: the ransom note is a slab at -3 degrees with the deep red hard
+     shadow, the tooltip's own pose (G6, G7). */
+@layer kp.signature {
+    /* Shape b. */
+    [data-theme='phantom'][data-theme='phantom'] [data-cc-shape='b'] .kp-chart {
+        --cc-line-filter: drop-shadow(2px 2px 0 var(--kp-red-deep));
+    }
+
+    [data-theme='phantom'][data-theme='phantom'] [data-cc-shape='b'] .kp-chart__spark-line {
+        filter: drop-shadow(1.5px 1.5px 0 var(--kp-red-deep));
+    }
+
+    [data-theme='phantom'][data-theme='phantom'] [data-cc-shape='b'] :is(.kp-chart__source, .kp-chart__show-all),
+    [data-theme='phantom'][data-theme='phantom'] [data-cc-shape='b'] .kp-chart__source:nth-child(even) {
+        rotate: none;
+    }
+
+    /* Loading r3c-pha-load-2 · the block and the slash. */
+    [data-theme='phantom'][data-theme='phantom'] [data-cc-loading='r3c-pha-load-2'] .kp-chart__state[data-kp-state='loading']::before {
+        background: var(--kp-sig-ph-block);
+    }
+
+    [data-theme='phantom'][data-theme='phantom'] [data-cc-loading='r3c-pha-load-2'] .kp-chart__state[data-kp-state='loading']::after {
+        background: var(--primary);
+        clip-path: var(--kp-sig-ph-slash);
+        translate: -2.8rem 0;
+        animation: none;
+    }
+
+    /* Arrival r3c-pha-arr-1 · cut in from the start, no skew. */
+    [data-theme='phantom'][data-theme='phantom'] [data-cc-arrival='r3c-pha-arr-1'][data-cc-arriving] .kp-chart__series {
+        transform: none;
+    }
+
+    /* Events r3c-pha-ev-1 · a red slash, no hole. */
+    [data-theme='phantom'][data-theme='phantom'] [data-cc-events='r3c-pha-ev-1'] .kp-chart__mark-dot {
+        fill: var(--primary);
+        stroke: none;
+        filter: none;
+    }
+
+    /* Tip b · the slab. */
+    [data-theme='phantom'][data-theme='phantom'] [data-cc-tip='b'] .kp-chart__tip {
+        box-shadow: 4px 4px 0 var(--kp-red-deep);
+        rotate: -3deg;
+    }
+
+    [data-theme='phantom'][data-theme='phantom'] [data-cc-tip='b'] .kp-chart__tip[data-kp-pinned] {
+        box-shadow:
+            4px 4px 0 var(--kp-red-deep),
+            0 0 0 2px var(--background);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'][data-theme='phantom'] [data-cc-loading='r3c-pha-load-2'] .kp-chart__state[data-kp-state='loading']::after {
+            animation: kp-sig-phantom-phantom-slash 1400ms cubic-bezier(0.6, 0, 0.4, 1) infinite;
+        }
+
+        [data-theme='phantom'][data-theme='phantom'] [data-cc-arrival='r3c-pha-arr-1'][data-cc-arriving] .kp-chart__plot {
+            animation: cca-k 400ms steps(4, end) both;
+        }
+
+        [data-theme='phantom'][data-theme='phantom'] [data-cc-arrival='r3c-pha-arr-1'][data-cc-arriving] .kp-chart__series {
+            mask-size: 7px 7px;
+            animation: kp-sig-phantom-resolve-tip 300ms linear 400ms backwards;
+        }
+    }
+}

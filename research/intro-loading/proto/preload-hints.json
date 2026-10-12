@@ -38,11 +38,6 @@
             "../fonts/rajdhani/rajdhani-semibold.woff2"
         ],
         "terminal": ["../fonts/sharetechmono/sharetechmono-regular.woff2"],
-        "retro": [
-            "../fonts/instrumentsans/instrumentsans-variable.woff2",
-            "../fonts/vt323/vt323-regular.woff2",
-            "../fonts/pixelifysans/pixelifysans-variable.woff2"
-        ],
         "phantom": [
             "../fonts/barlow/barlow-regular.woff2",
             "../fonts/barlow/barlow-bold.woff2",

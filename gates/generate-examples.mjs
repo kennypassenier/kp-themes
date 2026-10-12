@@ -43,7 +43,6 @@ const SHEETS = [
     'layout.css',
     'utilities.css',
     'cyberpunk-register.css',
-    'retro-register.css',
     'synthwave-register.css',
     'phantom-register.css',
     'terminal-register.css',
@@ -58,9 +57,7 @@ const SHEETS = [
     'nostromo-register.css',
     'dark-register.css',
     'formal-register.css',
-    'sepia-register.css',
     'solstice-register.css',
-    'high-contrast-register.css',
 ];
 
 /**

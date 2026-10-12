@@ -1,0 +1,138 @@
+/* research/character-drawer, formal: the decided picks on formal's grammar
+   (themes/formal/CHARACTER.md G1-G21, decided by Kenny on
+   research/formal-character, 2026-10-08; css/formal-register.css has the
+   package's own drawing of the same). Only formal's decided options change:
+   shape 1 and openclose 3 (highlight 1 and card 1 stand).
+
+   - shape: the engraved plate keeps its place at the window's edge but
+     loses the 2 px navy frame and the heavy dividers: a hairline, the
+     dialog's double rule inside it as its mat (G7), the ledger lines under
+     the figures of the body; the title is Fraunces (G18);
+   - openclose: "the seal is broken" (unfolding up from a thin line) is
+     retired; the drawer is ruled open where it stands, as a dialog is: its
+     frame rule start to end, then its head, its body and its foot, 60 ms
+     apart, a navy pen running ahead and lifted; it closes as that played
+     backwards (G3, G13). The keyframes are the register's
+     (kp-sig-formal-line-k, kp-sig-formal-pen-k). */
+@layer kp.signature {
+    [data-theme='formal'] [data-dt-shape='1'] .dt-drawer {
+        border: 1px solid var(--border-strong);
+        box-shadow:
+            inset 0 0 0 3px var(--popover),
+            inset 0 0 0 4px var(--border-strong);
+    }
+
+    [data-theme='formal'] [data-dt-shape='1'] .dt-drawer .kp-drawer__head {
+        border-block-end: 1px solid var(--border);
+        font-family: var(--theme-font-display);
+    }
+
+    [data-theme='formal'] [data-dt-shape='1'] .dt-drawer .kp-dialog__title {
+        font-variant-caps: normal;
+        letter-spacing: normal;
+    }
+
+    [data-theme='formal'] [data-dt-shape='1'] .dt-drawer .kp-drawer__foot {
+        border-block-start: 1px solid var(--border);
+    }
+
+    /* Openclose 3 · the seal is broken → ruled open. */
+    [data-theme='formal'] [data-dt-openclose='3'] .dt-drawer,
+    [data-theme='formal'] [data-dt-openclose='3'][data-dt-state='closed'] .dt-drawer {
+        scale: 1 1;
+    }
+
+    [data-theme='formal'] [data-dt-openclose='3'][data-dt-state='closed'] .dt-drawer {
+        clip-path: inset(-3rem 100% -3rem -3rem);
+    }
+
+    [data-theme='formal'] [data-dt-openclose='3'] .dt-drawer::before,
+    [data-theme='formal'] [data-dt-openclose='3'] .dt-drawer > :is(.kp-drawer__head, .kp-drawer__body, .kp-drawer__foot)::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        block-size: var(--kp-sig-fm-pen, 2px);
+        background: var(--primary);
+        clip-path: inset(0 0 0 100%);
+        pointer-events: none;
+    }
+
+    [data-theme='formal'] [data-dt-openclose='3'] .dt-drawer::before {
+        inset-block-start: 0;
+        z-index: 1;
+    }
+
+    [data-theme='formal'] [data-dt-openclose='3'] .dt-drawer > :is(.kp-drawer__head, .kp-drawer__body, .kp-drawer__foot) {
+        position: relative;
+    }
+
+    [data-theme='formal'] [data-dt-openclose='3'] .dt-drawer > :is(.kp-drawer__head, .kp-drawer__body, .kp-drawer__foot)::after {
+        inset-block-end: 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] [data-dt-openclose='3'][data-dt-state='opening'] .dt-drawer {
+            animation: kp-sig-formal-line-0 740ms linear both;
+        }
+
+        [data-theme='formal'] [data-dt-openclose='3'][data-dt-state='closing'] .dt-drawer {
+            animation: kp-sig-formal-line-0 740ms linear both reverse;
+        }
+
+        [data-theme='formal'] [data-dt-openclose='3'][data-dt-state='opening'] .dt-drawer::before {
+            animation: kp-sig-formal-pen-0 740ms linear both;
+        }
+
+        [data-theme='formal'] [data-dt-openclose='3'][data-dt-state='closing'] .dt-drawer::before {
+            animation: kp-sig-formal-pen-0 740ms linear both reverse;
+        }
+
+        [data-theme='formal'] [data-dt-openclose='3'][data-dt-state='opening'] .dt-drawer > .kp-drawer__head {
+            animation: kp-sig-formal-line-0 740ms linear both;
+        }
+
+        [data-theme='formal'] [data-dt-openclose='3'][data-dt-state='opening'] .dt-drawer > .kp-drawer__head::after {
+            animation: kp-sig-formal-pen-0 740ms linear both;
+        }
+
+        [data-theme='formal'] [data-dt-openclose='3'][data-dt-state='opening'] .dt-drawer > .kp-drawer__body {
+            animation: kp-sig-formal-line-1 740ms linear both;
+        }
+
+        [data-theme='formal'] [data-dt-openclose='3'][data-dt-state='opening'] .dt-drawer > .kp-drawer__body::after {
+            animation: kp-sig-formal-pen-1 740ms linear both;
+        }
+
+        [data-theme='formal'] [data-dt-openclose='3'][data-dt-state='opening'] .dt-drawer > .kp-drawer__foot {
+            animation: kp-sig-formal-line-2 740ms linear both;
+        }
+
+        [data-theme='formal'] [data-dt-openclose='3'][data-dt-state='opening'] .dt-drawer > .kp-drawer__foot::after {
+            animation: kp-sig-formal-pen-2 740ms linear both;
+        }
+
+        [data-theme='formal'] [data-dt-openclose='3'][data-dt-state='closing'] .dt-drawer > .kp-drawer__head {
+            animation: kp-sig-formal-line-0 740ms linear both reverse;
+        }
+
+        [data-theme='formal'] [data-dt-openclose='3'][data-dt-state='closing'] .dt-drawer > .kp-drawer__head::after {
+            animation: kp-sig-formal-pen-0 740ms linear both reverse;
+        }
+
+        [data-theme='formal'] [data-dt-openclose='3'][data-dt-state='closing'] .dt-drawer > .kp-drawer__body {
+            animation: kp-sig-formal-line-1 740ms linear both reverse;
+        }
+
+        [data-theme='formal'] [data-dt-openclose='3'][data-dt-state='closing'] .dt-drawer > .kp-drawer__body::after {
+            animation: kp-sig-formal-pen-1 740ms linear both reverse;
+        }
+
+        [data-theme='formal'] [data-dt-openclose='3'][data-dt-state='closing'] .dt-drawer > .kp-drawer__foot {
+            animation: kp-sig-formal-line-2 740ms linear both reverse;
+        }
+
+        [data-theme='formal'] [data-dt-openclose='3'][data-dt-state='closing'] .dt-drawer > .kp-drawer__foot::after {
+            animation: kp-sig-formal-pen-2 740ms linear both reverse;
+        }
+    }
+}

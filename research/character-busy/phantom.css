@@ -1,0 +1,65 @@
+/* research/character-busy, phantom: the decided picks on phantom's grammar
+   (themes/phantom/CHARACTER.md G1-G21, Kenny, 2026-10-09 on
+   research/phantom-character; css/phantom-register.css holds the tokens and
+   the keyframes this file names). Only phantom's decided options change:
+   shape 3, loading 3, arrival 2, failure 1 (phone 1, the red top rule, stays).
+
+   - shape: the torn ticket's hand-torn outline is cut paper with the fixed
+     14 px cut at 45 degrees (G6, G19);
+   - loading: the tremble (a turn back and forth) is the register's red slash
+     across the block of the screen, on the whole panel (G10);
+   - arrival: the throw is the shove from beyond the start edge, 400 ms, and the
+     panel resolves from dots in three cuts; it no longer eases out (G1, G2);
+   - failure: a failed load is the red plate with black ink, level, no ring; it
+     comes in on the same throw (G5, G8). */
+@layer kp.signature {
+    /* Shape 3 · cut paper. */
+    [data-theme='phantom'][data-theme='phantom'] [data-bo-shape='3'] .kp-datatable__busy-panel {
+        clip-path: var(--kp-paperclip);
+    }
+
+    /* Loading 3 · no tremble; the register draws the block and the slash. */
+    [data-theme='phantom'][data-theme='phantom'] [data-bo-loading='3'] .kp-datatable__busy-panel {
+        animation: none;
+    }
+
+    /* Arrival 2 · the throw. */
+    [data-theme='phantom'][data-theme='phantom'] [data-bo-arrival='2'] .kp-datatable__busy-overlay {
+        --bo-arrival: bo-ph-thrown;
+        --bo-arrival-dur: 0.7s;
+        --bo-arrival-ease: linear;
+    }
+
+    /* Failure 1 · the red plate, level. */
+    [data-theme='phantom'][data-theme='phantom'] [data-bo-failure='1'] [data-kp-datatable-failed] {
+        --bo-fail-shadow: none;
+        --bo-fail-from: translateX(-3rem) rotate(-8deg);
+        transform: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'][data-theme='phantom'] [data-bo-arrival='2'] .kp-datatable__busy-panel {
+            mask-size: 7px 7px;
+            animation: kp-sig-phantom-resolve 700ms linear backwards;
+        }
+    }
+
+    @keyframes bo-ph-thrown {
+        0% {
+            transform: translateX(-3rem) rotate(-8deg);
+            visibility: hidden;
+            animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
+        }
+
+        57.142857% {
+            transform: translateX(0) rotate(0deg);
+            visibility: visible;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            transform: translateX(0) rotate(0deg);
+            visibility: visible;
+        }
+    }
+}

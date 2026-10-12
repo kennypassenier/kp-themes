@@ -195,7 +195,7 @@ export declare const LIGHT_FAR = 560;
  * The knob a theme sets to have the point a press started at written to the
  * button it started on [scope-25, built at scope-101]: `--kp-press: point`.
  *
- * Sepia's approved gesture is the ink spreading into the paper on a press,
+ * The removed Sepia theme's approved gesture was the ink spreading into the paper on a press,
  * and ink spreads from where the nib touched down, not from the middle of
  * the plate. CSS knows a button is being pressed; it cannot know WHERE, so
  * something has to write the two numbers down. That is all this does — the
@@ -206,7 +206,7 @@ export declare const LIGHT_FAR = 560;
  * place, and the register gives them the same stain with no transition.
  *
  * Without the module, on a key press, or after `detach()`, the two
- * properties are whatever the stylesheet declared — sepia's own default is
+ * properties are whatever the stylesheet declared — the removed Sepia theme's default was
  * the middle of the button, so the gesture is whole before a pointer has
  * ever touched it [KT6].
  */

@@ -1,0 +1,472 @@
+/* research/deco-character/grammar.css: deco's proposed grammar as the demo
+   draws it (themes/deco/CHARACTER.md G1-G21, the anchor of
+   research/deco-anchor: the fan opens). One file of tokens, registered
+   properties and keyframes, linked by demo.html before options.css; once
+   Kenny has judged the nineteen questions, the per-component demos apply
+   the answers from here, as forest's grammar.css is applied.
+
+   UPDATE 1 (2026-10-08). Kenny did not approve thirteen of the nineteen
+   ("this should be the fancy, distinguished theme, with lots of gold accents
+   and fancy blue backgrounds (maybe even with a background wallpaper style
+   like it already has for most pages), it should exhume elegance without
+   being too 'in your face'"). The direction this file now carries:
+
+   - the grand lobby of 1925 after the lights go down: deep blue lacquer
+     (`--dc-lac`, the card's lacquer turned a few degrees toward blue) with the
+     register's chevron wallpaper behind every plate (the two
+     repeating-linear-gradients of css/_rules.css's deco texture in gold at
+     8 %, `--dc-wall-a`, on a 24 px tile), where the page has it felt at 5 %;
+   - gold is a THIN LINE and a SMALL MARK: a 1 px inlay line set
+     `--dc-inset` (6 px) inside a plate's edge with a stepped notch of
+     `--dc-notch` (6 px) at each corner, a `3px double` rule where something
+     matters, a lozenge jewel (a square turned 45 degrees) at a head, an end or
+     a divider's centre; gold is a fill only on the one primary button; ivory
+     reads, emerald is one jewel on what is on or done, ruby a hairline and a
+     word on a failure;
+   - symmetry: a plate's inlay draws from the middle of its top edge round both
+     ways and meets at the bottom (`--dc-draw`, 320 ms), then its lacquer,
+     wallpaper and words come up behind it (`--dc-up`, 160 ms);
+   - motion settles: `--dc-settle` cubic-bezier(0.22, 1, 0.36, 1) opening and
+     its point reflection `--dc-settle-out` cubic-bezier(0.64, 0, 0.78, 0)
+     closing, so a close is its open reversed frame for frame; the fan is kept
+     as the anchor but unfolds smoothly by angle (`--dc-a`), its ribs spreading
+     out of one bundle, never counted; a glint (a soft band of gold light,
+     blurred, 30 % of the width; `--dc-g` is its way across) passes once where
+     the eye should go;
+   - nothing rises, slides, jumps or flashes solid gold; no sunburst behind a
+     figure, no counted rays, no bulbs, no lamps, no curtain, no setbacks.
+
+   UPDATE 2 (2026-10-09). Kenny: "Do better, I'm very underwhelmed"; the
+   corners, loading, the bar, leave, hover and the press are drawn again as
+   jewellery, and gold now reads as gold: a highlight, the gold and a bronze
+   shade of one hue along every hairline (--dc-leaf-x/-y), faceted jewels
+   (--dc-gem), gold leaf with a grain (--dc-grain). Where he asked for them,
+   real curtains (velvet and a festoon) and a skyline of set-back hairlines
+   are back.
+
+   Kenny's six picks keep their round-one drawing and the keyframes below that
+   draw them (dcg-fan and dcg-plate for the durations, dcg-flash for the live
+   update's first option, dcg-ring for the spinner's first option).
+
+   Colours come from the theme's tokens only (relative colours allowed); every
+   animation sits under prefers-reduced-motion: no-preference, and the reduced
+   pose is the finished one. The tokens hang on `.dc-page, .dc-scene` (the
+   review dialog moves a section into its stage, which is neither). */
+
+/* The angle a fan has opened to (0 folded, 180 open; 360 for a ring of rays). */
+@property --dc-a {
+    syntax: '<angle>';
+    inherits: true;
+    initial-value: 180deg;
+}
+
+/* How far a plate has followed its fan (0 none, 1 whole): the four steps of
+   the plate behind the rays, also the width of the pleats' fold lines. */
+@property --dc-fill {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+/* How far a line or a plate has been counted open, 0 to 1 (pleats, a line lit
+   from its start). */
+@property --dc-p {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+/* Update 1. How far a plate's inlay is drawn round from its start (0 none, 1
+   closed), how far its lacquer, wallpaper and words are up (0 away, 1 there),
+   how far a glint has crossed (0 before the start edge, 1 past the end: gone),
+   and the wallpaper's gold (8 %). The finished pose is every initial value. */
+@property --dc-draw {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+@property --dc-up {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+@property --dc-g {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+@property --dc-wall-a {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0.08;
+}
+
+/* How bright a control's gold hairline is (a control rests at 0.55 and is
+   full gold where the pointer is); a transition moves it. */
+@property --dc-line-a {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0.85;
+}
+
+/* Update 2 (2026-10-09). The numbers the new options turn. --dc-w: a wave's
+   place along a string or a fade's strength (loops only); --dc-q: a leave's
+   dressing undone (0 dressed, 1 undressed; a festoon swag raised); --dc-m: a hover's mat frame drawn; --dc-r: a plate in
+   relief; --dc-t: a jewel's turn; --dc-o: a glint's angle round an inlay.
+   The finished pose is every initial value. */
+@property --dc-w {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --dc-q {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+/* Update 3 (2026-10-09). The leave's second stage (--dc-v: a dressing
+   there, 0, or gone, 1) and the great fan's two guard sticks (--dc-a1 the
+   left, --dc-a2 the right, from the left along its foot; 182 degrees is
+   folded away below it). */
+@property --dc-v {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+@property --dc-a1 {
+    syntax: '<angle>';
+    inherits: true;
+    initial-value: 182deg;
+}
+
+@property --dc-a2 {
+    syntax: '<angle>';
+    inherits: true;
+    initial-value: 182deg;
+}
+
+@property --dc-m {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --dc-r {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --dc-t {
+    syntax: '<angle>';
+    inherits: true;
+    initial-value: 0deg;
+}
+
+@property --dc-o {
+    syntax: '<angle>';
+    inherits: true;
+    initial-value: 0deg;
+}
+
+@layer kp.signature {
+    :is(.dc-page, .dc-scene, .dc-defs) {
+        /* One fan: 12 rays, 40 ms a ray. */
+        --dc-ray: 40ms;
+        --dc-fan: 480ms;
+        --dc-plate: 160ms;
+        --dc-group: 80ms;
+        --dc-contact: 160ms;
+        --dc-loop: 2400ms;
+        /* A fan of 12 rays is 180 degrees: a cell is 15, the ray 4. */
+        --dc-cell: 15deg;
+        --dc-rib: 4deg;
+        /* Curves: counted is the grammar's, the other two are the
+           alternatives of question 1. Each with its inverse (the point
+           reflection) so a close is its open reversed. */
+        --dc-count: steps(12, jump-end);
+        --dc-count-out: steps(12, jump-start);
+        --dc-ease: cubic-bezier(0.4, 0, 0.2, 1);
+        --dc-ease-out: cubic-bezier(0.8, 0, 0.6, 1);
+        /* Roles of colour (G5). */
+        --dc-gold: var(--primary);
+        --dc-jewel: var(--accent);
+        --dc-ruby: var(--destructive);
+        --dc-ivory: var(--foreground);
+        --dc-lacquer: var(--background);
+        /* The bite of a plate (G6): one corner cut as a chevron. */
+        --dc-bite: 1.25rem;
+        --dc-bite-poly: polygon(0 0, calc(100% - var(--dc-bite)) 0, 100% var(--dc-bite), 100% 100%, 0 100%);
+        /* A lozenge end for small parts: pointed left and right. */
+        --dc-lozenge-poly: polygon(0.5em 0, calc(100% - 0.5em) 0, 100% 50%, calc(100% - 0.5em) 100%, 0.5em 100%, 0 50%);
+        /* Update 1: the lobby. The curve and its point reflection (an eased
+           open closes on the inverse curve, so the close is the open
+           reversed); one arrival is the inlay drawn (320 ms) and the lacquer
+           up behind it (160 ms). */
+        --dc-settle: cubic-bezier(0.22, 1, 0.36, 1);
+        --dc-settle-out: cubic-bezier(0.64, 0, 0.78, 0);
+        --dc-arrive: 480ms;
+        --dc-draw-t: 320ms;
+        --dc-up-t: 160ms;
+        /* The lacquer: the card's, a few degrees toward blue. The inlay: 1 px
+           of gold set 6 px in, a 6 px stepped notch at each corner. */
+        --dc-lac: hsl(from var(--card) calc(h + 14) calc(s + 14) l);
+        --dc-inset: 6px;
+        --dc-notch: 6px;
+        /* The glint: a soft band of gold light, 30 % of the width, blurred. */
+        --dc-glint-ink: hsl(from var(--primary) h s 62% / 0.12);
+        --dc-glint-w: 30%;
+        --dc-glint-blur: 6px;
+        /* The pressed ground: the lacquer a shade darker. */
+        --dc-sunk: hsl(from var(--background) h s calc(l - 3));
+        /* Emerald as ink (the jewel's lighter cut, for an arrow or a word). */
+        --dc-emerald: var(--chart-2);
+        /* Poiret One capitals for titles, Josefin for the rest (G18). */
+        --dc-title-font: var(--theme-font-display);
+        --dc-title-track: 0.16em;
+        /* The crest: twelve gold rays from the foot, flat gold. */
+        --dc-crest-rays: repeating-conic-gradient(
+            from calc(-90deg + (var(--dc-cell) - var(--dc-rib)) / 2) at 50% 100%,
+            var(--dc-gold) 0 var(--dc-rib),
+            transparent var(--dc-rib) var(--dc-cell)
+        );
+        /* Update 2: gold that reads as gold. One hue, four lights: the
+           highlight (a pale champagne), the lit gold, the gold and its shade
+           (a bronze); a hairline carries them along its length, a jewel in
+           facets lit from the top left, gold leaf with a fine grain. */
+        --dc-gold-hi: hsl(from var(--primary) calc(h + 6) calc(s + 16) calc(l + 30));
+        --dc-gold-lt: hsl(from var(--primary) calc(h + 3) calc(s + 8) calc(l + 14));
+        --dc-gold-lo: hsl(from var(--primary) calc(h - 8) calc(s + 4) calc(l - 20));
+        --dc-gold-dk: hsl(from var(--primary) calc(h - 12) calc(s - 6) calc(l - 33));
+        --dc-champagne: hsl(from var(--primary) calc(h + 4) calc(s + 10) calc(l + 27));
+        --dc-shadow: hsl(from var(--background) h s calc(l - 6));
+        --dc-em-hi: hsl(from var(--accent) calc(h - 4) calc(s + 6) calc(l + 26));
+        --dc-em-lo: hsl(from var(--accent) h s calc(l - 14));
+        /* Along a horizontal hairline, down a vertical one, across a plate. */
+        --dc-leaf-x: linear-gradient(
+            90deg,
+            var(--dc-gold-lo),
+            var(--dc-gold) 14%,
+            var(--dc-gold-hi) 30%,
+            var(--dc-gold-lt) 42%,
+            var(--dc-gold) 58%,
+            var(--dc-gold-lo) 76%,
+            var(--dc-gold) 90%,
+            var(--dc-gold-lt)
+        );
+        --dc-leaf-y: linear-gradient(180deg, var(--dc-gold-hi), var(--dc-gold-lt) 22%, var(--dc-gold) 48%, var(--dc-gold-lo) 78%, var(--dc-gold));
+        --dc-leaf: linear-gradient(
+            135deg,
+            var(--dc-gold-lo),
+            var(--dc-gold) 16%,
+            var(--dc-gold-hi) 32%,
+            var(--dc-gold-lt) 42%,
+            var(--dc-gold) 56%,
+            var(--dc-gold-lo) 74%,
+            var(--dc-gold) 88%,
+            var(--dc-gold-lt)
+        );
+        /* A lozenge jewel's four facets (a square box clipped to a lozenge). */
+        --dc-gem: conic-gradient(var(--dc-gold-lt) 0 90deg, var(--dc-gold-lo) 0 180deg, var(--dc-gold) 0 270deg, var(--dc-gold-hi) 0);
+        /* The same facets on a square turned 45 degrees (`rotate: 45deg`). */
+        --dc-gem-r: conic-gradient(from -45deg, var(--dc-gold-lt) 0 90deg, var(--dc-gold-lo) 0 180deg, var(--dc-gold) 0 270deg, var(--dc-gold-hi) 0);
+        --dc-gem-em-r: conic-gradient(from -45deg, var(--dc-emerald) 0 90deg, var(--dc-em-lo) 0 180deg, var(--accent) 0 270deg, var(--dc-em-hi) 0);
+        --dc-gem-em: conic-gradient(var(--dc-emerald) 0 90deg, var(--dc-em-lo) 0 180deg, var(--accent) 0 270deg, var(--dc-em-hi) 0);
+        --dc-lozenge: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+        /* A lozenge as a mask (alpha only), for a jewel set among lines. */
+        --dc-loz-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M5 0 10 5 5 10 0 5Z' fill='currentColor'/%3E%3C/svg%3E");
+        /* The grain of gold leaf: a fine noise, used as a mask (alpha 0.45 to 1). */
+        --dc-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.95 0 0 0 0.25'/%3E%3C/filter%3E%3Crect width='96' height='96' filter='url(%23n)'/%3E%3C/svg%3E");
+        /* Velvet and satin in the lobby's blue: the cloth, its sheen, its fold. */
+        --dc-velvet: hsl(from var(--card) calc(h + 16) calc(s + 22) calc(l + 1));
+        --dc-velvet-hi: hsl(from var(--card) calc(h + 12) calc(s + 18) calc(l + 14));
+        --dc-velvet-lo: hsl(from var(--card) calc(h + 18) calc(s + 26) calc(l - 7));
+    }
+
+    /* ── Counted: a fan opens ray by ray, its plate follows in four steps ── */
+    @keyframes dcg-fan {
+        from {
+            --dc-a: 0deg;
+            animation-timing-function: steps(12, jump-end);
+        }
+        to {
+            --dc-a: 180deg;
+        }
+    }
+
+    @keyframes dcg-fan-out {
+        from {
+            --dc-a: 180deg;
+            animation-timing-function: steps(12, jump-start);
+        }
+        to {
+            --dc-a: 0deg;
+        }
+    }
+
+    @keyframes dcg-plate {
+        from {
+            --dc-fill: 0;
+            animation-timing-function: steps(4, jump-end);
+        }
+        to {
+            --dc-fill: 1;
+        }
+    }
+
+    @keyframes dcg-plate-out {
+        from {
+            --dc-fill: 1;
+            animation-timing-function: steps(4, jump-start);
+        }
+        to {
+            --dc-fill: 0;
+        }
+    }
+
+    /* A live update: one flash of the fan behind the changed figure, 480 ms
+       open and 480 ms folded; the same going and coming, so its close is its
+       open reversed. */
+    @keyframes dcg-flash {
+        0% {
+            --dc-a: 0deg;
+            animation-timing-function: steps(12, jump-end);
+        }
+        50% {
+            --dc-a: 180deg;
+            animation-timing-function: steps(12, jump-start);
+        }
+        100% {
+            --dc-a: 0deg;
+        }
+    }
+
+    @keyframes dcg-flash-out {
+        0% {
+            --dc-a: 0deg;
+            animation-timing-function: steps(12, jump-end);
+        }
+        50% {
+            --dc-a: 180deg;
+            animation-timing-function: steps(12, jump-start);
+        }
+        100% {
+            --dc-a: 0deg;
+        }
+    }
+
+    /* The spinner: a crest of twelve rays round a centre dot, a ring of 30
+       degree cells; opens, stands, folds, 2400 ms, never turning. */
+    @keyframes dcg-ring {
+        0% {
+            --dc-a: 0deg;
+            animation-timing-function: steps(12, jump-end);
+        }
+        40% {
+            --dc-a: 360deg;
+            animation-timing-function: linear;
+        }
+        56.67% {
+            --dc-a: 360deg;
+            animation-timing-function: steps(12, jump-start);
+        }
+        96.67% {
+            --dc-a: 0deg;
+        }
+        100% {
+            --dc-a: 0deg;
+        }
+    }
+
+    /* ── Update 1: the lobby's motion, settled ──────────────────────────
+       A plate arrives: its inlay draws round from its start (dcg-draw), then
+       its lacquer and words come up (dcg-up). A fan unfolds by angle, its ribs
+       spreading out of one bundle (dcg-unfold). Each on the settle curve; the
+       `-out` twin is the same backwards on the inverse curve. A glint passes
+       once (dcg-pass), at an even ease in and out, which is its own inverse. */
+    @keyframes dcg-draw {
+        from {
+            --dc-draw: 0;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        to {
+            --dc-draw: 1;
+        }
+    }
+
+    @keyframes dcg-draw-out {
+        from {
+            --dc-draw: 1;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+        to {
+            --dc-draw: 0;
+        }
+    }
+
+    @keyframes dcg-up {
+        from {
+            --dc-up: 0;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        to {
+            --dc-up: 1;
+        }
+    }
+
+    @keyframes dcg-up-out {
+        from {
+            --dc-up: 1;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+        to {
+            --dc-up: 0;
+        }
+    }
+
+    @keyframes dcg-unfold {
+        from {
+            --dc-a: 0deg;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        to {
+            --dc-a: 180deg;
+        }
+    }
+
+    @keyframes dcg-unfold-out {
+        from {
+            --dc-a: 180deg;
+            animation-timing-function: cubic-bezier(0.64, 0, 0.78, 0);
+        }
+        to {
+            --dc-a: 0deg;
+        }
+    }
+
+    @keyframes dcg-pass {
+        from {
+            --dc-g: 0;
+            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+        }
+        to {
+            --dc-g: 1;
+        }
+    }
+
+    @keyframes dcg-pass-out {
+        from {
+            --dc-g: 1;
+            animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+        }
+        to {
+            --dc-g: 0;
+        }
+    }
+}

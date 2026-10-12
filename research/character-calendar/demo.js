@@ -91,7 +91,7 @@ const IDEAS = {
         loading: [
             {
                 name: 'The desk diary: its loading',
-                text: 'Loading leaves the paper blank with a dotted leader across it. Now it moves: the dotted leader is written dot by dot, again and again.',
+                text: 'Loading leaves the paper blank with three navy rules ruled across its foot one after the other, held, lifted and ruled again.',
             },
             {
                 name: 'The ledger: its loading',
@@ -108,8 +108,8 @@ const IDEAS = {
                 text: 'The days are set line by line, each revealed left to right as type on a press.',
             },
             {
-                name: 'The page turns',
-                text: 'Each week turns down into place like the leaf of a diary.',
+                name: 'Each day ruled in',
+                text: 'Each day is ruled in from its start to its end at an even pace, in reading order, as a ledger is ruled.',
             },
             {
                 name: 'Ruled in',
@@ -119,7 +119,7 @@ const IDEAS = {
         tone: [
             {
                 name: 'The desk diary: its tones and today',
-                text: 'A night is marked by its tinted paper and a rule in its ink along the top; a night with nothing done is the full navy-red plate. Today is boxed in the navy double rule; the picked day hangs in a navy frame.',
+                text: 'A night is paper with a rule along its start edge: navy when kept, red ink when to look at, two red rules when none was backed up. Today is boxed in the navy double rule; the picked day hangs in a navy frame.',
             },
             {
                 name: 'The ledger: its tones and today',
@@ -152,8 +152,8 @@ const IDEAS = {
                 text: "Light's divider as a calendar: soft plates without a frame, each night's state also told by a seam along its foot in the state's ink, the dashed seam for a day to come.",
             },
             {
-                name: 'Daylight',
-                text: 'Every day a white card lifted off a pale sky by a soft shadow, the night washed in its colour from the top as light falls on it.',
+                name: 'White cards',
+                text: 'The month as white cards on the white page, each on its soft shadow and a hairline seam, with the numbers in the regular face; no wash behind them.',
             },
             {
                 name: 'The pill row',
@@ -166,8 +166,8 @@ const IDEAS = {
                 text: 'Loading is a dashed seam on a blank plate. Now it moves: the dashed seam walks along the foot.',
             },
             {
-                name: 'Daylight: its loading',
-                text: 'Loading lets a band of daylight cross each card, slowly. Now it moves: the band of daylight crosses each card.',
+                name: 'Out of focus',
+                text: 'A loading day keeps its cell; its number and its count breathe out of focus (blur and brightness up and back), a day later in the week a beat later.',
             },
             {
                 name: 'The sunbeam',
@@ -176,8 +176,8 @@ const IDEAS = {
         ],
         arrival: [
             {
-                name: 'Morning',
-                text: 'The days open from their centre, as light reaching a room, from the top left corner outwards.',
+                name: 'Out of the glare',
+                text: 'Every day comes into focus where it stands, out of a blurred, too bright glare, one after the other in reading order, 30 ms apart.',
             },
             {
                 name: 'Slide up',
@@ -194,8 +194,8 @@ const IDEAS = {
                 text: "Light's divider as a calendar: soft plates without a frame, each night's state also told by a seam along its foot in the state's ink, the dashed seam for a day to come. Today's number sits in the divider's open circle; the picked day carries a rounded indigo ring.",
             },
             {
-                name: 'Daylight: its tones and today',
-                text: 'Every day a white card lifted off a pale sky by a soft shadow, the night washed in its colour from the top as light falls on it. Today wears a ring of sunlight; the picked day an indigo ring.',
+                name: 'White plates, a bead for today',
+                text: 'Each tone paints its plain plate; today wears a white-ringed cyan bead in the corner of its cell; no glow and no ring of sunlight.',
             },
             {
                 name: 'The coloured dot',
@@ -208,8 +208,8 @@ const IDEAS = {
                 text: "Today's number sits in the divider's open circle; the picked day carries a rounded indigo ring. New: the day lifts on hover, the picked count in heavy type.",
             },
             {
-                name: 'Daylight: its pick',
-                text: 'Today wears a ring of sunlight; the picked day an indigo ring. New: a ring of light on hover, the picked count on an inverted label.',
+                name: 'Settles under the pointer',
+                text: 'Pointing settles the day 2 px toward the paper and tightens its shadow; the picked day keeps its indigo ring and its count on an ink plate.',
             },
             {
                 name: 'The focus halo',
@@ -1153,78 +1153,6 @@ const IDEAS = {
             },
         ],
     },
-    retro: {
-        shape: [
-            {
-                name: 'The tear-off pad',
-                text: 'Still: nothing blinks.',
-            },
-            {
-                name: 'The 1995 date picker',
-                text: "The date picker of 1995: the month sunk into a white well in a two-pixel bevel, every day a raised bevelled button that sinks when picked, a night's state as the button's colour.",
-            },
-            {
-                name: 'The floppy label',
-                text: 'Every day a 3½" disk label: a square with a cut top corner, a ruled writing line, the figure handwritten-bold in the pixel face.',
-            },
-        ],
-        loading: [
-            {
-                name: 'The tear-off pad: its loading',
-                text: "A dotted line along each label's foot. Now it moves: the dotted line fills in steps, as a 1995 progress bar.",
-            },
-            {
-                name: 'The 1995 date picker: its loading',
-                text: 'Loading fills the buttons with the 50 % dither. Now it moves: the dither crawls a pixel at a time.',
-            },
-            {
-                name: 'The hourglass',
-                text: 'The 1995 hourglass cursor turns over in each label.',
-            },
-        ],
-        arrival: [
-            {
-                name: 'Repaint',
-                text: 'Windows 95 repaints the window: each row appears in one hard step.',
-            },
-            {
-                name: 'The wipe',
-                text: 'A PowerPoint-style wipe across each row, in hard steps.',
-            },
-            {
-                name: 'The dissolve',
-                text: 'Each label appears in a chequer dissolve of hard steps.',
-            },
-        ],
-        tone: [
-            {
-                name: 'The tear-off pad: its tones and today',
-                text: 'Every day a leaf of a perforated tear-off pad: a row of perforation holes along its top, the figure in the pixel face, a good night on green paper, a partial one on yellow, a night with nothing done on red. Today is ringed in the marker; the picked day in the dotted focus line of 1995.',
-            },
-            {
-                name: 'The 1995 date picker: its tones and today',
-                text: 'Today is ringed in red, as the picker did; the picked day sinks, in the navy frame.',
-            },
-            {
-                name: 'The status icons',
-                text: 'Plain labels with a coloured icon dot in the corner (✓ ! ✕); today ringed in red.',
-            },
-        ],
-        select: [
-            {
-                name: 'The tear-off pad: its pick',
-                text: 'Today is ringed in the marker; the picked day in the dotted focus line of 1995. New: the day pressed in on hover, the picked count boxed.',
-            },
-            {
-                name: 'The 1995 date picker: its pick',
-                text: "The date picker of 1995: the month sunk into a white well in a two-pixel bevel, every day a raised bevelled button that sinks when picked, a night's state as the button's colour. Today is ringed in red, as the picker did; the picked day sinks, in the navy frame. New: a dashed ring on hover, the picked count on an inverted label.",
-            },
-            {
-                name: 'The marching ants',
-                text: 'The picked label inside dashed marching ants; the figure underlined on hover; the count in heavy type.',
-            },
-        ],
-    },
     grotesk: {
         shape: [
             {
@@ -1468,7 +1396,6 @@ const PICKED = {
     brutalism: ['1', '1', '1', '1', '3'],
     deco: ['1', '1', '2', '1', '1'],
     phantom: ['3', '3', '3', '2', '1'],
-    retro: ['3', '1', '3', '1', '1'],
     grotesk: ['3', '3', '1', '1', '1'],
     nostromo: ['1', '2', '2', '1', '1'],
     titanium: ['1', '1', '2', '1', '1'],

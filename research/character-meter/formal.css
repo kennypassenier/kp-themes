@@ -1,0 +1,34 @@
+/* research/character-meter, formal: the decided picks on formal's grammar
+   (themes/formal/CHARACTER.md G1-G21, decided by Kenny on
+   research/formal-character, 2026-10-08; css/formal-register.css has the
+   package's own drawing of the same). Only formal's decided options change:
+   loading 2 and arrival 1 (shape 1, the bound volume with its gold ribbon,
+   tone 1 and mark 2 stand: the ribbon is the one gold, G5, G19).
+
+   - loading: the sliding bar is retired; one navy rule is ruled along the
+     groove, held, lifted from the start and ruled again, 2400 ms (G10);
+   - arrival: the share is written in from the start at an even pace and a
+     dead stop, 400 ms (G1). */
+@layer kp.signature {
+    [data-theme='formal'] [data-cm-loading='2'] .kp-meter[data-kp-loading]::after {
+        all: unset;
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block: calc(50% - 1px) auto;
+        block-size: 2px;
+        pointer-events: none;
+        background: var(--primary);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] [data-cm-loading='2'] .kp-meter[data-kp-loading]::after {
+            animation: kp-sig-formal-ledger var(--kp-sig-fm-loop, 2400ms) linear infinite;
+        }
+
+        [data-theme='formal'] [data-cm-arrival='1'] .kp-meter::before {
+            animation: var(--cm-arr-o) var(--kp-sig-fm-time, 400ms) linear backwards;
+            transition: inline-size var(--kp-sig-fm-time, 400ms) linear;
+        }
+    }
+}

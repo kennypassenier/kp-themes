@@ -122,14 +122,6 @@
             "hover": "r2-ph-hover-1",
             "live": "r2-ph-live-1"
         },
-        "retro": {
-            "shape": "r2-rt-shape-1",
-            "loading": "1",
-            "arrival": "3",
-            "tone": "1",
-            "hover": "1",
-            "live": "3"
-        },
         "grotesk": {
             "shape": "1",
             "loading": "3",

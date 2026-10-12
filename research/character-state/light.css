@@ -1,0 +1,23 @@
+/* research/character-state, light: the decided picks on light's grammar
+   (themes/light/CHARACTER.md G1-G21, decided by Kenny on 2026-10-08;
+   css/light-register.css holds the tokens and keyframes, `--kp-sig-light-*`
+   and `kp-sig-light-*`). Only light's decided options change: shape 1 and
+   change 1 (tone 1 stays).
+
+   - shape: the soft dot's coloured glow is retired (G5, G7: nothing tinted
+     around it); the dot stays a plain dot in the state's own ink;
+   - change: the soft swell (the dot scaling to 160 %) is the re-exposure
+     (G9): the dot and the word go into the glare for a beat and come back
+     into focus; nothing moves or swells. */
+@layer kp.signature {
+    [data-theme='light'] [data-sw-shape='1'] {
+        --sw-dot-ring: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='light'] [data-sw-change='1'][data-sw-playing]::before,
+        [data-theme='light'] [data-sw-change='1'][data-sw-playing] .kp-state-word {
+            animation: kp-sig-light-reexpose var(--kp-sig-light-time) linear;
+        }
+    }
+}

@@ -6,7 +6,7 @@
 //
 // A demo opts in with three attributes and one module:
 //
-//   <html data-review="<demo id>" data-review-themes="formal,retro">  (themes optional: default all)
+//   <html data-review="<demo id>" data-review-themes="formal,deco">  (themes optional: default all)
 //   <section data-review-item="spinner" data-review-title="Spinner">  (one per judged piece)
 //     <div data-review-look><p data-for="formal">what to look at in formal</p>…</div>
 //   <script type="module" src="../_review/review.js"></script>
@@ -36,7 +36,7 @@
 // step, each shown in its own theme through block.html:
 //
 //   <script type="application/json" data-review-extra>
-//     [{ "page": "catalogue/field.html", "block": "choices", "theme": "retro",
+//     [{ "page": "catalogue/field.html", "block": "choices", "theme": "deco",
 //        "engine": "firefox", "title": "Fields › Choices", "look": "…" }]
 //   </script>
 //
@@ -1119,6 +1119,19 @@ function setupFlip(step, pair) {
 }
 
 /** Shows only flipCells[flipAt], large; its number, name and one-line note once; plays and restarts its motion. */
+/** The option shown, counted in the head beside the step, so the reviewer sees
+ *  which one is up without scrolling to the words under the stage (Kenny,
+ *  2026-10-08). Cleared when no option is flipped. */
+function writeFlipPosition() {
+    const position = $('[data-rv-position]');
+    position.querySelector('[data-rv-flip-pos]')?.remove();
+    if (!flipChoice || !flipWrap.classList.contains('rv-flip--active')) return;
+    const span = document.createElement('span');
+    span.setAttribute('data-rv-flip-pos', '');
+    span.textContent = ` · option ${flipAt + 1}/${flipChoice.options.length}`;
+    position.append(span);
+}
+
 function paintFlip(step) {
     if (!flipRow) return;
     stopPointer();
@@ -1133,6 +1146,7 @@ function paintFlip(step) {
         shown.style.setProperty('--kp-graph-height', '26rem');
     }
     const option = flipChoice?.options[flipAt];
+    writeFlipPosition();
     flipLabel.replaceChildren();
     if (option) {
         const b = document.createElement('b');
@@ -1587,11 +1601,26 @@ function rowFor(pair, only = null) {
         note.hidden = !box.checked && !note.value;
         li.classList.toggle('rv-row--rejected', box.checked);
         if (box.checked) note.focus();
+        if (!only) {
+            state[pair.key] = {
+                ...state[pair.key],
+                verdict: box.checked ? 'rejected' : 'approved',
+                note: note.value.trim(),
+                at: new Date().toISOString(),
+            };
+            save();
+            render();
+        }
         updateApprove();
     });
     note.addEventListener('input', () => {
         if (only) return; // kept when the step is answered, with the aspect's name
-        state[pair.key] = { ...state[pair.key], note: note.value.trim() };
+        state[pair.key] = {
+            ...state[pair.key],
+            verdict: box.checked ? 'rejected' : state[pair.key]?.verdict || 'approved',
+            note: note.value.trim(),
+            at: new Date().toISOString(),
+        };
         save();
         render();
     });
@@ -1684,6 +1713,7 @@ async function show(at) {
         $('[data-rv-position]').textContent =
             `Step ${index + 1}/${steps.length} · ${shownPairs.length} ${step.theme ? 'section(s)' : 'block(s)'}` +
             (judgedHere ? ` · ${judgedHere} already approved, not shown` : '');
+        writeFlipPosition();
         $('[data-rv-title]').textContent = step.title;
         const badge = $('[data-rv-state]');
         const rejected = step.pairs.filter((p) => verdictOf(p) === 'rejected').length;

@@ -12,8 +12,8 @@ Not a place but a **material**: anodised titanium over carbon weave. The
 round that produced this theme opened asking for one called hypertech —
 a category, defined by an empty place on the colour wheel — and it cost
 six refused worlds before the answer turned out to be a material, which
-is how every theme in this package is named. Retro is the desktop,
-terminal is the tube, blueprint is the drawing, forest is the map.
+is how every theme in this package is named. Terminal is the tube,
+blueprint is the drawing, forest is the map.
 
 The colour has a **cause**, and that is the whole theme. Anodising does
 not add pigment: it grows an oxide film, and the film's thickness decides

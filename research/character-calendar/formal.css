@@ -1,0 +1,89 @@
+/* research/character-calendar, formal: the decided picks on formal's grammar
+   (themes/formal/CHARACTER.md G1-G21, decided by Kenny on
+   research/formal-character, 2026-10-08; css/formal-register.css has the
+   package's own drawing of the same). Only formal's decided options change:
+   loading 1, arrival 2, tone 1 (shape 1 and select 1 stand).
+
+   - loading: the dotted leader is retired; a waiting day is paper with the
+     register's three navy rules ruled across its foot (its --kp-fm-stack),
+     one after the other, held, lifted and ruled again, 2400 ms (G10);
+   - arrival: the page turns (a flip) is retired; each day is ruled in, start
+     to end, 400 ms at an even pace, in reading order, a quarter of the 60 ms
+     stagger apart (G1, G2, G13);
+   - tone: a night is paper with a rule, never a tinted plate: kept in a navy
+     rule along its start edge, to look at in a red-ink one, failed in two red
+     rules (G5, G8); today stands in the double rule (G7). */
+@layer kp.signature {
+    [data-theme='formal'] [data-cl-tone='1'] .kp-calendar {
+        --cl-ok-bg: var(--card);
+        --cl-ok-fg: var(--foreground);
+        --cl-ok-edge: var(--border);
+        --cl-warn-bg: var(--card);
+        --cl-warn-fg: var(--destructive);
+        --cl-warn-edge: var(--border);
+        --cl-bad-bg: var(--card);
+        --cl-bad-fg: var(--destructive);
+        --cl-bad-edge: var(--border);
+        --cl-today: inset 0 0 0 2px var(--card), inset 0 0 0 3px var(--primary);
+    }
+
+    [data-theme='formal'] [data-cl-tone='1'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='ok'] {
+        --cl-pat: linear-gradient(var(--primary) 0 0) left / 3px 100% no-repeat;
+    }
+
+    [data-theme='formal'] [data-cl-tone='1'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='warn'] {
+        --cl-pat: linear-gradient(var(--destructive) 0 0) left / 3px 100% no-repeat;
+    }
+
+    [data-theme='formal'] [data-cl-tone='1'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='bad'] {
+        --cl-pat:
+            linear-gradient(var(--destructive) 0 0) left / 3px 100% no-repeat, linear-gradient(var(--destructive) 0 0) 5px 0 / 2px 100% no-repeat;
+    }
+
+    [data-theme='formal'] [data-cl-tone='1'] .kp-calendar__day[data-kp-today] {
+        border-color: var(--primary);
+    }
+
+    /* Loading 1 · the dotted leader → the lines are ruled. */
+    [data-theme='formal'] [data-cl-loading='1'] .kp-calendar__day[data-kp-tone='loading']::after {
+        content: '';
+        inset: auto 0.5rem 0.2rem;
+        block-size: var(--kp-fm-foot, 0.5rem);
+        border: 0;
+        border-radius: 0;
+        background-image: var(--kp-fm-stack);
+        background-repeat: no-repeat;
+        background-size: 100% 2px;
+        background-position:
+            0 0,
+            0 50%,
+            0 100%;
+        animation: none;
+    }
+
+    [data-theme='formal'] [data-cl-loading='1'] .kp-calendar__day[data-kp-tone='loading']::before {
+        content: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] [data-cl-loading='1'] .kp-calendar__day[data-kp-tone='loading'] {
+            animation: kp-sig-formal-loading var(--kp-sig-fm-loop, 2400ms) linear infinite;
+        }
+
+        /* Arrival 2 · the page turns → each day is ruled in. */
+        [data-theme='formal'] [data-cl-arrival='2'] .kp-calendar[data-cl-arrive] .kp-calendar__grid:not([aria-busy='true']) .kp-calendar__day {
+            --cl-step: calc(var(--kp-sig-fm-stagger, 60ms) / 4);
+            animation: cla-formal-ruled var(--kp-sig-fm-time, 400ms) linear calc((var(--cl-row, 0) * 7 + var(--cl-col, 0)) * var(--cl-step)) backwards;
+        }
+
+        @keyframes cla-formal-ruled {
+            from {
+                clip-path: inset(-3rem 100% -3rem -3rem);
+            }
+
+            to {
+                clip-path: inset(-3rem);
+            }
+        }
+    }
+}

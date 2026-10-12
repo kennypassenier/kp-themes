@@ -1,0 +1,92 @@
+/* research/character-calendar, dark: the decided picks on dark's applied
+   grammar (themes/dark/CHARACTER.md G1-G21, "Applied 2026-10-09";
+   css/dark-register.css holds the tokens and the keyframes this file names:
+   kp-sig-dark-comet, kp-sig-dark-lay). Dark's decided options are shape 3,
+   loading 1, arrival 3, tone 1, select 2; the grammar changes all five:
+
+   - shape: the 4 px rounded tiles are cut on two opposite corners, the inset
+     shadow is gone (G6, G7); the readings stay in the ticker mono (G18);
+   - loading: the still dashed line is the comet: the 2 px line and its tail
+     cross a loading day from start to end, 2400 ms a loop (G10);
+   - arrival: the drop is the pass: each day is laid from its start edge in
+     660 ms at one pace, a column 60 ms after the one before (G2, G4);
+   - tone: the glow round the figures (the alarm lamp) is gone; a warning's
+     film edge is the warning ink and a failure's the coral, the plate stays
+     near-black (G8);
+   - select: the day nudged 1 by 2 px is the line resting at its start edge, a
+     2 px slice of film with its glow; nothing moves (G15). */
+@layer kp.signature {
+    /* Shape 3 · cut on two corners, no inset shadow. */
+    [data-theme='dark'][data-theme='dark'] [data-cl-shape='3'] .kp-calendar {
+        --cl-r: 0;
+        --cl-swatch-r: 0;
+        --cl-shadow: 0 0 transparent;
+    }
+
+    [data-theme='dark'][data-theme='dark'] [data-cl-shape='3'] .kp-calendar__day {
+        clip-path: var(--kp-sig-dark-cut);
+    }
+
+    /* Tone 1 · the figure is plain; the warning and failure take the edge. */
+    [data-theme='dark'][data-theme='dark'] [data-cl-tone='1'] .kp-calendar {
+        --cl-warn-edge: var(--warning-foreground);
+        --cl-bad-edge: var(--destructive);
+    }
+
+    [data-theme='dark'][data-theme='dark']
+        [data-cl-tone='1']
+        .kp-calendar__day:is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad'])
+        .kp-calendar__num {
+        text-shadow: none;
+    }
+
+    /* Loading 1 · the comet on the day's own picture slot. */
+    [data-theme='dark'][data-theme='dark'] [data-cl-loading='1'] .kp-calendar__day[data-kp-tone='loading']::after {
+        content: '';
+        inset: 0;
+        border: 0;
+        border-radius: 0;
+        animation: none;
+        background-image: var(--kp-sig-dk-line), var(--kp-sig-dk-tail);
+        background-repeat: no-repeat;
+        background-size:
+            2px 100%,
+            calc(var(--kp-sig-dk-cw) * 100%) 100%;
+        background-position:
+            calc(50% * (1 + var(--kp-sig-dk-cw)) - 1px) 0,
+            50% 0;
+    }
+
+    /* Select 2 · the line rests at the day's start edge. */
+    [data-theme='dark'][data-theme='dark'] [data-cl-select='2'] .kp-calendar__day:hover {
+        translate: none;
+    }
+
+    [data-theme='dark'][data-theme='dark'] [data-cl-select='2'] .kp-calendar__day:not([data-kp-tone='loading']):hover::after {
+        content: '';
+        inset: 0 auto 0 0;
+        inline-size: 2px;
+        border-radius: 0;
+        background: var(--kp-sig-dk-line);
+        filter: var(--kp-sig-dk-glow);
+    }
+
+    [data-theme='dark'][data-theme='dark'] [data-cl-select='2'] td[aria-selected='true'] > .kp-calendar__day .kp-calendar__count {
+        border-radius: 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'][data-theme='dark'] [data-cl-loading='1'] .kp-calendar__day[data-kp-tone='loading']::after {
+            animation: kp-sig-dark-comet var(--kp-sig-dk-loop) linear infinite;
+        }
+
+        /* Arrival 3 · laid by the pass, a column after a column. */
+        [data-theme='dark'][data-theme='dark']
+            [data-cl-arrival='3']
+            .kp-calendar[data-cl-arrive]
+            .kp-calendar__grid:not([aria-busy='true'])
+            .kp-calendar__day {
+            animation: kp-sig-dark-lay 660ms linear calc(var(--cl-col, 0) * 60ms) backwards;
+        }
+    }
+}

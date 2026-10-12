@@ -45,7 +45,7 @@ export function insertAfter(source, line, afterOneOf) {
  */
 export function edits(theme) {
     const sheet = `css/${theme}-register.css`;
-    const built = ['brutalism', 'terminal', 'phantom', 'synthwave', 'retro', 'cyberpunk'];
+    const built = ['brutalism', 'terminal', 'phantom', 'synthwave', 'cyberpunk'];
     const after = (/** @type {string} */ shape) => built.map((name) => shape.replace('<t>', name));
     return [
         {

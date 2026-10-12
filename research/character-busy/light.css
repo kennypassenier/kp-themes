@@ -1,0 +1,60 @@
+/* research/character-busy, light: the decided picks on light's grammar
+   (themes/light/CHARACTER.md G1-G21, decided by Kenny on 2026-10-08;
+   css/light-register.css holds the tokens and keyframes, `--kp-sig-light-*`
+   and `kp-sig-light-*`). Only light's decided options change: shape 2,
+   loading 1, arrival 2, failure 1 (phone 1, the flat card with its seam
+   along the foot, stays).
+
+   - shape: daylight's pale wash from the primary is a sky wash, retired
+     (G7): the panel is white on the veil, told apart by the medium shadow
+     and a hairline seam;
+   - loading: the dashed baseline is retired (G10): the package draws the
+     waiting picture itself (css/light-register.css, "Loading is out of
+     focus"): the panel's words and clock breathe out of focus while the
+     spinner burns out and back; nothing is drawn under them;
+   - arrival: the unfold (a scaleY from the middle) is the exposure (G2,
+     G13): the layer comes out of the glare where it stands, 700 ms on the
+     settle; the package drops the layer at once when loading ends, so its
+     leave cannot be played here (the finding of busy.css's header);
+   - failure: the soft alarm (a destructive plate) is a warning (G8): a
+     white card with a 3 px destructive band along its top and the
+     medium shadow, in place, coming into focus on the same exposure. */
+@layer kp.signature {
+    [data-theme='light'] [data-bo-shape='2'] .kp-datatable__busy-panel {
+        --bo-panel-border: 0;
+        --bo-panel-radius: var(--radius, 0.5rem);
+        --bo-panel-bg: var(--card);
+        --bo-panel-shadow: 0 0 0 1px var(--border), var(--kp-shadow-md);
+    }
+
+    /* Loading 1 · the dashed baseline is retired; the words breathe (the register). */
+    [data-theme='light'] [data-bo-loading='1'] .kp-datatable__busy-panel::before {
+        --bo-pic: none;
+        animation: none;
+    }
+
+    /* Arrival 2 · the exposure, in place. */
+    [data-theme='light'] [data-bo-arrival='2'] .kp-datatable__busy-overlay {
+        --bo-arrival: kp-sig-light-expose;
+        --bo-arrival-dur: var(--kp-sig-light-time);
+        --bo-arrival-ease: var(--kp-sig-light-ease);
+    }
+
+    /* Failure 1 · a white card, the band along its top, the soft shadow. */
+    [data-theme='light'] [data-bo-failure='1'] [data-kp-datatable-failed] {
+        --bo-fail-bg: var(--card);
+        --bo-fail-ink: var(--card-foreground);
+        --bo-fail-border: 1px solid var(--border);
+        --bo-fail-radius: var(--radius, 0.5rem);
+        --bo-fail-shadow: inset 0 3px 0 0 var(--destructive), var(--kp-shadow-md);
+        --bo-fail-from: none;
+        --bo-fail-transition: opacity var(--kp-sig-light-time) var(--kp-sig-light-ease), filter var(--kp-sig-light-time) var(--kp-sig-light-ease);
+    }
+
+    @starting-style {
+        [data-theme='light'] [data-bo-failure='1'] [data-kp-datatable-failed]:not([hidden]) {
+            opacity: 0;
+            filter: var(--kp-sig-light-glare);
+        }
+    }
+}

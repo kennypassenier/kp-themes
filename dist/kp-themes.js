@@ -457,7 +457,6 @@ var init_strings = __esm({
         synthwave: { line: "\u25B6 Play", progress: "Tracking", ready: "Press start" }
       },
       arrivalLinesByTheme: {
-        retro: ["KP Modular BIOS v4.51PG", "kp-themes 95 \u2014 retro build", "Memory Test : {count}K"],
         terminal: ["KP-THEMES BIOS v5.0.0", "MEMORY TEST ......... 640K OK", "PHOSPHOR PROFILE .... terminal", "CRT WARM-UP ......... OK", "READY."]
       },
       arrivalProgress: "Progress",
@@ -2204,7 +2203,7 @@ var init_effects = __esm({
       // The nostromo headline [S48, LIFT_PLAN row 19]: the whole line popping
       // down under a clip-path, its text never touched.
       popping: "is-popping",
-      // The sepia headline [S48, LIFT_PLAN row 9]: the ghost look before the
+      // The Sepia headline (theme removed 2026-10-08) [S48, LIFT_PLAN row 9]: the ghost look before the
       // ink-in settle, on only while the transition runs.
       settling: "is-settling",
       // The solstice headline [S48, LIFT_PLAN row 18]: an overlay of three
@@ -2320,13 +2319,12 @@ var init_effects = __esm({
       "kp-bar-in": { durationMs: 520, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
       "kp-floor-drift": { durationMs: 6e3, cycles: Infinity, property: "background-position", luminanceSteps: [] },
       "kp-crt-off": { durationMs: 550, cycles: 1, property: "opacity", luminanceSteps: [1, 0] },
-      // The phantom register [PH1]: the words of a headline shouting in, the
-      // film cut of a toast, the loader's bar and its shove out to the left.
-      "kp-shout": { durationMs: 620, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-      "kp-cut-in": { durationMs: 180, cycles: 1, property: "opacity", luminanceSteps: [0, 0.6, 1] },
+      // The phantom register [PH1]: the loader's bar and its shove out to the left
+      // (the words of a headline and the toast are thrown in on the grammar's
+      // pair, below).
       "kp-bar-run": { durationMs: 900, cycles: 1, property: "transform", luminanceSteps: [] },
       "kp-load-out": { durationMs: 640, cycles: 1, property: "transform", luminanceSteps: [] },
-      // The retro register [RT1]: the dither clearing off a headline and off
+      // The Retro register (theme removed 2026-10-09) [RT1]: the dither clearing off a headline and off
       // the boot screen (four densities, one direction), the selection bar
       // dragging across a mark, the redaction brush lifting.
       "kp-dither-clear": { durationMs: 640, cycles: 1, property: "opacity", luminanceSteps: [1, 1, 1, 1, 0] },
@@ -2390,11 +2388,6 @@ var init_effects = __esm({
       "kp-resolve": { durationMs: 640, cycles: 1, property: "opacity", luminanceSteps: [0, 1, 1] },
       "kp-ignite": { durationMs: 600, cycles: 1, property: "color", luminanceSteps: [0, 1] },
       "kp-sweep-in": { durationMs: 600, cycles: 1, property: "background-position", luminanceSteps: [] },
-      // The sepia register [S48, LIFT_PLAN row 9]: the confirmation dialog's
-      // backdrop fade — a keyframe rather than a transition, because a
-      // ::backdrop needs @starting-style to transition on its own appearance
-      // and this theme does not use it.
-      "kp-confirm-in": { durationMs: 160, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
       // The solstice register [S48, LIFT_PLAN row 18]: the calibration wipe
       // over the headline, the rule draw, and the dossier's redaction lift.
       "kp-cal-slide": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
@@ -2408,12 +2401,6 @@ var init_effects = __esm({
       // The Lapis register (theme removed 2026-10-06) [S48, LIFT_PLAN row 6]: the burnish, a single
       // clip-path wipe over the headline once, no loop.
       "kp-burnish": { durationMs: 900, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      // The high-contrast register [S48, LIFT_PLAN row 14]: the headline's
-      // ellipse wipe and the rule's horizontal scale, both plain CSS with no
-      // [data-kp-effects] gate — they run once on every load, not once per
-      // session (a deliberate divergence, recorded in that theme's anatomy).
-      "kp-hc-headline-wipe": { durationMs: 550, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-hc-rule-wipe": { durationMs: 400, cycles: 1, property: "transform", luminanceSteps: [] },
       // The brutalism register [BR1]: the words dropping onto their offset and
       // the seamless marquee.
       "kp-slam": { durationMs: 260, cycles: 1, property: "transform", luminanceSteps: [] },
@@ -2471,8 +2458,8 @@ var init_effects = __esm({
       // The forest register [S48, LIFT_PLAN forest row]: the headline's own
       // fade-in and the contour trace that draws beside it, both CSS-only
       // (no routine — see css/forest-register.css's type section).
-      "kp-headline-in": { durationMs: 500, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-      "kp-trace": { durationMs: 1800, cycles: 1, property: "stroke-dashoffset", luminanceSteps: [] },
+      "kp-headline-in": { durationMs: 1e3, cycles: 1, property: "translate, clip-path", luminanceSteps: [] },
+      "kp-trace": { durationMs: 1e3, cycles: 1, property: "stroke-dashoffset", luminanceSteps: [] },
       // The deco register [S48, LIFT_PLAN row 8]: the cartouche's frame
       // scaling in once with the headline, and the dossier's jewel plates
       // clearing on the "Open the file" trigger, staggered 140ms apart.
@@ -2482,8 +2469,8 @@ var init_effects = __esm({
       // window opening once (a shape and a fade, never a loop), and the lede
       // marks' background-size sweep with its one colour swap — a highlighter
       // reveal, not a flash.
-      "kp-clip-reveal": { durationMs: 620, cycles: 1, property: "opacity", luminanceSteps: [0, 1, 1] },
-      "kp-mark-sweep": { durationMs: 420, cycles: 1, property: "color", luminanceSteps: [0, 1] },
+      "kp-clip-reveal": { durationMs: 700, cycles: 1, property: "opacity", luminanceSteps: [0, 1, 1] },
+      "kp-mark-sweep": { durationMs: 700, cycles: 1, property: "filter", luminanceSteps: [] },
       // The grotesk register [S48, LIFT_PLAN row 12]: the headline's optical
       // resolve, a monotone blur+brightness sweep, once, on the whole,
       // unsplit line (`kp-sharpen-in` — not `kp-focus`/`focus`, which the
@@ -2509,7 +2496,6 @@ var init_effects = __esm({
       // The steps are the opacity stops this gate parses (from/to included since
       // 2026-10-08).
       // formal's stamp: a frame that lands round the value and soaks in.
-      "kp-sig-formal-update-stamp": { durationMs: 300, cycles: 1, property: "opacity", luminanceSteps: [0, 0.9, 0.6, 0] },
       // cyberpunk's count-down stutter [Kenny, research/cyberpunk-live,
       // 2026-10-07 02:49]: two unblurred text-shadow copies (yellow up, cyan
       // down) ticking home 6, 4, 2, 1 px in four hard steps, 0.64 of the
@@ -2523,15 +2509,46 @@ var init_effects = __esm({
       // research/character-meter, 2026-10-05]: the loading picture (loops while
       // loading), the share arriving, its re-ink or a single move when the tone
       // changes. Only terminal's caret blinks in opacity, once a second.
-      "kp-sig-formal-meter-pos": { durationMs: 2600, cycles: Infinity, property: "background-position", luminanceSteps: [] },
-      "kp-sig-formal-meter-wipe-d": { durationMs: 900, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-formal-meter-wipe-o": { durationMs: 900, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-formal-meter-wipe-w": { durationMs: 900, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-light-meter-day": { durationMs: 3e3, cycles: Infinity, property: "translate", luminanceSteps: [] },
-      "kp-sig-light-meter-bump-d": { durationMs: 260, cycles: 1, property: "scale", luminanceSteps: [] },
-      "kp-sig-light-meter-bump-o": { durationMs: 260, cycles: 1, property: "scale", luminanceSteps: [] },
-      "kp-sig-light-meter-bump-w": { durationMs: 260, cycles: 1, property: "scale", luminanceSteps: [] },
-      "kp-sig-light-meter-grow-o": { durationMs: 700, cycles: 1, property: "scale", luminanceSteps: [] },
+      "kp-sig-formal-meter-wipe-d": { durationMs: 400, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      "kp-sig-formal-meter-wipe-o": { durationMs: 400, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      "kp-sig-formal-meter-wipe-w": { durationMs: 400, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      // Formal's grammar [themes/formal/CHARACTER.md §4, Kenny, 2026-10-08]: every
+      // one is a clip, a clip-path or a registered custom property that moves a
+      // rule's extent; none changes a colour or an opacity but the bar's head.
+      "kp-sig-formal-line-0": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      "kp-sig-formal-line-0-rtl": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      "kp-sig-formal-pen-0": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      "kp-sig-formal-pen-0-rtl": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      "kp-sig-formal-line-1": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      "kp-sig-formal-line-1-rtl": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      "kp-sig-formal-pen-1": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      "kp-sig-formal-pen-1-rtl": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      "kp-sig-formal-line-2": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      "kp-sig-formal-line-2-rtl": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      "kp-sig-formal-pen-2": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      "kp-sig-formal-pen-2-rtl": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      "kp-sig-formal-line-3": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      "kp-sig-formal-line-3-rtl": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      "kp-sig-formal-pen-3": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      "kp-sig-formal-pen-3-rtl": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      "kp-sig-formal-leave": { durationMs: 560, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      "kp-sig-formal-leave-rtl": { durationMs: 560, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      "kp-sig-formal-leave-pen": { durationMs: 560, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      "kp-sig-formal-leave-pen-rtl": { durationMs: 560, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      "kp-sig-formal-backdrop": { durationMs: 400, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      "kp-sig-formal-ledger": { durationMs: 2400, cycles: Infinity, property: "clip-path", luminanceSteps: [] },
+      "kp-sig-formal-bar-band": { durationMs: 2400, cycles: Infinity, property: "clip-path", luminanceSteps: [] },
+      "kp-sig-formal-bar-second": { durationMs: 2400, cycles: Infinity, property: "clip-path", luminanceSteps: [] },
+      "kp-sig-formal-bar-head": { durationMs: 2400, cycles: Infinity, property: "transform, opacity", luminanceSteps: [1, 1, 0, 0] },
+      "kp-sig-formal-ruling": { durationMs: 860, cycles: 1, property: "--kp-fm-t", luminanceSteps: [] },
+      "kp-sig-formal-loading": { durationMs: 2400, cycles: Infinity, property: "--kp-fm-l", luminanceSteps: [] },
+      "kp-sig-formal-update-closed": { durationMs: 850, cycles: 1, property: "--kp-fm-u", luminanceSteps: [] },
+      "kp-sig-formal-arc-outer": { durationMs: 2400, cycles: Infinity, property: "--kp-fm-a0, --kp-fm-a1", luminanceSteps: [] },
+      "kp-sig-formal-arc-inner": { durationMs: 2400, cycles: Infinity, property: "--kp-fm-a0, --kp-fm-a1", luminanceSteps: [] },
+      "kp-sig-formal-pen": { durationMs: 180, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      "kp-sig-light-meter-expose-d": { durationMs: 700, cycles: 1, property: "filter", luminanceSteps: [] },
+      "kp-sig-light-meter-expose-o": { durationMs: 700, cycles: 1, property: "filter", luminanceSteps: [] },
+      "kp-sig-light-meter-expose-w": { durationMs: 700, cycles: 1, property: "filter", luminanceSteps: [] },
       "kp-sig-synthwave-meter-grow-o": { durationMs: 600, cycles: 1, property: "scale", luminanceSteps: [] },
       "kp-sig-synthwave-meter-pos": { durationMs: 1800, cycles: Infinity, property: "background-position", luminanceSteps: [] },
       "kp-sig-pastel-meter-drift": { durationMs: 1600, cycles: Infinity, property: "translate", luminanceSteps: [] },
@@ -2546,12 +2563,8 @@ var init_effects = __esm({
       "kp-sig-terminal-tm-feed": { durationMs: 816, cycles: 1, property: "inset-block-start", luminanceSteps: [] },
       "kp-sig-terminal-update-blink": { durationMs: 900, cycles: 1, property: "color", luminanceSteps: [] },
       "kp-sig-terminal-update-blink-line": { durationMs: 900, cycles: 1, property: "color", luminanceSteps: [] },
-      "kp-sig-forest-meter-wipe-o": { durationMs: 1200, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-sepia-meter-knock-d": { durationMs: 280, cycles: 1, property: "translate", luminanceSteps: [] },
-      "kp-sig-sepia-meter-knock-o": { durationMs: 280, cycles: 1, property: "translate", luminanceSteps: [] },
-      "kp-sig-sepia-meter-knock-w": { durationMs: 280, cycles: 1, property: "translate", luminanceSteps: [] },
-      "kp-sig-sepia-meter-slant-o": { durationMs: 1100, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-sepia-meter-width": { durationMs: 2200, cycles: Infinity, property: "inline-size", luminanceSteps: [] },
+      "kp-sig-forest-meter-wipe-o": { durationMs: 1e3, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      "kp-sig-forest-meter-wipe-o-rtl": { durationMs: 1e3, cycles: 1, property: "clip-path", luminanceSteps: [] },
       "kp-sig-solstice-meter-bump-d": { durationMs: 500, cycles: 1, property: "scale", luminanceSteps: [] },
       "kp-sig-solstice-meter-bump-o": { durationMs: 500, cycles: 1, property: "scale", luminanceSteps: [] },
       "kp-sig-solstice-meter-bump-w": { durationMs: 500, cycles: 1, property: "scale", luminanceSteps: [] },
@@ -2560,13 +2573,11 @@ var init_effects = __esm({
       "kp-sig-deco-meter-knock-d": { durationMs: 300, cycles: 1, property: "translate", luminanceSteps: [] },
       "kp-sig-deco-meter-knock-o": { durationMs: 300, cycles: 1, property: "translate", luminanceSteps: [] },
       "kp-sig-deco-meter-knock-w": { durationMs: 300, cycles: 1, property: "translate", luminanceSteps: [] },
-      "kp-sig-deco-meter-pos": { durationMs: 2400, cycles: Infinity, property: "background-position", luminanceSteps: [] },
       "kp-sig-deco-meter-wipe-o": { durationMs: 900, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-phantom-meter-screen1": { durationMs: 700, cycles: Infinity, property: "background-position", luminanceSteps: [] },
-      "kp-sig-phantom-meter-jolt-d": { durationMs: 200, cycles: 1, property: "translate", luminanceSteps: [] },
-      "kp-sig-phantom-meter-jolt-o": { durationMs: 200, cycles: 1, property: "translate", luminanceSteps: [] },
-      "kp-sig-phantom-meter-jolt-w": { durationMs: 200, cycles: 1, property: "translate", luminanceSteps: [] },
-      "kp-sig-phantom-meter-slant-o": { durationMs: 220, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      "kp-sig-phantom-meter-redraw-d": { durationMs: 400, cycles: 1, property: "mask-image", luminanceSteps: [] },
+      "kp-sig-phantom-meter-redraw-o": { durationMs: 400, cycles: 1, property: "mask-image", luminanceSteps: [] },
+      "kp-sig-phantom-meter-redraw-w": { durationMs: 400, cycles: 1, property: "mask-image", luminanceSteps: [] },
+      "kp-sig-phantom-meter-slant-o": { durationMs: 400, cycles: 1, property: "clip-path", luminanceSteps: [] },
       "kp-sig-nostromo-meter-scan": { durationMs: 2e3, cycles: Infinity, property: "background-position", luminanceSteps: [] },
       "kp-sig-nostromo-meter-wipe-o": { durationMs: 1600, cycles: 1, property: "clip-path", luminanceSteps: [] },
       // titanium's loading is the anodising bath on every carrier (themes/titanium/CHARACTER.md G10).
@@ -2576,23 +2587,9 @@ var init_effects = __esm({
       "kp-sig-titanium-meter-jolt-o": { durationMs: 160, cycles: 1, property: "translate", luminanceSteps: [] },
       "kp-sig-titanium-meter-jolt-w": { durationMs: 160, cycles: 1, property: "translate", luminanceSteps: [] },
       // The meter, round 4 [Kenny's picks on research/character-meter, 2026-10-05]:
-      // dark (loading and arrival redrawn), cyberpunk, high-contrast, retro and
-      // grotesk. Every loading picture loops while loading.
-      "kp-sig-dark-meter-bump-d": { durationMs: 200, cycles: 1, property: "scale", luminanceSteps: [] },
-      "kp-sig-dark-meter-bump-o": { durationMs: 200, cycles: 1, property: "scale", luminanceSteps: [] },
-      "kp-sig-dark-meter-bump-w": { durationMs: 200, cycles: 1, property: "scale", luminanceSteps: [] },
-      "kp-sig-dark-meter-pos": { durationMs: 900, cycles: Infinity, property: "background-position", luminanceSteps: [] },
-      "kp-sig-dark-meter-press-o": { durationMs: 220, cycles: 1, property: "scale", luminanceSteps: [] },
+      // dark (loading and arrival redrawn), cyberpunk and grotesk
+      // (high-contrast and retro have since been removed). Every loading picture loops while loading.
       "kp-sig-cyberpunk-meter-slip-o": { durationMs: 320, cycles: 1, property: "translate", luminanceSteps: [] },
-      "kp-sig-high-contrast-meter-march": { durationMs: 800, cycles: Infinity, property: "translate", luminanceSteps: [] },
-      "kp-sig-high-contrast-meter-wipe-d": { durationMs: 120, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-high-contrast-meter-wipe-o": { durationMs: 120, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-high-contrast-meter-wipe-w": { durationMs: 120, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-retro-meter-knock-d": { durationMs: 160, cycles: 1, property: "translate", luminanceSteps: [] },
-      "kp-sig-retro-meter-knock-o": { durationMs: 160, cycles: 1, property: "translate", luminanceSteps: [] },
-      "kp-sig-retro-meter-knock-w": { durationMs: 160, cycles: 1, property: "translate", luminanceSteps: [] },
-      "kp-sig-retro-meter-shake": { durationMs: 1400, cycles: Infinity, property: "background-position", luminanceSteps: [] },
-      "kp-sig-retro-meter-wipe-o": { durationMs: 600, cycles: 1, property: "clip-path", luminanceSteps: [] },
       "kp-sig-grotesk-meter-grow-o": { durationMs: 400, cycles: 1, property: "scale", luminanceSteps: [] },
       // ── Rows added by the port session [scope-143, 2026-10-08]: every keyframe the
       // character rounds declared without a row. Generated from the stylesheets,
@@ -2616,14 +2613,6 @@ var init_effects = __esm({
       "kp-cp-charge": { durationMs: 520, cycles: 1, property: "transform", luminanceSteps: [] },
       "kp-cp-stream-144": { durationMs: 1800, cycles: Infinity, property: "transform", luminanceSteps: [] },
       "kp-cp-stream-216": { durationMs: 1200, cycles: Infinity, property: "transform", luminanceSteps: [] },
-      // retro-register
-      "kp-sig-retro-turn": { durationMs: 2600, cycles: Infinity, property: "transform", luminanceSteps: [] },
-      "kp-sig-retro-sand": { durationMs: 2600, cycles: Infinity, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-retro-dither": { durationMs: 1600, cycles: Infinity, property: "opacity", luminanceSteps: [0.15, 0.6] },
-      "kp-sig-retro-drop": { durationMs: 240, cycles: 1, property: "transform", luminanceSteps: [] },
-      "kp-sig-retro-zoom": { durationMs: 280, cycles: 1, property: "transform", luminanceSteps: [] },
-      "kp-sig-retro-hold": { durationMs: 500, cycles: 1, property: "opacity", luminanceSteps: [0, 0] },
-      "kp-sig-retro-leave": { durationMs: 280, cycles: 1, property: "opacity", luminanceSteps: [0] },
       // synthwave-register
       "kp-sw-flow": { durationMs: 225, cycles: Infinity, property: "background-position", luminanceSteps: [] },
       "kp-sw-floor-drive": { durationMs: 225, cycles: Infinity, property: "background-position", luminanceSteps: [] },
@@ -2645,14 +2634,23 @@ var init_effects = __esm({
       "kp-sig-synthwave-update-laser": { durationMs: 225, cycles: 1, property: "opacity", luminanceSteps: [1, 1, 0] },
       // phantom-register
       "kp-sig-phantom-phantom-snap": { durationMs: 260, cycles: Infinity, property: "transform", luminanceSteps: [] },
-      "kp-sig-phantom-phantom-slash": { durationMs: 1400, cycles: Infinity, property: "transform", luminanceSteps: [] },
-      "kp-sig-phantom-phantom-slam": { durationMs: 260, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-      "kp-sig-phantom-phantom-stick": { durationMs: 260, cycles: 1, property: "opacity", luminanceSteps: [0, 1, 1] },
-      "kp-sig-phantom-phantom-card": { durationMs: 380, cycles: 1, property: "opacity", luminanceSteps: [0, 1, 1] },
-      "kp-sig-phantom-phantom-card-big": { durationMs: 420, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-      "kp-sig-phantom-phantom-pop": { durationMs: 260, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+      "kp-sig-phantom-phantom-slash": { durationMs: 1400, cycles: Infinity, property: "translate", luminanceSteps: [] },
       "kp-progressbar-phantom-shove": { durationMs: 1500, cycles: Infinity, property: "transform", luminanceSteps: [] },
-      "kp-sig-phantom-leave": { durationMs: 650, cycles: 1, property: "opacity", luminanceSteps: [1, 0.55, 0.3, 0] },
+      // The grammar [themes/phantom/CHARACTER.md, Kenny, 2026-10-09]: the throw
+      // (translate, rotate, scale and a visibility that hides a part not yet
+      // drawn), its resolve in cuts of the screen (mask-image), their leaves, the
+      // bar thrown in on contact, the face of a pressed cap, the ink flipping at
+      // the second cut and a live update's six cuts. None changes a colour but
+      // the ink, once, on contact.
+      "kp-sig-phantom-fly": { durationMs: 700, cycles: 1, property: "translate, rotate, scale, visibility", luminanceSteps: [] },
+      "kp-sig-phantom-fly-out": { durationMs: 700, cycles: 1, property: "translate, rotate, scale, visibility", luminanceSteps: [] },
+      "kp-sig-phantom-resolve": { durationMs: 700, cycles: 1, property: "mask-image", luminanceSteps: [] },
+      "kp-sig-phantom-resolve-out": { durationMs: 700, cycles: 1, property: "mask-image", luminanceSteps: [] },
+      "kp-sig-phantom-resolve-tip": { durationMs: 300, cycles: 1, property: "mask-image", luminanceSteps: [] },
+      "kp-sig-phantom-bar": { durationMs: 120, cycles: 1, property: "mask-image", luminanceSteps: [] },
+      "kp-sig-phantom-face": { durationMs: 120, cycles: 1, property: "mask-image", luminanceSteps: [] },
+      "kp-sig-phantom-ink": { durationMs: 120, cycles: 1, property: "color", luminanceSteps: [] },
+      "kp-sig-phantom-update": { durationMs: 400, cycles: 1, property: "mask-image", luminanceSteps: [] },
       // terminal-register
       "kp-sig-terminal-tm-dot": { durationMs: 800, cycles: Infinity, property: "transform", luminanceSteps: [] },
       "kp-sig-terminal-tm-trail": { durationMs: 800, cycles: Infinity, property: "transform", luminanceSteps: [] },
@@ -2704,40 +2702,55 @@ var init_effects = __esm({
       "kp-sig-pastel-leave": { durationMs: 520, cycles: 1, property: "opacity", luminanceSteps: [0] },
       // forest-register
       "kp-sig-forest-sprout": { durationMs: 1e3, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-forest-plant": { durationMs: 3200, cycles: Infinity, property: "opacity", luminanceSteps: [0.7, 0.85, 1, 1] },
-      "kp-sig-forest-draw": { durationMs: 34, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-forest-radio": { durationMs: 34, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-      "kp-sig-forest-grow": { durationMs: 34, cycles: 7, property: "translate, clip-path", luminanceSteps: [] },
-      "kp-sig-forest-root": { durationMs: 34, cycles: 1, property: "translate, clip-path", luminanceSteps: [] },
+      "kp-sig-forest-plant": { durationMs: 1600, cycles: Infinity, property: "opacity", luminanceSteps: [0.7, 0.85, 1, 1] },
+      "kp-sig-forest-grow": { durationMs: 1e3, cycles: 1, property: "translate, clip-path", luminanceSteps: [] },
+      "kp-sig-forest-grow-back": { durationMs: 1e3, cycles: 1, property: "translate, clip-path", luminanceSteps: [] },
+      // the palette's close, the growth played reverse
+      "kp-sig-forest-root": { durationMs: 1e3, cycles: 1, property: "translate, clip-path", luminanceSteps: [] },
+      "kp-sig-forest-root-back": { durationMs: 1e3, cycles: 1, property: "translate, clip-path", luminanceSteps: [] },
+      // the phone menu's close, the growth played reverse
+      "kp-sig-forest-arrive": { durationMs: 1e3, cycles: 1, property: "translate, clip-path, filter", luminanceSteps: [] },
+      "kp-sig-forest-fade": { durationMs: 1e3, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+      "kp-sig-forest-fade-back": { durationMs: 1e3, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+      "kp-sig-forest-ground": { durationMs: 1e3, cycles: 1, property: "background-color", luminanceSteps: [] },
+      "kp-sig-forest-alarm-ring": { durationMs: 3200, cycles: Infinity, property: "opacity", luminanceSteps: [1, 1, 0, 0] },
       "kp-progressbar-forest-breath": { durationMs: 6600, cycles: Infinity, property: "--kp-fo-breath", luminanceSteps: [] },
-      "kp-sig-forest-leave": { durationMs: 34, cycles: 1, property: "translate, clip-path, filter", luminanceSteps: [] },
+      "kp-sig-forest-leave": { durationMs: 1e3, cycles: 1, property: "translate, clip-path, filter", luminanceSteps: [] },
       "kp-sig-forest-meter-ring-d": { durationMs: 1e3, cycles: 1, property: "opacity", luminanceSteps: [1, 1, 0] },
       "kp-sig-forest-meter-ring-w": { durationMs: 1e3, cycles: 1, property: "opacity", luminanceSteps: [1, 1, 0] },
-      "kp-skeleton-forest-treeline": { durationMs: 3200, cycles: Infinity, property: "--kp-fo-grow", luminanceSteps: [] },
-      "kp-sig-forest-update-ring": { durationMs: 34, cycles: 1, property: "opacity", luminanceSteps: [1, 1, 0] },
+      "kp-skeleton-forest-treeline": { durationMs: 6600, cycles: Infinity, property: "--kp-fo-grow", luminanceSteps: [] },
+      "kp-sig-forest-update-ring": { durationMs: 1e3, cycles: 1, property: "opacity", luminanceSteps: [1, 1, 0] },
       "kp-sig-forest-edge": { durationMs: 1e3, cycles: 1, property: "translate, clip-path", luminanceSteps: [] },
       // the drawer's --kp-sig-dur, the theme's growth time
       "kp-sig-forest-edge-rtl": { durationMs: 1e3, cycles: 1, property: "translate, clip-path", luminanceSteps: [] },
       // swapped in by animation-name on the rule that runs its sibling
       // deco-register
+      "kp-sig-deco-arrive": { durationMs: 480, cycles: 1, property: "custom-property", luminanceSteps: [] },
+      "kp-sig-deco-fan": { durationMs: 720, cycles: 1, property: "custom-property", luminanceSteps: [] },
+      "kp-sig-deco-wipe": { durationMs: 360, cycles: 1, property: "custom-property", luminanceSteps: [] },
+      "kp-sig-deco-gilded": { durationMs: 1e3, cycles: 1, property: "filter", luminanceSteps: [] },
+      "kp-sig-deco-doors": { durationMs: 2400, cycles: Infinity, property: "custom-property", luminanceSteps: [] },
+      "kp-sig-deco-glint": { durationMs: 2400, cycles: Infinity, property: "custom-property", luminanceSteps: [] },
+      "kp-sig-deco-seal": { durationMs: 400, cycles: 1, property: "custom-property", luminanceSteps: [] },
       "kp-sig-deco-deco-turn": { durationMs: 3600, cycles: Infinity, property: "transform", luminanceSteps: [] },
-      "kp-sig-deco-deco-open": { durationMs: 2800, cycles: Infinity, property: "opacity", luminanceSteps: [1, 1, 1, 0] },
       "kp-sig-deco-deco-unfold": { durationMs: 340, cycles: 1, property: "clip-path", luminanceSteps: [] },
       "kp-sig-deco-deco-grow": { durationMs: 340, cycles: 1, property: "transform", luminanceSteps: [] },
-      "kp-sig-deco-deco-centre": { durationMs: 340, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-deco-deco-sunrise": { durationMs: 340, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-      "kp-sig-deco-deco-fan": { durationMs: 1120, cycles: 1, property: "opacity", luminanceSteps: [0, 0] },
-      "kp-progressbar-deco-ascent": { durationMs: 900, cycles: Infinity, property: "transform", luminanceSteps: [] },
-      "kp-sig-deco-leave": { durationMs: 480, cycles: 1, property: "opacity", luminanceSteps: [0] },
       // light-register
       "kp-sig-light-light-orbit": { durationMs: 1200, cycles: Infinity, property: "transform", luminanceSteps: [] },
-      "kp-sig-light-light-open-x": { durationMs: 900, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-light-light-tick": { durationMs: 280, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-light-light-bead": { durationMs: 280, cycles: 1, property: "transform", luminanceSteps: [] },
-      "kp-sig-light-light-window": { durationMs: 520, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-      "kp-sig-light-light-float": { durationMs: 280, cycles: 1, property: "opacity", luminanceSteps: [0] },
-      "kp-sig-light-size-bloom": { durationMs: 420, cycles: 1, property: "opacity", luminanceSteps: [0] },
-      "kp-sig-light-leave": { durationMs: 420, cycles: 1, property: "opacity", luminanceSteps: [0] },
+      "kp-sig-light-light-tick": { durationMs: 200, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      // Light's grammar, 2026-10-08 (themes/light/CHARACTER.md §4): the exposure
+      // and its leave (opacity, 0 to 1 and 1 to 0), the filter keyframes (a
+      // re-exposure, out of focus, the burnt bead, the shutter), the bead on the
+      // hairline and the line exposed start to end.
+      "kp-sig-light-expose": { durationMs: 700, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
+      "kp-sig-light-leave": { durationMs: 700, cycles: 1, property: "opacity", luminanceSteps: [1, 0] },
+      "kp-sig-light-reexpose": { durationMs: 700, cycles: 1, property: "filter", luminanceSteps: [] },
+      "kp-sig-light-breathe": { durationMs: 3600, cycles: Infinity, property: "filter", luminanceSteps: [] },
+      "kp-sig-light-breathe-ink": { durationMs: 3600, cycles: Infinity, property: "text-shadow", luminanceSteps: [] },
+      "kp-sig-light-burn": { durationMs: 1200, cycles: Infinity, property: "filter", luminanceSteps: [] },
+      "kp-sig-light-flash": { durationMs: 200, cycles: 1, property: "filter", luminanceSteps: [] },
+      "kp-sig-light-line": { durationMs: 3600, cycles: Infinity, property: "transform", luminanceSteps: [] },
+      "kp-sig-light-feed": { durationMs: 700, cycles: 1, property: "clip-path, filter", luminanceSteps: [] },
       // grotesk-register
       "kp-sig-grotesk-fall": { durationMs: 34, cycles: 1, property: "filter", luminanceSteps: [] },
       "kp-sig-grotesk-fall-again": { durationMs: 960, cycles: 1, property: "filter", luminanceSteps: [] },
@@ -2810,44 +2823,20 @@ var init_effects = __esm({
       "kp-sig-nostromo-size-scan": { durationMs: 320, cycles: 1, property: "clip-path, filter", luminanceSteps: [] },
       "kp-sig-nostromo-erase": { durationMs: 320, cycles: 1, property: "clip-path", luminanceSteps: [] },
       // dark-register
-      "kp-sig-dark-dark-turn": { durationMs: 1400, cycles: Infinity, property: "transform", luminanceSteps: [] },
-      "kp-sig-dark-dark-ghost-l": { durationMs: 1800, cycles: Infinity, property: "opacity", luminanceSteps: [0, 0.5, 0] },
-      "kp-sig-dark-dark-ghost-r": { durationMs: 1800, cycles: Infinity, property: "opacity", luminanceSteps: [0, 0.5, 0] },
-      "kp-sig-dark-dark-resolve": { durationMs: 260, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-      "kp-sig-dark-dark-resolve-ghost": { durationMs: 260, cycles: 1, property: "opacity", luminanceSteps: [0.9, 0] },
-      "kp-sig-dark-dark-dot": { durationMs: 260, cycles: 1, property: "opacity", luminanceSteps: [0] },
-      // swapped in by animation-name on the rule that runs its sibling
-      "kp-sig-dark-dark-dot-ghost": { durationMs: 260, cycles: 1, property: "opacity", luminanceSteps: [0.9, 0] },
-      // swapped in by animation-name on the rule that runs its sibling
-      "kp-sig-dark-dark-settle": { durationMs: 520, cycles: 1, property: "opacity", luminanceSteps: [0] },
-      "kp-sig-dark-dark-settle-in": { durationMs: 2400, cycles: 1, property: "opacity", luminanceSteps: [0] },
-      "kp-sig-dark-dark-develop": { durationMs: 260, cycles: 1, property: "opacity", luminanceSteps: [0.55, 0] },
-      "kp-sig-dark-dark-brackets-open": { durationMs: 260, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-dark-size-develop": { durationMs: 480, cycles: 1, property: "opacity", luminanceSteps: [0.2] },
-      "kp-sig-dark-leave": { durationMs: 460, cycles: 1, property: "opacity", luminanceSteps: [0] },
+      // The dark register's grammar [themes/dark/CHARACTER.md §4, Kenny, 2026-10-09]:
+      // every pass is a mask or a clip over the part's own box, linear, with a
+      // 2px line of film; the turn is a registered angle; a loop is 2400 ms.
+      "kp-sig-dark-sweep": { durationMs: 880, cycles: 1, property: "mask-size", luminanceSteps: [] },
+      "kp-sig-dark-pass-line": { durationMs: 880, cycles: 1, property: "opacity", luminanceSteps: [0, 1, 1, 0, 0] },
+      "kp-sig-dark-pass-live": { durationMs: 660, cycles: 1, property: "opacity", luminanceSteps: [0, 1, 1, 0] },
+      "kp-sig-dark-film": { durationMs: 880, cycles: 1, property: "--kp-sig-dk-turn", luminanceSteps: [] },
+      "kp-sig-dark-figure": { durationMs: 660, cycles: 1, property: "--kp-sig-dk-at", luminanceSteps: [] },
+      "kp-sig-dark-lay": { durationMs: 660, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      "kp-sig-dark-comet": { durationMs: 2400, cycles: Infinity, property: "background-position", luminanceSteps: [] },
+      "kp-sig-dark-bars": { durationMs: 2400, cycles: Infinity, property: "--kp-sig-dk-ph", luminanceSteps: [] },
+      "kp-sig-dark-tap": { durationMs: 220, cycles: 1, property: "background-position", luminanceSteps: [] },
+      "kp-sig-dark-meter-lay": { durationMs: 660, cycles: 1, property: "mask-size", luminanceSteps: [] },
       // formal-register
-      "kp-sig-formal-orbit": { durationMs: 1600, cycles: Infinity, property: "transform", luminanceSteps: [] },
-      "kp-sig-formal-ink": { durationMs: 3e3, cycles: Infinity, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-formal-pen": { durationMs: 200, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-formal-dot": { durationMs: 200, cycles: 1, property: "transform", luminanceSteps: [] },
-      "kp-sig-formal-rise": { durationMs: 280, cycles: 1, property: "opacity", luminanceSteps: [0] },
-      "kp-sig-formal-rule": { durationMs: 560, cycles: 1, property: "transform", luminanceSteps: [] },
-      "kp-sig-formal-sheet": { durationMs: 300, cycles: 1, property: "opacity", luminanceSteps: [0] },
-      "kp-sig-formal-tip-drop": { durationMs: 200, cycles: 1, property: "opacity", luminanceSteps: [0] },
-      "kp-sig-formal-size-ink": { durationMs: 320, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-formal-leave": { durationMs: 400, cycles: 1, property: "opacity", luminanceSteps: [0.2] },
-      // sepia-register
-      "kp-sig-sepia-sepia-leaf": { durationMs: 1600, cycles: Infinity, property: "transform", luminanceSteps: [] },
-      "kp-sig-sepia-sepia-soak": { durationMs: 3200, cycles: Infinity, property: "opacity", luminanceSteps: [0, 1, 0] },
-      "kp-sig-sepia-sepia-tick": { durationMs: 320, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-sepia-sepia-seal": { durationMs: 320, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-      "kp-sig-sepia-sepia-slip": { durationMs: 520, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-      "kp-sig-sepia-sepia-page": { durationMs: 440, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-      "kp-sig-sepia-sepia-gloss": { durationMs: 320, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
-      "kp-progressbar-sepia-dinkus": { durationMs: 2600, cycles: Infinity, property: "transform", luminanceSteps: [] },
-      "kp-sig-sepia-size-turn": { durationMs: 440, cycles: 1, property: "opacity", luminanceSteps: [0] },
-      "kp-sig-sepia-leave": { durationMs: 700, cycles: 1, property: "opacity", luminanceSteps: [1, 1, 0] },
-      "kp-sig-sepia-leave-2": { durationMs: 700, cycles: 1, property: "box-shadow", luminanceSteps: [] },
       // solstice-register
       "kp-sig-solstice-solstice-arc": { durationMs: 2400, cycles: Infinity, property: "opacity", luminanceSteps: [0, 1, 1, 0, 0] },
       "kp-sig-solstice-solstice-light": { durationMs: 3600, cycles: Infinity, property: "transform", luminanceSteps: [] },
@@ -2857,16 +2846,7 @@ var init_effects = __esm({
       "kp-sig-solstice-solstice-ember": { durationMs: 360, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
       "kp-progressbar-solstice-arc": { durationMs: 2400, cycles: Infinity, property: "transform", luminanceSteps: [] },
       "kp-sig-solstice-size-rise": { durationMs: 480, cycles: 1, property: "opacity", luminanceSteps: [0] },
-      "kp-sig-solstice-leave": { durationMs: 540, cycles: 1, property: "opacity", luminanceSteps: [0] },
-      // high-contrast-register
-      "kp-sig-high-contrast-hc-walk": { durationMs: 1400, cycles: Infinity, property: "transform", luminanceSteps: [] },
-      "kp-sig-high-contrast-hc-march": { durationMs: 520, cycles: Infinity, property: "transform", luminanceSteps: [] },
-      "kp-sig-high-contrast-hc-wipe-x": { durationMs: 300, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-high-contrast-hc-wipe-y": { durationMs: 360, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-high-contrast-hc-hold": { durationMs: 140, cycles: 1, property: "opacity", luminanceSteps: [0, 0] },
-      "kp-sig-high-contrast-size-mark": { durationMs: 600, cycles: 1, property: "outline, outline-offset", luminanceSteps: [] },
-      "kp-sig-high-contrast-leave": { durationMs: 700, cycles: 1, property: "opacity", luminanceSteps: [1, 1, 0, 0] },
-      "kp-sig-high-contrast-leave-2": { durationMs: 700, cycles: 1, property: "clip-path", luminanceSteps: [] }
+      "kp-sig-solstice-leave": { durationMs: 540, cycles: 1, property: "opacity", luminanceSteps: [0] }
       // ── end of the port session's rows
     });
     started = /* @__PURE__ */ new WeakSet();
@@ -3030,8 +3010,10 @@ function showAlarm(options) {
     });
     document.body.append(dialog);
     dialog.showModal();
-    if (mode === "auto") dialog.focus();
-    else ack.focus();
+    dialog.scrollTop = 0;
+    if (mode === "auto") dialog.focus({ preventScroll: true });
+    else ack.focus({ preventScroll: true });
+    dialog.scrollTop = 0;
     dialog.dispatchEvent(new CustomEvent(ALARM_OPEN_EVENT, { bubbles: true, detail: { id, mode: dialog.dataset.kpAlarmMode } }));
     if (mode === "auto") {
       const total = seconds * 1e3;
@@ -3107,14 +3089,18 @@ __export(motion_exports, {
   CLOSING_ATTRIBUTE: () => CLOSING_ATTRIBUTE,
   FOLDING_OUT: () => FOLDING_OUT,
   FOLD_SELECTOR: () => FOLD_SELECTOR,
+  GROUP_FOLDING_ATTRIBUTE: () => GROUP_FOLDING_ATTRIBUTE,
   PANEL_SELECTOR: () => PANEL_SELECTOR,
   REVERSING_ATTRIBUTE: () => REVERSING_ATTRIBUTE,
   SIZE_ATTRIBUTE: () => SIZE_ATTRIBUTE,
   SIZE_SELECTOR: () => SIZE_SELECTOR,
+  arriveShown: () => arriveShown,
   attachMotion: () => attachMotion,
   closeDialog: () => closeDialog,
   easeSize: () => easeSize,
+  glideGroup: () => glideGroup,
   leave: () => leave,
+  leavesState: () => leavesState,
   motionWatchCount: () => motionWatchCount,
   playArrivalBackwards: () => playArrivalBackwards,
   playClose: () => playClose,
@@ -3268,7 +3254,10 @@ function attachClose(dialog) {
     openAsReversedClose(dialog);
   };
   own.close = (value) => void closeDialog(dialog, value);
-  if (dialog.open) rememberEntrance(dialog);
+  if (dialog.open) {
+    rememberEntrance(dialog);
+    openAsReversedClose(dialog);
+  }
   const onCancel = (event) => {
     if (event.defaultPrevented) return;
     event.preventDefault();
@@ -3427,13 +3416,6 @@ function closePopoverWithGhost(event) {
   });
   el2.after(ghost);
   ghosted.add(el2);
-  try {
-    ghost.showPopover();
-  } catch {
-    ghost.remove();
-    ghosted.delete(el2);
-    return;
-  }
   const done = () => {
     ghost.remove();
     ghosted.delete(el2);
@@ -3447,11 +3429,27 @@ function closePopoverWithGhost(event) {
     stopClose(ghost);
     done();
   };
-  el2.addEventListener("beforetoggle", back);
-  void playClose(ghost).then(() => {
-    el2.removeEventListener("beforetoggle", back);
-    done();
-  });
+  const play = () => {
+    el2.addEventListener("beforetoggle", back);
+    void playClose(ghost).then(() => {
+      el2.removeEventListener("beforetoggle", back);
+      done();
+    });
+  };
+  try {
+    ghost.showPopover();
+    play();
+  } catch {
+    setTimeout(() => {
+      if (!ghost.isConnected || el2.matches(":popover-open")) return done();
+      try {
+        ghost.showPopover();
+      } catch {
+        return done();
+      }
+      play();
+    }, 0);
+  }
 }
 function withoutOvershoot(ease) {
   const m = /^cubic-bezier\(\s*([^,]+),\s*([^,]+),\s*([^,]+),\s*([^)]+)\)$/.exec(ease.trim());
@@ -3576,7 +3574,8 @@ function arrival(scope) {
   }
 }
 function arrive(el2, motion) {
-  if (!motion || el2.style.animation || el2.hasAttribute("data-kp-arriving") || el2.hasAttribute("data-kp-leaving")) return;
+  if (!motion || el2.style.animation || el2.hasAttribute("data-kp-arriving") || el2.hasAttribute("data-kp-leaving") || el2.hasAttribute("data-kp-ghost")) return;
+  if (getComputedStyle(el2).getPropertyValue("--kp-arrive-unseen").trim() === "skip" && el2.getClientRects().length === 0) return;
   if (opensAsReversedClose(el2) && arriveAsReversedLeave(el2)) return;
   el2.setAttribute("data-kp-arriving", "");
   const own = getComputedStyle(el2).animationName;
@@ -3586,6 +3585,36 @@ function arrive(el2, motion) {
     el2.removeAttribute("data-kp-arriving");
   };
   void playedOut(el2, 1500).then(end);
+}
+function arriveShown(el2) {
+  arrive(el2, arrival(el2));
+}
+function glideGroup(group, opening, apply) {
+  const { size, ease } = themeMotion(group);
+  if (size <= 0 || switching || !group.isConnected || group.parentElement?.closest(`[${GROUP_FOLDING_ATTRIBUTE}]`)) return apply();
+  const own = groupGlides.get(group);
+  const standing = own ? group.getBoundingClientRect().height : null;
+  own?.cancel();
+  const from = standing ?? (opening ? 0 : layoutHeight(group));
+  group.setAttribute(GROUP_FOLDING_ATTRIBUTE, "");
+  group.style.setProperty("overflow", "clip");
+  group.style.setProperty("box-sizing", "border-box");
+  heightFolds.add(group);
+  apply();
+  const to = opening ? layoutHeight(group) : 0;
+  const easing = sizeEase(group, ease, to - from, true);
+  const mine = group.animate([{ height: `${from}px` }, { height: `${to}px` }], { duration: size, easing, fill: "forwards" });
+  groupGlides.set(group, mine);
+  const done = () => {
+    if (groupGlides.get(group) !== mine) return;
+    groupGlides.delete(group);
+    heightFolds.delete(group);
+    group.removeAttribute(GROUP_FOLDING_ATTRIBUTE);
+    group.style.removeProperty("overflow");
+    group.style.removeProperty("box-sizing");
+    mine.cancel();
+  };
+  void mine.finished.then(done, () => void 0);
 }
 async function playArrivalBackwards(el2) {
   if (reduced() || !el2.isConnected || el2.hasAttribute("data-kp-leaving")) return;
@@ -3624,6 +3653,34 @@ function partway(el2, share, done) {
   });
   return Promise.race([reached, done]);
 }
+function cappedGap(el2, share, lasts, count) {
+  const exits = el2.getAnimations({ subtree: true }).filter((a) => typeof CSSAnimation !== "undefined" && a instanceof CSSAnimation && /** @type {KeyframeEffect} */
+  a.effect?.target === el2).map((a) => {
+    const effect = (
+      /** @type {KeyframeEffect} */
+      a.effect
+    );
+    const timing = effect.getTiming();
+    return { timing, end: (Number(timing.delay) || 0) + (Number(effect.getComputedTiming().activeDuration) || 0) };
+  });
+  if (exits.length === 0) return null;
+  const gap = share > 0 && share < 1 ? Math.max(0, ...exits.map((exit) => reaches(exit.timing, exit.end, share))) : Math.max(lasts, ...exits.map((exit) => exit.end));
+  if (!Number.isFinite(gap)) return null;
+  const next = inTurnGap(gap, count);
+  return next < gap ? next : null;
+}
+function atTime(el2, ms, done) {
+  const css = el2.getAnimations({ subtree: true }).filter((a) => typeof CSSAnimation !== "undefined" && a instanceof CSSAnimation && /** @type {KeyframeEffect} */
+  a.effect?.target === el2);
+  const reached = new Promise((resolve) => {
+    const tick2 = () => {
+      if (css.every((a) => a.playState === "finished" || (Number(a.currentTime) || 0) >= ms)) resolve(void 0);
+      else requestAnimationFrame(tick2);
+    };
+    tick2();
+  });
+  return Promise.race([reached, done]);
+}
 function playedOut(el2, fallback2) {
   const css = el2.getAnimations({ subtree: true }).filter((a) => typeof CSSAnimation !== "undefined" && a instanceof CSSAnimation && /** @type {KeyframeEffect} */
   a.effect?.target === el2);
@@ -3647,6 +3704,14 @@ function arrivalOf(el2) {
   if (!toast2) return null;
   const [name, duration, ...ease] = toast2.split(" ");
   return { name, duration: parseFloat(duration), ease: ease.slice(0, -1).join(" ") };
+}
+function foldTiming(style) {
+  const grow = parseFloat(style.getPropertyValue("--kp-leave-fold-grow"));
+  const start = parseFloat(style.getPropertyValue("--kp-leave-fold-start"));
+  return {
+    grow: Number.isNaN(grow) ? 1.25 : grow,
+    start: (lasts) => Number.isNaN(start) ? lasts / 3 : lasts * start
+  };
 }
 function foldFrames(el2, style) {
   const parent = el2.parentElement ? getComputedStyle(el2.parentElement) : null;
@@ -3736,17 +3801,17 @@ function arriveAsReversedLeave(el2) {
       /** @type {KeyframeEffect} */
       a.effect
     );
-    const timing = effect.getTiming();
+    const timing2 = effect.getTiming();
     const pseudo = effect.pseudoElement;
     if (pseudo && rest[pseudo] === animationSignature(actor, pseudo)) {
-      timing.direction = flipped(timing.direction);
-      timing.delay = 0;
+      timing2.direction = flipped(timing2.direction);
+      timing2.delay = 0;
     }
     return {
       keyframes: effect.getKeyframes(),
-      timing,
+      timing: timing2,
       // The whole of it, every iteration, from the leave's start.
-      end: (Number(timing.delay) || 0) + (Number(effect.getComputedTiming().activeDuration) || 0),
+      end: (Number(timing2.delay) || 0) + (Number(effect.getComputedTiming().activeDuration) || 0),
       pseudoElement: effect.pseudoElement
     };
   });
@@ -3756,8 +3821,9 @@ function arriveAsReversedLeave(el2) {
   }
   const after = fold === "after";
   const pause = parseFloat(style.getPropertyValue("--kp-leave-pause")) || 0;
-  const foldFor = size > 0 && !floats(el2, style) ? steppedDuration(el2, withoutOvershoot(ease), Math.max(size, lasts) * 1.25) : 0;
-  const foldAt = onStepClock(el2, withoutOvershoot(ease), after ? lasts + pause : lasts / 3);
+  const timing = foldTiming(style);
+  const foldFor = size > 0 && !floats(el2, style) ? steppedDuration(el2, withoutOvershoot(ease), Math.max(size, lasts) * timing.grow) : 0;
+  const foldAt = onStepClock(el2, withoutOvershoot(ease), after ? lasts + pause : timing.start(lasts));
   const total = Math.max(lasts, ...exits.map((exit) => exit.end), foldFor ? foldAt + foldFor : 0);
   const plays = [];
   for (const exit of exits) {
@@ -3847,7 +3913,7 @@ function arriveInTurn(items) {
   let start = 0;
   const ends = items.map((item) => {
     const end = start + item.total;
-    start += item.lag;
+    start += inTurnGap(item.lag, items.length);
     return end;
   });
   const last = Math.max(...ends);
@@ -3861,6 +3927,11 @@ function arriveInTurn(items) {
     }
   });
 }
+function inTurnGap(gap, count) {
+  if (count < 3 || !(gap > 0)) return gap;
+  const budget = Math.max(IN_TURN_MS, gap);
+  return (count - 1) * gap <= budget ? gap : budget / (count - 1);
+}
 function reaches(timing, end, share) {
   if (!Number.isFinite(end)) return 0;
   if (typeof KeyframeEffect === "undefined" || typeof Animation === "undefined") return end * share;
@@ -3872,6 +3943,9 @@ function reaches(timing, end, share) {
     if ((now.progress ?? 0) >= share || (now.currentIteration ?? 0) > 0) return t;
   }
   return end;
+}
+function leavesState(el2) {
+  return getComputedStyle(el2).getPropertyValue("--kp-leave-state").trim() === "leave";
 }
 function leave(el2, { hide = false } = {}) {
   return new Promise((resolve) => {
@@ -3893,12 +3967,12 @@ async function leaveInTurn(items) {
   items.sort((a, b) => a.el.compareDocumentPosition(b.el) & Node.DOCUMENT_POSITION_FOLLOWING ? 1 : -1);
   for (const item of items) {
     const exited = new Promise((resolve) => {
-      void leaveOne(item.el, item.hide, resolve).then(item.resolve);
+      void leaveOne(item.el, item.hide, resolve, items.length).then(item.resolve);
     });
     await exited;
   }
 }
-async function leaveOne(el2, hide, exited) {
+async function leaveOne(el2, hide, exited, count = 1) {
   const gone = () => {
     if (hide) el2.hidden = true;
     else el2.remove();
@@ -3990,7 +4064,9 @@ async function leaveOne(el2, hide, exited) {
   const exit = lasts > 0 ? playedOut(actor, lasts + 100) : Promise.resolve();
   const set = parseFloat(style.getPropertyValue("--kp-leave-stagger"));
   const stagger = Number.isNaN(set) ? 0.5 : set;
-  if (lasts > 0 && stagger > 0 && stagger < 1) void partway(actor, stagger, exit).then(exited);
+  const capped = lasts > 0 && count > 2 ? cappedGap(actor, stagger, lasts, count) : null;
+  if (capped !== null) void atTime(actor, capped, exit).then(exited);
+  else if (lasts > 0 && stagger > 0 && stagger < 1) void partway(actor, stagger, exit).then(exited);
   else void exit.then(exited);
   running2.push(exit);
   if (size > 0 && !(el2 instanceof HTMLTableRowElement) && !floats(el2, style)) {
@@ -4000,9 +4076,10 @@ async function leaveOne(el2, hide, exited) {
     if ("height" in from) heightFolds.add(el2);
     const after = fold === "after";
     const pause = parseFloat(style.getPropertyValue("--kp-leave-pause")) || 0;
+    const timing = foldTiming(style);
     const folding = el2.animate([from, to], {
-      duration: steppedDuration(el2, withoutOvershoot(ease), Math.max(size, lasts) * 1.25),
-      delay: onStepClock(el2, withoutOvershoot(ease), after ? lasts + pause : lasts / 3),
+      duration: steppedDuration(el2, withoutOvershoot(ease), Math.max(size, lasts) * timing.grow),
+      delay: onStepClock(el2, withoutOvershoot(ease), after ? lasts + pause : timing.start(lasts)),
       easing: withoutOvershoot(ease),
       fill: "forwards"
     });
@@ -4165,7 +4242,7 @@ function easeSize(box, { arrive: fallback2 = "all", arriveKeys = [] } = {}) {
       }
       if (record.type === "childList")
         for (const node of record.addedNodes) {
-          if (!(node instanceof HTMLElement) || moved.has(node)) continue;
+          if (!(node instanceof HTMLElement) || moved.has(node) || node.hasAttribute("data-kp-ghost")) continue;
           if (mode === "new" && (repainted ??= repaintedIn(records, { keys })).has(node)) continue;
           arrive(node, motion);
         }
@@ -4276,16 +4353,16 @@ function attachMotion(root = document, { size = "", arrive: arrive2 = "all", arr
       ...scope instanceof Element && scope.matches(selector) ? [scope] : [],
       ...scope.querySelectorAll(selector)
     ];
-    for (const el2 of all("dialog.kp-dialog")) keep(el2, attachClose(
+    for (const el2 of all("dialog.kp-dialog, dialog.kp-palette, dialog.kp-alarm")) if (!el2.hasAttribute("data-kp-ghost")) keep(el2, attachClose(
       /** @type {HTMLDialogElement} */
       el2
     ));
-    for (const el2 of all(sizeSelector)) keep(el2, easeSize(
+    for (const el2 of all(sizeSelector)) if (!el2.hasAttribute("data-kp-ghost")) keep(el2, easeSize(
       /** @type {HTMLElement} */
       el2,
       { arrive: arrive2, arriveKeys }
     ));
-    for (const el2 of all(FOLD_SELECTOR)) if (el2 instanceof HTMLDetailsElement) keep(el2, attachFold(el2));
+    for (const el2 of all(FOLD_SELECTOR)) if (el2 instanceof HTMLDetailsElement && !el2.hasAttribute("data-kp-ghost")) keep(el2, attachFold(el2));
   };
   scan(root);
   let sweeping = false;
@@ -4316,7 +4393,7 @@ function attachMotion(root = document, { size = "", arrive: arrive2 = "all", arr
     detaches.clear();
   };
 }
-var SIZE_ATTRIBUTE, SIZE_SELECTOR, FOLD_SELECTOR, ARRIVE_KEYS, SKELETON, watching, CLOSE_SHARE, SIZE_SHARE, msOf, firstMs, reducedQuery, reducedNow, reduced, entrances, closing, nativeClose, opensAsReversedClose, switching, REVERSING_ATTRIBUTE, CLOSING_ATTRIBUTE, PANEL_SELECTOR, ghosted, NAMED_EASES, entering, animationSignature, pseudoNames, floats, flipped, arriving, finiteMs, batch, FOLDING_OUT, heightFolds, followsAFold, arriveMode;
+var SIZE_ATTRIBUTE, SIZE_SELECTOR, FOLD_SELECTOR, ARRIVE_KEYS, SKELETON, watching, CLOSE_SHARE, SIZE_SHARE, msOf, firstMs, reducedQuery, reducedNow, reduced, entrances, closing, nativeClose, opensAsReversedClose, switching, REVERSING_ATTRIBUTE, CLOSING_ATTRIBUTE, PANEL_SELECTOR, ghosted, NAMED_EASES, GROUP_FOLDING_ATTRIBUTE, groupGlides, entering, animationSignature, pseudoNames, floats, flipped, arriving, finiteMs, IN_TURN_MS, batch, FOLDING_OUT, heightFolds, followsAFold, arriveMode;
 var init_motion = __esm({
   "js/motion.js"() {
     "use strict";
@@ -4387,6 +4464,8 @@ var init_motion = __esm({
       "step-start": "steps(1, jump-start)",
       "step-end": "steps(1, jump-end)"
     };
+    GROUP_FOLDING_ATTRIBUTE = "data-kp-group-folding";
+    groupGlides = /* @__PURE__ */ new WeakMap();
     entering = /* @__PURE__ */ new WeakMap();
     animationSignature = (el2, pseudo = null) => {
       const style = getComputedStyle(el2, pseudo);
@@ -4415,10 +4494,11 @@ var init_motion = __esm({
     );
     arriving = null;
     finiteMs = (ms) => Number.isFinite(ms) ? ms : 0;
+    IN_TURN_MS = 600;
     batch = null;
     FOLDING_OUT = "out";
     heightFolds = /* @__PURE__ */ new WeakSet();
-    followsAFold = (box) => [...box.querySelectorAll("[data-kp-leaving]")].some((el2) => heightFolds.has(
+    followsAFold = (box) => [...box.querySelectorAll(`[data-kp-leaving], [${GROUP_FOLDING_ATTRIBUTE}]`)].some((el2) => heightFolds.has(
       /** @type {HTMLElement} */
       el2
     ) && el2.getClientRects().length > 0);
@@ -5129,6 +5209,7 @@ function attachTabs(root = document, { activation = "automatic", loop = true } =
         const back = leaving.get(show);
         if (back) going.push(back);
         if (going.length === 0) show.hidden = false;
+        else if (!back && leavesState(show)) show.hidden = false;
         else {
           if (!back) show.hidden = true;
           void Promise.all(going).then(() => {
@@ -5303,7 +5384,16 @@ function attachDismissals(root = document, { ownedBy = DISMISS_OWNED } = {}) {
     );
     if (!alert) return;
     const proceed = alert.dispatchEvent(new CustomEvent(ALERT_DISMISS_EVENT, { bubbles: true, cancelable: true, detail: { alert, button } }));
-    if (proceed) void leave(alert, { hide: true });
+    if (!proceed) return;
+    void leave(alert, { hide: true }).then(() => {
+      if (!leavesState(alert)) return;
+      const back = new MutationObserver(() => {
+        if (alert.hidden) return;
+        back.disconnect();
+        arriveShown(alert);
+      });
+      back.observe(alert, { attributes: true, attributeFilter: ["hidden"] });
+    });
   };
   root.addEventListener("click", onClick);
   return () => root.removeEventListener("click", onClick);
@@ -5852,12 +5942,33 @@ function attachNavToggles(root = document, { strings, ownedBy = NAV_OWNED } = {}
       button.setAttribute("aria-expanded", String(open));
       button.setAttribute("aria-label", label());
     };
+    let closing2 = false;
     const set = (open) => {
-      write(open);
-      nav.dispatchEvent(new CustomEvent(NAV_TOGGLE_EVENT, { bubbles: true, detail: { open } }));
+      if (open) {
+        closing2 = false;
+        nav.removeAttribute("data-kp-nav-closing");
+        write(true);
+        if (links) nav.style.setProperty("--kp-nav-links-height", `${links.scrollHeight}px`);
+        nav.dispatchEvent(new CustomEvent(NAV_TOGGLE_EVENT, { bubbles: true, detail: { open: true } }));
+      } else {
+        if (closing2 || !nav.hasAttribute("data-kp-nav-open")) return;
+        closing2 = true;
+        nav.setAttribute("data-kp-nav-closing", "");
+        button.setAttribute("aria-expanded", "false");
+        button.setAttribute("aria-label", label());
+        const durVal = getComputedStyle(nav).getPropertyValue("--kp-sig-fo-time").trim();
+        const dur = durVal ? durVal.endsWith("ms") ? parseFloat(durVal) : parseFloat(durVal) * 1e3 : 300;
+        setTimeout(() => {
+          if (!closing2) return;
+          closing2 = false;
+          nav.removeAttribute("data-kp-nav-closing");
+          write(false);
+          nav.dispatchEvent(new CustomEvent(NAV_TOGGLE_EVENT, { bubbles: true, detail: { open: false } }));
+        }, dur || 300);
+      }
     };
     write(nav.hasAttribute("data-kp-nav-open"));
-    const onClick = () => set(!nav.hasAttribute("data-kp-nav-open"));
+    const onClick = () => set(!nav.hasAttribute("data-kp-nav-open") && !closing2);
     const onKey = (event) => {
       if (event.key !== "Escape" || !nav.hasAttribute("data-kp-nav-open")) return;
       set(false);
@@ -6056,13 +6167,26 @@ function attachNavMenus(root = document, { strings, ownedBy = NAV_OWNED } = {}) 
       wired.set(button, { panel, stamped });
     }
     const openButton = () => buttons.find((b) => b.getAttribute("aria-expanded") === "true") ?? null;
+    const settleClosing = (item, panel) => {
+      item.setAttribute("data-kp-nav-closing", "");
+      requestAnimationFrame(() => {
+        if (!item.hasAttribute("data-kp-nav-closing")) return;
+        const plays = (panel?.getAnimations() ?? []).filter((a) => typeof CSSTransition !== "undefined" && a instanceof CSSTransition);
+        void Promise.all(plays.map((a) => a.finished.catch(() => void 0))).then(() => item.removeAttribute("data-kp-nav-closing"));
+      });
+    };
     const set = (button, open) => {
       if (open) {
-        for (const other of buttons) if (other !== button) other.setAttribute("aria-expanded", "false");
+        for (const other of buttons)
+          if (other !== button && other.getAttribute("aria-expanded") === "true") set(other, false);
       }
-      button.setAttribute("aria-expanded", String(open));
+      const was = button.getAttribute("aria-expanded") === "true";
       const panel = wired.get(button)?.panel;
+      const item = button.parentElement;
+      if (open) item?.removeAttribute("data-kp-nav-closing");
+      button.setAttribute("aria-expanded", String(open));
       if (open && panel) placeNavPanel(panel);
+      if (!open && was && item) settleClosing(item, panel);
     };
     const onClick = (event) => {
       const button = (
@@ -6303,8 +6427,13 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
       }
     };
     const dropBackdrop = () => {
-      backdrop?.remove();
+      if (!backdrop) return;
+      const target = backdrop;
       backdrop = null;
+      void playEntranceBackwards(target).then(() => {
+        target.remove();
+        stopReversing(target);
+      });
     };
     const raiseBackdrop = () => {
       if (backdrop || !covering() || !on(OPTIONS.backdrop, true)) return;
@@ -6341,9 +6470,9 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
       if (moveFocus2 && covering()) {
         if (open2) {
           restoreFocusTo = doc.activeElement;
-          panel.querySelector(FOCUSABLE)?.focus();
+          panel.querySelector(FOCUSABLE)?.focus({ preventScroll: true });
         } else if (restoreFocusTo instanceof HTMLElement) {
-          restoreFocusTo.focus();
+          restoreFocusTo.focus({ preventScroll: true });
           restoreFocusTo = null;
         }
       }
@@ -6849,6 +6978,38 @@ var init_listbox = __esm({
 });
 
 // js/top-layer.js
+function layoutRect(element) {
+  const box = element.getBoundingClientRect();
+  const view = element.ownerDocument.defaultView;
+  if (!view) return box;
+  const style = view.getComputedStyle(element);
+  const el2 = (
+    /** @type {HTMLElement} */
+    element
+  );
+  let x = 0;
+  let y = 0;
+  if (style.translate && style.translate !== "none") {
+    const parts = style.translate.split(/\s+/);
+    const length = (part, size) => {
+      if (!part) return 0;
+      const n = Number.parseFloat(part);
+      if (!Number.isFinite(n)) return 0;
+      return part.endsWith("%") ? n / 100 * size : n;
+    };
+    x += length(parts[0], el2.offsetWidth ?? box.width);
+    y += length(parts[1], el2.offsetHeight ?? box.height);
+  }
+  if (style.transform && style.transform !== "none" && typeof DOMMatrixReadOnly === "function") {
+    const m = new DOMMatrixReadOnly(style.transform);
+    if (m.is2D && m.a === 1 && m.b === 0 && m.c === 0 && m.d === 1) {
+      x += m.e;
+      y += m.f;
+    }
+  }
+  if (x === 0 && y === 0) return box;
+  return new DOMRect(box.x - x, box.y - y, box.width, box.height);
+}
 function raiseOverlay(element, place2) {
   if (typeof element.showPopover !== "function" || !element.isConnected) {
     place2(element);
@@ -6875,7 +7036,7 @@ function raiseOverlay(element, place2) {
 }
 function placeBlockSide(element, field) {
   clearBlockSide(element);
-  const drawn = element.getBoundingClientRect();
+  const drawn = layoutRect(element);
   const style = getComputedStyle(element);
   const height = drawn.height;
   const outside = style.boxSizing === "border-box" ? 0 : height - (Number.parseFloat(style.height) || 0);
@@ -6899,7 +7060,7 @@ function placeBlockSide(element, field) {
   return "above";
 }
 function raiseInPlace(element, anchor, field = anchor) {
-  const drawn = element.getBoundingClientRect();
+  const drawn = layoutRect(element);
   const from = anchor.getBoundingClientRect();
   const dx = drawn.left - from.left;
   const dy = drawn.top - from.top;
@@ -6981,6 +7142,7 @@ function attachComboboxes(root = document, {
     );
     if (input === null || list === null) continue;
     box.dataset.kpComboboxAttached = "";
+    list.dataset.kpArrive = "none";
     const status = (
       /** @type {HTMLElement | null} */
       box.querySelector(STATUS2)
@@ -7169,6 +7331,11 @@ function attachComboboxes(root = document, {
       else run();
     };
     const onKeyDown = (event) => {
+      if (list.hidden && (event.key === "ArrowDown" || event.altKey && event.key === "ArrowDown")) {
+        event.preventDefault();
+        if (filter() > 0) open();
+        return;
+      }
       if (!isTags) return;
       if ((event.key === "Enter" || event.key === ",") && !event.defaultPrevented && !event.isComposing) {
         if (event.key === "Enter" && listbox.index !== -1) return;
@@ -7292,6 +7459,7 @@ function attachSelect(select, { loop = false, typeaheadMs = 500 } = {}) {
   list.id = `${select.id || "kp-select"}-drawn-${selectCount}`;
   list.setAttribute("role", "listbox");
   list.dataset.kpSelectList = "";
+  list.dataset.kpArrive = "none";
   list.hidden = true;
   const labelled = select.labels?.[0];
   if (labelled) {
@@ -7324,7 +7492,7 @@ function attachSelect(select, { loop = false, typeaheadMs = 500 } = {}) {
     list.style.top = `${select.offsetTop + select.offsetHeight}px`;
     list.style.width = `${select.offsetWidth}px`;
     const box = select.getBoundingClientRect();
-    const drawn = list.getBoundingClientRect();
+    const drawn = layoutRect(list);
     const margin = Math.min(Math.max(Number.parseFloat(getComputedStyle(list).marginTop) || 0, 0), 8);
     list.style.left = `${select.offsetLeft + (box.left - drawn.left)}px`;
     list.style.top = `${select.offsetTop + select.offsetHeight + (box.bottom + margin - drawn.top)}px`;
@@ -8150,6 +8318,7 @@ function attachDatePickers(root = document, {
     );
     if (input === null || open === null || panel === null) continue;
     picker.dataset.kpDatepickerAttached = "";
+    panel.dataset.kpArrive = "none";
     const locale = resolveLocale(picker.dataset.kpLocale ?? localeOption, picker);
     const firstDay = weekStartsOn(locale, picker.dataset.kpWeekStartsOn === void 0 ? weekOption : Number(picker.dataset.kpWeekStartsOn));
     const min = picker.dataset.kpMin ? parseDate(picker.dataset.kpMin, locale) : null;
@@ -8372,8 +8541,10 @@ function attachDatePickers(root = document, {
     };
     let lower = () => {
     };
+    let wanted = !panel.hidden;
     const setOpen = (next) => {
-      if (panel.hidden === !next) return;
+      if (wanted === next) return;
+      wanted = next;
       view = "days";
       back = [];
       pin = null;
@@ -8382,16 +8553,28 @@ function attachDatePickers(root = document, {
         cursor = read() ?? /* @__PURE__ */ new Date();
         if (!panel.contains(live2)) panel.append(live2);
         draw();
+        stopClose(panel);
+        panel.inert = false;
+        if (panel.hidden) {
+          panel.hidden = false;
+          panel.dataset.kpDateOpen = "";
+          lower = raiseDatePanel(panel);
+        }
       } else {
         panel.style.removeProperty("min-inline-size");
         panel.style.removeProperty("min-block-size");
-      }
-      panel.hidden = !next;
-      if (next) lower = raiseDatePanel(panel);
-      else {
-        lower();
-        lower = () => {
-        };
+        panel.inert = true;
+        const closed = playClose(panel);
+        delete panel.dataset.kpDateOpen;
+        void closed.then((played) => {
+          if (!played || wanted) return;
+          panel.hidden = true;
+          lower();
+          lower = () => {
+          };
+          panel.inert = false;
+          stopClose(panel);
+        });
       }
       open.setAttribute("aria-expanded", String(next));
       if (next) focusCurrent();
@@ -8415,7 +8598,7 @@ function attachDatePickers(root = document, {
       if (closes) hide();
       if (refocus) input.focus();
     };
-    const onOpen = () => panel.hidden ? show() : hide();
+    const onOpen = () => wanted ? hide() : show();
     const onInput = () => commit(read(), "typed");
     const onPanelKey = (event) => {
       if (event.key === "Escape") {
@@ -8535,6 +8718,8 @@ function attachDatePickers(root = document, {
       panel.removeEventListener("keydown", onPanelKey);
       panel.removeEventListener("click", onPanelClick);
       picker.removeEventListener("focusout", onFocusOut);
+      stopClose(panel);
+      panel.inert = false;
       lower();
       panel.textContent = "";
       panel.style.removeProperty("min-inline-size");
@@ -8559,6 +8744,7 @@ var init_datepicker = __esm({
   "js/datepicker.js"() {
     "use strict";
     init_strings();
+    init_motion();
     init_top_layer();
     init_locale();
     PICKER2 = "[data-kp-datepicker]";
@@ -9200,9 +9386,27 @@ function attachDataTables(root = document, {
     const drawOverlay = (s2) => {
       overlayUnwatch?.();
       overlayUnwatch = null;
-      overlayLayer?.remove();
-      overlayLayer = null;
-      overlayClock = null;
+      if (overlayLayer) {
+        const toClose = overlayLayer;
+        overlayLayer = null;
+        overlayClock = null;
+        const panel3 = (
+          /** @type {HTMLElement | null} */
+          toClose.querySelector(".kp-datatable__busy-panel")
+        );
+        if (panel3 && toClose.isConnected && state !== "loading") {
+          if (leavesState(toClose)) {
+            void leave(toClose);
+          } else {
+            toClose.setAttribute("data-kp-closing", "");
+            void playClose(panel3).then(() => {
+              toClose.remove();
+            });
+          }
+        } else {
+          toClose.remove();
+        }
+      }
       const host = wrap;
       if (state !== "loading" || !busyOverlay) return;
       const layer = make6("div", "kp-datatable__busy-overlay");
@@ -9245,6 +9449,22 @@ function attachDataTables(root = document, {
     };
     let total = Number.parseInt(wrap.dataset.kpTotal ?? "", 10);
     const emptyWasHidden = empty?.hidden ?? false;
+    let emptyLeaving = false;
+    let emptyHidden = emptyWasHidden;
+    const showEmpty = (hide) => {
+      if (empty === null) return;
+      emptyHidden = hide;
+      if (emptyLeaving) return;
+      if (hide && !empty.hidden && empty.isConnected && leavesState(empty)) {
+        emptyLeaving = true;
+        void leave(empty, { hide: true }).then(() => {
+          emptyLeaving = false;
+          empty.hidden = emptyHidden;
+        });
+        return;
+      }
+      empty.hidden = hide;
+    };
     const densityWas = wrap.getAttribute("data-density");
     const busyWas = wrap.getAttribute("aria-busy");
     const themeBox = (box) => {
@@ -10132,7 +10352,7 @@ function attachDataTables(root = document, {
         pager.append(pagerButton(s2.next, page < pages - 1, () => page += 1));
       }
       if (empty !== null) {
-        empty.hidden = count > 0 || state !== "ready";
+        showEmpty(count > 0 || state !== "ready");
         const narrowing = query.trim() !== "" || filters.size > 0;
         for (const part of empty.querySelectorAll("[data-kp-datatable-empty-none]")) part.hidden = narrowing;
         for (const part of empty.querySelectorAll("[data-kp-datatable-empty-nomatch]")) part.hidden = !narrowing;
@@ -12303,10 +12523,20 @@ function attachStructure(root = document, {
       item.setAttribute("tabindex", "0");
       item.focus();
     };
+    let quiet = false;
+    const groupOf2 = (item) => {
+      const inside = item.querySelector(':scope > [role="group"]');
+      if (inside instanceof HTMLElement) return inside;
+      const next = item.nextElementSibling;
+      return next instanceof HTMLElement && next.getAttribute("role") === "group" ? next : null;
+    };
     const setExpanded = (item, expanded) => {
       if (!item.hasAttribute("aria-expanded")) return;
       if (item.getAttribute("aria-expanded") === "true" === expanded) return;
-      item.setAttribute("aria-expanded", String(expanded));
+      const flip = () => item.setAttribute("aria-expanded", String(expanded));
+      const group = quiet || !leavesState(tree) ? null : groupOf2(item);
+      if (group !== null) glideGroup(group, expanded, flip);
+      else flip();
       if (memory !== null) {
         const branches = {};
         for (const branch of tree.querySelectorAll('[role="treeitem"][aria-expanded]'))
@@ -12422,10 +12652,14 @@ function attachStructure(root = document, {
         if (item) setExpanded(item, expanded);
       },
       expandAll: () => {
+        quiet = true;
         for (const item of all()) setExpanded(item, true);
+        quiet = false;
       },
       collapseAll: () => {
+        quiet = true;
         for (const item of all()) setExpanded(item, false);
+        quiet = false;
       },
       focusItem: (id) => {
         const item = byId(id);
@@ -12674,6 +12908,7 @@ var init_structure = __esm({
     "use strict";
     init_strings();
     init_remember();
+    init_motion();
     TREE = "[data-kp-tree]";
     REORDER = "[data-kp-reorder]";
     SPLIT = "[data-kp-split]";
@@ -12827,11 +13062,14 @@ function attachUploads(root = document, { locale: localeOption, validate, render
         /** @type {HTMLElement | null} */
         button.closest("li, [data-kp-upload-file]")
       );
-      if (item === null) return;
+      if (item === null || item.hasAttribute("data-kp-leaving")) return;
       const ask = new CustomEvent(REMOVE_EVENT, { bubbles: true, cancelable: true, detail: { file: rows.get(item), item } });
       if (!item.dispatchEvent(ask)) return;
       rows.delete(item);
-      item.remove();
+      if (leavesState(item)) {
+        item.inert = true;
+        void leave(item);
+      } else item.remove();
     };
     const onDragOver = (event) => {
       event.preventDefault();
@@ -12911,6 +13149,7 @@ var init_upload = __esm({
     "use strict";
     init_strings();
     init_locale();
+    init_motion();
     UPLOAD = "[data-kp-upload]";
     FILE_EVENT = "kp-upload-file";
     REJECT_EVENT = "kp-upload-reject";
@@ -16146,7 +16385,7 @@ function clipped(wrapper, view) {
 }
 function raiseMenu(s2, view) {
   if (!clipped(s2.wrapper, view)) return;
-  const box = s2.menu.getBoundingClientRect();
+  const box = layoutRect(s2.menu);
   const button = s2.button.getBoundingClientRect();
   const dx = box.left - button.left;
   const dy = box.top - button.top;
@@ -16182,7 +16421,7 @@ function placeMenu(s2, view, covered) {
     room.left = MENU_GUTTER;
     room.right = html.clientWidth - MENU_GUTTER;
   }
-  const box = menu.getBoundingClientRect();
+  const box = layoutRect(menu);
   const style = view.getComputedStyle(menu);
   const cap = parseFloat(style.maxBlockSize);
   const borders = box.height - menu.clientHeight;
@@ -16546,8 +16785,15 @@ function paintCalendar(c) {
     if (!cell) return;
     const mine = inMonth(iso);
     cell.button.hidden = !mine;
+    cell.pad.hidden = mine;
     cell.pad.textContent = mine ? "" : iso.slice(8, 10);
     cell.td.toggleAttribute("data-kp-pad", !mine);
+    if (monthChanged) {
+      const animTarget = mine ? cell.button : cell.pad;
+      animTarget.style.animation = "none";
+      void animTarget.offsetHeight;
+      animTarget.style.animation = "";
+    }
     if (!mine) {
       cell.td.removeAttribute("aria-selected");
       delete cell.button.dataset.kpDate;
@@ -16683,7 +16929,10 @@ function attachCalendars(root = document, options = {}) {
     legend.hidden = true;
     const busy = make2(doc, "div", "kp-calendar__busy");
     busy.setAttribute("aria-hidden", "true");
-    busy.append(make2(doc, "span", "kp-spinner"));
+    const busyText = make2(doc, "span", "kp-calendar__busy-text");
+    busyText.textContent = s2.loading ?? "Loading\u2026";
+    const spinner = make2(doc, "span", "kp-spinner");
+    busy.append(busyText, spinner);
     el2.replaceChildren(nav, stateLine, grid2, busy, legend);
     if (!el2.hasAttribute("aria-labelledby") && !el2.hasAttribute("aria-label")) el2.setAttribute("aria-labelledby", title.id);
     const c = {
@@ -16705,7 +16954,8 @@ function attachCalendars(root = document, options = {}) {
       grid: grid2,
       cells,
       legend,
-      shownMonth: ""
+      shownMonth: "",
+      busyText
     };
     calendars.set(el2, c);
     decorate?.(prev, { kind: "month-prev", host: el2, key: keyOf2(el2) });
@@ -16777,6 +17027,7 @@ function setCalendarState(el2, state, words = "") {
   c.state = state;
   c.stateLine.textContent = words;
   c.stateLine.dataset.kpState = state;
+  if (c.busyText) c.busyText.textContent = words || (state === "loading" ? c.strings.loading ?? "Loading\u2026" : "");
   paintCalendar(c);
 }
 function calendarSelect(el2, iso) {
@@ -17434,14 +17685,11 @@ var THEMES = Object.freeze([
   { name: "pastel", label: "Pastel", dark: false },
   { name: "terminal", label: "Terminal", dark: true },
   { name: "forest", label: "Forest", dark: false },
-  { name: "high-contrast", label: "High contrast", dark: false },
-  { name: "sepia", label: "Sepia", dark: false },
   { name: "blueprint", label: "Blueprint", dark: true },
   { name: "solstice", label: "Solstice", dark: true },
   { name: "brutalism", label: "Brutalism", dark: false },
   { name: "deco", label: "Art Deco", dark: true },
   { name: "phantom", label: "Phantom", dark: true },
-  { name: "retro", label: "Retro", dark: false },
   { name: "grotesk", label: "Grotesk", dark: false },
   { name: "nostromo", label: "Nostromo", dark: false },
   { name: "titanium", label: "Titanium", dark: true }
@@ -18478,7 +18726,6 @@ function tourCardPlace(target, card, view, { gutter = TOUR_GUTTER, gap = TOUR_GA
   const top = target.top + target.height / 2 > view.height / 2 ? target.top - gap - card.height : target.bottom + gap;
   return { left, top };
 }
-var reducedMotion = (doc) => !!doc.defaultView?.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 var isShown2 = (el2) => !!el2 && el2.isConnected && el2.getClientRects().length > 0;
 function resolveTarget(step, doc) {
   if (typeof step.target === "function") {
@@ -18499,6 +18746,18 @@ var make4 = (doc, tag, className, text) => {
   return el2;
 };
 var endRunning = null;
+function fixShape(card, steps, title, text) {
+  const was = [title.textContent, text.textContent];
+  card.style.removeProperty("min-block-size");
+  let tallest = 0;
+  for (const step of steps) {
+    title.textContent = step.title;
+    text.textContent = step.text;
+    tallest = Math.max(tallest, card.getBoundingClientRect().height);
+  }
+  [title.textContent, text.textContent] = was;
+  if (tallest > 0) card.style.minBlockSize = `${Math.ceil(tallest)}px`;
+}
 function startTour(steps, { start = 0, remember: remember2, decorate, returnFocus, onEnd, strings: own } = {}) {
   endRunning?.();
   const doc = document;
@@ -18515,11 +18774,11 @@ function startTour(steps, { start = 0, remember: remember2, decorate, returnFocu
   );
   let index = Math.min(Math.max(0, start), live2.length - 1);
   let target = null;
-  let targetPosition = "";
   const card = (
     /** @type {HTMLDialogElement} */
     make4(doc, "dialog", "kp-tour")
   );
+  card.dataset.kpArrive = "none";
   const title = make4(doc, "h3", "kp-tour__title");
   title.id = nextId2("kp-tour-title");
   const text = make4(doc, "p", "kp-tour__text");
@@ -18546,15 +18805,12 @@ function startTour(steps, { start = 0, remember: remember2, decorate, returnFocu
   const unmark = () => {
     if (!target) return;
     target.removeAttribute("data-kp-tour-target");
-    target.style.position = targetPosition;
     target = null;
   };
   const mark = (el2) => {
     unmark();
     target = el2;
-    targetPosition = el2.style.position;
     el2.setAttribute("data-kp-tour-target", "");
-    if (view.getComputedStyle(el2).position === "static") el2.style.position = "relative";
   };
   const place2 = () => {
     if (!target || !card.open) return;
@@ -18623,15 +18879,25 @@ function startTour(steps, { start = 0, remember: remember2, decorate, returnFocu
       host.append(card);
     }
     if (!card.open) card.show();
+    if (!stepping) fixShape(card, live2, title, text);
     title.textContent = step.title;
     text.textContent = step.text;
-    if (stepping) markStep();
+    if (stepping) {
+      card.setAttribute("data-kp-tour-stepping", "");
+      markStep();
+    }
     count.textContent = strings.tourCount(index + 1, live2.length);
     backButton.hidden = index === 0;
     const last = index === live2.length - 1;
     nextButton.textContent = last ? strings.tourDone : strings.tourNext;
     nextButton.title = last ? strings.tourDoneTitle : strings.tourNextTitle;
-    if (scroll) el2.scrollIntoView({ block: "nearest", inline: "nearest", behavior: reducedMotion(doc) ? "auto" : "smooth" });
+    if (scroll) {
+      const rect = el2.getBoundingClientRect();
+      const inView = rect.top >= 0 && rect.bottom <= (view.innerHeight || doc.documentElement.clientHeight) && rect.left >= 0 && rect.right <= (view.innerWidth || doc.documentElement.clientWidth);
+      if (!inView) {
+        el2.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "auto" });
+      }
+    }
     place2();
     nextButton.focus({ preventScroll: true });
   };
@@ -18639,20 +18905,21 @@ function startTour(steps, { start = 0, remember: remember2, decorate, returnFocu
   const finish = (finished) => {
     if (ended) return;
     ended = true;
-    unmark();
     unmarkStep();
     card.inert = true;
+    card.removeAttribute("data-kp-tour-stepping");
     void playEntranceBackwards(card).then(() => {
+      unmark();
       if (card.open) card.close();
       card.remove();
       stopReversing(card);
+      if (back?.isConnected) back.focus();
     });
     view.removeEventListener("keydown", onKey, true);
     view.removeEventListener("resize", onMove);
     doc.removeEventListener("scroll", onMove, true);
     endRunning = null;
     if (remember2) tourMemory(remember2)?.write(TOUR_SLOT, true);
-    if (back?.isConnected) back.focus();
     onEnd?.(finished);
   };
   let frame = 0;
@@ -18796,6 +19063,7 @@ export {
   GRAPH_CHANGE_EVENT,
   GRID_PAGE_ROWS,
   GROUP_EVENT,
+  GROUP_FOLDING_ATTRIBUTE,
   GROUP_ROW,
   HEADLINE_ROUTINES,
   HIGHLIGHT_EVENT,
@@ -18933,6 +19201,7 @@ export {
   applyStoredTheme,
   applyStringProperties,
   applyTheme,
+  arriveShown,
   attachActionColumns,
   attachAgo,
   attachAlarms,
@@ -19049,6 +19318,7 @@ export {
   forms_exports as formsExports,
   freshness_exports as freshnessExports,
   getStrings,
+  glideGroup,
   glyphCells,
   graphBends,
   graph_exports as graphExports,
@@ -19073,6 +19343,7 @@ export {
   layoutOf,
   lazy_register_exports as lazyRegisterExports,
   leave,
+  leavesState,
   listbox_exports as listboxExports,
   luminance,
   markUpdating,
