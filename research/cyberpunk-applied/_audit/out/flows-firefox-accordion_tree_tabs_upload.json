@@ -1,0 +1,635 @@
+{
+    "tabs": {
+        "switch": {
+            "#fa-panel-1": {
+                "present": true,
+                "movesMs": 775,
+                "startMs": 72,
+                "poses": 7,
+                "gapsMs": [72, 12, 121, 116, 117, 409],
+                "w": [0, 775],
+                "h": [0, 48],
+                "op": [1, 1],
+                "maxJump": 775,
+                "anims": ["kp-sig-cyberpunk-split-out:480:linear", "script:600:steps(1)"],
+                "maxAnims": 2,
+                "first": {
+                    "r": [76.5, 257, 775, 48],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [0, 0, 0, 0],
+                    "op": 1
+                },
+                "trace": [
+                    [0, 775, 48, 1],
+                    [72, 775, 48, 1],
+                    [84, 775, 48, 1],
+                    [205, 775, 48, 1],
+                    [321, 775, 48, 1],
+                    [438, 775, 48, 1],
+                    [847, 0, 0, 1]
+                ]
+            },
+            "#fa-panel-2": {
+                "present": true,
+                "movesMs": 641,
+                "startMs": 847,
+                "poses": 6,
+                "gapsMs": [847, 7, 384, 134, 116],
+                "w": [0, 775],
+                "h": [0, 48],
+                "op": [1, 1],
+                "maxJump": 775,
+                "anims": ["script:480:linear", "script:600:steps(1)"],
+                "maxAnims": 2,
+                "first": {
+                    "r": [0, 0, 0, 0],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [76.5, 580, 775, 48],
+                    "op": 1
+                },
+                "trace": [
+                    [0, 0, 0, 1],
+                    [847, 775, 0, 1],
+                    [854, 775, 48, 1],
+                    [1238, 775, 48, 1],
+                    [1372, 775, 48, 1],
+                    [1488, 775, 48, 1]
+                ]
+            },
+            ".kp-tabs": {
+                "present": true,
+                "movesMs": 824,
+                "startMs": 72,
+                "poses": 4,
+                "gapsMs": [72, 775, 49],
+                "w": [775, 775],
+                "h": [85, 91],
+                "op": [1, 1],
+                "maxJump": 323,
+                "anims": [
+                    "sub:kp-sig-cyberpunk-split-out:480:linear",
+                    "sub:script:600:steps(1)",
+                    "script:480:steps(8, jump-st",
+                    "sub:script:480:linear"
+                ],
+                "maxAnims": 3,
+                "first": {
+                    "r": [76.5, 214, 775, 91],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [76.5, 537, 775, 91],
+                    "op": 1
+                },
+                "trace": [
+                    [0, 775, 91, 1],
+                    [72, 775, 91, 1],
+                    [847, 775, 85, 1],
+                    [896, 775, 91, 1]
+                ]
+            }
+        },
+        "back": {
+            "#fa-panel-1": {
+                "present": true,
+                "movesMs": 640,
+                "startMs": 853,
+                "poses": 6,
+                "gapsMs": [853, 6, 401, 115, 118],
+                "w": [0, 775],
+                "h": [0, 48],
+                "op": [1, 1],
+                "maxJump": 775,
+                "anims": ["script:480:linear", "script:600:steps(1)"],
+                "maxAnims": 2,
+                "first": {
+                    "r": [0, 0, 0, 0],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [76.5, 580, 775, 48],
+                    "op": 1
+                },
+                "trace": [
+                    [0, 0, 0, 1],
+                    [853, 775, 0, 1],
+                    [859, 775, 48, 1],
+                    [1260, 775, 48, 1],
+                    [1375, 775, 48, 1],
+                    [1493, 775, 48, 1]
+                ]
+            },
+            "#fa-panel-2": {
+                "present": true,
+                "movesMs": 767,
+                "startMs": 86,
+                "poses": 6,
+                "gapsMs": [86, 123, 117, 116, 411],
+                "w": [0, 775],
+                "h": [0, 48],
+                "op": [1, 1],
+                "maxJump": 775,
+                "anims": ["kp-sig-cyberpunk-split-out:480:linear", "script:600:steps(1)"],
+                "maxAnims": 2,
+                "first": {
+                    "r": [76.5, 580, 775, 48],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [0, 0, 0, 0],
+                    "op": 1
+                },
+                "trace": [
+                    [0, 775, 48, 1],
+                    [86, 775, 48, 1],
+                    [209, 775, 48, 1],
+                    [326, 775, 48, 1],
+                    [442, 775, 48, 1],
+                    [853, 0, 0, 1]
+                ]
+            },
+            ".kp-tabs": {
+                "present": true,
+                "movesMs": 48,
+                "startMs": 853,
+                "poses": 3,
+                "gapsMs": [853, 48],
+                "w": [775, 775],
+                "h": [85, 91],
+                "op": [1, 1],
+                "maxJump": 6,
+                "anims": [
+                    "sub:kp-sig-cyberpunk-split-out:480:linear",
+                    "sub:script:600:steps(1)",
+                    "script:480:steps(8, jump-st",
+                    "sub:script:480:linear"
+                ],
+                "maxAnims": 3,
+                "first": {
+                    "r": [76.5, 537, 775, 91],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [76.5, 537, 775, 91],
+                    "op": 1
+                },
+                "trace": [
+                    [0, 775, 91, 1],
+                    [853, 775, 85, 1],
+                    [901, 775, 91, 1]
+                ]
+            }
+        },
+        "pageErrors": []
+    },
+    "accordion": {
+        "open": {
+            ".kp-accordion__item:nth-child(2)": {
+                "present": true,
+                "movesMs": 0,
+                "startMs": 567,
+                "poses": 2,
+                "gapsMs": [567],
+                "w": [379.5, 379.5],
+                "h": [42, 102],
+                "op": [1, 1],
+                "maxJump": 60,
+                "anims": ["script:480:steps(1)"],
+                "maxAnims": 1,
+                "first": {
+                    "r": [472, 315.5, 379.5, 42],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [472, 315.5, 379.5, 102],
+                    "op": 1
+                },
+                "trace": [
+                    [0, 379.5, 42, 1],
+                    [567, 379.5, 102, 1]
+                ]
+            },
+            ".kp-accordion__item:nth-child(2) .kp-accordion__content, .kp-accordion__item:nth-child(2) > :not(summary)": {
+                "present": true,
+                "movesMs": 0,
+                "startMs": null,
+                "poses": 1,
+                "gapsMs": [],
+                "w": [379.5, 379.5],
+                "h": [60, 60],
+                "op": [1, 1],
+                "maxJump": 0,
+                "anims": [],
+                "maxAnims": 0,
+                "first": {
+                    "r": [472, 356.5, 379.5, 60],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [472, 356.5, 379.5, 60],
+                    "op": 1
+                },
+                "trace": [[0, 379.5, 60, 1]]
+            }
+        },
+        "close": {
+            ".kp-accordion__item:nth-child(2)": {
+                "present": true,
+                "movesMs": 0,
+                "startMs": 83,
+                "poses": 2,
+                "gapsMs": [83],
+                "w": [379.5, 379.5],
+                "h": [42, 102],
+                "op": [1, 1],
+                "maxJump": 60,
+                "anims": ["script:480:steps(1, jump-st"],
+                "maxAnims": 1,
+                "first": {
+                    "r": [472, 315.5, 379.5, 102],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [472, 315.5, 379.5, 42],
+                    "op": 1
+                },
+                "trace": [
+                    [0, 379.5, 102, 1],
+                    [83, 379.5, 42, 1]
+                ]
+            },
+            ".kp-accordion__item:nth-child(2) .kp-accordion__content, .kp-accordion__item:nth-child(2) > :not(summary)": {
+                "present": true,
+                "movesMs": 0,
+                "startMs": null,
+                "poses": 1,
+                "gapsMs": [],
+                "w": [379.5, 379.5],
+                "h": [60, 60],
+                "op": [1, 1],
+                "maxJump": 0,
+                "anims": [],
+                "maxAnims": 0,
+                "first": {
+                    "r": [472, 356.5, 379.5, 60],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [472, 356.5, 379.5, 60],
+                    "op": 1
+                },
+                "trace": [[0, 379.5, 60, 1]]
+            }
+        },
+        "mirror": {
+            ".kp-accordion__item:nth-child(2)": {
+                "openPoses": 2,
+                "closePoses": 2,
+                "samePoses": 2,
+                "ofMax": 1,
+                "openMs": 0,
+                "closeMs": 0
+            },
+            ".kp-accordion__item:nth-child(2) .kp-accordion__content, .kp-accordion__item:nth-child(2) > :not(summary)": {
+                "openPoses": 1,
+                "closePoses": 1,
+                "samePoses": 1,
+                "ofMax": 1,
+                "openMs": 0,
+                "closeMs": 0
+            }
+        },
+        "pageErrors": []
+    },
+    "tree": {
+        "open": {
+            "[data-kp-tree] > li:first-child > ul": {
+                "present": true,
+                "movesMs": 0,
+                "startMs": 69,
+                "poses": 2,
+                "gapsMs": [69],
+                "w": [0, 373.5],
+                "h": [0, 64],
+                "op": [1, 1],
+                "maxJump": 570.5,
+                "anims": [],
+                "maxAnims": 0,
+                "first": {
+                    "r": [0, 0, 0, 0],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [76.5, 570.5, 373.5, 64],
+                    "op": 1
+                },
+                "trace": [
+                    [0, 0, 0, 1],
+                    [69, 373.5, 64, 1]
+                ]
+            },
+            "[data-kp-tree]": {
+                "present": true,
+                "movesMs": 494,
+                "startMs": 61,
+                "poses": 12,
+                "gapsMs": [61, 8, 9, 49, 67, 58, 59, 59, 58, 66, 61],
+                "w": [379.5, 379.5],
+                "h": [224, 288],
+                "op": [1, 1],
+                "maxJump": 329,
+                "anims": ["script:480:steps(8)"],
+                "maxAnims": 1,
+                "first": {
+                    "r": [76.5, 213.5, 379.5, 224],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [76.5, 542.5, 379.5, 288],
+                    "op": 1
+                },
+                "trace": [
+                    [0, 379.5, 224, 1],
+                    [61, 379.5, 224, 1],
+                    [69, 379.5, 288, 1],
+                    [78, 379.5, 224, 1],
+                    [127, 379.5, 232, 1],
+                    [194, 379.5, 240, 1],
+                    [252, 379.5, 248, 1],
+                    [311, 379.5, 256, 1],
+                    [370, 379.5, 264, 1],
+                    [428, 379.5, 272, 1],
+                    [494, 379.5, 280, 1],
+                    [555, 379.5, 288, 1]
+                ]
+            },
+            "[data-kp-tree] > li:nth-child(2)": {
+                "present": true,
+                "movesMs": 8,
+                "startMs": 61,
+                "poses": 3,
+                "gapsMs": [61, 8],
+                "w": [379.5, 379.5],
+                "h": [160, 160],
+                "op": [1, 1],
+                "maxJump": 329,
+                "anims": [],
+                "maxAnims": 0,
+                "first": {
+                    "r": [76.5, 245.5, 379.5, 160],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [76.5, 638.5, 379.5, 160],
+                    "op": 1
+                },
+                "trace": [
+                    [0, 379.5, 160, 1],
+                    [61, 379.5, 160, 1],
+                    [69, 379.5, 160, 1]
+                ]
+            }
+        },
+        "close": {
+            "[data-kp-tree] > li:first-child > ul": {
+                "present": true,
+                "movesMs": 0,
+                "startMs": 91,
+                "poses": 2,
+                "gapsMs": [91],
+                "w": [0, 373.5],
+                "h": [0, 64],
+                "op": [1, 1],
+                "maxJump": 570.5,
+                "anims": [],
+                "maxAnims": 0,
+                "first": {
+                    "r": [76.5, 570.5, 373.5, 64],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [0, 0, 0, 0],
+                    "op": 1
+                },
+                "trace": [
+                    [0, 373.5, 64, 1],
+                    [91, 0, 0, 1]
+                ]
+            },
+            "[data-kp-tree]": {
+                "present": true,
+                "movesMs": 432,
+                "startMs": 91,
+                "poses": 10,
+                "gapsMs": [91, 16, 51, 66, 58, 58, 68, 57, 58],
+                "w": [379.5, 379.5],
+                "h": [224, 288],
+                "op": [1, 1],
+                "maxJump": 64,
+                "anims": ["script:480:steps(8, jump-st"],
+                "maxAnims": 1,
+                "first": {
+                    "r": [76.5, 542.5, 379.5, 288],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [76.5, 542.5, 379.5, 224],
+                    "op": 1
+                },
+                "trace": [
+                    [0, 379.5, 288, 1],
+                    [91, 379.5, 224, 1],
+                    [107, 379.5, 280, 1],
+                    [158, 379.5, 272, 1],
+                    [224, 379.5, 264, 1],
+                    [282, 379.5, 256, 1],
+                    [340, 379.5, 248, 1],
+                    [408, 379.5, 240, 1],
+                    [465, 379.5, 232, 1],
+                    [523, 379.5, 224, 1]
+                ]
+            },
+            "[data-kp-tree] > li:nth-child(2)": {
+                "present": true,
+                "movesMs": 0,
+                "startMs": 91,
+                "poses": 2,
+                "gapsMs": [91],
+                "w": [379.5, 379.5],
+                "h": [160, 160],
+                "op": [1, 1],
+                "maxJump": 64,
+                "anims": [],
+                "maxAnims": 0,
+                "first": {
+                    "r": [76.5, 638.5, 379.5, 160],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [76.5, 574.5, 379.5, 160],
+                    "op": 1
+                },
+                "trace": [
+                    [0, 379.5, 160, 1],
+                    [91, 379.5, 160, 1]
+                ]
+            }
+        },
+        "mirror": {
+            "[data-kp-tree] > li:first-child > ul": {
+                "openPoses": 2,
+                "closePoses": 2,
+                "samePoses": 2,
+                "ofMax": 1,
+                "openMs": 0,
+                "closeMs": 0
+            },
+            "[data-kp-tree]": {
+                "openPoses": 12,
+                "closePoses": 10,
+                "samePoses": 0,
+                "ofMax": 0,
+                "openMs": 494,
+                "closeMs": 432
+            },
+            "[data-kp-tree] > li:nth-child(2)": {
+                "openPoses": 3,
+                "closePoses": 2,
+                "samePoses": 0,
+                "ofMax": 0,
+                "openMs": 8,
+                "closeMs": 0
+            }
+        },
+        "pageErrors": []
+    },
+    "upload": {
+        "add": {
+            ".kp-upload__file": {
+                "present": true,
+                "movesMs": 767,
+                "startMs": 94,
+                "poses": 7,
+                "gapsMs": [94, 15, 383, 134, 116, 119],
+                "w": [775, 775],
+                "h": [2, 70],
+                "op": [1, 1],
+                "maxJump": 68,
+                "anims": ["script:480:linear", "script:600:steps(1)"],
+                "maxAnims": 2,
+                "first": null,
+                "lastp": {
+                    "r": [76.5, 590.5, 775, 70],
+                    "op": 1
+                },
+                "trace": [
+                    [0, null, null, null],
+                    [94, 775, 2, 1],
+                    [109, 775, 70, 1],
+                    [492, 775, 70, 1],
+                    [626, 775, 70, 1],
+                    [742, 775, 70, 1],
+                    [861, 775, 70, 1]
+                ]
+            },
+            ".kp-upload__list": {
+                "present": true,
+                "movesMs": 15,
+                "startMs": 94,
+                "poses": 3,
+                "gapsMs": [94, 15],
+                "w": [775, 775],
+                "h": [0, 70],
+                "op": [1, 1],
+                "maxJump": 68,
+                "anims": ["sub:script:480:linear", "sub:script:600:steps(1)"],
+                "maxAnims": 2,
+                "first": {
+                    "r": [76.5, 590.5, 775, 0],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [76.5, 590.5, 775, 70],
+                    "op": 1
+                },
+                "trace": [
+                    [0, 775, 0, 1],
+                    [94, 775, 2, 1],
+                    [109, 775, 70, 1]
+                ]
+            }
+        },
+        "remove": {
+            ".kp-upload__file": {
+                "present": true,
+                "movesMs": 0,
+                "startMs": 83,
+                "poses": 2,
+                "gapsMs": [83],
+                "w": [775, 775],
+                "h": [70, 70],
+                "op": [1, 1],
+                "maxJump": 0,
+                "anims": ["sub:--kp-cp-t:180:steps(4, jump-st"],
+                "maxAnims": 1,
+                "first": {
+                    "r": [76.5, 590.5, 775, 70],
+                    "op": 1
+                },
+                "lastp": null,
+                "trace": [
+                    [0, 775, 70, 1],
+                    [83, null, null, null]
+                ]
+            },
+            ".kp-upload__list": {
+                "present": true,
+                "movesMs": 0,
+                "startMs": 83,
+                "poses": 2,
+                "gapsMs": [83],
+                "w": [775, 775],
+                "h": [0, 70],
+                "op": [1, 1],
+                "maxJump": 70,
+                "anims": ["sub:--kp-cp-t:180:steps(4, jump-st"],
+                "maxAnims": 1,
+                "first": {
+                    "r": [76.5, 590.5, 775, 70],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [76.5, 590.5, 775, 0],
+                    "op": 1
+                },
+                "trace": [
+                    [0, 775, 70, 1],
+                    [83, 775, 0, 1]
+                ]
+            }
+        },
+        "mirror": {
+            ".kp-upload__file": {
+                "openPoses": 7,
+                "closePoses": 2,
+                "samePoses": 1,
+                "ofMax": 0.14,
+                "openMs": 767,
+                "closeMs": 0
+            },
+            ".kp-upload__list": {
+                "openPoses": 3,
+                "closePoses": 2,
+                "samePoses": 1,
+                "ofMax": 0.33,
+                "openMs": 15,
+                "closeMs": 0
+            }
+        },
+        "pageErrors": []
+    }
+}

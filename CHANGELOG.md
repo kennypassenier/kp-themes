@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **Changed: cyberpunk, the open/close pairs of the audit, every close its open reversed** [2026-10-12, research/cyberpunk-applied/_audit/MISSING.md]. The date
+  picker, combobox, theme menu, row-actions popover, palette, desktop dropdowns and the phone bar open by the channel split and close as that reversed (480 ms);
+  the tour card, its ring and dim, the alarm, the dialog backdrops and the side navigation (panel, backdrop, pushed content) follow, in four ticks each way.
+  Shared code moved only behind tokens that cyberpunk alone sets: `--kp-nav-close-time` (js/components.js holds a hover dropdown in Firefox),
+  `--kp-tour-dim-time`, `--kp-tour-dim-close-ease` and `--kp-tour-dim-close-delay` (css/components.css) and an inert `data-kp-sidenav-shift` (js/sidenav.js);
+  every other theme computes what it did.
 - **Changed: forest, the CSS-only rows of the audit** [2026-10-12, research/forest-applied/_audit/MISSING.md rows 6-8, 11, 13-23, 25]. Prose is in the body face (the
   alarm's detail, hint, countdown and button, the error page, platforms, health, status lines, truncated cells, microlabels); the busy table shows the planting row
   alone; a pressed plain or ghost button keeps its plate (ghost words 4.35:1 to 6.7:1); the phone toggle's tint follows `aria-expanded`; the leaf corner on the

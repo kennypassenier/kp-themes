@@ -1,0 +1,769 @@
+{
+    "/research/cyberpunk-applied/demo.html#loading": [
+        {
+            "name": "button.kp-button[busy]",
+            "n": 1,
+            "text": "Working…",
+            "size": "124x36",
+            "words": ["::before \"\"", "::after \"\""],
+            "anims": [],
+            "bg": "repeating-linear-gradient(color(srgb 0.9902 0.926173 0.0298 / 0) 0px, ",
+            "color": "rgb(253, 236, 8)"
+        },
+        {
+            "name": "div.kp-progressbar[indeterminate]",
+            "n": 1,
+            "text": "",
+            "size": "309x14",
+            "words": ["::before \"LOAD/#&\""],
+            "anims": [
+                "kp-sig-cyberpunk-word::before:1800ms:loop:linear",
+                "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear",
+                "kp-cp-stream-144::before:1800ms:loop:linear",
+                "kp-cp-stream-216::after:1200ms:loop:linear"
+            ],
+            "bg": "none",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "div.kp-progressbar.kp-progressbar--md[indeterminate]",
+            "n": 1,
+            "text": "",
+            "size": "309x21",
+            "words": ["::before \"LOAD/#&\""],
+            "anims": [
+                "kp-sig-cyberpunk-word::before:1800ms:loop:linear",
+                "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear",
+                "kp-cp-stream-144::before:1800ms:loop:linear",
+                "kp-cp-stream-216::after:1200ms:loop:linear"
+            ],
+            "bg": "none",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "div.kp-progressbar.kp-progressbar--lg[indeterminate]",
+            "n": 1,
+            "text": "",
+            "size": "309x28",
+            "words": ["::before \"LOAD/#&\""],
+            "anims": [
+                "kp-sig-cyberpunk-word::before:1800ms:loop:linear",
+                "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear",
+                "kp-cp-stream-144::before:1800ms:loop:linear",
+                "kp-cp-stream-216::after:1200ms:loop:linear"
+            ],
+            "bg": "none",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "span.kp-meter[busy][loading]",
+            "n": 1,
+            "text": "",
+            "size": "309x10",
+            "words": ["::before \"\"", "::after \"LOAD/#&\""],
+            "anims": ["kp-sig-cyberpunk-word::after:1800ms:loop:linear", "kp-sig-cyberpunk-word-tear::after:1800ms:loop:linear"],
+            "bg": "linear-gradient(135deg, rgb(19, 18, 22) 50%, rgba(0, 0, 0, 0) 50%), li",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "span.kp-skeleton",
+            "n": 4,
+            "text": "",
+            "size": "309x18",
+            "words": ["::before \"LOAD/#&\""],
+            "anims": ["kp-sig-cyberpunk-word::before:1800ms:loop:linear", "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear"],
+            "bg": "none",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "span.kp-skeleton.kp-skeleton--circle",
+            "n": 1,
+            "text": "",
+            "size": "48x48",
+            "words": [],
+            "anims": ["kp-pulse:1600ms:loop:linear"],
+            "bg": "linear-gradient(90deg, rgb(19, 18, 22), rgb(34, 32, 39), rgb(19, 18, 2",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "span.kp-skeleton.kp-skeleton--block",
+            "n": 1,
+            "text": "",
+            "size": "217x96",
+            "words": [],
+            "anims": ["kp-pulse:1600ms:loop:linear"],
+            "bg": "linear-gradient(90deg, rgb(19, 18, 22), rgb(34, 32, 39), rgb(19, 18, 2",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "span.kp-spinner",
+            "n": 4,
+            "text": "",
+            "size": "20x20",
+            "words": [],
+            "anims": [
+                "kp-sig-cyberpunk-bars-1:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-2:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-3:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-4:3000ms:loop:linear",
+                "kp-sig-cyberpunk-tear:3000ms:loop:linear"
+            ],
+            "bg": "linear-gradient(rgb(0, 238, 255) 0px, rgb(0, 238, 255) 2px, rgb(253, 2",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "button.kp-button.kp-button--secondary[busy]",
+            "n": 1,
+            "text": "Exporting",
+            "size": "156x36",
+            "words": ["::before \"\"", "::after \"\""],
+            "anims": [
+                "kp-sig-cyberpunk-bars-1:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-2:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-3:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-4:3000ms:loop:linear",
+                "kp-sig-cyberpunk-tear:3000ms:loop:linear"
+            ],
+            "bg": "repeating-linear-gradient(color(srgb 0.586 0.574 0.514 / 0) 0px, color",
+            "color": "rgb(149, 146, 131)"
+        }
+    ],
+    "/research/cyberpunk-applied/demo.html#table-busy": [
+        {
+            "name": "div.kp-datatable[busy]",
+            "n": 1,
+            "text": "The rows could not be loaded.T",
+            "size": "958x441",
+            "words": [],
+            "anims": [
+                "kp-sig-cyberpunk-bars-1:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-2:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-3:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-4:3000ms:loop:linear",
+                "kp-sig-cyberpunk-tear:3000ms:loop:linear"
+            ],
+            "bg": "none",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "span.kp-spinner",
+            "n": 6,
+            "text": "",
+            "size": "13x13",
+            "words": [],
+            "anims": [
+                "kp-sig-cyberpunk-bars-1:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-2:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-3:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-4:3000ms:loop:linear",
+                "kp-sig-cyberpunk-tear:3000ms:loop:linear"
+            ],
+            "bg": "linear-gradient(rgb(0, 238, 255) 0px, rgb(0, 238, 255) 2px, rgb(253, 2",
+            "color": "rgb(149, 146, 131)"
+        },
+        {
+            "name": "div.kp-datatable__busy-overlay",
+            "n": 1,
+            "text": "Asking the pump houses…",
+            "size": "958x281",
+            "words": [],
+            "anims": [
+                "kp-sig-cyberpunk-bars-1:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-2:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-3:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-4:3000ms:loop:linear",
+                "kp-sig-cyberpunk-tear:3000ms:loop:linear"
+            ],
+            "bg": "none",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "div.kp-datatable__busy-panel",
+            "n": 1,
+            "text": "Asking the pump houses…",
+            "size": "200x96",
+            "words": [],
+            "anims": [
+                "kp-sig-cyberpunk-bars-1:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-2:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-3:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-4:3000ms:loop:linear",
+                "kp-sig-cyberpunk-tear:3000ms:loop:linear"
+            ],
+            "bg": "none",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "button.kp-button[busy]",
+            "n": 1,
+            "text": "Working…",
+            "size": "124x36",
+            "words": ["::before \"\"", "::after \"\""],
+            "anims": [],
+            "bg": "repeating-linear-gradient(color(srgb 0.9902 0.926173 0.0298 / 0) 0px, ",
+            "color": "rgb(253, 236, 8)"
+        },
+        {
+            "name": "div.kp-progressbar[indeterminate]",
+            "n": 1,
+            "text": "",
+            "size": "309x14",
+            "words": ["::before \"#&$?%@/\""],
+            "anims": [
+                "kp-sig-cyberpunk-word::before:1800ms:loop:linear",
+                "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear",
+                "kp-cp-stream-144::before:1800ms:loop:linear",
+                "kp-cp-stream-216::after:1200ms:loop:linear"
+            ],
+            "bg": "none",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "div.kp-progressbar.kp-progressbar--md[indeterminate]",
+            "n": 1,
+            "text": "",
+            "size": "309x21",
+            "words": ["::before \"#&$?%@/\""],
+            "anims": [
+                "kp-sig-cyberpunk-word::before:1800ms:loop:linear",
+                "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear",
+                "kp-cp-stream-144::before:1800ms:loop:linear",
+                "kp-cp-stream-216::after:1200ms:loop:linear"
+            ],
+            "bg": "none",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "div.kp-progressbar.kp-progressbar--lg[indeterminate]",
+            "n": 1,
+            "text": "",
+            "size": "309x28",
+            "words": ["::before \"#&$?%@/\""],
+            "anims": [
+                "kp-sig-cyberpunk-word::before:1800ms:loop:linear",
+                "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear",
+                "kp-cp-stream-144::before:1800ms:loop:linear",
+                "kp-cp-stream-216::after:1200ms:loop:linear"
+            ],
+            "bg": "none",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "span.kp-meter[busy][loading]",
+            "n": 1,
+            "text": "",
+            "size": "309x10",
+            "words": ["::before \"\"", "::after \"#&$?%@/\""],
+            "anims": ["kp-sig-cyberpunk-word::after:1800ms:loop:linear", "kp-sig-cyberpunk-word-tear::after:1800ms:loop:linear"],
+            "bg": "linear-gradient(135deg, rgb(19, 18, 22) 50%, rgba(0, 0, 0, 0) 50%), li",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "span.kp-skeleton",
+            "n": 4,
+            "text": "",
+            "size": "309x18",
+            "words": ["::before \"#&$?%@/\""],
+            "anims": ["kp-sig-cyberpunk-word::before:1800ms:loop:linear", "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear"],
+            "bg": "none",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "span.kp-skeleton.kp-skeleton--circle",
+            "n": 1,
+            "text": "",
+            "size": "48x48",
+            "words": [],
+            "anims": ["kp-pulse:1600ms:loop:linear"],
+            "bg": "linear-gradient(90deg, rgb(19, 18, 22), rgb(34, 32, 39), rgb(19, 18, 2",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "span.kp-skeleton.kp-skeleton--block",
+            "n": 1,
+            "text": "",
+            "size": "217x96",
+            "words": [],
+            "anims": ["kp-pulse:1600ms:loop:linear"],
+            "bg": "linear-gradient(90deg, rgb(19, 18, 22), rgb(34, 32, 39), rgb(19, 18, 2",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "button.kp-button.kp-button--secondary[busy]",
+            "n": 1,
+            "text": "Exporting",
+            "size": "156x36",
+            "words": ["::before \"\"", "::after \"\""],
+            "anims": [
+                "kp-sig-cyberpunk-bars-1:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-2:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-3:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-4:3000ms:loop:linear",
+                "kp-sig-cyberpunk-tear:3000ms:loop:linear"
+            ],
+            "bg": "repeating-linear-gradient(color(srgb 0.586 0.574 0.514 / 0) 0px, color",
+            "color": "rgb(149, 146, 131)"
+        }
+    ],
+    "/research/cyberpunk-applied/demo.html#calendar-busy": [
+        {
+            "name": "table.kp-calendar__grid[busy]",
+            "n": 2,
+            "text": "MonTueWedThuFriSatSun 28 29 30",
+            "size": "483x378",
+            "words": [],
+            "anims": [],
+            "bg": "none",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "button.kp-calendar__day[tone=loading]",
+            "n": 62,
+            "text": "01",
+            "size": "62x52",
+            "words": [],
+            "anims": [],
+            "bg": "none",
+            "color": "rgb(149, 146, 131)"
+        },
+        {
+            "name": "span.kp-spinner",
+            "n": 36,
+            "text": "",
+            "size": "40x40",
+            "words": [],
+            "anims": [
+                "kp-sig-cyberpunk-bars-1:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-2:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-3:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-4:3000ms:loop:linear",
+                "kp-sig-cyberpunk-tear:3000ms:loop:linear"
+            ],
+            "bg": "linear-gradient(rgb(0, 238, 255) 0px, rgb(0, 238, 255) 2px, rgb(253, 2",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "button.kp-button[busy]",
+            "n": 1,
+            "text": "Working…",
+            "size": "124x36",
+            "words": ["::before \"\"", "::after \"\""],
+            "anims": [],
+            "bg": "repeating-linear-gradient(color(srgb 0.9902 0.926173 0.0298 / 0) 0px, ",
+            "color": "rgb(253, 236, 8)"
+        },
+        {
+            "name": "div.kp-progressbar[indeterminate]",
+            "n": 1,
+            "text": "",
+            "size": "309x14",
+            "words": ["::before \"LOADING\""],
+            "anims": [
+                "kp-sig-cyberpunk-word::before:1800ms:loop:linear",
+                "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear",
+                "kp-cp-stream-144::before:1800ms:loop:linear",
+                "kp-cp-stream-216::after:1200ms:loop:linear"
+            ],
+            "bg": "none",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "div.kp-progressbar.kp-progressbar--md[indeterminate]",
+            "n": 1,
+            "text": "",
+            "size": "309x21",
+            "words": ["::before \"LOADING\""],
+            "anims": [
+                "kp-sig-cyberpunk-word::before:1800ms:loop:linear",
+                "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear",
+                "kp-cp-stream-144::before:1800ms:loop:linear",
+                "kp-cp-stream-216::after:1200ms:loop:linear"
+            ],
+            "bg": "none",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "div.kp-progressbar.kp-progressbar--lg[indeterminate]",
+            "n": 1,
+            "text": "",
+            "size": "309x28",
+            "words": ["::before \"LOADING\""],
+            "anims": [
+                "kp-sig-cyberpunk-word::before:1800ms:loop:linear",
+                "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear",
+                "kp-cp-stream-144::before:1800ms:loop:linear",
+                "kp-cp-stream-216::after:1200ms:loop:linear"
+            ],
+            "bg": "none",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "span.kp-meter[busy][loading]",
+            "n": 1,
+            "text": "",
+            "size": "309x10",
+            "words": ["::before \"\"", "::after \"LOADING\""],
+            "anims": ["kp-sig-cyberpunk-word::after:1800ms:loop:linear", "kp-sig-cyberpunk-word-tear::after:1800ms:loop:linear"],
+            "bg": "linear-gradient(135deg, rgb(19, 18, 22) 50%, rgba(0, 0, 0, 0) 50%), li",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "span.kp-skeleton",
+            "n": 4,
+            "text": "",
+            "size": "309x18",
+            "words": ["::before \"LOADING\""],
+            "anims": ["kp-sig-cyberpunk-word::before:1800ms:loop:linear", "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear"],
+            "bg": "none",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "span.kp-skeleton.kp-skeleton--circle",
+            "n": 1,
+            "text": "",
+            "size": "48x48",
+            "words": [],
+            "anims": ["kp-pulse:1600ms:loop:linear"],
+            "bg": "linear-gradient(90deg, rgb(19, 18, 22), rgb(34, 32, 39), rgb(19, 18, 2",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "span.kp-skeleton.kp-skeleton--block",
+            "n": 1,
+            "text": "",
+            "size": "217x96",
+            "words": [],
+            "anims": ["kp-pulse:1600ms:loop:linear"],
+            "bg": "linear-gradient(90deg, rgb(19, 18, 22), rgb(34, 32, 39), rgb(19, 18, 2",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "button.kp-button.kp-button--secondary[busy]",
+            "n": 1,
+            "text": "Exporting",
+            "size": "156x36",
+            "words": ["::before \"\"", "::after \"\""],
+            "anims": [
+                "kp-sig-cyberpunk-bars-1:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-2:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-3:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-4:3000ms:loop:linear",
+                "kp-sig-cyberpunk-tear:3000ms:loop:linear"
+            ],
+            "bg": "repeating-linear-gradient(color(srgb 0.586 0.574 0.514 / 0) 0px, color",
+            "color": "rgb(149, 146, 131)"
+        }
+    ],
+    "/catalogue/button.html": [
+        {
+            "name": "button.kp-button[busy]",
+            "n": 1,
+            "text": "Working…",
+            "size": "124x36",
+            "words": ["::before \"\"", "::after \"\""],
+            "anims": [],
+            "bg": "repeating-linear-gradient(color(srgb 0.9902 0.926173 0.0298 / 0) 0px, ",
+            "color": "rgb(253, 236, 8)"
+        }
+    ],
+    "/catalogue/feedback.html": [
+        {
+            "name": "div.kp-progressbar",
+            "n": 6,
+            "text": "",
+            "size": "306x14",
+            "words": [],
+            "anims": ["kp-cp-charge::after:520ms:once:linear"],
+            "bg": "none",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "div.kp-progressbar[indeterminate]",
+            "n": 1,
+            "text": "",
+            "size": "306x14",
+            "words": ["::before \"\""],
+            "anims": [
+                "kp-sig-cyberpunk-word::before:1800ms:loop:linear",
+                "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear",
+                "kp-cp-stream-144::before:1800ms:loop:linear",
+                "kp-cp-stream-216::after:1200ms:loop:linear"
+            ],
+            "bg": "none",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "div.kp-progressbar.kp-progressbar--md",
+            "n": 6,
+            "text": "",
+            "size": "306x21",
+            "words": [],
+            "anims": ["kp-cp-charge::after:520ms:once:linear"],
+            "bg": "none",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "div.kp-progressbar.kp-progressbar--md[indeterminate]",
+            "n": 1,
+            "text": "",
+            "size": "306x21",
+            "words": ["::before \"\""],
+            "anims": [
+                "kp-sig-cyberpunk-word::before:1800ms:loop:linear",
+                "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear",
+                "kp-cp-stream-144::before:1800ms:loop:linear",
+                "kp-cp-stream-216::after:1200ms:loop:linear"
+            ],
+            "bg": "none",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "div.kp-progressbar.kp-progressbar--lg",
+            "n": 6,
+            "text": "",
+            "size": "306x28",
+            "words": [],
+            "anims": ["kp-cp-charge::after:520ms:once:linear"],
+            "bg": "none",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "div.kp-progressbar.kp-progressbar--lg[indeterminate]",
+            "n": 1,
+            "text": "",
+            "size": "306x28",
+            "words": ["::before \"\""],
+            "anims": [
+                "kp-sig-cyberpunk-word::before:1800ms:loop:linear",
+                "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear",
+                "kp-cp-stream-144::before:1800ms:loop:linear",
+                "kp-cp-stream-216::after:1200ms:loop:linear"
+            ],
+            "bg": "none",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "span.kp-spinner",
+            "n": 4,
+            "text": "",
+            "size": "20x20",
+            "words": [],
+            "anims": [
+                "kp-sig-cyberpunk-bars-1:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-2:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-3:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-4:3000ms:loop:linear",
+                "kp-sig-cyberpunk-tear:3000ms:loop:linear"
+            ],
+            "bg": "linear-gradient(rgb(0, 238, 255) 0px, rgb(0, 238, 255) 2px, rgb(253, 2",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "button.kp-button.kp-button--secondary[busy]",
+            "n": 1,
+            "text": "Exporting",
+            "size": "156x36",
+            "words": ["::before \"\"", "::after \"\""],
+            "anims": [
+                "kp-sig-cyberpunk-bars-1:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-2:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-3:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-4:3000ms:loop:linear",
+                "kp-sig-cyberpunk-tear:3000ms:loop:linear"
+            ],
+            "bg": "repeating-linear-gradient(color(srgb 0.586 0.574 0.514 / 0) 0px, color",
+            "color": "rgb(149, 146, 131)"
+        },
+        {
+            "name": "span.kp-skeleton",
+            "n": 4,
+            "text": "",
+            "size": "288x18",
+            "words": ["::before \"\""],
+            "anims": ["kp-sig-cyberpunk-word::before:1800ms:loop:linear", "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear"],
+            "bg": "none",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "span.kp-skeleton.kp-skeleton--circle",
+            "n": 1,
+            "text": "",
+            "size": "48x48",
+            "words": [],
+            "anims": ["kp-pulse:1600ms:loop:linear"],
+            "bg": "linear-gradient(90deg, rgb(19, 18, 22), rgb(34, 32, 39), rgb(19, 18, 2",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "span.kp-skeleton.kp-skeleton--block",
+            "n": 1,
+            "text": "",
+            "size": "224x96",
+            "words": [],
+            "anims": ["kp-pulse:1600ms:loop:linear"],
+            "bg": "linear-gradient(90deg, rgb(19, 18, 22), rgb(34, 32, 39), rgb(19, 18, 2",
+            "color": "rgb(215, 213, 204)"
+        }
+    ],
+    "/catalogue/structure.html": [],
+    "/catalogue/data.html": [
+        {
+            "name": "span.kp-meter.kp-meter--over-spill[busy][loading]",
+            "n": 1,
+            "text": "",
+            "size": "360x10",
+            "words": ["::before \"\"", "::after \"LOADING\""],
+            "anims": ["kp-sig-cyberpunk-word::after:1800ms:loop:linear", "kp-sig-cyberpunk-word-tear::after:1800ms:loop:linear"],
+            "bg": "linear-gradient(135deg, rgb(19, 18, 22) 50%, rgba(0, 0, 0, 0) 50%), li",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "div.kp-kpi.kp-kpi--trend[busy]",
+            "n": 1,
+            "text": "Pressure, pump house 2 avg 15 ",
+            "size": "469x185",
+            "words": ["span::before \"LOAD/#&\"", "span::before \"LOAD/#&\""],
+            "anims": ["kp-sig-cyberpunk-word::before:1800ms:loop:linear", "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear"],
+            "bg": "repeating-linear-gradient(color(srgb 0.9902 0.926173 0.0298 / 0) 0px, ",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "span.kp-skeleton",
+            "n": 2,
+            "text": "",
+            "size": "36x18",
+            "words": ["::before \"LOAD/#&\""],
+            "anims": ["kp-sig-cyberpunk-word::before:1800ms:loop:linear", "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear"],
+            "bg": "none",
+            "color": "rgb(215, 213, 204)"
+        }
+    ],
+    "/catalogue/table.html": [
+        {
+            "name": "div.kp-table-wrap[busy]",
+            "n": 1,
+            "text": "Reference\n                    ",
+            "size": "990x121",
+            "words": [],
+            "anims": ["kp-sig-cyberpunk-word::before:1800ms:loop:linear", "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear"],
+            "bg": "none",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "span.kp-skeleton",
+            "n": 36,
+            "text": "",
+            "size": "96x18",
+            "words": ["::before \"\""],
+            "anims": ["kp-sig-cyberpunk-word::before:1800ms:loop:linear", "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear"],
+            "bg": "none",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "div.kp-datatable[busy]",
+            "n": 5,
+            "text": "The rows could not be loaded.T",
+            "size": "950x198",
+            "words": ["span::before \"LOADING\"", "span::before \"LOADING\""],
+            "anims": [
+                "kp-sig-cyberpunk-word::before:1800ms:loop:linear",
+                "kp-sig-cyberpunk-word-tear::before:1800ms:loop:linear",
+                "kp-sig-cyberpunk-bars-1:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-2:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-3:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-4:3000ms:loop:linear",
+                "kp-sig-cyberpunk-tear:3000ms:loop:linear"
+            ],
+            "bg": "none",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "span.kp-spinner",
+            "n": 7,
+            "text": "",
+            "size": "13x13",
+            "words": [],
+            "anims": [
+                "kp-sig-cyberpunk-bars-1:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-2:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-3:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-4:3000ms:loop:linear",
+                "kp-sig-cyberpunk-tear:3000ms:loop:linear"
+            ],
+            "bg": "linear-gradient(rgb(0, 238, 255) 0px, rgb(0, 238, 255) 2px, rgb(253, 2",
+            "color": "rgb(149, 146, 131)"
+        },
+        {
+            "name": "div.kp-datatable__busy-overlay",
+            "n": 2,
+            "text": "Asking the host… 42 s so far",
+            "size": "950x241",
+            "words": [],
+            "anims": [
+                "kp-sig-cyberpunk-bars-1:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-2:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-3:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-4:3000ms:loop:linear",
+                "kp-sig-cyberpunk-tear:3000ms:loop:linear"
+            ],
+            "bg": "none",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "div.kp-datatable__busy-panel",
+            "n": 2,
+            "text": "Asking the host… 42 s so far",
+            "size": "214x96",
+            "words": [],
+            "anims": [
+                "kp-sig-cyberpunk-bars-1:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-2:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-3:3000ms:loop:linear",
+                "kp-sig-cyberpunk-bars-4:3000ms:loop:linear",
+                "kp-sig-cyberpunk-tear:3000ms:loop:linear"
+            ],
+            "bg": "none",
+            "color": "rgb(215, 213, 204)"
+        }
+    ],
+    "/catalogue/chart.html": [
+        {
+            "name": "div.kp-chart__plot[busy]",
+            "n": 1,
+            "text": "Loading the readings…",
+            "size": "950x168",
+            "words": [],
+            "anims": ["kp-pulse:1600ms:loop:linear"],
+            "bg": "none",
+            "color": "rgb(215, 213, 204)"
+        },
+        {
+            "name": "div.kp-chart__state.kp-skeleton",
+            "n": 1,
+            "text": "Loading the readings…",
+            "size": "950x168",
+            "words": [],
+            "anims": ["kp-pulse:1600ms:loop:linear"],
+            "bg": "linear-gradient(90deg, rgb(19, 18, 22), rgb(34, 32, 39), rgb(19, 18, 2",
+            "color": "rgb(149, 146, 131)"
+        },
+        {
+            "name": "span.kp-chart__source-stub.kp-skeleton",
+            "n": 3,
+            "text": "",
+            "size": "102x32",
+            "words": [],
+            "anims": ["kp-pulse:1600ms:loop:linear"],
+            "bg": "linear-gradient(90deg, rgb(19, 18, 22), rgb(34, 32, 39), rgb(19, 18, 2",
+            "color": "rgb(215, 213, 204)"
+        }
+    ],
+    "/catalogue/field.html": [],
+    "/catalogue/media.html": [],
+    "/catalogue/upload.html": [],
+    "/catalogue/combobox.html": [],
+    "/catalogue/datepicker.html": [],
+    "/catalogue/navigation.html": [],
+    "/catalogue/overlays.html": [],
+    "/catalogue/alarm.html": []
+}

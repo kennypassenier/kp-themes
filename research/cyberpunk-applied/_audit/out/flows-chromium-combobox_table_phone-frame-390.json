@@ -1,0 +1,747 @@
+{
+    "combobox": {
+        "open": {
+            ".kp-combobox__list": {
+                "present": true,
+                "movesMs": 432,
+                "startMs": 143,
+                "poses": 6,
+                "gapsMs": [143, 82, 116, 117, 117],
+                "w": [0, 213],
+                "h": [0, 188],
+                "op": [1, 1],
+                "maxJump": 580,
+                "anims": ["kp-sig-cyberpunk-split:480:linear"],
+                "maxAnims": 1,
+                "first": {
+                    "r": [0, 0, 0, 0],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [76.5, 580, 213, 188],
+                    "op": 1
+                },
+                "trace": [
+                    [0, 0, 0, 1],
+                    [143, 213, 188, 1],
+                    [225, 213, 188, 1],
+                    [341, 213, 188, 1],
+                    [458, 213, 188, 1],
+                    [575, 213, 188, 1]
+                ]
+            }
+        },
+        "type": {
+            ".kp-combobox__list": {
+                "present": true,
+                "movesMs": 500,
+                "startMs": 146,
+                "poses": 12,
+                "gapsMs": [146, 5, 45, 87, 5, 58, 50, 67, 50, 66, 67],
+                "w": [213, 213],
+                "h": [44, 188],
+                "op": [1, 1],
+                "maxJump": 13.5,
+                "anims": ["script:480:steps(8, jump-st"],
+                "maxAnims": 1,
+                "first": {
+                    "r": [76.5, 580, 213, 188],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [76.5, 580, 213, 44],
+                    "op": 1
+                },
+                "trace": [
+                    [0, 213, 188, 1],
+                    [146, 213, 174.5, 1],
+                    [151, 213, 161, 1],
+                    [196, 213, 147.5, 1],
+                    [283, 213, 135, 1],
+                    [288, 213, 122, 1],
+                    [346, 213, 109, 1],
+                    [396, 213, 96, 1],
+                    [463, 213, 83, 1],
+                    [513, 213, 70, 1],
+                    [579, 213, 57, 1],
+                    [646, 213, 44, 1]
+                ]
+            }
+        },
+        "close": {
+            ".kp-combobox__list": {
+                "present": true,
+                "movesMs": 547,
+                "startMs": 163,
+                "poses": 7,
+                "gapsMs": [163, 51, 97, 118, 118, 163],
+                "w": [0, 213],
+                "h": [0, 44],
+                "op": [1, 1],
+                "maxJump": 580,
+                "anims": [],
+                "maxAnims": 0,
+                "first": {
+                    "r": [76.5, 580, 213, 44],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [0, 0, 0, 0],
+                    "op": 1
+                },
+                "trace": [
+                    [0, 213, 44, 1],
+                    [163, 0, 0, 1],
+                    [214, 0, 0, 1],
+                    [311, 0, 0, 1],
+                    [429, 0, 0, 1],
+                    [547, 0, 0, 1],
+                    [710, 0, 0, 1]
+                ]
+            }
+        },
+        "reopen": {
+            ".kp-combobox__list": {
+                "present": true,
+                "movesMs": 0,
+                "startMs": null,
+                "poses": 1,
+                "gapsMs": [],
+                "w": [0, 0],
+                "h": [0, 0],
+                "op": [1, 1],
+                "maxJump": 0,
+                "anims": [],
+                "maxAnims": 0,
+                "first": {
+                    "r": [0, 0, 0, 0],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [0, 0, 0, 0],
+                    "op": 1
+                },
+                "trace": [[0, 0, 0, 1]]
+            }
+        },
+        "mirror": {
+            ".kp-combobox__list": {
+                "openPoses": 6,
+                "closePoses": 7,
+                "samePoses": 1,
+                "ofMax": 0.14,
+                "openMs": 432,
+                "closeMs": 547
+            }
+        },
+        "mirrorReopen": {
+            ".kp-combobox__list": {
+                "openPoses": 1,
+                "closePoses": 7,
+                "samePoses": 1,
+                "ofMax": 0.14,
+                "openMs": 0,
+                "closeMs": 547
+            }
+        },
+        "pageErrors": []
+    },
+    "table": {
+        "busyOn": {
+            ".kp-datatable__busy-overlay": {
+                "present": true,
+                "movesMs": 1027,
+                "startMs": 314,
+                "poses": 6,
+                "gapsMs": [314, 659, 133, 117, 118],
+                "w": [775, 775],
+                "h": [280.5, 280.5],
+                "op": [1, 1],
+                "maxJump": 0,
+                "anims": [
+                    "script:480:linear",
+                    "sub:kp-sig-cyberpunk-bars-1:3000:linear",
+                    "sub:kp-sig-cyberpunk-bars-2:3000:linear",
+                    "sub:kp-sig-cyberpunk-bars-3:3000:linear",
+                    "sub:kp-sig-cyberpunk-bars-4:3000:linear",
+                    "sub:kp-sig-cyberpunk-tear:3000:linear"
+                ],
+                "maxAnims": 6,
+                "first": null,
+                "lastp": {
+                    "r": [76.5, 375, 775, 280.5],
+                    "op": 1
+                },
+                "trace": [
+                    [0, null, null, null],
+                    [314, 775, 280.5, 1],
+                    [973, 775, 280.5, 1],
+                    [1106, 775, 280.5, 1],
+                    [1223, 775, 280.5, 1],
+                    [1341, 775, 280.5, 1]
+                ]
+            },
+            ".kp-datatable__busy-panel": {
+                "present": true,
+                "movesMs": 1027,
+                "startMs": 314,
+                "poses": 6,
+                "gapsMs": [314, 659, 133, 117, 118],
+                "w": [200, 200],
+                "h": [96, 96],
+                "op": [1, 1],
+                "maxJump": 0,
+                "anims": [
+                    "sub:kp-sig-cyberpunk-bars-1:3000:linear",
+                    "sub:kp-sig-cyberpunk-bars-2:3000:linear",
+                    "sub:kp-sig-cyberpunk-bars-3:3000:linear",
+                    "sub:kp-sig-cyberpunk-bars-4:3000:linear",
+                    "sub:kp-sig-cyberpunk-tear:3000:linear"
+                ],
+                "maxAnims": 5,
+                "first": null,
+                "lastp": {
+                    "r": [364, 467, 200, 96],
+                    "op": 1
+                },
+                "trace": [
+                    [0, null, null, null],
+                    [314, 200, 96, 1],
+                    [973, 200, 96, 1],
+                    [1106, 200, 96, 1],
+                    [1223, 200, 96, 1],
+                    [1341, 200, 96, 1]
+                ]
+            },
+            ".kp-datatable__status .kp-spinner": {
+                "present": true,
+                "movesMs": 777,
+                "startMs": 314,
+                "poses": 7,
+                "gapsMs": [314, 26, 400, 118, 115, 118],
+                "w": [0, 13],
+                "h": [13, 13],
+                "op": [1, 1],
+                "maxJump": 13,
+                "anims": [
+                    "script:480:linear",
+                    "script:600:steps(1)",
+                    "kp-sig-cyberpunk-bars-1:3000:linear",
+                    "kp-sig-cyberpunk-bars-2:3000:linear",
+                    "kp-sig-cyberpunk-bars-3:3000:linear",
+                    "kp-sig-cyberpunk-bars-4:3000:linear",
+                    "kp-sig-cyberpunk-tear:3000:linear"
+                ],
+                "maxAnims": 5,
+                "first": null,
+                "lastp": {
+                    "r": [88.5, 679, 13, 13],
+                    "op": 1
+                },
+                "trace": [
+                    [0, null, null, null],
+                    [314, 0, 13, 1],
+                    [340, 13, 13, 1],
+                    [740, 13, 13, 1],
+                    [858, 13, 13, 1],
+                    [973, 13, 13, 1],
+                    [1091, 13, 13, 1]
+                ]
+            },
+            ".kp-datatable": {
+                "present": true,
+                "movesMs": 0,
+                "startMs": 314,
+                "poses": 2,
+                "gapsMs": [314],
+                "w": [775, 775],
+                "h": [440.5, 440.5],
+                "op": [0.7, 1],
+                "maxJump": 0,
+                "anims": [
+                    "sub:kp-sig-cyberpunk-bars-1:3000:linear",
+                    "sub:kp-sig-cyberpunk-bars-2:3000:linear",
+                    "sub:kp-sig-cyberpunk-bars-3:3000:linear",
+                    "sub:kp-sig-cyberpunk-bars-4:3000:linear",
+                    "sub:kp-sig-cyberpunk-tear:3000:linear",
+                    "sub:script:480:linear",
+                    "sub:script:600:steps(1)"
+                ],
+                "maxAnims": 7,
+                "first": {
+                    "r": [76.5, 264, 775, 440.5],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [76.5, 264, 775, 440.5],
+                    "op": 0.7
+                },
+                "trace": [
+                    [0, 775, 440.5, 1],
+                    [314, 775, 440.5, 0.7]
+                ]
+            }
+        },
+        "busyOff": {
+            ".kp-datatable__busy-overlay": {
+                "present": true,
+                "movesMs": 0,
+                "startMs": 304,
+                "poses": 2,
+                "gapsMs": [304],
+                "w": [775, 775],
+                "h": [280.5, 280.5],
+                "op": [1, 1],
+                "maxJump": 0,
+                "anims": [
+                    "sub:kp-sig-cyberpunk-bars-1:3000:linear",
+                    "sub:kp-sig-cyberpunk-bars-2:3000:linear",
+                    "sub:kp-sig-cyberpunk-bars-3:3000:linear",
+                    "sub:kp-sig-cyberpunk-bars-4:3000:linear",
+                    "sub:kp-sig-cyberpunk-tear:3000:linear"
+                ],
+                "maxAnims": 5,
+                "first": {
+                    "r": [76.5, 375, 775, 280.5],
+                    "op": 1
+                },
+                "lastp": null,
+                "trace": [
+                    [0, 775, 280.5, 1],
+                    [304, null, null, null]
+                ]
+            },
+            ".kp-datatable__busy-panel": {
+                "present": true,
+                "movesMs": 0,
+                "startMs": 304,
+                "poses": 2,
+                "gapsMs": [304],
+                "w": [200, 200],
+                "h": [96, 96],
+                "op": [1, 1],
+                "maxJump": 0,
+                "anims": [
+                    "sub:kp-sig-cyberpunk-bars-1:3000:linear",
+                    "sub:kp-sig-cyberpunk-bars-2:3000:linear",
+                    "sub:kp-sig-cyberpunk-bars-3:3000:linear",
+                    "sub:kp-sig-cyberpunk-bars-4:3000:linear",
+                    "sub:kp-sig-cyberpunk-tear:3000:linear"
+                ],
+                "maxAnims": 5,
+                "first": {
+                    "r": [364, 467, 200, 96],
+                    "op": 1
+                },
+                "lastp": null,
+                "trace": [
+                    [0, 200, 96, 1],
+                    [304, null, null, null]
+                ]
+            },
+            ".kp-datatable__status .kp-spinner": {
+                "present": true,
+                "movesMs": 0,
+                "startMs": 304,
+                "poses": 2,
+                "gapsMs": [304],
+                "w": [13, 13],
+                "h": [13, 13],
+                "op": [1, 1],
+                "maxJump": 0,
+                "anims": [
+                    "kp-sig-cyberpunk-bars-1:3000:linear",
+                    "kp-sig-cyberpunk-bars-2:3000:linear",
+                    "kp-sig-cyberpunk-bars-3:3000:linear",
+                    "kp-sig-cyberpunk-bars-4:3000:linear",
+                    "kp-sig-cyberpunk-tear:3000:linear"
+                ],
+                "maxAnims": 5,
+                "first": {
+                    "r": [88.5, 679, 13, 13],
+                    "op": 1
+                },
+                "lastp": null,
+                "trace": [
+                    [0, 13, 13, 1],
+                    [304, null, null, null]
+                ]
+            },
+            ".kp-datatable": {
+                "present": true,
+                "movesMs": 0,
+                "startMs": 304,
+                "poses": 2,
+                "gapsMs": [304],
+                "w": [775, 775],
+                "h": [440.5, 440.5],
+                "op": [0.7, 1],
+                "maxJump": 0,
+                "anims": [
+                    "sub:kp-sig-cyberpunk-bars-1:3000:linear",
+                    "sub:kp-sig-cyberpunk-bars-2:3000:linear",
+                    "sub:kp-sig-cyberpunk-bars-3:3000:linear",
+                    "sub:kp-sig-cyberpunk-bars-4:3000:linear",
+                    "sub:kp-sig-cyberpunk-tear:3000:linear"
+                ],
+                "maxAnims": 5,
+                "first": {
+                    "r": [76.5, 264, 775, 440.5],
+                    "op": 0.7
+                },
+                "lastp": {
+                    "r": [76.5, 264, 775, 440.5],
+                    "op": 1
+                },
+                "trace": [
+                    [0, 775, 440.5, 0.7],
+                    [304, 775, 440.5, 1]
+                ]
+            }
+        },
+        "busyMirror": {
+            ".kp-datatable__busy-overlay": {
+                "openPoses": 6,
+                "closePoses": 2,
+                "samePoses": 1,
+                "ofMax": 0.17,
+                "openMs": 1027,
+                "closeMs": 0
+            },
+            ".kp-datatable__busy-panel": {
+                "openPoses": 6,
+                "closePoses": 2,
+                "samePoses": 1,
+                "ofMax": 0.17,
+                "openMs": 1027,
+                "closeMs": 0
+            },
+            ".kp-datatable__status .kp-spinner": {
+                "openPoses": 7,
+                "closePoses": 2,
+                "samePoses": 1,
+                "ofMax": 0.14,
+                "openMs": 777,
+                "closeMs": 0
+            },
+            ".kp-datatable": {
+                "openPoses": 2,
+                "closePoses": 2,
+                "samePoses": 2,
+                "ofMax": 1,
+                "openMs": 0,
+                "closeMs": 0
+            }
+        },
+        "emptyOn": {
+            ".kp-datatable .kp-empty": {
+                "present": false,
+                "movesMs": 0,
+                "startMs": null,
+                "poses": 1,
+                "gapsMs": [],
+                "w": [null, null],
+                "h": [null, null],
+                "op": [null, null],
+                "maxJump": 0,
+                "anims": [],
+                "maxAnims": 0,
+                "first": null,
+                "lastp": null,
+                "trace": [[0, null, null, null]]
+            },
+            ".kp-datatable": {
+                "present": true,
+                "movesMs": 347,
+                "startMs": 163,
+                "poses": 8,
+                "gapsMs": [163, 7, 103, 102, 18, 87, 30],
+                "w": [775, 775],
+                "h": [160, 440.5],
+                "op": [1, 1],
+                "maxJump": 70.5,
+                "anims": ["script:480:steps(8, jump-st"],
+                "maxAnims": 1,
+                "first": {
+                    "r": [76.5, 529, 775, 440.5],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [76.5, 529, 775, 160],
+                    "op": 1
+                },
+                "trace": [
+                    [0, 775, 440.5, 1],
+                    [163, 775, 406, 1],
+                    [170, 775, 371, 1],
+                    [273, 775, 300.5, 1],
+                    [375, 775, 265.5, 1],
+                    [393, 775, 230.5, 1],
+                    [480, 775, 195, 1],
+                    [510, 775, 160, 1]
+                ]
+            }
+        },
+        "emptyOff": {
+            ".kp-datatable .kp-empty": {
+                "present": false,
+                "movesMs": 0,
+                "startMs": null,
+                "poses": 1,
+                "gapsMs": [],
+                "w": [null, null],
+                "h": [null, null],
+                "op": [null, null],
+                "maxJump": 0,
+                "anims": [],
+                "maxAnims": 0,
+                "first": null,
+                "lastp": null,
+                "trace": [[0, null, null, null]]
+            },
+            ".kp-datatable": {
+                "present": true,
+                "movesMs": 390,
+                "startMs": 166,
+                "poses": 9,
+                "gapsMs": [166, 41, 49, 67, 67, 49, 67, 50],
+                "w": [775, 775],
+                "h": [160, 440.5],
+                "op": [1, 1],
+                "maxJump": 35.5,
+                "anims": ["script:480:steps(8)", "sub:kp-sig-cyberpunk-split:480:linear"],
+                "maxAnims": 2,
+                "first": {
+                    "r": [76.5, 529, 775, 160],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [76.5, 529, 775, 440.5],
+                    "op": 1
+                },
+                "trace": [
+                    [0, 775, 160, 1],
+                    [166, 775, 195, 1],
+                    [207, 775, 230.5, 1],
+                    [256, 775, 265.5, 1],
+                    [323, 775, 300.5, 1],
+                    [390, 775, 335.5, 1],
+                    [439, 775, 371, 1],
+                    [506, 775, 406, 1],
+                    [556, 775, 440.5, 1]
+                ]
+            }
+        },
+        "emptyMirror": {
+            ".kp-datatable .kp-empty": {
+                "openPoses": 1,
+                "closePoses": 1,
+                "samePoses": 1,
+                "ofMax": 1,
+                "openMs": 0,
+                "closeMs": 0
+            },
+            ".kp-datatable": {
+                "openPoses": 8,
+                "closePoses": 9,
+                "samePoses": 3,
+                "ofMax": 0.33,
+                "openMs": 347,
+                "closeMs": 390
+            }
+        },
+        "pageErrors": []
+    },
+    "phone-frame-390": {
+        "open": {
+            ".fa-phone .kp-nav__links": {
+                "present": true,
+                "movesMs": 483,
+                "startMs": 80,
+                "poses": 6,
+                "gapsMs": [80, 133, 117, 117, 116],
+                "w": [0, 292],
+                "h": [0, 271],
+                "op": [1, 1],
+                "maxJump": 811.5,
+                "anims": ["kp-sig-cyberpunk-split-bar:480:linear"],
+                "maxAnims": 1,
+                "first": {
+                    "r": [0, 0, 0, 0],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [50, 811.5, 292, 271],
+                    "op": 1
+                },
+                "trace": [
+                    [0, 0, 0, 1],
+                    [80, 292, 271, 1],
+                    [213, 292, 271, 1],
+                    [330, 292, 271, 1],
+                    [447, 292, 271, 1],
+                    [563, 292, 271, 1]
+                ]
+            },
+            ".fa-phone .kp-nav": {
+                "present": true,
+                "movesMs": 0,
+                "startMs": 80,
+                "poses": 2,
+                "gapsMs": [80],
+                "w": [316, 316],
+                "h": [61.5, 348.5],
+                "op": [1, 1],
+                "maxJump": 287,
+                "anims": ["sub:kp-sig-cyberpunk-split-bar:480:linear"],
+                "maxAnims": 1,
+                "first": {
+                    "r": [38, 740.5, 316, 61.5],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [38, 740.5, 316, 348.5],
+                    "op": 1
+                },
+                "trace": [
+                    [0, 316, 61.5, 1],
+                    [80, 316, 348.5, 1]
+                ]
+            },
+            ".fa-phone__body": {
+                "present": true,
+                "movesMs": 0,
+                "startMs": 80,
+                "poses": 2,
+                "gapsMs": [80],
+                "w": [316, 316],
+                "h": [72, 72],
+                "op": [1, 1],
+                "maxJump": 286.5,
+                "anims": [],
+                "maxAnims": 0,
+                "first": {
+                    "r": [38, 802, 316, 72],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [38, 1088.5, 316, 72],
+                    "op": 1
+                },
+                "trace": [
+                    [0, 316, 72, 1],
+                    [80, 316, 72, 1]
+                ]
+            }
+        },
+        "close": {
+            ".fa-phone .kp-nav__links": {
+                "present": true,
+                "movesMs": 484,
+                "startMs": 93,
+                "poses": 7,
+                "gapsMs": [93, 17, 117, 116, 117, 117],
+                "w": [0, 292],
+                "h": [0, 271],
+                "op": [1, 1],
+                "maxJump": 811.5,
+                "anims": ["kp-sig-cyberpunk-split-bar-back:480:linear"],
+                "maxAnims": 1,
+                "first": {
+                    "r": [50, 811.5, 292, 271],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [0, 0, 0, 0],
+                    "op": 1
+                },
+                "trace": [
+                    [0, 292, 271, 1],
+                    [93, 292, 271, 1],
+                    [110, 292, 271, 1],
+                    [227, 292, 271, 1],
+                    [343, 292, 271, 1],
+                    [460, 292, 271, 1],
+                    [577, 0, 0, 1]
+                ]
+            },
+            ".fa-phone .kp-nav": {
+                "present": true,
+                "movesMs": 0,
+                "startMs": 577,
+                "poses": 2,
+                "gapsMs": [577],
+                "w": [316, 316],
+                "h": [61.5, 348.5],
+                "op": [1, 1],
+                "maxJump": 287,
+                "anims": ["sub:kp-sig-cyberpunk-split-bar-back:480:linear"],
+                "maxAnims": 1,
+                "first": {
+                    "r": [38, 740.5, 316, 348.5],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [38, 740.5, 316, 61.5],
+                    "op": 1
+                },
+                "trace": [
+                    [0, 316, 348.5, 1],
+                    [577, 316, 61.5, 1]
+                ]
+            },
+            ".fa-phone__body": {
+                "present": true,
+                "movesMs": 0,
+                "startMs": 577,
+                "poses": 2,
+                "gapsMs": [577],
+                "w": [316, 316],
+                "h": [72, 72],
+                "op": [1, 1],
+                "maxJump": 286.5,
+                "anims": [],
+                "maxAnims": 0,
+                "first": {
+                    "r": [38, 1088.5, 316, 72],
+                    "op": 1
+                },
+                "lastp": {
+                    "r": [38, 802, 316, 72],
+                    "op": 1
+                },
+                "trace": [
+                    [0, 316, 72, 1],
+                    [577, 316, 72, 1]
+                ]
+            }
+        },
+        "mirror": {
+            ".fa-phone .kp-nav__links": {
+                "openPoses": 6,
+                "closePoses": 7,
+                "samePoses": 5,
+                "ofMax": 0.71,
+                "openMs": 483,
+                "closeMs": 484
+            },
+            ".fa-phone .kp-nav": {
+                "openPoses": 2,
+                "closePoses": 2,
+                "samePoses": 2,
+                "ofMax": 1,
+                "openMs": 0,
+                "closeMs": 0
+            },
+            ".fa-phone__body": {
+                "openPoses": 2,
+                "closePoses": 2,
+                "samePoses": 2,
+                "ofMax": 1,
+                "openMs": 0,
+                "closeMs": 0
+            }
+        },
+        "pageErrors": []
+    }
+}

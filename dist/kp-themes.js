@@ -5956,15 +5956,19 @@ function attachNavToggles(root = document, { strings, ownedBy = NAV_OWNED } = {}
         nav.setAttribute("data-kp-nav-closing", "");
         button.setAttribute("aria-expanded", "false");
         button.setAttribute("aria-label", label());
-        const durVal = getComputedStyle(nav).getPropertyValue("--kp-sig-fo-time").trim();
+        const navStyle = getComputedStyle(nav);
+        const durVal = (navStyle.getPropertyValue("--kp-nav-close-time") || navStyle.getPropertyValue("--kp-sig-fo-time")).trim();
         const dur = durVal ? durVal.endsWith("ms") ? parseFloat(durVal) : parseFloat(durVal) * 1e3 : 300;
-        setTimeout(() => {
-          if (!closing2) return;
-          closing2 = false;
-          nav.removeAttribute("data-kp-nav-closing");
-          write(false);
-          nav.dispatchEvent(new CustomEvent(NAV_TOGGLE_EVENT, { bubbles: true, detail: { open: false } }));
-        }, dur || 300);
+        setTimeout(
+          () => {
+            if (!closing2) return;
+            closing2 = false;
+            nav.removeAttribute("data-kp-nav-closing");
+            write(false);
+            nav.dispatchEvent(new CustomEvent(NAV_TOGGLE_EVENT, { bubbles: true, detail: { open: false } }));
+          },
+          Number.isFinite(dur) ? dur : 300
+        );
       }
     };
     write(nav.hasAttribute("data-kp-nav-open"));
@@ -6177,8 +6181,7 @@ function attachNavMenus(root = document, { strings, ownedBy = NAV_OWNED } = {}) 
     };
     const set = (button, open) => {
       if (open) {
-        for (const other of buttons)
-          if (other !== button && other.getAttribute("aria-expanded") === "true") set(other, false);
+        for (const other of buttons) if (other !== button && other.getAttribute("aria-expanded") === "true") set(other, false);
       }
       const was = button.getAttribute("aria-expanded") === "true";
       const panel = wired.get(button)?.panel;
@@ -6187,6 +6190,32 @@ function attachNavMenus(root = document, { strings, ownedBy = NAV_OWNED } = {}) 
       button.setAttribute("aria-expanded", String(open));
       if (open && panel) placeNavPanel(panel);
       if (!open && was && item) settleClosing(item, panel);
+    };
+    const holdsClose = () => getComputedStyle(nav).getPropertyValue("--kp-nav-close-time").trim() !== "";
+    const onLeave = (event) => {
+      if (!holdsClose()) return;
+      const item = itemOf(event.target);
+      if (!item || !nav.contains(item)) return;
+      const panel = item.querySelector(DROPDOWN);
+      if (!panel) return;
+      const to = (
+        /** @type {FocusEvent | PointerEvent} */
+        event.relatedTarget
+      );
+      if (to instanceof Node && item.contains(to)) return;
+      if (item.hasAttribute("data-kp-nav-menu-open")) return;
+      if (event.type === "pointerout" ? item.matches(":focus-within") : item.matches(":hover")) return;
+      const raw = getComputedStyle(nav).getPropertyValue("--kp-nav-close-time").trim();
+      const ms = raw.endsWith("ms") ? parseFloat(raw) : parseFloat(raw) * 1e3;
+      if (!(ms > 0)) return;
+      item.setAttribute("data-kp-nav-closing", "");
+      setTimeout(() => {
+        if (!item.matches(":hover, :focus-within, [data-kp-nav-menu-open]")) item.removeAttribute("data-kp-nav-closing");
+      }, ms || 0);
+    };
+    const onReturn = (event) => {
+      const item = itemOf(event.target);
+      if (item?.hasAttribute("data-kp-nav-closing") && item.querySelector(DROPDOWN)) item.removeAttribute("data-kp-nav-closing");
     };
     const onClick = (event) => {
       const button = (
@@ -6219,6 +6248,10 @@ function attachNavMenus(root = document, { strings, ownedBy = NAV_OWNED } = {}) 
     };
     nav.addEventListener("pointerover", onEnter);
     nav.addEventListener("focusin", onEnter);
+    nav.addEventListener("pointerover", onReturn);
+    nav.addEventListener("focusin", onReturn);
+    nav.addEventListener("pointerout", onLeave);
+    nav.addEventListener("focusout", onLeave);
     nav.addEventListener(
       "keydown",
       /** @type {EventListener} */
@@ -6236,6 +6269,10 @@ function attachNavMenus(root = document, { strings, ownedBy = NAV_OWNED } = {}) 
     cleanups.push(() => {
       nav.removeEventListener("pointerover", onEnter);
       nav.removeEventListener("focusin", onEnter);
+      nav.removeEventListener("pointerover", onReturn);
+      nav.removeEventListener("focusin", onReturn);
+      nav.removeEventListener("pointerout", onLeave);
+      nav.removeEventListener("focusout", onLeave);
       nav.removeEventListener(
         "keydown",
         /** @type {EventListener} */
@@ -6410,6 +6447,7 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
       if (!target) return { property: null, value: "" };
       const property = mode() === "push" ? "marginInlineStart" : "paddingInlineStart";
       const value = open2 && mode() !== "over" ? getComputedStyle(panel).inlineSize : "";
+      target.setAttribute("data-kp-sidenav-shift", open2 ? "open" : "closed");
       target.style.marginInlineStart = "";
       target.style.paddingInlineStart = "";
       target.style[property] = value;

@@ -194,6 +194,8 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
             // cannot see it: a panel asked for 11rem moved its content by
             // 15rem, and the gap showed.
             const value = open && mode() !== 'over' ? getComputedStyle(panel).inlineSize : '';
+            // A theme may draw the content's move (cyberpunk takes it in ticks): the mark says which way.
+            target.setAttribute('data-kp-sidenav-shift', open ? 'open' : 'closed');
             target.style.marginInlineStart = '';
             target.style.paddingInlineStart = '';
             target.style[property] = value;

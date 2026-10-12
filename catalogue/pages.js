@@ -76,6 +76,12 @@ export const PAGES = [
         // (Kenny, 2026-10-07: only fresh verdicts left to give).
         group: 'Research to look at',
         pages: [
+            // Cyberpunk, finished the forest way (2026-10-12): the full applied demo is a measuring page until the audit is mended; it joins To judge with the items Kenny must judge.
+            {
+                href: 'research/cyberpunk-applied/demo.html',
+                label: 'Cyberpunk, as applied',
+                rework: 'the audit of cyberpunk is being mended; only what Kenny must judge will be shown',
+            },
             // Kenny, 2026-10-08: the anchor round for the nine themes without one, the grotesk way (one question, six to ten candidates, each in its own scene, as a progress bar and as a button press, the recommendation first).
             // Kenny, 2026-10-08: what makes formal, light and deco themselves, the forest way (the analysis in themes/<theme>/CHARACTER.md), the nineteen questions each, every option a live scene that follows from the theme's decided anchor, the recommendation first.
             // Kenny, 2026-10-08 (update 1): deco's grammar did not convince him ("fancy, distinguished … lots of gold accents and fancy blue backgrounds … elegance without being too in your face"); thirteen questions redrawn as thin gold on lacquer with the wallpaper, his six picks kept.

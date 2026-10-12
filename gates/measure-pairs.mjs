@@ -77,10 +77,26 @@ async function startPaused(page, act, label) {
     const { ms, list } = await page.evaluate(() => {
         const list = document
             .getAnimations()
-            .filter((a) => !window.__ambient.has(a) && Number.isFinite(Number(a.effect?.getComputedTiming().endTime)) && Number(a.effect.getComputedTiming().iterations) !== Infinity);
+            .filter(
+                (a) =>
+                    !window.__ambient.has(a) &&
+                    !a.effect?.target?.closest?.('[data-kp-reveal="headline"]') &&
+                    Number.isFinite(Number(a.effect?.getComputedTiming().endTime)) &&
+                    Number(a.effect.getComputedTiming().iterations) !== Infinity,
+            );
         for (const a of list) a.pause();
+        // A loop that starts with the pair (a pulse, a sweep) is held at its first frame, so it
+        // free-runs at no other phase in the opening than in the closing.
+        for (const a of document.getAnimations()) {
+            if (window.__ambient.has(a) || Number(a.effect?.getComputedTiming().iterations) !== Infinity) continue;
+            a.pause();
+            a.currentTime = 0;
+        }
         window.__pair = list;
-        const name = (el) => (el ? `${el.tagName.toLowerCase()}${el.id ? '#' + el.id : ''}${typeof el.className === 'string' && el.className ? '.' + el.className.trim().split(/\s+/).slice(0, 2).join('.') : ''}` : '?');
+        const name = (el) =>
+            el
+                ? `${el.tagName.toLowerCase()}${el.id ? '#' + el.id : ''}${typeof el.className === 'string' && el.className ? '.' + el.className.trim().split(/\s+/).slice(0, 2).join('.') : ''}`
+                : '?';
         return {
             ms: Math.max(0, ...list.map((a) => Number(a.effect.getComputedTiming().endTime))),
             list: list.map((a) => {
@@ -118,7 +134,8 @@ async function differ(browser) {
                     };
                     const mad = (x, y) => {
                         let s = 0;
-                        for (let i = 0; i < x.length; i += 4) s += Math.abs(x[i] - y[i]) + Math.abs(x[i + 1] - y[i + 1]) + Math.abs(x[i + 2] - y[i + 2]);
+                        for (let i = 0; i < x.length; i += 4)
+                            s += Math.abs(x[i] - y[i]) + Math.abs(x[i + 1] - y[i + 1]) + Math.abs(x[i + 2] - y[i + 2]);
                         return s / (x.length / 4) / 3 / 255;
                     };
                     const A = await Promise.all(a.map(px));
@@ -135,11 +152,14 @@ async function differ(browser) {
 async function measure(browser, differPage, base, pair) {
     const context = await browser.newContext({ viewport: { width: 1280, height: 900 }, reducedMotion: 'no-preference' });
     const page = await context.newPage();
-    await page.goto(`${base}/research/forest-applied/demo.html`);
+    await page.goto(`${base}/research/${theme}-applied/demo.html`);
     await page.evaluate(() => document.fonts.ready);
     await page.addStyleTag({ content: 'html{scroll-behavior:auto!important}' });
     await pair.setup?.(page);
-    await page.locator(pair.section ?? 'body').first().scrollIntoViewIfNeeded();
+    await page
+        .locator(pair.section ?? 'body')
+        .first()
+        .scrollIntoViewIfNeeded();
     await page.waitForTimeout(400);
     await page.evaluate(() => {
         window.__ambient = new Set(document.getAnimations());
@@ -149,7 +169,7 @@ async function measure(browser, differPage, base, pair) {
     const notes = [];
     const closed = await shot();
 
-    const openMs = await startPaused(page, pair.open, "open");
+    const openMs = await startPaused(page, pair.open, 'open');
     if (openMs <= 0) notes.push('the opening runs no animation at all');
     const opening = [];
     for (let i = 0; i <= FRAMES; i++) {
@@ -161,7 +181,7 @@ async function measure(browser, differPage, base, pair) {
     await page.waitForTimeout(500);
     const open = await shot();
 
-    const closeMs = await startPaused(page, pair.close, "close");
+    const closeMs = await startPaused(page, pair.close, 'close');
     if (closeMs <= 0) notes.push('the closing runs no animation at all: it is gone at once');
     const closing = [];
     for (let i = 0; i <= FRAMES; i++) {
@@ -192,7 +212,8 @@ async function measure(browser, differPage, base, pair) {
 
     if (closeMs > 0 && Math.abs(closeMs - openMs) / Math.max(openMs, 1) > DURATION_TOLERANCE)
         notes.push(`the closing lasts ${Math.round(closeMs)} ms, the opening ${Math.round(openMs)} ms`);
-    if (closeMs > 0 && worst > TOLERANCE) notes.push(`the closing is not the opening backwards: ${(worst * 100).toFixed(1)} % off at frame ${at}/${FRAMES}`);
+    if (closeMs > 0 && worst > TOLERANCE)
+        notes.push(`the closing is not the opening backwards: ${(worst * 100).toFixed(1)} % off at frame ${at}/${FRAMES}`);
     if (gone > 0.01) notes.push(`after the closing the screen is not the one from before the opening: ${(gone * 100).toFixed(1)} % left over`);
     await context.close();
     return { id: pair.id, ok: notes.length === 0, notes, worst, open: openMs, close: closeMs };
@@ -207,7 +228,9 @@ for (const pair of PAIRS.filter((p) => only.length === 0 || only.includes(p.id))
     try {
         const r = await measure(browser, { compare }, base, pair);
         results.push(r);
-        console.log(`${r.ok ? 'ok  ' : 'FAIL'} ${r.id.padEnd(22)} open ${Math.round(r.open)} ms, close ${Math.round(r.close)} ms, worst ${(r.worst * 100).toFixed(1)} %`);
+        console.log(
+            `${r.ok ? 'ok  ' : 'FAIL'} ${r.id.padEnd(22)} open ${Math.round(r.open)} ms, close ${Math.round(r.close)} ms, worst ${(r.worst * 100).toFixed(1)} %`,
+        );
         for (const n of r.notes) console.log(`       - ${n}`);
     } catch (error) {
         results.push({ id: pair.id, ok: false });

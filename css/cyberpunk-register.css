@@ -30,6 +30,8 @@
         --kp-nav-notch: 13px;
         --kp-nav-enter: 520ms;
         --kp-nav-enter-delay: 80ms;
+        /* The phone bar's close takes the split's four ticks (js/components.js waits this long). */
+        --kp-nav-close-time: 480ms;
         --kp-decipher-cps: 26;
         --kp-decipher-lead: 260ms;
         --kp-decipher-swap: 0.5;
@@ -369,8 +371,12 @@
         border: 0;
         border-radius: 0;
         padding: 0.5rem 0;
-        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
-        translate: 0 -6px;
+        /* Always drawn: it opens and goes by the channel split (below), not by a fade, and a
+           closing one keeps its display until the split is out. */
+        opacity: 1;
+        --kp-cp-clip: var(--kp-cp-clip-ctl);
+        --kp-cp-wide: var(--kp-cp-wide-ctl);
+        clip-path: var(--kp-cp-clip);
     }
 
     /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
@@ -386,12 +392,6 @@
             clip-path: none;
             translate: none;
         }
-    }
-
-    [data-theme='cyberpunk'] .kp-nav__links > li:hover > .kp-nav__menu,
-    [data-theme='cyberpunk'] .kp-nav__links > li:focus-within > .kp-nav__menu,
-    [data-theme='cyberpunk'] .kp-nav__links > li[data-kp-nav-menu-open] > .kp-nav__menu {
-        translate: 0 0;
     }
 
     [data-theme='cyberpunk'] .kp-nav__menu a {
@@ -1108,6 +1108,13 @@
         clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--fx-notch-sm)), calc(100% - var(--fx-notch-sm)) 100%, 0 100%);
     }
 
+    /* The day grid keeps the height of a six-week month, so a month of four or five weeks does
+       not shorten the panel under the pointer [lesson 9]. */
+    [data-theme='cyberpunk'] .kp-datepicker__grid[data-kp-view='days'] {
+        min-block-size: 15.125rem;
+        align-content: start;
+    }
+
     [data-theme='cyberpunk'] .kp-colorpicker__swatch {
         border-radius: 0;
     }
@@ -1472,10 +1479,46 @@
             animation: kp-slice-a 320ms steps(2, end) 1;
         }
 
-        [data-theme='cyberpunk'] .kp-nav__menu {
-            transition:
-                opacity var(--fx-duration) var(--fx-ease),
-                translate var(--fx-duration) var(--fx-ease);
+        /* The bar's dropdown and mega menu open by the channel split and go as it played
+           backwards [Kenny: arrival and leave = split]: shown, the split plays; once the pointer
+           or the press is gone, `display` is held for 480 ms (a transition) while the same four
+           poses play in the other order, and the panel is gone with the last one. The mega
+           menu's item is held by the script (`[data-kp-nav-closing]`, js/components.js), which
+           waits for a transition on the panel: the hold below is that transition. */
+        [data-theme='cyberpunk'] .kp-nav__menu:not(.kp-nav__menu--wide) {
+            --kp-cp-hold: 0;
+            transition: --kp-cp-hold 480ms linear;
+            animation: kp-sig-cyberpunk-split-back 480ms steps(1, end) reverse forwards;
+        }
+
+        /* A dropdown the pointer or the focus has left is drawn through its close by the mark the
+           script puts on its item (js/components.js: Firefox does not hold `display`). */
+        [data-theme='cyberpunk']
+            .kp-nav__links
+            > li[data-kp-nav-closing]:not(:hover, :focus-within, [data-kp-nav-menu-open])
+            > .kp-nav__menu:not(.kp-nav__menu--wide) {
+            display: block;
+        }
+
+        [data-theme='cyberpunk'] .kp-nav__menu--wide {
+            --kp-cp-hold: 0;
+            transition: --kp-cp-hold 480ms linear;
+        }
+
+        [data-theme='cyberpunk']
+            :is(
+                .kp-nav__links > li:is(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+                .kp-nav__links > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide
+            ) {
+            --kp-cp-hold: 1;
+            animation: kp-sig-cyberpunk-split 480ms steps(1, end) backwards;
+        }
+
+        [data-theme='cyberpunk']
+            .kp-nav__links
+            > li[data-kp-nav-closing]:not([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true']))
+            > .kp-nav__menu--wide {
+            animation: kp-sig-cyberpunk-split-back 480ms steps(1, end) reverse forwards;
         }
 
         [data-theme='cyberpunk'] .kp-button {
@@ -2015,6 +2058,14 @@
     /* The clocks. A hover or a focus is four ticks (3, 2, 1, 0 left of the entrance), and its
        leave is the same four the other way round: `t` counts the ticks left, `p` says
        whether the part is pointed, so a pose is a function of the two. */
+    /* The mega menu's hold: it changes with the panel's state so a transition runs for as long as
+       the close does, and the script that keeps the panel drawn waits for it. */
+    @property --kp-cp-hold {
+        syntax: '<number>';
+        inherits: false;
+        initial-value: 0;
+    }
+
     @property --kp-cp-t {
         syntax: '<number>';
         inherits: true;
@@ -2120,7 +2171,8 @@
     /* The two copies, as the part's own silhouette: yellow right and up, cyan right and
        down (the live stutter's 6, 4, 2, 1 px). Every part that is a plate carries them;
        a part without a plate has none and only its text splits. */
-    [data-theme='cyberpunk'] :is(.kp-card, .kp-kpi, .kp-popover, .kp-dialog, .kp-toast, .kp-alert, .kp-tooltip) {
+    [data-theme='cyberpunk']
+        :is(.kp-card, .kp-kpi, .kp-popover, .kp-dialog, .kp-toast, .kp-alert, .kp-tooltip, .kp-datepicker__panel, .kp-combobox__list, .kp-nav__menu) {
         --kp-cp-rest: 0 0 transparent;
         --kp-cp-b0: 6px 4px 0 var(--accent), 6px -4px 0 var(--primary);
         --kp-cp-b1: 4px 3px 0 var(--accent), 4px -3px 0 var(--primary);
@@ -2129,7 +2181,7 @@
     }
 
     /* Each part's own cut. */
-    [data-theme='cyberpunk'] :is(.kp-card, .kp-kpi, .kp-popover) {
+    [data-theme='cyberpunk'] :is(.kp-card, .kp-kpi, .kp-popover, .kp-datepicker__panel, .kp-combobox__list) {
         --kp-cp-clip: var(--kp-cp-clip-plate);
         --kp-cp-wide: var(--kp-cp-wide-plate);
     }
@@ -2158,7 +2210,7 @@
     /* The holo plate [G7]: a card, a key figure and the menu's popover are void plates with
        a yellow rim glowing 10 px inward, scan lines at 135 degrees, the rim running along the
        notch, cut at the dossier corner. A press lights the circuit grid on it. */
-    [data-theme='cyberpunk'] :is(.kp-card, .kp-kpi, .kp-popover) {
+    [data-theme='cyberpunk'] :is(.kp-card, .kp-kpi, .kp-popover, .kp-datepicker__panel, .kp-combobox__list) {
         --kp-cp-ground: var(--card);
         --kp-cp-grid-a: 0;
         --kp-cp-rest: inset 0 0 0 1px var(--primary), inset 0 0 10px hsl(from var(--primary) h s l / 0.35);
@@ -2177,7 +2229,7 @@
         clip-path: var(--kp-cp-clip);
     }
 
-    [data-theme='cyberpunk'] .kp-popover {
+    [data-theme='cyberpunk'] :is(.kp-popover, .kp-datepicker__panel, .kp-combobox__list) {
         --kp-cp-ground: var(--popover);
     }
 
@@ -3578,6 +3630,43 @@
         }
     }
 
+    /* The same four poses under a second name: a part that is shown by the split and closes by
+       playing it backwards (`animation-direction: reverse`) must restart, and an animation that
+       keeps its name does not. Frame for frame the close is the opening. */
+    @keyframes kp-sig-cyberpunk-split-back {
+        0% {
+            clip-path: var(--kp-cp-wide, none);
+            box-shadow: var(--kp-cp-b0, 0 0 transparent), var(--kp-cp-rest, 0 0 transparent);
+            text-shadow:
+                6px 4px 0 var(--accent),
+                6px -4px 0 var(--primary);
+        }
+
+        25% {
+            clip-path: var(--kp-cp-wide, none);
+            box-shadow: var(--kp-cp-b1, 0 0 transparent), var(--kp-cp-rest, 0 0 transparent);
+            text-shadow:
+                4px 3px 0 var(--accent),
+                4px -3px 0 var(--primary);
+        }
+
+        50% {
+            clip-path: var(--kp-cp-wide, none);
+            box-shadow: var(--kp-cp-b2, 0 0 transparent), var(--kp-cp-rest, 0 0 transparent);
+            text-shadow:
+                2px 2px 0 var(--accent),
+                2px -2px 0 var(--primary);
+        }
+
+        75% {
+            clip-path: var(--kp-cp-wide, none);
+            box-shadow: var(--kp-cp-b3, 0 0 transparent), var(--kp-cp-rest, 0 0 transparent);
+            text-shadow:
+                1px 1px 0 var(--accent),
+                1px -1px 0 var(--primary);
+        }
+    }
+
     /* A leave: the entrance's four poses in the other order, and the last one held until the
        part is gone, so nothing of it outlives the rest. */
     @keyframes kp-sig-cyberpunk-split-out {
@@ -3612,6 +3701,71 @@
             text-shadow:
                 6px 4px 0 var(--accent),
                 6px -4px 0 var(--primary);
+        }
+    }
+
+    /* The phone bar's links, as one picture: the strip's own cut and its words, so the copies are
+       drawn by `filter` on the list (a clip on the strip's pseudo-element cuts the notch, a filter
+       sees what is cut). Opening is this, closing the same four poses the other way, held until
+       the script hides the list (js/components.js). */
+    @keyframes kp-sig-cyberpunk-split-bar {
+        0% {
+            filter: drop-shadow(6px 4px 0 var(--accent)) drop-shadow(6px -4px 0 var(--primary));
+        }
+
+        25% {
+            filter: drop-shadow(4px 3px 0 var(--accent)) drop-shadow(4px -3px 0 var(--primary));
+        }
+
+        50% {
+            filter: drop-shadow(2px 2px 0 var(--accent)) drop-shadow(2px -2px 0 var(--primary));
+        }
+
+        75% {
+            filter: drop-shadow(1px 1px 0 var(--accent)) drop-shadow(1px -1px 0 var(--primary));
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-split-bar-back {
+        0% {
+            filter: drop-shadow(6px 4px 0 var(--accent)) drop-shadow(6px -4px 0 var(--primary));
+        }
+
+        25% {
+            filter: drop-shadow(4px 3px 0 var(--accent)) drop-shadow(4px -3px 0 var(--primary));
+        }
+
+        50% {
+            filter: drop-shadow(2px 2px 0 var(--accent)) drop-shadow(2px -2px 0 var(--primary));
+        }
+
+        75% {
+            filter: drop-shadow(1px 1px 0 var(--accent)) drop-shadow(1px -1px 0 var(--primary));
+        }
+    }
+
+    @container kp-nav (max-width: 40rem) {
+        /* Collapsed, the lists nested in the open panel are its own rows and do not split again. */
+        [data-theme='cyberpunk'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__links .kp-nav__menu {
+            animation: none;
+            transition: none;
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+            [data-theme='cyberpunk'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
+                animation: kp-sig-cyberpunk-split-bar 480ms steps(1, end) backwards;
+            }
+
+            [data-theme='cyberpunk'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__links {
+                animation: kp-sig-cyberpunk-split-bar-back 480ms steps(1, end) reverse forwards;
+            }
+        }
+    }
+
+    /* A reader who asked for no motion gets no close to wait for. */
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='cyberpunk'] {
+            --kp-nav-close-time: 0ms;
         }
     }
 
@@ -3952,8 +4106,187 @@
     /* A menu and a popover open by the channel split, as the toast does (G3), and close as
        it played backwards (js/motion.js playClose). */
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='cyberpunk'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip)) {
+        [data-theme='cyberpunk']
+            :is(
+                .kp-menu-button > .kp-menu,
+                .kp-popover[popover]:not(.kp-tooltip),
+                .kp-combobox__list:popover-open,
+                .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open,
+                .kp-theme-menu__list
+            ) {
             animation: kp-sig-cyberpunk-split 480ms steps(1, end) backwards;
+        }
+
+        /* The list arrives as its own split, not as the leave turned around [forest's F-19]. */
+        [data-theme='cyberpunk'] .kp-combobox__list {
+            --kp-open: own;
+        }
+    }
+
+    /* ── The tour, the alarm and the side navigation as pairs [Kenny, 2026-10-12: every close
+       is its open reversed, in Firefox and Chromium] ──────────────────────────────────────
+       The tour's card is a holo plate like the menu's popover and opens by the channel split
+       (480 ms, four ticks); js/motion.js playEntranceBackwards plays that backwards when the
+       tour ends. The page's dim and the ring round the target are part of the pair: they come
+       in four ticks of the same 480 ms and go in the same four the other way round. A step is
+       no arrival (data-kp-tour-stepping): the card keeps its shape, plays no entrance, takes no
+       update copy, and walks to the next target in the same four ticks. */
+    [data-theme='cyberpunk'] {
+        /* The tour's dim goes back to no shadow at all, shrinking into the target as it grew out of it. */
+        --kp-tour-dim-close: 0 0 0 0 transparent;
+        --kp-tour-dim-time: 480ms;
+        /* The four ticks of 120 ms the other way round. `steps(4, jump-start)` jumps at a boundary
+           the same way as the opening's `jump-end`, so the two engines read a frame that falls
+           exactly on one as different poses; this one holds the pose before the jump at the
+           boundary itself (the jump takes 0.01 % of the time), so frame t of the going is frame
+           (T - t) of the coming at the boundary as well. */
+        --kp-cp-back: linear(0 0%, 0.25 0.01%, 0.25 25%, 0.5 25.01%, 0.5 50%, 0.75 50.01%, 0.75 75%, 1 75.01%, 1 100%);
+        --kp-tour-dim-close-ease: var(--kp-cp-back);
+    }
+
+    [data-theme='cyberpunk'] .kp-tour {
+        --kp-cp-clip: var(--kp-cp-clip-plate);
+        --kp-cp-wide: var(--kp-cp-wide-plate);
+        --kp-cp-rest: inset 0 0 0 1px var(--primary), inset 0 0 10px hsl(from var(--primary) h s l / 0.35);
+        --kp-cp-b0: 6px 4px 0 var(--accent), 6px -4px 0 var(--primary);
+        --kp-cp-b1: 4px 3px 0 var(--accent), 4px -3px 0 var(--primary);
+        --kp-cp-b2: 2px 2px 0 var(--accent), 2px -2px 0 var(--primary);
+        --kp-cp-b3: 1px 1px 0 var(--accent), 1px -1px 0 var(--primary);
+        --kp-cp-notch-line: linear-gradient(45deg, transparent calc(50% - 1.5px), var(--primary) calc(50% - 1.5px) 50%, transparent 50%) 100% 0 /
+            var(--kp-cp-notch) var(--kp-cp-notch) no-repeat;
+        --kp-cp-scan: repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / 0.06) 0 2px, transparent 2px 6px);
+        border: 0;
+        border-radius: 0;
+        background: var(--kp-cp-notch-line), var(--kp-cp-scan), var(--popover);
+        box-shadow: var(--kp-cp-rest);
+        clip-path: var(--kp-cp-clip);
+        transition: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-tour[open]:not([data-kp-tour-stepping]) {
+            animation: kp-sig-cyberpunk-split 480ms steps(1, end) backwards;
+        }
+
+        /* The dim grows out of the target and the ring is drawn in, in the card's four ticks;
+           css/components.css takes both back in the same four the other way round. `backwards`,
+           not `both`: a ring a finished animation holds cannot be taken back by the transition. */
+        [data-theme='cyberpunk'] [data-kp-tour-target] {
+            animation: kp-sig-cyberpunk-tour-ring 480ms steps(4, jump-end) backwards;
+            transition:
+                box-shadow 480ms steps(4, jump-end),
+                outline-color 480ms steps(4, jump-end);
+        }
+
+        [data-theme='cyberpunk'] .kp-tour[data-kp-tour-stepping] {
+            animation: none;
+            transition:
+                left 480ms steps(4, jump-end),
+                top 480ms steps(4, jump-end);
+        }
+
+        [data-theme='cyberpunk'] .kp-tour[data-kp-updating]::after {
+            content: none;
+            animation: none;
+        }
+
+        [data-theme='cyberpunk'] .kp-tour[data-kp-updating] {
+            animation: none;
+        }
+    }
+
+    /* Every dialog-like part's backdrop takes the theme's fade, even where it is invisible (the
+       alarm's), so js/motion.js plays it as the part's own, and not as its fallback `ease-in`.
+       The fade is the plate's four ticks, drawn in by the dim's colour (see the side navigation's
+       backdrop below for why it is not the opacity); the close is that backwards. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] :is(.kp-dialog, .kp-alarm, .kp-palette)::backdrop {
+            animation: kp-sig-cyberpunk-dim 480ms steps(4, jump-end) backwards;
+        }
+    }
+
+    /* The side navigation's panel, its content and its backdrop are one picture [Kenny: "one
+       mirrored picture"; G3: nothing slides in from an edge]. The over and push panel does not
+       travel: it is torn into place by the channel split, a yellow and a cyan copy 6, 4, 2, 1 px
+       out that meet in four ticks of 120 ms, 480 ms, and closed it is the same four the other
+       way round and then gone. The clock `--kp-sn-t` counts the ticks left (4 at the first
+       pose, 0 at the last); the open panel steps it down `jump-end`, the closing steps it up
+       `--kp-cp-back` (the opening's own poses in the other order), and the panel is hidden once
+       the closing is over (`visibility` over the same 480 ms is visible throughout and takes its
+       own value at the very end, so the first frame of the opening and the last of the closing
+       are both the shut panel). The return's easing is `--kp-cp-back`. The
+       backdrop fades in the same four ticks and the content a push panel makes room in
+       (`data-kp-sidenav-shift`, js/sidenav.js) takes its margin in them. */
+    @property --kp-sn-t {
+        syntax: '<number>';
+        inherits: false;
+        initial-value: 4;
+    }
+
+    [data-theme='cyberpunk'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) {
+        --kp-sn-t: 4;
+        --kp-sn-x: calc(var(--kp-sn-t) * 1px + max(0px, (var(--kp-sn-t) - 2) * 1px));
+        --kp-sn-y: calc(var(--kp-sn-t) * 1px);
+        --kp-sn-a: calc(min(1, var(--kp-sn-t)));
+        translate: 0 0;
+        visibility: hidden;
+        box-shadow:
+            var(--kp-sn-x) var(--kp-sn-y) 0 hsl(from var(--accent) h s l / var(--kp-sn-a)),
+            var(--kp-sn-x) calc(-1 * var(--kp-sn-y)) 0 hsl(from var(--primary) h s l / var(--kp-sn-a));
+        text-shadow:
+            var(--kp-sn-x) var(--kp-sn-y) 0 hsl(from var(--accent) h s l / var(--kp-sn-a)),
+            var(--kp-sn-x) calc(-1 * var(--kp-sn-y)) 0 hsl(from var(--primary) h s l / var(--kp-sn-a));
+    }
+
+    [data-theme='cyberpunk'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+        --kp-sn-t: 0;
+        translate: 0 0;
+        visibility: visible;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) {
+            transition:
+                --kp-sn-t 480ms var(--kp-cp-back),
+                visibility 480ms linear,
+                translate 0s;
+        }
+
+        [data-theme='cyberpunk'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            transition:
+                --kp-sn-t 480ms steps(4, jump-end),
+                visibility 480ms linear,
+                translate 0s;
+        }
+
+        /* The dim is drawn in by its colour, not its opacity: an opacity that stands at 1 reads one
+           level darker in Chromium when a compositor layer holds it than when it is static. */
+        [data-theme='cyberpunk'] .kp-sidenav__backdrop {
+            animation: kp-sig-cyberpunk-dim 480ms steps(4, jump-end) both;
+        }
+
+        [data-theme='cyberpunk'] [data-kp-sidenav-shift] {
+            transition:
+                margin-inline-start 480ms var(--kp-cp-back),
+                padding-inline-start 480ms var(--kp-cp-back);
+        }
+
+        [data-theme='cyberpunk'] [data-kp-sidenav-shift='open'] {
+            transition:
+                margin-inline-start 480ms steps(4, jump-end),
+                padding-inline-start 480ms steps(4, jump-end);
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-dim {
+        from {
+            background-color: transparent;
+        }
+    }
+
+    @keyframes kp-sig-cyberpunk-tour-ring {
+        from {
+            outline-color: transparent;
         }
     }
 }

@@ -1,0 +1,978 @@
+[
+    {
+        "part": "kp-accordion__item",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "950x78",
+        "n": 4,
+        "pages": ["structure"]
+    },
+    {
+        "part": "kp-alarm",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "950x352",
+        "n": 2,
+        "pages": ["alarm"]
+    },
+    {
+        "part": "kp-alarm__fill",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "360x6",
+        "n": 1,
+        "pages": ["alarm"]
+    },
+    {
+        "part": "kp-alarm__scan",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "950x352",
+        "n": 2,
+        "pages": ["alarm"]
+    },
+    {
+        "part": "kp-alarm__track",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "576x6",
+        "n": 1,
+        "pages": ["alarm"]
+    },
+    {
+        "part": "kp-alert",
+        "shape": "notch 8",
+        "radius": 0,
+        "size": "950x50",
+        "n": 17,
+        "pages": ["feedback", "motion", "table"]
+    },
+    {
+        "part": "kp-attention__icon",
+        "shape": "RECT",
+        "radius": 50,
+        "size": "28x28",
+        "n": 6,
+        "pages": ["feedback"]
+    },
+    {
+        "part": "kp-badge",
+        "shape": "notch 8",
+        "radius": 0,
+        "size": "390x22",
+        "n": 563,
+        "pages": ["alarm", "button", "chart"]
+    },
+    {
+        "part": "kp-button",
+        "shape": "notch 14",
+        "radius": 0,
+        "size": "151x28",
+        "n": 1085,
+        "pages": ["alarm", "button", "chart"]
+    },
+    {
+        "part": "kp-button",
+        "shape": "notch 8",
+        "radius": 0,
+        "size": "59x36",
+        "n": 3,
+        "pages": ["navigation"]
+    },
+    {
+        "part": "kp-calendar__day",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "92x52",
+        "n": 62,
+        "pages": ["data"]
+    },
+    {
+        "part": "kp-calendar__swatch",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "16x16",
+        "n": 12,
+        "pages": ["data"]
+    },
+    {
+        "part": "kp-card",
+        "shape": "notch 14",
+        "radius": 0,
+        "size": "950x163",
+        "n": 33,
+        "pages": ["button", "colorpicker", "data"]
+    },
+    {
+        "part": "kp-card__footer",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "918x49",
+        "n": 11,
+        "pages": ["button", "data"]
+    },
+    {
+        "part": "kp-cell-break",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "106x209",
+        "n": 2,
+        "pages": ["table"]
+    },
+    {
+        "part": "kp-cell-truncate",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "192x209",
+        "n": 34,
+        "pages": ["table"]
+    },
+    {
+        "part": "kp-chart__dot",
+        "shape": "RECT",
+        "radius": 50,
+        "size": "8x8",
+        "n": 1,
+        "pages": ["chart"]
+    },
+    {
+        "part": "kp-chart__source",
+        "shape": "RECT",
+        "radius": 999,
+        "size": "147x26",
+        "n": 34,
+        "pages": ["chart"]
+    },
+    {
+        "part": "kp-chart__source-stub",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "100x32",
+        "n": 3,
+        "pages": ["chart"]
+    },
+    {
+        "part": "kp-chart__state",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "950x168",
+        "n": 1,
+        "pages": ["chart"]
+    },
+    {
+        "part": "kp-code-block",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "992x194",
+        "n": 4,
+        "pages": ["feedback", "motion"]
+    },
+    {
+        "part": "kp-col-low",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "307x40",
+        "n": 3,
+        "pages": ["data"]
+    },
+    {
+        "part": "kp-colorpicker__swatch",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "42x42",
+        "n": 7,
+        "pages": ["colorpicker"]
+    },
+    {
+        "part": "kp-combobox__input",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "199x36",
+        "n": 9,
+        "pages": ["combobox"]
+    },
+    {
+        "part": "kp-combobox__list",
+        "shape": "notch 14",
+        "radius": 0,
+        "size": "950x188",
+        "n": 4,
+        "pages": ["combobox"]
+    },
+    {
+        "part": "kp-combobox__option",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "942x36",
+        "n": 2,
+        "pages": ["combobox"]
+    },
+    {
+        "part": "kp-datatable__bar",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "950x59",
+        "n": 32,
+        "pages": ["table"]
+    },
+    {
+        "part": "kp-datatable__busy-overlay",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "950x241",
+        "n": 2,
+        "pages": ["table"]
+    },
+    {
+        "part": "kp-datatable__busy-panel",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "215x96",
+        "n": 2,
+        "pages": ["table"]
+    },
+    {
+        "part": "kp-datatable__edit",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "112x21",
+        "n": 58,
+        "pages": ["table"]
+    },
+    {
+        "part": "kp-datatable__search",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "491x42",
+        "n": 7,
+        "pages": ["table"]
+    },
+    {
+        "part": "kp-datatable__sort-order",
+        "shape": "RECT",
+        "radius": 999,
+        "size": "16x13",
+        "n": 2,
+        "pages": ["table"]
+    },
+    {
+        "part": "kp-datepicker__day",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "32x34",
+        "n": 138,
+        "pages": ["datepicker"]
+    },
+    {
+        "part": "kp-datepicker__day",
+        "shape": "notch 8",
+        "radius": 0,
+        "size": "32x34",
+        "n": 6,
+        "pages": ["datepicker"]
+    },
+    {
+        "part": "kp-datepicker__panel",
+        "shape": "notch 14",
+        "radius": 0,
+        "size": "260x310",
+        "n": 6,
+        "pages": ["datepicker"]
+    },
+    {
+        "part": "kp-datepicker__title",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "123x30",
+        "n": 5,
+        "pages": ["datepicker"]
+    },
+    {
+        "part": "kp-dialog",
+        "shape": "notch ",
+        "radius": 0,
+        "size": "512x180",
+        "n": 4,
+        "pages": ["overlays"]
+    },
+    {
+        "part": "kp-dialog",
+        "shape": "notch 18",
+        "radius": 0,
+        "size": "359x145",
+        "n": 1,
+        "pages": ["overlays"]
+    },
+    {
+        "part": "kp-diff",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "950x806",
+        "n": 1,
+        "pages": ["data"]
+    },
+    {
+        "part": "kp-diff__line",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "916x20",
+        "n": 15,
+        "pages": ["data"]
+    },
+    {
+        "part": "kp-drawer",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "360x576",
+        "n": 1,
+        "pages": ["overlays"]
+    },
+    {
+        "part": "kp-drawer__foot",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "358x57",
+        "n": 1,
+        "pages": ["overlays"]
+    },
+    {
+        "part": "kp-drawer__head",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "358x67",
+        "n": 1,
+        "pages": ["overlays"]
+    },
+    {
+        "part": "kp-empty",
+        "shape": "notch 14",
+        "radius": 0,
+        "size": "306x146",
+        "n": 4,
+        "pages": ["feedback", "table"]
+    },
+    {
+        "part": "kp-field__check",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "18x18",
+        "n": 82,
+        "pages": ["alarm", "button", "chart"]
+    },
+    {
+        "part": "kp-field__check",
+        "shape": "RECT",
+        "radius": 50,
+        "size": "20x20",
+        "n": 10,
+        "pages": ["field"]
+    },
+    {
+        "part": "kp-field__input",
+        "shape": "notch 8",
+        "radius": 0,
+        "size": "958x86",
+        "n": 247,
+        "pages": ["alarm", "button", "chart"]
+    },
+    {
+        "part": "kp-footer",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "950x149",
+        "n": 3,
+        "pages": ["page-effects", "page"]
+    },
+    {
+        "part": "kp-form__summary",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "250x107",
+        "n": 1,
+        "pages": ["field"]
+    },
+    {
+        "part": "kp-graph__box",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "950x562",
+        "n": 2,
+        "pages": ["chart"]
+    },
+    {
+        "part": "kp-graph__kind",
+        "shape": "RECT",
+        "radius": 999,
+        "size": "98x26",
+        "n": 8,
+        "pages": ["chart"]
+    },
+    {
+        "part": "kp-grid",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "950x130",
+        "n": 2,
+        "pages": ["media"]
+    },
+    {
+        "part": "kp-grid__tile",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "315x64",
+        "n": 9,
+        "pages": ["media"]
+    },
+    {
+        "part": "kp-health__dot",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "14x14",
+        "n": 5,
+        "pages": ["data"]
+    },
+    {
+        "part": "kp-help",
+        "shape": "notch 14",
+        "radius": 0,
+        "size": "326x436",
+        "n": 3,
+        "pages": ["overlays"]
+    },
+    {
+        "part": "kp-icon-button",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "36x36",
+        "n": 15,
+        "pages": ["button", "feedback", "motion"]
+    },
+    {
+        "part": "kp-kpi",
+        "shape": "notch 14",
+        "radius": 0,
+        "size": "148x155",
+        "n": 41,
+        "pages": ["data", "motion"]
+    },
+    {
+        "part": "kp-kpi__delta",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "40x16",
+        "n": 3,
+        "pages": ["data"]
+    },
+    {
+        "part": "kp-kpi__meter",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "124x10",
+        "n": 7,
+        "pages": ["data"]
+    },
+    {
+        "part": "kp-kpi__value",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "26x32",
+        "n": 6,
+        "pages": ["data"]
+    },
+    {
+        "part": "kp-log",
+        "shape": "notch 18",
+        "radius": 0,
+        "size": "950x128",
+        "n": 2,
+        "pages": ["data"]
+    },
+    {
+        "part": "kp-log__level",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "70x21",
+        "n": 3,
+        "pages": ["data"]
+    },
+    {
+        "part": "kp-log__message",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "711x21",
+        "n": 1,
+        "pages": ["data"]
+    },
+    {
+        "part": "kp-log__source",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "73x21",
+        "n": 1,
+        "pages": ["data"]
+    },
+    {
+        "part": "kp-log__time",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "56x21",
+        "n": 1,
+        "pages": ["data"]
+    },
+    {
+        "part": "kp-marquee",
+        "shape": "notch 8",
+        "radius": 0,
+        "size": "950x32",
+        "n": 3,
+        "pages": ["media"]
+    },
+    {
+        "part": "kp-media",
+        "shape": "notch 11.2",
+        "radius": 0,
+        "size": "306x174",
+        "n": 10,
+        "pages": ["media"]
+    },
+    {
+        "part": "kp-media__overlay",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "302x56",
+        "n": 2,
+        "pages": ["media"]
+    },
+    {
+        "part": "kp-meter",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "360x10",
+        "n": 13,
+        "pages": ["data"]
+    },
+    {
+        "part": "kp-meter__mark",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "8x14",
+        "n": 1,
+        "pages": ["data"]
+    },
+    {
+        "part": "kp-mono",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "79x22",
+        "n": 358,
+        "pages": ["table"]
+    },
+    {
+        "part": "kp-nav",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "950x64",
+        "n": 14,
+        "pages": ["navigation", "page-effects"]
+    },
+    {
+        "part": "kp-nav__link",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "182x39",
+        "n": 2,
+        "pages": ["page-effects"]
+    },
+    {
+        "part": "kp-nav__menu",
+        "shape": "notch ",
+        "radius": 0,
+        "size": "208x188",
+        "n": 1,
+        "pages": ["navigation"]
+    },
+    {
+        "part": "kp-nav__toggle",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "36x36",
+        "n": 4,
+        "pages": ["navigation"]
+    },
+    {
+        "part": "kp-nav-wrap",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "950x64",
+        "n": 14,
+        "pages": ["navigation", "page-effects"]
+    },
+    {
+        "part": "kp-numeric",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "116x40",
+        "n": 128,
+        "pages": ["overlays", "table"]
+    },
+    {
+        "part": "kp-palette",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "578x341",
+        "n": 3,
+        "pages": ["page"]
+    },
+    {
+        "part": "kp-palette__input",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "608x53",
+        "n": 3,
+        "pages": ["page"]
+    },
+    {
+        "part": "kp-palette__keys",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "57x21",
+        "n": 9,
+        "pages": ["data", "navigation", "page"]
+    },
+    {
+        "part": "kp-palette__option",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "568x40",
+        "n": 2,
+        "pages": ["page"]
+    },
+    {
+        "part": "kp-palette__status",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "576x37",
+        "n": 3,
+        "pages": ["page"]
+    },
+    {
+        "part": "kp-popover",
+        "shape": "notch 14",
+        "radius": 0,
+        "size": "183x161",
+        "n": 6,
+        "pages": ["overlays", "page"]
+    },
+    {
+        "part": "kp-popover",
+        "shape": "notch ",
+        "radius": 0,
+        "size": "197x28",
+        "n": 2,
+        "pages": ["overlays"]
+    },
+    {
+        "part": "kp-progressbar__fill",
+        "shape": "inset(0px 100% 0px 0",
+        "radius": 0,
+        "size": "306x14",
+        "n": 3,
+        "pages": ["feedback"]
+    },
+    {
+        "part": "kp-progressbar__fill",
+        "shape": "inset(0px 65% 0px 0p",
+        "radius": 0,
+        "size": "276x14",
+        "n": 3,
+        "pages": ["feedback"]
+    },
+    {
+        "part": "kp-progressbar__fill",
+        "shape": "inset(0px 0% 0px 0px",
+        "radius": 0,
+        "size": "306x14",
+        "n": 3,
+        "pages": ["feedback"]
+    },
+    {
+        "part": "kp-progressbar__fill",
+        "shape": "inset(0px 78% 0px 0p",
+        "radius": 0,
+        "size": "226x14",
+        "n": 3,
+        "pages": ["feedback"]
+    },
+    {
+        "part": "kp-progressbar__fill",
+        "shape": "inset(0px 36% 0px 0p",
+        "radius": 0,
+        "size": "226x14",
+        "n": 3,
+        "pages": ["feedback"]
+    },
+    {
+        "part": "kp-progressbar__fill",
+        "shape": "inset(0px 39% 0px 0p",
+        "radius": 0,
+        "size": "226x14",
+        "n": 3,
+        "pages": ["feedback"]
+    },
+    {
+        "part": "kp-progressbar__track",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "306x14",
+        "n": 21,
+        "pages": ["feedback"]
+    },
+    {
+        "part": "kp-row",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "360x45",
+        "n": 1,
+        "pages": ["overlays"]
+    },
+    {
+        "part": "kp-section",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "950x592",
+        "n": 16,
+        "pages": ["page-effects"]
+    },
+    {
+        "part": "kp-shortcuts",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "490x320",
+        "n": 1,
+        "pages": ["data"]
+    },
+    {
+        "part": "kp-sidenav",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "240x900",
+        "n": 30,
+        "pages": ["alarm", "button", "chart"]
+    },
+    {
+        "part": "kp-sidenav__footer",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "238x49",
+        "n": 6,
+        "pages": ["navigation"]
+    },
+    {
+        "part": "kp-sidenav__header",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "238x46",
+        "n": 26,
+        "pages": ["alarm", "button", "chart"]
+    },
+    {
+        "part": "kp-sidenav__link",
+        "shape": "notch 8.8",
+        "radius": 0,
+        "size": "238x37",
+        "n": 30,
+        "pages": ["alarm", "button", "chart"]
+    },
+    {
+        "part": "kp-sidenav__toggle",
+        "shape": "notch 14",
+        "radius": 0,
+        "size": "165x36",
+        "n": 2,
+        "pages": ["navigation"]
+    },
+    {
+        "part": "kp-skeleton",
+        "shape": "notch 6",
+        "radius": 0,
+        "size": "37x18",
+        "n": 42,
+        "pages": ["data", "feedback", "table"]
+    },
+    {
+        "part": "kp-skeleton",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "48x48",
+        "n": 2,
+        "pages": ["feedback"]
+    },
+    {
+        "part": "kp-skip-link",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "127x40",
+        "n": 19,
+        "pages": ["alarm", "button", "chart"]
+    },
+    {
+        "part": "kp-spec",
+        "shape": "notch 18",
+        "radius": 0,
+        "size": "480x310",
+        "n": 1,
+        "pages": ["data"]
+    },
+    {
+        "part": "kp-spec__swatch",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "14x14",
+        "n": 6,
+        "pages": ["data"]
+    },
+    {
+        "part": "kp-spinner",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "20x20",
+        "n": 11,
+        "pages": ["feedback", "table"]
+    },
+    {
+        "part": "kp-split",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "950x224",
+        "n": 3,
+        "pages": ["structure"]
+    },
+    {
+        "part": "kp-split__separator",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "10x222",
+        "n": 3,
+        "pages": ["structure"]
+    },
+    {
+        "part": "kp-stack",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "950x208",
+        "n": 1,
+        "pages": ["overlays"]
+    },
+    {
+        "part": "kp-swatch",
+        "shape": "RECT",
+        "radius": 50,
+        "size": "18x18",
+        "n": 56,
+        "pages": ["page-effects", "page"]
+    },
+    {
+        "part": "kp-switch__input",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "40x24",
+        "n": 8,
+        "pages": ["switch"]
+    },
+    {
+        "part": "kp-tab",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "100x42",
+        "n": 14,
+        "pages": ["navigation"]
+    },
+    {
+        "part": "kp-tabs__list",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "950x43",
+        "n": 3,
+        "pages": ["navigation"]
+    },
+    {
+        "part": "kp-tag",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "99x26",
+        "n": 8,
+        "pages": ["combobox", "feedback", "table"]
+    },
+    {
+        "part": "kp-text-end",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "259x40",
+        "n": 428,
+        "pages": ["motion", "overlays", "table"]
+    },
+    {
+        "part": "kp-text-nowrap",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "260x40",
+        "n": 393,
+        "pages": ["table"]
+    },
+    {
+        "part": "kp-theme-group",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "160x354",
+        "n": 3,
+        "pages": ["page"]
+    },
+    {
+        "part": "kp-timeline",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "950x310",
+        "n": 2,
+        "pages": ["structure"]
+    },
+    {
+        "part": "kp-timeline__marker",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "17x17",
+        "n": 6,
+        "pages": ["structure"]
+    },
+    {
+        "part": "kp-toast",
+        "shape": "notch ",
+        "radius": 0,
+        "size": "523x58",
+        "n": 6,
+        "pages": ["feedback"]
+    },
+    {
+        "part": "kp-tour",
+        "shape": "notch 14",
+        "radius": 0,
+        "size": "352x158",
+        "n": 1,
+        "pages": ["overlays"]
+    },
+    {
+        "part": "kp-upload__file",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "950x70",
+        "n": 13,
+        "pages": ["upload"]
+    },
+    {
+        "part": "kp-upload__zone",
+        "shape": "RECT",
+        "radius": 0,
+        "size": "950x76",
+        "n": 6,
+        "pages": ["upload"]
+    }
+]
