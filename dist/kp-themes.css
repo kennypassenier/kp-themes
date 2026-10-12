@@ -20850,6 +20850,13 @@
         box-shadow: var(--kp-sw-rails-in);
     }
 
+    /* A slider paints no inset shadow (its track is the browser's), so its two tubes run outside it
+       (Firefox Tab audit, research/all-themes/_audit/tab-paint.mjs: 0 px changed with the inset ones).
+       The attribute twice outranks the list above, whose :is() takes its most specific entry. */
+    [data-theme='synthwave'] input[type='range'][type='range']:focus-visible {
+        box-shadow: var(--kp-sw-rails-out);
+    }
+
     /* The option a list marks as the one the keyboard is on (`aria-activedescendant`
        keeps the focus in the input) takes the same two tubes, while the input
        has the keyboard. */
@@ -48782,8 +48789,13 @@
         border-radius: 0;
     }
 
+    /* G14's two channels as grotesk draws them, the ink outline with the paper inside it: the switch's
+       own 2 px ink line swallowed an ink ring laid against it, and the paper colour alone was white on
+       white (Firefox Tab audit, research/all-themes/_audit/tab-paint.mjs: 0 px changed). */
     [data-theme='grotesk'] .kp-switch__input:focus-visible {
-        box-shadow: 0 0 0 2px var(--focus-ring-contrast);
+        outline: 2px solid var(--focus-ring);
+        outline-offset: 2px;
+        box-shadow: none;
     }
 
     [data-theme='grotesk'] .kp-form__summary {
@@ -49176,6 +49188,15 @@
     [data-theme='grotesk'] .kp-tab[aria-selected='true'] {
         color: var(--primary);
         box-shadow: inset 0 -3px 0 var(--primary);
+    }
+
+    /* Focused, the selected tab keeps DI2's two channels: its red baseline replaced the package's ink
+       ring (a box-shadow of its own), so only the paper outline was left, white on white (Firefox Tab
+       audit, research/all-themes/_audit/tab-paint.mjs: 4 px changed). */
+    [data-theme='grotesk'] .kp-tab[aria-selected='true']:focus-visible {
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 -3px var(--primary);
     }
 
     [data-theme='grotesk'] .kp-tabs__list {
@@ -55602,6 +55623,15 @@
         background: var(--card);
         color: var(--foreground);
         box-shadow: inset 0 -2px 0 0 var(--selected);
+    }
+
+    /* Focused, the selected tab keeps the ring of DI2 with its underline: the underline's own
+       box-shadow had replaced the ring (Firefox Tab audit, tab-paint.mjs: 0 px changed). */
+    [data-theme='nostromo'] .kp-tab[aria-selected='true']:focus-visible {
+        box-shadow:
+            0 0 0 2px var(--background),
+            0 0 0 4px var(--foreground),
+            inset 0 -2px 0 0 var(--selected);
     }
 
     [data-theme='nostromo'] .kp-tabs__list {

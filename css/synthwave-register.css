@@ -2586,6 +2586,13 @@
         box-shadow: var(--kp-sw-rails-in);
     }
 
+    /* A slider paints no inset shadow (its track is the browser's), so its two tubes run outside it
+       (Firefox Tab audit, research/all-themes/_audit/tab-paint.mjs: 0 px changed with the inset ones).
+       The attribute twice outranks the list above, whose :is() takes its most specific entry. */
+    [data-theme='synthwave'] input[type='range'][type='range']:focus-visible {
+        box-shadow: var(--kp-sw-rails-out);
+    }
+
     /* The option a list marks as the one the keyboard is on (`aria-activedescendant`
        keeps the focus in the input) takes the same two tubes, while the input
        has the keyboard. */

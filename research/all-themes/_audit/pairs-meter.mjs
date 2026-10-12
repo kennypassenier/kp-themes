@@ -1,0 +1,307 @@
+// @ts-nocheck: a measuring tool that drives a browser, not code the package ships
+// The open/close pair meter [Kenny, 2026-10-09: "sluiten moet het omgekeerde zijn van openen"].
+//
+// For every pair a theme opens and closes (a menu, a dialog, a panel, a tour
+// card ...) this records EVERY frame of the opening and of the closing - not
+// a few paused ones - and compares the closing with the opening played
+// backwards. The animations are paused the moment the pair is triggered and
+// sought to N+1 fixed fractions of their own length, so the frames are exact
+// and no timing noise comes into it.
+//
+// A pair passes only when, all at once:
+//   1. the closing takes as long as the opening (within DURATION_TOLERANCE);
+//   2. frame f of the opening and frame (1 - f) of the closing differ by at
+//      most TOLERANCE of what the whole gesture changes on screen (the part
+//      AND what is in it: a content that vanishes at once fails here);
+//   3. once the closing has played out the screen is the one before the
+//      opening (nothing stays visible, nothing jumped).
+//
+// Usage: node gates/measure-pairs.mjs [--theme cyberpunk] [--only id,id] [--engine firefox|chromium]
+//        [--keep] (keeps the frames in test-results/pairs/ for looking at)
+
+import { createServer } from 'node:http';
+import { mkdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { extname, join, normalize, resolve } from 'node:path';
+import process from 'node:process';
+import { fileURLToPath } from 'node:url';
+import { chromium, firefox } from '@playwright/test';
+import { PAIRS } from './pairs.mjs';
+import { serve } from './lib.mjs';
+
+export const TOLERANCE = 0.06;
+export const DURATION_TOLERANCE = 0.06;
+const FRAMES = 20;
+let lastDetail = [];
+
+const args = process.argv.slice(2);
+const flag = (name, fallback) => {
+    const at = args.indexOf(`--${name}`);
+    return at === -1 ? fallback : (args[at + 1] ?? true);
+};
+const theme = flag('theme', process.env.KP_THEME || 'cyberpunk');
+if ((process.env.KP_THEME || 'cyberpunk') !== theme) throw new Error('set KP_THEME to the theme: lib.mjs reads it at import');
+const only = String(flag('only', '')).split(',').filter(Boolean);
+const engine = flag('engine', 'firefox');
+const keep = args.includes('--keep');
+const probe = args.includes('--probe');
+
+const ROOT = resolve(fileURLToPath(new URL('../../..', import.meta.url)));
+const PAGE = flag('page', '/research/cyberpunk-applied/demo.html');
+const MIME = {
+    '.html': 'text/html',
+    '.css': 'text/css',
+    '.js': 'text/javascript',
+    '.mjs': 'text/javascript',
+    '.json': 'application/json',
+    '.woff2': 'font/woff2',
+    '.woff': 'font/woff',
+    '.svg': 'image/svg+xml',
+    '.png': 'image/png',
+};
+
+
+/**
+ * Pause what the action started, then keep that set for seeking.
+ * @param {import('@playwright/test').Page} page
+ */
+async function startPaused(page, act, label) {
+    await act(page);
+    const { ms, list } = await page.evaluate(() => {
+        const list = document
+            .getAnimations()
+            .filter(
+                (a) =>
+                    !window.__ambient.has(a) &&
+                    !/^kp-slice-/.test(a.animationName ?? '') &&
+                    // the page's own heading and boot screen, and the opener's focus or pointer effect, are not the pair
+                    !(a.effect?.target?.closest?.('h1, .kp-boot, .fa-intro, [data-kp-reveal]') ||
+                        (a.effect?.pseudoElement && a.effect.target?.matches?.('.kp-button, .kp-icon-button'))) &&
+                    Number.isFinite(Number(a.effect?.getComputedTiming().endTime)) &&
+                    Number(a.effect.getComputedTiming().iterations) !== Infinity,
+            );
+        for (const a of list) a.pause();
+        // A loop that starts with the pair (the planting row of a busy panel) is held at its first frame,
+        // so the opening's and the closing's frames differ only by the gesture and not by the loop's phase.
+        for (const a of document.getAnimations())
+            if (!window.__ambient.has(a) && !list.includes(a) && Number(a.effect?.getComputedTiming().iterations) === Infinity) {
+                a.pause();
+                a.currentTime = 0;
+            }
+        window.__pair = list;
+        const name = (el) =>
+            el
+                ? `${el.tagName.toLowerCase()}${el.id ? '#' + el.id : ''}${typeof el.className === 'string' && el.className ? '.' + el.className.trim().split(/\s+/).slice(0, 2).join('.') : ''}`
+                : '?';
+        return {
+            ms: Math.max(0, ...list.map((a) => Number(a.effect.getComputedTiming().endTime))),
+            list: list.map((a) => {
+                const t = a.effect.getComputedTiming();
+                return `${name(a.effect.target)}${a.effect.pseudoElement ?? ''} ${a.animationName ?? a.transitionProperty ?? 'script'} delay ${Math.round(Number(t.delay))} end ${Math.round(Number(t.endTime))} ${a.effect.getTiming().direction}`;
+            }),
+        };
+    });
+    if (probe) console.log(`  ${label}: ${list.length} animations\n    ${list.join('\n    ')}`);
+    const detail = await page.evaluate(() =>
+        window.__pair.map((a) => {
+            const t = a.effect.getComputedTiming();
+            const el = a.effect.target;
+            const cls = el?.classList ? ([...el.classList].find((c) => c.startsWith('kp-')) ?? el.tagName.toLowerCase()) : '?';
+            return {
+                t: `${cls}${a.effect.pseudoElement ?? ''}`,
+                n: a.animationName ?? a.transitionProperty ?? 'script',
+                ms: Math.round(Number(t.endTime)),
+                delay: Math.round(Number(t.delay)),
+                dir: a.effect.getTiming().direction,
+                ease: a.effect.getTiming().easing.slice(0, 18),
+            };
+        }),
+    );
+    lastDetail = detail;
+    return ms;
+}
+
+const seek = (page, ms, nudge = 0) =>
+    page.evaluate(
+        ([t, d]) => {
+            // first and last frame 1 ms inside the animation (see gates/measure-pairs.mjs: a stepped animation stands at
+            // its after-state at exactly its end, and a close played backwards at that end for the instant it starts)
+            for (const a of window.__pair) {
+                const end = Number(a.effect.getComputedTiming().endTime);
+                // Inside a tick, not on its edge (a stepped animation's frames at 60 and 120 ms are edges):
+                // the opening 1 ms after the frame, the closing 1 ms before its mirror frame.
+                a.currentTime = Math.min(Math.max(t + d, Math.min(1, end / 2)), Math.max(0, end - 1));
+            }
+        },
+        [ms, nudge],
+    );
+
+/** Decode PNG frames in a scratch page and return mean absolute difference tools. */
+async function differ(browser) {
+    const page = await browser.newPage();
+    await page.setContent('<canvas id="c"></canvas>');
+    return {
+        page,
+        /** @param {string[]} a base64 frames @param {string[]} b */
+        async compare(a, b) {
+            return page.evaluate(
+                async ({ a, b }) => {
+                    const px = async (b64) => {
+                        const blob = await (await fetch(`data:image/png;base64,${b64}`)).blob();
+                        const bmp = await createImageBitmap(blob);
+                        const c = new OffscreenCanvas(bmp.width, bmp.height);
+                        const ctx = c.getContext('2d');
+                        ctx.drawImage(bmp, 0, 0);
+                        return ctx.getImageData(0, 0, bmp.width, bmp.height).data;
+                    };
+                    const mad = (x, y) => {
+                        let s = 0;
+                        for (let i = 0; i < x.length; i += 4)
+                            s += Math.abs(x[i] - y[i]) + Math.abs(x[i + 1] - y[i + 1]) + Math.abs(x[i + 2] - y[i + 2]);
+                        return s / (x.length / 4) / 3 / 255;
+                    };
+                    const A = await Promise.all(a.map(px));
+                    const B = await Promise.all(b.map(px));
+                    return { A: A.length, mad: A.map((x, i) => mad(x, B[i])) };
+                },
+                { a, b },
+            );
+        },
+    };
+}
+
+/** @returns {Promise<{ id: string, ok: boolean, notes: string[], worst: number, open: number, close: number }>} */
+async function measure(browser, differPage, base, pair) {
+    const context = await browser.newContext({ viewport: { width: 1280, height: 900 }, reducedMotion: 'no-preference' });
+    const page = await context.newPage();
+    await page.addInitScript((t) => {
+        try {
+            localStorage.setItem('theme', t);
+        } catch {}
+    }, theme);
+    await page.goto(`${base}${pair.page ?? PAGE}`);
+    await page.waitForTimeout(pair.page ? 1200 : 0);
+    if (pair.page)
+        await page.evaluate(() => {
+            for (const el of document.querySelectorAll('.cat-block[hidden], .cat-component[hidden], .cat-section[hidden], .cat-group[hidden]'))
+                el.removeAttribute('hidden');
+        });
+    // a theme's boot screen (synthwave's tape, a terminal's lines) covers the page until it has played
+    await page.waitForFunction(() => !document.querySelector('.kp-boot'), null, { timeout: 8000 }).catch(() =>
+        page.evaluate(() => document.querySelectorAll('.kp-boot').forEach((e) => e.remove())),
+    );
+    await page.evaluate(() => document.fonts.ready);
+    await page.addStyleTag({ content: 'html{scroll-behavior:auto!important}' });
+    await pair.setup?.(page);
+    await page
+        .locator(pair.section ?? 'body')
+        .first()
+        .scrollIntoViewIfNeeded();
+    await page.waitForTimeout(400);
+    await page.evaluate(() => {
+        // the page's scroll reveals (a headline's shine) replay when a modal lets the page go: not the pair
+        for (const el of document.querySelectorAll('[data-kp-reveal]')) {
+            el.removeAttribute('data-kp-reveal');
+            el.classList.remove('is-shine', 'is-tracking');
+        }
+        window.__ambient = new Set(document.getAnimations());
+        for (const a of window.__ambient) a.pause();
+    });
+    const shot = async () => (await page.screenshot()).toString('base64');
+    const notes = [];
+    const closed = await shot();
+
+    const openMs = await startPaused(page, pair.open, 'open');
+    const openDetail = lastDetail;
+    if (openMs <= 0) notes.push('the opening runs no animation at all');
+    const opening = [];
+    for (let i = 0; i <= FRAMES; i++) {
+        await seek(page, (openMs * i) / FRAMES, 1);
+        opening.push(await shot());
+    }
+    // Let it settle for real.
+    await page.evaluate(() => window.__pair.forEach((a) => a.finish()));
+    await page.waitForTimeout(500);
+    const open = await shot();
+
+    const radii = pair.probe
+        ? await page.evaluate(
+              (sel) =>
+                  [...document.querySelectorAll(sel)]
+                      .filter((e) => e.getBoundingClientRect().width > 0)
+                      .slice(0, 3)
+                      .map((e) => {
+                          const c = getComputedStyle(e);
+                          const r = e.getBoundingClientRect();
+                          return `${e.tagName.toLowerCase()}${[...e.classList].slice(0, 1).map((x) => '.' + x)} ${Math.round(r.width)}x${Math.round(r.height)} radius ${c.borderTopLeftRadius}/${c.borderTopRightRadius}/${c.borderBottomRightRadius}/${c.borderBottomLeftRadius} font ${c.fontFamily.split(',')[0]}`;
+                      }),
+              pair.probe,
+          )
+        : [];
+    const closeMs = await startPaused(page, pair.close, 'close');
+    const closeDetail = lastDetail;
+    if (closeMs <= 0) notes.push('the closing runs no animation at all: it is gone at once');
+    const closing = [];
+    for (let i = 0; i <= FRAMES; i++) {
+        await seek(page, (closeMs * i) / FRAMES, -1);
+        closing.push(await shot());
+    }
+    await page.evaluate(() => window.__pair.forEach((a) => a.finish()));
+    await page.waitForTimeout(700);
+    const after = await shot();
+
+    if (keep) {
+        mkdirSync(join(ROOT, 'test-results/pairs'), { recursive: true });
+        const save = (name, b64) => writeFileSync(`${ROOT}/test-results/pairs/${pair.id}-${name}.png`, Buffer.from(b64, 'base64'));
+        opening.forEach((f, i) => save(`open-${String(i).padStart(2, '0')}`, f));
+        closing.forEach((f, i) => save(`close-${String(i).padStart(2, '0')}`, f));
+        save('closed', closed);
+        save('after', after);
+    }
+
+    // the whole gesture's change on screen = the scale every difference is read against
+    const whole = (await differPage.compare([closed], [open])).mad[0] || 1e-6;
+    const reversed = closing.slice().reverse();
+    const { mad } = await differPage.compare(opening, reversed);
+    const diffs = mad.map((d) => d / whole);
+    const worst = Math.max(...diffs);
+    const at = diffs.indexOf(worst);
+    const gone = (await differPage.compare([closed], [after])).mad[0] / whole;
+
+    if (closeMs > 0 && Math.abs(closeMs - openMs) / Math.max(openMs, 1) > DURATION_TOLERANCE)
+        notes.push(`the closing lasts ${Math.round(closeMs)} ms, the opening ${Math.round(openMs)} ms`);
+    if (closeMs > 0 && worst > TOLERANCE)
+        notes.push(`the closing is not the opening backwards: ${(worst * 100).toFixed(1)} % off at frame ${at}/${FRAMES}`);
+    if (gone > 0.01) notes.push(`after the closing the screen is not the one from before the opening: ${(gone * 100).toFixed(1)} % left over`);
+    await context.close();
+    return { id: pair.id, ok: notes.length === 0, notes, worst, open: openMs, close: closeMs, openDetail, closeDetail, radii, gone };
+}
+
+const server = await serve();
+const base = `http://127.0.0.1:${server.address().port}`;
+const browser = await (engine === 'chromium' ? chromium : firefox).launch();
+const { page: differPage, compare } = await differ(browser);
+const results = [];
+for (const pair of PAIRS.filter((p) => only.length === 0 || only.includes(p.id))) {
+    try {
+        const r = await measure(browser, { compare }, base, pair);
+        results.push(r);
+        console.log(
+            `${r.ok ? 'ok  ' : 'FAIL'} ${r.id.padEnd(22)} open ${Math.round(r.open)} ms, close ${Math.round(r.close)} ms, worst ${(r.worst * 100).toFixed(1)} %`,
+        );
+        for (const n of r.notes) console.log(`       - ${n}`);
+        const fmt = (d) =>
+            d.map((x) => `${x.t}:${x.n}:${x.ms}${x.delay ? '+' + x.delay : ''}:${x.dir === 'normal' ? '' : x.dir + ':'}${x.ease}`).join(' | ');
+        console.log(`       open [${fmt(r.openDetail)}]`);
+        console.log(`       close [${fmt(r.closeDetail)}]`);
+        for (const q of r.radii) console.log(`       shape ${q}`);
+    } catch (error) {
+        results.push({ id: pair.id, ok: false, error: String(error.message).split('\n')[0] });
+        console.log(`ERR  ${pair.id.padEnd(22)} ${String(error.message).split('\n')[0]}`);
+    }
+}
+await differPage.close();
+await browser.close();
+server.close();
+writeFileSync(join(ROOT, `research/all-themes/_audit/out/${theme}/pairs-${engine}.json`), JSON.stringify(results, null, 1));
+process.exitCode = results.every((r) => r.ok) ? 0 : 1;
+console.log(`\n${results.filter((r) => r.ok).length} of ${results.length} pairs pass (theme ${theme})`);

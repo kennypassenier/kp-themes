@@ -411,3 +411,18 @@ These were not cyberpunk's: the same wrong default is in every theme that has no
 - **Fix:** set the variables the layers read (or longhands) instead of the shorthand; the button now reads 5.29:1 in rest, hover,
   focus and press.
 - **Check:** a contrast sweep of every button and link text in every state (`contrast-sweep.mjs`, 799 readings).
+
+## 41. A part's own box-shadow replaces the package's focus ring: the paper outline alone is invisible
+
+- **Symptom:** (all-themes audit, 2026-10-13) a keyboard user tabs onto the selected tab in grotesk and nostromo, the switch in
+  grotesk and the slider in synthwave and sees nothing change.
+- **Cause:** the package's ring is two channels, an outline in `--focus-ring-contrast` (the page's own colour) and a box-shadow in
+  `--focus-ring`. A register that gives the part a box-shadow of its own (the selected tab's underline) or sets the ring's shadow in
+  the contrast colour (grotesk's switch) leaves only the outline, paper on paper. Synthwave's inset tubes paint nothing on a slider,
+  whose track is the browser's.
+- **Fix:** where a part keeps a shadow of its own, compose it with the ring in the same declaration (the tab: ring first, underline
+  after); where the part's own line swallows a ring laid against it, draw the theme's ink outline at an offset; a slider takes the
+  outside variant of the theme's mark.
+- **Check:** `KP_THEME=<theme> node research/all-themes/_audit/tab-paint.mjs`: a real Tab through the applied demo, each stop shot
+  focused and blurred; fewer than 16 changed pixels is NOMARK. Only the review dialog's own buttons may read NOMARK (the catalogue's
+  chrome covers them).
