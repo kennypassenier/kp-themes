@@ -1,5 +1,7 @@
 **Status (2026-10-09): waiting for Kenny's approvals; nothing in the package changed by this page.**
 
+**Round 6 (2026-10-12):** the bar is approved and left the page. Round 5 was judged not approved for the side navigation (its content was clipped away from its own edge as the close began), the date picker (every move redrew and replayed arrivals, the panel shrank and grew again) and the tour (the card changed shape from step to step). Mended and measured in the review dialog in Firefox and Chromium; the causes are entries 28 to 31 of docs/THEME_LESSONS.md.
+
 # Forest, as applied: what changed
 
 Kenny, 2026-10-09: "Can you show in a demo which forest components you changed? Just a showcase where I can approve everything."

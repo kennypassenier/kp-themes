@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+- **Changed: forest, the CSS-only rows of the audit** [2026-10-12, research/forest-applied/_audit/MISSING.md rows 6-8, 11, 13-23, 25]. Prose is in the body face (the
+  alarm's detail, hint, countdown and button, the error page, platforms, health, status lines, truncated cells, microlabels); the busy table shows the planting row
+  alone; a pressed plain or ghost button keeps its plate (ghost words 4.35:1 to 6.7:1); the phone toggle's tint follows `aria-expanded`; the leaf corner on the
+  code block, date picker title, key figure value, log level, mono chip and palette keys; one swatch shape (the part leaf) and the sort-order pill; hover blaze on a
+  calendar day, the month title, a sortable header and a tag's remove button; the press closes the blaze on rows, checks and switches; one-channel focus rings
+  on the tile link and the palette link; the alarm's backdrop fades on the growth curve; the phone bar's links fade in the growth time; `outline-style` and the
+  progress bar's head use the register's curve. The marquee's 48 s loop is a decided exception (CHARACTER.md).
+- **Changed: forest, the motion rows of the audit, every close its open reversed** [2026-10-12, research/forest-applied/_audit/MISSING.md rows 1-5, 9, 10, 12].
+  The busy table's layer, the table's empty state and an upload's file row leave before they go (open and close 1000 ms, mirror within 6 %); a
+  tab switch grows the new panel while the old one withers (1000 ms in all, not 2000); a tree branch's children glide open and shut on the growth
+  curve; a dismissed alert arrives again when it is shown; the tour's ring and dim withers as they were drawn (14.4 % off to 2.2 %); the space a
+  leave folds takes the growth time (1000 ms, not 1583). Shared code: `js/motion.js` gains `leavesState()`, `arriveShown()`, `glideGroup()` and
+  the tokens `--kp-leave-state`, `--kp-leave-fold-grow`, `--kp-leave-fold-start`, `--kp-arrive-unseen`; `css/components.css` the token
+  `--kp-tour-dim-close`. Every one is set by forest alone, so no other theme changes. The calendar's busy pair (open 1000 ms, close 1820 ms: the days
+  grow in turn when the data arrives) is a decided exception (CHARACTER.md).
 - **Fixed: menus placed under their button in every theme, and a capped arrival queue** [2026-10-09]. `js/top-layer.js` `layoutRect()` measures a
   box without its growth translate, so the menu button's menu, the drawn select and the date picker open at their trigger even when a theme grows
   them from its edge (forest opened them about one menu height too low); `js/motion.js` `inTurnGap()` caps a row of three or more items arriving or

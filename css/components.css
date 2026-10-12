@@ -9027,7 +9027,9 @@
     }
 
     body:has(.kp-tour[data-kp-reversing]) [data-kp-tour-target] {
-        box-shadow: 0 0 0 100vmax transparent !important;
+        /* A theme whose dim grows out of the target (forest) takes it back
+         * the same way: `--kp-tour-dim-close` names the shadow it fades to. */
+        box-shadow: var(--kp-tour-dim-close, 0 0 0 100vmax transparent) !important;
         outline-color: transparent !important;
         transition: box-shadow var(--kp-sig-fo-time, 1000ms) var(--kp-sig-fo-wither, var(--kp-sig-fo-grow, ease-in)), outline-color var(--kp-sig-fo-time, 1000ms) var(--kp-sig-fo-wither, var(--kp-sig-fo-grow, ease-in)) !important;
     }

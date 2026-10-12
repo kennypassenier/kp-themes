@@ -95,6 +95,14 @@
     display: block;
 }
 
+.fa-stage--frame {
+    position: relative;
+    block-size: 22rem;
+    overflow: clip;
+    padding: var(--kp-space-md, 1rem);
+    border: 1px dashed var(--border-strong);
+}
+
 .fa-stage--baseline {
     align-items: baseline;
 }

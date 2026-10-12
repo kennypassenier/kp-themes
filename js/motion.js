@@ -843,6 +843,10 @@ function arrive(el, motion) {
     if (!motion || el.style.animation || el.hasAttribute('data-kp-arriving') || el.hasAttribute('data-kp-leaving') || el.hasAttribute('data-kp-ghost')) return;
     // A theme that opens as its close turned around lets it arrive as its
     // leave played backwards [research/open-reverse].
+    // A theme that says `--kp-arrive-unseen: skip` lets what takes no box
+    // (display none) arrive as nothing: its arrival would only hold back,
+    // in the row of arrivals, the visible part that was added with it.
+    if (getComputedStyle(el).getPropertyValue('--kp-arrive-unseen').trim() === 'skip' && el.getClientRects().length === 0) return;
     if (opensAsReversedClose(el) && arriveAsReversedLeave(el)) return;
     // A register that has its own arrival draws it on `[data-kp-arriving]`;
     // one that has not lends its toast's.
@@ -854,6 +858,64 @@ function arrive(el, motion) {
         el.removeAttribute('data-kp-arriving');
     };
     void playedOut(el, 1500).then(end);
+}
+
+/**
+ * Let `el` arrive the theme's way, now: for a part a script brings back by
+ * itself (an alert dismissed and shown again), outside any box motion
+ * watches. A part that already arrives, or leaves, is left alone.
+ * @param {HTMLElement} el
+ */
+export function arriveShown(el) {
+    arrive(el, arrival(el));
+}
+
+/** The attribute a group carries while glideGroup() moves its height. */
+export const GROUP_FOLDING_ATTRIBUTE = 'data-kp-group-folding';
+
+/** @type {WeakMap<HTMLElement, Animation>} */
+const groupGlides = new WeakMap();
+
+/**
+ * Open or shut a group whose shut state is not drawn (a tree branch's
+ * children, `display: none` while `aria-expanded="false"`) by gliding its
+ * height, the accordion's way: the theme's growth curve and time, and the
+ * same curve turned around to shut, so the close is the open played
+ * backwards. `apply()` flips the state (the caller's attribute); the group
+ * is kept drawn through a shutting glide by the theme's rule on
+ * `[data-kp-group-folding]`. The box around it follows the group instead of
+ * gliding itself (followsAFold()). Under reduced motion, in a theme that
+ * switches, or inside a group that glides already, the state is applied at
+ * once and the box glides as it always did.
+ * @param {HTMLElement} group @param {boolean} opening @param {() => void} apply
+ */
+export function glideGroup(group, opening, apply) {
+    const { size, ease } = themeMotion(group);
+    if (size <= 0 || switching || !group.isConnected || group.parentElement?.closest(`[${GROUP_FOLDING_ATTRIBUTE}]`)) return apply();
+    const own = groupGlides.get(group);
+    // Turned round mid-glide: from the height it stands at.
+    const standing = own ? group.getBoundingClientRect().height : null;
+    own?.cancel();
+    const from = standing ?? (opening ? 0 : layoutHeight(group));
+    group.setAttribute(GROUP_FOLDING_ATTRIBUTE, '');
+    group.style.setProperty('overflow', 'clip');
+    group.style.setProperty('box-sizing', 'border-box');
+    heightFolds.add(group);
+    apply();
+    const to = opening ? layoutHeight(group) : 0;
+    const easing = sizeEase(group, ease, to - from, true);
+    const mine = group.animate([{ height: `${from}px` }, { height: `${to}px` }], { duration: size, easing, fill: 'forwards' });
+    groupGlides.set(group, mine);
+    const done = () => {
+        if (groupGlides.get(group) !== mine) return;
+        groupGlides.delete(group);
+        heightFolds.delete(group);
+        group.removeAttribute(GROUP_FOLDING_ATTRIBUTE);
+        group.style.removeProperty('overflow');
+        group.style.removeProperty('box-sizing');
+        mine.cancel();
+    };
+    void mine.finished.then(done, () => undefined);
 }
 
 /**
@@ -997,6 +1059,25 @@ function arrivalOf(el) {
     if (!toast) return null;
     const [name, duration, ...ease] = toast.split(' ');
     return { name, duration: parseFloat(duration), ease: ease.slice(0, -1).join(' ') };
+}
+
+/**
+ * How a leave's fold of space is timed, read off the leaving element: its
+ * length as a multiple of the longer of the exit and the size glide
+ * (`--kp-leave-fold-grow`, 1.25 unless a theme says otherwise) and, with no
+ * `--kp-leave-fold: after`, where it starts as a share of the exit
+ * (`--kp-leave-fold-start`, a third unless a theme says otherwise; forest
+ * sets 1 and 0, so its space closes as long as, and with, its leave).
+ * @param {CSSStyleDeclaration} style the element's style while it carries `data-kp-leaving`
+ * @returns {{ grow: number, start: (lasts: number) => number }}
+ */
+function foldTiming(style) {
+    const grow = parseFloat(style.getPropertyValue('--kp-leave-fold-grow'));
+    const start = parseFloat(style.getPropertyValue('--kp-leave-fold-start'));
+    return {
+        grow: Number.isNaN(grow) ? 1.25 : grow,
+        start: (lasts) => (Number.isNaN(start) ? lasts / 3 : lasts * start),
+    };
 }
 
 /**
@@ -1201,8 +1282,9 @@ function arriveAsReversedLeave(el) {
     if (actor !== el) for (const a of el.getAnimations()) if (a instanceof CSSAnimation) a.cancel();
     const after = fold === 'after';
     const pause = parseFloat(style.getPropertyValue('--kp-leave-pause')) || 0;
-    const foldFor = size > 0 && !floats(el, style) ? steppedDuration(el, withoutOvershoot(ease), Math.max(size, lasts) * 1.25) : 0;
-    const foldAt = onStepClock(el, withoutOvershoot(ease), after ? lasts + pause : lasts / 3);
+    const timing = foldTiming(style);
+    const foldFor = size > 0 && !floats(el, style) ? steppedDuration(el, withoutOvershoot(ease), Math.max(size, lasts) * timing.grow) : 0;
+    const foldAt = onStepClock(el, withoutOvershoot(ease), after ? lasts + pause : timing.start(lasts));
     // The leave is over when its last exit (a pseudo-element's may run
     // longer than the first) and its fold are.
     const total = Math.max(lasts, ...exits.map((exit) => exit.end), foldFor ? foldAt + foldFor : 0);
@@ -1382,6 +1464,18 @@ function reaches(timing, end, share) {
         if ((now.progress ?? 0) >= share || (now.currentIteration ?? 0) > 0) return t;
     }
     return end;
+}
+
+/**
+ * Whether the theme lets a part that a script is about to remove or hide
+ * (a state's layer, an empty state, a file row, a tree's children) leave
+ * first, as leave() plays it: a theme says so with `--kp-leave-state:
+ * leave`, and the others keep taking such a part out at once.
+ * @param {Element} el
+ * @returns {boolean}
+ */
+export function leavesState(el) {
+    return getComputedStyle(el).getPropertyValue('--kp-leave-state').trim() === 'leave';
 }
 
 /**
@@ -1578,9 +1672,10 @@ async function leaveOne(el, hide, exited, count = 1) {
         // faden en dan pas die accordion").
         const after = fold === 'after';
         const pause = parseFloat(style.getPropertyValue('--kp-leave-pause')) || 0;
+        const timing = foldTiming(style);
         const folding = el.animate([from, to], {
-            duration: steppedDuration(el, withoutOvershoot(ease), Math.max(size, lasts) * 1.25),
-            delay: onStepClock(el, withoutOvershoot(ease), after ? lasts + pause : lasts / 3),
+            duration: steppedDuration(el, withoutOvershoot(ease), Math.max(size, lasts) * timing.grow),
+            delay: onStepClock(el, withoutOvershoot(ease), after ? lasts + pause : timing.start(lasts)),
             easing: withoutOvershoot(ease),
             fill: 'forwards',
         });
@@ -1729,7 +1824,7 @@ const heightFolds = new WeakSet();
  * @param {HTMLElement} box
  */
 const followsAFold = (box) =>
-    [...box.querySelectorAll('[data-kp-leaving]')].some((el) => heightFolds.has(/** @type {HTMLElement} */ (el)) && el.getClientRects().length > 0);
+    [...box.querySelectorAll(`[data-kp-leaving], [${GROUP_FOLDING_ATTRIBUTE}]`)].some((el) => heightFolds.has(/** @type {HTMLElement} */ (el)) && el.getClientRects().length > 0);
 
 /**
  * Which arrivals play under `el`: its closest `data-kp-arrive` (`all`,

@@ -287,6 +287,9 @@ export function attachDatePickers(
         const panel = /** @type {HTMLElement | null} */ (picker.querySelector('[data-kp-date-panel]'));
         if (input === null || open === null || panel === null) continue;
         picker.dataset.kpDatepickerAttached = '';
+        // The panel redraws its days, months and years on every move; only opening it is an arrival
+        // (the theme's own entrance), so a redraw must not play the arrival of what was drawn.
+        panel.dataset.kpArrive = 'none';
 
         const locale = resolveLocale(picker.dataset.kpLocale ?? localeOption, picker);
         const firstDay = weekStartsOn(locale, picker.dataset.kpWeekStartsOn === undefined ? weekOption : Number(picker.dataset.kpWeekStartsOn));

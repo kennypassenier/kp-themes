@@ -193,6 +193,28 @@ const make = (doc, tag, className, text) => {
 let endRunning = null;
 
 /**
+ * The card keeps one shape for the whole tour: its height is the tallest step's, measured once
+ * as the tour opens, so going to the next step moves the card and swaps its words without the
+ * box changing size (Kenny, 2026-10-12, round 5: "de box moet gewoon zijn vorm behouden").
+ * @param {HTMLDialogElement} card
+ * @param {{ title: string, text: string }[]} steps
+ * @param {HTMLElement} title
+ * @param {HTMLElement} text
+ */
+function fixShape(card, steps, title, text) {
+    const was = [title.textContent, text.textContent];
+    card.style.removeProperty('min-block-size');
+    let tallest = 0;
+    for (const step of steps) {
+        title.textContent = step.title;
+        text.textContent = step.text;
+        tallest = Math.max(tallest, card.getBoundingClientRect().height);
+    }
+    [title.textContent, text.textContent] = was;
+    if (tallest > 0) card.style.minBlockSize = `${Math.ceil(tallest)}px`;
+}
+
+/**
  * Walk the reader over the page, one card per step, beside its target.
  * Steps whose target is not on the page are left out before counting, so the
  * count is exact. The card is a non-modal dialog: the page stays usable. Esc
@@ -214,6 +236,8 @@ export function startTour(steps, { start = 0, remember, decorate, returnFocus, o
     /** @type {HTMLElement | null} */
     let target = null;
     const card = /** @type {HTMLDialogElement} */ (make(doc, 'dialog', 'kp-tour'));
+    // The words change on every step; that is no arrival of new content to play the theme's way.
+    card.dataset.kpArrive = 'none';
     const title = make(doc, 'h3', 'kp-tour__title');
     title.id = nextId('kp-tour-title');
     const text = make(doc, 'p', 'kp-tour__text');
@@ -323,6 +347,7 @@ export function startTour(steps, { start = 0, remember, decorate, returnFocus, o
             host.append(card);
         }
         if (!card.open) card.show();
+        if (!stepping) fixShape(card, live, title, text);
         title.textContent = step.title;
         text.textContent = step.text;
         if (stepping) {

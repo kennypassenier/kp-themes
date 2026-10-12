@@ -126,6 +126,29 @@ export declare function sizeMotion(box: HTMLElement, change: number): {
     easing: string;
 };
 /**
+ * Let `el` arrive the theme's way, now: for a part a script brings back by
+ * itself (an alert dismissed and shown again), outside any box motion
+ * watches. A part that already arrives, or leaves, is left alone.
+ * @param {HTMLElement} el
+ */
+export declare function arriveShown(el: HTMLElement): void;
+/** The attribute a group carries while glideGroup() moves its height. */
+export declare const GROUP_FOLDING_ATTRIBUTE = "data-kp-group-folding";
+/**
+ * Open or shut a group whose shut state is not drawn (a tree branch's
+ * children, `display: none` while `aria-expanded="false"`) by gliding its
+ * height, the accordion's way: the theme's growth curve and time, and the
+ * same curve turned around to shut, so the close is the open played
+ * backwards. `apply()` flips the state (the caller's attribute); the group
+ * is kept drawn through a shutting glide by the theme's rule on
+ * `[data-kp-group-folding]`. The box around it follows the group instead of
+ * gliding itself (followsAFold()). Under reduced motion, in a theme that
+ * switches, or inside a group that glides already, the state is applied at
+ * once and the box glides as it always did.
+ * @param {HTMLElement} group @param {boolean} opening @param {() => void} apply
+ */
+export declare function glideGroup(group: HTMLElement, opening: boolean, apply: () => void): void;
+/**
  * Play backwards the arrival arrive() gives `el` in a theme where it does
  * not arrive as a leave turned around (a table row; Kenny, 2026-10-05: the
  * rows of a group unfolded the theme's way and folded away at once): the
@@ -142,6 +165,15 @@ export type Arriving = {
     total: number;
     lag: number;
 };
+/**
+ * Whether the theme lets a part that a script is about to remove or hide
+ * (a state's layer, an empty state, a file row, a tree's children) leave
+ * first, as leave() plays it: a theme says so with `--kp-leave-state:
+ * leave`, and the others keep taking such a part out at once.
+ * @param {Element} el
+ * @returns {boolean}
+ */
+export declare function leavesState(el: Element): boolean;
 /**
  * Let `el` leave the theme's way, then take it out [scope-142; Kenny,
  * 2026-10-04: "die grow/shrink bewegingen moeten ook zijn als er opeens

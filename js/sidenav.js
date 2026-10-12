@@ -274,9 +274,12 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
             if (moveFocus && covering()) {
                 if (open) {
                     restoreFocusTo = doc.activeElement;
-                    /** @type {HTMLElement | null} */ (panel.querySelector(FOCUSABLE))?.focus();
+                    /** @type {HTMLElement | null} */ (panel.querySelector(FOCUSABLE))?.focus({ preventScroll: true });
                 } else if (restoreFocusTo instanceof HTMLElement) {
-                    restoreFocusTo.focus();
+                    // Without scrolling: a panel that is fixed inside a scrolled box (a review
+                    // dialog's stage, a dashboard's main) is carried off with that scroll, so the
+                    // content seemed to vanish the moment the close began.
+                    restoreFocusTo.focus({ preventScroll: true });
                     restoreFocusTo = null;
                 }
             }

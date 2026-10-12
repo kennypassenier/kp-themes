@@ -412,9 +412,35 @@ there):
   (F-24); the prose link's underline in 200 ms (F-15); the headline grows out of its
   line, the rule, the meter's wipe and the alert edge are logical (F-34); the calendar's
   busy card grows and withers, back-to-top fades out on the withering curve (F-33); the
-  DI5 table states what plays (F-35). Still needing a script: the date picker's and the
-  alarm's closes, the palette's close outside Chromium, the theme list's close, the
-  side navigation's backdrop leaving (research/PACKAGE_FINDINGS.md).
+  DI5 table states what plays (F-35). Closes that once needed a script now measure as
+  mirrors of their opens (audit 2026-10-12, research/forest-applied/_audit: date picker
+  4.6 %, alarm 2.1 %, palette 0.5 %, theme list 0.0 %); the alarm's backdrop fades on
+  the growth curve like the dialog's, so its close is that fade reversed.
+- **Decided exception, the marquee:** the band loops linearly in 48000 ms
+  (`--kp-marquee`), not in the 3200 ms loop. It is a text ticker, not a growth: at 3200 ms
+  the words could not be read. It is the one loop in forest outside G4's loop time, and
+  `linear` is right for it (a walked line, G2).
+
+**Applied 2026-10-12 (the motion rows of the audit; every pair one growth time, mirror within 6 %,
+measured in Firefox and Chromium):**
+
+- **Leaving a state (G10):** the busy table's layer, the table's empty state and an upload's
+  file row wither before they go (`--kp-leave-state: leave`, js/motion.js `leavesState()`); an alert
+  that is shown again arrives as its leave reversed (`arriveShown()`). The space a leave folds
+  takes exactly the growth time and starts with the leave (`--kp-leave-fold-grow: 1`,
+  `--kp-leave-fold-start: 0`), so a leave is 1000 ms, not 1583. What takes no box arrives as
+  nothing (`--kp-arrive-unseen: skip`), so a hidden spinner holds back no visible part.
+- **Tabs:** the new panel grows while the old one withers (1000 ms in all); the box dips by the
+  difference of the two folds in between and comes back.
+- **Tree:** a branch's children glide open and shut on the growth curve like the accordion
+  (`glideGroup()`); expanding all applies at once.
+- **Tour:** the ring is drawn in by an animation that does not hold its end (`backwards`), so the
+  close can fade it on the withering curve, and the dim shrinks back into its target
+  (`--kp-tour-dim-close: 0 0 0 0 transparent`); the pair meter reads 2.2 % (Firefox), 1.4 % (Chromium).
+- **Decided exception, the calendar's busy pair:** it opens in 1000 ms (the card grows) and closes in
+  1820 ms: when the data arrives the card withers while the days grow in turn, 20 ms apart in
+  reading order (the calendar's decided arrival). The mirror would play the days' growth backwards
+  when loading starts, which is not what a month that is waiting for its data should do.
 
 ---
 

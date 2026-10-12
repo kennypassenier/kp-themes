@@ -115,7 +115,7 @@
     /* ── Type: microlabels carry a small ring glyph ────────────────────── */
 
     [data-theme='forest'] .microlabel {
-        font-family: var(--theme-font-mono);
+        font-family: var(--theme-font-body);
         font-size: 0.72rem;
         letter-spacing: 0.14em;
         text-transform: uppercase;
@@ -308,7 +308,7 @@
 
     /* The platforms line: a small ring before every name. */
     [data-theme='forest'] .kp-platforms {
-        font-family: var(--theme-font-mono);
+        font-family: var(--theme-font-body);
         font-size: 0.78rem;
         color: var(--muted-foreground);
     }
@@ -676,7 +676,10 @@
             .kp-accordion__summary,
             .kp-nav__menu a,
             .kp-sidenav__link,
-            .kp-sidenav__category-toggle
+            .kp-sidenav__category-toggle,
+            .kp-kpi__link,
+            button.kp-datepicker__title,
+            .kp-tag__remove
         ):focus-visible,
     [data-theme='forest'] :focus-visible + .kp-upload__zone,
     [data-theme='forest'] [data-kp-upload]:has([data-kp-upload-input]:focus-visible) .kp-upload__zone {
@@ -691,7 +694,8 @@
        channels are laid inside it: the inner ring at the edge, the
        contrast ring within it (DI2; the pale outer channel alone read
        about 1.03:1 on the card, research/forest-uniformity F-13). */
-    [data-theme='forest'] .kp-menu [data-kp-theme]:focus-visible {
+    [data-theme='forest'] .kp-menu [data-kp-theme]:focus-visible,
+    [data-theme='forest'] a.kp-palette__option:focus-visible {
         outline: var(--focus-ring-width, 2px) solid transparent;
         outline-offset: calc(-1 * var(--focus-ring-width, 2px));
         box-shadow:
@@ -1053,7 +1057,7 @@
     }
 
     [data-theme='forest'] .kp-health {
-        font-family: var(--theme-font-mono);
+        font-family: var(--theme-font-body);
         font-size: 0.8rem;
     }
 
@@ -1072,7 +1076,7 @@
     }
 
     [data-theme='forest'] .kp-error {
-        font-family: var(--theme-font-mono);
+        font-family: var(--theme-font-body);
         color: var(--destructive);
     }
 
@@ -1085,9 +1089,13 @@
     [data-theme='forest'] .kp-masked,
     [data-theme='forest'] .kp-copyable,
     [data-theme='forest'] .kp-truncate,
-    [data-theme='forest'] .kp-cell-break,
-    [data-theme='forest'] .kp-cell-truncate {
+    [data-theme='forest'] .kp-cell-break {
         font-family: var(--theme-font-mono);
+    }
+
+    /* A truncated cell is prose with an ellipsis, not an identifier (audit row 7). */
+    [data-theme='forest'] .kp-cell-truncate {
+        font-family: var(--theme-font-body);
     }
 
     [data-theme='forest'] .kp-timestamp,
@@ -1175,6 +1183,15 @@
 
     [data-theme='forest'] .kp-tree {
         font-family: var(--theme-font-mono);
+    }
+
+    /* A branch's children glide open and shut on the growth curve like the
+       accordion (js/motion.js glideGroup()): its height moves, the box clips.
+       Shutting, the state is already `aria-expanded="false"` and the group
+       is kept drawn until the glide is over. */
+    [data-theme='forest'] .kp-tree [role='treeitem'][aria-expanded='false'] > [role='group'][data-kp-group-folding],
+    [data-theme='forest'] .kp-tree [role='treeitem'][aria-expanded='false'] + [role='group'][data-kp-group-folding] {
+        display: block;
     }
 
     /* The accordion [gap-12]: the display face its tabs are set in. */
@@ -1277,7 +1294,7 @@
     [data-theme='forest'] .kp-theme-menu__status,
     [data-theme='forest'] .kp-palette__status,
     [data-theme='forest'] .kp-combobox__status {
-        font-family: var(--theme-font-mono);
+        font-family: var(--theme-font-body);
         font-size: 0.75rem;
     }
 
@@ -1396,7 +1413,7 @@
             transition:
                 outline-color var(--fx-duration) var(--fx-ease),
                 outline-offset var(--fx-duration) var(--fx-ease),
-                outline-style var(--fx-duration) allow-discrete,
+                outline-style var(--fx-duration) var(--fx-ease) allow-discrete,
                 box-shadow var(--fx-duration) var(--fx-ease),
                 background-color var(--fx-duration) var(--fx-ease),
                 border-color var(--fx-duration) var(--fx-ease),
@@ -1514,8 +1531,17 @@
        when pressed (G12: the blaze closes in, the part does not change). The
        restatement reached them too and turned them pale under their light
        words, 1.8:1 (research/forest-uniformity F-10). */
-    [data-theme='forest'] .kp-button:active:not(:disabled, .kp-button--primary, .kp-button--destructive) {
-        background: var(--secondary-active);
+    [data-theme='forest'] .kp-button:active:not(:disabled, .kp-button--primary, .kp-button--destructive, .kp-button--ghost) {
+        background: var(--card);
+    }
+
+    /* The same for the plain button and the ghost: the press closes the blaze
+       and the part keeps the plate it had pointed at (it turned (252,251,248)
+       to (191,187,176) before, and the ghost's green words read 4.35:1 on
+       that grey). */
+    [data-theme='forest'] .kp-button--ghost:active:not(:disabled) {
+        border-color: var(--border-strong);
+        background: color-mix(in srgb, var(--primary) 8%, transparent);
     }
 
     /* ── Read-only fields [gap-11] ────────────────────────────────────── */
@@ -1600,6 +1626,15 @@
         text-shadow: none;
     }
 
+    /* The alarm's prose, hint, countdown and button are words, not identifiers:
+       the body face, and the button is forest's own (no tracked capitals);
+       the code (`.kp-alarm__code`) is an identifier and stays mono. */
+    [data-theme='forest'] .kp-alarm :is(.kp-alarm__detail, .kp-alarm__hint, .kp-alarm__countdown, .kp-alarm__ack) {
+        font-family: var(--theme-font-body);
+        letter-spacing: 0.02em;
+        text-transform: none;
+    }
+
     /* A submenu item's mark [Kenny, 2026-09-20]: the open ring it already uses, like a seed. */
     [data-theme='forest'] .kp-sidenav__submenu .kp-sidenav__link {
         --kp-sidenav-submenu-mark: '◦';
@@ -1670,6 +1705,25 @@
            480 ms, are other themes'). */
         --kp-close-max: var(--kp-sig-fo-time);
         --kp-size-max: var(--kp-sig-fo-time);
+        /* The space a leave folds shut takes the growth time exactly and
+           starts with the leave (js/motion.js reads both; its defaults,
+           1.25 times the longer of the leave and the size glide, starting
+           a third into the exit, are other themes'): arriving and leaving
+           are one picture of one time, so a withered part is gone in 1000 ms
+           and an arrival is its mirror. */
+        --kp-leave-fold-grow: 1;
+        --kp-leave-fold-start: 0;
+        /* A part a script removes or hides (the busy table's layer, an empty
+           state, a file row, a tree's children, a re-shown alert) leaves
+           first, as it arrives: js/motion.js leavesState(). */
+        --kp-leave-state: leave;
+        /* The tour's dim goes back to no shadow at all (the base layer fades
+           it at its full spread), so it shrinks into the target as it grew
+           out of it. */
+        --kp-tour-dim-close: 0 0 0 0 transparent;
+        /* What arrives with no box (the busy table's hidden spinner) arrives
+           as nothing, so it holds back no visible part of its row. */
+        --kp-arrive-unseen: skip;
         /* How far past a growing part's edge its own shadow may show. */
         --kp-sig-fo-reach: 3rem;
         /* G6: the leaf corner, one rule for every plate and every small part:
@@ -1701,6 +1755,10 @@
        (scope-93: no link colour in a navigation). */
     [data-theme='forest'] .kp-progressbar {
         --kp-progressbar-height: calc(1.25rem * var(--kp-progressbar-scale, 1));
+        /* The package's own knobs, set to contact time on the register's curve,
+           so the head's transform moves with the fill (audit row 22). */
+        --kp-progressbar-duration: var(--fx-duration);
+        --kp-progressbar-ease: var(--fx-ease);
         /* One planting slot: half the bar's height, so a tree keeps its shape
            at any height the bar is given. */
         --kp-fo-pitch: calc(var(--kp-progressbar-height) / 2);
@@ -3110,7 +3168,15 @@
             .kp-reorder [data-kp-handle],
             .kp-accordion__summary,
             .kp-sidenav__link,
-            .kp-sidenav__category-toggle
+            .kp-sidenav__category-toggle,
+            .kp-datepicker__title,
+            .kp-kpi__value,
+            .kp-log__level,
+            .kp-mono,
+            .kp-palette__keys,
+            .kp-swatch,
+            .kp-spec__swatch,
+            .kp-datatable__sort-order
         ),
     [data-theme='forest'] .kp-card[data-kp-label]::before {
         /* The last small parts take the leaf too (Kenny, 2026-10-09 on
@@ -3325,7 +3391,7 @@
     }
 
     [data-theme='forest'] .kp-calendar__swatch {
-        border-radius: 0 4px 0 4px;
+        border-radius: var(--kp-sig-fo-part);
     }
 
     [data-theme='forest'] .kp-calendar__title {
@@ -3653,13 +3719,13 @@
             flex-wrap: nowrap;
             max-block-size: 0;
             opacity: 0;
-            transition: max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-wither), opacity calc(var(--kp-sig-fo-time) * 0.7) var(--kp-sig-fo-wither);
+            transition: max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-wither), opacity var(--kp-sig-fo-time) var(--kp-sig-fo-wither);
         }
 
         [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
             max-block-size: var(--kp-nav-links-height, 25rem);
             opacity: 1;
-            transition: max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-grow), opacity calc(var(--kp-sig-fo-time) * 0.7) var(--kp-sig-fo-grow);
+            transition: max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-grow), opacity var(--kp-sig-fo-time) var(--kp-sig-fo-grow);
         }
 
         @starting-style {
@@ -3672,7 +3738,7 @@
         [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__links {
             max-block-size: 0;
             opacity: 0;
-            transition: max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-wither), opacity calc(var(--kp-sig-fo-time) * 0.7) var(--kp-sig-fo-wither);
+            transition: max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-wither), opacity var(--kp-sig-fo-time) var(--kp-sig-fo-wither);
         }
 
         @media (prefers-reduced-motion: no-preference) {
@@ -3723,11 +3789,15 @@
         clip-path: inset(calc(-1 * var(--kp-sig-fo-reach)) 0 calc(-1 * var(--kp-sig-fo-reach)) calc(-1 * var(--kp-sig-fo-reach)));
     }
 
+    /* The panel slides with everything in it: its clip opens when the opening
+       starts and closes when the closing ends, so no content is cut away from
+       its own edge on the way (Kenny, round 5: "de content verdwijnt instant
+       als het sluiten begint, de content moet mee naar links verschuiven"). */
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='forest'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) {
             transition:
                 translate var(--kp-sig-fo-time) var(--kp-sig-fo-grow),
-                clip-path var(--kp-sig-fo-time) var(--kp-sig-fo-grow),
+                clip-path 0s linear,
                 inline-size var(--kp-sig-fo-time) var(--kp-sig-fo-grow);
         }
 
@@ -3739,7 +3809,7 @@
             ) {
             transition:
                 translate var(--kp-sig-fo-time) var(--kp-sig-fo-wither),
-                clip-path var(--kp-sig-fo-time) var(--kp-sig-fo-wither),
+                clip-path 0s linear var(--kp-sig-fo-time),
                 inline-size var(--kp-sig-fo-time) var(--kp-sig-fo-wither);
         }
 
@@ -3753,7 +3823,10 @@
             animation: kp-sig-forest-fade-back var(--kp-sig-fo-time) var(--kp-sig-fo-grow) reverse both !important;
         }
 
-        [data-theme='forest'] .kp-dialog[open]::backdrop {
+        /* The alarm's ground is transparent, but its backdrop still carries the
+           fade, so js/motion.js plays the close as that fade reversed (audit
+           row 19: it had fallen back to its own 1000 ms ease-in). */
+        [data-theme='forest'] :is(.kp-dialog, .kp-alarm)[open]::backdrop {
             animation: kp-sig-forest-fade var(--kp-sig-fo-time, 1000ms) var(--kp-sig-fo-grow, ease-out) backwards;
         }
     }
@@ -3785,7 +3858,10 @@
            close takes it back on the reversed curve (css/components.css), so the
            two are mirrors. */
         [data-theme='forest'] [data-kp-tour-target] {
-            animation: kp-sig-forest-tour-ring var(--kp-sig-fo-time) var(--kp-sig-fo-grow) both;
+            /* `backwards`, not `both`: a ring held by a finished animation
+               cannot be faded by the close's transition (css/components.css,
+               on the withering curve), and went at once. */
+            animation: kp-sig-forest-tour-ring var(--kp-sig-fo-time) var(--kp-sig-fo-grow) backwards;
             transition:
                 box-shadow var(--kp-sig-fo-time) var(--kp-sig-fo-grow),
                 outline-color var(--kp-sig-fo-time) var(--kp-sig-fo-grow);
@@ -3793,6 +3869,17 @@
 
         /* A step walks the card to the next target on the growth time and
            curve, its shape untouched. */
+        /* A step is no arrival and no news: the card keeps its shape, plays no entrance again and
+           draws no ring round itself; it walks to the next target and swaps its words. */
+        [data-theme='forest'] .kp-tour[data-kp-tour-stepping] {
+            animation: none;
+        }
+
+        [data-theme='forest'] .kp-tour[data-kp-updating]::after {
+            content: none;
+            animation: none;
+        }
+
         [data-theme='forest'] .kp-tour[data-kp-tour-stepping] {
             transition:
                 left var(--kp-sig-fo-time) var(--kp-sig-fo-grow),
@@ -3899,19 +3986,21 @@
         grid-template-columns: minmax(0, 1fr);
     }
 
+    /* The busy table's layer arrives as its leave played backwards and leaves
+       by js/motion.js leave() (`--kp-leave-state: leave`): one mechanism, so
+       the layer's own animations, which a loop on the same part overrode, are
+       gone. The table and its rows beneath it dim and come back on the growth time, on the
+       curve of the state they go to (a transition back takes the withering
+       curve), so the table under the layer is the same pair. */
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='forest'] .kp-datatable__busy-panel {
-            animation: kp-sig-forest-grow var(--kp-sig-dur) var(--kp-sig-fo-grow) backwards;
+        [data-theme='forest'] .kp-datatable,
+        [data-theme='forest'] .kp-datatable .kp-table tbody {
+            transition: opacity var(--kp-sig-fo-time) var(--kp-sig-fo-wither);
         }
 
-        [data-theme='forest'] .kp-datatable__busy-panel[data-kp-closing],
-        [data-theme='forest'] .kp-datatable__busy-overlay[data-kp-closing] .kp-datatable__busy-panel {
-            animation: kp-sig-forest-grow-back var(--kp-sig-dur) var(--kp-sig-fo-wither) reverse both;
-        }
-
-        [data-theme='forest'] .kp-datatable__busy-overlay[data-kp-closing] {
-            opacity: 0;
-            transition: opacity var(--kp-sig-dur) var(--kp-sig-fo-wither);
+        [data-theme='forest'] .kp-datatable[aria-busy='true'],
+        [data-theme='forest'] .kp-datatable[aria-busy='true'] .kp-table tbody {
+            transition-timing-function: var(--kp-sig-fo-grow);
         }
     }
 
@@ -4027,6 +4116,127 @@
         }
     }
 
+    /* ── Audit round (research/forest-applied/_audit/MISSING.md) ───────── */
+
+    /* Row 17, press on rows: a row that answers the pointer with the blaze
+       answers the press by closing it in and turning it solid (G12), as a
+       button does. The offset (-3px) is the row family's hover rule above. A
+       check and a switch close it to 1px, like a button. */
+    [data-theme='forest']
+        :where(
+            .kp-menu [data-kp-theme],
+            .kp-combobox__option,
+            .kp-palette__option,
+            .kp-accordion__summary,
+            .kp-nav__menu a,
+            .kp-sidenav__link,
+            .kp-sidenav__category-toggle,
+            .kp-table tbody tr,
+            .kp-field__check,
+            .kp-switch__input
+        ):active:not(:disabled, [aria-disabled='true'], :focus-visible) {
+        outline-style: solid;
+        outline-color: var(--primary);
+    }
+
+    [data-theme='forest'] :where(.kp-field__check, .kp-switch__input):active:not(:disabled, :focus-visible) {
+        outline-offset: 1px;
+    }
+
+    [data-theme='forest'] .kp-tree [role='treeitem']:active:not(:has([role='treeitem']:active))::after {
+        outline-style: solid;
+        outline-color: var(--primary);
+        outline-offset: -3px;
+    }
+
+    /* Row 16, hover answers: a day of the month, the month's title, a
+       sortable header and a tag's remove button blaze like every other part
+       pointed at (G12). The picked day keeps its green ring; the remove
+       button stays round (a wood's round part) and loses the red disc, since
+       a person's act is green (G5). The title's grey wash goes. A header is a
+       cell in a row of cells, so its ring is laid inside. */
+    [data-theme='forest']
+        :where(td:not([aria-selected='true']) > .kp-calendar__day, button.kp-datepicker__title, .kp-table th[data-kp-sort], .kp-tag__remove) {
+        outline: 2px dashed transparent;
+        outline-offset: 5px;
+    }
+
+    [data-theme='forest']
+        :where(td:not([aria-selected='true']) > .kp-calendar__day, button.kp-datepicker__title, .kp-tag__remove):hover:not(
+            :disabled,
+            [aria-disabled='true'],
+            :focus-visible
+        ) {
+        outline-color: var(--primary);
+        outline-offset: 2px;
+    }
+
+    [data-theme='forest'] .kp-table th[data-kp-sort]:hover {
+        outline-color: var(--primary);
+        outline-offset: -3px;
+    }
+
+    [data-theme='forest']
+        :where(td:not([aria-selected='true']) > .kp-calendar__day, button.kp-datepicker__title, .kp-tag__remove):active:not(
+            :disabled,
+            [aria-disabled='true'],
+            :focus-visible
+        ) {
+        outline-style: solid;
+        outline-color: var(--primary);
+        outline-offset: 1px;
+    }
+
+    [data-theme='forest'] .kp-table th[data-kp-sort]:active {
+        outline-style: solid;
+        outline-color: var(--primary);
+        outline-offset: -3px;
+    }
+
+    [data-theme='forest'] button.kp-datepicker__title:hover,
+    [data-theme='forest'] .kp-tag__remove:hover {
+        background: none;
+        color: inherit;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-tree [role='treeitem']::after {
+            transition:
+                outline-color var(--fx-duration) var(--fx-ease),
+                outline-offset var(--fx-duration) var(--fx-ease),
+                outline-style var(--fx-duration) var(--fx-ease) allow-discrete,
+                background-color var(--fx-duration) var(--fx-ease);
+        }
+
+        [data-theme='forest'] .kp-calendar__day,
+        [data-theme='forest'] button.kp-datepicker__title,
+        [data-theme='forest'] .kp-table th[data-kp-sort],
+        [data-theme='forest'] .kp-tag__remove {
+            transition:
+                outline-color var(--fx-duration) var(--fx-ease),
+                outline-offset var(--fx-duration) var(--fx-ease),
+                outline-style var(--fx-duration) var(--fx-ease) allow-discrete,
+                box-shadow var(--fx-duration) var(--fx-ease),
+                background-color var(--fx-duration) var(--fx-ease),
+                color var(--fx-duration) var(--fx-ease);
+        }
+    }
+
+    /* Row 8, one loading picture: while the busy table's overlay plants its
+       row over the rows, the status line's small tree stays out. */
+    [data-theme='forest'] .kp-datatable:has(> .kp-datatable__busy-overlay) .kp-datatable__status > .kp-spinner {
+        display: none;
+    }
+
+    /* Row 13, the phone bar's toggle: its tint follows aria-expanded, which the
+       script flips when the close starts, not data-kp-nav-open, which stays
+       until the close has played. */
+    [data-theme='forest'] .kp-nav[data-kp-nav-open] > .kp-nav__toggle:not([aria-expanded='true']) {
+        background: transparent;
+        color: inherit;
+        border-color: var(--border-strong);
+    }
+
     /* A day of the month takes DI2's two channels (F-14), its log rings
        kept inside, today's green ring too. */
     [data-theme='forest'] .kp-calendar__day:focus-visible,
@@ -4046,3 +4256,12 @@
     }
 }
 /* ── End of the signature ── */
+
+/* The code block is the layout layer's (css/layout.css sits after kp.signature, so
+   its 0.5rem radius wins over the plate list above). A block of code is a plate:
+   forest's leaf, 0 and the token (audit row 14). */
+@layer kp.layout {
+    [data-theme='forest'] .kp-code-block {
+        border-radius: var(--kp-sig-fo-plate);
+    }
+}

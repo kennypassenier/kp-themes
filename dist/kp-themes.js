@@ -3089,14 +3089,18 @@ __export(motion_exports, {
   CLOSING_ATTRIBUTE: () => CLOSING_ATTRIBUTE,
   FOLDING_OUT: () => FOLDING_OUT,
   FOLD_SELECTOR: () => FOLD_SELECTOR,
+  GROUP_FOLDING_ATTRIBUTE: () => GROUP_FOLDING_ATTRIBUTE,
   PANEL_SELECTOR: () => PANEL_SELECTOR,
   REVERSING_ATTRIBUTE: () => REVERSING_ATTRIBUTE,
   SIZE_ATTRIBUTE: () => SIZE_ATTRIBUTE,
   SIZE_SELECTOR: () => SIZE_SELECTOR,
+  arriveShown: () => arriveShown,
   attachMotion: () => attachMotion,
   closeDialog: () => closeDialog,
   easeSize: () => easeSize,
+  glideGroup: () => glideGroup,
   leave: () => leave,
+  leavesState: () => leavesState,
   motionWatchCount: () => motionWatchCount,
   playArrivalBackwards: () => playArrivalBackwards,
   playClose: () => playClose,
@@ -3571,6 +3575,7 @@ function arrival(scope) {
 }
 function arrive(el2, motion) {
   if (!motion || el2.style.animation || el2.hasAttribute("data-kp-arriving") || el2.hasAttribute("data-kp-leaving") || el2.hasAttribute("data-kp-ghost")) return;
+  if (getComputedStyle(el2).getPropertyValue("--kp-arrive-unseen").trim() === "skip" && el2.getClientRects().length === 0) return;
   if (opensAsReversedClose(el2) && arriveAsReversedLeave(el2)) return;
   el2.setAttribute("data-kp-arriving", "");
   const own = getComputedStyle(el2).animationName;
@@ -3580,6 +3585,36 @@ function arrive(el2, motion) {
     el2.removeAttribute("data-kp-arriving");
   };
   void playedOut(el2, 1500).then(end);
+}
+function arriveShown(el2) {
+  arrive(el2, arrival(el2));
+}
+function glideGroup(group, opening, apply) {
+  const { size, ease } = themeMotion(group);
+  if (size <= 0 || switching || !group.isConnected || group.parentElement?.closest(`[${GROUP_FOLDING_ATTRIBUTE}]`)) return apply();
+  const own = groupGlides.get(group);
+  const standing = own ? group.getBoundingClientRect().height : null;
+  own?.cancel();
+  const from = standing ?? (opening ? 0 : layoutHeight(group));
+  group.setAttribute(GROUP_FOLDING_ATTRIBUTE, "");
+  group.style.setProperty("overflow", "clip");
+  group.style.setProperty("box-sizing", "border-box");
+  heightFolds.add(group);
+  apply();
+  const to = opening ? layoutHeight(group) : 0;
+  const easing = sizeEase(group, ease, to - from, true);
+  const mine = group.animate([{ height: `${from}px` }, { height: `${to}px` }], { duration: size, easing, fill: "forwards" });
+  groupGlides.set(group, mine);
+  const done = () => {
+    if (groupGlides.get(group) !== mine) return;
+    groupGlides.delete(group);
+    heightFolds.delete(group);
+    group.removeAttribute(GROUP_FOLDING_ATTRIBUTE);
+    group.style.removeProperty("overflow");
+    group.style.removeProperty("box-sizing");
+    mine.cancel();
+  };
+  void mine.finished.then(done, () => void 0);
 }
 async function playArrivalBackwards(el2) {
   if (reduced() || !el2.isConnected || el2.hasAttribute("data-kp-leaving")) return;
@@ -3670,6 +3705,14 @@ function arrivalOf(el2) {
   const [name, duration, ...ease] = toast2.split(" ");
   return { name, duration: parseFloat(duration), ease: ease.slice(0, -1).join(" ") };
 }
+function foldTiming(style) {
+  const grow = parseFloat(style.getPropertyValue("--kp-leave-fold-grow"));
+  const start = parseFloat(style.getPropertyValue("--kp-leave-fold-start"));
+  return {
+    grow: Number.isNaN(grow) ? 1.25 : grow,
+    start: (lasts) => Number.isNaN(start) ? lasts / 3 : lasts * start
+  };
+}
 function foldFrames(el2, style) {
   const parent = el2.parentElement ? getComputedStyle(el2.parentElement) : null;
   const sideways = style.display.startsWith("inline") || parent !== null && /flex/.test(parent.display) && !parent.flexDirection.startsWith("column");
@@ -3758,17 +3801,17 @@ function arriveAsReversedLeave(el2) {
       /** @type {KeyframeEffect} */
       a.effect
     );
-    const timing = effect.getTiming();
+    const timing2 = effect.getTiming();
     const pseudo = effect.pseudoElement;
     if (pseudo && rest[pseudo] === animationSignature(actor, pseudo)) {
-      timing.direction = flipped(timing.direction);
-      timing.delay = 0;
+      timing2.direction = flipped(timing2.direction);
+      timing2.delay = 0;
     }
     return {
       keyframes: effect.getKeyframes(),
-      timing,
+      timing: timing2,
       // The whole of it, every iteration, from the leave's start.
-      end: (Number(timing.delay) || 0) + (Number(effect.getComputedTiming().activeDuration) || 0),
+      end: (Number(timing2.delay) || 0) + (Number(effect.getComputedTiming().activeDuration) || 0),
       pseudoElement: effect.pseudoElement
     };
   });
@@ -3778,8 +3821,9 @@ function arriveAsReversedLeave(el2) {
   }
   const after = fold === "after";
   const pause = parseFloat(style.getPropertyValue("--kp-leave-pause")) || 0;
-  const foldFor = size > 0 && !floats(el2, style) ? steppedDuration(el2, withoutOvershoot(ease), Math.max(size, lasts) * 1.25) : 0;
-  const foldAt = onStepClock(el2, withoutOvershoot(ease), after ? lasts + pause : lasts / 3);
+  const timing = foldTiming(style);
+  const foldFor = size > 0 && !floats(el2, style) ? steppedDuration(el2, withoutOvershoot(ease), Math.max(size, lasts) * timing.grow) : 0;
+  const foldAt = onStepClock(el2, withoutOvershoot(ease), after ? lasts + pause : timing.start(lasts));
   const total = Math.max(lasts, ...exits.map((exit) => exit.end), foldFor ? foldAt + foldFor : 0);
   const plays = [];
   for (const exit of exits) {
@@ -3899,6 +3943,9 @@ function reaches(timing, end, share) {
     if ((now.progress ?? 0) >= share || (now.currentIteration ?? 0) > 0) return t;
   }
   return end;
+}
+function leavesState(el2) {
+  return getComputedStyle(el2).getPropertyValue("--kp-leave-state").trim() === "leave";
 }
 function leave(el2, { hide = false } = {}) {
   return new Promise((resolve) => {
@@ -4029,9 +4076,10 @@ async function leaveOne(el2, hide, exited, count = 1) {
     if ("height" in from) heightFolds.add(el2);
     const after = fold === "after";
     const pause = parseFloat(style.getPropertyValue("--kp-leave-pause")) || 0;
+    const timing = foldTiming(style);
     const folding = el2.animate([from, to], {
-      duration: steppedDuration(el2, withoutOvershoot(ease), Math.max(size, lasts) * 1.25),
-      delay: onStepClock(el2, withoutOvershoot(ease), after ? lasts + pause : lasts / 3),
+      duration: steppedDuration(el2, withoutOvershoot(ease), Math.max(size, lasts) * timing.grow),
+      delay: onStepClock(el2, withoutOvershoot(ease), after ? lasts + pause : timing.start(lasts)),
       easing: withoutOvershoot(ease),
       fill: "forwards"
     });
@@ -4345,7 +4393,7 @@ function attachMotion(root = document, { size = "", arrive: arrive2 = "all", arr
     detaches.clear();
   };
 }
-var SIZE_ATTRIBUTE, SIZE_SELECTOR, FOLD_SELECTOR, ARRIVE_KEYS, SKELETON, watching, CLOSE_SHARE, SIZE_SHARE, msOf, firstMs, reducedQuery, reducedNow, reduced, entrances, closing, nativeClose, opensAsReversedClose, switching, REVERSING_ATTRIBUTE, CLOSING_ATTRIBUTE, PANEL_SELECTOR, ghosted, NAMED_EASES, entering, animationSignature, pseudoNames, floats, flipped, arriving, finiteMs, IN_TURN_MS, batch, FOLDING_OUT, heightFolds, followsAFold, arriveMode;
+var SIZE_ATTRIBUTE, SIZE_SELECTOR, FOLD_SELECTOR, ARRIVE_KEYS, SKELETON, watching, CLOSE_SHARE, SIZE_SHARE, msOf, firstMs, reducedQuery, reducedNow, reduced, entrances, closing, nativeClose, opensAsReversedClose, switching, REVERSING_ATTRIBUTE, CLOSING_ATTRIBUTE, PANEL_SELECTOR, ghosted, NAMED_EASES, GROUP_FOLDING_ATTRIBUTE, groupGlides, entering, animationSignature, pseudoNames, floats, flipped, arriving, finiteMs, IN_TURN_MS, batch, FOLDING_OUT, heightFolds, followsAFold, arriveMode;
 var init_motion = __esm({
   "js/motion.js"() {
     "use strict";
@@ -4416,6 +4464,8 @@ var init_motion = __esm({
       "step-start": "steps(1, jump-start)",
       "step-end": "steps(1, jump-end)"
     };
+    GROUP_FOLDING_ATTRIBUTE = "data-kp-group-folding";
+    groupGlides = /* @__PURE__ */ new WeakMap();
     entering = /* @__PURE__ */ new WeakMap();
     animationSignature = (el2, pseudo = null) => {
       const style = getComputedStyle(el2, pseudo);
@@ -4448,7 +4498,7 @@ var init_motion = __esm({
     batch = null;
     FOLDING_OUT = "out";
     heightFolds = /* @__PURE__ */ new WeakSet();
-    followsAFold = (box) => [...box.querySelectorAll("[data-kp-leaving]")].some((el2) => heightFolds.has(
+    followsAFold = (box) => [...box.querySelectorAll(`[data-kp-leaving], [${GROUP_FOLDING_ATTRIBUTE}]`)].some((el2) => heightFolds.has(
       /** @type {HTMLElement} */
       el2
     ) && el2.getClientRects().length > 0);
@@ -5159,6 +5209,7 @@ function attachTabs(root = document, { activation = "automatic", loop = true } =
         const back = leaving.get(show);
         if (back) going.push(back);
         if (going.length === 0) show.hidden = false;
+        else if (!back && leavesState(show)) show.hidden = false;
         else {
           if (!back) show.hidden = true;
           void Promise.all(going).then(() => {
@@ -5333,7 +5384,16 @@ function attachDismissals(root = document, { ownedBy = DISMISS_OWNED } = {}) {
     );
     if (!alert) return;
     const proceed = alert.dispatchEvent(new CustomEvent(ALERT_DISMISS_EVENT, { bubbles: true, cancelable: true, detail: { alert, button } }));
-    if (proceed) void leave(alert, { hide: true });
+    if (!proceed) return;
+    void leave(alert, { hide: true }).then(() => {
+      if (!leavesState(alert)) return;
+      const back = new MutationObserver(() => {
+        if (alert.hidden) return;
+        back.disconnect();
+        arriveShown(alert);
+      });
+      back.observe(alert, { attributes: true, attributeFilter: ["hidden"] });
+    });
   };
   root.addEventListener("click", onClick);
   return () => root.removeEventListener("click", onClick);
@@ -6410,9 +6470,9 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
       if (moveFocus2 && covering()) {
         if (open2) {
           restoreFocusTo = doc.activeElement;
-          panel.querySelector(FOCUSABLE)?.focus();
+          panel.querySelector(FOCUSABLE)?.focus({ preventScroll: true });
         } else if (restoreFocusTo instanceof HTMLElement) {
-          restoreFocusTo.focus();
+          restoreFocusTo.focus({ preventScroll: true });
           restoreFocusTo = null;
         }
       }
@@ -8258,6 +8318,7 @@ function attachDatePickers(root = document, {
     );
     if (input === null || open === null || panel === null) continue;
     picker.dataset.kpDatepickerAttached = "";
+    panel.dataset.kpArrive = "none";
     const locale = resolveLocale(picker.dataset.kpLocale ?? localeOption, picker);
     const firstDay = weekStartsOn(locale, picker.dataset.kpWeekStartsOn === void 0 ? weekOption : Number(picker.dataset.kpWeekStartsOn));
     const min = picker.dataset.kpMin ? parseDate(picker.dataset.kpMin, locale) : null;
@@ -9334,10 +9395,14 @@ function attachDataTables(root = document, {
           toClose.querySelector(".kp-datatable__busy-panel")
         );
         if (panel3 && toClose.isConnected && state !== "loading") {
-          toClose.setAttribute("data-kp-closing", "");
-          void playClose(panel3).then(() => {
-            toClose.remove();
-          });
+          if (leavesState(toClose)) {
+            void leave(toClose);
+          } else {
+            toClose.setAttribute("data-kp-closing", "");
+            void playClose(panel3).then(() => {
+              toClose.remove();
+            });
+          }
         } else {
           toClose.remove();
         }
@@ -9384,6 +9449,22 @@ function attachDataTables(root = document, {
     };
     let total = Number.parseInt(wrap.dataset.kpTotal ?? "", 10);
     const emptyWasHidden = empty?.hidden ?? false;
+    let emptyLeaving = false;
+    let emptyHidden = emptyWasHidden;
+    const showEmpty = (hide) => {
+      if (empty === null) return;
+      emptyHidden = hide;
+      if (emptyLeaving) return;
+      if (hide && !empty.hidden && empty.isConnected && leavesState(empty)) {
+        emptyLeaving = true;
+        void leave(empty, { hide: true }).then(() => {
+          emptyLeaving = false;
+          empty.hidden = emptyHidden;
+        });
+        return;
+      }
+      empty.hidden = hide;
+    };
     const densityWas = wrap.getAttribute("data-density");
     const busyWas = wrap.getAttribute("aria-busy");
     const themeBox = (box) => {
@@ -10271,7 +10352,7 @@ function attachDataTables(root = document, {
         pager.append(pagerButton(s2.next, page < pages - 1, () => page += 1));
       }
       if (empty !== null) {
-        empty.hidden = count > 0 || state !== "ready";
+        showEmpty(count > 0 || state !== "ready");
         const narrowing = query.trim() !== "" || filters.size > 0;
         for (const part of empty.querySelectorAll("[data-kp-datatable-empty-none]")) part.hidden = narrowing;
         for (const part of empty.querySelectorAll("[data-kp-datatable-empty-nomatch]")) part.hidden = !narrowing;
@@ -12442,10 +12523,20 @@ function attachStructure(root = document, {
       item.setAttribute("tabindex", "0");
       item.focus();
     };
+    let quiet = false;
+    const groupOf2 = (item) => {
+      const inside = item.querySelector(':scope > [role="group"]');
+      if (inside instanceof HTMLElement) return inside;
+      const next = item.nextElementSibling;
+      return next instanceof HTMLElement && next.getAttribute("role") === "group" ? next : null;
+    };
     const setExpanded = (item, expanded) => {
       if (!item.hasAttribute("aria-expanded")) return;
       if (item.getAttribute("aria-expanded") === "true" === expanded) return;
-      item.setAttribute("aria-expanded", String(expanded));
+      const flip = () => item.setAttribute("aria-expanded", String(expanded));
+      const group = quiet || !leavesState(tree) ? null : groupOf2(item);
+      if (group !== null) glideGroup(group, expanded, flip);
+      else flip();
       if (memory !== null) {
         const branches = {};
         for (const branch of tree.querySelectorAll('[role="treeitem"][aria-expanded]'))
@@ -12561,10 +12652,14 @@ function attachStructure(root = document, {
         if (item) setExpanded(item, expanded);
       },
       expandAll: () => {
+        quiet = true;
         for (const item of all()) setExpanded(item, true);
+        quiet = false;
       },
       collapseAll: () => {
+        quiet = true;
         for (const item of all()) setExpanded(item, false);
+        quiet = false;
       },
       focusItem: (id) => {
         const item = byId(id);
@@ -12813,6 +12908,7 @@ var init_structure = __esm({
     "use strict";
     init_strings();
     init_remember();
+    init_motion();
     TREE = "[data-kp-tree]";
     REORDER = "[data-kp-reorder]";
     SPLIT = "[data-kp-split]";
@@ -12966,11 +13062,14 @@ function attachUploads(root = document, { locale: localeOption, validate, render
         /** @type {HTMLElement | null} */
         button.closest("li, [data-kp-upload-file]")
       );
-      if (item === null) return;
+      if (item === null || item.hasAttribute("data-kp-leaving")) return;
       const ask = new CustomEvent(REMOVE_EVENT, { bubbles: true, cancelable: true, detail: { file: rows.get(item), item } });
       if (!item.dispatchEvent(ask)) return;
       rows.delete(item);
-      item.remove();
+      if (leavesState(item)) {
+        item.inert = true;
+        void leave(item);
+      } else item.remove();
     };
     const onDragOver = (event) => {
       event.preventDefault();
@@ -13050,6 +13149,7 @@ var init_upload = __esm({
     "use strict";
     init_strings();
     init_locale();
+    init_motion();
     UPLOAD = "[data-kp-upload]";
     FILE_EVENT = "kp-upload-file";
     REJECT_EVENT = "kp-upload-reject";
@@ -18646,6 +18746,18 @@ var make4 = (doc, tag, className, text) => {
   return el2;
 };
 var endRunning = null;
+function fixShape(card, steps, title, text) {
+  const was = [title.textContent, text.textContent];
+  card.style.removeProperty("min-block-size");
+  let tallest = 0;
+  for (const step of steps) {
+    title.textContent = step.title;
+    text.textContent = step.text;
+    tallest = Math.max(tallest, card.getBoundingClientRect().height);
+  }
+  [title.textContent, text.textContent] = was;
+  if (tallest > 0) card.style.minBlockSize = `${Math.ceil(tallest)}px`;
+}
 function startTour(steps, { start = 0, remember: remember2, decorate, returnFocus, onEnd, strings: own } = {}) {
   endRunning?.();
   const doc = document;
@@ -18666,6 +18778,7 @@ function startTour(steps, { start = 0, remember: remember2, decorate, returnFocu
     /** @type {HTMLDialogElement} */
     make4(doc, "dialog", "kp-tour")
   );
+  card.dataset.kpArrive = "none";
   const title = make4(doc, "h3", "kp-tour__title");
   title.id = nextId2("kp-tour-title");
   const text = make4(doc, "p", "kp-tour__text");
@@ -18766,6 +18879,7 @@ function startTour(steps, { start = 0, remember: remember2, decorate, returnFocu
       host.append(card);
     }
     if (!card.open) card.show();
+    if (!stepping) fixShape(card, live2, title, text);
     title.textContent = step.title;
     text.textContent = step.text;
     if (stepping) {
@@ -18949,6 +19063,7 @@ export {
   GRAPH_CHANGE_EVENT,
   GRID_PAGE_ROWS,
   GROUP_EVENT,
+  GROUP_FOLDING_ATTRIBUTE,
   GROUP_ROW,
   HEADLINE_ROUTINES,
   HIGHLIGHT_EVENT,
@@ -19086,6 +19201,7 @@ export {
   applyStoredTheme,
   applyStringProperties,
   applyTheme,
+  arriveShown,
   attachActionColumns,
   attachAgo,
   attachAlarms,
@@ -19202,6 +19318,7 @@ export {
   forms_exports as formsExports,
   freshness_exports as freshnessExports,
   getStrings,
+  glideGroup,
   glyphCells,
   graphBends,
   graph_exports as graphExports,
@@ -19226,6 +19343,7 @@ export {
   layoutOf,
   lazy_register_exports as lazyRegisterExports,
   leave,
+  leavesState,
   listbox_exports as listboxExports,
   luminance,
   markUpdating,
