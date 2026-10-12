@@ -4600,6 +4600,9 @@
                leave's own four ticks and starts with it. */
             --kp-leave-state: leave;
             --kp-arrive-unseen: skip;
+            /* ...and takes its turn only among its own siblings: an unrelated part drawn in the
+               same task must not hold the busy layer back one stagger (js/motion.js arriveInTurn()). */
+            --kp-arrive-turn: siblings;
             --kp-leave-fold-grow: 1;
             --kp-leave-fold-start: 0;
             /* ...in the split's four ticks (js/motion.js foldCurve()), so the space is never

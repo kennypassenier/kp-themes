@@ -271,13 +271,15 @@ const gone = (page, sel) =>
     }, sel);
 
 /** An open/close pair on one trigger. */
-async function pair(page, rec, { section, probes, open, close, openMs = 1000, closeMs = 1300, after = 700 }) {
+async function pair(page, rec, { section, probes, closeProbes = probes, open, close, openMs = 1000, closeMs = 1300, after = 700 }) {
     await sectionTo(page, section);
     await page.waitForTimeout(500);
     rec.open = await step(page, probes, openMs, open);
     await page.waitForTimeout(after);
-    rec.close = await step(page, probes, closeMs, close);
+    rec.close = await step(page, closeProbes, closeMs, close);
     await page.waitForTimeout(after);
+    // a popover hidden by the browser is gone at once; its close plays on a ghost copy (js/motion.js), so the close is read on that
+    if (closeProbes !== probes) closeProbes.forEach((c, i) => (rec.close[probes[i]] = rec.close[c]));
     rec.mirror = mirror(rec.open, rec.close);
 }
 
@@ -353,8 +355,10 @@ async function run(engine) {
         await pair(p, r, {
             section: 'theme-menu',
             probes: ['[data-fa-theme-menu] [popover]'],
+            closeProbes: ['[data-kp-ghost]'],
             open: () => click(p, '[data-fa-theme-menu] button'),
-            close: () => p.keyboard.press('Escape'),
+            // not Escape: the review dialog's own capture handler closes the whole stage on Escape (research/_review/review.js)
+            close: () => click(p, '[data-fa-theme-menu] button'),
         });
         r.react = {};
         await pair(p, r.react, {
@@ -368,8 +372,9 @@ async function run(engine) {
         pair(p, r, {
             section: 'popover-menus',
             probes: ['#fa-menu'],
+            closeProbes: ['[data-kp-ghost]'],
             open: () => click(p, '[popovertarget="fa-menu"]'),
-            close: () => p.keyboard.press('Escape'),
+            close: () => click(p, '[popovertarget="fa-menu"]'),
         }),
     );
     await flow(browser, 'combobox', {}, async (p, r) => {
@@ -380,7 +385,8 @@ async function run(engine) {
         await p.waitForTimeout(600);
         r.type = await step(p, probes, 800, () => p.keyboard.type('ba', { delay: 60 }));
         await p.waitForTimeout(400);
-        r.close = await step(p, probes, 1200, () => p.keyboard.press('Escape'));
+        r.close = await step(p, ['[data-kp-ghost]'], 1200, () => click(p, '#combobox h2, #h-combobox'));
+        r.close['.kp-combobox__list'] = r.close['[data-kp-ghost]'];
         await p.waitForTimeout(600);
         r.reopen = await step(p, probes, 1000, () => p.keyboard.press('ArrowDown'));
         r.mirror = mirror(r.open, r.close);
@@ -485,6 +491,9 @@ async function run(engine) {
         await sectionTo(p, 'tree');
         await p.waitForTimeout(400);
         const probes = ['[data-kp-tree] > li:first-child > ul', '[data-kp-tree]', '[data-kp-tree] > li:nth-child(2)'];
+        // scrolled into place first: a scroll inside the recorded click moved the box's top and read as a pose
+        await pointOf(p, '[data-kp-tree] > li:first-child', { dx: 0.08, dy: 0.04 });
+        await p.waitForTimeout(300);
         r.open = await step(p, probes, 1200, () => click(p, '[data-kp-tree] > li:first-child', { dx: 0.08, dy: 0.04 }));
         await p.waitForTimeout(500);
         r.close = await step(p, probes, 1200, () => click(p, '[data-kp-tree] > li:first-child', { dx: 0.08, dy: 0.04 }));
@@ -617,7 +626,7 @@ for (const engine of engines) {
     await run(engine);
     writeFileSync(
         `${ROOT}/research/cyberpunk-applied/_audit/out/flows-${engine}${only.length ? '-' + only.join('_') : ''}.json`,
-        JSON.stringify(results, (k, v) => (k === '_poseKeys' ? undefined : v), 1),
+        JSON.stringify(results, (k, v) => (k === '_poseKeys' && !process.env.KEEPKEYS ? undefined : v), 1),
     );
 }
 server.close();

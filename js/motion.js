@@ -1366,7 +1366,9 @@ function arriveAsReversedLeave(el) {
                 delay: finiteMs(total - foldAt - foldFor),
                 // A panel that arrives while another leaves (a tab swap) folds on
                 // `--kp-swap-fold-ease` where the theme says so: see attachTabs().
-                easing: withoutOvershoot((el.hasAttribute('data-kp-tabs-swapping') && style.getPropertyValue('--kp-swap-fold-ease').trim()) || foldEase),
+                easing: withoutOvershoot(
+                    (el.hasAttribute('data-kp-tabs-swapping') && style.getPropertyValue('--kp-swap-fold-ease').trim()) || foldEase,
+                ),
                 direction: 'reverse',
                 fill: 'backwards',
             }),
@@ -1425,9 +1427,29 @@ const finiteMs = (ms) => (Number.isFinite(ms) ? ms : 0);
  * around as a whole, so frame t of the arrivals is frame (S - t) of that
  * row of leaves, S being when its last leave ends (Kenny, 2026-10-05:
  * "showing should also be the reverse of removing").
+ * A theme that says `--kp-arrive-turn: siblings` (cyberpunk) takes turns only
+ * among elements that share a parent: a layer arriving over a table does not
+ * wait for an unrelated part that was drawn in the same task (the review
+ * stage's mirrored controls held the busy layer back one stagger, 240 ms,
+ * against a leave that went at once). Every other theme keeps one row.
  * @param {Arriving[]} items
  */
 function arriveInTurn(items) {
+    if (items.length < 2) return;
+    if (getComputedStyle(items[0].el).getPropertyValue('--kp-arrive-turn').trim() === 'siblings') {
+        /** @type {Map<Element | null, Arriving[]>} */
+        const rows = new Map();
+        for (const item of items) rows.set(item.el.parentElement, [...(rows.get(item.el.parentElement) ?? []), item]);
+        if (rows.size > 1) {
+            for (const row of rows.values()) turnsOf(row);
+            return;
+        }
+    }
+    turnsOf(items);
+}
+
+/** @param {Arriving[]} items */
+function turnsOf(items) {
     if (items.length < 2) return;
     items = items.filter((item) => Number.isFinite(item.total) && Number.isFinite(item.lag));
     if (items.length < 2) return;

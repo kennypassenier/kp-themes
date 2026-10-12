@@ -3870,7 +3870,9 @@ function arriveAsReversedLeave(el2) {
         delay: finiteMs(total - foldAt - foldFor),
         // A panel that arrives while another leaves (a tab swap) folds on
         // `--kp-swap-fold-ease` where the theme says so: see attachTabs().
-        easing: withoutOvershoot(el2.hasAttribute("data-kp-tabs-swapping") && style.getPropertyValue("--kp-swap-fold-ease").trim() || foldEase),
+        easing: withoutOvershoot(
+          el2.hasAttribute("data-kp-tabs-swapping") && style.getPropertyValue("--kp-swap-fold-ease").trim() || foldEase
+        ),
         direction: "reverse",
         fill: "backwards"
       })
@@ -3913,6 +3915,18 @@ function arriveAsReversedLeave(el2) {
   return true;
 }
 function arriveInTurn(items) {
+  if (items.length < 2) return;
+  if (getComputedStyle(items[0].el).getPropertyValue("--kp-arrive-turn").trim() === "siblings") {
+    const rows = /* @__PURE__ */ new Map();
+    for (const item of items) rows.set(item.el.parentElement, [...rows.get(item.el.parentElement) ?? [], item]);
+    if (rows.size > 1) {
+      for (const row of rows.values()) turnsOf(row);
+      return;
+    }
+  }
+  turnsOf(items);
+}
+function turnsOf(items) {
   if (items.length < 2) return;
   items = items.filter((item) => Number.isFinite(item.total) && Number.isFinite(item.lag));
   if (items.length < 2) return;

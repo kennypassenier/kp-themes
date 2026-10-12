@@ -19,7 +19,7 @@ the selectors and their order are identical, which is what
 | `css/blueprint-register.css` | 139.8 kB | 72.0 kB | 48% |
 | `css/brutalism-register.css` | 140.7 kB | 74.5 kB | 47% |
 | `css/components.css` | 321.1 kB | 130.6 kB | 59% |
-| `css/cyberpunk-register.css` | 228.5 kB | 129.2 kB | 43% |
+| `css/cyberpunk-register.css` | 228.7 kB | 129.3 kB | 43% |
 | `css/dark-register.css` | 135.7 kB | 62.4 kB | 54% |
 | `css/deco-register.css` | 141.8 kB | 79.9 kB | 44% |
 | `css/fonts.css` | 21.3 kB | 15.8 kB | 26% |
@@ -37,10 +37,10 @@ the selectors and their order are identical, which is what
 | `css/themes.css` | 153.6 kB | 99.6 kB | 35% |
 | `css/titanium-register.css` | 103.9 kB | 50.6 kB | 51% |
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 45% |
-| `dist/kp-themes.css` | 2557.2 kB | 1301.1 kB | 49% |
-| `dist/kp-themes.js` | 757.2 kB | 414.2 kB | 45% |
+| `dist/kp-themes.css` | 2557.4 kB | 1301.2 kB | 49% |
+| `dist/kp-themes.js` | 757.7 kB | 414.5 kB | 45% |
 
-The loose stylesheets together weigh **2617.6 kB** authored and
+The loose stylesheets together weigh **2617.8 kB** authored and
 **1338.6 kB** minified, 49% less. A page loading one theme's
 register rather than the whole bundle carries only that register's row.
 
