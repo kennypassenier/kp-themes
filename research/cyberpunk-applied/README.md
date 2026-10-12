@@ -1,4 +1,4 @@
-**Status (2026-10-12): round `2026-10-12-r1`, waiting for Kenny's verdicts in the review dialog; nothing in the package is changed by this page.**
+**Decided (Kenny, 13/10/2026 00:19): all twenty components approved after two rounds (the second reopened the phone bar, command palette, alarm button, tree margin, calendar and alert colours). Cyberpunk is finished: nothing in this demo is open.**
 
 # Cyberpunk, as applied: what changed
 

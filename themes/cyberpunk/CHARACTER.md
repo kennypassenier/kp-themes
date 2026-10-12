@@ -489,3 +489,5 @@ When the next theme's grammar is written (synthwave, Kenny's order of
 its recommendations steer clear of all four. Synthwave in particular shares
 cyberpunk's register curve and its neon: its grammar must not take the
 glow-and-grid look this table gives cyberpunk's holo card and circuit.
+
+**Applied 2026-10-13** (css/cyberpunk-register.css and the shared code behind cyberpunk-only tokens): Kenny approved all twenty components of research/cyberpunk-applied after two rounds, Firefox only. The audit is research/cyberpunk-applied/_audit/MISSING.md; the lessons it taught are 32-40 of docs/THEME_LESSONS.md.
