@@ -8948,7 +8948,11 @@
  * (min(22rem, 100vw - 2rem); on a phone the window's width less the two
  * 16px gutters). */
     .kp-tour {
-        position: fixed;
+        /* `!important`: a register's update mark sets `position: relative` on what it rings (lesson 5), and on a step the
+         * card carries that mark, so it dropped into the flow of its host for the update's length, pushed the page down by
+         * its own height and jumped back (Kenny, 2026-10-13: a flash on the step to the last card, and a card that
+         * "suddenly teleports to another part of the screen"). The card is fixed in every state. */
+        position: fixed !important;
         z-index: 60;
         inset: auto;
         box-sizing: border-box;
@@ -9029,7 +9033,7 @@
         z-index: 55;
         outline: 3px solid var(--ring);
         outline-offset: 3px;
-        box-shadow: 0 0 0 100vmax hsl(from var(--background) h s l / 0.72);
+        box-shadow: var(--kp-tour-dim, 0 0 0 100vmax hsl(from var(--background) h s l / 0.72));
         transition:
             outline 250ms ease,
             box-shadow 350ms ease;
@@ -9047,3 +9051,18 @@
                 var(--kp-tour-dim-close-ease, var(--kp-sig-fo-wither, var(--kp-sig-fo-grow, ease-in))) var(--kp-tour-dim-close-delay, 0s) !important;
     }
 }
+
+/* The tour's dim is the target's box-shadow, and a register that gives the part a shadow of its own (a card's rim) wins over
+ * kp.components, so on such a step the page was not dimmed at all and the dim flashed off and on between steps (Kenny,
+ * 2026-10-13: "an effect that flashes over the screen when going from the second window ... into the last"). Restated in the
+ * last layer; a theme draws its own dim by `--kp-tour-dim`, not by a box-shadow on the target. The close (above) stays
+ * `!important` and so still wins. */
+@layer kp.layout {
+    [data-kp-tour-target] {
+        box-shadow: var(--kp-tour-dim, 0 0 0 100vmax hsl(from var(--background) h s l / 0.72));
+        /* A cut corner (titanium's chamfer, a notch) is a clip-path, and a clip-path clips the part's own shadow: the dim
+         * vanished on a cut card. While the tour points at a part, the part is uncut. */
+        clip-path: none;
+    }
+}
+

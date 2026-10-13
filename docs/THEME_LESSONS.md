@@ -473,3 +473,24 @@ These were not cyberpunk's: the same wrong default is in every theme that has no
 - research/all-themes/_audit/pairs-meter.mjs waits for a theme's boot screen to end, takes the page's scroll reveals and the
   opener's own pointer effects out of the pair, and holds the navigation's close timer (200-2000 ms) until the frames are read; the
   frozen tooltip examples re-raster a pixel differently now and then (fractional y), which reads as a tooltip "left over".
+
+## 48. The tour's card is fixed in every state, and its dim survives a target's own shadow and clip
+
+- **Symptom:** (Kenny, review of research/all-themes-applied) a flash over the screen on the step to the last card, and a card
+  that glides to its place and then "suddenly teleports" elsewhere.
+- **Cause:** a step marks the card `[data-kp-updating]`, and several registers' update rules set `position: relative` (lesson 5),
+  so the fixed card fell into its host's flow for the update's length, pushed the content down by its own height and jumped back.
+  On the last step the target was a card with a shadow of its own (beats kp.components) or a cut corner (a clip-path clips the
+  part's own shadow), so the page un-dimmed.
+- **Fix:** `.kp-tour { position: fixed !important }`; the dim is `--kp-tour-dim`, restated in `@layer kp.layout`, and a targeted
+  part is unclipped while it is pointed at. A register draws its own dim with `--kp-tour-dim`, never a box-shadow on the target.
+- **Check:** research/all-themes/_audit (a `_tour` probe): the card's rectangle per frame through every step, no jump over 30 px
+  after a glide, and the target's computed box-shadow is the dim on every step.
+
+## 49. A redraw in the review kit is not an arrival; a part in the stage takes its own Escape
+
+- **Symptom:** the mirrored state buttons at the top of the review dialog stretched and shrank on every press; Escape on the
+  command palette closed the whole review dialog.
+- **Fix:** research/_review/review.js marks the mirrored controls `data-kp-arrive="none"` (lesson 29) and lets an open dialog,
+  popover, picker, side navigation or phone bar in the stage take the first Escape.
+- **Check:** the buttons' sizes per frame after a press (one value); Escape on the palette closes the palette only.

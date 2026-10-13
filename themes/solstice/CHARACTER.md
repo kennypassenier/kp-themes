@@ -488,3 +488,10 @@ eclipse, and solstice has left it the drop from above and the hard edge.
 ## Applied 2026-10-13
 
 All-themes pass (close = open reversed, the register's own entrance on every part that opens; `research/all-themes/reports/solstice.md`). Mechanism tokens at the root (`--kp-leave-state: leave`, `--kp-arrive-unseen: skip`, `--kp-leave-fold-grow: 1`, `--kp-leave-fold-start: 0`); a tree branch is kept drawn while it shuts. The register's existing entrances were carried to the parts that lacked one, at their own times: the dialog's dawn (560 ms) to the command palette and the tour's card (its dim and ring on the same 560 ms and curve, back on the curve turned round); the popover's rise (640 ms) to the combobox list, the date picker panel, the bar's hover dropdown and mega menu (`--kp-nav-close-time: 640ms`) and the phone bar's list. The calendar's busy layers and a busy table's two dims come out of the morning mist and go into it (540 ms). The side navigation's backdrop takes the panel's 240 ms. Not done here: G3's kindled dome (480 ms) is still not built for any part; the register's rise and dawn stand in for it.
+
+**Review round 1, 2026-10-13:** G3's kindled dome is built (`kp-sig-solstice-kindled`, 480 ms on G1's coming curve,
+`--kp-sig-solstice-open`, `--kp-sig-solstice-come`) and is the opening of every part G3 names: a menu, the header's menu
+(dropdown, mega menu and the phone panel), a popover, the dialog, the drawer, a toast and a tooltip, and of the command
+palette (Kenny rejected the dawn there). Each closes as the dome sinking, the same frames backwards. The combobox list, the
+date picker panel and the tour card (with the tour's dim and ring), which G3 does not name, are kindled too, borrowed
+from G3, so every part that opens in solstice uses the one decided opening.

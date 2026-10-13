@@ -614,3 +614,9 @@ and sentence case.
 ## Applied 2026-10-13
 
 All-themes pass (close = open reversed, the drop on every part that opens; `research/all-themes/reports/brutalism.md`). Mechanism tokens at the signature root (`--kp-leave-state: leave`, `--kp-arrive-unseen: skip`, `--kp-leave-fold-grow: 1`, `--kp-leave-fold-start: 0`); a tree branch is kept drawn while it shuts. Dropped onto their footprint and lifted off as that drop played backwards (G3, G12), where they faded, did nothing or closed at once: the command palette (the dialog's 15-unit drop and its holding backdrop), the combobox list and the date picker panel (3 units), the bar's hover dropdown and mega menu (`--kp-nav-close-time: 300ms`); the phone bar's list, which has no slab, is set down and lifted off as a part. The tour's veil grows out of its target in solid ink with the card's drop and shrinks back with its lift, the ring drawn in and out on the same 3 units. The calendar's busy card is dropped and lifted as a slab, a day's block as a part. The side navigation's backdrop takes the panel's 100 ms (it is still the package's fade, which G1 does not allow: open for Kenny).
+
+**Review round 1, 2026-10-13 (Kenny: the dim "is just black … that's not the purpose of the dim effect"):** the tour's
+veil is the ink laid thin, one flat weight (`--kp-br-veil`, the ink at 62 %), so the page reads through it; it still grows
+out of the target and shrinks back into it and never fades (G1). This returns to the translucent ink veil of Kenny's pick
+r2-br-highlight-1 and takes back proposal-13's "solid ink" for the veil only; slabs stay untinted (G7). Drawn through
+`--kp-tour-dim` (css/components.css now draws the dim from that token in kp.layout).

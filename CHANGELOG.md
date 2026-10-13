@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **Fixed: the review of research/all-themes-applied, round 1** [Kenny, 2026-10-13 18:19]. Every tour: the card no longer drops into the
+  page on a step (the flash and the jump, `.kp-tour` fixed in every state), the page stays dimmed on a target with its own shadow or a cut
+  corner (`--kp-tour-dim`, lesson 48). Blueprint's tour traces in and back and its busy month shows its compasses; brutalism's veil lets
+  the page read through; titanium's side navigation has no colour splash; deco's bar opens by the approved inlay and both lift doors
+  close; solstice's decided kindled dome is built for every part that opens; grotesk's phone links stand in one column. Back-to-top
+  scrolls the box it sits in (js/components.js); the review kit no longer animates its mirrored controls and lets a part on stage take
+  its own Escape.
 - **Changed: every other theme, the cyberpunk faults kept out** [Kenny, 2026-10-12; research/all-themes, Firefox]. In formal, light, dark, synthwave,
   terminal, blueprint, solstice, brutalism, deco, phantom, grotesk, nostromo and titanium every part that opens or arrives (command palette, date
   picker, combobox, menus and popovers, the bar's dropdown, mega menu and phone panel, the tour with its dim and ring, the alarm, the calendar and table

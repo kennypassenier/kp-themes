@@ -12320,7 +12320,11 @@
  * (min(22rem, 100vw - 2rem); on a phone the window's width less the two
  * 16px gutters). */
     .kp-tour {
-        position: fixed;
+        /* `!important`: a register's update mark sets `position: relative` on what it rings (lesson 5), and on a step the
+         * card carries that mark, so it dropped into the flow of its host for the update's length, pushed the page down by
+         * its own height and jumped back (Kenny, 2026-10-13: a flash on the step to the last card, and a card that
+         * "suddenly teleports to another part of the screen"). The card is fixed in every state. */
+        position: fixed !important;
         z-index: 60;
         inset: auto;
         box-sizing: border-box;
@@ -12401,7 +12405,7 @@
         z-index: 55;
         outline: 3px solid var(--ring);
         outline-offset: 3px;
-        box-shadow: 0 0 0 100vmax hsl(from var(--background) h s l / 0.72);
+        box-shadow: var(--kp-tour-dim, 0 0 0 100vmax hsl(from var(--background) h s l / 0.72));
         transition:
             outline 250ms ease,
             box-shadow 350ms ease;
@@ -12417,6 +12421,20 @@
                 var(--kp-tour-dim-close-ease, var(--kp-sig-fo-wither, var(--kp-sig-fo-grow, ease-in))) var(--kp-tour-dim-close-delay, 0s),
             outline-color var(--kp-tour-dim-time, var(--kp-sig-fo-time, 1000ms))
                 var(--kp-tour-dim-close-ease, var(--kp-sig-fo-wither, var(--kp-sig-fo-grow, ease-in))) var(--kp-tour-dim-close-delay, 0s) !important;
+    }
+}
+
+/* The tour's dim is the target's box-shadow, and a register that gives the part a shadow of its own (a card's rim) wins over
+ * kp.components, so on such a step the page was not dimmed at all and the dim flashed off and on between steps (Kenny,
+ * 2026-10-13: "an effect that flashes over the screen when going from the second window ... into the last"). Restated in the
+ * last layer; a theme draws its own dim by `--kp-tour-dim`, not by a box-shadow on the target. The close (above) stays
+ * `!important` and so still wins. */
+@layer kp.layout {
+    [data-kp-tour-target] {
+        box-shadow: var(--kp-tour-dim, 0 0 0 100vmax hsl(from var(--background) h s l / 0.72));
+        /* A cut corner (titanium's chamfer, a notch) is a clip-path, and a clip-path clips the part's own shadow: the dim
+         * vanished on a cut card. While the tour points at a part, the part is uncut. */
+        clip-path: none;
     }
 }
 
@@ -33765,14 +33783,22 @@
     }
 
     /* highlight: the target keeps the rivet ring (the ink outline and the
-       pixel outline) and the veil around it is solid ink: nothing is
-       translucent. */
+       pixel outline); the veil around it is the ink laid thin, one flat
+       weight, so the page reads through it as a dim does [r2-br-highlight-1,
+       Kenny's pick, the ink veil; review round 1, 2026-10-13: the solid ink
+       of proposal-13 left only the target to see ("that's not the purpose of
+       the dim effect")]. The weight never moves: the veil grows out of the
+       target and shrinks back into it, it never fades (G1). */
+    [data-theme='brutalism'] {
+        --kp-br-veil: hsl(from var(--foreground) h s l / 0.62);
+    }
+
     [data-theme='brutalism'] [data-kp-tour-target] {
         outline: var(--kp-line) solid var(--border-strong);
         outline-offset: 6px;
-        box-shadow:
-            var(--kp-pixel),
-            0 0 0 100vmax var(--foreground);
+        /* css/components.css draws the dim from this token in kp.layout (a register's own
+           box-shadow here loses to it, 2026-10-13). */
+        --kp-tour-dim: var(--kp-pixel), 0 0 0 100vmax var(--kp-br-veil);
     }
 
     /* ── Every part that opens is dropped onto its footprint and lifted off as that drop played
@@ -33780,12 +33806,12 @@
        fade, or by nothing, or closed at once]. ── */
     @media (prefers-reduced-motion: no-preference) {
         /* The tour's veil and ring come with the card's drop and go with its lift: the veil grows
-           out of the target in solid ink (no fade: it is ink at every frame, only its spread
-           moves), the ring is drawn in, in the card's 3 units on the fall, and css/components.css
+           out of the target in its one flat weight of ink (no fade: the weight is the same at
+           every frame, only its spread moves), the ring is drawn in, in the card's 3 units on the fall, and css/components.css
            takes both back on the lifting curve (`--kp-tour-dim-close-ease`), the veil shrinking into
            the target (`--kp-tour-dim-close`). `backwards`, not `both` (lesson 21). */
         [data-theme='brutalism'] {
-            --kp-tour-dim-close: var(--kp-pixel), 0 0 0 0 var(--foreground);
+            --kp-tour-dim-close: var(--kp-pixel), 0 0 0 0 var(--kp-br-veil);
             --kp-tour-dim-time: var(--kp-sig-br-time);
             --kp-tour-dim-close-ease: var(--kp-sig-br-up);
         }
@@ -33803,7 +33829,7 @@
                 outline-color: transparent;
                 box-shadow:
                     var(--kp-pixel),
-                    0 0 0 0 var(--foreground);
+                    0 0 0 0 var(--kp-br-veil);
             }
         }
 
@@ -36588,6 +36614,22 @@
 
         [data-theme='titanium'] .kp-sidenav__backdrop {
             animation-duration: var(--kp-sig-ti-panel);
+        }
+
+        /* The backdrop is a shade over the page, not a part that arrives: js/motion.js let it
+           arrive as the theme's leave played backwards, which ran the heat colours (gold, violet,
+           blue) over the whole frame beside the panel and dropped the shade in at the end
+           (review round 1, 2026-10-13: "a splash of colour next to the bar, filling the parent
+           element, looked a bit like the loading colours"). It keeps the shade it opens with
+           while those marks are on it, so it comes with the panel's slide and goes as that
+           backwards (js/sidenav.js), the same animation both ways. */
+        [data-theme='titanium'] .kp-sidenav__backdrop:is([data-kp-leaving], [data-kp-arriving]) {
+            overflow: visible;
+            animation: kp-sidenav-backdrop var(--kp-sig-ti-panel) var(--kp-sidenav-ease, var(--fx-ease, ease)) both;
+        }
+
+        [data-theme='titanium'] .kp-sidenav__backdrop:is([data-kp-leaving], [data-kp-arriving])::after {
+            content: none;
         }
 
         /* The calendar's busy layers arrive as the leave played backwards and cool
@@ -44371,13 +44413,10 @@
         border-color: var(--selected);
     }
 
-    /* The dropdown snaps into place, a popover with the demo's own
-   shadow (rewritten as a relative colour of --sidebar-background, DI9). */
+    /* The dropdown and the mega menu are deco's own menu (G14): the plate
+       (lacquer, wallpaper, coves, the gold inlay) is drawn by the plate rule
+       of Q6/Q7 below, which lists them; here only the room inside it. */
     [data-theme='deco'] .kp-nav__menu {
-        background: var(--popover);
-        border: 1px solid var(--border-strong);
-        border-radius: 0;
-        box-shadow: 0 12px 24px var(--kp-shadow-ink);
         padding: 0.4rem;
         min-width: 11rem;
     }
@@ -45965,20 +46004,23 @@
         }
     }
 
-    /* ── The navbar's panels open and close the deco way (coordinator,
-       2026-10-12; lessons 36, 38). The hover dropdown, the mega menu and the
-       phone bar's panel take the menu's own arrival, kp-sig-deco-arrive
-       (480 ms): the panel is drawn round from the middle of its top edge both
-       ways, as far as --kp-sig-deco-draw (320 ms), then its words come up
-       with --kp-sig-deco-up (160 ms); the close is the same frames backwards
-       under a second name (kp-sig-deco-arrive-back, played in reverse) so it
-       starts as an animation of its own. The panels keep their look: the
-       sector is a mask 48 px wider than the panel on every side (no-clip, the
-       plate's cove technique), so at rest it covers the panel and its shadow
-       whole. Firefox does not hold `display` for a transition: the hover
-       dropdown is held by js/components.js for `--kp-nav-close-time`, the mega
-       menu while a transition runs on it (the --kp-sig-deco-hold below), the
-       phone bar's panel for `--kp-nav-close-time`. ── */
+    /* ── The navbar's panels open and close the deco way: G3, the opening
+       Kenny approved for every menu (research/deco-character, "opening":
+       "inlay", 2026-10-09), and G14 (a menu inside a header is deco's own
+       menu). The hover dropdown, the mega menu and the phone bar's panel are
+       deco plates (listed in the plate rule of Q6/Q7: lacquer, the
+       wallpaper, coves, the gold inlay on ::after) and arrive as every deco
+       menu does, kp-sig-deco-arrive (480 ms): the gold inlay draws itself
+       round from the middle of the top edge both ways and meets at the
+       bottom (--kp-sig-deco-draw, 320 ms), then the lacquer, the wallpaper
+       and the words come up (--kp-sig-deco-up, 160 ms). The close is the
+       same frames backwards, under a second name (kp-sig-deco-arrive-back,
+       played in reverse) so it starts as an animation of its own: the
+       lacquer sinks, the inlay undraws. Firefox does not hold `display` for a
+       transition, so the hover dropdown is held by js/components.js for
+       `--kp-nav-close-time`, the mega menu while a transition runs on it (the
+       --kp-sig-deco-hold below), the phone bar's panel for
+       `--kp-nav-close-time`. ── */
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='deco'] {
             --kp-nav-close-time: var(--kp-sig-deco-arrive);
@@ -45986,20 +46028,12 @@
 
         [data-theme='deco'] .kp-nav__menu {
             --kp-sig-deco-hold: 0;
-            mask-image: conic-gradient(
-                from calc(var(--kp-sig-deco-draw) * -180deg),
-                var(--foreground) 0 calc(var(--kp-sig-deco-draw) * 360deg),
-                transparent 0
-            );
-            mask-size: calc(100% + 96px) calc(100% + 96px);
-            mask-position: -48px -48px;
-            mask-repeat: no-repeat;
-            mask-clip: no-clip;
             transition: --kp-sig-deco-hold var(--kp-sig-deco-arrive) linear;
             animation: kp-sig-deco-arrive-back var(--kp-sig-deco-arrive) linear reverse forwards;
         }
 
-        [data-theme='deco'] .kp-nav__menu > * {
+        [data-theme='deco'] .kp-nav__menu > *,
+        [data-theme='deco'] .kp-nav__menu[data-kp-menu-label]::before {
             opacity: var(--kp-sig-deco-up);
         }
 
@@ -46023,28 +46057,44 @@
         }
     }
 
+    /* Wide, a bar left with its phone panel open is a row of links again,
+       not a plate. */
+    @container kp-nav (min-width: 40.0001rem) {
+        [data-theme='deco'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links {
+            border: 0;
+            background: none;
+            mask-image: none;
+        }
+
+        [data-theme='deco'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links::after {
+            content: none;
+        }
+    }
+
     @container kp-nav (max-width: 40rem) {
+        /* The phone bar's panel is one plate under the bar, its rows inside
+           the inlay (14 px of cove and hairlines on every side). */
+        [data-theme='deco'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links {
+            position: relative;
+            margin-block-start: 0.6rem;
+            padding: 1rem 1.1rem;
+        }
+
         /* Collapsed, the lists nested in the open panel are its own rows and
-           come up with it; they play nothing of their own. */
+           come up with it: no plate of their own, nothing played. */
         [data-theme='deco'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links .kp-nav__menu {
             animation: none;
             transition: none;
             mask-image: none;
+            border: 0;
+            background: none;
+        }
+
+        [data-theme='deco'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links .kp-nav__menu::after {
+            content: none;
         }
 
         @media (prefers-reduced-motion: no-preference) {
-            [data-theme='deco'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links {
-                mask-image: conic-gradient(
-                    from calc(var(--kp-sig-deco-draw) * -180deg),
-                    var(--foreground) 0 calc(var(--kp-sig-deco-draw) * 360deg),
-                    transparent 0
-                );
-                mask-size: calc(100% + 96px) calc(100% + 96px);
-                mask-position: -48px -48px;
-                mask-repeat: no-repeat;
-                mask-clip: no-clip;
-            }
-
             [data-theme='deco'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > li {
                 opacity: var(--kp-sig-deco-up);
             }
@@ -46121,6 +46171,8 @@
             .kp-dialog,
             .kp-popover:not(.kp-tooltip),
             .kp-menu-button > .kp-menu,
+            .kp-nav__menu,
+            .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links,
             .kp-toast,
             .kp-tour,
             dialog.kp-drawer,
@@ -46233,6 +46285,8 @@
             .kp-dialog,
             .kp-popover:not(.kp-tooltip),
             .kp-menu-button > .kp-menu,
+            .kp-nav__menu,
+            .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links,
             .kp-toast,
             .kp-tour,
             dialog.kp-drawer,
@@ -46361,6 +46415,8 @@
             .kp-dialog,
             .kp-popover:not(.kp-tooltip),
             .kp-menu-button > .kp-menu,
+            .kp-nav__menu,
+            .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links,
             .kp-toast,
             .kp-tour,
             dialog.kp-drawer,
@@ -47646,7 +47702,11 @@
         translate: 0 calc(1px * var(--kp-sig-deco-pr));
     }
 
-    [data-theme='deco'] :is(a.kp-kpi, .kp-kpi--toggle, .kp-kpi--trend:has(.kp-kpi__link), .kp-calendar__day)::before {
+    /* A loading day's ::before is its left lift door (Q10), so the seal's ring
+       is not drawn on it: the ring's picture and opacity 0, written later at
+       the same weight, took the left door away (Kenny, 2026-10-13: "only has
+       the right curtain"). */
+    [data-theme='deco'] :is(a.kp-kpi, .kp-kpi--toggle, .kp-kpi--trend:has(.kp-kpi__link), .kp-calendar__day:not([data-kp-tone='loading']))::before {
         content: '';
         position: absolute;
         inset: 0;
@@ -47729,7 +47789,7 @@
         }
 
         [data-theme='deco'] :is(.kp-button, .kp-icon-button, .kp-menu__item):active:not(:disabled, [aria-disabled='true'], [aria-busy='true'])::after,
-        [data-theme='deco'] :is(a.kp-kpi, .kp-kpi--toggle, .kp-kpi--trend:has(.kp-kpi__link), .kp-calendar__day):active::before {
+        [data-theme='deco'] :is(a.kp-kpi, .kp-kpi--toggle, .kp-kpi--trend:has(.kp-kpi__link), .kp-calendar__day:not([data-kp-tone='loading'])):active::before {
             animation: kp-sig-deco-seal 400ms linear both;
         }
     }
@@ -50836,24 +50896,6 @@
         border-block-end: 0;
     }
 
-    @container kp-nav (max-width: 40rem) {
-        [data-theme='grotesk'] .kp-nav {
-            grid-template-columns: 1fr;
-            row-gap: 0.75rem;
-        }
-
-        [data-theme='grotesk'] .kp-nav__brand,
-        [data-theme='grotesk'] .kp-nav__links {
-            grid-column: 1;
-        }
-
-        [data-theme='grotesk'] .kp-nav__links {
-            flex-direction: column;
-            align-items: flex-start;
-            flex-wrap: nowrap;
-            justify-content: flex-start;
-        }
-    }
 
     [data-theme='grotesk'] .kp-nav__brand {
         grid-column: 1 / 4;
@@ -50876,6 +50918,36 @@
         grid-column: 4 / 15;
         justify-content: flex-end;
         gap: 1.5rem;
+    }
+
+    /* Collapsed, the track is the brand and the toggle on one row and the
+       links on their own row under them, from the start edge. This sits after
+       the wide placement above on purpose: written before it, at the same
+       weight, it lost, and the links fell into implicit columns 4 to 15 of a
+       one-column grid, to the right of the toggle (Kenny, 2026-10-13: "the
+       items appearing in the phone version are weirdly aligned to the
+       right"). */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='grotesk'] .kp-nav {
+            grid-template-columns: minmax(0, 1fr) auto;
+            row-gap: 0.75rem;
+        }
+
+        [data-theme='grotesk'] .kp-nav__brand {
+            grid-column: 1;
+        }
+
+        [data-theme='grotesk'] .kp-nav__toggle {
+            grid-column: 2;
+        }
+
+        [data-theme='grotesk'] .kp-nav__links {
+            grid-column: 1 / -1;
+            flex-direction: column;
+            align-items: flex-start;
+            flex-wrap: nowrap;
+            justify-content: flex-start;
+        }
     }
 
     /* Grilli's two-speed link [D grotesk R1, measured]: .1s in, .15s out —
@@ -56058,7 +56130,7 @@
        carriage (a square in the steel line, a sight through it, the nib down
        filled or up hollow) placed by the percent trick, so its centre runs inside
        the box with 8 px to spare on every side and nothing needs the box's size. */
-    [data-theme='blueprint'] :is([data-kp-leaving], [data-kp-arriving]):not(.kp-meter, .kp-kpi__meter)::after,
+    [data-theme='blueprint'] :is([data-kp-leaving], [data-kp-arriving]):not(.kp-meter, .kp-kpi__meter, .kp-tour)::after,
     [data-theme='blueprint'] :is(.kp-calendar__busy, .kp-calendar__day-busy)::after,
     [data-theme='blueprint'] :is(.kp-meter, .kp-kpi__meter)::before,
     [data-theme='blueprint'] .kp-dialog::after,
@@ -56106,7 +56178,7 @@
         background-repeat: no-repeat;
     }
 
-    [data-theme='blueprint'] :is([data-kp-leaving], [data-kp-arriving]):not(.kp-meter, .kp-kpi__meter)::after,
+    [data-theme='blueprint'] :is([data-kp-leaving], [data-kp-arriving]):not(.kp-meter, .kp-kpi__meter, .kp-tour)::after,
     [data-theme='blueprint'] :is(.kp-calendar__busy, .kp-calendar__day-busy)::after {
         --kp-bp-px: var(--kp-bp-rp);
         --kp-bp-py: var(--kp-bp-rp);
@@ -56142,6 +56214,11 @@
            the one set of keyframes is both. The part's own frame stands from the
            first frame to the last; only its lines are inked: a mask, a line high
            in steps, over the content box alone. */
+        /* The tour's card is no part that arrives: it opens by its trace (below).
+           Read out as it was added, it played the read where it stood first, in the
+           flow (`position: relative` on a fixed card), and then the trace again
+           where it belongs (review round 1, 2026-10-13: "some weird behaviour
+           when the first card opens"). */
         [data-theme='blueprint']
             :is([data-kp-leaving], [data-kp-arriving]):not(
                 .kp-dialog,
@@ -56150,6 +56227,7 @@
                 .kp-combobox__list,
                 .kp-datepicker__panel,
                 .kp-toast,
+                .kp-tour,
                 .kp-meter,
                 .kp-kpi__meter
             ) {
@@ -56160,7 +56238,7 @@
             mask-origin: content-box, border-box, content-box;
             mask-clip: content-box, border-box, content-box;
             mask-size:
-                100% round(up, calc(var(--kp-bp-rp) * 100%), 1lh),
+                100% round(up, calc(var(--kp-bp-rp) * 100%), max(1lh, 1px)),
                 100% 100%,
                 100% 100%;
             mask-position: 0 0;
@@ -56176,6 +56254,7 @@
                 .kp-combobox__list,
                 .kp-datepicker__panel,
                 .kp-toast,
+                .kp-tour,
                 .kp-meter,
                 .kp-kpi__meter
             ) {
@@ -56190,6 +56269,7 @@
                 .kp-combobox__list,
                 .kp-datepicker__panel,
                 .kp-toast,
+                .kp-tour,
                 .kp-meter,
                 .kp-kpi__meter
             ) {
@@ -56376,6 +56456,11 @@
        keep it drawn through the leave. The layers' reading stands at 1 at
        rest, so the mask that inks their lines shows them whole once the
        arrival has played. */
+    /* The mask inks a part line by line (`round(up, …, 1lh)`); the busy layers set
+       `line-height: 0` (css/components.css), where a step of 0 made the round NaN and
+       Firefox masked the whole content away: the month showed no loading at all
+       (review round 1, 2026-10-13: "there is no loading animation?"). The step is at
+       least a pixel (`max(1lh, 1px)`), the same as before wherever a line has height. */
     [data-theme='blueprint'] :is(.kp-calendar__busy, .kp-calendar__day-busy) {
         --kp-calendar-busy-leave: hold;
         --kp-bp-rp: 1;
@@ -56394,7 +56479,7 @@
             mask-origin: content-box, border-box, content-box;
             mask-clip: content-box, border-box, content-box;
             mask-size:
-                100% round(up, calc(var(--kp-bp-rp) * 100%), 1lh),
+                100% round(up, calc(var(--kp-bp-rp) * 100%), max(1lh, 1px)),
                 100% 100%,
                 100% 100%;
             mask-position: 0 0;
@@ -56518,10 +56603,14 @@
                 .kp-nav__menu,
                 .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links
             )
-            > * {
+            > :not(.kp-dialog, .kp-palette, .kp-tour, .kp-popover, .kp-datepicker__panel, .kp-combobox__list, .kp-toast) {
             visibility: visible;
             opacity: var(--kp-bp-ink);
         }
+        /* An overlay opened inside a dialog (the tour's card in the review dialog) is a
+           panel of its own, not the dialog's content: the rule above took the card's own
+           ink for its opacity and so hid the pen with the card, which then simply appeared
+           and simply vanished (review round 1, 2026-10-13: "the window just disappears"). */
 
         /* A list that floats over the sheet opens by its own trace at once: it
            folds no space, so the leave turned around has nothing to play but the
@@ -70600,16 +70689,51 @@
             animation: kp-sig-solstice-solstice-warm var(--kp-sig-dur) var(--fx-ease) both;
         }
 
+        /* G3 · what opens is kindled (decided 2026-10-07, research/solstice-character,
+           "opening": "dome"; built 2026-10-13): the toast, the dialog (and the drawer, a
+           dialog too) and the tooltip open as a dome of first light growing from the middle
+           of their foot, overbright and cooling, 2 units (480 ms) on G1's coming curve; the
+           close is the same frames backwards (js/motion.js), the dome sinking into the foot.
+           The dialog that is not yet open runs one and a half times as long, so the close
+           js/motion.js reads off it (two thirds) is the opening's own 480 ms. */
         [data-theme='solstice'] .kp-toast {
-            animation: kp-sig-solstice-solstice-rise var(--kp-sig-dur) cubic-bezier(0.2, 0, 0, 1) backwards;
+            animation: kp-sig-solstice-kindled var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) backwards;
         }
 
         [data-theme='solstice'] .kp-dialog {
-            animation: kp-sig-solstice-solstice-dawn var(--kp-sig-dur) cubic-bezier(0.2, 0, 0, 1) both;
+            animation: kp-sig-solstice-kindled calc(var(--kp-sig-solstice-open) * 1.5) var(--kp-sig-solstice-come) backwards;
+        }
+
+        [data-theme='solstice'] .kp-dialog[open] {
+            animation-duration: var(--kp-sig-solstice-open);
         }
 
         [data-theme='solstice'] .kp-tooltip {
-            animation: kp-sig-solstice-solstice-ember var(--kp-sig-dur) var(--fx-ease) both;
+            animation: kp-sig-solstice-kindled var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) backwards;
+        }
+
+        /* A toast leaves as its kindling played backwards (G3: closing is the dome sinking
+           back into the foot), under the same name, so js/motion.js lets it arrive as that
+           leave turned round: one picture, mirrored. The class is doubled to outweigh the
+           theme's general leave on `[data-kp-leaving]`. */
+        [data-theme='solstice'] .kp-toast.kp-toast[data-kp-leaving] {
+            animation: kp-sig-solstice-kindled var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) reverse forwards;
+        }
+    }
+
+    /* G3's dome: from nothing at the middle of the foot to past every corner (at rest the
+       ellipse holds the whole panel and its glow), overbright and warm, cooling to its own
+       colour. No timing function inside: the animation's curve (G1) plays it, and played
+       backwards it is the same frames in reverse. */
+    @keyframes kp-sig-solstice-kindled {
+        from {
+            clip-path: ellipse(0 0 at 50% 100%);
+            filter: brightness(1.35) saturate(1.3);
+        }
+
+        to {
+            clip-path: ellipse(150% 150% at 50% 100%);
+            filter: brightness(1) saturate(1);
         }
     }
 
@@ -71136,6 +71260,9 @@
     [data-theme='solstice'] {
         --kp-sig-solstice-touch: cubic-bezier(0.37, 0, 0.63, 1);
         --kp-sig-solstice-contact: 240ms;
+        /* G3 and G1: opening a panel takes 2 units, on the sine's last quarter (what comes). */
+        --kp-sig-solstice-open: 480ms;
+        --kp-sig-solstice-come: cubic-bezier(0.61, 1, 0.88, 1);
     }
 
     [data-theme='solstice']
@@ -71418,33 +71545,38 @@
         }
     }
 
-    /* A menu and a popover rise into the light as the toast does (G3); they close as the
-       rise played backwards (js/motion.js playClose). */
+    /* A menu and a popover are kindled (G3, the dome above); they close as it played
+       backwards (js/motion.js playClose, the ghost of a hidden popover). */
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='solstice'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip)) {
-            animation: kp-sig-solstice-solstice-rise 640ms cubic-bezier(0.2, 0, 0, 1) backwards;
+            animation: kp-sig-solstice-kindled var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) backwards;
         }
     }
 
     /* The rest of what opens takes the theme's own entrance [all-themes, 2026-10-13, lesson 38:
        these opened by the package's bare fade, or by nothing].
-       - The command palette and the tour's card are dialogs: the dialog's dawn (560 ms, its
-         rise out of the dark), which js/motion.js plays backwards to close the palette and
-         js/tour.js to end the tour. A tour step is no arrival: the card walks, its shape kept.
+       Every one of them is kindled, G3's dome (480 ms on G1's coming curve), so every part
+       that opens in solstice opens one way (coordinator, 2026-10-13; G3 does not name these
+       parts, the dome is borrowed for them).
+       - The command palette and the tour's card are dialogs: js/motion.js plays the dome
+         backwards to close the palette and js/tour.js to end the tour. A tour step is no
+         arrival: the card walks, its shape kept.
        - The combobox's list and the date picker's panel are lists that float over the page:
-         the popover's rise (640 ms), played backwards as they close (the ghost of a hidden
+         the dome, played backwards as they close (the ghost of a hidden
          popover, js/motion.js; the date picker's playClose(), whose name stays the same on the
          union of its opening mark and the closing marks, lesson 10).
        - The page's dim round the tour's target and its ring come in on the card's time and
          curve and go back on the curve turned round (css/components.css reads the tokens). */
     @media (prefers-reduced-motion: no-preference) {
+        /* The command palette is kindled (G3's dome, as the dialog it is; Kenny,
+           2026-10-13: the dawn was "not the right animation for this theme"). js/motion.js
+           plays it in the dialog's close time (480 ms) and backwards to close it. */
         [data-theme='solstice'] .kp-palette {
-            --kp-sig-dur: 560ms;
-            animation: kp-sig-solstice-solstice-dawn var(--kp-sig-dur) cubic-bezier(0.2, 0, 0, 1) both;
+            animation: kp-sig-solstice-kindled var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) backwards;
         }
 
         [data-theme='solstice'] .kp-tour[open]:not([data-kp-tour-stepping]) {
-            animation: kp-sig-solstice-solstice-dawn 560ms cubic-bezier(0.2, 0, 0, 1) backwards;
+            animation: kp-sig-solstice-kindled var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) backwards;
         }
 
         [data-theme='solstice'] .kp-tour[data-kp-tour-stepping] {
@@ -71453,17 +71585,18 @@
 
         [data-theme='solstice'] {
             --kp-tour-dim-close: 0 0 0 0 transparent;
-            --kp-tour-dim-time: 560ms;
-            --kp-tour-dim-close-ease: cubic-bezier(1, 0, 0.8, 1);
+            --kp-tour-dim-time: var(--kp-sig-solstice-open);
+            /* G1's going curve: the coming curve turned round. */
+            --kp-tour-dim-close-ease: cubic-bezier(0.12, 0, 0.39, 0);
         }
 
         /* `backwards`, not `both`: a ring a finished animation holds cannot be taken back by
            the close's transition (lesson 21). */
         [data-theme='solstice'] [data-kp-tour-target] {
-            animation: kp-sig-solstice-tour-ring 560ms cubic-bezier(0.2, 0, 0, 1) backwards;
+            animation: kp-sig-solstice-tour-ring var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) backwards;
             transition:
-                box-shadow 560ms cubic-bezier(0.2, 0, 0, 1),
-                outline-color 560ms cubic-bezier(0.2, 0, 0, 1);
+                box-shadow var(--kp-sig-solstice-open) var(--kp-sig-solstice-come),
+                outline-color var(--kp-sig-solstice-open) var(--kp-sig-solstice-come);
         }
 
         @keyframes kp-sig-solstice-tour-ring {
@@ -71477,23 +71610,23 @@
                 .kp-combobox__list:popover-open,
                 .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open
             ) {
-            animation: kp-sig-solstice-solstice-rise 640ms cubic-bezier(0.2, 0, 0, 1) backwards;
+            animation: kp-sig-solstice-kindled var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) backwards;
         }
 
-        /* The bar's dropdown and mega menu are the header's menu (G3): they rise as a menu
-           does and go as the rise played backwards (the same keyframes under a second name, so
+        /* The bar's dropdown and mega menu are the header's menu (G3): they are kindled as a
+           menu is and go as that played backwards (the same keyframes under a second name, so
            the browser restarts them). Once the pointer or the focus has left a dropdown,
            js/components.js marks its item `[data-kp-nav-closing]` for `--kp-nav-close-time`
            (Firefox does not hold `display`, lesson 36) and the rule below keeps it drawn; the
            mega menu's item is held until a transition on the panel has played, which is the
            `--kp-sig-solstice-hold` below. It replaces the package's opacity fade. */
         [data-theme='solstice'] {
-            --kp-nav-close-time: 640ms;
+            --kp-nav-close-time: var(--kp-sig-solstice-open);
         }
 
         [data-theme='solstice'] .kp-nav__menu {
             --kp-sig-solstice-hold: 0;
-            transition: --kp-sig-solstice-hold 640ms linear;
+            transition: --kp-sig-solstice-hold var(--kp-sig-solstice-open) linear;
         }
 
         [data-theme='solstice']
@@ -71502,7 +71635,7 @@
                 .kp-nav__links > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide
             ) {
             --kp-sig-solstice-hold: 1;
-            animation: kp-sig-solstice-solstice-rise 640ms cubic-bezier(0.2, 0, 0, 1) backwards;
+            animation: kp-sig-solstice-kindled var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) backwards;
         }
 
         [data-theme='solstice']
@@ -71511,27 +71644,27 @@
             > .kp-nav__menu:not(.kp-nav__menu--wide) {
             display: block;
             opacity: 1;
-            animation: kp-sig-solstice-solstice-rise-back 640ms cubic-bezier(0.2, 0, 0, 1) reverse forwards;
+            animation: kp-sig-solstice-kindled-back var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) reverse forwards;
         }
 
         [data-theme='solstice']
             .kp-nav__links
             > li[data-kp-nav-closing]:not([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true']))
             > .kp-nav__menu--wide {
-            animation: kp-sig-solstice-solstice-rise-back 640ms cubic-bezier(0.2, 0, 0, 1) reverse forwards;
+            animation: kp-sig-solstice-kindled-back var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) reverse forwards;
         }
 
-        /* On a phone the bar's menu is its list of links under the toggle: it rises as the
-           menu does and goes as that played backwards, in the same 640 ms (js/components.js
+        /* On a phone the bar's menu is its list of links under the toggle: it is kindled as
+           the menu is and goes as that played backwards, in the same 480 ms (js/components.js
            keeps it open `--kp-nav-close-time` while `[data-kp-nav-closing]`). The lists nested
            in it are its own rows and play nothing of their own. */
         @container kp-nav (max-width: 40rem) {
             [data-theme='solstice'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
-                animation: kp-sig-solstice-solstice-rise 640ms cubic-bezier(0.2, 0, 0, 1) backwards;
+                animation: kp-sig-solstice-kindled var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) backwards;
             }
 
             [data-theme='solstice'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__links {
-                animation: kp-sig-solstice-solstice-rise-back 640ms cubic-bezier(0.2, 0, 0, 1) reverse forwards;
+                animation: kp-sig-solstice-kindled-back var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) reverse forwards;
             }
 
             [data-theme='solstice'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu {
@@ -71540,15 +71673,17 @@
             }
         }
 
-        @keyframes kp-sig-solstice-solstice-rise-back {
+        /* G3's dome under a second name, played in reverse for a close that must start as
+           an animation of its own (the bar's panels). */
+        @keyframes kp-sig-solstice-kindled-back {
             from {
-                transform: translateY(14px);
-                clip-path: inset(-30px -30px 100% -30px);
+                clip-path: ellipse(0 0 at 50% 100%);
+                filter: brightness(1.35) saturate(1.3);
             }
 
             to {
-                transform: none;
-                clip-path: inset(-30px -30px 0 -30px);
+                clip-path: ellipse(150% 150% at 50% 100%);
+                filter: brightness(1) saturate(1);
             }
         }
     }

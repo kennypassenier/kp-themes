@@ -65,3 +65,40 @@ a second name) and the `--kp-bp-hold` clock.
 Measured wall time (Firefox, blueprint): pairs-meter full 2 min 52 s (old meter) and 2 min 30 s (re-run on the meter of 16:05),
 phone-bar alone 7 s, datepicker and sidenav re-run 12 s, identity 1 min 7 s, tab-paint 1 min 18 s: 8 min 6 s; plus the targeted `--only` runs and probes while
 fixing, not each timed (the first two measured 6 s and 37 s).
+
+## Review round 1 (2026-10-13)
+
+Judged in the review dialog's stage (Firefox, real mouse clicks at coordinates, every frame read by rAF and screenshot
+bursts; tool `research/all-themes/_audit/_r2stage.mjs`, contact sheets `_r2sheet.mjs`).
+
+**tour · "some weird behaviour when the first card opens … the closing animation is also bugged, the window just
+disappears"**
+- Cause 1 (the open): the card, added to the page, was also marked `[data-kp-arriving]`, and the reading of an arriving part
+  (`kp-sig-blueprint-read`, specificity 0,5,0) beat the card's trace (0,4,0): the card was read out visible for 570 ms at
+  (100, 375), with the read's `position: relative` putting a fixed card in the flow, then jumped to (57, 338), went hidden and
+  traced again for 800 ms.
+- Cause 2 (the close, and the open's empty 600 ms): in the stage the card is a child of the review dialog (a `.kp-dialog`),
+  so the rule that keeps a traced panel's contents focusable (`.kp-dialog > * { opacity: var(--kp-bp-ink) }`) took the
+  card's own ink (0 while it traces) for the card's opacity: the pen was hidden with the card. The card appeared at the ink
+  and, closing, vanished at a quarter of the close with nothing drawn. The plain page (the pair meter's) never shows it.
+- Change: `.kp-tour` added to the three `:not(...)` lists of the arriving/leaving read (mask, leave, arrival) and to the
+  read's `::after`; the contents rule now ends `> :not(.kp-dialog, .kp-palette, .kp-tour, .kp-popover,
+  .kp-datepicker__panel, .kp-combobox__list, .kp-toast)`.
+- Evidence: rAF trace after the fix: one `kp-sig-blueprint-trace` 0 → 800 ms at (57, 338) from the first frame, no read, no
+  jump; the close the same 800 ms reversed. Screenshots every 60 ms: the pen draws the card's outline on open and draws it
+  back on close (`scratchpad/r2/kb/sheet-bp8.png`). Pair meter `tour`: ok 800/800 ms, 0.7 % (unchanged; it measures the
+  plain page, where neither cause shows).
+
+**calendar · "there is no loading animation?"**
+- Cause: the busy layers are inked line by line by a mask `round(up, calc(var(--kp-bp-rp) * 100%), 1lh)`; css/components.css
+  sets `line-height: 0` on both layers, so the step was 0, the round NaN, and Firefox computed the mask `100% 0%`: the
+  whole content (the card's words, the compasses) masked away at rest. Only the layers' empty plates showed.
+- Change: the step is `max(1lh, 1px)` in both mask rules (the general read and the calendar layers); identical wherever a
+  line has height.
+- Evidence: computed mask `100% round(up, 100%, 1px)`; screenshots after Loading show the whole-month card with its
+  words and spinning compass and every loading day's compass, read out by the pen in 480 ms
+  (`scratchpad/r2/kb/sheet-cal3.png`). Pair meter `calendar-busy`: open 480 / close 480 ms, 100.4 % (unchanged, the known
+  forest-like state change, see Still failing above).
+
+Full pair meter after the round: 22 of 25 pass, the same rows as before (calendar-busy, wizard-step, empty-state, tabs-panel
+as listed). Wall time: full blueprint run 2 min 32 s; stage runs about 20 s each, eleven of them.

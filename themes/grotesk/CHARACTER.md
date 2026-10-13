@@ -655,3 +655,5 @@ the tour's dim and ring and the side navigation's backdrop are printed at once a
 fall's time.
 
 Round 2 (2026-10-13): the side navigation in over and push is hidden while it is shut, also before the script has marked it, so a panel that was never opened plays no close on the page after load.
+
+Review round 1 (2026-10-13): on a phone the bar's links stand in a column from the start edge under the brand, the toggle at the end of the brand's row; the collapsed placement had lost to the wide one (links in grid columns 4 to 15) since 2026-09-08.

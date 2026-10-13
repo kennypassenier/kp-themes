@@ -224,3 +224,8 @@ navbar (hover dropdown, mega menu, phone bar) opening by the menu's own arrival 
 its top edge, then the words up, 480 ms) and closing as it backwards (`kp-sig-deco-arrive-back`,
 `--kp-nav-close-time: 480ms`). The warning and destructive alert label is the ruby four points lighter (4.37 to 4.88:1
 on the lacquer). The navbar's motion is borrowed from the menu's (no rule here decides it): a deviation for Kenny.
+
+**Review round 1, 2026-10-13:** the navbar's dropdown, mega menu and phone panel are deco plates (lacquer, wallpaper,
+coves, the gold inlay) and open by G3 itself, the inlay drawing then the lacquer coming up, closing as that backwards; round
+1 had given them the motion without the inlay. A loading calendar day draws both lift doors again: the press ring on
+`::before` no longer applies to a loading day (it hid the left door).

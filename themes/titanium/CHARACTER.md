@@ -407,3 +407,7 @@ hold`); the status line's spinner stays out under the busy table's layer.
 **Round 2, 2026-10-13:** the busy table's layer keeps its place over the rows while it arrives and leaves
 (`.kp-datatable__busy-overlay[data-kp-leaving] { position: absolute }`), and the table's busy dims beneath it go as
 part of the same pair (see the report's "Round 2").
+
+**Review round 1, 2026-10-13:** the side navigation's backdrop is a shade, not a part that arrives: it no longer takes the
+leave played backwards (the heat colours ran over the whole frame beside the panel as it opened); it keeps its own shade
+animation on the panel's 240 ms both ways.

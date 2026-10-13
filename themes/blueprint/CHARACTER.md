@@ -557,3 +557,9 @@ Kenny's sixteen picks of 2026-10-07 23:41 are built into `css/blueprint-register
 ## Applied 2026-10-13
 
 All-themes pass (close = open reversed, the trace on every part that opens; `research/all-themes/reports/blueprint.md`). Mechanism tokens set at the root (`--kp-leave-state: leave`, `--kp-arrive-unseen: skip`, `--kp-leave-fold-grow: 1`, `--kp-leave-fold-start: 0`); a tree branch is kept drawn while it shuts; a toast arrives as its leave played backwards. Traced as they open and drawn backwards as they close (G3), where they faded or did nothing: the command palette, the tour's card (with its dim and ring on the panel's 5 units and the feed), the bar's hover dropdown and mega menu (`--kp-nav-close-time: 800ms`) and the phone bar's list of links. The calendar's busy layers and a busy table's two dims are read out and back in 3 units. A traced panel's contents stay visible to the focus while the trace hides its box (`--kp-bp-ink`): the dialog and the drawer had dropped the focus to the page and the date picker never took it. The busy table's layer keeps `position: absolute` while it is read out, and a tour card being stepped keeps `position: fixed` (lesson 5). The side navigation's backdrop takes the panel's 160 ms.
+
+**Review round 1, 2026-10-13:** the tour's card opens by its trace alone (it had also been read out as an arriving part,
+in the flow, before the trace began again where it stands), and inside a dialog its pen is seen: a traced panel's
+"contents visible to the focus" rule no longer reaches an overlay that sits in a dialog, which had hidden the card's pen
+with the card, so the card simply appeared and vanished. The calendar's busy layers show their loading: the read's
+line-by-line mask steps by at least a pixel (`max(1lh, 1px)`), since a layer with `line-height: 0` had masked itself away.

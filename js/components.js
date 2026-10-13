@@ -451,11 +451,22 @@ export function attachToTop(root = document, { strings, after } = {}) {
             button.append(glyph);
         }
 
+        // The box that scrolls the control's page: the window, or a scrolling box it sits in (a dashboard's main, a review
+        // dialog's stage; Kenny, 2026-10-13: "the back to top didn't seem to work" in such a stage). Read at every use, since
+        // a box can move the control into another scroller after it was attached.
+        const scroller = () => {
+            for (let box = button.parentElement; box && box !== doc.body && box !== doc.documentElement; box = box.parentElement) {
+                const overflow = view.getComputedStyle(box).overflowY;
+                if (/auto|scroll|overlay/.test(overflow) && box.scrollHeight > box.clientHeight + 1) return box;
+            }
+            return null;
+        };
         let shown = false;
         let queued = false;
         const decide = () => {
             queued = false;
-            const next = view.scrollY > threshold;
+            const box = scroller();
+            const next = (box ? box.scrollTop : view.scrollY) > threshold;
             if (next === shown) return;
             shown = next;
             button.toggleAttribute('data-kp-to-top-shown', next);
@@ -469,7 +480,7 @@ export function attachToTop(root = document, { strings, after } = {}) {
             view.requestAnimationFrame(decide);
         };
         const onClick = () => {
-            view.scrollTo({ top: 0 });
+            (scroller() ?? view).scrollTo({ top: 0 });
             // The focus goes too, and it goes WITHOUT scrolling. Focusing an
             // element normally brings it into view, which undid the journey:
             // on a page whose main landmark starts 2737px down, "back to
@@ -482,11 +493,12 @@ export function attachToTop(root = document, { strings, after } = {}) {
         };
 
         decide();
-        view.addEventListener('scroll', onScroll, { passive: true });
+        // Captured on the document: a box's scroll does not bubble, and the window's reaches the document as well.
+        doc.addEventListener('scroll', onScroll, { passive: true, capture: true });
         button.addEventListener('click', onClick);
 
         cleanups.push(() => {
-            view.removeEventListener('scroll', onScroll);
+            doc.removeEventListener('scroll', onScroll, { capture: true });
             button.removeEventListener('click', onClick);
             button.removeAttribute('data-kp-to-top-shown');
             glyph?.remove();

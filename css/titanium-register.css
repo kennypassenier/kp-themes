@@ -2593,6 +2593,22 @@
             animation-duration: var(--kp-sig-ti-panel);
         }
 
+        /* The backdrop is a shade over the page, not a part that arrives: js/motion.js let it
+           arrive as the theme's leave played backwards, which ran the heat colours (gold, violet,
+           blue) over the whole frame beside the panel and dropped the shade in at the end
+           (review round 1, 2026-10-13: "a splash of colour next to the bar, filling the parent
+           element, looked a bit like the loading colours"). It keeps the shade it opens with
+           while those marks are on it, so it comes with the panel's slide and goes as that
+           backwards (js/sidenav.js), the same animation both ways. */
+        [data-theme='titanium'] .kp-sidenav__backdrop:is([data-kp-leaving], [data-kp-arriving]) {
+            overflow: visible;
+            animation: kp-sidenav-backdrop var(--kp-sig-ti-panel) var(--kp-sidenav-ease, var(--fx-ease, ease)) both;
+        }
+
+        [data-theme='titanium'] .kp-sidenav__backdrop:is([data-kp-leaving], [data-kp-arriving])::after {
+            content: none;
+        }
+
         /* The calendar's busy layers arrive as the leave played backwards and cool
            away as they go: js/calendar.js marks a layer `[data-kp-leaving]` while
            its state goes (`--kp-calendar-busy-leave: hold`), and the rules below

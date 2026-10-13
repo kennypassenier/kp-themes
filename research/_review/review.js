@@ -1464,6 +1464,9 @@ function mirror(source, heading) {
         slot.append(title);
     }
     const holder = document.createElement('div');
+    // A rebuilt copy is a redraw, not an arrival: without this js/motion.js played the theme's arrival on every pressed
+    // control (Kenny, 2026-10-13: the bar "deformed to grow suddenly before moving to their usual size").
+    holder.dataset.kpArrive = 'none';
     slot.append(holder);
     const build = () => {
         const focusAt = actorsOf(holder).indexOf(/** @type {HTMLElement} */ (document.activeElement));
@@ -1886,6 +1889,15 @@ document.addEventListener(
         // Closed here rather than by the browser's own cancel: Chromium dropped
         // the Escape after the dialog had switched the theme a few times.
         if (event.key === 'Escape') {
+            // A part the demo opened on stage (a dialog, the palette, a popover, a picker, the tour, an open side
+            // navigation, the phone bar) takes its own Escape first (Kenny, 2026-10-13: Escape on the palette closed the
+            // review dialog as well); the review dialog closes on the next one.
+            const inner = [
+                ...document.querySelectorAll(
+                    'dialog[open], [popover]:popover-open, .kp-datepicker__panel:not([hidden]), .kp-sidenav[data-kp-sidenav-open="true"], .kp-nav[data-kp-nav-open]',
+                ),
+            ].some((el) => el !== dialog && dialog.contains(el.closest('[data-review-item]') ?? el) && !el.closest('.cat-bar'));
+            if (inner) return;
             event.preventDefault();
             dialog.close();
             return;

@@ -306,6 +306,17 @@ proseGroup?.addEventListener('click', (event) => {
     }
 });
 
+// The block's own back-to-top takes the reader back as well (Kenny, 2026-10-13: "the back to top didn't seem to work"): to
+// the top of whatever scrolls it, the page or the review dialog's stage.
+document.querySelector('[data-fa-to-top]')?.addEventListener('click', (event) => {
+    let box = /** @type {Element | null} */ (event.currentTarget instanceof Element ? event.currentTarget.parentElement : null);
+    while (box && box !== document.body) {
+        if (/auto|scroll/.test(getComputedStyle(box).overflowY) && box.scrollHeight > box.clientHeight + 1) break;
+        box = box.parentElement;
+    }
+    (box && box !== document.body ? box : window).scrollTo({ top: 0 });
+});
+
 /* --------------------------------------------------------------- loading */
 
 const loadingHost = document.querySelector('[data-fa-loading-host]');

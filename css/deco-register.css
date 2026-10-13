@@ -369,13 +369,10 @@
         border-color: var(--selected);
     }
 
-    /* The dropdown snaps into place, a popover with the demo's own
-   shadow (rewritten as a relative colour of --sidebar-background, DI9). */
+    /* The dropdown and the mega menu are deco's own menu (G14): the plate
+       (lacquer, wallpaper, coves, the gold inlay) is drawn by the plate rule
+       of Q6/Q7 below, which lists them; here only the room inside it. */
     [data-theme='deco'] .kp-nav__menu {
-        background: var(--popover);
-        border: 1px solid var(--border-strong);
-        border-radius: 0;
-        box-shadow: 0 12px 24px var(--kp-shadow-ink);
         padding: 0.4rem;
         min-width: 11rem;
     }
@@ -1963,20 +1960,23 @@
         }
     }
 
-    /* ── The navbar's panels open and close the deco way (coordinator,
-       2026-10-12; lessons 36, 38). The hover dropdown, the mega menu and the
-       phone bar's panel take the menu's own arrival, kp-sig-deco-arrive
-       (480 ms): the panel is drawn round from the middle of its top edge both
-       ways, as far as --kp-sig-deco-draw (320 ms), then its words come up
-       with --kp-sig-deco-up (160 ms); the close is the same frames backwards
-       under a second name (kp-sig-deco-arrive-back, played in reverse) so it
-       starts as an animation of its own. The panels keep their look: the
-       sector is a mask 48 px wider than the panel on every side (no-clip, the
-       plate's cove technique), so at rest it covers the panel and its shadow
-       whole. Firefox does not hold `display` for a transition: the hover
-       dropdown is held by js/components.js for `--kp-nav-close-time`, the mega
-       menu while a transition runs on it (the --kp-sig-deco-hold below), the
-       phone bar's panel for `--kp-nav-close-time`. ── */
+    /* ── The navbar's panels open and close the deco way: G3, the opening
+       Kenny approved for every menu (research/deco-character, "opening":
+       "inlay", 2026-10-09), and G14 (a menu inside a header is deco's own
+       menu). The hover dropdown, the mega menu and the phone bar's panel are
+       deco plates (listed in the plate rule of Q6/Q7: lacquer, the
+       wallpaper, coves, the gold inlay on ::after) and arrive as every deco
+       menu does, kp-sig-deco-arrive (480 ms): the gold inlay draws itself
+       round from the middle of the top edge both ways and meets at the
+       bottom (--kp-sig-deco-draw, 320 ms), then the lacquer, the wallpaper
+       and the words come up (--kp-sig-deco-up, 160 ms). The close is the
+       same frames backwards, under a second name (kp-sig-deco-arrive-back,
+       played in reverse) so it starts as an animation of its own: the
+       lacquer sinks, the inlay undraws. Firefox does not hold `display` for a
+       transition, so the hover dropdown is held by js/components.js for
+       `--kp-nav-close-time`, the mega menu while a transition runs on it (the
+       --kp-sig-deco-hold below), the phone bar's panel for
+       `--kp-nav-close-time`. ── */
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='deco'] {
             --kp-nav-close-time: var(--kp-sig-deco-arrive);
@@ -1984,20 +1984,12 @@
 
         [data-theme='deco'] .kp-nav__menu {
             --kp-sig-deco-hold: 0;
-            mask-image: conic-gradient(
-                from calc(var(--kp-sig-deco-draw) * -180deg),
-                var(--foreground) 0 calc(var(--kp-sig-deco-draw) * 360deg),
-                transparent 0
-            );
-            mask-size: calc(100% + 96px) calc(100% + 96px);
-            mask-position: -48px -48px;
-            mask-repeat: no-repeat;
-            mask-clip: no-clip;
             transition: --kp-sig-deco-hold var(--kp-sig-deco-arrive) linear;
             animation: kp-sig-deco-arrive-back var(--kp-sig-deco-arrive) linear reverse forwards;
         }
 
-        [data-theme='deco'] .kp-nav__menu > * {
+        [data-theme='deco'] .kp-nav__menu > *,
+        [data-theme='deco'] .kp-nav__menu[data-kp-menu-label]::before {
             opacity: var(--kp-sig-deco-up);
         }
 
@@ -2021,28 +2013,44 @@
         }
     }
 
+    /* Wide, a bar left with its phone panel open is a row of links again,
+       not a plate. */
+    @container kp-nav (min-width: 40.0001rem) {
+        [data-theme='deco'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links {
+            border: 0;
+            background: none;
+            mask-image: none;
+        }
+
+        [data-theme='deco'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links::after {
+            content: none;
+        }
+    }
+
     @container kp-nav (max-width: 40rem) {
+        /* The phone bar's panel is one plate under the bar, its rows inside
+           the inlay (14 px of cove and hairlines on every side). */
+        [data-theme='deco'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links {
+            position: relative;
+            margin-block-start: 0.6rem;
+            padding: 1rem 1.1rem;
+        }
+
         /* Collapsed, the lists nested in the open panel are its own rows and
-           come up with it; they play nothing of their own. */
+           come up with it: no plate of their own, nothing played. */
         [data-theme='deco'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links .kp-nav__menu {
             animation: none;
             transition: none;
             mask-image: none;
+            border: 0;
+            background: none;
+        }
+
+        [data-theme='deco'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links .kp-nav__menu::after {
+            content: none;
         }
 
         @media (prefers-reduced-motion: no-preference) {
-            [data-theme='deco'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links {
-                mask-image: conic-gradient(
-                    from calc(var(--kp-sig-deco-draw) * -180deg),
-                    var(--foreground) 0 calc(var(--kp-sig-deco-draw) * 360deg),
-                    transparent 0
-                );
-                mask-size: calc(100% + 96px) calc(100% + 96px);
-                mask-position: -48px -48px;
-                mask-repeat: no-repeat;
-                mask-clip: no-clip;
-            }
-
             [data-theme='deco'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > li {
                 opacity: var(--kp-sig-deco-up);
             }
@@ -2119,6 +2127,8 @@
             .kp-dialog,
             .kp-popover:not(.kp-tooltip),
             .kp-menu-button > .kp-menu,
+            .kp-nav__menu,
+            .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links,
             .kp-toast,
             .kp-tour,
             dialog.kp-drawer,
@@ -2231,6 +2241,8 @@
             .kp-dialog,
             .kp-popover:not(.kp-tooltip),
             .kp-menu-button > .kp-menu,
+            .kp-nav__menu,
+            .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links,
             .kp-toast,
             .kp-tour,
             dialog.kp-drawer,
@@ -2359,6 +2371,8 @@
             .kp-dialog,
             .kp-popover:not(.kp-tooltip),
             .kp-menu-button > .kp-menu,
+            .kp-nav__menu,
+            .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links,
             .kp-toast,
             .kp-tour,
             dialog.kp-drawer,
@@ -3644,7 +3658,11 @@
         translate: 0 calc(1px * var(--kp-sig-deco-pr));
     }
 
-    [data-theme='deco'] :is(a.kp-kpi, .kp-kpi--toggle, .kp-kpi--trend:has(.kp-kpi__link), .kp-calendar__day)::before {
+    /* A loading day's ::before is its left lift door (Q10), so the seal's ring
+       is not drawn on it: the ring's picture and opacity 0, written later at
+       the same weight, took the left door away (Kenny, 2026-10-13: "only has
+       the right curtain"). */
+    [data-theme='deco'] :is(a.kp-kpi, .kp-kpi--toggle, .kp-kpi--trend:has(.kp-kpi__link), .kp-calendar__day:not([data-kp-tone='loading']))::before {
         content: '';
         position: absolute;
         inset: 0;
@@ -3727,7 +3745,7 @@
         }
 
         [data-theme='deco'] :is(.kp-button, .kp-icon-button, .kp-menu__item):active:not(:disabled, [aria-disabled='true'], [aria-busy='true'])::after,
-        [data-theme='deco'] :is(a.kp-kpi, .kp-kpi--toggle, .kp-kpi--trend:has(.kp-kpi__link), .kp-calendar__day):active::before {
+        [data-theme='deco'] :is(a.kp-kpi, .kp-kpi--toggle, .kp-kpi--trend:has(.kp-kpi__link), .kp-calendar__day:not([data-kp-tone='loading'])):active::before {
             animation: kp-sig-deco-seal 400ms linear both;
         }
     }

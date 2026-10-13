@@ -1530,16 +1530,51 @@
             animation: kp-sig-solstice-solstice-warm var(--kp-sig-dur) var(--fx-ease) both;
         }
 
+        /* G3 · what opens is kindled (decided 2026-10-07, research/solstice-character,
+           "opening": "dome"; built 2026-10-13): the toast, the dialog (and the drawer, a
+           dialog too) and the tooltip open as a dome of first light growing from the middle
+           of their foot, overbright and cooling, 2 units (480 ms) on G1's coming curve; the
+           close is the same frames backwards (js/motion.js), the dome sinking into the foot.
+           The dialog that is not yet open runs one and a half times as long, so the close
+           js/motion.js reads off it (two thirds) is the opening's own 480 ms. */
         [data-theme='solstice'] .kp-toast {
-            animation: kp-sig-solstice-solstice-rise var(--kp-sig-dur) cubic-bezier(0.2, 0, 0, 1) backwards;
+            animation: kp-sig-solstice-kindled var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) backwards;
         }
 
         [data-theme='solstice'] .kp-dialog {
-            animation: kp-sig-solstice-solstice-dawn var(--kp-sig-dur) cubic-bezier(0.2, 0, 0, 1) both;
+            animation: kp-sig-solstice-kindled calc(var(--kp-sig-solstice-open) * 1.5) var(--kp-sig-solstice-come) backwards;
+        }
+
+        [data-theme='solstice'] .kp-dialog[open] {
+            animation-duration: var(--kp-sig-solstice-open);
         }
 
         [data-theme='solstice'] .kp-tooltip {
-            animation: kp-sig-solstice-solstice-ember var(--kp-sig-dur) var(--fx-ease) both;
+            animation: kp-sig-solstice-kindled var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) backwards;
+        }
+
+        /* A toast leaves as its kindling played backwards (G3: closing is the dome sinking
+           back into the foot), under the same name, so js/motion.js lets it arrive as that
+           leave turned round: one picture, mirrored. The class is doubled to outweigh the
+           theme's general leave on `[data-kp-leaving]`. */
+        [data-theme='solstice'] .kp-toast.kp-toast[data-kp-leaving] {
+            animation: kp-sig-solstice-kindled var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) reverse forwards;
+        }
+    }
+
+    /* G3's dome: from nothing at the middle of the foot to past every corner (at rest the
+       ellipse holds the whole panel and its glow), overbright and warm, cooling to its own
+       colour. No timing function inside: the animation's curve (G1) plays it, and played
+       backwards it is the same frames in reverse. */
+    @keyframes kp-sig-solstice-kindled {
+        from {
+            clip-path: ellipse(0 0 at 50% 100%);
+            filter: brightness(1.35) saturate(1.3);
+        }
+
+        to {
+            clip-path: ellipse(150% 150% at 50% 100%);
+            filter: brightness(1) saturate(1);
         }
     }
 
@@ -2066,6 +2101,9 @@
     [data-theme='solstice'] {
         --kp-sig-solstice-touch: cubic-bezier(0.37, 0, 0.63, 1);
         --kp-sig-solstice-contact: 240ms;
+        /* G3 and G1: opening a panel takes 2 units, on the sine's last quarter (what comes). */
+        --kp-sig-solstice-open: 480ms;
+        --kp-sig-solstice-come: cubic-bezier(0.61, 1, 0.88, 1);
     }
 
     [data-theme='solstice']
@@ -2348,33 +2386,38 @@
         }
     }
 
-    /* A menu and a popover rise into the light as the toast does (G3); they close as the
-       rise played backwards (js/motion.js playClose). */
+    /* A menu and a popover are kindled (G3, the dome above); they close as it played
+       backwards (js/motion.js playClose, the ghost of a hidden popover). */
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='solstice'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip)) {
-            animation: kp-sig-solstice-solstice-rise 640ms cubic-bezier(0.2, 0, 0, 1) backwards;
+            animation: kp-sig-solstice-kindled var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) backwards;
         }
     }
 
     /* The rest of what opens takes the theme's own entrance [all-themes, 2026-10-13, lesson 38:
        these opened by the package's bare fade, or by nothing].
-       - The command palette and the tour's card are dialogs: the dialog's dawn (560 ms, its
-         rise out of the dark), which js/motion.js plays backwards to close the palette and
-         js/tour.js to end the tour. A tour step is no arrival: the card walks, its shape kept.
+       Every one of them is kindled, G3's dome (480 ms on G1's coming curve), so every part
+       that opens in solstice opens one way (coordinator, 2026-10-13; G3 does not name these
+       parts, the dome is borrowed for them).
+       - The command palette and the tour's card are dialogs: js/motion.js plays the dome
+         backwards to close the palette and js/tour.js to end the tour. A tour step is no
+         arrival: the card walks, its shape kept.
        - The combobox's list and the date picker's panel are lists that float over the page:
-         the popover's rise (640 ms), played backwards as they close (the ghost of a hidden
+         the dome, played backwards as they close (the ghost of a hidden
          popover, js/motion.js; the date picker's playClose(), whose name stays the same on the
          union of its opening mark and the closing marks, lesson 10).
        - The page's dim round the tour's target and its ring come in on the card's time and
          curve and go back on the curve turned round (css/components.css reads the tokens). */
     @media (prefers-reduced-motion: no-preference) {
+        /* The command palette is kindled (G3's dome, as the dialog it is; Kenny,
+           2026-10-13: the dawn was "not the right animation for this theme"). js/motion.js
+           plays it in the dialog's close time (480 ms) and backwards to close it. */
         [data-theme='solstice'] .kp-palette {
-            --kp-sig-dur: 560ms;
-            animation: kp-sig-solstice-solstice-dawn var(--kp-sig-dur) cubic-bezier(0.2, 0, 0, 1) both;
+            animation: kp-sig-solstice-kindled var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) backwards;
         }
 
         [data-theme='solstice'] .kp-tour[open]:not([data-kp-tour-stepping]) {
-            animation: kp-sig-solstice-solstice-dawn 560ms cubic-bezier(0.2, 0, 0, 1) backwards;
+            animation: kp-sig-solstice-kindled var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) backwards;
         }
 
         [data-theme='solstice'] .kp-tour[data-kp-tour-stepping] {
@@ -2383,17 +2426,18 @@
 
         [data-theme='solstice'] {
             --kp-tour-dim-close: 0 0 0 0 transparent;
-            --kp-tour-dim-time: 560ms;
-            --kp-tour-dim-close-ease: cubic-bezier(1, 0, 0.8, 1);
+            --kp-tour-dim-time: var(--kp-sig-solstice-open);
+            /* G1's going curve: the coming curve turned round. */
+            --kp-tour-dim-close-ease: cubic-bezier(0.12, 0, 0.39, 0);
         }
 
         /* `backwards`, not `both`: a ring a finished animation holds cannot be taken back by
            the close's transition (lesson 21). */
         [data-theme='solstice'] [data-kp-tour-target] {
-            animation: kp-sig-solstice-tour-ring 560ms cubic-bezier(0.2, 0, 0, 1) backwards;
+            animation: kp-sig-solstice-tour-ring var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) backwards;
             transition:
-                box-shadow 560ms cubic-bezier(0.2, 0, 0, 1),
-                outline-color 560ms cubic-bezier(0.2, 0, 0, 1);
+                box-shadow var(--kp-sig-solstice-open) var(--kp-sig-solstice-come),
+                outline-color var(--kp-sig-solstice-open) var(--kp-sig-solstice-come);
         }
 
         @keyframes kp-sig-solstice-tour-ring {
@@ -2407,23 +2451,23 @@
                 .kp-combobox__list:popover-open,
                 .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open
             ) {
-            animation: kp-sig-solstice-solstice-rise 640ms cubic-bezier(0.2, 0, 0, 1) backwards;
+            animation: kp-sig-solstice-kindled var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) backwards;
         }
 
-        /* The bar's dropdown and mega menu are the header's menu (G3): they rise as a menu
-           does and go as the rise played backwards (the same keyframes under a second name, so
+        /* The bar's dropdown and mega menu are the header's menu (G3): they are kindled as a
+           menu is and go as that played backwards (the same keyframes under a second name, so
            the browser restarts them). Once the pointer or the focus has left a dropdown,
            js/components.js marks its item `[data-kp-nav-closing]` for `--kp-nav-close-time`
            (Firefox does not hold `display`, lesson 36) and the rule below keeps it drawn; the
            mega menu's item is held until a transition on the panel has played, which is the
            `--kp-sig-solstice-hold` below. It replaces the package's opacity fade. */
         [data-theme='solstice'] {
-            --kp-nav-close-time: 640ms;
+            --kp-nav-close-time: var(--kp-sig-solstice-open);
         }
 
         [data-theme='solstice'] .kp-nav__menu {
             --kp-sig-solstice-hold: 0;
-            transition: --kp-sig-solstice-hold 640ms linear;
+            transition: --kp-sig-solstice-hold var(--kp-sig-solstice-open) linear;
         }
 
         [data-theme='solstice']
@@ -2432,7 +2476,7 @@
                 .kp-nav__links > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide
             ) {
             --kp-sig-solstice-hold: 1;
-            animation: kp-sig-solstice-solstice-rise 640ms cubic-bezier(0.2, 0, 0, 1) backwards;
+            animation: kp-sig-solstice-kindled var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) backwards;
         }
 
         [data-theme='solstice']
@@ -2441,27 +2485,27 @@
             > .kp-nav__menu:not(.kp-nav__menu--wide) {
             display: block;
             opacity: 1;
-            animation: kp-sig-solstice-solstice-rise-back 640ms cubic-bezier(0.2, 0, 0, 1) reverse forwards;
+            animation: kp-sig-solstice-kindled-back var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) reverse forwards;
         }
 
         [data-theme='solstice']
             .kp-nav__links
             > li[data-kp-nav-closing]:not([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true']))
             > .kp-nav__menu--wide {
-            animation: kp-sig-solstice-solstice-rise-back 640ms cubic-bezier(0.2, 0, 0, 1) reverse forwards;
+            animation: kp-sig-solstice-kindled-back var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) reverse forwards;
         }
 
-        /* On a phone the bar's menu is its list of links under the toggle: it rises as the
-           menu does and goes as that played backwards, in the same 640 ms (js/components.js
+        /* On a phone the bar's menu is its list of links under the toggle: it is kindled as
+           the menu is and goes as that played backwards, in the same 480 ms (js/components.js
            keeps it open `--kp-nav-close-time` while `[data-kp-nav-closing]`). The lists nested
            in it are its own rows and play nothing of their own. */
         @container kp-nav (max-width: 40rem) {
             [data-theme='solstice'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
-                animation: kp-sig-solstice-solstice-rise 640ms cubic-bezier(0.2, 0, 0, 1) backwards;
+                animation: kp-sig-solstice-kindled var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) backwards;
             }
 
             [data-theme='solstice'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__links {
-                animation: kp-sig-solstice-solstice-rise-back 640ms cubic-bezier(0.2, 0, 0, 1) reverse forwards;
+                animation: kp-sig-solstice-kindled-back var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) reverse forwards;
             }
 
             [data-theme='solstice'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu {
@@ -2470,15 +2514,17 @@
             }
         }
 
-        @keyframes kp-sig-solstice-solstice-rise-back {
+        /* G3's dome under a second name, played in reverse for a close that must start as
+           an animation of its own (the bar's panels). */
+        @keyframes kp-sig-solstice-kindled-back {
             from {
-                transform: translateY(14px);
-                clip-path: inset(-30px -30px 100% -30px);
+                clip-path: ellipse(0 0 at 50% 100%);
+                filter: brightness(1.35) saturate(1.3);
             }
 
             to {
-                transform: none;
-                clip-path: inset(-30px -30px 0 -30px);
+                clip-path: ellipse(150% 150% at 50% 100%);
+                filter: brightness(1) saturate(1);
             }
         }
     }

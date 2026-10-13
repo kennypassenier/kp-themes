@@ -112,3 +112,24 @@ repeats of the sequence that failed).**
   being re-rastered, not grotesk: see research/all-themes/reports/formal.md, Round 2.
 
 Measured wall time of the round 2 grotesk runs: full pairs 142 s and 141 s; partial runs about 20 × 7 to 20 s, not timed.
+
+## Review round 1 (2026-10-13, Kenny's rejection)
+
+### bar · grotesk: "The items appearing in the phone version are weirly aligned to the right"
+
+- **Cause:** grotesk's bar is a 14-column grid; the collapsed rules (`@container kp-nav (max-width: 40rem)`: one column,
+  brand and links in column 1) were written *before* the wide placement (`.kp-nav__brand { grid-column: 1 / 4 }`,
+  `.kp-nav__links { grid-column: 4 / 15 }`) at the same weight, so the wide placement won on a phone too. In a one-column
+  grid the links then fell into implicit columns 4 to 15, starting at the toggle's x (about 60 % across the 390 px
+  frame). Present since 2026-09-08 (2ec32509), not from this round's motion.
+- **Change:** the collapsed block moved after the wide placement and made a two-track row:
+  `.kp-nav { grid-template-columns: minmax(0, 1fr) auto }`, `.kp-nav__brand { grid-column: 1 }`,
+  `.kp-nav__toggle { grid-column: 2 }`, `.kp-nav__links { grid-column: 1 / -1; align-items: flex-start }`. The wide bar is
+  untouched (checked: brand left, links right, dropdown under Readings as before).
+- **Evidence (frames in the review stage, phone 390 px):** before, Overview / Readings / Rota / Request access stood in a
+  column starting under the toggle, the left 60 % of the panel empty. After, brand and toggle share the top row (toggle
+  at the end) and the links stand in a column from the start edge under the brand, the dropdown's caption and links
+  indented 1rem from them; the fall plays the same.
+- **Pairs (Firefox):** phone-bar 960/960 ms, 0.0 %; bar-equipment 960/960 ms, 0.3 % (both ok, as before).
+
+Wall time of the timed run: pairs (phone-bar, bar-equipment) 12 s; stage frame runs 2 × 30 s, not timed.

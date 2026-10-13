@@ -63,3 +63,53 @@ Tab paint (end): 41 stops, NOMARK only "Review in a dialog" and "Copy answer".
 
 Measured wall time of the timed runs: pairs (all) 2 min 51 s, identity 1 min 8 s and 1 min 9 s, tab-paint 1 min 17 s,
 first pair subset 45 s: 7 min 10 s in total; about fifteen single-pair checks between fixes were not timed.
+
+## Review round 1 (2026-10-13, Kenny's rejections)
+
+Judged in the review dialog's stage (`demo.html`, "Review in a dialog", step Art Deco), Firefox, real mouse moves and
+clicks at coordinates, a screenshot per frame, looked at.
+
+### bar · deco: "I don't think this is the theme effect as we approved earlier?"
+
+- **Cause:** round 1 gave the dropdown, mega menu and phone panel only the *mechanics* of deco's menu opening (a conic
+  mask on the bare panel, then the words up). The panels were never deco plates, so there was no gold inlay to draw:
+  what Kenny saw was a grey panel uncovered by a sweeping wedge, not the opening he approved. On the phone the panel had
+  no ground at all, so the first 320 ms showed an empty gap.
+- **Rule used:** G3 (research/deco-character/decided.json, `"opening": "inlay"`, approved 2026-10-09): "Dialog, menu,
+  popover, tooltip, toast, drawer and tour card: the gold frame draws (320 ms), then the lacquer, wallpaper and words come
+  up (160 ms). The close: the lacquer sinks, the inlay undraws." Together with G14 (a menu inside a header is deco's own
+  menu). The anchor (the fan opens) is what G3 was derived from; G3 is the decided form of it for anything that opens.
+- **Change:** `.kp-nav__menu` (dropdown and mega menu) and the phone panel
+  (`.kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links`) are added to the three
+  plate lists (lacquer with the wallpaper, the coves, the 20-layer gold inlay on `::after` drawn by `--kp-sig-deco-draw`,
+  lacquer by `--kp-sig-deco-up`); the navbar's own dressing of `.kp-nav__menu` (popover ground, grey border, shadow) is
+  gone; the panel-wide conic mask is gone. The motion stays `kp-sig-deco-arrive` 480 ms in, `kp-sig-deco-arrive-back`
+  reversed out. The dropdown's caption (`::before`) comes up with the words. On the phone the panel is one plate
+  (padding 1rem 1.1rem, 0.6rem under the bar); the lists nested in it have no plate of their own (`::after` none, mask
+  none). A bar widened with its phone panel still open drops the plate (`@container kp-nav (min-width: 40.0001rem)`).
+- **Evidence (frames):** hover dropdown: frame 0 the inlay starts at the middle of the top edge, frames 1-3 it runs down
+  both sides, frames 4-5 it meets at the foot, then the lacquer, wallpaper and words come up; closing shows the words and
+  lacquer sinking, then the inlay undrawing back to the top middle. Mega menu and phone panel the same. Before, the same
+  frames showed a grey panel uncovered by a dark wedge with no gold at all.
+- **Pairs (Firefox):** bar-equipment 480/480 ms, 0.1 %; phone-bar 480/480 ms, 0.0 % (both ok, unchanged numbers: the
+  timing was right, the picture was not).
+- **For Kenny:** the navbar's panels now look like deco's other menus (coves, gold inlay, lacquer with the wallpaper)
+  instead of a plain dark box with a grey rule. That is a look change on top of the motion, needed because G3's opening
+  *is* the inlay drawing.
+
+### calendar · deco: "The effect of closing the curtains only has the right curtain, the left one isn't showing at all."
+
+- **Cause:** a loading day's lift doors are its `::before` (left door) and `::after` (right door). The seal's press ring
+  (`:is(a.kp-kpi, .kp-kpi--toggle, .kp-kpi--trend:has(.kp-kpi__link), .kp-calendar__day)::before`) has the same weight
+  (0,3,1) and comes later in the file, so on every day it replaced the left door's picture with the ring and set
+  `opacity: 0`, `inset: 0`. Only the right door was ever drawn.
+- **Change:** the ring and its `:active` animation skip loading days: `.kp-calendar__day:not([data-kp-tone='loading'])` in
+  both selectors. A loading day is not pressable in any case.
+- **Evidence (frames):** after pressing Loading, both doors close over every loading day and part by a third with the
+  number between them, in both calendars (busy-whole and busy-days). Before, only the right half was there.
+- **Pairs:** calendar-busy 360/360 ms, 101.5 % (was 98.5 %): the busy layers mirror; the remainder is the state change of
+  the day tones (the doors are now drawn on both halves, so a few more pixels differ). It fails the same way in forest; it
+  is on the brief's ignore list.
+
+Wall time of the timed runs: pairs (bar-equipment, phone-bar, calendar-busy) 21 s; tab-paint 1 min 13 s (40 stops, NOMARK
+only "Review in a dialog" and "Copy answer"); stage frame runs about 8 × 30 s, not timed.

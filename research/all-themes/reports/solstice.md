@@ -53,3 +53,73 @@ backwards). Every new rule borrows one of these.
 Measured wall time (Firefox, solstice): targeted pairs runs 41 s, 19 s, 43 s, 7 s, 6 s; full pairs-meter 2 min 41 s (old meter)
 and 2 min 21 s (re-run on the meter of 16:05); identity 1 min 6 s and 1 min 5 s; tab-paint 1 min 12 s. Re-run of datepicker and sidenav after the focus-return change in js/datepicker.js and js/sidenav.js
 (16:17, not mine) 11 s: still ok (1.4 %, 0.0 %). Total 10 min 32 s.
+
+## Review round 1 (2026-10-13, Kenny's rejection)
+
+### palette · solstice: "I don't think that's the right animation for this theme?"
+
+- **Cause:** round 1 gave the palette the register's dialog *dawn* (a fade-rise, 560 ms), which is not the opening Kenny
+  decided. themes/solstice/CHARACTER.md G3 (research/solstice-character/decided.json, `"opening": "dome"`, approved
+  2026-10-07 23:18) is **kindled**: a dome of first light grows from the middle of the panel's foot
+  (`clip-path: ellipse(0 0 at 50% 100%)` → `ellipse(150% 150% at 50% 100%)`), what it reaches overbright and warm
+  (`brightness(1.35) saturate(1.3)` → 1) and cooling, 2 units (480 ms) on G1's coming curve
+  `cubic-bezier(0.61, 1, 0.88, 1)`; closing is the dome sinking back into the foot. The register had never built it.
+- **Built:** `@keyframes kp-sig-solstice-kindled` (and `kp-sig-solstice-kindled-back`, the same frames under a second name
+  for the bar's closes), tokens `--kp-sig-solstice-open: 480ms` and `--kp-sig-solstice-come` on the root. No timing
+  function inside the keyframes, so a reversed play is the opening's frames in reverse (the close then runs on G1's
+  going curve by itself).
+- **The palette:** `.kp-palette { animation: kp-sig-solstice-kindled 480ms <come> backwards }`; js/motion.js opens it in the
+  dialog's close time and plays it backwards to close.
+
+**Parts G3 names for the same opening** ("A menu, the header's menu, a popover, the dialog, the drawer, a toast and a
+tooltip"). G3 names each explicitly, so each now opens kindled and closes as it backwards:
+
+| Part (G3's word) | Selector | Before (open/close, motion) | After (Firefox pairs) |
+|---|---|---|---|
+| the palette (asked; G3 does not name it) | `.kp-palette` | 373/373 ms, the dawn | palette 480/480 ms, 0.0 % |
+| the dialog | `.kp-dialog` (720 ms unopened, so js/motion.js reads a 480 ms close; 480 ms `[open]`) | 373/373 ms, the dawn | dialog 480/480 ms, 0.0 % |
+| the drawer | `dialog.kp-drawer` (a `.kp-dialog`) | 373/373 ms, the dawn | drawer 480/480 ms, 0.0 % |
+| a menu | `.kp-menu-button > .kp-menu` | 640 ms, the rise | (no pair of its own; same rule as the popover) |
+| a popover | `.kp-popover[popover]:not(.kp-tooltip)` | 640/640 ms, the rise | theme-menu 480/480 ms, 0.0 %; popover-row-actions 480/480 ms, 0.0 % |
+| the header's menu | `.kp-nav__menu` (dropdown, mega menu), `--kp-nav-close-time: 480ms`, the hold transition 480 ms | 640/640 ms, the rise | bar-equipment 480/480 ms, 0.1 % |
+| the header's menu on a phone | collapsed `.kp-nav__links` | 640/640 ms, the rise | phone-bar 480/480 ms, 0.0 % |
+| a toast | `.kp-toast` opens kindled; `.kp-toast.kp-toast[data-kp-leaving]` leaves as it reversed, so js/motion.js arrives it as that leave turned round | 540/540 ms, the morning mist | toast 480/480 ms, 0.0 % |
+| a tooltip | `.kp-tooltip` | 360/360 ms, the ember (scale + fade) | tooltip 480/480 ms, 0.0 % |
+
+Evidence (frames in the review stage): the palette opens as a dome rising from the middle of its foot over the panel,
+warm and bright, cooling as it reaches the top; Escape sinks it back into the foot. The bar's dropdown in the same
+frames: a small dome at the foot (frame 0), half the panel (frame 1), all but the top corners (frame 2), whole (frame 3).
+
+**Not changed, for Kenny:**
+- The combobox list, the date picker panel and the tour card are not named in G3; they keep round 1's borrowed motion (the
+  popover's old rise, 640 ms, and the dialog's dawn, 560 ms). Since the popover and the dialog now kindle, those three are
+  now the only parts in solstice that open differently. One line each makes them kindled too, if Kenny wants it.
+- The toast's leave is now the dome sinking (G3 names the toast), not the morning mist (G12, Kenny's pick for leaving);
+  every other leaving part keeps the mist.
+- `kp-sig-solstice-solstice-dawn`, `-rise` and `-ember` stay in the file: the rise still serves the combobox, date picker
+  and toast's old row in js/effects.js; the ember is now unused but has a TIMINGS row in js/effects.js, which is not mine.
+- `gates/check-motion.mjs` reports `kp-sig-solstice-kindled` and `-kindled-back` as needing a TIMINGS row and an
+  OUT_OF_SCOPE line (js/effects.js, gates), as for every other new keyframe this round: for the coordinator.
+- The demo's own words for solstice (bar: "rise into the light … the dome is built nowhere yet"; palette: "it dawns as the
+  dialog does (560 ms)") are now out of date; they are written by research/all-themes/build-demo.py (shared).
+- Pressing Escape on the palette inside the review dialog also closes the review dialog (seen in the frames); that is
+  research/_review/review.js, shared.
+
+Wall time of the timed runs: pairs (palette, dialog, drawer, toast, tooltip, theme-menu, popover-row-actions,
+bar-equipment, phone-bar) 51 s; stage frame runs about 4 × 30 s, not timed.
+
+### Follow-up (coordinator, 2026-10-13): one opening for every part that opens
+
+The combobox list, the date picker panel and the tour card are now kindled too: same dome, 480 ms on G1's coming curve,
+closing as it backwards. **Borrowed from G3**, which does not name these parts. The tour's dim and ring take the same
+480 ms: they open on `cubic-bezier(0.61, 1, 0.88, 1)` and close on G1's going curve `cubic-bezier(0.12, 0, 0.39, 0)`
+(`--kp-tour-dim-time`, `--kp-tour-dim-close-ease`, and the `[data-kp-tour-target]` ring and transitions). The shared tour
+rules in css/components.css were not touched. With this, every part that opens in solstice uses the one decided opening.
+
+| Pair | Before | After (Firefox) |
+|---|---|---|
+| combobox | 640/640 ms, the rise, 0.0 % | 480/480 ms, 0.0 % |
+| datepicker | 640/640 ms, the rise, 1.4 % | 480/480 ms, 1.7 % |
+| tour | 560/560 ms, the dawn, 0.6 % | 480/480 ms, 0.8 % |
+
+Wall time of the pairs run (combobox, datepicker, tour): 18 s.

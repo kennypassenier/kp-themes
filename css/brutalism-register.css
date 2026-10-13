@@ -3751,14 +3751,22 @@
     }
 
     /* highlight: the target keeps the rivet ring (the ink outline and the
-       pixel outline) and the veil around it is solid ink: nothing is
-       translucent. */
+       pixel outline); the veil around it is the ink laid thin, one flat
+       weight, so the page reads through it as a dim does [r2-br-highlight-1,
+       Kenny's pick, the ink veil; review round 1, 2026-10-13: the solid ink
+       of proposal-13 left only the target to see ("that's not the purpose of
+       the dim effect")]. The weight never moves: the veil grows out of the
+       target and shrinks back into it, it never fades (G1). */
+    [data-theme='brutalism'] {
+        --kp-br-veil: hsl(from var(--foreground) h s l / 0.62);
+    }
+
     [data-theme='brutalism'] [data-kp-tour-target] {
         outline: var(--kp-line) solid var(--border-strong);
         outline-offset: 6px;
-        box-shadow:
-            var(--kp-pixel),
-            0 0 0 100vmax var(--foreground);
+        /* css/components.css draws the dim from this token in kp.layout (a register's own
+           box-shadow here loses to it, 2026-10-13). */
+        --kp-tour-dim: var(--kp-pixel), 0 0 0 100vmax var(--kp-br-veil);
     }
 
     /* ── Every part that opens is dropped onto its footprint and lifted off as that drop played
@@ -3766,12 +3774,12 @@
        fade, or by nothing, or closed at once]. ── */
     @media (prefers-reduced-motion: no-preference) {
         /* The tour's veil and ring come with the card's drop and go with its lift: the veil grows
-           out of the target in solid ink (no fade: it is ink at every frame, only its spread
-           moves), the ring is drawn in, in the card's 3 units on the fall, and css/components.css
+           out of the target in its one flat weight of ink (no fade: the weight is the same at
+           every frame, only its spread moves), the ring is drawn in, in the card's 3 units on the fall, and css/components.css
            takes both back on the lifting curve (`--kp-tour-dim-close-ease`), the veil shrinking into
            the target (`--kp-tour-dim-close`). `backwards`, not `both` (lesson 21). */
         [data-theme='brutalism'] {
-            --kp-tour-dim-close: var(--kp-pixel), 0 0 0 0 var(--foreground);
+            --kp-tour-dim-close: var(--kp-pixel), 0 0 0 0 var(--kp-br-veil);
             --kp-tour-dim-time: var(--kp-sig-br-time);
             --kp-tour-dim-close-ease: var(--kp-sig-br-up);
         }
@@ -3789,7 +3797,7 @@
                 outline-color: transparent;
                 box-shadow:
                     var(--kp-pixel),
-                    0 0 0 0 var(--foreground);
+                    0 0 0 0 var(--kp-br-veil);
             }
         }
 

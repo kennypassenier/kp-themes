@@ -2390,7 +2390,7 @@
        carriage (a square in the steel line, a sight through it, the nib down
        filled or up hollow) placed by the percent trick, so its centre runs inside
        the box with 8 px to spare on every side and nothing needs the box's size. */
-    [data-theme='blueprint'] :is([data-kp-leaving], [data-kp-arriving]):not(.kp-meter, .kp-kpi__meter)::after,
+    [data-theme='blueprint'] :is([data-kp-leaving], [data-kp-arriving]):not(.kp-meter, .kp-kpi__meter, .kp-tour)::after,
     [data-theme='blueprint'] :is(.kp-calendar__busy, .kp-calendar__day-busy)::after,
     [data-theme='blueprint'] :is(.kp-meter, .kp-kpi__meter)::before,
     [data-theme='blueprint'] .kp-dialog::after,
@@ -2438,7 +2438,7 @@
         background-repeat: no-repeat;
     }
 
-    [data-theme='blueprint'] :is([data-kp-leaving], [data-kp-arriving]):not(.kp-meter, .kp-kpi__meter)::after,
+    [data-theme='blueprint'] :is([data-kp-leaving], [data-kp-arriving]):not(.kp-meter, .kp-kpi__meter, .kp-tour)::after,
     [data-theme='blueprint'] :is(.kp-calendar__busy, .kp-calendar__day-busy)::after {
         --kp-bp-px: var(--kp-bp-rp);
         --kp-bp-py: var(--kp-bp-rp);
@@ -2474,6 +2474,11 @@
            the one set of keyframes is both. The part's own frame stands from the
            first frame to the last; only its lines are inked: a mask, a line high
            in steps, over the content box alone. */
+        /* The tour's card is no part that arrives: it opens by its trace (below).
+           Read out as it was added, it played the read where it stood first, in the
+           flow (`position: relative` on a fixed card), and then the trace again
+           where it belongs (review round 1, 2026-10-13: "some weird behaviour
+           when the first card opens"). */
         [data-theme='blueprint']
             :is([data-kp-leaving], [data-kp-arriving]):not(
                 .kp-dialog,
@@ -2482,6 +2487,7 @@
                 .kp-combobox__list,
                 .kp-datepicker__panel,
                 .kp-toast,
+                .kp-tour,
                 .kp-meter,
                 .kp-kpi__meter
             ) {
@@ -2492,7 +2498,7 @@
             mask-origin: content-box, border-box, content-box;
             mask-clip: content-box, border-box, content-box;
             mask-size:
-                100% round(up, calc(var(--kp-bp-rp) * 100%), 1lh),
+                100% round(up, calc(var(--kp-bp-rp) * 100%), max(1lh, 1px)),
                 100% 100%,
                 100% 100%;
             mask-position: 0 0;
@@ -2508,6 +2514,7 @@
                 .kp-combobox__list,
                 .kp-datepicker__panel,
                 .kp-toast,
+                .kp-tour,
                 .kp-meter,
                 .kp-kpi__meter
             ) {
@@ -2522,6 +2529,7 @@
                 .kp-combobox__list,
                 .kp-datepicker__panel,
                 .kp-toast,
+                .kp-tour,
                 .kp-meter,
                 .kp-kpi__meter
             ) {
@@ -2708,6 +2716,11 @@
        keep it drawn through the leave. The layers' reading stands at 1 at
        rest, so the mask that inks their lines shows them whole once the
        arrival has played. */
+    /* The mask inks a part line by line (`round(up, …, 1lh)`); the busy layers set
+       `line-height: 0` (css/components.css), where a step of 0 made the round NaN and
+       Firefox masked the whole content away: the month showed no loading at all
+       (review round 1, 2026-10-13: "there is no loading animation?"). The step is at
+       least a pixel (`max(1lh, 1px)`), the same as before wherever a line has height. */
     [data-theme='blueprint'] :is(.kp-calendar__busy, .kp-calendar__day-busy) {
         --kp-calendar-busy-leave: hold;
         --kp-bp-rp: 1;
@@ -2726,7 +2739,7 @@
             mask-origin: content-box, border-box, content-box;
             mask-clip: content-box, border-box, content-box;
             mask-size:
-                100% round(up, calc(var(--kp-bp-rp) * 100%), 1lh),
+                100% round(up, calc(var(--kp-bp-rp) * 100%), max(1lh, 1px)),
                 100% 100%,
                 100% 100%;
             mask-position: 0 0;
@@ -2850,10 +2863,14 @@
                 .kp-nav__menu,
                 .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links
             )
-            > * {
+            > :not(.kp-dialog, .kp-palette, .kp-tour, .kp-popover, .kp-datepicker__panel, .kp-combobox__list, .kp-toast) {
             visibility: visible;
             opacity: var(--kp-bp-ink);
         }
+        /* An overlay opened inside a dialog (the tour's card in the review dialog) is a
+           panel of its own, not the dialog's content: the rule above took the card's own
+           ink for its opacity and so hid the pen with the card, which then simply appeared
+           and simply vanished (review round 1, 2026-10-13: "the window just disappears"). */
 
         /* A list that floats over the sheet opens by its own trace at once: it
            folds no space, so the leave turned around has nothing to play but the

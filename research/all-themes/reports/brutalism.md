@@ -58,3 +58,19 @@ down and lifted off (`kp-sig-brutalism-leave`, 1 rem, gone in one cut at the top
 
 Measured wall time (Firefox, brutalism): targeted pairs runs 39 s, 43 s, 11 s, 11 s; full pairs-meter 2 min 14 s; identity
 1 min 4 s; tab-paint 1 min 13 s; datepicker and sidenav re-run 11 s. Total 6 min 26 s.
+
+## Review round 1 (2026-10-13)
+
+**tour · "The page dim is too dark … it's just black"** (keep the no-fade grammar)
+- Cause: the veil was `0 0 0 100vmax var(--foreground)`, solid ink (proposal-13), so only the target showed.
+- Change: a flat ink veil `--kp-br-veil: hsl(from var(--foreground) h s l / 0.62)` on the theme root, used by the target's
+  dim (`--kp-tour-dim: var(--kp-pixel), 0 0 0 100vmax var(--kp-br-veil)` on `[data-kp-tour-target]`, per the coordinator's
+  shared change: a register's own box-shadow there now loses to kp.layout), by the arrival keyframe's `from` (spread 0)
+  and by `--kp-tour-dim-close`. The weight never changes during the motion: the veil grows out of the target and shrinks
+  back into it, no opacity ramp (G1).
+- Evidence: stage screenshots, settled: the page, the calendar and the incidents card read through the veil; frames every
+  40 ms show the veil growing from the target on open and shrinking into it on close (`scratchpad/r2/kb/sheet-br2.png`).
+  Pair meter `tour`: ok 300/300 ms, 0.3 % (was 0.2 %).
+
+**Deviation for Kenny:** G7/proposal-13 say "no transparency"; the veil is now translucent ink (62 %), which is Kenny's own
+pick r2-br-highlight-1 (78 % ink veil) at a lighter weight so the page reads. Slabs stay untinted.

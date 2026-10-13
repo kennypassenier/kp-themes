@@ -280,24 +280,6 @@
         border-block-end: 0;
     }
 
-    @container kp-nav (max-width: 40rem) {
-        [data-theme='grotesk'] .kp-nav {
-            grid-template-columns: 1fr;
-            row-gap: 0.75rem;
-        }
-
-        [data-theme='grotesk'] .kp-nav__brand,
-        [data-theme='grotesk'] .kp-nav__links {
-            grid-column: 1;
-        }
-
-        [data-theme='grotesk'] .kp-nav__links {
-            flex-direction: column;
-            align-items: flex-start;
-            flex-wrap: nowrap;
-            justify-content: flex-start;
-        }
-    }
 
     [data-theme='grotesk'] .kp-nav__brand {
         grid-column: 1 / 4;
@@ -320,6 +302,36 @@
         grid-column: 4 / 15;
         justify-content: flex-end;
         gap: 1.5rem;
+    }
+
+    /* Collapsed, the track is the brand and the toggle on one row and the
+       links on their own row under them, from the start edge. This sits after
+       the wide placement above on purpose: written before it, at the same
+       weight, it lost, and the links fell into implicit columns 4 to 15 of a
+       one-column grid, to the right of the toggle (Kenny, 2026-10-13: "the
+       items appearing in the phone version are weirdly aligned to the
+       right"). */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='grotesk'] .kp-nav {
+            grid-template-columns: minmax(0, 1fr) auto;
+            row-gap: 0.75rem;
+        }
+
+        [data-theme='grotesk'] .kp-nav__brand {
+            grid-column: 1;
+        }
+
+        [data-theme='grotesk'] .kp-nav__toggle {
+            grid-column: 2;
+        }
+
+        [data-theme='grotesk'] .kp-nav__links {
+            grid-column: 1 / -1;
+            flex-direction: column;
+            align-items: flex-start;
+            flex-wrap: nowrap;
+            justify-content: flex-start;
+        }
     }
 
     /* Grilli's two-speed link [D grotesk R1, measured]: .1s in, .15s out —

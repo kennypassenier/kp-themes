@@ -5922,11 +5922,19 @@ function attachToTop(root = document, { strings, after } = {}) {
       glyph.setAttribute("aria-hidden", "true");
       button.append(glyph);
     }
+    const scroller = () => {
+      for (let box = button.parentElement; box && box !== doc.body && box !== doc.documentElement; box = box.parentElement) {
+        const overflow = view.getComputedStyle(box).overflowY;
+        if (/auto|scroll|overlay/.test(overflow) && box.scrollHeight > box.clientHeight + 1) return box;
+      }
+      return null;
+    };
     let shown2 = false;
     let queued = false;
     const decide = () => {
       queued = false;
-      const next = view.scrollY > threshold;
+      const box = scroller();
+      const next = (box ? box.scrollTop : view.scrollY) > threshold;
       if (next === shown2) return;
       shown2 = next;
       button.toggleAttribute("data-kp-to-top-shown", next);
@@ -5938,7 +5946,7 @@ function attachToTop(root = document, { strings, after } = {}) {
       view.requestAnimationFrame(decide);
     };
     const onClick = () => {
-      view.scrollTo({ top: 0 });
+      (scroller() ?? view).scrollTo({ top: 0 });
       const to = (
         /** @type {HTMLElement | null} */
         (target === "" ? null : doc.querySelector(target)) ?? doc.body
@@ -5947,10 +5955,10 @@ function attachToTop(root = document, { strings, after } = {}) {
       to.focus({ preventScroll: true });
     };
     decide();
-    view.addEventListener("scroll", onScroll, { passive: true });
+    doc.addEventListener("scroll", onScroll, { passive: true, capture: true });
     button.addEventListener("click", onClick);
     cleanups.push(() => {
-      view.removeEventListener("scroll", onScroll);
+      doc.removeEventListener("scroll", onScroll, { capture: true });
       button.removeEventListener("click", onClick);
       button.removeAttribute("data-kp-to-top-shown");
       glyph?.remove();

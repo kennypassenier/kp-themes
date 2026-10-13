@@ -104,3 +104,17 @@ Full pairs after round 2: 20 of 25 (was 19). Still failing besides phone-bar: ca
 empty-state, tabs-panel, all as in round 1 and outside this round. No other pair moved.
 
 Measured wall time of the round-2 runs (Firefox): targeted runs about 9 x 12 s, final full pairs 143 s (2 min 23 s).
+
+## Review round 1 (2026-10-13)
+
+**sidenav · "a splash of colour next to the bar, filling the parent element, looked a bit like the loading colours"**
+- Cause: js/motion.js let the backdrop it found added arrive as titanium's leave played backwards
+  (`[data-kp-leaving][data-kp-arriving]`): the leave's `::after` heat gradient (gold, violet, blue, `mix-blend-mode: color`)
+  ran over the whole frame beside the panel for 400 ms, and the shade popped in at the end (opacity 0 until 190 ms, 1 at
+  274 ms). The close used the package's shade fade backwards, so it was not the open reversed either.
+- Change: `.kp-sidenav__backdrop:is([data-kp-leaving], [data-kp-arriving])` keeps `kp-sidenav-backdrop` on the panel's
+  240 ms (the same animation as at rest, so js/motion.js finds no exit of its own and leaves it), `overflow: visible`, and
+  its `::after` is `content: none`.
+- Evidence: rAF trace in the stage: only `kp-sidenav-backdrop` 0 → 240 ms, opacity rising from the first frame, no
+  `::after`; screenshot bursts on open and close show no colour (`scratchpad/r2/kb/sheet-ti4.png`, `sheet-ti5.png`; before:
+  `sheet-ti2.png`, the gradient at 223-326 ms). Pair meter `sidenav`, `sidenav-push`, `sidenav-group`: ok 240/240 ms, 0.0 %.

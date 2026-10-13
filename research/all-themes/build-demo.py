@@ -4,6 +4,18 @@
 import re, pathlib
 
 SRC = pathlib.Path('research/cyberpunk-applied')
+TO_TOP = '''// The block's own back-to-top takes the reader back as well (Kenny, 2026-10-13: "the back to top didn't seem to work"): to
+// the top of whatever scrolls it, the page or the review dialog's stage.
+document.querySelector('[data-fa-to-top]')?.addEventListener('click', (event) => {
+    let box = /** @type {Element | null} */ (event.currentTarget instanceof Element ? event.currentTarget.parentElement : null);
+    while (box && box !== document.body) {
+        if (/auto|scroll/.test(getComputedStyle(box).overflowY) && box.scrollHeight > box.clientHeight + 1) break;
+        box = box.parentElement;
+    }
+    (box && box !== document.body ? box : window).scrollTo({ top: 0 });
+});
+
+'''
 OUT = pathlib.Path('research/all-themes-applied')
 html = (SRC / 'demo.html').read_text()
 
@@ -17,16 +29,16 @@ SECTIONS = {
         'synthwave': 'The dropdown, mega menu and phone panel climb behind the beam and set back behind it. The phone panel no longer replays the bar\'s page-load slide. Borrowed from the header menu and the popover\'s climb.',
         'terminal': 'The dropdown, mega menu and phone panel are printed in the menu\'s four lines and cleared backwards. Borrowed from the menu\'s print (G3).',
         'blueprint': 'The dropdown and mega menu are traced; the phone panel\'s links are traced as a panel and drawn backwards on close. Borrowed from the header\'s menu (G3).',
-        'solstice': 'The dropdown, mega menu and phone list rise into the light as the popovers do (640 ms). Note: the decided "kindled" dome (G3) is built nowhere yet; this keeps the register\'s rise. Not approved = build the dome everywhere.',
+        'solstice': 'Round 2: the decided kindled dome (G3) is now built: the dropdown, mega menu and phone list open as a warm dome rising from the middle of the foot, overbright and cooling (480 ms), and sink back into it. The phone list counts as the header\'s menu.',
         'brutalism': 'The dropdown and mega menu take the popover\'s drop; the phone list is set down and lifted off as a part. Borrowed from G3/G12.',
-        'deco': 'The panel is uncovered round from the middle of its top edge (320 ms), then its words come up; closing is that backwards. Borrowed from the menu (G3).',
+        'deco': 'Round 2: the dropdown, mega menu and phone panel are now deco plates and open by the opening you approved (G3, the inlay): the gold frame draws from the middle of the top edge down both sides (320 ms), then the lacquer, wallpaper and words come up (160 ms); closing is that backwards.',
         'phantom': 'The dropdown and mega menu now close by the dissolve and snatch (their throw backwards); the phone panel is thrown from the menu\'s origin and lands level. Borrowed from G3 and G13.',
-        'grotesk': 'The dropdown, mega menu and phone panel take the plate\'s fall (960 ms) and fall back; the phone toggle\'s ink plate comes with the first frame and goes with the last. Borrowed from the popover\'s fall.',
+        'grotesk': 'The dropdown, mega menu and phone panel take the plate\'s fall (960 ms) and fall back. Round 2: on the phone the links stand in one column from the start edge under the brand (they fell into the grid\'s columns under the toggle).',
         'nostromo': 'The dropdown, mega menu and phone panel are drawn by the raster with the beam and erased with the same frames backwards. Borrowed from the popover\'s raster.',
         'titanium': 'The dropdown, mega menu and phone panel open by the dialog\'s cut from the top (240 ms) with the cutter line; the dropdown no longer fades. Borrowed from G3.',
     }),
     'sidenav': ('The side navigation', {
-        'titanium': 'Open the panel: it now slides in 240 ms (the cut band) instead of 60 ms, its backdrop with it; the push mode and the group fold follow.',
+        'titanium': 'Open the panel: it slides in 240 ms (the cut band) instead of 60 ms, its backdrop with it. Round 2: no more colour splash beside it (the backdrop played the leave\'s anodising heat backwards as if it arrived).',
         'grotesk': 'Open the panel: one-unit slide from the start edge while its plate falls over 960 ms; closing is that backwards; shut it is hidden.',
         'nostromo': 'Open the panel: it no longer slides in (G2 forbids it); it is switched on where it stands by the raster (4 frames) and erased when it closes.',
     }),
@@ -39,7 +51,7 @@ SECTIONS = {
             'terminal': 'is printed in the dialog\'s six lines',
             'titanium': 'is cut from the top at the dialog\'s time',
             'blueprint': 'is traced like the dialog (5 units, inked at 75 %)',
-            'solstice': 'dawns as the dialog does (560 ms)',
+            'solstice': 'opens as the decided kindled dome (round 2; G3), 480 ms, as the dialog now does too,',
             'brutalism': 'drops as the dialog\'s big slab (1500 ms from 2.5 rem); if it should be a plate (300 ms), that is one value',
             'phantom': 'is thrown from the board\'s start edge (-22 deg) and lands askew as the dialog does',
             'grotesk': 'falls into register as the red plate (960 ms)',
@@ -51,7 +63,7 @@ SECTIONS = {
         'synthwave': 'Open the picker: the panel climbs as the popover (two beats).',
         'terminal': 'Open the picker: the panel is printed in the menu\'s four lines.',
         'titanium': 'Open the picker: the panel is cut from the top at 240 ms with the cutter line ahead of it (square, no chamfer).',
-        'solstice': 'Open the picker: the panel rises into the light as the popovers do.',
+        'solstice': 'Open the picker: the panel opens as the kindled dome (round 2), as every part that opens in solstice now does.',
         'brutalism': 'Open the picker: the panel takes the popover\'s drop.',
         'phantom': 'Open the picker: it takes the menu\'s throw and resolve but lands level, not askew; its 25 % screen shows from the first instant because it must take the focus (G3 says a closed part is never drawn).',
         'grotesk': 'Open the picker: the plate falls in and falls back.',
@@ -62,7 +74,7 @@ SECTIONS = {
         'synthwave': 'Type in the field: the list climbs as the popover.',
         'terminal': 'Type in the field: the list is printed in four lines.',
         'titanium': 'Type in the field: the list is cut from the top with the cutter line.',
-        'solstice': 'Type in the field: the list rises into the light.',
+        'solstice': 'Type in the field: the list opens as the kindled dome (round 2).',
         'brutalism': 'Type in the field: the list takes the popover\'s drop.',
         'phantom': 'Type in the field: the list is thrown and resolves, landing level.',
         'grotesk': 'Type in the field: the plate falls in and back.',
@@ -75,9 +87,9 @@ SECTIONS = {
         'synthwave': 'The card climbs as the dialog with the beam; dim and ring on the same two beats.',
         'pastel': 'Only the timing: dim and ring come in the card\'s 160 ms and go in 160 ms (were 350/250 in, 1000 out). No new effect.',
         'terminal': 'The card is printed as a menu (four lines, 544 ms); dim and ring in the same four steps.',
-        'blueprint': 'The card is traced like the dialog; the dim grows out of the target and the ring is drawn in, both on 800 ms, and go back the same way.',
-        'solstice': 'The card dawns as the dialog; dim and ring take the dawn\'s time and curve.',
-        'brutalism': 'The veil grows out of the target in solid ink and shrinks back into it; the ring\'s colour comes and goes over the same 300 ms.',
+        'blueprint': 'Round 2: the card no longer appears at once and jumps (it was also treated as an arriving part) and no longer vanishes on close: one trace in where it stands, the same trace back. The dim grows out of the target and the ring is drawn in, both on 800 ms.',
+        'solstice': 'The card opens as the kindled dome; dim and ring take its 480 ms.',
+        'brutalism': 'Round 2: the veil is no longer solid black: one flat ink weight at 62 %, so the page reads through it (your earlier pick r2-br-highlight-1, made lighter; brutalism\'s G7 says no transparency). It grows out of the target and shrinks back into it, never fades.',
         'deco': 'Dim and ring now come and go with the card\'s own time.',
         'phantom': 'Dim and ring move with the card\'s throw (400 ms) and go with its throw back.',
         'grotesk': 'The card falls in and back; the dim and ring are printed at once with the card and taken off at once at the end of its close (G1: nothing fades).',
@@ -120,6 +132,22 @@ SECTIONS = {
     }),
 }
 
+ROUND = '2026-10-13-r2'
+DEMO_THEMES = ['formal', 'light', 'dark', 'cyberpunk', 'synthwave', 'pastel', 'terminal', 'forest', 'blueprint', 'solstice', 'brutalism', 'deco', 'phantom', 'grotesk', 'nostromo', 'titanium']
+TOUR_ALL = ' Round 2, every theme: on a step the card no longer drops into the page for a moment (that was the flash and the jump), the page stays dimmed on a card with cut corners, and the part the tour points at is shown uncut while it is pointed at.'
+GENERIC = 'Not changed for this theme in particular: judge it as it is (round 2 shows every block in every theme).'
+SECTIONS['tour'][1]['forest'] = 'Only the shared tour fixes.'
+SECTIONS['tour'][1]['cyberpunk'] = 'Only the shared tour fixes.'
+for t in list(SECTIONS['tour'][1]):
+    SECTIONS['tour'][1][t] += TOUR_ALL
+SECTIONS['calendar'][1]['blueprint'] = 'Round 2: Loading shows the whole month\'s compass and words again and every loading day\'s compass, drawn in by the pen (they were masked away). ' + SECTIONS['calendar'][1]['blueprint']
+SECTIONS['calendar'][1]['deco'] = 'Round 2: both lift doors close over every loading day (the left one was hidden by the press ring). ' + SECTIONS['calendar'][1]['deco']
+
+PHANTOM_R2 = ' Round 2: what you saw below the phone bar (nothing visible, a red line streaking) did not happen here on the published site in Firefox at 1280 to 1920 px, after approving up to phantom and opening the phone bar; a screenshot would let me find it.'
+for sid in ['palette', 'datepicker', 'combobox', 'tour', 'dialogs', 'alarm', 'table', 'calendar', 'prose']:
+    if 'phantom' in SECTIONS[sid][1]:
+        SECTIONS[sid][1]['phantom'] += PHANTOM_R2
+
 def section_block(sid):
     m = re.search(r'\n( *)<!-- [^\n]*-->\n\s*<section\n(?:(?!</section>).)*?data-review-item="%s"(?:(?!</section>)[\s\S])*?</section>\n' % re.escape(sid), html, re.S)
     if not m:
@@ -132,7 +160,8 @@ def esc(s):
 out_sections = []
 for n, (sid, (title, looks)) in enumerate(SECTIONS.items(), start=1):
     block = section_block(sid)
-    themes = [t for t in ALL if t in looks]
+    themes = [t for t in DEMO_THEMES if t in looks or (sid != 'tour' and t in ALL) or sid == 'tour']
+    looks = {**{t: GENERIC for t in themes}, **looks}
     block = re.sub(r'data-review-title="[^"]*"', f'data-review-title="{n} · {esc(title)}" data-review-themes="{",".join(themes)}"', block, count=1)
     block = re.sub(r'<p class="fa-num">[^<]*</p>', f'<p class="fa-num">{n} · {title.split(":")[0]}</p>', block, count=1)
     block = re.sub(r'(<h2 id="h-[^"]*">)[\s\S]*?(</h2>)', lambda m: f'{m.group(1)}\n                        {title}.\n                    {m.group(2)}', block, count=1)
@@ -144,7 +173,7 @@ for n, (sid, (title, looks)) in enumerate(SECTIONS.items(), start=1):
 head_end = html.index('<main')
 head = html[:head_end]
 head = head.replace('data-theme="cyberpunk" data-cat-theme="cyberpunk" data-cat-theme-fixed data-review="cyberpunk-applied" data-review-themes="cyberpunk"',
-                    f'data-theme="formal" data-cat-theme="formal" data-review="all-themes-applied" data-review-themes="{",".join(ALL)}"')
+                    f'data-theme="formal" data-cat-theme="formal" data-review="all-themes-applied" data-review-themes="{",".join(DEMO_THEMES)}"')
 head = head.replace('cyberpunk-register.css" data-kp-register="cyberpunk"', 'formal-register.css" data-kp-register="formal"')
 head = re.sub(r'<title>[^<]*</title>', '<title>kp-themes: what changed in every theme</title>', head)
 intro = '''<main class="fa-page">
@@ -166,7 +195,7 @@ intro = '''<main class="fa-page">
             </header>
 '''
 tail = html[html.index('        </main>'):]
-tail = tail.replace('<!-- Round one: every block is new. -->', '<!-- Round one. -->').replace('"round": "2026-10-12-r1"', '"round": "2026-10-13-r1"')
+tail = tail.replace('<!-- Round one: every block is new. -->', '<!-- Round one. -->').replace('"round": "2026-10-12-r1"', f'"round": "{ROUND}"')
 OUT.mkdir(exist_ok=True)
 (OUT / 'demo.html').write_text(head + intro + '\n'.join(out_sections) + '\n' + tail)
 js = (SRC / 'demo.js').read_text()
@@ -174,6 +203,7 @@ js = js.replace('research/cyberpunk-applied', 'research/all-themes-applied')
 js = js.replace("this page judges cyberpunk and stays cyberpunk", "the page keeps the theme the review dialog shows")
 js = js.replace("`${label} chosen; this page stays in cyberpunk.`", "`${label} chosen; this page keeps its theme.`")
 js = js.replace("const on = t.name === 'cyberpunk';", "const on = t.name === root.dataset.theme;")
+js = js.replace('/* --------------------------------------------------------------- loading */', TO_TOP + '/* --------------------------------------------------------------- loading */', 1)
 (OUT / 'demo.js').write_text(js)
 (OUT / 'demo.css').write_text((SRC / 'demo.css').read_text().replace('research/cyberpunk-applied', 'research/all-themes-applied'))
 print('sections', len(out_sections))
