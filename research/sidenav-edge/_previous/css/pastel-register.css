@@ -1,0 +1,2691 @@
+/* The redaction plate's alpha, registered so it can be transitioned: an
+   unregistered custom property flips at the end of its transition instead
+   of passing through values, and the plate's background reads it through
+   color-mix(). 1 is the covered plate, 0 the cleared one [scope-94]. */
+@property --kp-redact-alpha {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+}
+
+/* The bar's mega menu is held on screen while a transition on the panel plays (js/components.js
+   settleClosing()): this number, which pastel transitions over the sheet's time, is that transition
+   (review round 2, 2026-10-13; brutalism's --kp-sig-br-hold). */
+@property --kp-sig-pastel-hold {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+}
+
+@layer kp.register {
+    /* @kp-soft/themes — css/pastel-register.css
+   The pastel register, 5.0.0 [S48, LIFT_PLAN row 6]: risograph printing.
+   Scoped to [data-theme='pastel'] and inert elsewhere; opt-in, imported
+   after themes.css. The approved concept demo ("Second Pass", 2026-09-08)
+   is the reference for every value here, and docs/archive/RESEARCH_2026-09.md §5
+   is where each mechanism was measured: chrislemke's overprint offset and
+   halftone raster, Aardvark Book Club's rounded outer clip, the torn-tab
+   divider and the base/soft colour-pair system, and the theme's own
+   shipped --fx-ease as the springy overshoot family.
+
+   What this file does, in order: the knobs (including a halftone texture
+   that replaces the theme's earlier fractal-grain one, since the demo asks
+   for dots, not noise — css/_rules.css's T8 block is left as it was, and
+   this file's later cascade layer wins for [data-theme='pastel']); the
+   type; the hooks of S45 — the headline whose overprint duplicate springs
+   into register, the mark as a fill (the lede's mint/violet pair, the
+   dossier's ink redaction), the rule that draws itself, the pearls
+   divider (a torn tab until scope-93); the hero and dossier; the navbar
+   with its dropdown; the buttons with their hover lift and press settle;
+   the fields; the dialog; and one answer per component root (TH124). The reveals have their rest
+   state here and their motion in js/effects.js; without the script every
+   one of them stands at rest.
+
+   Colour discipline (DI9): nothing here names a colour. Every value is a
+   token, read directly or through a relative-colour expression that
+   overrides only the channels a measurement called for — never a literal
+   channel invented out of nowhere.
+
+   (1) THE STAMP [X0]: the demo's plate and ink colours have no token that
+   already carries them (every other colour in the demo matched an
+   existing token exactly — see themes/pastel/anatomy.md). The plate
+   shares its hue and is close in saturation to the accent token (the
+   theme's mint), just read at a much darker lightness step, so it is
+   expressed as that token at the measured lightness rather than as a new
+   contract-wide token (S47 is for a colour no token can reach at all;
+   this one is a token's own hue, darkened, and matches the demo's plate
+   to the pixel). The ink is the foreground token forced to zero
+   lightness, which is what "black, but as a relative colour" is.
+
+   (2) THE SHADOWS: the demo's dialog, backdrop and dropdown shadows are
+   literal, and their hue reads identical to the foreground token's own
+   hue in this theme. Each shadow here is the foreground token with that
+   same hue, the demo's own lightness and alpha carried over exactly, and
+   nothing invented.
+
+   (3) DI5 — every animation here is one-shot; nothing loops, nothing
+   opposes its own direction. The headline's spring (opacity rising once
+   over 650ms) rates well under the flash threshold; the mark fill and
+   the rule draw carry no opacity step at all (a background-size and a
+   width grow, OUT_OF_SCOPE in gates/check-motion.mjs); the redaction
+   clear and the hover/press springs are CSS transitions, not keyframes,
+   guarded the same way. */
+
+    [data-theme='pastel'] {
+        /* The configuration surface [AR43], the demo's values as defaults. */
+        --kp-reveal-threshold: 0.6;
+        --kp-reveal-stagger: 150ms;
+        --kp-redact-stagger: 90ms;
+        --kp-classified-delay: 300ms;
+        /* The reveals this theme performs [S45]: js/effects.js reads these
+           and leaves a theme that declares none at rest. */
+        --kp-reveal-headline: overprint;
+        --kp-reveal-emphasis: fill;
+        --kp-reveal-rule: draw;
+        /* The stamp [X0, above]: --accent's own hue, darkened; black off
+           --foreground. */
+        --kp-stamp: hsl(from var(--accent) h 45% 41%);
+        --kp-stamp-ink: hsl(from var(--foreground) h s 0%);
+        /* The halftone raster [D pastel R1, measured], replacing the
+           theme's earlier fractal grain for [data-theme='pastel'] only:
+           this cascade layer (kp.register) comes after kp.base, so this
+           wins over css/_rules.css's T8 block. Six-pixel dots in the
+           boundary ink, at the same 0.05 the theme already shipped. */
+        --fx-texture: radial-gradient(circle, var(--border-strong) 1px, transparent 1.3px);
+        --fx-texture-size: 6px 6px;
+        --fx-texture-opacity: 0.05;
+    }
+
+    /* ── Type ──────────────────────────────────────────────────────────── */
+
+    [data-theme='pastel'] h1,
+    [data-theme='pastel'] h2,
+    [data-theme='pastel'] h3 {
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+        margin: 0;
+        /* The richer, animated overprint below replaces the theme's flat
+           text-shadow one for every heading this register reaches. */
+        text-shadow: none;
+    }
+
+    /* Microlabels: the theme's own uppercase tick, in plum. */
+    [data-theme='pastel'] .microlabel {
+        display: inline-block;
+        font-family: var(--theme-font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--primary);
+        margin: 0 0 0.8rem;
+    }
+
+    /* ── The hooks [S45]: the headline, the mark, the rule, the divider ── */
+
+    /* The heading accent: the display step, balanced, on a surface. */
+    [data-theme='pastel'] [data-kp-surface] h1 {
+        position: relative;
+        letter-spacing: -0.01em;
+        margin-block: 0 1.1rem;
+        max-width: 22ch;
+        text-wrap: balance;
+    }
+
+    /* The headline reveal: the overprint duplicate — the second-pass ink,
+       always there as the theme's signature — springs from a wide
+       mis-registration into its 2px rest position once, on load. Scoped
+       to the reveal element only (the anatomy: never on running text). At
+       rest (no script, or reduced motion) the duplicate sits exactly
+       where it always sat: this is the theme's static signature with one
+       extra arrival on top of it, never instead of it. */
+    [data-theme='pastel'] [data-kp-reveal='headline']::before {
+        content: attr(data-kp-text);
+        position: absolute;
+        inset: 0;
+        color: var(--fx-overprint);
+        mix-blend-mode: multiply;
+        z-index: -1;
+        pointer-events: none;
+        transform: translate(2px, 2px);
+        opacity: 0.55;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'][data-kp-effects] [data-kp-reveal='headline']:not(.is-deciphered)::before {
+            transform: translate(14px, 10px);
+            opacity: 0;
+        }
+
+        [data-theme='pastel'] [data-kp-reveal='headline'].is-registering::before {
+            animation: kp-registration 650ms var(--fx-ease) both;
+        }
+    }
+
+    /* The mark: emphasis is a fill — the ink plate grows in behind the
+       word, mint by default. The lede's second mark is the violet pair,
+       matching the demo's two-tone lede (the shared markup carries no
+       modifier class between one mark and the next, so the second is
+       reached structurally). At rest (no script) the fill stands full. */
+    [data-theme='pastel'] mark {
+        background-color: var(--accent);
+        color: var(--accent-foreground);
+        padding: 0.05em 0.25em;
+        border-radius: 0.25em;
+        box-decoration-break: clone;
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        background-position: left center;
+    }
+
+    [data-theme='pastel'] .kp-lede mark:nth-of-type(2) {
+        background-color: var(--info);
+        color: var(--info-foreground);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'][data-kp-effects] mark:not(.is-cleared) {
+            background-size: 0% 100%;
+        }
+
+        [data-theme='pastel'] mark.is-cleared {
+            animation: kp-fill 420ms var(--fx-ease) both;
+        }
+    }
+
+    /* The rule: a plain plum bar that grows left to right once, when its
+       heading enters the viewport. */
+    [data-theme='pastel'] [data-kp-reveal='rule']::after {
+        content: '';
+        display: block;
+        block-size: 3px;
+        margin-block-start: 0.6rem;
+        background: var(--primary);
+        border-radius: 2px;
+        width: 100%;
+    }
+
+    [data-theme='pastel'][data-kp-effects] [data-kp-reveal='rule']:not(.is-in)::after {
+        width: 0%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] [data-kp-reveal='rule'].is-in::after {
+            animation: kp-draw 500ms var(--fx-ease) both;
+        }
+    }
+
+    /* The divider: pearls [scope-93]. Kenny, 2026-09-15, on the torn tab
+       this rule drew before: "The sawtooth isn't really fitting with
+       'Pastel' which is fluffier and rounder", and his answer to the form,
+       "ik wil pearls". Beads on a thread with no bar, spread evenly so no
+       bead is ever cut: `space` repeats only whole beads and spreads the
+       room left over between them. The plain divider in plum,
+       the alt divider in the mint ink, so the two seams still read as two
+       sheets. Pastel's own drawing; no other theme and no page knob draws
+       it [scope-95]. Knob: --kp-divider-height (3rem), as dark and titanium
+       read it. */
+    [data-theme='pastel'] [data-kp-divider] {
+        display: block;
+        block-size: var(--kp-divider-height, 3rem);
+        background: var(--primary);
+        mask-image: linear-gradient(black 0 0), radial-gradient(circle closest-side, black calc(100% - 0.6px), transparent 100%);
+        mask-size:
+            100% 2px,
+            1.5rem 0.75rem;
+        mask-position: center;
+        mask-repeat:
+            no-repeat,
+            space no-repeat;
+    }
+
+    [data-theme='pastel'] [data-kp-divider='alt'] {
+        background: var(--accent-foreground);
+    }
+
+    /* ── The hero: the rounded outer clip [B, measured] ───────────────── */
+
+    [data-theme='pastel'] [data-kp-surface='hero'] {
+        position: relative;
+        padding-block: 3.2rem 3.6rem;
+        clip-path: inset(0 round 0 0 2.5rem 2.5rem);
+    }
+
+    [data-theme='pastel'] [data-kp-surface='hero'] [data-kp-hero-grid] {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 2rem;
+        align-items: start;
+    }
+
+    /* ── The navbar ────────────────────────────────────────────────────── */
+
+    [data-theme='pastel'] .kp-nav-wrap {
+        background: var(--card);
+        border-bottom: 1px solid var(--border);
+    }
+
+    [data-theme='pastel'] .kp-nav {
+        background: var(--card);
+        padding-block: calc(var(--kp-nav-pad-block, 0.9rem) * var(--kp-nav-pad-scale, 1));
+    }
+
+    [data-theme='pastel'] .kp-nav__brand {
+        font-weight: 700;
+        font-size: 1.05rem;
+        letter-spacing: 0.01em;
+        color: var(--foreground);
+        text-decoration: none;
+    }
+
+    [data-theme='pastel'] .kp-nav__brand-tag {
+        display: block;
+        font-family: var(--theme-font-mono);
+        font-weight: 400;
+        font-size: 0.65rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='pastel'] .kp-nav__link {
+        padding-inline: 0.7rem;
+        border-radius: 0.6rem;
+        color: var(--foreground);
+        background: none;
+    }
+
+    [data-theme='pastel'] .kp-nav__link:hover,
+    [data-theme='pastel'] .kp-nav__link:focus-visible,
+    [data-theme='pastel'] .kp-nav__link[aria-current],
+    [data-theme='pastel'] .kp-nav__links > li:focus-within > .kp-nav__link {
+        background: var(--muted);
+        color: var(--foreground);
+        box-shadow: none;
+    }
+
+    /* The keyboard keeps its ring [fix-38, DI2]: `box-shadow: none` above
+       took the inner half off a focused link too, and the outer half is the
+       page's own ground, so a Tab changed no pixel a person could see. */
+    [data-theme='pastel'] .kp-nav__links > li > .kp-nav__link:focus-visible {
+        box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring);
+    }
+
+    [data-theme='pastel'] .kp-nav__link[aria-haspopup]::after {
+        content: ' ▾';
+        font-size: 0.7em;
+    }
+
+    [data-theme='pastel'] .kp-nav__link--lang {
+        color: var(--muted-foreground);
+        font-family: var(--theme-font-mono);
+        font-size: 0.78rem;
+    }
+
+    [data-theme='pastel'] .kp-nav__link--cta {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        font-weight: 600;
+    }
+
+    [data-theme='pastel'] .kp-nav__link--cta:hover,
+    [data-theme='pastel'] .kp-nav__link--cta:focus-visible {
+        background: var(--foreground);
+        color: var(--primary-foreground);
+    }
+
+    /* The dropdown [KT14]: a raised card, the same soft radius as the
+       theme's other panels. */
+    [data-theme='pastel'] .kp-nav__menu {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 0.8rem;
+        box-shadow: 0 10px 24px hsl(from var(--foreground) h 40% 20% / 0.12);
+        padding: 0.4rem;
+        min-width: 12rem;
+    }
+
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='pastel'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+    }
+
+    [data-theme='pastel'] .kp-nav__menu a {
+        padding-inline: 0.6rem;
+        border-radius: 0.5rem;
+        color: var(--foreground);
+    }
+
+    [data-theme='pastel'] .kp-nav__menu a:hover,
+    [data-theme='pastel'] .kp-nav__menu a:focus-visible {
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+
+    /* ── Buttons: the springy hover lift and press settle ──────────────── */
+
+    /* ── The sticker [scope-12, Kenny 2026-09-11: "A de sticker"] ──────
+       A risograph print lands on paper like a sticker, so a control here
+       behaves like one: a FLAT shadow beside it rather than a blurred one
+       underneath, a small lift and a nudge askew under the pointer, and
+       pressed completely flat. It is the one of the three proposals that
+       shows something at rest, which is why he took it.
+
+       The drop is a hard offset with no blur — that is the whole point,
+       and a soft shadow here would be the thing it is not. */
+    [data-theme='pastel'] .kp-button {
+        border-radius: 0.85rem;
+        border: 1px solid transparent;
+        font-weight: 600;
+        --kp-pastel-peel: 0 3px 0 color-mix(in srgb, var(--primary) 45%, black);
+        box-shadow: var(--kp-pastel-peel);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-button:hover:not(:disabled) {
+            translate: 0 -2px;
+            rotate: -1.2deg;
+            box-shadow:
+                0 5px 0 color-mix(in srgb, var(--primary) 45%, black),
+                0 8px 14px hsl(from var(--foreground) h s l / 0.14);
+        }
+    }
+
+    [data-theme='pastel'] .kp-button:active:not(:disabled) {
+        translate: 0 3px;
+        rotate: 0deg;
+        box-shadow: 0 0 0 color-mix(in srgb, var(--primary) 45%, black);
+    }
+
+    /* The ring first, then the sticker [AR30, DI2]: a box has one
+       box-shadow, and a peel written alone on :focus-visible paints over
+       the ring's inner half. Lapis made that mistake an hour ago and
+       eight tests caught it; this one is written the right way round. */
+    [data-theme='pastel'] .kp-button:focus-visible {
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            var(--kp-pastel-peel);
+    }
+
+    /* The demo's own size, kept off the sm/lg variants it never drew
+       [TH111]: the base component's own padding and type keep those two
+       apart, the way every lifted theme's own size leaves them alone. */
+    [data-theme='pastel'] .kp-button:not(.kp-button--sm):not(.kp-button--lg) {
+        padding-inline: 1.2rem;
+        font-size: 0.92rem;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-button,
+        [data-theme='pastel'] .kp-icon-button {
+            transition:
+                background-color var(--fx-duration) ease,
+                color var(--fx-duration) ease,
+                border-color var(--fx-duration) ease,
+                translate var(--fx-duration) var(--fx-ease),
+                rotate var(--fx-duration) var(--fx-ease),
+                box-shadow var(--fx-duration) var(--fx-ease),
+                scale var(--fx-duration) var(--fx-ease);
+        }
+
+        /* On a toast the close button sits on the toast's own plate, in the
+           toast's ink: a plate of its own under the error toast's dark ink read
+           1.01:1 (nostromo-notes, 2026-10-04). */
+        [data-theme='pastel'] .kp-toast .kp-icon-button {
+            background: transparent;
+            border-color: transparent;
+            color: inherit;
+        }
+
+        /* On an alert the close button sits on the alert's own plate, in the
+           alert's ink, the way it does on a toast [fix-95]. */
+        [data-theme='pastel'] .kp-alert .kp-icon-button {
+            background: transparent;
+            border-color: transparent;
+            color: inherit;
+        }
+
+        [data-theme='pastel'] .kp-icon-button:active:not(:disabled) {
+            scale: 0.98;
+        }
+    }
+
+    [data-theme='pastel'] .kp-button--primary,
+    [data-theme='pastel'] .kp-button--primary:hover,
+    [data-theme='pastel'] .kp-button--primary:focus-visible {
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='pastel'] .kp-button--primary:hover {
+        background: hsl(from var(--primary) h s 36%);
+    }
+
+    [data-theme='pastel'] .kp-button--secondary,
+    [data-theme='pastel'] .kp-button--secondary:hover,
+    [data-theme='pastel'] .kp-button--secondary:focus-visible {
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }
+
+    [data-theme='pastel'] .kp-button--secondary:hover {
+        background: hsl(from var(--secondary) h s 86%);
+    }
+
+    [data-theme='pastel'] .kp-button--ghost {
+        background: transparent;
+        color: var(--primary);
+        border-color: var(--border-strong);
+    }
+
+    [data-theme='pastel'] .kp-button--ghost:hover,
+    [data-theme='pastel'] .kp-button--ghost:focus-visible {
+        background: var(--card);
+        color: var(--primary);
+    }
+
+    [data-theme='pastel'] .kp-button--destructive,
+    [data-theme='pastel'] .kp-button--destructive:hover,
+    [data-theme='pastel'] .kp-button--destructive:focus-visible {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    [data-theme='pastel'] .kp-button--destructive:hover {
+        background: hsl(from var(--destructive) h s 38%);
+    }
+
+    /* The demo's call-to-action row: wide buttons, as in the reference. A
+       pager's or a menu's button keeps its own width (DI11 at 320 px). */
+    [data-theme='pastel'] [data-kp-surface='hero'] .kp-row > .kp-button {
+        min-width: min(11rem, 100%);
+    }
+
+    /* ── Fields ───────────────────────────────────────────────────────── */
+
+    [data-theme='pastel'] .kp-field__label {
+        font-weight: 600;
+        color: var(--foreground);
+    }
+
+    [data-theme='pastel'] .kp-field__input {
+        border: 1px solid var(--border-strong);
+        border-radius: 0.65rem;
+        background: var(--background);
+        color: var(--foreground);
+        padding-inline: 0.75rem;
+        font-size: 0.92rem;
+    }
+
+    /* The combobox's field focuses as every other field here (review round 2 follow-up,
+       2026-10-13): the package's field ring, 2 px of --focus-ring inside the page-coloured
+       outline. css/components.css gives the combobox input only a border colour on focus, which
+       is pastel's resting border already, so a Tab to it changed nothing on screen. */
+    [data-theme='pastel'] .kp-combobox__input:focus-visible {
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 var(--border-strong);
+    }
+
+    [data-theme='pastel'] .kp-field__input--multiline {
+        min-height: 5.5rem;
+        padding-block: calc(var(--kp-space-sm) * 1.2);
+    }
+
+    [data-theme='pastel'] .kp-field__help {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='pastel'] .kp-field--invalid .kp-field__input {
+        border-color: var(--destructive);
+    }
+
+    [data-theme='pastel'] .kp-field__error {
+        color: var(--destructive);
+    }
+
+    [data-theme='pastel'] .kp-fieldset {
+        border: 1px solid var(--border);
+        border-radius: 0.8rem;
+    }
+
+    /* The switch [gap-11]: the pill stays, soft on the field's ground. */
+    [data-theme='pastel'] .kp-switch {
+        --kp-switch-radius: var(--kp-radius-pill, 999px);
+    }
+
+    [data-theme='pastel'] .kp-switch__input:not(:checked) {
+        background: var(--background);
+        border-color: var(--border-strong);
+    }
+
+    [data-theme='pastel'] .kp-form__summary {
+        background: var(--muted);
+        border: 1px solid var(--border);
+        border-radius: 0.65rem;
+    }
+
+    /* ── Cards, the dossier stamp and its redactions ───────────────────── */
+
+    [data-theme='pastel'] .kp-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 1.2rem;
+    }
+
+    [data-theme='pastel'] .kp-card__title {
+        font-weight: 700;
+    }
+
+    /* The stamp: the demo's rotated plate in the derived stamp colour
+       [X0, above]. The demo's own markup sets it inline at the top of the
+       card; the package's Card only carries a label through
+       data-kp-label, synthesised on ::before as every other lifted theme
+       does (retro, phantom, terminal), so it is placed as their corner
+       badge is — a component constraint, not a demo choice, and named in
+       the anatomy's closing section.
+       It floats at the card's top end rather than being placed absolutely
+       (Kenny, 2026-09-15, stamp-cards "Op elke kaart met een label"
+       [scope-98]): an absolute stamp only landed on a card that was
+       positioned, the dossier, and in the portrait's narrow dossier it lay
+       over the title. A float lives in the card's own flow on every labelled
+       card, and the header beside it is a flex container, which never
+       overlaps a float: it narrows beside the plate, or drops below it when
+       the title's longest word no longer fits. The margins hold the -3deg
+       rotation's corners clear of the title. */
+    [data-theme='pastel'] .kp-card[data-kp-label]::before {
+        content: attr(data-kp-label);
+        float: inline-end;
+        margin-block: 0.1rem 0.4rem;
+        margin-inline: 0.6rem 0;
+        rotate: -3deg;
+        display: inline-flex;
+        align-items: center;
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+        font-size: 0.7rem;
+        letter-spacing: 0.12em;
+        color: var(--kp-stamp-ink);
+        background: var(--kp-stamp);
+        border-radius: 0.4rem;
+        padding: 0.3rem 0.6rem;
+    }
+
+    /* The header beside the stamp keeps at least its title's longest word,
+       so where that no longer fits beside the stamp the header is placed
+       below it instead of being squeezed under it [scope-98]. */
+    [data-theme='pastel'] .kp-card[data-kp-label] > .kp-card__header {
+        min-inline-size: min-content;
+    }
+
+    [data-theme='pastel'] .kp-card[data-kp-open][data-kp-label-open]::before {
+        content: attr(data-kp-label-open);
+    }
+
+    [data-theme='pastel'] .kp-card[data-kp-reveal='emphasis'] {
+        position: relative;
+    }
+
+    /* The redactions: an ink bar over the word, the way the demo's own
+       .kp-redaction spans work — here painted as the mark's own background,
+       cloned onto every line the phrase takes, so the mechanism reaches the
+       package's real dossier markup (three <mark> phrases inside the Card,
+       not standalone spans) and a phrase that wraps is covered line by line
+       [fix-33, scope-93]. The plate reaches 0.05em above and below the
+       words and 0.15em past each end as padding, room the words around it
+       make, so no plate reaches past the line it sits on. At rest, and
+       on any page without the effects module attached, the words are
+       plain: a permanently covered redaction with no way to open it would
+       be a trap, not a reveal (the pattern every lifted theme's dossier
+       already holds). */
+    [data-theme='pastel'] .kp-card[data-kp-reveal='emphasis'] mark {
+        --kp-redact-alpha: 0;
+        --kp-redact-ink: color-mix(in srgb, var(--foreground) calc(var(--kp-redact-alpha) * 100%), transparent);
+        background: linear-gradient(var(--kp-redact-ink), var(--kp-redact-ink)) left center / 0% 100% no-repeat;
+        color: inherit;
+        padding: 0.05em 0.15em;
+        border-radius: 0.25rem;
+        position: relative;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
+    }
+
+    [data-theme='pastel'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared) {
+        --kp-redact-alpha: 1;
+        color: transparent;
+        background-size: 100% 100%;
+    }
+
+    /* Opened, the plate is gone — stated here because the lede's own
+       cleared mark fills in (kp-fill), and that rule would reach these too. */
+    [data-theme='pastel'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared {
+        --kp-redact-alpha: 0;
+        background-size: 0% 100%;
+        animation: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* The plate fades over 220ms while it narrows back toward the
+           phrase's start over 380ms, both staggered, as the ::after bar did
+           before fix-33 [scope-94]; the word switches colour 220ms in, in no
+           time at all — the plate is the word's own ink, so it reads only
+           where the plate has gone, and KT8's mid-transition colour can
+           never be read. */
+        [data-theme='pastel'] .kp-card[data-kp-reveal='emphasis'] mark {
+            transition:
+                --kp-redact-alpha 220ms ease,
+                background-size 380ms var(--fx-ease),
+                color 0s linear 220ms;
+        }
+
+        [data-theme='pastel'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2) {
+            transition-delay: var(--kp-redact-stagger), var(--kp-redact-stagger), 220ms;
+        }
+
+        [data-theme='pastel'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3) {
+            transition-delay: calc(2 * var(--kp-redact-stagger)), calc(2 * var(--kp-redact-stagger)), 220ms;
+        }
+    }
+
+    /* ── Windows: dialogs, popovers, menus — the demo's own shadow [X0] ── */
+
+    [data-theme='pastel'] .kp-dialog,
+    [data-theme='pastel'] .kp-popover,
+    [data-theme='pastel'] .kp-menu,
+    [data-theme='pastel'] .kp-toast,
+    [data-theme='pastel'] .kp-tooltip,
+    [data-theme='pastel'] .kp-confirm,
+    [data-theme='pastel'] .kp-datepicker__panel,
+    [data-theme='pastel'] .kp-combobox__list,
+    [data-theme='pastel'] .kp-palette,
+    [data-theme='pastel'] .kp-theme-menu__list {
+        background: var(--card);
+        color: var(--card-foreground);
+        border: 1px solid var(--border-strong);
+        border-radius: 1.1rem;
+        box-shadow: 0 24px 48px hsl(from var(--foreground) h 40% 15% / 0.25);
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='pastel'] .kp-theme-menu {
+        background: none;
+        border: 0;
+        box-shadow: none;
+    }
+
+    /* Severity toasts [scope-60]. The plain toast above is repainted here in
+       a later layer than kp.components, which swallowed every variant's
+       plate; each is restated on the alert's token pair, as the severity
+       badge wears it. */
+    [data-theme='pastel'] .kp-toast--success {
+        background: var(--success);
+        color: var(--success-foreground);
+    }
+
+    [data-theme='pastel'] .kp-toast--info {
+        background: var(--info);
+        color: var(--info-foreground);
+        border-color: var(--info);
+    }
+
+    [data-theme='pastel'] .kp-toast--warning {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        border-color: var(--warning);
+    }
+
+    [data-theme='pastel'] .kp-toast--destructive,
+    [data-theme='pastel'] .kp-toast--error {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        border-color: var(--destructive);
+    }
+
+    [data-theme='pastel']
+        :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error)
+        :is(.kp-button--ghost, .kp-icon-button) {
+        color: inherit;
+    }
+
+    /* A button hovered on a toast takes a shade of the toast's own plate
+       (--kp-toast-button-hover, set in kp.components), not this theme's page hover (Kenny's second nostromo pass,
+       2026-09-13). Restated here because this layer repaints the hover. */
+    [data-theme='pastel'] .kp-toast :is(.kp-button--ghost, .kp-icon-button):hover:not(:disabled) {
+        background: var(--kp-toast-button-hover);
+        color: inherit;
+    }
+
+    /* The theme menu's list scrolls inside the rounded popover, so it is
+       square and unframed there: the popover draws the box [scope-60]. */
+    [data-theme='pastel'] .kp-theme-menu :is(.kp-popover, .kp-theme-menu__list) > .kp-menu {
+        border: 0;
+        border-radius: 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-dialog,
+        [data-theme='pastel'] .kp-confirm {
+            transition:
+                opacity 180ms ease,
+                transform 180ms var(--fx-ease);
+        }
+
+        [data-theme='pastel'] .kp-dialog::backdrop {
+            transition: opacity 180ms ease;
+        }
+    }
+
+    [data-theme='pastel'] .kp-menu__item:hover {
+        background: var(--muted);
+    }
+
+    [data-theme='pastel'] .kp-toasts {
+        gap: 0.6rem;
+    }
+
+    /* The plain alert only [gap-1, Kenny 2026-09-10]. This rule used to
+       repaint the ground of EVERY alert, and `kp.register` is a later layer
+       than `kp.components`, so it beat `.kp-alert--destructive`'s own plate
+       while that variant's ink — `--destructive-foreground`, which is drawn
+       to sit ON the plate — stayed. Measured in firefox on 2026-09-12:
+       seventeen of the twenty-two themes carried a destructive alert whose
+       text was unreadable, grotesk at 1.00 exactly, white on white.
+
+       Kenny saw it in chassis-rs and said to write it down and touch
+       nothing; this is the round he asked for it in. Same shape as fix-12,
+       one property over: a register overriding half of a pair the base
+       layer defines together. */
+    [data-theme='pastel'] .kp-alert:not([class*='kp-alert--']) {
+        background: var(--muted);
+        border: 1px solid var(--border);
+        border-radius: 0.8rem;
+    }
+
+    /* The success and warning plates' own inks read 4.57 and 4.58:1; a
+       twentieth of the page's text in them reads 4.79 and 4.75
+       [alert-contrast-M1]. The band's items are left alone: they keep the
+       page's text on a soft tint. */
+    [data-theme='pastel'] .kp-alert--success:not(.kp-attention__item) {
+        color: color-mix(in oklab, var(--success-foreground) 95%, var(--foreground));
+    }
+
+    [data-theme='pastel'] .kp-alert--warning:not(.kp-attention__item) {
+        color: color-mix(in oklab, var(--warning-foreground) 95%, var(--foreground));
+    }
+
+    [data-theme='pastel'] .kp-grid {
+        gap: 1rem;
+    }
+
+    [data-theme='pastel'] .kp-grid__tile,
+    [data-theme='pastel'] .kp-split__pane {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 0.8rem;
+    }
+
+    [data-theme='pastel'] .kp-split__separator {
+        background: var(--border);
+    }
+
+    /* ── Footer: the alternate ground behind the second tear ──────────── */
+
+    [data-theme='pastel'] .kp-footer {
+        background: var(--sidebar-background);
+        border-top: 1px solid var(--border);
+    }
+
+    [data-theme='pastel'] .kp-footer h4 {
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='pastel'] .kp-footer a {
+        color: var(--foreground);
+        font-size: 0.88rem;
+    }
+
+    [data-theme='pastel'] .kp-footer a:hover,
+    [data-theme='pastel'] .kp-footer a:focus-visible {
+        text-decoration: underline;
+    }
+
+    [data-theme='pastel'] .kp-footer .microlabel {
+        color: var(--muted-foreground);
+        font-family: var(--theme-font-mono);
+    }
+
+    /* ── Badges, tags, status ──────────────────────────────────────────── */
+
+    [data-theme='pastel'] .kp-badge,
+    [data-theme='pastel'] .kp-tag {
+        border-radius: 0.5rem;
+    }
+
+    [data-theme='pastel'] .kp-health__dot {
+        border-radius: 50%;
+    }
+
+    [data-theme='pastel'] .kp-skeleton {
+        border-radius: 0.5rem;
+    }
+
+    [data-theme='pastel'] .kp-spinner {
+        border-color: var(--border);
+        border-top-color: var(--primary);
+    }
+
+    [data-theme='pastel'] .kp-error {
+        color: var(--destructive);
+    }
+
+    [data-theme='pastel'] .kp-health {
+        color: var(--muted-foreground);
+        font-size: 0.85rem;
+    }
+
+    /* ── Text shapes: identifiers in the system mono, the demo's own ──── */
+
+    [data-theme='pastel'] .kp-id,
+    [data-theme='pastel'] .kp-url,
+    [data-theme='pastel'] .kp-numeric,
+    [data-theme='pastel'] .kp-timestamp,
+    [data-theme='pastel'] .kp-masked,
+    [data-theme='pastel'] .kp-copyable,
+    [data-theme='pastel'] .kp-truncate,
+    [data-theme='pastel'] .kp-cell-break,
+    [data-theme='pastel'] .kp-cell-truncate {
+        font-family: var(--theme-font-mono);
+        font-size: 0.9em;
+    }
+
+    [data-theme='pastel'] .kp-copyable__button {
+        border-radius: 0.5rem;
+    }
+
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='pastel'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='pastel'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
+    /* ── Data ─────────────────────────────────────────────────────────── */
+
+    [data-theme='pastel'] .kp-table {
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    [data-theme='pastel'] .kp-table th {
+        border-bottom: 1px solid var(--border-strong);
+        font-weight: 600;
+    }
+
+    [data-theme='pastel'] .kp-table td {
+        border-bottom: 1px solid var(--border);
+    }
+
+    [data-theme='pastel'] .kp-table tbody tr:hover {
+        background: var(--muted);
+    }
+
+    [data-theme='pastel'] .kp-datatable {
+        border: 1px solid var(--border);
+        border-radius: 0.8rem;
+    }
+
+    [data-theme='pastel'] .kp-datatable__bar {
+        border-bottom: 1px solid var(--border);
+    }
+
+    [data-theme='pastel'] .kp-datatable__sort[aria-sort] {
+        color: var(--primary);
+    }
+
+    [data-theme='pastel'] .kp-diff {
+        border: 1px solid var(--border);
+        border-radius: 0.8rem;
+    }
+
+    /* The added line's wash (Kenny, 2026-09-15, data#diff: "the plus colour
+       isn't distinct enough from the background"). This theme's --success is
+       a pale ground (85% lightness), so the shared 14% wash of it came out at
+       ΔE 0.89 from the diff's ground — invisible — while the removed line,
+       washed from the saturated --destructive, sat at ΔE 6.0. The added line
+       now washes from the saturated green ink instead, at the strength that
+       matches the removed line: ΔE 6.4, with the muted line numbers still
+       above 4.5:1 on it. */
+    [data-theme='pastel'] .kp-diff__line[data-kind='added'] {
+        background: hsl(from var(--success-foreground) h s l / 0.14);
+    }
+
+    [data-theme='pastel'] .kp-timeline {
+        border-inline-start: 2px solid var(--border);
+    }
+
+    [data-theme='pastel'] .kp-timeline__marker {
+        background: var(--primary);
+    }
+
+    [data-theme='pastel'] .kp-reorder {
+        border: 1px solid var(--border);
+        border-radius: 0.8rem;
+    }
+
+    [data-theme='pastel'] .kp-tree {
+        font-size: 0.92rem;
+    }
+
+    /* The accordion [gap-12]: the primary ink its selected tab takes, on the
+       marker and on what is open. */
+    [data-theme='pastel'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='pastel'] .kp-accordion__item[open] > .kp-accordion__summary {
+        color: var(--primary);
+    }
+
+    /* ── Navigation and steps ─────────────────────────────────────────── */
+
+    [data-theme='pastel'] .kp-tab[aria-selected='true'] {
+        color: var(--primary);
+    }
+
+    [data-theme='pastel'] .kp-tabs__list {
+        border-bottom: 1px solid var(--border);
+    }
+
+    [data-theme='pastel'] .kp-breadcrumb {
+        color: var(--muted-foreground);
+    }
+
+    /* The pagination's size is the package's [scope-87]; its numerals are
+       this register's: tabular, so the page numbers line up. */
+    [data-theme='pastel'] .kp-pagination {
+        font-variant-numeric: tabular-nums;
+    }
+
+    [data-theme='pastel'] .kp-pagination a[aria-current],
+    [data-theme='pastel'] .kp-pagination [aria-current] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        border-radius: 0.5rem;
+    }
+
+    [data-theme='pastel'] .kp-wizard {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 0.8rem;
+    }
+
+    /* ── Pickers and palettes ─────────────────────────────────────────── */
+
+    [data-theme='pastel'] .kp-datepicker__day[aria-selected='true'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        border-radius: 0.5rem;
+    }
+
+    [data-theme='pastel'] .kp-colorpicker__swatch {
+        border-radius: 0.5rem;
+    }
+
+    [data-theme='pastel'] .kp-shortcuts__row kbd {
+        border: 1px solid var(--border-strong);
+        border-radius: 0.4rem;
+        background: var(--muted);
+        display: inline-block;
+        padding: 0 0.4em;
+    }
+
+    /* ── The roots the rules above reach only by their parts ──────────── */
+
+    [data-theme='pastel'] .kp-field {
+        gap: calc(var(--kp-space-xs) * 1.4);
+    }
+
+    [data-theme='pastel'] .kp-form {
+        gap: calc(var(--kp-space-lg) * 1.1);
+    }
+
+    [data-theme='pastel'] .kp-combobox,
+    [data-theme='pastel'] .kp-datepicker,
+    [data-theme='pastel'] .kp-colorpicker,
+    [data-theme='pastel'] .kp-shortcuts,
+    [data-theme='pastel'] .kp-tabs {
+        border-radius: 0.8rem;
+    }
+
+    [data-theme='pastel'] .kp-split {
+        gap: 0.5rem;
+    }
+
+    /* ── The scrollbar joins the theme ────────────────────────────────── */
+
+    [data-theme='pastel'] {
+        scrollbar-color: var(--border-strong) var(--muted);
+    }
+
+    /* ── The demo's own pieces [S46] ──────────────────────────────────── */
+
+    [data-theme='pastel'] .kp-side-note {
+        position: absolute;
+        inset-inline-end: 1.25rem;
+        inset-block-start: 0;
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
+        font-family: var(--theme-font-mono);
+        font-size: 0.68rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--muted-foreground);
+        padding: 0.4rem 0;
+        border-inline-start: 1px solid var(--border);
+    }
+
+    [data-theme='pastel'] .kp-laurels {
+        gap: 1.1rem;
+        font-size: 0.72rem;
+        color: var(--muted-foreground);
+        letter-spacing: 0.03em;
+    }
+
+    [data-theme='pastel'] .kp-laurels b {
+        color: var(--primary);
+    }
+
+    [data-theme='pastel'] .kp-lede {
+        max-width: 42ch;
+        font-size: 1.05rem;
+    }
+
+    [data-theme='pastel'] .kp-platforms {
+        font-family: var(--theme-font-mono);
+        font-size: 0.72rem;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='pastel'] .kp-platforms span {
+        border: 1px solid var(--border);
+        border-radius: 0.5rem;
+        padding: 0.25rem 0.55rem;
+        background: var(--card);
+    }
+
+    /* The spec sheet: the demo's soft/base colour pairs as a kit, and the
+       rounded chip that carries them. */
+    [data-theme='pastel'] .kp-spec {
+        border: 1px solid var(--border);
+        border-radius: 1.1rem;
+        background: var(--card);
+        padding: 1.4rem;
+    }
+
+    [data-theme='pastel'] .kp-spec__swatch {
+        border-radius: 0.7rem;
+        border: 1px solid var(--border);
+    }
+
+    [data-theme='pastel'] .kp-spec dt {
+        font-size: 0.72rem;
+        font-weight: 600;
+    }
+
+    /* The log wears what this register already decided for its other data
+ * surface, `.kp-spec` — the same ground, the same edge, the same face
+ * [gap-14]. A new component that invents a look of its own is a
+ * twenty-third decision nobody made. */
+    [data-theme='pastel'] .kp-log {
+        border: 1px solid var(--border);
+        border-radius: 1.1rem;
+        background: var(--card);
+    }
+
+    [data-theme='pastel'] .kp-log__level {
+        font-size: 0.72rem;
+        font-weight: 600;
+    }
+
+    [data-theme='pastel'] .kp-spec dd {
+        font-family: var(--theme-font-mono);
+        font-size: 0.66rem;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='pastel'] .kp-spec__font {
+        font-size: 1.3rem;
+    }
+
+    /* ── Motion [DI5, DI7] ────────────────────────────────────────────── */
+
+    /* Every keyframe here has its row in TIMINGS (js/effects.js); kp-fill
+       and kp-draw carry no opacity step and are OUT_OF_SCOPE in
+       gates/check-motion.mjs (a size grow, no luminance change). */
+    @keyframes kp-registration {
+        0% {
+            transform: translate(14px, 10px);
+            opacity: 0;
+        }
+
+        100% {
+            transform: translate(2px, 2px);
+            opacity: 0.55;
+        }
+    }
+
+    @keyframes kp-fill {
+        from {
+            background-size: 0% 100%;
+        }
+
+        to {
+            background-size: 100% 100%;
+        }
+    }
+
+    @keyframes kp-draw {
+        from {
+            width: 0%;
+        }
+
+        to {
+            width: 100%;
+        }
+    }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — a rounded pill on the card colour, like everything else here. */
+    [data-theme='pastel'] .kp-marquee {
+        background: var(--card);
+        border-radius: 999px;
+        margin-inline: 1rem;
+        --kp-marquee: 38000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    /* A mega menu's group headings speak in the caption's voice [scope-48]. */
+    [data-theme='pastel'] .kp-nav__menu[data-kp-menu-label]::before,
+    [data-theme='pastel'] .kp-nav__menu--wide .kp-nav__menu-heading {
+        background: color-mix(in srgb, var(--primary) 12%, transparent);
+        border-radius: 999px;
+        margin: 0.25rem;
+        border-block-end: 0;
+        text-transform: none;
+    }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       The sticker Kenny chose for this theme, now on the row you are on:
+       peeled down at a slight angle, with a hard edge under it and a soft
+       drop below that [approved 2026-09-11]. */
+    [data-theme='pastel'] .kp-sidenav {
+        --kp-sidenav-gap: 0.3rem;
+        border-radius: 1.1rem;
+    }
+
+    [data-theme='pastel'] .kp-sidenav__header {
+        border-block-end: none;
+        padding-block-end: 0.2rem;
+    }
+
+    [data-theme='pastel'] .kp-sidenav__link,
+    [data-theme='pastel'] .kp-sidenav__category-toggle {
+        border-radius: 0.9rem;
+        padding-inline: 0.8rem;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-sidenav__link {
+            transition:
+                translate var(--fx-duration, 200ms) var(--fx-ease, ease),
+                background var(--fx-duration, 200ms) var(--fx-ease, ease);
+        }
+    }
+
+    [data-theme='pastel'] .kp-sidenav__link:hover {
+        translate: 0 -1px;
+    }
+
+    [data-theme='pastel'] .kp-sidenav__link[aria-current='page'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        rotate: -1.4deg;
+        box-shadow:
+            0 3px 0 color-mix(in srgb, var(--primary) 55%, black),
+            0 6px 12px hsl(from var(--foreground) h s l / 0.16);
+    }
+
+    [data-theme='pastel'] .kp-sidenav__badge {
+        color: inherit;
+        opacity: 0.75;
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Rounder than everything else, and the picture sits slightly askew
+       in its frame the way a photograph in an album does. */
+    [data-theme='pastel'] .kp-to-top {
+        border-radius: 999px;
+        box-shadow: 0 3px 0 color-mix(in srgb, var(--primary) 55%, black);
+    }
+
+    [data-theme='pastel'] .kp-media {
+        border-radius: 1.1rem;
+        border: 2px solid var(--border);
+    }
+
+    [data-theme='pastel'] .kp-media-figure > figcaption {
+        text-align: center;
+        font-style: italic;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='pastel'] .kp-media-figure {
+        text-align: center;
+        color: var(--muted-foreground);
+    }
+
+    /* ── The pressed state the register had been cancelling [fix-12] ───
+       A layer beats a state: this register's hover background sits in
+       kp.register, later than the kp.components rule that says what the
+       button looks like while it is held down, so pressing it changed
+       nothing. The base layer's own values, put back token for token. */
+
+    [data-theme='pastel'] .kp-button--primary:active:not(:disabled) {
+        background: var(--primary-active);
+        border-color: var(--primary-active);
+    }
+
+    [data-theme='pastel'] .kp-button--destructive:active:not(:disabled) {
+        background: var(--destructive-active);
+        border-color: var(--destructive-active);
+    }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='pastel'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
+
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
+
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): soft words on a well-rounded plate that
+       fills with the muted ground when pointed at. The link's typeface,
+       case, spacing, shape and pointer answer are restated here, because the
+       trigger is a button beside the list rather than a link in it. The
+       underline a plain link carries is not: it says "this is a link", and
+       the trigger is not one. */
+    [data-theme='pastel'] .kp-nav__search .kp-nav__search-trigger {
+        padding-inline: 0.7rem;
+        border: 0;
+        border-radius: 0.6rem;
+        background: none;
+        color: var(--foreground);
+    }
+
+    [data-theme='pastel'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='pastel'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        background: var(--muted);
+        color: var(--foreground);
+        box-shadow: none;
+    }
+
+    /* ── The alarm [scope-94, scope-98] ────────────────────────────────────
+       A sticker slapped on a risograph sheet. Kenny, judging the portrait:
+       "glitch effect past helemaal niet bij pastel, maak het alarm eigen aan
+       dit thema". Nothing flickers or loops ("A sharp corner or a flicker" is
+       in the portrait's never-does), and every colour keeps its role in
+       signature.json:
+
+         the plate    the milk ground (--background) at 95 %: the role that
+                      names "the alarm's ground"
+         the seams    pearls on a 2px thread in plum, top and bottom, the
+                      plain divider's own drawing
+         the panel    the paper card, the boundary frame (--border-strong),
+                      a panel's 1.1rem round and its soft plum drop
+         the code     a mint plate (--accent) with its ink, in the mono tick's
+                      spaced capitals, the marked word's fill
+         headline     the danger red (the role names "the alarm's headline"),
+                      Instrument Sans 700 in sentence case, and the
+                      overprint behind it: the second pass in --fx-overprint
+                      at 55 %, multiplied, 2px down and right
+         the reason   the plum ink
+         the button   plum (what acts), the sticker's hard offset from this
+                      register's own button rule, lifting askew under the
+                      pointer and pressed flat as every button here is
+
+       Motion is the dialog's (review round 2, 2026-10-13, below): the plate
+       comes out of nothing and the panel rises and turns into place as the
+       dialog's sheet does, and the close is that backwards. Nothing loops.
+       Under reduced motion the landed sticker, the full plate and the
+       registered overprint stand at once. The button keeps this register's
+       shape and takes the alarm's paint, on selectors long enough to outrank
+       this register's own button states; the dialog takes no focus ring,
+       because in the auto mode the whole screen is what has focus. */
+    [data-theme='pastel'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--background) h s l / 0.95);
+        --kp-alarm-ink: var(--destructive);
+        --kp-alarm-soft: var(--foreground);
+        --kp-alarm-split: var(--fx-overprint);
+        --kp-alarm-on-ink: var(--primary-foreground);
+        --kp-alarm-glow: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-halo: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-scan: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-vignette: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-bar: 1.5rem;
+        --kp-alarm-frame: 0 none;
+        --kp-alarm-title-size: clamp(2.25rem, 8.5cqi, 6.5rem);
+        --kp-alarm-title-case: none;
+        --kp-alarm-title-tracking: -0.01em;
+        --kp-alarm-panel-ground: var(--card);
+        --kp-alarm-panel-border: 1px solid var(--border-strong);
+        --kp-alarm-panel-radius: 1.1rem;
+        --kp-alarm-panel-shadow: 0 24px 48px hsl(from var(--foreground) h s l / 0.25);
+        --kp-alarm-panel-padding: clamp(1.75rem, 5cqi, 3.5rem) clamp(1.25rem, 5cqi, 4rem);
+    }
+
+    [data-theme='pastel'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='pastel'] .kp-alarm__bars::before,
+    [data-theme='pastel'] .kp-alarm__bars::after {
+        inset-inline: 1.5rem;
+        background: var(--primary);
+        mask-image: linear-gradient(black 0 0), radial-gradient(circle closest-side, black calc(100% - 0.6px), transparent 100%);
+        mask-size:
+            100% 2px,
+            1.5rem 0.75rem;
+        mask-position: center;
+        mask-repeat:
+            no-repeat,
+            space no-repeat;
+    }
+
+    [data-theme='pastel'] .kp-alarm__panel {
+        inline-size: min(100%, 54rem);
+    }
+
+    [data-theme='pastel'] .kp-alarm__code {
+        padding: 0.15em 0.6em;
+        border-radius: 0.25em;
+        background: linear-gradient(var(--accent), var(--accent)) left center / 100% 100% no-repeat;
+        color: var(--accent-foreground);
+        letter-spacing: 0.22em;
+    }
+
+    [data-theme='pastel'] .kp-alarm__title {
+        font-weight: 700;
+        text-wrap: balance;
+    }
+
+    [data-theme='pastel'] .kp-alarm__glyphs {
+        isolation: isolate;
+    }
+
+    [data-theme='pastel'] .kp-alarm__glyphs::before {
+        content: attr(data-text);
+        z-index: -1;
+        clip-path: none;
+        color: var(--fx-overprint);
+        mix-blend-mode: multiply;
+        opacity: 0.55;
+        translate: none;
+        transform: translate(2px, 2px);
+    }
+
+    [data-theme='pastel'] .kp-alarm__detail {
+        font-family: var(--theme-font-body);
+    }
+
+    [data-theme='pastel'] .kp-alarm__hint,
+    [data-theme='pastel'] .kp-alarm__countdown {
+        color: var(--muted-foreground);
+        letter-spacing: 0.12em;
+    }
+
+    [data-theme='pastel'] .kp-alarm__track,
+    [data-theme='pastel'] .kp-alarm__fill {
+        border-radius: 999px;
+    }
+
+    [data-theme='pastel'] .kp-alarm__track {
+        background: var(--muted);
+    }
+
+    [data-theme='pastel'] .kp-alarm__fill {
+        background: var(--primary);
+    }
+
+    [data-theme='pastel'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='pastel'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled),
+    [data-theme='pastel'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: var(--primary-foreground);
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+        letter-spacing: normal;
+        text-transform: none;
+        text-shadow: none;
+    }
+
+    [data-theme='pastel'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='pastel'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: var(--border-strong);
+        background: var(--card);
+        color: var(--foreground);
+        text-shadow: none;
+    }
+
+    /* The alarm opens as pastel's dialog does and closes as that backwards (review round 2,
+       Kenny 2026-10-13: "Niet de open/close animatie van dit thema"). It ran its own landing (the
+       plate's fade, the panel dropped 6 px askew by transitions, the mint plate filling and the
+       overprint springing in later), which js/motion.js could not turn around: it keeps only the
+       CSS animations of a dialog, so the close was a fade. Now the dialog's sheet
+       (kp-sig-pastel-pastel-sheet: up from 18 px below, turned -2.5 degrees, out of nothing) is
+       shared between the two boxes the alarm is made of: the screen-wide plate comes out of
+       nothing, the panel on it rises and turns into place, on the dialog's curve and in its time
+       (640 ms; js/motion.js plays it in the dialog's close time, forwards to open, backwards to
+       close, `--kp-open: reverse-close`). The words, the mint plate and the overprint stand on the
+       panel and come with it. The breathing glow stays off; the held-open catalogue frame
+       (`[data-kp-alarm-inline]`, never `[open]`) stands still. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-alarm:not([data-kp-alarm-motion='still']),
+        [data-theme='pastel'] .kp-alarm:not([data-kp-alarm-motion='still'])::after,
+        [data-theme='pastel']
+            .kp-alarm:not([data-kp-alarm-motion='still'])
+            :is(.kp-alarm__panel, .kp-alarm__title, .kp-alarm__detail, .kp-alarm__code),
+        [data-theme='pastel'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__glyphs::before {
+            animation: none;
+        }
+
+        [data-theme='pastel'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+            animation: kp-sig-pastel-sheet-ground 640ms var(--fx-ease) both;
+        }
+
+        [data-theme='pastel'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) .kp-alarm__panel {
+            animation: kp-sig-pastel-sheet-lay 640ms var(--fx-ease) both;
+        }
+    }
+
+    /* The dialog's sheet split over the alarm's plate and its panel: together they are
+       kp-sig-pastel-pastel-sheet frame for frame. */
+    @keyframes kp-sig-pastel-sheet-ground {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes kp-sig-pastel-sheet-lay {
+        from {
+            transform: translateY(18px) rotate(-2.5deg);
+        }
+
+        to {
+            transform: none;
+        }
+    }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: a soft bullet, the roundest mark in the set. */
+    [data-theme='pastel'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '•';
+    }
+}
+
+/* ── Signature [scope-140] ─────────────────────────────────────────────── */
+/* pastel's approved signature (Kenny, 2026-10-03, three review rounds): the
+   progress bar and the ten elements (spinner, skeleton, switch, check and
+   radio, toast, dialog, tooltip, wizard steps, empty state, link hover),
+   ported once from research/progress-signature/themes/pastel.css and research/signature-elements/themes/pastel.css
+   and maintained here from now on. In kp.signature, which css/themes.css
+   orders after kp.register, so it draws over the register exactly as the
+   approved demos did, whatever the weight of a register selector. */
+@layer kp.signature {
+    /* The link signature is for links in running text; a link in a navigation,
+       a menu, a breadcrumb (a nav) or the footer keeps its own component's look
+       (scope-93: no link colour in a navigation). */
+    [data-theme='pastel'] .kp-progressbar {
+        --kp-progressbar-height: calc(1.125rem * var(--kp-progressbar-scale, 1));
+        --kp-ps-head: calc(1rem * var(--kp-progressbar-scale, 1));
+        --kp-ps-inset: calc(0.1875rem * var(--kp-progressbar-scale, 1));
+        --kp-ps-drop: calc(2px * var(--kp-progressbar-scale, 1));
+    }
+
+    [data-theme='pastel'] .kp-progressbar__track {
+        border-radius: 999px;
+        background: var(--muted);
+        box-shadow: inset 0 0 0 1px var(--border);
+    }
+
+    [data-theme='pastel'] .kp-progressbar__track::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline: calc(var(--kp-ps-head) / 2);
+        background: var(--border-strong);
+        opacity: 0.55;
+        mask:
+            linear-gradient(black 0 0) center / 100% 2px no-repeat,
+            radial-gradient(circle closest-side, black calc(100% - 0.6px), transparent 100%) center / calc(0.75rem * var(--kp-progressbar-scale, 1))
+                calc(0.375rem * var(--kp-progressbar-scale, 1)) space no-repeat;
+    }
+
+    [data-theme='pastel'] .kp-progressbar__fill {
+        inset-block: var(--kp-ps-inset) calc(var(--kp-ps-inset) + var(--kp-ps-drop));
+        inset-inline: 0;
+        border-radius: 999px;
+        background: var(--primary);
+        box-shadow: var(--kp-ps-drop) var(--kp-ps-drop) 0 0 color-mix(in srgb, var(--fx-overprint) 85%, transparent);
+        clip-path: inset(
+            calc(-1 * var(--kp-ps-drop)) calc((1 - var(--kp-value)) * 100% + var(--kp-value) * var(--kp-ps-head) / 2) calc(-1 * var(--kp-ps-drop))
+                calc(-1 * var(--kp-ps-drop)) round 999px
+        );
+        transition: clip-path 420ms var(--fx-ease);
+    }
+
+    [data-theme='pastel'] .kp-progressbar__head {
+        inset-block-start: 0;
+        inset-block-end: auto;
+        inline-size: var(--kp-ps-head);
+        block-size: var(--kp-ps-head);
+        border-radius: 50%;
+        background: radial-gradient(circle closest-side, var(--primary) 0 28%, var(--card) calc(28% + 0.6px));
+        box-shadow:
+            inset 0 0 0 2px var(--primary),
+            calc(1px * var(--kp-progressbar-scale, 1)) var(--kp-ps-drop) 0 0 color-mix(in srgb, var(--primary) 55%, black);
+        transform: translateX(calc(var(--kp-value) * (100cqi - var(--kp-ps-head))));
+        transition: transform 420ms var(--fx-ease);
+    }
+
+    [data-theme='pastel'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset-inline: 0 auto;
+        inline-size: 28%;
+        clip-path: none;
+        animation: kp-progressbar-pastel-busy 1600ms cubic-bezier(0.45, 0, 0.25, 1) infinite;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='pastel'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+            inset-block: 0;
+            inset-inline: calc(var(--kp-ps-head) / 2);
+            inline-size: auto;
+            border-radius: 0;
+            box-shadow: none;
+            transform: none;
+            animation: none;
+            background: none;
+        }
+
+        [data-theme='pastel'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--primary);
+            mask: radial-gradient(circle closest-side, black calc(100% - 0.6px), transparent 100%) center /
+                calc(1.5rem * var(--kp-progressbar-scale, 1)) calc(0.5rem * var(--kp-progressbar-scale, 1)) space no-repeat;
+        }
+    }
+
+    [data-theme='pastel'] {
+        /* The sticker's hard shadow: plum, darkened, as a relative colour of
+           the token (the register mixes it with black; no literal here). */
+        --kp-sig-pastel-peel: hsl(from var(--primary) h s calc(l * 0.55));
+    }
+
+    [data-theme='pastel'] .kp-spinner {
+        --kp-sig-dur: 1500ms;
+        --kp-sig-s: var(--kp-spinner-size, 1.25rem);
+        position: relative;
+        border: 0;
+        border-radius: 50%;
+        /* The thread: a 2px ring at three eighths of the size. */
+        background: radial-gradient(
+            circle closest-side,
+            transparent calc(75% - 1px),
+            var(--border-strong) calc(75% - 1px) calc(75% + 1px),
+            transparent calc(75% + 1px)
+        );
+        animation: none;
+    }
+
+    [data-theme='pastel'] .kp-spinner::before,
+    [data-theme='pastel'] .kp-spinner::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background:
+            radial-gradient(circle at 50% 12.5%, var(--kp-sig-ink) 0 calc(var(--kp-sig-s) * 0.15), transparent calc(var(--kp-sig-s) * 0.15 + 0.5px)),
+            radial-gradient(
+                circle at 82.5% 68.75%,
+                var(--kp-sig-ink) 0 calc(var(--kp-sig-s) * 0.11),
+                transparent calc(var(--kp-sig-s) * 0.11 + 0.5px)
+            ),
+            radial-gradient(
+                circle at 17.5% 68.75%,
+                var(--kp-sig-ink) 0 calc(var(--kp-sig-s) * 0.075),
+                transparent calc(var(--kp-sig-s) * 0.075 + 0.5px)
+            );
+    }
+
+    [data-theme='pastel'] .kp-spinner::before {
+        --kp-sig-ink: var(--info-foreground);
+        /* The second pass: the same pearls 2px down and right, multiplied. */
+        translate: 2px 2px;
+        opacity: 0.55;
+        mix-blend-mode: multiply;
+    }
+
+    [data-theme='pastel'] .kp-spinner::after {
+        --kp-sig-ink: var(--primary);
+    }
+
+    [data-theme='pastel'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        --kp-sig-dur: 4000ms;
+        /* One colour period of the ribbon: the loop moves exactly this far. */
+        --kp-sig-period: 20rem;
+        /* The five sherbet scoops: each a pastel token, its saturation lifted
+           a step so the colours read as candy rather than as grey milk. */
+        --kp-sig-rose: hsl(from var(--primary) h calc(s * 1.15) 86%);
+        --kp-sig-peach: hsl(from var(--warning) h calc(s * 1.3) 84%);
+        --kp-sig-mint: hsl(from var(--accent) h calc(s * 1.25) 83%);
+        --kp-sig-sky: hsl(from var(--secondary) h calc(s * 1.5) 85%);
+        --kp-sig-lilac: hsl(from var(--info) h calc(s * 1.2) 85%);
+        position: relative;
+        overflow: hidden;
+        block-size: 0.95rem;
+        margin-inline: 0;
+        border-radius: 999px;
+        background: var(--accent);
+        animation: none;
+    }
+
+    [data-theme='pastel'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) + .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        margin-block-start: 0.6rem;
+    }
+
+    [data-theme='pastel'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: calc(var(--kp-sig-period) * -1);
+        inline-size: calc(100% + var(--kp-sig-period) * 2);
+        background: repeating-linear-gradient(
+            to right,
+            var(--kp-sig-rose) 0,
+            var(--kp-sig-peach) calc(var(--kp-sig-period) * 0.2),
+            var(--kp-sig-mint) calc(var(--kp-sig-period) * 0.4),
+            var(--kp-sig-sky) calc(var(--kp-sig-period) * 0.6),
+            var(--kp-sig-lilac) calc(var(--kp-sig-period) * 0.8),
+            var(--kp-sig-rose) var(--kp-sig-period)
+        );
+    }
+
+    [data-theme='pastel'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 20%;
+        inset-inline: 0.45rem;
+        block-size: 22%;
+        border-radius: 999px;
+        background: hsl(from var(--card) h s l / 0.6);
+    }
+
+    [data-theme='pastel'] .kp-switch {
+        --kp-switch-inset: 3px;
+    }
+
+    [data-theme='pastel'] .kp-switch__input {
+        border-color: var(--border-strong);
+        background: var(--background);
+    }
+
+    [data-theme='pastel'] .kp-switch__input::before {
+        inset-block: 2px 3px;
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+        box-shadow: 0 2px 0 var(--border-strong);
+        box-sizing: border-box;
+    }
+
+    [data-theme='pastel'] .kp-switch__input:checked {
+        border-color: var(--primary);
+        background: var(--primary);
+    }
+
+    [data-theme='pastel'] .kp-switch__input:checked::before {
+        inset-inline-start: var(--kp-switch-inset);
+        border-color: var(--kp-sig-pastel-peel);
+        /* On, the sticker carries a mint pearl. */
+        background: radial-gradient(circle, var(--accent-foreground) 0 2.5px, transparent 3px), var(--card);
+        box-shadow: 0 2px 0 var(--kp-sig-pastel-peel);
+        transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem))) rotate(-14deg);
+    }
+
+    [data-theme='pastel'] .kp-field__check {
+        --kp-sig-dur: 420ms;
+        appearance: none;
+        position: relative;
+        display: inline-grid;
+        place-content: center;
+        inline-size: 1.2rem;
+        block-size: 1.2rem;
+        margin: 0;
+        border: 1.5px solid var(--border-strong);
+        border-radius: 0.4rem;
+        background: var(--card);
+    }
+
+    [data-theme='pastel'] .kp-field__check[type='checkbox']:checked {
+        border-color: var(--primary);
+        background: var(--primary);
+    }
+
+    [data-theme='pastel'] .kp-field__check[type='checkbox']:checked::before,
+    [data-theme='pastel'] .kp-field__check[type='checkbox']:checked::after {
+        content: '';
+        grid-area: 1 / 1;
+        inline-size: 0.6rem;
+        block-size: 0.3rem;
+        border-inline-start: 2px solid currentColor;
+        border-block-end: 2px solid currentColor;
+        border-end-start-radius: 2px;
+        transform: translateY(-1px) rotate(-45deg);
+    }
+
+    [data-theme='pastel'] .kp-field__check[type='checkbox']:checked::before {
+        color: var(--accent);
+        translate: 1.5px 1.5px;
+    }
+
+    [data-theme='pastel'] .kp-field__check[type='checkbox']:checked::after {
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='pastel'] .kp-field__check[type='radio'] {
+        border-radius: 50%;
+    }
+
+    [data-theme='pastel'] .kp-field__check[type='radio']:checked {
+        border-color: var(--primary);
+    }
+
+    [data-theme='pastel'] .kp-field__check[type='radio']:checked::before {
+        content: '';
+        inline-size: 0.6rem;
+        block-size: 0.6rem;
+        border-radius: 50%;
+        background: var(--primary);
+        box-shadow: 1.5px 1.5px 0 hsl(from var(--info-foreground) h s l / 0.5);
+    }
+
+    [data-theme='pastel'] .kp-toast {
+        --kp-sig-dur: 560ms;
+        border-color: var(--border-strong);
+        border-radius: 1.1rem;
+        box-shadow:
+            0 3px 0 var(--kp-sig-pastel-peel),
+            0 16px 28px -14px hsl(from var(--foreground) h s l / 0.35);
+    }
+
+    [data-theme='pastel'] .kp-toast--success {
+        border-color: var(--success-foreground);
+        box-shadow:
+            0 3px 0 var(--success-foreground),
+            0 16px 28px -14px hsl(from var(--foreground) h s l / 0.35);
+    }
+
+    [data-theme='pastel'] .kp-dialog::backdrop {
+        background: hsl(from var(--foreground) h 30% 12% / 0.2);
+    }
+
+    [data-theme='pastel'] .kp-dialog {
+        --kp-sig-dur: 640ms;
+        border-color: var(--border-strong);
+        border-radius: 1.2rem;
+        /* The second sheet in mint, off register, and the sticker's peel. */
+        box-shadow:
+            7px 8px 0 -1px var(--accent),
+            7px 8px 0 0 hsl(from var(--accent-foreground) h s l / 0.35),
+            0 3px 0 var(--kp-sig-pastel-peel);
+    }
+
+    [data-theme='pastel'] .kp-tooltip {
+        --kp-sig-dur: 420ms;
+        margin-block-start: 0.75rem;
+        /* Within 12px under its trigger and never over it (Kenny's phantom note,
+           2026-09-15, tests/dark-themes-notes.spec.mjs). */
+        margin-inline-start: 0.9rem;
+        padding: 0.35rem 0.9rem;
+        border: 1px solid var(--border-strong);
+        border-radius: 999px;
+        background: var(--card);
+        color: var(--card-foreground);
+        box-shadow: 0 2px 0 var(--kp-sig-pastel-peel);
+        transform-origin: 0.4rem -0.8rem;
+    }
+
+    [data-theme='pastel'] .kp-tooltip::before,
+    [data-theme='pastel'] .kp-tooltip::after {
+        content: '';
+        position: absolute;
+        border: 1px solid var(--border-strong);
+        border-radius: 50%;
+        background: var(--card);
+        box-sizing: border-box;
+    }
+
+    [data-theme='pastel'] .kp-tooltip::before {
+        inset-block-start: -9px;
+        inset-inline-start: 0.55rem;
+        inline-size: 9px;
+        block-size: 9px;
+    }
+
+    [data-theme='pastel'] .kp-tooltip::after {
+        inset-block-start: -15px;
+        inset-inline-start: 0.2rem;
+        inline-size: 5px;
+        block-size: 5px;
+    }
+
+    [data-theme='pastel'] .kp-wizard__steps {
+        gap: 0.6rem 0;
+    }
+
+    [data-theme='pastel'] .kp-wizard__steps li {
+        gap: 0.45rem;
+    }
+
+    [data-theme='pastel'] .kp-wizard__steps li:not(:last-child)::after {
+        content: '';
+        inline-size: 1.25rem;
+        block-size: 2px;
+        margin-inline: 0.3rem;
+        border-radius: 2px;
+        background: var(--border-strong);
+    }
+
+    [data-theme='pastel'] .kp-wizard__steps li[data-state='done']::after {
+        background: var(--primary);
+    }
+
+    [data-theme='pastel'] .kp-wizard__steps li::before {
+        inline-size: 1.65rem;
+        block-size: 1.65rem;
+        border: 1.5px solid var(--border-strong);
+        border-radius: 50%;
+        background: var(--card);
+        color: var(--muted-foreground);
+        font-weight: 700;
+        box-sizing: border-box;
+    }
+
+    [data-theme='pastel'] .kp-wizard__steps li[data-state='done']::before {
+        border-color: var(--accent-foreground);
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+
+    [data-theme='pastel'] .kp-wizard__steps li[data-state='current']::before {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: var(--primary-foreground);
+        box-shadow: 0 2px 0 var(--kp-sig-pastel-peel);
+        rotate: -10deg;
+    }
+
+    [data-theme='pastel'] .kp-empty {
+        position: relative;
+        padding: 1.25rem 1.5rem 1.6rem;
+        border: 1px solid var(--border-strong);
+        border-radius: 1.2rem;
+        background: var(--card);
+        color: var(--muted-foreground);
+        box-shadow: 0 3px 0 var(--border-strong);
+    }
+
+    [data-theme='pastel'] .kp-empty::before {
+        content: '';
+        display: block;
+        inline-size: 3.25rem;
+        block-size: 3.25rem;
+        margin: 0 auto 0.75rem;
+        background:
+            radial-gradient(circle, var(--primary) 1.3px, transparent 1.7px) 0 0 / 6px 6px,
+            radial-gradient(circle, hsl(from var(--info-foreground) h s l / 0.6) 1.3px, transparent 1.7px) 2px 2px / 6px 6px;
+        mask: radial-gradient(circle closest-side, black 0 calc(100% - 1px), transparent 100%);
+    }
+
+    [data-theme='pastel'] .kp-empty::after {
+        content: '';
+        position: absolute;
+        inset-block-end: -1px;
+        inset-inline-end: -1px;
+        inline-size: 1.6rem;
+        block-size: 1.6rem;
+        border-start-start-radius: 0.7rem;
+        border-end-end-radius: 1.2rem;
+        background: linear-gradient(315deg, var(--background) 0 50%, var(--muted) 50% 100%);
+        box-shadow: -2px -2px 0 -1px hsl(from var(--border-strong) h s l / 0.5);
+    }
+
+    [data-theme='pastel'] .kp-empty__title {
+        margin: 0 0 0.25rem;
+        color: var(--foreground);
+        font-weight: 700;
+    }
+
+    [data-theme='pastel'] .kp-empty__body {
+        margin: 0;
+    }
+
+    [data-theme='pastel'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
+        position: relative;
+        isolation: isolate;
+        text-decoration-color: var(--primary);
+        text-decoration-thickness: 2px;
+        text-underline-offset: 0.22em;
+    }
+
+    [data-theme='pastel'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a)::before {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        inset: -0.05em -0.25em;
+        border-radius: 0.4em;
+        background: var(--accent);
+        transform: scaleX(0);
+        transform-origin: 0 50%;
+    }
+
+    [data-theme='pastel']
+        a:not(
+            [class],
+            :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-breadcrumb, .kp-sidenav, .kp-footer) a
+        ):hover::before {
+        transform: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-spinner::before,
+        [data-theme='pastel'] .kp-spinner::after {
+            animation: kp-sig-pastel-pastel-hop var(--kp-sig-dur) infinite;
+        }
+
+        [data-theme='pastel'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::before {
+            animation: kp-sig-pastel-pastel-flow var(--kp-sig-dur) linear infinite;
+        }
+
+        [data-theme='pastel'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2)::before {
+            animation-delay: calc(var(--kp-sig-dur) * -1 / 6);
+        }
+
+        [data-theme='pastel'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3)::before {
+            animation-delay: calc(var(--kp-sig-dur) * -2 / 6);
+        }
+
+        [data-theme='pastel'] .kp-switch__input::before {
+            transition: transform 320ms var(--fx-ease);
+        }
+
+        [data-theme='pastel'] .kp-field__check[type='checkbox']:checked::after {
+            animation: kp-sig-pastel-pastel-pop var(--kp-sig-dur) var(--fx-ease) both;
+        }
+
+        [data-theme='pastel'] .kp-field__check[type='checkbox']:checked::before {
+            animation: kp-sig-pastel-pastel-register-sm var(--kp-sig-dur) var(--fx-ease) both;
+        }
+
+        [data-theme='pastel'] .kp-field__check[type='radio']:checked::before {
+            animation: kp-sig-pastel-pastel-pop var(--kp-sig-dur) var(--fx-ease) both;
+        }
+
+        [data-theme='pastel'] .kp-toast {
+            animation: kp-sig-pastel-pastel-slap var(--kp-sig-dur) var(--fx-ease) both;
+        }
+
+        [data-theme='pastel'] .kp-dialog {
+            animation: kp-sig-pastel-pastel-sheet var(--kp-sig-dur) var(--fx-ease) both;
+        }
+
+        [data-theme='pastel'] .kp-tooltip {
+            animation: kp-sig-pastel-pastel-bubble var(--kp-sig-dur) var(--fx-ease) both;
+        }
+
+        [data-theme='pastel']
+            a:not(
+                [class],
+                :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-breadcrumb, .kp-sidenav, .kp-footer) a
+            )::before {
+            transition: transform 380ms var(--fx-ease);
+        }
+    }
+
+    @keyframes kp-sig-pastel-pastel-hop {
+        0% {
+            transform: rotate(0);
+            animation-timing-function: var(--fx-ease);
+        }
+
+        33.333% {
+            transform: rotate(120deg);
+            animation-timing-function: var(--fx-ease);
+        }
+
+        66.667% {
+            transform: rotate(240deg);
+            animation-timing-function: var(--fx-ease);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes kp-sig-pastel-pastel-flow {
+        from {
+            transform: none;
+        }
+
+        to {
+            transform: translateX(var(--kp-sig-period));
+        }
+    }
+
+    @keyframes kp-sig-pastel-pastel-register-sm {
+        0%,
+        30% {
+            opacity: 0;
+            translate: 5px 5px;
+        }
+
+        100% {
+            opacity: 1;
+            translate: 1.5px 1.5px;
+        }
+    }
+
+    @keyframes kp-sig-pastel-pastel-pop {
+        from {
+            opacity: 0;
+            scale: 0.3;
+        }
+
+        to {
+            opacity: 1;
+            scale: 1;
+        }
+    }
+
+    @keyframes kp-sig-pastel-pastel-slap {
+        from {
+            opacity: 0;
+            transform: translateY(12px) rotate(-4deg) scale(0.94);
+        }
+
+        to {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    @keyframes kp-sig-pastel-pastel-sheet {
+        from {
+            opacity: 0;
+            transform: translateY(18px) rotate(-2.5deg);
+        }
+
+        to {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    @keyframes kp-sig-pastel-pastel-bubble {
+        from {
+            opacity: 0;
+            transform: scale(0.5);
+        }
+
+        40% {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    @keyframes kp-progressbar-pastel-busy {
+        from {
+            transform: translateX(-110%);
+        }
+        to {
+            transform: translateX(370%);
+        }
+    }
+
+    /* Leaving, this theme's way [scope-142; picked by Kenny on research/size-motion,
+       2026-10-04]. js/motion.js marks what leaves `[data-kp-leaving]`, closes its space during
+       the exit, and in a row of leaves starts the next one halfway through this one. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── pastel: a balloon let go: it floats up with a little tilt ── */
+        /* Opening is closing turned around (Kenny's pick on research/open-reverse,
+           2026-10-05): js/motion.js opens the dialog as its close played backwards,
+           in the close's time, and lets what arrives play this leave backwards. */
+        [data-theme='pastel'] {
+            --kp-open: reverse-close;
+            /* The close mechanism (lessons 19, 23, 24, 37; applied 2026-10-13):
+               a part a script removes or hides (the busy table's layer, a file
+               row, a re-shown alert, an empty state) leaves by the balloon and
+               arrives as that backwards; what takes no box arrives as nothing;
+               the space a leave folds shut takes the leave's own time and
+               starts with it. */
+            --kp-leave-state: leave;
+            --kp-arrive-unseen: skip;
+            --kp-leave-fold-grow: 1;
+            --kp-leave-fold-start: 0;
+        }
+
+        [data-theme='pastel'] [data-kp-leaving] {
+            animation: kp-sig-pastel-leave 520ms cubic-bezier(0.4, 0, 1, 1) forwards;
+        }
+
+        @keyframes kp-sig-pastel-leave {
+            to {
+                transform: translateY(-28px) rotate(-5deg);
+                opacity: 0;
+            }
+        }
+    }
+
+    /* ── The meter with a mark, this theme's way [picked by Kenny on
+       research/character-meter, round 3, 2026-10-05: shape 1, while
+       loading 1, how the share arrives 3, when the tone changes 1,
+       the mark past the end 2]. The package's own markup and states
+       (setMeter(), js/kpi.js): the track on the meter, the share on ::before,
+       the sign past the end or the loading picture on ::after, the mark
+       `.kp-meter__mark`. Every animation and transition under
+       prefers-reduced-motion: no-preference; still frames otherwise. ── */
+
+    /* The shared part: room past the end, loading without the pulse, the mark
+       centred on its width, the package's signs cleared for the shape's own.
+       Under :where() so each picked rule below wins as it did in the demo. */
+    :where([data-theme='pastel']) :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-room: 0.625rem;
+        box-sizing: border-box;
+    }
+
+    :where([data-theme='pastel']) .kp-meter--inline {
+        margin-inline-end: calc(var(--kp-space-xs, 0.25rem) + var(--kp-sig-meter-room));
+    }
+
+    /* Each character draws its own loading picture instead of the pulse. */
+    :where([data-theme='pastel']) :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+        overflow: clip;
+        animation: none;
+    }
+
+    :where([data-theme='pastel']) :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    /* The mark is centred on its share, whatever its width. */
+    :where([data-theme='pastel']) .kp-meter__mark {
+        --kp-sig-meter-mw: 2px;
+        box-sizing: border-box;
+        inline-size: var(--kp-sig-meter-mw);
+        inset-inline-start: calc(clamp(0, var(--kp-mark, 0), 1) * 100% - var(--kp-sig-meter-mw) / 2);
+    }
+
+    :where([data-theme='pastel']) .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - 0.75rem);
+    }
+
+    /* The sign past the end, cleared of the package's ▸ for each character
+       to draw its own. */
+    :where([data-theme='pastel']) :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        content: '';
+        position: absolute;
+        inset: auto;
+        translate: none;
+        color: inherit;
+        font-size: 0.75rem;
+        line-height: 1;
+        text-shadow: none;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    /* A mark past the end keeps the package's sign inside the bar's end, in
+       each character's own glyph and ink. */
+    :where([data-theme='pastel']) .kp-meter__mark[data-kp-over]::after {
+        content: var(--kp-sig-meter-mo-sign, '▸');
+        color: var(--kp-sig-meter-mo-ink, var(--foreground));
+        font-family: var(--kp-sig-meter-mo-font, inherit);
+        text-shadow:
+            0 0 1px var(--kp-sig-meter-mo-halo, var(--card)),
+            0 0 2px var(--kp-sig-meter-mo-halo, var(--card));
+    }
+
+    /* ── shape: option 1 ── */
+
+    /* ── pastel · washi tape ──────────────────────────────────────── */
+    [data-theme='pastel'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-meter-height: 0.625rem;
+        --kp-sig-meter-room: 0.75rem;
+        --kp-sig-meter-mo-ink: var(--primary);
+        border-radius: 999px;
+        background:
+            radial-gradient(circle, hsl(from var(--border-strong) h s l / 0.4) 0 0.75px, transparent 1.25px) 0 0 / 4px 4px,
+            var(--muted);
+        box-shadow: inset 0 0 0 1px hsl(from var(--border-strong) h s l / 0.5);
+    }
+
+    /* Plum tape with white stripes, the sky second pass off register under
+       it, the far end torn. */
+    [data-theme='pastel'] :is(.kp-meter, .kp-kpi__meter)::before {
+        inset-block: 1px;
+        border-radius: 999px 0 0 999px;
+        background:
+            repeating-linear-gradient(-45deg, hsl(from var(--card) h s l / 0.3) 0 2px, transparent 2px 5px) 0 0 / calc(100% - 2px) calc(100% - 2px)
+                no-repeat,
+            linear-gradient(var(--kp-meter-fill-colour), var(--kp-meter-fill-colour)) 0 0 / calc(100% - 2px) calc(100% - 2px) no-repeat,
+            var(--fx-overprint);
+        clip-path: polygon(0 0, calc(100% - 3px) 0, 100% 20%, calc(100% - 3px) 40%, 100% 60%, calc(100% - 3px) 80%, 100% 100%, 0 100%);
+    }
+
+    /* A round sticker on a pin. */
+    [data-theme='pastel'] .kp-meter__mark {
+        inset-block: -2px;
+        border-radius: 1px;
+        background: var(--foreground);
+        box-shadow: 0 0 0 1px var(--card);
+    }
+
+    [data-theme='pastel'] .kp-meter__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-end: calc(100% - 1px);
+        inset-inline-start: 50%;
+        inline-size: 9px;
+        block-size: 9px;
+        translate: -50% 0;
+        border-radius: 50%;
+        background: var(--card);
+        box-shadow:
+            inset 0 0 0 2px var(--primary),
+            1px 1px 0 var(--primary);
+    }
+
+    /* The tape runs over and its corner curls. */
+    [data-theme='pastel'] :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        inset-inline-start: calc(100% + 1px);
+        inset-block: 1px;
+        inline-size: 0.5rem;
+        background: linear-gradient(225deg, transparent 0 32%, var(--fx-overprint) 32% 50%, var(--kp-meter-fill-colour) 50%);
+    }
+
+    /* ── while loading: option 1 ── */
+
+    /* A pale tape drifts along. */
+    [data-theme='pastel'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        inset-block: 1px;
+        inset-inline: -14.1421px 0;
+        background: repeating-linear-gradient(-45deg, hsl(from var(--primary) h s l / 0.3) 0 2px, transparent 2px 10px);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+            animation: kp-sig-pastel-meter-drift 1600ms linear infinite;
+        }
+    }
+
+    /* ── how the share arrives: option 3 ── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] :is(.kp-meter, .kp-kpi__meter)::before {
+            animation: kp-sig-pastel-meter-drop-o 600ms cubic-bezier(0.3, 1.5, 0.5, 1) backwards;
+            transition: inline-size 600ms cubic-bezier(0.3, 1.5, 0.5, 1);
+        }
+    }
+
+    /* ── when the tone changes: option 1 ── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='warning']::before {
+            animation-name: kp-sig-pastel-meter-drop-w;
+        }
+
+        [data-theme='pastel'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='destructive']::before {
+            animation-name: kp-sig-pastel-meter-drop-d;
+        }
+    }
+
+    /* ── the mark past the end: option 2 ── */
+
+    [data-theme='pastel'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-mo-sign: '♥';
+    }
+
+    [data-theme='pastel'] .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - var(--kp-sig-meter-mw) - 1px);
+        rotate: 24deg;
+        transform-origin: 50% 100%;
+    }
+
+    [data-theme='pastel'] .kp-meter__mark[data-kp-over]::after {
+        inset-inline-start: calc(100% + 3px);
+        rotate: -24deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-meter__mark {
+            transition:
+                inset-inline-start 700ms cubic-bezier(0.3, 1.7, 0.5, 1),
+                rotate 700ms cubic-bezier(0.3, 1.7, 0.5, 1);
+        }
+    }
+
+    @keyframes kp-sig-pastel-meter-drift {
+        0% {
+            translate: 0 0;
+        }
+
+        100% {
+            translate: 14.1421px 0;
+        }
+    }
+
+    @keyframes kp-sig-pastel-meter-drop-d {
+        0% {
+            translate: 0 -160%;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-sig-pastel-meter-drop-o {
+        0% {
+            translate: 0 -160%;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-sig-pastel-meter-drop-w {
+        0% {
+            translate: 0 -160%;
+        }
+
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* ── Close = open reversed (research/all-themes/BRIEF.md, 2026-10-13):
+       mechanism only, no motion of pastel's own is added or changed. ── */
+
+    /* A tree branch's children glide shut as they glided open (js/motion.js
+       glideGroup(), lesson 26): the group is kept drawn while it shuts. */
+    [data-theme='pastel'] .kp-tree [role='treeitem'][aria-expanded='false'] > [role='group'][data-kp-group-folding],
+    [data-theme='pastel'] .kp-tree [role='treeitem'][aria-expanded='false'] + [role='group'][data-kp-group-folding] {
+        display: block;
+    }
+
+    /* One loading picture: while the busy table's layer stands over the rows,
+       the status line's small spinner stays out, so it holds back no arrival
+       of the layer and needs no leave of its own (lesson 23; cyberpunk's
+       rule). */
+    [data-theme='pastel'] .kp-datatable:has(> .kp-datatable__busy-overlay) .kp-datatable__status > .kp-spinner {
+        display: none;
+    }
+
+    /* The tour (lessons 11, 21, 22): the page's dim and the target's ring
+       come in the card's own time and curve (the package's kp-tour-in, 160 ms
+       ease-out) and go in the same time on its reflection (ease-in),
+       shrinking back into the target; the ring is drawn in from transparent
+       (an attribute change starts no @starting-style), `backwards` so the
+       close's transition can take it back. */
+    [data-theme='pastel'] {
+        --kp-tour-dim-close: 0 0 0 0 transparent;
+        --kp-tour-dim-time: 160ms;
+        --kp-tour-dim-close-ease: ease-in;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] [data-kp-tour-target] {
+            animation: kp-sig-pastel-tour-ring 160ms ease-out backwards;
+            transition:
+                box-shadow 160ms ease-out,
+                outline-color 160ms ease-out;
+        }
+    }
+
+    @keyframes kp-sig-pastel-tour-ring {
+        from {
+            outline-color: transparent;
+        }
+    }
+
+    /* ── Every part that opens takes the dialog's sheet (review round 2, 2026-10-13) ──
+       Kenny, on the bar, the palette, the date picker, the combobox, the alarm and the side
+       navigation: "Niet de open/close animatie van dit thema". Pastel has no CHARACTER.md; its one
+       decided opening is the dialog's sheet (kp-sig-pastel-pastel-sheet, research/signature-elements:
+       a second sheet laid on the print, up from 18 px below and turned -2.5 degrees, out of nothing,
+       springing into place on --fx-ease). The dialog is seen opening in 427 ms (js/motion.js plays
+       its 640 ms entrance in the dialog's close time, two thirds, `--kp-open: reverse-close`) and
+       closing as that backwards. Every part below opens with that same sheet, in those same
+       427 ms on that same curve, and closes as it played backwards: a CSS close runs a second name
+       of the same frames (kp-sig-pastel-sheet-back) in reverse, so the browser restarts it
+       (lesson 10); a panel js/motion.js closes (the palette, the date picker, the combobox list)
+       has its entrance played backwards for it. The alarm's sheet is in the register layer above. */
+    [data-theme='pastel'] {
+        --kp-sig-pastel-window: 427ms;
+        /* The hover dropdown and the phone panel are held on screen for their close (lesson 36). */
+        --kp-nav-close-time: 427ms;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* The command palette (and the shortcut sheet) are dialogs: the dialog's own rule. */
+        [data-theme='pastel'] :is(.kp-palette, .kp-shortcuts) {
+            --kp-sig-dur: 640ms;
+            animation: kp-sig-pastel-pastel-sheet var(--kp-sig-dur) var(--fx-ease) both;
+        }
+
+        /* The date picker's panel, the combobox's list and the collapsed rail's group that floats out
+           beside it (`.kp-sidenav__flyout`, a popover js/motion.js closes): laid on as the dialog is,
+           each where it hangs from its opener. */
+        [data-theme='pastel'] :is(.kp-datepicker__panel, .kp-combobox__list, .kp-sidenav__flyout) {
+            animation: kp-sig-pastel-pastel-sheet var(--kp-sig-pastel-window) var(--fx-ease) backwards;
+        }
+
+        /* The combobox's list is placed by measuring where it is drawn the moment it opens
+           (js/top-layer.js raiseInPlace(), layoutRect(), which sets a move aside but not a turn):
+           measured turned, it stayed 4 px left, 13 px low and 8 px wide for as long as it was open.
+           Its sheet holds the turn back for the first, invisible frame (opacity 0), so the
+           measurement reads the list where it rests; every frame that can be seen is the sheet's. */
+        [data-theme='pastel'] .kp-combobox__list {
+            animation-name: kp-sig-pastel-sheet-placed;
+        }
+
+        /* Menus and popovers (review round 2 follow-up, 2026-10-13): the theme menu's list, a
+           popover such as the row actions, and a menu button's menu are laid on as the dialog is and
+           taken off as that backwards (js/motion.js plays the entrance back on its closing copy, or
+           playClose()). A menu inside a popover is not laid on twice: the popover is. Tooltips keep
+           their bubble. Several are placed by measuring them as they open (js/menu-button.js,
+           js/top-layer.js), so they take the sheet with its first, unseen frame unturned. */
+        [data-theme='pastel'] :is(.kp-popover:not(.kp-tooltip, .kp-sidenav__flyout), .kp-theme-menu__list, .kp-menu-button > .kp-menu) {
+            animation: kp-sig-pastel-sheet-placed var(--kp-sig-pastel-window) var(--fx-ease) backwards;
+        }
+
+        [data-theme='pastel'] :is(.kp-popover, .kp-theme-menu__list) :is(.kp-menu, .kp-popover) {
+            animation: none;
+        }
+
+        /* The bar's dropdown (opened by hover and focus) and mega menu (opened by its button).
+           While a dropdown closes, js/components.js marks its item `[data-kp-nav-closing]` for
+           `--kp-nav-close-time` and the rule keeps it drawn (Firefox holds no `display`); the mega
+           menu's item is held while the hold number below transitions. The package's opacity fade
+           is replaced: the sheet brings its own. */
+        @container kp-nav (width > 40rem) {
+            [data-theme='pastel'] .kp-nav__menu {
+                --kp-sig-pastel-hold: 0;
+                transition: --kp-sig-pastel-hold var(--kp-sig-pastel-window) linear;
+            }
+
+            [data-theme='pastel']
+                :is(
+                    .kp-nav__links > li:is(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+                    .kp-nav__links > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide
+                ) {
+                --kp-sig-pastel-hold: 1;
+                animation: kp-sig-pastel-pastel-sheet var(--kp-sig-pastel-window) var(--fx-ease) backwards;
+            }
+
+            [data-theme='pastel']
+                .kp-nav__links
+                > li[data-kp-nav-closing]:not(:hover, :focus-within, [data-kp-nav-menu-open])
+                > .kp-nav__menu:not(.kp-nav__menu--wide) {
+                display: block;
+                opacity: 1;
+                animation: kp-sig-pastel-sheet-back var(--kp-sig-pastel-window) var(--fx-ease) reverse forwards;
+            }
+
+            [data-theme='pastel']
+                .kp-nav__links
+                > li[data-kp-nav-closing]:not([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true']))
+                > .kp-nav__menu--wide {
+                animation: kp-sig-pastel-sheet-back var(--kp-sig-pastel-window) var(--fx-ease) reverse forwards;
+            }
+        }
+
+        /* On a phone the bar's links are a panel under the bar: laid on as a sheet, taken off as it
+           backwards (js/components.js keeps it open `--kp-nav-close-time` while
+           `[data-kp-nav-closing]`). The lists nested in it are its own rows and play nothing. */
+        @container kp-nav (max-width: 40rem) {
+            [data-theme='pastel'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
+                animation: kp-sig-pastel-pastel-sheet var(--kp-sig-pastel-window) var(--fx-ease) backwards;
+            }
+
+            [data-theme='pastel'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__links {
+                animation: kp-sig-pastel-sheet-back var(--kp-sig-pastel-window) var(--fx-ease) reverse forwards;
+            }
+
+            [data-theme='pastel'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu {
+                animation: none;
+                transition: none;
+            }
+        }
+
+        /* The side navigation (over and push) is laid on where it stands as the dialog is, and
+           taken off as that backwards; only then does it go back behind its edge (it no longer
+           slides in 220 ms). The content a push panel moves glides aside on the sheet's time and
+           curve and comes back on its reflection in the same time, so the close is the open
+           backwards; the backdrop, where a page keeps one, takes the same time. */
+        [data-theme='pastel'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            transition: translate 0s linear;
+            animation: kp-sig-pastel-pastel-sheet var(--kp-sig-pastel-window) var(--fx-ease) backwards;
+        }
+
+        [data-theme='pastel'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='false'] {
+            transition: translate 0s linear var(--kp-sig-pastel-window);
+            animation: kp-sig-pastel-sheet-back var(--kp-sig-pastel-window) var(--fx-ease) reverse forwards;
+        }
+
+        [data-theme='pastel'] .kp-sidenav__backdrop {
+            animation-duration: 427ms;
+        }
+
+        [data-theme='pastel'] [data-kp-sidenav-shift='open'] {
+            transition-duration: var(--kp-sig-pastel-window);
+            transition-timing-function: var(--fx-ease);
+            transition-delay: 0s;
+        }
+
+        /* --fx-ease, cubic-bezier(0.34, 1.56, 0.64, 1), turned around. */
+        [data-theme='pastel'] [data-kp-sidenav-shift='closed'] {
+            transition-duration: var(--kp-sig-pastel-window);
+            transition-timing-function: cubic-bezier(0.36, 0, 0.66, -0.56);
+            transition-delay: 0s;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='pastel'] {
+            --kp-nav-close-time: 0ms;
+        }
+    }
+
+    /* The sheet for a part placed by measuring it as it opens (the combobox's list): the first
+       frame is the rest pose, unseen (opacity 0); the turn and the drop come from the next frame. */
+    @keyframes kp-sig-pastel-sheet-placed {
+        0% {
+            opacity: 0;
+            transform: none;
+        }
+
+        0.1% {
+            opacity: 0;
+            transform: translateY(18px) rotate(-2.5deg);
+        }
+
+        100% {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    /* The sheet under a second name, for a close a style plays (lesson 10). */
+    @keyframes kp-sig-pastel-sheet-back {
+        from {
+            opacity: 0;
+            transform: translateY(18px) rotate(-2.5deg);
+        }
+
+        to {
+            opacity: 1;
+            transform: none;
+        }
+    }
+}
+/* ── End of the signature ── */

@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>North site · line 2 (over the page)</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <link rel="stylesheet" href="../../css/formal-register.css" data-kp-register="formal" />
+        <link rel="stylesheet" href="frame.css" />
+    </head>
+    <body class="se-body">
+        <div class="kp-sidenav__launcher">
+            <button type="button" class="kp-icon-button" data-kp-sidenav-toggle aria-controls="se-nav"></button>
+        </div>
+        <div class="kp-sidenav__tab">
+            <button type="button" class="kp-icon-button" data-kp-sidenav-toggle aria-controls="se-nav"></button>
+        </div>
+        <nav class="kp-sidenav" id="se-nav" aria-label="North site sections" data-kp-sidenav-mode="over" data-kp-sidenav-backdrop="false" data-kp-sidenav-initial-focus="[aria-current='page']" data-kp-sidenav-shortcut="Control+b">
+            <div class="kp-sidenav__header"><p class="kp-sidenav__title" data-kp-sidenav-slim-hide>North site</p><p class="kp-sidenav__title" data-kp-sidenav-slim-show aria-hidden="true">N</p></div>
+            <div class="kp-sidenav__scroll">
+                <ul class="kp-sidenav__list">
+                    <li>
+                        <a class="kp-sidenav__link" href="#se-main"
+                            ><span class="kp-sidenav__icon" aria-hidden="true">◎</span><span class="kp-sidenav__label">Overview</span></a
+                        >
+                    </li>
+                    <li>
+                        <a class="kp-sidenav__link" href="#se-main" aria-current="page"
+                            ><span class="kp-sidenav__icon" aria-hidden="true">▤</span><span class="kp-sidenav__label">Line 2</span
+                            ><span class="kp-sidenav__badge">2</span></a
+                        >
+                    </li>
+                    <li>
+                        <a class="kp-sidenav__link" href="#se-main"
+                            ><span class="kp-sidenav__icon" aria-hidden="true">!</span><span class="kp-sidenav__label">Alarms</span
+                            ><span class="kp-sidenav__badge">14</span></a
+                        >
+                    </li>
+                    <li><hr class="kp-sidenav__divider" /></li>
+                    <li class="kp-sidenav__category" data-kp-sidenav-expanded>
+                        <button type="button" class="kp-sidenav__category-toggle">
+                            <span class="kp-sidenav__icon" aria-hidden="true">≋</span><span class="kp-sidenav__label">Readings</span>
+                        </button>
+                        <div class="kp-sidenav__submenu">
+                            <ul class="kp-sidenav__list">
+                                <li><a class="kp-sidenav__link" href="#se-main"><span class="kp-sidenav__label">Pressure</span></a></li>
+                                <li><a class="kp-sidenav__link" href="#se-main"><span class="kp-sidenav__label">Flow rate</span></a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="kp-sidenav__category">
+                        <button type="button" class="kp-sidenav__category-toggle">
+                            <span class="kp-sidenav__icon" aria-hidden="true">⚙</span><span class="kp-sidenav__label">Maintenance</span>
+                        </button>
+                        <div class="kp-sidenav__submenu">
+                            <ul class="kp-sidenav__list">
+                                <li><a class="kp-sidenav__link" href="#se-main"><span class="kp-sidenav__label">Lock-outs</span></a></li>
+                                <li><a class="kp-sidenav__link" href="#se-main"><span class="kp-sidenav__label">Spare parts</span></a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <a class="kp-sidenav__link" href="#se-main"><span class="kp-sidenav__icon" aria-hidden="true">◷</span><span class="kp-sidenav__label">Rota</span></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="kp-sidenav__footer"><span class="kp-sidenav__label">Signed in as the night shift</span></div>
+        </nav>
+        <main class="se-main" id="se-main">
+            <header class="kp-page-header" data-kp-sidenav-launcher-room>
+                <div class="kp-page-header__inner">
+                    <div>
+                        <h1 class="kp-page-header__title">Line 2</h1>
+                        <p class="kp-page-header__description">The navigation slides in from the left edge of the window over this page; nothing is dimmed and the page does not move. Opened, the focus lands on the current page, Line 2. Control+B (⌘B on a Mac) and the small tab at the edge open and close it too.</p>
+                    </div>
+                    <div class="kp-page-header__actions">
+                        <button type="button" class="kp-button">Export readings</button>
+                        <button type="button" class="kp-button kp-button--primary">Log an incident</button>
+                    </div>
+                </div>
+            </header>
+            <div class="kp-kpis" role="group" aria-label="Line 2 at a glance">
+                <div class="kp-kpi">
+                    <span class="kp-kpi__label">Pressure now</span>
+                    <span class="kp-kpi__value">1.1<small>bar</small></span>
+                    <span class="kp-kpi__trend">3.2 bar at 02:10</span>
+                </div>
+                <div class="kp-kpi">
+                    <span class="kp-kpi__label">Flow now</span>
+                    <span class="kp-kpi__value">412<small>m³/h</small></span>
+                    <span class="kp-kpi__trend">Average over 15 min</span>
+                </div>
+                <div class="kp-kpi" data-kp-tone="warning">
+                    <span class="kp-kpi__label">Open incidents</span>
+                    <span class="kp-kpi__value">2</span>
+                    <span class="kp-kpi__trend">1 new since 02:40</span>
+                </div>
+            </div>
+            <div class="se-cards">
+                <section class="kp-card" aria-labelledby="se-h-incidents">
+                    <div class="kp-card__header"><h2 class="kp-card__title" id="se-h-incidents">Open incidents</h2></div>
+                    <div class="kp-card__body">
+                        <div class="kp-table-wrap" data-kp-region-label="Open incidents">
+                            <table class="kp-table">
+                                <thead>
+                                    <tr>
+                                        <th>Incident</th>
+                                        <th>Since</th>
+                                        <th>State</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Pressure drop, pump house 3</td>
+                                        <td>13/10/2026 02:40</td>
+                                        <td>Open</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Valve V-12 slow to close</td>
+                                        <td>12/10/2026 22:05</td>
+                                        <td>Waiting on parts</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+                <section class="kp-card" aria-labelledby="se-h-handover">
+                    <div class="kp-card__header"><h2 class="kp-card__title" id="se-h-handover">Handover</h2></div>
+                    <div class="kp-card__body">
+                        <p>The pressure dropped from 3.2 to 1.1 bar between 02:10 and 02:40. Pump house 3 was switched to the reserve pump at 02:52; the day shift checks the seal first.</p>
+                    </div>
+                </section>
+            </div>
+        </main>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="frame.js"></script>
+    </body>
+</html>

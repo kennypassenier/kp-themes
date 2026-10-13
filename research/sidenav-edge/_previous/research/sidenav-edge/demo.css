@@ -1,0 +1,76 @@
+/* research/sidenav-edge: the page around the three app windows only. Every
+   rule hangs on a block's own classes, because the review dialog moves the
+   blocks into its stage. Colours are the theme's tokens; nothing here
+   restyles a component. */
+
+.se-page {
+    display: grid;
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 80rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) var(--kp-space-md, 1rem) var(--kp-space-2xl, 3rem);
+}
+
+.se-intro {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.se-intro :is(h1, p) {
+    margin: 0;
+}
+
+.se-intro p,
+.se-look p,
+.se-sec__head h2 {
+    max-inline-size: 80ch;
+}
+
+.se-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    background: var(--background);
+    color: var(--foreground);
+}
+
+.se-sec__head {
+    display: grid;
+    gap: 0.25rem;
+}
+
+.se-sec__head :is(h2, p),
+.se-look p {
+    margin: 0;
+}
+
+.se-sec__head h2 {
+    font-size: 1.125rem;
+    line-height: 1.4;
+}
+
+.se-num,
+.se-motion {
+    color: var(--muted-foreground);
+}
+
+.se-num {
+    font-size: 0.875rem;
+}
+
+/* The window: an app page of its own, as tall as a laptop's view of it, so
+   the panel runs the full height and the launcher stays put while the page
+   scrolls under it. */
+.se-window {
+    display: block;
+    inline-size: 100%;
+    block-size: min(40rem, 80dvh);
+    border: 1px solid var(--border-strong);
+    background: var(--background);
+}
+
+.se-alone {
+    font-size: 0.875rem;
+}

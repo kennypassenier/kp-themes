@@ -183,10 +183,15 @@ function withEngine(signature) {
  * @returns {{ page: string, block: string, kind: 'note' | 'approved' | 'rejected', theme: string, engine?: string, text: string, signature: string, line?: string }[]}
  */
 export function promptItems() {
+    // A page under 'Archived research' is decided: what this browser still keeps
+    // for it was passed on in its own rounds and is never copied again (Kenny,
+    // 2026-10-13: forest-applied's round-5 verdicts came back in a fresh prompt).
+    const archived = new Set(PAGES.filter((group) => group.group === 'Archived research').flatMap((group) => group.pages.map((p) => p.href)));
     const titles = load(TITLES_KEY, {});
     const titleOf = (page, block) => titles[page]?.[block] ?? block;
     const items = [];
     for (const [page, blocks] of Object.entries(allNotes())) {
+        if (archived.has(page)) continue;
         for (const [block, themes] of Object.entries(blocks)) {
             for (const [theme, text] of Object.entries(themes)) {
                 // A dropped theme (lapis, shade-light, shade-dark, high-contrast, sepia, retro) is never passed on.
@@ -206,6 +211,7 @@ export function promptItems() {
     const stored = loadJudgements();
     for (const [key, themes] of Object.entries(stored)) {
         const { page, block } = verdictPlace(key);
+        if (archived.has(page)) continue;
         // A panel on screen knows whether its block still looks as judged; in
         // the theme on screen a verdict on a block that changed since is stale.
         const panel = document.querySelector(`.cat-judge[data-cat-block="${CSS.escape(key)}"]`);

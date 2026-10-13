@@ -32205,6 +32205,14 @@
         border: none;
     }
 
+    /* Over the page the slabs need ground of their own: on a transparent panel the page under it
+       showed between and behind them and the items were hard to read (Kenny, 2026-10-13, round 4:
+       "er is geen achtergrond"). The page's ground, closed by a hard 3 px edge like a slab's. */
+    [data-theme='brutalism'] .kp-sidenav[data-kp-sidenav-mode='over'] {
+        --kp-sidenav-surface: var(--background);
+        border-inline-end: 3px solid var(--foreground);
+    }
+
     [data-theme='brutalism'] .kp-sidenav__header {
         background: var(--foreground);
         color: var(--background);

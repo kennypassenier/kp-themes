@@ -134,7 +134,7 @@ SECTIONS = {
     }),
 }
 
-ROUND = '2026-10-13-r4'
+ROUND = '2026-10-13-r5'
 DEMO_THEMES = ['formal', 'light', 'dark', 'cyberpunk', 'synthwave', 'pastel', 'terminal', 'forest', 'blueprint', 'solstice', 'brutalism', 'deco', 'phantom', 'grotesk', 'nostromo', 'titanium']
 TOUR_ALL = ' Round 2, every theme: on a step the card no longer drops into the page for a moment (that was the flash and the jump), the page stays dimmed on a card with cut corners, and the part the tour points at is shown uncut while it is pointed at.'
 GENERIC = 'Not changed for this theme in particular: judge it as it is (round 2 shows every block in every theme).'
@@ -256,7 +256,9 @@ tail = tail.replace('<!-- Round one: every block is new. -->', '<!-- Round one. 
 OUT.mkdir(exist_ok=True)
 # Round 4 (Kenny, 2026-10-13 22:24): only the side navigation is asked again where it was not approved in round 3 (dark);
 # the rejected pairs (dark|sidenav, phantom|combobox) reopen by themselves.
-reopen = ['dark|sidenav']
+# Round 5 (Kenny, 2026-10-13 23:18): every pair approved; brutalism's panel over the page took a ground of its own
+# after the edge demo's round 1, and this demo's side navigation is that panel, so it is asked again.
+reopen = ['brutalism|sidenav']
 tail = tail.replace('"reopen": []', '"reopen": ' + json.dumps(reopen))
 (OUT / 'demo.html').write_text(head + intro + REFERENCE + '\n'.join(out_sections) + '\n' + tail)
 js = (SRC / 'demo.js').read_text()
