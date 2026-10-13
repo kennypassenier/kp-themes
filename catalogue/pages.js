@@ -3,15 +3,30 @@
 // gates/check-catalogue.mjs refuses a catalogue page or a research demo that
 // is missing here, and an entry here with no page behind it.
 
-/** @typedef {{ href: string, label: string, component?: boolean, review?: boolean, rework?: string }} Page */
+/**
+ * @typedef {object} Page
+ * @property {string} href
+ * @property {string} label
+ * @property {boolean} [component]  a component page: "Every component, one page" gathers its blocks
+ * @property {boolean} [review]     an example page: it wears the shell only when asked by `?review`
+ * @property {string} [rework]      a research round being rebuilt: the Agenda leaves it out until the flag goes
+ * @property {string} [about]       a research demo: what it asks, in one sentence, for the Agenda's row
+ * @property {string[]} [after]     a research demo: the demos (their href) to judge before this one; the Agenda
+ *                                  orders by it and says "Judge after: …" on the row
+ * @property {string} [affects]     a research demo: what a rejection here changes elsewhere, one sentence the Agenda
+ *                                  shows as "A rejection here changes: …"
+ */
 
 /** @type {{ group: string, pages: Page[] }[]} */
 export const PAGES = [
     {
         group: 'Review',
         pages: [
+            // The one page Kenny starts from (Kenny, 2026-10-13): what waits for him, in order, with what depends on
+            // what; To judge and Every component, one page stay reachable from it.
+            { href: 'catalogue/agenda.html', label: 'Agenda: start here' },
+            { href: 'catalogue/changed.html', label: 'To judge, by theme' },
             { href: 'catalogue/index.html', label: 'Every component, one page' },
-            { href: 'catalogue/changed.html', label: 'To judge: start here' },
             { href: 'catalogue/compare.html', label: 'Compare two themes' },
         ],
     },
@@ -88,9 +103,20 @@ export const PAGES = [
             // Kenny, 2026-10-07 04:23: what makes brutalism brutalism, the same way (the analysis in themes/brutalism/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the sixth theme of the one-by-one series, after solstice.
             // Kenny, 2026-10-07 04:23: what makes grotesk grotesk, the same way (the analysis in themes/grotesk/CHARACTER.md), nineteen rules of its grammar as questions, each option a live scene, the recommendation first; the seventh theme of the one-by-one series, after brutalism. Questions 9 to 12 are the grotesk-only loading demo Kenny asked for on 2026-10-06 21:37, from the graph's Out of register.
             // Kenny, 2026-10-12: "Cyberpunk lijkt af, zie dat dezelfde fouten nu niet terugkomen in andere thema's": every other theme mended so a close is its open backwards with the theme's own effect; only what changed, each block in the themes where it did (research/all-themes).
-            { href: 'research/all-themes-applied/demo.html', label: 'Every theme: closes as opens' },
+            {
+                href: 'research/all-themes-applied/demo.html',
+                label: 'Every theme: closes as opens',
+                about: "Every theme's bar, side navigation, palette, pickers, tour, dialogs and alarm close as their opening played backwards, with the theme's own effect.",
+                // Its block 2 (the side navigation) is drawn with the side navigation's defaults, which the edge demo decides.
+                after: ['research/sidenav-edge/demo.html'],
+            },
             // Kenny, 2026-10-13 (his words, translated from Dutch): "That same side navigation must have a button (e.g. a hamburger icon) at the very top left of the page that is static; the sidebar itself must come all the way out of the left side of the screen and push the other content to the right (or there must be enough margin so nothing is obstructed; make both demos)." and "Maybe there should also be an option that does obstruct the content: make three demos and/or the option to choose the version through attributes.": push, reserved gutter and over, one attribute each (research/sidenav-edge).
-            { href: 'research/sidenav-edge/demo.html', label: "The side navigation at the window's edge" },
+            {
+                href: 'research/sidenav-edge/demo.html',
+                label: "The side navigation at the window's edge",
+                about: "The side navigation slides out of the window's edge behind a fixed menu button, three ways (push the page, keep room for it, or cover it), plus its icon rail.",
+                affects: "block 2 of 'Every theme: closes as opens' (the side navigation) takes its defaults from here, so it is redrawn and asked again.",
+            },
         ],
     },
     {

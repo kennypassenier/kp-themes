@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Agenda · kp-themes catalogue</title>
+        <link rel="stylesheet" href="./deps.css" />
+        <link rel="stylesheet" href="./agenda.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+        <header class="cat-bar">
+            <a class="cat-bar__home" href="./index.html">kp-themes catalogue</a>
+            <span class="cat-bar__spacer"></span>
+            <button type="button" class="kp-button kp-button--ghost" data-cat-devtools>Devtools (Alt+D)</button>
+        </header>
+
+        <main id="main" class="cat-main agenda">
+            <div class="agenda__head">
+                <div class="agenda__lead">
+                    <h1>Agenda</h1>
+                    <p class="cat-intro agenda__intro">
+                        Everything that waits for your verdict, in the order to take it: a demo that another one builds on comes first, and each row
+                        says what a rejection there would change. Each button opens the review dialog with only what is still open.
+                    </p>
+                </div>
+                <div class="agenda__actions">
+                    <button type="button" class="kp-button kp-button--primary agenda__start" data-cat-hub-start data-agenda-start disabled>
+                        Reading…
+                    </button>
+                    <p class="cat-note agenda__next" data-agenda-next>Opens the first item that still waits.</p>
+                    <p class="agenda__other">
+                        <a href="./changed.html">To judge, by theme</a>
+                        <span aria-hidden="true">·</span>
+                        <a href="./index.html">Every component, one page</a>
+                    </p>
+                </div>
+            </div>
+
+            <!-- The status line: one sentence on where the round stands. Further lines go in this slot. -->
+            <div class="agenda__status" data-agenda-status-slot>
+                <p class="agenda__status-line" role="status" aria-live="polite" data-agenda-status>Reading what waits for a verdict…</p>
+            </div>
+
+            <div class="kp-alert kp-alert--info agenda__answers" role="status" data-agenda-answers hidden>
+                <span class="kp-alert__icon" aria-hidden="true">✎</span>
+                <span class="kp-alert__body"
+                    ><span class="kp-alert__label">Answers to paste: </span><span data-agenda-answers-text></span
+                ></span>
+                <button type="button" class="kp-button kp-button--sm agenda__answers-copy" data-agenda-answers-copy>Copy the answers</button>
+            </div>
+
+            <section class="agenda__part" aria-labelledby="agenda-waiting-title">
+                <h2 id="agenda-waiting-title">Waiting for you</h2>
+                <p class="cat-intro">
+                    One row per item, numbered in order. A count says how many element-and-theme pairs are still open and in how many themes.
+                </p>
+                <ol class="agenda__list" data-agenda-waiting aria-busy="true"></ol>
+            </section>
+
+            <details class="agenda__blocks" id="agenda-blocks" data-agenda-blocks-part hidden>
+                <summary class="agenda__fold-summary">The open catalogue blocks, laid out <span class="agenda__fold-count" data-agenda-blocks-count></span></summary>
+                <p class="cat-intro">
+                    What the catalogue row opens, with each block's verdict panel, so a block can be judged here as well. A block shows in the
+                    themes where it is open; the dialog walks them theme by theme and switches the theme by itself.
+                </p>
+                <div data-cat-compose="agenda"></div>
+            </details>
+
+            <details class="agenda__done" data-agenda-done>
+                <summary class="agenda__fold-summary">Done <span class="agenda__fold-count" data-agenda-done-count></span></summary>
+                <p class="cat-intro">
+                    Judged in every theme in this browser, or archived with the decision its folder records. Open one again to copy its answer or to
+                    change a verdict.
+                </p>
+                <ol class="agenda__list agenda__list--done" data-agenda-done-list></ol>
+            </details>
+        </main>
+
+        <script type="module" src="../js/auto.js"></script>
+        <script src="./boot-check.js"></script>
+        <script type="module" src="./catalogue.js"></script>
+        <script type="module" src="./agenda.js"></script>
+        <script type="module" src="./intros.js"></script>
+        <script type="module" src="./play.js"></script>
+        <script type="module" src="./checklist.js"></script>
+        <script type="module" src="./shortcuts.js"></script>
+    </body>
+</html>

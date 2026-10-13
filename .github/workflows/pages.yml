@@ -88,13 +88,13 @@ jobs:
           for dir in catalogue research examples css js fonts; do
             cp -r "review/$dir" "_site/review/$dir"
           done
-          printf '<!doctype html><meta http-equiv="refresh" content="0; url=./catalogue/index.html">\n' > _site/review/index.html
+          printf '<!doctype html><meta http-equiv="refresh" content="0; url=./catalogue/agenda.html">\n' > _site/review/index.html
           # The work branch's review site, the same cut, beside main's.
           mkdir -p _site/review-branch
           for dir in catalogue research examples css js fonts; do
             cp -r "review-branch/$dir" "_site/review-branch/$dir"
           done
-          printf '<!doctype html><meta http-equiv="refresh" content="0; url=./catalogue/changed.html">\n' > _site/review-branch/index.html
+          printf '<!doctype html><meta http-equiv="refresh" content="0; url=./catalogue/agenda.html">\n' > _site/review-branch/index.html
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site

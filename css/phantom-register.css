@@ -875,10 +875,17 @@
        the theme menu's popover holds a .kp-menu, and both took the 4 px
        edge, so the bar on the left stood twice (Kenny, 2026-10-08: "die
        balk links staat er twee keer?"). The outer surface keeps the edge
-       and the paperclip; the list inside is bare. */
+       and the paperclip; the list inside is bare.
+       A combobox's list is not one of them: it never lies inside the surface
+       that holds its field, it floats over it in the top layer as a dropdown
+       of its own (js/top-layer.js), so it keeps its own plate there too.
+       Named here it lost its ground, its edge and its paperclip inside any
+       dialog, the review dialog's stage included, and the page showed
+       through its options (Kenny, 2026-10-13 22:12: "er is precies geen vlak
+       achter de opties"). */
     [data-theme='phantom']
         :is(.kp-dialog, .kp-popover, .kp-toast, .kp-confirm, .kp-datepicker__panel, .kp-palette)
-        :is(.kp-menu, .kp-combobox__list, .kp-theme-menu__list) {
+        :is(.kp-menu, .kp-theme-menu__list) {
         background: transparent;
         border-left: 0;
         clip-path: none;
@@ -2510,6 +2517,8 @@
         background: var(--background);
         box-shadow: 10px 10px 0 var(--kp-sig-ph-plate);
         rotate: var(--kp-land);
+        /* Its turn, for a part inside it placed by measuring (kp-sig-phantom-fly-placed). */
+        --kp-sig-ph-host-turn: var(--kp-land);
         /* The red edge stands outside the content: the title, the words and
            the buttons are inset from it by its own width and 12 px, so no word
            sits on the red [Kenny, 2026-10-09: "in a dialog with a title, the
@@ -2528,6 +2537,7 @@
     [data-theme='phantom'] .kp-dialog.kp-drawer {
         padding-inline-end: 0;
         rotate: none;
+        --kp-sig-ph-host-turn: 0deg;
     }
 
     /* The slash the hero carries, here as the dialog's end edge: a red plate
@@ -2889,11 +2899,16 @@
 
     /* The throw for a part placed by measuring it as it opens (the combobox's list): its first
        frame, unseen, stands unturned where the part lands; the throw's own pose comes from the next
-       frame. */
+       frame. Unturned on the screen, not only against its parent: inside a surface that stands
+       askew (a dialog lands a degree and a half turned, the review dialog's stage included) the
+       part is turned back by that surface's own turn (--kp-sig-ph-host-turn), so the box measured
+       is the part itself and not the larger box round it turned. Measured inside the turned review
+       dialog without this, the raised list stood 2.4 px before its field, 1.2 px under it instead
+       of the 4 px margin, and 224 px wide against the field's 219 (review round 3). */
     @keyframes kp-sig-phantom-fly-placed {
         0% {
             translate: 0 0;
-            rotate: none;
+            rotate: calc(-1 * var(--kp-sig-ph-host-turn, 0deg));
             scale: 1;
             visibility: hidden;
             animation-timing-function: linear;
@@ -3693,15 +3708,13 @@
     /* The combobox's list is phantom's menu [G3, G6, G14] (Kenny, review
        round 2: "Niet de open/close animatie van dit thema"; it landed level):
        thrown from the field's edge, it slaps down and stands a degree and a
-       half askew, as the theme menu and the row actions do. Inside a dialog,
-       a popover or the palette it is part of that surface and stands level. */
+       half askew, as the theme menu and the row actions do. Inside a dialog
+       too: there it floats over the dialog in the top layer as a plate of its
+       own (review round 3: inside a dialog, the review stage's included, it had
+       been made bare, level and still). */
     [data-theme='phantom'] .kp-combobox__list {
         --kp-sig-ph-land: var(--kp-land);
         rotate: var(--kp-land);
-    }
-
-    [data-theme='phantom'] :is(.kp-dialog, .kp-popover, .kp-toast, .kp-confirm, .kp-palette) .kp-combobox__list {
-        rotate: none;
     }
 
     [data-theme='phantom']:dir(rtl) :is(.kp-datepicker__panel, .kp-combobox__list) {
@@ -3736,11 +3749,6 @@
            seen is the throw's. */
         [data-theme='phantom'] .kp-combobox__list {
             animation-name: kp-sig-phantom-fly-placed, kp-sig-phantom-resolve;
-        }
-
-        /* The combobox's list inside a dialog-like surface stays part of it. */
-        [data-theme='phantom'] :is(.kp-dialog, .kp-popover, .kp-toast, .kp-confirm, .kp-palette) .kp-combobox__list {
-            animation: none;
         }
     }
 

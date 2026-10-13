@@ -377,7 +377,7 @@
                     { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-alarm" },
                     {
                         "file": "css/pastel-register.css",
-                        "selector": "[data-theme='pastel'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel"
+                        "selector": "[data-theme='pastel'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) .kp-alarm__panel"
                     },
                     { "file": "css/pastel-register.css", "keyframes": "kp-registration" },
                     { "file": "css/pastel-register.css", "keyframes": "kp-fill" },

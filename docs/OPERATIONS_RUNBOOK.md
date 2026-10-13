@@ -893,7 +893,12 @@ steps only remove clicks.
 
 ### Procedure 9.1 — judge what is open
 
-1. Open **To judge: start here** (`catalogue/changed.html`).
+1. Open **Agenda: start here** (`catalogue/agenda.html`). It lists every
+   research demo and the catalogue blocks that wait, in order (a demo's
+   `after` in `catalogue/pages.js`), with what a rejection would change
+   (`affects`); its first button opens the first item, and after an item's
+   last verdict the dialog goes on to the next by itself. For the blocks of
+   one theme, open **To judge, by theme** (`catalogue/changed.html`) from it.
    It gathers only the blocks open in the theme on screen — never judged,
    judged on markup that changed, an approval whose pixels moved
    (`catalogue/pixel-checks.json`), or a review note asking again — page by

@@ -1,8 +1,7 @@
-// catalogue/changed.html, "To judge": the ONE page Kenny starts from when
-// something waits for his verdict (Kenny, 2026-10-05: "ik heb altijd gezegd
-// van dingen te bundelen zodat ik vanuit één centrale locatie/pagina verder
-// kan, dus doe dat"). Claude links only this page when it asks Kenny to look,
-// never a demo or a catalogue page on its own.
+// catalogue/changed.html, "To judge, by theme": the list of what waits for
+// Kenny's verdict in the theme on screen. Since 2026-10-13 the page he starts
+// from is the Agenda (agenda.html, which reads the same data through
+// waiting.js); this one stays reachable from it.
 //
 // In order: first the research demos under "Research to look at" that carry
 // the review kit, each with its state read from the kit's own storage
@@ -20,14 +19,11 @@
 // (`data-cat-theme-fixed` without a theme of its own keeps the theme menu
 // but stops the review dialog walking on to the next theme over blocks
 // gathered for this one); another theme picked in the menu gathers again.
-import { attachAll } from '../js/auto.js';
 import { currentTheme, THEME_EVENT } from '../js/theme-core.js';
-import { headingText, suffixIds } from './review.js';
-import { REVIEW_PAGE, themeLabel } from './review-state.js';
-import { mountJudging } from './judging.js';
+import { themeLabel } from './review-state.js';
 import { gatherBlocks, isOpen } from './open-pairs.js';
-import { PAGES } from './pages.js';
-import { fingerprintOf, loadUpdate, progressOf, shapeOf, storedFor } from '../research/_review/progress.js';
+import { progressOf, storedFor } from '../research/_review/progress.js';
+import { composeBlocks, demoStatus, readDecided, readDemo, researchPages, reviewUrl } from './waiting.js';
 
 const ROOT = new URL('../', import.meta.url);
 
@@ -59,81 +55,7 @@ async function composeChanged(host) {
         document.dispatchEvent(new CustomEvent('cat-composed'));
         return;
     }
-
-    const toolbar = document.createElement('div');
-    toolbar.className = 'cat-review-bar';
-    host.append(toolbar);
-    const toc = document.createElement('ul');
-    toc.className = 'cat-toc';
-    host.append(toc);
-
-    const entries = [];
-    for (const { page, slug, title: pageTitle, blocks: pageBlocks } of pages) {
-        const chosen = pageBlocks.filter((block) => open.has(block.id));
-        if (!chosen.length) continue;
-        const component = document.createElement('section');
-        component.className = 'cat-component';
-        component.id = slug;
-        const h2 = document.createElement('h2');
-        h2.className = 'cat-component__title';
-        h2.textContent = `${pageTitle} (${chosen.length})`;
-        const source = document.createElement('a');
-        source.className = 'cat-note';
-        source.href = new URL(page.href, ROOT).href;
-        source.textContent = `Open ${page.label} on its own page`;
-        component.append(h2, source);
-
-        const item = document.createElement('li');
-        const link = document.createElement('a');
-        link.href = `#${slug}`;
-        link.textContent = `${pageTitle} (${chosen.length})`;
-        item.append(link);
-        toc.append(item);
-
-        for (const block of chosen) {
-            const section = /** @type {HTMLElement} */ (document.importNode(block.node, true));
-            // As on the review page: the block's own heading one level down.
-            for (const h of section.querySelectorAll(':scope > h2')) {
-                const h3 = document.createElement('h3');
-                for (const { name, value } of h.attributes) h3.setAttribute(name, value);
-                h3.innerHTML = h.innerHTML;
-                h.replaceWith(h3);
-            }
-            section.dataset.catTitle = block.title;
-            suffixIds(section, '', `${slug}--`);
-            section.id = block.id;
-            component.append(section);
-            entries.push({
-                key: block.id,
-                notePage: REVIEW_PAGE,
-                noteBlock: block.id,
-                title: block.title ?? headingText(section),
-                source: block.source,
-                root: section,
-                fieldId: `cat-feedback-${block.id}`,
-                place: (panel) => section.append(panel),
-            });
-        }
-        host.append(component);
-    }
-
-    attachAll(host);
-    const judging = mountJudging({
-        entries,
-        toolbar,
-        onRender() {
-            for (const component of host.querySelectorAll('.cat-component')) {
-                component.hidden = !component.querySelector('.cat-block:not([hidden])');
-            }
-            // Open as judging.js has it: no verdict that stands, or a review note asking again.
-            const left = entries.filter(
-                ({ root }) => !['approved', 'rejected'].includes(root.dataset.catState ?? '') || root.hasAttribute('data-cat-review-note'),
-            ).length;
-            heading(left);
-        },
-    });
-    await judging.start();
-    document.dispatchEvent(new CustomEvent('cat-composed'));
+    await composeBlocks(host, { pages, chosen: open, onRender: (left) => heading(left) });
 }
 
 /* ------------------------------------------------------------------ the hub */
@@ -152,19 +74,16 @@ function mountHub() {
     const decided = /** @type {HTMLDetailsElement} */ (document.querySelector('[data-cat-hub-decided]'));
     const decidedList = /** @type {HTMLElement} */ (document.querySelector('[data-cat-hub-decided-list]'));
     const self = new URL('changed.html', import.meta.url);
-    const listed = PAGES.find((group) => group.group === 'Research to look at')?.pages ?? [];
-    // A round being rebuilt (`rework` in pages.js) waits for its new round, not for a verdict.
-    const pages = listed.filter((page) => !page.rework);
-    const inRework = listed.length - pages.length;
+    const { waiting: pages, inRework, archived: archivedPages } = researchPages();
 
-    /** @typedef {{ href: string, label: string, url: URL, shape: ReturnType<typeof shapeOf> | undefined, failed: boolean, row: HTMLLIElement }} Demo */
+    /** @typedef {{ href: string, label: string, url: URL, shape: Awaited<ReturnType<typeof readDemo>> | undefined, failed: boolean, row: HTMLLIElement }} Demo */
     /** @type {Demo[]} */
     const demos = pages.map((page) => ({ ...page, url: new URL(page.href, ROOT), shape: undefined, failed: false, row: rowFor(page) }));
     list.replaceChildren(...demos.map((demo) => demo.row));
     // Under Decided as well: every archived demo, with the decision its
     // folder records (decided.json), newest first (Kenny, 2026-10-07: "ik heb
     // al veel meer demos goedgekeurd dan deze laatste vier").
-    const archived = (PAGES.find((group) => group.group === 'Archived research')?.pages ?? []).map((page) => {
+    const archived = archivedPages.map((page) => {
         const row = rowFor(page);
         const url = new URL(page.href, ROOT);
         const open = /** @type {HTMLAnchorElement} */ (row.querySelector('[data-cat-hub-open]'));
@@ -172,7 +91,7 @@ function mountHub() {
         open.textContent = 'Open';
         open.setAttribute('aria-label', `Open: ${page.label}`);
         row.dataset.catHubState = 'archived';
-        return { row, url, decided: '' };
+        return { row, url, href: page.href, decided: '' };
     });
     /** One archived row's words and badge, from its decided.json or its absence. */
     const paintArchived = (entry) => {
@@ -187,12 +106,7 @@ function mountHub() {
     let blocksLeft = null;
 
     /** The address that opens a demo: its dialog at once, and the way back to here. */
-    const openUrl = (demo) => {
-        const url = new URL(demo.url);
-        url.searchParams.set('next', self.href);
-        url.searchParams.set('review', 'open');
-        return url.href;
-    };
+    const openUrl = (demo) => reviewUrl(demo.href, self.href);
 
     function rowFor(page) {
         const li = document.createElement('li');
@@ -224,14 +138,13 @@ function mountHub() {
             return;
         }
         if (!shape) return;
-        const progress = progressOf(shape, storedFor(shape.id));
+        const { progress, action } = demoStatus(shape);
         ask.textContent = shape.ask;
         row.dataset.catHubState = progress.state;
         const extras = progress.extrasLeft ? ' and its catalogue blocks' : '';
         if (progress.state === 'decided') {
             badge.textContent = `Judged in all ${progress.themes} themes`;
             badge.className = 'kp-badge kp-badge--success';
-            open.textContent = 'Open again';
         } else if (progress.state === 'updated') {
             // A later round: name the themes it reopened, so Kenny sees which round he is in.
             const names = progress.updated.map(themeLabel);
@@ -243,16 +156,14 @@ function mountHub() {
             const blocks = count > 3 && progress.extrasUpdated ? ' and its catalogue blocks' : '';
             badge.textContent = `${progress.update ? `Update ${progress.update}` : 'Changed'} · ${which}${blocks}`;
             badge.className = 'kp-badge kp-badge--info';
-            open.textContent = 'Continue';
         } else if (progress.state === 'new') {
             badge.textContent = `Not started · ${progress.themes} themes`;
             badge.className = 'kp-badge';
-            open.textContent = 'Start';
         } else {
             badge.textContent = `${progress.themesLeft} of ${progress.themes} themes left${extras}`;
             badge.className = 'kp-badge kp-badge--warning';
-            open.textContent = 'Continue';
         }
+        open.textContent = action;
         open.setAttribute('aria-label', `${open.textContent}: ${demo.label}`);
     }
 
@@ -318,18 +229,7 @@ function mountHub() {
     Promise.all(
         demos.map(async (demo) => {
             try {
-                const fetchUrl = new URL(demo.url);
-                fetchUrl.searchParams.set('_', String(Date.now()));
-                const response = await fetch(fetchUrl.href, { cache: 'no-cache' });
-                if (!response.ok) throw new Error(String(response.status));
-                const html = await response.text();
-                const shape = shapeOf(new DOMParser().parseFromString(html, 'text/html'));
-                // Its version, so a verdict on earlier files of this round reads as open.
-                if (shape) {
-                    shape.fingerprint = await fingerprintOf(demo.url, html);
-                    shape.update = await loadUpdate(new URL('update.json', demo.url));
-                }
-                demo.shape = shape;
+                demo.shape = await readDemo(demo.href);
             } catch {
                 demo.failed = true;
             }
@@ -338,14 +238,7 @@ function mountHub() {
     );
     Promise.all(
         archived.map(async (entry) => {
-            try {
-                const decidedUrl = new URL('decided.json', entry.url);
-                decidedUrl.searchParams.set('_', String(Date.now()));
-                const response = await fetch(decidedUrl.href, { cache: 'no-cache' });
-                if (response.ok) entry.decided = String((await response.json())?.decided || 'Decided; see its decided.json.');
-            } catch {
-                // No decision file: the row stays "Archived".
-            }
+            entry.decided = await readDecided(entry.href);
             paintArchived(entry);
         }),
     ).then(render);

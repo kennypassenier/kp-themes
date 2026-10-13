@@ -253,3 +253,10 @@ the full-size drawer (level, from the start edge, 700 ms); the combobox's list l
 level). The loading picture's block and slash stand on the busy panel of the table and of the calendar again (the panels
 were static, so both layers covered the whole table, and the whole window for the calendar).
 research/all-themes/reports/phantom.md.
+
+**Review round 3, 2026-10-13:** the combobox's list keeps phantom's menu plate (the popover ground, the 4 px red edge,
+the paperclip) and its throw and resolve inside a dialog too. It was named among the lists that are part of the
+surface they sit in, so inside any dialog (the review dialog's stage included) it was bare, level and still and the page
+showed through its options; it is never part of that surface, it floats over it in the top layer. A list placed by
+measuring is measured unturned on the screen: inside a dialog that stands askew its first, unseen frame is turned back
+by the dialog's own turn (`--kp-sig-ph-host-turn`), so it lands on its field exactly as on the page.

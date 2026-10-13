@@ -20,6 +20,8 @@ export const storeKey = (demo) => `kp-demo-review:${demo}`;
  * @property {string} ask        what the demo asks, from its own header
  * @property {string[]} themes   the themes it walks, in order
  * @property {string[]} items    its judged sections (`data-review-item`)
+ * @property {Record<string, string[] | null>} [itemThemes]  per section, the themes it names for itself
+ *   (`data-review-themes` on the section), null when it is asked in every theme the demo walks
  * @property {string[]} extras   the keys of the catalogue pairs it carries along
  * @property {{ round?: string, reopen?: string[] } | null} round
  * @property {string | null} [fingerprint]  see fingerprintOf, once read
@@ -60,7 +62,17 @@ function askOf(doc) {
 export function shapeOf(doc) {
     const root = doc.documentElement;
     const id = root.getAttribute('data-review');
-    const items = [...doc.querySelectorAll('[data-review-item]')].map((section) => section.getAttribute('data-review-item') ?? '');
+    const sections = [...doc.querySelectorAll('[data-review-item]')];
+    const items = sections.map((section) => section.getAttribute('data-review-item') ?? '');
+    // A section that names its own themes is asked in those only, as review.js builds its steps; counted in every
+    // theme, a demo of what differs per theme never read as decided.
+    /** @type {Record<string, string[] | null>} */
+    const itemThemes = Object.fromEntries(
+        sections.map((section) => {
+            const own = section.getAttribute('data-review-themes');
+            return [section.getAttribute('data-review-item') ?? '', own ? own.split(/[\s,]+/).filter(Boolean) : null];
+        }),
+    );
     if (!id || !items.length) return null;
     const listed = (root.getAttribute('data-review-themes') ?? '')
         .split(',')
@@ -74,6 +86,7 @@ export function shapeOf(doc) {
         ask: askOf(doc),
         themes: listed.length ? listed : THEMES.map((t) => t.name),
         items,
+        itemThemes,
         extras: extras.map((extra) => {
             const slug = extra.page.replace(/^.*\//, '').replace(/\.html$/, '');
             return `catalogue|${slug}--${extra.block}|${extra.theme}|${extra.engine || 'firefox'}`;
@@ -222,6 +235,8 @@ export function staleKeys(shape, stored) {
  * @returns {DemoProgress}
  */
 export function progressOf(shape, stored = storedFor(shape.id)) {
+    /** The sections asked in a theme: all of them, or the ones that name it. */
+    const askedIn = (theme) => shape.items.filter((item) => !shape.itemThemes?.[item] || shape.itemThemes[item]?.includes(theme));
     /** Pairs a round not yet opened in this browser will reopen on load (review.js): open, whatever their verdict. */
     const pending = new Set();
     if (shape.round?.round && stored.__round !== shape.round.round) {
@@ -236,10 +251,10 @@ export function progressOf(shape, stored = storedFor(shape.id)) {
     // An update not yet opened in this browser: the themes it asks again.
     if (shape.update && (Number(stored.__update) || 0) < shape.update.update)
         for (const theme of shape.themes)
-            if (Object.keys(shape.update.questions[theme] || {}).length) for (const item of shape.items) pending.add(`${theme}|${item}`);
+            if (Object.keys(shape.update.questions[theme] || {}).length) for (const item of askedIn(theme)) pending.add(`${theme}|${item}`);
     const reopened = new Set(pending.size ? pending : Array.isArray(stored.__reopened) ? stored.__reopened : []);
     const open = (key) => !stored[key]?.verdict || pending.has(key);
-    const steps = shape.themes.map((theme) => shape.items.map((item) => `${theme}|${item}`));
+    const steps = shape.themes.map((theme) => askedIn(theme).map((item) => `${theme}|${item}`));
     if (shape.extras.length) steps.push(shape.extras);
     const pairs = steps.flat();
     const pairsLeft = pairs.filter(open).length;
@@ -271,3 +286,58 @@ export function progressOf(shape, stored = storedFor(shape.id)) {
         pairsLeft,
     };
 }
+
+/*
+ * A demo's answer, kept beside its verdicts (Kenny, 2026-10-13: auto-next across demos). Once the dialog runs on from
+ * one demo to the next on the Agenda, the answer is no longer copied on the way; review.js keeps the latest text here
+ * and the Agenda offers every answer not yet copied in one press. Copying stays Kenny's: nothing is sent anywhere.
+ */
+
+/** Where review.js keeps a demo's latest answer: `{ text, at, judged, copied }`, `copied` the `at` it was copied at. */
+export const answerKey = (demo) => `${storeKey(demo)}:answer`;
+
+/**
+ * @typedef {object} DemoAnswer
+ * @property {string} text    the answer as the demo's "Copy answer" gives it
+ * @property {string} at      when it last changed (ISO)
+ * @property {number} judged  pairs judged when it was written
+ * @property {string} [copied] the `at` of the text last copied
+ */
+
+/** A demo's stored answer, or null. @returns {DemoAnswer | null} */
+export function answerOf(id) {
+    try {
+        const data = JSON.parse(localStorage.getItem(answerKey(id)) || 'null');
+        return data && typeof data.text === 'string' ? data : null;
+    } catch {
+        return null;
+    }
+}
+
+/** Keep a demo's answer; a text unchanged since it was copied stays copied. */
+export function keepAnswer(id, text, judged) {
+    const before = answerOf(id);
+    if (before?.text === text) return;
+    try {
+        localStorage.setItem(answerKey(id), JSON.stringify({ text, judged, at: new Date().toISOString() }));
+    } catch {
+        /* storage refused: the demo's own Copy answer still works */
+    }
+}
+
+/** Mark a demo's answer as copied, as it stands now. */
+export function markAnswerCopied(id) {
+    const answer = answerOf(id);
+    if (!answer) return;
+    try {
+        localStorage.setItem(answerKey(id), JSON.stringify({ ...answer, copied: answer.at }));
+    } catch {
+        /* nothing to mark */
+    }
+}
+
+/** Whether a demo has an answer with a verdict in it that was not copied since it last changed. */
+export const answerWaiting = (id) => {
+    const answer = answerOf(id);
+    return Boolean(answer && answer.judged > 0 && answer.copied !== answer.at);
+};

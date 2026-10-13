@@ -1,0 +1,3804 @@
+/* The numbers dark's motion is made of, registered at the top level because
+   Firefox does not register an @property inside a cascade layer; with no
+   registration every keyframe that moves one would flip between its two poses
+   instead of moving. --kp-sig-dk-turn is how far the film has turned on a
+   pass (0 at rest, a full turn is the same colour: cyan at the top);
+   --kp-sig-dk-at and --kp-sig-dk-ink are how far the line has come over a
+   changed figure and how much ink lies over the film in its letters (at
+   rest the figure is ink); --kp-sig-dk-ph is the spinner's loop, 0 to 1. */
+@property --kp-sig-dk-turn {
+    syntax: '<angle>';
+    inherits: true;
+    initial-value: 0deg;
+}
+
+@property --kp-sig-dk-at {
+    syntax: '<percentage>';
+    inherits: true;
+    initial-value: 100%;
+}
+
+@property --kp-sig-dk-ink {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+@property --kp-sig-dk-ph {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0.2;
+}
+
+/* --kp-sig-dk-hold carries no picture: a transition on it holds the mega
+   menu's panel on screen for the pass back (js/components.js settleClosing
+   waits for the panel's transitions), as Firefox holds no `display`. */
+@property --kp-sig-dk-hold {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+}
+
+@layer kp.register {
+    /* @kp-soft/themes — css/dark-register.css
+   The dark register, 5.0.0 [S48, LIFT_PLAN row 15]: the ordinary dark
+   theme, done properly. Scoped to [data-theme='dark'] and inert
+   elsewhere; opt-in, imported after themes.css. The approved concept
+   demo ("Small Hours", stars II, 2026-09-08) was the reference for every
+   value here.
+
+   THE STARFIELD IS GONE [Kenny, 2026-09-11]: "dark mag zijn sterren weer
+   kwijtspelen op de achtergrond". What stood here until that day was 112
+   individually-generated positions pasted verbatim from the demo's own
+   header — a 102-point field on the shared texture layer at 0.35, and
+   ten brighter stars on a layer of their own, their SVG shimmer rebuilt
+   as masked conic gradients. None of it was animated; it was a still
+   photograph, painted once. It is recorded here rather than only in the
+   history because the demo that approved it still shows it, and anyone
+   comparing the two deserves to know which way the difference runs.
+
+   The divider keeps its own dense local sample. That is a seam between
+   sections, not the background he named, and it stays until he says
+   otherwise.
+
+   What this file does, in order: the knobs; the two-channel focus ring,
+   reversed from the base default; the type; the hooks of S45 — the
+   headline that resolves word by word out of a blur, the mark as an
+   ignite (the lede's colour-only, scroll-bound; the dossier's a redact
+   bar that lifts on the trigger), the rule that sweeps in under a
+   heading, the divider as a night seam with its own dense local sample;
+   the nav as a quiet strip with its dropdown's own keyboard ring; the
+   buttons, fields and panels; and one answer per component root (TH124).
+
+   Colour discipline (DI9): nothing here names a colour. Every stop is
+   `var(--token)` or `hsl(from var(--token) h s l / alpha)`. */
+
+    [data-theme='dark'] {
+        /* The month heatmap's nav goes on two rows below this width: the
+           widest month and the three buttons in this type [fix-98]. */
+        --kp-calendar-nav-fit: 25rem;
+        /* A key-figure tile's frame in a strip with columns: --border-strong
+           reads 2.22:1 on the page and 2.11:1 on the card here (DI1, open), so
+           a fifth of the ink goes in it: 3.55:1 and 3.36:1 [fix-101]. */
+        --kp-kpi-border: color-mix(in oklab, var(--border-strong) 80%, var(--foreground));
+        /* The configuration surface [AR43], the demo's values as defaults. */
+        --kp-reveal-threshold: 0.6;
+        --kp-word-stagger: 60ms;
+        --kp-redact-stagger: 90ms;
+        --kp-sweep-range-start: entry 10%;
+        --kp-sweep-range-end: entry 85%;
+        --kp-ignite-range-start: entry 30%;
+        --kp-ignite-range-end: entry 80%;
+        /* The reveals this theme performs [S45]: js/effects.js reads these
+           and leaves a theme that declares none at rest. No arrival: the
+           demo has no boot sequence, the page is simply there. */
+        --kp-reveal-headline: resolve;
+        --kp-reveal-emphasis: ignite;
+        --kp-reveal-rule: sweep;
+        /* The turn's curve: most of it at once, then a long settle to cyan at
+           the top [G1; Kenny, 2026-10-09]. The pass itself is linear. */
+        --kp-settle: cubic-bezier(0.22, 1, 0.36, 1);
+
+        /* No starfield. The approved demo had one — 102 points on the
+           shared texture layer with ten shimmer stars above it — and
+           Kenny took it back out on 2026-09-11: "dark mag zijn sterren
+           weer kwijtspelen op de achtergrond". The ground is plain now.
+           The divider keeps its own dense local sample, which is a seam
+           between sections rather than the background he named. */
+
+        /* ── The oxide film [scope-16] ─────────────────────────────────
+           The one mechanism this theme is really about. Anodising does not
+           add pigment: it grows a film whose thickness decides which
+           wavelength survives, so the colour shifts with the angle you
+           look from. The gradient's start angle follows the pointer, and
+           `js/effects.js` writes that angle down — a gradient cannot read
+           a pointer.
+
+           `--kp-px` carries its own value so the gradient is valid before
+           anything has moved, and so it keeps working when the module is
+           detached or absent. Half a turn is the middle of the sweep. */
+        --kp-pointer: track;
+        --kp-px: 0.5;
+        --kp-py: 0.5;
+        --kp-iris: conic-gradient(from calc(var(--kp-px) * 1turn), var(--chart-1), var(--chart-2), var(--chart-3), var(--chart-4), var(--chart-1));
+
+        /* ── The halo: the film, spilled onto the ground [scope-102] ────
+           Kenny, 2026-09-16, the shadow-and-ink form, dark-shadow "Gloed
+           van de oxidefilm": a raised panel is separated from the ground
+           by the film's own four wavelengths rather than by a shadow in
+           the ground's own colour, which on a 5%-lightness ground had
+           almost nowhere to go (measured 0.4% of the band past ΔL* 3;
+           research/dark-dialog-shadow/README.md, option 1).
+
+           Four fixed shadows, not the blurred film itself. The research
+           measured the blurred version higher (88.3% of the band at dPR
+           1 against this one's share), but it cannot be worn by the two
+           surfaces this decision is mostly about: `.kp-popover` is
+           `overflow: auto` and a modal dialog is `overflow: auto` by the
+           UA stylesheet (HTML Standard §15.3.3), and overflow clips a
+           pseudo-element — the blurred halo measured 0 of 17616 band
+           pixels on the popover. A box-shadow is not a descendant and is
+           not clipped, so the same idea is painted as four of them, one
+           per wavelength, placed where the conic gradient puts that
+           colour: chart-2 below, chart-1 to the left, chart-3 to the
+           right, chart-4 above. The cost, stated rather than hidden: a
+           fixed shadow does not turn with the pointer as the film's own
+           border does. */
+        --kp-halo:
+            0 10px 18px hsl(from var(--chart-2) h s l / 0.3), -10px 4px 16px hsl(from var(--chart-1) h s l / 0.26),
+            10px 4px 16px hsl(from var(--chart-3) h s l / 0.26), 0 -6px 14px hsl(from var(--chart-4) h s l / 0.2);
+        /* The machined corner: cut, never rounded. Two opposite corners,
+           the way a milled part is relieved. */
+        --kp-chamfer: var(--fx-notch, 0.55rem);
+        --kp-chamfer-panel: 1rem;
+        /* How far past its own box the halo reaches, and how far past that
+           nothing of it is left [fix-41]. The furthest of the four shadows
+           travels its offset plus its blur — 10px + 18px — so 2.5rem is
+           past the last pixel of it and short of anything a panel holds. */
+        --kp-halo-reach: 2.5rem;
+        --kp-halo-field: 100rem;
+    }
+
+    /* ── The chamfer [scope-16] ────────────────────────────────────────
+       Controls take the small cut and panels the large one. `clip-path`
+       rather than a border-radius, because the corner is a straight edge
+       at forty-five degrees and a radius is an arc. */
+    [data-theme='dark'] .kp-button,
+    [data-theme='dark'] .kp-field__input,
+    [data-theme='dark'] .kp-badge {
+        clip-path: polygon(
+            0 0,
+            calc(100% - var(--kp-chamfer)) 0,
+            100% var(--kp-chamfer),
+            100% 100%,
+            var(--kp-chamfer) 100%,
+            0 calc(100% - var(--kp-chamfer))
+        );
+    }
+
+    /* The card's cut moved to its own ::after with the plate it belongs to
+       [scope-102], for the reason the dialog's did at scope-100: a
+       clip-path clips the element's own box-shadow, so a chamfered card
+       could not cast the halo (or anything else) at all. */
+    [data-theme='dark'] .kp-card::after,
+    [data-theme='dark'] .kp-alert,
+    [data-theme='dark'] .kp-dialog::before {
+        clip-path: polygon(
+            0 0,
+            calc(100% - var(--kp-chamfer-panel)) 0,
+            100% var(--kp-chamfer-panel),
+            100% 100%,
+            var(--kp-chamfer-panel) 100%,
+            0 calc(100% - var(--kp-chamfer-panel))
+        );
+    }
+
+    /* ── The halo stops where the corner is cut [fix-41] ────────────────
+       Kenny, 2026-09-16, on the confirmation dialog: "normaal is de hoek
+       afgesneden, maar nu is er een niet-gekleurde streep die het terug
+       hoekig maakt". Measured in firefox at dPR 2.222, over the two cut
+       corners of each panel: 1664 of the dialog's 5700 corner pixels and
+       1608 of the card's were painted by the halo *outside* the cut — a
+       glow tracing the square box while the plate traced the chamfer, with
+       the bare wedge between them reading as a strip that squared the
+       corner again. On the four blocks Kenny rejected: the confirmation
+       1667, the app shell's two cards 1711 and 1654, the dossier's three
+       1679, 1622 and 1596, the long dialog 579. After: 0, 9, 16, 0, 0, 0
+       and 0 — what is left is the clip's own edge between device pixels.
+
+       A box-shadow is the border box's shape and nothing else: it knows
+       no chamfer, and it is never painted inside the border box, so the
+       wedge could not be filled either. The three ways out were weighed:
+
+       - the halo on the plate's own layer, clipped with it — a clip-path
+         clips the element's own box-shadow (scope-100 measured that at
+         1406px), so the halo would vanish rather than follow the cut;
+       - `filter: drop-shadow()` on the plate — the plate is a
+         pseudo-element, and both surfaces that matter clip those away
+         (`.kp-popover` and a modal dialog are `overflow: auto`); on the
+         card a filter is refused outright by scope-102's own note,
+         because it would make every card the containing block of any
+         fixed descendant a consumer puts in it;
+       - the cut, extended outward through the shadow and applied to the
+         panel itself. Taken.
+
+       So the chamfer is carried past the box for the reach of the halo
+       and the panel is clipped to it: the glow is cut along the same
+       forty-five degrees the plate is, and stops dead at the corner. The
+       clip is the field rather than a box — a rectangle `--kp-halo-field`
+       out on every side with two bounded bites taken out of it, each
+       joined to the edge by a zero-width seam, the island idiom this file
+       already uses for the readout button's strip. Nothing a panel holds
+       is clipped unless it reaches into one of those two corners, and
+       nothing moves: a clip-path is paint, not layout.
+
+       The sixteen points, in order: the field's top-left corner; in along
+       its top edge to the seam and down it; round the top-right bite and
+       back up the same seam; on to the field's other two far corners;
+       then the bottom-left bite in the same three moves; and the last
+       corner closes it. */
+    [data-theme='dark'] .kp-card,
+    [data-theme='dark'] .kp-dialog,
+    [data-theme='dark'] .kp-menu,
+    [data-theme='dark'] .kp-popover:not(.kp-tooltip),
+    [data-theme='dark'] .kp-toast,
+    [data-theme='dark'] .kp-combobox__list,
+    [data-theme='dark'] .kp-datepicker__panel,
+    [data-theme='dark'] .kp-palette,
+    [data-theme='dark'] .kp-theme-menu__list,
+    [data-theme='dark'] .kp-nav__menu {
+        clip-path: polygon(
+            calc(-1 * var(--kp-halo-field)) calc(-1 * var(--kp-halo-field)),
+            calc(100% - var(--kp-chamfer-panel) - var(--kp-halo-reach)) calc(-1 * var(--kp-halo-field)),
+            calc(100% - var(--kp-chamfer-panel) - var(--kp-halo-reach)) calc(-1 * var(--kp-halo-reach)),
+            calc(100% + var(--kp-halo-reach)) calc(var(--kp-chamfer-panel) + var(--kp-halo-reach)),
+            calc(100% + var(--kp-halo-reach)) calc(-1 * var(--kp-halo-reach)),
+            calc(100% - var(--kp-chamfer-panel) - var(--kp-halo-reach)) calc(-1 * var(--kp-halo-reach)),
+            calc(100% - var(--kp-chamfer-panel) - var(--kp-halo-reach)) calc(-1 * var(--kp-halo-field)),
+            calc(100% + var(--kp-halo-field)) calc(-1 * var(--kp-halo-field)),
+            calc(100% + var(--kp-halo-field)) calc(100% + var(--kp-halo-field)),
+            calc(var(--kp-chamfer-panel) + var(--kp-halo-reach)) calc(100% + var(--kp-halo-field)),
+            calc(var(--kp-chamfer-panel) + var(--kp-halo-reach)) calc(100% + var(--kp-halo-reach)),
+            calc(-1 * var(--kp-halo-reach)) calc(100% - var(--kp-chamfer-panel) - var(--kp-halo-reach)),
+            calc(-1 * var(--kp-halo-reach)) calc(100% + var(--kp-halo-reach)),
+            calc(var(--kp-chamfer-panel) + var(--kp-halo-reach)) calc(100% + var(--kp-halo-reach)),
+            calc(var(--kp-chamfer-panel) + var(--kp-halo-reach)) calc(100% + var(--kp-halo-field)),
+            calc(-1 * var(--kp-halo-field)) calc(100% + var(--kp-halo-field))
+        );
+    }
+
+    /* ── The instrument's own button [scope-16] ────────────────────────
+       Three things happen at once and none of them is a colour change:
+       two brackets close on the label, the label draws itself in a little,
+       and the oxide runs along the bottom edge. The brackets are the
+       button's own pseudo-elements; the oxide is `.kp-button__edge`, which
+       the component now provides precisely because both were needed.
+
+       `content` here is a glyph, not a word: nothing to translate, and so
+       nothing KT5 has to police. */
+    [data-theme='dark'] .kp-button::before,
+    [data-theme='dark'] .kp-button::after {
+        position: absolute;
+        inset-block: 0;
+        display: grid;
+        place-items: center;
+        font-family: var(--theme-font-mono);
+        font-size: 0.85em;
+        color: currentcolor;
+        opacity: 0;
+        pointer-events: none;
+        z-index: 2;
+    }
+
+    [data-theme='dark'] .kp-button::before {
+        content: '[';
+        inset-inline-start: 0.55rem;
+        translate: -0.5rem 0;
+    }
+
+    [data-theme='dark'] .kp-button::after {
+        content: ']';
+        inset-inline-end: 0.55rem;
+        translate: 0.5rem 0;
+    }
+
+    /* The brackets need room of their own [scope-80]. Kenny's note on the
+       data table's add-filter editor: its small ghost Cancel is narrower
+       than the brackets, and on hover they sat on the letters (6.8px and
+       6.4px into "Cancel", firefox). The inline padding is therefore never
+       less than the bracket's inset, its glyph (0.85em of a monospace face,
+       about 0.55em wide) and a quarter rem of air; each size keeps its own
+       padding wherever that is already wider. */
+    [data-theme='dark'] .kp-button {
+        padding-inline: max(0.875rem, calc(0.55rem + 0.55em + 0.25rem));
+    }
+
+    [data-theme='dark'] .kp-button--sm {
+        padding-inline: max(var(--kp-button-padding-inline-sm, var(--kp-space-sm, 0.5rem)), calc(0.55rem + 0.55em + 0.25rem));
+    }
+
+    [data-theme='dark'] .kp-button--lg {
+        padding-inline: max(var(--kp-button-padding-inline-lg, var(--kp-space-xl, 1.5rem)), calc(0.55rem + 0.55em + 0.25rem));
+    }
+
+    [data-theme='dark'] .kp-button:hover:not(:disabled, [aria-disabled='true'])::before,
+    [data-theme='dark'] .kp-button:hover:not(:disabled, [aria-disabled='true'])::after,
+    [data-theme='dark'] .kp-button:focus-visible::before,
+    [data-theme='dark'] .kp-button:focus-visible::after {
+        opacity: 1;
+        translate: 0 0;
+    }
+
+    [data-theme='dark'] .kp-button__edge {
+        inset-block-start: auto;
+        block-size: 2px;
+        background: var(--kp-iris);
+        scale: 0 1;
+        transform-origin: left center;
+        z-index: 1;
+    }
+
+    [data-theme='dark'] .kp-button:hover:not(:disabled, [aria-disabled='true']) .kp-button__edge,
+    [data-theme='dark'] .kp-button:focus-visible .kp-button__edge {
+        scale: 1 1;
+    }
+
+    [data-theme='dark'] .kp-button__label {
+        position: relative;
+        z-index: 2;
+    }
+
+    [data-theme='dark'] .kp-button:hover:not(:disabled, [aria-disabled='true']) .kp-button__label,
+    [data-theme='dark'] .kp-button:focus-visible .kp-button__label {
+        scale: 0.94;
+    }
+
+    /* The reading above the control: the consumer's own word, in the
+       theme's monospace, taking the oxide's colours through the text. */
+    [data-theme='dark'] .kp-button__readout {
+        inset-block-end: calc(100% + 0.2rem);
+        font-family: var(--theme-font-mono);
+        font-size: 0.5rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--muted-foreground);
+        translate: 0 0.2rem;
+    }
+
+    [data-theme='dark'] .kp-button:hover:not(:disabled, [aria-disabled='true']) .kp-button__readout,
+    [data-theme='dark'] .kp-button:focus-visible .kp-button__readout {
+        opacity: 1;
+        translate: 0 0;
+        background: var(--kp-iris);
+        background-clip: text;
+        color: transparent;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] .kp-button::before,
+        [data-theme='dark'] .kp-button::after {
+            transition:
+                opacity var(--fx-duration) var(--fx-ease),
+                translate calc(var(--fx-duration) * 1.3) var(--fx-ease);
+        }
+
+        [data-theme='dark'] .kp-button__edge {
+            transition: scale calc(var(--fx-duration) * 1.9) var(--fx-ease);
+        }
+
+        [data-theme='dark'] .kp-button__label {
+            transition: scale calc(var(--fx-duration) * 1.3) var(--fx-ease);
+        }
+
+        [data-theme='dark'] .kp-button__readout {
+            transition:
+                opacity var(--fx-duration) var(--fx-ease),
+                translate var(--fx-duration) var(--fx-ease);
+        }
+    }
+
+    /* ── The press [Kenny's dark note, 2026-09-15] ────────────────────
+       "There is no animation when I click." The press was a ground change
+       only, eased over the theme's 220ms, and a click is shorter than
+       that: the ground had barely started to move when the release sent
+       it back. So the instrument answers a press the way it answers a
+       hover, in its own notation: the brackets close the last step onto
+       the label, the label settles a little further, the edge doubles,
+       and all of it arrives at once. The release is what eases back, on
+       the theme's own curve, which is the movement the eye catches. Every
+       one of these is paint — a pseudo-element's or a child's transform,
+       an out-of-flow edge — so no box in the row moves. */
+    [data-theme='dark'] .kp-button:active:not(:disabled),
+    [data-theme='dark'] .kp-button:active:not(:disabled)::before,
+    [data-theme='dark'] .kp-button:active:not(:disabled)::after,
+    [data-theme='dark'] .kp-button:active:not(:disabled) .kp-button__label,
+    [data-theme='dark'] .kp-button:active:not(:disabled) .kp-button__edge {
+        transition-duration: 0s;
+    }
+
+    [data-theme='dark'] .kp-button:active:not(:disabled)::before,
+    [data-theme='dark'] .kp-button:active:not(:disabled)::after {
+        opacity: 1;
+    }
+
+    [data-theme='dark'] .kp-button:active:not(:disabled)::before {
+        translate: 0.15rem 0;
+    }
+
+    [data-theme='dark'] .kp-button:active:not(:disabled)::after {
+        translate: -0.15rem 0;
+    }
+
+    [data-theme='dark'] .kp-button:active:not(:disabled) .kp-button__label {
+        scale: 0.9;
+    }
+
+    [data-theme='dark'] .kp-button:active:not(:disabled) .kp-button__edge {
+        block-size: 4px;
+        scale: 1 1;
+    }
+
+    /* ── Room for the readout above the chamfer [Kenny's note, 2026-09-15]
+       The chamfer is a clip-path, and a clip-path clips the element's
+       descendants too, so the readout — which sits above the control, out
+       of its box — was cut away entirely: at full opacity on hover and not
+       one pixel painted, on the catalogue and on the concept page alike.
+       A button that carries a readout keeps its chamfer and adds a strip
+       above it for the readout to show in. The strip is an island, joined
+       to the chamfer by a zero-width seam along the start edge, and it
+       stops the width of the focus ring and its outline short of the
+       control, so none of the ring the chamfer cuts away reappears on top.
+       It reaches well past both ends because the readout does not wrap. */
+    [data-theme='dark'] .kp-button:has(> .kp-button__readout) {
+        --kp-readout-seam: calc(-1 * (var(--focus-ring-width, 2px) + var(--kp-focus-ring-inner-width, 2px) + 1px));
+        clip-path: polygon(
+            0 0,
+            0 var(--kp-readout-seam),
+            calc(100% + 12rem) var(--kp-readout-seam),
+            calc(100% + 12rem) -2rem,
+            -12rem -2rem,
+            -12rem var(--kp-readout-seam),
+            0 var(--kp-readout-seam),
+            0 0,
+            calc(100% - var(--kp-chamfer)) 0,
+            100% var(--kp-chamfer),
+            100% 100%,
+            var(--kp-chamfer) 100%,
+            0 calc(100% - var(--kp-chamfer))
+        );
+    }
+
+    /* ── The field's own oxide line [scope-16] ─────────────────────────── */
+    [data-theme='dark'] .kp-field {
+        position: relative;
+    }
+
+    [data-theme='dark'] .kp-field::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: -1px;
+        block-size: 1px;
+        background: var(--kp-iris);
+        scale: 0 1;
+        transform-origin: left center;
+        pointer-events: none;
+    }
+
+    [data-theme='dark'] .kp-field:focus-within::after {
+        scale: 1 1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] .kp-field::after {
+            transition: scale calc(var(--fx-duration) * 1.5) var(--fx-ease);
+        }
+    }
+
+    /* ── The ring, reversed from the base default [DI2, AR30, S49] ────────
+       The base layer puts the theme's foreground on the inner ring and its
+       background on the outer one; the approved demo's own :focus-visible
+       does it the other way — the void touching the element, the ink
+       outside it — and DI2's promise holds either way, since one of the
+       two always clears 3:1 on the surface behind it. */
+    [data-theme='dark'] :focus-visible {
+        outline-color: var(--foreground);
+        box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--background);
+    }
+
+    /* ── The ring inside the chamfer [fix-38, DI2] ─────────────────────
+       The chamfer's clip-path cuts away everything outside the button's
+       box, the outline and the outer shadow above included: tabbing to a
+       button changed 0 pixels on or outside its edge. So on a clipped
+       control both channels go inside, along the edge, where the clip
+       cannot reach — the answer the menu item below and cyberpunk's bevel
+       already give. The ink (--focus-ring) runs along the edge and the
+       void (--focus-ring-contrast) inside it, the same order as the ring
+       outside: on the card-grounded button the ink reads, on the
+       near-white primary the void does. The outline stays declared and
+       stays clipped. */
+    [data-theme='dark'] .kp-button:focus-visible {
+        box-shadow:
+            inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 0 0 calc(var(--kp-focus-ring-inner-width, 2px) + 2px) var(--focus-ring-contrast);
+    }
+
+    /* ── Type ──────────────────────────────────────────────────────────── */
+
+    [data-theme='dark'] h1,
+    [data-theme='dark'] h2,
+    [data-theme='dark'] h3 {
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+        color: var(--foreground);
+    }
+
+    [data-theme='dark'] [data-kp-surface] h1 {
+        letter-spacing: -0.02em;
+        margin-block: 0 0.35em;
+        text-wrap: balance;
+    }
+
+    /* The headline reveal: the module wraps each word in its own span
+       (`[data-word]`, `--kp-i` its index); at rest — no script, or the
+       reveal already ran — every word is already its own inline-block
+       with nothing applied, which is the finished look. */
+    [data-theme='dark'] [data-kp-reveal='headline'] [data-word] {
+        display: inline-block;
+    }
+
+    /* Microlabels: a quiet dot before the label, in the near-white primary. */
+    [data-theme='dark'] .microlabel {
+        font-family: var(--theme-font-body);
+        font-size: 0.7rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--muted-foreground);
+        line-height: 1.3;
+    }
+
+    [data-theme='dark'] .microlabel::before {
+        content: '· ';
+        color: var(--primary);
+    }
+
+    /* ── The hooks [S45]: the mark, the rule, the divider ─────────────── */
+
+    /* The mark, its default and general reading: an ignite. At rest — no
+       script, reduced motion, or a browser without scroll-driven
+       animations — the words already stand in the finished signal: never
+       an invisible or half-drawn state (DI7). */
+    [data-theme='dark'] mark {
+        background: none;
+        color: var(--primary);
+        font-weight: 600;
+        text-decoration: underline 2px solid var(--border-strong);
+        text-underline-offset: 0.18em;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        @supports (animation-timeline: view()) {
+            [data-theme='dark'] mark {
+                color: var(--muted-foreground);
+                text-decoration-color: var(--border);
+                animation: kp-ignite linear both;
+                animation-timeline: view();
+                animation-range: var(--kp-ignite-range-start) var(--kp-ignite-range-end);
+            }
+        }
+    }
+
+    /* The rule: the oxide across the heading's whole width, drawn from the
+       leading edge as the heading arrives [scope-16]. The demo draws it as
+       a scaleX on a two-pixel band rather than the old sweep of a gradient
+       position, because the band IS the film here — there is nothing to
+       slide, only more or less of it. At rest it stands fully drawn. */
+    [data-theme='dark'] [data-kp-reveal='rule'] {
+        position: relative;
+        padding-block-end: 0.6rem;
+    }
+
+    [data-theme='dark'] [data-kp-reveal='rule']::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 0;
+        block-size: 2px;
+        background: var(--kp-iris);
+        scale: 1 1;
+        transform-origin: left center;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        @supports (animation-timeline: view()) {
+            [data-theme='dark'] [data-kp-reveal='rule']::after {
+                animation: kp-draw linear both;
+                animation-timeline: view();
+                animation-range: var(--kp-sweep-range-start) var(--kp-sweep-range-end);
+            }
+        }
+    }
+
+    /* The divider: the instrument's own scale. A hairline that fades at
+       both ends, with tick marks standing on it every three rem — the
+       edge of a ruler rather than a decorative seam. No starfield and no
+       colour of its own: every stop is a token. */
+    [data-theme='dark'] [data-kp-divider] {
+        position: relative;
+        display: block;
+        block-size: var(--kp-divider-height, 4rem);
+        background: linear-gradient(90deg, transparent, var(--border) 12%, var(--border) 88%, transparent);
+        background-size: 100% 1px;
+        background-repeat: no-repeat;
+        background-position: 0 50%;
+        overflow: hidden;
+    }
+
+    [data-theme='dark'] [data-kp-divider]::before {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: calc(50% - 3px);
+        block-size: 7px;
+        background: repeating-linear-gradient(90deg, var(--border-strong) 0 1px, transparent 1px var(--kp-divider-tick, 3rem));
+        /* A mask reads the alpha channel and ignores the hue, so the token here
+           is a way of saying "fully opaque" without writing a colour (DI9). */
+        mask-image: linear-gradient(90deg, transparent, var(--foreground) 12%, var(--foreground) 88%, transparent);
+    }
+
+    [data-theme='dark'] [data-kp-divider]::after {
+        content: '';
+        position: absolute;
+        inset-inline: 22%;
+        inset-block-start: 50%;
+        block-size: 1px;
+        background: var(--kp-iris);
+        opacity: 0.75;
+    }
+
+    [data-theme='dark'] [data-kp-divider='alt'] {
+        transform: scaleX(-1);
+    }
+
+    /* ── The hero ──────────────────────────────────────────────────────── */
+
+    [data-theme='dark'] [data-kp-surface='hero'] {
+        position: relative;
+        padding-block: 3rem 4.5rem;
+    }
+
+    [data-theme='dark'] [data-kp-surface='hero'] [data-kp-hero-grid] {
+        grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+        gap: 2.5rem;
+        align-items: end;
+    }
+
+    @container (max-width: 54rem) {
+        [data-theme='dark'] [data-kp-surface='hero'] [data-kp-hero-grid] {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* The margin note: a difference-blend chrome over the hero's own glow —
+       there is no photograph to invert over (S48), so the "imagery" is the
+       glow itself. Decorative, aria-hidden, never carries text a reader
+       needs (checked against every surface it might land on: over the
+       void 13.36, over the panel 11.72, over the glow itself only 2.19 —
+       the reason it stays hidden from assistive tech rather than relied
+       on). */
+    [data-theme='dark'] .kp-side-note {
+        position: absolute;
+        inset-inline-end: 0.35rem;
+        inset-block-start: 2rem;
+        writing-mode: vertical-rl;
+        font-family: var(--theme-font-mono);
+        font-size: 0.65rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: var(--foreground);
+        mix-blend-mode: difference;
+        z-index: 2;
+        padding: 0.4rem 0.1rem;
+    }
+
+    @media (max-width: 40rem) {
+        [data-theme='dark'] .kp-side-note {
+            display: none;
+        }
+    }
+
+    /* ── The navbar: quiet, no chrome of its own beyond the ground ─────── */
+
+    [data-theme='dark'] .kp-nav-wrap {
+        background: var(--card);
+        border-bottom: 1px solid var(--border-strong);
+    }
+
+    [data-theme='dark'] .kp-nav {
+        background: var(--card);
+        padding-block: calc(var(--kp-nav-pad-block, 0.7rem) * var(--kp-nav-pad-scale, 1));
+    }
+
+    [data-theme='dark'] .kp-nav__brand {
+        font-weight: 700;
+        font-size: 1.25rem;
+        letter-spacing: -0.01em;
+        color: var(--foreground);
+    }
+
+    [data-theme='dark'] .kp-nav__links {
+        gap: 0.15rem;
+    }
+
+    [data-theme='dark'] .kp-nav__link {
+        padding-inline: 0.8rem;
+        border-radius: var(--radius);
+        font-weight: 500;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-nav__link:hover,
+    [data-theme='dark'] .kp-nav__link:focus-visible,
+    [data-theme='dark'] .kp-nav__link[aria-current],
+    [data-theme='dark'] .kp-nav__links > li:focus-within > .kp-nav__link {
+        color: var(--foreground);
+        background: var(--accent);
+    }
+
+    [data-theme='dark'] .kp-nav__link[aria-haspopup]::after {
+        content: ' ⌄';
+        font-size: 0.8em;
+    }
+
+    [data-theme='dark'] .kp-nav__link--lang {
+        border-inline-start: 1px solid var(--border);
+        margin-inline-start: 0.5rem;
+        padding-inline-start: 0.7rem;
+    }
+
+    [data-theme='dark'] .kp-nav__link--cta {
+        margin-inline-start: 0.25rem;
+        background: var(--primary);
+        color: var(--primary-foreground);
+        font-weight: 600;
+    }
+
+    [data-theme='dark'] .kp-nav__link--cta:hover,
+    [data-theme='dark'] .kp-nav__link--cta:focus-visible {
+        background: var(--foreground);
+        color: var(--background);
+    }
+
+    /* The ring above the next link's plate [fix-38]: the ring reaches 4px
+       out, and a later item — the current page's plate — painted over its
+       end side in chromium (5% of it changed on focus). The focused item
+       is lifted over its neighbours. */
+    [data-theme='dark'] .kp-nav__links > li:has(> .kp-nav__link:focus-visible) {
+        z-index: 1;
+    }
+
+    /* The dropdown: a quiet dark panel, the theme's own edge, and — the
+       thing every one of the first batch's demos left unstyled (KT14) —
+       its own keyboard state: a 2px outline in the primary drawn inside
+       the item on the accent ground, rather than the page-wide ring. */
+    [data-theme='dark'] .kp-nav__menu {
+        background: var(--card);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+        padding: 0.3rem;
+        min-width: 12rem;
+        /* The oxide halo, as the dialog, the card and the popover family
+           carry it [scope-106]: a shadow in the theme's own background
+           token reads about two of 255 against the ground it stands on. */
+        box-shadow: var(--kp-halo);
+    }
+
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='dark'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+            clip-path: none;
+        }
+    }
+
+    [data-theme='dark'] .kp-nav__menu a {
+        display: block;
+        padding-inline: 0.7rem;
+        border-radius: calc(var(--radius) / 1.5);
+        color: var(--foreground);
+    }
+
+    [data-theme='dark'] .kp-nav__menu a:hover {
+        background: var(--accent);
+    }
+
+    [data-theme='dark'] .kp-nav__menu a:focus-visible {
+        background: var(--accent);
+        outline: 2px solid var(--primary);
+        outline-offset: -2px;
+        box-shadow: none;
+    }
+
+    /* ── Buttons: a flat panel, an edge, no bevel ──────────────────────── */
+
+    [data-theme='dark'] .kp-button,
+    [data-theme='dark'] .kp-icon-button {
+        background: var(--card);
+        color: var(--foreground);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+        font-weight: 600;
+    }
+
+    /* On a toast the close button sits on the toast's own plate, in the
+       toast's ink: a plate of its own under the error toast's dark ink read
+       1.01:1 (nostromo-notes, 2026-10-04). */
+    [data-theme='dark'] .kp-toast .kp-icon-button {
+        background: transparent;
+        border-color: transparent;
+        color: inherit;
+    }
+
+    /* On an alert the close button sits on the alert's own plate, in the
+       alert's ink, the way it does on a toast [fix-95]. */
+    [data-theme='dark'] .kp-alert .kp-icon-button {
+        background: transparent;
+        border-color: transparent;
+        color: inherit;
+    }
+
+    /* Hover answers a live button only [scope-100]: a disabled one took the
+       accent ground, the brackets and the label's draw-in like any other
+       (ground 17 → 28, brackets 0 → 1). Every hover rule of the instrument
+       carries the same guard. */
+    [data-theme='dark'] .kp-button:hover:not(:disabled, [aria-disabled='true']) {
+        background: var(--accent);
+    }
+
+    [data-theme='dark'] [data-kp-surface='hero'] .kp-row > .kp-button {
+        min-width: min(11rem, 100%);
+    }
+
+    [data-theme='dark'] .kp-button--primary,
+    [data-theme='dark'] .kp-button--primary:hover:not(:disabled, [aria-disabled='true']) {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    /* The theme's own hover step [scope-100]: `l + 6` lifted the 93% primary
+       to about 99%, past the token that names the step (86%). */
+    [data-theme='dark'] .kp-button--primary:hover:not(:disabled, [aria-disabled='true']) {
+        background: var(--primary-hover);
+        border-color: var(--primary-hover);
+    }
+
+    [data-theme='dark'] .kp-button--ghost {
+        background: transparent;
+        border-color: transparent;
+        color: var(--foreground);
+    }
+
+    [data-theme='dark'] .kp-button--ghost:hover:not(:disabled, [aria-disabled='true']) {
+        background: var(--accent);
+        border-color: var(--border-strong);
+    }
+
+    [data-theme='dark'] .kp-button--destructive {
+        background: transparent;
+        border-color: var(--destructive);
+        color: var(--destructive);
+    }
+
+    [data-theme='dark'] .kp-button--destructive:hover:not(:disabled, [aria-disabled='true']) {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    [data-theme='dark'] .kp-button:disabled {
+        opacity: 0.45;
+    }
+
+    /* ── Fields: a panel and an edge, the primary edge as focus ────────── */
+
+    [data-theme='dark'] .kp-field__label {
+        font-weight: 600;
+        color: var(--foreground);
+    }
+
+    [data-theme='dark'] .kp-field__input,
+    [data-theme='dark'] .kp-datatable__search,
+    [data-theme='dark'] .kp-combobox__input,
+    [data-theme='dark'] .kp-palette__input {
+        background: var(--card);
+        color: var(--foreground);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+    }
+
+    [data-theme='dark'] .kp-field__input:focus,
+    [data-theme='dark'] .kp-datatable__search:focus,
+    [data-theme='dark'] .kp-combobox__input:focus,
+    [data-theme='dark'] .kp-palette__input:focus {
+        border-color: var(--primary);
+    }
+
+    /* One arrow on a select, never two [fix-42]. Kenny, 2026-09-16, on the
+       textarea-and-select block: "Rechts van de dropdown zie ik één keer
+       onze styling van pijltje (> maar dan omgekeerd) en nog één van
+       firefox zelf ofzo?" What stood here was a chevron in two 6px
+       gradients — and nothing that took the browser's own arrow away, so
+       firefox drew its dropmarker beside it and chromium would draw its
+       ::picker-icon in the same place. Measured over the select's right
+       edge, firefox: 19 columns of ink where the twenty themes that leave
+       the arrow to the browser measure 8, and still 8 with this register's
+       own arrow forced off — two marks, not one. Titanium carried the same
+       three declarations and the same fault; the sweep found no third.
+
+       The register joins the other fifteen rather than keeping its own:
+       the browser draws the arrow and reserves the room for it (the
+       gradient had none — the package's 0.625rem end padding let a long
+       option run straight under it), and where the page may take the list
+       over the picker icon wears the theme [KT8]. The two registers that
+       do draw their own — terminal and retro — take the browser's away
+       with `appearance: none` in the same rule, which is what this one
+       never did. */
+    [data-theme='dark'] select.kp-field__input::picker-icon {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-field__help {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-field--invalid .kp-field__input {
+        border-color: var(--destructive);
+    }
+
+    [data-theme='dark'] .kp-field__error {
+        color: var(--destructive);
+    }
+
+    [data-theme='dark'] .kp-field__check:checked {
+        background: var(--primary);
+        border-color: var(--primary);
+    }
+
+    [data-theme='dark'] .kp-field__check:checked::before {
+        content: '';
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 0.1rem;
+        background: var(--primary-foreground);
+    }
+
+    [data-theme='dark'] .kp-fieldset {
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+    }
+
+    [data-theme='dark'] .kp-form__summary {
+        background: var(--card);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+    }
+
+    /* ── Cards, the dossier: a quiet panel, the redact bar ─────────────── */
+
+    /* The plate is on the ::after since scope-102 (below); the card itself
+       keeps the border box it always had, so nothing moves, and carries
+       nothing but the halo.
+
+       `position: relative` makes the card the containing block of that
+       plate, and `isolation: isolate` the stacking context the plate's
+       negative z-index needs — without it a card standing on a panel with
+       a ground of its own would have its plate painted behind that ground.
+       Neither is a filter: the dialog needs one because its plate is
+       `position: fixed`, and a filter would also make every card the
+       containing block of any fixed descendant a consumer puts in one. */
+    [data-theme='dark'] .kp-card {
+        position: relative;
+        isolation: isolate;
+        background: transparent;
+        border: 1px solid transparent;
+        border-radius: calc(var(--radius) * 1.5);
+        box-shadow: var(--kp-halo);
+    }
+
+    [data-theme='dark'] .kp-card__title {
+        font-weight: 700;
+    }
+
+    /* The stamp: attr(data-kp-label) content, the convention
+       css/cyberpunk-register.css already uses for the same slot. */
+    [data-theme='dark'] .kp-card[data-kp-label]::before {
+        content: attr(data-kp-label);
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: var(--primary);
+        color: var(--primary-foreground);
+        font-family: var(--theme-font-mono);
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 0.2rem 0.55rem;
+        border-radius: 999px;
+    }
+
+    [data-theme='dark'] .kp-card[data-kp-reveal='emphasis'] {
+        position: relative;
+    }
+
+    /* The dossier's own reading of the mark: not the ignite above, but a
+       redact bar in the theme's edge colour that lifts off, right to
+       left, on the trigger — the demo's own mechanism for this slot,
+       distinct from the lede's colour-only ignite the general rule above
+       answers. The bar sits on the mark's own ::after so what a reader
+       hears (the text itself) is never removed, only its paint. */
+    [data-theme='dark'] .kp-card[data-kp-reveal='emphasis'] mark {
+        position: relative;
+        color: var(--foreground);
+        background: none;
+        text-decoration: none;
+        font-weight: 400;
+        white-space: nowrap;
+        border-radius: 0.2em;
+    }
+
+    [data-theme='dark'] .kp-card[data-kp-reveal='emphasis'] mark::after {
+        content: '';
+        position: absolute;
+        inset: -0.05em -0.15em;
+        background: var(--border-strong);
+        border-radius: 0.2em;
+        transform: scaleX(0);
+        transform-origin: right center;
+        pointer-events: none;
+    }
+
+    [data-theme='dark'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared) {
+        color: transparent;
+    }
+
+    [data-theme='dark'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared)::after {
+        transform: scaleX(1);
+    }
+
+    /* ── Panels: a quiet dark ground, the theme's own edge ─────────────── */
+
+    [data-theme='dark'] .kp-dialog,
+    [data-theme='dark'] .kp-popover,
+    [data-theme='dark'] .kp-menu,
+    [data-theme='dark'] .kp-toast,
+    [data-theme='dark'] .kp-tooltip,
+    [data-theme='dark'] .kp-confirm,
+    [data-theme='dark'] .kp-datepicker__panel,
+    [data-theme='dark'] .kp-combobox__list,
+    [data-theme='dark'] .kp-palette,
+    [data-theme='dark'] .kp-theme-menu__list {
+        background: var(--card);
+        color: var(--foreground);
+        border: 1px solid var(--border-strong);
+        border-radius: calc(var(--radius) * 1.5);
+        /* The oxide halo [scope-102], where the shadow in the ground's own
+           colour used to be. A box-shadow rather than the blurred film,
+           because `.kp-popover` is `overflow: auto` and clips a
+           pseudo-element away — see --kp-halo. */
+        box-shadow: var(--kp-halo);
+    }
+
+    /* The wrapper round the theme picker's icon button is not a card: only its
+       dropdown list is. */
+    [data-theme='dark'] .kp-theme-menu {
+        background: none;
+        border: 0;
+        box-shadow: none;
+    }
+
+    /* Severity toasts [scope-60]. The plain toast above is repainted here in
+       a later layer than kp.components, which swallowed every variant's
+       plate; each is restated on the alert's token pair, as the severity
+       badge wears it. */
+    [data-theme='dark'] .kp-toast--success {
+        background: var(--success);
+        color: var(--success-foreground);
+        border-color: var(--success);
+    }
+
+    [data-theme='dark'] .kp-toast--info {
+        background: var(--info);
+        color: var(--info-foreground);
+        border-color: var(--info);
+    }
+
+    [data-theme='dark'] .kp-toast--warning {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        border-color: var(--warning);
+    }
+
+    [data-theme='dark'] .kp-toast--destructive,
+    [data-theme='dark'] .kp-toast--error {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        border-color: var(--destructive);
+    }
+
+    [data-theme='dark']
+        :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error)
+        :is(.kp-button--ghost, .kp-icon-button) {
+        color: inherit;
+    }
+
+    /* A button hovered on a toast takes a shade of the toast's own plate
+       (--kp-toast-button-hover, set in kp.components), not this theme's page hover (Kenny's second nostromo pass,
+       2026-09-13). Restated here because this layer repaints the hover. */
+    [data-theme='dark'] .kp-toast :is(.kp-button--ghost, .kp-icon-button):hover:not(:disabled) {
+        background: var(--kp-toast-button-hover);
+        color: inherit;
+    }
+
+    [data-theme='dark'] .kp-dialog__title {
+        font-weight: 700;
+    }
+
+    /* The panels are cut on the same two corners as the card and the dialog
+       [G6; Kenny, 2026-10-09: two opposite corners, the halo and the shadow
+       follow the cut]. The clip above carries the halo through the cut; the
+       cut's own edge is a 1 px diagonal in the panel's edge colour at each
+       cut corner, so the border does not stop short of the corner. The
+       diagonal of a square of side c lies c * 0.7071 from its corner. */
+    [data-theme='dark']
+        :is(
+            .kp-menu,
+            .kp-popover:not(.kp-tooltip),
+            .kp-toast,
+            .kp-combobox__list,
+            .kp-datepicker__panel,
+            .kp-palette,
+            .kp-theme-menu__list,
+            .kp-nav__menu
+        ) {
+        --kp-sig-dk-diag: var(--border-strong);
+        background-image:
+            linear-gradient(
+                225deg,
+                transparent calc(var(--kp-chamfer-panel) * 0.7071 - 1px),
+                var(--kp-sig-dk-diag) calc(var(--kp-chamfer-panel) * 0.7071 - 1px) calc(var(--kp-chamfer-panel) * 0.7071),
+                transparent 0
+            ),
+            linear-gradient(
+                45deg,
+                transparent calc(var(--kp-chamfer-panel) * 0.7071 - 1px),
+                var(--kp-sig-dk-diag) calc(var(--kp-chamfer-panel) * 0.7071 - 1px) calc(var(--kp-chamfer-panel) * 0.7071),
+                transparent 0
+            );
+        background-repeat: no-repeat;
+        background-size: var(--kp-chamfer-panel) var(--kp-chamfer-panel);
+        background-position:
+            100% 0,
+            0 100%;
+    }
+
+    [data-theme='dark'] :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error) {
+        --kp-sig-dk-diag: transparent;
+    }
+
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='dark'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            background-image: none;
+        }
+    }
+
+    /* Phase 7, `focus-ring`. The keyboard landing on an item inside the
+       row menu painted nothing at all in this theme — measured `outside:
+       0 focused, 0 at rest`. The popover rounds its corners and the item
+       fills it, so a ring drawn outside the item has nowhere to land;
+       cyberpunk hit the same wall when its bevel came back and answered
+       it the same way. Both channels go INSIDE, where nothing can clip
+       them: the ring colour first, the contrast colour behind it. */
+    [data-theme='dark'] .kp-menu__item:focus-visible {
+        outline: none;
+        background: var(--accent);
+        box-shadow:
+            inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 0 0 calc(var(--kp-focus-ring-inner-width, 2px) + 2px) var(--focus-ring-contrast);
+    }
+
+    [data-theme='dark'] .kp-menu__item:hover {
+        background: var(--accent);
+    }
+
+    /* The plain alert only [gap-1, Kenny 2026-09-10]. This rule used to
+       repaint the ground of EVERY alert, and `kp.register` is a later layer
+       than `kp.components`, so it beat `.kp-alert--destructive`'s own plate
+       while that variant's ink — `--destructive-foreground`, which is drawn
+       to sit ON the plate — stayed. Measured in firefox on 2026-09-12:
+       seventeen of the twenty-two themes carried a destructive alert whose
+       text was unreadable, grotesk at 1.00 exactly, white on white.
+
+       Kenny saw it in chassis-rs and said to write it down and touch
+       nothing; this is the round he asked for it in. Same shape as fix-12,
+       one property over: a register overriding half of a pair the base
+       layer defines together. */
+    [data-theme='dark'] .kp-alert:not([class*='kp-alert--']) {
+        background: var(--card);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+    }
+
+    [data-theme='dark'] .kp-alert__label {
+        font-weight: 700;
+    }
+
+    [data-theme='dark'] .kp-grid__tile,
+    [data-theme='dark'] .kp-split__pane {
+        background: var(--card);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+    }
+
+    [data-theme='dark'] .kp-split__separator {
+        background: var(--border);
+    }
+
+    /* ── The footer: one step darker than the ground ───────────────────── */
+
+    [data-theme='dark'] .kp-footer {
+        background: var(--sidebar-background);
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-footer h4 {
+        color: var(--foreground);
+    }
+
+    [data-theme='dark'] .kp-footer a {
+        color: var(--muted-foreground);
+        font-size: 0.92rem;
+    }
+
+    [data-theme='dark'] .kp-footer a:hover,
+    [data-theme='dark'] .kp-footer a:focus-visible {
+        color: var(--foreground);
+    }
+
+    /* ── Badges, tags, status ───────────────────────────────────────────── */
+
+    [data-theme='dark'] .kp-badge,
+    [data-theme='dark'] .kp-tag {
+        border: 1px solid var(--border-strong);
+    }
+
+    [data-theme='dark'] .kp-skeleton {
+        background: var(--accent);
+    }
+
+    [data-theme='dark'] .kp-spinner {
+        border-color: var(--border);
+        border-top-color: var(--primary);
+    }
+
+    [data-theme='dark'] .kp-error {
+        color: var(--destructive);
+    }
+
+    /* ── Text shapes ──────────────────────────────────────────────────── */
+
+    [data-theme='dark'] .kp-id,
+    [data-theme='dark'] .kp-url,
+    [data-theme='dark'] .kp-numeric,
+    [data-theme='dark'] .kp-timestamp,
+    [data-theme='dark'] .kp-masked,
+    [data-theme='dark'] .kp-copyable,
+    [data-theme='dark'] .kp-truncate,
+    [data-theme='dark'] .kp-cell-break,
+    [data-theme='dark'] .kp-cell-truncate {
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='dark'] .kp-timestamp,
+    [data-theme='dark'] .kp-id {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-copyable__button {
+        border: 1px solid var(--border-strong);
+    }
+
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='dark'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='dark'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--destructive);
+    }
+
+    /* ── Data ─────────────────────────────────────────────────────────── */
+
+    [data-theme='dark'] .kp-table th {
+        color: var(--muted-foreground);
+        border-bottom: 1px solid var(--border-strong);
+        font-weight: 600;
+    }
+
+    [data-theme='dark'] .kp-table td {
+        border-bottom: 1px solid var(--border);
+    }
+
+    [data-theme='dark'] .kp-table tbody tr:hover {
+        background: var(--card);
+    }
+
+    [data-theme='dark'] .kp-datatable {
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+        /* The sticky header's ground is the table's own [gap-13]. */
+        --kp-datatable-head-ground: var(--card);
+    }
+
+    [data-theme='dark'] .kp-datatable__bar {
+        border-bottom: 1px solid var(--border);
+    }
+
+    [data-theme='dark'] .kp-datatable__sort[aria-sort] {
+        color: var(--primary);
+    }
+
+    [data-theme='dark'] .kp-datatable__status,
+    [data-theme='dark'] .kp-datatable__page {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-diff {
+        background: var(--card);
+        border: 1px solid var(--border-strong);
+    }
+
+    [data-theme='dark'] .kp-diff__line {
+        font-family: var(--theme-font-mono);
+    }
+
+    [data-theme='dark'] .kp-timeline {
+        border-inline-start: 1px solid var(--border-strong);
+    }
+
+    [data-theme='dark'] .kp-timeline__marker {
+        background: var(--primary);
+    }
+
+    [data-theme='dark'] .kp-timeline__when {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-tree {
+        font-family: var(--theme-font-mono);
+    }
+
+    /* A branch's children are kept drawn while they glide shut
+       (js/motion.js glideGroup(), lesson 26): the state is already
+       `aria-expanded="false"` while the glide plays. */
+    [data-theme='dark'] .kp-tree [role='treeitem'][aria-expanded='false'] > [role='group'][data-kp-group-folding],
+    [data-theme='dark'] .kp-tree [role='treeitem'][aria-expanded='false'] + [role='group'][data-kp-group-folding] {
+        display: block;
+    }
+
+    /* The accordion [gap-12]: the rule at the start edge its category toggle and current page carry. */
+    [data-theme='dark'] .kp-accordion__summary {
+        padding-inline-start: 0.5rem;
+        border-inline-start: 2px solid transparent;
+    }
+
+    [data-theme='dark'] .kp-accordion__summary::marker {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-accordion__item[open] > .kp-accordion__summary {
+        border-inline-start-color: var(--primary);
+    }
+
+    [data-theme='dark'] .kp-reorder {
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+    }
+
+    /* ── Navigation and steps ───────────────────────────────────────────── */
+
+    [data-theme='dark'] .kp-tab {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-tab[aria-selected='true'] {
+        color: var(--foreground);
+        font-weight: 600;
+        border-bottom: 2px solid var(--primary);
+    }
+
+    [data-theme='dark'] .kp-tabs__list {
+        border-bottom: 1px solid var(--border-strong);
+    }
+
+    [data-theme='dark'] .kp-pagination a[aria-current],
+    [data-theme='dark'] .kp-pagination [aria-current] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='dark'] .kp-wizard {
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+    }
+
+    /* ── Pickers and palettes ─────────────────────────────────────────── */
+
+    [data-theme='dark'] .kp-datepicker__day[aria-selected='true'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='dark'] .kp-colorpicker__swatch {
+        border: 1px solid var(--border-strong);
+    }
+
+    [data-theme='dark'] .kp-shortcuts__row kbd {
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+        display: inline-block;
+        padding: 0 0.4em;
+    }
+
+    [data-theme='dark'] .kp-shortcuts__group-label,
+    [data-theme='dark'] .kp-palette__group-label {
+        font-weight: 700;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-theme-menu__status,
+    [data-theme='dark'] .kp-palette__status,
+    [data-theme='dark'] .kp-combobox__status {
+        color: var(--muted-foreground);
+    }
+
+    /* ── The roots the rules above reach only by their parts ───────────── */
+
+    [data-theme='dark'] .kp-field {
+        gap: calc(var(--kp-space-xs) * 1.2);
+    }
+
+    [data-theme='dark'] .kp-form {
+        gap: var(--kp-space-lg);
+    }
+
+    [data-theme='dark'] .kp-breadcrumb,
+    [data-theme='dark'] .kp-pagination {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-combobox,
+    [data-theme='dark'] .kp-datepicker,
+    [data-theme='dark'] .kp-colorpicker,
+    [data-theme='dark'] .kp-shortcuts {
+        border-radius: var(--radius);
+    }
+
+    [data-theme='dark'] .kp-grid {
+        gap: 0.75rem;
+    }
+
+    [data-theme='dark'] .kp-split {
+        gap: 0;
+    }
+
+    [data-theme='dark'] .kp-toasts {
+        gap: 0.6rem;
+    }
+
+    [data-theme='dark'] .kp-health {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-table {
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    /* ── The scrollbar joins the theme ──────────────────────────────────── */
+
+    [data-theme='dark'] {
+        scrollbar-color: var(--border-strong) var(--background);
+    }
+
+    /* ── The demo's own pieces [S46] ───────────────────────────────────── */
+
+    [data-theme='dark'] .kp-laurels {
+        gap: 0.5rem;
+        font-size: 0.75rem;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-laurels li {
+        flex: 1 1 12rem;
+        padding: 0.5rem 0.7rem;
+        background: var(--card);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+    }
+
+    [data-theme='dark'] .kp-laurels b {
+        display: block;
+        font-weight: 700;
+        font-size: 1rem;
+        color: var(--foreground);
+        margin-block-end: 0.15rem;
+    }
+
+    [data-theme='dark'] .kp-lede {
+        max-width: 38rem;
+        font-size: 1.08rem;
+    }
+
+    [data-theme='dark'] .kp-platforms {
+        margin-block-start: 1.6rem;
+        gap: 0.2rem 1.3rem;
+        font-family: var(--theme-font-mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-platforms span::before {
+        content: '· ';
+        color: var(--primary);
+    }
+
+    [data-theme='dark'] .kp-spec {
+        background: var(--card);
+        color: var(--foreground);
+        border: 1px solid var(--border-strong);
+        border-radius: calc(var(--radius) * 1.5);
+        padding: 1.2rem 1.4rem;
+        font-size: 0.86rem;
+        line-height: 1.75;
+    }
+
+    [data-theme='dark'] .kp-spec dt {
+        color: var(--muted-foreground);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: 0.72rem;
+    }
+
+    /* The log wears what this register already decided for its other data
+ * surface, `.kp-spec` — the same ground, the same edge, the same face
+ * [gap-14]. A new component that invents a look of its own is a
+ * twenty-third decision nobody made. */
+    [data-theme='dark'] .kp-log {
+        background: var(--card);
+        color: var(--foreground);
+        border: 1px solid var(--border-strong);
+        border-radius: calc(var(--radius) * 1.5);
+    }
+
+    [data-theme='dark'] .kp-log__level {
+        --kp-log-level-ink: var(--muted-foreground);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: 0.72rem;
+    }
+
+    [data-theme='dark'] .kp-spec__swatch {
+        border: 1px solid var(--border);
+    }
+
+    [data-theme='dark'] .kp-spec__font {
+        font-family: var(--theme-font-display);
+    }
+
+    /* ── Motion, guarded [DI7] ────────────────────────────────────────── */
+
+    /* Every animation and transition of this register lives here, inside
+       the no-preference guard, so a reader who asked for reduced motion
+       never receives one: the rest states above are what they get. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* A headline is laid word by word: the line crosses each word from its
+           start edge at one pace, 60 ms after the word before [G2, G19]. */
+        [data-theme='dark'] [data-kp-reveal='headline'].is-words [data-word] {
+            animation: kp-sig-dark-lay 660ms linear both;
+            animation-delay: calc(var(--kp-i, 0) * var(--kp-word-stagger));
+        }
+
+        /* The redact bar: a size change, not a colour (KT8: no
+           mid-transition colour can be read); the ink turns visible in
+           the same instant the bar clears, staggered per redaction. */
+        [data-theme='dark'] .kp-card[data-kp-reveal='emphasis'] mark::after {
+            transition: transform 380ms var(--fx-ease);
+        }
+
+        [data-theme='dark'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2)::after {
+            transition-delay: var(--kp-redact-stagger);
+        }
+
+        [data-theme='dark'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3)::after {
+            transition-delay: calc(2 * var(--kp-redact-stagger));
+        }
+
+        [data-theme='dark'] .kp-card[data-kp-reveal='emphasis'] mark {
+            transition: color 0s linear 0s;
+        }
+    }
+
+    /* ── Motion [DI5, DI7] ────────────────────────────────────────────── */
+
+    /* Every keyframe here has its row in TIMINGS (js/effects.js). A headline's
+       words are laid by the pass (kp-sig-dark-lay, below): a word's box is
+       revealed from the start edge at an even pace and stops dead at the end
+       (G1); nothing blurs, nothing splits into two wavelengths (G19). */
+    /* Scroll-bound, not time-based: the browser scrubs this by the
+       heading's own position, not a clock, so it cannot free-run and
+       cannot loop — see gates/check-motion.mjs's OUT_OF_SCOPE entry. */
+    @keyframes kp-ignite {
+        100% {
+            color: var(--primary);
+            text-decoration-color: var(--border-strong);
+        }
+    }
+
+    /* The rule draws itself from the leading edge [scope-16]. Scroll-bound
+       like the ignite above it: the browser scrubs this by the heading's
+       own position, so it cannot free-run and cannot loop. */
+    @keyframes kp-draw {
+        0% {
+            scale: 0 1;
+        }
+
+        100% {
+            scale: 1 1;
+        }
+    }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — the row a step lighter than the page it sits on. */
+    [data-theme='dark'] .kp-marquee {
+        border-block: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent);
+        background: color-mix(in srgb, var(--card) 60%, var(--background));
+        --kp-marquee: 50000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    /* A mega menu's group headings speak in the caption's voice [scope-48]. */
+    [data-theme='dark'] .kp-nav__menu[data-kp-menu-label]::before,
+    [data-theme='dark'] .kp-nav__menu--wide .kp-nav__menu-heading {
+        color: var(--primary);
+        border-block-end: 1px solid color-mix(in srgb, var(--foreground) 20%, transparent);
+    }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       Quiet, the way this theme is quiet: the row you are on is a raised
+       plate rather than a colour, and the accent shows only at its
+       leading edge. */
+    [data-theme='dark'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+        border-inline-end: 1px solid var(--border);
+    }
+
+    [data-theme='dark'] .kp-sidenav__link,
+    [data-theme='dark'] .kp-sidenav__category-toggle {
+        border-inline-start: 2px solid transparent;
+    }
+
+    [data-theme='dark'] .kp-sidenav__link[aria-current='page'] {
+        background: var(--accent);
+        color: var(--foreground);
+        border-inline-start-color: var(--primary);
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       Quiet, like the rest of it. */
+    [data-theme='dark'] .kp-to-top {
+        border: 1px solid var(--border);
+    }
+
+    [data-theme='dark'] .kp-media {
+        border: 1px solid var(--border);
+    }
+
+    [data-theme='dark'] .kp-media-figure > figcaption {
+        color: var(--muted-foreground);
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='dark'] .kp-media-figure {
+        color: var(--muted-foreground);
+    }
+
+    /* ── The pressed state the register had been cancelling [fix-12] ───
+       `kp.register` sits after `kp.components`, and a layer beats a state:
+       a register writing `.kp-button:hover { background: ... }` outranks
+       the base layer's `.kp-button:active`, so pressing the button changed
+       nothing. Kenny found it on Shade (dark), 2026-09-11 — "als ik gewoon
+       blijf klikken op de knop zelf, dan gebeurt er precies niks" — and
+       fifteen of the twenty-five registers had it.
+
+       These restate the base layer's own pressed values, token for token.
+       Nothing new is decided here; what the components layer already said
+       is put back where the cascade can reach it. */
+
+    [data-theme='dark'] .kp-button:active:not(:disabled) {
+        background: var(--secondary-active);
+    }
+
+    /* Not `--primary-active` any more [scope-100]: with the hover on its own
+       token (86%), that token (78%) sat 6.2 in OKLab distance from it, under
+       the States block's floor of 10, so a press barely showed. Fourteen
+       points under the hover ground instead. */
+    [data-theme='dark'] .kp-button--primary:active:not(:disabled) {
+        background: hsl(from var(--primary-hover) h s calc(l - 14));
+        border-color: hsl(from var(--primary-hover) h s calc(l - 14));
+    }
+
+    [data-theme='dark'] .kp-button--destructive:active:not(:disabled) {
+        background: var(--destructive-active);
+        border-color: var(--destructive-active);
+    }
+
+    /* ── The ground [scope-16] ─────────────────────────────────────────
+       An instrument's grid, and a pool of light under the pointer. Both
+       are on the page's own texture layer, so nothing here paints over a
+       control. The light is the one thing on the page that moves without
+       being touched, and it moves only because a hand does. */
+    [data-theme='dark'] body {
+        background-image:
+            radial-gradient(
+                46rem 34rem at calc(var(--kp-px) * 100%) calc(var(--kp-py) * 100%),
+                hsl(from var(--chart-1) h s l / 0.13),
+                transparent 62%
+            ),
+            repeating-linear-gradient(90deg, hsl(from var(--foreground) h s l / 0.045) 0 1px, transparent 1px var(--kp-grid, 5.5rem)),
+            repeating-linear-gradient(0deg, hsl(from var(--foreground) h s l / 0.045) 0 1px, transparent 1px var(--kp-grid, 5.5rem));
+        background-attachment: fixed;
+    }
+
+    /* ── The panels' edge is the film itself [scope-16] ────────────────
+       A gradient border, drawn by painting the panel's own ground over
+       the oxide and letting only the border box show through. */
+    [data-theme='dark'] .kp-card::after,
+    [data-theme='dark'] .kp-dialog::before {
+        border: 1px solid transparent;
+        background:
+            linear-gradient(var(--card), var(--card)) padding-box,
+            var(--kp-iris) border-box;
+    }
+
+    /* ── The card's plate, and its halo [scope-102] ───────────────────────
+       The dialog's scope-100 restructure, applied to the card for the same
+       measured reason: its chamfer is a clip-path, a clip-path clips the
+       element's own box-shadow, and the card could therefore cast nothing
+       at all. The plate — the ground, the film edge and the cut — moves to
+       the ::after; the card keeps its own border box (`border: 1px solid
+       transparent`, so no box moves) and carries the halo.
+
+       `inset: -1px` is the border's width: the containing block is the
+       card's padding box, and the plate has to reach back over the 1px
+       border it paints the film into. The same inset the dialog's plate
+       carries, for the same reason. */
+    [data-theme='dark'] .kp-card::after {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        z-index: -1;
+        border-radius: calc(var(--radius) * 1.5);
+        pointer-events: none;
+    }
+
+    /* ── The dialog's plate under its content, the shadow outside it [scope-100]
+       A clip-path clips everything the element paints, its box-shadow and
+       any filter included, so a chamfered dialog lay flat on its backdrop:
+       the 0 12px 28px shadow painted nothing (1406px of it came back with
+       the clip removed). The chamfer, the ground and the film edge move to
+       the dialog's ::before, and the dialog itself stays unclipped and casts
+       the same shadow as a drop-shadow, which follows the plate's cut shape.
+       The filter makes the dialog the containing block of a fixed
+       descendant, so the plate is fixed to the dialog's box and does not
+       scroll away with a dialog whose content scrolls; the popovers a
+       dialog can hold open in the top layer, which no containing block
+       reaches. The inset is the border's width, because that containing
+       block is the padding box.
+
+       Since scope-102 the shadow is the oxide halo, and a box-shadow
+       rather than a drop-shadow: a modal dialog is `overflow: auto` by
+       the UA stylesheet and clips its own pseudo-elements, so the
+       blurred film could not be worn here at all, and the four fixed
+       shadows are what the decision asks for on every one of the three
+       surfaces. The filter stays, emptied to a no-op: it is what makes
+       this dialog the containing block of its fixed plate, and losing it
+       would let the plate scroll away. A box-shadow is painted with the
+       element's own background and border, so the opaque plate on the
+       ::before covers nothing of it — an outer shadow lies outside the
+       border box by definition. */
+    [data-theme='dark'] .kp-dialog {
+        border: 1px solid transparent;
+        background: transparent;
+        box-shadow: var(--kp-halo);
+        filter: drop-shadow(0 0 0 transparent);
+    }
+
+    [data-theme='dark'] .kp-dialog::before {
+        content: '';
+        position: fixed;
+        inset: -1px;
+        z-index: -1;
+        pointer-events: none;
+    }
+
+    /* ── The small parts that carry the film [scope-16] ───────────────── */
+    [data-theme='dark'] .kp-nav__marker,
+    [data-theme='dark'] .kp-boot__bar i {
+        background: var(--kp-iris);
+    }
+
+    [data-theme='dark'] .kp-measure__bracket {
+        border-color: hsl(from var(--chart-1) h s l / 0.55);
+    }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='dark'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
+
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
+
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): quiet muted words on a rounded plate that
+       fills with the accent ground when pointed at or focused. The link's
+       typeface, case, spacing, shape and pointer answer are restated here,
+       because the trigger is a button beside the list rather than a link in
+       it. The underline a plain link carries is not: it says "this is a
+       link", and the trigger is not one. */
+    [data-theme='dark'] .kp-nav__search .kp-nav__search-trigger {
+        padding-inline: 0.8rem;
+        font-weight: 500;
+        border: 0;
+        border-radius: var(--radius);
+        background: transparent;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-nav__search .kp-nav__search-trigger:hover,
+    [data-theme='dark'] .kp-nav__search .kp-nav__search-trigger:focus-visible {
+        background: var(--accent);
+        color: var(--foreground);
+    }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       The dark plate of the prototype, split in the near-white of its primary, with a hairline frame. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='dark'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--destructive) h calc(s * 0.6) 5% / 0.95);
+        --kp-alarm-ink: hsl(from var(--destructive) h s max(l, 60));
+        --kp-alarm-soft: hsl(from var(--destructive) h calc(s * 0.4) 86);
+        --kp-alarm-split: var(--primary);
+        --kp-alarm-on-ink: hsl(from var(--destructive) h s 6%);
+        --kp-alarm-glow: hsl(from var(--destructive) h s max(l, 45) / 0.5);
+        --kp-alarm-halo: hsl(from var(--destructive) h s max(l, 50) / 0.55);
+        --kp-alarm-scan: hsl(from var(--destructive) h s max(l, 50) / 0.09);
+        --kp-alarm-vignette: hsl(from var(--destructive) h s 2% / 0.7);
+        --kp-alarm-frame: 1px solid;
+        --kp-alarm-title-tracking: 0.02em;
+    }
+
+    [data-theme='dark'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='dark'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='dark'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='dark'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='dark'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='dark'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='dark'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
+    }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: the same dash as light, its sibling. */
+    [data-theme='dark'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '–';
+    }
+}
+
+/* ── Signature [scope-140] ─────────────────────────────────────────────── */
+/* dark's approved signature (Kenny, 2026-10-03, three review rounds): the
+   progress bar and the ten elements (spinner, skeleton, switch, check and
+   radio, toast, dialog, tooltip, wizard steps, empty state, link hover),
+   ported once from research/progress-signature/themes/dark.css and research/signature-elements/themes/dark.css
+   and maintained here from now on. In kp.signature, which css/themes.css
+   orders after kp.register, so it draws over the register exactly as the
+   approved demos did, whatever the weight of a register selector. */
+@layer kp.signature {
+    /* The link signature is for links in running text; a link in a navigation,
+       a menu, a breadcrumb (a nav) or the footer keeps its own component's look
+       (scope-93: no link colour in a navigation). */
+    [data-theme='dark'] .kp-progressbar {
+        --kp-progressbar-height: calc(0.75rem * var(--kp-progressbar-scale, 1));
+        --kp-ps-cut: calc(4px * var(--kp-progressbar-scale, 1));
+        /* The indeterminate hatch: stripe and pitch grow with the bar. */
+        --kp-ps-stripe: calc(2px * var(--kp-progressbar-scale, 1));
+        --kp-ps-hatch: calc(6px * var(--kp-progressbar-scale, 1));
+        /* The film along the scale. --kp-px is the pointer's share across the
+           page (0.5 at rest, written by js/effects.js); it slides the film by
+           up to a fifth of the scale, the way the anodised edge turns with the
+           angle you look from. */
+        --kp-ps-film: linear-gradient(90deg, var(--chart-1), var(--chart-2) 36%, var(--chart-3) 68%, var(--chart-4));
+    }
+
+    [data-theme='dark'] .kp-progressbar__track {
+        border-radius: 0;
+        background:
+            linear-gradient(90deg, transparent calc(100% - 1px), var(--border-strong) 0) 0 100% / calc(100% / var(--kp-steps)) 45% repeat-x,
+            var(--muted);
+        box-shadow: inset 0 0 0 1px var(--border);
+        clip-path: polygon(
+            var(--kp-ps-cut) 0,
+            100% 0,
+            100% calc(100% - var(--kp-ps-cut)),
+            calc(100% - var(--kp-ps-cut)) 100%,
+            0 100%,
+            0 var(--kp-ps-cut)
+        );
+    }
+
+    [data-theme='dark'] .kp-progressbar__fill {
+        inset-block: calc(2px * var(--kp-progressbar-scale, 1));
+        background: var(--kp-ps-film) calc(var(--kp-px, 0.5) * 100%) 0 / 125% 100% no-repeat;
+        transition: clip-path 320ms var(--kp-settle, cubic-bezier(0.22, 1, 0.36, 1));
+    }
+
+    [data-theme='dark'] .kp-progressbar__head {
+        inline-size: calc(6px * var(--kp-progressbar-scale, 1));
+        translate: -100% 0;
+        background:
+            linear-gradient(var(--primary), var(--primary)) 100% 0 / 2px 100% no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 0 0 / 100% 2px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 0 100% / 100% 2px no-repeat;
+        transition: transform 320ms var(--kp-settle, cubic-bezier(0.22, 1, 0.36, 1));
+    }
+
+    [data-theme='dark'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset-inline: 0;
+        inline-size: auto;
+        clip-path: none;
+        animation: none;
+        -webkit-mask: repeating-linear-gradient(-45deg, var(--foreground) 0 var(--kp-ps-stripe), transparent var(--kp-ps-stripe) var(--kp-ps-hatch));
+        mask: repeating-linear-gradient(-45deg, var(--foreground) 0 var(--kp-ps-stripe), transparent var(--kp-ps-stripe) var(--kp-ps-hatch));
+    }
+
+    /* ── The numbers and pictures the grammar is made of [Kenny, 2026-10-09;
+       themes/dark/CHARACTER.md §1] ────────────────────────────────────────
+       Dark passes a line. A pass is 660 ms at one pace (linear) and stops
+       dead; the film it lays turns, and settles 220 ms after the line has
+       stopped (880 ms in all, `--kp-sig-dk-time`); a loop is 2400 ms; a
+       group is crossed 60 ms apart. The line is a 2 px slice of the film
+       with the one glow the theme allows, 10 px of --chart-1 at 40 %. */
+    [data-theme='dark'] {
+        --kp-sig-dark-ease: var(--kp-settle, cubic-bezier(0.22, 1, 0.36, 1));
+        --kp-sig-dark-c: 0.35rem;
+        --kp-sig-dk-time: 880ms;
+        --kp-sig-dk-loop: 2400ms;
+        --kp-sig-dk-r: 0px;
+        --kp-sig-dk-cw: 0.36;
+        --kp-sig-dk-line: linear-gradient(180deg, var(--chart-1), var(--chart-2), var(--chart-3), var(--chart-4));
+        --kp-sig-dk-glow: drop-shadow(0 0 10px hsl(from var(--chart-1) h s l / 0.4));
+        /* A solid, for a mask: only its alpha is read. */
+        --kp-sig-dk-solid: linear-gradient(var(--foreground), var(--foreground));
+        /* A comet: the head is the line, the tail a third of the part long,
+           full film at the head and nothing at its end. */
+        --kp-sig-dk-tail: linear-gradient(
+            90deg,
+            transparent,
+            hsl(from var(--chart-4) h s l / 0.14) 38%,
+            hsl(from var(--chart-3) h s l / 0.3) 60%,
+            hsl(from var(--chart-2) h s l / 0.5) 80%,
+            hsl(from var(--chart-1) h s l / 0.8)
+        );
+        --kp-sig-dark-cut: polygon(
+            0 0,
+            calc(100% - var(--kp-sig-dark-c)) 0,
+            100% var(--kp-sig-dark-c),
+            100% 100%,
+            var(--kp-sig-dark-c) 100%,
+            0 calc(100% - var(--kp-sig-dark-c))
+        );
+        /* Four corner brackets in one ink, as background layers. */
+        --kp-sig-dark-bk: var(--border-strong);
+        --kp-sig-dark-arm: 0.6rem;
+        --kp-sig-dark-brackets:
+            linear-gradient(var(--kp-sig-dark-bk), var(--kp-sig-dark-bk)) left top / var(--kp-sig-dark-arm) 1px no-repeat,
+            linear-gradient(var(--kp-sig-dark-bk), var(--kp-sig-dark-bk)) left top / 1px var(--kp-sig-dark-arm) no-repeat,
+            linear-gradient(var(--kp-sig-dark-bk), var(--kp-sig-dark-bk)) right top / var(--kp-sig-dark-arm) 1px no-repeat,
+            linear-gradient(var(--kp-sig-dark-bk), var(--kp-sig-dark-bk)) right top / 1px var(--kp-sig-dark-arm) no-repeat,
+            linear-gradient(var(--kp-sig-dark-bk), var(--kp-sig-dark-bk)) left bottom / var(--kp-sig-dark-arm) 1px no-repeat,
+            linear-gradient(var(--kp-sig-dark-bk), var(--kp-sig-dark-bk)) left bottom / 1px var(--kp-sig-dark-arm) no-repeat,
+            linear-gradient(var(--kp-sig-dark-bk), var(--kp-sig-dark-bk)) right bottom / var(--kp-sig-dark-arm) 1px no-repeat,
+            linear-gradient(var(--kp-sig-dark-bk), var(--kp-sig-dark-bk)) right bottom / 1px var(--kp-sig-dark-arm) no-repeat;
+    }
+
+    /* The film turns on a pass: every part that is laid, taken off, pressed
+       or crossed writes the film on its own copy of the turn, so a turn of
+       one number turns every edge that wears it (and the parts inside it,
+       which inherit the number). At rest the turn is 0 and this is the
+       register's film. */
+    [data-theme='dark']
+        :is(
+            .kp-button,
+            .kp-icon-button,
+            .kp-dialog,
+            dialog.kp-drawer,
+            .kp-menu,
+            .kp-popover,
+            .kp-toast,
+            .kp-tooltip,
+            .kp-card,
+            .kp-alert,
+            .kp-kpi,
+            .kp-combobox__list,
+            .kp-datepicker__panel,
+            .kp-palette,
+            .kp-theme-menu__list,
+            .kp-nav__menu,
+            [data-kp-leaving],
+            [data-kp-arriving]
+        ) {
+        --kp-iris: conic-gradient(
+            from calc(var(--kp-px) * 1turn + var(--kp-sig-dk-turn)),
+            var(--chart-1),
+            var(--chart-2),
+            var(--chart-3),
+            var(--chart-4),
+            var(--chart-1)
+        );
+    }
+
+    /* ── The spinner is the spectrum bars [G12; Kenny, 2026-10-09, question
+       12: "The spectrum bars"]. Five thin bars, one per film colour and a
+       lime, rise and fall in turn like a spectrometer's reading, 120 ms
+       apart (a twentieth of the 2400 ms loop), each cut on two opposite
+       corners; a hairline stands under them. One number, --kp-sig-dk-ph (0
+       to 1 over the loop, @property at the top of this file), is the loop;
+       each bar's height is read from it a twentieth later than the bar
+       before. Standing still the five stand at their rest heights. The
+       three sizes are the package's own (--kp-spinner-size). ── */
+    [data-theme='dark'] .kp-spinner {
+        --kp-sig-dk-cutb: calc(var(--kp-spinner-size, 1.25rem) * 0.06);
+        --kp-sig-dk-h1: calc(
+            0.58 + 0.27 * sin(calc((var(--kp-sig-dk-ph) - 0 * 0.05) * 720deg)) + 0.15 * sin(calc((var(--kp-sig-dk-ph) - 0 * 0.05) * 1080deg))
+        );
+        --kp-sig-dk-h2: calc(
+            0.58 + 0.27 * sin(calc((var(--kp-sig-dk-ph) - 1 * 0.05) * 720deg)) + 0.15 * sin(calc((var(--kp-sig-dk-ph) - 1 * 0.05) * 1080deg))
+        );
+        --kp-sig-dk-h3: calc(
+            0.58 + 0.27 * sin(calc((var(--kp-sig-dk-ph) - 2 * 0.05) * 720deg)) + 0.15 * sin(calc((var(--kp-sig-dk-ph) - 2 * 0.05) * 1080deg))
+        );
+        --kp-sig-dk-h4: calc(
+            0.58 + 0.27 * sin(calc((var(--kp-sig-dk-ph) - 3 * 0.05) * 720deg)) + 0.15 * sin(calc((var(--kp-sig-dk-ph) - 3 * 0.05) * 1080deg))
+        );
+        --kp-sig-dk-h5: calc(
+            0.58 + 0.27 * sin(calc((var(--kp-sig-dk-ph) - 4 * 0.05) * 720deg)) + 0.15 * sin(calc((var(--kp-sig-dk-ph) - 4 * 0.05) * 1080deg))
+        );
+        position: relative;
+        border: 0;
+        border-radius: 0;
+        -webkit-mask: none;
+        mask: none;
+        animation: none;
+        background-color: transparent;
+        background-image:
+            linear-gradient(var(--border-strong), var(--border-strong)),
+            linear-gradient(
+                225deg,
+                transparent 0 calc(var(--kp-sig-dk-cutb) * 0.7071),
+                var(--chart-1) 0 calc(100% - var(--kp-sig-dk-cutb) * 0.7071),
+                transparent 0
+            ),
+            linear-gradient(
+                225deg,
+                transparent 0 calc(var(--kp-sig-dk-cutb) * 0.7071),
+                var(--chart-2) 0 calc(100% - var(--kp-sig-dk-cutb) * 0.7071),
+                transparent 0
+            ),
+            linear-gradient(
+                225deg,
+                transparent 0 calc(var(--kp-sig-dk-cutb) * 0.7071),
+                var(--chart-3) 0 calc(100% - var(--kp-sig-dk-cutb) * 0.7071),
+                transparent 0
+            ),
+            linear-gradient(
+                225deg,
+                transparent 0 calc(var(--kp-sig-dk-cutb) * 0.7071),
+                var(--chart-4) 0 calc(100% - var(--kp-sig-dk-cutb) * 0.7071),
+                transparent 0
+            ),
+            linear-gradient(
+                225deg,
+                transparent 0 calc(var(--kp-sig-dk-cutb) * 0.7071),
+                hsl(from var(--chart-4) h s calc(l + 12)) 0 calc(100% - var(--kp-sig-dk-cutb) * 0.7071),
+                transparent 0
+            );
+        background-repeat: no-repeat;
+        background-size:
+            100% 1px,
+            12% calc(100% * var(--kp-sig-dk-h1)),
+            12% calc(100% * var(--kp-sig-dk-h2)),
+            12% calc(100% * var(--kp-sig-dk-h3)),
+            12% calc(100% * var(--kp-sig-dk-h4)),
+            12% calc(100% * var(--kp-sig-dk-h5));
+        background-position:
+            0 100%,
+            9.09% 100%,
+            29.5% 100%,
+            50% 100%,
+            70.45% 100%,
+            90.9% 100%;
+    }
+
+    /* ── Loading is a comet [G10; Kenny, 2026-10-09, question 10: "A comet
+       with a film tail"]. On every waiting surface the line is the head of a
+       tail a third of the part long, full film at the head and nothing at
+       its end; it crosses from start to end in the first three quarters of
+       the loop (1800 ms of 2400) and lays nothing, the slot stays dark behind
+       the tail, then the loop comes round. It fills the whole element and
+       takes its shape (a chamfered skeleton line is cut, a panel is swept
+       whole). The picture is the element's own ::before, laid over what is
+       waiting; a button has its brackets on ::before, so its comet is
+       painted on its own ground. The surfaces are the package's own: the
+       skeleton lines, blocks and circles (the key figures' and the
+       columns' skeleton lines are skeleton lines), the busy table's panel,
+       the loading menu entry, the busy button and card, the busy calendar
+       and its days, the loading chart, the busy tile grid, the loading
+       meter. One keyframe moves two background layers (the 2 px head and the
+       tail) from just before the start to just past the end; the comet's
+       width is --kp-sig-dk-cw. ── */
+    [data-theme='dark']
+        :where(
+            .kp-skeleton,
+            .kp-datatable__busy-panel,
+            .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+            .kp-card[aria-busy='true'],
+            .kp-tiles[aria-busy='true'] > .kp-card,
+            .kp-chart__state[data-kp-state='loading'],
+            .kp-calendar--busy-whole > .kp-calendar__busy,
+            .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading'],
+            .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) .kp-calendar__day[data-kp-tone='loading']
+        ) {
+        position: relative;
+        animation: none;
+    }
+
+    [data-theme='dark']
+        :where(
+            .kp-skeleton,
+            .kp-datatable__busy-panel,
+            .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+            .kp-card[aria-busy='true'],
+            .kp-tiles[aria-busy='true'] > .kp-card,
+            .kp-chart__state[data-kp-state='loading'],
+            .kp-calendar--busy-whole > .kp-calendar__busy,
+            .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading'],
+            .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) .kp-calendar__day[data-kp-tone='loading']
+        )::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        border-radius: inherit;
+        opacity: 1;
+        pointer-events: none;
+        background-image: var(--kp-sig-dk-line), var(--kp-sig-dk-tail);
+        background-repeat: no-repeat;
+        background-size:
+            2px 100%,
+            calc(var(--kp-sig-dk-cw) * 100%) 100%;
+        background-position:
+            calc(50% * (1 + var(--kp-sig-dk-cw)) - 1px) 0,
+            50% 0;
+    }
+
+    /* A chart's plot and a menu entry stand on the page's own ground. */
+    [data-theme='dark'] .kp-chart__state[data-kp-state='loading'] {
+        background-color: transparent;
+    }
+
+    /* The skeleton line is a slot: the accent plate, a hairline of film at its
+       foot, the chamfer; its sibling lines are crossed 120 ms apart. */
+    [data-theme='dark'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        position: relative;
+        block-size: 0.9rem;
+        border-radius: 0;
+        background:
+            linear-gradient(var(--accent), var(--accent)) top / 100% calc(100% - 1px) no-repeat,
+            var(--kp-iris);
+        clip-path: var(--kp-sig-dark-cut);
+        animation: none;
+    }
+
+    [data-theme='dark'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) + .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        margin-block-start: 0.6rem;
+    }
+
+    [data-theme='dark'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after {
+        content: none;
+    }
+
+    /* The block and the circle are slots of the accent plate too. */
+    [data-theme='dark'] :is(.kp-skeleton--block, .kp-skeleton--circle) {
+        overflow: clip;
+        background: var(--accent);
+    }
+
+    [data-theme='dark'] .kp-skeleton--block {
+        border-radius: 0;
+        clip-path: var(--kp-sig-dark-cut);
+    }
+
+    /* A busy button wears its comet on its own ground (its brackets are the
+       ::before and ::after). */
+    [data-theme='dark'] .kp-button[aria-busy='true'][aria-busy='true'] {
+        background-image: var(--kp-sig-dk-line), var(--kp-sig-dk-tail);
+        background-repeat: no-repeat;
+        background-size:
+            2px 100%,
+            calc(var(--kp-sig-dk-cw) * 100%) 100%;
+        background-position:
+            calc(50% * (1 + var(--kp-sig-dk-cw)) - 1px) 0,
+            50% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark']
+            :where(
+                .kp-skeleton,
+                .kp-datatable__busy-panel,
+                .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+                .kp-card[aria-busy='true'],
+                .kp-tiles[aria-busy='true'] > .kp-card,
+                .kp-chart__state[data-kp-state='loading'],
+                .kp-calendar--busy-whole > .kp-calendar__busy,
+                .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading'],
+                .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) .kp-calendar__day[data-kp-tone='loading']
+            )::before {
+            animation: kp-sig-dark-comet var(--kp-sig-dk-loop) linear infinite;
+        }
+
+        [data-theme='dark'] .kp-button[aria-busy='true'][aria-busy='true'] {
+            animation: kp-sig-dark-comet var(--kp-sig-dk-loop) linear infinite;
+        }
+
+        /* A part's place in a row staggers its comet by 120 ms, so a row of
+           skeleton lines or days reads as one pass. */
+        [data-theme='dark'] .kp-skeleton:nth-child(2)::before {
+            animation-delay: calc(120ms - var(--kp-sig-dk-loop));
+        }
+
+        [data-theme='dark'] .kp-skeleton:nth-child(3)::before {
+            animation-delay: calc(240ms - var(--kp-sig-dk-loop));
+        }
+
+        [data-theme='dark'] .kp-spinner {
+            animation: kp-sig-dark-bars var(--kp-sig-dk-loop) linear infinite;
+        }
+
+        /* The busy bar: no share is known, so the line runs the empty track
+           [G11; Kenny, 2026-10-09, question 11: "The line runs the track"]:
+           a short stretch of film (28 % of the track) crosses from the start
+           to the end, laying a tail that dims behind the line, 2400 ms, and
+           again. With a share known the fill is laid to the share, as round
+           one drew it. */
+        [data-theme='dark'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+            --kp-sig-dk-cw: 0.28;
+            -webkit-mask: none;
+            mask: none;
+            background-color: transparent;
+            background-image: var(--kp-sig-dk-line), var(--kp-sig-dk-tail);
+            background-repeat: no-repeat;
+            background-size:
+                2px 100%,
+                calc(var(--kp-sig-dk-cw) * 100%) 100%;
+            background-position:
+                calc(50% * (1 + var(--kp-sig-dk-cw)) - 1px) 0,
+                50% 0;
+            animation: kp-sig-dark-comet var(--kp-sig-dk-loop) linear infinite;
+        }
+
+        /* A tick and a radio's dot are laid by the pass, in the contact time. */
+        [data-theme='dark'] .kp-field__check:checked::before {
+            animation: kp-sig-dark-lay var(--fx-duration) linear both;
+        }
+
+        [data-theme='dark'] .kp-switch__input::before {
+            transition: transform var(--fx-duration) var(--kp-sig-dark-ease);
+        }
+    }
+
+    [data-theme='dark'] .kp-switch {
+        --kp-switch-radius: 0;
+        --kp-switch-thumb-radius: 0;
+    }
+
+    [data-theme='dark'] .kp-switch__input {
+        --kp-sig-dark-bk: var(--muted-foreground);
+        --kp-sig-dark-arm: 0.4rem;
+        border: 1px solid var(--border-strong);
+        background: var(--kp-sig-dark-brackets), var(--card);
+    }
+
+    [data-theme='dark'] .kp-switch__input::before {
+        background: var(--muted-foreground);
+        clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 4px 100%, 0 calc(100% - 4px));
+    }
+
+    [data-theme='dark'] .kp-switch__input:checked {
+        border-color: var(--primary);
+        background:
+            linear-gradient(var(--card), var(--card)) top / 100% calc(100% - 2px) no-repeat,
+            var(--kp-iris);
+    }
+
+    [data-theme='dark'] .kp-switch__input:checked::before {
+        inset-inline-start: var(--kp-switch-inset, 0.125rem);
+        background: var(--primary);
+        transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem)));
+    }
+
+    [data-theme='dark'] .kp-field__check {
+        appearance: none;
+        display: inline-grid;
+        place-items: center;
+        inline-size: 1.15rem;
+        block-size: 1.15rem;
+        margin: 0;
+        border: 1px solid var(--border-strong);
+        border-radius: 0.1rem;
+        background: var(--card);
+    }
+
+    [data-theme='dark'] .kp-field__check::before,
+    [data-theme='dark'] .kp-field__check::after {
+        grid-area: 1 / 1;
+    }
+
+    [data-theme='dark'] .kp-field__check[type='checkbox']:checked {
+        border-color: var(--primary);
+        background:
+            linear-gradient(var(--primary), var(--primary)) top / 100% calc(100% - 2px) no-repeat,
+            var(--kp-iris);
+    }
+
+    [data-theme='dark'] .kp-field__check[type='checkbox']:checked::before {
+        content: '';
+        inline-size: 0.6rem;
+        block-size: 0.3rem;
+        border-radius: 0;
+        background: none;
+        border-inline-start: 2px solid var(--primary-foreground);
+        border-block-end: 2px solid var(--primary-foreground);
+        transform: translateY(-1px) rotate(-45deg);
+    }
+
+    [data-theme='dark'] .kp-field__check[type='radio'] {
+        border-radius: 50%;
+    }
+
+    [data-theme='dark'] .kp-field__check[type='radio']:checked {
+        border-color: var(--primary);
+        background: var(--card);
+    }
+
+    [data-theme='dark'] .kp-field__check[type='radio']:checked::before {
+        content: '';
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        border-radius: 50%;
+        background: var(--primary);
+    }
+
+    [data-theme='dark'] .kp-toast {
+        position: relative;
+    }
+
+    [data-theme='dark'] .kp-toast:not([class*='kp-toast--']) {
+        border: 1px solid transparent;
+        background:
+            linear-gradient(var(--card), var(--card)) padding-box,
+            var(--kp-iris) border-box;
+    }
+
+    [data-theme='dark'] .kp-tooltip {
+        margin-inline-start: 0.5rem;
+        padding: 0.3rem 0.75rem;
+        border: 1px solid transparent;
+        border-radius: 0;
+        background:
+            linear-gradient(var(--card), var(--card)) padding-box,
+            var(--kp-iris) border-box;
+        box-shadow: none;
+        font-size: 0.8125rem;
+        letter-spacing: 0.02em;
+        clip-path: polygon(0 0, calc(100% - 0.45rem) 0, 100% 0.45rem, 100% 100%, 0.45rem 100%, 0 calc(100% - 0.45rem));
+    }
+
+    [data-theme='dark'] .kp-wizard__steps {
+        gap: 0.5rem 0.9rem;
+    }
+
+    [data-theme='dark'] .kp-wizard__steps li {
+        gap: 0.5rem;
+        padding: 0.3rem 0.6rem 0.3rem 0.3rem;
+    }
+
+    [data-theme='dark'] .kp-wizard__steps li::before {
+        inline-size: 1.6rem;
+        block-size: 1.6rem;
+        border: 0;
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: inset 0 0 0 1px var(--border-strong);
+        clip-path: polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 5px 100%, 0 calc(100% - 5px));
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='dark'] .kp-wizard__steps li[data-state='done'] {
+        color: var(--foreground);
+    }
+
+    [data-theme='dark'] .kp-wizard__steps li[data-state='done']::before {
+        background: var(--kp-iris);
+        box-shadow: none;
+        color: var(--background);
+        font-weight: 700;
+    }
+
+    [data-theme='dark'] .kp-wizard__steps li[data-state='current'] {
+        --kp-sig-dark-bk: var(--primary);
+        --kp-sig-dark-arm: 0.45rem;
+        background: var(--kp-sig-dark-brackets);
+    }
+
+    [data-theme='dark'] .kp-wizard__steps li[data-state='current']::before {
+        background: var(--primary);
+        box-shadow: none;
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='dark'] .kp-empty {
+        --kp-sig-dark-arm: 1rem;
+        position: relative;
+        padding: 1.5rem 1.5rem 2.25rem;
+        border: 0;
+        border-radius: 0;
+        background:
+            var(--kp-sig-dark-brackets), repeating-linear-gradient(to right, hsl(from var(--foreground) h s l / 0.04) 0 1px, transparent 1px 1.25rem),
+            repeating-linear-gradient(to bottom, hsl(from var(--foreground) h s l / 0.04) 0 1px, transparent 1px 1.25rem);
+    }
+
+    [data-theme='dark'] .kp-empty::after {
+        content: '';
+        position: absolute;
+        inset-block-end: 1.1rem;
+        inset-inline: 30%;
+        block-size: 1px;
+        background: var(--kp-iris);
+    }
+
+    [data-theme='dark'] .kp-empty__title {
+        letter-spacing: 0.02em;
+    }
+
+    [data-theme='dark'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
+        text-decoration-thickness: 1px;
+        text-decoration-color: hsl(from var(--foreground) h s l / 0.5);
+        text-underline-offset: 0.25em;
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
+    }
+
+    [data-theme='dark'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a):hover {
+        padding-block-end: 1px;
+        background: var(--kp-iris) left bottom / 100% 2px no-repeat;
+        text-decoration-color: transparent;
+    }
+
+    @media (forced-colors: active) {
+        [data-theme='dark'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a):hover {
+            text-decoration-color: currentColor;
+        }
+    }
+
+    /* ── Pointing, the keyboard and the press: one manner for every control
+       [G14, G15, G17; Kenny, 2026-10-09, questions 14, 15 and 17]. A button
+       in a header, a menu, a drawer, a tile or a tour hovers, focuses and
+       presses exactly like dark's own bracketed button; a menu entry like
+       the button; a link by its underline taking the film (above). The line
+       rests at the start: a 2 px slice of the film with its glow stands at
+       the control's start edge and the brackets close one step (the
+       register's own, above). The keyboard's ring is DI2's two channels
+       inside the cut, and it wins over the pointer when both apply. A press
+       is a pass: on contact the line crosses the face (220 ms) and the film
+       edge turns a quarter (+90 degrees) and settles; the brackets close; the
+       release turns it back. Nothing moves. ── */
+    [data-theme='dark'] :is(.kp-button, .kp-icon-button, .kp-menu__item) {
+        background-image: var(--kp-sig-dk-line);
+        background-repeat: no-repeat;
+        background-position: 0 0;
+        background-size: 0 100%;
+    }
+
+    [data-theme='dark'] :is(.kp-button, .kp-icon-button, .kp-menu__item):hover:not(:disabled, [aria-disabled='true']) {
+        background-size: 2px 100%;
+    }
+
+    [data-theme='dark'] :is(.kp-button, .kp-icon-button, .kp-menu__item):hover:not(:disabled, [aria-disabled='true'], :focus-visible) {
+        box-shadow: inset 7px 0 9px -6px hsl(from var(--chart-1) h s l / 0.4);
+    }
+
+    /* The film's edge on a link tile or a filter tile: the line at the start. */
+    [data-theme='dark'] :is(a.kp-kpi, .kp-kpi--toggle)::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: 2px;
+        background: var(--kp-sig-dk-line);
+        box-shadow: 0 0 9px hsl(from var(--chart-1) h s l / 0.4);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    [data-theme='dark'] :is(a.kp-kpi, .kp-kpi--toggle):hover::before {
+        opacity: 1;
+    }
+
+    [data-theme='dark'] :is(a.kp-kpi, .kp-kpi--toggle):is(:focus-visible) {
+        outline: none;
+        box-shadow:
+            inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 0 0 calc(var(--kp-focus-ring-inner-width, 2px) + 2px) var(--focus-ring-contrast);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] :is(.kp-button, .kp-icon-button, .kp-menu__item) {
+            transition:
+                background-color var(--fx-duration) var(--fx-ease),
+                border-color var(--fx-duration) var(--fx-ease),
+                color var(--fx-duration) var(--fx-ease),
+                box-shadow var(--fx-duration) var(--fx-ease),
+                background-size var(--fx-duration) var(--fx-ease),
+                --kp-sig-dk-turn var(--fx-duration) cubic-bezier(0.64, 0, 0.78, 0);
+        }
+
+        [data-theme='dark'] :is(a.kp-kpi, .kp-kpi--toggle)::before {
+            transition: opacity var(--fx-duration) var(--fx-ease);
+        }
+
+        /* On contact: the edge turns a quarter on the settle, the ground and the
+           line answer at once; the line crosses the face in the contact time. */
+        [data-theme='dark'] :is(.kp-button, .kp-icon-button, .kp-menu__item):active:not(:disabled) {
+            --kp-sig-dk-turn: 90deg;
+            background-size: 2px 100%;
+            transition:
+                background-color 0s,
+                border-color 0s,
+                color 0s,
+                box-shadow 0s,
+                background-size 0s,
+                --kp-sig-dk-turn var(--fx-duration) var(--fx-ease);
+            animation: kp-sig-dark-tap var(--fx-duration) linear both;
+        }
+    }
+
+    /* ── A live update is one pass over the figure [G9; Kenny, 2026-10-09,
+       question 9: "One pass over the figure"]. js/update.js writes the new
+       value at once and marks the element `[data-kp-updating='pass']`; the
+       line crosses the changed figure once from its start (the theme's update
+       time, 660 ms), the letters behind it take the film and settle back to
+       ink once it has gone by; the figure never moves, flares or jolts and
+       the box keeps its space. Applies to the key figure, the state word, the
+       trend, the strip column and the tile alike. A state word keeps its
+       width-holding ::after, so its line is drawn on ::before; a spark (an
+       svg) has no letters, its line crosses the parent's box. Two numbers, how
+       far the line has come (--kp-sig-dk-at) and how much ink lies over the
+       film (--kp-sig-dk-ink), are @property at the top of this file. ── */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] {
+            --kp-update: pass;
+        }
+
+        [data-theme='dark'] [data-kp-updating='pass'] {
+            position: relative;
+            --kp-sig-dk-ink-colour: var(--foreground);
+        }
+
+        [data-theme='dark'] .kp-kpi > .kp-kpi__value[data-kp-updating='pass'] {
+            justify-self: start;
+            inline-size: fit-content;
+        }
+
+        [data-theme='dark'] [data-kp-updating='pass']:not(:has(> svg)) {
+            background:
+                linear-gradient(90deg, transparent var(--kp-sig-dk-at), var(--kp-sig-dk-ink-colour) var(--kp-sig-dk-at)),
+                linear-gradient(
+                    hsl(from var(--kp-sig-dk-ink-colour) h s l / var(--kp-sig-dk-ink)),
+                    hsl(from var(--kp-sig-dk-ink-colour) h s l / var(--kp-sig-dk-ink))
+                ),
+                var(--kp-iris);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: kp-sig-dark-figure var(--kp-update-duration, 660ms) linear both;
+        }
+
+        [data-theme='dark'] [data-kp-updating='pass']:not(.kp-state-word)::after,
+        [data-theme='dark'] .kp-state-word[data-kp-updating='pass']::before {
+            content: '';
+            position: absolute;
+            inset: -2px -4px;
+            z-index: 1;
+            background: var(--kp-sig-dk-line) 100% 0 / 2px 100% no-repeat;
+            filter: var(--kp-sig-dk-glow);
+            opacity: 0;
+            pointer-events: none;
+            animation: kp-sig-dark-pass-live var(--kp-update-duration, 660ms) linear both;
+        }
+    }
+
+    /* ── The opening is a pass [G3, G13; Kenny, 2026-10-09, question 3:
+       "Swept in from its own left edge, left to right"]. A dialog, a menu, a
+       popover, a combobox list, a date picker, a palette, a toast, a tooltip
+       and a drawer open the same way: the line starts at the left edge of the
+       element that opens (never at its button) and crosses only that
+       element's own box at one pace, laying the panel behind it, the film
+       edge turning; it stops dead at the end and the turn settles 220 ms
+       later (880 ms in all). The close is the pass back, right to left,
+       taking the panel off behind it: js/motion.js plays this entrance
+       backwards (`--kp-open: reverse-close`), frame t of the close being
+       frame (T - t) of the open. The panel is revealed by a mask of three
+       layers (the box, and the reach of its halo on either side, which come
+       with the line's first and last 4 %), so the halo and the cut follow
+       what is laid instead of being cut square. The line is the panel's
+       ::after; the film turn is one number on the panel (the film's own
+       @property, kp-sig-dark-film). ── */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark']
+            :is(.kp-dialog, .kp-menu, .kp-popover, .kp-toast, .kp-combobox__list, .kp-datepicker__panel, .kp-palette, .kp-theme-menu__list) {
+            --kp-sig-dk-r: var(--kp-halo-reach, 2.5rem);
+        }
+
+        [data-theme='dark']
+            :is(
+                .kp-dialog,
+                dialog.kp-drawer,
+                .kp-menu,
+                .kp-popover,
+                .kp-tooltip,
+                .kp-toast,
+                .kp-combobox__list,
+                .kp-datepicker__panel,
+                .kp-palette,
+                .kp-theme-menu__list
+            ) {
+            animation:
+                kp-sig-dark-sweep var(--kp-sig-dk-time) linear backwards,
+                kp-sig-dark-film var(--kp-sig-dk-time) linear backwards;
+        }
+
+        [data-theme='dark']
+            :is(
+                .kp-dialog,
+                dialog.kp-drawer,
+                .kp-menu,
+                .kp-popover,
+                .kp-tooltip,
+                .kp-toast,
+                .kp-combobox__list,
+                .kp-datepicker__panel,
+                .kp-palette,
+                .kp-theme-menu__list,
+                .kp-nav__menu
+            )::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 3;
+            background: var(--kp-sig-dk-line) 100% 0 / 2px 100% no-repeat;
+            clip-path: none;
+            filter: var(--kp-sig-dk-glow);
+            opacity: 0;
+            pointer-events: none;
+            animation: kp-sig-dark-pass-line var(--kp-sig-dk-time) linear backwards;
+        }
+
+        /* A menu inside a popover is not swept twice: the popover is. */
+        [data-theme='dark'] .kp-popover :is(.kp-menu, .kp-popover) {
+            animation: none;
+        }
+
+        [data-theme='dark'] .kp-popover :is(.kp-menu, .kp-popover)::after {
+            content: none;
+        }
+
+        /* The drawer comes in from its own left edge too, over its own height
+           and width: it casts no halo, so there is no reach. */
+        [data-theme='dark'] dialog.kp-drawer {
+            --kp-sig-dk-r: 0px;
+        }
+
+        /* A dialog's backdrop is not swept; js/motion.js fades it with the
+           dialog. */
+
+        /* The nav dropdown opens by hovering or focusing its item, with no script
+           in between: the same pass, and the close is the pass back. While it
+           closes the item keeps the panel on screen for the whole pass back
+           (`display` is a discrete transition), and the closed style plays the
+           entrance reversed. */
+        @container kp-nav (width > 40rem) {
+            [data-theme='dark'] .kp-nav__menu {
+                --kp-sig-dk-r: var(--kp-halo-reach, 2.5rem);
+                opacity: 1;
+                transition: display var(--kp-sig-dk-time) allow-discrete;
+                animation:
+                    kp-sig-dark-sweep var(--kp-sig-dk-time) linear reverse forwards,
+                    kp-sig-dark-film var(--kp-sig-dk-time) linear reverse forwards;
+            }
+
+            [data-theme='dark'] .kp-nav__menu::after {
+                animation: kp-sig-dark-pass-line var(--kp-sig-dk-time) linear reverse forwards;
+            }
+
+            [data-theme='dark'] .kp-nav__links > li:hover > .kp-nav__menu,
+            [data-theme='dark'] .kp-nav__links > li:focus-within > .kp-nav__menu,
+            [data-theme='dark'] .kp-nav__links > li[data-kp-nav-menu-open] > .kp-nav__menu {
+                animation:
+                    kp-sig-dark-sweep var(--kp-sig-dk-time) linear backwards,
+                    kp-sig-dark-film var(--kp-sig-dk-time) linear backwards;
+            }
+
+            [data-theme='dark'] .kp-nav__links > li:hover > .kp-nav__menu::after,
+            [data-theme='dark'] .kp-nav__links > li:focus-within > .kp-nav__menu::after,
+            [data-theme='dark'] .kp-nav__links > li[data-kp-nav-menu-open] > .kp-nav__menu::after {
+                animation: kp-sig-dark-pass-line var(--kp-sig-dk-time) linear backwards;
+            }
+        }
+
+        /* The tooltip's halo is none: its reach is none. */
+        [data-theme='dark'] .kp-tooltip {
+            --kp-sig-dk-r: 0px;
+        }
+    }
+
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='dark'] .kp-nav__menu::after {
+            content: none;
+        }
+    }
+
+    /* The mask is only ever on while the pass plays: both ends of the keyframe
+       are the finished pose, so a still part carries no mask. The panel is the
+       box (layer one, which the line sweeps) and the reach of its halo on the
+       left (layer two, laid in the first 4 % of the pass) and on the right
+       (layer three, laid in the last 4 %). Written out once, 0 to 75 % of the
+       880 ms is the pass of 660 ms (G4); the rest holds while the turn
+       settles. */
+    @keyframes kp-sig-dark-sweep {
+        0% {
+            mask-image: var(--kp-sig-dk-solid), var(--kp-sig-dk-solid), var(--kp-sig-dk-solid);
+            mask-repeat: no-repeat;
+            mask-origin: border-box;
+            mask-clip: no-clip;
+            mask-composite: add;
+            mask-position:
+                0 calc(-1 * var(--kp-sig-dk-r)),
+                calc(-1 * var(--kp-sig-dk-r)) calc(-1 * var(--kp-sig-dk-r)),
+                calc(100% + var(--kp-sig-dk-r)) calc(-1 * var(--kp-sig-dk-r));
+            mask-size:
+                0px calc(100% + 2 * var(--kp-sig-dk-r)),
+                0px calc(100% + 2 * var(--kp-sig-dk-r)),
+                0px calc(100% + 2 * var(--kp-sig-dk-r));
+        }
+
+        3% {
+            mask-size:
+                4% calc(100% + 2 * var(--kp-sig-dk-r)),
+                var(--kp-sig-dk-r) calc(100% + 2 * var(--kp-sig-dk-r)),
+                0px calc(100% + 2 * var(--kp-sig-dk-r));
+        }
+
+        72% {
+            mask-size:
+                96% calc(100% + 2 * var(--kp-sig-dk-r)),
+                var(--kp-sig-dk-r) calc(100% + 2 * var(--kp-sig-dk-r)),
+                0px calc(100% + 2 * var(--kp-sig-dk-r));
+        }
+
+        75%,
+        100% {
+            mask-image: var(--kp-sig-dk-solid), var(--kp-sig-dk-solid), var(--kp-sig-dk-solid);
+            mask-repeat: no-repeat;
+            mask-origin: border-box;
+            mask-clip: no-clip;
+            mask-composite: add;
+            mask-position:
+                0 calc(-1 * var(--kp-sig-dk-r)),
+                calc(-1 * var(--kp-sig-dk-r)) calc(-1 * var(--kp-sig-dk-r)),
+                calc(100% + var(--kp-sig-dk-r)) calc(-1 * var(--kp-sig-dk-r));
+            mask-size:
+                100% calc(100% + 2 * var(--kp-sig-dk-r)),
+                var(--kp-sig-dk-r) calc(100% + 2 * var(--kp-sig-dk-r)),
+                var(--kp-sig-dk-r) calc(100% + 2 * var(--kp-sig-dk-r));
+        }
+    }
+
+    /* The line crosses the panel's own box and goes in and out at its ends. */
+    @keyframes kp-sig-dark-pass-line {
+        0% {
+            translate: -100% 0;
+            opacity: 0;
+        }
+
+        3% {
+            translate: -96% 0;
+            opacity: 1;
+        }
+
+        69% {
+            translate: -8% 0;
+            opacity: 1;
+        }
+
+        75%,
+        100% {
+            translate: 0 0;
+            opacity: 0;
+        }
+    }
+
+    /* The film's turn, laid with the pass: the colour runs round the edge as
+       the line crosses (345 degrees at the pace of the line) and settles the
+       last 15 degrees on --kp-settle in the 220 ms after the line has stopped,
+       cyan at the top. */
+    @keyframes kp-sig-dark-film {
+        0% {
+            --kp-sig-dk-turn: 0deg;
+            animation-timing-function: linear;
+        }
+
+        75% {
+            --kp-sig-dk-turn: 345deg;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        100% {
+            --kp-sig-dk-turn: 360deg;
+        }
+    }
+
+    /* The figure takes the film through its letters while the line crosses it
+       and settles back to ink once it has gone by. */
+    @keyframes kp-sig-dark-figure {
+        0% {
+            --kp-sig-dk-at: 0%;
+            --kp-sig-dk-ink: 0;
+            animation-timing-function: linear;
+        }
+
+        75% {
+            --kp-sig-dk-at: 100%;
+            --kp-sig-dk-ink: 0;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        100% {
+            --kp-sig-dk-at: 100%;
+            --kp-sig-dk-ink: 1;
+        }
+    }
+
+    /* A live pass: the line goes in at the start and out at the end of the
+       update's own time. */
+    @keyframes kp-sig-dark-pass-live {
+        0% {
+            translate: -100% 0;
+            opacity: 0;
+        }
+
+        4% {
+            translate: -96% 0;
+            opacity: 1;
+        }
+
+        92% {
+            translate: -8% 0;
+            opacity: 1;
+        }
+
+        100% {
+            translate: 0 0;
+            opacity: 0;
+        }
+    }
+
+    /* The pass of a small part or of a word: its box, from the start edge, at
+       one pace, stopping dead. */
+    @keyframes kp-sig-dark-lay {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    /* A comet crosses a waiting surface. The head (the 2 px line) and the tail
+       (a third of the part, or the share the property --kp-sig-dk-cw says)
+       are two background layers moved together from just before the start to
+       just past the end in three quarters of the loop; the last quarter the
+       slot is dark. A percentage position is a share of the box less the
+       layer, so the head sits at (1 + cw) of the box less its own width and
+       the tail at 1 / (1 - cw). */
+    @keyframes kp-sig-dark-comet {
+        0% {
+            background-position:
+                calc(0% - 2px) 0,
+                calc(-100% * var(--kp-sig-dk-cw) / (1 - var(--kp-sig-dk-cw))) 0;
+        }
+
+        75%,
+        100% {
+            background-position:
+                calc(100% * (1 + var(--kp-sig-dk-cw)) - 2px) 0,
+                calc(100% / (1 - var(--kp-sig-dk-cw))) 0;
+        }
+    }
+
+    /* The spinner's loop: one number, 0 to 1. */
+    @keyframes kp-sig-dark-bars {
+        from {
+            --kp-sig-dk-ph: 0;
+        }
+
+        to {
+            --kp-sig-dk-ph: 1;
+        }
+    }
+
+    /* A press: the line crosses the face and stops at its end. */
+    @keyframes kp-sig-dark-tap {
+        from {
+            background-position: 0 0;
+        }
+
+        to {
+            background-position: 100% 0;
+        }
+    }
+
+    /* Growing and shrinking, this theme's way [scope-142; Kenny, 2026-10-09:
+       the darkroom is retired]. js/motion.js marks a gliding box
+       `[data-kp-resizing]` and what arrives in it `[data-kp-arriving]`. The
+       box keeps the line's glow while it changes; what arrives is laid by the
+       pass (below), and nothing develops from a pale print. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] [data-kp-resizing] {
+            filter: var(--kp-sig-dk-glow);
+        }
+    }
+
+    /* Leaving, this theme's way [G13; Kenny, 2026-10-09, question 13: "The
+       pass lays, the pass back takes off"]. js/motion.js marks what leaves
+       `[data-kp-leaving]`, closes its space during the exit, and in a row of
+       leaves starts the next one a tenth into this one. The line crosses back
+       from the end and the part goes dark behind it, the film taken with it:
+       the opening played backwards, in the same time. Opening is closing
+       turned around (Kenny's pick on research/open-reverse, 2026-10-05): what
+       arrives plays this leave backwards (js/motion.js), so it is laid from
+       the start by the pass and the turn settles to cyan at the top, and
+       frame t of the arrival is frame (T - t) of the leave. The line is
+       drawn on the parts that can carry a pseudo-element: the alert, the key
+       figure and the card (on ::before, its ::after being the plate); a row
+       or any other part is taken off by the mask and the film alone. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] {
+            --kp-open: reverse-close;
+            /* A part a script removes or hides (the busy table's layer, a file
+               row, an empty state, a re-shown alert) is taken off by the pass
+               back first, as the pass lays it (js/motion.js leavesState(),
+               lessons 19, 23, 24); what takes no box arrives as nothing; the
+               space a leave folds shut takes the pass's own time and starts
+               with it. */
+            --kp-leave-state: leave;
+            --kp-arrive-unseen: skip;
+            --kp-leave-fold-grow: 1;
+            --kp-leave-fold-start: 0;
+        }
+
+        [data-theme='dark'] :is(.kp-card, .kp-alert, .kp-kpi) {
+            --kp-sig-dk-r: var(--kp-halo-reach, 2.5rem);
+        }
+
+        [data-theme='dark'] .kp-kpi {
+            --kp-sig-dk-r: 0px;
+        }
+
+        /* The leave plays the pass's frames under their second names (the
+           `-back` keyframes at the end of this layer), so a part whose
+           entrance is the pass itself (a toast) starts its leave afresh
+           instead of turning the finished entrance round in place (lesson 10;
+           all-themes pass, 2026-10-13). The attribute is named twice: the
+           entrance rule above names `dialog.kp-drawer` in its list, which
+           outranks a single attribute, so a leaving toast kept its entrance
+           and had no leave of its own to turn round into its arrival. */
+        [data-theme='dark'] [data-kp-leaving][data-kp-leaving] {
+            --kp-leave-stagger: 0.1;
+            animation:
+                kp-sig-dark-sweep-back var(--kp-sig-dk-time) linear reverse forwards,
+                kp-sig-dark-film-back var(--kp-sig-dk-time) linear reverse forwards;
+        }
+
+        [data-theme='dark'] [data-kp-leaving]:is(.kp-alert, .kp-kpi, .kp-card:not([data-kp-label])) {
+            position: relative;
+        }
+
+        [data-theme='dark'] [data-kp-leaving]:is(.kp-alert, .kp-kpi)::after,
+        [data-theme='dark'] [data-kp-leaving].kp-card:not([data-kp-label])::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 3;
+            background: var(--kp-sig-dk-line) 100% 0 / 2px 100% no-repeat;
+            filter: var(--kp-sig-dk-glow);
+            opacity: 0;
+            pointer-events: none;
+            animation: kp-sig-dark-pass-line-back var(--kp-sig-dk-time) linear reverse forwards;
+        }
+    }
+
+    /* ── A key figure is a panel, and a warning is the film gone coral [G6,
+       G7, G8; Kenny, 2026-10-09, questions 6, 7 and 8]. A tile that stands on
+       its own is cut on the same two corners as the card, with the film along
+       its edge; the plate stays near-black. A warning or a failure takes the
+       tone's colour along the whole film edge (the warning ink for a warning,
+       coral for a failure) and its change is set in that ink; there is no
+       lamp, no tinted plate and no lit number. A destructive menu entry has
+       a coral edge at its start and coral ink; a warning or failed alert is
+       the same, with its label in the tone. The strip's columns keep the
+       package's shared frames. ── */
+    [data-theme='dark'] .kp-kpi:not(.kp-kpis[data-kp-kpis-columns] > .kp-kpi) {
+        --kp-sig-dk-tone: transparent;
+        position: relative;
+        border-color: transparent;
+        background:
+            linear-gradient(var(--card), var(--card)) padding-box,
+            var(--kp-iris) border-box;
+        clip-path: polygon(
+            0 0,
+            calc(100% - var(--kp-chamfer-panel)) 0,
+            100% var(--kp-chamfer-panel),
+            100% 100%,
+            var(--kp-chamfer-panel) 100%,
+            0 calc(100% - var(--kp-chamfer-panel))
+        );
+    }
+
+    [data-theme='dark'] .kp-kpi[data-kp-tone='warning'] {
+        --kp-sig-dk-tone: var(--warning-foreground);
+    }
+
+    [data-theme='dark'] .kp-kpi[data-kp-tone='destructive'] {
+        --kp-sig-dk-tone: var(--destructive);
+    }
+
+    [data-theme='dark'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) {
+        box-shadow: none;
+        --kp-sig-dk-ink-colour: var(--kp-sig-dk-tone);
+    }
+
+    [data-theme='dark'] .kp-kpi:not(.kp-kpis[data-kp-kpis-columns] > .kp-kpi):is([data-kp-tone='warning'], [data-kp-tone='destructive']) {
+        border-color: transparent;
+        background:
+            linear-gradient(var(--card), var(--card)) padding-box,
+            linear-gradient(var(--kp-sig-dk-tone), var(--kp-sig-dk-tone)) border-box;
+    }
+
+    [data-theme='dark'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-kpi__value {
+        padding-inline: 0;
+        background: transparent;
+        color: var(--kp-sig-dk-tone);
+    }
+
+    [data-theme='dark'] .kp-kpi[data-kp-tone='destructive']:where(.kp-kpis[data-kp-kpis-columns] > .kp-kpi) {
+        border-color: var(--destructive);
+    }
+
+    [data-theme='dark'] .kp-kpi[data-kp-tone='warning']:where(.kp-kpis[data-kp-kpis-columns] > .kp-kpi) {
+        border-color: var(--warning-foreground);
+    }
+
+    [data-theme='dark'] .kp-alert:is(.kp-alert--warning, .kp-alert--destructive) {
+        background: var(--card);
+        color: var(--foreground);
+        border: 1px solid var(--kp-sig-dk-tone);
+    }
+
+    [data-theme='dark'] .kp-alert--warning {
+        --kp-sig-dk-tone: var(--warning-foreground);
+    }
+
+    [data-theme='dark'] .kp-alert--destructive {
+        --kp-sig-dk-tone: var(--destructive);
+    }
+
+    [data-theme='dark'] .kp-alert:is(.kp-alert--warning, .kp-alert--destructive) .kp-alert__label {
+        color: var(--kp-sig-dk-tone);
+    }
+
+    [data-theme='dark'] .kp-menu__item--destructive {
+        color: var(--destructive);
+        box-shadow: inset 2px 0 0 var(--destructive);
+    }
+
+    /* ── The meter with a mark, this theme's way [picked by Kenny on
+       research/character-meter, rounds 3 and 4, 2026-10-05: shape 1, while
+       loading 2 (round 4), how the share arrives 3 (round 4), when the tone
+       changes 3, the mark past the end 3]. The package's own markup
+       and states (setMeter(), js/kpi.js): the track on the meter, the share on
+       ::before, the sign past the end or the loading picture on ::after, the
+       mark `.kp-meter__mark`. Every animation and transition under
+       prefers-reduced-motion: no-preference; still frames otherwise.
+       Redrawn on the grammar [Kenny, 2026-10-09]: loading is the comet, the
+       share is laid by the pass, a tone is the film gone coral. ── */
+
+    /* The shared part: room past the end, loading without the pulse, the mark
+       centred on its width, the package's signs cleared for the shape's own.
+       Under :where() so each picked rule below wins as it did in the demo. */
+    :where([data-theme='dark']) :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-room: 0.625rem;
+        box-sizing: border-box;
+    }
+
+    :where([data-theme='dark']) .kp-meter--inline {
+        margin-inline-end: calc(var(--kp-space-xs, 0.25rem) + var(--kp-sig-meter-room));
+    }
+
+    /* Each character draws its own loading picture instead of the pulse. */
+    :where([data-theme='dark']) :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+        overflow: clip;
+        animation: none;
+    }
+
+    :where([data-theme='dark']) :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    /* The mark is centred on its share, whatever its width. */
+    :where([data-theme='dark']) .kp-meter__mark {
+        --kp-sig-meter-mw: 2px;
+        box-sizing: border-box;
+        inline-size: var(--kp-sig-meter-mw);
+        inset-inline-start: calc(clamp(0, var(--kp-mark, 0), 1) * 100% - var(--kp-sig-meter-mw) / 2);
+    }
+
+    :where([data-theme='dark']) .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - 0.75rem);
+    }
+
+    /* The sign past the end, cleared of the package's ▸ for each character
+       to draw its own. */
+    :where([data-theme='dark']) :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        content: '';
+        position: absolute;
+        inset: auto;
+        translate: none;
+        color: inherit;
+        font-size: 0.75rem;
+        line-height: 1;
+        text-shadow: none;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    /* A mark past the end keeps the package's sign inside the bar's end, in
+       each character's own glyph and ink. */
+    :where([data-theme='dark']) .kp-meter__mark[data-kp-over]::after {
+        content: var(--kp-sig-meter-mo-sign, '▸');
+        color: var(--kp-sig-meter-mo-ink, var(--foreground));
+        font-family: var(--kp-sig-meter-mo-font, inherit);
+        text-shadow:
+            0 0 1px var(--kp-sig-meter-mo-halo, var(--card)),
+            0 0 2px var(--kp-sig-meter-mo-halo, var(--card));
+    }
+
+    /* ── shape: option 1 ── */
+
+    /* ── dark · the machined channel ──────────────────────────────── */
+    [data-theme='dark'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-meter-height: 0.5rem;
+        --kp-sig-meter-room: 0.625rem;
+        --kp-sig-meter-cut: 3px;
+        --kp-sig-meter-halo: var(--kp-meter-halo, var(--card));
+        border-radius: 0;
+        background:
+            linear-gradient(
+                    135deg,
+                    var(--kp-sig-meter-halo) 0 calc(50% - 0.7px),
+                    var(--border-strong) calc(50% - 0.7px) calc(50% + 0.7px),
+                    transparent 0
+                )
+                0 0 / var(--kp-sig-meter-cut) var(--kp-sig-meter-cut) no-repeat,
+            linear-gradient(
+                    -45deg,
+                    var(--kp-sig-meter-halo) 0 calc(50% - 0.7px),
+                    var(--border-strong) calc(50% - 0.7px) calc(50% + 0.7px),
+                    transparent 0
+                )
+                100% 100% / var(--kp-sig-meter-cut) var(--kp-sig-meter-cut) no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) var(--kp-sig-meter-cut) 0 / calc(100% - var(--kp-sig-meter-cut)) 1px no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 0 100% / calc(100% - var(--kp-sig-meter-cut)) 1px no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 0 var(--kp-sig-meter-cut) / 1px calc(100% - var(--kp-sig-meter-cut)) no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 100% 0 / 1px calc(100% - var(--kp-sig-meter-cut)) no-repeat,
+            var(--muted);
+    }
+
+    /* Bright machined metal, the oxide film along its top edge laid along
+       the whole scale. */
+    [data-theme='dark'] :is(.kp-meter, .kp-kpi__meter)::before {
+        inset: 1px;
+        inline-size: calc(clamp(0, var(--kp-value, 0), 1) * (100% - 2px));
+        border-radius: 0;
+        background:
+            var(--kp-sig-dk-meter-film, linear-gradient(90deg, var(--chart-1), var(--chart-2), var(--chart-3), var(--chart-4))) 0 0 /
+                calc(100% / clamp(0.01, var(--kp-value, 0), 1)) 2px no-repeat,
+            var(--kp-meter-fill-colour);
+        clip-path: polygon(
+            calc(var(--kp-sig-meter-cut) - 1px) 0,
+            100% 0,
+            100% calc(100% - var(--kp-sig-meter-cut) + 1px),
+            calc(100% - var(--kp-sig-meter-cut) + 1px) 100%,
+            0 100%,
+            0 calc(var(--kp-sig-meter-cut) - 1px)
+        );
+    }
+
+    /* A V milled into the edge, a dark cut through the metal. */
+    [data-theme='dark'] .kp-meter__mark {
+        inset-block: -1px;
+        border-radius: 0;
+        background: var(--background);
+        box-shadow:
+            1px 0 0 var(--primary),
+            -1px 0 0 var(--primary);
+    }
+
+    [data-theme='dark'] .kp-meter__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-end: 100%;
+        inset-inline-start: 50%;
+        inline-size: 8px;
+        block-size: 5px;
+        translate: -50% 0;
+        background: var(--primary);
+        clip-path: polygon(0 0, 100% 0, 50% 100%);
+    }
+
+    /* The part runs out of the channel with a chamfered tip. */
+    [data-theme='dark'] :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        inset-inline-start: calc(100% + 2px);
+        inset-block: 1px;
+        inline-size: 0.4375rem;
+        background:
+            linear-gradient(90deg, var(--chart-4), var(--chart-1)) 0 0 / 100% 2px no-repeat,
+            var(--kp-meter-fill-colour);
+        clip-path: polygon(0 0, calc(100% - 3px) 0, 100% 50%, calc(100% - 3px) 100%, 0 100%);
+    }
+
+    /* ── while loading: option 2 ── */
+
+    /* Loading is the comet, as everywhere [G10]: the 2 px line and its tail a
+       third of the channel long cross it from start to end and lay nothing.
+       The picture is the channel's own ::after, laid over the whole channel. */
+    [data-theme='dark'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        all: unset;
+        content: '';
+        position: absolute;
+        inset: 1px;
+        pointer-events: none;
+        background-image: var(--kp-sig-dk-line), var(--kp-sig-dk-tail);
+        background-repeat: no-repeat;
+        background-size:
+            2px 100%,
+            calc(var(--kp-sig-dk-cw) * 100%) 100%;
+        background-position:
+            calc(50% * (1 + var(--kp-sig-dk-cw)) - 1px) 0,
+            50% 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+            animation: kp-sig-dark-comet var(--kp-sig-dk-loop) linear infinite;
+        }
+    }
+
+    /* ── how the share arrives: the pass ── */
+
+    /* The share is laid by the line from the start of the channel, 660 ms at
+       one pace; a new share moves to its size in the contact time on the
+       theme's curve. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] :is(.kp-meter, .kp-kpi__meter)::before {
+            animation: kp-sig-dark-meter-lay 660ms linear backwards;
+            transition: inline-size var(--fx-duration) var(--fx-ease);
+        }
+    }
+
+    /* ── when the tone changes: the film goes coral ── */
+
+    /* A warning or a failure takes the tone's colour along the whole length of
+       the share's film edge; the channel does not swell [G8]. */
+    [data-theme='dark'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='warning'] {
+        --kp-sig-dk-meter-film: linear-gradient(var(--warning-foreground), var(--warning-foreground));
+    }
+
+    [data-theme='dark'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='destructive'] {
+        --kp-sig-dk-meter-film: linear-gradient(var(--destructive), var(--destructive));
+    }
+
+    /* ── the mark past the end: option 3 ── */
+
+    [data-theme='dark'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-mo-sign: '▸';
+    }
+
+    [data-theme='dark'] .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - var(--kp-sig-meter-mw) - 1px);
+        rotate: 24deg;
+        transform-origin: 50% 100%;
+    }
+
+    [data-theme='dark'] .kp-meter__mark[data-kp-over]::after {
+        inset-inline-start: calc(100% + 3px);
+        rotate: -24deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] .kp-meter__mark {
+            transition:
+                inset-inline-start var(--fx-duration) var(--fx-ease),
+                rotate var(--fx-duration) var(--fx-ease);
+        }
+    }
+
+    @keyframes kp-sig-dark-meter-lay {
+        from {
+            mask-image: var(--kp-sig-dk-solid);
+            mask-repeat: no-repeat;
+            mask-size: 0px 100%;
+        }
+
+        to {
+            mask-image: var(--kp-sig-dk-solid);
+            mask-repeat: no-repeat;
+            mask-size: 100% 100%;
+        }
+    }
+
+    /* ── Every part that opens is laid by the pass and taken off by the pass
+       back [G3, G13; lesson 38; all-themes pass, 2026-10-13]. The tour's card,
+       its dim and ring, the calendar's busy layers and the bar's three
+       closings take the pass the dialog and the menus already use (880 ms,
+       the line at one pace); each close is the opening played backwards. The
+       `-back` keyframes below are the same frames under a second name, so a
+       close starts afresh instead of taking over the finished opening of the
+       same name (lesson 10). ── */
+    @media (prefers-reduced-motion: no-preference) {
+        /* The tour's card is swept in where it stands as the dialog is (it had
+           the package's 160 ms fade); js/motion.js playEntranceBackwards()
+           turns it and its line round when the tour ends. A step is no
+           arrival: the card plays no entrance again. */
+        [data-theme='dark'] .kp-tour {
+            --kp-sig-dk-r: var(--kp-halo-reach, 2.5rem);
+        }
+
+        [data-theme='dark'] .kp-tour[open]:not([data-kp-tour-stepping]) {
+            animation:
+                kp-sig-dark-sweep var(--kp-sig-dk-time) linear backwards,
+                kp-sig-dark-film var(--kp-sig-dk-time) linear backwards;
+        }
+
+        [data-theme='dark'] .kp-tour[open]:not([data-kp-tour-stepping])::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 3;
+            background: var(--kp-sig-dk-line) 100% 0 / 2px 100% no-repeat;
+            filter: var(--kp-sig-dk-glow);
+            opacity: 0;
+            pointer-events: none;
+            animation: kp-sig-dark-pass-line var(--kp-sig-dk-time) linear backwards;
+        }
+
+        /* The page dims round the target and the ring comes in over the card's
+           own pass, at its one pace (it was the package's 350 and 250 ms
+           ease); css/components.css takes both back in the same time, the dim
+           shrinking into the target as it grew out of it (lessons 11, 21,
+           22). */
+        [data-theme='dark'] {
+            --kp-tour-dim-close: 0 0 0 0 transparent;
+            --kp-tour-dim-time: var(--kp-sig-dk-time);
+            --kp-tour-dim-close-ease: linear;
+        }
+
+        [data-theme='dark'] [data-kp-tour-target] {
+            transition:
+                box-shadow var(--kp-sig-dk-time) linear,
+                outline-color var(--kp-sig-dk-time) linear;
+        }
+
+        /* The ring comes in only round a live tour's target (a frozen example
+           on a page is no opening). */
+        [data-theme='dark']:has(dialog.kp-tour[open]) [data-kp-tour-target] {
+            animation: kp-sig-dark-tour-ring var(--kp-sig-dk-time) linear backwards;
+        }
+
+        @keyframes kp-sig-dark-tour-ring {
+            from {
+                outline-color: transparent;
+            }
+        }
+
+        /* The calendar's busy layers are laid by the pass as anything that
+           arrives and taken off by the pass back as anything that leaves:
+           js/calendar.js marks a layer `[data-kp-leaving]` while its state goes
+           (`--kp-calendar-busy-leave: hold`), and the rules below keep it drawn
+           through the leave. */
+        [data-theme='dark'] :is(.kp-calendar__day-busy, .kp-calendar__busy) {
+            --kp-calendar-busy-leave: hold;
+            transition: none;
+        }
+
+        [data-theme='dark']
+            :is(.kp-calendar--busy-days, .kp-calendar--busy-whole:not(:has(> .kp-calendar__grid[aria-busy='true'])))
+            .kp-calendar__day[data-kp-tone='loading']
+            > .kp-calendar__day-busy:not([data-kp-leaving]),
+        [data-theme='dark'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy:not([data-kp-leaving]) {
+            animation:
+                kp-sig-dark-sweep var(--kp-sig-dk-time) linear backwards,
+                kp-sig-dark-film var(--kp-sig-dk-time) linear backwards;
+        }
+
+        [data-theme='dark'] .kp-calendar__day:has(> .kp-calendar__day-busy[data-kp-leaving]) {
+            position: relative;
+        }
+
+        [data-theme='dark'] .kp-calendar__day-busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-spinner, 0.75rem);
+            position: absolute;
+            inset-inline: 0;
+            inset-block-end: 0.125rem;
+            display: flex;
+            justify-content: center;
+            line-height: 0;
+        }
+
+        [data-theme='dark'] .kp-calendar--busy-whole > .kp-calendar__busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-busy-spinner, 2.5rem);
+            z-index: 1;
+            display: grid;
+            place-self: center;
+            place-items: center;
+            padding: var(--kp-space-md, 1rem);
+            border-radius: var(--radius, 0.5rem);
+            background: var(--card);
+            box-shadow: 0 0 0 1px var(--border);
+            line-height: 0;
+        }
+
+        /* The busy table's rows dim and come back over the busy layer's own
+           pass, at its one pace, so the table under the layer is part of the
+           same pair (they changed at once). Two dims stand while a table is
+           busy: its rows' (`--kp-datatable-busy-opacity`) and the whole
+           table's (css/layout.css, `--kp-busy-opacity` on `[aria-busy]`); the
+           whole table's was the one left in one frame, measured at the open's
+           first frame (round 2, 2026-10-13: the wrapper at 0.7 at 1 ms). */
+        [data-theme='dark'] .kp-datatable,
+        [data-theme='dark'] .kp-datatable .kp-table tbody {
+            transition: opacity var(--kp-sig-dk-time) linear;
+        }
+
+        /* The bar [Kenny via the coordinator, 2026-10-12: the navbar's opening
+           and closing are in scope]. The dropdown and the mega menu were
+           already swept in from the bar (G3) but closed at once in Firefox;
+           the phone bar's panel opened with no pass of its own. Each now takes
+           the pass back to close. Firefox does not hold `display`: the hover
+           dropdown and the phone panel are held by the script for
+           `--kp-nav-close-time`, the pass; the mega menu by a transition on
+           --kp-sig-dk-hold (js/components.js settleClosing). */
+        [data-theme='dark'] .kp-nav {
+            --kp-nav-close-time: 880ms;
+        }
+
+        @container kp-nav (width > 40rem) {
+            [data-theme='dark']
+                .kp-nav__links
+                > li[data-kp-nav-closing]:not(:hover, :focus-within, [data-kp-nav-menu-open])
+                > .kp-nav__menu:not(.kp-nav__menu--wide) {
+                display: block;
+                opacity: 1;
+                animation:
+                    kp-sig-dark-sweep-back var(--kp-sig-dk-time) linear reverse forwards,
+                    kp-sig-dark-film-back var(--kp-sig-dk-time) linear reverse forwards;
+            }
+
+            [data-theme='dark']
+                .kp-nav__links
+                > li[data-kp-nav-closing]:not(:hover, :focus-within, [data-kp-nav-menu-open])
+                > .kp-nav__menu:not(.kp-nav__menu--wide)::after {
+                animation: kp-sig-dark-pass-line-back var(--kp-sig-dk-time) linear reverse forwards;
+            }
+
+            [data-theme='dark'] .kp-nav__menu--wide {
+                --kp-sig-dk-hold: 0;
+                transition:
+                    display var(--kp-sig-dk-time) allow-discrete,
+                    --kp-sig-dk-hold var(--kp-sig-dk-time) linear;
+            }
+
+            [data-theme='dark']
+                .kp-nav__links
+                > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true']))
+                > .kp-nav__menu--wide {
+                --kp-sig-dk-hold: 1;
+            }
+
+            [data-theme='dark']
+                .kp-nav__links
+                > li[data-kp-nav-closing]:not([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true']))
+                > .kp-nav__menu--wide {
+                animation:
+                    kp-sig-dark-sweep-back var(--kp-sig-dk-time) linear reverse forwards,
+                    kp-sig-dark-film-back var(--kp-sig-dk-time) linear reverse forwards;
+            }
+
+            [data-theme='dark']
+                .kp-nav__links
+                > li[data-kp-nav-closing]:not([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true']))
+                > .kp-nav__menu--wide::after {
+                animation: kp-sig-dark-pass-line-back var(--kp-sig-dk-time) linear reverse forwards;
+            }
+        }
+
+        /* The phone bar's panel is swept in under the bar from its start edge,
+           its line crossing it, and taken off by the pass back. */
+        @container kp-nav (max-width: 40rem) {
+            [data-theme='dark'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links {
+                --kp-sig-dk-r: 0px;
+                position: relative;
+            }
+
+            [data-theme='dark'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
+                animation:
+                    kp-sig-dark-sweep var(--kp-sig-dk-time) linear backwards,
+                    kp-sig-dark-film var(--kp-sig-dk-time) linear backwards;
+            }
+
+            [data-theme='dark'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                z-index: 3;
+                background: var(--kp-sig-dk-line) 100% 0 / 2px 100% no-repeat;
+                filter: var(--kp-sig-dk-glow);
+                opacity: 0;
+                pointer-events: none;
+                animation: kp-sig-dark-pass-line var(--kp-sig-dk-time) linear backwards;
+            }
+
+            [data-theme='dark'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__links {
+                animation:
+                    kp-sig-dark-sweep-back var(--kp-sig-dk-time) linear reverse forwards,
+                    kp-sig-dark-film-back var(--kp-sig-dk-time) linear reverse forwards;
+            }
+
+            [data-theme='dark'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__links::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                z-index: 3;
+                background: var(--kp-sig-dk-line) 100% 0 / 2px 100% no-repeat;
+                filter: var(--kp-sig-dk-glow);
+                opacity: 0;
+                pointer-events: none;
+                animation: kp-sig-dark-pass-line-back var(--kp-sig-dk-time) linear reverse forwards;
+            }
+
+            /* The panel is swept as one: its nested list is not swept again. */
+            [data-theme='dark'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links .kp-nav__menu {
+                animation: none;
+            }
+
+            [data-theme='dark'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links .kp-nav__menu::after {
+                content: none;
+            }
+        }
+    }
+
+    /* A reader who asked for no motion gets no close to wait for. */
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='dark'] .kp-nav {
+            --kp-nav-close-time: 0ms;
+        }
+    }
+
+    @keyframes kp-sig-dark-sweep-back {
+        0% {
+            mask-image: var(--kp-sig-dk-solid), var(--kp-sig-dk-solid), var(--kp-sig-dk-solid);
+            mask-repeat: no-repeat;
+            mask-origin: border-box;
+            mask-clip: no-clip;
+            mask-composite: add;
+            mask-position:
+                0 calc(-1 * var(--kp-sig-dk-r)),
+                calc(-1 * var(--kp-sig-dk-r)) calc(-1 * var(--kp-sig-dk-r)),
+                calc(100% + var(--kp-sig-dk-r)) calc(-1 * var(--kp-sig-dk-r));
+            mask-size:
+                0px calc(100% + 2 * var(--kp-sig-dk-r)),
+                0px calc(100% + 2 * var(--kp-sig-dk-r)),
+                0px calc(100% + 2 * var(--kp-sig-dk-r));
+        }
+
+        3% {
+            mask-size:
+                4% calc(100% + 2 * var(--kp-sig-dk-r)),
+                var(--kp-sig-dk-r) calc(100% + 2 * var(--kp-sig-dk-r)),
+                0px calc(100% + 2 * var(--kp-sig-dk-r));
+        }
+
+        72% {
+            mask-size:
+                96% calc(100% + 2 * var(--kp-sig-dk-r)),
+                var(--kp-sig-dk-r) calc(100% + 2 * var(--kp-sig-dk-r)),
+                0px calc(100% + 2 * var(--kp-sig-dk-r));
+        }
+
+        75%,
+        100% {
+            mask-image: var(--kp-sig-dk-solid), var(--kp-sig-dk-solid), var(--kp-sig-dk-solid);
+            mask-repeat: no-repeat;
+            mask-origin: border-box;
+            mask-clip: no-clip;
+            mask-composite: add;
+            mask-position:
+                0 calc(-1 * var(--kp-sig-dk-r)),
+                calc(-1 * var(--kp-sig-dk-r)) calc(-1 * var(--kp-sig-dk-r)),
+                calc(100% + var(--kp-sig-dk-r)) calc(-1 * var(--kp-sig-dk-r));
+            mask-size:
+                100% calc(100% + 2 * var(--kp-sig-dk-r)),
+                var(--kp-sig-dk-r) calc(100% + 2 * var(--kp-sig-dk-r)),
+                var(--kp-sig-dk-r) calc(100% + 2 * var(--kp-sig-dk-r));
+        }
+    }
+
+    @keyframes kp-sig-dark-film-back {
+        0% {
+            --kp-sig-dk-turn: 0deg;
+            animation-timing-function: linear;
+        }
+
+        75% {
+            --kp-sig-dk-turn: 345deg;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        100% {
+            --kp-sig-dk-turn: 360deg;
+        }
+    }
+
+    @keyframes kp-sig-dark-pass-line-back {
+        0% {
+            translate: -100% 0;
+            opacity: 0;
+        }
+
+        3% {
+            translate: -96% 0;
+            opacity: 1;
+        }
+
+        69% {
+            translate: -8% 0;
+            opacity: 1;
+        }
+
+        75%,
+        100% {
+            translate: 0 0;
+            opacity: 0;
+        }
+    }
+
+    /* ── The alarm is a dialog: it is swept in where it stands (G3), review round 2 ──
+       Kenny, 2026-10-13: "Dat gaat niet open/close met de animatie van Dark". The alarm ran the
+       package's entrance (the plate faded in, the panel rose and scaled, the headline shrank into
+       place, the reason faded after it), which js/motion.js only turned around. Now the alarm's
+       own box, the whole screen, is laid by the dialog's pass: the line crosses it from its start
+       edge at one pace and the plate, its frame, its glow, the panel and the words are laid behind
+       it; the close is the pass back (js/motion.js plays this entrance backwards in the dialog's
+       close time, `--kp-open: reverse-close`). The plate casts no halo, so the reach is none. The
+       line is the vignette layer's ::after, the plate's own ::after being its breathing glow. The
+       film's turn is left out: the alarm draws no film edge. The held-open frame in the
+       catalogue (`[data-kp-alarm-inline]`, never `[open]`) stays still. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+            --kp-sig-dk-r: 0px;
+            animation: kp-sig-dark-sweep var(--kp-sig-dk-time) linear backwards;
+        }
+
+        [data-theme='dark'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) :is(.kp-alarm__panel, .kp-alarm__title, .kp-alarm__detail) {
+            animation: none;
+        }
+
+        [data-theme='dark'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) .kp-alarm__scan::after {
+            content: '';
+            inset: 0;
+            z-index: 3;
+            block-size: auto;
+            background: var(--kp-sig-dk-line) 100% 0 / 2px 100% no-repeat;
+            filter: var(--kp-sig-dk-glow);
+            opacity: 0;
+            pointer-events: none;
+            animation: kp-sig-dark-pass-line var(--kp-sig-dk-time) linear backwards;
+        }
+    }
+}
+/* ── End of the signature ── */

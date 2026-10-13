@@ -91,7 +91,7 @@ before it, once, and keeps every approval: the dialog walks only the rejected
 pairs, with no stored answer to clear by hand. Name pairs in `"reopen":
 ["<theme>|<item>", …]` only when something approved was redrawn too.
 
-"To judge" (catalogue/changed.html) then shows the demo as "Updated ·
+The Agenda (catalogue/agenda.html) and "To judge" (catalogue/changed.html) then show the demo as "Updated ·
 <themes>", naming the themes the round reopened; "Not started" is only for
 a demo never judged in that browser.
 Once every pair has its verdict again the demo moves under Decided at once,
@@ -106,6 +106,45 @@ A verdict of this round on other files is open again, in the dialog and in
 "To judge", which then calls the demo updated. Under Decided, "To judge" also
 lists every demo in "Archived research", with the decision its `decided.json`
 records.
+
+## Keep the round Kenny judged: the previous version
+
+Kenny, 2026-10-13: before and after, "onmisbaar". Every section in the dialog has a **Previous version (V)** button
+that shows the section as he saw it in the round before, in the same theme, in place of the current one; V again
+brings the current one back. It reads a snapshot kept beside the demo, so it works on the static review site.
+
+**The publish step**, once per round, before the demo's files change for the next round (so `HEAD` still holds the
+round he judged):
+
+```sh
+node research/_review/snapshot.mjs <topic>            # from HEAD
+node research/_review/snapshot.mjs <topic> --from <commit-of-the-judged-round>
+```
+
+It writes `research/<topic>/_previous/`: the demo's own folder, every stylesheet of `css/` and the modules the demo
+imports, as they stood then, plus `previous.json` (`round`, `commit`). The review kit and the catalogue shell are left
+out of the copy, so it never reads or writes verdicts; the fonts come from the live `fonts/`. Commit the folder with the
+new round. One snapshot per demo (about 4.5 MB): the next round's run replaces it, and archiving the demo removes it.
+Without a snapshot the button stays disabled and says why; a section new in this round says it has no earlier version.
+
+## Play open and close, slowly
+
+Every section in the dialog also has **Play open and close (L)** and a speed, **1×** or **¼×**. The kit presses the
+section's own opener, lets the opening play out, closes it the way the demo closes it (the same toggle, the dialog's
+own close request, the popover's hide, or the focus leaving a combobox), waits, and repeats until L is pressed again.
+The opener is the one the demo marks `data-review-replay`, else the first of the package's openers in the section
+(also inside a same-origin window in it): a side navigation toggle, the palette, a dialog or popover button, a
+combobox, a menu button. ¼× runs every animation of the section, and of the previous version when it is shown, at a
+quarter of its rate (Web Animations `playbackRate`), so a demo needs no speed control of its own.
+
+## Auto-next, across demos
+
+After **Approve** the dialog goes to the next open pair, across themes, as before. Opened from the Agenda
+(`catalogue/agenda.html`, `?next=` back to it), the last open pair of a demo no longer ends at the answer: the page goes
+back to the Agenda with `?auto=next`, and the Agenda opens the next item that waits by itself, in its order, skipping
+what has nothing open. The answer is kept per demo (`progress.js`, `keepAnswer`, under `kp-demo-review:<id>:answer`);
+the Agenda shows **Answers to paste** for every answer not yet copied and copies them together in one press. The demo's
+own **Copy answer** marks its answer copied too.
 
 ## A later round shows only what is open
 

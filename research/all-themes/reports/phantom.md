@@ -140,3 +140,50 @@ Measured wall time (Firefox, the four themes in parallel): pairs + identity 1 mi
   stage: thrown in from the start edge, resolving, landing under the field; the close the same backwards. Tab paint:
   41 stops, only the two allowed NOMARK.
 - **Gate:** `kp-sig-phantom-fly-placed` needs a TIMINGS row in js/effects.js.
+
+## Review round 3, Kenny's rejection (2026-10-13 22:12)
+
+**combobox:** "Niet de open/close animatie van dit thema, er is precies geen vlak achter de opties die tevoorschijn
+komen, waardoor de achtergrond doorzichtig lijkt, is dit anders dan bij andere thema's?"
+
+- **Cause (reproduced in the review dialog's stage):** the review dialog is itself a `.kp-dialog`, and phantom's register
+  named `.kp-combobox__list` among the lists that are part of the surface they sit in
+  (`:is(.kp-dialog, .kp-popover, …) :is(.kp-menu, .kp-combobox__list, .kp-theme-menu__list)`: ground `transparent`, no edge,
+  no paperclip), plus two more rules for a list inside a dialog: `rotate: none` and `animation: none`. So inside any
+  dialog, the stage included, the open list read `background-color: rgba(0, 0, 0, 0)`, `clip-path: none`, `border-left:
+  0px`, `rotate: none`, `animation-name: none`: no plate (the page showed through the options), no throw, no resolve,
+  level. Yes, it was different from the other themes and from phantom's own menus. On the plain page it was right,
+  which is why the meter passed. A combobox list is never part of the surface that holds its field: it floats over it in
+  the top layer (js/top-layer.js).
+- **Change 1** (`css/phantom-register.css`): `.kp-combobox__list` taken out of the "list inside a surface is bare" rule,
+  and the two dialog-only rules for it (`rotate: none`, `animation: none`) removed. Inside a dialog it now keeps the menu
+  plate, the throw and resolve, and lands askew.
+- **Change 2, placement:** the list is placed by measuring where it is drawn when it opens (`raiseInPlace()`, which sets
+  aside only the list's own move). Phantom's dialog stands a degree and a half turned, so inside it the measured box was
+  the larger box round the turned list: the raised list stood 2.4 px before its field, 1.2 px under it instead of the
+  4 px margin, and 224 px wide against the field's 219. The placed throw's first, unseen frame now turns the list back by
+  its surface's turn: `kp-sig-phantom-fly-placed` 0 % `rotate: calc(-1 * var(--kp-sig-ph-host-turn, 0deg))`, with
+  `--kp-sig-ph-host-turn: var(--kp-land)` on `.kp-dialog` and `0deg` on `.kp-dialog.kp-drawer` (level).
+- **Evidence:**
+  - Stage, computed on the open list: before `rgba(0, 0, 0, 0)`, `clip-path: none`, `0px` edge, `rotate: none`,
+    `animation: none`; after `rgb(33, 33, 33)`, the paperclip polygon, `4px solid rgb(255, 41, 59)`, `-1.5deg`,
+    `kp-sig-phantom-fly-placed, kp-sig-phantom-resolve`. The catalogue's theme menu (`#cat-theme-menu`) reads the same
+    four values: `rgb(33, 33, 33)`, the same polygon, `4px solid rgb(255, 41, 59)`, `-1.5deg`.
+  - Placement measured along the field's own (turned) axes: in the stage, list top-start corner 0.0 px along and 4.0 px
+    under the field's bottom-start corner (the 4 px margin), width 219 = the field, both at -1.5deg (before change 2:
+    -2.4 / 1.2 px, 224 px). On the plain page (place4.mjs): left 0, top 0 from the field, 219 px = the field, -1.5deg:
+    the earlier `kp-sig-phantom-fly-placed` fix holds.
+  - Frames in the stage (real click on the field, ArrowDown, animations paused and sought at 0, 100, 250, 400, 450, 550,
+    650, 699 ms; close by a real click beside the field): the list is thrown from up-left of the field at -9deg as a
+    25 % dot screen, slaps down under the field, cuts to 50 %, 75 %, solid and stands on its grey plate with the red
+    edge and the cut corner, a degree and a half askew, the page hidden behind it. The close is that backwards:
+    dissolved in the three cuts, then snatched back up-left. Mirrored frames differ only at the field's focus ring
+    (open 250 / close 450: 1,015 px of 151,200; open 699 / close 0: 991 px, the same ring).
+  - Pairs: combobox 700/700 ms 0.0 % (now `kp-sig-phantom-fly-placed` + `kp-sig-phantom-resolve`), datepicker 1.4 %,
+    dialog, drawer, palette 0.0 %. Full run 27 of 32, as before (failing: rail-tip, calendar-busy, wizard-step,
+    empty-state, tabs-panel, each on the brief's known list). Identity: combobox OWN/OWN.
+  - Tab paint: 41 stops, only "Review in a dialog" and "Copy answer" NOMARK.
+- **Gate:** `--kp-sig-ph-host-turn` is a plain custom property (no `@property`); nothing new for js/effects.js.
+
+Measured wall time of the round 3 phantom runs: pairs (5 pairs) 46 s, full identity 88 s, full pairs 280 s, tab paint
+74 s (pairs and tab paint in parallel with dark's).

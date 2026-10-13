@@ -297,3 +297,9 @@ register's colours are.
 Kenny's form of 2026-10-13 19:47 (research/sidenav-edge/OTHER-LIBRARIES.md): MUI, Material 3 and shadcn open the panel by
 dragging from the screen edge on touch. Rated Later: it needs its own drag logic and competes with the browser's back swipe.
 Nothing is built.
+
+## review-reference-everywhere · The theme's reference dialog at the top of every motion demo — Later (2026-10-13)
+
+Kenny's form of 2026-10-13 22:35: research/all-themes-applied opens with a reference block (the theme's own dialog) to compare
+every opening with; doing that in every demo about opening and closing is rated Later. Not built. In the same form: before-after,
+slow-replay and auto-next were rated Onmisbaar (built with the Agenda page), whose-turn and answer-sends Niet doen.

@@ -75,7 +75,8 @@
 // copies the answer and returns to the hub, which opens the next item.
 import { THEMES } from '../../js/theme-registry.js';
 import { applyTheme, currentTheme } from '../../js/theme-core.js';
-import { fingerprintOf, loadUpdate, staleKeys, storeKey } from './progress.js';
+import { fingerprintOf, keepAnswer, loadUpdate, markAnswerCopied, staleKeys, storeKey } from './progress.js';
+import { mountBlockTools } from './block-tools.js';
 
 const root = document.documentElement;
 const DEMO = root.dataset.review;
@@ -751,7 +752,7 @@ if (NEXT) {
     back.className = 'kp-button kp-button--ghost';
     back.href = NEXT;
     back.setAttribute('data-rv-hub', '');
-    back.textContent = '← To judge';
+    back.textContent = /\/agenda\.html$/.test(new URL(NEXT).pathname) ? '← Agenda' : '← To judge';
     back.title = 'Back to the list of everything waiting for a verdict';
     bar.prepend(back);
 }
@@ -816,6 +817,19 @@ function render() {
             : 'Continue in the dialog'
         : 'Review in a dialog';
     nextButton.hidden = !NEXT || judged < pairs.length;
+    // Kept for the Agenda, which offers every answer not yet copied once auto-next has run on past this demo.
+    keepAnswer(DEMO, text, judged);
+}
+
+/**
+ * Auto-next (Kenny, 2026-10-13): the last open pair judged, the dialog goes straight on to the next item on the
+ * list it came from (the Agenda opens it by itself), rather than stopping here. The answer waits there to be copied.
+ */
+function onToNextItem() {
+    const url = new URL(NEXT);
+    url.searchParams.set('auto', 'next');
+    say('Everything is judged. On to the next item…');
+    location.assign(url.href);
 }
 
 const say = (message) => {
@@ -827,6 +841,7 @@ async function copyAnswer() {
     const { text } = answer();
     try {
         await navigator.clipboard.writeText(text);
+        markAnswerCopied(DEMO);
         say('Copied. Paste it into the conversation.');
         return true;
     } catch {
@@ -1421,7 +1436,12 @@ function focusAspect(section, aspect) {
                 sib.setAttribute('data-review-off', '');
 }
 
+/** The tools over each section on stage (block-tools.js): previous version, play open and close, speed. */
+let tools = [];
+
 function putBack() {
+    for (const tool of tools) tool.teardown();
+    tools = [];
     markTarget(undefined);
     stopTour();
     teardownFlip();
@@ -1710,7 +1730,9 @@ async function show(at) {
                 pair.item.section.replaceWith(placeholder);
                 pair.item.section.dataset.rvPair = pair.key;
                 moved.push([placeholder, pair.item.section]);
-                stage.append(pair.item.section);
+                const tool = mountBlockTools({ section: pair.item.section, item: pair.item.id, theme: pair.theme, themeLabel: LABEL[pair.theme] || pair.theme, title: pair.item.title });
+                tools.push(tool);
+                stage.append(tool.bar, pair.item.section);
             } else {
                 stage.append(frameFor(pair));
             }
@@ -1728,7 +1750,7 @@ async function show(at) {
             : 'Everything on the left is approved together. Tick only what is wrong, and say why.';
         $('#rv-keys').textContent = step.aspect
             ? 'Right hand: ←/→ flip · ↑ pick · ↓ none of these. Left hand (AZERTY home row): Q/S state back/on · D tone · F next set · Z live update · R replay · E speed · A tour · Space pause. PageUp/PageDown move between pages · Escape closes.'
-            : 'Up approves the step, Left/Right move between steps, Escape closes. The theme switches by itself.';
+            : 'Up approves the step and goes on to the next open one, Left/Right move between steps, V the previous version, L plays open and close, Escape closes. The theme switches by itself.';
         for (const pair of shownPairs) if (pair.item) focusAspect(pair.item.section, step.aspect ?? null);
         if (step.aspect) setupFlip(step, shownPairs[0]);
         const judgedHere = step.pairs.length - shownPairs.length;
@@ -1802,7 +1824,8 @@ function approveStep() {
     save();
     render();
     const next = nextOpenStep(index);
-    if (next < 0) {
+    if (next < 0 && NEXT) onToNextItem();
+    else if (next < 0) {
         dialog.close();
         foot.scrollIntoView({ block: 'start' });
         say(
@@ -1855,7 +1878,8 @@ function answerAspect(step) {
     save();
     render();
     const next = nextOpenStep(index);
-    if (next < 0) {
+    if (next < 0 && NEXT) onToNextItem();
+    else if (next < 0) {
         dialog.close();
         foot.scrollIntoView({ block: 'start' });
         say(
@@ -1911,6 +1935,16 @@ document.addEventListener(
         // switches the theme [fix-103].
         const from = /** @type {HTMLElement} */ (event.target);
         if (from.matches('textarea, input:not([type="checkbox"]):not([type="radio"]):not([type="button"])')) return;
+        // V and L act on the section most in view: its previous version, its open and close on a loop.
+        if ((event.code === 'KeyV' || event.code === 'KeyL') && tools.length) {
+            const view = stage.closest('.rv-dialog__view')?.getBoundingClientRect();
+            const inView = tools.find((tool) => tool.bar.getBoundingClientRect().bottom > (view?.top ?? 0) + 8) ?? tools[0];
+            if (inView.key(event.code)) {
+                event.preventDefault();
+                event.stopPropagation();
+                return;
+            }
+        }
         // On an aspect page every shortcut acts wherever the focus sits: on a tile
         // clicked in the demo, a link, a control or a dialog button (Kenny,
         // 2026-10-06 18:50: "alle shortcuts moeten altijd blijven werken"). The

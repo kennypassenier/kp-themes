@@ -134,7 +134,7 @@ SECTIONS = {
     }),
 }
 
-ROUND = '2026-10-13-r3'
+ROUND = '2026-10-13-r4'
 DEMO_THEMES = ['formal', 'light', 'dark', 'cyberpunk', 'synthwave', 'pastel', 'terminal', 'forest', 'blueprint', 'solstice', 'brutalism', 'deco', 'phantom', 'grotesk', 'nostromo', 'titanium']
 TOUR_ALL = ' Round 2, every theme: on a step the card no longer drops into the page for a moment (that was the flash and the jump), the page stays dimmed on a card with cut corners, and the part the tour points at is shown uncut while it is pointed at.'
 GENERIC = 'Not changed for this theme in particular: judge it as it is (round 2 shows every block in every theme).'
@@ -254,7 +254,9 @@ intro = '''<main class="fa-page">
 tail = html[html.index('        </main>'):]
 tail = tail.replace('<!-- Round one: every block is new. -->', '<!-- Round one. -->').replace('"round": "2026-10-12-r1"', f'"round": "{ROUND}"')
 OUT.mkdir(exist_ok=True)
-reopen = [f'{t}|{i}' for t in DEMO_THEMES for i in ('sidenav', 'alarm')]
+# Round 4 (Kenny, 2026-10-13 22:24): only the side navigation is asked again where it was not approved in round 3 (dark);
+# the rejected pairs (dark|sidenav, phantom|combobox) reopen by themselves.
+reopen = ['dark|sidenav']
 tail = tail.replace('"reopen": []', '"reopen": ' + json.dumps(reopen))
 (OUT / 'demo.html').write_text(head + intro + REFERENCE + '\n'.join(out_sections) + '\n' + tail)
 js = (SRC / 'demo.js').read_text()

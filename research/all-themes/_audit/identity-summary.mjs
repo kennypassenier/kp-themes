@@ -43,9 +43,11 @@ for (const t of readdirSync(dir).filter((x) => (want.length ? want.includes(x) :
         const kind = (l) => {
             if (!l.length) return 'NONE';
             if (l.some((s) => s.startsWith(`kp-sig-${t}`))) return 'OWN';
+            // A plain slide or fade (the package's translate / opacity / scale transitions or scripted copies) is not the
+            // theme's effect: it read OWN here once and hid dark's sliding side navigation (2026-10-13).
             const p = props(l);
-            p.delete('opacity');
-            return p.size ? 'OWN' : 'FADE';
+            for (const plain of ['opacity', 'translate', 'transform', 'scale', 'kp-sidenav-backdrop']) p.delete(plain);
+            return p.size ? 'OWN' : 'PLAIN';
         };
         const ko = kind(open);
         const kc = kind(close);

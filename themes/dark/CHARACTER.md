@@ -204,3 +204,8 @@ Mechanism only; dark's pass, film and timings are unchanged (research/all-themes
   the headline shrank in, the reason came late). Its whole box, the screen, is now laid by the dialog's pass (G3:
   swept from its start edge where it stands), the line on the vignette layer's `::after`, and taken off by the pass
   back; no film turn (the alarm draws no film edge); the catalogue's held-open frame stays still.
+- Review round 3 (2026-10-13), the side navigation (over, push, the window-edge panel): it slid in on the package's
+  220 ms translate. It now stands where it opens and is laid by the dialog's pass (G3, G13): the line crosses it from
+  its start edge at one pace and the panel is laid behind it; the close is the pass back. 880 ms both ways; no halo
+  reach, no film turn (it draws no film edge). A pushed page (and the edge tab) moves with the line, in the pass's
+  660 ms, and back in the close's last 660 ms; a backdrop comes and goes over the 880 ms at one pace.

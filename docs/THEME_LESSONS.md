@@ -513,3 +513,14 @@ These were not cyberpunk's: the same wrong default is in every theme that has no
   place where the grammar does not move things; the pushed content follows on the same time.
 - **Check:** identity.mjs rows `sidenav` and `alarm` name the theme's keyframes (or list the dialog's scripted properties); the demo's
   reference block (the theme's own dialog) is the picture to compare with.
+
+## 52. "Every theme" is a list of themes times parts, checked before it is said
+
+- **Symptom:** (Kenny, round 3) dark's side navigation still slid in, after a reply that said every side navigation now opened with the
+  theme's own effect.
+- **Cause:** the work was split by the themes each rejection named (dark had only its alarm rejected), and the themes not handed out were
+  checked with identity-summary.mjs, which counted a plain `translate` slide as the theme's own effect.
+- **Fix:** identity-summary.mjs reads translate, opacity, transform and scale alone as PLAIN; before a round is published, every theme times
+  every part the round names is listed and read in that summary, and a claim about "every theme" is written only after it.
+- **Check:** `node research/all-themes/_audit/identity-summary.mjs | grep -E 'PLAIN|NONE|FADE'` lists only decided exceptions (pastel's
+  sheet reads PLAIN because it only moves and turns).
