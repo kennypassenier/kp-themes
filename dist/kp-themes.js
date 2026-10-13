@@ -6436,13 +6436,63 @@ var init_components = __esm({
 var sidenav_exports = {};
 __export(sidenav_exports, {
   OPTIONS: () => OPTIONS,
+  SIDENAV_LAUNCHER: () => SIDENAV_LAUNCHER,
   SIDENAV_MODE_EVENT: () => SIDENAV_MODE_EVENT,
   SIDENAV_OWNED: () => SIDENAV_OWNED,
   SIDENAV_SLIM_EVENT: () => SIDENAV_SLIM_EVENT,
+  SIDENAV_TAB: () => SIDENAV_TAB,
   SIDENAV_TOGGLE_EVENT: () => SIDENAV_TOGGLE_EVENT,
   attachSidenavs: () => attachSidenavs,
+  parseChord: () => parseChord,
   sidenavOf: () => sidenavOf
 });
+function parseChord(chord, mac) {
+  const parts = chord.split("+").map((part) => part.trim()).filter(Boolean);
+  const key = (parts.pop() ?? "").toLowerCase();
+  const mods = new Set(parts.map((part) => part.toLowerCase()));
+  const command = mods.has("control") || mods.has("ctrl") || mods.has("mod");
+  return {
+    key,
+    ctrl: command && !mac,
+    meta: command && mac || mods.has("meta"),
+    alt: mods.has("alt") || mods.has("option"),
+    shift: mods.has("shift"),
+    /** The same chord as `aria-keyshortcuts` writes it. */
+    aria: [...command ? [mac ? "Meta" : "Control"] : [], ...mods.has("meta") && !command ? ["Meta"] : [], ...mods.has("alt") || mods.has("option") ? ["Alt"] : [], ...mods.has("shift") ? ["Shift"] : [], key.length === 1 ? key.toUpperCase() : key].join("+")
+  };
+}
+function typing(target) {
+  if (!(target instanceof Element)) return false;
+  return target.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])') !== null;
+}
+function splitList(list) {
+  const out = [];
+  let depth = 0;
+  let start = 0;
+  for (let i = 0; i < list.length; i += 1) {
+    const c = list[i];
+    if (c === "(") depth += 1;
+    else if (c === ")") depth -= 1;
+    else if (c === "," && depth === 0) {
+      out.push(list.slice(start, i).trim());
+      start = i + 1;
+    }
+  }
+  out.push(list.slice(start).trim());
+  return out;
+}
+function slideTiming(panel) {
+  const style = getComputedStyle(panel);
+  const names = splitList(style.transitionProperty);
+  let at = names.indexOf("translate");
+  if (at === -1) at = names.indexOf("all");
+  if (at === -1) return { duration: "0s", ease: "linear", delay: "0s" };
+  const pick2 = (list) => {
+    const parts = splitList(list);
+    return parts[at % parts.length] ?? "";
+  };
+  return { duration: pick2(style.transitionDuration) || "0s", ease: pick2(style.transitionTimingFunction) || "linear", delay: pick2(style.transitionDelay) || "0s" };
+}
 function sidenavOf(element) {
   return element === null ? void 0 : handles2.get(element);
 }
@@ -6493,16 +6543,82 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
         doc.querySelector(selector)
       );
     };
+    const reserved = () => on(OPTIONS.reserve, false) && mode() !== "side" && !panel.hasAttribute(OPTIONS.narrow);
+    const edge = () => read(OPTIONS.side) === "end" ? "end" : "start";
+    const marginAlong = () => edge() === "end" ? "marginInlineEnd" : "marginInlineStart";
+    const paddingAlong = () => edge() === "end" ? "paddingInlineEnd" : "paddingInlineStart";
+    const panelSize = () => {
+      const style = getComputedStyle(panel);
+      const knob = style.getPropertyValue("--kp-sidenav-w").trim();
+      return knob !== "" ? knob : style.inlineSize;
+    };
+    const tabs = () => {
+      const boxes = /* @__PURE__ */ new Set();
+      for (const toggler of togglers()) {
+        const box = toggler.closest(SIDENAV_TAB);
+        if (box instanceof HTMLElement) boxes.add(box);
+      }
+      return [...boxes];
+    };
+    const MOVED = (
+      /** @type {const} */
+      ["marginInlineStart", "marginInlineEnd", "paddingInlineStart", "paddingInlineEnd"]
+    );
+    const shift = (target, property, value, mark, travels) => {
+      const timing = travels ? slideTiming(panel) : { duration: "0s", ease: "linear", delay: "0s" };
+      target.style.setProperty("--kp-sidenav-shift-duration", timing.duration);
+      target.style.setProperty("--kp-sidenav-shift-ease", timing.ease);
+      target.style.setProperty("--kp-sidenav-shift-delay", timing.delay);
+      target.setAttribute("data-kp-sidenav-shift", mark);
+      for (const one of MOVED) target.style[one] = "";
+      target.style[property] = value;
+    };
     const offsetContent = (open2) => {
+      for (const tab of tabs()) {
+        tab.setAttribute("data-kp-sidenav-tab-edge", edge());
+        shift(tab, marginAlong(), open2 && mode() !== "side" ? panelSize() : "", open2 ? "open" : "closed", mode() !== "side");
+      }
       const target = contentEl();
       if (!target) return { property: null, value: "" };
-      const property = mode() === "push" ? "marginInlineStart" : "paddingInlineStart";
-      const value = open2 && mode() !== "over" ? getComputedStyle(panel).inlineSize : "";
-      target.setAttribute("data-kp-sidenav-shift", open2 ? "open" : "closed");
-      target.style.marginInlineStart = "";
-      target.style.paddingInlineStart = "";
-      target.style[property] = value;
+      const property = mode() === "push" || reserved() ? marginAlong() : paddingAlong();
+      const value = reserved() || open2 && mode() !== "over" ? panelSize() : "";
+      shift(target, property, value, reserved() ? "reserved" : open2 ? "open" : "closed", mode() === "push" && !reserved());
       return { property, value };
+    };
+    const launchers = () => {
+      const boxes = /* @__PURE__ */ new Set();
+      for (const toggler of togglers()) {
+        const box = toggler.closest(SIDENAV_LAUNCHER);
+        if (box instanceof HTMLElement) boxes.add(box);
+      }
+      return [...boxes];
+    };
+    let lightTurn = 0;
+    const light = (open2, now) => {
+      lightTurn += 1;
+      const turn = lightTurn;
+      const boxes = launchers();
+      const shut = () => {
+        for (const box of boxes) box.removeAttribute(OPTIONS.lit);
+        panel.inert = mode() !== "side" && on(OPTIONS.inert, true);
+      };
+      if (open2) {
+        panel.inert = false;
+        for (const box of boxes) box.setAttribute(OPTIONS.lit, "");
+        return;
+      }
+      if (now) return shut();
+      requestAnimationFrame(() => {
+        const target = contentEl();
+        const motions = [...panel.getAnimations({ subtree: true }), ...target ? target.getAnimations() : []].map(
+          (a) => a.finished.catch(() => {
+          })
+        );
+        void Promise.all(motions).then(() => {
+          if (turn !== lightTurn || isOpen()) return;
+          shut();
+        });
+      });
     };
     const say = (open2) => {
       const s2 = { ...getStrings(), ...strings };
@@ -6553,13 +6669,31 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
       panel.setAttribute(OPTIONS.open, String(open2));
       say(open2);
       const offset = offsetContent(open2);
+      light(open2, !moveFocus2 && !save);
       if (open2) raiseBackdrop();
       else dropBackdrop();
       if (on(OPTIONS.lockScroll, false)) doc.documentElement.style.overflow = open2 && covering() ? "hidden" : "";
-      if (moveFocus2 && covering()) {
+      if (moveFocus2 && !open2 && !covering() && panel.contains(doc.activeElement)) {
+        restoreFocusTo = restoreFocusTo ?? togglers().find((t) => t instanceof HTMLElement && !panel.contains(t) && t.offsetParent !== null) ?? null;
+      }
+      const named = read(OPTIONS.initialFocus);
+      if (moveFocus2 && (covering() || named !== null && open2 || !open2 && restoreFocusTo !== null)) {
         if (open2) {
           restoreFocusTo = doc.activeElement;
-          panel.querySelector(FOCUSABLE)?.focus({ preventScroll: true });
+          let first = (
+            /** @type {HTMLElement | null} */
+            null
+          );
+          try {
+            first = named !== null ? (
+              /** @type {HTMLElement | null} */
+              panel.querySelector(named)
+            ) : null;
+          } catch {
+            first = null;
+          }
+          (first ?? /** @type {HTMLElement | null} */
+          panel.querySelector(FOCUSABLE))?.focus({ preventScroll: true });
         } else if (restoreFocusTo instanceof HTMLElement) {
           const back = restoreFocusTo;
           restoreFocusTo = null;
@@ -6593,18 +6727,257 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
         }
       }
     };
-    const setSlim = (collapsed) => {
+    const setSlim = (collapsed, save = true) => {
       if (read(OPTIONS.slim) === null) return;
       turnEase();
       const next = collapsed ?? panel.getAttribute(OPTIONS.slimCollapsed) === null;
       panel.toggleAttribute(OPTIONS.slimCollapsed, next);
       saySlim(next);
-      memory?.write("rail", next);
+      if (save) memory?.write("rail", next);
+      offsetContent(isOpen());
+      syncRail();
       panel.dispatchEvent(new CustomEvent(SIDENAV_SLIM_EVENT, { bubbles: true, detail: { collapsed: next } }));
     };
     const setMode = (next) => {
       panel.setAttribute(OPTIONS.mode, next);
       set(isOpen(), false, false);
+    };
+    const isRail = () => panel.hasAttribute(OPTIONS.slimCollapsed) && !panel.hasAttribute(OPTIONS.peek);
+    const flying = () => isRail() && on(OPTIONS.flyout, true);
+    const floatBeside = (box, item, align) => {
+      const at = item.getBoundingClientRect();
+      const rail = panel.getBoundingClientRect();
+      const width = box.offsetWidth;
+      const height = box.offsetHeight;
+      const view = doc.documentElement.clientWidth;
+      const tall = doc.documentElement.clientHeight;
+      const towardEnd = edge() !== "end";
+      let x = towardEnd ? rail.right + FLOAT_GAP : rail.left - FLOAT_GAP - width;
+      if (towardEnd && x + width > view - FLOAT_MARGIN) x = rail.left - FLOAT_GAP - width;
+      if (!towardEnd && x < FLOAT_MARGIN) x = rail.right + FLOAT_GAP;
+      x = Math.max(FLOAT_MARGIN, Math.min(x, view - FLOAT_MARGIN - width));
+      let y = align === "centre" ? at.top + at.height / 2 - height / 2 : at.top;
+      if (y + height > tall - FLOAT_MARGIN) y = align === "centre" ? tall - FLOAT_MARGIN - height : at.bottom - height;
+      y = Math.max(FLOAT_MARGIN, y);
+      box.style.setProperty("--kp-sidenav-float-x", `${Math.round(x)}px`);
+      box.style.setProperty("--kp-sidenav-float-y", `${Math.round(y)}px`);
+    };
+    const show = (box, then) => {
+      try {
+        box.showPopover();
+        then();
+      } catch {
+        setTimeout(() => {
+          try {
+            if (!box.matches(":popover-open")) box.showPopover();
+            then();
+          } catch {
+          }
+        }, 0);
+      }
+    };
+    let tip = null;
+    let tipFor = null;
+    let tipTimer = 0;
+    let tipGoing = false;
+    const tipItems = () => flying() ? ".kp-sidenav__link" : ".kp-sidenav__link, .kp-sidenav__category-toggle";
+    const hideTip = () => {
+      clearTimeout(tipTimer);
+      tipFor = null;
+      const box = tip;
+      if (box === null || !box.matches(":popover-open") || tipGoing) return;
+      tipGoing = true;
+      void playEntranceBackwards(box).then(() => {
+        tipGoing = false;
+        stopReversing(box);
+        if (tipFor === null && box.matches(":popover-open")) box.hidePopover();
+      });
+    };
+    const showTip = (item) => {
+      clearTimeout(tipTimer);
+      const words = (item.querySelector(".kp-sidenav__label")?.textContent ?? "").trim();
+      if (!isRail() || !on(OPTIONS.railTips, true) || words === "") return;
+      if (tip === null) {
+        tip = doc.createElement("span");
+        tip.className = "kp-popover kp-tooltip kp-sidenav__tip";
+        tip.setAttribute("popover", "manual");
+        tip.setAttribute("aria-hidden", "true");
+        panel.append(tip);
+      }
+      const box = tip;
+      tipFor = item;
+      if (tipGoing) {
+        tipGoing = false;
+        stopReversing(box);
+      }
+      box.textContent = words;
+      const place2 = () => floatBeside(box, item, "centre");
+      if (box.matches(":popover-open")) place2();
+      else show(box, place2);
+    };
+    const onTipOver = (event) => {
+      const item = event.target instanceof Element ? event.target.closest(tipItems()) : null;
+      if (item === null || !panel.contains(item) || item === tipFor || tip !== null && tip.contains(item)) return;
+      if (item.closest(".kp-sidenav__flyout") !== null) return;
+      clearTimeout(tipTimer);
+      if (tip?.matches(":popover-open") && !tipGoing) showTip(item);
+      else tipTimer = window.setTimeout(() => showTip(item), TIP_OPEN_MS);
+    };
+    const onTipOut = (event) => {
+      const to = event.relatedTarget instanceof Element ? event.relatedTarget.closest(tipItems()) : null;
+      if (to !== null && panel.contains(to) && to.closest(".kp-sidenav__flyout") === null) return;
+      hideTip();
+    };
+    const onTipFocus = (event) => {
+      const item = event.target instanceof Element ? event.target.closest(tipItems()) : null;
+      if (item === null || item.closest(".kp-sidenav__flyout") !== null) return hideTip();
+      showTip(item);
+    };
+    const floated = /* @__PURE__ */ new Map();
+    const submenuOf = (category) => (
+      /** @type {HTMLElement | null} */
+      category.querySelector(":scope > .kp-sidenav__submenu")
+    );
+    const toggleOf = (category) => (
+      /** @type {HTMLElement | null} */
+      category.querySelector(":scope > .kp-sidenav__category-toggle")
+    );
+    const flyOut = (category, { focusFirst = false } = {}) => {
+      const submenu = submenuOf(category);
+      if (submenu === null || !floated.has(submenu)) return;
+      for (const other of panel.querySelectorAll(`.kp-sidenav__category[${OPTIONS.flown}]`)) if (other !== category) flyIn(other);
+      hideTip();
+      category.setAttribute(OPTIONS.flown, "");
+      toggleOf(category)?.setAttribute("aria-expanded", "true");
+      const toggle = toggleOf(category) ?? category;
+      show(submenu, () => {
+        floatBeside(submenu, toggle, "start");
+        if (focusFirst) submenu.querySelector(FOCUSABLE)?.focus({ preventScroll: true });
+      });
+    };
+    const flyIn = (category, { refocus = false } = {}) => {
+      const submenu = submenuOf(category);
+      category.removeAttribute(OPTIONS.flown);
+      toggleOf(category)?.setAttribute("aria-expanded", String(category.hasAttribute(OPTIONS.expanded) && !flying()));
+      if (submenu?.matches(":popover-open")) submenu.hidePopover();
+      if (refocus) {
+        const toggle = toggleOf(category);
+        requestAnimationFrame(() => {
+          const motions = category.getAnimations({ subtree: true }).map((a) => a.finished.catch(() => {
+          }));
+          void Promise.all(motions).then(() => {
+            if (!category.hasAttribute(OPTIONS.flown) && toggle?.isConnected) toggle.focus({ preventScroll: true });
+          });
+        });
+      }
+    };
+    const syncRail = () => {
+      if (!isRail()) hideTip();
+      const fly = flying();
+      for (const category of panel.querySelectorAll(".kp-sidenav__category")) {
+        const submenu = submenuOf(category);
+        if (submenu === null) continue;
+        if (fly && !floated.has(submenu)) {
+          floated.set(submenu, { added: !submenu.hasAttribute("popover") });
+          submenu.setAttribute("popover", "manual");
+          submenu.classList.add("kp-popover", "kp-sidenav__flyout");
+          toggleOf(category)?.setAttribute("aria-expanded", "false");
+        } else if (!fly && floated.has(submenu)) {
+          flyIn(category);
+          const { added } = (
+            /** @type {{ added: boolean }} */
+            floated.get(submenu)
+          );
+          floated.delete(submenu);
+          submenu.classList.remove("kp-popover", "kp-sidenav__flyout");
+          if (added) submenu.removeAttribute("popover");
+          toggleOf(category)?.setAttribute("aria-expanded", String(category.hasAttribute(OPTIONS.expanded)));
+        }
+      }
+    };
+    const flyTimers = /* @__PURE__ */ new Map();
+    const onFlyOver = (event) => {
+      if (!flying() || event.pointerType === "touch") return;
+      const category = event.target instanceof Element ? event.target.closest(".kp-sidenav__category") : null;
+      if (category === null || !panel.contains(category)) return;
+      clearTimeout(flyTimers.get(category));
+      if (category.hasAttribute(OPTIONS.flown)) return;
+      flyTimers.set(category, window.setTimeout(() => flyOut(category), FLYOUT_OPEN_MS));
+    };
+    const onFlyOut = (event) => {
+      const category = event.target instanceof Element ? event.target.closest(".kp-sidenav__category") : null;
+      if (category === null || !panel.contains(category)) return;
+      if (event.relatedTarget instanceof Node && category.contains(event.relatedTarget)) return;
+      clearTimeout(flyTimers.get(category));
+      if (!category.hasAttribute(OPTIONS.flown)) return;
+      flyTimers.set(
+        category,
+        window.setTimeout(() => {
+          if (!category.matches(":hover") && !category.contains(doc.activeElement)) flyIn(category);
+        }, FLYOUT_CLOSE_MS)
+      );
+    };
+    const onFlyFocusOut = (event) => {
+      const category = event.target instanceof Element ? event.target.closest(`.kp-sidenav__category[${OPTIONS.flown}]`) : null;
+      if (category === null) return;
+      if (event.relatedTarget instanceof Node && category.contains(event.relatedTarget)) return;
+      if (!category.matches(":hover")) flyIn(category);
+    };
+    let peekTimer = 0;
+    let pointerIn = false;
+    let peekTurn = 0;
+    const setPeek = (value) => {
+      clearTimeout(peekTimer);
+      const now = panel.getAttribute(OPTIONS.peek);
+      if (value ? now === "open" : now !== "open") return;
+      turnEase();
+      peekTurn += 1;
+      const turn = peekTurn;
+      if (value) {
+        panel.setAttribute(OPTIONS.peek, "open");
+        syncRail();
+        return;
+      }
+      panel.setAttribute(OPTIONS.peek, "leaving");
+      requestAnimationFrame(() => {
+        const motions = panel.getAnimations().map((a) => a.finished.catch(() => {
+        }));
+        void Promise.all(motions).then(() => {
+          if (turn !== peekTurn) return;
+          panel.removeAttribute(OPTIONS.peek);
+          syncRail();
+        });
+      });
+    };
+    const peeks = () => read(OPTIONS.expandOnHover) !== null && read(OPTIONS.expandOnHover) !== "false" && panel.hasAttribute(OPTIONS.slimCollapsed);
+    const onPeekEnter = () => {
+      pointerIn = true;
+      if (!peeks()) return;
+      const delay = Number(read(OPTIONS.hoverDelay) ?? 150);
+      clearTimeout(peekTimer);
+      peekTimer = window.setTimeout(() => setPeek(true), Number.isFinite(delay) ? delay : 150);
+    };
+    const onPeekLeave = () => {
+      pointerIn = false;
+      clearTimeout(peekTimer);
+      if (!panel.contains(doc.activeElement)) setPeek(false);
+    };
+    const onPeekFocusIn = () => {
+      if (peeks()) setPeek(true);
+    };
+    const onPeekFocusOut = (event) => {
+      if (event.relatedTarget instanceof Node && panel.contains(event.relatedTarget)) return;
+      if (!pointerIn) setPeek(false);
+    };
+    const mac = /Mac|iPhone|iPad/.test(globalThis.navigator?.platform ?? "") || /Mac/.test(globalThis.navigator?.userAgent ?? "");
+    const chordText = read(OPTIONS.shortcut);
+    const chord = chordText !== null && chordText.trim() !== "" ? parseChord(chordText, mac) : null;
+    const onShortcut = (event) => {
+      if (chord === null || event.defaultPrevented || event.repeat || typing(event.target)) return;
+      if (event.key.toLowerCase() !== chord.key) return;
+      if (event.ctrlKey !== chord.ctrl || event.metaKey !== chord.meta || event.altKey !== chord.alt || event.shiftKey !== chord.shift) return;
+      event.preventDefault();
+      set(!isOpen());
     };
     const saveGroups = () => {
       if (memory === null) return;
@@ -6620,6 +6993,14 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
       if (!toggle || !panel.contains(toggle)) return;
       const category = toggle.closest(".kp-sidenav__category");
       if (!category) return;
+      if (flying()) {
+        if (category.hasAttribute(OPTIONS.flown)) flyIn(category);
+        else flyOut(category, { focusFirst: (
+          /** @type {MouseEvent} */
+          event.detail === 0
+        ) });
+        return;
+      }
       const expanded = category.hasAttribute(OPTIONS.expanded);
       turnEase();
       if (!expanded && on(OPTIONS.accordion, false)) {
@@ -6666,8 +7047,8 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
       if (!hiddenAtAttach.has(control)) hiddenAtAttach.set(control, control.hasAttribute("hidden"));
       control.toggleAttribute("hidden", hide);
     };
-    const threshold = () => {
-      const length = (overBelow ?? "").trim() || NARROW_STEP;
+    const threshold = (written = overBelow) => {
+      const length = (written ?? "").trim() || NARROW_STEP;
       const size = parseFloat(length);
       if (length.endsWith("rem")) return size * parseFloat(getComputedStyle(doc.documentElement).fontSize);
       if (length.endsWith("em")) return size * parseFloat(getComputedStyle(panel.parentElement ?? panel).fontSize);
@@ -6684,7 +7065,7 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
       const box = panel.parentElement;
       if (overBelow === null || box === null) return;
       const narrow = box.clientWidth <= threshold();
-      for (const control of togglers()) hideControl(control, !narrow);
+      for (const control of togglers()) if (control.closest(SIDENAV_LAUNCHER) === null) hideControl(control, !narrow);
       if (read(OPTIONS.slim) !== null) for (const control of slimTogglers()) hideControl(control, narrow);
       if (narrow === (declared !== null)) return;
       still(() => {
@@ -6709,18 +7090,74 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
         }
       });
     };
-    const narrowWatch = overBelow !== null && panel.parentElement !== null && typeof ResizeObserver === "function" ? new ResizeObserver(applyNarrow) : null;
+    const slimBelow = read(OPTIONS.slimBelow);
+    let slimHeld = null;
+    const applySlimBelow = () => {
+      const box = panel.parentElement;
+      if (slimBelow === null || box === null || read(OPTIONS.slim) === null || declared !== null) return;
+      const narrow = box.clientWidth <= threshold(slimBelow);
+      if (narrow === (slimHeld !== null)) return;
+      if (narrow) {
+        slimHeld = panel.hasAttribute(OPTIONS.slimCollapsed);
+        if (!slimHeld) setSlim(true, false);
+      } else {
+        const was = slimHeld;
+        slimHeld = null;
+        if (!was) setSlim(false, false);
+      }
+    };
+    const onResize = () => {
+      applyNarrow();
+      applySlimBelow();
+    };
+    const narrowWatch = (overBelow !== null || slimBelow !== null) && panel.parentElement !== null && typeof ResizeObserver === "function" ? new ResizeObserver(onResize) : null;
+    const launchedHere = launchers().length > 0 && !panel.hasAttribute(OPTIONS.launched);
+    if (launchedHere) panel.setAttribute(OPTIONS.launched, "");
+    const glyphs = [];
+    for (const toggler of togglers()) {
+      const box = toggler.closest(`${SIDENAV_LAUNCHER}, ${SIDENAV_TAB}`);
+      if (box === null || toggler.children.length > 0 || (toggler.textContent ?? "").trim() !== "") continue;
+      const glyph = doc.createElement("span");
+      glyph.className = box.matches(SIDENAV_TAB) ? "kp-sidenav__grip" : "kp-sidenav__bars";
+      glyph.setAttribute("aria-hidden", "true");
+      toggler.append(glyph);
+      glyphs.push(glyph);
+    }
     let start = mode() === "side";
     if (panel.hasAttribute(OPTIONS.open)) start = panel.getAttribute(OPTIONS.open) === "true";
     if (read(OPTIONS.slimCollapsed) !== null) panel.setAttribute(OPTIONS.slimCollapsed, "");
     set(start, false, false);
     saySlim(panel.getAttribute(OPTIONS.slimCollapsed) !== null);
     applyNarrow();
+    applySlimBelow();
     if (narrowWatch !== null && panel.parentElement !== null) narrowWatch.observe(panel.parentElement);
     for (const toggle of panel.querySelectorAll(".kp-sidenav__category-toggle")) {
       const category = toggle.closest(".kp-sidenav__category");
       toggle.setAttribute("aria-expanded", String(category?.hasAttribute("data-kp-sidenav-expanded") ?? false));
     }
+    syncRail();
+    if (chord !== null) for (const toggler of togglers()) toggler.setAttribute("aria-keyshortcuts", chord.aria);
+    const onRailKey = (event) => {
+      if (event.key === "Escape" && tip?.matches(":popover-open")) hideTip();
+      if (!flying() || !(event.target instanceof Element)) return;
+      const out = edge() === "end" ? "ArrowLeft" : "ArrowRight";
+      const back = edge() === "end" ? "ArrowRight" : "ArrowLeft";
+      const toggle = event.target.closest(".kp-sidenav__category-toggle");
+      if (toggle !== null && event.key === out) {
+        const category = toggle.closest(".kp-sidenav__category");
+        if (category) {
+          event.preventDefault();
+          flyOut(category, { focusFirst: true });
+        }
+        return;
+      }
+      const inside = event.target.closest(`.kp-sidenav__category[${OPTIONS.flown}]`);
+      if (inside !== null && event.target.closest(".kp-sidenav__flyout") !== null && (event.key === "Escape" || event.key === back)) {
+        event.preventDefault();
+        event.stopPropagation();
+        flyIn(inside, { refocus: true });
+      }
+    };
     doc.addEventListener("click", onToggleClick);
     doc.addEventListener("click", onSlimClick);
     panel.addEventListener("click", onCategory);
@@ -6734,7 +7171,56 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
       /** @type {EventListener} */
       onTrap
     );
+    panel.addEventListener(
+      "keydown",
+      /** @type {EventListener} */
+      onRailKey
+    );
     panel.addEventListener("pointerenter", turnEase);
+    panel.addEventListener("pointerenter", onPeekEnter);
+    panel.addEventListener("pointerleave", onPeekLeave);
+    panel.addEventListener("focusin", onPeekFocusIn);
+    panel.addEventListener(
+      "focusout",
+      /** @type {EventListener} */
+      onPeekFocusOut
+    );
+    panel.addEventListener(
+      "pointerover",
+      /** @type {EventListener} */
+      onTipOver
+    );
+    panel.addEventListener(
+      "pointerout",
+      /** @type {EventListener} */
+      onTipOut
+    );
+    panel.addEventListener(
+      "focusin",
+      /** @type {EventListener} */
+      onTipFocus
+    );
+    panel.addEventListener("focusout", hideTip);
+    panel.addEventListener(
+      "pointerover",
+      /** @type {EventListener} */
+      onFlyOver
+    );
+    panel.addEventListener(
+      "pointerout",
+      /** @type {EventListener} */
+      onFlyOut
+    );
+    panel.addEventListener(
+      "focusout",
+      /** @type {EventListener} */
+      onFlyFocusOut
+    );
+    if (chord !== null) doc.addEventListener(
+      "keydown",
+      /** @type {EventListener} */
+      onShortcut
+    );
     const handle = {
       element: panel,
       open,
@@ -6770,9 +7256,86 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
         onTrap
       );
       panel.removeEventListener("pointerenter", turnEase);
+      panel.removeEventListener(
+        "keydown",
+        /** @type {EventListener} */
+        onRailKey
+      );
+      panel.removeEventListener("pointerenter", onPeekEnter);
+      panel.removeEventListener("pointerleave", onPeekLeave);
+      panel.removeEventListener("focusin", onPeekFocusIn);
+      panel.removeEventListener(
+        "focusout",
+        /** @type {EventListener} */
+        onPeekFocusOut
+      );
+      panel.removeEventListener(
+        "pointerover",
+        /** @type {EventListener} */
+        onTipOver
+      );
+      panel.removeEventListener(
+        "pointerout",
+        /** @type {EventListener} */
+        onTipOut
+      );
+      panel.removeEventListener(
+        "focusin",
+        /** @type {EventListener} */
+        onTipFocus
+      );
+      panel.removeEventListener("focusout", hideTip);
+      panel.removeEventListener(
+        "pointerover",
+        /** @type {EventListener} */
+        onFlyOver
+      );
+      panel.removeEventListener(
+        "pointerout",
+        /** @type {EventListener} */
+        onFlyOut
+      );
+      panel.removeEventListener(
+        "focusout",
+        /** @type {EventListener} */
+        onFlyFocusOut
+      );
+      doc.removeEventListener(
+        "keydown",
+        /** @type {EventListener} */
+        onShortcut
+      );
+      clearTimeout(peekTimer);
+      clearTimeout(tipTimer);
+      for (const timer2 of flyTimers.values()) clearTimeout(timer2);
+      panel.removeAttribute(OPTIONS.peek);
+      const wasSlim = slimHeld ?? panel.hasAttribute(OPTIONS.slimCollapsed);
+      slimHeld = null;
+      panel.removeAttribute(OPTIONS.slimCollapsed);
+      syncRail();
+      panel.toggleAttribute(OPTIONS.slimCollapsed, wasSlim);
+      tip?.remove();
+      tip = null;
+      panel.inert = false;
+      for (const tab of tabs()) {
+        tab.removeAttribute("data-kp-sidenav-shift");
+        tab.removeAttribute("data-kp-sidenav-tab-edge");
+        tab.style.marginInlineStart = tab.style.marginInlineEnd = "";
+      }
+      for (const toggler of togglers()) toggler.removeAttribute("aria-keyshortcuts");
       panel.style.removeProperty("--kp-sidenav-ease-back");
       dropBackdrop();
       offsetContent(false);
+      const target = contentEl();
+      if (target) {
+        target.removeAttribute("data-kp-sidenav-shift");
+        for (const name of ["--kp-sidenav-shift-duration", "--kp-sidenav-shift-ease", "--kp-sidenav-shift-delay"]) target.style.removeProperty(name);
+        target.style.marginInlineStart = "";
+      }
+      lightTurn += 1;
+      for (const box of launchers()) box.removeAttribute(OPTIONS.lit);
+      for (const glyph of glyphs) glyph.remove();
+      if (launchedHere) panel.removeAttribute(OPTIONS.launched);
       if (on(OPTIONS.lockScroll, false)) doc.documentElement.style.overflow = "";
       panel.removeAttribute(OPTIONS.open);
       for (const toggler of togglers()) {
@@ -6797,7 +7360,7 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
     for (const c of cleanups) c();
   };
 }
-var SIDENAV_TOGGLE_EVENT, SIDENAV_SLIM_EVENT, SIDENAV_MODE_EVENT, SIDENAV_OWNED, OPTIONS, NARROW_STEP, handles2, FOCUSABLE;
+var SIDENAV_TOGGLE_EVENT, SIDENAV_SLIM_EVENT, SIDENAV_MODE_EVENT, SIDENAV_OWNED, OPTIONS, SIDENAV_TAB, SIDENAV_LAUNCHER, NARROW_STEP, handles2, FLYOUT_OPEN_MS, FLYOUT_CLOSE_MS, TIP_OPEN_MS, FLOAT_GAP, FLOAT_MARGIN, FOCUSABLE;
 var init_sidenav = __esm({
   "js/sidenav.js"() {
     "use strict";
@@ -6831,10 +7394,77 @@ var init_sidenav = __esm({
       slimShow: "data-kp-sidenav-slim-show",
       expanded: "data-kp-sidenav-expanded",
       overBelow: "data-kp-sidenav-over-below",
-      narrow: "data-kp-sidenav-narrow"
+      narrow: "data-kp-sidenav-narrow",
+      /**
+       * On the panel: the content named by `data-kp-sidenav-content` keeps the
+       * panel's width whether it is open or not (push and over modes) — the
+       * gutter the panel opens into. Default off.
+       */
+      reserve: "data-kp-sidenav-reserve",
+      /** Written on the panel while a `.kp-sidenav__launcher` drives it. */
+      launched: "data-kp-sidenav-launched",
+      /** Written on the launcher box from the opening's first frame to the closing's last. */
+      lit: "data-kp-sidenav-lit",
+      /** On a page element in the launcher's corner: keeps the launcher's width free at its start. */
+      launcherRoom: "data-kp-sidenav-launcher-room",
+      /**
+       * On the panel: a closed panel is `inert` (out of the tab order and the
+       * accessibility tree) from the closing's last frame to the opening's
+       * first. Default on; `"false"` leaves a closed panel reachable.
+       */
+      inert: "data-kp-sidenav-inert",
+      /**
+       * On the panel: in the collapsed rail each item shows its label as the
+       * package's tooltip on hover and on focus. Default on; `"false"` turns it off.
+       */
+      railTips: "data-kp-sidenav-rail-tips",
+      /**
+       * On a panel with `data-kp-sidenav-slim`: the width of the panel's box at
+       * and below which the rail collapses to its icons, a length, or the
+       * package's 40rem when empty; wider again it is what the reader left it.
+       * `data-kp-sidenav-over-below` is its sibling for the variant: below its
+       * length the panel becomes an `over` panel.
+       */
+      slimBelow: "data-kp-sidenav-slim-below",
+      /**
+       * On the panel: in the collapsed rail a group's submenu opens as a
+       * floating panel beside the rail, on hover (with intent) and from the
+       * keyboard, with the theme's popover effect. Default on; `"false"` keeps
+       * groups folding in place.
+       */
+      flyout: "data-kp-sidenav-flyout",
+      /** Written on a `.kp-sidenav__category` while its submenu floats beside the rail. */
+      flown: "data-kp-sidenav-flown",
+      /**
+       * On the panel: a key chord that toggles it from anywhere but a text
+       * field, e.g. `Control+b`. `Control` means Meta (⌘) on a Mac; `Mod` is
+       * the same thing spelled for both. Off by default.
+       */
+      shortcut: "data-kp-sidenav-shortcut",
+      /**
+       * On the panel: a selector, inside the panel, for where the focus lands
+       * when the panel opens. Default: the first focusable element, and only
+       * for an `over` panel; named, it is used in every mode.
+       */
+      initialFocus: "data-kp-sidenav-initial-focus",
+      /**
+       * On a rail with `data-kp-sidenav-expand-on-hover`: how long the pointer
+       * rests before the rail expands, in milliseconds. Default 150. The rail
+       * also expands while the focus is inside it.
+       */
+      hoverDelay: "data-kp-sidenav-hover-delay",
+      /** Written on the rail while it is expanded by the pointer or the focus. */
+      peek: "data-kp-sidenav-peek"
     };
+    SIDENAV_TAB = ".kp-sidenav__tab";
+    SIDENAV_LAUNCHER = ".kp-sidenav__launcher";
     NARROW_STEP = "40rem";
     handles2 = /* @__PURE__ */ new WeakMap();
+    FLYOUT_OPEN_MS = 150;
+    FLYOUT_CLOSE_MS = 250;
+    TIP_OPEN_MS = 300;
+    FLOAT_GAP = 6;
+    FLOAT_MARGIN = 8;
     FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
   }
 });
@@ -9222,7 +9852,7 @@ function attachDataTables(root = document, {
       if (className) node.className = className;
       return node;
     }, choiceValues2 = function(at) {
-      const declared = splitList(headers[at]?.dataset.kpFilterOptions);
+      const declared = splitList2(headers[at]?.dataset.kpFilterOptions);
       if (declared.length > 0) return declared;
       const values = [...new Set(all.map((row) => cellText(row, at)).filter((v) => v !== ""))];
       const order = orders[at];
@@ -9352,7 +9982,7 @@ function attachDataTables(root = document, {
     const sizesAttribute = wrap.dataset.kpPageSizes;
     const sizes = sizesAttribute === "none" ? [] : [
       .../* @__PURE__ */ new Set([
-        ...sizesAttribute ? splitList(sizesAttribute).map(Number).filter((n) => n > 0) : pageSizesOption,
+        ...sizesAttribute ? splitList2(sizesAttribute).map(Number).filter((n) => n > 0) : pageSizesOption,
         size
       ])
     ].sort((a, b) => a - b);
@@ -9425,7 +10055,7 @@ function attachDataTables(root = document, {
     const labels = headers.map((h2) => (h2.textContent ?? "").trim());
     const columnIds = headers.map((h2) => columnId(h2));
     const labelOf2 = (at) => labels[at] ?? "";
-    const orders = headers.map((h2) => h2.dataset.kpSortOrder === void 0 ? null : splitList(h2.dataset.kpSortOrder));
+    const orders = headers.map((h2) => h2.dataset.kpSortOrder === void 0 ? null : splitList2(h2.dataset.kpSortOrder));
     const filterKinds = headers.map((h2) => {
       const kind = h2.dataset.kpFilter;
       return kind === "choice" || kind === "range" || kind === "date" ? (
@@ -11498,7 +12128,7 @@ function attachDataTables(root = document, {
           /** @type {HTMLSelectElement} */
           make6("select", "kp-field__input")
         );
-        const declared = splitList(header?.dataset.kpEditOptions);
+        const declared = splitList2(header?.dataset.kpEditOptions);
         const values = declared.length > 0 ? declared : [...new Set(all.map((r) => cellText(r, column)).filter((v) => v !== ""))];
         if (!values.includes(previous)) values.unshift(previous);
         for (const value of values) {
@@ -11813,7 +12443,7 @@ function attachDataTables(root = document, {
       const declared = headers[at]?.dataset.kpFilterValue;
       if (declared === void 0) continue;
       const kind = filterKinds[at];
-      if (kind === "choice") filters.set(at, splitList(declared));
+      if (kind === "choice") filters.set(at, splitList2(declared));
       else {
         const [from = "", to = ""] = declared.split(",").map((part) => part.trim());
         filters.set(at, { from, to });
@@ -12058,7 +12688,7 @@ function attachDataTables(root = document, {
   };
   return Object.assign(detach, { handles: created });
 }
-var TABLE, SEARCH, SCOPE, DENSITY, STATUS4, PAGER, EMPTY2, CLEAR, LOADING, FAILED, RETRY, ACTIONS, SELECTED_COUNT, CLEAR_SELECTION, FILTERS, FILTER_TOGGLE, PILLS, ADD_FILTER, CARD_SORT, SELECT_ALL, SELECT_ROW, SORT_SUMMARY, SORT_RESET, EXPAND_ALL, COLLAPSE_ALL, EXPAND_COLUMN, ROW_TOGGLE, GROUP_ROW, GROUP_TOGGLE, GROUP_COUNT, ROW_CONTROLS, DETAIL, EDIT_CELL, EDIT_VALUE, EDITOR_WRAP, SKELETON_ROW, CHECK_CLASS, VIEW_EVENT, SELECT_EVENT, SORT_EVENT, RETRY_EVENT, COLUMNS_EVENT, EXPAND_EVENT, REQUEST_EVENT, EDIT_EVENT, GROUP_EVENT, PAGE_SIZE, PAGE_SIZES, SERVER_DEBOUNCE_MS, GRID_PAGE_ROWS, splitList, shown, defaultFilter, handles6, instances;
+var TABLE, SEARCH, SCOPE, DENSITY, STATUS4, PAGER, EMPTY2, CLEAR, LOADING, FAILED, RETRY, ACTIONS, SELECTED_COUNT, CLEAR_SELECTION, FILTERS, FILTER_TOGGLE, PILLS, ADD_FILTER, CARD_SORT, SELECT_ALL, SELECT_ROW, SORT_SUMMARY, SORT_RESET, EXPAND_ALL, COLLAPSE_ALL, EXPAND_COLUMN, ROW_TOGGLE, GROUP_ROW, GROUP_TOGGLE, GROUP_COUNT, ROW_CONTROLS, DETAIL, EDIT_CELL, EDIT_VALUE, EDITOR_WRAP, SKELETON_ROW, CHECK_CLASS, VIEW_EVENT, SELECT_EVENT, SORT_EVENT, RETRY_EVENT, COLUMNS_EVENT, EXPAND_EVENT, REQUEST_EVENT, EDIT_EVENT, GROUP_EVENT, PAGE_SIZE, PAGE_SIZES, SERVER_DEBOUNCE_MS, GRID_PAGE_ROWS, splitList2, shown, defaultFilter, handles6, instances;
 var init_datatable = __esm({
   "js/datatable.js"() {
     "use strict";
@@ -12119,7 +12749,7 @@ var init_datatable = __esm({
     PAGE_SIZES = Object.freeze([10, 25, 50, 100]);
     SERVER_DEBOUNCE_MS = 300;
     GRID_PAGE_ROWS = 5;
-    splitList = (attribute) => (attribute ?? "").split(",").map((part) => part.trim()).filter((part) => part !== "");
+    splitList2 = (attribute) => (attribute ?? "").split(",").map((part) => part.trim()).filter((part) => part !== "");
     shown = (element) => !/** @type {HTMLElement} */
     element.hidden && getComputedStyle(element).display !== "none";
     defaultFilter = (row, query) => (row.textContent ?? "").toLowerCase().includes(query);
@@ -19263,9 +19893,11 @@ export {
   SELECT_EVENT,
   SERVER_DEBOUNCE_MS,
   SEVERITIES,
+  SIDENAV_LAUNCHER,
   SIDENAV_MODE_EVENT,
   SIDENAV_OWNED,
   SIDENAV_SLIM_EVENT,
+  SIDENAV_TAB,
   SIDENAV_TOGGLE_EVENT,
   SIZE_ATTRIBUTE,
   SIZE_SELECTOR,
@@ -19499,6 +20131,7 @@ export {
   paintRemembered,
   palette,
   palette_exports as paletteExports,
+  parseChord,
   parseDate2 as parseDate,
   parseHsl,
   parseSpan,

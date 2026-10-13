@@ -2629,6 +2629,94 @@ parent's, measured as the bar measures its wrapper. In React it is
 `<Sidenav overBelow>` (or `overBelow="52rem"`) with `SidenavToggle`, which
 passes `hidden` through.
 
+### A panel at the window's edge, with a launcher
+
+[Kenny, 2026-10-13; research/sidenav-edge] A page whose navigation comes
+out of the window's left edge puts its toggler in a `.kp-sidenav__launcher`
+box: fixed at the start corner, in the same place at every width and in
+every state, above the panel. Leave the button empty and the module puts
+the package's three bars in it and names it from the strings:
+
+```html
+<div class="kp-sidenav__launcher">
+    <button type="button" class="kp-icon-button" data-kp-sidenav-toggle aria-controls="nav"></button>
+</div>
+<nav class="kp-sidenav" id="nav" aria-label="Sections" data-kp-sidenav-mode="push" data-kp-sidenav-content="#main" data-kp-sidenav-backdrop="false">
+    <div class="kp-sidenav__header"><p class="kp-sidenav__title">North site</p></div>
+    <div class="kp-sidenav__scroll">…</div>
+</nav>
+<main id="main">
+    <header class="kp-page-header" data-kp-sidenav-launcher-room>…</header>
+    …
+</main>
+```
+
+The module marks the panel `data-kp-sidenav-launched`, which starts its
+header beside the launcher (a panel without a header starts its first row
+below it), so the launcher never covers an item; `data-kp-sidenav-launcher-room`
+keeps the page header clear of it. The launcher box is lit
+(`data-kp-sidenav-lit`, the accent plate) from the opening's first frame
+to the closing's last, so its change is part of the open and played back
+with the close. Three ways to meet the page, one attribute each:
+
+- **push**, as above: opening pushes the content by the panel's width. The
+  content moves on the panel's own slide (the module copies its time, curve
+  and delay onto the content as `--kp-sidenav-shift-duration`, `-ease` and
+  `-delay`), so it travels with every theme's slide and comes back on its
+  reverse; a register that draws the move itself wins.
+- **reserved gutter**, `push` plus `data-kp-sidenav-reserve`: the content
+  keeps the panel's width whether the panel is open or not, so the panel
+  opens into empty room and covers nothing. Add `data-kp-sidenav-open="true"`
+  to start open.
+- **over**, `data-kp-sidenav-mode="over"` with `data-kp-sidenav-backdrop="false"`:
+  the panel slides over the content, with the focus trap and Escape `over` has.
+
+On a phone a push squeezes the content and a gutter takes 15rem of it; add
+`data-kp-sidenav-over-below` to turn either into an `over` panel at 40rem
+and narrower. The launcher stays (it is never hidden by that option) and
+the gutter gives its room back while the panel is narrow. Knobs:
+`--kp-sidenav-launcher-inset` (`--kp-space-sm`) and
+`--kp-sidenav-launcher-size` (2.25rem).
+
+### The side navigation's options from other libraries
+
+[Kenny, 2026-10-13; research/sidenav-edge, pages 1 to 5] Each is one
+attribute on the panel, and each opening and closing runs the theme's own
+effect with the close as the open backwards.
+
+- **A shut panel is inert.** A closed `over` or `push` panel is out of the
+  tab order and the accessibility tree from the closing's last frame to the
+  opening's first. `data-kp-sidenav-inert="false"` keeps it reachable.
+- **Edge tab.** A `.kp-sidenav__tab` box holding a toggler rides on the
+  panel's far edge, halfway down, and stays at the window's edge while the
+  panel is away; it works beside the launcher:
+
+  ```html
+  <div class="kp-sidenav__tab">
+      <button type="button" class="kp-icon-button" data-kp-sidenav-toggle aria-controls="nav"></button>
+  </div>
+  ```
+
+- **Shortcut.** `data-kp-sidenav-shortcut="Control+b"` opens and closes the
+  panel from anywhere but a text field; `Control` (or `Mod`) is ⌘ on a Mac.
+- **Where the focus lands.** `data-kp-sidenav-initial-focus="[aria-current='page']"`
+  names the element that takes the focus on opening, in every mode; the
+  focus goes back to the opener once the panel has closed.
+- **The collapsed rail** (`data-kp-sidenav-slim` with
+  `data-kp-sidenav-slim-collapsed`): each item shows its label as the
+  package's tooltip on hover and focus (`data-kp-sidenav-rail-tips="false"`
+  turns it off), and a group opens beside the rail as a floating panel with
+  the theme's popover effect, on a resting pointer, a press, Enter or the
+  arrow away from the edge; Escape or the arrow back folds it
+  (`data-kp-sidenav-flyout="false"` keeps groups folding in place).
+- **The rail's step.** `data-kp-sidenav-slim-below="60rem"` collapses the
+  rail when its box is that wide or narrower; wider again it is what the
+  reader left it. `data-kp-sidenav-over-below` (with a length too) is the
+  step for the variant.
+- **Widening on hover.** With `data-kp-sidenav-expand-on-hover`, the rail
+  widens after the pointer has rested `data-kp-sidenav-hover-delay`
+  milliseconds (150 by default) and while the keyboard focus is inside it.
+
 ## The page shell [TH36]
 
 ```html

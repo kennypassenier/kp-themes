@@ -36,6 +36,86 @@ export declare const OPTIONS: {
     expanded: string;
     overBelow: string;
     narrow: string;
+    /**
+     * On the panel: the content named by `data-kp-sidenav-content` keeps the
+     * panel's width whether it is open or not (push and over modes) — the
+     * gutter the panel opens into. Default off.
+     */
+    reserve: string;
+    /** Written on the panel while a `.kp-sidenav__launcher` drives it. */
+    launched: string;
+    /** Written on the launcher box from the opening's first frame to the closing's last. */
+    lit: string;
+    /** On a page element in the launcher's corner: keeps the launcher's width free at its start. */
+    launcherRoom: string;
+    /**
+     * On the panel: a closed panel is `inert` (out of the tab order and the
+     * accessibility tree) from the closing's last frame to the opening's
+     * first. Default on; `"false"` leaves a closed panel reachable.
+     */
+    inert: string;
+    /**
+     * On the panel: in the collapsed rail each item shows its label as the
+     * package's tooltip on hover and on focus. Default on; `"false"` turns it off.
+     */
+    railTips: string;
+    /**
+     * On a panel with `data-kp-sidenav-slim`: the width of the panel's box at
+     * and below which the rail collapses to its icons, a length, or the
+     * package's 40rem when empty; wider again it is what the reader left it.
+     * `data-kp-sidenav-over-below` is its sibling for the variant: below its
+     * length the panel becomes an `over` panel.
+     */
+    slimBelow: string;
+    /**
+     * On the panel: in the collapsed rail a group's submenu opens as a
+     * floating panel beside the rail, on hover (with intent) and from the
+     * keyboard, with the theme's popover effect. Default on; `"false"` keeps
+     * groups folding in place.
+     */
+    flyout: string;
+    /** Written on a `.kp-sidenav__category` while its submenu floats beside the rail. */
+    flown: string;
+    /**
+     * On the panel: a key chord that toggles it from anywhere but a text
+     * field, e.g. `Control+b`. `Control` means Meta (⌘) on a Mac; `Mod` is
+     * the same thing spelled for both. Off by default.
+     */
+    shortcut: string;
+    /**
+     * On the panel: a selector, inside the panel, for where the focus lands
+     * when the panel opens. Default: the first focusable element, and only
+     * for an `over` panel; named, it is used in every mode.
+     */
+    initialFocus: string;
+    /**
+     * On a rail with `data-kp-sidenav-expand-on-hover`: how long the pointer
+     * rests before the rail expands, in milliseconds. Default 150. The rail
+     * also expands while the focus is inside it.
+     */
+    hoverDelay: string;
+    /** Written on the rail while it is expanded by the pointer or the focus. */
+    peek: string;
+};
+/** The fixed box at the panel's far edge that holds a small toggler: the edge tab. */
+export declare const SIDENAV_TAB = ".kp-sidenav__tab";
+/** The fixed box at the window's start corner that holds a panel's toggler. */
+export declare const SIDENAV_LAUNCHER = ".kp-sidenav__launcher";
+/**
+ * A key chord as written on the panel: `Control+b`, `Mod+Shift+k`, `Alt+n`.
+ * `Control` and `Mod` are the platform's command key: Meta on a Mac.
+ *
+ * @param {string} chord
+ * @param {boolean} mac
+ */
+export declare function parseChord(chord: string, mac: boolean): {
+    key: string;
+    ctrl: boolean;
+    meta: boolean;
+    alt: boolean;
+    shift: boolean;
+    /** The same chord as `aria-keyshortcuts` writes it. */
+    aria: string;
 };
 export type Sidenav = {
     element: HTMLElement;

@@ -7671,8 +7671,7 @@
            (Kenny, 2026-10-05: no discrepancy between opening and closing). */
         .kp-sidenav:is(
             [data-kp-sidenav-open='false'],
-            [data-kp-sidenav-slim-collapsed]:not(:hover),
-            [data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-expand-on-hover])
+            [data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-peek='open'], [data-kp-sidenav-expand-on-hover]:not([data-kp-sidenav-attached]):hover)
         ) {
             transition-timing-function: var(--kp-sidenav-ease-back, var(--kp-sidenav-ease, var(--fx-ease, ease)));
         }
@@ -7685,12 +7684,15 @@
         --kp-sidenav-w: var(--kp-sidenav-slim-width, 4.5rem);
     }
 
-    .kp-sidenav[data-kp-sidenav-slim-collapsed]:not(:hover) [data-kp-sidenav-slim-hide],
+    /* Collapsed and not peeking: a rail told to expand on hover is expanded
+       while js/sidenav.js writes `data-kp-sidenav-peek="open"` (after the
+       pointer has rested, or while the focus is inside), and on plain
+       `:hover` on a page without the module. Narrowing again it is
+       `"leaving"` until the rail has its icon width: the words stay while
+       the width closes, as they came at once when it opened, so the close
+       is the opening backwards. */
+    .kp-sidenav[data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-peek], [data-kp-sidenav-expand-on-hover]:not([data-kp-sidenav-attached]):hover) [data-kp-sidenav-slim-hide],
     .kp-sidenav:not([data-kp-sidenav-slim-collapsed]) [data-kp-sidenav-slim-show] {
-        display: none;
-    }
-
-    .kp-sidenav[data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-expand-on-hover]):hover [data-kp-sidenav-slim-hide] {
         display: none;
     }
 
@@ -7699,8 +7701,7 @@
        name at all, so a screen reader said "button". The consumer's own
        slim-hide hooks keep display:none: those are ornaments the consumer
        chose to drop, where a label is the entry's name. */
-    .kp-sidenav[data-kp-sidenav-slim-collapsed]:not(:hover) .kp-sidenav__label,
-    .kp-sidenav[data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-expand-on-hover]):hover .kp-sidenav__label {
+    .kp-sidenav[data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-peek], [data-kp-sidenav-expand-on-hover]:not([data-kp-sidenav-attached]):hover) .kp-sidenav__label:not(.kp-sidenav__flyout *) {
         position: absolute;
         inline-size: 1px;
         block-size: 1px;
@@ -7714,8 +7715,57 @@
 
     /* Hovering a rail that was told to expand gives the labels back without
        changing the state anything else reads. */
-    .kp-sidenav[data-kp-sidenav-slim-collapsed][data-kp-sidenav-expand-on-hover]:hover {
+    .kp-sidenav[data-kp-sidenav-slim-collapsed]:is([data-kp-sidenav-peek='open'], [data-kp-sidenav-expand-on-hover]:not([data-kp-sidenav-attached]):hover) {
         --kp-sidenav-w: var(--kp-sidenav-width, 15rem);
+    }
+
+    /* In the collapsed rail a group's submenu floats beside the rail, in the
+       top layer (js/sidenav.js makes it a manual `.kp-popover` there, so it
+       opens with the theme's popover effect and js/motion.js plays its close
+       as that opening backwards), and an item's label shows as the
+       package's tooltip. Both are placed by the module beside the rail and
+       kept inside the window. */
+    :is(.kp-sidenav__flyout, .kp-sidenav__tip):popover-open,
+    :is(.kp-sidenav__flyout, .kp-sidenav__tip)[data-kp-ghost] {
+        position: fixed;
+        inset: auto;
+        left: var(--kp-sidenav-float-x, 0);
+        top: var(--kp-sidenav-float-y, 0);
+        margin: 0;
+        position-area: none;
+    }
+
+    /* In the floating mode a group's chevron shows the group's folded or
+       unfolded state, not whether it floats out: the float is drawn by the
+       popover, and a chevron that turned with it would turn on a different
+       clock from the popover's open and close. */
+    .kp-sidenav__category:has(> .kp-sidenav__flyout) > .kp-sidenav__category-toggle::after {
+        rotate: -45deg;
+    }
+
+    .kp-sidenav__category[data-kp-sidenav-expanded]:has(> .kp-sidenav__flyout) > .kp-sidenav__category-toggle::after {
+        rotate: 45deg;
+    }
+
+    /* The submenu's own `display` would beat the browser's rule that hides a
+       popover that is not open. */
+    .kp-sidenav__flyout:not(:popover-open, [data-kp-ghost]) {
+        display: none;
+    }
+
+    .kp-sidenav__flyout:popover-open {
+        display: grid;
+        grid-template-rows: 1fr;
+        min-inline-size: var(--kp-sidenav-flyout-min, 11rem);
+        transition: none;
+    }
+
+    .kp-sidenav__flyout .kp-sidenav__link {
+        padding-inline-start: var(--kp-sidenav-flyout-indent, 0.6rem);
+    }
+
+    .kp-sidenav__tip {
+        white-space: nowrap;
     }
 
     .kp-sidenav__header {
@@ -7963,6 +8013,133 @@
            that does not take this class is the consumer's to place. */
         position: relative;
         z-index: calc(var(--kp-sidenav-layer, 60) + 1);
+    }
+
+    /* The content a push panel moves [Kenny, 2026-10-13]. js/sidenav.js
+       copies the panel's own time, curve and delay for this change onto the
+       content (`--kp-sidenav-shift-duration`, `--kp-sidenav-shift-ease`,
+       `--kp-sidenav-shift-delay`), so the content travels with the
+       theme's slide and comes back on its reverse; a register that draws the
+       move itself (cyberpunk's ticks, nostromo's cut) wins from its layer.
+       Without the module, or in a mode that does not push, the time is 0s. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-kp-sidenav-shift] {
+            transition-property: margin-inline-start, margin-inline-end, padding-inline-start, padding-inline-end;
+            transition-duration: var(--kp-sidenav-shift-duration, 0s);
+            transition-timing-function: var(--kp-sidenav-shift-ease, linear);
+            transition-delay: var(--kp-sidenav-shift-delay, 0s);
+        }
+    }
+
+    /* The launcher [Kenny, 2026-10-13, translated: "a button (e.g. a hamburger
+       icon) at the very top left of the page that is static"]. A box fixed at the window's
+       start corner, always in the same place and above the panel, holding
+       the panel's toggler, which is the theme's own `.kp-icon-button`: the
+       box places it, so no register's `position` on an icon button can move
+       it (docs/THEME_LESSONS.md 5 and 43). Its ground is the page's, so
+       content scrolled under it never shows through; lit (from the opening's
+       first frame to the closing's last, js/sidenav.js) it takes the accent
+       plate, as the bar's own toggle does when its panel is open: a state
+       change, not three bars folding into a cross, which every register
+       would have to keep working.
+       Knobs: --kp-sidenav-launcher-inset (the gap to the window's edges,
+       default --kp-space-sm), --kp-sidenav-launcher-size (2.25rem, the icon
+       button's). The room it takes, inset + size + inset, is what the
+       panel's header and a page element marked
+       `data-kp-sidenav-launcher-room` keep free. */
+    .kp-sidenav__launcher {
+        position: fixed;
+        inset-block-start: var(--kp-sidenav-launcher-inset, var(--kp-space-sm, 0.5rem));
+        inset-inline-start: var(--kp-sidenav-launcher-inset, var(--kp-space-sm, 0.5rem));
+        z-index: calc(var(--kp-sidenav-layer, 60) + 1);
+        display: flex;
+        border-radius: var(--radius, 0.5rem);
+        background-color: var(--background);
+        color: var(--foreground);
+    }
+
+    .kp-sidenav__launcher > :is(button, .kp-icon-button) {
+        inline-size: var(--kp-sidenav-launcher-size, 2.25rem);
+        block-size: var(--kp-sidenav-launcher-size, 2.25rem);
+    }
+
+    .kp-sidenav__launcher[data-kp-sidenav-lit] {
+        background-color: var(--accent);
+        color: var(--accent-foreground);
+    }
+
+    /* The package's glyph: the three bars the bar's toggle draws, put in an
+       empty launcher toggler by js/sidenav.js. */
+    .kp-sidenav__bars {
+        display: block;
+        inline-size: 1.05rem;
+        block-size: 2px;
+        background: currentColor;
+        box-shadow:
+            0 -0.36rem 0 currentColor,
+            0 0.36rem 0 currentColor;
+    }
+
+    /* The panel the launcher drives starts its items clear of it: the header
+       row begins beside the launcher, or, without a header, the panel's
+       first row begins below it. */
+    .kp-sidenav[data-kp-sidenav-launched]:not([data-kp-sidenav-side='end']) > .kp-sidenav__header {
+        box-sizing: border-box;
+        min-block-size: calc(2 * var(--kp-sidenav-launcher-inset, var(--kp-space-sm, 0.5rem)) + var(--kp-sidenav-launcher-size, 2.25rem));
+        padding-inline-start: calc(2 * var(--kp-sidenav-launcher-inset, var(--kp-space-sm, 0.5rem)) + var(--kp-sidenav-launcher-size, 2.25rem));
+        align-items: center;
+    }
+
+    .kp-sidenav[data-kp-sidenav-launched]:not([data-kp-sidenav-side='end']):not(:has(> .kp-sidenav__header)) {
+        padding-block-start: calc(2 * var(--kp-sidenav-launcher-inset, var(--kp-space-sm, 0.5rem)) + var(--kp-sidenav-launcher-size, 2.25rem));
+    }
+
+    /* A page element in the launcher's corner keeps its width free, except
+       in a gutter, where the launcher already stands in the reserved room. */
+    [data-kp-sidenav-launcher-room]:not([data-kp-sidenav-shift='reserved'] *) {
+        padding-inline-start: calc(2 * var(--kp-sidenav-launcher-inset, var(--kp-space-sm, 0.5rem)) + var(--kp-sidenav-launcher-size, 2.25rem));
+    }
+
+    /* The edge tab: a small box on the panel's far edge holding a toggler
+       (the theme's `.kp-icon-button`), at the window's edge while the panel
+       is away. js/sidenav.js moves it with the panel (`data-kp-sidenav-shift`,
+       on the panel's own timing, so a register that draws the content's move
+       draws the tab's too) and says which edge (`data-kp-sidenav-tab-edge`).
+       The grip it draws in an empty toggler has no state to change. Edge
+       tabs belong to panels that slide (over, push). */
+    .kp-sidenav__tab {
+        position: fixed;
+        z-index: calc(var(--kp-sidenav-layer, 60) + 1);
+        display: flex;
+        inset-block-start: 50%;
+        inset-inline-start: 0;
+        translate: 0 -50%;
+        border: var(--kp-sidenav-edge, 1px solid var(--border));
+        border-inline-start: none;
+        border-start-end-radius: var(--radius, 0.5rem);
+        border-end-end-radius: var(--radius, 0.5rem);
+        background-color: var(--kp-sidenav-surface, var(--card));
+        color: var(--foreground);
+    }
+
+    .kp-sidenav__tab > :is(button, .kp-icon-button) {
+        inline-size: var(--kp-sidenav-tab-thickness, 1.25rem);
+        block-size: var(--kp-sidenav-tab-length, 3rem);
+    }
+
+    .kp-sidenav__tab[data-kp-sidenav-tab-edge='end'] {
+        inset-inline: auto 0;
+        border-inline: var(--kp-sidenav-edge, 1px solid var(--border)) none;
+        border-radius: var(--radius, 0.5rem) 0 0 var(--radius, 0.5rem);
+    }
+
+    .kp-sidenav__grip {
+        display: block;
+        inline-size: 2px;
+        block-size: 1rem;
+        background: currentColor;
+        box-shadow: 0.3rem 0 0 currentColor;
+        translate: -0.15rem 0;
     }
 
     /* --- An entrance played backwards ------------------------------------ */
@@ -43580,8 +43757,7 @@
         [data-theme='forest']
             .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']):is(
                 [data-kp-sidenav-open='false'],
-                [data-kp-sidenav-slim-collapsed]:not(:hover),
-                [data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-expand-on-hover])
+                [data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-peek='open'], [data-kp-sidenav-expand-on-hover]:not([data-kp-sidenav-attached]):hover)
             ) {
             transition:
                 translate var(--kp-sig-fo-time) var(--kp-sig-fo-wither),

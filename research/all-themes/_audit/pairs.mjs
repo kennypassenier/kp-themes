@@ -48,6 +48,58 @@ export const PAIRS = [
         open: click('button.kp-sidenav__toggle[aria-controls="fa-over"]'),
         close: click('#fa-over button[data-kp-sidenav-toggle]'),
     },
+    // research/sidenav-edge (Kenny, 2026-10-13): the panel at the window's edge with its launcher, three variants on
+    // three app pages; the launcher opens and closes it, and a push moves the page with the panel.
+    ...['push', 'gutter', 'over'].map((variant) => ({
+        id: `sidenav-edge-${variant}`,
+        page: `/research/sidenav-edge/${variant}.html`,
+        // the gutter page starts open: shut it first, then measure an opening and its close
+        setup: async (page) => {
+            if (variant === 'gutter') {
+                await page.evaluate(() => document.querySelector('.kp-sidenav__launcher button').click());
+                await page.waitForTimeout(1800);
+            }
+            await page.focus('.kp-sidenav__launcher button');
+        },
+        open: click('.kp-sidenav__launcher button'),
+        close: click('.kp-sidenav__launcher button'),
+    })),
+    // the edge tab opens and closes the over panel; the collapsed rail's group floats out and back; the rail widens on focus
+    {
+        id: 'sidenav-edge-tab',
+        page: '/research/sidenav-edge/over.html',
+        setup: focus('.kp-sidenav__tab button'),
+        open: click('.kp-sidenav__tab button'),
+        close: click('.kp-sidenav__tab button'),
+    },
+    {
+        id: 'sidenav-rail-flyout',
+        page: '/research/sidenav-edge/rail.html',
+        setup: (page) => page.evaluate(() => document.querySelectorAll('.kp-sidenav__category-toggle')[1].setAttribute('data-audit-t', '')),
+        // a pointer's click (detail 1): a click with detail 0 is the keyboard's, which takes the focus into the group
+        open: (page) => page.evaluate(() => document.querySelector('[data-audit-t]').dispatchEvent(new MouseEvent('click', { bubbles: true, detail: 1 }))),
+        close: (page) => page.evaluate(() => document.querySelector('[data-audit-t]').dispatchEvent(new MouseEvent('click', { bubbles: true, detail: 1 }))),
+    },
+    {
+        // the label tip of the collapsed rail: the pointer arrives on an item and leaves it
+        id: 'sidenav-rail-tip',
+        page: '/research/sidenav-edge/rail.html',
+        open: async (page) => {
+            const box = await page.locator('.kp-sidenav__link').first().boundingBox();
+            await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+            await page.waitForFunction(() => document.querySelector('.kp-sidenav__tip')?.matches(':popover-open'));
+        },
+        // Escape takes the tip away with the pointer still on the item, so the item's own hover is not part of the pair
+        close: (page) =>
+            page.evaluate(() => document.querySelector('.kp-sidenav').dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))),
+    },
+    {
+        id: 'sidenav-rail-peek',
+        page: '/research/sidenav-edge/peek.html',
+        setup: settle(300),
+        open: (page) => page.evaluate(() => document.querySelector('.kp-sidenav__link').focus()),
+        close: (page) => page.evaluate(() => document.activeElement.blur()),
+    },
     {
         id: 'sidenav-group',
         section: '#sidenav',

@@ -89,6 +89,8 @@ export const PAGES = [
             // Kenny, 2026-10-07 04:23: what makes grotesk grotesk, the same way (the analysis in themes/grotesk/CHARACTER.md), nineteen rules of its grammar as questions, each option a live scene, the recommendation first; the seventh theme of the one-by-one series, after brutalism. Questions 9 to 12 are the grotesk-only loading demo Kenny asked for on 2026-10-06 21:37, from the graph's Out of register.
             // Kenny, 2026-10-12: "Cyberpunk lijkt af, zie dat dezelfde fouten nu niet terugkomen in andere thema's": every other theme mended so a close is its open backwards with the theme's own effect; only what changed, each block in the themes where it did (research/all-themes).
             { href: 'research/all-themes-applied/demo.html', label: 'Every theme: closes as opens' },
+            // Kenny, 2026-10-13 (his words, translated from Dutch): "That same side navigation must have a button (e.g. a hamburger icon) at the very top left of the page that is static; the sidebar itself must come all the way out of the left side of the screen and push the other content to the right (or there must be enough margin so nothing is obstructed; make both demos)." and "Maybe there should also be an option that does obstruct the content: make three demos and/or the option to choose the version through attributes.": push, reserved gutter and over, one attribute each (research/sidenav-edge).
+            { href: 'research/sidenav-edge/demo.html', label: "The side navigation at the window's edge" },
         ],
     },
     {

@@ -2,6 +2,27 @@
 
 ## Unreleased
 
+- **Added: the side navigation at the window's edge, with a launcher** [Kenny, 2026-10-13; research/sidenav-edge]. `.kp-sidenav__launcher` is a box
+  fixed at the window's start corner holding the panel's toggler (a `.kp-icon-button` with `data-kp-sidenav-toggle`): always in the same place, above
+  the panel, with the package's three bars (`.kp-sidenav__bars`, put in an empty toggler) and its name from the strings. The panel it drives is marked
+  `data-kp-sidenav-launched` and starts its header beside the launcher, so the launcher never covers an item; the box is lit
+  (`data-kp-sidenav-lit`, the accent plate) from the opening's first frame to the closing's last; `data-kp-sidenav-launcher-room` keeps a page
+  element in the launcher's corner clear. Three variants by attribute: `data-kp-sidenav-mode="push"` with `data-kp-sidenav-content` pushes the
+  content by the panel's width, now moving with the panel (js/sidenav.js copies the panel's own slide timing onto the content as
+  `--kp-sidenav-shift-duration`, `-ease`, `-delay`; a register that draws the move wins); the same plus the new `data-kp-sidenav-reserve` keeps a
+  gutter as wide as the panel, open or shut, so the panel covers nothing; `data-kp-sidenav-mode="over"` with `data-kp-sidenav-backdrop="false"`
+  slides over the content. A launcher is never hidden by `data-kp-sidenav-over-below`, and a reserve gives way while that has made the panel narrow.
+  Every theme's own side-navigation motion runs unchanged; pair meter (Firefox) on formal, forest, cyberpunk, nostromo, titanium and dark: every
+  variant's close is its open backwards.
+- **Added: the side navigation's options from other libraries** [Kenny, 2026-10-13 19:47; research/sidenav-edge/OTHER-LIBRARIES.md]. A shut
+  `over` or `push` panel is `inert` (`data-kp-sidenav-inert`, default on). The collapsed rail shows each item's label as the package's tooltip
+  (`data-kp-sidenav-rail-tips`, default on) and opens a group beside the rail as a floating `.kp-popover` with the theme's popover effect, its
+  close the opening backwards, on hover intent, a press or the keyboard (`data-kp-sidenav-flyout`, default on; `data-kp-sidenav-flown`
+  written). `data-kp-sidenav-slim-below` collapses the rail at a width the page names. `data-kp-sidenav-shortcut` toggles the panel with a key
+  chord (`Control` is ⌘ on a Mac; `aria-keyshortcuts` on the togglers). `data-kp-sidenav-initial-focus` names where the focus lands on
+  opening. `data-kp-sidenav-hover-delay` (150 ms) makes an expand-on-hover rail wait for a resting pointer, and the rail also widens on focus
+  (`data-kp-sidenav-peek` written; its words stay while it narrows, so the narrowing is the widening backwards). `.kp-sidenav__tab` is an
+  edge tab that rides on the panel's far edge. A push panel on the end edge now moves the content's end margin, not its start.
 - **Fixed: the review of research/all-themes-applied, round 1** [Kenny, 2026-10-13 18:19]. Every tour: the card no longer drops into the
   page on a step (the flash and the jump, `.kp-tour` fixed in every state), the page stays dimmed on a target with its own shadow or a cut
   corner (`--kp-tour-dim`, lesson 48). Blueprint's tour traces in and back and its busy month shows its compasses; brutalism's veil lets

@@ -3804,8 +3804,7 @@
         [data-theme='forest']
             .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']):is(
                 [data-kp-sidenav-open='false'],
-                [data-kp-sidenav-slim-collapsed]:not(:hover),
-                [data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-expand-on-hover])
+                [data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-peek='open'], [data-kp-sidenav-expand-on-hover]:not([data-kp-sidenav-attached]):hover)
             ) {
             transition:
                 translate var(--kp-sig-fo-time) var(--kp-sig-fo-wither),
