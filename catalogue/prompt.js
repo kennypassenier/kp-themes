@@ -3,7 +3,7 @@
 // and verdict from every page (review-state.js). A reviewer judges page after
 // page and copies once at the end (Kenny, 2026-09-13).
 import { THEME_EVENT } from '../js/theme-core.js';
-import { JUDGEMENT_EVENT } from './judgements.js';
+import { JUDGEMENT_EVENT, registerReady } from './judgements.js';
 import { buildPrompt, clearPrompt, markCopied, NOTES_EVENT, STORAGE_KEYS } from './review-state.js';
 import { markAnswerCopied, waitingAnswers } from '../research/_review/progress.js';
 
@@ -62,7 +62,9 @@ export function mountPrompt({ bar, main }) {
     const show = top.querySelector('[data-cat-prompt-show]');
     const topText = top.querySelector('[data-cat-prompt]');
 
+    let ready = false;
     function render() {
+        if (!ready) return;
         const { text, items, pages, total, answers } = fullPrompt({ includeCopied: includeCopied.checked });
         const empty = total
             ? 'Nothing new since the last copied prompt. Tick "Include what was already copied" at the foot of the page to see all of it again.'
@@ -140,6 +142,14 @@ export function mountPrompt({ bar, main }) {
         if (event.key === null || STORAGE_KEYS.includes(event.key)) render();
     });
     document.documentElement.addEventListener(THEME_EVENT, () => setTimeout(render, 400));
-    render();
+    // Counted only once the register is read: before it, every verdict this browser keeps looked unrecorded, and the
+    // bar said "447 new item(s)" for approvals the register already held (Kenny, 2026-10-13).
+    for (const pre of texts) pre.textContent = 'Reading the register…';
+    counter.textContent = 'Reading the register…';
+    for (const button of document.querySelectorAll('[data-cat-prompt-copy], [data-cat-prompt-clear]')) /** @type {HTMLButtonElement} */ (button).disabled = true;
+    void registerReady.then(() => {
+        ready = true;
+        render();
+    });
     return { render };
 }
