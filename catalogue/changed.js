@@ -236,7 +236,12 @@ function mountHub() {
             // A later round: name the themes it reopened, so Kenny sees which round he is in.
             const names = progress.updated.map(themeLabel);
             if (progress.extrasUpdated) names.push('its catalogue blocks');
-            badge.textContent = `${progress.update ? `Update ${progress.update}` : 'Updated'} · ${names.join(', ')}`;
+            // More than three names wrap the badge a word per line in the card (Kenny, 2026-10-13: "zet gewoon 'Changed x
+            // themes'"): the count says it, the dialog shows which.
+            const count = progress.updated.length;
+            const which = count > 3 ? `${count} themes` : names.join(', ');
+            const blocks = count > 3 && progress.extrasUpdated ? ' and its catalogue blocks' : '';
+            badge.textContent = `${progress.update ? `Update ${progress.update}` : 'Changed'} · ${which}${blocks}`;
             badge.className = 'kp-badge kp-badge--info';
             open.textContent = 'Continue';
         } else if (progress.state === 'new') {
