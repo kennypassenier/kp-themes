@@ -281,8 +281,18 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
                     // Without scrolling: a panel that is fixed inside a scrolled box (a review
                     // dialog's stage, a dashboard's main) is carried off with that scroll, so the
                     // content seemed to vanish the moment the close began.
-                    restoreFocusTo.focus({ preventScroll: true });
+                    // And once the panel is gone, the way the focus left when it came: a ring
+                    // that comes back on the opener at the start of the close is not the opening
+                    // played backwards (docs/THEME_LESSONS.md 11). The close's motions start in
+                    // the next frame, so they are read there.
+                    const back = restoreFocusTo;
                     restoreFocusTo = null;
+                    requestAnimationFrame(() => {
+                        const motions = panel.getAnimations({ subtree: true }).map((a) => a.finished.catch(() => {}));
+                        void Promise.all(motions).then(() => {
+                            if (panel.getAttribute(OPTIONS.open) !== 'true' && back.isConnected) back.focus({ preventScroll: true });
+                        });
+                    });
                 }
             }
 

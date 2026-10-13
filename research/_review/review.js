@@ -480,6 +480,9 @@ const items = [...document.querySelectorAll('[data-review-item]')].map((section)
     title: section.dataset.reviewTitle || section.querySelector('h2, h3')?.textContent.trim() || section.dataset.reviewItem,
     section,
     choices: choicesOf(section),
+    // A section that names its own `data-review-themes` is asked in those themes only (a demo of what differs per
+    // theme, scope-143 all-themes); without it, in every theme the demo walks.
+    themes: section.dataset.reviewThemes ? section.dataset.reviewThemes.split(/[\s,]+/).filter(Boolean) : null,
 }));
 
 /** @type {{ page: string, block: string, theme: string, engine?: string, title?: string, look?: string }[]} */
@@ -524,7 +527,7 @@ const plainFixed = (theme, choice) => (typeof choice.fixed === 'object' && choic
 
 /** @type {Step[]} */
 const steps = ORDER.flatMap((theme) => {
-    const themePairs = items.map((item) => ({
+    const themePairs = items.filter((item) => !item.themes || item.themes.includes(theme)).map((item) => ({
         key: `${theme}|${item.id}`,
         label: `${item.id} · ${theme}`,
         title: item.title,

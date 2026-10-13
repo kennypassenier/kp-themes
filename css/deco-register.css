@@ -71,6 +71,15 @@
     initial-value: 1;
 }
 
+/* --kp-sig-deco-hold: a number the navbar's panels transition while they
+   close, so js/components.js (which waits for a transition on a closing mega
+   menu) holds them for the close's 480 ms. */
+@property --kp-sig-deco-hold {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+}
+
 @layer kp.register {
     /* @kp-soft/themes — css/deco-register.css
    The deco register, 5.0.0 [S48, LIFT_PLAN row 8]: Paris 1925, dark
@@ -1810,6 +1819,280 @@
            runs 720). */
         --kp-close-max: 720ms;
         --kp-size-max: 480ms;
+        /* The close mechanism (lessons 19, 23, 24, 37; applied 2026-10-13). A
+           part a script removes or hides (the busy table's layer, a file row,
+           a re-shown alert, an empty state) leaves by deco's own leave and
+           arrives as that backwards (js/motion.js leavesState()); what takes
+           no box arrives as nothing, so it holds back no visible part; the
+           space a leave folds shut takes the leave's own time and starts
+           with it, so arriving and leaving are one picture of one time. */
+        --kp-leave-state: leave;
+        --kp-arrive-unseen: skip;
+        --kp-leave-fold-grow: 1;
+        --kp-leave-fold-start: 0;
+        /* The tour (lessons 11, 22): the page's dim and the target's ring go
+           as they came, inside the card's 480 ms arrival, on the settle's
+           point reflection, and shrink back into the target. */
+        --kp-tour-dim-close: 0 0 0 0 transparent;
+        --kp-tour-dim-time: var(--kp-sig-deco-arrive);
+        --kp-tour-dim-close-ease: var(--kp-sig-deco-settle-out);
+    }
+
+    /* A tree branch's children glide shut as they glided open (js/motion.js
+       glideGroup(), lesson 26): the group is kept drawn through the shut
+       glide while its height closes. */
+    [data-theme='deco'] .kp-tree [role='treeitem'][aria-expanded='false'] > [role='group'][data-kp-group-folding],
+    [data-theme='deco'] .kp-tree [role='treeitem'][aria-expanded='false'] + [role='group'][data-kp-group-folding] {
+        display: block;
+    }
+
+    /* One loading picture: while the busy table's layer stands over the rows
+       (its lift doors), the status line's small spinner stays out, so it
+       holds back no arrival of the layer and needs no leave of its own
+       (lesson 23; cyberpunk's rule). */
+    [data-theme='deco'] .kp-datatable:has(> .kp-datatable__busy-overlay) .kp-datatable__status > .kp-spinner {
+        display: none;
+    }
+
+    /* The rows under the busy layer dim as the layer's fan opens over them and
+       come up as it folds away: the layer's own 360 ms, the settle in and its
+       reflection out, so the dim is part of the pair (forest dims them on its
+       growth the same way). */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-datatable .kp-table tbody {
+            transition: opacity calc(var(--kp-sig-deco-leave) / 2) var(--kp-sig-deco-settle-out);
+        }
+
+        [data-theme='deco'] .kp-datatable[aria-busy='true'] .kp-table tbody {
+            transition: opacity calc(var(--kp-sig-deco-leave) / 2) var(--kp-sig-deco-settle);
+        }
+    }
+
+    /* The calendar's busy layers (the whole month's card and a day's sunburst)
+       arrive as deco's leave for a part with no dressing (the fan's sector
+       folding, kp-sig-deco-wipe, 360 ms) played backwards (kp-sig-deco-unwipe),
+       and leave by it:
+       js/calendar.js marks a layer `[data-kp-leaving]` while its state goes
+       (`--kp-calendar-busy-leave: hold`, cyberpunk's mechanism) and the rules
+       below keep it drawn through the leave. At rest the sector stands open
+       (0 to 180deg), so the mask shows the whole layer. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] :is(.kp-calendar__day-busy, .kp-calendar__busy) {
+            --kp-calendar-busy-leave: hold;
+            --kp-sig-deco-a1: 0deg;
+            --kp-sig-deco-a2: 180deg;
+            transition: none;
+        }
+
+        [data-theme='deco']
+            :is(.kp-calendar--busy-days, .kp-calendar--busy-whole:not(:has(> .kp-calendar__grid[aria-busy='true'])))
+            .kp-calendar__day[data-kp-tone='loading']
+            > .kp-calendar__day-busy,
+        [data-theme='deco'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy {
+            animation: kp-sig-deco-unwipe calc(var(--kp-sig-deco-leave) / 2) linear backwards;
+            mask-image: conic-gradient(
+                from -90deg at 50% 100%,
+                transparent calc(var(--kp-sig-deco-a1) - 1deg),
+                var(--foreground) calc(var(--kp-sig-deco-a1) - 1deg) calc(var(--kp-sig-deco-a2) + 1deg),
+                transparent calc(var(--kp-sig-deco-a2) + 1deg)
+            );
+        }
+
+        [data-theme='deco'] .kp-calendar__day:has(> .kp-calendar__day-busy[data-kp-leaving]) {
+            position: relative;
+        }
+
+        [data-theme='deco'] .kp-calendar__day-busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-spinner, 0.75rem);
+            position: absolute;
+            inset-inline: 0;
+            inset-block-end: 0.125rem;
+            display: flex;
+            justify-content: center;
+            line-height: 0;
+        }
+
+        [data-theme='deco'] .kp-calendar--busy-whole > .kp-calendar__busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-busy-spinner, 2.5rem);
+            z-index: 1;
+            display: grid;
+            place-self: center;
+            place-items: center;
+            padding: var(--kp-space-md, 1rem);
+            border-radius: var(--radius, 0.5rem);
+            background: var(--card);
+            box-shadow: 0 0 0 1px var(--border);
+            line-height: 0;
+        }
+    }
+
+    /* The tour's dim grows out of the target and the ring is drawn in on the
+       card's own arrival (480 ms, the settle); css/components.css takes both
+       back in the same time on the settle's reflection. `backwards`, not
+       `both`: a ring a finished animation holds cannot be taken back by the
+       transition (lesson 21). */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] [data-kp-tour-target] {
+            animation: kp-sig-deco-tour-ring var(--kp-sig-deco-arrive) var(--kp-sig-deco-settle) backwards;
+            transition:
+                box-shadow var(--kp-sig-deco-arrive) var(--kp-sig-deco-settle),
+                outline-color var(--kp-sig-deco-arrive) var(--kp-sig-deco-settle);
+        }
+    }
+
+    /* kp-sig-deco-wipe played backwards under a name of its own, so the
+       calendar layer's leave (the wipe, on `[data-kp-leaving]`) starts as a
+       new animation instead of turning the finished arrival round (lesson 8):
+       the settle is the point reflection of the wipe's settle-out. */
+    @keyframes kp-sig-deco-unwipe {
+        from {
+            --kp-sig-deco-a1: 182deg;
+            --kp-sig-deco-a2: 182deg;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        to {
+            --kp-sig-deco-a1: 0deg;
+            --kp-sig-deco-a2: 180deg;
+        }
+    }
+
+    @keyframes kp-sig-deco-tour-ring {
+        from {
+            outline-color: transparent;
+        }
+    }
+
+    /* ── The navbar's panels open and close the deco way (coordinator,
+       2026-10-12; lessons 36, 38). The hover dropdown, the mega menu and the
+       phone bar's panel take the menu's own arrival, kp-sig-deco-arrive
+       (480 ms): the panel is drawn round from the middle of its top edge both
+       ways, as far as --kp-sig-deco-draw (320 ms), then its words come up
+       with --kp-sig-deco-up (160 ms); the close is the same frames backwards
+       under a second name (kp-sig-deco-arrive-back, played in reverse) so it
+       starts as an animation of its own. The panels keep their look: the
+       sector is a mask 48 px wider than the panel on every side (no-clip, the
+       plate's cove technique), so at rest it covers the panel and its shadow
+       whole. Firefox does not hold `display` for a transition: the hover
+       dropdown is held by js/components.js for `--kp-nav-close-time`, the mega
+       menu while a transition runs on it (the --kp-sig-deco-hold below), the
+       phone bar's panel for `--kp-nav-close-time`. ── */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] {
+            --kp-nav-close-time: var(--kp-sig-deco-arrive);
+        }
+
+        [data-theme='deco'] .kp-nav__menu {
+            --kp-sig-deco-hold: 0;
+            mask-image: conic-gradient(
+                from calc(var(--kp-sig-deco-draw) * -180deg),
+                var(--foreground) 0 calc(var(--kp-sig-deco-draw) * 360deg),
+                transparent 0
+            );
+            mask-size: calc(100% + 96px) calc(100% + 96px);
+            mask-position: -48px -48px;
+            mask-repeat: no-repeat;
+            mask-clip: no-clip;
+            transition: --kp-sig-deco-hold var(--kp-sig-deco-arrive) linear;
+            animation: kp-sig-deco-arrive-back var(--kp-sig-deco-arrive) linear reverse forwards;
+        }
+
+        [data-theme='deco'] .kp-nav__menu > * {
+            opacity: var(--kp-sig-deco-up);
+        }
+
+        [data-theme='deco']
+            :is(
+                .kp-nav__links > li:is(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+                .kp-nav__links > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide
+            ) {
+            --kp-sig-deco-hold: 1;
+            animation: kp-sig-deco-arrive var(--kp-sig-deco-arrive) linear backwards;
+        }
+
+        /* A dropdown the pointer or the focus has left is drawn through its
+           close by the mark the script puts on its item. */
+        [data-theme='deco']
+            .kp-nav__links
+            > li[data-kp-nav-closing]:not(:hover, :focus-within, [data-kp-nav-menu-open])
+            > .kp-nav__menu:not(.kp-nav__menu--wide) {
+            display: block;
+            opacity: 1;
+        }
+    }
+
+    @container kp-nav (max-width: 40rem) {
+        /* Collapsed, the lists nested in the open panel are its own rows and
+           come up with it; they play nothing of their own. */
+        [data-theme='deco'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links .kp-nav__menu {
+            animation: none;
+            transition: none;
+            mask-image: none;
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+            [data-theme='deco'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links {
+                mask-image: conic-gradient(
+                    from calc(var(--kp-sig-deco-draw) * -180deg),
+                    var(--foreground) 0 calc(var(--kp-sig-deco-draw) * 360deg),
+                    transparent 0
+                );
+                mask-size: calc(100% + 96px) calc(100% + 96px);
+                mask-position: -48px -48px;
+                mask-repeat: no-repeat;
+                mask-clip: no-clip;
+            }
+
+            [data-theme='deco'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > li {
+                opacity: var(--kp-sig-deco-up);
+            }
+
+            [data-theme='deco'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
+                animation: kp-sig-deco-arrive var(--kp-sig-deco-arrive) linear backwards;
+            }
+
+            [data-theme='deco'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__links {
+                animation: kp-sig-deco-arrive-back var(--kp-sig-deco-arrive) linear reverse forwards;
+            }
+        }
+    }
+
+    /* The side navigation's backdrop dims on the panel's own clock (contact,
+       160 ms, the settle), not the package's 220 ms, so panel and dim begin
+       and end together and the close (the dim played backwards, the panel on
+       the settle's reflection) mirrors the opening frame for frame. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-sidenav__backdrop {
+            animation: kp-sidenav-backdrop 160ms cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+    }
+
+    /* A reader who asked for no motion gets no close to wait for. */
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='deco'] {
+            --kp-nav-close-time: 0ms;
+        }
+    }
+
+    /* kp-sig-deco-arrive under a second name, played in reverse for a close
+       that must start as an animation of its own (the navbar's panels). */
+    @keyframes kp-sig-deco-arrive-back {
+        0% {
+            --kp-sig-deco-draw: 0;
+            --kp-sig-deco-up: 0;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        66.667% {
+            --kp-sig-deco-draw: 1;
+            --kp-sig-deco-up: 0;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        100% {
+            --kp-sig-deco-draw: 1;
+            --kp-sig-deco-up: 1;
+        }
     }
 
     /* ── Q6, Q7, Q19 · the plate: lacquer, the wallpaper behind it, the
@@ -2201,7 +2484,11 @@
     }
 
     [data-theme='deco'] :is(.kp-alert--warning, .kp-alert--destructive) .kp-alert__label {
-        color: var(--destructive);
+        /* The ruby four points lighter than --destructive (2026-10-13): the
+           plain ruby read 4.37:1 on the lacquer, under WCAG 2.2 AA's 4.5:1 for
+           a 600-weight label of this size; on a dark plate a step lighter is
+           the step that reads. */
+        color: hsl(from var(--destructive) h s calc(l + 4));
         text-decoration: underline 1px var(--primary);
         text-underline-offset: 0.3em;
     }
@@ -2442,7 +2729,13 @@
             animation: kp-sig-deco-fan var(--kp-sig-deco-leave) linear forwards;
         }
 
-        [data-theme='deco'] [data-kp-leaving]:not(.kp-card, .kp-kpi, .kp-alert, .kp-empty, .kp-grid__tile) {
+        /* The plates that close by their own arrival played backwards (toast,
+           dialog, popover, menu) are left out with no weight (:where), so the
+           fan's sector, resting folded at 182deg, never masks them away for
+           the whole of their close (2026-10-13: the toast vanished in frame 0). */
+        [data-theme='deco'] [data-kp-leaving]:not(.kp-card, .kp-kpi, .kp-alert, .kp-empty, .kp-grid__tile):not(
+                :where(.kp-toast, .kp-dialog, .kp-popover, .kp-menu-button > .kp-menu)
+            ) {
             animation-name: kp-sig-deco-wipe;
             animation-duration: calc(var(--kp-sig-deco-leave) / 2);
             mask-image: conic-gradient(
@@ -2453,8 +2746,19 @@
             );
         }
 
-        [data-theme='deco'] :is(.kp-toast, .kp-dialog, .kp-popover, .kp-menu-button > .kp-menu)[data-kp-leaving] {
+        [data-theme='deco'] :is(.kp-dialog, .kp-popover, .kp-menu-button > .kp-menu)[data-kp-leaving] {
             animation: none;
+        }
+
+        /* A toast leaves as its arrival played backwards (G3: the lacquer
+           sinks, the inlay undraws), under the arrival's own name, so
+           js/motion.js also lets it arrive as that leave turned round: its
+           space unfolds as it arrives and folds as it leaves, one picture
+           mirrored (lessons 19, 24; forest's toast does the same). The class
+           is doubled to outweigh the arrival's list, whose `dialog.kp-drawer[open]`
+           gives it (0,3,1). */
+        [data-theme='deco'] .kp-toast.kp-toast[data-kp-leaving] {
+            animation: kp-sig-deco-arrive var(--kp-sig-deco-arrive) linear reverse forwards;
         }
 
         [data-theme='deco'] :is(.kp-card, .kp-kpi, .kp-alert, .kp-empty, .kp-grid__tile):is([data-kp-leaving], [data-kp-arriving])::before,

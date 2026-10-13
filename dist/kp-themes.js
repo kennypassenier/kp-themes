@@ -3391,6 +3391,9 @@ function closePopoverWithGhost(event) {
   const box = el2.getBoundingClientRect();
   if (box.width === 0 && box.height === 0) return;
   const sized = getComputedStyle(el2);
+  const matrix = sized.transform === "none" ? null : new DOMMatrixReadOnly(sized.transform);
+  const isTurned = matrix !== null && (Math.abs(matrix.b) > 1e-3 || Math.abs(matrix.c) > 1e-3) || sized.rotate !== "none" && sized.rotate !== "0deg";
+  const turned = isTurned && el2 instanceof HTMLElement ? { x: (box.width - el2.offsetWidth) / 2, y: (box.height - el2.offsetHeight) / 2 } : { x: 0, y: 0 };
   const ghost = (
     /** @type {HTMLElement} */
     el2.cloneNode(true)
@@ -3403,8 +3406,8 @@ function closePopoverWithGhost(event) {
   Object.assign(ghost.style, {
     position: "fixed",
     inset: "auto",
-    top: `${box.top}px`,
-    left: `${box.left}px`,
+    top: `${box.top + turned.y}px`,
+    left: `${box.left + turned.x}px`,
     width: sized.width,
     height: sized.height,
     margin: "0",
@@ -6550,8 +6553,15 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
           restoreFocusTo = doc.activeElement;
           panel.querySelector(FOCUSABLE)?.focus({ preventScroll: true });
         } else if (restoreFocusTo instanceof HTMLElement) {
-          restoreFocusTo.focus({ preventScroll: true });
+          const back = restoreFocusTo;
           restoreFocusTo = null;
+          requestAnimationFrame(() => {
+            const motions = panel.getAnimations({ subtree: true }).map((a) => a.finished.catch(() => {
+            }));
+            void Promise.all(motions).then(() => {
+              if (panel.getAttribute(OPTIONS.open) !== "true" && back.isConnected) back.focus({ preventScroll: true });
+            });
+          });
         }
       }
       if (save) memory?.write("open", open2);
@@ -8620,6 +8630,10 @@ function attachDatePickers(root = document, {
     let lower = () => {
     };
     let wanted = !panel.hidden;
+    let closing2 = Promise.resolve();
+    const refocusAfterClose = (el2) => void closing2.then(() => {
+      if (!wanted && el2.isConnected) el2.focus();
+    });
     const setOpen = (next) => {
       if (wanted === next) return;
       wanted = next;
@@ -8643,6 +8657,7 @@ function attachDatePickers(root = document, {
         panel.style.removeProperty("min-block-size");
         panel.inert = true;
         const closed = playClose(panel);
+        closing2 = closed;
         delete panel.dataset.kpDateOpen;
         void closed.then((played) => {
           if (!played || wanted) return;
@@ -8674,7 +8689,8 @@ function attachDatePickers(root = document, {
       if (disabled(date)) return;
       commit(date, "chosen");
       if (closes) hide();
-      if (refocus) input.focus();
+      if (refocus && closes) refocusAfterClose(input);
+      else if (refocus) input.focus();
     };
     const onOpen = () => wanted ? hide() : show();
     const onInput = () => commit(read(), "typed");
@@ -8683,7 +8699,7 @@ function attachDatePickers(root = document, {
         event.preventDefault();
         if (view === "days") {
           hide();
-          open.focus();
+          refocusAfterClose(open);
         } else stepBack();
         return;
       }

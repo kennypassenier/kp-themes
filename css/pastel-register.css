@@ -2185,6 +2185,16 @@
            in the close's time, and lets what arrives play this leave backwards. */
         [data-theme='pastel'] {
             --kp-open: reverse-close;
+            /* The close mechanism (lessons 19, 23, 24, 37; applied 2026-10-13):
+               a part a script removes or hides (the busy table's layer, a file
+               row, a re-shown alert, an empty state) leaves by the balloon and
+               arrives as that backwards; what takes no box arrives as nothing;
+               the space a leave folds shut takes the leave's own time and
+               starts with it. */
+            --kp-leave-state: leave;
+            --kp-arrive-unseen: skip;
+            --kp-leave-fold-grow: 1;
+            --kp-leave-fold-start: 0;
         }
 
         [data-theme='pastel'] [data-kp-leaving] {
@@ -2427,6 +2437,51 @@
 
         100% {
             translate: 0 0;
+        }
+    }
+
+    /* ── Close = open reversed (research/all-themes/BRIEF.md, 2026-10-13):
+       mechanism only, no motion of pastel's own is added or changed. ── */
+
+    /* A tree branch's children glide shut as they glided open (js/motion.js
+       glideGroup(), lesson 26): the group is kept drawn while it shuts. */
+    [data-theme='pastel'] .kp-tree [role='treeitem'][aria-expanded='false'] > [role='group'][data-kp-group-folding],
+    [data-theme='pastel'] .kp-tree [role='treeitem'][aria-expanded='false'] + [role='group'][data-kp-group-folding] {
+        display: block;
+    }
+
+    /* One loading picture: while the busy table's layer stands over the rows,
+       the status line's small spinner stays out, so it holds back no arrival
+       of the layer and needs no leave of its own (lesson 23; cyberpunk's
+       rule). */
+    [data-theme='pastel'] .kp-datatable:has(> .kp-datatable__busy-overlay) .kp-datatable__status > .kp-spinner {
+        display: none;
+    }
+
+    /* The tour (lessons 11, 21, 22): the page's dim and the target's ring
+       come in the card's own time and curve (the package's kp-tour-in, 160 ms
+       ease-out) and go in the same time on its reflection (ease-in),
+       shrinking back into the target; the ring is drawn in from transparent
+       (an attribute change starts no @starting-style), `backwards` so the
+       close's transition can take it back. */
+    [data-theme='pastel'] {
+        --kp-tour-dim-close: 0 0 0 0 transparent;
+        --kp-tour-dim-time: 160ms;
+        --kp-tour-dim-close-ease: ease-in;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] [data-kp-tour-target] {
+            animation: kp-sig-pastel-tour-ring 160ms ease-out backwards;
+            transition:
+                box-shadow 160ms ease-out,
+                outline-color 160ms ease-out;
+        }
+    }
+
+    @keyframes kp-sig-pastel-tour-ring {
+        from {
+            outline-color: transparent;
         }
     }
 }

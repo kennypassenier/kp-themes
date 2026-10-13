@@ -464,3 +464,20 @@ so its recommendations steer clear of all five. Solstice in particular has a
 horizon (its meter's shape), a rising sun (its chart and strip) and a flare
 (its live picks): its sun must not take the stripes or the neon horizon this
 table gives synthwave.
+
+---
+
+**Applied 2026-10-13** (all-themes audit, close = open reversed; `research/all-themes/reports/synthwave.md`):
+the leave tokens (`--kp-leave-state: leave`, `--kp-arrive-unseen: skip`, fold 1 and 0); G3's climb (the beam
+climbing to the horizon, two beats on the sunrise curve) as keyframes on the menu, the popovers, the combobox's
+list, the date picker's panel, the tooltip, the command palette (the dialog's three/two beats) and the tour's
+card, and as a transition on the header's dropdown, mega menu and phone panel (`--kp-nav-close-time: 450ms`);
+the tour's dim and ring in two beats both ways; the tree's folding group kept drawn; the calendar's busy layers
+arrive as the sunset reversed and set as they go (`--kp-calendar-busy-leave: hold`); the status line's spinner
+stays out under the busy table's layer. The size change's row rise no longer takes over a part that arrives as
+its leave reversed (`[data-kp-arriving]:not([data-kp-leaving])`).
+
+**Round 2, 2026-10-13:** the busy table's layer keeps its place over the rows while it arrives and leaves
+(`.kp-datatable__busy-overlay[data-kp-leaving] { position: absolute }`), and the table's busy dims beneath it go as
+part of the same pair (see the report's "Round 2").
+The side navigation's backdrop dims in the panel's beat (`--fx-duration`, 225 ms), not the package's 220 ms.

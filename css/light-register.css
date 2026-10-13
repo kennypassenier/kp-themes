@@ -639,6 +639,14 @@
         font-size: 0.9em;
     }
 
+    /* A branch's children are kept drawn while they glide shut
+       (js/motion.js glideGroup(), lesson 26): the state is already
+       `aria-expanded="false"` while the glide plays. */
+    [data-theme='light'] .kp-tree [role='treeitem'][aria-expanded='false'] > [role='group'][data-kp-group-folding],
+    [data-theme='light'] .kp-tree [role='treeitem'][aria-expanded='false'] + [role='group'][data-kp-group-folding] {
+        display: block;
+    }
+
     /* The accordion [gap-12]: quiet at rest; open takes the primary ink. */
     [data-theme='light'] .kp-accordion__summary::marker {
         color: var(--muted-foreground);
@@ -1824,6 +1832,18 @@
            in the close's time, and lets what arrives play this leave backwards. */
         [data-theme='light'] {
             --kp-open: reverse-close;
+            /* A part a script removes or hides (the busy table's layer, a file
+               row, an empty state, a re-shown alert) goes back into the glare
+               first, as it comes out of it (js/motion.js leavesState(), lessons
+               19, 23, 24); what takes no box arrives as nothing; the space a
+               leave folds shut takes the exposure's own time and starts with it. */
+            --kp-leave-state: leave;
+            --kp-arrive-unseen: skip;
+            --kp-leave-fold-grow: 1;
+            --kp-leave-fold-start: 0;
+            /* ...on the leave's own (inverse) curve, so the space and the part
+               go together; the arrival plays it backwards, on the settle. */
+            --kp-leave-fold-ease: var(--kp-sig-light-ease-out);
         }
 
         [data-theme='light'] [data-kp-leaving] {
@@ -2332,6 +2352,217 @@
         to {
             clip-path: inset(0 0 0 0 round 999px);
             filter: none;
+        }
+    }
+
+    /* ── Every part that opens comes out of the glare and goes back into it
+       [G1, G3, G13; lesson 38; all-themes pass, 2026-10-13]. The palette, the
+       date picker's panel, the combobox's list, the tour's dim and ring, the
+       calendar's busy layers and the bar's three openings take the exposure
+       the dialog and the menus already use (700 ms on the settle); each close
+       is the same played backwards on the inverse curve. ── */
+    @media (prefers-reduced-motion: no-preference) {
+        /* The palette is exposed as the dialog is (it had the package's bare
+           fade); js/motion.js keeps the entrance and plays it backwards. The
+           date picker's panel and the combobox's list hang from their field
+           as a menu hangs from its button, and come into focus as it does;
+           js/motion.js playClose() turns the entrance round. */
+        [data-theme='light'] :is(dialog.kp-palette, .kp-combobox__list, .kp-datepicker__panel) {
+            animation: kp-sig-light-expose var(--kp-sig-light-time) var(--kp-sig-light-ease) backwards;
+        }
+
+        /* The calendar button hands its focus to the day as the panel opens and takes it back
+           when the panel is gone (js/datepicker.js, lesson 11). Its ring and lift settled over
+           200 ms as the focus left, so the open's first 200 ms ran a ring the close never ran
+           (it comes back after the close): 6.1 % at the open's first frame (round 2,
+           2026-10-13). On this one button the ring and the lift come and go in the frame the
+           focus moves, so they flip at the open's first frame and the close's last, mirrored. */
+        [data-theme='light'] .kp-datepicker [data-kp-date-open] {
+            transition-property: background-color, border-color, color;
+        }
+
+        /* The tour: the page dims round the target and the ring comes into
+           view in the card's own exposure (700 ms on the settle; it was the
+           package's 350 and 250 ms ease), and css/components.css takes both
+           back in the same time on the inverse curve, the dim shrinking into
+           the target as it grew out of it (lessons 11, 21, 22). */
+        [data-theme='light'] {
+            --kp-tour-dim-close: 0 0 0 0 transparent;
+            --kp-tour-dim-time: var(--kp-sig-light-time);
+            --kp-tour-dim-close-ease: var(--kp-sig-light-ease-out);
+        }
+
+        [data-theme='light'] [data-kp-tour-target] {
+            transition:
+                box-shadow var(--kp-sig-light-time) var(--kp-sig-light-ease),
+                outline-color var(--kp-sig-light-time) var(--kp-sig-light-ease);
+        }
+
+        /* The ring comes in only round a live tour's target (a frozen example
+           on a page is no opening). `backwards`, not `both`: a ring held by a
+           finished animation cannot be taken back by the close's transition. */
+        [data-theme='light']:has(dialog.kp-tour[open]) [data-kp-tour-target] {
+            animation: kp-sig-light-tour-ring var(--kp-sig-light-time) var(--kp-sig-light-ease) backwards;
+        }
+
+        @keyframes kp-sig-light-tour-ring {
+            from {
+                outline-color: transparent;
+            }
+        }
+
+        /* One loading picture: while the busy table's layer stands over the
+           rows, the status line's small spinner stays out, so it holds back no
+           arrival of the layer and leaves nothing behind it (lesson 23, as
+           cyberpunk and deco). */
+        [data-theme='light'] .kp-datatable:has(> .kp-datatable__busy-overlay) .kp-datatable__status > .kp-spinner {
+            display: none;
+        }
+
+        /* The busy table's rows dim and come back in the busy layer's own
+           exposure (on the settle going busy, on the inverse coming back), so
+           the table under the layer is part of the same pair. */
+        [data-theme='light'] .kp-datatable .kp-table tbody {
+            transition: opacity var(--kp-sig-light-time) var(--kp-sig-light-ease-out);
+        }
+
+        [data-theme='light'] .kp-datatable[aria-busy='true'] .kp-table tbody {
+            transition-timing-function: var(--kp-sig-light-ease);
+        }
+
+        /* The side navigation's shade comes and goes in the panel's own time
+           (the contact time it slides in), not the package's 220 ms. */
+        [data-theme='light'] .kp-sidenav__backdrop {
+            animation-duration: var(--fx-duration);
+        }
+
+        /* The calendar's busy layers come out of the glare as anything that
+           arrives and go back into it as anything that leaves: js/calendar.js
+           marks a layer `[data-kp-leaving]` while its state goes
+           (`--kp-calendar-busy-leave: hold`), and the rules below keep it drawn
+           through the leave. */
+        [data-theme='light'] :is(.kp-calendar__day-busy, .kp-calendar__busy) {
+            --kp-calendar-busy-leave: hold;
+            transition: none;
+        }
+
+        [data-theme='light']
+            :is(.kp-calendar--busy-days, .kp-calendar--busy-whole:not(:has(> .kp-calendar__grid[aria-busy='true'])))
+            .kp-calendar__day[data-kp-tone='loading']
+            > .kp-calendar__day-busy:not([data-kp-leaving]),
+        [data-theme='light'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy:not([data-kp-leaving]) {
+            animation: kp-sig-light-expose var(--kp-sig-light-time) var(--kp-sig-light-ease) backwards;
+        }
+
+        [data-theme='light'] .kp-calendar__day:has(> .kp-calendar__day-busy[data-kp-leaving]) {
+            position: relative;
+        }
+
+        [data-theme='light'] .kp-calendar__day-busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-spinner, 0.75rem);
+            position: absolute;
+            inset-inline: 0;
+            inset-block-end: 0.125rem;
+            display: flex;
+            justify-content: center;
+            line-height: 0;
+        }
+
+        [data-theme='light'] .kp-calendar--busy-whole > .kp-calendar__busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-busy-spinner, 2.5rem);
+            z-index: 1;
+            display: grid;
+            place-self: center;
+            place-items: center;
+            padding: var(--kp-space-md, 1rem);
+            border-radius: var(--radius, 0.5rem);
+            background: var(--card);
+            box-shadow: 0 0 0 1px var(--border);
+            line-height: 0;
+        }
+
+        /* The bar [Kenny via the coordinator, 2026-10-12: the navbar's opening
+           and closing are in scope]. Light decides no motion for the bar, so
+           it takes its menus' (G3): the hover dropdown, the mega menu and the
+           phone bar's panel are a glare under the bar that comes into focus,
+           and go back into the glare to close, the same frames on the inverse
+           curve. Transitions, not keyframes: a close begun halfway turns round
+           where it stands, and the mega menu's item is held by its transition
+           (js/components.js settleClosing). Firefox does not hold `display`:
+           the hover dropdown and the phone panel are held by the script for
+           `--kp-nav-close-time`, the exposure. */
+        [data-theme='light'] .kp-nav {
+            --kp-nav-close-time: 700ms;
+        }
+
+        [data-theme='light'] .kp-nav:not([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu,
+        [data-theme='light'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links {
+            opacity: 0;
+            filter: var(--kp-sig-light-glare);
+            transition:
+                opacity var(--kp-sig-light-time) var(--kp-sig-light-ease-out),
+                filter var(--kp-sig-light-time) var(--kp-sig-light-ease-out);
+        }
+
+        [data-theme='light']
+            .kp-nav:not([data-kp-nav-open], [data-kp-nav-closing])
+            .kp-nav__links
+            > li:is(:hover, :focus-within, [data-kp-nav-menu-open])
+            > .kp-nav__menu:not(.kp-nav__menu--wide),
+        [data-theme='light']
+            .kp-nav:not([data-kp-nav-open], [data-kp-nav-closing])
+            .kp-nav__links
+            > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true']))
+            > .kp-nav__menu--wide,
+        [data-theme='light'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
+            opacity: 1;
+            filter: none;
+            transition:
+                opacity var(--kp-sig-light-time) var(--kp-sig-light-ease),
+                filter var(--kp-sig-light-time) var(--kp-sig-light-ease);
+        }
+
+        @starting-style {
+            [data-theme='light']
+                .kp-nav:not([data-kp-nav-open], [data-kp-nav-closing])
+                .kp-nav__links
+                > li:is(:hover, :focus-within, [data-kp-nav-menu-open])
+                > .kp-nav__menu:not(.kp-nav__menu--wide),
+            [data-theme='light']
+                .kp-nav:not([data-kp-nav-open], [data-kp-nav-closing])
+                .kp-nav__links
+                > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true']))
+                > .kp-nav__menu--wide,
+            [data-theme='light'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
+                opacity: 0;
+                filter: var(--kp-sig-light-glare);
+            }
+        }
+
+        /* A dropdown the pointer or the focus has left is drawn through its
+           close by the mark the script puts on its item. */
+        [data-theme='light']
+            .kp-nav:not([data-kp-nav-open], [data-kp-nav-closing])
+            .kp-nav__links
+            > li[data-kp-nav-closing]:not(:hover, :focus-within, [data-kp-nav-menu-open])
+            > .kp-nav__menu:not(.kp-nav__menu--wide) {
+            display: block;
+        }
+
+        /* Wide, the phone bar's links are the bar itself: nothing is exposed. */
+        @container kp-nav (min-width: 40.0001rem) {
+            [data-theme='light'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links {
+                opacity: 1;
+                filter: none;
+                transition: none;
+            }
+        }
+    }
+
+    /* A reader who asked for no motion gets no close to wait for. */
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='light'] .kp-nav {
+            --kp-nav-close-time: 0ms;
         }
     }
 }

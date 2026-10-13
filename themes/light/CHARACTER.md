@@ -255,3 +255,23 @@ research/light-character, all nineteen approved, durations and the busy bar as h
 | Hover   | settles toward the paper     | titanium drops 1 px on press; light settles 2 px on hover and lands flat on press                                               |
 | Surface | white on white, soft shadows | every other theme has a ground or a frame; light has neither                                                                    |
 | Motifs  | the seam and the bead        | pastel's pearls are a row; light's circle is one, open, on a hairline                                                           |
+
+---
+
+## Applied 2026-10-13 (all-themes pass: close = open reversed)
+
+Mechanism only; light's exposure and its timings are unchanged (research/all-themes/reports/light.md).
+
+- Leaves and arrivals: `--kp-leave-state: leave`, `--kp-arrive-unseen: skip`, `--kp-leave-fold-grow: 1`,
+  `--kp-leave-fold-start: 0`, and the fold on the leave's own inverse curve (`--kp-leave-fold-ease`), so a part and its
+  space go together; the calendar's busy layers come out of the glare and go back into it
+  (`--kp-calendar-busy-leave: hold`); the busy table's rows dim and come back in the 700 ms exposure.
+- A tree branch is kept drawn while it glides shut (`[data-kp-group-folding]`).
+- The tour: the dim and the ring take the card's 700 ms on the settle, and go back on the inverse curve.
+- The palette, the date picker's panel and the combobox's list are exposed as the dialog and the menus are (the palette
+  had the bare fade, the other two nothing).
+- The bar (no decided motion): the hover dropdown, the mega menu and the phone bar's panel are a glare under the bar that
+  comes into focus (G3) and goes back into it; `--kp-nav-close-time: 700ms` holds the dropdown and the panel.
+- The side navigation's shade takes the panel's 200 ms.
+- Round 2: the calendar button that opens the date picker swaps its ring and lift in the frame the focus moves (no
+  200 ms settle on that one button), so the ring leaves at the open's first frame and returns at the close's last.

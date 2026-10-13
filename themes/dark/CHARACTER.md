@@ -180,3 +180,23 @@ Only the meter is in `css/dark-register.css` beyond the signature elements.
 | Hover   | the line resting at the start          | cyberpunk's cursor blinks; dark's line stands still and glows                                                                        |
 | Surface | near-black with a grid and a film edge | terminal is phosphor on black; nostromo amber on black; dark has no hue of its own, only the film on an edge                         |
 | Motifs  | film, line, chamfer, brackets, grid    | titanium shares the chamfer and the pointer-turned gradient (a heat tint on metal); dark's film is a slice of spectrum on black      |
+
+---
+
+## Applied 2026-10-13 (all-themes pass: close = open reversed)
+
+Mechanism only; dark's pass, film and timings are unchanged (research/all-themes/reports/dark.md).
+
+- Leaves and arrivals: `--kp-leave-state: leave`, `--kp-arrive-unseen: skip`, `--kp-leave-fold-grow: 1`,
+  `--kp-leave-fold-start: 0`; the leave plays the pass's frames under second names (`kp-sig-dark-sweep-back`,
+  `-film-back`, `-pass-line-back`) and outranks a toast's entrance, so a toast arrives as its leave turned round; the
+  calendar's busy layers are laid by the pass and taken off by the pass back (`--kp-calendar-busy-leave: hold`); the
+  busy table's rows dim and come back over the 880 ms pass.
+- A tree branch is kept drawn while it glides shut (`[data-kp-group-folding]`).
+- The tour's card is swept in as the dialog (it had the package's 160 ms fade); the dim and the ring take its 880 ms at
+  one pace both ways.
+- The bar: the dropdown and the mega menu close by the pass back (they vanished at once in Firefox); the phone bar's
+  panel is swept in and taken off by the pass; `--kp-nav-close-time: 880ms` holds the dropdown and the panel, a
+  transition on `--kp-sig-dk-hold` (new `@property`) the mega menu.
+- Round 2: the whole busy table (its `[aria-busy]` dim from css/layout.css) dims and comes back over the same 880 ms
+  pass as its rows; it was left in one frame.

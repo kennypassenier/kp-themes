@@ -3018,7 +3018,19 @@
         --kp-sig-dur: calc(2 * var(--kp-sw-beat));
     }
 
-    [data-theme='synthwave'] :is(.kp-dialog, .kp-popover, .kp-menu-button > .kp-menu, .kp-tooltip)::after {
+    [data-theme='synthwave']
+        :is(
+            .kp-dialog,
+            .kp-popover,
+            .kp-menu-button > .kp-menu,
+            .kp-tooltip,
+            .kp-combobox__list,
+            .kp-datepicker__panel,
+            .kp-palette,
+            .kp-shortcuts,
+            .kp-tour,
+            .kp-nav__menu
+        )::after {
         content: '';
         position: absolute;
         inset: 0 0 auto;
@@ -3232,60 +3244,63 @@
                 kp-sig-synthwave-glow var(--kp-sig-dur) linear backwards;
         }
 
-        /* What drops from a button climbs the same way, and, being a popover or
-           a menu that is shown and hidden, closes as that climb reversed: the
-           transitions run to the open state and back, and the curve is the
-           sunrise one, which is its own reverse. The beam fades as it
-           arrives; closing, it fades in as the panel goes (the same frames
-           backwards). */
-        [data-theme='synthwave'] :is(.kp-popover[popover]:not(:popover-open), .kp-menu-button > .kp-menu:is([hidden], [data-kp-closing])) {
-            clip-path: inset(100% -4rem -4rem -4rem);
-            transition:
-                clip-path calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun),
-                display calc(2 * var(--kp-sw-beat)) allow-discrete,
-                overlay calc(2 * var(--kp-sw-beat)) allow-discrete;
+        /* What drops from a button climbs the same way [G3]: the menu, a
+           popover, the combobox's list, the date picker's panel and the
+           tooltip are uncovered from their foot behind the beam, in two beats
+           on the sunrise curve, as the dialog is. The close is that climb
+           played backwards: js/motion.js turns the entrance around on
+           `[data-kp-closing]` / `[data-kp-reversing]` (a menu, the date
+           picker, the tooltip) or on its copy of a popover the browser hides
+           (the ghost). These were transitions to the open state and back,
+           which Firefox cannot hold for a popover leaving the top layer: the
+           close was gone in one frame (all-themes audit, 2026-10-13). */
+        [data-theme='synthwave']
+            :is(
+                .kp-menu-button > .kp-menu,
+                .kp-popover[popover]:not(.kp-tooltip),
+                .kp-combobox__list:popover-open,
+                .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open,
+                .kp-tooltip
+            ) {
+            animation: kp-sig-synthwave-climb calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun) backwards;
         }
 
-        [data-theme='synthwave'] :is(.kp-popover[popover]:not(:popover-open), .kp-menu-button > .kp-menu:is([hidden], [data-kp-closing]))::after {
-            inset-block-start: calc(100% - 2px);
-            opacity: 1;
-            transition:
-                inset-block-start calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun),
-                opacity calc(2 * var(--kp-sw-beat)) cubic-bezier(0, 0, 0.15, 1);
-        }
-
-        [data-theme='synthwave'] :is(.kp-popover:popover-open, .kp-menu-button > .kp-menu:not([hidden], [data-kp-closing])) {
-            clip-path: inset(-4rem);
-            transition:
-                clip-path calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun),
-                display calc(2 * var(--kp-sw-beat)) allow-discrete,
-                overlay calc(2 * var(--kp-sw-beat)) allow-discrete;
-        }
-
-        [data-theme='synthwave'] :is(.kp-popover:popover-open, .kp-menu-button > .kp-menu:not([hidden], [data-kp-closing]))::after {
+        [data-theme='synthwave']
+            :is(
+                .kp-menu-button > .kp-menu,
+                .kp-popover[popover]:not(.kp-tooltip),
+                .kp-combobox__list:popover-open,
+                .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open,
+                .kp-tooltip
+            )::after {
             inset-block-start: 0;
-            opacity: 0;
-            transition:
-                inset-block-start calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun),
-                opacity calc(2 * var(--kp-sw-beat)) cubic-bezier(0.85, 0, 1, 1);
+            animation:
+                kp-sig-synthwave-beam calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun) backwards,
+                kp-sig-synthwave-glow calc(2 * var(--kp-sw-beat)) linear backwards;
         }
 
-        /* A menu has played its close on [data-kp-closing] (js/motion.js
-           playClose) by the time it is hidden: nothing is left to run. */
-        [data-theme='synthwave'] .kp-menu-button > .kp-menu[hidden],
-        [data-theme='synthwave'] .kp-menu-button > .kp-menu[hidden]::after {
-            transition: none;
+        /* The list climbs as its own entrance, not as the leave turned around. */
+        [data-theme='synthwave'] .kp-combobox__list {
+            --kp-open: own;
         }
 
-        @starting-style {
-            [data-theme='synthwave'] :is(.kp-popover:popover-open, .kp-menu-button > .kp-menu:not([hidden], [data-kp-closing])) {
-                clip-path: inset(100% -4rem -4rem -4rem);
-            }
+        /* The command palette and the shortcuts sheet are dialogs: they climb as
+           the dialog does (three beats unopened, two once open, which js/motion.js
+           plays backwards to close them). They faded in the package's way. */
+        [data-theme='synthwave'] :is(.kp-palette, .kp-shortcuts) {
+            --kp-sig-dur: calc(3 * var(--kp-sw-beat));
+            animation: kp-sig-synthwave-climb var(--kp-sig-dur) var(--kp-sw-sun) backwards;
+        }
 
-            [data-theme='synthwave'] :is(.kp-popover:popover-open, .kp-menu-button > .kp-menu:not([hidden], [data-kp-closing]))::after {
-                inset-block-start: calc(100% - 2px);
-                opacity: 1;
-            }
+        [data-theme='synthwave'] :is(.kp-palette, .kp-shortcuts)[open] {
+            --kp-sig-dur: calc(2 * var(--kp-sw-beat));
+        }
+
+        [data-theme='synthwave'] :is(.kp-palette, .kp-shortcuts)::after {
+            inset-block-start: 0;
+            animation:
+                kp-sig-synthwave-beam var(--kp-sig-dur) var(--kp-sw-sun) backwards,
+                kp-sig-synthwave-glow var(--kp-sig-dur) linear backwards;
         }
     }
 
@@ -3403,7 +3418,10 @@
             filter: drop-shadow(0 0 8px var(--primary)) drop-shadow(0 0 18px var(--accent));
         }
 
-        [data-theme='synthwave'] [data-kp-arriving]:not(.kp-toast) {
+        /* A part that arrives as its leave played backwards carries
+           `[data-kp-leaving]` too (js/motion.js arriveAsReversedLeave reads that
+           leave): it is not a row rising in a size change. */
+        [data-theme='synthwave'] [data-kp-arriving]:not(.kp-toast, [data-kp-leaving]) {
             animation: kp-sig-synthwave-size-rise calc(4 * var(--kp-sw-beat)) var(--kp-sw-sun) backwards;
         }
 
@@ -3438,11 +3456,120 @@
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='synthwave'] {
             --kp-open: reverse-close;
+            /* A part a script removes or hides (the busy table's layer, an empty
+               state, a file row, a re-shown alert) leaves first, as it arrives
+               (js/motion.js leavesState(), lessons 19, 23, 24, 37); what takes no
+               box arrives as nothing; the space a leave folds shut takes the
+               leave's own four beats and starts with it (its defaults, 1.25 times
+               the leave starting a third in, are other themes'). */
+            --kp-leave-state: leave;
+            --kp-arrive-unseen: skip;
+            --kp-leave-fold-grow: 1;
+            --kp-leave-fold-start: 0;
+        }
+
+        /* The calendar's busy layers (the whole grid's card and a day's spinner)
+           arrive as the leave played backwards and set behind their horizon as
+           they go: js/calendar.js marks a layer `[data-kp-leaving]` while its
+           state goes (`--kp-calendar-busy-leave: hold`), and the rules below keep
+           it drawn through those four beats. They faded in and vanished at once. */
+        [data-theme='synthwave'] :is(.kp-calendar__day-busy, .kp-calendar__busy) {
+            --kp-calendar-busy-leave: hold;
+            transition: none;
+        }
+
+        [data-theme='synthwave']
+            :is(.kp-calendar--busy-days, .kp-calendar--busy-whole:not(:has(> .kp-calendar__grid[aria-busy='true'])))
+            .kp-calendar__day[data-kp-tone='loading']
+            > .kp-calendar__day-busy:not([data-kp-leaving]),
+        [data-theme='synthwave'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy:not([data-kp-leaving]) {
+            animation: kp-sig-synthwave-sink-in calc(4 * var(--kp-sw-beat)) var(--kp-sw-sun) reverse backwards;
+        }
+
+        /* ...the sun giving it back, as the toast's (the slab rises out of it). */
+        [data-theme='synthwave'] .kp-calendar--busy-whole > .kp-calendar__busy {
+            position: relative;
+        }
+
+        [data-theme='synthwave']
+            :is(.kp-calendar--busy-days, .kp-calendar--busy-whole:not(:has(> .kp-calendar__grid[aria-busy='true'])))
+            .kp-calendar__day[data-kp-tone='loading']
+            > .kp-calendar__day-busy:not([data-kp-leaving])::after,
+        [data-theme='synthwave'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy:not([data-kp-leaving])::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            background: var(--kp-sw-sun-cuts), var(--kp-sw-sun-v);
+            pointer-events: none;
+            translate: 0 101%;
+            visibility: hidden;
+            animation: kp-sig-synthwave-sun-in calc(4 * var(--kp-sw-beat)) var(--kp-sw-sun) reverse backwards;
+        }
+
+        [data-theme='synthwave'] .kp-calendar__day:has(> .kp-calendar__day-busy[data-kp-leaving]) {
+            position: relative;
+        }
+
+        [data-theme='synthwave'] .kp-calendar__day-busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-spinner, 0.75rem);
+            position: absolute;
+            inset-inline: 0;
+            inset-block-end: 0.125rem;
+            display: flex;
+            justify-content: center;
+            line-height: 0;
+        }
+
+        [data-theme='synthwave'] .kp-calendar--busy-whole > .kp-calendar__busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-busy-spinner, 2.5rem);
+            z-index: 1;
+            display: grid;
+            place-self: center;
+            place-items: center;
+            padding: var(--kp-space-md, 1rem);
+            border-radius: var(--radius, 0.5rem);
+            background: var(--card);
+            box-shadow: 0 0 0 1px var(--border);
+            line-height: 0;
         }
 
         [data-theme='synthwave'] [data-kp-leaving] {
             position: relative;
             animation: kp-sig-synthwave-sink calc(4 * var(--kp-sw-beat)) var(--kp-sw-sun) forwards;
+        }
+
+        /* The busy table's layer sinks where it stands (round 2, 2026-10-13): the
+           rule above made it relative, so as it left (and as it arrived) it dropped
+           below the table into the flow and folded a space of its own, and the
+           table's resize character (filter, outline) ran on the close only. */
+        /* The sidenav's backdrop dims in the panel's own beat (225 ms), not in the
+           package's literal 220 ms: 5 ms apart, the close's first frames were not
+           the open's last ones (7.3 % off at frame 1/20, round 2). */
+        [data-theme='synthwave'] .kp-sidenav__backdrop {
+            animation-duration: var(--fx-duration);
+        }
+
+        [data-theme='synthwave'] .kp-datatable__busy-overlay[data-kp-leaving] {
+            position: absolute;
+        }
+
+        /* The table and its rows under the layer are the same pair as the layer:
+           their dims (css/layout.css `--kp-busy-opacity`, the rows'
+           `--kp-datatable-busy-opacity`) came and went with `aria-busy`, at once.
+           They now lift in the layer's own four beats on the sun curve, and come
+           in the same way (the curve is its own mirror image). The table keeps
+           the package's resize character (outline, filter) beside it. */
+        [data-theme='synthwave'] .kp-datatable:has(> .kp-datatable__busy-overlay) {
+            transition:
+                outline-color calc(var(--kp-resize-dur, 300ms) / 2) ease-out,
+                outline-offset calc(var(--kp-resize-dur, 300ms) / 2) ease-out,
+                filter calc(var(--kp-resize-dur, 300ms) / 2) ease-out,
+                opacity calc(4 * var(--kp-sw-beat)) var(--kp-sw-sun);
+        }
+
+        [data-theme='synthwave'] .kp-datatable:has(> .kp-datatable__busy-overlay) .kp-table tbody {
+            transition: opacity calc(4 * var(--kp-sw-beat)) var(--kp-sw-sun);
         }
 
         [data-theme='synthwave'] [data-kp-leaving]::after {
@@ -3492,6 +3619,258 @@
                 translate: 0 31%;
                 visibility: visible;
             }
+        }
+
+        /* The same frames under second names, so an arrival that turns into its leave restarts
+           (a running or finished animation of the same name is only re-timed, lesson 8). */
+        @keyframes kp-sig-synthwave-sink-in {
+            0% {
+                translate: 0 0;
+                clip-path: inset(0 -1rem 0 -1rem);
+            }
+
+            50% {
+                translate: 0 50%;
+                clip-path: inset(-50% -1rem 50% -1rem);
+            }
+
+            100% {
+                translate: 0 70%;
+                clip-path: inset(31% -1rem 70% -1rem);
+            }
+        }
+
+        @keyframes kp-sig-synthwave-sun-in {
+            0% {
+                translate: 0 -101%;
+                visibility: visible;
+            }
+
+            50% {
+                translate: 0 -50%;
+                visibility: visible;
+            }
+
+            100% {
+                translate: 0 31%;
+                visibility: visible;
+            }
+        }
+    }
+
+    /* One loading picture: while the busy table's layer stands over the rows, the
+       status line's small spinner stays out (forest and cyberpunk, lesson 23): it
+       arrived on its own and was removed at once, so the layer's close was not its
+       open reversed. */
+    [data-theme='synthwave'] .kp-datatable:has(> .kp-datatable__busy-overlay) .kp-datatable__status > .kp-spinner {
+        display: none;
+    }
+
+    /* ── Every pair closes as its open reversed [all-themes audit, 2026-10-13;
+       lessons 11, 22, 26, 36, 38] ──────────────────────────────────────────
+       The tree's branches, the tour, and the header's dropdown, mega menu and
+       phone panel: each opens by the theme's own motion and closes as that
+       motion played backwards, in the same two beats. */
+
+    /* A tree branch's children glide open and shut (js/motion.js glideGroup());
+       shutting, the state is already `aria-expanded="false"` and the group is
+       kept drawn until the glide is over. It appeared at once and only the box
+       glided. */
+    [data-theme='synthwave'] .kp-tree [role='treeitem'][aria-expanded='false'] > [role='group'][data-kp-group-folding],
+    [data-theme='synthwave'] .kp-tree [role='treeitem'][aria-expanded='false'] + [role='group'][data-kp-group-folding] {
+        display: block;
+    }
+
+    /* The tour: the card climbs as the dialog does, in two beats; the page's dim
+       grows out of the target and the ring is drawn in over the same two beats,
+       and css/components.css takes both back on the same sunrise curve (it is
+       its own reverse) to no shadow at all. They came in 160, 250 and 350 ms
+       and went in 1000. */
+    [data-theme='synthwave'] {
+        --kp-tour-dim-close: 0 0 0 0 transparent;
+        --kp-tour-dim-time: 450ms;
+        --kp-tour-dim-close-ease: cubic-bezier(0.65, 0, 0.35, 1);
+        /* The header's hover dropdown and its phone panel are held on screen for
+           their close (js/components.js); Firefox does not hold `display`. */
+        --kp-nav-close-time: 450ms;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='synthwave'] {
+            --kp-nav-close-time: 0ms;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] .kp-tour[open]:not([data-kp-tour-stepping]) {
+            animation: kp-sig-synthwave-climb calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun) backwards;
+        }
+
+        [data-theme='synthwave'] .kp-tour[open]:not([data-kp-tour-stepping])::after {
+            inset-block-start: 0;
+            animation:
+                kp-sig-synthwave-beam calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun) backwards,
+                kp-sig-synthwave-glow calc(2 * var(--kp-sw-beat)) linear backwards;
+        }
+
+        /* `backwards`, not `both`: a ring a finished animation holds cannot be
+           taken back by the close's transition (lesson 21). */
+        [data-theme='synthwave'] [data-kp-tour-target] {
+            animation: kp-sig-synthwave-tour-ring calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun) backwards;
+            transition:
+                box-shadow calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun),
+                outline-color calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun);
+        }
+
+        /* A step is no arrival and no news: the card keeps its shape and walks to
+           the next target in two beats. */
+        [data-theme='synthwave'] .kp-tour[data-kp-tour-stepping] {
+            animation: none;
+            transition:
+                left calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun),
+                top calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun);
+        }
+
+        [data-theme='synthwave'] .kp-tour:is([data-kp-tour-stepping], [data-kp-updating])::after {
+            animation: none;
+        }
+
+        /* The header's dropdown and mega menu climb as a menu does [G3: "a menu,
+           the header's menu, a popover ... open the same way"]: uncovered from
+           their foot behind the beam, two beats on the sunrise curve, and set
+           back behind it to close. A transition to the open state and back,
+           as the bar holds the panel through its close (js/components.js marks
+           the item `[data-kp-nav-closing]` for `--kp-nav-close-time`, and the
+           mega menu's for as long as this transition runs). The dropdown faded
+           in and vanished; the mega menu had nothing. */
+        [data-theme='synthwave'] .kp-nav__menu {
+            clip-path: inset(100% -4rem -4rem -4rem);
+            transition:
+                clip-path calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun),
+                display calc(2 * var(--kp-sw-beat)) allow-discrete;
+        }
+
+        [data-theme='synthwave'] .kp-nav__links > li > .kp-nav__menu::after {
+            inset-block-start: calc(100% - 2px);
+            opacity: 1;
+            transition:
+                inset-block-start calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun),
+                opacity calc(2 * var(--kp-sw-beat)) cubic-bezier(0, 0, 0.15, 1);
+        }
+
+        [data-theme='synthwave']
+            .kp-nav__links
+            > li[data-kp-nav-closing]:not(:hover, :focus-within, [data-kp-nav-menu-open])
+            > .kp-nav__menu:not(.kp-nav__menu--wide) {
+            display: block;
+            opacity: 1;
+        }
+
+        [data-theme='synthwave']
+            :is(
+                .kp-nav__links > li:is(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+                .kp-nav__links > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide
+            ) {
+            clip-path: inset(-4rem);
+        }
+
+        [data-theme='synthwave']
+            :is(
+                .kp-nav__links > li:is(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+                .kp-nav__links > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide
+            )::after {
+            inset-block-start: 0;
+            opacity: 0;
+            transition:
+                inset-block-start calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun),
+                opacity calc(2 * var(--kp-sw-beat)) cubic-bezier(0.85, 0, 1, 1);
+        }
+
+        @starting-style {
+            [data-theme='synthwave']
+                :is(
+                    .kp-nav__links > li:is(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+                    .kp-nav__links > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide
+                ) {
+                clip-path: inset(100% -4rem -4rem -4rem);
+            }
+
+            [data-theme='synthwave']
+                :is(
+                    .kp-nav__links > li:is(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+                    .kp-nav__links > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide
+                )::after {
+                inset-block-start: calc(100% - 2px);
+                opacity: 1;
+            }
+        }
+
+        /* The phone panel climbs the same way under the bar, and the bar's
+           page-load slide does not replay on it: one mechanism per part. It
+           slid down and faded in 600 ms and closed by the same slide forwards. */
+        @container kp-nav (max-width: 40rem) {
+            [data-theme='synthwave'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links {
+                position: relative;
+                clip-path: inset(100% -1rem -1rem -1rem);
+                animation: none;
+                transition:
+                    clip-path calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun),
+                    display calc(2 * var(--kp-sw-beat)) allow-discrete;
+            }
+
+            [data-theme='synthwave'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links::after {
+                content: '';
+                position: absolute;
+                inset: calc(100% - 2px) 0 auto;
+                z-index: 3;
+                block-size: 2px;
+                background: var(--kp-core);
+                box-shadow: var(--kp-sw-laser);
+                opacity: 1;
+                pointer-events: none;
+                transition:
+                    inset-block-start calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun),
+                    opacity calc(2 * var(--kp-sw-beat)) cubic-bezier(0, 0, 0.15, 1);
+            }
+
+            [data-theme='synthwave'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
+                clip-path: inset(-1rem);
+            }
+
+            [data-theme='synthwave'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links::after {
+                inset-block-start: 0;
+                opacity: 0;
+                transition:
+                    inset-block-start calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun),
+                    opacity calc(2 * var(--kp-sw-beat)) cubic-bezier(0.85, 0, 1, 1);
+            }
+
+            @starting-style {
+                [data-theme='synthwave'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
+                    clip-path: inset(100% -1rem -1rem -1rem);
+                }
+
+                [data-theme='synthwave'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links::after {
+                    inset-block-start: calc(100% - 2px);
+                    opacity: 1;
+                }
+            }
+
+            /* Inside the open panel the lists are its own rows: no climb of their own. */
+            [data-theme='synthwave'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__links > li > .kp-nav__menu {
+                clip-path: none;
+                transition: none;
+            }
+
+            [data-theme='synthwave'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__links > li > .kp-nav__menu::after {
+                content: none;
+            }
+        }
+    }
+
+    @keyframes kp-sig-synthwave-tour-ring {
+        from {
+            outline-color: transparent;
         }
     }
 

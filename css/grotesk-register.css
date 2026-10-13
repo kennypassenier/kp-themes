@@ -16,6 +16,14 @@
     initial-value: 0;
 }
 
+/* The hold a bar's panel keeps while its close plays: js/components.js releases the mega menu's item
+   when a transition on the panel ends, and this is the one it waits for. */
+@property --kp-sig-gr-hold {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+}
+
 @layer kp.register {
     /* @kp-soft/themes — css/grotesk-register.css
    The grotesk register, 5.0.0 [S48, LIFT_PLAN row 12]: the International
@@ -2736,6 +2744,367 @@
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='grotesk'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip)) {
             animation: kp-sig-grotesk-fall var(--kp-sig-dur) linear backwards;
+        }
+    }
+
+    /* ── Pairs: every close is its open reversed, and the plate's fall on every part that opens
+       [all-themes audit, 2026-10-13; docs/THEME_LESSONS.md 19-27, 31, 36-38]. A close that is not a
+       leave (a dialog, a drawer, the palette, the alarm, a menu, a popover, the date picker, the
+       combobox's list, the bar's menus, the side navigation, the tour) is the fall played backwards
+       in the fall's own 960 ms: the red plate spirals back out the way it came. A part a script removes
+       or hides (the busy layers, a file row, a toast, a dismissed alert) takes the decided leave above
+       instead (clockwise out, CHARACTER.md §0b): that one is not the arrival reversed, on purpose. ── */
+    [data-theme='grotesk'] {
+        /* A part a script removes or hides leaves first, as everything else does here (lesson 19);
+           what takes no box arrives as nothing (23); the space a leave folds shut takes the leave's
+           own 960 ms and starts with it (24). */
+        --kp-leave-state: leave;
+        --kp-arrive-unseen: skip;
+        --kp-leave-fold-grow: 1;
+        --kp-leave-fold-start: 0;
+        /* The bar's hover dropdown and its phone panel are held on screen for the close's time
+           (js/components.js, lesson 36). */
+        --kp-nav-close-time: 960ms;
+        /* The tour's dim and ring: printed at once with the card and taken off at once at the end of
+           its close, as the dialog's backdrop is (nothing fades, G1). The close holds them for the
+           card's 960 ms and then drops them: `steps(1, end)`, the opening's `steps(1, start)` turned
+           round. */
+        --kp-tour-dim-close: 0 0 0 0 transparent;
+        --kp-tour-dim-time: 960ms;
+        --kp-tour-dim-close-ease: steps(1, end);
+        --kp-tour-dim-close-delay: 0s;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='grotesk'] {
+            --kp-nav-close-time: 0ms;
+        }
+    }
+
+    /* A tree branch's children are kept drawn while their group glides shut (lesson 26). */
+    [data-theme='grotesk'] .kp-tree [role='treeitem'][aria-expanded='false'] > [role='group'][data-kp-group-folding],
+    [data-theme='grotesk'] .kp-tree [role='treeitem'][aria-expanded='false'] + [role='group'][data-kp-group-folding] {
+        display: block;
+    }
+
+    /* The windows that slip most: the palette, the shortcuts sheet, the tour's card, the picker's
+       panel, the combobox's list, the bar's panels. */
+    [data-theme='grotesk']
+        :is(.kp-palette, .kp-shortcuts, .kp-tour, .kp-datepicker__panel, .kp-combobox__list, .kp-nav__menu, .kp-alarm__panel) {
+        --kp-sig-gr-r: 8px;
+    }
+
+    /* On the alarm's red ground the plate is the ink: its own red would not show. */
+    [data-theme='grotesk'] .kp-alarm__panel {
+        --kp-sig-gr-plate: var(--foreground);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* Every backdrop is printed at once and held while its window's plate falls, and the close
+           holds it the same 960 ms and lets it go with the window (lesson 16: with no motion of its own
+           js/motion.js fades it out on `ease-in`, which the opening never did). */
+        [data-theme='grotesk'] :is(.kp-dialog, .kp-drawer, .kp-alarm, .kp-palette, .kp-shortcuts)[open]::backdrop {
+            animation: kp-sig-grotesk-hold var(--kp-sig-gr-fall) linear backwards;
+        }
+
+        /* The dialog's and the drawer's title rule is drawn in the fall's own time, with its unit
+           of delay and its draw written into the keyframes, so js/motion.js (which plays every kept
+           entrance backwards in the close's 960 ms, without its delay) turns it round frame for frame. */
+        [data-theme='grotesk'] .kp-dialog__title::before {
+            animation: kp-sig-grotesk-gr-rule-set var(--kp-sig-gr-fall) linear both;
+        }
+
+        /* The palette and the shortcuts sheet open as the dialog does: their plate falls into
+           register; js/motion.js closes them as that fall played backwards. */
+        [data-theme='grotesk'] :is(.kp-palette, .kp-shortcuts)[open] {
+            animation: kp-sig-grotesk-fall var(--kp-sig-gr-fall) linear backwards;
+        }
+
+        /* The alarm is a poster: the red ground is there at once (no fade, G1) and the panel's plate,
+           the ink on the red, falls into register as on every window; the headline and the reason
+           are printed with it, not after it. Its close is that fall backwards, the ground going last. */
+        [data-theme='grotesk'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+            animation: none;
+        }
+
+        [data-theme='grotesk'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel {
+            animation: kp-sig-grotesk-fall var(--kp-sig-gr-fall) linear backwards;
+        }
+
+        [data-theme='grotesk'] .kp-alarm:not([data-kp-alarm-motion='still']) :is(.kp-alarm__title, .kp-alarm__detail) {
+            animation: none;
+        }
+
+        /* The date picker's panel and the combobox's list are the popover's plate: it falls into
+           register on them, and js/motion.js playClose plays that backwards (the panel's opening
+           mark stays on through the close, lesson 10). */
+        [data-theme='grotesk']
+            :is(.kp-combobox__list:popover-open, .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open) {
+            animation: kp-sig-grotesk-fall var(--kp-sig-gr-fall) linear backwards;
+        }
+
+        /* The tour's card is a window like the dialog: its plate falls into register, and js/tour.js
+           plays that backwards when the tour ends. A step is no arrival (lesson 30). */
+        [data-theme='grotesk'] .kp-tour[open]:not([data-kp-tour-stepping]) {
+            animation: kp-sig-grotesk-fall var(--kp-sig-gr-fall) linear backwards;
+        }
+
+        [data-theme='grotesk'] .kp-tour[data-kp-tour-stepping] {
+            animation: none;
+        }
+
+        [data-theme='grotesk'] [data-kp-tour-target] {
+            transition:
+                box-shadow var(--kp-sig-gr-fall) steps(1, start),
+                outline-color var(--kp-sig-gr-fall) steps(1, start);
+        }
+
+        /* A refreshing table's kept rows are dimmed at once when its busy layer arrives and come back
+           at once when the layer's leave is over, not when it starts. */
+        [data-theme='grotesk'] .kp-datatable .kp-table tbody {
+            transition: opacity 0s linear var(--kp-sig-gr-fall);
+        }
+
+        [data-theme='grotesk'] .kp-datatable[aria-busy='true'] .kp-table tbody {
+            transition: opacity 0s linear;
+        }
+
+        /* The calendar's busy layers (the whole grid's card and a day's spinner) arrive by the fall
+           and leave by the decided leave (clockwise out, §0b): js/calendar.js marks a layer
+           `[data-kp-leaving]` while its state goes (`--kp-calendar-busy-leave: hold`), and the rules
+           below keep it drawn through that leave. */
+        [data-theme='grotesk'] :is(.kp-calendar__day-busy, .kp-calendar__busy) {
+            --kp-calendar-busy-leave: hold;
+            transition: none;
+        }
+
+        [data-theme='grotesk']
+            :is(.kp-calendar--busy-days, .kp-calendar--busy-whole:not(:has(> .kp-calendar__grid[aria-busy='true'])))
+            .kp-calendar__day[data-kp-tone='loading']
+            > .kp-calendar__day-busy,
+        [data-theme='grotesk'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy {
+            animation: kp-sig-grotesk-fall var(--kp-sig-gr-fall) linear backwards;
+        }
+
+        [data-theme='grotesk'] .kp-calendar__day:has(> .kp-calendar__day-busy[data-kp-leaving]) {
+            position: relative;
+        }
+
+        [data-theme='grotesk'] .kp-calendar__day-busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-spinner, 0.75rem);
+            position: absolute;
+            inset-inline: 0;
+            inset-block-end: 0.125rem;
+            display: flex;
+            justify-content: center;
+            line-height: 0;
+        }
+
+        [data-theme='grotesk'] .kp-calendar--busy-whole > .kp-calendar__busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-busy-spinner, 2.5rem);
+            z-index: 1;
+            display: grid;
+            place-self: center;
+            place-items: center;
+            padding: var(--kp-space-md, 1rem);
+            border-radius: 0;
+            background: var(--card);
+            box-shadow: 0 0 0 1px var(--border);
+            line-height: 0;
+        }
+
+        /* The bar's dropdown and mega menu: shown, the plate falls into register on the panel; once
+           the pointer, the focus or the press is gone the panel is held for the close's 960 ms
+           (`[data-kp-nav-closing]` on its item, js/components.js) while the fall plays backwards under
+           a second name, so it starts again. The mega menu's item is released when a transition on
+           the panel ends: the hold below is that transition. No package fade: nothing fades (G1). */
+        [data-theme='grotesk'] .kp-nav__menu {
+            --kp-sig-gr-hold: 0;
+            transition: --kp-sig-gr-hold var(--kp-sig-gr-fall) linear;
+            animation: kp-sig-grotesk-fall-back var(--kp-sig-gr-fall) linear reverse forwards;
+        }
+
+        [data-theme='grotesk']
+            .kp-nav__links
+            > li[data-kp-nav-closing]:not(:hover, :focus-within, [data-kp-nav-menu-open])
+            > .kp-nav__menu:not(.kp-nav__menu--wide) {
+            display: block;
+            opacity: 1;
+        }
+
+        [data-theme='grotesk']
+            :is(
+                .kp-nav__links > li:is(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+                .kp-nav__links > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide
+            ) {
+            --kp-sig-gr-hold: 1;
+            animation: kp-sig-grotesk-fall var(--kp-sig-gr-fall) linear backwards;
+        }
+    }
+
+    @container kp-nav (max-width: 40rem) {
+        /* Collapsed, the lists nested in the open phone panel are its own rows: they do not fall again. */
+        [data-theme='grotesk'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__links .kp-nav__menu {
+            animation: none;
+            transition: none;
+        }
+
+        /* The phone panel is printed and its plate falls into register; closing, the panel is held
+           (`[data-kp-nav-closing]`, for `--kp-nav-close-time`) while the fall plays backwards. The
+           toggle's ink plate comes with the opening's first frame and goes with the closing's last
+           (`[data-kp-nav-open]` is taken off when the close is over), which is that turned round. */
+        @media (prefers-reduced-motion: no-preference) {
+            [data-theme='grotesk'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
+                --kp-sig-gr-r: 8px;
+                animation: kp-sig-grotesk-fall var(--kp-sig-gr-fall) linear backwards;
+            }
+
+            [data-theme='grotesk'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__links {
+                --kp-sig-gr-r: 8px;
+                animation: kp-sig-grotesk-fall-back var(--kp-sig-gr-fall) linear reverse forwards;
+            }
+        }
+    }
+
+    /* The side navigation (over and push) opens as every window does: it slides out from behind its
+       start edge in one contact unit (G2) and its red plate falls into register over the fall's 960 ms;
+       its backdrop is printed at once and held. The close is that played backwards: the plate spirals
+       out, and the slide back and the content's return come in the last unit, so frame t of the close is
+       frame 960 - t of the opening. */
+    [data-theme='grotesk'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) {
+        --kp-sig-gr-r: 8px;
+    }
+
+    /* Shut, the panel is not drawn: its plate, played backwards when the page loads, must not show
+       past its edge, and nothing in it takes the keyboard. The close keeps it drawn for the fall.
+       Before js/sidenav.js has marked it (no `data-kp-sidenav-open` yet) it is shut too, and hidden:
+       otherwise the script's first `false` started the close's 960 ms hold on a visible panel, and
+       a panel never opened played its close on the page for up to a second after load (round 2,
+       2026-10-13: the pair meter caught it in its "before" picture, 56 % left over, in about one
+       run in three of a full run). */
+    [data-theme='grotesk'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']):not([data-kp-sidenav-open='true']) {
+        visibility: hidden;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='grotesk'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            animation:
+                kp-sig-grotesk-fall var(--kp-sig-gr-fall) linear backwards,
+                kp-sig-grotesk-slide var(--kp-sig-gr-fall) linear backwards;
+            transition: visibility 0s linear;
+        }
+
+        /* No fill: once it has played the closed panel carries no plate (it would show past its edge).
+           The slide is keyframed in the fall's time (one unit of travel, then held) rather than a
+           transition with a delay, so the two directions are the same frames. */
+        [data-theme='grotesk'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='false'] {
+            animation:
+                kp-sig-grotesk-fall-back var(--kp-sig-gr-fall) linear reverse,
+                kp-sig-grotesk-slide-back var(--kp-sig-gr-fall) linear reverse;
+            transition: visibility 0s linear var(--kp-sig-gr-fall);
+        }
+
+        [data-theme='grotesk'] .kp-sidenav__backdrop {
+            animation: kp-sig-grotesk-hold var(--kp-sig-gr-fall) linear both;
+        }
+
+        [data-theme='grotesk'] [data-kp-sidenav-shift='open'] {
+            transition:
+                margin-inline-start var(--kp-sig-gr-unit) linear,
+                padding-inline-start var(--kp-sig-gr-unit) linear;
+        }
+
+        [data-theme='grotesk'] [data-kp-sidenav-shift='closed'] {
+            transition:
+                margin-inline-start var(--kp-sig-gr-unit) linear calc(var(--kp-sig-gr-fall) - var(--kp-sig-gr-unit)),
+                padding-inline-start var(--kp-sig-gr-unit) linear calc(var(--kp-sig-gr-fall) - var(--kp-sig-gr-unit));
+        }
+    }
+
+    /* The side navigation's slide in the fall's 8 units: one unit out from behind its start edge, held
+       for the rest; the close plays a second name backwards, so it starts again. */
+    @keyframes kp-sig-grotesk-slide {
+        0% {
+            translate: var(--kp-sidenav-away, -100%) 0;
+        }
+
+        12.5%,
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    @keyframes kp-sig-grotesk-slide-back {
+        0% {
+            translate: var(--kp-sidenav-away, -100%) 0;
+        }
+
+        12.5%,
+        100% {
+            translate: 0 0;
+        }
+    }
+
+    /* A backdrop that is printed at once and held: the window's fall runs over it. */
+    @keyframes kp-sig-grotesk-hold {
+        from,
+        to {
+            opacity: 1;
+        }
+    }
+
+    /* The title rule in the fall's 8 units: one unit of rest, three to draw, held from the fourth. */
+    @keyframes kp-sig-grotesk-gr-rule-set {
+        0%,
+        12.5% {
+            transform: scaleX(0);
+        }
+
+        50%,
+        100% {
+            transform: scaleX(1);
+        }
+    }
+
+    /* The fall under a third name, played backwards for a close a CSS state change starts (the
+       bar's panels): a new name, so the browser starts it again rather than turning the finished
+       opening round in place (lesson 8). */
+    @keyframes kp-sig-grotesk-fall-back {
+        0% {
+            filter: drop-shadow(var(--kp-sig-gr-r) 0 0 var(--kp-sig-gr-plate));
+        }
+
+        10.94% {
+            filter: drop-shadow(calc(var(--kp-sig-gr-r) * 0.626) calc(var(--kp-sig-gr-r) * 0.626) 0 var(--kp-sig-gr-plate));
+        }
+
+        21.88% {
+            filter: drop-shadow(0 calc(var(--kp-sig-gr-r) * 0.771) 0 var(--kp-sig-gr-plate));
+        }
+
+        32.81% {
+            filter: drop-shadow(calc(var(--kp-sig-gr-r) * -0.465) calc(var(--kp-sig-gr-r) * 0.465) 0 var(--kp-sig-gr-plate));
+        }
+
+        43.75% {
+            filter: drop-shadow(calc(var(--kp-sig-gr-r) * -0.543) 0 0 var(--kp-sig-gr-plate));
+        }
+
+        54.69% {
+            filter: drop-shadow(calc(var(--kp-sig-gr-r) * -0.303) calc(var(--kp-sig-gr-r) * -0.303) 0 var(--kp-sig-gr-plate));
+        }
+
+        65.63% {
+            filter: drop-shadow(0 calc(var(--kp-sig-gr-r) * -0.314) 0 var(--kp-sig-gr-plate));
+        }
+
+        76.56% {
+            filter: drop-shadow(calc(var(--kp-sig-gr-r) * 0.141) calc(var(--kp-sig-gr-r) * -0.141) 0 var(--kp-sig-gr-plate));
+        }
+
+        87.5%,
+        100% {
+            filter: drop-shadow(0 0 0 transparent);
         }
     }
 }

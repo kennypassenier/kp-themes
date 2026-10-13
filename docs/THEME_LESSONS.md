@@ -426,3 +426,50 @@ These were not cyberpunk's: the same wrong default is in every theme that has no
 - **Check:** `KP_THEME=<theme> node research/all-themes/_audit/tab-paint.mjs`: a real Tab through the applied demo, each stop shot
   focused and blurred; fewer than 16 changed pixels is NOMARK. Only the review dialog's own buttons may read NOMARK (the catalogue's
   chrome covers them).
+
+## 42. A popover opened by a transition closes in one frame in Firefox
+
+- **Symptom:** (all-themes, synthwave) the theme menu and the row actions open over two beats and are gone at once.
+- **Cause:** Firefox drops a popover from the top layer the moment it is hidden, and js/motion.js `closePopoverWithGhost()` only
+  plays a close for a panel whose entrance is a keyframe animation; a transition has nothing to play backwards.
+- **Fix:** open every popover, menu, date picker panel and combobox list with keyframes (the theme's own), never a transition.
+- **Check:** the pair meter's close for `theme-menu` and `popover-row-actions` lasts as long as the open.
+
+## 43. A leave rule that sets `position: relative` drops an absolute layer into the flow
+
+- **Symptom:** (all-themes, titanium, synthwave, terminal) the busy table's layer arrives and leaves under the table, the table
+  grows and shrinks around it, and the pair reads 115-150 % off.
+- **Cause:** the registers' `[data-kp-leaving] { position: relative }` (for their exit pseudo-elements) beat
+  `.kp-datatable__busy-overlay { position: absolute }`; js/motion.js then folded a space for it. Lesson 5 in another form.
+- **Fix:** `.kp-datatable__busy-overlay[data-kp-leaving] { position: absolute }`, and every state mark leaves `position` alone on a
+  part that is positioned already.
+- **Check:** the computed `position` of the layer while `data-kp-leaving` is on it.
+
+## 44. An arrival and its leave on one keyframes name: the leave never starts
+
+- **Symptom:** (formal's calendar layer, dark's toast, the calendar busy layers of synthwave, terminal, titanium) the arrival plays,
+  the leave is instant.
+- **Cause:** the finished arrival's animation is only re-timed when the leave names the same keyframes (lesson 8 and 10).
+- **Fix:** a second keyframes name with the same frames for the leave (`-back`, `-out`).
+- **Check:** `getAnimations()` on the part right after the leave starts: a new animation, not the arrival's.
+
+## 45. The focus comes back to the opener when the panel is gone, not when its close starts
+
+- **Symptom:** (date picker and side navigation, every theme) the close is the open backwards except for the opener's focus ring,
+  which is back at the first frame of the close (pair 6-14 % off).
+- **Fix:** js/datepicker.js `refocusAfterClose()` and js/sidenav.js wait for the close's animations before they focus the opener, as
+  js/tour.js already did (lesson 11). Forest and cyberpunk improve (2.4 and 0.4 %), nothing else moves.
+- **Check:** the pair meter on `datepicker` and `sidenav`.
+
+## 46. A ghost of a turned popover placed at its bounding box sits off
+
+- **Symptom:** (phantom, tilted menus) the close plays 2 px off the open (pair 65 %).
+- **Fix:** js/motion.js places the closing copy of a rotated panel at its layout box, centred in the drawn box; an unturned panel
+  keeps the drawn box (a translated or scaled one would move otherwise).
+- **Check:** the pair meter on `theme-menu` and `popover-row-actions` in phantom and cyberpunk.
+
+## 47. What the pair meter must hold still
+
+- research/all-themes/_audit/pairs-meter.mjs waits for a theme's boot screen to end, takes the page's scroll reveals and the
+  opener's own pointer effects out of the pair, and holds the navigation's close timer (200-2000 ms) until the frames are read; the
+  frozen tooltip examples re-raster a pixel differently now and then (fractional y), which reads as a tooltip "left over".

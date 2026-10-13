@@ -639,3 +639,19 @@ column under its rule, the baseline, the two plates in register, the train
 and the colour bands; blueprint is left the drafting table: the plotter's
 pen line, construction lines and dimensions, the drawing grid in squares,
 and a curve or a dwell of its own.
+
+## Applied 2026-10-13 (all-themes pairs audit)
+
+Every close that is not a leave is the plate's fall played backwards in the fall's 960 ms, and the fall
+now stands on every part that opens (css/grotesk-register.css, "Pairs" block at the foot of
+`kp.signature`; report: research/all-themes/reports/grotesk.md). The decided leave (clockwise out, §0b)
+is untouched; it is the one place a close is not its open reversed, and the busy layers, a file row, a
+toast and a dismissed alert take it. Borrowed where this file decides nothing: the palette, the
+shortcuts sheet, the tour's card and the side navigation take the dialog's fall; the date picker's
+panel, the combobox's list and the bar's dropdown, mega menu and phone panel take the popover's fall;
+the alarm's panel takes it in the ink on its red ground, the ground printed at once; every backdrop,
+the tour's dim and ring and the side navigation's backdrop are printed at once and held for the fall
+(nothing fades, G1). The side navigation keeps its slide from the start edge as one unit inside the
+fall's time.
+
+Round 2 (2026-10-13): the side navigation in over and push is hidden while it is shut, also before the script has marked it, so a panel that was never opened plays no close on the page after load.

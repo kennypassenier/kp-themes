@@ -14,6 +14,15 @@
     initial-value: 0;
 }
 
+/* A clock with nothing drawn on it: the bar's mega menu is held on screen
+   until a transition on its panel has played (js/components.js); this is
+   that transition, the length of the panel's close. */
+@property --kp-sig-solstice-hold {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+}
+
 @layer kp.register {
     /* @kp-soft/themes — css/solstice-register.css
    The solstice register, 5.0.0 [S48, S49]: warm dark, no neon. The
@@ -70,6 +79,16 @@
         --kp-shadow-soft: hsl(from var(--background) h s l / 0.45);
         --kp-shadow-deep: hsl(from var(--background) h s l / 0.55);
         --kp-shadow-hair: hsl(from var(--background) h s l / 0.3);
+        /* A part a script removes or hides (the busy table's layer, a file
+           row, a tree's children, a re-shown alert) leaves first, as it
+           arrives: js/motion.js leavesState() (lessons 19, 37). What takes no
+           box arrives as nothing (lesson 23). The space a leave folds shut
+           takes the leave's own time and starts with it, so arriving and
+           leaving are one picture of one length (lesson 24). */
+        --kp-leave-state: leave;
+        --kp-arrive-unseen: skip;
+        --kp-leave-fold-grow: 1;
+        --kp-leave-fold-start: 0;
     }
 
     /* ── Type ──────────────────────────────────────────────────────────── */
@@ -659,6 +678,13 @@
     [data-theme='solstice'] .kp-timeline__when {
         color: var(--muted-foreground);
         font-family: var(--theme-font-mono);
+    }
+
+    /* A branch's children glide open and shut (js/motion.js glideGroup(),
+       lesson 26): shutting, the group is kept drawn until the glide is over. */
+    [data-theme='solstice'] .kp-tree [role='treeitem'][aria-expanded='false'] > [role='group'][data-kp-group-folding],
+    [data-theme='solstice'] .kp-tree [role='treeitem'][aria-expanded='false'] + [role='group'][data-kp-group-folding] {
+        display: block;
     }
 
     [data-theme='solstice'] .kp-tree {
@@ -1649,6 +1675,120 @@
         }
     }
 
+    /* Waiting surfaces that come and go with a state, this theme's way (all-themes,
+       2026-10-13): the morning mist above, played backwards to arrive. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* The mist under a second name, for a part whose arrival and leave are
+           both CSS: the browser restarts an animation only when its name changes. */
+        @keyframes kp-sig-solstice-leave-back {
+            to {
+                transform: translateY(-14px);
+                filter: brightness(1.4) blur(3px);
+                opacity: 0;
+            }
+        }
+
+        /* The calendar's busy layers (the whole grid's card and a day's sun) come
+           out of the mist and go into it, 540 ms; they came in by the package's
+           240 ms fade and went at once. js/calendar.js marks a layer
+           `[data-kp-leaving]` while its state goes (`--kp-calendar-busy-leave:
+           hold`, lesson 37), the general leave above plays on it, and the rules
+           below keep it drawn and placed through it. */
+        [data-theme='solstice'] :is(.kp-calendar__day-busy, .kp-calendar__busy) {
+            --kp-calendar-busy-leave: hold;
+            transition: none;
+        }
+
+        [data-theme='solstice']
+            :is(.kp-calendar--busy-days, .kp-calendar--busy-whole:not(:has(> .kp-calendar__grid[aria-busy='true'])))
+            .kp-calendar__day[data-kp-tone='loading']
+            > .kp-calendar__day-busy,
+        [data-theme='solstice'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy {
+            animation: kp-sig-solstice-leave-back 540ms ease-in reverse backwards;
+        }
+
+        [data-theme='solstice'] .kp-calendar__day:has(> .kp-calendar__day-busy[data-kp-leaving]) {
+            position: relative;
+        }
+
+        [data-theme='solstice'] .kp-calendar__day-busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-spinner, 0.75rem);
+            position: absolute;
+            inset-inline: 0;
+            inset-block-end: 0.125rem;
+            display: flex;
+            justify-content: center;
+            line-height: 0;
+        }
+
+        [data-theme='solstice'] .kp-calendar--busy-whole > .kp-calendar__busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-busy-spinner, 2.5rem);
+            z-index: 1;
+            display: grid;
+            place-self: center;
+            place-items: center;
+            padding: var(--kp-space-md, 1rem);
+            border-radius: var(--radius, 0.5rem);
+            background: var(--card);
+            box-shadow: 0 0 0 1px var(--border);
+            line-height: 0;
+        }
+
+        /* A refreshing table and the rows it keeps dim with its busy layer, in
+           the layer's 540 ms, and brighten with its leave: the dims
+           (css/layout.css `--kp-busy-opacity`, the rows'
+           `--kp-datatable-busy-opacity`) switched in one frame while the layer
+           came and went over 540 ms. One keyframe set: forwards on the mist's
+           arrival curve, backwards on its leave (the reversed `ease-out` is the
+           leave's `ease-in`). */
+        [data-theme='solstice'] .kp-datatable {
+            --kp-ss-dim: var(--kp-busy-opacity, 0.7);
+        }
+
+        [data-theme='solstice'] .kp-datatable .kp-table tbody {
+            --kp-ss-dim: var(--kp-datatable-busy-opacity, 0.55);
+        }
+
+        [data-theme='solstice'] :is(.kp-datatable[aria-busy='true'], .kp-datatable[aria-busy='true'] .kp-table tbody) {
+            animation: kp-sig-solstice-busy-dim 540ms ease-out backwards;
+        }
+
+        [data-theme='solstice']
+            :is(
+                .kp-datatable:not([aria-busy='true']):has(> .kp-datatable__busy-overlay[data-kp-leaving]),
+                .kp-datatable:not([aria-busy='true']):has(> .kp-datatable__busy-overlay[data-kp-leaving]) .kp-table tbody
+            ) {
+            animation: kp-sig-solstice-busy-dim-back 540ms ease-out reverse backwards;
+        }
+
+        @keyframes kp-sig-solstice-busy-dim {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: var(--kp-ss-dim);
+            }
+        }
+
+        @keyframes kp-sig-solstice-busy-dim-back {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: var(--kp-ss-dim);
+            }
+        }
+
+        /* The side navigation's backdrop dims in the panel's own time (the
+           register's 240 ms), not the package's literal 220 ms, so the two are
+           one picture (lesson 31 checked: no clip cuts the content). */
+        [data-theme='solstice'] .kp-sidenav__backdrop {
+            animation-duration: 240ms;
+        }
+    }
+
     /* ── The meter with a mark, this theme's way [picked by Kenny on
        research/character-meter, round 3, 2026-10-05: shape 3, while
        loading 2, how the share arrives 2, when the tone changes 2,
@@ -2213,6 +2353,140 @@
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='solstice'] :is(.kp-menu-button > .kp-menu, .kp-popover[popover]:not(.kp-tooltip)) {
             animation: kp-sig-solstice-solstice-rise 640ms cubic-bezier(0.2, 0, 0, 1) backwards;
+        }
+    }
+
+    /* The rest of what opens takes the theme's own entrance [all-themes, 2026-10-13, lesson 38:
+       these opened by the package's bare fade, or by nothing].
+       - The command palette and the tour's card are dialogs: the dialog's dawn (560 ms, its
+         rise out of the dark), which js/motion.js plays backwards to close the palette and
+         js/tour.js to end the tour. A tour step is no arrival: the card walks, its shape kept.
+       - The combobox's list and the date picker's panel are lists that float over the page:
+         the popover's rise (640 ms), played backwards as they close (the ghost of a hidden
+         popover, js/motion.js; the date picker's playClose(), whose name stays the same on the
+         union of its opening mark and the closing marks, lesson 10).
+       - The page's dim round the tour's target and its ring come in on the card's time and
+         curve and go back on the curve turned round (css/components.css reads the tokens). */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='solstice'] .kp-palette {
+            --kp-sig-dur: 560ms;
+            animation: kp-sig-solstice-solstice-dawn var(--kp-sig-dur) cubic-bezier(0.2, 0, 0, 1) both;
+        }
+
+        [data-theme='solstice'] .kp-tour[open]:not([data-kp-tour-stepping]) {
+            animation: kp-sig-solstice-solstice-dawn 560ms cubic-bezier(0.2, 0, 0, 1) backwards;
+        }
+
+        [data-theme='solstice'] .kp-tour[data-kp-tour-stepping] {
+            animation: none;
+        }
+
+        [data-theme='solstice'] {
+            --kp-tour-dim-close: 0 0 0 0 transparent;
+            --kp-tour-dim-time: 560ms;
+            --kp-tour-dim-close-ease: cubic-bezier(1, 0, 0.8, 1);
+        }
+
+        /* `backwards`, not `both`: a ring a finished animation holds cannot be taken back by
+           the close's transition (lesson 21). */
+        [data-theme='solstice'] [data-kp-tour-target] {
+            animation: kp-sig-solstice-tour-ring 560ms cubic-bezier(0.2, 0, 0, 1) backwards;
+            transition:
+                box-shadow 560ms cubic-bezier(0.2, 0, 0, 1),
+                outline-color 560ms cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        @keyframes kp-sig-solstice-tour-ring {
+            from {
+                outline-color: transparent;
+            }
+        }
+
+        [data-theme='solstice']
+            :is(
+                .kp-combobox__list:popover-open,
+                .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open
+            ) {
+            animation: kp-sig-solstice-solstice-rise 640ms cubic-bezier(0.2, 0, 0, 1) backwards;
+        }
+
+        /* The bar's dropdown and mega menu are the header's menu (G3): they rise as a menu
+           does and go as the rise played backwards (the same keyframes under a second name, so
+           the browser restarts them). Once the pointer or the focus has left a dropdown,
+           js/components.js marks its item `[data-kp-nav-closing]` for `--kp-nav-close-time`
+           (Firefox does not hold `display`, lesson 36) and the rule below keeps it drawn; the
+           mega menu's item is held until a transition on the panel has played, which is the
+           `--kp-sig-solstice-hold` below. It replaces the package's opacity fade. */
+        [data-theme='solstice'] {
+            --kp-nav-close-time: 640ms;
+        }
+
+        [data-theme='solstice'] .kp-nav__menu {
+            --kp-sig-solstice-hold: 0;
+            transition: --kp-sig-solstice-hold 640ms linear;
+        }
+
+        [data-theme='solstice']
+            :is(
+                .kp-nav__links > li:is(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+                .kp-nav__links > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide
+            ) {
+            --kp-sig-solstice-hold: 1;
+            animation: kp-sig-solstice-solstice-rise 640ms cubic-bezier(0.2, 0, 0, 1) backwards;
+        }
+
+        [data-theme='solstice']
+            .kp-nav__links
+            > li[data-kp-nav-closing]:not(:hover, :focus-within, [data-kp-nav-menu-open])
+            > .kp-nav__menu:not(.kp-nav__menu--wide) {
+            display: block;
+            opacity: 1;
+            animation: kp-sig-solstice-solstice-rise-back 640ms cubic-bezier(0.2, 0, 0, 1) reverse forwards;
+        }
+
+        [data-theme='solstice']
+            .kp-nav__links
+            > li[data-kp-nav-closing]:not([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true']))
+            > .kp-nav__menu--wide {
+            animation: kp-sig-solstice-solstice-rise-back 640ms cubic-bezier(0.2, 0, 0, 1) reverse forwards;
+        }
+
+        /* On a phone the bar's menu is its list of links under the toggle: it rises as the
+           menu does and goes as that played backwards, in the same 640 ms (js/components.js
+           keeps it open `--kp-nav-close-time` while `[data-kp-nav-closing]`). The lists nested
+           in it are its own rows and play nothing of their own. */
+        @container kp-nav (max-width: 40rem) {
+            [data-theme='solstice'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
+                animation: kp-sig-solstice-solstice-rise 640ms cubic-bezier(0.2, 0, 0, 1) backwards;
+            }
+
+            [data-theme='solstice'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__links {
+                animation: kp-sig-solstice-solstice-rise-back 640ms cubic-bezier(0.2, 0, 0, 1) reverse forwards;
+            }
+
+            [data-theme='solstice'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu {
+                animation: none;
+                transition: none;
+            }
+        }
+
+        @keyframes kp-sig-solstice-solstice-rise-back {
+            from {
+                transform: translateY(14px);
+                clip-path: inset(-30px -30px 100% -30px);
+            }
+
+            to {
+                transform: none;
+                clip-path: inset(-30px -30px 0 -30px);
+            }
+        }
+    }
+
+    /* A reader who asked for no motion gets no close of the bar's menus to wait for. */
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='solstice'] {
+            --kp-nav-close-time: 0ms;
         }
     }
 }

@@ -1,3 +1,13 @@
+/* --kp-sig-ph-hold: a number the bar's mega menu transitions while it
+   closes, so js/components.js (which waits for a transition on a closing mega
+   menu) holds it for the throw back's 700 ms. Registered at the top level:
+   Firefox does not register an @property inside a cascade layer. */
+@property --kp-sig-ph-hold {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+}
+
 @layer kp.register {
     /* @kp-soft/themes — css/phantom-register.css
    The phantom register, 5.0.0 [S48, LIFT_PLAN row 2]: the cut-paper
@@ -3123,6 +3133,16 @@
                600 and 480 ms, are other themes'). */
             --kp-close-max: 700ms;
             --kp-size-max: 700ms;
+            /* The close mechanism (lessons 19, 23, 24, 37; applied 2026-10-13):
+               a part a script removes or hides (the busy table's layer, a file
+               row, a re-shown alert, an empty state) leaves by the dissolve and
+               snatch below and arrives as that backwards; what takes no box
+               arrives as nothing; the space a leave folds shut takes the
+               throw's own 700 ms and starts with it. */
+            --kp-leave-state: leave;
+            --kp-arrive-unseen: skip;
+            --kp-leave-fold-grow: 1;
+            --kp-leave-fold-start: 0;
         }
 
         [data-theme='phantom'] [data-kp-leaving] {
@@ -3548,6 +3568,277 @@
 
         100% {
             clip-path: polygon(0 0, calc(100% + 8px) 0, 100% 100%, 0 100%);
+        }
+    }
+
+    /* ── Close = open reversed, and the throw on every part that opens
+       (research/all-themes/BRIEF.md, 2026-10-13; lessons 11, 19-26, 31, 36-38).
+       Phantom's own motion only: the throw (kp-sig-phantom-fly, the shove,
+       400 ms) and the resolve (kp-sig-phantom-resolve, three cuts, 300 ms),
+       played together, 700 ms; the close is the same backwards (js/motion.js)
+       or the leave pair (kp-sig-phantom-fly-out, -resolve-out), which is that
+       pair turned round frame for frame. ── */
+
+    /* A tree branch's children glide shut as they glided open (js/motion.js
+       glideGroup(), lesson 26): the group is kept drawn while it shuts. */
+    [data-theme='phantom'] .kp-tree [role='treeitem'][aria-expanded='false'] > [role='group'][data-kp-group-folding],
+    [data-theme='phantom'] .kp-tree [role='treeitem'][aria-expanded='false'] + [role='group'][data-kp-group-folding] {
+        display: block;
+    }
+
+    /* One loading picture: while the busy table's layer stands over the rows,
+       the status line's small spinner stays out, so it holds back no arrival
+       of the layer (lesson 23; cyberpunk's rule). */
+    [data-theme='phantom'] .kp-datatable:has(> .kp-datatable__busy-overlay) .kp-datatable__status > .kp-spinner {
+        display: none;
+    }
+
+    /* The tour (lessons 11, 21, 22): the page's dim and the target's ring come
+       with the card's throw (400 ms on the shove) and go with its throw back:
+       after the card's 300 ms dissolve, 400 ms on the shove's inverse,
+       shrinking back into the target. */
+    [data-theme='phantom'] {
+        --kp-tour-dim-close: 0 0 0 0 transparent;
+        --kp-tour-dim-time: 400ms;
+        --kp-tour-dim-close-ease: cubic-bezier(1, 0, 0.19, 1);
+        --kp-tour-dim-close-delay: 300ms;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] [data-kp-tour-target] {
+            animation: kp-sig-phantom-tour-ring 400ms cubic-bezier(0.81, 0, 0, 1) backwards;
+            transition:
+                box-shadow 400ms cubic-bezier(0.81, 0, 0, 1),
+                outline-color 400ms cubic-bezier(0.81, 0, 0, 1);
+        }
+    }
+
+    @keyframes kp-sig-phantom-tour-ring {
+        from {
+            outline-color: transparent;
+        }
+    }
+
+    /* The command palette is thrown onto the board as the dialog is (it is
+       a dialog of its own class, so it had only the package's fade);
+       js/motion.js keeps a dialog's entrance and plays it backwards to close. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] .kp-palette {
+            mask-size: 7px 7px;
+            animation:
+                kp-sig-phantom-fly 700ms linear backwards,
+                kp-sig-phantom-resolve 700ms linear backwards;
+        }
+    }
+
+    /* The date picker's panel and the combobox's list are thrown from the
+       edge of what opens them and resolve, as a menu is; they land level, as
+       they stood (no askew pose of their own to land in). */
+    [data-theme='phantom'] :is(.kp-datepicker__panel, .kp-combobox__list) {
+        --kp-sig-dur: 700ms;
+        --kp-sig-ph-x0: -1.6rem;
+        --kp-sig-ph-y0: -2.4rem;
+        --kp-sig-ph-r0: -9deg;
+        --kp-sig-ph-s0: 1;
+        --kp-sig-ph-land: 0deg;
+    }
+
+    [data-theme='phantom']:dir(rtl) :is(.kp-datepicker__panel, .kp-combobox__list) {
+        --kp-sig-ph-x0: 1.6rem;
+        --kp-sig-ph-r0: 9deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] :is(.kp-datepicker__panel, .kp-combobox__list) {
+            mask-size: 7px 7px;
+            animation:
+                kp-sig-phantom-fly var(--kp-sig-dur) linear backwards,
+                kp-sig-phantom-resolve var(--kp-sig-dur) linear backwards;
+        }
+
+        /* The date picker moves the focus onto a day the moment it opens; a
+           panel that is `visibility: hidden` for the throw's first instant
+           cannot take it, and the keyboard was left outside (Escape no longer
+           reached it). The panel stays drawn (as its 25 % screen, off its
+           anchor) from that first instant; an important declaration outranks
+           the keyframes. */
+        [data-theme='phantom'] .kp-datepicker__panel {
+            visibility: visible !important;
+        }
+
+        /* The combobox's list inside a dialog-like surface stays part of it. */
+        [data-theme='phantom'] :is(.kp-dialog, .kp-popover, .kp-toast, .kp-confirm, .kp-palette) .kp-combobox__list {
+            animation: none;
+        }
+    }
+
+    /* The busy table dims as its layer resolves over it and comes up as the
+       layer dissolves: the dim is part of the pair, in the resolve's three
+       hard cuts (400 ms in, after the throw; at once on the way back, the
+       cuts the other way round), never a fade. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] :is(.kp-datatable, .kp-datatable .kp-table tbody) {
+            transition: opacity 300ms steps(3, jump-start);
+        }
+
+        [data-theme='phantom'] :is(.kp-datatable[aria-busy='true'], .kp-datatable[aria-busy='true'] .kp-table tbody) {
+            transition: opacity 300ms steps(3, jump-end) 400ms;
+        }
+    }
+
+    /* The calendar's busy layers (the month's plate and a day's star) are
+       thrown in and resolve, and leave by the dissolve and snatch on
+       `[data-kp-leaving]` (the leave above): js/calendar.js marks a layer
+       while its state goes (`--kp-calendar-busy-leave: hold`, cyberpunk's
+       mechanism) and the rules below keep it drawn through the 700 ms. They
+       land level, as they stand. */
+    [data-theme='phantom'] :is(.kp-calendar__day-busy, .kp-calendar__busy) {
+        --kp-sig-ph-land: 0deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] :is(.kp-calendar__day-busy, .kp-calendar__busy) {
+            --kp-calendar-busy-leave: hold;
+            mask-size: 7px 7px;
+            transition: none;
+        }
+
+        [data-theme='phantom']
+            :is(.kp-calendar--busy-days, .kp-calendar--busy-whole:not(:has(> .kp-calendar__grid[aria-busy='true'])))
+            .kp-calendar__day[data-kp-tone='loading']
+            > .kp-calendar__day-busy,
+        [data-theme='phantom'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy {
+            animation:
+                kp-sig-phantom-fly 700ms linear backwards,
+                kp-sig-phantom-resolve 700ms linear backwards;
+        }
+
+        [data-theme='phantom'] .kp-calendar__day:has(> .kp-calendar__day-busy[data-kp-leaving]) {
+            position: relative;
+        }
+
+        [data-theme='phantom'] .kp-calendar__day-busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-spinner, 0.75rem);
+            position: absolute;
+            inset-inline: 0;
+            inset-block-end: 0.125rem;
+            display: flex;
+            justify-content: center;
+            line-height: 0;
+        }
+
+        [data-theme='phantom'] .kp-calendar--busy-whole > .kp-calendar__busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-busy-spinner, 2.5rem);
+            z-index: 1;
+            display: grid;
+            place-self: center;
+            place-items: center;
+            padding: var(--kp-space-md, 1rem);
+            border-radius: var(--radius, 0.5rem);
+            background: var(--card);
+            box-shadow: 0 0 0 1px var(--border);
+            line-height: 0;
+        }
+    }
+
+    /* The side navigation's backdrop comes and goes on the panel's own clock
+       (contact, 120 ms, the shove), not the package's 220 ms, so panel and
+       dim start and end together and the close mirrors the opening. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] .kp-sidenav__backdrop {
+            animation: kp-sidenav-backdrop 120ms cubic-bezier(0.81, 0, 0, 1) both;
+        }
+    }
+
+    /* ── The bar (coordinator, 2026-10-12; lessons 36, 38): the hover dropdown
+       was thrown in but closed at once (Firefox does not hold `display`), the
+       mega menu went at once, the phone bar's panel had no motion. Each is
+       now thrown in and resolves (700 ms) and leaves by the dissolve and
+       snatch, the throw backwards. The dropdown is held for that by
+       js/components.js (`--kp-nav-close-time`), the mega menu while a
+       transition runs on it (--kp-sig-ph-hold), the phone bar's panel for
+       `--kp-nav-close-time`. ── */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] {
+            --kp-nav-close-time: 700ms;
+        }
+
+        [data-theme='phantom'] .kp-nav__menu {
+            --kp-sig-ph-hold: 0;
+            transition: --kp-sig-ph-hold 700ms linear;
+        }
+
+        [data-theme='phantom']
+            :is(
+                .kp-nav__links > li:is(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+                .kp-nav__links > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide
+            ) {
+            --kp-sig-ph-hold: 1;
+            animation:
+                kp-sig-phantom-fly 700ms linear backwards,
+                kp-sig-phantom-resolve 700ms linear backwards;
+        }
+
+        [data-theme='phantom']
+            .kp-nav__links
+            > li[data-kp-nav-closing]:not(:hover, :focus-within, [data-kp-nav-menu-open])
+            > .kp-nav__menu:not(.kp-nav__menu--wide) {
+            display: block;
+            opacity: 1;
+            animation:
+                kp-sig-phantom-fly-out 700ms linear forwards,
+                kp-sig-phantom-resolve-out 700ms linear forwards;
+        }
+
+        [data-theme='phantom']
+            .kp-nav__links
+            > li[data-kp-nav-closing]:not([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true']))
+            > .kp-nav__menu--wide {
+            animation:
+                kp-sig-phantom-fly-out 700ms linear forwards,
+                kp-sig-phantom-resolve-out 700ms linear forwards;
+        }
+    }
+
+    @container kp-nav (max-width: 40rem) {
+        /* Collapsed, the lists nested in the open panel are its own rows: they
+           come with it and play nothing of their own. */
+        [data-theme='phantom'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links .kp-nav__menu {
+            animation: none;
+            transition: none;
+        }
+
+        /* The panel is thrown from the toggle's side as a menu is and lands
+           level, as it stands. */
+        [data-theme='phantom'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links {
+            --kp-sig-ph-x0: -1.6rem;
+            --kp-sig-ph-y0: -2.4rem;
+            --kp-sig-ph-r0: -9deg;
+            --kp-sig-ph-s0: 1;
+            --kp-sig-ph-land: 0deg;
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+            [data-theme='phantom'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
+                mask-size: 7px 7px;
+                animation:
+                    kp-sig-phantom-fly 700ms linear backwards,
+                    kp-sig-phantom-resolve 700ms linear backwards;
+            }
+
+            [data-theme='phantom'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__links {
+                mask-size: 7px 7px;
+                animation:
+                    kp-sig-phantom-fly-out 700ms linear forwards,
+                    kp-sig-phantom-resolve-out 700ms linear forwards;
+            }
+        }
+    }
+
+    /* A reader who asked for no motion gets no close to wait for. */
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='phantom'] {
+            --kp-nav-close-time: 0ms;
         }
     }
 }

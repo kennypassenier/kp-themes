@@ -23,6 +23,10 @@ copy one structured answer back into the conversation [scope-141].
 `data-review-themes` is optional; without it the dialog walks all 22 themes
 in the registry's order.
 
+A section can name its own themes, `data-review-themes="formal,light"`: the dialog then asks it only in those
+themes (a demo of what changed per theme, research/all-themes-applied). Without it a section is asked in every
+theme the demo walks.
+
 Catalogue blocks can ride along as a last step, each in its own theme
 (shown through `block.html`, which copies the block's stages from the
 catalogue page itself):

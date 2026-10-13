@@ -610,3 +610,7 @@ clear of all seven. Grotesk in particular shares brutalism's black structure,
 Archivo and hard steps: brutalism takes the shadow, gravity, the diagonal,
 the pour and the slam; grotesk is left the grid, the cut, the sideways shove
 and sentence case.
+
+## Applied 2026-10-13
+
+All-themes pass (close = open reversed, the drop on every part that opens; `research/all-themes/reports/brutalism.md`). Mechanism tokens at the signature root (`--kp-leave-state: leave`, `--kp-arrive-unseen: skip`, `--kp-leave-fold-grow: 1`, `--kp-leave-fold-start: 0`); a tree branch is kept drawn while it shuts. Dropped onto their footprint and lifted off as that drop played backwards (G3, G12), where they faded, did nothing or closed at once: the command palette (the dialog's 15-unit drop and its holding backdrop), the combobox list and the date picker panel (3 units), the bar's hover dropdown and mega menu (`--kp-nav-close-time: 300ms`); the phone bar's list, which has no slab, is set down and lifted off as a part. The tour's veil grows out of its target in solid ink with the card's drop and shrinks back with its lift, the ring drawn in and out on the same 3 units. The calendar's busy card is dropped and lifted as a slab, a day's block as a part. The side navigation's backdrop takes the panel's 100 ms (it is still the package's fade, which G1 does not allow: open for Kenny).

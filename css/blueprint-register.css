@@ -69,6 +69,27 @@
     initial-value: 0;
 }
 
+/* --kp-bp-ink is whether a traced panel's contents are inked (1) or not yet
+   (0): the trace hides the panel's own box by `visibility`, but its contents
+   stay visible to focus and are painted by this number, so a dialog, the
+   palette and the date picker take the focus they are opened with while the
+   pen still draws (all-themes, 2026-10-13: the focus fell to <body>). */
+/* --kp-bp-hold is a clock with nothing drawn on it: the bar's mega menu is
+   held on screen until a transition on its panel has played
+   (js/components.js), and this is that transition, the length of its
+   close. */
+@property --kp-bp-hold {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+}
+
+@property --kp-bp-ink {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
 @layer kp.register {
     /* @kp-soft/themes — css/blueprint-register.css
    The blueprint register, 5.0.0 [S48, LIFT_PLAN row 6]: a technical
@@ -178,6 +199,17 @@
            other themes'). */
         --kp-close-max: 800ms;
         --kp-size-max: 480ms;
+        /* A part a script removes or hides (the busy table's layer, a file
+           row, a tree's children, a re-shown alert) is read out on its
+           scales as it leaves, as it arrives: js/motion.js leavesState()
+           (lessons 19, 37). What takes no box arrives as nothing, so it holds
+           back no visible part of its row (lesson 23). The space a leave
+           folds shut takes the leave's own time and starts with it, so the
+           pair is one stroke of one length (lesson 24). */
+        --kp-leave-state: leave;
+        --kp-arrive-unseen: skip;
+        --kp-leave-fold-grow: 1;
+        --kp-leave-fold-start: 0;
     }
 
     /* ── Type ──────────────────────────────────────────────────────────── */
@@ -1056,6 +1088,15 @@
         font-size: 0.9rem;
     }
 
+    /* A branch's children glide open and shut on the plotter's feed
+       (js/motion.js glideGroup(), lesson 26). Shutting, the state is already
+       `aria-expanded="false"` and the group is kept drawn until the glide is
+       over, so the shut is the open played backwards. */
+    [data-theme='blueprint'] .kp-tree [role='treeitem'][aria-expanded='false'] > [role='group'][data-kp-group-folding],
+    [data-theme='blueprint'] .kp-tree [role='treeitem'][aria-expanded='false'] + [role='group'][data-kp-group-folding] {
+        display: block;
+    }
+
     /* The accordion [gap-12]: the drafting mono its category toggle and tree use. */
     [data-theme='blueprint'] .kp-accordion__summary {
         font-family: var(--theme-font-mono);
@@ -1327,6 +1368,17 @@
         --kp-sidenav-surface: var(--card);
         --kp-sidenav-gap: 0;
         border-inline-end: 1px solid var(--border-strong);
+    }
+
+    /* The backdrop dims in the panel's own time (1 unit, the register's
+       `--fx-duration`) and on its feed: the package's literal 220 ms against a
+       160 ms panel made the close no mirror of the open (lesson 31 checked: no
+       clip cuts the content; it slides out of the frame whole). A literal, for
+       the flash check that reads it. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] .kp-sidenav__backdrop {
+            animation-duration: 160ms;
+        }
     }
 
     [data-theme='blueprint'] .kp-sidenav__title {
@@ -2077,6 +2129,14 @@
         }
     }
 
+    /* A reader who asked for no motion gets no close of the bar's menus to wait
+       for (js/components.js otherwise waits its own 300 ms). */
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='blueprint'] {
+            --kp-nav-close-time: 0ms;
+        }
+    }
+
     /* ── The meter with a mark, this theme's way [picked by Kenny on
        research/character-meter, round 3, 2026-10-05: shape 3, while
        loading 1, how the share arrives 1, when the tone changes 1,
@@ -2331,6 +2391,7 @@
        filled or up hollow) placed by the percent trick, so its centre runs inside
        the box with 8 px to spare on every side and nothing needs the box's size. */
     [data-theme='blueprint'] :is([data-kp-leaving], [data-kp-arriving]):not(.kp-meter, .kp-kpi__meter)::after,
+    [data-theme='blueprint'] :is(.kp-calendar__busy, .kp-calendar__day-busy)::after,
     [data-theme='blueprint'] :is(.kp-meter, .kp-kpi__meter)::before,
     [data-theme='blueprint'] .kp-dialog::after,
     [data-theme='blueprint'] .kp-popover:not(.kp-tooltip)::after,
@@ -2338,6 +2399,8 @@
     [data-theme='blueprint'] .kp-combobox__list::after,
     [data-theme='blueprint'] .kp-datepicker__panel::after,
     [data-theme='blueprint'] .kp-toast::after,
+    [data-theme='blueprint'] :is(.kp-palette, .kp-tour, .kp-nav__menu)::after,
+    [data-theme='blueprint'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links::after,
     [data-theme='blueprint'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block)::after,
     [data-theme='blueprint'] .kp-skeleton--block::after,
     [data-theme='blueprint'] .kp-skeleton--circle::before,
@@ -2375,7 +2438,8 @@
         background-repeat: no-repeat;
     }
 
-    [data-theme='blueprint'] :is([data-kp-leaving], [data-kp-arriving]):not(.kp-meter, .kp-kpi__meter)::after {
+    [data-theme='blueprint'] :is([data-kp-leaving], [data-kp-arriving]):not(.kp-meter, .kp-kpi__meter)::after,
+    [data-theme='blueprint'] :is(.kp-calendar__busy, .kp-calendar__day-busy)::after {
         --kp-bp-px: var(--kp-bp-rp);
         --kp-bp-py: var(--kp-bp-rp);
         inset: 0;
@@ -2518,6 +2582,202 @@
                 --kp-bp-rv: 0;
             }
         }
+
+        /* The same reading under a second name, for a leave that follows an arrival on the same part. */
+        @keyframes kp-sig-blueprint-read-out {
+            0% {
+                visibility: hidden;
+                --kp-bp-rp: 0;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 0;
+                --kp-bp-rv: 0;
+            }
+
+            0.1% {
+                visibility: visible;
+                --kp-bp-rp: 0;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 1;
+                --kp-bp-rv: 0;
+            }
+
+            10% {
+                --kp-bp-rp: 0;
+                --kp-bp-nib: 1;
+                --kp-bp-pv: 1;
+                --kp-bp-rv: 1;
+                animation-timing-function: var(--kp-sig-bp-feed);
+            }
+
+            90% {
+                --kp-bp-rp: 1;
+                --kp-bp-nib: 1;
+                --kp-bp-pv: 1;
+                --kp-bp-rv: 1;
+                animation-timing-function: linear;
+            }
+
+            92% {
+                --kp-bp-rp: 1;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 1;
+                --kp-bp-rv: 1;
+            }
+
+            99.9% {
+                --kp-bp-rp: 1;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 1;
+                --kp-bp-rv: 1;
+            }
+
+            100% {
+                --kp-bp-rp: 1;
+                --kp-bp-nib: 0;
+                --kp-bp-pv: 0;
+                --kp-bp-rv: 0;
+            }
+        }
+    }
+
+    /* A refreshing table and the rows it keeps are dimmed with its busy layer,
+       in the layer's own time and on the feed, and come back with its leave: the
+       sheet under a transparent busy plate is most of what the pair changes,
+       so a dim in one frame made the close no mirror of the open (all-themes,
+       2026-10-13). The dim lifts while the layer is marked leaving, as the
+       dimming played backwards (the feed is its own mirror image). */
+    @media (prefers-reduced-motion: no-preference) {
+        /* Two dims stand while a table is busy: the whole table's (css/layout.css,
+           `--kp-busy-opacity`) and its rows' (`--kp-datatable-busy-opacity`). */
+        [data-theme='blueprint'] .kp-datatable[aria-busy='true'] {
+            --kp-bp-dim: var(--kp-busy-opacity, 0.7);
+        }
+
+        [data-theme='blueprint'] .kp-datatable .kp-table tbody {
+            --kp-bp-dim: var(--kp-datatable-busy-opacity, 0.55);
+        }
+
+        [data-theme='blueprint'] :is(.kp-datatable[aria-busy='true'], .kp-datatable[aria-busy='true'] .kp-table tbody) {
+            animation: kp-sig-blueprint-busy-dim var(--kp-sig-bp-part) var(--kp-sig-bp-feed) backwards;
+        }
+
+        [data-theme='blueprint']
+            :is(
+                .kp-datatable:not([aria-busy='true']):has(> .kp-datatable__busy-overlay[data-kp-leaving]),
+                .kp-datatable:not([aria-busy='true']):has(> .kp-datatable__busy-overlay[data-kp-leaving]) .kp-table tbody
+            ) {
+            --kp-bp-dim: var(--kp-busy-opacity, 0.7);
+            animation: kp-sig-blueprint-busy-dim-out var(--kp-sig-bp-part) var(--kp-sig-bp-feed) reverse backwards;
+        }
+
+        [data-theme='blueprint'] .kp-datatable:not([aria-busy='true']):has(> .kp-datatable__busy-overlay[data-kp-leaving]) .kp-table tbody {
+            --kp-bp-dim: var(--kp-datatable-busy-opacity, 0.55);
+        }
+
+        @keyframes kp-sig-blueprint-busy-dim {
+            from {
+                opacity: 1;
+            }
+        }
+
+        @keyframes kp-sig-blueprint-busy-dim-out {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: var(--kp-bp-dim);
+            }
+        }
+
+        /* The busy layer lies over the rows (absolute, css/components.css); the
+           reading's `position: relative` for every part that arrives or leaves
+           put it under the table for the length of its arrival and its leave,
+           where it folded space of its own (lesson 5). (0,4,0), after it. */
+        [data-theme='blueprint'] .kp-datatable > .kp-datatable__busy-overlay:is([data-kp-leaving], [data-kp-arriving]) {
+            position: absolute;
+        }
+    }
+
+    /* The calendar's busy layers (the whole grid's card and a day's compass)
+       arrive and leave as a part does: read out on their scales, 3 units
+       (480 ms), the leave that reading played backwards (all-themes,
+       2026-10-13; it was the package's 160 ms opacity fade in and nothing
+       out). js/calendar.js marks a layer `[data-kp-leaving]` while its state
+       goes (`--kp-calendar-busy-leave: hold`, lesson 37) and the rules below
+       keep it drawn through the leave. The layers' reading stands at 1 at
+       rest, so the mask that inks their lines shows them whole once the
+       arrival has played. */
+    [data-theme='blueprint'] :is(.kp-calendar__busy, .kp-calendar__day-busy) {
+        --kp-calendar-busy-leave: hold;
+        --kp-bp-rp: 1;
+    }
+
+    [data-theme='blueprint'] .kp-calendar--busy-whole > .kp-calendar__busy {
+        position: relative;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] :is(.kp-calendar__busy, .kp-calendar__day-busy) {
+            transition: none;
+            mask-image:
+                linear-gradient(var(--foreground), var(--foreground)), linear-gradient(var(--foreground), var(--foreground)),
+                linear-gradient(var(--foreground), var(--foreground));
+            mask-origin: content-box, border-box, content-box;
+            mask-clip: content-box, border-box, content-box;
+            mask-size:
+                100% round(up, calc(var(--kp-bp-rp) * 100%), 1lh),
+                100% 100%,
+                100% 100%;
+            mask-position: 0 0;
+            mask-repeat: no-repeat;
+            mask-composite: add, subtract, add;
+        }
+
+        [data-theme='blueprint']
+            :is(.kp-calendar--busy-days, .kp-calendar--busy-whole:not(:has(> .kp-calendar__grid[aria-busy='true'])))
+            .kp-calendar__day[data-kp-tone='loading']
+            > .kp-calendar__day-busy,
+        [data-theme='blueprint'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy {
+            animation: kp-sig-blueprint-read var(--kp-sig-bp-part) linear backwards;
+        }
+
+        /* The reading under a second name, so the browser restarts it: the
+           arrival's own animation is still on the layer, finished, and only
+           turning its direction would show its first frame at once. (0,4,0),
+           after the general leave, which names the first. */
+        [data-theme='blueprint'] .kp-calendar > .kp-calendar__busy[data-kp-leaving],
+        [data-theme='blueprint'] .kp-calendar__day > .kp-calendar__day-busy[data-kp-leaving] {
+            animation: kp-sig-blueprint-read-out var(--kp-sig-bp-part) linear reverse forwards;
+        }
+
+        [data-theme='blueprint'] .kp-calendar__day:has(> .kp-calendar__day-busy[data-kp-leaving]) {
+            position: relative;
+        }
+
+        /* (0,4,0), after the general leave's `position: relative`, so the day's compass stays on its line. */
+        [data-theme='blueprint'] .kp-calendar__day > .kp-calendar__day-busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-spinner, 0.75rem);
+            position: absolute;
+            inset-inline: 0;
+            inset-block-end: 0.125rem;
+            display: flex;
+            justify-content: center;
+            line-height: 0;
+        }
+
+        [data-theme='blueprint'] .kp-calendar--busy-whole > .kp-calendar__busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-busy-spinner, 2.5rem);
+            z-index: 1;
+            display: grid;
+            place-self: center;
+            place-items: center;
+            padding: var(--kp-space-md, 1rem);
+            border-radius: var(--radius, 0.5rem);
+            background: var(--card);
+            box-shadow: 0 0 0 1px var(--border);
+            line-height: 0;
+        }
     }
 
     [data-theme='blueprint'] .kp-dialog::after,
@@ -2525,7 +2785,9 @@
     [data-theme='blueprint'] .kp-menu-button > .kp-menu::after,
     [data-theme='blueprint'] .kp-combobox__list::after,
     [data-theme='blueprint'] .kp-datepicker__panel::after,
-    [data-theme='blueprint'] .kp-toast::after {
+    [data-theme='blueprint'] .kp-toast::after,
+    [data-theme='blueprint'] :is(.kp-palette, .kp-tour, .kp-nav__menu)::after,
+    [data-theme='blueprint'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links::after {
         --kp-bp-px: calc(clamp(0, var(--kp-bp-r), 1) - clamp(0, var(--kp-bp-r) - 2, 1));
         --kp-bp-py: calc(clamp(0, var(--kp-bp-r) - 1, 1) - clamp(0, var(--kp-bp-r) - 3, 1));
         inset: -9px;
@@ -2572,11 +2834,165 @@
             --kp-bp-ov: visible;
         }
 
-        /* A panel that floats over the sheet opens by its own trace at once: the
-           leave turned around would start the pen only after the space it folds
-           (466 ms of nothing), which a floating list or a toast has none of. */
-        [data-theme='blueprint'] :is(.kp-combobox__list, .kp-toast) {
+        /* The parts that take the focus as they open (a dialog, the drawer, the
+           palette, the date picker, the tour's card, the bar's menus, whose links
+           the next Tab reaches while the pen still draws) keep their contents visible
+           to it while the trace hides their box, and paint them only when the
+           panel is inked (`--kp-bp-ink`, written by the trace's keyframes). A
+           hidden box hides nothing it holds from the focus this way, and the
+           picture is the same: nothing of the panel but the pen until the ink. */
+        [data-theme='blueprint']
+            :is(
+                .kp-dialog:not(.kp-alarm),
+                .kp-palette,
+                .kp-datepicker__panel,
+                .kp-tour,
+                .kp-nav__menu,
+                .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links
+            )
+            > * {
+            visibility: visible;
+            opacity: var(--kp-bp-ink);
+        }
+
+        /* A list that floats over the sheet opens by its own trace at once: it
+           folds no space, so the leave turned around has nothing to play but the
+           pen. A toast does fold its space in the stack: since the fold starts
+           with the leave and lasts as long (`--kp-leave-fold-start: 0`,
+           `--kp-leave-fold-grow: 1`), it arrives as its leave played backwards,
+           trace and space together, the pair's mirror (all-themes, 2026-10-13). */
+        [data-theme='blueprint'] .kp-combobox__list {
             --kp-open: normal;
+        }
+
+        /* The rest of what opens is drawn the same way [G3; all-themes,
+           2026-10-13, lesson 38: these opened by the package's bare fade, or
+           by nothing]. The command palette is a dialog: its entrance is kept by
+           js/motion.js and its close plays it backwards, as the dialog's. The
+           tour's card is an overlay sheet: traced as it opens, played backwards
+           by js/tour.js as the tour ends; a step is no arrival (it walks on the
+           feed, css/components.css) and no news, so the ruler of a reading
+           (`[data-kp-updating='read']`) is not set under it and its
+           `position: relative` never reaches the fixed card (lesson 5). */
+        [data-theme='blueprint'] .kp-palette {
+            --kp-bp-ov: hidden;
+            animation: kp-sig-blueprint-trace var(--kp-sig-bp-panel) linear backwards;
+        }
+
+        [data-theme='blueprint'] .kp-tour[open]:not([data-kp-tour-stepping]) {
+            animation: kp-sig-blueprint-trace var(--kp-sig-bp-panel) linear backwards;
+        }
+
+        [data-theme='blueprint'] .kp-tour[data-kp-tour-stepping] {
+            animation: none;
+        }
+
+        [data-theme='blueprint'] .kp-tour[data-kp-updating] {
+            position: fixed;
+        }
+
+        [data-theme='blueprint'] .kp-tour[data-kp-updating]::after {
+            animation: none;
+            background-image: none;
+        }
+
+        /* The page's dim grows out of the target and the ring is drawn in on the
+           card's own time and feed; css/components.css takes both back on the
+           same time (`--kp-tour-dim-time`), shrinking into the target
+           (`--kp-tour-dim-close`) on the feed, which is its own mirror image
+           (`--kp-tour-dim-close-ease`). `backwards`, not `both`: a ring a
+           finished animation holds cannot be taken back by the transition
+           (lesson 21). */
+        [data-theme='blueprint'] {
+            --kp-tour-dim-close: 0 0 0 0 transparent;
+            --kp-tour-dim-time: var(--kp-sig-bp-panel);
+            --kp-tour-dim-close-ease: var(--kp-sig-bp-feed);
+        }
+
+        [data-theme='blueprint'] [data-kp-tour-target] {
+            animation: kp-sig-blueprint-tour-ring var(--kp-sig-bp-panel) var(--kp-sig-bp-feed) backwards;
+            transition:
+                box-shadow var(--kp-sig-bp-panel) var(--kp-sig-bp-feed),
+                outline-color var(--kp-sig-bp-panel) var(--kp-sig-bp-feed);
+        }
+
+        @keyframes kp-sig-blueprint-tour-ring {
+            from {
+                outline-color: transparent;
+            }
+        }
+
+        /* The bar's dropdown and mega menu are the header's menu [G3]: traced from
+           their top-start corner as they open, the drawing backwards as they
+           close. Once the pointer or the focus has left a dropdown, js/components.js
+           marks its item `[data-kp-nav-closing]` for `--kp-nav-close-time` (Firefox
+           does not hold `display`, lesson 36) and the rule below keeps it drawn;
+           the mega menu's item is held until a transition on the panel has
+           played, which is the `--kp-bp-hold` below. The package's opacity fade
+           is replaced: one mechanism per part. */
+        [data-theme='blueprint'] .kp-nav__menu {
+            --kp-bp-ov: visible;
+            --kp-bp-hold: 0;
+            transition: --kp-bp-hold var(--kp-sig-bp-panel) linear;
+        }
+
+        [data-theme='blueprint']
+            :is(
+                .kp-nav__links > li:is(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+                .kp-nav__links > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide
+            ) {
+            --kp-bp-hold: 1;
+            animation: kp-sig-blueprint-trace var(--kp-sig-bp-panel) linear backwards;
+        }
+
+        [data-theme='blueprint']
+            .kp-nav__links
+            > li[data-kp-nav-closing]:not(:hover, :focus-within, [data-kp-nav-menu-open])
+            > .kp-nav__menu:not(.kp-nav__menu--wide) {
+            display: block;
+            opacity: 1;
+            animation: kp-sig-blueprint-trace-out var(--kp-sig-bp-panel) linear reverse forwards;
+        }
+
+        [data-theme='blueprint']
+            .kp-nav__links
+            > li[data-kp-nav-closing]:not([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true']))
+            > .kp-nav__menu--wide {
+            animation: kp-sig-blueprint-trace-out var(--kp-sig-bp-panel) linear reverse forwards;
+        }
+
+        /* A plain time: js/components.js reads it as a number (a panel's 5 units). */
+        [data-theme='blueprint'] {
+            --kp-nav-close-time: 800ms;
+        }
+
+        /* On a phone the bar's menu is its list of links under the toggle: traced
+           as it opens and drawn backwards as it closes, in the same 5 units
+           (js/components.js keeps it open `--kp-nav-close-time` while
+           `[data-kp-nav-closing]`). The lists nested in it are its own rows and
+           draw nothing of their own. */
+        @container kp-nav (max-width: 40rem) {
+            [data-theme='blueprint'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links {
+                --kp-bp-ov: visible;
+                position: relative;
+            }
+
+            [data-theme='blueprint'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
+                animation: kp-sig-blueprint-trace var(--kp-sig-bp-panel) linear backwards;
+            }
+
+            [data-theme='blueprint'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__links {
+                animation: kp-sig-blueprint-trace-out var(--kp-sig-bp-panel) linear reverse forwards;
+            }
+
+            [data-theme='blueprint'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu {
+                animation: none;
+                transition: none;
+            }
+
+            [data-theme='blueprint'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu::after {
+                content: none;
+            }
         }
 
         [data-theme='blueprint']
@@ -2591,6 +3007,7 @@
             0% {
                 visibility: hidden;
                 overflow: visible;
+                --kp-bp-ink: 0;
                 --kp-bp-r: 0;
                 --kp-bp-nib: 0;
                 --kp-bp-pv: 0;
@@ -2628,6 +3045,7 @@
             74.9% {
                 visibility: hidden;
                 overflow: visible;
+                --kp-bp-ink: 0;
                 --kp-bp-r: 4;
                 --kp-bp-nib: 1;
                 --kp-bp-pv: 1;
@@ -2637,6 +3055,7 @@
             75% {
                 visibility: visible;
                 overflow: var(--kp-bp-ov, auto);
+                --kp-bp-ink: 1;
                 --kp-bp-r: 4;
                 --kp-bp-nib: 0;
                 --kp-bp-pv: 0;
@@ -2646,6 +3065,7 @@
             100% {
                 visibility: visible;
                 overflow: var(--kp-bp-ov, auto);
+                --kp-bp-ink: 1;
                 --kp-bp-r: 4;
                 --kp-bp-nib: 0;
                 --kp-bp-pv: 0;
@@ -2657,6 +3077,7 @@
             0% {
                 visibility: hidden;
                 overflow: visible;
+                --kp-bp-ink: 0;
                 --kp-bp-r: 0;
                 --kp-bp-nib: 0;
                 --kp-bp-pv: 0;
@@ -2694,6 +3115,7 @@
             74.9% {
                 visibility: hidden;
                 overflow: visible;
+                --kp-bp-ink: 0;
                 --kp-bp-r: 4;
                 --kp-bp-nib: 1;
                 --kp-bp-pv: 1;
@@ -2703,6 +3125,7 @@
             75% {
                 visibility: visible;
                 overflow: var(--kp-bp-ov, auto);
+                --kp-bp-ink: 1;
                 --kp-bp-r: 4;
                 --kp-bp-nib: 0;
                 --kp-bp-pv: 0;
@@ -2712,6 +3135,7 @@
             100% {
                 visibility: visible;
                 overflow: var(--kp-bp-ov, auto);
+                --kp-bp-ink: 1;
                 --kp-bp-r: 4;
                 --kp-bp-nib: 0;
                 --kp-bp-pv: 0;

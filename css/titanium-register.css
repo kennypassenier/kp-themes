@@ -1,3 +1,13 @@
+/* The header's mega menu is held on screen while a transition on its panel runs
+   (js/components.js settleClosing): this number is that transition, 1 open and 0
+   shut, run over the panel's cut. At the top level because Firefox does not
+   register an @property inside a layer (all-themes audit, 2026-10-13). */
+@property --kp-sig-ti-hold {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+}
+
 @layer kp.register {
     /* @kp-soft/themes — css/titanium-register.css
    The titanium register, 6.0.0 [scope-17, scope-21]. Scoped to
@@ -2325,12 +2335,29 @@
            in the close's time, and lets what arrives play this leave backwards. */
         [data-theme='titanium'] {
             --kp-open: reverse-close;
+            /* A part a script removes or hides (the busy table's layer, an empty
+               state, a file row, a re-shown alert) cools away first, as it arrives
+               (js/motion.js leavesState(), lessons 19, 23, 24, 37); what takes no
+               box arrives as nothing; the space a leave folds shut closes with it
+               from its first frame (its defaults, 1.25 times the leave starting a
+               third in, are other themes'). */
+            --kp-leave-state: leave;
+            --kp-arrive-unseen: skip;
+            --kp-leave-fold-grow: 1;
+            --kp-leave-fold-start: 0;
         }
 
         [data-theme='titanium'] [data-kp-leaving] {
             position: relative;
             overflow: clip;
             animation: kp-sig-titanium-leave 400ms var(--kp-sig-ti-ease) forwards;
+        }
+
+        /* The busy table's layer stands where it stood while it cools away and as it
+           arrives (the rule above made it relative, so it dropped below the table
+           into the flow and folded a space of its own: 150 % off, round 2). */
+        [data-theme='titanium'] .kp-datatable__busy-overlay[data-kp-leaving] {
+            position: absolute;
         }
 
         [data-theme='titanium'] [data-kp-leaving]::after {
@@ -2371,6 +2398,435 @@
                 opacity: 1;
                 background-position: 0% 0;
             }
+        }
+    }
+
+    /* ── Every pair closes as its open reversed [all-themes audit, 2026-10-13;
+       lessons 11, 19, 21, 22, 26, 31, 36, 38] ─────────────────────────────
+       What drops from a trigger is cut top-down [G3]: the popover, the menu,
+       the combobox's list, the date picker's panel, the palette, the tour's
+       card and the header's dropdown, mega menu and phone panel open by the
+       dialog's cut (the panel uncovered from its top edge down, the cutter's
+       line running ahead of it in the second oxide), in the cut's 240 ms on the
+       theme curve, and close as that cut played backwards. Most had no motion
+       (popovers, menus, the list, the panel, the header); the palette faded. */
+    [data-theme='titanium'] {
+        --kp-sig-ti-panel: 240ms;
+        /* The theme curve turned round (1 - f(1 - x)): what a transition back
+           takes so frame t of the going is frame (T - t) of the coming. */
+        --kp-sig-ti-ease-back: cubic-bezier(0.8, 0, 0.8, 0.2);
+        /* The tour's dim and ring come in on the card's cut and go back the same
+           way, to no shadow at all. */
+        --kp-tour-dim-close: 0 0 0 0 transparent;
+        --kp-tour-dim-time: var(--kp-sig-ti-panel);
+        --kp-tour-dim-close-ease: var(--kp-sig-ti-ease-back);
+        /* The header's hover dropdown and its phone panel are held on screen for
+           their close (js/components.js; Firefox does not hold `display`). */
+        --kp-nav-close-time: 240ms;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='titanium'] {
+            --kp-nav-close-time: 0ms;
+        }
+    }
+
+    /* A tree branch's children glide open and shut (js/motion.js glideGroup());
+       shutting, the state is already `aria-expanded="false"` and the group is
+       kept drawn until the glide is over. They went at once. */
+    [data-theme='titanium'] .kp-tree [role='treeitem'][aria-expanded='false'] > [role='group'][data-kp-group-folding],
+    [data-theme='titanium'] .kp-tree [role='treeitem'][aria-expanded='false'] + [role='group'][data-kp-group-folding] {
+        display: block;
+    }
+
+    /* The rows under the busy layer are the same pair as the layer [round 2,
+       2026-10-13]: their dim and their bath came and went with `aria-busy`, at
+       once, so the open showed bathed, dimmed rows under the arriving layer and
+       the close plain rows under the leaving one (142 % off at frame 16/20).
+       The bath now stays while the layer is there, leaving included, and the dim
+       goes in the layer's own fade (the last 120 ms of its 400 ms cooling, on
+       the theme curve) and comes in as that fade backwards (the first 120 ms, on
+       the curve turned round). */
+    [data-theme='titanium'] .kp-datatable:has(> .kp-datatable__busy-overlay) .kp-table tbody tr:not([data-kp-skeleton-row]) {
+        background: var(--kp-sig-ti-bath), var(--card);
+    }
+
+    [data-theme='titanium'] .kp-datatable:has(> .kp-datatable__busy-overlay) .kp-table tbody tr:not([data-kp-skeleton-row]) > td {
+        background: transparent;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] .kp-datatable:has(> .kp-datatable__busy-overlay) .kp-table tbody tr:not([data-kp-skeleton-row]) {
+            animation: kp-sig-titanium-bath var(--kp-sig-ti-loop) linear infinite;
+        }
+
+        /* Two dims stand while a table is busy: the whole table's (css/layout.css,
+           `--kp-busy-opacity`) and its rows' (`--kp-datatable-busy-opacity`). */
+        /* The table keeps the package's resize character (outline, filter) beside it. */
+        [data-theme='titanium'] .kp-datatable:has(> .kp-datatable__busy-overlay) {
+            transition:
+                outline-color calc(var(--kp-resize-dur, 300ms) / 2) ease-out,
+                outline-offset calc(var(--kp-resize-dur, 300ms) / 2) ease-out,
+                filter calc(var(--kp-resize-dur, 300ms) / 2) ease-out,
+                opacity 120ms var(--kp-sig-ti-ease) 280ms;
+        }
+
+        [data-theme='titanium'] .kp-datatable[aria-busy='true']:has(> .kp-datatable__busy-overlay) {
+            transition:
+                outline-color calc(var(--kp-resize-dur, 300ms) / 2) ease-out,
+                outline-offset calc(var(--kp-resize-dur, 300ms) / 2) ease-out,
+                filter calc(var(--kp-resize-dur, 300ms) / 2) ease-out,
+                opacity 120ms var(--kp-sig-ti-ease-back) 0ms;
+        }
+
+        [data-theme='titanium'] .kp-datatable:has(> .kp-datatable__busy-overlay) .kp-table tbody {
+            transition: opacity 120ms var(--kp-sig-ti-ease) 280ms;
+        }
+
+        [data-theme='titanium'] .kp-datatable[aria-busy='true']:has(> .kp-datatable__busy-overlay) .kp-table tbody {
+            transition: opacity 120ms var(--kp-sig-ti-ease-back) 0ms;
+        }
+    }
+
+    /* One loading picture: while the busy table's layer stands over the rows, the
+       status line's small spinner stays out (forest and cyberpunk, lesson 23): it
+       arrived on its own and was removed at once. */
+    [data-theme='titanium'] .kp-datatable:has(> .kp-datatable__busy-overlay) .kp-datatable__status > .kp-spinner {
+        display: none;
+    }
+
+    /* The cutter's line on every panel that is cut open (the dialog's own is above). */
+    [data-theme='titanium']
+        :is(
+            .kp-popover[popover]:not(.kp-tooltip),
+            .kp-menu-button > .kp-menu,
+            .kp-combobox__list,
+            .kp-datepicker__panel,
+            .kp-palette,
+            .kp-shortcuts,
+            .kp-tour,
+            .kp-nav__links > li > .kp-nav__menu
+        )::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-block-end: 2px solid var(--chart-2);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium']
+            :is(
+                .kp-popover[popover]:popover-open,
+                .kp-menu-button > .kp-menu:not([hidden]),
+                .kp-combobox__list:popover-open,
+                .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open
+            ):not(.kp-tooltip) {
+            animation: kp-sig-titanium-panel-cut var(--kp-sig-ti-panel) var(--kp-sig-ti-ease) backwards;
+        }
+
+        [data-theme='titanium']
+            :is(
+                .kp-popover[popover]:popover-open,
+                .kp-menu-button > .kp-menu:not([hidden]),
+                .kp-combobox__list:popover-open,
+                .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open
+            ):not(.kp-tooltip)::after {
+            animation: kp-sig-titanium-ti-cutter var(--kp-sig-ti-panel) var(--kp-sig-ti-ease);
+        }
+
+        /* The list is cut open as its own entrance, not as the leave turned around. */
+        [data-theme='titanium'] .kp-combobox__list {
+            --kp-open: own;
+        }
+
+        /* The palette and the shortcuts sheet are dialogs: the dialog's time
+           (js/motion.js plays two thirds of it, and its close backwards). */
+        [data-theme='titanium'] :is(.kp-palette, .kp-shortcuts) {
+            --kp-sig-dur: 240ms;
+            animation: kp-sig-titanium-panel-cut var(--kp-sig-dur) var(--kp-sig-ti-ease) backwards;
+        }
+
+        [data-theme='titanium'] :is(.kp-palette, .kp-shortcuts)::after {
+            animation: kp-sig-titanium-ti-cutter var(--kp-sig-dur) var(--kp-sig-ti-ease);
+        }
+
+        /* The tour: the card is cut open; the dim grows out of the target and the
+           ring is drawn in on the same cut, and css/components.css takes both back
+           on the curve turned round. They came in 160, 250 and 350 ms and went in
+           1000. `backwards`, not `both` (lesson 21). */
+        [data-theme='titanium'] .kp-tour[open]:not([data-kp-tour-stepping]) {
+            animation: kp-sig-titanium-panel-cut var(--kp-sig-ti-panel) var(--kp-sig-ti-ease) backwards;
+        }
+
+        [data-theme='titanium'] .kp-tour[open]:not([data-kp-tour-stepping])::after {
+            animation: kp-sig-titanium-ti-cutter var(--kp-sig-ti-panel) var(--kp-sig-ti-ease);
+        }
+
+        [data-theme='titanium'] [data-kp-tour-target] {
+            animation: kp-sig-titanium-tour-ring var(--kp-sig-ti-panel) var(--kp-sig-ti-ease) backwards;
+            transition:
+                box-shadow var(--kp-sig-ti-panel) var(--kp-sig-ti-ease),
+                outline-color var(--kp-sig-ti-panel) var(--kp-sig-ti-ease);
+        }
+
+        [data-theme='titanium'] .kp-tour[data-kp-tour-stepping] {
+            animation: none;
+            transition:
+                left var(--kp-sig-ti-panel) var(--kp-sig-ti-ease),
+                top var(--kp-sig-ti-panel) var(--kp-sig-ti-ease);
+        }
+
+        [data-theme='titanium'] .kp-tour[data-kp-tour-stepping]::after {
+            animation: none;
+        }
+
+        /* The side navigation slides in the cut's band, with its backdrop: the
+           panel ran 60 ms (the contact band, `--fx-duration`) under a 220 ms
+           backdrop, so the close was not the open reversed (52 % off). */
+        [data-theme='titanium'] .kp-sidenav {
+            --kp-sidenav-duration: var(--kp-sig-ti-panel);
+        }
+
+        [data-theme='titanium'] .kp-sidenav__backdrop {
+            animation-duration: var(--kp-sig-ti-panel);
+        }
+
+        /* The calendar's busy layers arrive as the leave played backwards and cool
+           away as they go: js/calendar.js marks a layer `[data-kp-leaving]` while
+           its state goes (`--kp-calendar-busy-leave: hold`), and the rules below
+           keep it drawn through the 400 ms of that leave. They came in by a 60 ms
+           fade and vanished at once. */
+        [data-theme='titanium'] :is(.kp-calendar__day-busy, .kp-calendar__busy) {
+            --kp-calendar-busy-leave: hold;
+            transition: none;
+        }
+
+        [data-theme='titanium']
+            :is(.kp-calendar--busy-days, .kp-calendar--busy-whole:not(:has(> .kp-calendar__grid[aria-busy='true'])))
+            .kp-calendar__day[data-kp-tone='loading']
+            > .kp-calendar__day-busy:not([data-kp-leaving]),
+        [data-theme='titanium'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy:not([data-kp-leaving]) {
+            animation: kp-sig-titanium-leave-in 400ms var(--kp-sig-ti-ease) reverse backwards;
+        }
+
+        [data-theme='titanium'] .kp-calendar--busy-whole > .kp-calendar__busy {
+            position: relative;
+        }
+
+        [data-theme='titanium']
+            :is(.kp-calendar--busy-days, .kp-calendar--busy-whole:not(:has(> .kp-calendar__grid[aria-busy='true'])))
+            .kp-calendar__day[data-kp-tone='loading']
+            > .kp-calendar__day-busy:not([data-kp-leaving])::after,
+        [data-theme='titanium'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy:not([data-kp-leaving])::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 2;
+            background: linear-gradient(110deg, var(--warning-foreground), var(--chart-2), var(--chart-1), var(--chart-3));
+            background-size: 300% 100%;
+            mix-blend-mode: color;
+            opacity: 0;
+            animation: kp-sig-titanium-leave-2-in 400ms var(--kp-sig-ti-ease) reverse backwards;
+        }
+
+        [data-theme='titanium'] .kp-calendar__day:has(> .kp-calendar__day-busy[data-kp-leaving]) {
+            position: relative;
+        }
+
+        [data-theme='titanium'] .kp-calendar__day-busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-spinner, 0.75rem);
+            position: absolute;
+            inset-inline: 0;
+            inset-block-end: 0.125rem;
+            display: flex;
+            justify-content: center;
+            line-height: 0;
+        }
+
+        [data-theme='titanium'] .kp-calendar--busy-whole > .kp-calendar__busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-busy-spinner, 2.5rem);
+            z-index: 1;
+            display: grid;
+            place-self: center;
+            place-items: center;
+            padding: var(--kp-space-md, 1rem);
+            border-radius: var(--radius, 0.5rem);
+            background: var(--card);
+            box-shadow: 0 0 0 1px var(--border);
+            line-height: 0;
+        }
+
+        /* The header: the dropdown and the mega menu are cut open as a menu is and
+           cut shut as that played backwards (a second keyframes name, so the close
+           restarts); the bar holds the panel through its close. */
+        [data-theme='titanium'] .kp-nav__menu:not(.kp-nav__menu--wide) {
+            transition: none;
+        }
+
+        [data-theme='titanium'] .kp-nav__menu--wide {
+            --kp-sig-ti-hold: 0;
+            transition: --kp-sig-ti-hold var(--kp-sig-ti-panel) linear;
+        }
+
+        [data-theme='titanium']
+            :is(
+                .kp-nav__links > li:is(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+                .kp-nav__links > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide
+            ) {
+            --kp-sig-ti-hold: 1;
+            animation: kp-sig-titanium-panel-cut var(--kp-sig-ti-panel) var(--kp-sig-ti-ease) backwards;
+        }
+
+        [data-theme='titanium']
+            :is(
+                .kp-nav__links > li:is(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+                .kp-nav__links > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide
+            )::after {
+            animation: kp-sig-titanium-ti-cutter var(--kp-sig-ti-panel) var(--kp-sig-ti-ease);
+        }
+
+        [data-theme='titanium']
+            .kp-nav__links
+            > li[data-kp-nav-closing]:not(:hover, :focus-within, [data-kp-nav-menu-open])
+            > .kp-nav__menu:not(.kp-nav__menu--wide) {
+            display: block;
+            opacity: 1;
+        }
+
+        [data-theme='titanium']
+            :is(
+                .kp-nav__links > li[data-kp-nav-closing]:not(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+                .kp-nav__links
+                    > li[data-kp-nav-closing]:not([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true']))
+                    > .kp-nav__menu--wide
+            ) {
+            animation: kp-sig-titanium-panel-cut-back var(--kp-sig-ti-panel) var(--kp-sig-ti-ease) reverse forwards;
+        }
+
+        [data-theme='titanium']
+            :is(
+                .kp-nav__links > li[data-kp-nav-closing]:not(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+                .kp-nav__links
+                    > li[data-kp-nav-closing]:not([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true']))
+                    > .kp-nav__menu--wide
+            )::after {
+            animation: kp-sig-titanium-ti-cutter-back var(--kp-sig-ti-panel) var(--kp-sig-ti-ease) reverse forwards;
+        }
+
+        /* The phone panel is cut open under the bar the same way (it had no motion). */
+        @container kp-nav (max-width: 40rem) {
+            [data-theme='titanium'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links {
+                position: relative;
+            }
+
+            [data-theme='titanium'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                border-block-end: 2px solid var(--chart-2);
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            [data-theme='titanium'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
+                animation: kp-sig-titanium-panel-cut var(--kp-sig-ti-panel) var(--kp-sig-ti-ease) backwards;
+            }
+
+            [data-theme='titanium'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links::after {
+                animation: kp-sig-titanium-ti-cutter var(--kp-sig-ti-panel) var(--kp-sig-ti-ease);
+            }
+
+            [data-theme='titanium'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__links {
+                animation: kp-sig-titanium-panel-cut-back var(--kp-sig-ti-panel) var(--kp-sig-ti-ease) reverse forwards;
+            }
+
+            [data-theme='titanium'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__links::after {
+                animation: kp-sig-titanium-ti-cutter-back var(--kp-sig-ti-panel) var(--kp-sig-ti-ease) reverse forwards;
+            }
+
+            /* Inside the open panel the lists are its own rows: no cut of their own. */
+            [data-theme='titanium'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__links > li > .kp-nav__menu.kp-nav__menu {
+                animation: none;
+                transition: none;
+            }
+
+            [data-theme='titanium'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__links > li > .kp-nav__menu.kp-nav__menu::after {
+                content: none;
+            }
+        }
+    }
+
+    /* A panel uncovered from its top edge down; its shadow keeps room at the sides
+       and the foot. */
+    @keyframes kp-sig-titanium-panel-cut {
+        from {
+            clip-path: inset(0 -3rem 100% -3rem);
+        }
+
+        to {
+            clip-path: inset(0 -3rem -3rem -3rem);
+        }
+    }
+
+    /* The same cut and cutter under second names, for a close that plays them
+       backwards and must restart (lesson 8). */
+    @keyframes kp-sig-titanium-panel-cut-back {
+        from {
+            clip-path: inset(0 -3rem 100% -3rem);
+        }
+
+        to {
+            clip-path: inset(0 -3rem -3rem -3rem);
+        }
+    }
+
+    @keyframes kp-sig-titanium-ti-cutter-back {
+        from {
+            opacity: 1;
+            transform: translateY(-100%);
+        }
+
+        to {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    @keyframes kp-sig-titanium-tour-ring {
+        from {
+            outline-color: transparent;
+        }
+    }
+
+    /* The leave and its heat under second names, for a busy layer that arrives
+       and then leaves (an arrival that turns into its leave must restart). */
+    @keyframes kp-sig-titanium-leave-in {
+        0%,
+        70% {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
+
+    @keyframes kp-sig-titanium-leave-2-in {
+        from {
+            opacity: 0;
+            background-position: 100% 0;
+        }
+
+        20% {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 1;
+            background-position: 0% 0;
         }
     }
 
@@ -2775,15 +3231,15 @@
             animation: kp-sig-titanium-bath var(--kp-sig-ti-loop) linear infinite;
         }
 
-        [data-theme='titanium'] .kp-datatable[aria-busy='true'] .kp-table tbody tr:nth-child(2) {
+        [data-theme='titanium'] .kp-datatable:is([aria-busy='true'], :has(> .kp-datatable__busy-overlay)) .kp-table tbody tr:nth-child(2) {
             animation-delay: -440ms;
         }
 
-        [data-theme='titanium'] .kp-datatable[aria-busy='true'] .kp-table tbody tr:nth-child(3) {
+        [data-theme='titanium'] .kp-datatable:is([aria-busy='true'], :has(> .kp-datatable__busy-overlay)) .kp-table tbody tr:nth-child(3) {
             animation-delay: -880ms;
         }
 
-        [data-theme='titanium'] .kp-datatable[aria-busy='true'] .kp-table tbody tr:nth-child(4) {
+        [data-theme='titanium'] .kp-datatable:is([aria-busy='true'], :has(> .kp-datatable__busy-overlay)) .kp-table tbody tr:nth-child(4) {
             animation-delay: -1320ms;
         }
     }

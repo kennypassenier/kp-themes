@@ -484,3 +484,7 @@ this table and the five before it are read first, so its recommendations
 steer clear of all six. Brutalism in particular picked _Dropped in_,
 _Slammed down_ and hard offset shadows: it should not take solstice's dome or
 eclipse, and solstice has left it the drop from above and the hard edge.
+
+## Applied 2026-10-13
+
+All-themes pass (close = open reversed, the register's own entrance on every part that opens; `research/all-themes/reports/solstice.md`). Mechanism tokens at the root (`--kp-leave-state: leave`, `--kp-arrive-unseen: skip`, `--kp-leave-fold-grow: 1`, `--kp-leave-fold-start: 0`); a tree branch is kept drawn while it shuts. The register's existing entrances were carried to the parts that lacked one, at their own times: the dialog's dawn (560 ms) to the command palette and the tour's card (its dim and ring on the same 560 ms and curve, back on the curve turned round); the popover's rise (640 ms) to the combobox list, the date picker panel, the bar's hover dropdown and mega menu (`--kp-nav-close-time: 640ms`) and the phone bar's list. The calendar's busy layers and a busy table's two dims come out of the morning mist and go into it (540 ms). The side navigation's backdrop takes the panel's 240 ms. Not done here: G3's kindled dome (480 ms) is still not built for any part; the register's rise and dawn stand in for it.

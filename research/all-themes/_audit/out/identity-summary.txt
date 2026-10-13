@@ -1,0 +1,256 @@
+
+## blueprint
+  dialog            open OWN  close OWN 
+  drawer            open OWN  close OWN 
+  palette           open OWN  close OWN 
+  alarm             open OWN  close OWN 
+  datepicker        open OWN  close OWN   ASYM open[kp-sig-blueprint-trace] close[kp-sig-blueprint-trace-out]
+  combobox          open OWN  close OWN   ASYM open[kp-sig-blueprint-trace] close[kp-sig-blueprint-trace-out]
+  theme-menu        open OWN  close OWN   ASYM open[kp-sig-blueprint-trace] close[kp-sig-blueprint-trace-out]
+  row-actions       open OWN  close OWN   ASYM open[kp-sig-blueprint-trace] close[kp-sig-blueprint-trace-out]
+  tour              open OWN  close OWN   ASYM open[box-shadow,kp-sig-blueprint-tour-ring,kp-sig-blueprint-trace,outline-color] close[box-shadow,kp-sig-blueprint-trace,outline-color]
+  sidenav           open OWN  close OWN 
+  desktop-dropdown  open OWN  close OWN   ASYM open[kp-sig-blueprint-trace] close[--kp-bp-hold,kp-sig-blueprint-trace-out]
+  desktop-mega      open OWN  close OWN   ASYM open[kp-sig-blueprint-trace] close[--kp-bp-hold,kp-sig-blueprint-trace-out]
+  phone-frame       open OWN  close OWN   ASYM open[kp-sig-blueprint-trace] close[kp-sig-blueprint-trace-out]
+  phone-390         open OWN  close OWN   ASYM open[kp-sig-blueprint-trace] close[kp-sig-blueprint-trace-out]
+
+## brutalism
+  dialog            open OWN  close OWN 
+  drawer            open OWN  close OWN 
+  palette           open OWN  close OWN 
+  alarm             open OWN  close OWN 
+  datepicker        open OWN  close OWN 
+  combobox          open OWN  close OWN 
+  theme-menu        open OWN  close OWN 
+  row-actions       open OWN  close OWN 
+  tour              open OWN  close OWN   ASYM open[kp-sig-brutalism-drop,kp-sig-brutalism-tour-veil] close[box-shadow,kp-sig-brutalism-drop,outline-color]
+  sidenav           open OWN  close OWN 
+  desktop-dropdown  open OWN  close OWN   ASYM open[kp-sig-brutalism-drop] close[--kp-sig-br-hold,kp-sig-brutalism-drop]
+  desktop-mega      open OWN  close OWN   ASYM open[kp-sig-brutalism-drop] close[--kp-sig-br-hold,kp-sig-brutalism-drop]
+  phone-frame       open OWN  close OWN 
+  phone-390         open OWN  close OWN 
+
+## cyberpunk
+  dialog            open OWN  close OWN 
+  drawer            open OWN  close OWN 
+  palette           open OWN  close OWN   ASYM open[--kp-cp-ft,backgroundColor,kp-sig-cyberpunk-split (script)] close[backgroundColor,kp-sig-cyberpunk-split (script)]
+  alarm             open OWN  close OWN 
+  datepicker        open OWN  close OWN 
+  combobox          open OWN  close OWN 
+  theme-menu        open OWN  close OWN 
+  row-actions       open OWN  close OWN 
+  tour              open OWN  close OWN   ASYM open[box-shadow,kp-sig-cyberpunk-split,kp-sig-cyberpunk-tour-ring,outline-color] close[box-shadow,kp-sig-cyberpunk-split,outline-color]
+  sidenav           open OWN  close OWN 
+  desktop-dropdown  open OWN  close OWN   ASYM open[kp-sig-cyberpunk-split] close[--kp-cp-hold,kp-sig-cyberpunk-split]
+  desktop-mega      open OWN  close OWN   ASYM open[kp-sig-cyberpunk-split] close[--kp-cp-hold,kp-sig-cyberpunk-split]
+  phone-frame       open OWN  close OWN 
+  phone-390         open OWN  close OWN 
+
+## dark
+  dialog            open OWN  close OWN 
+  drawer            open OWN  close OWN 
+  palette           open OWN  close OWN 
+  alarm             open OWN  close OWN 
+  datepicker        open OWN  close OWN 
+  combobox          open OWN  close OWN 
+  theme-menu        open OWN  close OWN 
+  row-actions       open OWN  close OWN 
+  tour              open OWN  close OWN   ASYM open[box-shadow,kp-sig-dark-film,kp-sig-dark-pass-line,kp-sig-dark-sweep,kp-sig-dark-tour-ring,outline-color] close[box-shadow,kp-sig-dark-film,kp-sig-dark-pass-line,kp-sig-dark-sweep,outline-color]
+  sidenav           open OWN  close OWN 
+  desktop-dropdown  open OWN  close OWN 
+  desktop-mega      open OWN  close OWN   ASYM open[kp-sig-dark-film,kp-sig-dark-pass-line,kp-sig-dark-sweep] close[--kp-sig-dk-hold,kp-sig-dark-film,kp-sig-dark-pass-line,kp-sig-dark-sweep]
+  phone-frame       open OWN  close OWN 
+  phone-390         open OWN  close OWN 
+
+## deco
+  dialog            open OWN  close OWN 
+  drawer            open OWN  close OWN 
+  palette           open OWN  close OWN 
+  alarm             open OWN  close OWN 
+  datepicker        open OWN  close OWN 
+  combobox          open OWN  close OWN 
+  theme-menu        open OWN  close OWN 
+  row-actions       open OWN  close OWN 
+  tour              open OWN  close OWN   ASYM open[box-shadow,kp-sig-deco-arrive,kp-sig-deco-tour-ring,outline-color] close[box-shadow,kp-sig-deco-arrive,outline-color]
+  sidenav           open OWN  close OWN 
+  desktop-dropdown  open OWN  close OWN   ASYM open[kp-sig-deco-arrive] close[--kp-sig-deco-hold,kp-sig-deco-arrive]
+  desktop-mega      open OWN  close OWN   ASYM open[kp-sig-deco-arrive] close[--kp-sig-deco-hold,kp-sig-deco-arrive]
+  phone-frame       open OWN  close OWN 
+  phone-390         open OWN  close OWN 
+
+## forest
+  dialog            open OWN  close OWN 
+  drawer            open OWN  close OWN 
+  palette           open OWN  close OWN 
+  alarm             open OWN  close OWN 
+  datepicker        open OWN  close OWN 
+  combobox          open OWN  close OWN 
+  theme-menu        open OWN  close OWN 
+  row-actions       open OWN  close OWN 
+  tour              open OWN  close OWN   ASYM open[box-shadow,kp-sig-forest-arrive,kp-sig-forest-tour-ring,outline-color] close[box-shadow,kp-sig-forest-arrive,outline-color]
+  sidenav           open OWN  close OWN   ASYM open[kp-sig-forest-fade,translate] close[clip-path,kp-sig-forest-fade,translate]
+  desktop-dropdown  open OWN  close NONE  ASYM open[clip-path,translate] close[]
+  desktop-mega      open OWN  close OWN 
+  phone-frame       open OWN  close OWN 
+  phone-390         open OWN  close OWN 
+
+## formal
+  dialog            open OWN  close OWN 
+  drawer            open OWN  close OWN 
+  palette           open OWN  close OWN 
+  alarm             open OWN  close OWN 
+  datepicker        open OWN  close OWN 
+  combobox          open OWN  close OWN 
+  theme-menu        open OWN  close OWN 
+  row-actions       open OWN  close OWN 
+  tour              open OWN  close OWN   ASYM open[box-shadow,kp-sig-formal-line,kp-sig-formal-pen,kp-sig-formal-tour-ring,outline-color] close[box-shadow,kp-sig-formal-line,kp-sig-formal-pen,outline-color]
+  sidenav           open OWN  close OWN 
+  desktop-dropdown  open OWN  close OWN 
+  desktop-mega      open OWN  close OWN 
+  phone-frame       open OWN  close OWN 
+  phone-390         open OWN  close OWN 
+
+## grotesk
+  dialog            open OWN  close OWN   ASYM open[kp-sig-grotesk-fall,kp-sig-grotesk-gr-rule-set,kp-sig-grotesk-hold] close[kp-sig-cyberpunk-split-bar (script),kp-sig-grotesk-gr-rule-set,opacity,transform]
+  drawer            open OWN  close OWN   ASYM open[kp-sig-grotesk-fall,kp-sig-grotesk-gr-rule-set,kp-sig-grotesk-hold] close[kp-sig-cyberpunk-split-bar (script),kp-sig-grotesk-gr-rule-set,opacity,transform]
+  palette           open OWN  close OWN   ASYM open[kp-sig-grotesk-fall,kp-sig-grotesk-hold] close[kp-sig-cyberpunk-split-bar (script),opacity]
+  alarm             open OWN  close OWN   ASYM open[kp-sig-grotesk-fall,kp-sig-grotesk-hold] close[kp-sig-cyberpunk-split-bar (script),opacity]
+  datepicker        open OWN  close OWN 
+  combobox          open OWN  close OWN 
+  theme-menu        open OWN  close OWN 
+  row-actions       open OWN  close OWN 
+  tour              open OWN  close OWN 
+  sidenav           open OWN  close OWN   ASYM open[kp-sig-grotesk-fall,kp-sig-grotesk-hold,kp-sig-grotesk-slide] close[kp-sig-grotesk-fall,kp-sig-grotesk-hold,kp-sig-grotesk-slide,visibility]
+  desktop-dropdown  open OWN  close OWN   ASYM open[kp-sig-grotesk-fall] close[--kp-sig-gr-hold,kp-sig-grotesk-fall]
+  desktop-mega      open OWN  close OWN   ASYM open[kp-sig-grotesk-fall] close[--kp-sig-gr-hold,kp-sig-grotesk-fall]
+  phone-frame       open OWN  close OWN 
+  phone-390         open OWN  close OWN 
+
+## light
+  dialog            open OWN  close OWN 
+  drawer            open OWN  close OWN 
+  palette           open OWN  close OWN 
+  alarm             open OWN  close OWN 
+  datepicker        open OWN  close OWN 
+  combobox          open OWN  close OWN 
+  theme-menu        open OWN  close OWN 
+  row-actions       open OWN  close OWN 
+  tour              open OWN  close OWN   ASYM open[box-shadow,kp-sig-light-expose,kp-sig-light-tour-ring,outline-color] close[box-shadow,kp-sig-light-expose,outline-color]
+  sidenav           open OWN  close OWN 
+  desktop-dropdown  open OWN  close OWN 
+  desktop-mega      open OWN  close OWN 
+  phone-frame       open OWN  close OWN 
+  phone-390         open OWN  close OWN 
+
+## nostromo
+  dialog            open OWN  close OWN 
+  drawer            open OWN  close OWN 
+  palette           open OWN  close OWN 
+  alarm             open OWN  close OWN 
+  datepicker        open OWN  close OWN 
+  combobox          open OWN  close OWN 
+  theme-menu        open OWN  close OWN 
+  row-actions       open OWN  close OWN 
+  tour              open OWN  close OWN 
+  sidenav           open OWN  close OWN   ASYM open[kp-sidenav-backdrop,kp-sig-nostromo-beam-layer,kp-sig-nostromo-raster] close[kp-sidenav-backdrop,kp-sig-nostromo-beam-layer-erase,kp-sig-nostromo-erase,translate,visibility]
+  desktop-dropdown  open OWN  close OWN   ASYM open[kp-sig-nostromo-beam-layer,kp-sig-nostromo-raster] close[--kp-sig-no-hold,kp-sig-nostromo-beam-layer-erase,kp-sig-nostromo-erase]
+  desktop-mega      open OWN  close OWN   ASYM open[kp-sig-nostromo-beam-layer,kp-sig-nostromo-raster] close[--kp-sig-no-hold,kp-sig-nostromo-beam-layer-erase,kp-sig-nostromo-erase]
+  phone-frame       open OWN  close OWN   ASYM open[kp-sig-nostromo-beam-layer,kp-sig-nostromo-raster] close[kp-sig-nostromo-beam-layer-erase,kp-sig-nostromo-erase]
+  phone-390         open OWN  close OWN   ASYM open[kp-sig-nostromo-beam-layer,kp-sig-nostromo-raster] close[kp-sig-nostromo-beam-layer-erase,kp-sig-nostromo-erase]
+
+## pastel
+  dialog            open OWN  close OWN 
+  drawer            open OWN  close OWN 
+  palette           open FADE close FADE
+  alarm             open OWN  close OWN   ASYM open[backgroundSize,opacity,rotate,transform,translate] close[backgroundSize,opacity,transform]
+  datepicker        open NONE close NONE
+  combobox          open NONE close NONE
+  theme-menu        open NONE close NONE
+  row-actions       open NONE close NONE
+  tour              open OWN  close OWN   ASYM open[box-shadow,kp-sig-pastel-tour-ring,kp-tour-in,outline-color] close[box-shadow,kp-tour-in,outline-color]
+  sidenav           open OWN  close OWN 
+  desktop-dropdown  open FADE close NONE  ASYM open[opacity] close[]
+  desktop-mega      open NONE close NONE
+  phone-frame       open NONE close NONE
+  phone-390         open NONE close NONE
+
+## phantom
+  dialog            open OWN  close OWN   ASYM open[maskImage,opacity,rotate,scale,translate,visibility] close[kp-sig-phantom-ink,maskImage,opacity,rotate,scale,translate,visibility]
+  drawer            open OWN  close OWN 
+  palette           open OWN  close OWN 
+  alarm             open OWN  close OWN   ASYM open[opacity,scale,translate] close[kp-sig-phantom-ink,opacity,scale,translate]
+  datepicker        open OWN  close OWN 
+  combobox          open OWN  close OWN 
+  theme-menu        open OWN  close OWN 
+  row-actions       open OWN  close OWN   ASYM open[kp-sig-phantom-bar,kp-sig-phantom-fly,kp-sig-phantom-resolve,translate] close[kp-sig-phantom-fly,kp-sig-phantom-ink,kp-sig-phantom-resolve]
+  tour              open OWN  close OWN   ASYM open[box-shadow,kp-sig-phantom-fly,kp-sig-phantom-ink,kp-sig-phantom-resolve,kp-sig-phantom-tour-ring,outline-color] close[box-shadow,kp-sig-phantom-fly,kp-sig-phantom-ink,kp-sig-phantom-resolve,outline-color]
+  sidenav           open OWN  close OWN   ASYM open[kp-sidenav-backdrop,kp-sig-phantom-bar,kp-sig-phantom-ink,translate] close[kp-sidenav-backdrop,kp-sig-phantom-ink,translate]
+  desktop-dropdown  open OWN  close OWN   ASYM open[kp-sig-phantom-fly,kp-sig-phantom-resolve] close[--kp-sig-ph-hold,kp-sig-phantom-fly-out,kp-sig-phantom-resolve-out]
+  desktop-mega      open OWN  close OWN   ASYM open[kp-sig-phantom-bar,kp-sig-phantom-fly,kp-sig-phantom-resolve] close[--kp-sig-ph-hold,kp-sig-phantom-bar,kp-sig-phantom-fly-out,kp-sig-phantom-resolve-out]
+  phone-frame       open OWN  close OWN   ASYM open[kp-sig-phantom-fly,kp-sig-phantom-resolve] close[kp-sig-phantom-fly-out,kp-sig-phantom-resolve-out]
+  phone-390         open OWN  close OWN   ASYM open[kp-sig-phantom-fly,kp-sig-phantom-resolve] close[kp-sig-phantom-fly-out,kp-sig-phantom-resolve-out]
+
+## solstice
+  dialog            open OWN  close OWN 
+  drawer            open OWN  close OWN 
+  palette           open OWN  close OWN 
+  alarm             open OWN  close OWN 
+  datepicker        open OWN  close OWN 
+  combobox          open OWN  close OWN 
+  theme-menu        open OWN  close OWN 
+  row-actions       open OWN  close OWN 
+  tour              open OWN  close OWN   ASYM open[box-shadow,kp-sig-solstice-solstice-dawn,kp-sig-solstice-tour-ring,outline-color] close[box-shadow,kp-sig-solstice-solstice-dawn,outline-color]
+  sidenav           open OWN  close OWN 
+  desktop-dropdown  open OWN  close OWN   ASYM open[kp-sig-solstice-solstice-rise] close[--kp-sig-solstice-hold,kp-sig-solstice-solstice-rise]
+  desktop-mega      open OWN  close OWN   ASYM open[kp-sig-solstice-solstice-rise] close[--kp-sig-solstice-hold,kp-sig-solstice-solstice-rise]
+  phone-frame       open OWN  close OWN 
+  phone-390         open OWN  close OWN 
+
+## synthwave
+  dialog            open OWN  close OWN 
+  drawer            open OWN  close OWN 
+  palette           open OWN  close OWN 
+  alarm             open OWN  close OWN 
+  datepicker        open OWN  close OWN 
+  combobox          open OWN  close OWN 
+  theme-menu        open OWN  close OWN 
+  row-actions       open OWN  close OWN 
+  tour              open OWN  close OWN   ASYM open[box-shadow,kp-sig-synthwave-beam,kp-sig-synthwave-climb,kp-sig-synthwave-glow,kp-sig-synthwave-tour-ring,outline-color] close[box-shadow,kp-sig-synthwave-beam,kp-sig-synthwave-climb,kp-sig-synthwave-glow,outline-color]
+  sidenav           open OWN  close OWN   ASYM open[kp-sidenav-backdrop,kp-sun-cut,translate] close[kp-sidenav-backdrop,translate]
+  desktop-dropdown  open OWN  close OWN 
+  desktop-mega      open OWN  close OWN 
+  phone-frame       open OWN  close OWN 
+  phone-390         open OWN  close OWN 
+
+## terminal
+  dialog            open OWN  close OWN 
+  drawer            open OWN  close OWN 
+  palette           open OWN  close OWN 
+  alarm             open OWN  close OWN 
+  datepicker        open OWN  close OWN 
+  combobox          open OWN  close OWN 
+  theme-menu        open OWN  close OWN 
+  row-actions       open OWN  close OWN 
+  tour              open OWN  close OWN   ASYM open[box-shadow,kp-sig-terminal-tm-menu,kp-sig-terminal-tm-menu-feed,kp-sig-terminal-tour-ring,outline-color] close[box-shadow,kp-sig-terminal-tm-menu,kp-sig-terminal-tm-menu-feed,outline-color]
+  sidenav           open OWN  close OWN 
+  desktop-dropdown  open OWN  close OWN 
+  desktop-mega      open OWN  close OWN   ASYM open[kp-sig-terminal-tm-menu,kp-sig-terminal-tm-menu-feed] close[--kp-sig-tm-hold,kp-sig-terminal-tm-menu,kp-sig-terminal-tm-menu-feed]
+  phone-frame       open OWN  close OWN 
+  phone-390         open OWN  close OWN 
+
+## titanium
+  dialog            open OWN  close OWN 
+  drawer            open OWN  close OWN 
+  palette           open OWN  close OWN 
+  alarm             open OWN  close OWN 
+  datepicker        open OWN  close OWN 
+  combobox          open OWN  close OWN 
+  theme-menu        open OWN  close OWN 
+  row-actions       open OWN  close OWN 
+  tour              open OWN  close OWN   ASYM open[box-shadow,kp-sig-titanium-panel-cut,kp-sig-titanium-ti-cutter,kp-sig-titanium-tour-ring,outline-color] close[box-shadow,kp-sig-titanium-panel-cut,kp-sig-titanium-ti-cutter,outline-color]
+  sidenav           open OWN  close OWN 
+  desktop-dropdown  open OWN  close OWN 
+  desktop-mega      open OWN  close OWN   ASYM open[kp-sig-titanium-panel-cut,kp-sig-titanium-ti-cutter] close[--kp-sig-ti-hold,kp-sig-titanium-panel-cut,kp-sig-titanium-ti-cutter]
+  phone-frame       open OWN  close OWN 
+  phone-390         open OWN  close OWN 

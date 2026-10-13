@@ -541,6 +541,13 @@ function closePopoverWithGhost(event) {
     const box = el.getBoundingClientRect();
     if (box.width === 0 && box.height === 0) return;
     const sized = getComputedStyle(el);
+    // A turned panel (phantom's tilt) draws a bounding box larger than itself: the copy, which turns the
+    // same way, goes where the layout box is, centred in the drawn one (at the corner it sat 2 px off).
+    // A panel that is not turned keeps the drawn box as it is.
+    const matrix = sized.transform === 'none' ? null : new DOMMatrixReadOnly(sized.transform);
+    const isTurned = (matrix !== null && (Math.abs(matrix.b) > 1e-3 || Math.abs(matrix.c) > 1e-3)) || (sized.rotate !== 'none' && sized.rotate !== '0deg');
+    const turned =
+        isTurned && el instanceof HTMLElement ? { x: (box.width - el.offsetWidth) / 2, y: (box.height - el.offsetHeight) / 2 } : { x: 0, y: 0 };
     const ghost = /** @type {HTMLElement} */ (el.cloneNode(true));
     for (const one of [ghost, ...ghost.querySelectorAll('[id]')]) one.removeAttribute('id');
     ghost.setAttribute('aria-hidden', 'true');
@@ -550,8 +557,8 @@ function closePopoverWithGhost(event) {
     Object.assign(ghost.style, {
         position: 'fixed',
         inset: 'auto',
-        top: `${box.top}px`,
-        left: `${box.left}px`,
+        top: `${box.top + turned.y}px`,
+        left: `${box.left + turned.x}px`,
         width: sized.width,
         height: sized.height,
         margin: '0',

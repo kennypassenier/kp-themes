@@ -15,6 +15,15 @@
     initial-value: 1;
 }
 
+/* The header's mega menu is held on screen while a transition on its panel runs
+   (js/components.js settleClosing): this number is that transition, 1 open and 0
+   shut, run over the menu's print (all-themes audit, 2026-10-13). */
+@property --kp-sig-tm-hold {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+}
+
 @layer kp.register {
     /* @kp-soft/themes — css/terminal-register.css
    The terminal register, 5.0.0 [S48, LIFT_PLAN row 4]: the phosphor CRT.
@@ -2367,7 +2376,7 @@
     }
 
     /* The cursor stands at the start of the line being printed. */
-    [data-theme='terminal'] .kp-dialog::after {
+    [data-theme='terminal'] :is(.kp-dialog, .kp-palette, .kp-shortcuts)::after {
         content: '';
         position: absolute;
         inset-block-start: 1.25rem;
@@ -2387,7 +2396,8 @@
 
     /* The cursor at the line a menu or popover is printing; at rest it is not
        drawn (nothing sits on a part that is not waiting, G16). */
-    [data-theme='terminal'] :is(.kp-popover[popover], .kp-menu-button > .kp-menu):not(.kp-tooltip)::before {
+    [data-theme='terminal'] :is(.kp-popover[popover], .kp-menu-button > .kp-menu, .kp-combobox__list, .kp-datepicker__panel, .kp-tour):not(.kp-tooltip)::before,
+    [data-theme='terminal'] .kp-nav__links > li > .kp-nav__menu::after {
         content: '';
         position: absolute;
         inset-block-start: 0.6rem;
@@ -2565,12 +2575,52 @@
            lines at 136 ms, the block cursor at the line being printed [G3].
            The close is the same keyframes played backwards
            (js/motion.js playEntranceBackwards), frame for frame. */
-        [data-theme='terminal'] :is(.kp-popover[popover]:popover-open, .kp-menu-button > .kp-menu:not([hidden])):not(.kp-tooltip) {
+        [data-theme='terminal']
+            :is(
+                .kp-popover[popover]:popover-open,
+                .kp-menu-button > .kp-menu:not([hidden]),
+                .kp-combobox__list:popover-open,
+                .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open
+            ):not(.kp-tooltip) {
             animation: kp-sig-terminal-tm-menu calc(4 * var(--kp-sig-tm-line)) steps(4, jump-end) backwards;
         }
 
-        [data-theme='terminal'] :is(.kp-popover[popover]:popover-open, .kp-menu-button > .kp-menu:not([hidden])):not(.kp-tooltip)::before {
+        [data-theme='terminal']
+            :is(
+                .kp-popover[popover]:popover-open,
+                .kp-menu-button > .kp-menu:not([hidden]),
+                .kp-combobox__list:popover-open,
+                .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open
+            ):not(.kp-tooltip)::before {
             animation: kp-sig-terminal-tm-menu-feed calc(4 * var(--kp-sig-tm-line)) steps(4, jump-end) backwards;
+        }
+
+        /* The combobox's list and the date picker's panel are printed as a menu is
+           (they had no motion); the list prints as its own entrance, not as the
+           leave turned around. */
+        [data-theme='terminal'] .kp-combobox__list {
+            --kp-open: own;
+        }
+
+        /* The command palette and the shortcuts sheet are dialogs: printed as the
+           dialog is, six lines, the cursor at the line being printed, the dim in
+           the same steps (they faded in the package's way). js/motion.js plays
+           the print backwards to close them. */
+        [data-theme='terminal'] :is(.kp-palette, .kp-shortcuts) {
+            --kp-sig-dur: calc(6 * var(--kp-sig-tm-line) * 1.5);
+            animation: kp-sig-terminal-tm-rows var(--kp-sig-dur) steps(6, jump-end) backwards;
+        }
+
+        [data-theme='terminal'] :is(.kp-palette, .kp-shortcuts)[open] {
+            --kp-sig-dur: calc(6 * var(--kp-sig-tm-line));
+        }
+
+        [data-theme='terminal'] :is(.kp-palette, .kp-shortcuts)::after {
+            animation: kp-sig-terminal-tm-feed var(--kp-sig-dur) steps(6, jump-end) backwards;
+        }
+
+        [data-theme='terminal'] :is(.kp-palette, .kp-shortcuts)::backdrop {
+            animation: kp-sig-terminal-tm-wash var(--kp-sig-dur) steps(6, jump-end) backwards;
         }
 
         [data-theme='terminal'] .kp-empty__title::after {
@@ -2764,6 +2814,16 @@
            in the close's time, and lets what arrives play this leave backwards. */
         [data-theme='terminal'] {
             --kp-open: reverse-close;
+            /* A part a script removes or hides (the busy table's layer, an empty
+               state, a file row, a re-shown alert) is deleted by the cursor first,
+               as it is typed in (js/motion.js leavesState(), lessons 19, 23, 24,
+               37); what takes no box arrives as nothing; the space a leave folds
+               shut is cleared with it, from its first frame (its defaults, 1.25
+               times the leave starting a third in, are other themes'). */
+            --kp-leave-state: leave;
+            --kp-arrive-unseen: skip;
+            --kp-leave-fold-grow: 1;
+            --kp-leave-fold-start: 0;
         }
 
         /* One cell wide, the bloom of the phosphor in place of a glow; it runs
@@ -2773,6 +2833,27 @@
             position: relative;
             overflow: clip;
             animation: kp-sig-terminal-leave 480ms linear forwards;
+        }
+
+        /* The busy table's layer is deleted where it stands (round 2, 2026-10-13):
+           the rule above made it relative, so it dropped below the table into the
+           flow and folded a space of its own, in 816 ms of six lines after a
+           336 ms wait on the open against the cursor's 480 ms on the close
+           (16.3 % off at frame 7/20). */
+        [data-theme='terminal'] .kp-datatable__busy-overlay[data-kp-leaving] {
+            position: absolute;
+        }
+
+        /* The rows under the layer keep their dim until the cursor has deleted
+           the layer, then come back in one hard step (G1: no fade), as the open
+           dims them in one step before the layer is typed in: they came back
+           at once on the close, under a layer still standing. */
+        [data-theme='terminal'] .kp-datatable:has(> .kp-datatable__busy-overlay) .kp-table tbody {
+            transition: opacity 480ms steps(1, jump-end);
+        }
+
+        [data-theme='terminal'] .kp-datatable[aria-busy='true']:has(> .kp-datatable__busy-overlay) .kp-table tbody {
+            transition: none;
         }
 
         [data-theme='terminal'] [data-kp-leaving]:dir(rtl) {
@@ -3334,6 +3415,318 @@
         50%,
         83.333% {
             filter: brightness(0.4);
+        }
+    }
+
+    /* One loading picture: while the busy table's layer stands over the rows, the
+       status line's small spinner stays out (forest and cyberpunk, lesson 23): it
+       arrived on its own and was removed at once, so the layer's close was not its
+       open reversed. */
+    [data-theme='terminal'] .kp-datatable:has(> .kp-datatable__busy-overlay) .kp-datatable__status > .kp-spinner {
+        display: none;
+    }
+
+    /* ── Every pair closes as its open reversed [all-themes audit, 2026-10-13;
+       lessons 11, 19, 21, 22, 26, 36, 38] ─────────────────────────────────
+       The calendar's busy layers, the tree's branches, the tour, and the
+       header's dropdown, mega menu and phone panel: each opens by the theme's
+       own motion and closes as that motion played backwards, frame for frame. */
+
+    /* A tree branch's children are printed and cleared a line at a time
+       (js/motion.js glideGroup()); shutting, the state is already
+       `aria-expanded="false"` and the group is kept drawn until the glide is
+       over. It went at once. */
+    [data-theme='terminal'] .kp-tree [role='treeitem'][aria-expanded='false'] > [role='group'][data-kp-group-folding],
+    [data-theme='terminal'] .kp-tree [role='treeitem'][aria-expanded='false'] + [role='group'][data-kp-group-folding] {
+        display: block;
+    }
+
+    [data-theme='terminal'] {
+        /* The tour's dim and ring come in the card's four printed lines and go in
+           the same four the other way round: `steps(4, jump-start)` jumps at a
+           boundary where the opening's `jump-end` holds, so this one holds the
+           pose before the jump at the boundary itself (the jump takes 0.01 % of
+           the time) and frame t of the going is frame (T - t) of the coming. */
+        --kp-tour-dim-close: 0 0 0 0 transparent;
+        --kp-tour-dim-time: calc(4 * var(--kp-sig-tm-line));
+        --kp-tour-dim-close-ease: linear(0 0%, 0.25 0.01%, 0.25 25%, 0.5 25.01%, 0.5 50%, 0.75 50.01%, 0.75 75%, 1 75.01%, 1 100%);
+        /* The header's hover dropdown and its phone panel are held on screen for
+           their close, four lines (js/components.js; Firefox does not hold
+           `display`). */
+        --kp-nav-close-time: 544ms;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='terminal'] {
+            --kp-nav-close-time: 0ms;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* The calendar's busy layers (the whole grid's card and a day's spinner)
+           are typed in as the leave played backwards and deleted by the cursor as
+           they go: js/calendar.js marks a layer `[data-kp-leaving]` while its
+           state goes (`--kp-calendar-busy-leave: hold`), and the rules below keep
+           it drawn through the 480 ms of that leave. They came in by the
+           package's 34 ms fade and vanished at once. */
+        [data-theme='terminal'] :is(.kp-calendar__day-busy, .kp-calendar__busy) {
+            --kp-calendar-busy-leave: hold;
+            transition: none;
+        }
+
+        [data-theme='terminal']
+            :is(.kp-calendar--busy-days, .kp-calendar--busy-whole:not(:has(> .kp-calendar__grid[aria-busy='true'])))
+            .kp-calendar__day[data-kp-tone='loading']
+            > .kp-calendar__day-busy:not([data-kp-leaving]),
+        [data-theme='terminal'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy:not([data-kp-leaving]) {
+            overflow: clip;
+            animation: kp-sig-terminal-leave-in 480ms linear reverse backwards;
+        }
+
+        [data-theme='terminal']
+            :is(.kp-calendar--busy-days, .kp-calendar--busy-whole:not(:has(> .kp-calendar__grid[aria-busy='true'])))
+            .kp-calendar__day[data-kp-tone='loading']
+            > .kp-calendar__day-busy:not([data-kp-leaving])::after,
+        [data-theme='terminal'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy:not([data-kp-leaving])::after {
+            content: '';
+            position: absolute;
+            inset-block: 0;
+            inset-inline-end: calc(100% - 1ch);
+            inline-size: 1ch;
+            pointer-events: none;
+            z-index: 2;
+            background: var(--primary);
+            box-shadow: var(--kp-bloom);
+            visibility: hidden;
+            animation: kp-sig-terminal-leave-2-in 480ms linear reverse backwards;
+        }
+
+        [data-theme='terminal'] .kp-calendar__day:has(> .kp-calendar__day-busy[data-kp-leaving]) {
+            position: relative;
+        }
+
+        [data-theme='terminal'] .kp-calendar__day-busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-spinner, 0.75rem);
+            position: absolute;
+            inset-inline: 0;
+            inset-block-end: 0.125rem;
+            display: flex;
+            justify-content: center;
+            line-height: 0;
+        }
+
+        [data-theme='terminal'] .kp-calendar--busy-whole > .kp-calendar__busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-busy-spinner, 2.5rem);
+            z-index: 1;
+            display: grid;
+            place-self: center;
+            place-items: center;
+            /* The foot keeps the register's room for the loading row. */
+            padding-block-start: var(--kp-space-md, 1rem);
+            padding-inline: var(--kp-space-md, 1rem);
+            border-radius: var(--radius, 0.5rem);
+            background: var(--card);
+            box-shadow: 0 0 0 1px var(--border);
+            line-height: 0;
+        }
+
+        /* The tour's card is printed as a menu is, four lines, the cursor at the
+           line being printed; js/tour.js plays that backwards when the tour ends.
+           The dim grows out of the target and the ring is drawn in, in the same
+           four steps (`backwards`, not `both`: a ring a finished animation holds
+           cannot be taken back by the close's transition, lesson 21). They came
+           in 160, 250 and 350 ms and went in 1000. */
+        [data-theme='terminal'] .kp-tour[open]:not([data-kp-tour-stepping]) {
+            animation: kp-sig-terminal-tm-menu calc(4 * var(--kp-sig-tm-line)) steps(4, jump-end) backwards;
+        }
+
+        [data-theme='terminal'] .kp-tour[open]:not([data-kp-tour-stepping])::before {
+            animation: kp-sig-terminal-tm-menu-feed calc(4 * var(--kp-sig-tm-line)) steps(4, jump-end) backwards;
+        }
+
+        [data-theme='terminal'] [data-kp-tour-target] {
+            animation: kp-sig-terminal-tour-ring calc(4 * var(--kp-sig-tm-line)) steps(4, jump-end) backwards;
+            transition:
+                box-shadow calc(4 * var(--kp-sig-tm-line)) steps(4, jump-end),
+                outline-color calc(4 * var(--kp-sig-tm-line)) steps(4, jump-end);
+        }
+
+        /* A step is no arrival: the card keeps its shape, prints nothing again and
+           moves to the next target in the same four steps. */
+        [data-theme='terminal'] .kp-tour[data-kp-tour-stepping] {
+            animation: none;
+            transition:
+                left calc(4 * var(--kp-sig-tm-line)) steps(4, jump-end),
+                top calc(4 * var(--kp-sig-tm-line)) steps(4, jump-end);
+        }
+
+        [data-theme='terminal'] .kp-tour[data-kp-tour-stepping]::before {
+            animation: none;
+        }
+
+        /* The header's dropdown and mega menu are printed as a menu is [G3: "a
+           menu, the header's menu, a popover ... are printed from the top"],
+           four lines, the cursor at the line being printed (on `::after`: a
+           labelled dropdown's `::before` is its caption), and cleared from the
+           bottom as they close: the same keyframes under a second name played
+           backwards, so the close restarts. The bar holds the panel through its
+           close (js/components.js: the item is marked `[data-kp-nav-closing]` for
+           `--kp-nav-close-time`, the mega menu's for as long as its hold
+           transition runs). The dropdown faded in and vanished; the mega menu had
+           nothing. */
+        [data-theme='terminal'] .kp-nav__menu:not(.kp-nav__menu--wide) {
+            transition: none;
+        }
+
+        [data-theme='terminal'] .kp-nav__menu--wide {
+            --kp-sig-tm-hold: 0;
+            transition: --kp-sig-tm-hold calc(4 * var(--kp-sig-tm-line)) linear;
+        }
+
+        [data-theme='terminal']
+            :is(
+                .kp-nav__links > li:is(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+                .kp-nav__links > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide
+            ) {
+            --kp-sig-tm-hold: 1;
+            animation: kp-sig-terminal-tm-menu calc(4 * var(--kp-sig-tm-line)) steps(4, jump-end) backwards;
+        }
+
+        [data-theme='terminal']
+            :is(
+                .kp-nav__links > li:is(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+                .kp-nav__links > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide
+            )::after {
+            animation: kp-sig-terminal-tm-menu-feed calc(4 * var(--kp-sig-tm-line)) steps(4, jump-end) backwards;
+        }
+
+        [data-theme='terminal']
+            .kp-nav__links
+            > li[data-kp-nav-closing]:not(:hover, :focus-within, [data-kp-nav-menu-open])
+            > .kp-nav__menu:not(.kp-nav__menu--wide) {
+            display: block;
+            opacity: 1;
+        }
+
+        [data-theme='terminal']
+            :is(
+                .kp-nav__links > li[data-kp-nav-closing]:not(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+                .kp-nav__links
+                    > li[data-kp-nav-closing]:not([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true']))
+                    > .kp-nav__menu--wide
+            ) {
+            animation: kp-sig-terminal-tm-menu-back calc(4 * var(--kp-sig-tm-line)) steps(4, jump-end) reverse forwards;
+        }
+
+        [data-theme='terminal']
+            :is(
+                .kp-nav__links > li[data-kp-nav-closing]:not(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+                .kp-nav__links
+                    > li[data-kp-nav-closing]:not([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true']))
+                    > .kp-nav__menu--wide
+            )::after {
+            animation: kp-sig-terminal-tm-menu-feed-back calc(4 * var(--kp-sig-tm-line)) steps(4, jump-end) reverse forwards;
+        }
+
+        /* The phone panel is printed under the bar the same way and cleared as it
+           closes (it opened and closed with no motion). */
+        @container kp-nav (max-width: 40rem) {
+            [data-theme='terminal'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links {
+                position: relative;
+            }
+
+            [data-theme='terminal'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links::after {
+                content: '';
+                position: absolute;
+                inset-block-start: 0.6rem;
+                inset-inline-start: 0.6rem;
+                inline-size: 1ch;
+                block-size: 1.2em;
+                background: var(--primary);
+                box-shadow: var(--kp-sig-tm-bloom);
+                visibility: hidden;
+                pointer-events: none;
+            }
+
+            [data-theme='terminal'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
+                animation: kp-sig-terminal-tm-menu calc(4 * var(--kp-sig-tm-line)) steps(4, jump-end) backwards;
+            }
+
+            [data-theme='terminal'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links::after {
+                animation: kp-sig-terminal-tm-menu-feed calc(4 * var(--kp-sig-tm-line)) steps(4, jump-end) backwards;
+            }
+
+            [data-theme='terminal'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__links {
+                animation: kp-sig-terminal-tm-menu-back calc(4 * var(--kp-sig-tm-line)) steps(4, jump-end) reverse forwards;
+            }
+
+            [data-theme='terminal'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__links::after {
+                animation: kp-sig-terminal-tm-menu-feed-back calc(4 * var(--kp-sig-tm-line)) steps(4, jump-end) reverse forwards;
+            }
+
+            /* Inside the open panel the lists are its own rows: no print of their own. */
+            [data-theme='terminal'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__links > li > .kp-nav__menu.kp-nav__menu {
+                animation: none;
+                transition: none;
+            }
+
+            [data-theme='terminal'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__links > li > .kp-nav__menu.kp-nav__menu::after {
+                content: none;
+            }
+        }
+    }
+
+    @keyframes kp-sig-terminal-tour-ring {
+        from {
+            outline-color: transparent;
+        }
+    }
+
+    /* The menu's print and its cursor under second names: a close that plays them
+       backwards restarts instead of re-timing the opening (lesson 8). */
+    @keyframes kp-sig-terminal-tm-menu-back {
+        from {
+            clip-path: inset(0 0 calc(100% - 2.2rem) 0);
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes kp-sig-terminal-tm-menu-feed-back {
+        from {
+            inset-block-start: 0.6rem;
+            visibility: visible;
+        }
+
+        to {
+            inset-block-start: calc(100% - 1.8rem);
+            visibility: visible;
+        }
+    }
+
+    /* The leave and its cursor under second names, for a busy layer that is typed
+       in and then deleted (an arrival that turns into its leave must restart). */
+    @keyframes kp-sig-terminal-leave-in {
+        from {
+            clip-path: inset(0 0 0 0);
+        }
+
+        to {
+            clip-path: inset(0 100% 0 0);
+        }
+    }
+
+    @keyframes kp-sig-terminal-leave-2-in {
+        from {
+            inset-inline-end: 0;
+            visibility: visible;
+        }
+
+        to {
+            inset-inline-end: calc(100% - 1ch);
+            visibility: visible;
         }
     }
 }

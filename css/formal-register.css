@@ -812,6 +812,14 @@
         color: var(--foreground);
     }
 
+    /* A branch's children are kept drawn while they glide shut
+       (js/motion.js glideGroup(), lesson 26): the state is already
+       `aria-expanded="false"` while the glide plays. */
+    [data-theme='formal'] .kp-tree [role='treeitem'][aria-expanded='false'] > [role='group'][data-kp-group-folding],
+    [data-theme='formal'] .kp-tree [role='treeitem'][aria-expanded='false'] + [role='group'][data-kp-group-folding] {
+        display: block;
+    }
+
     /* The accordion [gap-12]: the body face and the ink, and the primary colour for what is open, as its tabs mark the selected one. */
     [data-theme='formal'] .kp-accordion__summary {
         font-family: var(--theme-font-body);
@@ -1391,46 +1399,89 @@
 
         /* Ruled in, line by line (G13; Kenny, 2026-10-08): the ground, the
            sheet, the docket tick and the reason are each ruled start to end
-           in the ruling time, 60 ms apart, top down; nothing fades or rises. */
+           in the ruling time, 60 ms apart, top down; nothing fades or rises.
+           Keyframes, not transitions (all-themes pass, 2026-10-13): js/motion.js
+           keeps a dialog's CSS entrance and plays it backwards to close it, so
+           with transitions the close fell back to its own ease-in fade. Each
+           keyframes runs over the dialog's 740 ms (js/motion.js plays every
+           kept entrance in that one time) and its offsets carry the old waits:
+           the ground and the sheet 0-400 ms, the tick 60-460, the reason
+           120-520, the double rule 400-580; the rest is held. */
         [data-theme='formal'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
-            transition: clip-path var(--kp-sig-fm-time) var(--fx-ease);
+            animation: kp-sig-formal-alarm-ground 740ms linear backwards;
         }
 
         [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel {
-            transition: clip-path var(--kp-sig-fm-time) var(--fx-ease);
+            animation: kp-sig-formal-alarm-sheet 740ms linear backwards;
         }
 
         [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel::before {
-            transition: opacity var(--fx-duration) var(--fx-ease) var(--kp-sig-fm-time);
+            animation: kp-sig-formal-alarm-double 740ms linear backwards;
         }
 
         [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__title::after {
-            transition: transform var(--kp-sig-fm-time) var(--fx-ease) var(--kp-sig-fm-stagger);
+            animation: kp-sig-formal-alarm-tick 740ms linear backwards;
         }
 
         [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__detail {
-            transition: clip-path var(--kp-sig-fm-time) var(--fx-ease) calc(2 * var(--kp-sig-fm-stagger));
+            animation: kp-sig-formal-alarm-reason 740ms linear backwards;
         }
 
-        @starting-style {
-            [data-theme='formal'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+        @keyframes kp-sig-formal-alarm-ground {
+            0% {
                 clip-path: inset(0 100% 0 0);
             }
 
-            [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel {
+            54.054%,
+            100% {
+                clip-path: inset(0);
+            }
+        }
+
+        @keyframes kp-sig-formal-alarm-sheet {
+            0% {
                 clip-path: inset(-3rem 100% -3rem -3rem);
             }
 
-            [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel::before {
+            54.054%,
+            100% {
+                clip-path: inset(-3rem);
+            }
+        }
+
+        @keyframes kp-sig-formal-alarm-double {
+            0%,
+            54.054% {
                 opacity: 0;
             }
 
-            [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__title::after {
+            78.378%,
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes kp-sig-formal-alarm-tick {
+            0%,
+            8.108% {
                 transform: scaleX(0);
             }
 
-            [data-theme='formal'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__detail {
+            62.162%,
+            100% {
+                transform: none;
+            }
+        }
+
+        @keyframes kp-sig-formal-alarm-reason {
+            0%,
+            16.216% {
                 clip-path: inset(-0.5em 100% -0.5em -0.5em);
+            }
+
+            70.27%,
+            100% {
+                clip-path: inset(-0.5em);
             }
         }
     }
@@ -1958,6 +2009,15 @@
             --kp-open: reverse-close;
             --kp-fm-ltr: 1;
             --kp-fm-dir: to right;
+            /* A part a script removes or hides (the busy table's layer, a file
+               row, an empty state, a re-shown alert) is ruled off first, as it
+               is ruled in (js/motion.js leavesState(), lessons 19, 23, 24);
+               what takes no box arrives as nothing; the space a leave folds
+               shut takes the leave's own time and starts with it. */
+            --kp-leave-state: leave;
+            --kp-arrive-unseen: skip;
+            --kp-leave-fold-grow: 1;
+            --kp-leave-fold-start: 0;
         }
 
         [data-theme='formal']:dir(rtl) {
@@ -2235,7 +2295,7 @@
             }
         }
 
-        [data-theme='formal'] :is(.kp-dialog, dialog.kp-drawer, .kp-tour) {
+        [data-theme='formal'] :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette) {
             --kp-fm-dur: 740ms;
             animation: kp-sig-formal-line-0 var(--kp-fm-dur) linear backwards;
         }
@@ -2244,12 +2304,12 @@
             --kp-fm-dur: 1110ms;
         }
 
-        [data-theme='formal'] :is(.kp-dialog, dialog.kp-drawer, .kp-tour):dir(rtl) {
+        [data-theme='formal'] :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette):dir(rtl) {
             animation-name: kp-sig-formal-line-0-rtl;
         }
 
         /* The frame rule, along the top edge. */
-        [data-theme='formal'] :is(.kp-dialog, dialog.kp-drawer, .kp-tour)::before {
+        [data-theme='formal'] :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)::before {
             content: '';
             position: absolute;
             inset-block-start: 0;
@@ -2262,17 +2322,21 @@
             animation: kp-sig-formal-pen-0 var(--kp-fm-dur) linear backwards;
         }
 
-        [data-theme='formal'] :is(.kp-dialog, dialog.kp-drawer, .kp-tour):dir(rtl)::before {
+        [data-theme='formal'] :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette):dir(rtl)::before {
             clip-path: inset(0 100% 0 0);
             animation-name: kp-sig-formal-pen-0-rtl;
         }
 
         /* Each line under it, and its rule under it. */
-        [data-theme='formal'] :is(.kp-dialog, dialog.kp-drawer, .kp-tour) > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]) {
+        [data-theme='formal']
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
+            > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]) {
             position: relative;
         }
 
-        [data-theme='formal'] :is(.kp-dialog, dialog.kp-drawer, .kp-tour) > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close])::after {
+        [data-theme='formal']
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
+            > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close])::after {
             content: '';
             position: absolute;
             inset-block-end: 0;
@@ -2284,103 +2348,112 @@
         }
 
         [data-theme='formal']
-            :is(.kp-dialog, dialog.kp-drawer, .kp-tour)
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
             > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):dir(rtl)::after {
             clip-path: inset(0 100% 0 0);
         }
 
-        [data-theme='formal'] :is(.kp-dialog, dialog.kp-drawer, .kp-tour) > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(1) {
+        [data-theme='formal']
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
+            > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(1) {
             animation: kp-sig-formal-line-0 var(--kp-fm-dur) linear backwards;
         }
 
         [data-theme='formal']
-            :is(.kp-dialog, dialog.kp-drawer, .kp-tour)
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
             > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(1):dir(rtl) {
             animation-name: kp-sig-formal-line-0-rtl;
         }
 
         [data-theme='formal']
-            :is(.kp-dialog, dialog.kp-drawer, .kp-tour)
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
             > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(1)::after {
             animation: kp-sig-formal-pen-0 var(--kp-fm-dur) linear backwards;
         }
 
         [data-theme='formal']
-            :is(.kp-dialog, dialog.kp-drawer, .kp-tour)
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
             > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(1):dir(rtl)::after {
             animation-name: kp-sig-formal-pen-0-rtl;
         }
 
-        [data-theme='formal'] :is(.kp-dialog, dialog.kp-drawer, .kp-tour) > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(2) {
+        [data-theme='formal']
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
+            > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(2) {
             animation: kp-sig-formal-line-1 var(--kp-fm-dur) linear backwards;
         }
 
         [data-theme='formal']
-            :is(.kp-dialog, dialog.kp-drawer, .kp-tour)
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
             > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(2):dir(rtl) {
             animation-name: kp-sig-formal-line-1-rtl;
         }
 
         [data-theme='formal']
-            :is(.kp-dialog, dialog.kp-drawer, .kp-tour)
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
             > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(2)::after {
             animation: kp-sig-formal-pen-1 var(--kp-fm-dur) linear backwards;
         }
 
         [data-theme='formal']
-            :is(.kp-dialog, dialog.kp-drawer, .kp-tour)
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
             > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(2):dir(rtl)::after {
             animation-name: kp-sig-formal-pen-1-rtl;
         }
 
-        [data-theme='formal'] :is(.kp-dialog, dialog.kp-drawer, .kp-tour) > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(3) {
+        [data-theme='formal']
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
+            > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(3) {
             animation: kp-sig-formal-line-2 var(--kp-fm-dur) linear backwards;
         }
 
         [data-theme='formal']
-            :is(.kp-dialog, dialog.kp-drawer, .kp-tour)
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
             > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(3):dir(rtl) {
             animation-name: kp-sig-formal-line-2-rtl;
         }
 
         [data-theme='formal']
-            :is(.kp-dialog, dialog.kp-drawer, .kp-tour)
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
             > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(3)::after {
             animation: kp-sig-formal-pen-2 var(--kp-fm-dur) linear backwards;
         }
 
         [data-theme='formal']
-            :is(.kp-dialog, dialog.kp-drawer, .kp-tour)
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
             > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(3):dir(rtl)::after {
             animation-name: kp-sig-formal-pen-2-rtl;
         }
 
         [data-theme='formal']
-            :is(.kp-dialog, dialog.kp-drawer, .kp-tour)
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
             > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(n + 4) {
             animation: kp-sig-formal-line-3 var(--kp-fm-dur) linear backwards;
         }
 
         [data-theme='formal']
-            :is(.kp-dialog, dialog.kp-drawer, .kp-tour)
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
             > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(n + 4):dir(rtl) {
             animation-name: kp-sig-formal-line-3-rtl;
         }
 
         [data-theme='formal']
-            :is(.kp-dialog, dialog.kp-drawer, .kp-tour)
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
             > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(n + 4)::after {
             animation: kp-sig-formal-pen-3 var(--kp-fm-dur) linear backwards;
         }
 
         [data-theme='formal']
-            :is(.kp-dialog, dialog.kp-drawer, .kp-tour)
+            :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
             > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(n + 4):dir(rtl)::after {
             animation-name: kp-sig-formal-pen-3-rtl;
         }
 
-        /* The shade behind a dialog is ruled across as well. */
-        [data-theme='formal'] .kp-dialog::backdrop {
+        /* The shade behind a dialog is ruled across as well; the palette is
+           ruled in as the dialog is (it had the package's bare fade), and the
+           alarm's shade takes the same ruling, so js/motion.js turns it round
+           instead of falling back to its own ease-in fade (lesson 16). */
+        [data-theme='formal'] :is(.kp-dialog, .kp-palette, .kp-alarm:not([data-kp-alarm-motion='still']))::backdrop {
             animation: kp-sig-formal-backdrop var(--kp-sig-fm-time, 400ms) linear backwards;
         }
 
@@ -3437,6 +3510,456 @@
 
     [data-theme='formal'] .kp-chart__tip {
         border-radius: 0;
+    }
+
+    /* ── Every part that opens is ruled open and ruled off [G3, G13; lesson 38;
+       all-themes pass, 2026-10-13]. The tour's dim and ring, the calendar's
+       busy layers and the bar's three openings (the hover dropdown, the mega
+       menu, the phone bar's panel) take the ruling the dialog and the menus
+       already use; each close is its opening played backwards. ── */
+    @media (prefers-reduced-motion: no-preference) {
+        /* The tour: the page dims round the target and the ring is drawn in
+           over the card's own 740 ms, at the ruling's even pace (it was the
+           package's 350 and 250 ms ease); css/components.css takes both back
+           in the same time on the same (linear) curve, the dim shrinking
+           into the target as it grew out of it (lessons 11, 21, 22). */
+        [data-theme='formal'] {
+            --kp-tour-dim-close: 0 0 0 0 transparent;
+            --kp-tour-dim-time: 740ms;
+            --kp-tour-dim-close-ease: linear;
+        }
+
+        [data-theme='formal'] [data-kp-tour-target] {
+            transition:
+                box-shadow 740ms linear,
+                outline-color 740ms linear;
+        }
+
+        /* The ring is drawn in only round a live tour's target (a frozen
+           example on a page is no opening). */
+        [data-theme='formal'] body:has(> dialog.kp-tour[open]) [data-kp-tour-target],
+        [data-theme='formal']:has(dialog.kp-tour[open]) [data-kp-tour-target] {
+            animation: kp-sig-formal-tour-ring 740ms linear backwards;
+        }
+
+        /* The card's lines are turned round with it: js/motion.js
+           playEntranceBackwards() reverses the card and its pseudo-elements
+           (css/components.css), and its title, text and foot are ruled lines
+           of their own, so they take the same reversal here, bottom first. */
+        [data-theme='formal'] .kp-tour[data-kp-reversing='reset'] > *,
+        [data-theme='formal'] .kp-tour[data-kp-reversing='reset'] > *::after {
+            animation-name: none !important;
+        }
+
+        [data-theme='formal'] .kp-tour[data-kp-reversing='play'] > *,
+        [data-theme='formal'] .kp-tour[data-kp-reversing='play'] > *::after {
+            animation-direction: reverse !important;
+            animation-fill-mode: both !important;
+        }
+
+        /* The busy table's rows (and the table, layout.css) dim and come back
+           in the busy layer's own 560 ms, at the even pace, so the table
+           under the layer is part of the same pair (they changed at once). */
+        [data-theme='formal'] .kp-datatable {
+            transition:
+                outline-color calc(var(--kp-resize-dur, 300ms) / 2) ease-out,
+                outline-offset calc(var(--kp-resize-dur, 300ms) / 2) ease-out,
+                filter calc(var(--kp-resize-dur, 300ms) / 2) ease-out,
+                opacity 560ms linear;
+        }
+
+        [data-theme='formal'] .kp-datatable .kp-table tbody {
+            transition: opacity 560ms linear;
+        }
+
+        /* The side navigation's shade comes and goes in the panel's own time
+           (the contact time it slides in), not the package's 220 ms, so the
+           pair is one picture (lesson 31). */
+        [data-theme='formal'] .kp-sidenav__backdrop {
+            animation-duration: var(--fx-duration);
+        }
+
+        @keyframes kp-sig-formal-tour-ring {
+            from {
+                outline-color: transparent;
+            }
+        }
+
+        /* The calendar's busy layers (the whole grid's card and a day's
+           spinner) are ruled in as anything that arrives, and ruled off as
+           anything that leaves: js/calendar.js marks a layer
+           `[data-kp-leaving]` while its state goes (`--kp-calendar-busy-leave:
+           hold`), and the rules below keep it drawn through the leave. */
+        [data-theme='formal'] :is(.kp-calendar__day-busy, .kp-calendar__busy) {
+            --kp-calendar-busy-leave: hold;
+            transition: none;
+        }
+
+        [data-theme='formal']
+            :is(.kp-calendar--busy-days, .kp-calendar--busy-whole:not(:has(> .kp-calendar__grid[aria-busy='true'])))
+            .kp-calendar__day[data-kp-tone='loading']
+            > .kp-calendar__day-busy:not([data-kp-leaving]) {
+            animation: kp-sig-formal-ruled-in 560ms linear reverse backwards;
+        }
+
+        /* The leave's frames under a name of their own, so the leave that
+           follows starts afresh instead of taking over the finished arrival
+           of the same name (lesson 10). */
+        @keyframes kp-sig-formal-ruled-in {
+            0%,
+            28.571% {
+                clip-path: inset(-3rem);
+            }
+
+            100% {
+                clip-path: inset(-3rem 100% -3rem -3rem);
+            }
+        }
+
+        [data-theme='formal'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy:not([data-kp-leaving]) {
+            animation:
+                kp-sig-formal-ruled-in 560ms linear reverse backwards,
+                kp-sig-formal-loading var(--kp-sig-fm-loop) linear infinite;
+        }
+
+        [data-theme='formal'] .kp-calendar__day:has(> .kp-calendar__day-busy[data-kp-leaving]) {
+            position: relative;
+        }
+
+        [data-theme='formal'] .kp-calendar__day-busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-spinner, 0.75rem);
+            position: absolute;
+            inset-inline: 0;
+            inset-block-end: 0.125rem;
+            display: flex;
+            justify-content: center;
+            line-height: 0;
+        }
+
+        [data-theme='formal'] .kp-calendar--busy-whole > .kp-calendar__busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-busy-spinner, 2.5rem);
+            z-index: 1;
+            display: grid;
+            place-self: center;
+            place-items: center;
+            padding: var(--kp-space-md, 1rem);
+            border-radius: var(--radius, 0.5rem);
+            background: var(--card);
+            box-shadow: 0 0 0 1px var(--border);
+            line-height: 0;
+        }
+
+        /* The bar [Kenny via the coordinator, 2026-10-12: the navbar's
+           opening and closing are in scope]. Formal decides no motion for the
+           bar, so it takes its menus' (G3): a dropdown, the mega menu and the
+           phone bar's panel are ruled open from the bar's edge, the panel's
+           frame rule first, then each entry's line 60 ms after the one above;
+           closed, the rules are taken off bottom first. One number,
+           --kp-fm-t, carried by a transition (not an animation) so a close
+           begun halfway turns round where it stands and the mega menu's item
+           is held by its transition (js/components.js settleClosing). Firefox
+           does not hold `display`: the hover dropdown and the phone panel are
+           held by the script for `--kp-nav-close-time`, the time the
+           entries take (400 + 160 + 60 per entry after the first). */
+        [data-theme='formal'] .kp-nav {
+            --kp-nav-close-time: 560ms;
+        }
+
+        [data-theme='formal'] .kp-nav:has(.kp-nav__menu:not(.kp-nav__menu--wide) > :nth-child(2)) {
+            --kp-nav-close-time: 620ms;
+        }
+
+        [data-theme='formal'] .kp-nav:has(.kp-nav__menu:not(.kp-nav__menu--wide) > :nth-child(3)) {
+            --kp-nav-close-time: 680ms;
+        }
+
+        [data-theme='formal'] .kp-nav:has(.kp-nav__menu:not(.kp-nav__menu--wide) > :nth-child(4)) {
+            --kp-nav-close-time: 740ms;
+        }
+
+        [data-theme='formal'] .kp-nav:has(.kp-nav__menu:not(.kp-nav__menu--wide) > :nth-child(5)) {
+            --kp-nav-close-time: 800ms;
+        }
+
+        [data-theme='formal'] .kp-nav:has(.kp-nav__menu:not(.kp-nav__menu--wide) > :nth-child(6)) {
+            --kp-nav-close-time: 860ms;
+        }
+
+        [data-theme='formal'] .kp-nav:has(.kp-nav__menu:not(.kp-nav__menu--wide) > :nth-child(7)) {
+            --kp-nav-close-time: 920ms;
+        }
+
+        [data-theme='formal'] .kp-nav:has(.kp-nav__menu:not(.kp-nav__menu--wide) > :nth-child(8)) {
+            --kp-nav-close-time: 980ms;
+        }
+
+        [data-theme='formal'] .kp-nav:not([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu {
+            --kp-fm-n: 1;
+        }
+
+        [data-theme='formal'] .kp-nav:not([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu:has(> :nth-child(2)) {
+            --kp-fm-n: 2;
+        }
+
+        [data-theme='formal'] .kp-nav:not([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu:has(> :nth-child(3)) {
+            --kp-fm-n: 3;
+        }
+
+        [data-theme='formal'] .kp-nav:not([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu:has(> :nth-child(4)) {
+            --kp-fm-n: 4;
+        }
+
+        [data-theme='formal'] .kp-nav:not([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu:has(> :nth-child(5)) {
+            --kp-fm-n: 5;
+        }
+
+        [data-theme='formal'] .kp-nav:not([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu:has(> :nth-child(6)) {
+            --kp-fm-n: 6;
+        }
+
+        [data-theme='formal'] .kp-nav:not([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu:has(> :nth-child(7)) {
+            --kp-fm-n: 7;
+        }
+
+        [data-theme='formal'] .kp-nav:not([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu:has(> :nth-child(8)) {
+            --kp-fm-n: 8;
+        }
+
+        [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links {
+            --kp-fm-n: 1;
+        }
+
+        [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links:has(> :nth-child(2)) {
+            --kp-fm-n: 2;
+        }
+
+        [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links:has(> :nth-child(3)) {
+            --kp-fm-n: 3;
+        }
+
+        [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links:has(> :nth-child(4)) {
+            --kp-fm-n: 4;
+        }
+
+        [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links:has(> :nth-child(5)) {
+            --kp-fm-n: 5;
+        }
+
+        [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links:has(> :nth-child(6)) {
+            --kp-fm-n: 6;
+        }
+
+        [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links:has(> :nth-child(7)) {
+            --kp-fm-n: 7;
+        }
+
+        [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links:has(> :nth-child(8)) {
+            --kp-fm-n: 8;
+        }
+
+        [data-theme='formal'] .kp-nav:not([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu,
+        [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links {
+            --kp-fm-total: calc(var(--kp-sig-fm-len) + var(--kp-sig-fm-lift) + (var(--kp-fm-n, 1) - 1) * var(--kp-sig-fm-st));
+            --kp-fm-f: clamp(0, var(--kp-fm-t) * var(--kp-fm-total) / var(--kp-sig-fm-len), 1);
+            --kp-fm-lf: clamp(0, (var(--kp-fm-t) * var(--kp-fm-total) - var(--kp-sig-fm-len)) / var(--kp-sig-fm-lift), 1);
+            --kp-fm-open: calc(100% - var(--kp-fm-f) * (100% + var(--kp-sig-fm-reach)));
+            --kp-fm-t: 0;
+            clip-path: inset(
+                calc(-1 * var(--kp-sig-fm-reach)) calc(var(--kp-fm-open) * var(--kp-fm-ltr) - var(--kp-sig-fm-reach) * (1 - var(--kp-fm-ltr)))
+                    calc(-1 * var(--kp-sig-fm-reach)) calc(var(--kp-fm-open) * (1 - var(--kp-fm-ltr)) - var(--kp-sig-fm-reach) * var(--kp-fm-ltr))
+            );
+            background-image: linear-gradient(
+                var(--kp-fm-dir),
+                transparent calc(var(--kp-fm-lf) * 100%),
+                var(--primary) calc(var(--kp-fm-lf) * 100%) calc(var(--kp-fm-f) * 100%),
+                transparent calc(var(--kp-fm-f) * 100%)
+            );
+            background-repeat: no-repeat;
+            background-size: 100% var(--kp-sig-fm-pen);
+            background-position: 0 0;
+            transition: --kp-fm-t calc(var(--kp-fm-total) * 1ms) linear;
+        }
+
+        [data-theme='formal']
+            .kp-nav:not([data-kp-nav-open], [data-kp-nav-closing])
+            .kp-nav__links
+            > li:is(:hover, :focus-within, [data-kp-nav-menu-open])
+            > .kp-nav__menu:not(.kp-nav__menu--wide),
+        [data-theme='formal']
+            .kp-nav:not([data-kp-nav-open], [data-kp-nav-closing])
+            .kp-nav__links
+            > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true']))
+            > .kp-nav__menu--wide,
+        [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
+            --kp-fm-t: 1;
+        }
+
+        @starting-style {
+            [data-theme='formal']
+                .kp-nav:not([data-kp-nav-open], [data-kp-nav-closing])
+                .kp-nav__links
+                > li:is(:hover, :focus-within, [data-kp-nav-menu-open])
+                > .kp-nav__menu:not(.kp-nav__menu--wide),
+            [data-theme='formal']
+                .kp-nav:not([data-kp-nav-open], [data-kp-nav-closing])
+                .kp-nav__links
+                > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true']))
+                > .kp-nav__menu--wide,
+            [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
+                --kp-fm-t: 0;
+            }
+        }
+
+        /* A dropdown the pointer or the focus has left is drawn through its
+           close by the mark the script puts on its item. */
+        [data-theme='formal']
+            .kp-nav:not([data-kp-nav-open], [data-kp-nav-closing])
+            .kp-nav__links
+            > li[data-kp-nav-closing]:not(:hover, :focus-within, [data-kp-nav-menu-open])
+            > .kp-nav__menu:not(.kp-nav__menu--wide) {
+            display: block;
+            opacity: 1;
+        }
+
+        [data-theme='formal'] .kp-nav:not([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu > *:nth-child(1) {
+            --kp-fm-k: 0;
+        }
+
+        [data-theme='formal'] .kp-nav:not([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu > *:nth-child(2) {
+            --kp-fm-k: 1;
+        }
+
+        [data-theme='formal'] .kp-nav:not([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu > *:nth-child(3) {
+            --kp-fm-k: 2;
+        }
+
+        [data-theme='formal'] .kp-nav:not([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu > *:nth-child(4) {
+            --kp-fm-k: 3;
+        }
+
+        [data-theme='formal'] .kp-nav:not([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu > *:nth-child(5) {
+            --kp-fm-k: 4;
+        }
+
+        [data-theme='formal'] .kp-nav:not([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu > *:nth-child(6) {
+            --kp-fm-k: 5;
+        }
+
+        [data-theme='formal'] .kp-nav:not([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu > *:nth-child(7) {
+            --kp-fm-k: 6;
+        }
+
+        [data-theme='formal'] .kp-nav:not([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu > *:nth-child(n + 8) {
+            --kp-fm-k: 7;
+        }
+
+        [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links > *:nth-child(1) {
+            --kp-fm-k: 0;
+        }
+
+        [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links > *:nth-child(2) {
+            --kp-fm-k: 1;
+        }
+
+        [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links > *:nth-child(3) {
+            --kp-fm-k: 2;
+        }
+
+        [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links > *:nth-child(4) {
+            --kp-fm-k: 3;
+        }
+
+        [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links > *:nth-child(5) {
+            --kp-fm-k: 4;
+        }
+
+        [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links > *:nth-child(6) {
+            --kp-fm-k: 5;
+        }
+
+        [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links > *:nth-child(7) {
+            --kp-fm-k: 6;
+        }
+
+        [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links > *:nth-child(n + 8) {
+            --kp-fm-k: 7;
+        }
+
+        [data-theme='formal'] .kp-nav:not([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu > *,
+        [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links > * {
+            --kp-fm-f: clamp(0, (var(--kp-fm-t) * var(--kp-fm-total) - var(--kp-fm-k, 0) * var(--kp-sig-fm-st)) / var(--kp-sig-fm-len), 1);
+            --kp-fm-lf: clamp(
+                0,
+                (var(--kp-fm-t) * var(--kp-fm-total) - var(--kp-fm-k, 0) * var(--kp-sig-fm-st) - var(--kp-sig-fm-len)) / var(--kp-sig-fm-lift),
+                1
+            );
+            --kp-fm-open: calc(100% - var(--kp-fm-f) * (100% + var(--kp-sig-fm-reach)));
+            clip-path: inset(
+                calc(-1 * var(--kp-sig-fm-reach)) calc(var(--kp-fm-open) * var(--kp-fm-ltr) - var(--kp-sig-fm-reach) * (1 - var(--kp-fm-ltr)))
+                    calc(-1 * var(--kp-sig-fm-reach)) calc(var(--kp-fm-open) * (1 - var(--kp-fm-ltr)) - var(--kp-sig-fm-reach) * var(--kp-fm-ltr))
+            );
+            background-image: linear-gradient(
+                var(--kp-fm-dir),
+                transparent calc(var(--kp-fm-lf) * 100%),
+                var(--primary) calc(var(--kp-fm-lf) * 100%) calc(var(--kp-fm-f) * 100%),
+                transparent calc(var(--kp-fm-f) * 100%)
+            );
+            background-repeat: no-repeat;
+            background-size: 100% var(--kp-sig-fm-pen);
+            background-position: 0 100%;
+        }
+
+        /* Wide, the phone bar's links are the bar itself: nothing is ruled. */
+        @container kp-nav (min-width: 40.0001rem) {
+            [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links,
+            [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links > * {
+                --kp-fm-t: 1;
+                clip-path: none;
+                background-image: none;
+                transition: none;
+            }
+        }
+
+        @container kp-nav (max-width: 40rem) {
+            [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle):has(> .kp-nav__links > :nth-child(1)) {
+                --kp-nav-close-time: 560ms;
+            }
+
+            [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle):has(> .kp-nav__links > :nth-child(2)) {
+                --kp-nav-close-time: 620ms;
+            }
+
+            [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle):has(> .kp-nav__links > :nth-child(3)) {
+                --kp-nav-close-time: 680ms;
+            }
+
+            [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle):has(> .kp-nav__links > :nth-child(4)) {
+                --kp-nav-close-time: 740ms;
+            }
+
+            [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle):has(> .kp-nav__links > :nth-child(5)) {
+                --kp-nav-close-time: 800ms;
+            }
+
+            [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle):has(> .kp-nav__links > :nth-child(6)) {
+                --kp-nav-close-time: 860ms;
+            }
+
+            [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle):has(> .kp-nav__links > :nth-child(7)) {
+                --kp-nav-close-time: 920ms;
+            }
+
+            [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle):has(> .kp-nav__links > :nth-child(8)) {
+                --kp-nav-close-time: 980ms;
+            }
+        }
+    }
+
+    /* A reader who asked for no motion gets no close to wait for. */
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='formal'] .kp-nav {
+            --kp-nav-close-time: 0ms;
+        }
     }
 }
 /* ── End of the signature ── */

@@ -1,0 +1,80 @@
+# Dark: close = open reversed, dark's own pass on every part that opens (2026-10-13)
+
+Changed: `css/dark-register.css` only, plus the "Applied 2026-10-13" note at the end of `themes/dark/CHARACTER.md`.
+Every number is Firefox (`pairs-meter.mjs`, `identity.mjs` + `identity-summary.mjs`, `tab-paint.mjs`). Dark's own motion
+and timing are kept: the line passes at one pace (`linear`, 660 ms) laying the panel behind it, the film's turn settles
+220 ms later (880 ms in all), the pass back to close; contact 220 ms.
+
+**Pairs: 11 of 26 → 17 of 26.** Identity: 10 of 14 parts OWN on open and close → 14 of 14 (the desktop dropdown, the
+mega menu, the phone frame and the phone at 390 px opened by the pass but closed with NONE before).
+Focus (`tab-paint.mjs`): 41 stops, only "Review in a dialog" and "Copy answer" NOMARK, as allowed.
+
+## Fixes
+
+| # | Part | Cause | Change (selector) | Before → after (open/close, worst) |
+|---|------|-------|-------------------|------------------------------------|
+| 1 | alert-close, upload-file | mechanism tokens unset (lessons 19, 23, 24, 37) | `[data-theme='dark']` beside `--kp-open` (no-preference): `--kp-leave-state: leave; --kp-arrive-unseen: skip; --kp-leave-fold-grow: 1; --kp-leave-fold-start: 0` | alert-close 0/1393 ms 106.6 % → 880/880 ms 0.0 %; upload-file 1393/0 ms 112.8 % → 880/880 ms 0.0 % |
+| 1b | toast | the leave rule `[data-theme='dark'] [data-kp-leaving]` (0,2,0) lost to the entrance list, whose `dialog.kp-drawer` makes it (0,2,1): a leaving toast kept its entrance, so it had no leave of its own for js/motion.js to turn into its arrival (it arrived by CSS with no fold, and left with a fold); the leave also used the entrance's own keyframe names, which do not restart (lesson 10) | `[data-theme='dark'] [data-kp-leaving][data-kp-leaving]` (the attribute named twice) with `kp-sig-dark-sweep-back` / `kp-sig-dark-film-back` (the same frames under second names) and the line's `kp-sig-dark-pass-line-back` | 880/1393 ms 77.6 % → 880/880 ms 0.0 % |
+| 1c | table-busy | the layer left at once; the rows' dim jumped | tokens above; `.kp-datatable .kp-table tbody` transition opacity 880 ms linear | 1393/0 ms 93.0 % → 880/880 ms 48.7 % (see Still failing) |
+| 1d | calendar-busy | the busy layers faded in 220 ms (package) and left at once | `:is(.kp-calendar__day-busy, .kp-calendar__busy) { --kp-calendar-busy-leave: hold; transition: none }`; arrival = the pass (`kp-sig-dark-sweep` + `kp-sig-dark-film`), leave = the `-back` pass reversed (1b); leaving layers kept drawn (cyberpunk's display rules) | 220/0 ms 100.0 % → 880/880 ms 95.5 % (see Still failing) |
+| 2 | tree | no rule kept the shutting group drawn (lesson 26) | `.kp-tree [role='treeitem'][aria-expanded='false'] > / + [role='group'][data-kp-group-folding] { display: block }` | 480/480 ms 51.5 % → 480/480 ms 0.0 % |
+| 3 | tour | the card ran the package's 160 ms `kp-tour-in` fade; the dim and ring opened on 350/250 ms ease and closed on 1000 ms ease-in | `.kp-tour[open]:not([data-kp-tour-stepping])`: the dialog's pass (`kp-sig-dark-sweep` + `kp-sig-dark-film`, `::after` the line), `--kp-sig-dk-r` the halo's reach; root `--kp-tour-dim-close: 0 0 0 0 transparent; --kp-tour-dim-time: var(--kp-sig-dk-time); --kp-tour-dim-close-ease: linear`; `[data-kp-tour-target]` transition box-shadow and outline-color 880 ms linear; ring from transparent by `kp-sig-dark-tour-ring` only round a live tour (`[data-theme='dark']:has(dialog.kp-tour[open])`) | 350/1000 ms 29.7 % → 880/880 ms 0.9 % |
+| 4 | palette, date picker, combobox, menus, alarm | already dark's pass (OWN/OWN) | none | unchanged |
+| 5 | navbar: hover dropdown, mega menu, phone bar's panel | the dropdown and mega menu were swept in but closed at once in Firefox: the closed style's `reverse` on the same keyframe names never restarts, and Firefox holds no `display`; the phone panel had no pass (only its nested list's line ran) | `--kp-nav-close-time: 880ms` on `.kp-nav` (0 ms under reduced motion); in `@container kp-nav (width > 40rem)`: `li[data-kp-nav-closing]:not(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide)` held `display: block` and given the `-back` pass reversed; `.kp-nav__menu--wide` held by a transition of `--kp-sig-dk-hold` (new `@property` at the top of the file) and its closing item given the `-back` pass; collapsed, `.kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links` swept in with its `::after` line, `[data-kp-nav-closing] > .kp-nav__links` the pass back, the nested list not swept again | bar-equipment 880/0 ms 101.7 % → 880/880 ms 0.1 %; phone-bar 880/0 ms 100.9 % → 880/880 ms (frames 0.0 % with the timer held, see Still failing) |
+| 6 | sidenav | not a clip and not the mechanism (lesson 31 checked): panel and backdrop are both 220 ms, settle to open and its inverse to close | none | 13.5 % → 13.5 % (see Still failing) |
+
+## Deviations for Kenny
+
+- **Tour card:** CHARACTER.md's G3 names the dialog, the menu and the tooltip, not the tour. The card is now swept in
+  where it stands as the dialog is (it had the package's 160 ms fade) and taken off by the pass back. Borrowed: G3, the
+  dialog.
+- **Phone bar's panel:** the bar has no decided motion. The panel is now swept in under the bar from its start edge with
+  the line crossing it, and taken off by the pass back; the dropdown and mega menu keep the pass they had and gain its
+  close. Borrowed: G3, the menu.
+- **Tour dim and ring:** they now take the card's 880 ms at the line's one pace instead of the package's 350/250 ms ease.
+  Borrowed: G1/G4.
+- **Calendar busy layers:** laid by the pass and taken off by the pass back (880 ms). Borrowed: G13.
+- **Busy table rows:** their dim comes and goes over the layer's 880 ms, linear.
+
+## Still failing
+
+- **datepicker 8.1 %, sidenav 13.5 %:** the panels mirror; the remainder is the focus mark, which goes back to the opener
+  (the calendar button, "Open the panel", with dark's brackets) at the first frame of the close while on the open it
+  reaches the panel only at its end (js, lesson 11), not the register.
+- **phone-bar, both rows (90.0 %, 98.4 %):** meter artefact of a time-based hold. The gate's row holds only 400-600 ms
+  timers and the audit's row none, so the 880 ms timer in js/components.js runs out while the paused frames are read.
+  With the timer held (a scratch copy of the meter, removed afterwards) the pair reads 880/880 ms, 0.0 %.
+- **table-busy 48.7 %:** the layer, its line and the rows' dim now mirror; the remainder is the status line's words,
+  which js swaps at once in both directions ("Asking the pump houses…" / "Showing 1–7 of 7"). Dark's dim of dark rows
+  on a dark ground is a small change on screen, so the words weigh half of it. Hiding the status line's spinner (as in
+  cyberpunk, deco and light) changed nothing here and was taken out again.
+- **calendar-busy 95.5 %:** the busy layers now pair; the rest is the days' tones and counts changing at once, a state
+  change (forest fails this pair too).
+- **wizard-step, empty-state, tabs-panel:** state changes, ignored per the brief.
+- **Gates (for the coordinator, js/* is outside this brief):** `gates/check-motion.mjs` asks TIMINGS rows (js/effects.js)
+  for `kp-sig-dark-sweep-back`, `kp-sig-dark-film-back`, `kp-sig-dark-pass-line-back`, `kp-sig-dark-tour-ring`, and
+  OUT_OF_SCOPE lines for `kp-sig-dark-sweep-back` and `kp-sig-dark-tour-ring` (the original `kp-sig-dark-sweep` is listed
+  there already).
+
+Measured wall time of the dark measurement runs: 7 min 29 s (pairs 169 s; partial pairs 80, 34 and 27 s; identity 66 s; tab-paint 73 s). One short partial run (table-busy) and the probes were not timed and are not in the sum.
+
+## Round 2 (2026-10-13)
+
+**table-busy: 880/880 ms, 48.7 % → 880/880 ms, 1.6 % (pass).**
+
+- **Cause, measured from the frames:** the open's first frame (1 ms) against the close's last frame differed over the
+  whole table, not only its status words: search field, header, rows and border were all dimmer. A probe at 1 ms read
+  `div.kp-datatable` at `opacity: 0.7`. That is css/layout.css's `[aria-busy='true'] { opacity: var(--kp-busy-opacity, 0.7) }`
+  on the whole data table, which flipped in one frame both ways. Round 1 only gave the rows' dim (`tbody`, the
+  package's `--kp-datatable-busy-opacity`) the pass's time. Round 1's note that the status words weigh half the change
+  was wrong: they are the 1.6 % that is left.
+- **Change:** the existing rule `[data-theme='dark'] .kp-datatable .kp-table tbody { transition: opacity
+  var(--kp-sig-dk-time) linear }` now also names `[data-theme='dark'] .kp-datatable`, so the whole table dims and
+  comes back over the same 880 ms linear pass as its rows and its layer.
+- **Remaining 1.6 %:** the status line's words ("Asking the pump houses…" / "Showing 1–7 of 7"), which js/datatable.js
+  swaps in one frame in both directions. That is a mirror (they flip at the open's first frame and at the close's
+  first frame), and it stays under the 6 % tolerance.
+- Full dark run after the change: 21 of 25 pass (was 20). Still failing: calendar-busy 95.5 % (shared with forest),
+  wizard-step, empty-state and tabs-panel (state changes, ignored per the brief).
+
+Measured wall time of the round 2 dark runs: full pairs 146 s; the partial table-busy runs (2 × about 8 s) were not timed.

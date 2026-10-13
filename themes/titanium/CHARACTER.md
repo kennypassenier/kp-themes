@@ -391,3 +391,19 @@ excepted (its harness signal stays), the spinner its own picture: the facing cut
    keeps the oxide stripes so it never reads as full.
 4. **Where it is drawn:** the register for the package's parts (2.1); each
    character demo at its picked loading key (2.2), titanium only.
+
+---
+
+**Applied 2026-10-13** (all-themes audit, close = open reversed; `research/all-themes/reports/titanium.md`):
+the leave tokens (`--kp-leave-state: leave`, `--kp-arrive-unseen: skip`, fold 1 and 0); G3's top-down cut with
+the cutter's line (240 ms on the theme curve) on the popovers, the menu, the combobox's list, the date picker's
+panel, the command palette (the dialog's time), the tour's card and the header's dropdown, mega menu and phone
+panel (closing under second keyframe names, `--kp-nav-close-time: 240ms`, the mega menu held by
+`--kp-sig-ti-hold`); the tour's dim and ring on the cut, back on the curve turned round; the side navigation in
+the cut's 240 ms with its backdrop (it slid in the 60 ms contact band); the tree's folding group kept drawn; the
+calendar's busy layers arrive as the cool-away reversed and cool away as they go (`--kp-calendar-busy-leave:
+hold`); the status line's spinner stays out under the busy table's layer.
+
+**Round 2, 2026-10-13:** the busy table's layer keeps its place over the rows while it arrives and leaves
+(`.kp-datatable__busy-overlay[data-kp-leaving] { position: absolute }`), and the table's busy dims beneath it go as
+part of the same pair (see the report's "Round 2").

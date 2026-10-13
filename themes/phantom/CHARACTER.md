@@ -233,3 +233,16 @@ Kenny's picks on research/phantom-character, all nineteen approved 2026-10-09 af
 | Hover   | the red bar thrown in behind the label   | synthwave's bars glow; grotesk's plate drops; phantom's bar is thrown and resolves with black ink                         |
 | Surface | black under a halftone, hard red shadows | brutalism's shadows are black on cream; cyberpunk's cuts glow; phantom's are deep red and nothing glows                   |
 | Motifs  | screen, skew, plates, slash, star        | grotesk shares the red/black/white but is level and unscreened; nothing else is skewed and halftoned                      |
+
+---
+
+**Applied 2026-10-13** (close = open reversed, research/all-themes/BRIEF.md; css/phantom-register.css only): the
+mechanism tokens (`--kp-leave-state: leave`, `--kp-arrive-unseen: skip`, `--kp-leave-fold-grow: 1`,
+`--kp-leave-fold-start: 0`), the tree branch kept drawn while it shuts, the tour's dim and ring with the card's throw
+(400 ms on the shove) and back with its throw back (after the 300 ms dissolve, on the inverse), the palette, the date
+picker panel and the combobox list thrown and resolved like the dialog and the menus (the two pickers land level; the
+date picker's panel is drawn from the throw's first instant because it takes the focus), the busy table's dim in the
+resolve's three cuts, the calendar's busy layers thrown in and snatched off (`--kp-calendar-busy-leave: hold`), the side
+navigation's backdrop on the panel's 120 ms, and the bar's dropdown, mega menu and phone panel thrown in and snatched
+off (`--kp-nav-close-time: 700ms`, the phone panel landing level). Deviations for Kenny are listed in
+research/all-themes/reports/phantom.md.

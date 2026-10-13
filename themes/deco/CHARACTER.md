@@ -211,3 +211,16 @@ research/deco-character on 2026-10-09):
 | Bar     | a fan laid flat, rays lit one by one               | brutalism's ruled bar counts ten steps in ink; deco's are gold rays with a lozenge point                           |
 | Live    | one flash of the fan                               | synthwave's laser flares under the value; deco's fan opens behind it, counted                                      |
 | Motifs  | the fan, the double rule, the lozenge, the chevron | sepia's dinkus is three lozenges in a row (dropped); grotesk's one red disc; deco's lozenge is a jewel set in gold |
+
+---
+
+**Applied 2026-10-13** (close = open reversed, research/all-themes/BRIEF.md; css/deco-register.css only): the
+mechanism tokens (`--kp-leave-state: leave`, `--kp-arrive-unseen: skip`, `--kp-leave-fold-grow: 1`,
+`--kp-leave-fold-start: 0`), the tree branch kept drawn while it glides shut, the tour's dim and ring on the card's
+480 ms settle and back on its reflection, the toast leaving as its arrival played backwards (its space folding with it),
+the busy table's rows dimming with its layer, the calendar's busy layers arriving and leaving by the wipe
+(`--kp-calendar-busy-leave: hold`, `kp-sig-deco-unwipe`), the side navigation's backdrop on the panel's 160 ms, and the
+navbar (hover dropdown, mega menu, phone bar) opening by the menu's own arrival (the panel drawn round from the middle of
+its top edge, then the words up, 480 ms) and closing as it backwards (`kp-sig-deco-arrive-back`,
+`--kp-nav-close-time: 480ms`). The warning and destructive alert label is the ruby four points lighter (4.37 to 4.88:1
+on the lacquer). The navbar's motion is borrowed from the menu's (no rule here decides it): a deviation for Kenny.

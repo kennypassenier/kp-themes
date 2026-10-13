@@ -419,3 +419,15 @@ such.
 
 When the next theme's grammar is written, this table, forest's and
 titanium's are read first, so its recommendations steer clear of all three.
+
+## Applied 2026-10-13 (all-themes pairs audit)
+
+Every close is its open played backwards on the frame clock, and the raster now draws every part that
+opens (css/nostromo-register.css, "Pairs" block at the foot of `kp.signature`; report:
+research/all-themes/reports/nostromo.md). Borrowed where this file decides nothing: the palette, the
+shortcuts sheet and the alarm take the dialog's raster (the alarm's package rise, scale and fades are
+gone, G3); the date picker's panel, the combobox's list and the bar's dropdown, mega menu and phone
+panel take the popover's raster and beam, and close by the leave's erase; the side navigation no longer
+slides in from its edge (G2): it is drawn where it stands and erased, then put away. The tour's dim and
+ring, the side navigation's backdrop and a busy table's dim switch in the card's 4 equal frames or at
+the first frame of the opening and the last of the closing.

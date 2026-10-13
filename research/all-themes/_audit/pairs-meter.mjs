@@ -246,6 +246,7 @@ async function measure(browser, differPage, base, pair) {
         closing.push(await shot());
     }
     await page.evaluate(() => window.__pair.forEach((a) => a.finish()));
+    await pair.release?.(page);
     await page.waitForTimeout(700);
     const after = await shot();
 

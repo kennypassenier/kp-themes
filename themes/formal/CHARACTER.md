@@ -289,3 +289,21 @@ hover = a rule under the label, motifs = the rules plus the seal where picked):
 | Hover, press | the inner rule, doubled on press                   | grotesk draws a baseline under the words and thickens it; formal's rule is inside the control and doubles                         |
 | Type         | Fraunces figures, small capitals                   | solstice's Instrument Serif sentence case; formal's figures are Fraunces with tabular numerals and its labels small capitals      |
 | Motifs       | the rule, the double rule, the docket cut, red ink | grotesk's one red disc and index bar; formal's red is ink on an entry, never a plate                                              |
+
+---
+
+## Applied 2026-10-13 (all-themes pass: close = open reversed)
+
+Mechanism only; formal's motion, rule and timings are unchanged (research/all-themes/reports/formal.md).
+
+- Leaves and arrivals: `--kp-leave-state: leave`, `--kp-arrive-unseen: skip`, `--kp-leave-fold-grow: 1`,
+  `--kp-leave-fold-start: 0`; the calendar's busy layers are ruled in and ruled off (`--kp-calendar-busy-leave: hold`,
+  arrival under its own name `kp-sig-formal-ruled-in`); the busy table's rows dim and come back in the layer's 560 ms.
+- A tree branch is kept drawn while it glides shut (`[data-kp-group-folding]`).
+- The tour: the dim and the ring take the card's 740 ms at the even pace both ways; the card's title, text and foot are
+  turned round with it.
+- The palette is ruled in as the dialog (it had the bare fade); the alarm's ruling is keyframes over the dialog's 740 ms
+  (the old waits kept as offsets), so its close is the ruling backwards, and its backdrop is ruled as the dialog's.
+- The bar (no decided motion): the hover dropdown, the mega menu and the phone bar's panel take the menus' ruling (G3),
+  line by line, 400 + 160 + 60 per entry; `--kp-nav-close-time` holds the dropdown and the panel for that time.
+- The side navigation's shade takes the panel's 180 ms.

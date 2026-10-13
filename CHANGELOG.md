@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- **Changed: every other theme, the cyberpunk faults kept out** [Kenny, 2026-10-12; research/all-themes, Firefox]. In formal, light, dark, synthwave,
+  terminal, blueprint, solstice, brutalism, deco, phantom, grotesk, nostromo and titanium every part that opens or arrives (command palette, date
+  picker, combobox, menus and popovers, the bar's dropdown, mega menu and phone panel, the tour with its dim and ring, the alarm, the calendar and table
+  busy layers) runs the theme's own effect, and its close is that open played backwards (20 to 21 of 25 pairs per theme; the rest are state changes or
+  decided, listed in research/all-themes/README.md); pastel takes the shared mechanism only. Keyboard focus is visible on every stop: the selected tab
+  (grotesk, nostromo), grotesk's switch and synthwave's slider drew nothing. The focus returns to the opener when a date picker or side navigation has
+  closed, not at the start of the close (js/datepicker.js, js/sidenav.js); a turned popover's closing copy sits where the popover was (js/motion.js). The
+  review kit asks a section only in the themes it names (`data-review-themes` on a section). Lessons 41 to 47 in docs/THEME_LESSONS.md.
+
 - **Changed: cyberpunk, the review of 2026-10-12 (round 2)** [Kenny, research/cyberpunk-applied]. The command palette and shortcuts open and close by the channel
   split (they had only the plate shape), the phone bar panel and its toggle play it with text ghosts and a mirrored close, and an identity audit
   (`research/cyberpunk-applied/_audit/identity.mjs`, animation names printed by `gates/measure-pairs.mjs`) now fails a pair that does not run the theme's signature.

@@ -20,15 +20,19 @@ const probes = {
     combobox: '.kp-combobox__list:popover-open, .kp-combobox__list:not([hidden])',
 };
 
+async function holdNavTimers(page) {
+    await page.focus('.fa-phone [data-kp-nav-toggle]');
+    await page.evaluate(() => {
+        const set = window.setTimeout.bind(window);
+        window.__held = [];
+        window.setTimeout = (fn, ms, ...rest) => (ms >= 200 && ms <= 2000 ? void window.__held.push(fn) : set(fn, ms, ...rest));
+    });
+}
+
 export const PAIRS = [
-    ...GATE.map((p) => ({ ...p, probe: probes[p.id] })),
-    {
-        id: 'phone-bar',
-        section: '.fa-phone',
-        setup: focus('.fa-phone [data-kp-nav-toggle]'),
-        open: click('.fa-phone [data-kp-nav-toggle]'),
-        close: click('.fa-phone [data-kp-nav-toggle]'),
-    },
+    // the phone bar's script ends the close on a timer of the theme's close time (240 to 1000 ms): held while the
+    // paused frames are read, released after, in every theme (the gate's row holds 400-600 ms, cyberpunk's)
+    ...GATE.map((p) => ({ ...p, probe: probes[p.id], ...(p.id === 'phone-bar' ? { themes: undefined, setup: holdNavTimers } : {}) })),
     {
         id: 'sidenav-push',
         section: '#sidenav',

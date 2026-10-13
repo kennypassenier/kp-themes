@@ -3290,5 +3290,282 @@
                 kp-sig-nostromo-beam-layer var(--kp-sig-dur) steps(var(--kp-sig-no-n), end) backwards;
         }
     }
+
+    /* ── Pairs: every close is its open reversed, and the raster on every part that opens
+       [all-themes audit, 2026-10-13; docs/THEME_LESSONS.md 19-27, 31, 36-38]. What opens is drawn
+       by the raster from its top edge down, a band per 80 ms frame, the beam riding the edge (G3);
+       what closes or leaves is erased the same way backwards, frame for frame (G12). ── */
+    [data-theme='nostromo'] {
+        /* A part a script removes or hides leaves first, erased by the raster (lesson 19); what
+           takes no box arrives as nothing (23); the space a leave folds shut takes the erase's own
+           4 frames and starts with it (24). */
+        --kp-leave-state: leave;
+        --kp-arrive-unseen: skip;
+        --kp-leave-fold-grow: 1;
+        --kp-leave-fold-start: 0;
+        /* The bar's hover dropdown and its phone panel are held on screen for the erase's 4 frames
+           (js/components.js, lesson 36). */
+        --kp-nav-close-time: 320ms;
+        /* Four equal frames the other way round: the raster's `steps(4, end)` turned round, holding
+           the pose before each jump at the frame boundary itself (cyberpunk's `--kp-cp-back`), so
+           frame t of a close is frame (T - t) of its opening on the boundaries too. */
+        --kp-sig-no-back4: linear(0 0%, 0.25 0.01%, 0.25 25%, 0.5 25.01%, 0.5 50%, 0.75 50.01%, 0.75 75%, 1 75.01%, 1 100%);
+        /* The tour's dim and ring come in the card's 4 frames and go in the same 4 the other way
+           round (lessons 11, 22). */
+        --kp-tour-dim-close: 0 0 0 0 transparent;
+        --kp-tour-dim-time: var(--kp-sig-no-strike);
+        --kp-tour-dim-close-ease: var(--kp-sig-no-back4);
+        --kp-tour-dim-close-delay: 0s;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='nostromo'] {
+            --kp-nav-close-time: 0ms;
+        }
+    }
+
+    /* A tree branch's children are kept drawn while their group glides shut (lesson 26). */
+    [data-theme='nostromo'] .kp-tree [role='treeitem'][aria-expanded='false'] > [role='group'][data-kp-group-folding],
+    [data-theme='nostromo'] .kp-tree [role='treeitem'][aria-expanded='false'] + [role='group'][data-kp-group-folding] {
+        display: block;
+    }
+
+    /* The panels the raster draws here, with the beam's tail the popover's. */
+    [data-theme='nostromo'] :is(.kp-palette, .kp-shortcuts, .kp-datepicker__panel, .kp-combobox__list, .kp-nav__menu, .kp-nav__links) {
+        --kp-sig-dur: var(--kp-sig-no-strike);
+        --kp-sig-no-n: 4;
+        --kp-sig-no-tail: 1.1rem;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* The palette and the shortcuts sheet are drawn as the dialog is; js/motion.js closes them
+           as that draw played backwards (and opens them as that close turned round). */
+        [data-theme='nostromo'] :is(.kp-palette, .kp-shortcuts)[open] {
+            animation:
+                kp-sig-nostromo-raster var(--kp-sig-dur) steps(var(--kp-sig-no-n), end) backwards,
+                kp-sig-nostromo-beam-layer var(--kp-sig-dur) steps(var(--kp-sig-no-n), end) backwards;
+        }
+
+        /* The date picker's panel and the combobox's list are drawn as the popover is; js/motion.js
+           playClose plays that backwards (the panel's opening mark stays on through the close,
+           lesson 10). The list arrives as its own draw, not as the leave turned around. */
+        [data-theme='nostromo']
+            :is(.kp-combobox__list:popover-open, .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open) {
+            animation:
+                kp-sig-nostromo-raster var(--kp-sig-dur) steps(var(--kp-sig-no-n), end) backwards,
+                kp-sig-nostromo-beam-layer var(--kp-sig-dur) steps(var(--kp-sig-no-n), end) backwards;
+        }
+
+        [data-theme='nostromo'] .kp-combobox__list {
+            --kp-open: own;
+        }
+
+        /* The alarm is the bridge's screen: drawn by the raster from its top edge down with the beam
+           riding the edge, 4 frames, the headline and the reason with it (the package's rise, scale
+           and fades are not this theme's: G3, nothing rises or scales). js/motion.js closes it as the
+           draw backwards. */
+        [data-theme='nostromo'] .kp-alarm {
+            --kp-sig-no-tail: 1.2rem;
+        }
+
+        [data-theme='nostromo'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+            animation:
+                kp-sig-nostromo-raster var(--kp-sig-no-strike) steps(4, end) backwards,
+                kp-sig-nostromo-beam-layer var(--kp-sig-no-strike) steps(4, end) backwards;
+        }
+
+        [data-theme='nostromo'] .kp-alarm:not([data-kp-alarm-motion='still']) :is(.kp-alarm__panel, .kp-alarm__title, .kp-alarm__detail) {
+            animation: none;
+        }
+
+        /* The side navigation (over, push) is switched on where it stands: it does not slide in
+           from its edge (G2) but is drawn by the raster, 4 frames, and erased by it when it closes;
+           only then does it go back off screen and out of sight. The content a push panel makes
+           room in moves with the first frame of the opening and the last of the closing. */
+        [data-theme='nostromo'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) {
+            --kp-sig-no-tail: 1.1rem;
+        }
+
+        [data-theme='nostromo'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            visibility: visible;
+            transition:
+                translate 0s linear,
+                visibility 0s linear;
+            animation:
+                kp-sig-nostromo-raster var(--kp-sig-no-strike) steps(4, end) backwards,
+                kp-sig-nostromo-beam-layer var(--kp-sig-no-strike) steps(4, end) backwards;
+        }
+
+        [data-theme='nostromo'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='false'] {
+            visibility: hidden;
+            transition:
+                translate 0s linear var(--kp-sig-no-strike),
+                visibility 0s linear var(--kp-sig-no-strike);
+            animation:
+                kp-sig-nostromo-erase var(--kp-sig-no-strike) steps(4, jump-start),
+                kp-sig-nostromo-beam-layer-erase var(--kp-sig-no-strike) steps(4, jump-start);
+        }
+
+        [data-theme='nostromo'] .kp-sidenav__backdrop {
+            animation-duration: var(--kp-sig-no-strike);
+            animation-timing-function: steps(4, end);
+        }
+
+        [data-theme='nostromo'] [data-kp-sidenav-shift='open'] {
+            transition:
+                margin-inline-start 0s linear,
+                padding-inline-start 0s linear;
+        }
+
+        [data-theme='nostromo'] [data-kp-sidenav-shift='closed'] {
+            transition:
+                margin-inline-start 0s linear var(--kp-sig-no-strike),
+                padding-inline-start 0s linear var(--kp-sig-no-strike);
+        }
+
+        /* The tour's dim and the ring round its target come in the card's 4 equal frames. */
+        [data-theme='nostromo'] [data-kp-tour-target] {
+            transition:
+                box-shadow var(--kp-sig-no-strike) steps(4, end),
+                outline-color var(--kp-sig-no-strike) steps(4, end);
+        }
+
+        /* The busy table dims at once when its layer is drawn (layout.css, `[aria-busy]`) and comes
+           back at once when the erase is over, not when it starts: the switch the opening throws
+           first, the closing throws last. The package's resize transitions are restated with it. */
+        [data-theme='nostromo'] .kp-datatable {
+            transition:
+                outline-color calc(var(--kp-resize-dur, 300ms) / 2) ease-out,
+                outline-offset calc(var(--kp-resize-dur, 300ms) / 2) ease-out,
+                filter calc(var(--kp-resize-dur, 300ms) / 2) ease-out,
+                opacity 0s linear var(--kp-sig-no-strike);
+        }
+
+        [data-theme='nostromo'] .kp-datatable[aria-busy='true'] {
+            transition:
+                outline-color calc(var(--kp-resize-dur, 300ms) / 2) ease-out,
+                outline-offset calc(var(--kp-resize-dur, 300ms) / 2) ease-out,
+                filter calc(var(--kp-resize-dur, 300ms) / 2) ease-out,
+                opacity 0s linear;
+        }
+
+        /* Its kept rows, dimmed further while it refreshes, the same way. */
+        [data-theme='nostromo'] .kp-datatable .kp-table tbody {
+            transition: opacity 0s linear var(--kp-sig-no-strike);
+        }
+
+        [data-theme='nostromo'] .kp-datatable[aria-busy='true'] .kp-table tbody {
+            transition: opacity 0s linear;
+        }
+
+        /* The calendar's busy layers (the whole grid's card and a day's spinner) are drawn by the
+           raster and erased by it (the leave above): js/calendar.js marks a layer `[data-kp-leaving]`
+           while its state goes (`--kp-calendar-busy-leave: hold`), and the rules below keep it drawn
+           through the erase. */
+        [data-theme='nostromo'] :is(.kp-calendar__day-busy, .kp-calendar__busy) {
+            --kp-calendar-busy-leave: hold;
+            transition: none;
+        }
+
+        [data-theme='nostromo']
+            :is(.kp-calendar--busy-days, .kp-calendar--busy-whole:not(:has(> .kp-calendar__grid[aria-busy='true'])))
+            .kp-calendar__day[data-kp-tone='loading']
+            > .kp-calendar__day-busy,
+        [data-theme='nostromo'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy {
+            animation: kp-sig-nostromo-raster var(--kp-sig-no-strike) steps(4, end) backwards;
+        }
+
+        [data-theme='nostromo'] .kp-calendar__day:has(> .kp-calendar__day-busy[data-kp-leaving]) {
+            position: relative;
+        }
+
+        [data-theme='nostromo'] .kp-calendar__day-busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-spinner, 0.75rem);
+            position: absolute;
+            inset-inline: 0;
+            inset-block-end: 0.125rem;
+            display: flex;
+            justify-content: center;
+            line-height: 0;
+        }
+
+        [data-theme='nostromo'] .kp-calendar--busy-whole > .kp-calendar__busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-busy-spinner, 2.5rem);
+            z-index: 1;
+            display: grid;
+            place-self: center;
+            place-items: center;
+            padding: var(--kp-space-md, 1rem);
+            border-radius: var(--radius, 0.75rem);
+            background: var(--card);
+            box-shadow: 0 0 0 1px var(--border);
+            line-height: 0;
+        }
+
+        /* The bar's dropdown and mega menu are drawn by the raster when shown; once the pointer,
+           the focus or the press is gone the panel is held for the 4 frames (`[data-kp-nav-closing]`
+           on its item, js/components.js) while the raster erases it, the beam climbing back up.
+           The mega menu's item is released when a transition on the panel ends: the hold below is
+           that transition. The package's opacity fade is replaced: the screen does not fade. */
+        [data-theme='nostromo'] .kp-nav__menu {
+            --kp-sig-no-hold: 0;
+            transition: --kp-sig-no-hold var(--kp-sig-no-strike) linear;
+            animation:
+                kp-sig-nostromo-erase var(--kp-sig-no-strike) steps(4, jump-start) forwards,
+                kp-sig-nostromo-beam-layer-erase var(--kp-sig-no-strike) steps(4, jump-start) forwards;
+        }
+
+        [data-theme='nostromo']
+            .kp-nav__links
+            > li[data-kp-nav-closing]:not(:hover, :focus-within, [data-kp-nav-menu-open])
+            > .kp-nav__menu:not(.kp-nav__menu--wide) {
+            display: block;
+            opacity: 1;
+        }
+
+        [data-theme='nostromo']
+            :is(
+                .kp-nav__links > li:is(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+                .kp-nav__links > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide
+            ) {
+            --kp-sig-no-hold: 1;
+            animation:
+                kp-sig-nostromo-raster var(--kp-sig-dur) steps(var(--kp-sig-no-n), end) backwards,
+                kp-sig-nostromo-beam-layer var(--kp-sig-dur) steps(var(--kp-sig-no-n), end) backwards;
+        }
+    }
+
+    @container kp-nav (max-width: 40rem) {
+        /* Collapsed, the lists nested in the open phone panel are its own rows: they are not drawn again. */
+        [data-theme='nostromo'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__links .kp-nav__menu {
+            animation: none;
+            transition: none;
+        }
+
+        /* The phone panel is drawn by the raster; closing, it is held (`[data-kp-nav-closing]`, for
+           `--kp-nav-close-time`) while the raster erases it. */
+        @media (prefers-reduced-motion: no-preference) {
+            [data-theme='nostromo'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
+                animation:
+                    kp-sig-nostromo-raster var(--kp-sig-dur) steps(var(--kp-sig-no-n), end) backwards,
+                    kp-sig-nostromo-beam-layer var(--kp-sig-dur) steps(var(--kp-sig-no-n), end) backwards;
+            }
+
+            [data-theme='nostromo'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__links {
+                animation:
+                    kp-sig-nostromo-erase var(--kp-sig-no-strike) steps(4, jump-start) forwards,
+                    kp-sig-nostromo-beam-layer-erase var(--kp-sig-no-strike) steps(4, jump-start) forwards;
+            }
+        }
+    }
 }
 /* ── End of the signature ── */
+
+/* The hold a bar's panel keeps while the raster erases it: js/components.js releases the mega menu's
+   item when a transition on the panel ends, and this is the one it waits for. At the top level:
+   Firefox does not register an @property inside a layer. */
+@property --kp-sig-no-hold {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+}

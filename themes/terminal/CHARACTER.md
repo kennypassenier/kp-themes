@@ -600,3 +600,18 @@ The nine themes still without a character file (formal, light, dark, pastel,
 high-contrast, sepia, deco, phantom, retro) are read from their registers and
 their approved family pictures until their own grammar is written; when the
 next is written, this table and the nine before it are read first.
+
+---
+
+**Applied 2026-10-13** (all-themes audit, close = open reversed; `research/all-themes/reports/terminal.md`):
+the leave tokens (`--kp-leave-state: leave`, `--kp-arrive-unseen: skip`, fold 1 and 0); G3's print (four lines
+at 136 ms, the cursor at the line being printed) on the combobox's list, the date picker's panel, the tour's card
+and the header's dropdown, mega menu and phone panel (closing under second keyframe names, `--kp-nav-close-time:
+544ms`, the mega menu held by `--kp-sig-tm-hold`); the command palette printed as the dialog (six lines); the
+tour's dim and ring in the same four steps both ways; the tree's folding group kept drawn; the calendar's busy
+layers typed in and deleted by the cursor (`--kp-calendar-busy-leave: hold`); the status line's spinner stays out
+under the busy table's layer.
+
+**Round 2, 2026-10-13:** the busy table's layer keeps its place over the rows while it arrives and leaves
+(`.kp-datatable__busy-overlay[data-kp-leaving] { position: absolute }`), and the table's busy dims beneath it go as
+part of the same pair (see the report's "Round 2").
