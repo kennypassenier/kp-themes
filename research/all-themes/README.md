@@ -46,3 +46,15 @@ alerts, calendar side by side), tones.mjs (computed text against plate for alert
 
 Kenny's verdicts in research/all-themes-applied (14 steps). The tone colours of the calendar days and the alerts in seven
 themes are asked there as approve (keep) or not (design the theme's own variant).
+
+## Side navigation at the window edge (research/sidenav-edge), measured in all 16 themes (2026-10-13, Firefox)
+
+Pairs `sidenav`, `sidenav-push`, `sidenav-group`, `sidenav-edge-push/-gutter/-over/-tab`, `sidenav-rail-flyout`,
+`sidenav-rail-tip`, `sidenav-rail-peek` (out/<theme>/sidenav-pairs.txt). Every theme passes all but these, each with its reason:
+- `sidenav-rail-tip`, every theme: the tip's frames mirror (0.0 %); the item stays hovered after the close, so the meter's
+  "screen before" differs. The pair's setup, not the motion.
+- `sidenav-rail-flyout`, pastel: no popover effect (pastel has no grammar), so the flyout opens and closes plainly.
+- `sidenav-edge-push`, grotesk (41 % at frame 3): sampled in real time the page and the panel's edge move together, 0 to 240 px
+  in the first 135 ms of the open and back in the last 120 ms of the close (852-970 ms): mirrored; the meter's paused seek
+  lands on the far side of the 120 ms shift. `sidenav-edge-gutter`, grotesk: 0.0 % off, 1.1 % of the screen left over (the
+  panel's visibility flip at the end).
