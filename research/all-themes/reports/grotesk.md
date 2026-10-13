@@ -133,3 +133,22 @@ Measured wall time of the round 2 grotesk runs: full pairs 142 s and 141 s; part
 - **Pairs (Firefox):** phone-bar 960/960 ms, 0.0 %; bar-equipment 960/960 ms, 0.3 % (both ok, as before).
 
 Wall time of the timed run: pairs (phone-bar, bar-equipment) 12 s; stage frame runs 2 × 30 s, not timed.
+
+## Review round 2, Kenny's rejection (2026-10-13 20:37)
+
+**bar:** "Als ik hover over 'equipment' dan wordt het niet gewoon onderlijnt, maar staat er een kleine schuine lijn?"
+
+- **Cause:** the mega menu's button is `.kp-nav__link.kp-nav__disclosure`. css/components.css draws its caret on
+  `::after` (a 0.4 em box with two 1.5 px borders, turned 45 degrees, -135 while open); grotesk draws the hover
+  baseline on the same `::after` of every `.kp-nav__link`. The baseline rule kept the caret's width, borders, turn and
+  shift: on hover it scaled in as a 6 px slanted stroke under the end of the word (measured: inline-size 6 px, rotate
+  45deg, border 1 px).
+- **Change** (`css/grotesk-register.css`, after the baseline rules): `.kp-nav__link.kp-nav__disclosure::after` and its
+  `[aria-expanded='true']` state reset `display: block; margin: 0; inline-size: auto; border: 0; rotate: none;
+  translate: none`, so the rule spans the word as under every other link (grotesk's dropdown link "Readings" shows no
+  caret either).
+- **Evidence:** hovered in the review stage: Overview 86 px, Readings 84 px, Equipment 6 px slanted → 95 px straight
+  red rule under the word, rotate none. Pairs `bar-equipment` 960/960 ms 0.0 %; full grotesk run 22 of 32, as before.
+  Tab paint: 41 stops, only "Review in a dialog" and "Copy answer" NOMARK.
+
+Measured wall time: full pairs 180 s; tab paint 72 s.

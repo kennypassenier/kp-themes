@@ -67,3 +67,76 @@ Tab paint (end): 41 stops, NOMARK only "Review in a dialog" and "Copy answer".
 
 Measured wall time of the timed runs: pairs (all) 4 min 14 s, identity 1 min 28 s, tab-paint 1 min 14 s: 6 min 56 s;
 about ten single-pair checks between fixes were not timed.
+
+## Review round 2 (2026-10-13, Kenny's rejections)
+
+Frames read in Firefox on `research/all-themes-applied/demo.html` (real mouse clicks at coordinates, each animation
+paused and sought frame by frame, sheets looked at); numbers from `pairs-meter.mjs` and `identity.mjs`.
+
+**sidenav · "Niet de open/close animatie van dit thema"**
+- Cause: the panel slid in on the package's translate (120 ms); the throw and the screen were nowhere.
+- Change: the over/push panel is thrown as phantom's drawer is (G3, G13): `.kp-sidenav:is([data-kp-sidenav-mode='over'],
+  [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true']` travels on the shove (`translate 400ms cubic-bezier(0.81, 0,
+  0, 1)`) as a screen of dots and resolves in three cuts (`kp-sig-phantom-resolve 700ms`); `[...='false']` dissolves
+  (`kp-sig-phantom-resolve-out`) and is snatched back on the inverse after 300 ms (`translate 400ms cubic-bezier(1, 0,
+  0.19, 1) 300ms`). The travel stays a transition, so js/sidenav.js moves a pushed page with the throw. A backdrop (where
+  the package lays one) runs `kp-sig-phantom-sidenav-dim` (700 ms, dim in the shove's 400, held).
+- Evidence: frames show the panel coming off the start edge as 25 % dots, landing, then 50 / 75 % / solid; the close is
+  that backwards. Identity: `kp-sig-phantom-resolve` open, `-resolve-out` close. Pairs: sidenav, sidenav-push,
+  sidenav-edge-push/-gutter/-over 700/700 ms, 0.0 % (were 120/120 ms); sidenav-group 120/120, 0.0 %.
+
+**alarm · "Niet de open/close animatie van dit thema"**
+- Cause: the package's opacity/scale/rise on the plate, panel, headline and reason, not the throw.
+- Change: `.kp-alarm[open]` runs the dialog's pair `kp-sig-phantom-fly` + `kp-sig-phantom-resolve` (700 ms), posed as the
+  full-size drawer (from the start edge, level: `--kp-sig-ph-x0: -100%`, r0 0, land 0; RTL mirrored); the panel, title
+  and detail animations are `none`; `visibility: visible !important` while open so Acknowledge takes the focus at the
+  throw's first instant (the 4c fault of round 1). js/motion.js keeps the entrance and closes it backwards.
+- Evidence: frames show the whole alarm thrown in from the left as dots and resolving; the close dissolves and is
+  snatched back. Identity: open `script[rotate,scale,translate,visibility]` + `script[maskImage]` on `dialog.kp-alarm`,
+  exactly the dialog's row (the audit marks scripted copies FAIL by name, as it does the dialog). Pair 700/700 ms, 0.0 %.
+  Focus: Acknowledge is focused 50 ms after the click; Enter closes the alarm.
+
+**combobox · "Niet de open/close animatie van dit thema"**
+- Cause: the list was given `--kp-sig-ph-land: 0deg` in round 1, so it landed level, not as phantom's menus (askew).
+- Change: `.kp-combobox__list { --kp-sig-ph-land: var(--kp-land); rotate: var(--kp-land) }` (inside a dialog, popover or
+  the palette: `rotate: none`); the date picker keeps its level landing (not rejected).
+- Evidence: the last open frame shows the list cut paper standing -1.5 degrees, as the theme menu; pair 700/700 ms, 0.0 %.
+
+**calendar · "Bij het laden ... staat de laadanimatie over het hele scherm ipv enkel in de tabel"**
+- Cause (lesson 5 in reverse: a layer with no positioned parent): the loading picture's halftone block (`::before`) and
+  red slash (`::after`) are `position: absolute; inset: 0`, but `.kp-calendar--busy-whole > .kp-calendar__busy` and
+  `.kp-datatable__busy-panel` are static in the package, so both layers were laid against the nearest positioned
+  ancestor: measured 1280 x 900 px, the whole window, for the month's card.
+- Change: `position: relative` on `:is(.kp-datatable__busy-panel, .kp-calendar--busy-whole > .kp-calendar__busy)` (both
+  are static flex/grid items, so nothing moves).
+- Evidence: the card's `::before` is now 304 x 92 px (its own box), and the screenshot shows the block and slash only on
+  the card. **Round 1's fault ("nothing visible below the phone bar and a red line constantly streaking") was the same
+  cause in the table:** the busy panel's block and slash filled the whole busy layer, 954 x 280 px at 1280 px wide and
+  312 x 343 px at 390 px wide (on a phone: the whole table under the bar hidden, the slash sweeping across it); now 213 x 96
+  and 245 x 54 px, the panel only. Pairs: table-busy 700/700 ms, 3.3 % (ok); calendar-busy 700/700 ms, 176.7 % (was
+  186.5 %; the day tones' state change, on the ignore list).
+
+Tab paint: 41 stops, NOMARK only "Review in a dialog" and "Copy answer".
+
+**Deviations for Kenny:** the alarm is thrown level from the start edge (the drawer's pose, a full-screen part cannot
+land askew without showing the page at its corners); the side navigation's backdrop (off in the review demo) fades on the
+throw's clock.
+
+Measured wall time (Firefox, the four themes in parallel): pairs + identity 1 min 57 s, tab-paint 1 min 18 s.
+
+## Review round 2, follow-up (coordinator, 2026-10-13): the combobox list's place
+
+- **Cause:** js/top-layer.js `raiseInPlace()` measures the list where it is drawn the moment it opens and sets aside a
+  move, not a turn or a scale. At that moment the list stands at the throw's first pose (-1.6 rem, -2.4 rem, -9 deg),
+  so its layout box was placed 13.4 px left of the field, 16.0 px up (over the field's lower edge) and 245.7 px wide
+  against the field's 219 px, for as long as it was open. (Without any motion, the resting -1.5 deg turn alone put it
+  2.4 px left, 2.8 px up, 223.9 px wide.)
+- **Change** (`css/phantom-register.css`): `.kp-combobox__list` runs `kp-sig-phantom-fly-placed`, the throw with one
+  frame in front of it (0 to 0.01 %): unturned, unmoved, `visibility: hidden`, so the measurement reads the box where
+  it lands; every visible frame is the throw's. Inside a dialog-like surface it still plays nothing.
+- **Evidence:** layout box after opening: left 0.0, top 0.0 px from the field's bottom, width 219 px (= the field),
+  landing at -1.5 deg. Pairs combobox 700/700 ms 0.0 % → 700/700 ms 0.0 % (now `kp-sig-phantom-fly-placed` +
+  `kp-sig-phantom-resolve`); datepicker 1.4 %, unchanged (it is placed by offsets, not measured). Frames in the review
+  stage: thrown in from the start edge, resolving, landing under the field; the close the same backwards. Tab paint:
+  41 stops, only the two allowed NOMARK.
+- **Gate:** `kp-sig-phantom-fly-placed` needs a TIMINGS row in js/effects.js.

@@ -620,3 +620,9 @@ veil is the ink laid thin, one flat weight (`--kp-br-veil`, the ink at 62 %), so
 out of the target and shrinks back into it and never fades (G1). This returns to the translucent ink veil of Kenny's pick
 r2-br-highlight-1 and takes back proposal-13's "solid ink" for the veil only; slabs stay untinted (G7). Drawn through
 `--kp-tour-dim` (css/components.css now draws the dim from that token in kp.layout).
+
+**Review round 2, 2026-10-13:** the side navigation (over, push) and the alarm open as the dialog: dropped onto their
+footprint from up-left on the fall curve, the hard shadow on the ground from the first frame, lifted off as that
+backwards (G3, G12). The side navigation no longer slides in from its edge (G2): it stands in place, falls 1.5 rem in
+300 ms, each slab's shadow staying on the ground; the alarm's stamp falls 2.5 rem in the dialog's 1500 ms while the
+screen stands. research/all-themes/reports/brutalism.md.

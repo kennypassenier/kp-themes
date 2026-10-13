@@ -1,7 +1,7 @@
 # Builds research/all-themes-applied/demo.html from research/cyberpunk-applied/demo.html: the same real
 # components, only the sections that changed in some theme, each asked only in the themes where it changed
 # (data-review-themes on the section), with what to look at per theme. Run from the repository root.
-import re, pathlib
+import re, pathlib, json
 
 SRC = pathlib.Path('research/cyberpunk-applied')
 TO_TOP = '''// The block's own back-to-top takes the reader back as well (Kenny, 2026-10-13: "the back to top didn't seem to work"): to
@@ -134,7 +134,7 @@ SECTIONS = {
     }),
 }
 
-ROUND = '2026-10-13-r2'
+ROUND = '2026-10-13-r3'
 DEMO_THEMES = ['formal', 'light', 'dark', 'cyberpunk', 'synthwave', 'pastel', 'terminal', 'forest', 'blueprint', 'solstice', 'brutalism', 'deco', 'phantom', 'grotesk', 'nostromo', 'titanium']
 TOUR_ALL = ' Round 2, every theme: on a step the card no longer drops into the page for a moment (that was the flash and the jump), the page stays dimmed on a card with cut corners, and the part the tour points at is shown uncut while it is pointed at.'
 GENERIC = 'Not changed for this theme in particular: judge it as it is (round 2 shows every block in every theme).'
@@ -152,6 +152,36 @@ for sid in ['palette', 'datepicker', 'combobox', 'tour', 'dialogs', 'alarm', 'ta
     if 'phantom' in SECTIONS[sid][1]:
         SECTIONS[sid][1]['phantom'] += PHANTOM_R2
 
+R3 = {
+ ("bar","pastel"): "Round 3: the dropdown, mega menu and phone panel open with pastel's own dialog entrance (the sheet rises 18 px, turned, and springs flat, 427 ms) and close as it backwards.",
+ ("palette","pastel"): "Round 3: the palette opens with pastel's dialog sheet and closes as it backwards.",
+ ("datepicker","pastel"): "Round 3: the panel opens with pastel's sheet.",
+ ("combobox","pastel"): "Round 3: the list opens with pastel's sheet.",
+ ("alarm","pastel"): "Round 3: the plate fades in and the panel drops and turns as pastel's dialog does; the close is that backwards.",
+ ("alarm","dark"): "Round 3: the alarm opens with dark's pass: the line crosses left to right laying the red plate behind it, and crosses back to close.",
+ ("bar","grotesk"): "Round 3: hovering Equipment draws the same straight red rule as the other links (the caret had bent it into a small slanted line).",
+ ("tour","forest"): "Round 3: no more green flash on the step to the last card (the dim grew out of the card's green rim; it now grows from nothing).",
+ ("combobox","phantom"): "Round 3: the list lands askew, as phantom's menus do.",
+ ("calendar","phantom"): "Round 3: the loading picture stays inside the calendar (its block and slash had no box of their own and covered the screen; the same fault covered the table on a phone).",
+ ("table","phantom"): "Round 3: the loading picture stays inside the busy panel (it covered the whole table, and on a phone the page below the bar).",
+}
+SN = {
+ "formal":"is ruled in like the dialog (740 ms) and ruled off backwards", "light":"comes into focus out of the glare like the dialog (700 ms)", "synthwave":"climbs behind the beam like the dialog (450 ms)", "terminal":"is printed in the dialog's six lines (816 ms) and cleared upward", "blueprint":"is traced by the pen and inked like the dialog (800 ms)", "solstice":"opens as the kindled dome (480 ms)", "brutalism":"is dropped onto its footprint (300 ms) and lifted off", "deco":"is a deco plate: the gold inlay draws, then the lacquer comes up (480 ms)", "phantom":"is thrown off its edge as dots and resolves in three cuts (700 ms)", "titanium":"is cut open from the top with the cutter line (240 ms)", "pastel":"is laid on with pastel's sheet (427 ms)",
+}
+AL = {
+ "synthwave":"climbs like the dialog with the beam","terminal":"is printed like the dialog","blueprint":"is traced, frame first, then inked","solstice":"opens as the kindled dome","brutalism":"drops the red stamp like the dialog's slab (1500 ms)","deco":"opens with the gold double frame drawn like the inlay","phantom":"is thrown like the drawer and resolves","titanium":"is cut open like the palette","light":"comes out of the glare like the dialog",
+}
+for (sid, t), line in R3.items():
+    SECTIONS[sid][1][t] = (SECTIONS[sid][1].get(t, "") + " " + line).strip()
+for t in DEMO_THEMES:
+    v = SN.get(t)
+    SECTIONS["sidenav"][1][t] = ("Round 3: the panel " + v + ", the theme's own opening; the close is that backwards. " if v else "Round 3: unchanged, it already used the theme's own opening (measured). ") + "Compare with the reference block at the top."
+    a = AL.get(t)
+    if a:
+        SECTIONS["alarm"][1][t] = "Round 3: the alarm " + a + "; the close is that backwards. Compare with the reference block."
+    elif t not in ("pastel", "dark"):
+        SECTIONS["alarm"][1][t] = "Round 3: unchanged, it already used the theme's own opening (measured). Compare with the reference block."
+
 def section_block(sid):
     m = re.search(r'\n( *)<!-- [^\n]*-->\n\s*<section\n(?:(?!</section>).)*?data-review-item="%s"(?:(?!</section>)[\s\S])*?</section>\n' % re.escape(sid), html, re.S)
     if not m:
@@ -164,7 +194,7 @@ def esc(s):
 out_sections = []
 for n, (sid, (title, looks)) in enumerate(SECTIONS.items(), start=1):
     block = section_block(sid)
-    themes = [t for t in DEMO_THEMES if t in looks or (sid != 'tour' and t in ALL) or sid == 'tour']
+    themes = [t for t in DEMO_THEMES if t in looks or (sid not in ('tour', 'sidenav', 'alarm') and t in ALL) or sid in ('tour', 'sidenav', 'alarm')]
     looks = {**{t: GENERIC for t in themes}, **looks}
     block = re.sub(r'data-review-title="[^"]*"', f'data-review-title="{n} · {esc(title)}" data-review-themes="{",".join(themes)}"', block, count=1)
     block = re.sub(r'<p class="fa-num">[^<]*</p>', f'<p class="fa-num">{n} · {title.split(":")[0]}</p>', block, count=1)
@@ -174,6 +204,29 @@ for n, (sid, (title, looks)) in enumerate(SECTIONS.items(), start=1):
     block = re.sub(r'<!-- [^\n]*-->', f'<!-- {n} · {sid} -->', block, count=1)
     out_sections.append(block)
 
+REFERENCE = '''
+            <!-- 0 · reference -->
+            <section class="fa-sec" id="reference" data-review-item="reference" data-review-title="0 · Reference: how this theme opens and closes" aria-labelledby="h-reference">
+                <div class="fa-sec__head">
+                    <p class="fa-num">0 · Reference</p>
+                    <h2 id="h-reference">Reference: how this theme opens and closes a dialog. Every block below should open and close the same way.</h2>
+                </div>
+                <div class="fa-look" data-review-look>
+REFLOOK
+                </div>
+                <div class="fa-stage">
+                    <button type="button" class="fa-ref-open" data-kp-dialog="fa-ref-dialog">Open the reference dialog</button>
+                    <dialog class="kp-dialog" id="fa-ref-dialog" aria-labelledby="fa-ref-title">
+                        <h2 class="kp-dialog__title" id="fa-ref-title">The theme's opening</h2>
+                        <p>This dialog opens with the theme's signature effect and closes as that effect played backwards.</p>
+                        <div class="kp-dialog__actions">
+                            <button type="button" class="fa-ref-open" data-kp-dialog-close="keep">Close</button>
+                        </div>
+                    </dialog>
+                </div>
+            </section>
+'''
+REFERENCE = REFERENCE.replace('REFLOOK', '\n'.join(f'                    <p data-for="{t}"><b>{t}</b>: an example first, to compare every other block with (Kenny, 2026-10-13). Open the dialog and close it: this is the theme\'s own opening, and its close is that opening backwards. Approve it when this is the effect you approved for the theme.</p>' for t in DEMO_THEMES))
 head_end = html.index('<main')
 head = html[:head_end]
 head = head.replace('data-theme="cyberpunk" data-cat-theme="cyberpunk" data-cat-theme-fixed data-review="cyberpunk-applied" data-review-themes="cyberpunk"',
@@ -201,7 +254,9 @@ intro = '''<main class="fa-page">
 tail = html[html.index('        </main>'):]
 tail = tail.replace('<!-- Round one: every block is new. -->', '<!-- Round one. -->').replace('"round": "2026-10-12-r1"', f'"round": "{ROUND}"')
 OUT.mkdir(exist_ok=True)
-(OUT / 'demo.html').write_text(head + intro + '\n'.join(out_sections) + '\n' + tail)
+reopen = [f'{t}|{i}' for t in DEMO_THEMES for i in ('sidenav', 'alarm')]
+tail = tail.replace('"reopen": []', '"reopen": ' + json.dumps(reopen))
+(OUT / 'demo.html').write_text(head + intro + REFERENCE + '\n'.join(out_sections) + '\n' + tail)
 js = (SRC / 'demo.js').read_text()
 js = js.replace('research/cyberpunk-applied', 'research/all-themes-applied')
 js = js.replace("this page judges cyberpunk and stays cyberpunk", "the page keeps the theme the review dialog shows")

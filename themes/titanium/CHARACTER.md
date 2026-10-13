@@ -411,3 +411,8 @@ part of the same pair (see the report's "Round 2").
 **Review round 1, 2026-10-13:** the side navigation's backdrop is a shade, not a part that arrives: it no longer takes the
 leave played backwards (the heat colours ran over the whole frame beside the panel as it opened); it keeps its own shade
 animation on the panel's 240 ms both ways.
+
+**Review round 2, 2026-10-13:** the side navigation (over, push) and the alarm are cut open from the top as the dialog
+is, the cutter line in the second oxide ahead of the cut, and cut shut backwards. The side navigation no longer slides in
+from its edge (G3's edge rule gives way to Kenny's verdict that the slide is not titanium's opening); it stands in place
+for the 240 ms of the cut. research/all-themes/reports/titanium.md.

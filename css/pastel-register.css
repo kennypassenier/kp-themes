@@ -8,6 +8,15 @@
     initial-value: 0;
 }
 
+/* The bar's mega menu is held on screen while a transition on the panel plays (js/components.js
+   settleClosing()): this number, which pastel transitions over the sheet's time, is that transition
+   (review round 2, 2026-10-13; brutalism's --kp-sig-br-hold). */
+@property --kp-sig-pastel-hold {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+}
+
 @layer kp.register {
     /* @kp-soft/themes — css/pastel-register.css
    The pastel register, 5.0.0 [S48, LIFT_PLAN row 6]: risograph printing.
@@ -512,6 +521,16 @@
         color: var(--foreground);
         padding-inline: 0.75rem;
         font-size: 0.92rem;
+    }
+
+    /* The combobox's field focuses as every other field here (review round 2 follow-up,
+       2026-10-13): the package's field ring, 2 px of --focus-ring inside the page-coloured
+       outline. css/components.css gives the combobox input only a border colour on focus, which
+       is pastel's resting border already, so a Tab to it changed nothing on screen. */
+    [data-theme='pastel'] .kp-combobox__input:focus-visible {
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 var(--border-strong);
     }
 
     [data-theme='pastel'] .kp-field__input--multiline {
@@ -1360,12 +1379,9 @@
                       register's own button rule, lifting askew under the
                       pointer and pressed flat as every button here is
 
-       Motion is the register's own: the plate fades over --fx-duration with
-       plain ease (the leave's fade); the panel lands the way a hovered
-       sticker lifts, from 6px up and -1.2deg askew to rest, overshooting on
-       --fx-ease over 420ms (a plate's fill time); the mint plate fills in
-       with kp-fill (420ms, --fx-ease); the headline's second pass springs
-       into register with kp-registration (650ms, --fx-ease). Nothing loops.
+       Motion is the dialog's (review round 2, 2026-10-13, below): the plate
+       comes out of nothing and the panel rises and turns into place as the
+       dialog's sheet does, and the close is that backwards. Nothing loops.
        Under reduced motion the landed sticker, the full plate and the
        registered overprint stand at once. The button keeps this register's
        shape and takes the alarm's paint, on selectors long enough to outrank
@@ -1487,50 +1503,56 @@
         text-shadow: none;
     }
 
+    /* The alarm opens as pastel's dialog does and closes as that backwards (review round 2,
+       Kenny 2026-10-13: "Niet de open/close animatie van dit thema"). It ran its own landing (the
+       plate's fade, the panel dropped 6 px askew by transitions, the mint plate filling and the
+       overprint springing in later), which js/motion.js could not turn around: it keeps only the
+       CSS animations of a dialog, so the close was a fade. Now the dialog's sheet
+       (kp-sig-pastel-pastel-sheet: up from 18 px below, turned -2.5 degrees, out of nothing) is
+       shared between the two boxes the alarm is made of: the screen-wide plate comes out of
+       nothing, the panel on it rises and turns into place, on the dialog's curve and in its time
+       (640 ms; js/motion.js plays it in the dialog's close time, forwards to open, backwards to
+       close, `--kp-open: reverse-close`). The words, the mint plate and the overprint stand on the
+       panel and come with it. The breathing glow stays off; the held-open catalogue frame
+       (`[data-kp-alarm-inline]`, never `[open]`) stands still. */
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='pastel'] .kp-alarm:not([data-kp-alarm-motion='still']),
         [data-theme='pastel'] .kp-alarm:not([data-kp-alarm-motion='still'])::after,
-        [data-theme='pastel'] .kp-alarm:not([data-kp-alarm-motion='still']) :is(.kp-alarm__panel, .kp-alarm__title, .kp-alarm__detail) {
+        [data-theme='pastel']
+            .kp-alarm:not([data-kp-alarm-motion='still'])
+            :is(.kp-alarm__panel, .kp-alarm__title, .kp-alarm__detail, .kp-alarm__code),
+        [data-theme='pastel'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__glyphs::before {
             animation: none;
         }
 
         [data-theme='pastel'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
-            transition: opacity var(--fx-duration) ease;
+            animation: kp-sig-pastel-sheet-ground 640ms var(--fx-ease) both;
         }
 
-        [data-theme='pastel'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel {
-            transition:
-                opacity var(--fx-duration) ease,
-                translate 420ms var(--fx-ease),
-                rotate 420ms var(--fx-ease);
+        [data-theme='pastel'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) .kp-alarm__panel {
+            animation: kp-sig-pastel-sheet-lay 640ms var(--fx-ease) both;
+        }
+    }
+
+    /* The dialog's sheet split over the alarm's plate and its panel: together they are
+       kp-sig-pastel-pastel-sheet frame for frame. */
+    @keyframes kp-sig-pastel-sheet-ground {
+        from {
+            opacity: 0;
         }
 
-        [data-theme='pastel'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__code {
-            animation: kp-fill 420ms 300ms var(--fx-ease) both;
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes kp-sig-pastel-sheet-lay {
+        from {
+            transform: translateY(18px) rotate(-2.5deg);
         }
 
-        [data-theme='pastel'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__glyphs::before {
-            animation: kp-registration 650ms 200ms var(--fx-ease) both;
-        }
-
-        [data-theme='pastel'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__detail {
-            transition: opacity var(--fx-duration) ease 300ms;
-        }
-
-        @starting-style {
-            [data-theme='pastel'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
-                opacity: 0;
-            }
-
-            [data-theme='pastel'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel {
-                opacity: 0;
-                translate: 0 -6px;
-                rotate: -1.2deg;
-            }
-
-            [data-theme='pastel'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__detail {
-                opacity: 0;
-            }
+        to {
+            transform: none;
         }
     }
 
@@ -2482,6 +2504,187 @@
     @keyframes kp-sig-pastel-tour-ring {
         from {
             outline-color: transparent;
+        }
+    }
+
+    /* ── Every part that opens takes the dialog's sheet (review round 2, 2026-10-13) ──
+       Kenny, on the bar, the palette, the date picker, the combobox, the alarm and the side
+       navigation: "Niet de open/close animatie van dit thema". Pastel has no CHARACTER.md; its one
+       decided opening is the dialog's sheet (kp-sig-pastel-pastel-sheet, research/signature-elements:
+       a second sheet laid on the print, up from 18 px below and turned -2.5 degrees, out of nothing,
+       springing into place on --fx-ease). The dialog is seen opening in 427 ms (js/motion.js plays
+       its 640 ms entrance in the dialog's close time, two thirds, `--kp-open: reverse-close`) and
+       closing as that backwards. Every part below opens with that same sheet, in those same
+       427 ms on that same curve, and closes as it played backwards: a CSS close runs a second name
+       of the same frames (kp-sig-pastel-sheet-back) in reverse, so the browser restarts it
+       (lesson 10); a panel js/motion.js closes (the palette, the date picker, the combobox list)
+       has its entrance played backwards for it. The alarm's sheet is in the register layer above. */
+    [data-theme='pastel'] {
+        --kp-sig-pastel-window: 427ms;
+        /* The hover dropdown and the phone panel are held on screen for their close (lesson 36). */
+        --kp-nav-close-time: 427ms;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* The command palette (and the shortcut sheet) are dialogs: the dialog's own rule. */
+        [data-theme='pastel'] :is(.kp-palette, .kp-shortcuts) {
+            --kp-sig-dur: 640ms;
+            animation: kp-sig-pastel-pastel-sheet var(--kp-sig-dur) var(--fx-ease) both;
+        }
+
+        /* The date picker's panel, the combobox's list and the collapsed rail's group that floats out
+           beside it (`.kp-sidenav__flyout`, a popover js/motion.js closes): laid on as the dialog is,
+           each where it hangs from its opener. */
+        [data-theme='pastel'] :is(.kp-datepicker__panel, .kp-combobox__list, .kp-sidenav__flyout) {
+            animation: kp-sig-pastel-pastel-sheet var(--kp-sig-pastel-window) var(--fx-ease) backwards;
+        }
+
+        /* The combobox's list is placed by measuring where it is drawn the moment it opens
+           (js/top-layer.js raiseInPlace(), layoutRect(), which sets a move aside but not a turn):
+           measured turned, it stayed 4 px left, 13 px low and 8 px wide for as long as it was open.
+           Its sheet holds the turn back for the first, invisible frame (opacity 0), so the
+           measurement reads the list where it rests; every frame that can be seen is the sheet's. */
+        [data-theme='pastel'] .kp-combobox__list {
+            animation-name: kp-sig-pastel-sheet-placed;
+        }
+
+        /* Menus and popovers (review round 2 follow-up, 2026-10-13): the theme menu's list, a
+           popover such as the row actions, and a menu button's menu are laid on as the dialog is and
+           taken off as that backwards (js/motion.js plays the entrance back on its closing copy, or
+           playClose()). A menu inside a popover is not laid on twice: the popover is. Tooltips keep
+           their bubble. Several are placed by measuring them as they open (js/menu-button.js,
+           js/top-layer.js), so they take the sheet with its first, unseen frame unturned. */
+        [data-theme='pastel'] :is(.kp-popover:not(.kp-tooltip, .kp-sidenav__flyout), .kp-theme-menu__list, .kp-menu-button > .kp-menu) {
+            animation: kp-sig-pastel-sheet-placed var(--kp-sig-pastel-window) var(--fx-ease) backwards;
+        }
+
+        [data-theme='pastel'] :is(.kp-popover, .kp-theme-menu__list) :is(.kp-menu, .kp-popover) {
+            animation: none;
+        }
+
+        /* The bar's dropdown (opened by hover and focus) and mega menu (opened by its button).
+           While a dropdown closes, js/components.js marks its item `[data-kp-nav-closing]` for
+           `--kp-nav-close-time` and the rule keeps it drawn (Firefox holds no `display`); the mega
+           menu's item is held while the hold number below transitions. The package's opacity fade
+           is replaced: the sheet brings its own. */
+        @container kp-nav (width > 40rem) {
+            [data-theme='pastel'] .kp-nav__menu {
+                --kp-sig-pastel-hold: 0;
+                transition: --kp-sig-pastel-hold var(--kp-sig-pastel-window) linear;
+            }
+
+            [data-theme='pastel']
+                :is(
+                    .kp-nav__links > li:is(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+                    .kp-nav__links > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide
+                ) {
+                --kp-sig-pastel-hold: 1;
+                animation: kp-sig-pastel-pastel-sheet var(--kp-sig-pastel-window) var(--fx-ease) backwards;
+            }
+
+            [data-theme='pastel']
+                .kp-nav__links
+                > li[data-kp-nav-closing]:not(:hover, :focus-within, [data-kp-nav-menu-open])
+                > .kp-nav__menu:not(.kp-nav__menu--wide) {
+                display: block;
+                opacity: 1;
+                animation: kp-sig-pastel-sheet-back var(--kp-sig-pastel-window) var(--fx-ease) reverse forwards;
+            }
+
+            [data-theme='pastel']
+                .kp-nav__links
+                > li[data-kp-nav-closing]:not([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true']))
+                > .kp-nav__menu--wide {
+                animation: kp-sig-pastel-sheet-back var(--kp-sig-pastel-window) var(--fx-ease) reverse forwards;
+            }
+        }
+
+        /* On a phone the bar's links are a panel under the bar: laid on as a sheet, taken off as it
+           backwards (js/components.js keeps it open `--kp-nav-close-time` while
+           `[data-kp-nav-closing]`). The lists nested in it are its own rows and play nothing. */
+        @container kp-nav (max-width: 40rem) {
+            [data-theme='pastel'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
+                animation: kp-sig-pastel-pastel-sheet var(--kp-sig-pastel-window) var(--fx-ease) backwards;
+            }
+
+            [data-theme='pastel'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__links {
+                animation: kp-sig-pastel-sheet-back var(--kp-sig-pastel-window) var(--fx-ease) reverse forwards;
+            }
+
+            [data-theme='pastel'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu {
+                animation: none;
+                transition: none;
+            }
+        }
+
+        /* The side navigation (over and push) is laid on where it stands as the dialog is, and
+           taken off as that backwards; only then does it go back behind its edge (it no longer
+           slides in 220 ms). The content a push panel moves glides aside on the sheet's time and
+           curve and comes back on its reflection in the same time, so the close is the open
+           backwards; the backdrop, where a page keeps one, takes the same time. */
+        [data-theme='pastel'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            transition: translate 0s linear;
+            animation: kp-sig-pastel-pastel-sheet var(--kp-sig-pastel-window) var(--fx-ease) backwards;
+        }
+
+        [data-theme='pastel'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='false'] {
+            transition: translate 0s linear var(--kp-sig-pastel-window);
+            animation: kp-sig-pastel-sheet-back var(--kp-sig-pastel-window) var(--fx-ease) reverse forwards;
+        }
+
+        [data-theme='pastel'] .kp-sidenav__backdrop {
+            animation-duration: 427ms;
+        }
+
+        [data-theme='pastel'] [data-kp-sidenav-shift='open'] {
+            transition-duration: var(--kp-sig-pastel-window);
+            transition-timing-function: var(--fx-ease);
+            transition-delay: 0s;
+        }
+
+        /* --fx-ease, cubic-bezier(0.34, 1.56, 0.64, 1), turned around. */
+        [data-theme='pastel'] [data-kp-sidenav-shift='closed'] {
+            transition-duration: var(--kp-sig-pastel-window);
+            transition-timing-function: cubic-bezier(0.36, 0, 0.66, -0.56);
+            transition-delay: 0s;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='pastel'] {
+            --kp-nav-close-time: 0ms;
+        }
+    }
+
+    /* The sheet for a part placed by measuring it as it opens (the combobox's list): the first
+       frame is the rest pose, unseen (opacity 0); the turn and the drop come from the next frame. */
+    @keyframes kp-sig-pastel-sheet-placed {
+        0% {
+            opacity: 0;
+            transform: none;
+        }
+
+        0.1% {
+            opacity: 0;
+            transform: translateY(18px) rotate(-2.5deg);
+        }
+
+        100% {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    /* The sheet under a second name, for a close a style plays (lesson 10). */
+    @keyframes kp-sig-pastel-sheet-back {
+        from {
+            opacity: 0;
+            transform: translateY(18px) rotate(-2.5deg);
+        }
+
+        to {
+            opacity: 1;
+            transform: none;
         }
     }
 }

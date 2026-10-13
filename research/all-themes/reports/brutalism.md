@@ -74,3 +74,37 @@ Measured wall time (Firefox, brutalism): targeted pairs runs 39 s, 43 s, 11 s, 1
 
 **Deviation for Kenny:** G7/proposal-13 say "no transparency"; the veil is now translucent ink (62 %), which is Kenny's own
 pick r2-br-highlight-1 (78 % ink veil) at a lighter weight so the page reads. Slabs stay untinted.
+
+## Review round 2 (2026-10-13, Kenny's rejections)
+
+Frames read in Firefox on `research/all-themes-applied/demo.html` (real clicks at coordinates, animations paused and
+sought frame by frame, sheets looked at); numbers from `pairs-meter.mjs` and `identity.mjs`.
+
+**sidenav · "Niet de open/close animatie van dit thema"**
+- Cause: the panel slid in from its edge (100 ms translate), which G2 forbids; no drop.
+- Change: dropped onto its footprint as G3 drops a plate: `[data-kp-sidenav-open='true']`
+  `kp-sig-brutalism-sidenav-drop 300ms` on the fall curve (a `transform` from 1.5 rem up-left, plus the registered
+  `--kp-sig-br-lift`, new top-level `@property`), `[...='false']` `kp-sig-brutalism-sidenav-drop-back reverse forwards`
+  (lifted off). Each slab's hard shadow stays on the ground: the links' `box-shadow` offset is `3px + lift` (the current
+  link `lift`). The panel stands in place (`translate 0s`; close `0s 300ms`), a pushed page likewise; a backdrop holds
+  (`kp-sig-brutalism-hold`).
+- Evidence: frames show the column held up-left over its black footprints, falling onto them and stopping dead; the close
+  lifts it back off. Pairs: sidenav 300/300 ms 1.0 %, sidenav-push 0.0 %, sidenav-edge-push 0.0 %, -gutter 0.0 %, -over
+  1.7 % (were 100/100 ms); sidenav-group 100/100, 0.0 %. Identity: `kp-sig-brutalism-sidenav-drop` / `-drop-back`.
+
+**alarm · "Niet de open/close animatie van dit thema"**
+- Cause: the package's opacity/scale/rise (1500 ms).
+- Change: the stamp (`.kp-alarm__panel`, the red plate on its 10 px shadow) is dropped from 2.5 rem up-left with
+  `kp-sig-brutalism-drop` (the dialog's slab drop, `--kp-sig-br-sh: 10px`), the screen stands at once (`.kp-alarm[open]
+  { animation: none }`, `::backdrop` held as the dialog's); title and detail animations `none`. js/motion.js plays it in
+  the dialog's 1500 ms and lifts it off backwards.
+- Evidence: frames show the stamp falling onto its shadow, which stays on the ground, and lifted off on close. Identity:
+  `script[boxShadow,translate]@div.kp-alarm__panel` + the backdrop's hold, the dialog's row (scripted copy). Pair
+  1500/1500 ms, 0.8 %.
+
+Tab paint: 41 stops, NOMARK only "Review in a dialog" and "Copy answer".
+
+**Deviation for Kenny:** a panel at the window's edge, held 1.5 rem up-left, has its first frames partly beyond that
+edge (the dialog keeps a margin for this; the side navigation cannot).
+
+Measured wall time (Firefox, the four themes in parallel): pairs + identity 1 min 57 s, tab-paint 1 min 18 s.

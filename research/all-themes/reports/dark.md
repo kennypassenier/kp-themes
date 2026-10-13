@@ -78,3 +78,28 @@ Measured wall time of the dark measurement runs: 7 min 29 s (pairs 169 s; partia
   wizard-step, empty-state and tabs-panel (state changes, ignored per the brief).
 
 Measured wall time of the round 2 dark runs: full pairs 146 s; the partial table-busy runs (2 × about 8 s) were not timed.
+
+## Review round 2, Kenny's rejection (2026-10-13 20:37)
+
+**alarm:** "Dat gaat niet open/close met de animatie van Dark".
+
+- **Cause:** the alarm was not in dark's pass list. It ran the package's entrance (the plate faded in 240 ms, the panel
+  rose 1.25 rem and scaled from 0.98, the headline shrank from 1.06, the reason faded in late), which js/motion.js
+  kept and played forwards and backwards in the 587 ms close time: timed and mirrored (pairs 0.0 %, identity "OWN" by
+  the script's name) but not dark's opening.
+- **Change** (`css/dark-register.css`, new block at the foot of `kp.signature`): `.kp-alarm[open]:not([data-kp-alarm-motion='still'])`
+  takes `kp-sig-dark-sweep` over its own box, the whole screen, with no halo reach (`--kp-sig-dk-r: 0px`); the line is
+  `.kp-alarm__scan::after` (the plate's own `::after` is its breathing glow) running `kp-sig-dark-pass-line`; panel,
+  headline and reason run nothing of their own. js/motion.js plays the pass forwards to open and backwards to close in
+  the dialog's 587 ms. No film turn: the alarm draws no film edge. The catalogue's held-open frame
+  (`[data-kp-alarm-inline]`) stays still.
+- **Evidence:** pairs `alarm` 587/587 ms 0.0 % → 587/587 ms 0.0 %, now `kp-alarm` mask (the sweep) and
+  `kp-alarm__scan::after` (the line) instead of opacity/scale/translate on four parts. Frames in the review stage at
+  0, 100, 200, 300, 400, 500, 586 ms: the line crosses the screen left to right laying the red plate, frame and
+  headline behind it; the close is the line crossing back right to left taking them off, ending on the page.
+  Full dark run: 27 of 32 pass (the side-navigation edge rows included; nothing else moved). Tab paint: 41 stops, only
+  "Review in a dialog" and "Copy answer" NOMARK.
+- **Deviation for Kenny:** the alarm is swept as one screen-wide box (G3, "a dialog is swept from its start edge where
+  it stands"); the alternative is to sweep only its card and let the red plate come with the backdrop's fade.
+
+Measured wall time: alarm pair + identity 15 s; full pairs 182 s; identity 65 s; tab paint 72 s.

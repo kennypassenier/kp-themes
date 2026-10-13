@@ -82,3 +82,62 @@ Measured wall time of the light measurement runs: 9 min 24 s (pairs 162 s and 15
   of the picker's pair.
 
 Measured wall time of the round 2 light runs: full pairs 140 s, tab-paint 71 s; the partial runs (3 × about 8 s) were not timed.
+
+## Review round 2 (2026-10-13 20:37, side navigation and alarm)
+
+Kenny: "Niet de open/close animatie van dit thema". The side navigation and the alarm must open with the theme's own
+dialog opening and close as that opening played backwards.
+
+**Side navigation (over, push, and the window-edge panel of research/sidenav-edge).**
+
+- **Cause:** the panel ran the package's plain slide, a `translate` transition over the 200 ms contact time
+  (identity: `transition:translate@nav.kp-sidenav 200ms`, no `kp-sig-light-*`). Light's dialog comes into focus out of
+  the glare where it stands (G2, G3: nothing slides). The pairs passed (200/200 ms), but the effect was not light's.
+- **Change** (`kp.signature`, motion block, where the backdrop's 200 ms rule was):
+  `[data-theme='light'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])` no longer
+  slides. It stays in place, and from the close's last frame on it is hidden with `visibility`. It opens with
+  `kp-sig-light-expose` (opacity and the glare `blur(5px) brightness(1.6)` coming down to none) over the 700 ms exposure
+  on the settle curve. It closes with `kp-sig-light-leave` (the same frames the other way) on the inverse curve, so the
+  close is the opening backwards. The content a push panel moves (and the edge tab) moves on the same exposure: 700 ms on
+  the settle, back on the inverse curve, through the panel's `translate` timing, which js/sidenav.js copies. The optional
+  backdrop takes the exposure's 700 ms and the settle, as the dialog's shade does.
+- **Evidence:**
+  - Pairs (Firefox), before → after: `sidenav` 200/200 ms, 0.7 % → 700/700 ms, 0.7 %; `sidenav-push` 200/200, 0.0 % →
+    700/700, 0.0 %; `sidenav-edge-push` 200/200, 0.0 % → 700/700, 0.0 %; `sidenav-edge-gutter` 200/200, 0.4 % → 700/700,
+    0.4 %; `sidenav-edge-over` 200/200, 4.4 % → 700/700, 4.4 %; `sidenav-edge-tab` 200/200, 3.0 % → 700/700, 3.1 %.
+    Unchanged: `sidenav-group` 200/200, 0.0 %; `sidenav-rail-peek` 200/200, 3.7 % (side mode, not touched).
+  - Identity: `kp-sig-light-expose@nav.kp-sidenav 700ms` on the open and `kp-sig-light-leave@nav.kp-sidenav 700ms` on the
+    close, both OWN. The ASYM note is the leave's own name (mirrored per the pairs) and the `visibility` flip at the end.
+  - Frames: in the review dialog's stage, with real clicks. At 60 ms the panel is a white glare with blurred, too-bright
+    rows. By 400 ms it is crisp. At 540 ms into the close it is back in the glare, faint, with blurred labels.
+
+**Alarm.**
+
+- **Cause:** light left the package's alarm motion in place. The panel rose 1.25 rem and scaled from 0.98, the
+  headline shrank from 1.06, and the reason faded (`kp-alarm-settle`, `-arrive`, `-detail-in`). js/motion.js replayed
+  that over 700 ms (identity: `script[opacity,scale,translate]` on the panel, `script[opacity,scale]` on the title).
+  That is a rise and a scale, not light's exposure.
+- **Change:** `[data-theme='light'] .kp-alarm[open]:not([data-kp-alarm-motion='still'])` runs `kp-sig-light-expose` over
+  the 700 ms exposure on the settle, as `.kp-dialog` does, so the whole plate comes out of the glare.
+  `:is(.kp-alarm__panel, .kp-alarm__title, .kp-alarm__detail)` take `animation: none`. The glow's slow pulse
+  (`::after`, ambient) stays.
+- **Evidence:**
+  - Pairs: 700/700 ms, 0.8 % → 700/700 ms, 0.9 %.
+  - Identity: `script[filter,opacity]@dialog.kp-alarm 700ms` on the open and `reverse 700ms` on the close. These are the
+    same keyframes the dialog's row shows (`script[filter,opacity]@dialog.kp-dialog`), both OWN. No scale or translate
+    runs any more.
+  - Frames: in the review dialog's stage at 60 ms the whole alarm is a blurred, overexposed pink glare over the page. At
+    1000 ms it is crisp.
+
+### Deviations for Kenny (review round 2)
+
+- **The content a push panel moves (and the window-edge tab):** CHARACTER.md decides nothing for it. It now moves on
+  the exposure's time and curve: most of the way at once, then settling, and back on the inverse curve. It borrows the
+  exposure (G1, G4). The panel itself no longer moves (G2).
+
+### Still failing
+
+None of the side navigation and alarm pairs fail. tab-paint: 41 stops, only "Review in a dialog" and "Copy answer" read NOMARK.
+
+Measured wall time of the review round 2 light runs: pairs (7 pairs) 44 s, identity (sidenav, alarm) 11 s, tab-paint 72 s.
+The partial runs (about 8 s each) and the review-dialog probe were not timed.

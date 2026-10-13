@@ -3766,5 +3766,39 @@
             opacity: 0;
         }
     }
+
+    /* ── The alarm is a dialog: it is swept in where it stands (G3), review round 2 ──
+       Kenny, 2026-10-13: "Dat gaat niet open/close met de animatie van Dark". The alarm ran the
+       package's entrance (the plate faded in, the panel rose and scaled, the headline shrank into
+       place, the reason faded after it), which js/motion.js only turned around. Now the alarm's
+       own box, the whole screen, is laid by the dialog's pass: the line crosses it from its start
+       edge at one pace and the plate, its frame, its glow, the panel and the words are laid behind
+       it; the close is the pass back (js/motion.js plays this entrance backwards in the dialog's
+       close time, `--kp-open: reverse-close`). The plate casts no halo, so the reach is none. The
+       line is the vignette layer's ::after, the plate's own ::after being its breathing glow. The
+       film's turn is left out: the alarm draws no film edge. The held-open frame in the
+       catalogue (`[data-kp-alarm-inline]`, never `[open]`) stays still. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+            --kp-sig-dk-r: 0px;
+            animation: kp-sig-dark-sweep var(--kp-sig-dk-time) linear backwards;
+        }
+
+        [data-theme='dark'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) :is(.kp-alarm__panel, .kp-alarm__title, .kp-alarm__detail) {
+            animation: none;
+        }
+
+        [data-theme='dark'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) .kp-alarm__scan::after {
+            content: '';
+            inset: 0;
+            z-index: 3;
+            block-size: auto;
+            background: var(--kp-sig-dk-line) 100% 0 / 2px 100% no-repeat;
+            filter: var(--kp-sig-dk-glow);
+            opacity: 0;
+            pointer-events: none;
+            animation: kp-sig-dark-pass-line var(--kp-sig-dk-time) linear backwards;
+        }
+    }
 }
 /* ── End of the signature ── */

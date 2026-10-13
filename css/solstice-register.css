@@ -2535,5 +2535,54 @@
             --kp-nav-close-time: 0ms;
         }
     }
+
+    /* Review round 3 (Kenny, 2026-10-13: "sidenav: Niet de open/close animatie van dit thema",
+       "alarm: Niet de open/close animatie van dit thema"). The side navigation and the alarm are
+       kindled as the dialog is [G3]: a dome of first light grows from the middle of the foot,
+       overbright and warm, cooling to its colour, 2 units (480 ms) on the coming curve; closing is the
+       dome sinking back into the foot, the same frames backwards.
+
+       The side navigation (over, push) no longer slides in from its edge (G2, G3: nothing slides in
+       from a side, the panel never moves): it is kindled where it opens. Closing plays the dome
+       backwards under its second name (`kp-sig-solstice-kindled-back`, lesson 44); only then is the
+       panel hidden (`visibility` waits the 480 ms). The content a push panel moves glides in the same
+       two units, on the coming curve to make room and on the going curve (the same curve played
+       back, G1) to give it back; js/sidenav.js copies this `translate` timing onto it. The panel's
+       `translate` never changes: the transition is only its clock. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='solstice'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) {
+            translate: 0 0;
+            visibility: hidden;
+            transition:
+                translate var(--kp-sig-solstice-open) cubic-bezier(0.12, 0, 0.39, 0),
+                visibility 0s linear var(--kp-sig-solstice-open);
+            animation: kp-sig-solstice-kindled-back var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) reverse both;
+        }
+
+        [data-theme='solstice'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            visibility: visible;
+            transition:
+                translate var(--kp-sig-solstice-open) var(--kp-sig-solstice-come),
+                visibility 0s linear;
+            animation: kp-sig-solstice-kindled var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) backwards;
+        }
+
+        /* Its backdrop (where a page keeps one) dims in the same two units on the coming curve. */
+        [data-theme='solstice'] .kp-sidenav__backdrop {
+            animation-duration: var(--kp-sig-solstice-open);
+            animation-timing-function: var(--kp-sig-solstice-come);
+        }
+
+        /* The alarm is a dialog the size of the screen: the whole screen is kindled from the middle of
+           its foot, as the dialog; js/motion.js keeps this entrance and plays it backwards to close
+           it. The package's fade, rise and scale are not this theme's (G3: never moves, never scales). */
+        [data-theme='solstice'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+            animation: kp-sig-solstice-kindled var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) backwards;
+        }
+
+        [data-theme='solstice'] .kp-alarm:not([data-kp-alarm-motion='still']) :is(.kp-alarm__panel, .kp-alarm__title, .kp-alarm__detail) {
+            animation: none;
+        }
+    }
 }
 /* ── End of the signature ── */

@@ -495,3 +495,6 @@ All-themes pass (close = open reversed, the register's own entrance on every par
 palette (Kenny rejected the dawn there). Each closes as the dome sinking, the same frames backwards. The combobox list, the
 date picker panel and the tour card (with the tour's dim and ring), which G3 does not name, are kindled too, borrowed
 from G3, so every part that opens in solstice uses the one decided opening.
+
+
+**Review round 2, 2026-10-13 (Kenny: "Niet de open/close animatie van dit thema"):** the side navigation (over, push) and the alarm are kindled as the dialog (the dome from the middle of the foot, 2 units on the coming curve) and sink back into the foot to close; the panel no longer slides from its edge, the push content glides on G1's coming and going curves. See the report's "Review round 2".

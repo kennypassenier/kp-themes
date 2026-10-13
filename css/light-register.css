@@ -2430,10 +2430,56 @@
             transition-timing-function: var(--kp-sig-light-ease);
         }
 
-        /* The side navigation's shade comes and goes in the panel's own time
-           (the contact time it slides in), not the package's 220 ms. */
+        /* The side navigation (over and push, the window-edge panel too) is
+           exposed where it stands, as the dialog is [G2, G3; Kenny,
+           2026-10-13 review round 2: "niet de open/close animatie van dit
+           thema"]: no slide in on the contact time any more. It is a glare
+           first and comes down into focus on the settle in one exposure
+           (kp-sig-light-expose, 700 ms); it closes back into the glare
+           (kp-sig-light-leave, the same frames the other way, on the inverse
+           curve), so the close is the opening backwards. Shut, it stays in
+           place and is hidden from the close's last frame. The content a push
+           panel makes room in moves on the same exposure (js/sidenav.js copies
+           the panel's `translate` timing to it; the panel's own translate
+           never changes): most of the way at once, then settling, and back on
+           the inverse curve. */
+        [data-theme='light'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) {
+            translate: 0 0;
+            visibility: hidden;
+            animation: kp-sig-light-leave var(--kp-sig-light-time) var(--kp-sig-light-ease-out) forwards;
+            transition:
+                translate var(--kp-sig-light-time) var(--kp-sig-light-ease-out),
+                visibility 0s linear var(--kp-sig-light-time),
+                inline-size var(--kp-sidenav-duration, var(--fx-duration)) var(--kp-sidenav-ease-back, var(--kp-sig-light-ease-out));
+        }
+
+        [data-theme='light'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            visibility: visible;
+            animation: kp-sig-light-expose var(--kp-sig-light-time) var(--kp-sig-light-ease) backwards;
+            transition:
+                translate var(--kp-sig-light-time) var(--kp-sig-light-ease),
+                visibility 0s linear,
+                inline-size var(--kp-sidenav-duration, var(--fx-duration)) var(--kp-sidenav-ease, var(--kp-sig-light-ease));
+        }
+
+        /* Its shade, where a page asks for one, comes in over the same
+           exposure, as the dialog's shade does (js/sidenav.js plays it round). */
         [data-theme='light'] .kp-sidenav__backdrop {
-            animation-duration: var(--fx-duration);
+            animation-duration: var(--kp-sig-light-time);
+            animation-timing-function: var(--kp-sig-light-ease);
+        }
+
+        /* The alarm comes into focus as the dialog does [G3]: the whole plate
+           a glare first, coming down into focus on the settle in one
+           exposure; js/motion.js plays it backwards into the glare to close
+           it. The package's rise and scale of the panel and the headline's
+           shrink are not light's and are off; the glow's slow pulse stays. */
+        [data-theme='light'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+            animation: kp-sig-light-expose var(--kp-sig-light-time) var(--kp-sig-light-ease) backwards;
+        }
+
+        [data-theme='light'] .kp-alarm:not([data-kp-alarm-motion='still']) :is(.kp-alarm__panel, .kp-alarm__title, .kp-alarm__detail) {
+            animation: none;
         }
 
         /* The calendar's busy layers come out of the glare as anything that

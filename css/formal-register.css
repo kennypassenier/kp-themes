@@ -3572,11 +3572,109 @@
             transition: opacity 560ms linear;
         }
 
-        /* The side navigation's shade comes and goes in the panel's own time
-           (the contact time it slides in), not the package's 220 ms, so the
-           pair is one picture (lesson 31). */
+        /* The side navigation (over and push, the window-edge panel too) is
+           ruled in where it stands, as the dialog is [G3; Kenny, 2026-10-13
+           review round 2: "niet de open/close animatie van dit thema"]: it no
+           longer slides in on the contact time. Its frame rule along the top
+           edge, then its lines (the header, the list, the foot), each clipped
+           open start to end with the 2 px navy pen under it, 60 ms apart, in
+           the dialog's 740 ms (400 + 160 + three lines 60 ms apart, the same
+           offsets as kp-sig-formal-line-k / -pen-k). One registered number,
+           --kp-fm-t (0 to 1), draws every clip and pen, as in the menus; the
+           opening runs it up (kp-sig-formal-ruling) and the close runs it down
+           (kp-sig-formal-ruling-back) at the even pace, so the close is the
+           ruling taken off, frame for frame the opening backwards. Shut, the
+           panel stays in place and is hidden from the close's last frame.
+           The content a push panel makes room in moves with the frame rule's
+           pen, in the first 400 ms of the 740 at the even pace, and back in
+           the last 400 ms of the close (js/sidenav.js copies the panel's
+           `translate` timing to it; the panel's own translate never changes).
+           The move is written over the whole 740 ms with a held stretch
+           (`linear()`, 400 / 740 = 54.054 %) rather than as 400 ms with a
+           delay, so the content's move is as long as the panel's ruling and
+           the two stay one pair. */
+        [data-theme='formal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) {
+            --kp-fm-t: 0;
+            --kp-fm-k: 0;
+            translate: 0 0;
+            visibility: hidden;
+            animation: kp-sig-formal-ruling-back 740ms linear;
+            transition:
+                translate 740ms linear(0, 0 45.946%, 1),
+                visibility 0s linear 740ms,
+                inline-size var(--kp-sidenav-duration, var(--fx-duration)) var(--kp-sidenav-ease-back, linear);
+        }
+
+        [data-theme='formal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            --kp-fm-t: 1;
+            visibility: visible;
+            animation: kp-sig-formal-ruling 740ms linear;
+            transition:
+                translate 740ms linear(0, 1 54.054%, 1),
+                visibility 0s linear,
+                inline-size var(--kp-sidenav-duration, var(--fx-duration)) var(--kp-sidenav-ease, linear);
+        }
+
+        [data-theme='formal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) > :nth-child(1) {
+            --kp-fm-k: 0;
+        }
+
+        [data-theme='formal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) > :nth-child(2) {
+            --kp-fm-k: 1;
+        }
+
+        [data-theme='formal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) > :nth-child(3) {
+            --kp-fm-k: 2;
+        }
+
+        [data-theme='formal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) > :nth-child(n + 4) {
+            --kp-fm-k: 3;
+        }
+
+        [data-theme='formal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']),
+        [data-theme='formal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) > * {
+            --kp-fm-f: clamp(0, (var(--kp-fm-t) * 740 - var(--kp-fm-k, 0) * var(--kp-sig-fm-st)) / var(--kp-sig-fm-len), 1);
+            --kp-fm-lf: clamp(
+                0,
+                (var(--kp-fm-t) * 740 - var(--kp-fm-k, 0) * var(--kp-sig-fm-st) - var(--kp-sig-fm-len)) / var(--kp-sig-fm-lift),
+                1
+            );
+            --kp-fm-open: calc(100% - var(--kp-fm-f) * (100% + var(--kp-sig-fm-reach)));
+            clip-path: inset(
+                calc(-1 * var(--kp-sig-fm-reach)) calc(var(--kp-fm-open) * var(--kp-fm-ltr) - var(--kp-sig-fm-reach) * (1 - var(--kp-fm-ltr)))
+                    calc(-1 * var(--kp-sig-fm-reach)) calc(var(--kp-fm-open) * (1 - var(--kp-fm-ltr)) - var(--kp-sig-fm-reach) * var(--kp-fm-ltr))
+            );
+            background-image: linear-gradient(
+                var(--kp-fm-dir),
+                transparent calc(var(--kp-fm-lf) * 100%),
+                var(--primary) calc(var(--kp-fm-lf) * 100%) calc(var(--kp-fm-f) * 100%),
+                transparent calc(var(--kp-fm-f) * 100%)
+            );
+            background-repeat: no-repeat;
+            background-size: 100% var(--kp-sig-fm-pen);
+            background-position: 0 100%;
+        }
+
+        /* The frame rule runs along the panel's top edge. */
+        [data-theme='formal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) {
+            background-position: 0 0;
+        }
+
+        @keyframes kp-sig-formal-ruling-back {
+            from {
+                --kp-fm-t: 1;
+            }
+
+            to {
+                --kp-fm-t: 0;
+            }
+        }
+
+        /* Its shade, where a page asks for one, is ruled across with the
+           frame rule (the dialog's shade is ruled too) and taken off as that
+           backwards (js/sidenav.js plays it round). */
         [data-theme='formal'] .kp-sidenav__backdrop {
-            animation-duration: var(--fx-duration);
+            animation: kp-sig-formal-alarm-ground 740ms linear both;
         }
 
         @keyframes kp-sig-formal-tour-ring {

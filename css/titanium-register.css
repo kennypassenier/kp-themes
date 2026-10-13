@@ -2775,6 +2775,84 @@
         }
     }
 
+    /* ── The side navigation and the alarm are cut open as titanium's dialog is
+       [G3; Kenny, review round 2: "Niet de open/close animatie van dit thema"]:
+       uncovered from the top edge down on the theme curve, the cutter line in the
+       second oxide (`--chart-2`) running ahead of the cut; the close is that cut
+       played backwards. ── */
+    [data-theme='titanium'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-block-end: 2px solid var(--chart-2);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* The side navigation that slides over or pushes the page no longer
+           slides (the slide was the package's, not the cut): it stands in its
+           place from the opening's first frame, is cut open in the panel's band
+           (240 ms), is cut shut backwards and only then goes back off screen;
+           a pushed page moves with those two frames. */
+        [data-theme='titanium'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            transition: translate 0s linear;
+            animation: kp-sig-titanium-panel-cut var(--kp-sig-ti-panel) var(--kp-sig-ti-ease) backwards;
+        }
+
+        [data-theme='titanium'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true']::after {
+            animation: kp-sig-titanium-ti-cutter var(--kp-sig-ti-panel) var(--kp-sig-ti-ease);
+        }
+
+        [data-theme='titanium'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='false'] {
+            transition: translate 0s linear var(--kp-sig-ti-panel);
+            animation: kp-sig-titanium-panel-cut-back var(--kp-sig-ti-panel) var(--kp-sig-ti-ease) reverse forwards;
+        }
+
+        [data-theme='titanium'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='false']::after {
+            animation: kp-sig-titanium-ti-cutter-back var(--kp-sig-ti-panel) var(--kp-sig-ti-ease) reverse forwards;
+        }
+
+        [data-theme='titanium'] [data-kp-sidenav-shift='open'] {
+            transition:
+                margin-inline-start 0s linear,
+                margin-inline-end 0s linear,
+                padding-inline-start 0s linear,
+                padding-inline-end 0s linear;
+        }
+
+        [data-theme='titanium'] [data-kp-sidenav-shift='closed'] {
+            transition:
+                margin-inline-start 0s linear var(--kp-sig-ti-panel),
+                margin-inline-end 0s linear var(--kp-sig-ti-panel),
+                padding-inline-start 0s linear var(--kp-sig-ti-panel),
+                padding-inline-end 0s linear var(--kp-sig-ti-panel);
+        }
+
+        /* The alarm: the whole screen cut open from the top on the dialog's
+           time, the cutter line drawn by the scan layer's ::after (titanium
+           does not sweep the scan). The package's rise, scale and fades of the
+           panel, the headline and the reason are retired; js/motion.js keeps
+           the cut and plays it backwards to close. */
+        [data-theme='titanium'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+            animation: kp-sig-titanium-panel-cut var(--kp-sig-dur, 240ms) var(--kp-sig-ti-ease) backwards;
+        }
+
+        [data-theme='titanium'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) .kp-alarm__scan::after {
+            content: '';
+            inset: 0;
+            block-size: auto;
+            border-block-end: 2px solid var(--chart-2);
+            background: none;
+            opacity: 0;
+            animation: kp-sig-titanium-ti-cutter var(--kp-sig-dur, 240ms) var(--kp-sig-ti-ease);
+        }
+
+        [data-theme='titanium'] .kp-alarm:not([data-kp-alarm-motion='still']) :is(.kp-alarm__panel, .kp-alarm__title, .kp-alarm__detail) {
+            animation: none;
+        }
+    }
+
     /* A panel uncovered from its top edge down; its shadow keeps room at the sides
        and the foot. */
     @keyframes kp-sig-titanium-panel-cut {

@@ -84,3 +84,42 @@ Full pairs after round 2: 20 of 25 (unchanged count; table-busy 16.3 → 6.9 %).
 calendar-busy 100 %, wizard-step, empty-state, tabs-panel, all as in round 1. No other pair moved.
 
 Measured wall time of the round-2 runs (Firefox): targeted runs 2 x 15 s, final full pairs 165 s (2 min 45 s).
+
+
+## Review round 2 (2026-10-13 20:37): the side navigation and the alarm
+
+Kenny, verbatim: "sidenav: Niet de open/close animatie van dit thema" and "alarm: Niet de open/close animatie van dit thema".
+
+### sidenav (over and push, `#fa-over`, `#fa-side` pushes, and the window-edge panels of research/sidenav-edge)
+
+- **Cause:** the register gave the over/push panel no motion of its own, so it ran the package's plain slide from its edge
+  (identity: transition:translate 34 ms steps(1) (the package slide in one step)).
+- **Change:** it now opens as terminal's dialog does, G3's print: the first line (the header) stands with the block cursor at once, the rest printed under it one line a step, six steps of 136 ms (816 ms, the dialog's own time); the close clears the lines from the foot, the cursor backing up a line a step. It no longer slides: `translate: 0 0` in every state, shut it is
+  `visibility: hidden` (after the close's last frame). Keyframes: `kp-sig-terminal-tm-nav-rows` on the panel (clip from `inset(0 0 calc(100% - 3rem) 0)`, the dialog's `tm-rows` with the side navigation's header as its first line) and `kp-sig-terminal-tm-nav-feed` on its ::after (the dialog's cursor at the panel's 0.75 rem inset), `steps(6, jump-end)`; the close runs `-back` copies with `reverse`. The content a push panel moves (and the edge
+  tab) steps over in the same six steps (`steps(6, jump-end)` to open, `steps(6, jump-start)` back; G1: nothing glides): js/sidenav.js copies the panel's `translate` transition onto it, and the panel's `translate` never
+  changes, so that transition is only the clock. The backdrop (where a page keeps one) takes the same time and curve.
+  Selectors: `[data-theme='terminal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])`, its
+  `[data-kp-sidenav-open='true']` state and their `::after` (end of the `kp.signature` layer, under
+  `prefers-reduced-motion: no-preference`; reduced motion keeps the package's instant show and hide).
+- **Evidence:** identity `sidenav` row FAIL (NOT split) → ok (split, open and close), now kp-sig-terminal-tm-nav-rows / -feed 816 ms; close -back copies, reverse. Pair meter
+  before: sidenav 220/220 0.0 %, sidenav-push 34/34, edge-push/gutter/over 34/34 0.0 %, alarm 816/816 4.2 %; after: sidenav 816/816 0.0 %, sidenav-push 816/816 0.0 %, sidenav-edge-push 816/816 0.0 %, -gutter 816/816 0.0 %, -over 816/816 0.0 %, -tab 816/816 0.0 %, sidenav-group 34/34 0.0 % (unchanged), alarm 816/816 4.2 % (the Acknowledge button's 34 ms press colour on the open, as before), dialog 816/816 0.0 %: 9 of 9. Seen in frames (review dialog stage, real clicks at
+  coordinates, the animations paused and sought): sidenav: the header line with the cursor at frame 0, then Summary, Readings, Handover printed under it, the cursor at the start of the line being printed down to the foot; the close clears the same lines upward. The alarm: the screen printed from the top in six bands with the red cursor at the left of the band being printed.
+
+### alarm (`.kp-alarm`, its panel and title)
+
+- **Cause:** the register named no alarm motion, so it ran the package's script[opacity] on the plate, script[opacity,scale,translate] on the panel, script[opacity,scale] on the title, which js/motion.js replays
+  and turns round.
+- **Change:** the dialog's own `kp-sig-terminal-tm-rows` (six lines) on `.kp-alarm[open]` and its `kp-sig-terminal-tm-feed` cursor on `.kp-alarm__scan::after` in the alarm's ink; the package's fade, rise and scale set to none. js/motion.js keeps this entrance and closes the alarm by playing it backwards in the dialog's
+  close time, as it does the dialog. Respects `data-kp-alarm-motion='still'`.
+- **Evidence:** identity now lists script[clipPath]@dialog.kp-alarm and script[top,visibility]@.kp-alarm__scan::after, the dialog's own two (script[clipPath]@dialog, script[top,visibility]@dialog::after). The audit's regex can only read keyframe NAMES, and js/motion.js
+  replays every dialog-like entrance as an unnamed script animation, so the `alarm` row prints FAIL exactly as this
+  theme's `dialog` row does; the property sets are the evidence. Pair meter: alarm 816/816 4.2 %, as before this round (open =
+  close, close the open reversed).
+
+### Deviations for Kenny (this round)
+
+- The push panel's content steps over in the print's six steps; borrowed from G1 (one hard step per line written), G3 does not name the page next to a panel. The side navigation prints in the dialog's six lines whatever its length (G1 would count its rows), so it takes the dialog's 816 ms, as the brief asks.
+
+Focus after the change (`tab-paint.mjs`): only "Review in a dialog" and "Copy answer" read NOMARK, as allowed.
+Measured wall time of this round's runs (Firefox, four themes in parallel): identity + pairs before 1 min 23 s, after
+1 min 31 s, tab-paint 1 min 15 s, frame sheets about 40 s each.

@@ -615,3 +615,6 @@ under the busy table's layer.
 **Round 2, 2026-10-13:** the busy table's layer keeps its place over the rows while it arrives and leaves
 (`.kp-datatable__busy-overlay[data-kp-leaving] { position: absolute }`), and the table's busy dims beneath it go as
 part of the same pair (see the report's "Round 2").
+
+
+**Review round 2, 2026-10-13 (Kenny: "Niet de open/close animatie van dit thema"):** the side navigation (over, push) and the alarm are printed as the dialog (six lines at 136 ms, the cursor at the line being printed) and cleared as that backwards; the panel no longer slides from its edge, the push content steps over in the same six steps. See the report's "Review round 2".

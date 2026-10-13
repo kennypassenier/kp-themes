@@ -246,3 +246,10 @@ resolve's three cuts, the calendar's busy layers thrown in and snatched off (`--
 navigation's backdrop on the panel's 120 ms, and the bar's dropdown, mega menu and phone panel thrown in and snatched
 off (`--kp-nav-close-time: 700ms`, the phone panel landing level). Deviations for Kenny are listed in
 research/all-themes/reports/phantom.md.
+
+**Review round 2, 2026-10-13:** the side navigation (over, push) is thrown as the drawer is (off its own edge on the
+shove as a screen, resolving in three cuts; dissolved and snatched back to close); the alarm is thrown and resolved as
+the full-size drawer (level, from the start edge, 700 ms); the combobox's list lands askew as the menus do (it landed
+level). The loading picture's block and slash stand on the busy panel of the table and of the calendar again (the panels
+were static, so both layers covered the whole table, and the whole window for the calendar).
+research/all-themes/reports/phantom.md.

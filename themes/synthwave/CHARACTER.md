@@ -481,3 +481,6 @@ its leave reversed (`[data-kp-arriving]:not([data-kp-leaving])`).
 (`.kp-datatable__busy-overlay[data-kp-leaving] { position: absolute }`), and the table's busy dims beneath it go as
 part of the same pair (see the report's "Round 2").
 The side navigation's backdrop dims in the panel's beat (`--fx-duration`, 225 ms), not the package's 220 ms.
+
+
+**Review round 2, 2026-10-13 (Kenny: "Niet de open/close animatie van dit thema"):** the side navigation (over, push) and the alarm open by G3's climb, the dialog's keyframes (the panel, or the whole alarm screen, uncovered from its foot behind the beam, two beats on the sunrise curve) and close as it backwards; the panel no longer slides from its edge, the push content glides in the same two beats. See the report's "Review round 2".

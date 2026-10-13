@@ -84,3 +84,59 @@ Measured wall time of the formal measurement runs: 10 min 14 s (pairs 189 s and 
   96.8 % (shared with forest), wizard-step, empty-state and tabs-panel (ignored per the brief).
 
 Measured wall time of the round 2 formal runs: full pairs 168 s; the tooltip repeats (formal 10, forest 11, about 7 s each) were not timed.
+
+## Review round 2 (2026-10-13 20:37, side navigation and alarm)
+
+Kenny: "Niet de open/close animatie van dit thema". The side navigation and the alarm must open with the theme's own
+dialog opening and close as that opening played backwards.
+
+**Side navigation (over, push, and the window-edge panel of research/sidenav-edge).**
+
+- **Cause:** the panel had no rule of its own in formal. It ran the package's plain slide, a `translate` transition
+  over the 180 ms contact time (identity: `transition:translate@nav.kp-sidenav 180ms`, no `kp-sig-formal-*`). Formal's
+  dialog is ruled in where it stands (G3). The pairs passed (180/180 ms, 0.0 %), but the effect was not formal's.
+- **Change** (`kp.signature`, `@media (prefers-reduced-motion: no-preference)`, where the backdrop's 180 ms rule was):
+  `[data-theme='formal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])` no longer
+  slides. It stays in place, and from the close's last frame on it is hidden with `visibility`. It is ruled in as the
+  dialog is: the frame rule along its top edge, then its lines (header, list, foot; `> :nth-child(1..3, n+4)`, k = 0..3).
+  Each line is clipped open from the start edge with the 2 px navy pen under it, 60 ms apart, in the dialog's 740 ms
+  (400 + 160 + 3 × 60). These are the same offsets as `kp-sig-formal-line-k` / `-pen-k`. All clips and pens are
+  computed from the registered number `--kp-fm-t`, as in the menus. The opening runs `kp-sig-formal-ruling` (0 to 1).
+  The close runs the new `kp-sig-formal-ruling-back` (1 to 0, a second name so the close starts afresh), at the even
+  pace, so it is exactly the opening backwards. The content a push panel moves (and the edge tab) travels with the
+  frame rule's pen: in the first 400 ms of the opening and the last 400 ms of the close, at the even pace. js/sidenav.js
+  copies the panel's `translate` timing to it, so that timing is written as 740 ms with a held stretch
+  (`linear(0, 1 54.054%, 1)` and `linear(0, 0 45.946%, 1)`). The first version used 400 ms with a 340 ms delay. That
+  read 17.6 % on `sidenav-edge-push`, because the meter holds a transition that ends before the pair ends at its last
+  millisecond, so the content stood 0.6 px short. With the content's move as long as the pair it reads 0.0 %. The
+  optional backdrop is ruled across with the frame rule: `kp-sig-formal-alarm-ground`, 740 ms.
+- **Evidence:**
+  - Pairs (Firefox), before → after: `sidenav` 180/180 ms, 0.0 % → 740/740 ms, 0.0 %; `sidenav-push` 180/180, 0.0 % →
+    740/740, 0.0 %; `sidenav-edge-push` → 740/740, 0.0 %; `sidenav-edge-gutter` → 740/740, 0.0 %; `sidenav-edge-over` →
+    740/740, 0.0 %; `sidenav-edge-tab` → 740/740, 0.0 %. Unchanged: `sidenav-group` 180/180, 0.0 %; `sidenav-rail-peek`
+    180/180, 2.8 % (side mode, not touched).
+  - Identity: `kp-sig-formal-ruling@nav.kp-sidenav 740ms` on the open and `kp-sig-formal-ruling-back@nav.kp-sidenav 740ms`
+    on the close, both OWN. The summary's ASYM note is only the close's own keyframes name and its `visibility` flip
+    at the end.
+  - Frames: in the review dialog's stage, with real clicks. At 200 ms the frame rule and the header's rule are ruled
+    halfway across and the list and foot are clipped behind them. At 400 ms the panel is whole and the pens are being
+    lifted from the start. At 540 ms into the close the panel is ruled off again to the same width as at 200 ms of the
+    opening, and the pens are back.
+
+**Alarm.** No change. It was already ruled by keyframes over the dialog's 740 ms (`kp-sig-formal-alarm-ground/-sheet/
+-double/-tick/-reason`), which js/motion.js replays forwards and backwards. Pairs: 740/740 ms, 0.0 % (unchanged).
+Identity: script copies of those keyframes (`script[clipPath]` on the ground, backdrop, sheet and reason) on the open and
+`reverse` on the close, both OWN.
+
+### Deviations for Kenny (review round 2)
+
+- **The content a push panel moves (and the window-edge tab):** CHARACTER.md decides nothing for it. It now moves
+  with the frame rule's pen at the even pace, in the first 400 ms of the opening and the last 400 ms of the close. It
+  borrows the ruling time of one rule (G4). The panel itself no longer travels (G3: ruled in where it stands).
+
+### Still failing
+
+None of the side navigation and alarm pairs fail. tab-paint: 41 stops, only "Review in a dialog" and "Copy answer" read NOMARK.
+
+Measured wall time of the review round 2 formal runs: pairs (7 pairs) 51 s and 47 s, identity (sidenav, alarm) 11 s,
+tab-paint 73 s. The partial runs with `--keep` (about 8 s each) and the review-dialog probe were not timed.

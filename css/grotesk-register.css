@@ -1423,6 +1423,23 @@
         scale: 1 1;
     }
 
+    /* The bar's disclosure button (the mega menu's "Equipment") is one of the bar's links, so its
+       ::after is the same baseline rule (review round 2, Kenny 2026-10-13: hovering it drew "a small
+       slanted line"). css/components.css draws the disclosure's caret on that same ::after (a
+       0.4em box, two 1.5px borders, turned 45 degrees, -135 while open); left in place, the rule
+       above took the caret's width, borders and turn and drew a 6 px slanted stroke. The caret's
+       own properties are cleared here, in the open state too, so the rule spans the word as it
+       does under every other link; grotesk's dropdown link ("Readings") shows no caret either. */
+    [data-theme='grotesk'] .kp-nav__link.kp-nav__disclosure::after,
+    [data-theme='grotesk'] .kp-nav__link.kp-nav__disclosure[aria-expanded='true']::after {
+        display: block;
+        margin: 0;
+        inline-size: auto;
+        border: 0;
+        rotate: none;
+        translate: none;
+    }
+
     /* The press thickens the rule [Kenny, 2026-10-07: "the rule thickens", his
        scope-12]: at once and for as long as it is held, the baseline under a
        button's words is out, 4 px, in the deeper red; a nav link's was out

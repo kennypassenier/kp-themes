@@ -275,3 +275,9 @@ Mechanism only; light's exposure and its timings are unchanged (research/all-the
 - The side navigation's shade takes the panel's 200 ms.
 - Round 2: the calendar button that opens the date picker swaps its ring and lift in the frame the focus moves (no
   200 ms settle on that one button), so the ring leaves at the open's first frame and returns at the close's last.
+- Review round 2 (Kenny: "niet de open/close animatie van dit thema"): the side navigation (over, push, the window-edge
+  panel) no longer slides on the contact time. It comes out of the glare where it stands, as the dialog does
+  (`kp-sig-light-expose`, 700 ms on the settle), goes back into it on the inverse curve (`kp-sig-light-leave`) and is
+  hidden after the close. The content a push panel moves follows on the same exposure. The alarm comes out of the glare
+  as the dialog does (`kp-sig-light-expose` on the whole plate); the package's rise and scale of its panel and headline
+  are off.

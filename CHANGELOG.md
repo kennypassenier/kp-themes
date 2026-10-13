@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- **Fixed: the review of research/all-themes-applied, round 2** [Kenny, 2026-10-13 20:37]. The side navigation and the alarm open and close
+  with each theme's own dialog effect in every theme (they slid, faded or rose with the package's motion in ten themes); pastel's bar, palette,
+  pickers, menus, alarm and side navigation take pastel's sheet; dark's alarm runs the pass; grotesk's Equipment hover draws the straight rule;
+  forest's tour dim no longer flashes green on a card; phantom's loading pictures stay inside their part (they covered the screen) and its
+  combobox list lands askew in the right place. Round 3 opens with a reference block, the theme's own dialog (lessons 50, 51).
 - **Added: the side navigation at the window's edge, with a launcher** [Kenny, 2026-10-13; research/sidenav-edge]. `.kp-sidenav__launcher` is a box
   fixed at the window's start corner holding the panel's toggler (a `.kp-icon-button` with `data-kp-sidenav-toggle`): always in the same place, above
   the panel, with the package's three bars (`.kp-sidenav__bars`, put in an empty toggler) and its name from the strings. The panel it drives is marked

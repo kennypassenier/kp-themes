@@ -2382,10 +2382,12 @@
         }
     }
 
-    /* The ring round a tour's target is drawn in from nothing, as the page dims. */
+    /* The ring round a tour's target is drawn in from nothing, and the page dims round it out of
+       no shadow at all (whatever shadow the part has of its own). */
     @keyframes kp-sig-forest-tour-ring {
         from {
             outline-color: transparent;
+            box-shadow: 0 0 0 0 transparent;
         }
     }
 
@@ -3861,9 +3863,16 @@
                cannot be faded by the close's transition (css/components.css,
                on the withering curve), and went at once. */
             animation: kp-sig-forest-tour-ring var(--kp-sig-fo-time) var(--kp-sig-fo-grow) backwards;
-            transition:
-                box-shadow var(--kp-sig-fo-time) var(--kp-sig-fo-grow),
-                outline-color var(--kp-sig-fo-time) var(--kp-sig-fo-grow);
+            /* The dim grows by the animation, not by a transition (review round 2, Kenny 2026-10-13:
+               "Bij de laatste stap is nog altijd een flash van groen dat over het scherm gaat"): a
+               transition starts from the part's own shadow, and a card's is the package's
+               `0 0 0 0 var(--border-strong)`, forest's green-grey, so on the step to the last card
+               the dim grew out of the card in green across the whole screen. The animation starts
+               from no shadow on every target, which is what the transition did on a part without a
+               shadow of its own (the row, the field): those frames are unchanged. A transition
+               outranks an animation, so box-shadow is out of this list; the close keeps its own
+               (css/components.css, `[data-kp-reversing]`, important). */
+            transition: outline-color var(--kp-sig-fo-time) var(--kp-sig-fo-grow);
         }
 
         /* A step walks the card to the next target on the growth time and

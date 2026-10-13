@@ -2065,13 +2065,97 @@
         }
     }
 
-    /* The side navigation's backdrop dims on the panel's own clock (contact,
-       160 ms, the settle), not the package's 220 ms, so panel and dim begin
-       and end together and the close (the dim played backwards, the panel on
-       the settle's reflection) mirrors the opening frame for frame. */
+    /* ── The side navigation and the alarm open as deco's dialog does [G3;
+       Kenny, review round 2: "Niet de open/close animatie van dit thema"]:
+       the gold frame draws itself round from the middle of its top edge both
+       ways and meets at the bottom (320 ms), then the lacquer and the words
+       come up (160 ms), kp-sig-deco-arrive, 480 ms; the close is that
+       backwards: the lacquer sinks, the frame undraws.
+
+       The side navigation that slides over or pushes the page is a deco plate
+       as the drawer is (it is in the plate lists above: lacquer, wallpaper,
+       coves, the inlay on ::after). It does not slide: it stands in its place
+       from the opening's first frame and leaves it after the closing's last
+       (the drawer does not travel either), and a pushed page moves with
+       those two frames. Its close is kp-sig-deco-arrive-back played in
+       reverse (a second name, so it starts as an animation of its own). ── */
     @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) > * {
+            opacity: var(--kp-sig-deco-up);
+        }
+
+        [data-theme='deco'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            transition: translate 0s linear;
+            animation: kp-sig-deco-arrive var(--kp-sig-deco-arrive) linear backwards;
+        }
+
+        [data-theme='deco'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='false'] {
+            transition: translate 0s linear var(--kp-sig-deco-arrive);
+            animation: kp-sig-deco-arrive-back var(--kp-sig-deco-arrive) linear reverse forwards;
+        }
+
+        [data-theme='deco'] [data-kp-sidenav-shift='open'] {
+            transition:
+                margin-inline-start 0s linear,
+                margin-inline-end 0s linear,
+                padding-inline-start 0s linear,
+                padding-inline-end 0s linear;
+        }
+
+        [data-theme='deco'] [data-kp-sidenav-shift='closed'] {
+            transition:
+                margin-inline-start 0s linear var(--kp-sig-deco-arrive),
+                margin-inline-end 0s linear var(--kp-sig-deco-arrive),
+                padding-inline-start 0s linear var(--kp-sig-deco-arrive),
+                padding-inline-end 0s linear var(--kp-sig-deco-arrive);
+        }
+
+        /* Where the package lays a backdrop, it comes up with the lacquer
+           (the last 160 ms of the opening) and sinks with it. */
         [data-theme='deco'] .kp-sidenav__backdrop {
-            animation: kp-sidenav-backdrop 160ms cubic-bezier(0.22, 1, 0.36, 1) both;
+            animation: kp-sig-deco-sidenav-dim var(--kp-sig-deco-arrive) linear both;
+        }
+
+        /* The alarm: its gold double frame (::before) is the inlay, drawn by
+           --kp-sig-deco-draw; its ground, glow, bars, scan and words come up
+           with --kp-sig-deco-up. The package's rise, scale and fades of the
+           panel, the headline and the reason are retired. js/motion.js keeps
+           the entrance and plays it backwards to close. */
+        [data-theme='deco'] .kp-alarm {
+            --kp-alarm-ground: hsl(from var(--background) h s 5% / calc(0.96 * var(--kp-sig-deco-up)));
+            --kp-alarm-glow: hsl(from var(--primary) h s l / calc(0.25 * var(--kp-sig-deco-up)));
+        }
+
+        [data-theme='deco'] .kp-alarm::before {
+            mask-image: conic-gradient(
+                from calc(var(--kp-sig-deco-draw) * -180deg) at 50% 50%,
+                var(--foreground) 0 calc(var(--kp-sig-deco-draw) * 360deg),
+                transparent 0
+            );
+        }
+
+        [data-theme='deco'] .kp-alarm > * {
+            opacity: var(--kp-sig-deco-up);
+        }
+
+        [data-theme='deco'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+            animation: kp-sig-deco-arrive var(--kp-sig-deco-arrive) linear backwards;
+        }
+
+        [data-theme='deco'] .kp-alarm:not([data-kp-alarm-motion='still']) :is(.kp-alarm__panel, .kp-alarm__title, .kp-alarm__detail) {
+            animation: none;
+        }
+    }
+
+    @keyframes kp-sig-deco-sidenav-dim {
+        0%,
+        66.667% {
+            opacity: 0;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        100% {
+            opacity: 1;
         }
     }
 
@@ -2129,6 +2213,7 @@
             .kp-menu-button > .kp-menu,
             .kp-nav__menu,
             .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links,
+            .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']),
             .kp-toast,
             .kp-tour,
             dialog.kp-drawer,
@@ -2243,6 +2328,7 @@
             .kp-menu-button > .kp-menu,
             .kp-nav__menu,
             .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links,
+            .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']),
             .kp-toast,
             .kp-tour,
             dialog.kp-drawer,
@@ -2373,6 +2459,7 @@
             .kp-menu-button > .kp-menu,
             .kp-nav__menu,
             .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links,
+            .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']),
             .kp-toast,
             .kp-tour,
             dialog.kp-drawer,

@@ -91,3 +91,42 @@ Full pairs after round 2: 21 of 25 (was 19). Still failing: calendar-busy 122.1 
 tabs-panel, all as in round 1 and outside this round. No other pair moved.
 
 Measured wall time of the round-2 runs (Firefox): targeted runs about 4 x 15 s, final full pairs 183 s (3 min 3 s).
+
+
+## Review round 2 (2026-10-13 20:37): the side navigation and the alarm
+
+Kenny, verbatim: "sidenav: Niet de open/close animatie van dit thema" and "alarm: Niet de open/close animatie van dit thema".
+
+### sidenav (over and push, `#fa-over`, `#fa-side` pushes, and the window-edge panels of research/sidenav-edge)
+
+- **Cause:** the register gave the over/push panel no motion of its own, so it ran the package's plain slide from its edge
+  (identity: transition:translate 225 ms (the package slide)).
+- **Change:** it now opens as synthwave's dialog does, G3's climb: the panel uncovered from its foot upward behind the 2 px near-white beam, struck from its centre, climbing to the top edge and going out; two beats (450 ms) on the sunrise curve. It no longer slides: `translate: 0 0` in every state, shut it is
+  `visibility: hidden` (after the close's last frame). Keyframes: `kp-sig-synthwave-climb` on the panel, `kp-sig-synthwave-beam` + `kp-sig-synthwave-glow` on its ::after; the close runs `-back` copies of the three (new, same frames) with `reverse both`. The content a push panel moves (and the edge
+  tab) glides in the same two beats on the sunrise curve (its own mirror image): js/sidenav.js copies the panel's `translate` transition onto it, and the panel's `translate` never
+  changes, so that transition is only the clock. The backdrop (where a page keeps one) takes the same time and curve.
+  Selectors: `[data-theme='synthwave'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])`, its
+  `[data-kp-sidenav-open='true']` state and their `::after` (end of the `kp.signature` layer, under
+  `prefers-reduced-motion: no-preference`; reduced motion keeps the package's instant show and hide).
+- **Evidence:** identity `sidenav` row FAIL (NOT split) → ok (split, open and close), now kp-sig-synthwave-climb / -beam / -glow 450 ms; close -back copies, reverse. Pair meter
+  before: sidenav 225/225 0.0 %, sidenav-push 225/225, edge-push/gutter/over 225/225 0.0 %, alarm 450/450 0.0 %; after: sidenav 450/450 0.0 %, sidenav-push 450/450 0.0 %, sidenav-edge-push 450/450 0.0 %, -gutter 450/450 0.0 %, -over 450/450 0.0 %, -tab 450/450 0.0 %, sidenav-group 225/225 0.0 % (unchanged), alarm 450/450 0.0 %, dialog 450/450 0.0 %: 9 of 9. Seen in frames (review dialog stage, real clicks at
+  coordinates, the animations paused and sought): sidenav frames in the review dialog's stage: at 25 % the beam stands near the foot with a strip of panel under it, at 50 % halfway, at 75 % at the header, the close's frames are the same pictures in reverse order; the alarm: the red screen is uncovered from the bottom of the window up behind a pink line, the close lowers it back.
+
+### alarm (`.kp-alarm`, its panel and title)
+
+- **Cause:** the register named no alarm motion, so it ran the package's script[opacity] on the plate, script[opacity,scale,translate] on the panel, script[opacity,scale] on the title (the package's fade, rise and scale), which js/motion.js replays
+  and turns round.
+- **Change:** `kp-sig-synthwave-climb` on `.kp-alarm[open]` (the whole screen uncovered from its foot), the beam and its strike on `.kp-alarm__scan::after` (the sweeping band synthwave never opted into); the package's `kp-alarm-ground-in/settle/arrive/detail-in` are set to none. js/motion.js keeps this entrance and closes the alarm by playing it backwards in the dialog's
+  close time, as it does the dialog. Respects `data-kp-alarm-motion='still'`.
+- **Evidence:** identity now lists script[clipPath]@dialog.kp-alarm, script[top] and script[opacity,transform]@.kp-alarm__scan::after, the same three property sets as the dialog's own row (script[clipPath]@dialog, script[top] and script[opacity,transform]@dialog::after). The audit's regex can only read keyframe NAMES, and js/motion.js
+  replays every dialog-like entrance as an unnamed script animation, so the `alarm` row prints FAIL exactly as this
+  theme's `dialog` row does; the property sets are the evidence. Pair meter: alarm 450/450 0.0 % (open =
+  close, close the open reversed).
+
+### Deviations for Kenny (this round)
+
+- The push panel's content glides on the sunrise curve (G1: a body glides) while the panel itself does not move; borrowed from G1, since G3 does not say what the page next to an opening panel does.
+
+Focus after the change (`tab-paint.mjs`): only "Review in a dialog" and "Copy answer" read NOMARK, as allowed.
+Measured wall time of this round's runs (Firefox, four themes in parallel): identity + pairs before 1 min 23 s, after
+1 min 31 s, tab-paint 1 min 15 s, frame sheets about 40 s each.

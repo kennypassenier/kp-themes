@@ -3729,5 +3729,135 @@
             visibility: visible;
         }
     }
+
+    /* Review round 3 (Kenny, 2026-10-13: "sidenav: Niet de open/close animatie van dit thema",
+       "alarm: Niet de open/close animatie van dit thema"). The side navigation and the alarm are
+       printed as the dialog is [G3]: from the top, one whole line per step, the block cursor at the
+       start of the line being printed, six lines at 136 ms (816 ms, the dialog's own time); closing is
+       the print backwards, the lines cleared from the bottom and the cursor backing up a line a step.
+
+       The side navigation (over, push) no longer slides in from its edge (G3: not a slide in from an
+       edge): it stands where it opens, its first line (the header) is on the screen with the cursor at
+       once and the rest is printed under it. Closing plays the same keyframes backwards under second
+       names (lesson 44); only when the print is cleared is the panel hidden (`visibility` waits the
+       816 ms). The content a push panel moves steps over in the same six steps (G1: nothing glides),
+       and back in the same steps turned round; js/sidenav.js copies this `translate` timing onto it.
+       The panel's `translate` never changes: the transition is only its clock. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='terminal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) {
+            translate: 0 0;
+            visibility: hidden;
+            transition:
+                translate calc(6 * var(--kp-sig-tm-line)) steps(6, jump-start),
+                visibility 0s linear calc(6 * var(--kp-sig-tm-line));
+            animation: kp-sig-terminal-tm-nav-rows-back calc(6 * var(--kp-sig-tm-line)) steps(6, jump-end) reverse both;
+        }
+
+        [data-theme='terminal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            visibility: visible;
+            transition:
+                translate calc(6 * var(--kp-sig-tm-line)) steps(6, jump-end),
+                visibility 0s linear;
+            animation: kp-sig-terminal-tm-nav-rows calc(6 * var(--kp-sig-tm-line)) steps(6, jump-end) backwards;
+        }
+
+        /* The cursor, the dialog's: one cell of the bright phosphor at the start of the line being
+           printed; at rest it is not drawn. */
+        [data-theme='terminal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])::after {
+            content: '';
+            position: absolute;
+            inset-block-start: 0.75rem;
+            inset-inline-start: 0.75rem;
+            z-index: 3;
+            inline-size: 1ch;
+            block-size: 1.2em;
+            background: var(--primary);
+            box-shadow: var(--kp-sig-tm-bloom);
+            visibility: hidden;
+            pointer-events: none;
+            animation: kp-sig-terminal-tm-nav-feed-back calc(6 * var(--kp-sig-tm-line)) steps(6, jump-end) reverse backwards;
+        }
+
+        [data-theme='terminal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true']::after {
+            animation: kp-sig-terminal-tm-nav-feed calc(6 * var(--kp-sig-tm-line)) steps(6, jump-end) backwards;
+        }
+
+        /* Its backdrop (where a page keeps one) comes up in the same six steps, as the dialog's. */
+        [data-theme='terminal'] .kp-sidenav__backdrop {
+            animation-duration: calc(6 * var(--kp-sig-tm-line));
+            animation-timing-function: steps(6, jump-end);
+        }
+
+        /* The alarm is a dialog the size of the screen: printed as the dialog, six lines from the top,
+           the cursor at the line being printed (the scan layer's ::after, a band this theme never
+           opted into); js/motion.js keeps this entrance and plays it backwards to close it. The
+           package's fade, rise and scale are not this theme's (G1: no fade, no scale). */
+        [data-theme='terminal'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+            animation: kp-sig-terminal-tm-rows calc(6 * var(--kp-sig-tm-line)) steps(6, jump-end) backwards;
+        }
+
+        [data-theme='terminal'] .kp-alarm:not([data-kp-alarm-motion='still']) :is(.kp-alarm__panel, .kp-alarm__title, .kp-alarm__detail) {
+            animation: none;
+        }
+
+        [data-theme='terminal'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) .kp-alarm__scan::after {
+            content: '';
+            inset-block-start: 1.25rem;
+            inset-inline: 1.25rem auto;
+            z-index: 3;
+            inline-size: 1ch;
+            block-size: 1.2em;
+            background: var(--kp-alarm-ink);
+            box-shadow: 0 0 0.4em var(--kp-alarm-halo);
+            visibility: hidden;
+            animation: kp-sig-terminal-tm-feed calc(6 * var(--kp-sig-tm-line)) steps(6, jump-end) backwards;
+        }
+    }
+
+    /* The side navigation's print: its first line (the header, 3 rem) stands at once, the rest is
+       printed under it; the cursor stands at the start of each line, from the header to the foot. */
+    @keyframes kp-sig-terminal-tm-nav-rows {
+        from {
+            clip-path: inset(0 0 calc(100% - 3rem) 0);
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes kp-sig-terminal-tm-nav-rows-back {
+        from {
+            clip-path: inset(0 0 calc(100% - 3rem) 0);
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes kp-sig-terminal-tm-nav-feed {
+        from {
+            inset-block-start: 0.75rem;
+            visibility: visible;
+        }
+
+        to {
+            inset-block-start: calc(100% - 0.75rem - 1.2em);
+            visibility: visible;
+        }
+    }
+
+    @keyframes kp-sig-terminal-tm-nav-feed-back {
+        from {
+            inset-block-start: 0.75rem;
+            visibility: visible;
+        }
+
+        to {
+            inset-block-start: calc(100% - 0.75rem - 1.2em);
+            visibility: visible;
+        }
+    }
 }
 /* ── End of the signature ── */

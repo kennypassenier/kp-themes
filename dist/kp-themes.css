@@ -22601,6 +22601,132 @@
             background-position: var(--kp-sig-meter-l1);
         }
     }
+
+    /* Review round 3 (Kenny, 2026-10-13: "sidenav: Niet de open/close animatie van dit thema",
+       "alarm: Niet de open/close animatie van dit thema"). The side navigation and the alarm open as
+       the dialog does [G3, opening = the beam climbs to the horizon] and close as that backwards.
+
+       The side navigation (over, push) no longer slides in from its edge (G2, G3: never a slide from
+       an edge): it stands where it opens and is uncovered from its foot upward behind the 2 px beam,
+       which is struck from its centre, climbs to the top edge and goes out, in two beats on the
+       sunrise curve, the dialog's own keyframes. Closing plays the same frames backwards under second
+       names (`-back`, lesson 44), so the beam sinks from the top to the foot and the panel goes behind
+       it; only then is it hidden (`visibility` waits the two beats). The content a push panel moves
+       glides in the same two beats on the sunrise curve (a body glides, G1); js/sidenav.js copies
+       this `translate` timing onto it, and the curve is its own mirror image, so the close is the
+       glide backwards. The panel's `translate` never changes: the transition is only its clock. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) {
+            translate: 0 0;
+            visibility: hidden;
+            transition:
+                translate calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun),
+                visibility 0s linear calc(2 * var(--kp-sw-beat));
+            animation: kp-sig-synthwave-climb-back calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun) reverse both;
+        }
+
+        [data-theme='synthwave'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            visibility: visible;
+            transition:
+                translate calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun),
+                visibility 0s linear;
+            animation: kp-sig-synthwave-climb calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun) backwards;
+        }
+
+        /* The beam, the dialog's (its ::after), on the panel's top edge at rest and out. */
+        [data-theme='synthwave'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])::after {
+            content: '';
+            position: absolute;
+            inset: 0 0 auto;
+            z-index: 3;
+            block-size: 2px;
+            background: var(--kp-core);
+            box-shadow: var(--kp-sw-laser);
+            opacity: 0;
+            pointer-events: none;
+            animation:
+                kp-sig-synthwave-beam-back calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun) reverse backwards,
+                kp-sig-synthwave-glow-back calc(2 * var(--kp-sw-beat)) linear reverse backwards;
+        }
+
+        [data-theme='synthwave'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true']::after {
+            animation:
+                kp-sig-synthwave-beam calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun) backwards,
+                kp-sig-synthwave-glow calc(2 * var(--kp-sw-beat)) linear backwards;
+        }
+
+        /* Its backdrop (where a page keeps one) dims in the same two beats on the same curve. */
+        [data-theme='synthwave'] .kp-sidenav__backdrop {
+            animation-duration: calc(2 * var(--kp-sw-beat));
+            animation-timing-function: var(--kp-sw-sun);
+        }
+
+        /* The alarm is a dialog the size of the screen: the whole screen is uncovered from its foot
+           upward behind the beam, two beats, as the dialog; js/motion.js keeps this entrance and plays
+           it backwards to close it. The beam is the scan layer's ::after (the sweeping band this
+           theme never opted into). The package's fade, rise and scale of the plate, the panel, the
+           headline and the reason are not this theme's (G3: never `scale`). */
+        [data-theme='synthwave'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+            animation: kp-sig-synthwave-climb calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun) backwards;
+        }
+
+        [data-theme='synthwave'] .kp-alarm:not([data-kp-alarm-motion='still']) :is(.kp-alarm__panel, .kp-alarm__title, .kp-alarm__detail) {
+            animation: none;
+        }
+
+        [data-theme='synthwave'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) .kp-alarm__scan::after {
+            content: '';
+            inset: 0 0 auto;
+            z-index: 3;
+            block-size: 2px;
+            background: var(--kp-core);
+            box-shadow: var(--kp-sw-laser);
+            opacity: 0;
+            animation:
+                kp-sig-synthwave-beam calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun) backwards,
+                kp-sig-synthwave-glow calc(2 * var(--kp-sw-beat)) linear backwards;
+        }
+    }
+
+    /* The climb, the beam and its strike under second names, for a close that must start as an
+       animation of its own (the side navigation): the same frames, played in reverse. */
+    @keyframes kp-sig-synthwave-climb-back {
+        from {
+            clip-path: inset(100% -4rem -4rem -4rem);
+        }
+
+        to {
+            clip-path: inset(-4rem);
+        }
+    }
+
+    @keyframes kp-sig-synthwave-beam-back {
+        from {
+            inset-block-start: calc(100% - 2px);
+        }
+
+        to {
+            inset-block-start: 0;
+        }
+    }
+
+    @keyframes kp-sig-synthwave-glow-back {
+        0% {
+            opacity: 1;
+            transform: scaleX(0);
+        }
+
+        12%,
+        85% {
+            opacity: 1;
+            transform: scaleX(1);
+        }
+
+        100% {
+            opacity: 0;
+            transform: scaleX(1);
+        }
+    }
 }
 /* ── End of the signature ── */
 
@@ -24897,8 +25023,16 @@
         animation: none;
     }
 
+    /* The block and the slash are drawn against the panel itself: both
+       panels are static in the package (a flex item in the table's layer, a
+       grid item of the month), so without a position of their own the two
+       layers below were laid against the nearest positioned ancestor, the
+       whole window in the review stage (Kenny, review round 2: "staat de
+       laadanimatie over het hele scherm ipv enkel in de tabel"; lesson 5:
+       the panel is static, so `relative` moves nothing). */
     [data-theme='phantom'] :is(.kp-datatable__busy-panel, .kp-calendar--busy-whole > .kp-calendar__busy) {
         --kp-busy-opacity: 1;
+        position: relative;
         isolation: isolate;
         overflow: clip;
     }
@@ -25485,6 +25619,42 @@
        first instant. */
     @keyframes kp-sig-phantom-fly {
         0% {
+            translate: var(--kp-sig-ph-x0, -80cqi) var(--kp-sig-ph-y0, 6cqi);
+            rotate: var(--kp-sig-ph-r0, -22deg);
+            scale: var(--kp-sig-ph-s0, 1.15);
+            visibility: hidden;
+            animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
+        }
+
+        57.142857% {
+            translate: 0 0;
+            rotate: var(--kp-sig-ph-land, -1.5deg);
+            scale: 1;
+            visibility: visible;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            translate: 0 0;
+            rotate: var(--kp-sig-ph-land, -1.5deg);
+            scale: 1;
+            visibility: visible;
+        }
+    }
+
+    /* The throw for a part placed by measuring it as it opens (the combobox's list): its first
+       frame, unseen, stands unturned where the part lands; the throw's own pose comes from the next
+       frame. */
+    @keyframes kp-sig-phantom-fly-placed {
+        0% {
+            translate: 0 0;
+            rotate: none;
+            scale: 1;
+            visibility: hidden;
+            animation-timing-function: linear;
+        }
+
+        0.01% {
             translate: var(--kp-sig-ph-x0, -80cqi) var(--kp-sig-ph-y0, 6cqi);
             rotate: var(--kp-sig-ph-r0, -22deg);
             scale: var(--kp-sig-ph-s0, 1.15);
@@ -26261,15 +26431,32 @@
     }
 
     /* The date picker's panel and the combobox's list are thrown from the
-       edge of what opens them and resolve, as a menu is; they land level, as
-       they stood (no askew pose of their own to land in). */
+       edge of what opens them and resolve, as a menu is. The date picker's
+       panel lands level, as it stood. */
     [data-theme='phantom'] :is(.kp-datepicker__panel, .kp-combobox__list) {
         --kp-sig-dur: 700ms;
         --kp-sig-ph-x0: -1.6rem;
         --kp-sig-ph-y0: -2.4rem;
         --kp-sig-ph-r0: -9deg;
         --kp-sig-ph-s0: 1;
+    }
+
+    [data-theme='phantom'] .kp-datepicker__panel {
         --kp-sig-ph-land: 0deg;
+    }
+
+    /* The combobox's list is phantom's menu [G3, G6, G14] (Kenny, review
+       round 2: "Niet de open/close animatie van dit thema"; it landed level):
+       thrown from the field's edge, it slaps down and stands a degree and a
+       half askew, as the theme menu and the row actions do. Inside a dialog,
+       a popover or the palette it is part of that surface and stands level. */
+    [data-theme='phantom'] .kp-combobox__list {
+        --kp-sig-ph-land: var(--kp-land);
+        rotate: var(--kp-land);
+    }
+
+    [data-theme='phantom'] :is(.kp-dialog, .kp-popover, .kp-toast, .kp-confirm, .kp-palette) .kp-combobox__list {
+        rotate: none;
     }
 
     [data-theme='phantom']:dir(rtl) :is(.kp-datepicker__panel, .kp-combobox__list) {
@@ -26293,6 +26480,17 @@
            the keyframes. */
         [data-theme='phantom'] .kp-datepicker__panel {
             visibility: visible !important;
+        }
+
+        /* The combobox's list is placed by measuring where it is drawn the moment it opens
+           (js/top-layer.js raiseInPlace(), layoutRect(), which sets a move aside but not a turn or
+           a scale). Measured at the throw's first pose it stayed 13 px left, 16 px up over its field
+           and 27 px wide for as long as it was open (review round 2 follow-up, 2026-10-13). Its
+           throw holds the pose back on its first, unseen frame (visibility hidden): unturned, at
+           its place, so the measurement reads the list where it lands; every frame that can be
+           seen is the throw's. */
+        [data-theme='phantom'] .kp-combobox__list {
+            animation-name: kp-sig-phantom-fly-placed, kp-sig-phantom-resolve;
         }
 
         /* The combobox's list inside a dialog-like surface stays part of it. */
@@ -26370,12 +26568,99 @@
         }
     }
 
-    /* The side navigation's backdrop comes and goes on the panel's own clock
-       (contact, 120 ms, the shove), not the package's 220 ms, so panel and
-       dim start and end together and the close mirrors the opening. */
+    /* ── The alarm is thrown onto the board as phantom's dialog is [G3, G13;
+       Kenny, review round 2: "Niet de open/close animatie van dit thema"]:
+       the package's rise, scale and fades of the plate, the panel, the
+       headline and the reason are retired. The alarm fills the screen, so it
+       is thrown as the full-size drawer is: from the start edge, level, on
+       the shove as a screen of dots, slapping down and resolving in three
+       cuts (700 ms); js/motion.js keeps that entrance and plays it backwards
+       to close (the dissolve, then the snatch back off the edge). It is drawn
+       from the first instant (off the board then), so the Acknowledge button
+       takes the focus the alarm gives it. ── */
+    [data-theme='phantom'] .kp-alarm {
+        --kp-sig-ph-x0: -100%;
+        --kp-sig-ph-y0: 0px;
+        --kp-sig-ph-r0: 0deg;
+        --kp-sig-ph-s0: 1;
+        --kp-sig-ph-land: 0deg;
+    }
+
+    [data-theme='phantom'] .kp-alarm:dir(rtl) {
+        --kp-sig-ph-x0: 100%;
+    }
+
     @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+            mask-size: 7px 7px;
+            animation:
+                kp-sig-phantom-fly 700ms linear backwards,
+                kp-sig-phantom-resolve 700ms linear backwards;
+        }
+
+        [data-theme='phantom'] .kp-alarm[open] {
+            visibility: visible !important;
+        }
+
+        [data-theme='phantom'] .kp-alarm:not([data-kp-alarm-motion='still']) :is(.kp-alarm__panel, .kp-alarm__title, .kp-alarm__detail) {
+            animation: none;
+        }
+    }
+
+    /* ── The side navigation is thrown as phantom's drawer is [G3, G13;
+       Kenny, review round 2: "Niet de open/close animatie van dit thema"]:
+       a panel that slides over (or pushes) the page is thrown from its own
+       edge, level, on the shove (400 ms) as a screen of dots, and slaps down
+       and resolves in three cuts (300 ms); closing, it dissolves in three
+       cuts and is snatched back off its edge on the inverse curve. The
+       travel stays the panel's translate (js/sidenav.js times a pushed
+       page's move from it, so the content goes with the throw); the screen
+       is kp-sig-phantom-resolve, the dialog's. ── */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) {
+            mask-size: 7px 7px;
+        }
+
+        [data-theme='phantom'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            transition: translate 400ms cubic-bezier(0.81, 0, 0, 1);
+            animation: kp-sig-phantom-resolve 700ms linear backwards;
+        }
+
+        [data-theme='phantom'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='false'] {
+            transition: translate 400ms cubic-bezier(1, 0, 0.19, 1) 300ms;
+            animation: kp-sig-phantom-resolve-out 700ms linear forwards;
+        }
+
+        /* A rail (slim) keeps its width glide beside the throw. */
+        [data-theme='phantom'] .kp-sidenav[data-kp-sidenav-slim]:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            transition:
+                translate 400ms cubic-bezier(0.81, 0, 0, 1),
+                inline-size 400ms cubic-bezier(0.81, 0, 0, 1);
+        }
+
+        [data-theme='phantom'] .kp-sidenav[data-kp-sidenav-slim]:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='false'] {
+            transition:
+                translate 400ms cubic-bezier(1, 0, 0.19, 1) 300ms,
+                inline-size 400ms cubic-bezier(1, 0, 0.19, 1);
+        }
+
+        /* Where the package lays a backdrop, it comes with the throw and goes
+           with the snatch: 700 ms, the dim in the shove's 400, held through
+           the resolve; js/sidenav.js plays it backwards to close. */
         [data-theme='phantom'] .kp-sidenav__backdrop {
-            animation: kp-sidenav-backdrop 120ms cubic-bezier(0.81, 0, 0, 1) both;
+            animation: kp-sig-phantom-sidenav-dim 700ms linear both;
+        }
+    }
+
+    @keyframes kp-sig-phantom-sidenav-dim {
+        0% {
+            opacity: 0;
+            animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
+        }
+
+        57.142857%,
+        100% {
+            opacity: 1;
         }
     }
 
@@ -30204,6 +30489,136 @@
             visibility: visible;
         }
     }
+
+    /* Review round 3 (Kenny, 2026-10-13: "sidenav: Niet de open/close animatie van dit thema",
+       "alarm: Niet de open/close animatie van dit thema"). The side navigation and the alarm are
+       printed as the dialog is [G3]: from the top, one whole line per step, the block cursor at the
+       start of the line being printed, six lines at 136 ms (816 ms, the dialog's own time); closing is
+       the print backwards, the lines cleared from the bottom and the cursor backing up a line a step.
+
+       The side navigation (over, push) no longer slides in from its edge (G3: not a slide in from an
+       edge): it stands where it opens, its first line (the header) is on the screen with the cursor at
+       once and the rest is printed under it. Closing plays the same keyframes backwards under second
+       names (lesson 44); only when the print is cleared is the panel hidden (`visibility` waits the
+       816 ms). The content a push panel moves steps over in the same six steps (G1: nothing glides),
+       and back in the same steps turned round; js/sidenav.js copies this `translate` timing onto it.
+       The panel's `translate` never changes: the transition is only its clock. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='terminal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) {
+            translate: 0 0;
+            visibility: hidden;
+            transition:
+                translate calc(6 * var(--kp-sig-tm-line)) steps(6, jump-start),
+                visibility 0s linear calc(6 * var(--kp-sig-tm-line));
+            animation: kp-sig-terminal-tm-nav-rows-back calc(6 * var(--kp-sig-tm-line)) steps(6, jump-end) reverse both;
+        }
+
+        [data-theme='terminal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            visibility: visible;
+            transition:
+                translate calc(6 * var(--kp-sig-tm-line)) steps(6, jump-end),
+                visibility 0s linear;
+            animation: kp-sig-terminal-tm-nav-rows calc(6 * var(--kp-sig-tm-line)) steps(6, jump-end) backwards;
+        }
+
+        /* The cursor, the dialog's: one cell of the bright phosphor at the start of the line being
+           printed; at rest it is not drawn. */
+        [data-theme='terminal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])::after {
+            content: '';
+            position: absolute;
+            inset-block-start: 0.75rem;
+            inset-inline-start: 0.75rem;
+            z-index: 3;
+            inline-size: 1ch;
+            block-size: 1.2em;
+            background: var(--primary);
+            box-shadow: var(--kp-sig-tm-bloom);
+            visibility: hidden;
+            pointer-events: none;
+            animation: kp-sig-terminal-tm-nav-feed-back calc(6 * var(--kp-sig-tm-line)) steps(6, jump-end) reverse backwards;
+        }
+
+        [data-theme='terminal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true']::after {
+            animation: kp-sig-terminal-tm-nav-feed calc(6 * var(--kp-sig-tm-line)) steps(6, jump-end) backwards;
+        }
+
+        /* Its backdrop (where a page keeps one) comes up in the same six steps, as the dialog's. */
+        [data-theme='terminal'] .kp-sidenav__backdrop {
+            animation-duration: calc(6 * var(--kp-sig-tm-line));
+            animation-timing-function: steps(6, jump-end);
+        }
+
+        /* The alarm is a dialog the size of the screen: printed as the dialog, six lines from the top,
+           the cursor at the line being printed (the scan layer's ::after, a band this theme never
+           opted into); js/motion.js keeps this entrance and plays it backwards to close it. The
+           package's fade, rise and scale are not this theme's (G1: no fade, no scale). */
+        [data-theme='terminal'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+            animation: kp-sig-terminal-tm-rows calc(6 * var(--kp-sig-tm-line)) steps(6, jump-end) backwards;
+        }
+
+        [data-theme='terminal'] .kp-alarm:not([data-kp-alarm-motion='still']) :is(.kp-alarm__panel, .kp-alarm__title, .kp-alarm__detail) {
+            animation: none;
+        }
+
+        [data-theme='terminal'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) .kp-alarm__scan::after {
+            content: '';
+            inset-block-start: 1.25rem;
+            inset-inline: 1.25rem auto;
+            z-index: 3;
+            inline-size: 1ch;
+            block-size: 1.2em;
+            background: var(--kp-alarm-ink);
+            box-shadow: 0 0 0.4em var(--kp-alarm-halo);
+            visibility: hidden;
+            animation: kp-sig-terminal-tm-feed calc(6 * var(--kp-sig-tm-line)) steps(6, jump-end) backwards;
+        }
+    }
+
+    /* The side navigation's print: its first line (the header, 3 rem) stands at once, the rest is
+       printed under it; the cursor stands at the start of each line, from the header to the foot. */
+    @keyframes kp-sig-terminal-tm-nav-rows {
+        from {
+            clip-path: inset(0 0 calc(100% - 3rem) 0);
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes kp-sig-terminal-tm-nav-rows-back {
+        from {
+            clip-path: inset(0 0 calc(100% - 3rem) 0);
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes kp-sig-terminal-tm-nav-feed {
+        from {
+            inset-block-start: 0.75rem;
+            visibility: visible;
+        }
+
+        to {
+            inset-block-start: calc(100% - 0.75rem - 1.2em);
+            visibility: visible;
+        }
+    }
+
+    @keyframes kp-sig-terminal-tm-nav-feed-back {
+        from {
+            inset-block-start: 0.75rem;
+            visibility: visible;
+        }
+
+        to {
+            inset-block-start: calc(100% - 0.75rem - 1.2em);
+            visibility: visible;
+        }
+    }
 }
 /* ── End of the signature ── */
 
@@ -30231,6 +30646,15 @@
     syntax: '<number>';
     inherits: false;
     initial-value: 0;
+}
+
+/* How far the side navigation still stands above its footprint while it is
+   dropped onto it (review round 2): the panel is held up-left by this much and
+   each slab's hard shadow stays on the ground, its offset grown by it. */
+@property --kp-sig-br-lift {
+    syntax: '<length>';
+    inherits: true;
+    initial-value: 0px;
 }
 
 @layer kp.register {
@@ -34162,11 +34586,102 @@
             line-height: 0;
         }
 
-        /* The side navigation's backdrop comes in the panel's own time (1 unit, the register's
-           `--fx-duration`), not the package's literal 220 ms (lesson 31 checked: no clip cuts the
-           content). A literal, for the flash check. */
+        /* ── The side navigation and the alarm open as brutalism's dialog does [G3, G2, G12;
+           Kenny, review round 2: "Niet de open/close animatie van dit thema"]: dropped onto the
+           footprint from up-left on the fall curve, stopping dead, the hard shadow on the page
+           from the first frame; the close lifts it off as that drop played backwards. Nothing
+           slides in from a side edge (G2): the panel that slides over or pushes the page stands
+           in its place from the opening's first frame, held 1.5 rem up-left over its slabs'
+           shadows, falls in 3 units (300 ms, G3's plate), and goes back off screen only after
+           the closing's last frame; a pushed page moves with those two frames. The fall is a
+           `transform` (the panel's own `translate` is the package's place). ── */
+        [data-theme='brutalism'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            transition: translate 0s linear;
+            animation: kp-sig-brutalism-sidenav-drop var(--kp-sig-br-time) var(--kp-sig-br-fall) backwards;
+        }
+
+        [data-theme='brutalism'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='false'] {
+            transition: translate 0s linear var(--kp-sig-br-time);
+            animation: kp-sig-brutalism-sidenav-drop-back var(--kp-sig-br-time) var(--kp-sig-br-fall) reverse forwards;
+        }
+
+        [data-theme='brutalism'] [data-kp-sidenav-shift='open'] {
+            transition:
+                margin-inline-start 0s linear,
+                margin-inline-end 0s linear,
+                padding-inline-start 0s linear,
+                padding-inline-end 0s linear;
+        }
+
+        [data-theme='brutalism'] [data-kp-sidenav-shift='closed'] {
+            transition:
+                margin-inline-start 0s linear var(--kp-sig-br-time),
+                margin-inline-end 0s linear var(--kp-sig-br-time),
+                padding-inline-start 0s linear var(--kp-sig-br-time),
+                padding-inline-end 0s linear var(--kp-sig-br-time);
+        }
+
+        /* Each slab's shadow stays on the ground while the panel is up (the current one sits in
+           its footprint, so its shadow shows only while it is lifted). */
+        [data-theme='brutalism'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) :is(.kp-sidenav__link, .kp-sidenav__category-toggle):not([aria-current='page'], :hover, :focus-visible) {
+            box-shadow: calc(3px + var(--kp-sig-br-lift)) calc(3px + var(--kp-sig-br-lift)) 0 var(--foreground);
+        }
+
+        [data-theme='brutalism'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) .kp-sidenav__link[aria-current='page'] {
+            box-shadow: var(--kp-sig-br-lift) var(--kp-sig-br-lift) 0 var(--foreground);
+        }
+
+        /* Where the package lays a backdrop it holds, solid, for the whole drop (nothing fades,
+           as the dialog's backdrop). A literal, for the flash check. */
         [data-theme='brutalism'] .kp-sidenav__backdrop {
-            animation-duration: 100ms;
+            animation: kp-sig-brutalism-hold 300ms steps(1, end) both;
+        }
+
+        /* The alarm: its stamp (the red panel on its 10 px shadow) is dropped onto its footprint
+           from 2.5 rem up-left in the dialog's quarter-speed time (js/motion.js plays every
+           dialog-like part in the dialog's 1500 ms and closes it as the drop backwards); the
+           screen behind it stands at once and holds. The package's fade of the screen and its
+           rise, scale and fades of the panel, the headline and the reason are retired. */
+        [data-theme='brutalism'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+            animation: none;
+        }
+
+        [data-theme='brutalism'] .kp-alarm::backdrop {
+            animation: kp-sig-brutalism-hold var(--kp-sig-br-dialog) steps(1, end) both;
+        }
+
+        [data-theme='brutalism'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) .kp-alarm__panel {
+            --kp-sig-br-h: var(--kp-sig-br-h-slab);
+            --kp-sig-br-sh: 10px;
+            animation: kp-sig-brutalism-drop var(--kp-sig-br-dialog) var(--kp-sig-br-fall) backwards;
+        }
+
+        [data-theme='brutalism'] .kp-alarm:not([data-kp-alarm-motion='still']) :is(.kp-alarm__title, .kp-alarm__detail) {
+            animation: none;
+        }
+
+        @keyframes kp-sig-brutalism-sidenav-drop {
+            from {
+                --kp-sig-br-lift: var(--kp-sig-br-h-plate);
+                transform: translate(calc(-1 * var(--kp-sig-br-h-plate)), calc(-1 * var(--kp-sig-br-h-plate)));
+            }
+
+            to {
+                --kp-sig-br-lift: 0px;
+                transform: none;
+            }
+        }
+
+        @keyframes kp-sig-brutalism-sidenav-drop-back {
+            from {
+                --kp-sig-br-lift: var(--kp-sig-br-h-plate);
+                transform: translate(calc(-1 * var(--kp-sig-br-h-plate)), calc(-1 * var(--kp-sig-br-h-plate)));
+            }
+
+            to {
+                --kp-sig-br-lift: 0px;
+                transform: none;
+            }
         }
 
         @keyframes kp-sig-brutalism-drop-back {
@@ -36975,6 +37490,84 @@
         }
     }
 
+    /* ── The side navigation and the alarm are cut open as titanium's dialog is
+       [G3; Kenny, review round 2: "Niet de open/close animatie van dit thema"]:
+       uncovered from the top edge down on the theme curve, the cutter line in the
+       second oxide (`--chart-2`) running ahead of the cut; the close is that cut
+       played backwards. ── */
+    [data-theme='titanium'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-block-end: 2px solid var(--chart-2);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* The side navigation that slides over or pushes the page no longer
+           slides (the slide was the package's, not the cut): it stands in its
+           place from the opening's first frame, is cut open in the panel's band
+           (240 ms), is cut shut backwards and only then goes back off screen;
+           a pushed page moves with those two frames. */
+        [data-theme='titanium'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            transition: translate 0s linear;
+            animation: kp-sig-titanium-panel-cut var(--kp-sig-ti-panel) var(--kp-sig-ti-ease) backwards;
+        }
+
+        [data-theme='titanium'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true']::after {
+            animation: kp-sig-titanium-ti-cutter var(--kp-sig-ti-panel) var(--kp-sig-ti-ease);
+        }
+
+        [data-theme='titanium'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='false'] {
+            transition: translate 0s linear var(--kp-sig-ti-panel);
+            animation: kp-sig-titanium-panel-cut-back var(--kp-sig-ti-panel) var(--kp-sig-ti-ease) reverse forwards;
+        }
+
+        [data-theme='titanium'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='false']::after {
+            animation: kp-sig-titanium-ti-cutter-back var(--kp-sig-ti-panel) var(--kp-sig-ti-ease) reverse forwards;
+        }
+
+        [data-theme='titanium'] [data-kp-sidenav-shift='open'] {
+            transition:
+                margin-inline-start 0s linear,
+                margin-inline-end 0s linear,
+                padding-inline-start 0s linear,
+                padding-inline-end 0s linear;
+        }
+
+        [data-theme='titanium'] [data-kp-sidenav-shift='closed'] {
+            transition:
+                margin-inline-start 0s linear var(--kp-sig-ti-panel),
+                margin-inline-end 0s linear var(--kp-sig-ti-panel),
+                padding-inline-start 0s linear var(--kp-sig-ti-panel),
+                padding-inline-end 0s linear var(--kp-sig-ti-panel);
+        }
+
+        /* The alarm: the whole screen cut open from the top on the dialog's
+           time, the cutter line drawn by the scan layer's ::after (titanium
+           does not sweep the scan). The package's rise, scale and fades of the
+           panel, the headline and the reason are retired; js/motion.js keeps
+           the cut and plays it backwards to close. */
+        [data-theme='titanium'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+            animation: kp-sig-titanium-panel-cut var(--kp-sig-dur, 240ms) var(--kp-sig-ti-ease) backwards;
+        }
+
+        [data-theme='titanium'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) .kp-alarm__scan::after {
+            content: '';
+            inset: 0;
+            block-size: auto;
+            border-block-end: 2px solid var(--chart-2);
+            background: none;
+            opacity: 0;
+            animation: kp-sig-titanium-ti-cutter var(--kp-sig-dur, 240ms) var(--kp-sig-ti-ease);
+        }
+
+        [data-theme='titanium'] .kp-alarm:not([data-kp-alarm-motion='still']) :is(.kp-alarm__panel, .kp-alarm__title, .kp-alarm__detail) {
+            animation: none;
+        }
+    }
+
     /* A panel uncovered from its top edge down; its shadow keeps room at the sides
        and the foot. */
     @keyframes kp-sig-titanium-panel-cut {
@@ -37467,6 +38060,15 @@
    of passing through values, and the plate's background reads it through
    color-mix(). 1 is the covered plate, 0 the cleared one [scope-94]. */
 @property --kp-redact-alpha {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+}
+
+/* The bar's mega menu is held on screen while a transition on the panel plays (js/components.js
+   settleClosing()): this number, which pastel transitions over the sheet's time, is that transition
+   (review round 2, 2026-10-13; brutalism's --kp-sig-br-hold). */
+@property --kp-sig-pastel-hold {
     syntax: '<number>';
     inherits: false;
     initial-value: 0;
@@ -37976,6 +38578,16 @@
         color: var(--foreground);
         padding-inline: 0.75rem;
         font-size: 0.92rem;
+    }
+
+    /* The combobox's field focuses as every other field here (review round 2 follow-up,
+       2026-10-13): the package's field ring, 2 px of --focus-ring inside the page-coloured
+       outline. css/components.css gives the combobox input only a border colour on focus, which
+       is pastel's resting border already, so a Tab to it changed nothing on screen. */
+    [data-theme='pastel'] .kp-combobox__input:focus-visible {
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 var(--border-strong);
     }
 
     [data-theme='pastel'] .kp-field__input--multiline {
@@ -38824,12 +39436,9 @@
                       register's own button rule, lifting askew under the
                       pointer and pressed flat as every button here is
 
-       Motion is the register's own: the plate fades over --fx-duration with
-       plain ease (the leave's fade); the panel lands the way a hovered
-       sticker lifts, from 6px up and -1.2deg askew to rest, overshooting on
-       --fx-ease over 420ms (a plate's fill time); the mint plate fills in
-       with kp-fill (420ms, --fx-ease); the headline's second pass springs
-       into register with kp-registration (650ms, --fx-ease). Nothing loops.
+       Motion is the dialog's (review round 2, 2026-10-13, below): the plate
+       comes out of nothing and the panel rises and turns into place as the
+       dialog's sheet does, and the close is that backwards. Nothing loops.
        Under reduced motion the landed sticker, the full plate and the
        registered overprint stand at once. The button keeps this register's
        shape and takes the alarm's paint, on selectors long enough to outrank
@@ -38951,50 +39560,56 @@
         text-shadow: none;
     }
 
+    /* The alarm opens as pastel's dialog does and closes as that backwards (review round 2,
+       Kenny 2026-10-13: "Niet de open/close animatie van dit thema"). It ran its own landing (the
+       plate's fade, the panel dropped 6 px askew by transitions, the mint plate filling and the
+       overprint springing in later), which js/motion.js could not turn around: it keeps only the
+       CSS animations of a dialog, so the close was a fade. Now the dialog's sheet
+       (kp-sig-pastel-pastel-sheet: up from 18 px below, turned -2.5 degrees, out of nothing) is
+       shared between the two boxes the alarm is made of: the screen-wide plate comes out of
+       nothing, the panel on it rises and turns into place, on the dialog's curve and in its time
+       (640 ms; js/motion.js plays it in the dialog's close time, forwards to open, backwards to
+       close, `--kp-open: reverse-close`). The words, the mint plate and the overprint stand on the
+       panel and come with it. The breathing glow stays off; the held-open catalogue frame
+       (`[data-kp-alarm-inline]`, never `[open]`) stands still. */
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='pastel'] .kp-alarm:not([data-kp-alarm-motion='still']),
         [data-theme='pastel'] .kp-alarm:not([data-kp-alarm-motion='still'])::after,
-        [data-theme='pastel'] .kp-alarm:not([data-kp-alarm-motion='still']) :is(.kp-alarm__panel, .kp-alarm__title, .kp-alarm__detail) {
+        [data-theme='pastel']
+            .kp-alarm:not([data-kp-alarm-motion='still'])
+            :is(.kp-alarm__panel, .kp-alarm__title, .kp-alarm__detail, .kp-alarm__code),
+        [data-theme='pastel'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__glyphs::before {
             animation: none;
         }
 
         [data-theme='pastel'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
-            transition: opacity var(--fx-duration) ease;
+            animation: kp-sig-pastel-sheet-ground 640ms var(--fx-ease) both;
         }
 
-        [data-theme='pastel'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel {
-            transition:
-                opacity var(--fx-duration) ease,
-                translate 420ms var(--fx-ease),
-                rotate 420ms var(--fx-ease);
+        [data-theme='pastel'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) .kp-alarm__panel {
+            animation: kp-sig-pastel-sheet-lay 640ms var(--fx-ease) both;
+        }
+    }
+
+    /* The dialog's sheet split over the alarm's plate and its panel: together they are
+       kp-sig-pastel-pastel-sheet frame for frame. */
+    @keyframes kp-sig-pastel-sheet-ground {
+        from {
+            opacity: 0;
         }
 
-        [data-theme='pastel'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__code {
-            animation: kp-fill 420ms 300ms var(--fx-ease) both;
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes kp-sig-pastel-sheet-lay {
+        from {
+            transform: translateY(18px) rotate(-2.5deg);
         }
 
-        [data-theme='pastel'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__glyphs::before {
-            animation: kp-registration 650ms 200ms var(--fx-ease) both;
-        }
-
-        [data-theme='pastel'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__detail {
-            transition: opacity var(--fx-duration) ease 300ms;
-        }
-
-        @starting-style {
-            [data-theme='pastel'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
-                opacity: 0;
-            }
-
-            [data-theme='pastel'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__panel {
-                opacity: 0;
-                translate: 0 -6px;
-                rotate: -1.2deg;
-            }
-
-            [data-theme='pastel'] .kp-alarm:not([data-kp-alarm-motion='still']) .kp-alarm__detail {
-                opacity: 0;
-            }
+        to {
+            transform: none;
         }
     }
 
@@ -39946,6 +40561,187 @@
     @keyframes kp-sig-pastel-tour-ring {
         from {
             outline-color: transparent;
+        }
+    }
+
+    /* ── Every part that opens takes the dialog's sheet (review round 2, 2026-10-13) ──
+       Kenny, on the bar, the palette, the date picker, the combobox, the alarm and the side
+       navigation: "Niet de open/close animatie van dit thema". Pastel has no CHARACTER.md; its one
+       decided opening is the dialog's sheet (kp-sig-pastel-pastel-sheet, research/signature-elements:
+       a second sheet laid on the print, up from 18 px below and turned -2.5 degrees, out of nothing,
+       springing into place on --fx-ease). The dialog is seen opening in 427 ms (js/motion.js plays
+       its 640 ms entrance in the dialog's close time, two thirds, `--kp-open: reverse-close`) and
+       closing as that backwards. Every part below opens with that same sheet, in those same
+       427 ms on that same curve, and closes as it played backwards: a CSS close runs a second name
+       of the same frames (kp-sig-pastel-sheet-back) in reverse, so the browser restarts it
+       (lesson 10); a panel js/motion.js closes (the palette, the date picker, the combobox list)
+       has its entrance played backwards for it. The alarm's sheet is in the register layer above. */
+    [data-theme='pastel'] {
+        --kp-sig-pastel-window: 427ms;
+        /* The hover dropdown and the phone panel are held on screen for their close (lesson 36). */
+        --kp-nav-close-time: 427ms;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* The command palette (and the shortcut sheet) are dialogs: the dialog's own rule. */
+        [data-theme='pastel'] :is(.kp-palette, .kp-shortcuts) {
+            --kp-sig-dur: 640ms;
+            animation: kp-sig-pastel-pastel-sheet var(--kp-sig-dur) var(--fx-ease) both;
+        }
+
+        /* The date picker's panel, the combobox's list and the collapsed rail's group that floats out
+           beside it (`.kp-sidenav__flyout`, a popover js/motion.js closes): laid on as the dialog is,
+           each where it hangs from its opener. */
+        [data-theme='pastel'] :is(.kp-datepicker__panel, .kp-combobox__list, .kp-sidenav__flyout) {
+            animation: kp-sig-pastel-pastel-sheet var(--kp-sig-pastel-window) var(--fx-ease) backwards;
+        }
+
+        /* The combobox's list is placed by measuring where it is drawn the moment it opens
+           (js/top-layer.js raiseInPlace(), layoutRect(), which sets a move aside but not a turn):
+           measured turned, it stayed 4 px left, 13 px low and 8 px wide for as long as it was open.
+           Its sheet holds the turn back for the first, invisible frame (opacity 0), so the
+           measurement reads the list where it rests; every frame that can be seen is the sheet's. */
+        [data-theme='pastel'] .kp-combobox__list {
+            animation-name: kp-sig-pastel-sheet-placed;
+        }
+
+        /* Menus and popovers (review round 2 follow-up, 2026-10-13): the theme menu's list, a
+           popover such as the row actions, and a menu button's menu are laid on as the dialog is and
+           taken off as that backwards (js/motion.js plays the entrance back on its closing copy, or
+           playClose()). A menu inside a popover is not laid on twice: the popover is. Tooltips keep
+           their bubble. Several are placed by measuring them as they open (js/menu-button.js,
+           js/top-layer.js), so they take the sheet with its first, unseen frame unturned. */
+        [data-theme='pastel'] :is(.kp-popover:not(.kp-tooltip, .kp-sidenav__flyout), .kp-theme-menu__list, .kp-menu-button > .kp-menu) {
+            animation: kp-sig-pastel-sheet-placed var(--kp-sig-pastel-window) var(--fx-ease) backwards;
+        }
+
+        [data-theme='pastel'] :is(.kp-popover, .kp-theme-menu__list) :is(.kp-menu, .kp-popover) {
+            animation: none;
+        }
+
+        /* The bar's dropdown (opened by hover and focus) and mega menu (opened by its button).
+           While a dropdown closes, js/components.js marks its item `[data-kp-nav-closing]` for
+           `--kp-nav-close-time` and the rule keeps it drawn (Firefox holds no `display`); the mega
+           menu's item is held while the hold number below transitions. The package's opacity fade
+           is replaced: the sheet brings its own. */
+        @container kp-nav (width > 40rem) {
+            [data-theme='pastel'] .kp-nav__menu {
+                --kp-sig-pastel-hold: 0;
+                transition: --kp-sig-pastel-hold var(--kp-sig-pastel-window) linear;
+            }
+
+            [data-theme='pastel']
+                :is(
+                    .kp-nav__links > li:is(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+                    .kp-nav__links > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide
+                ) {
+                --kp-sig-pastel-hold: 1;
+                animation: kp-sig-pastel-pastel-sheet var(--kp-sig-pastel-window) var(--fx-ease) backwards;
+            }
+
+            [data-theme='pastel']
+                .kp-nav__links
+                > li[data-kp-nav-closing]:not(:hover, :focus-within, [data-kp-nav-menu-open])
+                > .kp-nav__menu:not(.kp-nav__menu--wide) {
+                display: block;
+                opacity: 1;
+                animation: kp-sig-pastel-sheet-back var(--kp-sig-pastel-window) var(--fx-ease) reverse forwards;
+            }
+
+            [data-theme='pastel']
+                .kp-nav__links
+                > li[data-kp-nav-closing]:not([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true']))
+                > .kp-nav__menu--wide {
+                animation: kp-sig-pastel-sheet-back var(--kp-sig-pastel-window) var(--fx-ease) reverse forwards;
+            }
+        }
+
+        /* On a phone the bar's links are a panel under the bar: laid on as a sheet, taken off as it
+           backwards (js/components.js keeps it open `--kp-nav-close-time` while
+           `[data-kp-nav-closing]`). The lists nested in it are its own rows and play nothing. */
+        @container kp-nav (max-width: 40rem) {
+            [data-theme='pastel'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
+                animation: kp-sig-pastel-pastel-sheet var(--kp-sig-pastel-window) var(--fx-ease) backwards;
+            }
+
+            [data-theme='pastel'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__links {
+                animation: kp-sig-pastel-sheet-back var(--kp-sig-pastel-window) var(--fx-ease) reverse forwards;
+            }
+
+            [data-theme='pastel'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu {
+                animation: none;
+                transition: none;
+            }
+        }
+
+        /* The side navigation (over and push) is laid on where it stands as the dialog is, and
+           taken off as that backwards; only then does it go back behind its edge (it no longer
+           slides in 220 ms). The content a push panel moves glides aside on the sheet's time and
+           curve and comes back on its reflection in the same time, so the close is the open
+           backwards; the backdrop, where a page keeps one, takes the same time. */
+        [data-theme='pastel'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            transition: translate 0s linear;
+            animation: kp-sig-pastel-pastel-sheet var(--kp-sig-pastel-window) var(--fx-ease) backwards;
+        }
+
+        [data-theme='pastel'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='false'] {
+            transition: translate 0s linear var(--kp-sig-pastel-window);
+            animation: kp-sig-pastel-sheet-back var(--kp-sig-pastel-window) var(--fx-ease) reverse forwards;
+        }
+
+        [data-theme='pastel'] .kp-sidenav__backdrop {
+            animation-duration: 427ms;
+        }
+
+        [data-theme='pastel'] [data-kp-sidenav-shift='open'] {
+            transition-duration: var(--kp-sig-pastel-window);
+            transition-timing-function: var(--fx-ease);
+            transition-delay: 0s;
+        }
+
+        /* --fx-ease, cubic-bezier(0.34, 1.56, 0.64, 1), turned around. */
+        [data-theme='pastel'] [data-kp-sidenav-shift='closed'] {
+            transition-duration: var(--kp-sig-pastel-window);
+            transition-timing-function: cubic-bezier(0.36, 0, 0.66, -0.56);
+            transition-delay: 0s;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='pastel'] {
+            --kp-nav-close-time: 0ms;
+        }
+    }
+
+    /* The sheet for a part placed by measuring it as it opens (the combobox's list): the first
+       frame is the rest pose, unseen (opacity 0); the turn and the drop come from the next frame. */
+    @keyframes kp-sig-pastel-sheet-placed {
+        0% {
+            opacity: 0;
+            transform: none;
+        }
+
+        0.1% {
+            opacity: 0;
+            transform: translateY(18px) rotate(-2.5deg);
+        }
+
+        100% {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    /* The sheet under a second name, for a close a style plays (lesson 10). */
+    @keyframes kp-sig-pastel-sheet-back {
+        from {
+            opacity: 0;
+            transform: translateY(18px) rotate(-2.5deg);
+        }
+
+        to {
+            opacity: 1;
+            transform: none;
         }
     }
 }
@@ -42335,10 +43131,12 @@
         }
     }
 
-    /* The ring round a tour's target is drawn in from nothing, as the page dims. */
+    /* The ring round a tour's target is drawn in from nothing, and the page dims round it out of
+       no shadow at all (whatever shadow the part has of its own). */
     @keyframes kp-sig-forest-tour-ring {
         from {
             outline-color: transparent;
+            box-shadow: 0 0 0 0 transparent;
         }
     }
 
@@ -43814,9 +44612,16 @@
                cannot be faded by the close's transition (css/components.css,
                on the withering curve), and went at once. */
             animation: kp-sig-forest-tour-ring var(--kp-sig-fo-time) var(--kp-sig-fo-grow) backwards;
-            transition:
-                box-shadow var(--kp-sig-fo-time) var(--kp-sig-fo-grow),
-                outline-color var(--kp-sig-fo-time) var(--kp-sig-fo-grow);
+            /* The dim grows by the animation, not by a transition (review round 2, Kenny 2026-10-13:
+               "Bij de laatste stap is nog altijd een flash van groen dat over het scherm gaat"): a
+               transition starts from the part's own shadow, and a card's is the package's
+               `0 0 0 0 var(--border-strong)`, forest's green-grey, so on the step to the last card
+               the dim grew out of the card in green across the whole screen. The animation starts
+               from no shadow on every target, which is what the transition did on a part without a
+               shadow of its own (the row, the field): those frames are unchanged. A transition
+               outranks an animation, so box-shadow is out of this list; the close keeps its own
+               (css/components.css, `[data-kp-reversing]`, important). */
+            transition: outline-color var(--kp-sig-fo-time) var(--kp-sig-fo-grow);
         }
 
         /* A step walks the card to the next target on the growth time and
@@ -46285,13 +47090,97 @@
         }
     }
 
-    /* The side navigation's backdrop dims on the panel's own clock (contact,
-       160 ms, the settle), not the package's 220 ms, so panel and dim begin
-       and end together and the close (the dim played backwards, the panel on
-       the settle's reflection) mirrors the opening frame for frame. */
+    /* ── The side navigation and the alarm open as deco's dialog does [G3;
+       Kenny, review round 2: "Niet de open/close animatie van dit thema"]:
+       the gold frame draws itself round from the middle of its top edge both
+       ways and meets at the bottom (320 ms), then the lacquer and the words
+       come up (160 ms), kp-sig-deco-arrive, 480 ms; the close is that
+       backwards: the lacquer sinks, the frame undraws.
+
+       The side navigation that slides over or pushes the page is a deco plate
+       as the drawer is (it is in the plate lists above: lacquer, wallpaper,
+       coves, the inlay on ::after). It does not slide: it stands in its place
+       from the opening's first frame and leaves it after the closing's last
+       (the drawer does not travel either), and a pushed page moves with
+       those two frames. Its close is kp-sig-deco-arrive-back played in
+       reverse (a second name, so it starts as an animation of its own). ── */
     @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) > * {
+            opacity: var(--kp-sig-deco-up);
+        }
+
+        [data-theme='deco'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            transition: translate 0s linear;
+            animation: kp-sig-deco-arrive var(--kp-sig-deco-arrive) linear backwards;
+        }
+
+        [data-theme='deco'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='false'] {
+            transition: translate 0s linear var(--kp-sig-deco-arrive);
+            animation: kp-sig-deco-arrive-back var(--kp-sig-deco-arrive) linear reverse forwards;
+        }
+
+        [data-theme='deco'] [data-kp-sidenav-shift='open'] {
+            transition:
+                margin-inline-start 0s linear,
+                margin-inline-end 0s linear,
+                padding-inline-start 0s linear,
+                padding-inline-end 0s linear;
+        }
+
+        [data-theme='deco'] [data-kp-sidenav-shift='closed'] {
+            transition:
+                margin-inline-start 0s linear var(--kp-sig-deco-arrive),
+                margin-inline-end 0s linear var(--kp-sig-deco-arrive),
+                padding-inline-start 0s linear var(--kp-sig-deco-arrive),
+                padding-inline-end 0s linear var(--kp-sig-deco-arrive);
+        }
+
+        /* Where the package lays a backdrop, it comes up with the lacquer
+           (the last 160 ms of the opening) and sinks with it. */
         [data-theme='deco'] .kp-sidenav__backdrop {
-            animation: kp-sidenav-backdrop 160ms cubic-bezier(0.22, 1, 0.36, 1) both;
+            animation: kp-sig-deco-sidenav-dim var(--kp-sig-deco-arrive) linear both;
+        }
+
+        /* The alarm: its gold double frame (::before) is the inlay, drawn by
+           --kp-sig-deco-draw; its ground, glow, bars, scan and words come up
+           with --kp-sig-deco-up. The package's rise, scale and fades of the
+           panel, the headline and the reason are retired. js/motion.js keeps
+           the entrance and plays it backwards to close. */
+        [data-theme='deco'] .kp-alarm {
+            --kp-alarm-ground: hsl(from var(--background) h s 5% / calc(0.96 * var(--kp-sig-deco-up)));
+            --kp-alarm-glow: hsl(from var(--primary) h s l / calc(0.25 * var(--kp-sig-deco-up)));
+        }
+
+        [data-theme='deco'] .kp-alarm::before {
+            mask-image: conic-gradient(
+                from calc(var(--kp-sig-deco-draw) * -180deg) at 50% 50%,
+                var(--foreground) 0 calc(var(--kp-sig-deco-draw) * 360deg),
+                transparent 0
+            );
+        }
+
+        [data-theme='deco'] .kp-alarm > * {
+            opacity: var(--kp-sig-deco-up);
+        }
+
+        [data-theme='deco'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+            animation: kp-sig-deco-arrive var(--kp-sig-deco-arrive) linear backwards;
+        }
+
+        [data-theme='deco'] .kp-alarm:not([data-kp-alarm-motion='still']) :is(.kp-alarm__panel, .kp-alarm__title, .kp-alarm__detail) {
+            animation: none;
+        }
+    }
+
+    @keyframes kp-sig-deco-sidenav-dim {
+        0%,
+        66.667% {
+            opacity: 0;
+            animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        100% {
+            opacity: 1;
         }
     }
 
@@ -46349,6 +47238,7 @@
             .kp-menu-button > .kp-menu,
             .kp-nav__menu,
             .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links,
+            .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']),
             .kp-toast,
             .kp-tour,
             dialog.kp-drawer,
@@ -46463,6 +47353,7 @@
             .kp-menu-button > .kp-menu,
             .kp-nav__menu,
             .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links,
+            .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']),
             .kp-toast,
             .kp-tour,
             dialog.kp-drawer,
@@ -46593,6 +47484,7 @@
             .kp-menu-button > .kp-menu,
             .kp-nav__menu,
             .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links,
+            .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']),
             .kp-toast,
             .kp-tour,
             dialog.kp-drawer,
@@ -50652,10 +51544,56 @@
             transition-timing-function: var(--kp-sig-light-ease);
         }
 
-        /* The side navigation's shade comes and goes in the panel's own time
-           (the contact time it slides in), not the package's 220 ms. */
+        /* The side navigation (over and push, the window-edge panel too) is
+           exposed where it stands, as the dialog is [G2, G3; Kenny,
+           2026-10-13 review round 2: "niet de open/close animatie van dit
+           thema"]: no slide in on the contact time any more. It is a glare
+           first and comes down into focus on the settle in one exposure
+           (kp-sig-light-expose, 700 ms); it closes back into the glare
+           (kp-sig-light-leave, the same frames the other way, on the inverse
+           curve), so the close is the opening backwards. Shut, it stays in
+           place and is hidden from the close's last frame. The content a push
+           panel makes room in moves on the same exposure (js/sidenav.js copies
+           the panel's `translate` timing to it; the panel's own translate
+           never changes): most of the way at once, then settling, and back on
+           the inverse curve. */
+        [data-theme='light'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) {
+            translate: 0 0;
+            visibility: hidden;
+            animation: kp-sig-light-leave var(--kp-sig-light-time) var(--kp-sig-light-ease-out) forwards;
+            transition:
+                translate var(--kp-sig-light-time) var(--kp-sig-light-ease-out),
+                visibility 0s linear var(--kp-sig-light-time),
+                inline-size var(--kp-sidenav-duration, var(--fx-duration)) var(--kp-sidenav-ease-back, var(--kp-sig-light-ease-out));
+        }
+
+        [data-theme='light'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            visibility: visible;
+            animation: kp-sig-light-expose var(--kp-sig-light-time) var(--kp-sig-light-ease) backwards;
+            transition:
+                translate var(--kp-sig-light-time) var(--kp-sig-light-ease),
+                visibility 0s linear,
+                inline-size var(--kp-sidenav-duration, var(--fx-duration)) var(--kp-sidenav-ease, var(--kp-sig-light-ease));
+        }
+
+        /* Its shade, where a page asks for one, comes in over the same
+           exposure, as the dialog's shade does (js/sidenav.js plays it round). */
         [data-theme='light'] .kp-sidenav__backdrop {
-            animation-duration: var(--fx-duration);
+            animation-duration: var(--kp-sig-light-time);
+            animation-timing-function: var(--kp-sig-light-ease);
+        }
+
+        /* The alarm comes into focus as the dialog does [G3]: the whole plate
+           a glare first, coming down into focus on the settle in one
+           exposure; js/motion.js plays it backwards into the glare to close
+           it. The package's rise and scale of the panel and the headline's
+           shrink are not light's and are off; the glow's slow pulse stays. */
+        [data-theme='light'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+            animation: kp-sig-light-expose var(--kp-sig-light-time) var(--kp-sig-light-ease) backwards;
+        }
+
+        [data-theme='light'] .kp-alarm:not([data-kp-alarm-motion='still']) :is(.kp-alarm__panel, .kp-alarm__title, .kp-alarm__detail) {
+            animation: none;
         }
 
         /* The calendar's busy layers come out of the glare as anything that
@@ -52213,6 +53151,23 @@
     [data-theme='grotesk'] .kp-sidenav__link:hover::after,
     [data-theme='grotesk'] .kp-sidenav__link:focus-visible::after {
         scale: 1 1;
+    }
+
+    /* The bar's disclosure button (the mega menu's "Equipment") is one of the bar's links, so its
+       ::after is the same baseline rule (review round 2, Kenny 2026-10-13: hovering it drew "a small
+       slanted line"). css/components.css draws the disclosure's caret on that same ::after (a
+       0.4em box, two 1.5px borders, turned 45 degrees, -135 while open); left in place, the rule
+       above took the caret's width, borders and turn and drew a 6 px slanted stroke. The caret's
+       own properties are cleared here, in the open state too, so the rule spans the word as it
+       does under every other link; grotesk's dropdown link ("Readings") shows no caret either. */
+    [data-theme='grotesk'] .kp-nav__link.kp-nav__disclosure::after,
+    [data-theme='grotesk'] .kp-nav__link.kp-nav__disclosure[aria-expanded='true']::after {
+        display: block;
+        margin: 0;
+        inline-size: auto;
+        border: 0;
+        rotate: none;
+        translate: none;
     }
 
     /* The press thickens the rule [Kenny, 2026-10-07: "the rule thickens", his
@@ -58021,6 +58976,143 @@
         }
     }
     /* character>> */
+
+    /* Review round 3 (Kenny, 2026-10-13: "sidenav: Niet de open/close animatie van dit thema",
+       "alarm: Niet de open/close animatie van dit thema"). The side navigation and the alarm are drawn
+       as the dialog is [G2, G3]: the pen traces the outline from its top-start corner, along the top,
+       down the end, back along the foot and up the start, each side on the feed, and at three quarters
+       of the panel's 5 units (800 ms) the part is inked at once and the construction line lifted; the
+       close is the drawing backwards (the ink lifted, the outline untraced).
+
+       The side navigation (over, push) no longer slides in from its edge (G2: nothing slides): it is
+       drawn where it opens, the trace's own keyframes; closing plays them backwards under the second
+       name (`kp-sig-blueprint-trace-out`, lesson 44), which also hides it at its last frame. Its rows
+       stay visible to the focus while the pen draws and are painted by the ink, as the dialog's are.
+       The content a push panel moves makes room at once when the panel is inked (the `translate`
+       clock below: nothing at the feed until three quarters, then all of it) and goes back at once
+       when the ink is lifted, a quarter into the close; js/sidenav.js copies this timing onto it.
+       The panel's `translate` never changes: the transition is only that clock. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) {
+            --kp-bp-ov: visible;
+            translate: 0 0;
+            visibility: hidden;
+            transition: translate var(--kp-sig-bp-panel) linear(0, 0 25%, 1 25%, 1);
+            animation: kp-sig-blueprint-trace-out var(--kp-sig-bp-panel) linear reverse both;
+        }
+
+        [data-theme='blueprint'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            visibility: visible;
+            transition: translate var(--kp-sig-bp-panel) linear(0, 0 75%, 1 75%, 1);
+            animation: kp-sig-blueprint-trace var(--kp-sig-bp-panel) linear backwards;
+        }
+
+        [data-theme='blueprint'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] > * {
+            visibility: visible;
+            opacity: var(--kp-bp-ink);
+        }
+
+        /* The pen and the construction line, the dialog's (its ::after). On the side navigation the
+           line runs on the panel's own edge; on the alarm it runs on the alarm's frame, so the frame
+           is what the pen constructs before the screen is inked. */
+        [data-theme='blueprint'] :is(.kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']), .kp-alarm[open]:not([data-kp-alarm-motion='still']))::after {
+            content: '';
+            position: absolute;
+            z-index: 4;
+            pointer-events: none;
+            visibility: visible;
+            background-repeat: no-repeat;
+            --kp-bp-c-pen: hsl(from var(--primary) h s l / var(--kp-bp-pv));
+            --kp-bp-c-nib: hsl(from var(--primary) h s l / calc(var(--kp-bp-nib) * var(--kp-bp-pv)));
+            --kp-bp-c-steel: hsl(from var(--border-strong) h s l / var(--kp-bp-pv));
+            --kp-bp-c-ground: hsl(from var(--background) h s l / var(--kp-bp-pv));
+            --kp-bp-c-note: hsl(from var(--accent) h s l / var(--kp-bp-rv));
+            --kp-bp-c-trace: hsl(from var(--primary) h s l / var(--kp-bp-tv));
+            --kp-bp-pen-img:
+                radial-gradient(circle closest-side, var(--kp-bp-c-nib) 0 1.3px, var(--kp-bp-c-pen) 1.5px 2.2px, transparent 2.5px),
+                linear-gradient(var(--kp-bp-c-steel), var(--kp-bp-c-steel)), linear-gradient(var(--kp-bp-c-steel), var(--kp-bp-c-steel)),
+                linear-gradient(var(--kp-bp-c-steel), var(--kp-bp-c-steel)), linear-gradient(var(--kp-bp-c-steel), var(--kp-bp-c-steel)),
+                linear-gradient(var(--kp-bp-c-steel), var(--kp-bp-c-steel)), linear-gradient(var(--kp-bp-c-steel), var(--kp-bp-c-steel)),
+                linear-gradient(var(--kp-bp-c-steel), var(--kp-bp-c-steel)), linear-gradient(var(--kp-bp-c-steel), var(--kp-bp-c-steel)),
+                linear-gradient(var(--kp-bp-c-ground), var(--kp-bp-c-ground));
+            --kp-bp-pen-size: 5px 5px, 1px 5px, 1px 5px, 5px 1px, 5px 1px, 9px 1px, 9px 1px, 1px 9px, 1px 9px, 9px 9px;
+            --kp-bp-pen-pos:
+                calc(var(--kp-bp-px) * 100% + 6px - var(--kp-bp-px) * 11px) calc(var(--kp-bp-py) * 100% + 6px - var(--kp-bp-py) * 11px),
+                calc(var(--kp-bp-px) * 100% + 8px - var(--kp-bp-px) * 15px) calc(var(--kp-bp-py) * 100% + 0px - var(--kp-bp-py) * 11px),
+                calc(var(--kp-bp-px) * 100% + 8px - var(--kp-bp-px) * 15px) calc(var(--kp-bp-py) * 100% + 12px - var(--kp-bp-py) * 11px),
+                calc(var(--kp-bp-px) * 100% + 0px - var(--kp-bp-px) * 11px) calc(var(--kp-bp-py) * 100% + 8px - var(--kp-bp-py) * 15px),
+                calc(var(--kp-bp-px) * 100% + 12px - var(--kp-bp-px) * 11px) calc(var(--kp-bp-py) * 100% + 8px - var(--kp-bp-py) * 15px),
+                calc(var(--kp-bp-px) * 100% + 4px - var(--kp-bp-px) * 7px) calc(var(--kp-bp-py) * 100% + 4px - var(--kp-bp-py) * 15px),
+                calc(var(--kp-bp-px) * 100% + 4px - var(--kp-bp-px) * 7px) calc(var(--kp-bp-py) * 100% + 12px - var(--kp-bp-py) * 15px),
+                calc(var(--kp-bp-px) * 100% + 4px - var(--kp-bp-px) * 15px) calc(var(--kp-bp-py) * 100% + 4px - var(--kp-bp-py) * 7px),
+                calc(var(--kp-bp-px) * 100% + 12px - var(--kp-bp-px) * 15px) calc(var(--kp-bp-py) * 100% + 4px - var(--kp-bp-py) * 7px),
+                calc(var(--kp-bp-px) * 100% + 4px - var(--kp-bp-px) * 7px) calc(var(--kp-bp-py) * 100% + 4px - var(--kp-bp-py) * 7px);
+            --kp-bp-px: calc(clamp(0, var(--kp-bp-r), 1) - clamp(0, var(--kp-bp-r) - 2, 1));
+            --kp-bp-py: calc(clamp(0, var(--kp-bp-r) - 1, 1) - clamp(0, var(--kp-bp-r) - 3, 1));
+            background-image:
+                var(--kp-bp-pen-img), linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace)),
+                linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace)), linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace)),
+                linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace));
+            background-size:
+                var(--kp-bp-pen-size),
+                calc(clamp(0, var(--kp-bp-r), 1) * (100% - 16px)) 1px,
+                1px calc(clamp(0, var(--kp-bp-r) - 1, 1) * (100% - 16px)),
+                calc(clamp(0, var(--kp-bp-r) - 2, 1) * (100% - 16px)) 1px,
+                1px calc(clamp(0, var(--kp-bp-r) - 3, 1) * (100% - 16px));
+            background-position:
+                var(--kp-bp-pen-pos),
+                8px 8px,
+                right 8px top 8px,
+                right 8px bottom 8px,
+                left 8px bottom 8px;
+        }
+
+        [data-theme='blueprint'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])::after {
+            inset: -8px;
+        }
+
+        [data-theme='blueprint'] .kp-alarm[open]:not([data-kp-alarm-motion='still'])::after {
+            inset: calc(var(--kp-alarm-bar, 0.9rem) + 0.75rem - 8px) calc(0.75rem - 8px);
+            box-shadow: none;
+            animation: none;
+        }
+
+        /* Its backdrop (where a page keeps one) dims in the panel's 5 units on the feed. A literal,
+           for the flash check that reads it. */
+        [data-theme='blueprint'] .kp-sidenav__backdrop {
+            animation-duration: 800ms;
+            animation-timing-function: var(--kp-sig-bp-feed);
+        }
+
+        /* The alarm is a dialog the size of the screen: traced and inked as the dialog, its ground,
+           frame, bars and words together at the ink; js/motion.js keeps this entrance and plays it
+           backwards to close it. What it holds stays visible to the focus (the acknowledge button
+           takes it at once) and is painted by the ink. The frame's breathing glow, which lived on
+           the ::after the pen now takes, breathes on the scan layer's ::after. The package's fade,
+           rise and scale are not this theme's (G2: nothing rises or scales). */
+        [data-theme='blueprint'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+            --kp-bp-ov: hidden auto;
+            animation: kp-sig-blueprint-trace var(--kp-sig-bp-panel) linear backwards;
+        }
+
+        [data-theme='blueprint'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) > :is(.kp-alarm__scan, .kp-alarm__bars, .kp-alarm__panel) {
+            visibility: visible;
+            opacity: var(--kp-bp-ink);
+        }
+
+        [data-theme='blueprint'] .kp-alarm:not([data-kp-alarm-motion='still']) :is(.kp-alarm__panel, .kp-alarm__title, .kp-alarm__detail) {
+            animation: none;
+        }
+
+        [data-theme='blueprint'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) .kp-alarm__scan::after {
+            content: '';
+            inset: 0;
+            block-size: auto;
+            background: none;
+            box-shadow: inset 0 0 7rem var(--kp-alarm-glow);
+            animation: kp-alarm-pulse 1400ms ease-in-out infinite alternate;
+        }
+    }
 }
 /* ── End of the signature ── */
 
@@ -65364,6 +66456,40 @@
             opacity: 0;
         }
     }
+
+    /* ── The alarm is a dialog: it is swept in where it stands (G3), review round 2 ──
+       Kenny, 2026-10-13: "Dat gaat niet open/close met de animatie van Dark". The alarm ran the
+       package's entrance (the plate faded in, the panel rose and scaled, the headline shrank into
+       place, the reason faded after it), which js/motion.js only turned around. Now the alarm's
+       own box, the whole screen, is laid by the dialog's pass: the line crosses it from its start
+       edge at one pace and the plate, its frame, its glow, the panel and the words are laid behind
+       it; the close is the pass back (js/motion.js plays this entrance backwards in the dialog's
+       close time, `--kp-open: reverse-close`). The plate casts no halo, so the reach is none. The
+       line is the vignette layer's ::after, the plate's own ::after being its breathing glow. The
+       film's turn is left out: the alarm draws no film edge. The held-open frame in the
+       catalogue (`[data-kp-alarm-inline]`, never `[open]`) stays still. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+            --kp-sig-dk-r: 0px;
+            animation: kp-sig-dark-sweep var(--kp-sig-dk-time) linear backwards;
+        }
+
+        [data-theme='dark'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) :is(.kp-alarm__panel, .kp-alarm__title, .kp-alarm__detail) {
+            animation: none;
+        }
+
+        [data-theme='dark'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) .kp-alarm__scan::after {
+            content: '';
+            inset: 0;
+            z-index: 3;
+            block-size: auto;
+            background: var(--kp-sig-dk-line) 100% 0 / 2px 100% no-repeat;
+            filter: var(--kp-sig-dk-glow);
+            opacity: 0;
+            pointer-events: none;
+            animation: kp-sig-dark-pass-line var(--kp-sig-dk-time) linear backwards;
+        }
+    }
 }
 /* ── End of the signature ── */
 
@@ -68941,11 +70067,109 @@
             transition: opacity 560ms linear;
         }
 
-        /* The side navigation's shade comes and goes in the panel's own time
-           (the contact time it slides in), not the package's 220 ms, so the
-           pair is one picture (lesson 31). */
+        /* The side navigation (over and push, the window-edge panel too) is
+           ruled in where it stands, as the dialog is [G3; Kenny, 2026-10-13
+           review round 2: "niet de open/close animatie van dit thema"]: it no
+           longer slides in on the contact time. Its frame rule along the top
+           edge, then its lines (the header, the list, the foot), each clipped
+           open start to end with the 2 px navy pen under it, 60 ms apart, in
+           the dialog's 740 ms (400 + 160 + three lines 60 ms apart, the same
+           offsets as kp-sig-formal-line-k / -pen-k). One registered number,
+           --kp-fm-t (0 to 1), draws every clip and pen, as in the menus; the
+           opening runs it up (kp-sig-formal-ruling) and the close runs it down
+           (kp-sig-formal-ruling-back) at the even pace, so the close is the
+           ruling taken off, frame for frame the opening backwards. Shut, the
+           panel stays in place and is hidden from the close's last frame.
+           The content a push panel makes room in moves with the frame rule's
+           pen, in the first 400 ms of the 740 at the even pace, and back in
+           the last 400 ms of the close (js/sidenav.js copies the panel's
+           `translate` timing to it; the panel's own translate never changes).
+           The move is written over the whole 740 ms with a held stretch
+           (`linear()`, 400 / 740 = 54.054 %) rather than as 400 ms with a
+           delay, so the content's move is as long as the panel's ruling and
+           the two stay one pair. */
+        [data-theme='formal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) {
+            --kp-fm-t: 0;
+            --kp-fm-k: 0;
+            translate: 0 0;
+            visibility: hidden;
+            animation: kp-sig-formal-ruling-back 740ms linear;
+            transition:
+                translate 740ms linear(0, 0 45.946%, 1),
+                visibility 0s linear 740ms,
+                inline-size var(--kp-sidenav-duration, var(--fx-duration)) var(--kp-sidenav-ease-back, linear);
+        }
+
+        [data-theme='formal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            --kp-fm-t: 1;
+            visibility: visible;
+            animation: kp-sig-formal-ruling 740ms linear;
+            transition:
+                translate 740ms linear(0, 1 54.054%, 1),
+                visibility 0s linear,
+                inline-size var(--kp-sidenav-duration, var(--fx-duration)) var(--kp-sidenav-ease, linear);
+        }
+
+        [data-theme='formal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) > :nth-child(1) {
+            --kp-fm-k: 0;
+        }
+
+        [data-theme='formal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) > :nth-child(2) {
+            --kp-fm-k: 1;
+        }
+
+        [data-theme='formal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) > :nth-child(3) {
+            --kp-fm-k: 2;
+        }
+
+        [data-theme='formal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) > :nth-child(n + 4) {
+            --kp-fm-k: 3;
+        }
+
+        [data-theme='formal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']),
+        [data-theme='formal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) > * {
+            --kp-fm-f: clamp(0, (var(--kp-fm-t) * 740 - var(--kp-fm-k, 0) * var(--kp-sig-fm-st)) / var(--kp-sig-fm-len), 1);
+            --kp-fm-lf: clamp(
+                0,
+                (var(--kp-fm-t) * 740 - var(--kp-fm-k, 0) * var(--kp-sig-fm-st) - var(--kp-sig-fm-len)) / var(--kp-sig-fm-lift),
+                1
+            );
+            --kp-fm-open: calc(100% - var(--kp-fm-f) * (100% + var(--kp-sig-fm-reach)));
+            clip-path: inset(
+                calc(-1 * var(--kp-sig-fm-reach)) calc(var(--kp-fm-open) * var(--kp-fm-ltr) - var(--kp-sig-fm-reach) * (1 - var(--kp-fm-ltr)))
+                    calc(-1 * var(--kp-sig-fm-reach)) calc(var(--kp-fm-open) * (1 - var(--kp-fm-ltr)) - var(--kp-sig-fm-reach) * var(--kp-fm-ltr))
+            );
+            background-image: linear-gradient(
+                var(--kp-fm-dir),
+                transparent calc(var(--kp-fm-lf) * 100%),
+                var(--primary) calc(var(--kp-fm-lf) * 100%) calc(var(--kp-fm-f) * 100%),
+                transparent calc(var(--kp-fm-f) * 100%)
+            );
+            background-repeat: no-repeat;
+            background-size: 100% var(--kp-sig-fm-pen);
+            background-position: 0 100%;
+        }
+
+        /* The frame rule runs along the panel's top edge. */
+        [data-theme='formal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) {
+            background-position: 0 0;
+        }
+
+        @keyframes kp-sig-formal-ruling-back {
+            from {
+                --kp-fm-t: 1;
+            }
+
+            to {
+                --kp-fm-t: 0;
+            }
+        }
+
+        /* Its shade, where a page asks for one, is ruled across with the
+           frame rule (the dialog's shade is ruled too) and taken off as that
+           backwards (js/sidenav.js plays it round). */
         [data-theme='formal'] .kp-sidenav__backdrop {
-            animation-duration: var(--fx-duration);
+            animation: kp-sig-formal-alarm-ground 740ms linear both;
         }
 
         @keyframes kp-sig-formal-tour-ring {
@@ -71868,6 +73092,55 @@
     @media (prefers-reduced-motion: reduce) {
         [data-theme='solstice'] {
             --kp-nav-close-time: 0ms;
+        }
+    }
+
+    /* Review round 3 (Kenny, 2026-10-13: "sidenav: Niet de open/close animatie van dit thema",
+       "alarm: Niet de open/close animatie van dit thema"). The side navigation and the alarm are
+       kindled as the dialog is [G3]: a dome of first light grows from the middle of the foot,
+       overbright and warm, cooling to its colour, 2 units (480 ms) on the coming curve; closing is the
+       dome sinking back into the foot, the same frames backwards.
+
+       The side navigation (over, push) no longer slides in from its edge (G2, G3: nothing slides in
+       from a side, the panel never moves): it is kindled where it opens. Closing plays the dome
+       backwards under its second name (`kp-sig-solstice-kindled-back`, lesson 44); only then is the
+       panel hidden (`visibility` waits the 480 ms). The content a push panel moves glides in the same
+       two units, on the coming curve to make room and on the going curve (the same curve played
+       back, G1) to give it back; js/sidenav.js copies this `translate` timing onto it. The panel's
+       `translate` never changes: the transition is only its clock. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='solstice'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) {
+            translate: 0 0;
+            visibility: hidden;
+            transition:
+                translate var(--kp-sig-solstice-open) cubic-bezier(0.12, 0, 0.39, 0),
+                visibility 0s linear var(--kp-sig-solstice-open);
+            animation: kp-sig-solstice-kindled-back var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) reverse both;
+        }
+
+        [data-theme='solstice'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            visibility: visible;
+            transition:
+                translate var(--kp-sig-solstice-open) var(--kp-sig-solstice-come),
+                visibility 0s linear;
+            animation: kp-sig-solstice-kindled var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) backwards;
+        }
+
+        /* Its backdrop (where a page keeps one) dims in the same two units on the coming curve. */
+        [data-theme='solstice'] .kp-sidenav__backdrop {
+            animation-duration: var(--kp-sig-solstice-open);
+            animation-timing-function: var(--kp-sig-solstice-come);
+        }
+
+        /* The alarm is a dialog the size of the screen: the whole screen is kindled from the middle of
+           its foot, as the dialog; js/motion.js keeps this entrance and plays it backwards to close
+           it. The package's fade, rise and scale are not this theme's (G3: never moves, never scales). */
+        [data-theme='solstice'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+            animation: kp-sig-solstice-kindled var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) backwards;
+        }
+
+        [data-theme='solstice'] .kp-alarm:not([data-kp-alarm-motion='still']) :is(.kp-alarm__panel, .kp-alarm__title, .kp-alarm__detail) {
+            animation: none;
         }
     }
 }

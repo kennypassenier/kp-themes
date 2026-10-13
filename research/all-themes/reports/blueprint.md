@@ -102,3 +102,42 @@ disappears"**
 
 Full pair meter after the round: 22 of 25 pass, the same rows as before (calendar-busy, wizard-step, empty-state, tabs-panel
 as listed). Wall time: full blueprint run 2 min 32 s; stage runs about 20 s each, eleven of them.
+
+
+## Review round 2 (2026-10-13 20:37): the side navigation and the alarm
+
+Kenny, verbatim: "sidenav: Niet de open/close animatie van dit thema" and "alarm: Niet de open/close animatie van dit thema".
+
+### sidenav (over and push, `#fa-over`, `#fa-side` pushes, and the window-edge panels of research/sidenav-edge)
+
+- **Cause:** the register gave the over/push panel no motion of its own, so it ran the package's plain slide from its edge
+  (identity: transition:translate 160 ms on the feed (the package slide)).
+- **Change:** it now opens as blueprint's dialog does, G3's drawing: the pen traces the outline from the top-start corner, along the top, down the end, back along the foot and up the start, each side on the feed, and at three quarters of 5 units (800 ms) the part is inked at once and the construction line lifted; the close is that drawing backwards. It no longer slides: `translate: 0 0` in every state, shut it is
+  `visibility: hidden` (after the close's last frame). Keyframes: `kp-sig-blueprint-trace` on the panel (the dialog's keyframes; the pen and construction line on its ::after, run on the panel's own edge) and `kp-sig-blueprint-trace-out` with `reverse both` for the close; its rows stay visible to the focus and are painted by `--kp-bp-ink`, as the dialog's are. The content a push panel moves (and the edge
+  tab) makes room at once when the panel is inked (a `linear(0, 0 75%, 1 75%, 1)` clock) and goes back at once when the ink lifts, a quarter into the close (G2: nothing slides): js/sidenav.js copies the panel's `translate` transition onto it, and the panel's `translate` never
+  changes, so that transition is only the clock. The backdrop (where a page keeps one) takes the same time and curve.
+  Selectors: `[data-theme='blueprint'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])`, its
+  `[data-kp-sidenav-open='true']` state and their `::after` (end of the `kp.signature` layer, under
+  `prefers-reduced-motion: no-preference`; reduced motion keeps the package's instant show and hide).
+- **Evidence:** identity `sidenav` row FAIL (NOT split) → ok (split, open and close), now kp-sig-blueprint-trace 800 ms; close kp-sig-blueprint-trace-out, reverse. Pair meter
+  before: sidenav 160/160 0.2 %, sidenav-push 160/160, edge-push 160/160 1.0 %, -gutter 0.3 %, -over 0.3 %, alarm 800/800 0.0 %; after: sidenav 800/800 0.2 %, sidenav-push 800/800 0.0 %, sidenav-edge-push 800/800 0.0 %, -gutter 800/800 0.0 %, -over 800/800 0.3 %, -tab 800/800 0.3 %, sidenav-group 160/160 0.0 % (unchanged), alarm 800/800 0.0 %, dialog 800/800 0.0 %: 9 of 9. Seen in frames (review dialog stage, real clicks at
+  coordinates, the animations paused and sought): sidenav: at 25 % a cyan line runs along the panel's top with the pen at its end, at 50 % down the end edge and along the foot, at 75 % the panel and its rows inked at once; the edge page's content jumps right in that same frame and back in the close's frame where the ink lifts. The alarm: the pen draws the frame round the screen (top, end, foot, start) over the page, then the red alarm is inked; the close untraces it.
+
+### alarm (`.kp-alarm`, its panel and title)
+
+- **Cause:** the register named no alarm motion, so it ran the package's script[opacity] on the plate, script[opacity,scale,translate] on the panel, script[opacity,scale] on the title, which js/motion.js replays
+  and turns round.
+- **Change:** `kp-sig-blueprint-trace` on `.kp-alarm[open]` with the pen on its ::after, laid on the alarm's frame (inset by the bar + 0.75 rem), so the pen constructs the frame and the screen is inked at three quarters; what it holds stays focusable and is painted by the ink; the frame's breathing glow moved from that ::after to `.kp-alarm__scan::after` with the package's own `kp-alarm-pulse`; the package's fade, rise and scale set to none. js/motion.js keeps this entrance and closes the alarm by playing it backwards in the dialog's
+  close time, as it does the dialog. Respects `data-kp-alarm-motion='still'`.
+- **Evidence:** identity now lists script[overflowX,overflowY,visibility,--kp-bp-ink,--kp-bp-nib,--kp-bp-pv,--kp-bp-r,--kp-bp-tv]@dialog.kp-alarm, exactly the dialog's own row. The audit's regex can only read keyframe NAMES, and js/motion.js
+  replays every dialog-like entrance as an unnamed script animation, so the `alarm` row prints FAIL exactly as this
+  theme's `dialog` row does; the property sets are the evidence. Pair meter: alarm 800/800 0.0 % (open =
+  close, close the open reversed).
+
+### Deviations for Kenny (this round)
+
+- The push panel's content moves in one jump when the panel is inked (and back when the ink lifts) instead of travelling with a slide; borrowed from G2 ('when the line closes, the part is inked at once'), G3 does not name the page next to a panel. The alarm's breathing glow now sits on the scan layer instead of the alarm's own ::after, because the pen takes that pseudo-element as it does on the dialog.
+
+Focus after the change (`tab-paint.mjs`): only "Review in a dialog" and "Copy answer" read NOMARK, as allowed.
+Measured wall time of this round's runs (Firefox, four themes in parallel): identity + pairs before 1 min 23 s, after
+1 min 31 s, tab-paint 1 min 15 s, frame sheets about 40 s each.

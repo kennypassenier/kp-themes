@@ -200,3 +200,7 @@ Mechanism only; dark's pass, film and timings are unchanged (research/all-themes
   transition on `--kp-sig-dk-hold` (new `@property`) the mega menu.
 - Round 2: the whole busy table (its `[aria-busy]` dim from css/layout.css) dims and comes back over the same 880 ms
   pass as its rows; it was left in one frame.
+- Review round 2 (2026-10-13), the alarm: it ran the package's entrance (the plate faded, the panel rose and scaled,
+  the headline shrank in, the reason came late). Its whole box, the screen, is now laid by the dialog's pass (G3:
+  swept from its start edge where it stands), the line on the vignette layer's `::after`, and taken off by the pass
+  back; no film turn (the alarm draws no film edge); the catalogue's held-open frame stays still.

@@ -118,3 +118,34 @@ Measured wall time of the round-2 runs (Firefox): targeted runs about 9 x 12 s, 
 - Evidence: rAF trace in the stage: only `kp-sidenav-backdrop` 0 → 240 ms, opacity rising from the first frame, no
   `::after`; screenshot bursts on open and close show no colour (`scratchpad/r2/kb/sheet-ti4.png`, `sheet-ti5.png`; before:
   `sheet-ti2.png`, the gradient at 223-326 ms). Pair meter `sidenav`, `sidenav-push`, `sidenav-group`: ok 240/240 ms, 0.0 %.
+
+## Review round 2 (2026-10-13, Kenny's rejections)
+
+Frames read in Firefox on `research/all-themes-applied/demo.html` (real clicks at coordinates, animations paused and
+sought frame by frame, sheets looked at); numbers from `pairs-meter.mjs` and `identity.mjs`.
+
+**sidenav · "Niet de open/close animatie van dit thema"**
+- Cause: the panel slid in (the package's translate on the 240 ms band), no cut.
+- Change: the over/push panel is cut open as the dialog and the menus are (G3): `[data-kp-sidenav-open='true']`
+  `kp-sig-titanium-panel-cut 240ms` on the theme curve with the cutter line in `--chart-2` on a new `::after`
+  (`kp-sig-titanium-ti-cutter`); `[...='false']` `kp-sig-titanium-panel-cut-back` / `-ti-cutter-back` `reverse forwards`.
+  It stands in place (`translate 0s` on open, `0s 240ms` on close), a pushed page moves with those frames.
+- Evidence: frames show the panel uncovered from its top edge down behind the violet cutter line; the close cuts it shut
+  upward. Pairs: sidenav, sidenav-push, sidenav-group, sidenav-edge-push/-gutter/-over 240/240 ms, 0.0 %. Identity:
+  `kp-sig-titanium-panel-cut` + `-ti-cutter` open, the `-back` pair reversed on close.
+
+**alarm · "Niet de open/close animatie van dit thema"**
+- Cause: the package's opacity/scale/rise.
+- Change: `.kp-alarm[open]` runs `kp-sig-titanium-panel-cut` (the palette's cut); the cutter line is
+  `.kp-alarm__scan::after` (titanium does not sweep the scan): `inset: 0`, the 2 px `--chart-2` line, `kp-sig-titanium-ti-cutter`.
+  Panel, title and detail animations `none`. js/motion.js plays it in the dialog's 160 ms and closes it backwards.
+- Evidence: frames show the whole screen cut open from the top with the line running ahead; the close the reverse.
+  Identity: `script[clipPath]@dialog.kp-alarm` + `script[opacity,transform]@div.kp-alarm__scan::after`, the palette's
+  row (scripted copy). Pair 160/160 ms, 0.0 %.
+
+Tab paint: 41 stops, NOMARK only "Review in a dialog" and "Copy answer".
+
+**Deviation for Kenny:** G3 says a part that lives at an edge (drawer, toast) slides in from it; the side navigation no
+longer slides, it is cut open in place as a dialog, per your verdict that the slide is not titanium's opening.
+
+Measured wall time (Firefox, the four themes in parallel): pairs + identity 1 min 57 s, tab-paint 1 min 18 s.

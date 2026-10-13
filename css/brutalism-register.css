@@ -24,6 +24,15 @@
     initial-value: 0;
 }
 
+/* How far the side navigation still stands above its footprint while it is
+   dropped onto it (review round 2): the panel is held up-left by this much and
+   each slab's hard shadow stays on the ground, its offset grown by it. */
+@property --kp-sig-br-lift {
+    syntax: '<length>';
+    inherits: true;
+    initial-value: 0px;
+}
+
 @layer kp.register {
     /* @kp-soft/themes — css/brutalism-register.css
    The brutalism register, 5.0.0 [S48, LIFT_PLAN row 5]: printed matter.
@@ -3953,11 +3962,102 @@
             line-height: 0;
         }
 
-        /* The side navigation's backdrop comes in the panel's own time (1 unit, the register's
-           `--fx-duration`), not the package's literal 220 ms (lesson 31 checked: no clip cuts the
-           content). A literal, for the flash check. */
+        /* ── The side navigation and the alarm open as brutalism's dialog does [G3, G2, G12;
+           Kenny, review round 2: "Niet de open/close animatie van dit thema"]: dropped onto the
+           footprint from up-left on the fall curve, stopping dead, the hard shadow on the page
+           from the first frame; the close lifts it off as that drop played backwards. Nothing
+           slides in from a side edge (G2): the panel that slides over or pushes the page stands
+           in its place from the opening's first frame, held 1.5 rem up-left over its slabs'
+           shadows, falls in 3 units (300 ms, G3's plate), and goes back off screen only after
+           the closing's last frame; a pushed page moves with those two frames. The fall is a
+           `transform` (the panel's own `translate` is the package's place). ── */
+        [data-theme='brutalism'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            transition: translate 0s linear;
+            animation: kp-sig-brutalism-sidenav-drop var(--kp-sig-br-time) var(--kp-sig-br-fall) backwards;
+        }
+
+        [data-theme='brutalism'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='false'] {
+            transition: translate 0s linear var(--kp-sig-br-time);
+            animation: kp-sig-brutalism-sidenav-drop-back var(--kp-sig-br-time) var(--kp-sig-br-fall) reverse forwards;
+        }
+
+        [data-theme='brutalism'] [data-kp-sidenav-shift='open'] {
+            transition:
+                margin-inline-start 0s linear,
+                margin-inline-end 0s linear,
+                padding-inline-start 0s linear,
+                padding-inline-end 0s linear;
+        }
+
+        [data-theme='brutalism'] [data-kp-sidenav-shift='closed'] {
+            transition:
+                margin-inline-start 0s linear var(--kp-sig-br-time),
+                margin-inline-end 0s linear var(--kp-sig-br-time),
+                padding-inline-start 0s linear var(--kp-sig-br-time),
+                padding-inline-end 0s linear var(--kp-sig-br-time);
+        }
+
+        /* Each slab's shadow stays on the ground while the panel is up (the current one sits in
+           its footprint, so its shadow shows only while it is lifted). */
+        [data-theme='brutalism'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) :is(.kp-sidenav__link, .kp-sidenav__category-toggle):not([aria-current='page'], :hover, :focus-visible) {
+            box-shadow: calc(3px + var(--kp-sig-br-lift)) calc(3px + var(--kp-sig-br-lift)) 0 var(--foreground);
+        }
+
+        [data-theme='brutalism'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) .kp-sidenav__link[aria-current='page'] {
+            box-shadow: var(--kp-sig-br-lift) var(--kp-sig-br-lift) 0 var(--foreground);
+        }
+
+        /* Where the package lays a backdrop it holds, solid, for the whole drop (nothing fades,
+           as the dialog's backdrop). A literal, for the flash check. */
         [data-theme='brutalism'] .kp-sidenav__backdrop {
-            animation-duration: 100ms;
+            animation: kp-sig-brutalism-hold 300ms steps(1, end) both;
+        }
+
+        /* The alarm: its stamp (the red panel on its 10 px shadow) is dropped onto its footprint
+           from 2.5 rem up-left in the dialog's quarter-speed time (js/motion.js plays every
+           dialog-like part in the dialog's 1500 ms and closes it as the drop backwards); the
+           screen behind it stands at once and holds. The package's fade of the screen and its
+           rise, scale and fades of the panel, the headline and the reason are retired. */
+        [data-theme='brutalism'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+            animation: none;
+        }
+
+        [data-theme='brutalism'] .kp-alarm::backdrop {
+            animation: kp-sig-brutalism-hold var(--kp-sig-br-dialog) steps(1, end) both;
+        }
+
+        [data-theme='brutalism'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) .kp-alarm__panel {
+            --kp-sig-br-h: var(--kp-sig-br-h-slab);
+            --kp-sig-br-sh: 10px;
+            animation: kp-sig-brutalism-drop var(--kp-sig-br-dialog) var(--kp-sig-br-fall) backwards;
+        }
+
+        [data-theme='brutalism'] .kp-alarm:not([data-kp-alarm-motion='still']) :is(.kp-alarm__title, .kp-alarm__detail) {
+            animation: none;
+        }
+
+        @keyframes kp-sig-brutalism-sidenav-drop {
+            from {
+                --kp-sig-br-lift: var(--kp-sig-br-h-plate);
+                transform: translate(calc(-1 * var(--kp-sig-br-h-plate)), calc(-1 * var(--kp-sig-br-h-plate)));
+            }
+
+            to {
+                --kp-sig-br-lift: 0px;
+                transform: none;
+            }
+        }
+
+        @keyframes kp-sig-brutalism-sidenav-drop-back {
+            from {
+                --kp-sig-br-lift: var(--kp-sig-br-h-plate);
+                transform: translate(calc(-1 * var(--kp-sig-br-h-plate)), calc(-1 * var(--kp-sig-br-h-plate)));
+            }
+
+            to {
+                --kp-sig-br-lift: 0px;
+                transform: none;
+            }
         }
 
         @keyframes kp-sig-brutalism-drop-back {

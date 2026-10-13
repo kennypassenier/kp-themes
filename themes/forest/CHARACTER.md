@@ -529,3 +529,11 @@ alternative; the overlap is now an option Kenny can still pick, named as such.
 
 When the next theme's grammar is written, this table and titanium's are read
 first, so its recommendations steer clear of both.
+
+## Applied 2026-10-13 (review round 2, the tour)
+
+The tour's dim grows round its target by the ring's animation (`kp-sig-forest-tour-ring`, from no shadow), not by a
+transition: a transition started from the part's own shadow, and a card's is the package's `0 0 0 0` in
+`--border-strong`, so on the step to the last card the dim grew out of it in green across the screen. Every other
+frame of the tour is unchanged (a target without a shadow of its own, the row and the field, dimmed from no shadow
+before too); the close keeps its own transition.

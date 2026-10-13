@@ -307,3 +307,8 @@ Mechanism only; formal's motion, rule and timings are unchanged (research/all-th
 - The bar (no decided motion): the hover dropdown, the mega menu and the phone bar's panel take the menus' ruling (G3),
   line by line, 400 + 160 + 60 per entry; `--kp-nav-close-time` holds the dropdown and the panel for that time.
 - The side navigation's shade takes the panel's 180 ms.
+- Review round 2 (Kenny: "niet de open/close animatie van dit thema"): the side navigation (over, push, the window-edge
+  panel) no longer slides on the contact time. It is ruled in where it stands as the dialog is: the frame rule, then its
+  header, list and foot, 60 ms apart in 740 ms, drawn from `--kp-fm-t` (`kp-sig-formal-ruling` / `-ruling-back`). It is
+  ruled off as that backwards and hidden after the close. The content a push panel moves travels with the frame rule's
+  pen (the first 400 ms of the opening, the last 400 of the close). The alarm was already ruled; unchanged.

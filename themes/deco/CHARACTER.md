@@ -229,3 +229,8 @@ on the lacquer). The navbar's motion is borrowed from the menu's (no rule here d
 coves, the gold inlay) and open by G3 itself, the inlay drawing then the lacquer coming up, closing as that backwards; round
 1 had given them the motion without the inlay. A loading calendar day draws both lift doors again: the press ring on
 `::before` no longer applies to a loading day (it hid the left door).
+
+**Review round 2, 2026-10-13:** the side navigation (over, push) is a deco plate as the drawer is and opens by G3 in
+place (the inlay draws, the lacquer and the links come up, 480 ms; closing backwards); it no longer slides. The alarm
+opens by G3 too: its gold double frame draws round from the top middle, then the screen and the words come up (the
+package's fade, rise and scale are retired). research/all-themes/reports/deco.md.

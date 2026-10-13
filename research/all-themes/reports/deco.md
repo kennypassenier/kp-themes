@@ -113,3 +113,38 @@ clicks at coordinates, a screenshot per frame, looked at.
 
 Wall time of the timed runs: pairs (bar-equipment, phone-bar, calendar-busy) 21 s; tab-paint 1 min 13 s (40 stops, NOMARK
 only "Review in a dialog" and "Copy answer"); stage frame runs about 8 × 30 s, not timed.
+
+## Review round 2 (2026-10-13, Kenny's rejections)
+
+Frames read in Firefox on `research/all-themes-applied/demo.html` (real clicks at coordinates, animations paused and
+sought frame by frame, sheets looked at); numbers from `pairs-meter.mjs` and `identity.mjs`.
+
+**sidenav · "Niet de open/close animatie van dit thema"**
+- Cause: the panel slid in on the package's translate (160 ms); no inlay, no lacquer.
+- Change: the over/push panel is a deco plate as the drawer is (added to the three plate lists: lacquer with the
+  wallpaper, coves, the 20-layer gold inlay on `::after`), and opens as the dialog (G3): `[data-kp-sidenav-open='true']`
+  `kp-sig-deco-arrive 480ms` (the inlay drawn round from the middle of the top edge, then lacquer and words up),
+  `[...='false']` `kp-sig-deco-arrive-back 480ms reverse forwards`. It no longer slides: `translate 0s` on open,
+  `translate 0s 480ms` on close, a pushed page likewise (`[data-kp-sidenav-shift]`). Children's opacity follows
+  `--kp-sig-deco-up`. A backdrop comes up with the lacquer (`kp-sig-deco-sidenav-dim`).
+- Evidence: frames show the gold frame running down both sides and meeting at the foot, then lacquer, wallpaper and the
+  links coming up; the close is that backwards, then the panel is gone. Pairs: sidenav, sidenav-push,
+  sidenav-edge-push/-gutter/-over 480/480 ms, 0.0 % (were 160/160 ms); sidenav-group 160/160, 0.0 %. Identity:
+  `kp-sig-deco-arrive` open, `kp-sig-deco-arrive-back` close.
+
+**alarm** (round 1 listed it as still running the package's opacity/scale/rise)
+- Change: `.kp-alarm[open]` runs `kp-sig-deco-arrive` (480 ms): its gold double frame (`::before`) is the inlay, masked by
+  the same conic sector on `--kp-sig-deco-draw`; the ground and the glow take `--kp-sig-deco-up` in their alpha, and the
+  scan, bars and panel their opacity. The panel, title and detail animations are `none`. js/motion.js closes it as the
+  arrival backwards.
+- Evidence: frames show the frame drawn from the top middle round both ways over the open page, then the screen, the
+  bars and the words come up; closing the reverse. Identity: `script[--kp-sig-deco-draw,--kp-sig-deco-up]@dialog.kp-alarm`,
+  the dialog's own row (scripted copy). Pair 480/480 ms, 0.0 %.
+
+Tab paint: 41 stops, NOMARK only "Review in a dialog" and "Copy answer".
+
+**Deviations for Kenny:** the over/push side navigation now looks like the drawer (coves, gold inlay, lacquer with the
+wallpaper) instead of the plain card panel, because G3's opening is the inlay drawing; it opens in place instead of
+sliding. The static (`side`) panel is unchanged.
+
+Measured wall time (Firefox, the four themes in parallel): pairs + identity 1 min 57 s, tab-paint 1 min 18 s.

@@ -123,3 +123,42 @@ rules in css/components.css were not touched. With this, every part that opens i
 | tour | 560/560 ms, the dawn, 0.6 % | 480/480 ms, 0.8 % |
 
 Wall time of the pairs run (combobox, datepicker, tour): 18 s.
+
+
+## Review round 2 (2026-10-13 20:37): the side navigation and the alarm
+
+Kenny, verbatim: "sidenav: Niet de open/close animatie van dit thema" and "alarm: Niet de open/close animatie van dit thema".
+
+### sidenav (over and push, `#fa-over`, `#fa-side` pushes, and the window-edge panels of research/sidenav-edge)
+
+- **Cause:** the register gave the over/push panel no motion of its own, so it ran the package's plain slide from its edge
+  (identity: transition:translate 240 ms (the package slide)).
+- **Change:** it now opens as solstice's dialog does, G3's kindling: a dome of first light grows from the middle of the foot (`ellipse(0 0 at 50% 100%)` to past every corner), overbright and warm, cooling to its colour, 2 units (480 ms) on the coming curve; the close is the dome sinking back into the foot. It no longer slides: `translate: 0 0` in every state, shut it is
+  `visibility: hidden` (after the close's last frame). Keyframes: `kp-sig-solstice-kindled` on the panel and `kp-sig-solstice-kindled-back` (the existing second name) with `reverse both` for the close. The content a push panel moves (and the edge
+  tab) glides in the same two units, on the coming curve to make room and on the going curve (the same curve played back, G1) to give it back: js/sidenav.js copies the panel's `translate` transition onto it, and the panel's `translate` never
+  changes, so that transition is only the clock. The backdrop (where a page keeps one) takes the same time and curve.
+  Selectors: `[data-theme='solstice'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])`, its
+  `[data-kp-sidenav-open='true']` state and their `::after` (end of the `kp.signature` layer, under
+  `prefers-reduced-motion: no-preference`; reduced motion keeps the package's instant show and hide).
+- **Evidence:** identity `sidenav` row FAIL (NOT split) → ok (split, open and close), now kp-sig-solstice-kindled 480 ms; close kp-sig-solstice-kindled-back, reverse. Pair meter
+  before: sidenav 240/240 0.0 %, sidenav-push 240/240, edge-push/gutter/over 240/240 0.0 %, alarm 480/480 0.2 %; after: sidenav 480/480 0.0 %, sidenav-push 480/480 0.0 %, sidenav-edge-push 480/480 0.0 %, -gutter 480/480 0.0 %, -over 480/480 0.0 %, -tab 480/480 0.0 %, sidenav-group 240/240 0.0 % (unchanged), alarm 480/480 2.2 % (the Acknowledge button's 240 ms press colour on the open), dialog 480/480 0.0 %: 9 of 9. Seen in frames (review dialog stage, real clicks at
+  coordinates, the animations paused and sought): sidenav: at 25 % a warm dome over the panel's foot, at 50 % it has passed the top corners, cooling to the panel's colour; the close sinks the same dome into the foot. The alarm: a dome of light rises from the bottom middle of the window and uncovers the whole red screen; the close sinks it.
+
+### alarm (`.kp-alarm`, its panel and title)
+
+- **Cause:** the register named no alarm motion, so it ran the package's script[opacity] on the plate, script[opacity,scale,translate] on the panel, script[opacity,scale] on the title, which js/motion.js replays
+  and turns round.
+- **Change:** `kp-sig-solstice-kindled` on `.kp-alarm[open]`: the whole screen kindled from the middle of its foot; the package's fade, rise and scale set to none. js/motion.js keeps this entrance and closes the alarm by playing it backwards in the dialog's
+  close time, as it does the dialog. Respects `data-kp-alarm-motion='still'`.
+- **Evidence:** identity now lists script[clipPath,filter]@dialog.kp-alarm, exactly the dialog's own row (script[clipPath,filter]@dialog). The audit's regex can only read keyframe NAMES, and js/motion.js
+  replays every dialog-like entrance as an unnamed script animation, so the `alarm` row prints FAIL exactly as this
+  theme's `dialog` row does; the property sets are the evidence. Pair meter: alarm 480/480 2.2 % (open =
+  close, close the open reversed).
+
+### Deviations for Kenny (this round)
+
+- The push panel's content glides in the dome's two units on G1's coming and going curves while the panel itself does not move; borrowed from G1, G3 does not name the page next to a panel.
+
+Focus after the change (`tab-paint.mjs`): only "Review in a dialog" and "Copy answer" read NOMARK, as allowed.
+Measured wall time of this round's runs (Firefox, four themes in parallel): identity + pairs before 1 min 23 s, after
+1 min 31 s, tab-paint 1 min 15 s, frame sheets about 40 s each.

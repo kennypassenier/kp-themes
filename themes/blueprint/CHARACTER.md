@@ -563,3 +563,6 @@ in the flow, before the trace began again where it stands), and inside a dialog 
 "contents visible to the focus" rule no longer reaches an overlay that sits in a dialog, which had hidden the card's pen
 with the card, so the card simply appeared and vanished. The calendar's busy layers show their loading: the read's
 line-by-line mask steps by at least a pixel (`max(1lh, 1px)`), since a layer with `line-height: 0` had masked itself away.
+
+
+**Review round 2, 2026-10-13 (Kenny: "Niet de open/close animatie van dit thema"):** the side navigation (over, push) and the alarm are traced and inked as the dialog (5 units; on the alarm the pen draws its frame) and untraced as that backwards; the panel no longer slides from its edge, the push content moves at the ink; the alarm's breathing glow moved to its scan layer. See the report's "Review round 2".

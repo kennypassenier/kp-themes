@@ -494,3 +494,22 @@ These were not cyberpunk's: the same wrong default is in every theme that has no
 - **Fix:** research/_review/review.js marks the mirrored controls `data-kp-arrive="none"` (lesson 29) and lets an open dialog,
   popover, picker, side navigation or phone bar in the stage take the first Escape.
 - **Check:** the buttons' sizes per frame after a press (one value); Escape on the palette closes the palette only.
+
+## 50. A loading picture drawn by pseudo-elements needs a positioned part
+
+- **Symptom:** (Kenny, phantom) "nothing visible below the phone bar and a red line constantly streaking", and the calendar's loading
+  picture over the whole screen.
+- **Cause:** phantom draws its loading block and slash as `::before` / `::after` at `inset: 0`; the table's busy panel and the busy
+  calendar card have no `position` in the package, so the two layers stretched to the nearest positioned ancestor (the whole busy
+  layer, or the window).
+- **Fix:** `position: relative` on the part that carries such a picture, in the register that draws it.
+- **Check:** the picture's rectangle after pressing Loading equals its part's (phantom: 213 x 96 px panel, 304 x 92 px card).
+
+## 51. The side navigation and the alarm are openings too
+
+- **Symptom:** (Kenny, round 2) "niet de open/close animatie van dit thema" on the side navigation in ten themes and the alarm in nine:
+  they slid in from the edge or rose and scaled, the package's motion, while every dialog ran the theme's own.
+- **Fix:** each register draws the panel and the alarm with its dialog's keyframes (a second name for the close), the panel standing in
+  place where the grammar does not move things; the pushed content follows on the same time.
+- **Check:** identity.mjs rows `sidenav` and `alarm` name the theme's keyframes (or list the dialog's scripted properties); the demo's
+  reference block (the theme's own dialog) is the picture to compare with.

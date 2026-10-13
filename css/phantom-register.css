@@ -2268,8 +2268,16 @@
         animation: none;
     }
 
+    /* The block and the slash are drawn against the panel itself: both
+       panels are static in the package (a flex item in the table's layer, a
+       grid item of the month), so without a position of their own the two
+       layers below were laid against the nearest positioned ancestor, the
+       whole window in the review stage (Kenny, review round 2: "staat de
+       laadanimatie over het hele scherm ipv enkel in de tabel"; lesson 5:
+       the panel is static, so `relative` moves nothing). */
     [data-theme='phantom'] :is(.kp-datatable__busy-panel, .kp-calendar--busy-whole > .kp-calendar__busy) {
         --kp-busy-opacity: 1;
+        position: relative;
         isolation: isolate;
         overflow: clip;
     }
@@ -2856,6 +2864,42 @@
        first instant. */
     @keyframes kp-sig-phantom-fly {
         0% {
+            translate: var(--kp-sig-ph-x0, -80cqi) var(--kp-sig-ph-y0, 6cqi);
+            rotate: var(--kp-sig-ph-r0, -22deg);
+            scale: var(--kp-sig-ph-s0, 1.15);
+            visibility: hidden;
+            animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
+        }
+
+        57.142857% {
+            translate: 0 0;
+            rotate: var(--kp-sig-ph-land, -1.5deg);
+            scale: 1;
+            visibility: visible;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            translate: 0 0;
+            rotate: var(--kp-sig-ph-land, -1.5deg);
+            scale: 1;
+            visibility: visible;
+        }
+    }
+
+    /* The throw for a part placed by measuring it as it opens (the combobox's list): its first
+       frame, unseen, stands unturned where the part lands; the throw's own pose comes from the next
+       frame. */
+    @keyframes kp-sig-phantom-fly-placed {
+        0% {
+            translate: 0 0;
+            rotate: none;
+            scale: 1;
+            visibility: hidden;
+            animation-timing-function: linear;
+        }
+
+        0.01% {
             translate: var(--kp-sig-ph-x0, -80cqi) var(--kp-sig-ph-y0, 6cqi);
             rotate: var(--kp-sig-ph-r0, -22deg);
             scale: var(--kp-sig-ph-s0, 1.15);
@@ -3632,15 +3676,32 @@
     }
 
     /* The date picker's panel and the combobox's list are thrown from the
-       edge of what opens them and resolve, as a menu is; they land level, as
-       they stood (no askew pose of their own to land in). */
+       edge of what opens them and resolve, as a menu is. The date picker's
+       panel lands level, as it stood. */
     [data-theme='phantom'] :is(.kp-datepicker__panel, .kp-combobox__list) {
         --kp-sig-dur: 700ms;
         --kp-sig-ph-x0: -1.6rem;
         --kp-sig-ph-y0: -2.4rem;
         --kp-sig-ph-r0: -9deg;
         --kp-sig-ph-s0: 1;
+    }
+
+    [data-theme='phantom'] .kp-datepicker__panel {
         --kp-sig-ph-land: 0deg;
+    }
+
+    /* The combobox's list is phantom's menu [G3, G6, G14] (Kenny, review
+       round 2: "Niet de open/close animatie van dit thema"; it landed level):
+       thrown from the field's edge, it slaps down and stands a degree and a
+       half askew, as the theme menu and the row actions do. Inside a dialog,
+       a popover or the palette it is part of that surface and stands level. */
+    [data-theme='phantom'] .kp-combobox__list {
+        --kp-sig-ph-land: var(--kp-land);
+        rotate: var(--kp-land);
+    }
+
+    [data-theme='phantom'] :is(.kp-dialog, .kp-popover, .kp-toast, .kp-confirm, .kp-palette) .kp-combobox__list {
+        rotate: none;
     }
 
     [data-theme='phantom']:dir(rtl) :is(.kp-datepicker__panel, .kp-combobox__list) {
@@ -3664,6 +3725,17 @@
            the keyframes. */
         [data-theme='phantom'] .kp-datepicker__panel {
             visibility: visible !important;
+        }
+
+        /* The combobox's list is placed by measuring where it is drawn the moment it opens
+           (js/top-layer.js raiseInPlace(), layoutRect(), which sets a move aside but not a turn or
+           a scale). Measured at the throw's first pose it stayed 13 px left, 16 px up over its field
+           and 27 px wide for as long as it was open (review round 2 follow-up, 2026-10-13). Its
+           throw holds the pose back on its first, unseen frame (visibility hidden): unturned, at
+           its place, so the measurement reads the list where it lands; every frame that can be
+           seen is the throw's. */
+        [data-theme='phantom'] .kp-combobox__list {
+            animation-name: kp-sig-phantom-fly-placed, kp-sig-phantom-resolve;
         }
 
         /* The combobox's list inside a dialog-like surface stays part of it. */
@@ -3741,12 +3813,99 @@
         }
     }
 
-    /* The side navigation's backdrop comes and goes on the panel's own clock
-       (contact, 120 ms, the shove), not the package's 220 ms, so panel and
-       dim start and end together and the close mirrors the opening. */
+    /* ── The alarm is thrown onto the board as phantom's dialog is [G3, G13;
+       Kenny, review round 2: "Niet de open/close animatie van dit thema"]:
+       the package's rise, scale and fades of the plate, the panel, the
+       headline and the reason are retired. The alarm fills the screen, so it
+       is thrown as the full-size drawer is: from the start edge, level, on
+       the shove as a screen of dots, slapping down and resolving in three
+       cuts (700 ms); js/motion.js keeps that entrance and plays it backwards
+       to close (the dissolve, then the snatch back off the edge). It is drawn
+       from the first instant (off the board then), so the Acknowledge button
+       takes the focus the alarm gives it. ── */
+    [data-theme='phantom'] .kp-alarm {
+        --kp-sig-ph-x0: -100%;
+        --kp-sig-ph-y0: 0px;
+        --kp-sig-ph-r0: 0deg;
+        --kp-sig-ph-s0: 1;
+        --kp-sig-ph-land: 0deg;
+    }
+
+    [data-theme='phantom'] .kp-alarm:dir(rtl) {
+        --kp-sig-ph-x0: 100%;
+    }
+
     @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+            mask-size: 7px 7px;
+            animation:
+                kp-sig-phantom-fly 700ms linear backwards,
+                kp-sig-phantom-resolve 700ms linear backwards;
+        }
+
+        [data-theme='phantom'] .kp-alarm[open] {
+            visibility: visible !important;
+        }
+
+        [data-theme='phantom'] .kp-alarm:not([data-kp-alarm-motion='still']) :is(.kp-alarm__panel, .kp-alarm__title, .kp-alarm__detail) {
+            animation: none;
+        }
+    }
+
+    /* ── The side navigation is thrown as phantom's drawer is [G3, G13;
+       Kenny, review round 2: "Niet de open/close animatie van dit thema"]:
+       a panel that slides over (or pushes) the page is thrown from its own
+       edge, level, on the shove (400 ms) as a screen of dots, and slaps down
+       and resolves in three cuts (300 ms); closing, it dissolves in three
+       cuts and is snatched back off its edge on the inverse curve. The
+       travel stays the panel's translate (js/sidenav.js times a pushed
+       page's move from it, so the content goes with the throw); the screen
+       is kp-sig-phantom-resolve, the dialog's. ── */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) {
+            mask-size: 7px 7px;
+        }
+
+        [data-theme='phantom'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            transition: translate 400ms cubic-bezier(0.81, 0, 0, 1);
+            animation: kp-sig-phantom-resolve 700ms linear backwards;
+        }
+
+        [data-theme='phantom'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='false'] {
+            transition: translate 400ms cubic-bezier(1, 0, 0.19, 1) 300ms;
+            animation: kp-sig-phantom-resolve-out 700ms linear forwards;
+        }
+
+        /* A rail (slim) keeps its width glide beside the throw. */
+        [data-theme='phantom'] .kp-sidenav[data-kp-sidenav-slim]:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            transition:
+                translate 400ms cubic-bezier(0.81, 0, 0, 1),
+                inline-size 400ms cubic-bezier(0.81, 0, 0, 1);
+        }
+
+        [data-theme='phantom'] .kp-sidenav[data-kp-sidenav-slim]:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='false'] {
+            transition:
+                translate 400ms cubic-bezier(1, 0, 0.19, 1) 300ms,
+                inline-size 400ms cubic-bezier(1, 0, 0.19, 1);
+        }
+
+        /* Where the package lays a backdrop, it comes with the throw and goes
+           with the snatch: 700 ms, the dim in the shove's 400, held through
+           the resolve; js/sidenav.js plays it backwards to close. */
         [data-theme='phantom'] .kp-sidenav__backdrop {
-            animation: kp-sidenav-backdrop 120ms cubic-bezier(0.81, 0, 0, 1) both;
+            animation: kp-sig-phantom-sidenav-dim 700ms linear both;
+        }
+    }
+
+    @keyframes kp-sig-phantom-sidenav-dim {
+        0% {
+            opacity: 0;
+            animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
+        }
+
+        57.142857%,
+        100% {
+            opacity: 1;
         }
     }
 
