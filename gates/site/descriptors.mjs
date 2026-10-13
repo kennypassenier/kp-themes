@@ -23,7 +23,9 @@
 //   examples      each { title, why, markup } -- `markup` is
 //                 framework-free HTML, rendered live AND printed as the
 //                 snippet from the same string, so the two cannot
-//                 diverge (AR19)
+//                 diverge (AR19). `frame: true` (or `{ height }`) renders
+//                 it in an iframe window of its own, for a launcher or a
+//                 panel fixed to the window's edge
 //   variants      each { name, what } -- every variant and state
 //   accessibility bullets: what the package does, and what the consumer
 //                 still has to do
@@ -35,7 +37,7 @@
 // refuses it, so a rename cannot leave a table behind (AR21).
 
 /**
- * @typedef {{ title: string, why: string, markup: string, react?: string }} Example
+ * @typedef {{ title: string, why: string, markup: string, react?: string, frame?: boolean | { height?: string } }} Example
  * @typedef {{ name: string, what: string }} Variant
  * @typedef {{
  *   id: string,
@@ -616,6 +618,7 @@ export const DESCRIPTORS = [
             { name: 'disabled day', what: 'Outside the bounds or on a closed weekday: present, marked, and refusing the click.' },
         ],
         accessibility: [
+            'Built in — the focus returns to the input when the picker has closed, not at the start of the close.',
             'Built in — the grid is a real grid: arrows by day, Page keys by month, Home and End to the ends of the week, and one tab stop for the whole month.',
             'Built in — the month and year grids take the same keys a size up, Escape steps back one grid, and the grid that opens is named and announced.',
             'Built in — typing is a complete route to a date, so nobody is forced through the calendar at all.',
@@ -1007,6 +1010,7 @@ export const DESCRIPTORS = [
         ],
         variants: [
             { name: 'expanded / collapsed', what: 'The twisty is a second carrier beside the expanded state, and a collapsed branch is out of the walk as well as out of sight.' },
+            { name: 'row inset', what: 'Where a row\u2019s text starts at the root level, before the depth adds its indent: a knob (listed in the table of knobs below), 0.375rem by default. A theme with a wider row padding (cyberpunk) sets it, so a row keeps its inset in every theme.' },
             { name: 'selected', what: 'Selection is separate from the highlight: a click can select or toggle, and which one it does is a choice.' },
             { name: 'depth', what: 'The indent per level is a measure the tree sets from its own depth, so a deep branch does not need a class per level.' },
             { name: 'typeahead', what: 'Typing letters jumps to the next item that starts with them; it can be turned off for a tree whose labels are numbers.' },
@@ -2492,6 +2496,7 @@ export const DESCRIPTORS = [
         ],
         variants: [
             { name: '.kp-nav__brand', what: 'The name at the leading edge, in bold. As a link it keeps its look and takes the page’s ordinary link underline, which is what says it is one.' },
+            { name: '--kp-nav-close-time', what: 'For a theme that plays a close for the phone panel or a hover dropdown (cyberpunk): its length. The module holds the panel or the item open for that long while the close plays, then lets go. Unset, the phone panel closes after the theme\u2019s fold time, or 300 ms; the dropdowns close at once.' },
             { name: '.kp-nav__links', what: 'The row itself. It wraps rather than scrolling, so a narrow window gets two rows instead of a hidden third link.' },
             { name: '.kp-nav-wrap', what: 'The box the bar measures itself against. In a narrow one the bar takes a smaller inset, and the width that decides is the wrapper’s rather than the window’s.' },
             { name: '.kp-nav-wrap--sticky', what: 'The shrinking header: the bar sticks to the top of the box that scrolls it, and once that box has scrolled further than the bar is tall (or `data-kp-nav-sticky-after` pixels, if more) js/auto.js sets `data-kp-nav-compact` and the bar lowers its block padding (the knobs table names how far), gliding only when the reader has not asked for less motion. The module hands the bar’s height to the scrolling box’s scroll padding, so anchors and focused elements land below the bar; a scroll offset the page sets itself still wins. In React it is the `sticky` prop, with `stickyAfter`.' },
@@ -2635,20 +2640,208 @@ export const DESCRIPTORS = [
 </nav>
 `,
             },
+            {
+                title: 'From the window edge: a launcher, and the page pushed aside',
+                why: 'Added 2026-10-13 (research/sidenav-edge). The launcher is a box fixed at the window\'s start corner; the toggler inside it is empty, so the module draws the three bars (.kp-sidenav__bars) and names it from the strings. data-kp-sidenav-mode="push" with data-kp-sidenav-content moves the named element by the panel\'s width, on the panel\'s own slide timing, so closing is the opening played backwards. data-kp-sidenav-launcher-room keeps the page header clear of the launcher, and the shortcut is Control+B (⌘B on a Mac; the togglers get aria-keyshortcuts). data-kp-sidenav-over-below turns the panel into an over panel in a window narrower than 40rem: see it on a narrow screen. The example runs in a window of its own, because a fixed launcher would otherwise take over this page.',
+                frame: { height: '24rem' },
+                markup: `
+<div class="kp-sidenav__launcher">
+<button type="button" class="kp-icon-button" data-kp-sidenav-toggle aria-controls="push-nav"></button>
+</div>
+<nav class="kp-sidenav" id="push-nav" aria-label="Sections" data-kp-sidenav-mode="push" data-kp-sidenav-content="#push-main" data-kp-sidenav-backdrop="false" data-kp-sidenav-over-below data-kp-sidenav-shortcut="Control+b">
+<div class="kp-sidenav__header"><p class="kp-sidenav__title">North site</p></div>
+<div class="kp-sidenav__scroll">
+<ul class="kp-sidenav__list">
+<li><a class="kp-sidenav__link" href="#push-main"><span class="kp-sidenav__icon" aria-hidden="true">◎</span><span class="kp-sidenav__label">Overview</span></a></li>
+<li><a class="kp-sidenav__link" href="#push-main" aria-current="page"><span class="kp-sidenav__icon" aria-hidden="true">▤</span><span class="kp-sidenav__label">Line 2</span><span class="kp-sidenav__badge">2</span></a></li>
+<li><a class="kp-sidenav__link" href="#push-main"><span class="kp-sidenav__icon" aria-hidden="true">!</span><span class="kp-sidenav__label">Alarms</span><span class="kp-sidenav__badge">14</span></a></li>
+</ul>
+</div>
+</nav>
+<main id="push-main">
+<header class="kp-page-header" data-kp-sidenav-launcher-room>
+<h1 class="kp-page-header__title">Line 2</h1>
+<p class="kp-page-header__description">The navigation slides in from the window edge and pushes this page aside by its own width; closing slides it back and the page follows. Control+B (⌘B on a Mac) does the same.</p>
+</header>
+</main>
+`,
+            },
+            {
+                title: 'A reserved gutter: the panel covers nothing',
+                why: 'data-kp-sidenav-reserve on a push panel keeps the content\'s margin as wide as the panel whether the panel is open or not, so opening moves nothing and hides nothing. data-kp-sidenav-open="true" starts it open. While data-kp-sidenav-over-below has made the panel an over panel in a narrow window the reserve gives way, since there is no room to reserve.',
+                frame: { height: '24rem' },
+                markup: `
+<div class="kp-sidenav__launcher">
+<button type="button" class="kp-icon-button" data-kp-sidenav-toggle aria-controls="gutter-nav"></button>
+</div>
+<nav class="kp-sidenav" id="gutter-nav" aria-label="Sections" data-kp-sidenav-mode="push" data-kp-sidenav-reserve data-kp-sidenav-content="#gutter-main" data-kp-sidenav-backdrop="false" data-kp-sidenav-over-below data-kp-sidenav-open="true" data-kp-sidenav-shortcut="Control+b">
+<div class="kp-sidenav__header"><p class="kp-sidenav__title">North site</p></div>
+<div class="kp-sidenav__scroll">
+<ul class="kp-sidenav__list">
+<li><a class="kp-sidenav__link" href="#gutter-main"><span class="kp-sidenav__icon" aria-hidden="true">◎</span><span class="kp-sidenav__label">Overview</span></a></li>
+<li><a class="kp-sidenav__link" href="#gutter-main" aria-current="page"><span class="kp-sidenav__icon" aria-hidden="true">▤</span><span class="kp-sidenav__label">Line 2</span><span class="kp-sidenav__badge">2</span></a></li>
+<li><a class="kp-sidenav__link" href="#gutter-main"><span class="kp-sidenav__icon" aria-hidden="true">!</span><span class="kp-sidenav__label">Alarms</span><span class="kp-sidenav__badge">14</span></a></li>
+</ul>
+</div>
+</nav>
+<main id="gutter-main">
+<header class="kp-page-header" data-kp-sidenav-launcher-room>
+<h1 class="kp-page-header__title">Line 2</h1>
+<p class="kp-page-header__description">This page always keeps a margin as wide as the navigation, so the navigation opens into that space and covers nothing. In a reserved gutter the launcher stands in the gutter.</p>
+</header>
+</main>
+`,
+            },
+            {
+                title: 'Over the page, from the window edge, without a backdrop',
+                why: 'data-kp-sidenav-mode="over" with data-kp-sidenav-backdrop="false" slides the panel over the content and leaves the page visible and in place. data-kp-sidenav-initial-focus is a selector inside the panel for where the focus lands on opening, used in every mode. A closed over or push panel is inert (data-kp-sidenav-inert, on by default), so it is out of the tab order while it is away.',
+                frame: { height: '24rem' },
+                markup: `
+<div class="kp-sidenav__launcher">
+<button type="button" class="kp-icon-button" data-kp-sidenav-toggle aria-controls="over-nav"></button>
+</div>
+<div class="kp-sidenav__tab">
+<button type="button" class="kp-icon-button" data-kp-sidenav-toggle aria-controls="over-nav"></button>
+</div>
+<nav class="kp-sidenav" id="over-nav" aria-label="Sections" data-kp-sidenav-mode="over" data-kp-sidenav-backdrop="false" data-kp-sidenav-initial-focus="[aria-current='page']" data-kp-sidenav-shortcut="Control+b">
+<div class="kp-sidenav__header"><p class="kp-sidenav__title">North site</p></div>
+<div class="kp-sidenav__scroll">
+<ul class="kp-sidenav__list">
+<li><a class="kp-sidenav__link" href="#over-main"><span class="kp-sidenav__icon" aria-hidden="true">◎</span><span class="kp-sidenav__label">Overview</span></a></li>
+<li><a class="kp-sidenav__link" href="#over-main" aria-current="page"><span class="kp-sidenav__icon" aria-hidden="true">▤</span><span class="kp-sidenav__label">Line 2</span><span class="kp-sidenav__badge">2</span></a></li>
+<li><a class="kp-sidenav__link" href="#over-main"><span class="kp-sidenav__icon" aria-hidden="true">!</span><span class="kp-sidenav__label">Alarms</span><span class="kp-sidenav__badge">14</span></a></li>
+</ul>
+</div>
+</nav>
+<main id="over-main">
+<header class="kp-page-header" data-kp-sidenav-launcher-room>
+<h1 class="kp-page-header__title">Line 2</h1>
+<p class="kp-page-header__description">The navigation slides over this page and moves nothing. There is no backdrop here, so the page stays in view; the focus lands on the current page when the panel opens and returns to the launcher when it has closed.</p>
+</header>
+</main>
+`,
+            },
+            {
+                title: 'A push panel on the end edge',
+                why: 'data-kp-sidenav-side="end" puts the panel on the other edge, logically (the left in a right-to-left page). With data-kp-sidenav-content it is the content\'s end margin that makes room, so the page is pushed toward the start. The edge tab rides on the panel\'s far edge and is the only toggler here.',
+                frame: { height: '22rem' },
+                markup: `
+<div class="kp-sidenav__tab">
+<button type="button" class="kp-icon-button" data-kp-sidenav-toggle aria-controls="end-nav"></button>
+</div>
+<nav class="kp-sidenav" id="end-nav" aria-label="Sections" data-kp-sidenav-mode="push" data-kp-sidenav-side="end" data-kp-sidenav-content="#end-main" data-kp-sidenav-backdrop="false">
+<div class="kp-sidenav__header"><p class="kp-sidenav__title">North site</p></div>
+<div class="kp-sidenav__scroll">
+<ul class="kp-sidenav__list">
+<li><a class="kp-sidenav__link" href="#end-main"><span class="kp-sidenav__icon" aria-hidden="true">◎</span><span class="kp-sidenav__label">Overview</span></a></li>
+<li><a class="kp-sidenav__link" href="#end-main" aria-current="page"><span class="kp-sidenav__icon" aria-hidden="true">▤</span><span class="kp-sidenav__label">Line 2</span><span class="kp-sidenav__badge">2</span></a></li>
+<li><a class="kp-sidenav__link" href="#end-main"><span class="kp-sidenav__icon" aria-hidden="true">!</span><span class="kp-sidenav__label">Alarms</span><span class="kp-sidenav__badge">14</span></a></li>
+</ul>
+</div>
+</nav>
+<main id="end-main">
+<header class="kp-page-header">
+<h1 class="kp-page-header__title">Line 2</h1>
+<p class="kp-page-header__description">A push panel on the end edge moves the content away from the end, not the start: the page keeps its start and gives up its end margin to the panel.</p>
+</header>
+</main>
+`,
+            },
+            {
+                title: 'A collapsed rail: tips, flyouts and a width that collapses it',
+                why: 'In the collapsed rail each item shows its label as the package\'s tooltip, on hover and on focus (data-kp-sidenav-rail-tips, on by default), and a group opens beside the rail as a floating panel with the theme\'s popover effect (data-kp-sidenav-flyout, on by default): after the pointer rests, on a press, or from the keyboard (Enter or the arrow away from the edge goes in, Escape or the arrow back folds it). The module writes data-kp-sidenav-flown on the group while it floats. data-kp-sidenav-slim-below="60rem" collapses the rail in a box that wide or narrower, and wider again it is what the reader left it.',
+                frame: { height: '24rem' },
+                markup: `
+<div class="kp-shell">
+<div class="kp-shell__body">
+<nav class="kp-sidenav" id="rail-nav" aria-label="Sections" data-kp-sidenav-slim data-kp-sidenav-slim-collapsed data-kp-sidenav-slim-below="60rem">
+<div class="kp-sidenav__header"><p class="kp-sidenav__title" data-kp-sidenav-slim-hide>North site</p><p class="kp-sidenav__title" data-kp-sidenav-slim-show aria-hidden="true">N</p></div>
+<div class="kp-sidenav__scroll">
+<ul class="kp-sidenav__list">
+<li><a class="kp-sidenav__link" href="#rail-main" aria-current="page"><span class="kp-sidenav__icon" aria-hidden="true">▤</span><span class="kp-sidenav__label">Line 2</span></a></li>
+<li class="kp-sidenav__category">
+<button type="button" class="kp-sidenav__category-toggle"><span class="kp-sidenav__icon" aria-hidden="true">≋</span><span class="kp-sidenav__label">Readings</span></button>
+<div class="kp-sidenav__submenu">
+<ul class="kp-sidenav__list">
+<li><a class="kp-sidenav__link" href="#rail-main"><span class="kp-sidenav__label">Pressure</span></a></li>
+<li><a class="kp-sidenav__link" href="#rail-main"><span class="kp-sidenav__label">Flow rate</span></a></li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="kp-sidenav__footer">
+<button type="button" class="kp-sidenav__link" data-kp-sidenav-slim-toggle aria-controls="rail-nav"><span class="kp-sidenav__icon" aria-hidden="true" data-kp-sidenav-slim-hide>«</span><span class="kp-sidenav__icon" aria-hidden="true" data-kp-sidenav-slim-show>»</span></button>
+</div>
+</nav>
+<main class="kp-flex-1" id="rail-main">
+<header class="kp-page-header">
+<h1 class="kp-page-header__title">Line 2</h1>
+<p class="kp-page-header__description">Point at an icon, or tab to it: its name shows beside the rail. Point at Readings and the group opens beside the rail. The button at the foot widens the rail; in a window 60rem wide or narrower it collapses by itself.</p>
+</header>
+</main>
+</div>
+</div>
+`,
+            },
+            {
+                title: 'A rail that widens under a resting pointer',
+                why: 'data-kp-sidenav-expand-on-hover gives the words back while the pointer is over the rail; data-kp-sidenav-hover-delay is how long it must rest first, in milliseconds (default 150), so a pointer crossing the rail does not flap it. The rail also widens while the focus is inside it. The module writes data-kp-sidenav-peek on the panel: open while it is wide, then leaving while it narrows.',
+                frame: { height: '24rem' },
+                markup: `
+<div class="kp-shell">
+<div class="kp-shell__body">
+<nav class="kp-sidenav" id="peek-nav" aria-label="Sections" data-kp-sidenav-slim data-kp-sidenav-slim-collapsed data-kp-sidenav-expand-on-hover data-kp-sidenav-hover-delay="150">
+<div class="kp-sidenav__header"><p class="kp-sidenav__title" data-kp-sidenav-slim-hide>North site</p><p class="kp-sidenav__title" data-kp-sidenav-slim-show aria-hidden="true">N</p></div>
+<div class="kp-sidenav__scroll">
+<ul class="kp-sidenav__list">
+<li><a class="kp-sidenav__link" href="#peek-main" aria-current="page"><span class="kp-sidenav__icon" aria-hidden="true">▤</span><span class="kp-sidenav__label">Line 2</span></a></li>
+<li class="kp-sidenav__category">
+<button type="button" class="kp-sidenav__category-toggle"><span class="kp-sidenav__icon" aria-hidden="true">≋</span><span class="kp-sidenav__label">Readings</span></button>
+<div class="kp-sidenav__submenu">
+<ul class="kp-sidenav__list">
+<li><a class="kp-sidenav__link" href="#peek-main"><span class="kp-sidenav__label">Pressure</span></a></li>
+<li><a class="kp-sidenav__link" href="#peek-main"><span class="kp-sidenav__label">Flow rate</span></a></li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="kp-sidenav__footer">
+<button type="button" class="kp-sidenav__link" data-kp-sidenav-slim-toggle aria-controls="peek-nav"><span class="kp-sidenav__icon" aria-hidden="true" data-kp-sidenav-slim-hide>«</span><span class="kp-sidenav__icon" aria-hidden="true" data-kp-sidenav-slim-show>»</span></button>
+</div>
+</nav>
+<main class="kp-flex-1" id="peek-main">
+<header class="kp-page-header">
+<h1 class="kp-page-header__title">Line 2</h1>
+<p class="kp-page-header__description">The rail widens when the pointer rests on it for 150 ms, or while the focus is inside it, and narrows when both have gone. Its words stay while it narrows, so the narrowing is the widening backwards.</p>
+</header>
+</main>
+</div>
+</div>
+`,
+            },
         ],
         variants: [
             { name: 'data-kp-sidenav-mode', what: 'side (the default, in the flow), over (above the content, with a backdrop) or push (fixed, and the content named by data-kp-sidenav-content moves over).' },
+            { name: 'data-kp-sidenav-content', what: 'On a push or over panel: a selector for the page element the panel offsets. A push moves it by the panel\u2019s width (its start margin, or its end margin for a panel on the end edge); the module writes data-kp-sidenav-shift on it.' },
+            { name: 'data-kp-sidenav-over-below', what: 'A length, or empty for 40rem: in a box narrower than that a push panel becomes an over panel, and the reserve gives way. A launcher is never hidden by it; any other toggler (an edge tab included) is shown only while the panel is narrow, so a panel with over-below takes a launcher, not a tab. data-kp-sidenav-narrow is written while it has.' },
             { name: 'data-kp-sidenav-reserve', what: 'On a push or over panel with data-kp-sidenav-content: the content keeps the panel\u2019s width whether the panel is open or not, a gutter the panel opens into, so it covers nothing. Off by default. Not while data-kp-sidenav-over-below has made the panel an over panel on a narrow screen.' },
             { name: '.kp-sidenav__launcher', what: 'A box fixed at the window\u2019s start corner holding the panel\u2019s toggler (a .kp-icon-button with data-kp-sidenav-toggle and aria-controls): the same place at every width and in every state, above the panel. An empty toggler gets the package\u2019s three bars (.kp-sidenav__bars) and its accessible name from the strings. The module marks the panel data-kp-sidenav-launched, which starts its header beside the launcher (or its first row below it), and marks the box data-kp-sidenav-lit from the opening\u2019s first frame to the closing\u2019s last, the accent plate.' },
+            { name: '.kp-sidenav__bars', what: 'The three bars drawn in an empty toggler inside the launcher; a toggler with words or an icon of its own gets none.' },
+            { name: 'data-kp-sidenav-launched', what: 'Written on the panel while a launcher drives it: the header starts beside the launcher. Read it, do not set it.' },
+            { name: 'data-kp-sidenav-lit', what: 'Written on the launcher box from the opening\u2019s first frame to the closing\u2019s last: the accent plate. Read it, do not set it.' },
             { name: 'data-kp-sidenav-launcher-room', what: 'On a page element in the launcher\u2019s corner (the page header): keeps the launcher\u2019s width free at its start, except in a reserved gutter, where the launcher stands in the gutter.' },
             { name: '.kp-sidenav__tab', what: 'The edge tab: a box holding a toggler (a .kp-icon-button with data-kp-sidenav-toggle and aria-controls) that rides on the far edge of a panel that slides (over, push), halfway down, and sits at the window\u2019s edge while the panel is away; it moves on the panel\u2019s own timing and works beside the launcher. An empty toggler gets a grip (.kp-sidenav__grip), which has no state to change.' },
             { name: 'data-kp-sidenav-inert', what: 'A closed panel that slides away is inert, out of the tab order and the accessibility tree, from the closing\u2019s last frame to the opening\u2019s first. On by default; false leaves a closed panel reachable.' },
             { name: 'data-kp-sidenav-rail-tips', what: 'In the collapsed rail each item shows its label as the package\u2019s tooltip on hover and on focus, beside the rail and inside the window; it leaves as it came. On by default; false turns it off.' },
             { name: 'data-kp-sidenav-slim-below', what: 'On a rail (data-kp-sidenav-slim): the width of the panel\u2019s box at and below which the rail collapses to its icons, a length, or 40rem when empty. Wider again it is what the reader left it; the step\u2019s collapse is never remembered as the reader\u2019s. data-kp-sidenav-over-below, which takes a length too, is its sibling for the variant.' },
             { name: 'data-kp-sidenav-flyout', what: 'In the collapsed rail a group opens beside the rail as a floating panel, in the top layer, with the theme\u2019s popover opening and its close as that opening backwards: after the pointer rests 150 ms, on a press, or from the keyboard (Enter or the arrow away from the edge goes into it; Escape or the arrow back folds it and returns to its heading when the close is over). Placed beside the rail and turned to stay in the window. On by default; false keeps groups folding in place. data-kp-sidenav-flown is written on the group while it floats.' },
+            { name: 'data-kp-sidenav-flown', what: 'Written on a .kp-sidenav__category while its group floats beside the collapsed rail. Read it, do not set it.' },
             { name: 'data-kp-sidenav-shortcut', what: 'A key chord that opens and closes the panel from anywhere but a text field, such as Control+b. Control (or Mod) is the platform\u2019s command key: Meta (\u2318) on a Mac. The togglers get aria-keyshortcuts. Off by default.' },
             { name: 'data-kp-sidenav-initial-focus', what: 'A selector, inside the panel, for where the focus lands when the panel opens. Without it an over panel focuses its first stop and the others leave the focus where it is; named, it is used in every mode, and the focus goes back to the opener when the panel has closed.' },
             { name: 'data-kp-sidenav-hover-delay', what: 'On a rail with data-kp-sidenav-expand-on-hover: how long the pointer rests, in milliseconds, before the rail widens (default 150). The rail also widens while the focus is inside it. The module writes data-kp-sidenav-peek (open, then leaving while it narrows); a page without the module widens on plain hover.' },
+            { name: 'data-kp-sidenav-peek', what: 'Written on a rail with data-kp-sidenav-expand-on-hover: open while the rail is wide for a resting pointer or the focus, then leaving while it narrows with its words still showing. Read it, do not set it.' },
             { name: 'data-kp-sidenav-shift', what: 'Written by the module on the content a panel offsets: open, closed, or reserved for a gutter. A push moves on the panel\u2019s own slide timing, which the module copies onto the content for each change, so the content travels with the theme\u2019s slide and comes back on its reverse; a register that draws the move itself wins.' },
             { name: 'data-kp-sidenav-position', what: 'fixed or absolute. Absolute puts the panel inside a positioned box rather than against the window, which is what a page with two of them needs.' },
             { name: 'data-kp-sidenav-side', what: 'end puts the panel on the other edge, logically: in a right-to-left page that is the left, and it still slides out of the side it came from.' },
@@ -2668,6 +2861,8 @@ export const DESCRIPTORS = [
         ],
         accessibility: [
             'Built in — over mode traps the focus while it covers the page, moves the focus in on open, and gives it back to the toggler on close.',
+            'Built in — the focus goes back to the opener when the panel has closed, not at the start of the close.',
+            'Built in — a shut over or push panel is inert, out of the tab order and the accessibility tree; a shortcut puts aria-keyshortcuts on the togglers, and an empty launcher toggler gets an accessible name.',
             'Built in — the current page carries aria-current, so it is announced and not only drawn.',
             'Built in — the toggler says whether it is expanded and which panel it controls.',
             'Built in — a collapsed rail keeps every label in the accessibility tree, and the slim toggle keeps the focus while the rail changes.',
@@ -2692,9 +2887,28 @@ export const DESCRIPTORS = [
 <button type="button" class="kp-button kp-to-top" data-kp-to-top data-kp-to-top-after="400"></button>
 `,
             },
+            {
+                title: 'In a box that scrolls on its own',
+                why: 'Added 2026-10-13. A dashboard\u2019s main column or a dialog\u2019s stage scrolls instead of the window. The control looks for the nearest scrolling box it sits in, at every use: it appears when that box is past the threshold, and pressing it scrolls that box, not the window. Scroll the text in the window below. It runs in a window of its own because the control is fixed to the window\u2019s corner.',
+                frame: { height: '16rem' },
+                markup: `
+<main id="stage" style="block-size: 100dvh; overflow-y: auto">
+<h1>Readings</h1>
+<p>Line 2 reports every fifteen minutes. The pressure held at 3.2 bar until 02:10.</p>
+<p>At 02:40 it had dropped to 1.1 bar, and pump house 3 was switched to the reserve pump at 02:52.</p>
+<p>The day shift checks the seal first, then the valve V-12 that was slow to close.</p>
+<p>Nothing else was reported overnight. The backup ran at 03:00 and finished at 03:14.</p>
+<p>Flow averaged 412 m\u00b3/h over the last quarter of an hour.</p>
+<p>Maintenance has two lock-outs open and one spare part on order.</p>
+<p>The rota for the coming week is on the last page.</p>
+<button type="button" class="kp-button kp-to-top" data-kp-to-top data-kp-to-top-after="120"></button>
+</main>
+`,
+            },
         ],
         variants: [
             { name: 'data-kp-to-top-after', what: 'How far down it appears, in pixels. Default 400.' },
+            { name: 'the box it scrolls', what: 'The control scrolls the nearest scrolling box it sits in (a dashboard\u2019s main column, a dialog\u2019s stage), and measures its threshold against that box; with no such box it is the window, as before.' },
             { name: 'data-kp-to-top-target', what: 'A selector for where the focus should land instead of the top of the document. The focus moves without scrolling either way, so naming a landmark cannot undo the journey.' },
             { name: 'data-kp-to-top-shown', what: 'Written by the module while the control is on the screen. Read it, do not set it.' },
             { name: 'kp-to-top', what: 'The event, on the control, whenever it appears or goes away: `{ shown }`.' },
@@ -2748,6 +2962,14 @@ export const DESCRIPTORS = [
             { name: 'data-kp-settling', what: 'On a root while its first render is drawn: nothing under it arrives and no box glides, it takes its size at once. js/auto.js writes it on the root of every `attachAll()` until its modules have attached and two frames are painted; set it yourself on a part a framework renders in several passes, and take it off when that part is drawn.' },
             { name: '--kp-size-ease', what: 'A theme\u2019s own curve for its size changes, held from overshooting. Default: the dialog entrance\u2019s curve.' },
             { name: '--kp-size-steps', what: '`line` moves a size one line of text at a time, growing and shrinking alike (terminal).' },
+            { name: 'a close is its open, backwards', what: 'In every theme a part that closes (menu, popover, date picker, combobox, tour card and dim, alarm, side navigation, calendar and table busy layers) plays the theme\u2019s own opening in reverse, over the same time on the mirrored curve. The rows below are the knobs a theme sets for the parts that fold or leave; a theme that sets none keeps the defaults named.' },
+            { name: '--kp-leave-state', what: '`leave` on a theme lets a part a script is about to remove or hide (a state\u2019s layer, an empty state, a file row, a tree\u2019s children) leave first, as `leave(el)` plays it. Unset, such a part is taken out at once.' },
+            { name: '--kp-arrive-unseen', what: '`skip` lets what takes no box (display none) arrive as nothing, so its arrival does not hold back the visible parts added with it.' },
+            { name: '--kp-leave-fold-grow', what: 'How long a leave\u2019s fold of space takes, as a multiple of the longer of the exit and the size glide. Default 1.25.' },
+            { name: '--kp-leave-fold-start', what: 'Where the fold starts, as a share of the exit. Default one third; 0 starts it with the leave, so the space closes as long as, and with, the part.' },
+            { name: '--kp-leave-fold-ease', what: 'The curve the fold runs on. Default: the theme\u2019s entrance curve; a theme that folds in whole ticks names a steps() curve, and the box then leaves at the size the fold ended on.' },
+            { name: '--kp-swap-fold-ease', what: 'The fold curve for the panel that leaves while another arrives (a tab swap), so a stepped theme can offset the two by one tick and the box does not move.' },
+            { name: '--kp-accordion-size', what: '`own` gives the parts that otherwise keep the entrance\u2019s curve alone (the accordion, a tree branch) the theme\u2019s own size character as well.' },
             { name: '--kp-motion-scale', what: 'On the root: plays every close and every resize slower (above 1) or faster (below 1) at once. Default 1.' },
         ],
         accessibility: [
@@ -3196,6 +3418,8 @@ export const DESCRIPTORS = [
             { name: '.kp-help__list', what: 'A `dl`: the words beside their meanings in two columns; in a card of 22rem or less, the word over its meaning.' },
             { name: '.kp-help kbd', what: 'A key, drawn as a key.' },
             { name: '.kp-tour', what: 'The tour’s card, a non-modal dialog: its title, its text, and a foot with the count and Back, Skip and Next.' },
+            { name: 'the dim', what: 'The page is dimmed around the target by a shadow the target casts, set by a knob (listed below) that a theme replaces to draw its own dim; the theme does not paint a box-shadow on the target itself, which a cut corner would clip. While the tour points at a part, the part is uncut.' },
+            { name: 'closing the dim', what: 'When the card closes, the dim leaves as it was drawn: the knobs listed below name the shadow it fades to, how long it takes, its curve and its delay (forest withers it, cyberpunk steps it). Unset, it fades over the theme\u2019s fold time.' },
             { name: 'data-kp-tour-target', what: 'Written by the tour on the part it talks about: a ring in the focus colour, and the rest of the page dimmed around it.' },
             { name: 'startTour(steps, options)', what: 'Starts it: each step a `target` (a selector or a function), a `title` and a `text`; `remember`, `returnFocus`, `onEnd`, `decorate`, `strings`. Returns `{ end, goto }`, or null when no step’s part is on the page.' },
             { name: 'shouldStartTour()', what: 'Whether a page starts the tour by itself: `?tour` (or `?tour=3`) always; otherwise a first visit by a person, not a remembered one and not a browser driven by a script.' },

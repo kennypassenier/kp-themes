@@ -188,6 +188,36 @@
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-to-top&quot;</span> <span class="kp-code__keyword">data-kp-to-top</span> <span class="kp-code__keyword">data-kp-to-top-after</span><span class="kp-code__string">=&quot;400&quot;</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">In a box that scrolls on its own</figcaption>
+                        <p class="kp-text-muted">Added 2026-10-13. A dashboard’s main column or a dialog’s stage scrolls instead of the window. The control looks for the nearest scrolling box it sits in, at every use: it appears when that box is past the threshold, and pressing it scrolls that box, not the window. Scroll the text in the window below. It runs in a window of its own because the control is fixed to the window’s corner.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+                            <template data-sc-frame data-sc-frame-title="In a box that scrolls on its own" data-sc-frame-height="16rem">
+<main id="stage" style="block-size: 100dvh; overflow-y: auto">
+    <h1>Readings</h1>
+    <p>Line 2 reports every fifteen minutes. The pressure held at 3.2 bar until 02:10.</p>
+    <p>At 02:40 it had dropped to 1.1 bar, and pump house 3 was switched to the reserve pump at 02:52.</p>
+    <p>The day shift checks the seal first, then the valve V-12 that was slow to close.</p>
+    <p>Nothing else was reported overnight. The backup ran at 03:00 and finished at 03:14.</p>
+    <p>Flow averaged 412 m³/h over the last quarter of an hour.</p>
+    <p>Maintenance has two lock-outs open and one spare part on order.</p>
+    <p>The rota for the coming week is on the last page.</p>
+    <button type="button" class="kp-button kp-to-top" data-kp-to-top data-kp-to-top-after="120"></button>
+</main>
+                            </template>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">main</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;stage&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;block-size: 100dvh; overflow-y: auto&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">h1</span>&gt;Readings&lt;/<span class="kp-code__keyword">h1</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span>&gt;Line 2 reports every fifteen minutes. The pressure held at 3.2 bar until 02:10.&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span>&gt;At 02:40 it had dropped to 1.1 bar, and pump house 3 was switched to the reserve pump at 02:52.&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span>&gt;The day shift checks the seal first, then the valve V-12 that was slow to close.&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span>&gt;Nothing else was reported overnight. The backup ran at 03:00 and finished at 03:14.&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span>&gt;Flow averaged 412 m³/h over the last quarter of an hour.&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span>&gt;Maintenance has two lock-outs open and one spare part on order.&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span>&gt;The rota for the coming week is on the last page.&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-to-top&quot;</span> <span class="kp-code__keyword">data-kp-to-top</span> <span class="kp-code__keyword">data-kp-to-top-after</span><span class="kp-code__string">=&quot;120&quot;</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">main</span>&gt;</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="more-examples" id="more-examples">
                     <h2 class="kp-fw-semibold">More examples</h2>
@@ -264,6 +294,7 @@
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
                             <tr><td><code>data-kp-to-top-after</code></td><td>How far down it appears, in pixels. Default 400.</td></tr>
+                            <tr><td><code>the box it scrolls</code></td><td>The control scrolls the nearest scrolling box it sits in (a dashboard’s main column, a dialog’s stage), and measures its threshold against that box; with no such box it is the window, as before.</td></tr>
                             <tr><td><code>data-kp-to-top-target</code></td><td>A selector for where the focus should land instead of the top of the document. The focus moves without scrolling either way, so naming a landmark cannot undo the journey.</td></tr>
                             <tr><td><code>data-kp-to-top-shown</code></td><td>Written by the module while the control is on the screen. Read it, do not set it.</td></tr>
                             <tr><td><code>kp-to-top</code></td><td>The event, on the control, whenever it appears or goes away: `{ shown }`.</td></tr>
@@ -275,6 +306,7 @@
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../site/frames.js"></script>
         <script type="module" src="../../catalogue/demos.js"></script>
     </body>
 </html>

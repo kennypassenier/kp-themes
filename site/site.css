@@ -135,6 +135,35 @@
         overflow: visible;
     }
 
+    /* A framed example: a window of its own, so a launcher fixed to a
+       window's corner and a panel against its edge stay inside the box
+       (js frames: site/frames.js). The window follows the page's theme. */
+    .sc-frame {
+        display: block;
+        inline-size: 100%;
+        block-size: var(--sc-frame-height, 28rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--background);
+    }
+
+    /* The page inside the window: only a ground and a little room. */
+    .sc-frame__body {
+        margin: 0;
+        min-block-size: 100dvh;
+        background: var(--background);
+        color: var(--foreground);
+    }
+
+    .sc-frame__body > main,
+    .sc-frame__body .kp-shell__body > main {
+        display: grid;
+        gap: var(--kp-space-md, 1rem);
+        align-content: start;
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem) var(--kp-space-lg, 1.5rem);
+        min-inline-size: 0;
+    }
+
     /* The reading column begins where the navigation ends, rather than
        being centred inside the main column with a band of nothing in
        front of it. .kp-page still supplies the measure and the padding. */
