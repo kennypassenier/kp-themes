@@ -893,7 +893,7 @@ steps only remove clicks.
 
 ### Procedure 9.1 — judge what is open
 
-1. Open **Agenda: start here** (`catalogue/agenda.html`). It lists every
+1. Open **Agenda** (`catalogue/agenda.html`). It lists every
    research demo and the catalogue blocks that wait, in order (a demo's
    `after` in `catalogue/pages.js`), with what a rejection would change
    (`affects`); its first button opens the first item, and after an item's

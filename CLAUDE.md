@@ -113,6 +113,7 @@ Kenny.
 | docs/DEBUGGING_GUIDE.md        | symptom to cause, and what to look at first                         |
 | docs/OPERATIONS_RUNBOOK.md     | the numbered procedures a maintainer performs                       |
 | docs/MINI_ROUNDS.md            | open measurements and mini-rounds                                   |
+| docs/COMPONENTS_PAGE_PENDING.md | what site/components still has to show; add a line with every new component, option or token; once everything is approved, ask Kenny's go for the pass |
 | docs/ID_TRANSLATIONS.md        | the KT10 renames, one row each                                      |
 | site/layout.html               | the layout classes, their knobs and defaults (from css/layout.css)  |
 | docs/archive/                  | dated records kept for provenance, out of the index and the gates   |

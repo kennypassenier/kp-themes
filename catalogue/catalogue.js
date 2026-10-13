@@ -42,7 +42,9 @@ function buildNavigation() {
     const list = document.createElement('ul');
     list.className = 'kp-sidenav__list';
 
-    for (const { group, pages } of PAGES) {
+    for (const { group, nav, pages: all } of PAGES) {
+        // A group or page with `nav: false` stays reachable but is not listed (pages.js).
+        const pages = nav === false ? [] : all.filter((page) => page.nav !== false);
         // "Research to look at" is empty while nothing waits on Kenny; an empty
         // heading would read as something to open.
         if (!pages.length) continue;

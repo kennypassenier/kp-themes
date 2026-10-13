@@ -13,20 +13,22 @@
  * @property {string} [about]       a research demo: what it asks, in one sentence, for the Agenda's row
  * @property {string[]} [after]     a research demo: the demos (their href) to judge before this one; the Agenda
  *                                  orders by it and says "Judge after: …" on the row
+ * @property {boolean} [nav]       false: reachable, but not listed in the side navigation (Kenny, 2026-10-13: the Agenda
+ *                                  replaced them, so they are noise there)
  * @property {string} [affects]     a research demo: what a rejection here changes elsewhere, one sentence the Agenda
  *                                  shows as "A rejection here changes: …"
  */
 
-/** @type {{ group: string, pages: Page[] }[]} */
+/** @type {{ group: string, nav?: boolean, pages: Page[] }[]} */
 export const PAGES = [
     {
         group: 'Review',
         pages: [
             // The one page Kenny starts from (Kenny, 2026-10-13): what waits for him, in order, with what depends on
             // what; To judge and Every component, one page stay reachable from it.
-            { href: 'catalogue/agenda.html', label: 'Agenda: start here' },
-            { href: 'catalogue/changed.html', label: 'To judge, by theme' },
-            { href: 'catalogue/index.html', label: 'Every component, one page' },
+            { href: 'catalogue/agenda.html', label: 'Agenda' },
+            { href: 'catalogue/changed.html', label: 'To judge, by theme', nav: false },
+            { href: 'catalogue/index.html', label: 'Every component, one page', nav: false },
             { href: 'catalogue/compare.html', label: 'Compare two themes' },
         ],
     },
@@ -124,6 +126,8 @@ export const PAGES = [
         // a 'Research to look at' group of its own, above this one, and moves
         // down here once Kenny has decided on it [scope-81].
         group: 'Archived research',
+        // Decided demos stay reachable from the Agenda's Done list, not from the side navigation (Kenny, 2026-10-13).
+        nav: false,
         pages: [
             // Decided 2026-10-13 00:19: Kenny approved all twenty cyberpunk components in the applied demo (research/cyberpunk-applied; audit in _audit/MISSING.md).
             { href: 'research/cyberpunk-applied/demo.html', label: 'Cyberpunk, as applied' },
