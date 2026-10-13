@@ -1744,7 +1744,10 @@ async function show(at) {
         refused.hidden = true;
         updateApprove();
         if (!dialog.open) dialog.showModal();
-        approveButton.focus();
+        approveButton.focus({ preventScroll: true });
+        // Every page starts at its top, the demo on the left and the rows on the right (Kenny, 2026-10-13: "als ik van
+        // één dialog pagina naar de andere ga, scroll dan naar boven en doe hetzelfde voor de items rechts").
+        for (const box of [stage, stage.closest('.rv-dialog__view'), dialog.querySelector('.rv-dialog__side')]) if (box) box.scrollTop = 0;
         // A demo can act when its section comes on screen (signature-dialog
         // opens its dialog, so the entrance plays without a click).
         for (const pair of shownPairs) pair.item?.section.dispatchEvent(new CustomEvent('review:show', { bubbles: true }));
