@@ -5,6 +5,18 @@
 import { THEME_EVENT } from '../js/theme-core.js';
 import { JUDGEMENT_EVENT } from './judgements.js';
 import { buildPrompt, clearPrompt, markCopied, NOTES_EVENT, STORAGE_KEYS } from './review-state.js';
+import { markAnswerCopied, waitingAnswers } from '../research/_review/progress.js';
+
+/**
+ * The one prompt: every research demo's answer not yet passed on, then the catalogue's notes and verdicts.
+ * @param {{ includeCopied?: boolean }} options
+ */
+function fullPrompt(options) {
+    const answers = waitingAnswers();
+    const catalogue = buildPrompt(options);
+    const text = [...answers.map((a) => a.text), catalogue.text].filter(Boolean).join('\n\n');
+    return { ...catalogue, text, answers, items: catalogue.items + answers.length, total: catalogue.total + answers.length };
+}
 
 /**
  * @param {{ bar: HTMLElement, main: HTMLElement }} where
@@ -51,13 +63,13 @@ export function mountPrompt({ bar, main }) {
     const topText = top.querySelector('[data-cat-prompt]');
 
     function render() {
-        const { text, items, pages, total } = buildPrompt({ includeCopied: includeCopied.checked });
+        const { text, items, pages, total, answers } = fullPrompt({ includeCopied: includeCopied.checked });
         const empty = total
             ? 'Nothing new since the last copied prompt. Tick "Include what was already copied" at the foot of the page to see all of it again.'
             : 'No notes or verdicts yet, on any page. Judge a block or write a note under it; both belong to the theme on screen.';
         for (const pre of texts) pre.textContent = text || empty;
         counter.textContent = items
-            ? `${items} ${includeCopied.checked ? '' : 'new '}item(s) for the prompt, from ${pages} page(s)`
+            ? `${items} ${includeCopied.checked ? '' : 'new '}item(s) for the prompt, from ${pages + answers.length} page(s)`
             : `Nothing new for the prompt${total ? ' since the last copy' : ''}`;
         for (const button of document.querySelectorAll('[data-cat-prompt-copy]')) button.disabled = !text;
         for (const button of document.querySelectorAll('[data-cat-prompt-clear]')) button.disabled = !total;
@@ -75,11 +87,12 @@ export function mountPrompt({ bar, main }) {
 
     for (const copy of document.querySelectorAll('[data-cat-prompt-copy]')) {
         copy.addEventListener('click', async () => {
-            const { text } = buildPrompt({ includeCopied: includeCopied.checked });
+            const { text, answers } = fullPrompt({ includeCopied: includeCopied.checked });
             const pre = copy.closest('[data-cat-prompt-bar]') ? topText : foot.querySelector('[data-cat-prompt]');
             // Everything now counts as passed on; the next prompt starts from
             // what changes after this.
             markCopied();
+            for (const answer of answers) markAnswerCopied(answer.id);
             try {
                 await navigator.clipboard.writeText(text);
                 say('Copied. Paste it into the conversation.');

@@ -18,7 +18,7 @@
 import { THEMES } from '../js/theme-registry.js';
 import { JUDGEMENT_EVENT, loadJudgements } from './judgements.js';
 import { gatherBlocks, isOpen } from './open-pairs.js';
-import { answerOf, answerWaiting, markAnswerCopied } from '../research/_review/progress.js';
+import { answerWaiting } from '../research/_review/progress.js';
 import {
     composeBlocks,
     counted,
@@ -430,20 +430,14 @@ function renderAnswers() {
     if (!list.length) return;
     ui.answersText.textContent = `${counted(list.length, 'demo')} (${list.map((demo) => demo.page.label).join('; ')}) ${
         list.length === 1 ? 'has an answer' : 'have answers'
-    } you have not copied yet. One press copies ${list.length === 1 ? 'it' : 'them together'} for the conversation.`;
+    } you have not copied yet. "Copy the answers" is the bar's Copy prompt: one press copies every answer and verdict together.`;
 }
 
-ui.answersCopy.addEventListener('click', async () => {
-    const list = answersWaiting();
-    const text = list.map((demo) => answerOf(/** @type {any} */ (demo.shape).id)?.text ?? '').join('\n\n');
-    try {
-        await navigator.clipboard.writeText(text);
-        for (const demo of list) markAnswerCopied(/** @type {any} */ (demo.shape).id);
-        ui.status.textContent = `Copied ${counted(list.length, 'answer')}. Paste ${list.length === 1 ? 'it' : 'them'} into the conversation.`;
-        render();
-    } catch {
-        ui.status.textContent = 'The browser refused the clipboard. Open each demo and use its own Copy answer.';
-    }
+// One copy for everything (Kenny, 2026-10-13: "Dat moet gelijk getrokken worden"): this button presses the bar's
+// "Copy prompt", which carries the demo answers waiting here and the catalogue's verdicts alike.
+ui.answersCopy.addEventListener('click', () => {
+    /** @type {HTMLButtonElement | null} */ (document.querySelector('[data-cat-prompt-bar] [data-cat-prompt-copy]'))?.click();
+    setTimeout(render, 300);
 });
 
 /* ------------------------------------------------------------------ start */

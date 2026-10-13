@@ -341,3 +341,23 @@ export const answerWaiting = (id) => {
     const answer = answerOf(id);
     return Boolean(answer && answer.judged > 0 && answer.copied !== answer.at);
 };
+
+/**
+ * Every demo answer in this browser that waits to be passed on, in a stable order: what the one "Copy prompt" puts
+ * before the catalogue's verdicts (Kenny, 2026-10-13: the bar's Copy prompt and the Agenda's own copy button gave
+ * different things; "Dat moet gelijk getrokken worden").
+ * @returns {{ id: string, text: string }[]}
+ */
+export function waitingAnswers() {
+    const found = [];
+    try {
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i) ?? '';
+            const match = /^kp-demo-review:(.+):answer$/.exec(key);
+            if (match && answerWaiting(match[1])) found.push({ id: match[1], text: /** @type {DemoAnswer} */ (answerOf(match[1])).text });
+        }
+    } catch {
+        /* storage refused: nothing waits */
+    }
+    return found.sort((a, b) => a.id.localeCompare(b.id));
+}
