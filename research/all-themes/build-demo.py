@@ -18,6 +18,8 @@ document.querySelector('[data-fa-to-top]')?.addEventListener('click', (event) =>
 '''
 OUT = pathlib.Path('research/all-themes-applied')
 html = (SRC / 'demo.html').read_text()
+# Kenny, 2026-10-13: the side navigation only shows and hides itself; no second layer over the rest of the screen.
+html = html.replace('                        data-kp-sidenav-backdrop\n', '                        data-kp-sidenav-backdrop="false"\n', 1)
 
 ALL = ['formal', 'light', 'dark', 'synthwave', 'pastel', 'terminal', 'blueprint', 'solstice', 'brutalism', 'deco', 'phantom', 'grotesk', 'nostromo', 'titanium']
 
@@ -37,7 +39,7 @@ SECTIONS = {
         'nostromo': 'The dropdown, mega menu and phone panel are drawn by the raster with the beam and erased with the same frames backwards. Borrowed from the popover\'s raster.',
         'titanium': 'The dropdown, mega menu and phone panel open by the dialog\'s cut from the top (240 ms) with the cutter line; the dropdown no longer fades. Borrowed from G3.',
     }),
-    'sidenav': ('The side navigation', {
+    'sidenav': ('The side navigation: it shows and hides itself, with no layer over the rest of the screen', {
         'titanium': 'Open the panel: it slides in 240 ms (the cut band) instead of 60 ms, its backdrop with it. Round 2: no more colour splash beside it (the backdrop played the leave\'s anodising heat backwards as if it arrived).',
         'grotesk': 'Open the panel: one-unit slide from the start edge while its plate falls over 960 ms; closing is that backwards; shut it is hidden.',
         'nostromo': 'Open the panel: it no longer slides in (G2 forbids it); it is switched on where it stands by the raster (4 frames) and erased when it closes.',
@@ -141,6 +143,8 @@ SECTIONS['tour'][1]['cyberpunk'] = 'Only the shared tour fixes.'
 for t in list(SECTIONS['tour'][1]):
     SECTIONS['tour'][1][t] += TOUR_ALL
 SECTIONS['calendar'][1]['blueprint'] = 'Round 2: Loading shows the whole month\'s compass and words again and every loading day\'s compass, drawn in by the pen (they were masked away). ' + SECTIONS['calendar'][1]['blueprint']
+for t in list(SECTIONS['sidenav'][1]) + ALL:
+    SECTIONS['sidenav'][1][t] = SECTIONS['sidenav'][1].get(t, '').rstrip() + (' ' if SECTIONS['sidenav'][1].get(t) else '') + 'Round 2: the panel no longer lays a backdrop over the rest of the screen; only the panel itself comes and goes (the package keeps the backdrop as an option, data-kp-sidenav-backdrop).'
 SECTIONS['calendar'][1]['deco'] = 'Round 2: both lift doors close over every loading day (the left one was hidden by the press ring). ' + SECTIONS['calendar'][1]['deco']
 
 PHANTOM_R2 = ' Round 2: what you saw below the phone bar (nothing visible, a red line streaking) did not happen here on the published site in Firefox at 1280 to 1920 px, after approving up to phantom and opening the phone bar; a screenshot would let me find it.'
