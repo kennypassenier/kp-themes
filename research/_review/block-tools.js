@@ -169,7 +169,53 @@ export function mountBlockTools({ section, item, theme, themeLabel, title }) {
     }
 
     /* --------------------------------------------------- loop */
+    // A note being typed keeps the focus while the loop plays: a part that opens takes the focus (a side
+    // navigation's initial focus, a combobox, a frame's own page), and the letters then went to the demo
+    // (Kenny, 2026-10-13: typing in brutalism's note on "Over the page" stopped). The field held is the one
+    // last focused outside the section; a press of the pointer anywhere else lets it go.
+    const TYPING = 'textarea, input:not([type="checkbox"], [type="radio"], [type="button"], [type="submit"], [type="reset"]), [contenteditable]:not([contenteditable="false"])';
+    /** @type {HTMLElement | null} */
+    let held = null;
+    const takenBySection = (/** @type {Element | null} */ el) => el !== null && (section.contains(el) || (earlier?.contains(el) ?? false));
+    document.addEventListener('focusin', (event) => {
+        const el = /** @type {Element} */ (event.target);
+        if (alive && el.matches?.(TYPING) && !takenBySection(el)) held = /** @type {HTMLElement} */ (el);
+    });
+    document.addEventListener(
+        'pointerdown',
+        (event) => {
+            if (alive && held && event.target !== held) held = null;
+        },
+        true,
+    );
+    const keepTyping = () => {
+        if (!alive || !looping) return;
+        if (held?.isConnected && document.activeElement !== held && takenBySection(document.activeElement)) held.focus({ preventScroll: true });
+        requestAnimationFrame(keepTyping);
+    };
+    // The part's own focus() calls are what take the field away: while a field is held, a focus() on an element of
+    // the section (or of a page framed in it) does nothing, so not one letter goes astray.
+    /** @type {(() => void)[]} */
+    let unguard = [];
+    const guardFocus = () => {
+        for (const { doc, root: scope } of scopesOf(section)) {
+            const proto = /** @type {any} */ (doc.defaultView)?.HTMLElement?.prototype;
+            if (!proto || unguard.some((u) => /** @type {any} */ (u).proto === proto)) continue;
+            const own = proto.focus;
+            proto.focus = function (/** @type {FocusOptions | undefined} */ options) {
+                if (held?.isConnected && looping && scope.contains(this)) return;
+                return own.call(this, options);
+            };
+            const undo = () => {
+                proto.focus = own;
+            };
+            /** @type {any} */ (undo).proto = proto;
+            unguard.push(undo);
+        }
+    };
     async function loop() {
+        guardFocus();
+        requestAnimationFrame(keepTyping);
         while (alive && looping) {
             const root = shown();
             const opener = openerIn(root);
@@ -205,6 +251,8 @@ export function mountBlockTools({ section, item, theme, themeLabel, title }) {
             await sleep(700 / Math.sqrt(rate));
         }
         looping = false;
+        for (const undo of unguard) undo();
+        unguard = [];
         loopButton.setAttribute('aria-pressed', 'false');
         loopButton.textContent = '▶ Play open and close (L)';
     }
