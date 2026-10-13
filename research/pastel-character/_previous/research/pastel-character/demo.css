@@ -1,0 +1,317 @@
+/* research/pastel-character: the page only. A centred column; the story
+   at the top, then one section of nineteen rows, each row a question with
+   its options side by side on a desk (three across, two across when a
+   question has four) and stacked on a phone. Every option's own drawing is
+   in options.css; nothing here hangs on `.pa-page` alone where the review
+   dialog could move it. */
+.pa-page {
+    display: grid;
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 96rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) 16px 4rem;
+}
+
+.pa-intro,
+.pa-story,
+.pa-sec__head {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.pa-intro :is(h1, p),
+.pa-story :is(h2, p),
+.pa-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+.pa-intro p,
+.pa-story__text p,
+.pa-sec__head p {
+    max-inline-size: 78ch;
+}
+
+.pa-motion {
+    color: var(--muted-foreground);
+}
+
+.pa-story__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+.pa-story__text {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.pa-story__parts {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding: var(--kp-space-md, 1rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--card);
+}
+
+.pa-story__bar {
+    flex: 1 1 10rem;
+}
+
+.pa-story__skel {
+    display: grid;
+    gap: 0.4rem;
+}
+
+.pa-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.pa-sec__head p,
+.pa-aspect__why {
+    color: var(--muted-foreground);
+}
+
+.pa-toc {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+    gap: 0.15rem var(--kp-space-md, 1rem);
+    margin: 0;
+    padding-inline-start: 1.5rem;
+}
+
+.pa-controls {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.pa-actions,
+.pa-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+[data-pa-state][aria-pressed='true'],
+[data-pa-speed][aria-pressed='true'] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+}
+
+[data-review-look] p {
+    margin: 0;
+}
+
+.pa-aspects {
+    display: grid;
+    gap: var(--kp-space-xl, 2rem);
+}
+
+.pa-aspect {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    padding-block-start: var(--kp-space-lg, 1.5rem);
+    border-block-start: 1px solid var(--border);
+    scroll-margin-block-start: 1rem;
+}
+
+.pa-aspect__head {
+    display: grid;
+    gap: 0.35rem;
+}
+
+.pa-aspect__head :is(h3, p) {
+    max-inline-size: 90ch;
+    margin: 0;
+}
+
+.pa-aspect__no {
+    display: inline-grid;
+    place-items: center;
+    min-inline-size: 1.75rem;
+    block-size: 1.75rem;
+    margin-inline-end: 0.35rem;
+    border-radius: var(--kp-radius-pill, 999px);
+    background: var(--primary);
+    color: var(--primary-foreground);
+    font-family: var(--theme-font-mono);
+    font-size: 0.85rem;
+}
+
+.pa-aspect__rule {
+    margin-inline-start: 0.35rem;
+    color: var(--muted-foreground);
+    font-family: var(--theme-font-mono);
+    font-size: 0.75rem;
+    font-weight: 400;
+    white-space: nowrap;
+}
+
+.pa-aspect__q {
+    font-weight: 600;
+}
+
+/* Three options in a subgrid, so the names, the words and the scenes line
+   up across the row whatever their length; one under the other below 64rem. */
+.pa-trio {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+.pa-col {
+    display: grid;
+    grid-row: span 4;
+    grid-template-rows: subgrid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+/* A question with four options shows two across. */
+.pa-aspect[data-pa-count='4'] .pa-trio {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (max-width: 64rem) {
+    .pa-story__grid,
+    .pa-trio,
+    .pa-aspect[data-pa-count='4'] .pa-trio {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .pa-col {
+        grid-row: auto;
+        grid-template-rows: none;
+    }
+}
+
+.pa-label {
+    margin: 0;
+    font-weight: 700;
+}
+
+.pa-label__no {
+    font-family: var(--theme-font-mono);
+    color: var(--muted-foreground);
+}
+
+.pa-label__rec {
+    display: inline-block;
+    margin-inline-start: 0.25rem;
+    padding: 0.05rem 0.55rem;
+    border-radius: var(--kp-radius-pill, 999px);
+    background: var(--primary);
+    color: var(--primary-foreground);
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.pa-see,
+.pa-verdict {
+    margin: 0;
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.pa-verdict {
+    color: var(--muted-foreground);
+}
+
+.pa-verdict--rec {
+    color: var(--foreground);
+    font-weight: 600;
+}
+
+/* The scene: a small dashboard of parts, the same parts in every option of
+   a row. */
+.pa-scene {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12.5rem), 1fr));
+    justify-content: center;
+    gap: var(--kp-space-md, 1rem) var(--kp-space-lg, 1.5rem);
+    align-content: start;
+    box-sizing: border-box;
+    min-block-size: 100%;
+    padding: var(--kp-space-md, 1rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--background);
+}
+
+.pa-part {
+    display: grid;
+    gap: 0.4rem;
+    align-content: start;
+    min-inline-size: 0;
+}
+
+.pa-part--wide {
+    grid-column: 1 / -1;
+}
+
+.pa-cap {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: 0.75rem;
+}
+
+.pa-readout {
+    margin: 0;
+    font-family: var(--theme-font-mono);
+    font-size: 0.8rem;
+}
+
+/* In the review dialog one option is shown alone and large: its scene gets
+   the room of the stage. */
+[data-rv-flip-trio] .pa-col:not([hidden]) {
+    grid-column: 1 / -1;
+}
+
+/* Its words are in the dialog's hint, so only the scene stays. */
+[data-rv-flip-trio] .pa-col > :is(.pa-label, .pa-see, .pa-verdict) {
+    display: none;
+}
+
+/* A control in a part keeps its own width; plates and strips take the part's. */
+.pa-part > :is(.kp-button, .kp-badge, .pa-tip, .pa-spark, a) {
+    justify-self: start;
+}
+
+.pa-part > .pa-spark {
+    justify-self: stretch;
+}
+
+/* The scenes' own small layouts (unlayered, because kp.layout comes after
+   kp.signature and would otherwise win over the options' grids). */
+.pa-row--gap {
+    margin-block-start: var(--kp-space-sm, 0.5rem);
+}
+
+.pa-stack {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    justify-items: start;
+}
+
+.pa-sizes3 {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr) minmax(0, 1.6fr);
+    gap: var(--kp-space-md, 1rem);
+    align-items: start;
+}
+
+@media (max-width: 40rem) {
+    .pa-sizes3 {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

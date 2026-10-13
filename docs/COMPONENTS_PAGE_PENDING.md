@@ -23,3 +23,6 @@ each line its example and its option row, and empties the list.
   the folded corner on hover and the dashed outer focus line; the wobble as pastel's `--kp-update`. Each with its example and
   option row on the component pages it touches (dialog, popover, menu, toast, tooltip, alarm, tour, side navigation, date
   picker, combobox, progress bar, spinner, skeleton, button, key figure).
+- **Pastel's loading pictures and spinners, 21 matched pairs (research/pastel-character, round 2; pending Kenny's pick).** Once he
+  picks a pair, the progress bar, skeleton, spinner, key figure, menu and calendar pages show its loading picture and its spinner
+  in pastel, with an example and an option row each (themes/pastel/CHARACTER.md §6a lists the pairs).

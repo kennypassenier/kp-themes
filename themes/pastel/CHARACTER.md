@@ -44,6 +44,8 @@ not from its CSS says so.
 | 2026-10-07 02:54 | the Homelab project thread           | **The network graph changes in no theme.** In pastel its picks are a source of the grammar (the live family is the graph's wobble), never a target.                                                                                                                                                                                                                                         |
 | 2026-10-07 03:37 | relayed by the coordinator           | **Between themes, variation**: inside a theme a strict grammar, between themes distinctness ("een thema bestaat om distinct te zijn"); where a first recommendation overlapped another theme, a pastel-own alternative became the recommendation (§7).                                                                                                                                      |
 | 2026-10-13       | review round 2 (all-themes)          | **"Niet de open/close animatie van dit thema"** on the bar, the palette, the date picker, the combobox, the alarm and the side navigation: each now takes the dialog's sheet (`kp-sig-pastel-pastel-sheet`, up from 18 px below, turned -2.5°, out of nothing, 427 ms on `--fx-ease`) and closes as it backwards. docs/THEME_LESSONS.md lesson 52 records the sheet as the one decided exception that reads PLAIN: it only moves and turns. |
+| 2026-10-14       | research/pastel-character, round 1 (`2026-10-14-r1`), Kenny's verdict | **Fourteen of nineteen approved** (research/pastel-character/update.json, update 1): the anchor _Printed twice, stuck on_ (§0a option 1), the soft landing (G1), from its corner in reading order (G2), stuck on beside its trigger (G3), one landing of 560 ms (G4), three inks (G5), two radii and the pill (G6), paper with its pass, taped (G7), the sticker (G8), the wobble (G9), pastel's own button in every composite (G13), stuck down flat (G16), one face, weight speaks (G17); and **focus = the dashed line alone** (_Alleen de gestreepte lijn_, the picks' option 3, NOT the recommendation; G15 is rewritten on it at the port, contrast checked on every ground). **Open, asked again in update 1:** loading (G10) and the spinner (G11), redone as matched pairs; the leave (G12): option 1 confirmed and measured to be the anchor itself and its reverse, plus two new options asked by Kenny (the anchor, then the washi tape stuck on over the top-start corner; the anchor, then a thumbtack pushed in at the top centre; each close its open reversed, the fix coming off first); pointing (G14) option 1, the key figure's fold fixed (it sat in the package's grid column, 12 px inside the corner, with a control's radius); the motifs (G18) option 1, the empty state's lip redrawn as a real fold (the plate cut along the crease, the shadow with it). |
+| 2026-10-14       | research/pastel-character, update 1, round 2 (built, waiting on Kenny) | **Loading (G10) and the spinner (G11) as 21 matched pairs**, on Kenny's words (loading: option 1 best, beside 9 new and 10 out-of-the-box options; spinner: 2 best, 1 also good, 21 options matched to the loading pictures). Loading N and spinner N are one idea, every name says "Paar N"; loading recommends pair 1 (the flutter), the spinner pair 2 (the candy dots), the tape roll (pair 1) marked "ook goed". The list is in §6. |
 
 What Kenny had **not** decided, and what `research/pastel-character` asks: the
 anchor (the one open and close language every later decision departs from),
@@ -124,10 +126,10 @@ glitched, scanned, grown, thrown or burnt; nothing lands with a dead stop.
 | G9  | **A live change wobbles.** What changed (a figure, a word, a line, a tile's value) wobbles once like jelly round its foot: `rotate` 10° → -7° → 3° → 0, 800 ms `ease-out` (the graph's _The wobble_, Kenny's live family). Its second pass stays where it is, so the wobble shows against it. No swell, no wiggle of a whole tile, no colour flash. |
 | G10 | **Loading is washi tape.** A strip of striped washi tape (mint, its stripes in `--accent` and `--accent-foreground` at a quarter) lies across the top of every waiting surface and flutters gently round its middle (±1.5°, 2400 ms `ease-in-out`, alternate), its stripes drifting start → end; where there is no room for a strip (the spinner) the roll of the same tape turns (§6). |
 | G11 | **The spinner is the tape roll.** A ring of the striped tape turns in three hops a lap on the landing curve, 1200 ms a lap, its sky pass beside it. |
-| G12 | **Leaving is peeling off.** What leaves is its landing played backwards: it peels off at its top-start corner, then its pass slides off register; what arrives is stuck on. One picture, one curve, 560 ms. The balloon (Kenny's leave of 2026-10-04) is an option: with it, an arrival comes down from above while an opening comes from its corner, two directions for one gesture. |
+| G12 | **Leaving is peeling off.** (Update 1, 2026-10-14: asked again with two more options, the tape stuck on or a thumbtack pushed in after the landing; see §0.) What leaves is its landing played backwards: it peels off at its top-start corner, then its pass slides off register; what arrives is stuck on. One picture, one curve, 560 ms. The balloon (Kenny's leave of 2026-10-04) is an option: with it, an arrival comes down from above while an opening comes from its corner, two directions for one gesture. |
 | G13 | **An element inside a composite is the theme's own element.** A button in a header, menu, drawer, tile or alert is pastel's `.kp-button` in every state; a menu entry `.kp-menu__item`; a tag the sticker. A composite may add its own accent around them, never replace their hover, focus ring, press, corner or font (§4b). |
 | G14 | **Pointing peels the corner.** Hover lifts the sticker 2 px on its peel (the peel grows from 3 to 5 px, still flat) and its top-end corner curls up into a small fold in the paper's back (`--muted`), on the landing curve in 220 ms; the words stand upright and the siblings are untouched. Kenny's hover family (_The tape peel_) drawn so it shows a peel, and scope-24's lift without the turn. |
-| G15 | **Focus is the two rings, the outer one dashed.** DI2's two channels stay (a box-shadow ring in `--focus-ring` composed with the peel, lesson 41) and the outline becomes a 2 px dashed `--primary` line 3 px out (the header family's "focus dashes a line round it"). |
+| G15 | **Focus is the two rings, the outer one dashed.** (Superseded 2026-10-14, round 1: Kenny picked the dashed line alone, see §0; the port writes this rule on that pick.) DI2's two channels stay (a box-shadow ring in `--focus-ring` composed with the peel, lesson 41) and the outline becomes a 2 px dashed `--primary` line 3 px out (the header family's "focus dashes a line round it"). |
 | G16 | **A press sticks it down.** The part drops onto its peel (3 px down, peel 0) and the fold lies flat, 220 ms; it does not shrink, squash or turn (scope-24). |
 | G17 | **One face; weight speaks.** Instrument Sans for everything; titles and figures 700, labels 600 in sentence case, figures tabular; the microlabel's spaced capitals stay the one exception; monospace for identifiers, timestamps and log lines only. No face outside the tokens. |
 | G18 | **Motifs only from the sheet and the press.** The second pass, the sticker and its fold, the washi tape, the pearls on a thread, the halftone dots. Not candy: no sprinkles, hearts, clouds, macarons, gummies, bubblegum outlines or rainbows. |
@@ -392,6 +394,45 @@ to every other loading element:
    surface, the roll at rest.
 9. **Exceptions.** The network graph keeps its sprinkle drift (G20). Nothing
    else.
+
+### 6a. Round 2: 21 matched pairs (built 2026-10-14, waiting on Kenny's pick)
+
+Kenny asked for 21 loading pictures and 21 spinners, matched in pairs (the
+spinner the same idea in small). G10 and G11 above stay as written until he
+picks; the pair he picks rewrites them at the port. The pairs, loading ·
+spinner (research/pastel-character: pair 1 and the candy dots in options.css,
+pairs 2-11 in pairs-a.js/.css, 12-21 in pairs-b.js/.css):
+
+| Pair | Loading                                   | Spinner                                    | Source                   |
+| ---- | ----------------------------------------- | ------------------------------------------ | ------------------------ |
+| 1    | the washi flutters (recommended)          | the tape roll (also good)                  | Kenny's family pick      |
+| 2    | pearls on a thread                        | the three candy dots (recommended, today)  | the register's spinner   |
+| 3    | the highlighter                           | circled with the highlighter               | the planner              |
+| 4    | the habit tracker                         | the round habit tracker                    | the planner              |
+| 5    | flicking through                          | the little planner flicked through         | the planner              |
+| 6    | the margin doodle                         | the curl                                   | the planner              |
+| 7    | the sticker lifts and is pressed down     | the sticker pressed down all round         | the sticker              |
+| 8    | the stamp, printed twice                  | the little stamp                           | the risograph            |
+| 9    | the paper clip                            | the note with its clip                     | the planner              |
+| 10   | the notebook's elastic                    | the elastic band                           | the planner              |
+| 11   | the swinging tag                          | the tag on its pin                         | the scrapbook            |
+| 12   | googly eyes                               | the googly eye                             | the craft table          |
+| 13   | the pom-pom caterpillar                   | the curled-up caterpillar                  | the craft table          |
+| 14   | needle and thread                         | a button sewn on                           | the craft table          |
+| 15   | knitting                                  | the ball of wool                           | the craft table          |
+| 16   | clay balls                                | clay kneaded                               | the craft table          |
+| 17   | paper dolls                               | the paper doll pack                        | the craft table          |
+| 18   | fortune tellers                           | the fortune teller                         | the craft table          |
+| 19   | the paper spring (witch's ladder)         | the jack-in-the-box                        | the craft table          |
+| 20   | the paper plane                           | the looping plane                          | the craft table          |
+| 21   | paper pinwheels                           | the pinwheel                               | the craft table          |
+
+Every picture keeps the grammar: the three inks by role, the sky pass flat
+beside what is drawn, the landing curve where something lands, loops of
+1200 ms or longer, no blur, and a still pose under reduced motion. A spinner
+graphic is 3:1 or more on every plate it stands on (pair 3's ring is a
+deeper mint than the strip's highlighter for it: 3.56:1 on the busy button,
+measured).
 
 ---
 

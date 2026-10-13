@@ -1,0 +1,2613 @@
+/* research/pastel-character: pairs 2-11 of the loading and spinner questions
+   (pairs-a.js holds their words and the few extra elements three of them
+   need). Each loading picture is drawn on the strip every waiting carrier
+   already holds (`.pa-strip` with its `.pa-strip__dot`, in a tile, a key
+   figure, a menu entry, a day, a plot, a skeleton line and the busy bar);
+   each spinner on the scene's `.kp-spinner` and its two pseudo-elements.
+
+   SCOPE. Every rule hangs on `.pa-scene[data-pa-loading='a-…']` or
+   `.pa-scene[data-pa-spinner='a-…']`. The scene class is written twice
+   (`.pa-scene.pa-scene`) so these rules outweigh the shared strip rules of
+   options.css (up to three classes) whatever order the sheets load in.
+
+   GRAMMAR. Tokens only (plum --primary acts, sky --fx-overprint / --pa-pass-c
+   is the second pass, mint --accent fills; the highlighter and tracker mint
+   are --accent lifted in saturation, as the register's sherbet scoops are);
+   a pass lies flat beside what is drawn, never blurred; what lands, lands on
+   the landing curve (G1, written out inside keyframes, where a var() cannot be
+   a timing function); a there-and-back is ease-in-out; every loop lasts
+   1200 ms or longer and is multiplied by --pa-slow. Under reduced motion each
+   picture stands in its resting pose, which is the base style below. */
+
+@property --pa-a-sweep {
+    syntax: '<angle>';
+    inherits: true;
+    initial-value: 0deg;
+}
+
+@property --pa-a-fill {
+    syntax: '<angle>';
+    inherits: true;
+    initial-value: 0deg;
+}
+
+@property --pa-a-n {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+@property --pa-a-o {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+@property --pa-a-p {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+}
+
+@property --pa-a-f {
+    syntax: '<length>';
+    inherits: true;
+    initial-value: 0px;
+}
+
+@property --pa-a-pull {
+    syntax: '<length>';
+    inherits: true;
+    initial-value: 0px;
+}
+
+@layer kp.signature {
+    /* ── Shared: the inks, and the strip emptied for every a- picture ───── */
+
+    .pa-scene:is([data-pa-loading^='a-'], [data-pa-spinner^='a-']) {
+        /* The highlighter's ink and the tracker's fill: mint, lifted. */
+        --pa-a-hl: hsl(from var(--accent) h calc(s * 1.6) calc(l * 0.82));
+        --pa-a-hl-ring: hsl(from var(--accent) h calc(s * 1.45) calc(l * 0.7));
+        --pa-a-hl-deep: hsl(from var(--accent) h calc(s * 1.45) calc(l * 0.6));
+        --pa-a-pass-soft: hsl(from var(--fx-overprint) h s l / 0.35);
+        --pa-a-clip: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 13 30'%3E%3Cpath d='M8.5 10V23a2.5 2.5 0 0 1-5 0V5.5a4 4 0 0 1 8 0v19a5 5 0 0 1-10 0V9' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+    }
+
+    .pa-scene.pa-scene[data-pa-loading^='a-'] .pa-strip {
+        inset: auto;
+        inline-size: auto;
+        block-size: auto;
+        border-radius: 0;
+        background: none;
+        box-shadow: none;
+        rotate: none;
+        animation: none;
+    }
+
+    /* The menu entry fills its popover's row, so a picture placed at the
+       entry's end lands at the row's end, not on its words. */
+    .pa-scene.pa-scene[data-pa-loading^='a-'] .kp-menu__item.pa-waits {
+        display: block;
+        inline-size: 100%;
+        text-align: start;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading^='a-'] .pa-strip__dot {
+        display: none;
+        animation: none;
+    }
+
+    .pa-scene.pa-scene[data-pa-spinner^='a-'] .kp-spinner {
+        border: 0;
+        border-radius: 0;
+        background: none;
+        animation: none;
+        overflow: visible;
+    }
+
+    .pa-scene.pa-scene[data-pa-spinner^='a-'] .kp-spinner::before,
+    .pa-scene.pa-scene[data-pa-spinner^='a-'] .kp-spinner::after {
+        inset: 0;
+        border-radius: 0;
+        background: none;
+        translate: none;
+        opacity: 1;
+        mix-blend-mode: normal;
+        animation: none;
+    }
+
+    /* ── Pair 2, loading: pearls threaded (the candy dots' big sibling) ─── */
+
+    .pa-scene.pa-scene[data-pa-loading='a-pearls'] .pa-strip {
+        --pa-a-u: 1;
+        --pa-a-pitch: calc(1.8rem * var(--pa-a-u));
+        inset-block-start: -0.45rem;
+        inset-inline: 10%;
+        block-size: 0.9rem;
+        background: linear-gradient(var(--border-strong) 0 0) 0 50% / 100% 2px no-repeat;
+        mask: linear-gradient(90deg, transparent, #000 0.45rem, #000 calc(100% - 0.45rem), transparent);
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-pearls'] .pa-strip::before,
+    .pa-scene.pa-scene[data-pa-loading='a-pearls'] .pa-strip::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(
+                circle at calc(0.3rem * var(--pa-a-u)) 50%,
+                var(--pa-a-c) 0 calc(0.27rem * var(--pa-a-u)),
+                transparent calc(0.27rem * var(--pa-a-u) + 0.5px)
+            ),
+            radial-gradient(
+                circle at calc(0.9rem * var(--pa-a-u)) 50%,
+                var(--pa-a-c) 0 calc(0.2rem * var(--pa-a-u)),
+                transparent calc(0.2rem * var(--pa-a-u) + 0.5px)
+            ),
+            radial-gradient(
+                circle at calc(1.5rem * var(--pa-a-u)) 50%,
+                var(--pa-a-c) 0 calc(0.14rem * var(--pa-a-u)),
+                transparent calc(0.14rem * var(--pa-a-u) + 0.5px)
+            );
+        background-size: var(--pa-a-pitch) 100%;
+        background-repeat: repeat-x;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-pearls'] .pa-strip::before {
+        --pa-a-c: var(--pa-pass-c);
+        translate: 2px 2px;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-pearls'] .pa-strip::after {
+        --pa-a-c: var(--primary);
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-pearls'] .pa-day > .pa-strip {
+        --pa-a-u: 0.7;
+        inset-block-start: -0.32rem;
+        inset-inline: 0;
+        block-size: 0.64rem;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-pearls'] .pa-skel__line > .pa-strip {
+        --pa-a-u: 0.9;
+        inset: 0;
+        block-size: auto;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-pearls'] .pa-bar--busy .pa-strip {
+        --pa-a-u: 0.85;
+        inset: 0 0.2rem;
+        block-size: auto;
+    }
+
+    /* ── Pair 3, loading: the highlighter ───────────────────────────────── */
+
+    .pa-scene.pa-scene[data-pa-loading='a-highlight'] .pa-strip {
+        inset-block-start: 0.6rem;
+        inset-inline-start: 0.5rem;
+        inline-size: min(7.5rem, calc(100% - 1rem));
+        block-size: 1.4rem;
+        border-radius: 0.25rem 0.55rem 0.35rem 0.6rem;
+        background: radial-gradient(ellipse 0.5rem 70% at 100% 50%, var(--pa-a-hl-ring) 0 96%, transparent), var(--pa-a-hl);
+        box-shadow: 2px 2px 0 var(--pa-a-pass-soft);
+        mix-blend-mode: multiply;
+        rotate: -0.8deg;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-highlight'] .kp-menu__item > .pa-strip {
+        inset-block: 0.3rem;
+        block-size: auto;
+        inline-size: min(8rem, calc(100% - 1rem));
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-highlight'] .pa-plot > .pa-strip {
+        inset-block-start: calc(50% - 0.7rem);
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-highlight'] .pa-day > .pa-strip {
+        inset-block-start: calc(50% - 0.32rem);
+        inset-inline: 0.1rem;
+        inline-size: auto;
+        block-size: 0.64rem;
+        border-radius: 0.2rem 0.35rem;
+        rotate: -35deg;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-highlight'] .pa-skel__line > .pa-strip {
+        inset: -0.2rem -0.1rem;
+        inline-size: auto;
+        block-size: auto;
+        rotate: -0.5deg;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-highlight'] .pa-bar--busy .pa-strip {
+        inset: 0.12rem 0.2rem;
+        inline-size: auto;
+        block-size: auto;
+        rotate: none;
+    }
+
+    /* ── Pair 4, loading: the habit tracker ─────────────────────────────── */
+    /* The fill is one clock per strip (--pa-a-n counts the coloured boxes,
+       --pa-a-o fades them out together); each box reads its share of it. */
+
+    .pa-scene.pa-scene[data-pa-loading='a-tracker'] .pa-strip {
+        --pa-a-n: 3;
+        --pa-a-o: 1;
+        display: flex;
+        gap: 3px;
+        inset-block-start: 0.65rem;
+        inset-inline-end: 0.7rem;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-tracker'] .pa-a-box {
+        position: relative;
+        flex: none;
+        inline-size: 0.62rem;
+        block-size: 0.62rem;
+        border: 1.5px solid var(--border-strong);
+        border-radius: 3px;
+        background: var(--card);
+        box-shadow: 1.5px 1.5px 0 var(--pa-pass-c);
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-tracker'] .pa-a-box::after,
+    .pa-scene.pa-scene[data-pa-loading='a-tracker'] .pa-day > .pa-strip::after {
+        content: '';
+        position: absolute;
+        inset: 1px;
+        border-radius: 1.5px;
+        background: var(--pa-a-hl);
+        opacity: var(--pa-a-o);
+        clip-path: inset(0 calc((1 - clamp(0, var(--pa-a-n) - var(--k, 0), 1)) * 100%) 0 0);
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-tracker'] .kp-menu__item > .pa-strip {
+        inset-block-start: calc(50% - 0.31rem);
+    }
+
+    /* The days are the tracker's boxes themselves. */
+    .pa-scene.pa-scene[data-pa-loading='a-tracker'] .pa-day > .pa-strip {
+        inset: -1px;
+        border-radius: 50%;
+        mix-blend-mode: multiply;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-tracker'] .pa-day > .pa-strip::after {
+        inset: 0;
+        border-radius: 50%;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-tracker'] .pa-day:nth-child(2) > .pa-strip {
+        --k: 1;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-tracker'] .pa-day:nth-child(3) > .pa-strip {
+        --k: 2;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-tracker'] .pa-day:nth-child(4) > .pa-strip {
+        --k: 3;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-tracker'] .pa-day:nth-child(5) > .pa-strip {
+        --k: 4;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-tracker'] :is(.pa-skel__line, .pa-bar--busy) .pa-strip {
+        inset: 0;
+        gap: 2px;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-tracker'] .pa-bar--busy .pa-strip {
+        inset: 0.15rem 0.2rem;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-tracker'] :is(.pa-skel__line, .pa-bar--busy) .pa-a-box {
+        flex: 1 1 0;
+        inline-size: auto;
+        block-size: auto;
+        border-width: 1px;
+        box-shadow: none;
+    }
+
+    /* ── Pair 5, loading: thumbing through (the corner at the foot) ────── */
+    /* The foot's end corner stands a little dog-eared; three pages are
+       thumbed past it, each turned up on the landing and let fall. */
+
+    .pa-scene.pa-scene[data-pa-loading='a-flick'] .pa-strip {
+        --pa-a-s: 1.7rem;
+        inset-block-end: -1px;
+        inset-inline-end: -1px;
+        inline-size: var(--pa-a-s);
+        block-size: var(--pa-a-s);
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-flick'] .pa-strip::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-start-start-radius: 0.45rem;
+        background: linear-gradient(to top left, var(--pa-milk) 0 50%, var(--muted) 50% 100%);
+        box-shadow: -1.5px -1.5px 0 hsl(from var(--border-strong) h s l / 0.8);
+        transform-origin: 100% 100%;
+        scale: 0.3;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-flick'] .pa-strip:dir(rtl)::before {
+        background: linear-gradient(to top right, var(--pa-milk) 0 50%, var(--muted) 50% 100%);
+        box-shadow: 1.5px -1.5px 0 hsl(from var(--border-strong) h s l / 0.8);
+        border-start-start-radius: 0;
+        border-start-end-radius: 0.45rem;
+        transform-origin: 0 100%;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-flick'] .kp-menu__item > .pa-strip {
+        --pa-a-s: 1.15rem;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-flick'] .pa-day > .pa-strip {
+        --pa-a-s: 1rem;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-flick'] .pa-skel__line > .pa-strip {
+        --pa-a-s: 0.75rem;
+        inset-block-end: 0;
+        inset-inline-end: 0;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-flick'] .pa-bar--busy .pa-strip {
+        --pa-a-s: 1rem;
+    }
+
+    /* ── Pair 6, loading: the doodle (an SVG added by decorate) ──────────── */
+
+    .pa-scene.pa-scene[data-pa-loading='a-doodle'] .pa-strip {
+        inset-block-end: 0.3rem;
+        inset-inline: 0.65rem;
+        block-size: 0.7rem;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-doodle'] .kp-menu__item > .pa-strip {
+        inset-block-end: 0.05rem;
+        inset-inline: 0.6rem 30%;
+        block-size: 0.42rem;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-doodle'] .pa-day > .pa-strip {
+        inset: -0.3rem;
+        block-size: auto;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-doodle'] .pa-skel__line > .pa-strip {
+        inset: 0 0.15rem;
+        block-size: auto;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-doodle'] .pa-bar--busy .pa-strip {
+        inset: 0.12rem 0.35rem;
+        block-size: auto;
+    }
+
+    .pa-scene.pa-scene:is([data-pa-loading='a-doodle'], [data-pa-spinner='a-spiral']) .pa-a-pen {
+        position: absolute;
+        inset: 0;
+        inline-size: 100%;
+        block-size: 100%;
+        overflow: visible;
+    }
+
+    .pa-scene.pa-scene:is([data-pa-loading='a-doodle'], [data-pa-spinner='a-spiral']) .pa-a-pen polyline {
+        fill: none;
+        stroke-width: 1.6px;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-dasharray: 100 101;
+        stroke-dashoffset: 0;
+    }
+
+    .pa-scene.pa-scene:is([data-pa-loading='a-doodle'], [data-pa-spinner='a-spiral']) .pa-a-pen__ink {
+        stroke: var(--primary);
+    }
+
+    .pa-scene.pa-scene:is([data-pa-loading='a-doodle'], [data-pa-spinner='a-spiral']) .pa-a-pen__pass {
+        stroke: var(--pa-pass-c);
+        translate: 1.5px 1.5px;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-doodle'] .pa-a-pen--ring .pa-a-pen__pass {
+        translate: 3px 3px;
+    }
+
+    /* ── Pair 7, loading: the sticker lets go ───────────────────────────── */
+    /* The strip is turned 45°, so its top is the sticker's top-end corner:
+       the cap above the fold line (--pa-a-f down from the top) is hidden on
+       the sticker, and the flap (the same disc, its back, mirrored over that
+       line) shows on the near side of it. */
+
+    .pa-scene.pa-scene[data-pa-loading='a-sticker'] .pa-strip {
+        --pa-a-d: 1.6rem;
+        --pa-a-f: calc(var(--pa-a-d) * 0.16);
+        inset-inline-end: 0.8rem;
+        inset-block-start: calc(50% - var(--pa-a-d) / 2);
+        inline-size: var(--pa-a-d);
+        block-size: var(--pa-a-d);
+        rotate: 45deg;
+        filter: drop-shadow(1.4px 1.4px 0 var(--pa-peel));
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-sticker'] .pa-strip:dir(rtl) {
+        rotate: -45deg;
+        filter: drop-shadow(-1.4px 1.4px 0 var(--pa-peel));
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-sticker'] .pa-strip::before,
+    .pa-scene.pa-scene[data-pa-spinner='a-peel'] .kp-spinner::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: radial-gradient(circle closest-side, var(--primary) 0 26%, transparent calc(26% + 0.5px)), var(--accent);
+        mask: linear-gradient(to bottom, transparent var(--pa-a-f), #000 var(--pa-a-f));
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-sticker'] .pa-strip::after,
+    .pa-scene.pa-scene[data-pa-spinner='a-peel'] .kp-spinner::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: var(--muted);
+        translate: 0 calc(2 * var(--pa-a-f) - var(--pa-a-d));
+        mask: linear-gradient(to bottom, transparent calc(var(--pa-a-d) - var(--pa-a-f)), #000 calc(var(--pa-a-d) - var(--pa-a-f)));
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-sticker'] .kp-menu__item > .pa-strip {
+        --pa-a-d: 1.1rem;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-sticker'] .pa-skel__line > .pa-strip {
+        --pa-a-d: 0.9rem;
+        inset-inline-end: -0.2rem;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-sticker'] .pa-bar--busy .pa-strip {
+        --pa-a-d: 0.8rem;
+        inset-inline-end: 0.15rem;
+    }
+
+    /* A day is a round sticker itself: its own corner lifts, the milk shows. */
+    .pa-scene.pa-scene[data-pa-loading='a-sticker'] .pa-day > .pa-strip {
+        --pa-a-d: calc(2.2rem + 2px);
+        inset: -1px;
+        inline-size: auto;
+        block-size: auto;
+        filter: none;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-sticker'] .pa-day > .pa-strip::before {
+        background: var(--pa-milk);
+        mask: linear-gradient(to bottom, #000 var(--pa-a-f), transparent var(--pa-a-f));
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-sticker'] .pa-day > .pa-strip::after {
+        box-shadow: inset 0 0 0 1px var(--border-strong);
+    }
+
+    /* ── Pair 8, loading: the stamp, printed twice ──────────────────────── */
+
+    .pa-scene.pa-scene[data-pa-loading='a-stamp'] .pa-strip {
+        --pa-a-d: 2.3rem;
+        inset-block-start: calc(50% - var(--pa-a-d) / 2);
+        inset-inline-start: calc(62% - var(--pa-a-d) / 2);
+        inline-size: var(--pa-a-d);
+        block-size: var(--pa-a-d);
+        rotate: -10deg;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-stamp'] .pa-strip::before,
+    .pa-scene.pa-scene[data-pa-loading='a-stamp'] .pa-strip::after {
+        --pa-a-r: calc(var(--pa-a-d) * 0.125);
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(circle at 50% 50%, var(--card) 0 calc(var(--pa-a-d) * 0.075), transparent calc(var(--pa-a-d) * 0.075 + 0.5px)),
+            radial-gradient(circle at 50% 50%, var(--pa-a-c) 0 calc(var(--pa-a-d) * 0.13), transparent calc(var(--pa-a-d) * 0.13 + 0.5px)),
+            radial-gradient(circle at 50% 30%, var(--pa-a-c) 0 var(--pa-a-r), transparent calc(var(--pa-a-r) + 0.5px)),
+            radial-gradient(circle at 69% 43.8%, var(--pa-a-c) 0 var(--pa-a-r), transparent calc(var(--pa-a-r) + 0.5px)),
+            radial-gradient(circle at 61.8% 66.2%, var(--pa-a-c) 0 var(--pa-a-r), transparent calc(var(--pa-a-r) + 0.5px)),
+            radial-gradient(circle at 38.2% 66.2%, var(--pa-a-c) 0 var(--pa-a-r), transparent calc(var(--pa-a-r) + 0.5px)),
+            radial-gradient(circle at 31% 43.8%, var(--pa-a-c) 0 var(--pa-a-r), transparent calc(var(--pa-a-r) + 0.5px)),
+            radial-gradient(closest-side, transparent 84%, var(--pa-a-c) calc(84% + 0.5px) 95%, transparent calc(95% + 0.5px));
+        mix-blend-mode: multiply;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-stamp'] .pa-strip::before {
+        --pa-a-c: var(--pa-pass-c);
+        translate: 6px 6px;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-stamp'] .pa-strip::after {
+        --pa-a-c: var(--primary);
+        opacity: 0.9;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-stamp'] .kp-menu__item > .pa-strip {
+        --pa-a-d: 1.35rem;
+        inset-inline-start: auto;
+        inset-inline-end: 0.7rem;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-stamp'] .pa-day > .pa-strip {
+        --pa-a-d: 1.25rem;
+        inset-block-start: -0.45rem;
+        inset-inline-start: auto;
+        inset-inline-end: -0.45rem;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-stamp'] .pa-skel__line > .pa-strip {
+        --pa-a-d: 1.25rem;
+        inset-inline-start: auto;
+        inset-inline-end: 0.2rem;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-stamp'] .pa-bar--busy .pa-strip {
+        --pa-a-d: 1.3rem;
+        inset-inline-start: 45%;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-stamp'] :is(.pa-day, .pa-skel__line, .pa-bar--busy) .pa-strip::before {
+        translate: 3px 3px;
+    }
+
+    /* ── Pair 9, loading: the paperclip ─────────────────────────────────── */
+
+    .pa-scene.pa-scene[data-pa-loading='a-clip'] .pa-strip {
+        inset-block-start: -0.6rem;
+        inset-inline-start: 1.2rem;
+        inline-size: 0.62rem;
+        block-size: 1.45rem;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-clip'] .pa-strip::before,
+    .pa-scene.pa-scene[data-pa-loading='a-clip'] .pa-strip::after,
+    .pa-scene.pa-scene[data-pa-spinner='a-clipnote'] .kp-spinner::before,
+    .pa-scene.pa-scene[data-pa-spinner='a-clipnote'] .kp-spinner::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--primary);
+        mask: var(--pa-a-clip) center / contain no-repeat;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-clip'] .pa-strip::before {
+        background: var(--pa-pass-c);
+        translate: 2px 2px;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-clip'] .kp-menu__item > .pa-strip {
+        inset-block-start: -0.5rem;
+        inset-inline-start: 0.9rem;
+        inline-size: 0.5rem;
+        block-size: 1.15rem;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-clip'] .pa-day > .pa-strip {
+        inset-block-start: -0.5rem;
+        inset-inline-start: calc(50% - 0.22rem);
+        inline-size: 0.44rem;
+        block-size: 1.05rem;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-clip'] .pa-skel__line > .pa-strip {
+        inset-block-start: -0.45rem;
+        inset-inline-start: 0.5rem;
+        inline-size: 0.44rem;
+        block-size: 1.05rem;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-clip'] .pa-bar--busy .pa-strip {
+        inset-block-start: -0.55rem;
+        inset-inline-start: 0.7rem;
+        inline-size: 0.5rem;
+        block-size: 1.2rem;
+    }
+
+    /* ── Pair 10, loading: the elastic band ─────────────────────────────── */
+    /* The band is a border on a box as wide as the pull (--pa-a-pull): at 0 it
+       is a straight line; wider, its end side arcs out from top to foot. */
+
+    .pa-scene.pa-scene[data-pa-loading='a-elastic'] .pa-strip {
+        --pa-a-reach: 1.1rem;
+        inset-block: -0.3rem;
+        inset-inline-end: 1.7rem;
+        inline-size: 1rem;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-elastic'] .pa-strip::before,
+    .pa-scene.pa-scene[data-pa-loading='a-elastic'] .pa-strip::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: var(--pa-a-pull);
+        border: 0 solid var(--primary);
+        border-inline-end-width: 4px;
+        border-start-end-radius: 100% 50%;
+        border-end-end-radius: 100% 50%;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-elastic'] .pa-strip::before {
+        border-color: var(--pa-pass-c);
+        margin-block: 2px -2px;
+        margin-inline-start: 2px;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-elastic'] .kp-menu__item > .pa-strip {
+        --pa-a-reach: 0.7rem;
+        inset-block: -0.2rem;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-elastic'] .pa-day > .pa-strip {
+        --pa-a-reach: 0.35rem;
+        inset-block: -0.25rem;
+        inset-inline-end: 0.55rem;
+        inline-size: 0.5rem;
+    }
+
+    /* Along a line: the line itself is the elastic, plucked downward. */
+    .pa-scene.pa-scene[data-pa-loading='a-elastic'] :is(.pa-skel__line, .pa-bar--busy) .pa-strip {
+        --pa-a-reach: 0.45rem;
+        inset-block: calc(50% - 1.5px) auto;
+        inset-inline: -0.2rem;
+        inline-size: auto;
+        block-size: 0.8rem;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-elastic'] :is(.pa-skel__line, .pa-bar--busy) .pa-strip::before,
+    .pa-scene.pa-scene[data-pa-loading='a-elastic'] :is(.pa-skel__line, .pa-bar--busy) .pa-strip::after {
+        inset-block: 0 auto;
+        inset-inline: 0;
+        inline-size: auto;
+        block-size: var(--pa-a-pull);
+        border-inline-end-width: 0;
+        border-block-end-width: 4px;
+        border-radius: 0 0 50% 50% / 0 0 100% 100%;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-elastic'] :is(.pa-skel__line, .pa-bar--busy) .pa-strip::before {
+        margin-block: 2px 0;
+        margin-inline: 2px -2px;
+    }
+
+    /* ── Pair 11, loading: the tag on its string ────────────────────────── */
+
+    .pa-scene.pa-scene[data-pa-loading='a-tag'] .pa-strip {
+        inset-block-start: -0.35rem;
+        inset-inline-start: 72%;
+        inline-size: 1.1rem;
+        block-size: 2rem;
+        transform-origin: 50% 0;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-tag'] .pa-strip::before {
+        content: '';
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline-start: calc(50% - 0.75px);
+        inline-size: 1.5px;
+        block-size: 0.62rem;
+        border-radius: 1px;
+        background: var(--primary);
+        transform-origin: 50% 0;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-tag'] .pa-strip::after,
+    .pa-scene.pa-scene[data-pa-loading='a-tag'] .pa-strip__dot {
+        content: '';
+        display: block;
+        position: absolute;
+        inset: 0.5rem 0 auto;
+        inline-size: auto;
+        block-size: 1.45rem;
+        border-radius: 0.32rem 0.32rem 0.22rem 0.22rem;
+        transform-origin: 50% -0.5rem;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-tag'] .pa-strip::after {
+        border: 1px solid var(--border-strong);
+        background:
+            radial-gradient(
+                circle at 50% 0.24rem,
+                var(--pa-milk) 0 0.08rem,
+                var(--primary) calc(0.08rem + 0.5px) 0.16rem,
+                transparent calc(0.16rem + 0.5px)
+            ),
+            linear-gradient(var(--border-strong) 0 0) 50% 66% / 58% 1.5px no-repeat,
+            linear-gradient(var(--border-strong) 0 0) 38% 82% / 34% 1.5px no-repeat,
+            var(--card);
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-tag'] .pa-strip__dot {
+        background: var(--pa-pass-c);
+        translate: 3px 3px;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-tag'] .kp-menu__item > .pa-strip {
+        inset-inline-start: auto;
+        inset-inline-end: 0.9rem;
+        inset-block-start: -0.3rem;
+        scale: 0.7;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-tag'] .pa-day > .pa-strip {
+        inset-block-start: 1.25rem;
+        inset-inline-start: calc(50% - 0.48rem);
+        scale: 0.55;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-tag'] .pa-skel__line > .pa-strip {
+        inset-inline-start: auto;
+        inset-inline-end: 0.3rem;
+        inset-block-start: 50%;
+        scale: 0.55;
+    }
+
+    .pa-scene.pa-scene[data-pa-loading='a-tag'] .pa-bar--busy .pa-strip {
+        inset-inline-start: auto;
+        inset-inline-end: 0.6rem;
+        inset-block-start: -0.45rem;
+        scale: 0.6;
+    }
+
+    /* ── Spinners ───────────────────────────────────────────────────────── */
+
+    /* Pair 3: circled with the highlighter, a hand's slightly oval ring. */
+    /* The ring is a deeper mint than the strip's highlighter: a graphic needs
+       3:1 against its plate (measured in Firefox: 3.56:1 on the busy button,
+       3.88:1 on the page, 4.21:1 on the panel; the overlap 5.48:1 or more). */
+    .pa-scene.pa-scene[data-pa-spinner='a-circle'] .kp-spinner {
+        --pa-a-circle-ring: hsl(from var(--accent) h calc(s * 1.2) calc(l * 0.42));
+        --pa-a-circle-deep: hsl(from var(--accent) h calc(s * 1.2) calc(l * 0.32));
+        --pa-a-sweep: 385deg;
+        rotate: -14deg;
+        scale: 1 0.9;
+    }
+
+    .pa-scene.pa-scene[data-pa-spinner='a-circle'] .kp-spinner::before,
+    .pa-scene.pa-scene[data-pa-spinner='a-circle'] .kp-spinner::after {
+        border-radius: 50%;
+        mask: radial-gradient(closest-side, transparent 60%, #000 calc(60% + 0.5px) 97%, transparent calc(97% + 0.5px));
+        mix-blend-mode: multiply;
+    }
+
+    .pa-scene.pa-scene[data-pa-spinner='a-circle'] .kp-spinner::after {
+        background: conic-gradient(from -100deg, var(--pa-a-circle-ring) 0 min(var(--pa-a-sweep), 360deg), transparent 0);
+    }
+
+    .pa-scene.pa-scene[data-pa-spinner='a-circle'] .kp-spinner::before {
+        background: conic-gradient(from -100deg, var(--pa-a-circle-deep) 0 max(0deg, var(--pa-a-sweep) - 360deg), transparent 0);
+    }
+
+    /* Pair 4: the round tracker, six wedges with paper seams. */
+    .pa-scene.pa-scene[data-pa-spinner='a-wheel'] .kp-spinner {
+        --pa-a-fill: 240deg;
+        --pa-a-o: 1;
+        border-radius: 50%;
+        background: conic-gradient(hsl(from var(--pa-a-hl-ring) h s l / var(--pa-a-o)) 0 var(--pa-a-fill), var(--muted) 0);
+        mask: repeating-conic-gradient(from -4deg, transparent 0 8deg, #000 8deg 60deg);
+    }
+
+    .pa-scene.pa-scene[data-pa-spinner='a-wheel'] .kp-spinner::after {
+        border-radius: 50%;
+        border: max(1.5px, calc(var(--kp-sig-s) * 0.07)) solid var(--primary);
+    }
+
+    .pa-scene.pa-scene[data-pa-spinner='a-wheel'] .kp-spinner::before {
+        content: none;
+    }
+
+    /* Pair 5: the little planner, thumbed at its foot corner. The pad is the
+       ::before, its corner cut away along the fold (--pa-a-f, the fold's leg);
+       the ::after is the turned-up page, the paper's back. */
+    .pa-scene.pa-scene[data-pa-spinner='a-flip'] .kp-spinner {
+        --pa-a-line: max(1.5px, calc(var(--kp-sig-s) * 0.07));
+        --pa-a-f: calc(var(--kp-sig-s) * 0.2);
+    }
+
+    .pa-scene.pa-scene[data-pa-spinner='a-flip'] .kp-spinner::before {
+        border: var(--pa-a-line) solid var(--border-strong);
+        border-radius: 22%;
+        background:
+            linear-gradient(var(--primary) 0 0) 0 0 / 100% 28% no-repeat,
+            linear-gradient(var(--primary) 0 0) 30% 50% / 40% 13% no-repeat,
+            linear-gradient(var(--border-strong) 0 0) 30% 72% / 52% 9% no-repeat,
+            var(--card);
+        mask: linear-gradient(to top left, transparent calc(var(--pa-a-f) * 0.7071), #000 calc(var(--pa-a-f) * 0.7071 + 0.5px));
+    }
+
+    .pa-scene.pa-scene[data-pa-spinner='a-flip'] .kp-spinner::after {
+        inset: auto 0 0 auto;
+        inline-size: var(--pa-a-f);
+        block-size: var(--pa-a-f);
+        border-start-start-radius: 30%;
+        background: linear-gradient(to top left, transparent 50%, var(--muted) calc(50% + 0.5px));
+        filter: drop-shadow(-1px -1px 0 var(--border-strong));
+    }
+
+    /* Pair 6: the spiral (an SVG added by decorate); its pass is the wrap's. */
+    .pa-scene.pa-scene[data-pa-spinner='a-spiral'] .kp-spinner::before,
+    .pa-scene.pa-scene[data-pa-spinner='a-spiral'] .kp-spinner::after,
+    .pa-scene.pa-scene[data-pa-spinner='a-spiral'] .pa-a-pen__pass {
+        content: none;
+        display: none;
+    }
+
+    .pa-scene.pa-scene[data-pa-spinner='a-spiral'] .pa-a-pen polyline {
+        stroke-width: max(1.6px, calc(var(--kp-sig-s) * 0.075));
+    }
+
+    /* Pair 7: the sticker pressed down all round. */
+    .pa-scene.pa-scene[data-pa-spinner='a-peel'] .kp-spinner {
+        --pa-a-d: var(--kp-sig-s);
+        --pa-a-f: calc(var(--pa-a-d) * 0.2);
+        rotate: 45deg;
+        filter: drop-shadow(1px 1px 0 var(--pa-peel));
+    }
+
+    /* Pair 8: the stamp from the side, its print on the ground. */
+    .pa-scene.pa-scene[data-pa-spinner='a-stamper'] .kp-spinner {
+        --pa-a-o: 1;
+        --pa-a-p: 1;
+        background:
+            radial-gradient(closest-side, hsl(from var(--primary) h s l / var(--pa-a-o)) 92%, transparent) 50% 100% / 74% 12% no-repeat,
+            radial-gradient(closest-side, hsl(from var(--pa-pass-c) h s l / var(--pa-a-p)) 92%, transparent) calc(50% + 2px) calc(100% + 1px) / 74%
+                12% no-repeat;
+    }
+
+    .pa-scene.pa-scene[data-pa-spinner='a-stamper'] .kp-spinner::before {
+        inset: auto 13% 15%;
+        block-size: 34%;
+        border-radius: 24%;
+        background: var(--primary);
+    }
+
+    .pa-scene.pa-scene[data-pa-spinner='a-stamper'] .kp-spinner::after {
+        inset: 0 13% 48%;
+        background:
+            radial-gradient(circle closest-side, var(--pa-peel) 96%, transparent) 50% 0 / 46% 62% no-repeat,
+            linear-gradient(var(--pa-peel) 0 0) 50% 100% / 20% 60% no-repeat;
+    }
+
+    /* Pair 9: the note with its clip. */
+    .pa-scene.pa-scene[data-pa-spinner='a-clipnote'] .kp-spinner {
+        border: max(1.5px, calc(var(--kp-sig-s) * 0.06)) solid var(--border-strong);
+        border-radius: 20%;
+        background:
+            linear-gradient(var(--border-strong) 0 0) 62% 52% / 50% 8% no-repeat,
+            linear-gradient(var(--border-strong) 0 0) 56% 74% / 38% 8% no-repeat,
+            var(--card);
+    }
+
+    .pa-scene.pa-scene[data-pa-spinner='a-clipnote'] .kp-spinner::before,
+    .pa-scene.pa-scene[data-pa-spinner='a-clipnote'] .kp-spinner::after {
+        inset: -16% auto auto 10%;
+        inline-size: 34%;
+        block-size: 70%;
+    }
+
+    .pa-scene.pa-scene[data-pa-spinner='a-clipnote'] .kp-spinner::before {
+        background: var(--pa-pass-c);
+        margin: 1.5px 0 0 1.5px;
+    }
+
+    /* Pair 10: the rubber band. */
+    .pa-scene.pa-scene[data-pa-spinner='a-band'] .kp-spinner::after {
+        inset: 14%;
+        border: max(2px, calc(var(--kp-sig-s) * 0.09)) solid var(--primary);
+        border-radius: 50%;
+    }
+
+    .pa-scene.pa-scene[data-pa-spinner='a-band'] .kp-spinner::before {
+        content: none;
+    }
+
+    /* Pair 11: the tag on its pin. */
+    .pa-scene.pa-scene[data-pa-spinner='a-tagswing'] .kp-spinner {
+        background: radial-gradient(
+            circle at 50% 8%,
+            var(--primary) 0 calc(var(--kp-sig-s) * 0.08),
+            transparent calc(var(--kp-sig-s) * 0.08 + 0.5px)
+        );
+    }
+
+    .pa-scene.pa-scene[data-pa-spinner='a-tagswing'] .kp-spinner::before {
+        inset: 8% auto auto calc(50% - max(0.75px, calc(var(--kp-sig-s) * 0.035)));
+        inline-size: max(1.5px, calc(var(--kp-sig-s) * 0.07));
+        block-size: 26%;
+        border-radius: 1px;
+        background: var(--primary);
+        transform-origin: 50% 0;
+    }
+
+    .pa-scene.pa-scene[data-pa-spinner='a-tagswing'] .kp-spinner::after {
+        inset: 30% 25% 0;
+        border: max(1px, calc(var(--kp-sig-s) * 0.05)) solid var(--border-strong);
+        border-radius: 28% 28% 18% 18%;
+        background:
+            radial-gradient(
+                circle at 50% 22%,
+                var(--pa-milk) 0 calc(var(--kp-sig-s) * 0.06),
+                var(--primary) calc(var(--kp-sig-s) * 0.06 + 0.5px) calc(var(--kp-sig-s) * 0.11),
+                transparent calc(var(--kp-sig-s) * 0.11 + 0.5px)
+            ),
+            var(--card);
+        transform-origin: 50% -32%;
+    }
+
+    /* ── The motion ─────────────────────────────────────────────────────── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* Pair 2: the pearls hop one place a beat, the pass 120 ms ahead. */
+        .pa-scene.pa-scene[data-pa-loading='a-pearls'] .pa-strip::before,
+        .pa-scene.pa-scene[data-pa-loading='a-pearls'] .pa-strip::after {
+            animation: pa-a-thread calc(1500ms * var(--pa-slow, 1)) infinite;
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-pearls'] .pa-strip::after {
+            animation-delay: calc(120ms * var(--pa-slow, 1));
+        }
+
+        /* Pair 3: the swipe, the hold, the fade. */
+        .pa-scene.pa-scene[data-pa-loading='a-highlight'] .pa-strip {
+            animation: pa-a-swipe calc(2400ms * var(--pa-slow, 1)) infinite both;
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-highlight'] .pa-strip:dir(rtl) {
+            animation-name: pa-a-swipe-rtl;
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-highlight'] .pa-skel__line:nth-child(2) > .pa-strip,
+        .pa-scene.pa-scene[data-pa-loading='a-highlight'] .pa-day:nth-child(2) > .pa-strip {
+            animation-delay: calc(400ms * var(--pa-slow, 1));
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-highlight'] .pa-skel__line:nth-child(3) > .pa-strip,
+        .pa-scene.pa-scene[data-pa-loading='a-highlight'] .pa-day:nth-child(3) > .pa-strip {
+            animation-delay: calc(800ms * var(--pa-slow, 1));
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-highlight'] .pa-day:nth-child(4) > .pa-strip {
+            animation-delay: calc(1200ms * var(--pa-slow, 1));
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-highlight'] .pa-day:nth-child(5) > .pa-strip {
+            animation-delay: calc(1600ms * var(--pa-slow, 1));
+        }
+
+        /* Pair 4: one clock per strip; the bar has eight boxes. */
+        .pa-scene.pa-scene[data-pa-loading='a-tracker'] .pa-strip {
+            animation: pa-a-track5 calc(2400ms * var(--pa-slow, 1)) infinite both;
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-tracker'] .pa-bar--busy .pa-strip {
+            animation-name: pa-a-track8;
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-tracker'] .pa-skel__line:nth-child(2) > .pa-strip {
+            animation-delay: calc(400ms * var(--pa-slow, 1));
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-tracker'] .pa-skel__line:nth-child(3) > .pa-strip {
+            animation-delay: calc(800ms * var(--pa-slow, 1));
+        }
+
+        /* Pair 5: three pages thumbed past the corner. */
+        .pa-scene.pa-scene[data-pa-loading='a-flick'] .pa-strip::before {
+            animation: pa-a-flick calc(2400ms * var(--pa-slow, 1)) infinite both;
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-flick'] :is(.pa-skel__line:nth-child(2), .pa-day:nth-child(2)) > .pa-strip::before {
+            animation-delay: calc(400ms * var(--pa-slow, 1));
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-flick'] :is(.pa-skel__line:nth-child(3), .pa-day:nth-child(3)) > .pa-strip::before {
+            animation-delay: calc(800ms * var(--pa-slow, 1));
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-flick'] .pa-day:nth-child(4) > .pa-strip::before {
+            animation-delay: calc(1200ms * var(--pa-slow, 1));
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-flick'] .pa-day:nth-child(5) > .pa-strip::before {
+            animation-delay: calc(1600ms * var(--pa-slow, 1));
+        }
+
+        /* Pair 6: the pen draws, then the line is rubbed out from its start. */
+        .pa-scene.pa-scene[data-pa-loading='a-doodle'] .pa-a-pen polyline {
+            animation: pa-a-draw calc(2400ms * var(--pa-slow, 1)) infinite both;
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-doodle'] .pa-strip {
+            --pa-a-lag: 0ms;
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-doodle'] .pa-skel__line:nth-child(2) > .pa-strip {
+            --pa-a-lag: 400ms;
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-doodle'] .pa-skel__line:nth-child(3) > .pa-strip {
+            --pa-a-lag: 800ms;
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-doodle'] .pa-a-pen__pass {
+            animation-delay: calc(var(--pa-a-lag) * var(--pa-slow, 1));
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-doodle'] .pa-a-pen__ink {
+            animation-delay: calc((var(--pa-a-lag) + 120ms) * var(--pa-slow, 1));
+        }
+
+        /* Pair 7: the corner lifts slowly and is pressed back. */
+        .pa-scene.pa-scene[data-pa-loading='a-sticker'] .pa-strip {
+            animation: pa-a-peel calc(2400ms * var(--pa-slow, 1)) infinite both;
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-sticker'] .pa-skel__line:nth-child(2) > .pa-strip,
+        .pa-scene.pa-scene[data-pa-loading='a-sticker'] .pa-day:nth-child(2) > .pa-strip {
+            animation-delay: calc(400ms * var(--pa-slow, 1));
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-sticker'] .pa-skel__line:nth-child(3) > .pa-strip,
+        .pa-scene.pa-scene[data-pa-loading='a-sticker'] .pa-day:nth-child(3) > .pa-strip {
+            animation-delay: calc(800ms * var(--pa-slow, 1));
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-sticker'] .pa-day:nth-child(4) > .pa-strip {
+            animation-delay: calc(1200ms * var(--pa-slow, 1));
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-sticker'] .pa-day:nth-child(5) > .pa-strip {
+            animation-delay: calc(1600ms * var(--pa-slow, 1));
+        }
+
+        /* Pair 8: the pass lands, the ink 120 ms after, the ink dries; every
+           print turned a little differently (three prints a round). */
+        .pa-scene.pa-scene[data-pa-loading='a-stamp'] .pa-strip {
+            animation: pa-a-stamp-turn calc(7200ms * var(--pa-slow, 1)) steps(1, end) infinite;
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-stamp'] .pa-bar--busy .pa-strip {
+            animation:
+                pa-a-stamp-turn calc(7200ms * var(--pa-slow, 1)) steps(1, end) infinite,
+                pa-a-stamp-walk calc(7200ms * var(--pa-slow, 1)) steps(1, end) infinite;
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-stamp'] .pa-strip::before {
+            animation: pa-a-stamp-pass calc(2400ms * var(--pa-slow, 1)) infinite both;
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-stamp'] :is(.pa-day, .pa-skel__line, .pa-bar--busy) .pa-strip::before {
+            animation-name: pa-a-stamp-pass-sm;
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-stamp'] .pa-strip::after {
+            animation: pa-a-stamp-ink calc(2400ms * var(--pa-slow, 1)) calc(120ms * var(--pa-slow, 1)) infinite both;
+        }
+
+        /* Pair 9: three pushes on, a pull off. */
+        .pa-scene.pa-scene[data-pa-loading='a-clip'] .pa-strip {
+            animation: pa-a-clip calc(2400ms * var(--pa-slow, 1)) infinite both;
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-clip'] .pa-skel__line:nth-child(2) > .pa-strip {
+            animation-delay: calc(400ms * var(--pa-slow, 1));
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-clip'] .pa-skel__line:nth-child(3) > .pa-strip {
+            animation-delay: calc(800ms * var(--pa-slow, 1));
+        }
+
+        /* Pair 10: pulled slowly, let go, one flick past. */
+        .pa-scene.pa-scene[data-pa-loading='a-elastic'] .pa-strip::before,
+        .pa-scene.pa-scene[data-pa-loading='a-elastic'] .pa-strip::after {
+            animation: pa-a-twang calc(2400ms * var(--pa-slow, 1)) infinite both;
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-elastic'] :is(.pa-skel__line, .pa-bar--busy) .pa-strip::before,
+        .pa-scene.pa-scene[data-pa-loading='a-elastic'] :is(.pa-skel__line, .pa-bar--busy) .pa-strip::after {
+            animation-name: pa-a-twang-down;
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-elastic'] .pa-strip {
+            --pa-a-lag: 0ms;
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-elastic'] .pa-skel__line:nth-child(2) > .pa-strip {
+            --pa-a-lag: 400ms;
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-elastic'] .pa-skel__line:nth-child(3) > .pa-strip {
+            --pa-a-lag: 800ms;
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-elastic'] .pa-strip::before {
+            animation-delay: calc((var(--pa-a-lag) + 120ms) * var(--pa-slow, 1));
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-elastic'] .pa-strip::after {
+            animation-delay: calc(var(--pa-a-lag) * var(--pa-slow, 1));
+        }
+
+        /* Pair 11: the tag swings, its pass 120 ms behind. */
+        .pa-scene.pa-scene[data-pa-loading='a-tag'] .pa-strip::before,
+        .pa-scene.pa-scene[data-pa-loading='a-tag'] .pa-strip::after,
+        .pa-scene.pa-scene[data-pa-loading='a-tag'] .pa-strip__dot {
+            animation: pa-a-swing calc(1200ms * var(--pa-slow, 1)) ease-in-out infinite alternate both;
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-tag'] .pa-strip {
+            --pa-a-lag: 0ms;
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-tag'] .pa-skel__line:nth-child(2) > .pa-strip {
+            --pa-a-lag: 400ms;
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-tag'] .pa-skel__line:nth-child(3) > .pa-strip {
+            --pa-a-lag: 800ms;
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-tag'] .pa-strip::before,
+        .pa-scene.pa-scene[data-pa-loading='a-tag'] .pa-strip::after {
+            animation-delay: calc(var(--pa-a-lag) * var(--pa-slow, 1));
+        }
+
+        .pa-scene.pa-scene[data-pa-loading='a-tag'] .pa-strip__dot {
+            animation-delay: calc((var(--pa-a-lag) + 120ms) * var(--pa-slow, 1));
+        }
+
+        /* The spinners. */
+        .pa-scene.pa-scene[data-pa-spinner='a-circle'] .kp-spinner {
+            animation: pa-a-circle calc(1800ms * var(--pa-slow, 1)) infinite both;
+        }
+
+        .pa-scene.pa-scene[data-pa-spinner='a-wheel'] .kp-spinner {
+            animation: pa-a-wheel calc(2400ms * var(--pa-slow, 1)) infinite both;
+        }
+
+        .pa-scene.pa-scene[data-pa-spinner='a-flip'] .kp-spinner {
+            animation: pa-a-thumb calc(2400ms * var(--pa-slow, 1)) infinite both;
+        }
+
+        .pa-scene.pa-scene[data-pa-spinner='a-spiral'] .pa-a-pen polyline {
+            animation: pa-a-draw-spiral calc(1800ms * var(--pa-slow, 1)) infinite both;
+        }
+
+        .pa-scene.pa-scene[data-pa-spinner='a-peel'] .kp-spinner {
+            animation: pa-a-peel-round calc(2400ms * var(--pa-slow, 1)) infinite both;
+        }
+
+        .pa-scene.pa-scene[data-pa-spinner='a-stamper'] .kp-spinner {
+            animation: pa-a-print calc(1500ms * var(--pa-slow, 1)) infinite both;
+        }
+
+        .pa-scene.pa-scene[data-pa-spinner='a-stamper'] .kp-spinner::before,
+        .pa-scene.pa-scene[data-pa-spinner='a-stamper'] .kp-spinner::after {
+            animation: pa-a-press calc(1500ms * var(--pa-slow, 1)) infinite both;
+        }
+
+        .pa-scene.pa-scene[data-pa-spinner='a-clipnote'] .kp-spinner::before,
+        .pa-scene.pa-scene[data-pa-spinner='a-clipnote'] .kp-spinner::after {
+            animation: pa-a-clip-note calc(2400ms * var(--pa-slow, 1)) infinite both;
+        }
+
+        .pa-scene.pa-scene[data-pa-spinner='a-band'] .kp-spinner::after {
+            animation: pa-a-band calc(2400ms * var(--pa-slow, 1)) infinite both;
+        }
+
+        .pa-scene.pa-scene[data-pa-spinner='a-tagswing'] .kp-spinner::before,
+        .pa-scene.pa-scene[data-pa-spinner='a-tagswing'] .kp-spinner::after {
+            animation: pa-a-swing-wide calc(1200ms * var(--pa-slow, 1)) ease-in-out infinite alternate both;
+        }
+    }
+}
+
+/* ── Keyframes (the landing curve written out where a segment lands) ──── */
+
+@keyframes pa-a-thread {
+    0% {
+        background-position: 0 0;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    33.333% {
+        background-position: calc(var(--pa-a-pitch) / 3) 0;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    66.667% {
+        background-position: calc(var(--pa-a-pitch) * 2 / 3) 0;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    100% {
+        background-position: var(--pa-a-pitch) 0;
+    }
+}
+
+@keyframes pa-a-swipe {
+    0% {
+        clip-path: inset(-3px 100% -3px -3px);
+        opacity: 1;
+        animation-timing-function: cubic-bezier(0.3, 0, 0.25, 1);
+    }
+
+    32% {
+        clip-path: inset(-3px -3px -3px -3px);
+    }
+
+    72% {
+        opacity: 1;
+    }
+
+    86%,
+    100% {
+        clip-path: inset(-3px -3px -3px -3px);
+        opacity: 0;
+    }
+}
+
+@keyframes pa-a-swipe-rtl {
+    0% {
+        clip-path: inset(-3px -3px -3px 100%);
+        opacity: 1;
+        animation-timing-function: cubic-bezier(0.3, 0, 0.25, 1);
+    }
+
+    32% {
+        clip-path: inset(-3px -3px -3px -3px);
+    }
+
+    72% {
+        opacity: 1;
+    }
+
+    86%,
+    100% {
+        clip-path: inset(-3px -3px -3px -3px);
+        opacity: 0;
+    }
+}
+
+/* Five boxes coloured one by one, each landing, then all fade together. */
+@keyframes pa-a-track5 {
+    0% {
+        --pa-a-n: 0;
+        --pa-a-o: 1;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    9%,
+    13% {
+        --pa-a-n: 1;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    22%,
+    26% {
+        --pa-a-n: 2;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    35%,
+    39% {
+        --pa-a-n: 3;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    48%,
+    52% {
+        --pa-a-n: 4;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    61% {
+        --pa-a-n: 5;
+    }
+
+    80% {
+        --pa-a-n: 5;
+        --pa-a-o: 1;
+    }
+
+    92%,
+    100% {
+        --pa-a-n: 5;
+        --pa-a-o: 0;
+    }
+}
+
+@keyframes pa-a-track8 {
+    0% {
+        --pa-a-n: 0;
+        --pa-a-o: 1;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    6%,
+    8% {
+        --pa-a-n: 1;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    14%,
+    16% {
+        --pa-a-n: 2;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    22%,
+    24% {
+        --pa-a-n: 3;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    30%,
+    32% {
+        --pa-a-n: 4;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    38%,
+    40% {
+        --pa-a-n: 5;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    46%,
+    48% {
+        --pa-a-n: 6;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    54%,
+    56% {
+        --pa-a-n: 7;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    62% {
+        --pa-a-n: 8;
+    }
+
+    80% {
+        --pa-a-n: 8;
+        --pa-a-o: 1;
+    }
+
+    92%,
+    100% {
+        --pa-a-n: 8;
+        --pa-a-o: 0;
+    }
+}
+
+/* Three pages: each turned up on the landing, let fall; then the corner rests. */
+@keyframes pa-a-flick {
+    0% {
+        scale: 0.3;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    9% {
+        scale: 1;
+        animation-timing-function: cubic-bezier(0.5, 0, 0.75, 0);
+    }
+
+    15% {
+        scale: 0.3;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    24% {
+        scale: 1;
+        animation-timing-function: cubic-bezier(0.5, 0, 0.75, 0);
+    }
+
+    30% {
+        scale: 0.3;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    39% {
+        scale: 1;
+        animation-timing-function: cubic-bezier(0.5, 0, 0.75, 0);
+    }
+
+    46%,
+    100% {
+        scale: 0.3;
+    }
+}
+
+@keyframes pa-a-draw {
+    0% {
+        stroke-dashoffset: 100;
+        animation-timing-function: cubic-bezier(0.45, 0, 0.4, 1);
+    }
+
+    55% {
+        stroke-dashoffset: 0;
+    }
+
+    68% {
+        stroke-dashoffset: 0;
+        animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
+    }
+
+    100% {
+        stroke-dashoffset: -100;
+    }
+}
+
+@keyframes pa-a-draw-spiral {
+    0% {
+        stroke-dashoffset: 100;
+        animation-timing-function: cubic-bezier(0.3, 0, 0.3, 1);
+    }
+
+    50% {
+        stroke-dashoffset: 0;
+    }
+
+    64% {
+        stroke-dashoffset: 0;
+        animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
+    }
+
+    100% {
+        stroke-dashoffset: -100;
+    }
+}
+
+/* The sticker: a slow lift, a short wait, pressed back on the landing. */
+@keyframes pa-a-peel {
+    0% {
+        --pa-a-f: 0px;
+        animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+    }
+
+    52% {
+        --pa-a-f: calc(var(--pa-a-d) * 0.27);
+    }
+
+    62% {
+        --pa-a-f: calc(var(--pa-a-d) * 0.27);
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    76%,
+    100% {
+        --pa-a-f: 0px;
+    }
+}
+
+/* The stamp: three prints a round, each turned its own way. */
+@keyframes pa-a-stamp-turn {
+    0% {
+        rotate: -12deg;
+    }
+
+    33.333% {
+        rotate: 9deg;
+    }
+
+    66.667% {
+        rotate: -3deg;
+    }
+}
+
+@keyframes pa-a-stamp-walk {
+    0% {
+        inset-inline-start: 6%;
+    }
+
+    33.333% {
+        inset-inline-start: 42%;
+    }
+
+    66.667% {
+        inset-inline-start: 78%;
+    }
+}
+
+@keyframes pa-a-stamp-pass {
+    0% {
+        translate: 18px 14px;
+        opacity: 0;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    18% {
+        translate: 6px 6px;
+        opacity: 1;
+    }
+
+    68% {
+        opacity: 1;
+    }
+
+    88%,
+    100% {
+        translate: 6px 6px;
+        opacity: 0;
+    }
+}
+
+@keyframes pa-a-stamp-pass-sm {
+    0% {
+        translate: 9px 7px;
+        opacity: 0;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    18% {
+        translate: 3px 3px;
+        opacity: 1;
+    }
+
+    68% {
+        opacity: 1;
+    }
+
+    88%,
+    100% {
+        translate: 3px 3px;
+        opacity: 0;
+    }
+}
+
+@keyframes pa-a-stamp-ink {
+    0% {
+        scale: 1.3;
+        opacity: 0;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    18% {
+        scale: 1;
+        opacity: 0.9;
+    }
+
+    68% {
+        opacity: 0.9;
+    }
+
+    88%,
+    100% {
+        scale: 1;
+        opacity: 0;
+    }
+}
+
+/* The clip: three pushes, each landing, a wait, pulled off. */
+@keyframes pa-a-clip {
+    0% {
+        translate: 0 -0.6rem;
+        opacity: 0;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    8%,
+    13% {
+        translate: 0 -0.4rem;
+        opacity: 1;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    21%,
+    26% {
+        translate: 0 -0.2rem;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    34% {
+        translate: 0 0;
+    }
+
+    72% {
+        translate: 0 0;
+        opacity: 1;
+        animation-timing-function: cubic-bezier(0.5, 0, 0.75, 0);
+    }
+
+    84%,
+    100% {
+        translate: 0 -0.8rem;
+        opacity: 0;
+    }
+}
+
+@keyframes pa-a-clip-note {
+    0% {
+        translate: 0 -24%;
+        opacity: 0;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    8%,
+    13% {
+        translate: 0 -16%;
+        opacity: 1;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    21%,
+    26% {
+        translate: 0 -8%;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    34% {
+        translate: 0 0;
+    }
+
+    72% {
+        translate: 0 0;
+        opacity: 1;
+        animation-timing-function: cubic-bezier(0.5, 0, 0.75, 0);
+    }
+
+    84%,
+    100% {
+        translate: 0 -30%;
+        opacity: 0;
+    }
+}
+
+/* The elastic: a slow pull, a fast release, one flick past straight. */
+@keyframes pa-a-twang {
+    0% {
+        --pa-a-pull: 0px;
+        translate: 0 0;
+        animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+    }
+
+    50% {
+        --pa-a-pull: var(--pa-a-reach);
+        animation-timing-function: cubic-bezier(0.6, 0, 0.9, 0.5);
+    }
+
+    57% {
+        --pa-a-pull: 0px;
+        translate: 0 0;
+        animation-timing-function: ease-out;
+    }
+
+    63% {
+        translate: -3px 0;
+        animation-timing-function: ease-in-out;
+    }
+
+    72%,
+    100% {
+        --pa-a-pull: 0px;
+        translate: 0 0;
+    }
+}
+
+@keyframes pa-a-twang-down {
+    0% {
+        --pa-a-pull: 0px;
+        translate: 0 0;
+        animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+    }
+
+    50% {
+        --pa-a-pull: var(--pa-a-reach);
+        animation-timing-function: cubic-bezier(0.6, 0, 0.9, 0.5);
+    }
+
+    57% {
+        --pa-a-pull: 0px;
+        translate: 0 0;
+        animation-timing-function: ease-out;
+    }
+
+    63% {
+        translate: 0 -3px;
+        animation-timing-function: ease-in-out;
+    }
+
+    72%,
+    100% {
+        --pa-a-pull: 0px;
+        translate: 0 0;
+    }
+}
+
+@keyframes pa-a-swing {
+    from {
+        rotate: -9deg;
+    }
+
+    to {
+        rotate: 9deg;
+    }
+}
+
+@keyframes pa-a-swing-wide {
+    from {
+        rotate: -20deg;
+    }
+
+    to {
+        rotate: 20deg;
+    }
+}
+
+/* The circle: drawn round and a little past its start, held, faded. */
+@keyframes pa-a-circle {
+    0% {
+        --pa-a-sweep: 0deg;
+        opacity: 1;
+        animation-timing-function: cubic-bezier(0.45, 0, 0.3, 1);
+    }
+
+    50% {
+        --pa-a-sweep: 385deg;
+    }
+
+    76% {
+        opacity: 1;
+    }
+
+    92%,
+    100% {
+        --pa-a-sweep: 385deg;
+        opacity: 0;
+    }
+}
+
+/* The wheel: six wedges coloured one by one, each landing, then cleared. */
+@keyframes pa-a-wheel {
+    0% {
+        --pa-a-fill: 0deg;
+        --pa-a-o: 1;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    7%,
+    11% {
+        --pa-a-fill: 60deg;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    18%,
+    22% {
+        --pa-a-fill: 120deg;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    29%,
+    33% {
+        --pa-a-fill: 180deg;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    40%,
+    44% {
+        --pa-a-fill: 240deg;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    51%,
+    55% {
+        --pa-a-fill: 300deg;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    62% {
+        --pa-a-fill: 360deg;
+    }
+
+    80% {
+        --pa-a-fill: 360deg;
+        --pa-a-o: 1;
+    }
+
+    92%,
+    100% {
+        --pa-a-fill: 360deg;
+        --pa-a-o: 0;
+    }
+}
+
+/* The little planner: three pages thumbed at its foot corner, then rest. */
+@keyframes pa-a-thumb {
+    0% {
+        --pa-a-f: calc(var(--kp-sig-s) * 0.2);
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    9% {
+        --pa-a-f: calc(var(--kp-sig-s) * 0.58);
+        animation-timing-function: cubic-bezier(0.5, 0, 0.75, 0);
+    }
+
+    15% {
+        --pa-a-f: calc(var(--kp-sig-s) * 0.2);
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    24% {
+        --pa-a-f: calc(var(--kp-sig-s) * 0.58);
+        animation-timing-function: cubic-bezier(0.5, 0, 0.75, 0);
+    }
+
+    30% {
+        --pa-a-f: calc(var(--kp-sig-s) * 0.2);
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    39% {
+        --pa-a-f: calc(var(--kp-sig-s) * 0.58);
+        animation-timing-function: cubic-bezier(0.5, 0, 0.75, 0);
+    }
+
+    46%,
+    100% {
+        --pa-a-f: calc(var(--kp-sig-s) * 0.2);
+    }
+}
+
+/* The sticker spinner: the edge lifts and is pressed, a third further each time. */
+@keyframes pa-a-peel-round {
+    0% {
+        rotate: 45deg;
+        --pa-a-f: 0px;
+        animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+    }
+
+    17% {
+        rotate: 45deg;
+        --pa-a-f: calc(var(--pa-a-d) * 0.28);
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    30%,
+    33.33% {
+        rotate: 45deg;
+        --pa-a-f: 0px;
+    }
+
+    33.34% {
+        rotate: 165deg;
+        --pa-a-f: 0px;
+        animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+    }
+
+    50% {
+        rotate: 165deg;
+        --pa-a-f: calc(var(--pa-a-d) * 0.28);
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    63%,
+    66.66% {
+        rotate: 165deg;
+        --pa-a-f: 0px;
+    }
+
+    66.67% {
+        rotate: 285deg;
+        --pa-a-f: 0px;
+        animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+    }
+
+    83% {
+        rotate: 285deg;
+        --pa-a-f: calc(var(--pa-a-d) * 0.28);
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    96%,
+    100% {
+        rotate: 285deg;
+        --pa-a-f: 0px;
+    }
+}
+
+/* The stamp from the side: lifted, pressed down on the landing, lifted. */
+@keyframes pa-a-press {
+    0% {
+        translate: 0 calc(var(--kp-sig-s) * -0.2);
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    34%,
+    50% {
+        translate: 0 0;
+        animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+    }
+
+    86%,
+    100% {
+        translate: 0 calc(var(--kp-sig-s) * -0.2);
+    }
+}
+
+/* Its print: the sky as it touches, the plum a beat after, dried by the lift. */
+@keyframes pa-a-print {
+    0%,
+    26% {
+        --pa-a-p: 0;
+        --pa-a-o: 0;
+    }
+
+    30% {
+        --pa-a-p: 1;
+        --pa-a-o: 0;
+    }
+
+    36% {
+        --pa-a-o: 1;
+    }
+
+    70% {
+        --pa-a-p: 1;
+        --pa-a-o: 1;
+    }
+
+    94%,
+    100% {
+        --pa-a-p: 0;
+        --pa-a-o: 0;
+    }
+}
+
+/* The rubber band: stretched to an oval, snapped back with one overshoot,
+   a sixth of a turn further each time. */
+@keyframes pa-a-band {
+    0% {
+        rotate: 0deg;
+        scale: 1;
+        animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+    }
+
+    22% {
+        rotate: 0deg;
+        scale: 1.24 0.8;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    30%,
+    33.33% {
+        rotate: 0deg;
+        scale: 1;
+    }
+
+    33.34% {
+        rotate: 60deg;
+        scale: 1;
+        animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+    }
+
+    55% {
+        rotate: 60deg;
+        scale: 1.24 0.8;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    63%,
+    66.66% {
+        rotate: 60deg;
+        scale: 1;
+    }
+
+    66.67% {
+        rotate: 120deg;
+        scale: 1;
+        animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+    }
+
+    88% {
+        rotate: 120deg;
+        scale: 1.24 0.8;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    96%,
+    100% {
+        rotate: 120deg;
+        scale: 1;
+    }
+}
