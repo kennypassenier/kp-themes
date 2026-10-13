@@ -39,3 +39,6 @@ test-timings/
 
 # The coherence round's screenshot output (research/_coherence/README.md).
 research/_coherence/out/
+
+# Kenny's go for a release; the release-tests hook passes while it exists.
+.claude/release-go

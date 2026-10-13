@@ -1568,7 +1568,7 @@ test("the project's own document index names every document, and nothing that is
     // the first thing a session reads. Phase 8 found it missing two and
     // still pointing at two that had moved. An index a person maintains
     // will drift; this reads both ends.
-    const claude = readFileSync(new URL('../CLAUDE.md', import.meta.url), 'utf8');
+    const claude = readFileSync(new URL('../CLAUDE.md', import.meta.url), 'utf8') + readFileSync(new URL('../AGENTS.md', import.meta.url), 'utf8');
     const dir = new URL('../docs/', import.meta.url);
     const docs = readdirSync(dir, { withFileTypes: true })
         .filter((e) => e.isFile() && e.name.endsWith('.md'))
