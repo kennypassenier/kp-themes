@@ -251,8 +251,9 @@
     margin: 0;
     padding: 0;
     list-style: none;
-    overflow: auto;
-    overscroll-behavior: contain;
+    /* No scroller of its own: the list grows with its rows (the side's grid row is min-content) and the side scrolls.
+       A list with `overscroll-behavior: contain` and nothing to scroll swallowed the wheel over the rows, so only the
+       side's own scrollbar scrolled (Kenny, 2026-10-13). */
 }
 
 .rv-row {
