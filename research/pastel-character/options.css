@@ -1,0 +1,1739 @@
+/* research/pastel-character: every option of every question, in the theme's
+   signature layer, scoped by the option's attribute on its scene
+   (`.pa-scene[data-pa-<question>='<key>']`). Colours come from the theme's
+   tokens only (grammar.css holds the grammar as tokens and keyframes); every
+   motion sits under prefers-reduced-motion: no-preference, and the reduced
+   pose is the resting picture: the part stuck on with its second pass 6 px
+   off register. Durations are multiplied by --pa-slow (1, 2 or 4: the page's
+   speed buttons). The values of the "today" options are the register's own
+   (css/pastel-register.css); the values of "the picks" options are the
+   decided demos' (research/character-*).
+
+   SCOPE. The review dialog moves the section out of the page into its stage,
+   so nothing here hangs on `.pa-page` alone: every rule hangs on `.pa-scene`
+   (or on `.pa-sec` for the State buttons), which moves with its options.
+
+   THE CLOCK. One clock (demo.js) writes `data-pa-phase` on every scene of kind
+   `cycle`: gap (away: not drawn), in (printed twice and stuck on), hold (it
+   stands), out (its landing backwards). The base style of every part is its
+   resting pose, so reduced motion and hold show the finished picture. `in` and
+   `hold` run the open (`pa-x` forwards); `out` runs its mirror (`pa-x-r` in
+   reverse, as late as the open ended: the window less the delay less the
+   length), so a close is its open reversed frame by frame and what came last
+   goes first; `gap` stands at the close's last frame (a one millisecond run).
+   A part's second pass is its wrapper's `::before`, its ink the wrapper's
+   first child (`.pa-ink`), so the two passes run on their own clocks. */
+
+@layer kp.signature {
+    /* ── The scene: the milk page with its halftone, and the clock's knobs ── */
+
+    .pa-scene {
+        --pa-Tp: calc(440ms * var(--pa-slow, 1));
+        --pa-T: calc(440ms * var(--pa-slow, 1));
+        --pa-lag: calc(120ms * var(--pa-slow, 1));
+        --pa-step: calc(60ms * var(--pa-slow, 1));
+        --pa-contact: calc(220ms * var(--pa-slow, 1));
+        --pa-loop: calc(2400ms * var(--pa-slow, 1));
+        --pa-curve: var(--pa-land);
+        --pa-pass-in: pa-pass;
+        --pa-pass-out: pa-pass-r;
+        --pa-ink-in: pa-stuck;
+        --pa-ink-out: pa-stuck-r;
+        --pa-run-in: pa-run;
+        --pa-run-out: pa-run-r;
+        position: relative;
+        overflow: clip;
+        overflow-clip-margin: 1rem;
+        container-type: inline-size;
+        background:
+            radial-gradient(circle, hsl(from var(--border-strong) h s l / 0.22) 1px, transparent 1.3px) 0 0 / 6px 6px,
+            var(--background);
+        --kp-busy-opacity: 1;
+    }
+
+    .pa-scene .pa-title {
+        margin: 0;
+        font-weight: 700;
+    }
+
+    .pa-scene .pa-ink,
+    .pa-scene :is(.kp-dialog, .kp-toast, .kp-tooltip, .kp-popover, .kp-alert) {
+        animation: none;
+    }
+
+    /* ── The two passes at rest (G7) ─────────────────────────────────────── */
+
+    .pa-sheet {
+        --pa-r: var(--pa-r-plate);
+        position: relative;
+        isolation: isolate;
+        display: grid;
+        min-inline-size: 0;
+    }
+
+    .pa-sheet.pa-pill {
+        --pa-r: var(--pa-r-chip);
+        justify-self: start;
+    }
+
+    /* The second pass: a flat silhouette in the second ink, 6 px off register. */
+    .pa-sheet::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        border-radius: var(--pa-r);
+        background: var(--pa-pass-c);
+        translate: var(--pa-off) var(--pa-off);
+        pointer-events: none;
+    }
+
+    /* The ink pass: the part itself, swung from its top-start corner. */
+    .pa-sheet > .pa-ink {
+        position: relative;
+        margin: 0;
+        border-radius: var(--pa-r);
+        overflow: visible;
+        transform-origin: 0 0;
+        box-shadow: none;
+    }
+
+    .pa-scene .kp-card {
+        display: grid;
+        gap: 0.25rem;
+        margin: 0;
+        padding: 0.85rem 1rem;
+        border: 1px solid var(--border-strong);
+        background: var(--pa-paper);
+        color: var(--card-foreground);
+    }
+
+    .pa-scene .kp-card__body,
+    .pa-scene .kp-dialog__description {
+        margin: 0;
+    }
+
+    .pa-scene .kp-dialog {
+        display: grid;
+        gap: 0.5rem;
+        max-inline-size: none;
+        padding: 1rem 1.1rem;
+        border: 1px solid var(--border-strong);
+        background: var(--popover);
+    }
+
+    .pa-scene .kp-dialog__actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 0.5rem;
+    }
+
+    .pa-scene .kp-popover {
+        position: relative;
+        position-area: none;
+        inset: auto;
+        margin: 0;
+        max-block-size: none;
+        overflow: visible;
+        box-shadow: none;
+        padding: 0.3rem;
+        border: 1px solid var(--border-strong);
+        background: var(--popover);
+    }
+
+    /* The register frames a menu inside a popover as a window of its own. */
+    .pa-scene .kp-menu {
+        min-inline-size: 0;
+        border: 0;
+        border-radius: 0;
+        background: none;
+        box-shadow: none;
+    }
+
+    .pa-scene .kp-menu__item {
+        position: relative;
+        border-radius: calc(var(--pa-r-ctl) * 0.8);
+    }
+
+    .pa-scene .kp-toast {
+        position: relative;
+        border: 1px solid var(--border-strong);
+        background: var(--popover);
+        box-shadow: none;
+    }
+
+    .pa-scene .kp-toast__body {
+        color: var(--popover-foreground);
+    }
+
+    .pa-scene .kp-tooltip {
+        position: relative;
+        inset: auto;
+        display: block;
+        margin: 0;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--pa-r-chip);
+        background: var(--card);
+        color: var(--card-foreground);
+        box-shadow: none;
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .pa-scene .kp-tooltip::before,
+    .pa-scene .kp-tooltip::after {
+        display: none;
+    }
+
+    .pa-scene .kp-alert {
+        border-radius: var(--pa-r-plate);
+    }
+
+    .pa-scene .kp-kpi {
+        position: relative;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--pa-r-plate);
+        background: var(--pa-paper);
+    }
+
+    /* A strip of washi tape across a stuck plate's top-start corner (G7, Kenny's shape family). */
+    .pa-tape {
+        position: absolute;
+        z-index: 2;
+        inset-block-start: -0.4rem;
+        inset-inline-start: 0.5rem;
+        inline-size: 2.75rem;
+        block-size: 0.8rem;
+        border-radius: 2px;
+        background: var(--pa-tape-bg);
+        rotate: -14deg;
+        opacity: 0.94;
+        pointer-events: none;
+    }
+
+    /* ── Controls: the sticker with its flat plum peel (G7, G14 to G16) ──── */
+
+    .pa-scene :is(.pa-btn, .pa-kpilink, .pa-day--btn) {
+        position: relative;
+        translate: 0 0;
+        rotate: 0deg;
+        scale: 1;
+        box-shadow: 0 3px 0 var(--pa-peel);
+        outline: 0 solid transparent;
+        transition:
+            translate var(--pa-contact) var(--pa-land),
+            box-shadow var(--pa-contact) var(--pa-land),
+            rotate var(--pa-contact) var(--pa-land),
+            background-color var(--pa-contact) ease,
+            color var(--pa-contact) ease;
+    }
+
+    .pa-scene .pa-btn {
+        border-radius: var(--pa-r-ctl);
+    }
+
+    .pa-scene .kp-button--ghost.pa-btn {
+        border: 1px solid var(--border-strong);
+    }
+
+    /* The corner that curls up into a fold (G14): the page's milk where the
+       corner lifted off, the sticker's back below the crease. */
+    .pa-fold {
+        position: absolute;
+        z-index: 1;
+        inset-block-start: -1px;
+        inset-inline-end: -1px;
+        inline-size: 0.95rem;
+        block-size: 0.95rem;
+        border-start-end-radius: var(--pa-r-ctl);
+        border-end-start-radius: 0.4rem;
+        background: linear-gradient(225deg, var(--pa-milk) 0 50%, var(--muted) 50% 100%);
+        box-shadow: -1px 1px 0 hsl(from var(--border-strong) h s l / 0.7);
+        scale: 0;
+        transform-origin: 100% 0;
+        transition: scale var(--pa-contact) var(--pa-land);
+        pointer-events: none;
+    }
+
+    .pa-scene .pa-kpilink {
+        display: grid;
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .pa-scene .pa-link {
+        color: var(--primary);
+        text-decoration: underline 2px;
+        text-underline-offset: 0.22em;
+        background: linear-gradient(var(--accent), var(--accent)) 0 50% / 0% 100% no-repeat;
+        border-radius: 0.3em;
+        transition: background-size var(--pa-contact) var(--pa-land);
+    }
+
+    /* ── The parts at rest ───────────────────────────────────────────────── */
+
+    .pa-scene .pa-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.6rem;
+    }
+
+    .pa-hangs {
+        display: grid;
+        gap: 0.45rem;
+        justify-items: start;
+    }
+
+    .pa-hangs > .pa-sheet {
+        justify-self: start;
+        min-inline-size: 10rem;
+    }
+
+    .pa-hangs--tip > .pa-sheet {
+        min-inline-size: 0;
+    }
+
+    .pa-scene .pa-field {
+        display: grid;
+        gap: 0.25rem;
+        margin: 0;
+    }
+
+    .pa-scene .pa-field .kp-field__input {
+        inline-size: 9rem;
+        border-radius: var(--pa-r-ctl);
+    }
+
+    .pa-cal {
+        display: grid;
+        gap: 0.3rem;
+        padding: 0.55rem 0.65rem;
+    }
+
+    .pa-cal__head {
+        margin: 0;
+        font-weight: 700;
+        font-size: 0.85rem;
+    }
+
+    .pa-cal__grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1.7rem);
+        gap: 0.2rem;
+        font-size: 0.8rem;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .pa-cal__d {
+        display: grid;
+        place-items: center;
+        block-size: 1.6rem;
+        border-radius: 50%;
+    }
+
+    .pa-cal__d--pick {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        box-shadow: 0 2px 0 var(--pa-peel);
+    }
+
+    /* The side navigation: a small page with the panel at its start edge. */
+    .pa-frame {
+        display: grid;
+        grid-template-columns: minmax(8rem, 11rem) 1fr;
+        gap: 1rem;
+        padding: 0.75rem;
+        border: 1px dashed var(--border-strong);
+        border-radius: var(--pa-r-plate);
+    }
+
+    .pa-drawer {
+        align-content: start;
+        gap: 0.35rem;
+    }
+
+    .pa-navlink {
+        padding: 0.25rem 0.5rem;
+        border-radius: var(--pa-r-ctl);
+        color: var(--foreground);
+        text-decoration: none;
+    }
+
+    .pa-navlink:first-of-type {
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+
+    .pa-frame__page {
+        display: grid;
+        gap: 0.5rem;
+        align-content: start;
+        padding-block-start: 0.5rem;
+    }
+
+    .pa-frame__page span {
+        block-size: 0.6rem;
+        border-radius: var(--pa-r-chip);
+        background: var(--muted);
+    }
+
+    .pa-frame__page span:nth-child(2) {
+        inline-size: 80%;
+    }
+
+    .pa-frame__page span:nth-child(3) {
+        inline-size: 60%;
+    }
+
+    /* The alarm: its milk plate over the scene's corner, the panel stuck on it. */
+    .pa-alarm {
+        position: relative;
+        display: grid;
+        padding: 1rem;
+    }
+
+    .pa-alarm__ground {
+        position: absolute;
+        inset: 0;
+        border-radius: var(--pa-r-plate);
+        background: hsl(from var(--destructive) h s 92% / 0.9);
+    }
+
+    .pa-alarm__panel {
+        gap: 0.35rem;
+        justify-items: start;
+    }
+
+    .pa-alarm__title {
+        margin: 0;
+        color: var(--destructive);
+        font-size: 1.25rem;
+        font-weight: 700;
+        line-height: 1.1;
+    }
+
+    /* The tour: the target ringed, the card stuck on beside it. */
+    .pa-tour {
+        display: grid;
+        gap: 0.75rem;
+        justify-items: start;
+    }
+
+    .pa-tour__target {
+        position: relative;
+        padding: 0.25rem 0.75rem;
+        border-radius: var(--pa-r-chip);
+        background: var(--card);
+        border: 1px solid var(--border-strong);
+    }
+
+    .pa-tour__ring {
+        position: absolute;
+        inset: -5px;
+        border: 2px dashed var(--primary);
+        border-radius: var(--pa-r-chip);
+    }
+
+    .pa-tourcard {
+        gap: 0.4rem;
+    }
+
+    /* A small sticker beside one at an even pace (question 2). */
+    .pa-beads {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.25rem 1rem;
+    }
+
+    .pa-beads__ground {
+        display: grid;
+        place-items: start;
+        block-size: 3rem;
+        padding: 0.4rem;
+        border: 1px dashed var(--border-strong);
+        border-radius: var(--pa-r-ctl);
+    }
+
+    .pa-bead-wrap {
+        --pa-r: var(--pa-r-ctl);
+    }
+
+    .pa-bead {
+        display: block;
+        inline-size: 3.5rem;
+        block-size: 1.8rem;
+        border: 1px solid var(--border-strong);
+        background: var(--card);
+    }
+
+    .pa-bead--even {
+        --pa-curve: linear;
+    }
+
+    .pa-beads__name {
+        color: var(--muted-foreground);
+        font-size: 0.75rem;
+    }
+
+    /* Days of a month: round, each a small sticker. */
+    .pa-days {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .pa-daywrap {
+        --pa-r: 50%;
+    }
+
+    .pa-day {
+        position: relative;
+        display: grid;
+        place-items: center;
+        inline-size: 2.2rem;
+        block-size: 2.2rem;
+        border: 1px solid var(--border-strong);
+        border-radius: 50%;
+        background: var(--card);
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+    }
+
+    .pa-day--btn .pa-fold {
+        border-start-end-radius: 50%;
+    }
+
+    /* The trend's line. */
+    .pa-spark {
+        display: block;
+        inline-size: 100%;
+        block-size: 2.2rem;
+        color: var(--primary);
+    }
+
+    .pa-spark svg,
+    .pa-plot svg,
+    .pa-chart__plot svg,
+    .pa-events svg {
+        display: block;
+        inline-size: 100%;
+        block-size: 100%;
+    }
+
+    .pa-chart__plot {
+        display: block;
+        block-size: 2.5rem;
+        color: var(--primary);
+    }
+
+    /* An inset to interpolate to (from `none` a clip-path would flip at half time). */
+    .pa-run {
+        clip-path: inset(0 0 0 0);
+    }
+
+    .pa-spark--stale {
+        color: var(--muted-foreground);
+        opacity: 0.6;
+    }
+
+    /* The state word: a dot and the word on one round sticker (Kenny's state shape). */
+    .pa-state {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.2rem 0.7rem;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--pa-r-chip);
+        background: var(--card);
+        box-shadow: 0 2px 0 var(--pa-peel);
+    }
+
+    .pa-state__dot {
+        inline-size: 0.55rem;
+        block-size: 0.55rem;
+        border-radius: 50%;
+        background: var(--warning-foreground);
+    }
+
+    .pa-state__word {
+        display: inline-block;
+        font-weight: 600;
+    }
+
+    /* The tone (G8): the change on a sticker with its own flat peel. */
+    .pa-scene .pa-note {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.05rem 0.5rem;
+        border-radius: var(--pa-r-ctl);
+        background: var(--success);
+        color: var(--success-foreground);
+        font-weight: 700;
+        font-size: 0.8rem;
+        box-shadow: 0 2px 0 var(--success-foreground);
+    }
+
+    .pa-scene .pa-note[data-kp-tone='bad'] {
+        background: hsl(from var(--destructive) h s 94%);
+        color: var(--destructive);
+        box-shadow: 0 2px 0 var(--destructive);
+    }
+
+    .pa-scene .kp-kpi[data-kp-tone='warning'] .kp-kpi__label {
+        justify-self: start;
+        padding: 0.05rem 0.5rem;
+        border-radius: var(--pa-r-ctl);
+        background: var(--warning);
+        color: var(--warning-foreground);
+    }
+
+    .pa-scene .pa-failed {
+        border-color: var(--destructive);
+    }
+
+    .pa-scene .kp-menu__item--destructive {
+        color: var(--destructive);
+    }
+
+    .pa-carrier {
+        display: inline-block;
+        transform-origin: 50% 100%;
+    }
+
+    .pa-carrier--svg {
+        display: block;
+    }
+
+    .pa-readout {
+        margin: 0;
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        color: var(--muted-foreground);
+    }
+
+    .pa-scene .pa-chip {
+        border-radius: var(--pa-r-chip);
+    }
+
+    .pa-plot {
+        position: relative;
+        block-size: 3.5rem;
+        padding: 0.4rem;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--pa-r-plate);
+        background: var(--card);
+        color: var(--muted-foreground);
+    }
+
+    .pa-scene .pa-meter {
+        inline-size: 100%;
+    }
+
+    .pa-gap {
+        block-size: 0.75rem;
+    }
+
+    .pa-events {
+        position: relative;
+        block-size: 3.5rem;
+        color: var(--primary);
+    }
+
+    .pa-events i {
+        position: absolute;
+        inset-block-start: 20%;
+        inline-size: 0.75rem;
+        block-size: 0.75rem;
+        border: 1px solid var(--border-strong);
+        border-radius: 50%;
+        background: var(--card);
+        box-shadow: 1.5px 1.5px 0 var(--pa-pass-c);
+    }
+
+    .pa-events i:first-of-type {
+        inset-inline-start: 30%;
+    }
+
+    .pa-events i:last-of-type {
+        inset-inline-start: 72%;
+    }
+
+    .pa-list {
+        margin: 0.5rem 0 0;
+        padding-inline-start: 1.1rem;
+    }
+
+    .pa-list li::marker {
+        color: var(--primary);
+    }
+
+    .pa-scene .pa-empty {
+        margin: 0;
+    }
+
+    .pa-cap--inner {
+        margin: 0;
+        color: var(--foreground);
+        font-weight: 600;
+    }
+
+    .pa-prose {
+        margin: 0;
+    }
+
+    .pa-header {
+        margin: 0;
+        padding: 0.85rem 1rem;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--pa-r-plate);
+        background: var(--card);
+    }
+
+    .pa-header .kp-page-header__inner {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+    }
+
+    .pa-header .kp-page-header__title,
+    .pa-header .kp-page-header__description {
+        margin: 0;
+    }
+
+    .pa-header .kp-page-header__actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .pa-header-mini {
+        display: flex;
+        padding: 0.75rem;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--pa-r-plate);
+        background: var(--card);
+    }
+
+    .pa-in-tile {
+        justify-items: start;
+    }
+
+    .pa-scene .pa-busy-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        justify-self: start;
+    }
+
+    .pa-busy-panel {
+        justify-items: center;
+        text-align: center;
+    }
+
+    .pa-spins {
+        gap: 1.5rem;
+    }
+
+    .pa-spinwrap {
+        display: inline-grid;
+        filter: drop-shadow(1.5px 1.5px 0 var(--pa-pass-c));
+    }
+
+    /* The type question's tile. */
+    .pa-type {
+        gap: 0.4rem;
+    }
+
+    .pa-type p {
+        margin: 0;
+    }
+
+    .pa-type__label {
+        color: var(--muted-foreground);
+        font-weight: 600;
+        font-size: 0.8rem;
+    }
+
+    .pa-type__head {
+        font-weight: 700;
+        font-size: 1.25rem;
+    }
+
+    .pa-type__figure {
+        font-weight: 700;
+        font-size: 1.6rem;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .pa-type__figure small {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--muted-foreground);
+    }
+
+    .pa-type__table {
+        border-collapse: collapse;
+        font-size: 0.85rem;
+    }
+
+    .pa-type__table th {
+        padding-inline-end: 1rem;
+        font-weight: 600;
+        text-align: start;
+    }
+
+    .pa-type__table td {
+        font-variant-numeric: tabular-nums;
+    }
+
+    .pa-type__id,
+    .pa-stamp {
+        font-family: var(--theme-font-mono);
+        font-size: 0.8rem;
+        color: var(--muted-foreground);
+    }
+
+    /* ── Loading (G10): the strip, drawn on every waiting part ──────────── */
+
+    .pa-waits {
+        position: relative;
+    }
+
+    .pa-waits > :not(.pa-strip) {
+        opacity: 0.55;
+    }
+
+    .pa-strip {
+        position: absolute;
+        z-index: 2;
+        inset-block-start: -0.3rem;
+        inset-inline: 10%;
+        block-size: 0.6rem;
+        border-radius: 2px;
+        background: var(--pa-tape-bg);
+        box-shadow: 2px 2px 0 hsl(from var(--fx-overprint) h s l / 0.35);
+        transform-origin: 50% 50%;
+        pointer-events: none;
+    }
+
+    .pa-strip__dot {
+        position: absolute;
+        inset-block-start: 0.05rem;
+        inset-inline-start: 0;
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        border-radius: 50%;
+        background: var(--primary);
+        display: none;
+    }
+
+    .pa-day .pa-strip {
+        inset-inline: 15%;
+        inset-block-start: 40%;
+        rotate: -35deg;
+    }
+
+    .pa-scene .kp-menu__item.pa-waits {
+        overflow: visible;
+    }
+
+    .pa-skel {
+        display: grid;
+        gap: 0.85rem;
+        padding-block-start: 0.35rem;
+    }
+
+    .pa-skel__line {
+        display: block;
+        block-size: 0.7rem;
+        border-radius: var(--pa-r-chip);
+        background: var(--muted);
+    }
+
+    .pa-skel__line:nth-child(2) {
+        inline-size: 85%;
+    }
+
+    .pa-skel__line:nth-child(3) {
+        inline-size: 60%;
+    }
+
+    .pa-skel__line .pa-strip {
+        inset: 0;
+    }
+
+    /* The busy bar: the tape laid along the whole track (the register's pill hidden). */
+    .pa-scene .pa-bar--busy {
+        display: block;
+        block-size: 1.125rem;
+    }
+
+    .pa-scene .pa-bar--busy .kp-progressbar__track {
+        position: relative;
+        display: block;
+        block-size: 100%;
+        overflow: visible;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--pa-r-chip);
+        background: var(--card);
+    }
+
+    .pa-scene .pa-bar--busy :is(.kp-progressbar__fill, .kp-progressbar__head) {
+        display: none;
+    }
+
+    .pa-scene .pa-bar--busy .pa-strip {
+        inset: 0.2rem;
+        block-size: auto;
+    }
+
+    .pa-scene .pa-pop--flat {
+        position: relative;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .pa-scene .pa-strip {
+            animation:
+                pa-flutter calc(var(--pa-loop) / 2) ease-in-out infinite alternate,
+                pa-drift var(--pa-loop) linear infinite;
+        }
+
+        .pa-scene .pa-skel__line .pa-strip,
+        .pa-scene .pa-day .pa-strip,
+        .pa-scene .pa-bar--busy .pa-strip {
+            animation: pa-drift var(--pa-loop) linear infinite;
+        }
+
+        .pa-scene .pa-skel__line:nth-child(2) .pa-strip {
+            animation-delay: calc(400ms * var(--pa-slow, 1));
+        }
+
+        .pa-scene .pa-skel__line:nth-child(3) .pa-strip {
+            animation-delay: calc(800ms * var(--pa-slow, 1));
+        }
+
+        /* Option 2: the strip lies still, its stripes drift. */
+        .pa-scene[data-pa-loading='drift'] .pa-strip {
+            animation: pa-drift var(--pa-loop) linear infinite;
+        }
+
+        /* Option 3: a candy dot hops along instead of the tape. */
+        .pa-scene[data-pa-loading='hop'] .pa-strip {
+            background: none;
+            box-shadow: none;
+            animation: none;
+        }
+
+        .pa-scene[data-pa-loading='hop'] .pa-strip__dot {
+            display: block;
+            animation: pa-hop calc(1200ms * var(--pa-slow, 1)) cubic-bezier(0.3, 0, 0.3, 1) infinite;
+        }
+    }
+
+    .pa-scene[data-pa-loading='hop'] .pa-strip {
+        background: none;
+        box-shadow: none;
+        rotate: 0deg;
+    }
+
+    .pa-scene[data-pa-loading='hop'] .pa-strip__dot {
+        display: block;
+    }
+
+    /* ── The spinner (G11) ───────────────────────────────────────────────── */
+
+    /* The tape roll: a ring of the striped tape round a hole. */
+    .pa-scene[data-pa-spinner='roll'] .kp-spinner {
+        border: 0;
+        border-radius: 50%;
+        background: repeating-conic-gradient(var(--accent) 0 22.5deg, var(--pa-tape-stripe) 22.5deg 45deg);
+        mask: radial-gradient(circle closest-side, transparent 50%, black calc(50% + 0.5px));
+    }
+
+    .pa-scene[data-pa-spinner='roll'] .kp-spinner::before,
+    .pa-scene[data-pa-spinner='roll'] .kp-spinner::after {
+        display: none;
+    }
+
+    /* The pass chases: one plum dot round, its sky pass a moment behind. */
+    .pa-scene[data-pa-spinner='chase'] .kp-spinner {
+        background: radial-gradient(circle closest-side, transparent calc(75% - 1px), var(--border-strong) calc(75% - 1px) calc(75% + 1px), transparent calc(75% + 1px));
+    }
+
+    .pa-scene[data-pa-spinner='chase'] .kp-spinner::before,
+    .pa-scene[data-pa-spinner='chase'] .kp-spinner::after {
+        background: radial-gradient(circle at 50% 12.5%, var(--primary) 0 12%, transparent calc(12% + 0.5px));
+        animation: none;
+    }
+
+    .pa-scene[data-pa-spinner='chase'] .kp-spinner::before {
+        background: radial-gradient(circle at 50% 12.5%, var(--fx-overprint) 0 12%, transparent calc(12% + 0.5px));
+        translate: 1.5px 1.5px;
+    }
+
+    .pa-scene[data-pa-spinner='chase'] .pa-spinwrap,
+    .pa-scene[data-pa-spinner='dots'] .pa-spinwrap {
+        filter: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .pa-scene[data-pa-spinner='roll'] .kp-spinner {
+            animation: pa-roll calc(1200ms * var(--pa-slow, 1)) infinite;
+        }
+
+        .pa-scene[data-pa-spinner='chase'] .kp-spinner::after {
+            animation: pa-orbit calc(1200ms * var(--pa-slow, 1)) linear infinite;
+        }
+
+        .pa-scene[data-pa-spinner='chase'] .kp-spinner::before {
+            animation: pa-orbit calc(1200ms * var(--pa-slow, 1)) linear calc(-1050ms * var(--pa-slow, 1)) infinite;
+        }
+    }
+
+    /* ── The motion: what opens, arrives or leaves (the clock's scenes) ──── */
+
+    .pa-scene .pa-arrives,
+    .pa-scene .pa-fades {
+        --pa-d: calc(var(--i, 0) * var(--pa-step));
+    }
+
+    /* The window a close is mirrored in, per cell (one dialog, one week of days):
+       exactly the cell's own picture (its last part lands at it), so a close starts
+       the moment the out phase does and is the open's frames in reverse order.
+       Declared on the cell so it reads the cell's --pa-nmax (demo.js). */
+    .pa-scene .pa-part {
+        --pa-win: calc(var(--pa-nmax, 0) * var(--pa-step) + max(var(--pa-lag) + var(--pa-T), var(--pa-Tp)));
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .pa-scene[data-pa-kind='cycle'][data-pa-phase='gap'] .pa-sheet.pa-arrives::before {
+            animation: var(--pa-pass-out) 1ms linear 0s reverse both;
+        }
+
+        .pa-scene[data-pa-kind='cycle'][data-pa-phase='gap'] .pa-sheet.pa-arrives > .pa-ink {
+            animation: var(--pa-ink-out) 1ms linear 0s reverse both;
+        }
+
+        .pa-scene[data-pa-kind='cycle'][data-pa-phase='gap'] .pa-run {
+            animation: var(--pa-run-out) 1ms linear 0s reverse both;
+        }
+
+        .pa-scene[data-pa-kind='cycle'][data-pa-phase='gap'] .pa-fades {
+            animation: pa-fade-r 1ms linear 0s reverse both;
+        }
+
+        .pa-scene[data-pa-kind='cycle']:is([data-pa-phase='in'], [data-pa-phase='hold']) .pa-sheet.pa-arrives::before {
+            animation: var(--pa-pass-in) var(--pa-Tp) var(--pa-curve) var(--pa-d) both;
+        }
+
+        .pa-scene[data-pa-kind='cycle']:is([data-pa-phase='in'], [data-pa-phase='hold']) .pa-sheet.pa-arrives > .pa-ink {
+            animation: var(--pa-ink-in) var(--pa-T) var(--pa-curve) calc(var(--pa-d) + var(--pa-lag)) both;
+        }
+
+        .pa-scene[data-pa-kind='cycle']:is([data-pa-phase='in'], [data-pa-phase='hold']) .pa-run {
+            animation: var(--pa-run-in) var(--pa-T) var(--pa-curve) calc(var(--pa-d) + var(--pa-lag)) both;
+        }
+
+        .pa-scene[data-pa-kind='cycle']:is([data-pa-phase='in'], [data-pa-phase='hold']) .pa-fades {
+            animation: pa-fade var(--pa-Tp) var(--pa-curve) var(--pa-d) both;
+        }
+
+        .pa-scene[data-pa-kind='cycle'][data-pa-phase='out'] .pa-sheet.pa-arrives::before {
+            animation: var(--pa-pass-out) var(--pa-Tp) var(--pa-curve) calc(var(--pa-win) - var(--pa-d) - var(--pa-Tp)) reverse both;
+        }
+
+        .pa-scene[data-pa-kind='cycle'][data-pa-phase='out'] .pa-sheet.pa-arrives > .pa-ink {
+            animation: var(--pa-ink-out) var(--pa-T) var(--pa-curve) calc(var(--pa-win) - var(--pa-d) - var(--pa-lag) - var(--pa-T)) reverse both;
+        }
+
+        .pa-scene[data-pa-kind='cycle'][data-pa-phase='out'] .pa-run {
+            animation: var(--pa-run-out) var(--pa-T) var(--pa-curve) calc(var(--pa-win) - var(--pa-d) - var(--pa-lag) - var(--pa-T)) reverse both;
+        }
+
+        .pa-scene[data-pa-kind='cycle'][data-pa-phase='out'] .pa-fades {
+            animation: pa-fade-r var(--pa-Tp) var(--pa-curve) calc(var(--pa-win) - var(--pa-d) - var(--pa-Tp)) reverse both;
+        }
+    }
+
+    /* ── 1 · The anchor ─────────────────────────────────────────────────── */
+
+    .pa-scene[data-pa-anchor='meet'] {
+        --pa-pass-in: pa-meet-pass;
+        --pa-pass-out: pa-meet-pass-r;
+        --pa-ink-in: pa-meet-ink;
+        --pa-ink-out: pa-meet-ink-r;
+        --pa-lag: 0ms;
+    }
+
+    .pa-scene[data-pa-anchor='popped'],
+    .pa-scene[data-pa-leave='pop'] {
+        --pa-pass-in: pa-pop;
+        --pa-pass-out: pa-pop-r;
+        --pa-ink-in: pa-pop;
+        --pa-ink-out: pa-pop-r;
+        --pa-lag: calc(60ms * var(--pa-slow, 1));
+    }
+
+    .pa-scene[data-pa-anchor='popped'] :is(.pa-sheet > .pa-ink, .pa-sheet),
+    .pa-scene[data-pa-leave='pop'] :is(.pa-sheet > .pa-ink, .pa-sheet) {
+        transform-origin: 50% 50%;
+    }
+
+    .pa-scene[data-pa-anchor='sheet'] {
+        --pa-pass-in: pa-sheet-pass;
+        --pa-pass-out: pa-sheet-pass-r;
+        --pa-ink-in: pa-sheet-ink;
+        --pa-ink-out: pa-sheet-ink-r;
+        --pa-lag: 0ms;
+        --pa-Tp: calc(427ms * var(--pa-slow, 1));
+        --pa-T: calc(427ms * var(--pa-slow, 1));
+        --pa-curve: var(--pa-spring);
+        /* Today the dialog's second sheet is mint. */
+        --pa-pass-c: var(--accent);
+    }
+
+    .pa-scene[data-pa-anchor='sheet'] .pa-sheet > .pa-ink {
+        transform-origin: 50% 50%;
+    }
+
+    /* ── 2 · The curve ──────────────────────────────────────────────────── */
+
+    .pa-scene[data-pa-curve='register'] {
+        --pa-curve: var(--pa-spring);
+    }
+
+    .pa-scene[data-pa-curve='jelly'] {
+        --pa-curve: var(--pa-jelly);
+    }
+
+    .pa-scene[data-pa-curve] .pa-bead--even {
+        --pa-curve: linear;
+    }
+
+    /* ── 3 · The direction ─────────────────────────────────────────────── */
+
+    .pa-scene[data-pa-direction='rise'] {
+        --pa-pass-in: pa-rise-pass;
+        --pa-pass-out: pa-rise-pass-r;
+        --pa-ink-in: pa-rise-ink;
+        --pa-ink-out: pa-rise-ink-r;
+        --pa-run-in: pa-run-up;
+        --pa-run-out: pa-run-up-r;
+        --pa-lag: 0ms;
+    }
+
+    .pa-scene[data-pa-direction='bubbles'] {
+        --pa-pass-in: pa-bubble-pass;
+        --pa-pass-out: pa-bubble-pass-r;
+        --pa-ink-in: pa-bubble-ink;
+        --pa-ink-out: pa-bubble-ink-r;
+        --pa-run-in: pa-run-end;
+        --pa-run-out: pa-run-end-r;
+        --pa-lag: 0ms;
+    }
+
+    .pa-scene[data-pa-direction='bubbles'] .pa-arrives {
+        --pa-d: calc(var(--ri, 0) * var(--pa-step));
+    }
+
+    .pa-scene[data-pa-direction='bubbles'] .pa-sheet > .pa-ink {
+        transform-origin: 100% 100%;
+    }
+
+    /* ── 4 · Opening from a trigger ────────────────────────────────────── */
+
+    .pa-scene[data-pa-opening='bounced'] {
+        --pa-pass-in: pa-bounce-pass;
+        --pa-pass-out: pa-bounce-pass-r;
+        --pa-ink-in: pa-bounce-ink;
+        --pa-ink-out: pa-bounce-ink-r;
+        --pa-lag: 0ms;
+        --pa-Tp: calc(340ms * var(--pa-slow, 1));
+        --pa-T: calc(340ms * var(--pa-slow, 1));
+        --pa-curve: ease-out;
+    }
+
+    .pa-scene[data-pa-opening='popped'] {
+        --pa-pass-in: pa-pop;
+        --pa-pass-out: pa-pop-r;
+        --pa-ink-in: pa-pop;
+        --pa-ink-out: pa-pop-r;
+        --pa-lag: calc(60ms * var(--pa-slow, 1));
+        --pa-Tp: calc(280ms * var(--pa-slow, 1));
+        --pa-T: calc(280ms * var(--pa-slow, 1));
+        --pa-curve: var(--pa-spring);
+    }
+
+    .pa-scene[data-pa-opening='popped'] .pa-sheet {
+        transform-origin: 0 0;
+    }
+
+    /* ── 5 · Durations ────────────────────────────────────────────────── */
+
+    .pa-scene[data-pa-durations='brisk'] {
+        --pa-Tp: calc(320ms * var(--pa-slow, 1));
+        --pa-T: calc(320ms * var(--pa-slow, 1));
+        --pa-lag: calc(80ms * var(--pa-slow, 1));
+        --pa-step: calc(40ms * var(--pa-slow, 1));
+        --pa-contact: calc(160ms * var(--pa-slow, 1));
+        --pa-loop: calc(1600ms * var(--pa-slow, 1));
+    }
+
+    .pa-scene[data-pa-durations='unhurried'] {
+        --pa-Tp: calc(600ms * var(--pa-slow, 1));
+        --pa-T: calc(600ms * var(--pa-slow, 1));
+        --pa-lag: calc(180ms * var(--pa-slow, 1));
+        --pa-step: calc(90ms * var(--pa-slow, 1));
+        --pa-contact: calc(280ms * var(--pa-slow, 1));
+        --pa-loop: calc(3200ms * var(--pa-slow, 1));
+    }
+
+    /* The contact: the button is stuck down while the scene holds, in the contact time. */
+    .pa-scene[data-pa-phase='hold'] .pa-tap {
+        translate: 0 3px;
+        box-shadow: 0 0 0 var(--pa-peel);
+    }
+
+    /* ── 6 · Colour ──────────────────────────────────────────────────── */
+
+    .pa-scene mark {
+        padding: 0.05em 0.25em;
+        border-radius: 0.25em;
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+
+    .pa-scene[data-pa-colour='today'] .pa-dialogwrap {
+        --pa-pass-c: var(--accent);
+    }
+
+    .pa-scene[data-pa-colour='today'] mark:nth-of-type(2) {
+        background: var(--info);
+        color: var(--info-foreground);
+    }
+
+    .pa-scene[data-pa-colour='candy'] {
+        --pa-pass-c: hsl(from var(--info) h calc(s * 1.2) 85%);
+    }
+
+    .pa-scene[data-pa-colour='candy'] .kp-card {
+        background: hsl(from var(--primary) h calc(s * 1.15) 94%);
+    }
+
+    .pa-scene[data-pa-colour='candy'] .kp-dialog {
+        background: hsl(from var(--warning) h calc(s * 1.3) 93%);
+    }
+
+    .pa-scene[data-pa-colour='candy'] .kp-kpi {
+        background: hsl(from var(--secondary) h calc(s * 1.5) 93%);
+    }
+
+    .pa-scene[data-pa-colour='candy'] mark {
+        background: hsl(from var(--warning) h calc(s * 1.3) 84%);
+        color: var(--warning-foreground);
+    }
+
+    .pa-scene[data-pa-colour='candy'] mark:nth-of-type(2) {
+        background: hsl(from var(--info) h calc(s * 1.2) 85%);
+        color: var(--info-foreground);
+    }
+
+    /* ── 7 · Corners ─────────────────────────────────────────────────── */
+
+    .pa-scene .pa-sizes3 .pa-small {
+        min-inline-size: 0;
+    }
+
+    .pa-scene[data-pa-corners='pills'] {
+        --pa-r-plate: 1.8rem;
+        --pa-r-ctl: 999px;
+    }
+
+    .pa-scene[data-pa-corners='pills'] .kp-card {
+        padding-inline: 1.3rem;
+    }
+
+    .pa-scene[data-pa-corners='picks'] .pa-small {
+        border-radius: 60% 40% 55% 45%;
+    }
+
+    .pa-scene[data-pa-corners='picks'] .pa-sheet:has(> .pa-small) {
+        --pa-r: 60% 40% 55% 45%;
+    }
+
+    .pa-scene[data-pa-corners='picks'] .pa-long {
+        border: 2px dashed var(--border-strong);
+        border-radius: 2.5rem 2.5rem 1.5rem 2.5rem;
+    }
+
+    .pa-scene[data-pa-corners='picks'] .pa-sheet:has(> .pa-long) {
+        --pa-r: 2.5rem 2.5rem 1.5rem 2.5rem;
+    }
+
+    .pa-scene[data-pa-corners='picks'] .pa-wide {
+        border-radius: 0.3rem;
+        border-block-end: 3px solid var(--border-strong);
+    }
+
+    .pa-scene[data-pa-corners='picks'] .pa-sheet:has(> .pa-wide) {
+        --pa-r: 0.3rem;
+    }
+
+    .pa-scene[data-pa-corners='picks'] .kp-popover {
+        border-radius: calc(var(--radius) * 2.4);
+    }
+
+    .pa-scene[data-pa-corners='picks'] .pa-sheet:has(> .kp-popover) {
+        --pa-r: calc(var(--radius) * 2.4);
+    }
+
+    .pa-scene[data-pa-corners='picks'] .pa-btn {
+        border-radius: 0.6rem;
+    }
+
+    .pa-scene[data-pa-corners='picks'] .pa-tip {
+        border-radius: 0.3rem;
+    }
+
+    .pa-scene[data-pa-corners='picks'] .pa-bar,
+    .pa-scene[data-pa-corners='picks'] .pa-bar * {
+        border-radius: 2px;
+    }
+
+    .pa-scene[data-pa-corners] .pa-tip--still {
+        justify-self: start;
+    }
+
+    /* ── 8 · Surface ─────────────────────────────────────────────────── */
+
+    .pa-scene[data-pa-surface='pass'] .pa-tape,
+    .pa-scene[data-pa-surface='today'] .pa-tape {
+        display: none;
+    }
+
+    .pa-scene[data-pa-surface='today'] .pa-sheet::before {
+        display: none;
+    }
+
+    .pa-scene[data-pa-surface='today'] .pa-dialogwrap .kp-dialog {
+        box-shadow:
+            7px 8px 0 -1px var(--accent),
+            7px 8px 0 0 hsl(from var(--accent-foreground) h s l / 0.35),
+            0 3px 0 var(--pa-peel);
+    }
+
+    .pa-scene[data-pa-surface='today'] :is(.kp-toast, .kp-popover) {
+        box-shadow: 0 16px 28px -14px hsl(from var(--foreground) h s l / 0.35);
+    }
+
+    .pa-scene[data-pa-surface='today'] .kp-kpi,
+    .pa-scene[data-pa-surface='today'] .kp-card {
+        box-shadow: 0 8px 14px hsl(from var(--foreground) h s l / 0.1);
+    }
+
+    /* ── 9 · Tone ────────────────────────────────────────────────────── */
+
+    .pa-scene[data-pa-tone='heart'] .pa-note {
+        border-radius: var(--pa-r-chip);
+        rotate: -6deg;
+    }
+
+    .pa-scene[data-pa-tone='heart'] .pa-failed {
+        border-block-start: 6px solid hsl(from var(--destructive) h s 80%);
+    }
+
+    .pa-scene[data-pa-tone='heart'] .kp-kpi[data-kp-tone='warning'] {
+        border-block-start: 6px solid hsl(from var(--warning) h s 72%);
+    }
+
+    .pa-scene[data-pa-tone='heart'] .kp-kpi[data-kp-tone='warning'] .kp-kpi__label {
+        background: none;
+        color: var(--muted-foreground);
+    }
+
+    .pa-scene[data-pa-tone='heart'] .pa-state {
+        rotate: -5deg;
+        border-color: var(--warning-foreground);
+    }
+
+    .pa-scene[data-pa-tone='taped'] .pa-note,
+    .pa-scene[data-pa-tone='taped'] .kp-kpi[data-kp-tone='warning'] .kp-kpi__label {
+        border-radius: 2px;
+        box-shadow: none;
+        background: repeating-linear-gradient(90deg, hsl(from var(--warning) h s l / 0.9) 0 6px, hsl(from var(--warning) h s calc(l - 6) / 0.9) 6px 12px);
+        color: var(--warning-foreground);
+        rotate: -2deg;
+    }
+
+    .pa-scene[data-pa-tone='taped'] .pa-note[data-kp-tone='bad'] {
+        background: repeating-linear-gradient(90deg, hsl(from var(--destructive) h s 92%) 0 6px, hsl(from var(--destructive) h s 86%) 6px 12px);
+        color: var(--destructive);
+    }
+
+    .pa-scene[data-pa-tone='taped'] .pa-state {
+        border-radius: 2px;
+        box-shadow: none;
+        background: repeating-linear-gradient(90deg, var(--warning) 0 6px, hsl(from var(--warning) h s calc(l - 6)) 6px 12px);
+    }
+
+    .pa-scene[data-pa-tone='taped'] .kp-menu__item--destructive {
+        background: repeating-linear-gradient(90deg, hsl(from var(--destructive) h s 94%) 0 6px, hsl(from var(--destructive) h s 89%) 6px 12px);
+    }
+
+    .pa-scene[data-pa-tone='heart'] .kp-menu__item--destructive::after {
+        content: '♥';
+        margin-inline-start: 0.4rem;
+        display: inline-block;
+        rotate: -12deg;
+    }
+
+    .pa-scene[data-pa-tone='sticker'] .kp-menu__item--destructive {
+        background: hsl(from var(--destructive) h s 96%);
+    }
+
+    /* ── 10 · Live ───────────────────────────────────────────────────── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        .pa-scene[data-pa-live='wobble'][data-pa-beat='a'] .pa-carrier {
+            animation: pa-wobble-a calc(800ms * var(--pa-slow, 1)) ease-out;
+        }
+
+        .pa-scene[data-pa-live='wobble'][data-pa-beat='b'] .pa-carrier {
+            animation: pa-wobble-b calc(800ms * var(--pa-slow, 1)) ease-out;
+        }
+
+        .pa-scene[data-pa-live='reprint'][data-pa-beat='a'] .pa-carrier {
+            animation: pa-reprint-a calc(560ms * var(--pa-slow, 1)) var(--pa-land);
+        }
+
+        .pa-scene[data-pa-live='reprint'][data-pa-beat='b'] .pa-carrier {
+            animation: pa-reprint-b calc(560ms * var(--pa-slow, 1)) var(--pa-land);
+        }
+
+        .pa-scene[data-pa-live='squish'][data-pa-beat='a'] .pa-carrier {
+            animation: pa-squish-a calc(500ms * var(--pa-slow, 1)) ease-out;
+        }
+
+        .pa-scene[data-pa-live='squish'][data-pa-beat='b'] .pa-carrier {
+            animation: pa-squish-b calc(500ms * var(--pa-slow, 1)) ease-out;
+        }
+    }
+
+    .pa-scene[data-pa-live='squish'] .pa-carrier {
+        transform-origin: 50% 50%;
+    }
+
+    /* ── 12 · Leave ──────────────────────────────────────────────────── */
+
+    .pa-scene[data-pa-leave='balloon'] {
+        --pa-pass-in: pa-balloon-pass;
+        --pa-pass-out: pa-balloon-pass-r;
+        --pa-ink-in: pa-balloon-ink;
+        --pa-ink-out: pa-balloon-ink-r;
+        --pa-lag: 0ms;
+        --pa-Tp: calc(520ms * var(--pa-slow, 1));
+        --pa-T: calc(520ms * var(--pa-slow, 1));
+        /* The leave is (0.4, 0, 1, 1) forwards; played backwards on the arrival its
+           mirror is the point reflection (0, 0, 0.6, 1). */
+        --pa-curve: cubic-bezier(0, 0, 0.6, 1);
+    }
+
+    .pa-scene[data-pa-leave='balloon'] .pa-sheet > .pa-ink {
+        transform-origin: 50% 50%;
+    }
+
+    /* ── 13 to 16 · Pointing, focus, press: the recommended manners ─────── */
+
+    /* G14: the sticker lifts flat on its peel and its corner curls into a fold. */
+    .pa-scene :is(.pa-btn, .pa-kpilink, .pa-day--btn):is(:hover, .pa-pointed) {
+        translate: 0 -2px;
+        box-shadow: 0 5px 0 var(--pa-peel);
+    }
+
+    .pa-scene :is(.pa-btn, .pa-kpilink, .pa-day--btn, .pa-entry):is(:hover, .pa-pointed) > .pa-fold {
+        scale: 1;
+    }
+
+    .pa-scene .pa-entry:is(:hover, .pa-pointed) {
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+
+    .pa-scene .pa-link:is(:hover, .pa-pointed) {
+        background-size: 100% 100%;
+    }
+
+    /* G15: DI2's two channels, the outer one dashed in plum. */
+    .pa-scene :is(.pa-btn, .pa-kpilink, .pa-day--btn):is(:focus-visible, .pa-focused) {
+        outline: 2px dashed var(--primary);
+        outline-offset: 3px;
+        box-shadow:
+            0 0 0 2px var(--focus-ring),
+            0 3px 0 var(--pa-peel);
+    }
+
+    .pa-scene .pa-entry:is(:focus-visible, .pa-focused) {
+        outline: 2px dashed var(--primary);
+        outline-offset: 1px;
+        box-shadow: inset 0 0 0 2px var(--focus-ring);
+    }
+
+    /* G16: stuck down onto its peel, the fold lying flat, in a loop. */
+    @media (prefers-reduced-motion: no-preference) {
+        .pa-scene[data-pa-kind='loop'] :is(.pa-btn, .pa-kpilink, .pa-day--btn).pa-press {
+            animation: pa-press-flat calc(1600ms * var(--pa-slow, 1)) ease infinite;
+        }
+
+        .pa-scene[data-pa-kind='loop'] .pa-entry.pa-press {
+            animation: pa-press-entry calc(1600ms * var(--pa-slow, 1)) ease infinite;
+        }
+
+        .pa-scene[data-pa-press='squash'] :is(.pa-btn, .pa-kpilink, .pa-day--btn, .pa-entry).pa-press {
+            animation-name: pa-press-squash;
+        }
+
+        .pa-scene[data-pa-press='bubble'] :is(.pa-btn, .pa-kpilink, .pa-day--btn).pa-press {
+            animation-name: pa-press-bubble;
+        }
+    }
+
+    .pa-scene[data-pa-press='bubble'] .pa-entry.pa-press,
+    .pa-scene[data-pa-press='squash'] .pa-entry.pa-press {
+        background: var(--accent);
+    }
+
+    /* ── 14 · Hover options ─────────────────────────────────────────── */
+
+    .pa-scene[data-pa-hover='tilt'] :is(.pa-btn, .pa-kpilink, .pa-day--btn):is(:hover, .pa-pointed) {
+        rotate: -1.2deg;
+        box-shadow:
+            0 5px 0 var(--pa-peel),
+            0 8px 14px hsl(from var(--foreground) h s l / 0.14);
+    }
+
+    .pa-scene[data-pa-hover='tilt'] .pa-entry:is(:hover, .pa-pointed) {
+        rotate: -2deg;
+    }
+
+    .pa-scene:is([data-pa-hover='tilt'], [data-pa-hover='tape']) .pa-fold {
+        scale: 0;
+    }
+
+    /* The tape tab: a small strip of tape lies on the top-end corner and lifts its end. */
+    .pa-scene[data-pa-hover='tape'] :is(.pa-btn, .pa-kpilink, .pa-day--btn, .pa-entry) > .pa-fold {
+        scale: 1;
+        inline-size: 1.4rem;
+        block-size: 0.5rem;
+        inset-block-start: -0.2rem;
+        inset-inline-end: -0.4rem;
+        border-radius: 2px;
+        background: var(--pa-tape-bg);
+        box-shadow: none;
+        rotate: 30deg;
+        transform-origin: 0 50%;
+        transition: rotate var(--pa-contact) var(--pa-land), translate var(--pa-contact) var(--pa-land);
+    }
+
+    .pa-scene[data-pa-hover='tape'] :is(.pa-btn, .pa-kpilink, .pa-day--btn, .pa-entry):is(:hover, .pa-pointed) > .pa-fold {
+        rotate: 5deg;
+        translate: 0 -4px;
+    }
+
+    .pa-scene[data-pa-hover='tape'] :is(.pa-btn, .pa-kpilink, .pa-day--btn):is(:hover, .pa-pointed) {
+        translate: 0 0;
+        box-shadow: 0 3px 0 var(--pa-peel);
+    }
+
+    /* ── 15 · Focus options ─────────────────────────────────────────── */
+
+    .pa-scene[data-pa-focus='di2'] :is(.pa-btn, .pa-kpilink, .pa-day--btn, .pa-entry):is(:focus-visible, .pa-focused) {
+        outline: 2px solid var(--focus-ring-contrast);
+        outline-offset: 2px;
+    }
+
+    .pa-scene[data-pa-focus='single'] :is(.pa-btn, .pa-kpilink, .pa-day--btn):is(:focus-visible, .pa-focused) {
+        outline: 2px dashed var(--ring);
+        outline-offset: 3px;
+        box-shadow: 0 3px 0 var(--pa-peel);
+    }
+
+    .pa-scene[data-pa-focus='single'] .pa-entry:is(:focus-visible, .pa-focused) {
+        outline: 2px dashed var(--ring);
+        box-shadow: none;
+    }
+
+    /* ── 13 · Composites: the State buttons show every part in one state ── */
+
+    .pa-sec[data-pa-show='hover'] .pa-scene[data-pa-composites] :is(.pa-btn, .pa-kpilink) {
+        translate: 0 -2px;
+        box-shadow: 0 5px 0 var(--pa-peel);
+    }
+
+    .pa-sec[data-pa-show='hover'] .pa-scene[data-pa-composites] :is(.pa-btn, .pa-kpilink, .pa-entry) > .pa-fold {
+        scale: 1;
+    }
+
+    .pa-sec[data-pa-show='hover'] .pa-scene[data-pa-composites] .pa-entry {
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+
+    .pa-sec[data-pa-show='focus'] .pa-scene[data-pa-composites] :is(.pa-btn, .pa-kpilink) {
+        outline: 2px dashed var(--primary);
+        outline-offset: 3px;
+        box-shadow:
+            0 0 0 2px var(--focus-ring),
+            0 3px 0 var(--pa-peel);
+    }
+
+    .pa-sec[data-pa-show='focus'] .pa-scene[data-pa-composites] .pa-entry {
+        outline: 2px dashed var(--primary);
+        outline-offset: 1px;
+        box-shadow: inset 0 0 0 2px var(--focus-ring);
+    }
+
+    .pa-sec[data-pa-show='press'] .pa-scene[data-pa-composites] :is(.pa-btn, .pa-kpilink) {
+        translate: 0 3px;
+        box-shadow: 0 0 0 var(--pa-peel);
+    }
+
+    .pa-sec[data-pa-show='press'] .pa-scene[data-pa-composites] .pa-entry {
+        background: var(--accent);
+        translate: 0 1px;
+    }
+
+    /* Option 2: today's register on every button, the alone ones too. */
+    .pa-sec[data-pa-show='hover'] .pa-scene[data-pa-composites='register'] :is(.pa-btn, .pa-kpilink) {
+        rotate: -1.2deg;
+        box-shadow:
+            0 5px 0 var(--pa-peel),
+            0 8px 14px hsl(from var(--foreground) h s l / 0.14);
+    }
+
+    .pa-sec[data-pa-show='hover'] .pa-scene[data-pa-composites='register'] :is(.pa-btn, .pa-kpilink, .pa-entry) > .pa-fold,
+    .pa-sec[data-pa-show='hover'] .pa-scene[data-pa-composites='picks'] .pa-in-header > .pa-fold,
+    .pa-sec[data-pa-show='hover'] .pa-scene[data-pa-composites='picks'] .pa-entry > .pa-fold {
+        scale: 0;
+    }
+
+    .pa-sec[data-pa-show='focus'] .pa-scene[data-pa-composites='register'] :is(.pa-btn, .pa-kpilink) {
+        outline: 2px solid var(--focus-ring-contrast);
+        outline-offset: 2px;
+    }
+
+    /* Option 3: as the picks, each composite its own button. */
+    .pa-sec[data-pa-show='hover'] .pa-scene[data-pa-composites='picks'] .pa-in-header {
+        translate: 0 -1px;
+        rotate: -1.5deg;
+        box-shadow: 0 3px 0 var(--pa-peel);
+    }
+
+    .pa-sec[data-pa-show='hover'] .pa-scene[data-pa-composites='picks'] .pa-entry {
+        rotate: -3deg;
+    }
+
+    .pa-sec[data-pa-show='hover'] .pa-scene[data-pa-composites='picks'] .pa-tile-link {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        border-radius: var(--pa-r-chip);
+    }
+
+    .pa-sec[data-pa-show='focus'] .pa-scene[data-pa-composites='picks'] :is(.pa-in-header, .pa-tile-link, .pa-kpilink) {
+        outline: 2px dashed var(--ring);
+        box-shadow: 0 3px 0 var(--pa-peel);
+    }
+
+    .pa-sec[data-pa-show='press'] .pa-scene[data-pa-composites='picks'] .pa-in-header {
+        translate: 0 0;
+        box-shadow: 0 3px 0 var(--pa-peel);
+    }
+
+    .pa-scene[data-pa-composites='picks'] .pa-kpilink {
+        transition-duration: calc(150ms * var(--pa-slow, 1));
+        transition-timing-function: ease;
+    }
+
+    /* ── 17 · Type ───────────────────────────────────────────────────── */
+
+    .pa-scene[data-pa-type='caps'] :is(.pa-type__label, .pa-type__table th, .kp-badge, .kp-card__title) {
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        font-size: 0.72rem;
+    }
+
+    .pa-scene[data-pa-type='mono'] :is(.pa-type__label, .pa-type__figure, .pa-type__table, .kp-badge) {
+        font-family: var(--theme-font-mono);
+    }
+
+    /* ── 18 · Motifs ─────────────────────────────────────────────────── */
+
+    .pa-scene[data-pa-motifs='candy'] .pa-tile {
+        background:
+            radial-gradient(circle, hsl(from var(--primary) h s 75%) 1.5px, transparent 2px) 3px 4px / 22px 18px,
+            radial-gradient(circle, hsl(from var(--warning) h s 70%) 1.5px, transparent 2px) 13px 11px / 22px 18px,
+            var(--card);
+    }
+
+    .pa-scene[data-pa-motifs='candy'] .pa-list li::marker {
+        content: '★ ';
+        color: var(--warning-foreground);
+    }
+
+    .pa-scene[data-pa-motifs='candy'] .pa-events i {
+        border-style: dashed;
+        border-radius: 40% 60% 55% 45%;
+        background: hsl(from var(--primary) h s 88%);
+    }
+
+    .pa-scene[data-pa-motifs='candy'] .pa-empty {
+        border-style: dashed;
+        border-radius: 2.5rem 2.5rem 1.5rem 2.5rem;
+    }
+
+    .pa-scene[data-pa-motifs='candy'] .pa-meter[data-kp-over]::before {
+        content: '♥';
+        position: absolute;
+        inset-inline-end: -1rem;
+        inset-block-start: -0.2rem;
+        color: var(--primary);
+    }
+
+    .pa-scene[data-pa-motifs='bare'] .pa-tape {
+        display: none;
+    }
+
+    .pa-scene[data-pa-motifs='bare'] .pa-sheet::before {
+        display: none;
+    }
+
+    .pa-scene[data-pa-motifs='bare'] .pa-events i {
+        box-shadow: none;
+        border-radius: 2px;
+    }
+
+    .pa-scene[data-pa-motifs='bare'] .pa-empty::before,
+    .pa-scene[data-pa-motifs='bare'] .pa-empty::after {
+        display: none;
+    }
+
+    .pa-scene[data-pa-motifs='bare'] .pa-seam {
+        background: var(--border-strong);
+        block-size: 1px;
+    }
+
+    .pa-scene[data-pa-motifs='bare'] .pa-seam::before,
+    .pa-scene[data-pa-motifs='bare'] .pa-seam::after {
+        display: none;
+    }
+
+    .pa-scene[data-pa-motifs='bare'] .pa-btn {
+        box-shadow: none;
+    }
+
+    .pa-scene[data-pa-motifs='bare'] {
+        background: var(--background);
+    }
+}

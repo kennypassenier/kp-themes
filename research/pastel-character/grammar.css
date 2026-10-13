@@ -1,0 +1,670 @@
+/* research/pastel-character/grammar.css: pastel's proposed grammar as the
+   questions use it (themes/pastel/CHARACTER.md, the anchor in §0a and G1-G20).
+   One file of tokens and keyframes, linked by demo.html before options.css;
+   options.css applies it to every option of every question.
+
+   - pastel is a RISOGRAPH-PRINTED STICKER SHEET IN A PLANNER, and what it does
+     is PRINT TWICE AND STICK ON. A part's second pass (a flat silhouette in the
+     second ink, `--fx-overprint`, no words) springs from a wide misregistration
+     into its rest 6 px off register, down and toward the end, where it stays as
+     the part's flat shadow; 120 ms later the part itself swings down from its
+     top-start corner onto it. A close is that played backwards: the part peels
+     off at its corner, then the pass slides off register (G2, G3, G12);
+   - one curve, the soft landing (G1): a smooth approach that passes its rest by
+     8 % at 75 % of the time and settles back once, written as a `linear()`; a
+     close is the same keyframes on the same curve played `reverse`, which is
+     their exact mirror in time (docs/THEME_LESSONS.md lesson 8). Loops that go
+     there and back are `ease-in-out`, drifts `linear`;
+   - the clock (G4): contact 220 ms, a pass 440 ms, the ink pass from 120 ms (one
+     landing 560 ms), a group 60 ms apart, the wobble 800 ms, a loop 2400 ms;
+   - three inks (G5): plum acts and is the text, sky is the second pass and
+     nothing else, mint is the tape, the mark's plate and a hovered entry;
+   - round (G6): plates 1.2 rem, controls 0.85 rem, chips and the tooltip pills;
+   - flat (G7): no blur anywhere; a plate's offset is its sky pass, a control's
+     its plum peel 3 px straight down; a stuck plate carries one strip of washi
+     tape across its top-start corner.
+
+   Every one-shot motion is a pair of keyframes, `pa-x` and `pa-x-r`, with the
+   same frames: the open plays `pa-x` forwards, the close `pa-x-r` in reverse,
+   so the browser restarts it (lesson 44) and the close is the open's frames in
+   reverse order. Keyframes list only their `from`: the `to` is the part's own
+   resting value. Colours come from the theme's tokens only; every animation is
+   used under prefers-reduced-motion: no-preference, and the reduced pose is the
+   resting picture (G19). The tokens hang on `.pa-page, .pa-scene`, because the
+   review dialog moves a section into its stage. */
+
+@layer kp.signature {
+    :is(.pa-page, .pa-scene) {
+        /* G1: the soft landing, and the two curves offered beside it. */
+        --pa-land: linear(
+            0,
+            0.014 5%,
+            0.052 10%,
+            0.112 15%,
+            0.189 20%,
+            0.28 25%,
+            0.38 30%,
+            0.486 35%,
+            0.594 40%,
+            0.7 45%,
+            0.8 50%,
+            0.891 55%,
+            0.968 60%,
+            1.028 65%,
+            1.066 70%,
+            1.08 75%,
+            1.072 80%,
+            1.052 85%,
+            1.028 90%,
+            1.008 95%,
+            1
+        );
+        --pa-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+        --pa-jelly: linear(
+            0,
+            0.351 5%,
+            0.706 10%,
+            0.974 15%,
+            1.128 20%,
+            1.181 25%,
+            1.164 30%,
+            1.114 35%,
+            1.058 40%,
+            1.013 45%,
+            0.985 50%,
+            0.973 55%,
+            0.974 60%,
+            0.98 65%,
+            0.989 70%,
+            0.997 75%,
+            1.002 80%,
+            1.004 85%,
+            1.004 90%,
+            1.003 95%,
+            1
+        );
+        /* G5: the inks by role. */
+        --pa-ink-c: var(--primary);
+        --pa-pass-c: color-mix(in srgb, var(--fx-overprint) 85%, var(--background));
+        --pa-mint: var(--accent);
+        --pa-peel: hsl(from var(--primary) h s calc(l * 0.55));
+        --pa-paper: var(--card);
+        --pa-milk: var(--background);
+        /* G7: the pass's rest, off register. */
+        --pa-off: 6px;
+        /* G6: two radii and the pill. */
+        --pa-r-plate: calc(var(--radius, 1rem) * 1.2);
+        --pa-r-ctl: 0.85rem;
+        --pa-r-chip: 999px;
+        /* G10: the washi tape, mint with its stripes. */
+        --pa-tape-stripe: color-mix(in srgb, var(--accent-foreground) 25%, var(--accent));
+        --pa-tape-bg: repeating-linear-gradient(90deg, var(--accent) 0 6px, var(--pa-tape-stripe) 6px 12px);
+    }
+}
+
+/* ── The anchor (§0a): printed twice, stuck on ─────────────────────────── */
+
+/* The second pass: from far along the misregistration line to its 6 px rest. */
+@keyframes pa-pass {
+    from {
+        translate: calc(var(--pa-off, 6px) + 18px) calc(var(--pa-off, 6px) + 16px);
+        opacity: 0;
+    }
+}
+
+@keyframes pa-pass-r {
+    from {
+        translate: calc(var(--pa-off, 6px) + 18px) calc(var(--pa-off, 6px) + 16px);
+        opacity: 0;
+    }
+}
+
+/* The ink pass: swung down from its top-start corner (transform-origin 0 0). */
+@keyframes pa-stuck {
+    from {
+        rotate: -9deg;
+        translate: 0 -8px;
+        opacity: 0;
+    }
+}
+
+@keyframes pa-stuck-r {
+    from {
+        rotate: -9deg;
+        translate: 0 -8px;
+        opacity: 0;
+    }
+}
+
+/* Option 2: the two passes close on each other from both sides of the line. */
+@keyframes pa-meet-pass {
+    from {
+        translate: calc(var(--pa-off, 6px) + 20px) calc(var(--pa-off, 6px) + 18px);
+        opacity: 0;
+    }
+}
+
+@keyframes pa-meet-pass-r {
+    from {
+        translate: calc(var(--pa-off, 6px) + 20px) calc(var(--pa-off, 6px) + 18px);
+        opacity: 0;
+    }
+}
+
+@keyframes pa-meet-ink {
+    from {
+        translate: -16px -14px;
+        opacity: 0;
+    }
+}
+
+@keyframes pa-meet-ink-r {
+    from {
+        translate: -16px -14px;
+        opacity: 0;
+    }
+}
+
+/* Option 3 (the picks): popped from a quarter of its size. */
+@keyframes pa-pop {
+    from {
+        scale: 0.25;
+        opacity: 0;
+    }
+}
+
+@keyframes pa-pop-r {
+    from {
+        scale: 0.25;
+        opacity: 0;
+    }
+}
+
+/* Option 4 (today): the sheet, part and pass together, up from 18 px below, -2.5°. */
+@keyframes pa-sheet-pass {
+    from {
+        translate: var(--pa-off, 6px) calc(var(--pa-off, 6px) + 18px);
+        rotate: -2.5deg;
+        opacity: 0;
+    }
+}
+
+@keyframes pa-sheet-pass-r {
+    from {
+        translate: var(--pa-off, 6px) calc(var(--pa-off, 6px) + 18px);
+        rotate: -2.5deg;
+        opacity: 0;
+    }
+}
+
+@keyframes pa-sheet-ink {
+    from {
+        translate: 0 18px;
+        rotate: -2.5deg;
+        opacity: 0;
+    }
+}
+
+@keyframes pa-sheet-ink-r {
+    from {
+        translate: 0 18px;
+        rotate: -2.5deg;
+        opacity: 0;
+    }
+}
+
+/* ── G2: the direction's options ────────────────────────────────────────── */
+
+@keyframes pa-rise-pass {
+    from {
+        translate: var(--pa-off, 6px) calc(var(--pa-off, 6px) + 18px);
+        opacity: 0;
+    }
+}
+
+@keyframes pa-rise-pass-r {
+    from {
+        translate: var(--pa-off, 6px) calc(var(--pa-off, 6px) + 18px);
+        opacity: 0;
+    }
+}
+
+@keyframes pa-rise-ink {
+    from {
+        translate: 0 18px;
+        opacity: 0;
+    }
+}
+
+@keyframes pa-rise-ink-r {
+    from {
+        translate: 0 18px;
+        opacity: 0;
+    }
+}
+
+@keyframes pa-bubble-pass {
+    from {
+        translate: calc(var(--pa-off, 6px) + 16px) calc(var(--pa-off, 6px) + 20px);
+        scale: 0.6;
+        opacity: 0;
+    }
+}
+
+@keyframes pa-bubble-pass-r {
+    from {
+        translate: calc(var(--pa-off, 6px) + 16px) calc(var(--pa-off, 6px) + 20px);
+        scale: 0.6;
+        opacity: 0;
+    }
+}
+
+@keyframes pa-bubble-ink {
+    from {
+        translate: 16px 20px;
+        scale: 0.6;
+        opacity: 0;
+    }
+}
+
+@keyframes pa-bubble-ink-r {
+    from {
+        translate: 16px 20px;
+        scale: 0.6;
+        opacity: 0;
+    }
+}
+
+/* The trend's line: drawn start → end (the recommendation), up from below, or from the end. */
+@keyframes pa-run {
+    from {
+        clip-path: inset(0 100% 0 0);
+    }
+}
+
+@keyframes pa-run-r {
+    from {
+        clip-path: inset(0 100% 0 0);
+    }
+}
+
+@keyframes pa-run-up {
+    from {
+        translate: 0 12px;
+        opacity: 0;
+    }
+}
+
+@keyframes pa-run-up-r {
+    from {
+        translate: 0 12px;
+        opacity: 0;
+    }
+}
+
+@keyframes pa-run-end {
+    from {
+        clip-path: inset(0 0 0 100%);
+    }
+}
+
+@keyframes pa-run-end-r {
+    from {
+        clip-path: inset(0 0 0 100%);
+    }
+}
+
+/* A ground that comes with its panel (the alarm's plate, the tour's ring). */
+@keyframes pa-fade {
+    from {
+        opacity: 0;
+    }
+}
+
+@keyframes pa-fade-r {
+    from {
+        opacity: 0;
+    }
+}
+
+/* ── G3: the opening's options (the picks) ─────────────────────────────── */
+
+/* Bounced in: down into place in two soft steps; the pass travels with it. */
+@keyframes pa-bounce-pass {
+    0% {
+        translate: var(--pa-off, 6px) calc(var(--pa-off, 6px) - 16px);
+        opacity: 0;
+    }
+
+    55% {
+        translate: var(--pa-off, 6px) calc(var(--pa-off, 6px) + 4px);
+        opacity: 1;
+    }
+
+    78% {
+        translate: var(--pa-off, 6px) calc(var(--pa-off, 6px) - 3px);
+    }
+}
+
+@keyframes pa-bounce-pass-r {
+    0% {
+        translate: var(--pa-off, 6px) calc(var(--pa-off, 6px) - 16px);
+        opacity: 0;
+    }
+
+    55% {
+        translate: var(--pa-off, 6px) calc(var(--pa-off, 6px) + 4px);
+        opacity: 1;
+    }
+
+    78% {
+        translate: var(--pa-off, 6px) calc(var(--pa-off, 6px) - 3px);
+    }
+}
+
+@keyframes pa-bounce-ink {
+    0% {
+        translate: 0 -16px;
+        opacity: 0;
+    }
+
+    55% {
+        translate: 0 4px;
+        opacity: 1;
+    }
+
+    78% {
+        translate: 0 -3px;
+    }
+}
+
+@keyframes pa-bounce-ink-r {
+    0% {
+        translate: 0 -16px;
+        opacity: 0;
+    }
+
+    55% {
+        translate: 0 4px;
+        opacity: 1;
+    }
+
+    78% {
+        translate: 0 -3px;
+    }
+}
+
+/* ── G12: the leave's option, the balloon (Kenny's exit of 2026-10-04) ──── */
+
+@keyframes pa-balloon-pass {
+    from {
+        translate: var(--pa-off, 6px) calc(var(--pa-off, 6px) - 28px);
+        rotate: -5deg;
+        opacity: 0;
+    }
+}
+
+@keyframes pa-balloon-pass-r {
+    from {
+        translate: var(--pa-off, 6px) calc(var(--pa-off, 6px) - 28px);
+        rotate: -5deg;
+        opacity: 0;
+    }
+}
+
+@keyframes pa-balloon-ink {
+    from {
+        translate: 0 -28px;
+        rotate: -5deg;
+        opacity: 0;
+    }
+}
+
+@keyframes pa-balloon-ink-r {
+    from {
+        translate: 0 -28px;
+        rotate: -5deg;
+        opacity: 0;
+    }
+}
+
+/* ── Loops: the tape (G10), the roll (G11), the press (G16) ────────────── */
+
+@keyframes pa-flutter {
+    from {
+        rotate: -1.5deg;
+    }
+
+    to {
+        rotate: 1.5deg;
+    }
+}
+
+@keyframes pa-drift {
+    from {
+        background-position: 0 0;
+    }
+
+    to {
+        background-position: 12px 0;
+    }
+}
+
+/* A candy dot hops along (the picks' loading), four hops a pass. */
+@keyframes pa-hop {
+    0% {
+        inset-inline-start: 0%;
+        translate: 0 0;
+    }
+
+    12.5% {
+        translate: 0 -7px;
+    }
+
+    25% {
+        inset-inline-start: 25%;
+        translate: 0 0;
+    }
+
+    37.5% {
+        translate: 0 -7px;
+    }
+
+    50% {
+        inset-inline-start: 50%;
+        translate: 0 0;
+    }
+
+    62.5% {
+        translate: 0 -7px;
+    }
+
+    75% {
+        inset-inline-start: 75%;
+        translate: 0 0;
+    }
+
+    87.5% {
+        translate: 0 -7px;
+    }
+
+    100% {
+        inset-inline-start: calc(100% - 0.5rem);
+        translate: 0 0;
+    }
+}
+
+/* The tape roll: three hops a lap, each on the landing (written out: a var()
+   is not allowed as a timing function inside @keyframes). */
+@keyframes pa-roll {
+    0% {
+        rotate: 0deg;
+        animation-timing-function: linear(0, 0.052 10%, 0.189 20%, 0.38 30%, 0.594 40%, 0.8 50%, 0.968 60%, 1.066 70%, 1.08 75%, 1.052 85%, 1.008 95%, 1);
+    }
+
+    33.333% {
+        rotate: 120deg;
+        animation-timing-function: linear(0, 0.052 10%, 0.189 20%, 0.38 30%, 0.594 40%, 0.8 50%, 0.968 60%, 1.066 70%, 1.08 75%, 1.052 85%, 1.008 95%, 1);
+    }
+
+    66.667% {
+        rotate: 240deg;
+        animation-timing-function: linear(0, 0.052 10%, 0.189 20%, 0.38 30%, 0.594 40%, 0.8 50%, 0.968 60%, 1.066 70%, 1.08 75%, 1.052 85%, 1.008 95%, 1);
+    }
+
+    100% {
+        rotate: 360deg;
+    }
+}
+
+@keyframes pa-orbit {
+    to {
+        rotate: 360deg;
+    }
+}
+
+@keyframes pa-press-flat {
+    0%,
+    35%,
+    95%,
+    100% {
+        translate: 0 0;
+        box-shadow: 0 3px 0 var(--pa-peel);
+    }
+
+    50%,
+    80% {
+        translate: 0 3px;
+        box-shadow: 0 0 0 var(--pa-peel);
+    }
+}
+
+@keyframes pa-press-squash {
+    0%,
+    35%,
+    95%,
+    100% {
+        scale: 1;
+    }
+
+    50%,
+    80% {
+        scale: 1.05 0.9;
+    }
+}
+
+@keyframes pa-press-bubble {
+    0%,
+    35%,
+    95%,
+    100% {
+        scale: 1;
+    }
+
+    50%,
+    80% {
+        scale: 0.97;
+    }
+}
+
+/* A menu entry has no peel: its mint plate comes and it is stuck down 1 px. */
+@keyframes pa-press-entry {
+    0%,
+    35%,
+    95%,
+    100% {
+        translate: 0 0;
+        background-color: transparent;
+    }
+
+    50%,
+    80% {
+        translate: 0 1px;
+        background-color: var(--accent);
+    }
+}
+
+/* The fold lies down while the part is pressed. */
+@keyframes pa-press-fold {
+    0%,
+    35%,
+    95%,
+    100% {
+        scale: 1;
+    }
+
+    50%,
+    80% {
+        scale: 0;
+    }
+}
+
+/* ── G9: the live update, under two names so a new value restarts it ───── */
+
+@keyframes pa-wobble-a {
+    25% {
+        rotate: 10deg;
+    }
+
+    50% {
+        rotate: -7deg;
+    }
+
+    75% {
+        rotate: 3deg;
+    }
+}
+
+@keyframes pa-wobble-b {
+    25% {
+        rotate: 10deg;
+    }
+
+    50% {
+        rotate: -7deg;
+    }
+
+    75% {
+        rotate: 3deg;
+    }
+}
+
+@keyframes pa-reprint-a {
+    from {
+        filter: drop-shadow(0 0 0 transparent);
+    }
+
+    25% {
+        filter: drop-shadow(9px 7px 0 var(--pa-pass-c));
+    }
+
+    to {
+        filter: drop-shadow(0 0 0 transparent);
+    }
+}
+
+@keyframes pa-reprint-b {
+    from {
+        filter: drop-shadow(0 0 0 transparent);
+    }
+
+    25% {
+        filter: drop-shadow(9px 7px 0 var(--pa-pass-c));
+    }
+
+    to {
+        filter: drop-shadow(0 0 0 transparent);
+    }
+}
+
+@keyframes pa-squish-a {
+    30% {
+        scale: 1.12;
+    }
+}
+
+@keyframes pa-squish-b {
+    30% {
+        scale: 1.12;
+    }
+}

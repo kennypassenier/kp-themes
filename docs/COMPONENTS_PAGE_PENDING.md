@@ -12,4 +12,14 @@ each line its example and its option row, and empties the list.
 
 ## Waiting
 
-(Empty: the pass of 2026-10-13 brought every line above onto its component page.)
+(The pass of 2026-10-13 brought every line before this onto its component page.)
+
+- **Pastel's grammar, proposed (research/pastel-character, not yet decided; nothing in css/ yet).** Once Kenny decides, the
+  page shows what the register gains: the anchor _printed twice, stuck on_ (keyframes `kp-sig-pastel-pass-*` and
+  `kp-sig-pastel-stuck-*`, a second name for each close) on the dialog, alarm, palette, tour card, toast, tooltip, popovers,
+  menus, the bar's dropdown and phone panel, side navigation, drawer, date picker and combobox list; the proposed register
+  tokens `--kp-sig-pa-land` (the soft landing curve, `--fx-ease` following it), the pass offset (6 px) and colour
+  (`--fx-overprint`); the washi tape strip on every waiting surface, the tape-roll spinner and the tape along the busy bar;
+  the folded corner on hover and the dashed outer focus line; the wobble as pastel's `--kp-update`. Each with its example and
+  option row on the component pages it touches (dialog, popover, menu, toast, tooltip, alarm, tour, side navigation, date
+  picker, combobox, progress bar, spinner, skeleton, button, key figure).
