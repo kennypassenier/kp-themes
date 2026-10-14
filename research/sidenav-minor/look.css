@@ -1,0 +1,116 @@
+/* research/sidenav-minor: the page around the frames, in tokens only. Every rule
+   hangs on a class of its own, because the review dialog moves the sections into
+   its stage. */
+.mn-page {
+    display: grid;
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) var(--kp-space-md, 1rem) var(--kp-space-2xl, 3rem);
+}
+
+.mn-intro {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.mn-intro :is(h1, p) {
+    margin: 0;
+}
+
+.mn-intro p,
+.mn-sec__head p {
+    max-inline-size: 80ch;
+}
+
+.mn-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    background: var(--background);
+    color: var(--foreground);
+}
+
+.mn-sec__head {
+    display: grid;
+    gap: 0.25rem;
+}
+
+.mn-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+/* The look-at lines are the review dialog's (one per theme, read from here); the page shows the windows. */
+.mn-look {
+    display: none;
+}
+
+.mn-sec__head h2 {
+    font-size: 1.125rem;
+    line-height: 1.4;
+}
+
+.mn-num,
+.mn-how,
+.mn-motion {
+    color: var(--muted-foreground);
+}
+
+.mn-num,
+.mn-how {
+    font-size: 0.875rem;
+}
+
+.mn-windows {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    grid-template-columns: repeat(var(--mn-cols, 1), minmax(0, 1fr));
+    justify-items: start;
+}
+
+.mn-windows--2 {
+    --mn-cols: 2;
+    justify-items: center;
+}
+
+.mn-windows--3 {
+    --mn-cols: 3;
+}
+
+.mn-fig {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    inline-size: 100%;
+    min-inline-size: 0;
+}
+
+.mn-fig figcaption {
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+}
+
+.mn-window {
+    display: block;
+    inline-size: 100%;
+    block-size: min(36rem, 78dvh);
+    border: 1px solid var(--border-strong);
+    background: var(--background);
+}
+
+.mn-window--phone {
+    inline-size: min(100%, 390px);
+}
+
+@media (width <= 52rem) {
+    .mn-windows--3 {
+        --mn-cols: 1;
+    }
+}
+
+.mn-fig figcaption [data-mn-now]:not(:empty)::before {
+    content: '· ';
+    font-weight: normal;
+}

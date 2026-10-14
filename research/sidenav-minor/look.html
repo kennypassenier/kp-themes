@@ -1,0 +1,240 @@
+<!doctype html>
+<!-- Written by research/sidenav-minor/build.mjs; edit options.mjs and build.mjs, not this file. -->
+<html lang="en" data-theme="formal" data-cat-theme="formal" data-review="sidenav-minor-look">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes: the side navigation, six small options</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <link rel="stylesheet" href="../../css/formal-register.css" data-kp-register="formal" />
+        <link rel="stylesheet" href="look.css" />
+    </head>
+    <body>
+        <main class="mn-page">
+            <header class="mn-intro">
+                <h1>The side navigation: six small options</h1>
+                <p>
+                    Six options for the window-edge side navigation, each one attribute or one token and off by default. Every window below plays by itself: the panel opens
+                    and closes on a loop and shows itself pushing the page, keeping a gutter and lying over it. The toggle shows and hides only the panel: nothing dims
+                    and nothing to the right of it covers the page. Each theme keeps its own opening and closing, the close being the opening backwards.
+                    Judge them in the review dialog ("Review in a dialog" at the top), one theme at a time.
+                </p>
+                <p class="mn-motion" data-mn-motion hidden>
+                    <b>Your system asks for reduced motion</b>, so the panels appear and disappear without their effects. Turn it off to judge the movement.
+                </p>
+            </header>
+            <section class="mn-sec" id="narrow" data-review-item="narrow" data-review-title="1 · On a phone the panel can be narrower." data-review-components="sidenav" aria-labelledby="h-narrow">
+                <div class="mn-sec__head">
+                    <p class="mn-num">1 · Width on a narrow screen</p>
+                    <h2 id="h-narrow">On a phone the panel can be narrower.</h2>
+                    <p class="mn-how">The token --kp-sidenav-width-narrow, read while the panel is held as an over panel on a narrow screen.</p>
+                </div>
+                <div class="mn-look" data-review-look>
+                    <p data-for="formal">In formal, compare the two phones: with the token the panel is clearly narrower (13rem, against 20rem). The panel is ruled in where it stands and ruled away again, in the same time both ways. Every label stays readable.</p>
+                    <p data-for="light">In light, compare the two phones: with the token the panel is clearly narrower (13rem, against 20rem). The panel comes out of a glare and goes back into it, in the same time both ways. Every label stays readable.</p>
+                    <p data-for="dark">In dark, compare the two phones: with the token the panel is clearly narrower (13rem, against 20rem). The panel is laid in by a bright line that crosses it, and the line takes it away again, in the same time both ways. Every label stays readable.</p>
+                    <p data-for="cyberpunk">In cyberpunk, compare the two phones: with the token the panel is clearly narrower (13rem, against 20rem). The panel glitches in and out in three jumps, in the same time both ways. Every label stays readable.</p>
+                    <p data-for="synthwave">In synthwave, compare the two phones: with the token the panel is clearly narrower (13rem, against 20rem). The panel is uncovered from its foot behind a glowing beam, and covered again, in the same time both ways. Every label stays readable.</p>
+                    <p data-for="pastel">In pastel, compare the two phones: with the token the panel is clearly narrower (13rem, against 20rem). The panel is stuck on like a sticker and peeled off again, in the same time both ways. Every label stays readable.</p>
+                    <p data-for="terminal">In terminal, compare the two phones: with the token the panel is clearly narrower (13rem, against 20rem). The panel is printed line by line and cleared again, in the same time both ways. Every label stays readable.</p>
+                    <p data-for="forest">In forest, compare the two phones: with the token the panel is clearly narrower (13rem, against 20rem). The panel grows out of its edge and shrinks back, in the same time both ways. Every label stays readable.</p>
+                    <p data-for="blueprint">In blueprint, compare the two phones: with the token the panel is clearly narrower (13rem, against 20rem). The panel is traced in ink lines and untraced again, in the same time both ways. Every label stays readable.</p>
+                    <p data-for="solstice">In solstice, compare the two phones: with the token the panel is clearly narrower (13rem, against 20rem). The panel is kindled from the middle of its foot and sinks back, in the same time both ways. Every label stays readable.</p>
+                    <p data-for="brutalism">In brutalism, compare the two phones: with the token the panel is clearly narrower (13rem, against 20rem). The panel drops on its hard shadow and is lifted off again, in the same time both ways. Every label stays readable.</p>
+                    <p data-for="deco">In deco, compare the two phones: with the token the panel is clearly narrower (13rem, against 20rem). The panel arrives as a gilded plate and leaves the same way, in the same time both ways. Every label stays readable.</p>
+                    <p data-for="phantom">In phantom, compare the two phones: with the token the panel is clearly narrower (13rem, against 20rem). The panel is thrown on in three cuts and snatched away again, in the same time both ways. Every label stays readable.</p>
+                    <p data-for="grotesk">In grotesk, compare the two phones: with the token the panel is clearly narrower (13rem, against 20rem). The panel falls in like the dialog and rises out again, in the same time both ways. Every label stays readable.</p>
+                    <p data-for="nostromo">In nostromo, compare the two phones: with the token the panel is clearly narrower (13rem, against 20rem). The panel is scanned in by a beam and scanned out again, in the same time both ways. Every label stays readable.</p>
+                    <p data-for="titanium">In titanium, compare the two phones: with the token the panel is clearly narrower (13rem, against 20rem). The panel is cut open from the top and cut shut again, in the same time both ways. Every label stays readable.</p>
+                </div>
+                <div class="mn-windows mn-windows--2">
+                    <figure class="mn-fig">
+                        <iframe class="mn-window mn-window--phone" src="narrow.html?narrow=none" title="Without the token: an app page on a phone"></iframe>
+                        <figcaption>No token: the panel keeps its normal width, 20rem. <b data-mn-now></b></figcaption>
+                    </figure>
+                    <figure class="mn-fig">
+                        <iframe class="mn-window mn-window--phone" src="narrow.html?narrow=13rem" title="With the token: an app page on a phone"></iframe>
+                        <figcaption>--kp-sidenav-width-narrow: 13rem. <b data-mn-now></b></figcaption>
+                    </figure>
+                </div>
+            </section>
+
+            <section class="mn-sec" id="floating" data-review-item="floating" data-review-title="2 · The panel floats off the edge." data-review-components="sidenav" aria-labelledby="h-floating">
+                <div class="mn-sec__head">
+                    <p class="mn-num">2 · Floating variant</p>
+                    <h2 id="h-floating">The panel floats off the edge.</h2>
+                    <p class="mn-how">data-kp-sidenav-variant=&quot;floating&quot;: a gap all round, the theme's radius, edge and shadow.</p>
+                </div>
+                <div class="mn-look" data-review-look>
+                    <p data-for="formal">In formal the panel floats a little off the edge, with soft corners and a thin warm-grey line. It is ruled in where it stands and ruled away again. Shut, nothing of it stays on the screen, not even a shadow. Watch all three ways it meets the page.</p>
+                    <p data-for="light">In light the panel floats a little off the edge, with soft corners and a thin grey line. It comes out of a glare and goes back into it. Shut, nothing of it stays on the screen, not even a shadow. Watch all three ways it meets the page.</p>
+                    <p data-for="dark">In dark the panel floats a little off the edge, with square corners and a thin dark line. It is laid in by a bright line that crosses it, and the line takes it away again. Shut, nothing of it stays on the screen, not even a shadow. Watch all three ways it meets the page.</p>
+                    <p data-for="cyberpunk">In cyberpunk the panel floats a little off the edge, with square corners and a thin line in the theme's dim yellow. It glitches in and out in three jumps. Shut, nothing of it stays on the screen, not even a shadow. Watch all three ways it meets the page.</p>
+                    <p data-for="synthwave">In synthwave the panel floats a little off the edge, with almost square corners and a thin purple line. It is uncovered from its foot behind a glowing beam, and covered again. Shut, nothing of it stays on the screen, not even a shadow. Watch all three ways it meets the page.</p>
+                    <p data-for="pastel">In pastel the panel floats a little off the edge, with very round corners and a soft purple line. It is stuck on like a sticker and peeled off again. Shut, nothing of it stays on the screen, not even a shadow. Watch all three ways it meets the page.</p>
+                    <p data-for="terminal">In terminal the panel floats a little off the edge, with square corners and a thin green line. It is printed line by line and cleared again. Shut, nothing of it stays on the screen, not even a shadow. Watch all three ways it meets the page.</p>
+                    <p data-for="forest">In forest the panel floats a little off the edge, with round corners and a thin sand line. It grows out of its edge and shrinks back. Shut, nothing of it stays on the screen, not even a shadow. Watch all three ways it meets the page.</p>
+                    <p data-for="blueprint">In blueprint the panel floats a little off the edge, with nearly square corners and a thin blue line. It is traced in ink lines and untraced again. Shut, nothing of it stays on the screen, not even a shadow. Watch all three ways it meets the page.</p>
+                    <p data-for="solstice">In solstice the panel floats a little off the edge, with round corners and a thin warm line. It is kindled from the middle of its foot and sinks back. Shut, nothing of it stays on the screen, not even a shadow. Watch all three ways it meets the page.</p>
+                    <p data-for="brutalism">In brutalism the panel floats a little off the edge, with square corners and a hard black shadow. It drops on its hard shadow and is lifted off again. Shut, nothing of it stays on the screen, not even a shadow. Watch all three ways it meets the page.</p>
+                    <p data-for="deco">In deco the panel floats a little off the edge, with square corners and a thin gold-grey line. It arrives as a gilded plate and leaves the same way. Shut, nothing of it stays on the screen, not even a shadow. Watch all three ways it meets the page.</p>
+                    <p data-for="phantom">In phantom the panel floats a little off the edge, with square corners and a thin grey line. It is thrown on in three cuts and snatched away again. Shut, nothing of it stays on the screen, not even a shadow. Watch all three ways it meets the page.</p>
+                    <p data-for="grotesk">In grotesk the panel floats a little off the edge, with square corners and a thin black line. It falls in like the dialog and rises out again. Shut, nothing of it stays on the screen, not even a shadow. Watch all three ways it meets the page.</p>
+                    <p data-for="nostromo">In nostromo the panel floats a little off the edge, with round corners and a thin tan line. It is scanned in by a beam and scanned out again. Shut, nothing of it stays on the screen, not even a shadow. Watch all three ways it meets the page.</p>
+                    <p data-for="titanium">In titanium the panel floats a little off the edge, with square corners and a thin steel line. It is cut open from the top and cut shut again. Shut, nothing of it stays on the screen, not even a shadow. Watch all three ways it meets the page.</p>
+                </div>
+                <div class="mn-windows mn-windows--1">
+                    <figure class="mn-fig">
+                        <iframe class="mn-window" src="floating.html" title="Floating: an app page with its side navigation"></iframe>
+                        <figcaption>Plays by itself. Now:  <b data-mn-now></b></figcaption>
+                    </figure>
+                </div>
+            </section>
+
+            <section class="mn-sec" id="inset" data-review-item="inset" data-review-title="3 · The page becomes a card beside the panel." data-review-components="sidenav" aria-labelledby="h-inset">
+                <div class="mn-sec__head">
+                    <p class="mn-num">3 · Inset variant</p>
+                    <h2 id="h-inset">The page becomes a card beside the panel.</h2>
+                    <p class="mn-how">data-kp-sidenav-variant=&quot;inset&quot;: the panel stays flush, the content is a rounded card.</p>
+                </div>
+                <div class="mn-look" data-review-look>
+                    <p data-for="formal">In formal the panel sits flat against the edge and the page is a card beside it, with soft corners and a thin warm-grey line. The panel is ruled in where it stands and ruled away again. Nothing dims, and nothing next to the panel covers the page.</p>
+                    <p data-for="light">In light the panel sits flat against the edge and the page is a card beside it, with soft corners and a thin grey line. The panel comes out of a glare and goes back into it. Nothing dims, and nothing next to the panel covers the page.</p>
+                    <p data-for="dark">In dark the panel sits flat against the edge and the page is a card beside it, with square corners and a thin dark line. The panel is laid in by a bright line that crosses it, and the line takes it away again. Nothing dims, and nothing next to the panel covers the page.</p>
+                    <p data-for="cyberpunk">In cyberpunk the panel sits flat against the edge and the page is a card beside it, with square corners and a thin line in the theme's dim yellow. The panel glitches in and out in three jumps. Nothing dims, and nothing next to the panel covers the page.</p>
+                    <p data-for="synthwave">In synthwave the panel sits flat against the edge and the page is a card beside it, with almost square corners and a thin purple line. The panel is uncovered from its foot behind a glowing beam, and covered again. Nothing dims, and nothing next to the panel covers the page.</p>
+                    <p data-for="pastel">In pastel the panel sits flat against the edge and the page is a card beside it, with very round corners and a soft purple line. The panel is stuck on like a sticker and peeled off again. Nothing dims, and nothing next to the panel covers the page.</p>
+                    <p data-for="terminal">In terminal the panel sits flat against the edge and the page is a card beside it, with square corners and a thin green line. The panel is printed line by line and cleared again. Nothing dims, and nothing next to the panel covers the page.</p>
+                    <p data-for="forest">In forest the panel sits flat against the edge and the page is a card beside it, with round corners and a thin sand line. The panel grows out of its edge and shrinks back. Nothing dims, and nothing next to the panel covers the page.</p>
+                    <p data-for="blueprint">In blueprint the panel sits flat against the edge and the page is a card beside it, with nearly square corners and a thin blue line. The panel is traced in ink lines and untraced again. Nothing dims, and nothing next to the panel covers the page.</p>
+                    <p data-for="solstice">In solstice the panel sits flat against the edge and the page is a card beside it, with round corners and a thin warm line. The panel is kindled from the middle of its foot and sinks back. Nothing dims, and nothing next to the panel covers the page.</p>
+                    <p data-for="brutalism">In brutalism the panel sits flat against the edge and the page is a card beside it, with square corners and a hard black shadow. The panel drops on its hard shadow and is lifted off again. Nothing dims, and nothing next to the panel covers the page.</p>
+                    <p data-for="deco">In deco the panel sits flat against the edge and the page is a card beside it, with square corners and a thin gold-grey line. The panel arrives as a gilded plate and leaves the same way. Nothing dims, and nothing next to the panel covers the page.</p>
+                    <p data-for="phantom">In phantom the panel sits flat against the edge and the page is a card beside it, with square corners and a thin grey line. The panel is thrown on in three cuts and snatched away again. Nothing dims, and nothing next to the panel covers the page.</p>
+                    <p data-for="grotesk">In grotesk the panel sits flat against the edge and the page is a card beside it, with square corners and a thin black line. The panel falls in like the dialog and rises out again. Nothing dims, and nothing next to the panel covers the page.</p>
+                    <p data-for="nostromo">In nostromo the panel sits flat against the edge and the page is a card beside it, with round corners and a thin tan line. The panel is scanned in by a beam and scanned out again. Nothing dims, and nothing next to the panel covers the page.</p>
+                    <p data-for="titanium">In titanium the panel sits flat against the edge and the page is a card beside it, with square corners and a thin steel line. The panel is cut open from the top and cut shut again. Nothing dims, and nothing next to the panel covers the page.</p>
+                </div>
+                <div class="mn-windows mn-windows--1">
+                    <figure class="mn-fig">
+                        <iframe class="mn-window" src="inset.html" title="Inset: an app page with its side navigation"></iframe>
+                        <figcaption>Plays by itself. Now:  <b data-mn-now></b></figcaption>
+                    </figure>
+                </div>
+            </section>
+
+            <section class="mn-sec" id="peek" data-review-item="peek" data-review-title="4 · A thin strip of the panel stays in view when it is shut." data-review-components="sidenav" aria-labelledby="h-peek">
+                <div class="mn-sec__head">
+                    <p class="mn-num">4 · Peek strip</p>
+                    <h2 id="h-peek">A thin strip of the panel stays in view when it is shut.</h2>
+                    <p class="mn-how">The token --kp-sidenav-peek (here 0.75rem): the page keeps that strip's room; over the page, the strip is the only part that overlaps.</p>
+                </div>
+                <div class="mn-look" data-review-look>
+                    <p data-for="formal">In formal, when the panel is shut, a thin strip of it stays at the edge. Pushing, the page leaves room for the strip; over the page, only the strip overlaps. The panel is ruled in where it stands and ruled away again, and the strip never moves.</p>
+                    <p data-for="light">In light, when the panel is shut, a thin strip of it stays at the edge. Pushing, the page leaves room for the strip; over the page, only the strip overlaps. The panel comes out of a glare and goes back into it, and the strip never moves.</p>
+                    <p data-for="dark">In dark, when the panel is shut, a thin strip of it stays at the edge. Pushing, the page leaves room for the strip; over the page, only the strip overlaps. The panel is laid in by a bright line that crosses it, and the line takes it away again, and the strip never moves.</p>
+                    <p data-for="cyberpunk">In cyberpunk, when the panel is shut, a thin strip of it stays at the edge. Pushing, the page leaves room for the strip; over the page, only the strip overlaps. The panel glitches in and out in three jumps, and the strip never moves.</p>
+                    <p data-for="synthwave">In synthwave, when the panel is shut, a thin strip of it stays at the edge. Pushing, the page leaves room for the strip; over the page, only the strip overlaps. The panel is uncovered from its foot behind a glowing beam, and covered again, and the strip never moves.</p>
+                    <p data-for="pastel">In pastel, when the panel is shut, a thin strip of it stays at the edge. Pushing, the page leaves room for the strip; over the page, only the strip overlaps. The panel is stuck on like a sticker and peeled off again, and the strip never moves.</p>
+                    <p data-for="terminal">In terminal, when the panel is shut, a thin strip of it stays at the edge. Pushing, the page leaves room for the strip; over the page, only the strip overlaps. The panel is printed line by line and cleared again, and the strip never moves.</p>
+                    <p data-for="forest">In forest, when the panel is shut, a thin strip of it stays at the edge. Pushing, the page leaves room for the strip; over the page, only the strip overlaps. The panel grows out of its edge and shrinks back, and the strip never moves.</p>
+                    <p data-for="blueprint">In blueprint, when the panel is shut, a thin strip of it stays at the edge. Pushing, the page leaves room for the strip; over the page, only the strip overlaps. The panel is traced in ink lines and untraced again, and the strip never moves.</p>
+                    <p data-for="solstice">In solstice, when the panel is shut, a thin strip of it stays at the edge. Pushing, the page leaves room for the strip; over the page, only the strip overlaps. The panel is kindled from the middle of its foot and sinks back, and the strip never moves.</p>
+                    <p data-for="brutalism">In brutalism, when the panel is shut, a thin strip of it stays at the edge. Pushing, the page leaves room for the strip; over the page, only the strip overlaps. The panel drops on its hard shadow and is lifted off again, and the strip never moves.</p>
+                    <p data-for="deco">In deco, when the panel is shut, a thin strip of it stays at the edge. Pushing, the page leaves room for the strip; over the page, only the strip overlaps. The panel arrives as a gilded plate and leaves the same way, and the strip never moves.</p>
+                    <p data-for="phantom">In phantom, when the panel is shut, a thin strip of it stays at the edge. Pushing, the page leaves room for the strip; over the page, only the strip overlaps. The panel is thrown on in three cuts and snatched away again, and the strip never moves.</p>
+                    <p data-for="grotesk">In grotesk, when the panel is shut, a thin strip of it stays at the edge. Pushing, the page leaves room for the strip; over the page, only the strip overlaps. The panel falls in like the dialog and rises out again, and the strip never moves.</p>
+                    <p data-for="nostromo">In nostromo, when the panel is shut, a thin strip of it stays at the edge. Pushing, the page leaves room for the strip; over the page, only the strip overlaps. The panel is scanned in by a beam and scanned out again, and the strip never moves.</p>
+                    <p data-for="titanium">In titanium, when the panel is shut, a thin strip of it stays at the edge. Pushing, the page leaves room for the strip; over the page, only the strip overlaps. The panel is cut open from the top and cut shut again, and the strip never moves.</p>
+                </div>
+                <div class="mn-windows mn-windows--1">
+                    <figure class="mn-fig">
+                        <iframe class="mn-window" src="peek.html" title="Peek strip: an app page with its side navigation"></iframe>
+                        <figcaption>Plays by itself. Now:  <b data-mn-now></b></figcaption>
+                    </figure>
+                </div>
+            </section>
+
+            <section class="mn-sec" id="density" data-review-item="density" data-review-title="5 · Compact, default and comfortable rows." data-review-components="sidenav" aria-labelledby="h-density">
+                <div class="mn-sec__head">
+                    <p class="mn-num">5 · Density presets</p>
+                    <h2 id="h-density">Compact, default and comfortable rows.</h2>
+                    <p class="mn-how">data-kp-sidenav-density=&quot;compact&quot; or &quot;comfortable&quot;: only the panel's own spacing and size tokens change.</p>
+                </div>
+                <div class="mn-look" data-review-look>
+                    <p data-for="formal">In formal, compare the three panels: compact rows sit close together, comfortable rows sit further apart, and the middle one is as it always was. The text stays readable in all three.</p>
+                    <p data-for="light">In light, compare the three panels: compact rows sit close together, comfortable rows sit further apart, and the middle one is as it always was. The text stays readable in all three.</p>
+                    <p data-for="dark">In dark, compare the three panels: compact rows sit close together, comfortable rows sit further apart, and the middle one is as it always was. The text stays readable in all three.</p>
+                    <p data-for="cyberpunk">In cyberpunk, compare the three panels: compact rows sit close together, comfortable rows sit further apart, and the middle one is as it always was. The text stays readable in all three.</p>
+                    <p data-for="synthwave">In synthwave, compare the three panels: compact rows sit close together, comfortable rows sit further apart, and the middle one is as it always was. The text stays readable in all three.</p>
+                    <p data-for="pastel">In pastel, compare the three panels: compact rows sit close together, comfortable rows sit further apart, and the middle one is as it always was. The text stays readable in all three.</p>
+                    <p data-for="terminal">In terminal, compare the three panels: compact rows sit close together, comfortable rows sit further apart, and the middle one is as it always was. The text stays readable in all three.</p>
+                    <p data-for="forest">In forest, compare the three panels: compact rows sit close together, comfortable rows sit further apart, and the middle one is as it always was. The text stays readable in all three.</p>
+                    <p data-for="blueprint">In blueprint, compare the three panels: compact rows sit close together, comfortable rows sit further apart, and the middle one is as it always was. The text stays readable in all three.</p>
+                    <p data-for="solstice">In solstice, compare the three panels: compact rows sit close together, comfortable rows sit further apart, and the middle one is as it always was. The text stays readable in all three.</p>
+                    <p data-for="brutalism">In brutalism, compare the three panels: compact rows sit close together, comfortable rows sit further apart, and the middle one is as it always was. The text stays readable in all three.</p>
+                    <p data-for="deco">In deco, compare the three panels: compact rows sit close together, comfortable rows sit further apart, and the middle one is as it always was. The text stays readable in all three.</p>
+                    <p data-for="phantom">In phantom, compare the three panels: compact rows sit close together, comfortable rows sit further apart, and the middle one is as it always was. The text stays readable in all three.</p>
+                    <p data-for="grotesk">In grotesk, compare the three panels: compact rows sit close together, comfortable rows sit further apart, and the middle one is as it always was. The text stays readable in all three.</p>
+                    <p data-for="nostromo">In nostromo, compare the three panels: compact rows sit close together, comfortable rows sit further apart, and the middle one is as it always was. The text stays readable in all three.</p>
+                    <p data-for="titanium">In titanium, compare the three panels: compact rows sit close together, comfortable rows sit further apart, and the middle one is as it always was. The text stays readable in all three.</p>
+                </div>
+                <div class="mn-windows mn-windows--3">
+                    <figure class="mn-fig">
+                        <iframe class="mn-window" src="density.html?density=compact" title="Compact density"></iframe>
+                        <figcaption>compact <b data-mn-now></b></figcaption>
+                    </figure>
+                    <figure class="mn-fig">
+                        <iframe class="mn-window" src="density.html?density=default" title="Default density"></iframe>
+                        <figcaption>default (nothing set) <b data-mn-now></b></figcaption>
+                    </figure>
+                    <figure class="mn-fig">
+                        <iframe class="mn-window" src="density.html?density=comfortable" title="Comfortable density"></iframe>
+                        <figcaption>comfortable <b data-mn-now></b></figcaption>
+                    </figure>
+                </div>
+            </section>
+
+            <section class="mn-sec" id="action" data-review-item="action" data-review-title="6 · A small button beside a link." data-review-components="sidenav" aria-labelledby="h-action">
+                <div class="mn-sec__head">
+                    <p class="mn-num">6 · Action beside an item</p>
+                    <h2 id="h-action">A small button beside a link.</h2>
+                    <p class="mn-how">A .kp-sidenav__row holds the link and a .kp-sidenav__action: reachable by Tab, its own focus ring, and it does not open the link.</p>
+                </div>
+                <div class="mn-look" data-review-look>
+                    <p data-for="formal">In formal some rows carry a small button beside the link. Watch the keyboard reach it and draw its own ring, then press it: the link does not open. The panel is ruled in where it stands and ruled away again.</p>
+                    <p data-for="light">In light some rows carry a small button beside the link. Watch the keyboard reach it and draw its own ring, then press it: the link does not open. The panel comes out of a glare and goes back into it.</p>
+                    <p data-for="dark">In dark some rows carry a small button beside the link. Watch the keyboard reach it and draw its own ring, then press it: the link does not open. The panel is laid in by a bright line that crosses it, and the line takes it away again.</p>
+                    <p data-for="cyberpunk">In cyberpunk some rows carry a small button beside the link. Watch the keyboard reach it and draw its own ring, then press it: the link does not open. The panel glitches in and out in three jumps.</p>
+                    <p data-for="synthwave">In synthwave some rows carry a small button beside the link. Watch the keyboard reach it and draw its own ring, then press it: the link does not open. The panel is uncovered from its foot behind a glowing beam, and covered again.</p>
+                    <p data-for="pastel">In pastel some rows carry a small button beside the link. Watch the keyboard reach it and draw its own ring, then press it: the link does not open. The panel is stuck on like a sticker and peeled off again.</p>
+                    <p data-for="terminal">In terminal some rows carry a small button beside the link. Watch the keyboard reach it and draw its own ring, then press it: the link does not open. The panel is printed line by line and cleared again.</p>
+                    <p data-for="forest">In forest some rows carry a small button beside the link. Watch the keyboard reach it and draw its own ring, then press it: the link does not open. The panel grows out of its edge and shrinks back.</p>
+                    <p data-for="blueprint">In blueprint some rows carry a small button beside the link. Watch the keyboard reach it and draw its own ring, then press it: the link does not open. The panel is traced in ink lines and untraced again.</p>
+                    <p data-for="solstice">In solstice some rows carry a small button beside the link. Watch the keyboard reach it and draw its own ring, then press it: the link does not open. The panel is kindled from the middle of its foot and sinks back.</p>
+                    <p data-for="brutalism">In brutalism some rows carry a small button beside the link. Watch the keyboard reach it and draw its own ring, then press it: the link does not open. The panel drops on its hard shadow and is lifted off again.</p>
+                    <p data-for="deco">In deco some rows carry a small button beside the link. Watch the keyboard reach it and draw its own ring, then press it: the link does not open. The panel arrives as a gilded plate and leaves the same way.</p>
+                    <p data-for="phantom">In phantom some rows carry a small button beside the link. Watch the keyboard reach it and draw its own ring, then press it: the link does not open. The panel is thrown on in three cuts and snatched away again.</p>
+                    <p data-for="grotesk">In grotesk some rows carry a small button beside the link. Watch the keyboard reach it and draw its own ring, then press it: the link does not open. The panel falls in like the dialog and rises out again.</p>
+                    <p data-for="nostromo">In nostromo some rows carry a small button beside the link. Watch the keyboard reach it and draw its own ring, then press it: the link does not open. The panel is scanned in by a beam and scanned out again.</p>
+                    <p data-for="titanium">In titanium some rows carry a small button beside the link. Watch the keyboard reach it and draw its own ring, then press it: the link does not open. The panel is cut open from the top and cut shut again.</p>
+                </div>
+                <div class="mn-windows mn-windows--1">
+                    <figure class="mn-fig">
+                        <iframe class="mn-window" src="action.html" title="Action: an app page with its side navigation"></iframe>
+                        <figcaption>Plays by itself: the keyboard reaches a button, then it is pressed. Now:  <b data-mn-now></b></figcaption>
+                    </figure>
+                </div>
+            </section>
+        </main>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="look.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>
