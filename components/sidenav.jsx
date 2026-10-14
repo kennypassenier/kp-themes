@@ -53,6 +53,7 @@ import { SIDENAV_MODE_EVENT, SIDENAV_PREVENTED_EVENT, SIDENAV_SLIM_EVENT, SIDENA
  * @property {boolean} [focusTrap]
  * @property {string} [contentSelector]  What `push` moves over.
  * @property {boolean} [reserve]  The content keeps the panel's width whether it is open or not (push and over): the gutter the panel opens into.
+ * @property {'launcher' | 'tab' | 'both'} [opener]  Which opener an `over` or `push` panel shows: the fixed launcher, the edge tab or both. Left out, the markup decides (both elements = both). `side` and the collapsed rail ignore it.
  * @property {string} [shortcut]  A key chord that toggles it from anywhere but a text field, e.g. `Control+b` (`Mod` is Meta on a Mac).
  * @property {string} [initialFocus]  A selector, inside the panel, for where the focus lands on opening; used in every mode.
  * @property {number} [hoverDelay]  Milliseconds the pointer rests before an `expandOnHover` rail widens. Left out, the module waits 150.
@@ -135,6 +136,7 @@ function SidenavInner(
         focusTrap,
         contentSelector,
         reserve,
+        opener,
         shortcut,
         initialFocus,
         hoverDelay,
@@ -184,6 +186,7 @@ function SidenavInner(
         ...flag('data-kp-sidenav-focus-trap', focusTrap),
         ...value('data-kp-sidenav-content', contentSelector),
         ...flag('data-kp-sidenav-reserve', reserve),
+        ...value('data-kp-sidenav-opener', opener),
         ...value('data-kp-sidenav-shortcut', shortcut),
         ...value('data-kp-sidenav-initial-focus', initialFocus),
         ...value('data-kp-sidenav-hover-delay', hoverDelay === undefined ? undefined : String(hoverDelay)),

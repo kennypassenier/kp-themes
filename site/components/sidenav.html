@@ -2391,6 +2391,9 @@ data-kp-sidenav-backdrop="false"
                             <tr><td><code>data-kp-sidenav-mode</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-sidenav-narrow</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-sidenav-open</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-sidenav-opener</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-sidenav-opener-off</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-sidenav-opener-on</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-sidenav-over-below</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-sidenav-owner</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-sidenav-peek</code></td><td>written</td></tr>
@@ -2446,6 +2449,7 @@ data-kp-sidenav-backdrop="false"
                             <tr><td><code>focusTrap</code></td><td><code>boolean</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>contentSelector</code></td><td><code>string</code></td><td>optional</td><td>What `push` moves over.</td></tr>
                             <tr><td><code>reserve</code></td><td><code>boolean</code></td><td>optional</td><td>The content keeps the panel's width whether it is open or not (push and over): the gutter the panel opens into.</td></tr>
+                            <tr><td><code>opener</code></td><td><code>'launcher' | 'tab' | 'both'</code></td><td>optional</td><td>Which opener an `over` or `push` panel shows: the fixed launcher, the edge tab or both. Left out, the markup decides (both elements = both). `side` and the collapsed rail ignore it.</td></tr>
                             <tr><td><code>shortcut</code></td><td><code>string</code></td><td>optional</td><td>A key chord that toggles it from anywhere but a text field, e.g. `Control+b` (`Mod` is Meta on a Mac).</td></tr>
                             <tr><td><code>initialFocus</code></td><td><code>string</code></td><td>optional</td><td>A selector, inside the panel, for where the focus lands on opening; used in every mode.</td></tr>
                             <tr><td><code>hoverDelay</code></td><td><code>number</code></td><td>optional</td><td>Milliseconds the pointer rests before an `expandOnHover` rail widens. Left out, the module waits 150.</td></tr>

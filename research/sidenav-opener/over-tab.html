@@ -1,0 +1,77 @@
+<!doctype html>
+<!-- Written by research/sidenav-opener/build.mjs; edit build.mjs, not this file. -->
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>North site · Over the page · tab</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <link rel="stylesheet" href="../../css/formal-register.css" data-kp-register="formal" />
+        <link rel="stylesheet" href="frame.css" />
+    </head>
+    <body class="so-body">
+        <div class="kp-sidenav__launcher">
+            <button type="button" class="kp-icon-button" data-kp-sidenav-toggle aria-controls="so-nav"></button>
+        </div>
+        <div class="kp-sidenav__tab">
+            <button type="button" class="kp-icon-button" data-kp-sidenav-toggle aria-controls="so-nav"></button>
+        </div>
+        <nav class="kp-sidenav" id="so-nav" aria-label="North site sections" data-kp-sidenav-mode="over" data-kp-sidenav-backdrop="false" data-kp-sidenav-opener="tab" data-kp-sidenav-shortcut="Control+b">
+            <div class="kp-sidenav__header"><p class="kp-sidenav__title">North site</p></div>
+            <div class="kp-sidenav__scroll">
+                <ul class="kp-sidenav__list">
+                    <li><a class="kp-sidenav__link" href="#so-main"><span class="kp-sidenav__icon" aria-hidden="true">◎</span><span class="kp-sidenav__label">Overview</span></a></li>
+                    <li><a class="kp-sidenav__link" href="#so-main" aria-current="page"><span class="kp-sidenav__icon" aria-hidden="true">▤</span><span class="kp-sidenav__label">Line 2</span><span class="kp-sidenav__badge">2</span></a></li>
+                    <li><a class="kp-sidenav__link" href="#so-main"><span class="kp-sidenav__icon" aria-hidden="true">!</span><span class="kp-sidenav__label">Alarms</span><span class="kp-sidenav__badge">14</span></a></li>
+                    <li><hr class="kp-sidenav__divider" /></li>
+                    <li><a class="kp-sidenav__link" href="#so-main"><span class="kp-sidenav__icon" aria-hidden="true">⚙</span><span class="kp-sidenav__label">Maintenance</span></a></li>
+                    <li><a class="kp-sidenav__link" href="#so-main"><span class="kp-sidenav__icon" aria-hidden="true">◷</span><span class="kp-sidenav__label">Rota</span></a></li>
+                </ul>
+            </div>
+            <div class="kp-sidenav__footer"><span class="kp-sidenav__label">Signed in as the night shift</span></div>
+        </nav>
+        <main class="so-main" id="so-main">
+            <header class="kp-page-header" data-kp-sidenav-launcher-room>
+                <div class="kp-page-header__inner">
+                    <div>
+                        <h1 class="kp-page-header__title">Line 2</h1>
+                        <p class="kp-page-header__description">Opener: tab.</p>
+                    </div>
+                </div>
+            </header>
+            <div class="kp-kpis" role="group" aria-label="Line 2 at a glance">
+                <div class="kp-kpi">
+                    <span class="kp-kpi__label">Pressure now</span>
+                    <span class="kp-kpi__value">1.1<small>bar</small></span>
+                    <span class="kp-kpi__trend">3.2 bar at 02:10</span>
+                </div>
+                <div class="kp-kpi" data-kp-tone="warning">
+                    <span class="kp-kpi__label">Open incidents</span>
+                    <span class="kp-kpi__value">2</span>
+                    <span class="kp-kpi__trend">1 new since 02:40</span>
+                </div>
+            </div>
+            <div class="so-cards">
+                <section class="kp-card" aria-labelledby="so-h-handover">
+                    <div class="kp-card__header"><h2 class="kp-card__title" id="so-h-handover">Handover</h2></div>
+                    <div class="kp-card__body">
+                        <p>The pressure dropped from 3.2 to 1.1 bar between 02:10 and 02:40. Pump house 3 was switched to the reserve pump at 02:52.</p>
+                    </div>
+                </section>
+                <section class="kp-card" aria-labelledby="so-h-next">
+                    <div class="kp-card__header"><h2 class="kp-card__title" id="so-h-next">Next shift</h2></div>
+                    <div class="kp-card__body">
+                        <p>The day shift checks the seal first, then the valve V-12.</p>
+                    </div>
+                </section>
+            </div>
+        </main>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="frame.js"></script>
+        <script type="module" src="frame-play.js"></script>
+    </body>
+</html>
