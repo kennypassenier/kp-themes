@@ -96,23 +96,6 @@ async function sweep(scopeSelector, label) {
             continue;
         const b = await el.boundingBox();
         if (!b || b.width < 4 || b.height < 4) continue;
-        // the inside of the box: a state's edge lines (the split edge, the brackets) are not the ground a label sits on
-        // pastel's copy: the box of the label's own glyphs (its text range), less a pixel, so a neighbour that a
-        // lifted or swung part uncovers (the next row's sticker, a pass beside it) is not read as the label's ground
-        const t = await el.evaluate((e) => {
-            const r = document.createRange();
-            r.selectNodeContents(e);
-            const q = r.getBoundingClientRect();
-            return { x: q.x, y: q.y, w: q.width, h: q.height };
-        });
-        const box = t.w > 4 && t.h > 4 ? { x: t.x + 1, y: t.y + 1, width: t.w - 2, height: t.h - 2 } : b;
-        const inset = 0;
-        const clip = {
-            x: Math.max(0, box.x) + inset,
-            y: Math.max(0, box.y) + inset,
-            width: Math.min(box.width, 1280 - box.x) - 2 * inset,
-            height: Math.min(box.height, 900 - box.y) - 2 * inset,
-        };
         const states = {
             rest: async () => page.mouse.move(2, 2),
             hover: async () => page.mouse.move(b.x + b.width / 2, b.y + b.height / 2),
@@ -128,18 +111,45 @@ async function sweep(scopeSelector, label) {
         for (const [state, go] of Object.entries(states)) {
             await go();
             await page.waitForTimeout(450);
-            const color = await el.evaluate((e) => getComputedStyle(e).color);
-            const fg = parse(color);
-            if (!fg) continue;
-            const png = await page.screenshot({ clip });
+            // each text node in its own colour, on the ground under its own glyph box: a label whose
+            // parts differ (a dim icon, a badge on its plate, a busy button's spinner) is read part by part
+            const nodes = await el.evaluate((e) => {
+                const out = [];
+                const w = document.createTreeWalker(e, NodeFilter.SHOW_TEXT);
+                for (let t = w.nextNode(); t; t = w.nextNode()) {
+                    if (!t.data.trim()) continue;
+                    const r = document.createRange();
+                    r.selectNodeContents(t);
+                    const q = r.getBoundingClientRect();
+                    const cs = getComputedStyle(t.parentElement);
+                    if (q.width < 4 || q.height < 4 || cs.visibility === 'hidden') continue;
+                    out.push({ color: cs.color, x: q.x + 1, y: q.y + 1, width: q.width - 2, height: q.height - 2 });
+                }
+                return out;
+            });
+            let worst = Infinity;
+            for (const n of nodes) {
+                const fg = parse(n.color);
+                if (!fg) continue;
+                const nclip = {
+                    x: Math.max(0, n.x),
+                    y: Math.max(0, n.y),
+                    width: Math.min(n.width, 1280 - Math.max(0, n.x)),
+                    height: Math.min(n.height, 900 - Math.max(0, n.y)),
+                };
+                if (nclip.width < 2 || nclip.height < 2) continue;
+                const gs = await grounds(await page.screenshot({ clip: nclip }), fg);
+                for (const g of gs) worst = Math.min(worst, ratio(fg, g));
+            }
             if (state === 'press') {
                 await page.mouse.move(2, 2); // released away from the element: no click fires
                 await page.mouse.up();
             }
+            // a press released away drags a text selection across the page; left standing, every later
+            // reading measured the selection's plum plate instead of the part's own ground
+            await page.evaluate(() => getSelection()?.removeAllRanges());
             await el.evaluate((e) => e.blur());
-            const gs = await grounds(png, fg);
-            if (gs.length === 0) continue;
-            const worst = Math.min(...gs.map((g) => ratio(fg, g)));
+            if (!Number.isFinite(worst)) continue;
             rows.push({
                 label,
                 text,

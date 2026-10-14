@@ -17514,7 +17514,14 @@ function leaveBusyLayers(layers) {
     getComputedStyle(layer).animationName;
     const plays = layer.getAnimations().filter((a) => a instanceof CSSAnimation && /** @type {KeyframeEffect} */
     a.effect?.target === layer);
-    const done = () => layer.removeAttribute("data-kp-leaving");
+    const done = () => {
+      layer.removeAttribute("data-kp-leaving");
+      const words = layer.querySelector(":scope > .kp-calendar__busy-text");
+      if (words !== null && layer.hasAttribute("data-kp-busy-words-held")) {
+        layer.removeAttribute("data-kp-busy-words-held");
+        words.textContent = "";
+      }
+    };
     if (plays.length === 0) done();
     else void Promise.all(plays.map((a) => a.finished)).then(done, done);
   }
@@ -17782,7 +17789,16 @@ function setCalendarState(el2, state, words = "") {
   c.state = state;
   c.stateLine.textContent = words;
   c.stateLine.dataset.kpState = state;
-  if (c.busyText) c.busyText.textContent = words || (state === "loading" ? c.strings.loading ?? "Loading\u2026" : "");
+  if (c.busyText) {
+    const next = words || (state === "loading" ? c.strings.loading ?? "Loading\u2026" : "");
+    const card = c.busyText.parentElement;
+    const held2 = next === "" && card !== null && c.grid.getAttribute("aria-busy") === "true" && card.getClientRects().length > 0 && getComputedStyle(card).getPropertyValue("--kp-calendar-busy-words").trim() === "hold";
+    if (held2) card.setAttribute("data-kp-busy-words-held", "");
+    else {
+      card?.removeAttribute("data-kp-busy-words-held");
+      c.busyText.textContent = next;
+    }
+  }
   paintCalendar(c);
 }
 function calendarSelect(el2, iso) {

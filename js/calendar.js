@@ -208,7 +208,15 @@ function leaveBusyLayers(layers) {
         layer.setAttribute('data-kp-leaving', '');
         getComputedStyle(layer).animationName;
         const plays = layer.getAnimations().filter((a) => a instanceof CSSAnimation && /** @type {KeyframeEffect} */ (a.effect)?.target === layer);
-        const done = () => layer.removeAttribute('data-kp-leaving');
+        const done = () => {
+            layer.removeAttribute('data-kp-leaving');
+            // Words kept on the card through its leave (see setCalendarState()) go with it.
+            const words = layer.querySelector(':scope > .kp-calendar__busy-text');
+            if (words !== null && layer.hasAttribute('data-kp-busy-words-held')) {
+                layer.removeAttribute('data-kp-busy-words-held');
+                words.textContent = '';
+            }
+        };
         if (plays.length === 0) done();
         else void Promise.all(plays.map((a) => a.finished)).then(done, done);
     }
@@ -525,7 +533,23 @@ export function setCalendarState(el, state, words = '') {
     c.state = state;
     c.stateLine.textContent = words;
     c.stateLine.dataset.kpState = state;
-    if (c.busyText) c.busyText.textContent = words || (state === 'loading' ? (c.strings.loading ?? 'Loading…') : '');
+    if (c.busyText) {
+        const next = words || (state === 'loading' ? (c.strings.loading ?? 'Loading…') : '');
+        // A theme that takes the whole grid's card off as its arrival backwards keeps the card's words on it
+        // until it is gone (`--kp-calendar-busy-words: hold`, pastel), so the card that leaves is the one that came.
+        const card = c.busyText.parentElement;
+        const held =
+            next === '' &&
+            card !== null &&
+            c.grid.getAttribute('aria-busy') === 'true' &&
+            card.getClientRects().length > 0 &&
+            getComputedStyle(card).getPropertyValue('--kp-calendar-busy-words').trim() === 'hold';
+        if (held) card.setAttribute('data-kp-busy-words-held', '');
+        else {
+            card?.removeAttribute('data-kp-busy-words-held');
+            c.busyText.textContent = next;
+        }
+    }
     paintCalendar(c);
 }
 

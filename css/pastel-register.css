@@ -2013,6 +2013,18 @@
             animation: kp-sig-pastel-stuck-placed-out var(--kp-sig-pa-window) var(--kp-sig-pa-land) reverse forwards;
         }
 
+        /* js/sidenav.js takes the tip off as its entrance backwards
+           (`[data-kp-reversing]`, which the package turns round on the part
+           and its ::before and ::after only): its pass, the ::backdrop, goes
+           with it, so the pill peels off before its pass slides away. */
+        [data-theme='pastel'] .kp-sidenav__tip:popover-open[data-kp-reversing='reset']::backdrop {
+            animation-name: none;
+        }
+
+        [data-theme='pastel'] .kp-sidenav__tip:popover-open[data-kp-reversing='play']::backdrop {
+            animation: kp-sig-pastel-pass-in var(--kp-sig-pa-window) var(--kp-sig-pa-land) reverse both;
+        }
+
         /* A menu inside a popover is not stuck on twice: the popover is. */
         [data-theme='pastel'] :is(.kp-popover, .kp-theme-menu__list) :is(.kp-menu, .kp-popover) {
             animation: none;
@@ -2530,6 +2542,56 @@
             animation: kp-sig-pastel-pass-host-out var(--kp-sig-pa-window) var(--kp-sig-pa-land) reverse forwards;
         }
 
+        /* The table and the rows under the layer dim on the pass's clock
+           and come back on it (css/layout.css `--kp-busy-opacity`, the rows'
+           `--kp-datatable-busy-opacity`, both switched with `aria-busy` in one
+           frame while the layer took 560 ms): one keyframe set forwards as the
+           layer arrives, a second name played backwards as it leaves
+           (lessons 8, 44). */
+        [data-theme='pastel'] .kp-datatable {
+            --kp-sig-pa-dim: var(--kp-busy-opacity, 0.7);
+        }
+
+        [data-theme='pastel'] .kp-datatable .kp-table tbody {
+            --kp-sig-pa-dim: var(--kp-datatable-busy-opacity, 0.55);
+        }
+
+        [data-theme='pastel'] :is(.kp-datatable[aria-busy='true'], .kp-datatable[aria-busy='true'] .kp-table tbody) {
+            animation: kp-sig-pastel-busy-dim var(--kp-sig-pa-window) var(--kp-sig-pa-land) backwards;
+        }
+
+        [data-theme='pastel']
+            :is(
+                .kp-datatable:not([aria-busy='true']):has(> .kp-datatable__busy-overlay[data-kp-leaving]),
+                .kp-datatable:not([aria-busy='true']):has(> .kp-datatable__busy-overlay[data-kp-leaving]) .kp-table tbody
+            ) {
+            animation: kp-sig-pastel-busy-dim-back var(--kp-sig-pa-window) var(--kp-sig-pa-land) reverse backwards;
+        }
+
+        /* On the pass's own stops: nothing in the first frame, there at
+           78.57 % (440 of the 560). */
+        @keyframes kp-sig-pastel-busy-dim {
+            0% {
+                opacity: 1;
+            }
+
+            78.5714%,
+            100% {
+                opacity: var(--kp-sig-pa-dim);
+            }
+        }
+
+        @keyframes kp-sig-pastel-busy-dim-back {
+            0% {
+                opacity: 1;
+            }
+
+            78.5714%,
+            100% {
+                opacity: var(--kp-sig-pa-dim);
+            }
+        }
+
         /* A part fixed to the page (a card, a key figure, a tile): the
            thumbtack comes out first, then the landing backwards; arriving,
            js/motion.js plays it the other way, the tack pushed in last. */
@@ -2549,6 +2611,9 @@
        js/calendar.js marks it `[data-kp-leaving]` while its state goes. */
     [data-theme='pastel'] .kp-calendar__busy {
         --kp-calendar-busy-leave: hold;
+        /* ... with its words on it, so the card that peels off is the card
+           that was stuck on (js/calendar.js empties them when it is gone). */
+        --kp-calendar-busy-words: hold;
         transition: none;
     }
 
