@@ -60,6 +60,11 @@ const launcher = (/** @type {string} */ id) => `<div class="kp-sidenav__launcher
 <button type="button" class="kp-icon-button" data-kp-sidenav-toggle aria-controls="${id}"></button>
 </div>`;
 
+/** The edge tab: a box that rides on the far edge of a sliding panel and holds the panel's toggler. */
+const tab = (/** @type {string} */ id) => `<div class="kp-sidenav__tab">
+<button type="button" class="kp-icon-button" data-kp-sidenav-toggle aria-controls="${id}"></button>
+</div>`;
+
 /**
  * The page beside the panel: a header, two figures, two cards.
  * @param {string} id
@@ -289,6 +294,45 @@ document.addEventListener('click', (event) => {
 if (event.target instanceof Element && event.target.classList.contains('kp-sidenav__backdrop')) document.querySelector('#quiet-said').textContent = 'The backdrop was clicked. The menu stays open and nothing was sent.';
 }, true);
 </script>
+`,
+    },
+    {
+        title: 'The edge tab is the default opener',
+        why: 'Added 2026-10-15 (`sidenav-opener-1`). An over or push panel opens from the edge tab unless the panel says otherwise: with no `data-kp-sidenav-opener` the page behaves as `tab`. The markup holds a launcher and a tab, and the module draws only the tab, takes the launcher out of the tab order and the accessibility tree, and gives the header back the room kept for the launcher. A page with no tab for the panel keeps its launcher. Press the tab on the panel\u2019s edge.',
+        frame: FRAME,
+        markup: `
+${launcher('tab-nav')}
+${tab('tab-nav')}
+${panel({ id: 'tab-nav', main: 'tab-main', attrs: `${PUSH('tab-main')} data-kp-sidenav-open="true"`, rest: false })}
+${page('tab-main', 'Both openers are in the markup; with no choice made, only the edge tab shows.')}
+`,
+    },
+    {
+        title: 'The launcher only',
+        why: 'Added 2026-10-15 (`sidenav-opener-1`). `data-kp-sidenav-opener="launcher"` on an over or push panel draws the fixed launcher at the window\u2019s start corner and not the edge tab, which is out of the tab order and the accessibility tree meanwhile. Press the bars.',
+        frame: FRAME,
+        react: `
+<Sidenav id="nav" label="North site sections" mode="push" contentSelector="#main" opener="launcher" items={items} />
+`,
+        markup: `
+${launcher('launcher-nav')}
+${tab('launcher-nav')}
+${panel({ id: 'launcher-nav', main: 'launcher-main', attrs: `${PUSH('launcher-main')} data-kp-sidenav-opener="launcher" data-kp-sidenav-open="true"`, rest: false })}
+${page('launcher-main', 'The launcher is the only opener; the edge tab is not drawn.')}
+`,
+    },
+    {
+        title: 'Both openers',
+        why: 'Added 2026-10-15 (`sidenav-opener-1`). `data-kp-sidenav-opener="both"` keeps the launcher and the edge tab, each driving the same panel with the same focus, `aria-controls` and `inert`. The header keeps the launcher\u2019s room. Press either.',
+        frame: FRAME,
+        react: `
+<Sidenav id="nav" label="North site sections" mode="push" contentSelector="#main" opener="both" items={items} />
+`,
+        markup: `
+${launcher('both-nav')}
+${tab('both-nav')}
+${panel({ id: 'both-nav', main: 'both-main', attrs: `${PUSH('both-main')} data-kp-sidenav-opener="both" data-kp-sidenav-open="true"`, rest: false })}
+${page('both-main', 'The launcher and the edge tab both show, and either opens and shuts the panel.')}
 `,
     },
 ];

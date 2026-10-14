@@ -187,7 +187,7 @@
 <div class="kp-datepicker" data-kp-datepicker>
     <div class="kp-field">
         <label class="kp-field__label" for="doc-date-from">From</label>
-        <input class="kp-field__input" id="doc-date-from" type="text" inputmode="numeric" placeholder="dd-mm-yyyy" data-kp-date-input />
+        <input class="kp-field__input" id="doc-date-from" type="text" inputmode="numeric" placeholder="dd/mm/yyyy" data-kp-date-input />
     </div>
     <button type="button" class="kp-button kp-button--ghost" data-kp-date-open aria-label="Open the calendar">Calendar</button>
     <div class="kp-datepicker__panel" data-kp-date-panel hidden></div>
@@ -196,7 +196,29 @@
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datepicker&quot;</span> <span class="kp-code__keyword">data-kp-datepicker</span>&gt;
     &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
         &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-date-from&quot;</span>&gt;From&lt;/<span class="kp-code__keyword">label</span>&gt;
-        &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-date-from&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span> <span class="kp-code__keyword">inputmode</span><span class="kp-code__string">=&quot;numeric&quot;</span> <span class="kp-code__keyword">placeholder</span><span class="kp-code__string">=&quot;dd-mm-yyyy&quot;</span> <span class="kp-code__keyword">data-kp-date-input</span> /&gt;
+        &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-date-from&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span> <span class="kp-code__keyword">inputmode</span><span class="kp-code__string">=&quot;numeric&quot;</span> <span class="kp-code__keyword">placeholder</span><span class="kp-code__string">=&quot;dd/mm/yyyy&quot;</span> <span class="kp-code__keyword">data-kp-date-input</span> /&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost&quot;</span> <span class="kp-code__keyword">data-kp-date-open</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Open the calendar&quot;</span>&gt;Calendar&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datepicker__panel&quot;</span> <span class="kp-code__keyword">data-kp-date-panel</span> <span class="kp-code__keyword">hidden</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">The locale’s own order, by attribute</figcaption>
+                        <p class="kp-text-muted">Added 2026-10-15 (`datetime-M1`). A date is written dd/mm/yyyy for every reader (rule 52), whatever the page’s language, so `04/09/2026` is the fourth of September in New York as in Brussels. `data-kp-date-format=&quot;locale&quot;` on the picker brings back the order and separator the locale writes: this picker is `en-US`, so the field is written, hinted and read month first (`09/04/2026`, `mm/dd/yyyy`); in script it is `attachDatePickers(root, { dateFormat: 'locale' })`. The value the module keeps is the ISO date either way, and the month and weekday names always follow the locale.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-datepicker" data-kp-datepicker data-kp-locale="en-US" data-kp-date-format="locale">
+    <div class="kp-field">
+        <label class="kp-field__label" for="doc-date-us">Delivery (month first)</label>
+        <input class="kp-field__input" id="doc-date-us" type="text" inputmode="numeric" data-kp-date-input value="09/04/2026" />
+    </div>
+    <button type="button" class="kp-button kp-button--ghost" data-kp-date-open aria-label="Open the calendar">Calendar</button>
+    <div class="kp-datepicker__panel" data-kp-date-panel hidden></div>
+</div>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datepicker&quot;</span> <span class="kp-code__keyword">data-kp-datepicker</span> <span class="kp-code__keyword">data-kp-locale</span><span class="kp-code__string">=&quot;en-US&quot;</span> <span class="kp-code__keyword">data-kp-date-format</span><span class="kp-code__string">=&quot;locale&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-date-us&quot;</span>&gt;Delivery (month first)&lt;/<span class="kp-code__keyword">label</span>&gt;
+        &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-date-us&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span> <span class="kp-code__keyword">inputmode</span><span class="kp-code__string">=&quot;numeric&quot;</span> <span class="kp-code__keyword">data-kp-date-input</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;09/04/2026&quot;</span> /&gt;
     &lt;/<span class="kp-code__keyword">div</span>&gt;
     &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--ghost&quot;</span> <span class="kp-code__keyword">data-kp-date-open</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Open the calendar&quot;</span>&gt;Calendar&lt;/<span class="kp-code__keyword">button</span>&gt;
     &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datepicker__panel&quot;</span> <span class="kp-code__keyword">data-kp-date-panel</span> <span class="kp-code__keyword">hidden</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
@@ -3794,6 +3816,7 @@ data-kp-disabled-days="0,6"
                             <tr><td><code>.kp-datepicker__panel</code></td><td>The calendar, floating under the input on its own surface. It is rendered when it opens because a month grid is derived from a date.</td></tr>
                             <tr><td><code>.kp-datepicker__head / __title</code></td><td>The month, its name, and the two controls that page it. The title is a button that opens the twelve months of the year, and there the year opens twelve years.</td></tr>
                             <tr><td><code>month and year grids</code></td><td>Twelve cells, three a row, drawn with the day’s class so every theme paints them; the panel keeps the size the days had. Choosing a year shows its months, a month its days.</td></tr>
+                            <tr><td><code>data-kp-date-format</code></td><td>`rule52` (the default): the field is written, hinted and read dd/mm/yyyy whatever the locale; `locale`: the order and separator the locale writes (09/04/2026 under en-US, 04.09.2026 under de-DE). Script: `dateFormat: 'locale'` in the options of attachDatePickers. The ISO value does not change.</td></tr>
                             <tr><td><code>.kp-datepicker__grid / __weekday</code></td><td>Seven columns with the week starting where the locale says, unless the markup overrules it.</td></tr>
                             <tr><td><code>.kp-datepicker__day</code></td><td>One day. Exactly one of them is in the tab order at a time; the arrows move between the rest.</td></tr>
                             <tr><td><code>selected day</code></td><td>Carries a boundary as well as a fill, so it is still the chosen day when the fill matches the hover.</td></tr>
