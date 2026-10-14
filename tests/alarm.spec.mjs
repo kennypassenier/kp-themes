@@ -29,6 +29,7 @@
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
 import { DEFAULT_STRINGS as S } from '../js/strings.js';
+import { reportContrastAll } from './helpers/contrast-guideline.mjs';
 
 const FIXTURE = '/tests/fixtures/alarm.html';
 
@@ -427,14 +428,15 @@ test(
             const numbers = await page.evaluate(READ_CONTRAST);
             console.log(`[alarm] contrast ${theme}: ${JSON.stringify(numbers)}`);
             const floor = 4.5;
-            if (numbers.title < floor) low.push(`${theme}: headline ${numbers.title}`);
-            if (numbers.detail < floor) low.push(`${theme}: detail ${numbers.detail}`);
-            if (numbers.button < floor) low.push(`${theme}: button label ${numbers.button}`);
+            if (numbers.title < floor) low.push(`${theme} headline: ${numbers.title}:1`);
+            if (numbers.detail < floor) low.push(`${theme} detail: ${numbers.detail}:1`);
+            if (numbers.button < floor) low.push(`${theme} button label: ${numbers.button}:1`);
             await page.locator(`${OPEN} .kp-alarm__ack`).focus();
             await page.keyboard.press('Enter');
             await expect(page.locator(OPEN)).toHaveCount(0);
         }
-        expect(low).toEqual([]);
+        // Contrast is a guideline, not a gate (Kenny, form v44; fix-104).
+        reportContrastAll(test.info(), low);
         expect(errors).toEqual([]);
     },
 );
@@ -825,15 +827,16 @@ for (const view of FIT_VIEWPORTS) {
                     if (fit.out > allowed) broken.push(`${theme} ${view.label} ${alarm.label}: "${fit.where}" ${fit.out}px out of the frame`);
                     if (fit.clipped > 1) broken.push(`${theme} ${view.label} ${alarm.label}: the panel clips ${fit.clipped}px of its content`);
                     const floor = 4.5;
-                    if (numbers.title < floor) low.push(`${theme} ${view.label}: headline ${numbers.title}`);
-                    if (numbers.detail < floor) low.push(`${theme} ${view.label}: detail ${numbers.detail}`);
-                    if (numbers.button < floor) low.push(`${theme} ${view.label}: button label ${numbers.button}`);
+                    if (numbers.title < floor) low.push(`${theme} ${view.label} headline: ${numbers.title}:1`);
+                    if (numbers.detail < floor) low.push(`${theme} ${view.label} detail: ${numbers.detail}:1`);
+                    if (numbers.button < floor) low.push(`${theme} ${view.label} button label: ${numbers.button}:1`);
                     await page.evaluate(() => /** @type {HTMLDialogElement} */ (document.querySelector('dialog.kp-alarm[open]'))?.close('ack'));
                     await expect(page.locator(OPEN)).toHaveCount(0);
                 }
             }
             expect(broken).toEqual([]);
-            expect(low).toEqual([]);
+            // Contrast is a guideline, not a gate (Kenny, form v44; fix-104).
+            reportContrastAll(test.info(), low);
             expect(errors).toEqual([]);
         },
     );

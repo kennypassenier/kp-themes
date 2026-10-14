@@ -13,6 +13,7 @@ import { expect, test } from '@playwright/test';
 import { THEMES } from '../js/theme-registry.js';
 import { contrast } from '../js/contrast.js';
 import { parseColour } from './helpers/colour.mjs';
+import { reportContrast } from './helpers/contrast-guideline.mjs';
 
 // Motion stays on here: this file reads animations or transitions, and the
 // suite runs with reduced motion otherwise (playwright.config.mjs).
@@ -85,7 +86,8 @@ for (const { name } of THEMES) {
                 const plate = rgb(read.plate);
                 expect(ink && plate, `${which}: ${read.ink} on ${read.plate}`).toBeTruthy();
                 const ratio = contrast(/** @type {[number, number, number]} */ (ink), /** @type {[number, number, number]} */ (plate));
-                expect(ratio, `${name} ${which}: ${read.ink} on ${read.plate}`).toBeGreaterThanOrEqual(4.5);
+                // Contrast is a guideline, not a gate (Kenny, form v44; fix-104).
+                if (ratio < 4.5) reportContrast(test.info(), `${name} ${which} at rest, ${read.ink} on ${read.plate}: ${ratio.toFixed(2)}:1`);
             }
         },
     );
@@ -118,10 +120,12 @@ for (const { name } of THEMES) {
                     const plate = await plateOf(page, png);
                     const ink = rgb(await control.evaluate((el) => getComputedStyle(el).color));
                     const ratio = contrast(/** @type {[number, number, number]} */ (ink), /** @type {[number, number, number]} */ (plate));
-                    expect(
-                        ratio,
-                        `${name} ${which} ${state}: ink ${ink?.map((c) => Math.round(c * 255))} on plate ${plate.map((c) => Math.round(c * 255))}`,
-                    ).toBeGreaterThanOrEqual(4.5);
+                    // Contrast is a guideline, not a gate (Kenny, form v44; fix-104).
+                    if (ratio < 4.5)
+                        reportContrast(
+                            test.info(),
+                            `${name} ${which} ${state}, ink ${ink?.map((c) => Math.round(c * 255))} on plate ${plate.map((c) => Math.round(c * 255))}: ${ratio.toFixed(2)}:1`,
+                        );
                     await control.blur();
                 }
             }

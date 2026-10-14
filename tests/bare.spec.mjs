@@ -14,6 +14,7 @@
 // `npm run generate` has run.
 
 import { expect, test } from '@playwright/test';
+import { reportContrastAll } from './helpers/contrast-guideline.mjs';
 
 /** @param {string} rgb */
 function luminance(rgb) {
@@ -116,9 +117,10 @@ for (const theme of ['cyberpunk', 'formal']) {
             });
             const failures = bad
                 .filter((f) => ratio(f.fg, f.bg) < f.floor)
-                .map((f) => `${f.tag} "${f.text}": ${f.fg} on ${f.bg} = ${ratio(f.fg, f.bg).toFixed(2)}`);
+                .map((f) => `${f.tag} "${f.text}": ${f.fg} on ${f.bg} = ${ratio(f.fg, f.bg).toFixed(2)}:1`);
             expect(bad.length).toBeGreaterThan(8);
-            expect(failures).toEqual([]);
+            // Contrast is a guideline, not a gate (Kenny, form v44; fix-104).
+            reportContrastAll(test.info(), failures.map((f) => `${theme} ${f}`));
         },
     );
 }

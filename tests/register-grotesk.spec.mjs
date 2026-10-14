@@ -27,6 +27,7 @@ import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
 import { style } from './paint.mjs';
 import { stampWord } from './stamp.mjs';
+import { reportContrast } from './helpers/contrast-guideline.mjs';
 
 const INVENTORY = JSON.parse(readFileSync(new URL('../showcase/concept-demo.json', import.meta.url), 'utf8')).elements;
 
@@ -251,7 +252,9 @@ test.describe('grotesk press label [grotesk-hover decision, the press never grey
                 const cs = getComputedStyle(el);
                 return { color: cs.color, backgroundColor: cs.backgroundColor };
             });
-            expect(ratio(color, backgroundColor), `${color} on ${backgroundColor}`).toBeGreaterThanOrEqual(4.5);
+            // Contrast is a guideline, not a gate (Kenny, form v44; fix-104).
+            const pressed = ratio(color, backgroundColor);
+            if (pressed < 4.5) reportContrast(test.info(), `grotesk pressed ${variant} button label, ${color} on ${backgroundColor}: ${pressed.toFixed(2)}:1`);
             await page.mouse.up();
         });
     }

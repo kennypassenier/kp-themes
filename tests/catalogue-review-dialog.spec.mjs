@@ -8,6 +8,7 @@
 import { expect, test } from '@playwright/test';
 import { useEmptyRegister, useRegister } from './helpers/empty-register.mjs';
 import { waitForJudging } from './helpers/catalogue.mjs';
+import { reportContrast } from './helpers/contrast-guideline.mjs';
 
 // Motion stays on here: this file reads animations or transitions, and the
 // suite runs with reduced motion otherwise (playwright.config.mjs).
@@ -526,7 +527,9 @@ test(
             const reading = await readFrame(page);
             expect(reading.visible, theme).toBe(true);
             expect(reading.ground, `${theme}: the note has a ground`).toMatch(/^rgb/);
-            expect(reading.contrast, `${theme}: ${reading.color} on ${reading.ground}`).toBeGreaterThanOrEqual(4.5);
+            // Contrast is a guideline, not a gate (Kenny, form v44; fix-104).
+            if (reading.contrast < 4.5)
+                reportContrast(test.info(), `${theme} review note ${reading.color} on ${reading.ground}: ${reading.contrast.toFixed(2)}:1`);
             expect(reading.color, theme).not.toBe(reading.lookColor);
         }
     },

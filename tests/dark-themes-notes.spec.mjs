@@ -19,6 +19,7 @@ import { test, expect } from '@playwright/test';
 import { waitForJudging } from './helpers/catalogue.mjs';
 import { useEmptyRegister } from './helpers/empty-register.mjs';
 import { contrast, distance } from '../gates/colour.mjs';
+import { reportContrast } from './helpers/contrast-guideline.mjs';
 
 const THEME_NAMES = JSON.parse(readFileSync(new globalThis.URL('../themes/order.json', import.meta.url), 'utf8'));
 
@@ -313,7 +314,9 @@ test.describe(
             for (const r of read) {
                 if (r.retry) {
                     expect(r.frame, `${r.block} ${r.text}: the frame is the label's ink`).toEqual(r.label);
-                    expect(contrast(r.frame, r.plate), `${r.block} ${r.text}: frame on plate`).toBeGreaterThanOrEqual(3);
+                    // Contrast is a guideline, not a gate (Kenny, form v44; fix-104).
+                    const frameOnPlate = contrast(r.frame, r.plate);
+                    if (frameOnPlate < 3) reportContrast(test.info(), `synthwave ${r.block} ${r.text} frame on plate: ${frameOnPlate.toFixed(2)}:1`);
                 } else {
                     expect(r.frame, `${r.block} ${r.text}: a button's own frame`).toEqual(r.own);
                     expect(r.frame, `${r.block} ${r.text}: not the label's ink`).not.toEqual(r.label);

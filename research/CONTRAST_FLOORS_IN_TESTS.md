@@ -56,3 +56,35 @@ Total 23 tests. Contrast only: rows 1, 6, 13, 14, 15, 16, 17, 20, 23 (9). Mixed:
 - tests/catalogue-intros.spec.mjs:61, tests/overflow-floor.spec.mjs:105 (a timing ratio and a width ratio); tests/button*.spec.mjs and tests/density*.spec.mjs (24 px target floors); tests/button-notes.spec.mjs (perceptual distance, comment at :95).
 - tests/ring.mjs, tests/helpers/focus-paint.mjs, tests/helpers/colour.mjs, tests/paint.mjs: no ratio assertion (comments only, or helpers).
 - gates/*.mjs outside tests/ were not searched.
+
+## Done 2026-10-15
+
+Kenny's rule (form v44; fix-104): every hard contrast floor in the browser tests becomes a report; a test that costs more than 20 s is deleted. Durations were measured 2026-10-15 00:08-00:12 in Firefox, one worker (test-timings/contrast-2026-10-15.json and contrast-light-2026-10-15.json; for a per-theme test the figure is the sum over its themes). A report is `test.info().annotations.push({ type: 'contrast guideline', … })` through `reportContrast` / `reportContrastAll` in tests/helpers/contrast-guideline.mjs. Every non-contrast check of a mixed test is unchanged. The rule was applied here without running any test code (fix-118).
+
+| #   | Test                                              | Measured | Done                                                                                                                                                  |
+| --- | ------------------------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | alarm.spec.mjs headline/detail/button             | 2.0 s    | reported (floor lines go to the annotation; page-errors check stays)                                                                                   |
+| 2   | alarm.spec.mjs fit, 2 viewports                   | 5.2 s    | reported; `broken` (words out of frame, clipping) and page errors stay hard                                                                            |
+| 3   | bare.spec.mjs, 2 themes                           | 1.8 s    | reported; every other check stays hard                                                                                                                 |
+| 4   | catalogue-review-dialog.spec.mjs note ink        | 12.5 s   | reported (per-theme ratio); visible, ground, colour-differs-from-look stay hard                                                                        |
+| 5   | dark-themes-notes.spec.mjs Try again frame       | 1.5 s    | reported (3:1 frame on plate only); frame equals label ink / own frame stay hard                                                                       |
+| 6   | fixtures.spec.mjs links, 16 themes               | 8.7 s    | reported                                                                                                                                               |
+| 7   | graph.spec.mjs pinned tooltip                    | 7.2 s    | reported (warning dot 3:1); wrapped change stays hard                                                                                                  |
+| 8   | kpi-columns.spec.mjs                              | 15.4 s   | reported (frame 3:1 declared/painted, change tone 4.5:1); heights, overflow, label lines/cut stay hard                                                 |
+| 9   | kpi-trend.spec.mjs                                | 9.2 s    | reported (figure and change tones 4.5:1); label wrapping, cut, tile height stay hard                                                                   |
+| 10  | calendar.spec.mjs:40                              | 29.8 s   | DELETED (over 20 s), whole test incl. its six-rows half; unused `rows`, `PHONE`, `ALL_THEMES` import removed                                          |
+| 11  | light-pastel-hc-notes.spec.mjs added line        | 8.6 s    | reported (line-number 4.5:1); the added-wash delta-E check stays hard                                                                                  |
+| 12  | light-pastel-hc-notes.spec.mjs:94 nav links      | 18.9 s   | reported (not deleted: 18.9 s is 20 s or less); not-primary and rest-vs-hover checks stay hard                                                          |
+| 13  | log.spec.mjs                                      | 6.2 s    | reported                                                                                                                                               |
+| 14  | nav-ghost.spec.mjs:64 rest, 16 themes            | 7.6 s    | reported; the "ink and plate readable" precondition stays hard                                                                                         |
+| 15  | nav-ghost.spec.mjs:95 hover/focus, 16 themes     | 15.9 s   | reported                                                                                                                                               |
+| 16  | nostromo-notes.spec.mjs progress label           | 1.9 s    | reported; the "3 readings" precondition stays hard                                                                                                     |
+| 17  | nostromo-notes.spec.mjs severity words           | 2.4 s    | reported                                                                                                                                               |
+| 18  | nostromo-second-pass.spec.mjs:346                | 21.3 s   | DELETED (over 20 s), whole test; its helpers `raiseToasts`, `OWN_TOAST_HOVER`, `paintedGroundOf` and the `contrast` import removed with it            |
+| 19  | register-grotesk.spec.mjs pressed button         | 1.4 s    | reported; deeper red, not grey, label keeps its ink stay hard                                                                                          |
+| 20  | registers.spec.mjs destructive alert, 16 themes  | 10.3 s   | reported; the ground is now read from the painted pixels (`paintedGroundOf`), and the channels are scaled to 0..1 (the old call passed 0..255 into `contrast`, which reads 0..1, so its ratios were not real, pastel's 1.02:1 among them) |
+| 21  | scope-93-notes.spec.mjs breadcrumb               | 3.2 s    | reported (rest and hover 4.5:1); no-indigo, 13 crumbs, hover ink moves stay hard                                                                       |
+| 22  | scope-93-notes.spec.mjs call to action           | 0.9 s    | reported; inset ring and ground change stay hard                                                                                                       |
+| 23  | surfaces.spec.mjs, 16 themes                     | 8.7 s    | reported; the "nothing measured" precondition stays hard; the `REPORTED` excuse list is gone, since nothing fails any more                              |
+
+Docs updated: docs/TEST_PLAN.md (a bullet on the guideline rule), docs/MINI_ROUNDS.md (fix-98-M1: its test was deleted), docs/CORRECTIONS.md (fix-98: two update notes). The nostromo toast-hover test is named in no MINI_ROUNDS or CORRECTIONS line as a proof.

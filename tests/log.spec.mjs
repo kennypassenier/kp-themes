@@ -10,6 +10,7 @@ import { waitForJudging } from './helpers/catalogue.mjs';
 import { useEmptyRegister } from './helpers/empty-register.mjs';
 import { sourceIndex } from '../js/log.js';
 import { paintedContrast } from '../gates/colour.mjs';
+import { reportContrastAll } from './helpers/contrast-guideline.mjs';
 
 const THEME_NAMES = JSON.parse(readFileSync(new globalThis.URL('../themes/order.json', import.meta.url), 'utf8'));
 
@@ -150,9 +151,10 @@ test(
                 });
             for (const { part, severity, ink, ground } of inks) {
                 const ratio = paintedContrast(channels(ink), channels(ground));
-                if (ratio < 4.5) faint.push(`${theme}: ${severity} ${part} at ${ratio.toFixed(2)} (${ink} on ${ground})`);
+                if (ratio < 4.5) faint.push(`${theme}: ${severity} ${part} at ${ratio.toFixed(2)}:1 (${ink} on ${ground})`);
             }
         }
-        expect(faint, 'a log word below 4.5:1 on its own ground').toEqual([]);
+        // Contrast is a guideline, not a gate (Kenny, form v44; fix-104).
+        reportContrastAll(test.info(), faint);
     },
 );

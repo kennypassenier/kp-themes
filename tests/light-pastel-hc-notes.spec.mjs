@@ -17,6 +17,7 @@ import { expect, test } from '@playwright/test';
 import { contrast, distance } from '../gates/colour.mjs';
 import { waitForJudging } from './helpers/catalogue.mjs';
 import { useEmptyRegister } from './helpers/empty-register.mjs';
+import { reportContrast } from './helpers/contrast-guideline.mjs';
 
 /**
  * @param {import('@playwright/test').Page} page
@@ -85,7 +86,9 @@ for (const theme of ['light', 'pastel']) {
             expect(addedDelta, `added ΔE ${addedDelta.toFixed(2)} against removed ${removedDelta.toFixed(2)}`).toBeGreaterThanOrEqual(
                 Math.max(5, 0.8 * removedDelta),
             );
-            expect(contrast(rgb(read.number), read.added), 'the muted line number on the added wash').toBeGreaterThanOrEqual(4.5);
+            // Contrast is a guideline, not a gate (Kenny, form v44; fix-104).
+            const numberRatio = contrast(rgb(read.number), read.added);
+            if (numberRatio < 4.5) reportContrast(test.info(), `${theme} muted line number on the added wash: ${numberRatio.toFixed(2)}:1`);
         });
     });
 }
@@ -127,7 +130,8 @@ test.describe('light: no indigo in the nav bars [navigation#bar-collapsed]', { t
             ]) {
                 const ink = rgb(s.ink);
                 if (distance(ink, rgb(primary)) < 10) faults.push(`${rest.label} ${state}: in the primary`);
-                if (contrast(ink, s.ground) < 4.5) faults.push(`${rest.label} ${state}: ${contrast(ink, s.ground).toFixed(2)}:1`);
+                // Contrast is a guideline, not a gate (Kenny, form v44; fix-104).
+                if (contrast(ink, s.ground) < 4.5) reportContrast(test.info(), `${rest.label} ${state}: ${contrast(ink, s.ground).toFixed(2)}:1`);
             }
         }
         expect(faults).toEqual([]);
