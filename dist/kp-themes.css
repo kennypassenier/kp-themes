@@ -59541,7 +59541,17 @@
     [data-theme='blueprint'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links::after {
         --kp-bp-px: calc(clamp(0, var(--kp-bp-r), 1) - clamp(0, var(--kp-bp-r) - 2, 1));
         --kp-bp-py: calc(clamp(0, var(--kp-bp-r) - 1, 1) - clamp(0, var(--kp-bp-r) - 3, 1));
-        inset: -9px;
+        /* The construction line runs 9 px outside the panel only while the pen
+           draws (--kp-bp-ink 0). Inked, the line is gone (--kp-bp-tv 0) and the box
+           folds onto the panel: left at -9px it still counted as scrollable
+           overflow, so a panel with overflow `auto` scrolled by 9 px and a panel
+           near the window's edge made the page scroll (320 px: 329). */
+        /* The construction line runs 9 px outside the panel only while the pen
+           draws (--kp-bp-ink 0). Inked, the line is gone (--kp-bp-tv 0) and the box
+           folds onto the panel: left at -9px it still counted as scrollable
+           overflow, so a panel with overflow `auto` scrolled by 9 px and a panel
+           near the window's edge made the page scroll (320 px: 329). */
+        inset: calc(-9px * (1 - var(--kp-bp-ink)));
         visibility: visible;
         background-image:
             var(--kp-bp-pen-img), linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace)),
@@ -68494,6 +68504,11 @@
    under `@media (prefers-reduced-motion: no-preference)`. */
 
     [data-theme='formal'] {
+        /* The month heatmap's nav goes on two rows below this width: September
+           in the small capitals of the voice (css below, 0.06em apart) and the
+           three buttons need 342 px, and the package's 20.5rem let a 334 px card
+           hold them on one row with the last button 7 px outside it [fix-98]. */
+        --kp-calendar-nav-fit: 21.5rem;
         /* The configuration surface [AR43], the demo's own values as
            defaults: 1.05s before the lede's first mark washes in, 90ms
            between the two, a 0.4 viewport threshold for the section rule. */

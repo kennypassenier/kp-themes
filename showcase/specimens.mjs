@@ -221,7 +221,7 @@ export const SPECIMENS = [
             `<div class="kp-tabs__panel" role="tabpanel" id="${theme}-p1" aria-labelledby="${theme}-t1" hidden>The second panel.</div></div>` +
             `<div class="kp-accordion"><details class="kp-accordion__item"><summary class="kp-accordion__summary">A question</summary>` +
             `<div class="kp-accordion__body">An answer.</div></details></div>` +
-            `<div class="kp-toast" style="position: static; margin-top: 0.5rem;">A toast, frozen here so you can look at it.</div>`,
+            `<div class="kp-toast" style="position: relative; margin-top: 0.5rem;">A toast, frozen here so you can look at it.</div>`,
     },
     {
         id: 'wayfinding',
