@@ -1023,6 +1023,18 @@
         font-weight: 700;
     }
 
+    /* Its focus ring stands inside the plate (-6 px), and the dashed red ring
+       of every other part would be red on red here, with the contrast ring
+       clipped away by the entry's own `overflow: clip` (black on the board
+       besides). On this plate the dashes take the plate's ink and the hugging
+       ring is drawn inside the edge in the surface colour, so both channels
+       show on the red and on the board [G16; the dashboard's destructive menu
+       item, suite triage 10.0.0]. */
+    [data-theme='phantom'] .kp-menu__item--destructive:focus-visible {
+        outline-color: var(--primary-foreground);
+        box-shadow: inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--foreground);
+    }
+
     /* The plain alert only [gap-1, Kenny 2026-09-10]. This rule used to
        repaint the ground of EVERY alert, and `kp.register` is a later layer
        than `kp.components`, so it beat `.kp-alert--destructive`'s own plate

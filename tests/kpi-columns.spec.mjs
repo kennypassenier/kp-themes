@@ -7,6 +7,7 @@
 // spans the whole row; the centred option is gone.
 import { expect, test } from '@playwright/test';
 import { ALL_THEMES } from './helpers/sweep-themes.mjs';
+import { paintedFrame } from './helpers/frame-paint.mjs';
 
 const PAGE = '/catalogue/data.html#kpi-columns';
 
@@ -59,18 +60,36 @@ const holds = async (page, n, width) => {
     const block = page.locator('#kpi-columns');
     const strip = block.locator('[data-cat-kpis-strip]');
     await block.locator(`[data-cat-kpis-count] [data-value="${n}"]`).click();
-    await block.locator(`[data-cat-kpis-width] [data-value="${width}"]`).click();
+    // A width the block cannot give in this window is greyed and a press on it does
+    // nothing (catalogue/demos.js): the strip then stays as wide as the block is.
+    const out = (await block.locator(`[data-cat-kpis-width] [data-value="${width}"]`).getAttribute('aria-disabled')) === 'true';
+    await block.locator(`[data-cat-kpis-width] [data-value="${out ? 'full' : width}"]`).click();
     await expect(block.locator('[data-cat-kpis-log]')).toContainText(`${n} ${n === 1 ? 'tile' : 'tiles'} in`);
+    // Tiles leave one at a time, each after the one behind it has gone and the block has
+    // glided to its height: wait until the strip holds exactly the tiles asked for.
+    await expect(strip.locator(':scope > *')).toHaveCount(n);
+    // And until the columns stop moving. The count kpiColumns() gives is the most the
+    // strip may take: a label is never cut, so one that does not fit its tile steps the
+    // strip down to its next smaller allowed count [fix-99, fix-101].
+    /** @type {string | undefined} */
+    let before;
     await expect
-        .poll(async () => {
-            const m = await measure(strip);
-            return m.columns === m.expected.columns && m.spanLast === m.expected.spanLast;
-        })
+        .poll(
+            async () => {
+                const m = await measure(strip);
+                const now = JSON.stringify([m.columns, m.spanLast, m.inner]);
+                const still = now === before && m.columns <= m.expected.columns;
+                before = now;
+                return still;
+            },
+            { intervals: [120] },
+        )
         .toBe(true);
     const m = await measure(strip);
-    const what = `${n}/${width}`;
+    const what = `${n}/${out ? 'full (block too narrow for ' + width + ')' : width}`;
     m.rows.forEach((row, i) => {
-        if (m.rows.length > 1 && row.widths.length === 1) {
+        // In one column every row holds one tile, by definition; the rule is for strips of two or more.
+        if (m.columns > 1 && m.rows.length > 1 && row.widths.length === 1) {
             expect(i === m.rows.length - 1 && m.spanLast, `${what}: row ${i + 1} holds one tile`).toBe(true);
             expect(row.widths[0], `${what}: the lone tile spans the row`).toBeCloseTo(m.inner, 0);
         }
@@ -129,6 +148,8 @@ test(
             /** @type {HTMLElement} */ (document.querySelector('#kpi-columns .cat-resize')).style.inlineSize = '334px';
         });
         const misses = [];
+        /** @type {Record<string, number>} the painted frame, read once per theme */
+        const painted = {};
         for (const theme of ALL_THEMES) {
             await page.evaluate((t) => {
                 document.documentElement.dataset.theme = t;
@@ -248,7 +269,16 @@ test(
                                     r.selectNodeContents(l);
                                     return {
                                         lines: new Set([...r.getClientRects()].filter((b) => b.width > 0).map((b) => Math.round(b.top))).size,
-                                        cut: l.scrollWidth > l.clientWidth + 0.5 || t.scrollWidth > t.clientWidth + 0.5,
+                                        // The label's own text, or one of the tile's parts, reaches past the tile.
+                                        // The tile's scroll width is not read: a theme's frame ornament is a pseudo-element
+                                        // that stands 1 px out (deco's hairlines) and cuts nothing.
+                                        cut:
+                                            l.scrollWidth > l.clientWidth + 0.5 ||
+                                            [...t.children].some((part) => {
+                                                const b = part.getBoundingClientRect();
+                                                const f = t.getBoundingClientRect();
+                                                return b.right > f.right + 0.5 || b.left < f.left - 0.5;
+                                            }),
                                     };
                                 }),
                                 frame: Math.min(
@@ -276,7 +306,13 @@ test(
                         if (l.lines !== 1) misses.push(`${at}: label ${i + 1} on ${l.lines} lines`);
                         if (l.cut) misses.push(`${at}: label ${i + 1} or its tile cut`);
                     });
-                    if (g.frame < 3) misses.push(`${at}: the frame ${g.frame.toFixed(2)}:1`);
+                    if (g.frame < 3) {
+                        // The declared border reads below 3:1 or is no border at all (blueprint and terminal draw the frame
+                        // in a background line, synthwave in a rail and a glow, deco in gold hairlines on a pseudo-element):
+                        // read what is painted, once per theme.
+                        painted[theme] ??= (await paintedFrame(page, page.locator('[data-cat-kpis-strip] > *').first())).ratio;
+                        if (painted[theme] < 3) misses.push(`${at}: the frame ${g.frame.toFixed(2)}:1 declared, ${painted[theme].toFixed(2)}:1 painted`);
+                    }
                     for (const c of g.changes) if (c.ratio < 4.5) misses.push(`${at}: the ${c.tone} change ${c.ratio.toFixed(2)}:1`);
                 }
             }

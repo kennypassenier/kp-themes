@@ -541,13 +541,18 @@ eachBlock('[data-cat-kpis-strip]', (block) => {
             const rows = [];
             for (let left = count; left > 0; left -= columns) rows.push(Math.min(columns, left));
             const width = Math.round(strip.getBoundingClientRect().width);
-            log.textContent =
+            const text =
                 `${count} ${count === 1 ? 'tile' : 'tiles'} in ${width} px: ${columns} ${columns === 1 ? 'column' : 'columns'}, ` +
                 `${rows.length === 1 ? 'one row' : `rows ${rows.join(' + ')}`}` +
                 (strip.hasAttribute('data-kp-kpis-span-last')
                     ? '; no allowed count avoids a lone tile, so the last one spans its row.'
                     : ', no tile alone.') +
                 (asked > width + 1 ? ` (${asked} px asked: the block is only ${width} px wide in this window.)` : '');
+            // Only when the words changed: attachKpiStrips() fits the strip again on every change of
+            // the page, and a label that does not fit its tile makes it write the strip's style twice
+            // (the trial count, then the one that fits), which this block hears; writing the same
+            // words again is a change of the page too, so the two chased each other at 60 Hz at phone width.
+            if (log.textContent !== text) log.textContent = text;
         });
     // A width the block cannot give in this window is greyed and says why,
     // so a press never looks as if it did nothing.
