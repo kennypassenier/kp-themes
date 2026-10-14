@@ -2551,16 +2551,10 @@
         --fx-texture-opacity: 0.035;
     }
 
-    /* T6 · Light = "Blauwdruk": millimetre grid off a drawing table. */
-    [data-theme='light'] {
-        --fx-texture:
-            linear-gradient(to right, hsl(from var(--primary) h s l / 0.55) 1px, transparent 1px),
-            linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.55) 1px, transparent 1px),
-            linear-gradient(to right, hsl(from var(--primary) h s l / 0.9) 1px, transparent 1px),
-            linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.9) 1px, transparent 1px);
-        --fx-texture-size: 24px 24px, 24px 24px, 120px 120px, 120px 120px;
-        --fx-texture-opacity: 0.05;
-    }
+    /* T6 · Light carries no texture. It was "Blauwdruk", a millimetre grid off
+       a drawing table at 5 %, which the light register switched off again
+       (white on white, told apart by shadows and the seam, Kenny, 2026-10-08).
+       The block is gone from here; nothing was visible of it. */
 
     /* T7 · Dark carries no texture. It was "Observatorium", a faint
        starfield behind the glass, from round one until 2026-09-11, when
@@ -8541,10 +8535,6 @@
         border-block-start: 1px solid var(--border);
     }
 
-    .kp-menu__item--destructive {
-        color: var(--destructive);
-    }
-
     /* --- Dropdown and tooltip, on the popover layer ----------------------- */
 
     .kp-popover {
@@ -8602,6 +8592,16 @@
     .kp-menu__item:hover {
         background: var(--kp-highlight, hsl(from var(--foreground) h s l / 0.08));
         color: inherit;
+    }
+
+    /* A destructive entry keeps its ink, at rest and under the pointer. It sits
+ * after `.kp-menu__item` and its hover on purpose: it used to come before
+ * them, and their `color: inherit` cancelled it, so in every theme whose
+ * register does not restate the ink (synthwave, pastel, ...) "Delete" read
+ * like every other entry. */
+    .kp-menu__item--destructive,
+    .kp-menu__item--destructive:hover {
+        color: var(--destructive);
     }
 
     /* A disabled item looks unavailable and does not answer the pointer
@@ -12814,6 +12814,16 @@
 
     /* The part the tour talks about: a ring in the focus colour, and the rest
  * of the page dimmed around it, so the eye goes straight to it. */
+    /* `z-index` does nothing on a part that is not positioned (a plain block in
+ * normal flow), and the dim is the part's box-shadow: a later sibling with a
+ * ground painted over it, so the page was not dimmed below the target. A part
+ * with no position of its own is made `relative`. Zero specificity, so any rule
+ * that positions a part (a sticky header, an absolute drawer, every register)
+ * keeps what it says. */
+    :where([data-kp-tour-target]) {
+        position: relative;
+    }
+
     [data-kp-tour-target] {
         z-index: 55;
         outline: 3px solid var(--ring);
@@ -13802,6 +13812,29 @@
     [data-theme='cyberpunk'] .kp-menu__item::before {
         content: '— ';
         color: var(--primary);
+    }
+
+    /* A rich entry is a grid (the label over its hint), so its `::before`, the dash
+       here and the TARGET tag of a destructive entry below, was a grid item and took a row of
+       its own. In a rich entry the prefix and the label share the first row and the hint runs
+       under both, from the entry's start. */
+    [data-theme='cyberpunk'] .kp-menu--rich .kp-menu__item {
+        grid-template-columns: auto minmax(0, 1fr);
+        column-gap: 0;
+    }
+
+    [data-theme='cyberpunk'] .kp-menu--rich .kp-menu__item::before {
+        grid-area: 1 / 1;
+        align-self: baseline;
+        white-space: pre;
+    }
+
+    [data-theme='cyberpunk'] .kp-menu--rich .kp-menu__item > .kp-menu__label {
+        grid-area: 1 / 2;
+    }
+
+    [data-theme='cyberpunk'] .kp-menu--rich .kp-menu__item > .kp-menu__hint {
+        grid-area: 2 / 1 / auto / -1;
     }
 
     [data-theme='cyberpunk'] .kp-theme-menu {
@@ -19570,10 +19603,17 @@
     [data-theme='synthwave'] .kp-button::after {
         content: '';
         position: absolute;
-        left: -4px;
-        right: -4px;
+        /* The slit runs from the padding box's edges and reaches the 4 px past them
+           with a side shadow, not with `left` / `right: -4px`: a box that sticks out is
+           scrollable overflow, so every button measured 4 px of `scrollWidth` over
+           its `clientWidth` and read as a cut label, while the paint is identical. */
+        left: 0;
+        right: 0;
         height: 3px;
-        background: var(--background);
+        background: var(--kp-sw-cut-ink, var(--background));
+        box-shadow:
+            -4px 0 0 0 var(--kp-sw-cut-ink, var(--background)),
+            4px 0 0 0 var(--kp-sw-cut-ink, var(--background));
         opacity: 0;
         pointer-events: none;
     }
@@ -19588,7 +19628,7 @@
 
     [data-theme='synthwave'] .kp-card .kp-button::before,
     [data-theme='synthwave'] .kp-card .kp-button::after {
-        background: var(--card);
+        --kp-sw-cut-ink: var(--card);
     }
 
     [data-theme='synthwave'] .kp-button--primary {
@@ -51044,9 +51084,8 @@
         --kp-shadow-md: 0 8px 24px hsl(from var(--foreground) h s l / 0.12);
         --kp-shadow-lg: 0 20px 48px hsl(from var(--foreground) h s l / 0.22);
         /* White on white, told apart by these three shadows and the seam, and
-       nothing else [G7; Kenny, 2026-10-08, question 7]: no texture. The
-       blueprint grid the base layer still paints for this theme (T6, 5 %) is
-       taken off here, where the register is a later layer than the base. */
+       nothing else [G7; Kenny, 2026-10-08, question 7]: no texture. The base
+       layer paints none for this theme either (its blueprint grid, T6, is gone). */
         --fx-texture: none;
         --fx-texture-opacity: 0;
         /* The reveals this theme performs [S45]: js/effects.js reads

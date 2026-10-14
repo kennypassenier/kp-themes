@@ -783,6 +783,29 @@
         color: var(--primary);
     }
 
+    /* A rich entry is a grid (the label over its hint), so its `::before`, the dash
+       here and the TARGET tag of a destructive entry below, was a grid item and took a row of
+       its own. In a rich entry the prefix and the label share the first row and the hint runs
+       under both, from the entry's start. */
+    [data-theme='cyberpunk'] .kp-menu--rich .kp-menu__item {
+        grid-template-columns: auto minmax(0, 1fr);
+        column-gap: 0;
+    }
+
+    [data-theme='cyberpunk'] .kp-menu--rich .kp-menu__item::before {
+        grid-area: 1 / 1;
+        align-self: baseline;
+        white-space: pre;
+    }
+
+    [data-theme='cyberpunk'] .kp-menu--rich .kp-menu__item > .kp-menu__label {
+        grid-area: 1 / 2;
+    }
+
+    [data-theme='cyberpunk'] .kp-menu--rich .kp-menu__item > .kp-menu__hint {
+        grid-area: 2 / 1 / auto / -1;
+    }
+
     [data-theme='cyberpunk'] .kp-theme-menu {
         font-family: var(--kp-mono);
     }

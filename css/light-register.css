@@ -64,9 +64,8 @@
         --kp-shadow-md: 0 8px 24px hsl(from var(--foreground) h s l / 0.12);
         --kp-shadow-lg: 0 20px 48px hsl(from var(--foreground) h s l / 0.22);
         /* White on white, told apart by these three shadows and the seam, and
-       nothing else [G7; Kenny, 2026-10-08, question 7]: no texture. The
-       blueprint grid the base layer still paints for this theme (T6, 5 %) is
-       taken off here, where the register is a later layer than the base. */
+       nothing else [G7; Kenny, 2026-10-08, question 7]: no texture. The base
+       layer paints none for this theme either (its blueprint grid, T6, is gone). */
         --fx-texture: none;
         --fx-texture-opacity: 0;
         /* The reveals this theme performs [S45]: js/effects.js reads
