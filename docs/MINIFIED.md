@@ -15,11 +15,11 @@ the selectors and their order are identical, which is what
 
 | File | Authored | Minified | Saved |
 | ---- | -------: | -------: | ----: |
-| `css/_rules.css` | 39.7 kB | 20.7 kB | 48% |
+| `css/_rules.css` | 39.4 kB | 20.2 kB | 49% |
 | `css/blueprint-register.css` | 169.7 kB | 85.6 kB | 50% |
 | `css/brutalism-register.css` | 158.8 kB | 82.8 kB | 48% |
-| `css/components.css` | 350.6 kB | 141.8 kB | 60% |
-| `css/cyberpunk-register.css` | 236.5 kB | 133.1 kB | 44% |
+| `css/components.css` | 351.5 kB | 141.9 kB | 60% |
+| `css/cyberpunk-register.css` | 237.4 kB | 133.5 kB | 44% |
 | `css/dark-register.css` | 156.6 kB | 71.8 kB | 54% |
 | `css/deco-register.css` | 160.8 kB | 88.1 kB | 45% |
 | `css/fonts.css` | 21.3 kB | 15.8 kB | 26% |
@@ -27,21 +27,21 @@ the selectors and their order are identical, which is what
 | `css/formal-register.css` | 154.3 kB | 79.7 kB | 48% |
 | `css/grotesk-register.css` | 121.4 kB | 57.4 kB | 53% |
 | `css/layout.css` | 13.0 kB | 2.5 kB | 81% |
-| `css/light-register.css` | 105.3 kB | 48.8 kB | 54% |
+| `css/light-register.css` | 105.2 kB | 48.8 kB | 54% |
 | `css/nostromo-register.css` | 142.3 kB | 71.1 kB | 50% |
 | `css/pastel-register.css` | 158.1 kB | 79.9 kB | 50% |
 | `css/phantom-register.css` | 145.5 kB | 72.8 kB | 50% |
 | `css/solstice-register.css` | 100.7 kB | 52.2 kB | 48% |
-| `css/synthwave-register.css` | 164.4 kB | 84.1 kB | 49% |
+| `css/synthwave-register.css` | 164.9 kB | 84.2 kB | 49% |
 | `css/terminal-register.css` | 141.8 kB | 72.9 kB | 49% |
-| `css/themes.css` | 153.8 kB | 99.8 kB | 35% |
+| `css/themes.css` | 153.4 kB | 99.3 kB | 35% |
 | `css/titanium-register.css` | 129.0 kB | 63.5 kB | 51% |
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 45% |
-| `dist/kp-themes.css` | 2942.8 kB | 1477.8 kB | 50% |
+| `dist/kp-themes.css` | 2944.6 kB | 1478.0 kB | 50% |
 | `dist/kp-themes.js` | 812.9 kB | 441.7 kB | 46% |
 
-The loose stylesheets together weigh **3003.2 kB** authored and
-**1515.3 kB** minified, 50% less. A page loading one theme's
+The loose stylesheets together weigh **3004.7 kB** authored and
+**1515.0 kB** minified, 50% less. A page loading one theme's
 register rather than the whole bundle carries only that register's row.
 
 The wire is smaller again: gzip takes the minified bundle to roughly a

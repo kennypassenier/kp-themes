@@ -5169,10 +5169,6 @@
         border-block-start: 1px solid var(--border);
     }
 
-    .kp-menu__item--destructive {
-        color: var(--destructive);
-    }
-
     /* --- Dropdown and tooltip, on the popover layer ----------------------- */
 
     .kp-popover {
@@ -5230,6 +5226,16 @@
     .kp-menu__item:hover {
         background: var(--kp-highlight, hsl(from var(--foreground) h s l / 0.08));
         color: inherit;
+    }
+
+    /* A destructive entry keeps its ink, at rest and under the pointer. It sits
+ * after `.kp-menu__item` and its hover on purpose: it used to come before
+ * them, and their `color: inherit` cancelled it, so in every theme whose
+ * register does not restate the ink (synthwave, pastel, ...) "Delete" read
+ * like every other entry. */
+    .kp-menu__item--destructive,
+    .kp-menu__item--destructive:hover {
+        color: var(--destructive);
     }
 
     /* A disabled item looks unavailable and does not answer the pointer
@@ -9442,6 +9448,16 @@
 
     /* The part the tour talks about: a ring in the focus colour, and the rest
  * of the page dimmed around it, so the eye goes straight to it. */
+    /* `z-index` does nothing on a part that is not positioned (a plain block in
+ * normal flow), and the dim is the part's box-shadow: a later sibling with a
+ * ground painted over it, so the page was not dimmed below the target. A part
+ * with no position of its own is made `relative`. Zero specificity, so any rule
+ * that positions a part (a sticky header, an absolute drawer, every register)
+ * keeps what it says. */
+    :where([data-kp-tour-target]) {
+        position: relative;
+    }
+
     [data-kp-tour-target] {
         z-index: 55;
         outline: 3px solid var(--ring);

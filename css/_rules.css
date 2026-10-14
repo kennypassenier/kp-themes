@@ -28,16 +28,10 @@
         --fx-texture-opacity: 0.035;
     }
 
-    /* T6 · Light = "Blauwdruk": millimetre grid off a drawing table. */
-    [data-theme='light'] {
-        --fx-texture:
-            linear-gradient(to right, hsl(from var(--primary) h s l / 0.55) 1px, transparent 1px),
-            linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.55) 1px, transparent 1px),
-            linear-gradient(to right, hsl(from var(--primary) h s l / 0.9) 1px, transparent 1px),
-            linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.9) 1px, transparent 1px);
-        --fx-texture-size: 24px 24px, 24px 24px, 120px 120px, 120px 120px;
-        --fx-texture-opacity: 0.05;
-    }
+    /* T6 · Light carries no texture. It was "Blauwdruk", a millimetre grid off
+       a drawing table at 5 %, which the light register switched off again
+       (white on white, told apart by shadows and the seam, Kenny, 2026-10-08).
+       The block is gone from here; nothing was visible of it. */
 
     /* T7 · Dark carries no texture. It was "Observatorium", a faint
        starfield behind the glass, from round one until 2026-09-11, when

@@ -2,6 +2,24 @@
 
 ## Unreleased
 
+- **Fixed: a destructive menu entry keeps its ink** [Kenny's go for 10.1.0; package findings re-check]. `.kp-menu__item--destructive` came before
+  `.kp-menu__item` and its hover in kp.components, and their `color: inherit` cancelled it, so in every theme whose register does not restate
+  the ink (synthwave, pastel, blueprint, solstice, titanium, grotesk, forest, terminal, cyberpunk) "Delete" read like every other entry. The
+  rule now follows them and holds under the pointer too; the registers that restate it are unchanged.
+- **Fixed: synthwave's buttons no longer measure 4 px of overflow** [package findings re-check]. The sun cut's two slits reached 4 px past the
+  padding box with `left` / `right: -4px`, which is scrollable overflow, so every `.kp-button` read `scrollWidth` 4 px over `clientWidth`
+  (a label that looked cut). The slits now span the padding box and reach the same 4 px with a side shadow: the paint and every button's size
+  are unchanged. Blueprint's buttons still measure 28 px of `scrollHeight` over `clientHeight`: that is the pointing scale and the dimension,
+  decorative boxes drawn below the part, and no label is outside its button.
+- **Fixed: cyberpunk's rich menu entries carry the dash on the title's line** [package findings re-check]. A rich entry is a grid, so the
+  `::before` dash (and the TARGET tag of a destructive entry) was a grid item on a row of its own, 25 px (destructive: 19 px) taller than
+  the entry needs. The prefix and the label now share the first row and the hint runs under both.
+- **Removed: light's dead blueprint grid (T6) in css/\_rules.css** [package findings re-check]. The light register switched the grid off
+  (`--fx-texture: none`), so nothing of it was visible; the source block, and its copy in css/themes.css and the minified files, are gone.
+- **Fixed: the tour's dim covers a later sibling in plain block flow** [package findings re-check]. `[data-kp-tour-target]` set `z-index` on a
+  part with no position, which does nothing, so the dim (the part's box-shadow) was painted under every later opaque sibling in normal flow
+  (formal, forest, light: the part below the target was not dimmed at all). A target with no position of its own is now `position: relative`
+  (`:where()`, so every rule that positions a part wins).
 - **Fixed: blueprint's construction line no longer makes room that is not there** [Kenny, 2026-10-14; triage of the 10.0.0 suite, fault 1]. The
   trace `::after` of the toast, date picker, palette, tour card, bar menus and the other traced panels kept `inset: -9px` after the pen
   had lifted, so a panel with `overflow: auto` scrolled by 9 px (the table's filter menu: scroll width 177 in 168) and a panel at the

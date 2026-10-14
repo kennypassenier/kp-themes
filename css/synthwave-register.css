@@ -707,10 +707,17 @@
     [data-theme='synthwave'] .kp-button::after {
         content: '';
         position: absolute;
-        left: -4px;
-        right: -4px;
+        /* The slit runs from the padding box's edges and reaches the 4 px past them
+           with a side shadow, not with `left` / `right: -4px`: a box that sticks out is
+           scrollable overflow, so every button measured 4 px of `scrollWidth` over
+           its `clientWidth` and read as a cut label, while the paint is identical. */
+        left: 0;
+        right: 0;
         height: 3px;
-        background: var(--background);
+        background: var(--kp-sw-cut-ink, var(--background));
+        box-shadow:
+            -4px 0 0 0 var(--kp-sw-cut-ink, var(--background)),
+            4px 0 0 0 var(--kp-sw-cut-ink, var(--background));
         opacity: 0;
         pointer-events: none;
     }
@@ -725,7 +732,7 @@
 
     [data-theme='synthwave'] .kp-card .kp-button::before,
     [data-theme='synthwave'] .kp-card .kp-button::after {
-        background: var(--card);
+        --kp-sw-cut-ink: var(--card);
     }
 
     [data-theme='synthwave'] .kp-button--primary {
