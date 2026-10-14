@@ -73,15 +73,14 @@ export async function readDemo(href) {
     const url = new URL(href, ROOT);
     const fetchUrl = new URL(url);
     fetchUrl.searchParams.set('_', String(Date.now()));
+    // The update note is asked for beside the page, not after it: one round trip less before the row is known.
+    const update = loadUpdate(new URL('update.json', url));
     const response = await fetch(fetchUrl.href, { cache: 'no-cache' });
     if (!response.ok) throw new Error(String(response.status));
     const html = await response.text();
     const shape = shapeOf(new DOMParser().parseFromString(html, 'text/html'));
     // Its version, so a verdict on earlier files of this round reads as open.
-    if (shape) {
-        shape.fingerprint = await fingerprintOf(url, html);
-        shape.update = await loadUpdate(new URL('update.json', url));
-    }
+    if (shape) [shape.fingerprint, shape.update] = await Promise.all([fingerprintOf(url, html), update]);
     return shape;
 }
 

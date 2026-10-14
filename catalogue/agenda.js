@@ -19,18 +19,7 @@ import { THEMES } from '../js/theme-registry.js';
 import { JUDGEMENT_EVENT, loadJudgements } from './judgements.js';
 import { gatherBlocks, isOpen } from './open-pairs.js';
 import { ANSWER_EVENT, answerWaiting } from '../research/_review/progress.js';
-import {
-    composeBlocks,
-    counted,
-    demoStatus,
-    dependentsOf,
-    inOrder,
-    labelOf,
-    readDecided,
-    readDemo,
-    researchPages,
-    reviewUrl,
-} from './waiting.js';
+import { composeBlocks, counted, demoStatus, dependentsOf, inOrder, labelOf, readDecided, readDemo, researchPages, reviewUrl } from './waiting.js';
 
 const ROOT = new URL('../', import.meta.url);
 const SELF = new URL('agenda.html', import.meta.url).href;
@@ -135,7 +124,16 @@ function demoView({ page, shape, failed }) {
         affects: page.affects ?? '',
     };
     if (shape === undefined && !failed) {
-        return { ...base, kind: 'Research demo', count: 'Reading…', spread: '', tone: '', state: 'reading', action: 'Start', reason: 'Reading the demo' };
+        return {
+            ...base,
+            kind: 'Research demo',
+            count: 'Reading…',
+            spread: '',
+            tone: '',
+            state: 'reading',
+            action: 'Start',
+            reason: 'Reading the demo',
+        };
     }
     const url = new URL(page.href, ROOT).href;
     if (failed || !shape) {
@@ -179,11 +177,28 @@ function blocksView() {
         kind: 'Catalogue',
     };
     if (blocks.failed) {
-        return { ...base, count: 'State unknown', spread: '', tone: '', state: 'waiting', action: 'Open', href: new URL('catalogue/changed.html', ROOT).href };
+        return {
+            ...base,
+            count: 'State unknown',
+            spread: '',
+            tone: '',
+            state: 'waiting',
+            action: 'Open',
+            href: new URL('catalogue/changed.html', ROOT).href,
+        };
     }
     const now = blockPairs();
     if (!now) return { ...base, count: 'Gathering…', spread: '', tone: '', state: 'reading', action: 'Judge', reason: 'Gathering the blocks' };
-    if (!now.pairs) return { ...base, count: 'Judged', spread: 'in every theme', tone: ' kp-badge--success', state: 'done', action: 'Look again', href: new URL('catalogue/index.html', ROOT).href };
+    if (!now.pairs)
+        return {
+            ...base,
+            count: 'Judged',
+            spread: 'in every theme',
+            tone: ' kp-badge--success',
+            state: 'done',
+            action: 'Look again',
+            href: new URL('catalogue/index.html', ROOT).href,
+        };
     return {
         ...base,
         count: `${now.pairs} to judge`,
@@ -205,6 +220,37 @@ function openBlockDialog() {
 
 /** @type {Map<string, HTMLLIElement>} */
 const rows = new Map();
+
+/** The items still being read: they have no row and no number yet, only a placeholder in a row's shape. */
+const readingIds = new Set();
+
+/** @type {Map<string, HTMLLIElement>} */
+const placeholders = new Map();
+
+/**
+ * A row's shape without its words, for an item still being read (Kenny, 2026-10-14: a row that appeared with its
+ * title and button and was gone four seconds later read as a demo that vanished). It names nothing and offers
+ * nothing; it stands where a row may come, and goes when the item is known.
+ */
+function placeholderFor(/** @type {string} */ id) {
+    let row = placeholders.get(id);
+    if (row) return row;
+    row = document.createElement('li');
+    row.className = 'agenda-row agenda-row--reading';
+    row.setAttribute('aria-hidden', 'true');
+    row.innerHTML = `
+        <span class="kp-skeleton kp-skeleton--circle agenda-row__number"></span>
+        <div class="agenda-row__what">
+            <span class="kp-skeleton agenda-skeleton agenda-skeleton--kind"></span>
+            <span class="kp-skeleton agenda-skeleton agenda-skeleton--title"></span>
+            <span class="kp-skeleton agenda-skeleton"></span>
+            <span class="kp-skeleton agenda-skeleton agenda-skeleton--short"></span>
+        </div>
+        <p class="agenda-row__count"><span class="kp-skeleton agenda-skeleton agenda-skeleton--badge"></span></p>
+        <div class="agenda-row__go"><span class="kp-skeleton agenda-skeleton agenda-skeleton--button"></span></div>`;
+    placeholders.set(id, row);
+    return row;
+}
 
 /** One row's element, made once and repainted in place, so focus and scroll survive a refresh. */
 function rowFor(/** @type {string} */ id) {
@@ -233,7 +279,8 @@ function rowFor(/** @type {string} */ id) {
 /** The label of another item with its place in the list now. */
 function placeOf(/** @type {string} */ href, /** @type {Map<string, number>} */ numbers) {
     const number = numbers.get(href);
-    return number ? `${number} · ${labelOf(href)}` : `${labelOf(href)} (judged)`;
+    if (number) return `${number} · ${labelOf(href)}`;
+    return readingIds.has(href) ? `${labelOf(href)} (still being read)` : `${labelOf(href)} (judged)`;
 }
 
 /**
@@ -331,10 +378,15 @@ function render() {
     const views = [...demos.map(demoView), blocksView()];
     const open = views.filter((view) => view.state !== 'done');
     const finished = views.filter((view) => view.state === 'done');
+    // Only what is known to wait gets a row and a number; what is still being read holds a place in a row's shape.
+    const known = open.filter((view) => view.state === 'waiting');
+    const pending = open.filter((view) => view.state === 'reading');
+    readingIds.clear();
+    for (const view of pending) readingIds.add(view.id);
     /** @type {Map<string, number>} */
-    const numbers = new Map(open.map((view, i) => [view.id, i + 1]));
+    const numbers = new Map(known.map((view, i) => [view.id, i + 1]));
 
-    ui.waiting.replaceChildren(...open.map((view, i) => paintRow(view, i + 1, numbers)));
+    ui.waiting.replaceChildren(...known.map((view, i) => paintRow(view, i + 1, numbers)), ...pending.map((view) => placeholderFor(view.id)));
     if (!open.length) {
         const none = document.createElement('li');
         none.className = 'cat-changed-done agenda__none';
@@ -344,7 +396,10 @@ function render() {
     const reading = views.some((view) => view.state === 'reading');
     ui.waiting.setAttribute('aria-busy', String(reading));
 
-    const doneRows = [...finished.map((view) => paintRow(view, null, numbers)), ...archive.map((entry) => paintRow(archivedView(entry), null, numbers))];
+    const doneRows = [
+        ...finished.map((view) => paintRow(view, null, numbers)),
+        ...archive.map((entry) => paintRow(archivedView(entry), null, numbers)),
+    ];
     ui.doneList.replaceChildren(...doneRows);
     ui.doneCount.textContent = `(${doneRows.length})`;
 
@@ -372,7 +427,9 @@ function renderStatus({ open, reading }) {
     if (blockView?.state === 'waiting') parts.push(`catalogue blocks (${blockView.count}, ${blockView.spread})`);
     else if (blockView?.state === 'reading') parts.push('the catalogue blocks still being gathered');
     else parts.push('no catalogue block');
-    const rework = inRework ? ` ${counted(inRework, 'demo')} more ${inRework === 1 ? 'is' : 'are'} in rework and come${inRework === 1 ? 's' : ''} back with a new round.` : '';
+    const rework = inRework
+        ? ` ${counted(inRework, 'demo')} more ${inRework === 1 ? 'is' : 'are'} in rework and come${inRework === 1 ? 's' : ''} back with a new round.`
+        : '';
     ui.status.textContent = open.length
         ? `${counted(open.length, 'item')} ${open.length === 1 ? 'waits' : 'wait'}: ${parts.join(' and ')}.${rework}`
         : `Nothing waits: every demo and every catalogue block is judged in every theme.${rework}`;
@@ -380,7 +437,14 @@ function renderStatus({ open, reading }) {
 
 /** The head's primary button: the first item that waits. */
 function renderStart(/** @type {View[]} */ open, /** @type {boolean} */ reading) {
-    const first = open[0];
+    const first = open.find((view) => view.state === 'waiting');
+    if (!first && reading) {
+        ui.start.disabled = true;
+        ui.start.textContent = 'Reading…';
+        ui.next.textContent = 'Waiting for the first item to be read.';
+        ui.start.onclick = null;
+        return;
+    }
     if (!first) {
         ui.start.disabled = true;
         ui.start.textContent = 'Nothing waits';
