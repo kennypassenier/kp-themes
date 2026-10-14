@@ -105,17 +105,6 @@ export const PAGES = [
             // Kenny, 2026-10-07 04:23: what makes brutalism brutalism, the same way (the analysis in themes/brutalism/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the sixth theme of the one-by-one series, after solstice.
             // Kenny, 2026-10-07 04:23: what makes grotesk grotesk, the same way (the analysis in themes/grotesk/CHARACTER.md), nineteen rules of its grammar as questions, each option a live scene, the recommendation first; the seventh theme of the one-by-one series, after brutalism. Questions 9 to 12 are the grotesk-only loading demo Kenny asked for on 2026-10-06 21:37, from the graph's Out of register.
             // Kenny, 2026-10-12: "Cyberpunk lijkt af, zie dat dezelfde fouten nu niet terugkomen in andere thema's": every other theme mended so a close is its open backwards with the theme's own effect; only what changed, each block in the themes where it did (research/all-themes).
-            // Kenny, 2026-10-13 19:47 (form "kp-themes-zijnavigatie-opties"): the ten minor side navigation options marked "Gewenst", every one opt-in (research/sidenav-minor). Two demos: how the panel looks, and how it behaves.
-            {
-                href: 'research/sidenav-minor/look.html',
-                label: 'Side navigation: six new looks',
-                about: 'A narrower panel on a phone, a floating panel, the page as an inset card, a peek strip when shut, compact or comfortable rows, and a small button beside an item. Each is off unless a page asks for it.',
-            },
-            {
-                href: 'research/sidenav-minor/behaviour.html',
-                label: 'Side navigation: four new behaviours',
-                about: 'A page can refuse an open or close, the reader can drag the panel wider, and a page that turns a backdrop on can make it static or quiet. Each is off unless a page asks for it.',
-            },
         ],
     },
     {
@@ -126,6 +115,9 @@ export const PAGES = [
         // Decided demos stay reachable from the Agenda's Done list, not from the side navigation (Kenny, 2026-10-13).
         nav: false,
         pages: [
+            // Decided 2026-10-14 19:12: Kenny approved both side navigation minor demos in full (behaviour 64 of 64, look 96 of 96, all 16 themes).
+            { href: 'research/sidenav-minor/look.html', label: 'Side navigation: six new looks' },
+            { href: 'research/sidenav-minor/behaviour.html', label: 'Side navigation: four new behaviours' },
             // Decided 2026-10-14 16:50: Kenny approved pastel as applied in full (23 of 23 blocks, round 2: the side navigation moves alone, every key figure tacked).
             { href: 'research/pastel-applied/demo.html', label: 'Pastel, as applied' },
             // Decided 2026-10-14 03:23: Kenny approved pastel's grammar after update 2 (research/pastel-character/decided.json): loading = the pom-pom caterpillar 6, spinner = the caterpillar 2, leave = the thumbtack, focus = the dashed line alone.

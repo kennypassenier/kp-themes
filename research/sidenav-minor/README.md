@@ -1,5 +1,7 @@
 # research/sidenav-minor
 
+**Decided (Kenny, 14/10/2026 19:12): approved in full, both demos** (behaviour 64 of 64, look 96 of 96, all 16 themes; decided.json).
+
 Six small options for the window-edge side navigation, off by default (Kenny's "minor options" round,
 2026-10-14; the survey is research/sidenav-edge/OTHER-LIBRARIES.md).
 
