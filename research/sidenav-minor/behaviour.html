@@ -17,6 +17,13 @@
         <link rel="stylesheet" href="../../css/utilities.css" />
         <link rel="stylesheet" href="../../css/formal-register.css" data-kp-register="formal" />
         <link rel="stylesheet" href="../sidenav-edge/demo.css" />
+        <style>
+            /* The per-theme look-at lines are for the review dialog, which shows the one of the theme it is in; on the
+               page they were sixteen paragraphs above every window (Kenny, 2026-10-14). */
+            .se-look {
+                display: none;
+            }
+        </style>
     </head>
     <body>
         <main class="se-page">
@@ -49,6 +56,11 @@
                 <div class="se-sec__head">
                     <p class="se-num">1 · Cancelable events with a reason</p>
                     <h2 id="h-cancel">The page can say no, and every event says why it was asked.</h2>
+                    <p class="se-watch">
+                        What to watch, after "Play once": while the draft is not saved, the bars and Escape both try to close the menu and the page
+                        says no, so the menu stays where it is. The panel on the right, "What the menu reports", shows each try as cancelled with the
+                        way it was asked (toggler is the bars, escape is the key). After Save, Escape closes the menu and the line says allowed.
+                    </p>
                 </div>
                 <div class="se-look" data-review-look>
                     <p data-for="formal">
@@ -167,6 +179,11 @@
                 <div class="se-sec__head">
                     <p class="se-num">2 · Resize by dragging</p>
                     <h2 id="h-resize">The reader sets the menu width, and the page follows.</h2>
+                    <p class="se-watch">
+                        What to watch, after "Play once": the pointer drags the handle on the menu's inner edge and the page moves along. The bar
+                        under "Menu width" shows the width; it stops at the narrowest the page allows, the arrow keys change it too, and after a
+                        reload the width is still the same.
+                    </p>
                 </div>
                 <div class="se-look" data-review-look>
                     <p data-for="formal">
@@ -285,6 +302,10 @@
                 <div class="se-sec__head">
                     <p class="se-num">3 · Static backdrop</p>
                     <h2 id="h-static">The backdrop shows, but a click on it does not close the menu.</h2>
+                    <p class="se-watch">
+                        What to watch, after "Play once": the page behind the menu is dimmed. Clicking that dimmed part does not close the menu; the
+                        menu gives a short tug toward the screen edge instead, and the panel on the right says prevented. Escape still closes it.
+                    </p>
                 </div>
                 <div class="se-look" data-review-look>
                     <p data-for="formal">
@@ -402,6 +423,10 @@
                 <div class="se-sec__head">
                     <p class="se-num">4 · Close on backdrop off</p>
                     <h2 id="h-quiet">A click on the backdrop is ignored, silently.</h2>
+                    <p class="se-watch">
+                        What to watch, after "Play once": the page behind the menu is dimmed. Clicking that dimmed part does nothing at all: no
+                        movement, no message. Escape still closes it.
+                    </p>
                 </div>
                 <div class="se-look" data-review-look>
                     <p data-for="formal">

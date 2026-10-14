@@ -14,8 +14,12 @@ for (const section of document.querySelectorAll('[data-review-item]')) {
     button.setAttribute('data-mn-round', '');
     button.textContent = '▶ Play once';
     button.style.marginBlockEnd = '0.5rem';
-    const holder = first.closest('figure')?.parentElement ?? first.parentElement;
-    holder?.before(button);
+    button.style.justifySelf = 'start';
+    button.style.inlineSize = 'max-content';
+    // Above the group of windows when they share one (look.html), else right above the window; always inside the
+    // section, so the review dialog finds it as the section's replay control.
+    const group = first.closest('figure')?.parentElement;
+    (group && group !== section ? group : (first.closest('figure') ?? first)).before(button);
 }
 
 // Delegated, so a copy of the section the review dialog shows asks its own windows.
