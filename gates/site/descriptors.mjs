@@ -594,7 +594,21 @@ export const DESCRIPTORS = [
 <div class="kp-datepicker" data-kp-datepicker>
 <div class="kp-field">
 <label class="kp-field__label" for="doc-date-from">From</label>
-<input class="kp-field__input" id="doc-date-from" type="text" inputmode="numeric" placeholder="dd-mm-yyyy" data-kp-date-input />
+<input class="kp-field__input" id="doc-date-from" type="text" inputmode="numeric" placeholder="dd/mm/yyyy" data-kp-date-input />
+</div>
+<button type="button" class="kp-button kp-button--ghost" data-kp-date-open aria-label="Open the calendar">Calendar</button>
+<div class="kp-datepicker__panel" data-kp-date-panel hidden></div>
+</div>
+`,
+            },
+            {
+                title: 'The locale\u2019s own order, by attribute',
+                why: 'Added 2026-10-15 (`datetime-M1`). A date is written dd/mm/yyyy for every reader (rule 52), whatever the page\u2019s language, so `04/09/2026` is the fourth of September in New York as in Brussels. `data-kp-date-format="locale"` on the picker brings back the order and separator the locale writes: this picker is `en-US`, so the field is written, hinted and read month first (`09/04/2026`, `mm/dd/yyyy`); in script it is `attachDatePickers(root, { dateFormat: \'locale\' })`. The value the module keeps is the ISO date either way, and the month and weekday names always follow the locale.',
+                markup: `
+<div class="kp-datepicker" data-kp-datepicker data-kp-locale="en-US" data-kp-date-format="locale">
+<div class="kp-field">
+<label class="kp-field__label" for="doc-date-us">Delivery (month first)</label>
+<input class="kp-field__input" id="doc-date-us" type="text" inputmode="numeric" data-kp-date-input value="09/04/2026" />
 </div>
 <button type="button" class="kp-button kp-button--ghost" data-kp-date-open aria-label="Open the calendar">Calendar</button>
 <div class="kp-datepicker__panel" data-kp-date-panel hidden></div>
@@ -620,6 +634,7 @@ export const DESCRIPTORS = [
             { name: '.kp-datepicker__panel', what: 'The calendar, floating under the input on its own surface. It is rendered when it opens because a month grid is derived from a date.' },
             { name: '.kp-datepicker__head / __title', what: 'The month, its name, and the two controls that page it. The title is a button that opens the twelve months of the year, and there the year opens twelve years.' },
             { name: 'month and year grids', what: 'Twelve cells, three a row, drawn with the day’s class so every theme paints them; the panel keeps the size the days had. Choosing a year shows its months, a month its days.' },
+            { name: 'data-kp-date-format', what: '`rule52` (the default): the field is written, hinted and read dd/mm/yyyy whatever the locale; `locale`: the order and separator the locale writes (09/04/2026 under en-US, 04.09.2026 under de-DE). Script: `dateFormat: \'locale\'` in the options of attachDatePickers. The ISO value does not change.' },
             { name: '.kp-datepicker__grid / __weekday', what: 'Seven columns with the week starting where the locale says, unless the markup overrules it.' },
             { name: '.kp-datepicker__day', what: 'One day. Exactly one of them is in the tab order at a time; the arrows move between the rest.' },
             { name: 'selected day', what: 'Carries a boundary as well as a fill, so it is still the chosen day when the fill matches the hover.' },
@@ -2132,11 +2147,22 @@ export const DESCRIPTORS = [
 </div>
 `,
             },
+            {
+                title: 'A long label wraps between words and is never cut',
+                why: 'Added 2026-10-14 (`kpi-label-cut-M1`). A plain tile\u2019s label takes as many lines as it needs, breaking between words (a single word longer than the tile breaks inside it); it never ends in an ellipsis. The tiles of a row stretch to the tallest, so the row stays one height, and the figures sit directly under their labels. Here the window is 17rem wide and the tiles stack, each as wide as the window.',
+                frame: { height: '15rem', width: '17rem' },
+                markup: `
+<div class="kp-kpis" role="group" aria-label="Pump house 3">
+<div class="kp-kpi"><span class="kp-kpi__label">Discharge pressure at the reservoir inlet</span><span class="kp-kpi__value">3.1<small>bar</small></span><span class="kp-kpi__trend">two pumps running</span></div>
+<div class="kp-kpi"><span class="kp-kpi__label">Flow</span><span class="kp-kpi__value">412<small>m\u00b3/h</small></span><span class="kp-kpi__trend">into the ring main</span></div>
+</div>
+`,
+            },
         ],
         variants: [
             { name: '.kp-kpis', what: 'The strip: as many tiles a row as fit, every tile one height on every row.' },
             { name: '.kp-kpi', what: 'One tile: a `div`, an `a` (its border answers hover), or a `button.kp-kpi--toggle`.' },
-            { name: '.kp-kpi__label, __value, __note, __trend', what: 'The label (small capitals, one line, wrapping on a narrow tile), the number with a `<small>` unit, a note beside it, and the trend line.' },
+            { name: '.kp-kpi__label, __value, __note, __trend', what: 'The label (small capitals; it wraps between words as often as the tile is narrow and is never cut, a word longer than the tile breaks; in a strip with `data-kp-kpis-columns` it keeps one line and the strip takes fewer columns instead), the number with a `<small>` unit, a note beside it, and the trend line.' },
             { name: '.kp-kpi__delta', what: 'A change in the trend line: `data-kp-direction="up|down"` puts ▲ or ▼ before it, `data-kp-tone="good|bad"` colours it.' },
             { name: '.kp-kpi__spark', what: 'An inline SVG with `data-kp-spark="12 14 13 …"`: the script draws a line over a soft area from the numbers, and again when they change.' },
     { name: '.kp-kpi__meter', what: 'The meter at the bottom of a tile: the same rules as `.kp-meter` (its own page), with a mark, past the end and loading; the tile’s tone colours its fill.' },
@@ -2268,9 +2294,28 @@ export const DESCRIPTORS = [
 </div>
 `,
             },
+            {
+                title: 'A long label wraps and stops before the corner link',
+                why: 'Added 2026-10-14 (`kpi-label-cut-M1`). The trend tile\u2019s label stops before the corner link and, where it does not fit, wraps between words instead of ending in an ellipsis. Two label lines are kept for it whether it wraps or not, so a row of trend tiles stays one height. Here the window is 14rem wide, one tile.',
+                frame: { height: '22rem', width: '14rem' },
+                markup: `
+<div class="kp-kpis" role="group" aria-label="Pump house 1">
+<div class="kp-kpi kp-kpi--trend">
+<span class="kp-kpi__label">Discharge pressure at the reservoir inlet</span>
+<a class="kp-kpi__link" href="#" title="Open Pressure on Charts"><span class="kp-kpi__link-word">Charts</span> \u2197</a>
+<span class="kp-kpi__value">3.30<small>bar</small></span>
+<span class="kp-kpi__trend">now <b>3.36 bar</b> \u00b7 two pumps</span>
+<figure class="kp-kpi__chart" data-kp-chart="spark" data-kp-spark-head="none" data-kp-spark-axis="relative" aria-label="Pressure, last 24 hours">
+<script type="application/json" data-kp-chart-data>{"unit":"bar","digits":2,"series":[{"label":"Pressure","start":1791010800000,"step":3600000,"values":[3.36,3.45,3.44,3.44,3.45,3.45,3.45,3.44,3.4,3.35,3.32,3.35,3.41,3.44,3.46,3.44,3.48,3.55,3.58,3.55,3.51,3.38,3.31,3.3,3.36]}]}</script>
+</figure>
+</div>
+</div>
+`,
+            },
         ],
         variants: [
             { name: '.kp-kpi--trend', what: 'The tile: its link stretched over it, the trend a second stop for the keyboard; the whole tile takes the focus ring while its link has it.' },
+            { name: '.kp-kpi__label (trend tile)', what: 'Stops before the corner link and wraps between words, never cut; two lines are kept for it so a row of trend tiles stays one height.' },
             { name: '.kp-kpi__link', what: 'The corner link (“Charts ↗”); in a tile of 12rem or less only ↗ shows, the word stays for a screen reader (`.kp-kpi__link-word`).' },
             { name: '.kp-kpi__label-note', what: 'A note in the label, in its capitals, after a dot: “PRESSURE · AVG 15 MIN”.' },
             { name: 'data-kp-spark-head="none"', what: 'On a `[data-kp-chart="spark"]`: no name and value line; a reading is a chip over the line, on the trend’s own crosshair, and a click that was not a drag follows the tile’s link.' },
@@ -2977,6 +3022,8 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
             { name: 'data-kp-sidenav-launched', what: 'Written on the panel while a launcher drives it: the header starts beside the launcher. Read it, do not set it.' },
             { name: 'data-kp-sidenav-lit', what: 'Written on the launcher box from the opening\u2019s first frame to the closing\u2019s last: the accent plate. Read it, do not set it.' },
             { name: 'data-kp-sidenav-launcher-room', what: 'On a page element in the launcher\u2019s corner (the page header): keeps the launcher\u2019s width free at its start, except in a reserved gutter, where the launcher stands in the gutter.' },
+            { name: 'data-kp-sidenav-opener', what: 'On an over or push panel, which opener the page shows: launcher (the fixed .kp-sidenav__launcher), tab (the .kp-sidenav__tab on the panel\u2019s edge) or both. Absent or any other value is tab, the default; a page with no tab for the panel keeps its launcher, so a panel is never left without an opener. The box the choice turns off is not drawn, is out of the tab order and the accessibility tree and is absent from the first frame, and the header\u2019s room for the launcher is given back. A side panel and the collapsed rail ignore it. React: opener.' },
+            { name: 'data-kp-sidenav-opener-off / -on', what: 'Written by the module on an opener box (launcher or tab) the choice turns off, or keeps. Read them, do not set them.' },
             { name: '.kp-sidenav__tab', what: 'The edge tab: a box holding a toggler (a .kp-icon-button with data-kp-sidenav-toggle and aria-controls) that rides on the far edge of a panel that slides (over, push), halfway down, and sits at the window\u2019s edge while the panel is away; it moves on the panel\u2019s own timing and works beside the launcher. An empty toggler gets a grip (.kp-sidenav__grip), which has no state to change.' },
             { name: 'data-kp-sidenav-inert', what: 'A closed panel that slides away is inert, out of the tab order and the accessibility tree, from the closing\u2019s last frame to the opening\u2019s first. On by default; false leaves a closed panel reachable.' },
             { name: 'data-kp-sidenav-rail-tips', what: 'In the collapsed rail each item shows its label as the package\u2019s tooltip on hover and on focus, beside the rail and inside the window; it leaves as it came. On by default; false turns it off.' },

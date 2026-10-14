@@ -12,10 +12,6 @@ each line its example and its option row, and empties the list.
 
 ## Waiting
 
-- Date picker: `data-kp-date-format="locale"` / `dateFormat: 'locale'` (the default is dd/mm/yyyy, rule 52); the "Another locale" and "First day of
-  the week, and a locale by attribute" examples show 13/09/2026 now, and the options table row for `placeholder` says the locale's pattern.
-- Key figure: the label of a plain tile and of a trend tile wraps between words (no ellipsis); the trend tile keeps two label lines.
-
-(The pass of 2026-10-14 brought every line before this onto its component page.)
-
-- Side navigation: `data-kp-sidenav-opener` (`launcher`, `tab`, `both`; `over` and `push` only, absent = the markup decides) needs its example on site/components/sidenav.html and an option row; the React prop is `opener` [sidenav-opener-M1].
+(The pass of 2026-10-15 brought the last three lines onto their pages: the date
+picker's `data-kp-date-format`, the key-figure label wrap, the side navigation's
+`data-kp-sidenav-opener`. The pass of 2026-10-14 brought every line before them.)

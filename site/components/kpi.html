@@ -276,6 +276,22 @@
     &lt;/<span class="kp-code__keyword">a</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A long label wraps between words and is never cut</figcaption>
+                        <p class="kp-text-muted">Added 2026-10-14 (`kpi-label-cut-M1`). A plain tile’s label takes as many lines as it needs, breaking between words (a single word longer than the tile breaks inside it); it never ends in an ellipsis. The tiles of a row stretch to the tallest, so the row stays one height, and the figures sit directly under their labels. Here the window is 17rem wide and the tiles stack, each as wide as the window.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+                            <template data-sc-frame data-sc-frame-title="A long label wraps between words and is never cut" data-sc-frame-height="15rem" data-sc-frame-width="17rem">
+<div class="kp-kpis" role="group" aria-label="Pump house 3">
+    <div class="kp-kpi"><span class="kp-kpi__label">Discharge pressure at the reservoir inlet</span><span class="kp-kpi__value">3.1<small>bar</small></span><span class="kp-kpi__trend">two pumps running</span></div>
+    <div class="kp-kpi"><span class="kp-kpi__label">Flow</span><span class="kp-kpi__value">412<small>m³/h</small></span><span class="kp-kpi__trend">into the ring main</span></div>
+</div>
+                            </template>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpis&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Pump house 3&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label&quot;</span>&gt;Discharge pressure at the reservoir inlet&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__value&quot;</span>&gt;3.1&lt;<span class="kp-code__keyword">small</span>&gt;bar&lt;/<span class="kp-code__keyword">small</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__trend&quot;</span>&gt;two pumps running&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label&quot;</span>&gt;Flow&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__value&quot;</span>&gt;412&lt;<span class="kp-code__keyword">small</span>&gt;m³/h&lt;/<span class="kp-code__keyword">small</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__trend&quot;</span>&gt;into the ring main&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="more-examples" id="more-examples">
                     <h2 class="kp-fw-semibold">More examples</h2>
@@ -1461,7 +1477,7 @@
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
                             <tr><td><code>.kp-kpis</code></td><td>The strip: as many tiles a row as fit, every tile one height on every row.</td></tr>
                             <tr><td><code>.kp-kpi</code></td><td>One tile: a `div`, an `a` (its border answers hover), or a `button.kp-kpi--toggle`.</td></tr>
-                            <tr><td><code>.kp-kpi__label, __value, __note, __trend</code></td><td>The label (small capitals, one line, wrapping on a narrow tile), the number with a `&lt;small&gt;` unit, a note beside it, and the trend line.</td></tr>
+                            <tr><td><code>.kp-kpi__label, __value, __note, __trend</code></td><td>The label (small capitals; it wraps between words as often as the tile is narrow and is never cut, a word longer than the tile breaks; in a strip with `data-kp-kpis-columns` it keeps one line and the strip takes fewer columns instead), the number with a `&lt;small&gt;` unit, a note beside it, and the trend line.</td></tr>
                             <tr><td><code>.kp-kpi__delta</code></td><td>A change in the trend line: `data-kp-direction=&quot;up|down&quot;` puts ▲ or ▼ before it, `data-kp-tone=&quot;good|bad&quot;` colours it.</td></tr>
                             <tr><td><code>.kp-kpi__spark</code></td><td>An inline SVG with `data-kp-spark=&quot;12 14 13 …&quot;`: the script draws a line over a soft area from the numbers, and again when they change.</td></tr>
                             <tr><td><code>.kp-kpi__meter</code></td><td>The meter at the bottom of a tile: the same rules as `.kp-meter` (its own page), with a mark, past the end and loading; the tile’s tone colours its fill.</td></tr>
@@ -1478,6 +1494,7 @@
             </main>
         </div>
         <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../../site/frames.js"></script>
         <script type="module" src="../../catalogue/demos.js"></script>
     </body>
 </html>
