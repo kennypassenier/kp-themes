@@ -15,6 +15,13 @@
   capitals and the three buttons need 342 px, and the package's 20.5rem let the card hold them on one row with Today 7 px outside it.
   Formal sets `--kp-calendar-nav-fit: 21.5rem`, so below 344 px the title takes a row of its own, the same row in every month, as in the
   other themes; the wide calendar is unchanged.
+- **Fixed: nostromo's key-figure tile keeps one height in every state** [Kenny, 2026-10-14; triage of the 10.0.0 suite, fault 4;
+  tests/kpi-columns.spec.mjs:115, fix-101]. In a narrow tile (a 334 px pane gives a 127 px content box) Michroma's "412 m³/h" or "1,834 kWh"
+  did not fit beside its unit, so the unit dropped to a second line (css/nostromo-register.css, the `.kp-kpi__value` rule: 17.7 px), while
+  a skeleton or a dash never wraps: 121.2 px loading or empty, 138.9 to 139.4 px drawn. In a tile with a content box of 140 px or less the
+  figure now takes a 6.5th of that width at most (never above `--kp-kpi-value-size`) and its box keeps the height of a full-size line, so
+  the figure and its unit stay on one line and the tile is 121.2 px in every state; the tile's mono change tape has `line-height: 1`
+  so it no longer adds 0.5 px to the trend line. Tiles wider than that are untouched.
 
 - **Changed: the edge tab is the side navigation's default opener** [Kenny, 2026-10-14; sidenav-opener-1]. With no `data-kp-sidenav-opener`
   (or any value but `launcher` / `both`), an `over` or `push` panel behaves as `"tab"`: the tab shows, the launcher is not drawn and the
