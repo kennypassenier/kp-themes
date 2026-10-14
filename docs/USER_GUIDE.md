@@ -2717,6 +2717,52 @@ effect with the close as the open backwards.
   widens after the pointer has rested `data-kp-sidenav-hover-delay`
   milliseconds (150 by default) and while the keyboard focus is inside it.
 
+### Four behaviour options, off until a page asks
+
+[Kenny, 2026-10-13, the first four of the ten minor options; research/sidenav-minor]
+Each is one attribute on the panel; a panel without them behaves exactly as before.
+
+- **Events a page can refuse, with a reason.** `data-kp-sidenav-cancelable`
+  makes `kp-sidenav-toggle` (and `kp-sidenav-slim`) fire *before* the change,
+  cancelable, with `event.detail.reason`: `toggler`, `escape`, `backdrop`,
+  `shortcut` or `api` (a call on the handle). `event.preventDefault()` leaves
+  the panel as it is and fires `kp-sidenav-prevented`, whose `detail` holds
+  `kind` (`toggle` or `slim`), the state that was asked for (`open` or
+  `collapsed`), `reason` and `source` (`listener` or `static`). What a layout
+  does by itself (`breakpoint`, `mode`, `init`) is told, never asked. Without
+  the attribute the events fire after the change, as they always did, and
+  carry `reason` too.
+
+  ```js
+  nav.addEventListener('kp-sidenav-toggle', (event) => {
+      if (!event.detail.open && draftIsUnsaved()) event.preventDefault();
+  });
+  ```
+
+- **Resize by dragging.** `data-kp-sidenav-resizable` adds a handle
+  (`.kp-sidenav__resizer`, `role="separator"` with `aria-valuenow`, `-min` and
+  `-max` in pixels) inside the panel on the edge that faces the content, so it
+  covers none of the page. A pointer drags it; with the focus on it Left and
+  Right move one rem, Shift five, Home and End go to the limits, a double press
+  gives the stylesheet's width back. The limits are
+  `data-kp-sidenav-min-width` (12rem) and `data-kp-sidenav-max-width` (32rem),
+  any length. It writes `--kp-sidenav-width`, so a pushed or reserved content
+  follows, and keeps it with `data-kp-remember`. No handle in the collapsed rail.
+- **Static backdrop.** `data-kp-sidenav-backdrop="static"`: the backdrop is
+  there and a click on it does not close the panel. The panel is pulled a
+  little toward its edge and let go on the theme's own time and curve (never
+  shorter than 120 ms a leg), and `kp-sidenav-prevented` fires with
+  `source: 'static'`. Knobs: `--kp-sidenav-refuse-travel` (0.75rem),
+  `--kp-sidenav-refuse-duration`, `--kp-sidenav-refuse-ease`. No motion when the
+  system asks for none; the panel carries a ring while the cue lasts.
+- **Close on backdrop.** `data-kp-sidenav-close-on-backdrop="false"` makes a
+  click on the backdrop do nothing, silently, the sibling of
+  `data-kp-sidenav-close-on-esc="false"`.
+
+The last two only matter where a panel has a backdrop. The package's default is
+unchanged: a page that wants no scrim says `data-kp-sidenav-backdrop="false"`
+as before.
+
 ## The page shell [TH36]
 
 ```html
