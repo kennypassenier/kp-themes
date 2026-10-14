@@ -9,6 +9,7 @@
 import { test, expect } from '@playwright/test';
 import { THEMES } from '../js/theme-registry.js';
 import { sweepThemeRecords } from './helpers/sweep-themes.mjs';
+import { reportContrast } from './helpers/contrast-guideline.mjs';
 
 // Six declarations over 22 themes are 132 tests; none of the five faults
 // behind them was ever one theme's, so the level decides the width
@@ -96,7 +97,8 @@ for (const theme of SWEEP) {
                 );
                 return (a + 0.05) / (b + 0.05);
             });
-            expect(ratio).toBeGreaterThanOrEqual(4.5);
+            // Contrast is a guideline, not a gate (Kenny, form v44; fix-104).
+            if (ratio < 4.5) reportContrast(test.info(), `${theme.name} link on the page: ${ratio.toFixed(2)}:1`);
         });
 
         test('a link is not colour alone [DI4]', async ({ page }) => {

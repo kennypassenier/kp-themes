@@ -16,6 +16,7 @@ import { expect, test } from '@playwright/test';
 import { contrast, distance } from '../gates/colour.mjs';
 import { waitForJudging } from './helpers/catalogue.mjs';
 import { useEmptyRegister } from './helpers/empty-register.mjs';
+import { reportContrast } from './helpers/contrast-guideline.mjs';
 
 /**
  * @param {import('@playwright/test').Page} page
@@ -184,7 +185,8 @@ test.describe(
                 const name = ((await crumb.textContent()) ?? '').trim().slice(0, 24);
                 const rest = await reads(crumb);
                 const restRatio = contrast(rgb(rest.ink), rgb(rest.ground));
-                if (restRatio < 4.5) faults.push(`rest "${name}" ${restRatio.toFixed(2)}:1`);
+                // Contrast is a guideline, not a gate (Kenny, form v44; fix-104).
+                if (restRatio < 4.5) reportContrast(test.info(), `breadcrumb "${name}" at rest: ${restRatio.toFixed(2)}:1`);
                 const link = await crumb.evaluate((el) => el.tagName === 'A');
                 if (!link) continue;
                 await crumb.hover({ force: true, timeout: 2000 }).catch(() => {});
@@ -192,7 +194,7 @@ test.describe(
                 faults.push(...(await indigo(page, CRUMBS, 'hover')));
                 const hover = await reads(crumb);
                 const hoverRatio = contrast(rgb(hover.ink), rgb(hover.ground));
-                if (hoverRatio < 4.5) faults.push(`hover "${name}" ${hoverRatio.toFixed(2)}:1`);
+                if (hoverRatio < 4.5) reportContrast(test.info(), `breadcrumb "${name}" under the pointer: ${hoverRatio.toFixed(2)}:1`);
                 if (distance(rgb(hover.ink), rgb(rest.ink)) < 10) faults.push(`hover "${name}": the ink does not come up under the pointer`);
                 await crumb.evaluate((el) => el.removeAttribute('data-kp-test-pointed'));
                 await page.mouse.move(0, 0);
@@ -299,10 +301,13 @@ test.describe(
             await page.mouse.move(0, 0);
             const rest = await read();
             expect(rest.shadow, 'a ring drawn around the words').toMatch(/inset/);
-            expect(contrast(rgb(rest.ink), rgb(rest.ground)), 'rest').toBeGreaterThanOrEqual(4.5);
+            // Contrast is a guideline, not a gate (Kenny, form v44; fix-104).
+            const restRatio = contrast(rgb(rest.ink), rgb(rest.ground));
+            if (restRatio < 4.5) reportContrast(test.info(), `light call to action at rest: ${restRatio.toFixed(2)}:1`);
             await cta.hover();
             const hover = await read();
-            expect(contrast(rgb(hover.ink), rgb(hover.ground)), 'hover').toBeGreaterThanOrEqual(4.5);
+            const hoverRatio = contrast(rgb(hover.ink), rgb(hover.ground));
+            if (hoverRatio < 4.5) reportContrast(test.info(), `light call to action under the pointer: ${hoverRatio.toFixed(2)}:1`);
             expect(distance(rgb(hover.ground), rgb(rest.ground)), 'the pill fills under the pointer').toBeGreaterThan(20);
         });
     },

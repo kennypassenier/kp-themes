@@ -8,6 +8,7 @@
 import { expect, test } from '@playwright/test';
 import { ALL_THEMES } from './helpers/sweep-themes.mjs';
 import { paintedFrame } from './helpers/frame-paint.mjs';
+import { reportContrast } from './helpers/contrast-guideline.mjs';
 
 const PAGE = '/catalogue/data.html#kpi-columns';
 
@@ -311,9 +312,11 @@ test(
                         // in a background line, synthwave in a rail and a glow, deco in gold hairlines on a pseudo-element):
                         // read what is painted, once per theme.
                         painted[theme] ??= (await paintedFrame(page, page.locator('[data-cat-kpis-strip] > *').first())).ratio;
-                        if (painted[theme] < 3) misses.push(`${at}: the frame ${g.frame.toFixed(2)}:1 declared, ${painted[theme].toFixed(2)}:1 painted`);
+                        // Contrast is a guideline, not a gate (Kenny, form v44; fix-104).
+                        if (painted[theme] < 3)
+                            reportContrast(test.info(), `${at} frame: ${painted[theme].toFixed(2)}:1 painted, ${g.frame.toFixed(2)}:1 declared`);
                     }
-                    for (const c of g.changes) if (c.ratio < 4.5) misses.push(`${at}: the ${c.tone} change ${c.ratio.toFixed(2)}:1`);
+                    for (const c of g.changes) if (c.ratio < 4.5) reportContrast(test.info(), `${at} ${c.tone} change: ${c.ratio.toFixed(2)}:1`);
                 }
             }
         }

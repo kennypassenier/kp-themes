@@ -3,6 +3,7 @@ import { test, expect } from '@playwright/test';
 import { measured } from './paint.mjs';
 import { contrast } from '../gates/colour.mjs';
 import { sweepThemes } from './helpers/sweep-themes.mjs';
+import { paintedGroundOf, reportContrast } from './helpers/contrast-guideline.mjs';
 
 /** @param {string} rgb */
 const parse = (rgb) => {
@@ -159,19 +160,15 @@ for (const theme of SWEEP) {
             await page.goto(`/showcase/themes/${theme}.html`);
             const alert = page.locator('.kp-alert--destructive').first();
             await alert.scrollIntoViewIfNeeded();
-            const painted = await alert.evaluate((el) => {
-                const s = getComputedStyle(el);
-                // The ground the words actually stand on, not the one the
-                // element declares: a transparent alert shows what is behind it.
-                let node = /** @type {HTMLElement} */ (el);
-                let bg = s.backgroundColor;
-                while (bg === 'rgba(0, 0, 0, 0)' && node.parentElement) {
-                    node = node.parentElement;
-                    bg = getComputedStyle(node).backgroundColor;
-                }
-                return { fg: s.color, bg };
-            });
-            expect(contrast(parse(painted.fg), parse(painted.bg)), `${painted.fg} on ${painted.bg}`).toBeGreaterThanOrEqual(4.5);
+            // The ground the words actually stand on is read from the painted pixels: the alert's own
+            // background-color can be transparent over a plate a layer draws elsewhere (pastel).
+            const ink = await alert.evaluate((el) => getComputedStyle(el).color);
+            const ground = await paintedGroundOf(page, alert);
+            // gates/colour.mjs reads channels as 0..1; parse() and the pixels give 0..255.
+            const unit = (/** @type {number[]} */ c) => /** @type {[number, number, number]} */ (c.map((v) => v / 255));
+            const ratio = contrast(unit(parse(ink)), unit(ground));
+            // Contrast is a guideline, not a gate (Kenny, form v44; fix-104).
+            if (ratio < 4.5) reportContrast(test.info(), `${theme} destructive alert, ${ink} on painted rgb(${ground.join(', ')}): ${ratio.toFixed(2)}:1`);
         },
     );
 }

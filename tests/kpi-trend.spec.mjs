@@ -10,6 +10,7 @@
 // wide for the trend.
 import { expect, test } from '@playwright/test';
 import { ALL_THEMES } from './helpers/sweep-themes.mjs';
+import { reportContrast } from './helpers/contrast-guideline.mjs';
 
 const PAGE = '/catalogue/data.html#kpi-trend';
 /** 04/10/2026 14:40 in Brussels. */
@@ -354,9 +355,11 @@ test(
                     return { figure, good, bad };
                 });
                 const at = `${theme} ${strip}`;
-                for (const [tone, r] of Object.entries(got.figure)) if (r < 4.5) misses.push(`${at}: the ${tone} figure ${r.toFixed(2)}:1`);
-                if (got.good < 4.5) misses.push(`${at}: the good change ${got.good.toFixed(2)}:1`);
-                if (got.bad < 4.5) misses.push(`${at}: the bad change ${got.bad.toFixed(2)}:1`);
+                // Contrast is a guideline, not a gate (Kenny, form v44; fix-104).
+                const info = test.info();
+                for (const [tone, r] of Object.entries(got.figure)) if (r < 4.5) reportContrast(info, `${at} ${tone} figure: ${r.toFixed(2)}:1`);
+                if (got.good < 4.5) reportContrast(info, `${at} good change: ${got.good.toFixed(2)}:1`);
+                if (got.bad < 4.5) reportContrast(info, `${at} bad change: ${got.bad.toFixed(2)}:1`);
             }
         }
         expect(misses).toEqual([]);

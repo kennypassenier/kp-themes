@@ -21,6 +21,7 @@ import { expect, test } from '@playwright/test';
 import { waitForJudging } from './helpers/catalogue.mjs';
 import { useEmptyRegister } from './helpers/empty-register.mjs';
 import { ALL_THEMES } from './helpers/sweep-themes.mjs';
+import { reportContrast } from './helpers/contrast-guideline.mjs';
 
 const PAGE = '/catalogue/chart.html';
 
@@ -176,7 +177,9 @@ test(
                 }).length;
                 return { wrapped, dot: Math.max(ratio(fill, plate), ratio(ring, plate)) };
             });
-            if (got.wrapped || got.dot < 3) misses.push(`${theme}: ${got.wrapped} wrapped, dot ${got.dot.toFixed(2)}:1`);
+            if (got.wrapped) misses.push(`${theme}: ${got.wrapped} wrapped`);
+            // Contrast is a guideline, not a gate (Kenny, form v44; fix-104).
+            if (got.dot < 3) reportContrast(test.info(), `${theme} pinned tooltip warning dot: ${got.dot.toFixed(2)}:1`);
             await page.locator('#time-chart .kp-chart__release').first().click({ force: true });
         }
         expect(misses).toEqual([]);

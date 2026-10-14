@@ -5674,6 +5674,8 @@ September and October, every part of the nav on one line and the
 calendar one height; run by its own logic in Firefox, 39 misses on the
 old CSS, none on the new.
 
+*Update 2026-10-15:* the calendar test that held this assert was deleted (29.8 s, over 20 s, Kenny's rule); today's ring and the nav lines are no longer proven by a test.
+
 **5 · What the remedy costs.** One knob (AR21 count 313 + 1, read count
 310 + 1), five rules and a longer comment in components.css, one rule in
 formal-register.css, one line in twelve registers, about 60 lines of
@@ -5683,6 +5685,8 @@ ink rather than near-black.
 
 **6 · Who enforces it.** Code: the assert in tests/calendar.spec.mjs, at
 the 9.3.0 release suite.
+
+*Update 2026-10-15:* that assert is gone with the deleted test (29.8 s, over 20 s, Kenny's rule).
 
 **7 · How and when we measure that it works.** At the 9.3.0 release suite
 (the assert), and at Kenny's next judging of the calendar block in each

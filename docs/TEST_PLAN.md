@@ -202,6 +202,17 @@ a reason, written down; a silent hole is neither.
   promise that matters most: outside cyberpunk, and for anyone who asked
   for less motion, the text is simply the text.
 
+- **A contrast floor in a browser test is a report, not a gate** (Kenny,
+  form v44; fix-104; decided 2026-10-14, applied 2026-10-15). A reading
+  below its floor is written as a `contrast guideline` annotation
+  (`tests/helpers/contrast-guideline.mjs`) and never fails the test; every
+  other check in the same test stays hard. Two tests that cost more than
+  20 s were deleted instead: `tests/calendar.spec.mjs` (the six-rows and
+  today's-ring test, 29.8 s) and the toast-hover test in
+  `tests/nostromo-second-pass.spec.mjs` (21.3 s). The inventory with
+  durations is research/CONTRAST_FLOORS_IN_TESTS.md. The commit-time gates
+  (`gates/check-contrast.mjs` and friends) are not touched by this.
+
 - **Nothing compares how the page looks.** Every check here is a number —
   contrast, distance, flashes per second, whether an element exists — and
   there are no screenshot comparisons. A theme can therefore look wrong

@@ -5,7 +5,8 @@
 // date filter was a bare date input (scope-58), the tag input walked hidden
 // options, removed tags on a stray Backspace and ignored a click on an
 // option, the live upload zone did not take a drag at its first event, and
-// a toast's buttons neither sat at its end nor hovered in its colour.
+// a toast's buttons neither sat at its end nor hovered in its colour (the
+// toast-hover test was deleted 2026-10-15, over 20 s, Kenny's rule).
 //
 // Drilled per KT3 on 2026-09-13: every test below ran against the code
 // before the fixes and went red; the line under each name records what it
@@ -15,7 +16,6 @@ import { readFileSync } from 'node:fs';
 import { test, expect } from '@playwright/test';
 import { waitForJudging } from './helpers/catalogue.mjs';
 import { useEmptyRegister } from './helpers/empty-register.mjs';
-import { contrast } from '../gates/colour.mjs';
 import { DEFAULT_STRINGS as S } from '../js/strings.js';
 
 const THEME_NAMES = JSON.parse(readFileSync(new globalThis.URL('../themes/order.json', import.meta.url), 'utf8'));
@@ -278,165 +278,5 @@ test(
             return { kept, afterDrop: el.hasAttribute('data-kp-dragging') };
         });
         expect(state).toEqual({ kept: true, afterDrop: false });
-    },
-);
-
-// ── Note 4: toasts ───────────────────────────────────────────────────────────
-
-/** Raise one toast of each kind through the package, a long one and a short one, with an action. @param {import('@playwright/test').Page} page */
-const raiseToasts = (page) =>
-    page.evaluate(async () => {
-        const { toast } = await import('/js/overlays.js');
-        const region = /** @type {HTMLElement} */ (document.querySelector('#toasts .kp-toasts'));
-        for (const variant of ['', 'success', 'info', 'warning', 'destructive']) {
-            for (const text of ['Short.', 'A much longer message that has to wrap onto a second line inside the toast before it ends.']) {
-                const el = toast(text, {
-                    region,
-                    ms: 0,
-                    className: variant ? `kp-toast kp-toast--${variant}` : 'kp-toast',
-                    action: { label: 'Undo', onClick: () => {} },
-                });
-                el.dataset.testRaised = '';
-            }
-        }
-    });
-
-/**
- * The themes whose approved character gives a toast's button a hover of its own,
- * not "a shade of the toast's colour": pastel draws the plate on a pseudo-element
- * and lifts it, solstice keeps the resting ground, brutalism inverts to black with
- * the yellow ink, deco keeps the plate and moves the ink. For these the rule that
- * remains is the one that matters to a reader: the hovered button's ink reads at
- * 4.5:1 on what is painted behind it, read from the pixels.
- */
-const OWN_TOAST_HOVER = new Set(['pastel', 'solstice', 'brutalism', 'deco']);
-
-/**
- * The colour most of a box's pixels have: its ground, the glyphs being the few.
- * @param {import('@playwright/test').Page} page
- * @param {import('@playwright/test').Locator} box
- * @returns {Promise<number[]>} rgb 0..255
- */
-const paintedGroundOf = async (page, box) => {
-    const shot = await box.screenshot({ animations: 'disabled' });
-    return page.evaluate(async (data) => {
-        const img = new Image();
-        img.src = `data:image/png;base64,${data}`;
-        await img.decode();
-        const canvas = document.createElement('canvas');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        const ctx = /** @type {CanvasRenderingContext2D} */ (canvas.getContext('2d', { willReadFrequently: true }));
-        ctx.drawImage(img, 0, 0);
-        const d = ctx.getImageData(0, 0, img.width, img.height).data;
-        /** @type {Map<string, { n: number, sum: number[] }>} */
-        const buckets = new Map();
-        for (let i = 0; i < d.length; i += 4) {
-            const key = `${d[i] >> 4},${d[i + 1] >> 4},${d[i + 2] >> 4}`;
-            const b = buckets.get(key) ?? { n: 0, sum: [0, 0, 0] };
-            b.n += 1;
-            for (let c = 0; c < 3; c++) b.sum[c] += d[i + c];
-            buckets.set(key, b);
-        }
-        const [top] = [...buckets.values()].sort((a, b) => b.n - a.n);
-        return top.sum.map((v) => Math.round(v / top.n));
-    }, shot.toString('base64'));
-};
-
-test(
-    'a button hovered in a toast takes a shade of that toast’s own colour and reads at 4.5:1, in every theme [note 4]',
-    { tag: ['@component:feedback', '@sweep', '@component:catalogue'] },
-    async ({ page }) => {
-        // A sweep over 22 themes; under a parallel run it needs more than the default 30 s.
-        test.setTimeout(120_000);
-        // Before: the theme's standard ghost hover — nostromo painted rgb(225, 215, 199) on the info, destructive and success plates alike.
-        await open(page, '/catalogue/feedback.html');
-        await raiseToasts(page);
-        const faults = [];
-        for (const theme of THEME_NAMES) {
-            await wear(page, theme);
-            for (const variant of ['plain', 'success', 'info', 'warning', 'destructive']) {
-                const selector =
-                    variant === 'plain'
-                        ? '#toasts .kp-toast[data-test-raised]:not([class*="kp-toast--"]) button'
-                        : `#toasts .kp-toast--${variant}[data-test-raised] button`;
-                const button = page.locator(selector).first();
-                await button.hover();
-                if (OWN_TOAST_HOVER.has(theme)) {
-                    // Its own approved hover: held to legibility on the painted ground.
-                    await page.waitForTimeout(150);
-                    const [ground, ink] = [
-                        await paintedGroundOf(page, button),
-                        await button.evaluate((el) => {
-                            const ctx = /** @type {CanvasRenderingContext2D} */ (document.createElement('canvas').getContext('2d'));
-                            ctx.fillStyle = '#000';
-                            ctx.fillStyle = getComputedStyle(el).color;
-                            ctx.fillRect(0, 0, 1, 1);
-                            return [...ctx.getImageData(0, 0, 1, 1).data].slice(0, 3);
-                        }),
-                    ];
-                    const own = contrast(
-                        /** @type {[number, number, number]} */ (ink.map((v) => v / 255)),
-                        /** @type {[number, number, number]} */ (ground.map((v) => v / 255)),
-                    );
-                    if (own < 4.5) faults.push(`${theme} ${variant}: hovered ink ${ink} on painted ground ${ground} (${own.toFixed(2)}:1)`);
-                    await page.mouse.move(0, 0);
-                    continue;
-                }
-                const read = await button.evaluate(async (el) => {
-                    // The hover's paint once any transition has run.
-                    const until = performance.now() + 1500;
-                    const ctx = /** @type {CanvasRenderingContext2D} */ (
-                        document.createElement('canvas').getContext('2d', { willReadFrequently: true })
-                    );
-                    const rgba = (/** @type {string} */ css) => {
-                        ctx.clearRect(0, 0, 1, 1);
-                        ctx.fillStyle = '#000';
-                        ctx.fillStyle = css;
-                        ctx.fillRect(0, 0, 1, 1);
-                        const d = ctx.getImageData(0, 0, 1, 1).data;
-                        return [d[0], d[1], d[2], d[3] / 255];
-                    };
-                    const toastEl = /** @type {HTMLElement} */ (el.closest('.kp-toast'));
-                    let last = '';
-                    for (;;) {
-                        const now = getComputedStyle(el).backgroundColor;
-                        if (now === last || performance.now() > until) break;
-                        last = now;
-                        await new Promise((r) => setTimeout(r, 120));
-                    }
-                    const plate = rgba(getComputedStyle(toastEl).backgroundColor);
-                    const ink = rgba(getComputedStyle(el).color);
-                    const hover = rgba(getComputedStyle(el).backgroundColor);
-                    const ground = plate.slice(0, 3).map((v, i) => Math.round((hover[i] ?? 0) * (hover[3] ?? 0) + v * (1 - (hover[3] ?? 0))));
-                    const text = ink.slice(0, 3).map((v, i) => Math.round(v * (ink[3] ?? 1) + (ground[i] ?? 0) * (1 - (ink[3] ?? 1))));
-                    return { plate: plate.slice(0, 3), ground, text, hovered: el.matches(':hover') };
-                });
-                // A shade of the toast's own colour: the hovered ground is the plate moved part of the way towards black, white or its
-                // own ink — on one of those three lines — and visibly not the plate. The theme's page hover is on none of them.
-                const [p, g, t] = [read.plate, read.ground, read.text];
-                const onLine = (/** @type {number[]} */ to) => {
-                    const dir = to.map((v, i) => v - p[i]);
-                    const len2 = dir.reduce((a, v) => a + v * v, 0) || 1;
-                    const along = g.reduce((a, v, i) => a + (v - p[i]) * dir[i], 0) / len2;
-                    const closest = p.map((v, i) => v + along * dir[i]);
-                    return { along, off: Math.hypot(...g.map((v, i) => v - closest[i])) };
-                };
-                // A grey lies on all three lines at once, so the nearest line is taken among those the ground moved along.
-                const lines = [onLine([0, 0, 0]), onLine([255, 255, 255]), onLine(t)].filter((l) => l.along > 0 && l.along <= 0.5);
-                const { along, off: away } = lines.sort((a, b) => a.off - b.off)[0] ?? { along: -1, off: Infinity };
-                const moved = Math.hypot(...g.map((v, i) => v - p[i]));
-                const ratio = contrast(
-                    /** @type {[number, number, number]} */ (t.map((v) => v / 255)),
-                    /** @type {[number, number, number]} */ (g.map((v) => v / 255)),
-                );
-                if (!read.hovered || moved < 8 || away > 6 || along < 0 || along > 0.5 || ratio < 4.5)
-                    faults.push(
-                        `${theme} ${variant}: plate ${p} hover ground ${g} ink ${t} (moved ${moved.toFixed(1)}, off-line ${away.toFixed(1)}, ${ratio.toFixed(2)}:1)`,
-                    );
-                await page.mouse.move(0, 0);
-            }
-        }
-        expect(faults).toEqual([]);
     },
 );

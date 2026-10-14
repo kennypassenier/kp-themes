@@ -15,6 +15,7 @@ import { test, expect } from '@playwright/test';
 import { waitForJudging } from './helpers/catalogue.mjs';
 import { useEmptyRegister } from './helpers/empty-register.mjs';
 import { contrast as contrast01 } from '../gates/colour.mjs';
+import { reportContrastAll } from './helpers/contrast-guideline.mjs';
 
 // kpPaint reads channels in 0..255; contrast() expects 0..1. Unscaled, every
 // ratio came out in the millions and the two 4.5:1 checks could not fail.
@@ -108,10 +109,11 @@ test(
             for (const p of reads) {
                 const ratio = contrast(p.ink, p.ground);
                 const floor = 4.5;
-                if (ratio < floor - 0.005) faint.push(`${theme}: ${ratio.toFixed(2)} (rgb ${p.ink} on rgb ${p.ground})`);
+                if (ratio < floor - 0.005) faint.push(`${theme} progress label (rgb ${p.ink} on rgb ${p.ground}): ${ratio.toFixed(2)}:1`);
             }
         }
-        expect(faint).toEqual([]);
+        // Contrast is a guideline, not a gate (Kenny, form v44; fix-104).
+        reportContrastAll(test.info(), faint);
     },
 );
 
@@ -133,10 +135,11 @@ test(
                 .evaluateAll((els) => els.map((el) => ({ what: el.className, .../** @type {any} */ (window).kpPaint(el) })));
             for (const r of reads) {
                 const ratio = contrast(r.ink, r.ground);
-                if (ratio < 4.5) faint.push(`${theme} ${r.what}: ${ratio.toFixed(2)}`);
+                if (ratio < 4.5) faint.push(`${theme} ${r.what}: ${ratio.toFixed(2)}:1`);
             }
         }
-        expect(faint).toEqual([]);
+        // Contrast is a guideline, not a gate (Kenny, form v44; fix-104).
+        reportContrastAll(test.info(), faint);
     },
 );
 
