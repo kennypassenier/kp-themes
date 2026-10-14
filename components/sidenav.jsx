@@ -55,7 +55,7 @@ import { SIDENAV_MODE_EVENT, SIDENAV_PREVENTED_EVENT, SIDENAV_SLIM_EVENT, SIDENA
  * @property {boolean} [reserve]  The content keeps the panel's width whether it is open or not (push and over): the gutter the panel opens into.
  * @property {string} [shortcut]  A key chord that toggles it from anywhere but a text field, e.g. `Control+b` (`Mod` is Meta on a Mac).
  * @property {string} [initialFocus]  A selector, inside the panel, for where the focus lands on opening; used in every mode.
- * @property {number} [hoverDelay]  Milliseconds the pointer rests before an `expandOnHover` rail widens. Default 150.
+ * @property {number} [hoverDelay]  Milliseconds the pointer rests before an `expandOnHover` rail widens. Left out, the module waits 150.
  * @property {boolean | string} [slimBelow]  Collapse the rail to its icons while its box is this wide or narrower: `true` for the 40rem step, or a length.
  * @property {boolean} [railTips]  In the collapsed rail each item shows its label as a tooltip. Default on.
  * @property {boolean} [flyout]  In the collapsed rail a group's submenu floats beside it. Default on.

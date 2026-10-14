@@ -91,7 +91,7 @@ export type SidenavProps = {
      */
     initialFocus?: string;
     /**
-     * Milliseconds the pointer rests before an `expandOnHover` rail widens. Default 150.
+     * Milliseconds the pointer rests before an `expandOnHover` rail widens. Left out, the module waits 150.
      */
     hoverDelay?: number;
     /**
