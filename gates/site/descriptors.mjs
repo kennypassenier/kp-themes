@@ -119,6 +119,8 @@ export const DESCRIPTORS = [
                 name: 'registers loaded lazily',
                 what: 'On a page that links only the active theme’s register, a choice waits until the new register has arrived: the page keeps the previous theme meanwhile, the choice is still the one remembered, and a register that fails to load leaves the theme as it was.',
             },
+            { name: '--kp-sig-pa-* (pastel’s register)', what: 'The tokens pastel’s register keeps to itself, readable but not knobs: the soft landing (`land`, the same curve as the theme’s easing token), `land-size` (the landing held at its value, for widths and heights), `land-back` (the landing reversed); the clocks `window` 560 ms, `dialog` 840 ms, `tack` 360 ms, `wobble` 800 ms and `loop` 2400 ms; `off` (6 px, the pass’s offset), `pass-c`, `peel`, the radii `r-plate`, `r-ctl` and `r-chip`, `tape-bg`, `dir`, `corner` and `ground`; and two registered numbers, `pass` and `ink`, the two clocks every part that draws its own plate follows.' },
+            { name: 'kp-sig-pastel-* (pastel’s keyframes)', what: 'The anchor: `stuck-in`/`-out`, `stuck-placed-in`/`-out`, `stuck-plate-in`/`-out`, `pass-in`/`-out`, `pass-host-in`/`-out`, `stuck-small-in` and `pass-small-in` (a tick, a dot); the tack: `tack-in`/`-out`; the meter’s share: `meter-stuck-o`/`-w`/`-d`; the wobble: `update-wobble`; the caterpillar: `bug-rise`, `bug-rise-bead`, `bug-step`, `bug-feel`, and the spinner’s `curl-orbit`, `curl-lift`, `curl-turn`; the tour’s `tour-ring`. Every close is its open played backwards.' },
         ],
         accessibility: [
             'Built in — each option is a real button with a pressed state, so a screen reader says which theme is current without seeing the border.',
@@ -198,6 +200,7 @@ export const DESCRIPTORS = [
                 name: '--kp-measure: live',
                 what: "Blueprint's own device, outside the six-hook vocabulary [S48]: on the root, the module wraps every `data-kp-reveal=\"headline\"` element in `[data-kp-measured]` and builds two dimension lines beside it — never a fixed width. The horizontal one (`[data-kp-dim]`, `[data-kp-dim-line]`, two `[data-kp-dim-tick]` and a `[data-kp-measure]` label) reads the headline's own `getBoundingClientRect().width`, on load, on resize and once the page's fonts are ready, and writes the same rounded number to the line's `style.width` and the label in one breath. The vertical one (`[data-kp-elev-line]`, two `[data-kp-elev-tick]` and `[data-kp-elev-measure]`) needs no measurement of its own width to size itself — CSS containment does that — only a read to print the wrap's own height into its label.",
             },
+            { name: 'pastel: the spec sheet', what: 'In pastel the spec sheet is stuck to the page with a strip of washi tape across its top-start corner.' },
         ],
         accessibility: [
             'Built in — every reveal keeps the words in the document from the start; an effect changes how they arrive, never whether they are there.',
@@ -290,6 +293,7 @@ export const DESCRIPTORS = [
                 name: 'armed',
                 what: 'A confirming button between its first and second click, in the `inline` variant only. The module writes the state, the label changes, and a timeout disarms it. The default variant opens a dialog instead and writes nothing on the button.',
             },
+            { name: 'pastel', what: 'In pastel a button is a sticker with a flat peel straight under it: the pointer lifts it 2 px and curls its top-end corner into a fold, a press sticks it down flat, and focus is the dashed ring line alone, 3 px out, with no inner line. On a destructive, info or primary plate the dashed line takes the plate’s ink, where the ring colour would read 1.34, 2.92 and 1.40:1. A button in a header, a menu, a tile, an alert or the alarm is this button.' },
         ],
         accessibility: [
             'Built in — a destructive action with no way back is disarmed rather than left to fire, which is SC 3.3.4 turned into something a review cannot forget.',
@@ -558,6 +562,7 @@ export const DESCRIPTORS = [
             { name: '.kp-tag-list / .kp-tag', what: 'With tags on: the chosen values as removable chips above the input.' },
             { name: '.kp-tag__remove', what: 'The remove control on a tag. Its hover takes the destructive colour, and the tap target is widened by the tag rather than by growing the glyph.' },
             { name: '.kp-combobox__status', what: 'The live region that says how many options are left after each keystroke.' },
+            { name: 'pastel', what: 'In pastel the list has its pass on its ::backdrop and lands on it, and closes as that backwards.' },
         ],
         accessibility: [
             'Built in — virtual focus: the highlight travels the list while the cursor stays in the input, so typing keeps working and the current option is announced.',
@@ -616,6 +621,7 @@ export const DESCRIPTORS = [
             { name: '.kp-datepicker__day', what: 'One day. Exactly one of them is in the tab order at a time; the arrows move between the rest.' },
             { name: 'selected day', what: 'Carries a boundary as well as a fill, so it is still the chosen day when the fill matches the hover.' },
             { name: 'disabled day', what: 'Outside the bounds or on a closed weekday: present, marked, and refusing the click.' },
+            { name: 'pastel', what: 'In pastel the date picker’s panel has its pass on its ::backdrop and lands on it; it closes as that backwards, and the focus returns to the input when it has closed.' },
         ],
         accessibility: [
             'Built in — the focus returns to the input when the picker has closed, not at the start of the close.',
@@ -773,6 +779,7 @@ export const DESCRIPTORS = [
             { name: '.kp-wizard__actions', what: 'The back and next pair, at the end of the current step.' },
             { name: '--kp-wizard-padding', what: 'The room between the frame a theme draws and what is inside it, 1rem by default.' },
             { name: 'held transition', what: 'A step change can be refused or delayed by a listener or an async check, which is what a step that needs a server answer was missing.' },
+            { name: 'pastel', what: 'In pastel a wizard is stuck to the page with a strip of washi tape across its top-start corner.' },
         ],
         accessibility: [
             'Built in — the current step is marked with the attribute that exists for exactly this, which is what a screen reader announces on arrival.',
@@ -940,6 +947,29 @@ export const DESCRIPTORS = [
 </div>
 `,
             },
+            {
+                title: 'Loading, with a layer over the rows',
+                why: 'A table that is still asking: `data-kp-state="loading"` and `data-kp-busy-overlay` on the wrapper put a panel with the theme’s large spinner over the rows; the status line under the table says the same, and it is the one a screen reader hears. In pastel the panel is a plate with its own pass, stuck on as everything is, and it becomes caterpillar: a head on its top-end corner and legs along its foot, with the round-trip spinner on it.',
+                markup: `
+<div class="kp-datatable" data-kp-datatable data-kp-state="loading" data-kp-busy-overlay>
+<div class="kp-table-wrap">
+<table class="kp-table">
+<caption class="kp-sr-only">Containers, loading again</caption>
+<thead><tr><th scope="col">Stack</th><th scope="col">Container</th><th scope="col">State</th></tr></thead>
+<tbody>
+<tr><td>media</td><td>jellyfin</td><td>running</td></tr>
+<tr><td>platform</td><td>traefik</td><td>running</td></tr>
+<tr><td>platform</td><td>crowdsec</td><td>restarting</td></tr>
+<tr><td>monitoring</td><td>grafana</td><td>running</td></tr>
+</tbody>
+</table>
+</div>
+<div class="kp-datatable__bar">
+<p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+</div>
+</div>
+`,
+            },
         ],
         variants: [
             { name: 'data-kp-folded', what: 'Written on a group row (`tr[data-kp-row-group]`) while its members are folded away; `fold()` and `view().folded` read and set it.' },
@@ -966,6 +996,7 @@ export const DESCRIPTORS = [
             { name: '.kp-datatable__search', what: 'The search box. Typing is debounced so a long list is not re-sorted on every keystroke.' },
             { name: 'empty', what: 'When a filter matches nothing the empty state takes the table’s place rather than leaving a header over nothing.' },
             { name: 'clickable rows', what: 'A row can be marked as a control, which gives it the pointer cursor and an activation of its own.' },
+            { name: 'pastel: the busy panel', what: 'In pastel the busy panel draws its own plate and pass and lands on it as every part does, leaves as that backwards, and while it waits it becomes caterpillar (a head on its corner, stepping legs) with the round-trip spinner on it.' },
         ],
         accessibility: [
             'Built in — every sortable header is a real button inside the cell, so sorting is reachable without a pointer.',
@@ -1340,6 +1371,7 @@ export const DESCRIPTORS = [
             { name: '.kp-alert__icon', what: 'A decorative glyph at the leading edge, sized so it does not stretch with the text.' },
             { name: '.kp-alert__body', what: 'The message itself, taking the remaining width — a bare span here leaves the close button in the middle of the plate.' },
             { name: '.kp-alert__close', what: 'The dismiss control, pushed to the trailing edge.' },
+            { name: 'pastel', what: 'In pastel an alert draws its own plate and pass and is stuck on as everything is; its label sits on its tone’s plate and its close button is pastel’s button. An alert shown again arrives as its leave backwards.' },
         ],
         accessibility: [
             'Built in — a semantic alert with no words is refused by the contract enforcer, which is DI4 made mechanical rather than remembered.',
@@ -1576,6 +1608,7 @@ export const DESCRIPTORS = [
             { name: '.kp-toast--success / --warning / --info / --error', what: 'A rule down the leading edge in the status colour. The words say it as well.' },
             { name: '.kp-toast__close', what: 'A dismiss control pushed to the trailing edge, for a toast that does not go by itself.' },
             { name: 'with an action', what: 'A toast can carry one control — an undo — and then it should stay long enough to be used.' },
+            { name: 'pastel', what: 'In pastel a toast draws its own plate and pass under its words (no tape: paper in the hand), lands on the pass and leaves as that landing backwards; js/motion.js plays a toast’s arrival as its leave backwards. Each tone names its own paper.' },
         ],
         accessibility: [
             'Built in — the polite region announces without interrupting, and errors get the assertive one; that split is the whole reason there are two.',
@@ -1632,6 +1665,7 @@ export const DESCRIPTORS = [
             { name: '.kp-alarm__ack / __keep', what: 'The one way out, in the theme’s button shape and the alarm’s paint; and the quiet button that keeps a timed alarm open.' },
             { name: 'data-kp-alarm-inline', what: 'A frame held open in the flow of a page instead of raised over it, for a style guide.' },
             { name: 'data-kp-alarm-motion="still"', what: 'A frame that shows what a reader who asked for reduced motion sees, whatever the reader asked for.' },
+            { name: 'pastel', what: 'In pastel the alarm draws its own plate on the pass’s clock, lands as pastel’s dialog does and leaves as that backwards; its buttons are pastel’s button.' },
         ],
         accessibility: [
             'Built in — an alertdialog opened as a modal: the page behind is inert, focus stays inside, and it returns to the trigger when the alarm closes.',
@@ -1728,6 +1762,23 @@ export const DESCRIPTORS = [
 </div>
 `,
             },
+            {
+                title: 'Busy, in three sizes',
+                why: 'A busy bar is `data-kp-indeterminate` on the bar, with no value. Each theme draws its own wait in the track, at every size; pastel draws it from pieces: js/loading-pieces.js puts a row of pom-poms with a head in the track while it is busy (a still row of pom-poms without the script), and takes them away when the attribute goes.',
+                markup: `
+<div class="kp-stack">
+<div class="kp-progressbar" role="progressbar" aria-label="Waiting for the export, small" data-kp-indeterminate>
+<span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span>
+</div>
+<div class="kp-progressbar kp-progressbar--md" role="progressbar" aria-label="Waiting for the export, medium" data-kp-indeterminate>
+<span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span>
+</div>
+<div class="kp-progressbar kp-progressbar--lg" role="progressbar" aria-label="Waiting for the export, large" data-kp-indeterminate>
+<span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span>
+</div>
+</div>
+`,
+            },
         ],
         variants: [
             { name: '.kp-progressbar', what: 'The bar: one line high, as wide as its place up to a maximum, painting the share done from 0 to 1.' },
@@ -1741,6 +1792,7 @@ export const DESCRIPTORS = [
             { name: '.kp-progress__value', what: 'The number, quiet and small, after the bar.' },
             { name: '.kp-progress-group', what: 'A set of bars in three columns — label, track, reading — so every track begins and ends in the same place [fix-64].' },
             { name: '.kp-progress__label', what: 'The word in front of a bar inside a group.' },
+            { name: 'pastel: the caterpillar', what: 'In pastel a busy bar’s track becomes the pom-pom caterpillar: a row of pom-poms as round as the track is high, a head at its end, rising in turn on the theme’s loop (2.4 s). The pieces are js/loading-pieces.js’s, hidden from screen readers; without the script the track shows the same row standing still, and under reduced motion it stands still too.' },
         ],
         accessibility: [
             'Built in — `role="progressbar"` with `aria-valuenow` against `aria-valuemin` and `aria-valuemax`; js/progressbar.js keeps the paint in step with them, so the number read and the bar drawn cannot drift apart.',
@@ -1777,11 +1829,25 @@ export const DESCRIPTORS = [
 <button type="button" class="kp-button kp-button--primary" aria-busy="true"><span class="kp-spinner" aria-hidden="true"></span> Saving…</button>
 `,
             },
+            {
+                title: 'At every size',
+                why: 'The spinner’s size is a measure (the knobs table below), so one spinner serves a button, a line and a panel. In pastel the spinner is the pom-pom caterpillar going round a small day sticker, the round trip, at every size: js/loading-pieces.js draws it from pieces and marks the spinner `data-kp-pieces` while they are there.',
+                markup: `
+<div class="kp-row kp-gap-md">
+<span class="kp-spinner" role="status" aria-label="Loading, small" style="--kp-spinner-size: 1rem"></span>
+<span class="kp-spinner" role="status" aria-label="Loading"></span>
+<span class="kp-spinner" role="status" aria-label="Loading, medium" style="--kp-spinner-size: 2rem"></span>
+<span class="kp-spinner" role="status" aria-label="Loading, large" style="--kp-spinner-size: 3rem"></span>
+</div>
+`,
+            },
         ],
         variants: [
             { name: '.kp-spinner', what: 'The one size, set by a measure so a consumer can make it smaller inside a button.' },
             { name: 'reduced motion', what: 'The animation is inside the reduced-motion guard: for a reader who asked for stillness the ring is simply drawn, not turning.' },
             { name: 'decorative', what: 'Beside a label that already says what is happening, the ring is marked hidden so the wait is not announced twice.' },
+            { name: 'pastel: the round trip', what: 'In pastel the spinner is the pom-pom caterpillar going round a small day sticker, at every size, on the theme’s loop; under reduced motion it rests curled round the sticker.' },
+            { name: '--kp-loading-pieces', what: 'A register’s name for a loading picture made of pieces: js/loading-pieces.js (attachLoadingPieces(), wired in js/auto.js) adds the pieces to every waiting part of a theme that names one, and none to a theme that names nothing. Pastel names `caterpillar`; it is the only theme that names one.' },
         ],
         accessibility: [
             'Built in — the animation only runs where motion is welcome, which is DI7 and not a preference honoured where convenient.',
@@ -1813,6 +1879,18 @@ export const DESCRIPTORS = [
 <div aria-hidden="true"><span class="kp-skeleton kp-skeleton--circle"></span></div>
 `,
             },
+            {
+                title: 'A card of skeletons',
+                why: 'A card whose content is on its way: a block for its picture, two lines for its words. In pastel everything that waits becomes caterpillar: each line a row of pom-poms with a head, the block a plate with a head on its top-end corner and legs along its foot that step in turn, and the circle a body with two legs.',
+                markup: `
+<div class="kp-card" aria-hidden="true">
+<span class="kp-skeleton kp-skeleton--block"></span>
+<span class="kp-skeleton"></span>
+<span class="kp-skeleton"></span>
+<span class="kp-skeleton kp-skeleton--circle" style="inline-size: 3rem"></span>
+</div>
+`,
+            },
         ],
         variants: [
             { name: '.kp-skeleton', what: 'One line, at the height of a line of text.' },
@@ -1820,6 +1898,7 @@ export const DESCRIPTORS = [
             { name: '.kp-skeleton--circle', what: 'A round one for an avatar; it keeps its aspect whatever width it is given.' },
             { name: 'stacked', what: 'Adjacent skeletons take a distance from the stylesheet, so a paragraph of them needs no wrapper.' },
             { name: 'reduced motion', what: 'The pulse is inside the reduced-motion guard; the shapes are simply there for a reader who asked for stillness.' },
+            { name: 'pastel: the caterpillar', what: 'In pastel a line is a row of pom-poms with a head, a block a plate with a head and stepping legs, and a circle a pom-pom body on two legs; js/loading-pieces.js adds the pieces and the part carries `data-kp-pieces` while they are there. Without the script a line shows a still row of pom-poms.' },
         ],
         accessibility: [
             'Built in — the pulse changes opacity slowly enough to stay well under the flash threshold, and the motion gate measures it.',
@@ -2022,6 +2101,34 @@ export const DESCRIPTORS = [
 </div>
 `,
             },
+            {
+                title: 'A key figure that waits, one that acts, and the tones',
+                why: 'A key figure still waiting for its number carries `aria-busy="true"`; a warning or a failed figure carries its tone; a figure that leads somewhere is an `a`. In pastel every key figure has a thumbtack pushed in at its top centre; the waiting one becomes caterpillar (a head on its top-end corner, stepping legs along its foot); a warning or failed figure’s label sits on its tone’s plate; and the one that acts peels its top-end corner into a fold under the pointer.',
+                markup: `
+<div class="kp-kpis" role="group" aria-label="Pump houses">
+<div class="kp-kpi" aria-busy="true">
+<span class="kp-kpi__label">Flow now</span>
+<span class="kp-kpi__value">…</span>
+<span class="kp-kpi__trend">Reading the meters</span>
+</div>
+<div class="kp-kpi" data-kp-tone="warning">
+<span class="kp-kpi__label">Reservoir North</span>
+<span class="kp-kpi__value">78<small>%</small></span>
+<span class="kp-kpi__trend"><span class="kp-kpi__delta" data-kp-direction="up" data-kp-tone="bad">4 %</span> in the last hour</span>
+</div>
+<div class="kp-kpi" data-kp-tone="destructive">
+<span class="kp-kpi__label">Pump house 7</span>
+<span class="kp-kpi__value">0<small>bar</small></span>
+<span class="kp-kpi__trend">Offline since 04:12</span>
+</div>
+<a class="kp-kpi" href="#">
+<span class="kp-kpi__label">Alarms today</span>
+<span class="kp-kpi__value">3</span>
+<span class="kp-kpi__trend">See every alarm</span>
+</a>
+</div>
+`,
+            },
         ],
         variants: [
             { name: '.kp-kpis', what: 'The strip: as many tiles a row as fit, every tile one height on every row.' },
@@ -2034,6 +2141,9 @@ export const DESCRIPTORS = [
             { name: '.kp-kpi--toggle', what: 'A filter tile: a click flips `aria-pressed` and fires `kp-kpi-toggle` with `detail.pressed`; the page filters. Pressed, a primary border over a faint primary background.' },
             { name: '.kp-kpi__hint', what: 'What a click does, beside the label, in the page’s words: one child `data-kp-when="off"`, one `data-kp-when="on"`.' },
             { name: 'data-kp-kpi-owned', what: 'Leaves a toggle to the page, for a framework that keeps the pressed state itself.' },
+            { name: 'pastel: the thumbtack', what: 'In pastel every key figure is fixed to the page with a thumbtack at its top centre, the ones that act too. When a figure leaves, the tack comes out first, then it lifts off as its landing backwards and its space folds after the tack is out; one put back arrives as that backwards, the tack pushed in last.' },
+            { name: 'pastel: tones and changes', what: 'A warning or failed figure’s label sits on its tone’s plate, and a change shows as a sticker on the figure; a value written with update() wobbles (the update page). A figure that acts (a link, a toggle) lifts and peels its top-end corner under the pointer and sticks down flat when pressed; its focus is the dashed line alone.' },
+            { name: 'pastel: waiting', what: 'A key figure with `aria-busy="true"` becomes caterpillar while it waits: a head on its top-end corner and legs along its foot that step in turn (js/loading-pieces.js).' },
         ],
         accessibility: [
             'Built in — a filter tile is a real button with `aria-pressed`, so a screen reader says whether the filter is on.',
@@ -2080,6 +2190,7 @@ export const DESCRIPTORS = [
             { name: 'data-kp-loading', what: 'Loading: the track pulses at its height (still under reduced motion), with no fill and no mark; `aria-busy` with it.' },
             { name: '.kp-meter--inline', what: 'Three rem wide, at the start of a line of words, its middle on the line’s middle.' },
             { name: 'setMeter(el, meter)', what: 'Writes the share, the mark (made the first time), the tone and the ARIA in one call; `meterText(value, mark, words)` and `meterParts(value, mark)` are the words and the arithmetic on their own.' },
+            { name: 'pastel: loading', what: 'In pastel a meter with `data-kp-loading` (the last one in the example above) becomes a row of pom-poms with a head, as a busy progress bar does; a share that arrives is stuck on from its start corner on the soft landing.' },
         ],
         accessibility: [
             'Built in — `setMeter()` writes `role="meter"`, `aria-valuenow` (0 to 100) and an `aria-valuetext` with the real share and the mark, past 100 % too (“58% running now; 130% booked for tonight”).',
@@ -2372,6 +2483,29 @@ export const DESCRIPTORS = [
 </div>
 `,
             },
+            {
+                title: 'A month that loads',
+                why: 'The page says the month is loading with `setCalendarState(el, "loading", words)` and done with `setCalendarState(el, "ready")`; `.kp-calendar--busy-whole` puts one card over the grid while it loads, `.kp-calendar--busy-days` makes every day wait on its own. In pastel everything becomes caterpillar: the card over the month gets a head and stepping legs and is stuck on and taken off as the theme’s landing; in the second month every loading day gets a pom-pom rim and two legs, rises in turn, and the last of its week has a head beside it. Press Load and Loaded.',
+                markup: `
+<div class="kp-row kp-gap-sm kp-mb-md" role="group" aria-label="The months’ state">
+<button type="button" class="kp-button kp-button--sm" data-doc-calendar="loading">Load</button>
+<button type="button" class="kp-button kp-button--sm" data-doc-calendar="ready">Loaded</button>
+</div>
+<div class="kp-stack">
+<section class="kp-calendar kp-calendar--busy-whole" data-kp-calendar data-kp-calendar-month="2026-10" lang="en-GB" aria-label="Nightly backups, one card while loading" data-doc-calendar-month></section>
+<section class="kp-calendar kp-calendar--busy-days" data-kp-calendar data-kp-calendar-month="2026-10" lang="en-GB" aria-label="Nightly backups, each day waiting" data-doc-calendar-month></section>
+</div>
+<script type="module">
+import { setCalendarState } from '../../js/calendar.js';
+document.addEventListener('click', (event) => {
+const button = event.target instanceof Element ? event.target.closest('[data-doc-calendar]') : null;
+if (!button) return;
+const state = button.getAttribute('data-doc-calendar') === 'loading' ? 'loading' : 'ready';
+for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setCalendarState(month, state, state === 'loading' ? 'Reading the backups: 4 of 9 services read.' : '');
+});
+</script>
+`,
+            },
         ],
         variants: [
             { name: '[data-kp-calendar]', what: 'The calendar; `data-kp-calendar-month="YYYY-MM"` is the month it shows first (today’s by default) and `data-kp-calendar-selected="YYYY-MM-DD"` the day picked at first.' },
@@ -2385,6 +2519,9 @@ export const DESCRIPTORS = [
             { name: '.kp-calendar__pad', what: 'The neighbouring months’ days in the first and last weeks: their numbers, quiet and inert, so every week reads full.' },
             { name: '.kp-calendar__state', what: 'The line under the month: the words of `setCalendarState()`; an error’s after a dot in the destructive colour.' },
             { name: '.kp-calendar__legend', what: 'A swatch and its words per tone, from `setCalendarLegend(el, [{ tone, label }])`; hidden until given.' },
+            { name: '.kp-calendar--busy-whole / --busy-days', what: 'How a loading month shows: one card with the theme’s spinner and the state’s words over the whole grid, or the theme’s spinner in every loading day. Without either, the loading days pulse.' },
+            { name: 'pastel: the caterpillar', what: 'In pastel a loading day gets a pom-pom rim and two legs and rises in turn, with a head beside the last loading day of its week; the card over the whole month is a plate with its own pass, a head on its corner and stepping legs, stuck on as the landing and taken off as that backwards.' },
+            { name: '--kp-calendar-busy-words', what: 'In a register: `hold` keeps the card’s words on the card while it leaves, so the card that goes is the one that came (pastel); js/calendar.js writes `data-kp-busy-words-held` on the card until it has gone. Unset, the words clear at once.' },
         ],
         accessibility: [
             'Built in — one `table[role=grid]` named by the month’s title, seven column heads with the full weekday as their `abbr`, and one tab stop: arrows, Home/End, Page Up/Down (Shift: a year), Enter or Space to pick.',
@@ -2419,6 +2556,7 @@ export const DESCRIPTORS = [
             { name: 'hover and focus', what: 'Both open it in the React channel, with a delay before and after, so a pointer crossing the control does not flash it.' },
             { name: 'interactive', what: 'A tooltip can be made to take the pointer, for one that contains a link; by default it does not, so it cannot get in the way.' },
             { name: 'Escape', what: 'Closes it, like every other layer in the package.' },
+            { name: 'pastel', what: 'In pastel a tooltip hangs in its holder, whose ::after draws its pass by anchor positioning; it lands small on the pass and leaves as that backwards.' },
         ],
         accessibility: [
             'Built in — focus opens it as well as hover, so it is reachable from the keyboard.',
@@ -2508,6 +2646,7 @@ export const DESCRIPTORS = [
             { name: 'data-kp-nav-menu-end', what: 'Written by the module on a dropdown whose item has no room for it towards the window’s end: the panel hangs from the item’s end edge instead, so it stays inside the window. Measured as it opens and when the window changes size; nothing to write by hand.' },
             { name: '.kp-nav__menu--wide', what: 'The mega menu’s panel: a `.kp-nav__menu` that spans the bar in up to four columns of `.kp-nav__group`, each a `.kp-nav__menu-heading` over a plain list. Shown while its button says it is expanded; the minimum column width and the gap are knobs.' },
             { name: 'data-kp-nav-disclosure', what: 'The button that opens a mega menu’s panel, beside it in the same item; give it `kp-nav__link kp-nav__disclosure` so it reads as one of the bar’s links with a caret that turns while open. The module writes `aria-expanded` and `aria-controls`.' },
+            { name: 'pastel', what: 'In pastel a hover dropdown and the mega menu hang in their holder, whose ::after draws the pass by anchor positioning; the phone panel draws its own plate and pass. Each lands on its pass and closes as that backwards, and the module holds it open for the close (560 ms in pastel).' },
         ],
         accessibility: [
             'Built in — the current page is marked in three ways at once: weight, an underline and the attribute that says so out loud.',
@@ -2860,6 +2999,7 @@ export const DESCRIPTORS = [
             { name: 'never sideways', what: 'The panel clips its own horizontal overflow and a long label ends in an ellipsis, so a count or a badge at the end of a row is never pushed out of reach. A navigation you have to scroll sideways is one you cannot read.' },
             { name: '.kp-sidenav__scroll', what: 'The part that scrolls. The header and the footer do not, so a long navigation in a short window keeps its title and its account row in view.' },
             { name: '.kp-sidenav__category', what: 'A heading that folds, with .kp-sidenav__category-toggle and .kp-sidenav__submenu inside it. The open height is a grid track, so it animates without anything measuring it.' },
+            { name: 'pastel', what: 'In pastel an over or push panel draws its own plate and pass and lands on it; a panel on the end edge swings from its top-end corner. Widths and groups move on the landing held at its value, so a size never passes it, and the panel closes as it opened, backwards. The launcher and the rows are pastel’s buttons.' },
         ],
         accessibility: [
             'Built in — over mode traps the focus while it covers the page, moves the focus in on open, and gives it back to the toggler on close.',
@@ -2973,6 +3113,7 @@ export const DESCRIPTORS = [
             { name: '--kp-swap-fold-ease', what: 'The fold curve for the panel that leaves while another arrives (a tab swap), so a stepped theme can offset the two by one tick and the box does not move.' },
             { name: '--kp-accordion-size', what: '`own` gives the parts that otherwise keep the entrance\u2019s curve alone (the accordion, a tree branch) the theme\u2019s own size character as well.' },
             { name: '--kp-motion-scale', what: 'On the root: plays every close and every resize slower (above 1) or faster (below 1) at once. Default 1.' },
+            { name: 'pastel', what: 'Pastel caps a resize at one landing (560 ms), staggers a leave by 0.1071 of it, and folds the space of a card, a key figure or a tile from 0.6429 of its leave, after the tack is out; the side navigation’s width moves on the landing held at its value.' },
         ],
         accessibility: [
             'Built in — a reader who asked for reduced motion gets none: the dialog closes and the box takes its size at once.',
@@ -3002,8 +3143,8 @@ export const DESCRIPTORS = [
             },
         ],
         variants: [
-            { name: 'data-kp-updating', what: 'Written on the element while its update plays, with the register’s idea (`stamp`, `stutter`, `anodise`); on a spark it is the svg’s parent. Read it, do not set it.' },
-            { name: '--kp-update', what: 'In a register: the idea it plays on an update. Formal `stamp`, cyberpunk `stutter`, titanium `anodise`; the other registers declare none. Read on the element itself, so `none` on a spark’s svg lets the chart take its new point at once (cyberpunk). A register that declares it outside `prefers-reduced-motion: no-preference` plays a still version under reduced motion (cyberpunk).' },
+            { name: 'data-kp-updating', what: 'Written on the element while its update plays, with the register’s idea (`stamp`, `stutter`, `anodise`, `wobble`); on a spark it is the svg’s parent. Read it, do not set it.' },
+            { name: '--kp-update', what: 'In a register: the idea it plays on an update. Formal `stamp`, cyberpunk `stutter`, titanium `anodise`, pastel `wobble` (the value rocks on its pin and settles, 800 ms); most registers declare an idea of their own. Read on the element itself, so `none` on a spark’s svg lets the chart take its new point at once (cyberpunk). A register that declares it outside `prefers-reduced-motion: no-preference` plays a still version under reduced motion (cyberpunk).' },
         ],
         accessibility: [
             'Built in — the new value is in the page at the first frame and readable throughout; no idea hides, scrambles or resizes it.',
@@ -3259,6 +3400,7 @@ export const DESCRIPTORS = [
             { name: '.kp-menu__item--destructive', what: 'An entry in the destructive colour. It still needs a confirmation or an undo behind it.' },
             { name: '.kp-menu__separator', what: 'A rule between groups of entries.' },
             { name: 'hover', what: 'A wash of the page’s ink rather than the accent colour, so a highlighted row is quiet in every theme.' },
+            { name: 'pastel', what: 'In pastel a popover or a menu has its pass on its own ::backdrop (no dim), placed on it by anchor positioning, and lands on it from its top-start corner in one landing (560 ms); it closes as that backwards. An entry under the pointer peels its top-end corner into a fold, a press sticks it flat, and focus is the dashed line alone. The theme menu is this menu.' },
         ],
         accessibility: [
             'Built in — light dismiss, Escape and focus return are the browser’s, because a hand-written focus trap is how focus traps break.',
@@ -3300,6 +3442,18 @@ export const DESCRIPTORS = [
 </div>
 `,
             },
+            {
+                title: 'A menu that is still loading',
+                why: 'This is what `setMenu(wrapper, "loading")` writes: one disabled entry at the final row height and `aria-busy` on the menu, so the menu opens at once and fills when the entries arrive. In pastel the waiting menu becomes caterpillar: a head on its top-end corner and legs along its foot that step in turn.',
+                markup: `
+<div class="kp-menu-button" data-kp-menu-button>
+<button type="button" class="kp-button">Actions ▾</button>
+<div class="kp-menu kp-menu--rich" role="menu" aria-label="Actions on this pump house" aria-busy="true" hidden>
+<button type="button" role="menuitem" class="kp-menu__item" tabindex="-1" aria-disabled="true" data-kp-loading><span class="kp-menu__label">Loading…</span><span class="kp-menu__hint"> </span></button>
+</div>
+</div>
+`,
+            },
         ],
         variants: [
             { name: '.kp-menu-button', what: 'The wrapper, `[data-kp-menu-button]`: a button, then its `[role="menu"]`. The menu hangs under the button at its end edge.' },
@@ -3312,6 +3466,7 @@ export const DESCRIPTORS = [
             { name: 'empty', what: 'No entries: the button stays, grey, and its title says why; `data-kp-menu-empty="hide"` takes it away instead.' },
             { name: 'in a page header', what: 'In a `.kp-page-header` 40rem wide or narrower, the open menu spans the header’s buttons, inside the screen.' },
             { name: 'a refill while open', what: 'Waits until the menu closes, so a live update never moves an entry under the pointer or the focus; a fill that shows the same is skipped.' },
+            { name: 'pastel', what: 'The menu opens and closes as pastel’s popover (the menu page): its pass on its ::backdrop, the landing onto it, the close as the opening backwards. A loading menu becomes caterpillar, a head on its top-end corner and stepping legs along its foot, until its entries arrive.' },
         ],
         accessibility: [
             'Built in — the APG menu button: `aria-haspopup`, `aria-expanded` and `aria-controls` on the button; ↓ or ↑ opens it on the first or last entry; ↓ ↑ wrap, Home and End, and a letter jumps to the next entry that starts with it.',
@@ -3366,6 +3521,7 @@ export const DESCRIPTORS = [
             { name: '.kp-drawer__head, __desc', what: 'The title (a `.kp-dialog__title`, kept clear of the close button) and one sentence under it.' },
             { name: '.kp-drawer__body', what: 'What the drawer holds, in a column with room between; it scrolls inside itself.' },
             { name: '.kp-drawer__foot', what: 'The drawer’s action, always in view at the bottom.' },
+            { name: 'pastel', what: 'In pastel the drawer opens as pastel’s dialog (its pass, the landing onto it, a strip of washi tape) and swings from its top-end corner; it closes as that opening backwards.' },
         ],
         accessibility: [
             'Built in — as a modal `dialog` it traps the focus, closes on Escape and returns the focus to its button: the browser’s, as every dialog’s.',
@@ -3426,6 +3582,7 @@ export const DESCRIPTORS = [
             { name: 'startTour(steps, options)', what: 'Starts it: each step a `target` (a selector or a function), a `title` and a `text`; `remember`, `returnFocus`, `onEnd`, `decorate`, `strings`. Returns `{ end, goto }`, or null when no step’s part is on the page.' },
             { name: 'shouldStartTour()', what: 'Whether a page starts the tour by itself: `?tour` (or `?tour=3`) always; otherwise a first visit by a person, not a remembered one and not a browser driven by a script.' },
             { name: 'in a dialog', what: 'When the part a step is about is inside an open modal dialog, the card goes into that dialog, where it can be used.' },
+            { name: 'pastel', what: 'In pastel the tour’s card draws its own plate and pass and lands on it, a ring is drawn round the target (`kp-sig-pastel-tour-ring`), and the card and the dim close as they came, backwards.' },
         ],
         accessibility: [
             'Built in — the card is named by its title and described by its text; Next takes the focus on every step, ← and → move, and Esc ends the tour from anywhere and returns the focus where it was.',
@@ -3487,6 +3644,7 @@ export const DESCRIPTORS = [
             { name: '.kp-dialog__close', what: 'The close in the corner, on top of the padding rather than in the flow.' },
             { name: '.kp-dialog__actions', what: 'The buttons at the end, pushed to the trailing edge, primary last.' },
             { name: 'backdrop', what: 'A dimming rather than a theme colour: a tinted backdrop paints the page instead of pushing it back.' },
+            { name: 'pastel', what: 'In pastel a dialog is printed twice and stuck on: its second pass, a flat silhouette in the second ink drawn by its ::backdrop and placed on it by anchor positioning, springs into its rest 6 px off register, then the dialog swings down onto it from its top-start corner on the soft landing (one 8 % overshoot, settled once); a strip of washi tape crosses its top-start corner, and the modal’s dim is the backdrop’s border, so a click outside still reaches it. The close is that opening played backwards. Without anchor positioning the pass rests as a flat shadow and the dialog opens with the swing alone; under reduced motion it is simply there.' },
         ],
         accessibility: [
             'Built in — focus trapping, Escape and focus return come from the element itself, so they work the way the platform’s do.',
@@ -3565,6 +3723,7 @@ export const DESCRIPTORS = [
             { name: '.kp-palette__status', what: 'The live region that says how many commands are left after typing.' },
             { name: 'a link as a command', what: 'An `<a href>` carrying the option’s role and `data-kp-option`, inside a presentational list item (a command with an `href` in React). Enter and a click follow it; the module keeps it out of the Tab order so focus stays in the filter, and a page without JavaScript still has a list of working links.' },
             { name: 'matching', what: 'The filter matches literally by default — “read” finds “Readings for line 2” and not “Report an incident” — and `data-kp-match="subsequence"` (the `match` prop in React) makes “nap” find “new application” instead.' },
+            { name: 'pastel', what: 'In pastel the palette opens as pastel’s dialog: its pass on its ::backdrop, the landing onto it, a strip of washi tape across its corner; it closes as that opening backwards. An entry under the pointer or the keys is a sticker on its plate.' },
         ],
         accessibility: [
             'Built in — the dialog gives focus trapping, Escape and focus return, so the palette cannot strand the keyboard.',
@@ -3616,6 +3775,7 @@ export const DESCRIPTORS = [
             { name: '.kp-shortcuts__list', what: 'The definition list, with room above and below.' },
             { name: '.kp-shortcuts__row', what: 'One pair: the keys in a fixed column, the description beside them in quiet ink.' },
             { name: '.kp-shortcuts__group-label', what: 'A small heading over a group of rows, for a sheet long enough to need sections.' },
+            { name: 'pastel', what: 'In pastel the sheet opens as pastel’s dialog: its pass on its ::backdrop, the landing onto it; it closes as that opening backwards.' },
         ],
         accessibility: [
             'Built in — the dialog gives the focus trap, Escape and focus return; the sheet adds nothing to them.',
@@ -3693,6 +3853,16 @@ export const DESCRIPTORS = [
 </div>
 `,
             },
+            {
+                title: 'A card that waits',
+                why: 'A card whose body is still on its way carries `aria-busy="true"` until it has arrived. Every card in pastel has a thumbtack at its top centre; a waiting one also becomes caterpillar, a head on its top-end corner and legs along its foot.',
+                markup: `
+<article class="kp-card" aria-busy="true">
+<h3 class="kp-card__title">Pump house 3</h3>
+<p class="kp-card__body">Reading the pressure from the field unit…</p>
+</article>
+`,
+            },
         ],
         variants: [
             { name: '.kp-card', what: 'The surface: the card ground, a boundary, a rounded corner, and in one theme a hard shadow the knob paints and every other theme leaves at nothing.' },
@@ -3701,6 +3871,8 @@ export const DESCRIPTORS = [
             { name: '.kp-card__header', what: 'A row that lays the title and its actions on one baseline and pushes them apart.' },
             { name: '.kp-card__actions', what: 'The controls in that row, spaced by the scale.' },
             { name: '.kp-card__footer', what: 'A closing row, separated by a rule and the scale’s own distance.' },
+            { name: 'pastel: the thumbtack', what: 'In pastel every card is fixed to the page with a thumbtack at its top centre. A card that leaves loses its tack first, then lifts off as its landing backwards, and its space folds after the tack is out; one put back arrives as that backwards, the tack pushed in last.' },
+            { name: '[aria-busy="true"]', what: 'A card waiting for its content. In pastel it becomes caterpillar: a head on its top-end corner and legs along its foot that step in turn (js/loading-pieces.js). Other themes draw nothing extra.' },
         ],
         accessibility: [
             'Built in — the card ground and its ink are a measured pair, so text on a card clears the contrast floor in every theme.',
@@ -3741,6 +3913,7 @@ export const DESCRIPTORS = [
         variants: [
             { name: '.kp-tiles', what: 'A list or a div of `.kp-card`s: as many columns as fit, every row as tall as the tallest tile. A tile’s title is a step under a page card’s.' },
             { name: 'the footer', what: 'A `.kp-card__footer` keeps to the tile’s bottom edge; the body never touches its rule.' },
+            { name: 'pastel', what: 'In pastel every tile is fixed to the page with a thumbtack at its top centre, which comes out first when the tile leaves.' },
         ],
         accessibility: [
             'Built in — the grid is layout only; the cards keep their order in the markup, which is the reading order.',

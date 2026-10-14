@@ -147,7 +147,7 @@ export const NEEDS = [
         // components that make one wait later. A theme that names none gets
         // no piece.
         name: 'loading-pieces',
-        when: '.kp-skeleton, .kp-progressbar, .kp-meter, .kp-kpi, .kp-spinner, [data-kp-datatable], [data-kp-calendar], [data-kp-menu-button]',
+        when: '.kp-skeleton, .kp-progressbar, .kp-meter, .kp-kpi, .kp-card, .kp-spinner, [data-kp-datatable], [data-kp-calendar], [data-kp-menu-button]',
         load: () => import('./loading-pieces.js'),
         attach: (m, root) => [m.attachLoadingPieces(root)],
     },

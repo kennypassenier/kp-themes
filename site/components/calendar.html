@@ -194,6 +194,46 @@
     &lt;<span class="kp-code__keyword">aside</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;<span class="kp-code__keyword">p</span>&gt;Pick a day to see every service’s own state that night.&lt;/<span class="kp-code__keyword">p</span>&gt;&lt;/<span class="kp-code__keyword">aside</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A month that loads</figcaption>
+                        <p class="kp-text-muted">The page says the month is loading with `setCalendarState(el, &quot;loading&quot;, words)` and done with `setCalendarState(el, &quot;ready&quot;)`; `.kp-calendar--busy-whole` puts one card over the grid while it loads, `.kp-calendar--busy-days` makes every day wait on its own. In pastel everything becomes caterpillar: the card over the month gets a head and stepping legs and is stuck on and taken off as the theme’s landing; in the second month every loading day gets a pom-pom rim and two legs, rises in turn, and the last of its week has a head beside it. Press Load and Loaded.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-row kp-gap-sm kp-mb-md" role="group" aria-label="The months’ state">
+    <button type="button" class="kp-button kp-button--sm" data-doc-calendar="loading">Load</button>
+    <button type="button" class="kp-button kp-button--sm" data-doc-calendar="ready">Loaded</button>
+</div>
+<div class="kp-stack">
+    <section class="kp-calendar kp-calendar--busy-whole" data-kp-calendar data-kp-calendar-month="2026-10" lang="en-GB" aria-label="Nightly backups, one card while loading" data-doc-calendar-month></section>
+    <section class="kp-calendar kp-calendar--busy-days" data-kp-calendar data-kp-calendar-month="2026-10" lang="en-GB" aria-label="Nightly backups, each day waiting" data-doc-calendar-month></section>
+</div>
+<script type="module">
+    import { setCalendarState } from '../../js/calendar.js';
+    document.addEventListener('click', (event) => {
+    const button = event.target instanceof Element ? event.target.closest('[data-doc-calendar]') : null;
+    if (!button) return;
+    const state = button.getAttribute('data-doc-calendar') === 'loading' ? 'loading' : 'ready';
+    for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setCalendarState(month, state, state === 'loading' ? 'Reading the backups: 4 of 9 services read.' : '');
+    });
+</script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-gap-sm kp-mb-md&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;The months’ state&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-calendar</span><span class="kp-code__string">=&quot;loading&quot;</span>&gt;Load&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-calendar</span><span class="kp-code__string">=&quot;ready&quot;</span>&gt;Loaded&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-calendar kp-calendar--busy-whole&quot;</span> <span class="kp-code__keyword">data-kp-calendar</span> <span class="kp-code__keyword">data-kp-calendar-month</span><span class="kp-code__string">=&quot;2026-10&quot;</span> <span class="kp-code__keyword">lang</span><span class="kp-code__string">=&quot;en-GB&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Nightly backups, one card while loading&quot;</span> <span class="kp-code__keyword">data-doc-calendar-month</span>&gt;&lt;/<span class="kp-code__keyword">section</span>&gt;
+    &lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-calendar kp-calendar--busy-days&quot;</span> <span class="kp-code__keyword">data-kp-calendar</span> <span class="kp-code__keyword">data-kp-calendar-month</span><span class="kp-code__string">=&quot;2026-10&quot;</span> <span class="kp-code__keyword">lang</span><span class="kp-code__string">=&quot;en-GB&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Nightly backups, each day waiting&quot;</span> <span class="kp-code__keyword">data-doc-calendar-month</span>&gt;&lt;/<span class="kp-code__keyword">section</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">script</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;module&quot;</span>&gt;
+    import { setCalendarState } from '../../js/calendar.js';
+    document.addEventListener('click', (event) =&gt; {
+    const button = event.target instanceof Element ? event.target.closest('[data-doc-calendar]') : null;
+    if (!button) return;
+    const state = button.getAttribute('data-doc-calendar') === 'loading' ? 'loading' : 'ready';
+    for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setCalendarState(month, state, state === 'loading' ? 'Reading the backups: 4 of 9 services read.' : '');
+    });
+&lt;/<span class="kp-code__keyword">script</span>&gt;</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="more-examples" id="more-examples">
                     <h2 class="kp-fw-semibold">More examples</h2>
@@ -359,6 +399,9 @@
                             <tr><td><code>.kp-calendar__pad</code></td><td>The neighbouring months’ days in the first and last weeks: their numbers, quiet and inert, so every week reads full.</td></tr>
                             <tr><td><code>.kp-calendar__state</code></td><td>The line under the month: the words of `setCalendarState()`; an error’s after a dot in the destructive colour.</td></tr>
                             <tr><td><code>.kp-calendar__legend</code></td><td>A swatch and its words per tone, from `setCalendarLegend(el, [{ tone, label }])`; hidden until given.</td></tr>
+                            <tr><td><code>.kp-calendar--busy-whole / --busy-days</code></td><td>How a loading month shows: one card with the theme’s spinner and the state’s words over the whole grid, or the theme’s spinner in every loading day. Without either, the loading days pulse.</td></tr>
+                            <tr><td><code>pastel: the caterpillar</code></td><td>In pastel a loading day gets a pom-pom rim and two legs and rises in turn, with a head beside the last loading day of its week; the card over the whole month is a plate with its own pass, a head on its corner and stepping legs, stuck on as the landing and taken off as that backwards.</td></tr>
+                            <tr><td><code>--kp-calendar-busy-words</code></td><td>In a register: `hold` keeps the card’s words on the card while it leaves, so the card that goes is the one that came (pastel); js/calendar.js writes `data-kp-busy-words-held` on the card until it has gone. Unset, the words clear at once.</td></tr>
                     </tbody></table></div>
                 </section>
                 </div>

@@ -216,6 +216,24 @@
     &lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A menu that is still loading</figcaption>
+                        <p class="kp-text-muted">This is what `setMenu(wrapper, &quot;loading&quot;)` writes: one disabled entry at the final row height and `aria-busy` on the menu, so the menu opens at once and fills when the entries arrive. In pastel the waiting menu becomes caterpillar: a head on its top-end corner and legs along its foot that step in turn.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-menu-button" data-kp-menu-button>
+    <button type="button" class="kp-button">Actions ▾</button>
+    <div class="kp-menu kp-menu--rich" role="menu" aria-label="Actions on this pump house" aria-busy="true" hidden>
+        <button type="button" role="menuitem" class="kp-menu__item" tabindex="-1" aria-disabled="true" data-kp-loading><span class="kp-menu__label">Loading…</span><span class="kp-menu__hint"> </span></button>
+    </div>
+</div>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu-button&quot;</span> <span class="kp-code__keyword">data-kp-menu-button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span>&gt;Actions ▾&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu kp-menu--rich&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menu&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Actions on this pump house&quot;</span> <span class="kp-code__keyword">aria-busy</span><span class="kp-code__string">=&quot;true&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;menuitem&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span> <span class="kp-code__keyword">tabindex</span><span class="kp-code__string">=&quot;-1&quot;</span> <span class="kp-code__keyword">aria-disabled</span><span class="kp-code__string">=&quot;true&quot;</span> <span class="kp-code__keyword">data-kp-loading</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__label&quot;</span>&gt;Loading…&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__hint&quot;</span>&gt; &lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="more-examples" id="more-examples">
                     <h2 class="kp-fw-semibold">More examples</h2>
@@ -1144,6 +1162,7 @@ data-kp-value="archive"
                             <tr><td><code>empty</code></td><td>No entries: the button stays, grey, and its title says why; `data-kp-menu-empty=&quot;hide&quot;` takes it away instead.</td></tr>
                             <tr><td><code>in a page header</code></td><td>In a `.kp-page-header` 40rem wide or narrower, the open menu spans the header’s buttons, inside the screen.</td></tr>
                             <tr><td><code>a refill while open</code></td><td>Waits until the menu closes, so a live update never moves an entry under the pointer or the focus; a fill that shows the same is skipped.</td></tr>
+                            <tr><td><code>pastel</code></td><td>The menu opens and closes as pastel’s popover (the menu page): its pass on its ::backdrop, the landing onto it, the close as the opening backwards. A loading menu becomes caterpillar, a head on its top-end corner and stepping legs along its foot, until its entries arrive.</td></tr>
                     </tbody></table></div>
                 </section>
                 </div>

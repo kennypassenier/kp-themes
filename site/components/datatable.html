@@ -252,6 +252,46 @@
     &lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Loading, with a layer over the rows</figcaption>
+                        <p class="kp-text-muted">A table that is still asking: `data-kp-state=&quot;loading&quot;` and `data-kp-busy-overlay` on the wrapper put a panel with the theme’s large spinner over the rows; the status line under the table says the same, and it is the one a screen reader hears. In pastel the panel is a plate with its own pass, stuck on as everything is, and it becomes caterpillar: a head on its top-end corner and legs along its foot, with the round-trip spinner on it.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-datatable" data-kp-datatable data-kp-state="loading" data-kp-busy-overlay>
+    <div class="kp-table-wrap">
+        <table class="kp-table">
+            <caption class="kp-sr-only">Containers, loading again</caption>
+            <thead><tr><th scope="col">Stack</th><th scope="col">Container</th><th scope="col">State</th></tr></thead>
+            <tbody>
+                <tr><td>media</td><td>jellyfin</td><td>running</td></tr>
+                <tr><td>platform</td><td>traefik</td><td>running</td></tr>
+                <tr><td>platform</td><td>crowdsec</td><td>restarting</td></tr>
+                <tr><td>monitoring</td><td>grafana</td><td>running</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="kp-datatable__bar">
+        <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+    </div>
+</div>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable&quot;</span> <span class="kp-code__keyword">data-kp-datatable</span> <span class="kp-code__keyword">data-kp-state</span><span class="kp-code__string">=&quot;loading&quot;</span> <span class="kp-code__keyword">data-kp-busy-overlay</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table-wrap&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">table</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">caption</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sr-only&quot;</span>&gt;Containers, loading again&lt;/<span class="kp-code__keyword">caption</span>&gt;
+            &lt;<span class="kp-code__keyword">thead</span>&gt;&lt;<span class="kp-code__keyword">tr</span>&gt;&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Stack&lt;/<span class="kp-code__keyword">th</span>&gt;&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Container&lt;/<span class="kp-code__keyword">th</span>&gt;&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;State&lt;/<span class="kp-code__keyword">th</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;&lt;/<span class="kp-code__keyword">thead</span>&gt;
+            &lt;<span class="kp-code__keyword">tbody</span>&gt;
+                &lt;<span class="kp-code__keyword">tr</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;media&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;jellyfin&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;running&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
+                &lt;<span class="kp-code__keyword">tr</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;platform&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;traefik&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;running&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
+                &lt;<span class="kp-code__keyword">tr</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;platform&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;crowdsec&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;restarting&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
+                &lt;<span class="kp-code__keyword">tr</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;monitoring&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;grafana&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;running&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
+            &lt;/<span class="kp-code__keyword">tbody</span>&gt;
+        &lt;/<span class="kp-code__keyword">table</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable__bar&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable__status&quot;</span> <span class="kp-code__keyword">data-kp-datatable-status</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="more-examples" id="more-examples">
                     <h2 class="kp-fw-semibold">More examples</h2>
@@ -7280,6 +7320,7 @@ data-cat-server
                             <tr><td><code>.kp-datatable__search</code></td><td>The search box. Typing is debounced so a long list is not re-sorted on every keystroke.</td></tr>
                             <tr><td><code>empty</code></td><td>When a filter matches nothing the empty state takes the table’s place rather than leaving a header over nothing.</td></tr>
                             <tr><td><code>clickable rows</code></td><td>A row can be marked as a control, which gives it the pointer cursor and an activation of its own.</td></tr>
+                            <tr><td><code>pastel: the busy panel</code></td><td>In pastel the busy panel draws its own plate and pass and lands on it as every part does, leaves as that backwards, and while it waits it becomes caterpillar (a head on its corner, stepping legs) with the round-trip spinner on it.</td></tr>
                     </tbody></table></div>
                 </section>
                 </div>

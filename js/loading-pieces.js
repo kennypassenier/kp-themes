@@ -260,8 +260,12 @@ export function attachLoadingPieces(root = document) {
     });
     const target = /** @type {Node} */ (root instanceof Document ? root.documentElement : root);
     watch.observe(target, { subtree: true, childList: true, attributes: true, attributeFilter: WATCHED });
-    if (root instanceof Document || root === document.documentElement)
-        watch.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    // A second observe() of the same node replaces the first one's options, so
+    // the theme on <html> is watched only from a root below it; from the
+    // document, the subtree watch above already sees it (`data-theme` is in
+    // WATCHED). Observing <html> twice left only the theme watched, and a part
+    // that started waiting after the first paint got no pieces.
+    if (target !== document.documentElement) watch.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
     everything = true;
     schedule();
     return () => {

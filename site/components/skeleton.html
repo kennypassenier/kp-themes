@@ -200,6 +200,24 @@
 &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skeleton kp-skeleton--block&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skeleton kp-skeleton--circle&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A card of skeletons</figcaption>
+                        <p class="kp-text-muted">A card whose content is on its way: a block for its picture, two lines for its words. In pastel everything that waits becomes caterpillar: each line a row of pom-poms with a head, the block a plate with a head on its top-end corner and legs along its foot that step in turn, and the circle a body with two legs.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-card" aria-hidden="true">
+    <span class="kp-skeleton kp-skeleton--block"></span>
+    <span class="kp-skeleton"></span>
+    <span class="kp-skeleton"></span>
+    <span class="kp-skeleton kp-skeleton--circle" style="inline-size: 3rem"></span>
+</div>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skeleton kp-skeleton--block&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skeleton&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skeleton&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-skeleton kp-skeleton--circle&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;inline-size: 3rem&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="more-examples" id="more-examples">
                     <h2 class="kp-fw-semibold">More examples</h2>
@@ -295,6 +313,7 @@
                             <tr><td><code>.kp-skeleton--circle</code></td><td>A round one for an avatar; it keeps its aspect whatever width it is given.</td></tr>
                             <tr><td><code>stacked</code></td><td>Adjacent skeletons take a distance from the stylesheet, so a paragraph of them needs no wrapper.</td></tr>
                             <tr><td><code>reduced motion</code></td><td>The pulse is inside the reduced-motion guard; the shapes are simply there for a reader who asked for stillness.</td></tr>
+                            <tr><td><code>pastel: the caterpillar</code></td><td>In pastel a line is a row of pom-poms with a head, a block a plate with a head and stepping legs, and a circle a pom-pom body on two legs; js/loading-pieces.js adds the pieces and the part carries `data-kp-pieces` while they are there. Without the script a line shows a still row of pom-poms.</td></tr>
                     </tbody></table></div>
                 </section>
                 </div>

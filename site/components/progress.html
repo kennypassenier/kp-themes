@@ -302,6 +302,34 @@
     &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__track&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__fill&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__head&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Busy, in three sizes</figcaption>
+                        <p class="kp-text-muted">A busy bar is `data-kp-indeterminate` on the bar, with no value. Each theme draws its own wait in the track, at every size; pastel draws it from pieces: js/loading-pieces.js puts a row of pom-poms with a head in the track while it is busy (a still row of pom-poms without the script), and takes them away when the attribute goes.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <div class="kp-progressbar" role="progressbar" aria-label="Waiting for the export, small" data-kp-indeterminate>
+        <span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span>
+    </div>
+    <div class="kp-progressbar kp-progressbar--md" role="progressbar" aria-label="Waiting for the export, medium" data-kp-indeterminate>
+        <span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span>
+    </div>
+    <div class="kp-progressbar kp-progressbar--lg" role="progressbar" aria-label="Waiting for the export, large" data-kp-indeterminate>
+        <span class="kp-progressbar__track" aria-hidden="true"><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span></span>
+    </div>
+</div>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;progressbar&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Waiting for the export, small&quot;</span> <span class="kp-code__keyword">data-kp-indeterminate</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__track&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__fill&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__head&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar kp-progressbar--md&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;progressbar&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Waiting for the export, medium&quot;</span> <span class="kp-code__keyword">data-kp-indeterminate</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__track&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__fill&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__head&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar kp-progressbar--lg&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;progressbar&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Waiting for the export, large&quot;</span> <span class="kp-code__keyword">data-kp-indeterminate</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__track&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__fill&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progressbar__head&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="more-examples" id="more-examples">
                     <h2 class="kp-fw-semibold">More examples</h2>
@@ -1040,6 +1068,7 @@ data-kp-indeterminate
                             <tr><td><code>.kp-progress__value</code></td><td>The number, quiet and small, after the bar.</td></tr>
                             <tr><td><code>.kp-progress-group</code></td><td>A set of bars in three columns — label, track, reading — so every track begins and ends in the same place [fix-64].</td></tr>
                             <tr><td><code>.kp-progress__label</code></td><td>The word in front of a bar inside a group.</td></tr>
+                            <tr><td><code>pastel: the caterpillar</code></td><td>In pastel a busy bar’s track becomes the pom-pom caterpillar: a row of pom-poms as round as the track is high, a head at its end, rising in turn on the theme’s loop (2.4 s). The pieces are js/loading-pieces.js’s, hidden from screen readers; without the script the track shows the same row standing still, and under reduced motion it stands still too.</td></tr>
                     </tbody></table></div>
                 </section>
                 </div>
