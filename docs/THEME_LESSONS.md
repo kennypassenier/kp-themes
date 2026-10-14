@@ -621,3 +621,21 @@ These were not cyberpunk's: the same wrong default is in every theme that has no
 - **Check:** `.cat-nav ~ .kp-sidenav__backdrop` count on a catalogue-shell page at 390 px with the theme switched about 120 ms after
   the shell appears, for all themes, 2 s later: it must be 0 (before the fix: 15 of 16 themes on each research page). Also
   `getAnimations()` on any element in the middle of a close: a close that waits must survive a `data-theme` change.
+
+## 61. The room a page keeps for the fixed launcher is set in the last layer a register cannot reach, and is measured, not assumed
+
+- **Symptom:** (brutalism, the side navigation examples, the side navigation edge and minor research demos, 2026-10-14) the fixed
+  hamburger (`.kp-sidenav__launcher`) covered the first letter of the page title: 43 of the frame measurements and 4 of
+  `site/components/sidenav.html`'s, shut and open, at 1280 and 390 px. No other theme was affected.
+- **Cause:** the room (`data-kp-sidenav-launcher-room`: inset + size + inset) was a `padding-inline-start` in `@layer kp.components`.
+  Brutalism draws the page header with a `padding` shorthand in `@layer kp.signature`, which beats the components layer whatever the
+  specificity, so the header kept 1 rem where the launcher needs 3.25 rem. The same room, set on the panel's own header, was never
+  overridden.
+- **Fix:** the room rule lives in `@layer kp.layout` (components.css), after the register and signature layers, still on the
+  launcher's own tokens (`--kp-sidenav-launcher-inset`, `--kp-sidenav-launcher-size`); only a utility class can still override it.
+  A register that draws a marked element sets its own padding, never the room.
+- **Check:** for all 16 themes at 1280 and 390 px, shut and open once the panel has settled, on every `research/sidenav-edge` and
+  `research/sidenav-minor` frame page (`?theme=<name>`) and on every iframe of `site/components/sidenav.html`: take the launcher's
+  `getBoundingClientRect()` and intersect it with every `Range.getBoundingClientRect()` of a visible text node and with every
+  visible link, button and input outside the launcher; the count must be 0 (before: brutalism 47 of 896 measurements). Wait for the
+  panel to stop moving first: a panel that is sliding passes under the launcher by its own motion.

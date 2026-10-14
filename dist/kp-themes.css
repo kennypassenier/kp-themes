@@ -8114,12 +8114,6 @@
         padding-block-start: calc(2 * var(--kp-sidenav-launcher-inset, var(--kp-space-sm, 0.5rem)) + var(--kp-sidenav-launcher-size, 2.25rem));
     }
 
-    /* A page element in the launcher's corner keeps its width free, except
-       in a gutter, where the launcher already stands in the reserved room. */
-    [data-kp-sidenav-launcher-room]:not([data-kp-sidenav-shift='reserved'] *) {
-        padding-inline-start: calc(2 * var(--kp-sidenav-launcher-inset, var(--kp-space-sm, 0.5rem)) + var(--kp-sidenav-launcher-size, 2.25rem));
-    }
-
     /* The edge tab: a small box on the panel's far edge holding a toggler
        (the theme's `.kp-icon-button`), at the window's edge while the panel
        is away. js/sidenav.js moves it with the panel (`data-kp-sidenav-shift`,
@@ -12972,6 +12966,20 @@
         border-end-end-radius: 0;
         border-start-start-radius: var(--kp-sidenav-float-radius, var(--radius, 0.5rem));
         border-end-start-radius: var(--kp-sidenav-float-radius, var(--radius, 0.5rem));
+    }
+}
+
+/* A page element in the launcher's corner keeps its width free, except in a
+   gutter, where the launcher already stands in the reserved room. The rule
+   sits in the layout layer, after the registers' layers: a register that
+   draws the marked element (brutalism's page header sets its own padding in
+   the signature layer) cannot put the room back to its own padding and slide
+   the first letter of the title under the launcher (THEME_LESSONS 61). The
+   room is the launcher's inset + size + inset, the same tokens the launcher
+   is drawn from. */
+@layer kp.layout {
+    [data-kp-sidenav-launcher-room]:not([data-kp-sidenav-shift='reserved'] *) {
+        padding-inline-start: calc(2 * var(--kp-sidenav-launcher-inset, var(--kp-space-sm, 0.5rem)) + var(--kp-sidenav-launcher-size, 2.25rem));
     }
 }
 
