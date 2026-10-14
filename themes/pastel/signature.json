@@ -1,43 +1,83 @@
 {
     "$schema": "../signature.schema.json",
     "theme": "pastel",
-    "idea": "Risograph printing: a lavender-milk ground, plum ink and the slight misregistration of a second pass. Soft without being weak, the inks are saturated and only the ground is pale, and every corner is round. Things behave like stickers, a flat shadow beside them, a small lift askew under the pointer, pressed flat, and move with a springy overshoot nothing else in the package has.",
+    "idea": "Risograph printing on a sticker sheet in a planner: lavender-milk ground, plum ink, a sky second pass that never lines up. Everything is printed twice and stuck on: a part's flat sky pass springs into its rest 6 px off register and the part swings down onto it from its top-start corner, on one soft landing; a part fixed to the page gets a thumbtack. Controls are stickers with a flat plum peel that curl a corner under the pointer and are pressed flat; focus is a dashed plum line; whatever waits becomes a pom-pom caterpillar.",
     "loadBearing": [
         {
             "claim": "The ground is tinted, not white: a lavender so pale it reads as white until white is put beside it.",
             "proof": [
-                { "file": "themes/pastel/tokens.json", "token": "background" },
-                { "file": "themes/pastel/tokens.json", "token": "card" }
+                {
+                    "file": "themes/pastel/tokens.json",
+                    "token": "background"
+                },
+                {
+                    "file": "themes/pastel/tokens.json",
+                    "token": "card"
+                }
             ]
         },
         {
             "claim": "Plum acts; mint and violet are fills, never actions.",
             "proof": [
-                { "file": "themes/pastel/tokens.json", "token": "primary" },
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] mark" },
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-lede mark:nth-of-type(2)" }
+                {
+                    "file": "themes/pastel/tokens.json",
+                    "token": "primary"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] mark"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] .kp-lede mark:nth-of-type(2)"
+                }
             ]
         },
         {
             "claim": "The overprint: the headline carries a second-pass duplicate held 2px off register.",
             "proof": [
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] [data-kp-reveal='headline']::before" },
-                { "file": "themes/pastel/tokens.json", "token": "fx-overprint" }
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] [data-kp-reveal='headline']::before"
+                },
+                {
+                    "file": "themes/pastel/tokens.json",
+                    "token": "fx-overprint"
+                }
             ]
         },
         {
             "claim": "Soft geometry: the largest radii in the package, and a rounded clip on the hero.",
             "proof": [
-                { "file": "themes/pastel/tokens.json", "token": "radius" },
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-card" },
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] [data-kp-surface='hero']" }
+                {
+                    "file": "themes/pastel/tokens.json",
+                    "token": "radius"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] .kp-card"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] [data-kp-surface='hero']"
+                }
             ]
         },
         {
-            "claim": "The springy overshoot drives every arrival, fill, lift and press.",
+            "claim": "One soft landing drives every arrival, opening, fill, lift and press: it passes its rest by 8 % once and settles (G1).",
             "proof": [
-                { "file": "themes/pastel/tokens.json", "token": "fx-ease" },
-                { "file": "css/pastel-register.css", "keyframes": "kp-registration" }
+                {
+                    "file": "themes/pastel/tokens.json",
+                    "token": "fx-ease"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "keyframes": "kp-sig-pastel-stuck-in"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "keyframes": "kp-sig-pastel-pass-in"
+                }
             ]
         }
     ],
@@ -49,8 +89,14 @@
             "never": "White; white is the card laid on it.",
             "example": "surface-app",
             "proof": [
-                { "file": "themes/pastel/tokens.json", "token": "background" },
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-field__input" }
+                {
+                    "file": "themes/pastel/tokens.json",
+                    "token": "background"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] .kp-field__input"
+                }
             ]
         },
         {
@@ -60,42 +106,69 @@
             "never": "The page ground.",
             "example": "card",
             "proof": [
-                { "file": "themes/pastel/tokens.json", "token": "card" },
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-nav-wrap" }
+                {
+                    "file": "themes/pastel/tokens.json",
+                    "token": "card"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] .kp-nav-wrap"
+                }
             ]
         },
         {
             "role": "Plum ink",
             "token": "foreground",
-            "use": "Text, and the hue of every soft shadow.",
+            "use": "Text, and the dim behind a dialog.",
             "never": "Pure black, which only the stamp's ink is.",
             "example": "text-body",
             "proof": [
-                { "file": "themes/pastel/tokens.json", "token": "foreground" },
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-dialog::backdrop" }
+                {
+                    "file": "themes/pastel/tokens.json",
+                    "token": "foreground"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] :is(.kp-dialog, .kp-palette, .kp-shortcuts)::backdrop"
+                }
             ]
         },
         {
             "role": "Rose plum",
             "token": "primary",
-            "use": "What acts and what marks: the primary button, the call to action, the current page, the selected tab, the microlabel, the drawn rule, the pearls; mixed with black, the sticker's shadow.",
+            "use": "What acts and what marks: the primary button, the call to action, the current page, the selected tab, the microlabel, the drawn rule, the pearls, the thumbtack, the dashed focus line; darkened, the sticker's flat peel.",
             "never": "A pale fill; it is an ink, not a tint.",
             "example": "button-primary",
             "proof": [
-                { "file": "themes/pastel/tokens.json", "token": "primary" },
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-button--primary" },
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .microlabel" }
+                {
+                    "file": "themes/pastel/tokens.json",
+                    "token": "primary"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] .kp-button--primary"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] .microlabel"
+                }
             ]
         },
         {
             "role": "Mint",
             "token": "accent",
-            "use": "The plate that fills in behind a marked word, and a hovered menu row.",
+            "use": "The plate that fills in behind a marked word, a hovered menu row, the washi tape and the caterpillar's pom-poms.",
             "never": "A selected state: it reads 1.14 against the ground.",
             "example": "lede",
             "proof": [
-                { "file": "themes/pastel/tokens.json", "token": "accent" },
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-nav__menu a:hover" }
+                {
+                    "file": "themes/pastel/tokens.json",
+                    "token": "accent"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] .kp-nav__menu a:hover"
+                }
             ]
         },
         {
@@ -105,8 +178,14 @@
             "never": "Running text on the milk.",
             "example": "divider",
             "proof": [
-                { "file": "themes/pastel/tokens.json", "token": "accent-foreground" },
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] [data-kp-divider='alt']" }
+                {
+                    "file": "themes/pastel/tokens.json",
+                    "token": "accent-foreground"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] [data-kp-divider='alt']"
+                }
             ]
         },
         {
@@ -116,8 +195,14 @@
             "never": "A third fill beside mint and violet.",
             "example": "lede",
             "proof": [
-                { "file": "themes/pastel/tokens.json", "token": "info" },
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-lede mark:nth-of-type(2)" }
+                {
+                    "file": "themes/pastel/tokens.json",
+                    "token": "info"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] .kp-lede mark:nth-of-type(2)"
+                }
             ]
         },
         {
@@ -127,8 +212,14 @@
             "never": "Text.",
             "example": "buttons",
             "proof": [
-                { "file": "themes/pastel/tokens.json", "token": "secondary" },
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-button--secondary" }
+                {
+                    "file": "themes/pastel/tokens.json",
+                    "token": "secondary"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] .kp-button--secondary"
+                }
             ]
         },
         {
@@ -138,9 +229,18 @@
             "never": "The quiet hairline between rows.",
             "example": "field",
             "proof": [
-                { "file": "themes/pastel/tokens.json", "token": "border-strong" },
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-button--ghost" },
-                { "file": "css/pastel-register.css", "property": "--fx-texture" }
+                {
+                    "file": "themes/pastel/tokens.json",
+                    "token": "border-strong"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] .kp-button--ghost"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "property": "--fx-texture"
+                }
             ]
         },
         {
@@ -150,8 +250,14 @@
             "never": "Without words beside it: it is the theme's colour closest to its primary.",
             "example": "button-destructive",
             "proof": [
-                { "file": "themes/pastel/tokens.json", "token": "destructive" },
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-field--invalid .kp-field__input" }
+                {
+                    "file": "themes/pastel/tokens.json",
+                    "token": "destructive"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] .kp-field--invalid .kp-field__input"
+                }
             ]
         },
         {
@@ -161,19 +267,35 @@
             "never": "Anything but the stamp.",
             "example": "dossier",
             "proof": [
-                { "file": "css/pastel-register.css", "property": "--kp-stamp" },
-                { "file": "css/pastel-register.css", "property": "--kp-stamp-ink" }
+                {
+                    "file": "css/pastel-register.css",
+                    "property": "--kp-stamp"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "property": "--kp-stamp-ink"
+                }
             ]
         },
         {
             "role": "Second pass",
             "token": "fx-overprint",
-            "use": "The headline's duplicate layer, at 55 % and multiplied.",
+            "use": "The second pass and nothing else: every plate's flat silhouette 6 px off register, the headline's duplicate (55 %, multiplied), the progress fill's offset, the caterpillar's flat shadow.",
             "never": "Running text: doubled edges are unreadable for someone with astigmatism.",
             "example": "hero-headline",
             "proof": [
-                { "file": "themes/pastel/tokens.json", "token": "fx-overprint" },
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] [data-kp-reveal='headline']::before" }
+                {
+                    "file": "themes/pastel/tokens.json",
+                    "token": "fx-overprint"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] [data-kp-reveal='headline']::before"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "property": "--kp-sig-pa-pass-c"
+                }
             ]
         }
     ],
@@ -188,9 +310,18 @@
             "description": "Instrument Sans, the same face as the body, bold and balanced to 22ch; the overprint, not a second face, makes it a headline.",
             "example": "hero-headline",
             "proof": [
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] h1" },
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] [data-kp-surface] h1" },
-                { "file": "themes/pastel/tokens.json", "token": "theme-font-display" }
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] h1"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] [data-kp-surface] h1"
+                },
+                {
+                    "file": "themes/pastel/tokens.json",
+                    "token": "theme-font-display"
+                }
             ]
         },
         {
@@ -202,55 +333,98 @@
             "description": "Instrument Sans; buttons at 0.92rem and 600, labels in the ink at 600.",
             "example": "text-body",
             "proof": [
-                { "file": "themes/pastel/tokens.json", "token": "theme-font-body" },
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-field__label" }
+                {
+                    "file": "themes/pastel/tokens.json",
+                    "token": "theme-font-body"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] .kp-field__label"
+                }
             ]
         },
         {
-            "role": "Mono tick",
-            "font": "theme-font-mono",
+            "role": "Microlabel",
+            "font": "theme-font-body",
             "case": "uppercase",
             "tracking": "0.22em on a microlabel, 0.12em on the stamp",
-            "description": "The system mono for the small print: microlabels in plum capitals, the stamp, the brand tag, the language link, identifiers and the platforms.",
+            "description": "One face (G17): the microlabel keeps its spaced plum capitals in Instrument Sans at 600; the system mono is for identifiers, timestamps and log lines only.",
             "example": "mono",
             "proof": [
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .microlabel" },
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-id" }
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] .microlabel"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] .kp-id"
+                }
             ]
         }
     ],
     "shape": {
         "radius": {
-            "description": "1rem by token; the register goes further: cards 1.2rem, panels 1.1rem, buttons 0.85rem, fields 0.65rem, badges 0.5rem, and the progress bar and the band are pills.",
+            "description": "Two radii and the pill (G6): plates (cards, panels, dialogs, menus, toasts) 1.2rem, controls (buttons, fields) 0.85rem, and chips, tags, the tooltip and the bars are pills; what is round is round (a day, a dot, a pearl).",
             "example": "badges",
             "proof": [
-                { "file": "themes/pastel/tokens.json", "token": "radius" },
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-button" },
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-progressbar" }
+                {
+                    "file": "themes/pastel/tokens.json",
+                    "token": "radius"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] .kp-button"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] .kp-progressbar"
+                }
             ]
         },
         "borders": {
             "description": "Hairlines of --border on cards, tables and the navbar; the stronger boundary on fields, ghost buttons and every floating panel; dashed for an empty state and a read-only field.",
             "example": "card",
             "proof": [
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-dialog" },
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-field__input[readonly]" }
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] .kp-dialog"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] .kp-field__input[readonly]"
+                }
             ]
         },
         "shadows": {
-            "description": "Two kinds, never mixed up: the sticker's hard offset (0 3px 0, plum mixed 45 % with black, no blur) on buttons and back to top, and a soft plum-hued drop under floating panels (0 24px 48px at 25 %).",
+            "description": "No blur anywhere (G7): a plate's shadow is its flat sky pass 6 px off register, a control's its flat plum peel 3 px straight down (5 px when lifted, 0 when pressed).",
             "example": "buttons",
             "proof": [
-                { "file": "css/pastel-register.css", "property": "--kp-pastel-peel" },
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-popover" }
+                {
+                    "file": "css/pastel-register.css",
+                    "property": "--kp-sig-pa-peel"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "property": "--kp-sig-pa-pass-c"
+                }
             ]
         },
         "signature": {
-            "description": "The sticker: a control sits on the page with a flat shadow beside it, and the current side navigation row is peeled down at -1.4deg. The hero's bottom corners round off by 2.5rem.",
+            "description": "Printed twice, stuck on: the sky pass beside every plate, the thumbtack at the top centre of a part fixed to the page, washi tape across the top-start corner of a stuck panel, the fold a corner curls into. The hero's bottom corners round off by 2.5rem.",
             "example": "buttons",
             "proof": [
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-sidenav__link[aria-current='page']" },
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-to-top" }
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] .kp-sidenav__link[aria-current='page']"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] .kp-to-top"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "keyframes": "kp-sig-pastel-tack-in"
+                }
             ]
         }
     },
@@ -261,8 +435,14 @@
             "ink": "surface-hero-fg",
             "description": "The same milk as the page, with its bottom corners rounded off, one column, the overprinted headline.",
             "proof": [
-                { "file": "themes/pastel/tokens.json", "token": "surface-hero-bg" },
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] [data-kp-surface='hero']" }
+                {
+                    "file": "themes/pastel/tokens.json",
+                    "token": "surface-hero-bg"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] [data-kp-surface='hero']"
+                }
             ]
         },
         {
@@ -271,8 +451,14 @@
             "ink": "foreground",
             "description": "Milk with white cards on it, and a halftone raster of six-pixel dots at 5 % over the whole page.",
             "proof": [
-                { "file": "themes/pastel/tokens.json", "token": "card" },
-                { "file": "css/pastel-register.css", "property": "--fx-texture-opacity" }
+                {
+                    "file": "themes/pastel/tokens.json",
+                    "token": "card"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "property": "--fx-texture-opacity"
+                }
             ]
         },
         {
@@ -281,107 +467,182 @@
             "ink": "foreground",
             "description": "A slightly deeper lavender under a hairline, spaced capital headings in the muted ink.",
             "proof": [
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-footer" },
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-footer h4" }
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] .kp-footer"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] .kp-footer h4"
+                }
             ]
         }
     ],
     "motion": {
         "flicker": {
             "allowed": false,
-            "reason": "Soft is the point: nothing here loops or opposes its own direction, and the spring is the only drama.",
+            "reason": "Soft is the point: nothing flickers; the loops (the caterpillar's hump, its round trip) go there and back in 1200 ms or longer, and the landing's one overshoot is the only drama.",
             "proof": [
-                { "file": "css/pastel-register.css", "keyframes": "kp-registration" },
-                { "file": "themes/pastel/tokens.json", "token": "fx-ease" }
+                {
+                    "file": "css/pastel-register.css",
+                    "keyframes": "kp-registration"
+                },
+                {
+                    "file": "themes/pastel/tokens.json",
+                    "token": "fx-ease"
+                }
             ]
         },
         "verbs": {
             "enter": {
-                "description": "A plate fills in behind a marked word: the mint plate grows from the left with the overshoot, and the second phrase fills violet after it.",
-                "duration": "420ms per plate, 150ms apart, after 300ms",
-                "easing": "--fx-ease, cubic-bezier(0.34, 1.56, 0.64, 1)",
-                "reducedMotion": "The plates stand full.",
+                "description": "Printed twice, stuck on: the sky pass springs from a wide misregistration into its rest 6 px off register, and 120 ms later the part swings down onto it from its top-start corner; a group comes in reading order 60 ms apart. A marked word's mint plate still fills in behind it.",
+                "duration": "560ms one landing (the pass 440 from 0, the part 440 from 120); a dialog's CSS entrance 840ms, played by js/motion.js in 560",
+                "easing": "--fx-ease, the soft landing linear(): 8 % past its rest at 75 % of the time, settled once",
+                "reducedMotion": "Every part stands stuck on with its pass beside it.",
                 "open": false,
-                "note": "The dialog declares a transition (opacity, transform, 180ms) but nothing changes either when it opens, so it has no visible entrance; see the recipe.",
-                "demo": { "kind": "reveal", "example": "lede" },
+                "demo": {
+                    "kind": "reveal",
+                    "example": "lede"
+                },
                 "proof": [
-                    { "file": "css/pastel-register.css", "keyframes": "kp-fill" },
-                    { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] mark.is-cleared" },
-                    { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-dialog" }
+                    {
+                        "file": "css/pastel-register.css",
+                        "keyframes": "kp-sig-pastel-stuck-in"
+                    },
+                    {
+                        "file": "css/pastel-register.css",
+                        "keyframes": "kp-sig-pastel-pass-in"
+                    },
+                    {
+                        "file": "css/pastel-register.css",
+                        "keyframes": "kp-fill"
+                    }
                 ]
             },
             "leave": {
-                "description": "A redaction lifts: the ink plate over each phrase fades while it narrows back toward the phrase's start, 90ms apart; the word appears only where the plate has gone.",
-                "duration": "220ms fade and 380ms narrowing per phrase, 90ms apart",
-                "easing": "ease for the fade, --fx-ease for the narrowing",
-                "reducedMotion": "The words stand plain.",
+                "description": "The landing backwards: the part peels off at its top-start corner, then its pass slides off register; a part fixed to the page has its thumbtack pulled out first. A redaction still lifts as before.",
+                "duration": "560ms; 360ms more for the thumbtack",
+                "easing": "--fx-ease played in reverse",
+                "reducedMotion": "It is gone at once.",
                 "open": false,
-                "note": "No component leaves with motion; see the recipe.",
-                "demo": { "kind": "reveal", "example": "dossier" },
+                "demo": {
+                    "kind": "reveal",
+                    "example": "dossier"
+                },
                 "proof": [
-                    { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-card[data-kp-reveal='emphasis'] mark" },
                     {
                         "file": "css/pastel-register.css",
-                        "selector": "[data-theme='pastel'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark.is-cleared"
+                        "keyframes": "kp-sig-pastel-stuck-out"
                     },
-                    { "file": "css/pastel-register.css", "property": "--kp-redact-stagger" }
+                    {
+                        "file": "css/pastel-register.css",
+                        "keyframes": "kp-sig-pastel-tack-out"
+                    },
+                    {
+                        "file": "css/pastel-register.css",
+                        "selector": "[data-theme='pastel'] .kp-card[data-kp-reveal='emphasis'] mark"
+                    }
                 ]
             },
             "press": {
-                "description": "Pressed flat: the sticker sinks 3px, straightens and loses its shadow; a primary or destructive fill steps to its pressed token; an icon button settles to 98 %.",
+                "description": "Stuck down flat: the sticker drops 3px onto its peel, which goes to nothing, and its folded corner lies flat; it never shrinks or turns.",
                 "duration": "220ms (--fx-duration)",
                 "easing": "--fx-ease",
-                "reducedMotion": "The button sinks flat at once; the icon button does not scale.",
+                "reducedMotion": "It is flat at once.",
                 "open": false,
-                "demo": { "kind": "press", "example": "buttons" },
+                "demo": {
+                    "kind": "press",
+                    "example": "buttons"
+                },
                 "proof": [
-                    { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-button:active:not(:disabled)" },
-                    { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-icon-button:active:not(:disabled)" },
-                    { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-button--primary:active:not(:disabled)" }
+                    {
+                        "file": "css/pastel-register.css",
+                        "selector": "[data-theme='pastel'] :is(.kp-button, a.kp-kpi, .kp-kpi--toggle):active:not(:disabled, [aria-disabled='true'])"
+                    },
+                    {
+                        "file": "css/pastel-register.css",
+                        "selector": "[data-theme='pastel'] .kp-icon-button:active:not(:disabled)"
+                    },
+                    {
+                        "file": "css/pastel-register.css",
+                        "selector": "[data-theme='pastel'] .kp-button--primary:active:not(:disabled)"
+                    }
                 ]
             },
             "hover": {
-                "description": "The sticker lifts: up 2px and askew by -1.2deg, its hard shadow growing to 5px with a soft drop under it, overshooting into place.",
+                "description": "The corner peels: the sticker lifts 2px on its peel (3 to 5px, still flat) and its top-end corner curls into a small fold of its back; the words stay upright.",
                 "duration": "220ms (--fx-duration)",
                 "easing": "--fx-ease",
-                "reducedMotion": "No lift and no tilt, because the lift itself sits inside the motion guard; only the fill colour changes.",
+                "reducedMotion": "The lift and the fold are there at once.",
                 "open": false,
-                "demo": { "kind": "hover", "example": "buttons" },
+                "demo": {
+                    "kind": "hover",
+                    "example": "buttons"
+                },
                 "proof": [
-                    { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-button:hover:not(:disabled)" },
-                    { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-button--primary:hover" }
+                    {
+                        "file": "css/pastel-register.css",
+                        "selector": "[data-theme='pastel'] :is(.kp-button, a.kp-kpi, .kp-kpi--toggle):hover:not(:disabled, [aria-disabled='true'])"
+                    },
+                    {
+                        "file": "css/pastel-register.css",
+                        "selector": "[data-theme='pastel'] .kp-button--primary:hover"
+                    }
                 ]
             },
             "load": {
-                "description": "The second pass springs into register: the headline's duplicate flies in from a wide misregistration to its 2px rest offset, once; a section rule grows left to right when it enters the view.",
-                "duration": "650ms overprint; 500ms rule",
+                "description": "Everything that waits becomes the pom-pom caterpillar: a skeleton line, the busy bar and a loading meter become a row of mint pom-poms with a plum head; the days of a month its body with legs; a waiting panel gets a head on its corner and stepping legs; the spinner is the caterpillar going round a day sticker. The headline's second pass still springs into its 2px rest once.",
+                "duration": "1200ms hump, 2400ms round; 440ms overprint",
                 "easing": "--fx-ease",
-                "reducedMotion": "The duplicate rests at its 2px offset and the rule stands drawn.",
+                "reducedMotion": "The caterpillar stands still on its part; the duplicate rests at its 2px offset.",
                 "open": false,
-                "demo": { "kind": "reveal", "example": "hero-headline" },
+                "demo": {
+                    "kind": "reveal",
+                    "example": "hero-headline"
+                },
                 "proof": [
-                    { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] [data-kp-reveal='headline'].is-registering::before" },
-                    { "file": "css/pastel-register.css", "keyframes": "kp-registration" },
-                    { "file": "css/pastel-register.css", "keyframes": "kp-draw" }
+                    {
+                        "file": "css/pastel-register.css",
+                        "keyframes": "kp-sig-pastel-bug-rise-bead"
+                    },
+                    {
+                        "file": "css/pastel-register.css",
+                        "keyframes": "kp-sig-pastel-curl-orbit"
+                    },
+                    {
+                        "file": "css/pastel-register.css",
+                        "keyframes": "kp-registration"
+                    }
                 ]
             },
             "attention": {
-                "description": "A sticker slapped on a risograph sheet. The milk plate fades in; the paper panel lands the way a hovered sticker lifts, from 6px up and -1.2deg askew to rest, overshooting; the mint plate fills in behind the code line; the headline's second pass springs from a wide misregistration into its 2px rest. Nothing loops or flickers.",
-                "duration": "--fx-duration plate; 420ms landing; 420ms fill after 300ms; 650ms overprint after 200ms",
-                "easing": "--fx-ease, cubic-bezier(0.34, 1.56, 0.64, 1); plain ease for the fades",
-                "reducedMotion": "The landed panel, the full mint plate and the overprint at rest 2px off register, at once.",
+                "description": "The alarm is stuck on as every part is: its milk plate and pearl seams come on the pass's clock, the paper panel's sky pass springs into its rest and the panel swings down onto it from its top-start corner; the close is that backwards. Nothing loops or flickers.",
+                "duration": "560ms (its 840ms CSS entrance played by js/motion.js in 560)",
+                "easing": "--fx-ease, the soft landing",
+                "reducedMotion": "The panel stands stuck on with its pass, at once.",
                 "open": false,
-                "note": "The alarm's colours keep their roles: the milk ground, plum pearls on the seams, a paper panel with the boundary frame and the soft plum drop, the danger red headline, plum ink, a plum sticker button.",
-                "demo": { "kind": "restamp", "example": "alarm" },
+                "note": "The alarm's colours keep their roles: the milk ground, plum pearls on the seams, a paper panel with the boundary frame and its sky pass, the danger red headline, plum ink, a plum sticker button.",
+                "demo": {
+                    "kind": "restamp",
+                    "example": "alarm"
+                },
                 "proof": [
-                    { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-alarm" },
                     {
                         "file": "css/pastel-register.css",
-                        "selector": "[data-theme='pastel'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) .kp-alarm__panel"
+                        "selector": "[data-theme='pastel'] .kp-alarm"
                     },
-                    { "file": "css/pastel-register.css", "keyframes": "kp-registration" },
-                    { "file": "css/pastel-register.css", "keyframes": "kp-fill" },
-                    { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-alarm__bars::before" }
+                    {
+                        "file": "css/pastel-register.css",
+                        "selector": "[data-theme='pastel'] .kp-alarm__panel"
+                    },
+                    {
+                        "file": "css/pastel-register.css",
+                        "keyframes": "kp-sig-pastel-pass-host-in"
+                    },
+                    {
+                        "file": "css/pastel-register.css",
+                        "selector": "[data-theme='pastel'] .kp-alarm__bars::before"
+                    }
                 ]
             }
         }
@@ -393,8 +654,14 @@
             "description": "Round beads on a 2px thread, spread so no bead is ever cut; plum on the plain divider, mint ink on the alt one, so the two seams read as two sheets.",
             "example": "divider",
             "proof": [
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] [data-kp-divider]" },
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] [data-kp-divider='alt']" }
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] [data-kp-divider]"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] [data-kp-divider='alt']"
+                }
             ]
         },
         {
@@ -402,23 +669,43 @@
             "where": "The headline marked [data-kp-reveal='headline'], and nowhere else.",
             "description": "A sky-blue duplicate of the words at 55 %, multiplied, 2px down and right.",
             "example": "hero-headline",
-            "proof": [{ "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] [data-kp-reveal='headline']::before" }]
+            "proof": [
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] [data-kp-reveal='headline']::before"
+                }
+            ]
         },
         {
             "name": "The sticker",
-            "where": "Buttons, back to top, the current side navigation row.",
-            "description": "A hard, unblurred offset in plum mixed with black, beside the control rather than under it.",
+            "where": "Buttons, a key figure that acts, back to top, the current side navigation row.",
+            "description": "A hard, unblurred plum peel straight down under the control; under the pointer its corner curls into a fold.",
             "example": "buttons",
-            "proof": [{ "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-button:focus-visible" }]
+            "proof": [
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] .kp-button"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "property": "--kp-sig-pa-peel"
+                }
+            ]
         },
         {
             "name": "The stamp",
             "where": "A card with a label; on the dossier, it swaps its word when opened.",
-            "description": "A darkened mint plate with black mono capitals, rotated -3deg, 0.4rem round.",
+            "description": "A darkened mint plate with black spaced capitals in the body face, rotated -3deg, 0.4rem round.",
             "example": "dossier",
             "proof": [
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-card[data-kp-label]::before" },
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-card[data-kp-open][data-kp-label-open]::before" }
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] .kp-card[data-kp-label]::before"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] .kp-card[data-kp-open][data-kp-label-open]::before"
+                }
             ]
         },
         {
@@ -426,14 +713,24 @@
             "where": "[data-kp-surface='hero']",
             "description": "The hero's bottom corners clip round by 2.5rem, so the opening surface reads as a sheet laid over the page.",
             "example": "surface-hero",
-            "proof": [{ "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] [data-kp-surface='hero']" }]
+            "proof": [
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] [data-kp-surface='hero']"
+                }
+            ]
         },
         {
             "name": "The pill band",
             "where": ".kp-marquee",
             "description": "A rounded pill on the card colour, inset from the page edges.",
             "example": "marquee",
-            "proof": [{ "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-marquee" }]
+            "proof": [
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] .kp-marquee"
+                }
+            ]
         },
         {
             "name": "Halftone",
@@ -441,15 +738,45 @@
             "description": "Six-pixel dots in the boundary ink at 5 %, where the theme once had noise.",
             "example": null,
             "proof": [
-                { "file": "css/pastel-register.css", "property": "--fx-texture" },
-                { "file": "css/pastel-register.css", "property": "--fx-texture-size" }
+                {
+                    "file": "css/pastel-register.css",
+                    "property": "--fx-texture"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "property": "--fx-texture-size"
+                }
+            ]
+        },
+        {
+            "name": "The thumbtack",
+            "where": "A card, a key figure, a tile: what is fixed to the page.",
+            "description": "A round plum head with its rim and a glint at the top centre, its flat shadow in the second ink; pushed in after the part lands, pulled out first when it leaves.",
+            "example": "card",
+            "proof": [
+                {
+                    "file": "css/pastel-register.css",
+                    "keyframes": "kp-sig-pastel-tack-in"
+                }
+            ]
+        },
+        {
+            "name": "Washi tape",
+            "where": "The dialog, the drawer, the palette, the wizard, the spec sheet: a panel stuck to the page.",
+            "description": "One striped mint strip across the top-start corner, turned -14deg.",
+            "example": "card",
+            "proof": [
+                {
+                    "file": "css/pastel-register.css",
+                    "property": "--kp-sig-pa-tape-bg"
+                }
             ]
         }
     ],
     "voice": {
-        "case": "Sentence case everywhere; spaced mono capitals only for the microlabel, the brand tag, the stamp and footer headings.",
+        "case": "Sentence case everywhere; spaced capitals only for the microlabel and the stamp.",
         "labels": [
-            "A microlabel is a plum mono tick in spaced capitals.",
+            "A microlabel is a plum tick in spaced capitals, in the body face.",
             "A field label is the ink at weight 600, with no prefix.",
             "A dropdown link carries a small ' ▾'.",
             "The stamp swaps its word when the file is opened (the consumer's label and label-open)."
@@ -464,94 +791,203 @@
         ],
         "example": "voice",
         "proof": [
-            { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .microlabel" },
-            { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-nav__link[aria-haspopup]::after" },
-            { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-nav__brand-tag" }
+            {
+                "file": "css/pastel-register.css",
+                "selector": "[data-theme='pastel'] .microlabel"
+            },
+            {
+                "file": "css/pastel-register.css",
+                "selector": "[data-theme='pastel'] .kp-nav__link[aria-haspopup]::after"
+            },
+            {
+                "file": "css/pastel-register.css",
+                "selector": "[data-theme='pastel'] .kp-nav__brand-tag"
+            }
         ]
     },
     "recipe": [
         {
             "situation": "Ask for attention, loudly",
             "verb": "attention",
-            "answer": "The alarm as a sticker on the milk ground: pearls on the seams, a paper panel that lands askew and overshoots into place, the danger red headline with its overprint springing into register, a mint plate filling in behind the code line, the plum sticker button; nothing flickers.",
-            "components": ["kp-alarm"],
+            "answer": "The alarm as a sticker on the milk ground: pearls on the seams, a paper panel stuck on over its sky pass, the danger red headline with its overprint, the plum sticker button; nothing flickers.",
+            "components": [
+                "kp-alarm"
+            ],
             "open": false,
             "proof": [
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-alarm" },
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-alarm__glyphs::before" }
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] .kp-alarm"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] .kp-alarm__glyphs::before"
+                }
             ]
         },
         {
             "situation": "Ask for attention, in place",
             "verb": "attention",
-            "answer": "A rounded plate: the plain alert on the muted ground with a hairline, severity toasts on white panels with the soft drop, badges 0.5rem round; the words say which severity.",
-            "components": ["kp-alert", "kp-toast", "kp-badge"],
+            "answer": "A rounded plate with its sky pass: the plain alert on the muted ground, severity toasts on their tone's plate, pill badges; the words say which severity. Each arrives stuck on and leaves as that backwards.",
+            "components": [
+                "kp-alert",
+                "kp-toast",
+                "kp-badge"
+            ],
             "open": false,
             "proof": [
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-alert:not([class*='kp-alert--'])" },
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-toast--warning" },
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-badge" }
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] .kp-alert:not([class*='kp-alert--'])"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] .kp-toast--warning"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] .kp-badge"
+                }
             ]
         },
         {
             "situation": "Act",
             "verb": "press",
-            "answer": "The sticker button: plum for the primary action, sky for the secondary; lifts askew on hover, pressed flat.",
-            "components": ["kp-button", "kp-icon-button"],
+            "answer": "The sticker button: plum for the primary action, sky for the secondary; lifts on its peel with a curled corner on hover, stuck down flat when pressed.",
+            "components": [
+                "kp-button",
+                "kp-icon-button"
+            ],
             "open": false,
             "proof": [
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-button:active:not(:disabled)" },
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-icon-button:active:not(:disabled)" }
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] :is(.kp-button, a.kp-kpi, .kp-kpi--toggle):active:not(:disabled, [aria-disabled='true'])"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] .kp-icon-button:active:not(:disabled)"
+                }
             ]
         },
         {
             "situation": "Point at something",
             "verb": "hover",
-            "answer": "The sticker lifts; a menu row fills mint; a table row takes the muted ground; a side navigation link rises 1px.",
-            "components": ["kp-button", "kp-nav", "kp-table", "kp-sidenav"],
+            "answer": "The sticker lifts and curls a corner; a menu row fills mint with a fold at its end; a table row takes the muted ground; a side navigation link rises 1px.",
+            "components": [
+                "kp-button",
+                "kp-nav",
+                "kp-table",
+                "kp-sidenav"
+            ],
             "open": false,
             "proof": [
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-nav__menu a:hover" },
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-table tbody tr:hover" },
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-sidenav__link:hover" }
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] .kp-nav__menu a:hover"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] .kp-table tbody tr:hover"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] .kp-sidenav__link:hover"
+                }
             ]
         },
         {
             "situation": "A menu opens",
             "verb": "enter",
-            "answer": "The package's fade, on a raised white card 0.8rem round with a soft plum drop.",
-            "components": ["kp-nav"],
+            "answer": "Stuck on beside its trigger: its sky pass first, then the menu swings down from the corner nearest the button, on a white plate 1.2rem round; it closes as that backwards.",
+            "components": [
+                "kp-nav"
+            ],
             "open": false,
             "proof": [
-                { "file": "css/components.css", "selector": ".kp-nav__menu" },
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-nav__menu" }
+                {
+                    "file": "css/components.css",
+                    "selector": ".kp-nav__menu"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] .kp-nav__menu"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "keyframes": "kp-sig-pastel-stuck-in"
+                }
             ]
         },
         {
             "situation": "A panel opens (dialog, popover, toast)",
             "verb": "enter",
-            "answer": "No visible entrance: the dialog's declared transition has no starting style to move from.",
-            "components": ["kp-dialog", "kp-popover", "kp-toast"],
-            "open": true,
-            "proposal": "Give the transition the register already declares a starting style: opacity 0, 8px lower and -1deg askew, springing to rest over 180ms on --fx-ease; nothing under reduced motion."
+            "answer": "Printed twice and stuck on: the dialog's backdrop is its sky pass (its border the page's dim), a popover's too; a toast draws its own pass and plate. 560ms on the soft landing.",
+            "components": [
+                "kp-dialog",
+                "kp-popover",
+                "kp-toast"
+            ],
+            "open": false,
+            "proof": [
+                {
+                    "file": "css/pastel-register.css",
+                    "keyframes": "kp-sig-pastel-stuck-in"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "keyframes": "kp-sig-pastel-stuck-plate-in"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "keyframes": "kp-sig-pastel-pass-in"
+                }
+            ]
         },
         {
             "situation": "A panel closes",
             "verb": "leave",
-            "answer": "No exit today: the panel is gone at once.",
-            "components": ["kp-dialog", "kp-popover", "kp-toast"],
-            "open": true,
-            "proposal": "The sticker peels off: opacity to 0 while it rises 4px and turns 1.2deg, over --fx-duration on --fx-ease."
+            "answer": "The opening played backwards: the part peels off at its corner, then its pass slides off register (js/motion.js keeps the opening and reverses it).",
+            "components": [
+                "kp-dialog",
+                "kp-popover",
+                "kp-toast"
+            ],
+            "open": false,
+            "proof": [
+                {
+                    "file": "css/pastel-register.css",
+                    "keyframes": "kp-sig-pastel-stuck-out"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "keyframes": "kp-sig-pastel-pass-out"
+                }
+            ]
         },
         {
             "situation": "Wait for something",
             "verb": "load",
-            "answer": "The risograph pearl string for progress, sugar-pill skeleton lines a sherbet ribbon flows through, and a spinner with a plum head [scope-140].",
-            "components": ["kp-progressbar", "kp-skeleton", "kp-spinner"],
+            "answer": "Everything that waits becomes the pom-pom caterpillar (js/loading-pieces.js adds its pom-poms, head and legs); the spinner is the caterpillar going round a day sticker; a progress bar with an amount keeps its dotted fill and sticker head [scope-141].",
+            "components": [
+                "kp-progressbar",
+                "kp-skeleton",
+                "kp-spinner"
+            ],
             "open": false,
             "proof": [
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-progressbar" },
-                { "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] .kp-spinner" }
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] .kp-progressbar"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] .kp-spinner"
+                },
+                {
+                    "file": "css/pastel-register.css",
+                    "keyframes": "kp-sig-pastel-curl-orbit"
+                }
             ]
         },
         {
@@ -559,14 +995,24 @@
             "answer": "Pearls; before the footer, the pearls in mint ink.",
             "components": [],
             "open": false,
-            "proof": [{ "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] [data-kp-divider]" }]
+            "proof": [
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] [data-kp-divider]"
+                }
+            ]
         },
         {
             "situation": "Mark what matters in a sentence",
             "answer": "A mint plate filled in behind the phrase; a second phrase in violet.",
             "components": [],
             "open": false,
-            "proof": [{ "file": "css/pastel-register.css", "selector": "[data-theme='pastel'] mark" }]
+            "proof": [
+                {
+                    "file": "css/pastel-register.css",
+                    "selector": "[data-theme='pastel'] mark"
+                }
+            ]
         }
     ],
     "banner": {

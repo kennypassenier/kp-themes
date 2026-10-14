@@ -132,6 +132,10 @@
             "types": "./js/progressbar.d.ts",
             "default": "./js/progressbar.js"
         },
+        "./js/loading-pieces": {
+            "types": "./js/loading-pieces.d.ts",
+            "default": "./js/loading-pieces.js"
+        },
         "./js/actions": {
             "types": "./js/actions.d.ts",
             "default": "./js/actions.js"

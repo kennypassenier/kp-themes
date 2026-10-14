@@ -105,6 +105,12 @@ export const PAGES = [
             // Kenny, 2026-10-07 04:23: what makes brutalism brutalism, the same way (the analysis in themes/brutalism/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the sixth theme of the one-by-one series, after solstice.
             // Kenny, 2026-10-07 04:23: what makes grotesk grotesk, the same way (the analysis in themes/grotesk/CHARACTER.md), nineteen rules of its grammar as questions, each option a live scene, the recommendation first; the seventh theme of the one-by-one series, after brutalism. Questions 9 to 12 are the grotesk-only loading demo Kenny asked for on 2026-10-06 21:37, from the graph's Out of register.
             // Kenny, 2026-10-12: "Cyberpunk lijkt af, zie dat dezelfde fouten nu niet terugkomen in andere thema's": every other theme mended so a close is its open backwards with the theme's own effect; only what changed, each block in the themes where it did (research/all-themes).
+            // 2026-10-14: pastel's approved grammar (research/pastel-character/decided.json) ported to the package, the forest and cyberpunk way: every component in pastel as an app gets it, to approve block by block (audit in research/pastel-applied/_audit/MISSING.md).
+            {
+                href: 'research/pastel-applied/demo.html',
+                label: 'Pastel, as applied',
+                about: 'Every pastel component as the package now draws it: printed twice and stuck on, the thumbtack, the corner that peels, the dashed focus line and the pom-pom caterpillar for everything that waits.',
+            },
         ],
     },
     {
@@ -130,7 +136,8 @@ export const PAGES = [
                 href: 'research/sidenav-edge/demo.html',
                 label: "The side navigation at the window's edge",
                 about: "The side navigation slides out of the window's edge behind a fixed menu button, three ways (push the page, keep room for it, or cover it), plus its icon rail.",
-                affects: "block 2 of 'Every theme: closes as opens' (the side navigation) takes its defaults from here, so it is redrawn and asked again.",
+                affects:
+                    "block 2 of 'Every theme: closes as opens' (the side navigation) takes its defaults from here, so it is redrawn and asked again.",
             },
             // Decided 2026-10-13 00:19: Kenny approved all twenty cyberpunk components in the applied demo (research/cyberpunk-applied; audit in _audit/MISSING.md).
             { href: 'research/cyberpunk-applied/demo.html', label: 'Cyberpunk, as applied' },

@@ -1756,6 +1756,8 @@ export const DESCRIPTORS = [
         title: 'Spinner',
         group: 'Feedback',
         classes: ['kp-spinner'],
+        // `data-kp-pieces` marks a waiting part while a theme's loading pieces are in it (js/loading-pieces.js).
+        aliases: ['pieces'],
         exports: ['Spinner'],
         intro: 'A small ring that turns while something is happening whose end is not known. It stops turning for a reader who asked for less motion, and it says what it is in words.',
         whenToUse:
@@ -1780,6 +1782,10 @@ export const DESCRIPTORS = [
             { name: '.kp-spinner', what: 'The one size, set by a measure so a consumer can make it smaller inside a button.' },
             { name: 'reduced motion', what: 'The animation is inside the reduced-motion guard: for a reader who asked for stillness the ring is simply drawn, not turning.' },
             { name: 'decorative', what: 'Beside a label that already says what is happening, the ring is marked hidden so the wait is not announced twice.' },
+            {
+                name: '[data-kp-pieces]',
+                what: 'On a spinner, a skeleton, a busy bar, a loading day or a waiting panel while a theme draws its loading picture from pieces of its own (pastel’s pom-pom caterpillar): js/loading-pieces.js adds them, hidden from screen readers, and takes them away when the wait ends.',
+            },
         ],
         accessibility: [
             'Built in — the animation only runs where motion is welcome, which is DI7 and not a preference honoured where convenient.',

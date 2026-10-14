@@ -545,7 +545,8 @@ function closePopoverWithGhost(event) {
     // same way, goes where the layout box is, centred in the drawn one (at the corner it sat 2 px off).
     // A panel that is not turned keeps the drawn box as it is.
     const matrix = sized.transform === 'none' ? null : new DOMMatrixReadOnly(sized.transform);
-    const isTurned = (matrix !== null && (Math.abs(matrix.b) > 1e-3 || Math.abs(matrix.c) > 1e-3)) || (sized.rotate !== 'none' && sized.rotate !== '0deg');
+    const isTurned =
+        (matrix !== null && (Math.abs(matrix.b) > 1e-3 || Math.abs(matrix.c) > 1e-3)) || (sized.rotate !== 'none' && sized.rotate !== '0deg');
     const turned =
         isTurned && el instanceof HTMLElement ? { x: (box.width - el.offsetWidth) / 2, y: (box.height - el.offsetHeight) / 2 } : { x: 0, y: 0 };
     const ghost = /** @type {HTMLElement} */ (el.cloneNode(true));
@@ -617,6 +618,15 @@ if (typeof document !== 'undefined') document.addEventListener('beforetoggle', c
  * @param {string} ease
  */
 export function withoutOvershoot(ease) {
+    // A `linear()` list (pastel's landing since scope-141) is held the same
+    // way, output by output; a list with nothing past 0 or 1 (forest's,
+    // phantom's) is returned exactly as it came.
+    const list = /^linear\((.*)\)$/.exec(ease.trim());
+    if (list) {
+        const stops = list[1].split(',').map((stop) => stop.trim().split(/\s+/));
+        if (stops.every(([y]) => Number(y) >= 0 && Number(y) <= 1)) return ease;
+        return `linear(${stops.map(([y, ...at]) => [String(Math.min(1, Math.max(0, Number(y)))), ...at].join(' ')).join(', ')})`;
+    }
     const m = /^cubic-bezier\(\s*([^,]+),\s*([^,]+),\s*([^,]+),\s*([^)]+)\)$/.exec(ease.trim());
     if (!m) return ease;
     const [x1, y1, x2, y2] = m.slice(1).map(Number);
