@@ -11,7 +11,7 @@
 // Run: node --test gates/menu-button.test.mjs
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { menuKeyTarget, menuPlacement, menuSignature } from '../js/menu-button.js';
+import { MENU_COUNT_PROPERTY, menuKeyTarget, menuLineCount, menuPlacement, menuSignature } from '../js/menu-button.js';
 
 /** @type {import('../js/menu-button.js').MenuGroup[]} */
 const MENU = [
@@ -114,4 +114,14 @@ test('an open menu lies whole on the screen: its other edge, over the button, or
     assert.deepEqual([tall.side, tall.height, tall.top], ['below', 792 - 440, 440]);
     const tallLow = at(300, 600, 280, 600);
     assert.deepEqual([tallLow.side, tallLow.height, tallLow.top], ['above', 600 - 4 - 108, 108]);
+});
+
+test('a menu has as many lines as it has children, which is what a register counting with :has(> :nth-child(k)) counts', () => {
+    assert.equal(MENU_COUNT_PROPERTY, '--kp-menu-count');
+    assert.equal(menuLineCount({ children: { length: 0 } }), 0);
+    assert.equal(menuLineCount({ children: { length: 1 } }), 1);
+    // A menu setMenu() filled: its groups, however many entries each holds.
+    assert.equal(menuLineCount({ children: { length: 3 } }), 3);
+    // Past the eight a register that counts with :has() stops at.
+    assert.equal(menuLineCount({ children: { length: 12 } }), 12);
 });

@@ -51,6 +51,39 @@ export const MENU_CLOSE_EVENT = 'kp-menu-close';
 /** Fired on the wrapper, bubbling, when an entry was picked: `{ item, value }`. Cancelable: preventing it keeps the menu open. */
 export const MENU_SELECT_EVENT = 'kp-menu-select';
 
+/**
+ * The custom property written on a menu: how many lines it has to rule
+ * (menuLineCount()). A register that opens a menu line by line reads it to
+ * give the opening no dead time at its end; CSS alone cannot count children.
+ */
+export const MENU_COUNT_PROPERTY = '--kp-menu-count';
+
+/**
+ * How many lines a menu has: its children. In a menu `setMenu()` filled they
+ * are its groups (a nameless group is one line, a named one is its heading
+ * and entries); in a menu written by hand they are its entries, which is
+ * what a register counting with `:has(> :nth-child(k))` counts too. Pure.
+ * @param {{ children: { length: number } }} menu
+ * @returns {number}
+ */
+export function menuLineCount(menu) {
+    return menu.children.length;
+}
+
+/**
+ * Write menuLineCount() on a menu, and on the popover it stands in (the
+ * element a register clips and rules), when it changed.
+ * @param {HTMLElement} menu
+ */
+function countMenu(menu) {
+    const next = String(menuLineCount(menu));
+    /** @type {HTMLElement[]} */
+    const hosts = [menu];
+    const popover = menu.parentElement;
+    if (popover?.matches('.kp-popover[popover]')) hosts.push(popover);
+    for (const host of hosts) if (host.style.getPropertyValue(MENU_COUNT_PROPERTY) !== next) host.style.setProperty(MENU_COUNT_PROPERTY, next);
+}
+
 /** @typedef {import('./strings.js').Strings} Strings */
 
 /**
@@ -258,6 +291,7 @@ function drawMenu(s, groups) {
         entry.dataset.kpLoading = '';
         s.menu.replaceChildren(entry);
         s.menu.setAttribute('aria-busy', 'true');
+        countMenu(s.menu);
         setEmpty(s, false, strings);
         return;
     }
@@ -287,6 +321,7 @@ function drawMenu(s, groups) {
         blocks.push(block);
     }
     s.menu.replaceChildren(...blocks);
+    countMenu(s.menu);
     setEmpty(s, total === 0, strings);
 }
 
@@ -580,6 +615,8 @@ export function openMenu(wrapper, { focus = 'first' } = {}) {
     const doc = s.menu.ownerDocument;
     const view = doc.defaultView;
     s.open = true;
+    // A line a page added by hand since it was wired is counted too.
+    countMenu(s.menu);
     // Still closing: it turns round where it stands.
     const closing = !s.menu.hidden;
     stopClose(s.menu);
@@ -720,6 +757,7 @@ function wireMenu(wrapper, { decorate, strings }) {
         item.tabIndex = -1;
         decorateItem(s, item, index);
     });
+    countMenu(menu);
     return s;
 }
 
@@ -828,5 +866,8 @@ export function attachMenuButtons(root = document, { decorate, strings } = {}) {
             menus.delete(wrapper);
         });
     }
+    // A popover with a menu in it has no wrapper to wire, but a register that
+    // rules its lines needs the same count.
+    for (const menu of /** @type {HTMLElement[]} */ ([...root.querySelectorAll('.kp-popover[popover] > .kp-menu')])) countMenu(menu);
     return () => undo.splice(0).forEach((off) => off());
 }

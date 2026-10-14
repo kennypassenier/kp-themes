@@ -52,6 +52,18 @@ test('the theme’s time is max(size, close) × 1.25 on its curve without oversh
     assert.equal(updatePlays(''), false, 'a register without an idea');
 });
 
+test('a register that knows its own update time says it with --kp-update-time, and it wins when set', () => {
+    const motion = { size: 400, close: 740, ease: 'linear' };
+    assert.equal(updateTimingOf(motion).duration, 925, 'unset: the dialog’s time × 1.25, as before');
+    assert.equal(updateTimingOf({ ...motion, time: null }).duration, 925, 'null is unset');
+    assert.equal(updateTimingOf({ ...motion, time: 850 }).duration, 850, 'set: the register’s time');
+    assert.equal(updateTimingOf({ ...motion, time: 0 }).duration, 0, 'a register may say no time');
+    assert.equal(updateTimingOf({ ...motion, time: 850 }).ease, 'linear', 'the curve is still the theme’s');
+    assert.equal(updateTimingOf({ ...motion, time: -5 }).duration, 925, 'a negative time is none');
+    assert.equal(updateTimingOf({ ...motion, time: Number.NaN }).duration, 925, 'so is one that is no number');
+    assert.equal(updateTimingOf({ size: 0, close: 0, ease: 'linear' }).duration, 0, 'reduced motion with no register time: nothing');
+});
+
 test('the mark goes on after the timing with no reflow of its own, and comes off leaving the element as it was', () => {
     const el = standIn({ display: 'inline-block' });
     const before = markUpdating(/** @type {any} */ (el), 'stamp', { duration: 300, ease: 'ease' }, { inline: false });

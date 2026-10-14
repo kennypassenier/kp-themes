@@ -6,6 +6,25 @@ export declare const MENU_OPEN_EVENT = "kp-menu-open";
 export declare const MENU_CLOSE_EVENT = "kp-menu-close";
 /** Fired on the wrapper, bubbling, when an entry was picked: `{ item, value }`. Cancelable: preventing it keeps the menu open. */
 export declare const MENU_SELECT_EVENT = "kp-menu-select";
+/**
+ * The custom property written on a menu: how many lines it has to rule
+ * (menuLineCount()). A register that opens a menu line by line reads it to
+ * give the opening no dead time at its end; CSS alone cannot count children.
+ */
+export declare const MENU_COUNT_PROPERTY = "--kp-menu-count";
+/**
+ * How many lines a menu has: its children. In a menu `setMenu()` filled they
+ * are its groups (a nameless group is one line, a named one is its heading
+ * and entries); in a menu written by hand they are its entries, which is
+ * what a register counting with `:has(> :nth-child(k))` counts too. Pure.
+ * @param {{ children: { length: number } }} menu
+ * @returns {number}
+ */
+export declare function menuLineCount(menu: {
+    children: {
+        length: number;
+    };
+}): number;
 export type Strings = import('./strings.js').Strings;
 export type MenuItem = {
     /**

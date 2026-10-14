@@ -2,6 +2,39 @@
 
 ## Unreleased
 
+- **Fixed: a dialog, a drawer or an arriving part whose register animates a custom property is replayed whole** [Kenny's go for 10.1.0;
+  formal's package finding 1]. `rememberEntrance()`, `arriveAsReversedLeave()` and the leave of an entrance part replayed
+  `effect.getKeyframes()` with `Element.animate()`, and Chromium leaves the keyframes of a custom property out of `getKeyframes()`, so a
+  `--x` the register animated played nothing when the entrance was turned round (the dialog stood still for its whole close). js/motion.js
+  now keeps a copy of the effect (`new KeyframeEffect(effect)`, which carries every keyframe, the custom properties included, and the
+  pseudo-element) and plays that. Measured on a dialog ruled by a registered `--t` over 740 ms, 21 frames of the open and the close: Chromium
+  stood at 1.00 before and now runs 0.00 to 1.00 and back; Firefox is frame for frame the same before and after. The open/close pair meter
+  on formal, dark, cyberpunk and forest (Firefox) reads the same animations, durations and worst-frame differences before and after.
+- **Added: `--kp-lines: keep`, a part is played line by line** [Kenny's go for 10.1.0; formal's package finding 2]. A register that rules a part
+  frame first and then its lines (each with its own wait) says `--kp-lines: keep`. Then (a) a dialog's close and open play every kept
+  entrance with its own time and wait, the whole turned round and scaled to the theme's close time (`turnLines()`: the line that came in last
+  goes first; frame t of the open is frame close - t of the close), instead of every entrance in one duration with no wait; (b) an exit, and
+  an arrival as the leave played backwards, read every line inside the part that ends (`exitsOf()`: the part's own animations and those of its
+  lines, each on its own element with its own delay), so a part is gone only when its last line is, and its arrival is the same timeline
+  backwards. The shade behind a dialog (`::backdrop`) is no line: it takes the whole time as before. A line that never ends
+  (a spinner, a caret) is left alone. Only formal says it (below); every other theme plays as before. Proof on a synthetic card with three lines waiting 100, 200 and 300 ms: with the token its arrival frames are its leave frames reversed (21 of 21, both
+  engines) and it leaves after 627 ms (Chromium 597), without it after 413 ms with the lines cut, as before.
+- **Formal's tour card takes its lines' waits round with it** [scope-143]. The tour closes through `playEntranceBackwards()`, a CSS reversal in
+  which a reversed animation waits its delay first, so the card's ruled lines (waiting 0, 60, 120 ms) closed 7.8 % off their opening's mirror.
+  Formal's register now gives each line and pen of the card, in `[data-kp-reversing='play']`, the delay that mirrors it (the 740 ms span minus
+  the line's end: 340, 280, 220 ms and 180, 120, 60 ms for the pens, 180 ms for the top edge); the pair meter reads 1.0 % again, as before.
+- **Added: `--kp-update-time`, a register says how long its live update lasts** [Kenny's go for 10.1.0; formal's package finding 3].
+  `updateTiming()` (js/update.js) takes the register's `--kp-update-time` when it is set (a time, read where the element stands, played as
+  fast or slow as `--kp-motion-scale`), and otherwise the dialog's close or resize time times 1.25 as before; `updateTimingOf()` takes it as
+  `time`. All sixteen themes read the same update time before and after except formal, which now says `850ms`: its update was 925 ms (the
+  dialog's 740 ms times 1.25) while the register, its character document and the approved demo (research/character-kpi) are 850 ms, so the
+  first rule now takes 400 ms (47 %) as drawn, not 435 ms. The frames are the same fractions of a shorter time.
+- **Added: `--kp-menu-count`, a register can count the lines of a menu** [Kenny's go for 10.1.0; formal's package finding 4]. js/menu-button.js
+  writes the number of lines a menu has (`menuLineCount()`: its children, the groups `setMenu()` drew or the entries of a menu written by
+  hand) on the menu when it is wired, filled and opened, and on the popover that holds a `.kp-menu` when the menu buttons are attached.
+  Formal's menu button drops seven `:has(> :nth-child(k))` rules for one (`max(1, min(var(--kp-menu-count, 1), 8))`; its ninth and later
+  lines are still ruled with the eighth); a menu of 2 groups, 1 group and 10 entries opens and closes in the same 620, 560 and 980 ms with
+  every frame identical. A popover's menu keeps its `:has()` rules, which need no script.
 - **Fixed: the plain calendar no longer scrolls sideways in a 334 px pane** [Kenny's go for 10.1.0; package findings re-check]. The grid's
   deliberate overhang (`inline-size: calc(100% + 2 * gap)`, moved by a relative `inset`) left its box 12 px (brutalism 18 px) past the
   calendar, and Firefox counts the unshifted box of a relative offset, so a pane with `overflow: auto` read `scrollWidth` 346 (352) in 334.
