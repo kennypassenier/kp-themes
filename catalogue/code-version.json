@@ -1,6 +1,6 @@
 {
     "$comment": "What a block is made of [scope-114, scope-116]: per CSS family and per component, the code that shapes it, as digests. catalogue/block-hash.js reads the families a block names, the components those belong to and the modules its markup asks the loader for, so a change asks only about the blocks it touches. Written by gates/generate-code-version.mjs.",
-    "base": "cbb9684cca740bd4",
+    "base": "585903a96b1f349b",
     "modules": {
         "js/actions.js": { "digest": "249a4411a8337e48", "when": ".kp-row-actions" },
         "js/alarm.js": { "digest": "647bf77baf844ec6", "when": "[data-kp-alarm]" },
@@ -33,7 +33,7 @@
         "js/palette.js": { "digest": "d3da386b0c1b5c72", "when": "[data-kp-palette], [data-kp-shortcuts]" },
         "js/patterns.js": { "digest": "2b6eeed7f66b345b", "when": "[data-kp-copy], [data-kp-undo-action]" },
         "js/progressbar.js": { "digest": "6d0f772e21c2b243", "when": ".kp-progressbar" },
-        "js/sidenav.js": { "digest": "a83e8295f3baee14", "when": ".kp-sidenav" },
+        "js/sidenav.js": { "digest": "f6e83db06d310f10", "when": ".kp-sidenav" },
         "js/structure.js": { "digest": "3fad53992ddcb9cd", "when": "[data-kp-tree], [data-kp-reorder], [data-kp-split]" },
         "js/tables.js": { "digest": "66d205c2f610c15a", "when": ".kp-table-wrap" },
         "js/tiles.js": { "digest": "a93919ec458ab18b", "when": "[data-kp-tiles-set]" },
@@ -4810,7 +4810,7 @@
         "terminal||||.kp-shortcuts)": "28deba96eb6790ea",
         "terminal||||.kp-shortcuts__group-label": "db14c557d6006e96",
         "terminal||||.kp-side-note": "75c399f8218a259d",
-        "terminal||||.kp-sidenav": "8ca93c1af065c262",
+        "terminal||||.kp-sidenav": "e0796d7981181a88",
         "terminal||||.kp-sidenav__category-toggle": "4351680ca8dbe86f",
         "terminal||||.kp-sidenav__link": "eb3ca0b800702793",
         "terminal||||.kp-sidenav__link[aria-current='page']": "01ed40aec6a036a2",
@@ -5292,7 +5292,7 @@
         "||@supports (appearance: base-select)||select.kp-field__input::picker(select)": "5071af99da3338af",
         "||||*)": "f851e16e32bb2719",
         "||||-visible": "89c1d09b2fceb610",
-        "||||-visible)": "aaba97ef693defa0",
+        "||||-visible)": "8132c27da1fcc01f",
         "||||.gradient-text": "f06026d7ac99a1db",
         "||||.kp-accordion__body": "badd73ac3fa8a35b",
         "||||.kp-accordion__item": "c3534b15e214c38e",
@@ -5917,6 +5917,8 @@
         "||||.kp-sidenav[data-kp-sidenav-mode='side'][data-kp-sidenav-open='false']": "da1674ad6ef293d2",
         "||||.kp-sidenav[data-kp-sidenav-open='true']": "d46190cf35b70851",
         "||||.kp-sidenav[data-kp-sidenav-position='absolute']": "d660e8a5c20e8d86",
+        "||||.kp-sidenav[data-kp-sidenav-refused]": "404a636ff460eaac",
+        "||||.kp-sidenav[data-kp-sidenav-resizing]": "70c088c7f96978d9",
         "||||.kp-sidenav[data-kp-sidenav-side='end']": "c5fd860d579fe84e",
         "||||.kp-sidenav[data-kp-sidenav-side='end']:dir(rtl)": "835847f8a705be91",
         "||||.kp-sidenav[data-kp-sidenav-slim-collapsed]": "68205f2a1db69aa6",
@@ -5938,6 +5940,7 @@
         "||||.kp-sidenav__link": "eb6f4b7940a0a54e",
         "||||.kp-sidenav__link[aria-current='page']": "4c9d3090e7b0621d",
         "||||.kp-sidenav__list": "0a9dad2744557c03",
+        "||||.kp-sidenav__resizer": "b924ac76ea2ab435",
         "||||.kp-sidenav__scroll": "627c4fc21f50a313",
         "||||.kp-sidenav__submenu": "ea9ad19fe7de7516",
         "||||.kp-sidenav__tab": "22a9184e58c97d68",
@@ -6118,6 +6121,7 @@
         "||||[data-kp-series='4']": "ed2c732baed43456",
         "||||[data-kp-series='5']": "9f2a57794efbc73d",
         "||||[data-kp-sidenav-expand-on-hover]:not([data-kp-sidenav-attached]))": "a27e7c06c5fb4014",
+        "||||[data-kp-sidenav-position='absolute'])": "502617cb416bc634",
         "||||[data-kp-sidenav-slim-hide]": "e86808b7e7c08864",
         "||||[data-kp-sidenav-slim-show]": "e86808b7e7c08864",
         "||||[data-kp-step]-visible": "c47cd2c082513102",
@@ -6436,7 +6440,7 @@
             ]
         },
         "datatable": {
-            "modules": "cd221882633bc929",
+            "modules": "972916f390e34e3a",
             "families": [
                 "data-kp-align",
                 "data-kp-arrive",
@@ -7166,7 +7170,7 @@
             ]
         },
         "navigation": {
-            "modules": "c92ffe1075b02553",
+            "modules": "ff0be2ea2f3aa4ba",
             "families": [
                 "data-kp-activation",
                 "data-kp-against",
@@ -7234,6 +7238,8 @@
                 "data-kp-sidenav-attached",
                 "data-kp-sidenav-backdrop",
                 "data-kp-sidenav-backdrop-class",
+                "data-kp-sidenav-cancelable",
+                "data-kp-sidenav-close-on-backdrop",
                 "data-kp-sidenav-close-on-esc",
                 "data-kp-sidenav-content",
                 "data-kp-sidenav-expand-on-hover",
@@ -7248,6 +7254,8 @@
                 "data-kp-sidenav-launcher-room",
                 "data-kp-sidenav-lit",
                 "data-kp-sidenav-lock-scroll",
+                "data-kp-sidenav-max-width",
+                "data-kp-sidenav-min-width",
                 "data-kp-sidenav-mode",
                 "data-kp-sidenav-narrow",
                 "data-kp-sidenav-open",
@@ -7256,8 +7264,11 @@
                 "data-kp-sidenav-peek",
                 "data-kp-sidenav-position",
                 "data-kp-sidenav-rail-tips",
+                "data-kp-sidenav-refused",
                 "data-kp-sidenav-remember",
                 "data-kp-sidenav-reserve",
+                "data-kp-sidenav-resizable",
+                "data-kp-sidenav-resizing",
                 "data-kp-sidenav-shift",
                 "data-kp-sidenav-shortcut",
                 "data-kp-sidenav-side",
@@ -7303,6 +7314,7 @@
                 "kp-remember-clash",
                 "kp-sidenav",
                 "kp-sidenav-mode",
+                "kp-sidenav-prevented",
                 "kp-sidenav-slim",
                 "kp-sidenav-toggle",
                 "kp-sr-only",
@@ -7815,7 +7827,7 @@
             ]
         },
         "structure": {
-            "modules": "9e25674196133a23",
+            "modules": "acf7dfa1b38ca3e5",
             "families": [
                 "data-kp-arrive",
                 "data-kp-arriving",

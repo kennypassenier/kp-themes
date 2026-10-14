@@ -8142,6 +8142,98 @@
         translate: -0.15rem 0;
     }
 
+    /* --- Side navigation: minor behaviour options ------------------------
+       Three opt-in additions [Kenny, 2026-10-13, from the libraries survey]:
+       the refusal a static backdrop plays, and the handle that resizes the
+       panel. Every rule hangs on an attribute that only js/sidenav.js writes
+       when the page asked for the option, so a panel without them is drawn
+       exactly as before. The look is the theme's through its own tokens:
+       the cue runs on the panel's duration and curve
+       (--kp-sidenav-duration, --kp-sidenav-ease), the handle in --ring and
+       --border-strong. */
+
+    /* The refused cue: a static backdrop was clicked and nothing closed.
+       js/sidenav.js pulls the panel toward the edge it came from and lets it
+       go (Web Animations on the panel's margin, run twice, the second time
+       backwards: the return is the exact reverse of the pull and as long),
+       on the theme's own time and curve, so a stepped theme jolts in steps.
+       It is scripted because every register owns the panel's `translate` and
+       `animation` for its opening and closing, and a CSS animation here would
+       lose to them or replace them. While it plays the panel carries
+       `data-kp-sidenav-refused`, and this ring, which stands without motion
+       too. Its knobs (travel, duration, ease) are read by the script and
+       named at `refuse` in js/sidenav.js. */
+    .kp-sidenav[data-kp-sidenav-refused] {
+        outline: 2px solid var(--ring);
+        outline-offset: -2px;
+    }
+
+    /* The resize handle: inside the panel, on the edge that faces the content,
+       so it covers none of the page. A strip to grab with a short bar to show
+       it is there; the full-height line shows on pointing, focus and while it
+       is held. It rests in the border colour and is lit in the ring colour. */
+    .kp-sidenav:where([data-kp-sidenav-resizable]):not([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'], [data-kp-sidenav-position='absolute']) {
+        position: relative;
+    }
+
+    .kp-sidenav__resizer {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-end: 0;
+        z-index: 1;
+        display: grid;
+        place-items: center;
+        inline-size: var(--kp-sidenav-resizer-size, 0.75rem);
+        cursor: col-resize;
+        touch-action: none;
+        user-select: none;
+    }
+
+    .kp-sidenav[data-kp-sidenav-side='end'] > .kp-sidenav__resizer {
+        inset-inline: 0 auto;
+    }
+
+    .kp-sidenav[data-kp-sidenav-slim-collapsed] > .kp-sidenav__resizer {
+        display: none;
+    }
+
+    .kp-sidenav__resizer::before {
+        content: '';
+        inline-size: 0.25rem;
+        block-size: 2rem;
+        border-radius: var(--radius, 0.5rem);
+        background: var(--border-strong);
+    }
+
+    .kp-sidenav__resizer::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-end: 0;
+        inline-size: 2px;
+        background: var(--ring);
+        opacity: 0;
+    }
+
+    .kp-sidenav[data-kp-sidenav-side='end'] > .kp-sidenav__resizer::after {
+        inset-inline: 0 auto;
+    }
+
+    .kp-sidenav__resizer:is(:hover, :focus-visible)::after,
+    .kp-sidenav[data-kp-sidenav-resizing] > .kp-sidenav__resizer::after {
+        opacity: 1;
+    }
+
+    .kp-sidenav__resizer:is(:hover, :focus-visible)::before,
+    .kp-sidenav[data-kp-sidenav-resizing] > .kp-sidenav__resizer::before {
+        background: var(--ring);
+    }
+
+    /* While it is held the text under the pointer is not selected. */
+    .kp-sidenav[data-kp-sidenav-resizing] {
+        user-select: none;
+    }
+
     /* --- An entrance played backwards ------------------------------------ */
 
     /* js/motion.js playEntranceBackwards(): what came in with a CSS
@@ -28575,6 +28667,9 @@
     [data-theme='terminal'] .kp-sidenav {
         --kp-sidenav-surface: var(--card);
         --kp-sidenav-gap: 0;
+        /* The refused cue's two steps: the register's one-step clock would
+           pull the panel and let it go within a single frame. */
+        --kp-sidenav-refuse-ease: steps(2, end);
         border-inline-end: 1px dashed var(--border-strong);
     }
 

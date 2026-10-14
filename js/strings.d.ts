@@ -86,6 +86,10 @@ export type Strings = {
      */
     expandRail: string;
     /**
+     * The name of the resize handle on a resizable side navigation
+     */
+    resizeSidebar: string;
+    /**
      * The control that returns the reader to the top of the page
      */
     backToTop: string;
@@ -780,6 +784,7 @@ export type Strings = {
  * @property {string} closeSidebar  The same toggle once that side navigation is open
  * @property {string} collapseRail  The accessible name of an empty slim-rail toggle while the rail is expanded
  * @property {string} expandRail    The same toggle while the rail is collapsed to its icons
+ * @property {string} resizeSidebar The name of the resize handle on a resizable side navigation
  * @property {string} backToTop    The control that returns the reader to the top of the page
  * @property {string} previous
  * @property {string} next

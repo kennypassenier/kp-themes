@@ -49,6 +49,29 @@
 // played back with the close. An element of the page that shares the
 // launcher's corner (the page header) carries
 // `data-kp-sidenav-launcher-room` and keeps the launcher's width free.
+//
+// Four opt-in behaviours [Kenny, 2026-10-13, the ten minor options from the
+// libraries survey; the first four]. None changes a panel that does not ask:
+//
+//   · `data-kp-sidenav-cancelable`: `kp-sidenav-toggle` and `kp-sidenav-slim`
+//     fire before the change, cancelable, and carry `detail.reason`
+//     (`toggler`, `escape`, `backdrop`, `shortcut`, `api`; a layout's own
+//     `breakpoint`, `mode` and `init` are told, never asked). A prevented
+//     event leaves the state untouched and fires `kp-sidenav-prevented`
+//     (`detail`: `kind`, the state asked for, `reason`, `source`);
+//   · `data-kp-sidenav-resizable` with `-min-width` and `-max-width`: a
+//     `role="separator"` handle on the edge that faces the content, inside
+//     the panel, moved by pointer and by arrow keys, writing
+//     `--kp-sidenav-width` and kept when the panel remembers;
+//   · `data-kp-sidenav-backdrop="static"`: the backdrop shows and a click
+//     does not close; the panel is pulled back and let go (the theme's own
+//     time and curve) and `kp-sidenav-prevented` fires with `source: 'static'`;
+//   · `data-kp-sidenav-close-on-backdrop="false"`: a click on the backdrop
+//     does nothing, silently, as `close-on-esc="false"` does for Escape.
+//
+// The last two only matter where a backdrop exists (an `over` panel that did
+// not turn it off); the package's default stays no scrim where the page
+// says so.
 
 import { getStrings } from './strings.js';
 import { paintRemembered, sidenavGroups } from './remember.js';
@@ -57,6 +80,8 @@ import { playEntranceBackwards, reversedEase, stopReversing } from './motion.js'
 export const SIDENAV_TOGGLE_EVENT = 'kp-sidenav-toggle';
 export const SIDENAV_SLIM_EVENT = 'kp-sidenav-slim';
 export const SIDENAV_MODE_EVENT = 'kp-sidenav-mode';
+/** A change that was asked for and refused: by a listener, or by a static backdrop [Bootstrap's hidePrevented]. */
+export const SIDENAV_PREVENTED_EVENT = 'kp-sidenav-prevented';
 
 /** The mark a consumer puts on a toggler they wire themselves [AR29]. */
 export const SIDENAV_OWNED = '[data-kp-sidenav-owner]';
@@ -154,7 +179,47 @@ export const OPTIONS = {
     hoverDelay: 'data-kp-sidenav-hover-delay',
     /** Written on the rail while it is expanded by the pointer or the focus. */
     peek: 'data-kp-sidenav-peek',
+    /**
+     * On the panel: `kp-sidenav-toggle` and `kp-sidenav-slim` fire BEFORE the
+     * change, cancelable, with `detail.reason`; `preventDefault()` leaves the
+     * state untouched and `kp-sidenav-prevented` fires. Off by default: the
+     * events then fire after the change, as they always did, now with
+     * `detail.reason` as well.
+     */
+    cancelable: 'data-kp-sidenav-cancelable',
+    /**
+     * On the panel: `"false"` makes a click on the backdrop do nothing, the
+     * sibling of `data-kp-sidenav-close-on-esc`. Only a panel that has a
+     * backdrop is concerned. Default on.
+     */
+    closeOnBackdrop: 'data-kp-sidenav-close-on-backdrop',
+    /** Written on the panel and its backdrop while the refused cue plays (a static backdrop was clicked). */
+    refused: 'data-kp-sidenav-refused',
+    /**
+     * On the panel: a grab handle on the edge that faces the content makes the
+     * width the reader's to change; it writes `--kp-sidenav-width` and, with
+     * `remember`, keeps it. Off by default; `"false"` is off.
+     */
+    resizable: 'data-kp-sidenav-resizable',
+    /** On a resizable panel: the narrowest width the handle allows, a length. Default 12rem. */
+    minWidth: 'data-kp-sidenav-min-width',
+    /** On a resizable panel: the widest width the handle allows, a length. Default 32rem. */
+    maxWidth: 'data-kp-sidenav-max-width',
+    /** Written on the panel while the handle is held. */
+    resizing: 'data-kp-sidenav-resizing',
 };
+
+/** The shortest leg of the refused cue, in milliseconds: it is pulled and let go, each over at least this long. */
+const REFUSE_MIN_MS = 120;
+
+/** The class of the handle the module adds to a resizable panel. */
+export const SIDENAV_RESIZER = '.kp-sidenav__resizer';
+
+/**
+ * The reasons a change carries in `detail.reason`. A reader or a caller can
+ * refuse the first five; a layout's own adaptation cannot be refused.
+ */
+const ASKABLE = new Set(['toggler', 'escape', 'backdrop', 'shortcut', 'api']);
 
 /** The fixed box at the panel's far edge that holds a small toggler: the edge tab. */
 export const SIDENAV_TAB = '.kp-sidenav__tab';
@@ -529,8 +594,19 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
             // backdrop over the whole window, which dimmed a page that was
             // never asked about.
             if (read(OPTIONS.position) === 'absolute') backdrop.style.position = 'absolute';
-            backdrop.addEventListener('click', () => close());
+            backdrop.addEventListener('click', onBackdropClick);
             panel.after(backdrop);
+        };
+
+        /**
+         * A click on the backdrop. `static` shows the backdrop and refuses the
+         * click with the theme's cue; `close-on-backdrop="false"` ignores it
+         * like `close-on-esc="false"` ignores Escape; otherwise it closes.
+         */
+        const onBackdropClick = () => {
+            if (read(OPTIONS.backdrop) === 'static') return refuse();
+            if (!on(OPTIONS.closeOnBackdrop, true)) return;
+            set(false, true, true, 'backdrop');
         };
 
         /** @param {KeyboardEvent} event */
@@ -551,14 +627,100 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
         };
 
         /**
+         * Announce that a change was asked for and refused: by a listener that
+         * called `preventDefault()` on the cancelable event, or by a static
+         * backdrop. The state has not moved.
+         *
+         * @param {'toggle' | 'slim'} kind
+         * @param {Record<string, unknown>} detail the state that was asked for
+         * @param {string} reason
+         * @param {'listener' | 'static'} source
+         */
+        const prevented = (kind, detail, reason, source) => {
+            panel.dispatchEvent(new CustomEvent(SIDENAV_PREVENTED_EVENT, { bubbles: true, detail: { kind, ...detail, reason, source } }));
+        };
+
+        /**
+         * With `data-kp-sidenav-cancelable`, the event goes out BEFORE the
+         * change and may be refused; otherwise it goes out after, as it always
+         * did, and the caller sends it. What a layout does on its own
+         * (`breakpoint`, `mode`, `init`) is told, never asked.
+         *
+         * @param {string} name
+         * @param {Record<string, unknown>} detail
+         * @param {string} reason
+         * @returns {'prevented' | 'asked' | 'told'}
+         */
+        const ask = (name, detail, reason) => {
+            if (!ASKABLE.has(reason) || !on(OPTIONS.cancelable, false)) return 'told';
+            const event = new CustomEvent(name, { bubbles: true, cancelable: true, detail: { ...detail, reason } });
+            panel.dispatchEvent(event);
+            if (!event.defaultPrevented) return 'asked';
+            prevented(name === SIDENAV_SLIM_EVENT ? 'slim' : 'toggle', detail, reason, 'listener');
+            return 'prevented';
+        };
+
+        /**
+         * A click on a static backdrop: nothing closes. The panel is pulled
+         * toward its edge and let go (the same pull back, so the return is
+         * the exact reverse), on the theme's own duration and curve, marked
+         * `data-kp-sidenav-refused` while it lasts (css/components.css draws a
+         * ring on it), and the refusal is announced.
+         *
+         * Knobs, custom properties on the panel or above it: `--kp-sidenav-refuse-travel`
+         * (0.75rem), `--kp-sidenav-refuse-duration` and `--kp-sidenav-refuse-ease`
+         * (else the panel's own `--kp-sidenav-duration` and `--kp-sidenav-ease`,
+         * else the theme's `--fx-duration` and `--fx-ease`); a leg is never
+         * shorter than REFUSE_MIN_MS.
+         *
+         * It is a Web Animation on the panel's margin: the registers own the
+         * panel's `translate` and `animation` for its opening and closing, and
+         * a CSS animation would lose to them.
+         */
+        let refusing = 0;
+        const refuse = () => {
+            const marked = [panel, ...(backdrop ? [backdrop] : [])];
+            refusing += 1;
+            const turn = refusing;
+            for (const one of marked) one.setAttribute(OPTIONS.refused, '');
+            const style = getComputedStyle(panel);
+            const token = (/** @type {string[]} */ names) => names.map((name) => style.getPropertyValue(name).trim()).find((value) => value !== '') ?? '';
+            const time = token(['--kp-sidenav-refuse-duration', '--kp-sidenav-duration', '--fx-duration']) || '220ms';
+            const easing = token(['--kp-sidenav-refuse-ease', '--kp-sidenav-ease', '--fx-ease']) || 'ease';
+            const travel = style.getPropertyValue('--kp-sidenav-refuse-travel').trim() || '0.75rem';
+            const property = edge() === 'end' ? 'marginInlineEnd' : 'marginInlineStart';
+            let duration = 600;
+            if (!globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+                const probe = doc.createElement('span');
+                probe.style.cssText = `position:absolute;visibility:hidden;transition-duration:${time}`;
+                panel.append(probe);
+                const read = parseFloat(getComputedStyle(probe).transitionDuration) * 1000;
+                probe.remove();
+                // A leg shorter than a few frames is not a cue (terminal's 34 ms): the floor keeps it seen.
+                duration = Math.max(REFUSE_MIN_MS, Number.isFinite(read) && read > 0 ? read : 220);
+                panel.animate({ [property]: ['0px', `calc(-1 * ${travel})`] }, { duration, easing, iterations: 2, direction: 'alternate' });
+                duration *= 2;
+            }
+            setTimeout(() => {
+                if (turn === refusing) for (const one of marked) one.removeAttribute(OPTIONS.refused);
+            }, duration);
+            prevented('toggle', { open: false }, 'backdrop', 'static');
+        };
+
+        /**
          * @param {boolean} open
          * @param {boolean} [moveFocus]
          * @param {boolean} [save] whether this is a state to remember — a
          *   person's choice is, an adaptation to the room the panel is in is
          *   not. A window narrowed past the step closes the panel; widening
          *   it again must not find it closed because of that [Kenny, 2026-09-16].
+         * @param {string} [reason] what asked for the change, written in `detail.reason`:
+         *   `toggler`, `escape`, `backdrop`, `shortcut`, `api` (a call on the handle),
+         *   `breakpoint` (a layout adapting), `mode` (a mode change) or `init` (the starting state)
          */
-        const set = (open, moveFocus = true, save = true) => {
+        const set = (open, moveFocus = true, save = true, reason = 'api') => {
+            const asked = ask(SIDENAV_TOGGLE_EVENT, { open }, reason);
+            if (asked === 'prevented') return;
             turnEase();
             panel.setAttribute(OPTIONS.open, String(open));
             say(open);
@@ -607,8 +769,8 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
             }
 
             if (save) memory?.write('open', open);
-            panel.dispatchEvent(new CustomEvent(SIDENAV_TOGGLE_EVENT, { bubbles: true, detail: { open } }));
-            panel.dispatchEvent(new CustomEvent(SIDENAV_MODE_EVENT, { bubbles: true, detail: { mode: mode(), offset } }));
+            if (asked === 'told') panel.dispatchEvent(new CustomEvent(SIDENAV_TOGGLE_EVENT, { bubbles: true, detail: { open, reason } }));
+            panel.dispatchEvent(new CustomEvent(SIDENAV_MODE_EVENT, { bubbles: true, detail: { mode: mode(), offset, reason } }));
         };
 
         /** @param {{ remember?: boolean }} [options] */
@@ -643,24 +805,26 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
             }
         };
 
-        /** @param {boolean} [collapsed] */
-        const setSlim = (collapsed, save = true) => {
+        /** @param {boolean} [collapsed] @param {boolean} [save] @param {string} [reason] see `set` */
+        const setSlim = (collapsed, save = true, reason = 'api') => {
             if (read(OPTIONS.slim) === null) return;
-            turnEase();
             const next = collapsed ?? panel.getAttribute(OPTIONS.slimCollapsed) === null;
+            const asked = ask(SIDENAV_SLIM_EVENT, { collapsed: next }, reason);
+            if (asked === 'prevented') return;
+            turnEase();
             panel.toggleAttribute(OPTIONS.slimCollapsed, next);
             saySlim(next);
             if (save) memory?.write('rail', next);
             // A gutter or a push keeps pace with the rail's new width.
             offsetContent(isOpen());
             syncRail();
-            panel.dispatchEvent(new CustomEvent(SIDENAV_SLIM_EVENT, { bubbles: true, detail: { collapsed: next } }));
+            if (asked === 'told') panel.dispatchEvent(new CustomEvent(SIDENAV_SLIM_EVENT, { bubbles: true, detail: { collapsed: next, reason } }));
         };
 
         /** @param {'over' | 'side' | 'push'} next */
         const setMode = (next) => {
             panel.setAttribute(OPTIONS.mode, next);
-            set(isOpen(), false, false);
+            set(isOpen(), false, false, 'mode');
         };
 
         // ---- The collapsed rail: peek, labels as tooltips, groups that float out.
@@ -942,7 +1106,7 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
             if (event.key.toLowerCase() !== chord.key) return;
             if (event.ctrlKey !== chord.ctrl || event.metaKey !== chord.meta || event.altKey !== chord.alt || event.shiftKey !== chord.shift) return;
             event.preventDefault();
-            set(!isOpen());
+            set(!isOpen(), true, true, 'shortcut');
         };
 
 
@@ -991,7 +1155,7 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
             if (ownedBy !== '' && toggler.matches(ownedBy)) return;
             const controls = toggler.getAttribute('aria-controls');
             if (controls !== null && controls !== panel.id) return;
-            set(!isOpen());
+            set(!isOpen(), true, true, 'toggler');
         };
 
         /** @param {Event} event */
@@ -1001,13 +1165,13 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
             if (ownedBy !== '' && toggler.matches(ownedBy)) return;
             const controls = toggler.getAttribute('aria-controls');
             if (controls !== null && controls !== panel.id) return;
-            setSlim();
+            setSlim(undefined, true, 'toggler');
         };
 
         /** @param {KeyboardEvent} event */
         const onEsc = (event) => {
             if (event.key !== 'Escape' || !on(OPTIONS.closeOnEsc, true) || mode() === 'side' || !isOpen()) return;
-            close();
+            set(false, true, true, 'escape');
         };
 
         // Narrow [scope-80]. A rail beside the content is right on a wide
@@ -1070,7 +1234,7 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
                     panel.setAttribute(OPTIONS.narrow, '');
                     panel.removeAttribute(OPTIONS.slimCollapsed);
                     panel.setAttribute(OPTIONS.mode, 'over');
-                    set(false, false, false);
+                    set(false, false, false, 'breakpoint');
                 } else {
                     const was = /** @type {{ mode: string | null, slim: boolean }} */ (declared);
                     declared = null;
@@ -1079,7 +1243,7 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
                     else panel.setAttribute(OPTIONS.mode, was.mode);
                     panel.toggleAttribute(OPTIONS.slimCollapsed, was.slim);
                     saySlim(was.slim);
-                    set(mode() === 'side', false, false);
+                    set(mode() === 'side', false, false, 'breakpoint');
                 }
             });
         };
@@ -1097,11 +1261,11 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
             if (narrow === (slimHeld !== null)) return;
             if (narrow) {
                 slimHeld = panel.hasAttribute(OPTIONS.slimCollapsed);
-                if (!slimHeld) setSlim(true, false);
+                if (!slimHeld) setSlim(true, false, 'breakpoint');
             } else {
                 const was = slimHeld;
                 slimHeld = null;
-                if (!was) setSlim(false, false);
+                if (!was) setSlim(false, false, 'breakpoint');
             }
         };
         const onResize = () => {
@@ -1112,6 +1276,129 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
             (overBelow !== null || slimBelow !== null) && panel.parentElement !== null && typeof ResizeObserver === 'function'
                 ? new ResizeObserver(onResize)
                 : null;
+
+        // Resize by dragging [Kenny, 2026-10-13, from the libraries survey]. A
+        // handle on the edge that faces the content, inside the panel so it
+        // covers none of the page: a `separator` the pointer drags and the
+        // arrow keys move. It writes `--kp-sidenav-width`, the one knob the
+        // content's offset already reads, and keeps it when the panel
+        // remembers. The handle is not there in the collapsed rail.
+        /** @type {HTMLElement | null} */
+        let grip = null;
+        let wroteWidth = false;
+        const RESIZE_STEP = 16;
+        /** @param {string} name @param {string} fallback */
+        const limit = (name, fallback) => {
+            const px = threshold(read(name) ?? fallback);
+            return Number.isFinite(px) && px > 0 ? px : threshold(fallback);
+        };
+        const minWidth = () => limit(OPTIONS.minWidth, '12rem');
+        const maxWidth = () => Math.max(minWidth(), limit(OPTIONS.maxWidth, '32rem'));
+        const startsAtLeft = () => (edge() === 'start') !== (getComputedStyle(panel).direction === 'rtl');
+        /** @param {number} px */
+        const clampWidth = (px) => Math.round(Math.min(maxWidth(), Math.max(minWidth(), px)));
+        const sayWidth = () => {
+            if (grip === null) return;
+            grip.setAttribute('aria-valuemin', String(Math.round(minWidth())));
+            grip.setAttribute('aria-valuemax', String(Math.round(maxWidth())));
+            grip.setAttribute('aria-valuenow', String(Math.round(panel.getBoundingClientRect().width)));
+        };
+        /** @param {number} px @param {boolean} [save] */
+        const setWidth = (px, save = true) => {
+            const next = clampWidth(px);
+            panel.style.setProperty('--kp-sidenav-width', `${next}px`);
+            wroteWidth = true;
+            offsetContent(isOpen());
+            sayWidth();
+            if (save) memory?.write('width', next);
+            return next;
+        };
+        if (on(OPTIONS.resizable, false)) {
+            const s = { ...getStrings(), ...strings };
+            grip = doc.createElement('div');
+            grip.className = SIDENAV_RESIZER.slice(1);
+            grip.setAttribute('role', 'separator');
+            grip.setAttribute('aria-orientation', 'vertical');
+            grip.setAttribute('aria-label', s.resizeSidebar);
+            grip.setAttribute('aria-controls', panel.id);
+            grip.tabIndex = 0;
+            panel.append(grip);
+            const painted = parseFloat(panel.style.getPropertyValue('--kp-sidenav-width'));
+            if (Number.isFinite(painted)) setWidth(painted, false);
+            else sayWidth();
+        }
+        /** The panel's width with the pointer where the handle is held, so the handle does not jump. @type {number} */
+        let gripOffset = 0;
+        /** @type {string} */
+        let heldTransition = '';
+        /** @type {number | null} the pointer holding the handle */
+        let held = null;
+        /** @param {PointerEvent} event */
+        const pointerWidth = (event) => {
+            const rect = panel.getBoundingClientRect();
+            return startsAtLeft() ? event.clientX - rect.left : rect.right - event.clientX;
+        };
+        /** @param {PointerEvent} event */
+        const onGripDown = (event) => {
+            if (grip === null || event.button !== 0) return;
+            event.preventDefault();
+            try {
+                grip.setPointerCapture(event.pointerId);
+            } catch {
+                // A pointer the browser does not know (a scripted one): the moves still arrive on the handle.
+            }
+            held = event.pointerId;
+            gripOffset = panel.getBoundingClientRect().width - pointerWidth(event);
+            heldTransition = panel.style.transition;
+            // The width follows the pointer, not a transition's catch-up.
+            panel.style.transition = 'none';
+            panel.setAttribute(OPTIONS.resizing, '');
+        };
+        /** @param {PointerEvent} event */
+        const onGripMove = (event) => {
+            if (grip === null || held !== event.pointerId) return;
+            setWidth(pointerWidth(event) + gripOffset, false);
+        };
+        /** @param {PointerEvent} event */
+        const onGripUp = (event) => {
+            if (grip === null || held !== event.pointerId) return;
+            held = null;
+            if (grip.hasPointerCapture(event.pointerId)) grip.releasePointerCapture(event.pointerId);
+            panel.style.transition = heldTransition;
+            panel.removeAttribute(OPTIONS.resizing);
+            memory?.write('width', clampWidth(panel.getBoundingClientRect().width));
+        };
+        /** @param {KeyboardEvent} event */
+        const onGripKey = (event) => {
+            const grow = startsAtLeft() ? 'ArrowRight' : 'ArrowLeft';
+            const shrink = startsAtLeft() ? 'ArrowLeft' : 'ArrowRight';
+            const now = panel.getBoundingClientRect().width;
+            const step = RESIZE_STEP * (event.shiftKey ? 5 : 1);
+            let next = null;
+            if (event.key === grow) next = now + step;
+            else if (event.key === shrink) next = now - step;
+            else if (event.key === 'Home') next = minWidth();
+            else if (event.key === 'End') next = maxWidth();
+            if (next === null) return;
+            event.preventDefault();
+            still(() => setWidth(next));
+        };
+        /** A double press gives the width back to the stylesheet's own. */
+        const onGripReset = () => {
+            panel.style.removeProperty('--kp-sidenav-width');
+            wroteWidth = false;
+            memory?.forget('width');
+            still(() => offsetContent(isOpen()));
+            sayWidth();
+        };
+        if (grip !== null) {
+            grip.addEventListener('pointerdown', onGripDown);
+            grip.addEventListener('pointermove', onGripMove);
+            grip.addEventListener('pointerup', onGripUp);
+            grip.addEventListener('pointercancel', onGripUp);
+            grip.addEventListener('keydown', onGripKey);
+            grip.addEventListener('dblclick', onGripReset);
+        }
 
         // A launcher: the panel makes room for it, and an empty toggler in it
         // gets the package's three bars, the glyph the bar's own toggle draws.
@@ -1136,7 +1423,7 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
         let start = mode() === 'side';
         if (panel.hasAttribute(OPTIONS.open)) start = panel.getAttribute(OPTIONS.open) === 'true';
         if (read(OPTIONS.slimCollapsed) !== null) panel.setAttribute(OPTIONS.slimCollapsed, '');
-        set(start, false, false);
+        set(start, false, false, 'init');
         saySlim(panel.getAttribute(OPTIONS.slimCollapsed) !== null);
         applyNarrow();
         applySlimBelow();
@@ -1204,13 +1491,19 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
             close,
             toggle: ({ remember = true } = {}) => set(!isOpen(), true, remember),
             setMode,
-            setSlim,
+            setSlim: (collapsed) => setSlim(collapsed),
             isOpen,
             destroy: () => {},
         };
 
         const detach = () => {
             narrowWatch?.disconnect();
+            if (grip !== null) {
+                grip.remove();
+                grip = null;
+                panel.removeAttribute(OPTIONS.resizing);
+                if (wroteWidth) panel.style.removeProperty('--kp-sidenav-width');
+            }
             if (declared !== null) {
                 panel.removeAttribute(OPTIONS.narrow);
                 if (declared.mode === null) panel.removeAttribute(OPTIONS.mode);
@@ -1242,6 +1535,7 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
             clearTimeout(tipTimer);
             for (const timer of flyTimers.values()) clearTimeout(timer);
             panel.removeAttribute(OPTIONS.peek);
+            if (held !== null) panel.style.transition = heldTransition;
             // Fold the floating groups back into the panel as they were.
             const wasSlim = slimHeld ?? panel.hasAttribute(OPTIONS.slimCollapsed);
             slimHeld = null;

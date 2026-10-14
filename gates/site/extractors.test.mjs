@@ -286,7 +286,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // floating parts' place (--kp-sidenav-float-x, -y), the flyout's floor and indent (--kp-sidenav-flyout-min,
     // -indent) and the edge tab's size (--kp-sidenav-tab-thickness, -length): 11 more, on a main that already
     // read 328 (one knob arrived after the tree row's without a line here): 328 + 11.
-    assert.equal(result.expected, 339, 'AR21 counted the --kp-* properties in css/components.css');
+    // The side navigation's minor options (2026-10-14): the handle's width, --kp-sidenav-resizer-size: 339 + 1.
+    assert.equal(result.expected, 340, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -342,7 +343,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // And --kp-tree-inset, read through var(): 323 + 1.
     // The side navigation at the window's edge (2026-10-13): its eleven, every one read through var(), on a main
     // that already read 325: 325 + 11.
-    assert.equal(result.readCount, 336);
+    // The resize handle's width, --kp-sidenav-resizer-size, read through var() (2026-10-14): 336 + 1.
+    assert.equal(result.readCount, 337);
     // `--kp-chart-height` is read by js/chart.js (the plot's height when the
     // data names none), not by a stylesheet [scope-143].
     assert.deepEqual(result.unread, ['--kp-busy-opacity', '--kp-chart-height', '--kp-steps']);

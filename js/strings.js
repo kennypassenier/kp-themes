@@ -64,6 +64,7 @@
  * @property {string} closeSidebar  The same toggle once that side navigation is open
  * @property {string} collapseRail  The accessible name of an empty slim-rail toggle while the rail is expanded
  * @property {string} expandRail    The same toggle while the rail is collapsed to its icons
+ * @property {string} resizeSidebar The name of the resize handle on a resizable side navigation
  * @property {string} backToTop    The control that returns the reader to the top of the page
  * @property {string} previous
  * @property {string} next
@@ -371,6 +372,9 @@ export const DEFAULT_STRINGS = Object.freeze({
     // than hiding it, so it must not borrow the open and close names.
     collapseRail: 'Collapse the side navigation to its icons',
     expandRail: 'Expand the side navigation',
+    // The resize handle's name [Kenny, 2026-10-13, minor options]: a separator
+    // whose value is the panel's width, so it says what it changes.
+    resizeSidebar: 'Resize the side navigation',
     // A control that appears part-way down a page and has no text of its
     // own beyond an arrow: the accessible name is the whole of what a
     // screen reader gets.

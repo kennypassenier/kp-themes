@@ -1,6 +1,8 @@
 export declare const SIDENAV_TOGGLE_EVENT = "kp-sidenav-toggle";
 export declare const SIDENAV_SLIM_EVENT = "kp-sidenav-slim";
 export declare const SIDENAV_MODE_EVENT = "kp-sidenav-mode";
+/** A change that was asked for and refused: by a listener, or by a static backdrop [Bootstrap's hidePrevented]. */
+export declare const SIDENAV_PREVENTED_EVENT = "kp-sidenav-prevented";
 /** The mark a consumer puts on a toggler they wire themselves [AR29]. */
 export declare const SIDENAV_OWNED = "[data-kp-sidenav-owner]";
 /**
@@ -96,7 +98,37 @@ export declare const OPTIONS: {
     hoverDelay: string;
     /** Written on the rail while it is expanded by the pointer or the focus. */
     peek: string;
+    /**
+     * On the panel: `kp-sidenav-toggle` and `kp-sidenav-slim` fire BEFORE the
+     * change, cancelable, with `detail.reason`; `preventDefault()` leaves the
+     * state untouched and `kp-sidenav-prevented` fires. Off by default: the
+     * events then fire after the change, as they always did, now with
+     * `detail.reason` as well.
+     */
+    cancelable: string;
+    /**
+     * On the panel: `"false"` makes a click on the backdrop do nothing, the
+     * sibling of `data-kp-sidenav-close-on-esc`. Only a panel that has a
+     * backdrop is concerned. Default on.
+     */
+    closeOnBackdrop: string;
+    /** Written on the panel and its backdrop while the refused cue plays (a static backdrop was clicked). */
+    refused: string;
+    /**
+     * On the panel: a grab handle on the edge that faces the content makes the
+     * width the reader's to change; it writes `--kp-sidenav-width` and, with
+     * `remember`, keeps it. Off by default; `"false"` is off.
+     */
+    resizable: string;
+    /** On a resizable panel: the narrowest width the handle allows, a length. Default 12rem. */
+    minWidth: string;
+    /** On a resizable panel: the widest width the handle allows, a length. Default 32rem. */
+    maxWidth: string;
+    /** Written on the panel while the handle is held. */
+    resizing: string;
 };
+/** The class of the handle the module adds to a resizable panel. */
+export declare const SIDENAV_RESIZER = ".kp-sidenav__resizer";
 /** The fixed box at the panel's far edge that holds a small toggler: the edge tab. */
 export declare const SIDENAV_TAB = ".kp-sidenav__tab";
 /** The fixed box at the window's start corner that holds a panel's toggler. */

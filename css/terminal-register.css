@@ -1807,6 +1807,9 @@
     [data-theme='terminal'] .kp-sidenav {
         --kp-sidenav-surface: var(--card);
         --kp-sidenav-gap: 0;
+        /* The refused cue's two steps: the register's one-step clock would
+           pull the panel and let it go within a single frame. */
+        --kp-sidenav-refuse-ease: steps(2, end);
         border-inline-end: 1px dashed var(--border-strong);
     }
 
