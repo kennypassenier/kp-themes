@@ -3762,6 +3762,7 @@ data-kp-disabled-days="0,6"
                             <tr><td><code>defaultOpen</code></td><td><code>boolean</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>onOpenChange</code></td><td><code>(open: boolean) =&gt; void</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>locale</code></td><td><code>string</code></td><td>optional</td><td>Default: the nearest `lang`, else the browser's.</td></tr>
+                            <tr><td><code>dateFormat</code></td><td><code>'rule52' | 'locale'</code></td><td>optional</td><td>How the numeric date is written, hinted and read: `'rule52'` (default) is dd/mm/yyyy for every reader; `'locale'` is the reader's own order and separator. The same option as `attachDatePickers`.</td></tr>
                             <tr><td><code>weekStartsOn</code></td><td><code>number</code></td><td>optional</td><td>0 = Sunday. Default: the locale's.</td></tr>
                             <tr><td><code>min</code></td><td><code>string</code></td><td>optional</td><td>ISO. Days before are disabled.</td></tr>
                             <tr><td><code>max</code></td><td><code>string</code></td><td>optional</td><td>ISO. Days after are disabled.</td></tr>
@@ -3773,7 +3774,7 @@ data-kp-disabled-days="0,6"
                             <tr><td><code>previousGlyph</code></td><td><code>import('react').ReactNode</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>nextGlyph</code></td><td><code>import('react').ReactNode</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>renderDay</code></td><td><code>(date: Date, defaults: { className: string; disabled: boolean; }) =&gt; import('react').ReactNode</code></td><td>optional</td><td></td></tr>
-                            <tr><td><code>placeholder</code></td><td><code>string</code></td><td>optional</td><td>Default: the locale's pattern, e.g. dd-mm-yyyy.</td></tr>
+                            <tr><td><code>placeholder</code></td><td><code>string</code></td><td>optional</td><td>Default: the format's pattern, dd/mm/yyyy (the locale's own with `dateFormat=&quot;locale&quot;`).</td></tr>
                             <tr><td><code>inputProps</code></td><td><code>Record&lt;string, unknown&gt;</code></td><td>optional</td><td>Spread onto the input (name, required, aria-describedby, …).</td></tr>
                             <tr><td><code>strings</code></td><td><code>Partial&lt;import('../js/strings.js').Strings&gt;</code></td><td>optional</td><td></td></tr>
                             <tr><td><code>className</code></td><td><code>string</code></td><td>optional</td><td></td></tr>
@@ -3816,7 +3817,7 @@ data-kp-disabled-days="0,6"
                             <tr><td><code>.kp-datepicker__panel</code></td><td>The calendar, floating under the input on its own surface. It is rendered when it opens because a month grid is derived from a date.</td></tr>
                             <tr><td><code>.kp-datepicker__head / __title</code></td><td>The month, its name, and the two controls that page it. The title is a button that opens the twelve months of the year, and there the year opens twelve years.</td></tr>
                             <tr><td><code>month and year grids</code></td><td>Twelve cells, three a row, drawn with the day’s class so every theme paints them; the panel keeps the size the days had. Choosing a year shows its months, a month its days.</td></tr>
-                            <tr><td><code>data-kp-date-format</code></td><td>`rule52` (the default): the field is written, hinted and read dd/mm/yyyy whatever the locale; `locale`: the order and separator the locale writes (09/04/2026 under en-US, 04.09.2026 under de-DE). Script: `dateFormat: 'locale'` in the options of attachDatePickers. The ISO value does not change.</td></tr>
+                            <tr><td><code>data-kp-date-format</code></td><td>`rule52` (the default): the field is written, hinted and read dd/mm/yyyy whatever the locale; `locale`: the order and separator the locale writes (09/04/2026 under en-US, 04.09.2026 under de-DE). Script: `dateFormat: 'locale'` in the options of attachDatePickers; React: the `dateFormat=&quot;locale&quot;` prop of DatePicker (default `&quot;rule52&quot;`). The ISO value does not change.</td></tr>
                             <tr><td><code>.kp-datepicker__grid / __weekday</code></td><td>Seven columns with the week starting where the locale says, unless the markup overrules it.</td></tr>
                             <tr><td><code>.kp-datepicker__day</code></td><td>One day. Exactly one of them is in the tab order at a time; the arrows move between the rest.</td></tr>
                             <tr><td><code>selected day</code></td><td>Carries a boundary as well as a fill, so it is still the chosen day when the fill matches the hover.</td></tr>

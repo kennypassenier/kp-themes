@@ -1,6 +1,6 @@
 import { forwardRef, useEffect, useId, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react';
-import { clampToMonth, jumpMove, measureDateView, outsideRange, parseDate, raiseDatePanel, toISO, yearBlockStart } from '../js/datepicker.js';
-import { calendarNames, datePattern, formatBytes, formatDate, resolveLocale, weekStartsOn } from '../js/locale.js';
+import { clampToMonth, jumpMove, measureDateView, outsideRange, raiseDatePanel, toISO, yearBlockStart } from '../js/datepicker.js';
+import { calendarNames, datePattern, formatBytes, formatDate, parseDate, resolveLocale, weekStartsOn } from '../js/locale.js';
 import { DEFAULT_STRINGS } from '../js/strings.js';
 import { acceptsFile } from '../js/upload.js';
 import { useStrings } from '../hooks/use-strings.jsx';
@@ -44,6 +44,7 @@ function useLocale(ref, explicit) {
  * @property {boolean} [defaultOpen]
  * @property {(open: boolean) => void} [onOpenChange]
  * @property {string} [locale]         Default: the nearest `lang`, else the browser's.
+ * @property {'rule52' | 'locale'} [dateFormat]  How the numeric date is written, hinted and read: `'rule52'` (default) is dd/mm/yyyy for every reader; `'locale'` is the reader's own order and separator. The same option as `attachDatePickers`.
  * @property {number} [weekStartsOn]   0 = Sunday. Default: the locale's.
  * @property {string} [min]            ISO. Days before are disabled.
  * @property {string} [max]            ISO. Days after are disabled.
@@ -55,7 +56,7 @@ function useLocale(ref, explicit) {
  * @property {import('react').ReactNode} [previousGlyph]
  * @property {import('react').ReactNode} [nextGlyph]
  * @property {(date: Date, defaults: { className: string, disabled: boolean }) => import('react').ReactNode} [renderDay]
- * @property {string} [placeholder]    Default: the locale's pattern, e.g. dd-mm-yyyy.
+ * @property {string} [placeholder]    Default: the format's pattern, dd/mm/yyyy (the locale's own with `dateFormat="locale"`).
  * @property {Record<string, unknown>} [inputProps]  Spread onto the input (name, required, aria-describedby, …).
  * @property {Partial<import('../js/strings.js').Strings>} [strings]
  * @property {string} [className]
@@ -80,6 +81,7 @@ function DatePickerInner(
         defaultOpen = false,
         onOpenChange,
         locale: localeProp,
+        dateFormat = 'rule52',
         weekStartsOn: weekProp,
         min,
         max,
@@ -106,12 +108,13 @@ function DatePickerInner(
     const inner = useRef(null);
     useImperativeHandle(ref, () => /** @type {HTMLDivElement} */ (inner.current), []);
     const locale = useLocale(inner, localeProp);
+    const numeric = dateFormat === 'locale' ? 'locale' : 'rule52';
     const firstDay = weekStartsOn(locale, weekProp);
     // The names follow the locale; a consumer's own dictionary still wins [gap-11].
     const names = calendarNames(s, DEFAULT_STRINGS, locale);
     const [text, setText] = useControllable(value, defaultValue, undefined);
     const [open, setOpen] = useControllable(openProp, defaultOpen, onOpenChange);
-    const [cursor, setCursor] = useState(() => parseDate(defaultValue, locale) ?? new Date());
+    const [cursor, setCursor] = useState(() => parseDate(defaultValue, locale, numeric) ?? new Date());
     const button = useRef(/** @type {HTMLButtonElement | null} */ (null));
     const panelRef = useRef(/** @type {HTMLDivElement | null} */ (null));
     // Above any container that clips, and inside the window: the same
@@ -153,15 +156,15 @@ function DatePickerInner(
         setAnnouncement('');
     }, [open]);
 
-    const chosen = parseDate(text, locale);
+    const chosen = parseDate(text, locale, numeric);
     const year = cursor.getFullYear();
     const month = cursor.getMonth();
     const lead = (new Date(year, month, 1).getDay() - firstDay + 7) % 7;
     const days = new Date(year, month + 1, 0).getDate();
     const from = yearBlockStart(year);
     const monthTitle = s.monthTitle(names.months[month] ?? '', year);
-    const lower = min ? parseDate(min, locale) : null;
-    const upper = max ? parseDate(max, locale) : null;
+    const lower = min ? parseDate(min, locale, numeric) : null;
+    const upper = max ? parseDate(max, locale, numeric) : null;
     /** @param {Date} date */
     const disabled = (date) =>
         (lower !== null && date < lower) ||
@@ -221,7 +224,7 @@ function DatePickerInner(
     /** @param {Date} date */
     const take = (date) => {
         if (disabled(date)) return;
-        setText(formatDate(date, locale));
+        setText(formatDate(date, locale, numeric));
         onChange?.(toISO(date), date);
         if (closeOnSelect) setOpen(false);
         if (returnFocus) button.current?.focus();
@@ -300,7 +303,7 @@ function DatePickerInner(
                     inputMode="numeric"
                     // The hint follows the locale, so it cannot lie about
                     // the format.
-                    placeholder={placeholder ?? datePattern(locale).hint}
+                    placeholder={placeholder ?? datePattern(locale, numeric).hint}
                     data-kp-date-input
                     // ISO in the attribute, the locale on screen: parsing a
                     // localised string on the server is how off-by-one-day
@@ -309,7 +312,7 @@ function DatePickerInner(
                     value={text}
                     onChange={(event) => {
                         setText(event.target.value);
-                        const date = parseDate(event.target.value, locale);
+                        const date = parseDate(event.target.value, locale, numeric);
                         onChange?.(date === null ? null : toISO(date), date);
                         if (date !== null) setCursor(date);
                     }}

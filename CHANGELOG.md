@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- **Added: the React `DatePicker` follows rule 52 too, with a `dateFormat` prop** [datetime-M1; Kenny's go for 10.1.0]. `components/flow.jsx` called `parseDate`, `formatDate` and `datePattern` with their default `'locale'` format, so it wrote, hinted and read in the reader's order. It now defaults to `dateFormat="rule52"` (dd/mm/yyyy whatever the locale) and `dateFormat="locale"` brings the reader's own order back, the same option as `attachDatePickers(root, { dateFormat })`. The placeholder, the typed text, a picked day and `min`/`max` all follow it; the ISO value passed to `onChange` does not change.
 - **Fixed: a dialog, a drawer or an arriving part whose register animates a custom property is replayed whole** [Kenny's go for 10.1.0;
   formal's package finding 1]. `rememberEntrance()`, `arriveAsReversedLeave()` and the leave of an entrance part replayed
   `effect.getKeyframes()` with `Element.animate()`, and Chromium leaves the keyframes of a custom property out of `getKeyframes()`, so a
