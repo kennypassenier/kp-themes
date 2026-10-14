@@ -44,7 +44,6 @@
         --kp-rule-weight: 3px;
         --kp-slice: 600ms;
         --kp-slice-hover: 320ms;
-        --kp-charge: 520ms;
         --fx-notch-sm: 8px;
         /* The reveals this theme performs [S45]: js/effects.js reads these
            three and leaves a theme that declares none at rest. */
@@ -1563,10 +1562,6 @@
             transition: transform var(--fx-duration) var(--fx-ease);
         }
 
-        [data-theme='cyberpunk'] .kp-button:hover:not(:disabled)::after {
-            animation: kp-charge 520ms var(--fx-ease) 1;
-        }
-
         [data-theme='cyberpunk'] .kp-field__input {
             transition:
                 border-color var(--fx-duration) var(--fx-ease),
@@ -1680,12 +1675,6 @@
                 opacity: 0;
                 clip-path: polygon(0 0, 0 0, 0 0, 0 0);
                 transform: none;
-            }
-        }
-
-        @keyframes kp-charge {
-            to {
-                transform: translateX(120%);
             }
         }
 

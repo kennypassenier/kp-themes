@@ -2564,14 +2564,13 @@
         background: var(--destructive);
     }
 
-    .kp-graph__skeleton {
-        fill: none;
-        stroke: var(--muted);
-        stroke-width: 10;
+    .kp-graph__ghost {
+        opacity: 0.45;
+        pointer-events: none;
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        .kp-graph__skeleton {
+        .kp-graph__ghost {
             animation: kp-pulse 1600ms ease-in-out infinite;
         }
 

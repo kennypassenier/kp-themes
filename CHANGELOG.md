@@ -3,6 +3,32 @@
 ## Unreleased
 
 - **Added: the React `DatePicker` follows rule 52 too, with a `dateFormat` prop** [datetime-M1; Kenny's go for 10.1.0]. `components/flow.jsx` called `parseDate`, `formatDate` and `datePattern` with their default `'locale'` format, so it wrote, hinted and read in the reader's order. It now defaults to `dateFormat="rule52"` (dd/mm/yyyy whatever the locale) and `dateFormat="locale"` brings the reader's own order back, the same option as `attachDatePickers(root, { dateFormat })`. The placeholder, the typed text, a picked day and `min`/`max` all follow it; the ISO value passed to `onChange` does not change.
+- **Fixed: the network graph's loading picture is the ghost of the network** [Kenny's go for 10.1.0, leftover 3; PACKAGE_FINDINGS 2026-10-06].
+  js/graph.js drew one grey ellipse while loading. It now draws the coming network: the last drawn nodes and links, or a hub with a ring of six
+  when nothing was drawn yet, in the package's own `kp-graph__edge`, `__node`, `__ring` and `__core` classes (so each theme's settled shape draws
+  it), inside `g.kp-graph__ghost[aria-hidden]` (45 % opacity, `kp-pulse` breath under motion; `--i` per part and `--n` on the group for a
+  register's staggered motion). `.kp-graph__skeleton` is gone. Kenny's decided per-theme loading pictures (research/character-graph/decided.json,
+  `data-cg-loading`) live only in that demo's research stylesheets and are not in any register; this is the minimum they need, not their port.
+  The ready graph is untouched: its SVG markup is identical before and after in all 16 themes at 1280 and 390 px, and the screenshot of the
+  graph is byte-identical in 15 themes (synthwave's own glow differs between two runs of the same code).
+- **Checked, nothing to fix: forest's small motion strays F-15, F-25, F-33, F-34** [Kenny's go for 10.1.0, leftover 4]. Measured in Firefox: the
+  prose link's underline colour and thickness take 200 ms on `--fx-ease` and the dash turns solid at once (F-15); the dialog backdrop plays the
+  1000 ms growth curve (F-25); the calendar's busy card grows in 1000 ms and closes as that growth reversed, 1000 ms, frame for frame within one
+  frame of lag (F-33); the tick, the meter's wipe, the drawer's edge and the section rule run from the inline start on a right-to-left page, and the
+  headline grows vertically (F-34).
+- **Fixed: phantom's focus settles its animations** [Kenny's go for 10.1.0, leftover 5; tests/focus-visible.spec.mjs:136]. A focused bar link
+  (`.kp-nav__links > li:focus-within > .kp-nav__link::before`) and every hovered bar, tab, menu entry and key-figure label kept
+  `kp-sig-phantom-bar` finished but held by `animation-fill-mode: both`, so `getAnimations()` still listed one finite animation on the focused
+  link for ever (the test waits for none). The rules now fill `backwards` and state the solid face themselves (`mask-image: none`, the animation's
+  last frame). Per-frame computed `mask-image` and `width` of the bar on hover and on Tab focus, and of the button's `::after` on hover, run through
+  the same states before and after; animations on the focused link: 1 before, 0 after.
+- **Removed: cyberpunk's dead `kp-charge` rule, keyframes, knob and timing row** [Kenny's go for 10.1.0, leftover 6]. The hover rule on
+  `.kp-button:hover:not(:disabled)::after` never played (`animation: none` in `kp.signature` wins), the keyframes with it, the `--kp-charge` knob,
+  the `TIMINGS` row in js/effects.js and the gate's motion description. themes/cyberpunk/signature.json (idea, two claims, hover description and its
+  proof, two answers) and themes/cyberpunk/CHARACTER.md (hover row, G8, G17, the base-element row) now describe what plays: the circuit grid on the
+  face and the edge ring closing in over four steps (`--kp-cp-t`, `steps(4, jump-end)`, 180 ms), nothing lifts and nothing sweeps. Measured in
+  Firefox on the plain and the primary button, 11 paused frames (0 to 800 ms) of the hovered button, its `::before` and `::after` (animation name,
+  transform, clip-path, background, shadow, colour): identical before and after (one sha256 over all frames).
 - **Fixed: a dialog, a drawer or an arriving part whose register animates a custom property is replayed whole** [Kenny's go for 10.1.0;
   formal's package finding 1]. `rememberEntrance()`, `arriveAsReversedLeave()` and the leave of an entrance part replayed
   `effect.getKeyframes()` with `Element.animate()`, and Chromium leaves the keyframes of a custom property out of `getKeyframes()`, so a

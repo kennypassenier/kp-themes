@@ -1005,7 +1005,6 @@ test('AR43: every knob the architecture names has its default in the cyberpunk r
         '--kp-rule-weight': '3px',
         '--kp-slice': '600ms',
         '--kp-slice-hover': '320ms',
-        '--kp-charge': '520ms',
         '--fx-notch-sm': '8px',
     };
     const block = register.match(/\[data-theme='cyberpunk'\]\s*\{([^}]*)\}/)?.[1] ?? '';
