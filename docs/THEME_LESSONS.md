@@ -593,3 +593,16 @@ These were not cyberpunk's: the same wrong default is in every theme that has no
 - **Check:** shots of the option in a theme with a thick edge (deco, cyberpunk) and one with none (brutalism), then the no-change
   capture (`research/sidenav-minor/baseline.mjs`) on a page that sets none of the options.
 
+
+## 59. A demo window plays only when asked, and its focus never scrolls the page
+
+- **Symptom:** research/sidenav-minor/look.html jumped down to its sixth section two seconds after loading (scrollY 0 to 4955 px,
+  Firefox), and every window opened and closed by itself from the start, also while Kenny was reading another section (Kenny,
+  2026-10-14).
+- **Cause:** each window ran its own endless loop from load, and the action window called `focus()` without `preventScroll`, which
+  scrolls every ancestor document, the demo page included, to the focused element.
+- **Fix:** a window plays one round per request (`research/sidenav-minor/rounds.js`); the section's "Play once" button is its
+  `data-review-replay` control, so the review dialog's "Play open and close" drives it; every `focus()` in a window passes
+  `preventScroll: true`.
+- **Check:** load the demo in Firefox and read `scrollY` and every window's `data-kp-sidenav-open` every 0.5 s for 15 s without
+  touching anything: the page stays at 0 and no panel opens.

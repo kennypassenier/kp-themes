@@ -2,9 +2,10 @@
 // its scenario in `data-sm-scenario`; the script drives a pointer and keys
 // over the real component and writes every event the panel really sends into
 // the page's log. Nothing here is a mock: the panel, the handle, the
-// backdrop and the events are js/sidenav.js's. Loops until the page is
-// closed; a hidden page waits.
+// backdrop and the events are js/sidenav.js's. Plays one round each time the
+// page asks (rounds.js); a hidden page waits.
 import { attachSidenavs, sidenavOf } from '../../js/sidenav.js';
+import { nextRound } from './rounds.js';
 
 const panel = /** @type {HTMLElement} */ (document.querySelector('.kp-sidenav'));
 const main = /** @type {HTMLElement} */ (document.querySelector('.se-main'));
@@ -141,6 +142,7 @@ const scenes = {
         panel.addEventListener('kp-sidenav-toggle', onToggle);
         panel.addEventListener('kp-sidenav-prevented', onPrevented);
         for (;;) {
+            await nextRound();
             clearLog();
             field.value = '';
             mark(false);
@@ -242,6 +244,7 @@ const scenes = {
             await sleep(300);
         };
         for (;;) {
+            await nextRound();
             handle()?.destroy();
             try {
                 localStorage.removeItem('kp-remember:sidenav:sm-resize:width');
@@ -297,6 +300,7 @@ const scenes = {
         };
         document.addEventListener('click', backdropClick, true);
         for (;;) {
+            await nextRound();
             clearLog();
             if (handle()?.isOpen()) handle()?.close();
             await settled();

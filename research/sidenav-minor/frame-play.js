@@ -4,14 +4,15 @@
 // (pushes it, keeps a gutter, lies over it), so each option is seen in the
 // three modes without a click. The scene's name is shown in the frame.
 //
-// It stands down while the review dialog is looping the same section itself
-// (its "Play open and close" button is pressed), and for a while after the
-// reader touches the frame.
+// It plays one round each time the page asks (rounds.js): nothing moves
+// until the section's "Play once" is pressed, by the reader or by the review
+// dialog's "Play open and close".
 //
 // Attributes on <body>:
 //   data-play-scenes   "push,gutter,over" (default), the modes to cycle
 //   data-play-extra    optional steps run while the panel is open, see STEPS
 import { sidenavOf } from '../../js/sidenav.js';
+import { nextRound } from './rounds.js';
 
 const OPEN_HOLD = 2300;
 const SHUT_HOLD = 1500;
@@ -42,19 +43,6 @@ if (nav instanceof HTMLElement && asked.has('plain')) {
     nav.style.removeProperty('--kp-sidenav-peek');
     nav.style.removeProperty('--kp-sidenav-width-narrow');
 }
-let touched = 0;
-for (const type of ['pointerdown', 'keydown']) addEventListener(type, () => (touched = Date.now()), true);
-
-/** Whether something else is driving the panel right now. */
-function standDown() {
-    if (Date.now() - touched < 12000 || document.hidden) return true;
-    try {
-        return window.parent !== window && window.parent.document.querySelector('[data-rv-loop][aria-pressed="true"]') !== null;
-    } catch {
-        return false;
-    }
-}
-
 /** @param {string} scene */
 function arrange(scene) {
     if (!(nav instanceof HTMLElement)) return;
@@ -76,7 +64,8 @@ const STEPS = {
         const said = document.querySelector('.mn-said');
         if (!(button instanceof HTMLElement)) return;
         await wait(500);
-        button.focus({ focusVisible: true });
+        // preventScroll: a focus inside a window must not scroll the page that holds it.
+        button.focus({ preventScroll: true, focusVisible: true });
         await wait(900);
         button.click();
         if (said) said.textContent = 'The action was pressed; the link beside it did not open.';
@@ -93,11 +82,7 @@ async function loop() {
         // On a phone (`data-kp-sidenav-over-below`) the panel lies over the page whatever the scene says.
         const scenes = nav.hasAttribute('data-kp-sidenav-narrow') ? ['over'] : wanted;
         const scene = scenes[round % scenes.length];
-        if (standDown()) {
-            await wait(1000);
-            round -= 1;
-            continue;
-        }
+        await nextRound();
         const handle = sidenavOf(/** @type {HTMLElement} */ (nav));
         if (!handle) return;
         if (handle.isOpen()) {
@@ -110,7 +95,7 @@ async function loop() {
         const started = Date.now();
         for (const name of extras) await STEPS[/** @type {keyof typeof STEPS} */ (name)]?.();
         await wait(Math.max(0, OPEN_HOLD - (Date.now() - started)));
-        if (!standDown()) handle.close({ remember: false });
+        handle.close({ remember: false });
         await wait(SHUT_HOLD);
     }
 }
