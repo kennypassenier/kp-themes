@@ -2717,6 +2717,20 @@ effect with the close as the open backwards.
   widens after the pointer has rested `data-kp-sidenav-hover-delay`
   milliseconds (150 by default) and while the keyboard focus is inside it.
 
+### The side navigation's minor options
+
+[Kenny, 2026-10-14; research/sidenav-minor] Opt-in, one attribute or one
+token each; a panel that sets none of them looks and moves as before, in
+every theme, and every opening and closing keeps the theme's own effect with
+the close as the open backwards.
+
+- **A narrower panel on a narrow screen.** Set `--kp-sidenav-width-narrow`
+  (say `18rem`) on the panel or above it. While `data-kp-sidenav-over-below`
+  holds the panel as an `over` panel (40rem and narrower, or the length you
+  gave it; the module writes `data-kp-sidenav-narrow`) the panel is that
+  wide instead of `--kp-sidenav-width`. Unset, it keeps the width it has
+  everywhere else.
+
 ## The page shell [TH36]
 
 ```html

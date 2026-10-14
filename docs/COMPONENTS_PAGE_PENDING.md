@@ -46,3 +46,5 @@ each line its example and its option row, and empties the list.
   `data-kp-pieces`, `PIECE_CARRIERS`; wired in js/auto.js), with a still row of pom-poms in CSS without the script. The
   progress bar, skeleton, spinner, key figure, meter, menu button, data table and calendar pages show it in pastel; the
   spinner page lists `data-kp-pieces` already (gates/site/descriptors.mjs).
+- **Side navigation, narrow-screen width (2026-10-14, research/sidenav-minor).** `--kp-sidenav-width-narrow`: the panel's width
+  while `data-kp-sidenav-narrow` is on it (below the `data-kp-sidenav-over-below` step); falls back to `--kp-sidenav-width`.

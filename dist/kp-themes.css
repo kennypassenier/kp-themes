@@ -7589,6 +7589,18 @@
         border-inline-end: var(--kp-sidenav-edge, 1px solid var(--border));
     }
 
+    /* A narrower panel on a narrow screen [Kenny, 2026-10-14, from the
+       libraries survey: shadcn's --sidebar-width-mobile, Mantine's
+       responsive width]. `data-kp-sidenav-narrow` is what js/sidenav.js writes
+       while `data-kp-sidenav-over-below` holds the panel as an `over` panel
+       (40rem or its own step). The knob is opt-in: without
+       `--kp-sidenav-width-narrow` the fallback is the width the panel has
+       anywhere else, so nothing moves. It stands before the rail's rule
+       below, which names a width of its own and wins over it. */
+    .kp-sidenav[data-kp-sidenav-narrow] {
+        --kp-sidenav-w: var(--kp-sidenav-width-narrow, var(--kp-sidenav-width, 15rem));
+    }
+
     /* The panel that is part of the page. This is the default because a
        navigation that is there is a better starting point than one that
        has to be summoned; `over` and `push` are the ones you ask for. */

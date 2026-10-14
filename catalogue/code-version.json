@@ -5915,6 +5915,7 @@
         "||||.kp-sidenav[data-kp-sidenav-mode='over']": "b5447ffd86a4e3f9",
         "||||.kp-sidenav[data-kp-sidenav-mode='push']": "b5447ffd86a4e3f9",
         "||||.kp-sidenav[data-kp-sidenav-mode='side'][data-kp-sidenav-open='false']": "da1674ad6ef293d2",
+        "||||.kp-sidenav[data-kp-sidenav-narrow]": "696b2fea197346ae",
         "||||.kp-sidenav[data-kp-sidenav-open='true']": "d46190cf35b70851",
         "||||.kp-sidenav[data-kp-sidenav-position='absolute']": "d660e8a5c20e8d86",
         "||||.kp-sidenav[data-kp-sidenav-side='end']": "c5fd860d579fe84e",
