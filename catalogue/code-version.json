@@ -21,8 +21,8 @@
         "js/gridlayout.js": { "digest": "13ceeb82c7b8c760", "when": "[data-kp-grid]" },
         "js/kpi.js": { "digest": "303b7fb0c6477d3f", "when": "svg[data-kp-spark], button.kp-kpi--toggle, .kp-kpis[data-kp-kpis-columns]" },
         "js/loading-pieces.js": {
-            "digest": "0ca6566674254c21",
-            "when": ".kp-skeleton, .kp-progressbar, .kp-meter, .kp-kpi, .kp-spinner, [data-kp-datatable], [data-kp-calendar], [data-kp-menu-button]"
+            "digest": "36d0b7b71e2a851a",
+            "when": ".kp-skeleton, .kp-progressbar, .kp-meter, .kp-kpi, .kp-card, .kp-spinner, [data-kp-datatable], [data-kp-calendar], [data-kp-menu-button]"
         },
         "js/log.js": { "digest": "3fc853eb5c0c4dfa", "when": "[data-kp-source]" },
         "js/menu-button.js": { "digest": "e94d4736181db117", "when": "[data-kp-menu-button]" },

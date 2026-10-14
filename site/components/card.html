@@ -222,6 +222,20 @@
     &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__footer&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timestamp&quot;</span>&gt;Updated 2026-09-06 14:07&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A card that waits</figcaption>
+                        <p class="kp-text-muted">A card whose body is still on its way carries `aria-busy=&quot;true&quot;` until it has arrived. Every card in pastel has a thumbtack at its top centre; a waiting one also becomes caterpillar, a head on its top-end corner and legs along its foot.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<article class="kp-card" aria-busy="true">
+    <h3 class="kp-card__title">Pump house 3</h3>
+    <p class="kp-card__body">Reading the pressure from the field unit…</p>
+</article>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">article</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card&quot;</span> <span class="kp-code__keyword">aria-busy</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__title&quot;</span>&gt;Pump house 3&lt;/<span class="kp-code__keyword">h3</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__body&quot;</span>&gt;Reading the pressure from the field unit…&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">article</span>&gt;</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="more-examples" id="more-examples">
                     <h2 class="kp-fw-semibold">More examples</h2>
@@ -808,6 +822,8 @@
                             <tr><td><code>.kp-card__header</code></td><td>A row that lays the title and its actions on one baseline and pushes them apart.</td></tr>
                             <tr><td><code>.kp-card__actions</code></td><td>The controls in that row, spaced by the scale.</td></tr>
                             <tr><td><code>.kp-card__footer</code></td><td>A closing row, separated by a rule and the scale’s own distance.</td></tr>
+                            <tr><td><code>pastel: the thumbtack</code></td><td>In pastel every card is fixed to the page with a thumbtack at its top centre. A card that leaves loses its tack first, then lifts off as its landing backwards, and its space folds after the tack is out; one put back arrives as that backwards, the tack pushed in last.</td></tr>
+                            <tr><td><code>[aria-busy=&quot;true&quot;]</code></td><td>A card waiting for its content. In pastel it becomes caterpillar: a head on its top-end corner and legs along its foot that step in turn (js/loading-pieces.js). Other themes draw nothing extra.</td></tr>
                     </tbody></table></div>
                 </section>
                 </div>

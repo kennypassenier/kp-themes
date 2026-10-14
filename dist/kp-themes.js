@@ -18601,8 +18601,7 @@ function attachLoadingPieces(root = document) {
     root instanceof Document ? root.documentElement : root
   );
   watch.observe(target, { subtree: true, childList: true, attributes: true, attributeFilter: WATCHED });
-  if (root instanceof Document || root === document.documentElement)
-    watch.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  if (target !== document.documentElement) watch.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
   everything = true;
   schedule();
   return () => {
@@ -19135,7 +19134,7 @@ var NEEDS = [
     // components that make one wait later. A theme that names none gets
     // no piece.
     name: "loading-pieces",
-    when: ".kp-skeleton, .kp-progressbar, .kp-meter, .kp-kpi, .kp-spinner, [data-kp-datatable], [data-kp-calendar], [data-kp-menu-button]",
+    when: ".kp-skeleton, .kp-progressbar, .kp-meter, .kp-kpi, .kp-card, .kp-spinner, [data-kp-datatable], [data-kp-calendar], [data-kp-menu-button]",
     load: () => Promise.resolve().then(() => (init_loading_pieces(), loading_pieces_exports)),
     attach: (m, root) => [m.attachLoadingPieces(root)]
   },

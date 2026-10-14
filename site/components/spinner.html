@@ -196,6 +196,24 @@
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--primary&quot;</span> <span class="kp-code__keyword">aria-busy</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-spinner&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt; Saving…&lt;/<span class="kp-code__keyword">button</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">At every size</figcaption>
+                        <p class="kp-text-muted">The spinner’s size is a measure (the knobs table below), so one spinner serves a button, a line and a panel. In pastel the spinner is the pom-pom caterpillar going round a small day sticker, the round trip, at every size: js/loading-pieces.js draws it from pieces and marks the spinner `data-kp-pieces` while they are there.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-row kp-gap-md">
+    <span class="kp-spinner" role="status" aria-label="Loading, small" style="--kp-spinner-size: 1rem"></span>
+    <span class="kp-spinner" role="status" aria-label="Loading"></span>
+    <span class="kp-spinner" role="status" aria-label="Loading, medium" style="--kp-spinner-size: 2rem"></span>
+    <span class="kp-spinner" role="status" aria-label="Loading, large" style="--kp-spinner-size: 3rem"></span>
+</div>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-gap-md&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-spinner&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Loading, small&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-spinner-size: 1rem&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-spinner&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Loading&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-spinner&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Loading, medium&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-spinner-size: 2rem&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-spinner&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Loading, large&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-spinner-size: 3rem&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="more-examples" id="more-examples">
                     <h2 class="kp-fw-semibold">More examples</h2>
@@ -271,6 +289,8 @@
                             <tr><td><code>.kp-spinner</code></td><td>The one size, set by a measure so a consumer can make it smaller inside a button.</td></tr>
                             <tr><td><code>reduced motion</code></td><td>The animation is inside the reduced-motion guard: for a reader who asked for stillness the ring is simply drawn, not turning.</td></tr>
                             <tr><td><code>decorative</code></td><td>Beside a label that already says what is happening, the ring is marked hidden so the wait is not announced twice.</td></tr>
+                            <tr><td><code>pastel: the round trip</code></td><td>In pastel the spinner is the pom-pom caterpillar going round a small day sticker, at every size, on the theme’s loop; under reduced motion it rests curled round the sticker.</td></tr>
+                            <tr><td><code>--kp-loading-pieces</code></td><td>A register’s name for a loading picture made of pieces: js/loading-pieces.js (attachLoadingPieces(), wired in js/auto.js) adds the pieces to every waiting part of a theme that names one, and none to a theme that names nothing. Pastel names `caterpillar`; it is the only theme that names one.</td></tr>
                     </tbody></table></div>
                 </section>
                 </div>
