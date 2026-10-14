@@ -2752,6 +2752,19 @@ the close as the open backwards.
   to the card). The push and the gutter clear the panel exactly; over the page
   the panel stands in front of the card. The card is the module's doing, so a
   page without it keeps the flush panel only.
+- **A peek strip.** Set `--kp-sidenav-peek` (say `0.75rem`) on the panel or
+  above it and a thin strip of the panel stays at the window's edge while the
+  panel is shut: the module makes a `.kp-sidenav__peek` element beside the
+  panel (aria-hidden, no pointer, drawn in the theme's `--muted` ground,
+  `--kp-sidenav-peek-surface`, and strong edge). A theme's own opening and
+  closing run where the panel stands, not from the edge, so the strip is a
+  part of its own that is simply always there under the panel: the effect
+  does not change. A push panel keeps the strip's room in the content while
+  it is shut (the edge tab stands beside the strip), and a gutter already
+  holds it. **Over the page the strip is the one thing that overlaps the
+  content**, by exactly its width; nothing else of the panel does. A floating
+  panel hides the strip while it is open. Without the token there is no
+  strip, and the module does nothing.
 
 ## The page shell [TH36]
 

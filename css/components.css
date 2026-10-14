@@ -4782,6 +4782,40 @@
         translate: -0.15rem 0;
     }
 
+    /* The peek strip [Kenny, 2026-10-14, from the libraries survey: a sliver of
+       the panel stays at the edge, so the panel is known to be there]. Set
+       `--kp-sidenav-peek` (0.75rem) on the panel or above it, and
+       js/sidenav.js makes this element beside the panel: a thin column at the
+       window's edge, in the theme's muted ground (--kp-sidenav-peek-surface) and
+       strong edge, under the panel and
+       always there, so a theme's own opening and closing (which run where the
+       panel stands, not from the edge) stay as they are and the strip stays
+       put while they play. A push panel keeps the strip's room in the content
+       while it is shut; an `over` panel's strip is the only part of it that
+       lies over the page. It takes no pointer and no focus. Without the token
+       there is no strip, and nothing here applies. */
+    .kp-sidenav__peek {
+        position: fixed;
+        inset-block: var(--kp-sidenav-inset-block, 0);
+        inset-inline-start: 0;
+        z-index: calc(var(--kp-sidenav-layer, 60) - 1);
+        box-sizing: border-box;
+        inline-size: var(--kp-sidenav-peek, 0px);
+        background: var(--kp-sidenav-peek-surface, var(--muted));
+        border-inline-end: var(--kp-sidenav-edge, 1px solid var(--border-strong));
+        pointer-events: none;
+    }
+
+    .kp-sidenav__peek[data-kp-sidenav-peek-edge='end'] {
+        inset-inline: auto 0;
+        border-inline-end: none;
+        border-inline-start: var(--kp-sidenav-edge, 1px solid var(--border-strong));
+    }
+
+    .kp-sidenav__peek[data-kp-sidenav-peek-hushed] {
+        display: none;
+    }
+
     /* --- An entrance played backwards ------------------------------------ */
 
     /* js/motion.js playEntranceBackwards(): what came in with a CSS
@@ -9348,5 +9382,27 @@
         box-shadow:
             var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 var(--border-strong),
             0 0.25rem 1rem hsl(from var(--background) h s 0% / 0.25);
+    }
+}
+
+/* The peek strip of a floating panel keeps the gap of the panel above and
+ * rounds its far corners with the panel's radius; the panel's own hide while
+ * it is open is the module's (data-kp-sidenav-peek-hushed). */
+@layer kp.layout {
+    .kp-sidenav__peek[data-kp-sidenav-peek-variant='floating'] {
+        margin-block: var(--kp-sidenav-float-inset, var(--kp-space-sm, 0.5rem));
+        border: var(--kp-sidenav-float-edge, 1px solid var(--border-strong));
+        border-inline-start: none;
+        border-start-end-radius: var(--kp-sidenav-float-radius, var(--radius, 0.5rem));
+        border-end-end-radius: var(--kp-sidenav-float-radius, var(--radius, 0.5rem));
+    }
+
+    .kp-sidenav__peek[data-kp-sidenav-peek-variant='floating'][data-kp-sidenav-peek-edge='end'] {
+        border-inline-start: var(--kp-sidenav-float-edge, 1px solid var(--border-strong));
+        border-inline-end: none;
+        border-start-end-radius: 0;
+        border-end-end-radius: 0;
+        border-start-start-radius: var(--kp-sidenav-float-radius, var(--radius, 0.5rem));
+        border-end-start-radius: var(--kp-sidenav-float-radius, var(--radius, 0.5rem));
     }
 }

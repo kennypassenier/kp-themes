@@ -290,7 +290,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // The floating variant's ten: its gap, its derived gaps and room (--kp-sidenav-float, -lead, -room, -away-to-start,
     // -away-to-end) and the five knobs a theme or page sets (--kp-sidenav-float-inset, -radius, -edge, -shadow, -ink): 340 + 10.
     // The inset variant's four, all read through var(): its gap, the card's own space, radius and edge: 350 + 4.
-    assert.equal(result.expected, 354, 'AR21 counted the --kp-* properties in css/components.css');
+    // The peek strip's two, --kp-sidenav-peek (the strip's width) and --kp-sidenav-peek-surface, both read through var(): 354 + 2.
+    assert.equal(result.expected, 356, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -348,7 +349,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // that already read 325: 325 + 11.
     // The floating variant reads eight of its ten through var(); --kp-sidenav-room and -lead are read by js/sidenav.js: 337 + 8.
     // And the inset variant's four, every one read through var(): 345 + 4.
-    assert.equal(result.readCount, 349);
+    // And the peek strip's two: 349 + 2.
+    assert.equal(result.readCount, 351);
     // `--kp-chart-height` is read by js/chart.js (the plot's height when the
     // data names none), not by a stylesheet [scope-143]. --kp-sidenav-lead and --kp-sidenav-room are read by js/sidenav.js
     // (what the floating variant leaves beside the panel).

@@ -52,3 +52,5 @@ each line its example and its option row, and empties the list.
   from the edge (`--kp-sidenav-float-inset`, `-radius`, `-edge`, `-shadow`, `-ink`; the module reads `--kp-sidenav-room` and `-lead`).
 - **Side navigation, inset variant (2026-10-14, research/sidenav-minor).** `data-kp-sidenav-variant="inset"`: flush panel, the content a
   rounded card (`--kp-sidenav-inset-gap`, `-radius`, `-edge`; the module marks the content `data-kp-sidenav-inset`).
+- **Side navigation, peek strip (2026-10-14, research/sidenav-minor).** `--kp-sidenav-peek` (0.75rem): a thin `.kp-sidenav__peek` strip
+  stays at the edge while the panel is shut (`--kp-sidenav-peek-surface`); push keeps its room, over lies over the page by that width.
