@@ -26,36 +26,6 @@ const rgb = (css) => {
     return c ? [c.r / 255, c.g / 255, c.b / 255] : null;
 };
 
-for (const { name } of THEMES) {
-    test(
-        `${name}: a ghost and an icon button in the bar read against the bar [fix-77]`,
-        { tag: ['@component:navigation', '@component:button', `@theme:${name}`] },
-        async ({ page }) => {
-            await page.goto(FIXTURE);
-            await page.evaluate((theme) => document.documentElement.setAttribute('data-theme', theme), name);
-            // A theme switch animates its colours; read the settled ones.
-            await page.addStyleTag({ content: '*, *::before, *::after { transition: none !important; }' });
-            for (const which of ['ghost', 'icon', 'sticky-ghost', 'sticky-icon']) {
-                const read = await page.locator(`[data-test="${which}"]`).evaluate((el) => {
-                    let ground = null;
-                    const clear = (/** @type {Element} */ node) =>
-                        /rgba\(0, 0, 0, 0\)|transparent|\/ 0\)$/.test(getComputedStyle(node).backgroundColor);
-                    // The plate is the nearest box that paints a ground; the
-                    // button's own ground at rest is transparent.
-                    ground = el.parentElement;
-                    while (ground && clear(ground)) ground = ground.parentElement;
-                    return { ink: getComputedStyle(el).color, plate: ground ? getComputedStyle(ground).backgroundColor : 'rgb(255, 255, 255)' };
-                });
-                const ink = rgb(read.ink);
-                const plate = rgb(read.plate);
-                expect(ink && plate, `${which}: ${read.ink} on ${read.plate}`).toBeTruthy();
-                const ratio = contrast(/** @type {[number, number, number]} */ (ink), /** @type {[number, number, number]} */ (plate));
-                expect(ratio, `${name} ${which}: ${read.ink} on ${read.plate}`).toBeGreaterThanOrEqual(4.5);
-            }
-        },
-    );
-}
-
 /**
  * The colour a hovered control's plate paints most, read from the screen:
  * a hover plate may be the button's ground, a veil, an inset shadow or a
@@ -89,6 +59,37 @@ const plateOf = (page, png) =>
         const [top] = [...counts.values()].sort((a, b) => b.n - a.n);
         return top.sum.map((v) => v / top.n / 255);
     }, png.toString('base64'));
+
+for (const { name } of THEMES) {
+    test(
+        `${name}: a ghost and an icon button in the bar read against the bar [fix-77]`,
+        { tag: ['@component:navigation', '@component:button', `@theme:${name}`] },
+        async ({ page }) => {
+            await page.goto(FIXTURE);
+            await page.evaluate((theme) => document.documentElement.setAttribute('data-theme', theme), name);
+            // A theme switch animates its colours; read the settled ones.
+            await page.addStyleTag({ content: '*, *::before, *::after { transition: none !important; }' });
+            await page.mouse.move(0, 0);
+            for (const which of ['ghost', 'icon', 'sticky-ghost', 'sticky-icon']) {
+                const control = page.locator(`[data-test="${which}"]`);
+                // The plate is read from the screen, as the hover and focus test below reads it: a bar's plate may be a
+                // gradient over a transparent `background-color` (cyberpunk's yellow bar), which no walk up the
+                // ancestors for a painted ground can see. The button's own ground at rest is transparent, so its
+                // box shows the bar's plate; the most frequent colour of that box is the plate, not the glyph.
+                const box = await control.boundingBox();
+                if (!box) throw new Error(`${which} has no box`);
+                const png = await page.screenshot({ clip: box, animations: 'disabled', caret: 'hide' });
+                const seen = (await plateOf(page, png)).map((c) => c * 255);
+                const read = { ink: await control.evaluate((el) => getComputedStyle(el).color), plate: `rgb(${seen.map(Math.round).join(', ')})` };
+                const ink = rgb(read.ink);
+                const plate = rgb(read.plate);
+                expect(ink && plate, `${which}: ${read.ink} on ${read.plate}`).toBeTruthy();
+                const ratio = contrast(/** @type {[number, number, number]} */ (ink), /** @type {[number, number, number]} */ (plate));
+                expect(ratio, `${name} ${which}: ${read.ink} on ${read.plate}`).toBeGreaterThanOrEqual(4.5);
+            }
+        },
+    );
+}
 
 for (const { name } of THEMES) {
     test(

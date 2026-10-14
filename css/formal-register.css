@@ -3361,6 +3361,19 @@
         color: var(--destructive);
     }
 
+    /* The red edge bar and the two-channel focus ring share the box-shadow
+       property, and the bar's rule outranks the plain `:focus-visible` one, so
+       the keyboard saw only the paper-coloured outer half of the ring (an
+       almost invisible mark on this entry). Like the mirror button above, the
+       combined rule keeps both: the bar, then the inner ring, as every other
+       entry of the menu shows it [G14, G16; the dashboard's destructive menu
+       item, suite triage 10.0.0]. */
+    [data-theme='formal'] .kp-menu__item--destructive:focus-visible {
+        box-shadow:
+            inset 3px 0 0 var(--destructive),
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring);
+    }
+
     [data-theme='formal'] .kp-alert:is(.kp-alert--warning, .kp-alert--destructive) {
         border-color: var(--border);
         background: var(--card);

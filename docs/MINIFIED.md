@@ -24,24 +24,24 @@ the selectors and their order are identical, which is what
 | `css/deco-register.css` | 162.1 kB | 88.3 kB | 46% |
 | `css/fonts.css` | 21.3 kB | 15.8 kB | 26% |
 | `css/forest-register.css` | 171.1 kB | 86.2 kB | 50% |
-| `css/formal-register.css` | 154.3 kB | 79.7 kB | 48% |
+| `css/formal-register.css` | 155.1 kB | 79.9 kB | 48% |
 | `css/grotesk-register.css` | 121.4 kB | 57.4 kB | 53% |
 | `css/layout.css` | 13.0 kB | 2.5 kB | 81% |
 | `css/light-register.css` | 105.2 kB | 48.8 kB | 54% |
 | `css/nostromo-register.css` | 142.3 kB | 71.1 kB | 50% |
 | `css/pastel-register.css` | 158.1 kB | 79.9 kB | 50% |
-| `css/phantom-register.css` | 145.9 kB | 72.9 kB | 50% |
+| `css/phantom-register.css` | 146.6 kB | 73.1 kB | 50% |
 | `css/solstice-register.css` | 100.7 kB | 52.2 kB | 48% |
 | `css/synthwave-register.css` | 164.9 kB | 84.2 kB | 49% |
 | `css/terminal-register.css` | 141.8 kB | 72.9 kB | 49% |
 | `css/themes.css` | 153.4 kB | 99.3 kB | 35% |
 | `css/titanium-register.css` | 129.0 kB | 63.5 kB | 51% |
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 45% |
-| `dist/kp-themes.css` | 2948.8 kB | 1479.6 kB | 50% |
+| `dist/kp-themes.css` | 2950.3 kB | 1480.0 kB | 50% |
 | `dist/kp-themes.js` | 814.5 kB | 442.6 kB | 46% |
 
-The loose stylesheets together weigh **3008.9 kB** authored and
-**1516.6 kB** minified, 50% less. A page loading one theme's
+The loose stylesheets together weigh **3010.3 kB** authored and
+**1517.0 kB** minified, 50% less. A page loading one theme's
 register rather than the whole bundle carries only that register's row.
 
 The wire is smaller again: gzip takes the minified bundle to roughly a

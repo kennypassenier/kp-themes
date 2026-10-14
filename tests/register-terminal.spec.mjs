@@ -204,7 +204,7 @@ for (const [channel, url] of CHANNELS) {
             await expect.poll(async () => (await pseudo(rule, '::after', ['transform'])).transform).toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
         });
 
-        test('the shell line: a hovered item is inverse video, the cta is bracketed, the buttons are brackets and a plate', async ({ page }) => {
+        test('the shell line: a hovered item takes the cursor ring and a press is inverse video, the cta is bracketed, the buttons are brackets and a plate', async ({ page }) => {
             await open(page, url);
             await page
                 .locator('.kp-boot__skip')
@@ -215,8 +215,15 @@ for (const [channel, url] of CHANNELS) {
             await bootGone(page);
             const link = page.locator('.kp-nav__link').nth(1);
             await link.hover();
-            await expect.poll(() => link.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--primary'));
+            // Pointing brings the cursor ring (G8, css/terminal-register.css); inverse video
+            // is emphasis: the current item and the press.
+            const ring = await paint(page, '--ring');
+            await expect.poll(() => link.evaluate((el) => getComputedStyle(el).boxShadow)).toContain(ring);
+            expect(await link.evaluate((el) => getComputedStyle(el).backgroundColor), 'the ground stays').toBe('rgba(0, 0, 0, 0)');
+            await page.mouse.down();
+            await style(link, 'background-color', 'a press is inverse video').toBe(await paint(page, '--primary'));
             expect(await link.evaluate((el) => getComputedStyle(el).color)).toBe(await paint(page, '--primary-foreground'));
+            await page.mouse.up();
             const cta = page.locator('.kp-nav__link--cta').first();
             expect((await pseudo(cta, '::before', ['content'])).content).toMatch(/\[/);
             await style(cta, 'color').toBe(await paint(page, '--accent'));

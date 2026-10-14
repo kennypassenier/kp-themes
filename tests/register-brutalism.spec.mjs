@@ -152,17 +152,29 @@ for (const [channel, url] of CHANNELS) {
             await expect.poll(async () => (await pseudo(rule, '::after', ['transform'])).transform).toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
         });
 
-        test('the strip: a hovered item is the yellow plate with the line, and the cta lifts away from its shadow', async ({ page }) => {
+        test('the strip: a hovered item inverts to the ink plate with the yellow words in the line, and the cta inverts on a hover and lifts away from its shadow on focus', async ({ page }) => {
             await open(page, url);
             const link = page.locator('.kp-nav__link').nth(1);
             await link.hover();
-            await expect.poll(() => link.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--secondary'));
+            // Pointing inverts the item (G8, Kenny 2026-10-07 23:44); the yellow plate is the current item and the one with focus.
+            await expect.poll(() => link.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await paint(page, '--foreground'));
+            expect(await link.evaluate((el) => getComputedStyle(el).color), 'the words go yellow').toBe(await paint(page, '--secondary'));
             expect(await link.evaluate((el) => getComputedStyle(el).borderTopWidth)).toBe('3px');
             const cta = page.locator('.kp-nav__link--cta').first();
             await style(cta, 'background-color').toBe(await paint(page, '--primary'));
             await style(cta, 'box-shadow', 'the shadow').toMatch(/6px 6px 0px 0px/);
+            // Pointing inverts the cta (the yellow plate, ink words) and leaves its shadow at 6 px;
+            // the lift away from the shadow is what focus does (css/brutalism-register.css, G8, G14).
             await cta.hover();
-            await expect.poll(() => cta.evaluate((el) => getComputedStyle(el).translate), 'lifted').toBe('-2px -2px');
+            await expect.poll(() => cta.evaluate((el) => getComputedStyle(el).backgroundColor), 'inverted').toBe(await paint(page, '--primary-foreground'));
+            expect(await cta.evaluate((el) => getComputedStyle(el).color)).toBe(await paint(page, '--primary'));
+            expect(await cta.evaluate((el) => getComputedStyle(el).boxShadow), 'pointing does not move the shadow').toMatch(/6px 6px 0px 0px/);
+            await page.mouse.move(0, 0);
+            await cta.focus();
+            await page.keyboard.press('Tab');
+            await page.keyboard.press('Shift+Tab');
+            await expect(cta).toBeFocused();
+            await expect.poll(() => cta.evaluate((el) => getComputedStyle(el).translate), 'lifted by focus').toBe('-2px -2px');
             await expect.poll(() => cta.evaluate((el) => getComputedStyle(el).boxShadow), 'the shadow grows').toMatch(/8px 8px 0px 0px/);
         });
 

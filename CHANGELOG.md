@@ -37,6 +37,17 @@
 - **Fixed: a waiting deco button keeps its label readable under reduced motion** [package findings re-check]. The doors stood parted by a
   third, which covered 43 % of the label of a 128 px button (the doors cover two thirds of the button). A busy `.kp-button` now stands with
   them parted 2.5 thirds: 0 % of the label covered, about 10 px of each door left at the plate's ends. Other waiting parts are unchanged.
+- **Fixed: the destructive item of the row menu shows its keyboard focus in formal and phantom** [Kenny's go for 10.1.0; triage of the 10.0.0
+  suite, tests/dashboard.spec.mjs:255 and :291]. Formal's red edge bar is an `inset` box-shadow and it outranked the shared two-channel
+  ring, which is a box-shadow too, so the keyboard saw only the paper-coloured outer half (an almost invisible mark): the entry now keeps
+  the bar and the inner navy ring together, as every other entry of the menu shows it. Phantom's destructive entry is a red plate and its
+  focus ring stands inside it (`overflow: clip`): the dashed red ring was red on red and the black contrast ring was clipped away. On this
+  plate the dashes take the plate's ink (black) and the hugging ring is an inset line in the surface colour; every other part is unchanged.
+- **Fixed: the key-figure block of catalogue/data.html no longer chases itself at phone width** [triage of the 10.0.0 suite, row 26]. Its
+  line under the buttons was rewritten with the same words on every change of the strip, and `attachKpiStrips()` writes the strip's column
+  count twice while a label does not fit (the trial count, then the one that fits), so at 390 px the two heard each other about 500 times a
+  second (a press on a count took 1 to 6 s, the test 79 s). The line is written only when its words change (catalogue/demos.js); 7 s now.
+
 - **Fixed: a destructive menu entry keeps its ink** [Kenny's go for 10.1.0; package findings re-check]. `.kp-menu__item--destructive` came before
   `.kp-menu__item` and its hover in kp.components, and their `color: inherit` cancelled it, so in every theme whose register does not restate
   the ink (synthwave, pastel, blueprint, solstice, titanium, grotesk, forest, terminal, cyberpunk) "Delete" read like every other entry. The

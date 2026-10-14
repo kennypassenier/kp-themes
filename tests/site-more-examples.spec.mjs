@@ -16,8 +16,9 @@ test(
         const more = page.locator('#more-examples figure');
         // Twelve since the busy overlay's block (8.1.0); fourteen since the
         // states block shows the live busy counter and a written failure
-        // reason as stages of their own (9.2.0).
-        await expect(more).toHaveCount(14);
+        // reason as stages of their own (9.2.0); fifteen since the busy
+        // overlay's phone block (datatable-busy-phone) stands beside it.
+        await expect(more).toHaveCount(15);
         await expect(page.locator('#more-table-datatable-busy-overlay .kp-datatable__busy-overlay .kp-spinner')).toHaveCount(1);
         const states = page.locator('#more-table-datatable-states');
         // Three since 9.2.0: the live counter's table is busy too.
@@ -25,7 +26,9 @@ test(
         await expect(states.locator('[data-cat-busy] [data-kp-datatable-status]'), "the app's own words, through busy()").toContainText(
             'Asking the host… 42 s so far',
         );
-        await expect(states.getByRole('button', { name: 'Try again' })).toBeVisible();
+        // Two failed stages since 9.2.0 (the failure and the written reason), each with its retry.
+        await expect(states.getByRole('button', { name: 'Try again' })).toHaveCount(2);
+        await expect(states.getByRole('button', { name: 'Try again' }).first()).toBeVisible();
         // The pretend server of catalogue/demos.js answers here too.
         await expect(page.locator('#more-table-datatable-server tbody tr').first()).toBeVisible();
     },
@@ -34,5 +37,6 @@ test(
 test('the table page shows its catalogue blocks beside its own examples', { tag: ['@component:site'] }, async ({ page }) => {
     await page.goto('/site/components/table.html');
     await expect(page.locator('#example figure')).toHaveCount(3);
-    await expect(page.locator('#more-examples figure')).toHaveCount(7);
+    // Seven until the catalogue gained one more block that this page lists; eight now.
+    await expect(page.locator('#more-examples figure')).toHaveCount(8);
 });

@@ -37,6 +37,21 @@ const placement = (page) =>
         };
     }, TARGET);
 
+/**
+ * The placement once the card has finished gliding to its target: the card walks
+ * to the next step on the growth time (55e28b65, 9915b9b2), so right after a click
+ * the gap reads 9.5, 36.5 or 148.5 px on its way to 12.
+ * @param {import('@playwright/test').Page} page
+ */
+const settledPlacement = async (page) => {
+    /** @type {Awaited<ReturnType<typeof placement>> | undefined} */
+    let last;
+    await expect
+        .poll(async () => (last = await placement(page)).gap, { message: 'the card has arrived 12 px from its target', timeout: 8000 })
+        .toBe(12);
+    return /** @type {NonNullable<typeof last>} */ (last);
+};
+
 test(
     'the tour end to end: an exact count, the card 12 px from its ringed target and following it, Esc, memory, decorate, ?tour (I.3.7 1-4, 6, 7) [scope-143]',
     { tag: ['@component:overlays', '@component:catalogue'] },
@@ -47,7 +62,7 @@ test(
         await expect(page.locator('[data-cat-tour-log]')).toContainText('driven by a script');
         await page.locator('[data-cat-tour="start"]').click();
         await expect(page.locator(`${CARD} .kp-tour__count`)).toHaveText('1 of 5');
-        let at = await placement(page);
+        let at = await settledPlacement(page);
         expect([at.gap, at.covers, at.inView]).toEqual([12, false, true]);
         const look = await page
             .locator(TARGET)
@@ -60,7 +75,7 @@ test(
             await expect(page.locator(`${CARD} .kp-tour__count`)).toHaveText(`${n} of 5`);
         }
         await expect(page.locator(`${CARD} .kp-button--primary`)).toHaveText('Done');
-        at = await placement(page);
+        at = await settledPlacement(page);
         expect([at.gap, at.covers]).toEqual([12, false]);
         await page.keyboard.press('Escape');
         await expect(page.locator(CARD)).toHaveCount(0);
@@ -115,7 +130,7 @@ test(
         // The tour over the phone pane reaches its tab bar, the card beside it, not on it.
         await page.locator('[data-cat-tour="phone"]').click();
         await expect(page.locator(TARGET)).toHaveAttribute('data-cat-tour-phone', 'areas');
-        const at = await placement(page);
+        const at = await settledPlacement(page);
         expect([at.gap, at.covers]).toEqual([12, false]);
         expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBe(0);
     },

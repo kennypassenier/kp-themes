@@ -196,7 +196,7 @@ test(
 );
 
 test(
-    'in 16 themes, wide and in the phone pane: a figure in a tone and the change on their status pairs, and every label on one line, uncut, the tile growing to it [fix-99]',
+    'in 16 themes, wide and in the phone pane: a figure in a tone and the change on their status pairs, and every label wrapped between words only, uncut, one tile height [fix-99, kpi-label-cut-M1]',
     { tag: ['@component:data'] },
     async ({ page }) => {
         await ready(page);
@@ -226,13 +226,31 @@ test(
                         const tiles = /** @type {HTMLElement[]} */ ([...s.querySelectorAll(':scope > .kp-kpi')]);
                         const out = tiles.map((tile) => {
                             const l = /** @type {HTMLElement} */ (tile.querySelector('.kp-kpi__label'));
-                            const r = document.createRange();
-                            r.selectNodeContents(l);
+                            const lines = (/** @type {Range | Element} */ range) =>
+                                new Set([...range.getClientRects()].filter((b) => b.width > 0).map((b) => Math.round(b.top))).size;
+                            // A word on two lines is a word cut by the wrap; a label wraps between words only.
+                            let broken = 0;
+                            const walk = document.createTreeWalker(l, NodeFilter.SHOW_TEXT);
+                            for (let n = walk.nextNode(); n; n = walk.nextNode()) {
+                                for (const m of /** @type {Text} */ (n).data.matchAll(/\S+/g)) {
+                                    const word = document.createRange();
+                                    word.setStart(n, m.index);
+                                    word.setEnd(n, m.index + m[0].length);
+                                    if (lines(word) > 1) broken += 1;
+                                }
+                            }
+                            const box = tile.getBoundingClientRect();
                             return {
-                                lines: new Set([...r.getClientRects()].filter((b) => b.width > 0).map((b) => Math.round(b.top))).size,
-                                nowrap: getComputedStyle(l).whiteSpace === 'nowrap',
-                                cut: l.scrollWidth > l.clientWidth + 0.5 || tile.scrollWidth > tile.clientWidth + 0.5,
-                                height: Math.round(tile.getBoundingClientRect().height * 10) / 10,
+                                broken,
+                                // The label's text, or a part of the tile, reaches past the tile. The tile's scroll width is
+                                // not read: a theme's frame ornament is a pseudo-element standing 1 px out (deco) and cuts nothing.
+                                cut:
+                                    l.scrollWidth > l.clientWidth + 0.5 ||
+                                    [...tile.children].some((part) => {
+                                        const b = part.getBoundingClientRect();
+                                        return b.right > box.right + 0.5 || b.left < box.left - 0.5;
+                                    }),
+                                height: Math.round(box.height * 10) / 10,
                             };
                         });
                         label.innerHTML = keep;
@@ -243,7 +261,9 @@ test(
                     const at = `${theme} ${strip}${long ? ' (long label)' : ''}`;
                     if (over) misses.push(`${at}: the strip overflows`);
                     out.forEach((t, i) => {
-                        if (t.lines !== 1 || !t.nowrap) misses.push(`${at}: label ${i + 1} on ${t.lines} lines`);
+                        // Kenny, 2026-10-14 (kpi-label-cut-M1, merge 2bbd82cd): a trend label wraps between words, never cut; the
+                        // tile keeps two lines for it. (A plain tile's label stays on one line: tests/kpi-columns.spec.mjs.)
+                        if (t.broken) misses.push(`${at}: label ${i + 1} has ${t.broken} word(s) split across lines`);
                         if (t.cut) misses.push(`${at}: label ${i + 1} or its tile cut`);
                     });
                     const hs = out.map((t) => t.height);
@@ -267,7 +287,37 @@ test(
                     const plate = (el) => {
                         const layers = [];
                         for (let n = /** @type {Element | null} */ (el); n; n = n.parentElement) {
-                            const c = rgba(getComputedStyle(n).backgroundColor);
+                            const cs = getComputedStyle(n);
+                            // A plate drawn as one flat gradient (terminal's figure under a tone) is a ground like a
+                            // background colour, when it covers at least half the box each way; a frame line (blueprint,
+                            // terminal) is a flat gradient too, but one pixel thick.
+                            const split = (/** @type {string} */ list) => {
+                                const parts = [];
+                                let depth = 0;
+                                let from = 0;
+                                [...list].forEach((ch, at) => {
+                                    if (ch === '(') depth += 1;
+                                    else if (ch === ')') depth -= 1;
+                                    else if (ch === ',' && depth === 0) {
+                                        parts.push(list.slice(from, at).trim());
+                                        from = at + 1;
+                                    }
+                                });
+                                parts.push(list.slice(from).trim());
+                                return parts;
+                            };
+                            const images = cs.backgroundImage === 'none' ? [] : split(cs.backgroundImage);
+                            const sizes = split(cs.backgroundSize);
+                            const box = n.getBoundingClientRect();
+                            let flat = null;
+                            images.forEach((image, i) => {
+                                const m = /^linear-gradient\(((?:rgba?|color)\([^)]*\)), \1\)$/.exec(image);
+                                if (!m || flat) return;
+                                const [w = 'auto', h = w] = (sizes[i % sizes.length] ?? 'auto').match(/calc\([^)]*\)|\S+/g) ?? ['auto'];
+                                const big = (/** @type {string} */ part, /** @type {number} */ full) => part === 'auto' || part.startsWith('calc(100%') || parseFloat(part) >= full / 2;
+                                if (big(w, box.width) && big(h, box.height)) flat = m[1];
+                            });
+                            const c = flat ? rgba(flat) : rgba(cs.backgroundColor);
                             if (c[3] > 0) layers.push(c);
                             if (c[3] >= 1) break;
                         }

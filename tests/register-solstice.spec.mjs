@@ -31,7 +31,7 @@
 
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
-import { animationsSeen, pseudoStyle, recordAnimations } from './paint.mjs';
+import { pseudoStyle } from './paint.mjs';
 import { tabToSelector } from './ring.mjs';
 import { stampWord } from './stamp.mjs';
 
@@ -212,27 +212,44 @@ for (const [channel, url] of CHANNELS) {
             expect(stamp['background-color']).toBe(await paint(page, '--accent'));
         });
 
-        test('a low sun rakes once across the touched control [scope-12]', async ({ page }) => {
-            // `kp-rake` is a value that PASSES, not one that settles: the
-            // animation name is the keyframe while it runs and nothing after
-            // [fix-1]. So the listener is armed before the page exists.
-            // Drilled 2026-09-12 in firefox: the hover's `animation:
-            // kp-rake ...` removed -> red on the sighting.
-            await recordAnimations(page);
+        test('a low sun climbs its arc under the touched control, with the lit foot, on one number [scope-12, decided 2026-10-07]', async ({ page }) => {
+            // The rake of scope-12 (`kp-rake`) was replaced by the decided grammar
+            // (b27504dd): pointing is a number, --kp-sig-solstice-point, 0 at rest and 1
+            // under the pointer; the sun on ::before and the dome and foot edge on ::after
+            // are functions of it. Nothing keyframed runs. Drilled 2026-10-14 in firefox:
+            // the `:hover { --kp-sig-solstice-point: 1 }` rule removed -> red on the number.
             await open(page, url);
             const btn = page.locator('.kp-button').first();
-            const band = await pseudo(btn, '::after', ['background-image', 'width']);
-            expect(band['background-image'], 'the band is a gradient, so neither edge is a hard step').toContain('gradient');
+            const read = () =>
+                btn.evaluate((el) => ({
+                    point: getComputedStyle(el).getPropertyValue('--kp-sig-solstice-point').trim(),
+                    sun: getComputedStyle(el, '::before').opacity,
+                    foot: getComputedStyle(el, '::after').opacity,
+                    dome: getComputedStyle(el, '::after').backgroundImage,
+                }));
+            const rest = await read();
+            expect(rest.point, 'at rest the sun is below the edge').toBe('0');
+            expect(rest.sun).toBe('0');
             await btn.hover();
-            await animationsSeen(page, 'the sun rakes across').toContain('kp-rake');
+            await expect.poll(async () => (await read()).point, 'the sun has climbed').toBe('1');
+            const lit = await read();
+            expect(lit.sun, 'the sun shows').toBe('1');
+            expect(lit.foot, 'the foot edge and the dome show').toBe('1');
+            expect(lit.dome, 'a dome of warm light, a gradient so neither edge is a hard step').toContain('radial-gradient');
+            await page.mouse.move(0, 0);
+            await expect.poll(async () => (await read()).point, 'and sets again, once').toBe('0');
         });
 
-        test('the rake runs once, and not at all for someone asking for less motion [DI7]', async ({ page }) => {
-            await recordAnimations(page);
+        test('the sun climbs on a 240 ms sine, and at once for someone asking for less motion [DI7]', async ({ page }) => {
+            await open(page, url);
+            const duration = () => page.locator('.kp-button').first().evaluate((el) => getComputedStyle(el).transitionDuration);
+            expect(await duration(), 'the number runs 240 ms with motion').toContain('0.24s');
             await open(page, url, { reduced: true });
+            expect(await duration(), 'no transition under reduced motion').not.toContain('0.24s');
             await page.locator('.kp-button').first().hover();
-            await page.waitForTimeout(200);
-            expect(await page.evaluate(() => window.__kpAnimations ?? []), 'no rake under reduced motion').not.toContain('kp-rake');
+            await expect
+                .poll(() => page.locator('.kp-button').first().evaluate((el) => getComputedStyle(el).getPropertyValue('--kp-sig-solstice-point').trim()))
+                .toBe('1');
         });
 
         test('the approved inventory is whole on the page [S46]', async ({ page }) => {

@@ -183,7 +183,8 @@ test(
         await openReview(page);
         await approveOnReview(page, 'switch--states', 'formal');
 
-        await page.goto('/research/grotesk-hover/demo.html');
+        // A third catalogue page: the research demos carry the review kit and no prompt bar [fix-96].
+        await page.goto('/catalogue/field.html');
         const top = page.locator('[data-cat-prompt-bar]');
         await expect(top).toBeVisible();
         // A component page's note lives under the review page's key, so both are one page.
@@ -198,13 +199,14 @@ test(
         await expect(page.locator('.cat-feedback [data-cat-prompt]')).toHaveText((await text.textContent()) ?? '');
 
         await top.locator('[data-cat-prompt-clear]').click();
+        await expect(top.locator('[data-cat-prompt-count]')).toContainText('Nothing new');
+        await expect(text).not.toContainText(note);
         // A demo that carries the review kit copies its own answer and has no
         // catalogue prompt bar beside it [fix-96].
         await page.goto('/research/open-reverse/demo.html');
         await expect(page.locator('[data-rv-copy]').first()).toBeAttached();
         await expect(page.locator('[data-cat-prompt-bar]')).toHaveCount(0);
-        await expect(top.locator('[data-cat-prompt-count]')).toContainText('Nothing new');
-        await expect(text).not.toContainText(note);
+        await page.goto('/catalogue/field.html');
         expect(await page.evaluate((key) => localStorage.getItem(key), FEEDBACK)).toBe('{}');
         // The verdict stays; only its place in a prompt is used up.
         const judgements = await page.evaluate((key) => JSON.parse(localStorage.getItem(key) ?? '{}'), JUDGEMENTS);
