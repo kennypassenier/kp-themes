@@ -2773,6 +2773,30 @@ the close as the open backwards.
   between rows, the list's padding and whatever a theme says about its own
   rows stay the theme's. It is the panel's own preset, apart from the
   page-wide `data-density="compact"`.
+- **An action beside an item.** A trailing icon button next to a link: make
+  the list item a `.kp-sidenav__row` and put the link and the button in it as
+  siblings, never the button inside the link, so pressing it cannot follow
+  the link. Both are in the tab order, in that order, and the button has an
+  accessible name of its own. Put the theme's own `.kp-icon-button` on it
+  too and it wears the theme's icon button, with this component's size and
+  place:
+
+  ```html
+  <li class="kp-sidenav__row">
+      <a class="kp-sidenav__link" href="/alarms">
+          <span class="kp-sidenav__icon" aria-hidden="true">!</span><span class="kp-sidenav__label">Alarms</span>
+      </a>
+      <button type="button" class="kp-icon-button kp-sidenav__action" aria-label="More about Alarms">
+          <span aria-hidden="true">⋯</span>
+      </button>
+  </li>
+  ```
+
+  The button is as tall as its row (so it follows the density preset) and
+  `--kp-sidenav-action-size` wide (2rem), a gap of `--kp-sidenav-action-gap`
+  (0.25rem) from the link; hover is the link's, and its focus ring is drawn
+  inside it, where the panel's scroll cannot cut it. In the collapsed rail the
+  actions go with the labels.
 
 ## The page shell [TH36]
 

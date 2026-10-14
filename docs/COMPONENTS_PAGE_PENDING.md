@@ -56,3 +56,5 @@ each line its example and its option row, and empties the list.
   stays at the edge while the panel is shut (`--kp-sidenav-peek-surface`); push keeps its room, over lies over the page by that width.
 - **Side navigation, density presets (2026-10-14, research/sidenav-minor).** `data-kp-sidenav-density="compact|comfortable"`: sets only
   `--kp-sidenav-link-padding-block`, `-link-size`, `-icon-size` and `-pad` (rows 29 / 37 / 45 px).
+- **Side navigation, action beside an item (2026-10-14, research/sidenav-minor).** `.kp-sidenav__row` (the list item) holding a link and a
+  `.kp-icon-button.kp-sidenav__action` as siblings; `--kp-sidenav-action-size` (2rem), `--kp-sidenav-action-gap` (0.25rem); own focus ring, hides in the rail.
