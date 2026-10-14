@@ -7535,7 +7535,14 @@ var init_sidenav = __esm({
        * the edge the panel comes from, `start` or `end`. The content is a
        * rounded card while it is there.
        */
-      inset: "data-kp-sidenav-inset"
+      inset: "data-kp-sidenav-inset",
+      /**
+       * On the panel: `"compact"` or `"comfortable"` sets the tokens that make
+       * a row's height and the panel's padding (`--kp-sidenav-link-padding-block`,
+       * `-link-size`, `-icon-size`, `-pad`); without it, or with `"default"`,
+       * the panel is what it always was. CSS only; the module does not read it.
+       */
+      density: "data-kp-sidenav-density"
     };
     SIDENAV_TAB = ".kp-sidenav__tab";
     SIDENAV_LAUNCHER = ".kp-sidenav__launcher";

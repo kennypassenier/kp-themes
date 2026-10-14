@@ -54,3 +54,5 @@ each line its example and its option row, and empties the list.
   rounded card (`--kp-sidenav-inset-gap`, `-radius`, `-edge`; the module marks the content `data-kp-sidenav-inset`).
 - **Side navigation, peek strip (2026-10-14, research/sidenav-minor).** `--kp-sidenav-peek` (0.75rem): a thin `.kp-sidenav__peek` strip
   stays at the edge while the panel is shut (`--kp-sidenav-peek-surface`); push keeps its room, over lies over the page by that width.
+- **Side navigation, density presets (2026-10-14, research/sidenav-minor).** `data-kp-sidenav-density="compact|comfortable"`: sets only
+  `--kp-sidenav-link-padding-block`, `-link-size`, `-icon-size` and `-pad` (rows 29 / 37 / 45 px).

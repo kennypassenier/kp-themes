@@ -119,6 +119,13 @@ export declare const OPTIONS: {
      * rounded card while it is there.
      */
     inset: string;
+    /**
+     * On the panel: `"compact"` or `"comfortable"` sets the tokens that make
+     * a row's height and the panel's padding (`--kp-sidenav-link-padding-block`,
+     * `-link-size`, `-icon-size`, `-pad`); without it, or with `"default"`,
+     * the panel is what it always was. CSS only; the module does not read it.
+     */
+    density: string;
 };
 /** The fixed box at the panel's far edge that holds a small toggler: the edge tab. */
 export declare const SIDENAV_TAB = ".kp-sidenav__tab";

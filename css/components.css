@@ -4782,6 +4782,29 @@
         translate: -0.15rem 0;
     }
 
+    /* Density presets [Kenny, 2026-10-14, from the libraries survey: Fluent's
+       `density`, Chakra's `size`]. `data-kp-sidenav-density` on the panel is
+       one attribute that only sets tokens this component already reads: a row's
+       block padding, its type size, the icon's width and the header and footer
+       padding. The default (no attribute) is what the panel always was, at
+       37px a row; `compact` is 29px, above the 28px floor the package keeps
+       under a control, and `comfortable` 45px. The gap between rows, the list's
+       padding and everything a register says about its own rows are the
+       theme's, and stay. This is the panel's own knob, apart from the page-wide
+       `data-density="compact"` in css/_density.css, which they may share. */
+    .kp-sidenav[data-kp-sidenav-density='compact'] {
+        --kp-sidenav-link-padding-block: var(--kp-space-xs, 0.25rem);
+        --kp-sidenav-icon-size: 1.1rem;
+        --kp-sidenav-pad: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-sidenav[data-kp-sidenav-density='comfortable'] {
+        --kp-sidenav-link-padding-block: var(--kp-space-md, 0.75rem);
+        --kp-sidenav-link-size: var(--kp-text-md, 1rem);
+        --kp-sidenav-icon-size: 1.4rem;
+        --kp-sidenav-pad: 1rem;
+    }
+
     /* The peek strip [Kenny, 2026-10-14, from the libraries survey: a sliver of
        the panel stays at the edge, so the panel is known to be there]. Set
        `--kp-sidenav-peek` (0.75rem) on the panel or above it, and

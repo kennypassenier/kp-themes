@@ -2765,6 +2765,14 @@ the close as the open backwards.
   content**, by exactly its width; nothing else of the panel does. A floating
   panel hides the strip while it is open. Without the token there is no
   strip, and the module does nothing.
+- **Density.** `data-kp-sidenav-density="compact"` or `"comfortable"` on the
+  panel is one attribute that only sets tokens the panel already reads: a
+  row's block padding, its type size, the icon's width and the header and
+  footer padding. Default (no attribute) is 37px a row; `compact` is 29px
+  (above the 28px floor under a control) and `comfortable` 45px. The gap
+  between rows, the list's padding and whatever a theme says about its own
+  rows stay the theme's. It is the panel's own preset, apart from the
+  page-wide `data-density="compact"`.
 
 ## The page shell [TH36]
 
