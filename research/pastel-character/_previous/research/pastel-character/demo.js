@@ -12,10 +12,17 @@
 // the package's own components in pastel), the rows and the review kit's
 // choices from that data, and runs the page's clocks. Each OPTION is a live
 // scene with one attribute on its wrapper (`data-pa-<question>="<key>"`) that
-// options.css reads. The first option is the recommendation. The network graph
+// options.css reads. The recommendation is the option marked `rec`, else the
+// first (aspects.js: the spinner recommends option 2 so its pairs keep their
+// numbers). The network graph
 // is in no scene: it changes in no theme (Kenny, 2026-10-07 02:54).
 
 import { ASPECTS, STORY, TITLE, THEME, LABEL } from './aspects.js';
+import { decorate as decorateA } from './pairs-a.js';
+import { decorate as decorateB } from './pairs-b.js';
+
+/** The recommended option's index: the one marked `rec`, else the first. @param {{ options: { rec?: boolean }[] }} a */
+const recOf = (a) => Math.max(0, a.options.findIndex((o) => o.rec));
 
 /* ----------------------------------------------------------- the parts */
 
@@ -25,7 +32,9 @@ const button = (label = '', modifier = '', extra = '') =>
 
 /** A strip of washi tape across a plate's top-start corner (G7). */
 const TAPE = '<span class="pa-tape" aria-hidden="true"></span>';
-/** What a waiting part wears: the tape strip, and the candy dot of the hop option. */
+/** A thumbtack beside it, drawn only by the leave's tack option (G12, update 1), which hides the tape. */
+const TACK = '<span class="pa-tack" aria-hidden="true"></span>';
+/** What a waiting part wears: the tape strip, and a dot some loading pictures draw with (pairs-a, pairs-b). */
 const WAIT = '<span class="pa-strip" aria-hidden="true"><span class="pa-strip__dot"></span></span>';
 
 /**
@@ -313,10 +322,12 @@ const SPINNER = () =>
     cell('Een bezige knop', `<button type="button" class="kp-button pa-btn pa-busy-button" aria-busy="true">${spin()}<span class="kp-button__label">Bewaren…</span></button>`) +
     cell('Een bezig paneel', `<div class="kp-card pa-tile pa-busy-panel">${spin('2.5rem')}<p class="kp-card__body">De agenda wordt gelezen…</p></div>`);
 
+// The parts the surface rule tapes to the page (the card, the key figure) also
+// carry the tack the leave's third option pushes in instead of the tape.
 const LEAVE = () =>
     cell('Een melding', sheet(PART.alert('De wasmachine is klaar.'), 'pa-plate', 0)) +
-    cell('Een kaart', PART.tile('Boodschappen', '4 van 9 gedaan', true)) +
-    cell('Een kerncijfer', `<div class="kp-kpis">${PART.kpi('Taken vandaag', '12', note('3 meer'))}</div>`) +
+    cell('Een kaart', PART.tile('Boodschappen', '4 van 9 gedaan', true).replace(TAPE, TAPE + TACK)) +
+    cell('Een kerncijfer', `<div class="kp-kpis">${PART.kpi('Taken vandaag', '12', note('3 meer')).replace(TAPE, TAPE + TACK)}</div>`) +
     cell('Een toast', PART.toast());
 
 const COMPOSITES = () =>
@@ -478,7 +489,7 @@ section.setAttribute(
             label: a.label,
             options: a.options.map((o, at) => ({
                 value: String(at + 1),
-                label: `${o.name}${at === 0 ? ' (aanbevolen)' : ''}`,
+                label: `${o.name}${at === recOf(a) ? ' (aanbevolen)' : ''}`,
                 hint: `${a.question} ${o.see} ${o.verdict}`,
             })),
         })),
@@ -487,7 +498,7 @@ section.setAttribute(
 const look = /** @type {HTMLElement} */ (section.querySelector('[data-review-look]'));
 const lookLine = document.createElement('p');
 lookLine.setAttribute('data-for', THEME);
-lookLine.textContent = `${ASPECTS.length} vragen, elk één regel van ${LABEL.toLowerCase()}; de eerste optie van elke vraag is de aanbeveling. Kies wat voor jou ${LABEL.toLowerCase()} is, of “None of these” met een opmerking.`;
+lookLine.textContent = `${ASPECTS.length} vragen, elk één regel van ${LABEL.toLowerCase()}; de optie met “aanbevolen” is de aanbeveling (meestal de eerste). Laden en de spinner zijn 21 paren: optie N van de ene hoort bij optie N van de andere. Kies wat voor jou ${LABEL.toLowerCase()} is, of “None of these” met een opmerking.`;
 look.append(lookLine);
 
 /* ---------------------------------------------------------------- the rows */
@@ -495,6 +506,7 @@ look.append(lookLine);
 const rows = /** @type {HTMLElement} */ (section.querySelector('[data-pa-aspects]'));
 const toc = document.querySelector('[data-pa-toc]');
 ASPECTS.forEach((a, n) => {
+    const rec = recOf(a);
     const scene = SCENES[a.scene];
     if (!scene) throw new Error(`no scene for ${a.id}: ${a.scene}`);
     const box = document.createElement('section');
@@ -514,14 +526,14 @@ ASPECTS.forEach((a, n) => {
         col.className = 'pa-col';
         col.setAttribute('data-pa-option', String(at + 1));
         col.innerHTML = `<p class="pa-label"><span class="pa-label__no">${at + 1}</span> <span class="pa-label__name"></span>${
-            at === 0 ? ' <span class="pa-label__rec">Aanbevolen</span>' : ''
+            at === rec ? ' <span class="pa-label__rec">Aanbevolen</span>' : ''
         }</p><p class="pa-see"></p><p class="pa-verdict"></p>
         <div class="pa-scene" data-pa-kind="${a.kind}" data-pa-${a.id}="${o.key}" data-pa-phase="in">${scene()}</div>`;
         /** @type {HTMLElement} */ (col.querySelector('.pa-label__name')).textContent = o.name;
         /** @type {HTMLElement} */ (col.querySelector('.pa-see')).textContent = o.see;
         const verdict = /** @type {HTMLElement} */ (col.querySelector('.pa-verdict'));
         verdict.textContent = o.verdict;
-        verdict.classList.toggle('pa-verdict--rec', at === 0);
+        verdict.classList.toggle('pa-verdict--rec', at === rec);
         trio.append(col);
     });
     rows.append(box);
@@ -532,6 +544,64 @@ ASPECTS.forEach((a, n) => {
         toc.append(li);
     }
 });
+
+// Round 2: the loading and spinner pairs add a few elements of their own
+// (pairs-a.js, pairs-b.js). Some measure their carrier (pairs-a's doodle fits its
+// line to the strip; a hidden strip measures 0 and falls back to a stretched
+// line), so each scene is decorated after layout and again whenever its size
+// changes: a resize, or the review dialog showing a cell that was hidden.
+const decorated = new WeakMap();
+const decorateScene = (/** @type {HTMLElement} */ scene) => {
+    const id = scene.hasAttribute('data-pa-loading') ? 'loading' : 'spinner';
+    const key = scene.getAttribute(`data-pa-${id}`) || '';
+    decorateA(scene, id, key);
+    decorateB(scene, id, key);
+};
+const resized = new ResizeObserver((entries) => {
+    for (const { target, contentRect } of entries) {
+        const size = `${Math.round(contentRect.width)}x${Math.round(contentRect.height)}`;
+        if (decorated.get(target) === size) continue;
+        decorated.set(target, size);
+        decorateScene(/** @type {HTMLElement} */ (target));
+    }
+});
+// An option change (the review kit's embed writes the key on the scene) redraws too.
+const rekeyed = new MutationObserver((records) => {
+    for (const { target } of records) decorateScene(/** @type {HTMLElement} */ (target));
+});
+for (const scene of section.querySelectorAll('.pa-scene[data-pa-loading], .pa-scene[data-pa-spinner]')) {
+    decorateScene(/** @type {HTMLElement} */ (scene));
+    resized.observe(scene);
+    rekeyed.observe(scene, { attributeFilter: ['data-pa-loading', 'data-pa-spinner'] });
+}
+
+// Update 1 (update.json beside this page, the review kit's convention): the
+// questions Kenny approved are answered there and the dialog no longer walks
+// them; on the page each such row says it is decided and marks the option he
+// picked, so only the reopened questions read as open.
+fetch(new URL('update.json', location.href), { cache: 'no-cache' })
+    .then((response) => (response.ok ? response.json() : null))
+    .then((update) => {
+        const picks = update?.picks?.[THEME] || {};
+        const asked = update?.questions?.[THEME] || {};
+        for (const a of ASPECTS) {
+            const box = rows.querySelector(`[data-pa-aspect="${a.id}"]`);
+            const at = a.options.findIndex((o) => o.key === picks[a.id]);
+            if (!box || at < 0 || asked[a.id]) continue;
+            box.setAttribute('data-pa-decided', '');
+            const note = document.createElement('p');
+            note.className = 'pa-aspect__decided';
+            note.textContent = `Beslist door jou (14/10): ${a.options[at].name}. Niet meer gevraagd.`;
+            box.querySelector('.pa-aspect__head')?.append(note);
+            const col = box.querySelector(`[data-pa-option="${at + 1}"]`);
+            col?.setAttribute('data-pa-picked', '');
+            const tag = document.createElement('span');
+            tag.className = 'pa-label__picked';
+            tag.textContent = 'Jouw keuze';
+            col?.querySelector('.pa-label')?.append(' ', tag);
+        }
+    })
+    .catch(() => {});
 
 // The window of a cell's close is its picture's own length: the largest place in
 // reading order of its arriving parts tells how many group steps it holds.

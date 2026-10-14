@@ -1,8 +1,17 @@
 # What makes pastel pastel
 
-**Open (2026-10-14): nineteen questions wait for Kenny's verdicts in the review dialog** (research/pastel-character/demo.html, round
-`2026-10-14-r1`; the picks will go to `decided.json` and, once decided, to css/pastel-register.css; see themes/pastel/CHARACTER.md §0 and
-§0a).
+**Update 1, round 2 (2026-10-14): loading and the spinner are 21 matched pairs.** Loading N and spinner N are one idea (every
+name says "Paar N"): pair 1 the washi flutter and the tape roll, pair 2 pearls on a thread and today's candy dots, pairs 3-11 from
+the planner and the risograph (`pairs-a.js`/`.css`), pairs 12-21 from the craft table (`pairs-b.js`/`.css`). Loading recommends
+pair 1, the spinner pair 2 (Kenny's best; an option's `rec` marks a recommendation that is not first, so the pairs keep their
+numbers), the tape roll marked "ook goed". The old drift, hop and chase options are gone. The list is in CHARACTER.md §6a.
+
+**Update 1 (2026-10-14): five questions wait for Kenny's verdicts in the review dialog** (research/pastel-character/demo.html). Round
+`2026-10-14-r1` was judged on 2026-10-14 (snapshot in `_previous/`): fourteen questions are approved and locked in `update.json`
+(`picks.pastel`, the option keys; focus is _the dashed line alone_, not the recommendation), so the dialog no longer walks them and the
+page marks each as decided with Kenny's option tagged. Asked again (`questions.pastel`, Kenny's words and the reply): loading and the
+spinner (redone), the leave (option 1 shown to be the anchor itself, and two new options: the tape stuck on, a thumbtack pushed in), pointing
+(the key figure's fold fixed) and the motifs (the empty state's lip redrawn). See themes/pastel/CHARACTER.md §0.
 
 **Why.** Pastel was the only theme without a `CHARACTER.md`, and its one opening (the sheet: up from 18 px below, turned -2.5°, out of
 nothing) reads plain (docs/THEME_LESSONS.md lesson 52). The analysis in [themes/pastel/CHARACTER.md](../../themes/pastel/CHARACTER.md)
@@ -14,7 +23,8 @@ swings down from its top-start corner onto it (Kenny's arrival family, _Stuck on
 
 **What.** One page, pastel only, in the review kit's aspect mode (`data-review-themes="pastel"`): an intro (three paragraphs, from
 `aspects.js`), "Wat pastel vandaag is" (the package's own parts in pastel), then nineteen questions, each one rule and three options (four for
-the anchor), each a live scene built from the package's own components in pastel. The first option is the recommendation; every option says
+the anchor; 21 for loading and the spinner, five for the leave), each a live scene built from the package's own components in
+pastel. The first option is the recommendation (the spinner's is option 2, marked `rec`); every option says
 what you see and why it is or is not recommended, on the page and in its hint in the dialog. Options named "jouw keuze(s)" are the decided
 demos' values, "vandaag" the register's. The text Kenny reads is Dutch; identifiers and this file are English.
 
@@ -30,9 +40,9 @@ demos' values, "vandaag" the register's. The text Kenny reads is Dutch; identifi
 | 8   | Surface (G7)                   | paper with its pass, taped · paper with its pass · as today (soft shadows)                      |
 | 9   | A tone (G8)                    | the sticker (family) · the heart sticker askew · the tape label                                 |
 | 10  | Live (G9)                      | the wobble (family) · reprinted · squished (the picks)                                          |
-| 11  | Loading (G10)                  | the washi flutters (family) · the stripes drift · a candy dot hops                              |
-| 12  | The spinner (G11)              | the tape roll · the three candy dots (today) · the pass chases                                  |
-| 13  | Leaving and arriving (G12)     | peeled off · the balloon (Kenny's 04/10 pick) · popped away                                     |
+| 11  | Loading (G10)                  | 21 pairs: the washi flutters (family) · pearls on a thread · … (CHARACTER.md §6a)               |
+| 12  | The spinner (G11)              | 21 pairs: the tape roll · the three candy dots (today, recommended) · … (CHARACTER.md §6a)      |
+| 13  | Leaving and arriving (G12)     | the anchor itself · the anchor, then taped · the anchor, then a thumbtack · the balloon · popped |
 | 14  | Composites (G13)               | pastel's own · as the register today · as the picks                                            |
 | 15  | Pointing (G14)                 | the corner peels · lifted askew (today) · the tape tab                                          |
 | 16  | Focus (G15)                    | the two rings, the outer dashed · the two rings (today) · the dashed line alone (the picks)     |
@@ -72,6 +82,33 @@ demos' values, "vandaag" the register's. The text Kenny reads is Dutch; identifi
   buttons 6.10:1, plain 10.16:1, ghost 6.45:1, menu entries 5.46:1 or more, the good tone sticker 4.57:1, the bad 5.16:1 or more, marks
   4.54:1 or more (the candy option's lowest). Unmeasured: the striped tape labels of question 9 option 3 (a gradient plate).
 - Layout: no horizontal overflow at 390 px (page scroll width 390); screenshots at 1600 and 390 px checked by eye.
+
+**Measured, update 1 (Firefox, 2026-10-14).** `python3 -m http.server 8771 --bind 127.0.0.1` from the worktree root, then
+`node research/_review/measure-motion.mjs research/pastel-character --base http://127.0.0.1:8771 --aspect leave` (6 s):
+
+- Leave option 1 is the anchor: every part reads exactly as the anchor question's option 1 (the pass in t50 160, t90 250, run 20→440; the
+  part in t50 280, t90 370, run 140→560; out the mirror), and all of them "mirror". It names the anchor's keyframes (`pa-pass`, `pa-stuck`),
+  curve and times; no option rule overrides them.
+- Options 2 and 3: the tape and the tack run 580→920 ms in (from the moment the part has landed, 360 ms on the landing curve), and are the
+  first thing out (140→360 ms), then the part (530→800) and its pass (650→920): every part "mirror". A cell that carries a fix has a window
+  360 ms longer (`--pa-fixT`); the notice and the toast, which carry none, keep the anchor's window.
+- Pointing: the key figure's fold sat 12 px inside its corner (measured with getBoundingClientRect: tile right 483, fold right 471) because
+  the package gives every child of `.kp-kpi` `grid-column: 1 / -1`, which places an absolute child in that column; now `grid-column: auto`
+  and the plate's radius. The empty state's lip: the plate is cut along the crease with `clip-path`, the lip is the folded corner.
+- Layout: page scroll width 1600 at 1600 px and 390 at 390 px; screenshots at both widths checked by eye.
+
+**Measured, round 2 (Firefox, 2026-10-14).** `python3 -m http.server 8791 --bind 127.0.0.1` from the worktree root, then
+Playwright Firefox scripts over `demo.html?review=all` and the review dialog:
+
+- 21 options in loading and in the spinner, on the page and in the dialog (flipped 1/21 to 21/21, each a distinct label); 14
+  questions marked decided; the dialog walks five steps (loading 21, spinner 21, leave 5, pointing 3, motifs 3).
+- Every carrier plays: each of the 13 strips of every loading scene and each of the 5 spinners of every spinner scene has a
+  running animation (0 without one); under reduced motion 0 animations run in either row.
+- No console error; page scroll width 1600 at 1600 px and 390 at 390 px, the dialog's 1502 and 388.
+- Pair 3's ring (`a-circle`): 3.56:1 on the busy button, 3.88:1 on the page, 4.21:1 on the panel (was 1.52-1.80:1).
+- `node research/_review/measure-motion.mjs research/pastel-character --base http://127.0.0.1:8791` (16 s): 202 part lines, 197
+  "mirror", the 5 others the trend line's clip and the durations contact button as before. The loading and spinner loops are
+  not cycle scenes, so the tool does not read them.
 
 **Doubts.** The anchor's second pass is drawn by `::before`, which several package parts already use (the tooltip's bubble dots, the
 empty state's disc); the port will need a box-shadow layer or a wrapper there. RTL is not drawn: the pass's offset and the swing's corner

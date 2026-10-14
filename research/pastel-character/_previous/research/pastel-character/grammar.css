@@ -428,6 +428,50 @@
     }
 }
 
+/* ── G12: fixed to the page after it landed (update 1, Kenny 2026-10-14) ──
+   The anchor, then what holds the part to the canvas is put on: the strip of
+   washi tape over its top-start corner, or a thumbtack at its top centre. Each
+   comes down from above the page, larger (nearer the eye) and turned, and lands
+   on the soft landing: its one overshoot is the small flat press that sticks
+   the tape on or pushes the tack in (scale 0.96 / 0.94 at 75 % of the time),
+   then it settles. The leave plays the same frames backwards, first. */
+
+@keyframes pa-fix {
+    from {
+        translate: -5px -14px;
+        scale: 1.45;
+        rotate: -26deg;
+        opacity: 0;
+    }
+}
+
+@keyframes pa-fix-r {
+    from {
+        translate: -5px -14px;
+        scale: 1.45;
+        rotate: -26deg;
+        opacity: 0;
+    }
+}
+
+@keyframes pa-tack {
+    from {
+        translate: 0 -16px;
+        scale: 1.75;
+        opacity: 0;
+        box-shadow: 8px 10px 0 transparent;
+    }
+}
+
+@keyframes pa-tack-r {
+    from {
+        translate: 0 -16px;
+        scale: 1.75;
+        opacity: 0;
+        box-shadow: 8px 10px 0 transparent;
+    }
+}
+
 /* ── Loops: the tape (G10), the roll (G11), the press (G16) ────────────── */
 
 @keyframes pa-flutter {
@@ -450,50 +494,6 @@
     }
 }
 
-/* A candy dot hops along (the picks' loading), four hops a pass. */
-@keyframes pa-hop {
-    0% {
-        inset-inline-start: 0%;
-        translate: 0 0;
-    }
-
-    12.5% {
-        translate: 0 -7px;
-    }
-
-    25% {
-        inset-inline-start: 25%;
-        translate: 0 0;
-    }
-
-    37.5% {
-        translate: 0 -7px;
-    }
-
-    50% {
-        inset-inline-start: 50%;
-        translate: 0 0;
-    }
-
-    62.5% {
-        translate: 0 -7px;
-    }
-
-    75% {
-        inset-inline-start: 75%;
-        translate: 0 0;
-    }
-
-    87.5% {
-        translate: 0 -7px;
-    }
-
-    100% {
-        inset-inline-start: calc(100% - 0.5rem);
-        translate: 0 0;
-    }
-}
-
 /* The tape roll: three hops a lap, each on the landing (written out: a var()
    is not allowed as a timing function inside @keyframes). */
 @keyframes pa-roll {
@@ -513,12 +513,6 @@
     }
 
     100% {
-        rotate: 360deg;
-    }
-}
-
-@keyframes pa-orbit {
-    to {
         rotate: 360deg;
     }
 }

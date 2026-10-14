@@ -96,9 +96,14 @@
         --pa-r-plate: calc(var(--radius, 1rem) * 1.2);
         --pa-r-ctl: 0.85rem;
         --pa-r-chip: 999px;
-        /* G10: the washi tape, mint with its stripes. */
+        /* G10: the washi tape, mint with its stripes. Two layers, mint bands
+           over the stripe colour, for every `background:` that names it: a
+           color-mix() stop inside the repeating gradient itself is painted by
+           Firefox 153 as the stripe colour with mint hairlines (measured
+           2026-10-14), so the mixed colour is the layer under the gradient,
+           never a stop in it. */
         --pa-tape-stripe: color-mix(in srgb, var(--accent-foreground) 25%, var(--accent));
-        --pa-tape-bg: repeating-linear-gradient(90deg, var(--accent) 0 6px, var(--pa-tape-stripe) 6px 12px);
+        --pa-tape-bg: repeating-linear-gradient(90deg, var(--accent) 0 6px, transparent 6px 12px), var(--pa-tape-stripe);
     }
 }
 

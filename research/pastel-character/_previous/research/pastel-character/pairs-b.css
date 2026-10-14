@@ -1,0 +1,1955 @@
+/* research/pastel-character, pairs 12-21 (pairs-b.js): ten out-of-the-box
+   craft pairs for "Laden" and "De spinner". Every rule hangs on
+   `.pa-scene[data-pa-loading='b-…']` or `.pa-scene[data-pa-spinner='b-…']`;
+   keyframes are named `pa-b-…`. Inks by role (G5): plum (--primary) acts and
+   draws, mint (--accent, its stripe --pa-tape-stripe) fills, sky only as the
+   flat second pass beside a piece (--pa-pass-c, never a fill). No blur; every
+   shadow is a flat offset. One-shot steps inside a loop land on pastel's curve
+   (written out: a var() cannot be a timing function inside @keyframes);
+   there-and-backs are ease-in-out, drifts linear; no loop is shorter than
+   1200 ms. Durations follow the page's speed buttons (--pa-slow). Every
+   motion sits under prefers-reduced-motion: no-preference; the still pose is
+   the finished picture.
+
+   The loading picture lives in each waiting part's `.pa-strip` (tile, panel,
+   menu row, days, chart, skeleton lines, busy bar): the strip's own tape is
+   switched off and the piece is drawn in its place, sized in em so one
+   drawing fits every carrier. The spinner lives in each `.kp-spinner`: the
+   register's pearls (::before / ::after) are switched off first. */
+
+/* The sewn share of the button's stitch (spinner 14), animatable as an angle. */
+@property --pa-b-sewn {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 360deg;
+}
+
+@layer kp.signature {
+    /* ── Loading: the strip as a carrier for a piece ───────────────────── */
+
+    .pa-scene[data-pa-loading^='b-'] {
+        --pa-b-loop: calc(2400ms * var(--pa-slow, 1));
+        --pa-b-d: 0ms;
+    }
+
+    .pa-scene[data-pa-loading^='b-'] .pa-strip {
+        inset-block-start: -0.55rem;
+        inset-inline: 10%;
+        block-size: 1.1rem;
+        rotate: 0deg;
+        background: none;
+        box-shadow: none;
+        font-size: 1rem;
+        animation: none;
+    }
+
+    /* The pieces stand on the edge: options.css keeps the space under every
+       caption of the loading scene, for all 21 options alike. */
+
+    .pa-scene[data-pa-loading^='b-'] .pa-strip__dot {
+        display: none;
+    }
+
+    .pa-scene[data-pa-loading^='b-'] .pa-day .pa-strip {
+        inset: 0.3rem;
+        block-size: auto;
+        rotate: 0deg;
+        font-size: 0.55rem;
+    }
+
+    .pa-scene[data-pa-loading^='b-'] .pa-skel__line .pa-strip {
+        inset: 0;
+        block-size: auto;
+        font-size: 0.65rem;
+    }
+
+    .pa-scene[data-pa-loading^='b-'] .pa-bar--busy .pa-strip {
+        inset: 0.12rem 0.3rem;
+        block-size: auto;
+        font-size: 0.7rem;
+    }
+
+    /* The days and the skeleton lines start one after another, in reading order. */
+    .pa-scene[data-pa-loading^='b-'] .pa-day:nth-child(2) {
+        --pa-b-d: calc(160ms * var(--pa-slow, 1));
+    }
+
+    .pa-scene[data-pa-loading^='b-'] .pa-day:nth-child(3) {
+        --pa-b-d: calc(320ms * var(--pa-slow, 1));
+    }
+
+    .pa-scene[data-pa-loading^='b-'] .pa-day:nth-child(4) {
+        --pa-b-d: calc(480ms * var(--pa-slow, 1));
+    }
+
+    .pa-scene[data-pa-loading^='b-'] .pa-day:nth-child(5) {
+        --pa-b-d: calc(640ms * var(--pa-slow, 1));
+    }
+
+    .pa-scene[data-pa-loading^='b-'] .pa-skel__line {
+        --pa-b-d: calc((var(--n, 1) - 1) * 400ms * var(--pa-slow, 1));
+    }
+
+    .pa-scene[data-pa-loading^='b-'] .pa-b-x {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+    }
+
+    /* ── 12 · Googly eyes peek over the edge ───────────────────────────── */
+
+    .pa-scene[data-pa-loading='b-eyes'] .pa-strip::before,
+    .pa-scene[data-pa-loading='b-eyes'] .pa-strip::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: calc(50% - 1.12em);
+        inline-size: 1.1em;
+        block-size: 1.1em;
+        margin-block-start: -0.55em;
+        box-sizing: border-box;
+        border: 1px solid var(--border-strong);
+        border-radius: 50%;
+        /* The lid (mint, closed to nothing), the dome's shine, the loose pupil. */
+        background-color: var(--card);
+        background-image:
+            linear-gradient(var(--accent), var(--accent)), radial-gradient(circle at 70% 28%, var(--card) 0 9%, transparent calc(9% + 0.5px)),
+            radial-gradient(circle closest-side, var(--primary) 0 calc(100% - 0.5px), transparent 100%);
+        background-repeat: no-repeat;
+        background-size:
+            100% 0%,
+            100% 100%,
+            56% 56%;
+        background-position:
+            0 0,
+            0 0,
+            50% 100%;
+        box-shadow: 1.5px 1.5px 0 var(--pa-pass-c);
+    }
+
+    .pa-scene[data-pa-loading='b-eyes'] .pa-strip::after {
+        inset-inline-start: calc(50% + 0.02em);
+    }
+
+    .pa-scene[data-pa-loading='b-eyes'] .pa-strip {
+        font-size: 1.2rem;
+    }
+
+    .pa-scene[data-pa-loading='b-eyes'] .pa-skel__line .pa-strip {
+        font-size: 0.65rem;
+    }
+
+    .pa-scene[data-pa-loading='b-eyes'] .pa-bar--busy .pa-strip {
+        font-size: 0.75rem;
+    }
+
+    /* On a skeleton line the eyes peek from its end; in a day they sit in its middle. */
+    .pa-scene[data-pa-loading='b-eyes'] .pa-skel__line .pa-strip::before {
+        inset-inline-start: calc(100% - 2.4em);
+    }
+
+    .pa-scene[data-pa-loading='b-eyes'] .pa-skel__line .pa-strip::after {
+        inset-inline-start: calc(100% - 1.25em);
+    }
+
+    .pa-scene[data-pa-loading='b-eyes'] .pa-day .pa-strip {
+        font-size: 0.7rem;
+    }
+
+    /* ── 13 · The pom-pom caterpillar crawls along ────────────────────── */
+
+    .pa-scene[data-pa-loading='b-bug'] .pa-strip {
+        font-size: 1.1rem;
+        inset-inline: 0.35rem;
+        overflow-x: clip;
+        overflow-y: visible;
+    }
+
+    .pa-scene[data-pa-loading='b-bug'] .pa-day .pa-strip {
+        inset: 0.2rem 0.15rem;
+        border-radius: 50%;
+        font-size: 0.5rem;
+    }
+
+    .pa-scene[data-pa-loading='b-bug'] :is(.pa-skel__line, .pa-bar--busy) .pa-strip {
+        font-size: 0.8rem;
+    }
+
+    .pa-scene[data-pa-loading='b-bug'] .pa-b-x {
+        display: block;
+    }
+
+    .pa-scene[data-pa-loading='b-bug'] .pa-b-bug {
+        position: absolute;
+        inset-block-end: 0;
+        inset-inline-start: 30%;
+        display: flex;
+        align-items: flex-end;
+    }
+
+    .pa-scene[data-pa-loading='b-bug'] .pa-b-bug i {
+        flex: none;
+        inline-size: 0.78em;
+        block-size: 0.78em;
+        margin-inline-start: -0.2em;
+        border-radius: 50%;
+        /* A pom-pom: mint, its fluff a fine dot of its own darker stripe. */
+        background:
+            radial-gradient(circle, var(--pa-tape-stripe) 0.6px, transparent 1.1px) 0 0 / 3px 3px,
+            var(--accent);
+        box-shadow: 1.5px 1.5px 0 var(--pa-pass-c);
+    }
+
+    .pa-scene[data-pa-loading='b-bug'] .pa-b-bug i:first-child {
+        margin-inline-start: 0;
+    }
+
+    .pa-scene[data-pa-loading='b-bug'] .pa-b-bug .pa-b-head {
+        position: relative;
+        inline-size: 0.9em;
+        block-size: 0.9em;
+        /* Two paper eyes looking ahead. */
+        background:
+            radial-gradient(circle at 58% 42%, var(--primary) 0 0.05em, transparent 0.07em),
+            radial-gradient(circle at 80% 42%, var(--primary) 0 0.05em, transparent 0.07em),
+            radial-gradient(circle at 58% 42%, var(--card) 0 0.11em, transparent 0.13em),
+            radial-gradient(circle at 80% 42%, var(--card) 0 0.11em, transparent 0.13em), var(--primary);
+    }
+
+    /* The feelers: two plum stalks with a bobble each. */
+    .pa-scene[data-pa-loading='b-bug'] .pa-b-bug .pa-b-head::before {
+        content: '';
+        position: absolute;
+        inset-block-end: 82%;
+        inset-inline-start: 30%;
+        inline-size: 0.55em;
+        block-size: 0.42em;
+        background:
+            radial-gradient(circle at 0.07em 0.08em, var(--primary) 0 0.08em, transparent 0.1em),
+            radial-gradient(circle at calc(100% - 0.07em) 0.08em, var(--primary) 0 0.08em, transparent 0.1em),
+            linear-gradient(var(--primary), var(--primary)) 0.05em 0.08em / 1.5px 100% no-repeat,
+            linear-gradient(var(--primary), var(--primary)) calc(100% - 0.05em) 0.08em / 1.5px 100% no-repeat;
+    }
+
+    /* ── 14 · Needle and thread: a running stitch in a felt strip ─────── */
+
+    .pa-scene[data-pa-loading='b-stitch'] .pa-strip {
+        inset-block-start: -0.36rem;
+        block-size: 0.72rem;
+        border-radius: 999px;
+        /* Felt: mint with a fine fleck of its darker stripe. */
+        background:
+            radial-gradient(circle, var(--pa-tape-stripe) 0.5px, transparent 1px) 0 0 / 4px 4px,
+            var(--accent);
+        box-shadow: 2px 2px 0 var(--pa-pass-c);
+    }
+
+    .pa-scene[data-pa-loading='b-stitch'] .pa-day .pa-strip {
+        inset: 0.75rem 0.25rem;
+        block-size: auto;
+        font-size: 0.55rem;
+    }
+
+    .pa-scene[data-pa-loading='b-stitch'] .pa-skel__line .pa-strip {
+        inset: 0;
+        block-size: auto;
+    }
+
+    .pa-scene[data-pa-loading='b-stitch'] .pa-bar--busy .pa-strip {
+        inset: 0.12rem 0.3rem;
+        block-size: auto;
+    }
+
+    /* The thread: plum dashes, sewn in from the start. */
+    .pa-scene[data-pa-loading='b-stitch'] .pa-strip::before {
+        content: '';
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline: 0.4em;
+        block-size: 2px;
+        margin-block-start: -1px;
+        border-radius: 1px;
+        background: repeating-linear-gradient(90deg, var(--primary) 0 0.38em, transparent 0.38em 0.62em);
+        clip-path: inset(-1px 0 -1px 0);
+    }
+
+    /* The needle: a dark plum sliver with its eye, tilted where it dives in. */
+    .pa-scene[data-pa-loading='b-stitch'] .pa-strip::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: calc(100% - 0.4em);
+        inline-size: 0.95em;
+        block-size: 0.2em;
+        margin-block-start: -0.1em;
+        margin-inline-start: -0.15em;
+        border-radius: 999px 0.05em 0.05em 999px;
+        background: radial-gradient(ellipse 0.12em 0.05em at 0.22em 50%, var(--card) 0 90%, transparent 100%), var(--pa-peel);
+        rotate: -16deg;
+        transform-origin: 0.15em 50%;
+    }
+
+    /* ── 15 · Knitting: the band grows behind its rolling ball ────────── */
+
+    .pa-scene[data-pa-loading='b-knit'] {
+        --pa-b-knit: calc(1800ms * var(--pa-slow, 1));
+    }
+
+    .pa-scene[data-pa-loading='b-knit'] .pa-strip {
+        inset-block-start: -0.5rem;
+        block-size: 1rem;
+        inset-inline-end: 14%;
+    }
+
+    .pa-scene[data-pa-loading='b-knit'] .pa-day .pa-strip {
+        inset: 0.7rem 0.75rem 0.7rem 0.2rem;
+        block-size: auto;
+        font-size: 0.5rem;
+    }
+
+    .pa-scene[data-pa-loading='b-knit'] .pa-skel__line .pa-strip {
+        inset: 0 0.7rem 0 0;
+        block-size: auto;
+    }
+
+    .pa-scene[data-pa-loading='b-knit'] .pa-bar--busy .pa-strip {
+        inset: 0.1rem 1rem 0.1rem 0.3rem;
+        block-size: auto;
+    }
+
+    /* The knitted band: columns of mint V stitches on their darker stripe. */
+    .pa-scene[data-pa-loading='b-knit'] .pa-strip::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 0.2em;
+        background: var(--accent);
+        box-shadow: 2px 2px 0 var(--pa-pass-c);
+        clip-path: inset(-3px -3px -3px 0);
+    }
+
+    /* The stitches: two rows of yarn Vs, in the same yarn as the ball. */
+    .pa-scene[data-pa-loading='b-knit'] .pa-b-knit {
+        position: absolute;
+        inset: 0;
+        background: color-mix(in srgb, var(--primary) 55%, var(--accent));
+        mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M1.8 2 L5 8.2 L8.2 2' fill='none' stroke='%23000' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+            0 0 / 0.5em 50% repeat;
+        clip-path: inset(0 0 0 0);
+    }
+
+    /* The ball of the same yarn, wound (the spinner's ball). */
+    .pa-scene[data-pa-loading='b-knit'] .pa-strip::after {
+        --pa-b-wound: color-mix(in srgb, var(--primary) 55%, var(--accent));
+        content: '';
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: 100%;
+        inline-size: 1.2em;
+        block-size: 1.2em;
+        margin-block-start: -0.6em;
+        margin-inline-start: -0.2em;
+        box-sizing: border-box;
+        border: 1.5px solid var(--pa-b-wound);
+        border-radius: 50%;
+        background:
+            radial-gradient(circle at 112% 8%, transparent 0.42em, var(--pa-b-wound) 0.42em calc(0.42em + 1.3px), transparent calc(0.42em + 1.3px)),
+            radial-gradient(circle at 112% 8%, transparent 0.66em, var(--pa-b-wound) 0.66em calc(0.66em + 1.3px), transparent calc(0.66em + 1.3px)),
+            radial-gradient(circle at -8% 104%, transparent 0.4em, var(--pa-b-wound) 0.4em calc(0.4em + 1.3px), transparent calc(0.4em + 1.3px)),
+            radial-gradient(circle at -8% 104%, transparent 0.62em, var(--pa-b-wound) 0.62em calc(0.62em + 1.3px), transparent calc(0.62em + 1.3px)),
+            var(--accent);
+        box-shadow: 1.5px 1.5px 0 var(--pa-pass-c);
+    }
+
+    /* ── 16 · Clay balls pressed flat in turn ─────────────────────────── */
+
+    .pa-scene[data-pa-loading='b-clay'] .pa-strip {
+        inset-block-start: -0.75rem;
+        block-size: 1.4rem;
+    }
+
+    .pa-scene[data-pa-loading='b-clay'] .pa-day .pa-strip {
+        font-size: 0.85rem;
+    }
+
+    .pa-scene[data-pa-loading='b-clay'] :is(.pa-skel__line, .pa-bar--busy) .pa-strip {
+        inset-block: -0.25rem;
+        font-size: 0.7rem;
+    }
+
+    .pa-scene[data-pa-loading='b-clay'] .pa-b-x {
+        align-items: flex-end;
+    }
+
+    .pa-scene[data-pa-loading='b-clay'] :is(.pa-day, .pa-skel__line, .pa-bar--busy) .pa-b-x {
+        align-items: center;
+    }
+
+    .pa-scene[data-pa-loading='b-clay'] .pa-b-ball {
+        position: relative;
+        flex: none;
+        inline-size: 1.3em;
+        block-size: 1.18em;
+        /* Rolled by hand: not quite round. */
+        border-radius: 54% 46% 50% 50% / 56% 52% 48% 44%;
+        /* Clay: one hard highlight, no gradient sheen. */
+        background:
+            radial-gradient(circle at 34% 30%, color-mix(in srgb, var(--card) 60%, transparent) 0 16%, transparent calc(16% + 0.5px)), var(--accent);
+        box-shadow: 1.5px 1.5px 0 var(--pa-pass-c);
+        transform-origin: 50% 100%;
+    }
+
+    /* A thumbprint pressed into the clay. */
+    .pa-scene[data-pa-loading='b-clay'] .pa-b-ball::after {
+        content: '';
+        position: absolute;
+        inset: 34% 16% 14% 38%;
+        border-radius: 50%;
+        background: repeating-radial-gradient(
+            ellipse at 45% 55%,
+            transparent 0 1.6px,
+            color-mix(in srgb, var(--accent-foreground) 22%, transparent) 1.6px 2.4px
+        );
+    }
+
+    .pa-scene[data-pa-loading='b-clay'] .pa-b-ball:nth-child(2n)::after {
+        background: repeating-radial-gradient(ellipse at 45% 55%, transparent 0 1.6px, color-mix(in srgb, var(--card) 28%, transparent) 1.6px 2.4px);
+    }
+
+    .pa-scene[data-pa-loading='b-clay'] .pa-b-ball:nth-child(2n) {
+        background:
+            radial-gradient(circle at 34% 30%, color-mix(in srgb, var(--card) 45%, transparent) 0 16%, transparent calc(16% + 0.5px)), var(--primary);
+    }
+
+    /* ── 17 · Paper dolls unfold, hand in hand ────────────────────────── */
+
+    .pa-scene[data-pa-loading='b-dolls'],
+    .pa-scene[data-pa-spinner='b-unfold'] {
+        --pa-b-doll: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 20'%3E%3Cg fill='%23000'%3E%3Ccircle cx='8' cy='3.6' r='3.1'/%3E%3Cpath d='M5.2 7.4 H10.8 L14 16.2 H2 Z'/%3E%3Crect x='0' y='8.6' width='16' height='2.2' rx='1.1'/%3E%3Crect x='4.6' y='15.5' width='2.2' height='4.5' rx='1'/%3E%3Crect x='9.2' y='15.5' width='2.2' height='4.5' rx='1'/%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .pa-scene[data-pa-loading='b-dolls'] .pa-strip {
+        inset-block-start: -0.85rem;
+        block-size: 1.45rem;
+        font-size: 1.45rem;
+        filter: drop-shadow(1.5px 1.5px 0 var(--pa-pass-c));
+    }
+
+    .pa-scene[data-pa-loading='b-dolls'] .pa-day .pa-strip {
+        inset: 0.42rem 0.2rem;
+        block-size: auto;
+        font-size: 0.75rem;
+    }
+
+    .pa-scene[data-pa-loading='b-dolls'] .pa-skel__line .pa-strip,
+    .pa-scene[data-pa-loading='b-dolls'] .pa-bar--busy .pa-strip {
+        font-size: 0.95rem;
+        inset-block: -0.15rem;
+    }
+
+    /* The chain: front and back of the folded paper, doll by doll. */
+    .pa-scene[data-pa-loading='b-dolls'] .pa-strip::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: repeating-linear-gradient(90deg, var(--accent) 0 0.8em, var(--primary) 0.8em 1.6em);
+        mask: var(--pa-b-doll) 0 0 / 0.8em 1em repeat-x;
+        clip-path: inset(-2px 0 -2px 0);
+    }
+
+    /* The folded packet: one doll, the paper still folded, darker. */
+    .pa-scene[data-pa-loading='b-dolls'] .pa-strip::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: calc(100% - 0.8em);
+        inline-size: 0.8em;
+        background: var(--pa-peel);
+        mask: var(--pa-b-doll) 0 0 / 0.8em 1em no-repeat;
+        opacity: 0;
+    }
+
+    /* ── 18 · Fortune tellers count in a wave ─────────────────────────── */
+
+    .pa-scene[data-pa-loading='b-fortune'] .pa-strip {
+        inset-block-start: -0.65rem;
+        block-size: 1.3rem;
+        font-size: 1.3rem;
+    }
+
+    .pa-scene[data-pa-loading='b-fortune'] .pa-day .pa-strip {
+        font-size: 1.1rem;
+    }
+
+    .pa-scene[data-pa-loading='b-fortune'] .pa-skel__line .pa-strip,
+    .pa-scene[data-pa-loading='b-fortune'] .pa-bar--busy .pa-strip {
+        font-size: 0.9rem;
+        inset-block: -0.12rem;
+    }
+
+    /* One fortune teller, also the spinner's: four petals with their creases. */
+    .pa-scene[data-pa-loading='b-fortune'] .pa-b-fortune,
+    .pa-scene[data-pa-spinner='b-happer'] .pa-b-fortune {
+        --pa-b-gap: 0.09em;
+        position: relative;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: max(1px, 0.04em);
+        flex: none;
+        inline-size: 1em;
+        block-size: 1em;
+        filter: drop-shadow(1.5px 1.5px 0 var(--pa-pass-c));
+    }
+
+    .pa-scene[data-pa-loading='b-fortune'] .pa-b-fortune i,
+    .pa-scene[data-pa-spinner='b-happer'] .pa-b-fortune i {
+        --pa-b-crease: color-mix(in srgb, var(--card) 70%, transparent);
+        background:
+            linear-gradient(
+                45deg,
+                transparent calc(50% - 0.6px),
+                var(--pa-b-crease) calc(50% - 0.6px) calc(50% + 0.6px),
+                transparent calc(50% + 0.6px)
+            ),
+            var(--primary);
+    }
+
+    .pa-scene[data-pa-loading='b-fortune'] .pa-b-fortune i:nth-child(1),
+    .pa-scene[data-pa-spinner='b-happer'] .pa-b-fortune i:nth-child(1) {
+        --pa-b-dx: -1;
+        --pa-b-dy: -1;
+        border-start-start-radius: 0.14em;
+    }
+
+    .pa-scene[data-pa-loading='b-fortune'] .pa-b-fortune i:nth-child(2),
+    .pa-scene[data-pa-spinner='b-happer'] .pa-b-fortune i:nth-child(2) {
+        --pa-b-dx: 1;
+        --pa-b-dy: -1;
+        border-start-end-radius: 0.14em;
+        background:
+            linear-gradient(
+                -45deg,
+                transparent calc(50% - 0.6px),
+                var(--pa-b-crease) calc(50% - 0.6px) calc(50% + 0.6px),
+                transparent calc(50% + 0.6px)
+            ),
+            var(--accent);
+    }
+
+    .pa-scene[data-pa-loading='b-fortune'] .pa-b-fortune i:nth-child(3),
+    .pa-scene[data-pa-spinner='b-happer'] .pa-b-fortune i:nth-child(3) {
+        --pa-b-dx: -1;
+        --pa-b-dy: 1;
+        border-end-start-radius: 0.14em;
+        background:
+            linear-gradient(
+                -45deg,
+                transparent calc(50% - 0.6px),
+                var(--pa-b-crease) calc(50% - 0.6px) calc(50% + 0.6px),
+                transparent calc(50% + 0.6px)
+            ),
+            var(--accent);
+    }
+
+    .pa-scene[data-pa-loading='b-fortune'] .pa-b-fortune i:nth-child(4),
+    .pa-scene[data-pa-spinner='b-happer'] .pa-b-fortune i:nth-child(4) {
+        --pa-b-dx: 1;
+        --pa-b-dy: 1;
+        border-end-end-radius: 0.14em;
+    }
+
+    /* ── 19 · The paper spring (heksentrap) ───────────────────────────── */
+
+    .pa-scene[data-pa-loading='b-ladder'] .pa-strip {
+        --pa-b-folds: 9;
+        inset-block-start: -0.5rem;
+        block-size: 1rem;
+    }
+
+    .pa-scene[data-pa-loading='b-ladder'] .pa-day .pa-strip {
+        --pa-b-folds: 3;
+        inset: 0.72rem 0.25rem;
+        block-size: auto;
+    }
+
+    .pa-scene[data-pa-loading='b-ladder'] .pa-skel__line .pa-strip {
+        --pa-b-folds: 7;
+        inset: 0;
+        block-size: auto;
+    }
+
+    .pa-scene[data-pa-loading='b-ladder'] .pa-bar--busy .pa-strip {
+        --pa-b-folds: 12;
+    }
+
+    .pa-scene[data-pa-loading='b-ladder'] .pa-strip {
+        filter: drop-shadow(2px 2px 0 var(--pa-pass-c));
+    }
+
+    /* The spring seen from the side: one zigzag of paper, each fold's down
+       face plum and its up face mint; the folds widen as it stretches. */
+    .pa-scene[data-pa-loading='b-ladder'] .pa-strip::before {
+        --pa-b-pitch: calc(100% / var(--pa-b-folds));
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: 100%;
+        background: linear-gradient(90deg, var(--primary) 0 50%, var(--accent) 50% 100%) 0 0 / var(--pa-b-pitch) 100%;
+        mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' preserveAspectRatio='none'%3E%3Cpath d='M0 3 L10 17 L20 3' fill='none' stroke='%23000' stroke-width='5.5' stroke-linejoin='round'/%3E%3C/svg%3E")
+            0 0 / var(--pa-b-pitch) 100% repeat-x;
+    }
+
+    /* ── 20 · By paper plane ──────────────────────────────────────────── */
+
+    .pa-scene[data-pa-loading='b-plane'] .pa-strip {
+        font-size: 1.15rem;
+        inset-inline: 0.35rem;
+        inset-block-start: -0.55rem;
+        block-size: 1rem;
+        overflow-x: clip;
+        overflow-y: visible;
+    }
+
+    .pa-scene[data-pa-loading='b-plane'] .pa-day .pa-strip {
+        inset: 0.25rem 0.05rem;
+        block-size: auto;
+        border-radius: 50%;
+        font-size: 0.6rem;
+    }
+
+    .pa-scene[data-pa-loading='b-plane'] .pa-skel__line .pa-strip,
+    .pa-scene[data-pa-loading='b-plane'] .pa-bar--busy .pa-strip {
+        inset-block: -0.15rem;
+        block-size: auto;
+        font-size: 0.75rem;
+    }
+
+    .pa-scene[data-pa-loading='b-plane'] .pa-b-x {
+        display: block;
+    }
+
+    .pa-scene[data-pa-loading='b-plane'] .pa-b-flight {
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: 55%;
+        margin-block-start: -0.6em;
+    }
+
+    /* The plane, here and in the spinner: paper with a hairline edge, its fold in shade, its keel mint. */
+    .pa-scene[data-pa-loading='b-plane'] .pa-b-plane,
+    .pa-scene[data-pa-spinner='b-loop'] .pa-b-plane {
+        display: block;
+        inline-size: 1.9em;
+        block-size: 1.17em;
+        overflow: visible;
+        filter: drop-shadow(1.5px 1.5px 0 var(--pa-pass-c));
+    }
+
+    :is(.pa-scene[data-pa-loading='b-plane'], .pa-scene[data-pa-spinner='b-loop']) .pa-b-plane path {
+        stroke: var(--primary);
+        stroke-width: 0.9;
+        stroke-linejoin: round;
+    }
+
+    :is(.pa-scene[data-pa-loading='b-plane'], .pa-scene[data-pa-spinner='b-loop']) .pa-b-plane__wing {
+        fill: var(--card);
+    }
+
+    :is(.pa-scene[data-pa-loading='b-plane'], .pa-scene[data-pa-spinner='b-loop']) .pa-b-plane__fold {
+        fill: var(--muted);
+    }
+
+    :is(.pa-scene[data-pa-loading='b-plane'], .pa-scene[data-pa-spinner='b-loop']) .pa-b-plane__keel {
+        fill: var(--accent);
+    }
+
+    /* ── 21 · Paper pinwheels on their sticks ─────────────────────────── */
+
+    .pa-scene[data-pa-loading='b-pinwheel'] .pa-strip {
+        inset-block-start: -0.85rem;
+        block-size: 1.2rem;
+        font-size: 1.15rem;
+    }
+
+    .pa-scene[data-pa-loading='b-pinwheel'] .pa-day .pa-strip {
+        inset: 0.2rem;
+        block-size: auto;
+        font-size: 1.15rem;
+    }
+
+    .pa-scene[data-pa-loading='b-pinwheel'] .pa-skel__line .pa-strip {
+        inset-block: -0.2rem;
+        font-size: 0.75rem;
+    }
+
+    .pa-scene[data-pa-loading='b-pinwheel'] .pa-skel__line .pa-b-x {
+        justify-content: flex-end;
+    }
+
+    .pa-scene[data-pa-loading='b-pinwheel'] .pa-bar--busy .pa-strip {
+        inset-block: -0.2rem;
+        font-size: 0.8rem;
+    }
+
+    .pa-scene[data-pa-loading='b-pinwheel'] .pa-b-wheel {
+        position: relative;
+        display: grid;
+        flex: none;
+        inline-size: 1.1em;
+        block-size: 1.1em;
+        filter: drop-shadow(1.5px 1.5px 0 var(--pa-pass-c));
+    }
+
+    /* The stick, pushed into the part's top edge. */
+    .pa-scene[data-pa-loading='b-pinwheel'] .pa-b-wheel::before {
+        content: '';
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: calc(50% - 1px);
+        inline-size: 2px;
+        block-size: 0.95em;
+        border-radius: 1px;
+        background: var(--pa-peel);
+    }
+
+    .pa-scene[data-pa-loading='b-pinwheel'] :is(.pa-day, .pa-skel__line, .pa-bar--busy) .pa-b-wheel::before {
+        display: none;
+    }
+
+    /* Four blades, one fold of a square each (a quarter turn apart), and the pin. */
+    .pa-scene[data-pa-loading='b-pinwheel'] .pa-b-wheel i,
+    .pa-scene[data-pa-spinner='b-gust'] .kp-spinner {
+        --pa-b-blades:
+            radial-gradient(circle, var(--pa-peel) 0 7%, var(--card) calc(7% + 0.5px) 12%, transparent calc(12% + 0.5px)),
+            conic-gradient(
+                var(--primary) 0 45deg,
+                transparent 45deg 90deg,
+                var(--accent) 90deg 135deg,
+                transparent 135deg 180deg,
+                var(--primary) 180deg 225deg,
+                transparent 225deg 270deg,
+                var(--accent) 270deg 315deg,
+                transparent 315deg
+            );
+    }
+
+    .pa-scene[data-pa-loading='b-pinwheel'] .pa-b-wheel i {
+        position: relative;
+        border-radius: 0.12em;
+        background: var(--pa-b-blades);
+    }
+
+    /* ── The spinners: the register's pearls off, the piece drawn ─────── */
+
+    .pa-scene[data-pa-spinner^='b-'] {
+        --pa-b-loop: calc(1800ms * var(--pa-slow, 1));
+    }
+
+    .pa-scene[data-pa-spinner^='b-'] .kp-spinner {
+        position: relative;
+        border: 0;
+        border-radius: 0;
+        background: none;
+        font-size: var(--kp-spinner-size, 1.25rem);
+        animation: none;
+    }
+
+    .pa-scene[data-pa-spinner^='b-'] .kp-spinner::before,
+    .pa-scene[data-pa-spinner^='b-'] .kp-spinner::after {
+        content: none;
+        inset: auto;
+        translate: none;
+        opacity: 1;
+        mix-blend-mode: normal;
+        background: none;
+        animation: none;
+    }
+
+    .pa-scene[data-pa-spinner^='b-'] .pa-b-x {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+    }
+
+    /* 12 · The googly eye: the pupil rolls loose round the rim. */
+    .pa-scene[data-pa-spinner='b-eye'] .kp-spinner {
+        box-sizing: border-box;
+        border: 1px solid var(--border-strong);
+        border-radius: 50%;
+        background: var(--card);
+    }
+
+    .pa-scene[data-pa-spinner='b-eye'] .kp-spinner::before,
+    .pa-scene[data-pa-spinner='b-eye'] .kp-spinner::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+    }
+
+    .pa-scene[data-pa-spinner='b-eye'] .kp-spinner::after {
+        background: radial-gradient(circle at 50% 29%, var(--primary) 0 25%, transparent calc(25% + 0.5px));
+        rotate: 180deg;
+    }
+
+    .pa-scene[data-pa-spinner='b-eye'] .kp-spinner::before {
+        z-index: 1;
+        background: radial-gradient(circle at 68% 30%, var(--card) 0 8%, transparent calc(8% + 0.5px));
+    }
+
+    /* 13 · The caterpillar curled up, head to tail. */
+    .pa-scene[data-pa-spinner='b-curl'] .pa-b-ring {
+        position: absolute;
+        inset: 0;
+    }
+
+    .pa-scene[data-pa-spinner='b-curl'] .pa-b-ring i {
+        position: absolute;
+        inset: 0;
+        rotate: calc(var(--k) * 45deg);
+    }
+
+    .pa-scene[data-pa-spinner='b-curl'] .pa-b-ring b {
+        position: absolute;
+        inset-block-start: 6%;
+        inset-inline-start: 36.5%;
+        inline-size: 27%;
+        block-size: 27%;
+        border-radius: 50%;
+        background:
+            radial-gradient(circle, var(--pa-tape-stripe) 0.6px, transparent 1.1px) 0 0 / 3px 3px,
+            var(--accent);
+    }
+
+    .pa-scene[data-pa-spinner='b-curl'] .pa-b-ring .pa-b-head b {
+        background:
+            radial-gradient(circle at 70% 40%, var(--card) 0 14%, transparent calc(14% + 0.5px)),
+            radial-gradient(circle at 70% 70%, var(--card) 0 14%, transparent calc(14% + 0.5px)), var(--primary);
+    }
+
+    /* 14 · A felt button sewn on. */
+    .pa-scene[data-pa-spinner='b-button'] .kp-spinner {
+        border-radius: 50%;
+        background:
+            radial-gradient(circle at 40% 40%, var(--background) 0 6.5%, transparent calc(6.5% + 0.5px)),
+            radial-gradient(circle at 60% 40%, var(--background) 0 6.5%, transparent calc(6.5% + 0.5px)),
+            radial-gradient(circle at 40% 60%, var(--background) 0 6.5%, transparent calc(6.5% + 0.5px)),
+            radial-gradient(circle at 60% 60%, var(--background) 0 6.5%, transparent calc(6.5% + 0.5px)),
+            radial-gradient(circle, var(--pa-tape-stripe) 0.5px, transparent 1px) 0 0 / 3px 3px,
+            var(--accent);
+    }
+
+    .pa-scene[data-pa-spinner='b-button'] .kp-spinner::before,
+    .pa-scene[data-pa-spinner='b-button'] .kp-spinner::after {
+        content: '';
+        position: absolute;
+        inset: 10%;
+        border-radius: 50%;
+    }
+
+    /* The stitch round the button, sewn as far as the needle has come. */
+    .pa-scene[data-pa-spinner='b-button'] .kp-spinner::before {
+        background: repeating-conic-gradient(var(--primary) 0 16deg, transparent 16deg 30deg);
+        mask:
+            radial-gradient(closest-side, transparent calc(100% - max(2px, 0.09em)), #000 calc(100% - max(2px, 0.09em)) 100%, transparent 100%),
+            conic-gradient(#000 var(--pa-b-sewn), transparent 0);
+        mask-composite: intersect;
+    }
+
+    /* The needle at the front of the stitch. */
+    .pa-scene[data-pa-spinner='b-button'] .kp-spinner::after {
+        inset: -2%;
+        background: linear-gradient(var(--pa-peel), var(--pa-peel)) 50% 2% / max(1.5px, 0.05em) 24% no-repeat;
+        border-radius: 0;
+    }
+
+    /* 15 · The ball of yarn, tugged; its loose end hangs still. */
+    .pa-scene[data-pa-spinner='b-yarn'] .kp-spinner::before,
+    .pa-scene[data-pa-spinner='b-yarn'] .kp-spinner::after {
+        content: '';
+        position: absolute;
+    }
+
+    .pa-scene[data-pa-spinner='b-yarn'] .kp-spinner::before {
+        --pa-b-wound: color-mix(in srgb, var(--primary) 55%, var(--accent));
+        --pa-b-line: max(1.2px, 0.05em);
+        inset: 4% 18% 18% 4%;
+        box-sizing: border-box;
+        border: var(--pa-b-line) solid var(--pa-b-wound);
+        border-radius: 50%;
+        background:
+            radial-gradient(
+                circle at 112% 8%,
+                transparent 0.3em,
+                var(--pa-b-wound) 0.3em calc(0.3em + var(--pa-b-line)),
+                transparent calc(0.3em + var(--pa-b-line))
+            ),
+            radial-gradient(
+                circle at 112% 8%,
+                transparent 0.44em,
+                var(--pa-b-wound) 0.44em calc(0.44em + var(--pa-b-line)),
+                transparent calc(0.44em + var(--pa-b-line))
+            ),
+            radial-gradient(
+                circle at 112% 8%,
+                transparent 0.58em,
+                var(--pa-b-wound) 0.58em calc(0.58em + var(--pa-b-line)),
+                transparent calc(0.58em + var(--pa-b-line))
+            ),
+            radial-gradient(
+                circle at -8% 104%,
+                transparent 0.26em,
+                var(--pa-b-wound) 0.26em calc(0.26em + var(--pa-b-line)),
+                transparent calc(0.26em + var(--pa-b-line))
+            ),
+            radial-gradient(
+                circle at -8% 104%,
+                transparent 0.4em,
+                var(--pa-b-wound) 0.4em calc(0.4em + var(--pa-b-line)),
+                transparent calc(0.4em + var(--pa-b-line))
+            ),
+            var(--accent);
+    }
+
+    .pa-scene[data-pa-spinner='b-yarn'] .kp-spinner::after {
+        inset: 56% 0 6% 62%;
+        border: max(1.5px, 0.05em) solid color-mix(in srgb, var(--primary) 55%, var(--accent));
+        border-color: transparent transparent color-mix(in srgb, var(--primary) 55%, var(--accent)) transparent;
+        border-radius: 0 0 60% 40% / 0 0 100% 100%;
+    }
+
+    /* 16 · A ball of clay, kneaded. */
+    .pa-scene[data-pa-spinner='b-knead'] .kp-spinner {
+        border-radius: 54% 46% 50% 50% / 56% 52% 48% 44%;
+        background:
+            radial-gradient(circle at 34% 30%, color-mix(in srgb, var(--card) 60%, transparent) 0 15%, transparent calc(15% + 0.5px)), var(--accent);
+    }
+
+    .pa-scene[data-pa-spinner='b-knead'] .kp-spinner::after {
+        content: '';
+        position: absolute;
+        inset: 36% 16% 14% 40%;
+        border-radius: 50%;
+        background: repeating-radial-gradient(
+            ellipse at 45% 55%,
+            transparent 0 0.045em,
+            color-mix(in srgb, var(--accent-foreground) 22%, transparent) 0.045em 0.07em
+        );
+    }
+
+    /* 17 · Three paper dolls hand in hand: the outer two fold out from behind
+       the middle one and back, as the chain does on a waiting part. */
+    .pa-scene[data-pa-spinner='b-unfold'] .pa-b-trio {
+        display: grid;
+        grid-template-columns: repeat(3, 0.36em);
+        block-size: 0.45em;
+    }
+
+    .pa-scene[data-pa-spinner='b-unfold'] .pa-b-trio i {
+        grid-row: 1;
+        background: var(--accent);
+        mask: var(--pa-b-doll) 0 0 / 100% 100% no-repeat;
+    }
+
+    .pa-scene[data-pa-spinner='b-unfold'] .pa-b-trio i:nth-child(1) {
+        grid-column: 1;
+        transform-origin: 100% 50%;
+    }
+
+    .pa-scene[data-pa-spinner='b-unfold'] .pa-b-trio i:nth-child(2) {
+        grid-column: 3;
+        transform-origin: 0% 50%;
+    }
+
+    .pa-scene[data-pa-spinner='b-unfold'] .pa-b-trio i:nth-child(3) {
+        grid-column: 2;
+        background: var(--primary);
+    }
+
+    /* 18 · The fortune teller, alone. */
+    .pa-scene[data-pa-spinner='b-happer'] .pa-b-fortune {
+        inline-size: 0.84em;
+        block-size: 0.84em;
+        filter: none;
+    }
+
+    /* 19 · Jack in the box: the paper spring with its paper head, out of a plum box. */
+    .pa-scene[data-pa-spinner='b-jack'] .kp-spinner {
+        background: linear-gradient(var(--primary), var(--primary)) 50% 100% / 64% 28% no-repeat;
+        border-radius: 0 0 0.12em 0.12em;
+    }
+
+    .pa-scene[data-pa-spinner='b-jack'] .kp-spinner::before,
+    .pa-scene[data-pa-spinner='b-jack'] .kp-spinner::after {
+        content: '';
+        position: absolute;
+    }
+
+    .pa-scene[data-pa-spinner='b-jack'] .kp-spinner::before {
+        inset-block-end: 26%;
+        inset-inline: 36%;
+        block-size: 34%;
+        background:
+            linear-gradient(var(--primary) 0 50%, var(--accent) 50% 100%) 0 0 / 100% 25%,
+            var(--accent);
+    }
+
+    .pa-scene[data-pa-spinner='b-jack'] .kp-spinner::after {
+        inset-block-end: 56%;
+        inset-inline-start: 28%;
+        inline-size: 44%;
+        block-size: 44%;
+        box-sizing: border-box;
+        border: max(1px, 0.04em) solid var(--border-strong);
+        border-radius: 50%;
+        background:
+            radial-gradient(circle at 36% 45%, var(--primary) 0 9%, transparent calc(9% + 0.5px)),
+            radial-gradient(circle at 64% 45%, var(--primary) 0 9%, transparent calc(9% + 0.5px)),
+            radial-gradient(ellipse 20% 12% at 50% 66%, var(--accent) 0 90%, transparent 100%), var(--card);
+    }
+
+    /* 20 · The looping paper plane with its mint trail. */
+    .pa-scene[data-pa-spinner='b-loop'] .pa-b-loop {
+        position: absolute;
+        inset: 0;
+    }
+
+    .pa-scene[data-pa-spinner='b-loop'] .pa-b-loop::before {
+        content: '';
+        position: absolute;
+        inset: 14%;
+        border-radius: 50%;
+        background: conic-gradient(from 250deg, transparent 0 20deg, var(--accent) 20deg 110deg, transparent 110deg);
+        mask: radial-gradient(closest-side, transparent calc(100% - max(2.5px, 0.1em)), #000 calc(100% - max(2.5px, 0.1em)));
+    }
+
+    .pa-scene[data-pa-spinner='b-loop'] .pa-b-plane {
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline-start: 30%;
+        inline-size: 0.55em;
+        block-size: 0.34em;
+    }
+
+    /* 21 · The pinwheel. */
+    .pa-scene[data-pa-spinner='b-gust'] .kp-spinner {
+        border-radius: 0.1em;
+        background: var(--pa-b-blades);
+    }
+
+    /* ── The motion ────────────────────────────────────────────────────── */
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* Eyes: look to the start, to the end, drop loose; one blink. */
+        .pa-scene[data-pa-loading='b-eyes'] .pa-strip::before,
+        .pa-scene[data-pa-loading='b-eyes'] .pa-strip::after {
+            animation:
+                pa-b-look calc(3200ms * var(--pa-slow, 1)) ease-in-out var(--pa-b-d) infinite,
+                pa-b-blink calc(3200ms * var(--pa-slow, 1)) linear var(--pa-b-d) infinite;
+        }
+
+        .pa-scene[data-pa-loading='b-eyes'] .pa-strip::after {
+            animation-delay: calc(var(--pa-b-d) + 70ms * var(--pa-slow, 1));
+        }
+
+        /* Caterpillar: crawls start to end (drift, linear); the hump runs tail to head. */
+        .pa-scene[data-pa-loading='b-bug'] .pa-b-bug {
+            animation: pa-b-crawl calc(7200ms * var(--pa-slow, 1)) linear calc(var(--pa-b-d) * -4) infinite;
+        }
+
+        .pa-scene[data-pa-loading='b-bug'] .pa-b-bug i {
+            animation: pa-b-hump calc(1200ms * var(--pa-slow, 1)) ease-in-out calc(var(--k) * 150ms * var(--pa-slow, 1)) infinite;
+        }
+
+        /* Stitch: sewn in start to end, held, unpicked back. */
+        .pa-scene[data-pa-loading='b-stitch'] .pa-strip::before {
+            animation: pa-b-sew-thread var(--pa-b-loop) linear var(--pa-b-d) infinite;
+        }
+
+        .pa-scene[data-pa-loading='b-stitch'] .pa-strip::after {
+            animation: pa-b-sew-needle var(--pa-b-loop) linear var(--pa-b-d) infinite;
+        }
+
+        /* Knitting: grows there, unravels back. */
+        .pa-scene[data-pa-loading='b-knit'] .pa-strip::before,
+        .pa-scene[data-pa-loading='b-knit'] .pa-b-knit {
+            animation: pa-b-knit-band var(--pa-b-knit) ease-in-out var(--pa-b-d) infinite alternate;
+        }
+
+        .pa-scene[data-pa-loading='b-knit'] .pa-strip::after {
+            animation: pa-b-knit-ball var(--pa-b-knit) ease-in-out var(--pa-b-d) infinite alternate;
+        }
+
+        /* Clay: pressed flat in turn, springs back round. */
+        .pa-scene[data-pa-loading='b-clay'] .pa-b-ball {
+            animation: pa-b-squish var(--pa-b-loop) linear calc(var(--pa-b-d) + var(--k) * 260ms * var(--pa-slow, 1)) infinite;
+        }
+
+        /* Dolls: unfold, hold, fold back. */
+        .pa-scene[data-pa-loading='b-dolls'] .pa-strip::before {
+            animation: pa-b-unfold calc(3200ms * var(--pa-slow, 1)) linear var(--pa-b-d) infinite;
+        }
+
+        .pa-scene[data-pa-loading='b-dolls'] .pa-strip::after {
+            animation: pa-b-packet calc(3200ms * var(--pa-slow, 1)) linear var(--pa-b-d) infinite;
+        }
+
+        /* Fortune tellers: count in a wave. */
+        .pa-scene[data-pa-loading='b-fortune'] .pa-b-fortune i {
+            animation: pa-b-count var(--pa-b-loop) linear calc(var(--pa-b-d) + var(--k) * 160ms * var(--pa-slow, 1)) infinite;
+        }
+
+        /* Heksentrap: springs out with one overshoot, draws back in. */
+        .pa-scene[data-pa-loading='b-ladder'] .pa-strip::before {
+            animation: pa-b-spring var(--pa-b-loop) linear var(--pa-b-d) infinite;
+        }
+
+        /* Plane: glides start to end (linear) and bobs (there and back). */
+        .pa-scene[data-pa-loading='b-plane'] .pa-b-flight {
+            animation: pa-b-fly calc(3600ms * var(--pa-slow, 1)) linear calc(var(--pa-b-d) * -3) infinite;
+        }
+
+        .pa-scene[data-pa-loading='b-plane'] .pa-b-plane {
+            animation: pa-b-bob calc(1200ms * var(--pa-slow, 1)) ease-in-out infinite alternate;
+        }
+
+        /* Pinwheels: one gust, one turn each, in reading order. */
+        .pa-scene[data-pa-loading='b-pinwheel'] .pa-b-wheel i {
+            animation: pa-b-gust var(--pa-b-loop) linear calc(var(--pa-b-d) + var(--k) * 200ms * var(--pa-slow, 1)) infinite;
+        }
+
+        /* Spinners. */
+        .pa-scene[data-pa-spinner='b-eye'] .kp-spinner::after {
+            animation: pa-b-hops var(--pa-b-loop) infinite;
+        }
+
+        .pa-scene[data-pa-spinner='b-curl'] .pa-b-ring {
+            animation: pa-b-turn calc(4800ms * var(--pa-slow, 1)) linear infinite;
+        }
+
+        .pa-scene[data-pa-spinner='b-curl'] .pa-b-ring b {
+            animation: pa-b-hump calc(1200ms * var(--pa-slow, 1)) ease-in-out calc(var(--k) * 150ms * var(--pa-slow, 1)) infinite;
+        }
+
+        .pa-scene[data-pa-spinner='b-button'] .kp-spinner::before {
+            animation: pa-b-sew-round calc(2400ms * var(--pa-slow, 1)) linear infinite;
+        }
+
+        .pa-scene[data-pa-spinner='b-button'] .kp-spinner::after {
+            animation: pa-b-sew-needle-round calc(2400ms * var(--pa-slow, 1)) linear infinite;
+        }
+
+        .pa-scene[data-pa-spinner='b-yarn'] .kp-spinner::before {
+            animation: pa-b-hops var(--pa-b-loop) infinite;
+        }
+
+        .pa-scene[data-pa-spinner='b-knead'] .kp-spinner {
+            animation: pa-b-knead var(--pa-b-loop) infinite;
+        }
+
+        .pa-scene[data-pa-spinner='b-unfold'] .pa-b-trio i:not(:nth-child(3)) {
+            animation: pa-b-fold-out calc(2400ms * var(--pa-slow, 1)) infinite;
+        }
+
+        .pa-scene[data-pa-spinner='b-happer'] .pa-b-fortune i {
+            animation: pa-b-count calc(2400ms * var(--pa-slow, 1)) linear infinite;
+        }
+
+        .pa-scene[data-pa-spinner='b-jack'] .kp-spinner::before {
+            animation: pa-b-jack-spring var(--pa-b-loop) infinite;
+        }
+
+        .pa-scene[data-pa-spinner='b-jack'] .kp-spinner::after {
+            animation: pa-b-jack-head var(--pa-b-loop) infinite;
+        }
+
+        .pa-scene[data-pa-spinner='b-loop'] .pa-b-loop {
+            animation: pa-b-turn calc(2000ms * var(--pa-slow, 1)) linear infinite;
+        }
+
+        .pa-scene[data-pa-spinner='b-gust'] .kp-spinner {
+            animation: pa-b-gust calc(2000ms * var(--pa-slow, 1)) linear infinite;
+        }
+    }
+}
+
+/* ── Keyframes (named pa-b-…) ─────────────────────────────────────────── */
+
+@keyframes pa-b-look {
+    0% {
+        background-position:
+            0 0,
+            0 0,
+            50% 100%;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    22%,
+    40% {
+        background-position:
+            0 0,
+            0 0,
+            0% 45%;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    62%,
+    78% {
+        background-position:
+            0 0,
+            0 0,
+            100% 45%;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    96%,
+    100% {
+        background-position:
+            0 0,
+            0 0,
+            50% 100%;
+    }
+}
+
+@keyframes pa-b-blink {
+    0%,
+    46% {
+        background-size:
+            100% 0%,
+            100% 100%,
+            56% 56%;
+    }
+
+    49.5% {
+        background-size:
+            100% 100%,
+            100% 100%,
+            56% 56%;
+    }
+
+    53%,
+    100% {
+        background-size:
+            100% 0%,
+            100% 100%,
+            56% 56%;
+    }
+}
+
+@keyframes pa-b-crawl {
+    from {
+        inset-inline-start: -4em;
+    }
+
+    to {
+        inset-inline-start: 100%;
+    }
+}
+
+@keyframes pa-b-hump {
+    0%,
+    100% {
+        translate: 0 0;
+    }
+
+    50% {
+        translate: 0 -0.28em;
+    }
+}
+
+@keyframes pa-b-sew-thread {
+    0% {
+        clip-path: inset(-1px 100% -1px 0);
+    }
+
+    60%,
+    72% {
+        clip-path: inset(-1px 0 -1px 0);
+    }
+
+    100% {
+        clip-path: inset(-1px 100% -1px 0);
+    }
+}
+
+@keyframes pa-b-sew-needle {
+    0% {
+        inset-inline-start: 0.4em;
+    }
+
+    60%,
+    72% {
+        inset-inline-start: calc(100% - 0.4em);
+        animation-timing-function: ease-in-out;
+    }
+
+    100% {
+        inset-inline-start: 0.4em;
+    }
+}
+
+@keyframes pa-b-knit-band {
+    from {
+        clip-path: inset(-3px 100% -3px 0);
+    }
+
+    to {
+        clip-path: inset(-3px -3px -3px 0);
+    }
+}
+
+@keyframes pa-b-knit-ball {
+    from {
+        inset-inline-start: 0%;
+        rotate: 0deg;
+    }
+
+    to {
+        inset-inline-start: 100%;
+        rotate: 540deg;
+    }
+}
+
+@keyframes pa-b-squish {
+    0% {
+        scale: 1 1;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    14% {
+        scale: 1.32 0.62;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    22% {
+        scale: 1.32 0.62;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    42%,
+    100% {
+        scale: 1 1;
+    }
+}
+
+@keyframes pa-b-unfold {
+    0% {
+        clip-path: inset(-2px 100% -2px 0);
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    45%,
+    70% {
+        clip-path: inset(-2px 0 -2px 0);
+        animation-timing-function: ease-in-out;
+    }
+
+    100% {
+        clip-path: inset(-2px 100% -2px 0);
+    }
+}
+
+@keyframes pa-b-packet {
+    0% {
+        inset-inline-start: 0;
+        opacity: 1;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    45% {
+        inset-inline-start: calc(100% - 0.8em);
+        opacity: 1;
+    }
+
+    50%,
+    66% {
+        inset-inline-start: calc(100% - 0.8em);
+        opacity: 0;
+    }
+
+    70% {
+        inset-inline-start: calc(100% - 0.8em);
+        opacity: 1;
+        animation-timing-function: ease-in-out;
+    }
+
+    100% {
+        inset-inline-start: 0;
+        opacity: 1;
+    }
+}
+
+@keyframes pa-b-count {
+    0% {
+        translate: 0 0;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    16%,
+    26% {
+        translate: calc(var(--pa-b-dx) * var(--pa-b-gap, 0.09em)) 0;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    42%,
+    50% {
+        translate: 0 0;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    66%,
+    76% {
+        translate: 0 calc(var(--pa-b-dy) * var(--pa-b-gap, 0.09em));
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    92%,
+    100% {
+        translate: 0 0;
+    }
+}
+
+@keyframes pa-b-spring {
+    0% {
+        inline-size: 34%;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    45%,
+    58% {
+        inline-size: 92%;
+        animation-timing-function: ease-in-out;
+    }
+
+    100% {
+        inline-size: 34%;
+    }
+}
+
+@keyframes pa-b-fly {
+    from {
+        inset-inline-start: -2em;
+    }
+
+    to {
+        inset-inline-start: 100%;
+    }
+}
+
+@keyframes pa-b-bob {
+    from {
+        translate: 0 -0.18em;
+        rotate: -5deg;
+    }
+
+    to {
+        translate: 0 0.18em;
+        rotate: 4deg;
+    }
+}
+
+@keyframes pa-b-gust {
+    0% {
+        rotate: 0deg;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    55%,
+    100% {
+        rotate: 360deg;
+    }
+}
+
+/* Three hops a lap, each on the landing (the pupil, the yarn ball). Animates
+   `transform`, so a part's own `rotate` stays its resting angle. */
+@keyframes pa-b-hops {
+    0% {
+        transform: rotate(0deg);
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    33.333% {
+        transform: rotate(120deg);
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    66.667% {
+        transform: rotate(240deg);
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes pa-b-turn {
+    to {
+        rotate: 360deg;
+    }
+}
+
+@keyframes pa-b-sew-round {
+    0% {
+        --pa-b-sewn: 0deg;
+    }
+
+    60%,
+    72% {
+        --pa-b-sewn: 360deg;
+        animation-timing-function: ease-in-out;
+    }
+
+    100% {
+        --pa-b-sewn: 0deg;
+    }
+}
+
+@keyframes pa-b-sew-needle-round {
+    0% {
+        rotate: 0deg;
+    }
+
+    60%,
+    72% {
+        rotate: 360deg;
+        animation-timing-function: ease-in-out;
+    }
+
+    100% {
+        rotate: 0deg;
+    }
+}
+
+/* Pressed flat from above, then rolled a third on and round again. */
+@keyframes pa-b-knead {
+    0% {
+        transform: translate(0, 0) scale(1, 1) rotate(0deg);
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    14% {
+        transform: translate(0, 13%) scale(1.24, 0.74) rotate(60deg);
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    33.333% {
+        transform: translate(0, 0) scale(1, 1) rotate(120deg);
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    47.333% {
+        transform: translate(0, 13%) scale(1.24, 0.74) rotate(180deg);
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    66.667% {
+        transform: translate(0, 0) scale(1, 1) rotate(240deg);
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    80.667% {
+        transform: translate(0, 13%) scale(1.24, 0.74) rotate(300deg);
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    100% {
+        transform: translate(0, 0) scale(1, 1) rotate(360deg);
+    }
+}
+
+/* A doll folds out from behind its neighbour, holds, folds back (a fold is a
+   turn round the joined hands, so it reads as paper, never as a squash). */
+@keyframes pa-b-fold-out {
+    0% {
+        transform: rotateY(180deg);
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    40%,
+    70% {
+        transform: rotateY(0deg);
+        animation-timing-function: ease-in-out;
+    }
+
+    100% {
+        transform: rotateY(180deg);
+    }
+}
+
+/* Jack in the box: the spring shoots up with one overshoot, holds, sinks back. */
+@keyframes pa-b-jack-spring {
+    0% {
+        block-size: 6%;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    38%,
+    62% {
+        block-size: 34%;
+        animation-timing-function: ease-in-out;
+    }
+
+    100% {
+        block-size: 6%;
+    }
+}
+
+@keyframes pa-b-jack-head {
+    0% {
+        inset-block-end: 30%;
+        animation-timing-function: linear(
+            0,
+            0.052 10%,
+            0.189 20%,
+            0.38 30%,
+            0.594 40%,
+            0.8 50%,
+            0.968 60%,
+            1.066 70%,
+            1.08 75%,
+            1.052 85%,
+            1.008 95%,
+            1
+        );
+    }
+
+    38%,
+    62% {
+        inset-block-end: 56%;
+        animation-timing-function: ease-in-out;
+    }
+
+    100% {
+        inset-block-end: 30%;
+    }
+}

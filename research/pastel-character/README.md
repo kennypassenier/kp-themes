@@ -1,5 +1,20 @@
 # What makes pastel pastel
 
+**Update 2, round 3 (2026-10-14): loading and the spinner are four families of six variants; everything else is decided.** Kenny's
+round 2 verdict (update.json, update 2) locks 17 picks: the leave is _the anchor, then a thumbtack_ (`tack`), pointing _the corner
+peels_ (`peel`), the motifs _from the sticker sheet and the press_ (`sheet`). Of the 21 loading/spinner pairs he kept 6 (the
+doodle), 11 (the tag), 13 (the pom-pom caterpillar) and 20 (the paper plane) and asked for five variants of each; his point was that
+the plane and the caterpillar went THROUGH the days of the month where the doodle had its own treatment for a day. So both questions
+are 24 options: 1-6 the doodle, 7-12 the tag (`pairs-a.js`/`.css`), 13-18 the caterpillar, 19-24 the plane (`pairs-b.js`/`.css`);
+variant 1 of each family is round 2's pair as he saw it ("jouw keuze uit ronde 2"), variants 2-6 are alternatives that treat every
+carrier on purpose, the day circles above all (around them, onto them, from one to the next). Loading option N and spinner option N
+are one variant, with the same name; `aspects.js` refuses to load if the two lists stop following each file's `PAIRS`. Neither
+question recommends (`noRec`: all four families are Kenny's), so the dialog marks no option "aanbevolen" there. One layout for all
+24: the week, the skeleton and the busy bar reserve the largest room any variant draws in above and below them (options.css), no
+variant sets a margin of its own. The washi tape token (`--pa-tape-bg`) is two layers now, mint bands over the stripe colour,
+because Firefox 153 painted a color-mix() stop inside the repeating gradient as the stripe colour with hairlines. The list is in
+CHARACTER.md §6a.
+
 **Update 1, round 2 (2026-10-14): loading and the spinner are 21 matched pairs.** Loading N and spinner N are one idea (every
 name says "Paar N"): pair 1 the washi flutter and the tape roll, pair 2 pearls on a thread and today's candy dots, pairs 3-11 from
 the planner and the risograph (`pairs-a.js`/`.css`), pairs 12-21 from the craft table (`pairs-b.js`/`.css`). Loading recommends
@@ -23,8 +38,8 @@ swings down from its top-start corner onto it (Kenny's arrival family, _Stuck on
 
 **What.** One page, pastel only, in the review kit's aspect mode (`data-review-themes="pastel"`): an intro (three paragraphs, from
 `aspects.js`), "Wat pastel vandaag is" (the package's own parts in pastel), then nineteen questions, each one rule and three options (four for
-the anchor; 21 for loading and the spinner, five for the leave), each a live scene built from the package's own components in
-pastel. The first option is the recommendation (the spinner's is option 2, marked `rec`); every option says
+the anchor; 24 for loading and the spinner, five for the leave), each a live scene built from the package's own components in
+pastel. The first option is the recommendation, except in loading and the spinner, which have none (`noRec`); every option says
 what you see and why it is or is not recommended, on the page and in its hint in the dialog. Options named "jouw keuze(s)" are the decided
 demos' values, "vandaag" the register's. The text Kenny reads is Dutch; identifiers and this file are English.
 
@@ -40,8 +55,8 @@ demos' values, "vandaag" the register's. The text Kenny reads is Dutch; identifi
 | 8   | Surface (G7)                   | paper with its pass, taped · paper with its pass · as today (soft shadows)                      |
 | 9   | A tone (G8)                    | the sticker (family) · the heart sticker askew · the tape label                                 |
 | 10  | Live (G9)                      | the wobble (family) · reprinted · squished (the picks)                                          |
-| 11  | Loading (G10)                  | 21 pairs: the washi flutters (family) · pearls on a thread · … (CHARACTER.md §6a)               |
-| 12  | The spinner (G11)              | 21 pairs: the tape roll · the three candy dots (today, recommended) · … (CHARACTER.md §6a)      |
+| 11  | Loading (G10)                  | 24, no recommendation: the doodle 1-6 · the tag 7-12 · the caterpillar 13-18 · the plane 19-24 (CHARACTER.md §6a) |
+| 12  | The spinner (G11)              | 24, option N the same variant as loading option N, no recommendation (CHARACTER.md §6a)          |
 | 13  | Leaving and arriving (G12)     | the anchor itself · the anchor, then taped · the anchor, then a thumbtack · the balloon · popped |
 | 14  | Composites (G13)               | pastel's own · as the register today · as the picks                                            |
 | 15  | Pointing (G14)                 | the corner peels · lifted askew (today) · the tape tab                                          |
@@ -108,6 +123,23 @@ Playwright Firefox scripts over `demo.html?review=all` and the review dialog:
 - Pair 3's ring (`a-circle`): 3.56:1 on the busy button, 3.88:1 on the page, 4.21:1 on the panel (was 1.52-1.80:1).
 - `node research/_review/measure-motion.mjs research/pastel-character --base http://127.0.0.1:8791` (16 s): 202 part lines, 197
   "mirror", the 5 others the trend line's clip and the durations contact button as before. The loading and spinner loops are
+  not cycle scenes, so the tool does not read them.
+
+**Measured, round 3 (Firefox, 2026-10-14).** `python3 -m http.server 8801 --bind 127.0.0.1` from the worktree root, then Playwright
+Firefox scripts over `demo.html?review=all` and the review dialog (`?next=../../catalogue/agenda.html&review=open`):
+
+- One layout: every loading scene is 865.3 px high at 1600 and at 390 px (the seven cells 116.8, 134.9, 80.8, 120, 104, 115.6 and
+  95.2 px in all 24; before, 755.7 to 819.7 px over nine layouts), every spinner scene 312.4 px; in the dialog 395.7 px (1600) and
+  865.3 px (390) for all 24 loading options, 240 and 312.4 px for the spinners.
+- The dialog walks two steps, Laden (24) and De spinner (24), each flipped 1/24 to 24/24 with 24 distinct labels; no visible text
+  in either says "aanbevolen". Every one of the 7 loading carriers and 3 spinner carriers of every option has a running animation
+  (168 and 72 of 168 and 72 in the dialog, 240 of 240 parts on the page); under reduced motion none runs.
+- No console error or warning; page scroll width 1600 at 1600 px and 390 at 390 px, in the dialog too.
+- The washi tape: every element that paints `--pa-tape-bg` (the surface tape, the leave's tape, the hover tab, caterpillar 5's
+  leaf, plane 5's tape and tabs) now computes mint bands over the stripe colour, with no color() stop in the gradient; screenshots
+  before (stripe colour with hairlines) and after checked by eye.
+- `node research/_review/measure-motion.mjs research/pastel-character --base http://127.0.0.1:8801` (33 s): 199 part lines, 197
+  "mirror", the 2 others the trend line's clip; FRONT only on the jelly (question 2 option 3). The loading and spinner loops are
   not cycle scenes, so the tool does not read them.
 
 **Doubts.** The anchor's second pass is drawn by `::before`, which several package parts already use (the tooltip's bubble dots, the

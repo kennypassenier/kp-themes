@@ -505,6 +505,23 @@
         border-start-end-radius: 50%;
     }
 
+    /* A key figure as a link (update 1, Kenny 2026-10-14: on "Taken 12" the
+       corner was not adapted). Two faults: the package places every child of a
+       key figure in its grid column (`.kp-kpi > * { grid-column: 1 / -1 }`), and
+       an absolutely placed child with a grid column is placed in that column, so
+       the fold sat 12 px inside the corner, on the padding, and the plate's own
+       corner stayed whole beside it; and the fold had a control's 0.85 rem
+       corner on a plate's 1.2 rem. The fold is taken out of the grid and cut on
+       the plate's corner, a little larger than it, so its milk covers the
+       plate's rounded corner and border from the arc to the crease. */
+    .pa-kpilink > .pa-fold {
+        grid-column: auto;
+        inline-size: calc(var(--pa-r-plate) + 0.3rem);
+        block-size: calc(var(--pa-r-plate) + 0.3rem);
+        border-start-end-radius: var(--pa-r-plate);
+        border-end-start-radius: 0.55rem;
+    }
+
     /* The trend's line. */
     .pa-spark {
         display: block;
@@ -671,6 +688,47 @@
 
     .pa-scene .pa-empty {
         margin: 0;
+    }
+
+    /* The empty state's curled lip (update 1, Kenny 2026-10-14: "de lip hangt wel
+       omhoog … maar door schaduw of weet ik veel ziet het er niet goed uit"). The
+       register paints a flat square of page colour over the corner, so the plate's
+       3 px shadow ran on under it and the square stood on the dotted page as a
+       patch. Here the corner is really gone: the plate is cut along the crease
+       (its border, paper and shadow together, the shadow ending on the same
+       diagonal), so the page shows through, and the lip is the corner folded over
+       onto the plate: the sticker's back with the plate's own rounded corner and
+       border, and the crease as one line. */
+    .pa-scene:not([data-pa-motifs='bare']) .pa-empty {
+        --pa-lip: 1.9rem;
+        --pa-empty-r: var(--pa-r-plate);
+        border-radius: var(--pa-empty-r);
+        clip-path: polygon(
+            -1rem -1rem,
+            calc(100% + 1rem) -1rem,
+            calc(100% + 1rem) calc(100% - var(--pa-lip) - 1rem),
+            calc(100% - var(--pa-lip) - 1rem) calc(100% + 1rem),
+            -1rem calc(100% + 1rem)
+        );
+    }
+
+    .pa-scene:not([data-pa-motifs='bare']) .pa-empty::after {
+        inset-block-end: 0;
+        inset-inline-end: 0;
+        inline-size: var(--pa-lip);
+        block-size: var(--pa-lip);
+        border: 1px solid var(--border-strong);
+        border-block-end: 0;
+        border-inline-end: 0;
+        border-radius: 0;
+        border-start-start-radius: var(--pa-empty-r);
+        background: linear-gradient(
+            to bottom right,
+            var(--muted) calc(50% - 1px),
+            hsl(from var(--border-strong) h s l / 0.7) calc(50% - 1px) 50%,
+            transparent 50%
+        );
+        box-shadow: none;
     }
 
     .pa-cap--inner {
@@ -894,6 +952,13 @@
         position: relative;
     }
 
+    /* Round 2: some loading pictures stand up to 0.9rem above a part's top edge
+       (pairs-b's pieces), so every option keeps this space under each caption:
+       one layout for all 21, whichever is shown. */
+    .pa-scene[data-pa-loading] .pa-part > .pa-cap {
+        padding-block-end: 0.55rem;
+    }
+
     @media (prefers-reduced-motion: no-preference) {
         .pa-scene .pa-strip {
             animation:
@@ -914,33 +979,6 @@
         .pa-scene .pa-skel__line:nth-child(3) .pa-strip {
             animation-delay: calc(800ms * var(--pa-slow, 1));
         }
-
-        /* Option 2: the strip lies still, its stripes drift. */
-        .pa-scene[data-pa-loading='drift'] .pa-strip {
-            animation: pa-drift var(--pa-loop) linear infinite;
-        }
-
-        /* Option 3: a candy dot hops along instead of the tape. */
-        .pa-scene[data-pa-loading='hop'] .pa-strip {
-            background: none;
-            box-shadow: none;
-            animation: none;
-        }
-
-        .pa-scene[data-pa-loading='hop'] .pa-strip__dot {
-            display: block;
-            animation: pa-hop calc(1200ms * var(--pa-slow, 1)) cubic-bezier(0.3, 0, 0.3, 1) infinite;
-        }
-    }
-
-    .pa-scene[data-pa-loading='hop'] .pa-strip {
-        background: none;
-        box-shadow: none;
-        rotate: 0deg;
-    }
-
-    .pa-scene[data-pa-loading='hop'] .pa-strip__dot {
-        display: block;
     }
 
     /* ── The spinner (G11) ───────────────────────────────────────────────── */
@@ -958,23 +996,6 @@
         display: none;
     }
 
-    /* The pass chases: one plum dot round, its sky pass a moment behind. */
-    .pa-scene[data-pa-spinner='chase'] .kp-spinner {
-        background: radial-gradient(circle closest-side, transparent calc(75% - 1px), var(--border-strong) calc(75% - 1px) calc(75% + 1px), transparent calc(75% + 1px));
-    }
-
-    .pa-scene[data-pa-spinner='chase'] .kp-spinner::before,
-    .pa-scene[data-pa-spinner='chase'] .kp-spinner::after {
-        background: radial-gradient(circle at 50% 12.5%, var(--primary) 0 12%, transparent calc(12% + 0.5px));
-        animation: none;
-    }
-
-    .pa-scene[data-pa-spinner='chase'] .kp-spinner::before {
-        background: radial-gradient(circle at 50% 12.5%, var(--fx-overprint) 0 12%, transparent calc(12% + 0.5px));
-        translate: 1.5px 1.5px;
-    }
-
-    .pa-scene[data-pa-spinner='chase'] .pa-spinwrap,
     .pa-scene[data-pa-spinner='dots'] .pa-spinwrap {
         filter: none;
     }
@@ -982,14 +1003,6 @@
     @media (prefers-reduced-motion: no-preference) {
         .pa-scene[data-pa-spinner='roll'] .kp-spinner {
             animation: pa-roll calc(1200ms * var(--pa-slow, 1)) infinite;
-        }
-
-        .pa-scene[data-pa-spinner='chase'] .kp-spinner::after {
-            animation: pa-orbit calc(1200ms * var(--pa-slow, 1)) linear infinite;
-        }
-
-        .pa-scene[data-pa-spinner='chase'] .kp-spinner::before {
-            animation: pa-orbit calc(1200ms * var(--pa-slow, 1)) linear calc(-1050ms * var(--pa-slow, 1)) infinite;
         }
     }
 
@@ -1445,6 +1458,74 @@
         transform-origin: 50% 50%;
     }
 
+    /* Options 2 and 3 (update 1): the anchor, then the part is fixed to the page.
+       What fixes it starts the moment the part has landed (its delay + the lag +
+       the landing) and lasts --pa-fixT; a cell that carries one has a window that
+       long more, so its close starts with the fix played backwards (the tape
+       peeled off, the tack pulled out) and then is the anchor backwards. Only the
+       parts the surface rule tapes (a card, a key figure) carry it; a toast and a
+       notice are in the hand and have none. */
+    .pa-scene:is([data-pa-leave='taped'], [data-pa-leave='tack']) {
+        --pa-fixT: calc(360ms * var(--pa-slow, 1));
+        --pa-fix-in: pa-fix;
+        --pa-fix-out: pa-fix-r;
+    }
+
+    .pa-scene[data-pa-leave='tack'] {
+        --pa-fix-in: pa-tack;
+        --pa-fix-out: pa-tack-r;
+    }
+
+    .pa-scene[data-pa-leave='taped'] .pa-part:has(.pa-arrives .pa-tape),
+    .pa-scene[data-pa-leave='tack'] .pa-part:has(.pa-arrives .pa-tack) {
+        --pa-win: calc(var(--pa-nmax, 0) * var(--pa-step) + max(var(--pa-lag) + var(--pa-T), var(--pa-Tp)) + var(--pa-fixT));
+    }
+
+    /* The thumbtack: a round plum head with its rim and a glint, its flat shadow
+       in the second ink; it replaces the tape where it is the fix. */
+    .pa-tack {
+        display: none;
+    }
+
+    .pa-scene[data-pa-leave='tack'] .pa-tape {
+        display: none;
+    }
+
+    .pa-scene[data-pa-leave='tack'] .pa-tack {
+        display: block;
+        position: absolute;
+        z-index: 3;
+        inset-block-start: -0.5rem;
+        inset-inline-start: calc(50% - 0.6rem);
+        inline-size: 1.2rem;
+        block-size: 1.2rem;
+        border: 1.5px solid var(--pa-peel);
+        border-radius: 50%;
+        background:
+            radial-gradient(ellipse 0.3rem 0.2rem at 36% 32%, color-mix(in srgb, var(--primary) 22%, var(--card)) 0 92%, transparent 100%),
+            radial-gradient(circle at 50% 50%, var(--primary) 0 54%, hsl(from var(--primary) h s calc(l * 0.82)) 58% 100%);
+        box-shadow: 2px 2px 0 var(--pa-pass-c);
+        pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .pa-scene[data-pa-leave='taped'][data-pa-phase='gap'] .pa-arrives .pa-tape,
+        .pa-scene[data-pa-leave='tack'][data-pa-phase='gap'] .pa-arrives .pa-tack {
+            animation: var(--pa-fix-out) 1ms linear 0s reverse both;
+        }
+
+        .pa-scene[data-pa-leave='taped']:is([data-pa-phase='in'], [data-pa-phase='hold']) .pa-arrives .pa-tape,
+        .pa-scene[data-pa-leave='tack']:is([data-pa-phase='in'], [data-pa-phase='hold']) .pa-arrives .pa-tack {
+            animation: var(--pa-fix-in) var(--pa-fixT) var(--pa-curve) calc(var(--pa-d) + var(--pa-lag) + var(--pa-T)) both;
+        }
+
+        .pa-scene[data-pa-leave='taped'][data-pa-phase='out'] .pa-arrives .pa-tape,
+        .pa-scene[data-pa-leave='tack'][data-pa-phase='out'] .pa-arrives .pa-tack {
+            animation: var(--pa-fix-out) var(--pa-fixT) var(--pa-curve) calc(var(--pa-win) - var(--pa-d) - var(--pa-lag) - var(--pa-T) - var(--pa-fixT)) reverse
+                both;
+        }
+    }
+
     /* ── 13 to 16 · Pointing, focus, press: the recommended manners ─────── */
 
     /* G14: the sticker lifts flat on its peel and its corner curls into a fold. */
@@ -1689,6 +1770,7 @@
     }
 
     .pa-scene[data-pa-motifs='candy'] .pa-empty {
+        --pa-empty-r: 1.5rem;
         border-style: dashed;
         border-radius: 2.5rem 2.5rem 1.5rem 2.5rem;
     }

@@ -217,6 +217,25 @@
     white-space: nowrap;
 }
 
+/* Update 1: a question Kenny decided says so, and his option carries a mint tag
+   (the decided picks come from update.json; demo.js writes the marks). */
+.pa-aspect__decided {
+    margin: 0;
+    color: var(--foreground);
+    font-weight: 600;
+}
+
+.pa-label__picked {
+    display: inline-block;
+    padding: 0.05rem 0.55rem;
+    border-radius: var(--kp-radius-pill, 999px);
+    background: var(--accent);
+    color: var(--accent-foreground);
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
 .pa-see,
 .pa-verdict {
     margin: 0;

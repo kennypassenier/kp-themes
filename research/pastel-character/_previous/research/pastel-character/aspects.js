@@ -4,6 +4,29 @@
 // is proposed there (§0a) and asked here as question 1, because pastel never
 // had an anchor round of its own. The text Kenny reads is Dutch (his rule for
 // everything user-facing); identifiers stay English.
+//
+// Update 1 (round 2026-10-14-r1, Kenny's verdict of 2026-10-14): fourteen
+// questions are decided and locked in update.json "picks" (focus = the dashed
+// line alone, not the recommendation); five are asked again: loading and the
+// spinner (redone), the leave (option 1 is now said to be the anchor itself, and
+// two new options fix the part to the page after it landed: the tape stuck on,
+// a thumbtack pushed in), pointing (the key figure's fold fixed) and the motifs
+// (the empty state's lip redrawn). Kenny's words and the replies are in update.json.
+//
+// Round 2 of update 1 (Kenny's words on loading and the spinner): both are 21
+// options, matched in pairs (pairs-a.js: 2-11, pairs-b.js: 12-21). An option's
+// `rec` marks the recommendation where it is not the first (the spinner: dots,
+// option 2, so the pairs keep their numbers); without one the first is.
+
+import { LOADING_OPTIONS as PAIRS_A_LOADING, SPINNER_OPTIONS as PAIRS_A_SPINNER } from './pairs-a.js';
+import { LOADING_OPTIONS as PAIRS_B_LOADING, SPINNER_OPTIONS as PAIRS_B_SPINNER } from './pairs-b.js';
+
+/**
+ * The loading and spinner questions are 21 matched pairs (round 2): option N of
+ * one is the same idea as option N of the other, so each name says its pair.
+ * @template {{ name: string }} T @param {T[]} options @returns {T[]}
+ */
+const paired = (options) => options.map((option, at) => ({ ...option, name: `Paar ${at + 1} · ${option.name}` }));
 
 export const THEME = 'pastel';
 export const LABEL = 'Pastel';
@@ -17,7 +40,7 @@ export const STORY = {
 
 /**
  * @type {{ id: string, label: string, rule: string, question: string, why: string, kind: 'cycle' | 'loop' | 'still' | 'live', scene: string,
- *   options: { key: string, name: string, see: string, verdict: string }[] }[]}
+ *   options: { key: string, name: string, see: string, verdict: string, rec?: boolean }[] }[]}
  */
 export const ASPECTS = [
     {
@@ -323,73 +346,73 @@ export const ASPECTS = [
         label: 'Laden',
         rule: 'G10',
         question: 'Een tegel, een paneel, een menuregel, dagen, een grafiek, skeletregels en de bezige balk wachten op gegevens. Wat zie je?',
-        why: 'Alles wat wacht, in elke optie dezelfde onderdelen; alleen het beeld van het wachten verschilt.',
+        why: 'Eenentwintig beelden van het wachten, als eenentwintig paren met de spinner (vraag 12): laden N en spinner N zijn hetzelfde idee, hier groot over wat wacht, daar klein en rond. Elke naam zegt zijn paar. Paar 1 is de wapperende tape (jouw keuze), 2 tot 11 komen uit de planner en de risodruk, 12 tot 21 van de knutseltafel. Alles wat wacht is in elke optie hetzelfde; alleen het beeld verschilt.',
         kind: 'loop',
         scene: 'loading',
-        options: [
+        options: paired([
             {
                 key: 'flutter',
                 name: 'De washi tape wappert (jouw familiekeuze)',
+                rec: true,
                 see: 'Een strook gestreepte munttape ligt over de bovenrand van wat wacht en wappert zacht rond zijn midden (±1,5°, 2400 ms), terwijl de streepjes van begin naar eind schuiven; skeletregels zijn drie stroken; de bezige balk is de tape over de hele baan.',
-                verdict: 'Aanbevolen: dit, omdat het jouw laadfamilie is (de bezige tabel), op elk oppervlak hetzelfde beeld.',
+                verdict: 'Aanbevolen: dit, omdat jij het de beste vond (14/10) en het jouw laadfamilie is (de bezige tabel), op elk oppervlak hetzelfde beeld. Zijn spinner is de taperol.',
             },
-            {
-                key: 'drift',
-                name: 'De streepjes schuiven (jouw keuzes)',
-                see: 'De tape ligt stil, alleen de streepjes schuiven (het menu, de meter, de tegels, de trend).',
-                verdict: 'Niet aanbevolen, omdat het een beetje te stil is naast de wapperende tape die je als familie koos; wel een goede reserve.',
-            },
-            {
-                key: 'hop',
-                name: 'Een snoepbolletje springt (jouw keuzes)',
-                see: 'Een pruimkleurig bolletje springt van links naar rechts over elk oppervlak (de kalender, het kerncijfer, het menu).',
-                verdict: 'Niet aanbevolen, omdat een springend bolletje het snoep is, niet de planner.',
-            },
-        ],
+            ...PAIRS_A_LOADING,
+            ...PAIRS_B_LOADING,
+        ]),
     },
     {
         id: 'spinner',
         label: 'De spinner',
         rule: 'G11',
         question: 'Waar geen plaats is voor een strook tape: wat draait er?',
-        why: 'De spinner in drie maten, in een bezige knop en in een bezig paneel.',
+        why: 'Eenentwintig spinners, elk het laadbeeld met hetzelfde nummer in het klein (vraag 11): spinner N hoort bij laden N. Elke naam zegt zijn paar. Elke spinner in drie maten, in een bezige knop en in een bezig paneel.',
         kind: 'loop',
         scene: 'spinner',
-        options: [
+        options: paired([
             {
                 key: 'roll',
-                name: 'De taperol',
+                name: 'De taperol (ook goed, jouw keuze)',
                 see: 'Een rol van dezelfde gestreepte tape draait in drie sprongetjes per ronde op de landingscurve (1200 ms), zijn blauwe tweede inkt ernaast.',
-                verdict: 'Aanbevolen: dit, omdat het dezelfde tape is als bij het laden, opgerold, en het sprongetje het ritme van vandaag houdt.',
+                verdict: 'Ook goed volgens jou (14/10): dezelfde tape als het wapperende laadbeeld van paar 1, opgerold, en het sprongetje houdt het ritme van vandaag.',
             },
             {
                 key: 'dots',
                 name: 'De drie snoepbolletjes (vandaag)',
+                rec: true,
                 see: 'Drie bolletjes op een draad die in drie sprongen rondgaan (1500 ms).',
-                verdict: 'Niet aanbevolen, omdat de snoepbolletjes niets met de tape of de druk te maken hebben.',
+                verdict: 'Aanbevolen: dit, omdat jij het de beste vond (14/10). Zijn laadbeeld is paar 2, de parels op een draadje, met dezelfde maten en hetzelfde ritme.',
             },
-            {
-                key: 'chase',
-                name: 'De tweede inkt zit erachter',
-                see: 'Eén pruimkleurig bolletje draait rond, zijn blauwe tweede inkt hijgt er een halve tel achteraan.',
-                verdict: 'Niet aanbevolen, omdat een gelijkmatig draaiende stip het pakket is, niet pastel.',
-            },
-        ],
+            ...PAIRS_A_SPINNER,
+            ...PAIRS_B_SPINNER,
+        ]),
     },
     {
         id: 'leave',
         label: 'Weggaan en aankomen',
         rule: 'G12',
         question: 'Een melding, een kaart, een kerncijfer en een toast gaan weg en komen terug. Hoe?',
-        why: 'Aankomen is in elke optie het weggaan achterstevoren.',
+        why: 'Aankomen is in elke optie precies het weggaan achterstevoren. Opties 2 en 3 zijn nieuw (je vroeg ze op 14/10): het anker, en daarna wordt wat op de pagina vastzit (de kaart en het kerncijfer) nog vastgemaakt.',
         kind: 'cycle',
         scene: 'leave',
         options: [
             {
                 key: 'peel',
-                name: 'Afgepeld',
-                see: 'Het onderdeel pelt los van zijn hoek linksboven, daarna schuift de blauwe vorm weg; aankomen is het anker: erop geplakt.',
-                verdict: 'Aanbevolen: dit, omdat weggaan dan het anker achterstevoren is, en een opening en een aankomst uit dezelfde richting komen.',
+                name: 'Het anker zelf',
+                see: 'Dit is precies het anker dat je koos, niets anders: aankomen is “twee keer gedrukt, erop geplakt” (dezelfde beweging, dezelfde 560 ms, dezelfde zachte landing als de dialoog en het menu), weggaan is datzelfde anker exact achterstevoren: het onderdeel pelt los van zijn hoek linksboven, daarna schuift de blauwe vorm weg. Gemeten: elke beweging hier is tot op de milliseconde die van het anker.',
+                verdict: 'Aanbevolen: dit, omdat weggaan en aankomen dan geen eigen beweging hebben maar het anker zijn, zoals een opening en een aankomst uit dezelfde richting horen te komen.',
+            },
+            {
+                key: 'taped',
+                name: 'Het anker, dan vastgetapet',
+                see: 'Het anker, en meteen nadat de kaart en het kerncijfer neergelegd zijn, komt hun strookje washi tape van boven, schuin en wat groter, en wordt over de hoek linksboven op de pagina geplakt met één klein plat drukje (360 ms). Weggaan is dat exact achterstevoren: eerst gaat de tape eraf, dan pelt het onderdeel los. De melding en de toast heb je in de hand en krijgen geen tape.',
+                verdict: 'Niet aanbevolen, omdat het een derde stap aan elke aankomst toevoegt (920 ms in plaats van 560 ms); wel het mooiste verhaal: de tape die je bij het oppervlak koos, wordt echt vastgeplakt.',
+            },
+            {
+                key: 'tack',
+                name: 'Het anker, dan een punaise',
+                see: 'Het anker, en meteen nadat de kaart en het kerncijfer neergelegd zijn, wordt bovenaan in het midden een ronde pruimkleurige punaise erin geprikt: hij komt van boven, groter, en veert bij het indrukken één keer zacht terug, zijn platte blauwe schaduw ernaast (360 ms). Hij komt in de plaats van de tape. Weggaan is dat exact achterstevoren: eerst gaat de punaise eruit, dan pelt het onderdeel los.',
+                verdict: 'Niet aanbevolen, omdat een punaise van het prikbord is en niet van de planner met zijn stickers en tape, en de tape bij het oppervlak al gekozen is; wel lief, en hij leest meteen als “vastgezet”.',
             },
             {
                 key: 'balloon',

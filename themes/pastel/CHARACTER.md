@@ -46,6 +46,7 @@ not from its CSS says so.
 | 2026-10-13       | review round 2 (all-themes)          | **"Niet de open/close animatie van dit thema"** on the bar, the palette, the date picker, the combobox, the alarm and the side navigation: each now takes the dialog's sheet (`kp-sig-pastel-pastel-sheet`, up from 18 px below, turned -2.5°, out of nothing, 427 ms on `--fx-ease`) and closes as it backwards. docs/THEME_LESSONS.md lesson 52 records the sheet as the one decided exception that reads PLAIN: it only moves and turns. |
 | 2026-10-14       | research/pastel-character, round 1 (`2026-10-14-r1`), Kenny's verdict | **Fourteen of nineteen approved** (research/pastel-character/update.json, update 1): the anchor _Printed twice, stuck on_ (§0a option 1), the soft landing (G1), from its corner in reading order (G2), stuck on beside its trigger (G3), one landing of 560 ms (G4), three inks (G5), two radii and the pill (G6), paper with its pass, taped (G7), the sticker (G8), the wobble (G9), pastel's own button in every composite (G13), stuck down flat (G16), one face, weight speaks (G17); and **focus = the dashed line alone** (_Alleen de gestreepte lijn_, the picks' option 3, NOT the recommendation; G15 is rewritten on it at the port, contrast checked on every ground). **Open, asked again in update 1:** loading (G10) and the spinner (G11), redone as matched pairs; the leave (G12): option 1 confirmed and measured to be the anchor itself and its reverse, plus two new options asked by Kenny (the anchor, then the washi tape stuck on over the top-start corner; the anchor, then a thumbtack pushed in at the top centre; each close its open reversed, the fix coming off first); pointing (G14) option 1, the key figure's fold fixed (it sat in the package's grid column, 12 px inside the corner, with a control's radius); the motifs (G18) option 1, the empty state's lip redrawn as a real fold (the plate cut along the crease, the shadow with it). |
 | 2026-10-14       | research/pastel-character, update 1, round 2 (built, waiting on Kenny) | **Loading (G10) and the spinner (G11) as 21 matched pairs**, on Kenny's words (loading: option 1 best, beside 9 new and 10 out-of-the-box options; spinner: 2 best, 1 also good, 21 options matched to the loading pictures). Loading N and spinner N are one idea, every name says "Paar N"; loading recommends pair 1 (the flutter), the spinner pair 2 (the candy dots), the tape roll (pair 1) marked "ook goed". The list is in §6. |
+| 2026-10-14       | research/pastel-character, update 1, round 2, Kenny's verdict | **Three more approved** (update.json, update 2): the leave (G12) = _the anchor, then a thumbtack_ (option 3: the anchor, then a round plum tack with its sky shadow pushed in at the top centre; the close takes the tack out first); pointing (G14) = _the corner peels_ (option 1, with the key figure's fold fixed); the motifs (G18) = _from the sticker sheet and the press_ (option 1, with the empty state's lip as a real fold). **Loading (G10) and the spinner (G11), round 3:** of the 21 pairs Kenny kept four families, pairs 6, 11, 13 and 20 (_the doodle_, _the tag_, _the pom-pom caterpillar_, _the paper plane_), asked for five variants of each and dropped the rest; his point: the plane and the caterpillar crossed THROUGH the day circles of the month, where the doodle had its own treatment for a day (it circles it). Each variant now treats every carrier on purpose, the days above all (around them, onto them, from one to the next, never through them). 24 options each, no recommendation; the list is §6a. |
 
 What Kenny had **not** decided, and what `research/pastel-character` asks: the
 anchor (the one open and close language every later decision departs from),
@@ -126,7 +127,7 @@ glitched, scanned, grown, thrown or burnt; nothing lands with a dead stop.
 | G9  | **A live change wobbles.** What changed (a figure, a word, a line, a tile's value) wobbles once like jelly round its foot: `rotate` 10° → -7° → 3° → 0, 800 ms `ease-out` (the graph's _The wobble_, Kenny's live family). Its second pass stays where it is, so the wobble shows against it. No swell, no wiggle of a whole tile, no colour flash. |
 | G10 | **Loading is washi tape.** A strip of striped washi tape (mint, its stripes in `--accent` and `--accent-foreground` at a quarter) lies across the top of every waiting surface and flutters gently round its middle (±1.5°, 2400 ms `ease-in-out`, alternate), its stripes drifting start → end; where there is no room for a strip (the spinner) the roll of the same tape turns (§6). |
 | G11 | **The spinner is the tape roll.** A ring of the striped tape turns in three hops a lap on the landing curve, 1200 ms a lap, its sky pass beside it. |
-| G12 | **Leaving is peeling off.** (Update 1, 2026-10-14: asked again with two more options, the tape stuck on or a thumbtack pushed in after the landing; see §0.) What leaves is its landing played backwards: it peels off at its top-start corner, then its pass slides off register; what arrives is stuck on. One picture, one curve, 560 ms. The balloon (Kenny's leave of 2026-10-04) is an option: with it, an arrival comes down from above while an opening comes from its corner, two directions for one gesture. |
+| G12 | **Leaving is peeling off.** (Decided 2026-10-14, round 2: the anchor, then a thumbtack pushed in at the top centre, option 3; the port writes this rule on that pick, see §0.) What leaves is its landing played backwards: it peels off at its top-start corner, then its pass slides off register; what arrives is stuck on. One picture, one curve, 560 ms. The balloon (Kenny's leave of 2026-10-04) is an option: with it, an arrival comes down from above while an opening comes from its corner, two directions for one gesture. |
 | G13 | **An element inside a composite is the theme's own element.** A button in a header, menu, drawer, tile or alert is pastel's `.kp-button` in every state; a menu entry `.kp-menu__item`; a tag the sticker. A composite may add its own accent around them, never replace their hover, focus ring, press, corner or font (§4b). |
 | G14 | **Pointing peels the corner.** Hover lifts the sticker 2 px on its peel (the peel grows from 3 to 5 px, still flat) and its top-end corner curls up into a small fold in the paper's back (`--muted`), on the landing curve in 220 ms; the words stand upright and the siblings are untouched. Kenny's hover family (_The tape peel_) drawn so it shows a peel, and scope-24's lift without the turn. |
 | G15 | **Focus is the two rings, the outer one dashed.** (Superseded 2026-10-14, round 1: Kenny picked the dashed line alone, see §0; the port writes this rule on that pick.) DI2's two channels stay (a box-shadow ring in `--focus-ring` composed with the peel, lesson 41) and the outline becomes a 2 px dashed `--primary` line 3 px out (the header family's "focus dashes a line round it"). |
@@ -395,44 +396,56 @@ to every other loading element:
 9. **Exceptions.** The network graph keeps its sprinkle drift (G20). Nothing
    else.
 
-### 6a. Round 2: 21 matched pairs (built 2026-10-14, waiting on Kenny's pick)
+### 6a. Round 3: four families, six variants each (built 2026-10-14, waiting on Kenny's pick)
 
-Kenny asked for 21 loading pictures and 21 spinners, matched in pairs (the
-spinner the same idea in small). G10 and G11 above stay as written until he
-picks; the pair he picks rewrites them at the port. The pairs, loading ·
-spinner (research/pastel-character: pair 1 and the candy dots in options.css,
-pairs 2-11 in pairs-a.js/.css, 12-21 in pairs-b.js/.css):
+Of round 2's 21 matched pairs Kenny kept four families and asked for five new
+variants of each (2026-10-14): "Wat ik bv niet zo goed vond aan het
+vliegtuigje en de rups, is dat ze niet rond de dagen van de maand vliegen,
+maar erdoor." G10 and G11 above stay as written until he picks; the variant he
+picks rewrites them at the port. Loading option N and spinner option N are one
+variant (same family, same number, the same name on both; `PAIRS` in
+pairs-a.js and pairs-b.js lists the keys, and aspects.js refuses to load when
+the two lists drift apart). Variant 1 of each family is round 2's pair as Kenny
+saw it; variants 2-6 treat every carrier on purpose (tile, panel, menu entry,
+the days of a month, the chart, the skeleton lines, the busy bar), the day
+circles above all: around them, onto them or from one to the next, never
+through them. Neither question recommends; every family is Kenny's own pick.
+(research/pastel-character: the doodle and the tag in pairs-a.js/.css, the
+caterpillar and the plane in pairs-b.js/.css.)
 
-| Pair | Loading                                   | Spinner                                    | Source                   |
-| ---- | ----------------------------------------- | ------------------------------------------ | ------------------------ |
-| 1    | the washi flutters (recommended)          | the tape roll (also good)                  | Kenny's family pick      |
-| 2    | pearls on a thread                        | the three candy dots (recommended, today)  | the register's spinner   |
-| 3    | the highlighter                           | circled with the highlighter               | the planner              |
-| 4    | the habit tracker                         | the round habit tracker                    | the planner              |
-| 5    | flicking through                          | the little planner flicked through         | the planner              |
-| 6    | the margin doodle                         | the curl                                   | the planner              |
-| 7    | the sticker lifts and is pressed down     | the sticker pressed down all round         | the sticker              |
-| 8    | the stamp, printed twice                  | the little stamp                           | the risograph            |
-| 9    | the paper clip                            | the note with its clip                     | the planner              |
-| 10   | the notebook's elastic                    | the elastic band                           | the planner              |
-| 11   | the swinging tag                          | the tag on its pin                         | the scrapbook            |
-| 12   | googly eyes                               | the googly eye                             | the craft table          |
-| 13   | the pom-pom caterpillar                   | the curled-up caterpillar                  | the craft table          |
-| 14   | needle and thread                         | a button sewn on                           | the craft table          |
-| 15   | knitting                                  | the ball of wool                           | the craft table          |
-| 16   | clay balls                                | clay kneaded                               | the craft table          |
-| 17   | paper dolls                               | the paper doll pack                        | the craft table          |
-| 18   | fortune tellers                           | the fortune teller                         | the craft table          |
-| 19   | the paper spring (witch's ladder)         | the jack-in-the-box                        | the craft table          |
-| 20   | the paper plane                           | the looping plane                          | the craft table          |
-| 21   | paper pinwheels                           | the pinwheel                               | the craft table          |
+| #   | Loading (variant)                                   | On the days of the month                                   | Spinner (the same variant in small)                  |
+| --- | --------------------------------------------------- | ---------------------------------------------------------- | ---------------------------------------------------- |
+| 1   | the doodle 1: a looped pen line, erased (Kenny's)   | one day circled                                            | the spiral drawn and erased                          |
+| 2   | the doodle 2: the ribbon weaving through            | over one day, under the next, always between two           | a ribbon weaving round four little circles           |
+| 3   | the doodle 3: colouring in                          | each day coloured in mint, its number on top               | a circle coloured in, row by row                     |
+| 4   | the doodle 4: the arrow hops                        | an arc from day to day above, one long arc back below      | a round arrow, each a third further on               |
+| 5   | the doodle 5: the little star                       | a star dotted beside each day in turn                      | a star in three strokes, counted, not turned         |
+| 6   | the doodle 6: the outline                           | one wobbly line round the whole week                       | a line drawn round a little card                     |
+| 7   | the tag 1: the swinging tag (Kenny's)               | a tag hanging under each day                               | the tag on its pin                                   |
+| 8   | the tag 2: the washing line                         | the days hang on the line by a peg                         | three tags on a sagging line                         |
+| 9   | the tag 3: it turns over                            | a tag under each day turns, one after the other            | the tag turns once, its sky back seen                |
+| 10  | the tag 4: tied on                                  | a loop round each day in turn, the tag drops from it       | a ring drawn, the tag drops on it                    |
+| 11  | the tag 5: the yo-yo                                | a tag let down onto each day, a wave across the week       | the tag let down from a hook                         |
+| 12  | the tag 6: the cable car                            | rides a cable under the week, stopping under each day      | the tag on a ring like a Ferris wheel car            |
+| 13  | the caterpillar 1: the pom-pom caterpillar (Kenny's) | crawls along the row (as round 2)                         | curled up, a hump running round                      |
+| 14  | the caterpillar 2: the round                        | its own small caterpillar round each day                   | crawling round a round sticker                       |
+| 15  | the caterpillar 3: the inchworm                     | a bridge from the top of one day to the next               | stepping round a ring, three steps a lap             |
+| 16  | the caterpillar 4: the wheel                        | rolls over each day's top, dips between two                | rolls once, unrolls, curls up again                  |
+| 17  | the caterpillar 5: the very hungry caterpillar      | one bite from each day's top edge, the number whole        | eating round a mint leaf                             |
+| 18  | the caterpillar 6: everything becomes caterpillar   | the five days are its body, a hump running through them    | the three dots become a caterpillar                  |
+| 19  | the plane 1: the paper plane (Kenny's)              | flies along the row (as round 2)                           | the looping plane with its mint trail                |
+| 20  | the plane 2: hop, skip and jump                     | taps each day's top and skips on to the next               | hops round a round sticker, three landings a lap     |
+| 21  | the plane 3: folded and unfolded                    | a note on each day's shoulder, folded, flown, unfolded     | a note folds into a plane and opens again            |
+| 22  | the plane 4: loops                                  | one whole loop round each day, a line over the tops between | a figure of eight round two stickers                 |
+| 23  | the plane 5: it brings the tape                     | drops a tape tab on each day's corner, takes it back       | unrolls a ring of washi tape behind it               |
+| 24  | the plane 6: the dart                               | one plane stuck against each day's edge, wobbling          | three planes into a round target                     |
 
 Every picture keeps the grammar: the three inks by role, the sky pass flat
 beside what is drawn, the landing curve where something lands, loops of
-1200 ms or longer, no blur, and a still pose under reduced motion. A spinner
-graphic is 3:1 or more on every plate it stands on (pair 3's ring is a
-deeper mint than the strip's highlighter for it: 3.56:1 on the busy button,
-measured).
+1200 ms or longer, no blur, and a still pose under reduced motion. One layout
+for all 24: the week, the skeleton and the busy bar reserve the largest room
+any variant draws in above and below them (options.css), so the scene is the
+same height whichever option is shown.
 
 ---
 

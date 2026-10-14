@@ -1,0 +1,45 @@
+{
+    "update": 1,
+    "picks": {
+        "pastel": {
+            "anchor": "twice",
+            "curve": "landing",
+            "direction": "corner",
+            "opening": "stuck",
+            "durations": "landing",
+            "colour": "three",
+            "corners": "two",
+            "surface": "taped",
+            "tone": "sticker",
+            "live": "wobble",
+            "composites": "own",
+            "focus": "single",
+            "press": "flat",
+            "type": "one"
+        }
+    },
+    "questions": {
+        "pastel": {
+            "loading": {
+                "comment": "optie 1 is het beste, maar ik wil deze optie naast 9 compleet nieuwe opties. Daarna wil ik nog is 10 volledig out of the box opties, allen moeten ze passen in het speelse/cartoony/cute/knutselwerk thema wat Pastel momenteel is. Ik verwacht echte creativiteit voor elke optie, niet een half-assed job. Er moet over nagedacht zijn",
+                "reply": "Loading now has 21 options, built as 21 matched pairs with the spinner: loading N and spinner N are one idea, here large over what waits, there small and round, and every name says \"Paar N\". Option 1 is your flutter, kept as it was and still recommended; its spinner is the tape roll. Pairs 2 to 11 come from the planner and the risograph: pearls on a thread (the loading picture for today's candy dots), the highlighter, the habit tracker, flicking through the pages, the margin doodle, the sticker that lifts and is pressed down again, the stamp printed twice, the paper clip, the notebook's elastic, the swinging tag. Pairs 12 to 21 come from the craft table: googly eyes, the pom-pom caterpillar, needle and thread, knitting, clay balls, paper dolls, fortune tellers, the paper spring, the paper plane and paper pinwheels. Every one is a live picture on the same seven waiting parts (a tile, a panel, a menu entry, days, a chart, skeleton lines, the busy bar), in pastel's three inks with the sky second pass beside what is drawn, calm loops of 1.2 s or more, and a still picture under reduced motion. The old 'stripes drift' and 'candy dot hops' options are gone."
+            },
+            "spinner": {
+                "comment": "2 is best, 1 is ook al goed, ik wil net zoals de vorige component in totaal 21 varianten zien (één extra omdat hier twee opties goed zijn), allemaal extreem goed bedacht en gebaseerd op de varianten in het ladingscherm zodat ze bij mekaar passen, dat betekend dat je ook een lading animatie op optie 1 van deze component moet bijverzinnen, beide krijgen dus 21 opties",
+                "reply": "The spinner now has 21 options, each the loading picture with the same number in small, so the two questions line up pair by pair (\"Paar N\" in every name). The candy dots, your best, are recommended and stay option 2 so the pairs keep their numbers; the tape roll, also good, is option 1 and marked so. Pairs 3 to 11: a date circled with the highlighter (a deeper mint than the strip, so it reads on every plate), the round habit tracker, a little planner flicked through, the doodled curl, the sticker pressed down all round, the little stamp, the note with its clip, the elastic band, the tag on its pin. Pairs 12 to 21: the googly eye, the curled-up caterpillar, a button sewn on, the ball of wool, clay being kneaded, the paper doll pack unfolding, the fortune teller, the jack-in-the-box, the looping paper plane and the pinwheel. Each plays in three sizes, a busy button and a busy panel; the old 'the pass chases' option is gone."
+            },
+            "leave": {
+                "comment": "1 lijkt me het best, maar is dit dezelfde animatie als de anchor animation? want dat zou toch moeten? Extraatje, kan je een versie maken waarbij de animatie de anchor animatie is, maar de sticker (bij elementen met een sticker) er nog op wordt geplakt precies nadat het item neergezet wordt? zodat we hem precies vastplakken aan het canvas met die sticker? Ik wil ook een versie met een thumbtack die er in wordt geprikt",
+                "reply": "Yes: option 1 is the anchor itself, nothing else. It uses the anchor's own keyframes, curve and times (the second ink 440 ms, the part 440 ms from 120 ms, 560 ms in all), and the leave is that anchor played backwards; measured in Firefox, every part of it has the same t50, t90 and run as the dialog in the anchor question, and every part reads as an exact mirror. Its text now says so. Two new options follow it, both the anchor first: 2, right after the card and the key figure have landed, their strip of washi tape comes down from above the page, larger and turned, and is stuck over the top-start corner onto the page with one small flat press (360 ms); 3, a round plum thumbtack with its flat sky shadow is pushed in at the top centre instead of the tape, springing back once as it goes in (360 ms). The notice and the toast are in the hand and get neither. Each leave is its arrival exactly backwards (measured: the tape or tack comes off first, 0 to 360 ms, then the part peels off and the second ink slides away). The balloon and the pop are options 4 and 5."
+            },
+            "hover": {
+                "comment": "optie 1, maar het ziet er overal goed uit, buiten bij dit item waar \"Taken 12\" in staat, daar wordt de initiele hoek niet aangepast",
+                "reply": "Option 1 stays, fixed on the key figure. Two faults made its corner wrong: the package places every child of a key figure in its grid column, which put the fold 12 px inside the corner on the padding while the tile's own rounded corner stayed whole beside it, and the fold had a button's small corner on a tile's large one. The fold now sits on the tile's real corner with the tile's own rounding, so the corner curls over exactly as on the buttons, the menu entry and the day; at rest the tile is unchanged. The same fix holds wherever a key figure is a link."
+            },
+            "motifs": {
+                "comment": "1 is de beste optie maar de component met \"nog geen taken\" heeft hetzelfde probleem, de lip hangt wel omhoog aan de rechterbenedenhoek, maar door schaduw of weet ik veel ziet het er niet goed uit",
+                "reply": "Option 1 stays, with the empty state's lip redrawn. It was a flat square of page colour painted over the corner, so the plate's shadow ran on under it and the square stood out on the dotted page. Now the corner is really folded: the plate (its border, paper and shadow together) is cut along the crease so the page shows through, and the lip is that corner turned over onto the plate, the sticker's back with the plate's own rounded corner and border and the crease as one line; the shadow ends on the same diagonal."
+            }
+        }
+    }
+}

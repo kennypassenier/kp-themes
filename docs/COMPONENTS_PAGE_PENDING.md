@@ -23,6 +23,9 @@ each line its example and its option row, and empties the list.
   the folded corner on hover and the dashed outer focus line; the wobble as pastel's `--kp-update`. Each with its example and
   option row on the component pages it touches (dialog, popover, menu, toast, tooltip, alarm, tour, side navigation, date
   picker, combobox, progress bar, spinner, skeleton, button, key figure).
-- **Pastel's loading pictures and spinners, 21 matched pairs (research/pastel-character, round 2; pending Kenny's pick).** Once he
-  picks a pair, the progress bar, skeleton, spinner, key figure, menu and calendar pages show its loading picture and its spinner
-  in pastel, with an example and an option row each (themes/pastel/CHARACTER.md §6a lists the pairs).
+- **Pastel's loading pictures and spinners, four families of six variants (research/pastel-character, round 3; pending Kenny's
+  pick: the doodle, the tag, the pom-pom caterpillar, the paper plane, loading option N matched to spinner option N).** Once he
+  picks a variant, the progress bar, skeleton, spinner, key figure, menu and calendar pages show its loading picture (with its own
+  treatment of the days of the month) and its spinner in pastel, with an example and an option row each
+  (themes/pastel/CHARACTER.md §6a lists the 24 variants). Decided in round 2 and pending the port too: the leave _the anchor,
+  then a thumbtack_ (the tack's keyframes on the card and key figure pages).

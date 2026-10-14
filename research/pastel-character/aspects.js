@@ -13,20 +13,19 @@
 // a thumbtack pushed in), pointing (the key figure's fold fixed) and the motifs
 // (the empty state's lip redrawn). Kenny's words and the replies are in update.json.
 //
-// Round 2 of update 1 (Kenny's words on loading and the spinner): both are 21
-// options, matched in pairs (pairs-a.js: 2-11, pairs-b.js: 12-21). An option's
-// `rec` marks the recommendation where it is not the first (the spinner: dots,
-// option 2, so the pairs keep their numbers); without one the first is.
+// An option's `rec` marks the recommendation where it is not the first;
+// without one the first is, and a question marked `noRec` has none.
+//
+// Round 3 (Kenny 2026-10-14): leave = tack, hover = peel, motifs = sheet are
+// decided; loading and the spinner keep four families (doodle, tag, caterpillar,
+// plane), each its original plus five variants, in pairs-a.js and pairs-b.js.
+// Loading option N and spinner option N are one variant (same family, same
+// number; each file's PAIRS lists the keys side by side). Neither question
+// recommends: variant 1 of each family is Kenny's own pick of round 2, the
+// others are alternatives (`noRec`).
 
-import { LOADING_OPTIONS as PAIRS_A_LOADING, SPINNER_OPTIONS as PAIRS_A_SPINNER } from './pairs-a.js';
-import { LOADING_OPTIONS as PAIRS_B_LOADING, SPINNER_OPTIONS as PAIRS_B_SPINNER } from './pairs-b.js';
-
-/**
- * The loading and spinner questions are 21 matched pairs (round 2): option N of
- * one is the same idea as option N of the other, so each name says its pair.
- * @template {{ name: string }} T @param {T[]} options @returns {T[]}
- */
-const paired = (options) => options.map((option, at) => ({ ...option, name: `Paar ${at + 1} · ${option.name}` }));
+import { LOADING_OPTIONS as PAIRS_A_LOADING, SPINNER_OPTIONS as PAIRS_A_SPINNER, PAIRS as PAIRS_A } from './pairs-a.js';
+import { LOADING_OPTIONS as PAIRS_B_LOADING, SPINNER_OPTIONS as PAIRS_B_SPINNER, PAIRS as PAIRS_B } from './pairs-b.js';
 
 export const THEME = 'pastel';
 export const LABEL = 'Pastel';
@@ -39,7 +38,7 @@ export const STORY = {
 };
 
 /**
- * @type {{ id: string, label: string, rule: string, question: string, why: string, kind: 'cycle' | 'loop' | 'still' | 'live', scene: string,
+ * @type {{ id: string, label: string, rule: string, question: string, why: string, kind: 'cycle' | 'loop' | 'still' | 'live', scene: string, noRec?: boolean,
  *   options: { key: string, name: string, see: string, verdict: string, rec?: boolean }[] }[]}
  */
 export const ASPECTS = [
@@ -346,46 +345,28 @@ export const ASPECTS = [
         label: 'Laden',
         rule: 'G10',
         question: 'Een tegel, een paneel, een menuregel, dagen, een grafiek, skeletregels en de bezige balk wachten op gegevens. Wat zie je?',
-        why: 'Eenentwintig beelden van het wachten, als eenentwintig paren met de spinner (vraag 12): laden N en spinner N zijn hetzelfde idee, hier groot over wat wacht, daar klein en rond. Elke naam zegt zijn paar. Paar 1 is de wapperende tape (jouw keuze), 2 tot 11 komen uit de planner en de risodruk, 12 tot 21 van de knutseltafel. Alles wat wacht is in elke optie hetzelfde; alleen het beeld verschilt.',
+        why: 'Vier families die jij goed vond (14/10: de krabbel, het labeltje, de pomponrups, het vouwvliegtuigje), elk met zijn origineel en vijf nieuwe varianten: optie 1 tot 6 de krabbel, 7 tot 12 het labeltje, 13 tot 18 de pomponrups, 19 tot 24 het vouwvliegtuigje. Optie N hier en optie N bij de spinner (vraag 12) horen bij elkaar: dezelfde familie en hetzelfde nummer, de spinner is die variant in het klein. Er is geen aanbeveling: variant 1 van elke familie is jouw keuze uit ronde 2, de andere zijn alternatieven. Elke variant behandelt elke drager apart, vooral de dagen van de maand: eromheen, niet erdoor.',
         kind: 'loop',
         scene: 'loading',
-        options: paired([
-            {
-                key: 'flutter',
-                name: 'De washi tape wappert (jouw familiekeuze)',
-                rec: true,
-                see: 'Een strook gestreepte munttape ligt over de bovenrand van wat wacht en wappert zacht rond zijn midden (±1,5°, 2400 ms), terwijl de streepjes van begin naar eind schuiven; skeletregels zijn drie stroken; de bezige balk is de tape over de hele baan.',
-                verdict: 'Aanbevolen: dit, omdat jij het de beste vond (14/10) en het jouw laadfamilie is (de bezige tabel), op elk oppervlak hetzelfde beeld. Zijn spinner is de taperol.',
-            },
+        noRec: true,
+        options: [
             ...PAIRS_A_LOADING,
             ...PAIRS_B_LOADING,
-        ]),
+        ],
     },
     {
         id: 'spinner',
         label: 'De spinner',
         rule: 'G11',
         question: 'Waar geen plaats is voor een strook tape: wat draait er?',
-        why: 'Eenentwintig spinners, elk het laadbeeld met hetzelfde nummer in het klein (vraag 11): spinner N hoort bij laden N. Elke naam zegt zijn paar. Elke spinner in drie maten, in een bezige knop en in een bezig paneel.',
+        why: 'Optie N hier en optie N bij laden (vraag 11) horen bij elkaar: dezelfde familie en hetzelfde nummer, de spinner is die laadvariant in het klein (1 tot 6 de krabbel, 7 tot 12 het labeltje, 13 tot 18 de pomponrups, 19 tot 24 het vouwvliegtuigje). Er is geen aanbeveling: variant 1 van elke familie is jouw keuze uit ronde 2, de andere zijn alternatieven. Elke spinner in drie maten, in een bezige knop en in een bezig paneel.',
         kind: 'loop',
         scene: 'spinner',
-        options: paired([
-            {
-                key: 'roll',
-                name: 'De taperol (ook goed, jouw keuze)',
-                see: 'Een rol van dezelfde gestreepte tape draait in drie sprongetjes per ronde op de landingscurve (1200 ms), zijn blauwe tweede inkt ernaast.',
-                verdict: 'Ook goed volgens jou (14/10): dezelfde tape als het wapperende laadbeeld van paar 1, opgerold, en het sprongetje houdt het ritme van vandaag.',
-            },
-            {
-                key: 'dots',
-                name: 'De drie snoepbolletjes (vandaag)',
-                rec: true,
-                see: 'Drie bolletjes op een draad die in drie sprongen rondgaan (1500 ms).',
-                verdict: 'Aanbevolen: dit, omdat jij het de beste vond (14/10). Zijn laadbeeld is paar 2, de parels op een draadje, met dezelfde maten en hetzelfde ritme.',
-            },
+        noRec: true,
+        options: [
             ...PAIRS_A_SPINNER,
             ...PAIRS_B_SPINNER,
-        ]),
+        ],
     },
     {
         id: 'leave',
@@ -603,3 +584,17 @@ export const ASPECTS = [
         ],
     },
 ];
+
+// Loading option N and spinner option N must be the same variant: the keys in
+// both lists follow PAIRS one to one, and the two names are the same words.
+{
+    const byId = (/** @type {string} */ id) => ASPECTS.find((a) => a.id === id)?.options ?? [];
+    const loading = byId('loading');
+    const spinner = byId('spinner');
+    [...PAIRS_A, ...PAIRS_B].forEach(([l, sp], n) => {
+        if (loading[n]?.key !== l || spinner[n]?.key !== sp || loading[n]?.name !== spinner[n]?.name) {
+            throw new Error(`loading/spinner option ${n + 1} is not one pair: ${loading[n]?.key} / ${spinner[n]?.key}, expected ${l} / ${sp}`);
+        }
+    });
+    if (loading.length !== spinner.length) throw new Error('loading and spinner differ in length');
+}

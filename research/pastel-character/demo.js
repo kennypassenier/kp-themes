@@ -13,16 +13,20 @@
 // choices from that data, and runs the page's clocks. Each OPTION is a live
 // scene with one attribute on its wrapper (`data-pa-<question>="<key>"`) that
 // options.css reads. The recommendation is the option marked `rec`, else the
-// first (aspects.js: the spinner recommends option 2 so its pairs keep their
-// numbers). The network graph
+// first; a question marked `noRec` has none (round 3: loading and the spinner,
+// four families Kenny kept, none of them above the others). The network graph
 // is in no scene: it changes in no theme (Kenny, 2026-10-07 02:54).
 
 import { ASPECTS, STORY, TITLE, THEME, LABEL } from './aspects.js';
 import { decorate as decorateA } from './pairs-a.js';
 import { decorate as decorateB } from './pairs-b.js';
 
-/** The recommended option's index: the one marked `rec`, else the first. @param {{ options: { rec?: boolean }[] }} a */
-const recOf = (a) => Math.max(0, a.options.findIndex((o) => o.rec));
+/**
+ * The recommended option's index: the one marked `rec`, else the first; -1
+ * (none) for a question marked `noRec`, where every option is Kenny's own.
+ * @param {{ noRec?: boolean, options: { rec?: boolean }[] }} a
+ */
+const recOf = (a) => (a.noRec ? -1 : Math.max(0, a.options.findIndex((o) => o.rec)));
 
 /* ----------------------------------------------------------- the parts */
 
@@ -498,7 +502,7 @@ section.setAttribute(
 const look = /** @type {HTMLElement} */ (section.querySelector('[data-review-look]'));
 const lookLine = document.createElement('p');
 lookLine.setAttribute('data-for', THEME);
-lookLine.textContent = `${ASPECTS.length} vragen, elk één regel van ${LABEL.toLowerCase()}; de optie met “aanbevolen” is de aanbeveling (meestal de eerste). Laden en de spinner zijn 21 paren: optie N van de ene hoort bij optie N van de andere. Kies wat voor jou ${LABEL.toLowerCase()} is, of “None of these” met een opmerking.`;
+lookLine.textContent = `${ASPECTS.length} vragen, elk één regel van ${LABEL.toLowerCase()}; de optie met “aanbevolen” is de aanbeveling (meestal de eerste). Laden en de spinner zijn vier families met elk zes varianten, zonder aanbeveling: variant 1 van elke familie is jouw keuze uit ronde 2, de andere zijn alternatieven. Laden optie N en spinner optie N horen bij elkaar (dezelfde familie, hetzelfde nummer). Kies wat voor jou ${LABEL.toLowerCase()} is, of “None of these” met een opmerking.`;
 look.append(lookLine);
 
 /* ---------------------------------------------------------------- the rows */
