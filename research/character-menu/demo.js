@@ -1125,6 +1125,24 @@ function setLoadingAll(next) {
 function openAll() {
     for (const wrapper of allWrappers()) openMenu(wrapper, { focus: 'none' });
 }
+/** The animation a menu would show if it were not closing: a copy without the closing mark, out of sight, read and dropped. */
+function arrivalName(menu) {
+    const probe = /** @type {HTMLElement} */ (menu.cloneNode(false));
+    probe.removeAttribute('data-kp-closing');
+    probe.removeAttribute('data-mb-leaving');
+    probe.style.display = 'none';
+    menu.after(probe);
+    const name = getComputedStyle(probe).animationName;
+    probe.remove();
+    return name;
+}
+/** The name and duration of the CSS animation of the menu itself (not its parts) that is running. */
+function ownAnimation(menu) {
+    const own = menu
+        .getAnimations()
+        .find((a) => a instanceof CSSAnimation && /** @type {KeyframeEffect} */ (a.effect)?.target === menu && a.playState !== 'finished');
+    return own ? { name: /** @type {CSSAnimation} */ (own).animationName, ms: Math.round(Number(own.effect?.getComputedTiming().duration)) } : null;
+}
 function closeAll() {
     for (const wrapper of allWrappers()) {
         const menu = /** @type {HTMLElement | null} */ (wrapper.querySelector('.kp-menu'));
@@ -1132,6 +1150,27 @@ function closeAll() {
         if (reduced.matches) {
             closeMenu(wrapper);
             continue;
+        }
+        // The package closes the menu as its open backwards (js/menu-button.js:
+        // data-kp-closing, hidden once the animations of the menu have ended).
+        // Where the register has an exit of its own for that (blueprint's
+        // trace drawn backwards) and the leave below names the same keyframes
+        // and time, the running animation carries on: clearing it below ended
+        // it at once and the menu was hidden after two frames [fix-114]. The
+        // leave is only marked, and the mark goes with the animation's end.
+        // Every other theme plays its own leave below, as approved.
+        const running = menu.hasAttribute('data-kp-closing') ? ownAnimation(menu) : null;
+        if (running && running.name !== arrivalName(menu)) {
+            menu.setAttribute('data-mb-leaving', '');
+            const style = getComputedStyle(menu);
+            if (style.animationName === running.name && Math.round(parseFloat(style.animationDuration) * 1000) === running.ms) {
+                const unmark = () => menu.removeAttribute('data-mb-leaving');
+                menu.addEventListener('animationend', unmark, { once: true });
+                menu.addEventListener('animationcancel', unmark, { once: true });
+                setTimeout(unmark, 2000);
+                continue;
+            }
+            menu.removeAttribute('data-mb-leaving');
         }
         // A leave that reuses its arrival's keyframes under
         // animation-direction: reverse does not restart a finished animation

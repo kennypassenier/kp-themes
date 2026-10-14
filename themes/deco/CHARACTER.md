@@ -193,6 +193,8 @@ research/deco-character on 2026-10-09):
   `.kp-menu__item`, `a.kp-kpi`, `.kp-kpi--toggle`, the trend tile with its link and `.kp-calendar__day`:
   `--kp-sig-deco-hv` and `--kp-sig-deco-pr` transition 320 and 160 ms (settle in, inverse out); leaf on
   `::before` with a grain mask, ring (`kp-sig-deco-seal`) on `::after`; focus `3px double` gold.
+  A tap shorter than the ring's 400 ms plays it whole: `--kp-press: hold` makes js/effects.js mark the part `data-kp-pressed` for
+  `--kp-press-hold` (400 ms). Under reduced motion a waiting button's doors stand parted 2.5 thirds, so its label stays readable.
 - **Q18 (voice): applied.** Titles Poiret caps tracked 0.16 em, figures Josefin 600 tabular, alert labels
   Josefin caps 0.08 em.
 - **Gates:** every new keyframe has its TIMINGS row (js/effects.js) and OUT_OF_SCOPE line
