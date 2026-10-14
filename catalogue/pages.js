@@ -105,8 +105,6 @@ export const PAGES = [
             // Kenny, 2026-10-07 04:23: what makes brutalism brutalism, the same way (the analysis in themes/brutalism/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the sixth theme of the one-by-one series, after solstice.
             // Kenny, 2026-10-07 04:23: what makes grotesk grotesk, the same way (the analysis in themes/grotesk/CHARACTER.md), nineteen rules of its grammar as questions, each option a live scene, the recommendation first; the seventh theme of the one-by-one series, after brutalism. Questions 9 to 12 are the grotesk-only loading demo Kenny asked for on 2026-10-06 21:37, from the graph's Out of register.
             // Kenny, 2026-10-12: "Cyberpunk lijkt af, zie dat dezelfde fouten nu niet terugkomen in andere thema's": every other theme mended so a close is its open backwards with the theme's own effect; only what changed, each block in the themes where it did (research/all-themes).
-            // Kenny, 2026-10-14: the side navigation chooses its opener (sidenav-opener-M1): launcher or edge tab, over and push, in the sixteen themes.
-            { href: 'research/sidenav-opener/demo.html', label: 'Side navigation: launcher or edge tab' },
         ],
     },
     {
@@ -117,6 +115,8 @@ export const PAGES = [
         // Decided demos stay reachable from the Agenda's Done list, not from the side navigation (Kenny, 2026-10-13).
         nav: false,
         pages: [
+            // Decided 2026-10-15 01:11: Kenny approved the side navigation's opener in full (64 of 64, all 16 themes; the edge tab is the default).
+            { href: 'research/sidenav-opener/demo.html', label: 'Side navigation: launcher or edge tab' },
             // Decided 2026-10-14 19:12: Kenny approved both side navigation minor demos in full (behaviour 64 of 64, look 96 of 96, all 16 themes).
             { href: 'research/sidenav-minor/look.html', label: 'Side navigation: six new looks' },
             { href: 'research/sidenav-minor/behaviour.html', label: 'Side navigation: four new behaviours' },
