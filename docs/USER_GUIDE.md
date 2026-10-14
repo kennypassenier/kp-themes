@@ -761,7 +761,7 @@ date picker writes, hints and reads its field day first whatever the
 reader's language: `04/09/2026` is the fourth of September for an en-US
 reader in New York as it is in Brussels. Typing `4-9-2026`, `4.9.26` or an
 ISO date works too. `data-kp-date-format="locale"` on a picker, or the
-`dateFormat: 'locale'` option of `attachDatePickers`, brings back the order
+`dateFormat: 'locale'` option of `attachDatePickers` (the `dateFormat="locale"` prop of the React `DatePicker`, whose default is `"rule52"`), brings back the order
 and separator the reader's locale writes (`09/04/2026` under en-US,
 `04.09.2026` under de-DE); the placeholder and the parsing follow it. The
 month and weekday names, and the first day of the week, always follow the

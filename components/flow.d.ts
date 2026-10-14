@@ -24,6 +24,10 @@ export type DatePickerProps = {
      */
     locale?: string;
     /**
+     * How the numeric date is written, hinted and read: `'rule52'` (default) is dd/mm/yyyy for every reader; `'locale'` is the reader's own order and separator. The same option as `attachDatePickers`.
+     */
+    dateFormat?: 'rule52' | 'locale';
+    /**
      * 0 = Sunday. Default: the locale's.
      */
     weekStartsOn?: number;
@@ -59,7 +63,7 @@ export type DatePickerProps = {
         disabled: boolean;
     }) => import('react').ReactNode;
     /**
-     * Default: the locale's pattern, e.g. dd-mm-yyyy.
+     * Default: the format's pattern, dd/mm/yyyy (the locale's own with `dateFormat="locale"`).
      */
     placeholder?: string;
     /**
