@@ -1481,7 +1481,7 @@ function install6(ctx) {
   };
   const pressBus = () => {
     const asked = () => rootStyle ? rootStyle.getPropertyValue(PRESS_KNOB).trim() : "";
-    if (asked() !== "point" && asked() !== "size" || !view) return;
+    if (!["point", "size", "hold"].includes(asked()) || !view) return;
     const PRESSED = ".kp-button, .kp-icon-button";
     const marked = /* @__PURE__ */ new Set();
     const pressed = (event) => {
@@ -1490,6 +1490,26 @@ function install6(ctx) {
         /** @type {HTMLElement | null} */
         target.closest(PRESSED)
       ) : null;
+    };
+    const holding = /* @__PURE__ */ new Map();
+    const hold = (event) => {
+      const target = event.target;
+      const el2 = target instanceof Element ? (
+        /** @type {HTMLElement | null} */
+        target.closest(PRESS_HELD)
+      ) : null;
+      if (!el2) return;
+      const given = parseFloat(getComputedStyle(el2).getPropertyValue(PRESS_HOLD));
+      const ms = Number.isFinite(given) && given > 0 ? given : PRESS_HOLD_MS;
+      window.clearTimeout(holding.get(el2));
+      el2.setAttribute("data-kp-pressed", "");
+      holding.set(
+        el2,
+        window.setTimeout(() => {
+          el2.removeAttribute("data-kp-pressed");
+          holding.delete(el2);
+        }, ms)
+      );
     };
     const letter = (el2) => {
       el2.setAttribute(PRESS_SIZE, String(Math.round(el2.getBoundingClientRect().width)));
@@ -1500,6 +1520,7 @@ function install6(ctx) {
         /** @type {PointerEvent} */
         event
       );
+      if (asked() === "hold") return hold(event);
       const el2 = pressed(event);
       if (!el2) return;
       if (asked() === "size") return letter(el2);
@@ -1515,6 +1536,11 @@ function install6(ctx) {
         /** @type {KeyboardEvent} */
         event.key
       );
+      if (asked() === "hold")
+        return key === " " || key === "Enter" ? (
+          /** @type {KeyboardEvent} */
+          event.repeat ? void 0 : hold(event)
+        ) : void 0;
       const el2 = pressed(event);
       if (!el2 || key !== " " && key !== "Enter") return;
       if (asked() === "size") return letter(el2);
@@ -1535,6 +1561,11 @@ function install6(ctx) {
         el2.removeAttribute(PRESS_SIZE);
       }
       marked.clear();
+      for (const [el2, timer2] of holding) {
+        window.clearTimeout(timer2);
+        el2.removeAttribute("data-kp-pressed");
+      }
+      holding.clear();
     });
   };
   return { pointerLight, pointerBus, pressBus };
@@ -1820,6 +1851,9 @@ __export(effects_exports, {
   POINTER: () => POINTER,
   POINTER_KNOB: () => POINTER_KNOB,
   PRESS: () => PRESS,
+  PRESS_HELD: () => PRESS_HELD,
+  PRESS_HOLD: () => PRESS_HOLD,
+  PRESS_HOLD_MS: () => PRESS_HOLD_MS,
   PRESS_KNOB: () => PRESS_KNOB,
   PRESS_SIZE: () => PRESS_SIZE,
   REVEALS: () => REVEALS,
@@ -2064,7 +2098,7 @@ function attachEffects(root = document, options = {}) {
   let pressArmed = false;
   const armThemeBuses = () => {
     const wantPointer = !pointerArmed && asked(POINTER_KNOB) === "track";
-    const wantPress = !pressArmed && ["point", "size"].includes(asked(PRESS_KNOB));
+    const wantPress = !pressArmed && ["point", "size", "hold"].includes(asked(PRESS_KNOB));
     if (!wantPointer && !wantPress) return;
     pointerArmed ||= wantPointer;
     pressArmed ||= wantPress;
@@ -2120,7 +2154,7 @@ function attachEffects(root = document, options = {}) {
     }
   };
 }
-var HOOKS, SURFACES, REVEALS, HEADLINE_ROUTINES, ARRIVALS, STATE, ROUTINES, ARRIVAL, CARET_KNOB, KNOBS, COUNT_KNOB, COUNT_FROM_KNOB, BOOT_PROGRESS, MARQUEE_KNOB, MARQUEE_PAUSE_KNOB, MEASURE_KNOB, POINTER_KNOB, POINTER, LIGHT_KNOB, LIGHT, LIGHT_SELECTOR, LIGHT_REACH, LIGHT_FAR, PRESS_KNOB, PRESS, PRESS_SIZE, ROOT_ATTRIBUTE, DONE_ATTRIBUTE, REVEAL_STATE, TEXT_ATTRIBUTE, UNKNOWN_EVENT, REVEAL_EVENT, MEMO_PREFIX, GLYPHS, TIMINGS, started, carets, arrivalsOnScreen, unknownReported;
+var HOOKS, SURFACES, REVEALS, HEADLINE_ROUTINES, ARRIVALS, STATE, ROUTINES, ARRIVAL, CARET_KNOB, KNOBS, COUNT_KNOB, COUNT_FROM_KNOB, BOOT_PROGRESS, MARQUEE_KNOB, MARQUEE_PAUSE_KNOB, MEASURE_KNOB, POINTER_KNOB, POINTER, LIGHT_KNOB, LIGHT, LIGHT_SELECTOR, LIGHT_REACH, LIGHT_FAR, PRESS_KNOB, PRESS, PRESS_SIZE, PRESS_HOLD, PRESS_HELD, PRESS_HOLD_MS, ROOT_ATTRIBUTE, DONE_ATTRIBUTE, REVEAL_STATE, TEXT_ATTRIBUTE, UNKNOWN_EVENT, REVEAL_EVENT, MEMO_PREFIX, GLYPHS, TIMINGS, started, carets, arrivalsOnScreen, unknownReported;
 var init_effects = __esm({
   "js/effects.js"() {
     "use strict";
@@ -2285,6 +2319,9 @@ var init_effects = __esm({
     PRESS_KNOB = "--kp-press";
     PRESS = Object.freeze({ x: "--kp-press-x", y: "--kp-press-y" });
     PRESS_SIZE = "data-kp-press-size";
+    PRESS_HOLD = "--kp-press-hold";
+    PRESS_HELD = ".kp-button, .kp-icon-button, .kp-menu__item, a.kp-kpi, .kp-kpi--toggle, .kp-kpi--trend, .kp-calendar__day";
+    PRESS_HOLD_MS = 400;
     ROOT_ATTRIBUTE = "data-kp-effects";
     DONE_ATTRIBUTE = "data-kp-effects-done";
     REVEAL_STATE = "data-kp-reveal-state";
@@ -20484,6 +20521,9 @@ export {
   POINTER,
   POINTER_KNOB,
   PRESS,
+  PRESS_HELD,
+  PRESS_HOLD,
+  PRESS_HOLD_MS,
   PRESS_KNOB,
   PRESS_SIZE,
   PROGRESSBAR_SELECTOR,

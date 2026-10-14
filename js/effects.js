@@ -326,6 +326,23 @@ export const PRESS = Object.freeze({ x: '--kp-press-x', y: '--kp-press-y' });
  * the press so a dimension that fades out keeps its numerals.
  */
 export const PRESS_SIZE = 'data-kp-press-size';
+
+/**
+ * The third thing a theme can ask a press for: `--kp-press: hold`. A press
+ * the stylesheet plays as an animation on `:active` is cut where the pointer
+ * lifts, so a tap shorter than the animation shows part of it (deco's seal,
+ * 400 ms). The pressed part carries `data-kp-pressed` for the length of the
+ * animation, from the pointer going down or Space or Enter going down, and
+ * the register keys the animation on `[data-kp-pressed]` beside `:active`.
+ * `--kp-press-hold` (a time, read on the part) sets the length; without it
+ * `PRESS_HOLD_MS`. The mark is for the time the animation takes, so a longer
+ * press is still `:active`'s.
+ */
+export const PRESS_HOLD = '--kp-press-hold';
+/** The parts a `hold` press marks: every part a register presses with a sink and a seal. */
+export const PRESS_HELD = '.kp-button, .kp-icon-button, .kp-menu__item, a.kp-kpi, .kp-kpi--toggle, .kp-kpi--trend, .kp-calendar__day';
+/** How long a `hold` press stays marked when the theme names no time. */
+export const PRESS_HOLD_MS = 400;
 /** Set on the root before first paint; the register keys its start states on it [AR34]. */
 export const ROOT_ATTRIBUTE = 'data-kp-effects';
 
@@ -1354,7 +1371,7 @@ export function attachEffects(root = document, options = {}) {
     let pressArmed = false;
     const armThemeBuses = () => {
         const wantPointer = !pointerArmed && asked(POINTER_KNOB) === 'track';
-        const wantPress = !pressArmed && ['point', 'size'].includes(asked(PRESS_KNOB));
+        const wantPress = !pressArmed && ['point', 'size', 'hold'].includes(asked(PRESS_KNOB));
         if (!wantPointer && !wantPress) return;
         pointerArmed ||= wantPointer;
         pressArmed ||= wantPress;

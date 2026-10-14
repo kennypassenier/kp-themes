@@ -21,7 +21,7 @@ the selectors and their order are identical, which is what
 | `css/components.css` | 351.5 kB | 141.9 kB | 60% |
 | `css/cyberpunk-register.css` | 237.4 kB | 133.5 kB | 44% |
 | `css/dark-register.css` | 156.6 kB | 71.8 kB | 54% |
-| `css/deco-register.css` | 160.8 kB | 88.1 kB | 45% |
+| `css/deco-register.css` | 162.1 kB | 88.3 kB | 46% |
 | `css/fonts.css` | 21.3 kB | 15.8 kB | 26% |
 | `css/forest-register.css` | 171.1 kB | 86.2 kB | 50% |
 | `css/formal-register.css` | 154.3 kB | 79.7 kB | 48% |
@@ -37,11 +37,11 @@ the selectors and their order are identical, which is what
 | `css/themes.css` | 153.4 kB | 99.3 kB | 35% |
 | `css/titanium-register.css` | 129.0 kB | 63.5 kB | 51% |
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 45% |
-| `dist/kp-themes.css` | 2944.6 kB | 1478.0 kB | 50% |
-| `dist/kp-themes.js` | 812.9 kB | 441.7 kB | 46% |
+| `dist/kp-themes.css` | 2945.9 kB | 1478.2 kB | 50% |
+| `dist/kp-themes.js` | 814.3 kB | 442.5 kB | 46% |
 
-The loose stylesheets together weigh **3004.7 kB** authored and
-**1515.0 kB** minified, 50% less. A page loading one theme's
+The loose stylesheets together weigh **3005.9 kB** authored and
+**1515.2 kB** minified, 50% less. A page loading one theme's
 register rather than the whole bundle carries only that register's row.
 
 The wire is smaller again: gzip takes the minified bundle to roughly a

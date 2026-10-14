@@ -135,6 +135,10 @@
        anatomy's "What the demo showed" section). */
         --kp-reveal-emphasis: plate;
         --kp-reveal-rule: draw;
+        /* A press marks the part for the seal's 400 ms, so a quick tap shows
+           the whole ring [js/effects.js, --kp-press: hold]. */
+        --kp-press: hold;
+        --kp-press-hold: 400ms;
         /* The cartouche's three concentric steps and its chevron bite. */
         --kp-frame: inset 0 0 0 2px var(--primary), inset 0 0 0 5px var(--background), inset 0 0 0 7px var(--foreground);
         --kp-chevron: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
@@ -2834,7 +2838,8 @@
            dialog, popover, menu) are left out with no weight (:where), so the
            fan's sector, resting folded at 182deg, never masks them away for
            the whole of their close (2026-10-13: the toast vanished in frame 0). */
-        [data-theme='deco'] [data-kp-leaving]:not(.kp-card, .kp-kpi, .kp-alert, .kp-empty, .kp-grid__tile):not(
+        [data-theme='deco']
+            [data-kp-leaving]:not(.kp-card, .kp-kpi, .kp-alert, .kp-empty, .kp-grid__tile):not(
                 :where(.kp-toast, .kp-dialog, .kp-popover, .kp-menu-button > .kp-menu)
             ) {
             animation-name: kp-sig-deco-wipe;
@@ -3307,6 +3312,18 @@
             no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat;
         box-shadow: inset 1px 0 0 hsl(from var(--kp-sig-deco-gold-lo) h s l / 0.6);
         translate: calc(var(--kp-sig-deco-p) * 33.4%) 0;
+    }
+
+    /* Standing still, a waiting button keeps its label readable: the other
+       parts stand with the doors parted by a third (G20), but a button is
+       mostly its words, and at one third the doors covered 43 % of a 128 px
+       button's label. Here they stand parted nearly the whole way (2.5 of
+       their 3 thirds), leaving only each door's outer edge, about 10 px of
+       lacquer at each end of the plate. */
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='deco'] .kp-button[aria-busy='true'] {
+            --kp-sig-deco-p: 2.5;
+        }
     }
 
     @media (prefers-reduced-motion: no-preference) {
@@ -3831,8 +3848,21 @@
                 background-color var(--kp-sig-deco-contact) var(--kp-sig-deco-settle);
         }
 
-        [data-theme='deco'] :is(.kp-button, .kp-icon-button, .kp-menu__item):active:not(:disabled, [aria-disabled='true'], [aria-busy='true'])::after,
-        [data-theme='deco'] :is(a.kp-kpi, .kp-kpi--toggle, .kp-kpi--trend:has(.kp-kpi__link), .kp-calendar__day:not([data-kp-tone='loading'])):active::before {
+        /* The ring is played whole once it has started: a tap shorter than
+           400 ms lifts the pointer (`:active` ends) and would cut it where it
+           stood, so js/effects.js (--kp-press: hold, declared on the theme)
+           marks the pressed part `data-kp-pressed` for the 400 ms as well. */
+        [data-theme='deco']
+            :is(.kp-button, .kp-icon-button, .kp-menu__item):is(:active, [data-kp-pressed]):not(
+                :disabled,
+                [aria-disabled='true'],
+                [aria-busy='true']
+            )::after,
+        [data-theme='deco']
+            :is(a.kp-kpi, .kp-kpi--toggle, .kp-kpi--trend:has(.kp-kpi__link), .kp-calendar__day:not([data-kp-tone='loading'])):is(
+                :active,
+                [data-kp-pressed]
+            )::before {
             animation: kp-sig-deco-seal 400ms linear both;
         }
     }

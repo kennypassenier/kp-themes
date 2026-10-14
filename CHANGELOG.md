@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+- **Fixed: blueprint's menu closes as its open drawn backwards in the research menu demo** [fix-114; the new assert in
+  tests/review-kit-dialog.spec.mjs]. The package already closes the menu with the register's own exit (`[data-kp-closing]`, the trace
+  drawn backwards); the demo's Close then cleared the menu's animation for a frame to restart its own leave, which ended the animation the
+  package was waiting for, and the menu was hidden after two frames (about 90 ms, no animation running, inset and width reset). The demo
+  now leaves a running exit alone when its own leave names the same keyframes and time (blueprint's only), and marks the leave
+  (`data-mb-leaving`). Measured per frame in Firefox, Open then Close through the review dialog: blueprint 3 frames, no running reverse,
+  to 50 frames, the trace running backwards for about 870 ms; the other 15 themes unchanged (within 40 ms of their earlier time).
+- **Fixed: deco's seal plays whole on a quick tap** [package findings re-check]. The ring (`kp-sig-deco-seal`, 400 ms) ran on `:active`, so a
+  tap shorter than 400 ms cut it where the pointer lifted. js/effects.js has a third answer to a press, `--kp-press: hold`: the pressed part
+  carries `data-kp-pressed` for `--kp-press-hold` (400 ms here) from the pointer or Space or Enter going down, and the register keys the
+  ring on `:is(:active, [data-kp-pressed])`. Measured in Firefox on a button, the ring was visible 50 ms (a 60 ms tap) and 134 ms (150 ms)
+  against 166 ms for a held press; now 166 ms for all three. The sink and everything else are unchanged.
+- **Fixed: a waiting deco button keeps its label readable under reduced motion** [package findings re-check]. The doors stood parted by a
+  third, which covered 43 % of the label of a 128 px button (the doors cover two thirds of the button). A busy `.kp-button` now stands with
+  them parted 2.5 thirds: 0 % of the label covered, about 10 px of each door left at the plate's ends. Other waiting parts are unchanged.
 - **Fixed: a destructive menu entry keeps its ink** [Kenny's go for 10.1.0; package findings re-check]. `.kp-menu__item--destructive` came before
   `.kp-menu__item` and its hover in kp.components, and their `color: inherit` cancelled it, so in every theme whose register does not restate
   the ink (synthwave, pastel, blueprint, solstice, titanium, grotesk, forest, terminal, cyberpunk) "Delete" read like every other entry. The
