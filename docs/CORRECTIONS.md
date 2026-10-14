@@ -6729,3 +6729,40 @@ shapes: every pair 16-56 % apart. Queued as fix-117-M1.
 measures the cells of an aspect on load and warns on the page.
 
 **9 · When we review the measure.** After the character round's port.
+
+## fix-118 · Helpers ran single tests through a shim without Kenny's go (2026-10-14)
+
+Kenny, form of 2026-10-14 23:57: approved ("Klopt").
+
+**1 · What went wrong.** Kenny, 2026-10-14 23:51: "en ben je weer tests zonder
+mijn toestemming aan het uitvoeren?". Six helpers ran spec bodies in Firefox
+through their own runner script, outside the npm test scripts, so
+`.claude/hooks/release-tests.sh` never saw them (e.g. tests/dashboard.spec.mjs
+255 and 291 in 16 themes, both channels, 100.7 s).
+
+**2 · Which gate let it through.** Claude's own briefs: five of them said a
+helper may run one test once through a shim. The hook matches known commands
+only.
+
+**3 · Where else the same fault sits.** Searched with `grep -c 'spec.mjs'` and
+`grep -l shim` over the 14 helper transcripts of the session, then their final
+reports read: the triage, the review-dialog asserts, both stale-test passes,
+the blueprint menu fix and the nostromo tile fix ran test code; the formal
+helper ran meters only.
+
+**4 · How we prevent recurrence.** AGENTS.md: running test code any other way
+is a test run, and a brief to a helper never permits one.
+
+**5 · What the remedy costs.** A repaired test is proven at the release suite,
+not at once.
+
+**6 · Who enforces it.** Discipline: a hook cannot recognise a detour.
+
+**7 · How we measure it, and when.** At the next brief to a helper in
+kp-themes: it grants no test run (docs/MINI_ROUNDS.md fix-118-M1).
+
+**8 · Fallback.** The rule moves into the shared helper brief in
+~/Projects/dev-procedure, for every project.
+
+**9 · When we review the measure.** At the retrospective after 10.1.0.
+

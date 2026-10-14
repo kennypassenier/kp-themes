@@ -28,7 +28,10 @@ by checksum [scope-139].
 nu pas na dat ik de toestemming geef voor een release"): no browser test runs
 while building, not even a tagged subset; the suite runs once, after his go for
 a release. The gates in the commit hook and the screenshot check inside
-`scripts/release.sh` stay.
+`scripts/release.sh` stay. Running test code any other way (a shim or script
+that executes a spec's body) is a test run too, and a brief to a helper never
+permits one; without `.claude/release-go` a measuring script is the most a
+helper may run [fix-118].
 
 **Chromium is off in the test suite** (Kenny, 2026-10-03: "doe ook het chrome
 gedeelte tijdelijk weg, tot ik het terugwil"): `playwright.config.mjs` runs
@@ -45,17 +48,17 @@ never a silent deviation. This project follows
 
 ## Commands
 
-| Command                                                           | What                                                                                                              | When                                                                                                                                            |
-| ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `npm run gates`                                                   | the blocking code checks, seconds                                                                                 | every commit, by the hook in `.claude/hooks/gates.sh`                                                                                           |
-| `npm run test:tags -- --level building`                           | the tests tagged with what changed, firefox                                                                       | while building; `--dry-run` shows the selection and the count                                                                                   |
-| `npm run test:tags -- --level commit`                             | building plus every `@sweep` test, firefox                                                                        | once before a report or a commit; manual, not in the hook                                                                                       |
-| `npm run test:tags -- --level engines`                            | the commit selection, both engines                                                                                | at a layer's close and after a paint, focus or keyboard fix [fix-51]                                                                            |
-| `npm run test:release -- --go`                                    | what changed since the last release tag, plus every `@sweep` test on all 19 themes; every test at a major release | before a minor or patch release, on Kenny's go given in a form [form v9, 2026-10-04]                                                            |
-| `npm run test:browser`                                            | the whole suite, firefox (chromium with `KP_TEST_CHROMIUM=1`)                                                     | before a major release, on Kenny's go given in a form; never on Claude's own                                                                    |
-| `npm run release:preflight -- X.Y.Z`                              | what `scripts/release.sh` would refuse, seconds                                                                   | before any release form or "nothing blocks" claim [fix-89]                                                                                      |
-| `npm run advice`                                                  | the readings, printed, never refusing                                                                             | when Kenny wants the reading                                                                                                                    |
-| `npm run verify`                                                  | gates, the whole suite, advice, in order                                                                          | before a release, on the same go                                                                                                                |
+| Command                                                           | What                                                                                                              | When                                                                                                                                                                                                                                                                                                         |
+| ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `npm run gates`                                                   | the blocking code checks, seconds                                                                                 | every commit, by the hook in `.claude/hooks/gates.sh`                                                                                                                                                                                                                                                        |
+| `npm run test:tags -- --level building`                           | the tests tagged with what changed, firefox                                                                       | while building; `--dry-run` shows the selection and the count                                                                                                                                                                                                                                                |
+| `npm run test:tags -- --level commit`                             | building plus every `@sweep` test, firefox                                                                        | once before a report or a commit; manual, not in the hook                                                                                                                                                                                                                                                    |
+| `npm run test:tags -- --level engines`                            | the commit selection, both engines                                                                                | at a layer's close and after a paint, focus or keyboard fix [fix-51]                                                                                                                                                                                                                                         |
+| `npm run test:release -- --go`                                    | what changed since the last release tag, plus every `@sweep` test on all 19 themes; every test at a major release | before a minor or patch release, on Kenny's go given in a form [form v9, 2026-10-04]                                                                                                                                                                                                                         |
+| `npm run test:browser`                                            | the whole suite, firefox (chromium with `KP_TEST_CHROMIUM=1`)                                                     | before a major release, on Kenny's go given in a form; never on Claude's own                                                                                                                                                                                                                                 |
+| `npm run release:preflight -- X.Y.Z`                              | what `scripts/release.sh` would refuse, seconds                                                                   | before any release form or "nothing blocks" claim [fix-89]                                                                                                                                                                                                                                                   |
+| `npm run advice`                                                  | the readings, printed, never refusing                                                                             | when Kenny wants the reading                                                                                                                                                                                                                                                                                 |
+| `npm run verify`                                                  | gates, the whole suite, advice, in order                                                                          | before a release, on the same go                                                                                                                                                                                                                                                                             |
 | review site: <https://kennypassenier.github.io/kp-themes/review/> | the catalogue and the research demos, published                                                                   | Claude pushes `main` whenever it asks Kenny to look [scope-67], and links only `catalogue/agenda.html` (Agenda), the one page he starts from since 2026-10-13; before changing a demo for its next round, run `node research/_review/snapshot.mjs <topic>` so its Previous version shows the round he judged |
 
 Every command in this table that runs a browser test (`test:tags`, `test:release`, `test:browser`,
@@ -74,31 +77,31 @@ from there; before every push `git fetch && git rebase origin/main`, push to
 
 ## Project documents
 
-| Doc                            | Purpose                                                            |
-| ------------------------------ | ------------------------------------------------------------------ |
-| README.md                      | how to consume the package, tokens, provenance                     |
-| docs/CYCLE.md                  | the three steps this project works in, from round eight            |
-| docs/THEME_LESSONS.md          | what went wrong while finishing a theme and the check that finds it |
-| docs/FUTURE_THEMES.md          | theme ideas that were set aside                                     |
-| docs/RELEASE_HISTORY.md        | every release and round, written out (moved from CLAUDE.md)        |
-| docs/RULES.md                  | the project rules and the corrections they came from               |
-| docs/SCOPE.md                  | every approved scope decision (S1–S49, scope-1–scope-77)           |
-| docs/CORRECTIONS.md            | live-found faults and their approved measures                      |
-| docs/DESIGN_INVARIANTS.md      | what must hold in every theme (DI1–DI11)                           |
-| docs/FEATURES.md               | the frozen feature list with its test bars                         |
-| docs/ARCHITECTURE_REFERENCE.md | the system as built, as opposed to as decided                      |
-| docs/USER_GUIDE.md             | how a consumer builds a page with this                             |
-| docs/UTILITIES.md              | the generated utility classes                                      |
-| docs/MINIFIED.md               | the minified build and its per-file sizes (generated)              |
-| docs/TEST_PLAN.md              | what is tested, where, and what deliberately is not                |
-| docs/TROUBLESHOOTING.md        | when it looks wrong, or a check says no                            |
-| docs/DEBUGGING_GUIDE.md        | symptom to cause, and what to look at first                        |
-| docs/OPERATIONS_RUNBOOK.md     | the numbered procedures a maintainer performs                      |
-| docs/MINI_ROUNDS.md            | open measurements and mini-rounds                                  |
+| Doc                             | Purpose                                                                                                                                                |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| README.md                       | how to consume the package, tokens, provenance                                                                                                         |
+| docs/CYCLE.md                   | the three steps this project works in, from round eight                                                                                                |
+| docs/THEME_LESSONS.md           | what went wrong while finishing a theme and the check that finds it                                                                                    |
+| docs/FUTURE_THEMES.md           | theme ideas that were set aside                                                                                                                        |
+| docs/RELEASE_HISTORY.md         | every release and round, written out (moved from CLAUDE.md)                                                                                            |
+| docs/RULES.md                   | the project rules and the corrections they came from                                                                                                   |
+| docs/SCOPE.md                   | every approved scope decision (S1–S49, scope-1–scope-77)                                                                                               |
+| docs/CORRECTIONS.md             | live-found faults and their approved measures                                                                                                          |
+| docs/DESIGN_INVARIANTS.md       | what must hold in every theme (DI1–DI11)                                                                                                               |
+| docs/FEATURES.md                | the frozen feature list with its test bars                                                                                                             |
+| docs/ARCHITECTURE_REFERENCE.md  | the system as built, as opposed to as decided                                                                                                          |
+| docs/USER_GUIDE.md              | how a consumer builds a page with this                                                                                                                 |
+| docs/UTILITIES.md               | the generated utility classes                                                                                                                          |
+| docs/MINIFIED.md                | the minified build and its per-file sizes (generated)                                                                                                  |
+| docs/TEST_PLAN.md               | what is tested, where, and what deliberately is not                                                                                                    |
+| docs/TROUBLESHOOTING.md         | when it looks wrong, or a check says no                                                                                                                |
+| docs/DEBUGGING_GUIDE.md         | symptom to cause, and what to look at first                                                                                                            |
+| docs/OPERATIONS_RUNBOOK.md      | the numbered procedures a maintainer performs                                                                                                          |
+| docs/MINI_ROUNDS.md             | open measurements and mini-rounds                                                                                                                      |
 | docs/COMPONENTS_PAGE_PENDING.md | what site/components still has to show; add a line with every new component, option or token; once everything is approved, ask Kenny's go for the pass |
-| docs/ID_TRANSLATIONS.md        | the KT10 renames, one row each                                     |
-| site/layout.html               | the layout classes, their knobs and defaults (from css/layout.css) |
-| docs/archive/                  | dated records kept for provenance, out of the index and the gates  |
+| docs/ID_TRANSLATIONS.md         | the KT10 renames, one row each                                                                                                                         |
+| site/layout.html                | the layout classes, their knobs and defaults (from css/layout.css)                                                                                     |
+| docs/archive/                   | dated records kept for provenance, out of the index and the gates                                                                                      |
 
 Each document here had its own keep-or-go decision at `scope-77`
 (2026-09-14): `HANDOFF.md` was removed, `docs/LAYOUT.md` moved into the
