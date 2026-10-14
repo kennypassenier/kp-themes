@@ -172,12 +172,15 @@ Most of what this package ships is assembled, not authored. `npm run
 generate:all` runs fifteen steps in order (`package.json`, script
 `generate:all`):
 
-`generate` → `generate:fonts-css` → `generate:utilities` →
-`generate:bundle` → `generate:min` →
-`generate:examples` → `generate:showcase` → `generate:site` →
-`generate:ha` → `gates/generate-compare.mjs` → `report:di5` →
-`generate:types` → `gates/compliance.mjs` → `checksums` →
-`prettier --write .`
+`generate` → `generate:code-version` → `generate:fonts-css` →
+`generate:utilities` → `generate:bundle` → `generate:min` →
+`generate:examples` → `generate:portraits` → `generate:showcase` →
+`generate:site` → `gates/generate-compare.mjs` → `generate:types` →
+`gates/compliance.mjs` → `checksums` → `prettier --write .`
+
+`report:di5` (the motion ledger, `reports/di5.md`) left the chain on
+Kenny's word, 2026-10-14 ("Rapport schrappen"); the file stays as last
+written and is no longer updated.
 
 What that covers, by output:
 
