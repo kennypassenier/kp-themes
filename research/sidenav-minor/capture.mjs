@@ -5,7 +5,10 @@
 //
 //   python3 -m http.server 8761 --bind 127.0.0.1        # from the repository root
 //   node research/sidenav-minor/capture.mjs capture <out.json> [--port 8761]
-//   node research/sidenav-minor/capture.mjs diff <before.json> <after.json>
+//   node research/sidenav-minor/capture.mjs diff <before.json> <after.json> [--noise <second-before.json>]
+// Two captures of the same code differ in properties still moving when the first
+// frame was read (an opening in progress); `--noise` ignores every property that
+// differs between the two before-captures, and says how many it ignored.
 import { firefox } from '@playwright/test';
 import { createHash } from 'node:crypto';
 import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
@@ -93,12 +96,22 @@ async function capture(file) {
     console.log(`captured ${Object.keys(result).length} states in ${THEMES.length} themes -> ${file}`);
 }
 
-function diff(fileA, fileB) {
+function diff(fileA, fileB, noiseFile) {
+    const noise = new Set();
+    if (noiseFile) {
+        const n = JSON.parse(readFileSync(noiseFile, 'utf8'));
+        const m = JSON.parse(readFileSync(fileA, 'utf8'));
+        for (const key of Object.keys(m))
+            for (const part of Object.keys(m[key].styles))
+                for (const prop of Object.keys(m[key].styles[part] ?? {}))
+                    if (m[key].styles[part][prop] !== n[key]?.styles[part]?.[prop]) noise.add(`${key} ${part} ${prop}`);
+    }
     const x = JSON.parse(readFileSync(fileA, 'utf8'));
     const y = JSON.parse(readFileSync(fileB, 'utf8'));
     let states = 0;
     let props = 0;
     let shots = 0;
+    let ignored = 0;
     const lines = [];
     for (const key of new Set([...Object.keys(x), ...Object.keys(y)])) {
         states += 1;
@@ -115,17 +128,21 @@ function diff(fileA, fileB) {
             const q = y[key].styles[part] ?? {};
             for (const prop of new Set([...Object.keys(p), ...Object.keys(q)])) {
                 if (p[prop] !== q[prop]) {
+                    if (noise.has(`${key} ${part} ${prop}`)) {
+                        ignored += 1;
+                        continue;
+                    }
                     props += 1;
                     lines.push(`${key} ${part} ${prop}: ${p[prop]} -> ${q[prop]}`);
                 }
             }
         }
     }
-    console.log(lines.slice(0, 60).join('\n'));
-    console.log(`states compared: ${states}; computed-property differences: ${props}; screenshot differences: ${shots}`);
+    console.log(lines.slice(0, 400).join('\n'));
+    console.log(`states compared: ${states}; computed-property differences: ${props}; screenshot differences: ${shots}; ignored as noise: ${ignored}`);
     process.exitCode = props + shots === 0 ? 0 : 1;
 }
 
 if (mode === 'capture') await capture(a);
-else if (mode === 'diff') diff(a, b);
+else if (mode === 'diff') diff(a, b, process.argv.includes('--noise') ? process.argv[process.argv.indexOf('--noise') + 1] : null);
 else console.log('usage: capture <out.json> | diff <before.json> <after.json>');
