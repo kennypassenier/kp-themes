@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- **Fixed: blueprint's construction line no longer makes room that is not there** [Kenny, 2026-10-14; triage of the 10.0.0 suite, fault 1]. The
+  trace `::after` of the toast, date picker, palette, tour card, bar menus and the other traced panels kept `inset: -9px` after the pen
+  had lifted, so a panel with `overflow: auto` scrolled by 9 px (the table's filter menu: scroll width 177 in 168) and a panel at the
+  window's edge widened the page (320 px: 329). The box now runs 9 px outside the panel only while the pen draws (`--kp-bp-ink` 0) and rests
+  on the panel when it is inked; the drawing is the same frame for frame.
+- **Fixed: the frozen toast of the showcase pages is its own positioning box** [Kenny, 2026-10-14; triage of the 10.0.0 suite, fault 2]. The
+  specimen carried `position: static` inline, which beat the registers' `position: relative`, so the toast's pseudo-elements were placed
+  against the page: pastel's plate and pass went 6 px past a 320 px window (page 327) and were never drawn at the toast, blueprint's dimension
+  line sat at the top of the page. The specimen (showcase/specimens.mjs) is now `position: relative`, as every toast in a register is.
+- **Fixed: formal's calendar nav in a 334 px card** [Kenny, 2026-10-14; triage of the 10.0.0 suite, fault 3]. September in formal's small
+  capitals and the three buttons need 342 px, and the package's 20.5rem let the card hold them on one row with Today 7 px outside it.
+  Formal sets `--kp-calendar-nav-fit: 21.5rem`, so below 344 px the title takes a row of its own, the same row in every month, as in the
+  other themes; the wide calendar is unchanged.
+
 - **Changed: the edge tab is the side navigation's default opener** [Kenny, 2026-10-14; sidenav-opener-1]. With no `data-kp-sidenav-opener`
   (or any value but `launcher` / `both`), an `over` or `push` panel behaves as `"tab"`: the tab shows, the launcher is not drawn and the
   header and page room for the launcher is given back, on the first frame too (the pre-JS rules follow). A page with no `.kp-sidenav__tab` for the

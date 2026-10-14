@@ -74,6 +74,11 @@
    under `@media (prefers-reduced-motion: no-preference)`. */
 
     [data-theme='formal'] {
+        /* The month heatmap's nav goes on two rows below this width: September
+           in the small capitals of the voice (css below, 0.06em apart) and the
+           three buttons need 342 px, and the package's 20.5rem let a 334 px card
+           hold them on one row with the last button 7 px outside it [fix-98]. */
+        --kp-calendar-nav-fit: 21.5rem;
         /* The configuration surface [AR43], the demo's own values as
            defaults: 1.05s before the lede's first mark washes in, 90ms
            between the two, a 0.4 viewport threshold for the section rule. */
