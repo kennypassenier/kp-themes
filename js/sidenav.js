@@ -139,8 +139,9 @@ export const OPTIONS = {
     /**
      * On the panel: which opener the page shows, `launcher` (the fixed
      * `.kp-sidenav__launcher`), `tab` (the `.kp-sidenav__tab` on the edge) or
-     * `both`. Absent: the markup decides, so a page with both elements keeps
-     * both. Applies to `over` and `push`; `side` and the collapsed rail ignore it.
+     * `both`. Absent (or any other value): `tab`, the default [Kenny, 2026-10-14];
+     * a page with no `.kp-sidenav__tab` for the panel keeps its launcher.
+     * Applies to `over` and `push`; `side` and the collapsed rail ignore it.
      */
     opener: 'data-kp-sidenav-opener',
     /** Written on an opener box (launcher or tab) the choice turns off; the box is not drawn. */
@@ -631,14 +632,17 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
 
         /**
          * The page's choice of opener [sidenav-opener-M1]: the launcher, the
-         * edge tab or both. The boxes the choice turns off are marked and
+         * edge tab or both; the default is the tab. The boxes the choice turns off are marked and
          * not drawn; the panel's room for the launcher (its header's start
          * padding) is there only while a launcher is. Over and push only: a
-         * side panel and the collapsed rail show what the markup holds.
+         * side panel and the collapsed rail show what the markup holds. A
+         * panel with no tab on the page keeps its launcher whatever is asked:
+         * a panel is never left without an opener.
          */
         const applyOpener = () => {
             const asked = read(OPTIONS.opener);
-            const chosen = asked === 'launcher' || asked === 'tab' || asked === 'both' ? asked : 'both';
+            const wanted = asked === 'launcher' || asked === 'both' ? asked : 'tab';
+            const chosen = wanted === 'tab' && tabs().length === 0 ? 'launcher' : wanted;
             const slides = mode() !== 'side' && !panel.hasAttribute(OPTIONS.slimCollapsed);
             const keep = { launcher: !slides || chosen !== 'tab', tab: !slides || chosen !== 'launcher' };
             for (const [boxes, kept] of /** @type {const} */ ([
