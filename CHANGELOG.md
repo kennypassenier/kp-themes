@@ -2,6 +2,26 @@
 
 ## Unreleased
 
+- **Fixed: the plain calendar no longer scrolls sideways in a 334 px pane** [Kenny's go for 10.1.0; package findings re-check]. The grid's
+  deliberate overhang (`inline-size: calc(100% + 2 * gap)`, moved by a relative `inset`) left its box 12 px (brutalism 18 px) past the
+  calendar, and Firefox counts the unshifted box of a relative offset, so a pane with `overflow: auto` read `scrollWidth` 346 (352) in 334.
+  The box is now moved two gaps toward the start with `translate` and its `thead` / `tbody` one gap back, mirrored on a right-to-left page:
+  the box ends at the calendar's edge, every day's rectangle is the same to 0.1 px (42 cells and the weekday row, 16 themes, left-to-right and
+  right-to-left), and the scroll width is 334 in 15 themes. Forest's today leaf (a corner ornament 3 px outside its cell) still reaches 339
+  when today is in the last column; it is drawn that way and left.
+- **Fixed: the React theme list closes as it opens** [package findings re-check]. `components/theme-switcher.jsx` removed the list at once
+  (gone in 15 to 17 ms in every theme). It now stays until `playClose()` of js/motion.js (the close of the framework-free menu and every
+  menu button) has played the opening backwards, and takes no focus or pointer meanwhile; opened again, it turns round. Dark 873 ms open /
+  867 ms close, cyberpunk 469 / 465, pastel 561 / 567, blueprint 784 / 799, forest 1000 close; themes whose list has no opening of its own
+  still leave at once, as they arrive.
+- **Added: a busy button's words have their own element** [package findings re-check]. js/forms.js writes the busy words of a submit button
+  into a `span.kp-button__label` (the element the React button already has) and the React form does the same, so a register can style the
+  words alone. Nothing visible changes: a busy button in five variants per theme is pixel-identical before and after in all 16 themes;
+  phantom, whose label stands upright, keeps its busy words leaning with the button as before.
+- **Fixed: dark's pass starts at the right edge of a right-to-left page** [package findings re-check]. The mask, the line, a figure's film
+  and a small part's clip were physical left to right. Five custom properties (`--kp-sig-dk-s`, `-from`, `-end`, `-gdir`, `-cut`) now carry
+  the direction, turned by `:dir(rtl)` (and back inside a `[dir]` island); the close is still the same frames reversed. Left-to-right pages
+  are pixel-identical (8 frames of a menu's open and close); on a right-to-left page the line runs right to left with the panel laid behind it.
 - **Fixed: a destructive menu entry keeps its ink** [Kenny's go for 10.1.0; package findings re-check]. `.kp-menu__item--destructive` came before
   `.kp-menu__item` and its hover in kp.components, and their `color: inherit` cancelled it, so in every theme whose register does not restate
   the ink (synthwave, pastel, blueprint, solstice, titanium, grotesk, forest, terminal, cyberpunk) "Delete" read like every other entry. The

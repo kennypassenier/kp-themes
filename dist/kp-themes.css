@@ -12151,17 +12151,35 @@
     }
 
     /* The outer spacing reaches past the calendar's edges, so the days line
- * up with the title and the legend. Moved there by a relative offset, not
- * a negative margin: Firefox resolves a table's percentage width against
- * its box less the margins, so `-gap` margins made the grid 2 × gap wider
- * than asked and pushed a page at 390 px sideways (Chromium did not). */
+ * up with the title and the legend, and the table's box still ends at the
+ * calendar's own edge, so a pane that scrolls (overflow: auto, 334 px)
+ * gets no sideways scrollbar from it [scope-143]. The box is moved two
+ * gaps toward the start with `translate` (Firefox counts the unshifted box
+ * of a relative `inset`, 346 px in a 334 px pane, brutalism 352), and its
+ * rows are moved one gap back, so the days stay where they were. Not a
+ * negative margin: Firefox resolves a table's percentage width against its
+ * box less the margins, so `-gap` margins made the grid 2 × gap wider than
+ * asked and pushed a page at 390 px sideways (Chromium did not). A
+ * translation is physical, so a right-to-left page mirrors both. */
     .kp-calendar__grid {
         position: relative;
-        inset-inline-start: calc(var(--kp-calendar-gap, 6px) * -1);
+        translate: calc(var(--kp-calendar-gap, 6px) * -2) 0;
         table-layout: fixed;
         border-collapse: separate;
         border-spacing: var(--kp-calendar-gap, 6px);
         inline-size: calc(100% + 2 * var(--kp-calendar-gap, 6px));
+    }
+
+    .kp-calendar__grid :is(thead, tbody) {
+        translate: var(--kp-calendar-gap, 6px) 0;
+    }
+
+    .kp-calendar__grid:dir(rtl) {
+        translate: calc(var(--kp-calendar-gap, 6px) * 2) 0;
+    }
+
+    .kp-calendar__grid:dir(rtl) :is(thead, tbody) {
+        translate: calc(var(--kp-calendar-gap, 6px) * -1) 0;
     }
 
     .kp-calendar__grid th {
@@ -23765,6 +23783,13 @@
 
     [data-theme='phantom'] .kp-button__label {
         transform: skewX(calc(-1 * var(--kp-skew)));
+    }
+
+    /* The busy words of a submit button sit in a label of their own since
+       [scope-143]; before that they were the button's own text and leaned
+       with it. They keep leaning, so nothing about the busy button moves. */
+    [data-theme='phantom'] .kp-button[aria-busy='true'] > .kp-button__label:only-child {
+        transform: none;
     }
 
     [data-theme='phantom'] .kp-button::before {
@@ -66670,6 +66695,17 @@
         --kp-sig-dk-time: 880ms;
         --kp-sig-dk-loop: 2400ms;
         --kp-sig-dk-r: 0px;
+        /* Which way the pass runs: from the start edge, so from the left on a
+           left-to-right page and from the right on a right-to-left one
+           [scope-143]. Five numbers say it for the mask (the edge it is laid
+           from), the line (its sign, and the side of its box the 2 px sits
+           on), the film behind a figure's letters and the clip of a small
+           part; `:dir(rtl)` below turns them. */
+        --kp-sig-dk-s: 1;
+        --kp-sig-dk-from: left;
+        --kp-sig-dk-end: 100%;
+        --kp-sig-dk-gdir: 90deg;
+        --kp-sig-dk-cut: 0 100% 0 0;
         --kp-sig-dk-cw: 0.36;
         --kp-sig-dk-line: linear-gradient(180deg, var(--chart-1), var(--chart-2), var(--chart-3), var(--chart-4));
         --kp-sig-dk-glow: drop-shadow(0 0 10px hsl(from var(--chart-1) h s l / 0.4));
@@ -66705,6 +66741,26 @@
             linear-gradient(var(--kp-sig-dark-bk), var(--kp-sig-dark-bk)) left bottom / 1px var(--kp-sig-dark-arm) no-repeat,
             linear-gradient(var(--kp-sig-dark-bk), var(--kp-sig-dark-bk)) right bottom / var(--kp-sig-dark-arm) 1px no-repeat,
             linear-gradient(var(--kp-sig-dark-bk), var(--kp-sig-dark-bk)) right bottom / 1px var(--kp-sig-dark-arm) no-repeat;
+    }
+
+    /* A right-to-left page is passed from its right edge, the line crossing
+       to the left, and the pass back is the same frames reversed as ever.
+       A left-to-right island inside it turns them back. */
+    [data-theme='dark']:dir(rtl),
+    [data-theme='dark'] [dir]:dir(rtl) {
+        --kp-sig-dk-s: -1;
+        --kp-sig-dk-from: right;
+        --kp-sig-dk-end: 0%;
+        --kp-sig-dk-gdir: 270deg;
+        --kp-sig-dk-cut: 0 0 0 100%;
+    }
+
+    [data-theme='dark'] [dir]:dir(ltr) {
+        --kp-sig-dk-s: 1;
+        --kp-sig-dk-from: left;
+        --kp-sig-dk-end: 100%;
+        --kp-sig-dk-gdir: 90deg;
+        --kp-sig-dk-cut: 0 100% 0 0;
     }
 
     /* The film turns on a pass: every part that is laid, taken off, pressed
@@ -67308,7 +67364,7 @@
 
         [data-theme='dark'] [data-kp-updating='pass']:not(:has(> svg)) {
             background:
-                linear-gradient(90deg, transparent var(--kp-sig-dk-at), var(--kp-sig-dk-ink-colour) var(--kp-sig-dk-at)),
+                linear-gradient(var(--kp-sig-dk-gdir), transparent var(--kp-sig-dk-at), var(--kp-sig-dk-ink-colour) var(--kp-sig-dk-at)),
                 linear-gradient(
                     hsl(from var(--kp-sig-dk-ink-colour) h s l / var(--kp-sig-dk-ink)),
                     hsl(from var(--kp-sig-dk-ink-colour) h s l / var(--kp-sig-dk-ink))
@@ -67326,7 +67382,7 @@
             position: absolute;
             inset: -2px -4px;
             z-index: 1;
-            background: var(--kp-sig-dk-line) 100% 0 / 2px 100% no-repeat;
+            background: var(--kp-sig-dk-line) var(--kp-sig-dk-end) 0 / 2px 100% no-repeat;
             filter: var(--kp-sig-dk-glow);
             opacity: 0;
             pointer-events: none;
@@ -67392,7 +67448,7 @@
             position: absolute;
             inset: 0;
             z-index: 3;
-            background: var(--kp-sig-dk-line) 100% 0 / 2px 100% no-repeat;
+            background: var(--kp-sig-dk-line) var(--kp-sig-dk-end) 0 / 2px 100% no-repeat;
             clip-path: none;
             filter: var(--kp-sig-dk-glow);
             opacity: 0;
@@ -67479,9 +67535,9 @@
             mask-clip: no-clip;
             mask-composite: add;
             mask-position:
-                0 calc(-1 * var(--kp-sig-dk-r)),
-                calc(-1 * var(--kp-sig-dk-r)) calc(-1 * var(--kp-sig-dk-r)),
-                calc(100% + var(--kp-sig-dk-r)) calc(-1 * var(--kp-sig-dk-r));
+                var(--kp-sig-dk-from) 0 top calc(-1 * var(--kp-sig-dk-r)),
+                var(--kp-sig-dk-from) calc(-1 * var(--kp-sig-dk-r)) top calc(-1 * var(--kp-sig-dk-r)),
+                var(--kp-sig-dk-from) calc(100% + var(--kp-sig-dk-r)) top calc(-1 * var(--kp-sig-dk-r));
             mask-size:
                 0px calc(100% + 2 * var(--kp-sig-dk-r)),
                 0px calc(100% + 2 * var(--kp-sig-dk-r)),
@@ -67510,9 +67566,9 @@
             mask-clip: no-clip;
             mask-composite: add;
             mask-position:
-                0 calc(-1 * var(--kp-sig-dk-r)),
-                calc(-1 * var(--kp-sig-dk-r)) calc(-1 * var(--kp-sig-dk-r)),
-                calc(100% + var(--kp-sig-dk-r)) calc(-1 * var(--kp-sig-dk-r));
+                var(--kp-sig-dk-from) 0 top calc(-1 * var(--kp-sig-dk-r)),
+                var(--kp-sig-dk-from) calc(-1 * var(--kp-sig-dk-r)) top calc(-1 * var(--kp-sig-dk-r)),
+                var(--kp-sig-dk-from) calc(100% + var(--kp-sig-dk-r)) top calc(-1 * var(--kp-sig-dk-r));
             mask-size:
                 100% calc(100% + 2 * var(--kp-sig-dk-r)),
                 var(--kp-sig-dk-r) calc(100% + 2 * var(--kp-sig-dk-r)),
@@ -67523,17 +67579,17 @@
     /* The line crosses the panel's own box and goes in and out at its ends. */
     @keyframes kp-sig-dark-pass-line {
         0% {
-            translate: -100% 0;
+            translate: calc(-100% * var(--kp-sig-dk-s)) 0;
             opacity: 0;
         }
 
         3% {
-            translate: -96% 0;
+            translate: calc(-96% * var(--kp-sig-dk-s)) 0;
             opacity: 1;
         }
 
         69% {
-            translate: -8% 0;
+            translate: calc(-8% * var(--kp-sig-dk-s)) 0;
             opacity: 1;
         }
 
@@ -67589,17 +67645,17 @@
        update's own time. */
     @keyframes kp-sig-dark-pass-live {
         0% {
-            translate: -100% 0;
+            translate: calc(-100% * var(--kp-sig-dk-s)) 0;
             opacity: 0;
         }
 
         4% {
-            translate: -96% 0;
+            translate: calc(-96% * var(--kp-sig-dk-s)) 0;
             opacity: 1;
         }
 
         92% {
-            translate: -8% 0;
+            translate: calc(-8% * var(--kp-sig-dk-s)) 0;
             opacity: 1;
         }
 
@@ -67613,7 +67669,7 @@
        one pace, stopping dead. */
     @keyframes kp-sig-dark-lay {
         from {
-            clip-path: inset(0 100% 0 0);
+            clip-path: inset(var(--kp-sig-dk-cut));
         }
 
         to {
@@ -67737,7 +67793,7 @@
             position: absolute;
             inset: 0;
             z-index: 3;
-            background: var(--kp-sig-dk-line) 100% 0 / 2px 100% no-repeat;
+            background: var(--kp-sig-dk-line) var(--kp-sig-dk-end) 0 / 2px 100% no-repeat;
             filter: var(--kp-sig-dk-glow);
             opacity: 0;
             pointer-events: none;
@@ -68105,7 +68161,7 @@
             position: absolute;
             inset: 0;
             z-index: 3;
-            background: var(--kp-sig-dk-line) 100% 0 / 2px 100% no-repeat;
+            background: var(--kp-sig-dk-line) var(--kp-sig-dk-end) 0 / 2px 100% no-repeat;
             filter: var(--kp-sig-dk-glow);
             opacity: 0;
             pointer-events: none;
@@ -68281,7 +68337,7 @@
                 position: absolute;
                 inset: 0;
                 z-index: 3;
-                background: var(--kp-sig-dk-line) 100% 0 / 2px 100% no-repeat;
+                background: var(--kp-sig-dk-line) var(--kp-sig-dk-end) 0 / 2px 100% no-repeat;
                 filter: var(--kp-sig-dk-glow);
                 opacity: 0;
                 pointer-events: none;
@@ -68299,7 +68355,7 @@
                 position: absolute;
                 inset: 0;
                 z-index: 3;
-                background: var(--kp-sig-dk-line) 100% 0 / 2px 100% no-repeat;
+                background: var(--kp-sig-dk-line) var(--kp-sig-dk-end) 0 / 2px 100% no-repeat;
                 filter: var(--kp-sig-dk-glow);
                 opacity: 0;
                 pointer-events: none;
@@ -68332,9 +68388,9 @@
             mask-clip: no-clip;
             mask-composite: add;
             mask-position:
-                0 calc(-1 * var(--kp-sig-dk-r)),
-                calc(-1 * var(--kp-sig-dk-r)) calc(-1 * var(--kp-sig-dk-r)),
-                calc(100% + var(--kp-sig-dk-r)) calc(-1 * var(--kp-sig-dk-r));
+                var(--kp-sig-dk-from) 0 top calc(-1 * var(--kp-sig-dk-r)),
+                var(--kp-sig-dk-from) calc(-1 * var(--kp-sig-dk-r)) top calc(-1 * var(--kp-sig-dk-r)),
+                var(--kp-sig-dk-from) calc(100% + var(--kp-sig-dk-r)) top calc(-1 * var(--kp-sig-dk-r));
             mask-size:
                 0px calc(100% + 2 * var(--kp-sig-dk-r)),
                 0px calc(100% + 2 * var(--kp-sig-dk-r)),
@@ -68363,9 +68419,9 @@
             mask-clip: no-clip;
             mask-composite: add;
             mask-position:
-                0 calc(-1 * var(--kp-sig-dk-r)),
-                calc(-1 * var(--kp-sig-dk-r)) calc(-1 * var(--kp-sig-dk-r)),
-                calc(100% + var(--kp-sig-dk-r)) calc(-1 * var(--kp-sig-dk-r));
+                var(--kp-sig-dk-from) 0 top calc(-1 * var(--kp-sig-dk-r)),
+                var(--kp-sig-dk-from) calc(-1 * var(--kp-sig-dk-r)) top calc(-1 * var(--kp-sig-dk-r)),
+                var(--kp-sig-dk-from) calc(100% + var(--kp-sig-dk-r)) top calc(-1 * var(--kp-sig-dk-r));
             mask-size:
                 100% calc(100% + 2 * var(--kp-sig-dk-r)),
                 var(--kp-sig-dk-r) calc(100% + 2 * var(--kp-sig-dk-r)),
@@ -68391,17 +68447,17 @@
 
     @keyframes kp-sig-dark-pass-line-back {
         0% {
-            translate: -100% 0;
+            translate: calc(-100% * var(--kp-sig-dk-s)) 0;
             opacity: 0;
         }
 
         3% {
-            translate: -96% 0;
+            translate: calc(-96% * var(--kp-sig-dk-s)) 0;
             opacity: 1;
         }
 
         69% {
-            translate: -8% 0;
+            translate: calc(-8% * var(--kp-sig-dk-s)) 0;
             opacity: 1;
         }
 
@@ -68438,7 +68494,7 @@
             inset: 0;
             z-index: 3;
             block-size: auto;
-            background: var(--kp-sig-dk-line) 100% 0 / 2px 100% no-repeat;
+            background: var(--kp-sig-dk-line) var(--kp-sig-dk-end) 0 / 2px 100% no-repeat;
             filter: var(--kp-sig-dk-glow);
             opacity: 0;
             pointer-events: none;
@@ -68488,7 +68544,7 @@
             position: absolute;
             inset: 0;
             z-index: 3;
-            background: var(--kp-sig-dk-line) 100% 0 / 2px 100% no-repeat;
+            background: var(--kp-sig-dk-line) var(--kp-sig-dk-end) 0 / 2px 100% no-repeat;
             filter: var(--kp-sig-dk-glow);
             opacity: 0;
             pointer-events: none;
