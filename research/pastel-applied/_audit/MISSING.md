@@ -69,3 +69,8 @@ lines, palette keys, a fieldset legend and a key figure link within 2 px of thei
   tack is now their `::before` (same drawing, same leave and arrival). All five carry it at rest, through a leave and an arrival.
 - Meter: identity 20 of 20; pairs-meter on the ten side navigation and pin pairs 9 of 10, the one left `sidenav-rail-tip` 26.4 %, the
   pointer's hover plate (above).
+
+## Kenny's verdict on the findings above (2026-10-14 20:47)
+
+Dropped: the two readings under 4.5:1 (the info alert 4.43:1, the calendar day count 4.33:1) and the nine edge findings
+stay as they are. Contrast is a signal, not a gate (form v44); nothing here is queued.
