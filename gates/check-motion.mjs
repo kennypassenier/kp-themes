@@ -156,8 +156,6 @@ const OUT_OF_SCOPE = {
     'kp-stream-216':
         'a mask-position slide of a 216px packet tile by one tile every 8 seconds, on a 28px divider; the packets keep their colours, only their position moves',
     'kp-ember': 'a box-shadow that grows and fades once over the card edge; the card itself does not change luminance',
-    'kp-charge':
-        'a skewed light band translating across a button once on hover, blended over the face; the face itself does not change luminance and the band is under 341x256 px [TH118]',
     // The dark register [S48, LIFT_PLAN row 15]: the mark's ignite and the
     // rule's sweep are both bound to `animation-timeline: view()` — the
     // reader's own scroll position, not a clock — so neither can free-run

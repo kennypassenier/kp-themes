@@ -521,7 +521,6 @@ export const TIMINGS = Object.freeze({
     'kp-slice-a': { durationMs: 320, cycles: 1, property: 'opacity', luminanceSteps: [1, 1, 0] },
     'kp-slice-1': { durationMs: 600, cycles: 1, property: 'opacity', luminanceSteps: [1, 0, 0] },
     'kp-slice-2': { durationMs: 600, cycles: 1, property: 'opacity', luminanceSteps: [1, 0, 0] },
-    'kp-charge': { durationMs: 520, cycles: 1, property: 'transform', luminanceSteps: [] },
     'kp-slide-in': { durationMs: 140, cycles: 1, property: 'transform', luminanceSteps: [] },
     // The base layer's shared rule draw. One keyframe, seven registers, each
     // with its own duration: nostromo 280ms, blueprint 420ms, light and retro

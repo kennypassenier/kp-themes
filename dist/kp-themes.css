@@ -5930,14 +5930,13 @@
         background: var(--destructive);
     }
 
-    .kp-graph__skeleton {
-        fill: none;
-        stroke: var(--muted);
-        stroke-width: 10;
+    .kp-graph__ghost {
+        opacity: 0.45;
+        pointer-events: none;
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        .kp-graph__skeleton {
+        .kp-graph__ghost {
             animation: kp-pulse 1600ms ease-in-out infinite;
         }
 
@@ -13093,7 +13092,6 @@
         --kp-rule-weight: 3px;
         --kp-slice: 600ms;
         --kp-slice-hover: 320ms;
-        --kp-charge: 520ms;
         --fx-notch-sm: 8px;
         /* The reveals this theme performs [S45]: js/effects.js reads these
            three and leaves a theme that declares none at rest. */
@@ -14612,10 +14610,6 @@
             transition: transform var(--fx-duration) var(--fx-ease);
         }
 
-        [data-theme='cyberpunk'] .kp-button:hover:not(:disabled)::after {
-            animation: kp-charge 520ms var(--fx-ease) 1;
-        }
-
         [data-theme='cyberpunk'] .kp-field__input {
             transition:
                 border-color var(--fx-duration) var(--fx-ease),
@@ -14729,12 +14723,6 @@
                 opacity: 0;
                 clip-path: polygon(0 0, 0 0, 0 0, 0 0);
                 transform: none;
-            }
-        }
-
-        @keyframes kp-charge {
-            to {
-                transform: translateX(120%);
             }
         }
 
@@ -24971,7 +24959,11 @@
            pointer left. Pointing, it is thrown in on the shove in 60 ms and
            resolved from dots to solid in two cuts across the 120 ms of
            contact (kp-sig-phantom-bar); the ink flips to black at the
-           second (kp-sig-phantom-ink). */
+           second (kp-sig-phantom-ink). The solid face is the rule's own
+           `mask-image: none`, not the animation's held last frame, so the
+           animation ends and a focused link settles with none running
+           (tests/focus-visible.spec.mjs counts every finite animation that
+           still holds a fill). */
         [data-theme='phantom'] :is(.kp-nav__link, .kp-nav__menu a, .kp-footer a, .kp-tab, .kp-nav__search-trigger)::before,
         [data-theme='phantom'] .kp-button::after {
             mask-size: 7px 7px;
@@ -24983,7 +24975,8 @@
         [data-theme='phantom'] .kp-tab[aria-selected='true']::before,
         [data-theme='phantom'] .kp-button:hover::after {
             transition: width 60ms var(--kp-shove);
-            animation: kp-sig-phantom-bar 120ms linear both;
+            animation: kp-sig-phantom-bar 120ms linear backwards;
+            mask-image: none;
         }
 
         [data-theme='phantom'] .kp-button:hover {
@@ -25019,7 +25012,8 @@
         [data-theme='phantom'] :is(.kp-menu__item, .kp-calendar__day:not([data-kp-tone='loading'])):hover::before,
         [data-theme='phantom'] :is(a.kp-kpi, .kp-kpi--toggle):hover .kp-kpi__label::before {
             transition: translate 60ms var(--kp-shove);
-            animation: kp-sig-phantom-bar 120ms linear both;
+            animation: kp-sig-phantom-bar 120ms linear backwards;
+            mask-image: none;
         }
 
         /* A press drops these 3 px as it drops a key cap, and nothing eases. */

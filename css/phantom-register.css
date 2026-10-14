@@ -1754,7 +1754,11 @@
            pointer left. Pointing, it is thrown in on the shove in 60 ms and
            resolved from dots to solid in two cuts across the 120 ms of
            contact (kp-sig-phantom-bar); the ink flips to black at the
-           second (kp-sig-phantom-ink). */
+           second (kp-sig-phantom-ink). The solid face is the rule's own
+           `mask-image: none`, not the animation's held last frame, so the
+           animation ends and a focused link settles with none running
+           (tests/focus-visible.spec.mjs counts every finite animation that
+           still holds a fill). */
         [data-theme='phantom'] :is(.kp-nav__link, .kp-nav__menu a, .kp-footer a, .kp-tab, .kp-nav__search-trigger)::before,
         [data-theme='phantom'] .kp-button::after {
             mask-size: 7px 7px;
@@ -1766,7 +1770,8 @@
         [data-theme='phantom'] .kp-tab[aria-selected='true']::before,
         [data-theme='phantom'] .kp-button:hover::after {
             transition: width 60ms var(--kp-shove);
-            animation: kp-sig-phantom-bar 120ms linear both;
+            animation: kp-sig-phantom-bar 120ms linear backwards;
+            mask-image: none;
         }
 
         [data-theme='phantom'] .kp-button:hover {
@@ -1802,7 +1807,8 @@
         [data-theme='phantom'] :is(.kp-menu__item, .kp-calendar__day:not([data-kp-tone='loading'])):hover::before,
         [data-theme='phantom'] :is(a.kp-kpi, .kp-kpi--toggle):hover .kp-kpi__label::before {
             transition: translate 60ms var(--kp-shove);
-            animation: kp-sig-phantom-bar 120ms linear both;
+            animation: kp-sig-phantom-bar 120ms linear backwards;
+            mask-image: none;
         }
 
         /* A press drops these 3 px as it drops a key cap, and nothing eases. */

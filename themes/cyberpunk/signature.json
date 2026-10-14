@@ -1,7 +1,7 @@
 {
     "$schema": "../signature.schema.json",
     "theme": "cyberpunk",
-    "idea": "Signal yellow on a void with a violet cast: yellow acts and grounds, blood red alarms, cyan labels what must be read. Every corner is square or cut by a notch, the type is uppercase and spaced, and machine prefixes (///, >, !!) speak for the interface. Motion is a signal being acquired: text deciphers out of noise, a slice burst fires once, a charge sweeps across a button.",
+    "idea": "Signal yellow on a void with a violet cast: yellow acts and grounds, blood red alarms, cyan labels what must be read. Every corner is square or cut by a notch, the type is uppercase and spaced, and machine prefixes (///, >, !!) speak for the interface. Motion is a signal being acquired: text deciphers out of noise, a slice burst fires once, the edge of a pointed button closes in step by step.",
     "loadBearing": [
         {
             "claim": "Yellow acts and grounds, red alarms, cyan labels: swap any two and it is a different theme.",
@@ -35,11 +35,11 @@
             ]
         },
         {
-            "claim": "Motion glitches once and settles: decipher, slice burst, charge sweep. The only loop is the data stream between sections.",
+            "claim": "Motion glitches once and settles: decipher, slice burst, the button edge closing in step by step. The only loop is the data stream between sections.",
             "proof": [
                 { "file": "css/cyberpunk-register.css", "property": "--kp-reveal-headline" },
                 { "file": "css/cyberpunk-register.css", "keyframes": "kp-slice-1" },
-                { "file": "css/cyberpunk-register.css", "keyframes": "kp-charge" },
+                { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-button:hover:not(:disabled)" },
                 { "file": "css/cyberpunk-register.css", "keyframes": "kp-stream-144" }
             ]
         }
@@ -82,7 +82,7 @@
         {
             "role": "Label",
             "token": "accent",
-            "use": "What must be read: microlabels, field labels, table headers, the drawn rule, the caret, the tooltip frame, a toast's left edge, the charge band on a dark face.",
+            "use": "What must be read: microlabels, field labels, table headers, the drawn rule, the caret, the tooltip frame, a toast's left edge, the edge ring of a button on a dark face.",
             "never": "A ground or a button fill.",
             "example": "field",
             "proof": [
@@ -319,16 +319,15 @@
                 ]
             },
             "hover": {
-                "description": "The button lifts 1px and a charge band sweeps across its face once: cyan over a dark face, the face's own ink over a filled one. A nav link fires a two-step slice.",
-                "duration": "520ms sweep; 320ms link slice",
-                "easing": "--fx-ease; steps(2, end) for the slice",
-                "reducedMotion": "The lift and the hover fill remain, at once; no sweep, no slice.",
+                "description": "The button's edge closes in over four steps: a cyan ring over a dark face, with the circuit grid lit on the face; nothing lifts and nothing sweeps. A nav link fires a two-step slice.",
+                "duration": "180ms ring in four steps; 320ms link slice",
+                "easing": "steps(4, jump-end) for the ring; steps(2, end) for the slice",
+                "reducedMotion": "The hover fill remains, at once; no stepped ring, no slice.",
                 "open": false,
                 "demo": { "kind": "hover", "example": "buttons" },
                 "proof": [
-                    { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-button:hover:not(:disabled)::after" },
                     { "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-button:hover:not(:disabled)" },
-                    { "file": "css/cyberpunk-register.css", "keyframes": "kp-charge" }
+                    { "file": "css/cyberpunk-register.css", "property": "--kp-cp-t" }
                 ]
             },
             "load": {
@@ -474,7 +473,7 @@
         {
             "situation": "Act",
             "verb": "press",
-            "answer": "The notched, slit button: yellow fill for the one primary action, void face with a yellow frame for the rest; lift and charge on hover, drop on press.",
+            "answer": "The notched, slit button: yellow fill for the one primary action, void face with a yellow frame for the rest; the edge closes in on hover, drop on press.",
             "components": ["kp-button"],
             "open": false,
             "proof": [{ "file": "css/cyberpunk-register.css", "selector": "[data-theme='cyberpunk'] .kp-button:active:not(:disabled)" }]
@@ -482,7 +481,7 @@
         {
             "situation": "Point at something",
             "verb": "hover",
-            "answer": "A 12 % wash of the signal behind a nav or menu row; a one-shot slice on a nav link; a charge sweep on a button.",
+            "answer": "A 12 % wash of the signal behind a nav or menu row; a one-shot slice on a nav link; the edge of a button closing in step by step.",
             "components": ["kp-button", "kp-nav"],
             "open": false,
             "proof": [
