@@ -1,0 +1,27 @@
+{
+    "decided": "2026-10-14 03:23 Brussels, Kenny: 19 of 19 approved in the review dialog (research/pastel-character/README.md), update 2: anchor = printed twice, stuck on; focus = the dashed line alone (not the recommendation); leave = the anchor, then a thumbtack; loading = the pom-pom caterpillar 6 (everything becomes caterpillar); spinner = the pom-pom caterpillar 2 (the round trip); every other question its recommendation",
+    "attributes": "data-pa-<question>=\"<key>\" on the .pa-scene, research/pastel-character/options.css, pairs-a.css, pairs-b.css",
+    "picks": {
+        "pastel": {
+            "anchor": "twice",
+            "curve": "landing",
+            "direction": "corner",
+            "opening": "stuck",
+            "durations": "landing",
+            "colour": "three",
+            "corners": "two",
+            "surface": "taped",
+            "tone": "sticker",
+            "live": "wobble",
+            "composites": "own",
+            "focus": "single",
+            "press": "flat",
+            "type": "one",
+            "leave": "tack",
+            "hover": "peel",
+            "motifs": "sheet",
+            "loading": "b-bug-6",
+            "spinner": "b-curl-2"
+        }
+    }
+}

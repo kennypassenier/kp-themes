@@ -1,5 +1,7 @@
 # What makes pastel pastel
 
+**Decided (Kenny, 14/10/2026 03:23): all nineteen questions approved after update 2** (research/pastel-character/decided.json): loading = the pom-pom caterpillar 6 (`b-bug-6`), spinner = the caterpillar 2 (`b-curl-2`), leave = the anchor then a thumbtack, focus = the dashed line alone, every other question its recommendation; not yet applied in css/pastel-register.css (the port); see themes/pastel/CHARACTER.md §0.
+
 **Update 2, round 3 (2026-10-14): loading and the spinner are four families of six variants; everything else is decided.** Kenny's
 round 2 verdict (update.json, update 2) locks 17 picks: the leave is _the anchor, then a thumbtack_ (`tack`), pointing _the corner
 peels_ (`peel`), the motifs _from the sticker sheet and the press_ (`sheet`). Of the 21 loading/spinner pairs he kept 6 (the
