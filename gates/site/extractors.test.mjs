@@ -287,7 +287,9 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // -indent) and the edge tab's size (--kp-sidenav-tab-thickness, -length): 11 more, on a main that already
     // read 328 (one knob arrived after the tree row's without a line here): 328 + 11.
     // The side navigation's minor options (2026-10-14): the width on a narrow screen (--kp-sidenav-width-narrow): 339 + 1.
-    assert.equal(result.expected, 340, 'AR21 counted the --kp-* properties in css/components.css');
+    // The floating variant's ten: its gap, its derived gaps and room (--kp-sidenav-float, -lead, -room, -away-to-start,
+    // -away-to-end) and the five knobs a theme or page sets (--kp-sidenav-float-inset, -radius, -edge, -shadow, -ink): 340 + 10.
+    assert.equal(result.expected, 350, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -343,10 +345,12 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // And --kp-tree-inset, read through var(): 323 + 1.
     // The side navigation at the window's edge (2026-10-13): its eleven, every one read through var(), on a main
     // that already read 325: 325 + 11.
-    assert.equal(result.readCount, 337);
+    // The floating variant reads eight of its ten through var(); --kp-sidenav-room and -lead are read by js/sidenav.js: 337 + 8.
+    assert.equal(result.readCount, 345);
     // `--kp-chart-height` is read by js/chart.js (the plot's height when the
-    // data names none), not by a stylesheet [scope-143].
-    assert.deepEqual(result.unread, ['--kp-busy-opacity', '--kp-chart-height', '--kp-steps']);
+    // data names none), not by a stylesheet [scope-143]. --kp-sidenav-lead and --kp-sidenav-room are read by js/sidenav.js
+    // (what the floating variant leaves beside the panel).
+    assert.deepEqual(result.unread, ['--kp-busy-opacity', '--kp-chart-height', '--kp-sidenav-lead', '--kp-sidenav-room', '--kp-steps']);
 });
 
 test('AR21: a knob read in a nested rule is placed by the rule, not by its name', () => {

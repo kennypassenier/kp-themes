@@ -96,6 +96,18 @@ export declare const OPTIONS: {
     hoverDelay: string;
     /** Written on the rail while it is expanded by the pointer or the focus. */
     peek: string;
+    /**
+     * On the panel: its look. Without it the panel is the flush column it
+     * always was. `"floating"` detaches the panel from the window's edge: a
+     * gap all round, the theme's radius, an edge on every side and a shadow
+     * made of the theme's own tokens. Knobs: `--kp-sidenav-float-inset` (the
+     * gap, `--kp-space-sm`), `--kp-sidenav-float-radius` (`--radius`),
+     * `--kp-sidenav-float-edge` (`1px solid --border-strong`),
+     * `--kp-sidenav-float-shadow`. It keeps the slide, the push, the gutter
+     * and the over mode working: the push and the gutter leave the gap on
+     * both sides of the panel, and the edge tab rides on the panel's edge.
+     */
+    variant: string;
 };
 /** The fixed box at the panel's far edge that holds a small toggler: the edge tab. */
 export declare const SIDENAV_TAB = ".kp-sidenav__tab";

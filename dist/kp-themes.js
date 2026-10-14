@@ -6556,7 +6556,15 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
     const panelSize = () => {
       const style = getComputedStyle(panel);
       const knob = style.getPropertyValue("--kp-sidenav-w").trim();
-      return knob !== "" ? knob : style.inlineSize;
+      const width = knob !== "" ? knob : style.inlineSize;
+      const room = style.getPropertyValue("--kp-sidenav-room").trim();
+      return room !== "" ? `calc(${width} + ${room})` : width;
+    };
+    const edgeSize = () => {
+      const style = getComputedStyle(panel);
+      const lead = style.getPropertyValue("--kp-sidenav-lead").trim();
+      const width = style.getPropertyValue("--kp-sidenav-w").trim() || style.inlineSize;
+      return lead !== "" ? `calc(${width} + ${lead})` : width;
     };
     const tabs = () => {
       const boxes = /* @__PURE__ */ new Set();
@@ -6582,7 +6590,7 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
     const offsetContent = (open2) => {
       for (const tab of tabs()) {
         tab.setAttribute("data-kp-sidenav-tab-edge", edge());
-        shift(tab, marginAlong(), open2 && mode() !== "side" ? panelSize() : "", open2 ? "open" : "closed", mode() !== "side");
+        shift(tab, marginAlong(), open2 && mode() !== "side" ? edgeSize() : "", open2 ? "open" : "closed", mode() !== "side");
       }
       const target = contentEl();
       if (!target) return { property: null, value: "" };
@@ -7460,7 +7468,19 @@ var init_sidenav = __esm({
        */
       hoverDelay: "data-kp-sidenav-hover-delay",
       /** Written on the rail while it is expanded by the pointer or the focus. */
-      peek: "data-kp-sidenav-peek"
+      peek: "data-kp-sidenav-peek",
+      /**
+       * On the panel: its look. Without it the panel is the flush column it
+       * always was. `"floating"` detaches the panel from the window's edge: a
+       * gap all round, the theme's radius, an edge on every side and a shadow
+       * made of the theme's own tokens. Knobs: `--kp-sidenav-float-inset` (the
+       * gap, `--kp-space-sm`), `--kp-sidenav-float-radius` (`--radius`),
+       * `--kp-sidenav-float-edge` (`1px solid --border-strong`),
+       * `--kp-sidenav-float-shadow`. It keeps the slide, the push, the gutter
+       * and the over mode working: the push and the gutter leave the gap on
+       * both sides of the panel, and the edge tab rides on the panel's edge.
+       */
+      variant: "data-kp-sidenav-variant"
     };
     SIDENAV_TAB = ".kp-sidenav__tab";
     SIDENAV_LAUNCHER = ".kp-sidenav__launcher";

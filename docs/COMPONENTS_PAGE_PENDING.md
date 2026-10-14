@@ -48,3 +48,5 @@ each line its example and its option row, and empties the list.
   spinner page lists `data-kp-pieces` already (gates/site/descriptors.mjs).
 - **Side navigation, narrow-screen width (2026-10-14, research/sidenav-minor).** `--kp-sidenav-width-narrow`: the panel's width
   while `data-kp-sidenav-narrow` is on it (below the `data-kp-sidenav-over-below` step); falls back to `--kp-sidenav-width`.
+- **Side navigation, floating variant (2026-10-14, research/sidenav-minor).** `data-kp-sidenav-variant="floating"`: panel detached
+  from the edge (`--kp-sidenav-float-inset`, `-radius`, `-edge`, `-shadow`, `-ink`; the module reads `--kp-sidenav-room` and `-lead`).

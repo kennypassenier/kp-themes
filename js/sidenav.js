@@ -154,6 +154,18 @@ export const OPTIONS = {
     hoverDelay: 'data-kp-sidenav-hover-delay',
     /** Written on the rail while it is expanded by the pointer or the focus. */
     peek: 'data-kp-sidenav-peek',
+    /**
+     * On the panel: its look. Without it the panel is the flush column it
+     * always was. `"floating"` detaches the panel from the window's edge: a
+     * gap all round, the theme's radius, an edge on every side and a shadow
+     * made of the theme's own tokens. Knobs: `--kp-sidenav-float-inset` (the
+     * gap, `--kp-space-sm`), `--kp-sidenav-float-radius` (`--radius`),
+     * `--kp-sidenav-float-edge` (`1px solid --border-strong`),
+     * `--kp-sidenav-float-shadow`. It keeps the slide, the push, the gutter
+     * and the over mode working: the push and the gutter leave the gap on
+     * both sides of the panel, and the edge tab rides on the panel's edge.
+     */
+    variant: 'data-kp-sidenav-variant',
 };
 
 /** The fixed box at the panel's far edge that holds a small toggler: the edge tab. */
@@ -388,8 +400,25 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
         const panelSize = () => {
             const style = getComputedStyle(panel);
             const knob = style.getPropertyValue('--kp-sidenav-w').trim();
-            return knob !== '' ? knob : style.inlineSize;
+            const width = knob !== '' ? knob : style.inlineSize;
+            // A variant that takes room beside the panel (the floating gap
+            // on both sides of it) says so as `--kp-sidenav-room`; the
+            // content clears that too.
+            const room = style.getPropertyValue('--kp-sidenav-room').trim();
+            return room !== '' ? `calc(${width} + ${room})` : width;
         };
+        /**
+         * Where the panel's far edge stands: its width and what lies between
+         * the window's edge and the panel (`--kp-sidenav-lead`, the floating
+         * gap). The edge tab rides there.
+         */
+        const edgeSize = () => {
+            const style = getComputedStyle(panel);
+            const lead = style.getPropertyValue('--kp-sidenav-lead').trim();
+            const width = style.getPropertyValue('--kp-sidenav-w').trim() || style.inlineSize;
+            return lead !== '' ? `calc(${width} + ${lead})` : width;
+        };
+
         /** The edge tabs that hold one of this panel's togglers. */
         const tabs = () => {
             /** @type {Set<HTMLElement>} */
@@ -434,7 +463,7 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
             // slide: at the window's edge while the panel is away.
             for (const tab of tabs()) {
                 tab.setAttribute('data-kp-sidenav-tab-edge', edge());
-                shift(tab, marginAlong(), open && mode() !== 'side' ? panelSize() : '', open ? 'open' : 'closed', mode() !== 'side');
+                shift(tab, marginAlong(), open && mode() !== 'side' ? edgeSize() : '', open ? 'open' : 'closed', mode() !== 'side');
             }
             const target = contentEl();
             if (!target) return { property: null, value: '' };

@@ -2730,6 +2730,18 @@ the close as the open backwards.
   gave it; the module writes `data-kp-sidenav-narrow`) the panel is that
   wide instead of `--kp-sidenav-width`. Unset, it keeps the width it has
   everywhere else.
+- **Floating.** `data-kp-sidenav-variant="floating"` detaches the panel from
+  the window's edge: a gap all round (`--kp-sidenav-float-inset`, default
+  `--kp-space-sm`), the theme's radius (`--kp-sidenav-float-radius`,
+  `--radius`), an edge on every side (`--kp-sidenav-float-edge`, `1px solid
+  --border-strong`) and a shadow made of the theme's own tokens (its hard
+  `--fx-shadow-offset` where it has one, plus a soft drop,
+  `--kp-sidenav-float-shadow`). Push and gutter leave the gap on both sides
+  of the panel, the edge tab rides on its edge, and a shut panel leaves
+  nothing on the screen. The theme's opening and closing play as they do on
+  the flush panel; a register that reveals the panel by a number of its own
+  hands it to `--kp-sidenav-float-ink` on the panel (pastel does), so the
+  edge and the shadow come and go with it.
 
 ## The page shell [TH36]
 

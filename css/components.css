@@ -4234,7 +4234,7 @@
        has to be summoned; `over` and `push` are the ones you ask for. */
     .kp-sidenav[data-kp-sidenav-mode='over'],
     .kp-sidenav[data-kp-sidenav-mode='push'] {
-        --kp-sidenav-away: -100%;
+        --kp-sidenav-away: var(--kp-sidenav-away-to-start, -100%);
         position: fixed;
         /* One value or two, so a page with a bar it wants to keep can say
            `--kp-sidenav-inset-block: 3rem 0` and have the panel start under
@@ -4253,7 +4253,7 @@
        start is the right, and the panel still slides out of the side it
        came from. */
     .kp-sidenav[data-kp-sidenav-side='end'] {
-        --kp-sidenav-away: 100%;
+        --kp-sidenav-away: var(--kp-sidenav-away-to-end, 100%);
         inset-inline-start: auto;
         inset-inline-end: 0;
         border-inline-end: none;
@@ -4261,11 +4261,11 @@
     }
 
     .kp-sidenav:dir(rtl) {
-        --kp-sidenav-away: 100%;
+        --kp-sidenav-away: var(--kp-sidenav-away-to-end, 100%);
     }
 
     .kp-sidenav[data-kp-sidenav-side='end']:dir(rtl) {
-        --kp-sidenav-away: -100%;
+        --kp-sidenav-away: var(--kp-sidenav-away-to-start, -100%);
     }
 
     .kp-sidenav[data-kp-sidenav-open='true'] {
@@ -9255,3 +9255,65 @@
     }
 }
 
+
+/* --- The side navigation's looks [Kenny, 2026-10-14; research/sidenav-minor] ---
+ * `data-kp-sidenav-variant` on the panel: "floating" or "inset" (shadcn's two
+ * other sidebar looks). Opt-in, so a panel without it is untouched.
+ *
+ * Why this is in the last layers and not in kp.components with the rest of the
+ * panel: a register states the panel's edge itself (formal a hairline on the
+ * inline-end side, cyberpunk two pixels, deco a double rule, brutalism none and
+ * a transparent ground) and its surface, and a register beats kp.components.
+ * A panel that floats has an edge all round and one that is inset has none, so
+ * the variant has to come after the register, as the tour's dim does. Every
+ * rule hangs on the attribute, so nothing here applies to a panel that does not
+ * ask.
+ *
+ * FLOATING: the panel is detached from the window's edge: a gap all round
+ * (--kp-sidenav-float-inset, --kp-space-sm), the theme's radius
+ * (--kp-sidenav-float-radius, --radius), an edge on every side
+ * (--kp-sidenav-float-edge, 1px solid --border-strong) and a shadow made of
+ * the theme's own tokens: its hard offset shadow where it has one
+ * (--fx-shadow-offset) and a soft drop darkened out of --background
+ * (--kp-sidenav-float-shadow). A register that reveals the panel by a number
+ * of its own (pastel's ink, 0 to 1) hands that number to --kp-sidenav-float-ink
+ * on the panel, and the edge and the shadow come and go with it. A panel that slides away goes out past the gap
+ * and the shadow (the 2rem), so a shut panel leaves nothing of itself on the
+ * screen. The gap on both sides of the panel is the room (--kp-sidenav-room) a
+ * push or a gutter leaves beside it; the edge tab rides on the panel's edge
+ * (--kp-sidenav-lead).
+ */
+@layer kp.layout {
+    .kp-sidenav[data-kp-sidenav-variant='floating'] {
+        --kp-sidenav-float: var(--kp-sidenav-float-inset, var(--kp-space-sm, 0.5rem));
+        --kp-sidenav-lead: var(--kp-sidenav-float);
+        --kp-sidenav-room: calc(2 * var(--kp-sidenav-float));
+        --kp-sidenav-away-to-start: calc(-100% - var(--kp-sidenav-float) - 2rem);
+        --kp-sidenav-away-to-end: calc(100% + var(--kp-sidenav-float) + 2rem);
+        margin-block: var(--kp-sidenav-float);
+        border: var(--kp-sidenav-float-edge, 1px solid hsl(from var(--border-strong) h s l / var(--kp-sidenav-float-ink, 1)));
+        border-radius: var(--kp-sidenav-float-radius, var(--radius, 0.5rem));
+        box-shadow:
+            var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 hsl(from var(--border-strong) h s l / var(--kp-sidenav-float-ink, 1)),
+            var(--kp-sidenav-float-shadow, 0 0.5rem 1.5rem hsl(from var(--background) h s 0% / calc(0.4 * var(--kp-sidenav-float-ink, 1))));
+    }
+
+    .kp-sidenav[data-kp-sidenav-variant='floating']:not([data-kp-sidenav-side='end']) {
+        margin-inline-start: var(--kp-sidenav-float);
+    }
+
+    .kp-sidenav[data-kp-sidenav-variant='floating'][data-kp-sidenav-side='end'] {
+        margin-inline-end: var(--kp-sidenav-float);
+    }
+
+    /* The header and the footer paint to the panel's corners, so they take its radius. */
+    .kp-sidenav[data-kp-sidenav-variant='floating'] > .kp-sidenav__header {
+        border-start-start-radius: inherit;
+        border-start-end-radius: inherit;
+    }
+
+    .kp-sidenav[data-kp-sidenav-variant='floating'] > .kp-sidenav__footer {
+        border-end-start-radius: inherit;
+        border-end-end-radius: inherit;
+    }
+}
