@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>North site · resize by dragging</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <link rel="stylesheet" href="../../css/formal-register.css" data-kp-register="formal" />
+        <link rel="stylesheet" href="../sidenav-edge/frame.css" />
+        <link rel="stylesheet" href="play.css" />
+    </head>
+    <body class="se-body" data-sm-scenario="resize">
+        <div class="kp-sidenav__launcher">
+            <button type="button" class="kp-icon-button" data-kp-sidenav-toggle aria-controls="se-nav"></button>
+        </div>
+        <nav class="kp-sidenav" id="se-nav" aria-label="North site sections" data-kp-sidenav-mode="push" data-kp-sidenav-over-below data-kp-sidenav-content="#se-main" data-kp-sidenav-backdrop="false" data-kp-sidenav-open="true" data-kp-sidenav-resizable data-kp-sidenav-min-width="12rem" data-kp-sidenav-max-width="26rem" data-kp-remember="sm-resize">
+            <div class="kp-sidenav__header"><p class="kp-sidenav__title">North site</p></div>
+            <div class="kp-sidenav__scroll">
+                <ul class="kp-sidenav__list">
+                    <li><a class="kp-sidenav__link" href="#se-main"><span class="kp-sidenav__icon" aria-hidden="true">◎</span><span class="kp-sidenav__label">Overview</span></a></li>
+                    <li><a class="kp-sidenav__link" href="#se-main" aria-current="page"><span class="kp-sidenav__icon" aria-hidden="true">▤</span><span class="kp-sidenav__label">Line 2</span><span class="kp-sidenav__badge">2</span></a></li>
+                    <li><a class="kp-sidenav__link" href="#se-main"><span class="kp-sidenav__icon" aria-hidden="true">!</span><span class="kp-sidenav__label">Alarms</span><span class="kp-sidenav__badge">14</span></a></li>
+                    <li><hr class="kp-sidenav__divider" /></li>
+                    <li><a class="kp-sidenav__link" href="#se-main"><span class="kp-sidenav__icon" aria-hidden="true">≋</span><span class="kp-sidenav__label">Readings</span></a></li>
+                    <li><a class="kp-sidenav__link" href="#se-main"><span class="kp-sidenav__icon" aria-hidden="true">⚙</span><span class="kp-sidenav__label">Maintenance</span></a></li>
+                    <li><a class="kp-sidenav__link" href="#se-main"><span class="kp-sidenav__icon" aria-hidden="true">◷</span><span class="kp-sidenav__label">Rota</span></a></li>
+                </ul>
+            </div>
+            <div class="kp-sidenav__footer"><span class="kp-sidenav__label">Signed in as the night shift</span></div>
+        </nav>
+        <main class="se-main" id="se-main">
+            <header class="kp-page-header" data-kp-sidenav-launcher-room>
+                <div class="kp-page-header__inner">
+                    <div>
+                        <h1 class="kp-page-header__title">Line 2</h1>
+                        <p class="kp-page-header__description">Take the handle on the menu’s inner edge: the page follows, the width stays between its limits and is remembered.</p>
+                    </div>
+                </div>
+            </header>
+            <div class="sm-grid">
+                <section class="kp-card" aria-labelledby="sm-h-width">
+                    <div class="kp-card__header"><h2 class="kp-card__title" id="sm-h-width">Menu width</h2></div>
+                    <div class="kp-card__body">
+<div class="sm-stack">
+    <p class="sm-width" id="sm-px">240<small> px</small></p>
+    <div class="sm-gauge"><div class="sm-gauge__track"><div class="sm-gauge__fill"></div></div><div class="sm-gauge__scale"><span>12rem</span><span>26rem</span></div></div>
+    <p class="sm-note" id="sm-kept">Nothing remembered yet.</p>
+</div></div>
+                </section>
+                <section class="kp-card" aria-labelledby="sm-h-page">
+                    <div class="kp-card__header"><h2 class="kp-card__title" id="sm-h-page">Line 2 at a glance</h2></div>
+                    <div class="kp-card__body">
+<div class="kp-kpis" role="group" aria-label="Line 2 at a glance">
+    <div class="kp-kpi"><span class="kp-kpi__label">Pressure now</span><span class="kp-kpi__value">1.1<small>bar</small></span></div>
+    <div class="kp-kpi"><span class="kp-kpi__label">Flow now</span><span class="kp-kpi__value">412<small>m³/h</small></span></div>
+</div></div>
+                </section>
+            </div>
+            <p class="sm-caption sm-prop" aria-live="off"><b>0.</b><span>Starting.</span></p>
+        </main>
+        <span class="sm-ghost" aria-hidden="true"></span>
+        <kbd class="sm-key" aria-hidden="true"></kbd>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../sidenav-edge/frame.js"></script>
+        <script type="module" src="play.js"></script>
+    </body>
+</html>

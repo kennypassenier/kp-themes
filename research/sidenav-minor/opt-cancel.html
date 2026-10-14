@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>North site · cancelable events</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <link rel="stylesheet" href="../../css/formal-register.css" data-kp-register="formal" />
+        <link rel="stylesheet" href="../sidenav-edge/frame.css" />
+        <link rel="stylesheet" href="play.css" />
+    </head>
+    <body class="se-body" data-sm-scenario="cancel">
+        <div class="kp-sidenav__launcher">
+            <button type="button" class="kp-icon-button" data-kp-sidenav-toggle aria-controls="se-nav"></button>
+        </div>
+        <nav class="kp-sidenav" id="se-nav" aria-label="North site sections" data-kp-sidenav-mode="push" data-kp-sidenav-over-below data-kp-sidenav-content="#se-main" data-kp-sidenav-backdrop="false" data-kp-sidenav-cancelable>
+            <div class="kp-sidenav__header"><p class="kp-sidenav__title">North site</p></div>
+            <div class="kp-sidenav__scroll">
+                <ul class="kp-sidenav__list">
+                    <li><a class="kp-sidenav__link" href="#se-main"><span class="kp-sidenav__icon" aria-hidden="true">◎</span><span class="kp-sidenav__label">Overview</span></a></li>
+                    <li><a class="kp-sidenav__link" href="#se-main" aria-current="page"><span class="kp-sidenav__icon" aria-hidden="true">▤</span><span class="kp-sidenav__label">Line 2</span><span class="kp-sidenav__badge">2</span></a></li>
+                    <li><a class="kp-sidenav__link" href="#se-main"><span class="kp-sidenav__icon" aria-hidden="true">!</span><span class="kp-sidenav__label">Alarms</span><span class="kp-sidenav__badge">14</span></a></li>
+                    <li><hr class="kp-sidenav__divider" /></li>
+                    <li><a class="kp-sidenav__link" href="#se-main"><span class="kp-sidenav__icon" aria-hidden="true">≋</span><span class="kp-sidenav__label">Readings</span></a></li>
+                    <li><a class="kp-sidenav__link" href="#se-main"><span class="kp-sidenav__icon" aria-hidden="true">⚙</span><span class="kp-sidenav__label">Maintenance</span></a></li>
+                    <li><a class="kp-sidenav__link" href="#se-main"><span class="kp-sidenav__icon" aria-hidden="true">◷</span><span class="kp-sidenav__label">Rota</span></a></li>
+                </ul>
+            </div>
+            <div class="kp-sidenav__footer"><span class="kp-sidenav__label">Signed in as the night shift</span></div>
+        </nav>
+        <main class="se-main" id="se-main">
+            <header class="kp-page-header" data-kp-sidenav-launcher-room>
+                <div class="kp-page-header__inner">
+                    <div>
+                        <h1 class="kp-page-header__title">Incident report</h1>
+                        <p class="kp-page-header__description">The page can refuse the menu closing while a draft is unsaved, and every event says why it was asked.</p>
+                    </div>
+                </div>
+            </header>
+            <div class="sm-grid">
+                <section class="kp-card" aria-labelledby="sm-h-draft">
+                    <div class="kp-card__header"><h2 class="kp-card__title" id="sm-h-draft">Draft report</h2></div>
+                    <div class="kp-card__body">
+<div class="sm-stack">
+    <div class="kp-field"><label class="kp-field__label" for="sm-draft">What happened</label><input class="kp-field__input" id="sm-draft" type="text" autocomplete="off" /></div>
+    <div class="sm-row"><span class="kp-badge kp-badge--success" id="sm-state">Saved</span><button type="button" class="kp-button kp-button--primary" id="sm-save">Save draft</button></div>
+    <p class="sm-note" id="sm-note"></p>
+</div></div>
+                </section>
+                <section class="kp-card sm-prop" aria-labelledby="sm-h-log">
+                    <div class="kp-card__header"><h2 class="kp-card__title" id="sm-h-log">What the menu reports</h2></div>
+                    <div class="kp-card__body"><ol class="sm-log" aria-label="Events the menu sent"><li class="sm-log-empty">Nothing has happened yet.</li></ol></div>
+                </section>
+            </div>
+            <p class="sm-caption sm-prop" aria-live="off"><b>0.</b><span>Starting.</span></p>
+        </main>
+        <span class="sm-ghost" aria-hidden="true"></span>
+        <kbd class="sm-key" aria-hidden="true"></kbd>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../sidenav-edge/frame.js"></script>
+        <script type="module" src="play.js"></script>
+    </body>
+</html>

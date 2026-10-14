@@ -1,0 +1,213 @@
+/* research/sidenav-minor: the self-playing pages of the four behaviour
+   options. Tokens only; the pointer, the key chip and the log are props of
+   the demo, not parts of the package. */
+
+.sm-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    gap: var(--kp-space-md, 1rem);
+    align-items: stretch;
+}
+
+.sm-grid > .kp-card {
+    margin: 0;
+}
+
+.sm-stack {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.sm-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+/* The event log: the newest line on top, every line a real event the panel sent. */
+.sm-log {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    min-block-size: 11.5rem;
+    align-content: start;
+}
+
+.sm-log > li {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.1rem var(--kp-space-sm, 0.5rem);
+    align-items: center;
+    padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+    border: 1px solid var(--border);
+    background: var(--background);
+    color: var(--foreground);
+    font-size: 0.8125rem;
+    line-height: 1.35;
+}
+
+.sm-log > li[data-new] {
+    border-color: var(--ring);
+}
+
+.sm-log code {
+    overflow-wrap: anywhere;
+    font-size: inherit;
+}
+
+.sm-log small {
+    grid-column: 1 / -1;
+    color: var(--muted-foreground);
+    font-size: 0.75rem;
+}
+
+.sm-log-empty {
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+}
+
+/* The caption: one line saying what the pointer is doing now. */
+.sm-caption {
+    display: flex;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-items: baseline;
+    margin: 0;
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+    border: 1px solid var(--border-strong);
+    background: var(--card);
+    color: var(--foreground);
+    font-size: 0.9375rem;
+    min-block-size: 3rem;
+}
+
+.sm-caption b {
+    flex: none;
+    font-variant-numeric: tabular-nums;
+}
+
+/* The pointer that plays the page. */
+.sm-ghost {
+    position: fixed;
+    inset: 0 auto auto 0;
+    z-index: 300;
+    inline-size: 1.5rem;
+    block-size: 1.5rem;
+    pointer-events: none;
+    translate: 40vw 40vh;
+    transition: translate 750ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sm-ghost::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--foreground);
+    clip-path: polygon(0 0, 0 100%, 28% 76%, 48% 100%, 62% 92%, 42% 68%, 78% 68%);
+    filter: drop-shadow(0 0 1px var(--background)) drop-shadow(0 0 1px var(--background));
+}
+
+.sm-ghost::after {
+    content: '';
+    position: absolute;
+    inset: -0.5rem;
+    border: 2px solid var(--ring);
+    border-radius: 50%;
+    opacity: 0;
+    scale: 0.4;
+}
+
+.sm-ghost[data-press]::after {
+    animation: sm-press 520ms ease-out;
+}
+
+@keyframes sm-press {
+    0% {
+        opacity: 1;
+        scale: 0.4;
+    }
+
+    100% {
+        opacity: 0;
+        scale: 1.3;
+    }
+}
+
+/* A key the script presses. */
+.sm-key {
+    position: fixed;
+    inset: auto var(--kp-space-md, 1rem) var(--kp-space-md, 1rem) auto;
+    z-index: 300;
+    min-inline-size: 3rem;
+    padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.75rem);
+    border: 1px solid var(--border-strong);
+    border-block-end-width: 3px;
+    background: var(--card);
+    color: var(--foreground);
+    font: inherit;
+    font-size: 0.875rem;
+    text-align: center;
+    pointer-events: none;
+    opacity: 0;
+}
+
+.sm-key[data-on] {
+    opacity: 1;
+}
+
+/* A line under a control that says what the page did with the event. */
+.sm-note {
+    margin: 0;
+    min-block-size: 1.5rem;
+    color: var(--foreground);
+    font-size: 0.875rem;
+}
+
+/* The width gauge of the resize page: the panel's width between its limits. */
+.sm-gauge {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.sm-gauge__track {
+    position: relative;
+    block-size: 1.5rem;
+    border: 1px solid var(--border-strong);
+    background: var(--background);
+}
+
+.sm-gauge__fill {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    inline-size: var(--sm-fill, 50%);
+    background: var(--primary);
+}
+
+.sm-gauge__scale {
+    display: flex;
+    justify-content: space-between;
+    color: var(--muted-foreground);
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.sm-width {
+    margin: 0;
+    font-size: 1.75rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.sm-width small {
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+}
+
+/* What the demo reports stays above a backdrop: the page behind is dimmed,
+   the inspector is not. */
+.sm-prop {
+    position: relative;
+    z-index: 80;
+}
