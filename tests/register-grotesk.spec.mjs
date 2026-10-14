@@ -201,12 +201,14 @@ for (const [channel, url] of CHANNELS) {
     });
 }
 
-// Kenny's decision of 2026-09-14, "B, met een zwart label bij indrukken":
-// option B stays, and while a primary or destructive button is pressed its
-// label is --foreground on the grey press ground. Before: the label stayed
-// --primary-foreground/--destructive-foreground, white rgb(255, 255, 255) on
-// rgb(201, 201, 201) = 1.66:1; red on this test.
-test.describe('grotesk press label [grotesk-hover decision]', { tag: ['@theme:grotesk', '@component:button'] }, () => {
+// Kenny's decision of 2026-09-14, "B, met een zwart label bij indrukken", gave a
+// pressed primary or destructive button the grey press ground and a --foreground
+// label (before: white on rgb(201, 201, 201) = 1.66:1). He overtook it on
+// 2026-10-07 ("the press, never grey"): a red face deepens its red
+// (--primary-active, --destructive-active) and keeps its own label. What the
+// decision guarded stays: the label of a pressed button reads at 4.5:1 or more on
+// the ground it stands on, and that ground is never the grey.
+test.describe('grotesk press label [grotesk-hover decision, the press never grey]', { tag: ['@theme:grotesk', '@component:button'] }, () => {
     /** @param {string} text */
     const rgb = (text) => (text.match(/[\d.]+/g) ?? []).slice(0, 3).map(Number);
     /** @param {number[]} c */
@@ -224,7 +226,7 @@ test.describe('grotesk press label [grotesk-hover decision]', { tag: ['@theme:gr
     };
 
     for (const variant of ['primary', 'destructive']) {
-        test(`a pressed ${variant} button's label reads at 4.5:1 or more on the press ground`, async ({ page }) => {
+        test(`a pressed ${variant} button deepens its red, never goes grey, and the label reads at 4.5:1 or more`, async ({ page }) => {
             await page.emulateMedia({ reducedMotion: 'reduce' });
             await page.goto('/tests/fixtures/button.html');
             await page.evaluate((v) => {
@@ -237,12 +239,14 @@ test.describe('grotesk press label [grotesk-hover decision]', { tag: ['@theme:gr
                 document.body.prepend(b);
             }, variant);
             const button = page.locator(`[data-probe="${variant}"]`);
-            const pressGround = await paint(page, '--secondary-active');
-            const ink = await paint(page, '--foreground');
+            const pressGround = await paint(page, `--${variant}-active`);
+            const grey = await paint(page, '--secondary-active');
+            const restInk = await paint(page, `--${variant}-foreground`);
             await button.hover();
             await page.mouse.down();
-            await style(button, 'background-color', 'the grey press ground').toBe(pressGround);
-            await style(button, 'color', 'the label turns to the foreground ink while pressed').toBe(ink);
+            await style(button, 'background-color', 'the deeper red').toBe(pressGround);
+            expect(pressGround, 'not the grey press ground of 2026-09-14').not.toBe(grey);
+            await style(button, 'color', 'the label keeps its own ink').toBe(restInk);
             const { color, backgroundColor } = await button.evaluate((el) => {
                 const cs = getComputedStyle(el);
                 return { color: cs.color, backgroundColor: cs.backgroundColor };

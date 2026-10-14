@@ -450,7 +450,16 @@ test(
 
 /** The review note and the look text in the dialog, and the frame that scrolls them. */
 const readFrame = (page) =>
-    dialogOf(page).evaluate((el) => {
+    dialogOf(page).evaluate(async (el) => {
+        // The dialog grows open on a theme's curve and its note with it (the title is
+        // there at once): read the frame once everything finite in it has finished.
+        for (let round = 0; round < 5; round += 1) {
+            const running = [el, ...el.querySelectorAll('*')]
+                .flatMap((node) => node.getAnimations())
+                .filter((animation) => animation.effect?.getComputedTiming().iterations !== Infinity);
+            if (!running.length) break;
+            await Promise.allSettled(running.map((animation) => animation.finished));
+        }
         const note = /** @type {HTMLElement} */ (el.querySelector('[data-cat-dialog-review-note]'));
         const look = /** @type {HTMLElement} */ (el.querySelector('[data-cat-dialog-look]'));
         /** @param {Element | null} node */

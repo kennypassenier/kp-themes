@@ -52,6 +52,49 @@ const SWEEP = sweepThemes().filter((n) => THEMES.includes(n));
 // was not looking at the button he meant.
 const PRESSED = ['.kp-button--primary', '.kp-button', '.kp-button--destructive'];
 
+/**
+ * Everything a press is allowed to change, in one vector (runs in the page).
+ *
+ * Reading only `background-color` called retro red on 2026-09-12: that theme
+ * presses by inverting its bevel and shifting its padding, which is a reaction
+ * the narrower question could not see. `transform` and `translate` are different
+ * properties and a theme may press with either; a press may also land on a
+ * pseudo-element or on the label rather than on the control (nostromo lights a
+ * lamp, grotesk thickens the baseline). Reading only `translate` on the element
+ * called five themes red in Phase 7 that press perfectly well: the absence of a
+ * value read as the value, a fourth time in this round.
+ *
+ * Since the character rounds a press is also drawn in an image layer of the
+ * control (cyberpunk's scan lines, solstice's swell), in the clip of a
+ * pseudo-element (blueprint's draught line) and in the style of the outline
+ * (forest's blaze closes from dashed to solid): the vector reads all three.
+ *
+ * @param {Element} el
+ */
+function readPaint(el) {
+    const s = getComputedStyle(el);
+    const side = (/** @type {string} */ pseudo) => {
+        const q = getComputedStyle(el, pseudo);
+        return [q.opacity, q.backgroundColor, q.backgroundImage, q.transform, q.clipPath, q.borderColor, q.boxShadow].join(' ');
+    };
+    const label = el.querySelector('.kp-button__label');
+    return [
+        s.backgroundColor,
+        s.backgroundImage,
+        s.boxShadow,
+        s.translate,
+        s.transform,
+        s.paddingBlockStart,
+        s.paddingInlineStart,
+        s.borderColor,
+        s.color,
+        s.outline,
+        side('::before'),
+        side('::after'),
+        label === null ? '' : getComputedStyle(label).getPropertyValue('--kp-baseline-weight'),
+    ].join(' | ');
+}
+
 for (const theme of THEMES) {
     for (const selector of PRESSED) {
         test(
@@ -65,36 +108,7 @@ for (const theme of THEMES) {
                     selector === '.kp-button' ? page.locator('.kp-button:not([class*="kp-button--"])').first() : page.locator(selector).first();
                 if ((await button.count()) === 0) test.skip(true, `${theme}'s showcase page carries no ${selector}`);
                 await button.scrollIntoViewIfNeeded();
-                // Everything a press is allowed to change, in one vector. Reading
-                // only `background-color` called retro red on 2026-09-12: that theme
-                // presses by inverting its bevel and shifting its padding, which is
-                // a reaction the narrower question could not see.
-                const paint = () =>
-                    button.evaluate((el) => {
-                        const s = getComputedStyle(el);
-                        // `transform` and `translate` are different properties
-                        // and a theme may press with either; a press may also
-                        // land on a pseudo-element or on the label rather than
-                        // on the control (nostromo lights a lamp, grotesk
-                        // thickens the baseline). Reading only `translate` on
-                        // the element called five themes red in Phase 7 that
-                        // press perfectly well — the absence of a value read as
-                        // the value, a fourth time in this round.
-                        const before = getComputedStyle(el, '::before');
-                        const label = el.querySelector('.kp-button__label');
-                        return [
-                            s.backgroundColor,
-                            s.boxShadow,
-                            s.translate,
-                            s.transform,
-                            s.paddingBlockStart,
-                            s.paddingInlineStart,
-                            s.borderColor,
-                            s.color,
-                            `${before.opacity} ${before.backgroundColor} ${before.transform}`,
-                            label === null ? '' : getComputedStyle(label).getPropertyValue('--kp-baseline-weight'),
-                        ].join(' | ');
-                    });
+                const paint = () => button.evaluate(readPaint);
                 await button.hover();
                 // Let the hover settle before taking the baseline: read too early and
                 // the baseline is the RESTING paint, which the press then differs
@@ -105,23 +119,7 @@ for (const theme of THEMES) {
                 try {
                     await measured(
                         button,
-                        (el) => {
-                            const s = getComputedStyle(el);
-                            const before = getComputedStyle(el, '::before');
-                            const label = el.querySelector('.kp-button__label');
-                            return [
-                                s.backgroundColor,
-                                s.boxShadow,
-                                s.translate,
-                                s.transform,
-                                s.paddingBlockStart,
-                                s.paddingInlineStart,
-                                s.borderColor,
-                                s.color,
-                                `${before.opacity} ${before.backgroundColor} ${before.transform}`,
-                                label === null ? '' : getComputedStyle(label).getPropertyValue('--kp-baseline-weight'),
-                            ].join(' | ');
-                        },
+                        readPaint,
                         undefined,
                         `${theme}: held down, the button paints exactly as it did hovered`,
                     ).not.toBe(hovered);
