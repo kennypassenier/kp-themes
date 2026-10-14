@@ -89,7 +89,7 @@ for (const channel of CHANNELS) {
             await panel.locator('[data-kp-day="2026-09-04"]').press('PageDown');
             await expect(panel.locator('.kp-datepicker__title')).toHaveText(`${MONTHS[9]} 2026`);
             await panel.locator('[data-kp-day="2026-10-04"]').press('Enter');
-            await expect(input).toHaveValue('04-10-2026');
+            await expect(input).toHaveValue('04/10/2026');
             await expect(input).toHaveAttribute('data-kp-date-value', '2026-10-04');
             await expect(panel).toBeHidden();
         });

@@ -28,6 +28,12 @@
 // format is, because parsing a localised string on the server is how off-
 // by-one-day bugs are born.
 //
+// Since 10.1.0 the numeric display is dd/mm/yyyy for every reader, whatever
+// the locale (Kenny's rule 52: every date a kp component shows is
+// dd/mm/yyyy); `data-kp-date-format="locale"` (or the `dateFormat` option)
+// brings back the locale's own order. Month and weekday names, and the
+// first day of the week, still follow the locale.
+//
 // Since 3.0.0 [KT6, D5]: the display format, the parsing order and the
 // first day of the week come from the locale — the nearest `lang`, the
 // browser's, or `data-kp-locale` — instead of being Dutch; the first
@@ -257,14 +263,15 @@ export function datePicker(element) {
 
 /**
  * @param {ParentNode} root
- * @param {{ locale?: string, weekStartsOn?: number, closeOnSelect?: boolean, refocus?: boolean, isDateDisabled?: (date: Date) => boolean, renderDay?: (button: HTMLButtonElement, date: Date) => void, previousGlyph?: string, nextGlyph?: string }} [options]
- *   Defaults; per picker: `data-kp-locale`, `data-kp-week-starts-on`, `data-kp-min`, `data-kp-max` (ISO), `data-kp-disabled-days` (0-6, comma-separated), `data-kp-close-on-select="false"`, `data-kp-previous-glyph`, `data-kp-next-glyph`.
+ * @param {{ locale?: string, dateFormat?: 'rule52' | 'locale', weekStartsOn?: number, closeOnSelect?: boolean, refocus?: boolean, isDateDisabled?: (date: Date) => boolean, renderDay?: (button: HTMLButtonElement, date: Date) => void, previousGlyph?: string, nextGlyph?: string }} [options]
+ *   Defaults; per picker: `data-kp-locale`, `data-kp-date-format` (`rule52`, the default: dd/mm/yyyy whatever the locale; `locale`: the locale's own numeric order), `data-kp-week-starts-on`, `data-kp-min`, `data-kp-max` (ISO), `data-kp-disabled-days` (0-6, comma-separated), `data-kp-close-on-select="false"`, `data-kp-previous-glyph`, `data-kp-next-glyph`.
  * @returns {(() => void) & { handles: DatePickerHandle[] }} detach
  */
 export function attachDatePickers(
     root = document,
     {
         locale: localeOption,
+        dateFormat: formatOption = 'rule52',
         weekStartsOn: weekOption,
         closeOnSelect = true,
         refocus = true,
@@ -292,6 +299,8 @@ export function attachDatePickers(
         panel.dataset.kpArrive = 'none';
 
         const locale = resolveLocale(picker.dataset.kpLocale ?? localeOption, picker);
+        // The numeric date is dd/mm/yyyy for every reader (rule 52) unless the consumer asks for the locale's own.
+        const numeric = /** @type {'rule52' | 'locale'} */ ((picker.dataset.kpDateFormat ?? formatOption) === 'locale' ? 'locale' : 'rule52');
         const firstDay = weekStartsOn(locale, picker.dataset.kpWeekStartsOn === undefined ? weekOption : Number(picker.dataset.kpWeekStartsOn));
         const min = picker.dataset.kpMin ? parseLocale(picker.dataset.kpMin, locale) : null;
         const max = picker.dataset.kpMax ? parseLocale(picker.dataset.kpMax, locale) : null;
@@ -308,7 +317,7 @@ export function attachDatePickers(
         };
 
         // The hint follows the locale, so it cannot lie about the format.
-        if (input.placeholder === '') input.placeholder = datePattern(locale).hint;
+        if (input.placeholder === '') input.placeholder = datePattern(locale, numeric).hint;
 
         /** @param {Date} date */
         const disabled = (date) => {
@@ -317,7 +326,7 @@ export function attachDatePickers(
             if (disabledDays.includes(date.getDay())) return true;
             return isDateDisabled?.(date) ?? false;
         };
-        const read = () => parseDate(input.value, locale);
+        const read = () => (input.value.trim() === '' ? null : parseLocale(input.value, locale, numeric));
         let cursor = read() ?? new Date();
         /** Which grid the panel shows [scope-89]. @type {DateView} */
         let view = 'days';
@@ -624,7 +633,7 @@ export function attachDatePickers(
                 delete input.dataset.kpDateValue;
                 if (source !== 'typed') input.value = '';
             } else {
-                if (source !== 'typed') input.value = formatDate(date, locale);
+                if (source !== 'typed') input.value = formatDate(date, locale, numeric);
                 input.dataset.kpDateValue = toISO(date);
             }
             picker.dispatchEvent(new CustomEvent(DATE_EVENT, { bubbles: true, detail: { iso: date === null ? null : toISO(date), date, source } }));
@@ -740,7 +749,7 @@ export function attachDatePickers(
             element: picker,
             get: read,
             set: (date) => {
-                const parsed = date === null ? null : typeof date === 'string' ? parseLocale(date, locale) : date;
+                const parsed = date === null ? null : typeof date === 'string' ? parseLocale(date, locale, numeric) : date;
                 commit(parsed, 'set');
                 if (parsed !== null) cursor = parsed;
                 if (!panel.hidden) draw();

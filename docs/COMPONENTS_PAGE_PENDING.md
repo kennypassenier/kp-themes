@@ -12,4 +12,8 @@ each line its example and its option row, and empties the list.
 
 ## Waiting
 
+- Date picker: `data-kp-date-format="locale"` / `dateFormat: 'locale'` (the default is dd/mm/yyyy, rule 52); the "Another locale" and "First day of
+  the week, and a locale by attribute" examples show 13/09/2026 now, and the options table row for `placeholder` says the locale's pattern.
+- Key figure: the label of a plain tile and of a trend tile wraps between words (no ellipsis); the trend tile keeps two label lines.
+
 (The pass of 2026-10-14 brought every line before this onto its component page.)
