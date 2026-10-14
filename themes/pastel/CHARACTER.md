@@ -1,6 +1,8 @@
 # Pastel — character
 
 > **Approved in full by Kenny on 2026-10-14 03:23** (research/pastel-character/decided.json); the grammar in §1 with the picks in §0 is the reference for the port.
+>
+> **Applied 2026-10-14 [scope-141]** to css/pastel-register.css (its signature layer), themes/pastel/tokens.json and the new js/loading-pieces.js; every component as an app gets it is in research/pastel-applied, measured in research/pastel-applied/_audit/MISSING.md. The "Applied 2026-10-14" notes under each section say what changed and where the package could not do what the demo does.
 
 The reference for how pastel looks and moves. Read the grammar before adding
 or changing any pastel component; the inventory, families and outliers below
@@ -106,6 +108,23 @@ the peel off that corner is every leave (G12) and the hover (G14); a press
 sticks the part flat onto its pass (G16). The words never double (the anatomy's
 rule): the pass is a silhouette, not a copy of the text.
 
+**Applied 2026-10-14 (the anchor).** Option 1, printed twice, stuck on, is pastel's open, close, arrive and leave
+everywhere: the pass from 18 px further along the misregistration line into its 6 px rest in the first 440 ms of a
+560 ms window (`kp-sig-pastel-pass-in`), the part swung down from its top-start corner from 120 ms
+(`kp-sig-pastel-stuck-in`, `rotate -9deg`, `translate 0 -8px`, out of nothing), a close the same frames under a second
+name played `reverse`. **What the package needed beyond the demo:** the demo's pass and part are two sibling boxes; a
+package part is one element whose opacity and turn carry its pseudo-elements. So the pass is drawn outside the part where
+it can be: a top-layer part's own `::backdrop` (a dialog, the palette, a popover, a menu, the date picker's panel, the
+combobox's list), placed on the part by CSS anchor positioning (`position-anchor: auto`, which reads the layout box and
+never the turn; a modal's dim is that backdrop's 200vmax border, so a click outside still reaches the dialog); the
+holder's `::after` for the bar's dropdown, mega menu and a tooltip (`anchor-scope` on the holder). Where neither exists (a
+toast, an alert, the tour's card, the side navigation, the phone panel, the busy table's and the busy month's panels) the
+part draws its own plate (`::after`) and pass (`::before`) under its words, does not fade as a whole, and two registered
+numbers (`--kp-sig-pa-pass`, `--kp-sig-pa-ink`) carry the two clocks to its plate, its words (in `kp.base`, so a part's own
+opacity still wins) and its pass, which turns back against the part's swing so it only slides, as in the demo. The alarm
+runs the two clocks alone: its plate, its seams and its backdrop follow the pass, its panel the ink, its `::after` is the
+panel's pass. Without anchor positioning a part shows its pass at rest as a flat box-shadow and opens with the swing alone.
+
 ---
 
 ## 1. The pastel grammar (proposed)
@@ -139,6 +158,42 @@ glitched, scanned, grown, thrown or burnt; nothing lands with a dead stop.
 | G18 | **Motifs only from the sheet and the press.** The second pass, the sticker and its fold, the washi tape, the pearls on a thread, the halftone dots. Not candy: no sprinkles, hearts, clouds, macarons, gummies, bubblegum outlines or rainbows. |
 | G19 | **Every animation sits under `prefers-reduced-motion: no-preference`;** the reduced pose is the finished picture: the part stuck on with its pass 6 px off register, the tape still on its surface, the roll still. |
 | G20 | **The network graph is never a target** (Kenny, 2026-10-07 02:54). Its shape (candy beads and licorice), loading (the sprinkle drift), arrival (beads dropped in), focus (the package's dimming) and live update (the wobble, the source of G9) stay exactly as decided. |
+
+**Applied 2026-10-14 (the grammar, rule by rule).** As decided in §0, with these notes:
+
+- **G1** the landing is `--fx-ease` (tokens.json) and `--kp-sig-pa-land`, written with every stop placed (`0 0%` … `1 100%`)
+  so js/motion.js `reversedEase()` can turn it round; `--kp-sig-pa-land-size` is the landing held at its value for a size
+  (the side navigation's width and groups, `--kp-sidenav-ease`), and js/motion.js `withoutOvershoot()` now holds a
+  `linear()` list as it held a bezier (a list already inside 0 and 1, every other theme's, comes back as it came).
+- **G2, G3** every opening swings from its top-start corner (`--kp-sig-pa-corner`, the top-end corner in RTL, where the
+  pass also goes the other way, `--kp-sig-pa-dir`); a group arrives 60 ms apart (`--kp-leave-stagger: 0.1071`). A menu
+  that opens to the end of its trigger still swings from its top-start corner (the package does not say which side it hangs
+  from).
+- **G4** contact 220, landing 560, a dialog's CSS entrance 840 (js/motion.js plays it in two thirds, 560), the tack 360,
+  the wobble 800, the loops 1200 and 2400; `--kp-size-max: 560ms`.
+- **G5** the pass is sky everywhere (`--kp-sig-pa-pass-c`, the dialog's and the tick's mint second sheets became sky).
+- **G6** plates 1.2 rem, controls 0.85 rem, chips, tags, the tooltip and the bars pills; a picked day round.
+- **G7** no soft shadow is left; a plate at rest has its flat pass, a control its flat plum peel; washi tape on the dialog,
+  the palette, the wizard and the spec sheet. **The tape and the tack together:** the surface pick tapes a stuck plate, the
+  leave pick puts a thumbtack on a part fixed to the page and hides the tape there (its own option CSS); applied as: the
+  thumbtack on a card, a key figure and a tile (what a page adds and removes), the tape on the dialog and the panels. The
+  dialog's tape sits just inside its top-start corner, because the dialog is its own scroll box and clips what reaches out.
+- **G8** the change sticker on its tone's plate with its own peel; a warning or failed figure's label on its tone's plate,
+  the package's inset edge gone.
+- **G9** `--kp-update: wobble` (`kp-sig-pastel-update-wobble`, 800 ms `ease-out`, round the foot).
+- **G10, G11** §6a variant 18 and 14 as decided, drawn by js/loading-pieces.js (see §6a).
+- **G12** the anchor, then the thumbtack: the leave is the anchor backwards, a tacked part's tack coming out first
+  (`kp-sig-pastel-tack-out`, its space folding with the landing backwards, `--kp-leave-fold-start: 0.6429`).
+- **G13** pastel's `.kp-button` is the same in every composite.
+- **G14** the lift on the peel and the corner fold on a button, a menu entry and a key figure that acts (its fold on the
+  plate's corner); the words never turn.
+- **G15** the dashed `--ring` line alone, 3 px out (1 px on an entry in a list, inside a grid cell); on a destructive,
+  info or primary plate it takes the plate's ink, because `--ring` reads 1.34:1, 2.92:1 and 1.40:1 there.
+- **G16** stuck down flat: 3 px, peel 0, the fold flat.
+- **G17** one face: the microlabel, the stamp, the brand tag, the language link and the platform chips in Instrument Sans;
+  the package's capital labels (a key figure's, a menu's group heading, the palette's) in sentence case at 600.
+- **G18** the meter's heart past the end is gone.
+- **G19** every motion under `prefers-reduced-motion: no-preference`; reduced, every part stands stuck on with its pass.
 
 ---
 
@@ -321,6 +376,11 @@ detail or a technical inconsistency.
 | C6  | month heatmap · day cells                                         | hover, pick                    | calendar select 1: the day lifts on hover, today a dashed candy ring, the pick a solid ring, the count on an inverted label                                                                            | ●        |
 | C7  | drawer · tour buttons, state word, trend, graph                   | —                              | no pastel rule on an inner button or link found: conform (the graph is not a target in any case)                                                                                                        | —        |
 
+**Applied 2026-10-14 (composites, G13).** C1 to C4: the header's, a tile's and a menu's buttons are pastel's
+`.kp-button`; a menu entry has the mint plate, the fold and the flat press; a key figure that is a link or a toggle is a
+sticker with its peel, its fold on the plate's corner, the dashed line and the flat press, on the landing in the contact
+time. C5 (chart legend keys) and C6 (heatmap days) keep the package's look apart from the dashed line and the round day.
+
 ---
 
 ## 5. Proposal
@@ -449,6 +509,19 @@ beside what is drawn, the landing curve where something lands, loops of
 for all 24: the week, the skeleton and the busy bar reserve the largest room
 any variant draws in above and below them (options.css), so the scene is the
 same height whichever option is shown.
+
+**Applied 2026-10-14 (loading and the spinner).** Loading is variant 18 (_everything becomes caterpillar_), the spinner
+variant 14 (_the round_), on every loading part the package has: a skeleton line, the busy progress bar's track and a
+loading meter become a row of mint pom-poms as round as the row is high with a plum head at the end, the hump running tail
+to head (70 ms a bead, 1200 ms); a loading day of the month is its body (the mint pom-pom rim with its pass, two legs that
+step, the day itself rising in turn, 160 ms a day, a big head beside the last loading day of its week); a block skeleton,
+the busy table's panel, the busy month's card, a busy menu, a busy key figure or card get a head on their top-end corner
+and legs along their foot that step in turn; the spinner, at every size, is a small white day sticker with three pom-poms
+and the head going round it clockwise (2400 ms a round, the hump 1200 ms). The pieces are real elements added and removed by
+js/loading-pieces.js (`--kp-loading-pieces: caterpillar`; `data-kp-pieces` on the part while they are there), measured
+from the part's layout box as the demo's pairs-b.js measures its carriers; without the script a row and the spinner show a
+still caterpillar drawn by pseudo-elements. A day's own spinner stands down (the day is the picture). In a month the legs
+under a day are covered by the next week's row, where the demo had one week with room under it.
 
 ---
 

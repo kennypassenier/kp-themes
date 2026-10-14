@@ -524,3 +524,38 @@ These were not cyberpunk's: the same wrong default is in every theme that has no
   every part the round names is listed and read in that summary, and a claim about "every theme" is written only after it.
 - **Check:** `node research/all-themes/_audit/identity-summary.mjs | grep -E 'PLAIN|NONE|FADE'` lists only decided exceptions (pastel's
   sheet reads PLAIN because it only moves and turns).
+
+## 53. A register's toast entrance is every arrival's switch
+
+- **Symptom:** (pastel port, 2026-10-14) a toast, an alert shown again, a card put back and the busy table's layer all appeared at
+  once; the identity audit read "NOT split" on their opening only.
+- **Cause:** js/motion.js `arrival()` decides whether a theme lets anything arrive by drawing a `.kp-toast` out of sight and reading
+  its CSS entrance; the register had moved the toast to arrive through motion.js alone, so the probe found no animation and
+  `arrive()` returned before `arriveAsReversedLeave()` was ever asked.
+- **Fix:** keep a CSS entrance on `.kp-toast` (pastel: its own landing, `kp-sig-pastel-stuck-plate-in`) even where every arrival is
+  the leave played backwards.
+- **Check:** `identity.mjs --only toast,alert-close,card-pin,table-busy`: each opening names the theme's keyframes.
+
+## 54. A `linear()` curve is turned round only when every stop is placed and it is written on one line
+
+- **Symptom:** (pastel) the side navigation's width and a group's rows closed on the opening's curve, not on it turned round
+  (pair meter 88 % and 131 % off).
+- **Cause:** js/motion.js `reversedEase()` reverses a `linear()` list only when every stop carries its percentage, and its pattern
+  does not cross a line break; the register wrote `linear(0, 0.014 5%, …, 1)` across several lines (as prettier lays out a long
+  value), so the custom property came back unchanged.
+- **Fix:** write a theme's `linear()` curves as `0 0%` … `1 100%`, on one line (`/* prettier-ignore */` before the declaration), and
+  give a size a curve held at its value (pastel's `--kp-sig-pa-land-size`; js/motion.js `withoutOvershoot()` holds a `linear()` list).
+- **Check:** the pair meter's close column names the turned-round list (`linear(0 0%, 0 35%, …)`).
+
+## 55. A second layer drawn inside a part fades and turns with it: draw it outside, or fade the part by its layers
+
+- **Symptom:** (pastel's anchor) the sky pass should be there 120 ms before the part, and stay level while the part swings; drawn as
+  the part's `::before` it was invisible until the part faded in, and swung with it.
+- **Cause:** opacity, filter and transform apply to an element's whole rendering, pseudo-elements included; a scroll box (a dialog,
+  a popover, a combobox list) also clips a pseudo-element that reaches out.
+- **Fix:** draw the second layer on a box that is not the part: a top-layer part's own `::backdrop`, or the holder's `::after`, placed
+  on the part with anchor positioning (`position-anchor: auto` for a backdrop; `anchor-scope` on a holder), which reads the layout
+  box and never the turn. Where there is no such box, the part draws its plate and the layer as pseudo-elements, does not fade as a
+  whole, and registered custom properties carry the clocks to its plate, its children and the layer.
+- **Check:** shots of the opening at 30, 55 and 100 % of its time; the identity audit names the layer's keyframes on `::backdrop`
+  or the holder's `::after`.

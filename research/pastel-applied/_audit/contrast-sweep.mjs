@@ -86,16 +86,32 @@ async function sweep(scopeSelector, label) {
         if (!text && !aria) continue;
         if (only && !only.test(text)) continue;
         if (!text) continue; // an icon-only control has no label text to read
-        await el.scrollIntoViewIfNeeded();
+        // a part that hides while the sweep walks (a hover menu, a tooltip, a toast) is skipped
+        if (
+            !(await el.scrollIntoViewIfNeeded({ timeout: 2000 }).then(
+                () => true,
+                () => false,
+            ))
+        )
+            continue;
         const b = await el.boundingBox();
         if (!b || b.width < 4 || b.height < 4) continue;
         // the inside of the box: a state's edge lines (the split edge, the brackets) are not the ground a label sits on
-        const inset = b.height > 20 && b.width > 20 ? 5 : 0;
+        // pastel's copy: the box of the label's own glyphs (its text range), less a pixel, so a neighbour that a
+        // lifted or swung part uncovers (the next row's sticker, a pass beside it) is not read as the label's ground
+        const t = await el.evaluate((e) => {
+            const r = document.createRange();
+            r.selectNodeContents(e);
+            const q = r.getBoundingClientRect();
+            return { x: q.x, y: q.y, w: q.width, h: q.height };
+        });
+        const box = t.w > 4 && t.h > 4 ? { x: t.x + 1, y: t.y + 1, width: t.w - 2, height: t.h - 2 } : b;
+        const inset = 0;
         const clip = {
-            x: Math.max(0, b.x) + inset,
-            y: Math.max(0, b.y) + inset,
-            width: Math.min(b.width, 1280 - b.x) - 2 * inset,
-            height: Math.min(b.height, 900 - b.y) - 2 * inset,
+            x: Math.max(0, box.x) + inset,
+            y: Math.max(0, box.y) + inset,
+            width: Math.min(box.width, 1280 - box.x) - 2 * inset,
+            height: Math.min(box.height, 900 - box.y) - 2 * inset,
         };
         const states = {
             rest: async () => page.mouse.move(2, 2),

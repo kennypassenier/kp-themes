@@ -248,7 +248,11 @@ export function attachLoadingPieces(root = document) {
                     for (const el of node.querySelectorAll(ALL)) queue(el);
                 }
                 for (const node of r.removedNodes) {
-                    if (node instanceof Element && !node.classList.contains('kp-pieces') && dressed.has(node)) queue(node);
+                    if (!(node instanceof Element)) continue;
+                    // A component that redraws a waiting part's children takes the pieces with them: put them back.
+                    if (node.classList.contains('kp-pieces')) {
+                        if (dressed.has(target)) queue(target);
+                    } else if (dressed.has(node)) queue(node);
                 }
             }
         }

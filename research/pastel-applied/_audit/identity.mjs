@@ -9,6 +9,12 @@
 //
 // Real mouse clicks at coordinates, as Kenny judges. Usage:
 //   node research/pastel-applied/_audit/identity.mjs [--engine firefox|chromium] [--only id,id]
+//
+// Pastel (scope-141): its family is `kp-sig-pastel-*` (the anchor: -stuck-*, -pass-*, -stuck-plate-*,
+// -pass-host-*, -tack-*). js/motion.js replays a dialog's entrance and closes it with element.animate()
+// (no name): those copies are named here by their keyframes, the part's swing (rotate and translate)
+// as kp-sig-pastel-stuck, its pass (translate and opacity on a ::backdrop) as kp-sig-pastel-pass, and
+// the two clocks alone (--kp-sig-pa-*) as kp-sig-pastel-pass-host.
 import process from 'node:process';
 import { chromium, firefox } from '@playwright/test';
 import { serve, THEME } from './lib.mjs';
@@ -78,6 +84,44 @@ const PARTS = [
     },
     { id: 'desktop-mega', open: click('#bar .kp-nav__disclosure'), close: click('#bar .kp-nav__disclosure') },
     { id: 'phone-frame', open: click('.fa-phone [data-kp-nav-toggle]'), close: click('.fa-phone [data-kp-nav-toggle]') },
+    // Pastel's own blocks (21-23): a tooltip, a toast, an alert, a card with its thumbtack, the busy table and month.
+    {
+        id: 'tooltip',
+        open: (page) => page.focus('[data-fa-tip] .kp-button'),
+        close: key('Escape'),
+    },
+    {
+        id: 'toast',
+        open: click('[data-fa-toast]'),
+        // the toast toast() made (it alone carries dismiss()), wherever its region is
+        close: (page) =>
+            page.evaluate(() =>
+                [...document.querySelectorAll('.kp-toast')]
+                    .reverse()
+                    .find((t) => t.dismiss)
+                    ?.dismiss(),
+            ),
+    },
+    {
+        id: 'alert-close',
+        setup: async (page) => {
+            await clickAt(page, '[data-fa-alert] .kp-alert__close');
+            await page.waitForTimeout(1500);
+        },
+        open: click('[data-fa-alert-back]'),
+        close: click('[data-fa-alert] .kp-alert__close'),
+    },
+    {
+        id: 'card-pin',
+        setup: async (page) => {
+            await clickAt(page, '[data-fa-pin="leave"]');
+            await page.waitForTimeout(1500);
+        },
+        open: click('[data-fa-pin="back"]'),
+        close: click('[data-fa-pin="leave"]'),
+    },
+    { id: 'table-busy', open: click('[data-fa-table="busy"]'), close: click('[data-fa-table="ready"]') },
+    { id: 'calendar-busy', open: click('[data-fa-calendar="loading"]'), close: click('[data-fa-calendar="ready"]') },
     {
         id: 'phone-390',
         viewport: { width: 390, height: 800 },
@@ -103,8 +147,12 @@ const snapshot = (page) =>
                 if (name === 'script') {
                     const kf = a.effect.getKeyframes();
                     const has = (p) => kf.some((k) => k[p] && k[p] !== 'none' && k[p] !== 'normal');
+                    const keys = new Set(kf.flatMap((k) => Object.keys(k)));
                     if (has('textShadow') && has('boxShadow')) name = 'kp-sig-cyberpunk-split (script)';
                     else if (kf.some((k) => /drop-shadow/.test(k.filter ?? ''))) name = 'kp-sig-cyberpunk-split-bar (script)';
+                    else if (keys.has('rotate') && keys.has('translate')) name = 'kp-sig-pastel-stuck (script)';
+                    else if ([...keys].some((x) => x.startsWith('--kp-sig-pa-'))) name = 'kp-sig-pastel-pass-host (script)';
+                    else if (a.effect.pseudoElement === '::backdrop' && keys.has('translate')) name = 'kp-sig-pastel-pass (script)';
                     else
                         name = `script[${[...new Set(kf.flatMap((k) => Object.keys(k)).filter((x) => !['offset', 'computedOffset', 'easing', 'composite'].includes(x)))].join(',')}]`;
                 }

@@ -238,6 +238,18 @@ export const PAIRS = [
                 window.__s.dispatchEvent(new Event('input', { bubbles: true }));
             }),
     },
+    // pastel (scope-141): a card fixed to the page leaves, its thumbtack first, and comes back (block 23)
+    {
+        id: 'card-pin',
+        section: '#pinned',
+        setup: async (page) => {
+            await page.evaluate(() => document.querySelector('[data-fa-pin="leave"]').click());
+            await page.waitForTimeout(1600);
+            await page.focus('[data-fa-pin="back"]');
+        },
+        open: click('[data-fa-pin="back"]'),
+        close: click('[data-fa-pin="leave"]'),
+    },
     {
         id: 'tabs-panel',
         page: '/catalogue/navigation.html',

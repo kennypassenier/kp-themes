@@ -61,7 +61,7 @@
                     <li><a href="#loading">Alles wat wacht</a></li>
                     <li><a href="#popover-menus">Menu's in een popover</a></li>
                     <li><a href="#kpis">Kerncijfers, tonen, een waarde die verandert</a></li>
-                    <li><a href="#notes">Meldingen en toasts</a></li>
+                    <li><a href="#notes">Meldingen, toasts, hulpjes</a></li>
                     <li><a href="#pinned">Vastgeprikt: de punaise</a></li>
                 </ol>
             </header>
@@ -1575,10 +1575,12 @@ Gauge and sensor disagree by 2 bar.</textarea>
                         elke waarde wiebelt één keer rond haar voet, als gelei (800 ms), en haar blauwe druk blijft staan.
                     </p>
                 </div>
-                <div class="fa-stage fa-stage--block">
-                    <div class="fa-controls">
+                <div class="fa-controls" data-review-controls>
+                    <div class="kp-row" role="group" aria-label="Live update">
                         <button type="button" class="kp-button kp-button--sm" data-fa-update>Waarden bijwerken</button>
                     </div>
+                </div>
+                <div class="fa-stage fa-stage--block">
                     <div class="kp-kpis" role="group" aria-label="Network at a glance">
                         <div class="kp-kpi">
                             <span class="kp-kpi__label">Pump houses online</span>
@@ -1622,15 +1624,15 @@ Gauge and sensor disagree by 2 bar.</textarea>
                 class="fa-sec"
                 id="notes"
                 data-review-item="notes"
-                data-review-title="22 · Meldingen en toasts"
-                data-review-components="alert toast"
+                data-review-title="22 · Meldingen, toasts, hulpjes"
+                data-review-components="alert toast tooltip"
                 aria-labelledby="h-notes"
             >
                 <div class="fa-sec__head">
-                    <p class="fa-num">22 · Meldingen en toasts</p>
+                    <p class="fa-num">22 · Meldingen, toasts, hulpjes</p>
                     <h2 id="h-notes">
-                        Een melding en een toast zijn papier in de hand: hun eigen vel in de kleur van hun toon met de blauwe tweede druk ernaast,
-                        geen tape en geen punaise; ze komen vastgeplakt binnen en pellen er achterstevoren af.
+                        Een melding, een toast en een hulpje zijn papier in de hand: hun eigen vel in de kleur van hun toon met de blauwe tweede druk
+                        ernaast, geen tape en geen punaise; ze komen vastgeplakt binnen en pellen er achterstevoren af.
                     </h2>
                 </div>
                 <div class="fa-look" data-review-look>
@@ -1640,10 +1642,18 @@ Gauge and sensor disagree by 2 bar.</textarea>
                         met zijn kruisje.
                     </p>
                 </div>
-                <div class="fa-stage fa-stage--block">
-                    <div class="fa-controls">
+                <div class="fa-controls" data-review-controls>
+                    <div class="kp-row" role="group" aria-label="Alerts and toasts">
                         <button type="button" class="kp-button kp-button--sm" data-fa-alert-back>Melding terugzetten</button>
                         <button type="button" class="kp-button kp-button--sm" data-fa-toast>Toast tonen</button>
+                    </div>
+                </div>
+                <div class="fa-stage fa-stage--block">
+                    <div class="fa-row">
+                        <span class="kp-tooltip-anchor" data-fa-tip>
+                            <button type="button" class="kp-button kp-button--sm kp-button--ghost">Recalibrate</button>
+                            <span role="tooltip" class="kp-popover kp-tooltip">Takes about two minutes</span>
+                        </span>
                     </div>
                     <div class="fa-stack" data-fa-alerts>
                         <div class="kp-alert kp-alert--success" role="status" data-kp-semantic data-fa-alert>
@@ -1728,11 +1738,13 @@ Gauge and sensor disagree by 2 bar.</textarea>
                         laatste in.
                     </p>
                 </div>
-                <div class="fa-stage fa-stage--block">
-                    <div class="fa-controls">
+                <div class="fa-controls" data-review-controls>
+                    <div class="kp-row" role="group" aria-label="The card">
                         <button type="button" class="kp-button kp-button--sm" data-fa-pin="leave">Kaart weghalen</button>
                         <button type="button" class="kp-button kp-button--sm" data-fa-pin="back">Kaart terugzetten</button>
                     </div>
+                </div>
+                <div class="fa-stage fa-stage--block">
                     <div class="fa-pins" data-kp-size-motion data-fa-pins>
                         <div class="kp-card" data-fa-pin-card>
                             <div class="kp-card__header"><h3 class="kp-card__title">Groceries</h3></div>

@@ -377,5 +377,5 @@
 .fa-toast-stack {
     position: relative;
     contain: layout;
-    min-block-size: 24rem;
+    min-block-size: 30rem;
 }

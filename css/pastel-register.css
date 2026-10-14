@@ -185,10 +185,8 @@
         background-position: left center;
     }
 
-    [data-theme='pastel'] .kp-lede mark:nth-of-type(2) {
-        background-color: var(--info);
-        color: var(--info-foreground);
-    }
+    /* Three inks (G5, Kenny 2026-10-14): mint is the plate behind a marked
+       word, every one of them; violet is the info status only. */
 
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='pastel'][data-kp-effects] mark:not(.is-cleared) {
@@ -525,6 +523,7 @@
     [data-theme='pastel'] .kp-fieldset {
         border: 1px solid var(--border);
         border-radius: 1.2rem;
+        padding: 0.35rem 0.85rem 0.65rem;
     }
 
     /* The switch [gap-11]: the pill stays, soft on the field's ground. */
@@ -979,7 +978,8 @@
     [data-theme='pastel'] .kp-pagination [aria-current] {
         background: var(--primary);
         color: var(--primary-foreground);
-        border-radius: 0.85rem;
+        border-radius: 999px;
+        padding-inline: 0.45em;
     }
 
     [data-theme='pastel'] .kp-wizard {
@@ -1462,6 +1462,7 @@
        frame (`[data-kp-alarm-inline]`, never `[open]`) stands still. */
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='pastel'] .kp-alarm:not([data-kp-alarm-motion='still']),
+        [data-theme='pastel'] .kp-alarm:not([data-kp-alarm-motion='still'])::after,
         [data-theme='pastel']
             .kp-alarm:not([data-kp-alarm-motion='still'])
             :is(.kp-alarm__panel, .kp-alarm__title, .kp-alarm__detail, .kp-alarm__code),
@@ -1542,54 +1543,18 @@
         /* G1: the soft landing, passing its rest by 8 % at 75 % of the time
            and settling once (half at 36 %, 90 % at 56 %). --fx-ease is the
            same curve (themes/pastel/tokens.json). */
-        --kp-sig-pa-land: linear(
-            0,
-            0.014 5%,
-            0.052 10%,
-            0.112 15%,
-            0.189 20%,
-            0.28 25%,
-            0.38 30%,
-            0.486 35%,
-            0.594 40%,
-            0.7 45%,
-            0.8 50%,
-            0.891 55%,
-            0.968 60%,
-            1.028 65%,
-            1.066 70%,
-            1.08 75%,
-            1.072 80%,
-            1.052 85%,
-            1.028 90%,
-            1.008 95%,
-            1
-        );
+        /* prettier-ignore */
+        --kp-sig-pa-land: linear(0 0%, 0.014 5%, 0.052 10%, 0.112 15%, 0.189 20%, 0.28 25%, 0.38 30%, 0.486 35%, 0.594 40%, 0.7 45%, 0.8 50%, 0.891 55%, 0.968 60%, 1.028 65%, 1.066 70%, 1.08 75%, 1.072 80%, 1.052 85%, 1.028 90%, 1.008 95%, 1 100%);
+        /* A size lands without passing its value (js/motion.js withoutOvershoot()
+           holds the landing the same way): the side navigation's width, a
+           group's rows, a chevron's turn. */
+        /* prettier-ignore */
+        --kp-sig-pa-land-size: linear(0 0%, 0.014 5%, 0.052 10%, 0.112 15%, 0.189 20%, 0.28 25%, 0.38 30%, 0.486 35%, 0.594 40%, 0.7 45%, 0.8 50%, 0.891 55%, 0.968 60%, 1 65%, 1 100%);
+        --kp-sidenav-ease: var(--kp-sig-pa-land-size);
         /* The landing turned around, for a transition that takes back what
            the landing brought (js/motion.js reversedEase() writes the same). */
-        --kp-sig-pa-land-back: linear(
-            0 0%,
-            -0.008 5%,
-            -0.028 10%,
-            -0.052 15%,
-            -0.072 20%,
-            -0.08 25%,
-            -0.066 30%,
-            -0.028 35%,
-            0.032 40%,
-            0.109 45%,
-            0.2 50%,
-            0.3 55%,
-            0.406 60%,
-            0.514 65%,
-            0.62 70%,
-            0.72 75%,
-            0.811 80%,
-            0.888 85%,
-            0.948 90%,
-            0.986 95%,
-            1 100%
-        );
+        /* prettier-ignore */
+        --kp-sig-pa-land-back: linear(0 0%, -0.008 5%, -0.028 10%, -0.052 15%, -0.072 20%, -0.08 25%, -0.066 30%, -0.028 35%, 0.032 40%, 0.109 45%, 0.2 50%, 0.3 55%, 0.406 60%, 0.514 65%, 0.62 70%, 0.72 75%, 0.811 80%, 0.888 85%, 0.948 90%, 0.986 95%, 1 100%);
         /* G4: contact 220 (--fx-duration); one landing 560 (the pass 440
            from 0, the part 440 from 120); a dialog's CSS entrance 840, which
            js/motion.js plays in two thirds of it, 560; a group 60 apart; the
@@ -1648,6 +1613,14 @@
         --kp-sig-pa-corner: 0 0;
     }
 
+    /* An edge part hangs from the corner at its edge (G3): the drawer and a
+       side navigation on the end edge swing from their top-end corner, the
+       other way round; their pass still goes toward the end. */
+    [data-theme='pastel'] :is(.kp-drawer, .kp-sidenav[data-kp-sidenav-side='end']) {
+        --kp-sig-pa-turn: calc(-1 * var(--kp-sig-pa-dir));
+        --kp-sig-pa-corner: calc(50% + 50% * var(--kp-sig-pa-dir)) 0;
+    }
+
     /* A peeled corner on a plate shows the plate, not the page. */
     [data-theme='pastel']
         :is(
@@ -1680,7 +1653,7 @@
     @keyframes kp-sig-pastel-stuck-in {
         0%,
         21.4286% {
-            rotate: calc(-9deg * var(--kp-sig-pa-dir, 1));
+            rotate: calc(-9deg * var(--kp-sig-pa-turn, var(--kp-sig-pa-dir, 1)));
             translate: 0 -8px;
             opacity: 0;
         }
@@ -1689,7 +1662,7 @@
     @keyframes kp-sig-pastel-stuck-out {
         0%,
         21.4286% {
-            rotate: calc(-9deg * var(--kp-sig-pa-dir, 1));
+            rotate: calc(-9deg * var(--kp-sig-pa-turn, var(--kp-sig-pa-dir, 1)));
             translate: 0 -8px;
             opacity: 0;
         }
@@ -1706,7 +1679,7 @@
 
         0.1%,
         21.4286% {
-            rotate: calc(-9deg * var(--kp-sig-pa-dir, 1));
+            rotate: calc(-9deg * var(--kp-sig-pa-turn, var(--kp-sig-pa-dir, 1)));
             translate: 0 -8px;
             opacity: 0;
         }
@@ -1719,7 +1692,7 @@
 
         0.1%,
         21.4286% {
-            rotate: calc(-9deg * var(--kp-sig-pa-dir, 1));
+            rotate: calc(-9deg * var(--kp-sig-pa-turn, var(--kp-sig-pa-dir, 1)));
             translate: 0 -8px;
             opacity: 0;
         }
@@ -1758,14 +1731,14 @@
        read. */
     @keyframes kp-sig-pastel-stuck-plate-in {
         0% {
-            rotate: calc(-9deg * var(--kp-sig-pa-dir, 1));
+            rotate: calc(-9deg * var(--kp-sig-pa-turn, var(--kp-sig-pa-dir, 1)));
             translate: 0 -8px;
             --kp-sig-pa-ink: 0;
             --kp-sig-pa-pass: 0;
         }
 
         21.4286% {
-            rotate: calc(-9deg * var(--kp-sig-pa-dir, 1));
+            rotate: calc(-9deg * var(--kp-sig-pa-turn, var(--kp-sig-pa-dir, 1)));
             translate: 0 -8px;
             --kp-sig-pa-ink: 0;
         }
@@ -1777,14 +1750,14 @@
 
     @keyframes kp-sig-pastel-stuck-plate-out {
         0% {
-            rotate: calc(-9deg * var(--kp-sig-pa-dir, 1));
+            rotate: calc(-9deg * var(--kp-sig-pa-turn, var(--kp-sig-pa-dir, 1)));
             translate: 0 -8px;
             --kp-sig-pa-ink: 0;
             --kp-sig-pa-pass: 0;
         }
 
         21.4286% {
-            rotate: calc(-9deg * var(--kp-sig-pa-dir, 1));
+            rotate: calc(-9deg * var(--kp-sig-pa-turn, var(--kp-sig-pa-dir, 1)));
             translate: 0 -8px;
             --kp-sig-pa-ink: 0;
         }
@@ -2214,13 +2187,19 @@
             .kp-datatable__busy-panel,
             .kp-calendar__busy
         ) {
-        --kp-sig-pa-plate: var(--card);
-        --kp-sig-pa-edge: var(--border-strong);
         isolation: isolate;
         border-color: transparent;
         background: transparent;
         box-shadow: none;
         transform-origin: var(--kp-sig-pa-corner);
+    }
+
+    /* The paper and its edge by default, at no weight, so every part and
+       tone below names its own (lesson 32: a default never out-ranks the
+       states it stands for). */
+    :where([data-theme='pastel']) :where(.kp-toast, .kp-alert, .kp-tour, .kp-sidenav, .kp-datatable__busy-panel, .kp-calendar__busy) {
+        --kp-sig-pa-plate: var(--card);
+        --kp-sig-pa-edge: var(--border-strong);
     }
 
     [data-theme='pastel'] :is(.kp-toast, .kp-alert, .kp-datatable__busy-panel) {
@@ -2257,7 +2236,7 @@
         border-radius: inherit;
         background: var(--kp-sig-pa-pass-c);
         transform-origin: var(--kp-sig-pa-corner);
-        rotate: calc(9deg * var(--kp-sig-pa-dir) * (1 - var(--kp-sig-pa-ink)));
+        rotate: calc(9deg * var(--kp-sig-pa-turn, var(--kp-sig-pa-dir)) * (1 - var(--kp-sig-pa-ink)));
         transform: translate(
             calc((var(--kp-sig-pa-off) + 18px * (1 - var(--kp-sig-pa-pass))) * var(--kp-sig-pa-dir)),
             calc(var(--kp-sig-pa-off) + 16px * (1 - var(--kp-sig-pa-pass)) + 8px * (1 - var(--kp-sig-pa-ink)))
@@ -2309,6 +2288,11 @@
         --kp-sig-pa-edge: var(--success-foreground);
     }
 
+    /* The success alert's edge is its plate, as the package draws it. */
+    [data-theme='pastel'] .kp-alert--success {
+        --kp-sig-pa-edge: var(--success);
+    }
+
     [data-theme='pastel'] :is(.kp-toast--info, .kp-alert--info) {
         --kp-sig-pa-plate: var(--info);
         --kp-sig-pa-edge: var(--info);
@@ -2332,7 +2316,7 @@
     /* The busy table's panel follows its layer's clock (the layer arrives
        and leaves as one part, js/motion.js; the panel is stuck on in it). */
     [data-theme='pastel'] .kp-datatable__busy-panel {
-        rotate: calc(-9deg * var(--kp-sig-pa-dir) * (1 - var(--kp-sig-pa-ink)));
+        rotate: calc(-9deg * var(--kp-sig-pa-turn, var(--kp-sig-pa-dir)) * (1 - var(--kp-sig-pa-ink)));
         translate: 0 calc(-8px * (1 - var(--kp-sig-pa-ink)));
     }
 
@@ -2342,9 +2326,16 @@
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        /* A toast, an alert, the busy month's card arrive as their leave
-           backwards (js/motion.js): the leave is below. The tour's card is
-           stuck on when it opens, never on a step (lessons 4, 30). */
+        /* A toast is stuck on when it comes. js/motion.js reads this entrance
+           as the theme's arrival (a toast drawn out of sight) and lets
+           whatever arrives (a toast, an alert shown again, a card, the busy
+           table's layer) play its leave, below, backwards. */
+        [data-theme='pastel'] .kp-toast {
+            animation: kp-sig-pastel-stuck-plate-in var(--kp-sig-pa-window) var(--kp-sig-pa-land) backwards;
+        }
+
+        /* The tour's card is stuck on when it opens, never on a step (lessons
+           4, 30). */
         [data-theme='pastel'] .kp-tour[open]:not([data-kp-tour-stepping]) {
             animation: kp-sig-pastel-stuck-plate-in var(--kp-sig-pa-window) var(--kp-sig-pa-land) backwards;
         }
@@ -2424,7 +2415,7 @@
             border-radius: inherit;
             background: var(--kp-sig-pa-pass-c);
             transform-origin: var(--kp-sig-pa-corner);
-            rotate: calc(9deg * var(--kp-sig-pa-dir) * (1 - var(--kp-sig-pa-ink)));
+            rotate: calc(9deg * var(--kp-sig-pa-turn, var(--kp-sig-pa-dir)) * (1 - var(--kp-sig-pa-ink)));
             transform: translate(
                 calc((var(--kp-sig-pa-off) + 18px * (1 - var(--kp-sig-pa-pass))) * var(--kp-sig-pa-dir)),
                 calc(var(--kp-sig-pa-off) + 16px * (1 - var(--kp-sig-pa-pass)) + 8px * (1 - var(--kp-sig-pa-ink)))
@@ -2472,7 +2463,7 @@
         border-radius: var(--kp-sig-pa-r-plate);
         box-shadow: none;
         transform-origin: var(--kp-sig-pa-corner);
-        rotate: calc(-9deg * var(--kp-sig-pa-dir) * (1 - var(--kp-sig-pa-ink)));
+        rotate: calc(-9deg * var(--kp-sig-pa-turn, var(--kp-sig-pa-dir)) * (1 - var(--kp-sig-pa-ink)));
         translate: 0 calc(-8px * (1 - var(--kp-sig-pa-ink)));
         opacity: clamp(0, var(--kp-sig-pa-ink), 1);
     }
@@ -2543,6 +2534,9 @@
            thumbtack comes out first, then the landing backwards; arriving,
            js/motion.js plays it the other way, the tack pushed in last. */
         [data-theme='pastel'] :is(.kp-card, .kp-kpi, .kp-grid__tile)[data-kp-leaving] {
+            /* Its space closes with the landing backwards, after the tack is
+               out (360 of the 560 ms leave: a share of 0.6429). */
+            --kp-leave-fold-start: 0.6429;
             animation: kp-sig-pastel-stuck-out var(--kp-sig-pa-window) var(--kp-sig-pa-land) var(--kp-sig-pa-tack) reverse forwards;
         }
 
@@ -2778,6 +2772,24 @@
         box-shadow: 0 5px 0 var(--kp-sig-pa-peel);
     }
 
+    /* On a tone's own plate the plum line would sink in (the ring reads
+       1.34:1 on the destructive plate and 2.92:1 on the info plate): there
+       it takes the plate's ink, the words' colour, still dashed and alone
+       (measured, research/pastel-applied/_audit/MISSING.md). */
+    [data-theme='pastel']
+        :is(
+            .kp-toast--destructive,
+            .kp-toast--error,
+            .kp-toast--info,
+            .kp-alert--destructive,
+            .kp-alert--info,
+            .kp-button--primary,
+            .kp-button--destructive
+        )
+        :focus-visible {
+        outline-color: currentColor;
+    }
+
     /* An entry in a list sits in a scrolling box: its line is 1 px out. */
     [data-theme='pastel']
         :is(
@@ -2827,6 +2839,31 @@
         [data-theme='pastel'] :is(.kp-button, .kp-menu__item, a.kp-kpi, .kp-kpi--toggle)::after {
             transition: scale var(--fx-duration) var(--kp-sig-pa-land);
         }
+    }
+
+    /* ── One face; weight speaks (G17) ──────────────────────────────────── */
+
+    /* Labels are the body face at 600 in sentence case; the microlabel and
+       the stamp keep their spaced capitals (the one exception), the
+       alarm's code is an identifier. */
+    [data-theme='pastel']
+        :is(
+            .kp-kpi__label,
+            .kp-kpi__label-note,
+            .kp-theme-group__label,
+            .kp-palette__group-label,
+            .kp-shortcuts__group-label,
+            .kp-menu__heading,
+            .kp-nav__menu-heading,
+            .kp-log__level,
+            .kp-alarm__countdown,
+            .kp-alarm__hint
+        ),
+    [data-theme='pastel'] .kp-nav__menu[data-kp-menu-label]::before {
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+        letter-spacing: normal;
+        text-transform: none;
     }
 
     /* ── 9 · Tones, the live change (G8, G9) ───────────────────────────── */
@@ -3878,7 +3915,7 @@
     @keyframes kp-sig-pastel-meter-stuck-o {
         0%,
         21.4286% {
-            rotate: calc(-9deg * var(--kp-sig-pa-dir, 1));
+            rotate: calc(-9deg * var(--kp-sig-pa-turn, var(--kp-sig-pa-dir, 1)));
             translate: 0 -8px;
             opacity: 0;
         }
@@ -3887,7 +3924,7 @@
     @keyframes kp-sig-pastel-meter-stuck-w {
         0%,
         21.4286% {
-            rotate: calc(-9deg * var(--kp-sig-pa-dir, 1));
+            rotate: calc(-9deg * var(--kp-sig-pa-turn, var(--kp-sig-pa-dir, 1)));
             translate: 0 -8px;
             opacity: 0;
         }
@@ -3896,7 +3933,7 @@
     @keyframes kp-sig-pastel-meter-stuck-d {
         0%,
         21.4286% {
-            rotate: calc(-9deg * var(--kp-sig-pa-dir, 1));
+            rotate: calc(-9deg * var(--kp-sig-pa-turn, var(--kp-sig-pa-dir, 1)));
             translate: 0 -8px;
             opacity: 0;
         }

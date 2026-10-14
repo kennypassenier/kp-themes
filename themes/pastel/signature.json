@@ -17,7 +17,7 @@
             ]
         },
         {
-            "claim": "Plum acts; mint and violet are fills, never actions.",
+            "claim": "Three inks: plum acts, sky is the second pass and nothing else, mint fills.",
             "proof": [
                 {
                     "file": "themes/pastel/tokens.json",
@@ -29,7 +29,7 @@
                 },
                 {
                     "file": "css/pastel-register.css",
-                    "selector": "[data-theme='pastel'] .kp-lede mark:nth-of-type(2)"
+                    "property": "--kp-sig-pa-pass-c"
                 }
             ]
         },
@@ -191,8 +191,8 @@
         {
             "role": "Violet",
             "token": "info",
-            "use": "The second marked phrase of a lede: the other drum of the two-tone print.",
-            "never": "A third fill beside mint and violet.",
+            "use": "The info status only: an info alert or toast, an info badge.",
+            "never": "A fill beside mint, a second marked phrase, an action.",
             "example": "lede",
             "proof": [
                 {
@@ -201,7 +201,7 @@
                 },
                 {
                     "file": "css/pastel-register.css",
-                    "selector": "[data-theme='pastel'] .kp-lede mark:nth-of-type(2)"
+                    "selector": "[data-theme='pastel'] .kp-toast--info"
                 }
             ]
         },
@@ -810,9 +810,7 @@
             "situation": "Ask for attention, loudly",
             "verb": "attention",
             "answer": "The alarm as a sticker on the milk ground: pearls on the seams, a paper panel stuck on over its sky pass, the danger red headline with its overprint, the plum sticker button; nothing flickers.",
-            "components": [
-                "kp-alarm"
-            ],
+            "components": ["kp-alarm"],
             "open": false,
             "proof": [
                 {
@@ -829,11 +827,7 @@
             "situation": "Ask for attention, in place",
             "verb": "attention",
             "answer": "A rounded plate with its sky pass: the plain alert on the muted ground, severity toasts on their tone's plate, pill badges; the words say which severity. Each arrives stuck on and leaves as that backwards.",
-            "components": [
-                "kp-alert",
-                "kp-toast",
-                "kp-badge"
-            ],
+            "components": ["kp-alert", "kp-toast", "kp-badge"],
             "open": false,
             "proof": [
                 {
@@ -854,10 +848,7 @@
             "situation": "Act",
             "verb": "press",
             "answer": "The sticker button: plum for the primary action, sky for the secondary; lifts on its peel with a curled corner on hover, stuck down flat when pressed.",
-            "components": [
-                "kp-button",
-                "kp-icon-button"
-            ],
+            "components": ["kp-button", "kp-icon-button"],
             "open": false,
             "proof": [
                 {
@@ -874,12 +865,7 @@
             "situation": "Point at something",
             "verb": "hover",
             "answer": "The sticker lifts and curls a corner; a menu row fills mint with a fold at its end; a table row takes the muted ground; a side navigation link rises 1px.",
-            "components": [
-                "kp-button",
-                "kp-nav",
-                "kp-table",
-                "kp-sidenav"
-            ],
+            "components": ["kp-button", "kp-nav", "kp-table", "kp-sidenav"],
             "open": false,
             "proof": [
                 {
@@ -900,9 +886,7 @@
             "situation": "A menu opens",
             "verb": "enter",
             "answer": "Stuck on beside its trigger: its sky pass first, then the menu swings down from the corner nearest the button, on a white plate 1.2rem round; it closes as that backwards.",
-            "components": [
-                "kp-nav"
-            ],
+            "components": ["kp-nav"],
             "open": false,
             "proof": [
                 {
@@ -923,11 +907,7 @@
             "situation": "A panel opens (dialog, popover, toast)",
             "verb": "enter",
             "answer": "Printed twice and stuck on: the dialog's backdrop is its sky pass (its border the page's dim), a popover's too; a toast draws its own pass and plate. 560ms on the soft landing.",
-            "components": [
-                "kp-dialog",
-                "kp-popover",
-                "kp-toast"
-            ],
+            "components": ["kp-dialog", "kp-popover", "kp-toast"],
             "open": false,
             "proof": [
                 {
@@ -948,11 +928,7 @@
             "situation": "A panel closes",
             "verb": "leave",
             "answer": "The opening played backwards: the part peels off at its corner, then its pass slides off register (js/motion.js keeps the opening and reverses it).",
-            "components": [
-                "kp-dialog",
-                "kp-popover",
-                "kp-toast"
-            ],
+            "components": ["kp-dialog", "kp-popover", "kp-toast"],
             "open": false,
             "proof": [
                 {
@@ -969,11 +945,7 @@
             "situation": "Wait for something",
             "verb": "load",
             "answer": "Everything that waits becomes the pom-pom caterpillar (js/loading-pieces.js adds its pom-poms, head and legs); the spinner is the caterpillar going round a day sticker; a progress bar with an amount keeps its dotted fill and sticker head [scope-141].",
-            "components": [
-                "kp-progressbar",
-                "kp-skeleton",
-                "kp-spinner"
-            ],
+            "components": ["kp-progressbar", "kp-skeleton", "kp-spinner"],
             "open": false,
             "proof": [
                 {
@@ -1004,7 +976,7 @@
         },
         {
             "situation": "Mark what matters in a sentence",
-            "answer": "A mint plate filled in behind the phrase; a second phrase in violet.",
+            "answer": "A mint plate filled in behind the phrase, every marked phrase alike.",
             "components": [],
             "open": false,
             "proof": [
