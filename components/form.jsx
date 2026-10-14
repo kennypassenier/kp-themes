@@ -490,7 +490,7 @@ function FormInner(
                             disabled={busy}
                             aria-busy={busy ? 'true' : undefined}
                         >
-                            {busy ? (busyLabel ?? s.busy) : (submitLabel ?? s.save)}
+                            {busy ? <span className="kp-button__label">{busyLabel ?? s.busy}</span> : (submitLabel ?? s.save)}
                         </button>
                     ))}
             </form>

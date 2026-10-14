@@ -13358,7 +13358,10 @@ function attachForms(root = document, {
     const onValid = () => {
       button.disabled = true;
       button.setAttribute("aria-busy", "true");
-      button.textContent = busyText;
+      const label = button.ownerDocument.createElement("span");
+      label.className = "kp-button__label";
+      label.textContent = busyText;
+      button.replaceChildren(label);
     };
     const onDone = () => {
       button.disabled = false;

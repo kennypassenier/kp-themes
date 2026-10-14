@@ -1,6 +1,7 @@
 import { forwardRef, useEffect, useId, useImperativeHandle, useRef, useState } from 'react';
 import { THEME_LABELS, THEME_RECORDS, useTheme } from '../hooks/use-theme.js';
 import { useStrings } from '../hooks/use-strings.jsx';
+import { playClose, stopClose } from '../js/motion.js';
 
 // The theme switcher, React [S2, TH63].
 //
@@ -151,6 +152,39 @@ function ThemeSwitcherInner(
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [open, closeOnEscape, closeOnOutsideClick]);
 
+    // The list stays in the tree while its close plays: the package's close
+    // is the opening played backwards (js/motion.js playClose(), the one the
+    // framework-free menu and every menu button use), so it is removed only
+    // once that has played out [scope-143]. Under reduced motion, or in a
+    // theme with no opening, playClose() settles at once. Opened again
+    // meanwhile, the list turns round from the frame on screen.
+    const [present, setPresent] = useState(open);
+    /** @type {import('react').RefObject<HTMLDivElement | null>} */
+    const listBox = useRef(null);
+    useEffect(() => {
+        if (open) {
+            setPresent(true);
+            return undefined;
+        }
+        const box = listBox.current;
+        if (box === null) {
+            setPresent(false);
+            return undefined;
+        }
+        let wanted = true;
+        box.inert = true;
+        void playClose(box).then((played) => {
+            if (!wanted || !played) return;
+            stopClose(box);
+            setPresent(false);
+        });
+        return () => {
+            wanted = false;
+            box.inert = false;
+            stopClose(box);
+        };
+    }, [open]);
+
     const flat = themes.map((t) => t.name);
     /** @param {string} t */
     const choose = (t) => {
@@ -231,8 +265,8 @@ function ThemeSwitcherInner(
             {/* The popover box and the list that scrolls inside it are two
                 elements since 6.1, as in the markup channel, so the scrollbar
                 stays inside the box's rounded corners [scope-60]. */}
-            {open && (
-                <div className="kp-popover kp-theme-menu__list">
+            {(open || present) && (
+                <div ref={listBox} className="kp-popover kp-theme-menu__list">
                     <ul
                         id={`${id}-list`}
                         role="listbox"

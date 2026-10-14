@@ -568,6 +568,13 @@
         transform: skewX(calc(-1 * var(--kp-skew)));
     }
 
+    /* The busy words of a submit button sit in a label of their own since
+       [scope-143]; before that they were the button's own text and leaned
+       with it. They keep leaning, so nothing about the busy button moves. */
+    [data-theme='phantom'] .kp-button[aria-busy='true'] > .kp-button__label:only-child {
+        transform: none;
+    }
+
     [data-theme='phantom'] .kp-button::before {
         content: '';
         position: absolute;

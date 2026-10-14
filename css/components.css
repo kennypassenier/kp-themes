@@ -8785,17 +8785,35 @@
     }
 
     /* The outer spacing reaches past the calendar's edges, so the days line
- * up with the title and the legend. Moved there by a relative offset, not
- * a negative margin: Firefox resolves a table's percentage width against
- * its box less the margins, so `-gap` margins made the grid 2 × gap wider
- * than asked and pushed a page at 390 px sideways (Chromium did not). */
+ * up with the title and the legend, and the table's box still ends at the
+ * calendar's own edge, so a pane that scrolls (overflow: auto, 334 px)
+ * gets no sideways scrollbar from it [scope-143]. The box is moved two
+ * gaps toward the start with `translate` (Firefox counts the unshifted box
+ * of a relative `inset`, 346 px in a 334 px pane, brutalism 352), and its
+ * rows are moved one gap back, so the days stay where they were. Not a
+ * negative margin: Firefox resolves a table's percentage width against its
+ * box less the margins, so `-gap` margins made the grid 2 × gap wider than
+ * asked and pushed a page at 390 px sideways (Chromium did not). A
+ * translation is physical, so a right-to-left page mirrors both. */
     .kp-calendar__grid {
         position: relative;
-        inset-inline-start: calc(var(--kp-calendar-gap, 6px) * -1);
+        translate: calc(var(--kp-calendar-gap, 6px) * -2) 0;
         table-layout: fixed;
         border-collapse: separate;
         border-spacing: var(--kp-calendar-gap, 6px);
         inline-size: calc(100% + 2 * var(--kp-calendar-gap, 6px));
+    }
+
+    .kp-calendar__grid :is(thead, tbody) {
+        translate: var(--kp-calendar-gap, 6px) 0;
+    }
+
+    .kp-calendar__grid:dir(rtl) {
+        translate: calc(var(--kp-calendar-gap, 6px) * 2) 0;
+    }
+
+    .kp-calendar__grid:dir(rtl) :is(thead, tbody) {
+        translate: calc(var(--kp-calendar-gap, 6px) * -1) 0;
     }
 
     .kp-calendar__grid th {
