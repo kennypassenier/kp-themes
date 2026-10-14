@@ -1,0 +1,33 @@
+/* research/sidenav-opener: the page around the side navigation in each frame, in
+   tokens only, no colours of its own. */
+@layer research {
+    .so-body {
+        margin: 0;
+        min-block-size: 100dvh;
+        background: var(--background);
+        color: var(--foreground);
+    }
+
+    .so-main {
+        display: grid;
+        gap: var(--kp-space-lg, 1.5rem);
+        align-content: start;
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem) var(--kp-space-2xl, 3rem);
+        min-inline-size: 0;
+    }
+
+    .so-main > .kp-page-header {
+        min-block-size: calc(2 * var(--kp-sidenav-launcher-inset, var(--kp-space-sm, 0.5rem)) + var(--kp-sidenav-launcher-size, 2.25rem));
+        padding-block-start: var(--kp-space-xs, 0.25rem);
+    }
+
+    .so-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+        gap: var(--kp-space-md, 1rem);
+    }
+
+    .so-cards > .kp-card {
+        margin: 0;
+    }
+}

@@ -83,6 +83,10 @@ export type SidenavProps = {
      */
     reserve?: boolean;
     /**
+     * Which opener an `over` or `push` panel shows: the fixed launcher, the edge tab or both. Left out, the markup decides (both elements = both). `side` and the collapsed rail ignore it.
+     */
+    opener?: 'launcher' | 'tab' | 'both';
+    /**
      * A key chord that toggles it from anywhere but a text field, e.g. `Control+b` (`Mod` is Meta on a Mac).
      */
     shortcut?: string;

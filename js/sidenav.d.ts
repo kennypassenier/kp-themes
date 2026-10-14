@@ -44,6 +44,17 @@ export declare const OPTIONS: {
      * gutter the panel opens into. Default off.
      */
     reserve: string;
+    /**
+     * On the panel: which opener the page shows, `launcher` (the fixed
+     * `.kp-sidenav__launcher`), `tab` (the `.kp-sidenav__tab` on the edge) or
+     * `both`. Absent: the markup decides, so a page with both elements keeps
+     * both. Applies to `over` and `push`; `side` and the collapsed rail ignore it.
+     */
+    opener: string;
+    /** Written on an opener box (launcher or tab) the choice turns off; the box is not drawn. */
+    openerOff: string;
+    /** Written on an opener box the choice keeps, once the module has decided (the first paint hides the others by the markup alone). */
+    openerOn: string;
     /** Written on the panel while a `.kp-sidenav__launcher` drives it. */
     launched: string;
     /** Written on the launcher box from the opening's first frame to the closing's last. */

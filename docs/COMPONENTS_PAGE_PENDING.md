@@ -13,3 +13,5 @@ each line its example and its option row, and empties the list.
 ## Waiting
 
 (The pass of 2026-10-14 brought every line before this onto its component page.)
+
+- Side navigation: `data-kp-sidenav-opener` (`launcher`, `tab`, `both`; `over` and `push` only, absent = the markup decides) needs its example on site/components/sidenav.html and an option row; the React prop is `opener` [sidenav-opener-M1].

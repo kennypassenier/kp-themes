@@ -1,0 +1,116 @@
+/* research/sidenav-minor: the page around the frames, in tokens only. Every rule
+   hangs on a class of its own, because the review dialog moves the sections into
+   its stage. */
+.so-page {
+    display: grid;
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) var(--kp-space-md, 1rem) var(--kp-space-2xl, 3rem);
+}
+
+.so-intro {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.so-intro :is(h1, p) {
+    margin: 0;
+}
+
+.so-intro p,
+.so-sec__head p {
+    max-inline-size: 80ch;
+}
+
+.so-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    background: var(--background);
+    color: var(--foreground);
+}
+
+.so-sec__head {
+    display: grid;
+    gap: 0.25rem;
+}
+
+.so-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+/* The look-at lines are the review dialog's (one per theme, read from here); the page shows the windows. */
+.so-look {
+    display: none;
+}
+
+.so-sec__head h2 {
+    font-size: 1.125rem;
+    line-height: 1.4;
+}
+
+.so-num,
+.so-how,
+.so-motion {
+    color: var(--muted-foreground);
+}
+
+.so-num,
+.so-how {
+    font-size: 0.875rem;
+}
+
+.so-windows {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    grid-template-columns: repeat(var(--so-cols, 1), minmax(0, 1fr));
+    justify-items: start;
+}
+
+.so-windows--2 {
+    --so-cols: 2;
+    justify-items: center;
+}
+
+.so-windows--3 {
+    --so-cols: 3;
+}
+
+.so-fig {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    inline-size: 100%;
+    min-inline-size: 0;
+}
+
+.so-fig figcaption {
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+}
+
+.so-window {
+    display: block;
+    inline-size: 100%;
+    block-size: min(36rem, 78dvh);
+    border: 1px solid var(--border-strong);
+    background: var(--background);
+}
+
+.so-window--phone {
+    inline-size: min(100%, 390px);
+}
+
+@media (width <= 52rem) {
+    .so-windows--3 {
+        --so-cols: 1;
+    }
+}
+
+.so-fig figcaption [data-so-now]:not(:empty)::before {
+    content: '· ';
+    font-weight: normal;
+}

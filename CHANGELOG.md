@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **Added: the side navigation chooses its opener** [Kenny, 2026-10-14; sidenav-opener-M1; research/sidenav-opener]. `data-kp-sidenav-opener="launcher" | "tab" | "both"`
+  on the panel (React prop `opener`) says which of the fixed launcher and the edge tab an `over` or `push` panel shows, with or without
+  `data-kp-sidenav-reserve`. The box the choice turns off is not drawn (`data-kp-sidenav-opener-off`, `display: none` in the layout layer, none on the first
+  frame by the markup alone), and the panel's header gets the launcher's room back when only the tab shows (`data-kp-sidenav-launched` is written only
+  while a launcher is). Absent, the markup decides: a page with both elements keeps both, so no approved page changes. `side` mode and the collapsed
+  rail ignore it.
 - **Fixed: the review of research/all-themes-applied, round 2** [Kenny, 2026-10-13 20:37]. The side navigation and the alarm open and close
   with each theme's own dialog effect in every theme (they slid, faded or rose with the package's motion in ten themes); pastel's bar, palette,
   pickers, menus, alarm and side navigation take pastel's sheet; dark's alarm runs the pass; grotesk's Equipment hover draws the straight rule;

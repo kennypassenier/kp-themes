@@ -136,6 +136,17 @@ export const OPTIONS = {
      * gutter the panel opens into. Default off.
      */
     reserve: 'data-kp-sidenav-reserve',
+    /**
+     * On the panel: which opener the page shows, `launcher` (the fixed
+     * `.kp-sidenav__launcher`), `tab` (the `.kp-sidenav__tab` on the edge) or
+     * `both`. Absent: the markup decides, so a page with both elements keeps
+     * both. Applies to `over` and `push`; `side` and the collapsed rail ignore it.
+     */
+    opener: 'data-kp-sidenav-opener',
+    /** Written on an opener box (launcher or tab) the choice turns off; the box is not drawn. */
+    openerOff: 'data-kp-sidenav-opener-off',
+    /** Written on an opener box the choice keeps, once the module has decided (the first paint hides the others by the markup alone). */
+    openerOn: 'data-kp-sidenav-opener-on',
     /** Written on the panel while a `.kp-sidenav__launcher` drives it. */
     launched: 'data-kp-sidenav-launched',
     /** Written on the launcher box from the opening's first frame to the closing's last. */
@@ -465,6 +476,7 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
         /** @type {Element | null} */
         let restoreFocusTo = null;
 
+        const launchedByMarkup = panel.hasAttribute(OPTIONS.launched);
         const mode = () => read(OPTIONS.mode) ?? 'side';
         const isOpen = () => panel.getAttribute(OPTIONS.open) !== 'false' && (mode() === 'side' || panel.getAttribute(OPTIONS.open) === 'true');
         const covering = () => mode() === 'over';
@@ -617,8 +629,33 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
             target.style[property] = value;
         };
 
+        /**
+         * The page's choice of opener [sidenav-opener-M1]: the launcher, the
+         * edge tab or both. The boxes the choice turns off are marked and
+         * not drawn; the panel's room for the launcher (its header's start
+         * padding) is there only while a launcher is. Over and push only: a
+         * side panel and the collapsed rail show what the markup holds.
+         */
+        const applyOpener = () => {
+            const asked = read(OPTIONS.opener);
+            const chosen = asked === 'launcher' || asked === 'tab' || asked === 'both' ? asked : 'both';
+            const slides = mode() !== 'side' && !panel.hasAttribute(OPTIONS.slimCollapsed);
+            const keep = { launcher: !slides || chosen !== 'tab', tab: !slides || chosen !== 'launcher' };
+            for (const [boxes, kept] of /** @type {const} */ ([
+                [launchers(), keep.launcher],
+                [tabs(), keep.tab],
+            ])) {
+                for (const box of boxes) {
+                    box.toggleAttribute(OPTIONS.openerOff, !kept);
+                    box.toggleAttribute(OPTIONS.openerOn, kept);
+                }
+            }
+            if (!launchedByMarkup) panel.toggleAttribute(OPTIONS.launched, keep.launcher && launchers().length > 0);
+        };
+
         /** @param {boolean} open */
         const offsetContent = (open) => {
+            applyOpener();
             syncPeek(open);
             // The edge tab rides on the panel's far edge in the modes that
             // slide: at the window's edge while the panel is away.
@@ -1543,8 +1580,8 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
 
         // A launcher: the panel makes room for it, and an empty toggler in it
         // gets the package's three bars, the glyph the bar's own toggle draws.
-        const launchedHere = launchers().length > 0 && !panel.hasAttribute(OPTIONS.launched);
-        if (launchedHere) panel.setAttribute(OPTIONS.launched, '');
+        // A page that wrote the mark itself keeps it; otherwise applyOpener() writes it
+        // while a launcher is shown (declared before the first call, in the starting state).
         /** @type {HTMLElement[]} */
         const glyphs = [];
         for (const toggler of togglers()) {
@@ -1709,7 +1746,11 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
             lightTurn += 1;
             for (const box of launchers()) box.removeAttribute(OPTIONS.lit);
             for (const glyph of glyphs) glyph.remove();
-            if (launchedHere) panel.removeAttribute(OPTIONS.launched);
+            if (!launchedByMarkup) panel.removeAttribute(OPTIONS.launched);
+            for (const box of [...launchers(), ...tabs()]) {
+                box.removeAttribute(OPTIONS.openerOff);
+                box.removeAttribute(OPTIONS.openerOn);
+            }
             if (on(OPTIONS.lockScroll, false)) doc.documentElement.style.overflow = '';
             panel.removeAttribute(OPTIONS.open);
             for (const toggler of togglers()) {

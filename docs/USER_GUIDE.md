@@ -2697,6 +2697,17 @@ effect with the close as the open backwards.
   </div>
   ```
 
+- **Which opener shows.** `data-kp-sidenav-opener="launcher"`, `"tab"` or
+  `"both"` on the panel chooses the opener for an `over` or `push` panel (with
+  or without `data-kp-sidenav-reserve`): the module does not draw the other box
+  (no paint, out of the tab order and the accessibility tree, and none on the
+  first frame), and the panel's header gets the room kept for the launcher back
+  when only the tab is shown. Without the attribute the markup decides, so a
+  page that holds both elements keeps both, as before. A `side` panel and the
+  collapsed rail ignore it and show whatever the markup holds. The focus,
+  `aria-controls`, `inert` and the theme's own opening and closing are the same
+  with either opener.
+
 - **Shortcut.** `data-kp-sidenav-shortcut="Control+b"` opens and closes the
   panel from anywhere but a text field; `Control` (or `Mod`) is ⌘ on a Mac.
 - **Where the focus lands.** `data-kp-sidenav-initial-focus="[aria-current='page']"`
