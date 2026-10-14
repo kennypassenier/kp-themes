@@ -7589,12 +7589,24 @@
         border-inline-end: var(--kp-sidenav-edge, 1px solid var(--border));
     }
 
+    /* A narrower panel on a narrow screen [Kenny, 2026-10-14, from the
+       libraries survey: shadcn's --sidebar-width-mobile, Mantine's
+       responsive width]. `data-kp-sidenav-narrow` is what js/sidenav.js writes
+       while `data-kp-sidenav-over-below` holds the panel as an `over` panel
+       (40rem or its own step). The knob is opt-in: without
+       `--kp-sidenav-width-narrow` the fallback is the width the panel has
+       anywhere else, so nothing moves. It stands before the rail's rule
+       below, which names a width of its own and wins over it. */
+    .kp-sidenav[data-kp-sidenav-narrow] {
+        --kp-sidenav-w: var(--kp-sidenav-width-narrow, var(--kp-sidenav-width, 15rem));
+    }
+
     /* The panel that is part of the page. This is the default because a
        navigation that is there is a better starting point than one that
        has to be summoned; `over` and `push` are the ones you ask for. */
     .kp-sidenav[data-kp-sidenav-mode='over'],
     .kp-sidenav[data-kp-sidenav-mode='push'] {
-        --kp-sidenav-away: -100%;
+        --kp-sidenav-away: var(--kp-sidenav-away-to-start, -100%);
         position: fixed;
         /* One value or two, so a page with a bar it wants to keep can say
            `--kp-sidenav-inset-block: 3rem 0` and have the panel start under
@@ -7613,7 +7625,7 @@
        start is the right, and the panel still slides out of the side it
        came from. */
     .kp-sidenav[data-kp-sidenav-side='end'] {
-        --kp-sidenav-away: 100%;
+        --kp-sidenav-away: var(--kp-sidenav-away-to-end, 100%);
         inset-inline-start: auto;
         inset-inline-end: 0;
         border-inline-end: none;
@@ -7621,11 +7633,11 @@
     }
 
     .kp-sidenav:dir(rtl) {
-        --kp-sidenav-away: 100%;
+        --kp-sidenav-away: var(--kp-sidenav-away-to-end, 100%);
     }
 
     .kp-sidenav[data-kp-sidenav-side='end']:dir(rtl) {
-        --kp-sidenav-away: -100%;
+        --kp-sidenav-away: var(--kp-sidenav-away-to-start, -100%);
     }
 
     .kp-sidenav[data-kp-sidenav-open='true'] {
@@ -7671,7 +7683,10 @@
            (Kenny, 2026-10-05: no discrepancy between opening and closing). */
         .kp-sidenav:is(
             [data-kp-sidenav-open='false'],
-            [data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-peek='open'], [data-kp-sidenav-expand-on-hover]:not([data-kp-sidenav-attached]):hover)
+            [data-kp-sidenav-slim-collapsed]:not(
+                [data-kp-sidenav-peek='open'],
+                [data-kp-sidenav-expand-on-hover]:not([data-kp-sidenav-attached]):hover
+            )
         ) {
             transition-timing-function: var(--kp-sidenav-ease-back, var(--kp-sidenav-ease, var(--fx-ease, ease)));
         }
@@ -7691,7 +7706,8 @@
        `"leaving"` until the rail has its icon width: the words stay while
        the width closes, as they came at once when it opened, so the close
        is the opening backwards. */
-    .kp-sidenav[data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-peek], [data-kp-sidenav-expand-on-hover]:not([data-kp-sidenav-attached]):hover) [data-kp-sidenav-slim-hide],
+    .kp-sidenav[data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-peek], [data-kp-sidenav-expand-on-hover]:not([data-kp-sidenav-attached]):hover)
+        [data-kp-sidenav-slim-hide],
     .kp-sidenav:not([data-kp-sidenav-slim-collapsed]) [data-kp-sidenav-slim-show] {
         display: none;
     }
@@ -7701,7 +7717,8 @@
        name at all, so a screen reader said "button". The consumer's own
        slim-hide hooks keep display:none: those are ornaments the consumer
        chose to drop, where a label is the entry's name. */
-    .kp-sidenav[data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-peek], [data-kp-sidenav-expand-on-hover]:not([data-kp-sidenav-attached]):hover) .kp-sidenav__label:not(.kp-sidenav__flyout *) {
+    .kp-sidenav[data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-peek], [data-kp-sidenav-expand-on-hover]:not([data-kp-sidenav-attached]):hover)
+        .kp-sidenav__label:not(.kp-sidenav__flyout *) {
         position: absolute;
         inline-size: 1px;
         block-size: 1px;
@@ -7715,7 +7732,10 @@
 
     /* Hovering a rail that was told to expand gives the labels back without
        changing the state anything else reads. */
-    .kp-sidenav[data-kp-sidenav-slim-collapsed]:is([data-kp-sidenav-peek='open'], [data-kp-sidenav-expand-on-hover]:not([data-kp-sidenav-attached]):hover) {
+    .kp-sidenav[data-kp-sidenav-slim-collapsed]:is(
+            [data-kp-sidenav-peek='open'],
+            [data-kp-sidenav-expand-on-hover]:not([data-kp-sidenav-attached]):hover
+        ) {
         --kp-sidenav-w: var(--kp-sidenav-width, 15rem);
     }
 
@@ -8172,7 +8192,11 @@
        so it covers none of the page. A strip to grab with a short bar to show
        it is there; the full-height line shows on pointing, focus and while it
        is held. It rests in the border colour and is lit in the ring colour. */
-    .kp-sidenav:where([data-kp-sidenav-resizable]):not([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'], [data-kp-sidenav-position='absolute']) {
+    .kp-sidenav:where([data-kp-sidenav-resizable]):not(
+            [data-kp-sidenav-mode='over'],
+            [data-kp-sidenav-mode='push'],
+            [data-kp-sidenav-position='absolute']
+        ) {
         position: relative;
     }
 
@@ -8232,6 +8256,120 @@
     /* While it is held the text under the pointer is not selected. */
     .kp-sidenav[data-kp-sidenav-resizing] {
         user-select: none;
+    }
+
+    /* An action beside an item [Kenny, 2026-10-14, from the libraries survey:
+       shadcn's MenuAction]: a trailing icon button next to a link. The row is
+       the list item, `<li class="kp-sidenav__row">`, holding the link and the
+       button as siblings, so the button is never inside the link and pressing
+       it cannot follow it; both are in the tab order, in that order. Put
+       the theme's own `.kp-icon-button` on the button too
+       (`class="kp-icon-button kp-sidenav__action"`), and it wears the theme's
+       icon button with this component's size and place. The button is as tall
+       as its row (so it follows the density preset) and `--kp-sidenav-action-size`
+       wide (2rem); its focus ring is drawn inside it, where the panel's
+       scroll cannot cut it. In the collapsed rail the actions go with the
+       labels. */
+    .kp-sidenav__row {
+        display: flex;
+        align-items: stretch;
+        gap: var(--kp-sidenav-action-gap, 0.25rem);
+        min-inline-size: 0;
+    }
+
+    .kp-sidenav__row > .kp-sidenav__link {
+        flex: 1 1 auto;
+        inline-size: auto;
+    }
+
+    .kp-sidenav__row > .kp-sidenav__action {
+        flex: 0 0 auto;
+        box-sizing: border-box;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        align-self: stretch;
+        inline-size: var(--kp-sidenav-action-size, 2rem);
+        block-size: auto;
+        min-block-size: 0;
+        padding: 0;
+        font: inherit;
+        font-size: var(--kp-sidenav-link-size, var(--kp-font-size-sm, 0.875rem));
+        line-height: 1;
+        color: inherit;
+        cursor: pointer;
+    }
+
+    .kp-sidenav__row > .kp-sidenav__action:hover {
+        background: var(--muted);
+        color: var(--muted-foreground);
+    }
+
+    .kp-sidenav__row > .kp-sidenav__action:focus-visible {
+        outline-offset: calc(-2 * var(--kp-focus-ring-inner-width, 2px));
+        box-shadow: inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring);
+    }
+
+    .kp-sidenav[data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-peek], [data-kp-sidenav-expand-on-hover]:not([data-kp-sidenav-attached]):hover)
+        .kp-sidenav__action {
+        display: none;
+    }
+
+    /* Density presets [Kenny, 2026-10-14, from the libraries survey: Fluent's
+       `density`, Chakra's `size`]. `data-kp-sidenav-density` on the panel is
+       one attribute that only sets tokens this component already reads: a row's
+       block padding, its type size, the icon's width and the header and footer
+       padding. The default (no attribute) is what the panel always was, at
+       37px a row; `compact` is 29px, above the 28px floor the package keeps
+       under a control, and `comfortable` 45px. The gap between rows, the list's
+       padding and everything a register says about its own rows are the
+       theme's, and stay. This is the panel's own knob, apart from the page-wide
+       `data-density="compact"` in css/_density.css, which they may share. */
+    .kp-sidenav[data-kp-sidenav-density='compact'] {
+        --kp-sidenav-link-padding-block: var(--kp-space-xs, 0.25rem);
+        --kp-sidenav-icon-size: 1.1rem;
+        --kp-sidenav-pad: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-sidenav[data-kp-sidenav-density='comfortable'] {
+        --kp-sidenav-link-padding-block: var(--kp-space-md, 0.75rem);
+        --kp-sidenav-link-size: var(--kp-text-md, 1rem);
+        --kp-sidenav-icon-size: 1.4rem;
+        --kp-sidenav-pad: 1rem;
+    }
+
+    /* The peek strip [Kenny, 2026-10-14, from the libraries survey: a sliver of
+       the panel stays at the edge, so the panel is known to be there]. Set
+       `--kp-sidenav-peek` (0.75rem) on the panel or above it, and
+       js/sidenav.js makes this element beside the panel: a thin column at the
+       window's edge, in the theme's muted ground (--kp-sidenav-peek-surface) and
+       strong edge, under the panel and
+       always there, so a theme's own opening and closing (which run where the
+       panel stands, not from the edge) stay as they are and the strip stays
+       put while they play. A push panel keeps the strip's room in the content
+       while it is shut; an `over` panel's strip is the only part of it that
+       lies over the page. It takes no pointer and no focus. Without the token
+       there is no strip, and nothing here applies. */
+    .kp-sidenav__peek {
+        position: fixed;
+        inset-block: var(--kp-sidenav-inset-block, 0);
+        inset-inline-start: 0;
+        z-index: calc(var(--kp-sidenav-layer, 60) - 1);
+        box-sizing: border-box;
+        inline-size: var(--kp-sidenav-peek, 0px);
+        background: var(--kp-sidenav-peek-surface, var(--muted));
+        border-inline-end: var(--kp-sidenav-edge, 1px solid var(--border-strong));
+        pointer-events: none;
+    }
+
+    .kp-sidenav__peek[data-kp-sidenav-peek-edge='end'] {
+        inset-inline: auto 0;
+        border-inline-end: none;
+        border-inline-start: var(--kp-sidenav-edge, 1px solid var(--border-strong));
+    }
+
+    .kp-sidenav__peek[data-kp-sidenav-peek-hushed] {
+        display: none;
     }
 
     /* --- An entrance played backwards ------------------------------------ */
@@ -12704,6 +12842,123 @@
         /* A cut corner (titanium's chamfer, a notch) is a clip-path, and a clip-path clips the part's own shadow: the dim
          * vanished on a cut card. While the tour points at a part, the part is uncut. */
         clip-path: none;
+    }
+}
+
+/* --- The side navigation's looks [Kenny, 2026-10-14; research/sidenav-minor] ---
+ * `data-kp-sidenav-variant` on the panel: "floating" or "inset" (shadcn's two
+ * other sidebar looks). Opt-in, so a panel without it is untouched.
+ *
+ * Why this is in the last layers and not in kp.components with the rest of the
+ * panel: a register states the panel's edge itself (formal a hairline on the
+ * inline-end side, cyberpunk two pixels, deco a double rule, brutalism none and
+ * a transparent ground) and its surface, and a register beats kp.components.
+ * A panel that floats has an edge all round and one that is inset has none, so
+ * the variant has to come after the register, as the tour's dim does. Every
+ * rule hangs on the attribute, so nothing here applies to a panel that does not
+ * ask.
+ *
+ * FLOATING: the panel is detached from the window's edge: a gap all round
+ * (--kp-sidenav-float-inset, --kp-space-sm), the theme's radius
+ * (--kp-sidenav-float-radius, --radius), an edge on every side
+ * (--kp-sidenav-float-edge, 1px solid --border-strong) and a shadow made of
+ * the theme's own tokens: its hard offset shadow where it has one
+ * (--fx-shadow-offset) and a soft drop darkened out of --background
+ * (--kp-sidenav-float-shadow). A register that reveals the panel by a number
+ * of its own (pastel's ink, 0 to 1) hands that number to --kp-sidenav-float-ink
+ * on the panel, and the edge and the shadow come and go with it. A panel that slides away goes out past the gap
+ * and the shadow (the 2rem), so a shut panel leaves nothing of itself on the
+ * screen. The gap on both sides of the panel is the room (--kp-sidenav-room) a
+ * push or a gutter leaves beside it; the edge tab rides on the panel's edge
+ * (--kp-sidenav-lead).
+ */
+@layer kp.layout {
+    .kp-sidenav[data-kp-sidenav-variant='floating'] {
+        --kp-sidenav-float: var(--kp-sidenav-float-inset, var(--kp-space-sm, 0.5rem));
+        --kp-sidenav-lead: var(--kp-sidenav-float);
+        --kp-sidenav-room: calc(2 * var(--kp-sidenav-float));
+        --kp-sidenav-away-to-start: calc(-100% - var(--kp-sidenav-float) - 2rem);
+        --kp-sidenav-away-to-end: calc(100% + var(--kp-sidenav-float) + 2rem);
+        margin-block: var(--kp-sidenav-float);
+        border: var(--kp-sidenav-float-edge, 1px solid hsl(from var(--border-strong) h s l / var(--kp-sidenav-float-ink, 1)));
+        border-radius: var(--kp-sidenav-float-radius, var(--radius, 0.5rem));
+        box-shadow:
+            var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 hsl(from var(--border-strong) h s l / var(--kp-sidenav-float-ink, 1)),
+            var(--kp-sidenav-float-shadow, 0 0.5rem 1.5rem hsl(from var(--background) h s 0% / calc(0.4 * var(--kp-sidenav-float-ink, 1))));
+    }
+
+    .kp-sidenav[data-kp-sidenav-variant='floating']:not([data-kp-sidenav-side='end']) {
+        margin-inline-start: var(--kp-sidenav-float);
+    }
+
+    .kp-sidenav[data-kp-sidenav-variant='floating'][data-kp-sidenav-side='end'] {
+        margin-inline-end: var(--kp-sidenav-float);
+    }
+
+    /* The header and the footer paint to the panel's corners, so they take its radius. */
+    .kp-sidenav[data-kp-sidenav-variant='floating'] > .kp-sidenav__header {
+        border-start-start-radius: inherit;
+        border-start-end-radius: inherit;
+    }
+
+    .kp-sidenav[data-kp-sidenav-variant='floating'] > .kp-sidenav__footer {
+        border-end-start-radius: inherit;
+        border-end-end-radius: inherit;
+    }
+}
+
+/* INSET [Kenny, 2026-10-14; shadcn's "inset" sidebar]: the panel stays flush
+ * with the window's edge, on the page's own ground and with no edge of its own,
+ * and the content (the element `data-kp-sidenav-content` names, which
+ * js/sidenav.js marks `data-kp-sidenav-inset="start|end"`) becomes a rounded
+ * card beside it: the theme's card ground, edge, radius and shadow, a gap
+ * (--kp-sidenav-inset-gap, --kp-space-sm) round it. The push and the gutter
+ * clear the panel exactly (no room is added); lying over the page the panel
+ * stands in front of the card with the page's ground. The card is the module's
+ * doing: without it the panel is flush and nothing else changes. */
+@layer kp.layout {
+    .kp-sidenav[data-kp-sidenav-variant='inset'] {
+        --kp-sidenav-surface: var(--background);
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    [data-kp-sidenav-inset] {
+        --kp-sidenav-inset-space: var(--kp-sidenav-inset-gap, var(--kp-space-sm, 0.5rem));
+        box-sizing: border-box;
+        margin-block: var(--kp-sidenav-inset-space);
+        margin-inline: var(--kp-sidenav-inset-space);
+        min-block-size: calc(100dvh - 2 * var(--kp-sidenav-inset-space));
+        background: var(--card);
+        color: var(--card-foreground, var(--foreground));
+        border: var(--kp-sidenav-inset-edge, 1px solid var(--border-strong));
+        border-radius: var(--kp-sidenav-inset-radius, var(--radius, 0.5rem));
+        box-shadow:
+            var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 var(--border-strong),
+            0 0.25rem 1rem hsl(from var(--background) h s 0% / 0.25);
+    }
+}
+
+/* The peek strip of a floating panel keeps the gap of the panel above and
+ * rounds its far corners with the panel's radius; the panel's own hide while
+ * it is open is the module's (data-kp-sidenav-peek-hushed). */
+@layer kp.layout {
+    .kp-sidenav__peek[data-kp-sidenav-peek-variant='floating'] {
+        margin-block: var(--kp-sidenav-float-inset, var(--kp-space-sm, 0.5rem));
+        border: var(--kp-sidenav-float-edge, 1px solid var(--border-strong));
+        border-inline-start: none;
+        border-start-end-radius: var(--kp-sidenav-float-radius, var(--radius, 0.5rem));
+        border-end-end-radius: var(--kp-sidenav-float-radius, var(--radius, 0.5rem));
+    }
+
+    .kp-sidenav__peek[data-kp-sidenav-peek-variant='floating'][data-kp-sidenav-peek-edge='end'] {
+        border-inline-start: var(--kp-sidenav-float-edge, 1px solid var(--border-strong));
+        border-inline-end: none;
+        border-start-end-radius: 0;
+        border-end-end-radius: 0;
+        border-start-start-radius: var(--kp-sidenav-float-radius, var(--radius, 0.5rem));
+        border-end-start-radius: var(--kp-sidenav-float-radius, var(--radius, 0.5rem));
     }
 }
 
@@ -39359,6 +39614,11 @@
     [data-theme='pastel'] .kp-sidenav {
         --kp-sidenav-gap: 0.3rem;
         border-radius: 1.2rem;
+    }
+
+    /* The plate's ink (0 to 1) also brings a floating panel's edge and shadow in and out. */
+    [data-theme='pastel'] .kp-sidenav[data-kp-sidenav-variant='floating'] {
+        --kp-sidenav-float-ink: var(--kp-sig-pa-ink);
     }
 
     [data-theme='pastel'] .kp-sidenav__header {

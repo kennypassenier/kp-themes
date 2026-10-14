@@ -2763,6 +2763,87 @@ The last two only matter where a panel has a backdrop. The package's default is
 unchanged: a page that wants no scrim says `data-kp-sidenav-backdrop="false"`
 as before.
 
+### The side navigation's minor options
+
+[Kenny, 2026-10-14; research/sidenav-minor] Opt-in, one attribute or one
+token each; a panel that sets none of them looks and moves as before, in
+every theme, and every opening and closing keeps the theme's own effect with
+the close as the open backwards.
+
+- **A narrower panel on a narrow screen.** Set `--kp-sidenav-width-narrow`
+  (say `18rem`) on the panel or above it. While `data-kp-sidenav-over-below`
+  holds the panel as an `over` panel (40rem and narrower, or the length you
+  gave it; the module writes `data-kp-sidenav-narrow`) the panel is that
+  wide instead of `--kp-sidenav-width`. Unset, it keeps the width it has
+  everywhere else.
+- **Floating.** `data-kp-sidenav-variant="floating"` detaches the panel from
+  the window's edge: a gap all round (`--kp-sidenav-float-inset`, default
+  `--kp-space-sm`), the theme's radius (`--kp-sidenav-float-radius`,
+  `--radius`), an edge on every side (`--kp-sidenav-float-edge`, `1px solid
+  --border-strong`) and a shadow made of the theme's own tokens (its hard
+  `--fx-shadow-offset` where it has one, plus a soft drop,
+  `--kp-sidenav-float-shadow`). Push and gutter leave the gap on both sides
+  of the panel, the edge tab rides on its edge, and a shut panel leaves
+  nothing on the screen. The theme's opening and closing play as they do on
+  the flush panel; a register that reveals the panel by a number of its own
+  hands it to `--kp-sidenav-float-ink` on the panel (pastel does), so the
+  edge and the shadow come and go with it.
+- **Inset.** `data-kp-sidenav-variant="inset"` keeps the panel flush with the
+  window, on the page's ground and with no edge of its own, and makes the
+  content (the element `data-kp-sidenav-content` names, which the module marks
+  `data-kp-sidenav-inset="start|end"`) a rounded card beside it: the theme's
+  card ground, radius, edge and shadow, with a gap round it
+  (`--kp-sidenav-inset-gap`, default `--kp-space-sm`; `--kp-sidenav-inset-radius`,
+  `--kp-sidenav-inset-edge`; set them on the panel and the module carries them
+  to the card). The push and the gutter clear the panel exactly; over the page
+  the panel stands in front of the card. The card is the module's doing, so a
+  page without it keeps the flush panel only.
+- **A peek strip.** Set `--kp-sidenav-peek` (say `0.75rem`) on the panel or
+  above it and a thin strip of the panel stays at the window's edge while the
+  panel is shut: the module makes a `.kp-sidenav__peek` element beside the
+  panel (aria-hidden, no pointer, drawn in the theme's `--muted` ground,
+  `--kp-sidenav-peek-surface`, and strong edge). A theme's own opening and
+  closing run where the panel stands, not from the edge, so the strip is a
+  part of its own that is simply always there under the panel: the effect
+  does not change. A push panel keeps the strip's room in the content while
+  it is shut (the edge tab stands beside the strip), and a gutter already
+  holds it. **Over the page the strip is the one thing that overlaps the
+  content**, by exactly its width; nothing else of the panel does. A floating
+  panel hides the strip while it is open. Without the token there is no
+  strip, and the module does nothing.
+- **Density.** `data-kp-sidenav-density="compact"` or `"comfortable"` on the
+  panel is one attribute that only sets tokens the panel already reads: a
+  row's block padding, its type size, the icon's width and the header and
+  footer padding. Default (no attribute) is 37px a row; `compact` is 29px
+  (above the 28px floor under a control) and `comfortable` 45px. The gap
+  between rows, the list's padding and whatever a theme says about its own
+  rows stay the theme's. It is the panel's own preset, apart from the
+  page-wide `data-density="compact"`.
+- **An action beside an item.** A trailing icon button next to a link: make
+  the list item a `.kp-sidenav__row` and put the link and the button in it as
+  siblings, never the button inside the link, so pressing it cannot follow
+  the link. Both are in the tab order, in that order, and the button has an
+  accessible name of its own. Put the theme's own `.kp-icon-button` on it
+  too and it wears the theme's icon button, with this component's size and
+  place:
+
+  ```html
+  <li class="kp-sidenav__row">
+      <a class="kp-sidenav__link" href="/alarms">
+          <span class="kp-sidenav__icon" aria-hidden="true">!</span><span class="kp-sidenav__label">Alarms</span>
+      </a>
+      <button type="button" class="kp-icon-button kp-sidenav__action" aria-label="More about Alarms">
+          <span aria-hidden="true">⋯</span>
+      </button>
+  </li>
+  ```
+
+  The button is as tall as its row (so it follows the density preset) and
+  `--kp-sidenav-action-size` wide (2rem), a gap of `--kp-sidenav-action-gap`
+  (0.25rem) from the link; hover is the link's, and its focus ring is drawn
+  inside it, where the panel's scroll cannot cut it. In the collapsed rail the
+  actions go with the labels.
+
 ## The page shell [TH36]
 
 ```html

@@ -6471,7 +6471,13 @@ function parseChord(chord, mac) {
     alt: mods.has("alt") || mods.has("option"),
     shift: mods.has("shift"),
     /** The same chord as `aria-keyshortcuts` writes it. */
-    aria: [...command ? [mac ? "Meta" : "Control"] : [], ...mods.has("meta") && !command ? ["Meta"] : [], ...mods.has("alt") || mods.has("option") ? ["Alt"] : [], ...mods.has("shift") ? ["Shift"] : [], key.length === 1 ? key.toUpperCase() : key].join("+")
+    aria: [
+      ...command ? [mac ? "Meta" : "Control"] : [],
+      ...mods.has("meta") && !command ? ["Meta"] : [],
+      ...mods.has("alt") || mods.has("option") ? ["Alt"] : [],
+      ...mods.has("shift") ? ["Shift"] : [],
+      key.length === 1 ? key.toUpperCase() : key
+    ].join("+")
   };
 }
 function typing(target) {
@@ -6504,7 +6510,11 @@ function slideTiming(panel) {
     const parts = splitList(list);
     return parts[at % parts.length] ?? "";
   };
-  return { duration: pick2(style.transitionDuration) || "0s", ease: pick2(style.transitionTimingFunction) || "linear", delay: pick2(style.transitionDelay) || "0s" };
+  return {
+    duration: pick2(style.transitionDuration) || "0s",
+    ease: pick2(style.transitionTimingFunction) || "linear",
+    delay: pick2(style.transitionDelay) || "0s"
+  };
 }
 function sidenavOf(element) {
   return element === null ? void 0 : handles2.get(element);
@@ -6563,7 +6573,15 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
     const panelSize = () => {
       const style = getComputedStyle(panel);
       const knob = style.getPropertyValue("--kp-sidenav-w").trim();
-      return knob !== "" ? knob : style.inlineSize;
+      const width = knob !== "" ? knob : style.inlineSize;
+      const room = style.getPropertyValue("--kp-sidenav-room").trim();
+      return room !== "" ? `calc(${width} + ${room})` : width;
+    };
+    const edgeSize = () => {
+      const style = getComputedStyle(panel);
+      const lead = style.getPropertyValue("--kp-sidenav-lead").trim();
+      const width = style.getPropertyValue("--kp-sidenav-w").trim() || style.inlineSize;
+      return lead !== "" ? `calc(${width} + ${lead})` : width;
     };
     const tabs = () => {
       const boxes = /* @__PURE__ */ new Set();
@@ -6572,6 +6590,36 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
         if (box instanceof HTMLElement) boxes.add(box);
       }
       return [...boxes];
+    };
+    const peekSize = () => {
+      const length = getComputedStyle(panel).getPropertyValue("--kp-sidenav-peek").trim();
+      return length === "" || parseFloat(length) === 0 ? "" : length;
+    };
+    let strip = null;
+    const syncPeek = (open2) => {
+      const wanted = mode() !== "side" && peekSize() !== "";
+      if (!wanted) {
+        strip?.remove();
+        strip = null;
+        return;
+      }
+      if (strip === null) {
+        strip = doc.createElement("div");
+        strip.className = "kp-sidenav__peek";
+        strip.setAttribute("aria-hidden", "true");
+        panel.after(strip);
+      }
+      strip.setAttribute("data-kp-sidenav-peek-edge", edge());
+      const variant = read(OPTIONS.variant);
+      if (variant !== null) strip.setAttribute("data-kp-sidenav-peek-variant", variant);
+      else strip.removeAttribute("data-kp-sidenav-peek-variant");
+      strip.style.position = read(OPTIONS.position) === "absolute" ? "absolute" : "";
+      for (const name of PEEK_KNOBS) {
+        const value = getComputedStyle(panel).getPropertyValue(name).trim();
+        if (value !== "") strip.style.setProperty(name, value);
+        else strip.style.removeProperty(name);
+      }
+      strip.toggleAttribute("data-kp-sidenav-peek-hushed", open2 && variant === "floating");
     };
     const MOVED = (
       /** @type {const} */
@@ -6587,14 +6635,23 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
       target.style[property] = value;
     };
     const offsetContent = (open2) => {
+      syncPeek(open2);
       for (const tab of tabs()) {
         tab.setAttribute("data-kp-sidenav-tab-edge", edge());
-        shift(tab, marginAlong(), open2 && mode() !== "side" ? panelSize() : "", open2 ? "open" : "closed", mode() !== "side");
+        shift(tab, marginAlong(), mode() === "side" ? "" : open2 ? edgeSize() : peekSize(), open2 ? "open" : "closed", mode() !== "side");
       }
       const target = contentEl();
       if (!target) return { property: null, value: "" };
+      const inset = read(OPTIONS.variant) === "inset";
+      if (inset) target.setAttribute(OPTIONS.inset, edge());
+      else target.removeAttribute(OPTIONS.inset);
+      for (const name of INSET_KNOBS) {
+        const value2 = inset ? getComputedStyle(panel).getPropertyValue(name).trim() : "";
+        if (value2 !== "") target.style.setProperty(name, value2);
+        else target.style.removeProperty(name);
+      }
       const property = mode() === "push" || reserved() ? marginAlong() : paddingAlong();
-      const value = reserved() || open2 && mode() !== "over" ? panelSize() : "";
+      const value = reserved() || open2 && mode() !== "over" ? panelSize() : mode() === "push" ? peekSize() : "";
       shift(target, property, value, reserved() ? "reserved" : open2 ? "open" : "closed", mode() === "push" && !reserved());
       return { property, value };
     };
@@ -6963,7 +7020,10 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
       if (category === null || !panel.contains(category)) return;
       clearTimeout(flyTimers.get(category));
       if (category.hasAttribute(OPTIONS.flown)) return;
-      flyTimers.set(category, window.setTimeout(() => flyOut(category), FLYOUT_OPEN_MS));
+      flyTimers.set(
+        category,
+        window.setTimeout(() => flyOut(category), FLYOUT_OPEN_MS)
+      );
     };
     const onFlyOut = (event) => {
       const category = event.target instanceof Element ? event.target.closest(".kp-sidenav__category") : null;
@@ -7495,10 +7555,15 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
       panel.style.removeProperty("--kp-sidenav-ease-back");
       dropBackdrop();
       offsetContent(false);
+      strip?.remove();
+      strip = null;
       const target = contentEl();
       if (target) {
         target.removeAttribute("data-kp-sidenav-shift");
-        for (const name of ["--kp-sidenav-shift-duration", "--kp-sidenav-shift-ease", "--kp-sidenav-shift-delay"]) target.style.removeProperty(name);
+        target.removeAttribute(OPTIONS.inset);
+        for (const name of INSET_KNOBS) target.style.removeProperty(name);
+        for (const name of ["--kp-sidenav-shift-duration", "--kp-sidenav-shift-ease", "--kp-sidenav-shift-delay"])
+          target.style.removeProperty(name);
         target.style.marginInlineStart = "";
       }
       lightTurn += 1;
@@ -7529,7 +7594,7 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
     for (const c of cleanups) c();
   };
 }
-var SIDENAV_TOGGLE_EVENT, SIDENAV_SLIM_EVENT, SIDENAV_MODE_EVENT, SIDENAV_PREVENTED_EVENT, SIDENAV_OWNED, OPTIONS, REFUSE_MIN_MS, SIDENAV_RESIZER, ASKABLE, SIDENAV_TAB, SIDENAV_LAUNCHER, NARROW_STEP, handles2, FLYOUT_OPEN_MS, FLYOUT_CLOSE_MS, TIP_OPEN_MS, FLOAT_GAP, FLOAT_MARGIN, FOCUSABLE;
+var SIDENAV_TOGGLE_EVENT, SIDENAV_SLIM_EVENT, SIDENAV_MODE_EVENT, SIDENAV_PREVENTED_EVENT, SIDENAV_OWNED, OPTIONS, REFUSE_MIN_MS, SIDENAV_RESIZER, ASKABLE, SIDENAV_TAB, SIDENAV_LAUNCHER, NARROW_STEP, INSET_KNOBS, PEEK_KNOBS, handles2, FLYOUT_OPEN_MS, FLYOUT_CLOSE_MS, TIP_OPEN_MS, FLOAT_GAP, FLOAT_MARGIN, FOCUSABLE;
 var init_sidenav = __esm({
   "js/sidenav.js"() {
     "use strict";
@@ -7652,7 +7717,37 @@ var init_sidenav = __esm({
       /** On a resizable panel: the widest width the handle allows, a length. Default 32rem. */
       maxWidth: "data-kp-sidenav-max-width",
       /** Written on the panel while the handle is held. */
-      resizing: "data-kp-sidenav-resizing"
+      resizing: "data-kp-sidenav-resizing",
+      /**
+       * On the panel: its look. Without it the panel is the flush column it
+       * always was. `"floating"` detaches the panel from the window's edge: a
+       * gap all round, the theme's radius, an edge on every side and a shadow
+       * made of the theme's own tokens. Knobs: `--kp-sidenav-float-inset` (the
+       * gap, `--kp-space-sm`), `--kp-sidenav-float-radius` (`--radius`),
+       * `--kp-sidenav-float-edge` (`1px solid --border-strong`),
+       * `--kp-sidenav-float-shadow`. `"inset"` keeps the panel flush with the
+       * window and makes the content (the element `data-kp-sidenav-content`
+       * names) a rounded card beside it, on the page's ground. Knobs:
+       * `--kp-sidenav-inset-gap` (the card's margin, `--kp-space-sm`),
+       * `--kp-sidenav-inset-radius` (`--radius`), `--kp-sidenav-inset-edge`
+       * (`1px solid --border-strong`). Both keep the slide, the push, the
+       * gutter and the over mode working: the push and the gutter leave the
+       * room the variant takes, and the edge tab rides on the panel's edge.
+       */
+      variant: "data-kp-sidenav-variant",
+      /**
+       * Written on the content element while the panel is the `inset` variant:
+       * the edge the panel comes from, `start` or `end`. The content is a
+       * rounded card while it is there.
+       */
+      inset: "data-kp-sidenav-inset",
+      /**
+       * On the panel: `"compact"` or `"comfortable"` sets the tokens that make
+       * a row's height and the panel's padding (`--kp-sidenav-link-padding-block`,
+       * `-link-size`, `-icon-size`, `-pad`); without it, or with `"default"`,
+       * the panel is what it always was. CSS only; the module does not read it.
+       */
+      density: "data-kp-sidenav-density"
     };
     REFUSE_MIN_MS = 120;
     SIDENAV_RESIZER = ".kp-sidenav__resizer";
@@ -7660,6 +7755,14 @@ var init_sidenav = __esm({
     SIDENAV_TAB = ".kp-sidenav__tab";
     SIDENAV_LAUNCHER = ".kp-sidenav__launcher";
     NARROW_STEP = "40rem";
+    INSET_KNOBS = ["--kp-sidenav-inset-gap", "--kp-sidenav-inset-radius", "--kp-sidenav-inset-edge"];
+    PEEK_KNOBS = [
+      "--kp-sidenav-inset-block",
+      "--kp-sidenav-float-inset",
+      "--kp-sidenav-float-radius",
+      "--kp-sidenav-float-edge",
+      "--kp-sidenav-peek"
+    ];
     handles2 = /* @__PURE__ */ new WeakMap();
     FLYOUT_OPEN_MS = 150;
     FLYOUT_CLOSE_MS = 250;

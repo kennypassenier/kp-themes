@@ -1,0 +1,64 @@
+/* research/sidenav-minor: the page around the side navigation in each frame, in
+   tokens only, no colours of its own; plus the small scene label a self-playing
+   frame shows, so a viewer sees which way the page is being shown. */
+@layer research {
+    .mn-body {
+        margin: 0;
+        min-block-size: 100dvh;
+        background: var(--background);
+        color: var(--foreground);
+    }
+
+    .mn-main {
+        display: grid;
+        gap: var(--kp-space-lg, 1.5rem);
+        align-content: start;
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem) var(--kp-space-2xl, 3rem);
+        min-inline-size: 0;
+    }
+
+    .mn-main > .kp-page-header {
+        min-block-size: calc(2 * var(--kp-sidenav-launcher-inset, var(--kp-space-sm, 0.5rem)) + var(--kp-sidenav-launcher-size, 2.25rem));
+        padding-block-start: var(--kp-space-xs, 0.25rem);
+    }
+
+    .mn-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+        gap: var(--kp-space-md, 1rem);
+    }
+
+    .mn-cards > .kp-card {
+        margin: 0;
+    }
+
+    /* The label of the scene that is playing, for a frame opened on its own:
+       the end of the window, above everything else the page draws. In the demo
+       page the scene is named under the window instead. */
+    .mn-scene {
+        position: fixed;
+        inset-block-end: var(--kp-space-sm, 0.5rem);
+        inset-inline-end: var(--kp-space-sm, 0.5rem);
+        z-index: 200;
+        margin: 0;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        border: 1px solid var(--border-strong);
+        background: var(--popover);
+        color: var(--popover-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        line-height: 1.4;
+        pointer-events: none;
+    }
+
+    :root[data-mn-framed] .mn-scene {
+        display: none;
+    }
+
+    /* The result line of the action demo. */
+    .mn-said {
+        margin: 0;
+        min-block-size: 1.5em;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.875rem);
+    }
+}

@@ -37,6 +37,17 @@
 //   · `data-kp-sidenav-mode="over"` with `data-kp-sidenav-backdrop="false"`:
 //     the panel slides over the content, nothing dims.
 //
+// A peek strip [Kenny, 2026-10-14, from the libraries survey]: with
+// `--kp-sidenav-peek` set to a length (0.75rem) on the panel or above it, a
+// thin strip of the panel stays at the window's edge, and the panel's
+// `.kp-sidenav__peek` element (made here, aria-hidden, drawn in the theme's
+// muted ground and strong edge) shows it. A theme's own opening and closing run
+// where the panel stands, so the strip is a part of its own: it is there
+// whenever the panel is not fully open, under the panel, and nothing in
+// the theme's effect is changed. A push panel keeps the strip's room in the
+// content while it is shut; an `over` panel's strip is the one part that
+// lies over the page. A panel in the floating variant hides it while open.
+//
 // The launcher is a `.kp-sidenav__launcher` box holding the toggler (a
 // `.kp-icon-button` with `data-kp-sidenav-toggle`): fixed at the window's
 // start corner, always in the same place, above the panel. The module
@@ -207,6 +218,36 @@ export const OPTIONS = {
     maxWidth: 'data-kp-sidenav-max-width',
     /** Written on the panel while the handle is held. */
     resizing: 'data-kp-sidenav-resizing',
+    /**
+     * On the panel: its look. Without it the panel is the flush column it
+     * always was. `"floating"` detaches the panel from the window's edge: a
+     * gap all round, the theme's radius, an edge on every side and a shadow
+     * made of the theme's own tokens. Knobs: `--kp-sidenav-float-inset` (the
+     * gap, `--kp-space-sm`), `--kp-sidenav-float-radius` (`--radius`),
+     * `--kp-sidenav-float-edge` (`1px solid --border-strong`),
+     * `--kp-sidenav-float-shadow`. `"inset"` keeps the panel flush with the
+     * window and makes the content (the element `data-kp-sidenav-content`
+     * names) a rounded card beside it, on the page's ground. Knobs:
+     * `--kp-sidenav-inset-gap` (the card's margin, `--kp-space-sm`),
+     * `--kp-sidenav-inset-radius` (`--radius`), `--kp-sidenav-inset-edge`
+     * (`1px solid --border-strong`). Both keep the slide, the push, the
+     * gutter and the over mode working: the push and the gutter leave the
+     * room the variant takes, and the edge tab rides on the panel's edge.
+     */
+    variant: 'data-kp-sidenav-variant',
+    /**
+     * Written on the content element while the panel is the `inset` variant:
+     * the edge the panel comes from, `start` or `end`. The content is a
+     * rounded card while it is there.
+     */
+    inset: 'data-kp-sidenav-inset',
+    /**
+     * On the panel: `"compact"` or `"comfortable"` sets the tokens that make
+     * a row's height and the panel's padding (`--kp-sidenav-link-padding-block`,
+     * `-link-size`, `-icon-size`, `-pad`); without it, or with `"default"`,
+     * the panel is what it always was. CSS only; the module does not read it.
+     */
+    density: 'data-kp-sidenav-density',
 };
 
 /** The shortest leg of the refused cue, in milliseconds: it is pulled and let go, each over at least this long. */
@@ -234,6 +275,18 @@ export const SIDENAV_LAUNCHER = '.kp-sidenav__launcher';
  * steps at one width rather than at two [TH104, TH26].
  */
 const NARROW_STEP = '40rem';
+
+/** The inset card's knobs: set on the panel, they are carried to the content the card is made of. */
+const INSET_KNOBS = ['--kp-sidenav-inset-gap', '--kp-sidenav-inset-radius', '--kp-sidenav-inset-edge'];
+
+/** The panel knobs the peek strip (`.kp-sidenav__peek`, made for `--kp-sidenav-peek`) follows. */
+const PEEK_KNOBS = [
+    '--kp-sidenav-inset-block',
+    '--kp-sidenav-float-inset',
+    '--kp-sidenav-float-radius',
+    '--kp-sidenav-float-edge',
+    '--kp-sidenav-peek',
+];
 
 /** @type {WeakMap<Element, Sidenav>} */
 const handles = new WeakMap();
@@ -269,7 +322,13 @@ export function parseChord(chord, mac) {
         alt: mods.has('alt') || mods.has('option'),
         shift: mods.has('shift'),
         /** The same chord as `aria-keyshortcuts` writes it. */
-        aria: [...(command ? [mac ? 'Meta' : 'Control'] : []), ...(mods.has('meta') && !command ? ['Meta'] : []), ...(mods.has('alt') || mods.has('option') ? ['Alt'] : []), ...(mods.has('shift') ? ['Shift'] : []), key.length === 1 ? key.toUpperCase() : key].join('+'),
+        aria: [
+            ...(command ? [mac ? 'Meta' : 'Control'] : []),
+            ...(mods.has('meta') && !command ? ['Meta'] : []),
+            ...(mods.has('alt') || mods.has('option') ? ['Alt'] : []),
+            ...(mods.has('shift') ? ['Shift'] : []),
+            key.length === 1 ? key.toUpperCase() : key,
+        ].join('+'),
     };
 }
 
@@ -322,7 +381,11 @@ function slideTiming(panel) {
         const parts = splitList(list);
         return parts[at % parts.length] ?? '';
     };
-    return { duration: pick(style.transitionDuration) || '0s', ease: pick(style.transitionTimingFunction) || 'linear', delay: pick(style.transitionDelay) || '0s' };
+    return {
+        duration: pick(style.transitionDuration) || '0s',
+        ease: pick(style.transitionTimingFunction) || 'linear',
+        delay: pick(style.transitionDelay) || '0s',
+    };
 }
 
 /**
@@ -453,8 +516,25 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
         const panelSize = () => {
             const style = getComputedStyle(panel);
             const knob = style.getPropertyValue('--kp-sidenav-w').trim();
-            return knob !== '' ? knob : style.inlineSize;
+            const width = knob !== '' ? knob : style.inlineSize;
+            // A variant that takes room beside the panel (the floating gap
+            // on both sides of it) says so as `--kp-sidenav-room`; the
+            // content clears that too.
+            const room = style.getPropertyValue('--kp-sidenav-room').trim();
+            return room !== '' ? `calc(${width} + ${room})` : width;
         };
+        /**
+         * Where the panel's far edge stands: its width and what lies between
+         * the window's edge and the panel (`--kp-sidenav-lead`, the floating
+         * gap). The edge tab rides there.
+         */
+        const edgeSize = () => {
+            const style = getComputedStyle(panel);
+            const lead = style.getPropertyValue('--kp-sidenav-lead').trim();
+            const width = style.getPropertyValue('--kp-sidenav-w').trim() || style.inlineSize;
+            return lead !== '' ? `calc(${width} + ${lead})` : width;
+        };
+
         /** The edge tabs that hold one of this panel's togglers. */
         const tabs = () => {
             /** @type {Set<HTMLElement>} */
@@ -464,6 +544,50 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
                 if (box instanceof HTMLElement) boxes.add(box);
             }
             return [...boxes];
+        };
+        /**
+         * The strip a shut panel leaves in view (`--kp-sidenav-peek`, a
+         * length), or empty when the page sets none.
+         */
+        const peekSize = () => {
+            const length = getComputedStyle(panel).getPropertyValue('--kp-sidenav-peek').trim();
+            return length === '' || parseFloat(length) === 0 ? '' : length;
+        };
+        /** @type {HTMLElement | null} */
+        let strip = null;
+        /**
+         * Make, keep or drop the strip: it exists while the panel slides
+         * (not `side`) and the page sets `--kp-sidenav-peek`. It is the
+         * panel's next sibling, under the panel, marked with the edge and the
+         * look so the stylesheet can place it; the panel's knobs it follows
+         * are carried over. A floating panel hides it while open.
+         *
+         * @param {boolean} open
+         */
+        const syncPeek = (open) => {
+            const wanted = mode() !== 'side' && peekSize() !== '';
+            if (!wanted) {
+                strip?.remove();
+                strip = null;
+                return;
+            }
+            if (strip === null) {
+                strip = doc.createElement('div');
+                strip.className = 'kp-sidenav__peek';
+                strip.setAttribute('aria-hidden', 'true');
+                panel.after(strip);
+            }
+            strip.setAttribute('data-kp-sidenav-peek-edge', edge());
+            const variant = read(OPTIONS.variant);
+            if (variant !== null) strip.setAttribute('data-kp-sidenav-peek-variant', variant);
+            else strip.removeAttribute('data-kp-sidenav-peek-variant');
+            strip.style.position = read(OPTIONS.position) === 'absolute' ? 'absolute' : '';
+            for (const name of PEEK_KNOBS) {
+                const value = getComputedStyle(panel).getPropertyValue(name).trim();
+                if (value !== '') strip.style.setProperty(name, value);
+                else strip.style.removeProperty(name);
+            }
+            strip.toggleAttribute('data-kp-sidenav-peek-hushed', open && variant === 'floating');
         };
         const MOVED = /** @type {const} */ (['marginInlineStart', 'marginInlineEnd', 'paddingInlineStart', 'paddingInlineEnd']);
         /**
@@ -495,20 +619,32 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
 
         /** @param {boolean} open */
         const offsetContent = (open) => {
+            syncPeek(open);
             // The edge tab rides on the panel's far edge in the modes that
             // slide: at the window's edge while the panel is away.
             for (const tab of tabs()) {
                 tab.setAttribute('data-kp-sidenav-tab-edge', edge());
-                shift(tab, marginAlong(), open && mode() !== 'side' ? panelSize() : '', open ? 'open' : 'closed', mode() !== 'side');
+                shift(tab, marginAlong(), mode() === 'side' ? '' : open ? edgeSize() : peekSize(), open ? 'open' : 'closed', mode() !== 'side');
             }
             const target = contentEl();
             if (!target) return { property: null, value: '' };
+            // The inset variant makes the content a card (css/components.css),
+            // which reads its knobs from the panel's side of the page too.
+            const inset = read(OPTIONS.variant) === 'inset';
+            if (inset) target.setAttribute(OPTIONS.inset, edge());
+            else target.removeAttribute(OPTIONS.inset);
+            for (const name of INSET_KNOBS) {
+                const value = inset ? getComputedStyle(panel).getPropertyValue(name).trim() : '';
+                if (value !== '') target.style.setProperty(name, value);
+                else target.style.removeProperty(name);
+            }
             // side pads, push pushes — the reference's own distinction, and
             // it matters: padding keeps a background under the panel, a
             // margin moves the whole box. A gutter is a margin too: the
             // content's box starts where the panel ends.
             const property = mode() === 'push' || reserved() ? marginAlong() : paddingAlong();
-            const value = reserved() || (open && mode() !== 'over') ? panelSize() : '';
+            // A shut push panel that leaves a strip in view keeps the strip's room.
+            const value = reserved() || (open && mode() !== 'over') ? panelSize() : mode() === 'push' ? peekSize() : '';
             shift(target, property, value, reserved() ? 'reserved' : open ? 'open' : 'closed', mode() === 'push' && !reserved());
             return { property, value };
         };
@@ -684,7 +820,8 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
             const turn = refusing;
             for (const one of marked) one.setAttribute(OPTIONS.refused, '');
             const style = getComputedStyle(panel);
-            const token = (/** @type {string[]} */ names) => names.map((name) => style.getPropertyValue(name).trim()).find((value) => value !== '') ?? '';
+            const token = (/** @type {string[]} */ names) =>
+                names.map((name) => style.getPropertyValue(name).trim()).find((value) => value !== '') ?? '';
             const time = token(['--kp-sidenav-refuse-duration', '--kp-sidenav-duration', '--fx-duration']) || '220ms';
             const easing = token(['--kp-sidenav-refuse-ease', '--kp-sidenav-ease', '--fx-ease']) || 'ease';
             const travel = style.getPropertyValue('--kp-sidenav-refuse-travel').trim() || '0.75rem';
@@ -735,7 +872,8 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
             // panel, the shortcut) gives it back to its opener, or to the
             // launcher, rather than to nothing once it is inert.
             if (moveFocus && !open && !covering() && panel.contains(doc.activeElement)) {
-                restoreFocusTo = restoreFocusTo ?? togglers().find((t) => t instanceof HTMLElement && !panel.contains(t) && t.offsetParent !== null) ?? null;
+                restoreFocusTo =
+                    restoreFocusTo ?? togglers().find((t) => t instanceof HTMLElement && !panel.contains(t) && t.offsetParent !== null) ?? null;
             }
             const named = read(OPTIONS.initialFocus);
             if (moveFocus && (covering() || (named !== null && open) || (!open && restoreFocusTo !== null))) {
@@ -1017,7 +1155,10 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
             if (category === null || !panel.contains(category)) return;
             clearTimeout(flyTimers.get(category));
             if (category.hasAttribute(OPTIONS.flown)) return;
-            flyTimers.set(category, window.setTimeout(() => flyOut(category), FLYOUT_OPEN_MS));
+            flyTimers.set(
+                category,
+                window.setTimeout(() => flyOut(category), FLYOUT_OPEN_MS),
+            );
         };
         /** @param {PointerEvent} event */
         const onFlyOut = (event) => {
@@ -1074,7 +1215,8 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
                 });
             });
         };
-        const peeks = () => read(OPTIONS.expandOnHover) !== null && read(OPTIONS.expandOnHover) !== 'false' && panel.hasAttribute(OPTIONS.slimCollapsed);
+        const peeks = () =>
+            read(OPTIONS.expandOnHover) !== null && read(OPTIONS.expandOnHover) !== 'false' && panel.hasAttribute(OPTIONS.slimCollapsed);
         const onPeekEnter = () => {
             pointerIn = true;
             if (!peeks()) return;
@@ -1108,7 +1250,6 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
             event.preventDefault();
             set(!isOpen(), true, true, 'shortcut');
         };
-
 
         // Categories. The accordion option is the reference's: with it on,
         // opening one closes the others.
@@ -1554,10 +1695,15 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
             panel.style.removeProperty('--kp-sidenav-ease-back');
             dropBackdrop();
             offsetContent(false);
+            strip?.remove();
+            strip = null;
             const target = contentEl();
             if (target) {
                 target.removeAttribute('data-kp-sidenav-shift');
-                for (const name of ['--kp-sidenav-shift-duration', '--kp-sidenav-shift-ease', '--kp-sidenav-shift-delay']) target.style.removeProperty(name);
+                target.removeAttribute(OPTIONS.inset);
+                for (const name of INSET_KNOBS) target.style.removeProperty(name);
+                for (const name of ['--kp-sidenav-shift-duration', '--kp-sidenav-shift-ease', '--kp-sidenav-shift-delay'])
+                    target.style.removeProperty(name);
                 target.style.marginInlineStart = '';
             }
             lightTurn += 1;

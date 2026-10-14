@@ -48,7 +48,9 @@ for (const theme of themes) {
         const s = getComputedStyle(document.querySelector('.kp-sidenav'));
         return `${s.getPropertyValue('--kp-sidenav-duration').trim() || '(fx)'} ${s.getPropertyValue('--kp-sidenav-ease').trim() || '(fx)'}`;
     });
-    console.log(`${theme.padEnd(11)} ${String(cue.length).padStart(3)} frames  ${String(total).padStart(4)} ms  peak ${peak.toFixed(1)}px at ${cue[at][0]} ms   tokens: ${style}`);
+    console.log(
+        `${theme.padEnd(11)} ${String(cue.length).padStart(3)} frames  ${String(total).padStart(4)} ms  peak ${peak.toFixed(1)}px at ${cue[at][0]} ms   tokens: ${style}`,
+    );
     await p.context().close();
 }
 await b.close();

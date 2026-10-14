@@ -126,6 +126,36 @@ export declare const OPTIONS: {
     maxWidth: string;
     /** Written on the panel while the handle is held. */
     resizing: string;
+    /**
+     * On the panel: its look. Without it the panel is the flush column it
+     * always was. `"floating"` detaches the panel from the window's edge: a
+     * gap all round, the theme's radius, an edge on every side and a shadow
+     * made of the theme's own tokens. Knobs: `--kp-sidenav-float-inset` (the
+     * gap, `--kp-space-sm`), `--kp-sidenav-float-radius` (`--radius`),
+     * `--kp-sidenav-float-edge` (`1px solid --border-strong`),
+     * `--kp-sidenav-float-shadow`. `"inset"` keeps the panel flush with the
+     * window and makes the content (the element `data-kp-sidenav-content`
+     * names) a rounded card beside it, on the page's ground. Knobs:
+     * `--kp-sidenav-inset-gap` (the card's margin, `--kp-space-sm`),
+     * `--kp-sidenav-inset-radius` (`--radius`), `--kp-sidenav-inset-edge`
+     * (`1px solid --border-strong`). Both keep the slide, the push, the
+     * gutter and the over mode working: the push and the gutter leave the
+     * room the variant takes, and the edge tab rides on the panel's edge.
+     */
+    variant: string;
+    /**
+     * Written on the content element while the panel is the `inset` variant:
+     * the edge the panel comes from, `start` or `end`. The content is a
+     * rounded card while it is there.
+     */
+    inset: string;
+    /**
+     * On the panel: `"compact"` or `"comfortable"` sets the tokens that make
+     * a row's height and the panel's padding (`--kp-sidenav-link-padding-block`,
+     * `-link-size`, `-icon-size`, `-pad`); without it, or with `"default"`,
+     * the panel is what it always was. CSS only; the module does not read it.
+     */
+    density: string;
 };
 /** The class of the handle the module adds to a resizable panel. */
 export declare const SIDENAV_RESIZER = ".kp-sidenav__resizer";

@@ -1,5 +1,11 @@
 <!doctype html>
-<html lang="en" data-theme="formal" data-cat-theme="formal" data-review="sidenav-minor" data-review-themes="formal,light,dark,cyberpunk,synthwave,pastel,terminal,forest,blueprint,solstice,brutalism,deco,phantom,grotesk,nostromo,titanium">
+<html
+    lang="en"
+    data-theme="formal"
+    data-cat-theme="formal"
+    data-review="sidenav-minor"
+    data-review-themes="formal,light,dark,cyberpunk,synthwave,pastel,terminal,forest,blueprint,solstice,brutalism,deco,phantom,grotesk,nostromo,titanium"
+>
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -17,15 +23,18 @@
             <header class="se-intro">
                 <h1>The side navigation: four behaviour options</h1>
                 <p>
-                    Kenny, 2026-10-13 (translated from Dutch): the minor options from the libraries survey. These four change what the navigation does, not how
-                    it looks, and each is off until the page asks for it with one attribute: <code>data-kp-sidenav-cancelable</code> (events the page can
-                    refuse, each with its reason), <code>data-kp-sidenav-resizable</code> (a handle that sets the width), <code>data-kp-sidenav-backdrop="static"</code>
-                    (a backdrop that does not close on a click) and <code>data-kp-sidenav-close-on-backdrop="false"</code>. Every page plays itself with a pointer and
-                    keys over the real navigation; the log beside it lists the events the navigation really sends. The button at the top left, the slide from the left
-                    edge and each theme's own opening and closing are unchanged. Judge them in the review dialog ("Review in a dialog" at the top) or open each page on its own.
+                    Kenny, 2026-10-13 (translated from Dutch): the minor options from the libraries survey. These four change what the navigation
+                    does, not how it looks, and each is off until the page asks for it with one attribute:
+                    <code>data-kp-sidenav-cancelable</code> (events the page can refuse, each with its reason),
+                    <code>data-kp-sidenav-resizable</code> (a handle that sets the width), <code>data-kp-sidenav-backdrop="static"</code> (a backdrop
+                    that does not close on a click) and <code>data-kp-sidenav-close-on-backdrop="false"</code>. Every page plays itself with a pointer
+                    and keys over the real navigation; the log beside it lists the events the navigation really sends. The button at the top left, the
+                    slide from the left edge and each theme's own opening and closing are unchanged. Judge them in the review dialog ("Review in a
+                    dialog" at the top) or open each page on its own.
                 </p>
                 <p class="se-motion" data-se-motion hidden>
-                    <b>Your system asks for reduced motion</b>, so the navigation appears and disappears without sliding, and the refused cue is a ring without movement.
+                    <b>Your system asks for reduced motion</b>, so the navigation appears and disappears without sliding, and the refused cue is a
+                    ring without movement.
                 </p>
             </header>
 
@@ -42,24 +51,108 @@
                     <h2 id="h-cancel">The page can say no, and every event says why it was asked.</h2>
                 </div>
                 <div class="se-look" data-review-look>
-                    <p data-for="formal">The pointer opens the menu, types a draft, then tries to close the menu twice: with the bars, then with Escape. The page cancels both, so the menu does not move, and the log shows each as cancelled with its reason (toggler, escape) next to a prevented line. After Save, Escape closes it and the log says allowed. Check that the menu opens and closes with formal's own effect and that every log line is readable.</p>
-                    <p data-for="light">The pointer opens the menu, types a draft, then tries to close the menu twice: with the bars, then with Escape. The page cancels both, so the menu does not move, and the log shows each as cancelled with its reason (toggler, escape) next to a prevented line. After Save, Escape closes it and the log says allowed. Check that the menu opens and closes with light's own effect and that every log line is readable.</p>
-                    <p data-for="dark">The pointer opens the menu, types a draft, then tries to close the menu twice: with the bars, then with Escape. The page cancels both, so the menu does not move, and the log shows each as cancelled with its reason (toggler, escape) next to a prevented line. After Save, Escape closes it and the log says allowed. Check that the menu opens and closes with dark's own effect and that every log line is readable.</p>
-                    <p data-for="cyberpunk">The pointer opens the menu, types a draft, then tries to close the menu twice: with the bars, then with Escape. The page cancels both, so the menu does not move, and the log shows each as cancelled with its reason (toggler, escape) next to a prevented line. After Save, Escape closes it and the log says allowed. Check that the menu opens and closes with cyberpunk's own effect and that every log line is readable.</p>
-                    <p data-for="synthwave">The pointer opens the menu, types a draft, then tries to close the menu twice: with the bars, then with Escape. The page cancels both, so the menu does not move, and the log shows each as cancelled with its reason (toggler, escape) next to a prevented line. After Save, Escape closes it and the log says allowed. Check that the menu opens and closes with synthwave's own effect and that every log line is readable.</p>
-                    <p data-for="pastel">The pointer opens the menu, types a draft, then tries to close the menu twice: with the bars, then with Escape. The page cancels both, so the menu does not move, and the log shows each as cancelled with its reason (toggler, escape) next to a prevented line. After Save, Escape closes it and the log says allowed. Check that the menu opens and closes with pastel's own effect and that every log line is readable.</p>
-                    <p data-for="terminal">The pointer opens the menu, types a draft, then tries to close the menu twice: with the bars, then with Escape. The page cancels both, so the menu does not move, and the log shows each as cancelled with its reason (toggler, escape) next to a prevented line. After Save, Escape closes it and the log says allowed. Check that the menu opens and closes with terminal's own effect and that every log line is readable.</p>
-                    <p data-for="forest">The pointer opens the menu, types a draft, then tries to close the menu twice: with the bars, then with Escape. The page cancels both, so the menu does not move, and the log shows each as cancelled with its reason (toggler, escape) next to a prevented line. After Save, Escape closes it and the log says allowed. Check that the menu opens and closes with forest's own effect and that every log line is readable.</p>
-                    <p data-for="blueprint">The pointer opens the menu, types a draft, then tries to close the menu twice: with the bars, then with Escape. The page cancels both, so the menu does not move, and the log shows each as cancelled with its reason (toggler, escape) next to a prevented line. After Save, Escape closes it and the log says allowed. Check that the menu opens and closes with blueprint's own effect and that every log line is readable.</p>
-                    <p data-for="solstice">The pointer opens the menu, types a draft, then tries to close the menu twice: with the bars, then with Escape. The page cancels both, so the menu does not move, and the log shows each as cancelled with its reason (toggler, escape) next to a prevented line. After Save, Escape closes it and the log says allowed. Check that the menu opens and closes with solstice's own effect and that every log line is readable.</p>
-                    <p data-for="brutalism">The pointer opens the menu, types a draft, then tries to close the menu twice: with the bars, then with Escape. The page cancels both, so the menu does not move, and the log shows each as cancelled with its reason (toggler, escape) next to a prevented line. After Save, Escape closes it and the log says allowed. Check that the menu opens and closes with brutalism's own effect and that every log line is readable.</p>
-                    <p data-for="deco">The pointer opens the menu, types a draft, then tries to close the menu twice: with the bars, then with Escape. The page cancels both, so the menu does not move, and the log shows each as cancelled with its reason (toggler, escape) next to a prevented line. After Save, Escape closes it and the log says allowed. Check that the menu opens and closes with deco's own effect and that every log line is readable.</p>
-                    <p data-for="phantom">The pointer opens the menu, types a draft, then tries to close the menu twice: with the bars, then with Escape. The page cancels both, so the menu does not move, and the log shows each as cancelled with its reason (toggler, escape) next to a prevented line. After Save, Escape closes it and the log says allowed. Check that the menu opens and closes with phantom's own effect and that every log line is readable.</p>
-                    <p data-for="grotesk">The pointer opens the menu, types a draft, then tries to close the menu twice: with the bars, then with Escape. The page cancels both, so the menu does not move, and the log shows each as cancelled with its reason (toggler, escape) next to a prevented line. After Save, Escape closes it and the log says allowed. Check that the menu opens and closes with grotesk's own effect and that every log line is readable.</p>
-                    <p data-for="nostromo">The pointer opens the menu, types a draft, then tries to close the menu twice: with the bars, then with Escape. The page cancels both, so the menu does not move, and the log shows each as cancelled with its reason (toggler, escape) next to a prevented line. After Save, Escape closes it and the log says allowed. Check that the menu opens and closes with nostromo's own effect and that every log line is readable.</p>
-                    <p data-for="titanium">The pointer opens the menu, types a draft, then tries to close the menu twice: with the bars, then with Escape. The page cancels both, so the menu does not move, and the log shows each as cancelled with its reason (toggler, escape) next to a prevented line. After Save, Escape closes it and the log says allowed. Check that the menu opens and closes with titanium's own effect and that every log line is readable.</p>
+                    <p data-for="formal">
+                        The pointer opens the menu, types a draft, then tries to close the menu twice: with the bars, then with Escape. The page
+                        cancels both, so the menu does not move, and the log shows each as cancelled with its reason (toggler, escape) next to a
+                        prevented line. After Save, Escape closes it and the log says allowed. Check that the menu opens and closes with formal's own
+                        effect and that every log line is readable.
+                    </p>
+                    <p data-for="light">
+                        The pointer opens the menu, types a draft, then tries to close the menu twice: with the bars, then with Escape. The page
+                        cancels both, so the menu does not move, and the log shows each as cancelled with its reason (toggler, escape) next to a
+                        prevented line. After Save, Escape closes it and the log says allowed. Check that the menu opens and closes with light's own
+                        effect and that every log line is readable.
+                    </p>
+                    <p data-for="dark">
+                        The pointer opens the menu, types a draft, then tries to close the menu twice: with the bars, then with Escape. The page
+                        cancels both, so the menu does not move, and the log shows each as cancelled with its reason (toggler, escape) next to a
+                        prevented line. After Save, Escape closes it and the log says allowed. Check that the menu opens and closes with dark's own
+                        effect and that every log line is readable.
+                    </p>
+                    <p data-for="cyberpunk">
+                        The pointer opens the menu, types a draft, then tries to close the menu twice: with the bars, then with Escape. The page
+                        cancels both, so the menu does not move, and the log shows each as cancelled with its reason (toggler, escape) next to a
+                        prevented line. After Save, Escape closes it and the log says allowed. Check that the menu opens and closes with cyberpunk's
+                        own effect and that every log line is readable.
+                    </p>
+                    <p data-for="synthwave">
+                        The pointer opens the menu, types a draft, then tries to close the menu twice: with the bars, then with Escape. The page
+                        cancels both, so the menu does not move, and the log shows each as cancelled with its reason (toggler, escape) next to a
+                        prevented line. After Save, Escape closes it and the log says allowed. Check that the menu opens and closes with synthwave's
+                        own effect and that every log line is readable.
+                    </p>
+                    <p data-for="pastel">
+                        The pointer opens the menu, types a draft, then tries to close the menu twice: with the bars, then with Escape. The page
+                        cancels both, so the menu does not move, and the log shows each as cancelled with its reason (toggler, escape) next to a
+                        prevented line. After Save, Escape closes it and the log says allowed. Check that the menu opens and closes with pastel's own
+                        effect and that every log line is readable.
+                    </p>
+                    <p data-for="terminal">
+                        The pointer opens the menu, types a draft, then tries to close the menu twice: with the bars, then with Escape. The page
+                        cancels both, so the menu does not move, and the log shows each as cancelled with its reason (toggler, escape) next to a
+                        prevented line. After Save, Escape closes it and the log says allowed. Check that the menu opens and closes with terminal's
+                        own effect and that every log line is readable.
+                    </p>
+                    <p data-for="forest">
+                        The pointer opens the menu, types a draft, then tries to close the menu twice: with the bars, then with Escape. The page
+                        cancels both, so the menu does not move, and the log shows each as cancelled with its reason (toggler, escape) next to a
+                        prevented line. After Save, Escape closes it and the log says allowed. Check that the menu opens and closes with forest's own
+                        effect and that every log line is readable.
+                    </p>
+                    <p data-for="blueprint">
+                        The pointer opens the menu, types a draft, then tries to close the menu twice: with the bars, then with Escape. The page
+                        cancels both, so the menu does not move, and the log shows each as cancelled with its reason (toggler, escape) next to a
+                        prevented line. After Save, Escape closes it and the log says allowed. Check that the menu opens and closes with blueprint's
+                        own effect and that every log line is readable.
+                    </p>
+                    <p data-for="solstice">
+                        The pointer opens the menu, types a draft, then tries to close the menu twice: with the bars, then with Escape. The page
+                        cancels both, so the menu does not move, and the log shows each as cancelled with its reason (toggler, escape) next to a
+                        prevented line. After Save, Escape closes it and the log says allowed. Check that the menu opens and closes with solstice's
+                        own effect and that every log line is readable.
+                    </p>
+                    <p data-for="brutalism">
+                        The pointer opens the menu, types a draft, then tries to close the menu twice: with the bars, then with Escape. The page
+                        cancels both, so the menu does not move, and the log shows each as cancelled with its reason (toggler, escape) next to a
+                        prevented line. After Save, Escape closes it and the log says allowed. Check that the menu opens and closes with brutalism's
+                        own effect and that every log line is readable.
+                    </p>
+                    <p data-for="deco">
+                        The pointer opens the menu, types a draft, then tries to close the menu twice: with the bars, then with Escape. The page
+                        cancels both, so the menu does not move, and the log shows each as cancelled with its reason (toggler, escape) next to a
+                        prevented line. After Save, Escape closes it and the log says allowed. Check that the menu opens and closes with deco's own
+                        effect and that every log line is readable.
+                    </p>
+                    <p data-for="phantom">
+                        The pointer opens the menu, types a draft, then tries to close the menu twice: with the bars, then with Escape. The page
+                        cancels both, so the menu does not move, and the log shows each as cancelled with its reason (toggler, escape) next to a
+                        prevented line. After Save, Escape closes it and the log says allowed. Check that the menu opens and closes with phantom's own
+                        effect and that every log line is readable.
+                    </p>
+                    <p data-for="grotesk">
+                        The pointer opens the menu, types a draft, then tries to close the menu twice: with the bars, then with Escape. The page
+                        cancels both, so the menu does not move, and the log shows each as cancelled with its reason (toggler, escape) next to a
+                        prevented line. After Save, Escape closes it and the log says allowed. Check that the menu opens and closes with grotesk's own
+                        effect and that every log line is readable.
+                    </p>
+                    <p data-for="nostromo">
+                        The pointer opens the menu, types a draft, then tries to close the menu twice: with the bars, then with Escape. The page
+                        cancels both, so the menu does not move, and the log shows each as cancelled with its reason (toggler, escape) next to a
+                        prevented line. After Save, Escape closes it and the log says allowed. Check that the menu opens and closes with nostromo's
+                        own effect and that every log line is readable.
+                    </p>
+                    <p data-for="titanium">
+                        The pointer opens the menu, types a draft, then tries to close the menu twice: with the bars, then with Escape. The page
+                        cancels both, so the menu does not move, and the log shows each as cancelled with its reason (toggler, escape) next to a
+                        prevented line. After Save, Escape closes it and the log says allowed. Check that the menu opens and closes with titanium's
+                        own effect and that every log line is readable.
+                    </p>
                 </div>
-                <iframe class="se-window" src="opt-cancel.html" title="1 · Cancelable events: The page can say no, and every event says why it was asked."></iframe>
+                <iframe
+                    class="se-window"
+                    src="opt-cancel.html"
+                    title="1 · Cancelable events: The page can say no, and every event says why it was asked."
+                ></iframe>
                 <p class="se-alone"><a href="opt-cancel.html">Open this page on its own</a> (resize the window to judge it at phone width).</p>
             </section>
 
@@ -76,24 +169,108 @@
                     <h2 id="h-resize">The reader sets the menu width, and the page follows.</h2>
                 </div>
                 <div class="se-look" data-review-look>
-                    <p data-for="formal">The pointer takes the handle on the menu's inner edge and drags it wider: the page moves with it and the bar shows the width. Dragging too far narrow stops at the limit. Then the arrow keys widen it (Shift takes five steps), the page is loaded again and the width is where it was left, and a double press gives the original width back. Check that the handle is visible in formal's colours, sits inside the menu and covers no link.</p>
-                    <p data-for="light">The pointer takes the handle on the menu's inner edge and drags it wider: the page moves with it and the bar shows the width. Dragging too far narrow stops at the limit. Then the arrow keys widen it (Shift takes five steps), the page is loaded again and the width is where it was left, and a double press gives the original width back. Check that the handle is visible in light's colours, sits inside the menu and covers no link.</p>
-                    <p data-for="dark">The pointer takes the handle on the menu's inner edge and drags it wider: the page moves with it and the bar shows the width. Dragging too far narrow stops at the limit. Then the arrow keys widen it (Shift takes five steps), the page is loaded again and the width is where it was left, and a double press gives the original width back. Check that the handle is visible in dark's colours, sits inside the menu and covers no link.</p>
-                    <p data-for="cyberpunk">The pointer takes the handle on the menu's inner edge and drags it wider: the page moves with it and the bar shows the width. Dragging too far narrow stops at the limit. Then the arrow keys widen it (Shift takes five steps), the page is loaded again and the width is where it was left, and a double press gives the original width back. Check that the handle is visible in cyberpunk's colours, sits inside the menu and covers no link.</p>
-                    <p data-for="synthwave">The pointer takes the handle on the menu's inner edge and drags it wider: the page moves with it and the bar shows the width. Dragging too far narrow stops at the limit. Then the arrow keys widen it (Shift takes five steps), the page is loaded again and the width is where it was left, and a double press gives the original width back. Check that the handle is visible in synthwave's colours, sits inside the menu and covers no link.</p>
-                    <p data-for="pastel">The pointer takes the handle on the menu's inner edge and drags it wider: the page moves with it and the bar shows the width. Dragging too far narrow stops at the limit. Then the arrow keys widen it (Shift takes five steps), the page is loaded again and the width is where it was left, and a double press gives the original width back. Check that the handle is visible in pastel's colours, sits inside the menu and covers no link.</p>
-                    <p data-for="terminal">The pointer takes the handle on the menu's inner edge and drags it wider: the page moves with it and the bar shows the width. Dragging too far narrow stops at the limit. Then the arrow keys widen it (Shift takes five steps), the page is loaded again and the width is where it was left, and a double press gives the original width back. Check that the handle is visible in terminal's colours, sits inside the menu and covers no link.</p>
-                    <p data-for="forest">The pointer takes the handle on the menu's inner edge and drags it wider: the page moves with it and the bar shows the width. Dragging too far narrow stops at the limit. Then the arrow keys widen it (Shift takes five steps), the page is loaded again and the width is where it was left, and a double press gives the original width back. Check that the handle is visible in forest's colours, sits inside the menu and covers no link.</p>
-                    <p data-for="blueprint">The pointer takes the handle on the menu's inner edge and drags it wider: the page moves with it and the bar shows the width. Dragging too far narrow stops at the limit. Then the arrow keys widen it (Shift takes five steps), the page is loaded again and the width is where it was left, and a double press gives the original width back. Check that the handle is visible in blueprint's colours, sits inside the menu and covers no link.</p>
-                    <p data-for="solstice">The pointer takes the handle on the menu's inner edge and drags it wider: the page moves with it and the bar shows the width. Dragging too far narrow stops at the limit. Then the arrow keys widen it (Shift takes five steps), the page is loaded again and the width is where it was left, and a double press gives the original width back. Check that the handle is visible in solstice's colours, sits inside the menu and covers no link.</p>
-                    <p data-for="brutalism">The pointer takes the handle on the menu's inner edge and drags it wider: the page moves with it and the bar shows the width. Dragging too far narrow stops at the limit. Then the arrow keys widen it (Shift takes five steps), the page is loaded again and the width is where it was left, and a double press gives the original width back. Check that the handle is visible in brutalism's colours, sits inside the menu and covers no link.</p>
-                    <p data-for="deco">The pointer takes the handle on the menu's inner edge and drags it wider: the page moves with it and the bar shows the width. Dragging too far narrow stops at the limit. Then the arrow keys widen it (Shift takes five steps), the page is loaded again and the width is where it was left, and a double press gives the original width back. Check that the handle is visible in deco's colours, sits inside the menu and covers no link.</p>
-                    <p data-for="phantom">The pointer takes the handle on the menu's inner edge and drags it wider: the page moves with it and the bar shows the width. Dragging too far narrow stops at the limit. Then the arrow keys widen it (Shift takes five steps), the page is loaded again and the width is where it was left, and a double press gives the original width back. Check that the handle is visible in phantom's colours, sits inside the menu and covers no link.</p>
-                    <p data-for="grotesk">The pointer takes the handle on the menu's inner edge and drags it wider: the page moves with it and the bar shows the width. Dragging too far narrow stops at the limit. Then the arrow keys widen it (Shift takes five steps), the page is loaded again and the width is where it was left, and a double press gives the original width back. Check that the handle is visible in grotesk's colours, sits inside the menu and covers no link.</p>
-                    <p data-for="nostromo">The pointer takes the handle on the menu's inner edge and drags it wider: the page moves with it and the bar shows the width. Dragging too far narrow stops at the limit. Then the arrow keys widen it (Shift takes five steps), the page is loaded again and the width is where it was left, and a double press gives the original width back. Check that the handle is visible in nostromo's colours, sits inside the menu and covers no link.</p>
-                    <p data-for="titanium">The pointer takes the handle on the menu's inner edge and drags it wider: the page moves with it and the bar shows the width. Dragging too far narrow stops at the limit. Then the arrow keys widen it (Shift takes five steps), the page is loaded again and the width is where it was left, and a double press gives the original width back. Check that the handle is visible in titanium's colours, sits inside the menu and covers no link.</p>
+                    <p data-for="formal">
+                        The pointer takes the handle on the menu's inner edge and drags it wider: the page moves with it and the bar shows the width.
+                        Dragging too far narrow stops at the limit. Then the arrow keys widen it (Shift takes five steps), the page is loaded again
+                        and the width is where it was left, and a double press gives the original width back. Check that the handle is visible in
+                        formal's colours, sits inside the menu and covers no link.
+                    </p>
+                    <p data-for="light">
+                        The pointer takes the handle on the menu's inner edge and drags it wider: the page moves with it and the bar shows the width.
+                        Dragging too far narrow stops at the limit. Then the arrow keys widen it (Shift takes five steps), the page is loaded again
+                        and the width is where it was left, and a double press gives the original width back. Check that the handle is visible in
+                        light's colours, sits inside the menu and covers no link.
+                    </p>
+                    <p data-for="dark">
+                        The pointer takes the handle on the menu's inner edge and drags it wider: the page moves with it and the bar shows the width.
+                        Dragging too far narrow stops at the limit. Then the arrow keys widen it (Shift takes five steps), the page is loaded again
+                        and the width is where it was left, and a double press gives the original width back. Check that the handle is visible in
+                        dark's colours, sits inside the menu and covers no link.
+                    </p>
+                    <p data-for="cyberpunk">
+                        The pointer takes the handle on the menu's inner edge and drags it wider: the page moves with it and the bar shows the width.
+                        Dragging too far narrow stops at the limit. Then the arrow keys widen it (Shift takes five steps), the page is loaded again
+                        and the width is where it was left, and a double press gives the original width back. Check that the handle is visible in
+                        cyberpunk's colours, sits inside the menu and covers no link.
+                    </p>
+                    <p data-for="synthwave">
+                        The pointer takes the handle on the menu's inner edge and drags it wider: the page moves with it and the bar shows the width.
+                        Dragging too far narrow stops at the limit. Then the arrow keys widen it (Shift takes five steps), the page is loaded again
+                        and the width is where it was left, and a double press gives the original width back. Check that the handle is visible in
+                        synthwave's colours, sits inside the menu and covers no link.
+                    </p>
+                    <p data-for="pastel">
+                        The pointer takes the handle on the menu's inner edge and drags it wider: the page moves with it and the bar shows the width.
+                        Dragging too far narrow stops at the limit. Then the arrow keys widen it (Shift takes five steps), the page is loaded again
+                        and the width is where it was left, and a double press gives the original width back. Check that the handle is visible in
+                        pastel's colours, sits inside the menu and covers no link.
+                    </p>
+                    <p data-for="terminal">
+                        The pointer takes the handle on the menu's inner edge and drags it wider: the page moves with it and the bar shows the width.
+                        Dragging too far narrow stops at the limit. Then the arrow keys widen it (Shift takes five steps), the page is loaded again
+                        and the width is where it was left, and a double press gives the original width back. Check that the handle is visible in
+                        terminal's colours, sits inside the menu and covers no link.
+                    </p>
+                    <p data-for="forest">
+                        The pointer takes the handle on the menu's inner edge and drags it wider: the page moves with it and the bar shows the width.
+                        Dragging too far narrow stops at the limit. Then the arrow keys widen it (Shift takes five steps), the page is loaded again
+                        and the width is where it was left, and a double press gives the original width back. Check that the handle is visible in
+                        forest's colours, sits inside the menu and covers no link.
+                    </p>
+                    <p data-for="blueprint">
+                        The pointer takes the handle on the menu's inner edge and drags it wider: the page moves with it and the bar shows the width.
+                        Dragging too far narrow stops at the limit. Then the arrow keys widen it (Shift takes five steps), the page is loaded again
+                        and the width is where it was left, and a double press gives the original width back. Check that the handle is visible in
+                        blueprint's colours, sits inside the menu and covers no link.
+                    </p>
+                    <p data-for="solstice">
+                        The pointer takes the handle on the menu's inner edge and drags it wider: the page moves with it and the bar shows the width.
+                        Dragging too far narrow stops at the limit. Then the arrow keys widen it (Shift takes five steps), the page is loaded again
+                        and the width is where it was left, and a double press gives the original width back. Check that the handle is visible in
+                        solstice's colours, sits inside the menu and covers no link.
+                    </p>
+                    <p data-for="brutalism">
+                        The pointer takes the handle on the menu's inner edge and drags it wider: the page moves with it and the bar shows the width.
+                        Dragging too far narrow stops at the limit. Then the arrow keys widen it (Shift takes five steps), the page is loaded again
+                        and the width is where it was left, and a double press gives the original width back. Check that the handle is visible in
+                        brutalism's colours, sits inside the menu and covers no link.
+                    </p>
+                    <p data-for="deco">
+                        The pointer takes the handle on the menu's inner edge and drags it wider: the page moves with it and the bar shows the width.
+                        Dragging too far narrow stops at the limit. Then the arrow keys widen it (Shift takes five steps), the page is loaded again
+                        and the width is where it was left, and a double press gives the original width back. Check that the handle is visible in
+                        deco's colours, sits inside the menu and covers no link.
+                    </p>
+                    <p data-for="phantom">
+                        The pointer takes the handle on the menu's inner edge and drags it wider: the page moves with it and the bar shows the width.
+                        Dragging too far narrow stops at the limit. Then the arrow keys widen it (Shift takes five steps), the page is loaded again
+                        and the width is where it was left, and a double press gives the original width back. Check that the handle is visible in
+                        phantom's colours, sits inside the menu and covers no link.
+                    </p>
+                    <p data-for="grotesk">
+                        The pointer takes the handle on the menu's inner edge and drags it wider: the page moves with it and the bar shows the width.
+                        Dragging too far narrow stops at the limit. Then the arrow keys widen it (Shift takes five steps), the page is loaded again
+                        and the width is where it was left, and a double press gives the original width back. Check that the handle is visible in
+                        grotesk's colours, sits inside the menu and covers no link.
+                    </p>
+                    <p data-for="nostromo">
+                        The pointer takes the handle on the menu's inner edge and drags it wider: the page moves with it and the bar shows the width.
+                        Dragging too far narrow stops at the limit. Then the arrow keys widen it (Shift takes five steps), the page is loaded again
+                        and the width is where it was left, and a double press gives the original width back. Check that the handle is visible in
+                        nostromo's colours, sits inside the menu and covers no link.
+                    </p>
+                    <p data-for="titanium">
+                        The pointer takes the handle on the menu's inner edge and drags it wider: the page moves with it and the bar shows the width.
+                        Dragging too far narrow stops at the limit. Then the arrow keys widen it (Shift takes five steps), the page is loaded again
+                        and the width is where it was left, and a double press gives the original width back. Check that the handle is visible in
+                        titanium's colours, sits inside the menu and covers no link.
+                    </p>
                 </div>
-                <iframe class="se-window" src="opt-resize.html" title="2 · Resize by dragging: The reader sets the menu width, and the page follows."></iframe>
+                <iframe
+                    class="se-window"
+                    src="opt-resize.html"
+                    title="2 · Resize by dragging: The reader sets the menu width, and the page follows."
+                ></iframe>
                 <p class="se-alone"><a href="opt-resize.html">Open this page on its own</a> (resize the window to judge it at phone width).</p>
             </section>
 
@@ -110,24 +287,107 @@
                     <h2 id="h-static">The backdrop shows, but a click on it does not close the menu.</h2>
                 </div>
                 <div class="se-look" data-review-look>
-                    <p data-for="formal">The menu opens over a dimmed page. The pointer clicks the backdrop twice: the menu does not close; it is pulled a little toward the screen edge and let go (the pull is an even, unhurried one), a ring marks it for a moment, and the log says prevented. Escape then closes it. Check that the menu is back exactly where it was and that the opening and closing are formal's own.</p>
-                    <p data-for="light">The menu opens over a dimmed page. The pointer clicks the backdrop twice: the menu does not close; it is pulled a little toward the screen edge and let go (the pull runs on light's own quick curve), a ring marks it for a moment, and the log says prevented. Escape then closes it. Check that the menu is back exactly where it was and that the opening and closing are light's own.</p>
-                    <p data-for="dark">The menu opens over a dimmed page. The pointer clicks the backdrop twice: the menu does not close; it is pulled a little toward the screen edge and let go (the pull runs on dark's own curve), a ring marks it for a moment, and the log says prevented. Escape then closes it. Check that the menu is back exactly where it was and that the opening and closing are dark's own.</p>
-                    <p data-for="cyberpunk">The menu opens over a dimmed page. The pointer clicks the backdrop twice: the menu does not close; it is pulled a little toward the screen edge and let go (the pull jolts in three steps, as cyberpunk moves everything), a ring marks it for a moment, and the log says prevented. Escape then closes it. Check that the menu is back exactly where it was and that the opening and closing are cyberpunk's own.</p>
-                    <p data-for="synthwave">The menu opens over a dimmed page. The pointer clicks the backdrop twice: the menu does not close; it is pulled a little toward the screen edge and let go (the pull runs on synthwave's own curve), a ring marks it for a moment, and the log says prevented. Escape then closes it. Check that the menu is back exactly where it was and that the opening and closing are synthwave's own.</p>
-                    <p data-for="pastel">The menu opens over a dimmed page. The pointer clicks the backdrop twice: the menu does not close; it is pulled a little toward the screen edge and let go (the pull overshoots softly and settles, as pastel does), a ring marks it for a moment, and the log says prevented. Escape then closes it. Check that the menu is back exactly where it was and that the opening and closing are pastel's own.</p>
-                    <p data-for="terminal">The menu opens over a dimmed page. The pointer clicks the backdrop twice: the menu does not close; it is pulled a little toward the screen edge and let go (the pull comes in two steps, as terminal moves), a ring marks it for a moment, and the log says prevented. Escape then closes it. Check that the menu is back exactly where it was and that the opening and closing are terminal's own.</p>
-                    <p data-for="forest">The menu opens over a dimmed page. The pointer clicks the backdrop twice: the menu does not close; it is pulled a little toward the screen edge and let go (the pull runs on forest's own curve), a ring marks it for a moment, and the log says prevented. Escape then closes it. Check that the menu is back exactly where it was and that the opening and closing are forest's own.</p>
-                    <p data-for="blueprint">The menu opens over a dimmed page. The pointer clicks the backdrop twice: the menu does not close; it is pulled a little toward the screen edge and let go (the pull runs on blueprint's own curve), a ring marks it for a moment, and the log says prevented. Escape then closes it. Check that the menu is back exactly where it was and that the opening and closing are blueprint's own.</p>
-                    <p data-for="solstice">The menu opens over a dimmed page. The pointer clicks the backdrop twice: the menu does not close; it is pulled a little toward the screen edge and let go (the pull runs on solstice's own curve), a ring marks it for a moment, and the log says prevented. Escape then closes it. Check that the menu is back exactly where it was and that the opening and closing are solstice's own.</p>
-                    <p data-for="brutalism">The menu opens over a dimmed page. The pointer clicks the backdrop twice: the menu does not close; it is pulled a little toward the screen edge and let go (the pull is short and hard), a ring marks it for a moment, and the log says prevented. Escape then closes it. Check that the menu is back exactly where it was and that the opening and closing are brutalism's own.</p>
-                    <p data-for="deco">The menu opens over a dimmed page. The pointer clicks the backdrop twice: the menu does not close; it is pulled a little toward the screen edge and let go (the pull runs on deco's own curve), a ring marks it for a moment, and the log says prevented. Escape then closes it. Check that the menu is back exactly where it was and that the opening and closing are deco's own.</p>
-                    <p data-for="phantom">The menu opens over a dimmed page. The pointer clicks the backdrop twice: the menu does not close; it is pulled a little toward the screen edge and let go (the pull runs on phantom's own curve), a ring marks it for a moment, and the log says prevented. Escape then closes it. Check that the menu is back exactly where it was and that the opening and closing are phantom's own.</p>
-                    <p data-for="grotesk">The menu opens over a dimmed page. The pointer clicks the backdrop twice: the menu does not close; it is pulled a little toward the screen edge and let go (the pull runs on grotesk's own curve), a ring marks it for a moment, and the log says prevented. Escape then closes it. Check that the menu is back exactly where it was and that the opening and closing are grotesk's own.</p>
-                    <p data-for="nostromo">The menu opens over a dimmed page. The pointer clicks the backdrop twice: the menu does not close; it is pulled a little toward the screen edge and let go (the pull is a cut, with no in-between, as nostromo moves), a ring marks it for a moment, and the log says prevented. Escape then closes it. Check that the menu is back exactly where it was and that the opening and closing are nostromo's own.</p>
-                    <p data-for="titanium">The menu opens over a dimmed page. The pointer clicks the backdrop twice: the menu does not close; it is pulled a little toward the screen edge and let go (the pull runs on the panel's own metal time), a ring marks it for a moment, and the log says prevented. Escape then closes it. Check that the menu is back exactly where it was and that the opening and closing are titanium's own.</p>
+                    <p data-for="formal">
+                        The menu opens over a dimmed page. The pointer clicks the backdrop twice: the menu does not close; it is pulled a little
+                        toward the screen edge and let go (the pull is an even, unhurried one), a ring marks it for a moment, and the log says
+                        prevented. Escape then closes it. Check that the menu is back exactly where it was and that the opening and closing are
+                        formal's own.
+                    </p>
+                    <p data-for="light">
+                        The menu opens over a dimmed page. The pointer clicks the backdrop twice: the menu does not close; it is pulled a little
+                        toward the screen edge and let go (the pull runs on light's own quick curve), a ring marks it for a moment, and the log says
+                        prevented. Escape then closes it. Check that the menu is back exactly where it was and that the opening and closing are
+                        light's own.
+                    </p>
+                    <p data-for="dark">
+                        The menu opens over a dimmed page. The pointer clicks the backdrop twice: the menu does not close; it is pulled a little
+                        toward the screen edge and let go (the pull runs on dark's own curve), a ring marks it for a moment, and the log says
+                        prevented. Escape then closes it. Check that the menu is back exactly where it was and that the opening and closing are dark's
+                        own.
+                    </p>
+                    <p data-for="cyberpunk">
+                        The menu opens over a dimmed page. The pointer clicks the backdrop twice: the menu does not close; it is pulled a little
+                        toward the screen edge and let go (the pull jolts in three steps, as cyberpunk moves everything), a ring marks it for a
+                        moment, and the log says prevented. Escape then closes it. Check that the menu is back exactly where it was and that the
+                        opening and closing are cyberpunk's own.
+                    </p>
+                    <p data-for="synthwave">
+                        The menu opens over a dimmed page. The pointer clicks the backdrop twice: the menu does not close; it is pulled a little
+                        toward the screen edge and let go (the pull runs on synthwave's own curve), a ring marks it for a moment, and the log says
+                        prevented. Escape then closes it. Check that the menu is back exactly where it was and that the opening and closing are
+                        synthwave's own.
+                    </p>
+                    <p data-for="pastel">
+                        The menu opens over a dimmed page. The pointer clicks the backdrop twice: the menu does not close; it is pulled a little
+                        toward the screen edge and let go (the pull overshoots softly and settles, as pastel does), a ring marks it for a moment, and
+                        the log says prevented. Escape then closes it. Check that the menu is back exactly where it was and that the opening and
+                        closing are pastel's own.
+                    </p>
+                    <p data-for="terminal">
+                        The menu opens over a dimmed page. The pointer clicks the backdrop twice: the menu does not close; it is pulled a little
+                        toward the screen edge and let go (the pull comes in two steps, as terminal moves), a ring marks it for a moment, and the log
+                        says prevented. Escape then closes it. Check that the menu is back exactly where it was and that the opening and closing are
+                        terminal's own.
+                    </p>
+                    <p data-for="forest">
+                        The menu opens over a dimmed page. The pointer clicks the backdrop twice: the menu does not close; it is pulled a little
+                        toward the screen edge and let go (the pull runs on forest's own curve), a ring marks it for a moment, and the log says
+                        prevented. Escape then closes it. Check that the menu is back exactly where it was and that the opening and closing are
+                        forest's own.
+                    </p>
+                    <p data-for="blueprint">
+                        The menu opens over a dimmed page. The pointer clicks the backdrop twice: the menu does not close; it is pulled a little
+                        toward the screen edge and let go (the pull runs on blueprint's own curve), a ring marks it for a moment, and the log says
+                        prevented. Escape then closes it. Check that the menu is back exactly where it was and that the opening and closing are
+                        blueprint's own.
+                    </p>
+                    <p data-for="solstice">
+                        The menu opens over a dimmed page. The pointer clicks the backdrop twice: the menu does not close; it is pulled a little
+                        toward the screen edge and let go (the pull runs on solstice's own curve), a ring marks it for a moment, and the log says
+                        prevented. Escape then closes it. Check that the menu is back exactly where it was and that the opening and closing are
+                        solstice's own.
+                    </p>
+                    <p data-for="brutalism">
+                        The menu opens over a dimmed page. The pointer clicks the backdrop twice: the menu does not close; it is pulled a little
+                        toward the screen edge and let go (the pull is short and hard), a ring marks it for a moment, and the log says prevented.
+                        Escape then closes it. Check that the menu is back exactly where it was and that the opening and closing are brutalism's own.
+                    </p>
+                    <p data-for="deco">
+                        The menu opens over a dimmed page. The pointer clicks the backdrop twice: the menu does not close; it is pulled a little
+                        toward the screen edge and let go (the pull runs on deco's own curve), a ring marks it for a moment, and the log says
+                        prevented. Escape then closes it. Check that the menu is back exactly where it was and that the opening and closing are deco's
+                        own.
+                    </p>
+                    <p data-for="phantom">
+                        The menu opens over a dimmed page. The pointer clicks the backdrop twice: the menu does not close; it is pulled a little
+                        toward the screen edge and let go (the pull runs on phantom's own curve), a ring marks it for a moment, and the log says
+                        prevented. Escape then closes it. Check that the menu is back exactly where it was and that the opening and closing are
+                        phantom's own.
+                    </p>
+                    <p data-for="grotesk">
+                        The menu opens over a dimmed page. The pointer clicks the backdrop twice: the menu does not close; it is pulled a little
+                        toward the screen edge and let go (the pull runs on grotesk's own curve), a ring marks it for a moment, and the log says
+                        prevented. Escape then closes it. Check that the menu is back exactly where it was and that the opening and closing are
+                        grotesk's own.
+                    </p>
+                    <p data-for="nostromo">
+                        The menu opens over a dimmed page. The pointer clicks the backdrop twice: the menu does not close; it is pulled a little
+                        toward the screen edge and let go (the pull is a cut, with no in-between, as nostromo moves), a ring marks it for a moment,
+                        and the log says prevented. Escape then closes it. Check that the menu is back exactly where it was and that the opening and
+                        closing are nostromo's own.
+                    </p>
+                    <p data-for="titanium">
+                        The menu opens over a dimmed page. The pointer clicks the backdrop twice: the menu does not close; it is pulled a little
+                        toward the screen edge and let go (the pull runs on the panel's own metal time), a ring marks it for a moment, and the log
+                        says prevented. Escape then closes it. Check that the menu is back exactly where it was and that the opening and closing are
+                        titanium's own.
+                    </p>
                 </div>
-                <iframe class="se-window" src="opt-static.html" title="3 · Static backdrop: The backdrop shows, but a click on it does not close the menu."></iframe>
+                <iframe
+                    class="se-window"
+                    src="opt-static.html"
+                    title="3 · Static backdrop: The backdrop shows, but a click on it does not close the menu."
+                ></iframe>
                 <p class="se-alone"><a href="opt-static.html">Open this page on its own</a> (resize the window to judge it at phone width).</p>
             </section>
 
@@ -144,24 +404,92 @@
                     <h2 id="h-quiet">A click on the backdrop is ignored, silently.</h2>
                 </div>
                 <div class="se-look" data-review-look>
-                    <p data-for="formal">The menu opens over a dimmed page. The pointer clicks the backdrop twice and nothing happens: no movement, no cue, no event (the log only notes the click). Escape still closes it. Check that the menu opens and closes with formal's own effect and that the dimmed page stays readable around it.</p>
-                    <p data-for="light">The menu opens over a dimmed page. The pointer clicks the backdrop twice and nothing happens: no movement, no cue, no event (the log only notes the click). Escape still closes it. Check that the menu opens and closes with light's own effect and that the dimmed page stays readable around it.</p>
-                    <p data-for="dark">The menu opens over a dimmed page. The pointer clicks the backdrop twice and nothing happens: no movement, no cue, no event (the log only notes the click). Escape still closes it. Check that the menu opens and closes with dark's own effect and that the dimmed page stays readable around it.</p>
-                    <p data-for="cyberpunk">The menu opens over a dimmed page. The pointer clicks the backdrop twice and nothing happens: no movement, no cue, no event (the log only notes the click). Escape still closes it. Check that the menu opens and closes with cyberpunk's own effect and that the dimmed page stays readable around it.</p>
-                    <p data-for="synthwave">The menu opens over a dimmed page. The pointer clicks the backdrop twice and nothing happens: no movement, no cue, no event (the log only notes the click). Escape still closes it. Check that the menu opens and closes with synthwave's own effect and that the dimmed page stays readable around it.</p>
-                    <p data-for="pastel">The menu opens over a dimmed page. The pointer clicks the backdrop twice and nothing happens: no movement, no cue, no event (the log only notes the click). Escape still closes it. Check that the menu opens and closes with pastel's own effect and that the dimmed page stays readable around it.</p>
-                    <p data-for="terminal">The menu opens over a dimmed page. The pointer clicks the backdrop twice and nothing happens: no movement, no cue, no event (the log only notes the click). Escape still closes it. Check that the menu opens and closes with terminal's own effect and that the dimmed page stays readable around it.</p>
-                    <p data-for="forest">The menu opens over a dimmed page. The pointer clicks the backdrop twice and nothing happens: no movement, no cue, no event (the log only notes the click). Escape still closes it. Check that the menu opens and closes with forest's own effect and that the dimmed page stays readable around it.</p>
-                    <p data-for="blueprint">The menu opens over a dimmed page. The pointer clicks the backdrop twice and nothing happens: no movement, no cue, no event (the log only notes the click). Escape still closes it. Check that the menu opens and closes with blueprint's own effect and that the dimmed page stays readable around it.</p>
-                    <p data-for="solstice">The menu opens over a dimmed page. The pointer clicks the backdrop twice and nothing happens: no movement, no cue, no event (the log only notes the click). Escape still closes it. Check that the menu opens and closes with solstice's own effect and that the dimmed page stays readable around it.</p>
-                    <p data-for="brutalism">The menu opens over a dimmed page. The pointer clicks the backdrop twice and nothing happens: no movement, no cue, no event (the log only notes the click). Escape still closes it. Check that the menu opens and closes with brutalism's own effect and that the dimmed page stays readable around it.</p>
-                    <p data-for="deco">The menu opens over a dimmed page. The pointer clicks the backdrop twice and nothing happens: no movement, no cue, no event (the log only notes the click). Escape still closes it. Check that the menu opens and closes with deco's own effect and that the dimmed page stays readable around it.</p>
-                    <p data-for="phantom">The menu opens over a dimmed page. The pointer clicks the backdrop twice and nothing happens: no movement, no cue, no event (the log only notes the click). Escape still closes it. Check that the menu opens and closes with phantom's own effect and that the dimmed page stays readable around it.</p>
-                    <p data-for="grotesk">The menu opens over a dimmed page. The pointer clicks the backdrop twice and nothing happens: no movement, no cue, no event (the log only notes the click). Escape still closes it. Check that the menu opens and closes with grotesk's own effect and that the dimmed page stays readable around it.</p>
-                    <p data-for="nostromo">The menu opens over a dimmed page. The pointer clicks the backdrop twice and nothing happens: no movement, no cue, no event (the log only notes the click). Escape still closes it. Check that the menu opens and closes with nostromo's own effect and that the dimmed page stays readable around it.</p>
-                    <p data-for="titanium">The menu opens over a dimmed page. The pointer clicks the backdrop twice and nothing happens: no movement, no cue, no event (the log only notes the click). Escape still closes it. Check that the menu opens and closes with titanium's own effect and that the dimmed page stays readable around it.</p>
+                    <p data-for="formal">
+                        The menu opens over a dimmed page. The pointer clicks the backdrop twice and nothing happens: no movement, no cue, no event
+                        (the log only notes the click). Escape still closes it. Check that the menu opens and closes with formal's own effect and that
+                        the dimmed page stays readable around it.
+                    </p>
+                    <p data-for="light">
+                        The menu opens over a dimmed page. The pointer clicks the backdrop twice and nothing happens: no movement, no cue, no event
+                        (the log only notes the click). Escape still closes it. Check that the menu opens and closes with light's own effect and that
+                        the dimmed page stays readable around it.
+                    </p>
+                    <p data-for="dark">
+                        The menu opens over a dimmed page. The pointer clicks the backdrop twice and nothing happens: no movement, no cue, no event
+                        (the log only notes the click). Escape still closes it. Check that the menu opens and closes with dark's own effect and that
+                        the dimmed page stays readable around it.
+                    </p>
+                    <p data-for="cyberpunk">
+                        The menu opens over a dimmed page. The pointer clicks the backdrop twice and nothing happens: no movement, no cue, no event
+                        (the log only notes the click). Escape still closes it. Check that the menu opens and closes with cyberpunk's own effect and
+                        that the dimmed page stays readable around it.
+                    </p>
+                    <p data-for="synthwave">
+                        The menu opens over a dimmed page. The pointer clicks the backdrop twice and nothing happens: no movement, no cue, no event
+                        (the log only notes the click). Escape still closes it. Check that the menu opens and closes with synthwave's own effect and
+                        that the dimmed page stays readable around it.
+                    </p>
+                    <p data-for="pastel">
+                        The menu opens over a dimmed page. The pointer clicks the backdrop twice and nothing happens: no movement, no cue, no event
+                        (the log only notes the click). Escape still closes it. Check that the menu opens and closes with pastel's own effect and that
+                        the dimmed page stays readable around it.
+                    </p>
+                    <p data-for="terminal">
+                        The menu opens over a dimmed page. The pointer clicks the backdrop twice and nothing happens: no movement, no cue, no event
+                        (the log only notes the click). Escape still closes it. Check that the menu opens and closes with terminal's own effect and
+                        that the dimmed page stays readable around it.
+                    </p>
+                    <p data-for="forest">
+                        The menu opens over a dimmed page. The pointer clicks the backdrop twice and nothing happens: no movement, no cue, no event
+                        (the log only notes the click). Escape still closes it. Check that the menu opens and closes with forest's own effect and that
+                        the dimmed page stays readable around it.
+                    </p>
+                    <p data-for="blueprint">
+                        The menu opens over a dimmed page. The pointer clicks the backdrop twice and nothing happens: no movement, no cue, no event
+                        (the log only notes the click). Escape still closes it. Check that the menu opens and closes with blueprint's own effect and
+                        that the dimmed page stays readable around it.
+                    </p>
+                    <p data-for="solstice">
+                        The menu opens over a dimmed page. The pointer clicks the backdrop twice and nothing happens: no movement, no cue, no event
+                        (the log only notes the click). Escape still closes it. Check that the menu opens and closes with solstice's own effect and
+                        that the dimmed page stays readable around it.
+                    </p>
+                    <p data-for="brutalism">
+                        The menu opens over a dimmed page. The pointer clicks the backdrop twice and nothing happens: no movement, no cue, no event
+                        (the log only notes the click). Escape still closes it. Check that the menu opens and closes with brutalism's own effect and
+                        that the dimmed page stays readable around it.
+                    </p>
+                    <p data-for="deco">
+                        The menu opens over a dimmed page. The pointer clicks the backdrop twice and nothing happens: no movement, no cue, no event
+                        (the log only notes the click). Escape still closes it. Check that the menu opens and closes with deco's own effect and that
+                        the dimmed page stays readable around it.
+                    </p>
+                    <p data-for="phantom">
+                        The menu opens over a dimmed page. The pointer clicks the backdrop twice and nothing happens: no movement, no cue, no event
+                        (the log only notes the click). Escape still closes it. Check that the menu opens and closes with phantom's own effect and
+                        that the dimmed page stays readable around it.
+                    </p>
+                    <p data-for="grotesk">
+                        The menu opens over a dimmed page. The pointer clicks the backdrop twice and nothing happens: no movement, no cue, no event
+                        (the log only notes the click). Escape still closes it. Check that the menu opens and closes with grotesk's own effect and
+                        that the dimmed page stays readable around it.
+                    </p>
+                    <p data-for="nostromo">
+                        The menu opens over a dimmed page. The pointer clicks the backdrop twice and nothing happens: no movement, no cue, no event
+                        (the log only notes the click). Escape still closes it. Check that the menu opens and closes with nostromo's own effect and
+                        that the dimmed page stays readable around it.
+                    </p>
+                    <p data-for="titanium">
+                        The menu opens over a dimmed page. The pointer clicks the backdrop twice and nothing happens: no movement, no cue, no event
+                        (the log only notes the click). Escape still closes it. Check that the menu opens and closes with titanium's own effect and
+                        that the dimmed page stays readable around it.
+                    </p>
                 </div>
-                <iframe class="se-window" src="opt-quiet.html" title="4 · Close on backdrop off: A click on the backdrop is ignored, silently."></iframe>
+                <iframe
+                    class="se-window"
+                    src="opt-quiet.html"
+                    title="4 · Close on backdrop off: A click on the backdrop is ignored, silently."
+                ></iframe>
                 <p class="se-alone"><a href="opt-quiet.html">Open this page on its own</a> (resize the window to judge it at phone width).</p>
             </section>
         </main>

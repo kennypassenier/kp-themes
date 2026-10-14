@@ -1193,6 +1193,11 @@
         border-radius: 1.2rem;
     }
 
+    /* The plate's ink (0 to 1) also brings a floating panel's edge and shadow in and out. */
+    [data-theme='pastel'] .kp-sidenav[data-kp-sidenav-variant='floating'] {
+        --kp-sidenav-float-ink: var(--kp-sig-pa-ink);
+    }
+
     [data-theme='pastel'] .kp-sidenav__header {
         border-block-end: none;
         padding-block-end: 0.2rem;

@@ -208,7 +208,17 @@ const scenes = {
         const gripNow = () => /** @type {HTMLElement} */ (panel.querySelector('.kp-sidenav__resizer'));
         const fire = (/** @type {string} */ type, /** @type {number} */ x, /** @type {HTMLElement} */ target = gripNow()) => {
             const r = gripNow().getBoundingClientRect();
-            target.dispatchEvent(new PointerEvent(type, { bubbles: true, cancelable: true, pointerId: 7, isPrimary: true, button: 0, clientX: x, clientY: r.top + r.height / 2 }));
+            target.dispatchEvent(
+                new PointerEvent(type, {
+                    bubbles: true,
+                    cancelable: true,
+                    pointerId: 7,
+                    isPrimary: true,
+                    button: 0,
+                    clientX: x,
+                    clientY: r.top + r.height / 2,
+                }),
+            );
         };
         /** Drag the handle to a width (px), the pointer travelling there over `ms`. */
         const drag = async (/** @type {number} */ to, /** @type {number} */ ms) => {

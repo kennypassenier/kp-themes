@@ -52,10 +52,20 @@ function snapshot(PARTS) {
         for (const prop of style) props[prop] = style.getPropertyValue(prop);
         const r = el.getBoundingClientRect();
         props['@rect'] = [r.x, r.y, r.width, r.height].map((n) => Math.round(n * 100) / 100).join(',');
-        props['@attrs'] = el.getAttributeNames().sort().map((n) => `${n}=${el.getAttribute(n)}`).join(' ');
+        props['@attrs'] = el
+            .getAttributeNames()
+            .sort()
+            .map((n) => `${n}=${el.getAttribute(n)}`)
+            .join(' ');
         out[name] = props;
     }
-    out.root = { '@attrs': document.documentElement.getAttributeNames().sort().map((n) => `${n}=${document.documentElement.getAttribute(n)}`).join(' ') };
+    out.root = {
+        '@attrs': document.documentElement
+            .getAttributeNames()
+            .sort()
+            .map((n) => `${n}=${document.documentElement.getAttribute(n)}`)
+            .join(' '),
+    };
     return out;
 }
 
@@ -139,7 +149,9 @@ function diff(fileA, fileB, noiseFile) {
         }
     }
     console.log(lines.slice(0, 400).join('\n'));
-    console.log(`states compared: ${states}; computed-property differences: ${props}; screenshot differences: ${shots}; ignored as noise: ${ignored}`);
+    console.log(
+        `states compared: ${states}; computed-property differences: ${props}; screenshot differences: ${shots}; ignored as noise: ${ignored}`,
+    );
     process.exitCode = props + shots === 0 ? 0 : 1;
 }
 
