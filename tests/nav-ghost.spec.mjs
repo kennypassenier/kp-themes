@@ -12,6 +12,7 @@
 import { expect, test } from '@playwright/test';
 import { THEMES } from '../js/theme-registry.js';
 import { contrast } from '../js/contrast.js';
+import { parseColour } from './helpers/colour.mjs';
 
 // Motion stays on here: this file reads animations or transitions, and the
 // suite runs with reduced motion otherwise (playwright.config.mjs).
@@ -19,14 +20,10 @@ test.use({ reducedMotion: 'no-preference' });
 
 const FIXTURE = '/tests/fixtures/nav-ghost.html';
 
-/** An opaque colour as sRGB in 0..1; `color(srgb …)` and `rgb(…)` both occur. @param {string} css */
+/** An opaque colour as sRGB in 0..1; rgb(), color(srgb), oklab() and oklch() all occur. @param {string} css */
 const rgb = (css) => {
-    const srgb = css.match(/color\(srgb ([\d.]+) ([\d.]+) ([\d.]+)/);
-    if (srgb) return [Number(srgb[1]), Number(srgb[2]), Number(srgb[3])];
-    const m = css.match(/rgba?\(([^)]+)\)/);
-    if (!m) return null;
-    const [r, g, b] = m[1].split(/[\s,/]+/).filter(Boolean);
-    return [Number(r) / 255, Number(g) / 255, Number(b) / 255];
+    const c = parseColour(css);
+    return c ? [c.r / 255, c.g / 255, c.b / 255] : null;
 };
 
 for (const { name } of THEMES) {
@@ -77,14 +74,20 @@ const plateOf = (page, png) =>
         const ctx = /** @type {CanvasRenderingContext2D} */ (canvas.getContext('2d', { willReadFrequently: true }));
         ctx.drawImage(img, 0, 0);
         const d = ctx.getImageData(0, 0, img.width, img.height).data;
-        /** @type {Map<string, number>} */
+        // Buckets of 16 levels per channel, the winning bucket averaged: a plate
+        // drawn as a gradient (solstice's hover) has no single pixel value that
+        // repeats, so counting exact values let a small flat glow outvote it.
+        /** @type {Map<string, { n: number, sum: number[] }>} */
         const counts = new Map();
         for (let i = 0; i < d.length; i += 4) {
-            const key = `${d[i]},${d[i + 1]},${d[i + 2]}`;
-            counts.set(key, (counts.get(key) ?? 0) + 1);
+            const key = `${d[i] >> 4},${d[i + 1] >> 4},${d[i + 2] >> 4}`;
+            const bucket = counts.get(key) ?? { n: 0, sum: [0, 0, 0] };
+            bucket.n += 1;
+            for (let c = 0; c < 3; c++) bucket.sum[c] += d[i + c];
+            counts.set(key, bucket);
         }
-        const [top] = [...counts.entries()].sort((a, b) => b[1] - a[1])[0];
-        return top.split(',').map((n) => Number(n) / 255);
+        const [top] = [...counts.values()].sort((a, b) => b.n - a.n);
+        return top.sum.map((v) => v / top.n / 255);
     }, png.toString('base64'));
 
 for (const { name } of THEMES) {

@@ -36,19 +36,30 @@ const ROOT = new URL('../', import.meta.url);
 // A module born after 6.1.0 that writes markup is attached on the eager side
 // too, or the comparison would read its own additions as a missing `when`:
 // js/progressbar.js writes the track, fill and head into a one-line bar
-// [scope-140]. (js/log.js, also later, writes only `style`, which is volatile.)
-const EAGER =
-    readFileSync(new URL('fixtures/auto-eager.txt', import.meta.url), 'utf8') +
-    "\nimport('./progressbar.js').then((m) => m.attachProgressbars());\n" +
-    // The dashboard components [scope-143] write markup too: shared action
-    // columns, sparklines and KPI toggles, the attention band's order, and
-    // the chart's drawing.
-    "import('./actions.js').then((m) => m.attachActionColumns());\n" +
-    "import('./kpi.js').then((m) => { m.attachSparklines(); m.attachKpiToggles(); });\n" +
-    "import('./attention.js').then((m) => m.attachAttention());\n" +
-    "import('./tiles.js').then((m) => m.attachTileSets());\n" +
-    "import('./freshness.js').then((m) => m.attachAgo());\n" +
-    "import('./chart.js').then((m) => m.attachCharts());\n";
+// [scope-140]; the dashboard components [scope-143] write shared action
+// columns, sparklines, KPI toggles and strips, the attention band's order,
+// the chart's drawing and the "updated ago" labels; the graph writes its kind
+// bar and the menu button its aria wiring. (js/log.js, also later, writes only
+// `style`, which is volatile.) They are static imports run inside `attachAll()`,
+// not calls appended at load, so a page that composes itself later and calls
+// `attachAll(host)` (the catalogue index) gets them on the eager side too.
+const EXTRA = [
+    ['./progressbar.js', 'attachProgressbars'],
+    ['./actions.js', 'attachActionColumns'],
+    ['./kpi.js', 'attachSparklines'],
+    ['./kpi.js', 'attachKpiToggles'],
+    ['./kpi.js', 'attachKpiStrips'],
+    ['./attention.js', 'attachAttention'],
+    ['./tiles.js', 'attachTileSets'],
+    ['./freshness.js', 'attachAgo'],
+    ['./chart.js', 'attachCharts'],
+    ['./graph.js', 'attachGraphs'],
+    ['./menu-button.js', 'attachMenuButtons'],
+];
+const EAGER = readFileSync(new URL('fixtures/auto-eager.txt', import.meta.url), 'utf8')
+    .replace(/^/, EXTRA.map(([from, name], i) => `import { ${name} as extra${i} } from '${from}';\n`).join(''))
+    .replace('        attachGrids(root),\n    ];', `        attachGrids(root),\n${EXTRA.map((_, i) => `        extra${i}(root),\n`).join('')}    ];`);
+if (!EAGER.includes('extra0(root)')) throw new Error('the eager entry no longer ends its attach list with attachGrids(root)');
 /** js/effects.js as 6.1.0 shipped it, one module with every hook in it [scope-117]. */
 const EFFECTS_EAGER = readFileSync(new URL('fixtures/effects-eager.txt', import.meta.url), 'utf8');
 
@@ -138,8 +149,11 @@ const markup = (page) =>
             const ids = new RegExp(idLike);
             const out = [];
             const walk = (/** @type {Element} */ el, /** @type {string} */ path) => {
+                // `<time class="kp-ago">` writes datetime and title from the
+                // clock: two loads a second apart differ there, in both channels.
+                const clock = el.matches('time.kp-ago');
                 const attrs = [...el.attributes]
-                    .filter((a) => !skip.has(a.name))
+                    .filter((a) => !skip.has(a.name) && !(clock && (a.name === 'datetime' || a.name === 'title')))
                     .map((a) => `${a.name}=${ids.test(a.name) ? a.value.replace(/[-_][A-Za-z0-9]+$/, '-*').replace(/\d+/g, 'N') : a.value}`)
                     .sort();
                 // By depth, not by sibling position: an element one side adds at
@@ -168,19 +182,29 @@ const markup = (page) =>
  * The markup once it has stopped moving: read until two readings 300ms apart
  * agree. The catalogue's own pages compose their sections from fetched pages
  * after load, so a single reading caught one side mid-composition.
+ * The catalogue index composes in two steps, about 1 s and about 5 s after
+ * load, so for it a plateau must hold for 4.5 s, not 300 ms.
  * @param {import('@playwright/test').Page} page
+ * @param {number} [quiet] how many readings 300ms apart must keep agreeing
  */
-const stable = async (page) => {
+const stable = async (page, quiet = 1) => {
     await settle(page);
     let before = await markup(page);
-    for (let i = 0; i < 20; i++) {
+    let agreed = 0;
+    for (let i = 0; i < 60; i++) {
         await page.waitForTimeout(300);
         const now = await markup(page);
-        if (now.join('\n') === before.join('\n')) return now;
+        if (now.join('\n') === before.join('\n')) {
+            agreed += 1;
+            if (agreed >= quiet) return now;
+        } else agreed = 0;
         before = now;
     }
     return before;
 };
+
+/** Pages that compose themselves from fetched pages in several steps. */
+const SLOW_COMPOSE = new Set(['catalogue/index.html']);
 
 test.describe.configure({ mode: 'parallel' });
 
@@ -193,7 +217,9 @@ for (const path of PAGES) {
             await page.goto(`/${path}`);
             await page.waitForLoadState('load');
             await page.waitForSelector('html[data-kp-auto-ready]', { state: 'attached' });
-            const lazy = await stable(page);
+            const quiet = SLOW_COMPOSE.has(path) ? 15 : 1;
+            if (SLOW_COMPOSE.has(path)) test.setTimeout(90_000);
+            const lazy = await stable(page, quiet);
 
             const context = await browser.newContext();
             const eager = await context.newPage();
@@ -202,7 +228,7 @@ for (const path of PAGES) {
             await eager.route('**/js/effects.js', (route) => route.fulfill({ status: 200, contentType: 'text/javascript', body: EFFECTS_EAGER }));
             await eager.goto(new URL(`/${path}`, page.url()).href);
             await eager.waitForLoadState('load');
-            const whole = await stable(eager);
+            const whole = await stable(eager, quiet);
             await context.close();
 
             /** Lines as counts, so a duplicate on one side is a difference too. @param {string[]} a @param {string[]} b */

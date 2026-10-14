@@ -14,6 +14,7 @@
 import { expect, test } from '@playwright/test';
 import { THEMES } from '../js/theme-registry.js';
 import { sweepThemeRecords } from './helpers/sweep-themes.mjs';
+import { colourOf } from './helpers/colour.mjs';
 
 // The contrast floor is the same claim in every theme; the level decides
 // how many of them are measured [scope-103]. All 22 at the release level.
@@ -42,18 +43,14 @@ async function open(page, theme) {
     });
 }
 
-/** @param {string} rgb a computed `rgb(r, g, b)` or `rgba(r, g, b, a)` */
-function luminance(rgb) {
-    // A relative colour (`hsl(from …)`, the synthwave register) computes
-    // to `color(srgb r g b)`; a plain one to `rgb(r, g, b)`.
-    const srgb = rgb.match(/color\(srgb ([\d.]+) ([\d.]+) ([\d.]+)/);
-    const m = srgb ? [srgb[0], ...srgb.slice(1).map((v) => String(Math.round(Number(v) * 255)))] : rgb.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-    if (!m) throw new Error(`not a colour: ${rgb}`);
-    const [r, g, b] = [m[1], m[2], m[3]].map((v) => {
-        const c = Number(v) / 255;
+/** @param {string} css any computed colour: rgb(), color(srgb), oklab(), oklch() */
+function luminance(css) {
+    const { r, g, b } = colourOf(css);
+    const [lr, lg, lb] = [r, g, b].map((v) => {
+        const c = v / 255;
         return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
     });
-    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    return 0.2126 * lr + 0.7152 * lg + 0.0722 * lb;
 }
 
 /** @param {string} a @param {string} b */
@@ -118,12 +115,17 @@ const GROUND = `(el) => {
         });
         if (faceAt !== -1) return [layers[faceAt].match(/rgba?\\([^)]*\\)/)[0]];
         if (image && image !== 'none' && fills) {
-            const stops = image.match(/rgba?\\([^)]*\\)/g) ?? [];
+            // Only the layers that fill the box are a ground: cyberpunk's card
+            // stacks a 14px yellow notch and a hairline grid on its face, and the
+            // notch's stop is not what the text sits on. A size list repeats.
+            const filling = layers.filter((layer, i) => /^(auto( auto)?|100% 100%|cover)$/.test((sizes[i % sizes.length] ?? 'auto').trim()));
+            const stops = filling.join(' ').match(/rgba?\\([^)]*\\)/g) ?? [];
             const opaque = stops.filter((c) => !/rgba\\(\\d+, \\d+, \\d+, 0\\)/.test(c));
             if (opaque.length > 0) return opaque;
         }
         const bg = style.backgroundColor;
-        if (bg && !/rgba\\(\\d+, \\d+, \\d+, 0\\)/.test(bg) && bg !== 'transparent') return [bg];
+        // Transparent is rgba(r, g, b, 0) or, for a relative colour, color(srgb r g b / 0).
+        if (bg && !/rgba\\(\\d+, \\d+, \\d+, 0\\)|\\/ 0\\)$/.test(bg) && bg !== 'transparent') return [bg];
         node = node.parentElement;
     }
     return [getComputedStyle(document.documentElement).backgroundColor];

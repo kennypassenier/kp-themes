@@ -206,7 +206,11 @@ for (const theme of SWEEP) {
                 const m = /rgba?\((\d+), (\d+), (\d+)(?:, ([\d.]+))?\)/.exec(value);
                 if (!m) {
                     // color(srgb …) is how Chromium reports hsl(from …): a wash, by construction.
-                    if (!/^color\(srgb /.test(value)) foreign.push(`${prop} ${value} on ${where}`);
+                    // oklab(…) / oklch(…) is how Firefox reports color-mix(in oklab, …) and
+                    // oklch(from …): a mix or a relative colour of the theme's own tokens
+                    // (light's alert ink is a deliberate 95/5 mix). A colour typed by hand
+                    // computes to rgb(), so it is still caught above.
+                    if (!/^(color\(srgb |oklab\(|oklch\()/.test(value)) foreign.push(`${prop} ${value} on ${where}`);
                     continue;
                 }
                 if (m[4] !== undefined && Number(m[4]) < 1) continue;

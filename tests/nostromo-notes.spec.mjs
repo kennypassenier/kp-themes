@@ -97,15 +97,19 @@ test(
         const faint = [];
         for (const theme of THEME_NAMES) {
             await wear(page, theme);
-            // The reading beside the lone bar, not the three in the group
-            // under it: a block gains demos, and a locator that says "the
-            // one" stops being true the day it does [fix-64b].
-            const p = await page
-                .locator('#progress .cat-stage > .kp-stack .kp-progress__value')
-                .evaluate((el) => /** @type {any} */ (window).kpPaint(el));
-            const ratio = contrast(p.ink, p.ground);
-            const floor = 4.5;
-            if (ratio < floor - 0.005) faint.push(`${theme}: ${ratio.toFixed(2)} (rgb ${p.ink} on rgb ${p.ground})`);
+            // The reading beside each lone bar, not the three in the group
+            // under them: a block gains demos, and a locator that says "the
+            // one" stops being true the day it does [fix-64b]. The block stands
+            // three times (Small, Medium, Large), so there are three readings.
+            const reads = await page
+                .locator('#progress .cat-cell > .kp-stack .kp-progress__value')
+                .evaluateAll((els) => els.map((el) => /** @type {any} */ (window).kpPaint(el)));
+            expect(reads.length, 'one reading beside the lone bar at each of three sizes').toBe(3);
+            for (const p of reads) {
+                const ratio = contrast(p.ink, p.ground);
+                const floor = 4.5;
+                if (ratio < floor - 0.005) faint.push(`${theme}: ${ratio.toFixed(2)} (rgb ${p.ink} on rgb ${p.ground})`);
+            }
         }
         expect(faint).toEqual([]);
     },
@@ -149,18 +153,24 @@ test(
         const ragged = [];
         for (const theme of THEME_NAMES) {
             await wear(page, theme);
-            const boxes = await page.locator('.kp-progress-group .kp-progressbar').evaluateAll((els) =>
-                els.map((el) => {
-                    const r = el.getBoundingClientRect();
-                    return { left: Math.round(r.left), right: Math.round(r.right) };
-                }),
+            // The group stands three times (Small, Medium, Large); each is read on its own.
+            const groups = await page.locator('.kp-progress-group').evaluateAll((els) =>
+                els.map((group) =>
+                    [...group.querySelectorAll('.kp-progressbar')].map((el) => {
+                        const r = el.getBoundingClientRect();
+                        return { left: Math.round(r.left), right: Math.round(r.right) };
+                    }),
+                ),
             );
-            expect(boxes.length, 'three labelled bars stand in the group').toBe(3);
-            const lefts = new Set(boxes.map((b) => b.left));
-            const rights = new Set(boxes.map((b) => b.right));
-            if (lefts.size !== 1 || rights.size !== 1) {
-                ragged.push(`${theme}: lefts ${[...lefts].join('/')}, rights ${[...rights].join('/')}`);
-            }
+            expect(groups.length, 'the group of labelled bars stands at three sizes').toBe(3);
+            groups.forEach((boxes, g) => {
+                expect(boxes.length, `three labelled bars stand in group ${g + 1}`).toBe(3);
+                const lefts = new Set(boxes.map((b) => b.left));
+                const rights = new Set(boxes.map((b) => b.right));
+                if (lefts.size !== 1 || rights.size !== 1) {
+                    ragged.push(`${theme} group ${g + 1}: lefts ${[...lefts].join('/')}, rights ${[...rights].join('/')}`);
+                }
+            });
         }
         expect(ragged).toEqual([]);
     },

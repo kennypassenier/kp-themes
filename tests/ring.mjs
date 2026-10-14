@@ -13,6 +13,17 @@
 // AR30 is about one layer down.
 
 /**
+ * The themes whose approved character draws focus its own way, so that the
+ * declared "outline plus two shadow layers" of the base is not what they
+ * paint (css/<name>-register.css, the character rounds 3eba5336 and 0b5434db):
+ * corner brackets, an edge bar, a double or dashed outline, a cursor ring on a
+ * pseudo-element. For these the declared halves are not asserted; the painted
+ * ring (tests/helpers/focus-paint.mjs) is, and it is asserted for every theme.
+ * A theme that joins this list owes a ring that shows in paint on all four sides.
+ */
+export const OWN_FOCUS_GRAMMAR = new Set(['cyberpunk', 'synthwave', 'pastel', 'terminal', 'solstice', 'deco', 'phantom']);
+
+/**
  * Reach an element with the keyboard, by CSS selector.
  *
  * Measured in both browsers on 2026-09-08 (G15): a bare
@@ -49,6 +60,40 @@ export async function tabToSelector(page, selector, limit = 60) {
  * @param {number} [limit]
  */
 export const tabTo = (page, testId, limit = 40) => tabToSelector(page, `[data-test="${testId}"]`, limit);
+
+/**
+ * Themes that mark focus on a MENU ITEM their own way, beside the ones above:
+ * formal's edge bar and dark's inset line plus bracketed label, both approved
+ * characters (css/formal-register.css, css/dark-register.css). The base's two
+ * declared halves are not asserted on a menu item for these; the painted mark is.
+ */
+export const OWN_MENU_ITEM_FOCUS_GRAMMAR = new Set([...OWN_FOCUS_GRAMMAR, 'formal', 'dark']);
+
+/**
+ * Put the keyboard back on a control once it can take it.
+ *
+ * A switch of theme re-runs the opening trace of a popover or dialog (blueprint's,
+ * about 0.6 s) with `visibility: hidden` on its first frames, and the browser drops
+ * focus to the body meanwhile. A reader does not switch theme with a menu open, so
+ * the harness restores the focus before it reads anything; this polls until a
+ * `focus()` lands rather than sleeping a guessed time.
+ *
+ * @param {import('@playwright/test').Page} page
+ * @param {string} selector
+ * @param {number} [timeout]
+ */
+export async function holdFocus(page, selector, timeout = 3000) {
+    const until = Date.now() + timeout;
+    for (;;) {
+        const landed = await page.evaluate((s) => {
+            const el = /** @type {HTMLElement | null} */ (document.querySelector(s));
+            el?.focus();
+            return el !== null && el === document.activeElement;
+        }, selector);
+        if (landed || Date.now() > until) return landed;
+        await new Promise((resolve) => setTimeout(resolve, 50));
+    }
+}
 
 /** Wear a theme. @param {import('@playwright/test').Page} page @param {string} theme */
 export const wearTheme = async (page, theme) => {

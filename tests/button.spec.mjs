@@ -21,7 +21,8 @@ import { readFileSync } from 'node:fs';
 // The ring measurement lives in tests/ring.mjs since W4, because the
 // assembly suite measures the same ring on the destructive item inside a
 // row menu and two copies of it would drift apart.
-import { tabTo, wearTheme, wholeRing } from './ring.mjs';
+import { OWN_FOCUS_GRAMMAR, tabTo, wearTheme, wholeRing } from './ring.mjs';
+import { paintedRing } from './helpers/focus-paint.mjs';
 
 // Motion stays on here: this file reads animations or transitions, and the
 // suite runs with reduced motion otherwise (playwright.config.mjs).
@@ -68,6 +69,8 @@ test.describe('the button', { tag: ['@component:button'] }, () => {
         ['React', 'react-md'],
     ]) {
         test(`both halves of the focus ring reach .kp-button in every theme, ${channel} [AR30]`, { tag: ['@sweep'] }, async ({ page }) => {
+            // Sixteen themes, each read in paint as well as in style: not a 30 s test.
+            test.slow();
             await tabTo(page, id);
             /** @type {string[]} */
             const broken = [];
@@ -82,10 +85,15 @@ test.describe('the button', { tag: ['@component:button'] }, () => {
                 // the inner one a box-shadow layer in --focus-ring with a
                 // real spread: `0px 0px 0px 0px` is a layer that paints
                 // nothing, and that is exactly what the layer collision left.
-                if (!outer || !inner || !changed) {
+                // A theme with a focus grammar of its own does not paint the base's
+                // two declared halves; what it must do is paint a ring.
+                if (!OWN_FOCUS_GRAMMAR.has(theme) && (!outer || !inner || !changed)) {
                     const why = !changed ? 'focus changes nothing' : 'half a ring';
                     broken.push(`${theme}: ${why} — outline ${found.outlineStyle} ${found.outlineWidth}px, shadow ${found.boxShadow}`);
                 }
+                // Every theme, own grammar or not: the ring shows in paint on all four sides.
+                const { read, thin } = await paintedRing(page, page.locator(`[data-test="${id}"]`), { settleMs: 100 });
+                if (thin.length) broken.push(`${theme}: no painted ring on ${thin.join(', ')} ${JSON.stringify(read)}`);
             }
             expect(broken, `half a ring in:\n${broken.join('\n')}`).toEqual([]);
         });

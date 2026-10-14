@@ -129,9 +129,17 @@ for (const name of [theme('dark'), theme('titanium')]) {
                 const box = await button.boundingBox();
                 if (!box) continue;
                 await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-                // Let hover finish: the press is compared with where hover left it.
+                // Let hover finish: the press is compared with where hover left it. Finite
+                // animations only: the "Working…" button's spinner loops by design and
+                // would never settle.
                 await expect
-                    .poll(() => button.evaluate((el) => el.getAnimations({ subtree: true }).length), { message: `${label}: hover settles` })
+                    .poll(
+                        () =>
+                            button.evaluate(
+                                (el) => el.getAnimations({ subtree: true }).filter((a) => a.effect?.getTiming().iterations !== Infinity).length,
+                            ),
+                        { message: `${label}: hover settles` },
+                    )
                     .toBe(0);
                 const hovered = await read();
                 const clip = { x: box.x - 6, y: box.y - 6, width: box.width + 12, height: box.height + 12 };

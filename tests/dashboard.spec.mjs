@@ -44,7 +44,8 @@
 
 import { expect, test } from '@playwright/test';
 import { readFileSync } from 'node:fs';
-import { paintedFocusDelta, tabTo, wearTheme, wholeRing } from './ring.mjs';
+import { holdFocus, OWN_FOCUS_GRAMMAR, OWN_MENU_ITEM_FOCUS_GRAMMAR, tabTo, wearTheme, wholeRing } from './ring.mjs';
+import { paintedRing, paints } from './helpers/focus-paint.mjs';
 
 // Motion stays on here: this file reads animations or transitions, and the
 // suite runs with reduced motion otherwise (playwright.config.mjs).
@@ -256,6 +257,7 @@ for (const channel of CHANNELS) {
         `both halves of the focus ring reach the destructive item in the row menu, every theme — ${channel.name} [W4, AR30, DI2]`,
         { tag: ['@component:table', '@component:overlays', '@component:button', '@sweep'] },
         async ({ page }) => {
+            test.slow();
             await page.setViewportSize({ width: 1280, height: 900 });
             await page.goto(PAGE);
             await ready(page);
@@ -263,13 +265,24 @@ for (const channel of CHANNELS) {
 
             /** @type {string[]} */
             const broken = [];
+            const item = page.locator(`[data-test="${channel.prefix}-delete-r1"]`);
             for (const theme of THEMES) {
                 await wearTheme(page, theme);
+                // Blueprint's opening trace hides the menu for its first frames and
+                // the browser drops focus to the body: a switch of theme with the
+                // menu open is not a path a reader takes, so the harness puts the
+                // keyboard back on the item before it reads it (holdFocus).
+                await holdFocus(page, `[data-test="${channel.prefix}-delete-r1"]`);
                 // Read until the ring is whole, not once [fix-1]: the theme just
                 // changed and the ring arrives through a transition.
                 const { found, outer, inner } = await wholeRing(page, `${channel.prefix}-delete-r1`);
                 expect(found.focused, `${theme}: the keyboard lost the menu item`).toBe(true);
-                if (!outer || !inner) broken.push(`${theme}: outline ${found.outlineStyle} ${found.outlineWidth}px, shadow ${found.boxShadow}`);
+                // A theme whose character draws focus its own way is held to the
+                // painted mark (below) rather than to the base's two declared halves.
+                if (!OWN_MENU_ITEM_FOCUS_GRAMMAR.has(theme) && (!outer || !inner))
+                    broken.push(`${theme}: outline ${found.outlineStyle} ${found.outlineWidth}px, shadow ${found.boxShadow}`);
+                const { read } = await paintedRing(page, item, { settleMs: 700 });
+                if (!paints(read)) broken.push(`${theme}: focus painted nothing around the item ${JSON.stringify(read)}`);
             }
             expect(broken, `half a ring on the destructive menu item in:\n${broken.join('\n')}`).toEqual([]);
         },
@@ -308,8 +321,17 @@ for (const channel of CHANNELS) {
                 // inside — and it counted the popover's own border as a ring
                 // in the four themes whose --border-strong equals their
                 // --focus-ring. A difference has the border in both terms.
-                const { delta, side, focused, idle } = await paintedFocusDelta(page, `${channel.prefix}-delete-r1`, { settleMs: 150 });
-                if (delta <= 0) blank.push(`${theme} (${side}: ${focused} focused, ${idle} at rest)`);
+                //
+                // Read in paint, in any colour, around the item and along its edge
+                // (tests/helpers/focus-paint.mjs): the earlier count of pixels in
+                // --focus-ring read 0 in nine themes whose character marks focus
+                // another way (formal's red edge bar, cyberpunk's brackets, ...).
+                // The popover's overflow still cuts a mark it clips: a mark that
+                // does not survive the box moves no pixel.
+                const item = page.locator(`[data-test="${channel.prefix}-delete-r1"]`);
+                await holdFocus(page, `[data-test="${channel.prefix}-delete-r1"]`);
+                const { read } = await paintedRing(page, item, { settleMs: 700 });
+                if (!paints(read)) blank.push(`${theme} (${read.outside} outside, ${read.edge} at the edge moved)`);
             }
             expect(blank, `focus painted no ring in:\n${blank.join('\n')}`).toEqual([]);
         },
@@ -323,6 +345,7 @@ for (const channel of CHANNELS) {
         `the confirmation's buttons carry both halves of the ring, every theme — ${channel.name} [W4, TH107, DI2]`,
         { tag: ['@component:table', '@component:overlays', '@component:button', '@sweep'] },
         async ({ page }) => {
+            test.slow();
             await page.setViewportSize({ width: 1280, height: 900 });
             await page.goto(PAGE);
             await ready(page);
@@ -344,9 +367,16 @@ for (const channel of CHANNELS) {
                 // The reading that failed in Kenny's verify run of 2026-09-10,
                 // mid-transition on forest: the second shadow layer at nought
                 // spread on its way to two. Read until it is the value [fix-1].
+                // Phantom's switch drops focus out of the open dialog, as blueprint's
+                // does out of the menu: not a reader's path, so the harness puts the
+                // keyboard back on Cancel first.
+                await holdFocus(page, '[data-test="confirm-cancel"]');
                 const { found, outer, inner } = await wholeRing(page, 'confirm-cancel');
                 expect(found.focused, `${theme}: the keyboard is not on Cancel`).toBe(true);
-                if (!outer || !inner) broken.push(`${theme}: outline ${found.outlineStyle} ${found.outlineWidth}px, shadow ${found.boxShadow}`);
+                if (!OWN_FOCUS_GRAMMAR.has(theme) && (!outer || !inner))
+                    broken.push(`${theme}: outline ${found.outlineStyle} ${found.outlineWidth}px, shadow ${found.boxShadow}`);
+                const { read } = await paintedRing(page, page.locator('[data-test="confirm-cancel"]'), { settleMs: 700 });
+                if (!paints(read)) broken.push(`${theme}: focus painted nothing around Cancel ${JSON.stringify(read)}`);
             }
             expect(broken, `half a ring on the confirmation's Cancel in:\n${broken.join('\n')}`).toEqual([]);
         },
