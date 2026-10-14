@@ -2702,8 +2702,11 @@ effect with the close as the open backwards.
   or without `data-kp-sidenav-reserve`): the module does not draw the other box
   (no paint, out of the tab order and the accessibility tree, and none on the
   first frame), and the panel's header gets the room kept for the launcher back
-  when only the tab is shown. Without the attribute the markup decides, so a
-  page that holds both elements keeps both, as before. A `side` panel and the
+  when only the tab is shown. Without the attribute the edge tab is the
+  default: the panel behaves as `"tab"`, the launcher is not drawn and its room
+  is given back; write `"both"` to keep both. A page with no
+  `.kp-sidenav__tab` for the panel keeps its launcher, so a panel never has no
+  opener. A `side` panel and the
   collapsed rail ignore it and show whatever the markup holds. The focus,
   `aria-controls`, `inert` and the theme's own opening and closing are the same
   with either opener.

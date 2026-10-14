@@ -83,7 +83,7 @@ export type SidenavProps = {
      */
     reserve?: boolean;
     /**
-     * Which opener an `over` or `push` panel shows: the fixed launcher, the edge tab or both. Left out, the markup decides (both elements = both). `side` and the collapsed rail ignore it.
+     * Which opener an `over` or `push` panel shows: the fixed launcher, the edge tab or both. Left out, it is `tab` (the edge tab; a page with no tab for the panel keeps the launcher). `side` and the collapsed rail ignore it.
      */
     opener?: 'launcher' | 'tab' | 'both';
     /**

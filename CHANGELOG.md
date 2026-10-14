@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **Changed: the edge tab is the side navigation's default opener** [Kenny, 2026-10-14; sidenav-opener-1]. With no `data-kp-sidenav-opener`
+  (or any value but `launcher` / `both`), an `over` or `push` panel behaves as `"tab"`: the tab shows, the launcher is not drawn and the
+  header and page room for the launcher is given back, on the first frame too (the pre-JS rules follow). A page with no `.kp-sidenav__tab` for the
+  panel keeps its launcher, so a panel never loses its opener. Write `data-kp-sidenav-opener="both"` for the old markup-decides result on a page
+  with both elements. `side` mode and the collapsed rail are unchanged.
+
 - **Added: the side navigation chooses its opener** [Kenny, 2026-10-14; sidenav-opener-M1; research/sidenav-opener]. `data-kp-sidenav-opener="launcher" | "tab" | "both"`
   on the panel (React prop `opener`) says which of the fixed launcher and the edge tab an `over` or `push` panel shows, with or without
   `data-kp-sidenav-reserve`. The box the choice turns off is not drawn (`data-kp-sidenav-opener-off`, `display: none` in the layout layer, none on the first

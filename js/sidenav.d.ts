@@ -47,8 +47,9 @@ export declare const OPTIONS: {
     /**
      * On the panel: which opener the page shows, `launcher` (the fixed
      * `.kp-sidenav__launcher`), `tab` (the `.kp-sidenav__tab` on the edge) or
-     * `both`. Absent: the markup decides, so a page with both elements keeps
-     * both. Applies to `over` and `push`; `side` and the collapsed rail ignore it.
+     * `both`. Absent (or any other value): `tab`, the default [Kenny, 2026-10-14];
+     * a page with no `.kp-sidenav__tab` for the panel keeps its launcher.
+     * Applies to `over` and `push`; `side` and the collapsed rail ignore it.
      */
     opener: string;
     /** Written on an opener box (launcher or tab) the choice turns off; the box is not drawn. */
