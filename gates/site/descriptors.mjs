@@ -23,7 +23,7 @@
 //   examples      each { title, why, markup } -- `markup` is
 //                 framework-free HTML, rendered live AND printed as the
 //                 snippet from the same string, so the two cannot
-//                 diverge (AR19). `frame: true` (or `{ height }`) renders
+//                 diverge (AR19). `frame: true` (or `{ height, width }`) renders
 //                 it in an iframe window of its own, for a launcher or a
 //                 panel fixed to the window's edge
 //   variants      each { name, what } -- every variant and state
@@ -36,8 +36,10 @@
 // `js/`. A descriptor MAY NOT restate any of those -- gates/check-site.mjs
 // refuses it, so a rename cannot leave a table behind (AR21).
 
+import { SIDENAV_MINOR_EXAMPLES, SIDENAV_MINOR_VARIANTS } from './sidenav-minor.mjs';
+
 /**
- * @typedef {{ title: string, why: string, markup: string, react?: string, frame?: boolean | { height?: string } }} Example
+ * @typedef {{ title: string, why: string, markup: string, react?: string, frame?: boolean | { height?: string, width?: string } }} Example
  * @typedef {{ name: string, what: string }} Variant
  * @typedef {{
  *   id: string,
@@ -2962,6 +2964,7 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
 </div>
 `,
             },
+            ...SIDENAV_MINOR_EXAMPLES,
         ],
         variants: [
             { name: 'data-kp-sidenav-mode', what: 'side (the default, in the flow), over (above the content, with a backdrop) or push (fixed, and the content named by data-kp-sidenav-content moves over).' },
@@ -2999,6 +3002,7 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
             { name: 'never sideways', what: 'The panel clips its own horizontal overflow and a long label ends in an ellipsis, so a count or a badge at the end of a row is never pushed out of reach. A navigation you have to scroll sideways is one you cannot read.' },
             { name: '.kp-sidenav__scroll', what: 'The part that scrolls. The header and the footer do not, so a long navigation in a short window keeps its title and its account row in view.' },
             { name: '.kp-sidenav__category', what: 'A heading that folds, with .kp-sidenav__category-toggle and .kp-sidenav__submenu inside it. The open height is a grid track, so it animates without anything measuring it.' },
+            ...SIDENAV_MINOR_VARIANTS,
             { name: 'pastel', what: 'In pastel an over or push panel draws its own plate and pass and lands on it; a panel on the end edge swings from its top-end corner. Widths and groups move on the landing held at its value, so a size never passes it, and the panel closes as it opened, backwards. The launcher and the rows are pastel’s buttons.' },
         ],
         accessibility: [

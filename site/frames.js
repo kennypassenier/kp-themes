@@ -14,6 +14,8 @@ for (const template of document.querySelectorAll('template[data-sc-frame]')) {
     frame.title = template.getAttribute('data-sc-frame-title') ?? 'Example';
     const height = template.getAttribute('data-sc-frame-height');
     if (height) frame.style.setProperty('--sc-frame-height', height);
+    const width = template.getAttribute('data-sc-frame-width');
+    if (width) frame.style.setProperty('--sc-frame-width', width);
     frame.srcdoc =
         '<!doctype html><html lang="en" data-theme="' + (document.documentElement.getAttribute('data-theme') || 'formal') + '"><head>' +
         '<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">' + styles + '</head>' +

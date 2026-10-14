@@ -140,7 +140,7 @@
        (js frames: site/frames.js). The window follows the page's theme. */
     .sc-frame {
         display: block;
-        inline-size: 100%;
+        inline-size: min(100%, var(--sc-frame-width, 100%));
         block-size: var(--sc-frame-height, 28rem);
         border: 1px solid var(--border);
         border-radius: var(--radius, 0.5rem);

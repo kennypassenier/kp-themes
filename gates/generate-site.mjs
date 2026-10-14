@@ -479,11 +479,12 @@ ${table(
  * template holds the example's markup as written, so the page still carries
  * the string the snippet prints [AR19].
  *
- * @param {{ title: string, markup: string, frame?: boolean | { height?: string } }} ex
+ * @param {{ title: string, markup: string, frame?: boolean | { height?: string, width?: string } }} ex
  */
 function frameOf(ex) {
     const height = typeof ex.frame === 'object' && ex.frame.height ? ` data-sc-frame-height="${escape(ex.frame.height)}"` : '';
-    return `                            <template data-sc-frame data-sc-frame-title="${escape(ex.title)}"${height}>
+    const width = typeof ex.frame === 'object' && ex.frame.width ? ` data-sc-frame-width="${escape(ex.frame.width)}"` : '';
+    return `                            <template data-sc-frame data-sc-frame-title="${escape(ex.title)}"${height}${width}>
 ${ex.markup}
                             </template>`;
 }
@@ -506,6 +507,8 @@ for (const template of document.querySelectorAll('template[data-sc-frame]')) {
     frame.title = template.getAttribute('data-sc-frame-title') ?? 'Example';
     const height = template.getAttribute('data-sc-frame-height');
     if (height) frame.style.setProperty('--sc-frame-height', height);
+    const width = template.getAttribute('data-sc-frame-width');
+    if (width) frame.style.setProperty('--sc-frame-width', width);
     frame.srcdoc =
         '<!doctype html><html lang="en" data-theme="' + (document.documentElement.getAttribute('data-theme') || 'formal') + '"><head>' +
         '<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">' + styles + '</head>' +
@@ -661,7 +664,7 @@ function siteCss() {
        (js frames: site/frames.js). The window follows the page's theme. */
     .sc-frame {
         display: block;
-        inline-size: 100%;
+        inline-size: min(100%, var(--sc-frame-width, 100%));
         block-size: var(--sc-frame-height, 28rem);
         border: 1px solid var(--border);
         border-radius: var(--radius, 0.5rem);
