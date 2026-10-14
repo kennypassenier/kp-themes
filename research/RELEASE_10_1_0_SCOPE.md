@@ -53,8 +53,6 @@ focus helper, ...). The stamp-cards test lists `light`, which has no stamp: drop
 
 ## Waiting on Kenny (form of 2026-10-14)
 
-- Grotesk's toast, alert close and upload open with `fall` and close with `leave`: a mirror or its "clockwise both
-  ways" rule?
 - A trend tile's long label next to its corner link ends in an ellipsis (css/components.css:1587), against "a label is
   never cut".
 - The opener's default with no attribute (the markup decides) and the header room it gives back without a launcher.
@@ -62,7 +60,7 @@ focus helper, ...). The stamp-cards test lists `light`, which has no stamp: drop
 
 ## Not worked on again (already decided or parked)
 
-Contrast readings (a signal, not a gate: form v44); the parked package for the release after (arrival moments, per-dialog
+Contrast readings (a signal, not a gate: form v44); grotesk's leave, which turns clockwise and is not the arrival reversed by Kenny's update 2 of 2026-10-07 (themes/grotesk/CHARACTER.md §0b), so its toast, alert close and upload pairs read off on the meter by design; the parked package for the release after (arrival moments, per-dialog
 duration incl. dark's 587 ms dialogs, tile mark and tone, state word tones); fix-103 ("voorlopig ok", form v27); light's
 blueprint grid as a visible result.
 
