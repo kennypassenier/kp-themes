@@ -67,9 +67,9 @@ export type SidenavProps = {
      */
     accordion?: boolean;
     /**
-     * Dim the page behind it in `over`.
+     * Dim the page behind it in `over`; `false` for no scrim; `'static'` keeps the scrim and refuses a click on it with the theme's cue (the panel does not close, `onSidenavPrevented` fires).
      */
-    backdrop?: boolean;
+    backdrop?: boolean | 'static';
     backdropClass?: string;
     closeOnEsc?: boolean;
     lockScroll?: boolean;
@@ -78,6 +78,96 @@ export type SidenavProps = {
      * What `push` moves over.
      */
     contentSelector?: string;
+    /**
+     * The content keeps the panel's width whether it is open or not (push and over): the gutter the panel opens into.
+     */
+    reserve?: boolean;
+    /**
+     * A key chord that toggles it from anywhere but a text field, e.g. `Control+b` (`Mod` is Meta on a Mac).
+     */
+    shortcut?: string;
+    /**
+     * A selector, inside the panel, for where the focus lands on opening; used in every mode.
+     */
+    initialFocus?: string;
+    /**
+     * Milliseconds the pointer rests before an `expandOnHover` rail widens. Default 150.
+     */
+    hoverDelay?: number;
+    /**
+     * Collapse the rail to its icons while its box is this wide or narrower: `true` for the 40rem step, or a length.
+     */
+    slimBelow?: boolean | string;
+    /**
+     * In the collapsed rail each item shows its label as a tooltip. Default on.
+     */
+    railTips?: boolean;
+    /**
+     * In the collapsed rail a group's submenu floats beside it. Default on.
+     */
+    flyout?: boolean;
+    /**
+     * A closed panel leaves the tab order and the accessibility tree. Default on.
+     */
+    inert?: boolean;
+    /**
+     * `onSidenavToggle` and `onSidenavSlim` fire before the change and `preventDefault()` refuses it (`onSidenavPrevented` then fires).
+     */
+    cancelable?: boolean;
+    /**
+     * A click on the backdrop closes it. Default on.
+     */
+    closeOnBackdrop?: boolean;
+    /**
+     * A handle on the content-facing edge makes the width the reader's; kept with `remember`.
+     */
+    resizable?: boolean;
+    /**
+     * The narrowest width the handle allows, a length. Default 12rem.
+     */
+    minWidth?: string;
+    /**
+     * The widest width the handle allows, a length. Default 32rem.
+     */
+    maxWidth?: string;
+    /**
+     * The panel's look: `floating` detaches it from the window's edge, `inset` makes the content a rounded card beside it.
+     */
+    variant?: 'floating' | 'inset';
+    /**
+     * Row height and panel padding.
+     */
+    density?: 'compact' | 'default' | 'comfortable';
+    /**
+     * The panel opened or closed (before, with `cancelable`).
+     */
+    onSidenavToggle?: (event: CustomEvent<{
+        open: boolean;
+        reason: string;
+    }>) => void;
+    /**
+     * The rail collapsed or expanded (before, with `cancelable`).
+     */
+    onSidenavSlim?: (event: CustomEvent<{
+        collapsed: boolean;
+        reason: string;
+    }>) => void;
+    /**
+     * The mode or the room it takes changed.
+     */
+    onSidenavMode?: (event: CustomEvent<{
+        mode: 'over' | 'side' | 'push';
+        offset: unknown;
+        reason: string;
+    }>) => void;
+    /**
+     * A change was refused (by a listener or a static backdrop); `detail.reason` says who asked.
+     */
+    onSidenavPrevented?: (event: CustomEvent<{
+        kind: string;
+        reason: string;
+        source: string;
+    }>) => void;
     /**
      * A name, so what the reader folded, opened or collapsed survives a reload. Writes `data-kp-remember`; the key is composed from it [js/remember.js].
      */

@@ -1,5 +1,7 @@
 import { forwardRef, useEffect, useRef } from 'react';
 
+import { SIDENAV_MODE_EVENT, SIDENAV_PREVENTED_EVENT, SIDENAV_SLIM_EVENT, SIDENAV_TOGGLE_EVENT } from '../js/sidenav.js';
+
 // Side navigation [feat-nav-3, sidenav-react 2026-09-12].
 //
 // The framework-free channel shipped first and this is the other half.
@@ -44,12 +46,31 @@ import { forwardRef, useEffect, useRef } from 'react';
  * @property {boolean | string} [overBelow]  Become the `over` panel while the box it lives in is this wide or narrower: `true` for the package's 40rem step, or a length. Its toggles are shown only then, its slim toggles only above it [scope-80].
  * @property {boolean} [expandOnHover]  Widen while the pointer is over it.
  * @property {boolean} [accordion]  One nested list open at a time.
- * @property {boolean} [backdrop]  Dim the page behind it in `over`.
+ * @property {boolean | 'static'} [backdrop]  Dim the page behind it in `over`; `false` for no scrim; `'static'` keeps the scrim and refuses a click on it with the theme's cue (the panel does not close, `onSidenavPrevented` fires).
  * @property {string} [backdropClass]
  * @property {boolean} [closeOnEsc]
  * @property {boolean} [lockScroll]
  * @property {boolean} [focusTrap]
  * @property {string} [contentSelector]  What `push` moves over.
+ * @property {boolean} [reserve]  The content keeps the panel's width whether it is open or not (push and over): the gutter the panel opens into.
+ * @property {string} [shortcut]  A key chord that toggles it from anywhere but a text field, e.g. `Control+b` (`Mod` is Meta on a Mac).
+ * @property {string} [initialFocus]  A selector, inside the panel, for where the focus lands on opening; used in every mode.
+ * @property {number} [hoverDelay]  Milliseconds the pointer rests before an `expandOnHover` rail widens. Default 150.
+ * @property {boolean | string} [slimBelow]  Collapse the rail to its icons while its box is this wide or narrower: `true` for the 40rem step, or a length.
+ * @property {boolean} [railTips]  In the collapsed rail each item shows its label as a tooltip. Default on.
+ * @property {boolean} [flyout]  In the collapsed rail a group's submenu floats beside it. Default on.
+ * @property {boolean} [inert]  A closed panel leaves the tab order and the accessibility tree. Default on.
+ * @property {boolean} [cancelable]  `onSidenavToggle` and `onSidenavSlim` fire before the change and `preventDefault()` refuses it (`onSidenavPrevented` then fires).
+ * @property {boolean} [closeOnBackdrop]  A click on the backdrop closes it. Default on.
+ * @property {boolean} [resizable]  A handle on the content-facing edge makes the width the reader's; kept with `remember`.
+ * @property {string} [minWidth]  The narrowest width the handle allows, a length. Default 12rem.
+ * @property {string} [maxWidth]  The widest width the handle allows, a length. Default 32rem.
+ * @property {'floating' | 'inset'} [variant]  The panel's look: `floating` detaches it from the window's edge, `inset` makes the content a rounded card beside it.
+ * @property {'compact' | 'default' | 'comfortable'} [density]  Row height and panel padding.
+ * @property {(event: CustomEvent<{ open: boolean, reason: string }>) => void} [onSidenavToggle]  The panel opened or closed (before, with `cancelable`).
+ * @property {(event: CustomEvent<{ collapsed: boolean, reason: string }>) => void} [onSidenavSlim]  The rail collapsed or expanded (before, with `cancelable`).
+ * @property {(event: CustomEvent<{ mode: 'over' | 'side' | 'push', offset: unknown, reason: string }>) => void} [onSidenavMode]  The mode or the room it takes changed.
+ * @property {(event: CustomEvent<{ kind: string, reason: string, source: string }>) => void} [onSidenavPrevented]  A change was refused (by a listener or a static backdrop); `detail.reason` says who asked.
  * @property {string} [remember]  A name, so what the reader folded, opened or collapsed survives a reload. Writes `data-kp-remember`; the key is composed from it [js/remember.js].
  * @property {import('react').ElementType} [linkComponent]  What renders a link [TH62]. Default 'a'.
  * @property {string} [label]  The accessible name of the navigation landmark.
@@ -113,6 +134,25 @@ function SidenavInner(
         lockScroll,
         focusTrap,
         contentSelector,
+        reserve,
+        shortcut,
+        initialFocus,
+        hoverDelay,
+        slimBelow,
+        railTips,
+        flyout,
+        inert,
+        cancelable,
+        closeOnBackdrop,
+        resizable,
+        minWidth,
+        maxWidth,
+        variant,
+        density,
+        onSidenavToggle,
+        onSidenavSlim,
+        onSidenavMode,
+        onSidenavPrevented,
         remember,
         linkComponent: Link = 'a',
         autoAttach = true,
@@ -137,12 +177,27 @@ function SidenavInner(
         ...(overBelow === undefined || overBelow === false ? null : { 'data-kp-sidenav-over-below': overBelow === true ? '' : overBelow }),
         ...flag('data-kp-sidenav-expand-on-hover', expandOnHover),
         ...flag('data-kp-sidenav-accordion', accordion),
-        ...flag('data-kp-sidenav-backdrop', backdrop),
+        ...(backdrop === 'static' ? { 'data-kp-sidenav-backdrop': 'static' } : flag('data-kp-sidenav-backdrop', backdrop)),
         ...value('data-kp-sidenav-backdrop-class', backdropClass),
         ...flag('data-kp-sidenav-close-on-esc', closeOnEsc),
         ...flag('data-kp-sidenav-lock-scroll', lockScroll),
         ...flag('data-kp-sidenav-focus-trap', focusTrap),
         ...value('data-kp-sidenav-content', contentSelector),
+        ...flag('data-kp-sidenav-reserve', reserve),
+        ...value('data-kp-sidenav-shortcut', shortcut),
+        ...value('data-kp-sidenav-initial-focus', initialFocus),
+        ...value('data-kp-sidenav-hover-delay', hoverDelay === undefined ? undefined : String(hoverDelay)),
+        ...(slimBelow === undefined || slimBelow === false ? null : { 'data-kp-sidenav-slim-below': slimBelow === true ? '' : slimBelow }),
+        ...flag('data-kp-sidenav-rail-tips', railTips),
+        ...flag('data-kp-sidenav-flyout', flyout),
+        ...flag('data-kp-sidenav-inert', inert),
+        ...flag('data-kp-sidenav-cancelable', cancelable),
+        ...flag('data-kp-sidenav-close-on-backdrop', closeOnBackdrop),
+        ...flag('data-kp-sidenav-resizable', resizable),
+        ...value('data-kp-sidenav-min-width', minWidth),
+        ...value('data-kp-sidenav-max-width', maxWidth),
+        ...value('data-kp-sidenav-variant', variant),
+        ...value('data-kp-sidenav-density', density),
         ...value('data-kp-remember', remember),
     };
 
@@ -167,6 +222,33 @@ function SidenavInner(
             detach?.();
         };
     }, [autoAttach]);
+
+    // The module's events fire on the element either way; these props are
+    // the same events as callbacks. The listeners are added once and read the
+    // latest handler, so a new function on every render re-subscribes nothing.
+    const heard = useRef({ onSidenavToggle, onSidenavSlim, onSidenavMode, onSidenavPrevented });
+    heard.current = { onSidenavToggle, onSidenavSlim, onSidenavMode, onSidenavPrevented };
+    useEffect(() => {
+        const node = own.current;
+        if (node === null) return undefined;
+        const pairs = /** @type {const} */ ([
+            [SIDENAV_TOGGLE_EVENT, 'onSidenavToggle'],
+            [SIDENAV_SLIM_EVENT, 'onSidenavSlim'],
+            [SIDENAV_MODE_EVENT, 'onSidenavMode'],
+            [SIDENAV_PREVENTED_EVENT, 'onSidenavPrevented'],
+        ]);
+        const listeners = pairs.map(([type, name]) => {
+            const listener = (/** @type {Event} */ event) => {
+                // A nested panel's event bubbles through this one.
+                if (event.target === node) /** @type {any} */ (heard.current)[name]?.(event);
+            };
+            node.addEventListener(type, listener);
+            return /** @type {const} */ ([type, listener]);
+        });
+        return () => {
+            for (const [type, listener] of listeners) node.removeEventListener(type, listener);
+        };
+    }, []);
 
     /** @param {HTMLElement | null} node */
     const hold = (node) => {
