@@ -1444,6 +1444,19 @@
         padding: 0.5rem;
     }
 
+    /* The trend tile's label stops before its corner link (4.5rem, 2.25rem in
+       a narrow tile, css/components.css); the label's own end margin above is
+       the half rem it gives back, so the room for the link stays whole. */
+    [data-theme='nostromo'] .kp-kpi--trend > .kp-kpi__label {
+        margin-inline-end: calc(4.5rem - 0.5rem);
+    }
+
+    @container kp-kpi (max-width: 12rem) {
+        [data-theme='nostromo'] .kp-kpi--trend > .kp-kpi__label {
+            margin-inline-end: calc(2.25rem - 0.5rem);
+        }
+    }
+
     [data-theme='nostromo'] .kp-kpi__label::before {
         position: relative;
         inset: auto;

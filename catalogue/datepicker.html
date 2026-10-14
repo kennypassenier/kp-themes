@@ -801,15 +801,15 @@
                 <h2>Another locale</h2>
                 <div class="cat-look">
                     <b>Look at:</b> this picker sits under <code>lang="nl"</code> and nothing else changed. What the module takes from the locale must
-                    follow: the value is written <code>13-09-2026</code> with dashes, the placeholder of the empty one says <code>dd-mm-yyyy</code>,
-                    typing <code>14-9-2026</code> is read day first, and the month name and the weekday headings are Dutch — <b>september</b> over
+                    follow: the value is written <code>13/09/2026</code> (dd/mm/yyyy for every reader, rule 52), the placeholder of the empty one says <code>dd/mm/yyyy</code>,
+                    typing <code>14-9-2026</code> or <code>14/9/2026</code> is read day first, and the month name and the weekday headings are Dutch — <b>september</b> over
                     <b>ma di wo do vr za zo</b>, read from the browser for the picker's own locale. The arrow labels stay English until a consumer
                     calls <code>setStrings</code>, and a consumer who sets month or weekday names of their own keeps them in every locale.
                 </div>
                 <div class="cat-stage cat-stage--block" style="min-block-size: 22rem">
                     <div class="kp-datepicker" lang="nl">
                         <label class="kp-field__label" for="dp-nl">Datum van melding (frozen open)</label>
-                        <input class="kp-field__input" id="dp-nl" type="text" inputmode="numeric" value="13-09-2026" />
+                        <input class="kp-field__input" id="dp-nl" type="text" inputmode="numeric" value="13/09/2026" />
                         <button type="button" class="kp-button" aria-label="Open the calendar" aria-expanded="true">
                             <span aria-hidden="true">▦</span>
                         </button>
@@ -1138,7 +1138,7 @@
                 <div class="cat-stage" style="margin-block-start: 1rem">
                     <div class="kp-datepicker" data-kp-datepicker lang="nl">
                         <label class="kp-field__label" for="dp-nl-live">Datum van melding (live)</label>
-                        <input class="kp-field__input" id="dp-nl-live" type="text" inputmode="numeric" data-kp-date-input value="13-09-2026" />
+                        <input class="kp-field__input" id="dp-nl-live" type="text" inputmode="numeric" data-kp-date-input value="13/09/2026" />
                         <button type="button" class="kp-button" data-kp-date-open aria-label="Open the calendar" title="Open the calendar">
                             <span aria-hidden="true">▦</span>
                         </button>
@@ -1455,7 +1455,8 @@
                     is Monday, <code>6</code> Saturday) whatever the locale would say: in the frozen copy the headings run
                     <b>Su Mo Tu We Th Fr Sa</b> and 1 September 2026, a Tuesday, sits in the third column, with two blanks before it. The live twin
                     opens the same way. <code>data-kp-locale="de-DE"</code> sets the language of the picker without a <code>lang</code> around it: the
-                    value is written <code>13.09.2026</code>, the placeholder of the empty one reads <code>dd.mm.yyyy</code>, and the month and
+                    value is written <code>13/09/2026</code> and the placeholder of the empty one reads <code>dd/mm/yyyy</code> (rule 52; with
+                    <code>data-kp-date-format="locale"</code> they would read <code>13.09.2026</code> and <code>dd.mm.yyyy</code>), and the month and
                     weekday names are German, starting on Monday.
                 </div>
                 <div class="cat-stage cat-stage--block" style="min-block-size: 22rem">
@@ -1798,7 +1799,7 @@
                     </div>
                     <div class="kp-datepicker" data-kp-datepicker data-kp-locale="de-DE">
                         <label class="kp-field__label" for="dp-de-live">Lieferdatum (live, de-DE)</label>
-                        <input class="kp-field__input" id="dp-de-live" type="text" inputmode="numeric" data-kp-date-input value="13.09.2026" />
+                        <input class="kp-field__input" id="dp-de-live" type="text" inputmode="numeric" data-kp-date-input value="13/09/2026" />
                         <button type="button" class="kp-button" data-kp-date-open aria-label="Open the calendar" title="Open the calendar">
                             <span aria-hidden="true">▦</span>
                         </button>

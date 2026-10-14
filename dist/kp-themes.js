@@ -9085,7 +9085,8 @@ function weekStartsOn(locale, explicit) {
   }
   return 1;
 }
-function datePattern(locale) {
+function datePattern(locale, format = "locale") {
+  if (format === "rule52") return { parts: ["day", "month", "year"], separator: "/", hint: "dd/mm/yyyy" };
   const formatter = new Intl.DateTimeFormat(resolveLocale(locale), { year: "numeric", month: "2-digit", day: "2-digit" });
   const parts = [];
   let separator = "-";
@@ -9097,10 +9098,15 @@ function datePattern(locale) {
   const hint = parts.map((p) => p === "day" ? "dd" : p === "month" ? "mm" : "yyyy").join(separator);
   return { parts, separator, hint };
 }
-function formatDate(date, locale) {
+function formatDate(date, locale, format = "locale") {
+  if (format === "rule52") {
+    const dd = String(date.getDate()).padStart(2, "0");
+    const mm = String(date.getMonth() + 1).padStart(2, "0");
+    return `${dd}/${mm}/${String(date.getFullYear()).padStart(4, "0")}`;
+  }
   return new Intl.DateTimeFormat(resolveLocale(locale), { year: "numeric", month: "2-digit", day: "2-digit" }).format(date);
 }
-function parseDate(text, locale) {
+function parseDate(text, locale, format = "locale") {
   const trimmed = text.trim();
   const exact = (y, m, d) => {
     const date = new Date(y, m - 1, d);
@@ -9110,7 +9116,7 @@ function parseDate(text, locale) {
   if (iso) return exact(Number(iso[1]), Number(iso[2]), Number(iso[3]));
   const loose = /^(\d{1,4})[-/. ](\d{1,2})[-/. ](\d{1,4})$/.exec(trimmed);
   if (!loose) return null;
-  const { parts } = datePattern(locale);
+  const { parts } = datePattern(locale, format);
   const numbers = [Number(loose[1]), Number(loose[2]), Number(loose[3])];
   const by = {};
   parts.forEach((part, i) => {
@@ -9367,6 +9373,7 @@ function datePicker(element) {
 }
 function attachDatePickers(root = document, {
   locale: localeOption,
+  dateFormat: formatOption = "rule52",
   weekStartsOn: weekOption,
   closeOnSelect = true,
   refocus = true,
@@ -9399,6 +9406,10 @@ function attachDatePickers(root = document, {
     picker.dataset.kpDatepickerAttached = "";
     panel.dataset.kpArrive = "none";
     const locale = resolveLocale(picker.dataset.kpLocale ?? localeOption, picker);
+    const numeric = (
+      /** @type {'rule52' | 'locale'} */
+      (picker.dataset.kpDateFormat ?? formatOption) === "locale" ? "locale" : "rule52"
+    );
     const firstDay = weekStartsOn(locale, picker.dataset.kpWeekStartsOn === void 0 ? weekOption : Number(picker.dataset.kpWeekStartsOn));
     const min = picker.dataset.kpMin ? parseDate(picker.dataset.kpMin, locale) : null;
     const max = picker.dataset.kpMax ? parseDate(picker.dataset.kpMax, locale) : null;
@@ -9410,14 +9421,14 @@ function attachDatePickers(root = document, {
       expanded: open.getAttribute("aria-expanded"),
       panelHidden: panel.hidden
     };
-    if (input.placeholder === "") input.placeholder = datePattern(locale).hint;
+    if (input.placeholder === "") input.placeholder = datePattern(locale, numeric).hint;
     const disabled = (date) => {
       if (min !== null && date < min) return true;
       if (max !== null && date > max) return true;
       if (disabledDays.includes(date.getDay())) return true;
       return isDateDisabled?.(date) ?? false;
     };
-    const read = () => parseDate2(input.value, locale);
+    const read = () => input.value.trim() === "" ? null : parseDate(input.value, locale, numeric);
     let cursor = read() ?? /* @__PURE__ */ new Date();
     let view = "days";
     let back = [];
@@ -9671,7 +9682,7 @@ function attachDatePickers(root = document, {
         delete input.dataset.kpDateValue;
         if (source !== "typed") input.value = "";
       } else {
-        if (source !== "typed") input.value = formatDate(date, locale);
+        if (source !== "typed") input.value = formatDate(date, locale, numeric);
         input.dataset.kpDateValue = toISO(date);
       }
       picker.dispatchEvent(new CustomEvent(DATE_EVENT, { bubbles: true, detail: { iso: date === null ? null : toISO(date), date, source } }));
@@ -9787,7 +9798,7 @@ function attachDatePickers(root = document, {
       element: picker,
       get: read,
       set: (date) => {
-        const parsed = date === null ? null : typeof date === "string" ? parseDate(date, locale) : date;
+        const parsed = date === null ? null : typeof date === "string" ? parseDate(date, locale, numeric) : date;
         commit(parsed, "set");
         if (parsed !== null) cursor = parsed;
         if (!panel.hidden) draw();

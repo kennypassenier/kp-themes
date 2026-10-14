@@ -14,7 +14,7 @@
             "when": "[data-kp-contract-error], [data-kp-destructive], [data-kp-semantic], [data-kp-confirm], .kp-skip-link, [data-kp-skip], [data-kp-to-top], [data-kp-nav-toggle], .kp-nav-wrap--sticky, .kp-nav"
         },
         "js/datatable.js": { "digest": "a6f7940c2a272b30", "when": "[data-kp-datatable]" },
-        "js/datepicker.js": { "digest": "bd10d79372cfe7d0", "when": "[data-kp-datepicker]" },
+        "js/datepicker.js": { "digest": "1746eaff0df8b372", "when": "[data-kp-datepicker]" },
         "js/forms.js": { "digest": "ce7b5972fa9bd2a0", "when": "[data-kp-form], [data-kp-submit], .kp-switch" },
         "js/freshness.js": { "digest": "9d733e1e8379a795", "when": "[data-kp-ago]" },
         "js/graph.js": { "digest": "43beaf953b46865c", "when": "[data-kp-graph]" },
@@ -3043,6 +3043,7 @@
         "light||||tr:nth-child(4)": "bc43403d34204206",
         "light||||tr:nth-child(5)": "960130d78a04c508",
         "light||||tr:nth-child(6)": "9c494c4f4bd46a11",
+        "nostromo||@container kp-kpi (max-width: 12rem)||.kp-kpi__label": "e98161d8b763a22d",
         "nostromo||@container kp-nav (max-width: 40rem) § @media (prefers-reduced-motion: no-preference)||.kp-nav__links": "29da64ae5d890fff",
         "nostromo||@container kp-nav (max-width: 40rem)||.kp-nav__menu": "25b6a4bd0b05fa6f",
         "nostromo||@container kp-nav (max-width: 40rem)||.kp-nav__menu[data-kp-menu-label]": "c38a8eee72817f9a",
@@ -3202,7 +3203,7 @@
         "nostromo||||.kp-kpi[data-kp-tone='warning']": "9c4e86bddcad33bd",
         "nostromo||||.kp-kpi__delta": "0e16a8a9d54afe3a",
         "nostromo||||.kp-kpi__delta[data-kp-tone]": "15a1d544cb57a983",
-        "nostromo||||.kp-kpi__label": "4e7a7697f00dbf02",
+        "nostromo||||.kp-kpi__label": "aadcc2571095c695",
         "nostromo||||.kp-kpi__label)": "11e79e9de7866e62",
         "nostromo||||.kp-kpi__meter)": "93506c083e623a30",
         "nostromo||||.kp-kpi__meter)[data-kp-loading]": "af96990f8893d372",
@@ -5208,7 +5209,7 @@
         "||@container kp-grid (max-width: 40rem)||.kp-grid__tile": "10bb49e3b34a246a",
         "||@container kp-help (max-width: 22rem)||.kp-help__list": "ce0aed715e7e484c",
         "||@container kp-help (max-width: 22rem)||dt": "9812a778c231f526",
-        "||@container kp-kpi (max-width: 12rem)||.kp-kpi__label": "217377b3bde81112",
+        "||@container kp-kpi (max-width: 12rem)||.kp-kpi__label": "28e762fa5d5fd103",
         "||@container kp-kpi (max-width: 12rem)||.kp-kpi__link-word": "f151d675d67a2d53",
         "||@container kp-kpi (max-width: 12rem)||.kp-kpi__trend": "ec674358b8af7a07",
         "||@container kp-nav (max-width: 40rem)||.kp-nav": "ec4a3a0e85eeff68",
@@ -5716,7 +5717,7 @@
         "||||.kp-kpi__delta[data-kp-tone='good']": "338f7453ce3666f1",
         "||||.kp-kpi__delta[data-kp-tone]": "2147b8d079846945",
         "||||.kp-kpi__hint": "850af637c3eff6ba",
-        "||||.kp-kpi__label": "2d7bcf3eceec2100",
+        "||||.kp-kpi__label": "cae65982d18cac9c",
         "||||.kp-kpi__label-note": "4abcc2e45226adbf",
         "||||.kp-kpi__link": "da1ba237f7d62da0",
         "||||.kp-kpi__link-visible": "fe661543a9e9eee8",
@@ -6462,7 +6463,7 @@
             ]
         },
         "datatable": {
-            "modules": "972916f390e34e3a",
+            "modules": "b2286c46f8f1d67e",
             "families": [
                 "data-kp-align",
                 "data-kp-arrive",
@@ -6523,6 +6524,7 @@
                 "data-kp-datatable-sort-summary",
                 "data-kp-datatable-status",
                 "data-kp-datatable-undo",
+                "data-kp-date-format",
                 "data-kp-date-input",
                 "data-kp-date-open",
                 "data-kp-date-panel",
@@ -6631,10 +6633,11 @@
             ]
         },
         "datepicker": {
-            "modules": "ccb4273864320f5c",
+            "modules": "e78e3cb27538b426",
             "families": [
                 "data-kp-align",
                 "data-kp-close-on-select",
+                "data-kp-date-format",
                 "data-kp-date-input",
                 "data-kp-date-open",
                 "data-kp-date-panel",
@@ -7980,7 +7983,7 @@
             ]
         },
         "upload": {
-            "modules": "41beb48099cf8444",
+            "modules": "7053f83a6c6ba897",
             "families": [
                 "data-kp-arrive",
                 "data-kp-arriving",

@@ -1099,15 +1099,18 @@
         grid-column: 1 / -1;
     }
 
+    /* A plain tile's label is never cut [kpi-label-cut-M1]: it wraps between
+ * words as wide as the tile is, and a word longer than the tile breaks.
+ * The tiles of a row stretch to the tallest, so a row stays one height;
+ * a trend tile and a strip with columns keep their one-line rule below. */
     .kp-kpi__label {
-        overflow: hidden;
         color: var(--muted-foreground);
         font-size: var(--kp-text-xs, 0.75rem);
         font-weight: 500;
         letter-spacing: 0.06em;
-        text-overflow: ellipsis;
+        overflow-wrap: break-word;
         text-transform: uppercase;
-        white-space: nowrap;
+        white-space: normal;
     }
 
     /* The number, its unit, and a note beside it ("avg 15 min"). */
@@ -1290,15 +1293,6 @@
     .kp-kpi--toggle[aria-pressed='true'] .kp-kpi__hint > [data-kp-when='on'] {
         display: inline;
         color: var(--primary);
-    }
-
-    /* A narrow tile (two a row on a phone) wraps its label and its trend
- * rather than cutting them off. */
-    @container kp-kpi (max-width: 12rem) {
-        .kp-kpi__label {
-            white-space: normal;
-            overflow-wrap: break-word;
-        }
     }
 
     /* --- Meter with a mark [scope-143] ------------------------------------ */
@@ -1582,12 +1576,17 @@
     }
 
     /* The link in the corner takes the label's end: the label's box stops
- * before it and a label that is still too long ends in an ellipsis, so it
- * never runs under the link (a 148 px tile, a phone pane). */
+ * before it and a label that is still too long wraps between words, so it
+ * never runs under the link and is never cut (a 148 px tile, a phone pane;
+ * Kenny, 2026-10-14). Two lines are kept for it, as for the words under the
+ * figure, so a row of trends is one height whether a label wraps or not. */
     .kp-kpi--trend > .kp-kpi__label {
         margin-inline-end: 4.5rem;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        min-block-size: calc(2 * var(--kp-text-xs, 0.75rem) * var(--kp-line-height, 1.5));
+        overflow: visible;
+        overflow-wrap: break-word;
+        text-overflow: clip;
+        white-space: normal;
     }
 
     /* Every state as tall as filled: the value line keeps its height under
@@ -1653,7 +1652,7 @@
         }
 
         .kp-kpi--trend > .kp-kpi__label {
-            margin-inline-end: 1.5rem;
+            margin-inline-end: 2.25rem;
         }
 
         .kp-kpi--trend > .kp-kpi__trend {

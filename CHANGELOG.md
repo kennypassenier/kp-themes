@@ -26,8 +26,20 @@
   on the panel (React prop `opener`) says which of the fixed launcher and the edge tab an `over` or `push` panel shows, with or without
   `data-kp-sidenav-reserve`. The box the choice turns off is not drawn (`data-kp-sidenav-opener-off`, `display: none` in the layout layer, none on the first
   frame by the markup alone), and the panel's header gets the launcher's room back when only the tab shows (`data-kp-sidenav-launched` is written only
-  while a launcher is). Absent, the markup decides: a page with both elements keeps both, so no approved page changes. `side` mode and the collapsed
+  while a launcher is). Its default is the edge tab (see the change above). `side` mode and the collapsed
   rail ignore it.
+- **Fixed: a key figure's label is never cut** [kpi-label-cut-M1; Kenny, 2026-10-14]. A plain tile's `.kp-kpi__label` wraps between words (a
+  word longer than the tile breaks) instead of ending in an ellipsis; the trend tile's label next to its corner link does the same and stops
+  before the link (4.5rem, 2.25rem in a narrow tile; nostromo's register keeps that room), with two label lines kept so a row of trends stays one
+  height. The label of a tile in a strip with columns keeps its one line (fix-101). Measured in Firefox on catalogue/data.html in 16 themes at
+  1280 and 390 px: 288 plain labels and 768 trend tiles (also at a forced 148 px) with none cut, none under the link, one height inside a strip.
+- **Changed: the date picker writes dd/mm/yyyy for every reader** [datetime-M1; rule 52]. Its field, placeholder and typing are day first with
+  slashes whatever the locale (en-US used to write `09/04/2026`, de-DE `04.09.2026`); month and weekday names still follow the locale. New:
+  `data-kp-date-format="locale"` (and the `dateFormat` option of `attachDatePickers`) keeps the locale's own order; `formatDate`, `parseDate` and
+  `datePattern` in js/locale.js take the format as a last argument. gates/datepicker-format.test.mjs.
+- **Closed, already built: header-menu, kpi-meter, kpi-spark, counts-exact, port-spec** [docs/MINI_ROUNDS.md]. Each measured once in Firefox on the
+  catalogue and closed with its numbers.
+
 - **Fixed: the review of research/all-themes-applied, round 2** [Kenny, 2026-10-13 20:37]. The side navigation and the alarm open and close
   with each theme's own dialog effect in every theme (they slid, faded or rose with the package's motion in ten themes); pastel's bar, palette,
   pickers, menus, alarm and side navigation take pastel's sheet; dark's alarm runs the pass; grotesk's Equipment hover draws the straight rule;

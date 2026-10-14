@@ -139,7 +139,7 @@ for (const channel of CHANNELS) {
             await expect(panel.locator(`[data-kp-day="${chosenYear}-03-13"]`)).toBeFocused();
             await expect(panel.locator('[data-kp-day][tabindex="0"]')).toHaveCount(1);
             // Choosing a month moved the calendar, not the value.
-            await expect(page.locator(channel.input)).toHaveValue('13-09-2026');
+            await expect(page.locator(channel.input)).toHaveValue('13/09/2026');
             await panel.locator(`[data-kp-day="${chosenYear}-03-20"]`).click();
             await expect(page.locator(channel.input)).toHaveValue(`20-03-${chosenYear}`);
         });

@@ -115,12 +115,13 @@ export declare function measureDateView(panel: HTMLElement): {
 export declare function datePicker(element: Element): DatePickerHandle | null;
 /**
  * @param {ParentNode} root
- * @param {{ locale?: string, weekStartsOn?: number, closeOnSelect?: boolean, refocus?: boolean, isDateDisabled?: (date: Date) => boolean, renderDay?: (button: HTMLButtonElement, date: Date) => void, previousGlyph?: string, nextGlyph?: string }} [options]
- *   Defaults; per picker: `data-kp-locale`, `data-kp-week-starts-on`, `data-kp-min`, `data-kp-max` (ISO), `data-kp-disabled-days` (0-6, comma-separated), `data-kp-close-on-select="false"`, `data-kp-previous-glyph`, `data-kp-next-glyph`.
+ * @param {{ locale?: string, dateFormat?: 'rule52' | 'locale', weekStartsOn?: number, closeOnSelect?: boolean, refocus?: boolean, isDateDisabled?: (date: Date) => boolean, renderDay?: (button: HTMLButtonElement, date: Date) => void, previousGlyph?: string, nextGlyph?: string }} [options]
+ *   Defaults; per picker: `data-kp-locale`, `data-kp-date-format` (`rule52`, the default: dd/mm/yyyy whatever the locale; `locale`: the locale's own numeric order), `data-kp-week-starts-on`, `data-kp-min`, `data-kp-max` (ISO), `data-kp-disabled-days` (0-6, comma-separated), `data-kp-close-on-select="false"`, `data-kp-previous-glyph`, `data-kp-next-glyph`.
  * @returns {(() => void) & { handles: DatePickerHandle[] }} detach
  */
-export declare function attachDatePickers(root?: ParentNode, { locale: localeOption, weekStartsOn: weekOption, closeOnSelect, refocus, isDateDisabled, renderDay, previousGlyph, nextGlyph, }?: {
+export declare function attachDatePickers(root?: ParentNode, { locale: localeOption, dateFormat: formatOption, weekStartsOn: weekOption, closeOnSelect, refocus, isDateDisabled, renderDay, previousGlyph, nextGlyph, }?: {
     locale?: string;
+    dateFormat?: 'rule52' | 'locale';
     weekStartsOn?: number;
     closeOnSelect?: boolean;
     refocus?: boolean;
