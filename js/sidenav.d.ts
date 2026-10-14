@@ -131,8 +131,6 @@ export declare const OPTIONS: {
 export declare const SIDENAV_TAB = ".kp-sidenav__tab";
 /** The fixed box at the window's start corner that holds a panel's toggler. */
 export declare const SIDENAV_LAUNCHER = ".kp-sidenav__launcher";
-/** The strip a shut panel leaves in view [`--kp-sidenav-peek`], and the panel knobs it follows. */
-export declare const SIDENAV_PEEK = ".kp-sidenav__peek";
 /**
  * A key chord as written on the panel: `Control+b`, `Mod+Shift+k`, `Alt+n`.
  * `Control` and `Mod` are the platform's command key: Meta on a Mac.

@@ -559,3 +559,37 @@ These were not cyberpunk's: the same wrong default is in every theme that has no
   whole, and registered custom properties carry the clocks to its plate, its children and the layer.
 - **Check:** shots of the opening at 30, 55 and 100 % of its time; the identity audit names the layer's keyframes on `::backdrop`
   or the holder's `::after`.
+
+## 56. A shut panel is hidden each theme's own way: an option that adds chrome to it must go away with it
+
+- **Symptom:** (the side navigation's floating variant, 2026-10-14) in pastel the shut panel left a ghost frame and a shadow on the
+  window's edge; the other fifteen themes were clean.
+- **Cause:** a register hides a shut panel by `visibility`, a `clip-path`, `opacity`, a clock of its own (pastel's `--kp-sig-pa-ink`
+  fades each part's paint, and leaves the box where it stands) or a slide, and each of them covers what the register itself paints.
+  An option that paints a border and a shadow of its own, in a later layer, is covered only where the register hides the whole box.
+- **Fix:** hand the register's number to a token the option reads (`--kp-sidenav-float-ink`, set by pastel's register to
+  `--kp-sig-pa-ink`; the edge and the shadow take it as their alpha), and push a panel that slides past its own shadow.
+- **Check:** `node research/sidenav-minor/shut-leak.mjs <page>`: every theme, the shut panel photographed with the option and
+  without it (`?plain`), the strip along the window's edge compared pixel by pixel. `mid.mjs` photographs the opening part-way,
+  option and plain side by side, so a chrome that stands complete while the theme's own still draws itself in shows too.
+
+## 57. "The shut panel is off the screen" is not true: build a peek strip as a part of its own
+
+- **Symptom:** a strip of the shut panel (`--kp-sidenav-peek`) cannot be made by stopping the panel's slide short: in most themes the
+  shut panel does not slide, so there is nothing to stop.
+- **Cause:** the registers' openings run where the panel stands (ruled in, traced, cut open, dropped); `shut-state.mjs` shows the
+  shut panel at its place in ten themes, hidden by `visibility`, `opacity`, a `clip-path` or pastel's ink, and slid away in six.
+- **Fix:** the strip is an element beside the panel (`.kp-sidenav__peek`, made by js/sidenav.js), under the panel and always
+  there; no theme's effect is changed because none of them touches it.
+- **Check:** `node research/sidenav-minor/shut-state.mjs <page>` before building anything that relies on where a shut panel is.
+
+## 58. A look an option gives a part that a register paints itself goes in the last layers
+
+- **Symptom:** an option that sets a border, a ground or a radius on a part whose register states them (the side navigation's edge:
+  formal a hairline, cyberpunk two pixels, deco a double rule, brutalism none) changed nothing, or only in the themes without a rule.
+- **Cause:** `kp.register` and `kp.signature` come after `kp.components`, so the register's declaration wins whatever the specificity.
+- **Fix:** put the option's rules in `@layer kp.layout`, as the tour's dim is, every one of them hanging on the option's own
+  attribute so nothing applies without it, and leave the theme's motion (animation, transition, clip-path) alone.
+- **Check:** shots of the option in a theme with a thick edge (deco, cyberpunk) and one with none (brutalism), then the no-change
+  capture (`research/sidenav-minor/baseline.mjs`) on a page that sets none of the options.
+

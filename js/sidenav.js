@@ -214,8 +214,7 @@ const NARROW_STEP = '40rem';
 /** The inset card's knobs: set on the panel, they are carried to the content the card is made of. */
 const INSET_KNOBS = ['--kp-sidenav-inset-gap', '--kp-sidenav-inset-radius', '--kp-sidenav-inset-edge'];
 
-/** The strip a shut panel leaves in view [`--kp-sidenav-peek`], and the panel knobs it follows. */
-export const SIDENAV_PEEK = '.kp-sidenav__peek';
+/** The panel knobs the peek strip (`.kp-sidenav__peek`, made for `--kp-sidenav-peek`) follows. */
 const PEEK_KNOBS = ['--kp-sidenav-inset-block', '--kp-sidenav-float-inset', '--kp-sidenav-float-radius', '--kp-sidenav-float-edge', '--kp-sidenav-peek'];
 
 /** @type {WeakMap<Element, Sidenav>} */

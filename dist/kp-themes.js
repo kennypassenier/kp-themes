@@ -6445,7 +6445,6 @@ __export(sidenav_exports, {
   SIDENAV_LAUNCHER: () => SIDENAV_LAUNCHER,
   SIDENAV_MODE_EVENT: () => SIDENAV_MODE_EVENT,
   SIDENAV_OWNED: () => SIDENAV_OWNED,
-  SIDENAV_PEEK: () => SIDENAV_PEEK,
   SIDENAV_SLIM_EVENT: () => SIDENAV_SLIM_EVENT,
   SIDENAV_TAB: () => SIDENAV_TAB,
   SIDENAV_TOGGLE_EVENT: () => SIDENAV_TOGGLE_EVENT,
@@ -7418,7 +7417,7 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
     for (const c of cleanups) c();
   };
 }
-var SIDENAV_TOGGLE_EVENT, SIDENAV_SLIM_EVENT, SIDENAV_MODE_EVENT, SIDENAV_OWNED, OPTIONS, SIDENAV_TAB, SIDENAV_LAUNCHER, NARROW_STEP, INSET_KNOBS, SIDENAV_PEEK, PEEK_KNOBS, handles2, FLYOUT_OPEN_MS, FLYOUT_CLOSE_MS, TIP_OPEN_MS, FLOAT_GAP, FLOAT_MARGIN, FOCUSABLE;
+var SIDENAV_TOGGLE_EVENT, SIDENAV_SLIM_EVENT, SIDENAV_MODE_EVENT, SIDENAV_OWNED, OPTIONS, SIDENAV_TAB, SIDENAV_LAUNCHER, NARROW_STEP, INSET_KNOBS, PEEK_KNOBS, handles2, FLYOUT_OPEN_MS, FLYOUT_CLOSE_MS, TIP_OPEN_MS, FLOAT_GAP, FLOAT_MARGIN, FOCUSABLE;
 var init_sidenav = __esm({
   "js/sidenav.js"() {
     "use strict";
@@ -7548,7 +7547,6 @@ var init_sidenav = __esm({
     SIDENAV_LAUNCHER = ".kp-sidenav__launcher";
     NARROW_STEP = "40rem";
     INSET_KNOBS = ["--kp-sidenav-inset-gap", "--kp-sidenav-inset-radius", "--kp-sidenav-inset-edge"];
-    SIDENAV_PEEK = ".kp-sidenav__peek";
     PEEK_KNOBS = ["--kp-sidenav-inset-block", "--kp-sidenav-float-inset", "--kp-sidenav-float-radius", "--kp-sidenav-float-edge", "--kp-sidenav-peek"];
     handles2 = /* @__PURE__ */ new WeakMap();
     FLYOUT_OPEN_MS = 150;
@@ -20246,7 +20244,6 @@ export {
   SIDENAV_LAUNCHER,
   SIDENAV_MODE_EVENT,
   SIDENAV_OWNED,
-  SIDENAV_PEEK,
   SIDENAV_SLIM_EVENT,
   SIDENAV_TAB,
   SIDENAV_TOGGLE_EVENT,

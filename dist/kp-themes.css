@@ -39506,9 +39506,12 @@
        drop below that [approved 2026-09-11]. */
     [data-theme='pastel'] .kp-sidenav {
         --kp-sidenav-gap: 0.3rem;
-        /* The plate's ink (0 to 1) also brings a floating panel's edge and shadow in and out. */
-        --kp-sidenav-float-ink: var(--kp-sig-pa-ink);
         border-radius: 1.2rem;
+    }
+
+    /* The plate's ink (0 to 1) also brings a floating panel's edge and shadow in and out. */
+    [data-theme='pastel'] .kp-sidenav[data-kp-sidenav-variant='floating'] {
+        --kp-sidenav-float-ink: var(--kp-sig-pa-ink);
     }
 
     [data-theme='pastel'] .kp-sidenav__header {
