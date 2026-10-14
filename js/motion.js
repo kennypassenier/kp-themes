@@ -418,14 +418,40 @@ export function playEntranceBackwards(el) {
             }
             resolve(false);
         };
-        void Promise.all(plays.map((a) => a.finished)).then(
-            () => {
+        // The close ends when the animations on the element have ended, not when
+        // the ones first seen have. A theme switch while it runs swaps the
+        // register's animation: the one waited on is cancelled (its `finished`
+        // may never settle, hence the `cancel` event) and another takes over, so
+        // the element is looked at again each time. Waiting on the first alone
+        // left a backdrop (a solid one in brutalism) over the page for good.
+        const ended = (/** @type {Animation} */ a) =>
+            new Promise((done) => {
+                a.addEventListener('cancel', done, { once: true });
+                a.addEventListener('remove', done, { once: true });
+                a.finished.then(done, done);
+            });
+        const running = () =>
+            el
+                .getAnimations()
+                .filter(
+                    (a) =>
+                        typeof CSSAnimation !== 'undefined' &&
+                        a instanceof CSSAnimation &&
+                        /** @type {KeyframeEffect} */ (a.effect)?.target === el &&
+                        a.effect?.getComputedTiming().iterations !== Infinity &&
+                        a.playState !== 'finished',
+                );
+        const settle = (/** @type {Animation[]} */ waited) => {
+            if (own.__kpReversing === undefined) return;
+            void Promise.all(waited.map(ended)).then(() => {
                 if (own.__kpReversing === undefined) return;
+                const next = running();
+                if (next.length > 0) return settle(next);
                 delete own.__kpReversing;
                 resolve(true);
-            },
-            () => undefined,
-        );
+            });
+        };
+        settle(plays);
     });
 }
 

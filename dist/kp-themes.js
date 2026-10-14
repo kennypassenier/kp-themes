@@ -3309,14 +3309,26 @@ function playEntranceBackwards(el2) {
       }
       resolve(false);
     };
-    void Promise.all(plays.map((a) => a.finished)).then(
-      () => {
+    const ended = (a) => new Promise((done) => {
+      a.addEventListener("cancel", done, { once: true });
+      a.addEventListener("remove", done, { once: true });
+      a.finished.then(done, done);
+    });
+    const running2 = () => el2.getAnimations().filter(
+      (a) => typeof CSSAnimation !== "undefined" && a instanceof CSSAnimation && /** @type {KeyframeEffect} */
+      a.effect?.target === el2 && a.effect?.getComputedTiming().iterations !== Infinity && a.playState !== "finished"
+    );
+    const settle = (waited) => {
+      if (own.__kpReversing === void 0) return;
+      void Promise.all(waited.map(ended)).then(() => {
         if (own.__kpReversing === void 0) return;
+        const next = running2();
+        if (next.length > 0) return settle(next);
         delete own.__kpReversing;
         resolve(true);
-      },
-      () => void 0
-    );
+      });
+    };
+    settle(plays);
   });
 }
 function stopReversing(el2) {

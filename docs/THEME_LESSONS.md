@@ -606,3 +606,18 @@ These were not cyberpunk's: the same wrong default is in every theme that has no
   `preventScroll: true`.
 - **Check:** load the demo in Firefox and read `scrollY` and every window's `data-kp-sidenav-open` every 0.5 s for 15 s without
   touching anything: the page stays at 0 and no panel opens.
+
+## 60. A close that waits on one animation is stuck by a theme switch: the element it should remove stays
+
+- **Symptom:** (the catalogue shell's side navigation at 390 px, 2026-10-14) a `.kp-sidenav__backdrop` stayed over the page after the
+  panel had closed; in brutalism it is solid (`kp-sig-brutalism-hold`), in the other themes invisible but still there and still
+  catching clicks. No scrim should exist while no panel is open.
+- **Cause:** `playEntranceBackwards()` (js/motion.js) waited on the `finished` promise of the animations it saw when the close began.
+  A theme switch during the close (a page that opens in its own theme, a theme menu) swaps the register's animation: the animation
+  waited on is cancelled, its promise never settles the caller's `.then`, and the element is never removed or hidden. Every caller
+  (side navigation backdrop and flyout, tour card, tooltip) was exposed.
+- **Fix:** the wait ends on `finished`, `cancel` or `remove`, and looks at the element's running animations again before it
+  settles, so the animation that took over is waited for.
+- **Check:** `.cat-nav ~ .kp-sidenav__backdrop` count on a catalogue-shell page at 390 px with the theme switched about 120 ms after
+  the shell appears, for all themes, 2 s later: it must be 0 (before the fix: 15 of 16 themes on each research page). Also
+  `getAnimations()` on any element in the middle of a close: a close that waits must survive a `data-theme` change.
