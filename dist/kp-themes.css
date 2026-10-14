@@ -9527,6 +9527,9 @@
     }
 
     .kp-palette__input {
+        /* Border-box: content-box made the input 32px wider than its
+         * palette (391px in a 359px one), cut off by the overflow. */
+        box-sizing: border-box;
         width: 100%;
         padding: 0.875rem 1rem;
         border: 0;
@@ -9599,6 +9602,16 @@
         border-radius: var(--radius, 0.5rem);
         background: var(--card);
         color: var(--card-foreground);
+    }
+
+    /* A palette or a sheet shown in place (not modal, e.g. an example on
+     * a page) stays inside its box: 92vw is wider than a padded column on
+     * a phone, and the page scrolled sideways by 30px at 390px. A modal
+     * one keeps the browser's own limit against the window. */
+    .kp-palette:not(:modal),
+    .kp-shortcuts:not(:modal) {
+        box-sizing: border-box;
+        max-inline-size: 100%;
     }
 
     .kp-shortcuts__list {
