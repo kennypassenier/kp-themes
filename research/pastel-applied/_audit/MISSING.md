@@ -54,3 +54,18 @@ table and its rows dimmed in one frame; 74.6 % → 4.0 %) and the busy calendar'
 Identity: `node research/pastel-applied/_audit/identity.mjs` 20 of 20 parts open and close by pastel's own family. Keyboard: a real Tab
 through 400 stops, every stop shows the dashed line. Edges: `node research/pastel-applied/_audit/edges.mjs pastel` 9 small findings (log
 lines, palette keys, a fieldset legend and a key figure link within 2 px of their plate edge).
+
+## Kenny's two blocks not approved (2026-10-14)
+
+- **Side navigation (block 3).** What painted right of the panel: the demo's over panel carried `data-kp-sidenav-backdrop`, the package's
+  dimming over the whole frame (now `="false"`, as in research/all-themes-applied block 2); the panel's swing round its top corner, which
+  carried its foot up to 118 px over the page (240 px panel read 358 px wide mid-open); and its sky pass, which slid in from 24 px off
+  register. The side navigation (over and push) now lands in its own column without the turn (`kp-sig-pastel-sidenav-in/-out`) and its pass
+  is a fixed 6 px shadow that only fades on its clock (themes/pastel/CHARACTER.md §0 and G3). Firefox, 1600 and 390, every variant (demo
+  over and push, edge push, gutter, over, tab, rail flyout, tip, peek): the panel keeps its 240 px box in every frame, open and mid-toggle.
+  Left as designed: the rail's group flyout and the tip are popovers that float beside the rail by purpose (their pass on `::backdrop`).
+  Not changed: in the demo frame the "Open the panel" button stays over the open panel's title (the frame's layout, every theme).
+- **Key figures (block 21).** The link and the toggle key figure had no tack: their `::after` is the corner that curls on a hover. Their
+  tack is now their `::before` (same drawing, same leave and arrival). All five carry it at rest, through a leave and an arrival.
+- Meter: identity 20 of 20; pairs-meter on the ten side navigation and pin pairs 9 of 10, the one left `sidenav-rail-tip` 26.4 %, the
+  pointer's hover plate (above).

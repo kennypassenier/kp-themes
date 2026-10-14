@@ -137,14 +137,17 @@ The opener is the one the demo marks `data-review-replay`, else the first of the
 combobox, a menu button. ¼× runs every animation of the section, and of the previous version when it is shown, at a
 quarter of its rate (Web Animations `playbackRate`), so a demo needs no speed control of its own.
 
-## Auto-next, across demos
+## Finishing a demo, and the answer kept
 
-After **Approve** the dialog goes to the next open pair, across themes, as before. Opened from the Agenda
-(`catalogue/agenda.html`, `?next=` back to it), the last open pair of a demo no longer ends at the answer: the page goes
-back to the Agenda with `?auto=next`, and the Agenda opens the next item that waits by itself, in its order, skipping
-what has nothing open. The answer is kept per demo (`progress.js`, `keepAnswer`, under `kp-demo-review:<id>:answer`);
-the Agenda shows **Answers to paste** for every answer not yet copied and copies them together in one press. The demo's
-own **Copy answer** marks its answer copied too.
+After **Approve** the dialog goes to the next open pair, across themes. The last open pair judged, the dialog closes on
+the answer and stays there: nothing opens the next item, or the same one again, by itself (Kenny, 2026-10-14, retiring
+the auto-next of 2026-10-13, which sent a finished demo back to the Agenda, reopened it there and lost his two notes).
+Opened from the Agenda (`catalogue/agenda.html`, `?next=` back to it), **Copy answer, back to the Agenda** copies the
+answer and returns. The answer is kept per demo (`progress.js`, `keepAnswer`, under `kp-demo-review:<id>:answer`); the
+Agenda shows **Answers to paste** for every answer not yet copied and copies them together in one press, and the demo's
+own **Copy answer** marks its answer copied too. When a round, an update or a republished demo opens questions again
+and wipes their words before the answer was copied, that answer is carried along (`carryAnswer`) and stands at the top
+of the new one until it is copied.
 
 ## A later round shows only what is open
 

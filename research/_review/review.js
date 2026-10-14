@@ -71,11 +71,13 @@
 //
 // Opened from the hub (catalogue/changed.html, the one page Kenny starts
 // from), the address carries `?next=<hub>` and `review=open`: the dialog opens
-// by itself, the bar has a way back, and once everything is judged one button
-// copies the answer and returns to the hub, which opens the next item.
+// by itself, the bar has a way back, and once everything is judged the dialog
+// closes on the answer: one button copies it and returns to the hub. Nothing
+// opens the next item by itself (Kenny, 2026-10-14: the Agenda reopened the
+// same demo and its answer lost his two notes).
 import { THEMES } from '../../js/theme-registry.js';
 import { applyTheme, currentTheme } from '../../js/theme-core.js';
-import { fingerprintOf, keepAnswer, loadUpdate, markAnswerCopied, staleKeys, storeKey } from './progress.js';
+import { carriedAnswer, carryAnswer, fingerprintOf, keepAnswer, loadUpdate, markAnswerCopied, staleKeys, storeKey } from './progress.js';
 import { mountBlockTools } from './block-tools.js';
 
 const root = document.documentElement;
@@ -91,6 +93,8 @@ const NEXT = (() => {
         return '';
     }
 })();
+/** The hub's name in the page's words. */
+const HUB_NAME = NEXT && /\/agenda\.html$/.test(new URL(NEXT).pathname) ? 'the Agenda' : 'To judge';
 /*
  * Embed mode (Kenny, 2026-10-06 23:52: "Misschien helpt het om alle bestaande
  * laadschermen per thema te tonen, zodat ik dan bij andere thema's ook kan
@@ -616,6 +620,7 @@ try {
  */
 function reopenPair(key, aspects = []) {
     const entry = state[key];
+    if (entry?.verdict || entry?.note || entry?.redo) wiped = true;
     if (!ASPECT_MODE || !entry) {
         delete state[key];
         return;
@@ -627,6 +632,8 @@ function reopenPair(key, aspects = []) {
     const earlier = Object.fromEntries(Object.keys({ ...entry.earlier, ...entry.redo }).map((aspect) => [aspect, 'not approved']));
     state[key] = { choices, earlier };
 }
+/** Words of a verdict wiped on this load: the answer not yet copied is carried along (progress.js, carryAnswer). */
+let wiped = false;
 if (round?.round && state.__round !== round.round) {
     const reopened = [];
     for (const [key, entry] of Object.entries(state)) {
@@ -636,6 +643,7 @@ if (round?.round && state.__round !== round.round) {
         }
     }
     for (const key of round.reopen || []) {
+        if (state[key]?.verdict) wiped = true;
         delete state[key];
         reopened.push(key);
     }
@@ -676,6 +684,7 @@ if (UPDATE && ASPECT_MODE) {
     }
     save();
 }
+if (wiped) carryAnswer(DEMO);
 // A demo page shows only what is not approved yet (Kenny, 2026-10-13: "toon je wel geen al goedgekeurde
 // elementen meer"): a section whose every pair is approved is hidden behind one line, and ?review=all
 // brings it back. The dialog already walks only what is open.
@@ -765,11 +774,11 @@ foot.className = 'rv-answer';
 foot.setAttribute('aria-labelledby', 'rv-answer-title');
 foot.innerHTML = `
     <h2 id="rv-answer-title">Your answer</h2>
-    <p class="rv-meta">Every verdict and note from the dialog, as one answer to paste into the conversation. It stays in this browser until you clear it.</p>
+    <p class="rv-meta" data-rv-answer-about>Every verdict and note from the dialog, as one answer to paste into the conversation. It stays in this browser until you clear it.</p>
     <pre class="rv-answer__text" data-rv-answer></pre>
     <p class="rv-answer__actions">
         <button type="button" class="kp-button" data-rv-copy>Copy answer</button>
-        <button type="button" class="kp-button kp-button--primary" data-rv-next hidden>Copy answer, on to the next item</button>
+        <button type="button" class="kp-button kp-button--primary" data-rv-next hidden>Back to the list</button>
         <button type="button" class="kp-button kp-button--ghost" data-rv-clear>Clear all verdicts</button>
         <span class="rv-meta" role="status" aria-live="polite" data-rv-status></span>
     </p>`;
@@ -802,6 +811,9 @@ function answer() {
     if (once.length) lines.push('', 'Picked once, for every theme:', ...once);
     const openSteps = steps.filter(stepOpen);
     if (openSteps.length) lines.push('', `Still open: ${[...new Set(openSteps.map((s) => s.theme || s.title))].join(', ')}`);
+    // An answer not yet copied whose words a reopening wiped goes first, until the answer is copied.
+    const carried = carriedAnswer(DEMO);
+    if (carried) lines.unshift('Earlier answer, not copied before the demo opened its questions again:', carried, '', 'Now:');
     return { text: lines.join('\n'), judged: judged.length, rejected: rejected.length };
 }
 
@@ -817,32 +829,43 @@ function render() {
             : 'Continue in the dialog'
         : 'Review in a dialog';
     nextButton.hidden = !NEXT || judged < pairs.length;
-    // Kept for the Agenda, which offers every answer not yet copied once auto-next has run on past this demo.
+    // Kept for the Agenda, which offers every answer not yet copied when the demo was left without copying it.
     keepAnswer(DEMO, text, judged);
 }
 
 /**
- * Auto-next (Kenny, 2026-10-13): the last open pair judged, the dialog goes straight on to the next item on the
- * list it came from (the Agenda opens it by itself), rather than stopping here. The answer waits there to be copied.
+ * The last open pair judged: the dialog closes on the answer, and stays there. Nothing opens the next item, or this
+ * one again, by itself (Kenny, 2026-10-14: auto-next reopened the same demo and his two notes left the prompt).
  */
-function onToNextItem() {
-    const url = new URL(NEXT);
-    url.searchParams.set('auto', 'next');
-    say('Everything is judged. On to the next item…');
-    location.assign(url.href);
+function finished() {
+    // Focus lands on the answer's button once the dialog's own close handler has put its focus back.
+    const target = NEXT ? nextButton : foot.querySelector('[data-rv-copy]');
+    dialog.addEventListener('close', () => target?.focus(), { once: true });
+    dialog.close();
+    foot.scrollIntoView({ block: 'start' });
+    say(
+        NEXT
+            ? `Everything is judged. This answer is added to the prompt on ${HUB_NAME}, which gathers every demo until you copy it there.`
+            : 'Everything is judged. Copy the answer and paste it into the conversation.',
+    );
 }
 
 const say = (message) => {
     foot.querySelector('[data-rv-status]').textContent = message;
 };
 
-/** Copy the answer; true when it reached the clipboard, else it is selected. */
+/**
+ * Copy the answer; true when it reached the clipboard, else it is selected. Opened from a hub, the answer also stays
+ * in the hub's prompt until that one is copied: the prompt there gathers every demo judged on the way, and only its
+ * own copy passes them on (Kenny, 2026-10-14: "zeker zijn dat de prompts blijven/aangevuld worden tot dat ik
+ * effectief iets naar jou toe paste"). A demo opened on its own passes its answer on here.
+ */
 async function copyAnswer() {
     const { text } = answer();
     try {
         await navigator.clipboard.writeText(text);
-        markAnswerCopied(DEMO);
-        say('Copied. Paste it into the conversation.');
+        if (!NEXT) markAnswerCopied(DEMO);
+        say(NEXT ? `Copied this demo's answer. It also stays in the prompt on ${HUB_NAME} until you copy that one.` : 'Copied. Paste it into the conversation.');
         return true;
     } catch {
         const pre = foot.querySelector('[data-rv-answer]');
@@ -857,12 +880,15 @@ async function copyAnswer() {
 }
 for (const copy of document.querySelectorAll('[data-rv-copy]')) copy.addEventListener('click', copyAnswer);
 
-// The hand-off to the hub: shown once nothing is open; a copy that only
-// selected the text stays here, so the answer is not lost on the way.
+// The way back to the hub, shown once nothing is open. It copies nothing: the answer is already kept (keepAnswer)
+// and waits in the hub's prompt, added to by every demo judged after it, until that prompt is copied.
 const nextButton = foot.querySelector('[data-rv-next]');
-nextButton.addEventListener('click', async () => {
-    if (await copyAnswer()) location.assign(NEXT);
-});
+if (NEXT) {
+    nextButton.textContent = `Back to ${HUB_NAME}`;
+    foot.querySelector('[data-rv-answer-about]').textContent =
+        `Every verdict and note from the dialog. It is kept in this browser and added to the prompt on ${HUB_NAME}, which gathers every demo you judge until you copy it there.`;
+}
+nextButton.addEventListener('click', () => location.assign(NEXT));
 
 foot.querySelector('[data-rv-clear]').addEventListener('click', () => {
     if (!confirm('Clear every verdict and note on this demo, in every theme?')) return;
@@ -1824,17 +1850,8 @@ function approveStep() {
     save();
     render();
     const next = nextOpenStep(index);
-    if (next < 0 && NEXT) onToNextItem();
-    else if (next < 0) {
-        dialog.close();
-        foot.scrollIntoView({ block: 'start' });
-        say(
-            NEXT
-                ? 'Everything is judged. Copy the answer on to the next item, then paste it into the conversation.'
-                : 'Everything is judged. Copy the answer and paste it into the conversation.',
-        );
-        if (NEXT) nextButton.focus();
-    } else show(next);
+    if (next < 0) finished();
+    else show(next);
 }
 
 /** Records one aspect step: its pick, or "None of these" with a note; the theme's verdict once every aspect is answered. */
@@ -1878,17 +1895,8 @@ function answerAspect(step) {
     save();
     render();
     const next = nextOpenStep(index);
-    if (next < 0 && NEXT) onToNextItem();
-    else if (next < 0) {
-        dialog.close();
-        foot.scrollIntoView({ block: 'start' });
-        say(
-            NEXT
-                ? 'Everything is judged. Copy the answer on to the next item, then paste it into the conversation.'
-                : 'Everything is judged. Copy the answer and paste it into the conversation.',
-        );
-        if (NEXT) nextButton.focus();
-    } else show(next);
+    if (next < 0) finished();
+    else show(next);
 }
 
 dialog.addEventListener('click', (event) => {

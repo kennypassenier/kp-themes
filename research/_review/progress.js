@@ -288,9 +288,9 @@ export function progressOf(shape, stored = storedFor(shape.id)) {
 }
 
 /*
- * A demo's answer, kept beside its verdicts (Kenny, 2026-10-13: auto-next across demos). Once the dialog runs on from
- * one demo to the next on the Agenda, the answer is no longer copied on the way; review.js keeps the latest text here
- * and the Agenda offers every answer not yet copied in one press. Copying stays Kenny's: nothing is sent anywhere.
+ * A demo's answer, kept beside its verdicts (Kenny, 2026-10-13). Whoever leaves a demo without copying its answer
+ * finds it again on the Agenda, which offers every answer not yet copied in one press. Copying stays Kenny's:
+ * nothing is sent anywhere.
  */
 
 /** Where review.js keeps a demo's latest answer: `{ text, at, judged, copied }`, `copied` the `at` it was copied at. */
@@ -302,6 +302,7 @@ export const answerKey = (demo) => `${storeKey(demo)}:answer`;
  * @property {string} at      when it last changed (ISO)
  * @property {number} judged  pairs judged when it was written
  * @property {string} [copied] the `at` of the text last copied
+ * @property {string} [carried] an earlier answer, not copied, whose words a reopening wiped (carryAnswer)
  */
 
 /** A demo's stored answer, or null. @returns {DemoAnswer | null} */
@@ -314,27 +315,51 @@ export function answerOf(id) {
     }
 }
 
-/** Keep a demo's answer; a text unchanged since it was copied stays copied. */
+/** Keep a demo's answer; a text unchanged since it was copied stays copied, an answer carried along stays with it. */
 export function keepAnswer(id, text, judged) {
     const before = answerOf(id);
     if (before?.text === text) return;
+    const carried = before?.carried ? { carried: before.carried } : {};
     try {
-        localStorage.setItem(answerKey(id), JSON.stringify({ text, judged, at: new Date().toISOString() }));
+        localStorage.setItem(answerKey(id), JSON.stringify({ text, judged, at: new Date().toISOString(), ...carried }));
     } catch {
         /* storage refused: the demo's own Copy answer still works */
     }
 }
+
+/** Fired on the document when a demo's answer is passed on, so a page that lists waiting answers draws again. */
+export const ANSWER_EVENT = 'kp-demo-answer-copied';
 
 /** Mark a demo's answer as copied, as it stands now. */
 export function markAnswerCopied(id) {
     const answer = answerOf(id);
     if (!answer) return;
     try {
-        localStorage.setItem(answerKey(id), JSON.stringify({ ...answer, copied: answer.at }));
+        const { carried, ...rest } = answer;
+        localStorage.setItem(answerKey(id), JSON.stringify({ ...rest, copied: answer.at }));
     } catch {
         /* nothing to mark */
     }
+    globalThis.document?.dispatchEvent(new CustomEvent(ANSWER_EVENT, { detail: { id } }));
 }
+
+/**
+ * An answer not yet copied, carried along when the demo opens its questions again (a republish, a round, an update)
+ * and wipes the words it held (Kenny, 2026-10-14: a demo finished with two notes reopened, and its answer then read
+ * "2 open" without them). review.js puts the carried text before its own until the answer is copied.
+ */
+export function carryAnswer(id) {
+    const answer = answerOf(id);
+    if (!answer || !answerWaiting(id)) return;
+    try {
+        localStorage.setItem(answerKey(id), JSON.stringify({ ...answer, carried: answer.text }));
+    } catch {
+        /* storage refused: nothing to carry */
+    }
+}
+
+/** The answer carried along for a demo, or ''. */
+export const carriedAnswer = (id) => answerOf(id)?.carried || '';
 
 /** Whether a demo has an answer with a verdict in it that was not copied since it last changed. */
 export const answerWaiting = (id) => {

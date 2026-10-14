@@ -39840,6 +39840,43 @@
         }
     }
 
+    /* The side navigation lands in its own column (Kenny, 2026-10-14:
+       toggling it moves only the sidebar itself, nothing may cover the page
+       beside it): the two clocks and the 8 px drop of the stuck plate, no
+       turn, since a turn round its top corner swings its foot over the page.
+       `-out` is the same frames, played `reverse` for the close. */
+    @keyframes kp-sig-pastel-sidenav-in {
+        0%,
+        21.4286% {
+            translate: 0 -8px;
+            --kp-sig-pa-ink: 0;
+        }
+
+        0% {
+            --kp-sig-pa-pass: 0;
+        }
+
+        78.5714% {
+            --kp-sig-pa-pass: 1;
+        }
+    }
+
+    @keyframes kp-sig-pastel-sidenav-out {
+        0%,
+        21.4286% {
+            translate: 0 -8px;
+            --kp-sig-pa-ink: 0;
+        }
+
+        0% {
+            --kp-sig-pa-pass: 0;
+        }
+
+        78.5714% {
+            --kp-sig-pa-pass: 1;
+        }
+    }
+
     /* The clocks alone, on a holder whose parts read them (the alarm, the
        busy table's layer): the holder itself does not move. */
     @keyframes kp-sig-pastel-pass-host-in {
@@ -40352,6 +40389,15 @@
         pointer-events: none;
     }
 
+    /* The side navigation's pass is its own flat shadow 6 px off register and
+       nothing more: it does not slide in from further along the line or turn,
+       it only comes and goes on its clock, so nothing beyond those 6 px ever
+       paints over the page beside it (Kenny, 2026-10-14). */
+    [data-theme='pastel'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])::before {
+        rotate: none;
+        transform: translate(calc(var(--kp-sig-pa-off) * var(--kp-sig-pa-dir)), var(--kp-sig-pa-off));
+    }
+
     /* The side navigation is an edge panel: one edge, no corner at its edge. */
     [data-theme='pastel'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])::after {
         border: 0;
@@ -40430,18 +40476,18 @@
             animation: kp-sig-pastel-stuck-plate-in var(--kp-sig-pa-window) var(--kp-sig-pa-land) backwards;
         }
 
-        /* The side navigation (over and push) is stuck on where it stands and
-           taken off as that backwards; only then does it go back behind its
+        /* The side navigation (over and push) is stuck on in its own column
+           (no turn, kp-sig-pastel-sidenav-in) and taken off as that backwards; only then does it go back behind its
            edge. The content a push panel moves glides on the landing's time
            and curve, and back on its reflection. */
         [data-theme='pastel'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
             transition: translate 0s linear;
-            animation: kp-sig-pastel-stuck-plate-in var(--kp-sig-pa-window) var(--kp-sig-pa-land) backwards;
+            animation: kp-sig-pastel-sidenav-in var(--kp-sig-pa-window) var(--kp-sig-pa-land) backwards;
         }
 
         [data-theme='pastel'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='false'] {
             transition: translate 0s linear var(--kp-sig-pa-window);
-            animation: kp-sig-pastel-stuck-plate-out var(--kp-sig-pa-window) var(--kp-sig-pa-land) reverse forwards;
+            animation: kp-sig-pastel-sidenav-out var(--kp-sig-pa-window) var(--kp-sig-pa-land) reverse forwards;
         }
 
         [data-theme='pastel'] .kp-sidenav__backdrop {
@@ -40675,7 +40721,10 @@
             animation: kp-sig-pastel-stuck-out var(--kp-sig-pa-window) var(--kp-sig-pa-land) var(--kp-sig-pa-tack) reverse forwards;
         }
 
-        [data-theme='pastel'] :is(.kp-card, .kp-kpi, .kp-grid__tile)[data-kp-leaving]::after {
+        /* The tack is the ::after, or the ::before on a key figure that acts
+           (its ::after is its fold, section 8). */
+        [data-theme='pastel'] :is(.kp-card, .kp-kpi:not(a, .kp-kpi--toggle), .kp-grid__tile)[data-kp-leaving]::after,
+        [data-theme='pastel'] :is(a.kp-kpi, .kp-kpi--toggle)[data-kp-leaving]::before {
             animation: kp-sig-pastel-tack-out var(--kp-sig-pa-tack) var(--kp-sig-pa-land) reverse forwards;
         }
     }
@@ -40747,12 +40796,15 @@
 
     /* A part fixed to the page carries its thumbtack at its top centre: a
        round plum head with a rim and a glint, its flat shadow in the second
-       ink (G12, Kenny 2026-10-14). */
+       ink (G12, Kenny 2026-10-14). Every key figure carries it, the ones
+       that act too (a link, a toggle): theirs is the ::before, since their
+       ::after is the corner that curls on a hover (section 8). */
     [data-theme='pastel'] :is(.kp-card, .kp-kpi, .kp-grid__tile) {
         position: relative;
     }
 
-    [data-theme='pastel'] :is(.kp-card, .kp-kpi, .kp-grid__tile)::after {
+    [data-theme='pastel'] :is(.kp-card, .kp-kpi, .kp-grid__tile)::after,
+    [data-theme='pastel'] :is(a.kp-kpi, .kp-kpi--toggle)::before {
         content: '';
         position: absolute;
         z-index: 3;
@@ -40771,7 +40823,8 @@
         pointer-events: none;
     }
 
-    [data-theme='pastel'] :is(.kp-card, .kp-kpi, .kp-grid__tile):dir(rtl)::after {
+    [data-theme='pastel'] :is(.kp-card, .kp-kpi, .kp-grid__tile):dir(rtl)::after,
+    [data-theme='pastel'] :is(a.kp-kpi, .kp-kpi--toggle):dir(rtl)::before {
         translate: 50% 0;
     }
 

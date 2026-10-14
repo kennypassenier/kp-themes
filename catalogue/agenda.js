@@ -9,16 +9,16 @@
 // dialog over only what is open: a demo's own dialog (its page with `?review=open`, which walks only open pairs), or
 // the catalogue's block dialog over the open blocks laid out below. Finished items fold away under Done.
 //
-// Auto-next (Kenny, 2026-10-13): a demo opened from here goes on after its last verdict to `agenda.html?auto=next`,
-// and this page then opens the next item that waits by itself. The answers a run leaves behind wait in the band at
-// the top until they are copied (progress.js keepAnswer).
+// Nothing opens by itself (Kenny, 2026-10-14, replacing the auto-next of 2026-10-13: a demo finished with two notes
+// came back here, was opened again at once, and its answer lost the notes). A demo ends on its own answer; one button
+// there copies it and comes back. An answer left without copying waits in the band at the top (progress.js keepAnswer).
 //
 // The data and the logic are the shared ones (waiting.js, progress.js, open-pairs.js, judging.js); this module only
 // draws them.
 import { THEMES } from '../js/theme-registry.js';
 import { JUDGEMENT_EVENT, loadJudgements } from './judgements.js';
 import { gatherBlocks, isOpen } from './open-pairs.js';
-import { answerWaiting } from '../research/_review/progress.js';
+import { ANSWER_EVENT, answerWaiting } from '../research/_review/progress.js';
 import {
     composeBlocks,
     counted,
@@ -55,10 +55,8 @@ const ui = {
 
 /* ------------------------------------------------------------------ model */
 
-// Auto-next: asked once, by the address; taken off it so a reload does not run on again.
-const params = new URLSearchParams(location.search);
-let autoNext = params.get('auto') === 'next';
-if (autoNext) {
+// The retired auto-next's `?auto=next` (an old link, a demo page still open from before): read as the plain Agenda.
+if (new URLSearchParams(location.search).has('auto')) {
     const clean = new URL(location.href);
     clean.searchParams.delete('auto');
     history.replaceState(history.state, '', clean.href);
@@ -356,7 +354,6 @@ function render() {
     renderStart(open, reading);
     renderAnswers();
     document.title = `${reading ? '…' : open.length} waiting · Agenda · kp-themes catalogue`;
-    if (autoNext && !reading) runAutoNext(open);
 }
 
 /**
@@ -395,7 +392,7 @@ function renderStart(/** @type {View[]} */ open, /** @type {boolean} */ reading)
     ui.start.disabled = !ready;
     ui.start.textContent = ready ? (first.action === 'Start' ? 'Start with item 1' : 'Continue with item 1') : 'Reading…';
     ui.next.textContent = ready
-        ? `Opens “${first.title}”. After its last verdict the dialog goes on to the next item by itself.`
+        ? `Opens “${first.title}”. After its last verdict the dialog stops on its answer, to copy and come back here.`
         : 'Waiting for the first item to be read.';
     ui.start.onclick = () => openItem(first);
 }
@@ -403,20 +400,6 @@ function renderStart(/** @type {View[]} */ open, /** @type {boolean} */ reading)
 function openItem(/** @type {View} */ view) {
     if (view.href) location.assign(view.href);
     else view.press?.();
-}
-
-/** Auto-next: open the first item that waits, once it can be opened; or say that the run is over. */
-function runAutoNext(/** @type {View[]} */ open) {
-    const first = open[0];
-    if (!first) {
-        autoNext = false;
-        ui.status.textContent = `Everything is judged. ${ui.status.textContent}`;
-        (ui.answers.hidden ? ui.start : ui.answersCopy).focus();
-        return;
-    }
-    if (first.state !== 'waiting' || !(first.href || first.press)) return;
-    autoNext = false;
-    openItem(first);
 }
 
 /* ---------------------------------------------------------------- answers */
@@ -437,8 +420,10 @@ function renderAnswers() {
 // "Copy prompt", which carries the demo answers waiting here and the catalogue's verdicts alike.
 ui.answersCopy.addEventListener('click', () => {
     /** @type {HTMLButtonElement | null} */ (document.querySelector('[data-cat-prompt-bar] [data-cat-prompt-copy]'))?.click();
-    setTimeout(render, 300);
 });
+// The answers are passed on only once the prompt really left (prompt.js): the band follows that moment, whichever
+// copy button did it.
+document.addEventListener(ANSWER_EVENT, render);
 
 /* ------------------------------------------------------------------ start */
 

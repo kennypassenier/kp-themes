@@ -91,13 +91,17 @@ export function mountPrompt({ bar, main }) {
         copy.addEventListener('click', async () => {
             const { text, answers } = fullPrompt({ includeCopied: includeCopied.checked });
             const pre = copy.closest('[data-cat-prompt-bar]') ? topText : foot.querySelector('[data-cat-prompt]');
-            // Everything now counts as passed on; the next prompt starts from
-            // what changes after this.
-            markCopied();
-            for (const answer of answers) markAnswerCopied(answer.id);
+            // Everything counts as passed on, and the next prompt starts from what changes after this, only once the
+            // text has really left: on the clipboard, or copied by hand from the selection below (Kenny, 2026-10-14:
+            // "zeker zijn dat de prompts blijven/aangevuld worden tot dat ik effectief iets naar jou toe paste").
+            const passedOn = () => {
+                markCopied();
+                for (const answer of answers) markAnswerCopied(answer.id);
+            };
             try {
                 await navigator.clipboard.writeText(text);
-                say('Copied. Paste it into the conversation.');
+                passedOn();
+                say('Copied. Paste it into the conversation; the prompt starts fresh from here.');
                 // Only once it is on the clipboard: when the text is selected for
                 // a manual Ctrl+C instead, it must stay on screen.
                 setTimeout(render, 1500);
@@ -114,7 +118,16 @@ export function mountPrompt({ bar, main }) {
                 const selection = getSelection();
                 selection?.removeAllRanges();
                 selection?.addRange(range);
-                say('Selected. Press Ctrl+C to copy.');
+                // Passed on once Ctrl+C copies it; until then every answer and verdict stays in the prompt.
+                const onCopy = () => {
+                    if (!selection?.containsNode(pre, true)) return;
+                    document.removeEventListener('copy', onCopy);
+                    passedOn();
+                    say('Copied. Paste it into the conversation; the prompt starts fresh from here.');
+                    setTimeout(render, 1500);
+                };
+                document.addEventListener('copy', onCopy);
+                say('Selected. Press Ctrl+C to copy; the prompt is kept until then.');
             }
         });
     }
@@ -129,6 +142,8 @@ export function mountPrompt({ bar, main }) {
             )
                 return;
             clearPrompt();
+            // The demo answers waiting in the prompt count as passed on with it.
+            for (const answer of waitingAnswers()) markAnswerCopied(answer.id);
             render();
             say('Cleared.');
         });
@@ -139,7 +154,8 @@ export function mountPrompt({ bar, main }) {
     document.addEventListener(NOTES_EVENT, render);
     // Another tab, or a compare column in this page, wrote a note or a verdict.
     window.addEventListener('storage', (event) => {
-        if (event.key === null || STORAGE_KEYS.includes(event.key)) render();
+        // A demo's answer (progress.js answerKey) belongs to the prompt too.
+        if (event.key === null || STORAGE_KEYS.includes(event.key) || /^kp-demo-review:.+:answer$/.test(event.key)) render();
     });
     document.documentElement.addEventListener(THEME_EVENT, () => setTimeout(render, 400));
     // Counted only once the register is read: before it, every verdict this browser keeps looked unrecorded, and the

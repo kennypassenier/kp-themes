@@ -1,0 +1,1768 @@
+<!doctype html>
+<html lang="en" data-theme="pastel" data-cat-theme="pastel" data-cat-theme-fixed data-review="pastel-applied" data-review-themes="pastel">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes: pastel, zoals toegepast</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <link rel="stylesheet" href="../../css/pastel-register.css" data-kp-register="pastel" />
+        <link rel="stylesheet" href="demo.css" />
+    </head>
+    <body>
+        <main class="fa-page">
+            <header class="fa-intro" lang="nl">
+                <h1>Pastel, zoals toegepast</h1>
+                <p>
+                    Je keurde op 14 oktober 2026 het karakter van pastel goed, alle negentien vragen (research/pastel-character). Elk blok hieronder
+                    is het pakket zelf in pastel, zoals een app het krijgt: de echte onderdelen, de echte stylesheets en de echte scripts, niets apart
+                    voor deze pagina getekend. Het anker is <b>twee keer gedrukt, vastgeplakt</b>: eerst springt een plat hemelsblauw silhouet van het
+                    onderdeel (de tweede druk, zonder woorden) van ver naar zijn plek, 6 px schuin rechtsonder, waar het blijft als de schaduw van het
+                    onderdeel; 120 ms later zwaait het onderdeel er vanuit zijn hoek linksboven op neer, met één zachte landing (8 % voorbij en
+                    terug). Eén landing duurt 560 ms; sluiten is dat precies achterstevoren.
+                </p>
+                <p>
+                    Let verder op: een punaise bovenaan in het midden van wat aan de pagina vastzit (een kaart, een kerncijfer), die er bij vertrekken
+                    eerst uit gaat; een hoek die bij aanwijzen omkrult tot een vouwtje; alleen de gestreepte plumkleurige lijn bij focus; een knop die
+                    bij indrukken plat wordt geplakt; een waarde die bij een wijziging één keer wiebelt; en voor alles wat wacht de pomponrups, met de
+                    spinner als het rupsje dat rond een dagsticker kruipt.
+                </p>
+                <p>
+                    Beoordeel elk blok in het beoordelingsvenster ("Review in a dialog" bovenaan): goedkeuren of niet, met een notitie waar iets niet
+                    klopt. Hoe deze pagina gemeten is, staat in <code>research/pastel-applied/_audit/MISSING.md</code>. In het beoordelingsvenster
+                    sluit Escape het venster zelf: sluit wat je daar opent met zijn eigen knop of een klik ernaast.
+                </p>
+                <p class="fa-motion" data-fa-motion hidden>
+                    <b>Je systeem vraagt om minder beweging</b>, dus op deze pagina beweegt niets: elk onderdeel staat meteen vastgeplakt met zijn
+                    blauwe druk ernaast. Zet dat uit in de systeeminstellingen om het openen en sluiten te beoordelen.
+                </p>
+                <ol class="fa-toc" aria-label="De blokken">
+                    <li><a href="#bar">De balk</a></li>
+                    <li><a href="#links">Tabs, kruimelpad, paginanummers</a></li>
+                    <li><a href="#sidenav">Zijnavigatie</a></li>
+                    <li><a href="#palette">Opdrachtenpalet</a></li>
+                    <li><a href="#datepicker">Datumkiezer</a></li>
+                    <li><a href="#theme-menu">Themamenu</a></li>
+                    <li><a href="#combobox">Combobox</a></li>
+                    <li><a href="#tour">Rondleiding</a></li>
+                    <li><a href="#dialogs">Dialoog, lade, achtergrond</a></li>
+                    <li><a href="#alarm">Alarm</a></li>
+                    <li><a href="#fields">Velden, keuzelijst, uploadzone</a></li>
+                    <li><a href="#pairs">Vinkje, keuzerondje, schakelaar</a></li>
+                    <li><a href="#table">Tabel</a></li>
+                    <li><a href="#tree">Boom en accordeon</a></li>
+                    <li><a href="#legend">Herschikbare lijst, legenda, kleurstaal</a></li>
+                    <li><a href="#calendar">Kalender en de maand die laadt</a></li>
+                    <li><a href="#buttons">Knoppen</a></li>
+                    <li><a href="#prose">Links, kop, lijn, meldingen, meter</a></li>
+                    <li><a href="#loading">Alles wat wacht</a></li>
+                    <li><a href="#popover-menus">Menu's in een popover</a></li>
+                    <li><a href="#kpis">Kerncijfers, tonen, een waarde die verandert</a></li>
+                    <li><a href="#notes">Meldingen, toasts, hulpjes</a></li>
+                    <li><a href="#pinned">Vastgeprikt: de punaise</a></li>
+                </ol>
+            </header>
+
+            <!-- 1 · The bar -->
+            <section
+                class="fa-sec"
+                id="bar"
+                data-review-item="bar"
+                data-review-title="1 · De balk"
+                data-review-components="nav"
+                aria-labelledby="h-bar"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">1 · De balk</p>
+                    <h2 id="h-bar">
+                        De balk is een wit vel met zijn hemelsblauwe tweede druk ernaast; het uitklapmenu, het grote menu en het menu op de telefoon
+                        worden twee keer gedrukt en vastgeplakt, en sluiten als dat achterstevoren.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="pastel" lang="nl">
+                        Wijs <b>Readings</b> aan (of tab erheen): eerst springt de hemelsblauwe tweede druk op zijn plek, 6 px schuin naast het menu,
+                        en 120 ms later zwaait het menu er vanuit zijn hoek linksboven op neer. Ga weg: het menu gaat er eerst af, dan schuift de
+                        blauwe druk weg. Druk op <b>Equipment</b> voor het grote menu, en op de knop in het smalle kader voor het menu op de telefoon,
+                        dat nu een eigen wit vel met blauwe druk is.
+                    </p>
+                </div>
+                <div class="fa-stage fa-stage--block fa-stage--menus">
+                    <div class="kp-nav-wrap">
+                        <nav class="kp-nav" aria-label="Pump house navigation, wide">
+                            <a class="kp-nav__brand" href="#bar">Pump house 4 <span class="kp-nav__brand-tag">PH//04</span></a>
+                            <ul class="kp-nav__links">
+                                <li><a class="kp-nav__link" href="#bar" aria-current="page">Overview</a></li>
+                                <li>
+                                    <a class="kp-nav__link" href="#bar" aria-haspopup="true">Readings</a>
+                                    <ul class="kp-nav__menu" data-kp-menu-label="Readings · line 2">
+                                        <li><a href="#bar">Pressure</a></li>
+                                        <li><a href="#bar">Flow rate</a></li>
+                                        <li><a href="#bar">Pump cycles</a></li>
+                                        <li><a href="#bar">Valve positions</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <button type="button" class="kp-nav__link kp-nav__disclosure" data-kp-nav-disclosure>Equipment</button>
+                                    <div class="kp-nav__menu kp-nav__menu--wide">
+                                        <div class="kp-nav__group">
+                                            <h3 class="kp-nav__menu-heading">Pumps</h3>
+                                            <ul>
+                                                <li><a href="#bar">Main line pumps</a></li>
+                                                <li><a href="#bar">Booster sets</a></li>
+                                                <li><a href="#bar">Spare parts</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="kp-nav__group">
+                                            <h3 class="kp-nav__menu-heading">Valves</h3>
+                                            <ul>
+                                                <li><a href="#bar">Gate valves</a></li>
+                                                <li><a href="#bar">Check valves</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="kp-nav__group">
+                                            <h3 class="kp-nav__menu-heading">Sensors</h3>
+                                            <ul>
+                                                <li><a href="#bar">Pressure transducers</a></li>
+                                                <li><a href="#bar">Flow meters</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li><a class="kp-nav__link kp-nav__link--cta" href="#bar">Request access</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+                <p class="fa-label" lang="nl">Een telefoon, 390 px breed</p>
+                <div class="fa-stage fa-stage--block">
+                    <div class="fa-phone">
+                        <div class="kp-nav-wrap">
+                            <nav class="kp-nav" aria-label="Pump house navigation, phone">
+                                <a class="kp-nav__brand" href="#bar">Pump house 4</a>
+                                <button type="button" class="kp-nav__toggle" data-kp-nav-toggle></button>
+                                <ul class="kp-nav__links">
+                                    <li><a class="kp-nav__link" href="#bar" aria-current="page">Overview</a></li>
+                                    <li>
+                                        <a class="kp-nav__link" href="#bar" aria-haspopup="true">Readings</a>
+                                        <ul class="kp-nav__menu" data-kp-menu-label="Readings · line 2">
+                                            <li><a href="#bar">Pressure</a></li>
+                                            <li><a href="#bar">Flow rate</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a class="kp-nav__link" href="#bar">Rota</a></li>
+                                    <li><a class="kp-nav__link kp-nav__link--cta" href="#bar">Request access</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                        <p class="fa-phone__body">Line 2 is locked out at the manifold until the day shift checks the gauge.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2 · Tabs, breadcrumbs, pagination -->
+            <section
+                class="fa-sec"
+                id="links"
+                data-review-item="links"
+                data-review-title="2 · Tabs, kruimelpad, paginanummers"
+                data-review-components="tabs tab breadcrumb pagination"
+                aria-labelledby="h-links"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">2 · Tabs, kruimelpad, paginanummers</p>
+                    <h2 id="h-links">
+                        Tabs, het kruimelpad en de paginanummers tonen de gestreepte focuslijn; het huidige paginanummer is een plumkleurige sticker
+                        met de afgeronde hoek van een knop.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="pastel" lang="nl">
+                        Tab langs de tabs, de kruimels en de paginanummers: elke stap krijgt de gestreepte plumkleurige lijn, 3 px buiten het
+                        onderdeel, en verder niets. Het huidige paginanummer is een sticker met een hoek van 0.85 rem.
+                    </p>
+                </div>
+                <div class="fa-stage fa-stage--block fa-stack">
+                    <div class="kp-tabs">
+                        <div class="kp-tabs__list" role="tablist" aria-label="Incident INC-4471">
+                            <button type="button" class="kp-tab" role="tab" id="fa-tab-1" aria-controls="fa-panel-1" aria-selected="true">
+                                Summary
+                            </button>
+                            <button type="button" class="kp-tab" role="tab" id="fa-tab-2" aria-controls="fa-panel-2" aria-selected="false">
+                                Readings
+                            </button>
+                            <button type="button" class="kp-tab" role="tab" id="fa-tab-3" aria-controls="fa-panel-3" aria-selected="false">
+                                Handover
+                            </button>
+                        </div>
+                        <div class="kp-tabs__panel" role="tabpanel" id="fa-panel-1" aria-labelledby="fa-tab-1">
+                            Pressure on line 2 dropped to 1.1 bar at 02:40. The line is locked out at the manifold.
+                        </div>
+                        <div class="kp-tabs__panel" role="tabpanel" id="fa-panel-2" aria-labelledby="fa-tab-2" hidden>
+                            Sixty readings from the last hour; the gauge and the sensor agree within 0.05 bar.
+                        </div>
+                        <div class="kp-tabs__panel" role="tabpanel" id="fa-panel-3" aria-labelledby="fa-tab-3" hidden>
+                            The day shift checks the gauge against the sensor before reopening the line.
+                        </div>
+                    </div>
+                    <nav class="kp-breadcrumb" aria-label="Breadcrumb">
+                        <ol>
+                            <li><a href="#links">Sites</a></li>
+                            <li><a href="#links">Pump house 4</a></li>
+                            <li><a href="#links">Line 2</a></li>
+                            <li><span aria-current="page">Incident INC-4471</span></li>
+                        </ol>
+                    </nav>
+                    <nav class="kp-pagination" aria-label="Readings, page 14 of 60">
+                        <ul>
+                            <li><a href="#links">Previous</a></li>
+                            <li><a href="#links">1</a></li>
+                            <li class="kp-pagination__gap" aria-hidden="true">…</li>
+                            <li><a href="#links">13</a></li>
+                            <li><a href="#links" aria-current="page">14</a></li>
+                            <li><a href="#links">15</a></li>
+                            <li class="kp-pagination__gap" aria-hidden="true">…</li>
+                            <li><a href="#links">60</a></li>
+                            <li><a href="#links">Next</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </section>
+
+            <!-- 3 · Side navigation -->
+            <section
+                class="fa-sec"
+                id="sidenav"
+                data-review-item="sidenav"
+                data-review-title="3 · Zijnavigatie en haar groepen"
+                data-review-components="sidenav"
+                aria-labelledby="h-sidenav"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">3 · Zijnavigatie en haar groepen</p>
+                    <h2 id="h-sidenav">
+                        Het zijpaneel wordt twee keer gedrukt en vastgeplakt waar het staat (de blauwe druk eerst, dan zwaait het paneel neer) en gaat
+                        er achterstevoren weer af; de groepen glijden open op de zachte landing.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="pastel" lang="nl">
+                        Druk op <b>Open the panel</b> en sluit het met <b>Close</b> of Escape: kijk of de blauwe tweede druk eerst komt en als laatste
+                        gaat. Open en sluit <b>Maintenance</b> en <b>Readings</b>. De rij waar je bent is een plumkleurige sticker met een platte
+                        schaduw recht eronder, niet meer schuin.
+                    </p>
+                </div>
+                <div class="fa-stage fa-stage--block">
+                    <div class="fa-sidebox">
+                        <nav class="kp-sidenav" id="fa-side" aria-label="North site sections">
+                            <div class="kp-sidenav__header"><p class="kp-sidenav__title">North site</p></div>
+                            <div class="kp-sidenav__scroll">
+                                <ul class="kp-sidenav__list">
+                                    <li>
+                                        <a class="kp-sidenav__link" href="#sidenav"
+                                            ><span class="kp-sidenav__icon" aria-hidden="true">◎</span
+                                            ><span class="kp-sidenav__label">Overview</span></a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="kp-sidenav__link" href="#sidenav" aria-current="page"
+                                            ><span class="kp-sidenav__icon" aria-hidden="true">▤</span><span class="kp-sidenav__label">Line 2</span
+                                            ><span class="kp-sidenav__badge">2</span></a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="kp-sidenav__link" href="#sidenav"
+                                            ><span class="kp-sidenav__icon" aria-hidden="true">!</span><span class="kp-sidenav__label">Alarms</span
+                                            ><span class="kp-sidenav__badge">14</span></a
+                                        >
+                                    </li>
+                                    <li><hr class="kp-sidenav__divider" /></li>
+                                    <li class="kp-sidenav__category" data-kp-sidenav-expanded>
+                                        <button type="button" class="kp-sidenav__category-toggle">
+                                            <span class="kp-sidenav__icon" aria-hidden="true">≋</span><span class="kp-sidenav__label">Readings</span>
+                                        </button>
+                                        <div class="kp-sidenav__submenu">
+                                            <ul class="kp-sidenav__list">
+                                                <li>
+                                                    <a class="kp-sidenav__link" href="#sidenav"><span class="kp-sidenav__label">Pressure</span></a>
+                                                </li>
+                                                <li>
+                                                    <a class="kp-sidenav__link" href="#sidenav"><span class="kp-sidenav__label">Flow rate</span></a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li class="kp-sidenav__category">
+                                        <button type="button" class="kp-sidenav__category-toggle">
+                                            <span class="kp-sidenav__icon" aria-hidden="true">⚙</span
+                                            ><span class="kp-sidenav__label">Maintenance</span>
+                                        </button>
+                                        <div class="kp-sidenav__submenu">
+                                            <ul class="kp-sidenav__list">
+                                                <li>
+                                                    <a class="kp-sidenav__link" href="#sidenav"><span class="kp-sidenav__label">Lock-outs</span></a>
+                                                </li>
+                                                <li>
+                                                    <a class="kp-sidenav__link" href="#sidenav"><span class="kp-sidenav__label">Spare parts</span></a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <a class="kp-sidenav__link" href="#sidenav"><span class="kp-sidenav__label">Rota</span></a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="kp-sidenav__footer"><span class="kp-sidenav__label">Signed in as the night shift</span></div>
+                        </nav>
+                        <div class="fa-sidebox__body">
+                            <p>Line 2 has two open incidents. The pressure dropped from 3.2 to 1.1 bar between 02:10 and 02:40.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="fa-stage fa-stage--frame">
+                    <button type="button" class="kp-sidenav__toggle kp-button kp-button--secondary" data-kp-sidenav-toggle aria-controls="fa-over">
+                        Open the panel
+                    </button>
+                    <nav
+                        class="kp-sidenav"
+                        id="fa-over"
+                        aria-label="Incident sections"
+                        data-kp-sidenav-mode="over"
+                        data-kp-sidenav-position="absolute"
+                        data-kp-sidenav-backdrop
+                    >
+                        <div class="kp-sidenav__header"><p class="kp-sidenav__title">INC-4471</p></div>
+                        <div class="kp-sidenav__scroll">
+                            <ul class="kp-sidenav__list">
+                                <li>
+                                    <a class="kp-sidenav__link" href="#sidenav" aria-current="page"><span class="kp-sidenav__label">Summary</span></a>
+                                </li>
+                                <li>
+                                    <a class="kp-sidenav__link" href="#sidenav"><span class="kp-sidenav__label">Readings</span></a>
+                                </li>
+                                <li>
+                                    <a class="kp-sidenav__link" href="#sidenav"><span class="kp-sidenav__label">Handover</span></a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="kp-sidenav__footer">
+                            <button type="button" class="kp-button kp-button--ghost" data-kp-sidenav-toggle aria-controls="fa-over">Close</button>
+                        </div>
+                    </nav>
+                </div>
+            </section>
+
+            <!-- 4 · Command palette -->
+            <section
+                class="fa-sec"
+                id="palette"
+                data-review-item="palette"
+                data-review-title="4 · Opdrachtenpalet"
+                data-review-components="palette"
+                aria-labelledby="h-palette"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">4 · Opdrachtenpalet</p>
+                    <h2 id="h-palette">
+                        Het opdrachtenpalet is een dialoog: zijn achtergrond is nu de blauwe tweede druk (met de grijze waas eromheen), het palet
+                        zwaait er vanuit zijn hoek op neer, met een strookje washi tape in de hoek.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="pastel" lang="nl">
+                        Druk op <b>Open the commands</b>, wijs de opties aan en typ "lock". Sluit met Escape: het palet gaat er eerst af, dan de
+                        blauwe druk en de waas, precies omgekeerd.
+                    </p>
+                </div>
+                <div class="fa-stage">
+                    <button type="button" class="kp-button kp-button--secondary" data-kp-palette-open="fa-pal">Open the commands</button>
+                    <dialog class="kp-palette" id="fa-pal" data-kp-palette aria-label="Commands">
+                        <input
+                            class="kp-palette__input"
+                            type="text"
+                            role="combobox"
+                            aria-label="Commands"
+                            aria-expanded="true"
+                            aria-controls="fa-pal-list"
+                            autocomplete="off"
+                            placeholder="Type a command…"
+                        />
+                        <ul class="kp-palette__list" id="fa-pal-list" role="listbox" aria-label="Commands">
+                            <li role="presentation" class="kp-palette__group" data-kp-group>
+                                <span class="kp-palette__group-label">Incidents</span>
+                                <ul role="group" aria-label="Incidents">
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="report" data-kp-keys="N">
+                                        Report an incident
+                                    </li>
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="lockout" data-kp-keys="L">
+                                        Lock out a line
+                                    </li>
+                                </ul>
+                            </li>
+                            <li role="presentation" class="kp-palette__group" data-kp-group>
+                                <span class="kp-palette__group-label">Go to</span>
+                                <ul role="group" aria-label="Go to">
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="readings">Readings for line 2</li>
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="handover">Handover notes</li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <p class="kp-palette__status" role="status" aria-live="polite"></p>
+                    </dialog>
+                </div>
+            </section>
+
+            <!-- 5 · Date picker -->
+            <section
+                class="fa-sec"
+                id="datepicker"
+                data-review-item="datepicker"
+                data-review-title="5 · Datumkiezer"
+                data-review-components="datepicker"
+                aria-labelledby="h-datepicker"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">5 · Datumkiezer</p>
+                    <h2 id="h-datepicker">
+                        Het paneel van de datumkiezer wordt vastgeplakt onder zijn knop (eerst de blauwe druk, dan het paneel uit zijn hoek
+                        linksboven) en gaat er achterstevoren af; de gekozen dag is rond.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="pastel" lang="nl">
+                        Druk op de kalenderknop, beweeg met de pijltjestoetsen (de dag met focus krijgt de gestreepte lijn) en kies een dag of druk op
+                        Escape. Het paneel blijft even hoog bij elke maand.
+                    </p>
+                </div>
+                <div class="fa-stage">
+                    <div class="kp-datepicker" data-kp-datepicker lang="en-GB">
+                        <label class="kp-field__label" for="fa-date">Lock-out ends on</label>
+                        <input class="kp-field__input" id="fa-date" type="text" inputmode="numeric" data-kp-date-input value="09/10/2026" />
+                        <button type="button" class="kp-button" data-kp-date-open aria-label="Open the calendar" title="Open the calendar">
+                            <span aria-hidden="true">▦</span>
+                        </button>
+                        <div class="kp-datepicker__panel" data-kp-date-panel hidden></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6 · Theme menu -->
+            <section
+                class="fa-sec"
+                id="theme-menu"
+                data-review-item="theme-menu"
+                data-review-title="6 · Themamenu"
+                data-review-components="theme-menu theme-option"
+                aria-labelledby="h-theme-menu"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">6 · Themamenu</p>
+                    <h2 id="h-theme-menu">
+                        Het themamenu, in beide vormen, wordt twee keer gedrukt en vastgeplakt onder zijn knop en gaat er achterstevoren af; de opties
+                        krijgen de mintkleurige plaat en de gestreepte focuslijn.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="pastel" lang="nl">
+                        Druk op het palet-icoon, wijs de opties aan en tab erdoor. Doe hetzelfde met de tweede knop (de React-vorm). Een thema kiezen
+                        verandert deze pagina niet.
+                    </p>
+                </div>
+                <div class="fa-stage fa-stage--menus">
+                    <div class="fa-theme-host" data-fa-theme-menu></div>
+                    <div class="kp-theme-menu" data-fa-react>
+                        <button
+                            type="button"
+                            class="kp-icon-button"
+                            aria-label="Choose a theme (React shape)"
+                            aria-haspopup="listbox"
+                            aria-expanded="false"
+                        >
+                            Aa
+                        </button>
+                    </div>
+                    <p class="fa-note" role="status" data-fa-theme-said>Nog niets gekozen.</p>
+                </div>
+            </section>
+
+            <!-- 7 · Combobox -->
+            <section
+                class="fa-sec"
+                id="combobox"
+                data-review-item="combobox"
+                data-review-title="7 · Combobox"
+                data-review-components="combobox"
+                aria-labelledby="h-combobox"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">7 · Combobox</p>
+                    <h2 id="h-combobox">
+                        De lijst van de combobox wordt vastgeplakt onder het veld en gaat er achterstevoren af; het veld en de opties tonen de
+                        gestreepte focuslijn.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="pastel" lang="nl">
+                        Klik in het veld en druk op pijltje omlaag (of typ "p"). Kies een optie of druk op Escape en kijk of de lijst eerst gaat en
+                        dan de blauwe druk.
+                    </p>
+                </div>
+                <div class="fa-stage">
+                    <div class="kp-combobox" data-kp-combobox>
+                        <label class="kp-field__label" for="fa-cb">Site</label>
+                        <input
+                            class="kp-combobox__input"
+                            id="fa-cb"
+                            type="text"
+                            role="combobox"
+                            aria-expanded="false"
+                            aria-controls="fa-cb-list"
+                            autocomplete="off"
+                        />
+                        <ul class="kp-combobox__list" id="fa-cb-list" role="listbox" hidden>
+                            <li class="kp-combobox__option" role="option" data-kp-option data-value="ph4">Pump house 4</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option data-value="ph7">Pump house 7</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option data-value="cold">Cold store</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option data-value="weigh">Weighbridge</li>
+                            <li class="kp-combobox__option" role="option" data-kp-option data-value="boiler">Boiler room</li>
+                        </ul>
+                        <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+                    </div>
+                    <div class="kp-field">
+                        <label class="kp-field__label" for="fa-cb-beside">A plain field, for comparison</label>
+                        <input class="kp-field__input" id="fa-cb-beside" type="text" />
+                    </div>
+                </div>
+            </section>
+
+            <!-- 8 · Tour -->
+            <section
+                class="fa-sec"
+                id="tour"
+                data-review-item="tour"
+                data-review-title="8 · Rondleiding"
+                data-review-components="tour"
+                aria-labelledby="h-tour"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">8 · Rondleiding</p>
+                    <h2 id="h-tour">
+                        De kaart van de rondleiding wordt vastgeplakt met haar eigen blauwe druk, de waas en de gestreepte ring rond het doel komen op
+                        dezelfde landing, en de kaart verandert niet van vorm tussen de stappen.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="pastel" lang="nl">
+                        Druk op <b>Start the tour</b>, dan Next en Back: de kaart wandelt naar het volgende onderdeel zonder van vorm te veranderen.
+                        Druk op Skip of Escape: de kaart gaat er eerst af, dan haar blauwe druk.
+                    </p>
+                </div>
+                <div class="fa-stage fa-stage--block fa-stack">
+                    <div class="kp-row">
+                        <button type="button" class="kp-button kp-button--primary" data-fa-tour-start>Start the tour</button>
+                    </div>
+                    <div class="fa-tour-app">
+                        <div class="kp-row" data-fa-tour="actions">
+                            <button type="button" class="kp-button kp-button--sm">Export readings</button>
+                            <button type="button" class="kp-button kp-button--sm">Schedule a visit</button>
+                        </div>
+                        <div class="kp-field" data-fa-tour="search">
+                            <label class="kp-field__label" for="fa-tour-search">Find a pump house</label>
+                            <input class="kp-field__input" id="fa-tour-search" type="search" />
+                        </div>
+                        <div class="kp-card" data-fa-tour="note">
+                            <h3 class="kp-card__title">Open incidents</h3>
+                            <p class="kp-card__body">Two open: a door contact at pump house 1, and no reading from pump house 7 since 06:00.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 9 · Dialog, drawer, backdrops -->
+            <section
+                class="fa-sec"
+                id="dialogs"
+                data-review-item="dialogs"
+                data-review-title="9 · Dialoog, lade en achtergrond"
+                data-review-components="dialog drawer"
+                aria-labelledby="h-dialogs"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">9 · Dialoog, lade en achtergrond</p>
+                    <h2 id="h-dialogs">
+                        Twee keer gedrukt, vastgeplakt: de blauwe tweede druk springt van ver naar zijn plek 6 px schuin naast de dialoog, 120 ms
+                        later zwaait de dialoog er vanuit zijn hoek linksboven op neer, met een strookje washi tape in die hoek; sluiten is dat
+                        precies achterstevoren.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="pastel" lang="nl">
+                        Open de dialoog en sluit hem met een knop of Escape; doe hetzelfde met de lade. Let op de volgorde: bij openen eerst de blauwe
+                        druk, bij sluiten als laatste. De grijze waas over de pagina komt en gaat mee met de blauwe druk.
+                    </p>
+                </div>
+                <div class="fa-stage">
+                    <button type="button" class="kp-button kp-button--secondary" data-kp-dialog="fa-dialog">Open the dialog</button>
+                    <dialog class="kp-dialog" id="fa-dialog" aria-labelledby="fa-dialog-title">
+                        <h2 class="kp-dialog__title" id="fa-dialog-title">Close incident INC-4471?</h2>
+                        <p>The line is reopened and the vendor is told the fault is fixed. You can reopen the incident within seven days.</p>
+                        <div class="kp-dialog__actions">
+                            <button type="button" class="kp-button kp-button--ghost" data-kp-dialog-close="keep">Cancel</button>
+                            <button type="button" class="kp-button kp-button--primary" data-kp-dialog-close="close">Close incident</button>
+                        </div>
+                    </dialog>
+                    <button type="button" class="kp-button kp-button--secondary" data-kp-dialog="fa-drawer">Open Help in a drawer</button>
+                    <dialog class="kp-drawer kp-dialog" id="fa-drawer" aria-labelledby="fa-drawer-title">
+                        <header class="kp-drawer__head">
+                            <h2 class="kp-dialog__title" id="fa-drawer-title">Help</h2>
+                            <button
+                                type="button"
+                                class="kp-icon-button kp-dialog__close"
+                                aria-label="Close Help"
+                                title="Close Help"
+                                data-kp-dialog-close
+                            >
+                                ✕
+                            </button>
+                            <p class="kp-drawer__desc">Where things live on this site and the words it uses.</p>
+                        </header>
+                        <div class="kp-drawer__body">
+                            <div class="kp-help kp-card">
+                                <h3>Where things live</h3>
+                                <dl class="kp-help__list">
+                                    <dt>Overview</dt>
+                                    <dd>The network at a glance: what needs a visit, and what changed since this morning.</dd>
+                                    <dt>Readings</dt>
+                                    <dd>Pressure, flow and levels as charts, for an hour, a day or a week.</dd>
+                                    <dt>Incidents</dt>
+                                    <dd>What went wrong, who is on it, and what was done.</dd>
+                                </dl>
+                            </div>
+                        </div>
+                        <footer class="kp-drawer__foot">
+                            <button type="button" class="kp-button kp-button--primary" data-kp-dialog-close>Done</button>
+                        </footer>
+                    </dialog>
+                </div>
+            </section>
+
+            <!-- 10 · Alarm -->
+            <section
+                class="fa-sec"
+                id="alarm"
+                data-review-item="alarm"
+                data-review-title="10 · Alarm"
+                data-review-components="alarm"
+                aria-labelledby="h-alarm"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">10 · Alarm</p>
+                    <h2 id="h-alarm">
+                        Het alarm wordt vastgeplakt zoals elk onderdeel: de melkwitte ondergrond en de parelranden komen op de klok van de tweede
+                        druk, het witte paneel krijgt zijn blauwe druk en zwaait erop neer; sluiten is dat achterstevoren.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="pastel" lang="nl">
+                        Druk op <b>Raise the alarm</b> en bevestig het; probeer daarna de tweede knop met Escape. Het alarm onder de knoppen staat
+                        stil op de pagina, zodat je het rustig kunt bekijken.
+                    </p>
+                </div>
+                <div class="fa-stage">
+                    <button
+                        type="button"
+                        class="kp-button kp-button--destructive"
+                        data-kp-alarm="Pressure lost"
+                        data-kp-alarm-code="Line 2 · manifold"
+                        data-kp-alarm-detail="Pressure fell below 1 bar on line 2. The line is locked out until someone acknowledges."
+                    >
+                        Raise the alarm
+                    </button>
+                    <button
+                        type="button"
+                        class="kp-button"
+                        data-kp-alarm="Clearance required"
+                        data-kp-alarm-code="Override refused"
+                        data-kp-alarm-detail="The ring main valves stay under the shift lead's control."
+                        data-kp-alarm-action="Understood"
+                        data-kp-alarm-escape
+                    >
+                        Raise it, Escape allowed
+                    </button>
+                </div>
+                <div class="fa-stage fa-stage--block">
+                    <div class="kp-alarm" data-kp-alarm-inline data-kp-alarm-mode="ack" inert>
+                        <div class="kp-alarm__scan" aria-hidden="true"></div>
+                        <div class="kp-alarm__bars" aria-hidden="true"></div>
+                        <div class="kp-alarm__panel">
+                            <p class="kp-alarm__code">Line 2 · manifold</p>
+                            <div class="kp-alarm__title" role="heading" aria-level="3">
+                                <span class="kp-alarm__glyphs" data-text="Pressure lost">Pressure lost</span>
+                            </div>
+                            <p class="kp-alarm__detail">Pressure fell below 1 bar on line 2. The line is locked out until someone acknowledges.</p>
+                            <div class="kp-alarm__actions">
+                                <button type="button" class="kp-button kp-alarm__ack">Acknowledge</button>
+                                <span class="kp-alarm__hint" aria-hidden="true">Press Enter</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 11 · Fields, select, upload zone -->
+            <section
+                class="fa-sec"
+                id="fields"
+                data-review-item="fields"
+                data-review-title="11 · Velden, keuzelijst, uploadzone"
+                data-review-components="field upload datatable"
+                aria-labelledby="h-fields"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">11 · Velden, keuzelijst, uploadzone</p>
+                    <h2 id="h-fields">
+                        Velden hebben de afgeronde hoek van een knop (0.85 rem) en tonen bij focus alleen de gestreepte plumkleurige lijn; een bestand
+                        dat je weghaalt, pelt eraf zoals elk onderdeel dat vertrekt.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="pastel" lang="nl">
+                        Klik in een veld en tab tussen de velden: alleen de gestreepte lijn verschijnt, geen tweede ring. Zet een bestand in de
+                        uploadzone en haal het weg met het kruisje: het gaat er vanuit zijn hoek af.
+                    </p>
+                </div>
+                <div class="fa-stage">
+                    <div class="kp-field">
+                        <label class="kp-field__label" for="fa-f-site">Site</label>
+                        <input class="kp-field__input" id="fa-f-site" type="text" value="Pump house 4" />
+                    </div>
+                    <div class="kp-field">
+                        <label class="kp-field__label" for="fa-f-sev">Severity</label>
+                        <select class="kp-field__input" id="fa-f-sev">
+                            <option>Low</option>
+                            <option selected>High</option>
+                            <option>Critical: wake the on-call engineer</option>
+                        </select>
+                    </div>
+                    <div class="kp-field">
+                        <label class="kp-field__label" for="fa-f-note">Note for the day shift</label>
+                        <textarea class="kp-field__input kp-field__input--multiline" id="fa-f-note" rows="3">
+Gauge and sensor disagree by 2 bar.</textarea>
+                    </div>
+                    <div class="kp-field kp-field--invalid">
+                        <label class="kp-field__label" for="fa-f-mail">Escalation email <span class="kp-field__required">required</span></label>
+                        <input
+                            class="kp-field__input"
+                            id="fa-f-mail"
+                            type="email"
+                            value="night-shift@"
+                            aria-invalid="true"
+                            aria-describedby="fa-f-mail-error"
+                        />
+                        <span class="kp-field__error" id="fa-f-mail-error" data-kp-field-error
+                            >Enter an address with a domain after the @, such as night-shift@example.org.</span
+                        >
+                    </div>
+                    <div class="kp-field kp-field--check kp-field--invalid">
+                        <input class="kp-field__check" id="fa-f-ack" type="checkbox" aria-invalid="true" aria-describedby="fa-f-ack-error" />
+                        <label class="kp-field__label" for="fa-f-ack">I have read the lock-out procedure</label>
+                        <span class="kp-field__error" id="fa-f-ack-error" data-kp-field-error>Tick this before you reopen the line.</span>
+                    </div>
+                </div>
+                <div class="fa-stage fa-stage--block">
+                    <div class="kp-upload" data-kp-upload data-kp-max-bytes="5000000" data-kp-max-files="3">
+                        <input type="file" multiple class="kp-sr-only" id="fa-up" data-kp-upload-input />
+                        <label class="kp-upload__zone" for="fa-up" data-kp-upload-zone>Drop the telemetry exports here, or choose them</label>
+                        <ul class="kp-upload__list" data-kp-upload-list></ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 12 · Checkbox, radio, switch -->
+            <section
+                class="fa-sec"
+                id="pairs"
+                data-review-item="pairs"
+                data-review-title="12 · Vinkje, keuzerondje, schakelaar"
+                data-review-components="field switch"
+                aria-labelledby="h-pairs"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">12 · Vinkje, keuzerondje, schakelaar</p>
+                    <h2 id="h-pairs">
+                        Het vinkje en het bolletje worden twee keer gedrukt: eerst de hemelsblauwe kopie, 1.5 px ernaast, dan het vinkje zelf; het
+                        knopje van de schakelaar draait niet meer en schuift op de zachte landing.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="pastel" lang="nl">
+                        Zet vinkjes aan en uit, kies een ander keuzerondje en zet de schakelaars om. Kijk of het blauwe vinkje net voor het witte
+                        komt. Uitzetten gebeurt meteen (zie de lijst van wat nog ontbreekt).
+                    </p>
+                </div>
+                <div class="fa-stage">
+                    <div>
+                        <div class="kp-field kp-field--check">
+                            <input class="kp-field__check" id="fa-c-weekly" type="checkbox" checked />
+                            <label class="kp-field__label" for="fa-c-weekly">Send me the weekly incident summary</label>
+                        </div>
+                        <div class="kp-field kp-field--check">
+                            <input class="kp-field__check" id="fa-c-sms" type="checkbox" />
+                            <label class="kp-field__label" for="fa-c-sms">Also text me when an alarm is raised at night</label>
+                        </div>
+                        <div class="kp-field kp-field--check kp-field--invalid">
+                            <input class="kp-field__check" id="fa-c-sign" type="checkbox" aria-invalid="true" aria-describedby="fa-c-sign-error" />
+                            <label class="kp-field__label" for="fa-c-sign">Signed by the shift lead</label>
+                            <span class="kp-field__error" id="fa-c-sign-error" data-kp-field-error>Needed before the line reopens.</span>
+                        </div>
+                    </div>
+                    <fieldset class="kp-fieldset">
+                        <legend class="kp-field__label">Who is told first?</legend>
+                        <label class="kp-field__option"
+                            ><input class="kp-field__check" type="radio" name="fa-first" value="manager" checked /> Site manager</label
+                        >
+                        <label class="kp-field__option"><input class="kp-field__check" type="radio" name="fa-first" value="deputy" /> Deputy</label>
+                        <label class="kp-field__option"
+                            ><input class="kp-field__check" type="radio" name="fa-first" value="vendor" /> Vendor's hotline</label
+                        >
+                    </fieldset>
+                    <div class="fa-col">
+                        <label class="kp-switch">
+                            <input class="kp-switch__input" type="checkbox" role="switch" />
+                            <span class="kp-switch__state" aria-hidden="true"></span>
+                            <span>Night alarms</span>
+                        </label>
+                        <label class="kp-switch">
+                            <input class="kp-switch__input" type="checkbox" role="switch" checked />
+                            <span class="kp-switch__state" aria-hidden="true"></span>
+                            <span>Weekly summary</span>
+                        </label>
+                        <label class="kp-switch">
+                            <input class="kp-switch__input" type="checkbox" role="switch" checked disabled />
+                            <span class="kp-switch__state" aria-hidden="true"></span>
+                            <span>Audit log (always on)</span>
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 13 · Table -->
+            <section
+                class="fa-sec"
+                id="table"
+                data-review-item="table"
+                data-review-title="13 · Tabel"
+                data-review-components="table datatable"
+                aria-labelledby="h-table"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">13 · Tabel</p>
+                    <h2 id="h-table">
+                        De laadlaag van de tabel komt op de klok van de tweede druk en het witte paneel erin wordt vastgeplakt; terwijl het wacht,
+                        krijgt het paneel een rupsenkopje op zijn hoek en pootjes eronder, en de spinner is het rupsje dat rond een dagsticker kruipt.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="pastel" lang="nl">
+                        Druk op <b>Opnieuw laden</b>: de laag komt over de rijen en het paneel zwaait erop neer. Druk op <b>Geladen</b>: het paneel
+                        gaat er eerst af, dan de laag. Wijs de rijen aan en typ in het zoekveld.
+                    </p>
+                </div>
+                <div class="fa-controls" data-review-controls>
+                    <div class="kp-row" role="group" aria-label="The table's state">
+                        <button type="button" class="kp-button kp-button--sm" data-fa-table="busy" aria-pressed="false">Opnieuw laden</button>
+                        <button type="button" class="kp-button kp-button--sm" data-fa-table="ready" aria-pressed="true">Geladen</button>
+                    </div>
+                </div>
+                <div class="fa-stage fa-stage--block">
+                    <div class="kp-datatable" data-kp-datatable data-fa-dt>
+                        <div class="kp-datatable__bar">
+                            <input class="kp-datatable__search" type="search" data-kp-datatable-search aria-label="Search the pump houses" />
+                        </div>
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">
+                                    Pump houses
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col" data-kp-sort="text">Pump house</th>
+                                        <th scope="col" data-kp-sort="text">State</th>
+                                        <th scope="col" data-kp-sort="number" class="kp-text-end">Pressure, bar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-kp-row-key="ph1">
+                                        <td>Pump house 1</td>
+                                        <td>running</td>
+                                        <td class="kp-text-end kp-numeric">3.36</td>
+                                    </tr>
+                                    <tr data-kp-row-key="ph2">
+                                        <td>Pump house 2</td>
+                                        <td>running</td>
+                                        <td class="kp-text-end kp-numeric">3.12</td>
+                                    </tr>
+                                    <tr data-kp-row-key="ph3">
+                                        <td>Pump house 3</td>
+                                        <td>low pressure</td>
+                                        <td class="kp-text-end kp-numeric">1.92</td>
+                                    </tr>
+                                    <tr data-kp-row-key="ph4">
+                                        <td>Pump house 4</td>
+                                        <td>locked out</td>
+                                        <td class="kp-text-end kp-numeric">0.00</td>
+                                    </tr>
+                                    <tr data-kp-row-key="ph5">
+                                        <td>Pump house 5</td>
+                                        <td>running</td>
+                                        <td class="kp-text-end kp-numeric">2.98</td>
+                                    </tr>
+                                    <tr data-kp-row-key="ph6">
+                                        <td>Pump house 6</td>
+                                        <td>resting</td>
+                                        <td class="kp-text-end kp-numeric">2.71</td>
+                                    </tr>
+                                    <tr data-kp-row-key="ph7">
+                                        <td>Pump house 7</td>
+                                        <td>no reading</td>
+                                        <td class="kp-text-end kp-numeric">—</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="kp-datatable__bar">
+                            <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 14 · Tree and accordion -->
+            <section
+                class="fa-sec"
+                id="tree"
+                data-review-item="tree"
+                data-review-title="14 · Boom en accordeon"
+                data-review-components="tree accordion"
+                aria-labelledby="h-tree"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">14 · Boom en accordeon</p>
+                    <h2 id="h-tree">
+                        Takken van de boom en de koppen van de accordeon glijden open en dicht op de zachte landing (zonder door te schieten), in de
+                        tijd van één landing, en tonen de gestreepte focuslijn.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="pastel" lang="nl">
+                        Open en sluit de takken en de accordeonkoppen. Openen en sluiten duren even lang; tab erdoor voor de gestreepte lijn.
+                    </p>
+                </div>
+                <div class="fa-stage fa-stage--block fa-split">
+                    <ul class="kp-tree" role="tree" data-kp-tree data-kp-selectable aria-label="Pump house 4 files">
+                        <li role="treeitem" aria-expanded="false">
+                            Line 1
+                            <ul role="group">
+                                <li role="treeitem">readings-0100.csv</li>
+                                <li role="treeitem">readings-0200.csv</li>
+                            </ul>
+                        </li>
+                        <li role="treeitem" aria-expanded="true">
+                            Line 2
+                            <ul role="group">
+                                <li role="treeitem" aria-expanded="true">
+                                    Manifold
+                                    <ul role="group">
+                                        <li role="treeitem" aria-selected="true">readings-0240.csv</li>
+                                        <li role="treeitem">pump-log.txt</li>
+                                    </ul>
+                                </li>
+                                <li role="treeitem">lock-out-signed.pdf</li>
+                            </ul>
+                        </li>
+                        <li role="treeitem">site-plan.pdf</li>
+                    </ul>
+                    <div class="kp-accordion">
+                        <details class="kp-accordion__item" open>
+                            <summary class="kp-accordion__summary">Who may reopen a locked-out line?</summary>
+                            <div class="kp-accordion__body">
+                                Only the shift lead who signed the lock-out, or the site manager when that person has left the site.
+                            </div>
+                        </details>
+                        <details class="kp-accordion__item">
+                            <summary class="kp-accordion__summary">What counts as a pressure drop?</summary>
+                            <div class="kp-accordion__body">A fall of more than one bar within thirty minutes on any line.</div>
+                        </details>
+                        <details class="kp-accordion__item">
+                            <summary class="kp-accordion__summary">Which reading do we believe when the gauge and the sensor disagree?</summary>
+                            <div class="kp-accordion__body">Neither, on its own: close the line and log both readings at the same minute.</div>
+                        </details>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 15 · Reorder list, chart legend, swatches -->
+            <section
+                class="fa-sec"
+                id="legend"
+                data-review-item="legend"
+                data-review-title="15 · Herschikbare lijst, legenda, kleurstaal"
+                data-review-components="reorder chart colorpicker"
+                aria-labelledby="h-legend"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">15 · Herschikbare lijst, legenda, kleurstaal</p>
+                    <h2 id="h-legend">
+                        De rijen, de legendasleutels en het kleurstaal hebben de twee rondingen van het thema en de gestreepte focuslijn.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="pastel" lang="nl">
+                        Wijs de rijen aan en versleep er een aan zijn handvat (of gebruik de pijltjestoetsen op het handvat). Druk op een
+                        legendasleutel onder de grafiek en dan op <b>Show all</b>.
+                    </p>
+                </div>
+                <div class="fa-stage fa-stage--block fa-stack">
+                    <ul class="kp-reorder fa-narrow" data-kp-reorder aria-label="Columns in the handover report">
+                        <li data-kp-item="time" data-kp-label="Time"><button type="button" data-kp-handle aria-label="Move Time">⠿</button> Time</li>
+                        <li data-kp-item="pressure" data-kp-label="Pressure">
+                            <button type="button" data-kp-handle aria-label="Move Pressure">⠿</button> Pressure
+                        </li>
+                        <li data-kp-item="flow" data-kp-label="Flow rate">
+                            <button type="button" data-kp-handle aria-label="Move Flow rate">⠿</button> Flow rate
+                        </li>
+                        <li data-kp-item="signed" data-kp-label="Signed by">
+                            <button type="button" data-kp-handle aria-label="Move Signed by">⠿</button> Signed by
+                        </li>
+                    </ul>
+                    <div class="kp-chart-group" data-kp-chart-group data-kp-chart-span="24h">
+                        <figure class="kp-chart" data-kp-chart aria-label="Pressure">
+                            <figcaption class="kp-chart__title">Pressure, bar</figcaption>
+                            <script type="application/json" data-kp-chart-data>
+                                {
+                                    "label": "Pressure",
+                                    "unit": "bar",
+                                    "digits": 2,
+                                    "threshold": 2.1,
+                                    "series": [
+                                        {
+                                            "label": "Pump house 1",
+                                            "start": 1791010800000,
+                                            "step": 3600000,
+                                            "values": [
+                                                3.36, 3.38, 3.41, 3.43, 3.44, 3.45, 3.44, 3.43, 3.41, 3.38, 3.35, 3.33, 3.32, 3.34, 3.37, 3.4, 3.43,
+                                                3.46, 3.5, 3.53, 3.55, 3.52, 3.45, 3.36
+                                            ]
+                                        },
+                                        {
+                                            "label": "Pump house 3",
+                                            "start": 1791010800000,
+                                            "step": 3600000,
+                                            "values": [
+                                                2.8, 2.84, 2.86, 2.88, 2.88, 2.87, 2.85, 2.83, 2.79, 2.75, 2.73, 2.74, 2.77, 2.82, 2.85, 2.88, 2.91,
+                                                2.95, 2.99, 3.01, 2.96, 2.71, 1.93, 2.75
+                                            ]
+                                        },
+                                        {
+                                            "label": "Pump house 7",
+                                            "start": 1791010800000,
+                                            "step": 3600000,
+                                            "values": [
+                                                2.7, 2.73, 2.75, 2.77, 2.76, 2.75, 2.74, 2.72, 2.69, 2.66, 2.65, 2.67, 2.7, 2.73, 2.75, 2.77, 2.79,
+                                                2.81, 2.84, 2.85, 2.82, 2.76, 2.65, 2.7
+                                            ]
+                                        }
+                                    ]
+                                }
+                            </script>
+                        </figure>
+                    </div>
+                    <div class="kp-colorpicker" data-kp-colorpicker data-kp-against="--background">
+                        <label class="kp-field__label" for="fa-cp-h">Hue</label>
+                        <input id="fa-cp-h" type="range" data-kp-channel="h" min="0" max="360" value="140" />
+                        <label class="kp-field__label" for="fa-cp-s">Saturation</label>
+                        <input id="fa-cp-s" type="range" data-kp-channel="s" min="0" max="100" value="45" />
+                        <label class="kp-field__label" for="fa-cp-l">Lightness</label>
+                        <input id="fa-cp-l" type="range" data-kp-channel="l" min="0" max="100" value="32" />
+                        <span class="kp-colorpicker__swatch" data-kp-swatch aria-hidden="true"></span>
+                        <output class="kp-colorpicker__value" data-kp-colorpicker-value></output>
+                        <p class="kp-colorpicker__contrast" data-kp-colorpicker-contrast role="status" aria-live="polite"></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 16 · Calendar, the busy month -->
+            <section
+                class="fa-sec"
+                id="calendar"
+                data-review-item="calendar"
+                data-review-title="16 · Kalender en de maand die laadt"
+                data-review-components="calendar"
+                aria-labelledby="h-calendar"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">16 · Kalender en de maand die laadt</p>
+                    <h2 id="h-calendar">
+                        Als de maand laadt, wordt alles rups: elke dag krijgt een muntkleurig pomponrandje en pootjes en golft om de beurt omhoog, met
+                        een kopje naast de laatste dag van de week; de kaart over de hele maand wordt vastgeplakt met een kopje en pootjes.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="pastel" lang="nl">
+                        Druk op <b>Laden</b>: de eerste maand krijgt één kaart over de hele maand, de tweede laat elke dag zelf wachten. Druk op
+                        <b>Gelezen</b>: de kaart gaat er achterstevoren af. Klik een dag aan en gebruik de pijltjestoetsen voor de gestreepte lijn.
+                    </p>
+                </div>
+                <div class="fa-controls" data-review-controls>
+                    <div class="kp-row" role="group" aria-label="The month's state">
+                        <button type="button" class="kp-button kp-button--sm" data-fa-calendar="loading" aria-pressed="false">Laden</button>
+                        <button type="button" class="kp-button kp-button--sm" data-fa-calendar="ready" aria-pressed="true">Gelezen</button>
+                    </div>
+                </div>
+                <div class="fa-stage fa-stage--block fa-split" data-fa-calendar-stage>
+                    <div
+                        class="kp-calendar kp-calendar--busy-whole"
+                        data-kp-calendar
+                        data-kp-calendar-month="2026-10"
+                        lang="en-GB"
+                        aria-label="Nightly backups, one card while loading"
+                    ></div>
+                    <div
+                        class="kp-calendar kp-calendar--busy-days"
+                        data-kp-calendar
+                        data-kp-calendar-month="2026-10"
+                        lang="en-GB"
+                        aria-label="Nightly backups, each day waiting"
+                    ></div>
+                </div>
+            </section>
+
+            <!-- 17 · Buttons -->
+            <section
+                class="fa-sec"
+                id="buttons"
+                data-review-item="buttons"
+                data-review-title="17 · Knoppen"
+                data-review-components="button icon-button"
+                aria-labelledby="h-buttons"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">17 · Knoppen</p>
+                    <h2 id="h-buttons">
+                        Elke knop is een sticker met een platte plumkleurige schaduw recht eronder: aanwijzen tilt hem 2 px op en krult zijn hoek
+                        rechtsboven om, indrukken plakt hem plat, en focus is alleen de gestreepte lijn.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="pastel" lang="nl">
+                        Wijs de knoppen aan: de knop komt 2 px omhoog, de schaduw wordt 5 px en de hoek rechtsboven krult om tot een vouwtje. Druk en
+                        houd vast: hij zakt 3 px, de schaduw en de vouw verdwijnen. Tab erdoor: alleen de gestreepte lijn, de schaduw blijft. De
+                        woorden draaien nooit mee.
+                    </p>
+                </div>
+                <div class="fa-stage">
+                    <button type="button" class="kp-button kp-button--primary">Save changes</button>
+                    <button type="button" class="kp-button">Save as draft</button>
+                    <button type="button" class="kp-button kp-button--secondary">Preview</button>
+                    <button type="button" class="kp-button kp-button--ghost">Cancel</button>
+                    <button type="button" class="kp-button kp-button--destructive">Delete the reading</button>
+                    <button type="button" class="kp-button kp-button--mirror">Go back</button>
+                </div>
+                <div class="fa-stage fa-stage--baseline">
+                    <button type="button" class="kp-button kp-button--sm">Small</button>
+                    <button type="button" class="kp-button">Default</button>
+                    <button type="button" class="kp-button kp-button--lg">Large</button>
+                    <button type="button" class="kp-button kp-button--primary kp-button--sm">Small primary</button>
+                    <button type="button" class="kp-button kp-button--destructive kp-button--lg">Large destructive</button>
+                </div>
+                <div class="fa-stage">
+                    <button type="button" class="kp-button">
+                        <span aria-hidden="true">↻</span>
+                        <span class="kp-button__text">Retry</span>
+                    </button>
+                    <button type="button" class="kp-button kp-button--secondary">
+                        <span class="kp-button__text">Export</span>
+                        <span aria-hidden="true">↓</span>
+                    </button>
+                    <button type="button" class="kp-icon-button" aria-label="Close this panel" title="Close">
+                        <span aria-hidden="true">✕</span>
+                    </button>
+                    <button type="button" class="kp-button" disabled>Disabled</button>
+                    <button type="button" class="kp-button kp-button--primary" disabled>Disabled primary</button>
+                    <button type="button" class="kp-button" aria-busy="true">Working…</button>
+                </div>
+            </section>
+
+            <!-- 18 · Links, headline, rule, alert edge, meter, back to top -->
+            <section
+                class="fa-sec"
+                id="prose"
+                data-review-item="prose"
+                data-review-title="18 · Links, kop, lijn, meldingen, meter, terug naar boven"
+                data-review-components="alert meter to-top"
+                aria-labelledby="h-prose"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">18 · Links, kop, lijn, meldingen, meter, terug naar boven</p>
+                    <h2 id="h-prose">
+                        Een link in de tekst krijgt een mintkleurige plaat achter de woorden, de kop zijn blauwe tweede druk, de lijn tekent zich;
+                        meldingen en de knop terug naar boven worden vastgeplakt en gaan er achterstevoren af; het hartje bij de meter is weg.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="pastel" lang="nl">
+                        Wijs de link in de tekst aan. Druk op <b>Opnieuw afspelen</b> voor de kop, de lijn, de meldingen en de meters. Druk op
+                        <b>Rechts naar links</b> en speel opnieuw af: de blauwe druk en de hoek waaruit alles zwaait spiegelen mee. Druk twee keer op
+                        <b>Terug naar boven tonen</b>.
+                    </p>
+                </div>
+                <div class="fa-controls" data-review-controls>
+                    <div class="kp-row" role="group" aria-label="Play and direction">
+                        <button type="button" class="kp-button kp-button--sm" data-fa-prose="replay">Opnieuw afspelen</button>
+                        <button type="button" class="kp-button kp-button--sm" data-fa-prose="dir" aria-pressed="false">Rechts naar links</button>
+                        <button type="button" class="kp-button kp-button--sm" data-fa-prose="top" aria-pressed="true">Terug naar boven tonen</button>
+                    </div>
+                </div>
+                <div class="fa-stage fa-stage--block fa-stack" data-fa-dir>
+                    <div data-fa-reveal-host>
+                        <template>
+                            <div class="kp-section kp-stack" data-kp-surface="hero">
+                                <p class="microlabel">Pump house 4 · night shift</p>
+                                <h1 class="kp-text-balance" data-kp-reveal="headline">Every reading signed before the shift ends.</h1>
+                            </div>
+                            <div class="kp-section kp-stack" data-kp-surface="app">
+                                <h2 data-kp-reveal="rule">Sign the handover</h2>
+                                <p class="kp-prose">
+                                    The day shift reads this before it touches a valve. The <a href="#prose">lock-out procedure</a> says who may
+                                    reopen a line.
+                                </p>
+                            </div>
+                        </template>
+                    </div>
+                    <div class="fa-stack fa-stack--tight" data-fa-replay-host>
+                        <template>
+                            <div class="kp-alert" role="status"><span class="kp-alert__body">The export runs at 02:00 from Monday.</span></div>
+                            <div class="kp-alert kp-alert--success" role="status" data-kp-semantic>
+                                <span class="kp-alert__icon" aria-hidden="true">✓</span>
+                                <span class="kp-alert__body"><span class="kp-alert__label">Success: </span>The incident was closed.</span>
+                            </div>
+                            <div class="kp-alert kp-alert--warning" role="status" data-kp-semantic>
+                                <span class="kp-alert__icon" aria-hidden="true">!</span>
+                                <span class="kp-alert__body"
+                                    ><span class="kp-alert__label">Warning: </span>The service contract for pump house 4 ends in 12 days.</span
+                                >
+                            </div>
+                            <div class="kp-alert kp-alert--info" role="status" data-kp-semantic>
+                                <span class="kp-alert__icon" aria-hidden="true">i</span>
+                                <span class="kp-alert__body"
+                                    ><span class="kp-alert__label">Info: </span>Readings are late by up to five minutes.</span
+                                >
+                            </div>
+                            <div class="kp-alert kp-alert--destructive" role="alert" data-kp-semantic>
+                                <span class="kp-alert__icon" aria-hidden="true">✕</span>
+                                <span class="kp-alert__body"
+                                    ><span class="kp-alert__label">Error: </span>The alarm panel stopped reporting at 03:12.</span
+                                >
+                            </div>
+                            <div class="fa-meters">
+                                <span class="fa-meter-label">Reservoir North, 62 %, target 80 %</span>
+                                <span
+                                    class="kp-meter"
+                                    role="meter"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    aria-valuenow="62"
+                                    aria-valuetext="62% full; 80% the target level"
+                                    style="--kp-value: 0.62; --kp-mark: 0.8"
+                                    ><span class="kp-meter__mark" aria-hidden="true"></span
+                                ></span>
+                                <span class="fa-meter-label">Booked tonight, the mark past the end</span>
+                                <span
+                                    class="kp-meter"
+                                    role="meter"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    aria-valuenow="58"
+                                    aria-valuetext="58% running now; 130% booked for tonight"
+                                    style="--kp-value: 0.58; --kp-mark: 1.3"
+                                    ><span class="kp-meter__mark" aria-hidden="true" data-kp-over></span
+                                ></span>
+                                <span class="fa-meter-label">Past the end, a red piece</span>
+                                <span
+                                    class="kp-meter kp-meter--over-spill"
+                                    role="meter"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    aria-valuenow="100"
+                                    aria-valuetext="112% used"
+                                    data-kp-over
+                                    style="--kp-value: 1.12"
+                                ></span>
+                                <span class="fa-meter-label">Past the end, hatched</span>
+                                <span
+                                    class="kp-meter kp-meter--over-hatch"
+                                    role="meter"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    aria-valuenow="100"
+                                    aria-valuetext="120% used"
+                                    data-kp-over
+                                    style="--kp-value: 1.2"
+                                ></span>
+                                <span class="fa-meter-label">Past the end, the bar runs on</span>
+                                <span
+                                    class="kp-meter kp-meter--over-break"
+                                    role="meter"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    aria-valuenow="100"
+                                    aria-valuetext="115% used"
+                                    data-kp-over
+                                    style="--kp-value: 1.15"
+                                ></span>
+                                <span class="fa-meter-label">In a line of text</span>
+                                <p class="fa-meter-line">
+                                    Disk
+                                    <span
+                                        class="kp-meter kp-meter--inline"
+                                        role="meter"
+                                        aria-valuemin="0"
+                                        aria-valuemax="100"
+                                        aria-valuenow="61"
+                                        aria-valuetext="61% used"
+                                        style="--kp-value: 0.61"
+                                    ></span>
+                                    61 % used
+                                </p>
+                            </div>
+                        </template>
+                    </div>
+                    <div class="fa-to-top-box">
+                        <button type="button" class="kp-button kp-to-top" data-kp-to-top-shown data-fa-to-top>↑ Back to top</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 19 · Loading -->
+            <section
+                class="fa-sec"
+                id="loading"
+                data-review-item="loading"
+                data-review-title="19 · Skeletten, spinner, bezige knop, ladende meter"
+                data-review-components="skeleton spinner progressbar"
+                aria-labelledby="h-loading"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">19 · Skeletten, spinner, bezige knop, ladende meter</p>
+                    <h2 id="h-loading">
+                        Alles wat wacht wordt de pomponrups: skeletregels, de bezige balk en de ladende meter worden een rij muntkleurige pompons met
+                        een plumkleurig kopje, waar een bultje doorheen golft; een wachtend vlak krijgt een kopje op zijn hoek en stappende pootjes;
+                        de spinner is het rupsje dat rond een dagsticker kruipt.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="pastel" lang="nl">
+                        Kijk naar de regels, de balken, de meter en het blok: het bultje golft van staart naar kop (1200 ms). Kijk naar de spinners in
+                        drie maten en de bezige knop: het rupsje kruipt rond een rond wit plakkertje (2400 ms per rondje). Druk op
+                        <b>Samen starten</b> om alles op hetzelfde moment te laten beginnen.
+                    </p>
+                </div>
+                <div class="fa-controls" data-review-controls>
+                    <div class="kp-row" role="group" aria-label="Breath">
+                        <button type="button" class="kp-button kp-button--sm" data-fa-loading="restart">Samen starten</button>
+                    </div>
+                </div>
+                <div class="fa-stage fa-stage--block" data-fa-loading-host>
+                    <template>
+                        <div class="fa-loading">
+                            <div class="fa-stack">
+                                <div class="kp-progressbar" role="progressbar" aria-label="Waiting for the export, small" data-kp-indeterminate>
+                                    <span class="kp-progressbar__track" aria-hidden="true"
+                                        ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                                    ></span>
+                                </div>
+                                <div
+                                    class="kp-progressbar kp-progressbar--md"
+                                    role="progressbar"
+                                    aria-label="Waiting for the export, medium"
+                                    data-kp-indeterminate
+                                >
+                                    <span class="kp-progressbar__track" aria-hidden="true"
+                                        ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                                    ></span>
+                                </div>
+                                <div
+                                    class="kp-progressbar kp-progressbar--lg"
+                                    role="progressbar"
+                                    aria-label="Waiting for the export, large"
+                                    data-kp-indeterminate
+                                >
+                                    <span class="kp-progressbar__track" aria-hidden="true"
+                                        ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                                    ></span>
+                                </div>
+                                <span
+                                    class="kp-meter"
+                                    role="meter"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    aria-busy="true"
+                                    aria-valuetext="Measuring"
+                                    data-kp-loading
+                                ></span>
+                            </div>
+                            <div class="fa-stack">
+                                <div aria-hidden="true" class="fa-skel-lines">
+                                    <span class="kp-skeleton fa-w-100"></span>
+                                    <span class="kp-skeleton fa-w-90"></span>
+                                    <span class="kp-skeleton fa-w-60"></span>
+                                </div>
+                                <div class="fa-row">
+                                    <span aria-hidden="true" class="fa-skel-circle"
+                                        ><span class="kp-skeleton kp-skeleton--circle fa-w-100"></span
+                                    ></span>
+                                    <div class="kp-card fa-skel-card" aria-hidden="true">
+                                        <span class="kp-skeleton kp-skeleton--block fa-w-100"></span>
+                                        <span class="kp-skeleton fa-w-70"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="fa-row fa-row--center">
+                                <span class="kp-spinner" role="status" aria-label="Working…"></span>
+                                <span><span class="kp-spinner" role="status" aria-label="Loading readings"></span> Loading readings…</span>
+                                <span class="kp-spinner fa-spinner-lg" role="status" aria-label="Working…"></span>
+                                <button type="button" class="kp-button kp-button--secondary" aria-busy="true" disabled>
+                                    <span class="kp-spinner" aria-hidden="true"></span> Exporting
+                                </button>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </section>
+
+            <!-- 20 · Popover menus -->
+            <section
+                class="fa-sec"
+                id="popover-menus"
+                data-review-item="popover-menus"
+                data-review-title="20 · Menu's in een popover"
+                data-review-components="popover menu menu-button"
+                aria-labelledby="h-popover-menus"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">20 · Menu's in een popover</p>
+                    <h2 id="h-popover-menus">
+                        Een menu in een popover is één wit vel met zijn blauwe tweede druk, vastgeplakt onder zijn knop; een regel krijgt bij
+                        aanwijzen de mintkleurige plaat en een vouwtje aan zijn einde.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="pastel" lang="nl">
+                        Druk op <b>Row actions</b>, wijs de regels aan en sluit met Escape of een klik ernaast. Druk op <b>More ▾</b> voor het rijkere
+                        menu en kijk of het net onder zijn knop opent en hem nooit bedekt.
+                    </p>
+                </div>
+                <div class="fa-stage fa-stage--menus">
+                    <button
+                        type="button"
+                        class="kp-button kp-button--ghost"
+                        popovertarget="fa-menu"
+                        aria-haspopup="menu"
+                        style="anchor-name: --fa-menu"
+                    >
+                        Row actions
+                    </button>
+                    <div popover="auto" id="fa-menu" class="kp-popover" style="position-anchor: --fa-menu">
+                        <ul class="kp-menu" role="menu">
+                            <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Open incident</button></li>
+                            <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Assign to…</button></li>
+                            <li role="none"><button type="button" role="menuitem" class="kp-menu__item">Copy reference</button></li>
+                            <li role="separator" class="kp-menu__separator"></li>
+                            <li role="none">
+                                <button type="button" role="menuitem" class="kp-menu__item kp-menu__item--destructive">Delete incident</button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="kp-menu-button" data-kp-menu-button data-kp-key="fa-pump-house-more">
+                        <button type="button" class="kp-button">More ▾</button>
+                        <div class="kp-menu kp-menu--rich" role="menu" aria-label="Every other action on this pump house" id="fa-mb" hidden>
+                            <div class="kp-menu__group" role="group" aria-labelledby="fa-mb-g0">
+                                <p class="kp-menu__heading" id="fa-mb-g0" role="presentation">Run</p>
+                                <button
+                                    type="button"
+                                    role="menuitem"
+                                    class="kp-menu__item"
+                                    tabindex="-1"
+                                    aria-labelledby="fa-mb-l1"
+                                    aria-describedby="fa-mb-h1"
+                                    data-kp-value="restart"
+                                >
+                                    <span class="kp-menu__label" id="fa-mb-l1">Restart the pumps</span>
+                                    <span class="kp-menu__hint" id="fa-mb-h1">Stop and start both pumps, one after the other</span>
+                                </button>
+                                <button
+                                    type="button"
+                                    role="menuitem"
+                                    class="kp-menu__item"
+                                    tabindex="-1"
+                                    aria-disabled="true"
+                                    aria-labelledby="fa-mb-l2"
+                                    aria-describedby="fa-mb-h2 fa-mb-r2"
+                                    data-kp-value="test"
+                                    data-kp-reason="Not while a field engineer is on site"
+                                >
+                                    <span class="kp-menu__label" id="fa-mb-l2">Run a pressure test</span>
+                                    <span class="kp-menu__hint" id="fa-mb-h2">Close the ring main valve and measure for ten minutes</span>
+                                    <span class="kp-menu__hint kp-menu__reason" id="fa-mb-r2">Not while a field engineer is on site</span>
+                                </button>
+                            </div>
+                            <div class="kp-menu__group" role="group" aria-labelledby="fa-mb-g1">
+                                <p class="kp-menu__heading" id="fa-mb-g1" role="presentation">Records</p>
+                                <button
+                                    type="button"
+                                    role="menuitem"
+                                    class="kp-menu__item"
+                                    tabindex="-1"
+                                    aria-labelledby="fa-mb-l3"
+                                    aria-describedby="fa-mb-h3"
+                                    data-kp-value="print"
+                                >
+                                    <span class="kp-menu__label" id="fa-mb-l3">Print the site sheet</span>
+                                    <span class="kp-menu__hint" id="fa-mb-h3">One page with the pumps, the valves and the contacts</span>
+                                </button>
+                                <button
+                                    type="button"
+                                    role="menuitem"
+                                    class="kp-menu__item kp-menu__item--destructive"
+                                    tabindex="-1"
+                                    aria-labelledby="fa-mb-l4"
+                                    aria-describedby="fa-mb-h4"
+                                    data-kp-value="archive"
+                                >
+                                    <span class="kp-menu__label" id="fa-mb-l4">Archive this pump house…</span>
+                                    <span class="kp-menu__hint" id="fa-mb-h4">Take it off the network; its readings are kept</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- 21 · Key figures, tones, a live change -->
+            <section
+                class="fa-sec"
+                id="kpis"
+                data-review-item="kpis"
+                data-review-title="21 · Kerncijfers, tonen, een waarde die verandert"
+                data-review-components="kpi"
+                aria-labelledby="h-kpis"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">21 · Kerncijfers, tonen, een waarde die verandert</p>
+                    <h2 id="h-kpis">
+                        Een kerncijfer is wit papier met zijn blauwe tweede druk en een punaise; een verandering staat op een sticker in de kleur van
+                        haar toon, met een eigen platte schaduw; een waarschuwing staat in het label; een kerncijfer dat iets doet is een sticker die
+                        aanwijzen, focus en indrukken kent; en een waarde die verandert wiebelt één keer.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="pastel" lang="nl">
+                        Kijk naar de stickers <b>6 %</b> (groen) en <b>2 %</b> (rood) en de labels in de kleur van hun toon. Wijs de middelste twee
+                        aan en tab erheen: ze komen 2 px omhoog, hun hoek krult om en de gestreepte lijn verschijnt. Druk op <b>Waarden bijwerken</b>:
+                        elke waarde wiebelt één keer rond haar voet, als gelei (800 ms), en haar blauwe druk blijft staan.
+                    </p>
+                </div>
+                <div class="fa-controls" data-review-controls>
+                    <div class="kp-row" role="group" aria-label="Live update">
+                        <button type="button" class="kp-button kp-button--sm" data-fa-update>Waarden bijwerken</button>
+                    </div>
+                </div>
+                <div class="fa-stage fa-stage--block">
+                    <div class="kp-kpis" role="group" aria-label="Network at a glance">
+                        <div class="kp-kpi">
+                            <span class="kp-kpi__label">Pump houses online</span>
+                            <span class="kp-kpi__value"><span data-fa-live="a">14</span><small>of 15</small></span>
+                            <span class="kp-kpi__trend">Pump house 7 offline</span>
+                        </div>
+                        <a class="kp-kpi" href="#kpis">
+                            <span class="kp-kpi__label">Flow now</span>
+                            <span class="kp-kpi__value"><span data-fa-live="b">412</span><small>m³/h</small></span>
+                            <span class="kp-kpi__trend"
+                                ><span class="kp-kpi__delta" data-kp-direction="up" data-kp-tone="good">6 %</span> on yesterday</span
+                            >
+                        </a>
+                        <button type="button" class="kp-kpi kp-kpi--toggle" aria-pressed="false" data-kp-tone="warning">
+                            <span class="kp-kpi__label">Open incidents</span>
+                            <span class="kp-kpi__value"><span data-fa-live="c">3</span></span>
+                            <span class="kp-kpi__trend">2 new today</span>
+                        </button>
+                        <div class="kp-kpi kp-kpi--trend">
+                            <span class="kp-kpi__label">Pressure <span class="kp-kpi__label-note">avg 15 min</span></span>
+                            <a class="kp-kpi__link" href="#kpis" title="Open Pressure on Charts"><span class="kp-kpi__link-word">Charts</span> ↗</a>
+                            <span class="kp-kpi__value">3.40<small>bar</small></span>
+                            <span class="kp-kpi__trend">Last 24 hours</span>
+                        </div>
+                        <div class="kp-kpi" data-kp-tone="destructive">
+                            <span class="kp-kpi__label">Pressure alarms</span>
+                            <span class="kp-kpi__value">1</span>
+                            <span class="kp-kpi__trend"
+                                ><span class="kp-kpi__delta" data-kp-direction="down" data-kp-tone="bad">2 %</span> on yesterday</span
+                            >
+                        </div>
+                    </div>
+                    <p class="fa-label">
+                        <span class="kp-state-word" data-kp-words="Running&#10;Restarting" data-fa-live="d">Running</span>
+                    </p>
+                </div>
+            </section>
+
+            <!-- 22 · Alerts and toasts -->
+            <section
+                class="fa-sec"
+                id="notes"
+                data-review-item="notes"
+                data-review-title="22 · Meldingen, toasts, hulpjes"
+                data-review-components="alert toast tooltip"
+                aria-labelledby="h-notes"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">22 · Meldingen, toasts, hulpjes</p>
+                    <h2 id="h-notes">
+                        Een melding, een toast en een hulpje zijn papier in de hand: hun eigen vel in de kleur van hun toon met de blauwe tweede druk
+                        ernaast, geen tape en geen punaise; ze komen vastgeplakt binnen en pellen er achterstevoren af.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="pastel" lang="nl">
+                        Sluit de groene melding met het kruisje en druk op <b>Melding terugzetten</b>: kijk of het wegpellen het binnenkomen
+                        achterstevoren is (eerst het vel, dan de blauwe druk). Druk op <b>Toast tonen</b>: de toast komt rechtsonder binnen; sluit hem
+                        met zijn kruisje.
+                    </p>
+                </div>
+                <div class="fa-controls" data-review-controls>
+                    <div class="kp-row" role="group" aria-label="Alerts and toasts">
+                        <button type="button" class="kp-button kp-button--sm" data-fa-alert-back>Melding terugzetten</button>
+                        <button type="button" class="kp-button kp-button--sm" data-fa-toast>Toast tonen</button>
+                    </div>
+                </div>
+                <div class="fa-stage fa-stage--block">
+                    <div class="fa-row">
+                        <span class="kp-tooltip-anchor" data-fa-tip>
+                            <button type="button" class="kp-button kp-button--sm kp-button--ghost">Recalibrate</button>
+                            <span role="tooltip" class="kp-popover kp-tooltip">Takes about two minutes</span>
+                        </span>
+                    </div>
+                    <div class="fa-stack" data-fa-alerts>
+                        <div class="kp-alert kp-alert--success" role="status" data-kp-semantic data-fa-alert>
+                            <span class="kp-alert__icon" aria-hidden="true">✓</span>
+                            <span class="kp-alert__body"
+                                ><span class="kp-alert__label">Success: </span>The incident was closed and the vendor was told.</span
+                            >
+                            <button type="button" class="kp-icon-button kp-alert__close" aria-label="Close">×</button>
+                        </div>
+                        <div class="kp-alert" role="status">
+                            <span class="kp-alert__body">The export schedule changes to 02:00 from Monday.</span>
+                        </div>
+                        <div class="kp-alert kp-alert--warning" role="status" data-kp-semantic>
+                            <span class="kp-alert__icon" aria-hidden="true">!</span>
+                            <span class="kp-alert__body"><span class="kp-alert__label">Warning: </span>Two readings are late.</span>
+                        </div>
+                        <div class="kp-alert kp-alert--info" role="status" data-kp-semantic>
+                            <span class="kp-alert__icon" aria-hidden="true">i</span>
+                            <span class="kp-alert__body"
+                                ><span class="kp-alert__label">Info: </span>Three new readings since you opened this page.</span
+                            >
+                        </div>
+                        <div class="kp-alert kp-alert--destructive" role="alert" data-kp-semantic>
+                            <span class="kp-alert__icon" aria-hidden="true">!</span>
+                            <span class="kp-alert__body"
+                                ><span class="kp-alert__label">Error: </span>The export failed; the file was not written.</span
+                            >
+                        </div>
+                    </div>
+                    <p class="fa-label" lang="nl">De toasts zoals ze in hun hoek staan, in elke toon:</p>
+                    <div class="fa-toast-stack">
+                        <div class="kp-toasts" role="status" aria-live="polite">
+                            <div class="kp-toast">
+                                <span class="kp-toast__body">Saved. The handover note is visible to the day shift.</span>
+                                <button type="button" class="kp-button kp-button--ghost">Undo</button>
+                            </div>
+                            <div class="kp-toast kp-toast--success" data-kp-variant="success">
+                                <span class="kp-toast__body"><b>Success:</b> incident INC-4471 closed.</span>
+                                <button type="button" class="kp-icon-button kp-toast__close" aria-label="Close">×</button>
+                            </div>
+                            <div class="kp-toast kp-toast--info" data-kp-variant="info">
+                                <span class="kp-toast__body"><b>Info:</b> 3 new readings since you opened this page.</span>
+                                <button type="button" class="kp-button kp-button--ghost">Refresh</button>
+                            </div>
+                            <div class="kp-toast kp-toast--warning" data-kp-variant="warning">
+                                <span class="kp-toast__body"><b>Warning:</b> the vendor has not answered in 2 hours.</span>
+                                <button type="button" class="kp-icon-button kp-toast__close" aria-label="Close">×</button>
+                            </div>
+                            <div class="kp-toast kp-toast--destructive" data-kp-variant="destructive">
+                                <span class="kp-toast__body"><b>Error:</b> the note was not saved; you are offline.</span>
+                                <button type="button" class="kp-button kp-button--ghost">Retry</button>
+                            </div>
+                            <div class="kp-toast kp-toast--error" data-kp-variant="error">
+                                <span class="kp-toast__body"><b>Error:</b> the export failed; the file was not written.</span>
+                                <button type="button" class="kp-icon-button kp-toast__close" aria-label="Close">×</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 23 · Pinned: the thumbtack -->
+            <section
+                class="fa-sec"
+                id="pinned"
+                data-review-item="pinned"
+                data-review-title="23 · Vastgeprikt: de punaise"
+                data-review-components="card"
+                aria-labelledby="h-pinned"
+            >
+                <div class="fa-sec__head">
+                    <p class="fa-num">23 · Vastgeprikt: de punaise</p>
+                    <h2 id="h-pinned">
+                        Wat aan de pagina vastzit (een kaart, een kerncijfer) krijgt na de landing een punaise bovenaan in het midden; bij vertrekken
+                        gaat de punaise er eerst uit, dan pelt de kaart eraf en schuift de blauwe druk weg; terugkomen is dat achterstevoren.
+                    </h2>
+                </div>
+                <div class="fa-look" data-review-look>
+                    <p data-for="pastel" lang="nl">
+                        Druk op <b>Kaart weghalen</b>: de punaise komt er eerst uit (360 ms), dan de landing achterstevoren (560 ms), en de ruimte
+                        sluit zich mee. Druk op <b>Kaart terugzetten</b>: de kaart wordt twee keer gedrukt en vastgeplakt, de punaise gaat er als
+                        laatste in.
+                    </p>
+                </div>
+                <div class="fa-controls" data-review-controls>
+                    <div class="kp-row" role="group" aria-label="The card">
+                        <button type="button" class="kp-button kp-button--sm" data-fa-pin="leave">Kaart weghalen</button>
+                        <button type="button" class="kp-button kp-button--sm" data-fa-pin="back">Kaart terugzetten</button>
+                    </div>
+                </div>
+                <div class="fa-stage fa-stage--block">
+                    <div class="fa-pins" data-kp-size-motion data-fa-pins>
+                        <div class="kp-card" data-fa-pin-card>
+                            <div class="kp-card__header"><h3 class="kp-card__title">Groceries</h3></div>
+                            <div class="kp-card__body">4 of 9 done</div>
+                        </div>
+                        <div class="kp-card">
+                            <div class="kp-card__header"><h3 class="kp-card__title">Water</h3></div>
+                            <div class="kp-card__body">1.4 l today</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <!-- Round one: every block is new. -->
+        <script type="application/json" data-review-round>
+            { "round": "2026-10-14-r1", "reopen": [] }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="demo.js"></script>
+        </body>
+</html>
