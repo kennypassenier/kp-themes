@@ -18,6 +18,16 @@ export declare const ARRIVE_KEYS: readonly string[];
  */
 export declare function motionWatchCount(): number;
 /**
+ * A time a register names in a custom property, in ms, played as slowly or
+ * as fast as the page plays every motion (`--kp-motion-scale`, default 1);
+ * `null` when the register names none. A bare number is ms. The property is
+ * read where `el` stands, so a nested theme island answers with its own.
+ * @param {Element} el
+ * @param {string} name a custom property, such as `--kp-update-time`
+ * @returns {number | null}
+ */
+export declare function registerTime(el: Element, name: string): number | null;
+/**
  * The theme's motion, read from its dialog entrance: a dialog drawn for an
  * instant out of sight, in the theme `scope` wears.
  *
@@ -30,6 +40,69 @@ export declare function themeMotion(scope?: Element): {
     close: number;
     size: number;
 };
+export type Entrance = {
+    target: Element;
+    keyframes: Keyframe[];
+    easing: string;
+    pseudoElement: string | null;
+    line: Line;
+};
+/**
+ * `read`, the keyframes `getKeyframes()` reports (every ordinary property,
+ * the implicit first and last frame filled in, each frame on the animation's
+ * curve), with the custom properties that `own` (a copy of the same effect)
+ * keeps and `read` does not. Chromium's `getKeyframes()` leaves the custom
+ * properties of a register's animation out, even a whole frame that holds
+ * nothing else, and an `Element.animate()` fed with it plays nothing for a
+ * `--x` (package finding of 2026-10-08). A frame `read` has gets the custom
+ * properties it lacks; a frame it lacks (same offset) is added, on the curve
+ * and the composite `own` gives it. When `own` has no custom property, `read`
+ * is returned as it is. Pure.
+ * @param {Keyframe[]} read
+ * @param {Keyframe[]} own
+ * @returns {Keyframe[]}
+ */
+export declare function withCustomProperties(read: Keyframe[], own: Keyframe[]): Keyframe[];
+export type Line = {
+    delay: number;
+    duration: number;
+    end: number;
+};
+/**
+ * The lines of a part that closes as its open played backwards, line by line
+ * (`--kp-lines: keep`): the part takes `total` ms from its first line's start
+ * to its last line's end, each line keeps its own share of that time and its
+ * own wait, and the whole is turned round, so the line that came in last
+ * goes first. Pure: the lines as the register's entrance plays them in, the
+ * timing of each in the close and in the opening out. Where the part's
+ * entrance is as long as `total` the scale is 1 and every wait is the one the
+ * register wrote.
+ * @param {readonly Line[]} lines
+ * @param {number} total the time the part's close (and its open) takes
+ * @returns {{ duration: number, openDelay: number, closeDelay: number }[]}
+ */
+export declare function turnLines(lines: readonly Line[], total: number): {
+    duration: number;
+    openDelay: number;
+    closeDelay: number;
+}[];
+/**
+ * turnLines() for a dialog's kept entrances. The shade behind it
+ * (`::backdrop`) is no line of the dialog: it belongs to the whole part and
+ * takes the whole `total`, as it does without `--kp-lines: keep`, and it
+ * neither lengthens the span the lines are scaled by nor is scaled with them.
+ * @param {readonly { pseudoElement: string | null, line: Line }[]} kept
+ * @param {number} total
+ * @returns {{ duration: number, openDelay: number, closeDelay: number }[]}
+ */
+export declare function turnEntrances(kept: readonly {
+    pseudoElement: string | null;
+    line: Line;
+}[], total: number): {
+    duration: number;
+    openDelay: number;
+    closeDelay: number;
+}[];
 /**
  * Close a dialog the way it opened, backwards, then close it for real. With
  * no entrance to reverse (reduced motion, a theme without one) it closes at

@@ -91,6 +91,25 @@ const msOf = (el, name, fallback) => {
     return raw.endsWith('ms') ? n : n * 1000;
 };
 
+/**
+ * A time a register names in a custom property, in ms, played as slowly or
+ * as fast as the page plays every motion (`--kp-motion-scale`, default 1);
+ * `null` when the register names none. A bare number is ms. The property is
+ * read where `el` stands, so a nested theme island answers with its own.
+ * @param {Element} el
+ * @param {string} name a custom property, such as `--kp-update-time`
+ * @returns {number | null}
+ */
+export function registerTime(el, name) {
+    const raw = getComputedStyle(el).getPropertyValue(name).trim();
+    const n = parseFloat(raw);
+    if (Number.isNaN(n) || n < 0) return null;
+    const root = el.ownerDocument?.documentElement ?? document.documentElement;
+    const scale = parseFloat(getComputedStyle(root).getPropertyValue('--kp-motion-scale')) || 1;
+    const ms = raw.endsWith('ms') ? n : raw.endsWith('s') ? n * 1000 : n;
+    return ms * scale;
+}
+
 /** @param {string} raw a CSS duration list @returns {number} the first, in ms */
 const firstMs = (raw) => {
     const first = raw.split(',')[0].trim();
@@ -154,11 +173,139 @@ export function themeMotion(scope = document.documentElement) {
 
 /* ------------------------------------------------------------- closing */
 
-/** @type {WeakMap<HTMLDialogElement, { target: Element, keyframes: Keyframe[], easing: string, pseudoElement: string | null }[]>} */
+/**
+ * One CSS animation of a dialog's entrance, kept for its close: its
+ * keyframes (the custom properties of a register's animation included, see
+ * keyframesOf()), where it plays, its curve, and its own time and wait
+ * (`line`).
+ * @typedef {{ target: Element, keyframes: Keyframe[], easing: string, pseudoElement: string | null, line: Line }} Entrance
+ */
+/** @type {WeakMap<HTMLDialogElement, Entrance[]>} */
 const entrances = new WeakMap();
 /** @type {WeakSet<HTMLDialogElement>} */
 const closing = new WeakSet();
 const nativeClose = typeof HTMLDialogElement === 'undefined' ? null : HTMLDialogElement.prototype.close;
+
+/** The fields of a keyframe that are not a property of the style. */
+const KEYFRAME_FIELDS = new Set(['offset', 'computedOffset', 'easing', 'composite']);
+
+/**
+ * `read`, the keyframes `getKeyframes()` reports (every ordinary property,
+ * the implicit first and last frame filled in, each frame on the animation's
+ * curve), with the custom properties that `own` (a copy of the same effect)
+ * keeps and `read` does not. Chromium's `getKeyframes()` leaves the custom
+ * properties of a register's animation out, even a whole frame that holds
+ * nothing else, and an `Element.animate()` fed with it plays nothing for a
+ * `--x` (package finding of 2026-10-08). A frame `read` has gets the custom
+ * properties it lacks; a frame it lacks (same offset) is added, on the curve
+ * and the composite `own` gives it. When `own` has no custom property, `read`
+ * is returned as it is. Pure.
+ * @param {Keyframe[]} read
+ * @param {Keyframe[]} own
+ * @returns {Keyframe[]}
+ */
+export function withCustomProperties(read, own) {
+    const customs = own.filter((frame) => Object.keys(frame).some((key) => key.startsWith('--')));
+    if (customs.length === 0) return read;
+    const frames = read.map((frame) => ({ ...frame }));
+    const at = (/** @type {any} */ frame) => Number(frame.computedOffset ?? frame.offset);
+    for (const custom of /** @type {any[]} */ (customs)) {
+        let frame = /** @type {any} */ (frames.find((one) => Math.abs(at(one) - at(custom)) < 1e-6));
+        if (!frame) {
+            frame = { offset: at(custom), computedOffset: at(custom), easing: custom.easing, composite: custom.composite };
+            const next = frames.findIndex((one) => at(one) > at(custom));
+            frames.splice(next === -1 ? frames.length : next, 0, frame);
+        }
+        for (const key of Object.keys(custom)) if (key.startsWith('--') && !(key in frame) && !KEYFRAME_FIELDS.has(key)) frame[key] = custom[key];
+    }
+    return frames;
+}
+
+/**
+ * The keyframes to play `effect` again with `Element.animate()`: what
+ * `getKeyframes()` reports, plus the custom properties it may leave out
+ * (withCustomProperties()). An engine without the copy constructor gets what
+ * `getKeyframes()` reports.
+ * @param {KeyframeEffect} effect
+ * @returns {Keyframe[]}
+ */
+function keyframesOf(effect) {
+    const read = effect.getKeyframes();
+    try {
+        return withCustomProperties(read, new KeyframeEffect(effect).getKeyframes());
+    } catch {
+        return read;
+    }
+}
+
+/**
+ * The own time of one line of a part, in ms: when it starts, how long one
+ * iteration plays and where it ends on the part's clock.
+ * @typedef {{ delay: number, duration: number, end: number }} Line
+ */
+
+/** @param {KeyframeEffect} effect @returns {Line} */
+function lineOf(effect) {
+    const timing = effect.getTiming();
+    const delay = Number(timing.delay) || 0;
+    return {
+        delay,
+        duration: Number(timing.duration) || 0,
+        end: delay + (Number(effect.getComputedTiming().activeDuration) || 0),
+    };
+}
+
+/**
+ * The lines of a part that closes as its open played backwards, line by line
+ * (`--kp-lines: keep`): the part takes `total` ms from its first line's start
+ * to its last line's end, each line keeps its own share of that time and its
+ * own wait, and the whole is turned round, so the line that came in last
+ * goes first. Pure: the lines as the register's entrance plays them in, the
+ * timing of each in the close and in the opening out. Where the part's
+ * entrance is as long as `total` the scale is 1 and every wait is the one the
+ * register wrote.
+ * @param {readonly Line[]} lines
+ * @param {number} total the time the part's close (and its open) takes
+ * @returns {{ duration: number, openDelay: number, closeDelay: number }[]}
+ */
+export function turnLines(lines, total) {
+    const span = Math.max(0, ...lines.map((line) => line.end));
+    const scale = span > 0 ? total / span : 1;
+    return lines.map((line) => ({
+        duration: line.duration * scale,
+        openDelay: line.delay * scale,
+        closeDelay: (span - line.end) * scale,
+    }));
+}
+
+/**
+ * turnLines() for a dialog's kept entrances. The shade behind it
+ * (`::backdrop`) is no line of the dialog: it belongs to the whole part and
+ * takes the whole `total`, as it does without `--kp-lines: keep`, and it
+ * neither lengthens the span the lines are scaled by nor is scaled with them.
+ * @param {readonly { pseudoElement: string | null, line: Line }[]} kept
+ * @param {number} total
+ * @returns {{ duration: number, openDelay: number, closeDelay: number }[]}
+ */
+export function turnEntrances(kept, total) {
+    const lines = turnLines(
+        kept.filter((one) => one.pseudoElement !== '::backdrop').map((one) => one.line),
+        total,
+    );
+    let at = 0;
+    return kept.map((one) => (one.pseudoElement !== '::backdrop' ? lines[at++] : { duration: total, openDelay: 0, closeDelay: 0 }));
+}
+
+/**
+ * Whether the register of `el` keeps every line of a part with its own time
+ * and wait (`--kp-lines: keep`) instead of one time for the whole part.
+ * Formal rules a card's frame first and then its lines top down, so its
+ * leave, arrival, close and open each play every line's wait. Without the
+ * token nothing here is read and every part plays as one.
+ * @param {Element} el
+ * @returns {boolean}
+ */
+const keepsLines = (el) => getComputedStyle(el).getPropertyValue('--kp-lines').trim() === 'keep';
 
 /**
  * Keep the entrance the dialog just started, so its close can play it
@@ -172,9 +319,10 @@ function rememberEntrance(dialog) {
         const effect = /** @type {KeyframeEffect} */ (a.effect);
         return {
             target: /** @type {Element} */ (effect.target),
-            keyframes: effect.getKeyframes(),
+            keyframes: keyframesOf(effect),
             easing: String(effect.getTiming().easing ?? 'linear'),
             pseudoElement: effect.pseudoElement,
+            line: lineOf(effect),
         };
     });
     entrances.set(dialog, kept);
@@ -221,11 +369,16 @@ export async function closeDialog(dialog, returnValue) {
     closing.add(dialog);
     /** @type {Animation[]} */
     const out = [];
-    for (const { target, keyframes, easing, pseudoElement } of kept) {
+    // `--kp-lines: keep`: every kept line plays in its own time and with its
+    // own wait, the whole turned round (turnLines()); otherwise each takes
+    // the close's one time.
+    const lines = kept.length > 0 && keepsLines(dialog) ? turnEntrances(kept, duration) : null;
+    kept.forEach(({ target, keyframes, easing, pseudoElement }, at) => {
         try {
             out.push(
                 target.animate(keyframes, {
-                    duration,
+                    duration: lines ? lines[at].duration : duration,
+                    ...(lines ? { delay: lines[at].closeDelay } : {}),
                     easing,
                     direction: 'reverse',
                     fill: 'forwards',
@@ -235,7 +388,7 @@ export async function closeDialog(dialog, returnValue) {
         } catch {
             /* an engine that cannot animate that pseudo-element skips it */
         }
-    }
+    });
     // The backdrop leaves with the dialog when the theme gave it no motion of its own.
     if (!kept.some((one) => one.target === dialog && one.pseudoElement === '::backdrop')) {
         try {
@@ -276,13 +429,22 @@ function openAsReversedClose(dialog) {
     const kept = entrances.get(dialog) ?? [];
     if (duration <= 0) return;
     for (const a of entranceOf(dialog)) a.cancel();
-    for (const { target, keyframes, easing, pseudoElement } of kept) {
+    // As the close reads them (closeDialog()): with `--kp-lines: keep` each
+    // line plays its own wait and time, so frame t is still frame (close - t).
+    const lines = kept.length > 0 && keepsLines(dialog) ? turnEntrances(kept, duration) : null;
+    kept.forEach(({ target, keyframes, easing, pseudoElement }, at) => {
         try {
-            target.animate(keyframes, { duration, easing, fill: 'backwards', ...(pseudoElement ? { pseudoElement } : {}) });
+            target.animate(keyframes, {
+                duration: lines ? lines[at].duration : duration,
+                ...(lines ? { delay: lines[at].openDelay } : {}),
+                easing,
+                fill: 'backwards',
+                ...(pseudoElement ? { pseudoElement } : {}),
+            });
         } catch {
             /* an engine that cannot animate that pseudo-element skips it, as the close does */
         }
-    }
+    });
     const fade = /** @type {Keyframe[]} */ ([{ opacity: 1 }, { opacity: 0 }]);
     if (!kept.some((one) => one.target === dialog && one.pseudoElement === '::backdrop')) {
         try {
@@ -1006,13 +1168,11 @@ export async function playArrivalBackwards(el) {
 /**
  * Settles once the CSS animations on `el` are `share` of the way through,
  * or when `done` settles, whichever is first.
- * @param {HTMLElement} el @param {number} share @param {Promise<unknown>} done
+ * @param {HTMLElement} el @param {number} share @param {Promise<unknown>} done @param {boolean} [lines] the lines of the part count (exitsOf())
  * @returns {Promise<unknown>}
  */
-function partway(el, share, done) {
-    const css = el
-        .getAnimations({ subtree: true })
-        .filter((a) => typeof CSSAnimation !== 'undefined' && a instanceof CSSAnimation && /** @type {KeyframeEffect} */ (a.effect)?.target === el);
+function partway(el, share, done, lines = false) {
+    const css = exitsOf(el, lines);
     const reached = new Promise((resolve) => {
         const tick = () => {
             const through = css.every((a) => {
@@ -1031,18 +1191,15 @@ function partway(el, share, done) {
  * The gap inTurnGap() gives a leave of a row of `count`, in ms on its
  * exit's clock, when it is shorter than the one partway() would wait for;
  * else null. The same reading arrive() takes for its `lag`.
- * @param {HTMLElement} el @param {number} share @param {number} lasts @param {number} count
+ * @param {HTMLElement} el @param {number} share @param {number} lasts @param {number} count @param {boolean} [lines] as partway()
  * @returns {number | null}
  */
-function cappedGap(el, share, lasts, count) {
-    const exits = el
-        .getAnimations({ subtree: true })
-        .filter((a) => typeof CSSAnimation !== 'undefined' && a instanceof CSSAnimation && /** @type {KeyframeEffect} */ (a.effect)?.target === el)
-        .map((a) => {
-            const effect = /** @type {KeyframeEffect} */ (a.effect);
-            const timing = effect.getTiming();
-            return { timing, end: (Number(timing.delay) || 0) + (Number(effect.getComputedTiming().activeDuration) || 0) };
-        });
+function cappedGap(el, share, lasts, count, lines = false) {
+    const exits = exitsOf(el, lines).map((a) => {
+        const effect = /** @type {KeyframeEffect} */ (a.effect);
+        const timing = effect.getTiming();
+        return { timing, end: (Number(timing.delay) || 0) + (Number(effect.getComputedTiming().activeDuration) || 0) };
+    });
     if (exits.length === 0) return null;
     const gap =
         share > 0 && share < 1
@@ -1056,12 +1213,10 @@ function cappedGap(el, share, lasts, count) {
 /**
  * Settles once every CSS animation on `el` has run `ms` on its own clock (or
  * is over), or when `done` does.
- * @param {HTMLElement} el @param {number} ms @param {Promise<unknown>} done
+ * @param {HTMLElement} el @param {number} ms @param {Promise<unknown>} done @param {boolean} [lines] as partway()
  */
-function atTime(el, ms, done) {
-    const css = el
-        .getAnimations({ subtree: true })
-        .filter((a) => typeof CSSAnimation !== 'undefined' && a instanceof CSSAnimation && /** @type {KeyframeEffect} */ (a.effect)?.target === el);
+function atTime(el, ms, done, lines = false) {
+    const css = exitsOf(el, lines);
     const reached = new Promise((resolve) => {
         const tick = () => {
             if (css.every((a) => a.playState === 'finished' || (Number(a.currentTime) || 0) >= ms)) resolve(undefined);
@@ -1076,14 +1231,12 @@ function atTime(el, ms, done) {
  * Settles when the CSS animations running on `el` have played out, at
  * whatever rate they play (a slowed-down review plays them at a quarter);
  * with none running, after `fallback` ms.
- * @param {HTMLElement} el @param {number} fallback
+ * @param {HTMLElement} el @param {number} fallback @param {boolean} [lines] as partway()
  * @returns {Promise<unknown>}
  */
-function playedOut(el, fallback) {
+function playedOut(el, fallback, lines = false) {
     // Its pseudo-elements count too: a theme may draw its exit on ::after.
-    const css = el
-        .getAnimations({ subtree: true })
-        .filter((a) => typeof CSSAnimation !== 'undefined' && a instanceof CSSAnimation && /** @type {KeyframeEffect} */ (a.effect)?.target === el);
+    const css = exitsOf(el, lines);
     if (css.length === 0) return new Promise((resolve) => setTimeout(resolve, fallback));
     return Promise.all(css.map((a) => a.finished.catch(() => undefined)));
 }
@@ -1263,6 +1416,28 @@ const flipped = (direction) =>
     })[direction ?? 'normal'];
 
 /**
+ * The CSS animations that make up the exit `actor` plays: its own and those
+ * on its pseudo-elements and, where the register keeps the lines of a part
+ * (`--kp-lines: keep`, see keepsLines()), those of every line inside it that
+ * ends, each on its own element with its own wait. A line that never ends (a
+ * spinner, a caret) is no exit.
+ * @param {HTMLElement} actor
+ * @param {boolean} lines
+ * @returns {CSSAnimation[]}
+ */
+function exitsOf(actor, lines) {
+    return /** @type {CSSAnimation[]} */ (
+        actor.getAnimations({ subtree: true }).filter((a) => {
+            if (typeof CSSAnimation === 'undefined' || !(a instanceof CSSAnimation)) return false;
+            const effect = /** @type {KeyframeEffect | null} */ (a.effect);
+            const target = effect?.target;
+            if (target === actor) return true;
+            return lines && target != null && actor.contains(target) && Number.isFinite(Number(effect?.getComputedTiming().activeDuration));
+        })
+    );
+}
+
+/**
  * Let `el` arrive as its leave played backwards [research/open-reverse;
  * Kenny's pick, every theme since 2026-10-05]: the
  * timeline leaveOne() would play for it in its theme (the register's exit
@@ -1321,27 +1496,25 @@ function arriveAsReversedLeave(el) {
     }
     // The exit, read off the actor and taken over: its keyframes and timing.
     getComputedStyle(actor).animationName;
-    const css = actor
-        .getAnimations({ subtree: true })
-        .filter((a) => a instanceof CSSAnimation && /** @type {KeyframeEffect} */ (a.effect)?.target === actor)
-        .map((a) => /** @type {CSSAnimation} */ (a));
+    const css = exitsOf(actor, keepsLines(el));
     const exits = css.map((a) => {
         const effect = /** @type {KeyframeEffect} */ (a.effect);
         const timing = effect.getTiming();
         // An entrance part (see pseudoNames()): the leave plays it backwards.
         const pseudo = effect.pseudoElement;
-        if (pseudo && rest[pseudo] === animationSignature(actor, pseudo)) {
+        if (effect.target === actor && pseudo && rest[pseudo] === animationSignature(actor, pseudo)) {
             timing.direction = flipped(timing.direction);
             // Played backwards in the leave, from its first frame: its own
             // wait comes after it there, so here it ends with the timeline.
             timing.delay = 0;
         }
         return {
-            keyframes: effect.getKeyframes(),
+            target: /** @type {Element} */ (effect.target),
+            keyframes: keyframesOf(effect),
+            pseudoElement: effect.pseudoElement,
             timing,
             // The whole of it, every iteration, from the leave's start.
             end: (Number(timing.delay) || 0) + (Number(effect.getComputedTiming().activeDuration) || 0),
-            pseudoElement: effect.pseudoElement,
         };
     });
     for (const a of css) a.cancel();
@@ -1374,7 +1547,7 @@ function arriveAsReversedLeave(el) {
         const back = turned[direction] ?? 'reverse';
         try {
             plays.push(
-                actor.animate(exit.keyframes, {
+                exit.target.animate(exit.keyframes, {
                     duration: Number(duration) || 0,
                     iterations: Number(iterations),
                     delay: finiteMs(total - exit.end),
@@ -1713,7 +1886,7 @@ async function leaveOne(el, hide, exited, count = 1) {
         if (!(a instanceof CSSAnimation) || effect?.target !== actor || !pseudo || rest[pseudo] !== animationSignature(actor, pseudo)) continue;
         const timing = effect.getTiming();
         if (!Number.isFinite(Number(timing.iterations))) continue;
-        const keyframes = effect.getKeyframes();
+        const keyframes = keyframesOf(effect);
         a.cancel();
         try {
             running.push(
@@ -1732,7 +1905,9 @@ async function leaveOne(el, hide, exited, count = 1) {
             /* an engine that cannot animate that pseudo-element skips it */
         }
     }
-    const exit = lasts > 0 ? playedOut(actor, lasts + 100) : Promise.resolve();
+    // `--kp-lines: keep`: the lines inside it are part of the exit too (exitsOf()).
+    const lines = style.getPropertyValue('--kp-lines').trim() === 'keep';
+    const exit = lasts > 0 ? playedOut(actor, lasts + 100, lines) : Promise.resolve();
     // The next in a row of leaves starts once this one's exit is
     // `--kp-leave-stagger` of the way through (0.5 by default; 1 waits for
     // all of it), read off the animation itself so any playback rate holds.
@@ -1741,9 +1916,9 @@ async function leaveOne(el, hide, exited, count = 1) {
     const stagger = Number.isNaN(set) ? 0.5 : set;
     // A long row lets the next go sooner (inTurnGap()), on the exit's own
     // clock, as arriveInTurn() delays its arrivals.
-    const capped = lasts > 0 && count > 2 ? cappedGap(actor, stagger, lasts, count) : null;
-    if (capped !== null) void atTime(actor, capped, exit).then(exited);
-    else if (lasts > 0 && stagger > 0 && stagger < 1) void partway(actor, stagger, exit).then(exited);
+    const capped = lasts > 0 && count > 2 ? cappedGap(actor, stagger, lasts, count, lines) : null;
+    if (capped !== null) void atTime(actor, capped, exit, lines).then(exited);
+    else if (lasts > 0 && stagger > 0 && stagger < 1) void partway(actor, stagger, exit, lines).then(exited);
     else void exit.then(exited);
     running.push(exit);
     // A table row cannot be folded below its cells' content: it plays its

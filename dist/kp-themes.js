@@ -2553,22 +2553,6 @@ var init_effects = __esm({
       // Formal's grammar [themes/formal/CHARACTER.md §4, Kenny, 2026-10-08]: every
       // one is a clip, a clip-path or a registered custom property that moves a
       // rule's extent; none changes a colour or an opacity but the bar's head.
-      "kp-sig-formal-line-0": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-formal-line-0-rtl": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-formal-pen-0": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-formal-pen-0-rtl": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-formal-line-1": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-formal-line-1-rtl": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-formal-pen-1": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-formal-pen-1-rtl": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-formal-line-2": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-formal-line-2-rtl": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-formal-pen-2": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-formal-pen-2-rtl": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-formal-line-3": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-formal-line-3-rtl": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-formal-pen-3": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-formal-pen-3-rtl": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
       "kp-sig-formal-leave": { durationMs: 560, cycles: 1, property: "clip-path", luminanceSteps: [] },
       "kp-sig-formal-leave-rtl": { durationMs: 560, cycles: 1, property: "clip-path", luminanceSteps: [] },
       "kp-sig-formal-leave-pen": { durationMs: 560, cycles: 1, property: "clip-path", luminanceSteps: [] },
@@ -2583,6 +2567,12 @@ var init_effects = __esm({
       "kp-sig-formal-update-closed": { durationMs: 850, cycles: 1, property: "--kp-fm-u", luminanceSteps: [] },
       "kp-sig-formal-arc-outer": { durationMs: 2400, cycles: Infinity, property: "--kp-fm-a0, --kp-fm-a1", luminanceSteps: [] },
       "kp-sig-formal-arc-inner": { durationMs: 2400, cycles: Infinity, property: "--kp-fm-a0, --kp-fm-a1", luminanceSteps: [] },
+      "kp-sig-formal-ruled-frame": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      "kp-sig-formal-ruled-frame-rtl": { durationMs: 740, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      "kp-sig-formal-ruled-line": { durationMs: 400, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      "kp-sig-formal-ruled-line-rtl": { durationMs: 400, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      "kp-sig-formal-ruled-pen": { durationMs: 560, cycles: 1, property: "clip-path", luminanceSteps: [] },
+      "kp-sig-formal-ruled-pen-rtl": { durationMs: 560, cycles: 1, property: "clip-path", luminanceSteps: [] },
       "kp-sig-formal-pen": { durationMs: 180, cycles: 1, property: "clip-path", luminanceSteps: [] },
       "kp-sig-light-meter-expose-d": { durationMs: 700, cycles: 1, property: "filter", luminanceSteps: [] },
       "kp-sig-light-meter-expose-o": { durationMs: 700, cycles: 1, property: "filter", luminanceSteps: [] },
@@ -3144,16 +3134,29 @@ __export(motion_exports, {
   playArrivalBackwards: () => playArrivalBackwards,
   playClose: () => playClose,
   playEntranceBackwards: () => playEntranceBackwards,
+  registerTime: () => registerTime,
   repaintedIn: () => repaintedIn,
   reversedEase: () => reversedEase,
   sizeMotion: () => sizeMotion,
   stopClose: () => stopClose,
   stopReversing: () => stopReversing,
   themeMotion: () => themeMotion,
+  turnEntrances: () => turnEntrances,
+  turnLines: () => turnLines,
+  withCustomProperties: () => withCustomProperties,
   withoutOvershoot: () => withoutOvershoot
 });
 function motionWatchCount() {
   return watching;
+}
+function registerTime(el2, name) {
+  const raw = getComputedStyle(el2).getPropertyValue(name).trim();
+  const n = parseFloat(raw);
+  if (Number.isNaN(n) || n < 0) return null;
+  const root = el2.ownerDocument?.documentElement ?? document.documentElement;
+  const scale = parseFloat(getComputedStyle(root).getPropertyValue("--kp-motion-scale")) || 1;
+  const ms = raw.endsWith("ms") ? n : raw.endsWith("s") ? n * 1e3 : n;
+  return ms * scale;
 }
 function themeMotion(scope = document.documentElement) {
   if (reduced()) return { open: 0, ease: "linear", close: 0, size: 0 };
@@ -3184,6 +3187,63 @@ function themeMotion(scope = document.documentElement) {
     size: Math.min(open * SIZE_SHARE, msOf(root, "--kp-size-max", 480)) * scale
   };
 }
+function withCustomProperties(read, own) {
+  const customs = own.filter((frame) => Object.keys(frame).some((key) => key.startsWith("--")));
+  if (customs.length === 0) return read;
+  const frames = read.map((frame) => ({ ...frame }));
+  const at = (frame) => Number(frame.computedOffset ?? frame.offset);
+  for (
+    const custom of
+    /** @type {any[]} */
+    customs
+  ) {
+    let frame = (
+      /** @type {any} */
+      frames.find((one) => Math.abs(at(one) - at(custom)) < 1e-6)
+    );
+    if (!frame) {
+      frame = { offset: at(custom), computedOffset: at(custom), easing: custom.easing, composite: custom.composite };
+      const next = frames.findIndex((one) => at(one) > at(custom));
+      frames.splice(next === -1 ? frames.length : next, 0, frame);
+    }
+    for (const key of Object.keys(custom)) if (key.startsWith("--") && !(key in frame) && !KEYFRAME_FIELDS.has(key)) frame[key] = custom[key];
+  }
+  return frames;
+}
+function keyframesOf(effect) {
+  const read = effect.getKeyframes();
+  try {
+    return withCustomProperties(read, new KeyframeEffect(effect).getKeyframes());
+  } catch {
+    return read;
+  }
+}
+function lineOf(effect) {
+  const timing = effect.getTiming();
+  const delay = Number(timing.delay) || 0;
+  return {
+    delay,
+    duration: Number(timing.duration) || 0,
+    end: delay + (Number(effect.getComputedTiming().activeDuration) || 0)
+  };
+}
+function turnLines(lines, total) {
+  const span = Math.max(0, ...lines.map((line) => line.end));
+  const scale = span > 0 ? total / span : 1;
+  return lines.map((line) => ({
+    duration: line.duration * scale,
+    openDelay: line.delay * scale,
+    closeDelay: (span - line.end) * scale
+  }));
+}
+function turnEntrances(kept, total) {
+  const lines = turnLines(
+    kept.filter((one) => one.pseudoElement !== "::backdrop").map((one) => one.line),
+    total
+  );
+  let at = 0;
+  return kept.map((one) => one.pseudoElement !== "::backdrop" ? lines[at++] : { duration: total, openDelay: 0, closeDelay: 0 });
+}
 function rememberEntrance(dialog) {
   getComputedStyle(dialog).animationName;
   const kept = entranceOf(dialog).map((a) => {
@@ -3196,9 +3256,10 @@ function rememberEntrance(dialog) {
         /** @type {Element} */
         effect.target
       ),
-      keyframes: effect.getKeyframes(),
+      keyframes: keyframesOf(effect),
       easing: String(effect.getTiming().easing ?? "linear"),
-      pseudoElement: effect.pseudoElement
+      pseudoElement: effect.pseudoElement,
+      line: lineOf(effect)
     };
   });
   entrances.set(dialog, kept);
@@ -3219,11 +3280,13 @@ async function closeDialog(dialog, returnValue) {
   if (duration <= 0) return void close();
   closing.add(dialog);
   const out = [];
-  for (const { target, keyframes, easing, pseudoElement } of kept) {
+  const lines = kept.length > 0 && keepsLines(dialog) ? turnEntrances(kept, duration) : null;
+  kept.forEach(({ target, keyframes, easing, pseudoElement }, at) => {
     try {
       out.push(
         target.animate(keyframes, {
-          duration,
+          duration: lines ? lines[at].duration : duration,
+          ...lines ? { delay: lines[at].closeDelay } : {},
           easing,
           direction: "reverse",
           fill: "forwards",
@@ -3232,7 +3295,7 @@ async function closeDialog(dialog, returnValue) {
       );
     } catch {
     }
-  }
+  });
   if (!kept.some((one) => one.target === dialog && one.pseudoElement === "::backdrop")) {
     try {
       out.push(
@@ -3253,12 +3316,19 @@ function openAsReversedClose(dialog) {
   const kept = entrances.get(dialog) ?? [];
   if (duration <= 0) return;
   for (const a of entranceOf(dialog)) a.cancel();
-  for (const { target, keyframes, easing, pseudoElement } of kept) {
+  const lines = kept.length > 0 && keepsLines(dialog) ? turnEntrances(kept, duration) : null;
+  kept.forEach(({ target, keyframes, easing, pseudoElement }, at) => {
     try {
-      target.animate(keyframes, { duration, easing, fill: "backwards", ...pseudoElement ? { pseudoElement } : {} });
+      target.animate(keyframes, {
+        duration: lines ? lines[at].duration : duration,
+        ...lines ? { delay: lines[at].openDelay } : {},
+        easing,
+        fill: "backwards",
+        ...pseudoElement ? { pseudoElement } : {}
+      });
     } catch {
     }
-  }
+  });
   const fade = (
     /** @type {Keyframe[]} */
     [{ opacity: 1 }, { opacity: 0 }]
@@ -3699,9 +3769,8 @@ async function playArrivalBackwards(el2) {
   if (lent) el2.style.removeProperty("animation");
   el2.removeAttribute("data-kp-arriving");
 }
-function partway(el2, share, done) {
-  const css = el2.getAnimations({ subtree: true }).filter((a) => typeof CSSAnimation !== "undefined" && a instanceof CSSAnimation && /** @type {KeyframeEffect} */
-  a.effect?.target === el2);
+function partway(el2, share, done, lines = false) {
+  const css = exitsOf(el2, lines);
   const reached = new Promise((resolve) => {
     const tick2 = () => {
       const through = css.every((a) => {
@@ -3715,9 +3784,8 @@ function partway(el2, share, done) {
   });
   return Promise.race([reached, done]);
 }
-function cappedGap(el2, share, lasts, count) {
-  const exits = el2.getAnimations({ subtree: true }).filter((a) => typeof CSSAnimation !== "undefined" && a instanceof CSSAnimation && /** @type {KeyframeEffect} */
-  a.effect?.target === el2).map((a) => {
+function cappedGap(el2, share, lasts, count, lines = false) {
+  const exits = exitsOf(el2, lines).map((a) => {
     const effect = (
       /** @type {KeyframeEffect} */
       a.effect
@@ -3731,9 +3799,8 @@ function cappedGap(el2, share, lasts, count) {
   const next = inTurnGap(gap, count);
   return next < gap ? next : null;
 }
-function atTime(el2, ms, done) {
-  const css = el2.getAnimations({ subtree: true }).filter((a) => typeof CSSAnimation !== "undefined" && a instanceof CSSAnimation && /** @type {KeyframeEffect} */
-  a.effect?.target === el2);
+function atTime(el2, ms, done, lines = false) {
+  const css = exitsOf(el2, lines);
   const reached = new Promise((resolve) => {
     const tick2 = () => {
       if (css.every((a) => a.playState === "finished" || (Number(a.currentTime) || 0) >= ms)) resolve(void 0);
@@ -3743,9 +3810,8 @@ function atTime(el2, ms, done) {
   });
   return Promise.race([reached, done]);
 }
-function playedOut(el2, fallback2) {
-  const css = el2.getAnimations({ subtree: true }).filter((a) => typeof CSSAnimation !== "undefined" && a instanceof CSSAnimation && /** @type {KeyframeEffect} */
-  a.effect?.target === el2);
+function playedOut(el2, fallback2, lines = false) {
+  const css = exitsOf(el2, lines);
   if (css.length === 0) return new Promise((resolve) => setTimeout(resolve, fallback2));
   return Promise.all(css.map((a) => a.finished.catch(() => void 0)));
 }
@@ -3815,6 +3881,21 @@ function foldFrames(el2, style) {
   }
   return [from, to];
 }
+function exitsOf(actor, lines) {
+  return (
+    /** @type {CSSAnimation[]} */
+    actor.getAnimations({ subtree: true }).filter((a) => {
+      if (typeof CSSAnimation === "undefined" || !(a instanceof CSSAnimation)) return false;
+      const effect = (
+        /** @type {KeyframeEffect | null} */
+        a.effect
+      );
+      const target = effect?.target;
+      if (target === actor) return true;
+      return lines && target != null && actor.contains(target) && Number.isFinite(Number(effect?.getComputedTiming().activeDuration));
+    })
+  );
+}
 function arriveAsReversedLeave(el2) {
   if (el2 instanceof HTMLTableRowElement || !el2.isConnected) return false;
   const { size, ease } = themeMotion(el2);
@@ -3856,11 +3937,7 @@ function arriveAsReversedLeave(el2) {
     el2.style.setProperty("visibility", "hidden");
   }
   getComputedStyle(actor).animationName;
-  const css = actor.getAnimations({ subtree: true }).filter((a) => a instanceof CSSAnimation && /** @type {KeyframeEffect} */
-  a.effect?.target === actor).map((a) => (
-    /** @type {CSSAnimation} */
-    a
-  ));
+  const css = exitsOf(actor, keepsLines(el2));
   const exits = css.map((a) => {
     const effect = (
       /** @type {KeyframeEffect} */
@@ -3868,16 +3945,20 @@ function arriveAsReversedLeave(el2) {
     );
     const timing2 = effect.getTiming();
     const pseudo = effect.pseudoElement;
-    if (pseudo && rest[pseudo] === animationSignature(actor, pseudo)) {
+    if (effect.target === actor && pseudo && rest[pseudo] === animationSignature(actor, pseudo)) {
       timing2.direction = flipped(timing2.direction);
       timing2.delay = 0;
     }
     return {
-      keyframes: effect.getKeyframes(),
+      target: (
+        /** @type {Element} */
+        effect.target
+      ),
+      keyframes: keyframesOf(effect),
+      pseudoElement: effect.pseudoElement,
       timing: timing2,
       // The whole of it, every iteration, from the leave's start.
-      end: (Number(timing2.delay) || 0) + (Number(effect.getComputedTiming().activeDuration) || 0),
-      pseudoElement: effect.pseudoElement
+      end: (Number(timing2.delay) || 0) + (Number(effect.getComputedTiming().activeDuration) || 0)
     };
   });
   for (const a of css) a.cancel();
@@ -3904,7 +3985,7 @@ function arriveAsReversedLeave(el2) {
     const back = turned[direction] ?? "reverse";
     try {
       plays.push(
-        actor.animate(exit.keyframes, {
+        exit.target.animate(exit.keyframes, {
           duration: Number(duration) || 0,
           iterations: Number(iterations),
           delay: finiteMs(total - exit.end),
@@ -4127,7 +4208,7 @@ async function leaveOne(el2, hide, exited, count = 1) {
     if (!(a instanceof CSSAnimation) || effect?.target !== actor || !pseudo || rest[pseudo] !== animationSignature(actor, pseudo)) continue;
     const timing = effect.getTiming();
     if (!Number.isFinite(Number(timing.iterations))) continue;
-    const keyframes = effect.getKeyframes();
+    const keyframes = keyframesOf(effect);
     a.cancel();
     try {
       running2.push(
@@ -4143,12 +4224,13 @@ async function leaveOne(el2, hide, exited, count = 1) {
     } catch {
     }
   }
-  const exit = lasts > 0 ? playedOut(actor, lasts + 100) : Promise.resolve();
+  const lines = style.getPropertyValue("--kp-lines").trim() === "keep";
+  const exit = lasts > 0 ? playedOut(actor, lasts + 100, lines) : Promise.resolve();
   const set = parseFloat(style.getPropertyValue("--kp-leave-stagger"));
   const stagger = Number.isNaN(set) ? 0.5 : set;
-  const capped = lasts > 0 && count > 2 ? cappedGap(actor, stagger, lasts, count) : null;
-  if (capped !== null) void atTime(actor, capped, exit).then(exited);
-  else if (lasts > 0 && stagger > 0 && stagger < 1) void partway(actor, stagger, exit).then(exited);
+  const capped = lasts > 0 && count > 2 ? cappedGap(actor, stagger, lasts, count, lines) : null;
+  if (capped !== null) void atTime(actor, capped, exit, lines).then(exited);
+  else if (lasts > 0 && stagger > 0 && stagger < 1) void partway(actor, stagger, exit, lines).then(exited);
   else void exit.then(exited);
   running2.push(exit);
   if (size > 0 && !(el2 instanceof HTMLTableRowElement) && !floats(el2, style)) {
@@ -4489,7 +4571,7 @@ function attachMotion(root = document, { size = "", arrive: arrive2 = "all", arr
     detaches.clear();
   };
 }
-var SIZE_ATTRIBUTE, SIZE_SELECTOR, FOLD_SELECTOR, ARRIVE_KEYS, SKELETON, watching, CLOSE_SHARE, SIZE_SHARE, msOf, firstMs, reducedQuery, reducedNow, reduced, entrances, closing, nativeClose, opensAsReversedClose, switching, REVERSING_ATTRIBUTE, CLOSING_ATTRIBUTE, PANEL_SELECTOR, ghosted, NAMED_EASES, GROUP_FOLDING_ATTRIBUTE, groupGlides, entering, animationSignature, pseudoNames, floats, flipped, arriving, finiteMs, IN_TURN_MS, batch, FOLDING_OUT, heightFolds, followsAFold, arriveMode;
+var SIZE_ATTRIBUTE, SIZE_SELECTOR, FOLD_SELECTOR, ARRIVE_KEYS, SKELETON, watching, CLOSE_SHARE, SIZE_SHARE, msOf, firstMs, reducedQuery, reducedNow, reduced, entrances, closing, nativeClose, KEYFRAME_FIELDS, keepsLines, opensAsReversedClose, switching, REVERSING_ATTRIBUTE, CLOSING_ATTRIBUTE, PANEL_SELECTOR, ghosted, NAMED_EASES, GROUP_FOLDING_ATTRIBUTE, groupGlides, entering, animationSignature, pseudoNames, floats, flipped, arriving, finiteMs, IN_TURN_MS, batch, FOLDING_OUT, heightFolds, followsAFold, arriveMode;
 var init_motion = __esm({
   "js/motion.js"() {
     "use strict";
@@ -4535,6 +4617,8 @@ var init_motion = __esm({
     entrances = /* @__PURE__ */ new WeakMap();
     closing = /* @__PURE__ */ new WeakSet();
     nativeClose = typeof HTMLDialogElement === "undefined" ? null : HTMLDialogElement.prototype.close;
+    KEYFRAME_FIELDS = /* @__PURE__ */ new Set(["offset", "computedOffset", "easing", "composite"]);
+    keepsLines = (el2) => getComputedStyle(el2).getPropertyValue("--kp-lines").trim() === "keep";
     opensAsReversedClose = (el2) => getComputedStyle(el2).getPropertyValue("--kp-open").trim() === "reverse-close";
     switching = 0;
     if (typeof document !== "undefined" && typeof MutationObserver === "function") {
@@ -17299,17 +17383,29 @@ var menu_button_exports = {};
 __export(menu_button_exports, {
   MENU_BUTTON: () => MENU_BUTTON,
   MENU_CLOSE_EVENT: () => MENU_CLOSE_EVENT,
+  MENU_COUNT_PROPERTY: () => MENU_COUNT_PROPERTY,
   MENU_GUTTER: () => MENU_GUTTER,
   MENU_OPEN_EVENT: () => MENU_OPEN_EVENT,
   MENU_SELECT_EVENT: () => MENU_SELECT_EVENT,
   attachMenuButtons: () => attachMenuButtons,
   closeMenu: () => closeMenu,
   menuKeyTarget: () => menuKeyTarget,
+  menuLineCount: () => menuLineCount,
   menuPlacement: () => menuPlacement,
   menuSignature: () => menuSignature,
   openMenu: () => openMenu,
   setMenu: () => setMenu
 });
+function menuLineCount(menu) {
+  return menu.children.length;
+}
+function countMenu(menu) {
+  const next = String(menuLineCount(menu));
+  const hosts = [menu];
+  const popover = menu.parentElement;
+  if (popover?.matches(".kp-popover[popover]")) hosts.push(popover);
+  for (const host of hosts) if (host.style.getPropertyValue(MENU_COUNT_PROPERTY) !== next) host.style.setProperty(MENU_COUNT_PROPERTY, next);
+}
 function menuKeyTarget(event, at, labels) {
   const n = labels.length;
   if (!n) return null;
@@ -17376,6 +17472,7 @@ function drawMenu(s2, groups) {
     entry.dataset.kpLoading = "";
     s2.menu.replaceChildren(entry);
     s2.menu.setAttribute("aria-busy", "true");
+    countMenu(s2.menu);
     setEmpty(s2, false, strings);
     return;
   }
@@ -17403,6 +17500,7 @@ function drawMenu(s2, groups) {
     blocks.push(block);
   }
   s2.menu.replaceChildren(...blocks);
+  countMenu(s2.menu);
   setEmpty(s2, total === 0, strings);
 }
 function setEmpty(s2, empty, strings) {
@@ -17585,6 +17683,7 @@ function openMenu(wrapper, { focus = "first" } = {}) {
   const doc = s2.menu.ownerDocument;
   const view = doc.defaultView;
   s2.open = true;
+  countMenu(s2.menu);
   const closing2 = !s2.menu.hidden;
   stopClose(s2.menu);
   s2.menu.inert = false;
@@ -17700,6 +17799,7 @@ function wireMenu(wrapper, { decorate, strings }) {
     item.tabIndex = -1;
     decorateItem(s2, item, index);
   });
+  countMenu(menu);
   return s2;
 }
 function attachMenuButtons(root = document, { decorate, strings } = {}) {
@@ -17794,9 +17894,14 @@ function attachMenuButtons(root = document, { decorate, strings } = {}) {
       menus.delete(wrapper);
     });
   }
+  for (
+    const menu of
+    /** @type {HTMLElement[]} */
+    [...root.querySelectorAll(".kp-popover[popover] > .kp-menu")]
+  ) countMenu(menu);
   return () => undo.splice(0).forEach((off) => off());
 }
-var MENU_BUTTON, MENU_OPEN_EVENT, MENU_CLOSE_EVENT, MENU_SELECT_EVENT, menus, idSeq, nextId, keyOf, menuSignature, menuItems, labelOf, decorateItem, make, MENU_GUTTER, PLACED, decorateButton, attached;
+var MENU_BUTTON, MENU_OPEN_EVENT, MENU_CLOSE_EVENT, MENU_SELECT_EVENT, MENU_COUNT_PROPERTY, menus, idSeq, nextId, keyOf, menuSignature, menuItems, labelOf, decorateItem, make, MENU_GUTTER, PLACED, decorateButton, attached;
 var init_menu_button = __esm({
   "js/menu-button.js"() {
     "use strict";
@@ -17807,6 +17912,7 @@ var init_menu_button = __esm({
     MENU_OPEN_EVENT = "kp-menu-open";
     MENU_CLOSE_EVENT = "kp-menu-close";
     MENU_SELECT_EVENT = "kp-menu-select";
+    MENU_COUNT_PROPERTY = "--kp-menu-count";
     menus = /* @__PURE__ */ new WeakMap();
     idSeq = 0;
     nextId = (prefix) => `${prefix}-${idSeq += 1}`;
@@ -19985,11 +20091,12 @@ function updateIdea(value) {
   const idea = String(value ?? "").trim();
   return idea === "none" ? "" : idea;
 }
-function updateTimingOf({ size, close, ease }) {
-  return { duration: Math.max(size, close) * 1.25, ease: withoutOvershoot(ease) };
+function updateTimingOf({ size, close, ease, time = null }) {
+  const duration = time !== null && Number.isFinite(time) && time >= 0 ? time : Math.max(size, close) * 1.25;
+  return { duration, ease: withoutOvershoot(ease) };
 }
 function updateTiming(scope = document.documentElement) {
-  return updateTimingOf(themeMotion(scope));
+  return updateTimingOf({ ...themeMotion(scope), time: registerTime(scope, "--kp-update-time") });
 }
 var updatePlays = (idea) => idea !== "";
 function markUpdating(host, idea, timing, { inline = false } = {}) {
@@ -20497,6 +20604,7 @@ export {
   MEMO_PREFIX,
   MENU_BUTTON,
   MENU_CLOSE_EVENT,
+  MENU_COUNT_PROPERTY,
   MENU_GUTTER,
   MENU_OPEN_EVENT,
   MENU_SELECT_EVENT,
@@ -20774,6 +20882,7 @@ export {
   memoryFor,
   menu_button_exports as menuButtonExports,
   menuKeyTarget,
+  menuLineCount,
   menuPlacement,
   menuSignature,
   mergeRoles,
@@ -20819,6 +20928,7 @@ export {
   registerHref,
   registerLink,
   registerLoaded,
+  registerTime,
   registersPresent,
   remember_exports as rememberExports,
   rememberedName,
@@ -20899,6 +21009,8 @@ export {
   tourStepsOnPage,
   treeItemId,
   trendAxis,
+  turnEntrances,
+  turnLines,
   unknownEffects,
   unmarkUpdating,
   update,
@@ -20914,6 +21026,7 @@ export {
   watchScrollbar,
   watchScrolled,
   watchTabOverflow,
+  withCustomProperties,
   withoutOvershoot,
   wizard,
   wizard_exports as wizardExports,

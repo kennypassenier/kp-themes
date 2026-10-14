@@ -13,14 +13,18 @@ export declare function updateIdea(value: string | null | undefined): string;
 /**
  * How long an update plays and on which curve, from the theme's motion: the
  * box's resize time or the dialog's close time, whichever is longer, times
- * 1.25; the entrance's curve without its overshoot. 0 without motion.
- * @param {{ size: number, close: number, ease: string }} motion what themeMotion() returns
+ * 1.25; the entrance's curve without its overshoot. 0 without motion. A
+ * register that knows its own update time says it with `--kp-update-time`
+ * (`time`, in ms, read by updateTiming()): when set it is the time, whatever
+ * the dialog's is; unset, the time above.
+ * @param {{ size: number, close: number, ease: string, time?: number | null }} motion what themeMotion() returns, and the register's own time
  * @returns {{ duration: number, ease: string }}
  */
-export declare function updateTimingOf({ size, close, ease }: {
+export declare function updateTimingOf({ size, close, ease, time }: {
     size: number;
     close: number;
     ease: string;
+    time?: number | null;
 }): {
     duration: number;
     ease: string;

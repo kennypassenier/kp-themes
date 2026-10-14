@@ -199,11 +199,15 @@ hover = a rule under the label, motifs = the rules plus the seal where picked):
   the same time and curve (the headline is ruled in by a clip-path, no longer faded and risen).
 - **Q2 direction, Q3 opening, Q13 leave: applied.** One drawing, two machines (the comment above the
   `@media` block in kp.signature says why). The dialog, the drawer and the tour card are ruled by
-  `kp-sig-formal-line-0..3` (clip, one pair per line, the wait carried in the keyframe offsets because
-  js/motion.js drops delays when it turns an entrance round) and `kp-sig-formal-pen-0..3` (the 2 px navy
-  pen on the frame's `::before` and each line's `::after`), 740 ms (400 + 160 + three lines 60 ms apart),
-  `-rtl` twins for `dir`; the unopened `.kp-dialog` runs 1.5 times that (`--kp-fm-dur` 1110 ms) so that
-  js/motion.js's close (two thirds of what it reads) is 740 ms. The menu, popover, tooltip, combobox list
+  `kp-sig-formal-ruled-line` (the clip, one pair of keyframes for every line, the wait of the line as its
+  `animation-delay` of 0, 60, 120 and 180 ms, which js/motion.js keeps under `--kp-lines: keep`; the frame
+  itself is `kp-sig-formal-ruled-frame`, 740 ms) and `kp-sig-formal-ruled-pen` (the 2 px navy pen on the
+  frame's `::before` and each line's `::after`), 740 ms (400 + 160 + three lines 60 ms apart), `-rtl`
+  twins for `dir`; the unopened `.kp-dialog` runs 1.5 times that (`animation-duration` 1110 ms) so that
+  js/motion.js's close (two thirds of what it reads) is 740 ms. Until 2026-10-14 the waits were carried in
+  the keyframe offsets of `kp-sig-formal-line-0..3` and `-pen-0..3` (16 keyframes), because the package
+  dropped delays; every frame of the new ones is the old one to 0.01 % (research/PACKAGE_FINDINGS.md).
+  The menu, popover, tooltip, combobox list
   and date panel are ruled by `kp-sig-formal-ruling` (a registered number `--kp-fm-t`, 0 to 1, over
   `--kp-fm-total` = 400 + 160 + 60 per line after the first, lines counted with `:has()`), which the CSS
   reversal of css/components.css can play. A leave is `kp-sig-formal-leave` (560 ms: the pen is set
@@ -273,6 +277,11 @@ hover = a rule under the label, motifs = the rules plus the seal where picked):
   js/effects.js `TIMINGS` and lines in gates/check-motion.mjs `OUT_OF_SCOPE`; js/motion.js cannot replay a
   custom-property animation; a leave is replayed element by element, not line by line; the update time
   has no knob; the controls the manners list does not name.
+  Since 2026-10-14 the package answers the custom-property replay, the line-by-line play, the update time
+  and a menu's line count (CHANGELOG.md "Unreleased"): `--kp-update-time: 850ms` is formal's (it played 925 ms before, the
+  dialog's 740 ms times 1.25), the menu button counts its lines from `--kp-menu-count` (frames identical),
+  and the dialog, drawer, tour card and palette now rule their lines with delays under `--kp-lines: keep`
+  (frames identical to the offsets they replace).
 
 ---
 

@@ -555,6 +555,14 @@ closes: `together` (the default, a third of the way into the exit), `after`
 the exit on top while the element folds underneath at once). An exit is
 drawn inside the element's own box.
 
+A register that rules a part line by line (a card's frame first, then its
+lines top down, each with its own wait) says `--kp-lines: keep` on the root.
+Then an exit or an arrival reads every line inside the part that ends, each on
+its own element with its own time and wait, so the part is gone only when its
+last line is, and an arrival is the leave played backwards line by line; a
+dialog's close and open do the same, each kept entrance with its own wait
+instead of one time for all. Without it every part plays as one, as before.
+
 A live view that redraws its rows on every refresh marks the box
 `data-kp-arrive="none"`; otherwise every refresh replays every row's
 arrival (found on the homelab dashboard, 2026-10-04).
@@ -624,7 +632,9 @@ await update(tile.querySelector('svg[data-kp-spark]'), [...last24h, 3.41]); // a
 The time is the theme's own: `--kp-update-duration` is the longer of its
 resize and close times from `themeMotion()`, times 1.25, on
 `--kp-update-ease`, its curve without overshoot (formal 300 ms, cyberpunk
-750 ms, titanium 240 ms). The new value is in the page from the first frame
+750 ms, titanium 240 ms). A register that knows its own update time says it
+with `--kp-update-time` (formal: `850ms`): when set it is the time, whatever
+the dialog's is. The new value is in the page from the first frame
 and readable throughout, and nothing beside it moves: a width the new value
 itself needs is taken at once, with the value. A second update during the
 first restarts it. A spark is an svg, which has no pseudo-elements, so its
@@ -1615,6 +1625,11 @@ markup, in the shape `setMenu` writes (the block `menu-button` in
   the menu is open a new fill waits until it closes, so a live refill never
   moves an entry under the pointer or the focus.
 - One group of one entry, or a group without a name, has no heading.
+- The menu carries `--kp-menu-count`, how many lines it has (its children:
+  the groups `setMenu` drew, the entries of one written by hand), so a
+  register that rules a menu line by line can count them in CSS; a popover
+  holding a `.kp-menu` carries it too. It is written when the menu is wired,
+  filled and opened.
 - The keys are a menu's: ↓ or ↑ on the button opens it on the first or last
   entry, ↓ ↑ (wrapping), Home and End move, a letter jumps to the next entry
   that starts with it, Esc closes it and puts the focus back on the button

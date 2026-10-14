@@ -70593,14 +70593,15 @@
 
        Two machines, because js/motion.js plays a close and a leave two ways.
        (1) A dialog, a drawer, a tour card and what leaves or arrives are
-       turned round by js/motion.js from the keyframes the browser reports
-       (Element.getKeyframes, which leaves out custom properties), element by
-       element and pseudo-element by pseudo-element, each in the one time and
-       on the one curve and without the delay of its animation, so that each is
-       ruled by ordinary keyframes whose offsets carry its wait, one pair per
-       line (`kp-sig-formal-line-k`, the clip; `kp-sig-formal-pen-k`, the
-       pen), over 740 ms (400 + 160 + three lines 60 ms apart; a fourth line
-       and later share the fourth's offsets). The unopened dialog runs 1.5
+       turned round by js/motion.js from the effects the browser reports,
+       element by element and pseudo-element by pseudo-element. Said
+       `--kp-lines: keep`, each keeps its own time and wait (its
+       animation-delay) in the close, the open and the leave: one pair of
+       keyframes per line (`kp-sig-formal-ruled-line`, the clip;
+       `kp-sig-formal-ruled-pen`, the pen), the wait of the line as its delay
+       (0, 60, 120 and 180 ms; a fourth line and later share the fourth's),
+       over 740 ms (400 + 160 + three lines 60 ms apart). The shade behind it
+       takes the whole time, as it does without the token. The unopened dialog runs 1.5
        times that: js/motion.js reads the theme's time from an unopened dialog
        and takes a close as two thirds of it, so a dialog opens and closes in
        exactly 740 ms, and `--kp-close-max` allows it. A leave is the
@@ -70612,12 +70613,15 @@
        custom property: one number, `--kp-fm-t` (0 to 1, @property at the
        top of this file, finished = 1), runs over the time the lines of the
        panel need (`--kp-fm-total`: 400 + 160 + 60 per line after the first,
-       in ms; `--kp-fm-n` counts them with :has(), so a short menu has no
-       dead time at its end); the panel's clip and pen and every entry's clip
+       in ms; `--kp-fm-n` counts them, so a short menu has no dead time
+       at its end: a menu button's menu from the `--kp-menu-count` that
+       js/menu-button.js writes, a popover's menu with :has(), which needs no
+       script); the panel's clip and pen and every entry's clip
        and pen are computed from that number and the entry's index. ── */
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='formal'] {
             --kp-open: reverse-close;
+            --kp-lines: keep;
             --kp-fm-ltr: 1;
             --kp-fm-dir: to right;
             /* A part a script removes or hides (the busy table's layer, a file
@@ -70636,7 +70640,38 @@
             --kp-fm-dir: to left;
         }
 
-        @keyframes kp-sig-formal-line-0 {
+        /* One pair for every line of a dialog, a drawer, a tour card and a
+           palette: the clip rules the line open in 400 ms, the pen rules a
+           2 px navy rule across it in the same 400 and lifts it in 160 more.
+           A line's wait is its animation-delay (0, 60, 120 and 180 ms), which
+           js/motion.js keeps when it turns the entrance round (`--kp-lines:
+           keep`), so the frames are those the four pairs of keyframes gave
+           with the wait carried in their offsets. */
+        @keyframes kp-sig-formal-ruled-line {
+            from {
+                clip-path: inset(-3rem 100% -3rem -3rem);
+            }
+
+            to {
+                clip-path: inset(-3rem);
+            }
+        }
+
+        @keyframes kp-sig-formal-ruled-pen {
+            0% {
+                clip-path: inset(0 100% 0 0);
+            }
+
+            71.4286% {
+                clip-path: inset(0);
+            }
+
+            100% {
+                clip-path: inset(0 0 0 100%);
+            }
+        }
+
+        @keyframes kp-sig-formal-ruled-frame {
             0% {
                 clip-path: inset(-3rem 100% -3rem -3rem);
             }
@@ -70647,22 +70682,7 @@
             }
         }
 
-        @keyframes kp-sig-formal-pen-0 {
-            0% {
-                clip-path: inset(0 100% 0 0);
-            }
-
-            54.054% {
-                clip-path: inset(0);
-            }
-
-            75.676%,
-            100% {
-                clip-path: inset(0 0 0 100%);
-            }
-        }
-
-        @keyframes kp-sig-formal-line-0-rtl {
+        @keyframes kp-sig-formal-ruled-frame-rtl {
             0% {
                 clip-path: inset(-3rem -3rem -3rem 100%);
             }
@@ -70673,184 +70693,25 @@
             }
         }
 
-        @keyframes kp-sig-formal-pen-0-rtl {
+        @keyframes kp-sig-formal-ruled-line-rtl {
+            from {
+                clip-path: inset(-3rem -3rem -3rem 100%);
+            }
+
+            to {
+                clip-path: inset(-3rem);
+            }
+        }
+
+        @keyframes kp-sig-formal-ruled-pen-rtl {
             0% {
                 clip-path: inset(0 0 0 100%);
             }
 
-            54.054% {
+            71.4286% {
                 clip-path: inset(0);
             }
 
-            75.676%,
-            100% {
-                clip-path: inset(0 100% 0 0);
-            }
-        }
-
-        @keyframes kp-sig-formal-line-1 {
-            0%,
-            8.108% {
-                clip-path: inset(-3rem 100% -3rem -3rem);
-            }
-
-            62.162%,
-            100% {
-                clip-path: inset(-3rem);
-            }
-        }
-
-        @keyframes kp-sig-formal-pen-1 {
-            0%,
-            8.108% {
-                clip-path: inset(0 100% 0 0);
-            }
-
-            62.162% {
-                clip-path: inset(0);
-            }
-
-            83.784%,
-            100% {
-                clip-path: inset(0 0 0 100%);
-            }
-        }
-
-        @keyframes kp-sig-formal-line-1-rtl {
-            0%,
-            8.108% {
-                clip-path: inset(-3rem -3rem -3rem 100%);
-            }
-
-            62.162%,
-            100% {
-                clip-path: inset(-3rem);
-            }
-        }
-
-        @keyframes kp-sig-formal-pen-1-rtl {
-            0%,
-            8.108% {
-                clip-path: inset(0 0 0 100%);
-            }
-
-            62.162% {
-                clip-path: inset(0);
-            }
-
-            83.784%,
-            100% {
-                clip-path: inset(0 100% 0 0);
-            }
-        }
-
-        @keyframes kp-sig-formal-line-2 {
-            0%,
-            16.216% {
-                clip-path: inset(-3rem 100% -3rem -3rem);
-            }
-
-            70.27%,
-            100% {
-                clip-path: inset(-3rem);
-            }
-        }
-
-        @keyframes kp-sig-formal-pen-2 {
-            0%,
-            16.216% {
-                clip-path: inset(0 100% 0 0);
-            }
-
-            70.27% {
-                clip-path: inset(0);
-            }
-
-            91.892%,
-            100% {
-                clip-path: inset(0 0 0 100%);
-            }
-        }
-
-        @keyframes kp-sig-formal-line-2-rtl {
-            0%,
-            16.216% {
-                clip-path: inset(-3rem -3rem -3rem 100%);
-            }
-
-            70.27%,
-            100% {
-                clip-path: inset(-3rem);
-            }
-        }
-
-        @keyframes kp-sig-formal-pen-2-rtl {
-            0%,
-            16.216% {
-                clip-path: inset(0 0 0 100%);
-            }
-
-            70.27% {
-                clip-path: inset(0);
-            }
-
-            91.892%,
-            100% {
-                clip-path: inset(0 100% 0 0);
-            }
-        }
-
-        @keyframes kp-sig-formal-line-3 {
-            0%,
-            24.324% {
-                clip-path: inset(-3rem 100% -3rem -3rem);
-            }
-
-            78.378%,
-            100% {
-                clip-path: inset(-3rem);
-            }
-        }
-
-        @keyframes kp-sig-formal-pen-3 {
-            0%,
-            24.324% {
-                clip-path: inset(0 100% 0 0);
-            }
-
-            78.378% {
-                clip-path: inset(0);
-            }
-
-            100%,
-            100% {
-                clip-path: inset(0 0 0 100%);
-            }
-        }
-
-        @keyframes kp-sig-formal-line-3-rtl {
-            0%,
-            24.324% {
-                clip-path: inset(-3rem -3rem -3rem 100%);
-            }
-
-            78.378%,
-            100% {
-                clip-path: inset(-3rem);
-            }
-        }
-
-        @keyframes kp-sig-formal-pen-3-rtl {
-            0%,
-            24.324% {
-                clip-path: inset(0 0 0 100%);
-            }
-
-            78.378% {
-                clip-path: inset(0);
-            }
-
-            100%,
             100% {
                 clip-path: inset(0 100% 0 0);
             }
@@ -70906,17 +70767,22 @@
             }
         }
 
+        /* The frame is the one animation as long as the whole part (740 ms, 54.054 %
+           being its 400): it fixes the time the lines are scaled to, so a dialog of
+           two lines has the dead time at its end it always had. */
         [data-theme='formal'] :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette) {
-            --kp-fm-dur: 740ms;
-            animation: kp-sig-formal-line-0 var(--kp-fm-dur) linear backwards;
+            animation: kp-sig-formal-ruled-frame 740ms linear backwards;
         }
 
+        /* The unopened dialog is the probe js/motion.js reads the theme's time from
+           (a close is two thirds of its animation-duration): 1.5 times the 740 ms
+           the lines take, so a dialog opens and closes in exactly 740 ms. */
         [data-theme='formal'] .kp-dialog:not([open]) {
-            --kp-fm-dur: 1110ms;
+            animation-duration: 1110ms;
         }
 
         [data-theme='formal'] :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette):dir(rtl) {
-            animation-name: kp-sig-formal-line-0-rtl;
+            animation-name: kp-sig-formal-ruled-frame-rtl;
         }
 
         /* The frame rule, along the top edge. */
@@ -70930,12 +70796,12 @@
             background: var(--primary);
             clip-path: inset(0 0 0 100%);
             pointer-events: none;
-            animation: kp-sig-formal-pen-0 var(--kp-fm-dur) linear backwards;
+            animation: kp-sig-formal-ruled-pen 560ms linear 0ms backwards;
         }
 
         [data-theme='formal'] :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette):dir(rtl)::before {
             clip-path: inset(0 100% 0 0);
-            animation-name: kp-sig-formal-pen-0-rtl;
+            animation-name: kp-sig-formal-ruled-pen-rtl;
         }
 
         /* Each line under it, and its rule under it. */
@@ -70967,97 +70833,97 @@
         [data-theme='formal']
             :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
             > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(1) {
-            animation: kp-sig-formal-line-0 var(--kp-fm-dur) linear backwards;
+            animation: kp-sig-formal-ruled-line 400ms linear 0ms backwards;
         }
 
         [data-theme='formal']
             :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
             > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(1):dir(rtl) {
-            animation-name: kp-sig-formal-line-0-rtl;
+            animation-name: kp-sig-formal-ruled-line-rtl;
         }
 
         [data-theme='formal']
             :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
             > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(1)::after {
-            animation: kp-sig-formal-pen-0 var(--kp-fm-dur) linear backwards;
+            animation: kp-sig-formal-ruled-pen 560ms linear 0ms backwards;
         }
 
         [data-theme='formal']
             :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
             > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(1):dir(rtl)::after {
-            animation-name: kp-sig-formal-pen-0-rtl;
+            animation-name: kp-sig-formal-ruled-pen-rtl;
         }
 
         [data-theme='formal']
             :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
             > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(2) {
-            animation: kp-sig-formal-line-1 var(--kp-fm-dur) linear backwards;
+            animation: kp-sig-formal-ruled-line 400ms linear 60ms backwards;
         }
 
         [data-theme='formal']
             :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
             > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(2):dir(rtl) {
-            animation-name: kp-sig-formal-line-1-rtl;
+            animation-name: kp-sig-formal-ruled-line-rtl;
         }
 
         [data-theme='formal']
             :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
             > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(2)::after {
-            animation: kp-sig-formal-pen-1 var(--kp-fm-dur) linear backwards;
+            animation: kp-sig-formal-ruled-pen 560ms linear 60ms backwards;
         }
 
         [data-theme='formal']
             :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
             > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(2):dir(rtl)::after {
-            animation-name: kp-sig-formal-pen-1-rtl;
+            animation-name: kp-sig-formal-ruled-pen-rtl;
         }
 
         [data-theme='formal']
             :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
             > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(3) {
-            animation: kp-sig-formal-line-2 var(--kp-fm-dur) linear backwards;
+            animation: kp-sig-formal-ruled-line 400ms linear 120ms backwards;
         }
 
         [data-theme='formal']
             :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
             > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(3):dir(rtl) {
-            animation-name: kp-sig-formal-line-2-rtl;
+            animation-name: kp-sig-formal-ruled-line-rtl;
         }
 
         [data-theme='formal']
             :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
             > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(3)::after {
-            animation: kp-sig-formal-pen-2 var(--kp-fm-dur) linear backwards;
+            animation: kp-sig-formal-ruled-pen 560ms linear 120ms backwards;
         }
 
         [data-theme='formal']
             :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
             > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(3):dir(rtl)::after {
-            animation-name: kp-sig-formal-pen-2-rtl;
+            animation-name: kp-sig-formal-ruled-pen-rtl;
         }
 
         [data-theme='formal']
             :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
             > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(n + 4) {
-            animation: kp-sig-formal-line-3 var(--kp-fm-dur) linear backwards;
+            animation: kp-sig-formal-ruled-line 400ms linear 180ms backwards;
         }
 
         [data-theme='formal']
             :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
             > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(n + 4):dir(rtl) {
-            animation-name: kp-sig-formal-line-3-rtl;
+            animation-name: kp-sig-formal-ruled-line-rtl;
         }
 
         [data-theme='formal']
             :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
             > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(n + 4)::after {
-            animation: kp-sig-formal-pen-3 var(--kp-fm-dur) linear backwards;
+            animation: kp-sig-formal-ruled-pen 560ms linear 180ms backwards;
         }
 
         [data-theme='formal']
             :is(.kp-dialog, dialog.kp-drawer, .kp-tour, dialog.kp-palette)
             > :not(.kp-icon-button, .kp-dialog__close, [data-kp-close]):nth-child(n + 4):dir(rtl)::after {
-            animation-name: kp-sig-formal-pen-3-rtl;
+            animation-name: kp-sig-formal-ruled-pen-rtl;
         }
 
         /* The shade behind a dialog is ruled across as well; the palette is
@@ -71127,36 +70993,11 @@
             animation-name: kp-sig-formal-leave-pen-rtl;
         }
 
+        /* js/menu-button.js writes the number of lines on the menu (`--kp-menu-count`),
+           so the ruling counts them without a :has() rule per number; the ninth
+           line and later are ruled with the eighth, as they always were. */
         [data-theme='formal'] .kp-menu-button > .kp-menu {
-            --kp-fm-n: 1;
-        }
-
-        [data-theme='formal'] .kp-menu-button > .kp-menu:has(> :nth-child(2)) {
-            --kp-fm-n: 2;
-        }
-
-        [data-theme='formal'] .kp-menu-button > .kp-menu:has(> :nth-child(3)) {
-            --kp-fm-n: 3;
-        }
-
-        [data-theme='formal'] .kp-menu-button > .kp-menu:has(> :nth-child(4)) {
-            --kp-fm-n: 4;
-        }
-
-        [data-theme='formal'] .kp-menu-button > .kp-menu:has(> :nth-child(5)) {
-            --kp-fm-n: 5;
-        }
-
-        [data-theme='formal'] .kp-menu-button > .kp-menu:has(> :nth-child(6)) {
-            --kp-fm-n: 6;
-        }
-
-        [data-theme='formal'] .kp-menu-button > .kp-menu:has(> :nth-child(7)) {
-            --kp-fm-n: 7;
-        }
-
-        [data-theme='formal'] .kp-menu-button > .kp-menu:has(> :nth-child(8)) {
-            --kp-fm-n: 8;
+            --kp-fm-n: max(1, min(var(--kp-menu-count, 1), 8));
         }
 
         [data-theme='formal'] .kp-popover[popover]:not(.kp-tooltip) {
@@ -71295,13 +71136,17 @@
        word, the line never move and the box keeps its space. The stamp that
        landed askew (the register's old idea) is retired. Both rules are
        drawn on one pseudo-element from one number, --kp-fm-u (0 to 1 over
-       the theme's update time, @property at the top of this file). A state
+       the theme's update time, @property at the top of this file). That time
+       is 850 ms, said by `--kp-update-time`: without it js/update.js takes
+       the dialog's close time times 1.25, which is 925 ms here, and the rules
+       would not be the demo's 400 ms. A state
        word keeps its width-holding ::after, so its rules are drawn on
        ::before. Applies to the key figure, the state word, the trend, the
        strip column and the tile alike. ── */
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='formal'] {
             --kp-update: closed;
+            --kp-update-time: 850ms;
         }
 
         [data-theme='formal'] [data-kp-updating='closed'] {
@@ -72181,6 +72026,46 @@
             animation-fill-mode: both !important;
         }
 
+        /* A reversed animation waits its delay first, so each line's wait is
+           turned round with it: the 740 ms span minus the line's end (the line
+           ends at its wait + 400 ms, its pen at its wait + 560 ms, the pen on
+           the card's top edge at 560 ms), the line that came in last goes first. */
+        [data-theme='formal'] .kp-tour[data-kp-reversing='play']::before {
+            animation-delay: 180ms !important;
+        }
+
+        [data-theme='formal'] .kp-tour[data-kp-reversing='play'] > :nth-child(1) {
+            animation-delay: 340ms !important;
+        }
+
+        [data-theme='formal'] .kp-tour[data-kp-reversing='play'] > :nth-child(1)::after {
+            animation-delay: 180ms !important;
+        }
+
+        [data-theme='formal'] .kp-tour[data-kp-reversing='play'] > :nth-child(2) {
+            animation-delay: 280ms !important;
+        }
+
+        [data-theme='formal'] .kp-tour[data-kp-reversing='play'] > :nth-child(2)::after {
+            animation-delay: 120ms !important;
+        }
+
+        [data-theme='formal'] .kp-tour[data-kp-reversing='play'] > :nth-child(3) {
+            animation-delay: 220ms !important;
+        }
+
+        [data-theme='formal'] .kp-tour[data-kp-reversing='play'] > :nth-child(3)::after {
+            animation-delay: 60ms !important;
+        }
+
+        [data-theme='formal'] .kp-tour[data-kp-reversing='play'] > :nth-child(n + 4) {
+            animation-delay: 160ms !important;
+        }
+
+        [data-theme='formal'] .kp-tour[data-kp-reversing='play'] > :nth-child(n + 4)::after {
+            animation-delay: 0ms !important;
+        }
+
         /* The busy table's rows (and the table, layout.css) dim and come back
            in the busy layer's own 560 ms, at the even pace, so the table
            under the layer is part of the same pair (they changed at once). */
@@ -72203,7 +72088,7 @@
            edge, then its lines (the header, the list, the foot), each clipped
            open start to end with the 2 px navy pen under it, 60 ms apart, in
            the dialog's 740 ms (400 + 160 + three lines 60 ms apart, the same
-           offsets as kp-sig-formal-line-k / -pen-k). One registered number,
+           waits as kp-sig-formal-ruled-line / -ruled-pen). One registered number,
            --kp-fm-t (0 to 1), draws every clip and pen, as in the menus; the
            opening runs it up (kp-sig-formal-ruling) and the close runs it down
            (kp-sig-formal-ruling-back) at the even pace, so the close is the
