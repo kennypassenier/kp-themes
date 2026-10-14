@@ -2742,6 +2742,16 @@ the close as the open backwards.
   the flush panel; a register that reveals the panel by a number of its own
   hands it to `--kp-sidenav-float-ink` on the panel (pastel does), so the
   edge and the shadow come and go with it.
+- **Inset.** `data-kp-sidenav-variant="inset"` keeps the panel flush with the
+  window, on the page's ground and with no edge of its own, and makes the
+  content (the element `data-kp-sidenav-content` names, which the module marks
+  `data-kp-sidenav-inset="start|end"`) a rounded card beside it: the theme's
+  card ground, radius, edge and shadow, with a gap round it
+  (`--kp-sidenav-inset-gap`, default `--kp-space-sm`; `--kp-sidenav-inset-radius`,
+  `--kp-sidenav-inset-edge`; set them on the panel and the module carries them
+  to the card). The push and the gutter clear the panel exactly; over the page
+  the panel stands in front of the card. The card is the module's doing, so a
+  page without it keeps the flush panel only.
 
 ## The page shell [TH36]
 

@@ -161,11 +161,22 @@ export const OPTIONS = {
      * made of the theme's own tokens. Knobs: `--kp-sidenav-float-inset` (the
      * gap, `--kp-space-sm`), `--kp-sidenav-float-radius` (`--radius`),
      * `--kp-sidenav-float-edge` (`1px solid --border-strong`),
-     * `--kp-sidenav-float-shadow`. It keeps the slide, the push, the gutter
-     * and the over mode working: the push and the gutter leave the gap on
-     * both sides of the panel, and the edge tab rides on the panel's edge.
+     * `--kp-sidenav-float-shadow`. `"inset"` keeps the panel flush with the
+     * window and makes the content (the element `data-kp-sidenav-content`
+     * names) a rounded card beside it, on the page's ground. Knobs:
+     * `--kp-sidenav-inset-gap` (the card's margin, `--kp-space-sm`),
+     * `--kp-sidenav-inset-radius` (`--radius`), `--kp-sidenav-inset-edge`
+     * (`1px solid --border-strong`). Both keep the slide, the push, the
+     * gutter and the over mode working: the push and the gutter leave the
+     * room the variant takes, and the edge tab rides on the panel's edge.
      */
     variant: 'data-kp-sidenav-variant',
+    /**
+     * Written on the content element while the panel is the `inset` variant:
+     * the edge the panel comes from, `start` or `end`. The content is a
+     * rounded card while it is there.
+     */
+    inset: 'data-kp-sidenav-inset',
 };
 
 /** The fixed box at the panel's far edge that holds a small toggler: the edge tab. */
@@ -181,6 +192,9 @@ export const SIDENAV_LAUNCHER = '.kp-sidenav__launcher';
  * steps at one width rather than at two [TH104, TH26].
  */
 const NARROW_STEP = '40rem';
+
+/** The inset card's knobs: set on the panel, they are carried to the content the card is made of. */
+const INSET_KNOBS = ['--kp-sidenav-inset-gap', '--kp-sidenav-inset-radius', '--kp-sidenav-inset-edge'];
 
 /** @type {WeakMap<Element, Sidenav>} */
 const handles = new WeakMap();
@@ -467,6 +481,16 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
             }
             const target = contentEl();
             if (!target) return { property: null, value: '' };
+            // The inset variant makes the content a card (css/components.css),
+            // which reads its knobs from the panel's side of the page too.
+            const inset = read(OPTIONS.variant) === 'inset';
+            if (inset) target.setAttribute(OPTIONS.inset, edge());
+            else target.removeAttribute(OPTIONS.inset);
+            for (const name of INSET_KNOBS) {
+                const value = inset ? getComputedStyle(panel).getPropertyValue(name).trim() : '';
+                if (value !== '') target.style.setProperty(name, value);
+                else target.style.removeProperty(name);
+            }
             // side pads, push pushes — the reference's own distinction, and
             // it matters: padding keeps a background under the panel, a
             // margin moves the whole box. A gutter is a margin too: the
@@ -1292,6 +1316,8 @@ export function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWN
             const target = contentEl();
             if (target) {
                 target.removeAttribute('data-kp-sidenav-shift');
+                target.removeAttribute(OPTIONS.inset);
+                for (const name of INSET_KNOBS) target.style.removeProperty(name);
                 for (const name of ['--kp-sidenav-shift-duration', '--kp-sidenav-shift-ease', '--kp-sidenav-shift-delay']) target.style.removeProperty(name);
                 target.style.marginInlineStart = '';
             }

@@ -6594,6 +6594,14 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
       }
       const target = contentEl();
       if (!target) return { property: null, value: "" };
+      const inset = read(OPTIONS.variant) === "inset";
+      if (inset) target.setAttribute(OPTIONS.inset, edge());
+      else target.removeAttribute(OPTIONS.inset);
+      for (const name of INSET_KNOBS) {
+        const value2 = inset ? getComputedStyle(panel).getPropertyValue(name).trim() : "";
+        if (value2 !== "") target.style.setProperty(name, value2);
+        else target.style.removeProperty(name);
+      }
       const property = mode() === "push" || reserved() ? marginAlong() : paddingAlong();
       const value = reserved() || open2 && mode() !== "over" ? panelSize() : "";
       shift(target, property, value, reserved() ? "reserved" : open2 ? "open" : "closed", mode() === "push" && !reserved());
@@ -7343,6 +7351,8 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
       const target = contentEl();
       if (target) {
         target.removeAttribute("data-kp-sidenav-shift");
+        target.removeAttribute(OPTIONS.inset);
+        for (const name of INSET_KNOBS) target.style.removeProperty(name);
         for (const name of ["--kp-sidenav-shift-duration", "--kp-sidenav-shift-ease", "--kp-sidenav-shift-delay"]) target.style.removeProperty(name);
         target.style.marginInlineStart = "";
       }
@@ -7374,7 +7384,7 @@ function attachSidenavs(root = document, { strings, ownedBy = SIDENAV_OWNED, sto
     for (const c of cleanups) c();
   };
 }
-var SIDENAV_TOGGLE_EVENT, SIDENAV_SLIM_EVENT, SIDENAV_MODE_EVENT, SIDENAV_OWNED, OPTIONS, SIDENAV_TAB, SIDENAV_LAUNCHER, NARROW_STEP, handles2, FLYOUT_OPEN_MS, FLYOUT_CLOSE_MS, TIP_OPEN_MS, FLOAT_GAP, FLOAT_MARGIN, FOCUSABLE;
+var SIDENAV_TOGGLE_EVENT, SIDENAV_SLIM_EVENT, SIDENAV_MODE_EVENT, SIDENAV_OWNED, OPTIONS, SIDENAV_TAB, SIDENAV_LAUNCHER, NARROW_STEP, INSET_KNOBS, handles2, FLYOUT_OPEN_MS, FLYOUT_CLOSE_MS, TIP_OPEN_MS, FLOAT_GAP, FLOAT_MARGIN, FOCUSABLE;
 var init_sidenav = __esm({
   "js/sidenav.js"() {
     "use strict";
@@ -7476,15 +7486,27 @@ var init_sidenav = __esm({
        * made of the theme's own tokens. Knobs: `--kp-sidenav-float-inset` (the
        * gap, `--kp-space-sm`), `--kp-sidenav-float-radius` (`--radius`),
        * `--kp-sidenav-float-edge` (`1px solid --border-strong`),
-       * `--kp-sidenav-float-shadow`. It keeps the slide, the push, the gutter
-       * and the over mode working: the push and the gutter leave the gap on
-       * both sides of the panel, and the edge tab rides on the panel's edge.
+       * `--kp-sidenav-float-shadow`. `"inset"` keeps the panel flush with the
+       * window and makes the content (the element `data-kp-sidenav-content`
+       * names) a rounded card beside it, on the page's ground. Knobs:
+       * `--kp-sidenav-inset-gap` (the card's margin, `--kp-space-sm`),
+       * `--kp-sidenav-inset-radius` (`--radius`), `--kp-sidenav-inset-edge`
+       * (`1px solid --border-strong`). Both keep the slide, the push, the
+       * gutter and the over mode working: the push and the gutter leave the
+       * room the variant takes, and the edge tab rides on the panel's edge.
        */
-      variant: "data-kp-sidenav-variant"
+      variant: "data-kp-sidenav-variant",
+      /**
+       * Written on the content element while the panel is the `inset` variant:
+       * the edge the panel comes from, `start` or `end`. The content is a
+       * rounded card while it is there.
+       */
+      inset: "data-kp-sidenav-inset"
     };
     SIDENAV_TAB = ".kp-sidenav__tab";
     SIDENAV_LAUNCHER = ".kp-sidenav__launcher";
     NARROW_STEP = "40rem";
+    INSET_KNOBS = ["--kp-sidenav-inset-gap", "--kp-sidenav-inset-radius", "--kp-sidenav-inset-edge"];
     handles2 = /* @__PURE__ */ new WeakMap();
     FLYOUT_OPEN_MS = 150;
     FLYOUT_CLOSE_MS = 250;

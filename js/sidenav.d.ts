@@ -103,11 +103,22 @@ export declare const OPTIONS: {
      * made of the theme's own tokens. Knobs: `--kp-sidenav-float-inset` (the
      * gap, `--kp-space-sm`), `--kp-sidenav-float-radius` (`--radius`),
      * `--kp-sidenav-float-edge` (`1px solid --border-strong`),
-     * `--kp-sidenav-float-shadow`. It keeps the slide, the push, the gutter
-     * and the over mode working: the push and the gutter leave the gap on
-     * both sides of the panel, and the edge tab rides on the panel's edge.
+     * `--kp-sidenav-float-shadow`. `"inset"` keeps the panel flush with the
+     * window and makes the content (the element `data-kp-sidenav-content`
+     * names) a rounded card beside it, on the page's ground. Knobs:
+     * `--kp-sidenav-inset-gap` (the card's margin, `--kp-space-sm`),
+     * `--kp-sidenav-inset-radius` (`--radius`), `--kp-sidenav-inset-edge`
+     * (`1px solid --border-strong`). Both keep the slide, the push, the
+     * gutter and the over mode working: the push and the gutter leave the
+     * room the variant takes, and the edge tab rides on the panel's edge.
      */
     variant: string;
+    /**
+     * Written on the content element while the panel is the `inset` variant:
+     * the edge the panel comes from, `start` or `end`. The content is a
+     * rounded card while it is there.
+     */
+    inset: string;
 };
 /** The fixed box at the panel's far edge that holds a small toggler: the edge tab. */
 export declare const SIDENAV_TAB = ".kp-sidenav__tab";

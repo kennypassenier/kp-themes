@@ -9317,3 +9317,36 @@
         border-end-end-radius: inherit;
     }
 }
+
+/* INSET [Kenny, 2026-10-14; shadcn's "inset" sidebar]: the panel stays flush
+ * with the window's edge, on the page's own ground and with no edge of its own,
+ * and the content (the element `data-kp-sidenav-content` names, which
+ * js/sidenav.js marks `data-kp-sidenav-inset="start|end"`) becomes a rounded
+ * card beside it: the theme's card ground, edge, radius and shadow, a gap
+ * (--kp-sidenav-inset-gap, --kp-space-sm) round it. The push and the gutter
+ * clear the panel exactly (no room is added); lying over the page the panel
+ * stands in front of the card with the page's ground. The card is the module's
+ * doing: without it the panel is flush and nothing else changes. */
+@layer kp.layout {
+    .kp-sidenav[data-kp-sidenav-variant='inset'] {
+        --kp-sidenav-surface: var(--background);
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    [data-kp-sidenav-inset] {
+        --kp-sidenav-inset-space: var(--kp-sidenav-inset-gap, var(--kp-space-sm, 0.5rem));
+        box-sizing: border-box;
+        margin-block: var(--kp-sidenav-inset-space);
+        margin-inline: var(--kp-sidenav-inset-space);
+        min-block-size: calc(100dvh - 2 * var(--kp-sidenav-inset-space));
+        background: var(--card);
+        color: var(--card-foreground, var(--foreground));
+        border: var(--kp-sidenav-inset-edge, 1px solid var(--border-strong));
+        border-radius: var(--kp-sidenav-inset-radius, var(--radius, 0.5rem));
+        box-shadow:
+            var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 var(--border-strong),
+            0 0.25rem 1rem hsl(from var(--background) h s 0% / 0.25);
+    }
+}
