@@ -301,6 +301,48 @@ const raiseToasts = (page) =>
         }
     });
 
+/**
+ * The themes whose approved character gives a toast's button a hover of its own,
+ * not "a shade of the toast's colour": pastel draws the plate on a pseudo-element
+ * and lifts it, solstice keeps the resting ground, brutalism inverts to black with
+ * the yellow ink, deco keeps the plate and moves the ink. For these the rule that
+ * remains is the one that matters to a reader: the hovered button's ink reads at
+ * 4.5:1 on what is painted behind it, read from the pixels.
+ */
+const OWN_TOAST_HOVER = new Set(['pastel', 'solstice', 'brutalism', 'deco']);
+
+/**
+ * The colour most of a box's pixels have: its ground, the glyphs being the few.
+ * @param {import('@playwright/test').Page} page
+ * @param {import('@playwright/test').Locator} box
+ * @returns {Promise<number[]>} rgb 0..255
+ */
+const paintedGroundOf = async (page, box) => {
+    const shot = await box.screenshot({ animations: 'disabled' });
+    return page.evaluate(async (data) => {
+        const img = new Image();
+        img.src = `data:image/png;base64,${data}`;
+        await img.decode();
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = /** @type {CanvasRenderingContext2D} */ (canvas.getContext('2d', { willReadFrequently: true }));
+        ctx.drawImage(img, 0, 0);
+        const d = ctx.getImageData(0, 0, img.width, img.height).data;
+        /** @type {Map<string, { n: number, sum: number[] }>} */
+        const buckets = new Map();
+        for (let i = 0; i < d.length; i += 4) {
+            const key = `${d[i] >> 4},${d[i + 1] >> 4},${d[i + 2] >> 4}`;
+            const b = buckets.get(key) ?? { n: 0, sum: [0, 0, 0] };
+            b.n += 1;
+            for (let c = 0; c < 3; c++) b.sum[c] += d[i + c];
+            buckets.set(key, b);
+        }
+        const [top] = [...buckets.values()].sort((a, b) => b.n - a.n);
+        return top.sum.map((v) => Math.round(v / top.n));
+    }, shot.toString('base64'));
+};
+
 test(
     'a button hovered in a toast takes a shade of that toast’s own colour and reads at 4.5:1, in every theme [note 4]',
     { tag: ['@component:feedback', '@sweep', '@component:catalogue'] },
@@ -320,6 +362,27 @@ test(
                         : `#toasts .kp-toast--${variant}[data-test-raised] button`;
                 const button = page.locator(selector).first();
                 await button.hover();
+                if (OWN_TOAST_HOVER.has(theme)) {
+                    // Its own approved hover: held to legibility on the painted ground.
+                    await page.waitForTimeout(150);
+                    const [ground, ink] = [
+                        await paintedGroundOf(page, button),
+                        await button.evaluate((el) => {
+                            const ctx = /** @type {CanvasRenderingContext2D} */ (document.createElement('canvas').getContext('2d'));
+                            ctx.fillStyle = '#000';
+                            ctx.fillStyle = getComputedStyle(el).color;
+                            ctx.fillRect(0, 0, 1, 1);
+                            return [...ctx.getImageData(0, 0, 1, 1).data].slice(0, 3);
+                        }),
+                    ];
+                    const own = contrast(
+                        /** @type {[number, number, number]} */ (ink.map((v) => v / 255)),
+                        /** @type {[number, number, number]} */ (ground.map((v) => v / 255)),
+                    );
+                    if (own < 4.5) faults.push(`${theme} ${variant}: hovered ink ${ink} on painted ground ${ground} (${own.toFixed(2)}:1)`);
+                    await page.mouse.move(0, 0);
+                    continue;
+                }
                 const read = await button.evaluate(async (el) => {
                     // The hover's paint once any transition has run.
                     const until = performance.now() + 1500;

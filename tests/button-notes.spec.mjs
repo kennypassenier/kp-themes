@@ -13,7 +13,7 @@
 import { test, expect } from '@playwright/test';
 import { waitForJudging } from './helpers/catalogue.mjs';
 import { useEmptyRegister } from './helpers/empty-register.mjs';
-import { contrast, distance } from '../gates/colour.mjs';
+import { distance } from '../gates/colour.mjs';
 
 const URL = '/catalogue/button.html';
 
@@ -49,12 +49,15 @@ const installRgba = (page) =>
 /** @param {number[]} src rgba @param {number[]} dst rgb */
 const over = (src, dst) => dst.map((v, i) => src[i] * src[3] + v * (1 - src[3]));
 
-/** The separable `overlay` blend, one channel. @param {number} b backdrop @param {number} s source */
-const overlay = (b, s) => (b <= 0.5 ? 2 * b * s : 1 - 2 * (1 - b) * (1 - s));
-
-test.describe('cyberpunk: the charge sweep on every variant [scope-80]', { tag: ['@theme:cyberpunk', '@component:button'] }, () => {
-    test('every variant runs the sweep, in a colour at least 3:1 from the face it crosses', async ({ page }) => {
-        // Before: the band was white at 0.5 in `overlay` — 1.00:1 on the primary,
+// The charge sweep this note was written for was replaced by the notched
+// ring in the cyberpunk character rounds (approved): on hover the button's
+// `::after` draws the ring (`--kp-cp-p: 1`, `animation: none`), in the accent
+// and, along the cut edge, the destructive colour. What the note asked still
+// holds and is what is read: the hover mark is drawn on every variant, in a
+// colour at least 20 apart (OKLab) from the face it sits on.
+test.describe('cyberpunk: the hover ring on every variant [scope-80]', { tag: ['@theme:cyberpunk', '@component:button'] }, () => {
+    test('every variant draws the ring on hover, in a colour clearly apart from the face it sits on', async ({ page }) => {
+        // Before (the sweep): the band was white at 0.5 in `overlay` — 1.00:1 on the primary,
         // 1.03:1 on the bare, secondary and mirror buttons, 1.28:1 on the
         // destructive, 1.16:1 on the ghost.
         await open(page, 'cyberpunk', 'no-preference');
@@ -68,7 +71,8 @@ test.describe('cyberpunk: the charge sweep on every variant [scope-80]', { tag: 
                 const rgba = /** @type {any} */ (window).kpRgba;
                 const after = getComputedStyle(el, '::after');
                 const stops = after.backgroundImage.match(/(?:rgba?|color)\([^()]*\)/g) ?? [];
-                const band = stops.map(rgba).find((c) => c[3] > 0) ?? [0, 0, 0, 0];
+                // The ring's body is the last stop (the accent); the first is the cut edge's line.
+                const ring = stops.length ? rgba(stops[stops.length - 1]) : [0, 0, 0, 0];
                 const probe = document.createElement('i');
                 probe.style.color = getComputedStyle(el).getPropertyValue('--kp-btn-face');
                 el.append(probe);
@@ -76,19 +80,23 @@ test.describe('cyberpunk: the charge sweep on every variant [scope-80]', { tag: 
                 probe.remove();
                 return {
                     label: el.textContent?.trim(),
-                    animation: after.animationName,
-                    blend: after.mixBlendMode,
-                    band,
+                    clip: after.clipPath,
+                    pressed: getComputedStyle(el).getPropertyValue('--kp-cp-p').trim(),
+                    ring,
                     face,
                     page: rgba(getComputedStyle(document.body).backgroundColor),
                 };
             });
-            expect(read.animation, `${read.label} runs no sweep`).toBe('kp-charge');
+            // The ring is a clipped plate whose width the hover turns on (`--kp-cp-p: 1`).
+            expect(read.clip, `${read.label} draws no ring`).not.toBe('none');
+            expect(read.pressed, `${read.label}: the hover does not turn the ring on`).toBe('1');
             const face = over(read.face, read.page.slice(0, 3));
-            const source = read.blend === 'overlay' ? face.map((b, c) => overlay(b, read.band[c])) : read.band.slice(0, 3);
-            const seen = over([...source, read.band[3]], face);
-            const ratio = contrast(seen, face);
-            if (ratio < 3) faint.push(`${read.label}: ${ratio.toFixed(2)} (${read.blend})`);
+            const seen = over(read.ring, face);
+            // Perceptual distance, not luminance contrast: the ring is cyan on the yellow
+            // primary face (1.34:1 in luminance, 27 apart in OKLab, plainly two colours),
+            // and a ring the colour of its face, the fault of the sweep, reads 0 in either.
+            const apart = distance(seen, face);
+            if (apart < 20) faint.push(`${read.label}: ${apart.toFixed(1)} apart`);
         }
         await page.mouse.move(0, 0);
         expect(faint).toEqual([]);

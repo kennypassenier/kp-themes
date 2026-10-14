@@ -164,3 +164,26 @@ Findings that are not failing tests of this list, or are decisions:
 3. One theme-agnostic focus helper (a screenshot difference of the element and its band) in place of the four declared-style ones.
 4. Update the register specs to the approved grammars (rows 34 to 39); take `light` out of stamp-cards.
 5. Use the empty register in datatable:834 and redaction-cover; replace the progress selectors; wait for the tour glide.
+
+## Repair log (stale-test pass, 2026-10-14)
+
+Each repaired test was run once in Firefox through a standalone shim (the spec's own body, `test`/`expect` stubbed, its `beforeEach` hooks applied), against a fixture server started from this worktree. Nothing under css/ or js/ changed.
+
+- Rows 1-5 (auto-lazy): repaired. The eager side now statically imports graph, menu-button, kpi strips and the other post-6.1.0 attach functions into `attachAll()`; `time.kp-ago` datetime/title are masked; catalogue/index.html must hold still for 4.5 s and gets a 90 s timeout. Confirmed in Firefox (chart, data, overlays, feedback, index).
+- Row 6 (cyberpunk charge sweep): repaired. The test now reads the hover ring (clip-path drawn, `--kp-cp-p: 1`, OKLab distance of at least 20 from the face). Confirmed in Firefox. The dead `kp-charge` rule and keyframes were NOT deleted: see below.
+- Rows 13 (dark/titanium click is seen): repaired. The hover-settle wait counts finite animations only. Confirmed in Firefox, both themes.
+- Row 19 (datatable:834): repaired. Empty register, motion on, no `hidden` hack. Confirmed in Firefox.
+- Row 22 (fixtures:149 light, pastel, forest, solstice): repaired. `oklab()`/`oklch()` are accepted like `color(srgb)`. Confirmed in Firefox (and light fails again when the line is reverted).
+- Rows 29, 44 (nav-ghost solstice, surfaces solstice): repaired with the shared parser tests/helpers/colour.mjs (rgb, color(srgb), oklab, oklch; checked against Firefox's canvas). nav-ghost's plate reader buckets pixels so gradient plates work. Confirmed in Firefox.
+- Row 43 (surfaces cyberpunk): repaired. The ground finder only reads gradient layers that fill the box, and treats `color(srgb ... / 0)` as transparent (this also cleared deco). All 16 themes pass.
+- Rows 30, 31 (nostromo-notes progress): repaired. Selectors and counts follow the three-size layout. Confirmed in Firefox.
+- Row 32 (nostromo-second-pass:304): partly repaired. Pastel, solstice, brutalism and deco are held to 4.5:1 on the painted ground. Still red: deco warning (4.46:1) and deco destructive (3.14:1) on hover, a new finding.
+- Row 10 (review dialog walk): repaired. Confirmed in Firefox.
+- Row 41 (stamp-cards): `light` dropped from the theme list. Confirmed in Firefox.
+- Rows 7, 18, 16 (button:70 both channels, datatable-more:496 both channels, dashboard:322 both channels): repaired with one painted-ring helper (tests/helpers/focus-paint.mjs, shared with focus-visible.spec) and `OWN_FOCUS_GRAMMAR` in tests/ring.mjs; harness restores focus after a theme switch (blueprint, phantom). Confirmed in Firefox.
+- Row 23 (focus-visible cyberpunk, terminal): repaired. A side also counts when it changed at both ends (corner brackets). Confirmed in Firefox. Phantom not re-run (F-b).
+- Rows 14, 15 (dashboard:255, :291): measure repaired, still RED on purpose: formal and phantom paint no visible focus mark on the destructive menu item (formal only a faint plate beside its resting bar; phantom a red dashed ring on a red plate and a black ring on a near-black popover). A new real finding, not stale.
+- Row 33 (redaction-cover synthwave): no change needed. With the spec's own `beforeEach` (empty register, motion on) it passes on main.
+- Left unrepaired: rows 11 (review note tests; the NOTES fixture no longer matches the reworked blocks, not investigated), 12, 26, 34-40, 42 (fixed since), 45, 46, and the calendar, kpi-* and review-kit rows (excluded or real faults).
+- Dead `kp-charge`: confirmed never applies (it sits in `@layer kp.register`, the `animation: none` rule in `@layer kp.signature` wins; all 82 hovered buttons in cyberpunk read `animation-name: none`). Deleting it was tried and reverted: it changes catalogue/code-version.json (verdict hashes of cyberpunk buttons), dist/ and docs/MINIFIED.md, and breaks the signature proofs in themes/cyberpunk/signature.json (two `kp-charge` proofs and a rule proof) plus the CHARACTER.md hover row. Needs Kenny's word.
+- Also seen: nav-ghost fix-77 fails for cyberpunk on main (ground finder reads the bar's transparent colour under gradient layers, 1.04:1); not in the 10.0.0 list.

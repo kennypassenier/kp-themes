@@ -28,8 +28,10 @@ import { expect, test } from '@playwright/test';
 import { waitForJudging } from './helpers/catalogue.mjs';
 import { useEmptyRegister } from './helpers/empty-register.mjs';
 
-const THEMES = ['formal', 'pastel', 'light'];
-/** The themes with a portrait under research/theme-portraits/; light has none. */
+// Formal and pastel only: light has never had a stamp rule (600dbcbb swapped it in
+// for sepia, which was removed, and the test kept failing on it).
+const THEMES = ['formal', 'pastel'];
+/** The themes with a portrait under research/theme-portraits/. */
 const PORTRAITS = new Set(['formal', 'pastel']);
 const WIDTHS = [220, 360, 640];
 /** How far around the card the screenshot reaches, so a stamp placed off the card is still seen. */

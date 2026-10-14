@@ -214,7 +214,8 @@ test(
 
         // Four blocks on the switch page: the fourth approval empties formal.
         for (let i = 0; i < 4; i += 1) await page.keyboard.press('ArrowUp');
-        await expect(live).toContainText('Every block is judged in Formal', { timeout: 30_000 });
+        // The Agenda's wording: the finished theme is named, then the one it walks on to.
+        await expect(live).toContainText(/Formal is done\. Now judging in [A-Za-z ()]+\./, { timeout: 30_000 });
         await expect(themeBadge).not.toContainText('Formal', { timeout: 30_000 });
         // The page itself is in the new theme, and the dialog is on one of its blocks.
         const moved = await page.evaluate(() => document.documentElement.getAttribute('data-theme'));

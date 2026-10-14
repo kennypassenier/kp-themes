@@ -13,6 +13,7 @@
 import { readFileSync } from 'node:fs';
 import { test, expect } from '@playwright/test';
 import { DEFAULT_STRINGS as S } from '../js/strings.js';
+import { paintedRing } from './helpers/focus-paint.mjs';
 
 const URL = '/tests/fixtures/datatable-more.html';
 const THEME_NAMES = JSON.parse(readFileSync(new globalThis.URL('../themes/order.json', import.meta.url), 'utf8'));
@@ -494,9 +495,10 @@ for (const channel of CHANNELS) {
         });
 
         test(
-            'Enter on an editable cell edits it, Escape hands the focus back to the cell, and the focus ring shows inside the cell in every theme [feature 7]',
+            'Enter on an editable cell edits it, Escape hands the focus back to the cell, and the focus ring shows around the cell in every theme [feature 7]',
             { tag: ['@sweep'] },
             async ({ page }) => {
+                test.slow();
                 // Before: no grid and no edit button to reach in either channel.
                 // Drilled [KT3]: the `.kp-table[role='grid'] :is(th, td):focus-visible` rule taken out of css/components.css — 20 themes
                 // read inside:false in both channels (the two registers with their own answer held); restored, green.
@@ -515,24 +517,21 @@ for (const channel of CHANNELS) {
                 await expect(editor).toHaveCount(0);
                 await expect(editButton).toBeFocused();
                 await page.keyboard.press('ArrowLeft');
+                // The cell that holds the keyboard now, addressed by a mark so the
+                // painted reading can blur it and put the focus back.
+                await page.evaluate(() => document.activeElement?.setAttribute('data-test', 'focus-cell'));
+                const cell = page.locator('[data-test="focus-cell"]');
                 const missing = [];
                 for (const theme of THEME_NAMES) {
                     await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
-                    const ring = await page.evaluate(() => {
-                        const el = /** @type {HTMLElement} */ (document.activeElement);
-                        const s = getComputedStyle(el);
-                        const width = parseFloat(s.outlineWidth);
-                        const outline = s.outlineStyle !== 'none' && width > 0;
-                        return {
-                            tag: el.tagName,
-                            visible: el.matches(':focus-visible'),
-                            outline,
-                            // Inside the cell, so a neighbour's ground or the scroll box cannot cut it away: an outline
-                            // drawn inward, or a ring drawn as an inset shadow where the theme draws no outline.
-                            inside: outline ? parseFloat(s.outlineOffset) <= -width : s.boxShadow.includes('inset'),
-                        };
-                    });
-                    if (ring.tag !== 'TD' || !ring.visible || !ring.inside) missing.push(`${theme}: ${JSON.stringify(ring)}`);
+                    await cell.focus();
+                    // Read in paint, not in style: a neighbour's ground or the scroll box can cut a
+                    // ring away wherever the theme draws it (an outline outside, an inward outline,
+                    // an inset shadow, a mark on a pseudo-element, brackets), and only the pixels
+                    // say whether it survived. A ring cut on a side shows as that side unchanged.
+                    const { read, thin } = await paintedRing(page, cell, { settleMs: 700 });
+                    const visible = await cell.evaluate((el) => el.tagName === 'TD' && el === document.activeElement && el.matches(':focus-visible'));
+                    if (!visible || thin.length) missing.push(`${theme}: ${visible ? 'no painted ring on ' + thin.join(', ') : 'the cell is not focus-visible'} ${JSON.stringify(read)}`);
                 }
                 expect(missing).toEqual([]);
             },

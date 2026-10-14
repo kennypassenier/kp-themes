@@ -852,7 +852,13 @@ test.describe('datatable — a group folds as its open played backwards', { tag:
         });
         const errors = /** @type {string[]} */ ([]);
         page.on('pageerror', (error) => errors.push(String(error)));
+        // An arrival is motion: under reduced motion nothing arrives at all.
+        await page.emulateMedia({ reducedMotion: 'no-preference' });
+        // An empty register: a block already judged is hidden by the catalogue, and the
+        // group this test clicks lives in one that is.
+        await useEmptyRegister(page.context());
         await page.goto('/catalogue/table.html');
+        await waitForJudging(page);
         // The bar under the table with the group, which a click redraws.
         const bar = () =>
             page.evaluate(() =>
@@ -865,9 +871,6 @@ test.describe('datatable — a group folds as its open played backwards', { tag:
                         ?.getBoundingClientRect().height ?? -1,
                 ),
             );
-        await page.evaluate(() => {
-            for (let el = document.querySelector('tr[data-kp-row-group="home"]')?.parentElement; el; el = el.parentElement) el.hidden = false;
-        });
         await page.waitForTimeout(500);
         const early = await bar();
         await page.waitForTimeout(2500);
