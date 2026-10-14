@@ -36,7 +36,8 @@
 .fa-toc {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
-    gap: 0.15rem var(--kp-space-md, 1rem);
+    /* The numbers sit outside their item: the column gap leaves them room. */
+    gap: 0.15rem 2.5rem;
     margin: 0;
     padding-inline-start: 1.75rem;
 }
