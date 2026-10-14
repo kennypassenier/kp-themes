@@ -1,5 +1,7 @@
 # Pastel, as applied: what changed
 
+**Decided (Kenny, 14/10/2026 16:50): all 23 blocks approved in round 2 (round 1: 21 of 23; the side navigation and the key figures mended). Pastel is finished: nothing in this demo is open.** What the meters still report is in `_audit/MISSING.md`.
+
 Kenny approved pastel's character in full on 2026-10-14 03:23 (research/pastel-character/decided.json, 19 of 19). This page shows
 every pastel component the port changed (css/pastel-register.css, its signature layer; js/loading-pieces.js; themes/pastel/tokens.json),
 as the package itself: the real stylesheets, the real markup of the catalogue pages and the real scripts through `js/auto.js`. No scene is

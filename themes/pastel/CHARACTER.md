@@ -1,6 +1,6 @@
 # Pastel — character
 
-> **Approved in full by Kenny on 2026-10-14 03:23** (research/pastel-character/decided.json); the grammar in §1 with the picks in §0 is the reference for the port.
+> **Applied and approved by Kenny on 2026-10-14 16:50** (research/pastel-applied, 23 of 23 blocks). **Approved in full by Kenny on 2026-10-14 03:23** (research/pastel-character/decided.json); the grammar in §1 with the picks in §0 is the reference for the port.
 >
 > **Applied 2026-10-14 [scope-141]** to css/pastel-register.css (its signature layer), themes/pastel/tokens.json and the new js/loading-pieces.js; every component as an app gets it is in research/pastel-applied, measured in research/pastel-applied/_audit/MISSING.md. The "Applied 2026-10-14" notes under each section say what changed and where the package could not do what the demo does.
 
