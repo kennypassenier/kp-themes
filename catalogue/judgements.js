@@ -19,6 +19,7 @@
 // block that changed comes back to be judged again.
 import { ENGINE } from './engine.js';
 import { EARLIER_VERSIONS, HASH_VERSION } from './block-hash.js';
+import { newer } from './verdict-age.js';
 
 export const JUDGEMENTS_KEY = 'kp-catalogue-judgements:v3';
 const LEGACY_V2 = 'kp-catalogue-judgements:v2';
@@ -190,7 +191,7 @@ export function verdictOf(key, theme, engine = ENGINE, stored = loadJudgements()
     // A verdict repeating the register's still answers a pixel check the
     // register's could not: it is this browser's until recorded [scope-138].
     const same = kept && local && kept.verdict === local.verdict && kept.hash === local.hash && !answersPixels(key, theme, engine, local, kept);
-    if (kept && (!local || same || !newer(local, kept))) return { verdict: kept.verdict, hash: kept.hash, source: 'register', recorded: true };
+    if (kept && (!local || same || !newer(local, kept, HASH_VERSION))) return { verdict: kept.verdict, hash: kept.hash, source: 'register', recorded: true };
     if (local) return { verdict: local.verdict, hash: local.hash, source: 'browser', recorded: false };
     return null;
 }
@@ -208,22 +209,6 @@ export const pixelRunFor = (/** @type {string} */ key, /** @type {string} */ the
 function answersPixels(key, theme, engine, local, kept) {
     if (!pixelsReopened(key, theme, engine, kept.commit)) return false;
     return local.v === HASH_VERSION && Boolean(local.at) && (!pixelChecks.checked || local.at >= Date.parse(pixelChecks.checked));
-}
-
-function newer(local, kept) {
-    if (!local.at || local.v !== HASH_VERSION) return false;
-    return localDay(new Date(local.at)) >= String(kept.given ?? '');
-}
-
-/**
- * A day in the local calendar, as gates/verdicts.mjs writes `given`. In UTC
- * an approval Kenny gave at 01:50 in Brussels fell on the day before a
- * rejection recorded at 01:40 the same night, so the register's rejection
- * won and Approve did nothing (2026-10-08, phantom's theme menu).
- */
-function localDay(date) {
-    const pad = (/** @type {number} */ n) => String(n).padStart(2, '0');
-    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
 }
 
 /**
