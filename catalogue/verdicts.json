@@ -6092,7 +6092,7 @@
                     "verdict": "approved",
                     "hash": "78fe7119aaab0986ae43fed4ca6bc7e4a446d2e1f2e2099f3b3d9c3a25ce56f4",
                     "commit": "fff6fe45229d86f7f685df70f62180ef72e5dbf2",
-                    "given": "2026-10-05",
+                    "given": "2026-10-15",
                     "ratio": 2
                 }
             },
@@ -7343,7 +7343,7 @@
                     "verdict": "approved",
                     "hash": "7e825dab7b982af7ce6d991b62e18d3ff65e1d11f0f1ff373e125f03f8f30ac1",
                     "commit": "4c403c626be730a5c4faee91d654fdde1aded2cd",
-                    "given": "2026-10-05",
+                    "given": "2026-10-15",
                     "ratio": 2
                 }
             },
@@ -13800,7 +13800,7 @@
                     "verdict": "approved",
                     "hash": "c733fee697330814ea118d613a31cdd01443ea966e15c55e7ba9ec1863ecd18a",
                     "commit": "4c403c626be730a5c4faee91d654fdde1aded2cd",
-                    "given": "2026-10-05",
+                    "given": "2026-10-15",
                     "ratio": 2
                 }
             },
@@ -13863,7 +13863,7 @@
                     "verdict": "approved",
                     "hash": "c733fee697330814ea118d613a31cdd01443ea966e15c55e7ba9ec1863ecd18a",
                     "commit": "cadaed4e992c6eeefe17f6a552c56bac1d4e3dd4",
-                    "given": "2026-10-05",
+                    "given": "2026-10-15",
                     "ratio": 2
                 }
             },
@@ -18180,7 +18180,7 @@
                     "verdict": "approved",
                     "hash": "6f353ff6e21217454efab16610ea8945c3cf8f974bbd68e88ba1e70ec1b32263",
                     "commit": "4c403c626be730a5c4faee91d654fdde1aded2cd",
-                    "given": "2026-10-05",
+                    "given": "2026-10-15",
                     "ratio": 2
                 }
             },
@@ -18243,7 +18243,7 @@
                     "verdict": "approved",
                     "hash": "6f353ff6e21217454efab16610ea8945c3cf8f974bbd68e88ba1e70ec1b32263",
                     "commit": "fff6fe45229d86f7f685df70f62180ef72e5dbf2",
-                    "given": "2026-10-05",
+                    "given": "2026-10-15",
                     "ratio": 2
                 }
             },
@@ -22576,7 +22576,7 @@
                     "verdict": "approved",
                     "hash": "7b664a270256c0146fbd201e614095b15623a629b22b0c8420b325ac615c4179",
                     "commit": "4c403c626be730a5c4faee91d654fdde1aded2cd",
-                    "given": "2026-10-05",
+                    "given": "2026-10-15",
                     "ratio": 2
                 }
             },
@@ -22639,7 +22639,7 @@
                     "verdict": "approved",
                     "hash": "7b664a270256c0146fbd201e614095b15623a629b22b0c8420b325ac615c4179",
                     "commit": "fff6fe45229d86f7f685df70f62180ef72e5dbf2",
-                    "given": "2026-10-05",
+                    "given": "2026-10-15",
                     "ratio": 2
                 }
             },
@@ -24328,7 +24328,7 @@
                     "verdict": "approved",
                     "hash": "6bc4183d17bead599ebd7ad5e778261c72c052635c961b490ecf46f8d319b2a9",
                     "commit": "4c403c626be730a5c4faee91d654fdde1aded2cd",
-                    "given": "2026-10-05",
+                    "given": "2026-10-15",
                     "ratio": 2
                 }
             },
@@ -25350,7 +25350,7 @@
                     "verdict": "approved",
                     "hash": "e61baecd93c1f6b8d1e4716a37d7475d2c839e3343d5d851df6274fec32ae031",
                     "commit": "4c403c626be730a5c4faee91d654fdde1aded2cd",
-                    "given": "2026-10-05",
+                    "given": "2026-10-15",
                     "ratio": 2
                 }
             },
