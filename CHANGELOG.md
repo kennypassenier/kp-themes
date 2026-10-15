@@ -1,6 +1,8 @@
 # Changelog
 
-## Unreleased
+## 10.1.0 — 2026-10-15
+
+Released on Kenny's go (2026-10-15 03:06, form release-go "Nu uitbrengen"; 03:26 "Eerst oplossen"). The release suite ran once (1638 passed, 60 failed, 4 skipped, 17.7 min); the 60 were fixed by cause (research/SUITE_10_1_0_CAUSES.md) and re-run alone: five remain, all known measurement noise, listed for 10.1.1 in docs/MINI_ROUNDS.md (suite-noise-1011). The screenshot approval check is skipped: every pair is approved and anchored at ad6d6ad1 (Kenny, 2026-10-15 01:21).
 
 - **Fixed: a turned overlay is placed by its layout box, not by its bounding box** [scope-143, group 9 of research/SUITE_10_1_0_CAUSES.md; Kenny, 2026-10-15 03:26].
   Phantom's menus, lists and cards land a degree and a half askew (`rotate: -1.5deg`, 3eba5336, 10-13). `layoutRect()` in js/top-layer.js (used by
