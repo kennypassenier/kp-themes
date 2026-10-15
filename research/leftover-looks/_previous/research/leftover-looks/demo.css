@@ -1,0 +1,408 @@
+/* research/leftover-looks: the page, and the two proposals. The package's CSS is untouched; every
+   proposal below is a rule of this page only, and the "Now" columns and bars carry none of them.
+   Every rule hangs on a class of its own, because the review dialog moves the sections into its stage. */
+
+/* ───────────────────────────── the page ───────────────────────────── */
+
+.lo-page {
+    display: grid;
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) var(--kp-space-md, 1rem) var(--kp-space-2xl, 3rem);
+}
+
+.lo-intro {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.lo-intro :is(h1, p),
+.lo-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+.lo-intro p,
+.lo-sec__head p {
+    max-inline-size: 80ch;
+}
+
+.lo-motion,
+.lo-num,
+.lo-how {
+    color: var(--muted-foreground);
+}
+
+.lo-num,
+.lo-how {
+    font-size: 0.875rem;
+}
+
+.lo-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    background: var(--background);
+    color: var(--foreground);
+}
+
+.lo-sec__head {
+    display: grid;
+    gap: 0.25rem;
+}
+
+.lo-sec__head h2 {
+    font-size: 1.125rem;
+    line-height: 1.4;
+}
+
+/* The look-at lines are the review dialog's (one per theme, read from here). */
+.lo-look {
+    display: none;
+}
+
+/* On a phone the page gives its room to the stage. */
+@media (width < 42rem) {
+    .lo-page {
+        padding-inline: 0.5rem;
+    }
+
+    .lo-sec {
+        padding: 0.75rem;
+    }
+
+    .lo-stage {
+        padding: 0.5rem;
+    }
+}
+
+/* ─────────────────────── the stage: the theme of its own ─────────────────────── */
+
+.lo-stage {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-md, 1rem);
+    background: var(--background);
+    color: var(--foreground);
+}
+
+.lo-row__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 1rem;
+    grid-column: 1 / -1;
+    margin: 0;
+    font-size: 0.9375rem;
+    font-weight: normal;
+    color: var(--muted-foreground);
+}
+
+.lo-row__head b {
+    color: var(--foreground);
+    font-size: 1rem;
+}
+
+.lo-row__head span {
+    font-size: 0.8125rem;
+}
+
+/* One row per way of showing the plate, the same four parts in the same columns in every row, so each part
+   is compared straight down from "Now". The columns follow the parts' own widths. */
+.lo-row {
+    display: grid;
+    gap: var(--kp-space-md, 1rem) var(--kp-space-lg, 1.5rem);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr) minmax(0, 1.9fr) minmax(0, 1.2fr);
+    align-items: start;
+    padding-block-end: var(--kp-space-md, 1rem);
+    border-block-end: 1px solid var(--border);
+}
+
+.lo-row:last-child {
+    border-block-end: 0;
+}
+
+.lo-fig {
+    display: grid;
+    gap: 0.5rem;
+    margin: 0;
+    min-inline-size: 0;
+}
+
+/* A part's plate stands out of its box (up to 10 px), so the specimen keeps that room. */
+.lo-spec {
+    padding: 0 16px 16px 0;
+    min-inline-size: 0;
+}
+
+.lo-fig figcaption {
+    font-size: 0.8125rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+}
+
+@media (width < 64rem) {
+    .lo-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .lo-fig[data-lo-part='dialog'],
+    .lo-fig[data-lo-part='toast'] {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (width < 42rem) {
+    .lo-row {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* A static part in a stage stands where a real one is placed: positioned, so its pseudo-elements keep to it. */
+.lo-stage[data-theme='phantom'] :is(.kp-card, .kp-menu, .kp-dialog, .kp-toast) {
+    position: relative;
+    max-inline-size: 100%;
+    margin: 0;
+}
+
+/* A dialog's buttons keep their words whole on a narrow stage (the stage's own fault, the same in every row). */
+.lo-stage .kp-dialog__actions {
+    flex-wrap: wrap;
+}
+
+.lo-stage .kp-dialog__actions .kp-button {
+    white-space: nowrap;
+}
+
+/* ───────────── 1 · phantom: the three ways to let the second plate out ─────────────
+
+   The part keeps its own paint; only its clip changes. A clip path may reach past the box, so the
+   paperclip is widened to take in the room of the plate (--lo-d is the plate's offset: the register's
+   own 6 px for a toast and 10 px for a dialog, the 4 px of --kp-hard for a card and a menu), and the
+   plate itself is the part's own box-shadow (1), or one pseudo-element standing outside the box (2, 3).
+   The pseudo-element also fills the part's bottom-end cut, which a box-shadow cannot reach. The border
+   widths are what the register gives each part; the plate is placed from the border box. */
+
+.lo-stage[data-theme='phantom'] .kp-card {
+    --lo-d: 4px;
+    --lo-bt: 0px;
+    --lo-br: 0px;
+    --lo-bb: 0px;
+    --lo-bl: 5px;
+}
+
+.lo-stage[data-theme='phantom'] .kp-menu {
+    --lo-d: 4px;
+    --lo-bt: 0px;
+    --lo-br: 0px;
+    --lo-bb: 0px;
+    --lo-bl: 4px;
+}
+
+.lo-stage[data-theme='phantom'] .kp-toast {
+    --lo-d: 6px;
+    --lo-bt: 2px;
+    --lo-br: 2px;
+    --lo-bb: 2px;
+    --lo-bl: 2px;
+}
+
+.lo-stage[data-theme='phantom'] .kp-dialog {
+    --lo-d: 10px;
+    --lo-bt: 3px;
+    --lo-br: 3px;
+    --lo-bb: 3px;
+    --lo-bl: 3px;
+}
+
+/* A screen needs room to be a screen: its plate stands out further (a card and a menu 8 px, a toast 10, a dialog 14). */
+.lo-row[data-lo-plate='screen'] .kp-card,
+.lo-row[data-lo-plate='screen'] .kp-menu {
+    --lo-d: 8px;
+}
+
+.lo-row[data-lo-plate='screen'] .kp-toast {
+    --lo-d: 10px;
+}
+
+.lo-row[data-lo-plate='screen'] .kp-dialog {
+    --lo-d: 14px;
+}
+
+/* The slash stands this far out of the end edge. */
+.lo-stage[data-theme='phantom'] {
+    --lo-t: 10px;
+    --lo-c: var(--kp-cut-size, 14px);
+}
+
+/* The clips: the part's own cut at the top start, and room for the plate on the other three sides. */
+.lo-row:is([data-lo-plate='offset'], [data-lo-plate='screen']) :is(.kp-card, .kp-menu, .kp-toast, .kp-dialog) {
+    clip-path: polygon(
+        0 var(--lo-c),
+        var(--lo-c) 0,
+        100% 0,
+        100% var(--lo-d),
+        calc(100% + var(--lo-d)) var(--lo-d),
+        calc(100% + var(--lo-d)) calc(100% - var(--lo-c) + var(--lo-d)),
+        calc(100% - var(--lo-c) + var(--lo-d)) calc(100% + var(--lo-d)),
+        var(--lo-d) calc(100% + var(--lo-d)),
+        var(--lo-d) 100%,
+        0 100%
+    );
+}
+
+.lo-row[data-lo-plate='slash'] :is(.kp-card, .kp-menu, .kp-toast, .kp-dialog) {
+    clip-path: polygon(
+        0 var(--lo-c),
+        var(--lo-c) 0,
+        100% 0,
+        calc(100% + var(--lo-t)) 12px,
+        calc(100% + var(--lo-t)) calc(100% - var(--lo-c)),
+        calc(100% - var(--lo-c) + var(--lo-t)) 100%,
+        0 100%
+    );
+}
+
+/* 1 · One hard plate: the part's own box-shadow, let out by the wider clip. */
+.lo-row[data-lo-plate='offset'] :is(.kp-card, .kp-menu, .kp-toast, .kp-dialog) {
+    box-shadow: var(--lo-d) var(--lo-d) 0 var(--kp-red-deep);
+}
+
+/* The plate's pseudo-element: one per part, on the one the register leaves free (the dialog's ::after is its slash). */
+.lo-row:is([data-lo-plate='offset'], [data-lo-plate='screen'], [data-lo-plate='slash']) :is(.kp-card, .kp-menu, .kp-toast)::after,
+.lo-row:is([data-lo-plate='offset'], [data-lo-plate='screen'], [data-lo-plate='slash']) .kp-dialog::before {
+    content: '';
+    position: absolute;
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* 1 · only the corner: the bottom-end cut, red where the plate shows through it. */
+.lo-row[data-lo-plate='offset'] :is(.kp-card, .kp-menu, .kp-toast)::after,
+.lo-row[data-lo-plate='offset'] .kp-dialog::before {
+    inset: auto calc(-1 * var(--lo-br)) calc(-1 * var(--lo-bb)) auto;
+    inline-size: var(--lo-c);
+    block-size: var(--lo-c);
+    background: linear-gradient(135deg, transparent 50%, var(--kp-red-deep) 50%);
+}
+
+/* 2 · The plate as a screen: the plate's shape (the shifted copy outside the box, and the corner), dots in deep red. */
+.lo-row[data-lo-plate='screen'] :is(.kp-card, .kp-menu, .kp-toast)::after,
+.lo-row[data-lo-plate='screen'] .kp-dialog::before {
+    inset: calc(-1 * var(--lo-bt)) calc(-1 * var(--lo-br) - var(--lo-d)) calc(-1 * var(--lo-bb) - var(--lo-d)) calc(-1 * var(--lo-bl));
+    background: radial-gradient(circle at 50% 50%, var(--kp-red-deep) 0 1.6px, transparent 2px) 0 0 / 4px 4px;
+    clip-path: polygon(
+        calc(100% - var(--lo-d)) var(--lo-d),
+        100% var(--lo-d),
+        100% calc(100% - var(--lo-c)),
+        calc(100% - var(--lo-c)) 100%,
+        var(--lo-d) 100%,
+        var(--lo-d) calc(100% - var(--lo-d)),
+        calc(100% - var(--lo-d) - var(--lo-c)) calc(100% - var(--lo-d)),
+        calc(100% - var(--lo-d)) calc(100% - var(--lo-d) - var(--lo-c))
+    );
+}
+
+/* 3 · The plate as a slash: a deep red slash out of the end edge, its top cut at an angle. */
+.lo-row[data-lo-plate='slash'] :is(.kp-card, .kp-menu, .kp-toast)::after,
+.lo-row[data-lo-plate='slash'] .kp-dialog::before {
+    inset: calc(-1 * var(--lo-bt)) calc(-1 * var(--lo-br) - var(--lo-t)) calc(-1 * var(--lo-bb)) calc(-1 * var(--lo-bl));
+    background: var(--kp-red-deep);
+    clip-path: polygon(
+        calc(100% - var(--lo-t)) 0,
+        100% 12px,
+        100% calc(100% - var(--lo-c)),
+        calc(100% - var(--lo-c)) 100%,
+        calc(100% - var(--lo-t) - var(--lo-c)) 100%,
+        calc(100% - var(--lo-t)) calc(100% - var(--lo-c))
+    );
+}
+
+/* ───────────── 2 · deco: the inlay under the button ─────────────
+
+   The hook is one custom property on the open menu, --kp-menu-anchor-x, written by js/menu-button.js (demo.js
+   stands in for it here, on the menus of the proposal bar only). Deco's register has the draw's origin as
+   --kp-sig-deco-at, which its tooltip already sets; for a menu it reads the property when it is there. */
+
+.lo-bars {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (width < 52rem) {
+    .lo-bars {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.lo-bar-fig {
+    display: grid;
+    gap: 0.5rem;
+    align-content: start;
+    margin: 0;
+    min-inline-size: 0;
+    min-block-size: 21rem;
+}
+
+.lo-bar-fig figcaption {
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+}
+
+.lo-bar-fig figcaption b {
+    color: var(--foreground);
+}
+
+/* The menus are as wide as the stage can hold (the rich menu's own knobs). */
+.lo-bar .kp-menu-button > .kp-menu {
+    --kp-menu-rich-min: 13rem;
+    --kp-menu-rich-max: 15rem;
+}
+
+/* The first button's menu hangs from its start edge (the middle and the end button's menus are end-aligned, as the
+   package places them). */
+.lo-bar [data-lo-position='start'] > .kp-menu {
+    inset-inline: 0 auto;
+}
+
+.lo-bar .kp-button {
+    flex: none;
+    white-space: nowrap;
+}
+
+.lo-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.25rem;
+    padding: 0.5rem 0.25rem;
+    border: 1px solid var(--border);
+    background: var(--card);
+}
+
+.lo-stage--deco .lo-controls [role='group'] {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.lo-stage--deco .lo-controls [aria-pressed='true'] {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.lo-bar-fig[data-lo-bar='anchor'] .kp-menu-button > .kp-menu {
+    --kp-sig-deco-at: var(--kp-menu-anchor-x, 50%) 50%;
+}
+
+/* The first moment of the draw, held, so the point it starts from can be looked at. */
+.lo-stage--deco[data-lo-held] .kp-menu-button > .kp-menu {
+    animation: none;
+    --kp-sig-deco-draw: 0.2;
+    --kp-sig-deco-up: 0;
+}
