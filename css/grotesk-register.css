@@ -952,9 +952,29 @@
         border-radius: 0;
     }
 
-    [data-theme='grotesk'] .kp-diff__line {
+    [data-theme='grotesk'] .kp-diff__line,
+    [data-theme='grotesk'] .kp-diff__hunk {
         font-family: var(--kp-mono);
     }
+    /* The step list is a timetable: no plates, a heavy rule under each line,
+       square index marks, the time in bold figures. */
+    [data-theme='grotesk'] .kp-steplist {
+        --kp-steplist-gap: 0;
+        --kp-steplist-mark-radius: 0;
+    }
+
+    [data-theme='grotesk'] .kp-steplist__item {
+        border-width: 0 0 2px;
+        border-color: var(--foreground);
+        border-radius: 0;
+        background: transparent;
+    }
+
+    [data-theme='grotesk'] .kp-steplist__time {
+        color: var(--foreground);
+        font-weight: 700;
+    }
+
 
     [data-theme='grotesk'] .kp-timeline {
         border-inline-start: 3px solid var(--foreground);

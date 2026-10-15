@@ -7462,6 +7462,149 @@
         font-variant-numeric: tabular-nums;
     }
 
+    /* --- Step list: the steps of one run, live ----------------------------
+ * The list of a process in flight (an update, an import, a deploy): each
+ * step is waiting, running, done, failed or skipped, and the page changes it
+ * as the run goes. Not a timeline (that is what happened, in the past, with
+ * a time, and never changes) and not a wizard (that is where a person is in
+ * a form, and they move it). js/steplist.js keeps the marks, the words for a
+ * screen reader and the live announcement in step with `data-state`.
+ *
+ * Every state is a shape and a word as well as a colour [DI4]: a hollow ring
+ * (waiting), the theme's spinner (running), a filled disc with a tick (done),
+ * a filled disc with a cross (failed), a dashed ring with a dash (skipped).
+ * The mark has one fixed box, so a step changing state moves nothing, and the
+ * time column has a floor, so a time arriving does not rewrap the title.
+ * Knobs [KT6]: `--kp-steplist-mark` (the mark's box, 1.375rem),
+ * `--kp-steplist-time` (the time column's floor, 3.5rem),
+ * `--kp-steplist-mark-radius`, `--kp-steplist-gap`, and the glyphs
+ * `--kp-glyph-done` (falls back to `--kp-glyph-check`), `--kp-glyph-failed`,
+ * `--kp-glyph-skipped`. */
+    .kp-steplist {
+        display: grid;
+        gap: var(--kp-steplist-gap, var(--kp-space-sm, 0.5rem));
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-steplist__item {
+        display: grid;
+        grid-template-columns: var(--kp-steplist-mark, 1.375rem) minmax(0, 1fr) auto;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground, var(--foreground));
+    }
+
+    .kp-steplist__mark {
+        box-sizing: border-box;
+        display: grid;
+        place-items: center;
+        inline-size: var(--kp-steplist-mark, 1.375rem);
+        block-size: var(--kp-steplist-mark, 1.375rem);
+        border: 2px solid var(--border-strong);
+        border-radius: var(--kp-steplist-mark-radius, var(--kp-radius-pill, 999px));
+        font-size: 0.6875rem;
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .kp-steplist__mark > .kp-spinner {
+        --kp-spinner-size: var(--kp-steplist-mark, 1.375rem);
+    }
+
+    .kp-steplist__body {
+        display: grid;
+        min-inline-size: 0;
+        gap: 0.125rem;
+    }
+
+    .kp-steplist__title {
+        overflow-wrap: anywhere;
+    }
+
+    .kp-steplist__note {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-steplist__time {
+        min-inline-size: var(--kp-steplist-time, 3.5rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-variant-numeric: tabular-nums;
+        text-align: end;
+    }
+
+    /* The state's word, for a screen reader: the mark is a picture. */
+    .kp-steplist__state {
+        position: absolute;
+        inline-size: 1px;
+        block-size: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        border: 0;
+        clip-path: inset(50%);
+    }
+
+    .kp-steplist__item[data-state='running'] {
+        border-color: var(--primary);
+    }
+
+    .kp-steplist__item[data-state='running'] .kp-steplist__title {
+        font-weight: 600;
+    }
+
+    .kp-steplist__item[data-state='running'] .kp-steplist__mark {
+        border-color: transparent;
+    }
+
+    .kp-steplist__item[data-state='done'] .kp-steplist__mark {
+        border-color: var(--success);
+        background: var(--success);
+        color: var(--success-foreground);
+    }
+
+    .kp-steplist__item[data-state='done'] .kp-steplist__mark::after {
+        content: var(--kp-glyph-done, var(--kp-glyph-check, '✓'));
+    }
+
+    .kp-steplist__item[data-state='failed'] {
+        border-color: var(--destructive);
+    }
+
+    .kp-steplist__item[data-state='failed'] .kp-steplist__mark {
+        border-color: var(--destructive);
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    .kp-steplist__item[data-state='failed'] .kp-steplist__mark::after {
+        content: var(--kp-glyph-failed, '✕');
+    }
+
+    /* Skipped is quieter, by ink and by a dashed ring, not by opacity: the
+ * words keep their contrast. */
+    .kp-steplist__item[data-state='skipped'] {
+        color: var(--muted-foreground);
+    }
+
+    .kp-steplist__item[data-state='skipped'] .kp-steplist__mark {
+        border-style: dashed;
+        color: var(--muted-foreground);
+    }
+
+    .kp-steplist__item[data-state='skipped'] .kp-steplist__mark::after {
+        content: var(--kp-glyph-skipped, '–');
+    }
+
     /* Diff view [TH54] */
     .kp-diff {
         margin: 0;
@@ -7499,6 +7642,36 @@
 
     .kp-diff__line[data-kind='removed'] {
         background: hsl(from var(--destructive) h s l / 0.12);
+    }
+
+    /* The hunk header: the `@@ -12,6 +12,8 @@ function name` row that opens
+ * each block of changes, between the lines it introduces and the lines of
+ * the hunk before. A band of its own (the muted ground, a rule under it, a
+ * rule over it from the second hunk on) so the eye finds where a hunk
+ * begins without colour; the `@@` marks are the text carrier [DI4]. It
+ * wraps like a line, so a long function name never scrolls the diff.
+ * `font: inherit` keeps the container's mono face; a register that sets the
+ * face on the lines sets it on this row too. */
+    .kp-diff__hunk {
+        display: block;
+        padding: 0.125rem 0.5rem;
+        border-block-end: 1px solid var(--border);
+        background: var(--muted);
+        color: var(--muted-foreground);
+        font: inherit;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-diff__hunk:not(:first-child) {
+        border-block-start: 1px solid var(--border);
+    }
+
+    /* The context after the second `@@` (the function the hunk sits in) in
+ * the foreground, so the range reads as the quiet part and the place as the
+ * one that matters. Optional: a header may be one text node. */
+    .kp-diff__hunk-context {
+        color: var(--foreground);
     }
 
     /* Visually hidden, still announced. Used where a change is obvious on

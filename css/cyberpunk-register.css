@@ -1028,6 +1028,26 @@
         border-color: var(--kp-hairline);
     }
 
+    /* The step list is HUD readout rows: square corners, a hairline frame,
+       and a hard 3px bar on the side of the step that is running or has
+       failed (the bar is in the plate's own colour, the shape carries it). */
+    [data-theme='cyberpunk'] .kp-steplist {
+        --kp-steplist-mark-radius: 0;
+    }
+
+    [data-theme='cyberpunk'] .kp-steplist__item {
+        border-radius: 0;
+        border-color: var(--kp-hairline);
+    }
+
+    [data-theme='cyberpunk'] .kp-steplist__item:is([data-state='running'], [data-state='failed']) {
+        border-inline-start-width: 3px;
+    }
+
+    [data-theme='cyberpunk'] .kp-steplist__time {
+        font-family: var(--kp-mono);
+    }
+
     [data-theme='cyberpunk'] .kp-timeline {
         border-left: 1px solid var(--kp-hairline);
     }

@@ -927,6 +927,21 @@
         background: hsl(from var(--success-foreground) h s l / 0.14);
     }
 
+    /* The step list is a sticker sheet: round, thick-edged stickers; a done
+       sticker is stuck on a little crooked. */
+    [data-theme='pastel'] .kp-steplist {
+        --kp-steplist-gap: 0.625rem;
+    }
+
+    [data-theme='pastel'] .kp-steplist__item {
+        border-width: 2px;
+        border-radius: 1.1rem;
+    }
+
+    [data-theme='pastel'] .kp-steplist__item[data-state='done'] .kp-steplist__mark {
+        rotate: -8deg;
+    }
+
     [data-theme='pastel'] .kp-timeline {
         border-inline-start: 2px solid var(--border);
     }

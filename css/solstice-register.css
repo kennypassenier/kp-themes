@@ -663,8 +663,18 @@
         border-radius: var(--radius);
     }
 
-    [data-theme='solstice'] .kp-diff__line {
+    [data-theme='solstice'] .kp-diff__line,
+    [data-theme='solstice'] .kp-diff__hunk {
         font-family: var(--theme-font-mono);
+    }
+
+    /* The step list is a row of embers: a finished step keeps a warm halo. */
+    [data-theme='solstice'] .kp-steplist {
+        --kp-steplist-gap: 0.5rem;
+    }
+
+    [data-theme='solstice'] .kp-steplist__item[data-state='done'] .kp-steplist__mark {
+        box-shadow: 0 0 0 3px hsl(from var(--success) h s l / 0.25);
     }
 
     [data-theme='solstice'] .kp-timeline {

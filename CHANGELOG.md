@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+Three components the admin dashboard still drew itself (homelab kp-adopt-rest, kpa-9, kpa-14, kpa-18, kpa-19, kpa-32, kpa-33), built here first (research/kpadopt-feedback, awaiting Kenny's judgement; dist/ and the checksums are rebuilt at release).
+
+- **Added: a toast that waits while it is read.** `toast()` takes `pause` (default true: the clock stops while the pointer is on the toast or focus is inside it, `data-kp-paused` is set and `kp-toast-pause` is dispatched on the region), `linger` (ms left after both are gone, default `TOAST_LINGER_MS` 2000), `close` (a close button) and `sticky` (no clock, with a close button). Esc on a focused toast closes it; a touch does not count as hovering. Existing calls are unchanged except that a toast now waits for the pointer; `pause: false` brings back the plain timer.
+- **Added: `.kp-steplist` and `js/steplist.js`.** The live list of the steps of a run: `data-state` pending, running (the theme's own spinner), done, failed, skipped, each a shape and a word as well as a colour, a fixed mark box so nothing moves, a time column, and a status region that announces changes. `attachSteplists`, `buildSteplist`, `setStep`, `kp-steplist-step`. A new component rather than a variant of the timeline or the wizard steps (research/kpadopt-feedback/README.md). All 16 registers answer it; six strings `stepPending` ... `stepAnnounce` in js/strings.js; wired into js/auto.js.
+- **Added: `.kp-diff__hunk`** (and `.kp-diff__hunk-context`): the `@@ -a,b +c,d @@` header row of a diff hunk, a muted band with a rule under it and over it from the second hunk on. The registers that set a face on the lines set it on this row too; terminal and brutalism draw its rules their own way.
+
 ## 10.1.1 — 2026-10-15
 
 Released on Kenny's go (2026-10-15, form release-1011 "Nu uitbrengen, zonder suite"): a patch for two stylesheets a strict CSS parser refuses, found by JobTracker's Tailwind v4 build. No browser suite ran; the gates did, with the new CSS parse gate. The five known-noise tests of 10.1.0 (suite-noise-1011) wait for the next release suite.

@@ -1,0 +1,108 @@
+/* DEMO CHROME: every class prefixed `kf-` is mock, written for this page only
+   and not part of the package. Inside a stage everything is a package class
+   (.kp-toast, .kp-steplist, .kp-diff, .kp-button, .kp-spinner). */
+.kf-page {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+    max-inline-size: 72rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) 16px 4rem;
+}
+
+.kf-intro,
+.kf-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.kf-intro h1,
+.kf-intro p,
+.kf-sec__head h2,
+.kf-sec__head p {
+    margin: 0;
+}
+
+.kf-intro p,
+.kf-sec__head p {
+    color: var(--muted-foreground);
+}
+
+.kf-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.kf-label {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    font-weight: 600;
+}
+
+.kf-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+/* Two columns: the full width and a phone width (360 px) side by side. */
+.kf-cols {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 360px;
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+@media (max-width: 62rem) {
+    .kf-cols {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.kf-narrow {
+    inline-size: 360px;
+    max-inline-size: 100%;
+}
+
+/* `contain: layout` makes the fixed .kp-toasts stack pin to the stage, as the
+   catalogue does, so the toasts are judged in place. */
+.kf-stage {
+    contain: layout;
+    min-block-size: 22rem;
+    padding: var(--kp-space-md, 1rem);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.kf-toast-col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.kf-toast-col .kp-toast {
+    max-inline-size: 100%;
+}
+
+.kf-readout {
+    margin: 0;
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+    border-inline-start: 4px solid var(--primary);
+    background: var(--muted);
+    color: var(--foreground);
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    min-block-size: 4.5em;
+    white-space: pre-wrap;
+}
+
+.kf-hear {
+    font-style: italic;
+}
