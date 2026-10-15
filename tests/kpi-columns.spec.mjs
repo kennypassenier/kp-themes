@@ -68,7 +68,11 @@ const holds = async (page, n, width) => {
     await expect(block.locator('[data-cat-kpis-log]')).toContainText(`${n} ${n === 1 ? 'tile' : 'tiles'} in`);
     // Tiles leave one at a time, each after the one behind it has gone and the block has
     // glided to its height: wait until the strip holds exactly the tiles asked for.
-    await expect(strip.locator(':scope > *')).toHaveCount(n);
+    // A tile that is leaving stays in the strip while its exit plays (data-kp-leaving, and the
+    // block's own data-cat-going); it is not one of the n. Formal's exits are drawn line by line,
+    // so they last longer than the 5 s of a plain wait: give the last one 15 s to be gone.
+    await expect(strip.locator(':scope > *:not([data-kp-leaving]):not([data-cat-going])')).toHaveCount(n);
+    await expect(strip.locator(':scope > *'), 'every tile that left is gone before the rows are read').toHaveCount(n, { timeout: 15_000 });
     // And until the columns stop moving. The count kpiColumns() gives is the most the
     // strip may take: a label is never cut, so one that does not fit its tile steps the
     // strip down to its next smaller allowed count [fix-99, fix-101].

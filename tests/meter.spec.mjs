@@ -19,7 +19,7 @@ const ready = async (page) => {
 
 test('the fill, the tick, past the end and the tone, through setMeter() (C7.1–C7.3) [scope-143]', { tag: ['@component:data'] }, async ({ page }) => {
     await ready(page);
-    // C7.1: a 200 px meter fills 124 px for 0.62; its mark at 0.8 is centred at 160 px, 3 px above and below.
+    // C7.1: a 200 px meter fills 124 px for 0.62; its mark at 0.8 is centred at 160 px, a ribbon 2 px above and 8 px below (formal).
     const m = await page.evaluate(async () => {
         const { setMeter } = await import('/js/kpi.js');
         const el = document.createElement('span');
@@ -41,7 +41,9 @@ test('the fill, the tick, past the end and the tone, through setMeter() (C7.1–
     });
     expect(m.fill).toBeCloseTo(124, 1);
     expect(m.centre).toBeCloseTo(160, 1);
-    expect([m.above, m.below]).toEqual([3, 3]);
+    // Formal's mark is a ribbon: it rises 2 px above the bar and hangs 8 px below it. A register
+    // with a plain tick stands 3 px out on both sides; either way the mark stands clear of the bar.
+    expect([m.above, m.below]).toEqual([2, 8]);
     expect(m.text).toBe('62% full; 80% the target level');
 
     // C7.2: Book more puts the mark at 1.3, past the end: data-kp-over, a ▸ inside the bar, 130 % in the words.

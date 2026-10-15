@@ -17,6 +17,7 @@ import { readFileSync } from 'node:fs';
 import { test, expect } from '@playwright/test';
 import { DEFAULT_STRINGS as S } from '../js/strings.js';
 import { indicatorFor, tabToSelector, wearTheme } from './ring.mjs';
+import { band, PAD, paints } from './helpers/focus-paint.mjs';
 
 const FIXTURE = '/tests/fixtures/switch.html';
 
@@ -50,6 +51,32 @@ const paint = (page, id) =>
             thumb.backgroundColor,
         ].join(' | ');
     });
+
+/**
+ * Whether focus on the switch paints anything on its row, read from the screen: the row (its
+ * track and words) with a band around it, focused and then at rest. For a theme that draws the
+ * focus on the row (cyberpunk's brackets, through `:has(input:focus-visible)`) and not on the
+ * input, which the declared outline and shadow of the input cannot show.
+ *
+ * @param {import('@playwright/test').Page} page
+ * @param {string} id
+ */
+const paintedOnRow = async (page, id) => {
+    const input = page.locator(at(id));
+    const row = input.locator('xpath=ancestor::*[contains(concat(" ", normalize-space(@class), " "), " kp-switch ")][1]');
+    await row.evaluate((el) => el.scrollIntoView({ block: 'center', inline: 'center', behavior: 'instant' }));
+    await page.waitForTimeout(300);
+    const box = await row.boundingBox();
+    if (!box) throw new Error('the switch row has no box');
+    const clip = { x: box.x - PAD, y: box.y - PAD, width: box.width + PAD * 2, height: box.height + PAD * 2 };
+    const focused = await page.screenshot({ clip, animations: 'disabled' });
+    await input.evaluate((el) => /** @type {HTMLElement} */ (el).blur());
+    await page.waitForTimeout(100);
+    const rest = await page.screenshot({ clip, animations: 'disabled' });
+    // Back onto the input, by script: no pointer was used, so :focus-visible matches again.
+    await input.focus();
+    return paints(await band(page, focused, rest, { width: box.width, height: box.height, clipWidth: clip.width }));
+};
 
 /** The word the reader sees beside the track. @param {import('@playwright/test').Page} page @param {string} id */
 const word = (page, id) =>
@@ -117,7 +144,9 @@ for (const channel of CHANNELS) {
                 const outline = found.outlineStyle !== 'none' && found.outlineWidth >= 1;
                 const shadow = found.boxShadow !== 'none';
                 const changed = found.unfocused.outlineStyle !== found.outlineStyle || found.unfocused.boxShadow !== found.boxShadow;
-                if (!(outline || shadow) || !changed)
+                // Cyberpunk draws the focus on the row, not on the input (css/cyberpunk-register.css,
+                // `:has(input:focus-visible)`): there the paint on the screen is what counts.
+                if ((!(outline || shadow) || !changed) && !(theme === 'cyberpunk' && (await paintedOnRow(page, channel.off))))
                     unseen.push(`${theme}: outline ${found.outlineStyle} ${found.outlineWidth}px, shadow ${found.boxShadow}`);
             }
             expect(unseen, `focus shows nothing in:\n${unseen.join('\n')}`).toEqual([]);

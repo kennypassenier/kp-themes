@@ -57,6 +57,8 @@ const CHANNELS = {
         async choose(page, theme) {
             await this.open(page);
             await page.click(`#react-mount [data-kp-theme="${theme}"]`);
+            // The list stays mounted, inert, while its close plays; the next open waits for it to be gone.
+            await page.waitForSelector('#react-mount [role="listbox"]', { state: 'detached' });
         },
         async selection(page) {
             await this.open(page);

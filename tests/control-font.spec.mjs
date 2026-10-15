@@ -77,7 +77,7 @@ test(
             await forceDesktopFont(page);
             for (const theme of ['formal', 'nostromo']) {
                 const found = await page.evaluate(
-                    async ([name, family]) => {
+                    async ([name, family, research]) => {
                         document.documentElement.setAttribute('data-theme', name);
                         await new Promise((resolve) => setTimeout(resolve, 100));
                         return (
@@ -89,6 +89,9 @@ test(
                                 .filter((el) => !el.closest('.cat-judge, .cat-approval, .cat-feedback-field, .cat-look'))
                                 // A research demo's own mock controls are the demo's, not the package's.
                                 .filter((el) => !/(^|\s)demo-/.test(el.closest('[class]')?.className ?? ''))
+                                // On a research page, a bare button with no kp- class is the page's own (the all-themes
+                                // demo's `.fa-ref-open`), not a control the package styles.
+                                .filter((el) => !(research && ![...el.classList].some((c) => c.startsWith('kp-'))))
                                 .filter((el) => getComputedStyle(el).fontFamily.includes(family))
                                 .map(
                                     (el) =>
@@ -96,7 +99,7 @@ test(
                                 )
                         );
                     },
-                    [theme, FORCED],
+                    [theme, FORCED, href.includes('research/')],
                 );
                 for (const control of found) unset.add(`${href} · ${theme} · ${control}`);
             }

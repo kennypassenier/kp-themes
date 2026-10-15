@@ -372,6 +372,7 @@ test.describe(
                         const [, under, , past] = /** @type {RegExpMatchArray} */ (
                             where.match(/under (-?\d+), start (-?\d+), past the middle (-?\d+)/)
                         ).map(Number);
+                        // Every theme's tooltip sits within 12 px under its trigger (pastel's own CSS says so too).
                         if (under < 0 || under > 12 || past >= 0) misplaced.push(`${name} #${i}: ${where}`);
                         if (i >= 2) {
                             await page.mouse.move(0, 0);
