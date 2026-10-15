@@ -15,3 +15,7 @@ each line its example and its option row, and empties the list.
 (The pass of 2026-10-15 brought the last three lines onto their pages: the date
 picker's `data-kp-date-format`, the key-figure label wrap, the side navigation's
 `data-kp-sidenav-opener`. The pass of 2026-10-14 brought every line before them.)
+
+- `--kp-menu-anchor-x`, written by `js/menu-button.js` on the open menu of a menu button (the button's centre, in px from the menu's left edge,
+  kept 14 px inside it; not written when the menu hangs above its button). Written for every theme, read only by deco, whose inlay starts under the
+  button. Belongs on the menu button page next to the knobs (2026-10-15, research/leftover-looks).

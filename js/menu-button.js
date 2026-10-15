@@ -540,7 +540,10 @@ function lowerMenu(s) {
 }
 
 /** The inline properties placeMenu() writes, undone when the menu closes. */
-const PLACED = ['left', 'right', 'top', 'bottom', 'width', 'max-block-size', 'max-inline-size'];
+const PLACED = ['left', 'right', 'top', 'bottom', 'width', 'max-block-size', 'max-inline-size', '--kp-menu-anchor-x'];
+
+/** How far from the menu's left edge the written anchor stays at least, so it sits on the straight part of the top edge (past a theme's cove). */
+const ANCHOR_EDGE = 14;
 
 /** @param {HTMLElement} menu */
 function unplaceMenu(menu) {
@@ -600,6 +603,14 @@ function placeMenu(s, view, covered) {
     if (at.width != null) menu.style.setProperty('max-inline-size', `${at.width}px`);
     if (at.height != null) menu.style.setProperty('max-block-size', `${at.height}px`);
     menu.setAttribute('data-kp-menu-side', at.side);
+    // Where the button's centre falls on the menu, from the menu's left edge, for a register that starts something
+    // under the button (deco's inlay). Written for every theme; only a menu hanging below its button has it: one
+    // flipped above has its top edge away from the button, so it keeps the register's own origin.
+    if (at.side === 'below') {
+        const width = at.width ?? box.width;
+        const x = Math.min(Math.max(button.left + button.width / 2 - at.left, ANCHOR_EDGE), Math.max(width - ANCHOR_EDGE, ANCHOR_EDGE));
+        menu.style.setProperty('--kp-menu-anchor-x', `${Math.round(x * 10) / 10}px`);
+    }
 }
 
 /**

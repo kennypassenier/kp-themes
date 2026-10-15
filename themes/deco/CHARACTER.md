@@ -160,7 +160,7 @@ research/deco-character on 2026-10-09):
   the top edge, 320 ms) then `--kp-sig-deco-up` (lacquer, wallpaper and words, 160 ms); per-segment
   settle easing, no timing function of its own, so js/motion.js plays it backwards as the close
   (`--kp-open: reverse-close`). On `.kp-dialog` (720 ms unopened, 480 ms open, so the close it reads is
-  480), `.kp-menu-button > .kp-menu`, `.kp-popover[popover]`, `.kp-tooltip` (inlay from its lozenge),
+  480), `.kp-menu-button > .kp-menu` (inlay from under the button that opened it, `--kp-menu-anchor-x` written by js/menu-button.js; from the middle of the top edge when the menu hangs above its button), `.kp-popover[popover]`, `.kp-tooltip` (inlay from its lozenge),
   `.kp-toast`, `dialog.kp-drawer[open]`, `.kp-tour[open]` and the picker panels. The scaleX fold, the
   circle-free sunrise, the centre-line clips and the dialog crest are gone.
 - **Q5, Q6, Q7, Q19 (colour, corners, surface, motifs): applied.** One rule on every plate (`.kp-card`,

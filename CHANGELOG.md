@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **Changed: deco's menu inlay starts drawing under the button that opened it** [scope-143; Kenny, 2026-10-15 02:30, research/leftover-looks]. `placeMenu()` in
+  js/menu-button.js writes `--kp-menu-anchor-x` on the open menu (the button's centre in px from the menu's left edge, kept 14 px inside it) for every
+  theme, and removes it when the menu closes; css/deco-register.css reads it as `--kp-sig-deco-at: var(--kp-menu-anchor-x, 50%) 50%` on
+  `.kp-menu-button > .kp-menu`. A menu that flips above its button gets no property and keeps the middle of its top edge. The close is still the open
+  played backwards (0.0 % off over 20 frames in Firefox at 1280 and 390 px, buttons at the start, middle and end of a bar). Open and close durations in
+  formal (620 ms), cyberpunk (480 ms), forest (1000 ms) and deco (480 ms) are identical before and after.
 - **Added: the React `DatePicker` follows rule 52 too, with a `dateFormat` prop** [datetime-M1; Kenny's go for 10.1.0]. `components/flow.jsx` called `parseDate`, `formatDate` and `datePattern` with their default `'locale'` format, so it wrote, hinted and read in the reader's order. It now defaults to `dateFormat="rule52"` (dd/mm/yyyy whatever the locale) and `dateFormat="locale"` brings the reader's own order back, the same option as `attachDatePickers(root, { dateFormat })`. The placeholder, the typed text, a picked day and `min`/`max` all follow it; the ISO value passed to `onChange` does not change.
 - **Fixed: the network graph's loading picture is the ghost of the network** [Kenny's go for 10.1.0, leftover 3; PACKAGE_FINDINGS 2026-10-06].
   js/graph.js drew one grey ellipse while loading. It now draws the coming network: the last drawn nodes and links, or a hub with a ring of six

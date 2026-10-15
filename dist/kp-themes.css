@@ -49602,6 +49602,15 @@
         letter-spacing: var(--kp-sig-deco-title-track);
     }
 
+    /* A menu a button opened: its inlay starts under that button.
+       js/menu-button.js writes --kp-menu-anchor-x on the open menu (the
+       button's centre from the menu's left edge); a menu without it (above
+       its button, or opened by a page's own script) starts at the middle of
+       its top edge, as every other plate does. */
+    [data-theme='deco'] .kp-menu-button > .kp-menu {
+        --kp-sig-deco-at: var(--kp-menu-anchor-x, 50%) 50%;
+    }
+
     /* The tooltip: a small plate, a faceted lozenge set on its inlay under
        what it names (the inlay starts there). */
     [data-theme='deco'] .kp-tooltip {

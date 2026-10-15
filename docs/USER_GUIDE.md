@@ -1650,6 +1650,12 @@ Knobs: `--kp-menu-rich-min` (19rem) and `--kp-menu-rich-max`
 (`min(26rem, 100vw - 2rem)`), the menu's width; `--kp-menu-max-height`
 (`calc(100dvh - 12rem)`), past which it scrolls inside itself.
 
+The script writes one property on the open menu, `--kp-menu-anchor-x`: where
+the button's centre falls across the menu, in px from its left edge (kept 14 px
+inside it; not written when the menu hangs above its button). A theme may read
+it to start something under the button; deco's gold inlay does, and every other
+register ignores it.
+
 ### Help, a drawer and a short tour
 
 Help is a drawer at the end edge of the window, full height: a head, a body
