@@ -38,3 +38,15 @@ picker's `data-kp-date-format`, the key-figure label wrap, the side navigation's
 - Hover card: `attachHoverCards(root, { selector, fill, openDelayMs, closeDelayMs, closeOnEscape, cardClass })` from `js/hovercard.js` (`@kp-soft/themes/js/hovercard`), attribute `data-kp-hovercard="text"` (per anchor also `data-kp-open-delay`, `data-kp-close-delay`, `data-kp-close-on-escape="false"`), event `kp-hovercard` `{ open, card, anchor }` on the anchor, handle `{ card, open(anchor), hide(), refresh(), anchor() }`, the card `.kp-popover.kp-tooltip[data-kp-hovercard-card]`, token `--kp-hovercard-max-width`. Belongs on the tooltip page (2026-10-15, research/kpadopt-tooltip-sort).
 - Data table `data-kp-sort-multi="click"` / `multiSort: 'click'`: a plain header click (Enter, Space) adds a sort key, Shift + click sorts on the column alone; the reset button and summary are the existing ones. Belongs on the data table page, multi-sort section (2026-10-15, research/kpadopt-tooltip-sort).
 - Data table `data-kp-group-always` on a `tr[data-kp-row-group]` heading: stays visible with no data row under it (loading, failed with a Retry in the heading, empty with the reason). Belongs on the data table page, row groups (2026-10-15, research/kpadopt-tooltip-sort).
+- Network graph, three opt-in attributes on `figure.kp-graph[data-kp-graph]` (2026-10-15, research/kpadopt-graph): `data-kp-graph-colour="fixed"`
+  (every node's hue at `oklch(var(--kp-graph-node-l, 0.62) var(--kp-graph-node-c, 0.15) hue)`), `data-kp-graph-labels="under"` (a label centred under
+  its node, never cut; the narrow-box ellipse trade is off), `data-kp-graph-chrome="inside"` (Show all and the hint inside the picture, css grid
+  only; a `graphHint` with line breaks makes spans). Belongs on the network graph page with
+  an example each.
+- Network graph, new knobs: `--kp-graph-node-l`, `--kp-graph-node-c`, `--kp-graph-box-radius`, `--kp-graph-box-fill`, `--kp-graph-edge-on-width`
+  (2.6), `--kp-graph-node-dim` (0.3), `--kp-graph-dot-cap` (round), `--kp-graph-flag-colour`, `--kp-graph-label-weight` (500),
+  `--kp-graph-label-halo` (4px), `--kp-graph-inset` (10px, the inside chrome), `--kp-graph-edge-opacity` and
+  `--kp-graph-dash` (written per link and sample by the script from a kind's `opacity` and `dash`).
+- Network graph data: a kind's optional `colour`, `dash`, `opacity` and `bent`. Exports `graphLayout(data, W, H, { plain })` and
+  `graphBends(edges, bent)`.
+
