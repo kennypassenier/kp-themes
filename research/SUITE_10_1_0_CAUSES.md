@@ -261,3 +261,20 @@ Kenny's go 2026-10-15 03:26 ("suite-red: Eerst oplossen"). Every number below is
 ### Also: pastel's tooltip (coordinator's addition)
 
 - All four tooltips of catalogue/overlays.html#tooltip, pastel, 1920 x 1000: gap under the trigger 12, 12, 14, 14 before; 12, 12, 12, 12 after (`.kp-tooltip-anchor:has(> .kp-button:hover) > .kp-tooltip { margin-block-start: calc(0.75rem - 2px) }`: the hovered button lifts 2 px).
+
+## Repair log: remaining rows
+
+Kenny's go 2026-10-15 03:26 ("suite-red: Eerst oplossen"). Tests only, no look changed, nothing run (fix-118; `node --check`, prettier and the gates only). Phantom's askew parts (`rotate: -1.5deg`, approved) are now read by their layout box: the part's own `rotate` is set aside (inline `none !important`, put back at once) around the `getBoundingClientRect()`, the way `layoutRect()` in js/top-layer.js does. Every tolerance is as strict as before.
+
+- 6 batch3-faults.spec.mjs:68 nav dropdown: the gap to its item is `panel.offsetTop - item.offsetHeight` (the item is the panel's offsetParent), not the turned box's top against the item's bottom.
+- 7 combobox.spec.mjs:147 list in a clipping card (React): the list's rect is read with its `rotate` set aside; the gap under or above the input keeps its 0 to 8 px rule and the reach check is untouched.
+- 8 choice-centre.spec.mjs:198 data table checkboxes: every turned ancestor of the measured boxes has its `rotate` set aside while the words and the box are read (the tilt alone is 2 to 3 px over the 100 px from box to words), restored afterwards; the 1 px tolerance is unchanged.
+- 34 nav-menu.spec.mjs:93 mega menu panel against the bar's edges: the panel is read with its `rotate` set aside, 1.5 px tolerance unchanged.
+- 51 select.spec.mjs:239 every register answers the drawn list: the list's rect is read with its `rotate` set aside; top 0 to 8, left and width within 1 px as before.
+- 52, 53 select.spec.mjs:292 drawn list inside a clipping card, both channels: the same.
+- 24 kpi-columns.spec.mjs:102 row heights: `holds()` first polls (15 s) until no finite animation or transition under the block is running (no tile entering or leaving), then the column poll and the reads as before; the 0.5 px row rule is unchanged.
+- 23 fixtures.spec.mjs:44 pastel at 320 px: the file runs with motion on, so the test polls until the document has no running finite animation (the toast's swing) before it reads `scrollWidth`; the 1 px slack is unchanged.
+- 54, 55 showcase.spec.mjs:46 and :129 theme menus: new `opened(page, menu)` waits until the menu has no running finite animation (formal's line-by-line opening, 500 ms) before the option is clicked; also added to the third test that opens a menu (scroll as one).
+- 20 datepicker-jump.spec.mjs:279 panel size in every theme: `measure()` first waits until the panel has no running finite animation (pastel's 1.15 scale arrival), then reads width, height and spill; the 1 px rule is unchanged.
+
+Open question, groups 11, 13 and 15 (rows 20, 24, 54, 55) reproduced only with motion on although the suite config says `reducedMotion: 'reduce'`: no spec file overrides it. `playwright.config.mjs` sets `reducedMotion: 'reduce'` in `use`; the only `test.use({ reducedMotion: 'no-preference' })` among these files is fixtures.spec.mjs (row 23, handled above). datepicker-jump, kpi-columns and showcase have no `test.use` and no `emulateMedia` to motion (kpi-columns' one `emulateMedia` is `reduce`), and tests/helpers sets none either. So the log's mid-arrival reads (302 px, tiles at 9 to 112 px, a click through the menu) are not explained by the specs. Unresolved, to be measured: either the suite run did not get `reduce` in Firefox for those files, or part of the package plays these arrivals under reduce; pastel's and formal's arrivals all sit under `prefers-reduced-motion: no-preference` in the CSS. The waits above make the three tests correct either way.

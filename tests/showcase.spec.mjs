@@ -11,6 +11,26 @@ import { test, expect } from '@playwright/test';
 import { THEMES } from '../js/theme-registry.js';
 import { SPECIMENS } from '../showcase/specimens.mjs';
 
+/**
+ * Wait until a theme menu has finished opening: some themes draw it line by line
+ * through a clip (formal, 500 ms), and a click in those first frames passes through the
+ * part not yet shown to whatever stands behind the menu.
+ * @param {import('@playwright/test').Page} page @param {string} menu
+ */
+const opened = (page, menu) =>
+    expect
+        .poll(() =>
+            page
+                .locator(menu)
+                .evaluate(
+                    (el) =>
+                        el
+                            .getAnimations({ subtree: true })
+                            .filter((a) => Number.isFinite(a.effect?.getComputedTiming().endTime ?? 0) && a.playState === 'running').length,
+                ),
+        )
+        .toBe(0);
+
 const SHOWN = SPECIMENS.filter((s) => !s.fixturesOnly).length;
 
 test(
@@ -57,6 +77,7 @@ for (const side of ['left', 'right']) {
 
         await page.click(`#pane-${side} .kp-icon-button`);
         await expect(page.locator(`#sc-menu-${side}`)).toBeVisible();
+        await opened(page, `#sc-menu-${side}`);
         await page.click(`#sc-menu-${side} [data-kp-theme="terminal"]`);
 
         await expect(page.locator(`#pane-${side}`)).toHaveAttribute('data-theme', 'terminal');
@@ -89,6 +110,7 @@ test('the two halves scroll as one and stay aligned specimen by specimen [TH88]'
     // the right.
     await page.evaluate(() => window.scrollTo(0, 400));
     await page.click('#pane-right .kp-icon-button');
+    await opened(page, '#sc-menu-right');
     await page.click('#sc-menu-right [data-kp-theme="terminal"]');
     // Terminal brings its own face (Share Tech Mono). Measuring before it
     // lands reads the fallback's metrics on the right half only, and the
@@ -131,6 +153,7 @@ test('the picker remembers each half across a reload [TH88]', { tag: ['@componen
     await page.waitForSelector('.kp-icon-button');
     await page.evaluate(() => window.scrollTo(0, 400));
     await page.click('#pane-left .kp-icon-button');
+    await opened(page, '#sc-menu-left');
     await page.click('#sc-menu-left [data-kp-theme="light"]');
     await page.reload();
     await page.waitForSelector('.kp-icon-button');

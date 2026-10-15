@@ -278,7 +278,11 @@ test(
                 const s = /** @type {HTMLElement} */ (document.querySelector('[data-test="plain-select"]'));
                 const l = /** @type {HTMLElement} */ (document.querySelector('[data-test="plain-select"] + [data-kp-select-list]'));
                 const a = s.getBoundingClientRect();
+                // The list's layout box, its own `rotate` set aside: phantom lands its lists askew on
+                // purpose (-1.5deg), and the bounding box of a turned part is wider and higher than it stands.
+                l.style.setProperty('rotate', 'none', 'important');
                 const b = l.getBoundingClientRect();
+                l.style.removeProperty('rotate');
                 return { top: Math.round(b.top - a.bottom), left: Math.round(b.left - a.left), width: Math.round(b.width - a.width) };
             });
             if (gap.top < 0 || gap.top > 8 || Math.abs(gap.left) > 1 || Math.abs(gap.width) > 1) far.push(`${theme}: ${JSON.stringify(gap)}`);
@@ -315,7 +319,11 @@ for (const channel of CHANNELS) {
                         return hit !== option && !option.contains(hit);
                     }).length;
                     const a = el.getBoundingClientRect();
+                    // The list's layout box, its own `rotate` set aside: phantom lands its lists askew on
+                    // purpose (-1.5deg), and the bounding box of a turned part is wider and higher than it stands.
+                    drawn.style.setProperty('rotate', 'none', 'important');
                     const b = drawn.getBoundingClientRect();
+                    drawn.style.removeProperty('rotate');
                     return {
                         missed,
                         of: options.length,

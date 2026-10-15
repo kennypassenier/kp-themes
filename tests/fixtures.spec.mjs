@@ -44,6 +44,19 @@ for (const theme of SWEEP) {
         test('reflows at 320 px without sideways scrolling [DI11]', async ({ page }) => {
             await page.setViewportSize(NARROW);
             await page.goto(url);
+            // This file runs with motion on. The page's own toast swings in (pastel: rotate -9deg
+            // for the first fifth of 560 ms) and its box overhangs the page while it does, so the
+            // width is read once the page's arrival has finished, not in its first frames.
+            await expect
+                .poll(() =>
+                    page.evaluate(
+                        () =>
+                            document
+                                .getAnimations()
+                                .filter((a) => Number.isFinite(a.effect?.getComputedTiming().endTime ?? 0) && a.playState === 'running').length,
+                    ),
+                )
+                .toBe(0);
             const overflow = await page.evaluate(() => ({
                 scroll: document.documentElement.scrollWidth,
                 client: document.documentElement.clientWidth,

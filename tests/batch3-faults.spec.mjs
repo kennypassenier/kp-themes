@@ -87,8 +87,10 @@ test(
             if (style.opacity !== '1') return `opacity ${style.opacity}`;
             if (!['none', '0px', '0px 0px'].includes(style.translate)) return `still shifted by ${style.translate}, the closed position`;
             // Where hover puts it: under its item, over the stage rather than in the flow.
-            if (Math.abs(box.top - item.getBoundingClientRect().bottom) > 1)
-                return `${Math.round(box.top - item.getBoundingClientRect().bottom)}px from its item`;
+            // Read in layout, not by the turned box: phantom lands its panels askew on purpose
+            // (`rotate: -1.5deg`), and a bounding box of a turned part is 3 px taller than where it stands.
+            const gap = panel.offsetParent === item ? panel.offsetTop - item.offsetHeight : box.top - item.getBoundingClientRect().bottom;
+            if (Math.abs(gap) > 1) return `${Math.round(gap)}px from its item`;
             if (style.position !== 'absolute') return `position ${style.position}`;
             return null;
         });

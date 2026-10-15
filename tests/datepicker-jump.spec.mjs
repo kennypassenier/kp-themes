@@ -287,12 +287,25 @@ test(
         const panel = picker.locator('[data-kp-date-panel]');
         const title = panel.locator('.kp-datepicker__title');
         /** Width and height, and every grid cell's content fitting its box. */
-        const measure = () =>
-            panel.evaluate((el) => {
+        const measure = async () => {
+            // Read once the panel's arrival has finished: pastel's panel lands at 1.15 times its
+            // size (a `scale`), and in its first frames it measures 302 px against its 262.
+            await expect
+                .poll(() =>
+                    panel.evaluate(
+                        (el) =>
+                            el
+                                .getAnimations({ subtree: true })
+                                .filter((a) => Number.isFinite(a.effect?.getComputedTiming().endTime ?? 0) && a.playState === 'running').length,
+                    ),
+                )
+                .toBe(0);
+            return panel.evaluate((el) => {
                 const box = el.getBoundingClientRect();
                 const spill = [...el.querySelectorAll('[data-kp-month], [data-kp-year]')].filter((c) => c.scrollWidth > c.clientWidth + 1).length;
                 return { w: box.width, h: box.height, spill };
             });
+        };
         for (const theme of THEME_NAMES) {
             await page.evaluate((name) => document.documentElement.setAttribute('data-theme', name), theme);
             await picker.locator('[data-kp-date-open]').click();

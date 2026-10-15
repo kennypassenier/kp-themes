@@ -189,7 +189,11 @@ for (const channel of CHANNELS) {
                     // Under the input, or above it when the window has no room below [fix-30]: the card
                     // puts the framework-free input's bottom 88px above a 720px window's edge, less than the
                     // list's 118px, so that list opens above, at the same gap.
+                    // The list's layout box, its own `rotate` set aside: phantom lands its lists askew on
+                    // purpose (-1.5deg), and the bounding box of a turned part is not where it stands.
+                    drawn.style.setProperty('rotate', 'none', 'important');
                     const list = drawn.getBoundingClientRect();
+                    drawn.style.removeProperty('rotate');
                     const above = drawn.dataset.kpOverlaySide === 'above';
                     return {
                         missed,

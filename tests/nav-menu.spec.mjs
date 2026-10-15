@@ -126,7 +126,11 @@ test(
                     const panelFault = await outsideWindow(panel);
                     if (panelFault) faults.push(`${theme.name}, ${width}px, ${channel}: the mega menu's panel lies ${panelFault}`);
                     const span = await panel.evaluate((el) => {
+                        // The panel's layout box, its own `rotate` set aside: phantom lands its panels askew
+                        // on purpose (-1.5deg) and the bounding box of a turned part overhangs the bar.
+                        el.style.setProperty('rotate', 'none', 'important');
                         const box = el.getBoundingClientRect();
+                        el.style.removeProperty('rotate');
                         const bar = /** @type {Element} */ (el.closest('.kp-nav')).getBoundingClientRect();
                         return Math.max(Math.abs(box.left - bar.left), Math.abs(box.right - bar.right));
                     });
