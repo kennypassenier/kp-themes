@@ -401,7 +401,7 @@ export type DataTableOptions = {
     debounceMs?: number;
     sortCycle?: 'two' | 'three';
     /**
-     * Shift + click adds a sort key; `'click'`: a plain click adds it and Shift + click sorts on the column alone. Default false; per table `data-kp-sort-multi` (`="click"`).
+     * Shift + click adds a sort key; 'click': a plain click adds it and Shift + click sorts on the column alone. Default false; per table `data-kp-sort-multi` (`="click"`).
      */
     multiSort?: boolean | 'click';
     /**

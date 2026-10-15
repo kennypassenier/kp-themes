@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>List toolbar — kp-themes</title>
+        <meta name="description" content="The bar above a list, a log, a board or a chart that is not (or not only) a data table: a search box, groups of filters (segmented controls or chips), a slot for a count or a switch, and a row of the filters that are on as removable tags. The zones sit on one grid row, so the search box keeps its width whatever the filter groups hold. js/toolbar.js clears the search on Escape, focuses it on a key, and draws the active row." />
+        <!-- The theme a reader chose on another page, before first paint:
+             without it every page opened in formal again. -->
+        <script>
+(function () {
+    try {
+        var t = localStorage.getItem("theme");
+        if (t) document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+})();
+        </script>
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <!-- Every register, from 2026-09-07. They are opt-in for a consumer,
+             and leaving them off here was an omission rather than a
+             decision: a component page where you pick cyberpunk and see a
+             button that does not look like cyberpunk shows something that
+             is not that theme, which is what KT8 is about. The showcase
+             loaded them all along; these pages did not. -->
+        <link rel="stylesheet" href="../../css/cyberpunk-register.css" />
+        <link rel="stylesheet" href="../../css/synthwave-register.css" />
+        <link rel="stylesheet" href="../../css/phantom-register.css" />
+        <link rel="stylesheet" href="../../css/terminal-register.css" />
+        <link rel="stylesheet" href="../../css/brutalism-register.css" />
+        <link rel="stylesheet" href="../../css/titanium-register.css" />
+        <link rel="stylesheet" href="../../css/pastel-register.css" />
+        <link rel="stylesheet" href="../../css/forest-register.css" />
+        <link rel="stylesheet" href="../../css/deco-register.css" />
+        <link rel="stylesheet" href="../../css/light-register.css" />
+        <link rel="stylesheet" href="../../css/grotesk-register.css" />
+        <link rel="stylesheet" href="../../css/blueprint-register.css" />
+        <link rel="stylesheet" href="../../css/nostromo-register.css" />
+        <link rel="stylesheet" href="../../css/dark-register.css" />
+        <link rel="stylesheet" href="../../css/formal-register.css" />
+        <link rel="stylesheet" href="../../css/solstice-register.css" />
+        <link rel="stylesheet" href="../../site/site.css" />
+    </head>
+    <body>
+        <a class="sc-skip" href="#main">Skip to content</a>
+        <!-- The theme switcher, fixed in the top right corner of every page
+             (Kenny, 2026-09-29: "ik wil altijd kunnen switchen van thema"). -->
+        <div class="sc-theme-switch"><span class="kp-theme-menu"><button type="button" class="kp-icon-button" popovertarget="sc-theme-menu" aria-label="Choose a theme" style="anchor-name: --sc-theme-menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.6-.7 1.6-1.6 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.7-1.6 1.6-1.6H16c3.3 0 6-2.7 6-6 0-4.9-4.5-8.6-10-8.6z"/></svg></button><div popover="auto" id="sc-theme-menu" class="kp-popover" style="position-anchor: --sc-theme-menu"><ul class="kp-menu" data-kp-theme-picker aria-label="Choose a theme"><li role="presentation" class="kp-theme-group" data-kp-theme-group="light"><span class="kp-theme-group__label" aria-hidden="true">Light</span><ul class="kp-theme-group__list" aria-label="Light"><li><button type="button" data-kp-theme="formal"><span class="kp-swatch" data-theme="formal"></span>Formal</button></li><li><button type="button" data-kp-theme="light"><span class="kp-swatch" data-theme="light"></span>Light</button></li><li><button type="button" data-kp-theme="pastel"><span class="kp-swatch" data-theme="pastel"></span>Pastel</button></li><li><button type="button" data-kp-theme="forest"><span class="kp-swatch" data-theme="forest"></span>Forest</button></li><li><button type="button" data-kp-theme="brutalism"><span class="kp-swatch" data-theme="brutalism"></span>Brutalism</button></li><li><button type="button" data-kp-theme="grotesk"><span class="kp-swatch" data-theme="grotesk"></span>Grotesk</button></li><li><button type="button" data-kp-theme="nostromo"><span class="kp-swatch" data-theme="nostromo"></span>Nostromo</button></li></ul></li><li role="presentation" class="kp-theme-group" data-kp-theme-group="dark"><span class="kp-theme-group__label" aria-hidden="true">Dark</span><ul class="kp-theme-group__list" aria-label="Dark"><li><button type="button" data-kp-theme="dark"><span class="kp-swatch" data-theme="dark"></span>Dark</button></li><li><button type="button" data-kp-theme="cyberpunk"><span class="kp-swatch" data-theme="cyberpunk"></span>Cyberpunk</button></li><li><button type="button" data-kp-theme="synthwave"><span class="kp-swatch" data-theme="synthwave"></span>Synthwave</button></li><li><button type="button" data-kp-theme="terminal"><span class="kp-swatch" data-theme="terminal"></span>Terminal</button></li><li><button type="button" data-kp-theme="blueprint"><span class="kp-swatch" data-theme="blueprint"></span>Blueprint</button></li><li><button type="button" data-kp-theme="solstice"><span class="kp-swatch" data-theme="solstice"></span>Solstice</button></li><li><button type="button" data-kp-theme="deco"><span class="kp-swatch" data-theme="deco"></span>Art Deco</button></li><li><button type="button" data-kp-theme="phantom"><span class="kp-swatch" data-theme="phantom"></span>Phantom</button></li><li><button type="button" data-kp-theme="titanium"><span class="kp-swatch" data-theme="titanium"></span>Titanium</button></li></ul></li></ul></div></span></div>
+        <div class="kp-sidebar">
+            <nav class="kp-sidebar__aside sc-nav" aria-label="Documentation">
+                <a class="sc-brand kp-fw-bold" href="../../site/index.html">kp-themes</a>
+                <div class="sc-nav__sections kp-stack">
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Getting started</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/index.html">Start</a></li>
+                            <li><a class="sc-nav__link" href="../../site/layout.html">Layout layer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/utilities.html">Utility API</a></li>
+                            <li><a class="sc-nav__link" href="../../showcase/index.html">Showcase</a></li>
+                            <li><a class="sc-nav__link" href="../../examples/index.html">Example pages</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Theming</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/theme-switcher.html">Theme switcher</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/effects.html">Effects and surfaces</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/size-motion.html">Closing and resizing</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/update.html">Information that updates in place</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Forms</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/button.html">Button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/icon-button.html">Icon button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/field.html">Form field</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/switch.html">Switch</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/form.html">Form</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/combobox.html">Combobox and tag input</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/datepicker.html">Date picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/colorpicker.html">Colour picker</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/upload.html">File upload</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/wizard.html">Wizard</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/segmented.html">Segmented control and filter chips</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Data</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/table.html">Table</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/datatable.html">Data table</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tree.html">Tree</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/reorder.html">Reorder list</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/grid-layout.html">Movable grid layout</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/timeline.html">Timeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/diff.html">Diff</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/copyable.html">Copyable value</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/data-formatting.html">Showing data</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/empty-state.html">Empty state</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/log.html">Log</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/action-columns.html">Buttons in shared columns</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/kpi.html">Key figures</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/meter.html">Meter with a mark</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/kpi-columns.html">Key figures on allowed column counts</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/kpi-trend.html">Key figure with its 24-hour trend</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/chart.html">Time chart</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/graph.html">Network graph</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/state-word.html">State word</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/freshness.html">Freshness line</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/calendar.html">Month heatmap</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/toolbar.html" aria-current="page">List toolbar</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Feedback</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/alert.html">Alert</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/attention.html">Attention band</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/badge.html">Badge</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/count.html">Counting number</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/marquee.html">Marquee</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/toast.html">Toast</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/alarm.html">Alarm</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/progress.html">Progress</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/spinner.html">Spinner</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/skeleton.html">Skeleton</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/health.html">Health</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/steplist.html">Step list</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tooltip.html">Tooltip</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Navigation</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/nav-bar.html">Navigation bar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/sidenav.html">Side navigation</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/to-top.html">Back to top</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/breadcrumb.html">Breadcrumb</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/pagination.html">Pagination</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tabs.html">Tabs</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/accordion.html">Accordion</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/menu.html">Dropdown menu</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/menu-button.html">Menu button</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/drawer.html">Drawer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/help-tour.html">Help and the tour</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/dialog.html">Dialog</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/command-palette.html">Command palette</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/shortcut-sheet.html">Shortcut sheet</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/skip-link.html">Skip link</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Content</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/keys.html">Key line and key cap</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/media.html">Media</a></li>
+                        </ul>
+                    </div>
+                    <div class="sc-nav__group">
+                        <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Structure</h2>
+                        <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/card.html">Card</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/tiles.html">Tiles of one height</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/page-header.html">Page header</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/split-pane.html">Split pane</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/page-shell.html">Page shell</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/visually-hidden.html">Visually hidden</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <main class="kp-sidebar__main" id="main">
+                <div class="kp-page sc-measure">
+                <header class="kp-section">
+                    <h1 class="kp-fw-bold">List toolbar</h1>
+                    <p class="kp-prose">The bar above a list, a log, a board or a chart that is not (or not only) a data table: a search box, groups of filters (segmented controls or chips), a slot for a count or a switch, and a row of the filters that are on as removable tags. The zones sit on one grid row, so the search box keeps its width whatever the filter groups hold. js/toolbar.js clears the search on Escape, focuses it on a key, and draws the active row.</p>
+                </header>
+                <section class="kp-section" data-sc-section="when" id="when">
+                    <h2 class="kp-fw-semibold">When to use it</h2>
+                    <p class="kp-prose">Above any list the reader narrows down by typing and by a few filters. For a data table use its own header filters instead: the toolbar is the same idea for everything else.</p>
+                </section>
+                <section class="kp-section" data-sc-section="example" id="example">
+                    <h2 class="kp-fw-semibold">Live example</h2>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Search, one filter group and a count</figcaption>
+                        <p class="kp-text-muted">`data-kp-toolbar-key=&quot;/&quot;` focuses the search from anywhere on the page that is not a field; the key cap in the markup says so. The active row stays hidden until the page calls `setToolbarActive`.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-toolbar" data-kp-toolbar data-kp-toolbar-key="/" role="group" aria-label="Containers">
+    <div class="kp-toolbar__search"><input type="search" class="kp-field__input kp-toolbar__input" placeholder="Search containers" aria-label="Search containers" aria-keyshortcuts="/" /><kbd class="kp-kbd kp-toolbar__key" aria-hidden="true">/</kbd></div>
+    <div class="kp-toolbar__filters"><div class="kp-toolbar__group" role="group" aria-labelledby="doc-tb-status"><b class="kp-toolbar__label" id="doc-tb-status">Status</b>
+            <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="Status"><button type="button" class="kp-segmented__item" data-value="all" data-kp-segmented-all aria-pressed="true"><span class="kp-segmented__label">All</span></button><button type="button" class="kp-segmented__item" data-value="running" aria-pressed="false"><span class="kp-segmented__label">Running</span></button></div>
+        </div></div>
+        <div class="kp-toolbar__state">12 of 48</div>
+        <div class="kp-toolbar__active" hidden></div>
+    </div>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-toolbar&quot;</span> <span class="kp-code__keyword">data-kp-toolbar</span> <span class="kp-code__keyword">data-kp-toolbar-key</span><span class="kp-code__string">=&quot;/&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Containers&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-toolbar__search&quot;</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;search&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input kp-toolbar__input&quot;</span> <span class="kp-code__keyword">placeholder</span><span class="kp-code__string">=&quot;Search containers&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Search containers&quot;</span> <span class="kp-code__keyword">aria-keyshortcuts</span><span class="kp-code__string">=&quot;/&quot;</span> /&gt;&lt;<span class="kp-code__keyword">kbd</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kbd kp-toolbar__key&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;/&lt;/<span class="kp-code__keyword">kbd</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-toolbar__filters&quot;</span>&gt;&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-toolbar__group&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;doc-tb-status&quot;</span>&gt;&lt;<span class="kp-code__keyword">b</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-toolbar__label&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-tb-status&quot;</span>&gt;Status&lt;/<span class="kp-code__keyword">b</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-segmented kp-segmented--chips&quot;</span> <span class="kp-code__keyword">data-kp-segmented</span><span class="kp-code__string">=&quot;multi&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Status&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-segmented__item&quot;</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;all&quot;</span> <span class="kp-code__keyword">data-kp-segmented-all</span> <span class="kp-code__keyword">aria-pressed</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-segmented__label&quot;</span>&gt;All&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-segmented__item&quot;</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;running&quot;</span> <span class="kp-code__keyword">aria-pressed</span><span class="kp-code__string">=&quot;false&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-segmented__label&quot;</span>&gt;Running&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-toolbar__state&quot;</span>&gt;12 of 48&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-toolbar__active&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
+                </section>
+                <section class="kp-section" data-sc-section="markup" id="markup">
+                    <h2 class="kp-fw-semibold">Framework-free markup</h2>
+                    <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
+                    <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
+                    <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-toolbar</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-toolbar-clear</code></td><td>selector, written</td></tr>
+                            <tr><td><code>data-kp-toolbar-key</code></td><td>read</td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="react" id="react">
+                    <h2 class="kp-fw-semibold">React usage</h2>
+                    <p class="kp-text-muted">This unit has no React component; it is CSS and markup only.</p>
+                </section>
+                <section class="kp-section" data-sc-section="props" id="props">
+                    <h2 class="kp-fw-semibold">Props</h2>
+                    <p class="kp-text-muted">No props: this unit is CSS and markup only.</p>
+                </section>
+                <section class="kp-section" data-sc-section="events" id="events">
+                    <h2 class="kp-fw-semibold">Events</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
+                            <tr><td><code>kp-toolbar-remove</code></td><td>Fired on the toolbar when a tag's cross is pressed; `{ id, label }`.</td></tr>
+                            <tr><td><code>kp-toolbar-clear</code></td><td>Fired on the toolbar when Clear all is pressed.</td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="knobs" id="knobs">
+                    <h2 class="kp-fw-semibold">Knobs</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
+                            <tr><td><code>--kp-space-lg</code></td><td><code>1.5rem</code></td></tr>
+                            <tr><td><code>--kp-space-md</code></td><td><code>1rem</code></td></tr>
+                            <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
+                            <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
+                            <tr><td><code>--kp-text-xs</code></td><td><code>0.75rem</code></td></tr>
+                            <tr><td><code>--kp-toolbar-active-height</code></td><td><code>1.75rem</code></td></tr>
+                            <tr><td><code>--kp-toolbar-gap-block</code></td><td><code>var(--kp-space-sm, 0.5rem)</code></td></tr>
+                            <tr><td><code>--kp-toolbar-gap-inline</code></td><td><code>var(--kp-space-lg, 1rem)</code></td></tr>
+                            <tr><td><code>--kp-toolbar-group-gap</code></td><td><code>1.125rem</code></td></tr>
+                            <tr><td><code>--kp-toolbar-key-room</code></td><td><code>2.5rem</code></td></tr>
+                            <tr><td><code>--kp-toolbar-search-max</code></td><td><code>22rem</code></td></tr>
+                            <tr><td><code>--kp-toolbar-search-min</code></td><td><code>14rem</code></td></tr>
+                    </tbody></table></div>
+                </section>
+                <section class="kp-section" data-sc-section="a11y" id="a11y">
+                    <h2 class="kp-fw-semibold">Accessibility</h2>
+                    <ul class="kp-stack">
+                        <li>Built in — the toolbar is a named group; Escape in the search clears it and fires `input`, so the page filters again.</li>
+                        <li>Built in — removing a tag moves the focus to the next one, and Clear all returns it to the search.</li>
+                        <li>Yours — name the toolbar, label the search, and call `setToolbarActive` again after a filter changes so the tags always say what is on.</li>
+                    </ul>
+                </section>
+                <section class="kp-section" data-sc-section="variants" id="variants">
+                    <h2 class="kp-fw-semibold">Variants and states</h2>
+                    <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>.kp-toolbar__search</code></td><td>The search zone: the field and, beside it, the key cap that focuses it.</td></tr>
+                            <tr><td><code>.kp-toolbar__filters</code></td><td>The filter zone: any number of `.kp-toolbar__group`, each a label over a segmented control.</td></tr>
+                            <tr><td><code>.kp-toolbar__state</code></td><td>A slot for a count, a follow switch or a table/cards choice.</td></tr>
+                            <tr><td><code>.kp-toolbar__active</code></td><td>The filters that are on, as the data table’s removable tags and a Clear all button. Hidden when none is on.</td></tr>
+                    </tbody></table></div>
+                </section>
+                </div>
+            </main>
+        </div>
+        <script type="module" src="../../js/auto.js"></script>
+    </body>
+</html>

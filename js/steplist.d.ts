@@ -5,7 +5,7 @@ export declare const STEP_ID_ATTRIBUTE = "data-kp-step-id";
 /** Fired on the list, bubbling, when a step changed state after attach: `{ item, id, state, previous }`. */
 export declare const STEPLIST_EVENT = "kp-steplist-step";
 /** The states a step can be in. */
-export declare const STEP_STATES: readonly ["pending", "running", "done", "failed", "skipped"];
+export declare const STEP_STATES: readonly ['pending', 'running', 'done', 'failed', 'skipped'];
 export type StepState = 'pending' | 'running' | 'done' | 'failed' | 'skipped';
 export type StepRow = {
     /**

@@ -33,6 +33,7 @@ export type HoverCardOptions = {
 };
 export type HoverCardHandle = (() => void) & {
     card: HTMLElement;
+    open: (anchor: HTMLElement) => void;
     hide: () => void;
     refresh: () => void;
     anchor: () => HTMLElement | null;
@@ -44,4 +45,4 @@ export type HoverCardHandle = (() => void) & {
  * @param {HoverCardOptions} [options]
  * @returns {HoverCardHandle} detach, with the handle's members on it
  */
-export declare function attachHoverCards(root?: Document | Element, { selector, fill, openDelayMs, closeDelayMs, closeOnEscape, cardClass }?: HoverCardOptions): HoverCardHandle;
+export declare function attachHoverCards(root?: Document | Element, options?: HoverCardOptions): HoverCardHandle;

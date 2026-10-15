@@ -95,6 +95,7 @@ export function attachHoverCards(root = document, options = {}) {
         for (const [key, value] of Object.entries(options)) if (value !== undefined) /** @type {any} */ (held.cfg)[key] = value;
         return held.handle;
     }
+    /** @type {HoverCardOptions & { selector: string }} */
     const cfg = { selector: `[${HOVERCARD_ATTRIBUTE}]`, openDelayMs: 300, closeDelayMs: 100, closeOnEscape: true, ...stripped(options) };
     const doc = root instanceof Document ? root : root.ownerDocument;
     const card = doc.createElement('div');

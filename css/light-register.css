@@ -632,7 +632,7 @@
 
     [data-theme='light'] .kp-steplist__item {
         border-radius: calc(var(--radius) * 1.25);
-        box-shadow: 0 1px 2px hsl(0 0% 0% / 0.06);
+        box-shadow: 0 1px 2px hsl(from var(--foreground) h s l / 0.06);
     }
 
     [data-theme='light'] .kp-timeline {

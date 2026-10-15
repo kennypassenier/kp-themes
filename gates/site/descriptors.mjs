@@ -2580,12 +2580,159 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
         ],
     },
     {
+        id: 'segmented',
+        title: 'Segmented control and filter chips',
+        group: 'Forms',
+        classes: ['kp-segmented'],
+        exports: [],
+        intro: 'A group of buttons that choose among a few values, in two looks: a track with a plate under the chosen segment, or the same buttons as separate pills (`.kp-segmented--chips`). With `data-kp-segmented="single"` (the default) it is a radio group with one value on; with `multi` each press turns one value on or off, several may be on, and none on means everything is shown. js/segmented.js writes the roles, the states, the roving tab stop and, in the track look, the position of the plate.',
+        whenToUse:
+            'For a choice among two to six values that changes what a list or a chart shows, where every value should stay in sight: a status filter, a view, a range. Not for a long list of values (use a select or a combobox), and not for navigation between pages (use tabs or links).',
+        examples: [
+            {
+                title: 'One value on, with counts',
+                why: 'The markup is complete without the script: the roles and `aria-checked` are written, so it is right before anything runs. The script adds the roving tab stop, the arrow keys and the plate.',
+                markup: `
+<div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="Show">
+<button type="button" class="kp-segmented__item" data-value="changed" role="radio" aria-checked="true"><span class="kp-segmented__label">Changed</span><span class="kp-segmented__count">12</span></button>
+<button type="button" class="kp-segmented__item" data-value="all" role="radio" aria-checked="false"><span class="kp-segmented__label">All</span><span class="kp-segmented__count">48</span></button>
+<button type="button" class="kp-segmented__item" data-value="failed" role="radio" aria-checked="false"><span class="kp-segmented__label">Failed</span><span class="kp-segmented__count">2</span></button>
+</div>
+`,
+            },
+            {
+                title: 'Chips that combine, with an All chip',
+                why: 'In `multi` mode each chip is a toggle with `aria-pressed`. The chip marked `data-kp-segmented-all` is pressed while nothing else is, and pressing it turns the rest off.',
+                markup: `
+<div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="Status">
+<button type="button" class="kp-segmented__item" data-value="all" data-kp-segmented-all aria-pressed="true"><span class="kp-segmented__label">All</span></button>
+<button type="button" class="kp-segmented__item" data-value="running" aria-pressed="false"><span class="kp-segmented__label">Running</span></button>
+<button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="false"><span class="kp-segmented__label">Stopped</span></button>
+</div>
+`,
+            },
+        ],
+        variants: [
+            { name: '.kp-segmented--chips', what: 'The same buttons as separate pills instead of a track; the chosen chip takes the primary colour.' },
+            { name: '.kp-segmented__count', what: 'A number beside the label. While the group is `aria-busy="true"` it shows a placeholder, so nothing moves when the numbers arrive.' },
+            { name: 'disabled', what: '`disabled` on an item, or `aria-disabled="true"` on the group, takes it out of the arrow keys and dims it.' },
+            { name: 'overflow', what: 'When the segments are wider than the group, the group scrolls and the chosen segment is kept in view.' },
+        ],
+        accessibility: [
+            'Built in — single is a `radiogroup` with `aria-checked`, multi is a group of toggle buttons with `aria-pressed`; one tab stop in, arrow keys within, Home and End jump.',
+            'Built in — in multi the arrow keys only move the focus; Space and Enter turn the value, so a keyboard user never changes a filter by passing it.',
+            'Yours — name the group (`aria-label` or `aria-labelledby`), and say in text near the list what is being filtered.',
+        ],
+    },
+    {
+        id: 'toolbar',
+        title: 'List toolbar',
+        group: 'Data',
+        classes: ['kp-toolbar'],
+        exports: [],
+        intro: 'The bar above a list, a log, a board or a chart that is not (or not only) a data table: a search box, groups of filters (segmented controls or chips), a slot for a count or a switch, and a row of the filters that are on as removable tags. The zones sit on one grid row, so the search box keeps its width whatever the filter groups hold. js/toolbar.js clears the search on Escape, focuses it on a key, and draws the active row.',
+        whenToUse:
+            'Above any list the reader narrows down by typing and by a few filters. For a data table use its own header filters instead: the toolbar is the same idea for everything else.',
+        examples: [
+            {
+                title: 'Search, one filter group and a count',
+                why: '`data-kp-toolbar-key="/"` focuses the search from anywhere on the page that is not a field; the key cap in the markup says so. The active row stays hidden until the page calls `setToolbarActive`.',
+                markup: `
+<div class="kp-toolbar" data-kp-toolbar data-kp-toolbar-key="/" role="group" aria-label="Containers">
+<div class="kp-toolbar__search"><input type="search" class="kp-field__input kp-toolbar__input" placeholder="Search containers" aria-label="Search containers" aria-keyshortcuts="/" /><kbd class="kp-kbd kp-toolbar__key" aria-hidden="true">/</kbd></div>
+<div class="kp-toolbar__filters"><div class="kp-toolbar__group" role="group" aria-labelledby="doc-tb-status"><b class="kp-toolbar__label" id="doc-tb-status">Status</b>
+<div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="Status"><button type="button" class="kp-segmented__item" data-value="all" data-kp-segmented-all aria-pressed="true"><span class="kp-segmented__label">All</span></button><button type="button" class="kp-segmented__item" data-value="running" aria-pressed="false"><span class="kp-segmented__label">Running</span></button></div>
+</div></div>
+<div class="kp-toolbar__state">12 of 48</div>
+<div class="kp-toolbar__active" hidden></div>
+</div>
+`,
+            },
+        ],
+        variants: [
+            { name: '.kp-toolbar__search', what: 'The search zone: the field and, beside it, the key cap that focuses it.' },
+            { name: '.kp-toolbar__filters', what: 'The filter zone: any number of `.kp-toolbar__group`, each a label over a segmented control.' },
+            { name: '.kp-toolbar__state', what: 'A slot for a count, a follow switch or a table/cards choice.' },
+            { name: '.kp-toolbar__active', what: 'The filters that are on, as the data table’s removable tags and a Clear all button. Hidden when none is on.' },
+        ],
+        accessibility: [
+            'Built in — the toolbar is a named group; Escape in the search clears it and fires `input`, so the page filters again.',
+            'Built in — removing a tag moves the focus to the next one, and Clear all returns it to the search.',
+            'Yours — name the toolbar, label the search, and call `setToolbarActive` again after a filter changes so the tags always say what is on.',
+        ],
+    },
+    {
+        id: 'keys',
+        title: 'Key line and key cap',
+        group: 'Content',
+        classes: ['kp-keys', 'kp-kbd'],
+        exports: [],
+        intro: 'A line of keyboard shortcuts on one line under a list or beside a control: key caps (`kbd.kp-kbd`) with what each does. The markup is complete without any script; `setKeys(el, pairs)` writes it from pairs, and `Mod` is the platform’s modifier, ⌘ on a Mac and Ctrl elsewhere, in the set form and in markup (`data-kp-key="mod"` on a cap).',
+        whenToUse:
+            'To tell a reader which keys work where they are looking. For a full list of every shortcut use the Help sheet (`.kp-shortcuts`), which is a boxed dialog; this is the line that sits in the page.',
+        examples: [
+            {
+                title: 'Three shortcuts',
+                why: 'Keys pressed together share a `.kp-keys__caps`. The Ctrl cap is filled with ⌘ on a Mac by `attachKeys`.',
+                markup: `
+<div class="kp-keys" role="group" aria-label="Keyboard shortcuts">
+<span class="kp-keys__item"><kbd class="kp-kbd">/</kbd> search</span>
+<span class="kp-keys__item"><span class="kp-keys__caps"><kbd class="kp-kbd">↑</kbd><kbd class="kp-kbd">↓</kbd></span> move</span>
+<span class="kp-keys__item"><kbd class="kp-kbd" data-kp-key="mod">Ctrl</kbd><kbd class="kp-kbd">K</kbd> palette</span>
+</div>
+`,
+            },
+        ],
+        variants: [
+            { name: '.kp-kbd', what: 'One key cap: a small raised plate with the key’s text, in the page’s mono face.' },
+            { name: '.kp-keys--end', what: 'The line sits at the end of its row instead of the start.' },
+            { name: '.kp-keys__caps', what: 'Keys pressed together, kept side by side and never wrapped apart.' },
+        ],
+        accessibility: [
+            'Built in — the line is a named group, and each cap is real text, so a screen reader reads “slash, search”.',
+            'Yours — a cap only describes a shortcut; the page must bind the key, and a key that works only with a modifier must say so.',
+        ],
+    },
+    {
+        id: 'steplist',
+        title: 'Step list',
+        group: 'Feedback',
+        classes: ['kp-steplist'],
+        exports: [],
+        intro: 'The steps of one run, live: an update, an import or a deploy as a list whose items are waiting, running, done, failed or skipped. `data-state` on each item is the source; js/steplist.js keeps the rest in step with it: the spinner on the running step, a hidden state word after each title, `aria-current="step"`, and a polite status region that announces a change.',
+        whenToUse:
+            'For a process with named stages that a person watches or comes back to. For one measured quantity use a progress bar; for a form split in pages use the wizard.',
+        examples: [
+            {
+                title: 'An update in flight',
+                why: 'Give every step a note, so one arriving later moves nothing. Change a step with `setStep(list, id, { state })`, or set `data-state` yourself: the script follows either.',
+                markup: `
+<ol class="kp-steplist" aria-label="Update progress">
+<li class="kp-steplist__item" data-state="done" data-kp-step-id="pull"><span class="kp-steplist__mark" aria-hidden="true"></span><span class="kp-steplist__body"><span class="kp-steplist__title">Pull the images</span><span class="kp-steplist__note">Fetches what changed from the registry</span></span><time class="kp-steplist__time">4 s</time></li>
+<li class="kp-steplist__item" data-state="running" data-kp-step-id="restart"><span class="kp-steplist__mark" aria-hidden="true"></span><span class="kp-steplist__body"><span class="kp-steplist__title">Restart the stack</span><span class="kp-steplist__note">Stops, then starts every container</span></span></li>
+<li class="kp-steplist__item" data-state="pending" data-kp-step-id="check"><span class="kp-steplist__mark" aria-hidden="true"></span><span class="kp-steplist__body"><span class="kp-steplist__title">Check it answers</span><span class="kp-steplist__note">Waits for the health check</span></span></li>
+</ol>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-state', what: '`pending`, `running`, `done`, `failed` or `skipped`: the mark, the colour and the word follow it.' },
+            { name: '.kp-steplist__time', what: 'How long the step took, as the page prints it.' },
+            { name: '.kp-steplist__note', what: 'The one-line description under the title.' },
+        ],
+        accessibility: [
+            'Built in — each step reads “title, state”, the running one carries `aria-current="step"`, and a change is announced once through a hidden status region (a burst in one tick is one announcement).',
+            'Built in — the list itself is not a live region, so it does not re-read every note on every change.',
+            'Yours — name the list, and give a failed step a note that says what to do.',
+        ],
+    },
+    {
         id: 'tooltip',
         title: 'Tooltip',
         group: 'Feedback',
         classes: ['kp-tooltip'],
         exports: ['Tooltip'],
-        aliases: ['tooltip-owner', 'open-delay', 'close-delay', 'close-on-escape'],
+        aliases: ['tooltip-owner', 'open-delay', 'close-delay', 'close-on-escape', 'hovercard'],
         intro: 'A short label on the popover surface, anchored to the thing it describes. Both channels open it on hover and on focus, with a delay at both ends, and close it on Escape: the React component, and `attachTooltips` in js/overlays.js for a `.kp-tooltip-anchor` a server wrote.',
         whenToUse:
             'For naming a control whose glyph is not obvious, in a few words. Never for anything the reader needs — a tooltip cannot be reached on a touch screen, cannot be selected, and is gone the moment the pointer moves. Instructions, errors and help text belong in the page.',
@@ -2604,6 +2751,7 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
             { name: 'hover and focus', what: 'Both open it in the React channel, with a delay before and after, so a pointer crossing the control does not flash it.' },
             { name: 'interactive', what: 'A tooltip can be made to take the pointer, for one that contains a link; by default it does not, so it cannot get in the way.' },
             { name: 'Escape', what: 'Closes it, like every other layer in the package.' },
+            { name: 'data-kp-hovercard', what: 'The hover card: one tooltip for a whole page, filled when it opens (`attachHoverCards`), for anchors a page rebuilds or whose words are only known when the pointer arrives. The attribute holds the words, or a `fill(anchor, card)` callback supplies them; it is hoverable, dismissible and ignores touch.' },
             { name: 'pastel', what: 'In pastel a tooltip hangs in its holder, whose ::after draws its pass by anchor positioning; it lands small on the pass and leaves as that backwards.' },
         ],
         accessibility: [
@@ -2618,7 +2766,7 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
         id: 'nav-bar',
         title: 'Navigation bar',
         group: 'Navigation',
-        classes: ['kp-nav', 'kp-nav-wrap'],
+        classes: ['kp-nav', 'kp-nav-wrap', 'kp-tabbar'],
         exports: ['NavBar'],
         intro: 'The bar across the top of an application: a brand, a row of links, and room at the end for whatever the page keeps there. The current page is marked by weight and by a thicker underline, not by colour alone.',
         whenToUse:
@@ -2683,6 +2831,7 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
             },
         ],
         variants: [
+            { name: '.kp-tabbar', what: 'The bottom tab bar for phone widths: a `nav` of `.kp-tabbar__tab` links (an icon and a label each, a `.kp-badge` count on the one that needs the reader) and a More tab that opens a drawer through `data-kp-dialog`. It publishes its height on the root while it is on the screen, so a toast and the back-to-top control clear it; `setTabbarBadge`, `setTabbarCurrent` and `setTabbarBusy` change a tab from the page.' },
             { name: '.kp-nav__brand', what: 'The name at the leading edge, in bold. As a link it keeps its look and takes the page’s ordinary link underline, which is what says it is one.' },
             { name: '--kp-nav-close-time', what: 'For a theme that plays a close for the phone panel or a hover dropdown (cyberpunk): its length. The module holds the panel or the item open for that long while the close plays, then lets go. Unset, the phone panel closes after the theme\u2019s fold time, or 300 ms; the dropdowns close at once.' },
             { name: '.kp-nav__links', what: 'The row itself. It wraps rather than scrolling, so a narrow window gets two rows instead of a hidden third link.' },

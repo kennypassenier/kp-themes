@@ -84,6 +84,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/colorpicker.html">Colour picker</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/upload.html">File upload</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/wizard.html">Wizard</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/segmented.html">Segmented control and filter chips</a></li>
                         </ul>
                     </div>
                     <div class="sc-nav__group">
@@ -110,6 +111,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/state-word.html">State word</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/freshness.html">Freshness line</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/calendar.html">Month heatmap</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/toolbar.html">List toolbar</a></li>
                         </ul>
                     </div>
                     <div class="sc-nav__group">
@@ -126,6 +128,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/spinner.html">Spinner</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/skeleton.html">Skeleton</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/health.html">Health</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/steplist.html">Step list</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/tooltip.html" aria-current="page">Tooltip</a></li>
                         </ul>
                     </div>
@@ -152,6 +155,7 @@
                     <div class="sc-nav__group">
                         <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Content</h2>
                         <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/keys.html">Key line and key cap</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/media.html">Media</a></li>
                         </ul>
                     </div>
@@ -258,9 +262,11 @@
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
                     <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
-                            <tr><td><code>data-kp-close-delay</code></td><td>read</td></tr>
-                            <tr><td><code>data-kp-close-on-escape</code></td><td>written, read</td></tr>
-                            <tr><td><code>data-kp-open-delay</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-close-delay</code></td><td>written, read</td></tr>
+                            <tr><td><code>data-kp-close-on-escape</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-hovercard</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-hovercard-card</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-open-delay</code></td><td>written, read</td></tr>
                             <tr><td><code>data-kp-tooltip-attached</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-tooltip-owner</code></td><td>selector</td></tr>
                     </tbody></table></div>
@@ -291,12 +297,14 @@
                 <section class="kp-section" data-sc-section="events" id="events">
                     <h2 class="kp-fw-semibold">Events</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
+                            <tr><td><code>kp-hovercard</code></td><td>Dispatched on the anchor, bubbling, when the card opens or closes: `{ open, card, anchor }`.</td></tr>
                             <tr><td><code>kp-tooltip</code></td><td>Dispatched on a tooltip anchor, bubbling, when its tooltip opens or closes: `{ open, tooltip }`.</td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
                     <h2 class="kp-fw-semibold">Knobs</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
+                            <tr><td><code>--kp-hovercard-max-width</code></td><td><code>min(24rem, calc(100vw - 1rem))</code></td></tr>
                             <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
                             <tr><td><code>--kp-tooltip-max-width</code></td><td><code>18rem</code></td></tr>
                     </tbody></table></div>
@@ -318,6 +326,7 @@
                             <tr><td><code>hover and focus</code></td><td>Both open it in the React channel, with a delay before and after, so a pointer crossing the control does not flash it.</td></tr>
                             <tr><td><code>interactive</code></td><td>A tooltip can be made to take the pointer, for one that contains a link; by default it does not, so it cannot get in the way.</td></tr>
                             <tr><td><code>Escape</code></td><td>Closes it, like every other layer in the package.</td></tr>
+                            <tr><td><code>data-kp-hovercard</code></td><td>The hover card: one tooltip for a whole page, filled when it opens (`attachHoverCards`), for anchors a page rebuilds or whose words are only known when the pointer arrives. The attribute holds the words, or a `fill(anchor, card)` callback supplies them; it is hoverable, dismissible and ignores touch.</td></tr>
                             <tr><td><code>pastel</code></td><td>In pastel a tooltip hangs in its holder, whose ::after draws its pass by anchor positioning; it lands small on the pass and leaves as that backwards.</td></tr>
                     </tbody></table></div>
                 </section>
