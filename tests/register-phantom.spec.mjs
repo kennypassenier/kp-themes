@@ -190,7 +190,7 @@ for (const [channel, url] of CHANNELS) {
                 .toMatch(/^0(%|px) 0(%|px)$/);
         });
 
-        test('the dossier stamp is a rotated red plate, and the censor plates shear off on the trigger', async ({ page }) => {
+        test('the dossier stamp is a skewed red key-cap plate, and the censor plates shear off on the trigger', async ({ page }) => {
             await open(page, url);
             await page
                 .locator('.kp-boot__skip')
@@ -205,7 +205,8 @@ for (const [channel, url] of CHANNELS) {
             // alternative accepted a stamp that printed nothing [G4].
             const stamp = await pseudo(dossier, '::before', ['transform', 'background-color']);
             expect(await stampWord(page, '.kp-card[data-kp-reveal="emphasis"]', '::before', 'data-kp-label')).toMatch(/Calling card/i);
-            expect(stamp.transform).toMatch(/matrix\(0\.99/);
+            // The plate is skewed by the register's --kp-skew (-8deg: tan = -0.1405), not rotated.
+            expect(stamp.transform, 'the stamp is a skewed plate').toMatch(/^matrix\(1, 0, -0\.14\d*, 1, 0, 0\)$/);
             const mark = dossier.locator('mark').first();
             expect((await pseudo(mark, '::after', ['transform'])).transform, 'covered before the trigger').not.toMatch(/matrix\(0,|, 0, 0, 0\)/);
             await dossier.locator('[data-kp-reveal-trigger]').click();

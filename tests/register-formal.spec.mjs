@@ -2,8 +2,8 @@
 // "Fair Copy" (2026-09-08, scratchpad/formal-demo.html) reproduced by the
 // package, measured on the concept page under formal in both channels.
 //
-// What the demo showed and this suite holds: the headline that fades and
-// rises once and ends as its own untouched text (no glitch, no glyph —
+// What the demo showed and this suite holds: the headline that is ruled in
+// once (the demo faded and rose; the applied grammar rules it) and ends as its own untouched text (no glitch, no glyph —
 // the demo's per-word underline recolour could not be carried into the
 // shared markup and is a finding recorded in themes/formal/anatomy.md,
 // not built here); the lede's two marks washing in, staggered; the
@@ -75,12 +75,15 @@ const pseudo = (locator, pseudo, props) =>
 
 for (const [channel, url] of CHANNELS) {
     test.describe(`the formal register, ${channel}`, { tag: ['@theme:formal', '@component:page-effects', '@component:examples'] }, () => {
-        test('the headline fades and rises once, untouched — no glitch, no glyph', async ({ page }) => {
+        test('the headline is ruled in once, start to end, untouched — no glitch, no glyph, no fade', async ({ page }) => {
             // `arrive` leaves no state class of its own and no keyframe:
             // its whole mechanism is that the module HOLDS the headline in
-            // the register's armed rule (opacity 0, translateY(6px)) — two
-            // animation frames and then 500ms — before it adds
-            // `is-deciphered` and lets the transition carry it to rest. The
+            // the register's armed rule (a closed clip-path window,
+            // `inset(-0.5em 100% -0.5em -0.5em)`; since the grammar of
+            // 2026-10-08 nothing fades and nothing rises, so opacity stays 1
+            // and the transform none) — two animation frames and then
+            // 500ms — before it adds `is-deciphered` and lets the
+            // clip-path transition rule it in to rest. The
             // resting reads below are exactly what a theme declaring NO
             // routine produces, so on their own this test could not fail
             // [G3].
@@ -104,6 +107,7 @@ for (const [channel, url] of CHANNELS) {
                     window.kpAtLoad = {
                         opacity: Number.parseFloat(s.opacity),
                         transform: s.transform,
+                        clip: s.clipPath,
                         // What the browser is animating on this element,
                         // asked of the browser's own timeline rather than
                         // of a class the module wrote [KT13].
@@ -119,13 +123,17 @@ for (const [channel, url] of CHANNELS) {
             expect(await h1.locator('[data-glyph]').count(), 'no glyph noise').toBe(0);
             const atLoad = await page.evaluate(() => window.kpAtLoad);
             expect(atLoad, 'the headline and the effects attribute were both there when the page finished loading').not.toBeNull();
-            expect(atLoad.opacity, 'still painted invisible when the page finished loading').toBe(0);
-            expect(atLoad.transform, 'and still lifted off its resting place').not.toBe('none');
+            expect(atLoad.opacity, 'nothing fades: the headline is never translucent').toBe(1);
+            expect(atLoad.transform, 'nothing rises: it never leaves its place').toBe('none');
+            expect(atLoad.clip, 'still unruled (its clip window closed to the end side) when the page finished loading').toMatch(/100%/);
             expect(atLoad.running, 'and not yet moving: the module was still HOLDING it, which is all `arrive` is').toBe(0);
-            // Polled: `is-deciphered` lands when the 450ms transition it
-            // starts BEGINS, so a single read here catches it mid-flight.
-            await expect.poll(async () => h1.evaluate((el) => getComputedStyle(el).opacity), { timeout: 3000 }).toBe('1');
-            expect(await h1.evaluate((el) => getComputedStyle(el).transform), 'and it ends in its own place').toBe('none');
+            // Polled: `is-deciphered` lands when the clip-path transition it
+            // starts BEGINS, so a single read here catches it mid-flight
+            // (percentages still in the window); at rest the window is
+            // whole, in pixels only.
+            await expect.poll(async () => h1.evaluate((el) => getComputedStyle(el).clipPath), { timeout: 3000 }).not.toMatch(/%/);
+            expect(await h1.evaluate((el) => getComputedStyle(el).opacity), 'and it ends opaque').toBe('1');
+            expect(await h1.evaluate((el) => getComputedStyle(el).transform), 'and in its own place').toBe('none');
         });
 
         test('under reduced motion the headline and rule are at rest immediately, and the lede marks are already washed', async ({ page }) => {

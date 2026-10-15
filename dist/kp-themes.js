@@ -958,7 +958,7 @@ function install(ctx) {
         done();
       };
       finishers.push(finish2);
-      const keyframe = routine === "blur" ? "kp-word-in" : `kp-${routine}`;
+      const keyframe = routine === "blur" ? "kp-word-in" : routine === "shout" ? "kp-sig-phantom-fly" : `kp-${routine}`;
       later(finish2, TIMINGS[keyframe].durationMs + index * cfg.wordStagger + 50);
       return;
     }
