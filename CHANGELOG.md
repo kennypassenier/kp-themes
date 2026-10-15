@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+- **Added: the network graph can draw the admin dashboard's Map with no visible change** [kpadopt-graph, kpa-14; research/kpadopt-graph; draft, not yet judged].
+  Three opt-in attributes on `figure.kp-graph`, all off by default (the graph is drawn exactly as before without them):
+  `data-kp-graph-colour="fixed"` (one lightness and strength, `oklch(0.62 0.15 hue)`, in every theme; knobs `--kp-graph-node-l`, `--kp-graph-node-c`);
+  `data-kp-graph-labels="under"` (a label centred under its node, whole, no ellipsis, and the ellipse keeps its wide shape on a narrow box);
+  `data-kp-graph-chrome="inside"` (Show all in the picture's top corner and the hint along its foot, css only; a `graphHint` with line breaks sets
+  separate spans). New optional fields: a kind's `colour` (now optional), `dash`, `opacity`, `bent`. New knobs: `--kp-graph-box-radius`, `--kp-graph-box-fill`, `--kp-graph-edge-on-width`,
+  `--kp-graph-node-dim`, `--kp-graph-dot-cap`, `--kp-graph-flag-colour`, `--kp-graph-label-weight`, `--kp-graph-label-halo`, `--kp-graph-inset`.
+  `graphLayout()` takes `{ plain }` and `graphBends()` a set of `bent` kinds.
+  Overriding `--kp-graph-node-colour` per graph does not work (each node declares it), hence the attribute.
+
 ## 10.1.1 — 2026-10-15
 
 Released on Kenny's go (2026-10-15, form release-1011 "Nu uitbrengen, zonder suite"): a patch for two stylesheets a strict CSS parser refuses, found by JobTracker's Tailwind v4 build. No browser suite ran; the gates did, with the new CSS parse gate. The five known-noise tests of 10.1.0 (suite-noise-1011) wait for the next release suite.

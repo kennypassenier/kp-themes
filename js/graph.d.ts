@@ -23,7 +23,10 @@ export type GraphKind = {
     label: string;
     hint: string;
     style: 'solid' | 'dash' | 'dot' | 'long-dash';
-    colour: string;
+    colour?: string;
+    dash?: string;
+    opacity?: number;
+    bent?: boolean;
 };
 export type GraphData = {
     nodes: GraphNode[];
@@ -60,20 +63,26 @@ export declare const ringOf: (data: GraphData, hub: string | null) => GraphNode[
  * @param {GraphData} data
  * @param {number} W
  * @param {number} H
+ * @param {{ plain?: boolean }} [options] `plain`: keep the ellipse as on a wide box even when narrow (a graph whose labels sit under their nodes needs no room at the sides)
  * @returns {Map<string, { x: number, y: number, angle: number }>}
  */
-export declare function graphLayout(data: GraphData, W: number, H: number): Map<string, {
+export declare function graphLayout(data: GraphData, W: number, H: number, { plain }?: {
+    plain?: boolean;
+}): Map<string, {
     x: number;
     y: number;
     angle: number;
 }>;
 /**
  * Each edge's bend: edges between the same two nodes fan out (0, +26, −26,
- * +52 …) so two kinds never draw on top of each other.
+ * +52 …) so two kinds never draw on top of each other. A link of a `bent` kind
+ * (`kinds[].bent`) never draws straight: it takes the next step even when it
+ * is the only one between its two nodes.
  * @param {GraphEdge[]} edges
+ * @param {ReadonlySet<string>} [bent] the kinds that always bend
  * @returns {number[]}
  */
-export declare function graphBends(edges: GraphEdge[]): number[];
+export declare function graphBends(edges: GraphEdge[], bent?: ReadonlySet<string>): number[];
 /**
  * A label kept to `length` letters: the whole name, or its first letters and
  * an ellipsis (`Pump h…`).
