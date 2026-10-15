@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- **Fixed: phantom's cut-paper parts show their deep red second plate** [scope-143; Kenny, 2026-10-15 02:12, research/leftover-looks option 1 "one hard plate"].
+  A card, a menu, a toast and a dialog are clipped by `--kp-paperclip`, and a `clip-path` also clips the part's own `box-shadow`, so the plate the
+  register declared (G7) was never seen. css/phantom-register.css now widens the clip to take in the plate (`--kp-sig-ph-d`: 4 px on a card and a
+  menu, 6 px on a toast, 10 px on a dialog) so the part's own `box-shadow` shows, and one pseudo-element fills the bottom-end cut (`::after`; the
+  dialog's `::after` is its slash, so a dialog takes `::before`; a toast tone's corner follows the tone's plate through `--kp-sig-ph-corner`). The
+  dot mask of an arrival and a leave no longer clips at the border box (`mask-clip: no-clip` on the four parts and on `[data-kp-leaving]`), so the
+  plate is dots with the part while it is in the air. A card also takes `position: relative` (weakest rule), which is what the `data-kp-label`
+  tag's `::before` was always placed against: a labelled card without `data-kp-reveal` had its tag clipped away. A menu or theme menu inside a surface
+  (clip `none`) has no plate. Phantom-only selectors; no duration, curve or keyframe changed. Computed `clip-path`, `box-shadow` and the
+  pseudo-element equal the demo's option 1 on all four parts at 1280 and 390 px; no horizontal overflow at 1280, 390 and 320 px.
+
 - **Added: the React `DatePicker` follows rule 52 too, with a `dateFormat` prop** [datetime-M1; Kenny's go for 10.1.0]. `components/flow.jsx` called `parseDate`, `formatDate` and `datePattern` with their default `'locale'` format, so it wrote, hinted and read in the reader's order. It now defaults to `dateFormat="rule52"` (dd/mm/yyyy whatever the locale) and `dateFormat="locale"` brings the reader's own order back, the same option as `attachDatePickers(root, { dateFormat })`. The placeholder, the typed text, a picked day and `min`/`max` all follow it; the ISO value passed to `onChange` does not change.
 - **Fixed: the network graph's loading picture is the ghost of the network** [Kenny's go for 10.1.0, leftover 3; PACKAGE_FINDINGS 2026-10-06].
   js/graph.js drew one grey ellipse while loading. It now draws the coming network: the last drawn nodes and links, or a hub with a ring of six
