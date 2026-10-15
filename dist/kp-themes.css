@@ -24101,6 +24101,13 @@
         background: transparent;
         border-left: 0;
         clip-path: none;
+        box-shadow: none;
+    }
+
+    [data-theme='phantom']
+        :is(.kp-dialog, .kp-popover, .kp-toast, .kp-confirm, .kp-datepicker__panel, .kp-palette)
+        :is(.kp-menu, .kp-theme-menu__list)::after {
+        content: none;
     }
 
     /* The theme menu's wrapper is not a surface [scope-107]. Kenny,
@@ -25683,7 +25690,8 @@
         border-radius: 0;
         background: var(--background);
         color: var(--foreground);
-        box-shadow: 6px 6px 0 var(--kp-sig-ph-plate);
+        --kp-sig-ph-corner: var(--kp-sig-ph-plate);
+        box-shadow: 6px 6px 0 var(--kp-sig-ph-corner);
         rotate: var(--kp-land);
     }
 
@@ -25691,28 +25699,31 @@
         border-color: var(--success-foreground);
         background: var(--success);
         color: var(--success-foreground);
-        box-shadow: 6px 6px 0 hsl(from var(--success) h s calc(l + 16));
+        --kp-sig-ph-corner: hsl(from var(--success) h s calc(l + 16));
+        box-shadow: 6px 6px 0 var(--kp-sig-ph-corner);
     }
 
     [data-theme='phantom'] .kp-toast--info {
         border-color: var(--info-foreground);
         background: var(--info);
         color: var(--info-foreground);
-        box-shadow: 6px 6px 0 hsl(from var(--info) h s calc(l + 16));
+        --kp-sig-ph-corner: hsl(from var(--info) h s calc(l + 16));
+        box-shadow: 6px 6px 0 var(--kp-sig-ph-corner);
     }
 
     [data-theme='phantom'] .kp-toast--warning {
         border-color: var(--warning-foreground);
         background: var(--warning);
         color: var(--warning-foreground);
-        box-shadow: 6px 6px 0 hsl(from var(--warning) h s calc(l + 16));
+        --kp-sig-ph-corner: hsl(from var(--warning) h s calc(l + 16));
+        box-shadow: 6px 6px 0 var(--kp-sig-ph-corner);
     }
 
     [data-theme='phantom'] :is(.kp-toast--destructive, .kp-toast--error) {
         border-color: var(--foreground);
         background: var(--destructive);
         color: var(--destructive-foreground);
-        box-shadow: 6px 6px 0 var(--kp-sig-ph-plate);
+        box-shadow: 6px 6px 0 var(--kp-sig-ph-corner);
     }
 
     [data-theme='phantom'] .kp-toast__body {
@@ -25787,6 +25798,76 @@
     [data-theme='phantom'] .kp-dialog:not(.kp-drawer):dir(rtl)::after {
         clip-path: polygon(0 0, 60% 0, 100% 100%, 0 100%);
     }
+
+    /* ── The second plate, drawn [G7; Kenny, 2026-10-15 02:12, research/leftover-looks,
+       option 1 "one hard plate"] ────────────────────────────────────────
+       The paperclip is a clip-path, and a clip-path clips the part's own box-shadow,
+       so the deep red plate the register declared for a card, a menu, a toast and a
+       dialog was never seen. The clip is widened to take in the room of the plate
+       (--kp-sig-ph-d, the plate's offset: 4 px for a card and a menu, 6 px for a
+       toast, 10 px for a dialog) and the part's own box-shadow shows through it.
+       The bottom-end cut is the part's own corner: a box-shadow cannot reach it, so
+       one pseudo-element fills it, red where the plate shows through (the dialog's
+       ::after is its slash, so a dialog takes ::before). --kp-sig-ph-bw is the
+       border the pseudo-element is placed past. A part clipped by a theme's other
+       rules (a menu or a theme menu inside a surface) has no plate. */
+    [data-theme='phantom'] :is(.kp-card, .kp-menu, .kp-toast, .kp-dialog:not(.kp-drawer)) {
+        clip-path: polygon(
+            0 var(--kp-cut-size),
+            var(--kp-cut-size) 0,
+            100% 0,
+            100% var(--kp-sig-ph-d),
+            calc(100% + var(--kp-sig-ph-d)) var(--kp-sig-ph-d),
+            calc(100% + var(--kp-sig-ph-d)) calc(100% - var(--kp-cut-size) + var(--kp-sig-ph-d)),
+            calc(100% - var(--kp-cut-size) + var(--kp-sig-ph-d)) calc(100% + var(--kp-sig-ph-d)),
+            var(--kp-sig-ph-d) calc(100% + var(--kp-sig-ph-d)),
+            var(--kp-sig-ph-d) 100%,
+            0 100%
+        );
+    }
+
+    /* The mask of an arrival and a leave is the part's own dots; its default clip is the border box, which
+       would cut the plate while the part is in the air. */
+    [data-theme='phantom'] :is(.kp-card, .kp-menu, .kp-toast, .kp-dialog),
+    [data-theme='phantom'] [data-kp-leaving] {
+        mask-clip: no-clip;
+    }
+
+    [data-theme='phantom'] :is(.kp-card, .kp-menu) {
+        --kp-sig-ph-d: 4px;
+        --kp-sig-ph-bw: 0px;
+        --kp-sig-ph-corner: var(--kp-red-deep);
+        box-shadow: var(--kp-hard);
+    }
+
+    [data-theme='phantom'] .kp-toast {
+        --kp-sig-ph-d: 6px;
+        --kp-sig-ph-bw: 2px;
+    }
+
+    [data-theme='phantom'] .kp-dialog:not(.kp-drawer) {
+        --kp-sig-ph-d: 10px;
+        --kp-sig-ph-bw: 3px;
+        --kp-sig-ph-corner: var(--kp-red-deep);
+    }
+
+    /* A static part holds its pseudo-element (the weakest rule: a menu button's menu stays absolute). */
+    :where([data-theme='phantom']) :is(.kp-card, .kp-menu, .kp-toast) {
+        position: relative;
+    }
+
+    [data-theme='phantom'] :is(.kp-card, .kp-menu, .kp-toast)::after,
+    [data-theme='phantom'] .kp-dialog:not(.kp-drawer)::before {
+        content: '';
+        position: absolute;
+        inset: auto calc(-1 * var(--kp-sig-ph-bw)) calc(-1 * var(--kp-sig-ph-bw)) auto;
+        inline-size: var(--kp-cut-size);
+        block-size: var(--kp-cut-size);
+        z-index: 2;
+        background: linear-gradient(135deg, transparent 50%, var(--kp-sig-ph-corner) 50%);
+        pointer-events: none;
+    }
+
 
     [data-theme='phantom'] .kp-dialog__title {
         /* The title at the package's metrics [scope-87]: Kenny chose the fixed size
