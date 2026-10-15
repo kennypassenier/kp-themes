@@ -53,13 +53,18 @@ test('the fill, the tick, past the end and the tone, through setMeter() (C7.1–
     await page.locator('#meter').getByRole('button', { name: 'Book more' }).click();
     await expect(booked.locator('.kp-meter__mark')).toHaveAttribute('data-kp-over', '');
     await expect(booked).toHaveAttribute('aria-valuetext', '93% running; 130% booked for tonight');
-    const past = await booked.evaluate((el) => {
-        const mark = /** @type {HTMLElement} */ (el.querySelector('.kp-meter__mark'));
-        const box = el.getBoundingClientRect();
-        const m = mark.getBoundingClientRect();
-        return { arrow: getComputedStyle(mark, '::after').content, past: m.left >= box.right };
-    });
-    expect(past).toEqual({ arrow: '"›"', past: true });
+    // The ribbon slides to its place; read it once it has arrived.
+    await expect
+        .poll(() =>
+            booked.evaluate((el) => {
+                const mark = /** @type {HTMLElement} */ (el.querySelector('.kp-meter__mark'));
+                return {
+                    arrow: getComputedStyle(mark, '::after').content,
+                    past: mark.getBoundingClientRect().left >= el.getBoundingClientRect().right,
+                };
+            }),
+        )
+        .toEqual({ arrow: '"›"', past: true });
 
     // C7.3: red inside a destructive tile, amber for a warning meter on its own.
     const fills = await page.evaluate(() => {

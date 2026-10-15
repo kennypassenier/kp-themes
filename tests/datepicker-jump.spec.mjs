@@ -280,6 +280,8 @@ test(
     'the panel keeps its size across the three views, in every theme [scope-89]',
     { tag: ['@component:datepicker', '@sweep', '@component:catalogue'] },
     async ({ page }) => {
+        // Sixteen themes, three views each: measured at 28.5 s alone (2026-10-15), so it gets room.
+        test.setTimeout(60_000);
         await useEmptyRegister(page.context());
         await page.goto('/catalogue/datepicker.html');
         await waitForJudging(page);
@@ -290,21 +292,11 @@ test(
         const measure = async () => {
             // Read once the panel's arrival has finished: pastel's panel lands at 1.15 times its
             // size (a `scale`), and in its first frames it measures 302 px against its 262.
-            // Await the finite animations that are running now (an endless loop never finishes and
-            // is left out), capped at 3 s so a restarted transition cannot hold the read forever.
-            await panel.evaluate((el) =>
-                Promise.race([
-                    Promise.all(
-                        el
-                            .getAnimations({ subtree: true })
-                            .filter((a) => Number.isFinite(a.effect?.getComputedTiming().endTime ?? 0) && a.playState === 'running')
-                            .map((a) => a.finished.catch(() => undefined)),
-                    ),
-                    new Promise((resolve) => setTimeout(resolve, 3000)),
-                ]),
-            );
+            // The layout box is read (below), so a theme's arrival scale does not change the reading.
             return panel.evaluate((el) => {
-                const box = el.getBoundingClientRect();
+                // The layout box, not the painted one: a theme may turn or scale the panel as part of
+                // its look (pastel's sticker), and the size this test guards is the box's own.
+                const box = { width: /** @type {HTMLElement} */ (el).offsetWidth, height: /** @type {HTMLElement} */ (el).offsetHeight };
                 const spill = [...el.querySelectorAll('[data-kp-month], [data-kp-year]')].filter((c) => c.scrollWidth > c.clientWidth + 1).length;
                 return { w: box.width, h: box.height, spill };
             });
