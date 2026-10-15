@@ -1650,7 +1650,8 @@
         letter-spacing: 0.08em;
     }
 
-    [data-theme='synthwave'] .kp-diff__line {
+    [data-theme='synthwave'] .kp-diff__line,
+    [data-theme='synthwave'] .kp-diff__hunk {
         font-family: var(--kp-mono);
     }
 
@@ -1668,6 +1669,23 @@
         font-family: var(--kp-osd);
         color: var(--accent);
         letter-spacing: 0.08em;
+    }
+
+    /* The step list is arcade rows with a neon edge; the running row glows. */
+    [data-theme='synthwave'] .kp-steplist {
+        --kp-steplist-gap: 0.625rem;
+    }
+
+    [data-theme='synthwave'] .kp-steplist__item {
+        border-color: hsl(from var(--primary) h s l / 0.4);
+    }
+
+    [data-theme='synthwave'] .kp-steplist__item[data-state='running'] {
+        box-shadow: 0 0 12px hsl(from var(--primary) h s l / 0.45);
+    }
+
+    [data-theme='synthwave'] .kp-steplist__time {
+        font-family: var(--kp-mono);
     }
 
     [data-theme='synthwave'] .kp-timeline {
@@ -2412,6 +2430,7 @@
             .kp-cell-break,
             .kp-cell-truncate,
             .kp-diff__line,
+            .kp-diff__hunk,
             .kp-tree,
             .kp-colorpicker__value,
             .kp-spec,

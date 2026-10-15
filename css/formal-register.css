@@ -799,6 +799,18 @@
         border-radius: var(--radius);
     }
 
+    /* The step list is a ruled ledger: a hairline under each entry, no plate
+       around it; the running entry is set in weight and its mark. */
+    [data-theme='formal'] .kp-steplist {
+        --kp-steplist-gap: 0;
+    }
+
+    [data-theme='formal'] .kp-steplist__item {
+        border-width: 0 0 1px;
+        border-radius: 0;
+        background: transparent;
+    }
+
     [data-theme='formal'] .kp-timeline {
         border-inline-start: 1px solid var(--border);
     }

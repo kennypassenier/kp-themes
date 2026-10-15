@@ -1297,7 +1297,8 @@
         text-transform: uppercase;
     }
 
-    [data-theme='phantom'] .kp-diff__line {
+    [data-theme='phantom'] .kp-diff__line,
+    [data-theme='phantom'] .kp-diff__hunk {
         font-family: var(--kp-mono);
     }
 
@@ -1317,6 +1318,21 @@
         letter-spacing: 0.08em;
         text-transform: uppercase;
         font-size: 0.75rem;
+    }
+
+    /* The step list is a stack of cut-out cards with a red cut at the left;
+       the running card's cut is the primary. */
+    [data-theme='phantom'] .kp-steplist {
+        --kp-steplist-mark-radius: 0;
+    }
+
+    [data-theme='phantom'] .kp-steplist__item {
+        border-radius: 0;
+        border-inline-start: 4px solid var(--border-strong);
+    }
+
+    [data-theme='phantom'] .kp-steplist__item[data-state='running'] {
+        border-inline-start-color: var(--primary);
     }
 
     [data-theme='phantom'] .kp-timeline {

@@ -55,6 +55,12 @@
  * @property {(text: string) => string} agoStale  What a freshness line with `data-kp-ago-announce="state"` announces once it turns stale [scope-143]
  * @property {(text: string) => string} agoFresh  What it announces once it is fresh again [scope-143]
  * @property {string} agoInLiveRegion  The console warning for a ticking line inside a live region [scope-143]
+ * @property {string} stepPending  A step list's waiting step, as a screen reader hears it (js/steplist.js)
+ * @property {string} stepRunning  The step being run
+ * @property {string} stepDone  A finished step
+ * @property {string} stepFailed  A step that failed
+ * @property {string} stepSkipped  A step that was left out
+ * @property {(title: string, state: string) => string} stepAnnounce  What the list's status region says when a step changes, "Pull the images: running"
  * @property {string} busy
  * @property {string} close
  * @property {string} menu          The accessible name of a collapsed navigation's toggle
@@ -354,6 +360,13 @@ export const DEFAULT_STRINGS = Object.freeze({
     agoFresh: (text) => `${text}, up to date`,
     agoInLiveRegion:
         'kp-themes: a ticking freshness line (data-kp-ago) sits inside a live region, so a screen reader would hear it every second. It is silenced (aria-live="off"); move it out of the region, or use data-kp-ago-announce="state".',
+    // A step list's states and its announcement (js/steplist.js).
+    stepPending: 'waiting',
+    stepRunning: 'running',
+    stepDone: 'done',
+    stepFailed: 'failed',
+    stepSkipped: 'skipped',
+    stepAnnounce: (title, state) => `${title}: ${state}`,
     busy: 'Working…',
     close: 'Close',
     // The nav toggle carries no glyph of its own — this package ships

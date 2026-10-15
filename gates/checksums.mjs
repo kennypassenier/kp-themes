@@ -134,6 +134,7 @@ export const FILES = [
     'js/palette.js',
     'js/patterns.js',
     'js/progressbar.js',
+    'js/steplist.js',
     'js/loading-pieces.js',
     'js/motion.js',
     'js/update.js',

@@ -970,8 +970,22 @@
         border-radius: 0;
     }
 
-    [data-theme='deco'] .kp-diff__line {
+    [data-theme='deco'] .kp-diff__line,
+    [data-theme='deco'] .kp-diff__hunk {
         font-family: var(--theme-font-mono);
+    }
+
+    /* The step list is a gilt schedule: square corners, a fine inner rule
+       set in from the frame, squared marks. */
+    [data-theme='deco'] .kp-steplist {
+        --kp-steplist-mark-radius: 0;
+    }
+
+    [data-theme='deco'] .kp-steplist__item {
+        border-color: var(--border-strong);
+        border-radius: 0;
+        outline: 1px solid var(--border);
+        outline-offset: -4px;
     }
 
     [data-theme='deco'] .kp-timeline {

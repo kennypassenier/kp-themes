@@ -1371,7 +1371,22 @@
         border: 1px solid var(--border-strong);
     }
 
-    [data-theme='dark'] .kp-diff__line {
+    [data-theme='dark'] .kp-diff__line,
+    [data-theme='dark'] .kp-diff__hunk {
+        font-family: var(--theme-font-mono);
+    }
+
+    /* The step list is a status board: machined rows, squared lamps, the
+       time in the mono face. */
+    [data-theme='dark'] .kp-steplist {
+        --kp-steplist-mark-radius: 3px;
+    }
+
+    [data-theme='dark'] .kp-steplist__item {
+        border-color: var(--border-strong);
+    }
+
+    [data-theme='dark'] .kp-steplist__time {
         font-family: var(--theme-font-mono);
     }
 

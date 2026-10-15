@@ -1,0 +1,660 @@
+<!doctype html>
+<html
+    lang="en"
+    data-theme="formal"
+    data-review="kpadopt-feedback"
+    data-review-themes="formal,light,dark,cyberpunk,synthwave,pastel,terminal,forest,blueprint,solstice,brutalism,deco,phantom,grotesk,nostromo,titanium"
+>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes: feedback components (toast that waits, step list, diff hunk header)</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="demo.css" />
+    </head>
+    <body>
+        <main class="kf-page">
+            <header class="kf-intro">
+                <h1>Feedback components for the admin dashboard</h1>
+                <p>
+                    Three things the dashboard still draws itself: a toast that waits while it is being read, a live list of the steps of a run, and
+                    the
+                    <code>@@</code> header of a diff hunk. All three are the package's own now: <code>toast()</code> in
+                    <code>js/overlays.js</code> (new options), <code>.kp-steplist</code> with <code>js/steplist.js</code> (new), and
+                    <code>.kp-diff__hunk</code> in <code>css/components.css</code> (new row).
+                </p>
+                <p>
+                    Mock on this page: everything prefixed <code>kf-</code>, the sample data (a water company's pump houses and an update of its
+                    dashboard) and the scripted run. Package: every <code>kp-</code> class and the three scripts. Each section also shows the
+                    component in a 360 px column.
+                </p>
+            </header>
+
+            <section
+                class="kf-sec"
+                id="toast"
+                data-review-item="toast"
+                data-review-components="toast toasts"
+                data-review-title="A toast that waits while it is read"
+                aria-labelledby="h-toast"
+            >
+                <div class="kf-sec__head">
+                    <h2 id="h-toast">A toast that waits while it is read</h2>
+                    <p>
+                        <code>toast(content, { pause, linger, close, sticky })</code>. While the pointer is on a toast or focus is in it the clock
+                        stops ( <code>data-kp-paused</code>, event <code>kp-toast-pause</code>); <code>linger</code> ms after both are gone (default 2
+                        s) it leaves. <code>close: true</code> adds the close button; <code>sticky: true</code> is "stay until closed" (no clock,
+                        close button). Esc on a focused toast closes it. A touch does not count as hovering. Without the new options a toast behaves
+                        as before, except that it now waits (set <code>pause: false</code> for the old timer).
+                    </p>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Press <b>Short, hover me</b> and put the pointer on the toast before 3 s: it must stay, however long you hold it, and leave
+                        about 1.5 s after you move away. Tab to a button on a toast with an action: it stays while focus is in it; Esc on it closes
+                        it. The sticky toast has a close button and never leaves by itself. The readout under the buttons says when the clock stopped
+                        and started. The plate is the formal toast with its leading rule; a paused toast must look exactly like a running one (nothing
+                        flickers when the pointer arrives).
+                    </p>
+                    <p data-for="light">
+                        Press <b>Short, hover me</b> and put the pointer on the toast before 3 s: it must stay, however long you hold it, and leave
+                        about 1.5 s after you move away. Tab to a button on a toast with an action: it stays while focus is in it; Esc on it closes
+                        it. The sticky toast has a close button and never leaves by itself. The readout under the buttons says when the clock stopped
+                        and started. The plate is soft; the close button sits at the end, level with the words, and the hover ground is a shade of the
+                        toast's own plate.
+                    </p>
+                    <p data-for="dark">
+                        Press <b>Short, hover me</b> and put the pointer on the toast before 3 s: it must stay, however long you hold it, and leave
+                        about 1.5 s after you move away. Tab to a button on a toast with an action: it stays while focus is in it; Esc on it closes
+                        it. The sticky toast has a close button and never leaves by itself. The readout under the buttons says when the clock stopped
+                        and started. Check the close and action buttons on the success and error plates: their words must still read when hovered.
+                    </p>
+                    <p data-for="cyberpunk">
+                        Press <b>Short, hover me</b> and put the pointer on the toast before 3 s: it must stay, however long you hold it, and leave
+                        about 1.5 s after you move away. Tab to a button on a toast with an action: it stays while focus is in it; Esc on it closes
+                        it. The sticky toast has a close button and never leaves by itself. The readout under the buttons says when the clock stopped
+                        and started. The toast arrives with its glitch; hovering it must not re-run the arrival, and its plate edge must stay intact
+                        while paused.
+                    </p>
+                    <p data-for="synthwave">
+                        Press <b>Short, hover me</b> and put the pointer on the toast before 3 s: it must stay, however long you hold it, and leave
+                        about 1.5 s after you move away. Tab to a button on a toast with an action: it stays while focus is in it; Esc on it closes
+                        it. The sticky toast has a close button and never leaves by itself. The readout under the buttons says when the clock stopped
+                        and started. The neon edge stays steady while the pointer is on the toast; the close button is a square-ish icon button at the
+                        end.
+                    </p>
+                    <p data-for="pastel">
+                        Press <b>Short, hover me</b> and put the pointer on the toast before 3 s: it must stay, however long you hold it, and leave
+                        about 1.5 s after you move away. Tab to a button on a toast with an action: it stays while focus is in it; Esc on it closes
+                        it. The sticky toast has a close button and never leaves by itself. The readout under the buttons says when the clock stopped
+                        and started. The toast arrives with its bounce; hovering must not make it bounce again. The close button must not overlap the
+                        rounded corner.
+                    </p>
+                    <p data-for="terminal">
+                        Press <b>Short, hover me</b> and put the pointer on the toast before 3 s: it must stay, however long you hold it, and leave
+                        about 1.5 s after you move away. Tab to a button on a toast with an action: it stays while focus is in it; Esc on it closes
+                        it. The sticky toast has a close button and never leaves by itself. The readout under the buttons says when the clock stopped
+                        and started. The close mark is a plain multiplication sign in the mono face; the action button stays at the end whatever the
+                        text length.
+                    </p>
+                    <p data-for="forest">
+                        Press <b>Short, hover me</b> and put the pointer on the toast before 3 s: it must stay, however long you hold it, and leave
+                        about 1.5 s after you move away. Tab to a button on a toast with an action: it stays while focus is in it; Esc on it closes
+                        it. The sticky toast has a close button and never leaves by itself. The readout under the buttons says when the clock stopped
+                        and started. The toast keeps its trail rule; with a close button after an action, the two sit together at the end with one
+                        gap.
+                    </p>
+                    <p data-for="blueprint">
+                        Press <b>Short, hover me</b> and put the pointer on the toast before 3 s: it must stay, however long you hold it, and leave
+                        about 1.5 s after you move away. Tab to a button on a toast with an action: it stays while focus is in it; Esc on it closes
+                        it. The sticky toast has a close button and never leaves by itself. The readout under the buttons says when the clock stopped
+                        and started. The toast is a drafted plate; the buttons keep their dashed or plain frame and still align down the stack.
+                    </p>
+                    <p data-for="solstice">
+                        Press <b>Short, hover me</b> and put the pointer on the toast before 3 s: it must stay, however long you hold it, and leave
+                        about 1.5 s after you move away. Tab to a button on a toast with an action: it stays while focus is in it; Esc on it closes
+                        it. The sticky toast has a close button and never leaves by itself. The readout under the buttons says when the clock stopped
+                        and started. The plate stays warm on hover; the close button reads against the plate colour of every meaning.
+                    </p>
+                    <p data-for="brutalism">
+                        Press <b>Short, hover me</b> and put the pointer on the toast before 3 s: it must stay, however long you hold it, and leave
+                        about 1.5 s after you move away. Tab to a button on a toast with an action: it stays while focus is in it; Esc on it closes
+                        it. The sticky toast has a close button and never leaves by itself. The readout under the buttons says when the clock stopped
+                        and started. The hard shadow stays while paused; the close button has a heavy edge and is not clipped by the slab.
+                    </p>
+                    <p data-for="deco">
+                        Press <b>Short, hover me</b> and put the pointer on the toast before 3 s: it must stay, however long you hold it, and leave
+                        about 1.5 s after you move away. Tab to a button on a toast with an action: it stays while focus is in it; Esc on it closes
+                        it. The sticky toast has a close button and never leaves by itself. The readout under the buttons says when the clock stopped
+                        and started. The gilt frame is intact with a close button; the action and the close sit at the same baseline.
+                    </p>
+                    <p data-for="phantom">
+                        Press <b>Short, hover me</b> and put the pointer on the toast before 3 s: it must stay, however long you hold it, and leave
+                        about 1.5 s after you move away. Tab to a button on a toast with an action: it stays while focus is in it; Esc on it closes
+                        it. The sticky toast has a close button and never leaves by itself. The readout under the buttons says when the clock stopped
+                        and started. The card is slightly turned in this theme; the close button must be placed by the card, not by the page, and stay
+                        clickable.
+                    </p>
+                    <p data-for="grotesk">
+                        Press <b>Short, hover me</b> and put the pointer on the toast before 3 s: it must stay, however long you hold it, and leave
+                        about 1.5 s after you move away. Tab to a button on a toast with an action: it stays while focus is in it; Esc on it closes
+                        it. The sticky toast has a close button and never leaves by itself. The readout under the buttons says when the clock stopped
+                        and started. The toast is flat type on a rule; the close button is a plain cross at the grid's end line.
+                    </p>
+                    <p data-for="nostromo">
+                        Press <b>Short, hover me</b> and put the pointer on the toast before 3 s: it must stay, however long you hold it, and leave
+                        about 1.5 s after you move away. Tab to a button on a toast with an action: it stays while focus is in it; Esc on it closes
+                        it. The sticky toast has a close button and never leaves by itself. The readout under the buttons says when the clock stopped
+                        and started. The amber plate keeps its readout look; buttons at the end line up down the whole stack.
+                    </p>
+                    <p data-for="titanium">
+                        Press <b>Short, hover me</b> and put the pointer on the toast before 3 s: it must stay, however long you hold it, and leave
+                        about 1.5 s after you move away. Tab to a button on a toast with an action: it stays while focus is in it; Esc on it closes
+                        it. The sticky toast has a close button and never leaves by itself. The readout under the buttons says when the clock stopped
+                        and started. Machined plate: no easing in or out, and nothing animates when the clock stops; the buttons seat at the end.
+                    </p>
+                </div>
+                <div class="kf-actions" role="group" aria-label="Raise a toast">
+                    <button type="button" class="kp-button kp-button--sm" data-kf-toast="plain">Plain, 6 s</button>
+                    <button type="button" class="kp-button kp-button--sm" data-kf-toast="success">Success</button>
+                    <button type="button" class="kp-button kp-button--sm" data-kf-toast="info">Info</button>
+                    <button type="button" class="kp-button kp-button--sm" data-kf-toast="warning">Warning</button>
+                    <button type="button" class="kp-button kp-button--sm" data-kf-toast="destructive">Destructive</button>
+                    <button type="button" class="kp-button kp-button--sm" data-kf-toast="error">Error, 10 s + close</button>
+                    <button type="button" class="kp-button kp-button--sm" data-kf-toast="assertive">Assertive, sticky</button>
+                    <button type="button" class="kp-button kp-button--sm" data-kf-toast="sticky">Sticky with Open</button>
+                    <button type="button" class="kp-button kp-button--sm" data-kf-toast="undo">Undo, 15 s + close</button>
+                    <button type="button" class="kp-button kp-button--sm" data-kf-toast="long">Long text, action, close</button>
+                    <button type="button" class="kp-button kp-button--sm" data-kf-toast="short">Short, hover me (3 s)</button>
+                    <button type="button" class="kp-button kp-button--sm" data-kf-toast="nopause">pause: false</button>
+                    <button type="button" class="kp-button kp-button--sm" data-kf-toast="stack">Five at once (max 3)</button>
+                    <button type="button" class="kp-button kp-button--sm kp-button--ghost" id="kf-toast-clear">Dismiss all</button>
+                </div>
+                <div class="kf-cols">
+                    <div>
+                        <p class="kf-label">Live toasts arrive here (the stage is the window)</p>
+                        <div class="kf-stage"><div class="kp-toasts" id="kf-live" role="status" aria-live="polite"></div></div>
+                    </div>
+                    <div>
+                        <p class="kf-label">What the toast tells the page</p>
+                        <pre class="kf-readout" id="kf-toast-log" aria-live="off"></pre>
+                    </div>
+                </div>
+                <div class="kf-cols">
+                    <div>
+                        <p class="kf-label">Every state, static, full width</p>
+                        <div class="kf-stage">
+                            <div class="kf-toast-col" role="group" aria-label="Toast states, static">
+                                <div class="kp-toast">
+                                    <span class="kp-toast__body">Default. Saved; the handover note is visible to the day shift.</span
+                                    ><button type="button" class="kp-button kp-button--ghost">Undo</button>
+                                </div>
+                                <div class="kp-toast">
+                                    <span class="kp-toast__body">With a close button and an action (the dashboard's "held" toast).</span
+                                    ><button type="button" class="kp-button kp-button--ghost">Open</button
+                                    ><button type="button" class="kp-icon-button kp-toast__close" aria-label="Close">×</button>
+                                </div>
+                                <div class="kp-toast">
+                                    <span class="kp-toast__body">Action disabled while something runs.</span
+                                    ><button type="button" class="kp-button kp-button--ghost" disabled>Undo</button>
+                                </div>
+                                <div class="kp-toast" aria-busy="true">
+                                    <span class="kp-spinner" aria-hidden="true" style="--kp-spinner-size: 1rem"></span
+                                    ><span class="kp-toast__body">Loading: pulling images, 3 of 5.</span>
+                                </div>
+                                <div class="kp-toast kp-toast--success" data-kp-variant="success" data-kp-paused>
+                                    <span class="kp-toast__body"
+                                        ><b>Success:</b> paused, as it looks while the pointer is on it. Nothing changes.</span
+                                    ><button type="button" class="kp-icon-button kp-toast__close" aria-label="Close">×</button>
+                                </div>
+                                <div class="kp-toast kp-toast--info" data-kp-variant="info">
+                                    <span class="kp-toast__body"><b>Info:</b> pump house 4 reports again.</span
+                                    ><button type="button" class="kp-icon-button kp-toast__close" aria-label="Close">×</button>
+                                </div>
+                                <div class="kp-toast kp-toast--warning" data-kp-variant="warning">
+                                    <span class="kp-toast__body"><b>Warning:</b> line 2 is 0.3 bar under its limit.</span
+                                    ><button type="button" class="kp-icon-button kp-toast__close" aria-label="Close">×</button>
+                                </div>
+                                <div class="kp-toast kp-toast--destructive" data-kp-variant="destructive">
+                                    <span class="kp-toast__body"><b>Destructive:</b> line 2 was taken out of service.</span
+                                    ><button type="button" class="kp-icon-button kp-toast__close" aria-label="Close">×</button>
+                                </div>
+                                <div class="kp-toast kp-toast--error" data-kp-variant="error">
+                                    <span class="kp-toast__body"
+                                        ><b>Error:</b> the export stopped at 03:12, after 41 of 60 files; the ones written are complete.</span
+                                    ><button type="button" class="kp-button kp-button--ghost">Run again</button
+                                    ><button type="button" class="kp-icon-button kp-toast__close" aria-label="Close">×</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="kf-narrow">
+                        <p class="kf-label">Phone width, long text with action and close</p>
+                        <div class="kf-stage" style="min-block-size: 0">
+                            <div class="kf-toast-col">
+                                <div class="kp-toast kp-toast--warning" data-kp-variant="warning">
+                                    <span class="kp-toast__body"
+                                        ><b>Warning:</b> the nightly export of the pressure telemetry for pump house 4 did not finish; 19 of 60 files
+                                        are missing.</span
+                                    ><button type="button" class="kp-button kp-button--ghost">Run again</button
+                                    ><button type="button" class="kp-icon-button kp-toast__close" aria-label="Close">×</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="kf-sec"
+                id="steplist"
+                data-review-item="steplist"
+                data-review-components="steplist"
+                data-review-title="The steps of a run, live"
+                aria-labelledby="h-steplist"
+            >
+                <div class="kf-sec__head">
+                    <h2 id="h-steplist">The steps of a run, live</h2>
+                    <p>
+                        <code>.kp-steplist</code> is a new component, not a variant of the timeline (which is what happened, in the past, and never
+                        changes) or of the wizard steps (where a person is in a form, and they move it). Each <code>.kp-steplist__item</code> has
+                        <code>data-state</code> of pending, running, done, failed or skipped; <code>js/steplist.js</code> adds the spinner, the spoken
+                        state and the status region. <code>setStep(list, 'migrate', { state: 'done', time: '3.1 s' })</code> changes a step; setting
+                        <code>data-state</code> by hand is followed too. Event: <code>kp-steplist-step</code>.
+                    </p>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Press <b>Run the update</b>: each step turns running (the theme's own spinner), then done with a tick and its time; nothing
+                        below it moves. <b>Run, and fail at step 3</b>: step 3 gets a cross, the two after it are skipped (dashed ring and a dash).
+                        Compare each state without colour: ring / spinner / tick disc / cross disc / dashed ring. The line under the list is what a
+                        screen reader hears, in words. In the 360 px column every title and note wraps and the time stays at the right. A ruled
+                        ledger: a hairline under each entry, no plate; round marks.
+                    </p>
+                    <p data-for="light">
+                        Press <b>Run the update</b>: each step turns running (the theme's own spinner), then done with a tick and its time; nothing
+                        below it moves. <b>Run, and fail at step 3</b>: step 3 gets a cross, the two after it are skipped (dashed ring and a dash).
+                        Compare each state without colour: ring / spinner / tick disc / cross disc / dashed ring. The line under the list is what a
+                        screen reader hears, in words. In the 360 px column every title and note wraps and the time stays at the right. Soft daylight
+                        cards with a hair of shadow; round marks.
+                    </p>
+                    <p data-for="dark">
+                        Press <b>Run the update</b>: each step turns running (the theme's own spinner), then done with a tick and its time; nothing
+                        below it moves. <b>Run, and fail at step 3</b>: step 3 gets a cross, the two after it are skipped (dashed ring and a dash).
+                        Compare each state without colour: ring / spinner / tick disc / cross disc / dashed ring. The line under the list is what a
+                        screen reader hears, in words. In the 360 px column every title and note wraps and the time stays at the right. Status-board
+                        rows with a strong edge, small square lamps (3 px corners), the time in the mono face.
+                    </p>
+                    <p data-for="cyberpunk">
+                        Press <b>Run the update</b>: each step turns running (the theme's own spinner), then done with a tick and its time; nothing
+                        below it moves. <b>Run, and fail at step 3</b>: step 3 gets a cross, the two after it are skipped (dashed ring and a dash).
+                        Compare each state without colour: ring / spinner / tick disc / cross disc / dashed ring. The line under the list is what a
+                        screen reader hears, in words. In the 360 px column every title and note wraps and the time stays at the right. HUD rows:
+                        square corners, a hairline frame, and a 3 px bar at the left of the running and the failed row; square marks.
+                    </p>
+                    <p data-for="synthwave">
+                        Press <b>Run the update</b>: each step turns running (the theme's own spinner), then done with a tick and its time; nothing
+                        below it moves. <b>Run, and fail at step 3</b>: step 3 gets a cross, the two after it are skipped (dashed ring and a dash).
+                        Compare each state without colour: ring / spinner / tick disc / cross disc / dashed ring. The line under the list is what a
+                        screen reader hears, in words. In the 360 px column every title and note wraps and the time stays at the right. Arcade rows
+                        with a neon edge; the running row glows. The glow is a static shadow, not a pulse.
+                    </p>
+                    <p data-for="pastel">
+                        Press <b>Run the update</b>: each step turns running (the theme's own spinner), then done with a tick and its time; nothing
+                        below it moves. <b>Run, and fail at step 3</b>: step 3 gets a cross, the two after it are skipped (dashed ring and a dash).
+                        Compare each state without colour: ring / spinner / tick disc / cross disc / dashed ring. The line under the list is what a
+                        screen reader hears, in words. In the 360 px column every title and note wraps and the time stays at the right. Round
+                        stickers, 2 px edges; a done sticker sits a little crooked (-8 degrees).
+                    </p>
+                    <p data-for="terminal">
+                        Press <b>Run the update</b>: each step turns running (the theme's own spinner), then done with a tick and its time; nothing
+                        below it moves. <b>Run, and fail at step 3</b>: step 3 gets a cross, the two after it are skipped (dashed ring and a dash).
+                        Compare each state without colour: ring / spinner / tick disc / cross disc / dashed ring. The line under the list is what a
+                        screen reader hears, in words. In the 360 px column every title and note wraps and the time stays at the right. Program
+                        output: no plates, a dashed rule at the left (solid on the running line), square marks with plain + / x / - instead of a tick,
+                        cross and dash.
+                    </p>
+                    <p data-for="forest">
+                        Press <b>Run the update</b>: each step turns running (the theme's own spinner), then done with a tick and its time; nothing
+                        below it moves. <b>Run, and fail at step 3</b>: step 3 gets a cross, the two after it are skipped (dashed ring and a dash).
+                        Compare each state without colour: ring / spinner / tick disc / cross disc / dashed ring. The line under the list is what a
+                        screen reader hears, in words. In the 360 px column every title and note wraps and the time stays at the right. A trail: each
+                        stop has a 4 px blaze at the left in the foreground, the running one in the primary.
+                    </p>
+                    <p data-for="blueprint">
+                        Press <b>Run the update</b>: each step turns running (the theme's own spinner), then done with a tick and its time; nothing
+                        below it moves. <b>Run, and fail at step 3</b>: step 3 gets a cross, the two after it are skipped (dashed ring and a dash).
+                        Compare each state without colour: ring / spinner / tick disc / cross disc / dashed ring. The line under the list is what a
+                        screen reader hears, in words. In the 360 px column every title and note wraps and the time stays at the right. A drafting
+                        schedule: transparent rows with dashed frames, square marks, the running row solid; times in the mono face.
+                    </p>
+                    <p data-for="solstice">
+                        Press <b>Run the update</b>: each step turns running (the theme's own spinner), then done with a tick and its time; nothing
+                        below it moves. <b>Run, and fail at step 3</b>: step 3 gets a cross, the two after it are skipped (dashed ring and a dash).
+                        Compare each state without colour: ring / spinner / tick disc / cross disc / dashed ring. The line under the list is what a
+                        screen reader hears, in words. In the 360 px column every title and note wraps and the time stays at the right. Embers: a done
+                        step keeps a soft warm halo around its mark.
+                    </p>
+                    <p data-for="brutalism">
+                        Press <b>Run the update</b>: each step turns running (the theme's own spinner), then done with a tick and its time; nothing
+                        below it moves. <b>Run, and fail at step 3</b>: step 3 gets a cross, the two after it are skipped (dashed ring and a dash).
+                        Compare each state without colour: ring / spinner / tick disc / cross disc / dashed ring. The line under the list is what a
+                        screen reader hears, in words. In the 360 px column every title and note wraps and the time stays at the right. Slabs: heavy
+                        line, hard shadow, square marks with the heavy line; the running slab is filled with the muted plate.
+                    </p>
+                    <p data-for="deco">
+                        Press <b>Run the update</b>: each step turns running (the theme's own spinner), then done with a tick and its time; nothing
+                        below it moves. <b>Run, and fail at step 3</b>: step 3 gets a cross, the two after it are skipped (dashed ring and a dash).
+                        Compare each state without colour: ring / spinner / tick disc / cross disc / dashed ring. The line under the list is what a
+                        screen reader hears, in words. In the 360 px column every title and note wraps and the time stays at the right. A gilt
+                        schedule: square corners, a fine inner rule set 4 px in from the frame, square marks.
+                    </p>
+                    <p data-for="phantom">
+                        Press <b>Run the update</b>: each step turns running (the theme's own spinner), then done with a tick and its time; nothing
+                        below it moves. <b>Run, and fail at step 3</b>: step 3 gets a cross, the two after it are skipped (dashed ring and a dash).
+                        Compare each state without colour: ring / spinner / tick disc / cross disc / dashed ring. The line under the list is what a
+                        screen reader hears, in words. In the 360 px column every title and note wraps and the time stays at the right. Cut-out cards
+                        with a 4 px cut at the left, the running one in the primary; square marks.
+                    </p>
+                    <p data-for="grotesk">
+                        Press <b>Run the update</b>: each step turns running (the theme's own spinner), then done with a tick and its time; nothing
+                        below it moves. <b>Run, and fail at step 3</b>: step 3 gets a cross, the two after it are skipped (dashed ring and a dash).
+                        Compare each state without colour: ring / spinner / tick disc / cross disc / dashed ring. The line under the list is what a
+                        screen reader hears, in words. In the 360 px column every title and note wraps and the time stays at the right. A timetable:
+                        no plates, a heavy 2 px rule under each line, square index marks, times in bold.
+                    </p>
+                    <p data-for="nostromo">
+                        Press <b>Run the update</b>: each step turns running (the theme's own spinner), then done with a tick and its time; nothing
+                        below it moves. <b>Run, and fail at step 3</b>: step 3 gets a cross, the two after it are skipped (dashed ring and a dash).
+                        Compare each state without colour: ring / spinner / tick disc / cross disc / dashed ring. The line under the list is what a
+                        screen reader hears, in words. In the 360 px column every title and note wraps and the time stays at the right. Indicator
+                        panel: dark rows, 2 px lamps, the running row lit with an inner 1 px primary line, readout times.
+                    </p>
+                    <p data-for="titanium">
+                        Press <b>Run the update</b>: each step turns running (the theme's own spinner), then done with a tick and its time; nothing
+                        below it moves. <b>Run, and fail at step 3</b>: step 3 gets a cross, the two after it are skipped (dashed ring and a dash).
+                        Compare each state without colour: ring / spinner / tick disc / cross disc / dashed ring. The line under the list is what a
+                        screen reader hears, in words. In the 360 px column every title and note wraps and the time stays at the right. Machined
+                        plates with a strong edge, times in the mono face; the state is cut in, nothing animates.
+                    </p>
+                </div>
+                <div class="kf-actions" role="group" aria-label="Run the update">
+                    <button type="button" class="kp-button kp-button--sm kp-button--primary" id="kf-run-ok">Run the update</button>
+                    <button type="button" class="kp-button kp-button--sm" id="kf-run-fail">Run, and fail at step 3</button>
+                    <button type="button" class="kp-button kp-button--sm kp-button--ghost" id="kf-run-reset">Reset</button>
+                </div>
+                <div class="kf-cols">
+                    <div>
+                        <p class="kf-label">A live run</p>
+                        <div id="kf-run"></div>
+                        <p class="kf-readout kf-hear" id="kf-hear" aria-hidden="true" style="margin-block-start: 0.75rem"></p>
+                    </div>
+                    <div class="kf-narrow">
+                        <p class="kf-label">Phone width, every state</p>
+                        <ol class="kp-steplist" aria-label="States at phone width">
+                            <li class="kp-steplist__item" data-state="done">
+                                <span class="kp-steplist__mark" aria-hidden="true"></span
+                                ><span class="kp-steplist__body"
+                                    ><span class="kp-steplist__title">Pull the images</span
+                                    ><span class="kp-steplist__note">Fetches what changed</span></span
+                                ><time class="kp-steplist__time">4.2 s</time>
+                            </li>
+                            <li class="kp-steplist__item" data-state="running">
+                                <span class="kp-steplist__mark" aria-hidden="true"></span
+                                ><span class="kp-steplist__body"
+                                    ><span class="kp-steplist__title">Migrate the database</span
+                                    ><span class="kp-steplist__note">Runs the schema changes, once</span></span
+                                ><time class="kp-steplist__time"></time>
+                            </li>
+                            <li class="kp-steplist__item" data-state="failed">
+                                <span class="kp-steplist__mark" aria-hidden="true"></span
+                                ><span class="kp-steplist__body"
+                                    ><span class="kp-steplist__title">Check the dashboard answers</span
+                                    ><span class="kp-steplist__note">The second request timed out after 10 s</span></span
+                                ><time class="kp-steplist__time">10.0 s</time>
+                            </li>
+                            <li class="kp-steplist__item" data-state="skipped">
+                                <span class="kp-steplist__mark" aria-hidden="true"></span
+                                ><span class="kp-steplist__body"
+                                    ><span class="kp-steplist__title">Remove the old images</span
+                                    ><span class="kp-steplist__note">Left out</span></span
+                                ><time class="kp-steplist__time"></time>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div>
+                    <p class="kf-label">Every state, full width, with the long cases (the module adds the spinner and the spoken state words)</p>
+                    <ol class="kp-steplist" aria-label="Every state">
+                        <li class="kp-steplist__item" data-state="done">
+                            <span class="kp-steplist__mark" aria-hidden="true"></span
+                            ><span class="kp-steplist__body"
+                                ><span class="kp-steplist__title">Pull the images</span
+                                ><span class="kp-steplist__note">Fetches what changed from the registry</span></span
+                            ><time class="kp-steplist__time">4.2 s</time>
+                        </li>
+                        <li class="kp-steplist__item" data-state="done">
+                            <span class="kp-steplist__mark" aria-hidden="true"></span
+                            ><span class="kp-steplist__body"
+                                ><span class="kp-steplist__title">Stop the old containers</span
+                                ><span class="kp-steplist__note">Waits for open requests to finish</span></span
+                            ><time class="kp-steplist__time">1.1 s</time>
+                        </li>
+                        <li class="kp-steplist__item" data-state="running">
+                            <span class="kp-steplist__mark" aria-hidden="true"></span
+                            ><span class="kp-steplist__body"
+                                ><span class="kp-steplist__title">Migrate the database</span
+                                ><span class="kp-steplist__note">Runs the schema changes, once</span></span
+                            ><time class="kp-steplist__time"></time>
+                        </li>
+                        <li class="kp-steplist__item" data-state="pending">
+                            <span class="kp-steplist__mark" aria-hidden="true"></span
+                            ><span class="kp-steplist__body"
+                                ><span class="kp-steplist__title">Start the new containers</span
+                                ><span class="kp-steplist__note">One at a time, health checked</span></span
+                            ><time class="kp-steplist__time"></time>
+                        </li>
+                        <li class="kp-steplist__item" data-state="failed">
+                            <span class="kp-steplist__mark" aria-hidden="true"></span
+                            ><span class="kp-steplist__body"
+                                ><span class="kp-steplist__title">Check the dashboard answers</span
+                                ><span class="kp-steplist__note">Three requests, all must pass: the second one timed out after 10 s</span></span
+                            ><time class="kp-steplist__time">10.0 s</time>
+                        </li>
+                        <li class="kp-steplist__item" data-state="skipped">
+                            <span class="kp-steplist__mark" aria-hidden="true"></span
+                            ><span class="kp-steplist__body"
+                                ><span class="kp-steplist__title">Remove the old images</span
+                                ><span class="kp-steplist__note">Left out because the check failed</span></span
+                            ><time class="kp-steplist__time"></time>
+                        </li>
+                        <li class="kp-steplist__item" data-state="pending">
+                            <span class="kp-steplist__mark" aria-hidden="true"></span
+                            ><span class="kp-steplist__body"
+                                ><span class="kp-steplist__title"
+                                    >A step with a very long title that has to wrap inside its own column without pushing the time away from the end
+                                    of the row</span
+                                ><span class="kp-steplist__note"
+                                    >A long note as well: it explains, at length, what this step does, why it is slow, and what the person watching
+                                    should do if it does not finish within the usual time.</span
+                                ></span
+                            ><time class="kp-steplist__time">12 min 40 s</time>
+                        </li>
+                    </ol>
+                </div>
+            </section>
+
+            <section
+                class="kf-sec"
+                id="diff-hunk"
+                data-review-item="diff-hunk"
+                data-review-components="diff"
+                data-review-title="The header of a diff hunk"
+                aria-labelledby="h-hunk"
+            >
+                <div class="kf-sec__head">
+                    <h2 id="h-hunk">The header of a diff hunk</h2>
+                    <p>
+                        <code>.kp-diff__hunk</code> is a row in <code>.kp-diff</code> that opens a block of changes (<code
+                            >@@ -4,7 +4,7 @@ [site]</code
+                        >). Optionally <code>.kp-diff__hunk-context</code> wraps the text after the range. It is a muted band with a rule under it,
+                        and over it from the second hunk on.
+                    </p>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Each <code>@@ -a,b +c,d @@</code> row opens a block of changes: a band of its own, a rule under it, and a rule over it from
+                        the second hunk on. The function name after the range is set in the foreground ink, the range in the muted ink. Compare the
+                        long header (the 360 px column): it wraps, the diff never scrolls sideways. Check the three tricky ones: a hunk with no
+                        context text, a one-line diff, and a hunk with no lines. A muted band with a hairline; same mono face as the lines.
+                    </p>
+                    <p data-for="light">
+                        Each <code>@@ -a,b +c,d @@</code> row opens a block of changes: a band of its own, a rule under it, and a rule over it from
+                        the second hunk on. The function name after the range is set in the foreground ink, the range in the muted ink. Compare the
+                        long header (the 360 px column): it wraps, the diff never scrolls sideways. Check the three tricky ones: a hunk with no
+                        context text, a one-line diff, and a hunk with no lines. Slightly smaller type like the lines (0.9em); a soft band.
+                    </p>
+                    <p data-for="dark">
+                        Each <code>@@ -a,b +c,d @@</code> row opens a block of changes: a band of its own, a rule under it, and a rule over it from
+                        the second hunk on. The function name after the range is set in the foreground ink, the range in the muted ink. Compare the
+                        long header (the 360 px column): it wraps, the diff never scrolls sideways. Check the three tricky ones: a hunk with no
+                        context text, a one-line diff, and a hunk with no lines. The band must be distinct from the card ground and the muted ink
+                        readable on it.
+                    </p>
+                    <p data-for="cyberpunk">
+                        Each <code>@@ -a,b +c,d @@</code> row opens a block of changes: a band of its own, a rule under it, and a rule over it from
+                        the second hunk on. The function name after the range is set in the foreground ink, the range in the muted ink. Compare the
+                        long header (the 360 px column): it wraps, the diff never scrolls sideways. Check the three tricky ones: a hunk with no
+                        context text, a one-line diff, and a hunk with no lines. The band sits inside the chamfered frame without poking over the
+                        clipped corner.
+                    </p>
+                    <p data-for="synthwave">
+                        Each <code>@@ -a,b +c,d @@</code> row opens a block of changes: a band of its own, a rule under it, and a rule over it from
+                        the second hunk on. The function name after the range is set in the foreground ink, the range in the muted ink. Compare the
+                        long header (the 360 px column): it wraps, the diff never scrolls sideways. Check the three tricky ones: a hunk with no
+                        context text, a one-line diff, and a hunk with no lines. The mono face matches the lines; the band stays quiet next to the
+                        neon plus/minus.
+                    </p>
+                    <p data-for="pastel">
+                        Each <code>@@ -a,b +c,d @@</code> row opens a block of changes: a band of its own, a rule under it, and a rule over it from
+                        the second hunk on. The function name after the range is set in the foreground ink, the range in the muted ink. Compare the
+                        long header (the 360 px column): it wraps, the diff never scrolls sideways. Check the three tricky ones: a hunk with no
+                        context text, a one-line diff, and a hunk with no lines. A soft band inside the rounded frame; its top corners follow the
+                        frame.
+                    </p>
+                    <p data-for="terminal">
+                        Each <code>@@ -a,b +c,d @@</code> row opens a block of changes: a band of its own, a rule under it, and a rule over it from
+                        the second hunk on. The function name after the range is set in the foreground ink, the range in the muted ink. Compare the
+                        long header (the 360 px column): it wraps, the diff never scrolls sideways. Check the three tricky ones: a hunk with no
+                        context text, a one-line diff, and a hunk with no lines. Dashed rules above and below, as a printed separator; letter-spacing
+                        matches the lines.
+                    </p>
+                    <p data-for="forest">
+                        Each <code>@@ -a,b +c,d @@</code> row opens a block of changes: a band of its own, a rule under it, and a rule over it from
+                        the second hunk on. The function name after the range is set in the foreground ink, the range in the muted ink. Compare the
+                        long header (the 360 px column): it wraps, the diff never scrolls sideways. Check the three tricky ones: a hunk with no
+                        context text, a one-line diff, and a hunk with no lines. A muted band; the mono face matches the lines.
+                    </p>
+                    <p data-for="blueprint">
+                        Each <code>@@ -a,b +c,d @@</code> row opens a block of changes: a band of its own, a rule under it, and a rule over it from
+                        the second hunk on. The function name after the range is set in the foreground ink, the range in the muted ink. Compare the
+                        long header (the 360 px column): it wraps, the diff never scrolls sideways. Check the three tricky ones: a hunk with no
+                        context text, a one-line diff, and a hunk with no lines. The frame is transparent here: the band must still read as a band on
+                        the sheet.
+                    </p>
+                    <p data-for="solstice">
+                        Each <code>@@ -a,b +c,d @@</code> row opens a block of changes: a band of its own, a rule under it, and a rule over it from
+                        the second hunk on. The function name after the range is set in the foreground ink, the range in the muted ink. Compare the
+                        long header (the 360 px column): it wraps, the diff never scrolls sideways. Check the three tricky ones: a hunk with no
+                        context text, a one-line diff, and a hunk with no lines. A muted band in the mono face; nothing warm should bleed into it.
+                    </p>
+                    <p data-for="brutalism">
+                        Each <code>@@ -a,b +c,d @@</code> row opens a block of changes: a band of its own, a rule under it, and a rule over it from
+                        the second hunk on. The function name after the range is set in the foreground ink, the range in the muted ink. Compare the
+                        long header (the 360 px column): it wraps, the diff never scrolls sideways. Check the three tricky ones: a hunk with no
+                        context text, a one-line diff, and a hunk with no lines. Heavy rules above and below, the foreground ink on the plate.
+                    </p>
+                    <p data-for="deco">
+                        Each <code>@@ -a,b +c,d @@</code> row opens a block of changes: a band of its own, a rule under it, and a rule over it from
+                        the second hunk on. The function name after the range is set in the foreground ink, the range in the muted ink. Compare the
+                        long header (the 360 px column): it wraps, the diff never scrolls sideways. Check the three tricky ones: a hunk with no
+                        context text, a one-line diff, and a hunk with no lines. A band with a hairline; the mono face matches the lines.
+                    </p>
+                    <p data-for="phantom">
+                        Each <code>@@ -a,b +c,d @@</code> row opens a block of changes: a band of its own, a rule under it, and a rule over it from
+                        the second hunk on. The function name after the range is set in the foreground ink, the range in the muted ink. Compare the
+                        long header (the 360 px column): it wraps, the diff never scrolls sideways. Check the three tricky ones: a hunk with no
+                        context text, a one-line diff, and a hunk with no lines. The mono face matches the lines; the band meets the frame edge to
+                        edge.
+                    </p>
+                    <p data-for="grotesk">
+                        Each <code>@@ -a,b +c,d @@</code> row opens a block of changes: a band of its own, a rule under it, and a rule over it from
+                        the second hunk on. The function name after the range is set in the foreground ink, the range in the muted ink. Compare the
+                        long header (the 360 px column): it wraps, the diff never scrolls sideways. Check the three tricky ones: a hunk with no
+                        context text, a one-line diff, and a hunk with no lines. A flat band; the 2 px frame meets it cleanly.
+                    </p>
+                    <p data-for="nostromo">
+                        Each <code>@@ -a,b +c,d @@</code> row opens a block of changes: a band of its own, a rule under it, and a rule over it from
+                        the second hunk on. The function name after the range is set in the foreground ink, the range in the muted ink. Compare the
+                        long header (the 360 px column): it wraps, the diff never scrolls sideways. Check the three tricky ones: a hunk with no
+                        context text, a one-line diff, and a hunk with no lines. A muted band in the mono face on the dark card.
+                    </p>
+                    <p data-for="titanium">
+                        Each <code>@@ -a,b +c,d @@</code> row opens a block of changes: a band of its own, a rule under it, and a rule over it from
+                        the second hunk on. The function name after the range is set in the foreground ink, the range in the muted ink. Compare the
+                        long header (the 360 px column): it wraps, the diff never scrolls sideways. Check the three tricky ones: a hunk with no
+                        context text, a one-line diff, and a hunk with no lines. A muted band with a hairline; the mono face matches the lines.
+                    </p>
+                </div>
+                <div class="kf-cols">
+                    <div>
+                        <p class="kf-label">Three hunks, full width</p>
+                        <pre class="kp-diff" data-kf-diff="three" aria-label="Changes in pump-house-4.toml"></pre>
+                    </div>
+                    <div class="kf-narrow">
+                        <p class="kf-label">One hunk, a very long function name, phone width</p>
+                        <pre class="kp-diff" data-kf-diff="long" aria-label="Changes in reconcile.ts"></pre>
+                    </div>
+                </div>
+                <div class="kf-cols">
+                    <div>
+                        <p class="kf-label">One line, no context text</p>
+                        <pre class="kp-diff" data-kf-diff="bare" aria-label="Changes in retention.toml"></pre>
+                    </div>
+                    <div class="kf-narrow">
+                        <p class="kf-label">A hunk with no lines</p>
+                        <pre class="kp-diff" data-kf-diff="empty" aria-label="An empty hunk"></pre>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <script type="application/json" data-review-round>
+            { "round": "2026-10-15-r1" }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

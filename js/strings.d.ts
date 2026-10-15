@@ -55,6 +55,30 @@ export type Strings = {
      * The console warning for a ticking line inside a live region [scope-143]
      */
     agoInLiveRegion: string;
+    /**
+     * A step list's waiting step, as a screen reader hears it (js/steplist.js)
+     */
+    stepPending: string;
+    /**
+     * The step being run
+     */
+    stepRunning: string;
+    /**
+     * A finished step
+     */
+    stepDone: string;
+    /**
+     * A step that failed
+     */
+    stepFailed: string;
+    /**
+     * A step that was left out
+     */
+    stepSkipped: string;
+    /**
+     * What the list's status region says when a step changes, "Pull the images: running"
+     */
+    stepAnnounce: (title: string, state: string) => string;
     busy: string;
     close: string;
     /**
@@ -787,6 +811,12 @@ export type Strings = {
  * @property {(text: string) => string} agoStale  What a freshness line with `data-kp-ago-announce="state"` announces once it turns stale [scope-143]
  * @property {(text: string) => string} agoFresh  What it announces once it is fresh again [scope-143]
  * @property {string} agoInLiveRegion  The console warning for a ticking line inside a live region [scope-143]
+ * @property {string} stepPending  A step list's waiting step, as a screen reader hears it (js/steplist.js)
+ * @property {string} stepRunning  The step being run
+ * @property {string} stepDone  A finished step
+ * @property {string} stepFailed  A step that failed
+ * @property {string} stepSkipped  A step that was left out
+ * @property {(title: string, state: string) => string} stepAnnounce  What the list's status region says when a step changes, "Pull the images: running"
  * @property {string} busy
  * @property {string} close
  * @property {string} menu          The accessible name of a collapsed navigation's toggle

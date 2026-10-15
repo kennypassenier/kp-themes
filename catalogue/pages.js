@@ -111,6 +111,12 @@ export const PAGES = [
                 label: 'Segmented control, list toolbar and key line',
                 about: 'Three parts the admin dashboard draws itself: the segmented control and filter chips, the toolbar above a list (search, filter groups, the filters that are on), and the inline line of keyboard shortcuts. Every state, in all sixteen themes.',
             },
+            // Kenny, 2026-10-15 (kp-adopt-rest, kpa-9/14/18/19/32/33): three things the admin dashboard still draws itself, built in the package first: a toast that waits while it is hovered or focused (and can stay until closed), a live list of the steps of a run (.kp-steplist), and the @@ header row of a diff hunk (.kp-diff__hunk). 16 themes.
+            {
+                href: 'research/kpadopt-feedback/demo.html',
+                label: 'Feedback components: a toast that waits, a live step list, a diff hunk header',
+                about: 'The dashboard draws these itself because the package lacks them: toast() gains pause, linger, close and sticky; .kp-steplist (pending, running, done, failed, skipped, announced to a screen reader); .kp-diff__hunk.',
+            },
         ],
     },
     {

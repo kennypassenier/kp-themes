@@ -950,7 +950,26 @@
         border-radius: var(--radius);
     }
 
-    [data-theme='nostromo'] .kp-diff__line {
+    [data-theme='nostromo'] .kp-diff__line,
+    [data-theme='nostromo'] .kp-diff__hunk {
+        font-family: var(--theme-font-mono);
+    }
+
+    /* The step list is an indicator panel: dark rows, small square lamps,
+       readout times, and the running row lit from inside. */
+    [data-theme='nostromo'] .kp-steplist {
+        --kp-steplist-mark-radius: 2px;
+    }
+
+    [data-theme='nostromo'] .kp-steplist__item {
+        border-color: var(--border-strong);
+    }
+
+    [data-theme='nostromo'] .kp-steplist__item[data-state='running'] {
+        box-shadow: inset 0 0 0 1px var(--primary);
+    }
+
+    [data-theme='nostromo'] .kp-steplist__time {
         font-family: var(--theme-font-mono);
     }
 

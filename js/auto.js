@@ -119,6 +119,8 @@ export const NEEDS = [
     { name: 'gridlayout', when: '[data-kp-grid]', load: () => import('./gridlayout.js'), attach: (m, root) => [m.attachGrids(root)] },
     { name: 'log', when: '[data-kp-source]', load: () => import('./log.js'), attach: (m, root) => [m.attachLogs(root)] },
     { name: 'progressbar', when: '.kp-progressbar', load: () => import('./progressbar.js'), attach: (m, root) => [m.attachProgressbars(root)] },
+    // The live step list of a run [scope-143].
+    { name: 'steplist', when: '.kp-steplist', load: () => import('./steplist.js'), attach: (m, root) => [m.attachSteplists(root)] },
     // The dashboard components [scope-143]: row buttons on shared columns,
     // the KPI tile's sparkline and filter toggle, the attention band and
     // the time chart.

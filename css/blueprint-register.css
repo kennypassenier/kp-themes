@@ -1074,6 +1074,27 @@
         font-family: var(--theme-font-mono);
     }
 
+    /* The step list is a drafting schedule: transparent rows on the sheet,
+       dashed frames, squared marks, dimensions in the mono face. */
+    [data-theme='blueprint'] .kp-steplist {
+        --kp-steplist-mark-radius: 0;
+    }
+
+    [data-theme='blueprint'] .kp-steplist__item {
+        border-style: dashed;
+        border-color: var(--border-strong);
+        border-radius: 2px;
+        background: transparent;
+    }
+
+    [data-theme='blueprint'] .kp-steplist__item[data-state='running'] {
+        border-style: solid;
+    }
+
+    [data-theme='blueprint'] .kp-steplist__time {
+        font-family: var(--theme-font-mono);
+    }
+
     [data-theme='blueprint'] .kp-timeline {
         border-inline-start: 1px solid var(--border-strong);
     }

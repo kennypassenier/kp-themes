@@ -37,7 +37,7 @@ export {
     Toasts,
     Tooltip,
 } from './components/overlays.jsx';
-export { TOAST_MS, attachDialogs, attachDismissals, attachTabs, attachTooltips, toast } from './js/overlays.js';
+export { TOAST_LINGER_MS, TOAST_MS, TOAST_PAUSE_EVENT, attachDialogs, attachDismissals, attachTabs, attachTooltips, toast } from './js/overlays.js';
 export { Alarm, useAlarm } from './components/alarm.jsx';
 export { ALARM_CLOSE_EVENT, ALARM_OPEN_EVENT, ALARM_SECONDS, attachAlarms, showAlarm } from './js/alarm.js';
 export { PICK_EVENT as THEME_PICK_EVENT, THEME_MENU_ICON, attachThemePickers, themeMenuMarkup, themeOptionsMarkup } from './js/theme-picker.js';
@@ -87,6 +87,7 @@ export {
     setProgress as setProgressbar,
     syncProgressbar,
 } from './js/progressbar.js';
+export { STEPLIST_EVENT, STEP_ID_ATTRIBUTE, STEP_STATES, attachSteplists, buildSteplist, setStep } from './js/steplist.js';
 // The dashboard components [scope-143].
 export { ACTION_LIST, ROW_ACTIONS, attachActionColumns, fitActionColumns, mergeRoles, rowRoles } from './js/actions.js';
 export {
