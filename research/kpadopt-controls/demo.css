@@ -4,6 +4,7 @@
 
 .cd-page {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--kp-space-xl, 2rem);
     max-inline-size: 90rem;
     margin-inline: auto;
@@ -14,6 +15,7 @@
 .cd-sec__head,
 .cd-block {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--kp-space-sm, 0.5rem);
     min-inline-size: 0;
 }
@@ -63,6 +65,7 @@
 
 .cd-sec {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--kp-space-lg, 1.5rem);
     min-inline-size: 0;
     padding: var(--kp-space-lg, 1.5rem);
@@ -250,6 +253,7 @@
 
 .cd-lineup {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--kp-space-md, 0.75rem);
 }
 
@@ -266,6 +270,7 @@
 
 .cd-stage {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     align-content: start;
     justify-items: start;
     gap: var(--kp-space-md, 0.75rem);
@@ -282,4 +287,29 @@
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--muted-foreground);
+}
+
+/* The page shows the look-at line of the theme it is in, not all sixteen stacked; the review dialog reads the
+   paragraphs from the markup, so it still gets every theme's. */
+[data-review-look] > [data-for] {
+    display: none;
+}
+
+html[data-theme="formal"] [data-review-look] > [data-for="formal"],
+html[data-theme="light"] [data-review-look] > [data-for="light"],
+html[data-theme="dark"] [data-review-look] > [data-for="dark"],
+html[data-theme="cyberpunk"] [data-review-look] > [data-for="cyberpunk"],
+html[data-theme="synthwave"] [data-review-look] > [data-for="synthwave"],
+html[data-theme="pastel"] [data-review-look] > [data-for="pastel"],
+html[data-theme="terminal"] [data-review-look] > [data-for="terminal"],
+html[data-theme="forest"] [data-review-look] > [data-for="forest"],
+html[data-theme="blueprint"] [data-review-look] > [data-for="blueprint"],
+html[data-theme="solstice"] [data-review-look] > [data-for="solstice"],
+html[data-theme="brutalism"] [data-review-look] > [data-for="brutalism"],
+html[data-theme="deco"] [data-review-look] > [data-for="deco"],
+html[data-theme="phantom"] [data-review-look] > [data-for="phantom"],
+html[data-theme="grotesk"] [data-review-look] > [data-for="grotesk"],
+html[data-theme="nostromo"] [data-review-look] > [data-for="nostromo"],
+html[data-theme="titanium"] [data-review-look] > [data-for="titanium"] {
+    display: block;
 }

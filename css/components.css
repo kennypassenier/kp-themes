@@ -5432,6 +5432,8 @@
     .kp-tooltip[data-kp-hovercard-card] {
         position: fixed;
         inset: auto;
+        /* Placed by the script in window coordinates: the popover's anchor area would pin it to the window's end edge. */
+        position-area: none;
         max-width: var(--kp-hovercard-max-width, min(24rem, calc(100vw - 1rem)));
         overflow-wrap: anywhere;
         text-align: start;
@@ -9710,7 +9712,7 @@
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
-        max-inline-size: var(--kp-live-max, 30rem);
+        max-inline-size: min(100%, var(--kp-live-max, 30rem));
         white-space: nowrap;
     }
 

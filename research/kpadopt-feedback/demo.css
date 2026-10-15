@@ -106,3 +106,28 @@
 .kf-hear {
     font-style: italic;
 }
+
+/* The page shows the look-at line of the theme it is in, not all sixteen stacked; the review dialog reads the
+   paragraphs from the markup, so it still gets every theme's. */
+[data-review-look] > [data-for] {
+    display: none;
+}
+
+html[data-theme="formal"] [data-review-look] > [data-for="formal"],
+html[data-theme="light"] [data-review-look] > [data-for="light"],
+html[data-theme="dark"] [data-review-look] > [data-for="dark"],
+html[data-theme="cyberpunk"] [data-review-look] > [data-for="cyberpunk"],
+html[data-theme="synthwave"] [data-review-look] > [data-for="synthwave"],
+html[data-theme="pastel"] [data-review-look] > [data-for="pastel"],
+html[data-theme="terminal"] [data-review-look] > [data-for="terminal"],
+html[data-theme="forest"] [data-review-look] > [data-for="forest"],
+html[data-theme="blueprint"] [data-review-look] > [data-for="blueprint"],
+html[data-theme="solstice"] [data-review-look] > [data-for="solstice"],
+html[data-theme="brutalism"] [data-review-look] > [data-for="brutalism"],
+html[data-theme="deco"] [data-review-look] > [data-for="deco"],
+html[data-theme="phantom"] [data-review-look] > [data-for="phantom"],
+html[data-theme="grotesk"] [data-review-look] > [data-for="grotesk"],
+html[data-theme="nostromo"] [data-review-look] > [data-for="nostromo"],
+html[data-theme="titanium"] [data-review-look] > [data-for="titanium"] {
+    display: block;
+}

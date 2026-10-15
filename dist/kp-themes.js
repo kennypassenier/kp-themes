@@ -15726,13 +15726,13 @@ function attachHoverCards(root = document, options = {}) {
     const view = doc.documentElement.clientWidth;
     el2.style.setProperty("right", "auto");
     el2.style.setProperty("bottom", "auto");
-    el2.style.setProperty("left", `${rtl ? field.right - layoutRect(el2).width : field.left}px`);
     el2.style.setProperty("top", `${field.bottom}px`);
-    const box = layoutRect(el2);
-    const over = box.right - (view - EDGE);
-    const under = EDGE - box.left;
-    if (over > 0) el2.style.setProperty("left", `${Number.parseFloat(el2.style.left) - Math.min(over, Math.max(0, box.left - EDGE))}px`);
-    else if (under > 0) el2.style.setProperty("left", `${Number.parseFloat(el2.style.left) + under}px`);
+    el2.style.setProperty("left", `${EDGE}px`);
+    const width = layoutRect(el2).width;
+    const gap = Number.parseFloat(getComputedStyle(el2).marginLeft) || 0;
+    const wanted2 = rtl ? field.right - width : field.left;
+    const left = Math.max(EDGE - gap, Math.min(wanted2, view - EDGE - width - gap));
+    el2.style.setProperty("left", `${left}px`);
     placeBlockSide(el2, field);
   };
   const describe = (anchor) => {

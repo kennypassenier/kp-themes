@@ -151,14 +151,15 @@ export function attachHoverCards(root = document, options = {}) {
         const view = doc.documentElement.clientWidth;
         el.style.setProperty('right', 'auto');
         el.style.setProperty('bottom', 'auto');
-        el.style.setProperty('left', `${rtl ? field.right - layoutRect(el).width : field.left}px`);
         el.style.setProperty('top', `${field.bottom}px`);
-        // Kept inside the window: the register's own margin counts, as it does for a tooltip in its anchor.
-        const box = layoutRect(el);
-        const over = box.right - (view - EDGE);
-        const under = EDGE - box.left;
-        if (over > 0) el.style.setProperty('left', `${Number.parseFloat(el.style.left) - Math.min(over, Math.max(0, box.left - EDGE))}px`);
-        else if (under > 0) el.style.setProperty('left', `${Number.parseFloat(el.style.left) + under}px`);
+        // The width it takes depends on the room it has to the right of its left edge, so it is measured with the whole window
+        // to itself, then placed: start edge under the anchor's, kept inside the window by the register's own margin (EDGE).
+        el.style.setProperty('left', `${EDGE}px`);
+        const width = layoutRect(el).width;
+        const gap = Number.parseFloat(getComputedStyle(el).marginLeft) || 0;
+        const wanted = rtl ? field.right - width : field.left;
+        const left = Math.max(EDGE - gap, Math.min(wanted, view - EDGE - width - gap));
+        el.style.setProperty('left', `${left}px`);
         placeBlockSide(el, field);
     };
 
