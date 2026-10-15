@@ -1,5 +1,7 @@
 # research/leftover-looks
 
+**Decided (2026-10-15 02:30):** Kenny approved both in full: phantom-plate = 1, one hard plate; deco-inlay = under the button that opened it (round 2; round 1 of deco was rejected at 02:12 because the demo showed no deco menu). Both are ported to the package.
+
 Two visual findings of the package review (research/PACKAGE_FINDINGS.md, Phantom and Deco), shown as proposals before the
 package changes (Kenny, 2026-10-15 01:42, "leftovers: In 10.1.0"). The package CSS and JS are untouched; every proposal
 lives in this folder.
