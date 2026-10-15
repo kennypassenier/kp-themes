@@ -137,6 +137,10 @@ export const NEEDS = [
     { name: 'chart', when: '[data-kp-chart]', load: () => import('./chart.js'), attach: (m, root) => [m.attachCharts(root)] },
     // The menu button with its rich menu [scope-143]: every other action, grouped.
     { name: 'menu-button', when: '[data-kp-menu-button]', load: () => import('./menu-button.js'), attach: (m, root) => [m.attachMenuButtons(root)] },
+    // The segmented control, the list toolbar and the inline key line [kpadopt-controls].
+    { name: 'segmented', when: '[data-kp-segmented]', load: () => import('./segmented.js'), attach: (m, root) => [m.attachSegmented(root)] },
+    { name: 'toolbar', when: '[data-kp-toolbar]', load: () => import('./toolbar.js'), attach: (m, root) => [m.attachToolbars(root)] },
+    { name: 'keys', when: '.kp-kbd[data-kp-key]', load: () => import('./keys.js'), attach: (m, root) => [m.attachKeys(root)] },
     // The month heatmap [scope-143]: a month of days, each a plate in the
     // colour of its state; the page gives the days with setCalendarDays().
     { name: 'calendar', when: '[data-kp-calendar]', load: () => import('./calendar.js'), attach: (m, root) => [m.attachCalendars(root)] },

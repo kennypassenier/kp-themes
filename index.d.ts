@@ -38,6 +38,15 @@ export { ACTION_LIST, ROW_ACTIONS, attachActionColumns, fitActionColumns, mergeR
 export { KPI_STRIP, KPI_TOGGLE, KPI_TOGGLE_EVENT, METER, SPARK, attachKpiStrips, attachKpiToggles, attachSparklines, drawSparkline, fitKpiStrip, kpiColumns, meterParts, meterText, setMeter, sparkPaths, } from './js/kpi.js';
 export type Meter = import('./js/kpi.js').Meter;
 /** @typedef {import('./js/kpi.js').Meter} Meter */
+export { SEGMENTED, SEGMENTED_EVENT, attachSegmented, getSegmentedValues, resetSegmented, setSegmentedCounts, setSegmentedItems, setSegmentedValues, } from './js/segmented.js';
+export type SegmentedItem = import('./js/segmented.js').SegmentedItem;
+/** @typedef {import('./js/segmented.js').SegmentedItem} SegmentedItem */
+export { TOOLBAR, TOOLBAR_CLEAR_EVENT, TOOLBAR_REMOVE_EVENT, attachToolbars, setToolbarActive, toolbarSearch } from './js/toolbar.js';
+export type ToolbarFilter = import('./js/toolbar.js').ToolbarFilter;
+/** @typedef {import('./js/toolbar.js').ToolbarFilter} ToolbarFilter */
+export { KEYS, attachKeys, setKeys } from './js/keys.js';
+export type KeyPair = import('./js/keys.js').KeyPair;
+/** @typedef {import('./js/keys.js').KeyPair} KeyPair */
 export { UPDATE_PROPERTY, UPDATE_STYLE, UPDATING_ATTRIBUTE, markUpdating, unmarkUpdating, update, updateIdea, updatePlays, updateTiming, updateTimingOf, } from './js/update.js';
 export { ATTENTION, SEVERITIES, attachAttention, setAttention, sortAttention } from './js/attention.js';
 export { TILES_SET, TILE_ROW_MIN, attachTileSets, evenTileSet, tileSets } from './js/tiles.js';

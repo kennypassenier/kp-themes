@@ -144,6 +144,18 @@
             "types": "./js/kpi.d.ts",
             "default": "./js/kpi.js"
         },
+        "./js/segmented": {
+            "types": "./js/segmented.d.ts",
+            "default": "./js/segmented.js"
+        },
+        "./js/toolbar": {
+            "types": "./js/toolbar.d.ts",
+            "default": "./js/toolbar.js"
+        },
+        "./js/keys": {
+            "types": "./js/keys.d.ts",
+            "default": "./js/keys.js"
+        },
         "./js/attention": {
             "types": "./js/attention.d.ts",
             "default": "./js/attention.js"

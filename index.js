@@ -107,6 +107,22 @@ export {
     sparkPaths,
 } from './js/kpi.js';
 /** @typedef {import('./js/kpi.js').Meter} Meter */
+// The segmented control, the list toolbar and the inline key line [kpadopt-controls].
+export {
+    SEGMENTED,
+    SEGMENTED_EVENT,
+    attachSegmented,
+    getSegmentedValues,
+    resetSegmented,
+    setSegmentedCounts,
+    setSegmentedItems,
+    setSegmentedValues,
+} from './js/segmented.js';
+/** @typedef {import('./js/segmented.js').SegmentedItem} SegmentedItem */
+export { TOOLBAR, TOOLBAR_CLEAR_EVENT, TOOLBAR_REMOVE_EVENT, attachToolbars, setToolbarActive, toolbarSearch } from './js/toolbar.js';
+/** @typedef {import('./js/toolbar.js').ToolbarFilter} ToolbarFilter */
+export { KEYS, attachKeys, setKeys } from './js/keys.js';
+/** @typedef {import('./js/keys.js').KeyPair} KeyPair */
 // Information that updates in place, the theme's way [research/update-motion, 2026-10-05].
 export {
     UPDATE_PROPERTY,
