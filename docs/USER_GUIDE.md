@@ -2001,7 +2001,7 @@ replaced. A sort orders the rows within their group, and the groups (and
 any run of rows outside a group between them) keep the place the markup
 gave them, so a heading always stands above its own rows; a group whose
 rows all fail the search or a filter hides its heading, and a group split
-over two pages shows its heading on both. The handle: `fold([keys])` and
+over two pages shows its heading on both. `data-kp-group-always` on a heading keeps it visible when no data row is under it (skeleton rows do not count): a stack still loading, one that failed (put a Retry button in the heading; a click on a control in it does not fold) or one with nothing to list (put the reason in the heading). The handle: `fold([keys])` and
 `view().folded`; the event `kp-datatable-group` with
 `{ key, row, open, members, folded }`. Not for a `data-kp-server` table,
 whose server orders the rows. In the card layout a heading is the whole

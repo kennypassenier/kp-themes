@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- **Added: the hover card** [kpadopt-9; research/kpadopt-tooltip-sort]. `attachHoverCards()` in the new `js/hovercard.js` (also `@kp-soft/themes/js/hovercard` and the root export, wired into `js/auto.js` for `[data-kp-hovercard]`): one shared `.kp-popover.kp-tooltip` card, delegated from a root so anchors rebuilt after the attach keep working, its words from the `data-kp-hovercard` attribute or a `fill(anchor, card)` callback run when it opens. It wears every theme's tooltip look and entrance (it leaves as the entrance played backwards), sits under the anchor like a tooltip in its anchor does, flips above and stays in the window, can be entered by the pointer, closes on Escape and when its anchor is removed. `attachTooltips()` is unchanged. Pastel's pass plate is drawn on the card itself.
+- **Added: plain-click multi-sort** [kpadopt-sort]. `data-kp-sort-multi="click"` (option `multiSort: 'click'`) on a data table: every plain header click, Enter or Space adds the column as a sort key (ascending, descending, out), Shift + click sorts on that column alone. The reset button and the summary line are the existing ones. The default (Shift adds) is unchanged. The React component is not changed.
+- **Added: a group heading that stays** [kpadopt-groups]. `data-kp-group-always` on a data table's `tr[data-kp-row-group]` keeps the heading visible with no data row under it (rows still loading, failed, or none). Default unchanged.
+
 ## 10.1.1 — 2026-10-15
 
 Released on Kenny's go (2026-10-15, form release-1011 "Nu uitbrengen, zonder suite"): a patch for two stylesheets a strict CSS parser refuses, found by JobTracker's Tailwind v4 build. No browser suite ran; the gates did, with the new CSS parse gate. The five known-noise tests of 10.1.0 (suite-noise-1011) wait for the next release suite.

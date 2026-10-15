@@ -5253,6 +5253,21 @@
         font-size: var(--kp-text-sm, 0.8125rem);
     }
 
+    /* The page's one hover card (js/hovercard.js): a tooltip that lives in
+     * <body>, not in an anchor, and is filled when it opens. In the top layer
+     * the script places it in window coordinates, so the popover's UA inset
+     * is put back; the margins stay the register's own, which is what keeps
+     * the gap a tooltip in its anchor has. It is wider than a one-line
+     * tooltip because it may hold rows, and it can be entered by the pointer
+     * (WCAG 1.4.13), so a long word wraps rather than widening it. */
+    .kp-tooltip[data-kp-hovercard-card] {
+        position: fixed;
+        inset: auto;
+        max-width: var(--kp-hovercard-max-width, min(24rem, calc(100vw - 1rem)));
+        overflow-wrap: anywhere;
+        text-align: start;
+    }
+
     /* --- Toast ----------------------------------------------------------- */
 
     .kp-toasts {
@@ -9663,9 +9678,21 @@
         display: none;
     }
 
-    :root:has(.kp-sidenav:not([data-kp-sidenav-opener='launcher'], [data-kp-sidenav-opener='both']):is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'], [data-kp-sidenav-over-below]):not([data-kp-sidenav-slim-collapsed])):has(.kp-sidenav__tab)
+    :root:has(
+            .kp-sidenav:not([data-kp-sidenav-opener='launcher'], [data-kp-sidenav-opener='both']):is(
+                    [data-kp-sidenav-mode='over'],
+                    [data-kp-sidenav-mode='push'],
+                    [data-kp-sidenav-over-below]
+                ):not([data-kp-sidenav-slim-collapsed])
+        ):has(.kp-sidenav__tab)
         .kp-sidenav__launcher:not([data-kp-sidenav-opener-on]),
-    :root:has(.kp-sidenav[data-kp-sidenav-opener='launcher']:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'], [data-kp-sidenav-over-below]):not([data-kp-sidenav-slim-collapsed]))
+    :root:has(
+            .kp-sidenav[data-kp-sidenav-opener='launcher']:is(
+                    [data-kp-sidenav-mode='over'],
+                    [data-kp-sidenav-mode='push'],
+                    [data-kp-sidenav-over-below]
+                ):not([data-kp-sidenav-slim-collapsed])
+        )
         .kp-sidenav__tab:not([data-kp-sidenav-opener-on]) {
         display: none;
     }
@@ -9674,7 +9701,13 @@
        launcher is drawn: only the tab is (the module marks a kept launcher
        `-opener-on`; before it has run, the markup's `tab` says so). The room
        was the launcher's, and without one it is only a gap beside the title. */
-    :root:has(.kp-sidenav:not([data-kp-sidenav-opener='launcher'], [data-kp-sidenav-opener='both']):is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'], [data-kp-sidenav-over-below]):not([data-kp-sidenav-slim-collapsed])):has(.kp-sidenav__tab):not(:has(.kp-sidenav__launcher[data-kp-sidenav-opener-on]))
+    :root:has(
+            .kp-sidenav:not([data-kp-sidenav-opener='launcher'], [data-kp-sidenav-opener='both']):is(
+                    [data-kp-sidenav-mode='over'],
+                    [data-kp-sidenav-mode='push'],
+                    [data-kp-sidenav-over-below]
+                ):not([data-kp-sidenav-slim-collapsed])
+        ):has(.kp-sidenav__tab):not(:has(.kp-sidenav__launcher[data-kp-sidenav-opener-on]))
         [data-kp-sidenav-launcher-room] {
         padding-inline-start: revert-layer;
     }

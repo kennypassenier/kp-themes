@@ -1,0 +1,115 @@
+/* Mock layout for this research page only. Every class is `hc-` and none
+   restyles a `kp-` class: the cards, the badges, tags, tables and the data
+   table are the package's own. */
+.hc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+    gap: var(--kp-space-md, 1rem);
+    align-items: start;
+}
+.hc-panel {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+.hc-panel > h3 {
+    margin: 0;
+    font-size: 1rem;
+}
+.hc-panel > p {
+    margin: 0;
+    font-size: 0.875rem;
+}
+.hc-tag {
+    display: inline-block;
+    margin-inline-start: 0.5rem;
+    padding: 0.05rem 0.5rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    font: 600 0.7rem/1.4 var(--theme-font-mono, monospace);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    vertical-align: middle;
+}
+.hc-tag--package {
+    color: var(--success);
+}
+.hc-tag--mock {
+    color: var(--warning);
+}
+.hc-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.75rem;
+}
+.hc-bar > .hc-grow {
+    flex: 1 1 12rem;
+}
+.hc-trunc {
+    display: block;
+    max-inline-size: 11rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.hc-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+.hc-chips--end {
+    justify-content: flex-end;
+}
+/* A focusable anchor needs a visible focus ring; the package's own focus
+   ring is on buttons and fields, so the page asks for it on its chips. */
+.hc-anchor {
+    cursor: help;
+    border-radius: var(--radius, 0.25rem);
+}
+.hc-anchor:focus-visible {
+    outline: 2px solid var(--ring, currentColor);
+    outline-offset: 2px;
+}
+/* The rich card's content: a title, then label and value pairs on a grid. */
+.hc-rich {
+    display: grid;
+    gap: 0.25rem;
+    min-inline-size: 12rem;
+}
+.hc-rich > strong {
+    font-weight: 600;
+}
+.hc-rich dl {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.125rem 0.75rem;
+    margin: 0;
+}
+.hc-rich dt {
+    opacity: 0.75;
+}
+.hc-rich dd {
+    margin: 0;
+    text-align: end;
+    font-variant-numeric: tabular-nums;
+}
+/* The strip pinned to the bottom of the window: its card has no room below and opens above. */
+.hc-dock {
+    position: sticky;
+    inset-block-end: 0;
+    z-index: 1;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+}
+.hc-note {
+    margin: 0;
+    font-size: 0.8125rem;
+    opacity: 0.85;
+}
+.hc-reason {
+    margin-inline: 0.5rem;
+    font-weight: 400;
+}

@@ -129,6 +129,9 @@ export const NEEDS = [
         load: () => import('./kpi.js'),
         attach: (m, root) => [m.attachSparklines(root), m.attachKpiToggles(root), m.attachKpiStrips(root)],
     },
+    // The page's one hover card, filled when it opens [kpadopt-9]. Anchors may
+    // appear later: a page that builds them after the boot attaches it itself.
+    { name: 'hovercard', when: '[data-kp-hovercard]', load: () => import('./hovercard.js'), attach: (m, root) => [m.attachHoverCards(root)] },
     { name: 'attention', when: '.kp-attention', load: () => import('./attention.js'), attach: (m, root) => [m.attachAttention(root)] },
     // Tiles of one height across a board, and the ticking freshness line
     // (port spec H and I.4).

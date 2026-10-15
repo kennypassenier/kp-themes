@@ -138,6 +138,13 @@ export const PAGES = [
                 // Its block 2 (the side navigation) is drawn with the side navigation's defaults, which the edge demo decides.
                 after: ['research/sidenav-edge/demo.html'],
             },
+            // Kenny, 2026-10-15: the admin dashboard still draws these itself; the package gets them first (kpadopt-9, kpadopt-14 notes).
+            {
+                href: 'research/kpadopt-tooltip-sort/demo.html',
+                label: 'Hover card, plain-click multi-sort, group headings that stay',
+                about: 'One hover card filled when it opens (survives a table rebuilt every 30 s), a data table where every plain header click adds a sort key, and group headings that stay visible while loading, failed or empty.',
+                affects: 'the admin dashboard swaps its own hover card (ui.js .nx-tip), sortclick.js and the Backups repository headings for these.',
+            },
             // Kenny, 2026-10-13 (his words, translated from Dutch): "That same side navigation must have a button (e.g. a hamburger icon) at the very top left of the page that is static; the sidebar itself must come all the way out of the left side of the screen and push the other content to the right (or there must be enough margin so nothing is obstructed; make both demos)." and "Maybe there should also be an option that does obstruct the content: make three demos and/or the option to choose the version through attributes.": push, reserved gutter and over, one attribute each (research/sidenav-edge).
             {
                 href: 'research/sidenav-edge/demo.html',

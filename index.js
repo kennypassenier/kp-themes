@@ -107,6 +107,7 @@ export {
     sparkPaths,
 } from './js/kpi.js';
 /** @typedef {import('./js/kpi.js').Meter} Meter */
+export { HOVERCARD_ATTRIBUTE, HOVERCARD_CARD, HOVERCARD_EVENT, attachHoverCards } from './js/hovercard.js';
 // Information that updates in place, the theme's way [research/update-motion, 2026-10-05].
 export {
     UPDATE_PROPERTY,
