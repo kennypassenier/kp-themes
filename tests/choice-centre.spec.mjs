@@ -75,6 +75,18 @@ const measure = (page, scope) =>
                     .join(', '),
             ),
         ].filter((el) => /** @type {HTMLElement} */ (el).offsetParent !== null);
+        // Read in layout, not by the turned boxes: phantom lands its menus askew on purpose
+        // (`rotate: -1.5deg`), and over a hundred pixels from the box to its words that
+        // tilt alone is 2 to 3 px. Every turned ancestor sets its `rotate` aside while it is read.
+        /** @type {{ el: HTMLElement, value: string, priority: string }[]} */
+        const aside = [];
+        for (const el of boxes) {
+            for (let up = /** @type {HTMLElement | null} */ (el.parentElement); up; up = up.parentElement) {
+                if (aside.some((a) => a.el === up) || getComputedStyle(up).rotate === 'none') continue;
+                aside.push({ el: up, value: up.style.getPropertyValue('rotate'), priority: up.style.getPropertyPriority('rotate') });
+                up.style.setProperty('rotate', 'none', 'important');
+            }
+        }
         for (const el of boxes) {
             const box = /** @type {HTMLInputElement} */ (el);
             const host = wordsOf(box);
@@ -102,6 +114,10 @@ const measure = (page, scope) =>
             });
         }
         await frame();
+        for (const a of aside) {
+            if (a.value) a.el.style.setProperty('rotate', a.value, a.priority);
+            else a.el.style.removeProperty('rotate');
+        }
         return rows;
     }, scope);
 

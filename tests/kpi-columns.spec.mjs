@@ -78,6 +78,25 @@ const holds = async (page, n, width) => {
     // strip down to its next smaller allowed count [fix-99, fix-101].
     /** @type {string | undefined} */
     let before;
+    // And until no tile is entering or leaving: a tile that is mid-arrival or mid-exit is
+    // drawn at a height of its own (9 to 112 px in one row), so the rows are read only once
+    // every finite animation or transition under the block has finished.
+    await expect
+        .poll(
+            () =>
+                block.evaluate(
+                    (el) =>
+                        el
+                            .getAnimations({ subtree: true })
+                            .filter((a) => Number.isFinite(a.effect?.getComputedTiming().endTime ?? 0) && a.playState === 'running').length,
+                ),
+            {
+                message: `${n}/${width}: every tile's arrival and exit has finished`,
+                intervals: [120],
+                timeout: 15_000,
+            },
+        )
+        .toBe(0);
     await expect
         .poll(
             async () => {
