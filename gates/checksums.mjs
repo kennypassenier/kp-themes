@@ -144,6 +144,8 @@ export const FILES = [
     'js/freshness.js',
     'js/chart.js',
     'js/menu-button.js',
+    'js/nav-fold.js',
+    'js/tabbar.js',
     'js/tour.js',
     'js/calendar.js',
     'js/graph.js',

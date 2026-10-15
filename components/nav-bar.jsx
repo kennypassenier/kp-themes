@@ -57,6 +57,7 @@ import { placeNavMenu, placeNavPanel, skipTo as jumpTo, stickyNav } from '../js/
  * @property {import('react').ReactNode} [toggleIcon]  What goes in that button. Empty draws three bars; this package ships type, not icons.
  * @property {boolean} [sticky]    The shrinking header [scope-48]: the wrapper sticks to the top and turns compact once the page has scrolled past `stickyAfter`. Needs `wrap`. Default false.
  * @property {number} [stickyAfter]  How far, in px, before the bar turns compact; never less than the bar's own height, which is the default.
+ * @property {boolean} [fold]  Fold the links that do not fit behind a More menu (`data-kp-nav-fold`, js/nav-fold.js) [kpadopt-nav]. Default false.
  * @property {import('react').ReactNode} [search]  The `.kp-nav__search` slot: the command palette's trigger, usually a PaletteTrigger [scope-48].
  * @property {2 | 3 | 4 | 5 | 6} [headingLevel]  The level of a mega menu's group headings. Default 2.
  * @property {{ brand?: string, list?: string, item?: string, link?: string, skip?: string, menu?: string, menuLink?: string, toggle?: string, search?: string }} [classNames]
@@ -90,6 +91,7 @@ function NavBarInner(
         search,
         sticky = false,
         stickyAfter,
+        fold = false,
         headingLevel = 2,
         strings,
         className = '',
@@ -107,6 +109,31 @@ function NavBarInner(
     /** @type {import('react').RefObject<Map<string, HTMLElement>>} */
     const disclosures = useRef(new Map());
     const listId = useId();
+    // The bar's element, for the fold; the forwarded ref gets it too.
+    const navRef = useRef(/** @type {HTMLElement | null} */ (null));
+    const setNav = (/** @type {HTMLElement | null} */ el) => {
+        navRef.current = el;
+        if (typeof ref === 'function') ref(el);
+        else if (ref) ref.current = el;
+    };
+    // The fold adds its More item to the list the framework-free channel's way;
+    // React keeps rendering its own links around it.
+    useEffect(() => {
+        if (!fold) return undefined;
+        let live = true;
+        /** @type {(() => void) | undefined} */
+        let off;
+        // Fetched only by a bar that folds: the module brings the menu button with it.
+        import('../js/nav-fold.js').then((m) => {
+            if (live && navRef.current) off = m.foldNav(navRef.current, { strings });
+        });
+        return () => {
+            live = false;
+            off?.();
+        };
+        // `strings` is read once, when the fold is wired: a new object on every render must not rewire it.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fold]);
     const Heading = /** @type {'h2' | 'h3' | 'h4' | 'h5' | 'h6'} */ (`h${headingLevel}`);
     // The open panel lines up with the bar's edges, before it is painted and
     // again when the window changes size, as in the framework-free channel.
@@ -178,8 +205,9 @@ function NavBarInner(
             )}
             <Wrap {...wrapProps}>
                 <nav
-                    ref={ref}
+                    ref={setNav}
                     className={`kp-nav ${className}`.trim()}
+                    data-kp-nav-fold={fold ? '' : undefined}
                     aria-label={label ?? s.mainNavigation}
                     data-kp-nav-open={collapsible && open ? '' : undefined}
                     // AR29: this channel wires its dropdowns and mega menus

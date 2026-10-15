@@ -135,6 +135,11 @@ export const NEEDS = [
     { name: 'tiles', when: '[data-kp-tiles-set]', load: () => import('./tiles.js'), attach: (m, root) => [m.attachTileSets(root)] },
     { name: 'freshness', when: '[data-kp-ago]', load: () => import('./freshness.js'), attach: (m, root) => [m.attachAgo(root)] },
     { name: 'chart', when: '[data-kp-chart]', load: () => import('./chart.js'), attach: (m, root) => [m.attachCharts(root)] },
+    // A bar that folds what does not fit behind a More menu, and the phone's
+    // bottom tab bar [kpadopt-nav]. The fold builds its menu on the menu
+    // button's module, which it imports itself.
+    { name: 'nav-fold', when: '[data-kp-nav-fold]', load: () => import('./nav-fold.js'), attach: (m, root) => [m.attachNavFolds(root)] },
+    { name: 'tabbar', when: '.kp-tabbar', load: () => import('./tabbar.js'), attach: (m, root) => [m.attachTabbars(root)] },
     // The menu button with its rich menu [scope-143]: every other action, grouped.
     { name: 'menu-button', when: '[data-kp-menu-button]', load: () => import('./menu-button.js'), attach: (m, root) => [m.attachMenuButtons(root)] },
     // The month heatmap [scope-143]: a month of days, each a plate in the

@@ -2611,4 +2611,47 @@
         }
     }
 }
+
+@layer kp.register {
+    /* Bottom tab bar [kpadopt-nav] — light: white paper and soft shadow. The current tab settles into a pill behind its icon (the exposure settles, G1, G6); pointing eases the pill toward the paper (G15). */
+    [data-theme='light'] .kp-tabbar {
+        box-shadow: 0 -6px 18px -10px hsl(from var(--foreground) h s l / 0.18);
+        border-block-start-color: var(--border);
+    }
+
+    [data-theme='light'] .kp-tabbar__tab {
+        border-radius: 999px;
+        isolation: isolate;
+    }
+
+    [data-theme='light'] .kp-tabbar__tab::before {
+        inset: 0.125rem 0 auto;
+        margin-inline: auto;
+        inline-size: 3.5rem;
+        block-size: calc(var(--kp-tabbar-icon, 1.5rem) + 0.25rem);
+        border-radius: 999px;
+        background: hsl(from var(--primary) h s l / 0.14);
+        scale: 0.5 0.9;
+        opacity: 0;
+        z-index: -1;
+    }
+
+    [data-theme='light'] .kp-tabbar__tab[aria-current]:not([aria-current='false'])::before {
+        scale: 1 1;
+        opacity: 1;
+    }
+
+    [data-theme='light'] .kp-tabbar__tab:is(:hover, :focus-visible):not([aria-current]:not([aria-current='false']))::before {
+        scale: 0.85 1;
+        opacity: 0.6;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='light'] .kp-tabbar__tab::before {
+            transition:
+                scale var(--fx-duration) var(--fx-ease),
+                opacity var(--fx-duration) var(--fx-ease);
+        }
+    }
+}
 /* ── End of the signature ── */

@@ -4273,3 +4273,38 @@
         border-radius: var(--kp-sig-fo-plate);
     }
 }
+
+@layer kp.register {
+    /* Bottom tab bar [kpadopt-nav] — forest: paper and wood. The current tab is a trail blaze: a short clay mark painted on the bar's edge that grows in slowly, the way a tree does; the paper label turns forest ink (G1, G5, G12); a count is a paper tab. */
+    [data-theme='forest'] .kp-tabbar {
+        background: color-mix(in srgb, var(--background) 92%, transparent);
+        border-block-start-color: var(--border);
+    }
+
+    [data-theme='forest'] .kp-tabbar__tab {
+        border-radius: var(--radius);
+    }
+
+    [data-theme='forest'] .kp-tabbar__tab::before {
+        inset-inline: calc(50% - 0.75rem);
+        inset-block-start: calc(-1 * var(--kp-tabbar-pad, 0.25rem) - 3px);
+        block-size: 5px;
+        border-radius: 1px 1px 3px 3px;
+        background: var(--accent-foreground);
+        transform-origin: 50% 0;
+        scale: 1 0;
+    }
+
+    [data-theme='forest'] .kp-tabbar__tab[aria-current]:not([aria-current='false'])::before {
+        scale: 1 1;
+    }
+
+    [data-theme='forest'] .kp-tabbar__tab:is(:hover, :focus-visible):not([aria-current]:not([aria-current='false']))::before {
+        scale: 0.5 0.6;
+        background: var(--border-strong);
+    }
+
+    [data-theme='forest'] .kp-tabbar__badge {
+        border-radius: var(--kp-sig-fo-plate, var(--radius));
+    }
+}
