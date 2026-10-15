@@ -5,8 +5,8 @@
 // What the demo showed and this suite holds: no arrival at all and every
 // reveal at rest under reduced motion, the headline's overprint duplicate
 // springing from a wide mis-registration into its 2px rest position once
-// and ending as its own text, the lede's marks filling in mint then
-// violet, the app heading's rule growing left to right once it enters the
+// and ending as its own text, the lede’s marks filling in, both mint (violet is the info status only,
+// since 2026-10-14), the app heading's rule growing left to right once it enters the
 // viewport, the navbar's dropdown in the theme's own soft radius, the
 // buttons' spring lift on hover and settle on press, the dossier's rotated
 // stamp swapping its word when the file opens and its redactions fading
@@ -153,7 +153,7 @@ for (const [channel, url] of CHANNELS) {
             expect(forced.opacity, 'invisible while armed').toBe('0');
         });
 
-        test('the lede’s marks fill in, mint then violet [TH120]', async ({ page }) => {
+        test('the lede’s marks fill in, both mint [TH120]', async ({ page }) => {
             await page.addInitScript(() => {
                 window.kpArmed = [];
                 new MutationObserver(() => {
@@ -170,7 +170,11 @@ for (const [channel, url] of CHANNELS) {
             await settled(page);
             await expect.poll(() => marks.first().evaluate((el) => getComputedStyle(el).backgroundSize), 'the plate fills the word').toMatch(/^100%/);
             expect(await marks.first().evaluate((el) => getComputedStyle(el).backgroundColor), 'mint first').toBe(await paint(page, '--accent'));
-            expect(await marks.nth(1).evaluate((el) => getComputedStyle(el).backgroundColor), 'violet second').toBe(await paint(page, '--info'));
+            // Three inks (G5, Kenny 2026-10-14): mint is the plate behind every
+            // marked word; violet (--info) is the info status only, so the
+            // second mark is no longer the violet pair.
+            expect(await marks.nth(1).evaluate((el) => getComputedStyle(el).backgroundColor), 'mint second too').toBe(await paint(page, '--accent'));
+            expect(await paint(page, '--info'), 'and violet is a different ink, not what the mark wears').not.toBe(await paint(page, '--accent'));
             const armed = await page.evaluate(() => window.kpArmed);
             expect(
                 armed.some((s) => /^0(px|%)/.test(s)),

@@ -106,7 +106,7 @@ for (const [channel, url] of CHANNELS) {
             expect(after['animation-name'], 'no scroll-bound animation under reduced motion').toBe('none');
         });
 
-        test('the headline resolves word by word out of a blur and ends as its own text [DK2]', async ({ page }) => {
+        test('the headline is laid word by word, with no blur, and ends as its own text [DK2]', async ({ page }) => {
             await page.addInitScript(() => {
                 window.kpWords = 0;
                 window.kpAnimated = false;
@@ -119,7 +119,7 @@ for (const [channel, url] of CHANNELS) {
                     // only counted: a register that wraps the words but
                     // never animates them (the animation rule removed)
                     // would still pass a bare word-count check.
-                    if (h.classList.contains('is-words') && words.some((w) => getComputedStyle(w).animationName === 'kp-resolve')) {
+                    if (h.classList.contains('is-words') && words.some((w) => getComputedStyle(w).animationName === 'kp-sig-dark-lay')) {
                         window.kpAnimated = true;
                     }
                 }).observe(document, { subtree: true, childList: true, attributes: true });
@@ -132,8 +132,8 @@ for (const [channel, url] of CHANNELS) {
             expect(await h1.textContent()).toBe(source);
             expect(await h1.locator('[data-word]').count(), 'the words are gone: the element is its text').toBe(0);
             expect(await page.evaluate(() => window.kpWords), 'every word had its span').toBe(source?.split(/\s+/).length);
-            expect(await page.evaluate(() => window.kpAnimated), 'the words actually ran kp-resolve while armed').toBe(true);
-            expect(await h1.evaluate((el) => getComputedStyle(el).filter), 'the blur is gone at rest').toBe('none');
+            expect(await page.evaluate(() => window.kpAnimated), 'the words actually ran kp-sig-dark-lay while armed').toBe(true);
+            expect(await h1.evaluate((el) => getComputedStyle(el).filter), 'no blur at rest (the grammar has none at all)').toBe('none');
             expect(await h1.evaluate((el) => getComputedStyle(el).opacity)).toBe('1');
         });
 

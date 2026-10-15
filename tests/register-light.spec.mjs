@@ -2,12 +2,13 @@
 // "Plain Sight" (2026-09-08) reproduced by the package, measured on the
 // concept page under light in both channels.
 //
-// What the demo showed and this suite holds: the headline opening through
-// a rounded clip window once and ending as its own whole text (no noise,
+// What the demo showed and this suite holds: the headline coming into
+// focus out of a glare once (the demo's rounded clip window was retired by the
+// applied grammar, 2026-10-08) and ending as its own whole text (no noise,
 // no dither, no per-word stagger — the one thing every other headline
 // routine does and this one does not); the lede's two marks sweeping in
 // with a highlighter's background-size, staggered by the module itself;
-// the rule reusing the base layer's own kp-rule-in; the nav dropdown
+// the rule coming out of the same glare on kp-sig-light-expose; the nav dropdown
 // answered [KT14]; the two radius vocabularies (pill
 // buttons, small-radius surfaces); elevation on every panel that floats
 // over a page where card and popover are both pure white (DI6); the
@@ -105,7 +106,12 @@ for (const [channel, url] of CHANNELS) {
             await expect(page.locator('[data-kp-reveal="rule"]').first()).toHaveClass(/is-in/);
         });
 
-        test('the headline opens through a rounded clip window once, and ends as its own whole text [S48]', async ({ page }) => {
+        test('the headline comes into focus out of a glare once, and ends as its own whole text [S48]', async ({ page }) => {
+            // The applied grammar (2026-10-08) retired the rounded clip
+            // window: the headline is armed as a blurred, too-bright glare at
+            // opacity 0 and comes into focus where it stands. The keyframe
+            // keeps its old name, kp-clip-reveal.
+            //
             // Recorded before navigation, since the 620ms reveal can finish
             // inside a single frame on a fast runner: the moment the
             // animation starts, the element is captured mid-flight — proof
@@ -116,7 +122,7 @@ for (const [channel, url] of CHANNELS) {
                 document.addEventListener('animationstart', (e) => {
                     if (e.animationName === 'kp-clip-reveal' && window.kpArmedClip === null) {
                         const s = getComputedStyle(/** @type {Element} */ (e.target));
-                        window.kpArmedClip = { clip: s.clipPath, opacity: s.opacity };
+                        window.kpArmedClip = { filter: s.filter, opacity: s.opacity };
                     }
                 });
             });
@@ -126,12 +132,14 @@ for (const [channel, url] of CHANNELS) {
             await expect(h1).toHaveClass(/is-deciphered/, { timeout: 5000 });
             await settled(page);
             expect(await h1.textContent(), 'the text never changed').toBe(source);
-            const rested = await h1.evaluate((el) => ({ clip: getComputedStyle(el).clipPath, opacity: getComputedStyle(el).opacity }));
+            const rested = await h1.evaluate((el) => ({ filter: getComputedStyle(el).filter, opacity: getComputedStyle(el).opacity }));
             expect(rested.opacity, 'fully visible at rest').toBe('1');
             const armed = await page.evaluate(() => window.kpArmedClip);
             expect(armed, 'the animation ran and was observed starting').not.toBeNull();
             expect(armed.opacity, 'invisible at the start of the reveal').not.toBe('1');
-            expect(armed.clip, 'clipped at the start — a different shape than at rest').not.toBe(rested.clip);
+            expect(rested.filter, 'sharp at rest').toBe('none');
+            expect(armed.filter, 'in the glare at the start: blurred and too bright').toMatch(/blur\(/);
+            expect(armed.filter, 'a different picture than at rest').not.toBe(rested.filter);
             // The armed rule itself, probed statically and deterministically:
             // with the rested element made to match `:not(.is-deciphered)`
             // again (no animation running at this point — `.is-revealing`
@@ -140,11 +148,12 @@ for (const [channel, url] of CHANNELS) {
             const reArmed = await h1.evaluate((el) => {
                 el.classList.remove('is-deciphered');
                 const s = getComputedStyle(el);
-                const out = { clip: s.clipPath, opacity: s.opacity };
+                const out = { filter: s.filter, opacity: s.opacity };
                 el.classList.add('is-deciphered');
                 return out;
             });
             expect(reArmed.opacity, 'covered while armed, even after the reveal has already run once').toBe('0');
+            expect(reArmed.filter, 'and in the glare while armed').toMatch(/blur\(/);
         });
 
         test("the lede's marks sweep in with a highlighter, staggered by the module [TH120]", async ({ page }) => {
@@ -172,18 +181,39 @@ for (const [channel, url] of CHANNELS) {
             expect(armed.size, 'no fill while armed').toMatch(/^0%/);
         });
 
-        test('the rule draws itself under a heading when it enters the viewport, reusing the base layer’s kp-rule-in [TH122]', async ({ page }) => {
+        test('the rule comes into focus under a heading when it enters the viewport, on the register’s kp-sig-light-expose [TH122]', async ({
+            page,
+        }) => {
             await open(page, url);
             const rule = page.locator('[data-kp-reveal="rule"]').first();
             await rule.scrollIntoViewIfNeeded();
             await expect(rule).toHaveClass(/is-in/, { timeout: 5000 });
             const after = await pseudo(rule, '::after', ['animation-name', 'background-color', 'height']);
-            expect(after['animation-name']).toBe('kp-rule-in');
+            // Not drawn since the applied grammar: it stands from the start and
+            // comes out of the same glare as the heading, on the pair
+            // `kp-sig-light-expose` (not the base layer's `kp-rule-in`).
+            expect(after['animation-name']).toBe('kp-sig-light-expose');
             expect(after.height).toBe('2px');
             expect(after['background-color']).toBe(await paint(page, '--primary'));
             await settled(page);
             const transform = (await pseudo(rule, '::after', ['transform'])).transform;
-            expect(transform, 'drawn to its full width at rest').toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
+            expect(transform, 'whole at rest, never scaled').toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/);
+            const rested = await rule.evaluate((el) => {
+                const s = getComputedStyle(el, '::after');
+                return { filter: s.filter, opacity: s.opacity };
+            });
+            expect(rested, 'in focus at rest').toEqual({ filter: 'none', opacity: '1' });
+            // Armed again (the class off, no animation running at rest), the
+            // rule is back in the glare, invisible.
+            const armed = await rule.evaluate((el) => {
+                el.classList.remove('is-in');
+                const s = getComputedStyle(el, '::after');
+                const out = { filter: s.filter, opacity: s.opacity };
+                el.classList.add('is-in');
+                return out;
+            });
+            expect(armed.opacity, 'invisible while armed').toBe('0');
+            expect(armed.filter, 'and in the glare while armed').toMatch(/blur\(/);
         });
 
         test("the dossier's redactions clear on the trigger, staggered [S49, A11]", async ({ page }) => {
