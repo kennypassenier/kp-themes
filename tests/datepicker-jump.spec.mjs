@@ -141,7 +141,7 @@ for (const channel of CHANNELS) {
             // Choosing a month moved the calendar, not the value.
             await expect(page.locator(channel.input)).toHaveValue('13/09/2026');
             await panel.locator(`[data-kp-day="${chosenYear}-03-20"]`).click();
-            await expect(page.locator(channel.input)).toHaveValue(`20-03-${chosenYear}`);
+            await expect(page.locator(channel.input)).toHaveValue(`20/03/${chosenYear}`);
         });
 
         test('the arrows, Home and End walk the month and year grids, and Escape steps back one view [scope-89]', async ({ page }) => {
@@ -290,16 +290,19 @@ test(
         const measure = async () => {
             // Read once the panel's arrival has finished: pastel's panel lands at 1.15 times its
             // size (a `scale`), and in its first frames it measures 302 px against its 262.
-            await expect
-                .poll(() =>
-                    panel.evaluate(
-                        (el) =>
-                            el
-                                .getAnimations({ subtree: true })
-                                .filter((a) => Number.isFinite(a.effect?.getComputedTiming().endTime ?? 0) && a.playState === 'running').length,
+            // Await the finite animations that are running now (an endless loop never finishes and
+            // is left out), capped at 3 s so a restarted transition cannot hold the read forever.
+            await panel.evaluate((el) =>
+                Promise.race([
+                    Promise.all(
+                        el
+                            .getAnimations({ subtree: true })
+                            .filter((a) => Number.isFinite(a.effect?.getComputedTiming().endTime ?? 0) && a.playState === 'running')
+                            .map((a) => a.finished.catch(() => undefined)),
                     ),
-                )
-                .toBe(0);
+                    new Promise((resolve) => setTimeout(resolve, 3000)),
+                ]),
+            );
             return panel.evaluate((el) => {
                 const box = el.getBoundingClientRect();
                 const spill = [...el.querySelectorAll('[data-kp-month], [data-kp-year]')].filter((c) => c.scrollWidth > c.clientWidth + 1).length;

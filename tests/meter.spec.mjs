@@ -46,7 +46,9 @@ test('the fill, the tick, past the end and the tone, through setMeter() (C7.1–
     expect([m.above, m.below]).toEqual([2, 8]);
     expect(m.text).toBe('62% full; 80% the target level');
 
-    // C7.2: Book more puts the mark at 1.3, past the end: data-kp-over, a ▸ inside the bar, 130 % in the words.
+    // C7.2: Book more puts the mark at 1.3, past the end: data-kp-over and 130 % in the words. Formal
+    // draws Kenny's option 2 (7e41b938, 2026-10-05): the ribbon stands just past the bar's end with
+    // a › beside it, where the package's plain mark keeps a ▸ inside the bar.
     const booked = page.locator('[data-cat-meter-tiles] [data-cat-meter-of="booked"]');
     await page.locator('#meter').getByRole('button', { name: 'Book more' }).click();
     await expect(booked.locator('.kp-meter__mark')).toHaveAttribute('data-kp-over', '');
@@ -55,9 +57,9 @@ test('the fill, the tick, past the end and the tone, through setMeter() (C7.1–
         const mark = /** @type {HTMLElement} */ (el.querySelector('.kp-meter__mark'));
         const box = el.getBoundingClientRect();
         const m = mark.getBoundingClientRect();
-        return { arrow: getComputedStyle(mark, '::after').content, inside: m.left >= box.left && m.right <= box.right };
+        return { arrow: getComputedStyle(mark, '::after').content, past: m.left >= box.right };
     });
-    expect(past).toEqual({ arrow: '"▸"', inside: true });
+    expect(past).toEqual({ arrow: '"›"', past: true });
 
     // C7.3: red inside a destructive tile, amber for a warning meter on its own.
     const fills = await page.evaluate(() => {
