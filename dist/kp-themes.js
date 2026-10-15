@@ -17675,6 +17675,11 @@ function placeMenu(s2, view, covered) {
   if (at.width != null) menu.style.setProperty("max-inline-size", `${at.width}px`);
   if (at.height != null) menu.style.setProperty("max-block-size", `${at.height}px`);
   menu.setAttribute("data-kp-menu-side", at.side);
+  if (at.side === "below") {
+    const width = at.width ?? box.width;
+    const x = Math.min(Math.max(button.left + button.width / 2 - at.left, ANCHOR_EDGE), Math.max(width - ANCHOR_EDGE, ANCHOR_EDGE));
+    menu.style.setProperty("--kp-menu-anchor-x", `${Math.round(x * 10) / 10}px`);
+  }
 }
 function openMenu(wrapper, { focus = "first" } = {}) {
   const s2 = menus.get(wrapper);
@@ -17900,7 +17905,7 @@ function attachMenuButtons(root = document, { decorate, strings } = {}) {
   ) countMenu(menu);
   return () => undo.splice(0).forEach((off) => off());
 }
-var MENU_BUTTON, MENU_OPEN_EVENT, MENU_CLOSE_EVENT, MENU_SELECT_EVENT, MENU_COUNT_PROPERTY, menus, idSeq, nextId, keyOf, menuSignature, menuItems, labelOf, decorateItem, make, MENU_GUTTER, PLACED, decorateButton, attached;
+var MENU_BUTTON, MENU_OPEN_EVENT, MENU_CLOSE_EVENT, MENU_SELECT_EVENT, MENU_COUNT_PROPERTY, menus, idSeq, nextId, keyOf, menuSignature, menuItems, labelOf, decorateItem, make, MENU_GUTTER, PLACED, ANCHOR_EDGE, decorateButton, attached;
 var init_menu_button = __esm({
   "js/menu-button.js"() {
     "use strict";
@@ -17951,7 +17956,8 @@ var init_menu_button = __esm({
       return el2;
     };
     MENU_GUTTER = 8;
-    PLACED = ["left", "right", "top", "bottom", "width", "max-block-size", "max-inline-size"];
+    PLACED = ["left", "right", "top", "bottom", "width", "max-block-size", "max-inline-size", "--kp-menu-anchor-x"];
+    ANCHOR_EDGE = 14;
     decorateButton = (s2) => {
       if (!s2.decorate) return;
       const info = { kind: "menu-button", host: s2.wrapper };

@@ -25,7 +25,7 @@
             "when": ".kp-skeleton, .kp-progressbar, .kp-meter, .kp-kpi, .kp-card, .kp-spinner, [data-kp-datatable], [data-kp-calendar], [data-kp-menu-button]"
         },
         "js/log.js": { "digest": "3fc853eb5c0c4dfa", "when": "[data-kp-source]" },
-        "js/menu-button.js": { "digest": "72bef2272863f5e1", "when": "[data-kp-menu-button]" },
+        "js/menu-button.js": { "digest": "64282f222ec10261", "when": "[data-kp-menu-button]" },
         "js/motion.js": {
             "digest": "22f1dc62c65e9a93",
             "when": "dialog.kp-dialog, .kp-accordion__item, .kp-tabs, .kp-datatable, .kp-toasts, .kp-upload__list, .kp-combobox__list, .kp-tree, .kp-wizard, .kp-field, [data-kp-size-motion]"
@@ -1614,7 +1614,7 @@
         "deco||||.kp-masked": "d9c902c3ed462ffe",
         "deco||||.kp-media": "bd7204a79e561e15",
         "deco||||.kp-media-figure": "55f332a66e406703",
-        "deco||||.kp-menu": "998dca77ac3aa61f",
+        "deco||||.kp-menu": "7bd236b5dd0121a6",
         "deco||||.kp-menu))": "780353700855379b",
         "deco||||.kp-menu__item": "2a3c63bb113e6517",
         "deco||||.kp-menu__item)": "ce34585eaec89945",
