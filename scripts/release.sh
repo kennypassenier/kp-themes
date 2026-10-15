@@ -147,7 +147,7 @@ if [ "$dry" = 1 ]; then
   out="$root/.build/release/$tag"
   rm -rf "$out" && mkdir -p "$out"
   for a in "${assets[@]}"; do cp "$src/$a" "$out/"; done
-  cp "$src/CHANGELOG.md" "$out/release-notes.md"
+  (cd "$src" && awk -v v="$version" '$0 ~ "^## " v "( |$)" {on=1; print; next} on && /^## / {exit} on {print}' CHANGELOG.md) > "$out/release-notes.md"
   echo "✓ dry run for $tag: the ${#assets[@]} assets built from $ref and verified in .build/release/$tag/; nothing tagged, pushed or released"
   exit 0
 fi
@@ -155,10 +155,15 @@ fi
 git push origin "$tag"
 (
   cd "$src"
+  # GitHub refuses a release body over 125000 characters, and the whole
+  # CHANGELOG.md is past that since 10.0.0: the notes are this version's own
+  # section, from its heading to the next one.
+  awk -v v="$version" '$0 ~ "^## " v "( |$)" {on=1; print; next} on && /^## / {exit} on {print}' CHANGELOG.md > release-notes.md
+  test -s release-notes.md || { echo "CHANGELOG.md has no section for $version" >&2; exit 1; }
   gh release create "$tag" --verify-tag \
     --draft \
     --title "$tag" \
-    --notes-file CHANGELOG.md \
+    --notes-file release-notes.md \
     "${assets[@]}"
 )
 echo "✓ $tag: built here, tagged, pushed, and a DRAFT release created with ${#assets[@]} assets."
