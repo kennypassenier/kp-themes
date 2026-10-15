@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- **Fixed: a comment in brutalism's register closed early** [comment-glob-1011; JobTracker, 2026-10-15]. The path `research/character-*/` in a comment ended it at `*/`, so the rest of the comment became part of the next selector: brutalism's tile-hover rule was dropped by browsers and Tailwind v4 refused the stylesheet. The path is now written `research/character-<name>/`.
+
 ## 10.1.0 — 2026-10-15
 
 Released on Kenny's go (2026-10-15 03:06, form release-go "Nu uitbrengen"; 03:26 "Eerst oplossen"). The release suite ran once (1638 passed, 60 failed, 4 skipped, 17.7 min); the 60 were fixed by cause (research/SUITE_10_1_0_CAUSES.md) and re-run alone: five remain, all known measurement noise, listed for 10.1.1 in docs/MINI_ROUNDS.md (suite-noise-1011). The screenshot approval check is skipped: every pair is approved and anchored at ad6d6ad1 (Kenny, 2026-10-15 01:21).

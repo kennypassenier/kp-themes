@@ -34207,8 +34207,7 @@
     }
 
     /* ══ The dashboard components, ported from the decided character demos
-       (research/character-*/
-    brutalism.css on the picks in each decided.json,
+       (research/character-<name>/brutalism.css on the picks in each decided.json,
        Kenny 2026-10-06, redrawn on the grammar of 2026-10-07 23:44). Every
        demo-only option attribute is gone: the picked option is this theme's
        drawing. What needs a hook the package does not have yet is left out
