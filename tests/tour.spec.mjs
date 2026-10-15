@@ -14,6 +14,8 @@ import { autoReady } from './helpers/auto-ready.mjs';
 /** The live target, not the frozen copy the block shows for the eye. */
 const TARGET = '[data-kp-tour-target]:not([aria-label="Areas, frozen"])';
 const CARD = 'dialog.kp-tour';
+// The live card; a card that was just closed stays in the page as an inert copy while its close plays.
+const LIVE_CARD = 'dialog.kp-tour:not([inert]):not([data-kp-ghost])';
 
 /** @param {import('@playwright/test').Page} page @param {{ width: number, height: number }} size @param {string} [query] */
 const open = async (page, size, query = '') => {
@@ -27,7 +29,7 @@ const open = async (page, size, query = '') => {
 /** The card against its target and the window: the gap, whether it covers it, the target in view, the two side gutters. @param {import('@playwright/test').Page} page */
 const placement = (page) =>
     page.evaluate((selector) => {
-        const c = /** @type {Element} */ (document.querySelector('dialog.kp-tour')).getBoundingClientRect();
+        const c = /** @type {Element} */ (document.querySelector('dialog.kp-tour:not([inert]):not([data-kp-ghost])')).getBoundingClientRect();
         const t = /** @type {Element} */ (document.querySelector(selector)).getBoundingClientRect();
         return {
             gap: Math.round((c.top >= t.bottom ? c.top - t.bottom : t.top - c.bottom) * 2) / 2,
@@ -61,7 +63,7 @@ test(
         await expect(page.locator(CARD)).toHaveCount(0);
         await expect(page.locator('[data-cat-tour-log]')).toContainText('driven by a script');
         await page.locator('[data-cat-tour="start"]').click();
-        await expect(page.locator(`${CARD} .kp-tour__count`)).toHaveText('1 of 5');
+        await expect(page.locator(`${LIVE_CARD} .kp-tour__count`)).toHaveText('1 of 5');
         let at = await settledPlacement(page);
         expect([at.gap, at.covers, at.inView]).toEqual([12, false, true]);
         const look = await page
@@ -71,10 +73,10 @@ test(
         await page.evaluate(() => window.scrollBy(0, 200));
         await expect.poll(async () => (await placement(page)).gap).toBe(12);
         for (const n of [2, 3, 4, 5]) {
-            await page.locator(`${CARD} .kp-button--primary`).click();
-            await expect(page.locator(`${CARD} .kp-tour__count`)).toHaveText(`${n} of 5`);
+            await page.locator(`${LIVE_CARD} .kp-button--primary`).click();
+            await expect(page.locator(`${LIVE_CARD} .kp-tour__count`)).toHaveText(`${n} of 5`);
         }
-        await expect(page.locator(`${CARD} .kp-button--primary`)).toHaveText('Done');
+        await expect(page.locator(`${LIVE_CARD} .kp-button--primary`)).toHaveText('Done');
         at = await settledPlacement(page);
         expect([at.gap, at.covers]).toEqual([12, false]);
         await page.keyboard.press('Escape');
@@ -95,7 +97,7 @@ test(
         expect(api).toEqual({ kinds: ['tour-back', 'tour-next', 'tour-skip'], none: null });
         // ?tour always starts it, remembered or not.
         await open(page, { width: 1280, height: 800 }, '?tour');
-        await expect(page.locator(`${CARD} .kp-tour__count`)).toHaveText('1 of 5');
+        await expect(page.locator(`${LIVE_CARD} .kp-tour__count`)).toHaveText('1 of 5');
     },
 );
 
@@ -105,7 +107,7 @@ test(
     async ({ page }) => {
         await open(page, { width: 390, height: 844 });
         await page.locator('[data-cat-tour="start"]').click();
-        await expect(page.locator(CARD)).toBeVisible();
+        await expect(page.locator(LIVE_CARD)).toBeVisible();
         expect((await placement(page)).gutters).toEqual([16, 16]);
         await page.keyboard.press('Escape');
         // The drawer: the end edge, the full height, the foot at the bottom, each word over its meaning.
@@ -124,7 +126,7 @@ test(
         expect(box).toEqual([0, 0, 0, 0]);
         // A tour from Help hands the focus back to the Help button.
         await page.locator('#ov-dr-help [data-cat-tour="help"]').click();
-        await expect(page.locator(CARD)).toBeVisible();
+        await expect(page.locator(LIVE_CARD)).toBeVisible();
         await page.keyboard.press('Escape');
         await expect(help).toBeFocused();
         // The tour over the phone pane reaches its tab bar, the card beside it, not on it.

@@ -502,7 +502,7 @@ for (const channel of FEATURE_CHANNELS) {
                     }, container);
                     for (const theme of THEME_NAMES) {
                         await wearSettled(page, theme);
-                        await picker.locator('[data-kp-date-open]').click();
+                        await picker.locator('button[data-kp-date-open]').click();
                         const panel = picker.locator('.kp-datepicker__panel');
                         await expect(panel).toBeVisible();
                         const missed = await panel.evaluate((el) => {
@@ -515,7 +515,7 @@ for (const channel of FEATURE_CHANNELS) {
                         });
                         if (missed > 0) lost.push(`${theme} in .${container}: ${missed} days out of reach`);
                         // The trigger toggles it shut in both channels (the React picker's Escape lives on the days, not on the trigger).
-                        await picker.locator('[data-kp-date-open]').click();
+                        await picker.locator('button[data-kp-date-open]').click();
                         await expect(panel).toBeHidden();
                     }
                 }

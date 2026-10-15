@@ -40,7 +40,7 @@ const statusColumn = (table) => table.locator('tbody tr:visible td:nth-child(3)'
 /** @param {import('@playwright/test').Locator} table */
 const addButton = (table) => table.locator('[data-kp-datatable-add-filter]');
 /** @param {import('@playwright/test').Locator} table */
-const menu = (table) => table.locator('[data-kp-datatable-add-menu]');
+const menu = (table) => table.locator('[data-kp-datatable-add-menu]:not([data-kp-ghost])');
 /** @param {import('@playwright/test').Locator} table */
 const editor = (table) => table.locator('[data-kp-datatable-filter-editor]');
 /** @param {import('@playwright/test').Locator} table */

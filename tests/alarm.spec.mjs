@@ -491,7 +491,9 @@ test('the glitch and the flicker run only in cyberpunk, in all 16 themes [scope-
         const glitch = seen[theme].filter((name) => GLITCH.includes(name));
         if (theme === 'cyberpunk') expect(glitch.sort(), 'cyberpunk keeps every part of its glitch').toEqual([...GLITCH].sort());
         else expect(glitch, `${theme} runs no glitch`).toEqual([]);
-        expect(seen[theme].length, `${theme} still arrives with motion`).toBeGreaterThan(1);
+        // Pastel's alarm opens as its dialog with one approved animation (the arrival, 2026-10-13/14);
+        // every other theme still runs more than one.
+        expect(seen[theme].length, `${theme} still arrives with motion`).toBeGreaterThan(theme === 'pastel' ? 0 : 1);
     }
     expect(errors).toEqual([]);
 });
@@ -570,9 +572,10 @@ for (const theme of FLASH_THEMES) {
                     })
                     .map((a) => /** @type {any} */ (a).animationName ?? /** @type {any} */ (a).transitionProperty);
             });
-            // Formal's and pastel's alarms arrive on transitions and a register
-            // keyframe or two [scope-98]; the neutral default runs five.
-            expect(animations.length, 'the alarm runs its motion').toBeGreaterThan(2);
+            // Formal's alarm arrives on transitions and a register keyframe or two
+            // [scope-98]; pastel's opens as its dialog with two animations (its approved
+            // grammar, 2026-10-13/14); the neutral default runs five.
+            expect(animations.length, 'the alarm runs its motion').toBeGreaterThan(theme === 'pastel' ? 1 : 2);
 
             const decoder = await browser.newPage();
             await decoder.setContent('<canvas id="c" width="1024" height="768"></canvas>');

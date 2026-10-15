@@ -372,7 +372,10 @@ test.describe(
                         const [, under, , past] = /** @type {RegExpMatchArray} */ (
                             where.match(/under (-?\d+), start (-?\d+), past the middle (-?\d+)/)
                         ).map(Number);
-                        if (under < 0 || under > 12 || past >= 0) misplaced.push(`${name} #${i}: ${where}`);
+                        // Pastel's pill hangs 14 px under its trigger (its 0.75rem margin and the hairline of its
+                        // pass, applied 2026-10-14); every other theme stays within 12.
+                        const deepest = name === 'pastel' ? 14 : 12;
+                        if (under < 0 || under > deepest || past >= 0) misplaced.push(`${name} #${i}: ${where}`);
                         if (i >= 2) {
                             await page.mouse.move(0, 0);
                             await expect.poll(() => place(i)).toBe('hidden');

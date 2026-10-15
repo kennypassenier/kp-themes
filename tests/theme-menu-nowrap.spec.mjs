@@ -28,6 +28,8 @@ test.describe('the theme menu keeps every row on one line [theme-menu-nowrap]', 
                 if (!(await options.first().isVisible())) await trigger.click();
                 await options.and(page.locator(`[data-kp-theme="${theme}"]`)).click();
                 await page.waitForFunction((name) => document.documentElement.getAttribute('data-theme') === name, theme);
+                // The list stays mounted, inert, while its close plays; open it again only once it is gone.
+                await expect(options).toHaveCount(0);
                 if (!(await options.first().isVisible())) await trigger.click();
                 await expect(options.first()).toBeVisible();
                 const rows = await options.evaluateAll((all) =>

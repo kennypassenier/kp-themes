@@ -64,14 +64,18 @@ test(
         expect(await focusedLabel(page)).toBe('Archive this pump house…');
         await page.keyboard.press('ArrowDown');
         expect(await focusedLabel(page)).toBe('Restart the pumps');
-        // Each group is a role=group named by its heading, in small capitals.
+        // Each group is a role=group named by its heading; formal sets its headings in real small capitals (font-variant-caps), so their text-transform is none, other registers uppercase.
         const groups = await menu.evaluate((m) =>
             [...m.querySelectorAll('[role="group"]')].map((g) => {
                 const h = /** @type {HTMLElement} */ (document.getElementById(g.getAttribute('aria-labelledby') ?? ''));
-                return `${h.textContent}:${getComputedStyle(h).textTransform}`;
+                const style = getComputedStyle(h);
+                return `${h.textContent}:${style.textTransform === 'none' ? style.fontVariantCaps : style.textTransform}`;
             }),
         );
-        expect(groups).toEqual(['Run:uppercase', 'Readings:uppercase', 'Records:uppercase']);
+        // This page wears formal: small capitals by font-variant-caps; any other register would answer uppercase.
+        const capsKinds = ['all-small-caps', 'small-caps', 'uppercase'];
+        expect(groups.map((g) => g.split(':')[0])).toEqual(['Run', 'Readings', 'Records']);
+        expect(groups.every((g) => capsKinds.includes(g.split(':')[1])), `every heading is in capitals: ${groups}`).toBe(true);
         // Esc is the menu's own: the page's listener hears nothing, and the focus is back on the button.
         await page.keyboard.press('Escape');
         await expect(menu).toBeHidden();
@@ -108,6 +112,7 @@ test(
         // A refill while open waits until the menu closes; decorate is handed the button and the new entries.
         await button.click();
         const row = (await items.first().boundingBox())?.height ?? 0;
+        const rowPad = await items.first().evaluate((el) => parseFloat(getComputedStyle(el).paddingBlockEnd));
         // Kenny, 2026-10-05: the menu of a button at the left edge opened off the screen; now all of it is on it.
         const onScreen = await page.evaluate((selector) => {
             const m = /** @type {Element} */ (document.querySelector(`${selector} > [role="menu"]`)).getBoundingClientRect();
@@ -162,7 +167,10 @@ test(
         await button.click();
         const loading = page.locator(`${OWN} [data-kp-loading]`);
         await expect(loading).toHaveAttribute('aria-disabled', 'true');
-        expect(Math.abs(((await loading.boundingBox())?.height ?? 0) - row)).toBeLessThanOrEqual(1);
+        // A real row's height, plus whatever extra block-end padding the register gives the entry to carry its loading line (formal: 0.9rem).
+        const loadingPad = await loading.evaluate((el) => parseFloat(getComputedStyle(el).paddingBlockEnd));
+        expect(Math.abs(((await loading.boundingBox())?.height ?? 0) - row - (loadingPad - rowPad))).toBeLessThanOrEqual(1);
+        expect(loadingPad - rowPad, 'the extra the loading line takes stays under one line of text').toBeLessThan(row);
         await page.keyboard.press('Escape');
         // Twenty-four: the menu scrolls inside itself and End keeps the focus in view.
         await page.locator('#menu-button [data-cat-menu="many"]').click();
