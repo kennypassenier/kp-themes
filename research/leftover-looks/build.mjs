@@ -1,0 +1,272 @@
+// research/leftover-looks: writes demo.html from one description, so the four
+// phantom parts and the six deco menus are written once.
+//
+//   node research/leftover-looks/build.mjs
+import { writeFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const here = dirname(fileURLToPath(import.meta.url));
+
+/** @param {string} text */
+const attr = (text) => text.replaceAll('&', '&amp;').replaceAll("'", '&#39;').replaceAll('"', '&quot;');
+
+/* ------------------------------------------------------------------ phantom */
+
+/** The four parts of the register that wear the paperclip, each as the package marks it up. */
+const PARTS = [
+    {
+        id: 'card',
+        name: 'Card',
+        html: `<article class="kp-card">
+                                    <h4 class="kp-card__title">Pump house 3</h4>
+                                    <div class="kp-card__body"><p>Two pumps on the ring main. Last reading at 14:05, flow steady.</p></div>
+                                </article>`,
+    },
+    {
+        id: 'menu',
+        name: 'Menu',
+        html: `<div class="kp-menu" role="menu" aria-label="Every other action">
+                                    <button type="button" class="kp-menu__item" role="menuitem">Export readings</button>
+                                    <button type="button" class="kp-menu__item" role="menuitem">Schedule a visit</button>
+                                    <button type="button" class="kp-menu__item" role="menuitem">Mute alarms</button>
+                                </div>`,
+    },
+    {
+        id: 'dialog',
+        name: 'Dialog',
+        html: `<div class="kp-dialog" role="group" aria-label="A dialog, shown open">
+                                    <h4 class="kp-dialog__title">Close the valve?</h4>
+                                    <p class="kp-dialog__description">Pump house 3 stops feeding the north ring.</p>
+                                    <div class="kp-dialog__actions">
+                                        <button type="button" class="kp-button">Cancel</button>
+                                        <button type="button" class="kp-button kp-button--primary">Close it</button>
+                                    </div>
+                                </div>`,
+    },
+    {
+        id: 'toast',
+        name: 'Toast',
+        html: `<div class="kp-toast" role="group" aria-label="A toast, shown">
+                                    <span class="kp-toast__body">Valve closed.</span>
+                                    <button type="button" class="kp-button kp-button--sm">Undo</button>
+                                </div>`,
+    },
+];
+
+/** The four columns: what the register does today, then the three proposals (the recommendation first). */
+const PLATES = [
+    { id: 'now', head: 'Now', sub: 'The package as it is: the plate is declared and clipped away.' },
+    { id: 'offset', head: '1 · One hard plate', sub: 'Recommended. A deep red copy of the part, shifted down and to the end.' },
+    { id: 'screen', head: '2 · The plate as a screen', sub: 'The same copy, printed as the register’s halftone dots.' },
+    { id: 'slash', head: '3 · The plate as a slash', sub: 'A red slash standing out of the end edge only.' },
+];
+
+const phantomRows = PLATES.map(
+    (plate) => `                    <div class="lo-row" data-lo-plate="${plate.id}">
+                        <h3 class="lo-row__head"><b>${plate.head}</b><span>${plate.sub}</span></h3>
+${PARTS.map(
+    (part) => `                        <figure class="lo-fig" data-lo-part="${part.id}">
+                            <figcaption>${part.name}</figcaption>
+                            <div class="lo-spec">
+                                ${part.html}
+                            </div>
+                        </figure>`,
+).join('\n')}
+                    </div>`,
+).join('\n');
+
+/* --------------------------------------------------------------------- deco */
+
+const POSITIONS = [
+    { id: 'start', name: 'Start', label: 'Actions' },
+    { id: 'middle', name: 'Middle', label: 'Export' },
+    { id: 'end', name: 'End', label: 'More' },
+];
+
+/** @param {string} kind @param {typeof POSITIONS[number]} pos */
+function menuButton(kind, pos) {
+    return `<div class="kp-menu-button" data-kp-menu-button data-kp-key="lo-${kind}-${pos.id}" data-lo-position="${pos.id}">
+                                    <button type="button" class="kp-button kp-button--sm">${pos.label} ▾</button>
+                                    <div class="kp-menu kp-menu--rich" role="menu" aria-label="${pos.label}, ${kind === 'now' ? 'as it is' : 'with the anchor'}"></div>
+                                </div>`;
+}
+
+const decoBars = [
+    { id: 'now', head: 'Now', sub: 'The inlay is drawn from the middle of the menu’s top edge, whichever button opened it.' },
+    { id: 'anchor', head: 'Under the button (recommended)', sub: 'The same menus, the inlay drawn from the top edge right under the button that opened them.' },
+]
+    .map(
+        (bar) => `                        <figure class="lo-bar-fig" data-lo-bar="${bar.id}">
+                            <figcaption><b>${bar.head}</b></figcaption>
+                            <div class="lo-bar" role="toolbar" aria-label="${attr(bar.head)}">
+                                ${POSITIONS.map((pos) => menuButton(bar.id, pos)).join('\n                                ')}
+                            </div>
+                        </figure>`,
+    )
+    .join('\n');
+
+/* ------------------------------------------------------------------ choices */
+
+const phantomChoices = [
+    {
+        id: 'plate',
+        label: 'How phantom’s cut-paper parts show the deep red second plate',
+        options: [
+            {
+                value: 'offset',
+                label: '1 · One hard plate (recommended)',
+                hint: 'Cards, menus, toasts and dialogs get the plate the register already declares for the toast and the dialog (6 and 10 px) and the 4 px of the buttons’ key caps: a deep red copy of the part, shifted down and to the end, with its cut corners. The smallest change: the clip is widened to let it out.',
+            },
+            {
+                value: 'screen',
+                label: '2 · The plate as a screen',
+                hint: 'The same copy, printed as the register’s halftone dots in deep red instead of a solid. Softer on the eye and the screen is a phantom motif, but G7 says the second plate is a hard shadow.',
+            },
+            {
+                value: 'slash',
+                label: '3 · The plate as a slash',
+                hint: 'Not a copy: a red slash standing out of the end edge, cut at the top like the hero’s slash. The most graphic, and a new use of the slash motif.',
+            },
+        ],
+    },
+];
+
+const decoChoices = [
+    {
+        id: 'anchor',
+        label: 'Where a menu’s gold inlay starts drawing',
+        options: [
+            {
+                value: 'button',
+                label: 'Under the button that opened it (recommended)',
+                hint: 'js/menu-button.js writes where the button’s centre falls on the open menu as --kp-menu-anchor-x; deco’s register reads it as the origin of the draw. A register that does not read it is unchanged.',
+            },
+            {
+                value: 'middle',
+                label: 'The middle of the top edge, as today',
+                hint: 'Nothing changes: the inlay is drawn from the middle of the menu’s top edge whichever button opened it.',
+            },
+        ],
+    },
+];
+
+/* --------------------------------------------------------------------- page */
+
+const html = `<!doctype html>
+<!-- Written by research/leftover-looks/build.mjs; edit build.mjs and demo.css, not this file. -->
+<html lang="en" data-theme="formal" data-cat-theme="formal" data-review="leftover-looks" data-review-themes="phantom,deco">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes: two leftover looks, phantom’s second plate and deco’s menu inlay</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <link rel="stylesheet" href="../../css/formal-register.css" data-kp-register="formal" />
+        <link rel="stylesheet" href="../../css/phantom-register.css" data-kp-register="phantom" />
+        <link rel="stylesheet" href="../../css/deco-register.css" data-kp-register="deco" />
+        <link rel="stylesheet" href="demo.css" />
+    </head>
+    <body>
+        <main class="lo-page">
+            <header class="lo-intro">
+                <h1>Two leftover looks: phantom’s second plate and deco’s menu inlay</h1>
+                <p>
+                    Two findings from the package review, each shown here as a proposal next to what the package does now. Nothing in the package
+                    has changed: the proposals live in this page’s stylesheet only, and the package is changed only for the choice you tick.
+                    Judge them in the review dialog (“Review in a dialog” at the top): phantom first, then deco.
+                </p>
+                <p class="lo-motion" data-lo-motion hidden>
+                    <b>Your system asks for reduced motion</b>, so the menus appear without their inlay being drawn. Turn it off to judge the
+                    movement.
+                </p>
+            </header>
+
+            <section
+                class="lo-sec"
+                id="phantom-plate"
+                data-review-item="phantom-plate"
+                data-review-themes="phantom"
+                data-review-title="1 · Phantom: the deep red second plate"
+                data-review-components="card,menu,dialog,toast"
+                data-review-choices='${attr(JSON.stringify(phantomChoices))}'
+                aria-labelledby="h-phantom"
+            >
+                <div class="lo-sec__head">
+                    <p class="lo-num">1 · Phantom</p>
+                    <h2 id="h-phantom">Cut paper cannot show its hard shadow.</h2>
+                    <p class="lo-how">
+                        Phantom’s cards, menus, toasts and dialogs are cut with a <code>clip-path</code>, and a clip path also clips the part’s own
+                        <code>box-shadow</code>, so the deep red second plate the character asks for (G5, G7) is declared for the toast and the dialog
+                        and never seen. Top row: what the register does now; below it, three ways to let the plate show.
+                    </p>
+                </div>
+                <div class="lo-look" data-review-look>
+                    <p data-for="phantom">
+                        Compare each column with the top row: in “Now” a card, a menu, a dialog and a toast are flat paper on the black ground; in the
+                        three proposals each has its deep red second plate. Look at the cut corners (top start and bottom end): the plate must follow the
+                        cut, not square it. Then pick one of the three.
+                    </p>
+                </div>
+                <div class="lo-stage" data-theme="phantom" data-lo-stage="phantom">
+${phantomRows}
+                </div>
+            </section>
+
+            <section
+                class="lo-sec"
+                id="deco-inlay"
+                data-review-item="deco-inlay"
+                data-review-themes="deco"
+                data-review-title="2 · Deco: where a menu’s inlay starts"
+                data-review-components="menu"
+                data-review-choices='${attr(JSON.stringify(decoChoices))}'
+                aria-labelledby="h-deco"
+            >
+                <div class="lo-sec__head">
+                    <p class="lo-num">2 · Deco</p>
+                    <h2 id="h-deco">A menu’s inlay starts in the wrong place.</h2>
+                    <p class="lo-how">
+                        A deco plate’s gold inlay is drawn from the middle of its top edge, round both ways. For a menu that opens from a button it
+                        starts at the middle of the menu, not under the button, because the register cannot know where the button is. Proposal:
+                        <code>js/menu-button.js</code> writes the button’s centre on the open menu as <code>--kp-menu-anchor-x</code>, and deco’s
+                        register draws from there.
+                    </p>
+                </div>
+                <div class="lo-look" data-review-look>
+                    <p data-for="deco">
+                        Press “Start”, “Middle” and “End” to open the menu of the button at that place on both bars. Watch where the gold line
+                        begins: in “Now” always from the middle of the menu’s top edge; under the button in the proposal. “Hold the draw at a fifth”
+                        freezes the first moment of the inlay so you can see where it begins.
+                    </p>
+                </div>
+                <div class="lo-stage lo-stage--deco" data-theme="deco" data-lo-stage="deco">
+                    <div class="lo-controls" data-review-controls>
+                        <div role="group" aria-label="Open the menus at">
+                            <button type="button" class="kp-button kp-button--sm" data-lo-open="start" aria-pressed="false">Start</button>
+                            <button type="button" class="kp-button kp-button--sm" data-lo-open="middle" aria-pressed="false">Middle</button>
+                            <button type="button" class="kp-button kp-button--sm" data-lo-open="end" aria-pressed="false">End</button>
+                            <button type="button" class="kp-button kp-button--sm" data-lo-hold aria-pressed="false">Hold the draw at a fifth</button>
+                            <button type="button" class="kp-button kp-button--sm" data-lo-next data-review-replay aria-expanded="false">▶ Open the start menus</button>
+                        </div>
+                    </div>
+                    <div class="lo-bars">
+${decoBars}
+                    </div>
+                </div>
+            </section>
+        </main>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>
+`;
+
+writeFileSync(join(here, 'demo.html'), html);
+console.log('wrote demo.html');
