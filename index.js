@@ -124,6 +124,7 @@ export { TOOLBAR, TOOLBAR_CLEAR_EVENT, TOOLBAR_REMOVE_EVENT, attachToolbars, set
 /** @typedef {import('./js/toolbar.js').ToolbarFilter} ToolbarFilter */
 export { KEYS, attachKeys, setKeys } from './js/keys.js';
 /** @typedef {import('./js/keys.js').KeyPair} KeyPair */
+export { HOVERCARD_ATTRIBUTE, HOVERCARD_CARD, HOVERCARD_EVENT, attachHoverCards } from './js/hovercard.js';
 // Information that updates in place, the theme's way [research/update-motion, 2026-10-05].
 export {
     UPDATE_PROPERTY,

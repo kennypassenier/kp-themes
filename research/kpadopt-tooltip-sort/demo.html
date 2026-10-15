@@ -1,0 +1,777 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="kpadopt-tooltip-sort">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Hover card and plain-click multi-sort · kp-themes research demo</title>
+        <link rel="stylesheet" href="../../catalogue/deps.css" />
+        <link rel="stylesheet" href="demo.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+        <header class="cat-bar">
+            <a class="cat-bar__home" href="../../catalogue/index.html">kp-themes catalogue</a>
+            <span class="cat-bar__spacer"></span>
+            <button type="button" class="kp-button kp-button--ghost" data-cat-devtools>Devtools (Alt+D)</button>
+        </header>
+
+        <main id="main" class="cat-main">
+            <h1>Hover card and plain-click multi-sort</h1>
+            <p class="cat-intro">
+                Two things the admin dashboard still drew itself, now in the package (Kenny's rule: a consumer draws nothing). Both are the package's
+                own code: the card is <code>js/hovercard.js</code> with <code>.kp-popover.kp-tooltip</code>, the tables are
+                <code>.kp-datatable</code> with <code>data-kp-sort-multi="click"</code>. A green <b>package</b> tag marks that. The amber
+                <b>mock</b> tag marks page-only script in <code>demo.js</code> and <code>hc-</code> layout classes that borrow package classes (badge,
+                tag, table, button) and restyle none of them: the rebuild button, the dataset, the rich content built when the card opens and the
+                docked strip. The card needs a focusable anchor for the keyboard: <code>tabindex="0"</code> on a cell or chip that has no control in
+                it.
+            </p>
+
+            <section class="cat-block" id="hovercard" data-review-item="hovercard" data-review-title="Hover card" data-review-components="tooltip">
+                <h2>
+                    One hover card for a whole page<span class="hc-tag hc-tag--package">package</span
+                    ><span class="hc-tag hc-tag--mock">mock data</span>
+                </h2>
+                <div class="cat-look">
+                    <b>Look at:</b> hover or Tab to a status badge, a cut-off service name or a tag in the table. The card is one node: moving from
+                    one to the next carries it over without a new entrance, leaving closes it as its entrance played backwards. Press
+                    <b>Rebuild now</b> while a card is open: the anchors are new nodes, the card closes with its anchor and works on the new ones with
+                    no re-attach. The card sits under the anchor with its start edges aligned and the theme's own gap, flips above at the window's
+                    bottom edge (the docked strip) and stays inside the window at the right edge (the tags at the end). Escape closes it; the pointer
+                    can move onto it. <b>Almanac</b>'s tag has nothing to say: no card opens. The faded badge below is <code>aria-disabled</code>; its
+                    card says why.
+                </div>
+                <div data-review-look>
+                    <p data-for="blueprint">
+                        In this theme the card is a drafting callout: a leader line is drawn from its node on the anchor, then the pen traces the
+                        outline; it leaves by retracting. The leader must meet the anchor, also after you move from one cell to the next.
+                    </p>
+                    <p data-for="brutalism">
+                        In this theme the card is dropped onto its footprint with the hard shadow already on the page; nothing fades. Moving cell to
+                        cell must carry it over, not drop it again.
+                    </p>
+                    <p data-for="cyberpunk">
+                        In this theme the card splits open in stepped frames. Moving to the next cell must not replay the split; closing plays it
+                        backwards.
+                    </p>
+                    <p data-for="dark">
+                        In this theme a plain plate with the oxide halo of dark popovers, no glow of its own. Check the gap under the anchor equals
+                        the one in the Tooltip catalogue page.
+                    </p>
+                    <p data-for="deco">In this theme a small faceted plate with its inlay; check the inlay corners survive a long, wrapped text.</p>
+                    <p data-for="forest">
+                        In this theme the card grows down out of the anchor like a root and leaves by growing back. The root must hang from the anchor
+                        it names, also when the card moves to a neighbour.
+                    </p>
+                    <p data-for="formal">
+                        In this theme a quiet bordered plate, the least motion of all; this is the reference for gap and alignment (start edges of
+                        card and anchor line up).
+                    </p>
+                    <p data-for="grotesk">
+                        In this theme the card falls in as a printed label on a rule and leaves as it came. Rich rows (title, three label/value pairs)
+                        must stay on the grid.
+                    </p>
+                    <p data-for="light">In this theme the card is exposed like a print coming up; check text reads at a glance on the paper plate.</p>
+                    <p data-for="nostromo">
+                        In this theme the card is rastered in on a beam, stepped; keep an eye on the beam against the text of the rich card.
+                    </p>
+                    <p data-for="pastel">
+                        In this theme the card is stuck on like a sticker with its offset plate (the pass) behind it; the plate must go in and out
+                        with the card, since the card has no anchor wrapper here.
+                    </p>
+                    <p data-for="phantom">
+                        In this theme the card resolves out of the dark, linear; check it stays within 12 px under the anchor and never covers it.
+                    </p>
+                    <p data-for="solstice">In this theme the card is kindled, a dome of light rising, and sinks back on close.</p>
+                    <p data-for="synthwave">In this theme the card climbs in on the beat; moving between cells must not restart the climb.</p>
+                    <p data-for="terminal">
+                        In this theme the card is typed in, a line per step, and is untyped on close; the rich card types its rows top to bottom.
+                    </p>
+                    <p data-for="titanium">
+                        In this theme the card is cut from the metal and set in without easing (titanium is linear); the going-out is the same cut run
+                        backwards.
+                    </p>
+                </div>
+                <div class="hc-grid">
+                    <div class="hc-panel">
+                        <h3>Text from an attribute, rebuilt</h3>
+                        <div class="hc-bar">
+                            <button type="button" class="kp-button kp-button--sm" data-hc-rebuild>Rebuild now</button>
+                            <label class="hc-bar"><input type="checkbox" data-hc-auto /> every 8 s</label>
+                            <span class="hc-note" data-hc-rounds role="status">Rebuilt 0 times</span>
+                        </div>
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">
+                                    Services. Each name, state and tag has a card with its detail on hover or focus.
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Service</th>
+                                        <th scope="col">State</th>
+                                        <th scope="col">Backend</th>
+                                    </tr>
+                                </thead>
+                                <tbody data-hc-rows></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="hc-panel">
+                        <h3>States</h3>
+                        <p>Opened, standing still: press, then look; Escape or Close hides it.</p>
+                        <div class="hc-bar">
+                            <button type="button" class="kp-button kp-button--sm" data-hc-hold-attr>Show an attribute card open</button>
+                            <button type="button" class="kp-button kp-button--sm" data-hc-hold>Show a rich card open</button>
+                            <button type="button" class="kp-button kp-button--sm kp-button--ghost" data-hc-hide>Close</button>
+                        </div>
+                        <p>Disabled: the control is unavailable, its card still says why.</p>
+                        <div class="hc-chips">
+                            <span
+                                class="kp-badge hc-anchor"
+                                tabindex="0"
+                                aria-disabled="true"
+                                data-kp-hovercard="Restart is unavailable while a backup runs. It finishes about 04:10."
+                                >Restart</span
+                            >
+                        </div>
+                        <p>Long text wraps inside the card's width, a long word breaks.</p>
+                        <div class="hc-chips">
+                            <span
+                                class="kp-tag hc-anchor"
+                                tabindex="0"
+                                data-kp-hovercard="Reconciliation of /srv/media/library/films/Studio-Ghibli-Collection/Spirited-Away-2001-1080p-remux.mkv failed after 3 retries; the file is kept and retried at 03:00, no action needed unless it fails twice more."
+                                >Long note</span
+                            >
+                        </div>
+                        <p>At the window's right edge: the card is kept inside it.</p>
+                        <div class="hc-chips hc-chips--end">
+                            <span
+                                class="kp-tag hc-anchor"
+                                tabindex="0"
+                                data-kp-hovercard="Kept 8 px inside the window's right edge, however wide the card is."
+                                >Edge</span
+                            >
+                        </div>
+                    </div>
+                </div>
+                <div class="hc-dock">
+                    <p class="hc-note">Docked to the window's bottom edge, so there is no room below: the card opens above.</p>
+                    <div class="hc-chips">
+                        <span class="kp-tag hc-anchor" tabindex="0" data-kp-hovercard="Opens above, at the distance it would hang below."
+                            >Docked</span
+                        >
+                        <span
+                            class="kp-badge kp-badge--info hc-anchor"
+                            tabindex="0"
+                            data-kp-hovercard="Moving between two docked anchors carries the card over."
+                            >Docked too</span
+                        >
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="cat-block"
+                id="sortclick"
+                data-review-item="sortclick"
+                data-review-title="Plain-click multi-sort"
+                data-review-components="datatable"
+            >
+                <h2>Every click adds a sort key<span class="hc-tag hc-tag--package">package</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <code>data-kp-sort-multi="click"</code>. In the first table a plain click on a header adds that column as the next
+                    key (ascending, then descending, then out again), the numbers in the headers give the order and the line above says it in words;
+                    Enter or Space on a focused header does the same. <b>Shift</b> + click (Shift + Enter) sorts on that column alone, the quick way
+                    back to one key; <b>Clear the sort</b> puts the opening sort back (here: none). The second table opens on three keys and its
+                    button restores them. The third is the default, unchanged: Shift adds, a plain click sorts alone. The fourth adds
+                    <code>data-kp-sort-cycle="three"</code>. The summary line must keep one line high whatever it says.
+                </div>
+                <div data-review-look>
+                    <p data-for="blueprint">
+                        In this theme the little key numbers sit beside the sort mark as drafted dimension marks; a plain click adds the key, Shift
+                        sorts alone.
+                    </p>
+                    <p data-for="brutalism">
+                        In this theme key numbers are hard-edged blocks in the header; check they stay on the header line in the narrow table.
+                    </p>
+                    <p data-for="cyberpunk">
+                        In this theme key numbers read clearly beside the glitching sort arrow; the summary line above says the sort in words.
+                    </p>
+                    <p data-for="dark">
+                        In this theme key numbers in the oxide ink; the summary line does not jump when keys are added (it is one line high).
+                    </p>
+                    <p data-for="deco">In this theme key numbers as small gold rings; the third click on a key removes it and the ring renumbers.</p>
+                    <p data-for="forest">In this theme key numbers as leaf markers; reset returns the opening sort.</p>
+                    <p data-for="formal">In this theme the reference: numbers, arrows and the summary line aligned on one baseline in every state.</p>
+                    <p data-for="grotesk">In this theme numbers set in the grotesk face; the header height does not change when numbers appear.</p>
+                    <p data-for="light">In this theme numbers on the paper header; contrast of a number against the header is the thing to judge.</p>
+                    <p data-for="nostromo">In this theme numbers in the monitor ink, stepped reveal when a key is added.</p>
+                    <p data-for="pastel">In this theme numbers as sticker dots; check they do not collide with the sort arrow.</p>
+                    <p data-for="phantom">In this theme numbers resolve in the dark; they stay legible at the header size.</p>
+                    <p data-for="solstice">In this theme numbers kindle when added; reset puts the opening sort back.</p>
+                    <p data-for="synthwave">In this theme numbers glow on the beat; no overlap with the arrow.</p>
+                    <p data-for="terminal">In this theme numbers as bracketed digits; the sort line reads like a status line.</p>
+                    <p data-for="titanium">
+                        In this theme numbers cut into the header, no easing; the summary line and the reset button align on the end edge.
+                    </p>
+                </div>
+                <div class="hc-grid">
+                    <div class="hc-panel">
+                        <h3>Click mode, opens unsorted</h3>
+                        <div class="kp-datatable" data-kp-datatable data-kp-sort-multi="click" data-kp-page-sizes="none">
+                            <div class="kp-datatable__bar">
+                                <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-kp-datatable-sort-reset>
+                                    Clear the sort
+                                </button>
+                            </div>
+                            <div class="kp-table-wrap">
+                                <table class="kp-table">
+                                    <caption class="kp-sr-only">
+                                        Incidents. Click a column header to add it to the sort; Shift and click sorts on that column alone.
+                                    </caption>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" data-kp-sort="text">Reference</th>
+                                            <th scope="col" data-kp-sort="text">Site</th>
+                                            <th scope="col" data-kp-sort="text" data-kp-sort-order="Low,Medium,High,Critical">Severity</th>
+                                            <th scope="col" data-kp-sort="number" class="kp-text-end">Hours open</th>
+                                            <th scope="col" data-kp-sort="text">Owner</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr data-kp-row-key="INC-4471">
+                                            <td data-label="Reference"><code class="kp-mono">INC-4471</code></td>
+                                            <td data-label="Site">Pump house 4</td>
+                                            <td data-label="Severity">High</td>
+                                            <td data-label="Hours open" class="kp-text-end kp-numeric">2</td>
+                                            <td data-label="Owner">Ada</td>
+                                        </tr>
+                                        <tr data-kp-row-key="INC-4468">
+                                            <td data-label="Reference"><code class="kp-mono">INC-4468</code></td>
+                                            <td data-label="Site">Cold store</td>
+                                            <td data-label="Severity">Medium</td>
+                                            <td data-label="Hours open" class="kp-text-end kp-numeric">9</td>
+                                            <td data-label="Owner">Bram</td>
+                                        </tr>
+                                        <tr data-kp-row-key="INC-4465">
+                                            <td data-label="Reference"><code class="kp-mono">INC-4465</code></td>
+                                            <td data-label="Site">Weighbridge</td>
+                                            <td data-label="Severity">Critical</td>
+                                            <td data-label="Hours open" class="kp-text-end kp-numeric">16</td>
+                                            <td data-label="Owner">Ada</td>
+                                        </tr>
+                                        <tr data-kp-row-key="INC-4462">
+                                            <td data-label="Reference"><code class="kp-mono">INC-4462</code></td>
+                                            <td data-label="Site">Boiler room</td>
+                                            <td data-label="Severity">Low</td>
+                                            <td data-label="Hours open" class="kp-text-end kp-numeric">23</td>
+                                            <td data-label="Owner">Chen</td>
+                                        </tr>
+                                        <tr data-kp-row-key="INC-4459">
+                                            <td data-label="Reference"><code class="kp-mono">INC-4459</code></td>
+                                            <td data-label="Site">Loading bay</td>
+                                            <td data-label="Severity">High</td>
+                                            <td data-label="Hours open" class="kp-text-end kp-numeric">30</td>
+                                            <td data-label="Owner">Bram</td>
+                                        </tr>
+                                        <tr data-kp-row-key="INC-4456">
+                                            <td data-label="Reference"><code class="kp-mono">INC-4456</code></td>
+                                            <td data-label="Site">Main gate</td>
+                                            <td data-label="Severity">Medium</td>
+                                            <td data-label="Hours open" class="kp-text-end kp-numeric">37</td>
+                                            <td data-label="Owner">Chen</td>
+                                        </tr>
+                                        <tr data-kp-row-key="INC-4453">
+                                            <td data-label="Reference"><code class="kp-mono">INC-4453</code></td>
+                                            <td data-label="Site">Pump house 4</td>
+                                            <td data-label="Severity">Critical</td>
+                                            <td data-label="Hours open" class="kp-text-end kp-numeric">44</td>
+                                            <td data-label="Owner">Ada</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hc-panel">
+                        <h3>Click mode, opens on three keys</h3>
+                        <div class="kp-datatable" data-kp-datatable data-kp-sort-multi="click" data-kp-page-sizes="none">
+                            <div class="kp-datatable__bar">
+                                <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-kp-datatable-sort-reset>
+                                    Back to Severity, Hours open, Owner
+                                </button>
+                            </div>
+                            <div class="kp-table-wrap">
+                                <table class="kp-table">
+                                    <caption class="kp-sr-only">
+                                        Incidents, sorted on three columns. Click a header to add it; Shift and click sorts on it alone.
+                                    </caption>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" data-kp-sort="text">Reference</th>
+                                            <th scope="col" data-kp-sort="text">Site</th>
+                                            <th
+                                                scope="col"
+                                                data-kp-sort="text"
+                                                data-kp-sort-order="Low,Medium,High,Critical"
+                                                aria-sort="descending"
+                                                data-kp-sort-priority="1"
+                                            >
+                                                Severity
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                data-kp-sort="number"
+                                                class="kp-text-end"
+                                                aria-sort="descending"
+                                                data-kp-sort-priority="2"
+                                            >
+                                                Hours open
+                                            </th>
+                                            <th scope="col" data-kp-sort="text" aria-sort="ascending" data-kp-sort-priority="3">Owner</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr data-kp-row-key="INC-4471">
+                                            <td data-label="Reference"><code class="kp-mono">INC-4471</code></td>
+                                            <td data-label="Site">Pump house 4</td>
+                                            <td data-label="Severity">High</td>
+                                            <td data-label="Hours open" class="kp-text-end kp-numeric">2</td>
+                                            <td data-label="Owner">Ada</td>
+                                        </tr>
+                                        <tr data-kp-row-key="INC-4468">
+                                            <td data-label="Reference"><code class="kp-mono">INC-4468</code></td>
+                                            <td data-label="Site">Cold store</td>
+                                            <td data-label="Severity">Medium</td>
+                                            <td data-label="Hours open" class="kp-text-end kp-numeric">9</td>
+                                            <td data-label="Owner">Bram</td>
+                                        </tr>
+                                        <tr data-kp-row-key="INC-4465">
+                                            <td data-label="Reference"><code class="kp-mono">INC-4465</code></td>
+                                            <td data-label="Site">Weighbridge</td>
+                                            <td data-label="Severity">Critical</td>
+                                            <td data-label="Hours open" class="kp-text-end kp-numeric">16</td>
+                                            <td data-label="Owner">Ada</td>
+                                        </tr>
+                                        <tr data-kp-row-key="INC-4462">
+                                            <td data-label="Reference"><code class="kp-mono">INC-4462</code></td>
+                                            <td data-label="Site">Boiler room</td>
+                                            <td data-label="Severity">Low</td>
+                                            <td data-label="Hours open" class="kp-text-end kp-numeric">23</td>
+                                            <td data-label="Owner">Chen</td>
+                                        </tr>
+                                        <tr data-kp-row-key="INC-4459">
+                                            <td data-label="Reference"><code class="kp-mono">INC-4459</code></td>
+                                            <td data-label="Site">Loading bay</td>
+                                            <td data-label="Severity">High</td>
+                                            <td data-label="Hours open" class="kp-text-end kp-numeric">30</td>
+                                            <td data-label="Owner">Bram</td>
+                                        </tr>
+                                        <tr data-kp-row-key="INC-4456">
+                                            <td data-label="Reference"><code class="kp-mono">INC-4456</code></td>
+                                            <td data-label="Site">Main gate</td>
+                                            <td data-label="Severity">Medium</td>
+                                            <td data-label="Hours open" class="kp-text-end kp-numeric">37</td>
+                                            <td data-label="Owner">Chen</td>
+                                        </tr>
+                                        <tr data-kp-row-key="INC-4453">
+                                            <td data-label="Reference"><code class="kp-mono">INC-4453</code></td>
+                                            <td data-label="Site">Pump house 4</td>
+                                            <td data-label="Severity">Critical</td>
+                                            <td data-label="Hours open" class="kp-text-end kp-numeric">44</td>
+                                            <td data-label="Owner">Ada</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hc-panel">
+                        <h3>Default (Shift adds), unchanged</h3>
+                        <div class="kp-datatable" data-kp-datatable data-kp-sort-multi data-kp-page-sizes="none">
+                            <div class="kp-datatable__bar">
+                                <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-kp-datatable-sort-reset>
+                                    Back to Severity, then Hours open
+                                </button>
+                            </div>
+                            <div class="kp-table-wrap">
+                                <table class="kp-table">
+                                    <caption class="kp-sr-only">
+                                        Incidents, sorted on two columns. Shift and click a header to add it; a plain click sorts on it alone.
+                                    </caption>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" data-kp-sort="text">Reference</th>
+                                            <th scope="col" data-kp-sort="text">Site</th>
+                                            <th
+                                                scope="col"
+                                                data-kp-sort="text"
+                                                data-kp-sort-order="Low,Medium,High,Critical"
+                                                aria-sort="descending"
+                                                data-kp-sort-priority="1"
+                                            >
+                                                Severity
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                data-kp-sort="number"
+                                                class="kp-text-end"
+                                                aria-sort="descending"
+                                                data-kp-sort-priority="2"
+                                            >
+                                                Hours open
+                                            </th>
+                                            <th scope="col" data-kp-sort="text">Owner</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr data-kp-row-key="INC-4471">
+                                            <td data-label="Reference"><code class="kp-mono">INC-4471</code></td>
+                                            <td data-label="Site">Pump house 4</td>
+                                            <td data-label="Severity">High</td>
+                                            <td data-label="Hours open" class="kp-text-end kp-numeric">2</td>
+                                            <td data-label="Owner">Ada</td>
+                                        </tr>
+                                        <tr data-kp-row-key="INC-4468">
+                                            <td data-label="Reference"><code class="kp-mono">INC-4468</code></td>
+                                            <td data-label="Site">Cold store</td>
+                                            <td data-label="Severity">Medium</td>
+                                            <td data-label="Hours open" class="kp-text-end kp-numeric">9</td>
+                                            <td data-label="Owner">Bram</td>
+                                        </tr>
+                                        <tr data-kp-row-key="INC-4465">
+                                            <td data-label="Reference"><code class="kp-mono">INC-4465</code></td>
+                                            <td data-label="Site">Weighbridge</td>
+                                            <td data-label="Severity">Critical</td>
+                                            <td data-label="Hours open" class="kp-text-end kp-numeric">16</td>
+                                            <td data-label="Owner">Ada</td>
+                                        </tr>
+                                        <tr data-kp-row-key="INC-4462">
+                                            <td data-label="Reference"><code class="kp-mono">INC-4462</code></td>
+                                            <td data-label="Site">Boiler room</td>
+                                            <td data-label="Severity">Low</td>
+                                            <td data-label="Hours open" class="kp-text-end kp-numeric">23</td>
+                                            <td data-label="Owner">Chen</td>
+                                        </tr>
+                                        <tr data-kp-row-key="INC-4459">
+                                            <td data-label="Reference"><code class="kp-mono">INC-4459</code></td>
+                                            <td data-label="Site">Loading bay</td>
+                                            <td data-label="Severity">High</td>
+                                            <td data-label="Hours open" class="kp-text-end kp-numeric">30</td>
+                                            <td data-label="Owner">Bram</td>
+                                        </tr>
+                                        <tr data-kp-row-key="INC-4456">
+                                            <td data-label="Reference"><code class="kp-mono">INC-4456</code></td>
+                                            <td data-label="Site">Main gate</td>
+                                            <td data-label="Severity">Medium</td>
+                                            <td data-label="Hours open" class="kp-text-end kp-numeric">37</td>
+                                            <td data-label="Owner">Chen</td>
+                                        </tr>
+                                        <tr data-kp-row-key="INC-4453">
+                                            <td data-label="Reference"><code class="kp-mono">INC-4453</code></td>
+                                            <td data-label="Site">Pump house 4</td>
+                                            <td data-label="Severity">Critical</td>
+                                            <td data-label="Hours open" class="kp-text-end kp-numeric">44</td>
+                                            <td data-label="Owner">Ada</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hc-panel">
+                        <h3>Click mode with the three-step cycle</h3>
+                        <div class="kp-datatable" data-kp-datatable data-kp-sort-multi="click" data-kp-page-sizes="none" data-kp-sort-cycle="three">
+                            <div class="kp-datatable__bar">
+                                <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-kp-datatable-sort-reset>
+                                    Clear the sort
+                                </button>
+                            </div>
+                            <div class="kp-table-wrap">
+                                <table class="kp-table">
+                                    <caption class="kp-sr-only">
+                                        Incidents with a three-step sort. Click a header to add it to the sort.
+                                    </caption>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" data-kp-sort="text">Reference</th>
+                                            <th scope="col" data-kp-sort="text">Site</th>
+                                            <th scope="col" data-kp-sort="text" data-kp-sort-order="Low,Medium,High,Critical">Severity</th>
+                                            <th scope="col" data-kp-sort="number" class="kp-text-end">Hours open</th>
+                                            <th scope="col" data-kp-sort="text">Owner</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr data-kp-row-key="INC-4471">
+                                            <td data-label="Reference"><code class="kp-mono">INC-4471</code></td>
+                                            <td data-label="Site">Pump house 4</td>
+                                            <td data-label="Severity">High</td>
+                                            <td data-label="Hours open" class="kp-text-end kp-numeric">2</td>
+                                            <td data-label="Owner">Ada</td>
+                                        </tr>
+                                        <tr data-kp-row-key="INC-4468">
+                                            <td data-label="Reference"><code class="kp-mono">INC-4468</code></td>
+                                            <td data-label="Site">Cold store</td>
+                                            <td data-label="Severity">Medium</td>
+                                            <td data-label="Hours open" class="kp-text-end kp-numeric">9</td>
+                                            <td data-label="Owner">Bram</td>
+                                        </tr>
+                                        <tr data-kp-row-key="INC-4465">
+                                            <td data-label="Reference"><code class="kp-mono">INC-4465</code></td>
+                                            <td data-label="Site">Weighbridge</td>
+                                            <td data-label="Severity">Critical</td>
+                                            <td data-label="Hours open" class="kp-text-end kp-numeric">16</td>
+                                            <td data-label="Owner">Ada</td>
+                                        </tr>
+                                        <tr data-kp-row-key="INC-4462">
+                                            <td data-label="Reference"><code class="kp-mono">INC-4462</code></td>
+                                            <td data-label="Site">Boiler room</td>
+                                            <td data-label="Severity">Low</td>
+                                            <td data-label="Hours open" class="kp-text-end kp-numeric">23</td>
+                                            <td data-label="Owner">Chen</td>
+                                        </tr>
+                                        <tr data-kp-row-key="INC-4459">
+                                            <td data-label="Reference"><code class="kp-mono">INC-4459</code></td>
+                                            <td data-label="Site">Loading bay</td>
+                                            <td data-label="Severity">High</td>
+                                            <td data-label="Hours open" class="kp-text-end kp-numeric">30</td>
+                                            <td data-label="Owner">Bram</td>
+                                        </tr>
+                                        <tr data-kp-row-key="INC-4456">
+                                            <td data-label="Reference"><code class="kp-mono">INC-4456</code></td>
+                                            <td data-label="Site">Main gate</td>
+                                            <td data-label="Severity">Medium</td>
+                                            <td data-label="Hours open" class="kp-text-end kp-numeric">37</td>
+                                            <td data-label="Owner">Chen</td>
+                                        </tr>
+                                        <tr data-kp-row-key="INC-4453">
+                                            <td data-label="Reference"><code class="kp-mono">INC-4453</code></td>
+                                            <td data-label="Site">Pump house 4</td>
+                                            <td data-label="Severity">Critical</td>
+                                            <td data-label="Hours open" class="kp-text-end kp-numeric">44</td>
+                                            <td data-label="Owner">Ada</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="cat-block"
+                id="groupalways"
+                data-review-item="groupalways"
+                data-review-title="A group heading that stays"
+                data-review-components="datatable"
+            >
+                <h2>A group heading with no rows under it<span class="hc-tag hc-tag--package">package</span></h2>
+                <div class="cat-look">
+                    <b>Look at:</b> <code>data-kp-group-always</code> on a heading row. On the left the headings keep standing with no data row under
+                    them: <b>home</b> is still loading (skeleton rows do not count as data), <b>platform</b> failed and its heading carries a Retry
+                    button (a click on it does not fold the group), <b>lab</b> has nothing to list and its heading says why. Search for
+                    <b>jellyfin</b>: the three kept headings stay, the media rows narrow. On the right is the default, unchanged: the same markup
+                    without the attribute hides every heading that has no data row. Check the heading reads as a heading in the three states, the
+                    Retry button aligns with the text and the count badge reads 0.
+                </div>
+                <div data-review-look>
+                    <p data-for="blueprint">
+                        In this theme the heading is the theme&#x27;s own group row; judge the kept heading in loading, failed and empty form against
+                        a normal one (media), and the Retry button against the theme&#x27;s small button.
+                    </p>
+                    <p data-for="brutalism">
+                        In this theme the heading is the theme&#x27;s own group row; judge the kept heading in loading, failed and empty form against
+                        a normal one (media), and the Retry button against the theme&#x27;s small button.
+                    </p>
+                    <p data-for="cyberpunk">
+                        In this theme the heading is the theme&#x27;s own group row; judge the kept heading in loading, failed and empty form against
+                        a normal one (media), and the Retry button against the theme&#x27;s small button.
+                    </p>
+                    <p data-for="dark">
+                        In this theme the heading is the theme&#x27;s own group row; judge the kept heading in loading, failed and empty form against
+                        a normal one (media), and the Retry button against the theme&#x27;s small button.
+                    </p>
+                    <p data-for="deco">
+                        In this theme the heading is the theme&#x27;s own group row; judge the kept heading in loading, failed and empty form against
+                        a normal one (media), and the Retry button against the theme&#x27;s small button.
+                    </p>
+                    <p data-for="forest">
+                        In this theme the heading is the theme&#x27;s own group row; judge the kept heading in loading, failed and empty form against
+                        a normal one (media), and the Retry button against the theme&#x27;s small button.
+                    </p>
+                    <p data-for="formal">
+                        In this theme the heading is the theme&#x27;s own group row; judge the kept heading in loading, failed and empty form against
+                        a normal one (media), and the Retry button against the theme&#x27;s small button.
+                    </p>
+                    <p data-for="grotesk">
+                        In this theme the heading is the theme&#x27;s own group row; judge the kept heading in loading, failed and empty form against
+                        a normal one (media), and the Retry button against the theme&#x27;s small button.
+                    </p>
+                    <p data-for="light">
+                        In this theme the heading is the theme&#x27;s own group row; judge the kept heading in loading, failed and empty form against
+                        a normal one (media), and the Retry button against the theme&#x27;s small button.
+                    </p>
+                    <p data-for="nostromo">
+                        In this theme the heading is the theme&#x27;s own group row; judge the kept heading in loading, failed and empty form against
+                        a normal one (media), and the Retry button against the theme&#x27;s small button.
+                    </p>
+                    <p data-for="pastel">
+                        In this theme the heading is the theme&#x27;s own group row; judge the kept heading in loading, failed and empty form against
+                        a normal one (media), and the Retry button against the theme&#x27;s small button.
+                    </p>
+                    <p data-for="phantom">
+                        In this theme the heading is the theme&#x27;s own group row; judge the kept heading in loading, failed and empty form against
+                        a normal one (media), and the Retry button against the theme&#x27;s small button.
+                    </p>
+                    <p data-for="solstice">
+                        In this theme the heading is the theme&#x27;s own group row; judge the kept heading in loading, failed and empty form against
+                        a normal one (media), and the Retry button against the theme&#x27;s small button.
+                    </p>
+                    <p data-for="synthwave">
+                        In this theme the heading is the theme&#x27;s own group row; judge the kept heading in loading, failed and empty form against
+                        a normal one (media), and the Retry button against the theme&#x27;s small button.
+                    </p>
+                    <p data-for="terminal">
+                        In this theme the heading is the theme&#x27;s own group row; judge the kept heading in loading, failed and empty form against
+                        a normal one (media), and the Retry button against the theme&#x27;s small button.
+                    </p>
+                    <p data-for="titanium">
+                        In this theme the heading is the theme&#x27;s own group row; judge the kept heading in loading, failed and empty form against
+                        a normal one (media), and the Retry button against the theme&#x27;s small button.
+                    </p>
+                </div>
+                <div class="hc-grid">
+                    <div class="hc-panel">
+                        <h3>With data-kp-group-always</h3>
+                        <div class="kp-datatable" data-kp-datatable data-kp-page-sizes="none">
+                            <div class="kp-table-wrap">
+                                <table class="kp-table">
+                                    <caption class="kp-sr-only">
+                                        Backup repositories by stack. Stacks with nothing to list still show their heading and say why.
+                                    </caption>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" data-kp-sort="text">Repository</th>
+                                            <th scope="col" data-kp-sort="number" class="kp-text-end">Snapshots</th>
+                                            <th scope="col" data-kp-sort="number" class="kp-text-end">Size (GB)</th>
+                                            <th scope="col">Last run</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr data-kp-row-group="media">
+                                            <th scope="rowgroup" colspan="4">Stack media <span class="kp-badge" data-kp-group-count></span></th>
+                                        </tr>
+                                        <tr data-kp-row-key="media-jellyfin" data-kp-group-of="media">
+                                            <td data-label="Repository"><code class="kp-mono">media-jellyfin</code></td>
+                                            <td data-label="Snapshots" class="kp-text-end kp-numeric">42</td>
+                                            <td data-label="Size (GB)" class="kp-text-end kp-numeric">118.4</td>
+                                            <td data-label="Last run">04/10/2026 03:12</td>
+                                        </tr>
+                                        <tr data-kp-row-key="media-sonarr" data-kp-group-of="media">
+                                            <td data-label="Repository"><code class="kp-mono">media-sonarr</code></td>
+                                            <td data-label="Snapshots" class="kp-text-end kp-numeric">40</td>
+                                            <td data-label="Size (GB)" class="kp-text-end kp-numeric">2.1</td>
+                                            <td data-label="Last run">04/10/2026 03:14</td>
+                                        </tr>
+                                        <tr data-kp-row-group="home" data-kp-group-always>
+                                            <th scope="rowgroup" colspan="4">
+                                                Stack home (still loading) <span class="kp-badge" data-kp-group-count></span>
+                                            </th>
+                                        </tr>
+                                        <tr data-kp-skeleton-row aria-hidden="true">
+                                            <td colspan="4"><span class="kp-skeleton" style="display: block; block-size: 1em"></span></td>
+                                        </tr>
+                                        <tr data-kp-skeleton-row aria-hidden="true">
+                                            <td colspan="4"><span class="kp-skeleton" style="display: block; block-size: 1em"></span></td>
+                                        </tr>
+                                        <tr data-kp-row-group="platform" data-kp-group-always>
+                                            <th scope="rowgroup" colspan="4">
+                                                Stack platform (failed) <span class="kp-badge" data-kp-group-count></span>
+                                                <span class="hc-reason">Could not reach the repository.</span>
+                                                <button type="button" class="kp-button kp-button--sm" data-hc-retry>Retry</button>
+                                            </th>
+                                        </tr>
+                                        <tr data-kp-row-group="lab" data-kp-group-always>
+                                            <th scope="rowgroup" colspan="4">
+                                                Stack lab (no repositories) <span class="kp-badge" data-kp-group-count></span>
+                                                <span class="hc-reason">No repository is configured for this stack.</span>
+                                            </th>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hc-panel">
+                        <h3>Default (empty headings hidden)</h3>
+                        <div class="kp-datatable" data-kp-datatable data-kp-page-sizes="none">
+                            <div class="kp-table-wrap">
+                                <table class="kp-table">
+                                    <caption class="kp-sr-only">
+                                        Backup repositories by stack. Stacks with nothing to list still show their heading and say why.
+                                    </caption>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" data-kp-sort="text">Repository</th>
+                                            <th scope="col" data-kp-sort="number" class="kp-text-end">Snapshots</th>
+                                            <th scope="col" data-kp-sort="number" class="kp-text-end">Size (GB)</th>
+                                            <th scope="col">Last run</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr data-kp-row-group="media">
+                                            <th scope="rowgroup" colspan="4">Stack media <span class="kp-badge" data-kp-group-count></span></th>
+                                        </tr>
+                                        <tr data-kp-row-key="media-jellyfin" data-kp-group-of="media">
+                                            <td data-label="Repository"><code class="kp-mono">media-jellyfin</code></td>
+                                            <td data-label="Snapshots" class="kp-text-end kp-numeric">42</td>
+                                            <td data-label="Size (GB)" class="kp-text-end kp-numeric">118.4</td>
+                                            <td data-label="Last run">04/10/2026 03:12</td>
+                                        </tr>
+                                        <tr data-kp-row-key="media-sonarr" data-kp-group-of="media">
+                                            <td data-label="Repository"><code class="kp-mono">media-sonarr</code></td>
+                                            <td data-label="Snapshots" class="kp-text-end kp-numeric">40</td>
+                                            <td data-label="Size (GB)" class="kp-text-end kp-numeric">2.1</td>
+                                            <td data-label="Last run">04/10/2026 03:14</td>
+                                        </tr>
+                                        <tr data-kp-row-group="home">
+                                            <th scope="rowgroup" colspan="4">
+                                                Stack home (still loading) <span class="kp-badge" data-kp-group-count></span>
+                                            </th>
+                                        </tr>
+                                        <tr data-kp-skeleton-row aria-hidden="true">
+                                            <td colspan="4"><span class="kp-skeleton" style="display: block; block-size: 1em"></span></td>
+                                        </tr>
+                                        <tr data-kp-skeleton-row aria-hidden="true">
+                                            <td colspan="4"><span class="kp-skeleton" style="display: block; block-size: 1em"></span></td>
+                                        </tr>
+                                        <tr data-kp-row-group="platform">
+                                            <th scope="rowgroup" colspan="4">
+                                                Stack platform (failed) <span class="kp-badge" data-kp-group-count></span>
+                                                <span class="hc-reason">Could not reach the repository.</span>
+                                                <button type="button" class="kp-button kp-button--sm" data-hc-retry>Retry</button>
+                                            </th>
+                                        </tr>
+                                        <tr data-kp-row-group="lab">
+                                            <th scope="rowgroup" colspan="4">
+                                                Stack lab (no repositories) <span class="kp-badge" data-kp-group-count></span>
+                                                <span class="hc-reason">No repository is configured for this stack.</span>
+                                            </th>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

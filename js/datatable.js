@@ -76,6 +76,7 @@
 // asks for it:
 //
 //   data-kp-sort-multi       Shift + click adds a sort key; the header numbers the keys
+//                            ="click": a plain click adds it, Shift + click sorts on it alone
 //   data-kp-column-menu      a menu of columns, the key column locked
 //   data-kp-expandable       a button opens a detail row the consumer supplies
 //   data-kp-fixed-columns    the key column stays while the box scrolls sideways
@@ -699,7 +700,7 @@ let instances = 0;
  * @property {Filter} [filter]
  * @property {number} [debounceMs]  Default 0, and 300 for a server-backed table.
  * @property {'two' | 'three'} [sortCycle]
- * @property {boolean} [multiSort]  Shift + click adds a sort key. Default false; per table `data-kp-sort-multi`.
+ * @property {boolean | 'click'} [multiSort]  Shift + click adds a sort key; 'click': a plain click adds it and Shift + click sorts on the column alone. Default false; per table `data-kp-sort-multi` (`="click"`).
  * @property {'panel' | 'add'} [filterMode]  How the header-declared filters are set: a panel of every filter, or "+ Add filter" with one pill per filter. Default panel; per table `data-kp-filter-mode`.
  * @property {string} [pagerClassName]
  * @property {(at: number, of: number) => string} [pageLabel]
@@ -821,7 +822,11 @@ export function attachDataTables(
         const debounce = Number.parseInt(wrap.dataset.kpDebounce ?? '', 10) || debounceMs || (serverMode ? SERVER_DEBOUNCE_MS : 0);
         const cycle = wrap.dataset.kpSortCycle ?? sortCycle;
         const cycleName = cycle === 'three' ? 'three' : 'two';
-        const multi = wrap.dataset.kpSortMulti === undefined ? multiSort : wrap.dataset.kpSortMulti !== 'false';
+        const multi = wrap.dataset.kpSortMulti === undefined ? multiSort !== false : wrap.dataset.kpSortMulti !== 'false';
+        // `data-kp-sort-multi="click"` [kpadopt]: every plain press adds the
+        // column as a key (ascending, descending, out); Shift flips to the
+        // old plain press, "this column alone", the quick way back to one key.
+        const addOnClick = multi && (wrap.dataset.kpSortMulti === 'click' || (wrap.dataset.kpSortMulti === undefined && multiSort === 'click'));
         const glyphs = {
             expand: wrap.dataset.kpExpandGlyph ?? expandGlyph,
             collapse: wrap.dataset.kpCollapseGlyph ?? collapseGlyph,
@@ -1837,7 +1842,8 @@ export function attachDataTables(
             for (const [key, heading] of groups) {
                 const count = matched.get(key) ?? 0;
                 const open = !folded.has(key);
-                heading.hidden = !onPage.has(key);
+                // `data-kp-group-always` [kpadopt]: the heading stays with no data row under it (rows still loading, failed, or none).
+                heading.hidden = !onPage.has(key) && heading.dataset.kpGroupAlways === undefined;
                 const button = heading.querySelector(GROUP_TOGGLE);
                 if (button !== null) {
                     button.setAttribute('aria-expanded', String(open));
@@ -2846,7 +2852,7 @@ export function attachDataTables(
         const toggleSort = (header, addKey) => {
             const at = headers.indexOf(header);
             if (at === -1) return;
-            const next = nextSorts(sorts, at, { add: multi && addKey, cycle: cycleName });
+            const next = nextSorts(sorts, at, { add: multi && (addOnClick ? !addKey : addKey), cycle: cycleName });
             if (next.length === 0) commitSorts([], { column: at, direction: 'none' });
             else commitSorts(next);
         };

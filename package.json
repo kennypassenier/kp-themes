@@ -144,6 +144,10 @@
             "types": "./js/actions.d.ts",
             "default": "./js/actions.js"
         },
+        "./js/hovercard": {
+            "types": "./js/hovercard.d.ts",
+            "default": "./js/hovercard.js"
+        },
         "./js/kpi": {
             "types": "./js/kpi.d.ts",
             "default": "./js/kpi.js"

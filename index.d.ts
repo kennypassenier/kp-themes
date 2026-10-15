@@ -48,6 +48,7 @@ export type ToolbarFilter = import('./js/toolbar.js').ToolbarFilter;
 export { KEYS, attachKeys, setKeys } from './js/keys.js';
 export type KeyPair = import('./js/keys.js').KeyPair;
 /** @typedef {import('./js/keys.js').KeyPair} KeyPair */
+export { HOVERCARD_ATTRIBUTE, HOVERCARD_CARD, HOVERCARD_EVENT, attachHoverCards } from './js/hovercard.js';
 export { UPDATE_PROPERTY, UPDATE_STYLE, UPDATING_ATTRIBUTE, markUpdating, unmarkUpdating, update, updateIdea, updatePlays, updateTiming, updateTimingOf, } from './js/update.js';
 export { ATTENTION, SEVERITIES, attachAttention, setAttention, sortAttention } from './js/attention.js';
 export { TILES_SET, TILE_ROW_MIN, attachTileSets, evenTileSet, tileSets } from './js/tiles.js';

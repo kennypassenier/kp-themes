@@ -401,9 +401,9 @@ export type DataTableOptions = {
     debounceMs?: number;
     sortCycle?: 'two' | 'three';
     /**
-     * Shift + click adds a sort key. Default false; per table `data-kp-sort-multi`.
+     * Shift + click adds a sort key; `'click'`: a plain click adds it and Shift + click sorts on the column alone. Default false; per table `data-kp-sort-multi` (`="click"`).
      */
-    multiSort?: boolean;
+    multiSort?: boolean | 'click';
     /**
      * How the header-declared filters are set: a panel of every filter, or "+ Add filter" with one pill per filter. Default panel; per table `data-kp-filter-mode`.
      */
@@ -466,7 +466,7 @@ export type DataTableDecorateInfo = {
  * @property {Filter} [filter]
  * @property {number} [debounceMs]  Default 0, and 300 for a server-backed table.
  * @property {'two' | 'three'} [sortCycle]
- * @property {boolean} [multiSort]  Shift + click adds a sort key. Default false; per table `data-kp-sort-multi`.
+ * @property {boolean | 'click'} [multiSort]  Shift + click adds a sort key; 'click': a plain click adds it and Shift + click sorts on the column alone. Default false; per table `data-kp-sort-multi` (`="click"`).
  * @property {'panel' | 'add'} [filterMode]  How the header-declared filters are set: a panel of every filter, or "+ Add filter" with one pill per filter. Default panel; per table `data-kp-filter-mode`.
  * @property {string} [pagerClassName]
  * @property {(at: number, of: number) => string} [pageLabel]

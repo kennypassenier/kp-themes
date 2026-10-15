@@ -5352,6 +5352,21 @@
         font-size: var(--kp-text-sm, 0.8125rem);
     }
 
+    /* The page's one hover card (js/hovercard.js): a tooltip that lives in
+     * <body>, not in an anchor, and is filled when it opens. In the top layer
+     * the script places it in window coordinates, so the popover's UA inset
+     * is put back; the margins stay the register's own, which is what keeps
+     * the gap a tooltip in its anchor has. It is wider than a one-line
+     * tooltip because it may hold rows, and it can be entered by the pointer
+     * (WCAG 1.4.13), so a long word wraps rather than widening it. */
+    .kp-tooltip[data-kp-hovercard-card] {
+        position: fixed;
+        inset: auto;
+        max-width: var(--kp-hovercard-max-width, min(24rem, calc(100vw - 1rem)));
+        overflow-wrap: anywhere;
+        text-align: start;
+    }
+
     /* --- Toast ----------------------------------------------------------- */
 
     .kp-toasts {
