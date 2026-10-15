@@ -3138,3 +3138,49 @@
     }
 }
 /* ── End of the signature ── */
+
+/* ── Segmented control, list toolbar, key line [kpadopt-controls] ── */
+@layer kp.signature {
+    [data-theme='grotesk'] .kp-segmented {
+        --kp-seg-radius: 0;
+        --kp-seg-pad: 0;
+        --kp-seg-gap: 0;
+        --kp-seg-font: var(--theme-font-body);
+        --kp-seg-edge: transparent;
+        --kp-seg-track: transparent;
+        --kp-seg-ink: var(--muted-foreground);
+        --kp-seg-thumb: transparent;
+        --kp-seg-thumb-ink: var(--foreground);
+        --kp-seg-thumb-edge: inset 0 -3px 0 var(--primary);
+        --kp-seg-thumb-lift: 0 0 0 0 transparent;
+        --kp-chip-radius: 0;
+        --kp-chip-edge: var(--foreground);
+        --kp-chip-on: var(--foreground);
+        --kp-chip-on-ink: var(--background);
+    }
+    [data-theme='grotesk'] .kp-toolbar {
+        --kp-toolbar-group-gap: 1.125rem;
+    }
+    [data-theme='grotesk'] .kp-toolbar__label {
+        font-family: var(--theme-font-body);
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        text-transform: none;
+    }
+    [data-theme='grotesk'] .kp-keys {
+        --kp-keys-gap: 1rem;
+    }
+    [data-theme='grotesk'] .kp-kbd {
+        --kp-kbd-radius: 0;
+        --kp-kbd-edge: var(--foreground);
+        --kp-kbd-ground: transparent;
+        --kp-kbd-foot: 1px;
+        font-family: var(--theme-font-body);
+        font-weight: 700;
+    }
+    /* A transit board: the segments hang from one rule, the chosen one carries the
+       red bar under its word. The rule is the track's own foot. */
+    [data-theme='grotesk'] .kp-segmented:not(.kp-segmented--chips) {
+        border-block-end: 1px solid var(--foreground);
+    }
+}

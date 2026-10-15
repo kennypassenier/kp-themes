@@ -103,6 +103,9 @@
  * @property {(column: string) => string} tableFilterTo    The upper bound's accessible name
  * @property {(label: string) => string} tableRemoveFilter  A pill's remove button
  * @property {string} tableClearFilters
+ * @property {string} toolbarShowingOnly  The word before the filters that are on, in a list toolbar's active row (js/toolbar.js) [kpadopt-controls]
+ * @property {string} toolbarClearAll       The toolbar's button that turns every filter off [kpadopt-controls]
+ * @property {string} keysLabel            The accessible name of a line of keyboard shortcuts (js/keys.js) [kpadopt-controls]
  * @property {string} tableClearSearch      The way out of the no-match state
  * @property {(active: number) => string} tableAddFilter  The "+ Add filter" button of a table in the add-filter mode, with the number of active filters
  * @property {string} tableAddFilterMenu    The name of its menu of filterable columns
@@ -430,6 +433,9 @@ export const DEFAULT_STRINGS = Object.freeze({
     tableFilterTo: (column) => `${column}, to`,
     tableRemoveFilter: (label) => `Remove filter ${label}`,
     tableClearFilters: 'Clear all filters',
+    toolbarShowingOnly: 'Showing only',
+    toolbarClearAll: 'Clear all',
+    keysLabel: 'Keyboard shortcuts',
     tableClearSearch: 'Clear the search and filters',
     // The add-filter mode [Kenny, 2026-09-14, "Allebei, per tabel"], in the
     // words of the approved mock, research/datatable/demo.html#filter-add.

@@ -4116,3 +4116,50 @@
     }
 }
 /* ── End of the signature ── */
+
+/* ── Segmented control, list toolbar, key line [kpadopt-controls] ── */
+@layer kp.signature {
+    [data-theme='phantom'] .kp-segmented {
+        --kp-seg-radius: 0;
+        --kp-seg-font: var(--theme-font-display);
+        --kp-seg-size: 0.8125rem;
+        --kp-seg-tracking: 0.12em;
+        --kp-seg-case: uppercase;
+        --kp-seg-track: var(--card);
+        --kp-seg-thumb: var(--primary);
+        --kp-seg-thumb-ink: var(--primary-foreground);
+        --kp-seg-thumb-edge: 0 0 0 0 transparent;
+        --kp-seg-thumb-lift: 0 0 0 0 transparent;
+        --kp-chip-radius: 0;
+        --kp-chip-on: var(--primary);
+        --kp-chip-on-ink: var(--primary-foreground);
+        --kp-chip-on-edge: var(--primary);
+    }
+    [data-theme='phantom'] .kp-toolbar {
+        --kp-toolbar-group-gap: 1.125rem;
+    }
+    [data-theme='phantom'] .kp-toolbar__label {
+        font-family: var(--theme-font-display);
+        letter-spacing: 0.2em;
+    }
+    [data-theme='phantom'] .kp-keys {
+        --kp-keys-gap: 1rem;
+    }
+    [data-theme='phantom'] .kp-kbd {
+        --kp-kbd-radius: 0;
+        --kp-kbd-edge: var(--border-strong);
+        --kp-kbd-ground: var(--secondary);
+        --kp-kbd-foot: 2px;
+        font-family: var(--theme-font-display);
+        text-transform: uppercase;
+    }
+    /* The plate is cut paper: the corners at the start of the top and the end of
+       the bottom are snipped. Only the plate is clipped; an item keeps its focus
+       ring, and a chosen chip gets the deep second plate instead. */
+    [data-theme='phantom'] .kp-segmented[data-kp-segmented-thumb]::before {
+        clip-path: polygon(0.5rem 0, 100% 0, 100% calc(100% - 0.5rem), calc(100% - 0.5rem) 100%, 0 100%, 0 0.5rem);
+    }
+    [data-theme='phantom'] .kp-segmented--chips > .kp-segmented__item[aria-pressed='true'] {
+        box-shadow: 3px 3px 0 var(--kp-red-deep, var(--border-strong));
+    }
+}

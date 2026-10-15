@@ -3609,3 +3609,41 @@
     inherits: false;
     initial-value: 0;
 }
+
+/* ── Segmented control, list toolbar, key line [kpadopt-controls] ── */
+@layer kp.signature {
+    [data-theme='nostromo'] .kp-segmented {
+        --kp-seg-radius: var(--kp-sig-no-key, 0.3rem);
+        --kp-seg-font: var(--theme-font-mono);
+        --kp-seg-size: 0.75rem;
+        --kp-seg-tracking: 0.12em;
+        --kp-seg-case: uppercase;
+        --kp-seg-track: var(--secondary);
+        --kp-seg-thumb: repeating-linear-gradient(0deg, hsl(from var(--primary-foreground) h s l / 0.1) 0 1px, transparent 1px 3px), var(--primary);
+        --kp-seg-thumb-ink: var(--primary-foreground);
+        --kp-seg-thumb-edge: 0 0 0 0 transparent;
+        --kp-seg-thumb-lift: inset 0 0 0 1px hsl(from var(--primary-foreground) h s l / 0.25);
+        --kp-chip-radius: var(--kp-sig-no-key, 0.3rem);
+        --kp-chip-on: var(--primary);
+        --kp-chip-on-ink: var(--primary-foreground);
+    }
+    [data-theme='nostromo'] .kp-toolbar {
+        --kp-toolbar-group-gap: 1.125rem;
+    }
+    [data-theme='nostromo'] .kp-toolbar__label {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.18em;
+    }
+    [data-theme='nostromo'] .kp-keys {
+        font-family: var(--theme-font-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+    [data-theme='nostromo'] .kp-kbd {
+        --kp-kbd-radius: var(--kp-sig-no-key, 0.3rem);
+        --kp-kbd-ground: var(--secondary);
+        --kp-kbd-foot: 3px;
+        font-family: var(--theme-font-mono);
+        text-transform: uppercase;
+    }
+}

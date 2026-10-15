@@ -3339,3 +3339,50 @@
     }
 }
 /* ── End of the signature ── */
+
+/* ── Segmented control, list toolbar, key line [kpadopt-controls] ── */
+@layer kp.signature {
+    [data-theme='titanium'] .kp-segmented {
+        --kp-seg-radius: 0;
+        --kp-seg-font: var(--theme-font-mono);
+        --kp-seg-size: 0.75rem;
+        --kp-seg-tracking: 0.06em;
+        --kp-seg-case: uppercase;
+        --kp-seg-ease: linear;
+        --kp-seg-thumb: repeating-linear-gradient(90deg, hsl(from var(--primary-foreground) h s l / 0.1) 0 1px, transparent 1px 3px), var(--primary);
+        --kp-seg-thumb-ink: var(--primary-foreground);
+        --kp-seg-thumb-edge: 0 0 0 0 transparent;
+        --kp-seg-thumb-lift: 0 0 0 0 transparent;
+        --kp-chip-radius: 0;
+        --kp-chip-on: var(--primary);
+        --kp-chip-on-ink: var(--primary-foreground);
+    }
+    [data-theme='titanium'] .kp-toolbar {
+        --kp-toolbar-group-gap: 1.125rem;
+    }
+    [data-theme='titanium'] .kp-toolbar__label {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.1em;
+    }
+    [data-theme='titanium'] .kp-keys {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='titanium'] .kp-kbd {
+        --kp-kbd-radius: 0;
+        --kp-kbd-ground: var(--card);
+        --kp-kbd-foot: 1px;
+        font-family: var(--theme-font-mono);
+        box-shadow: var(--kp-tool-edge);
+    }
+    /* The plate is the badge's own cut: the chamfer of every titanium control. */
+    [data-theme='titanium'] .kp-segmented[data-kp-segmented-thumb]::before {
+        clip-path: polygon(
+            var(--kp-chamfer, 0.4rem) 0,
+            100% 0,
+            100% calc(100% - var(--kp-chamfer, 0.4rem)),
+            calc(100% - var(--kp-chamfer, 0.4rem)) 100%,
+            0 100%,
+            0 var(--kp-chamfer, 0.4rem)
+        );
+    }
+}

@@ -105,6 +105,12 @@ export const PAGES = [
             // Kenny, 2026-10-07 04:23: what makes brutalism brutalism, the same way (the analysis in themes/brutalism/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the sixth theme of the one-by-one series, after solstice.
             // Kenny, 2026-10-07 04:23: what makes grotesk grotesk, the same way (the analysis in themes/grotesk/CHARACTER.md), nineteen rules of its grammar as questions, each option a live scene, the recommendation first; the seventh theme of the one-by-one series, after brutalism. Questions 9 to 12 are the grotesk-only loading demo Kenny asked for on 2026-10-06 21:37, from the graph's Out of register.
             // Kenny, 2026-10-12: "Cyberpunk lijkt af, zie dat dezelfde fouten nu niet terugkomen in andere thema's": every other theme mended so a close is its open backwards with the theme's own effect; only what changed, each block in the themes where it did (research/all-themes).
+            // Kenny, 2026-10-15: the dashboard still draws its segmented control, list toolbar and key line itself; built here on the package first (research/kpadopt-controls).
+            {
+                href: 'research/kpadopt-controls/demo.html',
+                label: 'Segmented control, list toolbar and key line',
+                about: 'Three parts the admin dashboard draws itself: the segmented control and filter chips, the toolbar above a list (search, filter groups, the filters that are on), and the inline line of keyboard shortcuts. Every state, in all sixteen themes.',
+            },
         ],
     },
     {

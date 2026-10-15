@@ -170,6 +170,18 @@ export type Strings = {
     tableRemoveFilter: (label: string) => string;
     tableClearFilters: string;
     /**
+     * The word before the filters that are on, in a list toolbar's active row (js/toolbar.js) [kpadopt-controls]
+     */
+    toolbarShowingOnly: string;
+    /**
+     * The toolbar's button that turns every filter off [kpadopt-controls]
+     */
+    toolbarClearAll: string;
+    /**
+     * The accessible name of a line of keyboard shortcuts (js/keys.js) [kpadopt-controls]
+     */
+    keysLabel: string;
+    /**
      * The way out of the no-match state
      */
     tableClearSearch: string;
@@ -823,6 +835,9 @@ export type Strings = {
  * @property {(column: string) => string} tableFilterTo    The upper bound's accessible name
  * @property {(label: string) => string} tableRemoveFilter  A pill's remove button
  * @property {string} tableClearFilters
+ * @property {string} toolbarShowingOnly  The word before the filters that are on, in a list toolbar's active row (js/toolbar.js) [kpadopt-controls]
+ * @property {string} toolbarClearAll       The toolbar's button that turns every filter off [kpadopt-controls]
+ * @property {string} keysLabel            The accessible name of a line of keyboard shortcuts (js/keys.js) [kpadopt-controls]
  * @property {string} tableClearSearch      The way out of the no-match state
  * @property {(active: number) => string} tableAddFilter  The "+ Add filter" button of a table in the add-filter mode, with the number of active filters
  * @property {string} tableAddFilterMenu    The name of its menu of filterable columns

@@ -2612,3 +2612,32 @@
     }
 }
 /* ── End of the signature ── */
+
+/* ── Segmented control, list toolbar, key line [kpadopt-controls] ── */
+@layer kp.signature {
+    [data-theme='light'] .kp-segmented {
+        --kp-seg-radius: 999px;
+        --kp-seg-pad: 4px;
+        --kp-seg-edge: var(--border);
+        --kp-seg-thumb: var(--card);
+        --kp-seg-thumb-edge: 0 0 0 1px hsl(from var(--foreground) h s l / 0.08);
+        --kp-seg-thumb-lift: 0 2px 8px hsl(from var(--foreground) h s l / 0.18);
+        --kp-chip-on: var(--primary);
+        --kp-chip-on-ink: var(--primary-foreground);
+    }
+    [data-theme='light'] .kp-toolbar {
+        --kp-toolbar-group-gap: 1.25rem;
+    }
+    [data-theme='light'] .kp-toolbar__label {
+        letter-spacing: 0.04em;
+    }
+    [data-theme='light'] .kp-keys {
+        --kp-keys-gap: 1rem;
+    }
+    [data-theme='light'] .kp-kbd {
+        --kp-kbd-radius: 0.5rem;
+        --kp-kbd-edge: var(--border);
+        --kp-kbd-ground: var(--card);
+        box-shadow: 0 1px 2px hsl(from var(--foreground) h s l / 0.12);
+    }
+}

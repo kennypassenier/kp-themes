@@ -3870,3 +3870,53 @@
     }
 }
 /* ── End of the signature ── */
+
+/* ── Segmented control, list toolbar, key line [kpadopt-controls] ── */
+@layer kp.signature {
+    [data-theme='terminal'] .kp-segmented {
+        --kp-seg-radius: 0;
+        --kp-seg-pad: 2px;
+        --kp-seg-gap: 0;
+        --kp-seg-font: var(--theme-font-mono);
+        --kp-seg-track: var(--background);
+        --kp-seg-thumb: var(--primary);
+        --kp-seg-thumb-ink: var(--background);
+        --kp-seg-thumb-edge: 0 0 0 0 transparent;
+        --kp-seg-thumb-lift: 0 0 0 0 transparent;
+        --kp-chip-radius: 0;
+        --kp-chip-edge: var(--border-strong);
+        --kp-chip-on: var(--primary);
+        --kp-chip-on-ink: var(--background);
+        --kp-chip-on-edge: var(--primary);
+    }
+    [data-theme='terminal'] .kp-toolbar {
+        --kp-toolbar-group-gap: 1.125rem;
+    }
+    [data-theme='terminal'] .kp-toolbar__label {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0;
+        text-transform: lowercase;
+    }
+    [data-theme='terminal'] .kp-keys {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='terminal'] .kp-kbd {
+        --kp-kbd-radius: 0;
+        --kp-kbd-edge: transparent;
+        --kp-kbd-ground: transparent;
+        --kp-kbd-foot: 0;
+        --kp-kbd-pad: 0;
+        min-inline-size: 0;
+        font-family: var(--theme-font-mono);
+    }
+    /* A key is written the way a man page writes it: [ / ]. */
+    [data-theme='terminal'] .kp-kbd::before {
+        content: '[';
+    }
+    [data-theme='terminal'] .kp-kbd::after {
+        content: ']';
+    }
+    [data-theme='terminal'] .kp-toolbar__key.kp-kbd {
+        color: var(--muted-foreground);
+    }
+}

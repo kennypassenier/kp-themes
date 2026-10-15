@@ -3964,3 +3964,36 @@
     }
 }
 /* ── End of the signature ── */
+
+/* ── Segmented control, list toolbar, key line [kpadopt-controls] ── */
+@layer kp.signature {
+    [data-theme='formal'] .kp-segmented {
+        --kp-seg-radius: 3px;
+        --kp-seg-font: var(--theme-font-body);
+        --kp-seg-thumb: var(--card);
+        --kp-seg-thumb-ink: var(--primary);
+        --kp-seg-thumb-lift: inset 0 -2px 0 var(--primary);
+        --kp-chip-radius: 3px;
+        --kp-chip-on: var(--primary);
+        --kp-chip-on-ink: var(--primary-foreground);
+    }
+    [data-theme='formal'] .kp-toolbar {
+        --kp-toolbar-group-gap: 1.125rem;
+    }
+    [data-theme='formal'] .kp-toolbar__label {
+        font-family: var(--theme-font-body);
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.1em;
+        text-transform: none;
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+    [data-theme='formal'] .kp-keys {
+        font-family: var(--theme-font-body);
+    }
+    [data-theme='formal'] .kp-kbd {
+        --kp-kbd-radius: 2px;
+        --kp-kbd-ground: var(--card);
+        --kp-kbd-foot: 1px;
+        font-family: var(--theme-font-body);
+    }
+}
