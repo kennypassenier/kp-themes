@@ -50,6 +50,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      artifact_id: ${{ steps.upload.outputs.artifact_id }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -95,7 +97,8 @@ jobs:
             cp -r "review-branch/$dir" "_site/review-branch/$dir"
           done
           printf '<!doctype html><meta http-equiv="refresh" content="0; url=./catalogue/agenda.html">\n' > _site/review-branch/index.html
-      - uses: actions/upload-pages-artifact@v3
+      - id: upload
+        uses: actions/upload-pages-artifact@v3
         with:
           path: _site
 
@@ -108,3 +111,19 @@ jobs:
     steps:
       - id: deploy
         uses: actions/deploy-pages@v4
+
+  # Each push to main uploads a Pages artifact of about 27 MB that GitHub keeps
+  # for a day after the site is live; on 2026-10-14 that came to 30 live
+  # artifacts, 820 MB measured, against the account's 0.5 GB Actions storage.
+  # Once deploy has run, this run's upload is deleted (Kenny, 2026-10-15).
+  cleanup:
+    needs: [build, deploy]
+    if: always() && needs.build.outputs.artifact_id != ''
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: Delete this run's Pages upload
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X DELETE "repos/${{ github.repository }}/actions/artifacts/${{ needs.build.outputs.artifact_id }}"
