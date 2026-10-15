@@ -4166,18 +4166,24 @@
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='synthwave'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) {
             translate: 0 0;
+            /* Shut, off the screen once the beam has sunk: the transform waits the two beats
+               (the panel stays where the close plays) and `translate` stays the clock js/sidenav.js reads. */
+            transform: translateX(var(--kp-sidenav-away, -100%));
             visibility: hidden;
             transition:
                 translate calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun),
-                visibility 0s linear calc(2 * var(--kp-sw-beat));
+                visibility 0s linear calc(2 * var(--kp-sw-beat)),
+                transform 0s linear calc(2 * var(--kp-sw-beat));
             animation: kp-sig-synthwave-climb-back calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun) reverse both;
         }
 
         [data-theme='synthwave'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            transform: none;
             visibility: visible;
             transition:
                 translate calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun),
-                visibility 0s linear;
+                visibility 0s linear,
+                transform 0s;
             animation: kp-sig-synthwave-climb calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun) backwards;
         }
 

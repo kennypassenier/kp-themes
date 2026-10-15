@@ -2699,10 +2699,14 @@
     }
 
     /* A log line the reader is pointed at washes each cell it is made of: the wash grows a quarter
-       rem past the words on both sides (the cells keep their place, the gap is the sum of both). */
+       rem past the words on both sides. The wash is the cell's own ground with two hard shadows
+       a quarter rem to either side, so no cell box moves or grows: a log's four columns stand at
+       the same x on a current line as on every other (padding with a negative margin put the
+       cell's box 4 px left of the column). */
     [data-theme='cyberpunk'] .kp-log__line[data-kp-current] > * {
-        padding-inline: 0.25rem;
-        margin-inline: -0.25rem;
+        box-shadow:
+            -0.25rem 0 0 var(--muted),
+            0.25rem 0 0 var(--muted);
     }
 
     /* A switch's words end a half rem before the label's edge, where its brackets are drawn. */
@@ -5193,6 +5197,11 @@
         --kp-sn-y: calc(var(--kp-sn-t) * 1px);
         --kp-sn-a: calc(min(1, var(--kp-sn-t)));
         translate: 0 0;
+        /* Shut, the panel stands off the screen: the transform is the move out, and it comes
+           only when the four ticks of the close are over (the transition below), so the tear
+           plays in place and is gone before the panel leaves. Not `translate`: js/sidenav.js
+           reads that transition as the clock of a pushed page. */
+        transform: translateX(var(--kp-sidenav-away, -100%));
         visibility: hidden;
         box-shadow:
             var(--kp-sn-x) var(--kp-sn-y) 0 hsl(from var(--accent) h s l / var(--kp-sn-a)),
@@ -5205,6 +5214,7 @@
     [data-theme='cyberpunk'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
         --kp-sn-t: 0;
         translate: 0 0;
+        transform: none;
         visibility: visible;
     }
 
@@ -5213,14 +5223,16 @@
             transition:
                 --kp-sn-t 480ms var(--kp-cp-back),
                 visibility 480ms linear,
-                translate 0s;
+                translate 0s,
+                transform 0s linear 480ms;
         }
 
         [data-theme='cyberpunk'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
             transition:
                 --kp-sn-t 480ms steps(4, jump-end),
                 visibility 480ms linear,
-                translate 0s;
+                translate 0s,
+                transform 0s;
         }
 
         /* The dim is drawn in by its colour, not its opacity: an opacity that stands at 1 reads one

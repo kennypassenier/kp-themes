@@ -20,6 +20,43 @@
 // overlay where it always hung.
 
 /**
+ * The box an element's bounding rectangle would be with its own `rotate`
+ * set aside: the layout box. A theme may stand a part askew (phantom lands
+ * a menu, a card and a combobox's list a degree and a half turned), and the
+ * bounding rectangle of a turned box is larger than the box (a 1227 px list
+ * reads 1232 px wide and 32 px taller), so a placement that measured it put
+ * the list 16 px above its field and 3 px too wide. Only a single angle is
+ * set aside, about the box's `transform-origin`.
+ *
+ * @param {HTMLElement} el
+ * @param {CSSStyleDeclaration} style
+ * @returns {DOMRect}
+ */
+function unturnedRect(el, style) {
+    const box = el.getBoundingClientRect();
+    const match = /^(-?[\d.]+)(deg|rad|turn|grad)$/.exec(style.rotate ?? '');
+    if (!match) return box;
+    const unit = { deg: Math.PI / 180, rad: 1, turn: 2 * Math.PI, grad: Math.PI / 200 }[match[2]] ?? 0;
+    const a = Number.parseFloat(match[1]) * unit;
+    const c = Math.abs(Math.cos(a));
+    const s = Math.abs(Math.sin(a));
+    const det = c * c - s * s;
+    // Near 45 degrees the turned box cannot be told back; it stays as drawn.
+    if (a === 0 || Math.abs(det) < 0.05) return box;
+    const w = (c * box.width - s * box.height) / det;
+    const h = (c * box.height - s * box.width) / det;
+    const [ox, oy] = style.transformOrigin.split(/\s+/).map((n) => Number.parseFloat(n) || 0);
+    // The turned box's centre is the layout box's centre carried round the origin.
+    const dx = w / 2 - ox;
+    const dy = h / 2 - oy;
+    const cos = Math.cos(a);
+    const sin = Math.sin(a);
+    const left = box.left + box.width / 2 - ox - (dx * cos - dy * sin);
+    const top = box.top + box.height / 2 - oy - (dx * sin + dy * cos);
+    return new DOMRect(left, top, w, h);
+}
+
+/**
  * Where an element's box lies in window coordinates with its own `translate`
  * (and a `transform` that only translates) set aside: where the layout put
  * it, not where an arrival animation is drawing it this frame.
@@ -37,11 +74,11 @@
  * @returns {DOMRect}
  */
 export function layoutRect(element) {
-    const box = element.getBoundingClientRect();
     const view = element.ownerDocument.defaultView;
-    if (!view) return box;
+    if (!view) return element.getBoundingClientRect();
     const style = view.getComputedStyle(element);
     const el = /** @type {HTMLElement} */ (element);
+    const box = unturnedRect(el, style);
     let x = 0;
     let y = 0;
     if (style.translate && style.translate !== 'none') {

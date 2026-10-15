@@ -586,6 +586,7 @@ export function attachDatePickers(
             pin = null;
             live.textContent = '';
             if (next) {
+                tidy();
                 cursor = read() ?? new Date();
                 if (!panel.contains(live)) panel.append(live);
                 draw();
@@ -651,6 +652,18 @@ export function attachDatePickers(
 
         /** Typing is the primary path, so it updates the value on its own. */
         const onInput = () => commit(read(), 'typed');
+
+        /**
+         * A typed date that reads as a date is written the way the field shows a date
+         * (13-09-2026 becomes 13/09/2026), once the person leaves the field or opens the
+         * calendar; never while they type, and never a text that is not a date [scope-143].
+         */
+        const tidy = () => {
+            const date = read();
+            if (date === null) return;
+            const shown = formatDate(date, locale, numeric);
+            if (input.value !== shown) input.value = shown;
+        };
 
         /** @param {KeyboardEvent} event */
         const onPanelKey = (event) => {
@@ -737,12 +750,14 @@ export function attachDatePickers(
         open.setAttribute('aria-expanded', 'false');
         open.addEventListener('click', onOpen);
         input.addEventListener('input', onInput);
+        input.addEventListener('change', tidy);
         panel.addEventListener('keydown', onPanelKey);
         panel.addEventListener('click', onPanelClick);
         picker.addEventListener('focusout', onFocusOut);
         // The value attribute reflects what is in the field, silently.
         const initial = read();
         if (initial !== null) input.dataset.kpDateValue = toISO(initial);
+        // No rewrite at attach: the page's text stays until the field is left or the calendar opens (tidy).
 
         /** @type {DatePickerHandle} */
         const handle = {
@@ -763,6 +778,7 @@ export function attachDatePickers(
         cleanups.push(() => {
             open.removeEventListener('click', onOpen);
             input.removeEventListener('input', onInput);
+            input.removeEventListener('change', tidy);
             panel.removeEventListener('keydown', onPanelKey);
             panel.removeEventListener('click', onPanelClick);
             picker.removeEventListener('focusout', onFocusOut);

@@ -8177,15 +8177,36 @@ var init_listbox = __esm({
 });
 
 // js/top-layer.js
+function unturnedRect(el2, style) {
+  const box = el2.getBoundingClientRect();
+  const match = /^(-?[\d.]+)(deg|rad|turn|grad)$/.exec(style.rotate ?? "");
+  if (!match) return box;
+  const unit = { deg: Math.PI / 180, rad: 1, turn: 2 * Math.PI, grad: Math.PI / 200 }[match[2]] ?? 0;
+  const a = Number.parseFloat(match[1]) * unit;
+  const c = Math.abs(Math.cos(a));
+  const s2 = Math.abs(Math.sin(a));
+  const det = c * c - s2 * s2;
+  if (a === 0 || Math.abs(det) < 0.05) return box;
+  const w = (c * box.width - s2 * box.height) / det;
+  const h2 = (c * box.height - s2 * box.width) / det;
+  const [ox, oy] = style.transformOrigin.split(/\s+/).map((n) => Number.parseFloat(n) || 0);
+  const dx = w / 2 - ox;
+  const dy = h2 / 2 - oy;
+  const cos = Math.cos(a);
+  const sin = Math.sin(a);
+  const left = box.left + box.width / 2 - ox - (dx * cos - dy * sin);
+  const top = box.top + box.height / 2 - oy - (dx * sin + dy * cos);
+  return new DOMRect(left, top, w, h2);
+}
 function layoutRect(element) {
-  const box = element.getBoundingClientRect();
   const view = element.ownerDocument.defaultView;
-  if (!view) return box;
+  if (!view) return element.getBoundingClientRect();
   const style = view.getComputedStyle(element);
   const el2 = (
     /** @type {HTMLElement} */
     element
   );
+  const box = unturnedRect(el2, style);
   let x = 0;
   let y = 0;
   if (style.translate && style.translate !== "none") {
@@ -9764,6 +9785,7 @@ function attachDatePickers(root = document, {
       pin = null;
       live2.textContent = "";
       if (next) {
+        tidy();
         cursor = read() ?? /* @__PURE__ */ new Date();
         if (!panel.contains(live2)) panel.append(live2);
         draw();
@@ -9816,6 +9838,12 @@ function attachDatePickers(root = document, {
     };
     const onOpen = () => wanted ? hide() : show();
     const onInput = () => commit(read(), "typed");
+    const tidy = () => {
+      const date = read();
+      if (date === null) return;
+      const shown3 = formatDate(date, locale, numeric);
+      if (input.value !== shown3) input.value = shown3;
+    };
     const onPanelKey = (event) => {
       if (event.key === "Escape") {
         event.preventDefault();
@@ -9909,6 +9937,7 @@ function attachDatePickers(root = document, {
     open.setAttribute("aria-expanded", "false");
     open.addEventListener("click", onOpen);
     input.addEventListener("input", onInput);
+    input.addEventListener("change", tidy);
     panel.addEventListener("keydown", onPanelKey);
     panel.addEventListener("click", onPanelClick);
     picker.addEventListener("focusout", onFocusOut);
@@ -9931,6 +9960,7 @@ function attachDatePickers(root = document, {
     cleanups.push(() => {
       open.removeEventListener("click", onOpen);
       input.removeEventListener("input", onInput);
+      input.removeEventListener("change", tidy);
       panel.removeEventListener("keydown", onPanelKey);
       panel.removeEventListener("click", onPanelClick);
       picker.removeEventListener("focusout", onFocusOut);

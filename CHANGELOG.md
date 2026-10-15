@@ -2,6 +2,30 @@
 
 ## Unreleased
 
+- **Fixed: a turned overlay is placed by its layout box, not by its bounding box** [scope-143, group 9 of research/SUITE_10_1_0_CAUSES.md; Kenny, 2026-10-15 03:26].
+  Phantom's menus, lists and cards land a degree and a half askew (`rotate: -1.5deg`, 3eba5336, 10-13). `layoutRect()` in js/top-layer.js (used by
+  `raiseInPlace()` and `placeBlockSide()`) measured the part's bounding rectangle, which for a turned box is larger: a 1227 px combobox list read
+  1232 px wide and 32 px taller, so the list was placed 16 px above its field (`top` 633.3 px against 649.3 px; the gap under the input read -28 px)
+  and 3 px too wide. It now sets the part's own single-angle `rotate` aside (about its `transform-origin`) before it sets the `translate` aside,
+  so the list stands 4 px under its field at the field's width in every theme. Phantom's hard plate (4987a95d) moved no box: select list, nav dropdown, mega menu and menu
+  items measure identical before and after it in Firefox. The failing select, nav-menu and choice-centre tests read the bounding box of a part that
+  is askew by design.
+- **Fixed: a closed over-the-page side navigation is off the screen in cyberpunk, synthwave, terminal and solstice** [scope-143, group 10]. These four
+  keep the panel still (it is torn, climbed, printed or kindled in place, G3) and hid it with `visibility` only, so shut it stood on the screen at
+  `translate: 0` (240 px wide). Shut, the panel now also carries `transform: translateX(var(--kp-sidenav-away))`, which takes effect after the close has
+  played (`transform 0s` with the close's own delay: 480, 450, 816 and 480 ms) and is `none` the instant it opens; `translate` stays the clock
+  js/sidenav.js reads for a pushed page. The opening and the closing look as before (the last frame on the screen is at 467, 450, 802 and 467 ms).
+- **Fixed: a typed date is written back in the field's display format** [scope-143, group 12]. `13-09-2026` in a date field becomes `13/09/2026` when the
+  field is left (`change`) or the calendar opens, in both channels (js/datepicker.js `tidy()`, components/flow.jsx); never while typing, and text that
+  is not a date is left alone.
+- **Fixed: cyberpunk's current log line no longer moves its cells** [scope-143, group 16]. The pointed-at line washed each cell with padding and a negative
+  margin, which put the cell's box 4 px left of its column (289 against 293 for time, 353/357 source, 434/438 level, 512/516 message). The wash is now
+  two hard shadows a quarter rem to either side: same paint, no box moves; a warning or error level on that line now has the same padding as on the
+  other lines.
+- **Fixed: pastel's tooltip hangs within 12 px of a hovered trigger** [scope-143; coordinator, 2026-10-15]. A hovered pastel button lifts 2 px (`translate`),
+  and the tooltip's 12 px gap was measured from the lifted button: 14 px. A tooltip whose button is hovered takes `calc(0.75rem - 2px)`, so it rises with the button
+  and the gap stays 12 px (all four tooltips of catalogue/overlays.html#tooltip: 12, 12, 12, 12; were 12, 12, 14, 14).
+
 - **Fixed: phantom's cut-paper parts show their deep red second plate** [scope-143; Kenny, 2026-10-15 02:12, research/leftover-looks option 1 "one hard plate"].
   A card, a menu, a toast and a dialog are clipped by `--kp-paperclip`, and a `clip-path` also clips the part's own `box-shadow`, so the plate the
   register declared (G7) was never seen. css/phantom-register.css now widens the clip to take in the plate (`--kp-sig-ph-d`: 4 px on a card and a

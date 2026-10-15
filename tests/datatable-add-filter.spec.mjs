@@ -220,7 +220,7 @@ for (const channel of CHANNELS) {
             // Before: no add-filter button, so no date editor, no pills to remove and no Clear all.
             const table = await open(page, key);
             const format = (/** @type {string} */ iso) =>
-                page.evaluate(async (d) => (await import('/js/locale.js')).formatDate(new Date(`${d}T00:00:00`), 'en'), iso);
+                page.evaluate(async (d) => (await import('/js/locale.js')).formatDate(new Date(`${d}T00:00:00`), 'en', 'rule52'), iso);
             await choose(table, 'Opened');
             await expect(editor(table).locator('.kp-datepicker')).toHaveCount(2);
             const from = editor(table).locator('[data-kp-filter-bound="from"]');

@@ -15747,10 +15747,14 @@
     }
 
     /* A log line the reader is pointed at washes each cell it is made of: the wash grows a quarter
-       rem past the words on both sides (the cells keep their place, the gap is the sum of both). */
+       rem past the words on both sides. The wash is the cell's own ground with two hard shadows
+       a quarter rem to either side, so no cell box moves or grows: a log's four columns stand at
+       the same x on a current line as on every other (padding with a negative margin put the
+       cell's box 4 px left of the column). */
     [data-theme='cyberpunk'] .kp-log__line[data-kp-current] > * {
-        padding-inline: 0.25rem;
-        margin-inline: -0.25rem;
+        box-shadow:
+            -0.25rem 0 0 var(--muted),
+            0.25rem 0 0 var(--muted);
     }
 
     /* A switch's words end a half rem before the label's edge, where its brackets are drawn. */
@@ -18241,6 +18245,11 @@
         --kp-sn-y: calc(var(--kp-sn-t) * 1px);
         --kp-sn-a: calc(min(1, var(--kp-sn-t)));
         translate: 0 0;
+        /* Shut, the panel stands off the screen: the transform is the move out, and it comes
+           only when the four ticks of the close are over (the transition below), so the tear
+           plays in place and is gone before the panel leaves. Not `translate`: js/sidenav.js
+           reads that transition as the clock of a pushed page. */
+        transform: translateX(var(--kp-sidenav-away, -100%));
         visibility: hidden;
         box-shadow:
             var(--kp-sn-x) var(--kp-sn-y) 0 hsl(from var(--accent) h s l / var(--kp-sn-a)),
@@ -18253,6 +18262,7 @@
     [data-theme='cyberpunk'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
         --kp-sn-t: 0;
         translate: 0 0;
+        transform: none;
         visibility: visible;
     }
 
@@ -18261,14 +18271,16 @@
             transition:
                 --kp-sn-t 480ms var(--kp-cp-back),
                 visibility 480ms linear,
-                translate 0s;
+                translate 0s,
+                transform 0s linear 480ms;
         }
 
         [data-theme='cyberpunk'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
             transition:
                 --kp-sn-t 480ms steps(4, jump-end),
                 visibility 480ms linear,
-                translate 0s;
+                translate 0s,
+                transform 0s;
         }
 
         /* The dim is drawn in by its colour, not its opacity: an opacity that stands at 1 reads one
@@ -23068,18 +23080,24 @@
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='synthwave'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) {
             translate: 0 0;
+            /* Shut, off the screen once the beam has sunk: the transform waits the two beats
+               (the panel stays where the close plays) and `translate` stays the clock js/sidenav.js reads. */
+            transform: translateX(var(--kp-sidenav-away, -100%));
             visibility: hidden;
             transition:
                 translate calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun),
-                visibility 0s linear calc(2 * var(--kp-sw-beat));
+                visibility 0s linear calc(2 * var(--kp-sw-beat)),
+                transform 0s linear calc(2 * var(--kp-sw-beat));
             animation: kp-sig-synthwave-climb-back calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun) reverse both;
         }
 
         [data-theme='synthwave'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            transform: none;
             visibility: visible;
             transition:
                 translate calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun),
-                visibility 0s linear;
+                visibility 0s linear,
+                transform 0s;
             animation: kp-sig-synthwave-climb calc(2 * var(--kp-sw-beat)) var(--kp-sw-sun) backwards;
         }
 
@@ -31073,18 +31091,24 @@
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='terminal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) {
             translate: 0 0;
+            /* Shut, off the screen once the print is cleared: the transform waits the six lines
+               and `translate` stays the clock js/sidenav.js reads. */
+            transform: translateX(var(--kp-sidenav-away, -100%));
             visibility: hidden;
             transition:
                 translate calc(6 * var(--kp-sig-tm-line)) steps(6, jump-start),
-                visibility 0s linear calc(6 * var(--kp-sig-tm-line));
+                visibility 0s linear calc(6 * var(--kp-sig-tm-line)),
+                transform 0s linear calc(6 * var(--kp-sig-tm-line));
             animation: kp-sig-terminal-tm-nav-rows-back calc(6 * var(--kp-sig-tm-line)) steps(6, jump-end) reverse both;
         }
 
         [data-theme='terminal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            transform: none;
             visibility: visible;
             transition:
                 translate calc(6 * var(--kp-sig-tm-line)) steps(6, jump-end),
-                visibility 0s linear;
+                visibility 0s linear,
+                transform 0s;
             animation: kp-sig-terminal-tm-nav-rows calc(6 * var(--kp-sig-tm-line)) steps(6, jump-end) backwards;
         }
 
@@ -42312,6 +42336,13 @@
         background: var(--card);
         color: var(--card-foreground);
         box-shadow: none;
+    }
+
+    /* A hovered button lifts 2px (translate, no layout), and its tooltip's gap is
+       measured from where the button stands: the tooltip goes up with it, so the
+       gap stays the 12px it is at rest and never reads 14 [scope-143]. */
+    [data-theme='pastel'] .kp-tooltip-anchor:has(> .kp-button:hover:not(:disabled, [aria-disabled='true'])) > .kp-tooltip {
+        margin-block-start: calc(0.75rem - 2px);
     }
 
     /* The wizard's steps: round stickers; the current one plum with its peel,
@@ -75213,18 +75244,24 @@
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='solstice'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) {
             translate: 0 0;
+            /* Shut, off the screen once the dome has sunk: the transform waits the open time
+               and `translate` stays the clock js/sidenav.js reads. */
+            transform: translateX(var(--kp-sidenav-away, -100%));
             visibility: hidden;
             transition:
                 translate var(--kp-sig-solstice-open) cubic-bezier(0.12, 0, 0.39, 0),
-                visibility 0s linear var(--kp-sig-solstice-open);
+                visibility 0s linear var(--kp-sig-solstice-open),
+                transform 0s linear var(--kp-sig-solstice-open);
             animation: kp-sig-solstice-kindled-back var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) reverse both;
         }
 
         [data-theme='solstice'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            transform: none;
             visibility: visible;
             transition:
                 translate var(--kp-sig-solstice-open) var(--kp-sig-solstice-come),
-                visibility 0s linear;
+                visibility 0s linear,
+                transform 0s;
             animation: kp-sig-solstice-kindled var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) backwards;
         }
 
