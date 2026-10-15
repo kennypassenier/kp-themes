@@ -93,6 +93,9 @@ gate utilities node gates/check-utilities.mjs || exit 1
 # the dist bundle (TH106) and the minified build match their sources, and the size table with them [scope-76]
 gate gen-min node gates/generate-min.mjs --check || exit 1
 
+# every shipped stylesheet parses without a warning, as a strict consumer parses it [comment-glob-1011]
+gate css-parse node gates/check-css-parse.mjs || exit 1
+
 # a converted component sits inside its container (TH104, AR31)
 gate wrappers node gates/check-wrappers.mjs || exit 1
 

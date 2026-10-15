@@ -3,6 +3,8 @@
 ## Unreleased
 
 - **Fixed: a comment in brutalism's register closed early** [comment-glob-1011; JobTracker, 2026-10-15]. The path `research/character-*/` in a comment ended it at `*/`, so the rest of the comment became part of the next selector: brutalism's tile-hover rule was dropped by browsers and Tailwind v4 refused the stylesheet. The path is now written `research/character-<name>/`.
+- **Fixed: twenty-one empty entries in a cyberpunk selector list** [comment-glob-1011]. A hover-and-focus rule in css/cyberpunk-register.css listed `button, , summary, , …`; browsers forgive it inside `:is()`, a strict parser refuses the file. The empty entries are gone; nothing changes on screen.
+- **Added: a gate that parses every shipped stylesheet** [comment-glob-1011]. `npm run check:css-parse` (part of `npm run gates`) parses each stylesheet the package ships with esbuild and refuses on any warning, so a comment closed early or an empty selector entry no longer reaches a consumer.
 
 ## 10.1.0 — 2026-10-15
 

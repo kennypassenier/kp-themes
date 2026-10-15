@@ -6770,3 +6770,39 @@ kp-themes: it grants no test run (docs/MINI_ROUNDS.md fix-118-M1).
 
 **9 · When we review the measure.** At the retrospective after 10.1.0.
 
+
+## comment-glob-1011 · A comment closed early by a path glob shipped in 10.1.0 (2026-10-15)
+
+Kenny, form of 2026-10-15: approved ("Klopt").
+
+**1 · What went wrong.** css/brutalism-register.css:2995 held the path
+`research/character-*/` in a comment; its `*/` closed the comment early and
+the rest of the sentence became part of the tile-hover selector. Browsers
+dropped that rule; JobTracker's Tailwind v4 build refused the file
+(`CssSyntaxError: Missing opening (`).
+
+**2 · Which gate let it through.** None: the gates, the minifier and the
+browsers accept malformed CSS without a word.
+
+**3 · Where else the same fault sits.** `node gates/check-css-parse.mjs` over
+every shipped stylesheet found one more: 21 empty entries in an `:is()` list in
+css/cyberpunk-register.css (from 02ff9419), removed. Outside the package,
+research/size-motion/exits.css and the `_previous` snapshots also warn; they
+do not ship.
+
+**4 · How we prevent recurrence.** gates/check-css-parse.mjs parses every
+shipped stylesheet with esbuild (already a dependency) and refuses on any
+warning; it runs in `npm run gates`.
+
+**5 · What the remedy costs.** 52 files, a fraction of a second; no new
+dependency.
+
+**6 · Who enforces it.** Code: the commit hook.
+
+**7 · How we measure it, and when.** Measured at the commit that adds it: it
+failed first on the 10.1.0 brutalism file and the old cyberpunk build (6
+warnings) and passes on main. The loop closes when JobTracker builds on
+10.1.1 (docs/MINI_ROUNDS.md comment-glob-1011).
+
+**8 · Fallback.** If a strict consumer still refuses a file the gate passed,
+the gate parses with that consumer's parser (lightningcss) instead.
