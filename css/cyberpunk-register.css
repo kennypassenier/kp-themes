@@ -327,9 +327,15 @@
         position: relative;
     }
 
-    [data-theme='cyberpunk'] .kp-nav__link[aria-current='page'] {
+    [data-theme='cyberpunk'] .kp-nav__link:is([aria-current='page'], .kp-nav__more-button[aria-current='true']) {
         text-decoration: underline;
         text-underline-offset: 0.3em;
+    }
+
+    /* A folding bar [kpadopt-nav]: the void panel is as wide as the links the bar shows, not as the room the list is given. */
+    [data-theme='cyberpunk'] .kp-nav[data-kp-nav-fold] .kp-nav__links::before {
+        inset-inline-end: auto;
+        inline-size: var(--kp-nav-fold-used, 100%);
     }
 
     /* Pointing, focus and press on a link of the bar are the split edge, four closing brackets and
@@ -5859,6 +5865,60 @@
 @layer kp.layout {
     [data-theme='cyberpunk'] .kp-code-block {
         border-radius: 0;
+    }
+}
+
+@layer kp.register {
+    /* Bottom tab bar [kpadopt-nav] — cyberpunk: a locked target. The current tab is a yellow notched plate with dark ink, acquired in ticks (never eased), the labels prefixed-mono capitals (G1, G5, G6, G15); a count is a notched yellow-and-black tag. */
+    [data-theme='cyberpunk'] .kp-tabbar {
+        background: var(--background);
+        border-block-start: 1px solid var(--primary);
+    }
+
+    [data-theme='cyberpunk'] .kp-tabbar__tab {
+        border-radius: 0;
+        isolation: isolate;
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='cyberpunk'] .kp-tabbar__tab::before {
+        inset: 0;
+        block-size: auto;
+        z-index: -1;
+        background: var(--primary);
+        clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+        scale: 1 1;
+        opacity: 0;
+    }
+
+    [data-theme='cyberpunk'] .kp-tabbar__tab[aria-current]:not([aria-current='false']) {
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='cyberpunk'] .kp-tabbar__tab[aria-current]:not([aria-current='false'])::before {
+        opacity: 1;
+    }
+
+    [data-theme='cyberpunk'] .kp-tabbar__tab[aria-current]:not([aria-current='false']) .kp-tabbar__icon {
+        color: inherit;
+    }
+
+    [data-theme='cyberpunk'] .kp-tabbar__tab:is(:hover, :focus-visible):not([aria-current]:not([aria-current='false'])) {
+        color: var(--primary);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-tabbar__tab::before {
+            transition: opacity calc(var(--fx-duration) / 3) steps(3, jump-end);
+        }
+    }
+
+    [data-theme='cyberpunk'] .kp-tabbar__badge {
+        border-radius: 0;
+        clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 4px 100%, 0 calc(100% - 4px));
+        font-family: var(--theme-font-mono);
     }
 }
 /* <<cfd-layout-end>> */

@@ -632,6 +632,22 @@ export type Strings = {
      */
     menuEmpty: string;
     /**
+     * The word on the button a folding bar puts its overflowing links behind (`data-kp-nav-fold`, js/nav-fold.js) [kpadopt-nav]
+     */
+    navMore: string;
+    /**
+     * The name of that button's menu, for a screen reader [kpadopt-nav]
+     */
+    navMoreMenu: string;
+    /**
+     * Said after the button's name when a link behind it carries a counter [kpadopt-nav]
+     */
+    navMoreAlert: string;
+    /**
+     * Under a folded link that cannot be followed now (`aria-disabled`, `disabled`), as its reason [kpadopt-nav]
+     */
+    navMoreUnavailable: string;
+    /**
      * The tour card's button to the next step (js/tour.js) [scope-143]
      */
     tourNext: string;
@@ -1026,6 +1042,10 @@ export type Strings = {
  * @property {string} chartPinnedOutside  A pinned tooltip's head once a live update moved the window past the pin [scope-143]
  * @property {string} menuLoading  A menu button's menu while its entries load: one disabled entry (js/menu-button.js) [scope-143]
  * @property {string} menuEmpty  The title of a menu button with no entries, which stays and does nothing (`data-kp-menu-empty="disable"`) [scope-143]
+ * @property {string} navMore  The word on the button a folding bar puts its overflowing links behind (`data-kp-nav-fold`, js/nav-fold.js) [kpadopt-nav]
+ * @property {string} navMoreMenu  The name of that button's menu, for a screen reader [kpadopt-nav]
+ * @property {string} navMoreAlert  Said after the button's name when a link behind it carries a counter [kpadopt-nav]
+ * @property {string} navMoreUnavailable  Under a folded link that cannot be followed now (`aria-disabled`, `disabled`), as its reason [kpadopt-nav]
  * @property {string} tourNext  The tour card's button to the next step (js/tour.js) [scope-143]
  * @property {string} tourNextTitle  Its title [scope-143]
  * @property {string} tourBack  The tour card's button to the step before [scope-143]

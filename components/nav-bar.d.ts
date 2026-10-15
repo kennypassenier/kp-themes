@@ -74,6 +74,10 @@ export type NavBarProps = {
      */
     stickyAfter?: number;
     /**
+     * Fold the links that do not fit behind a More menu (`data-kp-nav-fold`, js/nav-fold.js) [kpadopt-nav]. Default false.
+     */
+    fold?: boolean;
+    /**
      * The `.kp-nav__search` slot: the command palette's trigger, usually a PaletteTrigger [scope-48].
      */
     search?: import('react').ReactNode;

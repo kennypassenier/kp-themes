@@ -4131,6 +4131,57 @@
         }
     }
 }
+
+@layer kp.register {
+    /* Bottom tab bar [kpadopt-nav] — phantom: a screen print. The current tab is a skewed red plate with black ink, thrown in from off the start edge in one shove; pointing throws a thin red bar; capitals in the condensed face (G1, G5, G6, G15). */
+    [data-theme='phantom'] .kp-tabbar {
+        background: var(--background);
+        border-block-start: 2px solid var(--primary);
+    }
+
+    [data-theme='phantom'] .kp-tabbar__tab {
+        border-radius: 0;
+        isolation: isolate;
+        font-family: var(--theme-font-display);
+        font-size: calc(var(--kp-tabbar-size, var(--kp-text-xs, 0.75rem)) * 1.1);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='phantom'] .kp-tabbar__tab::before {
+        inset: 0.125rem 0.125rem;
+        block-size: auto;
+        z-index: -1;
+        background: var(--primary);
+        transform: skewX(-10deg);
+        transform-origin: 0 50%;
+        scale: 0 1;
+    }
+
+    [data-theme='phantom'] .kp-tabbar__tab:dir(rtl)::before {
+        transform: skewX(10deg);
+        transform-origin: 100% 50%;
+    }
+
+    [data-theme='phantom'] .kp-tabbar__tab[aria-current]:not([aria-current='false']) {
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='phantom'] .kp-tabbar__tab[aria-current]:not([aria-current='false']) .kp-tabbar__icon {
+        color: inherit;
+    }
+
+    [data-theme='phantom'] .kp-tabbar__tab:is(:hover, :focus-visible):not([aria-current]:not([aria-current='false']))::before {
+        scale: 0.06 1;
+    }
+
+    [data-theme='phantom'] .kp-tabbar__badge {
+        border-radius: 0;
+        transform: skewX(-10deg);
+        background: var(--fx-signal);
+        color: var(--fx-signal-foreground);
+    }
+}
 /* ── End of the signature ── */
 
 /* ── Segmented control, list toolbar, key line [kpadopt-controls] ── */

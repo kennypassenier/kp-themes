@@ -4128,6 +4128,59 @@
         }
     }
 }
+
+@layer kp.register {
+    /* Bottom tab bar [kpadopt-nav] — brutalism: slabs. The bar is a ruled slab; the current tab is a yellow slab with ink border and a hard offset shadow; pointing lifts it off its footprint, a press drives it in (G2, G7, G8, G14); capitals, bold. */
+    [data-theme='brutalism'] .kp-tabbar {
+        border-block-start: var(--kp-line, 3px) solid var(--foreground);
+        gap: 0.25rem;
+    }
+
+    [data-theme='brutalism'] .kp-tabbar__tab {
+        border: var(--kp-line, 3px) solid transparent;
+        border-radius: 0;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='brutalism'] .kp-tabbar__tab::before {
+        content: none;
+    }
+
+    [data-theme='brutalism'] .kp-tabbar__tab[aria-current]:not([aria-current='false']) {
+        background: var(--fx-overprint);
+        color: var(--foreground);
+        border-color: var(--foreground);
+        box-shadow: var(--fx-shadow-offset) var(--fx-shadow-offset) 0 var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-tabbar__tab[aria-current]:not([aria-current='false']) .kp-tabbar__icon {
+        color: inherit;
+    }
+
+    [data-theme='brutalism'] .kp-tabbar__tab:is(:hover, :focus-visible):not([aria-current]:not([aria-current='false'])) {
+        border-color: var(--foreground);
+        translate: -2px -2px;
+        box-shadow: var(--fx-shadow-offset) var(--fx-shadow-offset) 0 var(--foreground);
+    }
+
+    [data-theme='brutalism'] .kp-tabbar__tab:active {
+        translate: var(--fx-shadow-offset) var(--fx-shadow-offset);
+        box-shadow: none;
+    }
+
+    [data-theme='brutalism'] .kp-tabbar__badge {
+        border-radius: 0;
+        border: 2px solid var(--foreground);
+        font-weight: 800;
+    }
+
+    /* The two-channel ring (DI2) stays: the slab's own shadow would replace its inner ring. */
+    [data-theme='brutalism'] .kp-tabbar__tab:focus-visible {
+        box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring);
+    }
+}
 /* ── End of the signature ── */
 
 /* ── Segmented control, list toolbar, key line [kpadopt-controls] ── */

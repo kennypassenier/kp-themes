@@ -117,6 +117,12 @@ export const PAGES = [
                 label: 'Feedback components: a toast that waits, a live step list, a diff hunk header',
                 about: 'The dashboard draws these itself because the package lacks them: toast() gains pause, linger, close and sticky; .kp-steplist (pending, running, done, failed, skipped, announced to a screen reader); .kp-diff__hunk.',
             },
+            // Kenny, 2026-10-15 (kp-adopt rest, kpa-33): three pieces the homelab dashboard still draws by hand, built into the package first: a top bar that folds what does not fit behind a More menu, a bottom tab bar for phones with a More drawer, and the running-job button.
+            {
+                href: 'research/kpadopt-nav/demo.html',
+                label: 'Top bar that folds behind More, bottom tab bar, running-job button',
+                about: 'The dashboard folds its bar by hand, draws its own phone tab bar and its own running-job pill: each is now built into the package, in all 16 themes, with every state, and shown with the real shell in three windows.',
+            },
         ],
     },
     {

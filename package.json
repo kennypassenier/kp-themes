@@ -180,6 +180,14 @@
             "types": "./js/menu-button.d.ts",
             "default": "./js/menu-button.js"
         },
+        "./js/nav-fold": {
+            "types": "./js/nav-fold.d.ts",
+            "default": "./js/nav-fold.js"
+        },
+        "./js/tabbar": {
+            "types": "./js/tabbar.d.ts",
+            "default": "./js/tabbar.js"
+        },
         "./js/tour": {
             "types": "./js/tour.d.ts",
             "default": "./js/tour.js"

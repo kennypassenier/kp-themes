@@ -3902,6 +3902,46 @@
         }
     }
 }
+
+@layer kp.register {
+    /* Bottom tab bar [kpadopt-nav] — terminal: a shell. The current tab is printed in reverse video, in one step (no easing, the line clock); pointing underlines the label like a cursor line; a press enters it in reverse (G8, G14); everything in the one mono, in cells. */
+    [data-theme='terminal'] .kp-tabbar {
+        background: var(--background);
+        border-block-start-color: var(--border);
+    }
+
+    [data-theme='terminal'] .kp-tabbar__tab {
+        border-radius: 0;
+    }
+
+    [data-theme='terminal'] .kp-tabbar__tab::before {
+        content: none;
+    }
+
+    [data-theme='terminal'] .kp-tabbar__tab[aria-current]:not([aria-current='false']),
+    [data-theme='terminal'] .kp-tabbar__tab:active {
+        background: var(--foreground);
+        color: var(--background);
+    }
+
+    [data-theme='terminal'] .kp-tabbar__tab[aria-current]:not([aria-current='false']) .kp-tabbar__icon,
+    [data-theme='terminal'] .kp-tabbar__tab:active .kp-tabbar__icon {
+        color: inherit;
+    }
+
+    [data-theme='terminal'] .kp-tabbar__tab:is(:hover, :focus-visible):not([aria-current]:not([aria-current='false'])) .kp-tabbar__label {
+        text-decoration: underline;
+        text-underline-offset: 0.25em;
+    }
+
+    [data-theme='terminal'] .kp-tabbar__badge {
+        border-radius: 0;
+    }
+
+    [data-theme='terminal'] .kp-tabbar__tab[aria-current]:not([aria-current='false']) .kp-tabbar__badge {
+        box-shadow: 0 0 0 1px var(--background);
+    }
+}
 /* ── End of the signature ── */
 
 /* ── Segmented control, list toolbar, key line [kpadopt-controls] ── */
