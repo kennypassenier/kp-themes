@@ -3749,18 +3749,24 @@
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='terminal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) {
             translate: 0 0;
+            /* Shut, off the screen once the print is cleared: the transform waits the six lines
+               and `translate` stays the clock js/sidenav.js reads. */
+            transform: translateX(var(--kp-sidenav-away, -100%));
             visibility: hidden;
             transition:
                 translate calc(6 * var(--kp-sig-tm-line)) steps(6, jump-start),
-                visibility 0s linear calc(6 * var(--kp-sig-tm-line));
+                visibility 0s linear calc(6 * var(--kp-sig-tm-line)),
+                transform 0s linear calc(6 * var(--kp-sig-tm-line));
             animation: kp-sig-terminal-tm-nav-rows-back calc(6 * var(--kp-sig-tm-line)) steps(6, jump-end) reverse both;
         }
 
         [data-theme='terminal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            transform: none;
             visibility: visible;
             transition:
                 translate calc(6 * var(--kp-sig-tm-line)) steps(6, jump-end),
-                visibility 0s linear;
+                visibility 0s linear,
+                transform 0s;
             animation: kp-sig-terminal-tm-nav-rows calc(6 * var(--kp-sig-tm-line)) steps(6, jump-end) backwards;
         }
 

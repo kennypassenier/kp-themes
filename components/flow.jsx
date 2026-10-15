@@ -157,6 +157,12 @@ function DatePickerInner(
     }, [open]);
 
     const chosen = parseDate(text, locale, numeric);
+    /** A typed date that reads as a date is written the way the field shows a date (13-09-2026 becomes 13/09/2026) [scope-143]. */
+    const tidy = () => {
+        if (chosen === null) return;
+        const shown = formatDate(chosen, locale, numeric);
+        if (shown !== text) setText(shown);
+    };
     const year = cursor.getFullYear();
     const month = cursor.getMonth();
     const lead = (new Date(year, month, 1).getDay() - firstDay + 7) % 7;
@@ -317,6 +323,12 @@ function DatePickerInner(
                         if (date !== null) setCursor(date);
                     }}
                     {...inputProps}
+                    // A typed date is written back the way the field shows a date once the
+                    // person leaves the field, or opens the calendar (see tidy).
+                    onBlur={(event) => {
+                        tidy();
+                        if (typeof inputProps?.onBlur === 'function') inputProps.onBlur(event);
+                    }}
                 />
             </div>
             {/* The date picker's markup, class for class: a plain button with
@@ -333,6 +345,7 @@ function DatePickerInner(
                 aria-expanded={open}
                 onClick={() => {
                     if (!open) {
+                        tidy();
                         focusOnOpen.current = true;
                         // Open on the chosen date, so the focused day is the one in the field.
                         if (chosen !== null) setCursor(chosen);

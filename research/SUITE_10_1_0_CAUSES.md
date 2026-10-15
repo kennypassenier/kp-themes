@@ -212,3 +212,52 @@ Not run (fix-118); every change below is read from the CSS/JS and checked with `
 - 41, 43 register-light.spec.mjs:175 rule: asserts `kp-sig-light-expose` (not `kp-rule-in`), 2px, primary, whole at rest (filter none, opacity 1), and adds the armed probe (`is-in` off: opacity 0 and blurred glare), replacing "drawn to full width".
 - 42, 44 register-light.spec.mjs:108 headline: light's rounded clip window is retired; it comes into focus from a glare (`blur(5px) brightness(1.6)`, opacity 0) on `kp-clip-reveal`. The test records the filter at animation start instead of the clip-path, asserts blurred at start, `none` at rest, and the re-armed probe keeps opacity 0 and adds the blur.
 - 45, 46 register-pastel.spec.mjs:156 lede marks: both marks are mint (G5, Kenny 2026-10-14: violet is the info status only). The second mark is asserted to be `--accent`, plus a check that `--info` is a different ink so the assertion can tell them apart.
+
+## Repair log: groups 9-16
+
+Kenny's go 2026-10-15 03:26 ("suite-red: Eerst oplossen"). Every number below is a Firefox measurement with a standalone Playwright script (no spec body run, fix-118), fixtures served from this worktree; "before" is the register of 0c487c8b (the parent of the plate's merge 4987a95d) or the code at HEAD 04d497a7.
+
+### 9. Phantom's plate: not the cause; a turned overlay was placed by its bounding box (fixed)
+
+- Measured: the plate moves no box. Select list at 1280 px, phantom: layout box 8, 74, 448 (left, top, width) before and after 4987a95d; menu button menu items 322.4 x 66.88 before and after; nav dropdown `offset` 0, 39, 204 x 192 and mega menu 0, 74, 1384 x 116 before and after.
+- Cause of the 3 to 4 px: phantom's menus, lists and cards land askew (`rotate: -1.5deg`, 3eba5336 and e785e30a, approved), and the failing tests read `getBoundingClientRect()`, the box of the turned part. v10.0.0's phantom had `rotate: none`: select list bounding width 448, now 451.83. The same code at 3eba5336 (before the rotation reached the list) reads 448.
+- One real defect inside it: `layoutRect()` (js/top-layer.js) is what `raiseInPlace()` and `placeBlockSide()` place a list by, and it measured the turned bounding box. A 1227 px combobox list in a card was placed at `top: 633.3 px` (field bottom 649.3 px) and 1229.6 px wide: gap -28.1 px under the input. Now `unturnedRect()` sets the single-angle `rotate` aside about the `transform-origin`: `top: 649.3 px`, 1227 px wide, layout offset 653 (4 px under the field), 0 of 3 options out of reach, both channels (before: 0 of 3 too, but 28 px up over the input).
+- Not changed: `rotate: -1.5deg` itself (the approved askew landing), so the select, nav-menu, combobox and choice-centre tests (rows 6, 7, 34, 51, 52, 53, 8), which compare the bounding box of an askew part with a straight box, still read 2 to 4 px by design: they are class B. Select list in phantom: bounding box 451.8 wide, layout box 448 = the select's 448.
+
+### 10. Closed side navigation on screen in four themes (fixed)
+
+- Cause: cyberpunk, synthwave, terminal and solstice keep the panel still and hide it with `visibility` (the approved "nothing slides in from an edge" arrival), so shut it stood at `translate: 0` on the screen: rect 0..240 (scoped 8..248, terminal 26..266). Not ecdd1b69 and not 33b04caa: the rules date from 3eba5336 and e785e30a (10-13). Cyberpunk is red in reduced motion too (its shut rule is outside the motion query); the other three only with motion.
+- Fix: shut, the panel also carries `transform: translateX(var(--kp-sidenav-away, -100%))`, with `transform 0s linear <the close's own delay>` in the closed transition and `transform: none; transition: transform 0s` when open. `translate` and its transition are untouched (js/sidenav.js reads them as the clock of a pushed page).
+- Numbers (1280 px, rect left/right of the window panel): shut -240/0 in all four, reduced motion and motion; opened 0/240; scoped panel shut right 8 (terminal 26) = its box's x. During the close with motion the panel is on the screen and visible until 467 ms (cyberpunk), 450 (synthwave), 802 (terminal), 467 (solstice) and off the screen from 486, 468, 819, 486 ms: the tear, beam, print and dome play in place as before. Command: `node g10b.mjs` (scratchpad).
+
+### 11. Calendar grid translate (not a defect; one test and one reading repaired)
+
+- Hit-testing: in the add-filter fixture, August 2026 open, all 31 day centres answer `elementFromPoint` in all 16 themes (0 unreachable). Rows 10 and 12 failed because the test formats its dates with `formatDate(..., 'en')` (08/10/2026) and the date picker's default is dd/mm/yyyy since 03a92724, so August became 8 October and `[data-kp-day="2026-08-15"]` did not exist. Repaired in the test: `formatDate(..., 'en', 'rule52')`.
+- Pastel 262 against 302: pastel's panel is 262 x 276 in the days, months and years views (all 16 themes equal within 0 px with reduced motion). 301.95 px is the panel read in the first frames of its stuck-on arrival (`scale`, 262 x 1.15), which the sweep reads right after `toBeVisible()`: reproduced with motion on (days 301.95 x 313.58). No change to the calendar; the 334 px overhang fix is untouched.
+
+### 12. A typed date is rewritten to the display format (fixed)
+
+- Cause: `commit(date, 'typed')` deliberately leaves what is typed, and nothing wrote the date back afterwards (03a92724 made dd/mm/yyyy the default and the 10.0.0 locale format happened to equal the typed form).
+- Fix: `tidy()` in js/datepicker.js on the input's `change` and when the calendar opens; the same in the React `DatePicker` (`onBlur` of the input, and the open button). Text that is not a date stays.
+- Numbers (components fixture, nl): fill `13-09-2026`, click away: `13/09/2026` (framework-free and React); fill `1-2-2026`, open the calendar: `01/02/2026`; fill `not a date`, click away: unchanged.
+
+### 13. Key-figure row heights (not real in the steady state)
+
+- With reduced motion every tile is 121.2 px in every row of all nine rows of the test (5/full, 4/600, 5/700, 7/700, 8/700, 5/358, 6/358, 1/358, 2/358), at 1280 px. With motion on, the same sequence reads tiles mid-leave and mid-enter (heights 9.3 to 111.7 px in one row): the test polls the column count only, not the tiles' own transitions. Nothing changed in the package; the test should wait for the strip's animations.
+
+### 14. Pastel at 320 px (transient, not changed)
+
+- At rest the pastel fixture is 320 px wide at 320 px, in all 16 themes (scrollWidth 320), with and without motion. The failure is the first 60 to 120 ms of the load with motion on (tests/fixtures.spec.mjs sets `reducedMotion: 'no-preference'` for the whole file): scrollWidth 330 to 338 while the static toast of the page swings in (`kp-sig-pastel-stuck-plate-in`, rotate -9deg for the first 21 % of 560 ms): with the toast's animation off the maximum over 6 loads is 320, with everything off 320. It is the approved swing; the page has an in-flow toast. Not changed.
+
+### 15. Showcase theme menus (a race with formal's arrival, not changed)
+
+- At rest the left menu (formal) answers at every button centre (`elementFromPoint` = the button, menu 38, 52, 170 x 498). With motion on, formal's menu opens line by line through a clip (500 ms), and a Playwright click in the first frames passes through the unrevealed part to the specimen behind (`.sc-states`); Playwright then scrolls (400 to 652) and the page scroll closes the menu. Reproduced 4 of 4 with motion on, 0 of 4 with reduced motion. Right half (dark) clicks in both.
+
+### 16. Cyberpunk log columns (fixed)
+
+- Real: the current line's cells (`[data-kp-current] > *`) were washed with `padding-inline: .25rem; margin-inline: -.25rem`, which put each cell's box 4 px left of its column: time 289 (293 on every other line), source 353 (357), level 434 (438), message 512 (516).
+- Fix: the wash is two hard shadows (`-0.25rem 0 0` and `0.25rem 0 0` in `--muted`). After: 293 / 357 / 438 / 516 on all five lines, the words in the same places; the level of the warning and error lines now carries the package's 0.4em padding like the other lines (word at 443.2 on both).
+
+### Also: pastel's tooltip (coordinator's addition)
+
+- All four tooltips of catalogue/overlays.html#tooltip, pastel, 1920 x 1000: gap under the trigger 12, 12, 14, 14 before; 12, 12, 12, 12 after (`.kp-tooltip-anchor:has(> .kp-button:hover) > .kp-tooltip { margin-block-start: calc(0.75rem - 2px) }`: the hovered button lifts 2 px).

@@ -3682,6 +3682,13 @@
         box-shadow: none;
     }
 
+    /* A hovered button lifts 2px (translate, no layout), and its tooltip's gap is
+       measured from where the button stands: the tooltip goes up with it, so the
+       gap stays the 12px it is at rest and never reads 14 [scope-143]. */
+    [data-theme='pastel'] .kp-tooltip-anchor:has(> .kp-button:hover:not(:disabled, [aria-disabled='true'])) > .kp-tooltip {
+        margin-block-start: calc(0.75rem - 2px);
+    }
+
     /* The wizard's steps: round stickers; the current one plum with its peel,
        upright (G14); a done one on the mint plate. */
     [data-theme='pastel'] .kp-wizard__steps {

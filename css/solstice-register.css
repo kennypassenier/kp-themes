@@ -2552,18 +2552,24 @@
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='solstice'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) {
             translate: 0 0;
+            /* Shut, off the screen once the dome has sunk: the transform waits the open time
+               and `translate` stays the clock js/sidenav.js reads. */
+            transform: translateX(var(--kp-sidenav-away, -100%));
             visibility: hidden;
             transition:
                 translate var(--kp-sig-solstice-open) cubic-bezier(0.12, 0, 0.39, 0),
-                visibility 0s linear var(--kp-sig-solstice-open);
+                visibility 0s linear var(--kp-sig-solstice-open),
+                transform 0s linear var(--kp-sig-solstice-open);
             animation: kp-sig-solstice-kindled-back var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) reverse both;
         }
 
         [data-theme='solstice'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            transform: none;
             visibility: visible;
             transition:
                 translate var(--kp-sig-solstice-open) var(--kp-sig-solstice-come),
-                visibility 0s linear;
+                visibility 0s linear,
+                transform 0s;
             animation: kp-sig-solstice-kindled var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) backwards;
         }
 
