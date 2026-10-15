@@ -12,3 +12,9 @@ lives in this folder.
 - `demo.html` is written by `build.mjs` from one description; `demo.css` holds the proposals, `demo.js` stands in for the
   proposed `js/menu-button.js` hook and drives the page's own buttons.
 - `shots.mjs` photographs both sections at 1280 and 390 px in Firefox. Not a test; no gate runs it.
+
+Round 2 (2026-10-15 02:12, Kenny: the deco menu "is not the menu I approved"): two causes, both fixed.
+- The page's root was `formal`, and formal's menu rules (higher specificity) reached into the deco stage: formal's ruling clip and
+  Instrument Sans instead of deco's arrival and Poiret/Josefin. The root is now `light` and fixed, with no formal register linked.
+- The review dialog is a `.kp-dialog`, and deco's "a menu inside a plate is not a second plate" rule took the plate off a menu a
+  menu button opens (bare words). That rule now leaves `.kp-menu-button > .kp-menu` alone (css/deco-register.css).
