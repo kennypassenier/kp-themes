@@ -99,6 +99,11 @@ export type WeekModel = {
     title: HTMLElement | null;
     today: HTMLButtonElement | null;
     legend: HTMLElement;
+    motion: {
+        gone: boolean;
+        stop: (() => void) | null;
+        asked: boolean;
+    };
     pills: Map<string, HTMLButtonElement>;
     timer: number;
     observer: ResizeObserver | null;

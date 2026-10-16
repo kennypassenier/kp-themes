@@ -92,6 +92,7 @@ export const WEEK_TICK_MS = 30_000;
  * @typedef {{ el: HTMLElement, zone: string, locale: string, now: () => number, strings: Strings, decorate?: WeekOptions['decorate'],
  *   start: string, days: number, events: WeekEvent[], state: WeekState, active: string | null, grid: HTMLElement,
  *   axis: HTMLElement, cols: WeekDay[], stateLine: HTMLElement, title: HTMLElement | null, today: HTMLButtonElement | null, legend: HTMLElement,
+ *   motion: { gone: boolean, stop: (() => void) | null, asked: boolean },
  *   pills: Map<string, HTMLButtonElement>, timer: number, observer: ResizeObserver | null, mode: 'grid' | 'list' }} WeekModel
  */
 
@@ -211,6 +212,21 @@ function stepButton(doc, name, path) {
     svg.append(line);
     button.append(svg);
     return button;
+}
+
+/**
+ * From here on, what comes later in this agenda arrives the theme's way (js/motion.js: the register's own arrival, one
+ * after the other): the items that end a loading state, a new item of a live update, the days of the next range. A
+ * pill that is still there keeps its node, so a refresh with the same items moves nothing. Asked by an agenda that can
+ * load (its first loading state) or move (its week buttons); one that only ever shows what it was given stays still.
+ * @param {WeekModel} c
+ */
+function watchArrivals(c) {
+    if (c.motion.asked) return;
+    c.motion.asked = true;
+    void import('./motion.js').then((m) => {
+        if (!c.motion.gone) c.motion.stop = m.easeSize(c.el);
+    });
 }
 
 /** Build the chrome once; the days are filled by paint(). @param {WeekModel} c */
@@ -582,6 +598,7 @@ export function attachWeeks(root = document, options = {}) {
             stateLine: el,
             title: null,
             today: null,
+            motion: { gone: false, stop: null, asked: false },
             legend: el,
             pills: new Map(),
             timer: 0,
@@ -594,6 +611,7 @@ export function attachWeeks(root = document, options = {}) {
         paint(c);
         // The one hover card of the page carries each item's detail.
         void import('./hovercard.js').then((m) => m.attachHoverCards(el.ownerDocument));
+        if (c.title) watchArrivals(c);
 
         /** @param {Event} event */
         const pillOf = (event) =>
@@ -678,6 +696,8 @@ export function attachWeeks(root = document, options = {}) {
             el.removeEventListener('click', onNav);
             window.clearInterval(c.timer);
             c.observer?.disconnect();
+            c.motion.gone = true;
+            c.motion.stop?.();
             weeks.delete(el);
         });
     }
@@ -711,6 +731,7 @@ export function setWeekEvents(el, events) {
 export function setWeekState(el, state, words = '') {
     const c = weeks.get(el);
     if (!c) return;
+    if (state === 'loading') watchArrivals(c);
     c.state = state;
     c.stateLine.dataset.kpWords = words;
     paint(c);

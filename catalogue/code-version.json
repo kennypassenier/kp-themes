@@ -51,7 +51,7 @@
         "js/tiles.js": { "digest": "a93919ec458ab18b", "when": "[data-kp-tiles-set]" },
         "js/toolbar.js": { "digest": "ca22723058dcfe13", "when": "[data-kp-toolbar]" },
         "js/upload.js": { "digest": "fe77364297c65175", "when": "[data-kp-upload]" },
-        "js/week.js": { "digest": "927f77c0e539c7c2", "when": "[data-kp-week]" },
+        "js/week.js": { "digest": "f500456752b0847a", "when": "[data-kp-week]" },
         "js/wizard.js": { "digest": "511924d0f81de6b2", "when": "[data-kp-wizard]" }
     },
     "themes": {
@@ -5932,6 +5932,7 @@
         "||@container kp-week (max-width: 39.99rem)||.kp-week__more": "6bef808e9da21017",
         "||@container kp-week (max-width: 39.99rem)||.kp-week__now": "6bef808e9da21017",
         "||@container kp-week (max-width: 39.99rem)||.kp-week__pill": "8d3408bfe3a4c0e9",
+        "||@container kp-week (max-width: 39.99rem)||.kp-week__state": "e97cc6444934d79c",
         "||@container kp-week (max-width: 39.99rem)||.kp-week__title": "debac05d8704c153",
         "||@container kp-week (max-width: 39.99rem)||.kp-week__today": "f034c55a07018b24",
         "||@container kp-week (min-width: 40rem)||.kp-week__pill[data-kp-overflow]": "17ad19ea97ac2a4c",

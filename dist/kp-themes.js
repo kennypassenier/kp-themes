@@ -21400,6 +21400,13 @@ function stepButton(doc, name, path) {
   button.append(svg);
   return button;
 }
+function watchArrivals(c) {
+  if (c.motion.asked) return;
+  c.motion.asked = true;
+  void Promise.resolve().then(() => (init_motion(), motion_exports)).then((m) => {
+    if (!c.motion.gone) c.motion.stop = m.easeSize(c.el);
+  });
+}
 function build(c) {
   const doc = c.el.ownerDocument;
   const s2 = c.strings;
@@ -21755,6 +21762,7 @@ function attachWeeks(root = document, options = {}) {
       stateLine: el4,
       title: null,
       today: null,
+      motion: { gone: false, stop: null, asked: false },
       legend: el4,
       pills: /* @__PURE__ */ new Map(),
       timer: 0,
@@ -21766,6 +21774,7 @@ function attachWeeks(root = document, options = {}) {
     buildDays(c);
     paint3(c);
     void Promise.resolve().then(() => (init_hovercard(), hovercard_exports)).then((m) => m.attachHoverCards(el4.ownerDocument));
+    if (c.title) watchArrivals(c);
     const pillOf = (event) => event.target instanceof Element ? (
       /** @type {HTMLElement | null} */
       event.target.closest(".kp-week__pill")
@@ -21846,6 +21855,8 @@ function attachWeeks(root = document, options = {}) {
       el4.removeEventListener("click", onNav);
       window.clearInterval(c.timer);
       c.observer?.disconnect();
+      c.motion.gone = true;
+      c.motion.stop?.();
       weeks.delete(el4);
     });
   }
@@ -21862,6 +21873,7 @@ function setWeekEvents(el4, events) {
 function setWeekState(el4, state, words = "") {
   const c = weeks.get(el4);
   if (!c) return;
+  if (state === "loading") watchArrivals(c);
   c.state = state;
   c.stateLine.dataset.kpWords = words;
   paint3(c);

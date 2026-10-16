@@ -11577,6 +11577,11 @@
             background: none;
         }
 
+        /* In rows the sentence stays in the items' column, clear of the day names it would otherwise run over. */
+        .kp-week__state {
+            inset-inline-start: calc(var(--kp-week-day-label, 5.5rem) + var(--kp-space-sm, 0.5rem));
+        }
+
         .kp-week__day[data-kp-today] .kp-week__col {
             background: none;
         }
