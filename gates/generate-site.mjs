@@ -295,9 +295,13 @@ function componentPage(nav, descriptor, sources) {
                         <figcaption class="kp-fw-semibold">${escape(ex.title)}</figcaption>
                         <p class="kp-text-muted">${escape(ex.why)}</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-${ex.frame ? frameOf(ex) : ex.markup}
+${ex.frame ? frameOf(ex) : ex.markup}${ex.script ? liveScript(ex.script) : ''}
                         </div>
-                        <pre class="kp-code-block" data-sc-snippet><code>${highlight(ex.markup.trim(), 'html')}</code></pre>
+                        <pre class="kp-code-block" data-sc-snippet><code>${highlight(ex.markup.trim(), 'html')}</code></pre>${
+                            ex.script
+                                ? `\n                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>\n                        <pre class="kp-code-block" data-sc-snippet><code>${highlight(ex.script.trim(), 'js')}</code></pre>`
+                                : ''
+                        }
                     </figure>`,
         )
         .join('\n');
@@ -487,6 +491,20 @@ function frameOf(ex) {
     return `                            <template data-sc-frame data-sc-frame-title="${escape(ex.title)}"${height}${width}>
 ${ex.markup}
                             </template>`;
+}
+
+/**
+ * An example's `script`: the page's part of it (it hands a component its
+ * data). The snippet prints it with the package's specifiers; the live page
+ * runs the same text with each `@kp-soft/themes/js/x` pointing at the
+ * module in this tree, so the two cannot diverge [AR19]. It runs before
+ * js/auto.js, so the page's options are the ones that count.
+ *
+ * @param {string} script
+ */
+function liveScript(script) {
+    const run = script.trim().replace(/@kp-soft\/themes\/js\/([a-z-]+)/g, '../../js/$1.js');
+    return `\n                            <script type="module">\n${run}\n                            </script>`;
 }
 
 /** The module that opens a framed example's window (see frameOf). */
