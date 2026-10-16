@@ -174,10 +174,12 @@ export {
     SEGMENTED,
     SEGMENTED_EVENT,
     attachSegmented,
+    getSegmentedTri,
     getSegmentedValues,
     resetSegmented,
     setSegmentedCounts,
     setSegmentedItems,
+    setSegmentedTri,
     setSegmentedValues,
 } from './js/segmented.js';
 /** @typedef {import('./js/segmented.js').SegmentedItem} SegmentedItem */
@@ -250,6 +252,83 @@ export { BULLETS, BULLETS_PICK_EVENT, BULLETS_RETRY_EVENT, attachBullets, bullet
 export { CODE, CODE_COPIED_MS, attachCodes, prettyJson, setCode } from './js/code.js';
 /** @typedef {import('./js/code.js').CodeSpec} CodeSpec */
 export { TICK, TICK_EVENT, TICK_KNOB, TICK_MS, attachTicks, parseTick, tickTo } from './js/tick.js';
+// A wheel that picks for you, by weight [kpadopt4].
+export {
+    WHEEL,
+    WHEEL_RESULT_EVENT,
+    WHEEL_SPIN_EVENT,
+    attachWheels,
+    getWheelResult,
+    pickWeighted,
+    setWheelItems,
+    setWheelState,
+    spinWheel,
+    wheelAngles,
+} from './js/wheel.js';
+/** @typedef {import('./js/wheel.js').WheelItem} WheelItem */
+// One step at a time, with the screen kept on: cook mode [kpadopt4].
+export {
+    FOCUS_STEPS,
+    FOCUS_STEPS_DONE_EVENT,
+    FOCUS_STEPS_EVENT,
+    FOCUS_STEPS_WAKE_EVENT,
+    SWIPE_DISTANCE,
+    attachFocusSteps,
+    getStepIndex,
+    goToStep,
+    setFocusSteps,
+    setFocusStepsState,
+} from './js/focus-steps.js';
+/** @typedef {import('./js/focus-steps.js').FocusStep} FocusStep */
+/** @typedef {import('./js/focus-steps.js').FocusIngredient} FocusIngredient */
+// Kitchen timers: named countdowns that keep running [kpadopt4].
+export {
+    TIMERS,
+    TIMER_CHANGE_EVENT,
+    TIMER_DONE_EVENT,
+    TIMER_START,
+    TIMER_START_EVENT,
+    TIMER_STOP_EVENT,
+    TIMER_TICK_MS,
+    addTimerTime,
+    askTimerNotifications,
+    attachTimers,
+    formatClock,
+    getTimers,
+    parseDuration,
+    pauseTimer,
+    restoreTimers,
+    resumeTimer,
+    startTimer,
+    stopTimer,
+    stopTimerRing,
+} from './js/timer.js';
+/** @typedef {import('./js/timer.js').TimerState} TimerState */
+// A checklist whose ticked items sink [kpadopt4].
+export {
+    CHECKLIST,
+    CHECKLIST_CLEAR_EVENT,
+    CHECKLIST_EVENT,
+    CHECKLIST_UNDO_EVENT,
+    CHECKLIST_UNDO_MS,
+    attachChecklists,
+    getChecklistItems,
+    setChecklistChecked,
+    setChecklistItems,
+    setChecklistState,
+} from './js/checklist.js';
+/** @typedef {import('./js/checklist.js').ChecklistItem} ChecklistItem */
+// A quantity with minus and plus [kpadopt4].
+export {
+    QUANTITY,
+    QUANTITY_EVENT,
+    attachQuantities,
+    formatQuantity,
+    getQuantity,
+    parseQuantity,
+    setQuantity,
+    settleQuantity,
+} from './js/quantity.js';
 export { HOVERCARD_ATTRIBUTE, HOVERCARD_CARD, HOVERCARD_EVENT, attachHoverCards } from './js/hovercard.js';
 // Information that updates in place, the theme's way [research/update-motion, 2026-10-05].
 export {

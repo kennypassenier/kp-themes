@@ -85,6 +85,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/upload.html">File upload</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/wizard.html">Wizard</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/segmented.html" aria-current="page">Segmented control and filter chips</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/quantity.html">Quantity</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/formrows.html">Form rows</a></li>
                         </ul>
                     </div>
@@ -121,6 +122,8 @@
                             <li><a class="sc-nav__link" href="../../site/components/pipeline.html">Pipeline</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/toolbar.html">List toolbar</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/facets.html">Facet list</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/checklist.html">Checklist</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/wheel.html">Wheel</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/idmark.html">Identity mark</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/stackbar.html">Share bar</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/bullets.html">Bullet rows</a></li>
@@ -143,6 +146,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/skeleton.html">Skeleton</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/health.html">Health</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/status-row.html">Status rows</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/timer.html">Kitchen timers</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/steplist.html">Step list</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/tooltip.html">Tooltip</a></li>
                         </ul>
@@ -150,6 +154,7 @@
                     <div class="sc-nav__group">
                         <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Navigation</h2>
                         <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/focus-steps.html">One step at a time</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/nav-bar.html">Navigation bar</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/sidenav.html">Side navigation</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/to-top.html">Back to top</a></li>
@@ -289,7 +294,9 @@ load();</code></pre>
                             <tr><td><code>data-kp-segmented-collapse</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-segmented-glide</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-segmented-overflow</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-segmented-summary</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-segmented-thumb</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-segmented-tri</code></td><td>written</td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="react" id="react">
@@ -322,6 +329,8 @@ load();</code></pre>
                             <tr><td><code>--kp-chip-radius</code></td><td><code>var(--kp-radius-pill, 999px)</code></td></tr>
                             <tr><td><code>--kp-control-height</code></td><td><code>2.25rem</code></td></tr>
                             <tr><td><code>--kp-focus-ring-inner-width</code></td><td><code>2px</code></td></tr>
+                            <tr><td><code>--kp-glyph-check</code></td><td><code>'✓'</code></td></tr>
+                            <tr><td><code>--kp-glyph-cross</code></td><td><code>'✕'</code></td></tr>
                             <tr><td><code>--kp-radius-pill</code></td><td><code>999px</code></td></tr>
                             <tr><td><code>--kp-seg-case</code></td><td><code>none</code></td></tr>
                             <tr><td><code>--kp-seg-count-radius</code></td><td><code>999px</code></td></tr>
@@ -353,6 +362,14 @@ load();</code></pre>
                             <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
                             <tr><td><code>--kp-space-xs</code></td><td><code>0.25rem</code></td></tr>
                             <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
+                            <tr><td><code>--kp-tri-gap</code></td><td><code>0.4em</code></td></tr>
+                            <tr><td><code>--kp-tri-mark</code></td><td><code>1.25em</code></td></tr>
+                            <tr><td><code>--kp-tri-mark-radius</code></td><td><code>50%</code></td></tr>
+                            <tr><td><code>--kp-tri-out-edge</code></td><td><code>var(--destructive)</code></td></tr>
+                            <tr><td><code>--kp-tri-out-ground</code></td><td><code>var(--kp-chip-ground, var(--card))</code></td></tr>
+                            <tr><td><code>--kp-tri-out-ink</code></td><td><code>var(--kp-chip-ink, var(--foreground))</code></td></tr>
+                            <tr><td><code>--kp-tri-pad-start</code></td><td><code>var(--kp-space-sm, 0.5rem)</code></td></tr>
+                            <tr><td><code>--kp-tri-touch</code></td><td><code>2.75rem</code></td></tr>
                             <tr><td><code>--kp-week-step-pad</code></td><td><code>var(--kp-space-sm, 0.5rem)</code></td></tr>
                     </tbody></table></div>
                 </section>

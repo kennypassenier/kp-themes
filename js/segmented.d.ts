@@ -8,6 +8,10 @@ export declare const SEGMENTED_ITEM = ".kp-segmented__item";
 export declare const THUMB_ATTRIBUTE = "data-kp-segmented-thumb";
 /** Set one frame after the plate was first placed, so only later moves glide. */
 export declare const GLIDE_ATTRIBUTE = "data-kp-segmented-glide";
+/** A three-way chip's state: `include` or `exclude`; absent is either way [kpadopt4]. */
+export declare const TRI_ATTRIBUTE = "data-kp-segmented-tri";
+/** The order a press walks a three-way chip through. */
+export declare const TRI_STATES: readonly ['any', 'include', 'exclude'];
 /** Set while the segments are wider than the group, which then scrolls. */
 export declare const OVERFLOW_ATTRIBUTE = "data-kp-segmented-overflow";
 export type SegmentedItem = {
@@ -23,9 +27,23 @@ export type SegmentedItem = {
     hint?: string;
     disabled?: boolean;
     /**
-     * This is the "All" item.
+     * This is the "All" item (Clear all in a three-way group).
      */
     all?: boolean;
+    /**
+     * A three-way chip's state; a chip still there keeps its own when absent.
+     */
+    state?: 'any' | 'include' | 'exclude';
+};
+export type TriValues = {
+    /**
+     * the values that must be in
+     */
+    include: string[];
+    /**
+     * the values that must not be in
+     */
+    exclude: string[];
 };
 /** @param {Element} group @returns {HTMLElement[]} */
 export declare function itemsOf(group: Element): HTMLElement[];
@@ -38,6 +56,23 @@ export declare function valueOf(item: Element): string;
  * @returns {string[]}
  */
 export declare function getSegmentedValues(group: Element): string[];
+/**
+ * The values that must be in and the values that must not be in, in the
+ * order of the chips (a three-way group) [kpadopt4].
+ * @param {Element} group
+ * @returns {TriValues}
+ */
+export declare function getSegmentedTri(group: Element): TriValues;
+/**
+ * Set a three-way group's chips without firing the event; a value in
+ * neither list is let go.
+ * @param {Element} group
+ * @param {{ include?: Iterable<string>, exclude?: Iterable<string> }} values
+ */
+export declare function setSegmentedTri(group: Element, { include, exclude }: {
+    include?: Iterable<string>;
+    exclude?: Iterable<string>;
+}): void;
 /**
  * Place the plate under the chosen segment (single, segmented look) and note
  * whether the segments overflow the group.

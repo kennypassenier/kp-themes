@@ -455,6 +455,66 @@
  * @property {(names: string) => string} diagnosticsOnlyInStylesheet
  * @property {(names: string) => string} diagnosticsOnlyInScript
  * @property {string} diagnosticsUnknownVersion
+ * @property {string} triInclude  A three-way filter chip that must be in, as a screen reader hears it after the chip's name (js/segmented.js, `data-kp-segmented="tri"`) [kpadopt4]
+ * @property {string} triExclude  A chip that must not be in [kpadopt4]
+ * @property {string} triAny  A chip that may or may not be in [kpadopt4]
+ * @property {(label: string, state: string) => string} triAnnounce  What a three-way group says after a press, "Chicken: required" [kpadopt4]
+ * @property {string} triHint  The line under a three-way group while nothing is chosen [kpadopt4]
+ * @property {(include: string[], exclude: string[]) => string} triSummary  The same line once something is chosen [kpadopt4]
+ * @property {string} triCleared  What a three-way group says after Clear all [kpadopt4]
+ * @property {(label: string) => string} quantityLess  The minus button's name, "Portions, less" (js/quantity.js) [kpadopt4]
+ * @property {(label: string) => string} quantityMore  The plus button's name, "Portions, more" [kpadopt4]
+ * @property {(value: string, unit: string) => string} quantityValue  The value with its unit, as a screen reader hears it, "6 portions" [kpadopt4]
+ * @property {(done: number, total: number) => string} checklistCount  A checklist group's count beside its heading, "4 of 9" (js/checklist.js) [kpadopt4]
+ * @property {(done: number, total: number) => string} checklistSummary  The whole list's count in its bar, "4 of 9 done" [kpadopt4]
+ * @property {string} checklistCheckAll  The bar's button that ticks every item [kpadopt4]
+ * @property {string} checklistClear  The bar's button that takes the ticked items away [kpadopt4]
+ * @property {string} checklistUndo  The button that brings them back [kpadopt4]
+ * @property {(n: number) => string} checklistCleared  The bar's line after a clear, "3 cleared" [kpadopt4]
+ * @property {(n: number) => string} checklistRestored  Said after Undo [kpadopt4]
+ * @property {string} checklistEmpty  An empty checklist [kpadopt4]
+ * @property {string} checklistLoading  The words under a loading checklist's spinner [kpadopt4]
+ * @property {string} checklistFailed  A checklist that could not be read, when the page gives no message [kpadopt4]
+ * @property {(label: string) => string} checklistDone  Said when an item is ticked [kpadopt4]
+ * @property {(label: string) => string} checklistDoneMoved  Said when an item is ticked with the keyboard and sank [kpadopt4]
+ * @property {(label: string) => string} checklistOpen  Said when an item is unticked [kpadopt4]
+ * @property {string} timerRunning  A kitchen timer's state word while it runs (js/timer.js) [kpadopt4]
+ * @property {string} timerPaused  Its state word while paused [kpadopt4]
+ * @property {string} timerDoneWord  Its state word once it has ended [kpadopt4]
+ * @property {(name: string) => string} timerDone  The large line on an ended timer, its notification and its alert, "Rice is done" [kpadopt4]
+ * @property {string} timerPause  The button that pauses a timer [kpadopt4]
+ * @property {string} timerResume  The button that resumes it [kpadopt4]
+ * @property {string} timerStopRing  The button on an ended timer that stops it and takes it away [kpadopt4]
+ * @property {string} timerAddMinute  The button that adds a minute, "+1 min" [kpadopt4]
+ * @property {(name: string) => string} timerAddMinuteTo  That button's accessible name [kpadopt4]
+ * @property {(name: string) => string} timerRemove  The remove button's accessible name and tooltip [kpadopt4]
+ * @property {string} timerEmpty  A list with no timer [kpadopt4]
+ * @property {(name: string) => string} timerLastMinute  Said once when a timer has a minute left [kpadopt4]
+ * @property {(name: string, clock: string) => string} timerStarted  Said when a timer starts [kpadopt4]
+ * @property {(name: string) => string} timerAlready  Said when a starter is pressed while its timer runs [kpadopt4]
+ * @property {(n: number, total: number) => string} focusCount  The count over a step shown on its own, "Step 3 of 8" (js/focus-steps.js) [kpadopt4]
+ * @property {string} focusNext  The button that goes on to the next step [kpadopt4]
+ * @property {string} focusPrevious  The button that goes back a step [kpadopt4]
+ * @property {string} focusDone  The next button on the last step [kpadopt4]
+ * @property {string} focusNeeds  The heading over what a step needs [kpadopt4]
+ * @property {(duration: string) => string} focusTimer  A step's timer button, "Start a timer · 10 min" [kpadopt4]
+ * @property {string} focusReadAloud  The button that reads the step aloud [kpadopt4]
+ * @property {string} focusStopReading  The same button while it reads [kpadopt4]
+ * @property {string} focusWakeOn  The screen line while the screen is kept on [kpadopt4]
+ * @property {string} focusWakeOff  The screen line when it is not [kpadopt4]
+ * @property {string} focusWakeUnsupported  The screen line in a browser that cannot keep it on [kpadopt4]
+ * @property {string} focusEmpty  A view with no steps [kpadopt4]
+ * @property {string} focusLoading  The words under its spinner while the steps load [kpadopt4]
+ * @property {string} focusFailed  Steps that could not be read, when the page gives no message [kpadopt4]
+ * @property {string} wheelSpin  The button in the middle of a wheel that picks (js/wheel.js) [kpadopt4]
+ * @property {string} wheelSpinAgain  The same button once the wheel has chosen [kpadopt4]
+ * @property {string} wheelIdle  The line under a wheel that has not spun yet [kpadopt4]
+ * @property {string} wheelChose  The line over the outcome, "The wheel chose" [kpadopt4]
+ * @property {string} wheelSpinning  The line while it turns [kpadopt4]
+ * @property {string} wheelOnlyOne  The line over the outcome when there was only one choice [kpadopt4]
+ * @property {string} wheelEmpty  A wheel with no choices, when the page gives no sentence [kpadopt4]
+ * @property {string} wheelLoading  The words under its spinner while the choices load [kpadopt4]
+ * @property {string} wheelFailed  Choices that could not be read, when the page gives no message [kpadopt4]
  */
 
 /**
@@ -1010,6 +1070,77 @@ export const DEFAULT_STRINGS = Object.freeze({
     diagnosticsOnlyInStylesheet: (names) => `Only the stylesheet has: ${names}`,
     diagnosticsOnlyInScript: (names) => `Only the JavaScript has: ${names}`,
     diagnosticsUnknownVersion: 'not declared',
+    // A three-way filter chip (js/segmented.js, `data-kp-segmented="tri"`) [kpadopt4].
+    triInclude: 'required',
+    triExclude: 'left out',
+    triAny: 'either way',
+    triAnnounce: (label, state) => `${label}: ${state}`,
+    triHint: 'Tap a chip once to require it, twice to leave it out, a third time to let it go.',
+    triSummary: (include, exclude) => {
+        const line = [include.length ? `with ${include.join(', ')}` : '', exclude.length ? `without ${exclude.join(', ')}` : '']
+            .filter(Boolean)
+            .join(', ');
+        return line.charAt(0).toUpperCase() + line.slice(1);
+    },
+    triCleared: 'Every filter is let go.',
+    // A quantity with minus and plus (js/quantity.js) [kpadopt4].
+    quantityLess: (label) => (label ? `${label}, less` : 'Less'),
+    quantityMore: (label) => (label ? `${label}, more` : 'More'),
+    quantityValue: (value, unit) => `${value} ${unit}`,
+    // A checklist (js/checklist.js) [kpadopt4].
+    checklistCount: (done, total) => `${done} of ${total}`,
+    checklistSummary: (done, total) => `${done} of ${total} done`,
+    checklistCheckAll: 'Check all',
+    checklistClear: 'Clear checked',
+    checklistUndo: 'Undo',
+    checklistCleared: (n) => `${n} cleared`,
+    checklistRestored: (n) => `${n} back on the list`,
+    checklistEmpty: 'Nothing on the list.',
+    checklistLoading: 'Loading the list…',
+    checklistFailed: 'The list could not be read.',
+    checklistDone: (label) => `${label} done`,
+    checklistDoneMoved: (label) => `${label} done, moved to the end. Next item.`,
+    checklistOpen: (label) => `${label} back on the list`,
+    // Kitchen timers (js/timer.js) [kpadopt4].
+    timerRunning: 'Running',
+    timerPaused: 'Paused',
+    timerDoneWord: 'Done',
+    timerDone: (name) => `${name} is done`,
+    timerPause: 'Pause',
+    timerResume: 'Resume',
+    timerStopRing: 'Stop',
+    timerAddMinute: '+1 min',
+    timerAddMinuteTo: (name) => `One more minute for ${name}`,
+    timerRemove: (name) => `Remove ${name}`,
+    timerEmpty: 'No timers running.',
+    timerLastMinute: (name) => `${name}: one minute left`,
+    timerStarted: (name, clock) => `${name} started, ${clock}`,
+    timerAlready: (name) => `${name} is already running`,
+    // One step at a time (js/focus-steps.js) [kpadopt4].
+    focusCount: (n, total) => `Step ${n} of ${total}`,
+    focusNext: 'Next',
+    focusPrevious: 'Back',
+    focusDone: 'Done',
+    focusNeeds: 'For this step',
+    focusTimer: (duration) => `Start a timer · ${duration}`,
+    focusReadAloud: 'Read aloud',
+    focusStopReading: 'Stop reading',
+    focusWakeOn: 'Screen stays on',
+    focusWakeOff: 'Screen may dim',
+    focusWakeUnsupported: 'Screen may dim: this browser cannot keep it on',
+    focusEmpty: 'This recipe has no steps yet.',
+    focusLoading: 'Loading the steps…',
+    focusFailed: 'The steps could not be read.',
+    // A wheel that picks (js/wheel.js) [kpadopt4].
+    wheelSpin: 'Spin',
+    wheelSpinAgain: 'Again',
+    wheelIdle: 'Press Spin to let the wheel choose.',
+    wheelChose: 'The wheel chose',
+    wheelSpinning: 'Turning…',
+    wheelOnlyOne: 'Only one fits: nothing to spin',
+    wheelEmpty: 'Nothing fits these filters.',
+    wheelLoading: 'Loading the choices…',
+    wheelFailed: 'The choices could not be read.',
 });
 
 // STRINGS_NL was removed in 4.0.0 [D3]. Kenny decided that on

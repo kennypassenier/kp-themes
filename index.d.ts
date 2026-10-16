@@ -46,7 +46,7 @@ export { ACTION_LIST, ROW_ACTIONS, ROW_KEYS, ROW_OPEN_EVENT, attachActionColumns
 export { KPI_STRIP, KPI_TOGGLE, KPI_TOGGLE_EVENT, METER, SPARK, attachKpiStrips, attachKpiToggles, attachSparklines, drawSparkline, fitKpiStrip, kpiColumns, meterParts, meterText, setMeter, sparkPaths, } from './js/kpi.js';
 export type Meter = import('./js/kpi.js').Meter;
 /** @typedef {import('./js/kpi.js').Meter} Meter */
-export { SEGMENTED, SEGMENTED_EVENT, attachSegmented, getSegmentedValues, resetSegmented, setSegmentedCounts, setSegmentedItems, setSegmentedValues, } from './js/segmented.js';
+export { SEGMENTED, SEGMENTED_EVENT, attachSegmented, getSegmentedTri, getSegmentedValues, resetSegmented, setSegmentedCounts, setSegmentedItems, setSegmentedTri, setSegmentedValues, } from './js/segmented.js';
 export type SegmentedItem = import('./js/segmented.js').SegmentedItem;
 /** @typedef {import('./js/segmented.js').SegmentedItem} SegmentedItem */
 export { TOOLBAR, TOOLBAR_CLEAR_EVENT, TOOLBAR_REMOVE_EVENT, attachToolbars, setToolbarActive, toolbarSearch } from './js/toolbar.js';
@@ -94,6 +94,21 @@ export { CODE, CODE_COPIED_MS, attachCodes, prettyJson, setCode } from './js/cod
 export type CodeSpec = import('./js/code.js').CodeSpec;
 /** @typedef {import('./js/code.js').CodeSpec} CodeSpec */
 export { TICK, TICK_EVENT, TICK_KNOB, TICK_MS, attachTicks, parseTick, tickTo } from './js/tick.js';
+export { WHEEL, WHEEL_RESULT_EVENT, WHEEL_SPIN_EVENT, attachWheels, getWheelResult, pickWeighted, setWheelItems, setWheelState, spinWheel, wheelAngles, } from './js/wheel.js';
+export type WheelItem = import('./js/wheel.js').WheelItem;
+/** @typedef {import('./js/wheel.js').WheelItem} WheelItem */
+export { FOCUS_STEPS, FOCUS_STEPS_DONE_EVENT, FOCUS_STEPS_EVENT, FOCUS_STEPS_WAKE_EVENT, SWIPE_DISTANCE, attachFocusSteps, getStepIndex, goToStep, setFocusSteps, setFocusStepsState, } from './js/focus-steps.js';
+export type FocusStep = import('./js/focus-steps.js').FocusStep;
+export type FocusIngredient = import('./js/focus-steps.js').FocusIngredient;
+/** @typedef {import('./js/focus-steps.js').FocusStep} FocusStep */
+/** @typedef {import('./js/focus-steps.js').FocusIngredient} FocusIngredient */
+export { TIMERS, TIMER_CHANGE_EVENT, TIMER_DONE_EVENT, TIMER_START, TIMER_START_EVENT, TIMER_STOP_EVENT, TIMER_TICK_MS, addTimerTime, askTimerNotifications, attachTimers, formatClock, getTimers, parseDuration, pauseTimer, restoreTimers, resumeTimer, startTimer, stopTimer, stopTimerRing, } from './js/timer.js';
+export type TimerState = import('./js/timer.js').TimerState;
+/** @typedef {import('./js/timer.js').TimerState} TimerState */
+export { CHECKLIST, CHECKLIST_CLEAR_EVENT, CHECKLIST_EVENT, CHECKLIST_UNDO_EVENT, CHECKLIST_UNDO_MS, attachChecklists, getChecklistItems, setChecklistChecked, setChecklistItems, setChecklistState, } from './js/checklist.js';
+export type ChecklistItem = import('./js/checklist.js').ChecklistItem;
+/** @typedef {import('./js/checklist.js').ChecklistItem} ChecklistItem */
+export { QUANTITY, QUANTITY_EVENT, attachQuantities, formatQuantity, getQuantity, parseQuantity, setQuantity, settleQuantity, } from './js/quantity.js';
 export { HOVERCARD_ATTRIBUTE, HOVERCARD_CARD, HOVERCARD_EVENT, attachHoverCards } from './js/hovercard.js';
 export { UPDATE_PROPERTY, UPDATE_STYLE, UPDATING_ATTRIBUTE, markUpdating, unmarkUpdating, update, updateIdea, updatePlays, updateTiming, updateTimingOf, } from './js/update.js';
 export { ATTENTION, SEVERITIES, attachAttention, setAttention, sortAttention } from './js/attention.js';

@@ -3650,6 +3650,154 @@ group.addEventListener('kp-facet-change', (event) => {
         ],
     },
     {
+        id: 'quantity',
+        title: 'Quantity',
+        group: 'Forms',
+        classes: ['kp-quantity'],
+        exports: [],
+        intro: 'A number between a minus and a plus button with its unit after it, for servings and amounts. `data-kp-quantity` on the root with `-min`, `-max`, `-step`, `-unit`, `-unit-one`, `-label` and `-locale`; js/quantity.js (`attachQuantities`, `setQuantity`, `getQuantity`) writes the buttons, the field box and the unit, and fires `kp-quantity-change` with `{ value, previous, source }`. The number is a spin button that can be typed in the page’s language, with a comma or a point.',
+        whenToUse: 'For a small whole or stepped amount a person nudges up and down: portions, pieces, grams in steps. For a free number use a field; for a share of a range use a slider.',
+        examples: [
+            {
+                title: 'Portions, from 1 to 12',
+                why: 'The buttons are the theme’s own; the number and the unit share one field box; the minus is dimmed at the bound and keeps its place.',
+                markup: `
+<div class="kp-quantity" data-kp-quantity data-kp-quantity-min="1" data-kp-quantity-max="12" data-kp-quantity-unit="portions" data-kp-quantity-unit-one="portion" data-kp-quantity-label="Portions">
+<input class="kp-quantity__input" value="2" />
+</div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-quantity-step', what: 'The step a press moves by; its decimals are the number’s decimals (0.5 shows one).' },
+            { name: 'data-kp-quantity-disabled', what: 'The whole control dimmed and out of reach.' },
+            { name: '.kp-quantity--lg', what: 'Larger buttons and number, for a screen at arm’s length.' },
+        ],
+        accessibility: [
+            'Built in — the number is a spin button with its value and unit in words; ArrowUp, ArrowDown, PageUp, PageDown, Home and End move it; the buttons are named after the label.',
+            'Built in — a button at a bound is marked `aria-disabled` and keeps the focus.',
+            'Yours — give it a label (`data-kp-quantity-label` or a `<label>` for the input).',
+        ],
+    },
+    {
+        id: 'checklist',
+        title: 'Checklist',
+        group: 'Data',
+        classes: ['kp-checklist'],
+        exports: [],
+        intro: 'A list a person works down, such as a shopping list by shop: every row is a checkbox’s label, a ticked row is struck through and sinks to the end of its group, gliding in the theme’s own time. `data-kp-checklist` on the root; js/checklist.js (`setChecklistItems`, `getChecklistItems`, `setChecklistChecked`, `setChecklistState`, `attachChecklists`) draws the groups, the counts and the bar with Check all, Clear checked and its Undo, and fires `kp-checklist-change`, `kp-checklist-clear` and `kp-checklist-undo` with the whole list, so the page stores it.',
+        whenToUse: 'For items a person ticks off and no longer needs to see on top. For a filter use the facet list; for the steps of a running process use the step list.',
+        examples: [
+            {
+                title: 'A shopping list',
+                why: 'The module draws the rows from the items it is given; the markup is only the root.',
+                markup: `
+<div class="kp-checklist" data-kp-checklist aria-label="Shopping list"></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-checklist-sink="false"', what: 'A ticked row stays where it is, struck through.' },
+            { name: 'data-kp-checklist-undo-ms', what: 'How long Undo is offered after Clear checked (6000).' },
+            { name: 'data-kp-checklist-empty', what: 'The sentence of an empty list.' },
+            { name: 'data-kp-checklist-heading', what: 'The level of the group headings (3).' },
+        ],
+        accessibility: [
+            'Built in — real checkboxes in labels, named by the item and described by its amount; group headings with their counts.',
+            'Built in — ticked with the keyboard, the focus goes to the item that took its place; a status region says what moved.',
+            'Yours — give the list a name and store what the events say.',
+        ],
+    },
+    {
+        id: 'timer',
+        title: 'Kitchen timers',
+        group: 'Feedback',
+        classes: ['kp-timers', 'kp-timer'],
+        exports: [],
+        intro: 'Named countdowns that keep running side by side, each a card with its name, the time left large, the theme’s progress bar, Pause or Resume, +1 min and Remove. `data-kp-timers` on the list; js/timer.js (`startTimer`, `pauseTimer`, `resumeTimer`, `addTimerTime`, `stopTimer`, `getTimers`, `restoreTimers`, `askTimerNotifications`, `attachTimers`) counts from each end time, so a page in the background or a phone that locked shows the right time again, and ends a timer with the done plate, a soft chime, a buzz and a system notification when allowed. A button with `data-kp-timer-start="10m"` anywhere in the page starts one.',
+        whenToUse: 'For clocks a person starts and keeps an eye on (cooking, a break, a session). For a notice that closes by itself use the alarm in its timed mode.',
+        examples: [
+            {
+                title: 'A list and a starter in a sentence',
+                why: 'The list draws its cards; the starter names the duration and the timer.',
+                markup: `
+<div class="kp-timers" data-kp-timers id="timers" aria-label="Kitchen timers"></div>
+<p>Let the sauce simmer for <button type="button" class="kp-button kp-button--sm" data-kp-timer-start="10m" data-kp-timer-name="Sauce" data-kp-timer-for="timers">10 minutes</button>.</p>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-timers-ring', what: 'How long an ended timer chimes, in seconds (60; 0 is once).' },
+            { name: 'data-kp-timers-sound="off"', what: 'No chime.' },
+            { name: 'data-kp-timers-notify="false"', what: 'No system notification even with the permission.' },
+            { name: 'data-kp-timers-empty', what: 'The sentence of an empty list.' },
+        ],
+        accessibility: [
+            'Built in — each card is named by its timer; the time is a `timer` region that is read on demand, never every second.',
+            'Built in — a start and the last minute are said politely, the end at once.',
+            'Yours — ask for notifications from a press, and keep what getTimers() gives across a reload.',
+        ],
+    },
+    {
+        id: 'focus-steps',
+        title: 'One step at a time',
+        group: 'Navigation',
+        classes: ['kp-focus-steps'],
+        exports: [],
+        intro: 'Cook mode: one step of a recipe large on the screen, with what that step needs, a timer button and a note, the count and the theme’s progress bar on top, and two big buttons at the foot. `data-kp-focus-steps` on the root; js/focus-steps.js (`setFocusSteps`, `goToStep`, `getStepIndex`, `setFocusStepsState`, `attachFocusSteps`) keeps the screen on with the Wake Lock API while it is attached, turns the step with the arrows, PageUp/PageDown, Space and a swipe, reads it aloud on request and fires `kp-focus-steps-change` so the page can remember where a person stopped.',
+        whenToUse: 'For instructions followed with the hands busy: a recipe, a repair, an exercise. For a form filled in parts use the wizard; for the steps of a running process use the step list.',
+        examples: [
+            {
+                title: 'A recipe',
+                why: 'The module draws the parts from the steps it is given; the root needs a height.',
+                markup: `
+<div class="kp-focus-steps" data-kp-focus-steps aria-label="Chicken curry"></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-focus-steps-wake="false"', what: 'Do not ask for the screen to stay on.' },
+            { name: 'data-kp-focus-steps-timers', what: 'The id of the timer list a step’s timer button starts in.' },
+            { name: 'data-kp-focus-steps-empty', what: 'The sentence of a recipe with no steps.' },
+            { name: 'data-kp-focus-steps-screen', what: 'Written: on, off or unsupported, and said in the head.' },
+        ],
+        accessibility: [
+            'Built in — every change says “Step 3 of 8” and the step; the buttons are real buttons, a step boundary is `aria-disabled` and keeps the focus.',
+            'Built in — keys and a swipe do what the buttons do; Read aloud uses the browser’s own voice.',
+            'Yours — give the view a name and a height, and remember the index the event gives.',
+        ],
+    },
+    {
+        id: 'wheel',
+        title: 'Wheel',
+        group: 'Data',
+        classes: ['kp-wheel'],
+        exports: [],
+        intro: 'A wheel that picks for you: a segment per choice, sized by its weight, a pointer at the top and Spin in the middle. `data-kp-wheel` on the root; js/wheel.js (`setWheelItems`, `spinWheel`, `setWheelState`, `getWheelResult`, `pickWeighted`, `attachWheels`) draws the outcome by the weights first and then turns the wheel to it, never lands on the same choice twice in a row, takes the short way for a reader who asked for less motion, and says the outcome once. `kp-wheel-spin` and `kp-wheel-result` carry the item.',
+        whenToUse: 'To take a small choice off someone’s hands (what to eat, who goes first) where any outcome is acceptable. For a choice a person makes use a list or a segmented control.',
+        examples: [
+            {
+                title: 'Tonight’s dinner',
+                why: 'The module draws the wheel from the items it is given.',
+                markup: `
+<div class="kp-wheel" data-kp-wheel aria-label="Tonight’s dinner"></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-wheel-duration', what: 'How long a spin takes, in ms (3600).' },
+            { name: 'data-kp-wheel-turns', what: 'Whole turns before it settles (4).' },
+            { name: 'data-kp-wheel-reduced-ms', what: 'The short turn under reduced motion, in ms (600; 0 places it at once).' },
+            { name: 'data-kp-wheel-repeat="true"', what: 'Spin again may land on the same choice.' },
+            { name: 'data-kp-wheel-empty', what: 'The sentence when nothing fits.' },
+        ],
+        accessibility: [
+            'Built in — Spin is a real button (Space, Enter); the outcome is a status region said once, after the turn.',
+            'Built in — reduced motion takes the short way, or none.',
+            'Yours — give the wheel a name, and offer the outcome as a choice the person can refuse.',
+        ],
+    },
+    {
         id: 'steplist',
         title: 'Step list',
         group: 'Feedback',

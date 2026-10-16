@@ -85,6 +85,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/upload.html">File upload</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/wizard.html">Wizard</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/segmented.html">Segmented control and filter chips</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/quantity.html">Quantity</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/formrows.html">Form rows</a></li>
                         </ul>
                     </div>
@@ -121,6 +122,8 @@
                             <li><a class="sc-nav__link" href="../../site/components/pipeline.html">Pipeline</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/toolbar.html">List toolbar</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/facets.html">Facet list</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/checklist.html">Checklist</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/wheel.html">Wheel</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/idmark.html">Identity mark</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/stackbar.html">Share bar</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/bullets.html">Bullet rows</a></li>
@@ -143,6 +146,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/skeleton.html">Skeleton</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/health.html">Health</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/status-row.html">Status rows</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/timer.html">Kitchen timers</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/steplist.html">Step list</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/tooltip.html">Tooltip</a></li>
                         </ul>
@@ -150,6 +154,7 @@
                     <div class="sc-nav__group">
                         <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Navigation</h2>
                         <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/focus-steps.html">One step at a time</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/nav-bar.html">Navigation bar</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/sidenav.html">Side navigation</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/to-top.html">Back to top</a></li>
@@ -682,8 +687,20 @@ aria-label="Checked on submit only"
                             <tr><td><code>--kp-field-max-width</code></td><td><code>28rem</code></td></tr>
                             <tr><td><code>--kp-field-option-size</code></td><td><code>0.875rem</code></td></tr>
                             <tr><td><code>--kp-focus-ring-inner-width</code></td><td><code>2px</code></td></tr>
+                            <tr><td><code>--kp-focus-steps-busy-height</code></td><td><code>12rem</code></td></tr>
+                            <tr><td><code>--kp-focus-steps-button-text</code></td><td><code>1.125rem</code></td></tr>
+                            <tr><td><code>--kp-focus-steps-height</code></td><td><code>100%</code></td></tr>
+                            <tr><td><code>--kp-focus-steps-measure</code></td><td><code>44ch</code></td></tr>
+                            <tr><td><code>--kp-focus-steps-min</code></td><td><code>24rem</code></td></tr>
+                            <tr><td><code>--kp-focus-steps-needs</code></td><td><code>1.125rem</code></td></tr>
+                            <tr><td><code>--kp-focus-steps-pad</code></td><td><code>var(--kp-space-md, 0.75rem)</code></td></tr>
+                            <tr><td><code>--kp-focus-steps-target</code></td><td><code>4rem</code></td></tr>
+                            <tr><td><code>--kp-focus-steps-text</code></td><td><code>clamp(1.25rem, 1.05rem + 1vw, 1.75rem)</code></td></tr>
+                            <tr><td><code>--kp-focus-steps-tool</code></td><td><code>2.75rem</code></td></tr>
                             <tr><td><code>--kp-form-gap</code></td><td><code>var(--kp-space-lg)</code></td></tr>
+                            <tr><td><code>--kp-glyph-back</code></td><td><code>'←'</code></td></tr>
                             <tr><td><code>--kp-glyph-check</code></td><td><code>'✓'</code></td></tr>
+                            <tr><td><code>--kp-glyph-forward</code></td><td><code>'→'</code></td></tr>
                             <tr><td><code>--kp-glyph-required</code></td><td><code>'\002A\00a0'</code></td></tr>
                             <tr><td><code>--kp-highlight</code></td><td><code>hsl(from var(--foreground) h s l / 0.08)</code></td></tr>
                             <tr><td><code>--kp-line-height</code></td><td><code>1.5</code></td></tr>
@@ -692,8 +709,10 @@ aria-label="Checked on submit only"
                             <tr><td><code>--kp-popover-max-height</code></td><td><code>min(80vh, 40rem)</code></td></tr>
                             <tr><td><code>--kp-radius-sm</code></td><td><code>calc(var(--radius, 0.5rem) / 2)</code></td></tr>
                             <tr><td><code>--kp-space-lg</code></td><td><code>1.5rem</code></td></tr>
+                            <tr><td><code>--kp-space-md</code></td><td><code>1rem</code></td></tr>
                             <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
                             <tr><td><code>--kp-space-xs</code></td><td><code>0.25rem</code></td></tr>
+                            <tr><td><code>--kp-text-md</code></td><td><code>1rem</code></td></tr>
                             <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
                             <tr><td><code>--kp-text-xs</code></td><td><code>0.75rem</code></td></tr>
                     </tbody></table></div>

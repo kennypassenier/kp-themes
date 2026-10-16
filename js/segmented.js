@@ -32,16 +32,34 @@
 // `--kp-seg-x` and `--kp-seg-w` on the group, and the theme decides how it
 // moves (its own --fx-duration and --fx-ease).
 //
+// `data-kp-segmented="tri"` [kpadopt4] is the three-way filter: each chip
+// stands for something that must be in, must not be in, or does not matter
+// ("with chicken, without mushrooms"). A press turns it on (✓, the chip
+// filled), a second press leaves it out (✕, the theme's destructive edge, the
+// label struck through), a third lets it go; Delete or Backspace lets the
+// focused chip go at once. The state is `data-kp-segmented-tri="include|exclude"` on the
+// item (absent: either way), a mark that is always there and always the same
+// size, so nothing moves, and a word a screen reader hears after the chip's
+// name ("Chicken, required"); a status region says what a press changed. An
+// item marked `data-kp-segmented-all` is Clear all here, dimmed while nothing
+// is chosen. `data-kp-segmented-summary` on the group keeps one line after it:
+// how to use it while nothing is chosen, what is chosen once something is.
+// Use it with the chip look (`kp-segmented--chips`).
+//
 // Events (bubbling, on the group):
 //   kp-segmented-change   { value: string | null, values: string[], item }
 //                         `values` are the values on (empty = All); `value`
-//                         is the one just pressed.
+//                         is the one just pressed. A three-way group adds
+//                         `include`, `exclude` (values) and `state`, the
+//                         pressed chip's new state.
 //
 // States: `disabled` on an item, `aria-disabled="true"` on the group,
 // `aria-busy="true"` on the group (the counts show a placeholder while their
 // numbers load, so nothing moves when they arrive).
 //
 // Nothing runs on import; attachSegmented(root) returns a detach.
+
+import { getStrings } from './strings.js';
 
 /** A segmented control or a chip group. */
 export const SEGMENTED = '[data-kp-segmented]';
@@ -58,6 +76,12 @@ export const THUMB_ATTRIBUTE = 'data-kp-segmented-thumb';
 /** Set one frame after the plate was first placed, so only later moves glide. */
 export const GLIDE_ATTRIBUTE = 'data-kp-segmented-glide';
 
+/** A three-way chip's state: `include` or `exclude`; absent is either way [kpadopt4]. */
+export const TRI_ATTRIBUTE = 'data-kp-segmented-tri';
+
+/** The order a press walks a three-way chip through. */
+export const TRI_STATES = /** @type {const} */ (['any', 'include', 'exclude']);
+
 /** Set while the segments are wider than the group, which then scrolls. */
 export const OVERFLOW_ATTRIBUTE = 'data-kp-segmented-overflow';
 
@@ -68,7 +92,14 @@ export const OVERFLOW_ATTRIBUTE = 'data-kp-segmented-overflow';
  * @property {number | null} [count]  Shown beside the label; null or absent shows none.
  * @property {string} [hint]  The item's `title`.
  * @property {boolean} [disabled]
- * @property {boolean} [all]  This is the "All" item.
+ * @property {boolean} [all]  This is the "All" item (Clear all in a three-way group).
+ * @property {'any' | 'include' | 'exclude'} [state]  A three-way chip's state; a chip still there keeps its own when absent.
+ */
+
+/**
+ * @typedef {object} TriValues
+ * @property {string[]} include  the values that must be in
+ * @property {string[]} exclude  the values that must not be in
  */
 
 /** @type {WeakSet<Element>} */
@@ -82,6 +113,15 @@ const HANDLED = new WeakSet();
 
 /** @param {Element} group */
 const isMulti = (group) => group.getAttribute('data-kp-segmented') === 'multi';
+
+/** @param {Element} group */
+const isTri = (group) => group.getAttribute('data-kp-segmented') === 'tri';
+
+/** @param {Element} item @returns {'any' | 'include' | 'exclude'} */
+const triOf = (item) => {
+    const state = item.getAttribute(TRI_ATTRIBUTE);
+    return state === 'include' || state === 'exclude' ? state : 'any';
+};
 
 /** @param {Element} group @returns {HTMLElement[]} */
 export function itemsOf(group) {
@@ -99,7 +139,8 @@ export function valueOf(item) {
 }
 
 /** @param {Element} group @param {Element} item */
-const isOn = (group, item) => item.getAttribute(isMulti(group) ? 'aria-pressed' : 'aria-checked') === 'true';
+const isOn = (group, item) =>
+    isTri(group) ? triOf(item) === 'include' : item.getAttribute(isMulti(group) ? 'aria-pressed' : 'aria-checked') === 'true';
 
 /** @param {Element} group */
 const groupDisabled = (group) => group.getAttribute('aria-disabled') === 'true';
@@ -115,7 +156,7 @@ const itemDisabled = (item) => item.hasAttribute('disabled') || item.getAttribut
  */
 export function getSegmentedValues(group) {
     return itemsOf(group)
-        .filter((item) => isOn(group, item) && !(isMulti(group) && isAll(item)))
+        .filter((item) => isOn(group, item) && !((isMulti(group) || isTri(group)) && isAll(item)))
         .map(valueOf);
 }
 
@@ -126,6 +167,17 @@ export function getSegmentedValues(group) {
  * @param {readonly string[]} values
  */
 function paint(group, values) {
+    if (isTri(group)) {
+        // A list of values is the ones that must be in; what is left out stays left out.
+        const include = new Set(values);
+        for (const item of itemsOf(group)) {
+            if (isAll(item)) continue;
+            const was = triOf(item);
+            writeTri(item, include.has(valueOf(item)) ? 'include' : was === 'exclude' ? 'exclude' : 'any');
+        }
+        paintTri(group);
+        return;
+    }
     const multi = isMulti(group);
     const items = itemsOf(group);
     const others = items.filter((item) => !isAll(item));
@@ -158,6 +210,136 @@ function roving(group) {
         enabled[0];
     for (const item of items) item.tabIndex = item === stop ? 0 : -1;
     if (stop) STOP.set(group, stop);
+}
+
+/**
+ * Write one three-way chip's state: the attribute, the word a screen reader
+ * hears after its name, and the mark (drawn by the stylesheet from the
+ * attribute). The parts are made when the markup left them out.
+ * @param {HTMLElement} item
+ * @param {'any' | 'include' | 'exclude'} state
+ */
+function writeTri(item, state) {
+    if (state === 'any') item.removeAttribute(TRI_ATTRIBUTE);
+    else item.setAttribute(TRI_ATTRIBUTE, state);
+    let mark = item.querySelector(':scope > .kp-segmented__mark');
+    if (!mark) {
+        mark = document.createElement('span');
+        mark.className = 'kp-segmented__mark';
+        mark.setAttribute('aria-hidden', 'true');
+        item.prepend(mark);
+    }
+    let word = item.querySelector(':scope > .kp-segmented__state');
+    if (!word) {
+        word = document.createElement('span');
+        word.className = 'kp-sr-only kp-segmented__state';
+        item.append(word);
+    }
+    const strings = getStrings();
+    word.textContent = `, ${state === 'include' ? strings.triInclude : state === 'exclude' ? strings.triExclude : strings.triAny}`;
+}
+
+/**
+ * The three-way group's Clear all (dimmed while nothing is chosen), its
+ * summary line and its roving tab stop.
+ * @param {Element} group
+ */
+function paintTri(group) {
+    const { include, exclude } = getSegmentedTri(group);
+    const chosen = include.length + exclude.length > 0;
+    for (const item of itemsOf(group)) {
+        if (!isAll(item)) continue;
+        item.setAttribute('aria-disabled', String(!chosen));
+    }
+    summaryOf(group, chosen);
+    roving(group);
+}
+
+/**
+ * The line after a three-way group that asks for one (`data-kp-segmented-summary`):
+ * how it works while nothing is chosen, what is chosen once something is. Its
+ * value, when it has one, replaces the hint. One line; the whole sentence is
+ * its title when it is cut.
+ * @param {Element} group @param {boolean} chosen
+ */
+function summaryOf(group, chosen) {
+    if (!group.hasAttribute('data-kp-segmented-summary')) return;
+    const next = group.nextElementSibling;
+    /** @type {HTMLElement} */
+    let line;
+    if (next instanceof HTMLElement && next.classList.contains('kp-segmented__summary')) line = next;
+    else {
+        line = document.createElement('p');
+        line.className = 'kp-segmented__summary';
+        group.after(line);
+    }
+    const names = (/** @type {'include' | 'exclude'} */ state) =>
+        itemsOf(group)
+            .filter((item) => !isAll(item) && triOf(item) === state)
+            .map((item) => (item.querySelector('.kp-segmented__label') ?? item).textContent?.trim() ?? '');
+    const text = chosen
+        ? getStrings().triSummary(names('include'), names('exclude'))
+        : group.getAttribute('data-kp-segmented-summary') || getStrings().triHint;
+    line.textContent = text;
+    line.title = text;
+    line.toggleAttribute('data-kp-chosen', chosen);
+}
+
+/**
+ * Say something through a three-way group's status region (made on first
+ * need, after the group and its summary line).
+ * @param {Element} group @param {string} message
+ */
+function sayTri(group, message) {
+    let region = group.parentElement?.querySelector(`:scope > .kp-segmented__live[data-for="${CSS.escape(group.id || '')}"]`) ?? null;
+    if (!region) {
+        if (!group.id) group.id = `kp-segmented-${Math.random().toString(36).slice(2, 9)}`;
+        region = document.createElement('span');
+        region.className = 'kp-sr-only kp-segmented__live';
+        region.setAttribute('role', 'status');
+        region.setAttribute('data-for', group.id);
+        const summary = group.nextElementSibling?.classList.contains('kp-segmented__summary') ? group.nextElementSibling : group;
+        summary.after(region);
+    }
+    const target = region;
+    // Cleared first so the same sentence twice in a row is still heard.
+    target.textContent = '';
+    setTimeout(() => (target.textContent = message), 60);
+}
+
+/**
+ * The values that must be in and the values that must not be in, in the
+ * order of the chips (a three-way group) [kpadopt4].
+ * @param {Element} group
+ * @returns {TriValues}
+ */
+export function getSegmentedTri(group) {
+    /** @type {TriValues} */
+    const out = { include: [], exclude: [] };
+    for (const item of itemsOf(group)) {
+        if (isAll(item)) continue;
+        const state = triOf(item);
+        if (state !== 'any') out[state].push(valueOf(item));
+    }
+    return out;
+}
+
+/**
+ * Set a three-way group's chips without firing the event; a value in
+ * neither list is let go.
+ * @param {Element} group
+ * @param {{ include?: Iterable<string>, exclude?: Iterable<string> }} values
+ */
+export function setSegmentedTri(group, { include = [], exclude = [] }) {
+    enhance(group);
+    const inc = new Set(include);
+    const exc = new Set(exclude);
+    for (const item of itemsOf(group)) {
+        if (isAll(item)) continue;
+        const value = valueOf(item);
+        writeTri(item, inc.has(value) ? 'include' : exc.has(value) ? 'exclude' : 'any');
+    }
+    paintTri(group);
 }
 
 /**
@@ -194,7 +376,7 @@ function enhance(group) {
     const multi = isMulti(group);
     if (!ENHANCED.has(group)) {
         ENHANCED.add(group);
-        if (!group.hasAttribute('role')) group.setAttribute('role', multi ? 'group' : 'radiogroup');
+        if (!group.hasAttribute('role')) group.setAttribute('role', multi || isTri(group) ? 'group' : 'radiogroup');
         if (typeof ResizeObserver !== 'undefined' && group instanceof HTMLElement) {
             const observer = new ResizeObserver(() => layout(group));
             observer.observe(group);
@@ -205,10 +387,12 @@ function enhance(group) {
     const observer = WATCH.get(group);
     for (const item of itemsOf(group)) {
         if (item instanceof HTMLButtonElement && !item.hasAttribute('type')) item.type = 'button';
-        if (!multi && !item.hasAttribute('role')) item.setAttribute('role', 'radio');
+        if (!multi && !isTri(group) && !item.hasAttribute('role')) item.setAttribute('role', 'radio');
+        if (isTri(group) && !isAll(item)) writeTri(item, triOf(item));
         observer?.observe(item);
     }
-    paint(group, getSegmentedValues(group));
+    if (isTri(group)) paintTri(group);
+    else paint(group, getSegmentedValues(group));
 }
 
 /**
@@ -218,6 +402,12 @@ function enhance(group) {
  */
 function choose(group, item) {
     if (groupDisabled(group) || itemDisabled(item)) return;
+    if (isTri(group)) {
+        if (isAll(item)) return resetSegmented(group);
+        const from = triOf(item);
+        turnTri(group, item, TRI_STATES[(TRI_STATES.indexOf(from) + 1) % TRI_STATES.length]);
+        return;
+    }
     const before = getSegmentedValues(group);
     const value = valueOf(item);
     /** @type {string[]} */
@@ -234,6 +424,23 @@ function choose(group, item) {
     // A press on the value already chosen, or on All while nothing is on, changes nothing.
     if (!changed) return;
     group.dispatchEvent(new CustomEvent(SEGMENTED_EVENT, { bubbles: true, detail: { value, values: after, item } }));
+}
+
+/**
+ * Give one three-way chip a state, say so and fire the event.
+ * @param {Element} group @param {HTMLElement} item @param {'any' | 'include' | 'exclude'} state
+ */
+function turnTri(group, item, state) {
+    if (triOf(item) === state) return;
+    writeTri(item, state);
+    paintTri(group);
+    const strings = getStrings();
+    const label = (item.querySelector('.kp-segmented__label') ?? item).textContent?.trim() ?? '';
+    sayTri(group, strings.triAnnounce(label, state === 'include' ? strings.triInclude : state === 'exclude' ? strings.triExclude : strings.triAny));
+    const { include, exclude } = getSegmentedTri(group);
+    group.dispatchEvent(
+        new CustomEvent(SEGMENTED_EVENT, { bubbles: true, detail: { value: valueOf(item), values: include, include, exclude, state, item } }),
+    );
 }
 
 /**
@@ -254,6 +461,19 @@ export function setSegmentedValues(group, values) {
 export function resetSegmented(group) {
     enhance(group);
     if (groupDisabled(group)) return;
+    if (isTri(group)) {
+        const before = getSegmentedTri(group);
+        if (before.include.length + before.exclude.length === 0) return;
+        setSegmentedTri(group, {});
+        sayTri(group, getStrings().triCleared);
+        group.dispatchEvent(
+            new CustomEvent(SEGMENTED_EVENT, {
+                bubbles: true,
+                detail: { value: null, values: [], include: [], exclude: [], state: 'any', item: null },
+            }),
+        );
+        return;
+    }
     const before = getSegmentedValues(group);
     if (before.length === 0 && isMulti(group)) return;
     paint(group, []);
@@ -291,6 +511,8 @@ export function setSegmentedCounts(group, counts) {
 export function setSegmentedItems(group, items) {
     enhance(group);
     const multi = isMulti(group);
+    const tri = isTri(group);
+    const kept = new Map(itemsOf(group).map((item) => [valueOf(item), triOf(item)]));
     const on = getSegmentedValues(group).filter((value) => items.some((item) => item.value === value));
     const active = group.ownerDocument.activeElement;
     const focused = active instanceof HTMLElement && group.contains(active) ? valueOf(active) : null;
@@ -300,7 +522,9 @@ export function setSegmentedItems(group, items) {
         item.className = 'kp-segmented__item';
         item.dataset.value = spec.value;
         if (spec.all) item.setAttribute('data-kp-segmented-all', '');
-        if (!multi) item.setAttribute('role', 'radio');
+        if (!multi && !tri) item.setAttribute('role', 'radio');
+        const state = spec.state ?? kept.get(spec.value) ?? 'any';
+        if (tri && !spec.all && state !== 'any') item.setAttribute(TRI_ATTRIBUTE, state);
         if (spec.hint) item.title = spec.hint;
         if (spec.disabled) item.disabled = true;
         const label = document.createElement('span');
@@ -318,7 +542,8 @@ export function setSegmentedItems(group, items) {
     STOP.delete(group);
     group.replaceChildren(...made);
     enhance(group);
-    paint(group, on);
+    if (tri) paintTri(group);
+    else paint(group, on);
     if (focused !== null) made.find((item) => valueOf(item) === focused)?.focus();
 }
 
@@ -368,6 +593,13 @@ export function attachSegmented(root = document) {
         const at = items.indexOf(item);
         if (at < 0) return;
         let to = -1;
+        if (isTri(group) && (event.key === 'Delete' || event.key === 'Backspace') && !isAll(item)) {
+            HANDLED.add(event);
+            event.preventDefault();
+            enhance(group);
+            if (!groupDisabled(group) && !itemDisabled(item)) turnTri(group, item, 'any');
+            return;
+        }
         if (event.key === 'Home') to = 0;
         else if (event.key === 'End') to = items.length - 1;
         else {
@@ -383,7 +615,7 @@ export function attachSegmented(root = document) {
         roving(group);
         next.focus();
         // A radio group chooses as the focus moves; a toggle group only moves.
-        if (!isMulti(group)) choose(group, next);
+        if (!isMulti(group) && !isTri(group)) choose(group, next);
     };
     /** @param {FocusEvent} event */
     const onFocus = (event) => {

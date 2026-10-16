@@ -31,5 +31,11 @@
     "stackbar": "a data piece built at kpadopt4-data from the tokens alone, demoed in formal only (research/kpadopt4-data); each register answers it once it is judged in that theme",
     "secret": "the secret field [kpadopt4], built in formal first (research/kpadopt4-flows); each register answers it once it is judged in that theme",
     "pipeline": "the pipeline board [kpadopt4], built in formal first (research/kpadopt4-flows); each register answers it once it is judged in that theme",
-    "art": "the drawings of an empty state [kpadopt4], a set per theme; formal draws the ledger first (research/kpadopt4-flows), each register shows its own set once it is drawn and judged"
+    "art": "the drawings of an empty state [kpadopt4], a set per theme; formal draws the ledger first (research/kpadopt4-flows), each register shows its own set once it is drawn and judged",
+    "quantity": "a component for the AuDHD recipe app [kpadopt4], built from the package's parts and judged in formal only first (research/kpadopt4-recipes); each register answers it once it is judged in that theme",
+    "checklist": "a component for the AuDHD recipe app [kpadopt4], built from the package's parts and judged in formal only first (research/kpadopt4-recipes); each register answers it once it is judged in that theme",
+    "timers": "a component for the AuDHD recipe app [kpadopt4], built from the package's parts and judged in formal only first (research/kpadopt4-recipes); each register answers it once it is judged in that theme",
+    "timer": "a component for the AuDHD recipe app [kpadopt4], built from the package's parts and judged in formal only first (research/kpadopt4-recipes); each register answers it once it is judged in that theme",
+    "focus-steps": "a component for the AuDHD recipe app [kpadopt4], built from the package's parts and judged in formal only first (research/kpadopt4-recipes); each register answers it once it is judged in that theme",
+    "wheel": "a component for the AuDHD recipe app [kpadopt4], built from the package's parts and judged in formal only first (research/kpadopt4-recipes); each register answers it once it is judged in that theme"
 }

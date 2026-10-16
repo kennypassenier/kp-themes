@@ -212,6 +212,26 @@
             "types": "./js/pipeline.d.ts",
             "default": "./js/pipeline.js"
         },
+        "./js/wheel": {
+            "types": "./js/wheel.d.ts",
+            "default": "./js/wheel.js"
+        },
+        "./js/focus-steps": {
+            "types": "./js/focus-steps.d.ts",
+            "default": "./js/focus-steps.js"
+        },
+        "./js/timer": {
+            "types": "./js/timer.d.ts",
+            "default": "./js/timer.js"
+        },
+        "./js/checklist": {
+            "types": "./js/checklist.d.ts",
+            "default": "./js/checklist.js"
+        },
+        "./js/quantity": {
+            "types": "./js/quantity.d.ts",
+            "default": "./js/quantity.js"
+        },
         "./js/heat": {
             "types": "./js/heat.d.ts",
             "default": "./js/heat.js"

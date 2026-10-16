@@ -125,6 +125,12 @@ export const PAGES = [
                 label: 'Flows and records: secret field, dialog sections, page-owned sort, pipeline, journey, contact timeline, drawings',
                 about: 'Seven parts the apps still draw themselves, now in the package, formal only: .kp-secret (reveal with a countdown, copy without showing), .kp-dialog sections with a confirmation that lists what still depends on a thing, data-kp-sort-external on the data table, .kp-pipeline, the .kp-steplist--journey stepper over a .kp-gantt--line, point events on the run timeline, and data-kp-art drawings for an empty state.',
             },
+            // 2026-10-16 (the AuDHD recipes thread, research/kpadopt4-recipes): six calm components the parked recipe app asked for, built as general kp components, formal only.
+            {
+                href: 'research/kpadopt4-recipes/demo.html',
+                label: 'Six calm components: wheel, cook mode, timers, quantity, checklist, three-way filter',
+                about: 'The recipe app for someone with AuDHD asked for six things the package lacked: a weighted wheel that picks for you, one step at a time with the screen kept on, named kitchen timers, a quantity with minus and plus, a checklist whose ticked items sink, and filter chips with with, without and either way. Formal only, every state.',
+            },
         ],
     },
     {

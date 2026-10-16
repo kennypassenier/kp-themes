@@ -14,8 +14,10 @@
         "kp-actions",
         "kp-art",
         "kp-bar-cell",
+        "kp-checklist",
         "kp-facet",
         "kp-facets",
+        "kp-focus-steps",
         "kp-gantt",
         "kp-heat",
         "kp-kbd",
@@ -23,12 +25,16 @@
         "kp-matrix",
         "kp-pipeline",
         "kp-secret",
+        "kp-quantity",
         "kp-segmented",
         "kp-statuslist",
         "kp-statusrow",
         "kp-steplist",
         "kp-tabbar",
+        "kp-timer",
+        "kp-timers",
         "kp-toolbar",
-        "kp-week"
+        "kp-week",
+        "kp-wheel"
     ]
 }

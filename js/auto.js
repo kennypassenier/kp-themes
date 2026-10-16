@@ -163,6 +163,12 @@ export const NEEDS = [
     { name: 'bullets', when: '[data-kp-bullets]', load: () => import('./bullets.js'), attach: (m, root) => [m.attachBullets(root)] },
     { name: 'code', when: '[data-kp-code]', load: () => import('./code.js'), attach: (m, root) => [m.attachCodes(root)] },
     { name: 'tick', when: '[data-kp-tick]', load: () => import('./tick.js'), attach: (m, root) => [m.attachTicks(root)] },
+    { name: 'wheel', when: '[data-kp-wheel]', load: () => import('./wheel.js'), attach: (m, root) => [m.attachWheels(root)] },
+    { name: 'focus-steps', when: '[data-kp-focus-steps]', load: () => import('./focus-steps.js'), attach: (m, root) => [m.attachFocusSteps(root)] },
+    { name: 'timer', when: '[data-kp-timers], [data-kp-timer-start]', load: () => import('./timer.js'), attach: (m, root) => [m.attachTimers(root)] },
+    { name: 'checklist', when: '[data-kp-checklist]', load: () => import('./checklist.js'), attach: (m, root) => [m.attachChecklists(root)] },
+    // A quantity with minus and plus, the kitchen timers, the checklist, one step at a time and the wheel [kpadopt4].
+    { name: 'quantity', when: '[data-kp-quantity]', load: () => import('./quantity.js'), attach: (m, root) => [m.attachQuantities(root)] },
     { name: 'toolbar', when: '[data-kp-toolbar]', load: () => import('./toolbar.js'), attach: (m, root) => [m.attachToolbars(root)] },
     { name: 'keys', when: '.kp-kbd[data-kp-key]', load: () => import('./keys.js'), attach: (m, root) => [m.attachKeys(root)] },
     // The month heatmap [scope-143]: a month of days, each a plate in the

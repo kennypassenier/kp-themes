@@ -13757,7 +13757,14 @@
     }
 
     @media (hover: hover) {
-        .kp-segmented--chips:not([aria-disabled='true']) > .kp-segmented__item:not(:disabled, [aria-pressed='true'], [aria-checked='true']):hover {
+        .kp-segmented--chips:not([aria-disabled='true'])
+            > .kp-segmented__item:not(
+                :disabled,
+                [aria-pressed='true'],
+                [aria-checked='true'],
+                [data-kp-segmented-tri],
+                [aria-disabled='true']
+            ):hover {
             border-color: var(--ring);
             background: var(--kp-chip-hover, var(--card));
             color: var(--kp-chip-ink, var(--foreground));
@@ -13770,6 +13777,105 @@
         background: var(--kp-chip-on, var(--foreground));
         color: var(--kp-chip-on-ink, var(--background));
         box-shadow: none;
+    }
+
+    /* The three-way chip [kpadopt4]: either way, must be in, must not be in.
+ * The mark is always there and always one size: a hollow ring (either way),
+ * the filled ring with the theme's check (in), the destructive pair with a
+ * cross (out), so the state is a shape and a word as well as a colour and
+ * the chip never changes width. Out also strikes the label through. */
+    .kp-segmented[data-kp-segmented='tri'] > .kp-segmented__item {
+        gap: var(--kp-tri-gap, 0.4em);
+        padding-inline-start: var(--kp-tri-pad-start, var(--kp-space-sm, 0.5rem));
+    }
+
+    .kp-segmented[data-kp-segmented='tri'] > .kp-segmented__item[data-kp-segmented-all] {
+        padding-inline-start: var(--kp-chip-pad-inline, var(--kp-space-md, 0.75rem));
+    }
+
+    .kp-segmented__mark {
+        display: inline-grid;
+        flex: none;
+        place-items: center;
+        box-sizing: border-box;
+        inline-size: var(--kp-tri-mark, 1.25em);
+        block-size: var(--kp-tri-mark, 1.25em);
+        border: 1.5px solid color-mix(in oklab, currentColor 55%, transparent);
+        border-radius: var(--kp-tri-mark-radius, 50%);
+        font-size: 0.85em;
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .kp-segmented__mark::before {
+        content: '';
+    }
+
+    .kp-segmented__item[data-kp-segmented-tri='include'] > .kp-segmented__mark {
+        border-color: currentColor;
+        background: currentColor;
+    }
+
+    .kp-segmented__item[data-kp-segmented-tri='include'] > .kp-segmented__mark::before {
+        content: var(--kp-glyph-check, '✓');
+        color: var(--kp-chip-on, var(--foreground));
+    }
+
+    .kp-segmented--chips > .kp-segmented__item[data-kp-segmented-tri='include'] {
+        border-color: var(--kp-chip-on-edge, var(--kp-chip-on, var(--foreground)));
+        background: var(--kp-chip-on, var(--foreground));
+        color: var(--kp-chip-on-ink, var(--background));
+    }
+
+    .kp-segmented--chips > .kp-segmented__item[data-kp-segmented-tri='exclude'] {
+        border-color: var(--kp-tri-out-edge, var(--destructive));
+        background: var(--kp-tri-out-ground, var(--kp-chip-ground, var(--card)));
+        color: var(--kp-tri-out-ink, var(--kp-chip-ink, var(--foreground)));
+    }
+
+    .kp-segmented__item[data-kp-segmented-tri='exclude'] > .kp-segmented__label {
+        text-decoration: line-through;
+        text-decoration-color: var(--kp-tri-out-edge, var(--destructive));
+        text-decoration-thickness: 2px;
+    }
+
+    .kp-segmented__item[data-kp-segmented-tri='exclude'] > .kp-segmented__mark {
+        border-color: var(--destructive);
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    .kp-segmented__item[data-kp-segmented-tri='exclude'] > .kp-segmented__mark::before {
+        content: var(--kp-glyph-cross, '✕');
+    }
+
+    @media (hover: hover) {
+        .kp-segmented--chips:not([aria-disabled='true']) > .kp-segmented__item:is([data-kp-segmented-tri]):hover {
+            box-shadow: inset 0 0 0 1px currentColor;
+        }
+    }
+
+    /* On a touch screen a three-way chip is a whole fingertip high. */
+    @media (pointer: coarse) {
+        .kp-segmented--chips[data-kp-segmented='tri'] > .kp-segmented__item {
+            min-block-size: var(--kp-tri-touch, 2.75rem);
+        }
+    }
+
+    /* The line after a three-way group: the hint, then what is chosen. One
+ * line, so nothing under it moves when it changes. */
+    .kp-segmented__summary {
+        margin: var(--kp-space-xs, 0.25rem) 0 0;
+        overflow: hidden;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        line-height: 1.5;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .kp-segmented__summary[data-kp-chosen] {
+        color: var(--foreground);
     }
 
     /* Disabled, on an item or on the whole control: dimmed, unreachable,
@@ -14602,6 +14708,850 @@
         grid-template-columns: minmax(0, 1fr) auto;
         border: 1px solid var(--border);
         white-space: nowrap;
+    }
+
+    /* --- A quantity with minus and plus [kpadopt4] ------------------------
+ *
+ * A number between a minus and a plus, its unit after it, for servings and
+ * amounts. The buttons are the theme's own `.kp-button`, square and at least
+ * a fingertip (`--kp-quantity-target`, 2.75rem; 3rem on a touch screen); the
+ * number and the unit share one field box, so "6 portions" reads as one
+ * thing. The field is as wide as the widest value it can hold
+ * (`--kp-quantity-chars`, written by js/quantity.js) and the unit as wide as
+ * its longest form, so nothing moves as the number changes. A button at a
+ * bound says so and keeps its place (`aria-disabled`). */
+    .kp-quantity {
+        --kp-quantity-chars: 2;
+        display: inline-grid;
+        grid-template-columns: auto minmax(0, auto) auto;
+        align-items: stretch;
+        justify-self: start;
+        gap: var(--kp-quantity-gap, var(--kp-space-xs, 0.25rem));
+        inline-size: fit-content;
+        max-inline-size: 100%;
+        vertical-align: middle;
+    }
+
+    .kp-quantity__step.kp-button {
+        display: inline-grid;
+        place-items: center;
+        box-sizing: border-box;
+        inline-size: var(--kp-quantity-target, 2.75rem);
+        min-block-size: var(--kp-quantity-target, 2.75rem);
+        padding: 0;
+        font-size: var(--kp-quantity-glyph-size, 1.25rem);
+        line-height: 1;
+        touch-action: manipulation;
+        user-select: none;
+        -webkit-user-select: none;
+    }
+
+    .kp-quantity__glyph::before {
+        content: var(--kp-glyph-minus, '−');
+    }
+
+    .kp-quantity__step[data-kp-quantity-by='1'] .kp-quantity__glyph::before {
+        content: var(--kp-glyph-plus, '+');
+    }
+
+    .kp-quantity__step[aria-disabled='true'] {
+        opacity: 0.45;
+        cursor: not-allowed;
+    }
+
+    .kp-quantity__field {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        box-sizing: border-box;
+        min-block-size: var(--kp-quantity-target, 2.75rem);
+        padding-inline: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--input);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--background);
+        color: var(--foreground);
+        box-shadow: var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 var(--border-strong);
+        cursor: text;
+    }
+
+    .kp-quantity__field:has(.kp-quantity__input:focus-visible) {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast);
+        outline-offset: var(--kp-focus-ring-inner-width, 2px);
+        box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring);
+    }
+
+    .kp-quantity__field:has(.kp-quantity__input[aria-invalid='true']) {
+        border-color: var(--destructive);
+    }
+
+    .kp-quantity__input {
+        box-sizing: content-box;
+        inline-size: calc(var(--kp-quantity-chars) * 1ch + 0.25ch);
+        min-inline-size: 1ch;
+        margin: 0;
+        padding: 0 var(--kp-space-xs, 0.25rem);
+        border: 0;
+        background: transparent;
+        color: inherit;
+        font: inherit;
+        font-size: var(--kp-quantity-size, var(--kp-text-md, 1rem));
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+        text-align: end;
+    }
+
+    .kp-quantity__input:focus-visible {
+        outline: none;
+        box-shadow: none;
+    }
+
+    /* The unit, as wide as its longest form (`data-kp-words`): an invisible
+ * line of no height holds the width. A unit longer than
+ * `--kp-quantity-unit-max` wraps onto a second line rather than being cut. */
+    .kp-quantity__unit {
+        display: inline-flex;
+        flex-direction: column;
+        min-inline-size: 0;
+        max-inline-size: var(--kp-quantity-unit-max, 12em);
+        overflow: hidden;
+        padding-block: var(--kp-space-xs, 0.25rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        line-height: 1.2;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-quantity__unit::after {
+        content: attr(data-kp-words);
+        block-size: 0;
+        overflow: hidden;
+        visibility: hidden;
+        white-space: pre;
+    }
+
+    .kp-quantity[data-kp-quantity-disabled],
+    .kp-quantity:has(.kp-quantity__input:disabled) {
+        opacity: 0.55;
+    }
+
+    .kp-quantity:has(.kp-quantity__input:disabled) .kp-quantity__field {
+        cursor: not-allowed;
+    }
+
+    /* Larger, for a counter on an arm's length screen (cook mode). */
+    .kp-quantity--lg {
+        --kp-quantity-target: 3.5rem;
+        --kp-quantity-size: 1.5rem;
+        --kp-quantity-glyph-size: 1.75rem;
+    }
+
+    @media (pointer: coarse) {
+        .kp-quantity {
+            --kp-quantity-target: 3rem;
+        }
+
+        .kp-quantity--lg {
+            --kp-quantity-target: 3.5rem;
+        }
+    }
+
+    /* --- A checklist whose ticked items sink [kpadopt4] -------------------
+ *
+ * A list a person works down (a shopping list by shop). Every row is its
+ * checkbox's label, a fingertip high (`--kp-checklist-row`, 2.75rem; 3rem on
+ * touch), the name in the reading column and the amount in a column of its
+ * own at the end, so amounts line up from row to row. A ticked row is struck
+ * through in the muted ink and sinks to the end of its group (js/checklist.js
+ * glides it there in the theme's size time); a group whose every row is done
+ * says so with the theme's check before its count. The bar holds the count of
+ * what is done, or after a clear its Undo, in one line that never moves. */
+    .kp-checklist {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+    }
+
+    .kp-checklist__bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        padding-block-end: var(--kp-space-xs, 0.25rem);
+        border-block-end: 1px solid var(--border);
+    }
+
+    /* The count, or after a clear its line and Undo: it keeps the room the
+ * second needs (`--kp-checklist-status-min`), so the bar wraps, or not, the
+ * same way in both. */
+    .kp-checklist__status {
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: var(--kp-checklist-status-min, 10.5rem);
+        min-block-size: var(--kp-button-height-sm, 1.75rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-checklist__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin-inline-start: auto;
+    }
+
+    .kp-checklist__body {
+        position: relative;
+        display: grid;
+        gap: var(--kp-space-md, 0.75rem);
+        min-inline-size: 0;
+    }
+
+    .kp-checklist[aria-busy='true'] .kp-checklist__body {
+        min-block-size: var(--kp-checklist-busy-height, 10rem);
+    }
+
+    .kp-checklist__head {
+        display: flex;
+        align-items: baseline;
+        gap: var(--kp-space-md, 0.75rem);
+        margin: 0 0 var(--kp-space-xs, 0.25rem);
+        font-size: var(--kp-text-md, 1rem);
+        font-weight: 600;
+    }
+
+    .kp-checklist__title {
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-checklist__count {
+        flex: none;
+        margin-inline-start: auto;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 400;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-checklist__group[data-kp-checklist-done] .kp-checklist__count::before {
+        content: var(--kp-glyph-check, '✓') '\00a0';
+        color: var(--success-foreground, currentColor);
+    }
+
+    .kp-checklist__list {
+        margin: 0;
+        padding: 0;
+        border-block-start: 1px solid var(--border);
+        list-style: none;
+    }
+
+    .kp-checklist__item {
+        border-block-end: 1px solid var(--border);
+    }
+
+    .kp-checklist__row {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        align-items: center;
+        gap: var(--kp-space-md, 0.75rem);
+        box-sizing: border-box;
+        min-block-size: var(--kp-checklist-row, 2.75rem);
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    @media (hover: hover) {
+        .kp-checklist__row:hover {
+            background: var(--kp-highlight, hsl(from var(--foreground) h s l / 0.08));
+        }
+    }
+
+    .kp-checklist__check.kp-field__check {
+        inline-size: 1.25rem;
+        block-size: 1.25rem;
+        margin: 0;
+    }
+
+    .kp-checklist__label {
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-checklist__detail {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        text-align: end;
+        white-space: nowrap;
+    }
+
+    .kp-checklist__item[data-kp-checklist-checked] .kp-checklist__label {
+        color: var(--muted-foreground);
+        text-decoration: line-through;
+        text-decoration-thickness: 1.5px;
+    }
+
+    .kp-checklist__empty {
+        margin: 0;
+        padding: var(--kp-space-lg, 1.5rem);
+        border: 1px dashed var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        color: var(--muted-foreground);
+        text-align: center;
+    }
+
+    .kp-checklist__empty[data-kp-checklist-failed] {
+        border-style: solid;
+        border-color: var(--destructive);
+        color: var(--foreground);
+    }
+
+    @media (pointer: coarse) {
+        .kp-checklist {
+            --kp-checklist-row: 3rem;
+        }
+    }
+
+    /* --- Kitchen timers [kpadopt4] ----------------------------------------
+ *
+ * Named countdowns side by side, each a card of one height: its name and a
+ * state word, the time left large in figures of one width (the theme's
+ * display face), the theme's own progress bar, and three buttons a
+ * fingertip high. Ended, a card turns to the done plate (the warning pair by
+ * default, `--kp-timer-done-ground` / `-ink`) with the name large in the
+ * time's place and one primary Stop. Nothing in a card changes size as the
+ * clock runs or the state changes: the time box is one line of its size,
+ * the state word holds the width of its longest word, the first button the
+ * room of its column. */
+    .kp-timers {
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+    }
+
+    .kp-timers__list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(min(var(--kp-timer-min, 16rem), 100%), 1fr));
+        gap: var(--kp-space-md, 0.75rem);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-timers__empty {
+        margin: 0;
+        padding: var(--kp-space-lg, 1.5rem);
+        border: 1px dashed var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        color: var(--muted-foreground);
+        text-align: center;
+    }
+
+    .kp-timer {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+        padding: var(--kp-space-md, 0.75rem) var(--kp-space-md, 0.75rem) var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    .kp-timer__head {
+        display: flex;
+        align-items: baseline;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+    }
+
+    .kp-timer__name {
+        flex: 1 1 auto;
+        min-inline-size: 0;
+        overflow: hidden;
+        font-weight: 600;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    /* The state word holds the width of its longest word (`data-kp-words`). */
+    .kp-timer__state {
+        display: inline-flex;
+        flex: none;
+        flex-direction: column;
+        align-items: flex-end;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-timer__state::after {
+        content: attr(data-kp-words);
+        block-size: 0;
+        overflow: hidden;
+        visibility: hidden;
+        white-space: pre;
+    }
+
+    .kp-timer__time {
+        overflow: hidden;
+        block-size: 1.15em;
+        font-family: var(--kp-timer-font, var(--theme-font-display, inherit));
+        font-size: var(--kp-timer-size, 2.75rem);
+        font-weight: 600;
+        line-height: 1.15;
+        font-variant-numeric: tabular-nums lining-nums;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .kp-timer[data-kp-timer-state='paused'] .kp-timer__time {
+        color: var(--muted-foreground);
+    }
+
+    .kp-timer__actions {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto auto;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-timer__actions > .kp-button {
+        min-block-size: var(--kp-timer-target, 2.75rem);
+    }
+
+    .kp-timer__remove.kp-button {
+        inline-size: var(--kp-timer-target, 2.75rem);
+        padding: 0;
+    }
+
+    .kp-timer__remove-glyph::before {
+        content: var(--kp-glyph-close, '✕');
+    }
+
+    .kp-timer[data-kp-timer-state='done'] {
+        border-color: var(--kp-timer-done-edge, var(--warning));
+        background: var(--kp-timer-done-ground, var(--warning));
+        color: var(--kp-timer-done-ink, var(--warning-foreground));
+    }
+
+    .kp-timer[data-kp-timer-state='done'] .kp-timer__state {
+        color: inherit;
+        font-weight: 600;
+    }
+
+    /* Ended: the name, large, in the time's own box. */
+    .kp-timer[data-kp-timer-state='done'] .kp-timer__time {
+        font-size: calc(var(--kp-timer-size, 2.75rem) * 0.62);
+        block-size: calc(1.15em / 0.62);
+        line-height: calc(1.15 / 0.62);
+    }
+
+    @media (pointer: coarse) {
+        .kp-timers {
+            --kp-timer-target: 3rem;
+        }
+    }
+
+    /* --- One step at a time [kpadopt4] ------------------------------------
+ *
+ * Cook mode: the count and the theme's progress bar on top, one step in
+ * large type with what it needs, and two buttons a knuckle can hit at the
+ * foot. Three rows of a grid: the head and the buttons keep their place
+ * whatever the step's length, and a long step scrolls inside its body. Give
+ * the root its height (`--kp-focus-steps-height`, the whole screen in an
+ * app: `100dvh`). */
+    .kp-focus-steps {
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr) auto;
+        gap: var(--kp-space-md, 0.75rem);
+        box-sizing: border-box;
+        block-size: var(--kp-focus-steps-height, 100%);
+        min-block-size: var(--kp-focus-steps-min, 24rem);
+        min-inline-size: 0;
+        padding: var(--kp-focus-steps-pad, var(--kp-space-md, 0.75rem));
+        background: var(--background);
+        color: var(--foreground);
+    }
+
+    .kp-focus-steps:focus {
+        outline: none;
+    }
+
+    .kp-focus-steps__head {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-focus-steps__count {
+        font-size: var(--kp-text-md, 1rem);
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-focus-steps__tools {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-end;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+    }
+
+    /* The screen line: a dot that is filled while the screen is kept on. */
+    .kp-focus-steps__wake {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4em;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-focus-steps__wake::before {
+        content: '';
+        flex: none;
+        inline-size: 0.6em;
+        block-size: 0.6em;
+        border: 1.5px solid currentColor;
+        border-radius: 50%;
+    }
+
+    .kp-focus-steps[data-kp-focus-steps-screen='on'] .kp-focus-steps__wake::before {
+        border-color: var(--primary);
+        background: var(--primary);
+    }
+
+    .kp-focus-steps__speak-text {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .kp-focus-steps__speak-text::after {
+        content: attr(data-kp-words);
+        block-size: 0;
+        overflow: hidden;
+        visibility: hidden;
+        white-space: pre;
+    }
+
+    .kp-focus-steps__bar {
+        grid-column: 1 / -1;
+    }
+
+    .kp-focus-steps__body {
+        position: relative;
+        min-block-size: 0;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        padding: var(--kp-space-xs, 0.25rem);
+        touch-action: pan-y;
+    }
+
+    .kp-focus-steps__step {
+        display: grid;
+        align-content: start;
+        gap: var(--kp-space-lg, 1.5rem);
+        max-inline-size: var(--kp-focus-steps-measure, 44ch);
+    }
+
+    .kp-focus-steps__step:focus {
+        outline: none;
+    }
+
+    .kp-focus-steps__text {
+        margin: 0;
+        font-size: var(--kp-focus-steps-text, clamp(1.25rem, 1.05rem + 1vw, 1.75rem));
+        line-height: 1.45;
+        text-wrap: pretty;
+    }
+
+    .kp-focus-steps__needs {
+        padding-block-start: var(--kp-space-md, 0.75rem);
+        border-block-start: 1px solid var(--border);
+    }
+
+    .kp-focus-steps__needs-title {
+        margin: 0 0 var(--kp-space-sm, 0.5rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+    }
+
+    /* The amounts in one column as wide as the longest, the names in the next [fix-64]. */
+    .kp-focus-steps__needs-list {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        margin: 0;
+        padding: 0;
+        font-size: var(--kp-focus-steps-needs, 1.125rem);
+        list-style: none;
+    }
+
+    .kp-focus-steps__need {
+        display: contents;
+    }
+
+    .kp-focus-steps__amount {
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+        text-align: end;
+        white-space: nowrap;
+    }
+
+    .kp-focus-steps__name {
+        overflow-wrap: anywhere;
+    }
+
+    .kp-focus-steps__timer.kp-button {
+        justify-self: start;
+        min-block-size: var(--kp-focus-steps-tool, 2.75rem);
+    }
+
+    .kp-focus-steps__note,
+    .kp-focus-steps__message {
+        margin: 0;
+    }
+
+    .kp-focus-steps[aria-busy='true'] .kp-focus-steps__body {
+        min-block-size: var(--kp-focus-steps-busy-height, 12rem);
+    }
+
+    .kp-focus-steps__nav {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-focus-steps__nav > .kp-button {
+        gap: var(--kp-space-sm, 0.5rem);
+        min-block-size: var(--kp-focus-steps-target, 4rem);
+        font-size: var(--kp-focus-steps-button-text, 1.125rem);
+    }
+
+    .kp-focus-steps__nav > .kp-button[aria-disabled='true'] {
+        opacity: 0.45;
+        cursor: not-allowed;
+    }
+
+    .kp-focus-steps__glyph--prev::before {
+        content: var(--kp-glyph-back, '←');
+    }
+
+    .kp-focus-steps__glyph--next::before {
+        content: var(--kp-glyph-forward, '→');
+    }
+
+    .kp-focus-steps__next[data-kp-focus-steps-last] .kp-focus-steps__glyph--next::before {
+        content: var(--kp-glyph-check, '✓');
+    }
+
+    /* --- A wheel that picks [kpadopt4] ------------------------------------
+ *
+ * A round wheel of soft segments in the theme's five chart colours, a still
+ * pointer at the top, the theme's primary button in the middle, and under it
+ * the outcome in two reserved lines, so nothing below moves when it is said.
+ * The wheel is square and keeps its size in every state (`--kp-wheel-size`);
+ * it turns on `--kp-wheel-ease` (js/wheel.js), a long even settle, never an
+ * overshoot. The chosen segment is filled deeper and the others step back. */
+    .kp-wheel {
+        display: grid;
+        justify-items: center;
+        gap: var(--kp-space-md, 0.75rem);
+        box-sizing: border-box;
+        inline-size: var(--kp-wheel-size, min(24rem, 100%));
+        max-inline-size: 100%;
+    }
+
+    .kp-wheel__stage {
+        position: relative;
+        inline-size: 100%;
+        aspect-ratio: 1;
+    }
+
+    /* The disc turns as a square: round and out of the pointer's way, so its corners never cover what stands beside it. */
+    /* An opaque plate under the hub, so a dimmed Spin never shows the segments through it. */
+    .kp-wheel__stage::before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        top: 50%;
+        left: 50%;
+        box-sizing: border-box;
+        inline-size: var(--kp-wheel-hub, 30%);
+        min-inline-size: 4.5rem;
+        aspect-ratio: 1;
+        translate: -50% -50%;
+        border-radius: 50%;
+        background: var(--card);
+        box-shadow: 0 0 0 var(--kp-wheel-hub-ring, 4px) var(--card);
+    }
+
+    .kp-wheel__disc {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .kp-wheel__face {
+        display: block;
+        inline-size: 100%;
+        block-size: 100%;
+        overflow: visible;
+    }
+
+    .kp-wheel__segment {
+        --kp-wheel-tone: var(--chart-1);
+        fill: color-mix(in oklab, var(--kp-wheel-tone) var(--kp-wheel-tint, 30%), var(--card));
+        stroke: var(--card);
+        stroke-width: 1.2;
+    }
+
+    .kp-wheel__segment[data-tone='2'] {
+        --kp-wheel-tone: var(--chart-2);
+    }
+
+    .kp-wheel__segment[data-tone='3'] {
+        --kp-wheel-tone: var(--chart-3);
+    }
+
+    .kp-wheel__segment[data-tone='4'] {
+        --kp-wheel-tone: var(--chart-4);
+    }
+
+    .kp-wheel__segment[data-tone='5'] {
+        --kp-wheel-tone: var(--chart-5);
+    }
+
+    .kp-wheel__segment[data-kp-wheel-chosen] {
+        fill: color-mix(in oklab, var(--kp-wheel-tone) var(--kp-wheel-tint-chosen, 62%), var(--card));
+    }
+
+    .kp-wheel__segment[data-kp-wheel-other] {
+        opacity: var(--kp-wheel-other, 0.45);
+    }
+
+    .kp-wheel__label {
+        fill: var(--foreground);
+        font-family: inherit;
+        font-weight: 500;
+        pointer-events: none;
+    }
+
+    .kp-wheel__label[data-kp-wheel-chosen] {
+        font-weight: 700;
+    }
+
+    .kp-wheel__rim {
+        fill: none;
+        stroke: var(--border-strong);
+        stroke-width: 1.5;
+    }
+
+    .kp-wheel__ghost {
+        fill: var(--muted);
+        stroke: var(--border-strong);
+        stroke-width: 1;
+        stroke-dasharray: 4 3;
+    }
+
+    .kp-wheel__pointer {
+        position: absolute;
+        inset-block-start: -1.5%;
+        left: 50%;
+        inline-size: 9%;
+        translate: -50% 0;
+        fill: var(--kp-wheel-pointer, var(--primary));
+        stroke: var(--card);
+        stroke-width: 1.5;
+        stroke-linejoin: round;
+        pointer-events: none;
+        z-index: 2;
+    }
+
+    .kp-wheel__spin.kp-button {
+        position: absolute;
+        z-index: 1;
+        top: 50%;
+        left: 50%;
+        box-sizing: border-box;
+        inline-size: var(--kp-wheel-hub, 30%);
+        min-inline-size: 4.5rem;
+        aspect-ratio: 1;
+        padding: 0;
+        translate: -50% -50%;
+        /* Round in every theme: a register's button corner (kp.register) would square the hub off and lay its corners
+           over the labels. The register keeps every other part of its button. */
+        border-radius: 50% !important;
+        box-shadow: 0 0 0 var(--kp-wheel-hub-ring, 4px) var(--card);
+        font-size: var(--kp-text-md, 1rem);
+        font-weight: 700;
+    }
+
+    .kp-wheel__spin[aria-disabled='true'] {
+        opacity: 0.55;
+        cursor: not-allowed;
+    }
+
+    /* The outcome: a caption and the name in two reserved lines. */
+    .kp-wheel__result {
+        display: grid;
+        justify-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        inline-size: 100%;
+        text-align: center;
+    }
+
+    .kp-wheel__caption {
+        max-inline-size: 100%;
+        margin: 0;
+        min-block-size: 1lh;
+        overflow: hidden;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    /* Two lines of the outcome's size, always: the name, or a sentence (empty, failed) in the reading size. */
+    .kp-wheel__outcome {
+        display: -webkit-box;
+        box-sizing: border-box;
+        block-size: calc(2.5 * var(--kp-wheel-outcome, 1.5rem));
+        margin: 0;
+        overflow: hidden;
+        font-family: var(--kp-wheel-font, var(--theme-font-display, inherit));
+        font-size: var(--kp-wheel-outcome, 1.5rem);
+        font-weight: 600;
+        line-height: 1.25;
+        overflow-wrap: anywhere;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+    }
+
+    .kp-wheel__outcome[data-kp-wheel-note] {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-inline: var(--kp-space-sm, 0.5rem);
+        border-radius: var(--radius, 0.5rem);
+        color: var(--muted-foreground);
+        font-family: inherit;
+        font-size: var(--kp-text-md, 1rem);
+        font-weight: 400;
+    }
+
+    .kp-wheel__result[data-kp-wheel-failed] .kp-wheel__outcome {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
     }
 }
 
