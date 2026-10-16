@@ -209,6 +209,7 @@ export {
 } from './js/statusrow.js';
 /** @typedef {import('./js/statusrow.js').StatusRow} StatusRow */
 export { FACETS, FACET_EVENT, attachFacets, getFacetValues, setFacetCounts, setFacetItems, setFacetValues } from './js/facets.js';
+export { ART, ART_KINDS, ART_SETS, attachArt, drawArt } from './js/art.js';
 export {
     PIPELINE,
     PIPELINE_MORE_EVENT,

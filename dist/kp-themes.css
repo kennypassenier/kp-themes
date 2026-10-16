@@ -11002,6 +11002,64 @@
         margin: 0 0 0.75rem;
     }
 
+    /* A drawing at the top of an empty state [kpadopt4] (`data-kp-art`, js/art.js): a picture only, the words carry the
+ * meaning. Every theme draws its own set and its register shows it; a theme without one shows none, so the drawing is
+ * hidden here. Knobs [KT6]: `--kp-art-size` (7.5rem wide; `data-kp-art-size` sm 5rem, lg 10rem), `--kp-art-stroke`
+ * (1.5px), `--kp-art-rule` (the acting colour), `--kp-art-line` (the faint ruled lines), `--kp-art-ink`, `--kp-art-red`. */
+    .kp-art {
+        display: none;
+        box-sizing: content-box;
+        inline-size: var(--kp-art-size, 7.5rem);
+        block-size: auto;
+        aspect-ratio: 120 / 72;
+        margin: 0 auto var(--kp-space-sm, 0.5rem);
+        overflow: visible;
+    }
+
+    .kp-art > g {
+        display: none;
+    }
+
+    .kp-art path {
+        fill: none;
+        stroke-width: var(--kp-art-stroke, 1.5px);
+        stroke-linecap: square;
+        stroke-linejoin: miter;
+        vector-effect: non-scaling-stroke;
+    }
+
+    .kp-art__rule {
+        stroke: var(--kp-art-rule, var(--primary));
+    }
+
+    .kp-art path.kp-art__rule {
+        stroke-width: calc(var(--kp-art-stroke, 1.5px) + 0.5px);
+    }
+
+    .kp-art__line {
+        stroke: var(--kp-art-line, var(--border-strong));
+    }
+
+    .kp-art path.kp-art__line {
+        stroke-width: 1px;
+    }
+
+    .kp-art__ink {
+        stroke: var(--kp-art-ink, var(--muted-foreground));
+    }
+
+    .kp-art__red {
+        stroke: var(--kp-art-red, var(--destructive));
+    }
+
+    [data-kp-art-size='sm'] > .kp-art {
+        --kp-art-size: 5rem;
+    }
+
+    [data-kp-art-size='lg'] > .kp-art {
+        --kp-art-size: 10rem;
+    }
+
     /* Copyable value [TH53] */
     .kp-copyable {
         display: inline-flex;
@@ -85491,6 +85549,43 @@
     }
 }
 /* ── end flows and records: pipeline ── */
+
+/* ── Flows and records [kpadopt4]: drawings for an empty state ── */
+@layer kp.register {
+    /* Formal draws the ledger set (js/art.js): a ruled page, an entry struck through in red ink, the account closed with the
+       double rule (G7, G8, G19). Every stroke is ruled in on arrival at the ruling pace, 400 ms each and 60 ms apart, top
+       down, linear with a dead stop (G1, G2, G4, G13); the reduced pose is the drawing ruled (G20). */
+    [data-theme='formal'] .kp-art {
+        display: block;
+    }
+
+    [data-theme='formal'] .kp-art > g[data-kp-art-set='ledger'] {
+        display: inline;
+    }
+
+    [data-theme='formal'] .kp-art path {
+        stroke-linecap: butt;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] .kp-art path {
+            stroke-dasharray: 1;
+            animation: kp-formal-art-ruled 400ms linear both;
+            animation-delay: calc(var(--kp-art-i, 0) * 60ms);
+        }
+    }
+
+    @keyframes kp-formal-art-ruled {
+        from {
+            stroke-dashoffset: 1;
+        }
+
+        to {
+            stroke-dashoffset: 0;
+        }
+    }
+}
+/* ── end flows and records: drawings ── */
 
 /* Pointing and pressing run on one number each [Kenny, 2026-10-07]: 0 at
    rest, 1 at the end of the unit. Registered so the browser can transition

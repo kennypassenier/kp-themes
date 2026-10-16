@@ -159,6 +159,7 @@ export const FILES = [
     'js/statusrow.js',
     'js/facets.js',
     'js/pipeline.js',
+    'js/art.js',
     'js/toolbar.js',
     'js/keys.js',
     'js/heat.js',

@@ -1380,7 +1380,8 @@ export const DESCRIPTORS = [
         id: 'empty-state',
         title: 'Empty state',
         group: 'Data',
-        classes: ['kp-empty'],
+        classes: ['kp-empty', 'kp-art'],
+        aliases: ['art'],
         exports: ['EmptyState'],
         intro: 'A bordered box that says a list is empty, and which emptiness it is: nothing yet, or nothing that matched. A blank area says the page is broken instead.',
         whenToUse:
@@ -1402,6 +1403,16 @@ export const DESCRIPTORS = [
 </div>
 `,
             },
+            {
+                title: 'With a drawing of what kind of empty it is',
+                why: '`data-kp-art` puts a small line drawing at the top, in the theme’s own hand: none, nomatch, error, offline, done or locked. It is a picture only; the title and the sentence carry the meaning. A theme shows its own set, and a theme without one shows none.',
+                markup: `
+<div class="kp-empty" data-kp-art="done">
+<p class="kp-empty__title">All clear</p>
+<p class="kp-empty__body">No follow-up is due this week.</p>
+</div>
+`,
+            },
         ],
         variants: [
             { name: '.kp-empty', what: 'The box on its own: a dashed boundary and quiet ink, for a one-line emptiness with nothing to offer.' },
@@ -1409,6 +1420,8 @@ export const DESCRIPTORS = [
             { name: '.kp-empty__body', what: 'One sentence under it, saying what would put something here.' },
             { name: 'filtered', what: 'The same box in its other state, with the action that clears the filter instead of the one that creates a first item.' },
             { name: 'as a heading', what: 'The title can be rendered as a real heading where the empty state stands for a whole section.' },
+            { name: 'data-kp-art', what: 'A drawing at the top (`.kp-art`, js/art.js `attachArt`): `none`, `nomatch`, `error`, `offline`, `done` or `locked`, in the theme’s own set (`data-kp-art-set`; formal’s is the ledger), ruled in on arrival where the theme moves. `data-kp-art-kind` on the drawing says which.' },
+            { name: 'data-kp-art-size', what: '`sm` (5rem) or `lg` (10rem) instead of 7.5rem.' },
         ],
         accessibility: [
             'Built in — the title is text in the page’s own ink rather than a picture of a shrug, so it is read out like any other message.',
