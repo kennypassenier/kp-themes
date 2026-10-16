@@ -1,0 +1,113 @@
+/* Mock layout for this research page only. Every class is `gd-` and none
+   restyles a `kp-` class: the grids, the matrix, the bar cells, the buttons,
+   the tags and the data tables are the package's own. */
+.gd-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
+    gap: var(--kp-space-md, 1rem);
+    align-items: start;
+    margin-block-start: var(--kp-space-md, 1rem);
+}
+.gd-panel {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+    align-content: start;
+}
+.gd-panel > h3 {
+    margin: 0;
+    font-size: 1rem;
+}
+.gd-tag {
+    display: inline-block;
+    margin-inline-start: 0.5rem;
+    padding: 0.05rem 0.5rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    font: 600 0.7rem/1.4 var(--theme-font-mono, monospace);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    vertical-align: middle;
+}
+.gd-tag--package {
+    color: var(--success);
+}
+.gd-tag--mock {
+    color: var(--warning);
+}
+.gd-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.75rem;
+}
+.gd-grow {
+    flex: 1 1 0;
+}
+.gd-note {
+    margin: 0;
+    font-size: 0.8125rem;
+    opacity: 0.85;
+}
+/* The narrow box: 22 rem, so the matrix inside has to scroll. */
+.gd-narrow {
+    max-inline-size: 22rem;
+    padding: var(--kp-space-sm, 0.5rem);
+    border: 1px dashed var(--border-strong);
+}
+
+/* The page shows the look-at line of the theme it is in, not all sixteen stacked; the review dialog reads the
+   paragraphs from the markup, so it still gets every theme's. */
+[data-review-look] > [data-for] {
+    display: none;
+}
+html[data-theme='formal'] [data-review-look] > [data-for='formal'],
+html[data-theme='light'] [data-review-look] > [data-for='light'],
+html[data-theme='dark'] [data-review-look] > [data-for='dark'],
+html[data-theme='cyberpunk'] [data-review-look] > [data-for='cyberpunk'],
+html[data-theme='synthwave'] [data-review-look] > [data-for='synthwave'],
+html[data-theme='pastel'] [data-review-look] > [data-for='pastel'],
+html[data-theme='terminal'] [data-review-look] > [data-for='terminal'],
+html[data-theme='forest'] [data-review-look] > [data-for='forest'],
+html[data-theme='blueprint'] [data-review-look] > [data-for='blueprint'],
+html[data-theme='solstice'] [data-review-look] > [data-for='solstice'],
+html[data-theme='brutalism'] [data-review-look] > [data-for='brutalism'],
+html[data-theme='deco'] [data-review-look] > [data-for='deco'],
+html[data-theme='phantom'] [data-review-look] > [data-for='phantom'],
+html[data-theme='grotesk'] [data-review-look] > [data-for='grotesk'],
+html[data-theme='nostromo'] [data-review-look] > [data-for='nostromo'],
+html[data-theme='titanium'] [data-review-look] > [data-for='titanium'] {
+    display: block;
+}
+
+/* The plain statement of what to see and what each control does, one per section [Kenny, 2026-10-16]. */
+.gd-expect {
+    margin: 0 0 var(--kp-space-md, 1rem);
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+    border: 1px solid var(--border-strong);
+    border-inline-start-width: 4px;
+    border-radius: var(--radius, 0);
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+.gd-expect p {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+}
+.gd-expect ul {
+    margin: 0;
+    padding-inline-start: 1.25rem;
+}
+.gd-expect li + li {
+    margin-block-start: var(--kp-space-xs, 0.25rem);
+}
+
+/* One column, so the tables are tables at a desktop width and cards only on a phone. The capacity table gives
+   its number column the room "not read" needs: the package's --kp-bar-cell-value knob. */
+.gd-stack {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+}
+.gd-stack .kp-table {
+    --kp-bar-cell-value: 8ch;
+}

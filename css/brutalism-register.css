@@ -3870,10 +3870,7 @@
            (js/motion.js), and the date picker's playClose(), whose name stays the same on the
            union of its opening mark and the closing marks (lesson 10). */
         [data-theme='brutalism']
-            :is(
-                .kp-combobox__list:popover-open,
-                .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open
-            ) {
+            :is(.kp-combobox__list:popover-open, .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open) {
             --kp-sig-br-h: var(--kp-sig-br-h-plate);
             --kp-sig-br-sh: var(--kp-sig-br-drop);
             animation: kp-sig-brutalism-drop var(--kp-sig-br-time) var(--kp-sig-br-fall) backwards;
@@ -3940,7 +3937,11 @@
                 animation: kp-sig-brutalism-leave var(--kp-sig-br-time) var(--kp-sig-br-up) forwards;
             }
 
-            [data-theme='brutalism'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu {
+            [data-theme='brutalism']
+                .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing])
+                .kp-nav__links
+                > li
+                > .kp-nav__menu {
                 animation: none;
                 transition: none;
             }
@@ -4040,7 +4041,9 @@
 
         /* Each slab's shadow stays on the ground while the panel is up (the current one sits in
            its footprint, so its shadow shows only while it is lifted). */
-        [data-theme='brutalism'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) :is(.kp-sidenav__link, .kp-sidenav__category-toggle):not([aria-current='page'], :hover, :focus-visible) {
+        [data-theme='brutalism']
+            .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])
+            :is(.kp-sidenav__link, .kp-sidenav__category-toggle):not([aria-current='page'], :hover, :focus-visible) {
             box-shadow: calc(3px + var(--kp-sig-br-lift)) calc(3px + var(--kp-sig-br-lift)) 0 var(--foreground);
         }
 
@@ -4295,3 +4298,69 @@
         --kp-facet-hover: var(--secondary);
     }
 }
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* Slabs: square, framed in ink, a hard shadow under each; a tile under the pointer is pressed into its shadow; the pick is the fat 5 px frame. */
+    [data-theme='brutalism'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 0;
+        --kp-heat-cell-edge: 2px;
+        --kp-heat-cell-ink: var(--foreground);
+        --kp-heat-cell-gap: 4px;
+        --kp-heat-cell-lift: 2px 2px 0 var(--foreground);
+        --kp-heat-cell-hover: translate(2px, 2px);
+        --kp-matrix-cell-hover: translate(3px, 3px);
+    }
+    [data-theme='brutalism'] .kp-heat__cell:hover:not(.kp-skeleton, [aria-disabled='true']) {
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] .kp-heat__cell:is([data-kp-tone='future'], [data-kp-tone='none'], [data-kp-tone='before']) {
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] .kp-heat__cell[data-kp-picked] {
+        outline: 4px solid var(--foreground);
+        outline-offset: 0;
+        z-index: 1;
+    }
+    [data-theme='brutalism'] .kp-heat__label,
+    [data-theme='brutalism'] .kp-matrix__row,
+    [data-theme='brutalism'] .kp-matrix__col {
+        text-transform: uppercase;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+    }
+    [data-theme='brutalism'] .kp-matrix__cell {
+        border: 2px solid var(--foreground);
+        box-shadow: 3px 3px 0 var(--foreground);
+        color: var(--foreground);
+    }
+    [data-theme='brutalism'] .kp-matrix__cell:is([data-kp-tone='self'], [data-kp-tone='none'], [data-kp-inert]) {
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 4px solid var(--foreground);
+        outline-offset: 0;
+    }
+    [data-theme='brutalism'] .kp-heat__label-button[aria-pressed='true'] {
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        box-shadow: 3px 3px 0 var(--foreground);
+    }
+    @media (max-width: 40rem) {
+        [data-theme='brutalism'] .kp-heat {
+            --kp-heat-cell-edge: 1px;
+            --kp-heat-cell-gap: 2px;
+            --kp-heat-cell-lift: 1px 1px 0 var(--foreground);
+        }
+    }
+    [data-theme='brutalism'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='brutalism'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='brutalism'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */

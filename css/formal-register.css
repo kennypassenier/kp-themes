@@ -3245,7 +3245,12 @@
     /* A day of the month: paper with a rule, not a tinted plate. A kept night
        is ruled along its start edge in navy, a night to look at in red ink, a
        failed one in two red rules; today stands in the double rule. */
-    [data-theme='formal'] :is(.kp-calendar__day, .kp-calendar__swatch):is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad']) {
+    [data-theme='formal']
+        :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate):is(
+            [data-kp-tone='ok'],
+            [data-kp-tone='warn'],
+            [data-kp-tone='bad']
+        ) {
         --kp-fm-edge: inset 3px 0 0 var(--primary);
         border-color: var(--border);
         background: var(--card);
@@ -3253,12 +3258,12 @@
         color: var(--foreground);
     }
 
-    [data-theme='formal'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='warn'] {
+    [data-theme='formal'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate)[data-kp-tone='warn'] {
         --kp-fm-edge: inset 3px 0 0 var(--destructive);
         color: var(--destructive);
     }
 
-    [data-theme='formal'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='bad'] {
+    [data-theme='formal'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate)[data-kp-tone='bad'] {
         --kp-fm-edge: inset 3px 0 0 var(--destructive), inset 6px 0 0 var(--card), inset 8px 0 0 var(--destructive);
         color: var(--destructive);
     }
@@ -3549,11 +3554,7 @@
         [data-theme='formal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']),
         [data-theme='formal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) > * {
             --kp-fm-f: clamp(0, (var(--kp-fm-t) * 740 - var(--kp-fm-k, 0) * var(--kp-sig-fm-st)) / var(--kp-sig-fm-len), 1);
-            --kp-fm-lf: clamp(
-                0,
-                (var(--kp-fm-t) * 740 - var(--kp-fm-k, 0) * var(--kp-sig-fm-st) - var(--kp-sig-fm-len)) / var(--kp-sig-fm-lift),
-                1
-            );
+            --kp-fm-lf: clamp(0, (var(--kp-fm-t) * 740 - var(--kp-fm-k, 0) * var(--kp-sig-fm-st) - var(--kp-sig-fm-len)) / var(--kp-sig-fm-lift), 1);
             --kp-fm-open: calc(100% - var(--kp-fm-f) * (100% + var(--kp-sig-fm-reach)));
             clip-path: inset(
                 calc(-1 * var(--kp-sig-fm-reach)) calc(var(--kp-fm-open) * var(--kp-fm-ltr) - var(--kp-sig-fm-reach) * (1 - var(--kp-fm-ltr)))
@@ -4108,3 +4109,43 @@
         --kp-facet-hover: var(--muted);
     }
 }
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* Ledger entries: a cell is a ruled square of the ledger, the pick is the double rule, labels are small capitals. */
+    [data-theme='formal'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 1px;
+        --kp-heat-cell-ink: hsl(from var(--foreground) h s l / 0.3);
+        --kp-heat-cell-gap: 3px;
+    }
+    [data-theme='formal'] .kp-heat__cell[data-kp-picked],
+    [data-theme='formal'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 3px double var(--primary);
+        outline-offset: 1px;
+    }
+    [data-theme='formal'] .kp-heat__label,
+    [data-theme='formal'] .kp-matrix__row,
+    [data-theme='formal'] .kp-matrix__col {
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.08em;
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+    [data-theme='formal'] .kp-heat__label-button[aria-pressed='true'] {
+        background: none;
+        color: var(--primary);
+        box-shadow: inset 0 -2px 0 var(--primary);
+    }
+    [data-theme='formal'] .kp-heat__sep {
+        border-block-start: 3px double var(--border-strong);
+    }
+    [data-theme='formal'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='formal'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='formal'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */

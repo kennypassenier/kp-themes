@@ -9382,6 +9382,682 @@
         border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
     }
 
+    /* --- Heat grid [kpadopt2-grids] ----------------------------------------- */
+
+    /* Rows x many columns of small cells, each toned by a state (ok, warn,
+ * bad, muted, future, before, none: the month heatmap's words) or by a
+ * value (`data-kp-tone="level"` with `--kp-heat-level` 0 to 1). A label
+ * column on the start side (the label is a button that toggles when the
+ * grid is `data-kp-heat-toggle`), the column axis above (or below,
+ * `axis: 'end'`), an optional summary row whose cells fill from the bottom
+ * by `--kp-heat-share`, a legend (`.kp-heat__legend`), a picked column
+ * (`data-kp-picked`) and hover detail through the hover card. js/heat.js
+ * writes and wires it; the markup is complete without the script.
+ *
+ * Every row is a subgrid of the label column and the cell columns, so the
+ * labels and the cells line up in every state, a loading grid keeps the
+ * same footprint (the cells are the theme's own `.kp-skeleton--block`), and
+ * a state is never told by colour alone: a bad cell is striped, a warn
+ * cell ruled, a future cell dashed, a cell before the record hatched.
+ * Knobs: --kp-heat-cols (set by the script), --kp-heat-label (8rem, at most
+ * a quarter of the grid on a narrow page), --kp-heat-gap-x (0.75rem),
+ * --kp-heat-gap-y (6px), --kp-heat-cell-gap (3px), --kp-heat-cell-edge (1px, a cell's frame),
+ * --kp-heat-cell-ink (the frame's colour), --kp-heat-cell-lift (a shadow),
+ * --kp-heat-cell-hover (the hover transform), --kp-heat-cell-height
+ * (22px), --kp-heat-summary-height (30px), --kp-heat-cell-radius,
+ * --kp-heat-state-height (6rem, the empty and failed states), and the
+ * fills --kp-heat-ok, --kp-heat-warn, --kp-heat-bad, --kp-heat-level-ink. */
+    :is(.kp-heat, .kp-heat__legend, .kp-heat__swatch) {
+        --kp-heat-ok: color-mix(in oklab, var(--success-foreground) 70%, var(--card));
+        --kp-heat-warn: color-mix(in oklab, var(--warning-foreground) 78%, var(--card));
+        --kp-heat-bad: var(--destructive);
+        --kp-heat-level-ink: var(--primary);
+    }
+
+    .kp-heat {
+        display: grid;
+        grid-template-columns: clamp(4.5rem, 26%, var(--kp-heat-label, 8rem)) minmax(0, 1fr);
+        column-gap: var(--kp-heat-gap-x, 0.75rem);
+        row-gap: var(--kp-heat-gap-y, 6px);
+        align-content: start;
+        align-items: center;
+        min-inline-size: 0;
+    }
+
+    .kp-heat__row {
+        display: grid;
+        grid-column: 1 / -1;
+        grid-template-columns: subgrid;
+        align-items: center;
+        min-block-size: var(--kp-heat-cell-height, 22px);
+    }
+
+    .kp-heat__cells {
+        display: grid;
+        grid-template-columns: repeat(var(--kp-heat-cols, 30), minmax(0, 1fr));
+        gap: var(--kp-heat-cell-gap, 3px);
+        min-inline-size: 0;
+    }
+
+    .kp-heat__label {
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 500;
+    }
+
+    .kp-heat__label-button {
+        appearance: none;
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        box-sizing: border-box;
+        inline-size: calc(100% + 12px);
+        min-inline-size: 0;
+        margin-inline: -6px;
+        padding: 2px 6px;
+        border: 0;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: none;
+        color: inherit;
+        font: inherit;
+        text-align: start;
+        cursor: pointer;
+    }
+
+    .kp-heat__label-button:hover {
+        background: color-mix(in oklab, var(--muted) 70%, transparent);
+    }
+
+    .kp-heat__label-button[aria-pressed='true'] {
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+
+    .kp-heat__label-button:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 1px;
+    }
+
+    .kp-heat__label-text {
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kp-heat__label-text--muted {
+        color: var(--muted-foreground);
+    }
+
+    .kp-heat__mark {
+        flex: none;
+        inline-size: 0.625rem;
+        block-size: 0.625rem;
+        border-radius: 2px;
+        background: var(--kp-heat-mark, var(--primary));
+    }
+
+    .kp-heat__label-skeleton {
+        inline-size: 70%;
+        block-size: 0.75rem;
+    }
+
+    .kp-heat__sep {
+        grid-column: 1 / -1;
+        margin-block: 4px;
+        border-block-start: 1px solid var(--border);
+    }
+
+    /* The column axis: one name per few columns; the others stay in their
+ * column, in no colour, so every name keeps its own column and a screen
+ * reader still has every header. */
+    .kp-heat__col {
+        display: flex;
+        justify-content: center;
+        min-inline-size: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+
+    .kp-heat__col:last-child:not([data-kp-minor]) {
+        justify-content: flex-end;
+    }
+
+    .kp-heat__col[data-kp-minor] {
+        overflow: hidden;
+        color: transparent;
+        user-select: none;
+    }
+
+    /* On a phone every second name goes: thirty columns are 8 px each there. */
+    @media (max-width: 40rem) {
+        .kp-heat__col:not([data-kp-minor], :last-child):nth-child(6n + 4) {
+            color: transparent;
+            user-select: none;
+        }
+    }
+
+    .kp-heat__col[data-kp-picked] {
+        color: var(--foreground);
+        font-weight: 700;
+    }
+
+    .kp-heat__cell,
+    .kp-heat__swatch {
+        --kp-heat-fill: var(--muted);
+        --kp-heat-pattern: none;
+        box-sizing: border-box;
+        border: var(--kp-heat-cell-edge, 1px) solid var(--kp-heat-cell-ink, transparent);
+        border-radius: var(--kp-heat-cell-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
+        box-shadow: var(--kp-heat-cell-lift, none);
+        background-color: var(--kp-heat-fill);
+        background-image: var(--kp-heat-pattern);
+    }
+
+    .kp-heat__cell {
+        position: relative;
+        display: block;
+        min-inline-size: 0;
+        block-size: var(--kp-heat-cell-height, 22px);
+        padding: 0;
+        cursor: pointer;
+    }
+
+    .kp-heat__swatch {
+        display: inline-block;
+        inline-size: 0.75rem;
+        block-size: 0.75rem;
+        vertical-align: -0.125rem;
+    }
+
+    :is(.kp-heat__cell, .kp-heat__swatch)[data-kp-tone='ok'] {
+        --kp-heat-fill: var(--kp-heat-ok);
+    }
+
+    :is(.kp-heat__cell, .kp-heat__swatch)[data-kp-tone='warn'] {
+        --kp-heat-fill: var(--kp-heat-warn);
+        --kp-heat-pattern: repeating-linear-gradient(0deg, color-mix(in oklab, var(--card) 55%, transparent) 0 1px, transparent 1px 4px);
+    }
+
+    :is(.kp-heat__cell, .kp-heat__swatch)[data-kp-tone='bad'] {
+        --kp-heat-fill: var(--kp-heat-bad);
+        --kp-heat-pattern: repeating-linear-gradient(135deg, color-mix(in oklab, var(--card) 38%, transparent) 0 2px, transparent 2px 5px);
+    }
+
+    :is(.kp-heat__cell, .kp-heat__swatch)[data-kp-tone='future'] {
+        --kp-heat-fill: transparent;
+        border-style: dashed;
+        border-color: var(--muted-foreground);
+    }
+
+    :is(.kp-heat__cell, .kp-heat__swatch)[data-kp-tone='before'] {
+        --kp-heat-fill: transparent;
+        --kp-heat-pattern: repeating-linear-gradient(135deg, var(--muted) 0 3px, transparent 3px 6px);
+    }
+
+    :is(.kp-heat__cell, .kp-heat__swatch)[data-kp-tone='none'] {
+        --kp-heat-fill: transparent;
+        border-color: var(--border);
+    }
+
+    :is(.kp-heat__cell, .kp-heat__swatch)[data-kp-tone='level'] {
+        --kp-heat-fill: color-mix(in oklab, var(--kp-heat-level-ink) calc(var(--kp-heat-level, 0) * 100%), var(--muted));
+    }
+
+    /* The summary row: the cell is a track and the tone fills it from the
+ * bottom by the share (a night in which four of five stacks were backed up). */
+    .kp-heat__row--summary {
+        min-block-size: var(--kp-heat-summary-height, 30px);
+    }
+
+    .kp-heat__row--summary .kp-heat__cell {
+        block-size: var(--kp-heat-summary-height, 30px);
+    }
+
+    .kp-heat__cell[data-kp-share] {
+        overflow: hidden;
+        background-color: var(--muted);
+        background-image: none;
+    }
+
+    .kp-heat__cell[data-kp-share]::before {
+        content: '';
+        position: absolute;
+        inset: auto 0 0 0;
+        block-size: calc(var(--kp-heat-share, 0) * 100%);
+        background-color: var(--kp-heat-fill);
+        background-image: var(--kp-heat-pattern);
+    }
+
+    .kp-heat__cell[data-kp-share]:is([data-kp-tone='future'], [data-kp-tone='before'], [data-kp-tone='none'], [data-kp-tone='muted']) {
+        background-color: transparent;
+        background-image: var(--kp-heat-pattern);
+    }
+
+    .kp-heat__cell[data-kp-share]:is([data-kp-tone='future'], [data-kp-tone='before'], [data-kp-tone='none'], [data-kp-tone='muted'])::before {
+        display: none;
+    }
+
+    /* Hover, focus, the picked column. The cell grows a little on the block
+ * axis only, so no neighbour moves. */
+    .kp-heat__cell[aria-disabled='true'] {
+        cursor: default;
+    }
+
+    .kp-heat__cell:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+        z-index: 1;
+    }
+
+    .kp-heat__cell[data-kp-picked] {
+        outline: 2px solid var(--primary);
+        outline-offset: 1px;
+    }
+
+    .kp-heat__cell[data-kp-picked]:focus-visible {
+        outline-color: var(--ring);
+        outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-heat__cell {
+            transition: transform var(--fx-duration, 110ms) var(--fx-ease, ease);
+        }
+
+        .kp-heat__cell:hover:not([aria-disabled='true'], .kp-skeleton) {
+            transform: var(--kp-heat-cell-hover, scaleY(1.15));
+        }
+    }
+
+    /* Loading keeps the footprint: the cells are the theme's skeleton block
+ * at the cell's own size. */
+    .kp-heat__cell.kp-skeleton {
+        block-size: var(--kp-heat-cell-height, 22px);
+        cursor: progress;
+    }
+
+    .kp-heat__row--summary .kp-heat__cell.kp-skeleton {
+        block-size: var(--kp-heat-summary-height, 30px);
+    }
+
+    .kp-heat__state {
+        grid-column: 1 / -1;
+        display: grid;
+        place-items: center;
+        min-block-size: var(--kp-heat-state-height, 6rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        text-align: center;
+    }
+
+    .kp-heat__state[data-kp-state='error'] {
+        color: var(--destructive);
+    }
+
+    /* The legend, under the grid: a swatch and its words, wrapping by whole
+ * entries. `.kp-heat__ramp` is a value scale, less to more. */
+    .kp-heat__legend {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 1rem);
+        margin: var(--kp-space-sm, 0.5rem) 0 0;
+        padding: 0;
+        list-style: none;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-heat__legend > li {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-heat__legend > li[data-kp-end] {
+        display: flex;
+        flex: 1 1 auto;
+        justify-content: flex-end;
+        min-inline-size: 0;
+    }
+
+    .kp-heat__legend > li[data-kp-end] > .kp-keys {
+        flex: 0 1 auto;
+        min-inline-size: 0;
+        justify-content: flex-end;
+    }
+
+    .kp-heat__ramp {
+        display: inline-flex;
+        gap: 2px;
+    }
+
+    /* --- Matrix [kpadopt2-grids] -------------------------------------------- */
+
+    /* Source x destination: a cell per pair, each in words and a glyph as
+ * well as a tone (allowed, mismatch, blocked, unknown; `self` is the pair
+ * with itself, dashed and inert). The grid scrolls inside its own box when
+ * the cells cannot be narrower than --kp-matrix-cell-min; the column
+ * headers stay on the top and the row headers on the start side, and the
+ * corner holds the key ("from down to across"). A header is a button that
+ * lights its row and its column (`data-kp-lit` on the matrix dims the cells
+ * it does not touch); one cell can be pinned (`aria-pressed`); a rule
+ * being read marks the cells it touches (`data-kp-mark`).
+ * Knobs: --kp-matrix-cols (set by the script), --kp-matrix-head (6.5rem, 4.6rem
+ * in a box under 36rem), --kp-matrix-cell-min (3.5rem), --kp-matrix-cell-height
+ * (44px), --kp-matrix-gap (4px), --kp-matrix-ground (the card colour: what the
+ * sticky headers are painted with), --kp-matrix-dim (0.4). */
+    .kp-matrix {
+        --kp-matrix-ground: var(--card);
+        container: kp-matrix / inline-size;
+        position: relative;
+        max-inline-size: 100%;
+        overflow: auto;
+        overscroll-behavior-x: contain;
+        scroll-padding-inline-start: var(--kp-matrix-head, 6.5rem);
+        scroll-padding-block-start: 2.5rem;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-matrix__grid {
+        display: grid;
+        grid-template-columns: var(--kp-matrix-head, 6.5rem) repeat(var(--kp-matrix-cols, 5), minmax(var(--kp-matrix-cell-min, 3.5rem), 1fr));
+        gap: var(--kp-matrix-gap, 4px);
+        inline-size: max-content;
+        min-inline-size: 100%;
+        align-content: start;
+    }
+
+    .kp-matrix__line {
+        display: contents;
+    }
+
+    @container kp-matrix (max-width: 36rem) {
+        .kp-matrix__grid {
+            --kp-matrix-head: 4.6rem;
+            --kp-matrix-gap: 3px;
+        }
+    }
+
+    .kp-matrix__corner {
+        position: sticky;
+        inset: 0 auto auto 0;
+        z-index: 3;
+        display: flex;
+        align-items: flex-end;
+        padding: 4px 2px;
+        background: var(--kp-matrix-ground);
+        color: var(--muted-foreground);
+        box-shadow: 0 var(--kp-matrix-gap, 4px) 0 var(--kp-matrix-ground);
+    }
+
+    .kp-matrix__col,
+    .kp-matrix__row {
+        appearance: none;
+        box-sizing: border-box;
+        min-inline-size: 0;
+        margin: 0;
+        border: 0;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--kp-matrix-ground);
+        color: var(--muted-foreground);
+        font: inherit;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    .kp-matrix__col {
+        position: sticky;
+        inset-block-start: 0;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4px 2px;
+        box-shadow: 0 var(--kp-matrix-gap, 4px) 0 var(--kp-matrix-ground);
+    }
+
+    .kp-matrix__row {
+        position: sticky;
+        inset-inline-start: 0;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.375rem);
+        padding: 0 6px;
+        color: var(--foreground);
+        text-align: start;
+        box-shadow: var(--kp-matrix-gap, 4px) 0 0 var(--kp-matrix-ground);
+    }
+
+    .kp-matrix__name {
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kp-matrix__mark {
+        flex: none;
+        inline-size: 0.75rem;
+        block-size: 0.75rem;
+        border-radius: 2px;
+        background: var(--kp-heat-mark, var(--primary));
+    }
+
+    @container kp-matrix (max-width: 36rem) {
+        .kp-matrix__row .kp-matrix__mark {
+            display: none;
+        }
+    }
+
+    :is(.kp-matrix__col, .kp-matrix__row):hover {
+        background: color-mix(in oklab, var(--muted) 70%, var(--kp-matrix-ground));
+    }
+
+    :is(.kp-matrix__col, .kp-matrix__row)[aria-pressed='true'] {
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+
+    :is(.kp-matrix__col, .kp-matrix__row):focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: -2px;
+    }
+
+    .kp-matrix__cell {
+        appearance: none;
+        box-sizing: border-box;
+        display: grid;
+        place-items: center;
+        min-inline-size: 0;
+        min-block-size: var(--kp-matrix-cell-height, 44px);
+        margin: 0;
+        padding: 2px;
+        border: 2px solid transparent;
+        border-radius: var(--kp-heat-cell-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
+        background: var(--muted);
+        color: var(--muted-foreground);
+        font: inherit;
+        font-variant-numeric: tabular-nums;
+        line-height: 1.2;
+        text-align: center;
+        overflow-wrap: anywhere;
+        cursor: pointer;
+    }
+
+    .kp-matrix__cell[data-kp-glyph]::before {
+        content: attr(data-kp-glyph);
+        font-size: 1.25em;
+        font-weight: 700;
+    }
+
+    .kp-matrix__cell[data-kp-tone='ok'] {
+        background: var(--success);
+        color: var(--success-foreground);
+        font-weight: 600;
+    }
+
+    .kp-matrix__cell[data-kp-tone='warn'] {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        font-weight: 600;
+    }
+
+    .kp-matrix__cell[data-kp-tone='bad'] {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        font-weight: 600;
+    }
+
+    .kp-matrix__cell[data-kp-tone='muted'] {
+        background: var(--muted);
+        color: var(--muted-foreground);
+    }
+
+    .kp-matrix__cell:is([data-kp-tone='self'], [data-kp-tone='none']) {
+        border-style: dashed;
+        border-color: var(--border);
+        background: transparent;
+        cursor: default;
+    }
+
+    .kp-matrix__cell[data-kp-tone='none'] {
+        border-color: var(--border-strong);
+    }
+
+    .kp-matrix__cell[data-kp-ringed] {
+        box-shadow:
+            inset 0 0 0 2px var(--destructive),
+            inset 0 0 0 4px var(--kp-matrix-ground);
+    }
+
+    .kp-matrix__cell[aria-pressed='true'] {
+        outline: 2px solid var(--primary);
+        outline-offset: 1px;
+    }
+
+    .kp-matrix__cell:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+    }
+
+    .kp-matrix__cell[data-kp-mark] {
+        outline: 2px dashed var(--primary);
+        outline-offset: 1px;
+    }
+
+    .kp-matrix[data-kp-lit] .kp-matrix__cell:not([data-kp-hot], [data-kp-mark], [data-kp-inert]) {
+        opacity: var(--kp-matrix-dim, 0.4);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-matrix__cell {
+            transition:
+                transform var(--fx-duration, 110ms) var(--fx-ease, ease),
+                opacity var(--fx-duration, 110ms) var(--fx-ease, ease);
+        }
+
+        .kp-matrix__cell:hover:not([data-kp-inert], [aria-disabled='true']) {
+            transform: var(--kp-matrix-cell-hover, scale(1.05));
+        }
+    }
+
+    .kp-matrix__cell.kp-skeleton {
+        min-block-size: var(--kp-matrix-cell-height, 44px);
+        block-size: auto;
+        cursor: progress;
+    }
+
+    .kp-matrix__col--skeleton,
+    .kp-matrix__row--skeleton {
+        block-size: 1rem;
+        align-self: center;
+    }
+
+    .kp-matrix__state {
+        display: grid;
+        place-items: center;
+        min-block-size: var(--kp-heat-state-height, 6rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    /* The legend under a matrix is the heat grid's. A matrix swatch shows the
+ * cell's plate. */
+    .kp-heat__swatch--plate {
+        inline-size: 1rem;
+        block-size: 1rem;
+        border-width: 2px;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+    }
+
+    .kp-heat__swatch--plate[data-kp-tone='ok'] {
+        background: var(--success);
+    }
+
+    .kp-heat__swatch--plate[data-kp-tone='warn'] {
+        background: var(--warning);
+    }
+
+    .kp-heat__swatch--plate[data-kp-tone='bad'] {
+        background: var(--destructive);
+    }
+
+    .kp-heat__swatch--plate[data-kp-tone='muted'] {
+        background: var(--muted);
+    }
+
+    .kp-heat__swatch--plate:is([data-kp-tone='self'], [data-kp-tone='none']) {
+        border-style: dashed;
+        border-color: var(--border-strong);
+        background: transparent;
+    }
+
+    .kp-heat__swatch--plate[data-kp-ringed] {
+        box-shadow:
+            inset 0 0 0 2px var(--destructive),
+            inset 0 0 0 4px var(--card);
+    }
+
+    /* --- A value with a bar, in a table cell [kpadopt2-grids] ---------------- */
+
+    /* The meter and its number in one cell: the bar takes the room that is
+ * left, the number a column of its own on the end edge, so a column of
+ * these lines up its bars and its figures whatever the figures say. A data
+ * table sorts it by the cell's `data-kp-sort-value`. js/barcell.js writes
+ * it; `data-kp-bar="0.62"` on the span is enough. Knobs:
+ * --kp-bar-cell-bar (3rem, the least the bar takes), --kp-bar-cell-value
+ * (4ch, the number's column), --kp-bar-cell-gap (0.5rem). */
+    .kp-bar-cell {
+        display: grid;
+        grid-template-columns: minmax(var(--kp-bar-cell-bar, 3rem), 1fr) var(--kp-bar-cell-value, 4ch);
+        align-items: center;
+        gap: var(--kp-bar-cell-gap, var(--kp-space-sm, 0.5rem));
+        min-inline-size: 0;
+    }
+
+    .kp-bar-cell--start {
+        grid-template-columns: var(--kp-bar-cell-value, 4ch) minmax(var(--kp-bar-cell-bar, 3rem), 1fr);
+    }
+
+    .kp-bar-cell--start > .kp-bar-cell__value {
+        order: -1;
+    }
+
+    .kp-bar-cell__value {
+        min-inline-size: 0;
+        font-variant-numeric: tabular-nums;
+        text-align: end;
+        white-space: nowrap;
+    }
+
     /* --- Bottom tab bar [kpadopt-nav] -------------------------------------- */
 
     /* The phone's navigation: the frequent areas within thumb reach, then a

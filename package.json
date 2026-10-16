@@ -168,6 +168,14 @@
             "types": "./js/facets.d.ts",
             "default": "./js/facets.js"
         },
+        "./js/heat": {
+            "types": "./js/heat.d.ts",
+            "default": "./js/heat.js"
+        },
+        "./js/barcell": {
+            "types": "./js/barcell.d.ts",
+            "default": "./js/barcell.js"
+        },
         "./js/toolbar": {
             "types": "./js/toolbar.d.ts",
             "default": "./js/toolbar.js"

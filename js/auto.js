@@ -158,6 +158,10 @@ export const NEEDS = [
     // The month heatmap [scope-143]: a month of days, each a plate in the
     // colour of its state; the page gives the days with setCalendarDays().
     { name: 'calendar', when: '[data-kp-calendar]', load: () => import('./calendar.js'), attach: (m, root) => [m.attachCalendars(root)] },
+    // The heat grid, the matrix and the value with a bar in a table cell [kpadopt2-grids].
+    { name: 'heat', when: '[data-kp-heat]', load: () => import('./heat.js'), attach: (m, root) => [m.attachHeats(root)] },
+    { name: 'matrix', when: '[data-kp-matrix]', load: () => import('./heat.js'), attach: (m, root) => [m.attachMatrices(root)] },
+    { name: 'barcell', when: '[data-kp-bar]', load: () => import('./barcell.js'), attach: (m, root) => [m.attachBarCells(root)] },
     { name: 'graph', when: '[data-kp-graph]', load: () => import('./graph.js'), attach: (m, root) => [m.attachGraphs(root)] },
     {
         // A theme's loading picture made of pieces (`--kp-loading-pieces`,

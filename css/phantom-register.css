@@ -2680,7 +2680,6 @@
         pointer-events: none;
     }
 
-
     [data-theme='phantom'] .kp-dialog__title {
         /* The title at the package's metrics [scope-87]: Kenny chose the fixed size
            over the theme's own on 2026-10-03 (research/dialog-title). */
@@ -4008,13 +4007,15 @@
         }
 
         /* A rail (slim) keeps its width glide beside the throw. */
-        [data-theme='phantom'] .kp-sidenav[data-kp-sidenav-slim]:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+        [data-theme='phantom']
+            .kp-sidenav[data-kp-sidenav-slim]:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
             transition:
                 translate 400ms cubic-bezier(0.81, 0, 0, 1),
                 inline-size 400ms cubic-bezier(0.81, 0, 0, 1);
         }
 
-        [data-theme='phantom'] .kp-sidenav[data-kp-sidenav-slim]:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='false'] {
+        [data-theme='phantom']
+            .kp-sidenav[data-kp-sidenav-slim]:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='false'] {
             transition:
                 translate 400ms cubic-bezier(1, 0, 0.19, 1) 300ms,
                 inline-size 400ms cubic-bezier(1, 0, 0.19, 1);
@@ -4292,3 +4293,47 @@
         --kp-facet-hover: var(--muted);
     }
 }
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* Cut-out plates: each tile is thrown in off the square (a slight slant) with a hard black shadow; a press drops it 3 px; the pick is a white bar under the column. */
+    [data-theme='phantom'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 0;
+        --kp-heat-cell-lift: 2px 2px 0 hsl(from var(--foreground) h s l / 0.55);
+        --kp-heat-cell-hover: translate(-1px, -1px);
+        --kp-matrix-cell-hover: translate(-2px, -2px);
+    }
+    [data-theme='phantom'] .kp-heat__cell {
+        rotate: -2deg;
+    }
+    [data-theme='phantom'] .kp-heat__cell:is([data-kp-tone='future'], [data-kp-tone='none'], [data-kp-tone='before'], [data-kp-share]) {
+        box-shadow: none;
+    }
+    [data-theme='phantom'] .kp-heat__cell:active:not(.kp-skeleton),
+    [data-theme='phantom'] .kp-matrix__cell:active:not([data-kp-inert]) {
+        transform: translate(3px, 3px);
+        box-shadow: none;
+    }
+    [data-theme='phantom'] .kp-heat__cell[data-kp-picked],
+    [data-theme='phantom'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 3px solid var(--foreground);
+        outline-offset: 1px;
+    }
+    [data-theme='phantom'] .kp-heat__label,
+    [data-theme='phantom'] .kp-matrix__row,
+    [data-theme='phantom'] .kp-matrix__col {
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-weight: 800;
+    }
+    [data-theme='phantom'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='phantom'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='phantom'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */

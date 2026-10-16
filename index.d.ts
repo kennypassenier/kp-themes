@@ -46,7 +46,15 @@ export { TOOLBAR, TOOLBAR_CLEAR_EVENT, TOOLBAR_REMOVE_EVENT, attachToolbars, set
 export type ToolbarFilter = import('./js/toolbar.js').ToolbarFilter;
 /** @typedef {import('./js/toolbar.js').ToolbarFilter} ToolbarFilter */
 export { KEYS, attachKeys, setKeys } from './js/keys.js';
+export { HEAT, HEAT_PAGE_EVENT, HEAT_PICK_EVENT, HEAT_ROW_EVENT, MATRIX, MATRIX_LIGHT_EVENT, MATRIX_PICK_EVENT, attachHeats, attachMatrices, setHeat, setHeatPick, setHeatRows, setMatrix, setMatrixLit, setMatrixPick, } from './js/heat.js';
+export type HeatSpec = import('./js/heat.js').HeatSpec;
+export type MatrixSpec = import('./js/heat.js').MatrixSpec;
+/** @typedef {import('./js/heat.js').HeatSpec} HeatSpec */
+/** @typedef {import('./js/heat.js').MatrixSpec} MatrixSpec */
+export { BAR_CELL, SORT_VALUE_ATTRIBUTE, attachBarCells, setBarCell } from './js/barcell.js';
+export type BarCell = import('./js/barcell.js').BarCell;
 export type KeyPair = import('./js/keys.js').KeyPair;
+/** @typedef {import('./js/barcell.js').BarCell} BarCell */
 /** @typedef {import('./js/keys.js').KeyPair} KeyPair */
 export { ACTION_BUSY_EVENT, ACTION_TILE, attachActionTiles, setActionBusy } from './js/action-tiles.js';
 export { STATUS_EVENT, STATUS_ID_ATTRIBUTE, STATUS_LIST, STATUS_RETRY_EVENT, STATUS_STATES, attachStatusLists, buildStatusList, setStatus, } from './js/statusrow.js';

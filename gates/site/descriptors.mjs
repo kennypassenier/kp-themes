@@ -2625,6 +2625,126 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
         ],
     },
     {
+        id: 'heat',
+        title: 'Heat grid',
+        group: 'Data',
+        classes: ['kp-heat'],
+        aliases: ['picked', 'share', 'minor', 'inert'],
+        exports: [],
+        intro: 'Rows by many columns of small cells, each toned by a state or a value: a stack per night, a service per hour. A label column on the start side (a press on a name toggles it, `data-kp-heat-toggle`), the column axis, an optional summary row whose cells fill from the bottom (`data-kp-share`), a legend (`.kp-heat__legend` with `.kp-heat__swatch` and `.kp-heat__ramp`), a picked column (`data-kp-picked`, `data-kp-heat-picked`) and hover detail through the hover card. A state is told by a pattern as well as a colour: a bad cell is striped, a warn cell ruled, a future cell dashed, a cell before the record hatched. `setHeat(el, spec)` in js/heat.js writes it and keeps its footprint in every state; `data-kp-heat-owned` leaves the picked column and the pressed names to the page. A cell on the axis that is not named is `data-kp-minor`; a cell that cannot be pressed is `data-kp-inert`.',
+        whenToUse:
+            'When a reader looks for the odd one out in a dense grid of states or values and then asks about one cell: coverage per night, uptime per hour, a count per day. Not for a few categories (use a table or a chart) and not for a month calendar (use the calendar, which has the weekdays).',
+        examples: [
+            {
+                title: 'Two rows of states, with a legend',
+                why: 'The markup is complete without the script apart from the roving tab stop: every cell is a named button. Tones are the month heatmap’s words.',
+                markup: `
+<div class="kp-heat" data-kp-heat role="grid" aria-label="Snapshots per stack per night" style="--kp-heat-cols: 4">
+<div class="kp-heat__row" role="row"><span class="kp-heat__label" role="rowheader"><span class="kp-heat__label-text">media</span></span>
+<div class="kp-heat__cells" role="none">
+<button type="button" class="kp-heat__cell" role="gridcell" data-kp-tone="ok" data-r="0" data-c="0" data-row-key="media" data-col-key="14" aria-label="media, 14: backed up"></button>
+<button type="button" class="kp-heat__cell" role="gridcell" data-kp-tone="bad" data-r="0" data-c="1" data-row-key="media" data-col-key="15" aria-label="media, 15: missed"></button>
+<button type="button" class="kp-heat__cell" role="gridcell" data-kp-tone="before" data-r="0" data-c="2" data-row-key="media" data-col-key="16" aria-label="media, 16: before any history"></button>
+<button type="button" class="kp-heat__cell" role="gridcell" data-kp-tone="future" data-r="0" data-c="3" data-row-key="media" data-col-key="17" aria-label="media, 17: not run yet"></button>
+</div></div>
+</div>
+<ul class="kp-heat__legend"><li><span class="kp-heat__swatch" data-kp-tone="ok"></span> backed up</li><li><span class="kp-heat__swatch" data-kp-tone="bad"></span> missed</li></ul>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-tone', what: '`ok`, `warn`, `bad`, `muted`, `future`, `before`, `none`, `level` (the darker, the more) and `loading` (the theme’s own skeleton block).' },
+            { name: '.kp-heat__row--summary', what: 'A track per cell, filled from the bottom by its share; the whole-fleet row of a coverage grid.' },
+            { name: 'data-kp-picked', what: 'On every cell and the axis name of the picked column; written by `setHeatPick` and by a press on a cell.' },
+            { name: 'data-kp-share', what: 'On a summary row’s cell: the tone fills it from the bottom by its share.' },
+            { name: 'data-kp-minor', what: 'On an axis name that is not drawn (every third is); it stays in the tree for a screen reader.' },
+            { name: 'data-kp-inert', what: 'A cell that cannot be pressed; `aria-disabled` goes with it.' },
+            { name: 'data-kp-state', what: '`loading`, `empty` and `error` on the grid: loading keeps the cells in place, the others show one sentence of the grid’s minimum height.' },
+        ],
+        accessibility: [
+            'Built in — a `grid` with row and column headers, one tab stop, arrow keys, Home and End, Ctrl with them for the corners; Page Up and Page Down send `kp-heat-page`, Enter and Space press a cell (`kp-heat-pick`), a pressed name sends `kp-heat-row`.',
+            'Built in — a state is a pattern as well as a colour; a column name that is not drawn stays in the tree.',
+            'Yours — give every cell words (`label`) that say what its colour says, and put the detail of a picked column in a polite live region.',
+        ],
+    },
+    {
+        id: 'matrix',
+        title: 'Matrix',
+        group: 'Data',
+        classes: ['kp-matrix'],
+        aliases: ['glyph', 'ringed', 'mark', 'lit', 'hot', 'inert'],
+        exports: [],
+        intro: 'Source by destination: a cell per pair that says its state in a plate, a word or a glyph (`data-kp-glyph`), with the pair with itself dashed and inert (`self`, `data-kp-inert`). A red ring (`data-kp-ringed`) means the traffic stopped on the way out of the source; a dashed outline (`data-kp-mark`) marks the cells a rule being read touches. The headers are buttons that light their row and their column (`data-kp-lit` on the matrix, `data-kp-hot` on the cells they touch) and stay in place while the grid scrolls inside its own box. One cell can be pinned (`aria-pressed`); `data-kp-matrix-select="follow"` pins the one the arrow keys land on, and `data-kp-matrix-owned` leaves the state to the page. `setMatrix(el, spec)` in js/heat.js writes it.',
+        whenToUse:
+            'For a table of pairs where the state of each pair matters more than a number: which service may reach which, who shares with whom, which version fits which platform.',
+        examples: [
+            {
+                title: 'Two names, one allowed pair',
+                why: 'Headers are sticky; the cell reads as a plate, a number and its words.',
+                markup: `
+<div class="kp-matrix" data-kp-matrix>
+<div class="kp-matrix__grid" role="grid" aria-label="Which stack can reach which" style="--kp-matrix-cols: 2">
+<div class="kp-matrix__line" role="row"><span class="kp-matrix__corner" role="columnheader">from ↓ to →</span><button type="button" class="kp-matrix__col" role="columnheader" aria-pressed="false" data-key="web"><span class="kp-matrix__name">web</span></button><button type="button" class="kp-matrix__col" role="columnheader" aria-pressed="false" data-key="db"><span class="kp-matrix__name">db</span></button></div>
+<div class="kp-matrix__line" role="row"><button type="button" class="kp-matrix__row" role="rowheader" aria-pressed="false" data-key="web"><span class="kp-matrix__name">web</span></button><span class="kp-matrix__cell" role="gridcell" data-kp-tone="self" data-kp-inert aria-label="web to web: itself"></span><button type="button" class="kp-matrix__cell" role="gridcell" data-kp-tone="ok" data-r="0" data-c="1" data-row-key="web" data-col-key="db" aria-pressed="false" aria-label="web to db: 1 port open">1</button></div>
+</div>
+</div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-tone', what: '`ok` (allowed), `warn` (mismatch), `bad` (blocked), `muted` (nothing open), `none` (unknown, inert), `self` (itself, inert) and `loading`.' },
+            { name: 'data-kp-glyph', what: 'The glyph a cell shows when the page gave it no text: a tick, an exclamation mark, a cross or a dash by its tone.' },
+            { name: 'data-kp-ringed', what: 'A red ring inside the plate: the traffic was stopped on the way out of the source.' },
+            { name: 'data-kp-mark', what: 'A dashed outline on the cells a rule being read touches.' },
+            { name: 'data-kp-lit', what: 'On the matrix while a header is lit: the cells it does not touch recede; the ones it touches carry `data-kp-hot`.' },
+            { name: 'data-kp-hot', what: 'A cell in a lit row or column.' },
+            { name: 'data-kp-inert', what: 'A cell that cannot be pressed (itself, unknown).' },
+            { name: 'data-kp-ringed', what: 'See above: the ring on a cell.' },
+            { name: 'data-kp-state', what: '`loading` keeps the shape with skeleton names and cells; `empty` and `error` show one sentence.' },
+        ],
+        accessibility: [
+            'Built in — a `grid` with row and column headers and one tab stop; arrows move between the cells that can be pressed and wrap round; Escape turns the lit names off (`kp-matrix-light`); a pinned cell sends `kp-matrix-pick`.',
+            'Built in — a state is a plate, a word or a glyph, and the cell’s name says the pair and its state.',
+            'Yours — give every cell a `label` that says its state in words, and say what is pinned in a live region.',
+        ],
+    },
+    {
+        id: 'bar-cell',
+        title: 'Bar in a table cell',
+        group: 'Data',
+        classes: ['kp-bar-cell'],
+        aliases: ['bar'],
+        exports: [],
+        intro: 'A value with a proportional bar inside a table cell: the meter and its figure, the figure in a column of its own on the end edge, so a column of them lines up its bars and its numbers. `data-kp-bar="0.62"` on the span is enough (`data-kp-bar-text`, `-tone`, `-mark`, `-label`, `-loading`, `-warn` and `-bad` refine it); `setBarCell(span, { value, text })` in js/barcell.js does the same from script. From 0.75 the fill is the warning colour, from 0.9 the destructive one. A data table sorts a cell by its `data-kp-sort-value` when it has one, and `setBarCell` writes it.',
+        whenToUse:
+            'In a table where the share of something is the point of a column: capacity per stack, how full a disk is. Not alone on a page (use the meter).',
+        examples: [
+            {
+                title: 'A bar column that sorts by its share',
+                why: 'The cell shows "62%" and sorts by 62; `data-kp-sort-value` on the `td` is what the data table reads.',
+                markup: `
+<table class="kp-table"><thead><tr><th scope="col">Stack</th><th scope="col">Disk</th></tr></thead>
+<tbody><tr><td>media</td><td data-kp-sort-value="62"><span class="kp-bar-cell" data-kp-bar="0.62"></span></td></tr></tbody></table>
+`,
+            },
+        ],
+        variants: [
+            { name: '.kp-bar-cell--start', what: 'The figure before the bar.' },
+            { name: 'data-kp-bar', what: 'The share, 0 up (1 is full; above 1 the bar is full and says so); empty is not measured.' },
+            { name: 'data-kp-bar-text', what: 'The words beside the bar; without them, the rounded percentage.' },
+            { name: 'data-kp-bar-tone', what: '`warning`, `destructive` or `none`; without it the share decides.' },
+            { name: 'data-kp-bar-warn', what: 'The share from which the fill is the warning colour (0.75).' },
+            { name: 'data-kp-bar-bad', what: 'The share from which the fill is the destructive colour (0.9).' },
+            { name: 'data-kp-bar-mark', what: 'A tick on the bar: a limit, a target.' },
+            { name: 'data-kp-bar-label', what: 'What the share is, for a screen reader.' },
+            { name: 'data-kp-bar-loading', what: 'The bar is the busy track at its own size and the figure is empty.' },
+        ],
+        accessibility: [
+            'Built in — the bar is the package’s meter: `role="meter"` with a value text that names the real share, past 100 % too.',
+            'Yours — keep the figure beside the bar: colour and length are not the only carrier.',
+        ],
+    },
+    {
         id: 'toolbar',
         title: 'List toolbar',
         group: 'Data',

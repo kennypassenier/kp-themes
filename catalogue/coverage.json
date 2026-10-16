@@ -1,4 +1,4 @@
 {
     "note": "Component roots css/components.css defines that no catalogue page shows yet. A ratchet: gates/check-catalogue.mjs refuses a root that is neither shown nor listed here, and refuses a listed root the catalogue has started showing, so this list can only shrink. Round eight empties it page by page [scope-31].",
-    "pending": ["kp-action", "kp-actions", "kp-facet", "kp-facets", "kp-statuslist", "kp-statusrow", "kp-kbd", "kp-keys", "kp-segmented", "kp-steplist", "kp-tabbar", "kp-toolbar"]
+    "pending": ["kp-action", "kp-actions", "kp-bar-cell", "kp-facet", "kp-facets", "kp-heat", "kp-kbd", "kp-keys", "kp-matrix", "kp-segmented", "kp-statuslist", "kp-statusrow", "kp-steplist", "kp-tabbar", "kp-toolbar"]
 }

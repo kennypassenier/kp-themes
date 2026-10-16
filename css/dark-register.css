@@ -4050,3 +4050,33 @@
         --kp-facet-hover: var(--accent);
     }
 }
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* Instrument cells: a lit top edge in the oxide film's light, nothing else moves; the pick is a film-coloured ring. */
+    [data-theme='dark'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 3px;
+        --kp-heat-cell-lift: inset 0 1px 0 hsl(from var(--foreground) h s l / 0.16);
+        --kp-heat-cell-hover: none;
+        --kp-matrix-cell-hover: none;
+    }
+    [data-theme='dark'] .kp-heat__cell:hover:not(.kp-skeleton, [aria-disabled='true']),
+    [data-theme='dark'] .kp-matrix__cell:hover:not([data-kp-inert]) {
+        filter: brightness(1.18);
+    }
+    [data-theme='dark'] .kp-heat__cell[data-kp-picked] {
+        outline: 1px solid var(--primary);
+        outline-offset: 2px;
+        box-shadow: 0 0 10px hsl(from var(--primary) h s l / 0.35);
+    }
+    [data-theme='dark'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='dark'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='dark'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */

@@ -116,6 +116,12 @@ export const REQUIRED = [
         why: 'The layout measures its own width and puts the page’s detail under the calendar when narrow; the query reaches only its own children [scope-143].',
     },
     {
+        container: 'kp-matrix',
+        class: 'kp-matrix',
+        self: true,
+        why: 'The matrix scrolls inside its own box and narrows its row headers when that box is narrow; the query reaches only its own grid [kpadopt2-grids].',
+    },
+    {
         container: 'kp-help',
         class: 'kp-help',
         self: true,
