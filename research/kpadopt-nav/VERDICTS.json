@@ -11,7 +11,7 @@
         },
         {
             "round": "2",
-            "page": "2026-10-16-r3",
+            "page": "2026-10-16-r2",
             "allJudged": true,
             "notApproved": [
                 { "item": "nav-fold", "theme": "cyberpunk", "note": "the more button is detached from the actual bar in all these examples" },
