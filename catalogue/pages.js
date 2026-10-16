@@ -106,6 +106,12 @@ export const PAGES = [
             // Kenny, 2026-10-07 04:23: what makes grotesk grotesk, the same way (the analysis in themes/grotesk/CHARACTER.md), nineteen rules of its grammar as questions, each option a live scene, the recommendation first; the seventh theme of the one-by-one series, after brutalism. Questions 9 to 12 are the grotesk-only loading demo Kenny asked for on 2026-10-06 21:37, from the graph's Out of register.
             // Kenny, 2026-10-12: "Cyberpunk lijkt af, zie dat dezelfde fouten nu niet terugkomen in andere thema's": every other theme mended so a close is its open backwards with the theme's own effect; only what changed, each block in the themes where it did (research/all-themes).
             // Kenny, 2026-10-16 (kp-adopt-rest, round 2): eight things the admin dashboard still draws itself (action tiles, status rows, the facet list, the coverage heat grid, the reachability matrix, bars in table cells with data-kp-sort-value, the week agenda, the run timeline), built in the package first as ONE demo, formal only until Kenny approves it.
+            // Kenny, 2026-10-16 (kp-adopt-rest, round 3): six things the dashboard still drew itself, each an opt-in option of an approved component (nav separator, choice-filter value, timeline day buttons and series legend, the week's next-N phone list, facet identity patterns, the heat grid's jump to the latest), formal only.
+            {
+                href: 'research/kpadopt3/demo.html',
+                label: 'Round 3: six opt-in options the dashboard still draws itself',
+                about: 'A separator in the folding bar, a choice filter that reads td[data-kp-filter-value], day buttons and a series legend on the run timeline, the week agenda’s next 8 as a phone list, facet swatches with an identity pattern, and End to the latest night on the heat grid. Formal first.',
+            },
             {
                 href: 'research/kpadopt2/demo.html',
                 label: 'Round 2: the week agenda’s states, still open',
