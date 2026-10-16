@@ -174,6 +174,8 @@ export const NEEDS = [
     // The two timers [kpadopt4-ideas]: a countdown in digits, and the time left as a shrinking disc.
     { name: 'countdown', when: '[data-kp-countdown]', load: () => import('./countdown.js'), attach: (m, root) => [m.attachCountdowns(root)] },
     { name: 'timer-disc', when: '[data-kp-timer-disc]', load: () => import('./timer-disc.js'), attach: (m, root) => [m.attachTimerDiscs(root)] },
+    // The range picker [kpadopt4-ideas]: presets as the segmented control, and a custom from–to with the date picker.
+    { name: 'range', when: '[data-kp-range]', load: () => import('./range.js'), attach: (m, root) => [m.attachRanges(root)] },
     { name: 'graph', when: '[data-kp-graph]', load: () => import('./graph.js'), attach: (m, root) => [m.attachGraphs(root)] },
     {
         // A theme's loading picture made of pieces (`--kp-loading-pieces`,

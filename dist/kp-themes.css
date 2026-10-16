@@ -17102,6 +17102,138 @@
             box-shadow: 0 0 0 10px color-mix(in oklab, var(--primary) 12%, transparent);
         }
     }
+
+    /* --- Range picker: a preset or a custom from–to [kpadopt4-ideas] ---
+ * `.kp-range[data-kp-range]` (js/range.js). The presets as the package's segmented control and a Custom… button on one
+ * line, and under it one line that names the chosen window exactly; narrower than 26rem of its own the presets take the
+ * whole line and Custom… stands beside the name under them (nothing wraps, nothing is cut). Custom… opens a panel on the theme's popover plate under the control: From and To,
+ * each the package's date picker and a time, an error line that keeps its room, Cancel and Apply.
+ * Knobs [KT6]: --kp-range-gap (--kp-space-sm), --kp-range-panel-width (24rem), --kp-range-time-width (5.5rem). */
+    .kp-range {
+        container: kp-range / inline-size;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+    }
+
+    .kp-range__bar {
+        display: flex;
+        align-items: center;
+        gap: var(--kp-range-gap, var(--kp-space-sm, 0.5rem));
+        min-inline-size: 0;
+    }
+
+    .kp-range__presets {
+        flex: 0 1 auto;
+        min-inline-size: 0;
+    }
+
+    .kp-range__custom {
+        flex: none;
+        white-space: nowrap;
+    }
+
+    /* The custom window is the one in force: the button reads as chosen, the way a pressed toggle does. */
+    .kp-range__custom[aria-pressed='true'] {
+        border-color: var(--primary);
+        box-shadow: inset 0 0 0 1px var(--primary);
+    }
+
+    .kp-range__label {
+        min-block-size: 1lh;
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        overflow-wrap: anywhere;
+    }
+
+    /* The panel is placed by the script in window coordinates, in the top layer. */
+    .kp-popover.kp-range__panel {
+        position: fixed;
+        position-area: none;
+        box-sizing: border-box;
+        inline-size: min(var(--kp-range-panel-width, 24rem), calc(100vw - 1rem));
+        margin: 0;
+        padding: var(--kp-space-md, 1rem);
+        overflow: visible;
+    }
+
+    .kp-range__panel[hidden] {
+        display: none;
+    }
+
+    .kp-range__title {
+        margin: 0 0 var(--kp-space-sm, 0.5rem);
+        font-weight: 600;
+    }
+
+    .kp-range__bound {
+        min-inline-size: 0;
+        margin: 0 0 var(--kp-space-sm, 0.5rem);
+        padding: 0;
+        border: 0;
+    }
+
+    .kp-range__inputs {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) var(--kp-range-time-width, 5.5rem);
+        gap: var(--kp-space-sm, 0.5rem);
+        align-items: start;
+    }
+
+    .kp-range__date {
+        min-inline-size: 0;
+    }
+
+    .kp-range__time {
+        inline-size: 100%;
+        box-sizing: border-box;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-range__panel .kp-field__input[aria-invalid='true'] {
+        border-color: var(--destructive);
+        box-shadow: inset 0 0 0 1px var(--destructive);
+    }
+
+    .kp-range__error {
+        min-block-size: 1lh;
+        margin: 0 0 var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-range__actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    /* Narrower than the presets and Custom… side by side: the presets take the whole line, each segment as wide as the
+     * next, and Custom… stands at the end of the line under them, beside the window's name. Nothing is cut or scrolled. */
+    @container kp-range (max-width: 26rem) {
+        .kp-range__bar {
+            display: contents;
+        }
+
+        .kp-range__presets {
+            grid-row: 1;
+            grid-column: 1 / span 2;
+            inline-size: 100%;
+            grid-auto-columns: minmax(0, 1fr);
+        }
+
+        .kp-range__custom {
+            grid-row: 2;
+            grid-column: 2;
+            align-self: start;
+        }
+
+        .kp-range__label {
+            grid-row: 2;
+            grid-column: 1;
+        }
+    }
 }
 
 /* The tour's dim is the target's box-shadow, and a register that gives the part a shadow of its own (a card's rim) wins over

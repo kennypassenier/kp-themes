@@ -392,6 +392,25 @@
  * @property {(left: string, total: string) => string} timerDiscLeft  The visual timer's face for a screen reader: "12 min left of 25 min" [kpadopt4-ideas]
  * @property {string} timerUnderMinute  The time left on the face in its last minute [kpadopt4-ideas]
  * @property {(name: string, duration: string) => string} timerDiscCaption  The still line under the disc: "Focus · 25 min" [kpadopt4-ideas]
+ * @property {string} rangePresets  The range picker's preset group, for a screen reader (js/range.js) [kpadopt4-ideas]
+ * @property {(key: string) => string} rangePresetName  A preset in words: "Last 24 hours" [kpadopt4-ideas]
+ * @property {(key: string) => string} rangePresetShort  A preset on its segment: "24h" [kpadopt4-ideas]
+ * @property {string} rangeCustom  The button that opens the custom range [kpadopt4-ideas]
+ * @property {string} rangeCustomTitle  The custom panel's title [kpadopt4-ideas]
+ * @property {string} rangeCustomName  A custom window's name in the line under the picker [kpadopt4-ideas]
+ * @property {string} rangeFrom  The start's label [kpadopt4-ideas]
+ * @property {string} rangeTo  The end's label [kpadopt4-ideas]
+ * @property {(bound: string) => string} rangeDateLabel  A date field's name: "From, date (dd/mm/yyyy)" [kpadopt4-ideas]
+ * @property {(bound: string) => string} rangeTimeLabel  A time field's name [kpadopt4-ideas]
+ * @property {string} rangeTimeHint  The time field's placeholder [kpadopt4-ideas]
+ * @property {string} rangeApply  The custom panel's Apply [kpadopt4-ideas]
+ * @property {string} rangeCancel  The custom panel's Cancel [kpadopt4-ideas]
+ * @property {(name: string, from: string, to: string) => string} rangeLabel  The line under the picker: "Last 24 hours · 15/10/2026 14:05 – 16/10/2026 14:05" [kpadopt4-ideas]
+ * @property {(bound: string) => string} rangeErrorDate  A date that is not a whole dd/mm/yyyy [kpadopt4-ideas]
+ * @property {(bound: string) => string} rangeErrorTime  A time that is not a time of day [kpadopt4-ideas]
+ * @property {string} rangeErrorOrder  A window whose end does not come after its start [kpadopt4-ideas]
+ * @property {string} rangeErrorFuture  A window that ends in the future [kpadopt4-ideas]
+ * @property {(days: number) => string} rangeErrorSpan  A window longer than the picker allows [kpadopt4-ideas]
  * @property {string} graphShowAll  The network graph's way back to every node and every kind of link (js/graph.js) [scope-143]
  * @property {string} graphShowAllTitle  Its title [scope-143]
  * @property {string} graphHint  The hint under the graph, and the second half of its picture's accessible name: what a pointer, a click and the keys do [scope-143]
@@ -911,6 +930,32 @@ export const DEFAULT_STRINGS = Object.freeze({
     timerDiscLeft: (left, total) => `${left} left of ${total}`,
     timerUnderMinute: 'under a minute',
     timerDiscCaption: (name, duration) => `${name} · ${duration}`,
+    // The range picker [kpadopt4-ideas].
+    rangePresets: 'Ranges',
+    rangePresetName: (key) => {
+        const m = /^(\d+)\s*([mhdw])$/.exec(key.trim().toLowerCase());
+        if (!m) return key;
+        const n = Number(m[1]);
+        const unit = /** @type {Record<string, string>} */ ({ m: 'minute', h: 'hour', d: 'day', w: 'week' })[m[2]];
+        return n === 1 ? `Last ${unit}` : `Last ${n} ${unit}s`;
+    },
+    rangePresetShort: (key) => key,
+    rangeCustom: 'Custom…',
+    rangeCustomTitle: 'Custom range',
+    rangeCustomName: 'Custom',
+    rangeFrom: 'From',
+    rangeTo: 'To',
+    rangeDateLabel: (bound) => `${bound}, date (dd/mm/yyyy)`,
+    rangeTimeLabel: (bound) => `${bound}, time (HH:MM, 24 hours)`,
+    rangeTimeHint: 'HH:MM',
+    rangeApply: 'Apply',
+    rangeCancel: 'Cancel',
+    rangeLabel: (name, from, to) => `${name} · ${from} – ${to}`,
+    rangeErrorDate: (bound) => `${bound}: type a whole date, dd/mm/yyyy.`,
+    rangeErrorTime: (bound) => `${bound}: type a time of day, 00:00 to 23:59.`,
+    rangeErrorOrder: 'The end must come after the start.',
+    rangeErrorFuture: 'The end lies in the future.',
+    rangeErrorSpan: (days) => `A range spans at most ${days} days.`,
     // The network graph [scope-143]: its own words; the nodes, kinds and
     // the sentences of its states are the page's.
     graphShowAll: 'Show all',

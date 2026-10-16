@@ -150,6 +150,7 @@ export {
     timerButton,
 } from './js/countdown.js';
 export { TIMER_DISC, TIMER_DISC_LEFT, attachTimerDiscs, discShare, timerDiscOf } from './js/timer-disc.js';
+export { RANGE, RANGE_EVENT, RANGE_PRESETS, attachRanges, parseTime, presetMs, rangeFaults, rangeMoment, rangeOf, setRange } from './js/range.js';
 // The dashboard components [scope-143].
 export { ACTION_LIST, ROW_ACTIONS, attachActionColumns, fitActionColumns, mergeRoles, rowRoles } from './js/actions.js';
 export {

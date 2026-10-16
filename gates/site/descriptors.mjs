@@ -2999,6 +2999,41 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
         ],
     },
     {
+        id: 'range',
+        title: 'Range picker',
+        group: 'Forms',
+        classes: ['kp-range'],
+        exports: [],
+        intro: 'The time window of a metrics page: the presets as the package’s segmented control and a Custom… button that opens a panel with two of the package’s date pickers (dd/mm/yyyy) and two times (HH:MM), checked before Apply. Under the control one line says exactly which window is chosen, “Last 24 hours · 15/10/2026 14:05 – 16/10/2026 14:05”, in Europe/Brussels unless `data-kp-time-zone` says otherwise. Choosing fires `kp-range-change` with the preset’s key (or null), ISO start and end, and the line. The panel says what is wrong (a date or time that is not whole, the end before the start, an end in the future, a window longer than `data-kp-range-max-days`) under the fields and marks them; Cancel, Escape or a press outside keeps the window as it was.',
+        whenToUse:
+            'Above a chart, a log or a table that shows a stretch of time. For one date use the date picker; for a range inside a table’s filter use the table’s own date filter.',
+        examples: [
+            {
+                title: 'Metrics, the last 24 hours',
+                why: 'The markup is the empty box with its presets; the script builds the control, the line and the panel.',
+                markup: `
+<div class="kp-range" data-kp-range="24h" data-kp-range-presets="1h 6h 24h 7d 30d" aria-label="Metrics range"></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-range', what: 'The preset chosen at first (a key of the presets); empty for the third preset.' },
+            { name: 'data-kp-range-presets', what: 'The presets, space separated: a number and m, h, d or w (`1h 6h 24h 7d 30d`).' },
+            { name: 'data-kp-range-start', what: 'With `data-kp-range-end`: a custom window to start with, as ISO moments.' },
+            { name: 'data-kp-range-end', what: 'The end of that custom window.' },
+            { name: 'data-kp-range-max-days', what: 'The longest custom window, in days; none by default.' },
+            { name: 'data-kp-range-future', what: 'A custom window may end in the future.' },
+            { name: 'data-kp-range-disabled', what: 'The presets and Custom… are off; the line still names the window.' },
+            { name: 'data-kp-range-value', what: 'Set by the script: the preset in force, or `custom`.' },
+            { name: 'data-kp-time-zone', what: 'The zone the line and the custom times are read in; Europe/Brussels by default.' },
+        ],
+        accessibility: [
+            'Built in — the presets are a radio group with one tab stop and arrow keys; Custom… says it opens a dialog and is pressed while a custom window is in force; the line is the picker’s description and is read when it changes.',
+            'Built in — the panel takes the focus and gives it back; Escape closes a calendar first, then the panel; a wrong field is marked invalid and points at the sentence that says why.',
+            'Yours — name the picker (`aria-label`) after what it narrows, and redraw the chart from the event’s ISO moments.',
+        ],
+    },
+    {
         id: 'toolbar',
         title: 'List toolbar',
         group: 'Data',

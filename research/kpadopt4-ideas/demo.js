@@ -225,3 +225,34 @@ for (const [event, word] of [
         say(target.matches('.kp-timer-disc') ? discLog : countLog, line);
     });
 }
+
+/* ------------------------------------------------------------ 6 · the range picker */
+
+import { RANGE_EVENT, attachRanges } from '../../js/range.js';
+
+attachRanges(document);
+const rangeLog = byId('k4-range-log');
+document.addEventListener(RANGE_EVENT, (event) => {
+    const d = /** @type {CustomEvent} */ (event).detail;
+    say(rangeLog, `kp-range-change · ${d.preset ?? 'custom'} · ${d.start} → ${d.end}`);
+});
+// Demo only: open the custom panel with the end before the start, and apply it.
+byId('k4-range-wrong').addEventListener('click', () => {
+    const main = byId('k4-range-main');
+    /** @type {HTMLButtonElement} */ (main.querySelector('.kp-range__custom')).click();
+    requestAnimationFrame(() => {
+        const times = /** @type {NodeListOf<HTMLInputElement>} */ (main.querySelectorAll('.kp-range__time'));
+        const dates = main.querySelectorAll('.kp-range__date');
+        const [a, b] = [
+            /** @type {HTMLInputElement} */ (dates[0].querySelector('input')),
+            /** @type {HTMLInputElement} */ (dates[1].querySelector('input')),
+        ];
+        const swap = a.value;
+        a.value = b.value;
+        b.value = swap;
+        for (const input of [a, b]) input.dispatchEvent(new Event('change', { bubbles: true }));
+        times[0].value = '18:00';
+        times[1].value = '09:00';
+        /** @type {HTMLButtonElement} */ (main.querySelector('.kp-range__actions .kp-button--primary')).click();
+    });
+});

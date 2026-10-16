@@ -859,6 +859,133 @@ pct config 109</code></pre>
                 </div>
             </section>
 
+            <!-- 6 · range picker -->
+            <section
+                class="k4-sec"
+                id="range"
+                data-review-item="range"
+                data-review-components="range"
+                data-review-topic="range"
+                data-review-topic-title="6 · Range picker"
+                data-review-title="6 · Range picker: presets and a custom from–to"
+                aria-labelledby="h-range"
+            >
+                <div class="k4-sec__head">
+                    <h2 id="h-range">6 · Range picker: presets and a custom from–to</h2>
+                    <p>
+                        <code>&lt;div class="kp-range" data-kp-range="24h" data-kp-range-presets="1h 6h 24h 7d 30d"&gt;</code> (js/range.js): the
+                        homelab Metrics page’s ranges, with the package’s segmented control, date picker and buttons.
+                    </p>
+                </div>
+                <div class="k4-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            One line: the segmented track <b>1h 6h 24h 7d 30d</b> with <b>24h</b> chosen, then <b>Custom…</b>. Under it the exact
+                            window: “Last 24 hours · dd/mm/yyyy HH:MM – dd/mm/yyyy HH:MM”, now in Brussels time.
+                        </li>
+                        <li>
+                            Click <b>7d</b> (or Tab in and use the arrow keys): the plate glides to it, the line names the new window, and the grey
+                            box shows <code>kp-range-change</code> with the ISO start and end.
+                        </li>
+                        <li>
+                            <b>Custom…</b> opens a panel under the control, on formal’s popover plate: From and To, each a date field with its
+                            calendar button and a time (HH:MM), filled with the window in force; the date field has the focus. Pick two days in the
+                            calendar, change a time, press <b>Apply</b> (or Enter in a time): the panel closes, no preset is chosen, Custom… reads as
+                            pressed, the line says “Custom · …”.
+                        </li>
+                        <li>
+                            <b>Open with a wrong range</b> (demo) opens the panel with the end before the start and presses Apply: a red sentence
+                            under the fields says the end must come after the start, the four fields are framed red, the panel stays open and keeps
+                            its size. Escape (or Cancel, or a click outside) closes it and the window stays as it was.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal’s segmented track and plate, its small button for Custom…, its popover plate for the panel, its date picker and
+                        calendar, its field error.
+                    </p>
+                </div>
+                <div
+                    class="kp-range"
+                    data-kp-range="24h"
+                    data-kp-range-presets="1h 6h 24h 7d 30d"
+                    aria-label="Metrics range"
+                    id="k4-range-main"
+                ></div>
+                <div class="k4-actions">
+                    <button type="button" class="kp-button" id="k4-range-wrong">Open with a wrong range (demo)</button>
+                </div>
+                <pre class="k4-log" id="k4-range-log" aria-live="polite"></pre>
+            </section>
+
+            <section
+                class="k4-sec"
+                id="range-states"
+                data-review-item="range-states"
+                data-review-components="range"
+                data-review-topic="range"
+                data-review-title="6 · Range picker: a custom window, a limit, disabled, phone width"
+                aria-labelledby="h-range-states"
+            >
+                <div class="k4-sec__head">
+                    <h2 id="h-range-states">6 · Range picker: a custom window, a limit, disabled, phone width</h2>
+                    <p>The same component in four situations.</p>
+                </div>
+                <div class="k4-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>A custom window</b> given in the markup (<code>data-kp-range-start</code>, <code>-end</code>): no preset chosen,
+                            Custom… pressed, the line “Custom · 01/10/2026 08:00 – 03/10/2026 18:30”.
+                        </li>
+                        <li>
+                            <b>At most 31 days</b> (<code>data-kp-range-max-days="31"</code>): a custom window longer than that is refused with “A
+                            range spans at most 31 days.”
+                        </li>
+                        <li><b>Disabled</b>: the track and Custom… are off; the line still names the window.</li>
+                        <li>
+                            <b>Phone width</b> (360 px): the presets take the whole line, each as wide as the next, and Custom… stands under them
+                            beside the window’s name; nothing is cut. The panel fits the screen, each date and time side by side.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Formal in each situation.</p>
+                </div>
+                <div class="k4-stack">
+                    <div>
+                        <p class="k4-label">A custom window</p>
+                        <div
+                            class="kp-range"
+                            data-kp-range
+                            data-kp-range-start="2026-10-01T06:00:00Z"
+                            data-kp-range-end="2026-10-03T16:30:00Z"
+                            aria-label="Backups range"
+                        ></div>
+                    </div>
+                    <div>
+                        <p class="k4-label">At most 31 days, presets 1h 24h 7d 30d</p>
+                        <div
+                            class="kp-range"
+                            data-kp-range="7d"
+                            data-kp-range-presets="1h 24h 7d 30d"
+                            data-kp-range-max-days="31"
+                            aria-label="Logs range"
+                        ></div>
+                    </div>
+                    <div>
+                        <p class="k4-label">Disabled</p>
+                        <div class="kp-range" data-kp-range="6h" data-kp-range-disabled aria-label="Range, disabled"></div>
+                    </div>
+                    <div class="k4-frame k4-frame--phone">
+                        <p class="k4-label">Phone width</p>
+                        <div class="kp-range" data-kp-range="24h" aria-label="Metrics range on a phone"></div>
+                    </div>
+                </div>
+            </section>
+
             <!-- next sections -->
         </main>
         <script type="module" src="demo.js"></script>

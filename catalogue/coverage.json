@@ -13,6 +13,7 @@
         "kp-kbd",
         "kp-keys",
         "kp-matrix",
+        "kp-range",
         "kp-segmented",
         "kp-statuslist",
         "kp-statusrow",

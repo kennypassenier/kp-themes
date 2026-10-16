@@ -15,3 +15,4 @@ topic per component, every state (loading, empty, error, disabled, busy, long te
 | command-block | `.kp-command`, `js/command.js` (`attachCommands`)                             | copy button (js/patterns.js), kp-badge, `pre`       | small  | built    |
 | visual-timer  | `.kp-timer-disc`, `js/timer-disc.js` (`attachTimerDiscs`)                     | kp buttons, the state word, the countdown's clock   | medium | built    |
 | numeric timer | `.kp-countdown`, `js/countdown.js` (`attachCountdowns`, `countdownClock`)     | kp buttons, the state word                          | medium | built    |
+| range-picker  | `.kp-range`, `js/range.js` (`attachRanges`, `kp-range-change`)                | segmented control, date picker, popover, buttons    | medium | built    |

@@ -1120,6 +1120,82 @@ export type Strings = {
      */
     timerDiscCaption: (name: string, duration: string) => string;
     /**
+     * The range picker's preset group, for a screen reader (js/range.js) [kpadopt4-ideas]
+     */
+    rangePresets: string;
+    /**
+     * A preset in words: "Last 24 hours" [kpadopt4-ideas]
+     */
+    rangePresetName: (key: string) => string;
+    /**
+     * A preset on its segment: "24h" [kpadopt4-ideas]
+     */
+    rangePresetShort: (key: string) => string;
+    /**
+     * The button that opens the custom range [kpadopt4-ideas]
+     */
+    rangeCustom: string;
+    /**
+     * The custom panel's title [kpadopt4-ideas]
+     */
+    rangeCustomTitle: string;
+    /**
+     * A custom window's name in the line under the picker [kpadopt4-ideas]
+     */
+    rangeCustomName: string;
+    /**
+     * The start's label [kpadopt4-ideas]
+     */
+    rangeFrom: string;
+    /**
+     * The end's label [kpadopt4-ideas]
+     */
+    rangeTo: string;
+    /**
+     * A date field's name: "From, date (dd/mm/yyyy)" [kpadopt4-ideas]
+     */
+    rangeDateLabel: (bound: string) => string;
+    /**
+     * A time field's name [kpadopt4-ideas]
+     */
+    rangeTimeLabel: (bound: string) => string;
+    /**
+     * The time field's placeholder [kpadopt4-ideas]
+     */
+    rangeTimeHint: string;
+    /**
+     * The custom panel's Apply [kpadopt4-ideas]
+     */
+    rangeApply: string;
+    /**
+     * The custom panel's Cancel [kpadopt4-ideas]
+     */
+    rangeCancel: string;
+    /**
+     * The line under the picker: "Last 24 hours · 15/10/2026 14:05 – 16/10/2026 14:05" [kpadopt4-ideas]
+     */
+    rangeLabel: (name: string, from: string, to: string) => string;
+    /**
+     * A date that is not a whole dd/mm/yyyy [kpadopt4-ideas]
+     */
+    rangeErrorDate: (bound: string) => string;
+    /**
+     * A time that is not a time of day [kpadopt4-ideas]
+     */
+    rangeErrorTime: (bound: string) => string;
+    /**
+     * A window whose end does not come after its start [kpadopt4-ideas]
+     */
+    rangeErrorOrder: string;
+    /**
+     * A window that ends in the future [kpadopt4-ideas]
+     */
+    rangeErrorFuture: string;
+    /**
+     * A window longer than the picker allows [kpadopt4-ideas]
+     */
+    rangeErrorSpan: (days: number) => string;
+    /**
      * The network graph's way back to every node and every kind of link (js/graph.js) [scope-143]
      */
     graphShowAll: string;
@@ -1532,6 +1608,25 @@ export type Strings = {
  * @property {(left: string, total: string) => string} timerDiscLeft  The visual timer's face for a screen reader: "12 min left of 25 min" [kpadopt4-ideas]
  * @property {string} timerUnderMinute  The time left on the face in its last minute [kpadopt4-ideas]
  * @property {(name: string, duration: string) => string} timerDiscCaption  The still line under the disc: "Focus · 25 min" [kpadopt4-ideas]
+ * @property {string} rangePresets  The range picker's preset group, for a screen reader (js/range.js) [kpadopt4-ideas]
+ * @property {(key: string) => string} rangePresetName  A preset in words: "Last 24 hours" [kpadopt4-ideas]
+ * @property {(key: string) => string} rangePresetShort  A preset on its segment: "24h" [kpadopt4-ideas]
+ * @property {string} rangeCustom  The button that opens the custom range [kpadopt4-ideas]
+ * @property {string} rangeCustomTitle  The custom panel's title [kpadopt4-ideas]
+ * @property {string} rangeCustomName  A custom window's name in the line under the picker [kpadopt4-ideas]
+ * @property {string} rangeFrom  The start's label [kpadopt4-ideas]
+ * @property {string} rangeTo  The end's label [kpadopt4-ideas]
+ * @property {(bound: string) => string} rangeDateLabel  A date field's name: "From, date (dd/mm/yyyy)" [kpadopt4-ideas]
+ * @property {(bound: string) => string} rangeTimeLabel  A time field's name [kpadopt4-ideas]
+ * @property {string} rangeTimeHint  The time field's placeholder [kpadopt4-ideas]
+ * @property {string} rangeApply  The custom panel's Apply [kpadopt4-ideas]
+ * @property {string} rangeCancel  The custom panel's Cancel [kpadopt4-ideas]
+ * @property {(name: string, from: string, to: string) => string} rangeLabel  The line under the picker: "Last 24 hours · 15/10/2026 14:05 – 16/10/2026 14:05" [kpadopt4-ideas]
+ * @property {(bound: string) => string} rangeErrorDate  A date that is not a whole dd/mm/yyyy [kpadopt4-ideas]
+ * @property {(bound: string) => string} rangeErrorTime  A time that is not a time of day [kpadopt4-ideas]
+ * @property {string} rangeErrorOrder  A window whose end does not come after its start [kpadopt4-ideas]
+ * @property {string} rangeErrorFuture  A window that ends in the future [kpadopt4-ideas]
+ * @property {(days: number) => string} rangeErrorSpan  A window longer than the picker allows [kpadopt4-ideas]
  * @property {string} graphShowAll  The network graph's way back to every node and every kind of link (js/graph.js) [scope-143]
  * @property {string} graphShowAllTitle  Its title [scope-143]
  * @property {string} graphHint  The hint under the graph, and the second half of its picture's accessible name: what a pointer, a click and the keys do [scope-143]

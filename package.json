@@ -164,6 +164,10 @@
             "types": "./js/timer-disc.d.ts",
             "default": "./js/timer-disc.js"
         },
+        "./js/range": {
+            "types": "./js/range.d.ts",
+            "default": "./js/range.js"
+        },
         "./js/loading-pieces": {
             "types": "./js/loading-pieces.d.ts",
             "default": "./js/loading-pieces.js"

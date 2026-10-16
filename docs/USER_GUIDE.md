@@ -1939,6 +1939,36 @@ Both fire `kp-countdown-change` (`{ state, remaining, total }`, on a start, a pa
 `timerStarted`, `timerResumed`, `timerLeft`, `timerDuration`, `timerDiscLeft`, `timerUnderMinute`, `timerDiscCaption`).
 The recipes app's named kitchen timers are their own component; they may run on `countdownClock()` too.
 
+### A range of time
+
+The window of a metrics page, as presets or a custom from–to:
+
+```html
+<div class="kp-range" data-kp-range="24h" data-kp-range-presets="1h 6h 24h 7d 30d" aria-label="Metrics range"></div>
+```
+
+`attachRanges(root)` (`js/range.js`, attached by `js/auto.js`) builds the presets as the package's segmented control
+(a radio group, one tab stop, arrow keys) and a Custom… button, and under them one line that names the window exactly:
+"Last 24 hours · 15/10/2026 14:05 – 16/10/2026 14:05" (rule 52, in Europe/Brussels unless `data-kp-time-zone` names
+another zone). A preset is a length back from now: a number and `m`, `h`, `d` or `w`. Choosing one, or applying a
+custom window, fires `kp-range-change` with `{ preset, start, end, label }`: the preset's key or null, the moments as
+ISO strings, and the line.
+
+Custom… opens a panel under the control on the theme's popover plate, with From and To, each the package's date picker
+(dd/mm/yyyy, with its calendar) and a time (HH:MM, 24 hours; `1405` and `14.05` are read too), filled with the window in
+force. Apply checks that both are whole, that the end comes after the start, that it is not in the future (unless
+`data-kp-range-future`) and that it spans at most `data-kp-range-max-days`; what is wrong is said under the fields,
+which are marked, and the panel stays. Cancel, Escape (after an open calendar) or a press outside closes it and keeps
+the window. `data-kp-range-start` and `-end` start with a custom window, `data-kp-range-disabled` turns the picker off.
+Narrower than 26rem of its own, the presets take the whole line and Custom… stands under them beside the line.
+
+From a script: `setRange(el, { preset: '7d' })` or `setRange(el, { start, end })` sets the window without the event,
+and `rangeOf(el)` reads it. `presetMs`, `parseTime`, `rangeFaults` and `rangeMoment` are the rules. The words are
+`range…` (`rangePresets`, `rangePresetName`, `rangePresetShort`, `rangeCustom`, `rangeCustomTitle`,
+`rangeCustomName`, `rangeFrom`, `rangeTo`, `rangeDateLabel`, `rangeTimeLabel`, `rangeTimeHint`, `rangeApply`,
+`rangeCancel`, `rangeLabel`, `rangeErrorDate`, `rangeErrorTime`, `rangeErrorOrder`, `rangeErrorFuture`,
+`rangeErrorSpan`). Knobs: `--kp-range-gap`, `--kp-range-panel-width` (24rem), `--kp-range-time-width` (5.5rem).
+
 <!-- kpadopt4-ideas: next component -->
 
 ## Tables that fit [TH95, TH96]
