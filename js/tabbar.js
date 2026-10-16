@@ -41,7 +41,7 @@
 // and the back-to-top control clear of it, whatever the theme or the safe-area
 // inset makes of its height.
 //
-// `setTabbarBadge(tab, count)` writes a count (`99+` past the max, hidden at 0
+// `setTabbarBadge(tab, count)` writes a count (every digit of it, never capped or abbreviated; hidden at 0
 // or null); `setTabbarCurrent(bar, id)` moves `aria-current` to the tab with
 // that `data-kp-tab`; `setTabbarBusy(tab, busy)` puts one tab to wait. Nothing runs on import; attachTabbars(root) returns a
 // detach.
@@ -53,19 +53,20 @@ export const TABBAR = '.kp-tabbar';
 export const TABBAR_HEIGHT_PROPERTY = '--kp-tabbar-height';
 
 /**
- * Write a count on a tab: the digits, `99+` past `max`, nothing and hidden at
+ * Write a count on a tab: all its digits (12 is 12 and 1534 is 1534, never `99+`
+ * or `1.5k`: Kenny, 2026-10-03, a counter shows the real number), nothing and hidden at
  * 0 or `null`. The badge is made when the tab has none. A tab that has a
  * count is the one place the bar speaks for something that moved, so the
  * count is also on the tab as `data-kp-count`, for a register or a test.
  *
  * @param {Element} tab a `.kp-tabbar__tab`
  * @param {number | null} count
- * @param {{ max?: number }} [options]
  * @returns {HTMLElement | null} the badge
  */
-export function setTabbarBadge(tab, count, { max = 99 } = {}) {
+export function setTabbarBadge(tab, count) {
     let badge = /** @type {HTMLElement | null} */ (tab.querySelector('.kp-tabbar__badge'));
-    const none = count === null || !Number.isFinite(count) || count <= 0;
+    const whole = count === null || !Number.isFinite(count) ? 0 : Math.trunc(count);
+    const none = whole <= 0;
     if (!badge) {
         if (none) return null;
         badge = tab.ownerDocument.createElement('span');
@@ -73,9 +74,9 @@ export function setTabbarBadge(tab, count, { max = 99 } = {}) {
         tab.append(badge);
     }
     badge.hidden = none;
-    badge.textContent = none ? '' : count > max ? `${max}+` : String(count);
+    badge.textContent = none ? '' : String(whole);
     if (none) tab.removeAttribute('data-kp-count');
-    else tab.setAttribute('data-kp-count', String(count));
+    else tab.setAttribute('data-kp-count', String(whole));
     return badge;
 }
 

@@ -2745,6 +2745,80 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
         ],
     },
     {
+        id: 'week',
+        title: 'Week agenda',
+        group: 'Data',
+        classes: ['kp-week'],
+        aliases: ['past', 'overflow', 'today'],
+        exports: [],
+        intro: 'Seven day columns with the items of the week placed at their time of day: a nightly backup at 02:00, a host round at 03:30. `attachWeeks(root)` in js/week.js fills `section.kp-week[data-kp-week]` with the head of each day, an hour axis and one pill per item; the page gives the items (`setWeekEvents`) and the state of the whole (`setWeekState`). `data-kp-week-start` is the first day (`YYYY-MM-DD`, else today), `data-kp-week-days` how many columns, `data-kp-week-nav` adds the week buttons. A pill has a series colour (1 to 5) and a state: `next` is ringed, `off` and `skipped` muted and struck through, `reference` dashed and not a button. A column holds as many pills as fit; the rest fold into a `+N` menu button (`data-kp-overflow` marks the folded ones). Below 40rem the columns become rows and every item is shown. A line across today’s column is now; items already past carry `data-kp-past`.',
+        whenToUse:
+            'When a reader asks what runs when over the next days: schedules, rounds, bookings. Not for a month (use the calendar), not for what already ran (use the run timeline) and not for one list in time order (use the timeline).',
+        examples: [
+            {
+                title: 'An agenda for the next seven days',
+                why: 'The markup is the empty frame; the script builds the days and the pills from the items the page hands over.',
+                markup: `
+<section class="kp-week" data-kp-week data-kp-week-nav data-kp-week-start="2026-10-16" aria-label="Runs in the next 7 days"></section>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-week', what: 'Marks the agenda; `attachWeeks` fills it.' },
+            { name: 'data-kp-week-start', what: 'The first day, `YYYY-MM-DD`; without it, today in the time zone.' },
+            { name: 'data-kp-week-days', what: 'How many day columns the range has (7).' },
+            { name: 'data-kp-week-nav', what: 'Adds the row of week buttons: previous, today and next (`data-kp-week-prev`, `data-kp-week-today`, `data-kp-week-next` mark them); a press sends the new range to the page.' },
+            { name: 'data-kp-week-mode', what: 'The layout in force: `grid` (columns) or `list` (rows below 40rem); read from the stylesheet, not written by the page.' },
+            { name: 'data-kp-state', what: 'On a pill: `next`, `off`, `skipped` or `reference`. On the agenda: `loading`, `empty` or `error`.' },
+            { name: 'data-kp-series', what: 'On a pill: 1 to 5, the colour from `--chart-1` to `--chart-5`; the label carries the meaning.' },
+            { name: 'data-kp-past', what: 'On a pill whose time has passed; it is muted.' },
+            { name: 'data-kp-overflow', what: 'On a pill folded into the `+N` menu of a full column.' },
+        ],
+        accessibility: [
+            'Built in — one tab stop: arrow up and down move within a day, left and right to the neighbouring day (the item nearest in time), Home and End to the day’s first and last, Enter and Space open the item.',
+            'Built in — every pill is a button named by its time and label; the now-line has an accessible name with the time; the `+N` button opens a menu of the folded items.',
+            'Yours — give the agenda a name (`aria-label`), keep the label of every item short and meaningful without its colour, and give the new items when the range changes.',
+        ],
+    },
+    {
+        id: 'gantt',
+        title: 'Run timeline',
+        group: 'Data',
+        classes: ['kp-gantt'],
+        aliases: ['active', 'out'],
+        exports: [],
+        intro: 'One bar per run on a time axis, a lane per job, stack or host, and a line for now. `attachGantts(root)` in js/gantt.js fills `section.kp-gantt[data-kp-gantt]` with range buttons (`data-kp-gantt-ranges`, the one in force in `data-kp-gantt-range`), a Live button and the selected range; the page gives the lanes and the runs (`setGanttRuns`) and the state of the whole (`setGanttState`). A run is `queued` (dashed and hollow, from queueing to now), `running` (striped and growing to now), `ok` (solid) or `failed` (solid, taller, with a cap and a cross): the tone is never the only carrier. A running bar is placed by one custom property that moves every second, so the page repaints nothing. While the window is Live its right edge follows now (`data-kp-gantt-live`); dragging across the plot selects a range, shown in a chip with Zoom and Clear (`data-kp-gantt-zoom`, `data-kp-gantt-clear`). `data-kp-gantt-ghosts="2 3 2 1"` sets the rows of the loading lanes so loading and loaded are as tall.',
+        whenToUse:
+            'When a reader asks what ran when, how long it took and what failed: operations of the last hours or days, per job. Not for what will run (use the week agenda) and not for a series of values (use the chart).',
+        examples: [
+            {
+                title: 'Operations of the last six hours',
+                why: 'The markup is the empty frame with its ranges; the script builds the axis, the lanes and the bars from the runs the page hands over.',
+                markup: `
+<section class="kp-gantt" data-kp-gantt data-kp-gantt-ranges="1h 6h 24h 7d" data-kp-gantt-range="6h" data-kp-gantt-ghosts="2 1" aria-label="Operations of the last 6 hours"></section>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-gantt', what: 'Marks the timeline; `attachGantts` fills it.' },
+            { name: 'data-kp-gantt-ranges', what: 'The range buttons, space separated: `1h 6h 24h 7d`.' },
+            { name: 'data-kp-gantt-range', what: 'The range in force; it decides how much time the window shows.' },
+            { name: 'data-kp-gantt-live', what: 'On the Live button, pressed while the window follows now.' },
+            { name: 'data-kp-gantt-zoom', what: 'On the Zoom button of the selection chip: the window becomes the selected range and stops following now.' },
+            { name: 'data-kp-gantt-clear', what: 'On the Clear button of the selection chip: the selection is lifted.' },
+            { name: 'data-kp-gantt-ghosts', what: 'The rows of each loading lane, space separated, so loading and loaded are as tall.' },
+            { name: 'data-kp-gantt-id', what: 'On a bar: the id the page gave the run; reported when it is opened.' },
+            { name: 'data-kp-state', what: 'On a bar: `queued`, `running`, `ok` or `failed`. On the timeline: `loading`, `empty` or `error`.' },
+            { name: 'data-kp-active', what: 'On the selection chip while a range is selected.' },
+            { name: 'data-kp-out', what: 'On the now-line when now lies outside the window; it is hidden.' },
+        ],
+        accessibility: [
+            'Built in — one tab stop: left and right move along a lane, up and down to the nearest bar of the neighbouring lane, Home and End to the lane’s first and last, Enter and Space open the run; range, Live, Zoom and Clear are buttons.',
+            'Built in — every bar has an accessible name with its label, state and times; a run that changes state is announced in a polite status region.',
+            'Yours — give the timeline a name (`aria-label`), name every run so it reads without its colour, and give the new runs when the window moves.',
+        ],
+    },
+    {
         id: 'toolbar',
         title: 'List toolbar',
         group: 'Data',

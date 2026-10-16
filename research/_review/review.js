@@ -77,7 +77,17 @@
 // same demo and its answer lost his two notes).
 import { THEMES } from '../../js/theme-registry.js';
 import { applyTheme, currentTheme } from '../../js/theme-core.js';
-import { carriedAnswer, carryAnswer, fingerprintOf, keepAnswer, loadUpdate, markAnswerCopied, staleKeys, storeKey } from './progress.js';
+import {
+    carriedAnswer,
+    carryAnswer,
+    dropReceivedAnswer,
+    fingerprintOf,
+    keepAnswer,
+    loadUpdate,
+    markAnswerCopied,
+    staleKeys,
+    storeKey,
+} from './progress.js';
 import { mountBlockTools } from './block-tools.js';
 
 const root = document.documentElement;
@@ -532,14 +542,16 @@ const plainFixed = (theme, choice) => (typeof choice.fixed === 'object' && choic
 
 /** @type {Step[]} */
 const steps = ORDER.flatMap((theme) => {
-    const themePairs = items.filter((item) => !item.themes || item.themes.includes(theme)).map((item) => ({
-        key: `${theme}|${item.id}`,
-        label: `${item.id} · ${theme}`,
-        title: item.title,
-        look: '',
-        theme,
-        item,
-    }));
+    const themePairs = items
+        .filter((item) => !item.themes || item.themes.includes(theme))
+        .map((item) => ({
+            key: `${theme}|${item.id}`,
+            label: `${item.id} · ${theme}`,
+            title: item.title,
+            look: '',
+            theme,
+            item,
+        }));
     // A theme with no section asked in it is no step: a re-review that asks a few pairs counts and walks only those.
     if (!themePairs.length) return [];
     if (!ASPECT_MODE) return [{ title: LABEL[theme] || theme, theme, pairs: themePairs }];
@@ -686,6 +698,8 @@ if (UPDATE && ASPECT_MODE) {
     }
     save();
 }
+// An answer Claude already received (VERDICTS.json, the round's "received") is not carried into this round.
+dropReceivedAnswer(DEMO, round);
 if (wiped) carryAnswer(DEMO);
 // A demo page shows only what is not approved yet (Kenny, 2026-10-13: "toon je wel geen al goedgekeurde
 // elementen meer"): a section whose every pair is approved is hidden behind one line, and ?review=all
@@ -832,7 +846,7 @@ function render() {
         : 'Review in a dialog';
     nextButton.hidden = !NEXT || judged < pairs.length;
     // Kept for the Agenda, which offers every answer not yet copied when the demo was left without copying it.
-    keepAnswer(DEMO, text, judged);
+    keepAnswer(DEMO, text, judged, round?.round || '');
 }
 
 /**
@@ -867,7 +881,11 @@ async function copyAnswer() {
     try {
         await navigator.clipboard.writeText(text);
         if (!NEXT) markAnswerCopied(DEMO);
-        say(NEXT ? `Copied this demo's answer. It also stays in the prompt on ${HUB_NAME} until you copy that one.` : 'Copied. Paste it into the conversation.');
+        say(
+            NEXT
+                ? `Copied this demo's answer. It also stays in the prompt on ${HUB_NAME} until you copy that one.`
+                : 'Copied. Paste it into the conversation.',
+        );
         return true;
     } catch {
         const pre = foot.querySelector('[data-rv-answer]');
@@ -1751,14 +1769,23 @@ async function show(at) {
         if (step.theme) await switchTheme(step.theme);
         index = steps.indexOf(step);
         putBack();
-        shownPairs = stepOpen(step) ? step.pairs.filter(isOpen) : step.pairs;
+        // Only an approved pair leaves the list: a pair Kenny marked not approved stays in it, with its tick and its
+        // note, until a new round reopens it (kpadopt-nav, 2026-10-16: "option 2 disappeared from the list when I reopened
+        // the page" was the pair he had rejected, dropped because it was no longer 'open').
+        shownPairs = stepOpen(step) ? step.pairs.filter((p) => isOpen(p) || verdictOf(p) === 'rejected') : step.pairs;
         for (const pair of shownPairs) {
             if (pair.item) {
                 const placeholder = document.createComment('review');
                 pair.item.section.replaceWith(placeholder);
                 pair.item.section.dataset.rvPair = pair.key;
                 moved.push([placeholder, pair.item.section]);
-                const tool = mountBlockTools({ section: pair.item.section, item: pair.item.id, theme: pair.theme, themeLabel: LABEL[pair.theme] || pair.theme, title: pair.item.title });
+                const tool = mountBlockTools({
+                    section: pair.item.section,
+                    item: pair.item.id,
+                    theme: pair.theme,
+                    themeLabel: LABEL[pair.theme] || pair.theme,
+                    title: pair.item.title,
+                });
                 tools.push(tool);
                 stage.append(tool.bar, pair.item.section);
             } else {
@@ -1781,7 +1808,7 @@ async function show(at) {
             : 'Up approves the step and goes on to the next open one, Left/Right move between steps, V the previous version, L plays open and close, Escape closes. The theme switches by itself.';
         for (const pair of shownPairs) if (pair.item) focusAspect(pair.item.section, step.aspect ?? null);
         if (step.aspect) setupFlip(step, shownPairs[0]);
-        const judgedHere = step.pairs.length - shownPairs.length;
+        const judgedHere = step.pairs.filter((p) => verdictOf(p) === 'approved' && !shownPairs.includes(p)).length;
         $('[data-rv-position]').textContent =
             `Step ${index + 1}/${steps.length} · ${shownPairs.length} ${step.theme ? 'section(s)' : 'block(s)'}` +
             (judgedHere ? ` · ${judgedHere} already approved, not shown` : '');

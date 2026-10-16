@@ -3,19 +3,17 @@ export declare const TABBAR = ".kp-tabbar";
 /** The root property the bar's height is published on while the bar is shown. */
 export declare const TABBAR_HEIGHT_PROPERTY = "--kp-tabbar-height";
 /**
- * Write a count on a tab: the digits, `99+` past `max`, nothing and hidden at
+ * Write a count on a tab: all its digits (12 is 12 and 1534 is 1534, never `99+`
+ * or `1.5k`: Kenny, 2026-10-03, a counter shows the real number), nothing and hidden at
  * 0 or `null`. The badge is made when the tab has none. A tab that has a
  * count is the one place the bar speaks for something that moved, so the
  * count is also on the tab as `data-kp-count`, for a register or a test.
  *
  * @param {Element} tab a `.kp-tabbar__tab`
  * @param {number | null} count
- * @param {{ max?: number }} [options]
  * @returns {HTMLElement | null} the badge
  */
-export declare function setTabbarBadge(tab: Element, count: number | null, { max }?: {
-    max?: number;
-}): HTMLElement | null;
+export declare function setTabbarBadge(tab: Element, count: number | null): HTMLElement | null;
 /**
  * Make one tab the current page: `aria-current="page"` on it, off the others.
  * A `data-kp-tab` that matches no tab leaves every tab not current, which is

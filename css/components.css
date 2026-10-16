@@ -11176,6 +11176,14 @@
         font-variant-numeric: tabular-nums;
         white-space: nowrap;
         pointer-events: none;
+        /* The whole number, never capped (12, 1534): the badge is out of the flow and anchored at its start
+         * edge, so it grows outward over the icon's corner, sizes to its digits (no ellipsis, no clip) and
+         * moves no neighbour. */
+        flex: none;
+        inline-size: max-content;
+        max-inline-size: none;
+        overflow: visible;
+        text-overflow: clip;
     }
 
     .kp-tabbar__badge:empty {

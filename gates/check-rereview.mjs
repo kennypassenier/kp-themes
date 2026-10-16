@@ -9,6 +9,7 @@
 //
 //   { "demo": "<topic>",
 //     "rounds": [ { "round": "1", "allJudged": true|false,
+//                   "page": "<id of the page round it answers>",   // optional: kept in step with the page's "received"
 //                   "approved": [{ "item", "theme" }],          // pairs approved in a round that judged only some
 //                   "notApproved": [{ "item", "theme", "note" }] } ],
 //     "reopened": [{ "item", "theme", "reason" }] }             // a pair offered again because the component changed
@@ -81,6 +82,15 @@ export function rereviewFaults(topic, html, verdicts, archived) {
         if (!r.item || !r.theme || !String(r.reason ?? '').trim()) {
             faults.push(`research/${topic}/VERDICTS.json: a reopened pair needs item, theme and a written reason`);
         }
+    }
+    // The page's round lists the page rounds Claude has recorded (the review kit drops their answers, progress.js).
+    const declared = [...(JSON.parse(/<script\b[^>]*data-review-round[^>]*>([\s\S]*?)<\/script>/.exec(html)?.[1] ?? 'null')?.received ?? [])].sort();
+    const recorded = [...new Set((verdicts.rounds ?? []).map((/** @type {any} */ r) => r.page).filter(Boolean))].sort();
+    if (declared.join('|') !== recorded.join('|')) {
+        faults.push(
+            `research/${topic}: the page's data-review-round "received" [${declared.join(', ')}] must equal the "page" ids of the rounds in VERDICTS.json [${recorded.join(', ')}], ` +
+                `or the review kit carries an answer Claude already received as "not copied yet"`,
+        );
     }
     if (archived) return faults;
     const latest = latestVerdicts(verdicts, offered);

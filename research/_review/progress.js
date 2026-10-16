@@ -23,7 +23,7 @@ export const storeKey = (demo) => `kp-demo-review:${demo}`;
  * @property {Record<string, string[] | null>} [itemThemes]  per section, the themes it names for itself
  *   (`data-review-themes` on the section), null when it is asked in every theme the demo walks
  * @property {string[]} extras   the keys of the catalogue pairs it carries along
- * @property {{ round?: string, reopen?: string[] } | null} round
+ * @property {{ round?: string, reopen?: string[], received?: string[] } | null} round
  * @property {string | null} [fingerprint]  see fingerprintOf, once read
  * @property {DemoUpdate | null} [update]   see loadUpdate, once read
  */
@@ -304,6 +304,8 @@ export const answerKey = (demo) => `${storeKey(demo)}:answer`;
  * @property {number} judged  pairs judged when it was written
  * @property {string} [copied] the `at` of the text last copied
  * @property {string} [carried] an earlier answer, not copied, whose words a reopening wiped (carryAnswer)
+ * @property {string} [round] the page's round id when the answer was written (keepAnswer); absent on older answers
+ * @property {string} [carriedRound] the round id the carried words were written in
  */
 
 /** A demo's stored answer, or null. @returns {DemoAnswer | null} */
@@ -317,12 +319,14 @@ export function answerOf(id) {
 }
 
 /** Keep a demo's answer; a text unchanged since it was copied stays copied, an answer carried along stays with it. */
-export function keepAnswer(id, text, judged) {
+export function keepAnswer(id, text, judged, round = '') {
     const before = answerOf(id);
-    if (before?.text === text) return;
-    const carried = before?.carried ? { carried: before.carried } : {};
+    if (before?.text === text && before.round !== undefined) return;
+    const carried = before?.carried ? { carried: before.carried, carriedRound: before.carriedRound ?? before.round ?? '' } : {};
     try {
-        localStorage.setItem(answerKey(id), JSON.stringify({ text, judged, at: new Date().toISOString(), ...carried }));
+        const same =
+            before?.text === text ? { at: before.at, ...(before.copied ? { copied: before.copied } : {}) } : { at: new Date().toISOString() };
+        localStorage.setItem(answerKey(id), JSON.stringify({ text, judged, round, ...same, ...carried }));
     } catch {
         /* storage refused: the demo's own Copy answer still works */
     }
@@ -353,10 +357,49 @@ export function carryAnswer(id) {
     const answer = answerOf(id);
     if (!answer || !answerWaiting(id)) return;
     try {
-        localStorage.setItem(answerKey(id), JSON.stringify({ ...answer, carried: answer.text }));
+        localStorage.setItem(answerKey(id), JSON.stringify({ ...answer, carried: answer.text, carriedRound: answer.round ?? '' }));
     } catch {
         /* storage refused: nothing to carry */
     }
+}
+
+/**
+ * Whether an answer written in `answerRound` belongs to a round Claude has already received and recorded
+ * (VERDICTS.json; the page lists those page round ids as `"received"` in its round script, and gates/check-rereview.mjs
+ * keeps the list in step). An answer with no round id was written before round ids were kept: it belongs to the round
+ * before the current one, so it is received as soon as the page lists any received round.
+ * @param {string | undefined} answerRound
+ * @param {{ received?: string[] } | null | undefined} round the page's round
+ */
+export const roundReceived = (answerRound, round) => {
+    const received = round?.received;
+    if (!Array.isArray(received) || !received.length) return false;
+    return !answerRound || received.includes(answerRound);
+};
+
+/**
+ * Drop what Claude already holds (Kenny, 2026-10-16: a new round started with his round-2 answer, which he had
+ * delivered through a form, and the Agenda said it was not copied). An answer of a received round is removed; words
+ * carried from a received round are removed from an answer of the current one. An answer of a round not received stays.
+ * @returns {boolean} whether anything was dropped
+ */
+export function dropReceivedAnswer(id, round) {
+    const answer = answerOf(id);
+    if (!answer) return false;
+    try {
+        if (roundReceived(answer.round, round)) {
+            localStorage.removeItem(answerKey(id));
+            return true;
+        }
+        if (answer.carried && roundReceived(answer.carriedRound, round)) {
+            const { carried, carriedRound, ...rest } = answer;
+            localStorage.setItem(answerKey(id), JSON.stringify(rest));
+            return true;
+        }
+    } catch {
+        /* storage refused: nothing to drop */
+    }
+    return false;
 }
 
 /** The answer carried along for a demo, or ''. */
