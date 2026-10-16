@@ -432,6 +432,8 @@
  * @property {(state: string) => string} uptimeStateWord  A period's state as a word: up, degraded, down, no data [kpadopt4-ideas]
  * @property {(label: string, state: string, percent: string | null, incidents: number | null) => string} uptimeCell  A cell's name and hover card: its period, its state and its figures [kpadopt4-ideas]
  * @property {(shown: number, total: number) => string} uptimeShown  Under a strip too narrow for every cell: "55 of 90 shown" [kpadopt4-ideas]
+ * @property {(percent: string | null, incidents: number | null) => string} uptimeInfoFigures  A period's figures in its quick info: "99.4% up · 1 incident" [kpadopt4 r2]
+ * @property {(label: string) => string} uptimeOpen  The link in a period's quick info to the period's own page: "Open 14/10/2026" [kpadopt4 r2]
  * @property {(name: string) => string} typeConfirmLabel  The typed confirmation's label; the name is set in as code where this sentence puts it (js/components.js) [kpadopt4-ideas]
  * @property {string} typeConfirmRuleExact  Its rule when capitals count [kpadopt4-ideas]
  * @property {string} typeConfirmRuleAnyCase  Its rule when capitals do not count (`data-kp-confirm-case="any"`) [kpadopt4-ideas]
@@ -1093,6 +1095,11 @@ export const DEFAULT_STRINGS = Object.freeze({
             .filter(Boolean)
             .join(' · '),
     uptimeShown: (shown, total) => `${shown} of ${total} shown`,
+    uptimeInfoFigures: (percent, incidents) =>
+        [percent === null ? null : `${percent}% up`, incidents === null ? null : incidents === 1 ? '1 incident' : `${incidents} incidents`]
+            .filter(Boolean)
+            .join(' · '),
+    uptimeOpen: (label) => `Open ${label}`,
     // The typed confirmation [kpadopt4-ideas].
     typeConfirmLabel: (name) => `Type ${name} to confirm`,
     typeConfirmRuleExact: 'Type it exactly: capitals count; spaces at the start and the end are ignored.',

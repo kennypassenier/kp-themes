@@ -19066,21 +19066,21 @@
         display: none;
     }
 
-    .kp-uptime__cell[data-kp-tone='up'] {
+    :is(.kp-uptime__cell, .kp-uptime__swatch)[data-kp-tone='up'] {
         --kp-uptime-fill: var(--kp-uptime-up);
     }
 
-    .kp-uptime__cell[data-kp-tone='degraded'] {
+    :is(.kp-uptime__cell, .kp-uptime__swatch)[data-kp-tone='degraded'] {
         --kp-uptime-fill: var(--kp-uptime-degraded);
         --kp-uptime-pattern: repeating-linear-gradient(0deg, color-mix(in oklab, var(--card) 55%, transparent) 0 1px, transparent 1px 4px);
     }
 
-    .kp-uptime__cell[data-kp-tone='down'] {
+    :is(.kp-uptime__cell, .kp-uptime__swatch)[data-kp-tone='down'] {
         --kp-uptime-fill: var(--kp-uptime-down);
         --kp-uptime-pattern: repeating-linear-gradient(135deg, color-mix(in oklab, var(--card) 38%, transparent) 0 2px, transparent 2px 5px);
     }
 
-    .kp-uptime__cell[data-kp-tone='none'] {
+    :is(.kp-uptime__cell, .kp-uptime__swatch)[data-kp-tone='none'] {
         --kp-uptime-fill: transparent;
         border-color: var(--border);
     }
@@ -19093,6 +19093,83 @@
     .kp-uptime__cell:focus-visible {
         outline: 2px solid var(--ring);
         outline-offset: 1px;
+    }
+
+    /* The cell whose quick info is open stands raised with the focus ring, so the plate under it reads as its own. */
+    .kp-uptime__cell[aria-expanded='true'] {
+        block-size: 100%;
+        outline: 2px solid var(--ring);
+        outline-offset: 1px;
+    }
+
+    a.kp-uptime__cell {
+        text-decoration: none;
+    }
+
+    /* A period's quick info (`open: 'info'`): the theme's popover plate under its cell, placed by the script in window
+     * coordinates in the top layer. The period, its state as a swatch of the cell's own fill and a word, its figures,
+     * the page's lines and a link to its page. Knob: --kp-uptime-info-width (17rem). */
+    .kp-popover.kp-uptime__info {
+        position: fixed;
+        position-area: none;
+        box-sizing: border-box;
+        display: grid;
+        justify-items: start;
+        gap: var(--kp-space-xs, 0.25rem);
+        inline-size: min(var(--kp-uptime-info-width, 17rem), calc(100vw - 1rem));
+        margin: 0;
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        overflow: visible;
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-uptime__info[hidden] {
+        display: none;
+    }
+
+    .kp-uptime__info > :is(p, ul) {
+        max-inline-size: 100%;
+        margin: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-uptime__info-title {
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-uptime__info-state {
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-uptime__swatch {
+        --kp-uptime-fill: var(--muted);
+        --kp-uptime-pattern: none;
+        box-sizing: border-box;
+        flex: none;
+        inline-size: 0.625rem;
+        block-size: 1rem;
+        border: 1px solid transparent;
+        border-radius: var(--kp-uptime-cell-radius, 1px);
+        background-color: var(--kp-uptime-fill);
+        background-image: var(--kp-uptime-pattern);
+    }
+
+    .kp-uptime__info-figures {
+        color: var(--muted-foreground);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-uptime__info-details {
+        display: grid;
+        gap: calc(var(--kp-space-xs, 0.25rem) / 2);
+        padding-inline-start: 1rem;
+    }
+
+    .kp-uptime__info-link {
+        margin-block-start: var(--kp-space-xs, 0.25rem);
     }
 
     .kp-uptime .kp-uptime__cell.kp-skeleton {

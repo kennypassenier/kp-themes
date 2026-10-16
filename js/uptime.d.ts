@@ -2,6 +2,8 @@
 export declare const UPTIME = "[data-kp-uptime]";
 /** Fired on the strip when a cell is pressed: `{ key, index, period }`. */
 export declare const UPTIME_PICK_EVENT = "kp-uptime-pick";
+/** Fired on the strip, cancelable, before a period's quick info opens: `{ key, index, period, panel }`. */
+export declare const UPTIME_OPEN_EVENT = "kp-uptime-open";
 /** The states of a period, in the order of how bad they are. */
 export declare const UPTIME_STATES: readonly ['up', 'degraded', 'down', 'none'];
 /** How many cells a strip waits with when the page has not said (`data-kp-uptime-count`). */
@@ -28,6 +30,14 @@ export type UptimePeriod = {
      * the hover card's text; else the label, the state and the figures
      */
     tip?: string;
+    /**
+     * the period's own page: the cell is a link to it (or, with `open: 'info'`, its quick info links it)
+     */
+    href?: string;
+    /**
+     * lines for the period's quick info (what happened, how long), with `open: 'info'`
+     */
+    details?: string[];
 };
 export type UptimeSpec = {
     /**
@@ -58,6 +68,10 @@ export type UptimeSpec = {
      * the error state's sentence; else the dictionary's
      */
     error?: string;
+    /**
+     * a press opens the period's quick info; else `data-kp-uptime-open`
+     */
+    open?: 'info';
 };
 export type UptimeFigures = {
     /**
@@ -79,6 +93,8 @@ export type UptimeFigures = {
  * @property {number} [uptime]  the share of the period the service was up, 0 to 1, when measured
  * @property {number} [incidents] how many incidents began in it
  * @property {string} [tip]     the hover card's text; else the label, the state and the figures
+ * @property {string} [href]    the period's own page: the cell is a link to it (or, with `open: 'info'`, its quick info links it)
+ * @property {string[]} [details] lines for the period's quick info (what happened, how long), with `open: 'info'`
  */
 /**
  * @typedef {object} UptimeSpec
@@ -89,6 +105,7 @@ export type UptimeFigures = {
  * @property {string} [to]      the axis's end word ("Today"); else the latest period's label
  * @property {number} [count]   how many cells a loading or empty strip waits with; else `data-kp-uptime-count`, else 90
  * @property {string} [error]   the error state's sentence; else the dictionary's
+ * @property {'info'} [open]    a press opens the period's quick info; else `data-kp-uptime-open`
  */
 /**
  * @typedef {object} UptimeFigures

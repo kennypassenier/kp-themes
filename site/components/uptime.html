@@ -232,7 +232,9 @@
                             <tr><td><code>data-kp-uptime-count</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-uptime-fit</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-uptime-label</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-uptime-open</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-uptime-state</code></td><td>written, read</td></tr>
+                            <tr><td><code>data-kp-uptime-tip</code></td><td>written</td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="react" id="react">
@@ -247,6 +249,7 @@
                     <h2 class="kp-fw-semibold">Events</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
                             <tr><td><code>kp-uptime-pick</code></td><td>Fired on the strip when a cell is pressed: `{ key, index, period }`.</td></tr>
+                            <tr><td><code>kp-uptime-open</code></td><td>Fired on the strip, cancelable, before a period's quick info opens: `{ key, index, period, panel }`.</td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="knobs" id="knobs">

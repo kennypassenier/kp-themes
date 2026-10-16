@@ -565,6 +565,8 @@ var init_strings = __esm({
         incidents === null ? null : incidents === 1 ? "1 incident" : `${incidents} incidents`
       ].filter(Boolean).join(" \xB7 "),
       uptimeShown: (shown2, total) => `${shown2} of ${total} shown`,
+      uptimeInfoFigures: (percent, incidents) => [percent === null ? null : `${percent}% up`, incidents === null ? null : incidents === 1 ? "1 incident" : `${incidents} incidents`].filter(Boolean).join(" \xB7 "),
+      uptimeOpen: (label) => `Open ${label}`,
       // The typed confirmation [kpadopt4-ideas].
       typeConfirmLabel: (name) => `Type ${name} to confirm`,
       typeConfirmRuleExact: "Type it exactly: capitals count; spaces at the start and the end are ignored.",
@@ -29220,6 +29222,7 @@ var uptime_exports = {};
 __export(uptime_exports, {
   UPTIME: () => UPTIME,
   UPTIME_COUNT: () => UPTIME_COUNT,
+  UPTIME_OPEN_EVENT: () => UPTIME_OPEN_EVENT,
   UPTIME_PICK_EVENT: () => UPTIME_PICK_EVENT,
   UPTIME_STATES: () => UPTIME_STATES,
   attachUptimes: () => attachUptimes,
@@ -29293,6 +29296,8 @@ function draw2(el9, spec) {
     /** @type {HTMLElement} */
     el9.ownerDocument.activeElement.dataset.kpKey
   ) : void 0;
+  INFO.get(el9)?.();
+  const info = infoMode(el9);
   el9.classList.add("kp-uptime");
   el9.dataset.kpUptimeState = state;
   if (loading) el9.setAttribute("aria-busy", "true");
@@ -29340,12 +29345,26 @@ function draw2(el9, spec) {
   const cells = [];
   for (let i = 0; i < count; i++) {
     const period = loading || failed ? null : periods[i] ?? null;
-    const cell = make10(el9, loading ? "span" : "button", loading ? "kp-uptime__cell kp-skeleton kp-skeleton--block" : "kp-uptime__cell");
+    const link = Boolean(period?.href) && !info;
+    const cell = make10(
+      el9,
+      loading ? "span" : link ? "a" : "button",
+      loading ? "kp-uptime__cell kp-skeleton kp-skeleton--block" : "kp-uptime__cell"
+    );
     if (loading) {
       cell.setAttribute("aria-hidden", "true");
     } else {
       const tone = period && UPTIME_STATES.includes(period.state) ? period.state : "none";
-      cell.type = "button";
+      if (link) cell.setAttribute(
+        "href",
+        /** @type {string} */
+        period?.href
+      );
+      else cell.type = "button";
+      if (info && period) {
+        cell.setAttribute("aria-haspopup", "dialog");
+        cell.setAttribute("aria-expanded", "false");
+      }
       cell.dataset.kpTone = tone;
       cell.tabIndex = -1;
       if (period) {
@@ -29424,7 +29443,7 @@ function fit(el9) {
     const focusable = cells.filter((c) => !c.hidden && c.tabIndex === 0);
     if (focusable.length === 0) {
       const last = cells.at(-1);
-      if (last && last.tagName === "BUTTON") last.tabIndex = 0;
+      if (last && last.matches(CELL)) last.tabIndex = 0;
     }
     for (const c of cells) if (c.hidden && c.tabIndex === 0) c.tabIndex = -1;
   }
@@ -29488,15 +29507,146 @@ function attachUptimes(root = document) {
     const relaid = typeof ResizeObserver === "function" ? new ResizeObserver(() => fit(el9)) : null;
     const track = el9.querySelector(".kp-uptime__track");
     if (relaid && track && el9.dataset.kpUptimeFit === "scroll") relaid.observe(track);
+    const doc2 = el9.ownerDocument;
+    let panel = null;
+    let anchor = null;
+    let lower = null;
+    let shown2 = false;
+    const tips = (on) => {
+      for (const c of el9.querySelectorAll(".kp-uptime__cell")) {
+        const from = on ? "data-kp-uptime-tip" : HOVERCARD_ATTRIBUTE;
+        const to = on ? HOVERCARD_ATTRIBUTE : "data-kp-uptime-tip";
+        const words = c.getAttribute(from);
+        if (words === null) continue;
+        c.setAttribute(to, words);
+        c.removeAttribute(from);
+      }
+    };
+    const place2 = (p) => {
+      if (!anchor) return;
+      const box = anchor.getBoundingClientRect();
+      const strip = el9.getBoundingClientRect();
+      const width2 = p.offsetWidth;
+      const start = getComputedStyle(el9).direction === "rtl" ? box.right - width2 : box.left;
+      const inStrip = Math.max(strip.left, Math.min(start, strip.right - width2));
+      const left = Math.max(8, Math.min(inStrip, doc2.documentElement.clientWidth - width2 - 8));
+      p.style.setProperty("left", `${left}px`);
+      p.style.setProperty("top", `${box.bottom + 6}px`);
+      placeBlockSide(p, box);
+    };
+    const fill2 = (box, period) => {
+      const s2 = getStrings();
+      const tone = UPTIME_STATES.includes(period.state) ? period.state : "none";
+      const title = make10(el9, "p", "kp-uptime__info-title");
+      title.id = `${box.id}-title`;
+      title.textContent = period.label;
+      const state = make10(el9, "p", "kp-uptime__info-state");
+      const swatch = make10(el9, "span", "kp-uptime__swatch");
+      swatch.dataset.kpTone = tone;
+      swatch.setAttribute("aria-hidden", "true");
+      const word = make10(el9, "span");
+      word.textContent = s2.uptimeStateWord(tone);
+      state.append(swatch, word);
+      const parts = [title, state];
+      const percent = typeof period.uptime === "number" && Number.isFinite(period.uptime) ? uptimePercent(period.uptime) : null;
+      const incidents = typeof period.incidents === "number" && period.incidents >= 0 ? Math.floor(period.incidents) : null;
+      if (percent !== null || incidents !== null) {
+        const figures = make10(el9, "p", "kp-uptime__info-figures");
+        figures.textContent = s2.uptimeInfoFigures(percent, incidents);
+        parts.push(figures);
+      }
+      if (period.details?.length) {
+        const list = make10(el9, "ul", "kp-uptime__info-details");
+        for (const line of period.details) list.append(Object.assign(make10(el9, "li"), { textContent: line }));
+        parts.push(list);
+      }
+      if (period.href) {
+        const link = (
+          /** @type {HTMLAnchorElement} */
+          make10(el9, "a", "kp-button kp-button--sm kp-uptime__info-link")
+        );
+        link.href = period.href;
+        link.textContent = s2.uptimeOpen(period.label);
+        parts.push(link);
+      }
+      box.setAttribute("aria-labelledby", title.id);
+      box.replaceChildren(...parts);
+    };
+    const openInfo = (cell) => {
+      const periods = SPECS.get(el9)?.periods ?? [];
+      const index = periods.findIndex((p) => p.key === cell.dataset.kpKey);
+      if (index < 0) return;
+      if (!panel) {
+        panel = make10(el9, "div", "kp-popover kp-uptime__info");
+        panel.id = `kp-uptime-info-${infoMade += 1}`;
+        panel.setAttribute("role", "dialog");
+        panel.hidden = true;
+        el9.append(panel);
+      }
+      const detail = { key: cell.dataset.kpKey, index, period: periods[index], panel };
+      if (!el9.dispatchEvent(new CustomEvent(UPTIME_OPEN_EVENT, { bubbles: true, cancelable: true, detail }))) return;
+      fill2(panel, periods[index]);
+      anchor?.setAttribute("aria-expanded", "false");
+      anchor = cell;
+      cell.setAttribute("aria-expanded", "true");
+      cell.setAttribute("aria-controls", panel.id);
+      if (shown2) {
+        place2(panel);
+        return;
+      }
+      shown2 = true;
+      attachHoverCards(doc2).hide();
+      tips(false);
+      stopClose(panel);
+      panel.hidden = false;
+      if (lower) place2(panel);
+      else {
+        lower = raiseOverlay(panel, place2);
+        arriveShown(panel);
+      }
+    };
+    const closeInfo = async (refocus, now = false) => {
+      if (!shown2 || !panel) return;
+      shown2 = false;
+      const cell = anchor;
+      cell?.setAttribute("aria-expanded", "false");
+      if (!now) {
+        const done = await playClose(panel);
+        if (!done || shown2) return;
+      }
+      panel.hidden = true;
+      lower?.();
+      lower = null;
+      stopClose(panel);
+      tips(true);
+      anchor = null;
+      if (refocus && cell?.isConnected) cell.focus();
+    };
+    INFO.set(el9, () => {
+      void closeInfo(false, true);
+      panel?.remove();
+      panel = null;
+    });
     const onKey = (event) => {
+      if (event.key === "Escape" && shown2) {
+        event.preventDefault();
+        event.stopPropagation();
+        void closeInfo(true);
+        return;
+      }
       const cell = (
         /** @type {HTMLElement | null} */
-        event.target instanceof Element ? event.target.closest("button.kp-uptime__cell") : null
+        event.target instanceof Element ? event.target.closest(CELL) : null
       );
-      if (!cell || !el9.contains(cell)) return;
+      if (!cell || !el9.contains(cell) || panel?.contains(cell)) return;
+      if (event.key === " " && cell.tagName === "A") {
+        event.preventDefault();
+        cell.click();
+        return;
+      }
       const cells = (
         /** @type {HTMLElement[]} */
-        [...el9.querySelectorAll("button.kp-uptime__cell:not([hidden])")]
+        [...el9.querySelectorAll(`.kp-uptime__track > ${CELL}:not([hidden])`)]
       );
       const at = cells.indexOf(cell);
       let next = -1;
@@ -29510,24 +29660,41 @@ function attachUptimes(root = document) {
       for (const c of cells) c.tabIndex = -1;
       cells[next].tabIndex = 0;
       cells[next].focus();
+      if (shown2 && cells[next].getAttribute("aria-haspopup")) openInfo(cells[next]);
     };
     const onClick = (event) => {
       const cell = (
         /** @type {HTMLElement | null} */
-        event.target instanceof Element ? event.target.closest("button.kp-uptime__cell") : null
+        event.target instanceof Element ? event.target.closest(CELL) : null
       );
-      if (!cell || !el9.contains(cell)) return;
+      if (!cell || !el9.contains(cell) || panel?.contains(cell)) return;
       const periods = SPECS.get(el9)?.periods ?? [];
       const index = periods.findIndex((p) => p.key === cell.dataset.kpKey);
       if (index < 0) return;
-      for (const c of el9.querySelectorAll("button.kp-uptime__cell")) c.tabIndex = -1;
+      for (const c of el9.querySelectorAll(`.kp-uptime__track > ${CELL}`)) c.tabIndex = -1;
       cell.tabIndex = 0;
       el9.dispatchEvent(
         new CustomEvent(UPTIME_PICK_EVENT, { bubbles: true, detail: { key: cell.dataset.kpKey, index, period: periods[index] } })
       );
+      if (cell.getAttribute("aria-haspopup") && infoMode(el9)) {
+        if (shown2 && anchor === cell) void closeInfo(false);
+        else openInfo(cell);
+      }
+    };
+    const onOutside = (event) => {
+      if (!shown2) return;
+      const target = event.target instanceof Element ? event.target : null;
+      if (target && (panel?.contains(target) || el9.contains(target) && target.closest(CELL))) return;
+      void closeInfo(false);
+    };
+    const onFocusOut = (event) => {
+      const next = event.relatedTarget;
+      if (shown2 && next instanceof Node && !el9.contains(next)) void closeInfo(false);
     };
     el9.addEventListener("keydown", onKey);
     el9.addEventListener("click", onClick);
+    el9.addEventListener("focusout", onFocusOut);
+    doc2.addEventListener("pointerdown", onOutside, true);
     cleanups.push(() => {
       watcher?.disconnect();
       relaid?.disconnect();
@@ -29535,6 +29702,10 @@ function attachUptimes(root = document) {
       cancelAnimationFrame(frame2);
       el9.removeEventListener("keydown", onKey);
       el9.removeEventListener("click", onClick);
+      el9.removeEventListener("focusout", onFocusOut);
+      doc2.removeEventListener("pointerdown", onOutside, true);
+      INFO.get(el9)?.();
+      INFO.delete(el9);
       CARDS2.get(el9)?.remove();
       CARDS2.delete(el9);
       delete el9.dataset.kpUptimeAttached;
@@ -29546,15 +29717,19 @@ function attachUptimes(root = document) {
     for (const c of cleanups) c();
   };
 }
-var UPTIME, UPTIME_PICK_EVENT, UPTIME_STATES, UPTIME_COUNT, SPECS, CARDS2, WAITING2, UNPINNED, DRAWN2, countOf, make10;
+var UPTIME, UPTIME_PICK_EVENT, UPTIME_OPEN_EVENT, CELL, UPTIME_STATES, UPTIME_COUNT, SPECS, CARDS2, WAITING2, UNPINNED, DRAWN2, INFO, infoMade, infoMode, countOf, make10;
 var init_uptime = __esm({
   "js/uptime.js"() {
     "use strict";
     init_strings();
     init_hovercard();
     init_busy_card();
+    init_motion();
+    init_top_layer();
     UPTIME = "[data-kp-uptime]";
     UPTIME_PICK_EVENT = "kp-uptime-pick";
+    UPTIME_OPEN_EVENT = "kp-uptime-open";
+    CELL = ".kp-uptime__cell:is(button, a)";
     UPTIME_STATES = /** @type {const} */
     ["up", "degraded", "down", "none"];
     UPTIME_COUNT = 90;
@@ -29563,6 +29738,9 @@ var init_uptime = __esm({
     WAITING2 = /* @__PURE__ */ new WeakMap();
     UNPINNED = /* @__PURE__ */ new WeakSet();
     DRAWN2 = /* @__PURE__ */ new WeakSet();
+    INFO = /* @__PURE__ */ new WeakMap();
+    infoMade = 0;
+    infoMode = (el9) => (SPECS.get(el9)?.open ?? el9.dataset.kpUptimeOpen) === "info";
     countOf = (el9) => {
       const n = Number.parseInt(el9.dataset.kpUptimeCount ?? "", 10);
       return Number.isFinite(n) && n > 0 ? n : UPTIME_COUNT;
@@ -33205,6 +33383,7 @@ export {
   UPDATING_ATTRIBUTE,
   UPTIME,
   UPTIME_COUNT,
+  UPTIME_OPEN_EVENT,
   UPTIME_PICK_EVENT,
   UPTIME_STATES,
   VALID_EVENT,
