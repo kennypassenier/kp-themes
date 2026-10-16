@@ -4416,11 +4416,20 @@
         pointer-events: none;
         background-repeat: no-repeat;
         background-image:
-            linear-gradient(var(--kp-bp-w), var(--kp-bp-w)),
-            linear-gradient(var(--kp-bp-w), var(--kp-bp-w)),
+            linear-gradient(var(--kp-bp-w), var(--kp-bp-w)), linear-gradient(var(--kp-bp-w), var(--kp-bp-w)),
             linear-gradient(var(--kp-bp-d), var(--kp-bp-d)),
-            linear-gradient(to top left, transparent calc(50% - 0.5px), var(--kp-bp-d) calc(50% - 0.5px) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
-            linear-gradient(to top left, transparent calc(50% - 0.5px), var(--kp-bp-d) calc(50% - 0.5px) calc(50% + 0.5px), transparent calc(50% + 0.5px));
+            linear-gradient(
+                to top left,
+                transparent calc(50% - 0.5px),
+                var(--kp-bp-d) calc(50% - 0.5px) calc(50% + 0.5px),
+                transparent calc(50% + 0.5px)
+            ),
+            linear-gradient(
+                to top left,
+                transparent calc(50% - 0.5px),
+                var(--kp-bp-d) calc(50% - 0.5px) calc(50% + 0.5px),
+                transparent calc(50% + 0.5px)
+            );
         background-size:
             1px 100%,
             1px 100%,
@@ -4642,8 +4651,8 @@
     [data-theme='blueprint'] :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='running'] {
         border-color: var(--primary);
         background:
-            linear-gradient(90deg, var(--primary) 0 0.75rem, transparent 0.75rem 1rem, var(--primary) 1rem 1.125rem, transparent 1.125rem 1.375rem) 0 50% /
-                1.375rem 1px repeat-x,
+            linear-gradient(90deg, var(--primary) 0 0.75rem, transparent 0.75rem 1rem, var(--primary) 1rem 1.125rem, transparent 1.125rem 1.375rem) 0
+                50% / 1.375rem 1px repeat-x,
             transparent;
         color: var(--foreground);
         box-shadow: inset -2px 0 0 var(--primary);
@@ -4747,5 +4756,61 @@
        drops under the first and out of the timeline onto the legend. */
     [data-theme='blueprint'] .kp-gantt__ghost .kp-gantt__run.kp-skeleton {
         position: absolute;
+    }
+}
+
+/* ── The six opt-in options of the dashboard adoption, round 3, in this theme [kpadopt3] ──
+   The nav bar's separator, the timeline's day buttons and series runs, the week agenda's upcoming list on a phone and
+   the facet swatch's identity pattern (the choice-filter value and the heat grid's End are behaviour only).
+   Blueprint's own (themes/blueprint/CHARACTER.md): the separator is the sheet's fold line, the dashed
+   rule of the divider, stood upright and lying across the phone's list. A day on the axis is drafted: pointing brings
+   the pen's cyan witness lines to either side of it; pressed it is the section, hatched in amber between the amber
+   witness lines with its dimension line under it (the next run's amber). A series' finished run is a hatched section
+   in its ink; the upcoming list's day rule is dashed; the facet pattern is framed by a drawn line. */
+@layer kp.signature {
+    [data-theme='blueprint'] .kp-nav__sep {
+        inline-size: 1px;
+        border-inline-start: 0;
+        background: linear-gradient(to bottom, var(--border-strong) 0 6px, transparent 6px 12px) 0 0 / 1px 12px repeat-y;
+    }
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='blueprint'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep {
+            inline-size: auto;
+            block-size: 1px;
+            border-block-start: 0;
+            background: linear-gradient(90deg, var(--border-strong) 0 6px, transparent 6px 12px) 0 0 / 12px 1px repeat-x;
+        }
+    }
+
+    [data-theme='blueprint'] .kp-gantt__tick:is(button) {
+        border-radius: 0;
+        text-decoration: none;
+    }
+    [data-theme='blueprint'] .kp-gantt__tick:is(button):hover {
+        color: var(--foreground);
+        box-shadow:
+            -4px 0 0 -3px var(--primary),
+            4px 0 0 -3px var(--primary);
+    }
+    [data-theme='blueprint'] .kp-gantt__tick:is(button)[aria-pressed='true'] {
+        background: repeating-linear-gradient(-45deg, hsl(from var(--accent) h s l / 0.3) 0 1px, transparent 1px 5px);
+        color: var(--accent);
+        box-shadow:
+            -4px 0 0 -3px var(--accent),
+            4px 0 0 -3px var(--accent),
+            inset 0 -1px 0 var(--accent);
+    }
+    [data-theme='blueprint'] .kp-gantt__run[data-kp-state='ok'][data-kp-series] {
+        background:
+            repeating-linear-gradient(-45deg, hsl(from var(--kp-gantt-series) h s l / 0.5) 0 1px, transparent 1px 4px),
+            color-mix(in oklab, var(--kp-gantt-series) 18%, var(--card));
+    }
+    [data-theme='blueprint'] .kp-week__next:not(:has(+ .kp-week__next:not([data-kp-day-start]))) {
+        border-block-end-style: dashed;
+    }
+    [data-theme='blueprint'] .kp-facet__swatch[data-kp-facet-pattern] {
+        border-radius: 0;
+        outline: 1px solid hsl(from var(--kp-facet-swatch-colour, var(--border-strong)) h s l / 0.7);
+        outline-offset: 1px;
     }
 }

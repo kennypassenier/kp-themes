@@ -4681,3 +4681,71 @@
         position: absolute;
     }
 }
+
+/* ── The six opt-in options of the dashboard adoption, round 3, in this theme [kpadopt3] ──
+   The nav bar's separator, the timeline's day buttons and series runs, the week agenda's upcoming list on a phone and
+   the facet swatch's identity pattern (the choice-filter value and the heat grid's End are behaviour only).
+   Forest's own (themes/forest/CHARACTER.md): the separator is a twig, a green hairline with one leaf at
+   its head; lying down across the phone's list the leaf sits on its start. A day on the axis is a leaf: the small leaf
+   corner on its ground, pointing blazes it in the moss wash, pressed it is the green leaf with the trail's foot under it.
+   A series' finished run grows from the ground in its own colour; the facet pattern is a leaf of its hue. */
+@layer kp.signature {
+    [data-theme='forest'] .kp-nav__sep {
+        position: relative;
+        border-inline-start-color: hsl(from var(--primary) h s l / 0.55);
+    }
+    [data-theme='forest'] .kp-nav__sep::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 1px;
+        inset-inline-start: 0;
+        inline-size: 6px;
+        block-size: 6px;
+        border-radius: 0 100%;
+        background: var(--primary);
+    }
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep {
+            border-block-start-color: hsl(from var(--primary) h s l / 0.55);
+        }
+        [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep::after {
+            inset-block-start: -6px;
+            inset-inline-start: 0;
+        }
+    }
+
+    [data-theme='forest'] .kp-gantt__tick:is(button) {
+        border-radius: 0 0.45rem;
+        text-decoration: none;
+    }
+    [data-theme='forest'] .kp-gantt__tick:is(button):hover {
+        background: var(--muted);
+        color: var(--foreground);
+    }
+    [data-theme='forest'] .kp-gantt__tick:is(button)[aria-pressed='true'] {
+        background: color-mix(in oklab, var(--primary) 16%, var(--card));
+        color: var(--primary);
+        box-shadow: inset 0 -2px 0 var(--primary);
+    }
+    [data-theme='forest'] .kp-gantt__run[data-kp-state='ok'][data-kp-series] {
+        box-shadow: inset 0 -2px 0 var(--kp-gantt-series);
+    }
+    [data-theme='forest'] .kp-gantt__run[data-kp-state='ok'][data-kp-series]:hover {
+        box-shadow:
+            inset 0 -2px 0 var(--kp-gantt-series),
+            0 0 0 1px var(--primary);
+    }
+    [data-theme='forest'] .kp-week__next:not(:has(+ .kp-week__next:not([data-kp-day-start]))) {
+        border-block-end-color: hsl(from var(--primary) h s l / 0.3);
+    }
+    [data-theme='forest'] .kp-facet__swatch[data-kp-facet-pattern] {
+        border-radius: 0 40%;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-gantt__tick:is(button) {
+            transition:
+                background-color var(--fx-duration) var(--fx-ease),
+                color var(--fx-duration) var(--fx-ease);
+        }
+    }
+}

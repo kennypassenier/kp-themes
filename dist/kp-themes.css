@@ -54849,6 +54849,74 @@
     }
 }
 
+/* ── The six opt-in options of the dashboard adoption, round 3, in this theme [kpadopt3] ──
+   The nav bar's separator, the timeline's day buttons and series runs, the week agenda's upcoming list on a phone and
+   the facet swatch's identity pattern (the choice-filter value and the heat grid's End are behaviour only).
+   Forest's own (themes/forest/CHARACTER.md): the separator is a twig, a green hairline with one leaf at
+   its head; lying down across the phone's list the leaf sits on its start. A day on the axis is a leaf: the small leaf
+   corner on its ground, pointing blazes it in the moss wash, pressed it is the green leaf with the trail's foot under it.
+   A series' finished run grows from the ground in its own colour; the facet pattern is a leaf of its hue. */
+@layer kp.signature {
+    [data-theme='forest'] .kp-nav__sep {
+        position: relative;
+        border-inline-start-color: hsl(from var(--primary) h s l / 0.55);
+    }
+    [data-theme='forest'] .kp-nav__sep::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 1px;
+        inset-inline-start: 0;
+        inline-size: 6px;
+        block-size: 6px;
+        border-radius: 0 100%;
+        background: var(--primary);
+    }
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep {
+            border-block-start-color: hsl(from var(--primary) h s l / 0.55);
+        }
+        [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep::after {
+            inset-block-start: -6px;
+            inset-inline-start: 0;
+        }
+    }
+
+    [data-theme='forest'] .kp-gantt__tick:is(button) {
+        border-radius: 0 0.45rem;
+        text-decoration: none;
+    }
+    [data-theme='forest'] .kp-gantt__tick:is(button):hover {
+        background: var(--muted);
+        color: var(--foreground);
+    }
+    [data-theme='forest'] .kp-gantt__tick:is(button)[aria-pressed='true'] {
+        background: color-mix(in oklab, var(--primary) 16%, var(--card));
+        color: var(--primary);
+        box-shadow: inset 0 -2px 0 var(--primary);
+    }
+    [data-theme='forest'] .kp-gantt__run[data-kp-state='ok'][data-kp-series] {
+        box-shadow: inset 0 -2px 0 var(--kp-gantt-series);
+    }
+    [data-theme='forest'] .kp-gantt__run[data-kp-state='ok'][data-kp-series]:hover {
+        box-shadow:
+            inset 0 -2px 0 var(--kp-gantt-series),
+            0 0 0 1px var(--primary);
+    }
+    [data-theme='forest'] .kp-week__next:not(:has(+ .kp-week__next:not([data-kp-day-start]))) {
+        border-block-end-color: hsl(from var(--primary) h s l / 0.3);
+    }
+    [data-theme='forest'] .kp-facet__swatch[data-kp-facet-pattern] {
+        border-radius: 0 40%;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-gantt__tick:is(button) {
+            transition:
+                background-color var(--fx-duration) var(--fx-ease),
+                color var(--fx-duration) var(--fx-ease);
+        }
+    }
+}
+
 /* The numbers deco's motion is made of, registered at the top level because
    Firefox does not register an @property inside a cascade layer; with no
    registration a number would not animate or transition. Each initial value
@@ -70483,11 +70551,20 @@
         pointer-events: none;
         background-repeat: no-repeat;
         background-image:
-            linear-gradient(var(--kp-bp-w), var(--kp-bp-w)),
-            linear-gradient(var(--kp-bp-w), var(--kp-bp-w)),
+            linear-gradient(var(--kp-bp-w), var(--kp-bp-w)), linear-gradient(var(--kp-bp-w), var(--kp-bp-w)),
             linear-gradient(var(--kp-bp-d), var(--kp-bp-d)),
-            linear-gradient(to top left, transparent calc(50% - 0.5px), var(--kp-bp-d) calc(50% - 0.5px) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
-            linear-gradient(to top left, transparent calc(50% - 0.5px), var(--kp-bp-d) calc(50% - 0.5px) calc(50% + 0.5px), transparent calc(50% + 0.5px));
+            linear-gradient(
+                to top left,
+                transparent calc(50% - 0.5px),
+                var(--kp-bp-d) calc(50% - 0.5px) calc(50% + 0.5px),
+                transparent calc(50% + 0.5px)
+            ),
+            linear-gradient(
+                to top left,
+                transparent calc(50% - 0.5px),
+                var(--kp-bp-d) calc(50% - 0.5px) calc(50% + 0.5px),
+                transparent calc(50% + 0.5px)
+            );
         background-size:
             1px 100%,
             1px 100%,
@@ -70709,8 +70786,8 @@
     [data-theme='blueprint'] :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='running'] {
         border-color: var(--primary);
         background:
-            linear-gradient(90deg, var(--primary) 0 0.75rem, transparent 0.75rem 1rem, var(--primary) 1rem 1.125rem, transparent 1.125rem 1.375rem) 0 50% /
-                1.375rem 1px repeat-x,
+            linear-gradient(90deg, var(--primary) 0 0.75rem, transparent 0.75rem 1rem, var(--primary) 1rem 1.125rem, transparent 1.125rem 1.375rem) 0
+                50% / 1.375rem 1px repeat-x,
             transparent;
         color: var(--foreground);
         box-shadow: inset -2px 0 0 var(--primary);
@@ -70814,6 +70891,62 @@
        drops under the first and out of the timeline onto the legend. */
     [data-theme='blueprint'] .kp-gantt__ghost .kp-gantt__run.kp-skeleton {
         position: absolute;
+    }
+}
+
+/* ── The six opt-in options of the dashboard adoption, round 3, in this theme [kpadopt3] ──
+   The nav bar's separator, the timeline's day buttons and series runs, the week agenda's upcoming list on a phone and
+   the facet swatch's identity pattern (the choice-filter value and the heat grid's End are behaviour only).
+   Blueprint's own (themes/blueprint/CHARACTER.md): the separator is the sheet's fold line, the dashed
+   rule of the divider, stood upright and lying across the phone's list. A day on the axis is drafted: pointing brings
+   the pen's cyan witness lines to either side of it; pressed it is the section, hatched in amber between the amber
+   witness lines with its dimension line under it (the next run's amber). A series' finished run is a hatched section
+   in its ink; the upcoming list's day rule is dashed; the facet pattern is framed by a drawn line. */
+@layer kp.signature {
+    [data-theme='blueprint'] .kp-nav__sep {
+        inline-size: 1px;
+        border-inline-start: 0;
+        background: linear-gradient(to bottom, var(--border-strong) 0 6px, transparent 6px 12px) 0 0 / 1px 12px repeat-y;
+    }
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='blueprint'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep {
+            inline-size: auto;
+            block-size: 1px;
+            border-block-start: 0;
+            background: linear-gradient(90deg, var(--border-strong) 0 6px, transparent 6px 12px) 0 0 / 12px 1px repeat-x;
+        }
+    }
+
+    [data-theme='blueprint'] .kp-gantt__tick:is(button) {
+        border-radius: 0;
+        text-decoration: none;
+    }
+    [data-theme='blueprint'] .kp-gantt__tick:is(button):hover {
+        color: var(--foreground);
+        box-shadow:
+            -4px 0 0 -3px var(--primary),
+            4px 0 0 -3px var(--primary);
+    }
+    [data-theme='blueprint'] .kp-gantt__tick:is(button)[aria-pressed='true'] {
+        background: repeating-linear-gradient(-45deg, hsl(from var(--accent) h s l / 0.3) 0 1px, transparent 1px 5px);
+        color: var(--accent);
+        box-shadow:
+            -4px 0 0 -3px var(--accent),
+            4px 0 0 -3px var(--accent),
+            inset 0 -1px 0 var(--accent);
+    }
+    [data-theme='blueprint'] .kp-gantt__run[data-kp-state='ok'][data-kp-series] {
+        background:
+            repeating-linear-gradient(-45deg, hsl(from var(--kp-gantt-series) h s l / 0.5) 0 1px, transparent 1px 4px),
+            color-mix(in oklab, var(--kp-gantt-series) 18%, var(--card));
+    }
+    [data-theme='blueprint'] .kp-week__next:not(:has(+ .kp-week__next:not([data-kp-day-start]))) {
+        border-block-end-style: dashed;
+    }
+    [data-theme='blueprint'] .kp-facet__swatch[data-kp-facet-pattern] {
+        border-radius: 0;
+        outline: 1px solid hsl(from var(--kp-facet-swatch-colour, var(--border-strong)) h s l / 0.7);
+        outline-offset: 1px;
     }
 }
 
@@ -86315,8 +86448,7 @@
                 hsl(from var(--kp-sig-solstice-sun) h s l / calc(0.055 * min(1, var(--kp-sig-solstice-press) * 3))) 42%,
                 transparent 72%
             ),
-            linear-gradient(var(--kp-so-foot), var(--kp-so-foot)),
-            linear-gradient(to top, hsl(from var(--kp-so-sky) h s l / 0.22), transparent);
+            linear-gradient(var(--kp-so-foot), var(--kp-so-foot)), linear-gradient(to top, hsl(from var(--kp-so-sky) h s l / 0.22), transparent);
         background-position:
             0 100%,
             50% 100%,
@@ -86374,7 +86506,11 @@
         position: relative;
     }
     [data-theme='solstice'] .kp-action:not(:is(.kp-action--destructive, :disabled, [aria-disabled='true'])) {
-        color: color-mix(in oklch, var(--card-foreground) calc((1 - var(--kp-sig-solstice-press)) * 100%), var(--kp-sig-solstice-cream, var(--foreground)));
+        color: color-mix(
+            in oklch,
+            var(--card-foreground) calc((1 - var(--kp-sig-solstice-press)) * 100%),
+            var(--kp-sig-solstice-cream, var(--foreground))
+        );
     }
     [data-theme='solstice'] .kp-action:is(:disabled, [aria-disabled='true']) {
         --kp-so-sky: transparent;
@@ -86440,12 +86576,7 @@
         inset-inline-start: 0;
         inline-size: 37%;
         block-size: 1.2rem;
-        background: radial-gradient(
-            circle at 50% 100%,
-            var(--primary) 0 0.28rem,
-            hsl(from var(--primary) h s l / 0.35) 0.3rem,
-            transparent 0.9rem
-        );
+        background: radial-gradient(circle at 50% 100%, var(--primary) 0 0.28rem, hsl(from var(--primary) h s l / 0.35) 0.3rem, transparent 0.9rem);
         transform: translateX(-100%);
         pointer-events: none;
     }
@@ -86469,7 +86600,9 @@
         --kp-facet-hover: linear-gradient(to top, hsl(from var(--accent) h s l / 0.2), transparent 70%);
     }
     [data-theme='solstice'] .kp-facet:hover {
-        background: linear-gradient(var(--primary), var(--primary)) 0 100% / 100% 2px no-repeat, linear-gradient(to top, hsl(from var(--accent) h s l / 0.2), transparent 70%);
+        background:
+            linear-gradient(var(--primary), var(--primary)) 0 100% / 100% 2px no-repeat,
+            linear-gradient(to top, hsl(from var(--accent) h s l / 0.2), transparent 70%);
     }
     [data-theme='solstice'] .kp-facets[aria-busy='true'] .kp-facet__count {
         position: relative;
@@ -86689,6 +86822,76 @@
        drops under the first and out of the timeline onto the legend. */
     [data-theme='solstice'] .kp-gantt__ghost .kp-gantt__run.kp-skeleton {
         position: absolute;
+    }
+}
+
+/* ── The six opt-in options of the dashboard adoption, round 3, in this theme [kpadopt3] ──
+   The nav bar's separator, the timeline's day buttons and series runs, the week agenda's upcoming list on a phone and
+   the facet swatch's identity pattern (the choice-filter value and the heat grid's End are behaviour only).
+   Solstice's own (themes/solstice/CHARACTER.md): the separator is the divider's horizon with its peak
+   of low sun, stood upright, the amber point leaning into the next group; lying down across the phone's list the peak
+   rises from the middle of the line. A day on the axis flares from its foot under the pointer; pressed it wears the
+   halo, the primary's light rising from the horizon under it. A series' finished run is lit from its foot in its own
+   light; the facet pattern is a soft lantern of its hue, lit from below. */
+@layer kp.signature {
+    [data-theme='solstice'] .kp-nav__sep {
+        position: relative;
+        border-inline-start-color: var(--border);
+    }
+    [data-theme='solstice'] .kp-nav__sep::after {
+        content: '';
+        position: absolute;
+        inset-block-start: calc(50% - 4px);
+        inset-inline-start: 0;
+        inline-size: 5px;
+        block-size: 8px;
+        background: var(--accent);
+        clip-path: polygon(0 0, 100% 50%, 0 100%);
+    }
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='solstice'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep {
+            border-block-start-color: var(--border);
+        }
+        [data-theme='solstice'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep::after {
+            inset-block-start: -5px;
+            inset-inline-start: calc(50% - 4px);
+            inline-size: 8px;
+            block-size: 5px;
+            clip-path: polygon(50% 0, 100% 100%, 0 100%);
+        }
+    }
+
+    [data-theme='solstice'] .kp-gantt__tick:is(button) {
+        border-radius: calc(var(--radius) * 0.8) calc(var(--radius) * 0.8) 0 0;
+        text-decoration: none;
+    }
+    [data-theme='solstice'] .kp-gantt__tick:is(button):hover {
+        background: radial-gradient(ellipse 70% 90% at 50% 100%, hsl(from var(--accent) h s l / 0.35), transparent 70%);
+        color: var(--foreground);
+    }
+    [data-theme='solstice'] .kp-gantt__tick:is(button)[aria-pressed='true'] {
+        background: radial-gradient(ellipse 85% 120% at 50% 100%, hsl(from var(--primary) h s l / 0.45), hsl(from var(--primary) h s l / 0.1) 75%);
+        color: var(--foreground);
+        box-shadow: inset 0 -2px 0 var(--primary);
+    }
+    [data-theme='solstice'] .kp-gantt__run[data-kp-state='ok'][data-kp-series] {
+        box-shadow:
+            inset 0 -2px 0 var(--kp-gantt-series),
+            inset 0 -8px 8px -6px hsl(from var(--kp-gantt-series) h s l / 0.55);
+    }
+    [data-theme='solstice'] .kp-gantt__run[data-kp-state='ok'][data-kp-series]:hover {
+        box-shadow:
+            inset 0 -2px 0 var(--accent),
+            inset 0 -8px 8px -6px hsl(from var(--accent) h s l / 0.55);
+    }
+    [data-theme='solstice'] .kp-facet__swatch[data-kp-facet-pattern] {
+        border-radius: 35%;
+        box-shadow: 0 2px 4px -1px hsl(from var(--kp-facet-swatch-colour, var(--primary)) h s l / 0.6);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='solstice'] .kp-gantt__tick:is(button) {
+            transition: box-shadow var(--kp-sig-solstice-contact, var(--fx-duration)) var(--kp-sig-solstice-touch, var(--fx-ease));
+        }
     }
 }
 
