@@ -4894,3 +4894,1044 @@
         }
     }
 }
+
+/* ── The kpadopt4 components in synthwave's own grammar [kpadopt4] ──
+   Synthwave is the drive into the sunset (themes/synthwave/CHARACTER.md): the tape stands on the grid floor under its
+   own horizon, every light is a neon tube, what arrives rises over its horizon and what leaves sets behind it (G2, G3,
+   G12). A part that is drawn rises 0.5 rem from behind its line, uncovered from that line up, on the sunrise curve in
+   two beats of 225 ms (G1, G4); light switches in hard steps and is never tweened (G1); pointing turns the tube up in one
+   step (G8); a press dips it (G14); a warning is a hollow neon ring before the title or figure, the words glowing in the
+   tone's ink (G13); a change draws the laser (G9); labels are the OSD's capitals after a cyan arrow, figures the chrome
+   display (G15); square plates carrying the pink to cyan stripe, 2 px controls, never a notch or a pill (G6). */
+@layer kp.signature {
+    [data-theme='synthwave'] {
+        --kp-sw4-beat: var(--kp-sw-beat, 225ms);
+        --kp-sw4-stripe: linear-gradient(to right, var(--primary), var(--accent));
+        --kp-sw4-horizon: linear-gradient(90deg, transparent, var(--kp-pink-text) 50%, transparent);
+        --kp-sw4-sun: linear-gradient(var(--kp-sun-top), var(--kp-sun-bottom));
+        --kp-art-rule: var(--primary);
+        --kp-art-line: hsl(from var(--kp-pink-text) h s l / 0.35);
+        --kp-art-ink: var(--accent);
+        --kp-art-red: var(--destructive);
+        --kp-art-stroke: 1.5px;
+    }
+
+    /* A hollow neon ring before a title or a figure: the near-white core, the bloom in the tone's ink. Set --kp-sw4-tone
+       on the part and give it the class's ::before. */
+    [data-theme='synthwave'] :is(
+            .kp-bullets__row[data-kp-tone='destructive'] .kp-bullets__figure,
+            .kp-bullets__row[data-kp-tone='warning'] .kp-bullets__figure,
+            .kp-action-list--lead > li[data-kp-state='failed'] .kp-action-list__title,
+            .kp-action-list--lead > li[data-kp-state='warn'] .kp-action-list__title,
+            .kp-kv__row[data-kp-state='error'] > dt,
+            .kp-formrow[data-kp-state='error'] .kp-formrow__label,
+            .kp-statusrow[data-state='warn'] .kp-statusrow__title,
+            .kp-timer[data-kp-timer-state='done'] .kp-timer__name,
+            .kp-countdown[data-kp-countdown-state='ended'] .kp-countdown__name,
+            .kp-segmented__item[data-kp-segmented-tri='exclude'] > .kp-segmented__label
+        )::before {
+        content: '';
+        display: inline-block;
+        inline-size: 0.6em;
+        block-size: 0.6em;
+        margin-inline-end: 0.45em;
+        border: 2px solid var(--kp-core);
+        border-radius: 50%;
+        box-shadow:
+            0 0 5px var(--kp-sw4-tone),
+            inset 0 0 4px var(--kp-sw4-tone);
+        vertical-align: 0.05em;
+        box-sizing: border-box;
+    }
+
+    /* ── Identity mark: a plate in the name's colour, 2 px corners, the letters in the chrome display; the round mark is
+       the neon ring ── */
+    [data-theme='synthwave'] .kp-idmark {
+        --kp-idmark-radius: 2px;
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        letter-spacing: 0.04em;
+        text-shadow: 0 0 4px hsl(from var(--kp-idmark-c) h s l / 0.7);
+    }
+    [data-theme='synthwave'] .kp-idmark--round {
+        border-width: 2px;
+        border-color: var(--kp-core);
+        background: color-mix(in oklab, var(--kp-idmark-c) 14%, var(--card));
+        box-shadow:
+            0 0 6px var(--kp-idmark-c),
+            inset 0 0 6px hsl(from var(--kp-idmark-c) h s l / 0.6);
+    }
+    [data-theme='synthwave'] .kp-idmark--pattern {
+        text-shadow: none;
+    }
+    [data-theme='synthwave'] .kp-idmark--glyph::after {
+        border-radius: 0;
+        box-shadow: 0 0 5px var(--kp-idmark-c);
+    }
+    [data-theme='synthwave'] .kp-idmark[aria-current]:not([aria-current='false']),
+    [data-theme='synthwave'] .kp-idmark[data-kp-idmark-selected] {
+        box-shadow:
+            0 0 0 2px var(--card),
+            0 0 0 3px var(--kp-core),
+            0 0 10px 3px hsl(from var(--primary) h s l / 0.7);
+    }
+    [data-theme='synthwave'] .kp-idmark-group__more {
+        border-radius: 2px;
+        font-family: var(--kp-osd);
+    }
+
+    /* ── Share bar: the parts are held tubes with the stripe's gap; the part pointed at turns up in one step; the
+       threshold is a laser tick; the title is the OSD ── */
+    [data-theme='synthwave'] .kp-stackbar {
+        --kp-stackbar-radius: 2px;
+    }
+    [data-theme='synthwave'] .kp-stackbar__title {
+        font-family: var(--kp-osd);
+        font-size: 1.125rem;
+        font-weight: 400;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--kp-pink-text);
+    }
+    [data-theme='synthwave'] .kp-stackbar__title::before {
+        content: '▶ ';
+        color: var(--accent);
+    }
+    [data-theme='synthwave'] .kp-stackbar__total,
+    [data-theme='synthwave'] .kp-stackbar__value {
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        letter-spacing: 0.08em;
+        color: var(--accent);
+    }
+    [data-theme='synthwave'] .kp-stackbar__bar {
+        background: hsl(from var(--sidebar-background) h s l / 0.8);
+        box-shadow: inset 0 -1px 0 var(--kp-hairline);
+    }
+    [data-theme='synthwave'] .kp-stackbar__seg {
+        border-radius: 0;
+        outline: 0;
+    }
+    [data-theme='synthwave'] .kp-stackbar__seg[data-kp-stackbar-lit] {
+        filter: brightness(1.2) drop-shadow(0 0 5px var(--kp-stackbar-colour, var(--chart-1)));
+        box-shadow: inset calc(var(--kp-stackbar-gap, 2px) * -1) 0 0 var(--card);
+    }
+    [data-theme='synthwave'] .kp-stackbar__mark {
+        inset-block: -4px;
+        background: var(--kp-core);
+        box-shadow:
+            0 0 2px var(--sidebar-background),
+            0 0 6px var(--primary);
+    }
+    [data-theme='synthwave'] .kp-stackbar__swatch {
+        border-radius: 1px;
+        box-shadow: 0 0 5px var(--kp-stackbar-colour, var(--chart-1));
+    }
+    [data-theme='synthwave'] .kp-stackbar__item[data-kp-stackbar-lit] .kp-stackbar__label {
+        text-shadow: var(--kp-tube-pink);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] .kp-stackbar:not([aria-busy='true']) .kp-stackbar__bar {
+            animation: kp-sw4-rise calc(2 * var(--kp-sw4-beat)) var(--kp-sw-sun) backwards;
+        }
+    }
+
+    /* ── Bullet rows: the figure is the OSD's read-out; a tone is the neon ring before it, the figure glowing in its ink ── */
+    [data-theme='synthwave'] .kp-bullets__figure {
+        font-family: var(--kp-osd);
+        font-size: 1.125rem;
+        font-weight: 400;
+        letter-spacing: 0.06em;
+        border-radius: 0;
+    }
+    [data-theme='synthwave'] .kp-bullets__row[data-kp-tone='warning'] .kp-bullets__figure,
+    [data-theme='synthwave'] .kp-bullets__row[data-kp-tone='destructive'] .kp-bullets__figure {
+        padding-inline: 0;
+        background: transparent;
+    }
+    [data-theme='synthwave'] .kp-bullets__row[data-kp-tone='destructive'] .kp-bullets__figure {
+        --kp-sw4-tone: var(--destructive);
+        color: var(--destructive);
+        text-shadow: 0 0 6px hsl(from var(--destructive) h s l / 0.6);
+    }
+    [data-theme='synthwave'] .kp-bullets__row[data-kp-tone='warning'] .kp-bullets__figure {
+        --kp-sw4-tone: var(--warning-foreground);
+        color: var(--warning-foreground);
+        text-shadow: 0 0 6px hsl(from var(--warning-foreground) h s l / 0.6);
+    }
+    [data-theme='synthwave'] .kp-bullets__row:has(.kp-bullets__link:is(:hover, :focus-visible)) .kp-bullets__label {
+        text-shadow: var(--kp-tube-pink);
+    }
+    [data-theme='synthwave'] .kp-bullets__detail {
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        letter-spacing: 0.06em;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] .kp-bullets:not([aria-busy='true']) .kp-bullets__row {
+            animation: kp-sw4-rise calc(2 * var(--kp-sw4-beat)) var(--kp-sw-sun) backwards;
+        }
+        [data-theme='synthwave'] .kp-bullets:not([aria-busy='true']) .kp-bullets__row:nth-child(2) {
+            animation-delay: var(--kp-sw4-beat);
+        }
+        [data-theme='synthwave'] .kp-bullets:not([aria-busy='true']) .kp-bullets__row:nth-child(n + 3) {
+            animation-delay: calc(2 * var(--kp-sw4-beat));
+        }
+    }
+
+    /* ── Key-value grid and form rows: the key is the OSD after a cyan arrow, the failed row takes the neon ring ── */
+    [data-theme='synthwave'] .kp-kv__row > dt,
+    [data-theme='synthwave'] .kp-formrow__label {
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--kp-pink-text);
+    }
+    [data-theme='synthwave'] .kp-kv__row > dt::before {
+        content: '▶ ';
+        color: var(--accent);
+    }
+    [data-theme='synthwave'] .kp-formrow__label > small {
+        font-family: var(--theme-font-body);
+        text-transform: none;
+        letter-spacing: 0;
+        color: var(--muted-foreground);
+    }
+    [data-theme='synthwave'] .kp-kv__row[data-kp-state='error'] > dt,
+    [data-theme='synthwave'] .kp-formrow[data-kp-state='error'] .kp-formrow__label {
+        --kp-sw4-tone: var(--destructive);
+        color: var(--destructive);
+        text-shadow: 0 0 6px hsl(from var(--destructive) h s l / 0.5);
+    }
+    [data-theme='synthwave'] .kp-kv__row[data-kp-state='error']::before,
+    [data-theme='synthwave'] .kp-formrow[data-kp-state='error']::before {
+        display: none;
+    }
+    [data-theme='synthwave'] .kp-kv__row[data-kp-changed] > dt::after {
+        color: var(--primary);
+        text-shadow: var(--kp-tube-pink);
+    }
+    [data-theme='synthwave'] .kp-formrows--lines > .kp-formrow,
+    [data-theme='synthwave'] .kp-kv--lines > .kp-kv__row {
+        border-image: var(--kp-sw4-horizon) 1;
+    }
+
+    /* ── Code block: the tape with its stripe, the title the OSD after a cyan arrow ── */
+    [data-theme='synthwave'] .kp-code {
+        border-radius: 0;
+        border-block-start: 3px solid transparent;
+        border-image: var(--kp-sw4-stripe) 1;
+        border-image-width: 3px 0 0 0;
+    }
+    [data-theme='synthwave'] .kp-code__title,
+    [data-theme='synthwave'] .kp-code__meta {
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--kp-pink-text);
+    }
+    [data-theme='synthwave'] .kp-code__title::before {
+        content: '▶ ';
+        color: var(--accent);
+    }
+    [data-theme='synthwave'] .kp-code__head {
+        border-block-end: 1px solid var(--kp-hairline);
+    }
+
+    /* ── Page header line ── */
+    [data-theme='synthwave'] .kp-page-header__meta {
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        letter-spacing: 0.08em;
+        color: var(--accent);
+    }
+
+    /* ── A number that ticks: a laser is drawn under it from its centre outward in one beat, flares, and burns down,
+       3 beats once; the figure never moves ── */
+    [data-theme='synthwave'] [data-kp-tick] {
+        position: relative;
+        font-family: var(--theme-font-display);
+    }
+    [data-theme='synthwave'] [data-kp-tick]::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: -3px;
+        block-size: 2px;
+        background: var(--kp-core);
+        box-shadow:
+            0 0 6px var(--primary),
+            0 0 16px hsl(from var(--primary) h s l / 0.9);
+        opacity: 0;
+        transform: scaleX(0);
+        pointer-events: none;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] [data-kp-tick][data-kp-tick-state='running']::after {
+            animation: kp-sig-synthwave-update-laser calc(3 * var(--kp-sw4-beat)) linear;
+        }
+    }
+
+    /* The rise: what arrives is uncovered from its horizon up while it climbs 0.5 rem, on the sunrise curve. */
+    @keyframes kp-sw4-rise {
+        from {
+            clip-path: inset(100% -2rem -2rem -2rem);
+            translate: 0 0.5rem;
+        }
+        to {
+            clip-path: inset(-2rem);
+            translate: 0 0;
+        }
+    }
+}
+/* ── end the kpadopt4 data pieces ── */
+
+/* ── The kpadopt4 rows, records and flows in synthwave's own grammar [kpadopt4] ──
+   Rows and lanes rise over their horizon one beat after the part before (G3, G4); pointing turns the row's tube up (G8);
+   a warning is the hollow neon ring before the title (G13); a plate carries the stripe along its top and is square (G6,
+   G7); the journey is the drive: the horizon runs between the steps reached, the current step is the striped sun (G16);
+   the drawings for an empty state are the horizon, the striped sun and the floor (G16). */
+@layer kp.signature {
+    /* ── Rows with a lead ── */
+    [data-theme='synthwave'] .kp-action-list--lead {
+        --kp-action-list-bar: 3px;
+        --kp-action-list-next-wash: 0%;
+    }
+    [data-theme='synthwave'] .kp-action-list--lead > li[data-kp-state='new'],
+    [data-theme='synthwave'] .kp-action-list--lead > li[data-kp-state='next'] {
+        border-image: linear-gradient(var(--primary), var(--accent)) 1;
+        border-image-width: 0 0 0 3px;
+    }
+    [data-theme='synthwave'] .kp-action-list--lead > li:is(:hover, :focus-within) .kp-action-list__title {
+        text-shadow: var(--kp-tube-pink);
+    }
+    [data-theme='synthwave'] .kp-action-list--lead > li[data-kp-state='failed'] .kp-action-list__title {
+        --kp-sw4-tone: var(--destructive);
+        color: var(--destructive);
+    }
+    [data-theme='synthwave'] .kp-action-list--lead > li[data-kp-state='warn'] .kp-action-list__title {
+        --kp-sw4-tone: var(--warning-foreground);
+        color: var(--warning-foreground);
+    }
+    [data-theme='synthwave'] .kp-action-list--lead > li[data-kp-state='next'] > .kp-action-list__lead {
+        color: var(--primary);
+        text-shadow: var(--kp-tube-pink);
+    }
+    [data-theme='synthwave'] .kp-action-list__when,
+    [data-theme='synthwave'] .kp-action-list__meta {
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        letter-spacing: 0.06em;
+    }
+    [data-theme='synthwave'] .kp-action-list__payload {
+        border-radius: 2px;
+        font-family: var(--kp-mono);
+    }
+    [data-theme='synthwave'] .kp-action-list > li.kp-action-list__group > :is(h2, h3, h4, h5, h6) {
+        font-family: var(--kp-osd);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--kp-pink-text);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] .kp-action-list--lead > li {
+            animation: kp-sw4-rise calc(2 * var(--kp-sw4-beat)) var(--kp-sw-sun) backwards;
+        }
+        [data-theme='synthwave'] .kp-action-list--lead > li:nth-child(2) {
+            animation-delay: var(--kp-sw4-beat);
+        }
+        [data-theme='synthwave'] .kp-action-list--lead > li:nth-child(3) {
+            animation-delay: calc(2 * var(--kp-sw4-beat));
+        }
+        [data-theme='synthwave'] .kp-action-list--lead > li:nth-child(n + 4) {
+            animation-delay: calc(3 * var(--kp-sw4-beat));
+        }
+    }
+
+    /* ── Status rows ── */
+    [data-theme='synthwave'] .kp-statusrow[data-state='warn'] {
+        --kp-statusrow-state-edge: hsl(from var(--warning-foreground) h s l / 0.5);
+        --kp-sw4-tone: var(--warning-foreground);
+        --kp-statusrow-radius: 2px;
+    }
+    [data-theme='synthwave'] .kp-statusrow[data-state='warn'] .kp-statusrow__title {
+        color: var(--warning-foreground);
+    }
+    [data-theme='synthwave'] .kp-statusrow__fix {
+        font-family: var(--theme-font-body);
+        padding-inline-start: 0.5rem;
+        border-inline-start: 1px solid var(--kp-hairline);
+    }
+
+    /* ── Choices as tiles: a tape with its stripe; pointing turns the tube up; checked it is lit pink ── */
+    [data-theme='synthwave'] .kp-fieldset[data-kp-layout='tiles'] {
+        --kp-field-tile-radius: 2px;
+        --kp-field-tile-ground-checked: color-mix(in oklab, var(--primary) 10%, var(--card));
+    }
+    [data-theme='synthwave'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option {
+        background-image: var(--kp-sw4-stripe);
+        background-size: 100% 2px;
+        background-repeat: no-repeat;
+        background-position: 0 0;
+    }
+    [data-theme='synthwave'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:hover:not(:has(> .kp-field__check:disabled)) {
+        border-color: var(--kp-pink-text);
+        box-shadow: 0 0 8px hsl(from var(--primary) h s l / 0.5);
+    }
+    [data-theme='synthwave'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:hover:not(:has(> .kp-field__check:disabled)) .kp-field__option-title {
+        text-shadow: var(--kp-tube-pink);
+    }
+    [data-theme='synthwave'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:active:not(:has(> .kp-field__check:disabled)) {
+        box-shadow: none;
+    }
+    [data-theme='synthwave'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:checked) {
+        box-shadow:
+            inset 0 0 0 1px var(--primary),
+            0 0 10px hsl(from var(--primary) h s l / 0.45);
+    }
+    [data-theme='synthwave'] .kp-field__option-title {
+        font-family: var(--theme-font-body);
+    }
+    [data-theme='synthwave'] .kp-field__option-hint {
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        letter-spacing: 0.04em;
+    }
+
+    /* ── A card in four data states ── */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] .kp-card[data-kp-state='ready'] > .kp-card__stage > .kp-card__data {
+            animation: kp-sw4-rise calc(2 * var(--kp-sw4-beat)) var(--kp-sw-sun) backwards;
+        }
+    }
+
+    /* ── Drawings for an empty state: the horizon. The drawing rises over its own horizon, uncovered from the line up,
+       on the sunrise curve in two beats; its tubes glow in their ink. ── */
+    [data-theme='synthwave'] .kp-art {
+        display: block;
+    }
+    [data-theme='synthwave'] .kp-art > g[data-kp-art-set='horizon'] {
+        display: inline;
+    }
+    [data-theme='synthwave'] .kp-art path {
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+    [data-theme='synthwave'] .kp-art__rule {
+        filter: drop-shadow(0 0 3px hsl(from var(--primary) h s l / 0.8));
+    }
+    [data-theme='synthwave'] .kp-art__ink {
+        filter: drop-shadow(0 0 2px hsl(from var(--accent) h s l / 0.6));
+    }
+    [data-theme='synthwave'] .kp-art__red {
+        filter: drop-shadow(0 0 3px hsl(from var(--destructive) h s l / 0.8));
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] .kp-art {
+            animation: kp-sw4-rise calc(2 * var(--kp-sw4-beat)) var(--kp-sw-sun) backwards;
+        }
+    }
+
+    /* ── The pipeline: a lane is the tape, square, with the stripe along its top; a card is a plate on it; the chosen card
+       turns its tube up and keeps it ── */
+    [data-theme='synthwave'] .kp-pipeline__lane {
+        border-radius: 0;
+        background: var(--kp-sw4-stripe) 0 0 / 100% 3px no-repeat, var(--muted);
+    }
+    [data-theme='synthwave'] .kp-pipeline__head {
+        border-radius: 2px;
+    }
+    [data-theme='synthwave'] .kp-pipeline__name {
+        font-family: var(--kp-osd);
+        font-size: 1.125rem;
+        font-weight: 400;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--kp-pink-text);
+    }
+    [data-theme='synthwave'] .kp-pipeline__name::before {
+        content: '▶ ';
+        color: var(--accent);
+    }
+    [data-theme='synthwave'] .kp-pipeline__count {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+    }
+    [data-theme='synthwave'] .kp-pipeline__share,
+    [data-theme='synthwave'] .kp-pipeline__sub,
+    [data-theme='synthwave'] .kp-pipeline__meta {
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        letter-spacing: 0.04em;
+    }
+    [data-theme='synthwave'] .kp-pipeline__card {
+        border-radius: 2px;
+    }
+    [data-theme='synthwave'] .kp-pipeline__card:hover {
+        box-shadow: 0 0 8px hsl(from var(--primary) h s l / 0.5);
+    }
+    [data-theme='synthwave'] .kp-pipeline__card:hover .kp-pipeline__title,
+    [data-theme='synthwave'] .kp-pipeline__card[aria-current='true'] .kp-pipeline__title {
+        text-shadow: var(--kp-tube-pink);
+    }
+    [data-theme='synthwave'] .kp-pipeline__card[aria-current='true'] {
+        outline: 0;
+        border-color: var(--kp-core);
+        box-shadow:
+            0 0 0 1px var(--primary),
+            0 0 12px hsl(from var(--primary) h s l / 0.6);
+    }
+    [data-theme='synthwave'] .kp-pipeline__mark {
+        border-radius: 2px;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] .kp-pipeline:not([aria-busy='true']) .kp-pipeline__lane {
+            animation: kp-sw4-rise calc(2 * var(--kp-sw4-beat)) var(--kp-sw-sun) backwards;
+        }
+        [data-theme='synthwave'] .kp-pipeline:not([aria-busy='true']) .kp-pipeline__lane:nth-child(2) {
+            animation-delay: var(--kp-sw4-beat);
+        }
+        [data-theme='synthwave'] .kp-pipeline:not([aria-busy='true']) .kp-pipeline__lane:nth-child(3) {
+            animation-delay: calc(2 * var(--kp-sw4-beat));
+        }
+        [data-theme='synthwave'] .kp-pipeline:not([aria-busy='true']) .kp-pipeline__lane:nth-child(n + 4) {
+            animation-delay: calc(3 * var(--kp-sw4-beat));
+        }
+    }
+
+    /* ── The journey: the horizon runs between the steps reached, the steps to come are the lane's dashes, the current
+       step is the striped sun ── */
+    [data-theme='synthwave'] .kp-steplist--journey {
+        --kp-journey-rule: 2px;
+    }
+    [data-theme='synthwave'] .kp-steplist--journey > .kp-steplist__item:is([data-state='done'], [data-state='current'])::before {
+        background: var(--kp-sw4-stripe);
+        box-shadow: 0 0 6px hsl(from var(--primary) h s l / 0.5);
+    }
+    [data-theme='synthwave'] .kp-steplist--journey > .kp-steplist__item + .kp-steplist__item:not([data-state='done'], [data-state='current'], [data-state='failed'])::before {
+        background: repeating-linear-gradient(90deg, var(--kp-hairline) 0 0.375rem, transparent 0.375rem 0.625rem);
+    }
+    [data-theme='synthwave'] .kp-steplist__item[data-state='current'] .kp-steplist__mark {
+        border-color: transparent;
+        background:
+            repeating-linear-gradient(to bottom, transparent 0 55%, var(--card) 55% 62%, transparent 62% 70%, var(--card) 70% 78%, transparent 78% 86%, var(--card) 86% 94%, transparent 94%),
+            var(--kp-sw4-sun);
+        box-shadow: 0 0 10px hsl(from var(--kp-sun-glow) h s l / 0.7);
+    }
+    [data-theme='synthwave'] .kp-steplist--journey .kp-steplist__title {
+        font-family: var(--kp-osd);
+        font-size: 1.125rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    [data-theme='synthwave'] .kp-steplist--journey .kp-steplist__time {
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        color: var(--accent);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] .kp-steplist--journey > .kp-steplist__item {
+            animation: kp-sw4-rise calc(2 * var(--kp-sw4-beat)) var(--kp-sw-sun) backwards;
+        }
+        [data-theme='synthwave'] .kp-steplist--journey > .kp-steplist__item:nth-child(2) {
+            animation-delay: var(--kp-sw4-beat);
+        }
+        [data-theme='synthwave'] .kp-steplist--journey > .kp-steplist__item:nth-child(3) {
+            animation-delay: calc(2 * var(--kp-sw4-beat));
+        }
+        [data-theme='synthwave'] .kp-steplist--journey > .kp-steplist__item:nth-child(n + 4) {
+            animation-delay: calc(3 * var(--kp-sw4-beat));
+        }
+    }
+
+    /* ── Moments on the run timeline and the dated line ── */
+    [data-theme='synthwave'] .kp-gantt__point:hover::before,
+    [data-theme='synthwave'] .kp-gantt__point:focus-visible::before {
+        box-shadow: 0 0 8px hsl(from var(--primary) h s l / 0.8);
+    }
+    [data-theme='synthwave'] .kp-gantt__count {
+        font-family: var(--kp-osd);
+        border-radius: 2px;
+    }
+    [data-theme='synthwave'] .kp-gantt__zone {
+        border-inline-start: 1px solid var(--kp-hairline);
+    }
+    [data-theme='synthwave'] .kp-gantt__mark {
+        box-shadow: 0 0 6px hsl(from var(--primary) h s l / 0.7);
+    }
+}
+/* ── end the kpadopt4 rows and flows ── */
+
+/* ── The kpadopt4 secrets, time, cooking and commands in synthwave's own grammar [kpadopt4] ──
+   A secret is a tube that strikes on (G1, G13); what runs out is a laser burning down (G9); a clock is the sun setting:
+   the share left is the striped sun, its stripes closing as it sinks, on the face's horizon ring (G11, G16); the wheel is
+   the arcade's: marquee bulbs round its rim, a turn on the sunrise curve (G1, G10); a thing that ends or fails has the
+   neon ring (G13); a command is the VCR's OSD over the tape (G15). Light switches in hard steps, bodies glide. */
+@layer kp.signature {
+    /* ── Secret field ── */
+    [data-theme='synthwave'] .kp-secret__value {
+        border-radius: 2px;
+        font-family: var(--kp-mono);
+        background: hsl(from var(--sidebar-background) h s l / 0.85);
+    }
+    [data-theme='synthwave'] .kp-secret[data-kp-secret-state='shown'] .kp-secret__value {
+        border-color: var(--kp-pink-text);
+        box-shadow: 0 0 8px hsl(from var(--primary) h s l / 0.45);
+    }
+    [data-theme='synthwave'] .kp-secret {
+        --kp-secret-drain: var(--kp-core);
+    }
+    [data-theme='synthwave'] .kp-secret__drain {
+        background: var(--kp-core);
+        box-shadow:
+            0 0 6px var(--primary),
+            0 0 14px hsl(from var(--primary) h s l / 0.8);
+    }
+    [data-theme='synthwave'] .kp-secret__line {
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        letter-spacing: 0.08em;
+        color: var(--accent);
+    }
+    [data-theme='synthwave'] .kp-secret[data-kp-secret-state='error'] .kp-secret__words {
+        color: var(--destructive);
+        text-shadow: 0 0 6px hsl(from var(--destructive) h s l / 0.5);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] .kp-secret[data-kp-secret-state='shown'] .kp-secret__text {
+            animation: kp-tube-on calc(4 * var(--kp-sw4-beat)) steps(1, end) backwards;
+        }
+    }
+
+    /* ── Dialog in sections, confirmation, typed confirmation ── */
+    [data-theme='synthwave'] .kp-dialog__heading {
+        font-family: var(--kp-osd);
+        font-size: 1.125rem;
+        font-weight: 400;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--kp-pink-text);
+    }
+    [data-theme='synthwave'] .kp-dialog__heading::before {
+        content: '▶ ';
+        color: var(--accent);
+    }
+    [data-theme='synthwave'] .kp-dialog__section:not(:first-child) {
+        border-block-start: 1px solid transparent;
+        border-image: var(--kp-sw4-horizon) 1;
+    }
+    [data-theme='synthwave'] .kp-dialog__section--danger {
+        border-inline-start: 0;
+        border-image: none;
+        padding-inline-start: 0;
+    }
+    [data-theme='synthwave'] .kp-dialog__section--danger > .kp-dialog__heading {
+        --kp-sw4-tone: var(--destructive);
+        color: var(--destructive);
+        text-shadow: 0 0 6px hsl(from var(--destructive) h s l / 0.5);
+    }
+    [data-theme='synthwave'] .kp-dialog__section--danger > .kp-dialog__heading::before {
+        content: '';
+        display: inline-block;
+        inline-size: 0.6em;
+        block-size: 0.6em;
+        margin-inline-end: 0.45em;
+        border: 2px solid var(--kp-core);
+        border-radius: 50%;
+        box-shadow:
+            0 0 5px var(--destructive),
+            inset 0 0 4px var(--destructive);
+        box-sizing: border-box;
+    }
+    [data-theme='synthwave'] .kp-confirm__dependents,
+    [data-theme='synthwave'] .kp-type-confirm__loses {
+        border-radius: 0;
+    }
+    [data-theme='synthwave'] .kp-type-confirm__loses {
+        border-inline-start-width: 1px;
+        border-inline-start-color: var(--border);
+        border-block-start: 2px solid var(--destructive);
+    }
+    [data-theme='synthwave'] .kp-type-confirm__loses-title {
+        font-family: var(--kp-osd);
+        font-size: 1.125rem;
+        font-weight: 400;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--destructive);
+    }
+    [data-theme='synthwave'] .kp-type-confirm__name {
+        border-radius: 2px;
+        font-family: var(--kp-osd);
+        font-size: 1.125rem;
+        color: var(--accent);
+        letter-spacing: 0.06em;
+    }
+    [data-theme='synthwave'] .kp-type-confirm__list,
+    [data-theme='synthwave'] .kp-type-confirm__input {
+        font-family: var(--kp-mono);
+    }
+    [data-theme='synthwave'] .kp-type-confirm__status {
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        letter-spacing: 0.08em;
+    }
+    [data-theme='synthwave'] .kp-type-confirm[data-kp-matched] .kp-type-confirm__input {
+        border-color: var(--accent);
+        box-shadow: 0 0 8px hsl(from var(--accent) h s l / 0.5);
+    }
+
+    /* ── Segmented tri-state chips: in is lit pink, out takes the red neon ring and a struck word ── */
+    [data-theme='synthwave'] .kp-segmented--chips > .kp-segmented__item[data-kp-segmented-tri='include'] {
+        border-color: var(--kp-pink-text);
+        box-shadow: 0 0 8px hsl(from var(--primary) h s l / 0.5);
+        text-shadow: var(--kp-tube-pink);
+    }
+    [data-theme='synthwave'] .kp-segmented--chips > .kp-segmented__item[data-kp-segmented-tri='exclude'] {
+        --kp-sw4-tone: var(--destructive);
+        border-color: var(--destructive);
+    }
+    [data-theme='synthwave'] .kp-segmented__mark {
+        border-radius: 2px;
+    }
+    [data-theme='synthwave'] .kp-segmented__summary {
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        letter-spacing: 0.06em;
+        color: var(--accent);
+    }
+
+    /* ── Quantity ── */
+    [data-theme='synthwave'] .kp-quantity__field {
+        border-radius: 2px;
+    }
+    [data-theme='synthwave'] .kp-quantity__input {
+        font-family: var(--kp-osd);
+        font-size: 1.25rem;
+        letter-spacing: 0.04em;
+    }
+    [data-theme='synthwave'] .kp-quantity__unit {
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        color: var(--accent);
+    }
+
+    /* ── Checklist: a row turns its tube up when pointed at; a ticked item sinks behind its horizon ── */
+    [data-theme='synthwave'] .kp-checklist__row {
+        border-radius: 2px;
+    }
+    [data-theme='synthwave'] .kp-checklist__row:hover .kp-checklist__label {
+        text-shadow: var(--kp-tube-pink);
+    }
+    [data-theme='synthwave'] .kp-checklist__title {
+        font-family: var(--kp-osd);
+        font-size: 1.125rem;
+        font-weight: 400;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--kp-pink-text);
+    }
+    [data-theme='synthwave'] .kp-checklist__title::before {
+        content: '▶ ';
+        color: var(--accent);
+    }
+    [data-theme='synthwave'] .kp-checklist__count,
+    [data-theme='synthwave'] .kp-checklist__status {
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        letter-spacing: 0.06em;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] .kp-checklist__item {
+            animation: kp-sw4-rise calc(2 * var(--kp-sw4-beat)) var(--kp-sw-sun) backwards;
+        }
+    }
+
+    /* ── Kitchen timers: the tape with its stripe; a timer that has ended has the red neon ring before its name ── */
+    [data-theme='synthwave'] .kp-timer {
+        --kp-timer-font: var(--theme-font-display);
+        border-radius: 0;
+        background-image: var(--kp-sw4-stripe);
+        background-size: 100% 3px;
+        background-repeat: no-repeat;
+    }
+    [data-theme='synthwave'] .kp-timer__name,
+    [data-theme='synthwave'] .kp-timer__state {
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+    [data-theme='synthwave'] .kp-timer__time {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        text-shadow: var(--kp-tube-pink);
+    }
+    [data-theme='synthwave'] .kp-timer[data-kp-timer-state='paused'] .kp-timer__time {
+        text-shadow: none;
+    }
+    [data-theme='synthwave'] .kp-timer[data-kp-timer-state='done'] {
+        --kp-timer-done-ground: var(--card);
+        --kp-timer-done-ink: var(--card-foreground);
+        --kp-timer-done-edge: var(--destructive);
+        --kp-sw4-tone: var(--destructive);
+    }
+    [data-theme='synthwave'] .kp-timer[data-kp-timer-state='done'] .kp-timer__name,
+    [data-theme='synthwave'] .kp-timer[data-kp-timer-state='done'] .kp-timer__state {
+        color: var(--destructive);
+        text-shadow: 0 0 6px hsl(from var(--destructive) h s l / 0.5);
+    }
+
+    /* ── Cook mode: the step rises over its horizon when it changes ── */
+    [data-theme='synthwave'] .kp-focus-steps__count,
+    [data-theme='synthwave'] .kp-focus-steps__amount,
+    [data-theme='synthwave'] .kp-focus-steps__needs-title {
+        font-family: var(--kp-osd);
+        font-size: 1.125rem;
+        letter-spacing: 0.1em;
+    }
+    [data-theme='synthwave'] .kp-focus-steps__needs-title {
+        text-transform: uppercase;
+        color: var(--kp-pink-text);
+    }
+    [data-theme='synthwave'] .kp-focus-steps__needs {
+        border-radius: 0;
+        border-block-start: 2px solid var(--primary);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] .kp-focus-steps__step {
+            animation: kp-sw4-rise calc(2 * var(--kp-sw4-beat)) var(--kp-sw-sun) backwards;
+        }
+    }
+
+    /* ── Wheel: marquee bulbs run round the rim, the pointer is a pink tube, the turn is the sunrise curve ── */
+    [data-theme='synthwave'] .kp-wheel {
+        --kp-wheel-ease: var(--kp-sw-sun);
+        --kp-wheel-pointer: var(--primary);
+        --kp-wheel-tint: 26%;
+    }
+    [data-theme='synthwave'] .kp-wheel__rim {
+        stroke: var(--kp-core);
+        stroke-width: 3;
+        stroke-linecap: round;
+        stroke-dasharray: 0.01 5.2;
+        filter: drop-shadow(0 0 2px var(--primary));
+    }
+    [data-theme='synthwave'] .kp-wheel__segment {
+        stroke: var(--background);
+    }
+    [data-theme='synthwave'] .kp-wheel__spin.kp-button {
+        white-space: nowrap;
+        letter-spacing: 0.04em;
+    }
+    [data-theme='synthwave'] .kp-wheel__pointer {
+        stroke: var(--kp-core);
+        filter: drop-shadow(0 0 4px var(--primary));
+    }
+    [data-theme='synthwave'] .kp-wheel__label,
+    [data-theme='synthwave'] .kp-wheel__caption {
+        font-family: var(--kp-osd);
+        letter-spacing: 0.04em;
+    }
+    [data-theme='synthwave'] .kp-wheel__outcome {
+        font-family: var(--theme-font-display);
+        text-shadow: var(--kp-tube-pink);
+    }
+
+    /* ── Uptime: cells are tubes; a cell pointed at turns up; the strip rises over its horizon ── */
+    [data-theme='synthwave'] .kp-uptime {
+        --kp-uptime-cell-radius: 1px;
+    }
+    [data-theme='synthwave'] .kp-uptime__title {
+        font-family: var(--kp-osd);
+        font-size: 1.125rem;
+        font-weight: 400;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--kp-pink-text);
+    }
+    [data-theme='synthwave'] .kp-uptime__title::before {
+        content: '▶ ';
+        color: var(--accent);
+    }
+    [data-theme='synthwave'] .kp-uptime__percent,
+    [data-theme='synthwave'] .kp-uptime__incidents,
+    [data-theme='synthwave'] .kp-uptime__axis,
+    [data-theme='synthwave'] .kp-uptime__info-figures {
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        letter-spacing: 0.06em;
+    }
+    [data-theme='synthwave'] .kp-uptime__percent {
+        color: var(--accent);
+    }
+    [data-theme='synthwave'] .kp-uptime__cell:is(:hover, :focus-visible, [aria-expanded='true']) {
+        filter: brightness(1.25) drop-shadow(0 0 4px var(--kp-uptime-fill));
+    }
+    [data-theme='synthwave'] .kp-uptime__summary[data-kp-tone='error'] {
+        border-radius: 2px;
+        font-family: var(--kp-osd);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] .kp-uptime:not([data-kp-uptime-state]) .kp-uptime__track {
+            animation: kp-sw4-rise calc(2 * var(--kp-sw4-beat)) var(--kp-sw-sun) backwards;
+        }
+    }
+
+    /* ── Visual timer: the sun sets. The share left is the striped sun, its stripes thickening toward the horizon as it
+       sinks, standing on the face's cyan horizon ring ── */
+    [data-theme='synthwave'] .kp-timer-disc {
+        --kp-timer-disc-marks: var(--accent);
+        --kp-timer-disc-ring: var(--destructive);
+    }
+    [data-theme='synthwave'] .kp-timer-disc__face {
+        border-color: var(--accent);
+        background: var(--sidebar-background);
+        box-shadow: 0 0 10px hsl(from var(--accent) h s l / 0.35);
+    }
+    [data-theme='synthwave'] .kp-timer-disc__sector {
+        background:
+            repeating-linear-gradient(to bottom, transparent 0 56%, var(--sidebar-background) 56% 60%, transparent 60% 68%, var(--sidebar-background) 68% 74%, transparent 74% 82%, var(--sidebar-background) 82% 90%, transparent 90%),
+            var(--kp-sw4-sun);
+        -webkit-mask: conic-gradient(var(--foreground) calc(var(--kp-timer-disc-left, 1) * 360deg), transparent 0);
+        mask: conic-gradient(var(--foreground) calc(var(--kp-timer-disc-left, 1) * 360deg), transparent 0);
+    }
+    [data-theme='synthwave'] .kp-timer-disc__hub {
+        border-color: var(--sidebar-background);
+        background: var(--kp-core);
+        box-shadow: 0 0 6px var(--primary);
+    }
+    [data-theme='synthwave'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face {
+        border-color: var(--destructive);
+        box-shadow: 0 0 12px hsl(from var(--destructive) h s l / 0.6);
+    }
+    [data-theme='synthwave'] .kp-timer-disc__caption,
+    [data-theme='synthwave'] .kp-timer-disc__status {
+        font-family: var(--kp-osd);
+        font-size: 1.125rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+    [data-theme='synthwave'] .kp-timer-disc__caption {
+        color: var(--kp-pink-text);
+    }
+    [data-theme='synthwave'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__status {
+        color: var(--destructive);
+    }
+
+    /* ── Countdown: the digits are the chrome display with the pink tube; ended has the red neon ring ── */
+    [data-theme='synthwave'] .kp-countdown__time,
+    [data-theme='synthwave'] .kp-countdown__digit {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        text-shadow: var(--kp-tube-pink);
+    }
+    [data-theme='synthwave'] .kp-countdown[data-kp-countdown-state='paused'] .kp-countdown__time {
+        text-shadow: none;
+    }
+    [data-theme='synthwave'] .kp-countdown__name,
+    [data-theme='synthwave'] .kp-countdown__status {
+        font-family: var(--kp-osd);
+        font-size: 1.125rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+    [data-theme='synthwave'] .kp-countdown__name {
+        color: var(--kp-pink-text);
+    }
+    [data-theme='synthwave'] .kp-countdown[data-kp-countdown-state='ended'] {
+        --kp-sw4-tone: var(--destructive);
+        --kp-countdown-ring: var(--destructive);
+    }
+    [data-theme='synthwave'] .kp-countdown[data-kp-countdown-state='ended'] .kp-countdown__name,
+    [data-theme='synthwave'] .kp-countdown[data-kp-countdown-state='ended'] .kp-countdown__status {
+        color: var(--destructive);
+        text-shadow: 0 0 6px hsl(from var(--destructive) h s l / 0.5);
+    }
+    [data-theme='synthwave'] .kp-countdown[data-kp-countdown-state='ended'] .kp-countdown__time,
+    [data-theme='synthwave'] .kp-countdown[data-kp-countdown-state='ended'] .kp-countdown__digit {
+        text-shadow: 0 0 8px hsl(from var(--destructive) h s l / 0.7);
+    }
+
+    /* ── Range picker ── */
+    [data-theme='synthwave'] .kp-range__label,
+    [data-theme='synthwave'] .kp-range__bound,
+    [data-theme='synthwave'] .kp-range__title {
+        font-family: var(--kp-osd);
+        font-size: 1.125rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--kp-pink-text);
+    }
+    [data-theme='synthwave'] .kp-range__error {
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        letter-spacing: 0.06em;
+        color: var(--destructive);
+        text-shadow: 0 0 6px hsl(from var(--destructive) h s l / 0.5);
+    }
+
+    /* ── Command: the OSD names the shell, the tape carries the stripe, the prompt is cyan ── */
+    [data-theme='synthwave'] .kp-command {
+        --kp-command-prompt-ink: var(--accent);
+        border-radius: 0;
+        border-block-start: 3px solid transparent;
+        border-image: var(--kp-sw4-stripe) 1;
+        border-image-width: 3px 0 0 0;
+    }
+    [data-theme='synthwave'] .kp-command__shell {
+        font-family: var(--kp-osd);
+        font-size: 1.125rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--kp-pink-text);
+    }
+    [data-theme='synthwave'] .kp-command__shell::before {
+        content: '▶ ';
+        color: var(--accent);
+    }
+    [data-theme='synthwave'] .kp-command__head {
+        border-block-end: 1px solid var(--kp-hairline);
+    }
+    [data-theme='synthwave'] .kp-command__where {
+        font-family: var(--kp-osd);
+        font-size: 1rem;
+        letter-spacing: 0.06em;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] .kp-command__code {
+            animation: kp-sw4-rise calc(2 * var(--kp-sw4-beat)) var(--kp-sw-sun) backwards;
+        }
+    }
+
+    /* ── Compare slider: the divider is the horizon, a pink tube with its bloom; the grip a 2 px control; the labels the
+       OSD ── */
+    [data-theme='synthwave'] .kp-compare {
+        --kp-compare-line: 2px;
+    }
+    [data-theme='synthwave'] .kp-compare__divider {
+        background: var(--kp-core);
+        box-shadow:
+            0 0 6px var(--primary),
+            0 0 16px hsl(from var(--primary) h s l / 0.8);
+    }
+    [data-theme='synthwave'] .kp-compare__handle,
+    [data-theme='synthwave'] .kp-compare__grip {
+        border-radius: 2px;
+    }
+    [data-theme='synthwave'] .kp-compare__label {
+        border-radius: 2px;
+        font-family: var(--kp-osd);
+        font-size: 1.125rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+    [data-theme='synthwave'] .kp-compare__label--before::before,
+    [data-theme='synthwave'] .kp-compare__label--after::before {
+        content: '▶ ';
+        color: var(--accent);
+    }
+}
+/* ── end the kpadopt4 secrets, time, cooking and commands ── */

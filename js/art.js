@@ -117,8 +117,224 @@ const LEDGER = {
     ],
 };
 
+/**
+ * Dark's set, the spectrum [kpadopt4]: every drawing is the instrument's screen. The screen is a frame cut on two opposite
+ * corners with its grid faint; the baseline is the line's track; the film (the acting stroke) is what the spectral line has
+ * laid; a bracket closes on a reading; coral is the one colour that is meaning. In a 120 by 72 box.
+ * @type {Record<ArtKind, ArtStroke[]>}
+ */
+const SPECTRUM = {
+    // An empty screen: the grid, the baseline, the line waiting at its start edge.
+    none: [
+        ['ink', 'M22 8h66l10 10v46H32L22 54z'],
+        ['line', 'M34 22h52'],
+        ['line', 'M34 50h52'],
+        ['line', 'M60 14v44'],
+        ['line', 'M34 36h52'],
+        ['rule', 'M34 30v12'],
+    ],
+    // The spectrum read and no line found: the baseline flat, a pair of brackets round nothing.
+    nomatch: [
+        ['ink', 'M22 8h66l10 10v46H32L22 54z'],
+        ['line', 'M34 36h14'],
+        ['line', 'M72 36h14'],
+        ['ink', 'M54 24h-6v24h6'],
+        ['ink', 'M66 24h6v24h-6'],
+        ['rule', 'M60 31v10'],
+    ],
+    // The line laid up to a point and cut there in coral: the rest of the track dark.
+    error: [
+        ['ink', 'M22 8h66l10 10v46H32L22 54z'],
+        ['rule', 'M34 36h20'],
+        ['red', 'M58 24l8 24'],
+        ['red', 'M66 24l-8 24'],
+        ['line', 'M70 36h16'],
+    ],
+    // The track broken in two with the brackets turned away from each other: nothing crosses the gap.
+    offline: [
+        ['line', 'M10 36h26'],
+        ['ink', 'M44 26h-6v20h6'],
+        ['ink', 'M76 26h6v20h-6'],
+        ['line', 'M84 36h26'],
+        ['rule', 'M52 36h4'],
+        ['rule', 'M64 36h4'],
+    ],
+    // The pass finished: the whole track laid in film, the bracket closed on its end.
+    done: [
+        ['ink', 'M22 8h66l10 10v46H32L22 54z'],
+        ['line', 'M34 22h52'],
+        ['line', 'M34 50h52'],
+        ['rule', 'M34 36h46'],
+        ['ink', 'M82 26h6v20h-6'],
+        ['rule', 'M46 54l6 5l12-12'],
+    ],
+    // The screen behind a plate: a shackle, the plate cut on its corners, the keyhole in film.
+    locked: [
+        ['ink', 'M22 8h66l10 10v46H32L22 54z'],
+        ['ink', 'M52 34v-7a8 8 0 0 1 16 0v7'],
+        ['ink', 'M48 34h24v18H54l-6-6z'],
+        ['rule', 'M60 39v8'],
+    ],
+};
+
+/**
+ * Cyberpunk's set, the HUD [kpadopt4]: every drawing is the system looking at a holo card. The card is a plate cut at its
+ * dossier corner and its foot; scan lines are faint; the reticle (four corner brackets, the acting stroke in signal
+ * yellow) is the system targeting; cyan reads out; red is the alarm. In a 120 by 72 box.
+ * @type {Record<ArtKind, ArtStroke[]>}
+ */
+const HUD = {
+    // An empty holo card, the reticle standing open at its middle, the cursor waiting.
+    none: [
+        ['ink', 'M22 8h64l12 12v44H34L22 52z'],
+        ['line', 'M30 22h8'],
+        ['line', 'M30 28h4'],
+        ['rule', 'M48 30h6'],
+        ['rule', 'M48 30v6'],
+        ['rule', 'M72 30h-6'],
+        ['rule', 'M72 30v6'],
+        ['rule', 'M48 46h6'],
+        ['rule', 'M48 46v-6'],
+        ['rule', 'M72 46h-6'],
+        ['rule', 'M72 46v-6'],
+        ['line', 'M57 38h6'],
+    ],
+    // The reticle hunting wide and finding nothing, a read-out prefix beside it.
+    nomatch: [
+        ['ink', 'M22 8h64l12 12v44H34L22 52z'],
+        ['rule', 'M40 24h10'],
+        ['rule', 'M40 24v10'],
+        ['rule', 'M80 24h-10'],
+        ['rule', 'M80 24v10'],
+        ['rule', 'M40 52h10'],
+        ['rule', 'M40 52v-10'],
+        ['rule', 'M80 52h-10'],
+        ['rule', 'M80 52v-10'],
+        ['line', 'M56 38h8'],
+        ['line', 'M60 34v8'],
+    ],
+    // The card torn: its top half displaced sideways, two bands of red between the halves.
+    error: [
+        ['ink', 'M28 8h64l12 12v10H28z'],
+        ['red', 'M14 34h34'],
+        ['red', 'M72 38h34'],
+        ['ink', 'M22 42h64v22H34L22 52z'],
+        ['line', 'M40 54h24'],
+    ],
+    // The uplink: four bars of signal rising, cut through by one red stroke, nothing diagonal in the card.
+    offline: [
+        ['ink', 'M44 54v-6'],
+        ['ink', 'M54 54v-14'],
+        ['ink', 'M64 54v-22'],
+        ['ink', 'M74 54v-30'],
+        ['red', 'M30 62h60'],
+        ['line', 'M30 14h20'],
+        ['line', 'M70 14h20'],
+    ],
+    // Target locked and cleared: the reticle closed tight on a tick.
+    done: [
+        ['ink', 'M22 8h64l12 12v44H34L22 52z'],
+        ['rule', 'M44 26h8'],
+        ['rule', 'M44 26v8'],
+        ['rule', 'M76 26h-8'],
+        ['rule', 'M76 26v8'],
+        ['rule', 'M44 50h8'],
+        ['rule', 'M44 50v-8'],
+        ['rule', 'M76 50h-8'],
+        ['rule', 'M76 50v-8'],
+        ['ink', 'M53 39l5 5l10-11'],
+    ],
+    // A card behind the lock: the shackle, the notched body, the reticle's four corners in red.
+    locked: [
+        ['ink', 'M22 8h64l12 12v44H34L22 52z'],
+        ['ink', 'M52 34v-6a8 8 0 0 1 16 0v6'],
+        ['ink', 'M48 34h24v18H56l-8-8z'],
+        ['red', 'M60 40v6'],
+        ['line', 'M28 60h8'],
+    ],
+};
+
+/**
+ * Synthwave's set, the floor [kpadopt4]: the empty state already carries the striped sun on its horizon, so each drawing is
+ * what stands on the floor under it, in neon tubes: the marquee's bulbs (what waits), a ring (what is looked for or what
+ * failed), the horizon's tube in two halves (what is cut), the lock on a shutter. Pink acts (the acting stroke), cyan
+ * reads, red is a tube that failed; the floor's lines close on a point, nothing else runs diagonal. In a 120 by 72 box.
+ * @type {Record<ArtKind, ArtStroke[]>}
+ */
+const HORIZON = {
+    // The marquee with its bulbs unlit, the floor closing on the horizon under it.
+    none: [
+        ['ink', 'M26 14h6'],
+        ['ink', 'M42 14h6'],
+        ['ink', 'M58 14h6'],
+        ['ink', 'M74 14h6'],
+        ['ink', 'M90 14h6'],
+        ['rule', 'M10 30h100'],
+        ['line', 'M60 30l-40 34'],
+        ['line', 'M60 30l-20 34'],
+        ['line', 'M60 30v34'],
+        ['line', 'M60 30l20 34'],
+        ['line', 'M60 30l40 34'],
+        ['line', 'M18 42h84'],
+        ['line', 'M8 56h104'],
+    ],
+    // A neon ring held over the floor with a laser laid under it: it holds nothing.
+    nomatch: [
+        ['ink', 'M72 24a12 12 0 1 0-24 0a12 12 0 1 0 24 0'],
+        ['line', 'M56 24h8'],
+        ['rule', 'M12 44h96'],
+        ['line', 'M18 54h84'],
+        ['line', 'M8 64h104'],
+    ],
+    // A red neon ring with its bar across it: the tube that failed, the floor still under it.
+    error: [
+        ['red', 'M72 24a12 12 0 1 0-24 0a12 12 0 1 0 24 0'],
+        ['red', 'M54 24h12'],
+        ['rule', 'M12 44h96'],
+        ['line', 'M18 54h84'],
+        ['line', 'M8 64h104'],
+    ],
+    // The horizon tube in two halves, each ending in a plug that meets no socket.
+    offline: [
+        ['rule', 'M10 30h38'],
+        ['ink', 'M48 22v16'],
+        ['ink', 'M72 22v16'],
+        ['rule', 'M72 30h38'],
+        ['line', 'M52 30h4'],
+        ['line', 'M64 30h4'],
+        ['line', 'M18 46h84'],
+        ['line', 'M8 58h104'],
+    ],
+    // Every bulb of the marquee lit, the horizon closed under them.
+    done: [
+        ['rule', 'M24 14h8'],
+        ['rule', 'M40 14h8'],
+        ['rule', 'M56 14h8'],
+        ['rule', 'M72 14h8'],
+        ['rule', 'M88 14h8'],
+        ['ink', 'M10 30h100'],
+        ['line', 'M18 42h84'],
+        ['line', 'M8 56h104'],
+    ],
+    // The shutter down: slats, a lock strung on the lowest one.
+    locked: [
+        ['ink', 'M32 8h56'],
+        ['ink', 'M32 16h56'],
+        ['ink', 'M32 24h56'],
+        ['ink', 'M32 32h56'],
+        ['ink', 'M54 40v-3a6 6 0 0 1 12 0v3'],
+        ['rule', 'M52 40h16v12H52z'],
+        ['line', 'M18 62h84'],
+    ],
+};
+
 /** Every set the package has, by the name a register shows. @type {Record<string, Record<ArtKind, ArtStroke[]>>} */
-export const ART_SETS = { ledger: LEDGER };
+export const ART_SETS = {
+    ledger: LEDGER,
+    spectrum: SPECTRUM,
+    hud: HUD,
+    horizon: HORIZON,
+};
 
 /** @param {string} value @returns {value is ArtKind} */
 const isKind = (value) => /** @type {readonly string[]} */ (ART_KINDS).includes(value);
