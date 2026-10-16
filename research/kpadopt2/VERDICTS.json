@@ -4,7 +4,38 @@
         {
             "round": "1",
             "page": "2026-10-16-r1",
-            "allJudged": true,
+            "allJudged": false,
+            "comment": "The page asked formal only: the approved pairs are listed, so the pairs a later round asks of the other themes are not read as judged.",
+            "approved": [
+                {
+                    "item": "actions",
+                    "theme": "formal"
+                },
+                {
+                    "item": "status",
+                    "theme": "formal"
+                },
+                {
+                    "item": "facets",
+                    "theme": "formal"
+                },
+                {
+                    "item": "heat",
+                    "theme": "formal"
+                },
+                {
+                    "item": "week-crowd",
+                    "theme": "formal"
+                },
+                {
+                    "item": "gantt",
+                    "theme": "formal"
+                },
+                {
+                    "item": "gantt-states",
+                    "theme": "formal"
+                }
+            ],
             "notApproved": [
                 {
                     "item": "matrix",
@@ -32,7 +63,22 @@
         {
             "round": "2",
             "page": "2026-10-16-r2",
-            "allJudged": true,
+            "allJudged": false,
+            "comment": "The page asked formal only: the approved pairs are listed, so the pairs a later round asks of the other themes are not read as judged.",
+            "approved": [
+                {
+                    "item": "matrix",
+                    "theme": "formal"
+                },
+                {
+                    "item": "barcell",
+                    "theme": "formal"
+                },
+                {
+                    "item": "week",
+                    "theme": "formal"
+                }
+            ],
             "notApproved": [
                 {
                     "item": "week-states",
@@ -45,7 +91,9 @@
         {
             "round": "3",
             "page": "2026-10-16-r3",
-            "allJudged": true,
+            "allJudged": false,
+            "comment": "The page asked formal only: the approved pairs are listed, so the pairs a later round asks of the other themes are not read as judged.",
+            "approved": [],
             "notApproved": [
                 {
                     "item": "week-states",
@@ -53,6 +101,19 @@
                     "note": "Ik snap niet goed waarom dit bepaalde patroon van skeleton gebruikt wordt, sommige entries hebben twee, andere drie skeleton elementen? Kan je niet beter iets doen zoals bij table waarbij de hele table het laadicoon centraal krijgt? Dat oogt veel beter"
                 }
             ]
+        },
+        {
+            "round": "4",
+            "page": "2026-10-16-r4",
+            "allJudged": false,
+            "comment": "Kenny approved the week agenda's states in formal (the loading week with the data table's loading card): every section of the demo is approved in formal.",
+            "approved": [
+                {
+                    "item": "week-states",
+                    "theme": "formal"
+                }
+            ],
+            "notApproved": []
         }
     ],
     "reopened": []

@@ -12190,7 +12190,9 @@
         color: var(--destructive);
     }
 
-    .kp-gantt[data-kp-state='ready'] .kp-gantt__body:not(:has(.kp-gantt__lane)) {
+    /* With no lane (no run in the window, or the history failed) the body keeps a lane-sized space, so the state's
+     * sentence stands over the plot and never over the legend under it. */
+    .kp-gantt:is([data-kp-state='ready'], [data-kp-state='empty'], [data-kp-state='error']) .kp-gantt__body:not(:has(.kp-gantt__lane)) {
         min-block-size: 5.25rem;
     }
 
@@ -14175,6 +14177,12 @@
     .kp-heat__cell.kp-skeleton {
         block-size: var(--kp-heat-cell-height, 22px);
         cursor: progress;
+    }
+
+    /* A skeleton's gap to the skeleton before it (`.kp-skeleton + .kp-skeleton`) is for lines in a column; the cells of a
+     * row are side by side, and the gap made every loading row taller than its ready row. */
+    :is(.kp-heat__cell, .kp-matrix__cell).kp-skeleton {
+        margin-block: 0;
     }
 
     .kp-heat__row--summary .kp-heat__cell.kp-skeleton {

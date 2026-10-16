@@ -164,13 +164,13 @@ SECTIONS.push({
         'Hover a bar: a card with name, times, length and state (a running one counts up). Click it or press Enter: the readout under the timeline logs it. Tab enters once; the arrows move along a lane (left, right) and between lanes (up, down).',
         'The range buttons <b>1h 6h 24h 7d</b> change how much time shows. <b>Live</b> (pressed) makes the right edge follow now; press it to freeze the window, press again to follow.',
         'Drag across the plot: a dashed band, then the toolbar row above the timeline turns into a chip with the range, <b>Zoom</b> (the window becomes the range and stops following) and <b>Clear</b>. A click on a bar without a drag still opens it.',
-        'The buttons under the timeline drive it: <b>Start a run</b> adds a running bar, <b>Finish</b> turns the oldest running one solid, <b>Fail</b> turns it failed, <b>Queue a run</b> adds a hollow one, <b>Start the queued run</b> turns it striped. <b>Fast time</b> runs the clock sixty times faster so growth is visible. The frame does not change height when a run starts or ends: the lanes with a run still open already hold a spare row, and a start that needs more scrolls inside the frame. Pressing a range button, <b>Live</b> or <b>Zoom</b> lays the lanes out again.',
+        'The buttons above the timeline drive it: <b>Start a run</b> adds a running bar, <b>Finish the oldest run</b> turns the oldest running one solid, <b>Fail it instead</b> turns it failed, <b>Queue a run</b> adds a hollow one, <b>Start the queued run</b> turns it striped. <b>Fast time</b> runs the clock sixty times faster so growth is visible. The frame does not change height when a run starts or ends: the lanes with a run still open already hold a spare row, and a start that needs more scrolls inside the frame. Pressing a range button, <b>Live</b> or <b>Zoom</b> lays the lanes out again.',
     ],
     look: 'Press Start a run, then Fast time, and watch a bar grow; then drag across the plot.',
     body: `
                 <div class="kt-actions">
                     <button type="button" class="kp-button" id="kt-run-start">Start a run</button>
-                    <button type="button" class="kp-button" id="kt-run-finish">Finish the oldest running run</button>
+                    <button type="button" class="kp-button" id="kt-run-finish">Finish the oldest run</button>
                     <button type="button" class="kp-button" id="kt-run-fail">Fail it instead</button>
                     <button type="button" class="kp-button" id="kt-run-queue">Queue a run</button>
                     <button type="button" class="kp-button" id="kt-run-promote">Start the queued run</button>
@@ -198,12 +198,12 @@ SECTIONS.push({
         '<b>Loading</b>: five ghost lanes as tall as the real ones, each ghost bar a plate of a bar’s size with the navy rule ruled along its foot (formal’s own loading); the axis is already there.',
         '<b>Empty</b>: the axis and the sentence “No run in this window.” over a lane-sized space. <b>Error</b>: the page’s words in the destructive colour.',
         '<b>A held window</b>: the Live button is not pressed, the window ends two hours ago and does not move; a range is already selected (a band across the plot and the toolbar row turned into a chip with its times, Zoom and Clear, standing where the range buttons and Live stand; the toolbar keeps its height and the chip lies on no lane, at 1280 and at 390 px). <b>Zoom</b> makes the band the window; <b>Clear</b> lifts it.',
-        '<b>Show the hover card on the failed run</b> opens the card on the failed bar of the held window: name, times, length and state, joined to its bar, with its edge whole in this theme.',
+        '<b>Hover card on the failed run</b> opens the card on the failed bar of the held window: name, times, length and state, joined to its bar, with its edge whole in this theme.',
     ],
     look: 'Check the ghost lanes against the real lanes above, and the card against its bar.',
     body: `
                 <div class="kt-actions">
-                    <button type="button" class="kp-button" id="kt-hover-open">Show the hover card on the failed run</button>
+                    <button type="button" class="kp-button" id="kt-hover-open">Hover card on the failed run</button>
                 </div>
                 <div class="kt-stack">
                     <div><p class="kt-label">Loading</p><div class="kp-gantt" data-kp-gantt data-kp-gantt-ghosts="2 3 2 1 1" id="kt-gstate-loading" aria-label="Loading history"></div></div>

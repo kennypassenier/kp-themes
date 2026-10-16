@@ -7,14 +7,15 @@
 //
 //   node research/kpadopt2/build.mjs
 import { readFileSync, writeFileSync } from 'node:fs';
+import { sections as tiles } from './parts/tiles.mjs';
 import { sections as time } from './parts/time.mjs';
 
 const grids = readFileSync(new URL('./parts/grids.html', import.meta.url), 'utf8');
 
-// Round 3 (2026-10-16) shows only the section Kenny has not approved (research/kpadopt2/VERDICTS.json; gates/check-rereview.mjs
-// refuses a page that offers an approved pair): the week agenda's states. The other ten sections stay in parts/ for the record
-// and leave the page.
-const OPEN = ['week-states'];
+// Round 5 (2026-10-16) asks the fifteen other themes for every section, all approved in formal in rounds 1 to 4
+// (research/kpadopt2/VERDICTS.json; gates/check-rereview.mjs refuses a page that offers an approved pair). Formal leaves the page.
+const OPEN = ['actions', 'status', 'facets', 'heat', 'matrix', 'barcell', 'week', 'week-crowd', 'week-states', 'gantt', 'gantt-states'];
+const THEMES = 'light,dark,cyberpunk,synthwave,pastel,terminal,forest,blueprint,solstice,brutalism,deco,phantom,grotesk,nostromo,titanium';
 /** Keep only the open sections of a run of sections. @param {string} html */
 const openOnly = (html) =>
     html.replace(/[ \t]*<section\b[\s\S]*?<\/section>\n?/g, (block) =>
@@ -23,11 +24,11 @@ const openOnly = (html) =>
 
 const html = `<!doctype html>
 <!-- Written by research/kpadopt2/build.mjs; edit build.mjs, parts/, demo-*.css and demo-*.js, not this file. -->
-<html lang="en" data-theme="formal" data-review="kpadopt2" data-review-themes="formal">
+<html lang="en" data-theme="light" data-review="kpadopt2" data-review-themes="${THEMES}">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Round 2 of the dashboard adoption, the one still open · kp-themes research demo</title>
+        <title>Round 5 of the dashboard adoption: the eight components in every theme · kp-themes research demo</title>
         <link rel="stylesheet" href="../../css/fonts.css" />
         <link rel="stylesheet" href="../../css/themes.css" />
         <link rel="stylesheet" href="../../css/components.css" />
@@ -44,7 +45,7 @@ const html = `<!doctype html>
                     t = t || localStorage.getItem('theme');
                 } catch (e) {}
                 if (t) d.setAttribute('data-theme', t);
-                var theme = d.getAttribute('data-theme') || 'formal';
+                var theme = d.getAttribute('data-theme') || 'light';
                 document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
             })();
         </script>
@@ -56,24 +57,33 @@ const html = `<!doctype html>
 
         <main id="main" class="cat-main r2-page">
             <header class="r2-intro">
-                <h1>Round 2 of the dashboard adoption: the one still open</h1>
+                <h1>Round 5 of the dashboard adoption: the eight components in every theme</h1>
                 <p class="cat-intro">
-                    Review round 4. Kenny approved ten of the eleven sections in formal, so only the <b>week agenda’s states</b> is on this page. A
-                    loading week no longer draws skeleton entries: its days stay empty and steady, and the data table’s own loading card (the theme’s
-                    large spinner, the words, formal’s ruled lines) stands in the middle of the days, arriving and leaving as it does over a table. The
-                    items arrive only once the card has gone. Everything with a
-                    <code>kp-</code> class and every script under <code>js/</code> is the package; the sample data and the button that drives the
-                    demo are this page’s. The section says what you should see under <b>Expected</b>. Formal only, judged in the review dialog
-                    (“Review in a dialog” at the top).
+                    Review round 5. Kenny approved the eight components in formal (rounds 1 to 4): the <b>action tiles</b>, the <b>status
+                    rows</b>, the <b>facet list</b>, the <b>heat grid</b>, the <b>matrix</b>, the <b>bar in a table cell</b>, the <b>week
+                    agenda</b> with its states and the <b>run timeline</b>. This round asks the fifteen other themes, each built from that
+                    theme’s own approved parts: its buttons, segmented track, menus, loading picture, arrival and signature motion. Formal is
+                    not on the page (approved). Every section says what you should see under <b>Expected</b>, and the review dialog’s
+                    “Look at” line names what is this theme’s own. Everything with a <code>kp-</code> class and every script under
+                    <code>js/</code> is the package; the sample data and the buttons that drive a demo are this page’s.
                 </p>
+                <p class="ta-note" data-ta-mirror-note hidden>
+                    <b>Hover, focus and press rows are drawn by copying the package’s own rules</b> (the page reads the stylesheets and re-writes
+                    <code>:hover</code> as a class), so they show the theme’s real look. That needs the page to be served over http (as the catalogue
+                    does); opened as a file, those rows show only the plain tile.
+                </p>
+                <p class="ta-note" data-ta-motion hidden><b>Your system asks for reduced motion</b>, so hover and press change the look but nothing moves or fades.</p>
             </header>
+${openOnly(tiles)}
 ${openOnly(grids)}
 ${openOnly(time)}
         </main>
-${openOnly(grids).trim() ? '        <script type="module" src="demo-grids.js"></script>\n' : ''}        <script type="module" src="demo-time.js"></script>
+        <script type="module" src="demo-grids.js"></script>
+        <script type="module" src="demo-time.js"></script>
         <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="demo-tiles.js"></script>
         <script type="application/json" data-review-round>
-            { "round": "2026-10-16-r4", "received": ["2026-10-16-r1", "2026-10-16-r2", "2026-10-16-r3"], "reopen": ["formal|week-states"] }
+            { "round": "2026-10-16-r5", "received": ["2026-10-16-r1", "2026-10-16-r2", "2026-10-16-r3", "2026-10-16-r4"] }
         </script>
         <script type="module" src="../_review/review.js"></script>
         <script src="../../catalogue/boot-check.js"></script>
