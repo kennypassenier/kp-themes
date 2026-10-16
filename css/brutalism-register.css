@@ -4652,3 +4652,1506 @@
         }
     }
 }
+
+/* ── The kpadopt4 data pieces, in this theme [kpadopt4] ──
+   Brutalism's own (themes/brutalism/CHARACTER.md): a mark is paint under black ink in the ink line on its small hard
+   shadow, square (G5, G6, G7); a part under the hand is lifted up-left off its footprint while its shadow stays on the
+   ground (G8); a warning is taped off, hazard stripes along its foot (G13); a number that changes is slammed onto its
+   yellow offset (G9); a bolt is square and has its own small shadow (G16); the voice is Archivo Black shouting and Space
+   Grotesk speaking in bold capitals, the machine's words in mono (G15). */
+@layer kp.signature {
+    /* The identity mark: flat paint, never a tint, the letters in Archivo Black; the round mark is the same square with
+       a second frame stamped inside it; the pick is the fat frame. */
+    [data-theme='brutalism'] .kp-idmark {
+        --kp-idmark-radius: 0;
+        border: 2px solid var(--border-strong);
+        background: var(--kp-idmark-c);
+        box-shadow: 2px 2px 0 var(--border-strong);
+        color: var(--border-strong);
+        font-family: var(--theme-font-display);
+        font-size: calc(var(--kp-idmark-s) * 0.42);
+        font-weight: 400;
+        letter-spacing: -0.02em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-idmark--xs {
+        border-width: 1px;
+        box-shadow: 1px 1px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-idmark--round {
+        border-radius: 0;
+        outline: 2px solid var(--border-strong);
+        outline-offset: -5px;
+    }
+    [data-theme='brutalism'] .kp-idmark--xs.kp-idmark--round {
+        outline: 0;
+    }
+    [data-theme='brutalism'] .kp-idmark--pattern {
+        --kp-idmark-ink: var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-idmark--glyph::after {
+        border-radius: 0;
+        background: var(--secondary);
+        box-shadow: 0 0 0 1.5px var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-idmark--glyph[data-kp-idmark-glyph='circle']::after {
+        border-radius: 0;
+    }
+    [data-theme='brutalism'] .kp-idmark--glyph[data-kp-idmark-glyph='triangle']::after {
+        box-shadow: none;
+        background: var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-idmark[data-kp-idmark-empty] {
+        border-style: dashed;
+        background: var(--muted);
+        box-shadow: none;
+        color: var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-idmark[aria-current]:not([aria-current='false']),
+    [data-theme='brutalism'] .kp-idmark[data-kp-idmark-selected] {
+        outline: 4px solid var(--border-strong);
+        outline-offset: 1px;
+        box-shadow: 2px 2px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-idmark--round[aria-current]:not([aria-current='false']),
+    [data-theme='brutalism'] .kp-idmark--round[data-kp-idmark-selected] {
+        outline: 4px solid var(--border-strong);
+        outline-offset: 1px;
+    }
+    [data-theme='brutalism'] .kp-idmark-group > .kp-idmark,
+    [data-theme='brutalism'] .kp-idmark-group > .kp-idmark-group__more {
+        box-shadow: 2px 2px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-idmark-group__more {
+        --kp-idmark-radius: 0;
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        color: var(--border-strong);
+        font-family: var(--theme-font-display);
+    }
+
+    /* The share bar: a rule printed in the ink line on its hard shadow, the parts flat paint set apart by ink, the
+       threshold a block standing out of it, the legend's swatches square bolts. */
+    [data-theme='brutalism'] .kp-stackbar {
+        --kp-stackbar-radius: 0;
+        --kp-stackbar-gap: 3px;
+    }
+    [data-theme='brutalism'] .kp-stackbar__title {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        letter-spacing: -0.01em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-stackbar__total {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-stackbar__bar {
+        box-sizing: border-box;
+        border: 3px solid var(--border-strong);
+        background: var(--card);
+        box-shadow: 4px 4px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-stackbar__seg {
+        box-shadow: inset calc(var(--kp-stackbar-gap, 3px) * -1) 0 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-stackbar__seg:dir(rtl) {
+        box-shadow: inset var(--kp-stackbar-gap, 3px) 0 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-stackbar__seg[data-kp-stackbar-hatch],
+    [data-theme='brutalism'] .kp-stackbar__swatch[data-kp-stackbar-hatch] {
+        background-image: repeating-linear-gradient(-45deg, transparent 0 3px, var(--border-strong) 3px 5px);
+    }
+    [data-theme='brutalism'] .kp-stackbar__seg[data-kp-stackbar-lit] {
+        translate: -2px -2px;
+        box-shadow:
+            inset calc(var(--kp-stackbar-gap, 3px) * -1) 0 0 var(--border-strong),
+            3px 3px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-stackbar__bar[data-kp-stackbar-full] .kp-stackbar__seg:last-of-type {
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] .kp-stackbar__mark {
+        inset-block: -0.5rem;
+        inline-size: 6px;
+        margin-inline-start: -2px;
+        background: var(--border-strong);
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] .kp-stackbar__bar[data-kp-over]::after {
+        content: '\25B6';
+        color: var(--destructive);
+        text-shadow: 1px 1px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-stackbar__item {
+        border-radius: 0;
+        border: 2px solid transparent;
+    }
+    [data-theme='brutalism'] .kp-stackbar__item[data-kp-stackbar-lit] {
+        border-color: var(--border-strong);
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        box-shadow: 3px 3px 0 var(--border-strong);
+        translate: -1px -1px;
+    }
+    [data-theme='brutalism'] .kp-stackbar__item[data-kp-stackbar-lit] .kp-stackbar__value {
+        color: inherit;
+    }
+    [data-theme='brutalism'] .kp-stackbar__swatch {
+        box-sizing: border-box;
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: 2px 2px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-stackbar__item[data-kp-stackbar-rest] .kp-stackbar__swatch {
+        background: var(--card);
+        box-shadow: 2px 2px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-stackbar__label {
+        font-weight: 700;
+        letter-spacing: 0.02em;
+    }
+    [data-theme='brutalism'] .kp-stackbar__value {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-stackbar__item[data-kp-stackbar-over] .kp-stackbar__value {
+        padding-inline: 0.35em;
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+    [data-theme='brutalism'] .kp-stackbar__note,
+    [data-theme='brutalism'] .kp-bullets[data-kp-state='error'] .kp-bullets__note {
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: var(--kp-shadow);
+        color: var(--foreground);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-stackbar[data-kp-state='error'] .kp-stackbar__note {
+        padding-block-end: calc(var(--kp-space-sm, 0.5rem) + 0.5rem);
+        background:
+            repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.5rem no-repeat,
+            var(--card);
+    }
+
+    /* Bullet rows: the row under the hand is lifted off its footprint, yellow, named by its label; a figure's tone is
+       paint in the ink line (paper on red). */
+    [data-theme='brutalism'] .kp-bullets__row {
+        border-radius: 0;
+        border: 2px solid transparent;
+    }
+    [data-theme='brutalism'] .kp-bullets__row:has(.kp-bullets__link:hover) {
+        border-color: var(--border-strong);
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        box-shadow: 4px 4px 0 var(--border-strong);
+        translate: -2px -2px;
+    }
+    [data-theme='brutalism'] .kp-bullets__row:has(.kp-bullets__link:active) {
+        translate: 0 0;
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] .kp-bullets__row:has(.kp-bullets__link:hover) .kp-bullets__label {
+        text-decoration: none;
+    }
+    [data-theme='brutalism'] .kp-bullets__row:has(.kp-bullets__link:hover) .kp-bullets__detail {
+        color: inherit;
+    }
+    [data-theme='brutalism'] .kp-bullets__label {
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-bullets__detail {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='brutalism'] .kp-bullets__figure {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+    }
+    [data-theme='brutalism'] .kp-bullets__row[data-kp-tone='warning'] .kp-bullets__figure,
+    [data-theme='brutalism'] .kp-bullets__row[data-kp-tone='destructive'] .kp-bullets__figure {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: 2px 2px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-bullets__row[data-kp-tone='warning'] .kp-bullets__figure {
+        background: var(--warning);
+        color: var(--border-strong);
+    }
+
+    /* The key-value grid: the keys in bold capitals, the lines ink, a changed row marked by a block, a failed row taped
+       off along its foot. */
+    [data-theme='brutalism'] .kp-kv__row > dt {
+        color: var(--foreground);
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-kv__row > dd {
+        font-weight: 500;
+    }
+    [data-theme='brutalism'] .kp-kv--lines > .kp-kv__row {
+        border-block-end: 2px solid var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-kv {
+        --kp-glyph-changed: '\00a0\25A0';
+    }
+    [data-theme='brutalism'] .kp-kv__row[data-kp-changed] > dt::after {
+        color: var(--foreground);
+        text-shadow: 1px 1px 0 var(--secondary);
+    }
+    [data-theme='brutalism'] .kp-kv__row[data-kp-state='error'] {
+        padding-block-end: 0.5rem;
+        background: repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.375rem no-repeat;
+    }
+    [data-theme='brutalism'] .kp-kv__row[data-kp-state='error']::before {
+        content: none;
+    }
+
+    /* Form rows: the label in bold capitals; a row changed and not saved has the yellow block along its start edge in
+       the ink line; a row in error is taped off along that edge. */
+    [data-theme='brutalism'] .kp-formrow__label {
+        font-size: 0.8125rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-formrow__label > small {
+        font-weight: 500;
+        letter-spacing: 0;
+        text-transform: none;
+    }
+    [data-theme='brutalism'] .kp-formrow[data-kp-changed]::before,
+    [data-theme='brutalism'] .kp-formrow[data-kp-state='error']::before {
+        inline-size: 8px;
+        inset-inline-start: calc(var(--kp-space-sm, 0.5rem) * -1 - 4px);
+        background: var(--secondary);
+        box-shadow: 0 0 0 2px var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-formrow[data-kp-state='error']::before {
+        background: repeating-linear-gradient(45deg, var(--destructive) 0 4px, var(--border-strong) 4px 8px);
+    }
+    [data-theme='brutalism'] .kp-formrows--lines > .kp-formrow {
+        border-block-end: 2px solid var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-formrow__lock::before {
+        border-radius: 0;
+        border-width: 2px;
+    }
+
+    /* The code block: a slab with a yellow head like the dialog's band; keys are marked in lavender paint, the second
+       sheet; a failed read is taped off. */
+    [data-theme='brutalism'] .kp-code {
+        --kp-code-key: var(--foreground);
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: var(--kp-shadow);
+    }
+    [data-theme='brutalism'] .kp-code__head {
+        border-block-end: var(--kp-line) solid var(--border-strong);
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }
+    [data-theme='brutalism'] .kp-code__title {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        letter-spacing: -0.01em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-code__meta {
+        color: inherit;
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-code__body,
+    [data-theme='brutalism'] .kp-code__note {
+        border-radius: 0;
+    }
+    [data-theme='brutalism'] .kp-code__key {
+        padding-inline: 0.15em;
+        background: var(--accent);
+        color: var(--accent-foreground, var(--foreground));
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-code__foot {
+        border-block-start: 2px solid var(--border-strong);
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-code[data-kp-state='error'] .kp-code__note {
+        padding-block-end: calc(var(--kp-space-md, 0.75rem) + 0.5rem);
+        background:
+            repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.5rem no-repeat,
+            var(--muted);
+    }
+
+    /* The header line. */
+    [data-theme='brutalism'] .kp-page-header__line > .kp-page-header__title {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-page-header__meta {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+
+    /* A number that ticks lands on its yellow offset, 3 px down-right of itself, and the offset is struck off in one cut
+       when the count ends (G9). */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] [data-kp-tick][data-kp-tick-state='running'] {
+            filter: drop-shadow(3px 3px 0 var(--secondary));
+        }
+    }
+}
+
+/* ── The uptime strip, rows, checks, choices, a card's four states and the drawings, in this theme [kpadopt4-rows] ──
+   A cell of the strip is a small block of paint in its ink line (up, degraded and down are the statuses' paint and the
+   stripes they already carry); pointing lifts it up-left off its footprint (G8). A row says its state in a bar of paint
+   along its start edge, a failed one taped off, the next one up the yellow slab (G5, G13). A tile of choices is a
+   slab: pointing lifts it, the pick is yellow (G5, G8). Waiting is the lintel hoisted in its well (G10): the strip
+   is one well, not a well in every cell. The drawings are set down one after another and stop dead (G1, G3). */
+@layer kp.signature {
+    [data-theme='brutalism'] .kp-uptime {
+        --kp-uptime-cell-radius: 0;
+        --kp-uptime-up: var(--success);
+        --kp-uptime-degraded: var(--warning);
+        --kp-uptime-down: var(--destructive);
+    }
+    [data-theme='brutalism'] .kp-uptime__title {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-uptime__percent {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+    }
+    [data-theme='brutalism'] .kp-uptime__summary {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-uptime__summary[data-kp-tone='error'] {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: 2px 2px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-uptime__cell:not(.kp-skeleton) {
+        border: 0;
+        border-radius: 0;
+        box-shadow: inset 0 0 0 1px var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-uptime__cell[data-kp-tone='none']:not(.kp-skeleton) {
+        background: var(--card);
+    }
+    [data-theme='brutalism'] .kp-uptime__cell:is(:hover, :focus-visible, [aria-expanded='true']):not(.kp-skeleton) {
+        translate: -1px 0;
+        box-shadow:
+            inset 0 0 0 1px var(--border-strong),
+            2px 2px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-uptime__axis {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-uptime__info-title {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-uptime__swatch {
+        border: 0;
+        border-radius: 0;
+        box-shadow: inset 0 0 0 1px var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-uptime__cell.kp-skeleton {
+        visibility: hidden;
+    }
+    [data-theme='brutalism'] .kp-uptime__track:has(> .kp-skeleton) {
+        position: relative;
+        box-sizing: border-box;
+        box-shadow:
+            inset 0 0 0 2px var(--border-strong),
+            3px 3px 0 var(--border-strong);
+        background-color: var(--card);
+        background-image: var(--kp-sig-br-lintel);
+        background-size: var(--kp-sig-br-lintel-size);
+        background-position-x: 50%, 21%, 79%;
+        background-position-y: 100%;
+        background-repeat: no-repeat;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-uptime__track:has(> .kp-skeleton) {
+            animation: kp-sig-brutalism-hoist var(--kp-sig-br-loop) linear infinite backwards;
+        }
+        [data-theme='brutalism'] .kp-uptime__cell {
+            transition: none;
+        }
+    }
+
+    /* Rows with a lead. */
+    [data-theme='brutalism'] .kp-action-list--lead {
+        --kp-action-list-bar: 8px;
+        --kp-action-list-next-wash: 0%;
+    }
+    [data-theme='brutalism'] .kp-action-list--lead > li {
+        border-block-end: 2px solid var(--border-strong);
+        border-inline-start-color: transparent;
+    }
+    [data-theme='brutalism'] .kp-action-list--lead > li[data-kp-state='new'] {
+        border-inline-start-color: var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-action-list--lead > li[data-kp-state='active'] {
+        border-inline-start-color: var(--accent);
+        box-shadow: inset 2px 0 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-action-list--lead > li[data-kp-state='warn'] {
+        border-inline-start-color: var(--warning);
+        box-shadow: inset 2px 0 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-action-list--lead > li[data-kp-state='failed'] {
+        background: repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 0 / 8px 100% no-repeat;
+    }
+    [data-theme='brutalism'] .kp-action-list--lead > li[data-kp-state='failed']:dir(rtl) {
+        background-position: 100% 0;
+    }
+    [data-theme='brutalism'] .kp-action-list--lead > li[data-kp-state='next'] {
+        border-inline-start-color: var(--border-strong);
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        box-shadow: inset 0 0 0 3px var(--border-strong);
+    }
+    [data-theme='brutalism']
+        .kp-action-list--lead
+        > li[data-kp-state='next']
+        :is(.kp-action-list__lead, .kp-action-list__text, .kp-action-list__meta) {
+        color: inherit;
+    }
+    [data-theme='brutalism'] .kp-action-list__title {
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-action-list--lead > li:is([data-kp-state='done'], [data-kp-state='past']) .kp-action-list__title {
+        font-weight: 500;
+    }
+    [data-theme='brutalism'] .kp-action-list__meta {
+        font-family: var(--theme-font-mono);
+        font-weight: 500;
+    }
+    [data-theme='brutalism'] .kp-action-list__when > :first-child {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-action-list > li.kp-action-list__group {
+        padding-inline-start: var(--kp-space-sm, 0.5rem);
+        border-block-end: var(--kp-line) solid var(--border-strong);
+        color: var(--foreground);
+        font-family: var(--theme-font-display);
+        font-size: 0.875rem;
+        font-weight: 400;
+        letter-spacing: 0.04em;
+    }
+    [data-theme='brutalism'] .kp-action-list__payload {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: 3px 3px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-action-list__more > summary {
+        color: var(--foreground);
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-action-list__more > summary:hover {
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }
+    [data-theme='brutalism'] [data-kp-row-keys] > li:focus-visible {
+        outline-width: 3px;
+        outline-offset: -3px;
+    }
+
+    /* A check with a reservation: the mark in warning paint, a band of tape in that paint along the foot. */
+    [data-theme='brutalism'] .kp-statusrow[data-state='warn'] {
+        --kp-statusrow-state-edge: var(--border-strong);
+        padding-block-end: calc(0.5rem + 0.5rem);
+        background:
+            repeating-linear-gradient(45deg, var(--warning) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.5rem no-repeat,
+            var(--card);
+    }
+    [data-theme='brutalism'] .kp-statusrow[data-state='warn'] .kp-statusrow__mark {
+        border-color: var(--border-strong);
+        background: var(--warning);
+        color: var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-statusrow__fix {
+        font-weight: 700;
+    }
+
+    /* Choices as tiles: slabs; pointing lifts one up-left off its footprint; the pick is yellow. */
+    [data-theme='brutalism'] .kp-fieldset[data-kp-layout='tiles'] {
+        --kp-field-tile-radius: 0;
+        --kp-field-tiles-gap: 1rem;
+    }
+    [data-theme='brutalism'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option {
+        border: var(--kp-line) solid var(--border-strong);
+        background: var(--card);
+        box-shadow: 4px 4px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-field__option-title {
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-field__option-hint {
+        font-weight: 500;
+    }
+    [data-theme='brutalism'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:hover:not(:has(> .kp-field__check:disabled)) {
+        border-color: var(--border-strong);
+        translate: -2px -2px;
+        box-shadow: 6px 6px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:active:not(:has(> .kp-field__check:disabled)) {
+        translate: 4px 4px;
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:checked) {
+        border-color: var(--border-strong);
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        box-shadow: 4px 4px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:checked) .kp-field__option-hint {
+        color: inherit;
+    }
+    [data-theme='brutalism'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:disabled) {
+        border-style: dashed;
+        background: var(--muted);
+        box-shadow: none;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option {
+            transition:
+                translate var(--fx-duration) var(--kp-sig-br-fall),
+                box-shadow var(--fx-duration) var(--kp-sig-br-fall);
+        }
+    }
+
+    /* A card in four data states: the failure is taped off along its foot; the data that returns is set down. */
+    [data-theme='brutalism'] .kp-card__state-title {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-card[data-kp-state='error'] > .kp-card__stage > .kp-card__state .kp-card__failure {
+        padding-block-end: calc(var(--kp-space-md, 0.75rem) + 0.5rem);
+        background:
+            repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.5rem no-repeat,
+            var(--card);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-card[data-kp-state='ready'] > .kp-card__stage > .kp-card__data {
+            animation: kp-sig-brutalism-k4-fall var(--kp-sig-br-time) var(--kp-sig-br-fall) both;
+        }
+    }
+    @keyframes kp-sig-brutalism-k4-fall {
+        from {
+            translate: -0.75rem -0.75rem;
+            opacity: 0;
+        }
+        1% {
+            opacity: 1;
+        }
+        to {
+            translate: 0 0;
+            opacity: 1;
+        }
+    }
+
+    /* The drawings: the slab's set. Heavy strokes, square ends; each is set down from up-left and stops dead, one
+       after another, 100 ms apart. */
+    [data-theme='brutalism'] .kp-empty[data-kp-art]::before {
+        display: none;
+    }
+    [data-theme='brutalism'] .kp-art {
+        display: block;
+        --kp-art-stroke: 3px;
+        --kp-art-rule: var(--foreground);
+        --kp-art-line: var(--foreground);
+        --kp-art-ink: var(--foreground);
+        --kp-art-red: var(--destructive);
+    }
+    [data-theme='brutalism'] .kp-art > g[data-kp-art-set='slab'] {
+        display: inline;
+    }
+    [data-theme='brutalism'] .kp-art path {
+        stroke-linecap: butt;
+        stroke-linejoin: miter;
+    }
+    [data-theme='brutalism'] .kp-art path.kp-art__line {
+        stroke-width: 2px;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-art path {
+            animation: kp-sig-brutalism-art-set var(--kp-sig-br-time) var(--kp-sig-br-fall) both;
+            animation-delay: calc(var(--kp-art-i, 0) * 100ms);
+        }
+    }
+    @keyframes kp-sig-brutalism-art-set {
+        from {
+            translate: -10px -10px;
+            opacity: 0;
+        }
+        1% {
+            opacity: 1;
+        }
+        to {
+            translate: 0 0;
+            opacity: 1;
+        }
+    }
+}
+
+/* ── Flows and records, in this theme [kpadopt4-flows] ──
+   A secret printed on the page is slammed onto its yellow offset when it is shown, and its time runs out in ten hard
+   steps of a six-pixel bar (G9, G11, G16); a dialog's sections are ruled off in the ink line, the danger section taped
+   off (G13); a moment on the timeline is a square bolt with its own small shadow, a stretch in warning is hazard tape
+   (G16); a journey is a path of blocks, the one it stands at lifted off its footprint; the pipeline's lanes and cards
+   are slabs, pointing lifts a card up-left off its footprint (G7, G8). */
+@layer kp.signature {
+    [data-theme='brutalism'] .kp-secret {
+        --kp-secret-drain: var(--border-strong);
+        --kp-secret-drain-size: 6px;
+    }
+    [data-theme='brutalism'] .kp-secret__value {
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: 3px 3px 0 var(--border-strong);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-secret[data-kp-secret-state='shown'] .kp-secret__value {
+        background: var(--accent);
+        color: var(--accent-foreground, var(--foreground));
+    }
+    [data-theme='brutalism'] .kp-secret[data-kp-secret-state='disabled'] .kp-secret__value {
+        background: var(--muted);
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] .kp-secret__line {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-secret__drain {
+        border-radius: 0;
+    }
+    [data-theme='brutalism'] .kp-secret[data-kp-secret-state='error'] .kp-secret__words {
+        padding: 0 0 0.5rem;
+        border-inline-start: 0;
+        background: repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.375rem no-repeat;
+        font-weight: 700;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism']
+            .kp-secret:not([data-kp-secret-ttl='0'], [data-kp-secret-reveal-on='hold'])[data-kp-secret-state='shown']
+            .kp-secret__drain {
+            animation-timing-function: steps(10, jump-end);
+        }
+        [data-theme='brutalism'] .kp-secret[data-kp-secret-state='shown'] .kp-secret__text {
+            display: inline-block;
+            animation: kp-sig-brutalism-secret-slam calc(var(--kp-sig-br-time) + 12 * 100ms) linear both;
+        }
+    }
+    @keyframes kp-sig-brutalism-secret-slam {
+        0% {
+            translate: -6px -6px;
+            filter: drop-shadow(9px 9px 0 var(--border-strong));
+            animation-timing-function: var(--kp-sig-br-fall);
+        }
+        20%,
+        99.9% {
+            translate: 0 0;
+            filter: drop-shadow(3px 3px 0 var(--border-strong));
+        }
+        100% {
+            translate: 0 0;
+            filter: none;
+        }
+    }
+
+    /* The dialog in sections. */
+    [data-theme='brutalism'] .kp-dialog__section {
+        border-block-start: var(--kp-line) solid var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-dialog__section:first-child {
+        border-block-start: 0;
+    }
+    [data-theme='brutalism'] .kp-dialog__heading {
+        font-size: 0.8125rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-dialog__note {
+        font-weight: 500;
+    }
+    [data-theme='brutalism'] .kp-dialog__section--danger {
+        padding-inline: 0;
+        padding-block-end: calc(var(--kp-dialog-section-gap, 0.75rem) + 0.5rem);
+        border-inline-start: 0;
+        background: repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.5rem no-repeat;
+    }
+    [data-theme='brutalism'] .kp-dialog__section--danger:last-child {
+        padding-block-end: calc(var(--kp-dialog-section-gap, 0.75rem) + 0.5rem);
+    }
+    [data-theme='brutalism'] .kp-confirm__dependents {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--muted);
+        box-shadow: 3px 3px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-confirm__dependents .kp-dialog__heading {
+        margin: 0 0 var(--kp-space-xs, 0.25rem);
+    }
+    [data-theme='brutalism'] .kp-confirm__list {
+        font-weight: 700;
+    }
+
+    /* Moments and stretches on the timeline. */
+    [data-theme='brutalism'] .kp-gantt {
+        --kp-gantt-mark-size: 0.75rem;
+    }
+    [data-theme='brutalism'] :is(.kp-gantt__point, .kp-gantt__mark)::before {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--kp-gantt-mark);
+        box-shadow: 1px 1px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] :is(.kp-gantt__point, .kp-gantt__mark)[data-kp-shape='diamond']::before {
+        border-radius: 0;
+    }
+    [data-theme='brutalism'] :is(.kp-gantt__point, .kp-gantt__mark)[data-kp-shape='triangle']::before {
+        border: 0;
+        background: var(--border-strong);
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] :is(.kp-gantt__point, .kp-gantt__mark)[data-kp-shape='ring']::before,
+    [data-theme='brutalism'] .kp-gantt__point[data-kp-planned]::before {
+        background: var(--card);
+    }
+    [data-theme='brutalism'] .kp-gantt__point[data-kp-planned][data-kp-shape='triangle']::before {
+        background:
+            linear-gradient(var(--card), var(--card)) content-box,
+            var(--border-strong) border-box;
+    }
+    [data-theme='brutalism'] .kp-gantt__point:hover::before {
+        translate: -1px -1px;
+        box-shadow: 3px 3px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-gantt__point:active::before {
+        translate: 1px 1px;
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] .kp-gantt__zone,
+    [data-theme='brutalism'] .kp-gantt__band {
+        border-inline: 2px solid var(--border-strong);
+        background: repeating-linear-gradient(45deg, hsl(from var(--kp-gantt-mark) h s l / 0.35) 0 4px, transparent 4px 10px);
+    }
+    [data-theme='brutalism'] .kp-gantt__zone[data-kp-lane-zone] {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--kp-gantt-mark);
+    }
+    [data-theme='brutalism'] :is(.kp-gantt__zone, .kp-gantt__band)[data-kp-tone='warning'] {
+        --kp-gantt-mark: var(--warning);
+    }
+    [data-theme='brutalism'] :is(.kp-gantt__zone, .kp-gantt__band)[data-kp-tone='warning'][data-kp-lane-zone] {
+        background: repeating-linear-gradient(45deg, var(--warning) 0 4px, var(--border-strong) 4px 8px);
+    }
+    [data-theme='brutalism'] .kp-gantt__count {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: 2px 2px 0 var(--border-strong);
+        font-family: var(--theme-font-display);
+        font-size: 0.6875rem;
+        font-weight: 400;
+    }
+    [data-theme='brutalism'] .kp-gantt__sub {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-gantt__lane-link {
+        text-decoration-thickness: 3px;
+        text-underline-offset: 0.15em;
+    }
+    [data-theme='brutalism'] .kp-gantt__lane-link:hover {
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }
+
+    /* The journey: a path of blocks. */
+    [data-theme='brutalism'] .kp-steplist--journey {
+        --kp-journey-rule: 4px;
+        --kp-steplist-mark: 1.5rem;
+        --kp-steplist-mark-radius: 0;
+    }
+    [data-theme='brutalism'] .kp-steplist--journey > .kp-steplist__item {
+        border: 0;
+        background: transparent;
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] .kp-steplist--journey .kp-steplist__mark {
+        border: 3px solid var(--border-strong);
+        background-color: var(--card);
+        box-shadow: 2px 2px 0 var(--border-strong);
+        font-family: var(--theme-font-display);
+    }
+    [data-theme='brutalism'] .kp-steplist--journey .kp-steplist__title {
+        font-size: 0.8125rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-steplist--journey > .kp-steplist__item:not([data-state='current']) .kp-steplist__title {
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-steplist--journey .kp-steplist__time {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-steplist--journey > .kp-steplist__item + .kp-steplist__item::before {
+        background: repeating-linear-gradient(90deg, var(--border-strong) 0 6px, transparent 6px 10px);
+    }
+    [data-theme='brutalism'] .kp-steplist--journey > .kp-steplist__item:is([data-state='done'], [data-state='current'])::before {
+        background: var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-steplist--journey > .kp-steplist__item[data-state='failed']::before {
+        background: repeating-linear-gradient(45deg, var(--destructive) 0 4px, var(--border-strong) 4px 8px);
+    }
+    [data-theme='brutalism'] .kp-steplist--journey .kp-steplist__item[data-state='done']:not([data-kp-tone]) .kp-steplist__mark {
+        background: var(--border-strong);
+        color: var(--card);
+    }
+    [data-theme='brutalism'] .kp-steplist--journey .kp-steplist__item[data-state='done'][data-kp-tone] .kp-steplist__mark {
+        border-color: var(--border-strong);
+        background: var(--kp-step-tone);
+        color: var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-steplist--journey .kp-steplist__item[data-state='current'] .kp-steplist__mark {
+        border-color: var(--border-strong);
+        background: var(--kp-step-tone, var(--secondary));
+        translate: -2px -2px;
+        box-shadow: 5px 5px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-steplist--journey .kp-steplist__item[data-state='failed'] .kp-steplist__mark {
+        border-color: var(--border-strong);
+    }
+    @container kp-journey (max-width: 30rem) {
+        [data-theme='brutalism'] .kp-steplist--journey > .kp-steplist__item:not(:last-child)::after {
+            background: repeating-linear-gradient(180deg, var(--border-strong) 0 6px, transparent 6px 10px);
+        }
+        [data-theme='brutalism']
+            .kp-steplist--journey
+            > .kp-steplist__item:has(+ .kp-steplist__item:is([data-state='done'], [data-state='current']))::after {
+            background: var(--border-strong);
+        }
+        [data-theme='brutalism'] .kp-steplist--journey > .kp-steplist__item:has(+ .kp-steplist__item[data-state='failed'])::after {
+            background: repeating-linear-gradient(135deg, var(--destructive) 0 4px, var(--border-strong) 4px 8px);
+        }
+    }
+
+    /* The pipeline. */
+    [data-theme='brutalism'] .kp-pipeline {
+        --kp-pipeline-gap: 1rem;
+    }
+    [data-theme='brutalism'] .kp-pipeline__lane {
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: 4px 4px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-pipeline__head {
+        border: 0;
+        border-block-end: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        background: var(--kp-pipeline-tone);
+        color: var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-pipeline__name {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-pipeline__count {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+    }
+    [data-theme='brutalism'] .kp-pipeline__share {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-pipeline__card {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: 3px 3px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-pipeline__card:hover {
+        border-color: var(--border-strong);
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        translate: -2px -2px;
+        box-shadow: 5px 5px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-pipeline__card:hover :is(.kp-pipeline__sub, .kp-pipeline__meta) {
+        color: inherit;
+    }
+    [data-theme='brutalism'] .kp-pipeline__card:active {
+        translate: 3px 3px;
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] .kp-pipeline__card[aria-current='true'] {
+        border-color: var(--border-strong);
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        box-shadow:
+            inset 0 0 0 2px var(--border-strong),
+            3px 3px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-pipeline__card[aria-current='true'] :is(.kp-pipeline__sub, .kp-pipeline__meta) {
+        color: inherit;
+    }
+    [data-theme='brutalism'] .kp-pipeline__card[data-kp-dimmed] {
+        border-style: dashed;
+        background: transparent;
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] .kp-pipeline__title {
+        font-weight: 700;
+        letter-spacing: 0.02em;
+    }
+    [data-theme='brutalism'] .kp-pipeline__sub,
+    [data-theme='brutalism'] .kp-pipeline__meta {
+        font-family: var(--theme-font-mono);
+        font-weight: 500;
+    }
+    [data-theme='brutalism'] .kp-pipeline__mark {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--kp-pipeline-tone, var(--muted));
+        box-shadow: 2px 2px 0 var(--border-strong);
+        color: var(--border-strong);
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+    }
+    [data-theme='brutalism'] .kp-pipeline__state {
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: var(--kp-shadow);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-pipeline__state[data-kp-state='error'] {
+        padding-block-end: calc(var(--kp-space-sm, 0.5rem) + 0.5rem);
+        background:
+            repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.5rem no-repeat,
+            var(--card);
+    }
+    [data-theme='brutalism'] .kp-pipeline__state[data-kp-state='error'] .kp-pipeline__words {
+        border-inline-start: 0;
+        padding-inline-start: 0;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-pipeline__card {
+            transition:
+                translate var(--fx-duration) var(--kp-sig-br-fall),
+                box-shadow var(--fx-duration) var(--kp-sig-br-fall);
+        }
+    }
+}
+
+/* ── The ideas and the recipe components, in this theme [kpadopt4-ideas, kpadopt4-recipes] ──
+   Everything here is a slab or a part of one: a terminal is an ink plate with paper words and a yellow prompt; a time
+   left is a disc on its footprint and a digital time a row of blocks, and when the time is out the part is set down
+   again, once, on its footprint (G3, G12); a range's pick is the yellow plate; the compare slider's divider is the
+   six-pixel bar and its handle a block lifted off its footprint; a wheel turns at a constant speed and stops dead
+   (G1: no ease, no settle); an included chip is yellow with a stamped tick, an excluded one is ink with a red cross
+   (G5, G16); a step is set down on its footprint (G3). */
+@layer kp.signature {
+    /* Typed confirmation: the loss list is a slab taped off along its foot; the name is the yellow plate in its box. */
+    [data-theme='brutalism'] .kp-type-confirm__loses {
+        padding-block-end: calc(var(--kp-space-sm, 0.5rem) + 0.5rem);
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background:
+            repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.5rem no-repeat,
+            var(--card);
+        box-shadow: 3px 3px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-type-confirm__loses-title {
+        font-size: 0.8125rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-type-confirm__list {
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-type-confirm__name {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-type-confirm__input {
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-type-confirm__status {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+
+    /* Command block: the terminal is ink with paper words, the prompt the yellow hand. */
+    [data-theme='brutalism'] .kp-command {
+        --kp-command-prompt-ink: var(--secondary);
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: var(--kp-shadow);
+    }
+    [data-theme='brutalism'] .kp-command__head {
+        border-block-end: var(--kp-line) solid var(--border-strong);
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }
+    [data-theme='brutalism'] .kp-command__shell {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        letter-spacing: -0.01em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-command__code {
+        background: var(--foreground);
+        color: var(--background);
+    }
+    [data-theme='brutalism'] .kp-command__code > code {
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-command__where {
+        border-block-start: var(--kp-line) solid var(--border-strong);
+        color: var(--foreground);
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-command:not([data-kp-command-ready])::before {
+        border-block-end: var(--kp-line) solid var(--border-strong);
+    }
+
+    /* Visual timer and countdown. */
+    [data-theme='brutalism'] .kp-timer-disc {
+        --kp-timer-disc-fill: var(--secondary);
+        --kp-timer-disc-marks: var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-timer-disc__face {
+        border: var(--kp-line) solid var(--border-strong);
+        background: var(--card);
+        box-shadow: var(--kp-shadow);
+        transition: none;
+    }
+    [data-theme='brutalism'] .kp-timer-disc__sector {
+        box-shadow: 0 0 0 2px var(--border-strong);
+        transition: none;
+    }
+    [data-theme='brutalism'] .kp-timer-disc__marks {
+        inset: 2%;
+        background: repeating-conic-gradient(from -1.2deg, var(--border-strong) 0 2.4deg, transparent 2.4deg 30deg);
+    }
+    [data-theme='brutalism'] .kp-timer-disc__hub {
+        inset: 45%;
+        border: 3px solid var(--card);
+        border-radius: 0;
+        background: var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-timer-disc[data-kp-timer-disc-state='paused'] .kp-timer-disc__sector {
+        opacity: 1;
+        --kp-timer-disc-fill: var(--accent);
+    }
+    [data-theme='brutalism'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face {
+        background: var(--secondary);
+        box-shadow: var(--kp-shadow);
+    }
+    [data-theme='brutalism'] :is(.kp-timer-disc__caption, .kp-countdown__name) {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        letter-spacing: -0.01em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] :is(.kp-timer-disc__status, .kp-countdown__status) {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-countdown {
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: var(--kp-shadow);
+        transition: none;
+    }
+    [data-theme='brutalism'] .kp-countdown__time {
+        font-weight: 400;
+    }
+    [data-theme='brutalism'] .kp-countdown__digit {
+        background: var(--secondary);
+        box-shadow: inset 0 0 0 2px var(--border-strong);
+        color: var(--secondary-foreground);
+    }
+    [data-theme='brutalism'] .kp-countdown[data-kp-countdown-state='paused'] .kp-countdown__digit {
+        background: var(--muted);
+        color: var(--muted-foreground);
+    }
+    [data-theme='brutalism'] .kp-countdown[data-kp-countdown-state='ended'] {
+        background: var(--foreground);
+        color: var(--background);
+        box-shadow: var(--kp-shadow);
+    }
+    [data-theme='brutalism'] .kp-countdown[data-kp-countdown-state='ended'] .kp-countdown__status {
+        color: inherit;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism']
+            :is(.kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face, .kp-countdown[data-kp-countdown-state='ended']) {
+            --kp-sig-br-h: var(--kp-sig-br-h-part);
+            --kp-sig-br-sh: var(--kp-sig-br-drop);
+            animation: kp-sig-brutalism-drop var(--kp-sig-br-time) var(--kp-sig-br-fall) 1;
+        }
+    }
+
+    /* Range picker. */
+    [data-theme='brutalism'] .kp-range__custom[aria-pressed='true'] {
+        border-color: var(--border-strong);
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        box-shadow: inset 0 0 0 2px var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-range__label {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-range__title {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-range__panel .kp-field__input[aria-invalid='true'] {
+        border-color: var(--destructive);
+        box-shadow: inset 0 0 0 2px var(--destructive);
+    }
+
+    /* Compare slider. */
+    [data-theme='brutalism'] .kp-compare {
+        --kp-compare-line: 6px;
+        --kp-compare-ink: var(--border-strong);
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: var(--kp-shadow);
+    }
+    [data-theme='brutalism'] .kp-compare__handle {
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        box-shadow: 4px 4px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-compare__handle:active {
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] .kp-compare__label {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: 3px 3px 0 var(--border-strong);
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-compare__failed {
+        padding-block-end: calc(var(--kp-space-md, 1rem) + 0.5rem);
+        background:
+            repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.5rem no-repeat,
+            var(--muted);
+        color: var(--foreground);
+        font-weight: 700;
+    }
+
+    /* Three-way chips. */
+    [data-theme='brutalism'] .kp-segmented[data-kp-segmented='tri'] {
+        --kp-tri-mark-radius: 0;
+        --kp-tri-out-edge: var(--border-strong);
+        --kp-tri-out-ground: var(--foreground);
+        --kp-tri-out-ink: var(--background);
+    }
+    [data-theme='brutalism'] .kp-segmented__mark {
+        border: 2px solid currentColor;
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+    }
+    [data-theme='brutalism'] .kp-segmented--chips > .kp-segmented__item[data-kp-segmented-tri='include'] {
+        box-shadow: var(--kp-shadow);
+    }
+    [data-theme='brutalism'] .kp-segmented--chips > .kp-segmented__item[data-kp-segmented-tri='exclude'] {
+        box-shadow: 3px 3px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-segmented__item[data-kp-segmented-tri='exclude'] > .kp-segmented__label {
+        text-decoration-color: var(--background);
+        text-decoration-thickness: 3px;
+    }
+    [data-theme='brutalism'] .kp-segmented__item[data-kp-segmented-tri='exclude'] > .kp-segmented__mark {
+        border-color: var(--background);
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+    [data-theme='brutalism'] .kp-segmented__summary {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    @media (hover: hover) {
+        [data-theme='brutalism'] .kp-segmented--chips:not([aria-disabled='true']) > .kp-segmented__item[data-kp-segmented-tri]:hover {
+            translate: -2px -2px;
+            box-shadow: 5px 5px 0 var(--border-strong);
+        }
+    }
+
+    /* Quantity. */
+    [data-theme='brutalism'] .kp-quantity__field {
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: 4px 4px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-quantity__field:has(.kp-quantity__input:focus-visible) {
+        translate: -2px -2px;
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            6px 6px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-quantity__field:has(.kp-quantity__input[aria-invalid='true']) {
+        border-color: var(--border-strong);
+        background:
+            repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.3rem no-repeat,
+            var(--card);
+    }
+    [data-theme='brutalism'] .kp-quantity__input {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+    }
+    [data-theme='brutalism'] .kp-quantity__unit {
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    /* Checklist: rows ruled in ink; the row under the hand is the yellow plate; a ticked item is struck through in ink. */
+    [data-theme='brutalism'] .kp-checklist__bar {
+        border-block-end: var(--kp-line) solid var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-checklist__status {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-checklist__head {
+        font-family: var(--theme-font-display);
+        font-size: 1rem;
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-checklist__count {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-checklist__group[data-kp-checklist-done] .kp-checklist__count::before {
+        color: var(--foreground);
+    }
+    [data-theme='brutalism'] .kp-checklist__list {
+        border-block-start: 2px solid var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-checklist__item {
+        border-block-end: 2px solid var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-checklist__label {
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-checklist__detail {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-checklist__row:hover {
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }
+    [data-theme='brutalism'] .kp-checklist__row:hover .kp-checklist__detail {
+        color: inherit;
+    }
+    [data-theme='brutalism'] .kp-checklist__item[data-kp-checklist-checked] .kp-checklist__label {
+        color: var(--foreground);
+        text-decoration-color: var(--border-strong);
+        text-decoration-thickness: 3px;
+    }
+    [data-theme='brutalism'] .kp-checklist__empty {
+        border: var(--kp-line) dashed var(--border-strong);
+        border-radius: 0;
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-checklist__empty[data-kp-checklist-failed] {
+        padding-block-end: calc(var(--kp-space-lg, 1.5rem) + 0.5rem);
+        border-style: solid;
+        background:
+            repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.5rem no-repeat,
+            var(--card);
+        box-shadow: var(--kp-shadow);
+    }
+
+    /* Timers: slabs; the one that has run out is set down again, yellow, taped off along its foot. */
+    [data-theme='brutalism'] .kp-timer {
+        border: var(--kp-line) solid var(--border-strong);
+        border-radius: 0;
+        background: var(--card);
+        box-shadow: var(--kp-shadow);
+    }
+    [data-theme='brutalism'] .kp-timer__name {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-timer__state {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-timer__time {
+        font-weight: 400;
+    }
+    [data-theme='brutalism'] .kp-timer[data-kp-timer-state='done'] {
+        --kp-timer-done-ground: var(--warning);
+        --kp-timer-done-ink: var(--border-strong);
+        --kp-timer-done-edge: var(--border-strong);
+        padding-block-end: calc(var(--kp-space-md, 0.75rem) + 0.5rem);
+        background:
+            repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.5rem no-repeat,
+            var(--warning);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-timer[data-kp-timer-state='done'] {
+            --kp-sig-br-h: var(--kp-sig-br-h-plate);
+            --kp-sig-br-sh: var(--kp-sig-br-drop);
+            animation: kp-sig-brutalism-drop var(--kp-sig-br-time) var(--kp-sig-br-fall) 1;
+        }
+    }
+
+    /* Cook mode: each step is set down on its footprint; the figures and the counter shout. */
+    [data-theme='brutalism'] .kp-focus-steps__count {
+        font-family: var(--theme-font-display);
+        font-size: 1.125rem;
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-focus-steps__text {
+        font-weight: 600;
+        line-height: 1.35;
+    }
+    [data-theme='brutalism'] .kp-focus-steps__needs {
+        border-block-start: var(--kp-line) solid var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-focus-steps__needs-title {
+        color: var(--foreground);
+        font-size: 0.8125rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-focus-steps__amount {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-focus-steps__name {
+        font-weight: 600;
+    }
+    [data-theme='brutalism'] .kp-focus-steps__wake::before {
+        border-radius: 0;
+        border-width: 2px;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-focus-steps__step {
+            animation: kp-sig-brutalism-k4-fall var(--kp-sig-br-time) var(--kp-sig-br-fall) both;
+        }
+    }
+
+    /* The wheel: flat paint between ink lines, an ink rim; a constant speed and a dead stop. */
+    [data-theme='brutalism'] .kp-wheel {
+        --kp-wheel-ease: linear;
+        --kp-wheel-tint: 100%;
+        --kp-wheel-tint-chosen: 100%;
+        --kp-wheel-other: 0.35;
+        --kp-wheel-pointer: var(--secondary);
+        --kp-wheel-hub-ring: 4px;
+    }
+    [data-theme='brutalism'] .kp-wheel__segment {
+        stroke: var(--border-strong);
+        stroke-width: 2;
+    }
+    [data-theme='brutalism'] .kp-wheel__segment[data-kp-wheel-chosen] {
+        stroke-width: 3.5;
+    }
+    [data-theme='brutalism'] .kp-wheel__label {
+        fill: var(--border-strong);
+        stroke: var(--card);
+        stroke-width: 3px;
+        stroke-linejoin: round;
+        paint-order: stroke;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-wheel__rim {
+        stroke: var(--border-strong);
+        stroke-width: 4;
+    }
+    [data-theme='brutalism'] .kp-wheel__pointer {
+        stroke: var(--border-strong);
+        stroke-width: 2.5;
+        stroke-linejoin: miter;
+    }
+    [data-theme='brutalism'] .kp-wheel__stage::before {
+        background: var(--card);
+        box-shadow:
+            0 0 0 var(--kp-wheel-hub-ring) var(--border-strong),
+            5px 5px 0 var(--kp-wheel-hub-ring) var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-wheel__ghost {
+        stroke-width: 3;
+    }
+    [data-theme='brutalism'] .kp-wheel__outcome {
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+    [data-theme='brutalism'] .kp-wheel__result[data-kp-wheel-failed] .kp-wheel__outcome {
+        border: 3px solid var(--border-strong);
+        box-shadow: 3px 3px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-wheel__caption {
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-wheel__outcome:not(:empty, [data-kp-wheel-note]) {
+            animation: kp-sig-brutalism-secret-slam calc(var(--kp-sig-br-time) + 12 * 100ms) linear both;
+        }
+    }
+}
