@@ -29,7 +29,7 @@ const THEMES = 'light,dark,cyberpunk,synthwave,pastel,terminal,forest,blueprint,
 // Kenny reopened four faults in formal on 2026-10-16 15:46 ("formal-faults: Herstellen"; research/approved-formal-notes.md):
 // the sections that show them ask formal again in this same round, beside the fifteen other themes. The page names formal
 // too (the review dialog walks the page's themes); every other section names only the fifteen.
-const FORMAL_AGAIN = ['heat', 'matrix', 'barcell', 'gantt', 'gantt-states'];
+const FORMAL_AGAIN = ['heat', 'matrix', 'gantt-states'];
 /** Keep only the open sections of a run of sections, each naming the themes it asks. @param {string} html */
 const openOnly = (html) =>
     html.replace(/[ \t]*<section\b[\s\S]*?<\/section>\n?/g, (block) => {
@@ -99,7 +99,7 @@ ${openOnly(time)}
         <script type="module" src="../../js/auto.js"></script>
         <script type="module" src="demo-tiles.js"></script>
         <script type="application/json" data-review-round>
-            { "round": "2026-10-16-r5", "received": ["2026-10-16-r1", "2026-10-16-r2", "2026-10-16-r3", "2026-10-16-r4"], "reopen": ${JSON.stringify(FORMAL_AGAIN.map((item) => `formal|${item}`))} }
+            { "round": "2026-10-16-r6", "received": ["2026-10-16-r1", "2026-10-16-r2", "2026-10-16-r3", "2026-10-16-r4", "2026-10-16-r5"], "reopen": ${JSON.stringify(FORMAL_AGAIN.map((item) => `formal|${item}`))} }
         </script>
         <script type="module" src="../_review/review.js"></script>
         <script src="../../catalogue/boot-check.js"></script>

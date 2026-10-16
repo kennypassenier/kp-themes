@@ -118,8 +118,21 @@
         {
             "round": "5",
             "allJudged": false,
-            "comment": "Received while round 2026-10-16-r5 is still open in the review dialog: only these two rejections, no \"page\" id, so the page keeps the round and the review kit keeps Kenny's other answers of this round. Both sections now show the data table's loading card (js/busy-card.js) and are asked again in formal in the same round; the republished page reopens their rejected verdicts (research/_review/progress.js, staleKeys).",
-            "approved": [],
+            "comment": "Kenny judged the five formal sections of round r5 (2026-10-16 16:17): heat, barcell and gantt approved; matrix and gantt-states not approved. The fifteen other themes were not judged yet and stay open in round r6.",
+            "approved": [
+                {
+                    "item": "heat",
+                    "theme": "formal"
+                },
+                {
+                    "item": "barcell",
+                    "theme": "formal"
+                },
+                {
+                    "item": "gantt",
+                    "theme": "formal"
+                }
+            ],
             "notApproved": [
                 {
                     "item": "matrix",
@@ -132,7 +145,15 @@
                     "note": "ik zie geen loading icoon? moet hier ook zoals bij een table zijn waar het icoon in het midden van de matrix staat en lijkt te laden"
                 }
             ],
-            "generalNote": "direct al twee fouten die ik niet overal wil tegenkomen, dus fix ze nu"
+            "generalNote": "direct al twee fouten die ik niet overal wil tegenkomen, dus fix ze nu",
+            "page": "2026-10-16-r5",
+            "reopened": [
+                {
+                    "item": "heat",
+                    "theme": "formal",
+                    "reason": "Its loading state changed after the approval: the heat grid now shows the data table's loading card (js/busy-card.js), the fix Kenny asked to apply everywhere when he rejected the matrix and gantt-states for the same fault (2026-10-16 16:17, 'direct al twee fouten die ik niet overal wil tegenkomen, dus fix ze nu')."
+                }
+            ]
         }
     ],
     "reopened": [
