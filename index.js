@@ -23,6 +23,11 @@ export {
     placeNavMenu,
     setStateWord,
     skipTo,
+    TYPE_CONFIRM,
+    TYPE_CONFIRM_EVENT,
+    attachTypeConfirms,
+    buildTypeConfirm,
+    typeConfirmMatches,
 } from './js/components.js';
 export {
     Accordion,

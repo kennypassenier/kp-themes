@@ -1819,6 +1819,54 @@ and a press fires `kp-uptime-pick` (`{ key, index, period }`). The dictionary wo
 `--kp-uptime-lift`. Exports: `attachUptimes`, `setUptime`, `uptimeFigures`, `uptimePercent`, `uptimeFit`, `UPTIME`,
 `UPTIME_PICK_EVENT`, `UPTIME_STATES`, `UPTIME_COUNT`.
 
+### A typed confirmation
+
+For the few actions that delete what cannot come back, the confirmation dialog of the destructive button can ask for
+the name first. Add `data-kp-confirm-type` to a button that already has `data-kp-confirm`:
+
+```html
+<button
+    type="button"
+    class="kp-button kp-button--destructive"
+    data-kp-destructive
+    data-kp-confirm="Wipe the stack media?"
+    data-kp-confirm-type="media"
+    data-kp-confirm-loses="lost-media"
+>
+    Wipe media…
+</button>
+<template id="lost-media">
+    <ul class="kp-type-confirm__list">
+        <li>3 containers: jellyfin, jellyseerr, tdarr</li>
+        <li>/srv/media/config (2.4 GB)</li>
+    </ul>
+</template>
+```
+
+The dialog then shows what will be lost (the template's content, under "This deletes, for good:"), the label "Type
+media to confirm" with the name in a code chip, the field (it has the focus), the rule and one line that says whether
+it matches. Confirm stays disabled until it does and carries the button's own words without the trailing "…"
+(`data-kp-confirm-label` sets others); Enter in the field confirms a match; your handler runs once, as with every
+confirmation. Spaces at the start and the end never count, capitals do unless `data-kp-confirm-case="any"`; the rule
+under the field says which. From a script, `openConfirmation(button, { typeName, anyCase, loses, acceptLabel })`.
+Without the attribute the confirmation is exactly what it was.
+
+Inside a dialog or form of your own (a wizard's review step), put the block where it belongs and name the button it
+holds off:
+
+```html
+<div data-kp-type-confirm="media" data-kp-type-confirm-for="wipe" data-kp-type-confirm-loses="lost-media"></div>
+<button type="button" class="kp-button kp-button--destructive" id="wipe">Wipe media</button>
+```
+
+`attachTypeConfirms(root)` (in `js/components.js`, attached by `js/auto.js`) fills it and keeps the button disabled
+until the name matches; a button you disabled yourself stays disabled. The block fires `kp-type-confirm`
+(`{ matched, value, name }`) when the answer turns and carries `data-kp-matched`. `typeConfirmMatches(typed, name, {
+anyCase })` is the rule and `buildTypeConfirm(document, { name, anyCase, loses, onChange })` builds the block for a
+page that draws its own. The words are `typeConfirmLabel`, `typeConfirmRuleExact`, `typeConfirmRuleAnyCase`,
+`typeConfirmMatched`, `typeConfirmMismatch` and `typeConfirmLoses`. Knobs: `--kp-type-confirm-gap`,
+`--kp-type-confirm-list-max` (12rem; a longer list scrolls), `--kp-confirm-typed-max-width` (30rem).
+
 <!-- kpadopt4-ideas: next component -->
 
 ## Tables that fit [TH95, TH96]

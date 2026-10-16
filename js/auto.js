@@ -60,6 +60,7 @@ export const NEEDS = [
             '[data-kp-destructive]',
             '[data-kp-semantic]',
             '[data-kp-confirm]',
+            '[data-kp-type-confirm]',
             '.kp-skip-link',
             '[data-kp-skip]',
             '[data-kp-to-top]',
@@ -71,6 +72,7 @@ export const NEEDS = [
         attach: (m, root) => [
             m.enforceContracts(root),
             m.attachConfirmations(root),
+            m.attachTypeConfirms(root),
             m.attachSkipLinks(root),
             m.attachToTop(root),
             m.attachNavToggles(root),

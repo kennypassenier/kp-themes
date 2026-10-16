@@ -127,3 +127,12 @@
     grid-template-columns: minmax(0, 1fr);
     gap: var(--kp-space-lg, 1.5rem);
 }
+
+/* A confirmation dialog drawn open in the flow, so every state can be seen at once (the package's .kp-dialog). */
+.k4-static-dialog {
+    position: static;
+    display: block;
+    box-sizing: border-box;
+    inline-size: 100%;
+    margin: 0;
+}

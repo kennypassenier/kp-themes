@@ -46,6 +46,7 @@
                 class="k4-sec"
                 id="uptime"
                 data-review-item="uptime"
+                data-review-components="uptime"
                 data-review-topic="uptime"
                 data-review-topic-title="1 · Uptime strip"
                 data-review-title="1 · Uptime strip: 90 days and 48 hours"
@@ -97,6 +98,7 @@
                 class="k4-sec"
                 id="uptime-states"
                 data-review-item="uptime-states"
+                data-review-components="uptime"
                 data-review-topic="uptime"
                 data-review-title="1 · Uptime strip: loading, empty, error, a long name"
                 aria-labelledby="h-uptime-states"
@@ -154,6 +156,7 @@
                 class="k4-sec"
                 id="uptime-phone"
                 data-review-item="uptime-phone"
+                data-review-components="uptime"
                 data-review-topic="uptime"
                 data-review-title="1 · Uptime strip at phone width"
                 aria-labelledby="h-uptime-phone"
@@ -197,6 +200,245 @@
                     <div class="k4-frame k4-frame--phone">
                         <p class="k4-label">Loading</p>
                         <div class="kp-uptime" data-kp-uptime id="k4-uptime-phone-loading" data-kp-uptime-label="kyu"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2 · typed confirmation -->
+            <section
+                class="k4-sec"
+                id="type-dialog"
+                data-review-item="type-dialog"
+                data-review-components="type-confirm"
+                data-review-topic="type-confirm"
+                data-review-topic-title="2 · Typed confirmation"
+                data-review-title="2 · Typed confirmation: in the confirmation dialog"
+                aria-labelledby="h-type-dialog"
+            >
+                <div class="k4-sec__head">
+                    <h2 id="h-type-dialog">2 · Typed confirmation: in the confirmation dialog</h2>
+                    <p>
+                        The package’s confirmation dialog, opt-in: <code>data-kp-confirm-type="media"</code> on a destructive button, with
+                        <code>data-kp-confirm-loses</code> naming a template of what is lost and <code>data-kp-confirm-case="any"</code> when capitals
+                        may differ. Without the attribute the dialog is the approved one, unchanged.
+                    </p>
+                </div>
+                <div class="k4-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Wipe media…</b> opens the modal dialog: the question, the line “This cannot be undone…”, a box with a red edge listing
+                            what is deleted, then “Type <code>media</code> to confirm” with the name in a code chip, the field (it has the focus), the
+                            rule “Type it exactly: capitals count…”, and an empty line under it.
+                        </li>
+                        <li>
+                            The red <b>Wipe media</b> button stays disabled. Type <code>Media</code>: the line says “Does not match yet” and the
+                            button stays off. Type <code>media</code> (spaces around it are fine): a green “Matches” badge appears in that same line
+                            and the button turns on. Nothing in the dialog moves while you type. Enter in the field now confirms; the grey box logs
+                            it.
+                        </li>
+                        <li><b>Remove almanac…</b> takes <code>ALMANAC</code> as well: its rule says capitals do not count.</li>
+                        <li>
+                            <b>Delete the long one…</b>: a long name breaks inside its chip rather than running out of the dialog, and 24 lost items
+                            scroll inside their box while the field and the buttons stay in view.
+                        </li>
+                        <li>Escape or Cancel closes without acting, and the focus goes back to the button you pressed.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal’s own confirmation dialog on its card plate, the lost items in the body’s mono face on a muted ground with the
+                        destructive rule at their start, formal’s field and its destructive button.
+                    </p>
+                </div>
+                <div class="k4-actions">
+                    <button
+                        type="button"
+                        class="kp-button kp-button--destructive"
+                        data-kp-destructive
+                        data-kp-confirm="Wipe the stack media?"
+                        data-kp-confirm-type="media"
+                        data-kp-confirm-loses="k4-lost-media"
+                        data-k4-act="wipe media"
+                    >
+                        Wipe media…
+                    </button>
+                    <button
+                        type="button"
+                        class="kp-button kp-button--destructive"
+                        data-kp-destructive
+                        data-kp-confirm="Remove almanac from the fleet?"
+                        data-kp-confirm-type="almanac"
+                        data-kp-confirm-case="any"
+                        data-kp-confirm-label="Remove almanac"
+                        data-kp-confirm-loses="k4-lost-almanac"
+                        data-k4-act="remove almanac"
+                    >
+                        Remove almanac…
+                    </button>
+                    <button
+                        type="button"
+                        class="kp-button kp-button--destructive"
+                        data-kp-destructive
+                        data-kp-confirm="Delete the stack and every backup of it?"
+                        data-kp-confirm-type="homelab-monitoring-prometheus-node-exporter-garuda-workstation"
+                        data-kp-confirm-label="Delete it"
+                        data-kp-confirm-loses="k4-lost-long"
+                        data-k4-act="delete the long one"
+                    >
+                        Delete the long one…
+                    </button>
+                </div>
+                <template id="k4-lost-media">
+                    <ul class="kp-type-confirm__list">
+                        <li>3 containers: jellyfin, jellyseerr, tdarr</li>
+                        <li>/srv/media/config (2.4 GB)</li>
+                        <li>14 snapshots, the oldest from 02/09/2026</li>
+                        <li>The Traefik route media.kp-soft.dev</li>
+                    </ul>
+                </template>
+                <template id="k4-lost-almanac">
+                    <ul class="kp-type-confirm__list">
+                        <li>The almanac service on CT 112</li>
+                        <li>Its Google Calendar link</li>
+                    </ul>
+                </template>
+                <template id="k4-lost-long">
+                    <ul class="kp-type-confirm__list" id="k4-lost-long-list"></ul>
+                </template>
+                <pre class="k4-log" id="k4-type-log" aria-live="polite"></pre>
+            </section>
+
+            <section
+                class="k4-sec"
+                id="type-own"
+                data-review-item="type-own"
+                data-review-components="type-confirm"
+                data-review-topic="type-confirm"
+                data-review-title="2 · Typed confirmation: in a page’s own dialog, every state"
+                aria-labelledby="h-type-own"
+            >
+                <div class="k4-sec__head">
+                    <h2 id="h-type-own">2 · Typed confirmation: in a page’s own dialog, every state</h2>
+                    <p>
+                        <code>&lt;div data-kp-type-confirm="media" data-kp-type-confirm-for="…"&gt;</code> inside a page’s own
+                        <code>.kp-dialog</code> (the homelab action dialog’s review step): the block fills itself and holds the named button off until
+                        the name matches. Shown open in the flow below, four times, so every state is in view at once.
+                    </p>
+                </div>
+                <div class="k4-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Empty</b>: the field is empty, the match line is empty, <b>Wipe media</b> is disabled.</li>
+                        <li><b>Not yet</b>: <code>Media</code> typed; “Does not match yet” in muted ink; the button is still disabled.</li>
+                        <li><b>Matches</b>: <code>media</code> typed; the green “Matches” badge; <b>Wipe media</b> is on.</li>
+                        <li>
+                            <b>Disabled anyway</b>: the name matches, but the page holds the button off itself (a backup is running): it stays
+                            disabled. The four frames are the same height.
+                        </li>
+                        <li><b>Open in a modal</b> opens the same block in a real modal dialog of the page’s own.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Formal’s dialog plate in the flow; the field, the help text and the badge are formal’s own.</p>
+                </div>
+                <div class="k4-pair">
+                    <div class="kp-dialog kp-confirm kp-confirm--typed k4-static-dialog" role="group" aria-labelledby="k4-own-1">
+                        <h3 class="kp-dialog__title" id="k4-own-1">Empty</h3>
+                        <div data-kp-type-confirm="media" data-kp-type-confirm-for="k4-own-b1"></div>
+                        <div class="kp-dialog__actions">
+                            <button type="button" class="kp-button">Cancel</button>
+                            <button type="button" class="kp-button kp-button--destructive" id="k4-own-b1" data-k4-act="wipe media">Wipe media</button>
+                        </div>
+                    </div>
+                    <div class="kp-dialog kp-confirm kp-confirm--typed k4-static-dialog" role="group" aria-labelledby="k4-own-2">
+                        <h3 class="kp-dialog__title" id="k4-own-2">Not yet</h3>
+                        <div data-kp-type-confirm="media" data-kp-type-confirm-for="k4-own-b2" data-k4-typed="Media"></div>
+                        <div class="kp-dialog__actions">
+                            <button type="button" class="kp-button">Cancel</button>
+                            <button type="button" class="kp-button kp-button--destructive" id="k4-own-b2" data-k4-act="wipe media">Wipe media</button>
+                        </div>
+                    </div>
+                    <div class="kp-dialog kp-confirm kp-confirm--typed k4-static-dialog" role="group" aria-labelledby="k4-own-3">
+                        <h3 class="kp-dialog__title" id="k4-own-3">Matches</h3>
+                        <div data-kp-type-confirm="media" data-kp-type-confirm-for="k4-own-b3" data-k4-typed="media"></div>
+                        <div class="kp-dialog__actions">
+                            <button type="button" class="kp-button">Cancel</button>
+                            <button type="button" class="kp-button kp-button--destructive" id="k4-own-b3" data-k4-act="wipe media">Wipe media</button>
+                        </div>
+                    </div>
+                    <div class="kp-dialog kp-confirm kp-confirm--typed k4-static-dialog" role="group" aria-labelledby="k4-own-4">
+                        <h3 class="kp-dialog__title" id="k4-own-4">Disabled anyway</h3>
+                        <div data-kp-type-confirm="media" data-kp-type-confirm-for="k4-own-b4" data-k4-typed="media"></div>
+                        <div class="kp-dialog__actions">
+                            <button type="button" class="kp-button">Cancel</button>
+                            <button
+                                type="button"
+                                class="kp-button kp-button--destructive"
+                                id="k4-own-b4"
+                                disabled
+                                title="A backup of media is running"
+                            >
+                                Wipe media
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="k4-actions">
+                    <button type="button" class="kp-button" data-kp-dialog="k4-own-modal">Open in a modal</button>
+                </div>
+                <dialog class="kp-dialog kp-confirm kp-confirm--typed" id="k4-own-modal" aria-labelledby="k4-own-modal-title">
+                    <h2 class="kp-dialog__title" id="k4-own-modal-title">Wipe the stack media</h2>
+                    <p class="kp-dialog__description">Step 3 of 3 · Review. The press deletes what is listed below.</p>
+                    <div class="kp-dialog__body">
+                        <div data-kp-type-confirm="media" data-kp-type-confirm-for="k4-own-modal-go" data-kp-type-confirm-loses="k4-lost-media"></div>
+                    </div>
+                    <div class="kp-dialog__actions">
+                        <button type="button" class="kp-button" data-kp-dialog-close>Back</button>
+                        <button type="button" class="kp-button kp-button--destructive" id="k4-own-modal-go" data-k4-act="wipe media (own dialog)">
+                            Wipe media
+                        </button>
+                    </div>
+                </dialog>
+            </section>
+
+            <section
+                class="k4-sec"
+                id="type-phone"
+                data-review-item="type-phone"
+                data-review-components="type-confirm"
+                data-review-topic="type-confirm"
+                data-review-title="2 · Typed confirmation at phone width"
+                aria-labelledby="h-type-phone"
+            >
+                <div class="k4-sec__head">
+                    <h2 id="h-type-phone">2 · Typed confirmation at phone width</h2>
+                    <p>The page’s own dialog with what is lost, in a 360 px frame.</p>
+                </div>
+                <div class="k4-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            The list, the label with its chip, the field and the rule each fit the frame; the long name breaks inside its chip; the
+                            two buttons stay side by side, their labels whole. No text touches an edge.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Formal at a phone’s width.</p>
+                </div>
+                <div class="k4-frame k4-frame--phone">
+                    <div class="kp-dialog kp-confirm kp-confirm--typed k4-static-dialog" role="group" aria-labelledby="k4-phone-t">
+                        <h3 class="kp-dialog__title" id="k4-phone-t">Delete the stack and every backup of it?</h3>
+                        <div
+                            data-kp-type-confirm="homelab-monitoring-prometheus-node-exporter"
+                            data-kp-type-confirm-for="k4-phone-go"
+                            data-kp-type-confirm-loses="k4-lost-media"
+                        ></div>
+                        <div class="kp-dialog__actions">
+                            <button type="button" class="kp-button">Cancel</button>
+                            <button type="button" class="kp-button kp-button--destructive" id="k4-phone-go">Delete it</button>
+                        </div>
                     </div>
                 </div>
             </section>

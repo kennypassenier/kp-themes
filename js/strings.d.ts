@@ -1008,6 +1008,30 @@ export type Strings = {
      */
     uptimeShown: (shown: number, total: number) => string;
     /**
+     * The typed confirmation's label; the name is set in as code where this sentence puts it (js/components.js) [kpadopt4-ideas]
+     */
+    typeConfirmLabel: (name: string) => string;
+    /**
+     * Its rule when capitals count [kpadopt4-ideas]
+     */
+    typeConfirmRuleExact: string;
+    /**
+     * Its rule when capitals do not count (`data-kp-confirm-case="any"`) [kpadopt4-ideas]
+     */
+    typeConfirmRuleAnyCase: string;
+    /**
+     * The badge once the typed name matches [kpadopt4-ideas]
+     */
+    typeConfirmMatched: string;
+    /**
+     * The line while what is typed does not match yet [kpadopt4-ideas]
+     */
+    typeConfirmMismatch: string;
+    /**
+     * The heading over what the action will delete [kpadopt4-ideas]
+     */
+    typeConfirmLoses: string;
+    /**
      * The network graph's way back to every node and every kind of link (js/graph.js) [scope-143]
      */
     graphShowAll: string;
@@ -1392,6 +1416,12 @@ export type Strings = {
  * @property {(state: string) => string} uptimeStateWord  A period's state as a word: up, degraded, down, no data [kpadopt4-ideas]
  * @property {(label: string, state: string, percent: string | null, incidents: number | null) => string} uptimeCell  A cell's name and hover card: its period, its state and its figures [kpadopt4-ideas]
  * @property {(shown: number, total: number) => string} uptimeShown  Under a strip too narrow for every cell: "55 of 90 shown" [kpadopt4-ideas]
+ * @property {(name: string) => string} typeConfirmLabel  The typed confirmation's label; the name is set in as code where this sentence puts it (js/components.js) [kpadopt4-ideas]
+ * @property {string} typeConfirmRuleExact  Its rule when capitals count [kpadopt4-ideas]
+ * @property {string} typeConfirmRuleAnyCase  Its rule when capitals do not count (`data-kp-confirm-case="any"`) [kpadopt4-ideas]
+ * @property {string} typeConfirmMatched  The badge once the typed name matches [kpadopt4-ideas]
+ * @property {string} typeConfirmMismatch  The line while what is typed does not match yet [kpadopt4-ideas]
+ * @property {string} typeConfirmLoses  The heading over what the action will delete [kpadopt4-ideas]
  * @property {string} graphShowAll  The network graph's way back to every node and every kind of link (js/graph.js) [scope-143]
  * @property {string} graphShowAllTitle  Its title [scope-143]
  * @property {string} graphHint  The hint under the graph, and the second half of its picture's accessible name: what a pointer, a click and the keys do [scope-143]

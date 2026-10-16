@@ -132,3 +132,38 @@ document.addEventListener(UPTIME_PICK_EVENT, (event) => {
     say(uptimeLog, `kp-uptime-pick · key ${key} · index ${index} · ${period.state}`);
 });
 attachUptimes(document);
+
+/* ------------------------------------------------------------ 2 · the typed confirmation */
+
+import { TYPE_CONFIRM_EVENT } from '../../js/components.js';
+
+const typeLog = byId('k4-type-log');
+// The long list of what the long one deletes.
+const longList = byId('k4-lost-long').content.querySelector('ul');
+for (let i = 1; i <= 24; i++) {
+    const li = document.createElement('li');
+    li.textContent = `snapshot ${String(i).padStart(2, '0')} · ${String(((i * 3) % 28) + 1).padStart(2, '0')}/09/2026 03:12 · 1.${i} GB`;
+    longList?.append(li);
+}
+document.addEventListener(TYPE_CONFIRM_EVENT, (event) => {
+    const { matched, value } = /** @type {CustomEvent} */ (event).detail;
+    say(typeLog, `kp-type-confirm · "${value}" · ${matched ? 'matches' : 'does not match'}`);
+});
+document.addEventListener('click', (event) => {
+    const act = event.target instanceof Element ? event.target.closest('[data-k4-act]') : null;
+    if (act instanceof HTMLButtonElement && !act.disabled) say(typeLog, `pressed: ${act.dataset.k4Act}`);
+});
+// The states shown at once: type into the blocks that carry a value once js/auto.js has filled them.
+const typeIn = () => {
+    for (const block of document.querySelectorAll('[data-k4-typed]')) {
+        const input = block.querySelector('input');
+        if (!input) return false;
+        input.value = /** @type {HTMLElement} */ (block).dataset.k4Typed ?? '';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+    return true;
+};
+const waitTyped = () => {
+    if (!typeIn()) requestAnimationFrame(waitTyped);
+};
+waitTyped();

@@ -8,6 +8,7 @@ topic per component, every state (loading, empty, error, disabled, busy, long te
 - Package: every `kp-` class and every script under `js/`. Mock: the sample data (fixed up to 16/10/2026), the frames,
   the event readouts and the controls marked "demo" (`demo.js`, `demo.css`).
 
-| Need         | What the package offers now                                  | Built from                                       | Cost   | Status |
-| ------------ | ------------------------------------------------------------ | ------------------------------------------------ | ------ | ------ |
-| uptime-strip | `.kp-uptime`, `js/uptime.js` (`setUptime`, `kp-uptime-pick`) | heat grid fills, hover card, busy card, skeleton | medium | built  |
+| Need         | What the package offers now                                                   | Built from                                          | Cost   | Status   |
+| ------------ | ----------------------------------------------------------------------------- | --------------------------------------------------- | ------ | -------- |
+| uptime-strip | `.kp-uptime`, `js/uptime.js` (`setUptime`, `kp-uptime-pick`)                  | heat grid fills, hover card, busy card, skeleton    | medium | built    |
+| type-confirm | `data-kp-confirm-type` on the confirmation (extended), `data-kp-type-confirm` | the confirmation dialog, kp-field, kp-badge, button | small  | extended |

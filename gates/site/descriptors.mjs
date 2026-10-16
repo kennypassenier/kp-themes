@@ -2854,6 +2854,52 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
         ],
     },
     {
+        id: 'type-confirm',
+        title: 'Typed confirmation',
+        group: 'Feedback',
+        classes: ['kp-type-confirm'],
+        aliases: ['matched'],
+        exports: [],
+        intro: 'A destructive action that turns on only once the reader has typed its name. On a button that already asks for a confirmation, `data-kp-confirm-type="media"` makes the package’s confirmation dialog show what will be lost (`data-kp-confirm-loses`, the id of a template or an element), the field, the rule it is matched by and a line that says whether it matches; Confirm stays disabled until it does, carries the button’s own words (or `data-kp-confirm-label`), and Enter in the field confirms a match. Spaces at the start and the end never count; capitals count unless `data-kp-confirm-case="any"`. In a page’s own dialog or form, `data-kp-type-confirm="media"` with `data-kp-type-confirm-for="<button id>"` builds the same block and holds that button off.',
+        whenToUse:
+            'For the few actions that delete something that cannot come back and whose name the reader should look at first: wiping a stack, removing a service, deleting a backup set. For an everyday delete the plain confirmation or an undo is enough.',
+        examples: [
+            {
+                title: 'In the confirmation dialog',
+                why: 'The button keeps its own handler: the dialog swallows the click, and re-fires it once the name is typed and Confirm is pressed.',
+                markup: `
+<button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-kp-confirm="Wipe the stack media?" data-kp-confirm-type="media" data-kp-confirm-loses="lost-media">Wipe media…</button>
+<template id="lost-media"><ul class="kp-type-confirm__list"><li>3 containers: jellyfin, jellyseerr, tdarr</li><li>/srv/media/config (2.4 GB)</li></ul></template>
+`,
+            },
+            {
+                title: 'In a page’s own dialog',
+                why: 'The block fills itself and keeps the button it names disabled until the name matches; a button the page disabled itself stays disabled.',
+                markup: `
+<div data-kp-type-confirm="media" data-kp-type-confirm-for="wipe"></div>
+<button type="button" class="kp-button kp-button--destructive" id="wipe">Wipe media</button>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-confirm-type', what: 'On a button with `data-kp-confirm`: the name the reader types before Confirm turns on.' },
+            { name: 'data-kp-confirm-case', what: '`any`: capitals do not count. Spaces at the start and the end never do.' },
+            { name: 'data-kp-confirm-loses', what: 'The id of a `<template>` or an element whose content says what will be lost; shown above the field.' },
+            { name: 'data-kp-confirm-label', what: 'The words on Confirm; else the button’s own words without a trailing “…”.' },
+            { name: 'data-kp-type-confirm', what: 'A block a page puts in its own dialog or form: the name to type.' },
+            { name: 'data-kp-type-confirm-for', what: 'The id of the button the block holds off until the name matches.' },
+            { name: 'data-kp-type-confirm-case', what: '`any`: capitals do not count.' },
+            { name: 'data-kp-type-confirm-loses', what: 'The id of a template or an element with what will be lost.' },
+            { name: 'data-kp-type-confirm-attached', what: 'Set by the script once the block is filled.' },
+            { name: 'data-kp-matched', what: 'Set by the script on the block: `true` while what is typed matches the name.' },
+        ],
+        accessibility: [
+            'Built in — the field is labelled by the sentence with the name in it and described by the rule and the match line; the match line is a polite live region; the field has the focus when the dialog opens.',
+            'Built in — Confirm is disabled until the name matches, so neither a click nor Enter can act before; a match is a word on the success plate as well as a colour.',
+            'Yours — list what will be lost in plain words, keep the name the one the reader knows it by, and keep the action rare: a typed name asked every day is typed without reading.',
+        ],
+    },
+    {
         id: 'toolbar',
         title: 'List toolbar',
         group: 'Data',

@@ -284,6 +284,7 @@
         "kp-week": ["@component:data"],
         "kp-gantt": ["@component:data"],
         "kp-uptime": ["@component:data"],
+        "kp-type-confirm": ["@component:feedback"],
         "kp-calendar-layout": ["@component:data"],
         "kp-attention": ["@component:feedback"],
         "kp-ago": ["@component:feedback"],

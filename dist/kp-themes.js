@@ -494,6 +494,13 @@ var init_strings = __esm({
         incidents === null ? null : incidents === 1 ? "1 incident" : `${incidents} incidents`
       ].filter(Boolean).join(" \xB7 "),
       uptimeShown: (shown2, total) => `${shown2} of ${total} shown`,
+      // The typed confirmation [kpadopt4-ideas].
+      typeConfirmLabel: (name) => `Type ${name} to confirm`,
+      typeConfirmRuleExact: "Type it exactly: capitals count; spaces at the start and the end are ignored.",
+      typeConfirmRuleAnyCase: "Capitals do not count; spaces at the start and the end are ignored.",
+      typeConfirmMatched: "Matches",
+      typeConfirmMismatch: "Does not match yet",
+      typeConfirmLoses: "This deletes, for good:",
       // The network graph [scope-143]: its own words; the nodes, kinds and
       // the sentences of its states are the page's.
       graphShowAll: "Show all",
@@ -6119,6 +6126,8 @@ __export(components_exports, {
   NAV_TOGGLE_EVENT: () => NAV_TOGGLE_EVENT,
   TO_TOP: () => TO_TOP,
   TO_TOP_EVENT: () => TO_TOP_EVENT,
+  TYPE_CONFIRM: () => TYPE_CONFIRM,
+  TYPE_CONFIRM_EVENT: () => TYPE_CONFIRM_EVENT,
   VIOLATION_EVENT: () => VIOLATION_EVENT,
   attachConfirmations: () => attachConfirmations,
   attachNavMenus: () => attachNavMenus,
@@ -6126,6 +6135,8 @@ __export(components_exports, {
   attachSkipLinks: () => attachSkipLinks,
   attachStickyNavs: () => attachStickyNavs,
   attachToTop: () => attachToTop,
+  attachTypeConfirms: () => attachTypeConfirms,
+  buildTypeConfirm: () => buildTypeConfirm,
   enforceContracts: () => enforceContracts,
   findViolations: () => findViolations,
   openConfirmation: () => openConfirmation,
@@ -6133,9 +6144,93 @@ __export(components_exports, {
   placeNavPanel: () => placeNavPanel,
   setStateWord: () => setStateWord,
   skipTo: () => skipTo,
-  stickyNav: () => stickyNav
+  stickyNav: () => stickyNav,
+  typeConfirmMatches: () => typeConfirmMatches
 });
-function openConfirmation(button, { phrase, strings, onAccept, onCancel, className = "", initialFocus = "cancel" } = {}) {
+function typeConfirmMatches(typed, name, { anyCase = false } = {}) {
+  const a = typed.trim();
+  const b = name.trim();
+  if (b === "") return false;
+  return anyCase ? a.toLocaleLowerCase() === b.toLocaleLowerCase() : a === b;
+}
+function buildTypeConfirm(doc, { name, anyCase = false, loses = null, strings, onChange, block: given }) {
+  const s2 = { ...getStrings(), ...strings };
+  const id = `kp-type-confirm-${++typeSeq}`;
+  const block = given ?? doc.createElement("div");
+  block.classList.add("kp-type-confirm", "kp-field");
+  block.replaceChildren();
+  if (loses !== null && (!Array.isArray(loses) || loses.length > 0)) {
+    const box = doc.createElement("div");
+    box.className = "kp-type-confirm__loses";
+    const head = doc.createElement("p");
+    head.className = "kp-type-confirm__loses-title";
+    head.id = `${id}-loses`;
+    head.textContent = s2.typeConfirmLoses;
+    box.append(head);
+    if (Array.isArray(loses)) {
+      const list = doc.createElement("ul");
+      list.className = "kp-type-confirm__list";
+      list.setAttribute("aria-labelledby", head.id);
+      for (const line of loses) {
+        const item = doc.createElement("li");
+        item.textContent = line;
+        list.append(item);
+      }
+      box.append(list);
+    } else box.append(
+      /** @type {Node} */
+      loses
+    );
+    block.append(box);
+  }
+  const label = doc.createElement("label");
+  label.className = "kp-field__label kp-type-confirm__label";
+  label.htmlFor = `${id}-input`;
+  const [before, after = ""] = s2.typeConfirmLabel("\0").split("\0");
+  const code = doc.createElement("code");
+  code.className = "kp-type-confirm__name";
+  code.textContent = name;
+  label.append(before, code, after);
+  const input = doc.createElement("input");
+  input.type = "text";
+  input.className = "kp-field__input kp-type-confirm__input";
+  input.id = `${id}-input`;
+  input.autocomplete = "off";
+  input.spellcheck = false;
+  input.setAttribute("autocapitalize", "off");
+  input.setAttribute("autocorrect", "off");
+  input.setAttribute("aria-describedby", `${id}-rule ${id}-status`);
+  const rule = doc.createElement("p");
+  rule.className = "kp-field__help kp-type-confirm__rule";
+  rule.id = `${id}-rule`;
+  rule.textContent = anyCase ? s2.typeConfirmRuleAnyCase : s2.typeConfirmRuleExact;
+  const status = doc.createElement("p");
+  status.className = "kp-type-confirm__status";
+  status.id = `${id}-status`;
+  status.setAttribute("aria-live", "polite");
+  block.append(label, input, rule, status);
+  let matched = false;
+  const update2 = () => {
+    const now = typeConfirmMatches(input.value, name, { anyCase });
+    const typed = input.value.trim() !== "";
+    block.dataset.kpMatched = String(now);
+    if (now) {
+      const badge = doc.createElement("span");
+      badge.className = "kp-badge kp-badge--success kp-type-confirm__match";
+      badge.textContent = s2.typeConfirmMatched;
+      status.replaceChildren(badge);
+    } else status.textContent = typed ? s2.typeConfirmMismatch : "";
+    if (now !== matched) {
+      matched = now;
+      onChange?.(now, input.value);
+      block.dispatchEvent(new CustomEvent(TYPE_CONFIRM_EVENT, { bubbles: true, detail: { matched: now, value: input.value, name } }));
+    }
+  };
+  input.addEventListener("input", update2);
+  update2();
+  return { block, input, matched: () => matched };
+}
+function openConfirmation(button, { phrase, strings, onAccept, onCancel, className = "", initialFocus = "cancel", typeName, anyCase, loses, acceptLabel } = {}) {
   const s2 = { ...getStrings(), ...strings };
   const text = phrase ?? button.getAttribute("data-kp-confirm") ?? s2.confirm;
   const displaced = [...document.querySelectorAll("[popover]")].filter((el4) => el4.matches(":popover-open"));
@@ -6164,11 +6259,47 @@ function openConfirmation(button, { phrase, strings, onAccept, onCancel, classNa
   accept.className = "kp-button kp-button--destructive";
   accept.setAttribute("data-kp-confirm-accept", "");
   accept.textContent = s2.confirmAccept;
-  accept.addEventListener("click", () => dialog.close("accept"));
+  accept.addEventListener("click", () => {
+    if (!accept.disabled) dialog.close("accept");
+  });
   const actions = document.createElement("div");
   actions.className = "kp-dialog__actions";
   actions.append(cancel, accept);
-  dialog.append(title, description, actions);
+  const name = typeName ?? button.getAttribute("data-kp-confirm-type") ?? "";
+  let field = null;
+  if (name.trim() !== "") {
+    dialog.classList.add("kp-confirm--typed");
+    const own = (button.textContent ?? "").trim().replace(/\s*(?:…|\.\.\.)$/, "");
+    accept.textContent = acceptLabel ?? button.getAttribute("data-kp-confirm-label") ?? (own || s2.confirmAccept);
+    const lostId = button.getAttribute("data-kp-confirm-loses");
+    const lostSource = lostId ? document.getElementById(lostId) : null;
+    const lost = loses ?? (lostSource instanceof HTMLTemplateElement ? lostSource.content.cloneNode(true) : lostSource ? lostSource.cloneNode(true) : null);
+    if (lost instanceof Element) {
+      lost.removeAttribute("id");
+      lost.removeAttribute("hidden");
+    }
+    const body = document.createElement("div");
+    body.className = "kp-dialog__body";
+    const typed = buildTypeConfirm(document, {
+      name,
+      anyCase: anyCase ?? button.getAttribute("data-kp-confirm-case") === "any",
+      loses: lost,
+      strings,
+      onChange: (matched) => {
+        accept.disabled = !matched;
+      }
+    });
+    accept.disabled = !typed.matched();
+    typed.input.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" && !accept.disabled) {
+        event.preventDefault();
+        dialog.close("accept");
+      }
+    });
+    body.append(typed.block);
+    field = typed.input;
+    dialog.append(title, description, body, actions);
+  } else dialog.append(title, description, actions);
   document.body.append(dialog);
   dialog.addEventListener("close", () => {
     const taken = dialog.returnValue === "accept";
@@ -6181,8 +6312,50 @@ function openConfirmation(button, { phrase, strings, onAccept, onCancel, classNa
     else onCancel?.();
   });
   dialog.showModal();
-  (initialFocus === "accept" ? accept : cancel).focus();
+  (field ?? (initialFocus === "accept" ? accept : cancel)).focus();
   return dialog;
+}
+function attachTypeConfirms(root = document, { strings } = {}) {
+  const cleanups = [];
+  for (const el4 of root.querySelectorAll(TYPE_CONFIRM)) {
+    const block = (
+      /** @type {HTMLElement} */
+      el4
+    );
+    if (block.dataset.kpTypeConfirmAttached !== void 0) continue;
+    block.dataset.kpTypeConfirmAttached = "";
+    const doc = block.ownerDocument;
+    const target = block.dataset.kpTypeConfirmFor ? doc.getElementById(block.dataset.kpTypeConfirmFor) : null;
+    const button = target instanceof HTMLButtonElement || target instanceof HTMLInputElement ? target : null;
+    const wasDisabled = button?.disabled ?? false;
+    const lostSource = block.dataset.kpTypeConfirmLoses ? doc.getElementById(block.dataset.kpTypeConfirmLoses) : null;
+    const lost = lostSource instanceof HTMLTemplateElement ? lostSource.content.cloneNode(true) : lostSource ? lostSource.cloneNode(true) : null;
+    if (lost instanceof Element) {
+      lost.removeAttribute("id");
+      lost.removeAttribute("hidden");
+    }
+    const typed = buildTypeConfirm(doc, {
+      name: block.dataset.kpTypeConfirm ?? "",
+      anyCase: block.dataset.kpTypeConfirmCase === "any",
+      loses: lost,
+      strings,
+      block,
+      onChange: (matched) => {
+        if (button) button.disabled = !matched || wasDisabled;
+      }
+    });
+    if (button) button.disabled = !typed.matched() || wasDisabled;
+    cleanups.push(() => {
+      block.replaceChildren();
+      block.classList.remove("kp-type-confirm", "kp-field");
+      delete block.dataset.kpMatched;
+      delete block.dataset.kpTypeConfirmAttached;
+      if (button) button.disabled = wasDisabled;
+    });
+  }
+  return () => {
+    for (const c of cleanups) c();
+  };
 }
 function findViolations(root = document, { rules = ["DI10", "DI4"], exempt = EXEMPT } = {}) {
   const violations = [];
@@ -6803,7 +6976,7 @@ function setStateWord(el4, word) {
   if (!words.includes(word)) el4.setAttribute("data-kp-words", [...words, word].join("\n"));
   el4.textContent = word;
 }
-var VIOLATION_EVENT, CONFIRM_WINDOW_MS, CONFIRM_MODES, CONFIRM_OWNED, unlocked, dialogSeq, EXEMPT, changed, TO_TOP_EVENT, TO_TOP, NAV_TOGGLE_EVENT, NAV_OWNED, NAV_COMPACT_EVENT, NAV_STICKY_OWNED, DROPDOWN, viewBox, overflowOf, slideIntoView;
+var VIOLATION_EVENT, CONFIRM_WINDOW_MS, CONFIRM_MODES, CONFIRM_OWNED, unlocked, dialogSeq, TYPE_CONFIRM_EVENT, TYPE_CONFIRM, typeSeq, EXEMPT, changed, TO_TOP_EVENT, TO_TOP, NAV_TOGGLE_EVENT, NAV_OWNED, NAV_COMPACT_EVENT, NAV_STICKY_OWNED, DROPDOWN, viewBox, overflowOf, slideIntoView;
 var init_components = __esm({
   "js/components.js"() {
     "use strict";
@@ -6815,6 +6988,9 @@ var init_components = __esm({
     CONFIRM_OWNED = "[data-kp-confirm-owner]";
     unlocked = null;
     dialogSeq = 0;
+    TYPE_CONFIRM_EVENT = "kp-type-confirm";
+    TYPE_CONFIRM = "[data-kp-type-confirm]";
+    typeSeq = 0;
     EXEMPT = "[data-kp-contract-ignore]";
     changed = /* @__PURE__ */ new WeakMap();
     TO_TOP_EVENT = "kp-to-top";
@@ -24996,6 +25172,7 @@ var NEEDS = [
       "[data-kp-destructive]",
       "[data-kp-semantic]",
       "[data-kp-confirm]",
+      "[data-kp-type-confirm]",
       ".kp-skip-link",
       "[data-kp-skip]",
       "[data-kp-to-top]",
@@ -25007,6 +25184,7 @@ var NEEDS = [
     attach: (m, root) => [
       m.enforceContracts(root),
       m.attachConfirmations(root),
+      m.attachTypeConfirms(root),
       m.attachSkipLinks(root),
       m.attachToTop(root),
       m.attachNavToggles(root),
@@ -26260,6 +26438,8 @@ export {
   TREE_EXPAND_EVENT,
   TREE_SELECT_EVENT,
   TREND_CHART,
+  TYPE_CONFIRM,
+  TYPE_CONFIRM_EVENT,
   UNDO_EVENT,
   UNDO_MS,
   UNKNOWN_EVENT,
@@ -26354,6 +26534,7 @@ export {
   attachToolbars,
   attachTooltips,
   attachTrendCharts,
+  attachTypeConfirms,
   attachUploads,
   attachUptimes,
   attachWeeks,
@@ -26366,6 +26547,7 @@ export {
   buildProgressbar,
   buildStatusList,
   buildSteplist,
+  buildTypeConfirm,
   busy_card_exports as busyCardExports,
   calendar_exports as calendarExports,
   calendarMonth,
@@ -26653,6 +26835,7 @@ export {
   trendAxis,
   turnEntrances,
   turnLines,
+  typeConfirmMatches,
   unknownEffects,
   unmarkUpdating,
   update,
