@@ -4182,3 +4182,1661 @@
         }
     }
 }
+
+/* ── The kpadopt4 components in nostromo's grammar: data pieces, empty-state drawings [kpadopt4] ──
+   Nostromo's own (themes/nostromo/CHARACTER.md): the case is what you touch and the screen is what the ship reports
+   (G7). A mark is a label plate (tape, 2 px, G6) with a lamp-lit pattern when it is a picture; a share bar is a lit
+   window, its parts lit lenses and the free rest the unlit cells (G10's window); labels are tape, counts Michroma
+   (G15); a changed reading lights its lamp (G9); a failed carrier sounds the klaxon (G13); a block of code or a command
+   is a screen: amber phosphor on dark glass under scanlines, set in the plate's bezel (G7). Every drawing in an empty
+   state is a vector written on such a screen, the raster's order, frame by frame (G2, G4). */
+@layer kp.signature {
+    [data-theme='nostromo'] {
+        /* A counted figure is printed in 8 frames (G4). */
+        --kp-tick: 640;
+        --kp-glyph-changed: '';
+        /* The vent seam under a ruled row: a line of dots, as the dividers' perforation. */
+        --kp-no-seam: radial-gradient(circle, var(--border-strong) 1px, transparent 1.4px) 0 100% / 10px 3px repeat-x;
+        /* A glass set into a plate: its own bezel in the case's moulding (G7). */
+        --kp-no-bezel:
+            0 0 0 2px var(--secondary), 0 0 0 3px var(--border-strong), inset 0 0 12px hsl(from var(--sidebar-background) h s calc(l - 10) / 0.95);
+        --kp-no-phosphor: var(--sidebar-primary);
+        --kp-no-cream: var(--sidebar-foreground);
+        --kp-no-dim: hsl(from var(--sidebar-foreground) h s l / 0.55);
+        --kp-no-glow: 0 0 4px hsl(from var(--sidebar-primary) h s l / 0.5);
+    }
+
+    /* ── The identity mark: a label plate; a pattern is a lit picture on a small screen ── */
+    [data-theme='nostromo'] .kp-idmark {
+        --kp-idmark-radius: var(--kp-sig-no-tape);
+        box-shadow: var(--kp-sig-no-raised);
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-idmark--xs {
+        box-shadow: none;
+    }
+    [data-theme='nostromo'] .kp-idmark--round {
+        border-radius: 50%;
+    }
+    [data-theme='nostromo'] .kp-idmark--pattern {
+        --kp-idmark-ink: hsl(from var(--kp-idmark-c) h s calc(l + 24));
+        border: 1px solid var(--secondary);
+        background: var(--kp-sig-no-scan), var(--sidebar-background);
+        box-shadow:
+            0 0 0 1px var(--border-strong),
+            inset 0 0 6px hsl(from var(--sidebar-background) h s calc(l - 10) / 0.95);
+    }
+    [data-theme='nostromo'] .kp-idmark--pattern .kp-idmark__pattern {
+        filter: drop-shadow(0 0 1.5px hsl(from var(--kp-idmark-c) h s calc(l + 24) / 0.8));
+    }
+    /* The corner glyph is a lamp on the plate's corner: it takes the plate's edge, not a paper halo. */
+    [data-theme='nostromo'] .kp-idmark--glyph::after {
+        box-shadow: 0 0 0 1.5px var(--card);
+    }
+    [data-theme='nostromo'] .kp-idmark--glyph[data-kp-idmark-glyph='circle']::after {
+        background: var(--kp-sig-no-lens);
+    }
+    [data-theme='nostromo'] .kp-idmark[data-kp-idmark-empty] {
+        box-shadow: none;
+    }
+    /* The current mark is a key pushed in, ringed (G14). */
+    [data-theme='nostromo'] .kp-idmark[aria-current]:not([aria-current='false']),
+    [data-theme='nostromo'] .kp-idmark[data-kp-idmark-selected] {
+        box-shadow:
+            var(--kp-sig-no-well),
+            0 0 0 2px var(--card),
+            0 0 0 4px var(--primary);
+    }
+    [data-theme='nostromo'] .kp-idmark-group > .kp-idmark,
+    [data-theme='nostromo'] .kp-idmark-group > .kp-idmark-group__more {
+        box-shadow:
+            0 0 0 2px var(--card),
+            0 1px 2px hsl(from var(--foreground) h s l / 0.25);
+    }
+    [data-theme='nostromo'] .kp-idmark-group__more {
+        --kp-idmark-radius: var(--kp-sig-no-tape);
+        font-family: var(--theme-font-mono);
+    }
+    /* Loading: a small glass, its lamp computing in the middle; no word in a plate this small. */
+    [data-theme='nostromo'] .kp-idmark.kp-skeleton {
+        border: 1px solid var(--secondary);
+        border-radius: var(--kp-sig-no-tape);
+        box-shadow: 0 0 0 1px var(--border-strong);
+    }
+    [data-theme='nostromo'] .kp-idmark.kp-skeleton::after {
+        content: '' / '';
+        position: absolute;
+        inset: 32%;
+        border-radius: 50%;
+        background: var(--kp-sig-no-lens);
+        box-shadow: 0 0 5px hsl(from var(--kp-sig-no-led) h s l / 0.7);
+        filter: none;
+        -webkit-mask: none;
+        mask: none;
+    }
+
+    /* ── The share bar: a lit window ── */
+    [data-theme='nostromo'] .kp-stackbar {
+        --kp-stackbar-radius: 0.15rem;
+        --kp-stackbar-gap: 2px;
+        /* The window's bezel stands 3 px past the bar: the room is the grid's gap, never a margin, so a note that keeps the
+           bar's and the legend's footprint is exactly as tall. */
+        row-gap: 0.5rem;
+    }
+    [data-theme='nostromo'] .kp-stackbar__title {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-stackbar__total {
+        font-family: var(--theme-font-display);
+        font-size: 0.75rem;
+    }
+    /* The window: the free rest is the unlit cells, a part is a run of lit lenses (its hot top, its seam a vent slot). */
+    [data-theme='nostromo'] .kp-stackbar__bar {
+        background: repeating-linear-gradient(90deg, var(--sidebar-accent) 0 3px, transparent 3px 5px), var(--sidebar-background);
+        box-shadow:
+            0 0 0 2px var(--secondary),
+            0 0 0 3px var(--border-strong);
+    }
+    [data-theme='nostromo'] .kp-stackbar[aria-busy='true'] .kp-stackbar__bar {
+        background: var(--sidebar-background);
+    }
+    [data-theme='nostromo'] .kp-stackbar__seg {
+        box-shadow: inset calc(var(--kp-stackbar-gap, 2px) * -1) 0 0 var(--sidebar-background);
+    }
+    [data-theme='nostromo'] .kp-stackbar__seg:dir(rtl) {
+        box-shadow: inset var(--kp-stackbar-gap, 2px) 0 0 var(--sidebar-background);
+    }
+    [data-theme='nostromo'] .kp-stackbar__seg::before {
+        content: '';
+        position: absolute;
+        inset: 0 0 65% 0;
+        background: hsl(from var(--kp-no-cream) h s 100% / 0.26);
+        pointer-events: none;
+    }
+    [data-theme='nostromo'] .kp-stackbar__seg[data-kp-stackbar-lit] {
+        box-shadow:
+            inset calc(var(--kp-stackbar-gap, 2px) * -1) 0 0 var(--sidebar-background),
+            0 0 0 2px var(--sidebar-background),
+            0 0 0 3px var(--sidebar-primary),
+            0 0 8px hsl(from var(--sidebar-primary) h s l / 0.6);
+    }
+    [data-theme='nostromo'] .kp-stackbar__bar[data-kp-stackbar-full] .kp-stackbar__seg:last-of-type {
+        box-shadow: none;
+    }
+    [data-theme='nostromo'] .kp-stackbar__mark {
+        background: var(--sidebar-primary);
+        box-shadow:
+            0 0 0 1px var(--sidebar-background),
+            0 0 6px hsl(from var(--sidebar-primary) h s l / 0.7);
+    }
+    [data-theme='nostromo'] .kp-stackbar__bar[data-kp-over]::after {
+        color: hsl(from var(--destructive) h s calc(l + 10));
+        text-shadow: 0 0 5px hsl(from var(--destructive) h s l / 0.7);
+    }
+    [data-theme='nostromo'] .kp-stackbar__swatch {
+        inline-size: 0.625rem;
+        block-size: 0.625rem;
+        border-radius: 50%;
+        box-shadow:
+            inset 0 1px 0 hsl(from var(--kp-no-cream) h s 100% / 0.45),
+            0 0 0 1px var(--foreground);
+    }
+    [data-theme='nostromo'] .kp-stackbar__item[data-kp-stackbar-rest] .kp-stackbar__swatch {
+        background: var(--sidebar-accent);
+        box-shadow: 0 0 0 1px var(--foreground);
+    }
+    [data-theme='nostromo'] .kp-stackbar__item[data-kp-stackbar-lit] {
+        background: var(--popover);
+        box-shadow: var(--kp-sig-no-well);
+    }
+    [data-theme='nostromo'] .kp-stackbar__value {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+    }
+    /* A note in the bar's place is the empty state's plate; a failed read sounds the klaxon (G13). */
+    [data-theme='nostromo'] .kp-stackbar__note {
+        border-style: solid;
+        border-color: var(--border-strong);
+        border-radius: var(--kp-sig-no-key);
+        background: var(--card);
+        box-shadow: var(--kp-sig-no-well);
+    }
+    [data-theme='nostromo'] .kp-stackbar[data-kp-state='error'] .kp-stackbar__note {
+        border: 3px solid var(--destructive);
+        color: var(--foreground);
+    }
+    [data-theme='nostromo'] .kp-stackbar__note-title {
+        font-family: var(--theme-font-mono);
+        font-size: 0.8rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    /* ── Bullet rows: the LED meter is the bar; the figure is a Michroma count, a tone a framed tape ── */
+    [data-theme='nostromo'] .kp-bullets__figure {
+        font-family: var(--theme-font-display);
+        font-size: 0.75rem;
+        font-weight: 400;
+    }
+    [data-theme='nostromo'] .kp-bullets__row[data-kp-tone='warning'] .kp-bullets__figure,
+    [data-theme='nostromo'] .kp-bullets__row[data-kp-tone='destructive'] .kp-bullets__figure {
+        padding-block: 0.1em;
+        border-radius: var(--kp-sig-no-tape);
+        box-shadow: inset 0 0 0 1px hsl(from var(--background) h s 100% / 0.25);
+    }
+    [data-theme='nostromo'] .kp-bullets__row {
+        border-radius: var(--kp-sig-no-key);
+    }
+    [data-theme='nostromo'] .kp-bullets__row:has(.kp-bullets__link:hover) {
+        background: var(--popover);
+        box-shadow: var(--kp-sig-no-raised);
+    }
+    [data-theme='nostromo'] .kp-bullets__row:has(.kp-bullets__link:active) {
+        background: color-mix(in oklab, var(--secondary) 82%, var(--foreground));
+        box-shadow: var(--kp-sig-no-well);
+    }
+    [data-theme='nostromo'] .kp-bullets__row:has(.kp-bullets__link:hover) .kp-bullets__label {
+        text-decoration-color: var(--selected);
+        text-decoration-thickness: 2px;
+    }
+    [data-theme='nostromo'] .kp-bullets__row:has(.kp-bullets__link:focus-visible) {
+        box-shadow:
+            0 0 0 2px var(--background),
+            0 0 0 4px var(--foreground);
+    }
+    [data-theme='nostromo'] .kp-bullets__note-title,
+    [data-theme='nostromo'] .kp-stackbar__note-title {
+        margin: 0;
+    }
+
+    /* ── The key-value grid: labels on tape, a changed value lights its lamp, a failed one sounds the klaxon ── */
+    [data-theme='nostromo'] .kp-kv__row > dt {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-kv--lines > .kp-kv__row {
+        border-block-end: 0;
+        background: var(--kp-no-seam);
+    }
+    [data-theme='nostromo'] .kp-kv--lines > .kp-kv__row:last-child {
+        background: none;
+    }
+    [data-theme='nostromo'] .kp-kv__row[data-kp-changed] > dt::after {
+        content: '';
+        display: inline-block;
+        inline-size: 0.4rem;
+        block-size: 0.4rem;
+        margin-inline-start: 0.5rem;
+        border-radius: 50%;
+        background: var(--kp-sig-no-lens);
+        box-shadow: 0 0 4px hsl(from var(--kp-sig-no-led) h s l / 0.7);
+        vertical-align: 0.1em;
+    }
+    [data-theme='nostromo'] .kp-kv__row[data-kp-state='error']::before {
+        inline-size: 3px;
+    }
+
+    /* ── Form rows: the same tape labels; the changed row's lamp rule in ink, a failed row's klaxon rule ── */
+    [data-theme='nostromo'] .kp-formrow__label {
+        font-family: var(--theme-font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding-block-start: calc((var(--kp-control-height, 2.25rem) - 1.5em) / 2);
+    }
+    [data-theme='nostromo'] .kp-formrow__label > small {
+        font-size: 0.6875rem;
+        letter-spacing: 0.02em;
+        text-transform: none;
+    }
+    [data-theme='nostromo'] .kp-formrows--lines > .kp-formrow {
+        border-block-end: 0;
+        background: var(--kp-no-seam);
+    }
+    [data-theme='nostromo'] .kp-formrows--lines > .kp-formrow:last-child {
+        background: none;
+    }
+    [data-theme='nostromo'] .kp-formrow[data-kp-changed]::before,
+    [data-theme='nostromo'] .kp-formrow[data-kp-state='error']::before {
+        inline-size: 3px;
+    }
+    [data-theme='nostromo'] .kp-formrow__aside {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.04em;
+    }
+    [data-theme='nostromo'] .kp-formrow__lock::before {
+        border-radius: 2px;
+    }
+
+    /* ── Code and commands are screens: amber phosphor on dark glass under scanlines, in the plate's bezel (G7, G15) ── */
+    [data-theme='nostromo'] .kp-code,
+    [data-theme='nostromo'] .kp-command {
+        --kp-code-key: var(--kp-no-phosphor);
+        --kp-command-prompt-ink: var(--kp-no-phosphor);
+        border-color: var(--border-strong);
+        border-radius: var(--radius);
+        background: var(--card);
+        box-shadow: var(--kp-sig-no-raised);
+    }
+    [data-theme='nostromo'] .kp-code__head,
+    [data-theme='nostromo'] .kp-command__head {
+        border-block-end: 0;
+    }
+    [data-theme='nostromo'] .kp-code__title,
+    [data-theme='nostromo'] .kp-command__shell {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-code__meta {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    /* The glass stands in the plate's bezel: the room round it is the plate's own padding (a margin on a paragraph is
+       the page's to reset), so a note and a body are the same height in every state. */
+    [data-theme='nostromo'] .kp-code {
+        padding: 0 0.5rem 0.5rem;
+    }
+    [data-theme='nostromo'] :is(.kp-code__head, .kp-code__foot) {
+        margin-inline: -0.5rem;
+    }
+    [data-theme='nostromo'] :is(.kp-code__body, .kp-code__note) {
+        margin: 0;
+    }
+    [data-theme='nostromo'] .kp-command__code {
+        margin: 0 0.5rem 0.5rem;
+    }
+    [data-theme='nostromo'] :is(.kp-code__body, .kp-code__note, .kp-command__code) {
+        border-radius: 0.5rem;
+        background: var(--kp-sig-no-scan), var(--sidebar-background);
+        box-shadow: var(--kp-no-bezel);
+        color: var(--kp-no-cream);
+        font-family: var(--theme-font-mono);
+        text-shadow: var(--kp-no-glow);
+    }
+    [data-theme='nostromo'] :is(.kp-code__body, .kp-command__code) > code {
+        background: none;
+        color: var(--kp-no-cream);
+    }
+    [data-theme='nostromo'] .kp-command__code {
+        padding: 0.625rem 0.875rem;
+        margin-block-start: 0;
+    }
+    [data-theme='nostromo'] .kp-code__punct,
+    [data-theme='nostromo'] .kp-code[data-kp-code-lines] .kp-code__line::before {
+        color: var(--kp-no-dim);
+    }
+    [data-theme='nostromo'] .kp-code__note {
+        color: var(--kp-no-dim);
+    }
+    [data-theme='nostromo'] .kp-code[data-kp-state='error'] .kp-code__note {
+        color: hsl(from var(--destructive) h s calc(l + 24));
+    }
+    [data-theme='nostromo'] .kp-code[data-kp-state='error'] {
+        box-shadow:
+            var(--kp-sig-no-raised),
+            inset 0 0 0 3px var(--destructive);
+    }
+    [data-theme='nostromo'] .kp-code__foot {
+        border-block-start: 0;
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-command__where {
+        border-block-start: 0;
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-command:not([data-kp-command-ready])::before {
+        border-block-end: 0;
+    }
+    [data-theme='nostromo'] .kp-code[data-kp-code-folded] .kp-code__body {
+        mask-image: linear-gradient(to bottom, black calc(100% - 2.5em), transparent);
+    }
+
+    /* ── The page header's line: its freshness reads as tape ── */
+    [data-theme='nostromo'] .kp-page-header__line .kp-ago {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    /* ── Drawings in an empty state: a vector written on an amber screen [js/art.js, set "nostromo"] ── */
+    [data-theme='nostromo'] [data-kp-art]::before {
+        content: none;
+    }
+    [data-theme='nostromo'] [data-kp-art] {
+        padding-block-start: 1.25rem;
+    }
+    [data-theme='nostromo'] [data-kp-art] > .kp-button {
+        margin-block-start: 0.875rem;
+    }
+    [data-theme='nostromo'] .kp-art {
+        --kp-art-stroke: 1.5px;
+        --kp-art-rule: var(--kp-no-phosphor);
+        --kp-art-line: hsl(from var(--sidebar-primary) h s l / 0.42);
+        --kp-art-ink: var(--kp-no-cream);
+        --kp-art-red: hsl(from var(--destructive) h s calc(l + 22));
+        display: block;
+        box-sizing: content-box;
+        margin: 0 auto 0.875rem;
+        padding: 0.5rem 0.75rem;
+        border-radius: 0.5rem;
+        background: var(--kp-sig-no-scan), var(--sidebar-background);
+        box-shadow: var(--kp-no-bezel);
+        filter: drop-shadow(0 1px 0 hsl(from var(--card) h s calc(l + 8) / 0.9));
+    }
+    [data-theme='nostromo'] .kp-art > g[data-kp-art-set='nostromo'] {
+        display: inline;
+    }
+    [data-theme='nostromo'] .kp-art path {
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+    [data-theme='nostromo'] .kp-art path:is(.kp-art__rule, .kp-art__red) {
+        filter: drop-shadow(0 0 2px currentColor);
+    }
+    [data-theme='nostromo'] .kp-art__rule {
+        color: var(--kp-no-phosphor);
+    }
+    [data-theme='nostromo'] .kp-art__red {
+        color: var(--kp-art-red);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        /* The screen is struck on (the raster), then every stroke is written, a frame apart, in 4 frames each. */
+        [data-theme='nostromo'] .kp-art {
+            --kp-sig-no-n: 4;
+            animation: kp-sig-nostromo-raster var(--kp-sig-no-strike) steps(4, end) backwards;
+        }
+        [data-theme='nostromo'] .kp-art path {
+            stroke-dasharray: 1;
+            animation: kp-sig-nostromo-art-write var(--kp-sig-no-strike) steps(4, end) both;
+            animation-delay: calc(var(--kp-sig-no-strike) + var(--kp-art-i, 0) * var(--kp-sig-no-frame));
+        }
+    }
+    @keyframes kp-sig-nostromo-art-write {
+        from {
+            stroke-dashoffset: 1;
+        }
+        to {
+            stroke-dashoffset: 0;
+        }
+    }
+}
+
+/* ── The kpadopt4 components in nostromo's grammar: rows, tiles, check lists, card states [kpadopt4] ──
+   A row of a list is a line on the console's log: its state is a lit bar along the start edge, and a row that warns or
+   fails sounds the klaxon, framed all round, 3 px, in the tone (G13); a payload a row folds away is the ship's printout
+   on its small screen (G7). A tile of choices is a moulded key: raised at rest, lit rim under the hand, sunk in its well
+   when it is ticked (G8, G14); its title is label tape. A fix written out for a check is a readout on a screen. */
+@layer kp.signature {
+    [data-theme='nostromo'] .kp-action-list--lead > li {
+        border-radius: var(--kp-sig-no-key);
+    }
+    [data-theme='nostromo'] .kp-action-list--lead > li:is([data-kp-state='warn'], [data-kp-state='failed']) {
+        box-shadow: inset 0 0 0 3px var(--kp-no-tone);
+    }
+    [data-theme='nostromo'] .kp-action-list--lead > li[data-kp-state='warn'] {
+        --kp-no-tone: var(--warning);
+    }
+    [data-theme='nostromo'] .kp-action-list--lead > li[data-kp-state='failed'] {
+        --kp-no-tone: var(--destructive);
+    }
+    [data-theme='nostromo'] .kp-action-list--lead > li[data-kp-state='next'] {
+        box-shadow: var(--kp-sig-no-well);
+    }
+    [data-theme='nostromo'] .kp-action-list__title {
+        font-size: 0.9375rem;
+    }
+    [data-theme='nostromo'] .kp-action-list__when {
+        line-height: 1.45;
+    }
+    [data-theme='nostromo'] .kp-action-list__when > :first-child {
+        font-family: var(--theme-font-mono);
+        font-size: 0.8125rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-action-list > li.kp-action-list__group {
+        padding-block-end: 0.5rem;
+        background: var(--kp-no-seam);
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.12em;
+    }
+    [data-theme='nostromo'] .kp-action-list__more > summary {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-action-list__payload {
+        border: 0;
+        border-radius: 0.5rem;
+        background: var(--kp-sig-no-scan), var(--sidebar-background);
+        box-shadow: var(--kp-no-bezel);
+        color: var(--kp-no-cream);
+        font-family: var(--theme-font-mono);
+        text-shadow: var(--kp-no-glow);
+        margin: 0.5rem 0.25rem 0.25rem;
+    }
+
+    /* A check that warns: the klaxon, as a failed row's, in the warning ink. */
+    [data-theme='nostromo'] .kp-statusrow[data-state='warn'] {
+        --kp-statusrow-state-edge: var(--warning);
+        --kp-statusrow-line: 3px;
+    }
+    [data-theme='nostromo'] .kp-statusrow__fix {
+        box-sizing: border-box;
+        inline-size: fit-content;
+        max-inline-size: 100%;
+        padding: 0.3rem 0.6rem;
+        border-radius: var(--kp-sig-no-key);
+        background: var(--kp-sig-no-scan), var(--sidebar-background);
+        box-shadow: 0 0 0 1px var(--border-strong);
+        color: var(--kp-no-cream);
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        text-shadow: var(--kp-no-glow);
+    }
+    [data-theme='nostromo'] .kp-statusrow__fix::before {
+        content: '> ' / '';
+        color: var(--kp-no-phosphor);
+    }
+
+    /* Choices as tiles: moulded keys; the ticked one is sunk in its well with its rim lit in ink. */
+    [data-theme='nostromo'] .kp-fieldset[data-kp-layout='tiles'] {
+        --kp-field-tile-radius: var(--kp-sig-no-key);
+        --kp-field-tile-ground: var(--card);
+        --kp-field-tile-ground-checked: color-mix(in oklab, var(--secondary) 82%, var(--foreground));
+        --kp-field-tile-edge-checked: var(--foreground);
+    }
+    [data-theme='nostromo'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option {
+        border-color: var(--border-strong);
+        box-shadow: var(--kp-sig-no-raised);
+    }
+    [data-theme='nostromo'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:hover:not(:has(> .kp-field__check:disabled)) {
+        border-color: var(--foreground);
+        background: var(--popover);
+    }
+    [data-theme='nostromo'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:active:not(:has(> .kp-field__check:disabled)) {
+        background: color-mix(in oklab, var(--secondary) 82%, var(--foreground));
+        box-shadow: var(--kp-sig-no-well);
+    }
+    [data-theme='nostromo'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:checked) {
+        box-shadow:
+            var(--kp-sig-no-well),
+            inset 0 0 0 1px var(--foreground);
+    }
+    [data-theme='nostromo'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:focus-visible) {
+        outline: 0;
+        box-shadow:
+            0 0 0 2px var(--background),
+            0 0 0 4px var(--foreground),
+            var(--kp-sig-no-raised);
+    }
+    [data-theme='nostromo'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:disabled) {
+        box-shadow: none;
+    }
+    [data-theme='nostromo'] .kp-field__option-title {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    /* A tiles group with nothing chosen sounds the klaxon round the whole group (G13). */
+    [data-theme='nostromo'] .kp-fieldset[data-kp-layout='tiles'][aria-invalid='true'] {
+        outline-width: 3px;
+    }
+
+    /* A card in four data states: the stage is a bay; its note and its failure keep the empty state's and alert's plates. */
+    [data-theme='nostromo'] .kp-card__state-title {
+        font-family: var(--theme-font-mono);
+        font-size: 0.8rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-card__state > .kp-card__empty {
+        border-radius: var(--kp-sig-no-key);
+    }
+}
+
+/* ── The kpadopt4 components in nostromo's grammar: pipeline, journey, moments, secret, dialog sections [kpadopt4] ──
+   The pipeline is a rack: a lane a moulded plate, its head label tape with the stage's lit strip, a card a key with its
+   lamp (G8): unlit at rest, lit under the hand, full when pressed, the LED orange on the open one; the board's words
+   are a plate, a failed read the klaxon (G13). A journey is the LED bargraph laid between its steps: the way travelled
+   lit in the step's own colour, the way to come unlit cells, a failed way alternate cells in red; the step it stands at
+   is a lamp lit in its key. A moment on the timeline is a lamp, a stretch a run of lit cells (G10's window). The secret
+   field is a screen: the value is written on it by the raster (G2) and the countdown is a bargraph that goes out cell by
+   cell (G9, G10); a dialog's sections are divided by the vent seam and its danger section is framed all round (G13). */
+@layer kp.signature {
+    /* ── Pipeline ── */
+    [data-theme='nostromo'] .kp-pipeline__lane {
+        border-color: var(--border-strong);
+        border-radius: var(--radius);
+        background: var(--muted);
+        box-shadow: var(--kp-sig-no-raised);
+    }
+    [data-theme='nostromo'] .kp-pipeline__head {
+        border: 0;
+        border-radius: var(--kp-sig-no-tape);
+        background: var(--foreground);
+        box-shadow: inset 4px 0 0 var(--kp-pipeline-tone);
+        padding-inline-start: calc(var(--kp-space-sm, 0.5rem) + 4px);
+        color: var(--primary-foreground);
+    }
+    [data-theme='nostromo'] .kp-pipeline__head:dir(rtl) {
+        box-shadow: inset -4px 0 0 var(--kp-pipeline-tone);
+        padding-inline-start: var(--kp-space-sm, 0.5rem);
+        padding-inline-end: calc(var(--kp-space-sm, 0.5rem) + 4px);
+    }
+    [data-theme='nostromo'] .kp-pipeline__name {
+        color: inherit;
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-pipeline__count {
+        font-family: var(--theme-font-display);
+        font-size: 1rem;
+        font-weight: 400;
+    }
+    [data-theme='nostromo'] .kp-pipeline__share {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-pipeline__card {
+        position: relative;
+        border-color: var(--border-strong);
+        border-radius: var(--kp-sig-no-key);
+        box-shadow: var(--kp-sig-no-raised);
+        padding-inline-end: 1.5rem;
+    }
+    /* The card's lamp, in its top end corner: unlit 25 %, lit under the hand 70 %, full when pressed (G8). */
+    [data-theme='nostromo'] .kp-pipeline__card:not(.kp-pipeline__ghost)::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 0.4rem;
+        inset-inline-end: 0.4rem;
+        inline-size: 0.4rem;
+        block-size: 0.4rem;
+        border-radius: 50%;
+        background: currentcolor;
+        opacity: 0.25;
+    }
+    [data-theme='nostromo'] .kp-pipeline__card:hover:not(.kp-pipeline__ghost)::after {
+        opacity: 0.7;
+    }
+    [data-theme='nostromo'] .kp-pipeline__card:active:not(.kp-pipeline__ghost)::after {
+        opacity: 1;
+    }
+    [data-theme='nostromo'] .kp-pipeline__card:hover {
+        border-color: var(--foreground);
+        background: var(--popover);
+    }
+    [data-theme='nostromo'] .kp-pipeline__card:active {
+        background: color-mix(in oklab, var(--secondary) 82%, var(--foreground));
+        box-shadow: var(--kp-sig-no-well);
+    }
+    [data-theme='nostromo'] .kp-pipeline__card[aria-current='true'] {
+        border-color: var(--foreground);
+        box-shadow: var(--kp-sig-no-well);
+    }
+    [data-theme='nostromo'] .kp-pipeline__card[aria-current='true']::after {
+        background: var(--kp-sig-no-lens);
+        box-shadow: 0 0 5px hsl(from var(--kp-sig-no-led) h s l / 0.7);
+        opacity: 1;
+    }
+    [data-theme='nostromo'] .kp-pipeline__card:focus-visible {
+        outline: 0;
+        box-shadow:
+            0 0 0 2px var(--background),
+            0 0 0 4px var(--foreground);
+    }
+    [data-theme='nostromo'] .kp-pipeline__card[data-kp-dimmed] {
+        box-shadow: none;
+    }
+    [data-theme='nostromo'] .kp-pipeline__card[data-kp-dimmed]::after {
+        opacity: 0.12;
+    }
+    [data-theme='nostromo'] .kp-pipeline__mark {
+        border-radius: var(--kp-sig-no-tape);
+        font-family: var(--theme-font-mono);
+        box-shadow: inset 0 0 0 1px hsl(from var(--foreground) h s l / 0.3);
+    }
+    [data-theme='nostromo'] .kp-pipeline__meta {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.04em;
+    }
+    [data-theme='nostromo'] .kp-pipeline__none {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-pipeline__state {
+        border-radius: var(--kp-sig-no-key);
+        box-shadow: var(--kp-sig-no-well);
+    }
+    [data-theme='nostromo'] .kp-pipeline__state[data-kp-state='error'] {
+        border: 3px solid var(--destructive);
+    }
+    [data-theme='nostromo'] .kp-pipeline__state[data-kp-state='error'] .kp-pipeline__words {
+        padding-inline-start: 0;
+        border-inline-start: 0;
+        text-align: center;
+    }
+
+    /* ── Journey: the LED bargraph between the steps ── */
+    [data-theme='nostromo'] .kp-steplist--journey {
+        --kp-journey-rule: 6px;
+        --kp-no-cells: linear-gradient(90deg, var(--foreground) 0 3px, transparent 3px) 0 0 / 5px 100% repeat-x;
+        --kp-no-cells-v: linear-gradient(180deg, var(--foreground) 0 3px, transparent 3px) 0 0 / 100% 5px repeat-y;
+        --kp-steplist-mark-radius: var(--kp-sig-no-key);
+    }
+    [data-theme='nostromo'] .kp-steplist--journey > .kp-steplist__item + .kp-steplist__item::before,
+    [data-theme='nostromo'] .kp-steplist--journey > .kp-steplist__item:not(:last-child)::after {
+        background: var(--sidebar-accent);
+        -webkit-mask: var(--kp-no-cells);
+        mask: var(--kp-no-cells);
+    }
+    [data-theme='nostromo'] .kp-steplist--journey > .kp-steplist__item:is([data-state='done'], [data-state='current'])::before {
+        background: var(--kp-step-tone, var(--kp-sig-no-led));
+    }
+    [data-theme='nostromo'] .kp-steplist--journey > .kp-steplist__item[data-state='failed']::before {
+        background: repeating-linear-gradient(90deg, var(--destructive) 0 5px, transparent 5px 10px);
+    }
+    [data-theme='nostromo'] .kp-steplist--journey .kp-steplist__mark {
+        box-shadow: var(--kp-sig-no-raised);
+    }
+    /* The step it stands at: a key sunk in its well with its lamp lit in the step's colour. */
+    [data-theme='nostromo'] .kp-steplist--journey .kp-steplist__item[data-state='current'] .kp-steplist__mark {
+        border-color: var(--foreground);
+        background:
+            radial-gradient(
+                circle,
+                hsl(from var(--kp-step-tone, var(--kp-sig-no-led)) h s calc(l + 22)) 0 18%,
+                var(--kp-step-tone, var(--kp-sig-no-led)) 34%,
+                transparent 40%
+            ),
+            var(--secondary);
+        box-shadow: var(--kp-sig-no-well);
+    }
+    [data-theme='nostromo'] .kp-steplist--journey .kp-steplist__item[data-state='done']:not([data-kp-tone]) .kp-steplist__mark {
+        border-color: var(--foreground);
+        background: var(--foreground);
+        color: var(--primary-foreground);
+    }
+    [data-theme='nostromo'] .kp-steplist--journey .kp-steplist__title {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-steplist--journey .kp-steplist__time {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.04em;
+    }
+    @container kp-journey (max-width: 30rem) {
+        [data-theme='nostromo'] .kp-steplist--journey > .kp-steplist__item:not(:last-child)::after {
+            -webkit-mask: var(--kp-no-cells-v);
+            mask: var(--kp-no-cells-v);
+            inline-size: 6px;
+        }
+        [data-theme='nostromo']
+            .kp-steplist--journey
+            > .kp-steplist__item:has(+ .kp-steplist__item:is([data-state='done'], [data-state='current']))::after {
+            background: var(--kp-step-tone, var(--kp-sig-no-led));
+        }
+        [data-theme='nostromo'] .kp-steplist--journey > .kp-steplist__item:has(+ .kp-steplist__item[data-state='failed'])::after {
+            background: repeating-linear-gradient(180deg, var(--destructive) 0 5px, transparent 5px 10px);
+        }
+    }
+
+    /* ── Moments on the timeline: lamps; stretches are runs of lit cells ── */
+    [data-theme='nostromo'] :is(.kp-gantt__point, .kp-gantt__mark)::before {
+        box-shadow: 0 0 4px hsl(from var(--kp-gantt-mark) h s l / 0.6);
+    }
+    [data-theme='nostromo'] :is(.kp-gantt__point, .kp-gantt__mark)[data-kp-planned]::before,
+    [data-theme='nostromo'] :is(.kp-gantt__point, .kp-gantt__mark)[data-kp-shape='ring']::before {
+        box-shadow: none;
+    }
+    [data-theme='nostromo'] .kp-gantt__point:hover::before {
+        box-shadow:
+            0 0 0 2px var(--card),
+            0 0 0 4px var(--foreground),
+            0 0 8px hsl(from var(--kp-sig-no-led) h s l / 0.6);
+    }
+    [data-theme='nostromo'] .kp-gantt__point:active::before {
+        box-shadow:
+            0 0 0 2px var(--card),
+            0 0 0 4px var(--foreground),
+            var(--kp-sig-no-well);
+    }
+    [data-theme='nostromo'] .kp-gantt__count {
+        border-radius: var(--kp-sig-no-tape);
+        background: var(--foreground);
+        border-color: var(--foreground);
+        color: var(--primary-foreground);
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='nostromo'] .kp-gantt__zone[data-kp-lane-zone] {
+        border-radius: 1px;
+        background: repeating-linear-gradient(90deg, hsl(from var(--kp-gantt-mark) h s l / 0.85) 0 3px, transparent 3px 5px);
+    }
+    [data-theme='nostromo'] :is(.kp-gantt__zone:not([data-kp-lane-zone]), .kp-gantt__band) {
+        border-inline: 0;
+        background: repeating-linear-gradient(90deg, hsl(from var(--kp-gantt-mark) h s l / 0.2) 0 3px, transparent 3px 6px);
+    }
+    [data-theme='nostromo'] .kp-gantt__zone[data-kp-tone='warning']:not([data-kp-lane-zone]) {
+        box-shadow: inset 0 3px 0 var(--warning-foreground);
+    }
+    [data-theme='nostromo'] .kp-gantt__sub {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.04em;
+    }
+
+    /* ── Secret field: a screen; the value is written by the raster, the countdown is a bargraph going out ── */
+    [data-theme='nostromo'] .kp-secret {
+        --kp-secret-drain-size: 6px;
+        --kp-secret-drain: var(--kp-sig-no-led);
+    }
+    [data-theme='nostromo'] .kp-secret__value {
+        border: 0;
+        border-radius: var(--kp-sig-no-key);
+        background: var(--kp-sig-no-scan), var(--sidebar-background);
+        box-shadow:
+            0 0 0 2px var(--secondary),
+            0 0 0 3px var(--border-strong),
+            inset 0 0 8px hsl(from var(--sidebar-background) h s calc(l - 10) / 0.95);
+        color: var(--kp-no-cream);
+        text-shadow: var(--kp-no-glow);
+    }
+    [data-theme='nostromo'] .kp-secret__value.kp-masked {
+        color: var(--kp-no-dim);
+    }
+    [data-theme='nostromo'] .kp-secret[data-kp-secret-state='disabled'] .kp-secret__value {
+        box-shadow: 0 0 0 1px var(--border-strong);
+        background: var(--muted);
+        color: var(--muted-foreground);
+        text-shadow: none;
+    }
+    [data-theme='nostromo'] .kp-secret__drain {
+        background: var(--kp-secret-drain);
+        -webkit-mask: linear-gradient(90deg, var(--foreground) 0 3px, transparent 3px) 0 0 / 5px 100% repeat-x;
+        mask: linear-gradient(90deg, var(--foreground) 0 3px, transparent 3px) 0 0 / 5px 100% repeat-x;
+        filter: drop-shadow(0 0 3px hsl(from var(--sidebar-primary) h s l / 0.55));
+    }
+    [data-theme='nostromo'] .kp-secret__line {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-secret[data-kp-secret-state='error'] .kp-secret__words {
+        padding: 0.15rem 0.5rem;
+        border: 3px solid var(--destructive);
+        border-radius: var(--kp-sig-no-tape);
+        letter-spacing: 0.02em;
+        text-transform: none;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo']
+            .kp-secret:not([data-kp-secret-ttl='0'], [data-kp-secret-reveal-on='hold'])[data-kp-secret-state='shown']
+            .kp-secret__drain {
+            animation: kp-sig-nostromo-drain var(--kp-secret-ttl, 30s) steps(48, end) forwards;
+        }
+        [data-theme='nostromo'] .kp-secret[data-kp-secret-state='shown'] .kp-secret__text {
+            display: inline-block;
+            animation: kp-sig-nostromo-raster var(--kp-sig-no-print) steps(8, end) backwards;
+        }
+    }
+    @keyframes kp-sig-nostromo-drain {
+        from {
+            clip-path: inset(-6px 0 -6px 0);
+        }
+        to {
+            clip-path: inset(-6px 100% -6px 0);
+        }
+    }
+
+    /* ── A dialog in sections: the vent seam between them, the danger section framed all round ── */
+    [data-theme='nostromo'] .kp-dialog__section {
+        border-block-start: 0;
+    }
+    [data-theme='nostromo'] .kp-dialog__section:not(:first-child) {
+        background: var(--kp-no-seam);
+        background-position: 0 0;
+        background-size: 10px 3px;
+        background-repeat: repeat-x;
+        padding-block-start: calc(var(--kp-dialog-section-gap, 0.75rem) + 3px);
+    }
+    [data-theme='nostromo'] .kp-dialog__heading {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-dialog__section--danger {
+        margin-block-start: 0.5rem;
+        padding: calc(var(--kp-dialog-section-gap, 0.75rem) + 0.125rem) var(--kp-space-md, 0.75rem);
+        border: 3px solid var(--destructive);
+        border-radius: var(--kp-sig-no-key);
+        background: none;
+    }
+    [data-theme='nostromo'] .kp-dialog__section--danger:first-child {
+        margin-block-start: 0;
+    }
+    [data-theme='nostromo'] .kp-dialog__section--danger:last-child {
+        padding-block-end: calc(var(--kp-dialog-section-gap, 0.75rem) + 0.125rem);
+    }
+
+    /* What still uses a thing, and what will be lost: a printout on a screen, under its tape heading. */
+    [data-theme='nostromo'] .kp-confirm__dependents {
+        border: 0;
+        border-radius: 0.5rem;
+        background: var(--kp-sig-no-scan), var(--sidebar-background);
+        box-shadow: var(--kp-no-bezel);
+        margin-inline: 0.25rem;
+        color: var(--kp-no-cream);
+        font-family: var(--theme-font-mono);
+        text-shadow: var(--kp-no-glow);
+    }
+    [data-theme='nostromo'] .kp-confirm__dependents .kp-dialog__heading {
+        color: var(--kp-no-phosphor);
+    }
+    [data-theme='nostromo'] .kp-type-confirm__loses {
+        border: 3px solid var(--destructive);
+        border-radius: var(--kp-sig-no-key);
+        background: var(--card);
+    }
+    [data-theme='nostromo'] .kp-type-confirm__loses-title {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-type-confirm__name {
+        border-radius: var(--kp-sig-no-tape);
+        background: var(--foreground);
+        color: var(--primary-foreground);
+        letter-spacing: 0.04em;
+    }
+    [data-theme='nostromo'] .kp-type-confirm__status {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+}
+
+/* ── The kpadopt4 components in nostromo's grammar: time, cooking and comparison [kpadopt4] ──
+   Everything that reads a time out is the ship's screen: the digits of a countdown, a timer's remaining time and the
+   timer disc are amber phosphor on dark glass in the case's bezel (G7, G15); an ended timer sounds the klaxon, framed
+   all round and never flashing (G13); the uptime strip is a lit window whose cells light by state (G10's window); the
+   wheel turns in whole frames of the ship's clock and its outcome is written on the screen (G1, G4); a three-way chip
+   is a switch with its lamp, lit in ink, in red for out (G8, G13); the quantity's figure is Michroma in its well and
+   its unit label tape (G15); a checklist is the log with its dotted seams; cook mode's ingredients are a printout. */
+@layer kp.signature {
+    [data-theme='nostromo'] {
+        /* The wheel's settle: the register's curve held in 45 frames of 80 ms (3.6 s). */
+        --kp-wheel-ease: linear(
+            0 0% 2.21%,
+            0.005 2.22% 4.43%,
+            0.022 4.44% 6.66%,
+            0.057 6.67% 8.88%,
+            0.117 8.89% 11.1%,
+            0.2 11.11% 13.32%,
+            0.289 13.33% 15.55%,
+            0.37 15.56% 17.77%,
+            0.44 17.78% 19.99%,
+            0.5 20% 22.21%,
+            0.552 22.22% 24.43%,
+            0.597 24.44% 26.66%,
+            0.637 26.67% 28.88%,
+            0.672 28.89% 31.1%,
+            0.703 31.11% 33.32%,
+            0.732 33.33% 35.55%,
+            0.758 35.56% 37.77%,
+            0.781 37.78% 39.99%,
+            0.802 40% 42.21%,
+            0.822 42.22% 44.43%,
+            0.84 44.44% 46.66%,
+            0.856 46.67% 48.88%,
+            0.871 48.89% 51.1%,
+            0.885 51.11% 53.32%,
+            0.897 53.33% 55.55%,
+            0.909 55.56% 57.77%,
+            0.919 57.78% 59.99%,
+            0.929 60% 62.21%,
+            0.938 62.22% 64.43%,
+            0.946 64.44% 66.66%,
+            0.953 66.67% 68.88%,
+            0.96 68.89% 71.1%,
+            0.966 71.11% 73.32%,
+            0.972 73.33% 75.55%,
+            0.977 75.56% 77.77%,
+            0.981 77.78% 79.99%,
+            0.985 80% 82.21%,
+            0.988 82.22% 84.43%,
+            0.991 84.44% 86.66%,
+            0.994 86.67% 88.88%,
+            0.996 88.89% 91.1%,
+            0.997 91.11% 93.32%,
+            0.998 93.33% 95.55%,
+            0.999 95.56% 97.77%,
+            1 97.78% 99.99%,
+            1 100%
+        );
+    }
+
+    /* ── Uptime strip: a lit window ── */
+    [data-theme='nostromo'] .kp-uptime {
+        --kp-uptime-up: hsl(from var(--success) h s calc(l + 22));
+        --kp-uptime-degraded: hsl(from var(--warning-foreground) h s calc(l + 16));
+        --kp-uptime-down: hsl(from var(--destructive) h s calc(l + 14));
+        --kp-uptime-cell-radius: 1px;
+        row-gap: 0.5rem;
+    }
+    [data-theme='nostromo'] .kp-uptime__title {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-uptime__percent {
+        font-family: var(--theme-font-display);
+        font-size: 0.8125rem;
+        font-weight: 400;
+    }
+    [data-theme='nostromo'] .kp-uptime__summary {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.04em;
+    }
+    [data-theme='nostromo'] .kp-uptime__summary[data-kp-tone='error'] {
+        border-radius: var(--kp-sig-no-tape);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+    }
+    [data-theme='nostromo'] .kp-uptime__axis {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-uptime__track {
+        box-sizing: border-box;
+        padding: 2px;
+        border-radius: 0.15rem;
+        background: var(--sidebar-background);
+        box-shadow:
+            0 0 0 2px var(--secondary),
+            0 0 0 3px var(--border-strong);
+    }
+    [data-theme='nostromo'] .kp-uptime__cell {
+        position: relative;
+        border: 0;
+    }
+    [data-theme='nostromo'] .kp-uptime__cell:not([data-kp-tone]) {
+        --kp-uptime-fill: var(--sidebar-accent);
+    }
+    [data-theme='nostromo'] .kp-uptime__cell:is([data-kp-tone='up'], [data-kp-tone='degraded'], [data-kp-tone='down']) {
+        box-shadow: 0 0 4px hsl(from var(--kp-uptime-fill) h s l / 0.55);
+    }
+    [data-theme='nostromo'] .kp-uptime__cell:is([data-kp-tone='up'], [data-kp-tone='degraded'], [data-kp-tone='down'])::before {
+        content: '';
+        position: absolute;
+        inset: 0 0 62% 0;
+        background: hsl(from var(--kp-no-cream) h s 100% / 0.28);
+        pointer-events: none;
+    }
+    [data-theme='nostromo'] .kp-uptime__cell[data-kp-tone='none'] {
+        --kp-uptime-fill: transparent;
+        box-shadow: inset 0 0 0 1px var(--sidebar-accent);
+    }
+    [data-theme='nostromo'] .kp-uptime__cell:is(:hover, :focus-visible, [aria-expanded='true']) {
+        box-shadow:
+            0 0 0 1px var(--sidebar-background),
+            0 0 0 2px var(--sidebar-primary),
+            0 0 8px hsl(from var(--sidebar-primary) h s l / 0.6);
+    }
+    [data-theme='nostromo'] .kp-uptime__cell:focus-visible,
+    [data-theme='nostromo'] .kp-uptime__cell[aria-expanded='true'] {
+        outline: 0;
+    }
+    [data-theme='nostromo'] .kp-uptime__swatch {
+        border: 0;
+        border-radius: 1px;
+        box-shadow: 0 0 0 1px var(--foreground);
+    }
+    [data-theme='nostromo'] .kp-uptime__info-title {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-uptime__info-state {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    /* Waiting: the track is the lamp bank, computing (G10). */
+    [data-theme='nostromo'] .kp-uptime__cell.kp-skeleton {
+        visibility: hidden;
+    }
+    [data-theme='nostromo'] .kp-uptime__track:has(> .kp-uptime__cell.kp-skeleton) {
+        --kp-no-pitch: 5px;
+        background:
+            var(--kp-no-leds) 0 50% / calc(var(--kp-no-pitch) * 37) calc(100% - 8px) repeat-x,
+            linear-gradient(90deg, var(--sidebar-accent) 0 3px, transparent 0) 0 50% / var(--kp-no-pitch) calc(100% - 8px) repeat-x,
+            var(--sidebar-background);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] .kp-uptime__track:has(> .kp-uptime__cell.kp-skeleton) {
+            animation: kp-sig-nostromo-bank var(--kp-sig-no-loop) steps(1, end) infinite;
+        }
+        [data-theme='nostromo'] .kp-uptime__cell {
+            transition: block-size var(--fx-duration) steps(2, jump-end);
+        }
+    }
+
+    /* ── Kitchen timers: the time is a screen readout; ended, the klaxon frames the card (never flashing) ── */
+    [data-theme='nostromo'] .kp-timers {
+        --kp-timer-font: var(--theme-font-mono);
+        --kp-timer-size: 2.25rem;
+        --kp-timer-done-ground: var(--card);
+        --kp-timer-done-ink: var(--card-foreground);
+        --kp-timer-done-edge: var(--border-strong);
+    }
+    [data-theme='nostromo'] .kp-timer {
+        border-color: var(--border-strong);
+        box-shadow: var(--kp-sig-no-raised);
+    }
+    [data-theme='nostromo'] .kp-timer__name {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-timer__state {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-timer__time {
+        box-sizing: content-box;
+        padding-inline: 0.5rem;
+        border-radius: var(--kp-sig-no-key);
+        background: var(--kp-sig-no-scan), var(--sidebar-background);
+        box-shadow: var(--kp-no-bezel);
+        color: var(--kp-no-phosphor);
+        text-align: center;
+        text-shadow: 0 0 6px hsl(from var(--sidebar-primary) h s l / 0.6);
+        font-weight: 700;
+    }
+    [data-theme='nostromo'] .kp-timer[data-kp-timer-state='paused'] .kp-timer__time {
+        color: var(--kp-no-dim);
+        text-shadow: none;
+    }
+    [data-theme='nostromo'] .kp-timer[data-kp-timer-state='done'] {
+        box-shadow: inset 0 0 0 3px var(--destructive);
+    }
+    [data-theme='nostromo'] .kp-timer[data-kp-timer-state='done'] .kp-timer__state {
+        padding-inline: 0.4rem;
+        border-radius: var(--kp-sig-no-tape);
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+    [data-theme='nostromo'] .kp-timer[data-kp-timer-state='done'] .kp-timer__time {
+        font-size: calc(var(--kp-timer-size) * 0.62);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    /* ── Countdown: a named timer in digits on the screen ── */
+    [data-theme='nostromo'] .kp-countdown {
+        --kp-countdown-ink: var(--kp-no-phosphor);
+        --kp-countdown-size: 2.75rem;
+        --kp-countdown-ring: var(--destructive);
+        border-color: var(--border-strong);
+        border-radius: var(--radius);
+        box-shadow: var(--kp-sig-no-raised);
+    }
+    [data-theme='nostromo'] .kp-countdown__name,
+    [data-theme='nostromo'] .kp-timer-disc__caption {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-countdown__status,
+    [data-theme='nostromo'] .kp-timer-disc__status {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-countdown__time {
+        padding: 0.25rem 0.75rem;
+        border-radius: var(--kp-sig-no-key);
+        background: var(--kp-sig-no-scan), var(--sidebar-background);
+        box-shadow: var(--kp-no-bezel);
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+        text-shadow: 0 0 8px hsl(from var(--sidebar-primary) h s l / 0.6);
+    }
+    [data-theme='nostromo'] .kp-countdown[data-kp-countdown-state='paused'] .kp-countdown__time {
+        color: var(--kp-no-dim);
+        text-shadow: none;
+    }
+    [data-theme='nostromo'] .kp-countdown[data-kp-countdown-state='ended'] {
+        box-shadow: inset 0 0 0 3px var(--destructive);
+        animation: none;
+    }
+    [data-theme='nostromo'] .kp-countdown[data-kp-countdown-state='ended'] .kp-countdown__status,
+    [data-theme='nostromo'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__status {
+        padding-inline: 0.4rem;
+        border-radius: var(--kp-sig-no-tape);
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    /* ── Timer disc: a round screen, the time left a lit sector, the rim marks in cream ── */
+    [data-theme='nostromo'] .kp-timer-disc {
+        --kp-timer-disc-fill: var(--kp-no-phosphor);
+        --kp-timer-disc-marks: var(--kp-no-cream);
+        --kp-timer-disc-ring: var(--destructive);
+    }
+    [data-theme='nostromo'] .kp-timer-disc__face {
+        border: 0;
+        background: var(--kp-sig-no-scan), var(--sidebar-background);
+        box-shadow:
+            0 0 0 3px var(--secondary),
+            0 0 0 4px var(--border-strong),
+            inset 0 0 16px hsl(from var(--sidebar-background) h s calc(l - 10) / 0.95);
+    }
+    [data-theme='nostromo'] .kp-timer-disc__sector {
+        filter: drop-shadow(0 0 5px hsl(from var(--sidebar-primary) h s l / 0.6));
+    }
+    [data-theme='nostromo'] .kp-timer-disc__hub {
+        border: 0;
+        background: var(--kp-sig-no-lens);
+        box-shadow:
+            0 0 0 1.5px var(--foreground),
+            0 0 6px hsl(from var(--kp-sig-no-led) h s l / 0.6);
+    }
+    [data-theme='nostromo'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face {
+        box-shadow:
+            0 0 0 3px var(--destructive),
+            0 0 0 4px var(--border-strong),
+            inset 0 0 16px hsl(from var(--sidebar-background) h s calc(l - 10) / 0.95);
+        animation: none;
+    }
+
+    /* ── Range picker: the custom window in force is a key sunk in its well ── */
+    [data-theme='nostromo'] .kp-range__custom[aria-pressed='true'] {
+        border-color: var(--foreground);
+        background: color-mix(in oklab, var(--secondary) 82%, var(--foreground));
+        box-shadow: var(--kp-sig-no-well);
+    }
+    [data-theme='nostromo'] .kp-range__label {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-range__title {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-range__panel .kp-field__input[aria-invalid='true'] {
+        box-shadow: inset 0 0 0 2px var(--destructive);
+    }
+
+    /* ── The wheel: a dial on the case, its pick written on the screen ── */
+    [data-theme='nostromo'] .kp-wheel {
+        --kp-wheel-hub-ring: 5px;
+        --kp-wheel-pointer: var(--primary);
+        --kp-wheel-font: var(--theme-font-mono);
+        --kp-wheel-outcome: 1.25rem;
+    }
+    [data-theme='nostromo'] .kp-wheel__stage::before {
+        box-shadow:
+            0 0 0 var(--kp-wheel-hub-ring) var(--secondary),
+            0 0 0 calc(var(--kp-wheel-hub-ring) + 1px) var(--border-strong);
+    }
+    [data-theme='nostromo'] .kp-wheel__spin.kp-button {
+        box-shadow:
+            0 0 0 var(--kp-wheel-hub-ring) var(--secondary),
+            0 0 0 calc(var(--kp-wheel-hub-ring) + 1px) var(--border-strong),
+            var(--kp-sig-no-raised);
+    }
+    [data-theme='nostromo'] .kp-wheel__disc {
+        box-shadow:
+            0 0 0 4px var(--secondary),
+            0 0 0 5px var(--border-strong),
+            var(--kp-sig-no-raised);
+    }
+    [data-theme='nostromo'] .kp-wheel__segment {
+        stroke: var(--foreground);
+        stroke-width: 0.5;
+    }
+    [data-theme='nostromo'] .kp-wheel__label {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.04em;
+    }
+    [data-theme='nostromo'] .kp-wheel__rim {
+        stroke: var(--foreground);
+        stroke-width: 1;
+    }
+    [data-theme='nostromo'] .kp-wheel__pointer {
+        filter: drop-shadow(0 1px 1px hsl(from var(--foreground) h s l / 0.4));
+    }
+    [data-theme='nostromo'] .kp-wheel__caption {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-wheel__outcome:not([data-kp-wheel-note]) {
+        align-items: center;
+        padding: 0.25rem 0.75rem;
+        border-radius: var(--kp-sig-no-key);
+        background: var(--kp-sig-no-scan), var(--sidebar-background);
+        box-shadow: var(--kp-no-bezel);
+        color: var(--kp-no-phosphor);
+        text-shadow: 0 0 6px hsl(from var(--sidebar-primary) h s l / 0.6);
+        text-align: center;
+    }
+    [data-theme='nostromo'] .kp-wheel__outcome:not([data-kp-wheel-note]):empty {
+        background: none;
+        box-shadow: none;
+    }
+    [data-theme='nostromo'] .kp-wheel__outcome[data-kp-wheel-note] {
+        border-radius: var(--kp-sig-no-key);
+    }
+    [data-theme='nostromo'] .kp-wheel__result[data-kp-wheel-failed] .kp-wheel__outcome {
+        border: 3px solid var(--destructive);
+        background: var(--card);
+        color: var(--foreground);
+    }
+
+    /* ── Cook mode: the count is Michroma, the wake lamp lights, the needs are a printout on the screen ── */
+    [data-theme='nostromo'] .kp-focus-steps__head {
+        grid-template-columns: auto minmax(0, 1fr);
+    }
+    [data-theme='nostromo'] .kp-focus-steps__count {
+        font-family: var(--theme-font-display);
+        font-size: 0.8125rem;
+        font-weight: 400;
+        white-space: nowrap;
+    }
+    [data-theme='nostromo'] .kp-focus-steps__wake {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-focus-steps__wake::before {
+        border: 0;
+        background: var(--sidebar-accent);
+        box-shadow: 0 0 0 1.5px var(--foreground);
+    }
+    [data-theme='nostromo'] .kp-focus-steps[data-kp-focus-steps-screen='on'] .kp-focus-steps__wake::before {
+        background: var(--kp-sig-no-lens);
+        box-shadow:
+            0 0 0 1.5px var(--foreground),
+            0 0 6px hsl(from var(--kp-sig-no-led) h s l / 0.7);
+    }
+    [data-theme='nostromo'] .kp-focus-steps__needs {
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        border: 0;
+        border-radius: 0.5rem;
+        background: var(--kp-sig-no-scan), var(--sidebar-background);
+        box-shadow: var(--kp-no-bezel);
+        margin-inline: 0.25rem;
+        color: var(--kp-no-cream);
+        font-family: var(--theme-font-mono);
+        text-shadow: var(--kp-no-glow);
+    }
+    [data-theme='nostromo'] .kp-focus-steps__needs-title {
+        color: var(--kp-no-phosphor);
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-focus-steps__amount {
+        color: var(--kp-no-phosphor);
+    }
+    [data-theme='nostromo'] .kp-focus-steps__nav > .kp-button {
+        font-size: 1rem;
+    }
+
+    /* ── Quantity: Michroma figure in its well, the unit on tape ── */
+    [data-theme='nostromo'] .kp-quantity__field {
+        border-radius: var(--kp-sig-no-key);
+        border-color: var(--border-strong);
+        background: var(--background);
+        box-shadow: var(--kp-sig-no-well);
+    }
+    [data-theme='nostromo'] .kp-quantity__field:has(.kp-quantity__input:focus-visible) {
+        box-shadow:
+            0 0 0 2px var(--background),
+            0 0 0 4px var(--foreground);
+        outline: 0;
+    }
+    [data-theme='nostromo'] .kp-quantity__field:has(.kp-quantity__input[aria-invalid='true']) {
+        box-shadow: inset 0 0 0 3px var(--destructive);
+    }
+    [data-theme='nostromo'] .kp-quantity__input {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+    }
+    [data-theme='nostromo'] .kp-quantity__unit {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-quantity__step.kp-button {
+        border-radius: var(--kp-sig-no-key);
+    }
+
+    /* ── Checklist: the log, rows lit by the hand, seams of dots ── */
+    [data-theme='nostromo'] .kp-checklist__bar {
+        border-block-end: 0;
+        background: var(--kp-no-seam);
+        padding-block-end: calc(var(--kp-space-xs, 0.25rem) + 3px);
+    }
+    [data-theme='nostromo'] .kp-checklist__status {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-checklist__head {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-checklist__count {
+        font-family: var(--theme-font-display);
+        font-size: 0.75rem;
+        letter-spacing: 0;
+        text-transform: none;
+    }
+    [data-theme='nostromo'] .kp-checklist__list {
+        border-block-start: 0;
+        background: var(--kp-no-seam);
+        background-position: 0 0;
+        background-size: 10px 3px;
+        background-repeat: repeat-x;
+        padding-block-start: 3px;
+    }
+    [data-theme='nostromo'] .kp-checklist__item {
+        border-block-end: 0;
+        background: var(--kp-no-seam);
+    }
+    [data-theme='nostromo'] .kp-checklist__item:last-child {
+        background: none;
+    }
+    [data-theme='nostromo'] .kp-checklist__row:hover {
+        background: var(--popover);
+    }
+    [data-theme='nostromo'] .kp-checklist__row:active {
+        background: color-mix(in oklab, var(--secondary) 82%, var(--foreground));
+        box-shadow: var(--kp-sig-no-well);
+    }
+    [data-theme='nostromo'] .kp-checklist__detail {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+    }
+    [data-theme='nostromo'] .kp-checklist__empty {
+        border-radius: var(--kp-sig-no-key);
+        border-color: var(--border-strong);
+    }
+    [data-theme='nostromo'] .kp-checklist__empty[data-kp-checklist-failed] {
+        border: 3px solid var(--destructive);
+    }
+    [data-theme='nostromo'] .kp-timers__empty {
+        border-radius: var(--kp-sig-no-key);
+        border-color: var(--border-strong);
+    }
+
+    /* ── Three-way chips: a switch with its lamp; in is the key sunk with the lamp lit, out the klaxon ── */
+    [data-theme='nostromo'] .kp-segmented[data-kp-segmented='tri'] {
+        --kp-tri-mark-radius: 50%;
+        --kp-tri-out-edge: var(--destructive);
+        --kp-tri-out-ground: var(--card);
+        --kp-tri-out-ink: var(--foreground);
+    }
+    [data-theme='nostromo'] .kp-segmented__mark {
+        border: 1.5px solid currentcolor;
+        background: color-mix(in oklab, currentcolor 18%, transparent);
+    }
+    [data-theme='nostromo'] .kp-segmented__item[data-kp-segmented-tri='include'] > .kp-segmented__mark {
+        border-color: currentcolor;
+        background: var(--kp-sig-no-lens);
+        box-shadow: 0 0 5px hsl(from var(--kp-sig-no-led) h s l / 0.7);
+    }
+    [data-theme='nostromo'] .kp-segmented__item[data-kp-segmented-tri='include'] > .kp-segmented__mark::before {
+        color: var(--foreground);
+    }
+    [data-theme='nostromo'] .kp-segmented--chips > .kp-segmented__item[data-kp-segmented-tri='include'] {
+        box-shadow: var(--kp-sig-no-well);
+    }
+    [data-theme='nostromo'] .kp-segmented--chips > .kp-segmented__item[data-kp-segmented-tri='exclude'] {
+        box-shadow: inset 0 0 0 2px var(--destructive);
+    }
+    [data-theme='nostromo'] .kp-segmented__item[data-kp-segmented-tri='exclude'] > .kp-segmented__mark {
+        border-color: var(--destructive);
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        box-shadow: 0 0 5px hsl(from var(--destructive) h s l / 0.6);
+    }
+    [data-theme='nostromo'] .kp-segmented__summary {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    @media (hover: hover) {
+        [data-theme='nostromo'] .kp-segmented--chips:not([aria-disabled='true']) > .kp-segmented__item[data-kp-segmented-tri='include']:hover,
+        [data-theme='nostromo'] .kp-segmented--chips:not([aria-disabled='true']) > .kp-segmented__item[data-kp-segmented-tri='exclude']:hover {
+            box-shadow: var(--kp-sig-no-well);
+        }
+    }
+
+    /* ── Compare slider: the divider is a lit rail, the handle a lamp-lit knob, the labels tape ── */
+    [data-theme='nostromo'] .kp-compare {
+        --kp-compare-ink: var(--foreground);
+        --kp-compare-line: 3px;
+        border-color: var(--border-strong);
+        border-radius: var(--radius);
+        box-shadow: var(--kp-sig-no-raised);
+    }
+    [data-theme='nostromo'] .kp-compare__divider {
+        box-shadow: 0 0 0 1px var(--card);
+    }
+    [data-theme='nostromo'] .kp-compare__handle {
+        border-radius: var(--kp-sig-no-key);
+        background: var(--secondary);
+        box-shadow: var(--kp-sig-no-raised);
+    }
+    [data-theme='nostromo'] .kp-compare__handle::before {
+        content: '';
+        position: absolute;
+        inset-block-start: 0.3rem;
+        inset-inline-start: calc(50% - 0.2rem);
+        inline-size: 0.4rem;
+        block-size: 0.4rem;
+        border-radius: 50%;
+        background: var(--kp-sig-no-lens);
+        box-shadow: 0 0 5px hsl(from var(--kp-sig-no-led) h s l / 0.7);
+    }
+    [data-theme='nostromo'] .kp-compare__handle:active {
+        background: color-mix(in oklab, var(--secondary) 82%, var(--foreground));
+        box-shadow: var(--kp-sig-no-well);
+    }
+    [data-theme='nostromo'] .kp-compare__handle:focus-visible {
+        outline: 0;
+        box-shadow:
+            0 0 0 2px var(--background),
+            0 0 0 4px var(--foreground);
+    }
+    [data-theme='nostromo'] .kp-compare__label {
+        border: 0;
+        border-radius: var(--kp-sig-no-tape);
+        background: var(--foreground);
+        color: var(--primary-foreground);
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='nostromo'] .kp-compare__failed {
+        border: 3px solid var(--destructive);
+        box-sizing: border-box;
+    }
+}
+
+/* ── kpadopt4 repairs found at 390 px [kpadopt4] ──
+   A label set in this theme's wide letters needs more room than the aside leaves it in a narrow form: below 36rem of the
+   form's own width the aside stands under the control, on its own line, so no label ever runs into it. The countdown's
+   colon takes the room of a monospaced character. */
+@layer kp.signature {
+    @container kp-formrows (max-width: 36rem) {
+        [data-theme='nostromo'] .kp-formrow__label {
+            grid-column: 1 / -1;
+        }
+        [data-theme='nostromo'] .kp-formrow__aside {
+            grid-column: 1 / -1;
+            grid-row: 3;
+            justify-content: flex-start;
+        }
+    }
+    [data-theme='nostromo'] .kp-countdown__colon {
+        inline-size: 1ch;
+    }
+}
+
+/* ── A sort the page carries out [kpadopt4]: the sorted header has its lamp lit (G8, G9) ──
+   Every sortable header keeps an unlit lamp before its name (25 %), so the header never changes width when it is the
+   sorted one; the sorted header's lamp is the LED, lit, and the arrow after the name keeps the direction. A column that
+   cannot be sorted now has no lamp and no arrow. */
+@layer kp.signature {
+    [data-theme='nostromo'] .kp-table th[data-kp-sort]:not([aria-disabled='true'])::before,
+    [data-theme='nostromo'] .kp-table th[data-kp-sort][aria-sort='ascending']::before,
+    [data-theme='nostromo'] .kp-table th[data-kp-sort][aria-sort='descending']::before {
+        content: '';
+        display: inline-block;
+        inline-size: 0.4rem;
+        block-size: 0.4rem;
+        margin-inline-end: 0.4rem;
+        border-radius: 50%;
+        background: currentcolor;
+        opacity: 0.25;
+        vertical-align: 0.08em;
+    }
+    [data-theme='nostromo'] .kp-table th[data-kp-sort]:is([aria-sort='ascending'], [aria-sort='descending'])::before {
+        background: var(--kp-sig-no-lens);
+        box-shadow: 0 0 5px hsl(from var(--kp-sig-no-led) h s l / 0.7);
+        opacity: 1;
+    }
+    [data-theme='nostromo'] .kp-table th[data-kp-sort]:not([aria-disabled='true']):hover::before {
+        opacity: 0.7;
+    }
+    [data-theme='nostromo'] .kp-table th[data-kp-sort]:not([aria-disabled='true']):active::before {
+        opacity: 1;
+    }
+    [data-theme='nostromo'] .kp-table th[data-kp-sort]:is([aria-sort='ascending'], [aria-sort='descending'])::after {
+        font-family: var(--theme-font-mono);
+    }
+}
