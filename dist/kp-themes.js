@@ -3873,6 +3873,8 @@ function foldFrames(el2, style) {
     paddingTop: style.paddingTop,
     paddingBottom: style.paddingBottom
   };
+  const floor = sideways ? "minWidth" : "minHeight";
+  if (parseFloat(style[floor]) > 0) from[floor] = style[floor];
   const to = Object.fromEntries(Object.keys(from).map((k) => [k, "0px"]));
   const gapOf = parent && /flex/.test(parent.display) ? parseFloat(sideways ? parent.columnGap : parent.rowGap) || 0 : 0;
   if (gapOf > 0) {
@@ -3893,6 +3895,20 @@ function foldFrames(el2, style) {
     else if (near("nextElementSibling")) to[end] = `${-gapOf}px`;
   }
   return [from, to];
+}
+function foldReflows(el2, from, to) {
+  if (!("width" in from)) return false;
+  const chain = [];
+  for (let up = el2.parentElement; up && up !== document.body && chain.length < 6; up = up.parentElement) chain.push(up);
+  const before = chain.map((n) => n.getBoundingClientRect().height);
+  const dashed = (k) => k.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`);
+  const keys = Object.keys(to).map(dashed);
+  const kept = keys.map((k) => el2.style.getPropertyValue(k));
+  const values = Object.values(to);
+  keys.forEach((k, i) => el2.style.setProperty(k, values[i], "important"));
+  const after = chain.map((n) => n.getBoundingClientRect().height);
+  keys.forEach((k, i) => kept[i] ? el2.style.setProperty(k, kept[i]) : el2.style.removeProperty(k));
+  return after.some((h2, i) => Math.abs(h2 - before[i]) >= 1);
 }
 function exitsOf(actor, lines) {
   return (
@@ -3982,7 +3998,8 @@ function arriveAsReversedLeave(el2) {
   const pause = parseFloat(style.getPropertyValue("--kp-leave-pause")) || 0;
   const timing = foldTiming(style);
   const foldEase = foldCurve(style, ease);
-  const foldFor = size > 0 && !floats(el2, style) ? steppedDuration(el2, withoutOvershoot(foldEase), Math.max(size, lasts) * timing.grow) : 0;
+  const frames = size > 0 && !floats(el2, style) ? foldFrames(el2, style) : null;
+  const foldFor = frames && !foldReflows(el2, ...frames) ? steppedDuration(el2, withoutOvershoot(foldEase), Math.max(size, lasts) * timing.grow) : 0;
   const foldAt = onStepClock(el2, withoutOvershoot(foldEase), after ? lasts + pause : timing.start(lasts));
   const total = Math.max(lasts, ...exits.map((exit) => exit.end), foldFor ? foldAt + foldFor : 0);
   const plays = [];
@@ -4014,10 +4031,9 @@ function arriveAsReversedLeave(el2) {
   const set = parseFloat(style.getPropertyValue("--kp-leave-stagger"));
   const stagger = Number.isNaN(set) ? 0.5 : set;
   const lag = lasts <= 0 ? 0 : stagger > 0 && stagger < 1 ? Math.max(0, ...exits.map((exit) => reaches(exit.timing, exit.end, stagger))) : Math.max(lasts, ...exits.map((exit) => exit.end));
-  if (foldFor > 0) {
+  if (foldFor > 0 && frames) {
     el2.style.setProperty("overflow", "clip");
     el2.style.setProperty("box-sizing", "border-box");
-    const frames = foldFrames(el2, style);
     if ("height" in frames[0]) heightFolds.add(el2);
     plays.push(
       el2.animate(frames, {
@@ -4246,10 +4262,11 @@ async function leaveOne(el2, hide, exited, count = 1) {
   else if (lasts > 0 && stagger > 0 && stagger < 1) void partway(actor, stagger, exit, lines).then(exited);
   else void exit.then(exited);
   running2.push(exit);
-  if (size > 0 && !(el2 instanceof HTMLTableRowElement) && !floats(el2, style)) {
+  const foldTo = size > 0 && !(el2 instanceof HTMLTableRowElement) && !floats(el2, style) ? foldFrames(el2, style) : null;
+  if (foldTo && !foldReflows(el2, ...foldTo)) {
     el2.style.setProperty("overflow", "clip");
     el2.style.setProperty("box-sizing", "border-box");
-    const [from, to] = foldFrames(el2, style);
+    const [from, to] = foldTo;
     if ("height" in from) heightFolds.add(el2);
     const after = fold === "after";
     const pause = parseFloat(style.getPropertyValue("--kp-leave-pause")) || 0;

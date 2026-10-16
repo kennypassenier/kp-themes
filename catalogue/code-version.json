@@ -29,7 +29,7 @@
         "js/log.js": { "digest": "3fc853eb5c0c4dfa", "when": "[data-kp-source]" },
         "js/menu-button.js": { "digest": "64282f222ec10261", "when": "[data-kp-menu-button]" },
         "js/motion.js": {
-            "digest": "22f1dc62c65e9a93",
+            "digest": "dbb3c7daa5d6ae1d",
             "when": "dialog.kp-dialog, .kp-accordion__item, .kp-tabs, .kp-datatable, .kp-toasts, .kp-upload__list, .kp-combobox__list, .kp-tree, .kp-wizard, .kp-field, [data-kp-size-motion]"
         },
         "js/nav-fold.js": { "digest": "c2391bdac603aa3f", "when": "[data-kp-nav-fold]" },
