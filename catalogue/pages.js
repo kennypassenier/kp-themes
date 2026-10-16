@@ -108,11 +108,6 @@ export const PAGES = [
             // Kenny, 2026-10-16 (kp-adopt-rest, round 2): eight things the admin dashboard still draws itself (action tiles, status rows, the facet list, the coverage heat grid, the reachability matrix, bars in table cells with data-kp-sort-value, the week agenda, the run timeline), built in the package first as ONE demo, formal only until Kenny approves it.
             // Kenny, 2026-10-16 (kp-adopt-rest, round 3): six things the dashboard still drew itself, each an opt-in option of an approved component (nav separator, choice-filter value, timeline day buttons and series legend, the week's next-N phone list, facet identity patterns, the heat grid's jump to the latest), formal only.
             {
-                href: 'research/kpadopt3/demo.html',
-                label: 'Round 3: six opt-in options the dashboard still draws itself',
-                about: 'A separator in the folding bar, a choice filter that reads td[data-kp-filter-value], day buttons and a series legend on the run timeline, the week agenda’s next 8 as a phone list, facet swatches with an identity pattern, and End to the latest night on the heat grid. Formal first.',
-            },
-            {
                 href: 'research/kpadopt2/demo.html',
                 label: 'Round 2: the week agenda’s states, still open',
                 about: 'Eight components the dashboard draws itself, each section judged in one review dialog: .kp-action tiles, .kp-statusrow, .kp-facets, .kp-heat, .kp-matrix, .kp-bar-cell with the table’s data-kp-sort-value, .kp-week, .kp-gantt. Formal first.',
@@ -127,6 +122,12 @@ export const PAGES = [
         // Decided demos stay reachable from the Agenda's Done list, not from the side navigation (Kenny, 2026-10-13).
         nav: false,
         pages: [
+            // Decided 2026-10-16 15:21: Kenny approved kpadopt3 in full in round 1; recorded in research/kpadopt3/VERDICTS.json.
+            {
+                href: 'research/kpadopt3/demo.html',
+                label: 'Round 3: six opt-in options the dashboard still draws itself',
+                about: 'A separator in the folding bar, a choice filter that reads td[data-kp-filter-value], day buttons and a series legend on the run timeline, the week agenda’s next 8 as a phone list, facet swatches with an identity pattern, and End to the latest night on the heat grid. Formal first.',
+            },
             // Decided 2026-10-16 13:29: Kenny approved kpadopt-nav in full, the last pair (phantom's folding bar) in round 5; recorded in research/kpadopt-nav/VERDICTS.json.
             {
                 href: 'research/kpadopt-nav/demo.html',

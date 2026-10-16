@@ -1,5 +1,7 @@
 # research/kpadopt3: round 3 of the dashboard adoption, six opt-in options
 
+**Decided (2026-10-16 15:21):** Kenny approved all six options in formal in the review dialog (week-upcoming on the condition that its loading is phone-only, which it is). Recorded in `VERDICTS.json`; the demo is not offered again.
+
 The admin dashboard (homelab `admin/web`) still drew six things itself because kp-themes lacked them. Each is now an
 opt-in option of a component Kenny already approved; without the new attribute or field nothing changes. One page,
 [`demo.html`](demo.html), six sections, **formal only** (`data-review-themes="formal"`), one review topic (`kpadopt3`).
