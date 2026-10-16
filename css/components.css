@@ -7786,19 +7786,53 @@
         min-inline-size: 0;
     }
 
+    /* The range's title on the start side, the steps on the end side, on one line; the title in the theme's display
+     * face, as a page's section title. The steps are the package's segmented track (`.kp-segmented.kp-week__steps`,
+     * dressed by every register) used as a group of actions: nothing in it is chosen, so no plate; a chevron back,
+     * Today, a chevron on. Today is `aria-disabled` while the range already starts today.
+     * Knobs: --kp-week-title-size (1.25rem), --kp-week-step-pad (the chevrons' inline padding, --kp-space-sm). */
     .kp-week__nav {
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-        gap: var(--kp-space-sm, 0.5rem);
+        justify-content: space-between;
+        gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+        margin-block-end: var(--kp-space-sm, 0.5rem);
     }
 
     .kp-week__title {
         flex: 1 1 auto;
+        min-inline-size: 0;
         margin: 0;
-        font-size: var(--kp-text-base, 1rem);
+        font-family: var(--theme-font-display, inherit);
+        font-size: var(--kp-week-title-size, 1.25rem);
+        line-height: 1.25;
         font-variant-numeric: tabular-nums;
-        text-align: center;
+        text-align: start;
+    }
+
+    /* Two classes: the segmented track is written later in this layer and gives its items equal columns. */
+    .kp-segmented.kp-week__steps {
+        flex: none;
+        grid-auto-columns: auto;
+    }
+
+    .kp-segmented__item.kp-week__step--icon {
+        padding-inline: var(--kp-week-step-pad, var(--kp-space-sm, 0.5rem));
+    }
+
+    .kp-week__chevron {
+        inline-size: 1rem;
+        block-size: 1rem;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .kp-week__steps:dir(rtl) .kp-week__chevron {
+        scale: -1 1;
     }
 
     .kp-week__frame {
@@ -8126,15 +8160,9 @@
             padding-block-end: 0;
         }
 
-        .kp-week__nav {
-            display: grid;
-            grid-template-columns: auto auto auto;
-            justify-content: start;
-        }
-
         .kp-week__title {
-            grid-column: 1 / -1;
-            grid-row: 1;
+            flex-basis: 100%;
+            font-size: var(--kp-week-title-size-narrow, 1.0625rem);
         }
 
         .kp-week__axis,

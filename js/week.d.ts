@@ -97,6 +97,7 @@ export type WeekModel = {
     cols: WeekDay[];
     stateLine: HTMLElement;
     title: HTMLElement | null;
+    today: HTMLButtonElement | null;
     legend: HTMLElement;
     pills: Map<string, HTMLButtonElement>;
     timer: number;

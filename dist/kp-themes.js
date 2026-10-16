@@ -21384,6 +21384,22 @@ function timeOfDay(c, ms) {
   const w = wallTime(ms, c.zone);
   return { hhmm: `${two3(w.hour)}:${two3(w.minute)}`, at: (w.hour * 60 + w.minute) / 1440 };
 }
+function stepButton(doc, name, path) {
+  const button = make4(doc, "button", "kp-segmented__item kp-week__step kp-week__step--icon");
+  button.type = "button";
+  button.setAttribute("aria-label", name);
+  button.title = name;
+  const svg = doc.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("viewBox", "0 0 24 24");
+  svg.setAttribute("aria-hidden", "true");
+  svg.setAttribute("focusable", "false");
+  svg.setAttribute("class", "kp-week__chevron");
+  const line = doc.createElementNS("http://www.w3.org/2000/svg", "path");
+  line.setAttribute("d", path);
+  svg.append(line);
+  button.append(svg);
+  return button;
+}
 function build(c) {
   const doc = c.el.ownerDocument;
   const s2 = c.strings;
@@ -21391,11 +21407,6 @@ function build(c) {
   const parts = [];
   if (c.el.hasAttribute("data-kp-week-nav")) {
     const nav = make4(doc, "div", "kp-week__nav");
-    nav.setAttribute("role", "group");
-    nav.setAttribute("aria-label", s2.weekGroup);
-    const prev = make4(doc, "button", "kp-button kp-button--sm", s2.weekPrev);
-    prev.type = "button";
-    prev.dataset.kpWeekPrev = "";
     const title = make4(
       doc,
       /** @type {'h2'} */
@@ -21403,14 +21414,20 @@ function build(c) {
       "kp-week__title"
     );
     title.setAttribute("aria-live", "polite");
-    const next = make4(doc, "button", "kp-button kp-button--sm", s2.weekNext);
-    next.type = "button";
-    next.dataset.kpWeekNext = "";
-    const today = make4(doc, "button", "kp-button kp-button--sm", s2.weekToday);
+    const steps = make4(doc, "div", "kp-segmented kp-week__steps");
+    steps.setAttribute("role", "group");
+    steps.setAttribute("aria-label", s2.weekGroup);
+    const prev = stepButton(doc, s2.previous, "M15 18l-6-6 6-6");
+    prev.dataset.kpWeekPrev = "";
+    const today = make4(doc, "button", "kp-segmented__item kp-week__step", s2.weekToday);
     today.type = "button";
     today.dataset.kpWeekToday = "";
-    nav.append(prev, title, next, today);
+    const next = stepButton(doc, s2.next, "M9 6l6 6-6 6");
+    next.dataset.kpWeekNext = "";
+    steps.append(prev, today, next);
+    nav.append(title, steps);
     c.title = title;
+    c.today = today;
     c.decorate?.(prev, { kind: "prev", host: c.el, key: keyOf3(c.el) });
     c.decorate?.(next, { kind: "next", host: c.el, key: keyOf3(c.el) });
     c.decorate?.(today, { kind: "today", host: c.el, key: keyOf3(c.el) });
@@ -21481,6 +21498,9 @@ function buildDays(c) {
   if (c.title) {
     const last = c.cols[c.cols.length - 1]?.iso ?? c.start;
     c.title.textContent = `${dm(c.start, true)} \u2013 ${dm(last, true)}`;
+  }
+  if (c.today) {
+    c.today.setAttribute("aria-disabled", String(c.start === today));
   }
 }
 function pillFor(c, e) {
@@ -21734,6 +21754,7 @@ function attachWeeks(root = document, options = {}) {
       cols: [],
       stateLine: el4,
       title: null,
+      today: null,
       legend: el4,
       pills: /* @__PURE__ */ new Map(),
       timer: 0,
@@ -21794,7 +21815,7 @@ function attachWeeks(root = document, options = {}) {
     };
     const onNav = (event) => {
       const target = event.target instanceof Element ? event.target.closest("button") : null;
-      if (!target) return;
+      if (!target || target.getAttribute("aria-disabled") === "true") return;
       let next = c.start;
       if (target.hasAttribute("data-kp-week-prev")) next = shiftDay(c.start, -c.days);
       else if (target.hasAttribute("data-kp-week-next")) next = shiftDay(c.start, c.days);
