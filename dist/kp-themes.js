@@ -86,6 +86,7 @@ var init_strings = __esm({
       stepDone: "done",
       stepFailed: "failed",
       stepSkipped: "skipped",
+      stepCurrent: "current",
       stepAnnounce: (title, state) => `${title}: ${state}`,
       // A status row's states, its Retry and its announcement (js/statusrow.js).
       statusOk: "ok",
@@ -15905,6 +15906,7 @@ function buildSteplist(rows, { label } = {}) {
     const item = span2("kp-steplist__item", "li");
     item.setAttribute(STEP_ID_ATTRIBUTE, row.id ?? String(index));
     item.dataset.state = known(row.state);
+    if (row.tone) item.dataset.kpTone = String(row.tone);
     const body = span2("kp-steplist__body");
     body.append(span2("kp-steplist__title"), span2("kp-steplist__note"));
     item.append(span2("kp-steplist__mark"), body, span2("kp-steplist__time", "time"));
@@ -15941,7 +15943,7 @@ function syncItem(item, { announce: announce2 = false } = {}) {
     body.append(word);
   }
   word.textContent = `, ${stateWord(state)}`;
-  if (state === "running") item.setAttribute("aria-current", "step");
+  if (state === "running" || state === "current") item.setAttribute("aria-current", "step");
   else item.removeAttribute("aria-current");
   const previous = synced2.get(item);
   synced2.set(item, state);
@@ -16028,7 +16030,7 @@ var init_steplist = __esm({
     STEP_ID_ATTRIBUTE = "data-kp-step-id";
     STEPLIST_EVENT = "kp-steplist-step";
     STEP_STATES = /** @type {const} */
-    ["pending", "running", "done", "failed", "skipped"];
+    ["pending", "running", "done", "failed", "skipped", "current"];
     synced2 = /* @__PURE__ */ new WeakMap();
     pending = /* @__PURE__ */ new WeakMap();
     known = (state) => STEP_STATES.includes(
@@ -16040,7 +16042,7 @@ var init_steplist = __esm({
     ) : "pending";
     stateWord = (state) => {
       const s2 = getStrings();
-      return { pending: s2.stepPending, running: s2.stepRunning, done: s2.stepDone, failed: s2.stepFailed, skipped: s2.stepSkipped }[state];
+      return { pending: s2.stepPending, running: s2.stepRunning, done: s2.stepDone, failed: s2.stepFailed, skipped: s2.stepSkipped, current: s2.stepCurrent }[state];
     };
     span2 = (className, tag = "span") => {
       const el4 = document.createElement(tag);

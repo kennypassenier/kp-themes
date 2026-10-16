@@ -3090,10 +3090,24 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
 </ol>
 `,
             },
+            {
+                title: 'A journey: where an application stands',
+                why: 'The same list laid along one path. `current` is the step it stands at now, reached steps are `done`, a closed path ends with a `failed` step; `data-kp-tone` gives a step its own colour and the time column holds the date it was reached. Under 36rem of its own width the path turns to a column.',
+                markup: `
+<ol class="kp-steplist kp-steplist--journey" aria-label="Where the application stands">
+<li class="kp-steplist__item" data-state="done" data-kp-tone="1"><span class="kp-steplist__mark" aria-hidden="true"></span><span class="kp-steplist__body"><span class="kp-steplist__title">Draft</span></span><time class="kp-steplist__time">28/09</time></li>
+<li class="kp-steplist__item" data-state="done" data-kp-tone="2"><span class="kp-steplist__mark" aria-hidden="true"></span><span class="kp-steplist__body"><span class="kp-steplist__title">Sent</span></span><time class="kp-steplist__time">02/10</time></li>
+<li class="kp-steplist__item" data-state="current" data-kp-tone="3"><span class="kp-steplist__mark" aria-hidden="true"></span><span class="kp-steplist__body"><span class="kp-steplist__title">Interview</span></span><time class="kp-steplist__time">09/10</time></li>
+<li class="kp-steplist__item" data-state="pending"><span class="kp-steplist__mark" aria-hidden="true"></span><span class="kp-steplist__body"><span class="kp-steplist__title">Offer</span></span><time class="kp-steplist__time"></time></li>
+</ol>
+`,
+            },
         ],
         variants: [
-            { name: 'data-state', what: '`pending`, `running`, `done`, `failed` or `skipped`: the mark, the colour and the word follow it.' },
-            { name: '.kp-steplist__time', what: 'How long the step took, as the page prints it.' },
+            { name: 'data-state', what: '`pending`, `running`, `done`, `failed`, `skipped` or `current` (the step a journey stands at now: a ring with a dot, no spinner): the mark, the colour and the word follow it.' },
+            { name: '.kp-steplist--journey', what: 'The steps side by side on one path, joined by a rule drawn in the step’s colour once reached; a column under 36rem of its own width.' },
+            { name: 'data-kp-tone', what: 'A step’s own colour, `1` to `5` (`--chart-N`), or any value with the page’s own step colour set on the item: the reached mark and the rule into it wear it.' },
+            { name: '.kp-steplist__time', what: 'How long the step took, as the page prints it; in a journey, the date it was reached.' },
             { name: '.kp-steplist__note', what: 'The one-line description under the title.' },
         ],
         accessibility: [

@@ -60,6 +60,7 @@
  * @property {string} stepDone  A finished step
  * @property {string} stepFailed  A step that failed
  * @property {string} stepSkipped  A step that was left out
+ * @property {string} stepCurrent  The step a journey stands at now, neither running nor done (`data-state="current"`) [kpadopt4]
  * @property {(title: string, state: string) => string} stepAnnounce  What the list's status region says when a step changes, "Pull the images: running"
  * @property {string} statusOk  A status row that is fine, as a screen reader hears it (js/statusrow.js)
  * @property {string} statusLoading  A status row still being read
@@ -449,6 +450,7 @@ export const DEFAULT_STRINGS = Object.freeze({
     stepDone: 'done',
     stepFailed: 'failed',
     stepSkipped: 'skipped',
+    stepCurrent: 'current',
     stepAnnounce: (title, state) => `${title}: ${state}`,
     // A status row's states, its Retry and its announcement (js/statusrow.js).
     statusOk: 'ok',

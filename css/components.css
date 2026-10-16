@@ -8036,6 +8036,169 @@
         content: var(--kp-glyph-skipped, '–');
     }
 
+    /* The step a process stands at now, neither running nor done [kpadopt4]: a ring with a dot, the title in weight. */
+    .kp-steplist__item[data-state='current'] {
+        border-color: var(--kp-step-tone, var(--primary));
+    }
+
+    .kp-steplist__item[data-state='current'] .kp-steplist__title {
+        font-weight: 600;
+    }
+
+    .kp-steplist__item[data-state='current'] .kp-steplist__mark {
+        border-color: var(--kp-step-tone, var(--primary));
+        background: radial-gradient(circle, var(--kp-step-tone, var(--primary)) 0 34%, transparent 38%);
+    }
+
+    .kp-steplist__item[data-kp-tone='1'] {
+        --kp-step-tone: var(--chart-1);
+    }
+
+    .kp-steplist__item[data-kp-tone='2'] {
+        --kp-step-tone: var(--chart-2);
+    }
+
+    .kp-steplist__item[data-kp-tone='3'] {
+        --kp-step-tone: var(--chart-3);
+    }
+
+    .kp-steplist__item[data-kp-tone='4'] {
+        --kp-step-tone: var(--chart-4);
+    }
+
+    .kp-steplist__item[data-kp-tone='5'] {
+        --kp-step-tone: var(--chart-5);
+    }
+
+    /* A step with its own colour (`data-kp-tone` 1 to 5, or any value with `--kp-step-tone` set by the page) wears it when
+ * reached; the tick is drawn in the card's ground on it. */
+    .kp-steplist__item[data-kp-tone][data-state='done'] .kp-steplist__mark {
+        border-color: var(--kp-step-tone);
+        background: var(--kp-step-tone);
+        color: var(--card);
+    }
+
+    /* A journey [kpadopt4] (`.kp-steplist--journey`): the steps side by side on one path, a mark over each name, the date it
+ * was reached under it, joined by a rule that is drawn in the step's colour once the step is reached. Under 36rem of its
+ * own width the path turns to a column, the rule down the marks. Every step has the same width, so a long name wraps
+ * under its own mark and never reaches the next. Knob: `--kp-journey-rule` (2px). */
+    .kp-steplist--journey {
+        container: kp-journey / inline-size;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0;
+    }
+
+    .kp-steplist--journey > .kp-steplist__item {
+        position: relative;
+        flex: 1 1 0;
+        min-inline-size: 0;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto auto auto;
+        justify-items: center;
+        align-content: start;
+        gap: var(--kp-space-xs, 0.25rem);
+        padding: 0 var(--kp-space-xs, 0.25rem);
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        text-align: center;
+    }
+
+    .kp-steplist--journey .kp-steplist__mark {
+        position: relative;
+        z-index: 1;
+        background-color: var(--card);
+    }
+
+    .kp-steplist--journey .kp-steplist__body {
+        justify-items: center;
+    }
+
+    .kp-steplist--journey .kp-steplist__title {
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: break-word;
+        hyphens: auto;
+    }
+
+    .kp-steplist--journey .kp-steplist__time {
+        min-inline-size: 0;
+        text-align: center;
+    }
+
+    .kp-steplist--journey .kp-steplist__time:empty {
+        display: none;
+    }
+
+    /* The rule into a step, from the previous mark to this one. */
+    .kp-steplist--journey > .kp-steplist__item + .kp-steplist__item::before {
+        content: '';
+        position: absolute;
+        inset-block-start: calc(var(--kp-steplist-mark, 1.375rem) / 2 - var(--kp-journey-rule, 2px) / 2);
+        inset-inline: calc(-50% + var(--kp-steplist-mark, 1.375rem) / 2) calc(50% + var(--kp-steplist-mark, 1.375rem) / 2);
+        block-size: var(--kp-journey-rule, 2px);
+        background: var(--border-strong);
+    }
+
+    .kp-steplist--journey > .kp-steplist__item:is([data-state='done'], [data-state='current'])::before {
+        background: var(--kp-step-tone, var(--success));
+    }
+
+    .kp-steplist--journey > .kp-steplist__item[data-state='failed']::before {
+        background: repeating-linear-gradient(90deg, var(--destructive) 0 0.375rem, transparent 0.375rem 0.625rem);
+    }
+
+    .kp-steplist--journey > .kp-steplist__item:not([data-state='current']) .kp-steplist__title {
+        font-weight: 400;
+    }
+
+    .kp-steplist--journey > .kp-steplist__item[data-state='current'] .kp-steplist__title {
+        font-weight: 600;
+    }
+
+    @container kp-journey (max-width: 36rem) {
+        .kp-steplist--journey > .kp-steplist__item {
+            flex-basis: 100%;
+            grid-template-columns: var(--kp-steplist-mark, 1.375rem) minmax(0, 1fr) auto;
+            grid-template-rows: auto;
+            justify-items: stretch;
+            align-items: start;
+            gap: var(--kp-space-md, 0.75rem);
+            padding: 0 0 var(--kp-space-md, 0.75rem);
+            text-align: start;
+        }
+
+        .kp-steplist--journey .kp-steplist__body {
+            justify-items: start;
+        }
+
+        .kp-steplist--journey .kp-steplist__time {
+            text-align: end;
+        }
+
+        /* Down the column the rule leaves each mark for the next one, in this step's colour once the next is reached. */
+        .kp-steplist--journey > .kp-steplist__item + .kp-steplist__item::before {
+            content: none;
+        }
+
+        .kp-steplist--journey > .kp-steplist__item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            inset-block: var(--kp-steplist-mark, 1.375rem) 0;
+            inset-inline-start: calc(var(--kp-steplist-mark, 1.375rem) / 2 - var(--kp-journey-rule, 2px) / 2);
+            inline-size: var(--kp-journey-rule, 2px);
+            background: var(--border-strong);
+        }
+
+        .kp-steplist--journey > .kp-steplist__item:has(+ .kp-steplist__item:is([data-state='done'], [data-state='current']))::after {
+            background: var(--kp-step-tone, var(--success));
+        }
+
+        .kp-steplist--journey > .kp-steplist__item:has(+ .kp-steplist__item[data-state='failed'])::after {
+            background: repeating-linear-gradient(180deg, var(--destructive) 0 0.25rem, transparent 0.25rem 0.4375rem);
+        }
+    }
+
     /* --- Week agenda: seven days, the items of the week placed in time -----
  * `section.kp-week[data-kp-week]` (js/week.js). A grid of an hour axis and
  * one column per day; every item is a pill at its time of day. The column's

@@ -29,6 +29,14 @@
 //     list itself is not a live region: it would read every time and every
 //     note again. A burst of changes in one tick is one announcement.
 //
+// A journey [kpadopt4]: `.kp-steplist--journey` lays the steps side by side
+// on one path (a column under 36rem of its own width), the way an
+// application goes draft, sent, interview, offer. `data-state="current"` is
+// the step it stands at now (no spinner: nothing is running), a reached step
+// is `done`, a closed path ends with a `failed` step (rejected, withdrawn),
+// and `data-kp-tone="1"` … `"5"` (or `--kp-step-tone`) gives a step its own
+// colour. The time column holds the date the step was reached.
+//
 // Change a step with setStep(list, 'pull', { state: 'running' }); no framework
 // is needed, and a framework that sets `data-state` itself is followed too.
 // Every word it adds is in js/strings.js.
@@ -42,16 +50,17 @@ export const STEP_ID_ATTRIBUTE = 'data-kp-step-id';
 /** Fired on the list, bubbling, when a step changed state after attach: `{ item, id, state, previous }`. */
 export const STEPLIST_EVENT = 'kp-steplist-step';
 /** The states a step can be in. */
-export const STEP_STATES = /** @type {const} */ (['pending', 'running', 'done', 'failed', 'skipped']);
+export const STEP_STATES = /** @type {const} */ (['pending', 'running', 'done', 'failed', 'skipped', 'current']);
 
 /**
- * @typedef {'pending' | 'running' | 'done' | 'failed' | 'skipped'} StepState
+ * @typedef {'pending' | 'running' | 'done' | 'failed' | 'skipped' | 'current'} StepState
  * @typedef {object} StepRow
  * @property {string} [id] names the step for setStep(); defaults to its index
  * @property {string} title
  * @property {string} [note] the one-line description under the title; give every step one, so a note arriving later moves nothing
  * @property {StepState} [state] pending when absent
- * @property {string} [time] how long it took, as the page prints it
+ * @property {string} [time] how long it took, as the page prints it (in a journey: the date the step was reached)
+ * @property {1 | 2 | 3 | 4 | 5} [tone] the step's own colour, `--chart-1` … `--chart-5` (`data-kp-tone`) [kpadopt4]
  */
 
 /** The state each item was last synced to, to tell a change from a first sync. @type {WeakMap<Element, string>} */
@@ -65,7 +74,9 @@ const known = (state) => (STEP_STATES.includes(/** @type {any} */ (state)) ? /**
 /** @param {StepState} state */
 const stateWord = (state) => {
     const s = getStrings();
-    return { pending: s.stepPending, running: s.stepRunning, done: s.stepDone, failed: s.stepFailed, skipped: s.stepSkipped }[state];
+    return { pending: s.stepPending, running: s.stepRunning, done: s.stepDone, failed: s.stepFailed, skipped: s.stepSkipped, current: s.stepCurrent }[
+        state
+    ];
 };
 
 /** @param {string} className @param {string} [tag] */
@@ -91,6 +102,7 @@ export function buildSteplist(rows, { label } = {}) {
         const item = span('kp-steplist__item', 'li');
         item.setAttribute(STEP_ID_ATTRIBUTE, row.id ?? String(index));
         item.dataset.state = known(row.state);
+        if (row.tone) item.dataset.kpTone = String(row.tone);
         const body = span('kp-steplist__body');
         body.append(span('kp-steplist__title'), span('kp-steplist__note'));
         item.append(span('kp-steplist__mark'), body, span('kp-steplist__time', 'time'));
@@ -143,7 +155,7 @@ function syncItem(item, { announce = false } = {}) {
     }
     // ", done" after the title: the comma makes the reader pause.
     word.textContent = `, ${stateWord(state)}`;
-    if (state === 'running') item.setAttribute('aria-current', 'step');
+    if (state === 'running' || state === 'current') item.setAttribute('aria-current', 'step');
     else item.removeAttribute('aria-current');
 
     const previous = synced.get(item);

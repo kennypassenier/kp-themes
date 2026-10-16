@@ -4403,3 +4403,68 @@
     }
 }
 /* ── end flows and records: timeline ── */
+
+/* ── Flows and records [kpadopt4]: the journey ── */
+@layer kp.register {
+    /* Formal: a journey is a ruled path through the ledger. The steps stand on no plate and under no hairline (the step list's
+       ledger lines are for a list, not a path); the rule into a reached step is ruled in navy (G5: navy does every acting),
+       or in the step's own colour, square-ended (G6); a step to come is joined by the faint ledger line (G7). The step it
+       stands at is framed by the double rule, round (G7, G12: a hairline ring with a thinner ring inside it); a closed path
+       ends in red ink (G5, G8). Names are labels in small capitals, dates in tabular figures (G18). */
+    [data-theme='formal'] .kp-steplist--journey > .kp-steplist__item {
+        border: 0;
+        background: transparent;
+    }
+
+    [data-theme='formal'] .kp-steplist--journey > .kp-steplist__item + .kp-steplist__item::before {
+        background: var(--border);
+    }
+
+    [data-theme='formal'] .kp-steplist--journey > .kp-steplist__item:is([data-state='done'], [data-state='current'])::before {
+        background: var(--kp-step-tone, var(--primary));
+    }
+
+    [data-theme='formal'] .kp-steplist--journey .kp-steplist__item[data-state='done']:not([data-kp-tone]) .kp-steplist__mark {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='formal'] .kp-steplist--journey .kp-steplist__item[data-state='current'] .kp-steplist__mark {
+        border: 1px solid var(--kp-step-tone, var(--primary));
+        background: var(--card);
+        box-shadow:
+            inset 0 0 0 2px var(--card),
+            inset 0 0 0 3px var(--kp-step-tone, var(--primary)),
+            inset 0 0 0 5px var(--card),
+            inset 0 0 0 20px var(--kp-step-tone, var(--primary));
+    }
+
+    [data-theme='formal'] .kp-steplist--journey .kp-steplist__title {
+        font-family: var(--theme-font-body);
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+        font-size: var(--kp-text-base, 0.9375rem);
+    }
+
+    [data-theme='formal'] .kp-steplist--journey .kp-steplist__time {
+        font-variant-numeric: tabular-nums lining-nums;
+    }
+
+    @container kp-journey (max-width: 36rem) {
+        [data-theme='formal'] .kp-steplist--journey > .kp-steplist__item:not(:last-child)::after {
+            background: var(--border);
+        }
+
+        [data-theme='formal']
+            .kp-steplist--journey
+            > .kp-steplist__item:has(+ .kp-steplist__item:is([data-state='done'], [data-state='current']))::after {
+            background: var(--kp-step-tone, var(--primary));
+        }
+
+        [data-theme='formal'] .kp-steplist--journey > .kp-steplist__item:has(+ .kp-steplist__item[data-state='failed'])::after {
+            background: repeating-linear-gradient(180deg, var(--destructive) 0 0.25rem, transparent 0.25rem 0.4375rem);
+        }
+    }
+}
+/* ── end flows and records: journey ── */
