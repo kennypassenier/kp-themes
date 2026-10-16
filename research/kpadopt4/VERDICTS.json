@@ -221,6 +221,38 @@
                 }
             ],
             "generalNote": "New standing rule (Kenny, in the bullets note): failed, empty (\"nothing due\") and loading states fill the component's full normal footprint, with a normal-size action (Retry), for every component from now on where applicable."
+        },
+        {
+            "round": "2",
+            "page": "2026-10-16-r2",
+            "allJudged": false,
+            "comment": "Kenny, 2026-10-17 00:31: 6 of 6 judged in formal, 6 approved. Every section of the demo is now approved in formal; the eleven other themes are not judged yet and stay open.",
+            "approved": [
+                {
+                    "item": "stackbar",
+                    "theme": "formal"
+                },
+                {
+                    "item": "bullets",
+                    "theme": "formal"
+                },
+                {
+                    "item": "uptime",
+                    "theme": "formal"
+                },
+                {
+                    "item": "journey",
+                    "theme": "formal"
+                },
+                {
+                    "item": "contact",
+                    "theme": "formal"
+                },
+                {
+                    "item": "compare",
+                    "theme": "formal"
+                }
+            ]
         }
     ]
 }

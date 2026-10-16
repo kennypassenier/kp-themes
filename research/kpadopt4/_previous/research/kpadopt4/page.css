@@ -1,6 +1,6 @@
 /* research/kpadopt4: the one page of the fourth adoption round. Everything with a kp- class is the package; these kd-
    rules lay out the page around the topics (the intro, the topic list, a heading per topic). Each source's sections keep
-   their own rules: data.css (dd-), rows.css (kr-), flows.css (fd-), recipes.css (kc-), ideas.css (ki-). */
+   their own rules: data.css (dd-), flows.css (fd-), ideas.css (ki-); round 1 also had rows.css (kr-) and recipes.css (kc-). */
 
 .kd-page {
     display: grid;
@@ -47,4 +47,20 @@
     padding-block-start: var(--kp-space-md, 1rem);
     border-block-start: 2px solid var(--border);
     scroll-margin-block-start: var(--kp-space-xl, 2rem);
+}
+
+/* Round 2: "How this differs" under a section that stands beside the component it was asked about. */
+.kd-differs {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+.kd-differs .kp-table th[scope='row'] {
+    white-space: nowrap;
+}
+
+.kd-answer {
+    max-inline-size: 80ch;
+    margin: 0;
 }

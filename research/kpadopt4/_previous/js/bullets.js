@@ -26,8 +26,13 @@
 // States: `loading` keeps the rows' geometry as waiting rows and lays the
 // data table's busy card over them (js/busy-card.js); the rows are drawn once
 // the card has gone. `empty` says why there is nothing (`emptyTitle`,
-// `emptyText`), `error` says what failed (`message`) with a Retry that fires
-// `kp-bullets-retry`.
+// `emptyText`), `error` says what failed (`message`) with a Retry, a
+// normal-size kp-button, that fires `kp-bullets-retry` (`retry: false` leaves
+// it out). Both are the package's empty state (`.kp-empty`, each theme's own)
+// filling the list's whole footprint, the height it had with its rows, the
+// words and the button centred in it, so nothing under it moves (Kenny,
+// 2026-10-16: failed, empty and loading fill the component's full normal
+// size). A list that never had rows takes `--kp-bullets-state-min`.
 
 import { getStrings } from './strings.js';
 import { setMeter } from './kpi.js';
@@ -63,13 +68,14 @@ export const BULLETS_RETRY_EVENT = 'kp-bullets-retry';
  * @property {'worst' | 'none'} [sort]  default 'worst'
  * @property {'ready' | 'loading' | 'empty' | 'error'} [state]
  * @property {string} [message]         the sentence of a failed list
+ * @property {boolean} [retry]          false leaves Retry out of a failed list (a read the page cannot repeat)
  * @property {string} [emptyTitle]
  * @property {string} [emptyText]
  * @property {number} [loadingRows]     how many waiting rows (default: the rows shown last, else 3)
  * @property {string} [loadingWords]    what the busy card says
  */
 
-/** @type {WeakMap<HTMLElement, { rows: number, leads: boolean, card: import('./busy-card.js').BusyCard | null, drawn: boolean, pending: BulletsSpec | null, wired: boolean }>} */
+/** @type {WeakMap<HTMLElement, { rows: number, leads: boolean, card: import('./busy-card.js').BusyCard | null, drawn: boolean, pending: BulletsSpec | null, wired: boolean, height: number }>} */
 const MEMORY = new WeakMap();
 
 /** @param {Document} doc @param {string} className @param {string} [tag] */
@@ -97,7 +103,7 @@ export function bulletTone(value, threshold, bad) {
  * @param {BulletsSpec} spec
  */
 export function setBullets(el, spec) {
-    const memory = MEMORY.get(el) ?? { rows: 3, leads: false, card: null, drawn: false, pending: null, wired: false };
+    const memory = MEMORY.get(el) ?? { rows: 3, leads: false, card: null, drawn: false, pending: null, wired: false, height: 0 };
     MEMORY.set(el, memory);
     el.classList.add('kp-bullets');
     el.setAttribute('data-kp-bullets', '');
@@ -185,34 +191,47 @@ function draw(el, spec, memory) {
     const focusedKey = /** @type {HTMLElement | null} */ (el.querySelector('.kp-bullets__link:focus'))?.dataset.kpBulletsKey;
 
     if (state === 'error' || state === 'empty' || rows.length === 0) {
-        el.setAttribute('data-kp-state', state === 'error' ? 'error' : 'empty');
-        const note = make(doc, 'kp-bullets__note', 'div');
+        const failed = state === 'error';
+        el.setAttribute('data-kp-state', failed ? 'error' : 'empty');
+        // The note takes the list's whole footprint: the height the rows (or the note before it) had.
         const was = el.querySelector(':scope > :is(.kp-bullets__list, .kp-bullets__note)')?.getBoundingClientRect().height ?? 0;
-        if (was > 0) note.style.minBlockSize = `${was}px`;
-        note.setAttribute('role', 'status');
-        const title = make(doc, '', 'strong');
-        title.textContent = state === 'error' ? (spec.message ?? strings.bulletsError) : (spec.emptyTitle ?? strings.bulletsEmpty);
+        memory.height = Math.max(was, memory.height);
+        // A focused Retry that goes with its note leaves the focus on the list, so the keyboard keeps its place.
+        const refocus = el.querySelector(':scope > .kp-bullets__note')?.contains(doc.activeElement) ?? false;
+        const note = make(doc, 'kp-empty kp-bullets__note', 'div');
+        if (memory.height > 0) note.style.minBlockSize = `${memory.height}px`;
+        if (failed) note.setAttribute('data-kp-tone', 'error');
+        note.setAttribute('role', failed ? 'alert' : 'status');
+        const title = make(doc, 'kp-empty__title kp-bullets__note-title', 'p');
+        title.textContent = failed ? (spec.message ?? strings.bulletsError) : (spec.emptyTitle ?? strings.bulletsEmpty);
         note.append(title);
-        if (state !== 'error' && spec.emptyText) {
-            const text = make(doc, '', 'span');
+        if (!failed && spec.emptyText) {
+            const text = make(doc, 'kp-empty__body kp-bullets__note-text', 'p');
             text.textContent = spec.emptyText;
             note.append(text);
         }
-        if (state === 'error') {
-            const retry = make(doc, 'kp-button kp-button--sm', 'button');
+        if (failed && spec.retry !== false) {
+            const retry = make(doc, 'kp-button kp-bullets__retry', 'button');
             retry.setAttribute('type', 'button');
             retry.setAttribute('data-kp-bullets-retry', '');
             retry.textContent = strings.bulletsRetry;
             note.append(retry);
         }
         el.replaceChildren(note);
+        if (refocus) {
+            el.tabIndex = -1;
+            el.focus({ preventScroll: true });
+        }
         return;
     }
 
     el.setAttribute('data-kp-state', 'ready');
     const threshold = spec.threshold;
     const max = spec.max ?? threshold * 2;
-    const format = spec.format ?? ((/** @type {number} */ value) => new Intl.NumberFormat(/** @type {HTMLElement | null} */ (el.closest('[lang]'))?.lang || undefined).format(value));
+    const format =
+        spec.format ??
+        ((/** @type {number} */ value) =>
+            new Intl.NumberFormat(/** @type {HTMLElement | null} */ (el.closest('[lang]'))?.lang || undefined).format(value));
     if (spec.sort !== 'none') rows.sort((a, b) => (b.value ?? -Infinity) - (a.value ?? -Infinity));
     memory.rows = rows.length;
     memory.leads = rows.some((row) => row.lead !== undefined);
@@ -275,8 +294,11 @@ function draw(el, spec, memory) {
         list.append(li);
     }
     el.replaceChildren(list);
+    memory.height = list.getBoundingClientRect().height;
     if (focusedKey !== undefined)
-        /** @type {HTMLElement | null} */ ([...el.querySelectorAll('.kp-bullets__link')].find((link) => /** @type {HTMLElement} */ (link).dataset.kpBulletsKey === focusedKey))?.focus();
+        /** @type {HTMLElement | null} */ (
+            [...el.querySelectorAll('.kp-bullets__link')].find((link) => /** @type {HTMLElement} */ (link).dataset.kpBulletsKey === focusedKey)
+        )?.focus();
 }
 
 /**

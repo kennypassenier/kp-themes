@@ -89,6 +89,7 @@
  * @property {string} stackbarLoading  A share bar being read
  * @property {string} stackbarEmpty  A share bar with nothing read yet
  * @property {string} stackbarError  A share bar that could not be read
+ * @property {string} stackbarRetry  The Retry button of a failed share bar
  * @property {string} bulletsLoading  What the busy card over a bullet list says (js/bullets.js)
  * @property {string} bulletsEmpty  A bullet list with no rows, when the page gives no reason
  * @property {string} bulletsError  A bullet list that could not be read, when the page gives no sentence
@@ -431,6 +432,8 @@
  * @property {(state: string) => string} uptimeStateWord  A period's state as a word: up, degraded, down, no data [kpadopt4-ideas]
  * @property {(label: string, state: string, percent: string | null, incidents: number | null) => string} uptimeCell  A cell's name and hover card: its period, its state and its figures [kpadopt4-ideas]
  * @property {(shown: number, total: number) => string} uptimeShown  Under a strip too narrow for every cell: "55 of 90 shown" [kpadopt4-ideas]
+ * @property {(percent: string | null, incidents: number | null) => string} uptimeInfoFigures  A period's figures in its quick info: "99.4% up · 1 incident" [kpadopt4 r2]
+ * @property {(label: string) => string} uptimeOpen  The link in a period's quick info to the period's own page: "Open 14/10/2026" [kpadopt4 r2]
  * @property {(name: string) => string} typeConfirmLabel  The typed confirmation's label; the name is set in as code where this sentence puts it (js/components.js) [kpadopt4-ideas]
  * @property {string} typeConfirmRuleExact  Its rule when capitals count [kpadopt4-ideas]
  * @property {string} typeConfirmRuleAnyCase  Its rule when capitals do not count (`data-kp-confirm-case="any"`) [kpadopt4-ideas]
@@ -483,6 +486,8 @@
  * @property {(before: string, after: string) => string} compareSlider  The divider's name for a screen reader [kpadopt4-ideas]
  * @property {(percent: number, before: string, after: string) => string} compareValue  Where the divider stands: "40% Before, 60% After" [kpadopt4-ideas]
  * @property {string} compareFailed  A pane whose image could not be loaded [kpadopt4-ideas]
+ * @property {string} compareRetry  The Retry button of a pane whose image could not be loaded [kpadopt4 r2]
+ * @property {string} compareLoading  What the busy card over a compare slider says while its images load [kpadopt4 r2]
  * @property {string} graphShowAll  The network graph's way back to every node and every kind of link (js/graph.js) [scope-143]
  * @property {string} graphShowAllTitle  Its title [scope-143]
  * @property {string} graphHint  The hint under the graph, and the second half of its picture's accessible name: what a pointer, a click and the keys do [scope-143]
@@ -642,6 +647,7 @@ export const DEFAULT_STRINGS = Object.freeze({
     stackbarLoading: 'Reading…',
     stackbarEmpty: 'Not read yet.',
     stackbarError: 'Could not be read.',
+    stackbarRetry: 'Retry',
     bulletsLoading: 'Reading…',
     bulletsEmpty: 'Nothing to show.',
     bulletsError: 'Could not be read.',
@@ -944,9 +950,7 @@ export const DEFAULT_STRINGS = Object.freeze({
     arrivalWordsByTheme: {
         synthwave: { line: '▶ Play', progress: 'Tracking', ready: 'Press start' },
     },
-    arrivalLinesByTheme: {
-        terminal: ['KP-THEMES BIOS v5.0.0', 'MEMORY TEST ......... 640K OK', 'PHOSPHOR PROFILE .... terminal', 'CRT WARM-UP ......... OK', 'READY.'],
-    },
+    arrivalLinesByTheme: {},
     arrivalProgress: 'Progress',
     arrivalReady: 'Ready',
     arrivalSkip: 'Skip',
@@ -1091,6 +1095,11 @@ export const DEFAULT_STRINGS = Object.freeze({
             .filter(Boolean)
             .join(' · '),
     uptimeShown: (shown, total) => `${shown} of ${total} shown`,
+    uptimeInfoFigures: (percent, incidents) =>
+        [percent === null ? null : `${percent}% up`, incidents === null ? null : incidents === 1 ? '1 incident' : `${incidents} incidents`]
+            .filter(Boolean)
+            .join(' · '),
+    uptimeOpen: (label) => `Open ${label}`,
     // The typed confirmation [kpadopt4-ideas].
     typeConfirmLabel: (name) => `Type ${name} to confirm`,
     typeConfirmRuleExact: 'Type it exactly: capitals count; spaces at the start and the end are ignored.',
@@ -1160,6 +1169,8 @@ export const DEFAULT_STRINGS = Object.freeze({
     compareSlider: (before, after) => `Divider between ${before} and ${after}`,
     compareValue: (percent, before, after) => `${percent}% ${before}, ${100 - percent}% ${after}`,
     compareFailed: 'This image could not be loaded.',
+    compareRetry: 'Retry',
+    compareLoading: 'Loading the images…',
     // The network graph [scope-143]: its own words; the nodes, kinds and
     // the sentences of its states are the page's.
     graphShowAll: 'Show all',

@@ -15700,21 +15700,21 @@
         display: none;
     }
 
-    .kp-uptime__cell[data-kp-tone='up'] {
+    :is(.kp-uptime__cell, .kp-uptime__swatch)[data-kp-tone='up'] {
         --kp-uptime-fill: var(--kp-uptime-up);
     }
 
-    .kp-uptime__cell[data-kp-tone='degraded'] {
+    :is(.kp-uptime__cell, .kp-uptime__swatch)[data-kp-tone='degraded'] {
         --kp-uptime-fill: var(--kp-uptime-degraded);
         --kp-uptime-pattern: repeating-linear-gradient(0deg, color-mix(in oklab, var(--card) 55%, transparent) 0 1px, transparent 1px 4px);
     }
 
-    .kp-uptime__cell[data-kp-tone='down'] {
+    :is(.kp-uptime__cell, .kp-uptime__swatch)[data-kp-tone='down'] {
         --kp-uptime-fill: var(--kp-uptime-down);
         --kp-uptime-pattern: repeating-linear-gradient(135deg, color-mix(in oklab, var(--card) 38%, transparent) 0 2px, transparent 2px 5px);
     }
 
-    .kp-uptime__cell[data-kp-tone='none'] {
+    :is(.kp-uptime__cell, .kp-uptime__swatch)[data-kp-tone='none'] {
         --kp-uptime-fill: transparent;
         border-color: var(--border);
     }
@@ -15727,6 +15727,83 @@
     .kp-uptime__cell:focus-visible {
         outline: 2px solid var(--ring);
         outline-offset: 1px;
+    }
+
+    /* The cell whose quick info is open stands raised with the focus ring, so the plate under it reads as its own. */
+    .kp-uptime__cell[aria-expanded='true'] {
+        block-size: 100%;
+        outline: 2px solid var(--ring);
+        outline-offset: 1px;
+    }
+
+    a.kp-uptime__cell {
+        text-decoration: none;
+    }
+
+    /* A period's quick info (`open: 'info'`): the theme's popover plate under its cell, placed by the script in window
+     * coordinates in the top layer. The period, its state as a swatch of the cell's own fill and a word, its figures,
+     * the page's lines and a link to its page. Knob: --kp-uptime-info-width (17rem). */
+    .kp-popover.kp-uptime__info {
+        position: fixed;
+        position-area: none;
+        box-sizing: border-box;
+        display: grid;
+        justify-items: start;
+        gap: var(--kp-space-xs, 0.25rem);
+        inline-size: min(var(--kp-uptime-info-width, 17rem), calc(100vw - 1rem));
+        margin: 0;
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        overflow: visible;
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-uptime__info[hidden] {
+        display: none;
+    }
+
+    .kp-uptime__info > :is(p, ul) {
+        max-inline-size: 100%;
+        margin: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-uptime__info-title {
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-uptime__info-state {
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-uptime__swatch {
+        --kp-uptime-fill: var(--muted);
+        --kp-uptime-pattern: none;
+        box-sizing: border-box;
+        flex: none;
+        inline-size: 0.625rem;
+        block-size: 1rem;
+        border: 1px solid transparent;
+        border-radius: var(--kp-uptime-cell-radius, 1px);
+        background-color: var(--kp-uptime-fill);
+        background-image: var(--kp-uptime-pattern);
+    }
+
+    .kp-uptime__info-figures {
+        color: var(--muted-foreground);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-uptime__info-details {
+        display: grid;
+        gap: calc(var(--kp-space-xs, 0.25rem) / 2);
+        padding-inline-start: 1rem;
+    }
+
+    .kp-uptime__info-link {
+        margin-block-start: var(--kp-space-xs, 0.25rem);
     }
 
     .kp-uptime .kp-uptime__cell.kp-skeleton {
@@ -16471,27 +16548,54 @@
         transition: none;
     }
 
+    /* Loading: a quiet plate over the whole box (the divider and the labels under it) and the data table's own
+     * loading card in its middle (js/busy-card.js), as a table that loads (Kenny, 2026-10-16). The plate holds
+     * nothing to dim, so the card's layer draws no veil. */
     .kp-compare .kp-compare__wait {
         z-index: 3;
-        block-size: auto;
         margin: 0;
-        border-radius: 0;
+        background: var(--muted);
     }
 
     .kp-compare:not([data-kp-compare-state='loading']) .kp-compare__wait {
         display: none;
     }
 
+    .kp-compare > .kp-compare__busy {
+        --kp-busy-overlay-veil: 0%;
+        z-index: 4;
+    }
+
+    /* A failed image: the sentence and a normal-size Retry over the whole visible part of its pane (Kenny,
+     * 2026-10-16: failed fills the component's footprint), centred in it wherever the divider stands. */
     .kp-compare__failed {
         position: absolute;
         inset: 0;
         display: grid;
-        place-items: center;
+        align-content: center;
+        justify-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
         margin: 0;
         padding: var(--kp-space-md, 1rem);
+        overflow: hidden;
         background: var(--muted);
         color: var(--muted-foreground);
         text-align: center;
+        cursor: default;
+    }
+
+    .kp-compare__pane--after > .kp-compare__failed {
+        inset-inline-start: calc(var(--kp-compare-pos) * 1%);
+    }
+
+    .kp-compare__pane--before > .kp-compare__failed {
+        inset-inline-end: calc(100% - var(--kp-compare-pos) * 1%);
+    }
+
+    .kp-compare__failed-words {
+        max-inline-size: 100%;
+        margin: 0;
+        overflow-wrap: anywhere;
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -17100,15 +17204,17 @@
         font-weight: 600;
     }
 
-    /* Loading: the bar pulses at its height; the legend keeps two rows. */
+    /* Loading: the bar is the meter's own loading picture at the bar's size
+     * (each theme's way a bar waits); the legend keeps its rows. */
     .kp-stackbar[aria-busy='true'] .kp-stackbar__bar {
         background: transparent;
     }
 
-    .kp-stackbar__wait {
+    .kp-stackbar__bar > .kp-meter.kp-stackbar__wait {
         flex: 1;
         block-size: 100%;
         min-block-size: 0;
+        margin: 0;
         border-radius: inherit;
     }
 
@@ -17143,18 +17249,35 @@
         --kp-skeleton-height: 0.75em;
     }
 
-    /* Not read, or failed: one sentence where the legend goes, the bar kept
-     * at its height so nothing under it moves. */
+    /* Not read, or failed: one calm note over the bar's and the legend's whole
+     * footprint, the height they had (the script writes it; a bar never drawn
+     * takes --kp-stackbar-state-min), in the empty state's dashed frame with
+     * the theme's empty-state title; the sentence and a normal-size Retry side
+     * by side, centred, so the note fits a footprint only a few lines high
+     * (Kenny, 2026-10-16). A bar without a legend keeps its track, its words
+     * in its hover card. */
     .kp-stackbar__note {
         box-sizing: border-box;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        align-content: center;
+        justify-content: center;
+        gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        min-block-size: var(--kp-stackbar-state-min, 4rem);
         margin: 0;
-        min-block-size: 1.5rem;
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        border: 1px dashed var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
         color: var(--muted-foreground);
-        font-size: var(--kp-text-sm, 0.8125rem);
+        text-align: center;
     }
 
-    .kp-stackbar[data-kp-state='error'] .kp-stackbar__note {
-        color: var(--foreground);
+    .kp-stackbar__note > .kp-stackbar__note-title {
+        min-inline-size: 0;
+        max-inline-size: 100%;
+        margin: 0;
+        overflow-wrap: anywhere;
     }
 
     @media (forced-colors: active) {
@@ -17332,19 +17455,31 @@
         grid-column: lead;
     }
 
+    /* Nothing due, or failed: the package's empty state (each theme's own)
+     * over the list's whole footprint, the height it had with its rows (the
+     * script writes it; a list that never had rows takes
+     * --kp-bullets-state-min), the words and a normal-size Retry centred in
+     * it (Kenny, 2026-10-16: failed and empty fill the component's full
+     * normal size). The rows' grid never stretches the button. */
     .kp-bullets__note {
         box-sizing: border-box;
         display: grid;
-        justify-items: start;
-        gap: var(--kp-space-sm, 0.5rem);
+        align-content: center;
+        justify-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-block-size: var(--kp-bullets-state-min, 7.5rem);
         margin: 0;
-        padding-block: var(--kp-space-md, 0.75rem);
-        color: var(--muted-foreground);
-        font-size: var(--kp-text-sm, 0.8125rem);
+        text-align: center;
     }
 
-    .kp-bullets__note > :is(strong) {
-        color: var(--foreground);
+    .kp-bullets__note > :is(.kp-bullets__note-title, .kp-bullets__note-text) {
+        max-inline-size: 100%;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-bullets__note > .kp-bullets__retry {
+        align-self: center;
+        margin-block-start: var(--kp-space-sm, 0.5rem);
     }
 
     @container kp-bullets (max-width: 34rem) {
