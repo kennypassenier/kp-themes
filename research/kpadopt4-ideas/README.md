@@ -17,3 +17,28 @@ topic per component, every state (loading, empty, error, disabled, busy, long te
 | numeric timer  | `.kp-countdown`, `js/countdown.js` (`attachCountdowns`, `countdownClock`)     | kp buttons, the state word                          | medium | built    |
 | range-picker   | `.kp-range`, `js/range.js` (`attachRanges`, `kp-range-change`)                | segmented control, date picker, popover, buttons    | medium | built    |
 | compare-slider | `.kp-compare`, `js/compare.js` (`attachCompares`, `kp-compare-change`)        | skeleton, the theme's ink and motion tokens         | medium | built    |
+
+Why each is what it is:
+
+- **uptime-strip** is a new component, not a heat grid option: the heat grid is rows by columns with a label column and
+  an axis, where the strip is one thin row that must never wrap, shows fewer cells on a phone and carries its own
+  summary. It reuses the heat grid's fills and patterns, so a state reads the same in both.
+- **type-confirm** extends the approved confirmation (`js/components.js`, no new import, so the closure chassis-rs
+  vendors stays as it is); without `data-kp-confirm-type` the dialog is unchanged. The homelab action dialog's rule
+  (`nameTyped`, `pressGate` in `admin/web/js/actionforms.js`) is the reference: trimmed, capitals count.
+- **command-block** builds on the package's copy button (`[data-kp-copy]`) rather than a copy of its own.
+- **The two timers** are separate components, as asked, on one clock (`countdownClock()`). They are named
+  `.kp-timer-disc` and `.kp-countdown` so they do not collide with the recipes branch's named kitchen timers, which may
+  run on the same clock.
+- **range-picker** composes the segmented control, the date picker and the popover plate; Custom… is a button beside the
+  radio group, so the arrow keys never open the panel by moving over it.
+- **compare-slider** cuts each pane with `clip-path`, so a live pane is only hit where it shows.
+
+Not shown and why: a timer has no loading state (nothing is fetched), and a command block, a typed confirmation and a
+compare slider have no disabled state of their own (the typed confirmation shows its button held off instead).
+
+The two ideas Kenny marked "Later" (nudge-card, notification-log) are written down in
+[`../IDEAS_LATER.md`](../IDEAS_LATER.md).
+
+Recommendation: approve in formal, then answer each component in the fifteen other themes' registers (they are on
+`gates/register-pending.json` until then).
