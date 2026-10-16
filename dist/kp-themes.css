@@ -11503,7 +11503,7 @@
     }
 
     /* A journey [kpadopt4] (`.kp-steplist--journey`): the steps side by side on one path, a mark over each name, the date it
- * was reached under it, joined by a rule that is drawn in the step's colour once the step is reached. Under 36rem of its
+ * was reached under it, joined by a rule that is drawn in the step's colour once the step is reached. Under 30rem of its
  * own width the path turns to a column, the rule down the marks. Every step has the same width, so a long name wraps
  * under its own mark and never reaches the next. Knob: `--kp-journey-rule` (2px). */
     .kp-steplist--journey {
@@ -11580,7 +11580,7 @@
         font-weight: 600;
     }
 
-    @container kp-journey (max-width: 36rem) {
+    @container kp-journey (max-width: 30rem) {
         .kp-steplist--journey > .kp-steplist__item {
             flex-basis: 100%;
             grid-template-columns: var(--kp-steplist-mark, 1.375rem) minmax(0, 1fr) auto;
@@ -12349,6 +12349,11 @@
         translate: calc(100% * var(--kp-gantt-tick-flip, 1)) 0;
     }
 
+    /* An end-edge label that would run into the label before it is not drawn [kpadopt4]. */
+    .kp-gantt__tick[data-kp-gantt-crowded]:not(button) {
+        visibility: hidden;
+    }
+
     .kp-gantt__tick[data-kp-day] {
         color: var(--foreground);
         font-weight: 600;
@@ -12974,6 +12979,7 @@
     }
 
     .kp-gantt--line .kp-gantt__body {
+        --kp-gantt-row: 2.25rem;
         grid-template-columns: 0 minmax(0, 1fr);
     }
 
@@ -12985,7 +12991,7 @@
 
     .kp-gantt--line :is(.kp-gantt__corner, .kp-gantt__axis) {
         grid-row: 3;
-        position: static;
+        position: relative;
         border-block-end: 0;
         border-block-start: 1px solid var(--border-strong);
     }
@@ -12998,12 +13004,25 @@
         inset: 0 0 var(--kp-gantt-axis, 1.75rem);
     }
 
+    /* A timeline of moments [kpadopt4] gives its sentence the card's ground, so no rule of the axis runs through it. */
+    .kp-gantt[data-kp-gantt-points]:not([data-kp-state='loading']) .kp-gantt__state:not(:empty) {
+        box-sizing: border-box;
+        display: block;
+        inline-size: fit-content;
+        max-inline-size: calc(100% - 2 * var(--kp-space-md, 0.75rem));
+        block-size: fit-content;
+        margin: auto;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--card);
+    }
+
     /* --- Pipeline: where each item stands, a lane per stage [kpadopt4] ------
  * `section.kp-pipeline[data-kp-pipeline]` (js/pipeline.js). A read-only board: lanes side by side at one width, each as
  * tall as the tallest, a plate with the stage's name and its exact count in the stage's colour (a tint of the chart
  * colour, the words in the page's ink [fix-70]), the share of all under it, and the cards. A closed lane stands under the
  * board across its width. Under 40rem of the board's own width the lanes turn to rows. The sentence of an empty or a
- * failed board stands on its own plate over the lanes, which keep their place. Knobs [KT6]: `--kp-pipeline-gap`
+ * failed board stands on its own plate above the lanes, which keep their place and are covered by nothing. Knobs [KT6]: `--kp-pipeline-gap`
  * (0.75rem), `--kp-pipeline-min` (12rem, the board's least height), `--kp-pipeline-card-min` (12rem, a card's least
  * width where cards flow in a row), `--kp-pipeline-mark` (1.75rem), `--kp-pipeline-tone` (the stage's colour). */
     .kp-pipeline {
@@ -13251,27 +13270,19 @@
     }
 
     .kp-pipeline__state {
-        position: absolute;
-        inset-block-start: 50%;
-        inset-inline-start: 50%;
-        z-index: 2;
         box-sizing: border-box;
-        display: grid;
-        justify-items: center;
-        gap: var(--kp-space-sm, 0.5rem);
-        inline-size: max-content;
-        max-inline-size: min(28rem, calc(100% - 2rem));
-        padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1rem);
-        translate: -50% -50%;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        margin-block-end: var(--kp-pipeline-gap, 0.75rem);
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
         border: 1px solid var(--border-strong);
         border-radius: var(--radius, 0.5rem);
         background: var(--card);
         color: var(--card-foreground, var(--foreground));
         text-align: center;
-    }
-
-    .kp-pipeline__state:dir(rtl) {
-        translate: 50% -50%;
     }
 
     .kp-pipeline__state[hidden] {
@@ -85417,6 +85428,10 @@
         background: var(--kp-step-tone, var(--primary));
     }
 
+    [data-theme='formal'] .kp-steplist--journey > .kp-steplist__item[data-state='failed']::before {
+        background: repeating-linear-gradient(90deg, var(--destructive) 0 0.375rem, transparent 0.375rem 0.625rem);
+    }
+
     [data-theme='formal'] .kp-steplist--journey .kp-steplist__item[data-state='done']:not([data-kp-tone]) .kp-steplist__mark {
         border-color: var(--primary);
         background: var(--primary);
@@ -85444,7 +85459,7 @@
         font-variant-numeric: tabular-nums lining-nums;
     }
 
-    @container kp-journey (max-width: 36rem) {
+    @container kp-journey (max-width: 30rem) {
         [data-theme='formal'] .kp-steplist--journey > .kp-steplist__item:not(:last-child)::after {
             background: var(--border);
         }

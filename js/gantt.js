@@ -118,6 +118,8 @@ export const GANTT_STEPS = Object.freeze([60, 300, 900, 1800, 3600, 10_800, 21_6
 const MONDAY = 345_600;
 /** Point marks closer than this, in px, are one mark with a count [kpadopt4]. */
 const CLUSTER_PX = 14;
+/** The room a count plate takes after its mark, in px [kpadopt4]. */
+const CLUSTER_PLATE_PX = 24;
 
 /**
  * @typedef {'queued' | 'running' | 'ok' | 'failed'} GanttRunState
@@ -299,7 +301,8 @@ function fitWindow(c) {
     for (const zone of c.zones) for (const edge of [toMs(zone.from), toMs(zone.to)]) if (Number.isFinite(edge)) moments.push(edge);
     const lo = Math.min(...moments) / 1000;
     const hi = Math.max(...moments) / 1000;
-    const span = Math.max(3600, hi - lo);
+    // A timeline of moments reads in days: it never fits to less than a week.
+    const span = Math.max(c.el.hasAttribute('data-kp-gantt-points') ? 604_800 : 3600, hi - lo);
     const pad = span / 20;
     c.span = span + 2 * pad;
     c.to = hi - c.base + pad;
@@ -555,11 +558,20 @@ function syncDays(c) {
 function edgeTicks(c, w) {
     const room = c.axis.clientWidth;
     if (!room) return;
-    for (const [t, parts] of c.ticks) {
+    let before = -Infinity;
+    for (const t of [...c.ticks.keys()].sort((a, b) => a - b)) {
+        const parts = /** @type {{ label: HTMLElement }} */ (c.ticks.get(t));
         // A day button (`data-kp-gantt-days`) has its own edge rule in syncTicks: it stands against the end, whole.
         if (parts.label.tagName === 'BUTTON') continue;
         const at = ((t - w.from) / c.span) * room;
-        parts.label.toggleAttribute('data-kp-gantt-edge', room - at < parts.label.offsetWidth + 2);
+        const width = parts.label.offsetWidth;
+        const edge = room - at < width + 2;
+        parts.label.toggleAttribute('data-kp-gantt-edge', edge);
+        // A label turned before its rule that would run into the label before it steps aside [kpadopt4].
+        const start = edge ? at - width : at;
+        const crowded = edge && start < before + 4;
+        parts.label.toggleAttribute('data-kp-gantt-crowded', crowded);
+        if (!crowded) before = start + width;
     }
 }
 
@@ -685,6 +697,8 @@ function paint(c) {
     drawBusy(c);
     const empty = c.state === 'ready' && c.runs.length === 0 && c.points.length === 0 && lanes.length === 0;
     const words = c.state === 'loading' ? s.ganttLoading : c.state === 'empty' || empty ? s.ganttEmpty : c.stateLine.dataset.kpWords || '';
+    // A timeline of moments with nothing to show has no line for now running through its sentence [kpadopt4].
+    c.nowLine.hidden = c.el.hasAttribute('data-kp-gantt-points') && (c.state === 'error' || c.state === 'empty' || empty);
     // An empty or failed sentence waits, as the runs do, until the card has gone.
     c.stateLine.textContent = (c.state === 'ready' && !empty) || c.leaving !== null ? '' : words;
     c.stateLine.dataset.kpState = empty && c.state === 'ready' ? 'empty' : c.state;
@@ -765,6 +779,8 @@ function drawBusy(c) {
     c.busy = openBusyCard(frameBox, {
         words: c.strings.ganttLoading,
         area: () => {
+            // A dated line is short: its card covers the whole frame, the line and its dates [kpadopt4].
+            if (c.line) return [c.scroll];
             const tracks = /** @type {HTMLElement[]} */ ([...c.body.querySelectorAll(':scope > .kp-gantt__track')]);
             const scroll = c.scroll.getBoundingClientRect();
             const axis = c.axis.getBoundingClientRect();
@@ -805,7 +821,9 @@ function paintGhosts(c) {
         [0.25, 0.1],
     ];
     // `data-kp-gantt-ghosts="2 3 2 1 1"`: the rows of each ghost lane, so the loading frame is as tall as the lanes will be.
-    const rows = (c.el.dataset.kpGanttGhosts ?? '1 1 1').split(/\s+/).map((n) => Math.max(1, Math.min(6, Number.parseInt(n, 10) || 1)));
+    const rows = (c.el.dataset.kpGanttGhosts ?? (c.line ? '1' : '1 1 1'))
+        .split(/\s+/)
+        .map((n) => Math.max(1, Math.min(6, Number.parseInt(n, 10) || 1)));
     rows.forEach((count, i) => {
         const bars = /** @type {number[]} */ (shapes[i % shapes.length]);
         const label = make(doc, 'div', 'kp-gantt__lane kp-gantt__ghost');
@@ -942,7 +960,8 @@ function clusterPoints(c) {
             const at = Number.parseFloat(el.style.getPropertyValue('--kp-g-s'));
             const px = ((at - headAt) / c.span) * width;
             const last = groups[groups.length - 1];
-            if (last && px < CLUSTER_PX) last.push(el);
+            // A mark with a count carries its plate after it: the next mark keeps clear of the plate too.
+            if (last && px < (last.length > 1 ? CLUSTER_PX + CLUSTER_PLATE_PX : CLUSTER_PX)) last.push(el);
             else {
                 groups.push([el]);
                 headAt = at;

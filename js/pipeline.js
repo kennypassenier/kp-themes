@@ -27,7 +27,7 @@
 //   states   setPipelineState(el, state, words): `loading` keeps the lanes
 //            and lays the data table's own loading card (js/busy-card.js)
 //            over the board, the cards drawn once it has gone; `empty` keeps
-//            every lane with “none” and one sentence over the board; `error`
+//            every lane with “none” and one sentence above the board; `error`
 //            says why with Try again (`kp-pipeline-retry`)
 //   keys     one tab stop: ← → to the neighbouring lane (the same place, or
 //            its last card), ↑ ↓ along a lane, Home and End to a lane's first
@@ -102,7 +102,8 @@ function build(c) {
     c.live = make(doc, 'p', 'kp-sr-only kp-pipeline__live');
     c.live.setAttribute('role', 'status');
     const frame = make(doc, 'div', 'kp-pipeline__frame');
-    frame.append(c.board, c.stateBox);
+    // The sentence of an empty or failed board stands on its own plate above the lanes, covering none of them.
+    frame.append(c.stateBox, c.board);
     c.el.replaceChildren(frame, c.closed, c.live);
 }
 

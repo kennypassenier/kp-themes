@@ -4424,6 +4424,10 @@
         background: var(--kp-step-tone, var(--primary));
     }
 
+    [data-theme='formal'] .kp-steplist--journey > .kp-steplist__item[data-state='failed']::before {
+        background: repeating-linear-gradient(90deg, var(--destructive) 0 0.375rem, transparent 0.375rem 0.625rem);
+    }
+
     [data-theme='formal'] .kp-steplist--journey .kp-steplist__item[data-state='done']:not([data-kp-tone]) .kp-steplist__mark {
         border-color: var(--primary);
         background: var(--primary);
@@ -4451,7 +4455,7 @@
         font-variant-numeric: tabular-nums lining-nums;
     }
 
-    @container kp-journey (max-width: 36rem) {
+    @container kp-journey (max-width: 30rem) {
         [data-theme='formal'] .kp-steplist--journey > .kp-steplist__item:not(:last-child)::after {
             background: var(--border);
         }

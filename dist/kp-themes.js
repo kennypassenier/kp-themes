@@ -14283,7 +14283,7 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS } = {}) {
     );
     if (!reveal) {
       reveal = /** @type {HTMLButtonElement} */
-      make9("button", "kp-button kp-button--sm kp-secret__reveal");
+      make9("button", "kp-button kp-secret__reveal");
       reveal.type = "button";
       reveal.setAttribute("data-kp-secret-reveal", "");
       actions.append(reveal);
@@ -14295,7 +14295,7 @@ function attachSecrets(root = document, { load, copiedMs = COPIED_MS } = {}) {
     );
     if (!copy && field.dataset.kpSecretCopy !== "false") {
       copy = /** @type {HTMLButtonElement} */
-      make9("button", "kp-button kp-button--sm kp-copyable__button kp-secret__copy");
+      make9("button", "kp-button kp-copyable__button kp-secret__copy");
       copy.type = "button";
       copy.setAttribute("data-kp-secret-copy", "");
       copy.textContent = s2.secretCopy;
@@ -23145,7 +23145,7 @@ function fitWindow(c) {
   for (const zone of c.zones) for (const edge of [toMs2(zone.from), toMs2(zone.to)]) if (Number.isFinite(edge)) moments.push(edge);
   const lo = Math.min(...moments) / 1e3;
   const hi = Math.max(...moments) / 1e3;
-  const span3 = Math.max(3600, hi - lo);
+  const span3 = Math.max(c.el.hasAttribute("data-kp-gantt-points") ? 604800 : 3600, hi - lo);
   const pad = span3 / 20;
   c.span = span3 + 2 * pad;
   c.to = hi - c.base + pad;
@@ -23370,10 +23370,21 @@ function syncDays(c) {
 function edgeTicks(c, w) {
   const room = c.axis.clientWidth;
   if (!room) return;
-  for (const [t, parts] of c.ticks) {
+  let before = -Infinity;
+  for (const t of [...c.ticks.keys()].sort((a, b) => a - b)) {
+    const parts = (
+      /** @type {{ label: HTMLElement }} */
+      c.ticks.get(t)
+    );
     if (parts.label.tagName === "BUTTON") continue;
     const at = (t - w.from) / c.span * room;
-    parts.label.toggleAttribute("data-kp-gantt-edge", room - at < parts.label.offsetWidth + 2);
+    const width = parts.label.offsetWidth;
+    const edge = room - at < width + 2;
+    parts.label.toggleAttribute("data-kp-gantt-edge", edge);
+    const start = edge ? at - width : at;
+    const crowded = edge && start < before + 4;
+    parts.label.toggleAttribute("data-kp-gantt-crowded", crowded);
+    if (!crowded) before = start + width;
   }
 }
 function paint4(c) {
@@ -23491,6 +23502,7 @@ function paint4(c) {
   drawBusy2(c);
   const empty = c.state === "ready" && c.runs.length === 0 && c.points.length === 0 && lanes.length === 0;
   const words = c.state === "loading" ? s2.ganttLoading : c.state === "empty" || empty ? s2.ganttEmpty : c.stateLine.dataset.kpWords || "";
+  c.nowLine.hidden = c.el.hasAttribute("data-kp-gantt-points") && (c.state === "error" || c.state === "empty" || empty);
   c.stateLine.textContent = c.state === "ready" && !empty || c.leaving !== null ? "" : words;
   c.stateLine.dataset.kpState = empty && c.state === "ready" ? "empty" : c.state;
   paintGhosts(c);
@@ -23553,6 +23565,7 @@ function drawBusy2(c) {
   c.busy = openBusyCard(frameBox, {
     words: c.strings.ganttLoading,
     area: () => {
+      if (c.line) return [c.scroll];
       const tracks = (
         /** @type {HTMLElement[]} */
         [...c.body.querySelectorAll(":scope > .kp-gantt__track")]
@@ -23591,7 +23604,7 @@ function paintGhosts(c) {
     [0.05, 0.5],
     [0.25, 0.1]
   ];
-  const rows = (c.el.dataset.kpGanttGhosts ?? "1 1 1").split(/\s+/).map((n) => Math.max(1, Math.min(6, Number.parseInt(n, 10) || 1)));
+  const rows = (c.el.dataset.kpGanttGhosts ?? (c.line ? "1" : "1 1 1")).split(/\s+/).map((n) => Math.max(1, Math.min(6, Number.parseInt(n, 10) || 1)));
   rows.forEach((count, i) => {
     const bars = (
       /** @type {number[]} */
@@ -23711,7 +23724,7 @@ function clusterPoints(c) {
       const at = Number.parseFloat(el4.style.getPropertyValue("--kp-g-s"));
       const px3 = (at - headAt) / c.span * width;
       const last = groups[groups.length - 1];
-      if (last && px3 < CLUSTER_PX) last.push(el4);
+      if (last && px3 < (last.length > 1 ? CLUSTER_PX + CLUSTER_PLATE_PX : CLUSTER_PX)) last.push(el4);
       else {
         groups.push([el4]);
         headAt = at;
@@ -24278,7 +24291,7 @@ function setGanttZones(el4, zones) {
   c.zones = zones;
   paint4(c);
 }
-var GANTT, GANTT_OPEN_EVENT, GANTT_SELECT_EVENT, GANTT_WINDOW_EVENT, GANTT_TICK_MS, GANTT_STEPS, MONDAY, CLUSTER_PX, gantts, idSeq3, two4, make5, toMs2, keyOf4, stateWord3, rel;
+var GANTT, GANTT_OPEN_EVENT, GANTT_SELECT_EVENT, GANTT_WINDOW_EVENT, GANTT_TICK_MS, GANTT_STEPS, MONDAY, CLUSTER_PX, CLUSTER_PLATE_PX, gantts, idSeq3, two4, make5, toMs2, keyOf4, stateWord3, rel;
 var init_gantt = __esm({
   "js/gantt.js"() {
     "use strict";
@@ -24294,6 +24307,7 @@ var init_gantt = __esm({
     GANTT_STEPS = Object.freeze([60, 300, 900, 1800, 3600, 10800, 21600, 43200, 86400, 172800, 604800, 1209600, 2419200]);
     MONDAY = 345600;
     CLUSTER_PX = 14;
+    CLUSTER_PLATE_PX = 24;
     gantts = /* @__PURE__ */ new WeakMap();
     idSeq3 = 0;
     two4 = (n) => String(n).padStart(2, "0");
@@ -24336,7 +24350,7 @@ function build3(c) {
   c.live = make6(doc, "p", "kp-sr-only kp-pipeline__live");
   c.live.setAttribute("role", "status");
   const frame2 = make6(doc, "div", "kp-pipeline__frame");
-  frame2.append(c.board, c.stateBox);
+  frame2.append(c.stateBox, c.board);
   c.el.replaceChildren(frame2, c.closed, c.live);
 }
 function cardNode(c, card, lane) {

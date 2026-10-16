@@ -2934,7 +2934,7 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
             { name: 'data-kp-lane', what: 'On a lane: its key.' },
             { name: 'data-kp-tone', what: 'On a lane and its cards: the stage’s colour, 1 to 5.' },
             { name: 'data-kp-dimmed', what: 'On a card filtered out but kept in its place: quieter ink and a dashed edge.' },
-            { name: 'data-kp-state', what: 'On the board: `loading` (the lanes kept, the table’s loading card over them, cards drawn once it has gone), `ready`, `empty` (every lane says none, one sentence over the board) or `error` (the reason with Try again).' },
+            { name: 'data-kp-state', what: 'On the board: `loading` (the lanes kept, the table’s loading card over them, cards drawn once it has gone), `ready`, `empty` (every lane says none, one sentence on a plate above the lanes) or `error` (the reason with Try again).' },
             { name: 'kp-pipeline-open', what: 'A card was opened: `{ id, card, source }`; a link is still followed.' },
             { name: 'kp-pipeline-retry', what: 'Try again on a failed board was pressed.' },
             { name: 'kp-pipeline-more', what: 'A lane shows more or fewer: `{ lane, open }`.' },
@@ -3144,7 +3144,7 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
             },
             {
                 title: 'A journey: where an application stands',
-                why: 'The same list laid along one path. `current` is the step it stands at now, reached steps are `done`, a closed path ends with a `failed` step; `data-kp-tone` gives a step its own colour and the time column holds the date it was reached. Under 36rem of its own width the path turns to a column.',
+                why: 'The same list laid along one path. `current` is the step it stands at now, reached steps are `done`, a closed path ends with a `failed` step; `data-kp-tone` gives a step its own colour and the time column holds the date it was reached. Under 30rem of its own width the path turns to a column.',
                 markup: `
 <ol class="kp-steplist kp-steplist--journey" aria-label="Where the application stands">
 <li class="kp-steplist__item" data-state="done" data-kp-tone="1"><span class="kp-steplist__mark" aria-hidden="true"></span><span class="kp-steplist__body"><span class="kp-steplist__title">Draft</span></span><time class="kp-steplist__time">28/09</time></li>
@@ -3157,7 +3157,7 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
         ],
         variants: [
             { name: 'data-state', what: '`pending`, `running`, `done`, `failed`, `skipped` or `current` (the step a journey stands at now: a ring with a dot, no spinner): the mark, the colour and the word follow it.' },
-            { name: '.kp-steplist--journey', what: 'The steps side by side on one path, joined by a rule drawn in the step’s colour once reached; a column under 36rem of its own width.' },
+            { name: '.kp-steplist--journey', what: 'The steps side by side on one path, joined by a rule drawn in the step’s colour once reached; a column under 30rem of its own width.' },
             { name: 'data-kp-tone', what: 'A step’s own colour, `1` to `5` (`--chart-N`), or any value with the page’s own step colour set on the item: the reached mark and the rule into it wear it.' },
             { name: '.kp-steplist__time', what: 'How long the step took, as the page prints it; in a journey, the date it was reached.' },
             { name: '.kp-steplist__note', what: 'The one-line description under the title.' },

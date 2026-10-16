@@ -318,7 +318,7 @@ export function attachSecrets(root = document, { load, copiedMs = COPIED_MS } = 
         }
         let reveal = /** @type {HTMLButtonElement | null} */ (actions.querySelector('[data-kp-secret-reveal]'));
         if (!reveal) {
-            reveal = /** @type {HTMLButtonElement} */ (make('button', 'kp-button kp-button--sm kp-secret__reveal'));
+            reveal = /** @type {HTMLButtonElement} */ (make('button', 'kp-button kp-secret__reveal'));
             reveal.type = 'button';
             reveal.setAttribute('data-kp-secret-reveal', '');
             actions.append(reveal);
@@ -326,7 +326,7 @@ export function attachSecrets(root = document, { load, copiedMs = COPIED_MS } = 
         }
         let copy = /** @type {HTMLButtonElement | null} */ (actions.querySelector('[data-kp-secret-copy]'));
         if (!copy && field.dataset.kpSecretCopy !== 'false') {
-            copy = /** @type {HTMLButtonElement} */ (make('button', 'kp-button kp-button--sm kp-copyable__button kp-secret__copy'));
+            copy = /** @type {HTMLButtonElement} */ (make('button', 'kp-button kp-copyable__button kp-secret__copy'));
             copy.type = 'button';
             copy.setAttribute('data-kp-secret-copy', '');
             copy.textContent = s.secretCopy;

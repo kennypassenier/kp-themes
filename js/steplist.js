@@ -30,7 +30,7 @@
 //     note again. A burst of changes in one tick is one announcement.
 //
 // A journey [kpadopt4]: `.kp-steplist--journey` lays the steps side by side
-// on one path (a column under 36rem of its own width), the way an
+// on one path (a column under 30rem of its own width), the way an
 // application goes draft, sent, interview, offer. `data-state="current"` is
 // the step it stands at now (no spinner: nothing is running), a reached step
 // is `done`, a closed path ends with a `failed` step (rejected, withdrawn),
