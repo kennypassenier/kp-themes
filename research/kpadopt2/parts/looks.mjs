@@ -63,6 +63,7 @@ export const FAC = {
 
 /** What to look at in the heat grid, per theme. */
 export const HEAT = {
+    formal: 'Approved; asked again for one repair: press Loading, then Ready. The grid keeps exactly its height (it grew about 36 px while loading).',
     light: "Cells are small light cards with a hair of shadow. Point at one: it settles 2 px toward the paper; a press flashes it. Loading: every cell out of focus, breathing, in place. The pinned night is the indigo ring.",
     dark: "Square instrument cells with a lighter top edge; pointing rests the cyan line on the cell’s start edge, nothing grows. Loading: every cell is a slot the comet crosses. The pinned night is the film’s cyan ring with its glow.",
     cyberpunk: "Neon tubes in the void, the pick a cyan tube; pointing lights the cell’s tube in yellow. Loading: the cells stand dim and one LOADING is deciphered over the grid and torn away again, never a word per cell.",
@@ -82,6 +83,7 @@ export const HEAT = {
 
 /** What to look at in the matrix, per theme. */
 export const MATRIX = {
+    formal: 'Approved; asked again for one repair: pick Loading, then Ready. The matrix keeps exactly its height (it grew 36 px while loading).',
     light: "The same small cards as the heat grid, settling 2 px when pointed at; Loading blurs the cells in place, breathing; the names are pills.",
     dark: "The same square cells as the heat grid, the line resting on the start edge when pointed at; Loading is the comet over the slots; the names on the top are in the ticker mono.",
     cyberpunk: "The same neon cells, mono names. Loading: the cells dim and one LOADING is deciphered over the matrix.",
@@ -101,6 +103,7 @@ export const MATRIX = {
 
 /** What to look at in the bar in a table cell, per theme. */
 export const BARCELL = {
+    formal: 'Approved; asked again for one repair: at 390 px press Show loading, then again. The cards keep their height (the table grew 90 px while loading); at 1280 nothing changed.',
     light: "The bar is light’s flat meter line. Show loading: the bars and the figures go out of focus and breathe (the figure a soft pill), the table’s busy panel shows the bead spinner; nothing moves.",
     dark: "The bar is dark’s machined channel, the figures in the ticker mono. Show loading: the bars and figures are slots the comet crosses, the busy panel shows the spectrum bars.",
     cyberpunk: "Mono figures. Show loading: the table is one picture, the busy panel’s signal bars and its deciphered word over the dimmed rows.",
@@ -177,6 +180,7 @@ export const WEEK_STATES = {
 
 /** What to look at in the run timeline, per theme. */
 export const GANTT = {
+    formal: 'Approved; asked again for one repair: the newest hour at the end edge of the axis stands whole before its rule, never cut by the edge (at 390 px too).',
     light: "Capsule bars. A running bar has no stripes: a white-ringed cyan bead runs along it to its growing end and back, as on light’s busy bar. The line for now is cyan with the bead on top. Point at a bar: it settles 2 px.",
     dark: "Square bars. A running bar is a dark slot inside the film, crossed by the comet again and again (the line running its track), no stripes. The line for now is cyan with its glow.",
     cyberpunk: "Bars with a small cut corner. A running bar is a data stream: the void in a yellow rim with cyan dashes feeding through it; a short run stays a bar, not a wedge.",
@@ -196,6 +200,7 @@ export const GANTT = {
 
 /** What to look at in the run timeline’s states, per theme. */
 export const GANTT_STATES = {
+    formal: 'Approved; asked again for two repairs: Empty and Error have a lane-sized room under the axis for their sentence, which no longer runs over the legend (the failure wraps to two lines at 390 px and the room grows with it); the axis label at the end edge stands whole.',
     light: "Loading: the ghost bars are out of focus, breathing. The hover card is light’s white card with its shadow, joined under the failed bar.",
     dark: "Loading: the ghost bars are slots the comet crosses. The hover card is dark’s plate inside the film, joined under the failed bar.",
     cyberpunk: "Loading: the ghost bars stand dim and one LOADING is deciphered over the lanes. The hover card is a holo plate joined under the failed bar.",

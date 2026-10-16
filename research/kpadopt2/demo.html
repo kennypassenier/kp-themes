@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- Written by research/kpadopt2/build.mjs; edit build.mjs, parts/, demo-*.css and demo-*.js, not this file. -->
-<html lang="en" data-theme="light" data-review="kpadopt2" data-review-themes="light,dark,cyberpunk,synthwave,pastel,terminal,forest,blueprint,solstice,brutalism,deco,phantom,grotesk,nostromo,titanium">
+<html lang="en" data-theme="light" data-review="kpadopt2" data-review-themes="formal,light,dark,cyberpunk,synthwave,pastel,terminal,forest,blueprint,solstice,brutalism,deco,phantom,grotesk,nostromo,titanium">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -39,7 +39,7 @@
                     rows</b>, the <b>facet list</b>, the <b>heat grid</b>, the <b>matrix</b>, the <b>bar in a table cell</b>, the <b>week
                     agenda</b> with its states and the <b>run timeline</b>. This round asks the fifteen other themes, each built from that
                     theme’s own approved parts: its buttons, segmented track, menus, loading picture, arrival and signature motion. Formal is
-                    not on the page (approved). Every section says what you should see under <b>Expected</b>, and the review dialog’s
+                    asked again only for the heat grid, the matrix, the bar cell and the run timeline, each with one repair to judge. Every section says what you should see under <b>Expected</b>, and the review dialog’s
                     “Look at” line names what is this theme’s own. Everything with a <code>kp-</code> class and every script under
                     <code>js/</code> is the package; the sample data and the buttons that drive a demo are this page’s.
                 </p>
@@ -51,7 +51,7 @@
                 <p class="ta-note" data-ta-motion hidden><b>Your system asks for reduced motion</b>, so hover and press change the look but nothing moves or fades.</p>
             </header>
 
-            <section class="ta-sec" data-review-item="actions" data-review-components="actions action" data-review-title="1 · Action tiles" aria-label="Action tiles">
+            <section data-review-themes="light,dark,cyberpunk,synthwave,pastel,terminal,forest,blueprint,solstice,brutalism,deco,phantom,grotesk,nostromo,titanium" class="ta-sec" data-review-item="actions" data-review-components="actions action" data-review-title="1 · Action tiles" aria-label="Action tiles">
                 <div class="ta-sec__head">
                     <h2>1 · Action tiles</h2>
                     <p>
@@ -115,7 +115,7 @@
                 </div>
             </section>
 
-            <section class="ta-sec" data-review-item="status" data-review-components="statuslist statusrow" data-review-title="2 · Status rows" aria-label="Status rows">
+            <section data-review-themes="light,dark,cyberpunk,synthwave,pastel,terminal,forest,blueprint,solstice,brutalism,deco,phantom,grotesk,nostromo,titanium" class="ta-sec" data-review-item="status" data-review-components="statuslist statusrow" data-review-title="2 · Status rows" aria-label="Status rows">
                 <div class="ta-sec__head">
                     <h2>2 · Status rows</h2>
                     <p>
@@ -177,7 +177,7 @@
                 </div>
             </section>
 
-            <section class="ta-sec" data-review-item="facets" data-review-components="facets facet" data-review-title="3 · Facet list" aria-label="Facet list">
+            <section data-review-themes="light,dark,cyberpunk,synthwave,pastel,terminal,forest,blueprint,solstice,brutalism,deco,phantom,grotesk,nostromo,titanium" class="ta-sec" data-review-item="facets" data-review-components="facets facet" data-review-title="3 · Facet list" aria-label="Facet list">
                 <div class="ta-sec__head">
                     <h2>3 · Facet list</h2>
                     <p>
@@ -253,7 +253,7 @@
                 </div>
             </section>
 
-<section class="cat-block" id="heat" data-review-item="heat" data-review-title="Heat grid" data-review-components="heat">
+<section data-review-themes="formal,light,dark,cyberpunk,synthwave,pastel,terminal,forest,blueprint,solstice,brutalism,deco,phantom,grotesk,nostromo,titanium" class="cat-block" id="heat" data-review-item="heat" data-review-title="Heat grid" data-review-components="heat">
     <h2>Heat grid: stacks by nights<span class="gd-tag gd-tag--package">package</span><span class="gd-tag gd-tag--mock">mock data</span></h2>
     <div class="cat-look">
         <b>Look at:</b> the tiles are the theme’s own small plates; the grid never changes height when the state changes; nothing wraps (the long
@@ -294,6 +294,7 @@
         </ul>
     </div>
     <div data-review-look>
+        <p data-for="formal">Approved; asked again for one repair: press Loading, then Ready. The grid keeps exactly its height (it grew about 36 px while loading).</p>
         <p data-for="light">Cells are small light cards with a hair of shadow. Point at one: it settles 2 px toward the paper; a press flashes it. Loading: every cell out of focus, breathing, in place. The pinned night is the indigo ring.</p>
         <p data-for="dark">Square instrument cells with a lighter top edge; pointing rests the cyan line on the cell’s start edge, nothing grows. Loading: every cell is a slot the comet crosses. The pinned night is the film’s cyan ring with its glow.</p>
         <p data-for="cyberpunk">Neon tubes in the void, the pick a cyan tube; pointing lights the cell’s tube in yellow. Loading: the cells stand dim and one LOADING is deciphered over the grid and torn away again, never a word per cell.</p>
@@ -364,7 +365,7 @@
     </div>
 </section>
 
-<section class="cat-block" id="matrix" data-review-item="matrix" data-review-title="Matrix" data-review-components="matrix">
+<section data-review-themes="formal,light,dark,cyberpunk,synthwave,pastel,terminal,forest,blueprint,solstice,brutalism,deco,phantom,grotesk,nostromo,titanium" class="cat-block" id="matrix" data-review-item="matrix" data-review-title="Matrix" data-review-components="matrix">
     <h2>Matrix: which stack can reach which<span class="gd-tag gd-tag--package">package</span><span class="gd-tag gd-tag--mock">mock data</span></h2>
     <div class="cat-look">
         <b>Look at:</b> state is told by the plate <i>and</i> a word or glyph (cover the colours in your mind: it still reads); the pinned cell, the
@@ -402,6 +403,7 @@
         </ul>
     </div>
     <div data-review-look>
+        <p data-for="formal">Approved; asked again for one repair: pick Loading, then Ready. The matrix keeps exactly its height (it grew 36 px while loading).</p>
         <p data-for="light">The same small cards as the heat grid, settling 2 px when pointed at; Loading blurs the cells in place, breathing; the names are pills.</p>
         <p data-for="dark">The same square cells as the heat grid, the line resting on the start edge when pointed at; Loading is the comet over the slots; the names on the top are in the ticker mono.</p>
         <p data-for="cyberpunk">The same neon cells, mono names. Loading: the cells dim and one LOADING is deciphered over the matrix.</p>
@@ -454,7 +456,7 @@
     </div>
 </section>
 
-<section class="cat-block" id="barcell" data-review-item="barcell" data-review-title="Bar in a table cell" data-review-components="bar-cell">
+<section data-review-themes="formal,light,dark,cyberpunk,synthwave,pastel,terminal,forest,blueprint,solstice,brutalism,deco,phantom,grotesk,nostromo,titanium" class="cat-block" id="barcell" data-review-item="barcell" data-review-title="Bar in a table cell" data-review-components="bar-cell">
     <h2>
         A value with a bar in a data table cell<span class="gd-tag gd-tag--package">package</span><span class="gd-tag gd-tag--mock">mock data</span>
     </h2>
@@ -490,6 +492,7 @@
         </ul>
     </div>
     <div data-review-look>
+        <p data-for="formal">Approved; asked again for one repair: at 390 px press Show loading, then again. The cards keep their height (the table grew 90 px while loading); at 1280 nothing changed.</p>
         <p data-for="light">The bar is light’s flat meter line. Show loading: the bars and the figures go out of focus and breathe (the figure a soft pill), the table’s busy panel shows the bead spinner; nothing moves.</p>
         <p data-for="dark">The bar is dark’s machined channel, the figures in the ticker mono. Show loading: the bars and figures are slots the comet crosses, the busy panel shows the spectrum bars.</p>
         <p data-for="cyberpunk">Mono figures. Show loading: the table is one picture, the busy panel’s signal bars and its deciphered word over the dimmed rows.</p>
@@ -583,7 +586,7 @@
 
 
 
-            <section
+            <section data-review-themes="light,dark,cyberpunk,synthwave,pastel,terminal,forest,blueprint,solstice,brutalism,deco,phantom,grotesk,nostromo,titanium"
                 class="kt-sec"
                 id="week"
                 data-review-item="week"
@@ -637,7 +640,7 @@
                 <pre class="kt-log" id="kt-week-log" aria-label="What the agenda reported" aria-live="off"></pre>
             </section>
 
-            <section
+            <section data-review-themes="light,dark,cyberpunk,synthwave,pastel,terminal,forest,blueprint,solstice,brutalism,deco,phantom,grotesk,nostromo,titanium"
                 class="kt-sec"
                 id="week-crowd"
                 data-review-item="week-crowd"
@@ -694,7 +697,7 @@
                 <pre class="kt-log" id="kt-crowd-log" aria-label="What the agenda reported" aria-live="off"></pre>
             </section>
 
-            <section
+            <section data-review-themes="light,dark,cyberpunk,synthwave,pastel,terminal,forest,blueprint,solstice,brutalism,deco,phantom,grotesk,nostromo,titanium"
                 class="kt-sec"
                 id="week-states"
                 data-review-item="week-states"
@@ -744,7 +747,7 @@
                 </div>
             </section>
 
-            <section
+            <section data-review-themes="formal,light,dark,cyberpunk,synthwave,pastel,terminal,forest,blueprint,solstice,brutalism,deco,phantom,grotesk,nostromo,titanium"
                 class="kt-sec"
                 id="gantt"
                 data-review-item="gantt"
@@ -768,6 +771,7 @@
                     </ul>
                 </div>
                 <div data-review-look>
+                    <p data-for="formal">Press Start a run, then Fast time, and watch a bar grow; then drag across the plot. Approved; asked again for one repair: the newest hour at the end edge of the axis stands whole before its rule, never cut by the edge (at 390 px too).</p>
                     <p data-for="light">Press Start a run, then Fast time, and watch a bar grow; then drag across the plot. Capsule bars. A running bar has no stripes: a white-ringed cyan bead runs along it to its growing end and back, as on light’s busy bar. The line for now is cyan with the bead on top. Point at a bar: it settles 2 px.</p>
                     <p data-for="dark">Press Start a run, then Fast time, and watch a bar grow; then drag across the plot. Square bars. A running bar is a dark slot inside the film, crossed by the comet again and again (the line running its track), no stripes. The line for now is cyan with its glow.</p>
                     <p data-for="cyberpunk">Press Start a run, then Fast time, and watch a bar grow; then drag across the plot. Bars with a small cut corner. A running bar is a data stream: the void in a yellow rim with cyan dashes feeding through it; a short run stays a bar, not a wedge.</p>
@@ -805,7 +809,7 @@
                 <pre class="kt-log" id="kt-gantt-log" aria-label="What the timeline reported" aria-live="off"></pre>
             </section>
 
-            <section
+            <section data-review-themes="formal,light,dark,cyberpunk,synthwave,pastel,terminal,forest,blueprint,solstice,brutalism,deco,phantom,grotesk,nostromo,titanium"
                 class="kt-sec"
                 id="gantt-states"
                 data-review-item="gantt-states"
@@ -827,6 +831,7 @@
                     </ul>
                 </div>
                 <div data-review-look>
+                    <p data-for="formal">Check the ghost lanes against the real lanes above, and the card against its bar. Approved; asked again for two repairs: Empty and Error have a lane-sized room under the axis for their sentence, which no longer runs over the legend (the failure wraps to two lines at 390 px and the room grows with it); the axis label at the end edge stands whole.</p>
                     <p data-for="light">Check the ghost lanes against the real lanes above, and the card against its bar. Loading: the ghost bars are out of focus, breathing. The hover card is light’s white card with its shadow, joined under the failed bar.</p>
                     <p data-for="dark">Check the ghost lanes against the real lanes above, and the card against its bar. Loading: the ghost bars are slots the comet crosses. The hover card is dark’s plate inside the film, joined under the failed bar.</p>
                     <p data-for="cyberpunk">Check the ghost lanes against the real lanes above, and the card against its bar. Loading: the ghost bars stand dim and one LOADING is deciphered over the lanes. The hover card is a holo plate joined under the failed bar.</p>
@@ -860,7 +865,7 @@
         <script type="module" src="../../js/auto.js"></script>
         <script type="module" src="demo-tiles.js"></script>
         <script type="application/json" data-review-round>
-            { "round": "2026-10-16-r5", "received": ["2026-10-16-r1", "2026-10-16-r2", "2026-10-16-r3", "2026-10-16-r4"] }
+            { "round": "2026-10-16-r5", "received": ["2026-10-16-r1", "2026-10-16-r2", "2026-10-16-r3", "2026-10-16-r4"], "reopen": ["formal|heat","formal|matrix","formal|barcell","formal|gantt","formal|gantt-states"] }
         </script>
         <script type="module" src="../_review/review.js"></script>
         <script src="../../catalogue/boot-check.js"></script>

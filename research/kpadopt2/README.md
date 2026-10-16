@@ -93,9 +93,12 @@ in one `[kpadopt2]` block of `css/<theme>-register.css`, and a `[kpadopt2-repair
 - **Package changes, formal unchanged:** `js/gantt.js` marks an axis label near the end edge `data-kp-gantt-edge`, and a
   register that sets `--kp-gantt-tick-flip: 1` hangs that label inside the plot (formal keeps 0, so its axis is as approved);
   pastel's loading pieces (`js/loading-pieces.js`) carry one caterpillar per heat row and none per heat or matrix cell.
-- **Found in formal and left as approved:** the heat and matrix loading rows are 6 px taller than the ready rows (the grid
-  grows about 36 px while it loads); the empty and failed timeline sentence sits over the legend; the bar table grows at
-  390 px while it loads; an axis label at the end edge can be cut. The other themes fix these in their repairs block.
+- **Found in formal, repaired in the package** (Kenny, 2026-10-16 15:46, "formal-faults: Herstellen"): the heat and matrix
+  loading rows were 6 px taller than the ready rows; the empty and failed timeline sentence sat over the legend; the bar table
+  grew at 390 px while it loaded; an axis label at the end edge could be cut. `css/components.css` and `js/gantt.js` fix all
+  four (research/approved-formal-notes.md), so the fifteen repairs blocks now repeat what the package does. The sections that
+  show them (heat, matrix, barcell, gantt, gantt-states) ask formal again in this round (`FORMAL_AGAIN` in `build.mjs`, the
+  round's `reopen`, `reopened` in `VERDICTS.json`).
 
 ## Decisions to judge
 

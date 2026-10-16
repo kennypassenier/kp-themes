@@ -26,15 +26,21 @@ const grids = readFileSync(new URL('./parts/grids.html', import.meta.url), 'utf8
 // (research/kpadopt2/VERDICTS.json; gates/check-rereview.mjs refuses a page that offers an approved pair). Formal leaves the page.
 const OPEN = ['actions', 'status', 'facets', 'heat', 'matrix', 'barcell', 'week', 'week-crowd', 'week-states', 'gantt', 'gantt-states'];
 const THEMES = 'light,dark,cyberpunk,synthwave,pastel,terminal,forest,blueprint,solstice,brutalism,deco,phantom,grotesk,nostromo,titanium';
-/** Keep only the open sections of a run of sections. @param {string} html */
+// Kenny reopened four faults in formal on 2026-10-16 15:46 ("formal-faults: Herstellen"; research/approved-formal-notes.md):
+// the sections that show them ask formal again in this same round, beside the fifteen other themes. The page names formal
+// too (the review dialog walks the page's themes); every other section names only the fifteen.
+const FORMAL_AGAIN = ['heat', 'matrix', 'barcell', 'gantt', 'gantt-states'];
+/** Keep only the open sections of a run of sections, each naming the themes it asks. @param {string} html */
 const openOnly = (html) =>
-    html.replace(/[ \t]*<section\b[\s\S]*?<\/section>\n?/g, (block) =>
-        OPEN.includes(/\bdata-review-item="([^"]+)"/.exec(block)?.[1] ?? '') ? block : '',
-    );
+    html.replace(/[ \t]*<section\b[\s\S]*?<\/section>\n?/g, (block) => {
+        const item = /\bdata-review-item="([^"]+)"/.exec(block)?.[1] ?? '';
+        if (!OPEN.includes(item)) return '';
+        return block.replace(/<section\b/, `<section data-review-themes="${FORMAL_AGAIN.includes(item) ? `formal,${THEMES}` : THEMES}"`);
+    });
 
 const html = `<!doctype html>
 <!-- Written by research/kpadopt2/build.mjs; edit build.mjs, parts/, demo-*.css and demo-*.js, not this file. -->
-<html lang="en" data-theme="light" data-review="kpadopt2" data-review-themes="${THEMES}">
+<html lang="en" data-theme="light" data-review="kpadopt2" data-review-themes="formal,${THEMES}">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -73,7 +79,7 @@ const html = `<!doctype html>
                     rows</b>, the <b>facet list</b>, the <b>heat grid</b>, the <b>matrix</b>, the <b>bar in a table cell</b>, the <b>week
                     agenda</b> with its states and the <b>run timeline</b>. This round asks the fifteen other themes, each built from that
                     theme’s own approved parts: its buttons, segmented track, menus, loading picture, arrival and signature motion. Formal is
-                    not on the page (approved). Every section says what you should see under <b>Expected</b>, and the review dialog’s
+                    asked again only for the heat grid, the matrix, the bar cell and the run timeline, each with one repair to judge. Every section says what you should see under <b>Expected</b>, and the review dialog’s
                     “Look at” line names what is this theme’s own. Everything with a <code>kp-</code> class and every script under
                     <code>js/</code> is the package; the sample data and the buttons that drive a demo are this page’s.
                 </p>
@@ -93,7 +99,7 @@ ${openOnly(time)}
         <script type="module" src="../../js/auto.js"></script>
         <script type="module" src="demo-tiles.js"></script>
         <script type="application/json" data-review-round>
-            { "round": "2026-10-16-r5", "received": ["2026-10-16-r1", "2026-10-16-r2", "2026-10-16-r3", "2026-10-16-r4"] }
+            { "round": "2026-10-16-r5", "received": ["2026-10-16-r1", "2026-10-16-r2", "2026-10-16-r3", "2026-10-16-r4"], "reopen": ${JSON.stringify(FORMAL_AGAIN.map((item) => `formal|${item}`))} }
         </script>
         <script type="module" src="../_review/review.js"></script>
         <script src="../../catalogue/boot-check.js"></script>

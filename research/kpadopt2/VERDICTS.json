@@ -116,5 +116,31 @@
             "notApproved": []
         }
     ],
-    "reopened": []
+    "reopened": [
+        {
+            "item": "gantt",
+            "theme": "formal",
+            "reason": "Kenny chose to reopen it in formal on 2026-10-16 15:46 (\"formal-faults: Herstellen\"): an axis label at the end edge was cut; js/gantt.js's end-edge flip is now the component's default (commit 5e7d7efc)."
+        },
+        {
+            "item": "gantt-states",
+            "theme": "formal",
+            "reason": "Kenny chose to reopen it in formal on 2026-10-16 15:46 (\"formal-faults: Herstellen\"): the empty and failed sentence ran over the legend and the end-edge axis label was cut; the sentence has its own room (dd92c3b2) and the label stands before its rule (5e7d7efc)."
+        },
+        {
+            "item": "heat",
+            "theme": "formal",
+            "reason": "Kenny chose to reopen it in formal on 2026-10-16 15:46 (\"formal-faults: Herstellen\"): loading rows were taller than ready rows (the grid grew 37.5 px); the skeleton cells drop the skeleton-to-skeleton gap (commit f2d8b367)."
+        },
+        {
+            "item": "matrix",
+            "theme": "formal",
+            "reason": "Kenny chose to reopen it in formal on 2026-10-16 15:46 (\"formal-faults: Herstellen\"): loading rows were taller than ready rows (the matrix grew 36 px); the skeleton cells drop the skeleton-to-skeleton gap (commit f2d8b367)."
+        },
+        {
+            "item": "barcell",
+            "theme": "formal",
+            "reason": "Kenny chose to reopen it in formal on 2026-10-16 15:46 (\"formal-faults: Herstellen\"): at 390 px the table grew 90 px while loading; the loading figure holds the figure's line height (commit f6e97a0c)."
+        }
+    ]
 }
