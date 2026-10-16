@@ -6836,3 +6836,9 @@ dialog walks only the open pairs.
 **8 · Fallback.** If it fails, no link goes to Kenny until the approved pairs are removed by hand.
 
 **9 · When we review the measure.** At the retrospective of this kp-themes release.
+
+**Second instance, same root cause (2026-10-16).** The new round of kpadopt-nav carried Kenny's already-received round-2
+answer, and the Agenda said "1 demo has an answer you have not copied yet". Kenny asked on 2026-10-04 that a re-review
+resets its own stored state so he never clears it by hand; that rule was also among the 26 memory entries past the index
+load limit. Measure: the review kit drops answers (and carried words) of rounds recorded in VERDICTS.json (the page's
+`received` list, progress.js `dropReceivedAnswer`), and gates/check-rereview.mjs keeps that list in step with VERDICTS.json.

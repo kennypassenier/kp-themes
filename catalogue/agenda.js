@@ -18,7 +18,7 @@
 import { THEMES } from '../js/theme-registry.js';
 import { JUDGEMENT_EVENT, loadJudgements } from './judgements.js';
 import { gatherBlocks, isOpen } from './open-pairs.js';
-import { ANSWER_EVENT, answerWaiting } from '../research/_review/progress.js';
+import { ANSWER_EVENT, answerWaiting, dropReceivedAnswer } from '../research/_review/progress.js';
 import { composeBlocks, counted, demoStatus, dependentsOf, inOrder, labelOf, readDecided, readDemo, researchPages, reviewUrl } from './waiting.js';
 
 const ROOT = new URL('../', import.meta.url);
@@ -497,6 +497,8 @@ for (const demo of demos) {
     readDemo(demo.page.href)
         .then((shape) => {
             demo.shape = shape;
+            // An answer of a round Claude already received is not waiting to be copied (progress.js, dropReceivedAnswer).
+            if (shape) dropReceivedAnswer(shape.id, shape.round);
         })
         .catch(() => {
             demo.failed = true;

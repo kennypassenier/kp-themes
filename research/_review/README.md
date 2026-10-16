@@ -185,6 +185,16 @@ A round with `"allJudged": true` approved every pair of the page that is not in 
 before it touches the demo. To re-review: delete the approved sections from the page, give the others
 `data-review-themes` naming only their open themes, and name the redrawn pairs in the round's `reopen`.
 
+**Received rounds are not carried.** The demo's answer is kept in the browser until Kenny copies it, and carried into a
+round that reopens questions; the Agenda then says it has not been copied. An answer Claude already received (Kenny
+delivered it through a form, so the kit never saw a Copy press) must not come back (Kenny, 2026-10-16: a fresh round starts
+empty). When recording a round in `VERDICTS.json`, add `"page": "<id of the page round that answer was given on>"`, and list
+the same ids in the new page round's script: `{ "round": "r4", "received": ["r3"], "reopen": [...] }`. The kit stores the
+page round id with every answer; on the demo page and on the Agenda it deletes an answer (or carried words) of a received
+round. An answer stored without a round id belongs to the round before the current one, so it is dropped as soon as
+`received` is non-empty. An answer of a round not listed stays and is still counted as not copied. The gate below refuses a
+page whose `received` differs from the `page` ids in `VERDICTS.json`.
+
 `gates/check-rereview.mjs` (in `npm run gates`) refuses a demo with a `VERDICTS.json` whose page still offers a pair whose
 latest verdict is approved, and names the pairs. The only way past is a `reopened` entry with a written `reason` (the
 component changed after the approval). A demo whose every pair is approved is Decided instead: `decided.json`, the README's
