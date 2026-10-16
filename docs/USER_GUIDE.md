@@ -1935,7 +1935,7 @@ a row. Exports: `setRowBusy`, `removeRow`, `attachRowKeys`, `ROW_KEYS`,
 ## Seven everyday components [kpadopt4-ideas]
 
 Seven things Kenny's apps kept drawing by hand, approved as components on 2026-10-16 and demoed in formal
-(`research/kpadopt4-ideas/`). The registers do not answer them yet (they are on `gates/register-pending.json`), so every
+(`research/kpadopt4/`). The registers do not answer them yet (they are on `gates/register-pending.json`), so every
 theme draws them from its tokens and its own buttons, segmented control, date picker, hover card and busy card.
 `js/auto.js` fetches each module only on a page that carries its markup; each attach function returns a detach.
 

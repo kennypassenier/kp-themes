@@ -1,5 +1,5 @@
-// research/kpadopt4-recipes · 5, the checklist (mock data; the list is js/checklist.js).
-import { byId, say } from './kit.js';
+// research/kpadopt4 (recipes sections) · 5, the checklist (mock data; the list is js/checklist.js).
+import { byId, say } from './recipes-kit.js';
 import {
     CHECKLIST_CLEAR_EVENT,
     CHECKLIST_EVENT,
@@ -28,8 +28,8 @@ const PACKING = [
     { id: 'apron', label: 'Apron', group: 'Kitchen bag' },
 ];
 
-const list = byId('k4-list');
-const stay = byId('k4-list-stay');
+const list = byId('kc-list');
+const stay = byId('kc-list-stay');
 attachChecklists(byId('checklist'));
 setChecklistItems(stay, PACKING);
 
@@ -42,21 +42,21 @@ const load = () => {
     }, 2500);
 };
 load();
-byId('k4-list-load').addEventListener('click', load);
-byId('k4-list-fail').addEventListener('click', () => {
+byId('kc-list-load').addEventListener('click', load);
+byId('kc-list-fail').addEventListener('click', () => {
     setChecklistItems(list, []);
     setChecklistState(list, 'error', 'The list could not be read. Check the connection and press Load again.');
 });
-byId('k4-list-empty').addEventListener('click', () => {
+byId('kc-list-empty').addEventListener('click', () => {
     setChecklistState(list, 'ready');
     setChecklistItems(list, []);
 });
-byId('k4-list-reset').addEventListener('click', () => {
+byId('kc-list-reset').addEventListener('click', () => {
     setChecklistState(list, 'ready');
     setChecklistItems(list, SAMPLE);
 });
 
-const log = byId('k4-list-log');
+const log = byId('kc-list-log');
 const section = byId('checklist');
 section.addEventListener(CHECKLIST_EVENT, (event) => {
     const { id, checked, items } = /** @type {CustomEvent} */ (event).detail;

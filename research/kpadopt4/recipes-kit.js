@@ -1,4 +1,4 @@
-// research/kpadopt4-recipes: the page's helpers (mock).
+// research/kpadopt4 (recipes sections): the page's helpers (mock).
 
 /** @param {string} id @returns {HTMLElement} */
 export const byId = (id) => /** @type {HTMLElement} */ (document.getElementById(id));

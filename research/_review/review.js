@@ -596,9 +596,14 @@ const pairOf = (item, theme) => ({ key: `${theme}|${item.id}`, label: `${item.id
  * of its own). Within a topic a step is one theme (Kenny, 2026-10-16 17:44: "1 item per thema per approval, want
  * terminal lijkt eindeloos lang te zijn en ik geraak niet aan items onder terminal"): the topic's sections in that
  * theme, each in a frame of its own (lane mode above) at the stage's full width, then the next theme of the same
- * topic, then the next topic. A round that asks one theme, and a demo of aspect pages, walk theme by theme as before.
+ * topic, then the next topic. A round that asks one theme walks its topics the same way when it names two or more;
+ * without topics it, and a demo of aspect pages, walk theme by theme as before.
  */
-const TOPIC_MODE = !ASPECT_MODE && new Set(items.flatMap(askedThemes)).size > 1;
+// A one-theme round whose sections name two or more topics walks them topic by topic too (2026-10-16, the one
+// kpadopt4 page: 51 formal sections in nine topics would otherwise be one endless step).
+const TOPIC_MODE =
+    !ASPECT_MODE &&
+    (new Set(items.flatMap(askedThemes)).size > 1 || new Set(items.map((item) => item.section.dataset.reviewTopic).filter(Boolean)).size > 1);
 
 /** @type {Step[]} */
 const steps = TOPIC_MODE ? topicSteps() : themeSteps();

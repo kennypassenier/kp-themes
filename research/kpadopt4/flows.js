@@ -1,4 +1,4 @@
-// research/kpadopt4-flows: the page's own data and the buttons that drive a state. Every component is the package's;
+// research/kpadopt4 (flows sections): the page's own data and the buttons that drive a state. Every component is the package's;
 // this file only hands them sample data (a job search, a homelab's schedules, a service's secrets) on a fixed clock,
 // 16/10/2026 12:00 in Brussels, so the review reads the same every day.
 

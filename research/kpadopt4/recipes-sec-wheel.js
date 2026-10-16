@@ -1,5 +1,5 @@
-// research/kpadopt4-recipes · 1, the wheel (mock dishes and weights; the wheel is js/wheel.js).
-import { byId, say } from './kit.js';
+// research/kpadopt4 (recipes sections) · 1, the wheel (mock dishes and weights; the wheel is js/wheel.js).
+import { byId, say } from './recipes-kit.js';
 import { WHEEL_RESULT_EVENT, WHEEL_SPIN_EVENT, attachWheels, setWheelItems, setWheelState } from '../../js/wheel.js';
 import { attachSegmented, SEGMENTED_EVENT } from '../../js/segmented.js';
 
@@ -16,8 +16,8 @@ const DISHES = [
 ];
 const as = (/** @type {typeof DISHES} */ list) => list.map(({ id, label, weight }) => ({ id, label, weight }));
 
-const wheel = byId('k4-wheel');
-const phone = byId('k4-wheel-phone');
+const wheel = byId('kc-wheel');
+const phone = byId('kc-wheel-phone');
 attachWheels(byId('wheel'));
 attachSegmented(byId('wheel'));
 setWheelItems(wheel, as(DISHES));
@@ -30,18 +30,18 @@ const FILTERS = {
     one: () => DISHES.filter((d) => d.id === 'soup'),
     none: () => [],
 };
-byId('k4-wheel-filter').addEventListener(SEGMENTED_EVENT, (event) => {
+byId('kc-wheel-filter').addEventListener(SEGMENTED_EVENT, (event) => {
     const value = /** @type {CustomEvent} */ (event).detail.value;
     setWheelState(wheel, 'ready');
     setWheelItems(wheel, as(FILTERS[value]()));
 });
-byId('k4-wheel-load').addEventListener('click', () => {
+byId('kc-wheel-load').addEventListener('click', () => {
     setWheelState(wheel, 'loading');
     setTimeout(() => setWheelState(wheel, 'ready'), 2500);
 });
-byId('k4-wheel-fail').addEventListener('click', () => setWheelState(wheel, 'error', 'The dishes could not be read. Press Load again.'));
+byId('kc-wheel-fail').addEventListener('click', () => setWheelState(wheel, 'error', 'The dishes could not be read. Press Load again.'));
 
-const log = byId('k4-wheel-log');
+const log = byId('kc-wheel-log');
 const section = byId('wheel');
 section.addEventListener(WHEEL_SPIN_EVENT, (event) =>
     say(log, `kp-wheel-spin · drawn first: ${/** @type {CustomEvent} */ (event).detail.item.label}`),

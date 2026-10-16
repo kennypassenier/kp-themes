@@ -1,0 +1,156 @@
+# research/kpadopt4: the fourth adoption round, one page
+
+Everything the component survey of 2026-10-16 found missing from Kenny's apps, built in the package and shown on
+**one** page, [`demo.html`](demo.html), **formal only** (`data-review-themes="formal"`): 51 sections in nine review
+topics (Values and figures; Rows and lists; Records and forms; Cards and states; Flows and timelines; Secrets and
+confirmation; Time and timers; Cooking (AuDHD recipes); Commands and comparison). Every section keeps its "Expected:"
+block and its look-at line for formal.
+
+The page was put together from five builder demos (data, rows, flows, recipes, ideas); their notes follow, one
+chapter each. The page's own styles and scripts stay one file per source (`data.css`/`data.js` with the `dd-`
+prefix, `rows.*` with `kr-`, `flows.*` with `fd-`, `recipes*.js`/`recipes.css` with `kc-`, `ideas.*` with `ki-`);
+`page.css` lays out the intro, the topic list and the topic headings. Where a note below names `demo.html`,
+`demo.css` or `demo.js`, read the one page and the source's own file.
+
+## data: research/kpadopt4: data pieces every app drew itself, one page
+
+Seven needs from the component survey of 2026-10-16 (G1, G4, G12, G17, G18, G20, G24), built in the package first and shown in
+**formal only** until Kenny approves them: [`demo.html`](demo.html), eight sections in five review topics, `data-review-themes="formal"`.
+
+- Package: every `kp-` class (css/components.css, the block "Data pieces every app drew itself") and js/idmark.js, js/stackbar.js,
+  js/bullets.js, js/code.js, js/tick.js. The registers do not answer them yet (gates/register-pending.json): every theme draws them from
+  its tokens, formal's own skeleton, meter, spinner and busy card included.
+- Mock: the sample data, the state buttons, the readouts, the kv loading swap (the page keeps each value's height) and the 390 px frames.
+
+| Need | What it is for                             | Seen in                                                   | What the package offers now                                                                            | Cost   | Recommendation |
+| ---- | ------------------------------------------ | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | ------ | -------------- |
+| G1   | a plate made from a name                   | homelab `stackMark`, JobTracker `Mark`                    | `.kp-idmark` (letters, `--pattern`, `--round`, `--glyph`, five sizes), `idmarkFor`, `idmarkColours`    | medium | Adopt          |
+| G4   | parts of one whole with a legend           | homelab `hk-stack-bar`                                    | `.kp-stackbar`, `setStackbar` (hover card, arrow keys, Other, over the whole, marks)                   | medium | Adopt          |
+| G12  | a value against a threshold, per row       | JobTracker follow-up clock                                | `.kp-bullets`, `setBullets` on the meter with its mark; busy card while loading                        | medium | Adopt          |
+| G17  | freshness line and page header with meta   | JobTracker `PageHeader`, `Freshness`                      | already `.kp-page-header` and `[data-kp-ago]`; new opt-in `__heading` / `__line` / `__lead` / `__meta` | small  | Adopt the line |
+| G18  | key-value grid; label, control, aside rows | homelab `st-set`, `hl-kv`, JobTracker `Row`, chassis `dl` | `.kp-kv` (`--lines`, `--stack`, `--columns`), `.kp-formrows` / `.kp-formrow` (`--top`, `--wide`)       | small  | Adopt          |
+| G20  | a payload or code block                    | kyu `pre.snippet`, chassis requests                       | `.kp-code`, `setCode` (Pretty/Raw, Wrap, Copy, lines, fold, truncated, states)                         | medium | Adopt          |
+| G24  | a live number that ticks                   | JobTracker `TickNumber`                                   | `[data-kp-count]` already counts up once; new `[data-kp-tick]`, `tickTo`                               | small  | Adopt          |
+
+Not built: a vertical share bar, a sticky page header and in-place threshold editing (no app asked for them in code). The share bar is one figure,
+like the meter, so its loading is its own pulsing bar and not the busy card; the bullet list and the code block lay the busy card.
+
+Measured in Firefox (playwright-core, firefox-1538) at 1280 and 390 px, on the page and in the review dialog: no console errors, no text touching a
+neighbour, a graphic or an edge, no sideways scroll, every component the same height in every state (bullets, share bar, code block, kv), loading
+animating (busy card in the bullets and code block), Copy the same width as Copied, the tick landing exactly on the written text.
+
+## rows: Rows, cards and choices (kpadopt4-rows)
+
+Seven needs from the 2026-10-16 survey of what Kenny's apps still draw themselves (G14, G15, G16, G19, G22, G23, G25),
+checked against the package first. Formal only, until Kenny approves it.
+
+| Need                    | What the apps draw                                | Package answer                                                                                                                    | Build    |
+| ----------------------- | ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| G14 "Needs you" band    | JobTracker `jt-attn` (Overview, Dossier, Queue)   | already `.kp-attention` + `setAttention`/`attachAttention`: rows of icon, title and sentence, actions, worst first, keyed refresh | none     |
+| G15 check tile          | JobTracker `jt-check-tile`                        | `data-kp-layout="tiles"` on `.kp-fieldset` (new option)                                                                           | CSS      |
+| G16 card in four states | JobTracker `Card` `state`, homelab `failBox`      | `.kp-card[data-kp-state]`, js/card-state.js (new module, lays js/busy-card.js)                                                    | CSS + JS |
+| G19 inbox / message row | homelab `nx-inbox`, JobTracker queue, kyu backlog | `.kp-action-list--lead` (new option) + `setRowBusy`, `removeRow`, `attachRowKeys` in js/actions.js                                | CSS + JS |
+| G22 file list           | JobTracker Files                                  | the same rows; `.kp-upload__file` stays for files being sent                                                                      | CSS      |
+| G23 readiness checks    | JobTracker Readiness, homelab doctor              | `.kp-statusrow` `warn` + `__fix`, `countStatus` (new options)                                                                     | CSS + JS |
+| G25 appointments        | JobTracker Appointments                           | the same rows, `time.__when`, `li.__group`, `data-kp-state="next"`/`"past"`                                                       | CSS      |
+
+Not built: bulk select, swipe actions, an undo toast after a delete (no current app uses them), relative "in 7 days"
+words (the page writes them), a count chip on a choice tile.
+
+Demo: `demo.html` (formal), seven sections in four topics, each with its Expected block and a 360 px column.
+
+## flows: Flows and records (kpadopt4-flows)
+
+Round 1, formal only (2026-10-16). Seven needs from the component survey of Kenny's apps
+(homelab admin web, JobTracker, chassis-rs, kyu, almanac), each built into the package and shown in
+`demo.html` with every state, at the page's width and at 390 px.
+
+| Need                                  | What the apps draw today                                                         | What the package now has                                                                                                                                                                       | Built as                                       |
+| ------------------------------------- | -------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| G2 secret reveal                      | homelab `sx-mask` (Secrets), kyu `data-reveal-target`, chassis client token line | `.kp-secret[data-kp-secret]` in js/patterns.js: mask, Reveal with countdown and drain rule, Copy without showing, hold, wrap, disabled with reason, value read on demand (`kp-secret-request`) | extension of `.kp-masked` + `.kp-copyable`     |
+| G21 dependent confirm + Manage dialog | chassis `client-dialog__*`, almanac calendars a source still writes to           | `.kp-dialog--wide`, `__head`, `__section`, `__heading`, `__note`, `__section--danger`; `data-kp-confirm-dependents`, `-blocked`, `-type`                                                       | extension of `.kp-dialog` and the confirmation |
+| G5 header sort the page carries out   | homelab Schedules `sch-sort` with its own `sched-sort` key                       | `data-kp-sort-external` on the data table, `th[aria-disabled]`                                                                                                                                 | extension of `.kp-datatable`                   |
+| G10 pipeline                          | JobTracker Overview `Pipeline` (`pl__*`)                                         | `.kp-pipeline` and js/pipeline.js                                                                                                                                                              | new component                                  |
+| G11 journey stepper                   | JobTracker Dossier `Journey`                                                     | `.kp-steplist--journey`, state `current`, `data-kp-tone`; the dated line is `.kp-gantt--line`                                                                                                  | extension of `.kp-steplist` and `.kp-gantt`    |
+| G13 contact timeline                  | JobTracker Overview `Timeline`                                                   | `setGanttPoints`, `setGanttKinds`, `setGanttZones`, range word `all`, week steps, lane `href` and `sub`                                                                                        | extension of `.kp-gantt`                       |
+| G9 empty-state drawings               | homelab `drawing()` and `nx-art`                                                 | `data-kp-art` and js/art.js; formal's ledger set                                                                                                                                               | new module on `.kp-empty`                      |
+
+Every register but formal lists the new roots as pending (gates/register-pending.json); the drawings
+show only in a theme that has its own set. Mock in the page: the sample data, the fixed clock
+(16/10/2026 12:00 Brussels), the delayed secret answers and the buttons that drive a state.
+
+## recipes: research/kpadopt4: six calm components for a recipe app
+
+The recipe app (parked until after the Life task app; its concept may still change) is for someone with AuDHD. The
+AuDHD-recipes thread listed six components kp-themes lacked, each with its options and quality-of-life wishes
+(2026-10-16 19:25). Each is built as a general kp component, useful beyond recipes, and shown on one page,
+[`demo.html`](demo.html), **formal only** (`data-review-themes="formal"`), until Kenny approves it. The other fifteen
+registers do not answer the new roots yet (gates/register-pending.json); each does once it is judged in its theme.
+
+- Package: every `kp-` class and every script under `js/`. Mock: the sample data, the frames, the event logs and the
+  buttons that drive a section (`demo.js`, `kit.js`, `sec-*.js`, `demo.css`).
+
+| Need                 | What the package offers now                      | Built how                                                                                |
+| -------------------- | ------------------------------------------------ | ---------------------------------------------------------------------------------------- |
+| 1 · wheel            | `.kp-wheel`, js/wheel.js                         | new, from the theme's primary button, chart colours, busy card and size motion           |
+| 2 · cook mode        | `.kp-focus-steps`, js/focus-steps.js             | new, from `.kp-button`, the progress bar, the alert, the busy card and the timer starter |
+| 3 · timers           | `.kp-timers`, `.kp-timer`, js/timer.js           | new, from `.kp-button`, the progress bar and the theme's arrival and leave               |
+| 4 · quantity         | `.kp-quantity`, js/quantity.js                   | new, from `.kp-button` and the field                                                     |
+| 5 · checklist        | `.kp-checklist`, js/checklist.js                 | new, from the field's checkbox, `.kp-button`, the busy card and the theme's size motion  |
+| 6 · three-way filter | `data-kp-segmented="tri"` on the segmented chips | an opt-in mode of the approved segmented chips; the facet list stays checkboxes          |
+
+What the thread listed as already covered (cards, segmented, facets, combobox, upload, steplist, wizard, datepicker,
+week, chart, toasts, dialogs) needed nothing.
+
+For the review, AuDHD choices made on purpose: no motion that is not the result of a press (the wheel turns only on
+Spin; a checklist row glides only to show where it went; nothing pulses or loops but the loading cards); every state is
+a word and a shape as well as a colour; targets are at least 44 px (48 on touch, 64 for cook mode's two buttons); text
+and controls keep their places in every state (reserved lines, held widths). Two questions for the per-theme round, not
+for formal: whether a theme gives the wheel's settle its own curve (`--kp-wheel-ease`; titanium's "metal does not
+ease" would stop a wheel dead), and how each theme draws an ended timer (`--kp-timer-done-*`; formal draws its red-ink
+entry).
+
+## ideas: research/kpadopt4: seven new components, in formal
+
+Kenny approved seven new kp-themes components on 2026-10-16 19:32, all marked "Onmisbaar". Each is built from the
+package's own parts and shown in [`demo.html`](demo.html), **formal only** (`data-review-themes="formal"`), one review
+topic per component, every state (loading, empty, error, disabled, busy, long text, phone width) on the page with an
+"Expected:" block.
+
+- Package: every `kp-` class and every script under `js/`. Mock: the sample data (fixed up to 16/10/2026), the frames,
+  the event readouts and the controls marked "demo" (`demo.js`, `demo.css`).
+
+| Need           | What the package offers now                                                   | Built from                                          | Cost   | Status   |
+| -------------- | ----------------------------------------------------------------------------- | --------------------------------------------------- | ------ | -------- |
+| uptime-strip   | `.kp-uptime`, `js/uptime.js` (`setUptime`, `kp-uptime-pick`)                  | heat grid fills, hover card, busy card, skeleton    | medium | built    |
+| type-confirm   | `data-kp-confirm-type` on the confirmation (extended), `data-kp-type-confirm` | the confirmation dialog, kp-field, kp-badge, button | small  | extended |
+| command-block  | `.kp-command`, `js/command.js` (`attachCommands`)                             | copy button (js/patterns.js), kp-badge, `pre`       | small  | built    |
+| visual-timer   | `.kp-timer-disc`, `js/timer-disc.js` (`attachTimerDiscs`)                     | kp buttons, the state word, the countdown's clock   | medium | built    |
+| numeric timer  | `.kp-countdown`, `js/countdown.js` (`attachCountdowns`, `countdownClock`)     | kp buttons, the state word                          | medium | built    |
+| range-picker   | `.kp-range`, `js/range.js` (`attachRanges`, `kp-range-change`)                | segmented control, date picker, popover, buttons    | medium | built    |
+| compare-slider | `.kp-compare`, `js/compare.js` (`attachCompares`, `kp-compare-change`)        | skeleton, the theme's ink and motion tokens         | medium | built    |
+
+Why each is what it is:
+
+- **uptime-strip** is a new component, not a heat grid option: the heat grid is rows by columns with a label column and
+  an axis, where the strip is one thin row that must never wrap, shows fewer cells on a phone and carries its own
+  summary. It reuses the heat grid's fills and patterns, so a state reads the same in both.
+- **type-confirm** extends the approved confirmation (`js/components.js`, no new import, so the closure chassis-rs
+  vendors stays as it is); without `data-kp-confirm-type` the dialog is unchanged. The homelab action dialog's rule
+  (`nameTyped`, `pressGate` in `admin/web/js/actionforms.js`) is the reference: trimmed, capitals count.
+- **command-block** builds on the package's copy button (`[data-kp-copy]`) rather than a copy of its own.
+- **The two timers** are separate components, as asked, on one clock (`countdownClock()`). They are named
+  `.kp-timer-disc` and `.kp-countdown` so they do not collide with the recipes branch's named kitchen timers, which may
+  run on the same clock.
+- **range-picker** composes the segmented control, the date picker and the popover plate; Custom… is a button beside the
+  radio group, so the arrow keys never open the panel by moving over it.
+- **compare-slider** cuts each pane with `clip-path`, so a live pane is only hit where it shows.
+
+Not shown and why: a timer has no loading state (nothing is fetched), and a command block, a typed confirmation and a
+compare slider have no disabled state of their own (the typed confirmation shows its button held off instead).
+
+The two ideas Kenny marked "Later" (nudge-card, notification-log) are written down in
+[`../IDEAS_LATER.md`](../IDEAS_LATER.md).
+
+Recommendation: approve in formal, then answer each component in the fifteen other themes' registers (they are on
+`gates/register-pending.json` until then).

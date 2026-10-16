@@ -7,7 +7,7 @@ until it is built (then it moves to the CHANGELOG) or dropped (then the section 
 ## nudge-card
 
 **Marked "Later" by Kenny on 2026-10-16 19:32**, in the same answer that approved the seven components of
-`research/kpadopt4-ideas/`.
+`research/kpadopt4/`.
 
 One calm prompt a day that asks for a small input and goes away by itself: a single card, not a toast and not a
 notification, that says one thing ("How did today go?"), offers one or two answers, and dismisses itself once answered

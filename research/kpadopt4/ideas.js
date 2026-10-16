@@ -1,4 +1,4 @@
-// research/kpadopt4-ideas: the demo's wiring. The components are the package's own (js/uptime.js and the others named
+// research/kpadopt4 (ideas sections): the demo's wiring. The components are the package's own (js/uptime.js and the others named
 // per section); the sample data, the readouts and the buttons that drive a section are this page's (mock). Loaded
 // before js/auto.js, so what is set here is what the page starts with. The sample days run up to a fixed day,
 // 16/10/2026, so the page reads the same on every visit.
@@ -97,10 +97,10 @@ const SERVICES = {
 };
 
 const strips = {
-    jellyfin: byId('k4-uptime-jellyfin'),
-    kyu: byId('k4-uptime-kyu'),
-    almanac: byId('k4-uptime-almanac'),
-    hours: byId('k4-uptime-hours'),
+    jellyfin: byId('ki-uptime-jellyfin'),
+    kyu: byId('ki-uptime-kyu'),
+    almanac: byId('ki-uptime-almanac'),
+    hours: byId('ki-uptime-hours'),
 };
 setUptime(strips.jellyfin, { label: 'jellyfin', periods: SERVICES.jellyfin, from: '90 days ago', to: 'Today' });
 setUptime(strips.kyu, { label: 'kyu', periods: SERVICES.kyu, from: '90 days ago', to: 'Today' });
@@ -108,7 +108,7 @@ setUptime(strips.almanac, { label: 'almanac (added 64 days ago)', periods: SERVI
 setUptime(strips.hours, { label: 'kyu delivery, per hour', periods: hours(), from: '48 hours ago', to: 'This hour' });
 
 // The states strip: the control above it sets its state.
-const stateStrip = byId('k4-uptime-state');
+const stateStrip = byId('ki-uptime-state');
 const LONG = 'jellyfin media server on CT 106, the one the whole family watches in the evening, with transcoding';
 /** @param {string} state */
 const showState = (state) => {
@@ -119,14 +119,14 @@ const showState = (state) => {
     else setUptime(stateStrip, { label: 'kyu', periods: SERVICES.kyu, from: '90 days ago', to: 'Today' });
 };
 showState('loading');
-byId('k4-uptime-states').addEventListener(SEGMENTED_EVENT, (event) => showState(/** @type {CustomEvent} */ (event).detail.value));
+byId('ki-uptime-states').addEventListener(SEGMENTED_EVENT, (event) => showState(/** @type {CustomEvent} */ (event).detail.value));
 
 // Phone width: the same history, fitting and scrolling.
-setUptime(byId('k4-uptime-phone-fit'), { label: 'kyu', periods: SERVICES.kyu, from: '90 days ago', to: 'Today' });
-setUptime(byId('k4-uptime-phone-scroll'), { label: 'kyu', periods: SERVICES.kyu, from: '90 days ago', to: 'Today' });
-setUptime(byId('k4-uptime-phone-loading'), { label: 'kyu', state: 'loading', count: 90 });
+setUptime(byId('ki-uptime-phone-fit'), { label: 'kyu', periods: SERVICES.kyu, from: '90 days ago', to: 'Today' });
+setUptime(byId('ki-uptime-phone-scroll'), { label: 'kyu', periods: SERVICES.kyu, from: '90 days ago', to: 'Today' });
+setUptime(byId('ki-uptime-phone-loading'), { label: 'kyu', state: 'loading', count: 90 });
 
-const uptimeLog = byId('k4-uptime-log');
+const uptimeLog = byId('ki-uptime-log');
 document.addEventListener(UPTIME_PICK_EVENT, (event) => {
     const { key, index, period } = /** @type {CustomEvent} */ (event).detail;
     say(uptimeLog, `kp-uptime-pick · key ${key} · index ${index} · ${period.state}`);
@@ -137,9 +137,9 @@ attachUptimes(document);
 
 import { TYPE_CONFIRM_EVENT } from '../../js/components.js';
 
-const typeLog = byId('k4-type-log');
+const typeLog = byId('ki-type-log');
 // The long list of what the long one deletes.
-const longList = byId('k4-lost-long').content.querySelector('ul');
+const longList = byId('ki-lost-long').content.querySelector('ul');
 for (let i = 1; i <= 24; i++) {
     const li = document.createElement('li');
     li.textContent = `snapshot ${String(i).padStart(2, '0')} · ${String(((i * 3) % 28) + 1).padStart(2, '0')}/09/2026 03:12 · 1.${i} GB`;
@@ -150,15 +150,15 @@ document.addEventListener(TYPE_CONFIRM_EVENT, (event) => {
     say(typeLog, `kp-type-confirm · "${value}" · ${matched ? 'matches' : 'does not match'}`);
 });
 document.addEventListener('click', (event) => {
-    const act = event.target instanceof Element ? event.target.closest('[data-k4-act]') : null;
-    if (act instanceof HTMLButtonElement && !act.disabled) say(typeLog, `pressed: ${act.dataset.k4Act}`);
+    const act = event.target instanceof Element ? event.target.closest('[data-ki-act]') : null;
+    if (act instanceof HTMLButtonElement && !act.disabled) say(typeLog, `pressed: ${act.dataset.kiAct}`);
 });
 // The states shown at once: type into the blocks that carry a value once js/auto.js has filled them.
 const typeIn = () => {
-    for (const block of document.querySelectorAll('[data-k4-typed]')) {
+    for (const block of document.querySelectorAll('[data-ki-typed]')) {
         const input = block.querySelector('input');
         if (!input) return false;
-        input.value = /** @type {HTMLElement} */ (block).dataset.k4Typed ?? '';
+        input.value = /** @type {HTMLElement} */ (block).dataset.kiTyped ?? '';
         input.dispatchEvent(new Event('input', { bubbles: true }));
     }
     return true;
@@ -170,14 +170,19 @@ waitTyped();
 
 /* ------------------------------------------------------------ 3 · the command block */
 
-const cmdLog = byId('k4-cmd-log');
+const cmdLog = byId('ki-cmd-log');
 document.addEventListener('kp-copy', (event) => {
+    // One page holds every topic now: only a copy from a command section is this log's.
+    if (!(event.target instanceof Element) || !event.target.closest('[data-review-item^="command"]')) return;
     const text = /** @type {CustomEvent} */ (event).detail.text;
     say(cmdLog, `kp-copy · ${text.split('\n').length} line(s) · ${JSON.stringify(text.slice(0, 70))}${text.length > 70 ? '…' : ''}`);
 });
-document.addEventListener('kp-copy-failed', () => say(cmdLog, 'kp-copy-failed · the clipboard refused'));
+document.addEventListener('kp-copy-failed', (event) => {
+    if (!(event.target instanceof Element) || !event.target.closest('[data-review-item^="command"]')) return;
+    say(cmdLog, 'kp-copy-failed · the clipboard refused');
+});
 // Demo only: a clipboard that refuses, to show the failure state.
-const refuse = byId('k4-cmd-refuse');
+const refuse = byId('ki-cmd-refuse');
 const realWrite = navigator.clipboard?.writeText?.bind(navigator.clipboard);
 refuse.addEventListener('click', () => {
     const on = refuse.getAttribute('aria-pressed') !== 'true';
@@ -195,30 +200,30 @@ import { timerDiscOf } from '../../js/timer-disc.js';
 // The states shown at once run on demo clocks the page moves by hand (mock), one per state; the live timers above run
 // on the real one.
 const times = { idle: 0, running: 0, paused: 0, ended: 0 };
-const held = /** @type {HTMLElement[]} */ ([...document.querySelectorAll('[data-k4-clock]')]);
+const held = /** @type {HTMLElement[]} */ ([...document.querySelectorAll('[data-ki-clock]')]);
 for (const el of held) {
-    const state = /** @type {keyof typeof times} */ (el.dataset.k4Clock);
+    const state = /** @type {keyof typeof times} */ (el.dataset.kiClock);
     const now = () => times[state];
     if (el.matches('.kp-timer-disc')) attachTimerDiscs(el, { now });
     else attachCountdowns(el, { now });
 }
 const clockOf = (/** @type {HTMLElement} */ el) => timerDiscOf(el) ?? countdownOf(el);
-for (const el of held) if (el.dataset.k4Clock !== 'idle') clockOf(el)?.start();
+for (const el of held) if (el.dataset.kiClock !== 'idle') clockOf(el)?.start();
 times.running = 3 * 60000; // seven of ten minutes left
 times.paused = 6 * 60000; // four left, then paused
-for (const el of held) if (el.dataset.k4Clock === 'paused') clockOf(el)?.pause();
+for (const el of held) if (el.dataset.kiClock === 'paused') clockOf(el)?.pause();
 times.ended = 11 * 60000; // the time is up
-for (const el of held) if (el.dataset.k4Clock === 'ended') clockOf(el)?.state();
+for (const el of held) if (el.dataset.kiClock === 'ended') clockOf(el)?.state();
 
-const discLog = byId('k4-disc-log');
-const countLog = byId('k4-countdown-log');
+const discLog = byId('ki-disc-log');
+const countLog = byId('ki-countdown-log');
 for (const [event, word] of [
     [COUNTDOWN_EVENT, 'kp-countdown-change'],
     [COUNTDOWN_END_EVENT, 'kp-countdown-end'],
 ]) {
     document.addEventListener(event, (e) => {
         const target = /** @type {HTMLElement} */ (e.target);
-        if (target.dataset.k4Clock) return;
+        if (target.dataset.kiClock) return;
         const d = /** @type {CustomEvent} */ (e).detail;
         const name = target.dataset.kpTimerDiscName ?? target.dataset.kpCountdownName;
         const line = `${word} · ${name} · ${d.state ?? 'ended'}${d.remaining !== undefined ? ` · ${Math.ceil(d.remaining / 1000)} s left` : ''}`;
@@ -231,14 +236,14 @@ for (const [event, word] of [
 import { RANGE_EVENT, attachRanges } from '../../js/range.js';
 
 attachRanges(document);
-const rangeLog = byId('k4-range-log');
+const rangeLog = byId('ki-range-log');
 document.addEventListener(RANGE_EVENT, (event) => {
     const d = /** @type {CustomEvent} */ (event).detail;
     say(rangeLog, `kp-range-change · ${d.preset ?? 'custom'} · ${d.start} → ${d.end}`);
 });
 // Demo only: open the custom panel with the end before the start, and apply it.
-byId('k4-range-wrong').addEventListener('click', () => {
-    const main = byId('k4-range-main');
+byId('ki-range-wrong').addEventListener('click', () => {
+    const main = byId('ki-range-main');
     /** @type {HTMLButtonElement} */ (main.querySelector('.kp-range__custom')).click();
     requestAnimationFrame(() => {
         const times = /** @type {NodeListOf<HTMLInputElement>} */ (main.querySelectorAll('.kp-range__time'));
@@ -261,14 +266,14 @@ byId('k4-range-wrong').addEventListener('click', () => {
 
 import { COMPARE_EVENT } from '../../js/compare.js';
 
-const compareLog = byId('k4-compare-log');
+const compareLog = byId('ki-compare-log');
 document.addEventListener(COMPARE_EVENT, (event) => {
     say(compareLog, `kp-compare-change · ${/** @type {CustomEvent} */ (event).detail.position}`);
 });
 // Demo only: hold the first box in its loading state, as if its images were still on their way.
-const loadingToggle = byId('k4-compare-loading');
+const loadingToggle = byId('ki-compare-loading');
 loadingToggle.addEventListener('click', () => {
     const on = loadingToggle.getAttribute('aria-pressed') !== 'true';
     loadingToggle.setAttribute('aria-pressed', String(on));
-    byId('k4-compare-img').dataset.kpCompareState = on ? 'loading' : 'ready';
+    byId('ki-compare-img').dataset.kpCompareState = on ? 'loading' : 'ready';
 });

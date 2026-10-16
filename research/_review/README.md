@@ -60,8 +60,9 @@ catalogue page itself):
 
 - A bar at the top of the page: how many steps and pairs are judged,
   "Review in a dialog" and "Copy answer".
-- A round that asks more than one theme: grouped by topic, one step per theme within a topic, the topic's sections
-  in that one theme (see "Topic steps" below). A round that asks one theme, and a demo of aspect pages:
+- A round that asks more than one theme, or one theme with sections in two or more topics: grouped by topic, one
+  step per theme within a topic, the topic's sections in that one theme (see "Topic steps" below). A round that asks
+  one theme without topics, and a demo of aspect pages:
 - One step per theme: every section of the demo at once, stacked as on
   "Every component, one page", and at the side one row per section with its
   look-at line and a "Not approved" box. The reviewer ticks only what is

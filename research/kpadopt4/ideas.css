@@ -1,31 +1,31 @@
-/* research/kpadopt4-ideas: the page's own frame. Everything with a kp- class is the package; these k4- rules only lay the
+/* research/kpadopt4 (ideas sections): the page's own frame. Everything with a kp- class is the package; these ki- rules only lay the
    sections out, frame the widths and draw the readouts. */
 
-.k4-page {
+.ki-page {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: var(--kp-space-xl, 2rem);
     max-inline-size: 90rem;
 }
 
-.k4-intro,
-.k4-sec__head {
+.ki-intro,
+.ki-sec__head {
     display: grid;
     gap: var(--kp-space-xs, 0.25rem);
 }
 
-.k4-intro :is(h1, p),
-.k4-sec__head :is(h2, p) {
+.ki-intro :is(h1, p),
+.ki-sec__head :is(h2, p) {
     margin: 0;
 }
 
-.k4-intro p,
-.k4-sec__head p {
+.ki-intro p,
+.ki-sec__head p {
     max-inline-size: 80ch;
     color: var(--muted-foreground);
 }
 
-.k4-sec {
+.ki-sec {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: var(--kp-space-md, 1rem);
@@ -38,7 +38,7 @@
 }
 
 /* The "Expected:" block: what to see and what each control does. */
-.k4-expected {
+.ki-expected {
     padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
     border-inline-start: 3px solid var(--primary);
     background: var(--muted);
@@ -46,56 +46,56 @@
     font-size: var(--kp-text-sm, 0.8125rem);
 }
 
-.k4-expected p {
+.ki-expected p {
     margin: 0 0 var(--kp-space-xs, 0.25rem);
 }
 
-.k4-expected ul {
+.ki-expected ul {
     display: grid;
     gap: var(--kp-space-xs, 0.25rem);
     margin: 0;
     padding-inline-start: 1.25rem;
 }
 
-.k4-label {
+.ki-label {
     margin: 0 0 var(--kp-space-xs, 0.25rem);
     color: var(--muted-foreground);
     font-size: var(--kp-text-sm, 0.8125rem);
     font-weight: 600;
 }
 
-.k4-actions {
+.ki-actions {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: var(--kp-space-sm, 0.5rem);
 }
 
-.k4-stack {
+.ki-stack {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: var(--kp-space-lg, 1.5rem);
     min-inline-size: 0;
 }
 
-.k4-stack > * {
+.ki-stack > * {
     min-inline-size: 0;
 }
 
 /* Two or three columns side by side where there is room, one under the other on a phone. */
-.k4-pair {
+.ki-pair {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr));
     gap: var(--kp-space-lg, 1.5rem);
     align-items: start;
 }
 
-.k4-pair > * {
+.ki-pair > * {
     min-inline-size: 0;
 }
 
 /* A frame of a fixed width: what the component does at that width, whatever the page's. */
-.k4-frame {
+.ki-frame {
     box-sizing: border-box;
     max-inline-size: 100%;
     padding: var(--kp-space-md, 1rem);
@@ -103,12 +103,12 @@
     border-radius: var(--radius, 0.5rem);
 }
 
-.k4-frame--phone {
+.ki-frame--phone {
     inline-size: min(360px, 100%);
 }
 
 /* The last event a section's component fired, as the page received it. */
-.k4-log {
+.ki-log {
     box-sizing: border-box;
     min-block-size: calc(3lh + 2 * var(--kp-space-sm, 0.5rem));
     margin: 0;
@@ -122,14 +122,14 @@
     overflow-wrap: anywhere;
 }
 
-.k4-strips {
+.ki-strips {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: var(--kp-space-lg, 1.5rem);
 }
 
 /* A confirmation dialog drawn open in the flow, so every state can be seen at once (the package's .kp-dialog). */
-.k4-static-dialog {
+.ki-static-dialog {
     position: static;
     display: block;
     box-sizing: border-box;
@@ -138,37 +138,37 @@
 }
 
 /* Siblings in one row share one height (the command blocks). */
-.k4-pair--even {
+.ki-pair--even {
     align-items: stretch;
 }
 
 /* Timers in a row: equal columns, every card as tall as its neighbours. */
-.k4-states,
-.k4-four {
+.ki-states,
+.ki-four {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(13rem, 100%), 1fr));
     gap: var(--kp-space-lg, 1.5rem);
     align-items: stretch;
 }
 
-.k4-states > *,
-.k4-four > * {
+.ki-states > *,
+.ki-four > * {
     min-inline-size: 0;
 }
 
 /* Countdowns hold three buttons on one line: their columns are wider. */
-.k4-states--wide {
+.ki-states--wide {
     grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
 }
 
 /* The live panes of the compare slider: each version on the same ground, the same size. */
-.k4-live-pane {
+.ki-live-pane {
     display: grid;
     padding: var(--kp-space-md, 1rem);
     background: var(--background);
 }
 
-.k4-live-card {
+.ki-live-card {
     display: grid;
     gap: var(--kp-space-xs, 0.25rem);
     align-content: start;

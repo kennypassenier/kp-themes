@@ -1,5 +1,5 @@
-// research/kpadopt4-recipes · 2, one step at a time (mock recipe; the view is js/focus-steps.js).
-import { byId, say } from './kit.js';
+// research/kpadopt4 (recipes sections) · 2, one step at a time (mock recipe; the view is js/focus-steps.js).
+import { byId, say } from './recipes-kit.js';
 import {
     FOCUS_STEPS_DONE_EVENT,
     FOCUS_STEPS_EVENT,
@@ -50,32 +50,32 @@ const CURRY = [
     },
 ];
 
-const cook = byId('k4-cook');
-const phone = byId('k4-cook-phone');
+const cook = byId('kc-cook');
+const phone = byId('kc-cook-phone');
 attachFocusSteps(byId('cook'));
 setFocusSteps(cook, CURRY, { start: 2 });
 setFocusSteps(phone, CURRY);
 
-byId('k4-cook-load').addEventListener('click', () => {
+byId('kc-cook-load').addEventListener('click', () => {
     setFocusStepsState(cook, 'loading');
     setTimeout(() => {
         setFocusSteps(cook, CURRY, { start: 2 });
         setFocusStepsState(cook, 'ready');
     }, 2500);
 });
-byId('k4-cook-fail').addEventListener('click', () =>
+byId('kc-cook-fail').addEventListener('click', () =>
     setFocusStepsState(cook, 'error', 'The recipe could not be read. Check the connection and press Load again.'),
 );
-byId('k4-cook-empty').addEventListener('click', () => {
+byId('kc-cook-empty').addEventListener('click', () => {
     setFocusStepsState(cook, 'ready');
     setFocusSteps(cook, []);
 });
-byId('k4-cook-reset').addEventListener('click', () => {
+byId('kc-cook-reset').addEventListener('click', () => {
     setFocusStepsState(cook, 'ready');
     setFocusSteps(cook, CURRY, { start: 2 });
 });
 
-const log = byId('k4-cook-log');
+const log = byId('kc-cook-log');
 const section = byId('cook');
 section.addEventListener(FOCUS_STEPS_EVENT, (event) => {
     const { index, from, total } = /** @type {CustomEvent} */ (event).detail;

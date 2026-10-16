@@ -1,4 +1,4 @@
-/* research/kpadopt4-flows: the page's own frame. Everything with a kp- class is the package; these fd- rules only lay the
+/* research/kpadopt4 (flows sections): the page's own frame. Everything with a kp- class is the package; these fd- rules only lay the
    sections out, frame the widths and hold the open dialogs still on the page. */
 
 .fd-page {
@@ -92,6 +92,11 @@
     font-size: var(--kp-text-xs, 0.75rem);
 }
 
+/* The sort line inside the table's own frame keeps off its edge. */
+.kp-datatable > .fd-note {
+    padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+}
+
 /* A phone: 390 px wide, the component inside it as on the device. */
 .fd-phone {
     box-sizing: border-box;
@@ -121,6 +126,8 @@
    only taken out of the top layer. */
 .fd-stage {
     display: grid;
+    /* One track no wider than the stage, so a wide dialog held here keeps inside it on a phone. */
+    grid-template-columns: minmax(0, 1fr);
     justify-items: center;
     min-inline-size: 0;
     padding: var(--kp-space-lg, 1.5rem) var(--kp-space-md, 0.75rem);

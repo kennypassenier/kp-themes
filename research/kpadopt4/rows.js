@@ -1,4 +1,4 @@
-// research/kpadopt4-rows: the sample data and the buttons that drive the demo. Everything it draws uses the package's
+// research/kpadopt4 (rows sections): the sample data and the buttons that drive the demo. Everything it draws uses the package's
 // classes and calls the package's own functions (js/actions.js, js/card-state.js, js/statusrow.js).
 import { removeRow, setRowBusy } from '../../js/actions.js';
 import { setCardState } from '../../js/card-state.js';
@@ -99,27 +99,27 @@ const inboxRow = (r) =>
         h(
             'div',
             { class: 'kp-row-actions' },
-            button(r.open, { 'data-kp-action': 'open', 'data-k4-open': '' }),
-            r.noSeen ? null : button('Mark seen', { 'data-kp-action': 'seen', 'data-k4-seen': '' }),
+            button(r.open, { 'data-kp-action': 'open', 'data-kr-open': '' }),
+            r.noSeen ? null : button('Mark seen', { 'data-kp-action': 'seen', 'data-kr-seen': '' }),
         ),
     );
 
-const inboxLists = /** @type {HTMLElement[]} */ ([...document.querySelectorAll('[data-k4-inbox], [data-k4-inbox-phone]')]);
+const inboxLists = /** @type {HTMLElement[]} */ ([...document.querySelectorAll('[data-kr-inbox], [data-kr-inbox-phone]')]);
 const drawInbox = () => {
     for (const list of inboxLists) list.replaceChildren(...INBOX.map(inboxRow));
 };
 drawInbox();
-const inboxReadout = /** @type {HTMLElement} */ (document.querySelector('[data-k4-inbox-readout]'));
+const inboxReadout = /** @type {HTMLElement} */ (document.querySelector('[data-kr-inbox-readout]'));
 for (const list of inboxLists) {
     list.addEventListener('click', async (event) => {
         const target = event.target instanceof Element ? event.target : null;
         const row = /** @type {HTMLElement | null} */ (target?.closest('li'));
         if (!row) return;
-        if (target?.closest('[data-k4-open]')) {
+        if (target?.closest('[data-kr-open]')) {
             inboxReadout.textContent = `Opened: ${row.querySelector('.kp-action-list__title')?.textContent}`;
             return;
         }
-        const seen = /** @type {HTMLElement | null} */ (target?.closest('[data-k4-seen]'));
+        const seen = /** @type {HTMLElement | null} */ (target?.closest('[data-kr-seen]'));
         if (!seen || row.getAttribute('aria-busy') === 'true') return;
         setRowBusy(row, true, seen);
         await wait(1200);
@@ -138,12 +138,12 @@ for (const list of inboxLists) {
         inboxReadout.textContent = `Opened: ${row.querySelector('.kp-action-list__title')?.textContent}`;
     });
 }
-const failButton = /** @type {HTMLElement} */ (document.querySelector('[data-k4-inbox-fail]'));
+const failButton = /** @type {HTMLElement} */ (document.querySelector('[data-kr-inbox-fail]'));
 failButton.addEventListener('click', () => {
     failNext = !failNext;
     failButton.setAttribute('aria-pressed', String(failNext));
 });
-document.querySelector('[data-k4-inbox-reset]')?.addEventListener('click', () => {
+document.querySelector('[data-kr-inbox-reset]')?.addEventListener('click', () => {
     drawInbox();
     inboxReadout.textContent = 'All five rows are back.';
 });
@@ -156,7 +156,8 @@ const BACKLOG = [
         published: '16/10/2026 03:00',
         attempts: '5 of 5 attempts',
         note: 'gave up: the receiver answered 503 five times',
-        payload: '{\n  "job": "backup",\n  "stack": "vault",\n  "target": "s3://backups-hourly/vault/2026-10-16T03:00:00Z",\n  "volumes": ["vault_data", "vault_config"],\n  "requested_by": "schedule:backups-hourly"\n}',
+        payload:
+            '{\n  "job": "backup",\n  "stack": "vault",\n  "target": "s3://backups-hourly/vault/2026-10-16T03:00:00Z",\n  "volumes": ["vault_data", "vault_config"],\n  "requested_by": "schedule:backups-hourly"\n}',
     },
     {
         id: '01JA3R2W5Y7P1K3M9Q4T8V6Z0A',
@@ -183,7 +184,11 @@ const BACKLOG = [
         payload: '',
     },
 ];
-const BADGE = /** @type {Record<string, string>} */ ({ dead: 'kp-badge kp-badge--destructive', claimed: 'kp-badge kp-badge--warning', pending: 'kp-badge' });
+const BADGE = /** @type {Record<string, string>} */ ({
+    dead: 'kp-badge kp-badge--destructive',
+    claimed: 'kp-badge kp-badge--warning',
+    pending: 'kp-badge',
+});
 const ROW_STATE = /** @type {Record<string, string>} */ ({ dead: 'failed', claimed: 'active', pending: '' });
 
 /** @param {typeof BACKLOG[number]} m */
@@ -209,17 +214,17 @@ const backlogRow = (m) => {
         h(
             'div',
             { class: 'kp-row-actions' },
-            m.state === 'dead' ? button('Requeue', { 'data-kp-action': 'requeue', 'data-k4-requeue': '' }) : null,
-            button('Delete', { 'data-kp-action': 'delete', 'data-k4-delete': '', class: 'kp-button kp-button--sm kp-button--destructive' }),
+            m.state === 'dead' ? button('Requeue', { 'data-kp-action': 'requeue', 'data-kr-requeue': '' }) : null,
+            button('Delete', { 'data-kp-action': 'delete', 'data-kr-delete': '', class: 'kp-button kp-button--sm kp-button--destructive' }),
         ),
     );
     if (ROW_STATE[m.state]) row.setAttribute('data-kp-state', ROW_STATE[m.state]);
     return row;
 };
-const backlog = /** @type {HTMLElement} */ (document.querySelector('[data-k4-backlog]'));
-const backlogPhone = /** @type {HTMLElement} */ (document.querySelector('[data-k4-backlog-phone]'));
-const backlogCard = /** @type {HTMLElement} */ (document.querySelector('[data-k4-backlog-card]'));
-const backlogCount = /** @type {HTMLElement} */ (document.querySelector('[data-k4-backlog-count]'));
+const backlog = /** @type {HTMLElement} */ (document.querySelector('[data-kr-backlog]'));
+const backlogPhone = /** @type {HTMLElement} */ (document.querySelector('[data-kr-backlog-phone]'));
+const backlogCard = /** @type {HTMLElement} */ (document.querySelector('[data-kr-backlog-card]'));
+const backlogCount = /** @type {HTMLElement} */ (document.querySelector('[data-kr-backlog-count]'));
 const countBacklog = () => {
     const n = backlog.querySelectorAll(':scope > li').length;
     backlogCount.textContent = n === 1 ? '1 message' : `${n} messages`;
@@ -236,8 +241,8 @@ backlog.addEventListener('click', async (event) => {
     const target = event.target instanceof Element ? event.target : null;
     const row = /** @type {HTMLElement | null} */ (target?.closest('li'));
     if (!row || row.getAttribute('aria-busy') === 'true') return;
-    const requeue = /** @type {HTMLElement | null} */ (target?.closest('[data-k4-requeue]'));
-    const del = /** @type {HTMLElement | null} */ (target?.closest('[data-k4-delete]'));
+    const requeue = /** @type {HTMLElement | null} */ (target?.closest('[data-kr-requeue]'));
+    const del = /** @type {HTMLElement | null} */ (target?.closest('[data-kr-delete]'));
     if (!requeue && !del) return;
     setRowBusy(row, true, requeue ?? del);
     await wait(900);
@@ -259,7 +264,7 @@ backlog.addEventListener('click', async (event) => {
             text: 'Every message of this subscription has been delivered or deleted.',
         });
 });
-document.querySelector('[data-k4-backlog-reset]')?.addEventListener('click', drawBacklog);
+document.querySelector('[data-kr-backlog-reset]')?.addEventListener('click', drawBacklog);
 
 // ---------------------------------------------------------------- 1c files
 const FILES = [
@@ -299,21 +304,39 @@ const fileRow = (f) => {
             view,
             f.missing
                 ? null
-                : h('a', { class: 'kp-button kp-button--sm', href: '#files', 'data-kp-action': 'open', 'aria-label': `Open ${f.name} in a new tab`, title: 'Open in a new tab' }, '↗'),
+                : h(
+                      'a',
+                      {
+                          class: 'kp-button kp-button--sm',
+                          href: '#files',
+                          'data-kp-action': 'open',
+                          'aria-label': `Open ${f.name} in a new tab`,
+                          title: 'Open in a new tab',
+                      },
+                      '↗',
+                  ),
         ),
     );
     return row;
 };
-for (const list of document.querySelectorAll('[data-k4-files], [data-k4-files-phone]')) list.replaceChildren(...FILES.map(fileRow));
-for (const list of document.querySelectorAll('[data-k4-files-mini]')) {
-    const n = Number(list.getAttribute('data-k4-files-mini')) || FILES.length;
+for (const list of document.querySelectorAll('[data-kr-files], [data-kr-files-phone]')) list.replaceChildren(...FILES.map(fileRow));
+for (const list of document.querySelectorAll('[data-kr-files-mini]')) {
+    const n = Number(list.getAttribute('data-kr-files-mini')) || FILES.length;
     list.replaceChildren(...FILES.slice(0, n).map(fileRow));
 }
 
 // ---------------------------------------------------------------- 1d appointments
 const APPOINTMENTS = [
     { group: 'Upcoming' },
-    { day: 'Thu 23/10/2026', time: '14:00', title: 'Second interview', note: 'With Hanne Peeters and the platform lead, at the Ghent office.', state: 'next', badge: 'Next · in 7 days', calendar: true },
+    {
+        day: 'Thu 23/10/2026',
+        time: '14:00',
+        title: 'Second interview',
+        note: 'With Hanne Peeters and the platform lead, at the Ghent office.',
+        state: 'next',
+        badge: 'Next · in 7 days',
+        calendar: true,
+    },
     { day: 'Tue 28/10/2026', time: '10:00', title: 'Technical test', note: 'Two hours, remote; they send the link the day before.', state: '' },
     { group: 'Past' },
     { day: 'Tue 14/10/2026', time: '09:30', title: 'Intro call', note: 'Twenty minutes with the recruiter.', state: 'past' },
@@ -330,26 +353,34 @@ const appointmentRow = (a) => {
     const row = h(
         'li',
         a.state ? { 'data-kp-state': a.state } : null,
-        h('span', { class: 'kp-action-list__lead' }, h('time', { class: 'kp-action-list__when' }, h('span', null, a.day ?? ''), h('span', null, a.time ?? ''))),
+        h(
+            'span',
+            { class: 'kp-action-list__lead' },
+            h('time', { class: 'kp-action-list__when' }, h('span', null, a.day ?? ''), h('span', null, a.time ?? '')),
+        ),
         h(
             'div',
             { class: 'kp-action-list__main' },
             h('strong', { class: 'kp-action-list__title' }, a.title ?? ''),
             a.note ? h('span', { class: 'kp-action-list__text' }, a.note) : null,
             a.badge || a.calendar
-                ? meta(a.badge ? h('span', { class: 'kp-badge kp-badge--info' }, a.badge) : null, a.calendar ? 'In your calendar: remove it there before deleting it here' : null)
+                ? meta(
+                      a.badge ? h('span', { class: 'kp-badge kp-badge--info' }, a.badge) : null,
+                      a.calendar ? 'In your calendar: remove it there before deleting it here' : null,
+                  )
                 : null,
         ),
         h('div', { class: 'kp-row-actions' }, button('Edit', { 'data-kp-action': 'edit' }), del),
     );
     return row;
 };
-for (const list of document.querySelectorAll('[data-k4-appointments], [data-k4-appointments-phone]')) list.replaceChildren(...APPOINTMENTS.map(appointmentRow));
+for (const list of document.querySelectorAll('[data-kr-appointments], [data-kr-appointments-phone]'))
+    list.replaceChildren(...APPOINTMENTS.map(appointmentRow));
 
 // ---------------------------------------------------------------- 2 card states
-const live = /** @type {HTMLElement} */ (document.querySelector('[data-k4-live-card]'));
-const readout = /** @type {HTMLElement} */ (document.querySelector('[data-k4-card-readout]'));
-const pick = /** @type {HTMLElement} */ (document.querySelector('[data-k4-state-pick]'));
+const live = /** @type {HTMLElement} */ (document.querySelector('[data-kr-live-card]'));
+const readout = /** @type {HTMLElement} */ (document.querySelector('[data-kr-card-readout]'));
+const pick = /** @type {HTMLElement} */ (document.querySelector('[data-kr-state-pick]'));
 const WORDS = /** @type {Record<string, string>} */ ({ loading: 'loading', empty: 'empty', error: 'error', ready: 'filled' });
 const OPTIONS = /** @type {Record<string, import('../../js/card-state.js').CardStateOptions>} */ ({
     loading: { words: 'Reading the folder…' },
@@ -362,7 +393,8 @@ const OPTIONS = /** @type {Record<string, import('../../js/card-state.js').CardS
     ready: {},
 });
 /** @param {HTMLElement} card @param {string} state */
-const put = (card, state) => setCardState(card, /** @type {any} */ (state), { ...OPTIONS[state], action: state === 'empty' ? OPTIONS.empty.action?.cloneNode(true) : null });
+const put = (card, state) =>
+    setCardState(card, /** @type {any} */ (state), { ...OPTIONS[state], action: state === 'empty' ? OPTIONS.empty.action?.cloneNode(true) : null });
 /** @param {string} state */
 const choose = (state) => {
     put(live, state);
@@ -378,25 +410,25 @@ const reload = async () => {
     await wait(1500);
     choose('ready');
 };
-document.querySelector('[data-k4-reload]')?.addEventListener('click', reload);
+document.querySelector('[data-kr-reload]')?.addEventListener('click', reload);
 live.addEventListener('kp-card-retry', reload);
 
-const phone = /** @type {HTMLElement} */ (document.querySelector('[data-k4-phone-card]'));
+const phone = /** @type {HTMLElement} */ (document.querySelector('[data-kr-phone-card]'));
 put(phone, 'error');
 phone.addEventListener('kp-card-retry', async () => {
     put(phone, 'loading');
     await wait(1500);
     put(phone, 'error');
 });
-for (const card of /** @type {NodeListOf<HTMLElement>} */ (document.querySelectorAll('[data-k4-still]'))) {
-    const kind = card.getAttribute('data-k4-still') ?? 'ready';
+for (const card of /** @type {NodeListOf<HTMLElement>} */ (document.querySelectorAll('[data-kr-still]'))) {
+    const kind = card.getAttribute('data-kr-still') ?? 'ready';
     put(card, kind === 'first' || kind === 'refresh' ? 'loading' : kind);
 }
 
 // ---------------------------------------------------------------- 3 checks
-const system = /** @type {HTMLElement} */ (document.querySelector('[data-k4-system]'));
-const checks = /** @type {HTMLElement} */ (document.querySelector('[data-k4-checks]'));
-const summary = /** @type {HTMLElement} */ (document.querySelector('[data-k4-summary]'));
+const system = /** @type {HTMLElement} */ (document.querySelector('[data-kr-system]'));
+const checks = /** @type {HTMLElement} */ (document.querySelector('[data-kr-checks]'));
+const summary = /** @type {HTMLElement} */ (document.querySelector('[data-kr-summary]'));
 let gitPasses = false;
 let reads = 0;
 const writeSummary = () => {
@@ -404,7 +436,7 @@ const writeSummary = () => {
     const at = ['14:02', '14:05', '14:07', '14:09', '14:12'][Math.min(reads, 4)];
     summary.textContent = `${c.ok} of ${c.total} checks pass · read 16/10/2026 ${at}`;
 };
-document.querySelector('[data-k4-recheck]')?.addEventListener('click', async () => {
+document.querySelector('[data-kr-recheck]')?.addEventListener('click', async () => {
     setCardState(system, 'loading', { words: 'Checking…' });
     await wait(1500);
     gitPasses = !gitPasses;
@@ -412,19 +444,23 @@ document.querySelector('[data-k4-recheck]')?.addEventListener('click', async () 
     setStatus(
         checks,
         'git',
-        gitPasses ? { state: 'ok', detail: 'in step · branch main' } : { state: 'failed', detail: '2 commits not pushed', fix: 'Pull and push from the repository; the dashboard never rebases.' },
+        gitPasses
+            ? { state: 'ok', detail: 'in step · branch main' }
+            : { state: 'failed', detail: '2 commits not pushed', fix: 'Pull and push from the repository; the dashboard never rebases.' },
     );
     writeSummary();
     setCardState(system, 'ready');
 });
 
 // ---------------------------------------------------------------- 4 tiles
-const form = /** @type {HTMLFormElement} */ (document.querySelector('[data-k4-tiles-form]'));
-const tilesReadout = /** @type {HTMLElement} */ (document.querySelector('[data-k4-tiles-readout]'));
-const cvField = /** @type {HTMLElement} */ (document.querySelector('[data-k4-cv-field]'));
-const cv = /** @type {HTMLElement} */ (document.querySelector('[data-k4-cv]'));
+const form = /** @type {HTMLFormElement} */ (document.querySelector('[data-kr-tiles-form]'));
+const tilesReadout = /** @type {HTMLElement} */ (document.querySelector('[data-kr-tiles-readout]'));
+const cvField = /** @type {HTMLElement} */ (document.querySelector('[data-kr-cv-field]'));
+const cv = /** @type {HTMLElement} */ (document.querySelector('[data-kr-cv]'));
 form.addEventListener('change', () => {
-    const ticked = [...form.querySelectorAll('input[name="act"]:checked')].map((i) => i.closest('label')?.querySelector('.kp-field__option-title')?.textContent);
+    const ticked = [...form.querySelectorAll('input[name="act"]:checked')].map(
+        (i) => i.closest('label')?.querySelector('.kp-field__option-title')?.textContent,
+    );
     const tone = form.querySelector('input[name="tone"]:checked')?.closest('label')?.querySelector('.kp-field__option-title')?.textContent;
     tilesReadout.textContent = `Ticked: ${ticked.length ? ticked.join(', ') : 'nothing'} · Tone: ${tone}`;
     if (form.querySelector('input[name="cv"]:checked')) {

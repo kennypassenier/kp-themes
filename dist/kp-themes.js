@@ -23702,6 +23702,8 @@ function chime() {
     const Context = window.AudioContext ?? /** @type {any} */
     window.webkitAudioContext;
     if (!Context) return;
+    if (audio === null && /** @type {any} */
+    navigator.userActivation?.isActive === false) return;
     audio ??= new Context();
     const ctx = (
       /** @type {AudioContext} */
@@ -23730,6 +23732,8 @@ function primeSound() {
     const Context = window.AudioContext ?? /** @type {any} */
     window.webkitAudioContext;
     if (!Context) return;
+    if (audio === null && /** @type {any} */
+    navigator.userActivation?.isActive === false) return;
     audio ??= new Context();
     if (audio.state === "suspended") void audio.resume();
   } catch {

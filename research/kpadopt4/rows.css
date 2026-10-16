@@ -1,31 +1,31 @@
-/* research/kpadopt4-rows: the page's own frame. Everything with a kp- class is the package; these k4- rules only lay
+/* research/kpadopt4 (rows sections): the page's own frame. Everything with a kp- class is the package; these kr- rules only lay
    the sections out, frame the widths and draw the readouts. */
 
-.k4-page {
+.kr-page {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: var(--kp-space-xl, 2rem);
     max-inline-size: 90rem;
 }
 
-.k4-intro,
-.k4-sec__head {
+.kr-intro,
+.kr-sec__head {
     display: grid;
     gap: var(--kp-space-xs, 0.25rem);
 }
 
-.k4-intro :is(h1, p),
-.k4-sec__head :is(h2, p) {
+.kr-intro :is(h1, p),
+.kr-sec__head :is(h2, p) {
     margin: 0;
 }
 
-.k4-intro p,
-.k4-sec__head p {
+.kr-intro p,
+.kr-sec__head p {
     max-inline-size: 80ch;
     color: var(--muted-foreground);
 }
 
-.k4-sec {
+.kr-sec {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: var(--kp-space-md, 1rem);
@@ -38,7 +38,7 @@
 }
 
 /* The "Expected:" block: what to see and what each control does. */
-.k4-expected {
+.kr-expected {
     padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
     border-inline-start: 3px solid var(--primary);
     background: var(--muted);
@@ -46,38 +46,38 @@
     font-size: var(--kp-text-sm, 0.8125rem);
 }
 
-.k4-expected p {
+.kr-expected p {
     margin: 0 0 var(--kp-space-xs, 0.25rem);
 }
 
-.k4-expected ul {
+.kr-expected ul {
     display: grid;
     gap: var(--kp-space-xs, 0.25rem);
     margin: 0;
     padding-inline-start: 1.25rem;
 }
 
-.k4-label {
+.kr-label {
     margin: 0;
     color: var(--muted-foreground);
     font-size: var(--kp-text-sm, 0.8125rem);
     font-weight: 600;
 }
 
-.k4-actions {
+.kr-actions {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
 }
 
-.k4-readout {
+.kr-readout {
     margin: 0;
     color: var(--muted-foreground);
     font-size: var(--kp-text-sm, 0.8125rem);
 }
 
-.k4-stack {
+.kr-stack {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     align-content: start;
@@ -86,55 +86,55 @@
 }
 
 /* The wide component beside its phone column; one under the other where there is no room. */
-.k4-pair {
+.kr-pair {
     display: grid;
     grid-template-columns: minmax(0, 1fr) min(360px, 100%);
     gap: var(--kp-space-xl, 2rem);
     align-items: start;
 }
 
-.k4-pair > * {
+.kr-pair > * {
     min-inline-size: 0;
 }
 
 /* By the section's own width, so the review dialog's narrower stage stacks them too. */
-.k4-sec {
-    container: k4-sec / inline-size;
+.kr-sec {
+    container: kr-sec / inline-size;
 }
 
-@container k4-sec (max-width: 64rem) {
-    .k4-pair {
+@container kr-sec (max-width: 64rem) {
+    .kr-pair {
         grid-template-columns: minmax(0, 1fr);
     }
 }
 
 /* A frame of a phone's width: what the component does at that width, whatever the page's. */
-.k4-frame {
+.kr-frame {
     box-sizing: border-box;
     max-inline-size: 100%;
     border: 1px dashed var(--border-strong);
     border-radius: var(--radius, 0.5rem);
 }
 
-.k4-frame--phone {
+.kr-frame--phone {
     inline-size: min(360px, 100%);
     padding: var(--kp-space-sm, 0.5rem);
 }
 
 /* The card states: the live card and its phone, the five still ones under them. */
-.k4-cards {
+.kr-cards {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: var(--kp-space-md, 1rem);
 }
 
-.k4-still {
+.kr-still {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 32rem), 1fr));
     gap: var(--kp-space-md, 1rem);
 }
 
-.k4-summary {
+.kr-summary {
     margin: 0 0 var(--kp-space-sm, 0.5rem);
     font-weight: 600;
     font-variant-numeric: tabular-nums;

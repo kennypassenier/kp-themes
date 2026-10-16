@@ -1,4 +1,4 @@
-/* research/kpadopt4-data: the page around the components. Nothing here
+/* research/kpadopt4 (data sections): the page around the components. Nothing here
  * styles a kp-* part; it lays out the sections, the captions and the
  * narrow frames that stand for a phone. */
 
@@ -171,4 +171,10 @@
 .dd-table td,
 .dd-table th {
     max-inline-size: 16rem;
+}
+
+/* The live numbers: a tile wide enough for "€ 1.118.204,75" in the tile's figure face, so on a phone the strip goes to
+   one column instead of pushing the figure past the tile's edge (the package's own knob). */
+.dd-block > .kp-kpis {
+    --kp-kpi-min: 14rem;
 }

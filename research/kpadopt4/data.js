@@ -1,4 +1,4 @@
-// research/kpadopt4-data: what this page does that the package does not.
+// research/kpadopt4 (data sections): what this page does that the package does not.
 //   1. the sample data and the buttons that switch each section between its states;
 //   2. the readouts under the live examples;
 //   3. the mark table (every look at every size) and the freshness lines' moments.
@@ -113,7 +113,13 @@ one('[data-dd-stackbar="main"]').addEventListener('kp-stackbar-pick', (event) =>
 // ---- 3 · the bullet rows ----------------------------------------------------------------
 const applications = [
     { key: 'a1', lead: 'Brightline Health', label: 'Data engineer', detail: 'second interview 21/10/2026 14:00', value: 4 },
-    { key: 'a2', lead: 'Acme Logistics', label: 'Senior platform engineer, logistics data and integrations', detail: 'due since 02/10/2026', value: 31 },
+    {
+        key: 'a2',
+        lead: 'Acme Logistics',
+        label: 'Senior platform engineer, logistics data and integrations',
+        detail: 'due since 02/10/2026',
+        value: 31,
+    },
     { key: 'a3', lead: 'Contoso', label: 'Backend developer (Rust)', detail: 'due since 11/10/2026', value: 22 },
     { key: 'a4', lead: 'Vereniging voor Duurzame Logistiek Vlaanderen', label: 'Project lead', detail: 'due since 15/10/2026', value: 18 },
     { key: 'a5', lead: 'Fabrikam', label: 'Site reliability engineer', detail: 'no follow-up needed', value: 9 },
@@ -198,13 +204,25 @@ const payload = JSON.stringify({
     note: 'Nightly copy of every container volume to the NAS, checked after it is written; the NAS was asleep and was woken first.',
 });
 const request = Array.from({ length: 31 }, (_, i) =>
-    i === 0 ? 'POST /api/v1/notify HTTP/1.1' : i < 6 ? ['Host: kyu.home.example.net', 'Content-Type: application/json', 'Authorization: Bearer ••••••••', 'X-Request-Id: 7c1e9f', ''][i - 1] : `line ${i}: {"step":${i},"state":"ok"}`,
+    i === 0
+        ? 'POST /api/v1/notify HTTP/1.1'
+        : i < 6
+          ? ['Host: kyu.home.example.net', 'Content-Type: application/json', 'Authorization: Bearer ••••••••', 'X-Request-Id: 7c1e9f', ''][i - 1]
+          : `line ${i}: {"step":${i},"state":"ok"}`,
 ).join('\n');
 /** @param {string} state */
 function drawCode(state) {
     const s = /** @type {any} */ (state);
     for (const el of [one('[data-dd-code-main]'), one('[data-dd-code-phone]')])
-        setCode(el, { title: 'Payload', language: 'JSON', size: '612 B', lines: true, text: payload, state: s, message: state === 'error' ? 'Could not read the message: it was removed from the queue.' : undefined });
+        setCode(el, {
+            title: 'Payload',
+            language: 'JSON',
+            size: '612 B',
+            lines: true,
+            text: payload,
+            state: s,
+            message: state === 'error' ? 'Could not read the message: it was removed from the queue.' : undefined,
+        });
     setCode(one('[data-dd-code-long]'), {
         title: 'Request',
         language: 'HTTP',

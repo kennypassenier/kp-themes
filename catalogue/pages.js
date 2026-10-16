@@ -107,35 +107,12 @@ export const PAGES = [
             // Kenny, 2026-10-12: "Cyberpunk lijkt af, zie dat dezelfde fouten nu niet terugkomen in andere thema's": every other theme mended so a close is its open backwards with the theme's own effect; only what changed, each block in the themes where it did (research/all-themes).
             // Kenny, 2026-10-16 (kp-adopt-rest, round 2): eight things the admin dashboard still draws itself (action tiles, status rows, the facet list, the coverage heat grid, the reachability matrix, bars in table cells with data-kp-sort-value, the week agenda, the run timeline), built in the package first as ONE demo, formal only until Kenny approves it.
             // Kenny, 2026-10-16 (kp-adopt-rest, round 3): six things the dashboard still drew itself, each an opt-in option of an approved component (nav separator, choice-filter value, timeline day buttons and series legend, the week's next-N phone list, facet identity patterns, the heat grid's jump to the latest), formal only.
-            // 2026-10-16 (component survey G1, G4, G12, G17, G18, G20, G24): data pieces every app drew itself, built in the package first, formal only.
+            // Kenny, 2026-10-16: one central demo for the fourth adoption round (the data pieces, the rows, cards and choices,
+            // the flows and records, the AuDHD recipe components and the seven "Onmisbaar" ideas), formal only, nine topics.
             {
-                href: 'research/kpadopt4-data/demo.html',
-                label: 'Identity marks, share bars, bullet rows, key-value grids, form rows, code blocks and live numbers',
-                about: 'Seven things the homelab dashboard, JobTracker, kyu and chassis still draw themselves: .kp-idmark (a plate made from a name), .kp-stackbar (parts of a whole with a legend), .kp-bullets (a value against a threshold per row), .kp-kv and .kp-formrows, .kp-code (payload block with Pretty/Raw, Wrap, Copy, fold), the page header line with a mark and the freshness line, and data-kp-tick (a live number that counts to its new value).',
-            },
-            // Kenny's apps survey, 2026-10-16 (G14-G25): what JobTracker, the homelab dashboard and kyu still draw around their lists, each an opt-in option of a component the package had, formal only.
-            {
-                href: 'research/kpadopt4-rows/demo.html',
-                label: 'Rows, cards and choices: inbox rows, a card in four states, check lists, choice tiles',
-                about: 'Rows with a lead for an inbox, a message backlog, a file list and appointments (.kp-action-list--lead, setRowBusy, removeRow, j/k), a card in four data states (.kp-card[data-kp-state], js/card-state.js), status rows with warn and the fix written out, and choices as tiles (data-kp-layout="tiles"). Formal only.',
-            },
-            // Kenny, 2026-10-16 (component survey, round 4: flows and records): seven needs of homelab, JobTracker, chassis, kyu and almanac, built in the package, formal only.
-            {
-                href: 'research/kpadopt4-flows/demo.html',
-                label: 'Flows and records: secret field, dialog sections, page-owned sort, pipeline, journey, contact timeline, drawings',
-                about: 'Seven parts the apps still draw themselves, now in the package, formal only: .kp-secret (reveal with a countdown, copy without showing), .kp-dialog sections with a confirmation that lists what still depends on a thing, data-kp-sort-external on the data table, .kp-pipeline, the .kp-steplist--journey stepper over a .kp-gantt--line, point events on the run timeline, and data-kp-art drawings for an empty state.',
-            },
-            // 2026-10-16 (the AuDHD recipes thread, research/kpadopt4-recipes): six calm components the parked recipe app asked for, built as general kp components, formal only.
-            {
-                href: 'research/kpadopt4-recipes/demo.html',
-                label: 'Six calm components: wheel, cook mode, timers, quantity, checklist, three-way filter',
-                about: 'The recipe app for someone with AuDHD asked for six things the package lacked: a weighted wheel that picks for you, one step at a time with the screen kept on, named kitchen timers, a quantity with minus and plus, a checklist whose ticked items sink, and filter chips with with, without and either way. Formal only, every state.',
-            },
-            // Kenny, 2026-10-16 19:32: seven new components, all "Onmisbaar" (uptime strip, typed confirmation, command block, a visual and a numeric timer, range picker, compare slider), formal only.
-            {
-                href: 'research/kpadopt4-ideas/demo.html',
-                label: 'Seven new components: uptime strip, typed confirmation, command block, two timers, range picker, compare slider',
-                about: 'Built from the package’s own parts and shown in formal only, every state: .kp-uptime (one cell per day or hour, exact figures), the typed confirmation (data-kp-confirm-type), .kp-command (shell label, admin badge, copy), .kp-timer-disc (a shrinking disc), .kp-countdown (digits that never shift), .kp-range (presets and a custom from–to), .kp-compare (a before/after divider).',
+                href: 'research/kpadopt4/demo.html',
+                label: 'The fourth adoption round: 51 sections in nine topics, formal',
+                about: 'Everything the component survey of 16/10/2026 found missing from the apps, built in the package and shown in formal only, every state, grouped into nine topics: values and figures (.kp-idmark, .kp-stackbar, .kp-bullets, data-kp-tick, .kp-uptime), rows and lists (.kp-action-list--lead, status rows with warn and the fix, a sort the page carries out), records and forms (.kp-kv, .kp-formrows, choices as tiles), cards and states (.kp-card[data-kp-state], the page header with a mark, drawings for an empty state), flows and timelines (.kp-pipeline, the journey stepper, the contact timeline), secrets and confirmation (.kp-secret, dialog sections, a confirmation that depends on something, the typed confirmation), time and timers (.kp-timer-disc, .kp-countdown, .kp-range), cooking for the AuDHD recipe app (.kp-wheel, .kp-focus-steps, .kp-timers, .kp-quantity, .kp-checklist, three-way filter chips) and commands and comparison (.kp-code, .kp-command, .kp-compare).',
             },
         ],
     },

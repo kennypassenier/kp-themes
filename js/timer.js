@@ -274,6 +274,9 @@ function chime() {
     try {
         const Context = window.AudioContext ?? /** @type {any} */ (window).webkitAudioContext;
         if (!Context) return;
+        // No press has woken the sound yet (a timer the page started or restored on its own): a context made now is
+        // refused by the browser, with a warning in the console, so wait for one.
+        if (audio === null && /** @type {any} */ (navigator).userActivation?.isActive === false) return;
         audio ??= new Context();
         const ctx = /** @type {AudioContext} */ (audio);
         if (ctx.state === 'suspended') void ctx.resume();
@@ -301,6 +304,9 @@ function primeSound() {
     try {
         const Context = window.AudioContext ?? /** @type {any} */ (window).webkitAudioContext;
         if (!Context) return;
+        // No press has woken the sound yet (a timer the page started or restored on its own): a context made now is
+        // refused by the browser, with a warning in the console, so wait for one.
+        if (audio === null && /** @type {any} */ (navigator).userActivation?.isActive === false) return;
         audio ??= new Context();
         if (audio.state === 'suspended') void audio.resume();
     } catch {

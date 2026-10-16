@@ -65,7 +65,7 @@
         "js/tick.js": { "digest": "993b1b15055f9a8e", "when": "[data-kp-tick]" },
         "js/tiles.js": { "digest": "a93919ec458ab18b", "when": "[data-kp-tiles-set]" },
         "js/timer-disc.js": { "digest": "693981725e9b1225", "when": "[data-kp-timer-disc]" },
-        "js/timer.js": { "digest": "f32d9606330d82cf", "when": "[data-kp-timers], [data-kp-timer-start]" },
+        "js/timer.js": { "digest": "fa429994fdee68cd", "when": "[data-kp-timers], [data-kp-timer-start]" },
         "js/toolbar.js": { "digest": "ca22723058dcfe13", "when": "[data-kp-toolbar]" },
         "js/upload.js": { "digest": "fe77364297c65175", "when": "[data-kp-upload]" },
         "js/uptime.js": { "digest": "09e6f1c9d691671f", "when": "[data-kp-uptime]" },
