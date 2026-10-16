@@ -2450,11 +2450,7 @@
  * `var(--chart-2)`). Knobs: `--kp-graph-h` (480px; the script sets it to
  * the height it draws), `--kp-graph-label-size` (12px), `--kp-graph-dim`
  * (0.08, a link that is not lit while a node is), `--kp-graph-hue` (210, a
- * node's hue, set per node by the script). More knobs, all optional:
- * `--kp-graph-box-radius` and `--kp-graph-box-fill` (the frame),
- * `--kp-graph-edge-on-width` (2.6), `--kp-graph-node-dim` (0.3),
- * `--kp-graph-dot-cap` (round), `--kp-graph-flag-colour`, `--kp-graph-label-weight`
- * (500), `--kp-graph-label-halo` (4px), and the opt-in attributes below. */
+ * node's hue, set per node by the script). */
     .kp-graph {
         display: grid;
         gap: var(--kp-space-sm, 0.5rem);
@@ -2534,8 +2530,8 @@
         position: relative;
         min-block-size: var(--kp-graph-h, 480px);
         border: 1px solid var(--border);
-        border-radius: var(--kp-graph-box-radius, var(--radius, 0.5rem));
-        background: var(--kp-graph-box-fill, var(--background));
+        border-radius: var(--radius, 0.5rem);
+        background: var(--background);
     }
 
     .kp-graph__svg {
@@ -2601,30 +2597,26 @@
         stroke-width: 1.6;
     }
 
-    .kp-graph__edge {
-        opacity: var(--kp-graph-edge-opacity, 1);
-    }
-
     .kp-graph__sample line {
         stroke-width: 2;
     }
 
     /* A kind's dash, on its links and on its sample in the list. */
     .kp-graph [data-kp-style='dash'] {
-        stroke-dasharray: var(--kp-graph-dash, 6 3);
+        stroke-dasharray: 6 3;
     }
 
     .kp-graph [data-kp-style='dot'] {
-        stroke-dasharray: var(--kp-graph-dash, 2 4);
-        stroke-linecap: var(--kp-graph-dot-cap, round);
+        stroke-dasharray: 2 4;
+        stroke-linecap: round;
     }
 
     .kp-graph [data-kp-style='long-dash'] {
-        stroke-dasharray: var(--kp-graph-dash, 12 4);
+        stroke-dasharray: 12 4;
     }
 
     .kp-graph__edge.is-on {
-        stroke-width: var(--kp-graph-edge-on-width, 2.6);
+        stroke-width: 2.6;
     }
 
     .kp-graph__edge.is-dim {
@@ -2662,7 +2654,7 @@
     /* A node whose settings differ from the plan: a dotted ring around it. */
     .kp-graph__flag {
         fill: none;
-        stroke: var(--kp-graph-flag-colour, var(--warning-foreground));
+        stroke: var(--warning-foreground);
         stroke-width: 1.5;
         stroke-dasharray: 2 3;
     }
@@ -2670,10 +2662,10 @@
     .kp-graph__label {
         fill: var(--foreground);
         font-size: var(--kp-graph-label-size, 12px);
-        font-weight: var(--kp-graph-label-weight, 500);
+        font-weight: 500;
         paint-order: stroke;
         stroke: var(--background);
-        stroke-width: var(--kp-graph-label-halo, 4px);
+        stroke-width: 4px;
         stroke-linejoin: round;
     }
 
@@ -2687,70 +2679,8 @@
     }
 
     .kp-graph__node.is-dim {
-        opacity: var(--kp-graph-node-dim, 0.3);
+        opacity: 0.3;
     }
-    /* A hint of several lines (the page's `graphHint` with line breaks) sets them side by side. */
-    .kp-graph__hint:has(> span) {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.25rem 0.75rem;
-    }
-
-    /* Opt-in: one fixed lightness and strength for every node's hue
- * (`data-kp-graph-colour="fixed"` on the figure), the same in every theme:
- * `--kp-graph-node-l` (0.62) and `--kp-graph-node-c` (0.15) are the knobs. The
- * node's own colour cannot be set from the figure with
- * `--kp-graph-node-colour`, because each node declares it itself. */
-    .kp-graph[data-kp-graph-colour='fixed'] .kp-graph__node {
-        --kp-graph-node-colour: oklch(var(--kp-graph-node-l, 0.62) var(--kp-graph-node-c, 0.15) var(--kp-graph-hue, 210));
-    }
-
-    /* Opt-in: Show all and the hint inside the picture
- * (`data-kp-graph-chrome="inside"`). The bar dissolves into the figure's
- * grid: the kinds keep the row over the picture; Show all lies in the
- * picture's top end corner and the hint along its foot, all three in one
- * grid cell, so nothing is measured or moved by script and the picture keeps
- * its height. The hint lets the pointer through. */
-    .kp-graph[data-kp-graph-chrome='inside'] {
-        grid-template-columns: minmax(0, 1fr);
-        row-gap: 0;
-    }
-
-    .kp-graph[data-kp-graph-chrome='inside'] > .kp-graph__bar {
-        display: contents;
-    }
-
-    .kp-graph[data-kp-graph-chrome='inside'] .kp-graph__kinds {
-        grid-area: 1 / 1;
-        margin-block-end: var(--kp-space-sm, 0.5rem);
-    }
-
-    .kp-graph[data-kp-graph-chrome='inside'] > .kp-graph__box,
-    .kp-graph[data-kp-graph-chrome='inside'] .kp-graph__show-all,
-    .kp-graph[data-kp-graph-chrome='inside'] > .kp-graph__hint {
-        grid-area: 2 / 1;
-    }
-
-    .kp-graph[data-kp-graph-chrome='inside'] .kp-graph__show-all {
-        position: relative;
-        z-index: 1;
-        align-self: start;
-        justify-self: end;
-        margin: var(--kp-graph-inset, 10px);
-    }
-
-    .kp-graph[data-kp-graph-chrome='inside'] > .kp-graph__hint {
-        position: relative;
-        z-index: 1;
-        align-self: end;
-        margin: 0 calc(var(--kp-graph-inset, 10px) + 2px) var(--kp-graph-inset, 10px);
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.25rem 0.75rem;
-        font-size: var(--kp-text-xs, 0.75rem);
-        pointer-events: none;
-    }
-
     /* --- Freshness line [scope-143] ---------------------------------------- */
 
     /* "updated 12 s ago", ticking (js/freshness.js). Tabular digits, kept

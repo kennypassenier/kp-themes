@@ -15,12 +15,7 @@
 //   graphHideKind(el, kind)   hide or show one kind of link from the page
 //
 // and the pure halves the drawing is made of: hubOf(), ringOf(),
-// graphLayout(), graphBends(), graphLabelText() and
-// fitGraphLabels(). Opt-in attributes on the figure, read at every drawing:
-// `data-kp-graph-labels="under"` (a label centred under its node, never cut), `data-kp-graph-colour=
-// "fixed"` (one lightness and strength for every node's hue) and
-// `data-kp-graph-chrome="inside"` (Show all and the hint inside the picture,
-// css only). A
+// graphLayout(), graphBends(), graphLabelText() and fitGraphLabels(). A
 // hover, a pick or a hidden kind changes classes only, never a node, so the
 // element under the pointer is never rebuilt. Nothing runs on import; the
 // attach function returns a detach.
@@ -36,8 +31,7 @@ export const GRAPH_CHANGE_EVENT = 'kp-graph-change';
  * @typedef {{ id: string, label: string, kind?: string, hue?: number, weight?: number | null,
  *   flag?: 'mismatch' | null, description: string, external?: boolean }} GraphNode
  * @typedef {{ from: string, to: string, kind: string, detail?: string }} GraphEdge
- * @typedef {{ kind: string, label: string, hint: string, style: 'solid' | 'dash' | 'dot' | 'long-dash', colour?: string,
- *   dash?: string, opacity?: number, bent?: boolean }} GraphKind
+ * @typedef {{ kind: string, label: string, hint: string, style: 'solid' | 'dash' | 'dot' | 'long-dash', colour: string }} GraphKind
  * @typedef {{ nodes: GraphNode[], edges: GraphEdge[], kinds: GraphKind[], hub?: string }} GraphData
  */
 
@@ -96,10 +90,9 @@ export const ringOf = (data, hub) =>
  * @param {GraphData} data
  * @param {number} W
  * @param {number} H
- * @param {{ plain?: boolean }} [options] `plain`: keep the ellipse as on a wide box even when narrow (a graph whose labels sit under their nodes needs no room at the sides)
  * @returns {Map<string, { x: number, y: number, angle: number }>}
  */
-export function graphLayout(data, W, H, { plain = false } = {}) {
+export function graphLayout(data, W, H) {
     /** @type {Map<string, { x: number, y: number, angle: number }>} */
     const at = new Map();
     const hub = hubOf(data);
@@ -108,7 +101,7 @@ export function graphLayout(data, W, H, { plain = false } = {}) {
     const R = Math.min(W, H) * 0.36;
     let rx = R * (W > 600 ? 1.35 : 1);
     let ry = R;
-    if (W < 600 && !plain) {
+    if (W < 600) {
         rx = Math.min(rx, W * 0.24);
         ry = Math.max(ry, H * 0.36);
     }
@@ -123,24 +116,20 @@ export function graphLayout(data, W, H, { plain = false } = {}) {
 
 /**
  * Each edge's bend: edges between the same two nodes fan out (0, +26, −26,
- * +52 …) so two kinds never draw on top of each other. A link of a `bent` kind
- * (`kinds[].bent`) never draws straight: it takes the next step even when it
- * is the only one between its two nodes.
+ * +52 …) so two kinds never draw on top of each other.
  * @param {GraphEdge[]} edges
- * @param {ReadonlySet<string>} [bent] the kinds that always bend
  * @returns {number[]}
  */
-export function graphBends(edges, bent) {
+export function graphBends(edges) {
     /** @type {Map<string, number>} */
     const seen = new Map();
     return edges.map((e) => {
         const key = [e.from, e.to].sort().join('\u0000');
         const k = seen.get(key) ?? 0;
         seen.set(key, k + 1);
-        const step = bent?.has(e.kind) ? k + 1 : k;
-        if (step === 0) return 0;
-        const size = Math.ceil(step / 2) * 26;
-        return size * (step % 2 ? 1 : -1) * (e.from < e.to ? 1 : -1);
+        if (k === 0) return 0;
+        const size = Math.ceil(k / 2) * 26;
+        return size * (k % 2 ? 1 : -1) * (e.from < e.to ? 1 : -1);
     });
 }
 
@@ -204,32 +193,6 @@ export function fitGraphLabels(labels, W, H, measure) {
         if (!found) break;
     }
 }
-
-/**
- * An edge as a quadratic curve, bent sideways by `bend`.
- * @param {{ x: number, y: number }} a
- * @param {{ x: number, y: number }} b
- * @param {number} bend
- */
-function edgeD(a, b, bend) {
-    const len = Math.hypot(b.x - a.x, b.y - a.y) || 1;
-    const mx = (a.x + b.x) / 2 - ((b.y - a.y) / len) * bend;
-    const my = (a.y + b.y) / 2 + ((b.x - a.x) / len) * bend;
-    return `M${a.x.toFixed(1)},${a.y.toFixed(1)} Q${mx.toFixed(1)},${my.toFixed(1)} ${b.x.toFixed(1)},${b.y.toFixed(1)}`;
-}
-
-/** What a kind sets on its links and its sample: its colour, dash and opacity, as custom properties. @param {GraphKind | undefined} kind */
-const kindStyle = (kind) =>
-    [
-        kind?.colour ? `--kp-graph-edge-colour: ${kind.colour}` : '',
-        kind?.dash ? `--kp-graph-dash: ${kind.dash}` : '',
-        kind?.opacity != null ? `--kp-graph-edge-opacity: ${kind.opacity}` : '',
-    ]
-        .filter(Boolean)
-        .join('; ');
-
-/** The kinds whose links always bend. @param {GraphData} data */
-const bentKinds = (data) => new Set(data.kinds.filter((k) => k.bent).map((k) => k.kind));
 
 /** A node's radius: 14, or 10 to 24 by its weight; an outside node 9. @param {GraphNode} n */
 const radiusOf = (n) => (n.external ? 9 : n.weight != null ? 10 + 14 * Math.sqrt(Math.max(0, Math.min(1, n.weight))) : 14);
@@ -321,27 +284,6 @@ function fitDrawnLabels(labels, W, H) {
 }
 
 /**
- * A node's hue: its own, else spread evenly over the nodes by label (the outside ones are left out of the spread).
- * @param {GraphData} data
- * @param {GraphNode} n
- */
-function hueOf(data, n) {
-    if (n.hue != null) return n.hue;
-    const sorted = data.nodes.filter((x) => !x.external).sort((x, y) => x.label.localeCompare(y.label) || x.id.localeCompare(y.id));
-    return Math.round((sorted.indexOf(n) / Math.max(1, sorted.length)) * 360);
-}
-
-/** The words of the hint: a line break makes separate spans (the inside layout sets them side by side). @param {HTMLElement} hint @param {string} words */
-function writeHint(hint, words) {
-    const lines = words.split('\n');
-    if (lines.length < 2) {
-        hint.textContent = words;
-        return;
-    }
-    hint.replaceChildren(...lines.map((line) => make(hint.ownerDocument, 'span', '', line)));
-}
-
-/**
  * The ghost of the coming network, drawn while loading [PACKAGE_FINDINGS, 2026-10-06]: the last network's nodes and
  * links, or a hub with a ring of six when nothing was drawn yet, in the package's own edge, node, ring and core
  * classes so the theme's settled shape draws it, quieted by the `kp-graph__ghost` rules. Every part carries `--i`
@@ -350,10 +292,9 @@ function writeHint(hint, words) {
  * @param {GraphData | null} last
  * @param {number} W
  * @param {number} H
- * @param {boolean} plain  the ring layout without the narrow-box trade (labels under their nodes)
  * @returns {SVGGElement}
  */
-function ghostOf(doc, last, W, H, plain) {
+function ghostOf(doc, last, W, H) {
     /** @type {GraphData} */
     const data = last?.nodes.length
         ? last
@@ -363,25 +304,29 @@ function ghostOf(doc, last, W, H, plain) {
               kinds: [],
               hub: 'hub',
           };
-    const at = graphLayout(data, W, H, { plain });
+    const at = graphLayout(data, W, H);
     const hub = hubOf(data);
     const order = [...(hub ? [hub] : []), ...ringOf(data, hub).map((n) => n.id)];
-    const bends = graphBends(data.edges, bentKinds(data));
+    const bends = graphBends(data.edges);
     const kinds = new Map(data.kinds.map((k) => [k.kind, k]));
+    const sorted = data.nodes.filter((n) => !n.external).sort((a, b) => a.label.localeCompare(b.label));
     const root = svgEl(doc, 'g', { class: 'kp-graph__ghost', 'aria-hidden': 'true', style: `--n: ${order.length}` });
     const edges = svgEl(doc, 'g', { class: 'kp-graph__edges' });
     data.edges.forEach((e, i) => {
         const a = at.get(e.from);
         const b = at.get(e.to);
         if (!a || !b) return;
+        const len = Math.hypot(b.x - a.x, b.y - a.y) || 1;
+        const mx = (a.x + b.x) / 2 - ((b.y - a.y) / len) * bends[i];
+        const my = (a.y + b.y) / 2 + ((b.x - a.x) / len) * bends[i];
         const kind = kinds.get(e.kind);
         edges.append(
             svgEl(doc, 'path', {
                 class: 'kp-graph__edge',
-                d: edgeD(a, b, bends[i]),
+                d: `M${a.x.toFixed(1)},${a.y.toFixed(1)} Q${mx.toFixed(1)},${my.toFixed(1)} ${b.x.toFixed(1)},${b.y.toFixed(1)}`,
                 'data-kp-kind': e.kind,
                 'data-kp-style': kind?.style ?? 'solid',
-                style: [`--i: ${Math.max(0, order.indexOf(e.from === hub ? e.to : e.from))}`, kindStyle(kind)].filter(Boolean).join('; '),
+                style: `--i: ${Math.max(0, order.indexOf(e.from === hub ? e.to : e.from))}${kind?.colour ? `; --kp-graph-edge-colour: ${kind.colour}` : ''}`,
             }),
         );
     });
@@ -391,9 +336,10 @@ function ghostOf(doc, last, W, H, plain) {
         const p = at.get(id);
         if (!n || !p) return;
         const r = radiusOf(n);
+        const hue = n.hue ?? Math.round((sorted.indexOf(n) / Math.max(1, sorted.length)) * 360);
         const node = svgEl(doc, 'g', {
             class: `kp-graph__node${n.external ? ' kp-graph__node--external' : ''}${id === hub ? ' kp-graph__node--hub' : ''}`,
-            style: `--i: ${i}${n.external ? '' : `; --kp-graph-hue: ${hueOf(data, n)}`}`,
+            style: `--i: ${i}${n.external ? '' : `; --kp-graph-hue: ${hue}`}`,
         });
         node.append(svgEl(doc, 'circle', { class: 'kp-graph__ring', cx: p.x, cy: p.y, r }));
         if (!n.external) node.append(svgEl(doc, 'circle', { class: 'kp-graph__core', cx: p.x, cy: p.y, r: Math.max(4, r - 6) }));
@@ -405,15 +351,13 @@ function ghostOf(doc, last, W, H, plain) {
 /** Draw the whole graph for the box's width. @param {GraphModel} g */
 function drawGraph(g) {
     const doc = g.el.ownerDocument;
-    // Read at every drawing: `data-kp-graph-labels="under"` puts each label centred under its node, whole.
-    const under = g.el.getAttribute('data-kp-graph-labels') === 'under';
     const width = g.box.clientWidth;
     g.drawnWidth = width;
     const W = Math.max(280, width || 800);
     const H = W < 600 ? 480 : Math.max(420, Math.min(560, Math.round(W * 0.6)));
     g.box.style.setProperty('--kp-graph-h', `${H}px`);
-    g.svg.setAttribute('height', String(H));
     g.svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    g.svg.setAttribute('height', String(H));
     const hadFocus = g.svg.contains(doc.activeElement) ? g.focus : null;
     g.svg.replaceChildren();
     const data = g.data;
@@ -421,7 +365,7 @@ function drawGraph(g) {
     g.note.textContent = g.state === 'ready' ? '' : g.state === 'loading' ? g.words || g.strings.graphLoading : g.words;
     g.note.hidden = g.state === 'ready';
     if (g.state === 'loading') {
-        g.svg.append(ghostOf(doc, g.data, W, H, under));
+        g.svg.append(ghostOf(doc, g.data, W, H));
     }
     if (g.state !== 'ready' || !data) {
         g.legend.replaceChildren();
@@ -429,9 +373,9 @@ function drawGraph(g) {
         g.showAll.setAttribute('data-kp-idle', '');
         return;
     }
-    const at = graphLayout(data, W, H, { plain: under });
+    const at = graphLayout(data, W, H);
     const hub = hubOf(data);
-    const bends = graphBends(data.edges, bentKinds(data));
+    const bends = graphBends(data.edges);
     const kinds = new Map(data.kinds.map((k) => [k.kind, k]));
     const name = (/** @type {string} */ id) => data.nodes.find((n) => n.id === id)?.label ?? id;
     const edges = svgEl(doc, 'g', { class: 'kp-graph__edges' });
@@ -439,23 +383,27 @@ function drawGraph(g) {
         const a = at.get(e.from);
         const b = at.get(e.to);
         if (!a || !b) return;
+        const len = Math.hypot(b.x - a.x, b.y - a.y) || 1;
+        const mx = (a.x + b.x) / 2 - ((b.y - a.y) / len) * bends[i];
+        const my = (a.y + b.y) / 2 + ((b.x - a.x) / len) * bends[i];
         const kind = kinds.get(e.kind);
         const path = svgEl(doc, 'path', {
-            d: edgeD(a, b, bends[i]),
+            d: `M${a.x.toFixed(1)},${a.y.toFixed(1)} Q${mx.toFixed(1)},${my.toFixed(1)} ${b.x.toFixed(1)},${b.y.toFixed(1)}`,
             class: 'kp-graph__edge',
             'data-kp-from': e.from,
             'data-kp-to': e.to,
             'data-kp-kind': e.kind,
             'data-kp-style': kind?.style ?? 'solid',
         });
-        const style = kindStyle(kind);
-        if (style) path.setAttribute('style', style);
+        if (kind?.colour) path.setAttribute('style', `--kp-graph-edge-colour: ${kind.colour}`);
         const title = svgEl(doc, 'title');
         title.textContent = `${name(e.from)} → ${name(e.to)}: ${e.detail || kind?.label || e.kind}`;
         path.append(title);
         edges.append(path);
     });
     g.svg.append(edges);
+    // Hues spread evenly over the nodes in label order, unless a node has its own.
+    const sorted = data.nodes.filter((n) => !n.external).sort((a, b) => a.label.localeCompare(b.label));
     /** @type {DrawnLabel[]} */
     const labels = [];
     const ring = ringOf(data, hub);
@@ -474,42 +422,27 @@ function drawGraph(g) {
             'aria-pressed': String(g.selected.has(id)),
             'aria-label': `${n.label}, ${n.description}`,
         });
-        if (!n.external) node.setAttribute('style', `--kp-graph-hue: ${hueOf(data, n)}`);
+        if (!n.external) node.setAttribute('style', `--kp-graph-hue: ${n.hue ?? Math.round((sorted.indexOf(n) / Math.max(1, sorted.length)) * 360)}`);
         const title = svgEl(doc, 'title');
         title.textContent = `${n.label}: ${n.description}`;
-        node.append(title);
-        /** @type {number} */
-        let lx;
-        /** @type {number} */
-        let ly;
-        /** @type {string} */
-        let anchor;
-        node.append(svgEl(doc, 'circle', { class: 'kp-graph__ring', cx: p.x, cy: p.y, r }));
+        node.append(title, svgEl(doc, 'circle', { class: 'kp-graph__ring', cx: p.x, cy: p.y, r }));
         if (!n.external) node.append(svgEl(doc, 'circle', { class: 'kp-graph__core', cx: p.x, cy: p.y, r: Math.max(4, r - 6) }));
         if (n.flag === 'mismatch') node.append(svgEl(doc, 'circle', { class: 'kp-graph__flag', cx: p.x, cy: p.y, r: r + 5 }));
-        if (under) {
-            // Centred under the node, whole.
-            lx = p.x;
-            ly = p.y + r + 16;
-            anchor = 'middle';
-        } else {
-            // The label points away from the hub: beside the node on the ring's
-            // sides, over it at the top, under it at the bottom and for the hub.
-            const dx = id === hub ? 0 : Math.cos(p.angle);
-            const dy = id === hub ? 1 : Math.sin(p.angle);
-            const off = r + (n.flag === 'mismatch' ? 10 : 6);
-            anchor = dx > 0.35 ? 'start' : dx < -0.35 ? 'end' : 'middle';
-            lx = p.x + dx * off;
-            ly = p.y + dy * off + (dy > 0.35 ? 9 : dy < -0.35 ? -3 : 4);
-        }
+        // The label points away from the hub: beside the node on the ring's
+        // sides, over it at the top, under it at the bottom and for the hub.
+        const dx = id === hub ? 0 : Math.cos(p.angle);
+        const dy = id === hub ? 1 : Math.sin(p.angle);
+        const off = r + (n.flag === 'mismatch' ? 10 : 6);
+        const anchor = dx > 0.35 ? 'start' : dx < -0.35 ? 'end' : 'middle';
+        const lx = p.x + dx * off;
+        const ly = p.y + dy * off + (dy > 0.35 ? 9 : dy < -0.35 ? -3 : 4);
         const text = /** @type {SVGTextElement} */ (
             svgEl(doc, 'text', { class: 'kp-graph__label', x: lx.toFixed(1), y: ly.toFixed(1), 'text-anchor': anchor })
         );
         text.textContent = n.label;
         text.setAttribute('aria-hidden', 'true');
         node.append(text);
-        // Only the side labels are fitted (and cut); under their nodes a label is whole.
-        if (!under) labels.push({ text, full: n.label, length: n.label.length });
+        labels.push({ text, full: n.label, length: n.label.length });
         g.svg.append(node);
         g.decorate?.(node, { kind: 'node', host: g.el, key: keyOf(g.el), index, value: id, label: n.label });
     });
@@ -528,8 +461,7 @@ function drawGraph(g) {
             button.setAttribute('aria-pressed', String(!g.hidden.has(k.kind)));
             const sample = svgEl(doc, 'svg', { class: 'kp-graph__sample', viewBox: '0 0 24 8', 'aria-hidden': 'true' });
             const line = svgEl(doc, 'line', { x1: 1, y1: 4, x2: 23, y2: 4, 'data-kp-style': k.style });
-            const sampleStyle = kindStyle(k);
-            if (sampleStyle) line.setAttribute('style', sampleStyle);
+            line.setAttribute('style', `--kp-graph-edge-colour: ${k.colour}`);
             sample.append(line);
             button.append(sample, make(doc, 'span', '', k.label));
             li.append(button);
@@ -639,12 +571,11 @@ export function attachGraphs(root = document, { decorate, strings } = {}) {
         bar.append(legend, showAll);
         const box = make(doc, 'div', 'kp-graph__box');
         const svg = /** @type {SVGSVGElement} */ (/** @type {unknown} */ (svgEl(doc, 'svg', { class: 'kp-graph__svg', role: 'group' })));
-        svg.setAttribute('aria-label', `${el.getAttribute('aria-label') ?? s.graphUnnamed}. ${s.graphHint.split('\n').join('. ')}`);
+        svg.setAttribute('aria-label', `${el.getAttribute('aria-label') ?? s.graphUnnamed}. ${s.graphHint}`);
         const note = make(doc, 'p', 'kp-graph__note');
         note.setAttribute('role', 'status');
         box.append(svg, note);
-        const hint = make(doc, 'p', 'kp-graph__hint');
-        writeHint(hint, s.graphHint);
+        const hint = make(doc, 'p', 'kp-graph__hint', s.graphHint);
         // The data child stays (a script draws nothing), so a second attach
         // after a detach reads it again.
         el.replaceChildren(bar, box, hint, ...(script ? [script] : []));

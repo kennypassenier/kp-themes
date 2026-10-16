@@ -18,15 +18,6 @@ Three components the admin dashboard still drew itself (homelab kp-adopt-rest, k
 - **Added: the hover card** [kpadopt-9; research/kpadopt-tooltip-sort]. `attachHoverCards()` in the new `js/hovercard.js` (also `@kp-soft/themes/js/hovercard` and the root export, wired into `js/auto.js` for `[data-kp-hovercard]`): one shared `.kp-popover.kp-tooltip` card, delegated from a root so anchors rebuilt after the attach keep working, its words from the `data-kp-hovercard` attribute or a `fill(anchor, card)` callback run when it opens. It wears every theme's tooltip look and entrance (it leaves as the entrance played backwards), sits under the anchor like a tooltip in its anchor does, flips above and stays in the window, can be entered by the pointer, closes on Escape and when its anchor is removed. `attachTooltips()` is unchanged. Pastel's pass plate is drawn on the card itself.
 - **Added: plain-click multi-sort** [kpadopt-sort]. `data-kp-sort-multi="click"` (option `multiSort: 'click'`) on a data table: every plain header click, Enter or Space adds the column as a sort key (ascending, descending, out), Shift + click sorts on that column alone. The reset button and the summary line are the existing ones. The default (Shift adds) is unchanged. The React component is not changed.
 - **Added: a group heading that stays** [kpadopt-groups]. `data-kp-group-always` on a data table's `tr[data-kp-row-group]` keeps the heading visible with no data row under it (rows still loading, failed, or none). Default unchanged.
-- **Added: the network graph can draw the admin dashboard's Map with no visible change** [kpadopt-graph, kpa-14; research/kpadopt-graph; draft, not yet judged].
-  Three opt-in attributes on `figure.kp-graph`, all off by default (the graph is drawn exactly as before without them):
-  `data-kp-graph-colour="fixed"` (one lightness and strength, `oklch(0.62 0.15 hue)`, in every theme; knobs `--kp-graph-node-l`, `--kp-graph-node-c`);
-  `data-kp-graph-labels="under"` (a label centred under its node, whole, no ellipsis, and the ellipse keeps its wide shape on a narrow box);
-  `data-kp-graph-chrome="inside"` (Show all in the picture's top corner and the hint along its foot, css only; a `graphHint` with line breaks sets
-  separate spans). New optional fields: a kind's `colour` (now optional), `dash`, `opacity`, `bent`. New knobs: `--kp-graph-box-radius`, `--kp-graph-box-fill`, `--kp-graph-edge-on-width`,
-  `--kp-graph-node-dim`, `--kp-graph-dot-cap`, `--kp-graph-flag-colour`, `--kp-graph-label-weight`, `--kp-graph-label-halo`, `--kp-graph-inset`.
-  `graphLayout()` takes `{ plain }` and `graphBends()` a set of `bent` kinds.
-  Overriding `--kp-graph-node-colour` per graph does not work (each node declares it), hence the attribute.
 
 ## 10.1.1 — 2026-10-15
 

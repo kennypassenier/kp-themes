@@ -1573,36 +1573,6 @@ dictionary (`graphShowAll`, `graphHint`, `graphKinds`, `graphLoading`, … in
 graphs under `root`. Knobs: `--kp-graph-h` (480px; the script sets the
 height it draws at), `--kp-graph-label-size` (12px), `--kp-graph-dim`
 (0.08, a link that is not lit while a node is).
-
-Three opt-in attributes on the figure change how it draws; without them the
-graph is exactly as above. They are read each time the picture is drawn
-(`setGraphData`, a new width), except `data-kp-graph-chrome` and
-`data-kp-graph-colour`, which are css only and take effect at once.
-
-| Attribute                       | What it does                                                                                                                                                                                                                                                                                                           |
-| ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `data-kp-graph-colour="fixed"`  | every node's hue at one fixed lightness and strength, the same in every theme (`oklch(0.62 0.15 <hue>)`), not at the lightness of the theme's `--chart-1`. Knobs `--kp-graph-node-l` (0.62) and `--kp-graph-node-c` (0.15). Setting `--kp-graph-node-colour` on the figure does not work: each node declares it itself |
-| `data-kp-graph-labels="under"`  | each label centred under its node, whole: never shortened, never fitted. The ellipse keeps its wide shape on a narrow box too (labels beside the ring need that room, labels under the nodes do not)                                                                                                                    |
-| `data-kp-graph-chrome="inside"` | Show all in the picture's top end corner and the hint along its foot, inside the frame; the kinds stay in the row over the picture. Css only (one grid cell), the picture keeps its height. A `graphHint` with line breaks (`strings`) is set as separate spans side by side; the accessible name joins them with full stops |
-
-More knobs, all optional: `--kp-graph-box-radius` and `--kp-graph-box-fill`
-(the frame: any `background` value), `--kp-graph-edge-on-width` (2.6, a lit
-link), `--kp-graph-node-dim` (0.3, a node that is not lit), `--kp-graph-dot-cap`
-(`round`; `butt` for plain dots), `--kp-graph-flag-colour`
-(`--warning-foreground`), `--kp-graph-label-weight` (500) and
-`--kp-graph-label-halo` (4px). A kind takes three more optional fields:
-`dash` (a `stroke-dasharray`, `5 4`, for the kind's links and its sample),
-`opacity` and `bent` (its links never draw straight, even when alone between
-two nodes); its `colour` may be left out.
-
-The Map page of the admin dashboard is drawn with `colour="fixed"`,
-`labels="under"` and `chrome="inside"`; the kinds are `var(--chart-3)` solid
-for declared, `var(--muted-foreground)` dashed for planned,
-`var(--warning-foreground)` dashed with `dash: '5 4'` for open, `var(--chart-2)`
-dotted with `dash: '2 4'` and `bent: true` for named, `var(--chart-1)` solid for
-a route; and on the figure `--kp-graph-dot-cap: butt; --kp-graph-edge-on-width: 2.4`.
-Positions, node sizes, hues and bends then equal the Map's own to the pixel.
-
 ### Every other action: the menu button
 
 The rare actions of a page or a record go behind one "More ▾" at the end of
