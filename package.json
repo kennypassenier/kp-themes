@@ -156,6 +156,18 @@
             "types": "./js/segmented.d.ts",
             "default": "./js/segmented.js"
         },
+        "./js/action-tiles": {
+            "types": "./js/action-tiles.d.ts",
+            "default": "./js/action-tiles.js"
+        },
+        "./js/statusrow": {
+            "types": "./js/statusrow.d.ts",
+            "default": "./js/statusrow.js"
+        },
+        "./js/facets": {
+            "types": "./js/facets.d.ts",
+            "default": "./js/facets.js"
+        },
         "./js/toolbar": {
             "types": "./js/toolbar.d.ts",
             "default": "./js/toolbar.js"

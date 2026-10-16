@@ -124,6 +124,21 @@ export { TOOLBAR, TOOLBAR_CLEAR_EVENT, TOOLBAR_REMOVE_EVENT, attachToolbars, set
 /** @typedef {import('./js/toolbar.js').ToolbarFilter} ToolbarFilter */
 export { KEYS, attachKeys, setKeys } from './js/keys.js';
 /** @typedef {import('./js/keys.js').KeyPair} KeyPair */
+// Action tiles, status rows and the facet list [kpadopt2-tiles].
+export { ACTION_BUSY_EVENT, ACTION_TILE, attachActionTiles, setActionBusy } from './js/action-tiles.js';
+export {
+    STATUS_EVENT,
+    STATUS_ID_ATTRIBUTE,
+    STATUS_LIST,
+    STATUS_RETRY_EVENT,
+    STATUS_STATES,
+    attachStatusLists,
+    buildStatusList,
+    setStatus,
+} from './js/statusrow.js';
+/** @typedef {import('./js/statusrow.js').StatusRow} StatusRow */
+export { FACETS, FACET_EVENT, attachFacets, getFacetValues, setFacetCounts, setFacetItems, setFacetValues } from './js/facets.js';
+/** @typedef {import('./js/facets.js').FacetItem} FacetItem */
 export { HOVERCARD_ATTRIBUTE, HOVERCARD_CARD, HOVERCARD_EVENT, attachHoverCards } from './js/hovercard.js';
 // Information that updates in place, the theme's way [research/update-motion, 2026-10-05].
 export {

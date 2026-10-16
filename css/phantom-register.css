@@ -4231,3 +4231,64 @@
         box-shadow: 3px 3px 0 var(--kp-red-deep, var(--border-strong));
     }
 }
+
+/* ── Action tiles, status rows, facet list [kpadopt2-tiles] ── */
+@layer kp.signature {
+    /* Phantom: cut paper. Pointing throws a red bar in behind the title from the start edge, in two cuts, and flips its ink to black; the tile does not move. A press drops the slab 3 px onto its deep-red shadow. */
+    [data-theme='phantom'] .kp-action {
+        --kp-action-radius: 0;
+        --kp-action-edge: var(--border-strong);
+        --kp-action-edge-hover: var(--border-strong);
+        --kp-action-shadow: 3px 3px 0 var(--kp-red-deep, var(--border-strong));
+        --kp-action-shadow-active: 0 0 0 0 transparent;
+        --kp-action-press: 3px 3px;
+        --kp-action-title-font: var(--theme-font-display);
+        --kp-action-title-case: uppercase;
+        --kp-action-title-tracking: 0.1em;
+    }
+    [data-theme='phantom'] .kp-action__title {
+        justify-self: start;
+        margin-inline-start: -0.375rem;
+        padding-inline: 0.375rem;
+        background: linear-gradient(var(--primary), var(--primary)) no-repeat;
+        background-size: 0% 100%;
+    }
+    [data-theme='phantom'] .kp-action:hover:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'])) .kp-action__title {
+        background-size: 100% 100%;
+        color: var(--primary-foreground);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] .kp-action__title {
+            transition:
+                background-size var(--fx-duration) steps(2, jump-end),
+                color var(--fx-duration) steps(2, jump-end);
+        }
+    }
+    [data-theme='phantom'] .kp-statuslist {
+        --kp-statusrow-mark-radius: 0;
+    }
+    [data-theme='phantom'] .kp-statusrow {
+        --kp-statusrow-radius: 0;
+        border-inline-start: 4px solid var(--kp-statusrow-state-edge, var(--border-strong));
+    }
+    [data-theme='phantom'] .kp-statusrow[data-state='loading'] {
+        border-inline-start-color: var(--primary);
+    }
+    [data-theme='phantom'] .kp-facets {
+        --kp-facet-radius: 0;
+    }
+    [data-theme='phantom'] .kp-facets__title {
+        font-family: var(--theme-font-display);
+        letter-spacing: 0.2em;
+    }
+}
+
+/* The grid's gap leaves room for the tile's own shadow, glow or outline; the facet row's wash. */
+@layer kp.signature {
+    [data-theme='phantom'] .kp-actions {
+        --kp-actions-gap: 0.75rem;
+    }
+    [data-theme='phantom'] .kp-facet {
+        --kp-facet-hover: var(--muted);
+    }
+}

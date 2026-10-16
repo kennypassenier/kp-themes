@@ -5986,3 +5986,72 @@
         }
     }
 }
+
+/* ── Action tiles, status rows, facet list [kpadopt2-tiles] ── */
+@layer kp.signature {
+    /* Cyberpunk: pointing lights the circuit, a 14 px grid in the primary over the tile; the rim goes to the primary with a glow, the title is spaced capitals. A press fills the tile with a wash of the primary. */
+    [data-theme='cyberpunk'] .kp-action {
+        --kp-action-radius: 0.3rem;
+        --kp-action-edge: var(--kp-hairline);
+        --kp-action-edge-hover: var(--primary);
+        --kp-action-shadow-hover: 0 0 10px hsl(from var(--primary) h s l / 0.3);
+        --kp-action-ground-active: hsl(from var(--primary) h s l / 0.14);
+        --kp-action-press: 0 1px;
+        --kp-action-title-case: uppercase;
+        --kp-action-title-tracking: 0.08em;
+        --kp-action-title-size: 0.9375rem;
+    }
+    [data-theme='cyberpunk'] .kp-action > :not(.kp-action__state) {
+        position: relative;
+    }
+    [data-theme='cyberpunk'] .kp-action::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background-image:
+            linear-gradient(hsl(from var(--primary) h s l / 0.2) 1px, transparent 1px),
+            linear-gradient(90deg, hsl(from var(--primary) h s l / 0.2) 1px, transparent 1px);
+        background-size: 14px 14px;
+        opacity: 0;
+        pointer-events: none;
+    }
+    [data-theme='cyberpunk'] .kp-action:hover:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true']))::before {
+        opacity: 1;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-action::before {
+            transition: opacity var(--fx-duration) var(--fx-ease);
+        }
+    }
+    [data-theme='cyberpunk'] .kp-statuslist {
+        --kp-statusrow-mark-radius: 0;
+    }
+    [data-theme='cyberpunk'] .kp-statusrow {
+        --kp-statusrow-radius: 0;
+        --kp-statusrow-edge: var(--kp-hairline);
+    }
+    [data-theme='cyberpunk'] .kp-statusrow:is([data-state='loading'], [data-state='failed']) {
+        border-inline-start-width: 3px;
+    }
+    [data-theme='cyberpunk'] .kp-statusrow__detail {
+        font-family: var(--kp-mono);
+    }
+    [data-theme='cyberpunk'] .kp-facets {
+        --kp-facet-radius: 0;
+    }
+    [data-theme='cyberpunk'] .kp-facets__title,
+    [data-theme='cyberpunk'] .kp-facet__count {
+        font-family: var(--kp-mono);
+    }
+}
+
+/* The grid's gap leaves room for the tile's own shadow, glow or outline; the facet row's wash. */
+@layer kp.signature {
+    [data-theme='cyberpunk'] .kp-actions {
+        --kp-actions-gap: 0.625rem;
+    }
+    [data-theme='cyberpunk'] .kp-facet {
+        --kp-facet-hover: hsl(from var(--primary) h s l / 0.1);
+    }
+}

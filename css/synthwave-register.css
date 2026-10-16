@@ -4405,3 +4405,50 @@
             0 0 8px hsl(from var(--primary) h s l / 0.55);
     }
 }
+
+/* ── Action tiles, status rows, facet list [kpadopt2-tiles] ── */
+@layer kp.signature {
+    /* Synthwave: the arcade marquee. A pink frame with a glow that widens when pointed at; a press dims the tube and drops the tile 1 px; the title is the display face in spaced capitals. */
+    [data-theme='synthwave'] .kp-action {
+        --kp-action-radius: 0.4rem;
+        --kp-action-edge: hsl(from var(--primary) h s l / 0.55);
+        --kp-action-edge-hover: var(--primary);
+        --kp-action-shadow: 0 0 12px hsl(from var(--primary) h s l / 0.28);
+        --kp-action-shadow-hover: 0 0 16px hsl(from var(--primary) h s l / 0.5);
+        --kp-action-shadow-active: 0 0 7px hsl(from var(--primary) h s l / 0.35);
+        --kp-action-ground-active: hsl(from var(--primary) h s l / 0.1);
+        --kp-action-press: 0 1px;
+        --kp-action-title-case: uppercase;
+        --kp-action-title-tracking: 0.1em;
+        --kp-action-title-size: 0.9375rem;
+    }
+    [data-theme='synthwave'] .kp-statuslist {
+        --kp-statuslist-gap: 0.625rem;
+    }
+    [data-theme='synthwave'] .kp-statusrow {
+        --kp-statusrow-edge: hsl(from var(--primary) h s l / 0.4);
+        --kp-statusrow-radius: 0.4rem;
+    }
+    [data-theme='synthwave'] .kp-statusrow[data-state='loading'] {
+        box-shadow: 0 0 12px hsl(from var(--primary) h s l / 0.45);
+    }
+    [data-theme='synthwave'] .kp-statusrow__detail {
+        font-family: var(--kp-mono);
+    }
+    [data-theme='synthwave'] .kp-facets {
+        --kp-facet-radius: 2px;
+    }
+    [data-theme='synthwave'] .kp-facet__count {
+        font-family: var(--kp-mono);
+    }
+}
+
+/* The grid's gap leaves room for the tile's own shadow, glow or outline; the facet row's wash. */
+@layer kp.signature {
+    [data-theme='synthwave'] .kp-actions {
+        --kp-actions-gap: 0.75rem;
+    }
+    [data-theme='synthwave'] .kp-facet {
+        --kp-facet-hover: hsl(from var(--primary) h s l / 0.1);
+    }
+}

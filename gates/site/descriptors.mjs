@@ -2694,6 +2694,112 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
         ],
     },
     {
+        id: 'action-tile',
+        title: 'Action tile',
+        group: 'Buttons',
+        classes: ['kp-actions', 'kp-action'],
+        exports: [],
+        intro: 'A button or a link drawn as a tile: a title and the one sentence that says what it does, in a grid whose tiles on one row are all as tall as the tallest. A button tile does something, a link tile goes somewhere (its mark is a chevron). The tile has a mark column that is always there, so a spinner arriving moves nothing. js/action-tiles.js (`attachActionTiles`, `setActionBusy`) stops a press on a busy or disabled tile and puts the theme’s own spinner in the mark while `aria-busy="true"`.',
+        whenToUse: 'For a short list of things to do or places to go that each need a sentence: a landing page, a drawer, a settings overview. For one action use a button; for a list of records use a table.',
+        examples: [
+            {
+                title: 'A grid of tiles',
+                why: 'Buttons and links mix in one grid. Mark a destructive tile with `kp-action--destructive`; its words must say what it does, the bar and the red title only help.',
+                markup: `
+<div class="kp-actions" role="group" aria-label="System actions">
+<button type="button" class="kp-action"><strong class="kp-action__title">Back up now</strong><span class="kp-action__mark" aria-hidden="true"></span><span class="kp-action__text">Copies every volume to the backup disk and checks the copy.</span></button>
+<a class="kp-action" href="#host"><strong class="kp-action__title">Host</strong><span class="kp-action__mark" aria-hidden="true"></span><span class="kp-action__text">CPU, memory and disks of the machine underneath.</span></a>
+<button type="button" class="kp-action kp-action--destructive"><strong class="kp-action__title">Delete all snapshots</strong><span class="kp-action__mark" aria-hidden="true"></span><span class="kp-action__text">Frees 48 GB. This cannot be undone.</span></button>
+<button type="button" class="kp-action" disabled><strong class="kp-action__title">Check for updates</strong><span class="kp-action__mark" aria-hidden="true"></span><span class="kp-action__text">Not while a backup is running.</span></button>
+</div>
+`,
+            },
+        ],
+        variants: [
+            { name: '.kp-action--destructive', what: 'A start bar, a red-tinted edge and title. The edge goes fully red when pointed at.' },
+            { name: 'disabled / aria-disabled="true"', what: 'A quieter plate, no hover, no press; `aria-disabled` also stops a link or a button that must keep its focus.' },
+            { name: 'aria-busy="true"', what: 'The spinner appears in the mark, a hidden “Working…” follows the title, and a press does nothing until it is cleared. `setActionBusy(tile, true)` sets it and fires `kp-action-busy`.' },
+            { name: '.kp-action__meta', what: 'An optional small line under the sentence, for a live figure.' },
+            { name: '--kp-actions-min', what: 'The least width of a column (15rem); the grid fills the width with as many as fit.' },
+        ],
+        accessibility: [
+            'Built in — a tile is a real button or link: Tab reaches it, Enter or Space presses a button, Enter follows a link, and the focus ring is whole in every theme.',
+            'Built in — the chevron and the spinner are pictures (`aria-hidden`); the busy word is read after the title.',
+            'Yours — give every tile a sentence, and name the group.',
+        ],
+    },
+    {
+        id: 'status-row',
+        aliases: ['status', 'status-id', 'status-retry', 'status-retry-button', 'status-change'],
+        title: 'Status rows',
+        group: 'Feedback',
+        classes: ['kp-statuslist', 'kp-statusrow'],
+        exports: [],
+        intro: 'One row per item that is read or checked one by one: a mark, the item’s name, a short detail and, when it failed, a Retry that tries that one item again. `data-state` is `ok`, `loading`, `failed` or `empty`; each is a shape and a word as well as a colour. js/statusrow.js (`buildStatusList`, `setStatus`, `attachStatusLists`) keeps the mark, the spoken state, `aria-busy`, the Retry and the announcement in step with it, and fires `kp-status-retry` when a Retry is pressed and `kp-status-change` when a row changes.',
+        whenToUse: 'For a page that reads many things separately (a backup per stack, a check per host) and must say which one is slow, which failed and why. For the steps of one run use the step list.',
+        examples: [
+            {
+                title: 'The four states',
+                why: 'Give every row a detail so a reason arriving later moves nothing; `--kp-statusrow-detail-lines: 2` keeps room for a two-line reason.',
+                markup: `
+<ul class="kp-statuslist" aria-label="Backups per stack">
+<li class="kp-statusrow" data-state="ok" data-kp-status-id="jellyfin"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">jellyfin</span><span class="kp-statusrow__detail">read</span></span></li>
+<li class="kp-statusrow" data-state="loading" data-kp-status-id="vault"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">vaultwarden</span><span class="kp-statusrow__detail">reading (12 s)</span></span></li>
+<li class="kp-statusrow" data-state="failed" data-kp-status-id="traefik"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">traefik</span><span class="kp-statusrow__detail">timed out after 20 s</span></span></li>
+<li class="kp-statusrow" data-state="empty" data-kp-status-id="grafana"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">grafana</span><span class="kp-statusrow__detail">no backups by design</span></span></li>
+</ul>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-state', what: '`ok` (a disc with a tick), `loading` (the theme’s spinner), `failed` (a disc with a cross, a red edge and a Retry), `empty` (a dashed ring and a dashed edge).' },
+            { name: 'data-kp-status-id', what: 'Names a row for `setStatus(list, id, { state, label, detail })`.' },
+            { name: 'data-kp-status-retry="false"', what: 'On the list: no Retry button on failed rows.' },
+            { name: '.kp-statuslist--rows', what: 'One column instead of a grid of columns of at least 16rem.' },
+        ],
+        accessibility: [
+            'Built in — each row reads “name, state”, a loading row has `aria-busy`, and a change is announced once through a hidden status region; more than three changes in one tick become one summary.',
+            'Built in — the Retry is named after its row, and when the focused Retry goes away the focus moves to the row’s name.',
+            'Yours — name the list, and write a reason that says what to do.',
+        ],
+    },
+    {
+        id: 'facets',
+        title: 'Facet list',
+        group: 'Data',
+        classes: ['kp-facets', 'kp-facet'],
+        exports: [],
+        intro: 'Checkbox rows that narrow a list by one property, each with how many items it would show and an “only” button that selects just that row. `data-kp-facets` on the group; `data-kp-facets-all="Everything"` adds a row that turns every row on and shows a mixed state while only some are. js/facets.js (`setFacetItems`, `setFacetCounts`, `setFacetValues`, `getFacetValues`, `attachFacets`) keeps the rows in step and fires `kp-facet-change`. `setFacetItems` changes rows in place, so a row that arrives later never takes the keyboard focus away.',
+        whenToUse: 'For the side of a log, a list or a board where a few values of one property are turned on and off, and the common move is “only this one”. For one value out of a few use a segmented control; for a long list with search use the combobox.',
+        examples: [
+            {
+                title: 'A group with an Everything row',
+                why: 'The checkboxes are the theme’s own; “only” is the theme’s ghost button, a sibling of the label. Counts keep a column.',
+                markup: `
+<div class="kp-facets" role="group" aria-label="Source">
+<ul class="kp-facets__list">
+<li class="kp-facet" data-kp-facet-all><label class="kp-facet__option"><input type="checkbox" class="kp-field__check kp-facet__check" checked /><span class="kp-facet__name">Everything</span><span class="kp-facet__count">351</span></label></li>
+<li class="kp-facet" data-value="HOST"><label class="kp-facet__option"><input type="checkbox" class="kp-field__check kp-facet__check" checked /><span class="kp-facet__name">Host</span><span class="kp-facet__count">214</span></label><button type="button" class="kp-button kp-button--ghost kp-button--sm kp-facet__only" aria-label="Show only Host">only</button></li>
+<li class="kp-facet" data-value="jellyfin"><label class="kp-facet__option"><input type="checkbox" class="kp-field__check kp-facet__check" checked /><span class="kp-facet__name">jellyfin</span><span class="kp-facet__count">96</span></label><button type="button" class="kp-button kp-button--ghost kp-button--sm kp-facet__only" aria-label="Show only jellyfin">only</button></li>
+</ul>
+</div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-facets-all', what: 'The Everything row; its checkbox is mixed while only some rows are on, and pressing it turns every row on.' },
+            { name: 'aria-busy="true"', what: 'On the group: the counts show as quiet bars that keep their place until `setFacetCounts` writes them.' },
+            { name: '.kp-facets--row', what: 'The rows side by side as bordered pills, scrolling sideways, for a phone.' },
+            { name: '.kp-facet__swatch', what: 'An optional small square before the name; its colour is a custom property you set on it.' },
+            { name: 'data-kp-facet-all and only', what: 'The “only” button is shown when the pointer is on the row or focus is in it, and always on a device that cannot hover.' },
+        ],
+        accessibility: [
+            'Built in — each checkbox is named by its row’s name and described by its count; “only” says which row it is for; it sits beside the label, never inside it.',
+            'Built in — after “only” or “Everything” a hidden status region says “Showing only Host” or “Showing everything”.',
+            'Yours — give the group a name, and keep each count in step with what the page shows.',
+        ],
+    },
+    {
         id: 'steplist',
         title: 'Step list',
         group: 'Feedback',

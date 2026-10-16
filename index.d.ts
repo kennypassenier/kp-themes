@@ -48,6 +48,13 @@ export type ToolbarFilter = import('./js/toolbar.js').ToolbarFilter;
 export { KEYS, attachKeys, setKeys } from './js/keys.js';
 export type KeyPair = import('./js/keys.js').KeyPair;
 /** @typedef {import('./js/keys.js').KeyPair} KeyPair */
+export { ACTION_BUSY_EVENT, ACTION_TILE, attachActionTiles, setActionBusy } from './js/action-tiles.js';
+export { STATUS_EVENT, STATUS_ID_ATTRIBUTE, STATUS_LIST, STATUS_RETRY_EVENT, STATUS_STATES, attachStatusLists, buildStatusList, setStatus, } from './js/statusrow.js';
+export type StatusRow = import('./js/statusrow.js').StatusRow;
+/** @typedef {import('./js/statusrow.js').StatusRow} StatusRow */
+export { FACETS, FACET_EVENT, attachFacets, getFacetValues, setFacetCounts, setFacetItems, setFacetValues } from './js/facets.js';
+export type FacetItem = import('./js/facets.js').FacetItem;
+/** @typedef {import('./js/facets.js').FacetItem} FacetItem */
 export { HOVERCARD_ATTRIBUTE, HOVERCARD_CARD, HOVERCARD_EVENT, attachHoverCards } from './js/hovercard.js';
 export { UPDATE_PROPERTY, UPDATE_STYLE, UPDATING_ATTRIBUTE, markUpdating, unmarkUpdating, update, updateIdea, updatePlays, updateTiming, updateTimingOf, } from './js/update.js';
 export { ATTENTION, SEVERITIES, attachAttention, setAttention, sortAttention } from './js/attention.js';

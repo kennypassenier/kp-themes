@@ -4234,3 +4234,64 @@
         box-shadow: var(--kp-shadow);
     }
 }
+
+/* ── Action tiles, status rows, facet list [kpadopt2-tiles] ── */
+@layer kp.signature {
+    /* Brutalism: a slab on its shadow. A 3 px line on a 6 px hard shadow; pointing grows the shadow to 8 px, a press drives the slab into its footprint; the title is heavy capitals in the display face. */
+    [data-theme='brutalism'] .kp-action {
+        --kp-action-radius: 0;
+        --kp-action-line: var(--kp-line);
+        --kp-action-edge: var(--border-strong);
+        --kp-action-edge-hover: var(--border-strong);
+        --kp-action-ground: color-mix(in oklab, var(--accent) 30%, var(--card));
+        --kp-action-ground-active: color-mix(in oklab, var(--accent) 55%, var(--card));
+        --kp-action-shadow: var(--kp-shadow);
+        --kp-action-shadow-hover: calc(var(--kp-drop) + 2px) calc(var(--kp-drop) + 2px) 0 0 var(--border-strong);
+        --kp-action-shadow-active: 0 0 0 0 transparent;
+        --kp-action-press: var(--kp-drop) var(--kp-drop);
+        --kp-action-title-font: var(--theme-font-display);
+        --kp-action-title-case: uppercase;
+        --kp-action-title-tracking: 0.04em;
+        --kp-action-title-weight: 700;
+    }
+    [data-theme='brutalism'] .kp-action:focus-visible {
+        outline: 4px solid var(--border-strong);
+        outline-offset: 2px;
+    }
+    [data-theme='brutalism'] .kp-statuslist {
+        --kp-statuslist-gap: 0.75rem;
+        --kp-statusrow-mark-radius: 0;
+    }
+    [data-theme='brutalism'] .kp-statusrow {
+        --kp-statusrow-line: var(--kp-line);
+        --kp-statusrow-edge: var(--border-strong);
+        --kp-statusrow-radius: 0;
+        box-shadow: var(--kp-shadow);
+    }
+    [data-theme='brutalism'] .kp-statusrow__mark {
+        border-width: var(--kp-line);
+    }
+    [data-theme='brutalism'] .kp-statusrow[data-state='loading'] {
+        --kp-statusrow-ground: var(--muted);
+    }
+    [data-theme='brutalism'] .kp-facets {
+        --kp-facet-radius: 0;
+    }
+    [data-theme='brutalism'] .kp-facet:hover {
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }
+    [data-theme='brutalism'] .kp-facets__title {
+        font-weight: 700;
+    }
+}
+
+/* The grid's gap leaves room for the tile's own shadow, glow or outline; the facet row's wash. */
+@layer kp.signature {
+    [data-theme='brutalism'] .kp-actions {
+        --kp-actions-gap: 1rem;
+    }
+    [data-theme='brutalism'] .kp-facet {
+        --kp-facet-hover: var(--secondary);
+    }
+}
