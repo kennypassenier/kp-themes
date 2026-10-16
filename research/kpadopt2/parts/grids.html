@@ -30,7 +30,7 @@
             </li>
             <li>
                 <b>Ready, Loading, Empty, Failed</b> swap the same grid: loading keeps every tile in place under the theme’s own busy picture, which
-                always moves; empty and failed show one centred sentence, with the grid’s own minimum height so the page does not jump.
+                always moves, and the data table’s loading card (the theme’s spinner and “Reading…”) stands in the middle of the cells; empty and failed show one centred sentence, with the grid’s own minimum height so the page does not jump.
             </li>
             <li>
                 <b>Requests per hour</b> (below) is the same grid toned by a value: the darker the tile, the more requests; the legend is a five-step
@@ -126,7 +126,9 @@
             </li>
             <li>
                 <b>State</b> is the package’s segmented control (<b>Ready</b>, <b>Loading</b>, <b>Empty</b>, <b>Failed</b>) and swaps both matrices:
-                loading keeps the shape, the names stay and every cell waits in the theme’s own loading picture, which always moves; empty and failed show one sentence. The grid does not change height.
+                loading keeps the shape, the names stay and every cell waits in the theme’s own loading picture, which always moves, and the data table’s loading card (the theme’s spinner
+                and “Reading…”) stands in the middle of the cells, as over a loading table; going back to Ready, the card closes first, then the cells
+                are drawn. Empty and failed show one sentence. The grid does not change height.
             </li>
         </ul>
     </div>

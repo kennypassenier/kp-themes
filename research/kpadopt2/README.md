@@ -100,6 +100,30 @@ in one `[kpadopt2]` block of `css/<theme>-register.css`, and a `[kpadopt2-repair
   show them (heat, matrix, barcell, gantt, gantt-states) ask formal again in this round (`FORMAL_AGAIN` in `build.mjs`, the
   round's `reopen`, `reopened` in `VERDICTS.json`).
 
+### Round 5, during the round: the loading card in the matrix and the timeline (2026-10-16)
+
+Kenny rejected the matrix and the timeline's states in formal: "ik zie geen loading icoon? moet hier ook zoals bij een table
+zijn waar het icoon in het midden van de matrix staat en lijkt te laden" ("direct al twee fouten die ik niet overal wil
+tegenkomen, dus fix ze nu"). Recorded in `VERDICTS.json` (round "5", no page id: the round stays open). What changed:
+
+- **One shared piece, `js/busy-card.js`:** `openBusyCard()` lays the data table's own loading card (the layer and panel
+  `drawOverlay()` in `js/datatable.js` builds, as the week agenda's loading does) centred over a data area, measured from the
+  area and placed again when the box resizes or scrolls; it arrives the theme's way and leaves as the table's card leaves. Over
+  a short area (a heat grid of three rows) the panel lies flat, the spinner beside the words (container `kp-busy-card`).
+- **Heat grid and matrix (`js/heat.js`):** a loading grid keeps its waiting cells and lays the card over them, clear of the
+  axis, the headers and the names; going back to ready, the card closes first and the cells are drawn after it.
+- **Run timeline (`js/gantt.js`):** the card over the ghost lanes (or the lanes it had), the toolbar, axis and lane names
+  beside it; the runs and an empty or failed sentence are drawn once it has gone; the loading sentence is read out, not drawn.
+- **Two registers:** cyberpunk's deciphered LOADING and terminal's htop row across the matrix gave way to the card.
+- **The other new components** of kpadopt2 and kpadopt3: the week agenda (and its phone list) already had the card; the
+  bar cell loads inside a data table that lays it; action tiles, status rows and the facet list wait per tile, per row or per
+  count while staying usable, so they are not data areas that load whole.
+- **The guard:** `gates/check-busy-card.mjs` (in `npm run gates`) refuses a module in `js/` that takes a loading state
+  without being classified, and a data component whose loading state does not lay the card.
+
+The matrix, the heat grid and the timeline's states ask formal again in this round (look lines in `parts/looks.mjs`); the
+fifteen other themes' look lines for those three sections say where the card stands.
+
 ## Decisions to judge
 
 - Tiles: the "only" button of the facet list is a sibling of the label, always shown on touch; a status row keeps one detail line (`--kp-statusrow-detail-lines: 2` for more); the tile reserves a mark column so a spinner never moves the title.

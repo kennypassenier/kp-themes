@@ -114,6 +114,25 @@
                 }
             ],
             "notApproved": []
+        },
+        {
+            "round": "5",
+            "allJudged": false,
+            "comment": "Received while round 2026-10-16-r5 is still open in the review dialog: only these two rejections, no \"page\" id, so the page keeps the round and the review kit keeps Kenny's other answers of this round. Both sections now show the data table's loading card (js/busy-card.js) and are asked again in formal in the same round; the republished page reopens their rejected verdicts (research/_review/progress.js, staleKeys).",
+            "approved": [],
+            "notApproved": [
+                {
+                    "item": "matrix",
+                    "theme": "formal",
+                    "note": "ik zie geen loading icoon? moet hier ook zoals bij een table zijn waar het icoon in het midden van de matrix staat en lijkt te laden"
+                },
+                {
+                    "item": "gantt-states",
+                    "theme": "formal",
+                    "note": "ik zie geen loading icoon? moet hier ook zoals bij een table zijn waar het icoon in het midden van de matrix staat en lijkt te laden"
+                }
+            ],
+            "generalNote": "direct al twee fouten die ik niet overal wil tegenkomen, dus fix ze nu"
         }
     ],
     "reopened": [

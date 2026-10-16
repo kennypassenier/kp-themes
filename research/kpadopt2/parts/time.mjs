@@ -139,7 +139,7 @@ SECTIONS.push({
     title: 'Run timeline: loading, empty, error, a held window, the hover card',
     about: 'The states of the whole timeline at their final size, a window held in the past with a selected range, and the hover card opened on a failed run.',
     expected: [
-        '<b>Loading</b>: five ghost lanes as tall as the real ones, each ghost bar a plate of a bar’s size in the theme’s own loading picture; the axis is already there.',
+        '<b>Loading</b>: five ghost lanes as tall as the real ones, each ghost bar a plate of a bar’s size in the theme’s own loading picture; the axis is already there. In the middle of the lanes stands the data table’s loading card (the theme’s spinner and “Reading the history”), as over a loading table; the toolbar, the axis and the lane names stay beside it.',
         '<b>Empty</b>: the axis and the sentence “No run in this window.” over a lane-sized space. <b>Error</b>: the page’s words in the destructive colour.',
         '<b>A held window</b>: the Live button is not pressed, the window ends two hours ago and does not move; a range is already selected (a band across the plot and the toolbar row turned into a chip with its times, Zoom and Clear, standing where the range buttons and Live stand; the toolbar keeps its height and the chip lies on no lane, at 1280 and at 390 px). <b>Zoom</b> makes the band the window; <b>Clear</b> lifts it.',
         '<b>Hover card on the failed run</b> opens the card on the failed bar of the held window: name, times, length and state, joined to its bar, with its edge whole in this theme.',
