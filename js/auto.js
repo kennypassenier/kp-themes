@@ -102,7 +102,7 @@ export const NEEDS = [
     },
     {
         name: 'patterns',
-        when: '[data-kp-copy], [data-kp-undo-action]',
+        when: '[data-kp-copy], [data-kp-undo-action], [data-kp-secret]',
         load: () => import('./patterns.js'),
         attach: (m, root) => [m.attachPatterns(root)],
     },

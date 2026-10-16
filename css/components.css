@@ -7578,6 +7578,155 @@
         color: var(--destructive);
     }
 
+    /* Secret field [kpadopt4] -----------------------------------------------
+ * `.kp-secret[data-kp-secret]` (js/patterns.js): a masked value, Reveal and
+ * Copy, and one line under them for the countdown, the reason a field is off
+ * or why it could not be read. The value box has the control height and the
+ * row's width whatever it holds, and the line under it always keeps its
+ * room, so showing, hiding, loading or failing moves nothing. A long value
+ * stays on one line and scrolls inside its box (a fade at the end says there
+ * is more) unless `data-kp-secret-wrap="wrap"`, which keeps
+ * `data-kp-secret-lines` lines of room. Knobs [KT6]: `--kp-secret-min`
+ * (16rem, the value box's least width before the buttons go under it),
+ * `--kp-secret-lines` (2), `--kp-secret-drain` (the rule that runs out with
+ * the countdown, `--primary`), `--kp-secret-drain-size` (2px). */
+    .kp-secret {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+        max-inline-size: 100%;
+    }
+
+    .kp-secret__value {
+        box-sizing: border-box;
+        display: block;
+        flex: 1 1 var(--kp-secret-min, 16rem);
+        min-inline-size: 0;
+        block-size: var(--kp-control-height, 2.25rem);
+        margin: 0;
+        padding: 0 var(--kp-space-sm, 0.5rem);
+        overflow-x: auto;
+        overflow-y: hidden;
+        border: 1px solid var(--border);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--muted);
+        color: var(--foreground);
+        font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        line-height: calc(var(--kp-control-height, 2.25rem) - 2px);
+        white-space: nowrap;
+        scrollbar-width: none;
+    }
+
+    .kp-secret__value.kp-masked {
+        color: var(--muted-foreground);
+        user-select: none;
+    }
+
+    .kp-secret[data-kp-secret-overflow] .kp-secret__value {
+        mask-image: linear-gradient(to left, transparent, var(--foreground) 1.5rem);
+    }
+
+    .kp-secret[data-kp-secret-overflow] .kp-secret__value:dir(rtl) {
+        mask-image: linear-gradient(to right, transparent, var(--foreground) 1.5rem);
+    }
+
+    .kp-secret[data-kp-secret-wrap='wrap'] .kp-secret__value {
+        block-size: auto;
+        min-block-size: calc(var(--kp-secret-lines, 2) * 1.5em + 2 * var(--kp-space-xs, 0.25rem) + 2px);
+        padding-block: var(--kp-space-xs, 0.25rem);
+        overflow: visible;
+        line-height: 1.5;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-secret__actions {
+        display: flex;
+        flex: none;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    /* The reveal button keeps the width of its longest word, so Reveal, Hide and Try again move nothing. */
+    .kp-secret__reveal {
+        min-inline-size: 6.5em;
+    }
+
+    .kp-secret__line {
+        display: grid;
+        grid-template-rows: var(--kp-secret-drain-size, 2px) auto;
+        flex: 1 0 100%;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin: 0;
+        min-block-size: calc(var(--kp-secret-drain-size, 2px) + var(--kp-space-xs, 0.25rem) + 1.25rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        line-height: 1.25rem;
+    }
+
+    .kp-secret__words {
+        grid-row: 2;
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-secret__spinner {
+        --kp-spinner-size: 0.875rem;
+        flex: none;
+    }
+
+    .kp-secret__drain {
+        grid-row: 1;
+        display: block;
+        block-size: var(--kp-secret-drain-size, 2px);
+        background: var(--kp-secret-drain, var(--primary));
+        transform-origin: 0 50%;
+        visibility: hidden;
+    }
+
+    .kp-secret__drain:dir(rtl) {
+        transform-origin: 100% 50%;
+    }
+
+    /* Why it could not be read: an entry ruled off along its start edge, in the page's ink [fix-70]. */
+    .kp-secret[data-kp-secret-state='error'] .kp-secret__words {
+        padding-inline-start: var(--kp-space-sm, 0.5rem);
+        border-inline-start: 3px solid var(--destructive);
+        color: var(--foreground);
+    }
+
+    .kp-secret[data-kp-secret-state='disabled'] .kp-secret__value {
+        border-style: dashed;
+        background: transparent;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-secret:not([data-kp-secret-ttl='0'], [data-kp-secret-reveal-on='hold'])[data-kp-secret-state='shown'] .kp-secret__drain {
+            visibility: visible;
+            animation: kp-secret-drain var(--kp-secret-ttl, 30s) linear forwards;
+        }
+
+        .kp-secret[data-kp-secret-paused] .kp-secret__drain {
+            animation-play-state: paused;
+        }
+    }
+
+    @keyframes kp-secret-drain {
+        from {
+            scale: 1 1;
+        }
+
+        to {
+            scale: 0 1;
+        }
+    }
+
     /* Status parts [TH52] */
     .kp-health {
         display: inline-flex;

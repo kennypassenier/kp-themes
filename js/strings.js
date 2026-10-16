@@ -224,6 +224,20 @@
  * @property {string} copyBlockedAnnouncement
  * @property {string} undo
  * @property {string} deleted
+ * @property {string} secretLabel  A secret field's name when the page gives none (js/patterns.js, `.kp-secret`) [kpadopt4]
+ * @property {string} secretReveal  The button that shows a secret
+ * @property {string} secretHide  The same button while the secret is shown
+ * @property {string} secretHold  The button of a secret shown only while it is held (`data-kp-secret-reveal-on="hold"`)
+ * @property {string} secretCopy  The button that copies a secret without showing it
+ * @property {string} secretReading  The words beside the spinner while a secret is fetched
+ * @property {string} secretRetry  The reveal button's words after a secret could not be read
+ * @property {(seconds: number) => string} secretHidesIn  The countdown under a shown secret, "Hides in 28 s"
+ * @property {string} secretPaused  The countdown's words while the reader selects or holds the focus in the value
+ * @property {string} secretStaysShown  The line under a shown secret that hides only when asked (`data-kp-secret-ttl="0"`)
+ * @property {(seconds: number) => string} secretShown  What a screen reader hears when a secret is shown, "Shown. Hides in 30 s."
+ * @property {string} secretHidden  What it hears when the secret is hidden again
+ * @property {(reason: string) => string} secretFailed  The line under a secret that could not be read
+ * @property {string} secretNoSource  The reason when a secret has no value, loader or listener to read it from
  * @property {string} splitLabel
  * @property {(name: string) => string} reorderHandle
  * @property {(name: string, at: number, of: number) => string} reorderMoved
@@ -662,6 +676,21 @@ export const DEFAULT_STRINGS = Object.freeze({
     copyBlockedAnnouncement: 'Copying is blocked in this browser',
     undo: 'Undo',
     deleted: 'Deleted.',
+    // The secret field [kpadopt4]: a masked value shown on request for a few seconds, copied without being shown.
+    secretLabel: 'Secret',
+    secretReveal: 'Reveal',
+    secretHide: 'Hide',
+    secretHold: 'Hold to reveal',
+    secretCopy: 'Copy',
+    secretReading: 'Reading…',
+    secretRetry: 'Try again',
+    secretHidesIn: (seconds) => `Hides in ${seconds} s`,
+    secretPaused: 'Paused while you select it',
+    secretStaysShown: 'Shown until you hide it',
+    secretShown: (seconds) => (seconds > 0 ? `Shown. Hides in ${seconds} s.` : 'Shown.'),
+    secretHidden: 'Hidden again',
+    secretFailed: (reason) => `Could not read it: ${reason}`,
+    secretNoSource: 'there is nothing to read it from',
     splitLabel: 'Resize the panes',
     reorderHandle: (name) => `Move ${name}`,
     /** Announced after a keyboard or pointer move. @param {string} name @param {number} at @param {number} of */

@@ -264,6 +264,7 @@
         "kp-timestamp": ["@component:data"],
         "kp-empty": ["@component:data"],
         "kp-copyable": ["@component:data"],
+        "kp-secret": ["@component:data"],
         "kp-health": ["@component:data"],
         "kp-tiles": ["@component:data"],
         "kp-kpis": ["@component:data"],

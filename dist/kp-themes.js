@@ -323,6 +323,21 @@ var init_strings = __esm({
       copyBlockedAnnouncement: "Copying is blocked in this browser",
       undo: "Undo",
       deleted: "Deleted.",
+      // The secret field [kpadopt4]: a masked value shown on request for a few seconds, copied without being shown.
+      secretLabel: "Secret",
+      secretReveal: "Reveal",
+      secretHide: "Hide",
+      secretHold: "Hold to reveal",
+      secretCopy: "Copy",
+      secretReading: "Reading\u2026",
+      secretRetry: "Try again",
+      secretHidesIn: (seconds) => `Hides in ${seconds} s`,
+      secretPaused: "Paused while you select it",
+      secretStaysShown: "Shown until you hide it",
+      secretShown: (seconds) => seconds > 0 ? `Shown. Hides in ${seconds} s.` : "Shown.",
+      secretHidden: "Hidden again",
+      secretFailed: (reason) => `Could not read it: ${reason}`,
+      secretNoSource: "there is nothing to read it from",
       splitLabel: "Resize the panes",
       reorderHandle: (name) => `Move ${name}`,
       /** Announced after a keyboard or pointer move. @param {string} name @param {number} at @param {number} of */
@@ -13846,12 +13861,21 @@ __export(patterns_exports, {
   COPIED_MS: () => COPIED_MS,
   COPY_EVENT: () => COPY_EVENT,
   COPY_FAILED_EVENT: () => COPY_FAILED_EVENT,
+  SECRET: () => SECRET,
+  SECRET_EVENT: () => SECRET_EVENT,
+  SECRET_MASK: () => SECRET_MASK,
+  SECRET_REQUEST_EVENT: () => SECRET_REQUEST_EVENT,
+  SECRET_TTL: () => SECRET_TTL,
   UNDO_EVENT: () => UNDO_EVENT,
   UNDO_MS: () => UNDO_MS,
-  attachPatterns: () => attachPatterns
+  attachPatterns: () => attachPatterns,
+  attachSecrets: () => attachSecrets,
+  hideSecret: () => hideSecret,
+  revealSecret: () => revealSecret
 });
-function attachPatterns(root = document, { copiedMs = COPIED_MS, undoMs = UNDO_MS, toastOnCopyFailure = true, undoClassName = "kp-button kp-button--ghost" } = {}) {
+function attachPatterns(root = document, { copiedMs = COPIED_MS, undoMs = UNDO_MS, toastOnCopyFailure = true, undoClassName = "kp-button kp-button--ghost", secretLoad } = {}) {
   const cleanups = [];
+  cleanups.push(attachSecrets(root, { copiedMs, ...secretLoad ? { load: secretLoad } : {} }));
   for (const element of root.querySelectorAll(COPY)) {
     const button = (
       /** @type {HTMLButtonElement} */
@@ -13961,7 +13985,357 @@ function attachPatterns(root = document, { copiedMs = COPIED_MS, undoMs = UNDO_M
     for (const c of cleanups) c();
   };
 }
-var COPY, UNDO, UNDO_MS, COPIED_MS, COMMIT_EVENT, UNDO_EVENT, COPY_EVENT, COPY_FAILED_EVENT;
+function revealSecret(field) {
+  secrets.get(field)?.reveal("call");
+}
+function hideSecret(field) {
+  secrets.get(field)?.hide("call");
+}
+function attachSecrets(root = document, { load, copiedMs = COPIED_MS } = {}) {
+  const cleanups = [];
+  const fields = (
+    /** @type {HTMLElement[]} */
+    [
+      ...root instanceof Element && root.matches(SECRET) ? [root] : [],
+      ...root.querySelectorAll(SECRET)
+    ]
+  );
+  for (const field of fields) {
+    if (secrets.has(field)) continue;
+    const doc = field.ownerDocument;
+    const s2 = getStrings();
+    const make8 = (tag, className) => {
+      const el4 = doc.createElement(tag);
+      el4.className = className;
+      return el4;
+    };
+    field.classList.add("kp-secret");
+    if (!field.hasAttribute("role")) field.setAttribute("role", "group");
+    if (!field.hasAttribute("aria-label") && !field.hasAttribute("aria-labelledby"))
+      field.setAttribute("aria-label", field.dataset.kpSecretLabel ?? s2.secretLabel);
+    const hold = field.dataset.kpSecretRevealOn === "hold";
+    const ttl = Math.max(0, Number.parseInt(field.dataset.kpSecretTtl ?? "", 10));
+    const seconds = Number.isFinite(ttl) ? ttl : SECRET_TTL;
+    const maskLength = Math.max(1, Number.parseInt(field.dataset.kpSecretMask ?? "", 10) || SECRET_MASK);
+    const mask = (field.dataset.kpSecretMaskChar ?? "\u2022").repeat(maskLength);
+    const built = (
+      /** @type {Element[]} */
+      []
+    );
+    let value = (
+      /** @type {HTMLElement | null} */
+      field.querySelector(":scope > .kp-secret__value")
+    );
+    if (!value) {
+      value = make8("code", "kp-secret__value");
+      field.prepend(value);
+      built.push(value);
+    }
+    value.classList.add("kp-masked");
+    value.textContent = mask;
+    let actions = (
+      /** @type {HTMLElement | null} */
+      field.querySelector(":scope > .kp-secret__actions")
+    );
+    if (!actions) {
+      actions = make8("div", "kp-secret__actions");
+      value.after(actions);
+      built.push(actions);
+    }
+    let reveal = (
+      /** @type {HTMLButtonElement | null} */
+      actions.querySelector("[data-kp-secret-reveal]")
+    );
+    if (!reveal) {
+      reveal = /** @type {HTMLButtonElement} */
+      make8("button", "kp-button kp-button--sm kp-secret__reveal");
+      reveal.type = "button";
+      reveal.setAttribute("data-kp-secret-reveal", "");
+      actions.append(reveal);
+      built.push(reveal);
+    }
+    let copy = (
+      /** @type {HTMLButtonElement | null} */
+      actions.querySelector("[data-kp-secret-copy]")
+    );
+    if (!copy && field.dataset.kpSecretCopy !== "false") {
+      copy = /** @type {HTMLButtonElement} */
+      make8("button", "kp-button kp-button--sm kp-copyable__button kp-secret__copy");
+      copy.type = "button";
+      copy.setAttribute("data-kp-secret-copy", "");
+      copy.textContent = s2.secretCopy;
+      actions.append(copy);
+      built.push(copy);
+    }
+    let line = (
+      /** @type {HTMLElement | null} */
+      field.querySelector(":scope > .kp-secret__line")
+    );
+    if (!line) {
+      line = make8("p", "kp-secret__line");
+      field.append(line);
+      built.push(line);
+    }
+    const words = make8("span", "kp-secret__words");
+    const drain = make8("span", "kp-secret__drain");
+    drain.setAttribute("aria-hidden", "true");
+    line.replaceChildren(words, drain);
+    const spoken = make8("span", "kp-sr-only kp-secret__live");
+    spoken.setAttribute("role", "status");
+    spoken.setAttribute("aria-live", "polite");
+    field.append(spoken);
+    built.push(spoken);
+    const valueId = value.id || `kp-secret-${Math.random().toString(36).slice(2, 9)}`;
+    value.id = valueId;
+    reveal.setAttribute("aria-controls", valueId);
+    field.style.setProperty("--kp-secret-ttl", `${seconds}s`);
+    const lines = Number.parseInt(field.dataset.kpSecretLines ?? "", 10);
+    if (lines > 0) field.style.setProperty("--kp-secret-lines", String(lines));
+    let state = "hidden";
+    let left = seconds;
+    let timer2 = 0;
+    let paused = false;
+    let ticket = 0;
+    let copiedTimer = 0;
+    const say4 = (text) => {
+      spoken.textContent = "";
+      window.setTimeout(() => spoken.textContent = text, 30);
+    };
+    const disabledWhy = () => field.dataset.kpSecretDisabled;
+    const label = () => state === "shown" ? s2.secretHide : state === "error" ? s2.secretRetry : hold ? s2.secretHold : s2.secretReveal;
+    const setState = (next) => {
+      state = next;
+      field.dataset.kpSecretState = next;
+      const why = disabledWhy();
+      reveal.textContent = label();
+      reveal.disabled = why !== void 0 || next === "loading";
+      reveal.setAttribute("aria-expanded", String(next === "shown"));
+      if (hold) reveal.setAttribute("aria-pressed", String(next === "shown"));
+      if (copy) copy.disabled = why !== void 0;
+      value.setAttribute("aria-busy", String(next === "loading"));
+      if (next !== "shown") {
+        field.removeAttribute("data-kp-secret-overflow");
+        value.textContent = mask;
+        value.classList.add("kp-masked");
+        value.removeAttribute("tabindex");
+      }
+    };
+    const writeLine = () => {
+      const why = disabledWhy();
+      if (why !== void 0) {
+        field.dataset.kpSecretState = "disabled";
+        words.textContent = why;
+        return;
+      }
+      if (state === "loading") {
+        words.replaceChildren();
+        const spinner = make8("span", "kp-spinner kp-secret__spinner");
+        spinner.setAttribute("aria-hidden", "true");
+        words.append(spinner, doc.createTextNode(s2.secretReading));
+      } else if (state === "shown") words.textContent = seconds === 0 ? s2.secretStaysShown : paused ? s2.secretPaused : s2.secretHidesIn(left);
+      else if (state !== "error") words.textContent = "";
+    };
+    const stop = () => {
+      window.clearInterval(timer2);
+      timer2 = 0;
+    };
+    const hide = (reason = "press") => {
+      if (state !== "shown" && state !== "loading") return;
+      ticket += 1;
+      stop();
+      paused = false;
+      field.removeAttribute("data-kp-secret-paused");
+      const was = state;
+      setState("hidden");
+      writeLine();
+      if (was === "shown") {
+        say4(s2.secretHidden);
+        field.dispatchEvent(new CustomEvent(SECRET_EVENT, { bubbles: true, detail: { shown: false, reason } }));
+      }
+    };
+    const read = (purpose) => new Promise((resolve, reject) => {
+      let answered = false;
+      const respond = (v) => {
+        if (answered) return;
+        answered = true;
+        resolve(String(v));
+      };
+      const fail = (why) => {
+        if (answered) return;
+        answered = true;
+        reject(why);
+      };
+      const event = new CustomEvent(SECRET_REQUEST_EVENT, { bubbles: true, cancelable: true, detail: { respond, fail, purpose } });
+      field.dispatchEvent(event);
+      if (event.defaultPrevented) return;
+      if (load) {
+        Promise.resolve().then(() => load(field, purpose)).then(respond, fail);
+        return;
+      }
+      const inline = field.dataset.kpSecretValue;
+      if (inline !== void 0) respond(inline);
+      else fail(new Error(s2.secretNoSource));
+    });
+    const reasonOf = (error) => error instanceof Error ? error.message : typeof error === "string" ? error : s2.secretNoSource;
+    const tick4 = () => {
+      if (paused) return;
+      left -= 1;
+      if (left === 10 && seconds > 10) say4(s2.secretHidesIn(10));
+      if (left <= 0) {
+        hide("timer");
+        return;
+      }
+      writeLine();
+    };
+    const show = async (reason = "press") => {
+      if (disabledWhy() !== void 0 || state === "loading" || state === "shown") return;
+      const mine = ticket += 1;
+      setState("loading");
+      writeLine();
+      let text = "";
+      try {
+        text = await read("reveal");
+      } catch (error) {
+        if (mine !== ticket) return;
+        setState("error");
+        words.textContent = s2.secretFailed(reasonOf(error));
+        say4(words.textContent);
+        return;
+      }
+      if (mine !== ticket) return;
+      const shown2 = make8("span", "kp-secret__text");
+      shown2.textContent = text;
+      value.replaceChildren(shown2);
+      value.classList.remove("kp-masked");
+      value.tabIndex = 0;
+      field.toggleAttribute("data-kp-secret-overflow", value.scrollWidth > value.clientWidth + 1);
+      left = seconds;
+      paused = false;
+      setState("shown");
+      drain.style.animation = "none";
+      void drain.offsetWidth;
+      drain.style.removeProperty("animation");
+      writeLine();
+      say4(s2.secretShown(seconds));
+      field.dispatchEvent(new CustomEvent(SECRET_EVENT, { bubbles: true, detail: { shown: true, reason } }));
+      if (seconds > 0 && !hold) timer2 = window.setInterval(tick4, 1e3);
+    };
+    const pause = (on) => {
+      if (state !== "shown" || paused === on || seconds === 0) return;
+      paused = on;
+      field.toggleAttribute("data-kp-secret-paused", on);
+      writeLine();
+    };
+    const onReveal = () => {
+      if (hold) return;
+      if (state === "shown") hide("press");
+      else void show("press");
+    };
+    const onHoldDown = (event) => {
+      if (!hold || event.button !== 0) return;
+      reveal.setPointerCapture?.(event.pointerId);
+      void show("hold");
+    };
+    const onHoldUp = () => {
+      if (hold) hide("hold");
+    };
+    const onHoldKey = (event) => {
+      if (!hold || event.key !== " " && event.key !== "Enter") return;
+      event.preventDefault();
+      if (event.type === "keydown" && !event.repeat) void show("hold");
+      if (event.type === "keyup") hide("hold");
+    };
+    const onCopy = async () => {
+      if (!copy || disabledWhy() !== void 0) return;
+      const idle = s2.secretCopy;
+      let text = "";
+      try {
+        text = state === "shown" ? value.textContent ?? "" : await read("copy");
+        await navigator.clipboard.writeText(text);
+      } catch (error) {
+        copy.dataset.kpCopyFailed = "";
+        copy.dispatchEvent(new CustomEvent(COPY_FAILED_EVENT, { bubbles: true, detail: { text: "", error } }));
+        say4(s2.copyBlockedAnnouncement);
+        return;
+      }
+      delete copy.dataset.kpCopyFailed;
+      copy.textContent = s2.copied;
+      copy.dataset.kpCopied = "";
+      copy.dispatchEvent(new CustomEvent(COPY_EVENT, { bubbles: true, detail: { text: "" } }));
+      say4(s2.copiedAnnouncement(field.getAttribute("aria-label") ?? s2.secretLabel));
+      window.clearTimeout(copiedTimer);
+      copiedTimer = window.setTimeout(() => {
+        copy.textContent = idle;
+        delete copy.dataset.kpCopied;
+      }, copiedMs);
+    };
+    const onFocusIn = (event) => {
+      if (event.target === value) pause(true);
+    };
+    const onFocusOut = (event) => {
+      if (event.target === value && !selected()) pause(false);
+    };
+    const selected = () => {
+      const selection = doc.getSelection();
+      return selection !== null && !selection.isCollapsed && value.contains(selection.anchorNode);
+    };
+    const onSelection = () => {
+      if (state === "shown") pause(selected() || doc.activeElement === value);
+    };
+    const onAway = () => {
+      if (doc.visibilityState === "hidden") hide("away");
+    };
+    reveal.addEventListener("click", onReveal);
+    reveal.addEventListener("pointerdown", onHoldDown);
+    reveal.addEventListener("pointerup", onHoldUp);
+    reveal.addEventListener("pointercancel", onHoldUp);
+    reveal.addEventListener("lostpointercapture", onHoldUp);
+    reveal.addEventListener("keydown", onHoldKey);
+    reveal.addEventListener("keyup", onHoldKey);
+    reveal.addEventListener("blur", onHoldUp);
+    copy?.addEventListener("click", onCopy);
+    field.addEventListener("focusin", onFocusIn);
+    field.addEventListener("focusout", onFocusOut);
+    doc.addEventListener("selectionchange", onSelection);
+    doc.addEventListener("visibilitychange", onAway);
+    setState(disabledWhy() !== void 0 ? "disabled" : "hidden");
+    writeLine();
+    const watch = new MutationObserver(() => {
+      if (disabledWhy() !== void 0) hide("call");
+      setState(disabledWhy() !== void 0 ? "disabled" : state === "disabled" ? "hidden" : state);
+      writeLine();
+    });
+    watch.observe(field, { attributes: true, attributeFilter: ["data-kp-secret-disabled"] });
+    secrets.set(field, { reveal: (reason) => void show(reason), hide: (reason) => hide(reason) });
+    cleanups.push(() => {
+      watch.disconnect();
+      stop();
+      window.clearTimeout(copiedTimer);
+      reveal.removeEventListener("click", onReveal);
+      reveal.removeEventListener("pointerdown", onHoldDown);
+      reveal.removeEventListener("pointerup", onHoldUp);
+      reveal.removeEventListener("pointercancel", onHoldUp);
+      reveal.removeEventListener("lostpointercapture", onHoldUp);
+      reveal.removeEventListener("keydown", onHoldKey);
+      reveal.removeEventListener("keyup", onHoldKey);
+      reveal.removeEventListener("blur", onHoldUp);
+      copy?.removeEventListener("click", onCopy);
+      field.removeEventListener("focusin", onFocusIn);
+      field.removeEventListener("focusout", onFocusOut);
+      doc.removeEventListener("selectionchange", onSelection);
+      doc.removeEventListener("visibilitychange", onAway);
+      ticket += 1;
+      value.textContent = mask;
+      for (const part of built) part.remove();
+      delete field.dataset.kpSecretState;
+      secrets.delete(field);
+    });
+  }
+  return () => {
+    for (const c of cleanups.splice(0)) c();
+  };
+}
+var COPY, UNDO, SECRET, SECRET_TTL, SECRET_MASK, SECRET_EVENT, SECRET_REQUEST_EVENT, UNDO_MS, COPIED_MS, COMMIT_EVENT, UNDO_EVENT, COPY_EVENT, COPY_FAILED_EVENT, secrets;
 var init_patterns = __esm({
   "js/patterns.js"() {
     "use strict";
@@ -13969,12 +14343,18 @@ var init_patterns = __esm({
     init_strings();
     COPY = "[data-kp-copy]";
     UNDO = "[data-kp-undo-action]";
+    SECRET = "[data-kp-secret]";
+    SECRET_TTL = 30;
+    SECRET_MASK = 12;
+    SECRET_EVENT = "kp-secret";
+    SECRET_REQUEST_EVENT = "kp-secret-request";
     UNDO_MS = 6e3;
     COPIED_MS = 1500;
     COMMIT_EVENT = "kp-action-commit";
     UNDO_EVENT = "kp-action-undo";
     COPY_EVENT = "kp-copy";
     COPY_FAILED_EVENT = "kp-copy-failed";
+    secrets = /* @__PURE__ */ new WeakMap();
   }
 });
 
@@ -24662,7 +25042,7 @@ var NEEDS = [
   },
   {
     name: "patterns",
-    when: "[data-kp-copy], [data-kp-undo-action]",
+    when: "[data-kp-copy], [data-kp-undo-action], [data-kp-secret]",
     load: () => Promise.resolve().then(() => (init_patterns(), patterns_exports)),
     attach: (m, root) => [m.attachPatterns(root)]
   },
@@ -25817,6 +26197,11 @@ export {
   RUN_EVENT,
   SCROLL_BOXES,
   SCROLL_OVERFLOW,
+  SECRET,
+  SECRET_EVENT,
+  SECRET_MASK,
+  SECRET_REQUEST_EVENT,
+  SECRET_TTL,
   SEGMENTED,
   SEGMENTED_EVENT,
   SEGMENTED_ITEM,
@@ -25950,6 +26335,7 @@ export {
   attachProgressbars,
   attachRemembered,
   attachScrollbars,
+  attachSecrets,
   attachSegmented,
   attachSelect,
   attachSelects,
@@ -26062,6 +26448,7 @@ export {
   grid,
   gridlayout_exports as gridlayoutExports,
   heat_exports as heatExports,
+  hideSecret,
   hourChange,
   hovercard_exports as hovercardExports,
   hsl,
@@ -26155,6 +26542,7 @@ export {
   resetSegmented,
   resolveStrings,
   restoreRemembered,
+  revealSecret,
   revealTab,
   reversedEase,
   rgbToHsl,

@@ -50,6 +50,7 @@ export const NOT_DATA = {
     'js/menu-button.js': "a menu's loading items, inside the menu's own plate",
     'js/segmented.js': "a segment's busy mark",
     'js/tabbar.js': "a tab's busy mark",
+    'js/patterns.js': "a secret field's own one-line spinner while its one value is read (`.kp-secret`) [kpadopt4]",
     'js/auto.js': 'the loader that attaches the modules',
     'js/effects.js': "the effects' timing table",
     'js/motion.js': 'the motion a loading state arrives and leaves with',

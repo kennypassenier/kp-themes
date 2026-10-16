@@ -4248,3 +4248,68 @@
     }
 }
 /* ── end heat grid, matrix, bar cell ── */
+
+/* ── Flows and records [kpadopt4]: secret field ── */
+@layer kp.register {
+    /* Secret field — formal: a figure kept under a cover in the ledger. The box is paper with a hairline (G7), its value in the
+       ledger's own hand; shown, the value is ruled in from the start at the ruling pace (G1, G13: 400 ms, linear), and the
+       countdown is a navy rule ruled off from its end at an even pace (G1, G11), square-ended (G6). The countdown words are a
+       caption in small capitals (G18); a failure is the red-ink entry (G8). */
+    [data-theme='formal'] .kp-secret {
+        --kp-secret-drain: var(--primary);
+    }
+
+    [data-theme='formal'] .kp-secret__value {
+        border-color: var(--border);
+        border-radius: calc(var(--radius) / 2);
+        background: var(--card);
+        font-family: var(--theme-font-body);
+    }
+
+    [data-theme='formal'] .kp-secret[data-kp-secret-state='disabled'] .kp-secret__value {
+        background: transparent;
+    }
+
+    [data-theme='formal'] .kp-secret__line {
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    [data-theme='formal'] .kp-secret[data-kp-secret-state='error'] .kp-secret__words {
+        font-variant-caps: normal;
+        letter-spacing: 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] .kp-secret[data-kp-secret-state='shown'] .kp-secret__text {
+            display: inline-block;
+            animation: kp-formal-secret-ruled 400ms linear;
+        }
+
+        [data-theme='formal'] .kp-secret[data-kp-secret-state='shown'] .kp-secret__text:dir(rtl) {
+            animation-name: kp-formal-secret-ruled-rtl;
+        }
+    }
+
+    @keyframes kp-formal-secret-ruled {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes kp-formal-secret-ruled-rtl {
+        from {
+            clip-path: inset(0 0 0 100%);
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+}
+/* ── end flows and records ── */
