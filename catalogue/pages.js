@@ -107,16 +107,6 @@ export const PAGES = [
             // Kenny, 2026-10-12: "Cyberpunk lijkt af, zie dat dezelfde fouten nu niet terugkomen in andere thema's": every other theme mended so a close is its open backwards with the theme's own effect; only what changed, each block in the themes where it did (research/all-themes).
             // Kenny, 2026-10-16 (kp-adopt-rest, round 2): eight things the admin dashboard still draws itself (action tiles, status rows, the facet list, the coverage heat grid, the reachability matrix, bars in table cells with data-kp-sort-value, the week agenda, the run timeline), built in the package first as ONE demo, formal only until Kenny approves it.
             // Kenny, 2026-10-16 (kp-adopt-rest, round 3): six things the dashboard still drew itself, each an opt-in option of an approved component (nav separator, choice-filter value, timeline day buttons and series legend, the week's next-N phone list, facet identity patterns, the heat grid's jump to the latest), formal only.
-            {
-                href: 'research/kpadopt3/demo.html',
-                label: 'Round 3, page round 2: four of the six options in the fifteen other themes',
-                about: 'Formal was approved in full in round 1. This round asks the fifteen other themes for the four options that are seen, each drawn in that theme’s own language: the separator in the folding bar (upright, in the phone’s list), the run timeline’s day buttons and series runs, the week agenda’s next 8 as a phone list, and the facet swatch’s identity pattern.',
-            },
-            {
-                href: 'research/kpadopt2/demo.html',
-                label: 'Round 5: the eight components in the fifteen other themes',
-                about: 'Eight components the dashboard draws itself, each section judged in one review dialog: .kp-action tiles, .kp-statusrow, .kp-facets, .kp-heat, .kp-matrix, .kp-bar-cell with the table’s data-kp-sort-value, .kp-week, .kp-gantt. Approved in formal (rounds 1 to 4); this round asks every other theme, each built from its own parts.',
-            },
         ],
     },
     {
@@ -127,6 +117,17 @@ export const PAGES = [
         // Decided demos stay reachable from the Agenda's Done list, not from the side navigation (Kenny, 2026-10-13).
         nav: false,
         pages: [
+            // Decided 2026-10-16 19:17: Kenny approved kpadopt2 (round 6) and kpadopt3 (round 2) in all 16 themes; recorded in their VERDICTS.json.
+            {
+                href: 'research/kpadopt3/demo.html',
+                label: 'Round 3, page round 2: four of the six options in the fifteen other themes',
+                about: 'Formal was approved in full in round 1. This round asks the fifteen other themes for the four options that are seen, each drawn in that theme’s own language: the separator in the folding bar (upright, in the phone’s list), the run timeline’s day buttons and series runs, the week agenda’s next 8 as a phone list, and the facet swatch’s identity pattern.',
+            },
+            {
+                href: 'research/kpadopt2/demo.html',
+                label: 'Round 5: the eight components in the fifteen other themes',
+                about: 'Eight components the dashboard draws itself, each section judged in one review dialog: .kp-action tiles, .kp-statusrow, .kp-facets, .kp-heat, .kp-matrix, .kp-bar-cell with the table’s data-kp-sort-value, .kp-week, .kp-gantt. Approved in formal (rounds 1 to 4); this round asks every other theme, each built from its own parts.',
+            },
             // Decided 2026-10-16 13:29: Kenny approved kpadopt-nav in full, the last pair (phantom's folding bar) in round 5; recorded in research/kpadopt-nav/VERDICTS.json.
             {
                 href: 'research/kpadopt-nav/demo.html',

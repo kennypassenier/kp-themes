@@ -7,12 +7,30 @@
             "allJudged": false,
             "comment": "The page asked formal only: the approved pairs are listed, so the pairs round 2 asks of the other themes are not read as judged. Kenny approved all six in formal (2026-10-16 15:21).",
             "approved": [
-                { "item": "nav-sep", "theme": "formal" },
-                { "item": "choice-value", "theme": "formal" },
-                { "item": "gantt-days", "theme": "formal" },
-                { "item": "week-upcoming", "theme": "formal" },
-                { "item": "facet-pattern", "theme": "formal" },
-                { "item": "heat-latest", "theme": "formal" }
+                {
+                    "item": "nav-sep",
+                    "theme": "formal"
+                },
+                {
+                    "item": "choice-value",
+                    "theme": "formal"
+                },
+                {
+                    "item": "gantt-days",
+                    "theme": "formal"
+                },
+                {
+                    "item": "week-upcoming",
+                    "theme": "formal"
+                },
+                {
+                    "item": "facet-pattern",
+                    "theme": "formal"
+                },
+                {
+                    "item": "heat-latest",
+                    "theme": "formal"
+                }
             ],
             "notApproved": [],
             "notes": [
@@ -22,6 +40,13 @@
                     "note": "Kenny, 2026-10-16 15:21: \"de phone versie lijkt ok, het laden werkt enkel op phone, dus als dat de bedoeling is, dan is het goedgekeurd\". It is: the option only changes the phone view; the wide week keeps its approved loading. Recorded as approved."
                 }
             ]
+        },
+        {
+            "round": "2",
+            "page": "2026-10-16-r2",
+            "allJudged": true,
+            "notApproved": [],
+            "comment": "Kenny, 2026-10-16 19:17: every asked pair approved; the demo is decided."
         }
     ]
 }

@@ -1,5 +1,7 @@
 # research/kpadopt2: round 2 of the dashboard adoption, one page
 
+**Decided (2026-10-16 19:17):** Kenny approved every pair in the review dialog, in all 16 themes, by round 6. Recorded in `VERDICTS.json`; the demo is not offered again.
+
 Kenny's rule (2026-10-04): a demo is ONE central page where every section is judged through one review dialog. This folder holds the eight components
 the admin dashboard still draws itself (docs/admin/KP_THEMES_ADOPTION.md), built in the package first, in **formal only** until Kenny approves them:
 [`demo.html`](demo.html), eleven sections, `data-review-themes="formal"`, one review topic (`kpadopt2`).

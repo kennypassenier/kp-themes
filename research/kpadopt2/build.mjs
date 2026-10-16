@@ -124,7 +124,7 @@ ${openOnly(time)}
         <script type="module" src="../../js/auto.js"></script>
         <script type="module" src="demo-tiles.js"></script>
         <script type="application/json" data-review-round>
-            { "round": "2026-10-16-r6", "received": ["2026-10-16-r1", "2026-10-16-r2", "2026-10-16-r3", "2026-10-16-r4", "2026-10-16-r5"], "reopen": ${JSON.stringify(FORMAL_AGAIN.map((item) => `formal|${item}`))} }
+            { "round": "2026-10-16-r6", "received": ["2026-10-16-r1", "2026-10-16-r2", "2026-10-16-r3", "2026-10-16-r4", "2026-10-16-r5", "2026-10-16-r6"], "reopen": ${JSON.stringify(FORMAL_AGAIN.map((item) => `formal|${item}`))} }
         </script>
         <script type="module" src="../_review/review.js"></script>
         <script src="../../catalogue/boot-check.js"></script>

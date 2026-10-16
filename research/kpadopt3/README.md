@@ -1,5 +1,7 @@
 # research/kpadopt3: round 3 of the dashboard adoption, six opt-in options
 
+**Decided (2026-10-16 19:17):** Kenny approved every pair in the review dialog, in all 16 themes, by round 2. Recorded in `VERDICTS.json`; the demo is not offered again.
+
 **Round 1 (2026-10-16 15:21):** Kenny approved all six options in formal in the review dialog (week-upcoming on the condition that its loading is phone-only, which it is). Recorded in `VERDICTS.json`. Round 2 asks the fifteen other themes for the four options that are seen (below).
 
 The admin dashboard (homelab `admin/web`) still drew six things itself because kp-themes lacked them. Each is now an

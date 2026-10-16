@@ -154,6 +154,13 @@
                     "reason": "Its loading state changed after the approval: the heat grid now shows the data table's loading card (js/busy-card.js), the fix Kenny asked to apply everywhere when he rejected the matrix and gantt-states for the same fault (2026-10-16 16:17, 'direct al twee fouten die ik niet overal wil tegenkomen, dus fix ze nu')."
                 }
             ]
+        },
+        {
+            "round": "6",
+            "page": "2026-10-16-r6",
+            "allJudged": true,
+            "notApproved": [],
+            "comment": "Kenny, 2026-10-16 19:17: every asked pair approved; the demo is decided."
         }
     ],
     "reopened": [
