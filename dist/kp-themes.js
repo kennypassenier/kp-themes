@@ -21486,10 +21486,13 @@ function buildDays(c) {
     now.setAttribute("role", "separator");
     now.hidden = true;
     track.append(now);
-    const ghosts = [0.18, 0.32, 0.5, 0.74].slice(0, 2 + i % 3).map((at, g) => {
+    const ghosts = GHOST_TIMES[i % GHOST_TIMES.length].map((at, g) => {
       const ghost = make4(doc, "span", "kp-week__ghost kp-skeleton");
       ghost.setAttribute("aria-hidden", "true");
-      ghost.style.setProperty("--kp-week-at", String(at + (i + g) % 3 * 0.04));
+      ghost.style.setProperty("--kp-week-at", String(at));
+      ghost.style.setProperty("--kp-week-seq", String(i + g));
+      ghost.style.setProperty("--kp-week-ghost-label", `${GHOST_LABELS[(i + g) % GHOST_LABELS.length]}%`);
+      ghost.append(make4(doc, "span", "kp-week__ghost-time"), make4(doc, "span", "kp-week__ghost-label"));
       return ghost;
     });
     track.append(...ghosts);
@@ -21591,6 +21594,11 @@ function paint3(c) {
     const have = [...col.track.children].filter((n) => n !== col.moreButton?.parentElement);
     const same = wanted.length === have.length && wanted.every((n, i) => n === have[i]);
     if (!same) {
+      const keep = new Set(
+        /** @type {Element[]} */
+        wanted
+      );
+      for (const n of have) if (!keep.has(n)) n.remove();
       for (const n of nodes) n.remove();
       col.track.append(...nodes);
     }
@@ -21907,7 +21915,7 @@ function setWeekLegend(el4, entries) {
   );
   c.legend.hidden = entries.length === 0;
 }
-var WEEK, WEEK_OPEN_EVENT, WEEK_RANGE_EVENT, WEEK_TICK_MS, weeks, GAP, AXIS_HOURS, two3, make4, toMs, keyOf3, dayName, dm, menuModule;
+var WEEK, WEEK_OPEN_EVENT, WEEK_RANGE_EVENT, WEEK_TICK_MS, weeks, GAP, AXIS_HOURS, GHOST_TIMES, GHOST_LABELS, two3, make4, toMs, keyOf3, dayName, dm, menuModule;
 var init_week = __esm({
   "js/week.js"() {
     "use strict";
@@ -21922,6 +21930,16 @@ var init_week = __esm({
     weeks = /* @__PURE__ */ new WeakMap();
     GAP = 2;
     AXIS_HOURS = [0, 6, 12, 18, 24];
+    GHOST_TIMES = [
+      [0.08, 0.29],
+      [0.08, 0.3, 0.62],
+      [0.1, 0.42, 0.78],
+      [0.29, 0.55],
+      [0.08, 0.3],
+      [0.12, 0.33, 0.62],
+      [0.29, 0.5, 0.74]
+    ];
+    GHOST_LABELS = [72, 54, 86, 62, 78, 48];
     two3 = (n) => String(n).padStart(2, "0");
     make4 = (doc, tag, className, text) => {
       const el4 = doc.createElement(tag);
