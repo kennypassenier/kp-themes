@@ -10819,9 +10819,12 @@
     }
 
     /* Loading keeps the footprint: the cells are the theme's skeleton block
- * at the cell's own size. */
+ * at the cell's own size, without the gap a skeleton keeps from the one
+ * before it (`.kp-skeleton + .kp-skeleton`), so a loading row is exactly as
+ * tall as its ready row. */
     .kp-heat__cell.kp-skeleton {
         block-size: var(--kp-heat-cell-height, 22px);
+        margin-block: 0;
         cursor: progress;
     }
 
@@ -11120,9 +11123,11 @@
         }
     }
 
+    /* As in the heat grid: no skeleton-to-skeleton gap, so a loading row is as tall as its ready row. */
     .kp-matrix__cell.kp-skeleton {
         min-block-size: var(--kp-matrix-cell-height, 44px);
         block-size: auto;
+        margin-block: 0;
         cursor: progress;
     }
 
