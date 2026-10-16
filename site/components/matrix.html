@@ -209,6 +209,67 @@
     &lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Who can reach whom, pinned by the arrow keys, and the three states</figcaption>
+                        <p class="kp-text-muted">`setMatrix(el, spec)` takes the names and a `cell(row, column)` function: a tone, the words, a `ringed` red ring for traffic stopped on the way out, a `mark` outline for the cells a rule touches. Press a header to light its row or column; `data-kp-matrix-select=&quot;follow&quot;` pins the cell the arrow keys land on and `kp-matrix-pick` reports it. `matrixSelf` and `matrixUnknown` are the words for a pair with itself and an unknown pair. Below, the loading, empty and failed matrix.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-matrix" id="doc-matrix-live" data-kp-matrix data-kp-matrix-select="follow"></div>
+<div class="kp-matrix" id="doc-matrix-loading" data-kp-matrix></div>
+<div class="kp-matrix" id="doc-matrix-empty" data-kp-matrix></div>
+<div class="kp-matrix" id="doc-matrix-error" data-kp-matrix></div>
+                            <script type="module">
+import { attachMatrices, setMatrix } from '../../js/heat.js';
+
+attachMatrices(document.getElementById('doc-matrix-live').parentElement);
+const names = ['web', 'api', 'db', 'cache'].map((key) => ({ key, label: key }));
+const open = { 'web>api': 'HTTP', 'api>db': 'SQL', 'api>cache': 'cache' };
+setMatrix(document.getElementById('doc-matrix-live'), {
+    corner: 'from ↓ to →',
+    rows: names,
+    columns: names,
+    label: 'Which stack can reach which',
+    cell: (row, column) => {
+        if (row === column) return undefined;
+        const words = open[row + '>' + column];
+        if (words) return { tone: 'ok', text: words, label: words + ' is open', mark: row === 'api' };
+        return row === 'web' && column === 'db'
+            ? { tone: 'bad', label: 'blocked on the way out of web', ringed: true }
+            : { tone: 'muted', label: 'nothing open' };
+    },
+});
+setMatrix(document.getElementById('doc-matrix-loading'), { state: 'loading', skeleton: 3, label: 'Reachability, loading' });
+setMatrix(document.getElementById('doc-matrix-empty'), { state: 'empty', message: 'No stack is shown: every stack is filtered out.', label: 'Reachability, empty' });
+setMatrix(document.getElementById('doc-matrix-error'), { state: 'error', message: 'The firewall rules could not be read.', label: 'Reachability, failed' });
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-matrix&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-matrix-live&quot;</span> <span class="kp-code__keyword">data-kp-matrix</span> <span class="kp-code__keyword">data-kp-matrix-select</span><span class="kp-code__string">=&quot;follow&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-matrix&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-matrix-loading&quot;</span> <span class="kp-code__keyword">data-kp-matrix</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-matrix&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-matrix-empty&quot;</span> <span class="kp-code__keyword">data-kp-matrix</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-matrix&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-matrix-error&quot;</span> <span class="kp-code__keyword">data-kp-matrix</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachMatrices, setMatrix } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/heat'</span>;
+
+attachMatrices(document.getElementById(<span class="kp-code__string">'doc-matrix-live'</span>).parentElement);
+<span class="kp-code__keyword">const</span> names = [<span class="kp-code__string">'web'</span>, <span class="kp-code__string">'api'</span>, <span class="kp-code__string">'db'</span>, <span class="kp-code__string">'cache'</span>].map((key) =&gt; ({ key, label: key }));
+<span class="kp-code__keyword">const</span> open = { <span class="kp-code__string">'web&gt;api'</span>: <span class="kp-code__string">'HTTP'</span>, <span class="kp-code__string">'api&gt;db'</span>: <span class="kp-code__string">'SQL'</span>, <span class="kp-code__string">'api&gt;cache'</span>: <span class="kp-code__string">'cache'</span> };
+setMatrix(document.getElementById(<span class="kp-code__string">'doc-matrix-live'</span>), {
+    corner: <span class="kp-code__string">'from ↓ to →'</span>,
+    rows: names,
+    columns: names,
+    label: <span class="kp-code__string">'Which stack can reach which'</span>,
+    cell: (row, column) =&gt; {
+        <span class="kp-code__keyword">if</span> (row === column) <span class="kp-code__keyword">return</span> <span class="kp-code__keyword">undefined</span>;
+        <span class="kp-code__keyword">const</span> words = open[row + <span class="kp-code__string">'&gt;'</span> + column];
+        <span class="kp-code__keyword">if</span> (words) <span class="kp-code__keyword">return</span> { tone: <span class="kp-code__string">'ok'</span>, text: words, label: words + <span class="kp-code__string">' is open'</span>, mark: row === <span class="kp-code__string">'api'</span> };
+        <span class="kp-code__keyword">return</span> row === <span class="kp-code__string">'web'</span> &amp;&amp; column === <span class="kp-code__string">'db'</span>
+            ? { tone: <span class="kp-code__string">'bad'</span>, label: <span class="kp-code__string">'blocked on the way out of web'</span>, ringed: <span class="kp-code__keyword">true</span> }
+            : { tone: <span class="kp-code__string">'muted'</span>, label: <span class="kp-code__string">'nothing open'</span> };
+    },
+});
+setMatrix(document.getElementById(<span class="kp-code__string">'doc-matrix-loading'</span>), { state: <span class="kp-code__string">'loading'</span>, skeleton: <span class="kp-code__string">3</span>, label: <span class="kp-code__string">'Reachability, loading'</span> });
+setMatrix(document.getElementById(<span class="kp-code__string">'doc-matrix-empty'</span>), { state: <span class="kp-code__string">'empty'</span>, message: <span class="kp-code__string">'No stack is shown: every stack is filtered out.'</span>, label: <span class="kp-code__string">'Reachability, empty'</span> });
+setMatrix(document.getElementById(<span class="kp-code__string">'doc-matrix-error'</span>), { state: <span class="kp-code__string">'error'</span>, message: <span class="kp-code__string">'The firewall rules could not be read.'</span>, label: <span class="kp-code__string">'Reachability, failed'</span> });</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -284,6 +345,9 @@
                             <tr><td><code>data-kp-inert</code></td><td>A cell that cannot be pressed (itself, unknown).</td></tr>
                             <tr><td><code>data-kp-ringed</code></td><td>See above: the ring on a cell.</td></tr>
                             <tr><td><code>data-kp-state</code></td><td>`loading` keeps the shape with skeleton names and cells; `empty` and `error` show one sentence.</td></tr>
+                            <tr><td><code>the busy card</code></td><td>While `loading`, the data table’s loading card (`js/busy-card.js`) stands centred over the cells (`.kp-matrix__busy`), over the skeleton names and plates, and the matrix is drawn once it has left.</td></tr>
+                            <tr><td><code>setMatrix / setMatrixLit / setMatrixPick</code></td><td>Write the matrix, light some headers (`kp-matrix-light` reports the change a person made) and pin a cell. `data-kp-matrix-owned` leaves the lit and pinned state to the page.</td></tr>
+                            <tr><td><code>.kp-heat__swatch--plate</code></td><td>A legend swatch drawn as a matrix plate, for a legend under a matrix.</td></tr>
                     </tbody></table></div>
                 </section>
                 </div>

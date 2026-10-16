@@ -207,6 +207,31 @@
     &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-keys__item&quot;</span>&gt;&lt;<span class="kp-code__keyword">kbd</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kbd&quot;</span> <span class="kp-code__keyword">data-kp-key</span><span class="kp-code__string">=&quot;mod&quot;</span>&gt;Ctrl&lt;/<span class="kp-code__keyword">kbd</span>&gt;&lt;<span class="kp-code__keyword">kbd</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kbd&quot;</span>&gt;K&lt;/<span class="kp-code__keyword">kbd</span>&gt; palette&lt;/<span class="kp-code__keyword">span</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Written from pairs, at the end of its row</figcaption>
+                        <p class="kp-text-muted">`setKeys(el, pairs)` takes `[keys, words]` pairs (a key, or an array of keys pressed together) and writes the spans; `Mod` becomes ⌘ on a Mac and Ctrl elsewhere. The group is named by the dictionary’s `keysLabel` when it has no name of its own.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-keys kp-keys--end" id="doc-keys-set"></div>
+                            <script type="module">
+import { setKeys } from '../../js/keys.js';
+
+setKeys(document.getElementById('doc-keys-set'), [
+    ['/', 'search containers'],
+    [['↑', '↓'], 'move'],
+    [['Mod', 'K'], 'palette'],
+]);
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-keys kp-keys--end&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-keys-set&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { setKeys } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/keys'</span>;
+
+setKeys(document.getElementById(<span class="kp-code__string">'doc-keys-set'</span>), [
+    [<span class="kp-code__string">'/'</span>, <span class="kp-code__string">'search containers'</span>],
+    [[<span class="kp-code__string">'↑'</span>, <span class="kp-code__string">'↓'</span>], <span class="kp-code__string">'move'</span>],
+    [[<span class="kp-code__string">'Mod'</span>, <span class="kp-code__string">'K'</span>], <span class="kp-code__string">'palette'</span>],
+]);</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>

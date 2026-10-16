@@ -207,6 +207,75 @@
     &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-steplist__item&quot;</span> <span class="kp-code__keyword">data-state</span><span class="kp-code__string">=&quot;pending&quot;</span> <span class="kp-code__keyword">data-kp-step-id</span><span class="kp-code__string">=&quot;check&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-steplist__mark&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-steplist__body&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-steplist__title&quot;</span>&gt;Check it answers&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-steplist__note&quot;</span>&gt;Waits for the health check&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
 &lt;/<span class="kp-code__keyword">ol</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Built from rows, and run live</figcaption>
+                        <p class="kp-text-muted">The five states in one list, built by `buildSteplist` from rows (an `id`, a `title`, a `note`, a `state`, a `time`) and then driven by `setStep`. Each step the button moves announces itself once in the status region, and `kp-steplist-step` fires on the list with `{ item, id, state, previous }`. The step ids are the `data-kp-step-id` the module writes.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div id="doc-steps" class="kp-stack"></div>
+<button type="button" class="kp-button" id="doc-steps-run">Run it again</button>
+                            <script type="module">
+import { buildSteplist, setStep, attachSteplists } from '../../js/steplist.js';
+
+const host = document.getElementById('doc-steps');
+const list = buildSteplist(
+    [
+        { id: 'pull', title: 'Pull the images', note: 'Fetches what changed', state: 'done', time: '4 s' },
+        { id: 'stop', title: 'Stop the stack', note: 'Waits for the containers', state: 'done', time: '2 s' },
+        { id: 'migrate', title: 'Migrate the data', note: 'Nothing to migrate', state: 'skipped' },
+        { id: 'start', title: 'Start the stack', note: 'The disk was full', state: 'failed', time: '9 s' },
+        { id: 'check', title: 'Check it answers', note: 'Waits for the health check', state: 'pending' },
+    ],
+    { label: 'Update progress' },
+);
+host.append(list);
+attachSteplists(host);
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+document.getElementById('doc-steps-run').addEventListener('click', async (event) => {
+    event.currentTarget.disabled = true;
+    for (const id of ['pull', 'stop', 'migrate', 'start', 'check']) setStep(list, id, { state: 'pending', time: '' });
+    for (const id of ['pull', 'stop', 'start', 'check']) {
+        setStep(list, id, { state: 'running' });
+        await sleep(900);
+        setStep(list, id, { state: 'done', time: '1 s' });
+    }
+    setStep(list, 'migrate', { state: 'skipped' });
+    event.currentTarget.disabled = false;
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-steps&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-steps-run&quot;</span>&gt;Run it again&lt;/<span class="kp-code__keyword">button</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { buildSteplist, setStep, attachSteplists } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/steplist'</span>;
+
+<span class="kp-code__keyword">const</span> host = document.getElementById(<span class="kp-code__string">'doc-steps'</span>);
+<span class="kp-code__keyword">const</span> list = buildSteplist(
+    [
+        { id: <span class="kp-code__string">'pull'</span>, title: <span class="kp-code__string">'Pull the images'</span>, note: <span class="kp-code__string">'Fetches what changed'</span>, state: <span class="kp-code__string">'done'</span>, time: <span class="kp-code__string">'4 s'</span> },
+        { id: <span class="kp-code__string">'stop'</span>, title: <span class="kp-code__string">'Stop the stack'</span>, note: <span class="kp-code__string">'Waits for the containers'</span>, state: <span class="kp-code__string">'done'</span>, time: <span class="kp-code__string">'2 s'</span> },
+        { id: <span class="kp-code__string">'migrate'</span>, title: <span class="kp-code__string">'Migrate the data'</span>, note: <span class="kp-code__string">'Nothing to migrate'</span>, state: <span class="kp-code__string">'skipped'</span> },
+        { id: <span class="kp-code__string">'start'</span>, title: <span class="kp-code__string">'Start the stack'</span>, note: <span class="kp-code__string">'The disk was full'</span>, state: <span class="kp-code__string">'failed'</span>, time: <span class="kp-code__string">'9 s'</span> },
+        { id: <span class="kp-code__string">'check'</span>, title: <span class="kp-code__string">'Check it answers'</span>, note: <span class="kp-code__string">'Waits for the health check'</span>, state: <span class="kp-code__string">'pending'</span> },
+    ],
+    { label: <span class="kp-code__string">'Update progress'</span> },
+);
+host.append(list);
+attachSteplists(host);
+
+<span class="kp-code__keyword">const</span> sleep = (ms) =&gt; <span class="kp-code__keyword">new</span> Promise((resolve) =&gt; setTimeout(resolve, ms));
+document.getElementById(<span class="kp-code__string">'doc-steps-run'</span>).addEventListener(<span class="kp-code__string">'click'</span>, <span class="kp-code__keyword">async</span> (event) =&gt; {
+    event.currentTarget.disabled = <span class="kp-code__keyword">true</span>;
+    <span class="kp-code__keyword">for</span> (<span class="kp-code__keyword">const</span> id <span class="kp-code__keyword">of</span> [<span class="kp-code__string">'pull'</span>, <span class="kp-code__string">'stop'</span>, <span class="kp-code__string">'migrate'</span>, <span class="kp-code__string">'start'</span>, <span class="kp-code__string">'check'</span>]) setStep(list, id, { state: <span class="kp-code__string">'pending'</span>, time: <span class="kp-code__string">''</span> });
+    <span class="kp-code__keyword">for</span> (<span class="kp-code__keyword">const</span> id <span class="kp-code__keyword">of</span> [<span class="kp-code__string">'pull'</span>, <span class="kp-code__string">'stop'</span>, <span class="kp-code__string">'start'</span>, <span class="kp-code__string">'check'</span>]) {
+        setStep(list, id, { state: <span class="kp-code__string">'running'</span> });
+        <span class="kp-code__keyword">await</span> sleep(<span class="kp-code__string">900</span>);
+        setStep(list, id, { state: <span class="kp-code__string">'done'</span>, time: <span class="kp-code__string">'1 s'</span> });
+    }
+    setStep(list, <span class="kp-code__string">'migrate'</span>, { state: <span class="kp-code__string">'skipped'</span> });
+    event.currentTarget.disabled = <span class="kp-code__keyword">false</span>;
+});</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -260,6 +329,10 @@
                             <tr><td><code>data-state</code></td><td>`pending`, `running`, `done`, `failed` or `skipped`: the mark, the colour and the word follow it.</td></tr>
                             <tr><td><code>.kp-steplist__time</code></td><td>How long the step took, as the page prints it.</td></tr>
                             <tr><td><code>.kp-steplist__note</code></td><td>The one-line description under the title.</td></tr>
+                            <tr><td><code>buildSteplist(rows, { label })</code></td><td>Builds the `ol` from rows `{ id, title, note, state, time }`; attach it afterwards. `data-kp-step-id` carries each id.</td></tr>
+                            <tr><td><code>setStep(list, id, change)</code></td><td>Changes one step (`state`, `title`, `note`, `time`) and says so once in the status region; the id is `data-kp-step-id` or the step’s index.</td></tr>
+                            <tr><td><code>the mark</code></td><td>Drawn from `data-state`: the theme’s spinner while running, and a glyph for done, failed and skipped (the glyph tokens are in the knobs). It is never the only carrier: the state word is there too.</td></tr>
+                            <tr><td><code>the words</code></td><td>`stepPending`, `stepRunning`, `stepDone`, `stepFailed`, `stepSkipped` and the announcement `stepAnnounce(title, state)` are in the dictionary, so `setStrings()` translates them.</td></tr>
                     </tbody></table></div>
                 </section>
                 </div>

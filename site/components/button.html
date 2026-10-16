@@ -255,6 +255,24 @@
     &lt;/<span class="kp-code__keyword">li</span>&gt;
 &lt;/<span class="kp-code__keyword">ul</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A button that shows a running job</figcaption>
+                        <p class="kp-text-muted">`kp-button--live` is a row with the theme’s own spinner in front and a label that gives way: it never grows past its maximum width, cuts the long label with an ellipsis and, in a container narrower than 40rem (the nav wrapper is one), swaps the long label for the short one, so the box never empties. `hidden` takes it out of the bar without a gap. The narrow box below shows the short label.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-row kp-gap-md">
+    <button type="button" class="kp-button kp-button--secondary kp-button--sm kp-button--live"><span class="kp-spinner kp-button__spin" aria-hidden="true"></span><span class="kp-button__short">Running</span><span class="kp-button__long">Updating gateway · step 3 of 35</span></button>
+    <div style="inline-size: 14rem; container-type: inline-size">
+        <button type="button" class="kp-button kp-button--secondary kp-button--sm kp-button--live"><span class="kp-spinner kp-button__spin" aria-hidden="true"></span><span class="kp-button__short">Running</span><span class="kp-button__long">Updating gateway · step 3 of 35</span></button>
+    </div>
+</div>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-gap-md&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--secondary kp-button--sm kp-button--live&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-spinner kp-button__spin&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button__short&quot;</span>&gt;Running&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button__long&quot;</span>&gt;Updating gateway · step 3 of 35&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;inline-size: 14rem; container-type: inline-size&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--secondary kp-button--sm kp-button--live&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-spinner kp-button__spin&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button__short&quot;</span>&gt;Running&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button__long&quot;</span>&gt;Updating gateway · step 3 of 35&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="more-examples" id="more-examples">
                     <h2 class="kp-fw-semibold">More examples</h2>
@@ -820,6 +838,7 @@ Revoke key
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>.kp-button--live</code></td><td>A running-job button: `.kp-button__spin` (the theme’s spinner), `.kp-button__short` and `.kp-button__long`. The long label is cut with an ellipsis; the short one takes over in a container under 40rem. The widest it grows is the live-width knob.</td></tr>
                             <tr><td><code>.kp-button</code></td><td>The default: the secondary surface with a boundary, for the actions that are neither the main one nor dangerous.</td></tr>
                             <tr><td><code>.kp-button--primary</code></td><td>One per view. The action the reader came to take.</td></tr>
                             <tr><td><code>.kp-button--destructive</code></td><td>Deletes and disconnections. It has to carry a confirmation or an undo as well.</td></tr>

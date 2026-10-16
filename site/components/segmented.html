@@ -223,6 +223,53 @@
     &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-segmented__item&quot;</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;stopped&quot;</span> <span class="kp-code__keyword">aria-pressed</span><span class="kp-code__string">=&quot;false&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-segmented__label&quot;</span>&gt;Stopped&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Full width, and counts that arrive later</figcaption>
+                        <p class="kp-text-muted">`.kp-segmented--block` gives every segment the same width on a full-width control. While the group is `aria-busy=&quot;true&quot;` the counts show as quiet placeholders that keep their place; `setSegmentedCounts` writes the numbers, and the group is released, so nothing moves. Press the button to load them again. The group also reports `kp-segmented-change` with `{ value, values, item }`.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-segmented kp-segmented--block" id="doc-seg-load" data-kp-segmented="single" role="radiogroup" aria-label="Show" aria-busy="true">
+    <button type="button" class="kp-segmented__item" data-value="all" role="radio" aria-checked="true"><span class="kp-segmented__label">All</span><span class="kp-segmented__count"></span></button>
+    <button type="button" class="kp-segmented__item" data-value="running" role="radio" aria-checked="false"><span class="kp-segmented__label">Running</span><span class="kp-segmented__count"></span></button>
+    <button type="button" class="kp-segmented__item" data-value="failed" role="radio" aria-checked="false"><span class="kp-segmented__label">Failed</span><span class="kp-segmented__count"></span></button>
+</div>
+<button type="button" class="kp-button kp-mt-sm" id="doc-seg-reload">Load the counts again</button>
+                            <script type="module">
+import { attachSegmented, setSegmentedCounts } from '../../js/segmented.js';
+
+const group = document.getElementById('doc-seg-load');
+attachSegmented(group.parentElement);
+const load = () => {
+    group.setAttribute('aria-busy', 'true');
+    setTimeout(() => {
+        setSegmentedCounts(group, { all: 48, running: 31, failed: 2 });
+        group.removeAttribute('aria-busy');
+    }, 1500);
+};
+document.getElementById('doc-seg-reload').addEventListener('click', load);
+load();
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-segmented kp-segmented--block&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-seg-load&quot;</span> <span class="kp-code__keyword">data-kp-segmented</span><span class="kp-code__string">=&quot;single&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;radiogroup&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Show&quot;</span> <span class="kp-code__keyword">aria-busy</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-segmented__item&quot;</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;all&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;radio&quot;</span> <span class="kp-code__keyword">aria-checked</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-segmented__label&quot;</span>&gt;All&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-segmented__count&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-segmented__item&quot;</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;running&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;radio&quot;</span> <span class="kp-code__keyword">aria-checked</span><span class="kp-code__string">=&quot;false&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-segmented__label&quot;</span>&gt;Running&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-segmented__count&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-segmented__item&quot;</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;failed&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;radio&quot;</span> <span class="kp-code__keyword">aria-checked</span><span class="kp-code__string">=&quot;false&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-segmented__label&quot;</span>&gt;Failed&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-segmented__count&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-mt-sm&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-seg-reload&quot;</span>&gt;Load the counts again&lt;/<span class="kp-code__keyword">button</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachSegmented, setSegmentedCounts } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/segmented'</span>;
+
+<span class="kp-code__keyword">const</span> group = document.getElementById(<span class="kp-code__string">'doc-seg-load'</span>);
+attachSegmented(group.parentElement);
+<span class="kp-code__keyword">const</span> load = () =&gt; {
+    group.setAttribute(<span class="kp-code__string">'aria-busy'</span>, <span class="kp-code__string">'true'</span>);
+    setTimeout(() =&gt; {
+        setSegmentedCounts(group, { all: <span class="kp-code__string">48</span>, running: <span class="kp-code__string">31</span>, failed: <span class="kp-code__string">2</span> });
+        group.removeAttribute(<span class="kp-code__string">'aria-busy'</span>);
+    }, <span class="kp-code__string">1500</span>);
+};
+document.getElementById(<span class="kp-code__string">'doc-seg-reload'</span>).addEventListener(<span class="kp-code__string">'click'</span>, load);
+load();</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -316,6 +363,12 @@
                             <tr><td><code>.kp-segmented__count</code></td><td>A number beside the label. While the group is `aria-busy=&quot;true&quot;` it shows a placeholder, so nothing moves when the numbers arrive.</td></tr>
                             <tr><td><code>disabled</code></td><td>`disabled` on an item, or `aria-disabled=&quot;true&quot;` on the group, takes it out of the arrow keys and dims it.</td></tr>
                             <tr><td><code>overflow</code></td><td>When the segments are wider than the group, the group scrolls and the chosen segment is kept in view.</td></tr>
+                            <tr><td><code>.kp-segmented--block</code></td><td>Every segment the same width, on a full-width control.</td></tr>
+                            <tr><td><code>data-kp-segmented-collapse=&quot;false&quot;</code></td><td>In `multi`, turning every other value on is the same as none, so the group goes back to All. This keeps them on.</td></tr>
+                            <tr><td><code>data-kp-segmented-thumb / -glide / -overflow</code></td><td>Written by the script, never by you: the plate is placed, it glides only after its first placement, and the segments are wider than the group. The plate’s place is two custom properties on the group, which the theme moves in its own time.</td></tr>
+                            <tr><td><code>setSegmentedValues / getSegmentedValues / resetSegmented</code></td><td>Read the values that are on (empty is All), set them without an event (the address changed), or turn every value off and fire the event if anything was on.</td></tr>
+                            <tr><td><code>setSegmentedCounts / setSegmentedItems</code></td><td>Write the numbers beside the values (null empties one, a value not named keeps its number), or replace the items in place: the values still present stay on and the focus stays on its value.</td></tr>
+                            <tr><td><code>aria-busy=&quot;true&quot;</code></td><td>On the group: the counts show a placeholder while their numbers load. Pressing is not blocked.</td></tr>
                     </tbody></table></div>
                 </section>
                 </div>

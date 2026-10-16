@@ -193,11 +193,111 @@
                     <h2 class="kp-fw-semibold">Live example</h2>
                     <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">An agenda for the next seven days</figcaption>
-                        <p class="kp-text-muted">The markup is the empty frame; the script builds the days and the pills from the items the page hands over.</p>
+                        <p class="kp-text-muted">The markup is the empty frame; the script builds the days and the pills from the items the page hands over. Two series, a ringed next run, a muted one that is off, a dashed reference and a legend: the page’s part is printed below.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<section class="kp-week" data-kp-week data-kp-week-nav data-kp-week-start="2026-10-16" aria-label="Runs in the next 7 days"></section>
+<section class="kp-week" data-kp-week data-kp-week-nav aria-label="Runs in the next 7 days"></section>
+                            <script type="module">
+import { attachWeeks, setWeekEvents, setWeekLegend } from '../../js/week.js';
+
+const agenda = document.querySelector('[data-kp-week]');
+attachWeeks(agenda.parentElement);
+const at = (days, hours, minutes) => {
+    const moment = new Date();
+    moment.setDate(moment.getDate() + days);
+    moment.setHours(hours, minutes, 0, 0);
+    return moment.getTime();
+};
+const events = [];
+for (let day = 0; day < 7; day += 1) {
+    events.push({ id: 'backup-' + day, start: at(day, 2, 0), label: 'Backup photos', series: 1, detail: 'Nightly, keeps 14 copies' });
+    events.push({ id: 'host-' + day, start: at(day, 3, 30), label: 'Host round', series: 3, state: 'reference' });
+    if (day % 3 === 0) events.push({ id: 'update-' + day, start: at(day, 4, 30), label: 'Update images', series: 2 });
+}
+events.push({ id: 'report', start: at(1, 7, 30), label: 'Mail the report', series: 2, state: 'next' });
+events.push({ id: 'scrub', start: at(2, 13, 0), label: 'Scrub the pool', series: 4, state: 'off' });
+setWeekEvents(agenda, events);
+setWeekLegend(agenda, [
+    { series: 1, label: 'Nightly round' },
+    { series: 2, label: 'Updates' },
+    { series: 4, label: 'Housekeeping' },
+]);
+                            </script>
                         </div>
-                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-week&quot;</span> <span class="kp-code__keyword">data-kp-week</span> <span class="kp-code__keyword">data-kp-week-nav</span> <span class="kp-code__keyword">data-kp-week-start</span><span class="kp-code__string">=&quot;2026-10-16&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Runs in the next 7 days&quot;</span>&gt;&lt;/<span class="kp-code__keyword">section</span>&gt;</code></pre>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-week&quot;</span> <span class="kp-code__keyword">data-kp-week</span> <span class="kp-code__keyword">data-kp-week-nav</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Runs in the next 7 days&quot;</span>&gt;&lt;/<span class="kp-code__keyword">section</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachWeeks, setWeekEvents, setWeekLegend } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/week'</span>;
+
+<span class="kp-code__keyword">const</span> agenda = document.querySelector(<span class="kp-code__string">'[data-kp-week]'</span>);
+attachWeeks(agenda.parentElement);
+<span class="kp-code__keyword">const</span> at = (days, hours, minutes) =&gt; {
+    <span class="kp-code__keyword">const</span> moment = <span class="kp-code__keyword">new</span> Date();
+    moment.setDate(moment.getDate() + days);
+    moment.setHours(hours, minutes, <span class="kp-code__string">0</span>, <span class="kp-code__string">0</span>);
+    <span class="kp-code__keyword">return</span> moment.getTime();
+};
+<span class="kp-code__keyword">const</span> events = [];
+<span class="kp-code__keyword">for</span> (<span class="kp-code__keyword">let</span> day = <span class="kp-code__string">0</span>; day &lt; <span class="kp-code__string">7</span>; day += <span class="kp-code__string">1</span>) {
+    events.push({ id: <span class="kp-code__string">'backup-'</span> + day, start: at(day, <span class="kp-code__string">2</span>, <span class="kp-code__string">0</span>), label: <span class="kp-code__string">'Backup photos'</span>, series: <span class="kp-code__string">1</span>, detail: <span class="kp-code__string">'Nightly, keeps 14 copies'</span> });
+    events.push({ id: <span class="kp-code__string">'host-'</span> + day, start: at(day, <span class="kp-code__string">3</span>, <span class="kp-code__string">30</span>), label: <span class="kp-code__string">'Host round'</span>, series: <span class="kp-code__string">3</span>, state: <span class="kp-code__string">'reference'</span> });
+    <span class="kp-code__keyword">if</span> (day % <span class="kp-code__string">3</span> === <span class="kp-code__string">0</span>) events.push({ id: <span class="kp-code__string">'update-'</span> + day, start: at(day, <span class="kp-code__string">4</span>, <span class="kp-code__string">30</span>), label: <span class="kp-code__string">'Update images'</span>, series: <span class="kp-code__string">2</span> });
+}
+events.push({ id: <span class="kp-code__string">'report'</span>, start: at(<span class="kp-code__string">1</span>, <span class="kp-code__string">7</span>, <span class="kp-code__string">30</span>), label: <span class="kp-code__string">'Mail the report'</span>, series: <span class="kp-code__string">2</span>, state: <span class="kp-code__string">'next'</span> });
+events.push({ id: <span class="kp-code__string">'scrub'</span>, start: at(<span class="kp-code__string">2</span>, <span class="kp-code__string">13</span>, <span class="kp-code__string">0</span>), label: <span class="kp-code__string">'Scrub the pool'</span>, series: <span class="kp-code__string">4</span>, state: <span class="kp-code__string">'off'</span> });
+setWeekEvents(agenda, events);
+setWeekLegend(agenda, [
+    { series: <span class="kp-code__string">1</span>, label: <span class="kp-code__string">'Nightly round'</span> },
+    { series: <span class="kp-code__string">2</span>, label: <span class="kp-code__string">'Updates'</span> },
+    { series: <span class="kp-code__string">4</span>, label: <span class="kp-code__string">'Housekeeping'</span> },
+]);</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">On a phone: the next eight items</figcaption>
+                        <p class="kp-text-muted">`data-kp-week-upcoming=&quot;8&quot;` makes the agenda, once it is narrower than 40rem, a list of the next eight items instead of seven day rows: one row per item, its day on the left (named once for a run of the same day, Today for today) and its own pill on the right. An item that is off, skipped or only a reference is not one, and a passed item leaves the list on the next tick. `data-kp-week-upcoming-label` names the list and `data-kp-week-upcoming-empty` is what it says when nothing is left. The box here is 26rem wide, so it shows what a phone shows.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div style="max-inline-size: 26rem">
+    <section class="kp-week" data-kp-week data-kp-week-upcoming="8" data-kp-week-upcoming-label="The next runs" data-kp-week-upcoming-empty="Nothing is scheduled." aria-label="Runs in the next 7 days"></section>
+</div>
+                            <script type="module">
+import { attachWeeks, setWeekEvents } from '../../js/week.js';
+
+const agenda = document.querySelector('[data-kp-week-upcoming]');
+attachWeeks(agenda.parentElement);
+const at = (days, hours, minutes) => {
+    const moment = new Date();
+    moment.setDate(moment.getDate() + days);
+    moment.setHours(hours, minutes, 0, 0);
+    return moment.getTime();
+};
+const events = [];
+for (let day = 0; day < 7; day += 1) {
+    events.push({ id: 'backup-' + day, start: at(day, 2, 0), label: 'Backup photos', series: 1 });
+    if (day % 2 === 0) events.push({ id: 'report-' + day, start: at(day, 18, 30), label: 'Mail the report', series: 2 });
+}
+events.push({ id: 'off', start: at(1, 12, 0), label: 'Scrub the pool', series: 4, state: 'off' });
+setWeekEvents(agenda, events);
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;max-inline-size: 26rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-week&quot;</span> <span class="kp-code__keyword">data-kp-week</span> <span class="kp-code__keyword">data-kp-week-upcoming</span><span class="kp-code__string">=&quot;8&quot;</span> <span class="kp-code__keyword">data-kp-week-upcoming-label</span><span class="kp-code__string">=&quot;The next runs&quot;</span> <span class="kp-code__keyword">data-kp-week-upcoming-empty</span><span class="kp-code__string">=&quot;Nothing is scheduled.&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Runs in the next 7 days&quot;</span>&gt;&lt;/<span class="kp-code__keyword">section</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachWeeks, setWeekEvents } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/week'</span>;
+
+<span class="kp-code__keyword">const</span> agenda = document.querySelector(<span class="kp-code__string">'[data-kp-week-upcoming]'</span>);
+attachWeeks(agenda.parentElement);
+<span class="kp-code__keyword">const</span> at = (days, hours, minutes) =&gt; {
+    <span class="kp-code__keyword">const</span> moment = <span class="kp-code__keyword">new</span> Date();
+    moment.setDate(moment.getDate() + days);
+    moment.setHours(hours, minutes, <span class="kp-code__string">0</span>, <span class="kp-code__string">0</span>);
+    <span class="kp-code__keyword">return</span> moment.getTime();
+};
+<span class="kp-code__keyword">const</span> events = [];
+<span class="kp-code__keyword">for</span> (<span class="kp-code__keyword">let</span> day = <span class="kp-code__string">0</span>; day &lt; <span class="kp-code__string">7</span>; day += <span class="kp-code__string">1</span>) {
+    events.push({ id: <span class="kp-code__string">'backup-'</span> + day, start: at(day, <span class="kp-code__string">2</span>, <span class="kp-code__string">0</span>), label: <span class="kp-code__string">'Backup photos'</span>, series: <span class="kp-code__string">1</span> });
+    <span class="kp-code__keyword">if</span> (day % <span class="kp-code__string">2</span> === <span class="kp-code__string">0</span>) events.push({ id: <span class="kp-code__string">'report-'</span> + day, start: at(day, <span class="kp-code__string">18</span>, <span class="kp-code__string">30</span>), label: <span class="kp-code__string">'Mail the report'</span>, series: <span class="kp-code__string">2</span> });
+}
+events.push({ id: <span class="kp-code__string">'off'</span>, start: at(<span class="kp-code__string">1</span>, <span class="kp-code__string">12</span>, <span class="kp-code__string">0</span>), label: <span class="kp-code__string">'Scrub the pool'</span>, series: <span class="kp-code__string">4</span>, state: <span class="kp-code__string">'off'</span> });
+setWeekEvents(agenda, events);</code></pre>
                     </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
@@ -285,6 +385,10 @@
                             <tr><td><code>data-kp-series</code></td><td>On a pill: 1 to 5, the colour from `--chart-1` to `--chart-5`; the label carries the meaning.</td></tr>
                             <tr><td><code>data-kp-past</code></td><td>On a pill whose time has passed; it is muted.</td></tr>
                             <tr><td><code>data-kp-overflow</code></td><td>On a pill folded into the `+N` menu of a full column.</td></tr>
+                            <tr><td><code>setWeekEvents / setWeekState / setWeekStart / setWeekLegend</code></td><td>The page’s four calls: the items (repainted in place by id, so a pill keeps its focus), the state of the whole (`loading` draws the data table’s busy card over the empty days; `empty`, `error` with its words), a new first day, and the legend under the agenda.</td></tr>
+                            <tr><td><code>data-kp-week-upcoming</code></td><td>Opt-in: below 40rem the agenda lists the next items (the number given) instead of its day rows, one row per item.</td></tr>
+                            <tr><td><code>data-kp-week-upcoming-label / -empty</code></td><td>The list’s name for a screen reader, and its sentence when nothing is still to come (else the dictionary’s `weekEmpty`).</td></tr>
+                            <tr><td><code>.kp-week__upcoming / __next</code></td><td>The list and one row of it. A row carries `data-kp-day-start` when it opens its day and `data-kp-today` for today; `.kp-week__next--empty` and `.kp-week__none` are the sentence of an empty list.</td></tr>
                     </tbody></table></div>
                 </section>
                 </div>

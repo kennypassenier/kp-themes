@@ -213,6 +213,45 @@
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-toasts&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A toast that waits for the reader, and one that stays</figcaption>
+                        <p class="kp-text-muted">Three buttons call toast() from js/overlays.js. The first toast keeps its clock while the pointer is on it or focus is inside it (try resting the pointer on it) and leaves two seconds after both are gone; the second has a close button and the ordinary clock; the third is sticky: no clock, a close button, and Esc closes it from the keyboard.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-row kp-gap-sm">
+    <button type="button" class="kp-button" data-doc-toast="pause">Rest on it</button>
+    <button type="button" class="kp-button" data-doc-toast="close">With a close button</button>
+    <button type="button" class="kp-button kp-button--primary" data-doc-toast="sticky">Stays until closed</button>
+</div>
+                            <script type="module">
+import { toast } from '../../js/overlays.js';
+
+const shows = {
+    pause: () => toast('Saved: rest the pointer on this toast and it waits.', { linger: 1500 }),
+    close: () => toast('The export finished.', { close: true }),
+    sticky: () => toast('The server refused the file. Close this when you have read it.', { sticky: true, live: 'assertive' }),
+};
+for (const button of document.querySelectorAll('[data-doc-toast]')) {
+    button.addEventListener('click', () => shows[button.dataset.docToast]());
+}
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-gap-sm&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-doc-toast</span><span class="kp-code__string">=&quot;pause&quot;</span>&gt;Rest on it&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-doc-toast</span><span class="kp-code__string">=&quot;close&quot;</span>&gt;With a close button&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--primary&quot;</span> <span class="kp-code__keyword">data-doc-toast</span><span class="kp-code__string">=&quot;sticky&quot;</span>&gt;Stays until closed&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { toast } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/overlays'</span>;
+
+<span class="kp-code__keyword">const</span> shows = {
+    pause: () =&gt; toast(<span class="kp-code__string">'Saved: rest the pointer on this toast and it waits.'</span>, { linger: <span class="kp-code__string">1500</span> }),
+    close: () =&gt; toast(<span class="kp-code__string">'The export finished.'</span>, { close: <span class="kp-code__keyword">true</span> }),
+    sticky: () =&gt; toast(<span class="kp-code__string">'The server refused the file. Close this when you have read it.'</span>, { sticky: <span class="kp-code__keyword">true</span>, live: <span class="kp-code__string">'assertive'</span> }),
+};
+<span class="kp-code__keyword">for</span> (<span class="kp-code__keyword">const</span> button <span class="kp-code__keyword">of</span> document.querySelectorAll(<span class="kp-code__string">'[data-doc-toast]'</span>)) {
+    button.addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; shows[button.dataset.docToast]());
+}</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="more-examples" id="more-examples">
                     <h2 class="kp-fw-semibold">More examples</h2>
@@ -352,6 +391,12 @@
                             <tr><td><code>.kp-toast--success / --warning / --info / --error</code></td><td>A rule down the leading edge in the status colour. The words say it as well.</td></tr>
                             <tr><td><code>.kp-toast__close</code></td><td>A dismiss control pushed to the trailing edge, for a toast that does not go by itself.</td></tr>
                             <tr><td><code>with an action</code></td><td>A toast can carry one control — an undo — and then it should stay long enough to be used.</td></tr>
+                            <tr><td><code>pause (default true)</code></td><td>While the pointer is on a toast or focus is inside it, its clock stops and the toast carries `data-kp-paused`; `pause: false` brings back the plain timer. A touch is not hovering. The region hears `kp-toast-pause` with `{ toast, paused }` each time it stops or starts again.</td></tr>
+                            <tr><td><code>linger</code></td><td>The milliseconds a toast has left once the pointer and the focus are both gone (`TOAST_LINGER_MS`, 2000 by default; per toast as `linger`).</td></tr>
+                            <tr><td><code>close</code></td><td>`close: true` adds a close button at the toast’s end; the toast keeps its clock.</td></tr>
+                            <tr><td><code>sticky</code></td><td>`sticky: true` is no clock plus a close button: the toast stays until it is closed. For an undo that needs a decision or an error that has to be read.</td></tr>
+                            <tr><td><code>Escape</code></td><td>Esc on a focused toast closes it, whether or not it has a close button.</td></tr>
+                            <tr><td><code>with a tab bar</code></td><td>The stack, and the back-to-top control, rise by the tab bar’s own height, so a toast never stands behind it on a phone.</td></tr>
                             <tr><td><code>pastel</code></td><td>In pastel a toast draws its own plate and pass under its words (no tape: paper in the hand), lands on the pass and leaves as that landing backwards; js/motion.js plays a toast’s arrival as its leave backwards. Each tone names its own paper.</td></tr>
                     </tbody></table></div>
                 </section>

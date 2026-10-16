@@ -211,6 +211,69 @@
     &lt;/<span class="kp-code__keyword">ul</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Made from items, with a colour and an identity pattern, and counts that arrive</figcaption>
+                        <p class="kp-text-muted">`setFacetItems` reconciles the rows by value, in place. A row’s `swatch` is a colour and its `pattern` a seed (a name): a 5 by 5 pattern, the same for the same name wherever it is drawn (`identityCells(seed)`), is laid over the square, so two sources are told apart by more than a hue. `aria-busy=&quot;true&quot;` shows the counts as quiet bars until `setFacetCounts` writes them. `kp-facet-change` carries `{ group, values, source, value }`; the line under the list prints it.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-facets" id="doc-facets-live" data-kp-facets data-kp-facets-all="Everything" role="group" aria-label="Source" aria-busy="true">
+    <ul class="kp-facets__list"></ul>
+    <p class="kp-facets__empty" hidden>No sources yet.</p>
+</div>
+<p class="kp-text-muted" id="doc-facets-out" aria-live="polite">Showing everything.</p>
+                            <script type="module">
+import { attachFacets, setFacetCounts, setFacetItems } from '../../js/facets.js';
+
+const group = document.getElementById('doc-facets-live');
+attachFacets(group.parentElement);
+const hue = (name) => [...name].reduce((sum, ch) => sum + ch.charCodeAt(0), 0) % 360;
+setFacetItems(
+    group,
+    ['Host', 'jellyfin', 'traefik', 'vaultwarden'].map((name) => ({
+        value: name,
+        label: name,
+        swatch: 'oklch(0.62 0.15 ' + hue(name) + ')',
+        pattern: name,
+    })),
+);
+setTimeout(() => {
+    setFacetCounts(group, { Host: 214, jellyfin: 96, traefik: 31, vaultwarden: 10 });
+    group.removeAttribute('aria-busy');
+}, 1200);
+group.addEventListener('kp-facet-change', (event) => {
+    const { values, source, value } = event.detail;
+    document.getElementById('doc-facets-out').textContent = 'Showing ' + values.join(', ') + ' (' + source + (value ? ', ' + value : '') + ').';
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-facets&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-facets-live&quot;</span> <span class="kp-code__keyword">data-kp-facets</span> <span class="kp-code__keyword">data-kp-facets-all</span><span class="kp-code__string">=&quot;Everything&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Source&quot;</span> <span class="kp-code__keyword">aria-busy</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-facets__list&quot;</span>&gt;&lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-facets__empty&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;No sources yet.&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-facets-out&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;Showing everything.&lt;/<span class="kp-code__keyword">p</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachFacets, setFacetCounts, setFacetItems } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/facets'</span>;
+
+<span class="kp-code__keyword">const</span> group = document.getElementById(<span class="kp-code__string">'doc-facets-live'</span>);
+attachFacets(group.parentElement);
+<span class="kp-code__keyword">const</span> hue = (name) =&gt; [...name].reduce((sum, ch) =&gt; sum + ch.charCodeAt(<span class="kp-code__string">0</span>), <span class="kp-code__string">0</span>) % <span class="kp-code__string">360</span>;
+setFacetItems(
+    group,
+    [<span class="kp-code__string">'Host'</span>, <span class="kp-code__string">'jellyfin'</span>, <span class="kp-code__string">'traefik'</span>, <span class="kp-code__string">'vaultwarden'</span>].map((name) =&gt; ({
+        value: name,
+        label: name,
+        swatch: <span class="kp-code__string">'oklch(0.62 0.15 '</span> + hue(name) + <span class="kp-code__string">')'</span>,
+        pattern: name,
+    })),
+);
+setTimeout(() =&gt; {
+    setFacetCounts(group, { Host: <span class="kp-code__string">214</span>, jellyfin: <span class="kp-code__string">96</span>, traefik: <span class="kp-code__string">31</span>, vaultwarden: <span class="kp-code__string">10</span> });
+    group.removeAttribute(<span class="kp-code__string">'aria-busy'</span>);
+}, <span class="kp-code__string">1200</span>);
+group.addEventListener(<span class="kp-code__string">'kp-facet-change'</span>, (event) =&gt; {
+    <span class="kp-code__keyword">const</span> { values, source, value } = event.detail;
+    document.getElementById(<span class="kp-code__string">'doc-facets-out'</span>).textContent = <span class="kp-code__string">'Showing '</span> + values.join(<span class="kp-code__string">', '</span>) + <span class="kp-code__string">' ('</span> + source + (value ? <span class="kp-code__string">', '</span> + value : <span class="kp-code__string">''</span>) + <span class="kp-code__string">').'</span>;
+});</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -276,6 +339,9 @@
                             <tr><td><code>aria-busy=&quot;true&quot;</code></td><td>On the group: the counts show as quiet bars that keep their place until `setFacetCounts` writes them.</td></tr>
                             <tr><td><code>.kp-facets--row</code></td><td>The rows side by side as bordered pills, scrolling sideways, for a phone.</td></tr>
                             <tr><td><code>.kp-facet__swatch</code></td><td>An optional small square before the name; its colour is a custom property you set on it.</td></tr>
+                            <tr><td><code>FacetItem.pattern / data-kp-facet-pattern</code></td><td>A seed (a name) for an identity pattern over the swatch: `identityCells(seed)` makes a 5 by 5 grid mirrored about its middle column, the same for the same name everywhere; `.kp-facet__pattern` is the drawing. An empty seed takes it away. The pattern’s size and ink are in the knobs.</td></tr>
+                            <tr><td><code>setFacetItems / setFacetCounts / setFacetValues / getFacetValues</code></td><td>Reconcile the rows by value in place, write the counts, set the values that are on without an event, and read them. `kp-facet-change` fires for a person’s choice only: `source` is `toggle`, `only` or `all`.</td></tr>
+                            <tr><td><code>facetOnly / facetAll / facetShowingOnly / facetShowingAll</code></td><td>The words (“only”, “Everything”, “Showing only Host”, “Showing everything”), in the dictionary; the “only” label and its aria name are `facetOnly` and `facetOnlyLabel`.</td></tr>
                             <tr><td><code>data-kp-facet-all and only</code></td><td>The “only” button is shown when the pointer is on the row or focus is in it, and always on a device that cannot hover.</td></tr>
                     </tbody></table></div>
                 </section>

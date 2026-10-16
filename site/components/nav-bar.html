@@ -255,6 +255,135 @@
     &lt;/<span class="kp-code__keyword">nav</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A bar that folds what does not fit, with a separator</figcaption>
+                        <p class="kp-text-muted">`data-kp-nav-fold` on the nav folds only the links that do not fit, from the end, behind a More menu (the menu button’s own: its keys, its placement, its theme); a link that is folded stays in its list item, out of the flow and the focus order, and its menu entry clicks the real link. `data-kp-nav-keep` on an item keeps it in the bar wherever it is. `li.kp-nav__sep` is a rule between two groups of links: it stands only between shown links, and the More menu draws it as its own separator. Drag the corner of the box to narrow the bar.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div style="inline-size: 28rem; max-inline-size: 100%; overflow: hidden; resize: horizontal; border: 1px dashed var(--border); padding: 0.25rem">
+    <div class="kp-nav-wrap">
+        <nav class="kp-nav" data-kp-nav-fold aria-label="Main, folding">
+            <span class="kp-nav__brand">kp</span>
+            <ul class="kp-nav__links">
+                <li><a class="kp-nav__link" href="#nav-bar" aria-current="page">Overview</a></li>
+                <li><a class="kp-nav__link" href="#example">Backups</a></li>
+                <li class="kp-nav__sep" aria-hidden="true"></li>
+                <li><a class="kp-nav__link" href="#variants">Network</a></li>
+                <li><a class="kp-nav__link" href="#variants">Applications</a></li>
+                <li data-kp-nav-keep><a class="kp-nav__link" href="#variants">Alerts</a></li>
+                <li class="kp-nav__sep" aria-hidden="true"></li>
+                <li><a class="kp-nav__link" href="#variants">Settings</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;inline-size: 28rem; max-inline-size: 100%; overflow: hidden; resize: horizontal; border: 1px dashed var(--border); padding: 0.25rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav-wrap&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav&quot;</span> <span class="kp-code__keyword">data-kp-nav-fold</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Main, folding&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__brand&quot;</span>&gt;kp&lt;/<span class="kp-code__keyword">span</span>&gt;
+            &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__links&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#nav-bar&quot;</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>&gt;Overview&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#example&quot;</span>&gt;Backups&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__sep&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#variants&quot;</span>&gt;Network&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#variants&quot;</span>&gt;Applications&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-kp-nav-keep</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#variants&quot;</span>&gt;Alerts&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__sep&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-nav__link&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#variants&quot;</span>&gt;Settings&lt;/<span class="kp-code__keyword">a</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+            &lt;/<span class="kp-code__keyword">ul</span>&gt;
+        &lt;/<span class="kp-code__keyword">nav</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A bottom tab bar, with a count on one tab</figcaption>
+                        <p class="kp-text-muted">On a phone the bar sits at the bottom of the window; here `kp-tabbar--static` leaves it in the flow and `kp-tabbar--always` shows it at every width, so it can be looked at. The icon, the label and the optional `.kp-badge` count are the tab’s; the More tab opens a drawer through `data-kp-dialog`. `setTabbarBadge`, `setTabbarCurrent` and `setTabbarBusy` change a tab from the page: press the buttons below.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<nav class="kp-tabbar kp-tabbar--always kp-tabbar--static" id="doc-tabbar" aria-label="Areas">
+    <a class="kp-tabbar__tab" href="#home" data-kp-tab="home" aria-current="page"><span class="kp-tabbar__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h7v7H3z" /><path d="M14 3h7v7h-7z" /><path d="M3 14h7v7H3z" /><path d="M14 14h7v7h-7z" /></svg></span><span class="kp-tabbar__label">Home</span></a>
+    <a class="kp-tabbar__tab" href="#inbox" data-kp-tab="inbox"><span class="kp-tabbar__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13h4l2 3h4l2-3h4" /><path d="M5 5h14l1 8v6H4v-6z" /></svg></span><span class="kp-tabbar__label">Needs you</span><span class="kp-badge kp-tabbar__badge">3</span></a>
+    <a class="kp-tabbar__tab" href="#activity" data-kp-tab="activity"><span class="kp-tabbar__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h4l3-7 4 14 3-7h4" /></svg></span><span class="kp-tabbar__label">Activity</span></a>
+    <button type="button" class="kp-tabbar__tab kp-tabbar__tab--more" data-kp-dialog="doc-tabbar-more"><span class="kp-tabbar__icon kp-tabbar__icon--more" aria-hidden="true"></span><span class="kp-tabbar__label">More</span></button>
+</nav>
+<dialog class="kp-drawer kp-dialog" id="doc-tabbar-more" aria-labelledby="doc-tabbar-more-title">
+    <header class="kp-drawer__head">
+        <h2 class="kp-dialog__title" id="doc-tabbar-more-title">More</h2>
+        <button type="button" class="kp-icon-button kp-dialog__close" data-kp-dialog-close aria-label="Close">×</button>
+        <p class="kp-drawer__desc">The areas you need less often.</p>
+    </header>
+    <div class="kp-drawer__body">
+        <div class="kp-menu kp-menu--rich" role="group" aria-label="More">
+            <a class="kp-menu__item" href="#backups"><span class="kp-menu__label">Backups</span><span class="kp-menu__hint">Snapshots, restores and the nightly run</span></a>
+            <a class="kp-menu__item" href="#system"><span class="kp-menu__label">System</span><span class="kp-menu__hint">The host, its disks and updates</span></a>
+        </div>
+    </div>
+</dialog>
+<div class="kp-row kp-gap-sm kp-mt-sm">
+    <button type="button" class="kp-button kp-button--sm" data-doc-tab="badge">Count 1534</button>
+    <button type="button" class="kp-button kp-button--sm" data-doc-tab="current">Current: Activity</button>
+    <button type="button" class="kp-button kp-button--sm" data-doc-tab="busy">Busy</button>
+</div>
+                            <script type="module">
+import { attachTabbars, setTabbarBadge, setTabbarBusy, setTabbarCurrent } from '../../js/tabbar.js';
+
+const bar = document.getElementById('doc-tabbar');
+attachTabbars(bar.parentElement);
+const tab = (id) => bar.querySelector('[data-kp-tab="' + id + '"]');
+const actions = {
+    badge: () => setTabbarBadge(tab('inbox'), 1534),
+    current: () => setTabbarCurrent(bar, 'activity'),
+    busy: () => {
+        setTabbarBusy(tab('activity'), true);
+        setTimeout(() => setTabbarBusy(tab('activity'), false), 2500);
+    },
+};
+for (const button of document.querySelectorAll('[data-doc-tab]')) {
+    button.addEventListener('click', () => actions[button.dataset.docTab]());
+}
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">nav</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabbar kp-tabbar--always kp-tabbar--static&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-tabbar&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Areas&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabbar__tab&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#home&quot;</span> <span class="kp-code__keyword">data-kp-tab</span><span class="kp-code__string">=&quot;home&quot;</span> <span class="kp-code__keyword">aria-current</span><span class="kp-code__string">=&quot;page&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabbar__icon&quot;</span>&gt;&lt;<span class="kp-code__keyword">svg</span> <span class="kp-code__keyword">viewBox</span><span class="kp-code__string">=&quot;0 0 24 24&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;<span class="kp-code__keyword">path</span> <span class="kp-code__keyword">d</span><span class="kp-code__string">=&quot;M3 3h7v7H3z&quot;</span> /&gt;&lt;<span class="kp-code__keyword">path</span> <span class="kp-code__keyword">d</span><span class="kp-code__string">=&quot;M14 3h7v7h-7z&quot;</span> /&gt;&lt;<span class="kp-code__keyword">path</span> <span class="kp-code__keyword">d</span><span class="kp-code__string">=&quot;M3 14h7v7H3z&quot;</span> /&gt;&lt;<span class="kp-code__keyword">path</span> <span class="kp-code__keyword">d</span><span class="kp-code__string">=&quot;M14 14h7v7h-7z&quot;</span> /&gt;&lt;/<span class="kp-code__keyword">svg</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabbar__label&quot;</span>&gt;Home&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>&gt;
+    &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabbar__tab&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#inbox&quot;</span> <span class="kp-code__keyword">data-kp-tab</span><span class="kp-code__string">=&quot;inbox&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabbar__icon&quot;</span>&gt;&lt;<span class="kp-code__keyword">svg</span> <span class="kp-code__keyword">viewBox</span><span class="kp-code__string">=&quot;0 0 24 24&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;<span class="kp-code__keyword">path</span> <span class="kp-code__keyword">d</span><span class="kp-code__string">=&quot;M4 13h4l2 3h4l2-3h4&quot;</span> /&gt;&lt;<span class="kp-code__keyword">path</span> <span class="kp-code__keyword">d</span><span class="kp-code__string">=&quot;M5 5h14l1 8v6H4v-6z&quot;</span> /&gt;&lt;/<span class="kp-code__keyword">svg</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabbar__label&quot;</span>&gt;Needs you&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-badge kp-tabbar__badge&quot;</span>&gt;3&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>&gt;
+    &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabbar__tab&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#activity&quot;</span> <span class="kp-code__keyword">data-kp-tab</span><span class="kp-code__string">=&quot;activity&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabbar__icon&quot;</span>&gt;&lt;<span class="kp-code__keyword">svg</span> <span class="kp-code__keyword">viewBox</span><span class="kp-code__string">=&quot;0 0 24 24&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;<span class="kp-code__keyword">path</span> <span class="kp-code__keyword">d</span><span class="kp-code__string">=&quot;M3 12h4l3-7 4 14 3-7h4&quot;</span> /&gt;&lt;/<span class="kp-code__keyword">svg</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabbar__label&quot;</span>&gt;Activity&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabbar__tab kp-tabbar__tab--more&quot;</span> <span class="kp-code__keyword">data-kp-dialog</span><span class="kp-code__string">=&quot;doc-tabbar-more&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabbar__icon kp-tabbar__icon--more&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-tabbar__label&quot;</span>&gt;More&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">nav</span>&gt;
+&lt;<span class="kp-code__keyword">dialog</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-drawer kp-dialog&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-tabbar-more&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;doc-tabbar-more-title&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">header</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-drawer__head&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">h2</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog__title&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-tabbar-more-title&quot;</span>&gt;More&lt;/<span class="kp-code__keyword">h2</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-icon-button kp-dialog__close&quot;</span> <span class="kp-code__keyword">data-kp-dialog-close</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Close&quot;</span>&gt;×&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-drawer__desc&quot;</span>&gt;The areas you need less often.&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;/<span class="kp-code__keyword">header</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-drawer__body&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu kp-menu--rich&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;More&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#backups&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__label&quot;</span>&gt;Backups&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__hint&quot;</span>&gt;Snapshots, restores and the nightly run&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>&gt;
+            &lt;<span class="kp-code__keyword">a</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__item&quot;</span> <span class="kp-code__keyword">href</span><span class="kp-code__string">=&quot;#system&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__label&quot;</span>&gt;System&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-menu__hint&quot;</span>&gt;The host, its disks and updates&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">a</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">dialog</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-gap-sm kp-mt-sm&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-tab</span><span class="kp-code__string">=&quot;badge&quot;</span>&gt;Count 1534&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-tab</span><span class="kp-code__string">=&quot;current&quot;</span>&gt;Current: Activity&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-tab</span><span class="kp-code__string">=&quot;busy&quot;</span>&gt;Busy&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachTabbars, setTabbarBadge, setTabbarBusy, setTabbarCurrent } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/tabbar'</span>;
+
+<span class="kp-code__keyword">const</span> bar = document.getElementById(<span class="kp-code__string">'doc-tabbar'</span>);
+attachTabbars(bar.parentElement);
+<span class="kp-code__keyword">const</span> tab = (id) =&gt; bar.querySelector(<span class="kp-code__string">'[data-kp-tab=&quot;'</span> + id + <span class="kp-code__string">'&quot;]'</span>);
+<span class="kp-code__keyword">const</span> actions = {
+    badge: () =&gt; setTabbarBadge(tab(<span class="kp-code__string">'inbox'</span>), <span class="kp-code__string">1534</span>),
+    current: () =&gt; setTabbarCurrent(bar, <span class="kp-code__string">'activity'</span>),
+    busy: () =&gt; {
+        setTabbarBusy(tab(<span class="kp-code__string">'activity'</span>), <span class="kp-code__keyword">true</span>);
+        setTimeout(() =&gt; setTabbarBusy(tab(<span class="kp-code__string">'activity'</span>), <span class="kp-code__keyword">false</span>), <span class="kp-code__string">2500</span>);
+    },
+};
+<span class="kp-code__keyword">for</span> (<span class="kp-code__keyword">const</span> button <span class="kp-code__keyword">of</span> document.querySelectorAll(<span class="kp-code__string">'[data-doc-tab]'</span>)) {
+    button.addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; actions[button.dataset.docTab]());
+}</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="more-examples" id="more-examples">
                     <h2 class="kp-fw-semibold">More examples</h2>
@@ -1346,12 +1475,22 @@
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-nav-fold</code></td><td>Opt-in on the nav: the links that do not fit are folded from the end behind a More menu (`attachNavFolds`; `NavBar` takes `fold`). The bar stays one row before and after, the fit is measured at the links’ natural widths so it cannot oscillate, and below the bar’s own phone breakpoint, with a toggle present, it stands down.</td></tr>
+                            <tr><td><code>data-kp-nav-keep</code></td><td>On a list item: it stays in the bar wherever it is, and the fold takes the others.</td></tr>
+                            <tr><td><code>kp-nav-fold</code></td><td>Fired on the nav, bubbling, when the folded set changes: `{ folded, items }`. `planFold()` is the arithmetic on its own, `foldNav()` folds one bar.</td></tr>
+                            <tr><td><code>fold marks</code></td><td>Written by the script: `data-kp-nav-fold-ready` once the bar is fitted, `data-kp-nav-folding` while anything is folded, `data-kp-nav-folded` on each folded item, `data-kp-nav-more-current` when the current page is behind More (and `aria-current` on its button) and `data-kp-nav-more-alert` when a `.kp-badge` count is (a dot on the button, announced).</td></tr>
+                            <tr><td><code>--kp-nav-more-dot</code></td><td>The colour of the dot on the More button when a count is behind it. A list item with a dropdown or a mega menu becomes a named group in the More menu: its heading, then its links.</td></tr>
+                            <tr><td><code>navMore / navMoreMenu / navMoreAlert / navMoreUnavailable</code></td><td>The More button’s words in the dictionary: its label, the menu’s name, the alert announcement and the entry of a link that cannot be followed.</td></tr>
+                            <tr><td><code>.kp-nav__sep</code></td><td>`&lt;li class=&quot;kp-nav__sep&quot; aria-hidden=&quot;true&quot;&gt;`: a rule between two groups of links, never a target. A separator stands only between two links that are shown, so none dangles before More or at the start; in the More menu the links after it start a group below the menu’s own `.kp-menu__separator` (`data-kp-nav-sep`). `planSeparators()` and `NAV_SEP` are the arithmetic. Its inset and colour are knobs.</td></tr>
                             <tr><td><code>.kp-tabbar</code></td><td>The bottom tab bar for phone widths: a `nav` of `.kp-tabbar__tab` links (an icon and a label each, a `.kp-badge` count on the one that needs the reader) and a More tab that opens a drawer through `data-kp-dialog`. It publishes its height on the root while it is on the screen, so a toast and the back-to-top control clear it; `setTabbarBadge`, `setTabbarCurrent` and `setTabbarBusy` change a tab from the page.</td></tr>
                             <tr><td><code>.kp-nav__brand</code></td><td>The name at the leading edge, in bold. As a link it keeps its look and takes the page’s ordinary link underline, which is what says it is one.</td></tr>
                             <tr><td><code>--kp-nav-close-time</code></td><td>For a theme that plays a close for the phone panel or a hover dropdown (cyberpunk): its length. The module holds the panel or the item open for that long while the close plays, then lets go. Unset, the phone panel closes after the theme’s fold time, or 300 ms; the dropdowns close at once.</td></tr>
                             <tr><td><code>.kp-nav__links</code></td><td>The row itself. It wraps rather than scrolling, so a narrow window gets two rows instead of a hidden third link.</td></tr>
                             <tr><td><code>.kp-nav-wrap</code></td><td>The box the bar measures itself against. In a narrow one the bar takes a smaller inset, and the width that decides is the wrapper’s rather than the window’s.</td></tr>
                             <tr><td><code>.kp-nav-wrap--sticky</code></td><td>The shrinking header: the bar sticks to the top of the box that scrolls it, and once that box has scrolled further than the bar is tall (or `data-kp-nav-sticky-after` pixels, if more) js/auto.js sets `data-kp-nav-compact` and the bar lowers its block padding (the knobs table names how far), gliding only when the reader has not asked for less motion. The module hands the bar’s height to the scrolling box’s scroll padding, so anchors and focused elements land below the bar; a scroll offset the page sets itself still wins. In React it is the `sticky` prop, with `stickyAfter`.</td></tr>
+                            <tr><td><code>.kp-tabbar modifiers</code></td><td>The bar shows below 40rem of window; `kp-tabbar--wide` below 60rem, where a dashboard’s top bar has no room for its links either; `kp-tabbar--always` at every width; `kp-tabbar--static` leaves it in the flow instead of fixed to the window’s bottom edge.</td></tr>
+                            <tr><td><code>.kp-tabbar parts</code></td><td>`.kp-tabbar__tab` (a link or a button), `__icon` (`__icon--more` is the More tab’s), `__label` and `__badge`, the `.kp-badge` count on the tab that needs the reader. `setTabbarBadge(tab, count)` writes every digit of the count (never `99+`), hidden at 0 or null; `setTabbarCurrent(bar, id)` moves `aria-current` to the tab with that `data-kp-tab`; `setTabbarBusy(tab, busy)` puts one tab to wait.</td></tr>
+                            <tr><td><code>--kp-tabbar-height</code></td><td>Written on the root by `js/tabbar.js` while the bar is on the screen (0px when it is not): the page keeps its last line, a toast and the back-to-top control clear of it. The bar’s own sizes (tab height, icon, padding, text size, the safe-area inset, its time and layer) are in the knobs below.</td></tr>
                             <tr><td><code>current page</code></td><td>Weight and a thicker underline, with the state on the link so it is announced as well as drawn.</td></tr>
                             <tr><td><code>.kp-nav__search</code></td><td>The slot at the bar’s far end for the command palette’s trigger — a `.kp-nav__search-trigger` button with `data-kp-palette-open`, which reads as a quiet search box and prints the palette’s key. The command palette page shows it working; in React it is the `search` prop, filled with a PaletteTrigger.</td></tr>
                             <tr><td><code>data-kp-nav-menu-open</code></td><td>On a list item with a `.kp-nav__menu`: that dropdown is shown open, exactly where hover and focus open it. For a page that shows it open, or a script that opens it on a press; taking the attribute away closes it again.</td></tr>

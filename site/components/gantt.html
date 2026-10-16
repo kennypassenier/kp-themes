@@ -193,11 +193,130 @@
                     <h2 class="kp-fw-semibold">Live example</h2>
                     <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">Operations of the last six hours</figcaption>
-                        <p class="kp-text-muted">The markup is the empty frame with its ranges; the script builds the axis, the lanes and the bars from the runs the page hands over.</p>
+                        <p class="kp-text-muted">The markup is the empty frame with its ranges; the script builds the axis, the lanes and the bars from the runs the page hands over: a finished run, a failed one, one still running and one queued. Drag across the plot to select a range.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
 <section class="kp-gantt" data-kp-gantt data-kp-gantt-ranges="1h 6h 24h 7d" data-kp-gantt-range="6h" data-kp-gantt-ghosts="2 1" aria-label="Operations of the last 6 hours"></section>
+                            <script type="module">
+import { attachGantts, setGanttRuns } from '../../js/gantt.js';
+
+const MIN = 60_000;
+const now = Date.now();
+const ago = (minutes) => now - minutes * MIN;
+const timeline = document.querySelector('[data-kp-gantt]');
+attachGantts(timeline.parentElement);
+setGanttRuns(
+    timeline,
+    [
+        { id: 'backup', lane: 'nightly', label: 'Backup photos', start: ago(300), end: ago(240), state: 'ok' },
+        { id: 'prune', lane: 'nightly', label: 'Prune snapshots', start: ago(220), end: ago(190), state: 'failed', detail: 'The target disk was full.' },
+        { id: 'update', lane: 'updates', label: 'Update images', start: ago(150), end: ago(95), state: 'ok' },
+        { id: 'verify', lane: 'updates', label: 'Verify backups', start: ago(40), state: 'running' },
+        { id: 'next', lane: 'nightly', label: 'Backup photos', start: ago(8), state: 'queued' },
+    ],
+    [
+        { id: 'nightly', label: 'Nightly round' },
+        { id: 'updates', label: 'Updates' },
+    ],
+);
+                            </script>
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-gantt&quot;</span> <span class="kp-code__keyword">data-kp-gantt</span> <span class="kp-code__keyword">data-kp-gantt-ranges</span><span class="kp-code__string">=&quot;1h 6h 24h 7d&quot;</span> <span class="kp-code__keyword">data-kp-gantt-range</span><span class="kp-code__string">=&quot;6h&quot;</span> <span class="kp-code__keyword">data-kp-gantt-ghosts</span><span class="kp-code__string">=&quot;2 1&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Operations of the last 6 hours&quot;</span>&gt;&lt;/<span class="kp-code__keyword">section</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachGantts, setGanttRuns } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/gantt'</span>;
+
+<span class="kp-code__keyword">const</span> MIN = <span class="kp-code__string">60_000</span>;
+<span class="kp-code__keyword">const</span> now = Date.now();
+<span class="kp-code__keyword">const</span> ago = (minutes) =&gt; now - minutes * MIN;
+<span class="kp-code__keyword">const</span> timeline = document.querySelector(<span class="kp-code__string">'[data-kp-gantt]'</span>);
+attachGantts(timeline.parentElement);
+setGanttRuns(
+    timeline,
+    [
+        { id: <span class="kp-code__string">'backup'</span>, lane: <span class="kp-code__string">'nightly'</span>, label: <span class="kp-code__string">'Backup photos'</span>, start: ago(<span class="kp-code__string">300</span>), end: ago(<span class="kp-code__string">240</span>), state: <span class="kp-code__string">'ok'</span> },
+        { id: <span class="kp-code__string">'prune'</span>, lane: <span class="kp-code__string">'nightly'</span>, label: <span class="kp-code__string">'Prune snapshots'</span>, start: ago(<span class="kp-code__string">220</span>), end: ago(<span class="kp-code__string">190</span>), state: <span class="kp-code__string">'failed'</span>, detail: <span class="kp-code__string">'The target disk was full.'</span> },
+        { id: <span class="kp-code__string">'update'</span>, lane: <span class="kp-code__string">'updates'</span>, label: <span class="kp-code__string">'Update images'</span>, start: ago(<span class="kp-code__string">150</span>), end: ago(<span class="kp-code__string">95</span>), state: <span class="kp-code__string">'ok'</span> },
+        { id: <span class="kp-code__string">'verify'</span>, lane: <span class="kp-code__string">'updates'</span>, label: <span class="kp-code__string">'Verify backups'</span>, start: ago(<span class="kp-code__string">40</span>), state: <span class="kp-code__string">'running'</span> },
+        { id: <span class="kp-code__string">'next'</span>, lane: <span class="kp-code__string">'nightly'</span>, label: <span class="kp-code__string">'Backup photos'</span>, start: ago(<span class="kp-code__string">8</span>), state: <span class="kp-code__string">'queued'</span> },
+    ],
+    [
+        { id: <span class="kp-code__string">'nightly'</span>, label: <span class="kp-code__string">'Nightly round'</span> },
+        { id: <span class="kp-code__string">'updates'</span>, label: <span class="kp-code__string">'Updates'</span> },
+    ],
+);</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A week of runs, by series, with the days on the axis</figcaption>
+                        <p class="kp-text-muted">`data-kp-gantt-days` turns every day named on the axis into a button that selects that whole day, with the chip, Zoom and Clear; `kp-gantt-select` then carries `source: &quot;day&quot;` and the `day`. A finished run’s `series` (1 to 5) inks it in the chart colours instead of the success colour, and `setGanttLegend` names the series after the states; a failed run keeps its own look, so the state still reads first.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<section class="kp-gantt" data-kp-gantt data-kp-gantt-days data-kp-gantt-ranges="24h 7d" data-kp-gantt-range="7d" data-kp-gantt-ghosts="2 1" aria-label="Operations of the last 7 days"></section>
+                            <script type="module">
+import { attachGantts, setGanttLegend, setGanttRuns } from '../../js/gantt.js';
+
+const HOUR = 3_600_000;
+const midnight = new Date();
+midnight.setHours(0, 0, 0, 0);
+const runs = [];
+for (let day = 6; day >= 0; day -= 1) {
+    const start = midnight.getTime() - day * 24 * HOUR;
+    runs.push({ id: 'backup-' + day, lane: 'nightly', label: 'Backup photos', start: start + 2 * HOUR, end: start + 3 * HOUR, state: day === 3 ? 'failed' : 'ok', series: 1 });
+    if (day % 3 === 0) runs.push({ id: 'update-' + day, lane: 'updates', label: 'Update images', start: start + 4.5 * HOUR, end: start + 6 * HOUR, state: 'ok', series: 2 });
+}
+const el = document.querySelector('[data-kp-gantt-days]');
+attachGantts(el.parentElement);
+setGanttRuns(el, runs, [
+    { id: 'nightly', label: 'Nightly round' },
+    { id: 'updates', label: 'Updates' },
+]);
+setGanttLegend(el, [
+    { series: 1, label: 'Nightly round' },
+    { series: 2, label: 'Updates' },
+]);
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-gantt&quot;</span> <span class="kp-code__keyword">data-kp-gantt</span> <span class="kp-code__keyword">data-kp-gantt-days</span> <span class="kp-code__keyword">data-kp-gantt-ranges</span><span class="kp-code__string">=&quot;24h 7d&quot;</span> <span class="kp-code__keyword">data-kp-gantt-range</span><span class="kp-code__string">=&quot;7d&quot;</span> <span class="kp-code__keyword">data-kp-gantt-ghosts</span><span class="kp-code__string">=&quot;2 1&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Operations of the last 7 days&quot;</span>&gt;&lt;/<span class="kp-code__keyword">section</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachGantts, setGanttLegend, setGanttRuns } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/gantt'</span>;
+
+<span class="kp-code__keyword">const</span> HOUR = <span class="kp-code__string">3_600_000</span>;
+<span class="kp-code__keyword">const</span> midnight = <span class="kp-code__keyword">new</span> Date();
+midnight.setHours(<span class="kp-code__string">0</span>, <span class="kp-code__string">0</span>, <span class="kp-code__string">0</span>, <span class="kp-code__string">0</span>);
+<span class="kp-code__keyword">const</span> runs = [];
+<span class="kp-code__keyword">for</span> (<span class="kp-code__keyword">let</span> day = <span class="kp-code__string">6</span>; day &gt;= <span class="kp-code__string">0</span>; day -= <span class="kp-code__string">1</span>) {
+    <span class="kp-code__keyword">const</span> start = midnight.getTime() - day * <span class="kp-code__string">24</span> * HOUR;
+    runs.push({ id: <span class="kp-code__string">'backup-'</span> + day, lane: <span class="kp-code__string">'nightly'</span>, label: <span class="kp-code__string">'Backup photos'</span>, start: start + <span class="kp-code__string">2</span> * HOUR, end: start + <span class="kp-code__string">3</span> * HOUR, state: day === <span class="kp-code__string">3</span> ? <span class="kp-code__string">'failed'</span> : <span class="kp-code__string">'ok'</span>, series: <span class="kp-code__string">1</span> });
+    <span class="kp-code__keyword">if</span> (day % <span class="kp-code__string">3</span> === <span class="kp-code__string">0</span>) runs.push({ id: <span class="kp-code__string">'update-'</span> + day, lane: <span class="kp-code__string">'updates'</span>, label: <span class="kp-code__string">'Update images'</span>, start: start + <span class="kp-code__string">4.5</span> * HOUR, end: start + <span class="kp-code__string">6</span> * HOUR, state: <span class="kp-code__string">'ok'</span>, series: <span class="kp-code__string">2</span> });
+}
+<span class="kp-code__keyword">const</span> el = document.querySelector(<span class="kp-code__string">'[data-kp-gantt-days]'</span>);
+attachGantts(el.parentElement);
+setGanttRuns(el, runs, [
+    { id: <span class="kp-code__string">'nightly'</span>, label: <span class="kp-code__string">'Nightly round'</span> },
+    { id: <span class="kp-code__string">'updates'</span>, label: <span class="kp-code__string">'Updates'</span> },
+]);
+setGanttLegend(el, [
+    { series: <span class="kp-code__string">1</span>, label: <span class="kp-code__string">'Nightly round'</span> },
+    { series: <span class="kp-code__string">2</span>, label: <span class="kp-code__string">'Updates'</span> },
+]);</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">While it loads</figcaption>
+                        <p class="kp-text-muted">`setGanttState(el, &quot;loading&quot;)` draws the lanes’ ghosts at their final height and stands the data table’s own loading card (the theme’s spinner and “Reading the history”) over them, the toolbar, axis and lane names beside it; the runs are drawn once the card has left. `error` and `empty` put their words over the plot.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<section class="kp-gantt" data-kp-gantt data-kp-gantt-ranges="1h 6h 24h 7d" data-kp-gantt-ghosts="2 1" data-kp-doc-loading aria-label="Operations, loading"></section>
+                            <script type="module">
+import { attachGantts, setGanttState } from '../../js/gantt.js';
+
+const timeline = document.querySelector('[data-kp-doc-loading]');
+attachGantts(timeline.parentElement);
+setGanttState(timeline, 'loading');
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-gantt&quot;</span> <span class="kp-code__keyword">data-kp-gantt</span> <span class="kp-code__keyword">data-kp-gantt-ranges</span><span class="kp-code__string">=&quot;1h 6h 24h 7d&quot;</span> <span class="kp-code__keyword">data-kp-gantt-ghosts</span><span class="kp-code__string">=&quot;2 1&quot;</span> <span class="kp-code__keyword">data-kp-doc-loading</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Operations, loading&quot;</span>&gt;&lt;/<span class="kp-code__keyword">section</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachGantts, setGanttState } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/gantt'</span>;
+
+<span class="kp-code__keyword">const</span> timeline = document.querySelector(<span class="kp-code__string">'[data-kp-doc-loading]'</span>);
+attachGantts(timeline.parentElement);
+setGanttState(timeline, <span class="kp-code__string">'loading'</span>);</code></pre>
                     </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
@@ -300,6 +419,11 @@
                             <tr><td><code>data-kp-active</code></td><td>On the selection chip while a range is selected.</td></tr>
                             <tr><td><code>data-kp-out</code></td><td>On the now-line when now lies outside the window; it is hidden.</td></tr>
                             <tr><td><code>data-kp-gantt-edge</code></td><td>On an axis label too close to the end edge for its name: an hour label stands before its rule and ends at it in a register that flips it; a day button stands against the end, whole.</td></tr>
+                            <tr><td><code>data-kp-gantt-days</code></td><td>Opt-in: each day named on the axis is a button (one tab stop, arrows, Home and End between them) that selects that whole day, 00:00 to 00:00 in the zone, as a brush would. It is `aria-pressed` while it is the selection and lifts it when pressed again; a window too short to hold a midnight names no day. `data-kp-gantt-crowded` marks an axis whose day names would touch, so they thin out.</td></tr>
+                            <tr><td><code>series</code></td><td>On a run (`GanttRun.series`, 1 to 5): a finished run is inked in `--chart-1` to `--chart-5` instead of the success colour. Failed, running and queued keep their own look. `setGanttLegend(el, [{ series, label }])` names the series after the states; none takes them away.</td></tr>
+                            <tr><td><code>setGanttRuns / setGanttState / setGanttWindow / setGanttSelection</code></td><td>The page’s calls: the lanes and runs (repainted in place by id), the state of the whole, the window (`{ span, live, to }`, no event) and a selected range (`{ from, to }` or null).</td></tr>
+                            <tr><td><code>the busy card</code></td><td>While loading, the data table’s loading card (`js/busy-card.js`) stands centred over the lanes, flat over a short area, and the runs are drawn once it has left.</td></tr>
+                            <tr><td><code>a register’s repairs</code></td><td>A register may hang the end-edge axis label inside the plot (the flip knob) and give an empty or failed timeline’s sentence a plate of its own (the state-ground knob); both are in the knobs below, and formal leaves them as they were approved.</td></tr>
                     </tbody></table></div>
                 </section>
                 </div>

@@ -213,6 +213,67 @@
         &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-toolbar__active&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
     &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">The active row, a reserved height and a narrow column</figcaption>
+                        <p class="kp-text-muted">The page keeps the filters in step: `setToolbarActive(toolbar, filters)` draws one removable tag each and Clear all, and the page turns a filter off on `kp-toolbar-remove` (`{ id, label }`) or all of them on `kp-toolbar-clear`. `data-kp-toolbar-reserve` keeps the active row’s height while it is empty, so the list under the toolbar never moves; `.kp-toolbar--stacked` is the one-column toolbar on demand, for a narrow card or a side column on a wide window.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-toolbar kp-toolbar--stacked" id="doc-tb-live" data-kp-toolbar data-kp-toolbar-reserve role="group" aria-label="Containers" style="max-inline-size: 24rem">
+    <div class="kp-toolbar__search"><input type="search" class="kp-field__input kp-toolbar__input" placeholder="Search containers" aria-label="Search containers" /></div>
+    <div class="kp-toolbar__filters"><div class="kp-toolbar__group" role="group" aria-labelledby="doc-tb-live-status"><b class="kp-toolbar__label" id="doc-tb-live-status">Status</b>
+            <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="Status"><button type="button" class="kp-segmented__item" data-value="all" data-kp-segmented-all aria-pressed="true"><span class="kp-segmented__label">All</span></button><button type="button" class="kp-segmented__item" data-value="running" aria-pressed="false"><span class="kp-segmented__label">Running</span></button><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="false"><span class="kp-segmented__label">Stopped</span></button></div>
+        </div></div>
+        <div class="kp-toolbar__state">3 containers</div>
+        <div class="kp-toolbar__active" hidden></div>
+    </div>
+                            <script type="module">
+import { attachSegmented, getSegmentedValues, resetSegmented, setSegmentedValues } from '../../js/segmented.js';
+import { attachToolbars, setToolbarActive } from '../../js/toolbar.js';
+
+const toolbar = document.getElementById('doc-tb-live');
+const chips = toolbar.querySelector('[data-kp-segmented]');
+attachSegmented(toolbar);
+attachToolbars(toolbar.parentElement);
+const draw = (values) => setToolbarActive(toolbar, values.map((value) => ({ id: value, label: 'Status: ' + value })));
+chips.addEventListener('kp-segmented-change', (event) => draw(event.detail.values));
+toolbar.addEventListener('kp-toolbar-remove', (event) => {
+    const values = getSegmentedValues(chips).filter((value) => value !== event.detail.id);
+    setSegmentedValues(chips, values);
+    draw(values);
+});
+toolbar.addEventListener('kp-toolbar-clear', () => {
+    resetSegmented(chips);
+    draw([]);
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-toolbar kp-toolbar--stacked&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-tb-live&quot;</span> <span class="kp-code__keyword">data-kp-toolbar</span> <span class="kp-code__keyword">data-kp-toolbar-reserve</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Containers&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;max-inline-size: 24rem&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-toolbar__search&quot;</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;search&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input kp-toolbar__input&quot;</span> <span class="kp-code__keyword">placeholder</span><span class="kp-code__string">=&quot;Search containers&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Search containers&quot;</span> /&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-toolbar__filters&quot;</span>&gt;&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-toolbar__group&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;doc-tb-live-status&quot;</span>&gt;&lt;<span class="kp-code__keyword">b</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-toolbar__label&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-tb-live-status&quot;</span>&gt;Status&lt;/<span class="kp-code__keyword">b</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-segmented kp-segmented--chips&quot;</span> <span class="kp-code__keyword">data-kp-segmented</span><span class="kp-code__string">=&quot;multi&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Status&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-segmented__item&quot;</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;all&quot;</span> <span class="kp-code__keyword">data-kp-segmented-all</span> <span class="kp-code__keyword">aria-pressed</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-segmented__label&quot;</span>&gt;All&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-segmented__item&quot;</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;running&quot;</span> <span class="kp-code__keyword">aria-pressed</span><span class="kp-code__string">=&quot;false&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-segmented__label&quot;</span>&gt;Running&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-segmented__item&quot;</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;stopped&quot;</span> <span class="kp-code__keyword">aria-pressed</span><span class="kp-code__string">=&quot;false&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-segmented__label&quot;</span>&gt;Stopped&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-toolbar__state&quot;</span>&gt;3 containers&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-toolbar__active&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachSegmented, getSegmentedValues, resetSegmented, setSegmentedValues } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/segmented'</span>;
+<span class="kp-code__keyword">import</span> { attachToolbars, setToolbarActive } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/toolbar'</span>;
+
+<span class="kp-code__keyword">const</span> toolbar = document.getElementById(<span class="kp-code__string">'doc-tb-live'</span>);
+<span class="kp-code__keyword">const</span> chips = toolbar.querySelector(<span class="kp-code__string">'[data-kp-segmented]'</span>);
+attachSegmented(toolbar);
+attachToolbars(toolbar.parentElement);
+<span class="kp-code__keyword">const</span> draw = (values) =&gt; setToolbarActive(toolbar, values.map((value) =&gt; ({ id: value, label: <span class="kp-code__string">'Status: '</span> + value })));
+chips.addEventListener(<span class="kp-code__string">'kp-segmented-change'</span>, (event) =&gt; draw(event.detail.values));
+toolbar.addEventListener(<span class="kp-code__string">'kp-toolbar-remove'</span>, (event) =&gt; {
+    <span class="kp-code__keyword">const</span> values = getSegmentedValues(chips).filter((value) =&gt; value !== event.detail.id);
+    setSegmentedValues(chips, values);
+    draw(values);
+});
+toolbar.addEventListener(<span class="kp-code__string">'kp-toolbar-clear'</span>, () =&gt; {
+    resetSegmented(chips);
+    draw([]);
+});</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -271,6 +332,12 @@
                             <tr><td><code>.kp-toolbar__filters</code></td><td>The filter zone: any number of `.kp-toolbar__group`, each a label over a segmented control.</td></tr>
                             <tr><td><code>.kp-toolbar__state</code></td><td>A slot for a count, a follow switch or a table/cards choice.</td></tr>
                             <tr><td><code>.kp-toolbar__active</code></td><td>The filters that are on, as the data table’s removable tags and a Clear all button. Hidden when none is on.</td></tr>
+                            <tr><td><code>data-kp-toolbar-key</code></td><td>The key that focuses the search from anywhere on the page that is not a field (`/`); the key cap in the markup (`.kp-toolbar__key`) says so.</td></tr>
+                            <tr><td><code>data-kp-toolbar-reserve</code></td><td>The active row keeps its height while it is empty, so the list under the toolbar does not move when a filter is turned on.</td></tr>
+                            <tr><td><code>.kp-toolbar--stacked</code></td><td>The one-column toolbar on demand, for a narrow card or a side column on a wide window, where the window’s own width cannot know the room. The filters scroll sideways instead of wrapping.</td></tr>
+                            <tr><td><code>data-kp-toolbar-clear</code></td><td>On the Clear all button; the script makes it once and keeps it, so a press in flight never meets a button replaced under it.</td></tr>
+                            <tr><td><code>setToolbarActive(toolbar, filters, { clearAll, removeGlyph })</code></td><td>Draws the filters that are on (`{ id, label }` each); `clearAll: false` leaves out Clear all, `removeGlyph` changes the cross. `toolbarSearch(toolbar)` returns the search input.</td></tr>
+                            <tr><td><code>toolbarShowingOnly / toolbarClearAll</code></td><td>The word before the tags and the Clear all label, in the dictionary, so `setStrings()` translates them.</td></tr>
                     </tbody></table></div>
                 </section>
                 </div>

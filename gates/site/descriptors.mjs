@@ -23,7 +23,9 @@
 //   examples      each { title, why, markup } -- `markup` is
 //                 framework-free HTML, rendered live AND printed as the
 //                 snippet from the same string, so the two cannot
-//                 diverge (AR19). `frame: true` (or `{ height, width }`) renders
+//                 diverge (AR19). `script` is the page's own part, run live
+//                 and printed below it, for a component that waits for data.
+//                 `frame: true` (or `{ height, width }`) renders
 //                 it in an iframe window of its own, for a launcher or a
 //                 panel fixed to the window's edge
 //   variants      each { name, what } -- every variant and state
@@ -39,7 +41,7 @@
 import { SIDENAV_MINOR_EXAMPLES, SIDENAV_MINOR_VARIANTS } from './sidenav-minor.mjs';
 
 /**
- * @typedef {{ title: string, why: string, markup: string, react?: string, frame?: boolean | { height?: string, width?: string } }} Example
+ * @typedef {{ title: string, why: string, markup: string, react?: string, script?: string, frame?: boolean | { height?: string, width?: string } }} Example
  * @typedef {{ name: string, what: string }} Variant
  * @typedef {{
  *   id: string,
@@ -270,8 +272,21 @@ export const DESCRIPTORS = [
 </ul>
 `,
             },
+            {
+                title: 'A button that shows a running job',
+                why: '`kp-button--live` is a row with the theme’s own spinner in front and a label that gives way: it never grows past its maximum width, cuts the long label with an ellipsis and, in a container narrower than 40rem (the nav wrapper is one), swaps the long label for the short one, so the box never empties. `hidden` takes it out of the bar without a gap. The narrow box below shows the short label.',
+                markup: `
+<div class="kp-row kp-gap-md">
+<button type="button" class="kp-button kp-button--secondary kp-button--sm kp-button--live"><span class="kp-spinner kp-button__spin" aria-hidden="true"></span><span class="kp-button__short">Running</span><span class="kp-button__long">Updating gateway · step 3 of 35</span></button>
+<div style="inline-size: 14rem; container-type: inline-size">
+<button type="button" class="kp-button kp-button--secondary kp-button--sm kp-button--live"><span class="kp-spinner kp-button__spin" aria-hidden="true"></span><span class="kp-button__short">Running</span><span class="kp-button__long">Updating gateway · step 3 of 35</span></button>
+</div>
+</div>
+`,
+            },
         ],
         variants: [
+            { name: '.kp-button--live', what: 'A running-job button: `.kp-button__spin` (the theme’s spinner), `.kp-button__short` and `.kp-button__long`. The long label is cut with an ellipsis; the short one takes over in a container under 40rem. The widest it grows is the live-width knob.' },
             { name: '.kp-button', what: 'The default: the secondary surface with a boundary, for the actions that are neither the main one nor dangerous.' },
             { name: '.kp-button--primary', what: 'One per view. The action the reader came to take.' },
             { name: '.kp-button--destructive', what: 'Deletes and disconnections. It has to carry a confirmation or an undo as well.' },
@@ -988,8 +1003,62 @@ export const DESCRIPTORS = [
 </div>
 `,
             },
+            {
+                title: 'Several sort keys by plain click, sorted by a value, filtered by a word',
+                why: '`data-kp-sort-multi="click"` makes a plain press on a header (Enter, Space) add a sort key and Shift + click sort on that column alone; the reset button and the sort summary are the ordinary ones. A cell’s `data-kp-sort-value` is what it sorts and range-filters by in place of its text: the size says “1.2 GB” and sorts by its bytes. A cell’s `data-kp-filter-value` is the word a choice filter lists and matches it by: the status cell shows a dot and a time, the filter offers “running” and “stopped”.',
+                markup: `
+<div class="kp-datatable" data-kp-datatable data-kp-sort-multi="click" data-kp-page-sizes="none">
+<div class="kp-table-wrap">
+<table class="kp-table">
+<caption class="kp-sr-only">Backups</caption>
+<thead><tr>
+<th scope="col" data-kp-sort="text">Stack</th>
+<th scope="col" data-kp-sort="text" data-kp-filter="choice">Status</th>
+<th scope="col" data-kp-sort="number" class="kp-text-end">Size</th>
+</tr></thead>
+<tbody>
+<tr data-kp-row-key="s0"><td>media</td><td data-kp-filter-value="running"><span class="kp-badge kp-badge--success">● 02:14</span></td><td class="kp-text-end kp-numeric" data-kp-sort-value="1200000000">1.2 GB</td></tr>
+<tr data-kp-row-key="s1"><td>home</td><td data-kp-filter-value="stopped"><span class="kp-badge">○ 3 days ago</span></td><td class="kp-text-end kp-numeric" data-kp-sort-value="950000">950 KB</td></tr>
+<tr data-kp-row-key="s2"><td>network</td><td data-kp-filter-value="running"><span class="kp-badge kp-badge--success">● 03:30</span></td><td class="kp-text-end kp-numeric" data-kp-sort-value="48000000">48 MB</td></tr>
+<tr data-kp-row-key="s3"><td>docs</td><td data-kp-filter-value="running"><span class="kp-badge kp-badge--success">● 04:02</span></td><td class="kp-text-end kp-numeric" data-kp-sort-value="48000000">48 MB</td></tr>
+</tbody>
+</table>
+</div>
+<div class="kp-datatable__bar">
+<p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+</div>
+</div>
+`,
+            },
+            {
+                title: 'A group heading that stays with no row under it',
+                why: '`data-kp-group-always` on a `tr[data-kp-row-group]` heading keeps it visible when no data row stands under it: here the second group is still loading (skeleton rows), the third failed (with a Retry in the heading) and the fourth is empty, with its reason. Without the attribute a heading with no row is hidden, as the rows are.',
+                markup: `
+<div class="kp-datatable" data-kp-datatable data-kp-page-sizes="none">
+<div class="kp-table-wrap">
+<table class="kp-table">
+<caption class="kp-sr-only">Backup repositories by stack. Stacks with nothing to list still show their heading and say why.</caption>
+<thead><tr><th scope="col" data-kp-sort="text">Repository</th><th scope="col" data-kp-sort="number" class="kp-text-end">Snapshots</th></tr></thead>
+<tbody>
+<tr data-kp-row-group="media"><th scope="rowgroup" colspan="2">Stack media <span class="kp-badge" data-kp-group-count></span></th></tr>
+<tr data-kp-row-key="media-jellyfin" data-kp-group-of="media"><td>media-jellyfin</td><td class="kp-text-end kp-numeric">42</td></tr>
+<tr data-kp-row-group="home" data-kp-group-always><th scope="rowgroup" colspan="2">Stack home (still loading) <span class="kp-badge" data-kp-group-count></span></th></tr>
+<tr data-kp-skeleton-row aria-hidden="true"><td colspan="2"><span class="kp-skeleton" style="display: block; block-size: 1em"></span></td></tr>
+<tr data-kp-row-group="platform" data-kp-group-always><th scope="rowgroup" colspan="2">Stack platform (failed) <span class="kp-badge" data-kp-group-count></span> <span class="kp-text-muted">Could not reach the repository.</span> <button type="button" class="kp-button kp-button--sm">Retry</button></th></tr>
+<tr data-kp-row-group="lab" data-kp-group-always><th scope="rowgroup" colspan="2">Stack lab (no repositories) <span class="kp-badge" data-kp-group-count></span> <span class="kp-text-muted">No repository is configured for this stack.</span></th></tr>
+</tbody>
+</table>
+</div>
+</div>
+`,
+            },
         ],
         variants: [
+            { name: 'data-kp-sort-multi="click"', what: 'A plain press on a header (Enter, Space) adds a sort key and Shift + click sorts on that column alone; without a value, Shift + click adds the key as it always did. `multiSort: \'click\'` is the same in script.' },
+            { name: 'td data-kp-sort-value', what: 'The value a cell sorts and range- or date-filters by in place of its text: a bar cell’s share, a size’s bytes.' },
+            { name: 'td data-kp-filter-value', what: 'The word a choice filter lists and matches a cell by in place of its text: a status cell with a dot and a time is filtered as “running”.' },
+            { name: 'data-kp-group-always', what: 'On a `tr[data-kp-row-group]` heading: it stays visible with no data row under it (loading, failed with a Retry in the heading, empty with the reason). Without it the heading is hidden with its rows.' },
+            { name: 'the busy card', what: 'The loading card of a busy table (`.kp-datatable__busy-overlay.kp-datatable__busy-card` over a `.kp-datatable__busy-panel`: the theme’s spinner and words) is `openBusyCard(host, { words, area, className, arrive })` in `js/busy-card.js` (`BUSY_CARD` selects it), and the heat grid, matrix and run timeline lay the same one over their cells and lanes. A container named `kp-busy-card` lays the panel flat over a short area.' },
             { name: 'data-kp-folded', what: 'Written on a group row (`tr[data-kp-row-group]`) while its members are folded away; `fold()` and `view().folded` read and set it.' },
             {
                 name: 'loading, on a phone',
@@ -1209,8 +1278,25 @@ export const DESCRIPTORS = [
 </pre>
 `,
             },
+            {
+                title: 'Two hunks, each with its @@ header',
+                why: 'A hunk opens with a row of its own: the range (`@@ -a,b +c,d @@`) and, optionally, the place it sits in, wrapped in `.kp-diff__hunk-context` so the range reads as the quiet part. The header is a band with a rule under it, and a rule over it from the second hunk on.',
+                markup: `
+<pre class="kp-diff">
+<div class="kp-diff__hunk">@@ -4,3 +4,3 @@ <span class="kp-diff__hunk-context">[retention]</span></div>
+<span class="kp-diff__line" data-kind="same"><span class="kp-diff__number">4</span><span class="kp-diff__sign"> </span><span>keep_daily = 7</span></span>
+<span class="kp-diff__line" data-kind="removed"><span class="kp-diff__number">5</span><span class="kp-diff__sign">-</span><span>keep_weekly = 4</span></span>
+<span class="kp-diff__line" data-kind="added"><span class="kp-diff__number">5</span><span class="kp-diff__sign">+</span><span>keep_weekly = 8</span></span>
+<div class="kp-diff__hunk">@@ -20,2 +20,2 @@ <span class="kp-diff__hunk-context">[target]</span></div>
+<span class="kp-diff__line" data-kind="removed"><span class="kp-diff__number">20</span><span class="kp-diff__sign">-</span><span>path = /mnt/old</span></span>
+<span class="kp-diff__line" data-kind="added"><span class="kp-diff__number">20</span><span class="kp-diff__sign">+</span><span>path = /mnt/backup</span></span>
+</pre>
+`,
+            },
         ],
         variants: [
+            { name: '.kp-diff__hunk', what: 'The `@@` header row that opens a block of changes: a muted band with a rule under it, and a rule over it from the second hunk on. It wraps long headers instead of widening the block.' },
+            { name: '.kp-diff__hunk-context', what: 'Optional: wraps the text after the range (the function or section the hunk sits in) in the foreground colour. A header may be one text node without it.' },
             { name: 'same', what: 'Context: no tint, a blank sign, the line as it is.' },
             { name: 'added', what: 'A wash of the success colour behind the line, and a plus in the sign column.' },
             { name: 'removed', what: 'A wash of the destructive colour, and a minus.' },
@@ -1619,6 +1705,29 @@ export const DESCRIPTORS = [
 <div class="kp-toasts" role="status" aria-live="polite"></div>
 `,
             },
+            {
+                title: 'A toast that waits for the reader, and one that stays',
+                why: 'Three buttons call toast() from js/overlays.js. The first toast keeps its clock while the pointer is on it or focus is inside it (try resting the pointer on it) and leaves two seconds after both are gone; the second has a close button and the ordinary clock; the third is sticky: no clock, a close button, and Esc closes it from the keyboard.',
+                markup: `
+<div class="kp-row kp-gap-sm">
+<button type="button" class="kp-button" data-doc-toast="pause">Rest on it</button>
+<button type="button" class="kp-button" data-doc-toast="close">With a close button</button>
+<button type="button" class="kp-button kp-button--primary" data-doc-toast="sticky">Stays until closed</button>
+</div>
+`,
+                script: `
+import { toast } from '@kp-soft/themes/js/overlays';
+
+const shows = {
+    pause: () => toast('Saved: rest the pointer on this toast and it waits.', { linger: 1500 }),
+    close: () => toast('The export finished.', { close: true }),
+    sticky: () => toast('The server refused the file. Close this when you have read it.', { sticky: true, live: 'assertive' }),
+};
+for (const button of document.querySelectorAll('[data-doc-toast]')) {
+    button.addEventListener('click', () => shows[button.dataset.docToast]());
+}
+`,
+            },
         ],
         variants: [
             { name: '.kp-toasts', what: 'The stack: fixed at the trailing bottom corner, newest last, above every other layer.' },
@@ -1626,6 +1735,12 @@ export const DESCRIPTORS = [
             { name: '.kp-toast--success / --warning / --info / --error', what: 'A rule down the leading edge in the status colour. The words say it as well.' },
             { name: '.kp-toast__close', what: 'A dismiss control pushed to the trailing edge, for a toast that does not go by itself.' },
             { name: 'with an action', what: 'A toast can carry one control — an undo — and then it should stay long enough to be used.' },
+            { name: 'pause (default true)', what: 'While the pointer is on a toast or focus is inside it, its clock stops and the toast carries `data-kp-paused`; `pause: false` brings back the plain timer. A touch is not hovering. The region hears `kp-toast-pause` with `{ toast, paused }` each time it stops or starts again.' },
+            { name: 'linger', what: 'The milliseconds a toast has left once the pointer and the focus are both gone (`TOAST_LINGER_MS`, 2000 by default; per toast as `linger`).' },
+            { name: 'close', what: '`close: true` adds a close button at the toast’s end; the toast keeps its clock.' },
+            { name: 'sticky', what: '`sticky: true` is no clock plus a close button: the toast stays until it is closed. For an undo that needs a decision or an error that has to be read.' },
+            { name: 'Escape', what: 'Esc on a focused toast closes it, whether or not it has a close button.' },
+            { name: 'with a tab bar', what: 'The stack, and the back-to-top control, rise by the tab bar’s own height, so a toast never stands behind it on a phone.' },
             { name: 'pastel', what: 'In pastel a toast draws its own plate and pass under its words (no tape: paper in the hand), lands on the pass and leaves as that landing backwards; js/motion.js plays a toast’s arrival as its leave backwards. Each tone names its own paper.' },
         ],
         accessibility: [
@@ -2611,12 +2726,45 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
 </div>
 `,
             },
+            {
+                title: 'Full width, and counts that arrive later',
+                why: '`.kp-segmented--block` gives every segment the same width on a full-width control. While the group is `aria-busy="true"` the counts show as quiet placeholders that keep their place; `setSegmentedCounts` writes the numbers, and the group is released, so nothing moves. Press the button to load them again. The group also reports `kp-segmented-change` with `{ value, values, item }`.',
+                markup: `
+<div class="kp-segmented kp-segmented--block" id="doc-seg-load" data-kp-segmented="single" role="radiogroup" aria-label="Show" aria-busy="true">
+<button type="button" class="kp-segmented__item" data-value="all" role="radio" aria-checked="true"><span class="kp-segmented__label">All</span><span class="kp-segmented__count"></span></button>
+<button type="button" class="kp-segmented__item" data-value="running" role="radio" aria-checked="false"><span class="kp-segmented__label">Running</span><span class="kp-segmented__count"></span></button>
+<button type="button" class="kp-segmented__item" data-value="failed" role="radio" aria-checked="false"><span class="kp-segmented__label">Failed</span><span class="kp-segmented__count"></span></button>
+</div>
+<button type="button" class="kp-button kp-mt-sm" id="doc-seg-reload">Load the counts again</button>
+`,
+                script: `
+import { attachSegmented, setSegmentedCounts } from '@kp-soft/themes/js/segmented';
+
+const group = document.getElementById('doc-seg-load');
+attachSegmented(group.parentElement);
+const load = () => {
+    group.setAttribute('aria-busy', 'true');
+    setTimeout(() => {
+        setSegmentedCounts(group, { all: 48, running: 31, failed: 2 });
+        group.removeAttribute('aria-busy');
+    }, 1500);
+};
+document.getElementById('doc-seg-reload').addEventListener('click', load);
+load();
+`,
+            },
         ],
         variants: [
             { name: '.kp-segmented--chips', what: 'The same buttons as separate pills instead of a track; the chosen chip takes the primary colour.' },
             { name: '.kp-segmented__count', what: 'A number beside the label. While the group is `aria-busy="true"` it shows a placeholder, so nothing moves when the numbers arrive.' },
             { name: 'disabled', what: '`disabled` on an item, or `aria-disabled="true"` on the group, takes it out of the arrow keys and dims it.' },
             { name: 'overflow', what: 'When the segments are wider than the group, the group scrolls and the chosen segment is kept in view.' },
+            { name: '.kp-segmented--block', what: 'Every segment the same width, on a full-width control.' },
+            { name: 'data-kp-segmented-collapse="false"', what: 'In `multi`, turning every other value on is the same as none, so the group goes back to All. This keeps them on.' },
+            { name: 'data-kp-segmented-thumb / -glide / -overflow', what: 'Written by the script, never by you: the plate is placed, it glides only after its first placement, and the segments are wider than the group. The plate’s place is two custom properties on the group, which the theme moves in its own time.' },
+            { name: 'setSegmentedValues / getSegmentedValues / resetSegmented', what: 'Read the values that are on (empty is All), set them without an event (the address changed), or turn every value off and fire the event if anything was on.' },
+            { name: 'setSegmentedCounts / setSegmentedItems', what: 'Write the numbers beside the values (null empties one, a value not named keeps its number), or replace the items in place: the values still present stay on and the focus stays on its value.' },
+            { name: 'aria-busy="true"', what: 'On the group: the counts show a placeholder while their numbers load. Pressing is not blocked.' },
         ],
         accessibility: [
             'Built in — single is a `radiogroup` with `aria-checked`, multi is a group of toggle buttons with `aria-pressed`; one tab stop in, arrow keys within, Home and End jump.',
@@ -2651,6 +2799,70 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
 <ul class="kp-heat__legend"><li><span class="kp-heat__swatch" data-kp-tone="ok"></span> backed up</li><li><span class="kp-heat__swatch" data-kp-tone="bad"></span> missed</li></ul>
 `,
             },
+            {
+                title: 'A backups grid with a summary row, a picked night and the newest column on the end',
+                why: '`setHeat(el, spec)` writes the axis, the summary row (each cell filled from the bottom by its `share`) and the rows. Press a name to toggle it (`data-kp-heat-toggle`), press a cell to pin its night, and use the arrows, Page Up and Page Down. `data-kp-heat-latest="end"` says the newest column stands on the end edge: End also sends `kp-heat-page` with `direction: "latest"`, so a grid paged back to older nights comes back in the same press.',
+                markup: `
+<div class="kp-heat" id="doc-heat-backups" data-kp-heat data-kp-heat-toggle data-kp-heat-latest="end"></div>
+<ul class="kp-heat__legend"><li><span class="kp-heat__swatch" data-kp-tone="ok"></span> backed up</li><li><span class="kp-heat__swatch" data-kp-tone="warn"></span> some missed</li><li><span class="kp-heat__swatch" data-kp-tone="bad"></span> missed</li><li><span class="kp-heat__swatch" data-kp-tone="future"></span> not run yet</li></ul>
+`,
+                script: `
+import { attachHeats, setHeat } from '@kp-soft/themes/js/heat';
+
+const grid = document.getElementById('doc-heat-backups');
+attachHeats(grid.parentElement);
+const NIGHTS = 14;
+const STACKS = ['media', 'home', 'platform', 'backups'];
+const missed = (stack, night) => (stack === 'backups' && night === 5) || (stack === 'platform' && night === 9);
+const columns = Array.from({ length: NIGHTS }, (_, night) => ({ key: String(night), label: String(night + 1) }));
+const cellOf = (stack, night) =>
+    night === NIGHTS - 1
+        ? { tone: 'future', label: 'not run yet' }
+        : missed(stack, night)
+          ? { tone: 'bad', label: 'missed', tip: stack + ', night ' + (night + 1) + ': no snapshot.' }
+          : { tone: 'ok', label: 'backed up' };
+const rows = STACKS.map((stack) => ({ key: stack, label: stack, cells: columns.map((_, night) => cellOf(stack, night)) }));
+const summary = {
+    key: 'fleet',
+    label: 'Whole fleet',
+    cells: columns.map((_, night) => {
+        if (night === NIGHTS - 1) return { tone: 'future', label: 'not run yet' };
+        const ok = STACKS.filter((stack) => !missed(stack, night)).length;
+        return { tone: ok === STACKS.length ? 'ok' : 'warn', share: ok / STACKS.length, label: ok + ' of ' + STACKS.length + ' backed up' };
+    }),
+};
+setHeat(grid, { columns, summary, rows, label: 'Snapshots per stack per night', picked: String(NIGHTS - 2) });
+`,
+            },
+            {
+                title: 'Tone by value, and the three states',
+                why: 'The tone `level` darkens with a cell’s `level` (0 to 1): a count per day, a load per hour. The three states keep the grid’s footprint: `loading` shows skeleton cells in place (and the data table’s loading card over them), `empty` and `error` give one sentence of the grid’s minimum height (`message`). `skeleton` is the shape of a loading grid that has no data yet.',
+                markup: `
+<div class="kp-heat" id="doc-heat-level" data-kp-heat></div>
+<div class="kp-heat" id="doc-heat-loading" data-kp-heat></div>
+<div class="kp-heat" id="doc-heat-empty" data-kp-heat></div>
+<div class="kp-heat" id="doc-heat-error" data-kp-heat></div>
+`,
+                script: `
+import { attachHeats, setHeat } from '@kp-soft/themes/js/heat';
+
+attachHeats(document.getElementById('doc-heat-level').parentElement);
+const columns = Array.from({ length: 12 }, (_, hour) => ({ key: String(hour), label: String(hour * 2) }));
+const row = (key, seed) => ({
+    key,
+    label: key,
+    cells: columns.map((_, hour) => {
+        const level = Math.abs(Math.sin(hour * seed));
+        return { tone: 'level', level, label: Math.round(level * 100) + ' requests' };
+    }),
+});
+setHeat(document.getElementById('doc-heat-level'), { columns, rows: [row('web', 0.7), row('api', 1.3), row('mail', 2.1)], label: 'Requests per two hours' });
+const skeleton = { rows: 3, columns: 12 };
+setHeat(document.getElementById('doc-heat-loading'), { state: 'loading', skeleton, label: 'Requests, loading' });
+setHeat(document.getElementById('doc-heat-empty'), { state: 'empty', skeleton, message: 'No stack is shown: every stack is filtered out.', label: 'Requests, empty' });
+setHeat(document.getElementById('doc-heat-error'), { state: 'error', skeleton, message: 'The repositories could not be read. Try again in a minute.', label: 'Requests, failed' });
+`,
+            },
         ],
         variants: [
             { name: 'data-kp-tone', what: '`ok`, `warn`, `bad`, `muted`, `future`, `before`, `none`, `level` (the darker, the more) and `loading` (the theme’s own skeleton block).' },
@@ -2660,6 +2872,9 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
             { name: 'data-kp-minor', what: 'On an axis name that is not drawn (every third is); it stays in the tree for a screen reader.' },
             { name: 'data-kp-inert', what: 'A cell that cannot be pressed; `aria-disabled` goes with it.' },
             { name: 'data-kp-state', what: '`loading`, `empty` and `error` on the grid: loading keeps the cells in place, the others show one sentence of the grid’s minimum height.' },
+            { name: 'data-kp-heat-latest', what: 'Opt-in: `end` (or `start`, for a grid whose newest column comes first) says which edge the newest column stands on. The key that goes to that edge (End, or Home) still moves to the end of the row, and also sends `kp-heat-page` with `direction: "latest"`; with Ctrl it goes to that corner and sends it too.' },
+            { name: 'the busy card', what: 'While `loading`, the data table’s loading card (`js/busy-card.js`: the theme’s spinner and “Reading…”) stands centred over the cells (`.kp-heat__busy`), arriving and leaving as the table’s does; the cells are drawn once it has left.' },
+            { name: 'setHeat / setHeatPick / setHeatRows', what: 'Write the grid (keeping its columns, row heights, picked column and a focused cell’s place), pick a column by its key, and set which row names are pressed. A grid marked `data-kp-heat-owned` leaves the picked column and the pressed names to the page. `heatLoading`, `heatEmpty` and `heatFailed` are the default words.' },
         ],
         accessibility: [
             'Built in — a `grid` with row and column headers, one tab stop, arrow keys, Home and End, Ctrl with them for the corners; Page Up and Page Down send `kp-heat-page`, Enter and Space press a cell (`kp-heat-pick`), a pressed name sends `kp-heat-row`.',
@@ -2690,6 +2905,40 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
 </div>
 `,
             },
+            {
+                title: 'Who can reach whom, pinned by the arrow keys, and the three states',
+                why: '`setMatrix(el, spec)` takes the names and a `cell(row, column)` function: a tone, the words, a `ringed` red ring for traffic stopped on the way out, a `mark` outline for the cells a rule touches. Press a header to light its row or column; `data-kp-matrix-select="follow"` pins the cell the arrow keys land on and `kp-matrix-pick` reports it. `matrixSelf` and `matrixUnknown` are the words for a pair with itself and an unknown pair. Below, the loading, empty and failed matrix.',
+                markup: `
+<div class="kp-matrix" id="doc-matrix-live" data-kp-matrix data-kp-matrix-select="follow"></div>
+<div class="kp-matrix" id="doc-matrix-loading" data-kp-matrix></div>
+<div class="kp-matrix" id="doc-matrix-empty" data-kp-matrix></div>
+<div class="kp-matrix" id="doc-matrix-error" data-kp-matrix></div>
+`,
+                script: `
+import { attachMatrices, setMatrix } from '@kp-soft/themes/js/heat';
+
+attachMatrices(document.getElementById('doc-matrix-live').parentElement);
+const names = ['web', 'api', 'db', 'cache'].map((key) => ({ key, label: key }));
+const open = { 'web>api': 'HTTP', 'api>db': 'SQL', 'api>cache': 'cache' };
+setMatrix(document.getElementById('doc-matrix-live'), {
+    corner: 'from ↓ to →',
+    rows: names,
+    columns: names,
+    label: 'Which stack can reach which',
+    cell: (row, column) => {
+        if (row === column) return undefined;
+        const words = open[row + '>' + column];
+        if (words) return { tone: 'ok', text: words, label: words + ' is open', mark: row === 'api' };
+        return row === 'web' && column === 'db'
+            ? { tone: 'bad', label: 'blocked on the way out of web', ringed: true }
+            : { tone: 'muted', label: 'nothing open' };
+    },
+});
+setMatrix(document.getElementById('doc-matrix-loading'), { state: 'loading', skeleton: 3, label: 'Reachability, loading' });
+setMatrix(document.getElementById('doc-matrix-empty'), { state: 'empty', message: 'No stack is shown: every stack is filtered out.', label: 'Reachability, empty' });
+setMatrix(document.getElementById('doc-matrix-error'), { state: 'error', message: 'The firewall rules could not be read.', label: 'Reachability, failed' });
+`,
+            },
         ],
         variants: [
             { name: 'data-kp-tone', what: '`ok` (allowed), `warn` (mismatch), `bad` (blocked), `muted` (nothing open), `none` (unknown, inert), `self` (itself, inert) and `loading`.' },
@@ -2701,6 +2950,9 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
             { name: 'data-kp-inert', what: 'A cell that cannot be pressed (itself, unknown).' },
             { name: 'data-kp-ringed', what: 'See above: the ring on a cell.' },
             { name: 'data-kp-state', what: '`loading` keeps the shape with skeleton names and cells; `empty` and `error` show one sentence.' },
+            { name: 'the busy card', what: 'While `loading`, the data table’s loading card (`js/busy-card.js`) stands centred over the cells (`.kp-matrix__busy`), over the skeleton names and plates, and the matrix is drawn once it has left.' },
+            { name: 'setMatrix / setMatrixLit / setMatrixPick', what: 'Write the matrix, light some headers (`kp-matrix-light` reports the change a person made) and pin a cell. `data-kp-matrix-owned` leaves the lit and pinned state to the page.' },
+            { name: '.kp-heat__swatch--plate', what: 'A legend swatch drawn as a matrix plate, for a legend under a matrix.' },
         ],
         accessibility: [
             'Built in — a `grid` with row and column headers and one tab stop; arrows move between the cells that can be pressed and wrap round; Escape turns the lit names off (`kp-matrix-light`); a pinned cell sends `kp-matrix-pick`.',
@@ -2757,9 +3009,63 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
         examples: [
             {
                 title: 'An agenda for the next seven days',
-                why: 'The markup is the empty frame; the script builds the days and the pills from the items the page hands over.',
+                why: 'The markup is the empty frame; the script builds the days and the pills from the items the page hands over. Two series, a ringed next run, a muted one that is off, a dashed reference and a legend: the page’s part is printed below.',
                 markup: `
-<section class="kp-week" data-kp-week data-kp-week-nav data-kp-week-start="2026-10-16" aria-label="Runs in the next 7 days"></section>
+<section class="kp-week" data-kp-week data-kp-week-nav aria-label="Runs in the next 7 days"></section>
+`,
+                script: `
+import { attachWeeks, setWeekEvents, setWeekLegend } from '@kp-soft/themes/js/week';
+
+const agenda = document.querySelector('[data-kp-week]');
+attachWeeks(agenda.parentElement);
+const at = (days, hours, minutes) => {
+    const moment = new Date();
+    moment.setDate(moment.getDate() + days);
+    moment.setHours(hours, minutes, 0, 0);
+    return moment.getTime();
+};
+const events = [];
+for (let day = 0; day < 7; day += 1) {
+    events.push({ id: 'backup-' + day, start: at(day, 2, 0), label: 'Backup photos', series: 1, detail: 'Nightly, keeps 14 copies' });
+    events.push({ id: 'host-' + day, start: at(day, 3, 30), label: 'Host round', series: 3, state: 'reference' });
+    if (day % 3 === 0) events.push({ id: 'update-' + day, start: at(day, 4, 30), label: 'Update images', series: 2 });
+}
+events.push({ id: 'report', start: at(1, 7, 30), label: 'Mail the report', series: 2, state: 'next' });
+events.push({ id: 'scrub', start: at(2, 13, 0), label: 'Scrub the pool', series: 4, state: 'off' });
+setWeekEvents(agenda, events);
+setWeekLegend(agenda, [
+    { series: 1, label: 'Nightly round' },
+    { series: 2, label: 'Updates' },
+    { series: 4, label: 'Housekeeping' },
+]);
+`,
+            },
+            {
+                title: 'On a phone: the next eight items',
+                why: '`data-kp-week-upcoming="8"` makes the agenda, once it is narrower than 40rem, a list of the next eight items instead of seven day rows: one row per item, its day on the left (named once for a run of the same day, Today for today) and its own pill on the right. An item that is off, skipped or only a reference is not one, and a passed item leaves the list on the next tick. `data-kp-week-upcoming-label` names the list and `data-kp-week-upcoming-empty` is what it says when nothing is left. The box here is 26rem wide, so it shows what a phone shows.',
+                markup: `
+<div style="max-inline-size: 26rem">
+<section class="kp-week" data-kp-week data-kp-week-upcoming="8" data-kp-week-upcoming-label="The next runs" data-kp-week-upcoming-empty="Nothing is scheduled." aria-label="Runs in the next 7 days"></section>
+</div>
+`,
+                script: `
+import { attachWeeks, setWeekEvents } from '@kp-soft/themes/js/week';
+
+const agenda = document.querySelector('[data-kp-week-upcoming]');
+attachWeeks(agenda.parentElement);
+const at = (days, hours, minutes) => {
+    const moment = new Date();
+    moment.setDate(moment.getDate() + days);
+    moment.setHours(hours, minutes, 0, 0);
+    return moment.getTime();
+};
+const events = [];
+for (let day = 0; day < 7; day += 1) {
+    events.push({ id: 'backup-' + day, start: at(day, 2, 0), label: 'Backup photos', series: 1 });
+    if (day % 2 === 0) events.push({ id: 'report-' + day, start: at(day, 18, 30), label: 'Mail the report', series: 2 });
+}
+events.push({ id: 'off', start: at(1, 12, 0), label: 'Scrub the pool', series: 4, state: 'off' });
+setWeekEvents(agenda, events);
 `,
             },
         ],
@@ -2773,6 +3079,10 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
             { name: 'data-kp-series', what: 'On a pill: 1 to 5, the colour from `--chart-1` to `--chart-5`; the label carries the meaning.' },
             { name: 'data-kp-past', what: 'On a pill whose time has passed; it is muted.' },
             { name: 'data-kp-overflow', what: 'On a pill folded into the `+N` menu of a full column.' },
+            { name: 'setWeekEvents / setWeekState / setWeekStart / setWeekLegend', what: 'The page’s four calls: the items (repainted in place by id, so a pill keeps its focus), the state of the whole (`loading` draws the data table’s busy card over the empty days; `empty`, `error` with its words), a new first day, and the legend under the agenda.' },
+            { name: 'data-kp-week-upcoming', what: 'Opt-in: below 40rem the agenda lists the next items (the number given) instead of its day rows, one row per item.' },
+            { name: 'data-kp-week-upcoming-label / -empty', what: 'The list’s name for a screen reader, and its sentence when nothing is still to come (else the dictionary’s `weekEmpty`).' },
+            { name: '.kp-week__upcoming / __next', what: 'The list and one row of it. A row carries `data-kp-day-start` when it opens its day and `data-kp-today` for today; `.kp-week__next--empty` and `.kp-week__none` are the sentence of an empty list.' },
         ],
         accessibility: [
             'Built in — one tab stop: arrow up and down move within a day, left and right to the neighbouring day (the item nearest in time), Home and End to the day’s first and last, Enter and Space open the item.',
@@ -2793,9 +3103,76 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
         examples: [
             {
                 title: 'Operations of the last six hours',
-                why: 'The markup is the empty frame with its ranges; the script builds the axis, the lanes and the bars from the runs the page hands over.',
+                why: 'The markup is the empty frame with its ranges; the script builds the axis, the lanes and the bars from the runs the page hands over: a finished run, a failed one, one still running and one queued. Drag across the plot to select a range.',
                 markup: `
 <section class="kp-gantt" data-kp-gantt data-kp-gantt-ranges="1h 6h 24h 7d" data-kp-gantt-range="6h" data-kp-gantt-ghosts="2 1" aria-label="Operations of the last 6 hours"></section>
+`,
+                script: `
+import { attachGantts, setGanttRuns } from '@kp-soft/themes/js/gantt';
+
+const MIN = 60_000;
+const now = Date.now();
+const ago = (minutes) => now - minutes * MIN;
+const timeline = document.querySelector('[data-kp-gantt]');
+attachGantts(timeline.parentElement);
+setGanttRuns(
+    timeline,
+    [
+        { id: 'backup', lane: 'nightly', label: 'Backup photos', start: ago(300), end: ago(240), state: 'ok' },
+        { id: 'prune', lane: 'nightly', label: 'Prune snapshots', start: ago(220), end: ago(190), state: 'failed', detail: 'The target disk was full.' },
+        { id: 'update', lane: 'updates', label: 'Update images', start: ago(150), end: ago(95), state: 'ok' },
+        { id: 'verify', lane: 'updates', label: 'Verify backups', start: ago(40), state: 'running' },
+        { id: 'next', lane: 'nightly', label: 'Backup photos', start: ago(8), state: 'queued' },
+    ],
+    [
+        { id: 'nightly', label: 'Nightly round' },
+        { id: 'updates', label: 'Updates' },
+    ],
+);
+`,
+            },
+            {
+                title: 'A week of runs, by series, with the days on the axis',
+                why: '`data-kp-gantt-days` turns every day named on the axis into a button that selects that whole day, with the chip, Zoom and Clear; `kp-gantt-select` then carries `source: "day"` and the `day`. A finished run’s `series` (1 to 5) inks it in the chart colours instead of the success colour, and `setGanttLegend` names the series after the states; a failed run keeps its own look, so the state still reads first.',
+                markup: `
+<section class="kp-gantt" data-kp-gantt data-kp-gantt-days data-kp-gantt-ranges="24h 7d" data-kp-gantt-range="7d" data-kp-gantt-ghosts="2 1" aria-label="Operations of the last 7 days"></section>
+`,
+                script: `
+import { attachGantts, setGanttLegend, setGanttRuns } from '@kp-soft/themes/js/gantt';
+
+const HOUR = 3_600_000;
+const midnight = new Date();
+midnight.setHours(0, 0, 0, 0);
+const runs = [];
+for (let day = 6; day >= 0; day -= 1) {
+    const start = midnight.getTime() - day * 24 * HOUR;
+    runs.push({ id: 'backup-' + day, lane: 'nightly', label: 'Backup photos', start: start + 2 * HOUR, end: start + 3 * HOUR, state: day === 3 ? 'failed' : 'ok', series: 1 });
+    if (day % 3 === 0) runs.push({ id: 'update-' + day, lane: 'updates', label: 'Update images', start: start + 4.5 * HOUR, end: start + 6 * HOUR, state: 'ok', series: 2 });
+}
+const el = document.querySelector('[data-kp-gantt-days]');
+attachGantts(el.parentElement);
+setGanttRuns(el, runs, [
+    { id: 'nightly', label: 'Nightly round' },
+    { id: 'updates', label: 'Updates' },
+]);
+setGanttLegend(el, [
+    { series: 1, label: 'Nightly round' },
+    { series: 2, label: 'Updates' },
+]);
+`,
+            },
+            {
+                title: 'While it loads',
+                why: '`setGanttState(el, "loading")` draws the lanes’ ghosts at their final height and stands the data table’s own loading card (the theme’s spinner and “Reading the history”) over them, the toolbar, axis and lane names beside it; the runs are drawn once the card has left. `error` and `empty` put their words over the plot.',
+                markup: `
+<section class="kp-gantt" data-kp-gantt data-kp-gantt-ranges="1h 6h 24h 7d" data-kp-gantt-ghosts="2 1" data-kp-doc-loading aria-label="Operations, loading"></section>
+`,
+                script: `
+import { attachGantts, setGanttState } from '@kp-soft/themes/js/gantt';
+
+const timeline = document.querySelector('[data-kp-doc-loading]');
+attachGantts(timeline.parentElement);
+setGanttState(timeline, 'loading');
 `,
             },
         ],
@@ -2812,6 +3189,11 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
             { name: 'data-kp-active', what: 'On the selection chip while a range is selected.' },
             { name: 'data-kp-out', what: 'On the now-line when now lies outside the window; it is hidden.' },
             { name: 'data-kp-gantt-edge', what: 'On an axis label too close to the end edge for its name: an hour label stands before its rule and ends at it in a register that flips it; a day button stands against the end, whole.' },
+            { name: 'data-kp-gantt-days', what: 'Opt-in: each day named on the axis is a button (one tab stop, arrows, Home and End between them) that selects that whole day, 00:00 to 00:00 in the zone, as a brush would. It is `aria-pressed` while it is the selection and lifts it when pressed again; a window too short to hold a midnight names no day. `data-kp-gantt-crowded` marks an axis whose day names would touch, so they thin out.' },
+            { name: 'series', what: 'On a run (`GanttRun.series`, 1 to 5): a finished run is inked in `--chart-1` to `--chart-5` instead of the success colour. Failed, running and queued keep their own look. `setGanttLegend(el, [{ series, label }])` names the series after the states; none takes them away.' },
+            { name: 'setGanttRuns / setGanttState / setGanttWindow / setGanttSelection', what: 'The page’s calls: the lanes and runs (repainted in place by id), the state of the whole, the window (`{ span, live, to }`, no event) and a selected range (`{ from, to }` or null).' },
+            { name: 'the busy card', what: 'While loading, the data table’s loading card (`js/busy-card.js`) stands centred over the lanes, flat over a short area, and the runs are drawn once it has left.' },
+            { name: 'a register’s repairs', what: 'A register may hang the end-edge axis label inside the plot (the flip knob) and give an empty or failed timeline’s sentence a plate of its own (the state-ground knob); both are in the knobs below, and formal leaves them as they were approved.' },
         ],
         accessibility: [
             'Built in — one tab stop: left and right move along a lane, up and down to the nearest bar of the neighbouring lane, Home and End to the lane’s first and last, Enter and Space open the run; range, Live, Zoom and Clear are buttons.',
@@ -2843,12 +3225,52 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
 </div>
 `,
             },
+            {
+                title: 'The active row, a reserved height and a narrow column',
+                why: 'The page keeps the filters in step: `setToolbarActive(toolbar, filters)` draws one removable tag each and Clear all, and the page turns a filter off on `kp-toolbar-remove` (`{ id, label }`) or all of them on `kp-toolbar-clear`. `data-kp-toolbar-reserve` keeps the active row’s height while it is empty, so the list under the toolbar never moves; `.kp-toolbar--stacked` is the one-column toolbar on demand, for a narrow card or a side column on a wide window.',
+                markup: `
+<div class="kp-toolbar kp-toolbar--stacked" id="doc-tb-live" data-kp-toolbar data-kp-toolbar-reserve role="group" aria-label="Containers" style="max-inline-size: 24rem">
+<div class="kp-toolbar__search"><input type="search" class="kp-field__input kp-toolbar__input" placeholder="Search containers" aria-label="Search containers" /></div>
+<div class="kp-toolbar__filters"><div class="kp-toolbar__group" role="group" aria-labelledby="doc-tb-live-status"><b class="kp-toolbar__label" id="doc-tb-live-status">Status</b>
+<div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="Status"><button type="button" class="kp-segmented__item" data-value="all" data-kp-segmented-all aria-pressed="true"><span class="kp-segmented__label">All</span></button><button type="button" class="kp-segmented__item" data-value="running" aria-pressed="false"><span class="kp-segmented__label">Running</span></button><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="false"><span class="kp-segmented__label">Stopped</span></button></div>
+</div></div>
+<div class="kp-toolbar__state">3 containers</div>
+<div class="kp-toolbar__active" hidden></div>
+</div>
+`,
+                script: `
+import { attachSegmented, getSegmentedValues, resetSegmented, setSegmentedValues } from '@kp-soft/themes/js/segmented';
+import { attachToolbars, setToolbarActive } from '@kp-soft/themes/js/toolbar';
+
+const toolbar = document.getElementById('doc-tb-live');
+const chips = toolbar.querySelector('[data-kp-segmented]');
+attachSegmented(toolbar);
+attachToolbars(toolbar.parentElement);
+const draw = (values) => setToolbarActive(toolbar, values.map((value) => ({ id: value, label: 'Status: ' + value })));
+chips.addEventListener('kp-segmented-change', (event) => draw(event.detail.values));
+toolbar.addEventListener('kp-toolbar-remove', (event) => {
+    const values = getSegmentedValues(chips).filter((value) => value !== event.detail.id);
+    setSegmentedValues(chips, values);
+    draw(values);
+});
+toolbar.addEventListener('kp-toolbar-clear', () => {
+    resetSegmented(chips);
+    draw([]);
+});
+`,
+            },
         ],
         variants: [
             { name: '.kp-toolbar__search', what: 'The search zone: the field and, beside it, the key cap that focuses it.' },
             { name: '.kp-toolbar__filters', what: 'The filter zone: any number of `.kp-toolbar__group`, each a label over a segmented control.' },
             { name: '.kp-toolbar__state', what: 'A slot for a count, a follow switch or a table/cards choice.' },
             { name: '.kp-toolbar__active', what: 'The filters that are on, as the data table’s removable tags and a Clear all button. Hidden when none is on.' },
+            { name: 'data-kp-toolbar-key', what: 'The key that focuses the search from anywhere on the page that is not a field (`/`); the key cap in the markup (`.kp-toolbar__key`) says so.' },
+            { name: 'data-kp-toolbar-reserve', what: 'The active row keeps its height while it is empty, so the list under the toolbar does not move when a filter is turned on.' },
+            { name: '.kp-toolbar--stacked', what: 'The one-column toolbar on demand, for a narrow card or a side column on a wide window, where the window’s own width cannot know the room. The filters scroll sideways instead of wrapping.' },
+            { name: 'data-kp-toolbar-clear', what: 'On the Clear all button; the script makes it once and keeps it, so a press in flight never meets a button replaced under it.' },
+            { name: 'setToolbarActive(toolbar, filters, { clearAll, removeGlyph })', what: 'Draws the filters that are on (`{ id, label }` each); `clearAll: false` leaves out Clear all, `removeGlyph` changes the cross. `toolbarSearch(toolbar)` returns the search input.' },
+            { name: 'toolbarShowingOnly / toolbarClearAll', what: 'The word before the tags and the Clear all label, in the dictionary, so `setStrings()` translates them.' },
         ],
         accessibility: [
             'Built in — the toolbar is a named group; Escape in the search clears it and fires `input`, so the page filters again.',
@@ -2875,6 +3297,22 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
 <span class="kp-keys__item"><span class="kp-keys__caps"><kbd class="kp-kbd">↑</kbd><kbd class="kp-kbd">↓</kbd></span> move</span>
 <span class="kp-keys__item"><kbd class="kp-kbd" data-kp-key="mod">Ctrl</kbd><kbd class="kp-kbd">K</kbd> palette</span>
 </div>
+`,
+            },
+            {
+                title: 'Written from pairs, at the end of its row',
+                why: '`setKeys(el, pairs)` takes `[keys, words]` pairs (a key, or an array of keys pressed together) and writes the spans; `Mod` becomes ⌘ on a Mac and Ctrl elsewhere. The group is named by the dictionary’s `keysLabel` when it has no name of its own.',
+                markup: `
+<div class="kp-keys kp-keys--end" id="doc-keys-set"></div>
+`,
+                script: `
+import { setKeys } from '@kp-soft/themes/js/keys';
+
+setKeys(document.getElementById('doc-keys-set'), [
+    ['/', 'search containers'],
+    [['↑', '↓'], 'move'],
+    [['Mod', 'K'], 'palette'],
+]);
 `,
             },
         ],
@@ -2907,6 +3345,27 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
 <button type="button" class="kp-action kp-action--destructive"><strong class="kp-action__title">Delete all snapshots</strong><span class="kp-action__mark" aria-hidden="true"></span><span class="kp-action__text">Frees 48 GB. This cannot be undone.</span></button>
 <button type="button" class="kp-action" disabled><strong class="kp-action__title">Check for updates</strong><span class="kp-action__mark" aria-hidden="true"></span><span class="kp-action__text">Not while a backup is running.</span></button>
 </div>
+`,
+            },
+            {
+                title: 'A tile that works for a while',
+                why: '`setActionBusy(tile, true)` puts `aria-busy="true"` on the tile, the theme’s spinner in its mark and a hidden “Working…” after its title, and fires `kp-action-busy` with `{ tile, busy }`. While it is busy a press does nothing, not even the page’s own handler. The mark column is always there, so the spinner arriving moves nothing.',
+                markup: `
+<div class="kp-actions" id="doc-tiles-busy" role="group" aria-label="System actions">
+<button type="button" class="kp-action" id="doc-tile-backup"><strong class="kp-action__title">Back up now</strong><span class="kp-action__mark" aria-hidden="true"></span><span class="kp-action__text">Copies every volume to the backup disk. Press it and it is busy for three seconds.</span></button>
+<button type="button" class="kp-action kp-action--destructive" aria-busy="true"><strong class="kp-action__title">Delete all snapshots</strong><span class="kp-action__mark" aria-hidden="true"></span><span class="kp-action__text">Always busy here, to show a busy tile of the destructive kind.</span></button>
+</div>
+`,
+                script: `
+import { attachActionTiles, setActionBusy } from '@kp-soft/themes/js/action-tiles';
+
+const tiles = document.getElementById('doc-tiles-busy');
+attachActionTiles(tiles.parentElement);
+document.getElementById('doc-tile-backup').addEventListener('click', (event) => {
+    const tile = event.currentTarget;
+    setActionBusy(tile, true);
+    setTimeout(() => setActionBusy(tile, false), 3000);
+});
 `,
             },
         ],
@@ -2945,12 +3404,43 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
 </ul>
 `,
             },
+            {
+                title: 'Built from rows, with a Retry that works',
+                why: '`buildStatusList(rows, { label, retry, single })` builds the list; `setStatus(list, id, { state, label, detail })` changes one row. Pressing Retry on the failed row fires `kp-status-retry` with `{ item, id }` and changes nothing else: the page decides what a retry is, here `loading`, then `ok` two seconds later. `kp-status-change` fires on every change after attach, and the hidden status region says it once.',
+                markup: `
+<div id="doc-status-host"></div>
+`,
+                script: `
+import { attachStatusLists, buildStatusList, setStatus } from '@kp-soft/themes/js/statusrow';
+
+const host = document.getElementById('doc-status-host');
+const list = buildStatusList(
+    [
+        { id: 'jellyfin', label: 'jellyfin', state: 'ok', detail: 'read' },
+        { id: 'vault', label: 'vaultwarden', state: 'loading', detail: 'reading' },
+        { id: 'traefik', label: 'traefik', state: 'failed', detail: 'timed out after 20 s' },
+        { id: 'grafana', label: 'grafana', state: 'empty', detail: 'no backups by design' },
+    ],
+    { label: 'Backups per stack', single: true },
+);
+host.append(list);
+attachStatusLists(host);
+setTimeout(() => setStatus(list, 'vault', { state: 'ok', detail: 'read' }), 2500);
+list.addEventListener('kp-status-retry', (event) => {
+    const id = event.detail.id;
+    setStatus(list, id, { state: 'loading', detail: 'reading' });
+    setTimeout(() => setStatus(list, id, { state: 'ok', detail: 'read' }), 2000);
+});
+`,
+            },
         ],
         variants: [
             { name: 'data-state', what: '`ok` (a disc with a tick), `loading` (the theme’s spinner), `failed` (a disc with a cross, a red edge and a Retry), `empty` (a dashed ring and a dashed edge).' },
             { name: 'data-kp-status-id', what: 'Names a row for `setStatus(list, id, { state, label, detail })`.' },
             { name: 'data-kp-status-retry="false"', what: 'On the list: no Retry button on failed rows.' },
             { name: '.kp-statuslist--rows', what: 'One column instead of a grid of columns of at least 16rem.' },
+            { name: 'buildStatusList / setStatus / attachStatusLists', what: 'Build the list from rows `{ id, label, state, detail }`, change one row, and attach the spoken parts and the Retry. `kp-status-retry` is `{ item, id }`, `kp-status-change` is `{ item, id, state, previous }`.' },
+            { name: 'statusOk / statusLoading / statusFailed / statusEmpty / statusRetry', what: 'The state words and the Retry label, in the dictionary; `statusRetryLabel` names a Retry after its row, and `statusAnnounce` and `statusAnnounceMany` are the announcements (more than three changes in one tick become one summary).' },
         ],
         accessibility: [
             'Built in — each row reads “name, state”, a loading row has `aria-busy`, and a change is announced once through a hidden status region; more than three changes in one tick become one summary.',
@@ -2980,12 +3470,50 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
 </div>
 `,
             },
+            {
+                title: 'Made from items, with a colour and an identity pattern, and counts that arrive',
+                why: '`setFacetItems` reconciles the rows by value, in place. A row’s `swatch` is a colour and its `pattern` a seed (a name): a 5 by 5 pattern, the same for the same name wherever it is drawn (`identityCells(seed)`), is laid over the square, so two sources are told apart by more than a hue. `aria-busy="true"` shows the counts as quiet bars until `setFacetCounts` writes them. `kp-facet-change` carries `{ group, values, source, value }`; the line under the list prints it.',
+                markup: `
+<div class="kp-facets" id="doc-facets-live" data-kp-facets data-kp-facets-all="Everything" role="group" aria-label="Source" aria-busy="true">
+<ul class="kp-facets__list"></ul>
+<p class="kp-facets__empty" hidden>No sources yet.</p>
+</div>
+<p class="kp-text-muted" id="doc-facets-out" aria-live="polite">Showing everything.</p>
+`,
+                script: `
+import { attachFacets, setFacetCounts, setFacetItems } from '@kp-soft/themes/js/facets';
+
+const group = document.getElementById('doc-facets-live');
+attachFacets(group.parentElement);
+const hue = (name) => [...name].reduce((sum, ch) => sum + ch.charCodeAt(0), 0) % 360;
+setFacetItems(
+    group,
+    ['Host', 'jellyfin', 'traefik', 'vaultwarden'].map((name) => ({
+        value: name,
+        label: name,
+        swatch: 'oklch(0.62 0.15 ' + hue(name) + ')',
+        pattern: name,
+    })),
+);
+setTimeout(() => {
+    setFacetCounts(group, { Host: 214, jellyfin: 96, traefik: 31, vaultwarden: 10 });
+    group.removeAttribute('aria-busy');
+}, 1200);
+group.addEventListener('kp-facet-change', (event) => {
+    const { values, source, value } = event.detail;
+    document.getElementById('doc-facets-out').textContent = 'Showing ' + values.join(', ') + ' (' + source + (value ? ', ' + value : '') + ').';
+});
+`,
+            },
         ],
         variants: [
             { name: 'data-kp-facets-all', what: 'The Everything row; its checkbox is mixed while only some rows are on, and pressing it turns every row on.' },
             { name: 'aria-busy="true"', what: 'On the group: the counts show as quiet bars that keep their place until `setFacetCounts` writes them.' },
             { name: '.kp-facets--row', what: 'The rows side by side as bordered pills, scrolling sideways, for a phone.' },
             { name: '.kp-facet__swatch', what: 'An optional small square before the name; its colour is a custom property you set on it.' },
+            { name: 'FacetItem.pattern / data-kp-facet-pattern', what: 'A seed (a name) for an identity pattern over the swatch: `identityCells(seed)` makes a 5 by 5 grid mirrored about its middle column, the same for the same name everywhere; `.kp-facet__pattern` is the drawing. An empty seed takes it away. The pattern’s size and ink are in the knobs.' },
+            { name: 'setFacetItems / setFacetCounts / setFacetValues / getFacetValues', what: 'Reconcile the rows by value in place, write the counts, set the values that are on without an event, and read them. `kp-facet-change` fires for a person’s choice only: `source` is `toggle`, `only` or `all`.' },
+            { name: 'facetOnly / facetAll / facetShowingOnly / facetShowingAll', what: 'The words (“only”, “Everything”, “Showing only Host”, “Showing everything”), in the dictionary; the “only” label and its aria name are `facetOnly` and `facetOnlyLabel`.' },
             { name: 'data-kp-facet-all and only', what: 'The “only” button is shown when the pointer is on the row or focus is in it, and always on a device that cannot hover.' },
         ],
         accessibility: [
@@ -3015,11 +3543,53 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
 </ol>
 `,
             },
+            {
+                title: 'Built from rows, and run live',
+                why: 'The five states in one list, built by `buildSteplist` from rows (an `id`, a `title`, a `note`, a `state`, a `time`) and then driven by `setStep`. Each step the button moves announces itself once in the status region, and `kp-steplist-step` fires on the list with `{ item, id, state, previous }`. The step ids are the `data-kp-step-id` the module writes.',
+                markup: `
+<div id="doc-steps" class="kp-stack"></div>
+<button type="button" class="kp-button" id="doc-steps-run">Run it again</button>
+`,
+                script: `
+import { buildSteplist, setStep, attachSteplists } from '@kp-soft/themes/js/steplist';
+
+const host = document.getElementById('doc-steps');
+const list = buildSteplist(
+    [
+        { id: 'pull', title: 'Pull the images', note: 'Fetches what changed', state: 'done', time: '4 s' },
+        { id: 'stop', title: 'Stop the stack', note: 'Waits for the containers', state: 'done', time: '2 s' },
+        { id: 'migrate', title: 'Migrate the data', note: 'Nothing to migrate', state: 'skipped' },
+        { id: 'start', title: 'Start the stack', note: 'The disk was full', state: 'failed', time: '9 s' },
+        { id: 'check', title: 'Check it answers', note: 'Waits for the health check', state: 'pending' },
+    ],
+    { label: 'Update progress' },
+);
+host.append(list);
+attachSteplists(host);
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+document.getElementById('doc-steps-run').addEventListener('click', async (event) => {
+    event.currentTarget.disabled = true;
+    for (const id of ['pull', 'stop', 'migrate', 'start', 'check']) setStep(list, id, { state: 'pending', time: '' });
+    for (const id of ['pull', 'stop', 'start', 'check']) {
+        setStep(list, id, { state: 'running' });
+        await sleep(900);
+        setStep(list, id, { state: 'done', time: '1 s' });
+    }
+    setStep(list, 'migrate', { state: 'skipped' });
+    event.currentTarget.disabled = false;
+});
+`,
+            },
         ],
         variants: [
             { name: 'data-state', what: '`pending`, `running`, `done`, `failed` or `skipped`: the mark, the colour and the word follow it.' },
             { name: '.kp-steplist__time', what: 'How long the step took, as the page prints it.' },
             { name: '.kp-steplist__note', what: 'The one-line description under the title.' },
+            { name: 'buildSteplist(rows, { label })', what: 'Builds the `ol` from rows `{ id, title, note, state, time }`; attach it afterwards. `data-kp-step-id` carries each id.' },
+            { name: 'setStep(list, id, change)', what: 'Changes one step (`state`, `title`, `note`, `time`) and says so once in the status region; the id is `data-kp-step-id` or the step’s index.' },
+            { name: 'the mark', what: 'Drawn from `data-state`: the theme’s spinner while running, and a glyph for done, failed and skipped (the glyph tokens are in the knobs). It is never the only carrier: the state word is there too.' },
+            { name: 'the words', what: '`stepPending`, `stepRunning`, `stepDone`, `stepFailed`, `stepSkipped` and the announcement `stepAnnounce(title, state)` are in the dictionary, so `setStrings()` translates them.' },
         ],
         accessibility: [
             'Built in — each step reads “title, state”, the running one carries `aria-current="step"`, and a change is announced once through a hidden status region (a burst in one tick is one announcement).',
@@ -3046,6 +3616,30 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
 <span popover="auto" id="doc-tooltip" role="tooltip" class="kp-popover kp-tooltip" style="position-anchor: --doc-tooltip">An optional stylesheet that changes the texture of a theme without changing its colours.</span>
 `,
             },
+            {
+                title: 'The hover card: one card for the whole page',
+                why: '`attachHoverCards(root, options)` listens on the root, not on the anchors, so an anchor made later works at once. The first cell’s words are in `data-kp-hovercard`; the second has none, so `fill(anchor, card)` supplies them as the card opens (return a string, nodes or null). The third opens after 800 ms (`data-kp-open-delay`) and ignores Escape (`data-kp-close-on-escape="false"`). Rest the pointer on a cell, or Tab to it: the card stays while the pointer is on it and goes on Escape. `kp-hovercard` is fired on the anchor with `{ open, card, anchor }`.',
+                markup: `
+<table class="kp-table" id="doc-hovercards"><thead><tr><th scope="col">Stack</th><th scope="col">State</th></tr></thead>
+<tbody>
+<tr><td>media</td><td tabindex="0" data-kp-hovercard="Last backup 02:14, 3 hours ago">healthy</td></tr>
+<tr><td>network</td><td tabindex="0" data-kp-hovercard data-doc-fill="network">warning</td></tr>
+<tr><td>vault</td><td tabindex="0" data-kp-hovercard="Slow to answer. The card opens late and Escape does not close it." data-kp-open-delay="800" data-kp-close-on-escape="false">slow</td></tr>
+</tbody></table>
+<p class="kp-text-muted" id="doc-hovercard-out">No card has opened yet.</p>
+`,
+                script: `
+import { attachHoverCards } from '@kp-soft/themes/js/hovercard';
+
+const table = document.getElementById('doc-hovercards');
+attachHoverCards(table.parentElement, {
+    fill: (anchor) => (anchor.dataset.docFill ? 'Two hosts did not answer in the last ten minutes.' : null),
+});
+table.addEventListener('kp-hovercard', (event) => {
+    document.getElementById('doc-hovercard-out').textContent = event.detail.open ? 'Open for ' + event.detail.anchor.textContent + '.' : 'Closed.';
+});
+`,
+            },
         ],
         variants: [
             { name: '.kp-tooltip', what: 'The popover surface at tooltip size: smaller text and a maximum width, so it wraps instead of running across the page.' },
@@ -3053,6 +3647,8 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
             { name: 'interactive', what: 'A tooltip can be made to take the pointer, for one that contains a link; by default it does not, so it cannot get in the way.' },
             { name: 'Escape', what: 'Closes it, like every other layer in the package.' },
             { name: 'data-kp-hovercard', what: 'The hover card: one tooltip for a whole page, filled when it opens (`attachHoverCards`), for anchors a page rebuilds or whose words are only known when the pointer arrives. The attribute holds the words, or a `fill(anchor, card)` callback supplies them; it is hoverable, dismissible and ignores touch.' },
+            { name: 'attachHoverCards options', what: '`{ selector, fill, openDelayMs, closeDelayMs, closeOnEscape, cardClass }` (300 ms and 100 ms, Escape on). Per anchor: `data-kp-open-delay`, `data-kp-close-delay` and `data-kp-close-on-escape="false"`. The attribute’s own text wins over `fill`.' },
+            { name: 'hover card handle', what: '`attachHoverCards` returns the detach function with `{ card, open(anchor), hide(), refresh(), anchor() }` on it: `refresh()` fills the open card again when its data changed under the pointer. The card is `.kp-popover.kp-tooltip[data-kp-hovercard-card]` in the body, in the top layer, and its widest is a knob.' },
             { name: 'pastel', what: 'In pastel a tooltip hangs in its holder, whose ::after draws its pass by anchor positioning; it lands small on the pass and leaves as that backwards.' },
         ],
         accessibility: [
@@ -3130,14 +3726,95 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
 />
 `,
             },
+            {
+                title: 'A bar that folds what does not fit, with a separator',
+                why: '`data-kp-nav-fold` on the nav folds only the links that do not fit, from the end, behind a More menu (the menu button’s own: its keys, its placement, its theme); a link that is folded stays in its list item, out of the flow and the focus order, and its menu entry clicks the real link. `data-kp-nav-keep` on an item keeps it in the bar wherever it is. `li.kp-nav__sep` is a rule between two groups of links: it stands only between shown links, and the More menu draws it as its own separator. Drag the corner of the box to narrow the bar.',
+                markup: `
+<div style="inline-size: 28rem; max-inline-size: 100%; overflow: hidden; resize: horizontal; border: 1px dashed var(--border); padding: 0.25rem">
+<div class="kp-nav-wrap">
+<nav class="kp-nav" data-kp-nav-fold aria-label="Main, folding">
+<span class="kp-nav__brand">kp</span>
+<ul class="kp-nav__links">
+<li><a class="kp-nav__link" href="#nav-bar" aria-current="page">Overview</a></li>
+<li><a class="kp-nav__link" href="#example">Backups</a></li>
+<li class="kp-nav__sep" aria-hidden="true"></li>
+<li><a class="kp-nav__link" href="#variants">Network</a></li>
+<li><a class="kp-nav__link" href="#variants">Applications</a></li>
+<li data-kp-nav-keep><a class="kp-nav__link" href="#variants">Alerts</a></li>
+<li class="kp-nav__sep" aria-hidden="true"></li>
+<li><a class="kp-nav__link" href="#variants">Settings</a></li>
+</ul>
+</nav>
+</div>
+</div>
+`,
+            },
+            {
+                title: 'A bottom tab bar, with a count on one tab',
+                why: 'On a phone the bar sits at the bottom of the window; here `kp-tabbar--static` leaves it in the flow and `kp-tabbar--always` shows it at every width, so it can be looked at. The icon, the label and the optional `.kp-badge` count are the tab’s; the More tab opens a drawer through `data-kp-dialog`. `setTabbarBadge`, `setTabbarCurrent` and `setTabbarBusy` change a tab from the page: press the buttons below.',
+                markup: `
+<nav class="kp-tabbar kp-tabbar--always kp-tabbar--static" id="doc-tabbar" aria-label="Areas">
+<a class="kp-tabbar__tab" href="#home" data-kp-tab="home" aria-current="page"><span class="kp-tabbar__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h7v7H3z" /><path d="M14 3h7v7h-7z" /><path d="M3 14h7v7H3z" /><path d="M14 14h7v7h-7z" /></svg></span><span class="kp-tabbar__label">Home</span></a>
+<a class="kp-tabbar__tab" href="#inbox" data-kp-tab="inbox"><span class="kp-tabbar__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13h4l2 3h4l2-3h4" /><path d="M5 5h14l1 8v6H4v-6z" /></svg></span><span class="kp-tabbar__label">Needs you</span><span class="kp-badge kp-tabbar__badge">3</span></a>
+<a class="kp-tabbar__tab" href="#activity" data-kp-tab="activity"><span class="kp-tabbar__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h4l3-7 4 14 3-7h4" /></svg></span><span class="kp-tabbar__label">Activity</span></a>
+<button type="button" class="kp-tabbar__tab kp-tabbar__tab--more" data-kp-dialog="doc-tabbar-more"><span class="kp-tabbar__icon kp-tabbar__icon--more" aria-hidden="true"></span><span class="kp-tabbar__label">More</span></button>
+</nav>
+<dialog class="kp-drawer kp-dialog" id="doc-tabbar-more" aria-labelledby="doc-tabbar-more-title">
+<header class="kp-drawer__head">
+<h2 class="kp-dialog__title" id="doc-tabbar-more-title">More</h2>
+<button type="button" class="kp-icon-button kp-dialog__close" data-kp-dialog-close aria-label="Close">×</button>
+<p class="kp-drawer__desc">The areas you need less often.</p>
+</header>
+<div class="kp-drawer__body">
+<div class="kp-menu kp-menu--rich" role="group" aria-label="More">
+<a class="kp-menu__item" href="#backups"><span class="kp-menu__label">Backups</span><span class="kp-menu__hint">Snapshots, restores and the nightly run</span></a>
+<a class="kp-menu__item" href="#system"><span class="kp-menu__label">System</span><span class="kp-menu__hint">The host, its disks and updates</span></a>
+</div>
+</div>
+</dialog>
+<div class="kp-row kp-gap-sm kp-mt-sm">
+<button type="button" class="kp-button kp-button--sm" data-doc-tab="badge">Count 1534</button>
+<button type="button" class="kp-button kp-button--sm" data-doc-tab="current">Current: Activity</button>
+<button type="button" class="kp-button kp-button--sm" data-doc-tab="busy">Busy</button>
+</div>
+`,
+                script: `
+import { attachTabbars, setTabbarBadge, setTabbarBusy, setTabbarCurrent } from '@kp-soft/themes/js/tabbar';
+
+const bar = document.getElementById('doc-tabbar');
+attachTabbars(bar.parentElement);
+const tab = (id) => bar.querySelector('[data-kp-tab="' + id + '"]');
+const actions = {
+    badge: () => setTabbarBadge(tab('inbox'), 1534),
+    current: () => setTabbarCurrent(bar, 'activity'),
+    busy: () => {
+        setTabbarBusy(tab('activity'), true);
+        setTimeout(() => setTabbarBusy(tab('activity'), false), 2500);
+    },
+};
+for (const button of document.querySelectorAll('[data-doc-tab]')) {
+    button.addEventListener('click', () => actions[button.dataset.docTab]());
+}
+`,
+            },
         ],
         variants: [
+            { name: 'data-kp-nav-fold', what: 'Opt-in on the nav: the links that do not fit are folded from the end behind a More menu (`attachNavFolds`; `NavBar` takes `fold`). The bar stays one row before and after, the fit is measured at the links’ natural widths so it cannot oscillate, and below the bar’s own phone breakpoint, with a toggle present, it stands down.' },
+            { name: 'data-kp-nav-keep', what: 'On a list item: it stays in the bar wherever it is, and the fold takes the others.' },
+            { name: 'kp-nav-fold', what: 'Fired on the nav, bubbling, when the folded set changes: `{ folded, items }`. `planFold()` is the arithmetic on its own, `foldNav()` folds one bar.' },
+            { name: 'fold marks', what: 'Written by the script: `data-kp-nav-fold-ready` once the bar is fitted, `data-kp-nav-folding` while anything is folded, `data-kp-nav-folded` on each folded item, `data-kp-nav-more-current` when the current page is behind More (and `aria-current` on its button) and `data-kp-nav-more-alert` when a `.kp-badge` count is (a dot on the button, announced).' },
+            { name: '--kp-nav-more-dot', what: 'The colour of the dot on the More button when a count is behind it. A list item with a dropdown or a mega menu becomes a named group in the More menu: its heading, then its links.' },
+            { name: 'navMore / navMoreMenu / navMoreAlert / navMoreUnavailable', what: 'The More button’s words in the dictionary: its label, the menu’s name, the alert announcement and the entry of a link that cannot be followed.' },
+            { name: '.kp-nav__sep', what: '`<li class="kp-nav__sep" aria-hidden="true">`: a rule between two groups of links, never a target. A separator stands only between two links that are shown, so none dangles before More or at the start; in the More menu the links after it start a group below the menu’s own `.kp-menu__separator` (`data-kp-nav-sep`). `planSeparators()` and `NAV_SEP` are the arithmetic. Its inset and colour are knobs.' },
             { name: '.kp-tabbar', what: 'The bottom tab bar for phone widths: a `nav` of `.kp-tabbar__tab` links (an icon and a label each, a `.kp-badge` count on the one that needs the reader) and a More tab that opens a drawer through `data-kp-dialog`. It publishes its height on the root while it is on the screen, so a toast and the back-to-top control clear it; `setTabbarBadge`, `setTabbarCurrent` and `setTabbarBusy` change a tab from the page.' },
             { name: '.kp-nav__brand', what: 'The name at the leading edge, in bold. As a link it keeps its look and takes the page’s ordinary link underline, which is what says it is one.' },
             { name: '--kp-nav-close-time', what: 'For a theme that plays a close for the phone panel or a hover dropdown (cyberpunk): its length. The module holds the panel or the item open for that long while the close plays, then lets go. Unset, the phone panel closes after the theme\u2019s fold time, or 300 ms; the dropdowns close at once.' },
             { name: '.kp-nav__links', what: 'The row itself. It wraps rather than scrolling, so a narrow window gets two rows instead of a hidden third link.' },
             { name: '.kp-nav-wrap', what: 'The box the bar measures itself against. In a narrow one the bar takes a smaller inset, and the width that decides is the wrapper’s rather than the window’s.' },
             { name: '.kp-nav-wrap--sticky', what: 'The shrinking header: the bar sticks to the top of the box that scrolls it, and once that box has scrolled further than the bar is tall (or `data-kp-nav-sticky-after` pixels, if more) js/auto.js sets `data-kp-nav-compact` and the bar lowers its block padding (the knobs table names how far), gliding only when the reader has not asked for less motion. The module hands the bar’s height to the scrolling box’s scroll padding, so anchors and focused elements land below the bar; a scroll offset the page sets itself still wins. In React it is the `sticky` prop, with `stickyAfter`.' },
+            { name: '.kp-tabbar modifiers', what: 'The bar shows below 40rem of window; `kp-tabbar--wide` below 60rem, where a dashboard’s top bar has no room for its links either; `kp-tabbar--always` at every width; `kp-tabbar--static` leaves it in the flow instead of fixed to the window’s bottom edge.' },
+            { name: '.kp-tabbar parts', what: '`.kp-tabbar__tab` (a link or a button), `__icon` (`__icon--more` is the More tab’s), `__label` and `__badge`, the `.kp-badge` count on the tab that needs the reader. `setTabbarBadge(tab, count)` writes every digit of the count (never `99+`), hidden at 0 or null; `setTabbarCurrent(bar, id)` moves `aria-current` to the tab with that `data-kp-tab`; `setTabbarBusy(tab, busy)` puts one tab to wait.' },
+            { name: '--kp-tabbar-height', what: 'Written on the root by `js/tabbar.js` while the bar is on the screen (0px when it is not): the page keeps its last line, a toast and the back-to-top control clear of it. The bar’s own sizes (tab height, icon, padding, text size, the safe-area inset, its time and layer) are in the knobs below.' },
             { name: 'current page', what: 'Weight and a thicker underline, with the state on the link so it is announced as well as drawn.' },
             { name: '.kp-nav__search', what: 'The slot at the bar’s far end for the command palette’s trigger — a `.kp-nav__search-trigger` button with `data-kp-palette-open`, which reads as a quiet search box and prints the palette’s key. The command palette page shows it working; in React it is the `search` prop, filled with a PaletteTrigger.' },
             { name: 'data-kp-nav-menu-open', what: 'On a list item with a `.kp-nav__menu`: that dropdown is shown open, exactly where hover and focus open it. For a page that shows it open, or a script that opens it on a press; taking the attribute away closes it again.' },
@@ -3551,6 +4228,7 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
             },
         ],
         variants: [
+            { name: 'with a tab bar', what: 'The control, like the toast stack, rises by the bottom tab bar’s own height while the bar is on the screen, so it never stands behind it on a phone.' },
             { name: 'data-kp-to-top-after', what: 'How far down it appears, in pixels. Default 400.' },
             { name: 'the box it scrolls', what: 'The control scrolls the nearest scrolling box it sits in (a dashboard\u2019s main column, a dialog\u2019s stage), and measures its threshold against that box; with no such box it is the window, as before.' },
             { name: 'data-kp-to-top-target', what: 'A selector for where the focus should land instead of the top of the document. The focus moves without scrolling either way, so naming a landmark cannot undo the journey.' },
@@ -3958,6 +4636,7 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
             },
         ],
         variants: [
+            { name: '--kp-menu-anchor-x', what: 'Written by `js/menu-button.js` on the open menu: the button’s centre in pixels from the menu’s left edge, kept 14 px inside it, and not written when the menu hangs above its button. Every theme receives it; only deco reads it, to start its inlay under the button.' },
             { name: '.kp-menu-button', what: 'The wrapper, `[data-kp-menu-button]`: a button, then its `[role="menu"]`. The menu hangs under the button at its end edge.' },
             { name: '.kp-menu--rich', what: 'The menu itself, a `.kp-menu`: wide enough for a label over a hint, and past its maximum height it scrolls inside itself.' },
             { name: '.kp-menu__group, __heading', what: 'A group of entries and its heading in small muted capitals, which names the `role="group"`. A menu of one entry, or a nameless group, has no heading.' },

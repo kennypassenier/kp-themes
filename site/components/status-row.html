@@ -209,6 +209,57 @@
     &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-statusrow&quot;</span> <span class="kp-code__keyword">data-state</span><span class="kp-code__string">=&quot;empty&quot;</span> <span class="kp-code__keyword">data-kp-status-id</span><span class="kp-code__string">=&quot;grafana&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-statusrow__mark&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-statusrow__body&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-statusrow__label&quot;</span>&gt;grafana&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-statusrow__detail&quot;</span>&gt;no backups by design&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
 &lt;/<span class="kp-code__keyword">ul</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Built from rows, with a Retry that works</figcaption>
+                        <p class="kp-text-muted">`buildStatusList(rows, { label, retry, single })` builds the list; `setStatus(list, id, { state, label, detail })` changes one row. Pressing Retry on the failed row fires `kp-status-retry` with `{ item, id }` and changes nothing else: the page decides what a retry is, here `loading`, then `ok` two seconds later. `kp-status-change` fires on every change after attach, and the hidden status region says it once.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div id="doc-status-host"></div>
+                            <script type="module">
+import { attachStatusLists, buildStatusList, setStatus } from '../../js/statusrow.js';
+
+const host = document.getElementById('doc-status-host');
+const list = buildStatusList(
+    [
+        { id: 'jellyfin', label: 'jellyfin', state: 'ok', detail: 'read' },
+        { id: 'vault', label: 'vaultwarden', state: 'loading', detail: 'reading' },
+        { id: 'traefik', label: 'traefik', state: 'failed', detail: 'timed out after 20 s' },
+        { id: 'grafana', label: 'grafana', state: 'empty', detail: 'no backups by design' },
+    ],
+    { label: 'Backups per stack', single: true },
+);
+host.append(list);
+attachStatusLists(host);
+setTimeout(() => setStatus(list, 'vault', { state: 'ok', detail: 'read' }), 2500);
+list.addEventListener('kp-status-retry', (event) => {
+    const id = event.detail.id;
+    setStatus(list, id, { state: 'loading', detail: 'reading' });
+    setTimeout(() => setStatus(list, id, { state: 'ok', detail: 'read' }), 2000);
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-status-host&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachStatusLists, buildStatusList, setStatus } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/statusrow'</span>;
+
+<span class="kp-code__keyword">const</span> host = document.getElementById(<span class="kp-code__string">'doc-status-host'</span>);
+<span class="kp-code__keyword">const</span> list = buildStatusList(
+    [
+        { id: <span class="kp-code__string">'jellyfin'</span>, label: <span class="kp-code__string">'jellyfin'</span>, state: <span class="kp-code__string">'ok'</span>, detail: <span class="kp-code__string">'read'</span> },
+        { id: <span class="kp-code__string">'vault'</span>, label: <span class="kp-code__string">'vaultwarden'</span>, state: <span class="kp-code__string">'loading'</span>, detail: <span class="kp-code__string">'reading'</span> },
+        { id: <span class="kp-code__string">'traefik'</span>, label: <span class="kp-code__string">'traefik'</span>, state: <span class="kp-code__string">'failed'</span>, detail: <span class="kp-code__string">'timed out after 20 s'</span> },
+        { id: <span class="kp-code__string">'grafana'</span>, label: <span class="kp-code__string">'grafana'</span>, state: <span class="kp-code__string">'empty'</span>, detail: <span class="kp-code__string">'no backups by design'</span> },
+    ],
+    { label: <span class="kp-code__string">'Backups per stack'</span>, single: <span class="kp-code__keyword">true</span> },
+);
+host.append(list);
+attachStatusLists(host);
+setTimeout(() =&gt; setStatus(list, <span class="kp-code__string">'vault'</span>, { state: <span class="kp-code__string">'ok'</span>, detail: <span class="kp-code__string">'read'</span> }), <span class="kp-code__string">2500</span>);
+list.addEventListener(<span class="kp-code__string">'kp-status-retry'</span>, (event) =&gt; {
+    <span class="kp-code__keyword">const</span> id = event.detail.id;
+    setStatus(list, id, { state: <span class="kp-code__string">'loading'</span>, detail: <span class="kp-code__string">'reading'</span> });
+    setTimeout(() =&gt; setStatus(list, id, { state: <span class="kp-code__string">'ok'</span>, detail: <span class="kp-code__string">'read'</span> }), <span class="kp-code__string">2000</span>);
+});</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -276,6 +327,8 @@
                             <tr><td><code>data-kp-status-id</code></td><td>Names a row for `setStatus(list, id, { state, label, detail })`.</td></tr>
                             <tr><td><code>data-kp-status-retry=&quot;false&quot;</code></td><td>On the list: no Retry button on failed rows.</td></tr>
                             <tr><td><code>.kp-statuslist--rows</code></td><td>One column instead of a grid of columns of at least 16rem.</td></tr>
+                            <tr><td><code>buildStatusList / setStatus / attachStatusLists</code></td><td>Build the list from rows `{ id, label, state, detail }`, change one row, and attach the spoken parts and the Retry. `kp-status-retry` is `{ item, id }`, `kp-status-change` is `{ item, id, state, previous }`.</td></tr>
+                            <tr><td><code>statusOk / statusLoading / statusFailed / statusEmpty / statusRetry</code></td><td>The state words and the Retry label, in the dictionary; `statusRetryLabel` names a Retry after its row, and `statusAnnounce` and `statusAnnounceMany` are the announcements (more than three changes in one tick become one summary).</td></tr>
                     </tbody></table></div>
                 </section>
                 </div>

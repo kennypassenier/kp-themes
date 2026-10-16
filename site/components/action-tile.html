@@ -209,6 +209,41 @@
     &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-action&quot;</span> <span class="kp-code__keyword">disabled</span>&gt;&lt;<span class="kp-code__keyword">strong</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-action__title&quot;</span>&gt;Check for updates&lt;/<span class="kp-code__keyword">strong</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-action__mark&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-action__text&quot;</span>&gt;Not while a backup is running.&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A tile that works for a while</figcaption>
+                        <p class="kp-text-muted">`setActionBusy(tile, true)` puts `aria-busy=&quot;true&quot;` on the tile, the theme’s spinner in its mark and a hidden “Working…” after its title, and fires `kp-action-busy` with `{ tile, busy }`. While it is busy a press does nothing, not even the page’s own handler. The mark column is always there, so the spinner arriving moves nothing.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-actions" id="doc-tiles-busy" role="group" aria-label="System actions">
+    <button type="button" class="kp-action" id="doc-tile-backup"><strong class="kp-action__title">Back up now</strong><span class="kp-action__mark" aria-hidden="true"></span><span class="kp-action__text">Copies every volume to the backup disk. Press it and it is busy for three seconds.</span></button>
+    <button type="button" class="kp-action kp-action--destructive" aria-busy="true"><strong class="kp-action__title">Delete all snapshots</strong><span class="kp-action__mark" aria-hidden="true"></span><span class="kp-action__text">Always busy here, to show a busy tile of the destructive kind.</span></button>
+</div>
+                            <script type="module">
+import { attachActionTiles, setActionBusy } from '../../js/action-tiles.js';
+
+const tiles = document.getElementById('doc-tiles-busy');
+attachActionTiles(tiles.parentElement);
+document.getElementById('doc-tile-backup').addEventListener('click', (event) => {
+    const tile = event.currentTarget;
+    setActionBusy(tile, true);
+    setTimeout(() => setActionBusy(tile, false), 3000);
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-actions&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-tiles-busy&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;System actions&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-action&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-tile-backup&quot;</span>&gt;&lt;<span class="kp-code__keyword">strong</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-action__title&quot;</span>&gt;Back up now&lt;/<span class="kp-code__keyword">strong</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-action__mark&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-action__text&quot;</span>&gt;Copies every volume to the backup disk. Press it and it is busy for three seconds.&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-action kp-action--destructive&quot;</span> <span class="kp-code__keyword">aria-busy</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;<span class="kp-code__keyword">strong</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-action__title&quot;</span>&gt;Delete all snapshots&lt;/<span class="kp-code__keyword">strong</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-action__mark&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-action__text&quot;</span>&gt;Always busy here, to show a busy tile of the destructive kind.&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachActionTiles, setActionBusy } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/action-tiles'</span>;
+
+<span class="kp-code__keyword">const</span> tiles = document.getElementById(<span class="kp-code__string">'doc-tiles-busy'</span>);
+attachActionTiles(tiles.parentElement);
+document.getElementById(<span class="kp-code__string">'doc-tile-backup'</span>).addEventListener(<span class="kp-code__string">'click'</span>, (event) =&gt; {
+    <span class="kp-code__keyword">const</span> tile = event.currentTarget;
+    setActionBusy(tile, <span class="kp-code__keyword">true</span>);
+    setTimeout(() =&gt; setActionBusy(tile, <span class="kp-code__keyword">false</span>), <span class="kp-code__string">3000</span>);
+});</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>

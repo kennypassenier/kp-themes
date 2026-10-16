@@ -217,6 +217,120 @@
     &lt;/<span class="kp-code__keyword">div</span>&gt;
     &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-heat__legend&quot;</span>&gt;&lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-heat__swatch&quot;</span> <span class="kp-code__keyword">data-kp-tone</span><span class="kp-code__string">=&quot;ok&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt; backed up&lt;/<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-heat__swatch&quot;</span> <span class="kp-code__keyword">data-kp-tone</span><span class="kp-code__string">=&quot;bad&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt; missed&lt;/<span class="kp-code__keyword">li</span>&gt;&lt;/<span class="kp-code__keyword">ul</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A backups grid with a summary row, a picked night and the newest column on the end</figcaption>
+                        <p class="kp-text-muted">`setHeat(el, spec)` writes the axis, the summary row (each cell filled from the bottom by its `share`) and the rows. Press a name to toggle it (`data-kp-heat-toggle`), press a cell to pin its night, and use the arrows, Page Up and Page Down. `data-kp-heat-latest=&quot;end&quot;` says the newest column stands on the end edge: End also sends `kp-heat-page` with `direction: &quot;latest&quot;`, so a grid paged back to older nights comes back in the same press.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-heat" id="doc-heat-backups" data-kp-heat data-kp-heat-toggle data-kp-heat-latest="end"></div>
+<ul class="kp-heat__legend"><li><span class="kp-heat__swatch" data-kp-tone="ok"></span> backed up</li><li><span class="kp-heat__swatch" data-kp-tone="warn"></span> some missed</li><li><span class="kp-heat__swatch" data-kp-tone="bad"></span> missed</li><li><span class="kp-heat__swatch" data-kp-tone="future"></span> not run yet</li></ul>
+                            <script type="module">
+import { attachHeats, setHeat } from '../../js/heat.js';
+
+const grid = document.getElementById('doc-heat-backups');
+attachHeats(grid.parentElement);
+const NIGHTS = 14;
+const STACKS = ['media', 'home', 'platform', 'backups'];
+const missed = (stack, night) => (stack === 'backups' && night === 5) || (stack === 'platform' && night === 9);
+const columns = Array.from({ length: NIGHTS }, (_, night) => ({ key: String(night), label: String(night + 1) }));
+const cellOf = (stack, night) =>
+    night === NIGHTS - 1
+        ? { tone: 'future', label: 'not run yet' }
+        : missed(stack, night)
+          ? { tone: 'bad', label: 'missed', tip: stack + ', night ' + (night + 1) + ': no snapshot.' }
+          : { tone: 'ok', label: 'backed up' };
+const rows = STACKS.map((stack) => ({ key: stack, label: stack, cells: columns.map((_, night) => cellOf(stack, night)) }));
+const summary = {
+    key: 'fleet',
+    label: 'Whole fleet',
+    cells: columns.map((_, night) => {
+        if (night === NIGHTS - 1) return { tone: 'future', label: 'not run yet' };
+        const ok = STACKS.filter((stack) => !missed(stack, night)).length;
+        return { tone: ok === STACKS.length ? 'ok' : 'warn', share: ok / STACKS.length, label: ok + ' of ' + STACKS.length + ' backed up' };
+    }),
+};
+setHeat(grid, { columns, summary, rows, label: 'Snapshots per stack per night', picked: String(NIGHTS - 2) });
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-heat&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-heat-backups&quot;</span> <span class="kp-code__keyword">data-kp-heat</span> <span class="kp-code__keyword">data-kp-heat-toggle</span> <span class="kp-code__keyword">data-kp-heat-latest</span><span class="kp-code__string">=&quot;end&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-heat__legend&quot;</span>&gt;&lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-heat__swatch&quot;</span> <span class="kp-code__keyword">data-kp-tone</span><span class="kp-code__string">=&quot;ok&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt; backed up&lt;/<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-heat__swatch&quot;</span> <span class="kp-code__keyword">data-kp-tone</span><span class="kp-code__string">=&quot;warn&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt; some missed&lt;/<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-heat__swatch&quot;</span> <span class="kp-code__keyword">data-kp-tone</span><span class="kp-code__string">=&quot;bad&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt; missed&lt;/<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">li</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-heat__swatch&quot;</span> <span class="kp-code__keyword">data-kp-tone</span><span class="kp-code__string">=&quot;future&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt; not run yet&lt;/<span class="kp-code__keyword">li</span>&gt;&lt;/<span class="kp-code__keyword">ul</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachHeats, setHeat } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/heat'</span>;
+
+<span class="kp-code__keyword">const</span> grid = document.getElementById(<span class="kp-code__string">'doc-heat-backups'</span>);
+attachHeats(grid.parentElement);
+<span class="kp-code__keyword">const</span> NIGHTS = <span class="kp-code__string">14</span>;
+<span class="kp-code__keyword">const</span> STACKS = [<span class="kp-code__string">'media'</span>, <span class="kp-code__string">'home'</span>, <span class="kp-code__string">'platform'</span>, <span class="kp-code__string">'backups'</span>];
+<span class="kp-code__keyword">const</span> missed = (stack, night) =&gt; (stack === <span class="kp-code__string">'backups'</span> &amp;&amp; night === <span class="kp-code__string">5</span>) || (stack === <span class="kp-code__string">'platform'</span> &amp;&amp; night === <span class="kp-code__string">9</span>);
+<span class="kp-code__keyword">const</span> columns = Array.<span class="kp-code__keyword">from</span>({ length: NIGHTS }, (_, night) =&gt; ({ key: String(night), label: String(night + <span class="kp-code__string">1</span>) }));
+<span class="kp-code__keyword">const</span> cellOf = (stack, night) =&gt;
+    night === NIGHTS - <span class="kp-code__string">1</span>
+        ? { tone: <span class="kp-code__string">'future'</span>, label: <span class="kp-code__string">'not run yet'</span> }
+        : missed(stack, night)
+          ? { tone: <span class="kp-code__string">'bad'</span>, label: <span class="kp-code__string">'missed'</span>, tip: stack + <span class="kp-code__string">', night '</span> + (night + <span class="kp-code__string">1</span>) + <span class="kp-code__string">': no snapshot.'</span> }
+          : { tone: <span class="kp-code__string">'ok'</span>, label: <span class="kp-code__string">'backed up'</span> };
+<span class="kp-code__keyword">const</span> rows = STACKS.map((stack) =&gt; ({ key: stack, label: stack, cells: columns.map((_, night) =&gt; cellOf(stack, night)) }));
+<span class="kp-code__keyword">const</span> summary = {
+    key: <span class="kp-code__string">'fleet'</span>,
+    label: <span class="kp-code__string">'Whole fleet'</span>,
+    cells: columns.map((_, night) =&gt; {
+        <span class="kp-code__keyword">if</span> (night === NIGHTS - <span class="kp-code__string">1</span>) <span class="kp-code__keyword">return</span> { tone: <span class="kp-code__string">'future'</span>, label: <span class="kp-code__string">'not run yet'</span> };
+        <span class="kp-code__keyword">const</span> ok = STACKS.filter((stack) =&gt; !missed(stack, night)).length;
+        <span class="kp-code__keyword">return</span> { tone: ok === STACKS.length ? <span class="kp-code__string">'ok'</span> : <span class="kp-code__string">'warn'</span>, share: ok / STACKS.length, label: ok + <span class="kp-code__string">' of '</span> + STACKS.length + <span class="kp-code__string">' backed up'</span> };
+    }),
+};
+setHeat(grid, { columns, summary, rows, label: <span class="kp-code__string">'Snapshots per stack per night'</span>, picked: String(NIGHTS - <span class="kp-code__string">2</span>) });</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Tone by value, and the three states</figcaption>
+                        <p class="kp-text-muted">The tone `level` darkens with a cell’s `level` (0 to 1): a count per day, a load per hour. The three states keep the grid’s footprint: `loading` shows skeleton cells in place (and the data table’s loading card over them), `empty` and `error` give one sentence of the grid’s minimum height (`message`). `skeleton` is the shape of a loading grid that has no data yet.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-heat" id="doc-heat-level" data-kp-heat></div>
+<div class="kp-heat" id="doc-heat-loading" data-kp-heat></div>
+<div class="kp-heat" id="doc-heat-empty" data-kp-heat></div>
+<div class="kp-heat" id="doc-heat-error" data-kp-heat></div>
+                            <script type="module">
+import { attachHeats, setHeat } from '../../js/heat.js';
+
+attachHeats(document.getElementById('doc-heat-level').parentElement);
+const columns = Array.from({ length: 12 }, (_, hour) => ({ key: String(hour), label: String(hour * 2) }));
+const row = (key, seed) => ({
+    key,
+    label: key,
+    cells: columns.map((_, hour) => {
+        const level = Math.abs(Math.sin(hour * seed));
+        return { tone: 'level', level, label: Math.round(level * 100) + ' requests' };
+    }),
+});
+setHeat(document.getElementById('doc-heat-level'), { columns, rows: [row('web', 0.7), row('api', 1.3), row('mail', 2.1)], label: 'Requests per two hours' });
+const skeleton = { rows: 3, columns: 12 };
+setHeat(document.getElementById('doc-heat-loading'), { state: 'loading', skeleton, label: 'Requests, loading' });
+setHeat(document.getElementById('doc-heat-empty'), { state: 'empty', skeleton, message: 'No stack is shown: every stack is filtered out.', label: 'Requests, empty' });
+setHeat(document.getElementById('doc-heat-error'), { state: 'error', skeleton, message: 'The repositories could not be read. Try again in a minute.', label: 'Requests, failed' });
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-heat&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-heat-level&quot;</span> <span class="kp-code__keyword">data-kp-heat</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-heat&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-heat-loading&quot;</span> <span class="kp-code__keyword">data-kp-heat</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-heat&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-heat-empty&quot;</span> <span class="kp-code__keyword">data-kp-heat</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-heat&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-heat-error&quot;</span> <span class="kp-code__keyword">data-kp-heat</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachHeats, setHeat } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/heat'</span>;
+
+attachHeats(document.getElementById(<span class="kp-code__string">'doc-heat-level'</span>).parentElement);
+<span class="kp-code__keyword">const</span> columns = Array.<span class="kp-code__keyword">from</span>({ length: <span class="kp-code__string">12</span> }, (_, hour) =&gt; ({ key: String(hour), label: String(hour * <span class="kp-code__string">2</span>) }));
+<span class="kp-code__keyword">const</span> row = (key, seed) =&gt; ({
+    key,
+    label: key,
+    cells: columns.map((_, hour) =&gt; {
+        <span class="kp-code__keyword">const</span> level = Math.abs(Math.sin(hour * seed));
+        <span class="kp-code__keyword">return</span> { tone: <span class="kp-code__string">'level'</span>, level, label: Math.round(level * <span class="kp-code__string">100</span>) + <span class="kp-code__string">' requests'</span> };
+    }),
+});
+setHeat(document.getElementById(<span class="kp-code__string">'doc-heat-level'</span>), { columns, rows: [row(<span class="kp-code__string">'web'</span>, <span class="kp-code__string">0.7</span>), row(<span class="kp-code__string">'api'</span>, <span class="kp-code__string">1.3</span>), row(<span class="kp-code__string">'mail'</span>, <span class="kp-code__string">2.1</span>)], label: <span class="kp-code__string">'Requests per two hours'</span> });
+<span class="kp-code__keyword">const</span> skeleton = { rows: <span class="kp-code__string">3</span>, columns: <span class="kp-code__string">12</span> };
+setHeat(document.getElementById(<span class="kp-code__string">'doc-heat-loading'</span>), { state: <span class="kp-code__string">'loading'</span>, skeleton, label: <span class="kp-code__string">'Requests, loading'</span> });
+setHeat(document.getElementById(<span class="kp-code__string">'doc-heat-empty'</span>), { state: <span class="kp-code__string">'empty'</span>, skeleton, message: <span class="kp-code__string">'No stack is shown: every stack is filtered out.'</span>, label: <span class="kp-code__string">'Requests, empty'</span> });
+setHeat(document.getElementById(<span class="kp-code__string">'doc-heat-error'</span>), { state: <span class="kp-code__string">'error'</span>, skeleton, message: <span class="kp-code__string">'The repositories could not be read. Try again in a minute.'</span>, label: <span class="kp-code__string">'Requests, failed'</span> });</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -301,6 +415,9 @@
                             <tr><td><code>data-kp-minor</code></td><td>On an axis name that is not drawn (every third is); it stays in the tree for a screen reader.</td></tr>
                             <tr><td><code>data-kp-inert</code></td><td>A cell that cannot be pressed; `aria-disabled` goes with it.</td></tr>
                             <tr><td><code>data-kp-state</code></td><td>`loading`, `empty` and `error` on the grid: loading keeps the cells in place, the others show one sentence of the grid’s minimum height.</td></tr>
+                            <tr><td><code>data-kp-heat-latest</code></td><td>Opt-in: `end` (or `start`, for a grid whose newest column comes first) says which edge the newest column stands on. The key that goes to that edge (End, or Home) still moves to the end of the row, and also sends `kp-heat-page` with `direction: &quot;latest&quot;`; with Ctrl it goes to that corner and sends it too.</td></tr>
+                            <tr><td><code>the busy card</code></td><td>While `loading`, the data table’s loading card (`js/busy-card.js`: the theme’s spinner and “Reading…”) stands centred over the cells (`.kp-heat__busy`), arriving and leaving as the table’s does; the cells are drawn once it has left.</td></tr>
+                            <tr><td><code>setHeat / setHeatPick / setHeatRows</code></td><td>Write the grid (keeping its columns, row heights, picked column and a focused cell’s place), pick a column by its key, and set which row names are pressed. A grid marked `data-kp-heat-owned` leaves the picked column and the pressed names to the page. `heatLoading`, `heatEmpty` and `heatFailed` are the default words.</td></tr>
                     </tbody></table></div>
                 </section>
                 </div>
