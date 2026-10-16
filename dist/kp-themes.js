@@ -3044,6 +3044,7 @@ var init_effects = __esm({
       "kp-sig-synthwave-bulb": { durationMs: 900, cycles: Infinity, property: "background-color", luminanceSteps: [] },
       "kp-sig-synthwave-chase": { durationMs: 900, cycles: Infinity, property: "background-position", luminanceSteps: [] },
       "kp-sig-synthwave-lane": { durationMs: 600, cycles: Infinity, property: "transform", luminanceSteps: [] },
+      "kp-sig-pastel-tape-drift": { durationMs: 600, cycles: Infinity, property: "background-position", luminanceSteps: [] },
       "kp-sig-dark-run": { durationMs: 2400, cycles: Infinity, property: "background-position", luminanceSteps: [] },
       "kp-sig-dark-bars": { durationMs: 2400, cycles: Infinity, property: "--kp-sig-dk-ph", luminanceSteps: [] },
       "kp-sig-dark-tap": { durationMs: 220, cycles: 1, property: "background-position", luminanceSteps: [] },
@@ -23766,7 +23767,8 @@ function caterpillar(el4, kind) {
     const h2 = H - 2 * inset;
     const w = W - 2 * inset;
     const step = h2 * 0.78;
-    const n2 = Math.max(3, Math.floor((w - h2 * 1.1) / step));
+    const reserve2 = el4.classList.contains("kp-heat__cells") ? h2 * 0.6 : 0;
+    const n2 = Math.max(3, Math.floor((w - h2 * 1.1 - reserve2) / step));
     let html2 = "";
     for (let k = 0; k < n2; k++)
       html2 += `<i class="kp-pieces__bead" style="left: ${px(at(inset + k * step, h2))}; top: ${px(inset)}; --s: ${px(h2)}; --k: ${k}"></i>`;
@@ -23894,6 +23896,7 @@ function attachLoadingPieces(root = document) {
           el4
         );
       } else {
+        if (target2.matches?.(ALL) || dressed.has(target2)) queue(target2);
         for (const node of r.addedNodes) {
           if (!(node instanceof Element) || node.classList.contains("kp-pieces")) continue;
           if (node.matches(ALL)) queue(node);
@@ -23936,9 +23939,9 @@ var init_loading_pieces = __esm({
     PIECES_ATTRIBUTE = "data-kp-pieces";
     PIECE_CARRIERS = /** @type {const} */
     {
-      row: ".kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block), .kp-progressbar[data-kp-indeterminate] > .kp-progressbar__track, :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]",
+      row: ".kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block), .kp-progressbar[data-kp-indeterminate] > .kp-progressbar__track, :is(.kp-meter, .kp-kpi__meter)[data-kp-loading], .kp-heat__cells:has(> .kp-heat__cell.kp-skeleton)",
       day: ':is(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone="loading"], .kp-skeleton--circle',
-      plate: '.kp-skeleton--block, .kp-datatable__busy-panel, .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy="true"]) > .kp-calendar__busy, .kp-menu-button > .kp-menu[aria-busy="true"], .kp-kpi[aria-busy="true"], .kp-card[aria-busy="true"]',
+      plate: '.kp-skeleton--block:not(.kp-heat__cell, .kp-matrix__cell), .kp-datatable__busy-panel, .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy="true"]) > .kp-calendar__busy, .kp-menu-button > .kp-menu[aria-busy="true"], .kp-kpi[aria-busy="true"], .kp-card[aria-busy="true"]',
       spinner: ".kp-spinner"
     };
     ALL = Object.values(PIECE_CARRIERS).join(", ");
