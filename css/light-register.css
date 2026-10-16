@@ -2995,3 +2995,71 @@
         position: absolute;
     }
 }
+
+/* ── The six opt-in options of the dashboard adoption, round 3, in this theme [kpadopt3] ──
+   The nav bar's separator, the timeline's day buttons and series runs, the week agenda's upcoming list on a phone and
+   the facet swatch's identity pattern (the choice-filter value and the heat grid's End are behaviour only).
+   Light's own (themes/light/CHARACTER.md): the separator is the divider's hairline with its small open bead on
+   it, stood upright, and lying down across the phone's list (G19). A day on the axis is acted on, so it is a pill:
+   pointing gives it the menu's muted wash, pressed it is the indigo tint the heat grid's picked name wears (G6). A series'
+   finished run is a pill card with the small shadow (G7). The upcoming list's day rule is the week's faint hairline;
+   the facet pattern sits on a 4 px card of its hue with a hair of shadow, as a heat cell does. */
+@layer kp.signature {
+    [data-theme='light'] .kp-nav__sep {
+        position: relative;
+        border-inline-start-color: var(--border);
+    }
+    [data-theme='light'] .kp-nav__sep::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: -3px;
+        inline-size: 5px;
+        block-size: 5px;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--kp-radius-pill, 999px);
+        background: var(--background);
+        translate: 0 -50%;
+    }
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='light'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep {
+            border-block-start-color: var(--border);
+        }
+        [data-theme='light'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep::after {
+            inset-block-start: -3px;
+            inset-inline-start: 50%;
+            translate: -50% 0;
+        }
+    }
+
+    [data-theme='light'] .kp-gantt__tick:is(button) {
+        border-radius: var(--kp-radius-pill, 999px);
+        text-decoration: none;
+    }
+    [data-theme='light'] .kp-gantt__tick:is(button):hover {
+        background: var(--muted);
+        color: var(--foreground);
+    }
+    [data-theme='light'] .kp-gantt__tick:is(button)[aria-pressed='true'] {
+        background: color-mix(in oklab, var(--primary) 12%, var(--card));
+        box-shadow: inset 0 0 0 1px hsl(from var(--primary) h s l / 0.35);
+        color: var(--primary);
+    }
+    [data-theme='light'] .kp-gantt__run[data-kp-state='ok'][data-kp-series] {
+        box-shadow: 0 1px 2px hsl(from var(--foreground) h s l / 0.12);
+    }
+    [data-theme='light'] .kp-week__next:not(:has(+ .kp-week__next:not([data-kp-day-start]))) {
+        border-block-end-color: hsl(from var(--border) h s l / 0.6);
+    }
+    [data-theme='light'] .kp-facet__swatch[data-kp-facet-pattern] {
+        border-radius: 4px;
+        box-shadow: 0 1px 2px hsl(from var(--foreground) h s l / 0.12);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='light'] .kp-gantt__tick:is(button) {
+            transition:
+                background-color var(--fx-duration) var(--kp-ease-hover, var(--fx-ease)),
+                color var(--fx-duration) var(--kp-ease-hover, var(--fx-ease));
+        }
+    }
+}

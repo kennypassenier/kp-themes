@@ -6077,8 +6077,8 @@
             linear-gradient(var(--kp-cp-tone) 0 0) var(--kp-cp-lk) calc(100% - var(--kp-cp-lk)) / 2px 9px no-repeat,
             linear-gradient(var(--kp-cp-tone) 0 0) calc(100% - var(--kp-cp-lk)) calc(100% - var(--kp-cp-lk)) / 9px 2px no-repeat,
             linear-gradient(var(--kp-cp-tone) 0 0) calc(100% - var(--kp-cp-lk)) calc(100% - var(--kp-cp-lk)) / 2px 9px no-repeat;
-        --kp-cp-tile-notch: linear-gradient(45deg, transparent calc(50% - 1.5px), var(--destructive) calc(50% - 1.5px) 50%, transparent 50%) 100%
-            0 / var(--kp-cp-notch) var(--kp-cp-notch) no-repeat;
+        --kp-cp-tile-notch: linear-gradient(45deg, transparent calc(50% - 1.5px), var(--destructive) calc(50% - 1.5px) 50%, transparent 50%) 100% 0 /
+            var(--kp-cp-notch) var(--kp-cp-notch) no-repeat;
     }
     [data-theme='cyberpunk'] .kp-action--destructive::after {
         display: none;
@@ -6218,10 +6218,12 @@
         box-shadow: inset 0 0 0 1px var(--primary);
     }
     /* Waiting: the cells and the names stand dim and wordless; one LOADING is deciphered over the cells' columns. */
-    [data-theme='cyberpunk'] :is(.kp-heat__cell, .kp-matrix__cell, .kp-heat__label-skeleton, .kp-matrix__col--skeleton, .kp-matrix__row--skeleton).kp-skeleton {
+    [data-theme='cyberpunk']
+        :is(.kp-heat__cell, .kp-matrix__cell, .kp-heat__label-skeleton, .kp-matrix__col--skeleton, .kp-matrix__row--skeleton).kp-skeleton {
         opacity: 0.45;
     }
-    [data-theme='cyberpunk'] :is(.kp-heat__cell, .kp-matrix__cell, .kp-heat__label-skeleton, .kp-matrix__col--skeleton, .kp-matrix__row--skeleton).kp-skeleton::before {
+    [data-theme='cyberpunk']
+        :is(.kp-heat__cell, .kp-matrix__cell, .kp-heat__label-skeleton, .kp-matrix__col--skeleton, .kp-matrix__row--skeleton).kp-skeleton::before {
         content: none;
         animation: none;
     }
@@ -6298,7 +6300,9 @@
         border-inline-start: 3px solid var(--kp-week-ink);
     }
     [data-theme='cyberpunk'] .kp-week__pill:is(button):hover {
-        box-shadow: 0 0 0 1px var(--primary), 0 0 8px hsl(from var(--primary) h s l / 0.5);
+        box-shadow:
+            0 0 0 1px var(--primary),
+            0 0 8px hsl(from var(--primary) h s l / 0.5);
     }
     [data-theme='cyberpunk'] :is(.kp-week__time, .kp-week__head, .kp-gantt__tick, .kp-week__axis > span) {
         font-family: var(--kp-mono);
@@ -6307,7 +6311,9 @@
         border-radius: 0;
     }
     [data-theme='cyberpunk'] .kp-gantt__run:is(button):hover {
-        box-shadow: 0 0 0 1px var(--primary), 0 0 8px hsl(from var(--primary) h s l / 0.5);
+        box-shadow:
+            0 0 0 1px var(--primary),
+            0 0 8px hsl(from var(--primary) h s l / 0.5);
     }
     [data-theme='cyberpunk'] .kp-gantt__run[data-kp-state='running'] {
         position: absolute;
@@ -6329,7 +6335,9 @@
     }
     [data-theme='cyberpunk'] .kp-gantt__swatch[data-kp-state='running'] {
         border-color: var(--primary);
-        background: repeating-linear-gradient(90deg, var(--accent) 0 3px, transparent 3px 6px) 0 50% / 100% 2px no-repeat, var(--card);
+        background:
+            repeating-linear-gradient(90deg, var(--accent) 0 3px, transparent 3px 6px) 0 50% / 100% 2px no-repeat,
+            var(--card);
     }
     /* The loading sentence is the machine's voice on a plate of the void, never over a ghost bar's edge. */
     [data-theme='cyberpunk'] .kp-gantt[data-kp-state='loading'] .kp-gantt__state {
@@ -6424,5 +6432,67 @@
        drops under the first and out of the timeline onto the legend. */
     [data-theme='cyberpunk'] .kp-gantt__ghost .kp-gantt__run.kp-skeleton {
         position: absolute;
+    }
+}
+
+/* ── The six opt-in options of the dashboard adoption, round 3, in this theme [kpadopt3] ──
+   The nav bar's separator, the timeline's day buttons and series runs, the week agenda's upcoming list on a phone and
+   the facet swatch's identity pattern (the choice-filter value and the heat grid's End are behaviour only).
+   Cyberpunk's own (themes/cyberpunk/CHARACTER.md): the separator is the neon slash, the yellow leaning with
+   the bar's own cut and split into its cyan ghost (the RGB split); lying down in the phone's list it is a short data
+   dash on the plate, yellow then a cyan packet, never wider than the plate. A day on the axis takes the RGB split under
+   the pointer; pressed it is a lock-on: the yellow ground with its notched corner and the hard yellow foot. A series'
+   finished run has the hard 3 px bar on its leading edge, as a week pill does; the facet pattern is notched. */
+@layer kp.signature {
+    [data-theme='cyberpunk'] .kp-nav__sep {
+        inline-size: 2px;
+        border-inline-start: 0;
+        background: var(--primary);
+        box-shadow: -2px 0 0 hsl(from var(--accent) h s l / 0.75);
+        transform: skewX(-18deg);
+    }
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='cyberpunk'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep {
+            inline-size: 3.25rem;
+            block-size: 2px;
+            margin-inline: var(--kp-space-lg, 1rem) auto;
+            border-block-start: 0;
+            background: linear-gradient(90deg, var(--primary) 0 68%, transparent 68% 76%, var(--accent) 76% 100%);
+            box-shadow: none;
+            transform: none;
+        }
+    }
+
+    [data-theme='cyberpunk'] .kp-gantt__tick:is(button) {
+        border-radius: 0;
+        text-decoration: none;
+    }
+    [data-theme='cyberpunk'] .kp-gantt__tick:is(button):hover {
+        color: var(--primary);
+        text-shadow:
+            -1px 0 hsl(from var(--accent) h s l / 0.9),
+            1px 0 hsl(from var(--destructive) h s l / 0.9);
+    }
+    [data-theme='cyberpunk'] .kp-gantt__tick:is(button)[aria-pressed='true'] {
+        background: linear-gradient(225deg, transparent 5px, hsl(from var(--primary) h s l / 0.18) 5px);
+        color: var(--primary);
+        box-shadow: inset 0 -2px 0 var(--primary);
+        text-shadow: none;
+    }
+    [data-theme='cyberpunk'] .kp-gantt__run[data-kp-state='ok'][data-kp-series] {
+        box-shadow: inset 3px 0 0 var(--kp-gantt-series);
+    }
+    [data-theme='cyberpunk'] .kp-gantt__run[data-kp-state='ok'][data-kp-series]:hover {
+        box-shadow:
+            inset 3px 0 0 var(--kp-gantt-series),
+            0 0 0 1px var(--primary),
+            0 0 8px hsl(from var(--primary) h s l / 0.5);
+    }
+    [data-theme='cyberpunk'] .kp-week__next:not(:has(+ .kp-week__next:not([data-kp-day-start]))) {
+        border-block-end-color: var(--kp-hairline, var(--border));
+    }
+    [data-theme='cyberpunk'] .kp-facet__swatch[data-kp-facet-pattern] {
+        border-radius: 0;
+        clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 0 100%);
     }
 }

@@ -22689,8 +22689,8 @@
             linear-gradient(var(--kp-cp-tone) 0 0) var(--kp-cp-lk) calc(100% - var(--kp-cp-lk)) / 2px 9px no-repeat,
             linear-gradient(var(--kp-cp-tone) 0 0) calc(100% - var(--kp-cp-lk)) calc(100% - var(--kp-cp-lk)) / 9px 2px no-repeat,
             linear-gradient(var(--kp-cp-tone) 0 0) calc(100% - var(--kp-cp-lk)) calc(100% - var(--kp-cp-lk)) / 2px 9px no-repeat;
-        --kp-cp-tile-notch: linear-gradient(45deg, transparent calc(50% - 1.5px), var(--destructive) calc(50% - 1.5px) 50%, transparent 50%) 100%
-            0 / var(--kp-cp-notch) var(--kp-cp-notch) no-repeat;
+        --kp-cp-tile-notch: linear-gradient(45deg, transparent calc(50% - 1.5px), var(--destructive) calc(50% - 1.5px) 50%, transparent 50%) 100% 0 /
+            var(--kp-cp-notch) var(--kp-cp-notch) no-repeat;
     }
     [data-theme='cyberpunk'] .kp-action--destructive::after {
         display: none;
@@ -22830,10 +22830,12 @@
         box-shadow: inset 0 0 0 1px var(--primary);
     }
     /* Waiting: the cells and the names stand dim and wordless; one LOADING is deciphered over the cells' columns. */
-    [data-theme='cyberpunk'] :is(.kp-heat__cell, .kp-matrix__cell, .kp-heat__label-skeleton, .kp-matrix__col--skeleton, .kp-matrix__row--skeleton).kp-skeleton {
+    [data-theme='cyberpunk']
+        :is(.kp-heat__cell, .kp-matrix__cell, .kp-heat__label-skeleton, .kp-matrix__col--skeleton, .kp-matrix__row--skeleton).kp-skeleton {
         opacity: 0.45;
     }
-    [data-theme='cyberpunk'] :is(.kp-heat__cell, .kp-matrix__cell, .kp-heat__label-skeleton, .kp-matrix__col--skeleton, .kp-matrix__row--skeleton).kp-skeleton::before {
+    [data-theme='cyberpunk']
+        :is(.kp-heat__cell, .kp-matrix__cell, .kp-heat__label-skeleton, .kp-matrix__col--skeleton, .kp-matrix__row--skeleton).kp-skeleton::before {
         content: none;
         animation: none;
     }
@@ -22910,7 +22912,9 @@
         border-inline-start: 3px solid var(--kp-week-ink);
     }
     [data-theme='cyberpunk'] .kp-week__pill:is(button):hover {
-        box-shadow: 0 0 0 1px var(--primary), 0 0 8px hsl(from var(--primary) h s l / 0.5);
+        box-shadow:
+            0 0 0 1px var(--primary),
+            0 0 8px hsl(from var(--primary) h s l / 0.5);
     }
     [data-theme='cyberpunk'] :is(.kp-week__time, .kp-week__head, .kp-gantt__tick, .kp-week__axis > span) {
         font-family: var(--kp-mono);
@@ -22919,7 +22923,9 @@
         border-radius: 0;
     }
     [data-theme='cyberpunk'] .kp-gantt__run:is(button):hover {
-        box-shadow: 0 0 0 1px var(--primary), 0 0 8px hsl(from var(--primary) h s l / 0.5);
+        box-shadow:
+            0 0 0 1px var(--primary),
+            0 0 8px hsl(from var(--primary) h s l / 0.5);
     }
     [data-theme='cyberpunk'] .kp-gantt__run[data-kp-state='running'] {
         position: absolute;
@@ -22941,7 +22947,9 @@
     }
     [data-theme='cyberpunk'] .kp-gantt__swatch[data-kp-state='running'] {
         border-color: var(--primary);
-        background: repeating-linear-gradient(90deg, var(--accent) 0 3px, transparent 3px 6px) 0 50% / 100% 2px no-repeat, var(--card);
+        background:
+            repeating-linear-gradient(90deg, var(--accent) 0 3px, transparent 3px 6px) 0 50% / 100% 2px no-repeat,
+            var(--card);
     }
     /* The loading sentence is the machine's voice on a plate of the void, never over a ghost bar's edge. */
     [data-theme='cyberpunk'] .kp-gantt[data-kp-state='loading'] .kp-gantt__state {
@@ -23036,6 +23044,68 @@
        drops under the first and out of the timeline onto the legend. */
     [data-theme='cyberpunk'] .kp-gantt__ghost .kp-gantt__run.kp-skeleton {
         position: absolute;
+    }
+}
+
+/* ── The six opt-in options of the dashboard adoption, round 3, in this theme [kpadopt3] ──
+   The nav bar's separator, the timeline's day buttons and series runs, the week agenda's upcoming list on a phone and
+   the facet swatch's identity pattern (the choice-filter value and the heat grid's End are behaviour only).
+   Cyberpunk's own (themes/cyberpunk/CHARACTER.md): the separator is the neon slash, the yellow leaning with
+   the bar's own cut and split into its cyan ghost (the RGB split); lying down in the phone's list it is a short data
+   dash on the plate, yellow then a cyan packet, never wider than the plate. A day on the axis takes the RGB split under
+   the pointer; pressed it is a lock-on: the yellow ground with its notched corner and the hard yellow foot. A series'
+   finished run has the hard 3 px bar on its leading edge, as a week pill does; the facet pattern is notched. */
+@layer kp.signature {
+    [data-theme='cyberpunk'] .kp-nav__sep {
+        inline-size: 2px;
+        border-inline-start: 0;
+        background: var(--primary);
+        box-shadow: -2px 0 0 hsl(from var(--accent) h s l / 0.75);
+        transform: skewX(-18deg);
+    }
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='cyberpunk'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep {
+            inline-size: 3.25rem;
+            block-size: 2px;
+            margin-inline: var(--kp-space-lg, 1rem) auto;
+            border-block-start: 0;
+            background: linear-gradient(90deg, var(--primary) 0 68%, transparent 68% 76%, var(--accent) 76% 100%);
+            box-shadow: none;
+            transform: none;
+        }
+    }
+
+    [data-theme='cyberpunk'] .kp-gantt__tick:is(button) {
+        border-radius: 0;
+        text-decoration: none;
+    }
+    [data-theme='cyberpunk'] .kp-gantt__tick:is(button):hover {
+        color: var(--primary);
+        text-shadow:
+            -1px 0 hsl(from var(--accent) h s l / 0.9),
+            1px 0 hsl(from var(--destructive) h s l / 0.9);
+    }
+    [data-theme='cyberpunk'] .kp-gantt__tick:is(button)[aria-pressed='true'] {
+        background: linear-gradient(225deg, transparent 5px, hsl(from var(--primary) h s l / 0.18) 5px);
+        color: var(--primary);
+        box-shadow: inset 0 -2px 0 var(--primary);
+        text-shadow: none;
+    }
+    [data-theme='cyberpunk'] .kp-gantt__run[data-kp-state='ok'][data-kp-series] {
+        box-shadow: inset 3px 0 0 var(--kp-gantt-series);
+    }
+    [data-theme='cyberpunk'] .kp-gantt__run[data-kp-state='ok'][data-kp-series]:hover {
+        box-shadow:
+            inset 3px 0 0 var(--kp-gantt-series),
+            0 0 0 1px var(--primary),
+            0 0 8px hsl(from var(--primary) h s l / 0.5);
+    }
+    [data-theme='cyberpunk'] .kp-week__next:not(:has(+ .kp-week__next:not([data-kp-day-start]))) {
+        border-block-end-color: var(--kp-hairline, var(--border));
+    }
+    [data-theme='cyberpunk'] .kp-facet__swatch[data-kp-facet-pattern] {
+        border-radius: 0;
+        clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 0 100%);
     }
 }
 
@@ -62131,6 +62201,74 @@
     }
 }
 
+/* ── The six opt-in options of the dashboard adoption, round 3, in this theme [kpadopt3] ──
+   The nav bar's separator, the timeline's day buttons and series runs, the week agenda's upcoming list on a phone and
+   the facet swatch's identity pattern (the choice-filter value and the heat grid's End are behaviour only).
+   Light's own (themes/light/CHARACTER.md): the separator is the divider's hairline with its small open bead on
+   it, stood upright, and lying down across the phone's list (G19). A day on the axis is acted on, so it is a pill:
+   pointing gives it the menu's muted wash, pressed it is the indigo tint the heat grid's picked name wears (G6). A series'
+   finished run is a pill card with the small shadow (G7). The upcoming list's day rule is the week's faint hairline;
+   the facet pattern sits on a 4 px card of its hue with a hair of shadow, as a heat cell does. */
+@layer kp.signature {
+    [data-theme='light'] .kp-nav__sep {
+        position: relative;
+        border-inline-start-color: var(--border);
+    }
+    [data-theme='light'] .kp-nav__sep::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: -3px;
+        inline-size: 5px;
+        block-size: 5px;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--kp-radius-pill, 999px);
+        background: var(--background);
+        translate: 0 -50%;
+    }
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='light'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep {
+            border-block-start-color: var(--border);
+        }
+        [data-theme='light'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep::after {
+            inset-block-start: -3px;
+            inset-inline-start: 50%;
+            translate: -50% 0;
+        }
+    }
+
+    [data-theme='light'] .kp-gantt__tick:is(button) {
+        border-radius: var(--kp-radius-pill, 999px);
+        text-decoration: none;
+    }
+    [data-theme='light'] .kp-gantt__tick:is(button):hover {
+        background: var(--muted);
+        color: var(--foreground);
+    }
+    [data-theme='light'] .kp-gantt__tick:is(button)[aria-pressed='true'] {
+        background: color-mix(in oklab, var(--primary) 12%, var(--card));
+        box-shadow: inset 0 0 0 1px hsl(from var(--primary) h s l / 0.35);
+        color: var(--primary);
+    }
+    [data-theme='light'] .kp-gantt__run[data-kp-state='ok'][data-kp-series] {
+        box-shadow: 0 1px 2px hsl(from var(--foreground) h s l / 0.12);
+    }
+    [data-theme='light'] .kp-week__next:not(:has(+ .kp-week__next:not([data-kp-day-start]))) {
+        border-block-end-color: hsl(from var(--border) h s l / 0.6);
+    }
+    [data-theme='light'] .kp-facet__swatch[data-kp-facet-pattern] {
+        border-radius: 4px;
+        box-shadow: 0 1px 2px hsl(from var(--foreground) h s l / 0.12);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='light'] .kp-gantt__tick:is(button) {
+            transition:
+                background-color var(--fx-duration) var(--kp-ease-hover, var(--fx-ease)),
+                color var(--fx-duration) var(--kp-ease-hover, var(--fx-ease));
+        }
+    }
+}
+
 /* The red plate's polar position round the black ink: --kp-sig-gr-a is its
    angle (it only ever grows: screen y points down, so a growing angle is
    clockwise, in either text direction) and --kp-sig-gr-q its distance (1 the
@@ -78829,7 +78967,9 @@
         border-inline-start-color: var(--chart-1);
     }
     [data-theme='dark'] .kp-week__pill[data-kp-state='next'] {
-        box-shadow: 0 0 0 1px var(--chart-1), 0 0 10px hsl(from var(--chart-1) h s l / 0.4);
+        box-shadow:
+            0 0 0 1px var(--chart-1),
+            0 0 10px hsl(from var(--chart-1) h s l / 0.4);
     }
     [data-theme='dark'] :is(.kp-week__now, .kp-gantt__now) {
         filter: drop-shadow(0 0 5px hsl(from var(--chart-1) h s l / 0.6));
@@ -78942,6 +79082,80 @@
        drops under the first and out of the timeline onto the legend. */
     [data-theme='dark'] .kp-gantt__ghost .kp-gantt__run.kp-skeleton {
         position: absolute;
+    }
+}
+
+/* ── The six opt-in options of the dashboard adoption, round 3, in this theme [kpadopt3] ──
+   The nav bar's separator, the timeline's day buttons and series runs, the week agenda's upcoming list on a phone and
+   the facet swatch's identity pattern (the choice-filter value and the heat grid's End are behaviour only).
+   Dark's own (themes/dark/CHARACTER.md): the separator is the instrument's scale stood upright, a hairline
+   fading at both ends with one lit tick at its middle in the chart cyan; lying down in the phone's list the tick stands
+   on it. A day on the axis is a slot: pointing lights its edge, pressed it is the lit plate (the accent) with the edge
+   and its glow, as a pointed tile is. A series' finished run carries the 2 px leading edge in its ink, as a week pill
+   does. The facet pattern is a square on a machined rim. */
+@layer kp.signature {
+    [data-theme='dark'] .kp-nav__sep {
+        position: relative;
+        inline-size: 1px;
+        border-inline-start: 0;
+        background: linear-gradient(to bottom, transparent, var(--border-strong) 25%, var(--border-strong) 75%, transparent);
+    }
+    [data-theme='dark'] .kp-nav__sep::after {
+        content: '';
+        position: absolute;
+        inset-block-start: calc(50% - 1px);
+        inset-inline-start: -2px;
+        inline-size: 5px;
+        block-size: 2px;
+        background: var(--chart-1);
+        box-shadow: 0 0 6px hsl(from var(--chart-1) h s l / 0.6);
+    }
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='dark'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep {
+            inline-size: auto;
+            block-size: 1px;
+            border-block-start: 0;
+            background: linear-gradient(90deg, transparent, var(--border-strong) 12%, var(--border-strong) 88%, transparent);
+        }
+        [data-theme='dark'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep::after {
+            inset-block-start: -2px;
+            inset-inline-start: calc(50% - 1px);
+            inline-size: 2px;
+            block-size: 5px;
+        }
+    }
+
+    [data-theme='dark'] .kp-gantt__tick:is(button) {
+        border-radius: 0;
+        text-decoration: none;
+    }
+    [data-theme='dark'] .kp-gantt__tick:is(button):hover {
+        color: var(--foreground);
+        box-shadow: inset 0 -2px 0 var(--chart-1);
+    }
+    [data-theme='dark'] .kp-gantt__tick:is(button)[aria-pressed='true'] {
+        background: var(--accent);
+        color: var(--foreground);
+        box-shadow:
+            inset 0 -2px 0 var(--chart-1),
+            inset 0 -9px 9px -7px hsl(from var(--chart-1) h s l / 0.55);
+    }
+    [data-theme='dark'] .kp-gantt__run[data-kp-state='ok'][data-kp-series] {
+        box-shadow: inset 2px 0 0 var(--kp-gantt-series);
+    }
+    [data-theme='dark'] .kp-gantt__run[data-kp-state='ok'][data-kp-series]:hover {
+        box-shadow:
+            inset 2px 0 0 var(--kp-gantt-series),
+            0 0 0 1px var(--foreground);
+    }
+    [data-theme='dark'] .kp-facet__swatch[data-kp-facet-pattern] {
+        border-radius: 0;
+        box-shadow: inset 0 0 0 1px hsl(from var(--foreground) h s l / 0.2);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] .kp-gantt__tick:is(button) {
+            transition: box-shadow var(--fx-duration) linear;
+        }
     }
 }
 
