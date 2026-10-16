@@ -2432,7 +2432,8 @@
 
     /* The cursor at the line a menu or popover is printing; at rest it is not
        drawn (nothing sits on a part that is not waiting, G16). */
-    [data-theme='terminal'] :is(.kp-popover[popover], .kp-menu-button > .kp-menu, .kp-combobox__list, .kp-datepicker__panel, .kp-tour):not(.kp-tooltip)::before,
+    [data-theme='terminal']
+        :is(.kp-popover[popover], .kp-menu-button > .kp-menu, .kp-combobox__list, .kp-datepicker__panel, .kp-tour):not(.kp-tooltip)::before,
     [data-theme='terminal'] .kp-nav__links > li > .kp-nav__menu::after {
         content: '';
         position: absolute;
@@ -3523,7 +3524,9 @@
             :is(.kp-calendar--busy-days, .kp-calendar--busy-whole:not(:has(> .kp-calendar__grid[aria-busy='true'])))
             .kp-calendar__day[data-kp-tone='loading']
             > .kp-calendar__day-busy:not([data-kp-leaving])::after,
-        [data-theme='terminal'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy:not([data-kp-leaving])::after {
+        [data-theme='terminal']
+            .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true'])
+            > .kp-calendar__busy:not([data-kp-leaving])::after {
             content: '';
             position: absolute;
             inset-block: 0;
@@ -3993,3 +3996,46 @@
         color: var(--muted-foreground);
     }
 }
+
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* Character cells: square, no rounding, no shadow; a cell under the pointer takes the cursor ring; the pick is reverse video: a > before the column's name and a bar of phosphor under it. */
+    [data-theme='terminal'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 0;
+        --kp-heat-cell-gap: 2px;
+        --kp-heat-cell-hover: none;
+        --kp-matrix-cell-hover: none;
+    }
+    [data-theme='terminal'] .kp-heat__cell:hover:not(.kp-skeleton, [aria-disabled='true']),
+    [data-theme='terminal'] .kp-matrix__cell:hover:not([data-kp-inert]) {
+        box-shadow: var(--kp-sig-tm-ring, 0 0 0 1px var(--foreground));
+        z-index: 1;
+    }
+    [data-theme='terminal'] .kp-heat__col[data-kp-picked]::before {
+        content: '>';
+    }
+    [data-theme='terminal'] .kp-heat__cell[data-kp-picked] {
+        outline: 1px solid var(--foreground);
+        outline-offset: 1px;
+    }
+    [data-theme='terminal'] .kp-heat__label-button[aria-pressed='true'],
+    [data-theme='terminal'] :is(.kp-matrix__col, .kp-matrix__row)[aria-pressed='true'] {
+        background: var(--foreground);
+        color: var(--background);
+    }
+    [data-theme='terminal'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 1px solid var(--foreground);
+        outline-offset: 2px;
+    }
+    [data-theme='terminal'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='terminal'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='terminal'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */

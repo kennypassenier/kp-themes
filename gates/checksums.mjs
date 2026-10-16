@@ -154,6 +154,8 @@ export const FILES = [
     'js/segmented.js',
     'js/toolbar.js',
     'js/keys.js',
+    'js/heat.js',
+    'js/barcell.js',
     'js/remember.js',
     'js/sidenav.js',
     'js/strings.js',

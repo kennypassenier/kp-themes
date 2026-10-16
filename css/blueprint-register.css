@@ -3033,12 +3033,20 @@
                 animation: kp-sig-blueprint-trace-out var(--kp-sig-bp-panel) linear reverse forwards;
             }
 
-            [data-theme='blueprint'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu {
+            [data-theme='blueprint']
+                .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing])
+                .kp-nav__links
+                > li
+                > .kp-nav__menu {
                 animation: none;
                 transition: none;
             }
 
-            [data-theme='blueprint'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu::after {
+            [data-theme='blueprint']
+                .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing])
+                .kp-nav__links
+                > li
+                > .kp-nav__menu::after {
                 content: none;
             }
         }
@@ -4175,7 +4183,11 @@
         /* The pen and the construction line, the dialog's (its ::after). On the side navigation the
            line runs on the panel's own edge; on the alarm it runs on the alarm's frame, so the frame
            is what the pen constructs before the screen is inked. */
-        [data-theme='blueprint'] :is(.kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']), .kp-alarm[open]:not([data-kp-alarm-motion='still']))::after {
+        [data-theme='blueprint']
+            :is(
+                .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']),
+                .kp-alarm[open]:not([data-kp-alarm-motion='still'])
+            )::after {
             content: '';
             position: absolute;
             z-index: 4;
@@ -4330,7 +4342,8 @@
         --kp-seg-tracking: 0.08em;
         --kp-seg-case: uppercase;
         --kp-seg-track: transparent;
-        --kp-seg-thumb: repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / 0.34) 0 1px, transparent 1px 5px), hsl(from var(--primary) h s l / 0.1);
+        --kp-seg-thumb:
+            repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / 0.34) 0 1px, transparent 1px 5px), hsl(from var(--primary) h s l / 0.1);
         --kp-seg-thumb-ink: var(--foreground);
         --kp-seg-thumb-edge: 0 0 0 1px var(--primary);
         --kp-seg-thumb-lift: 0 0 0 0 transparent;
@@ -4357,3 +4370,47 @@
         font-family: var(--theme-font-mono);
     }
 }
+
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* Drafted cells: ruled squares in line weight, hatching for what is not there; the pick is a dashed amber datum line round the column. */
+    [data-theme='blueprint'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 0;
+        --kp-heat-cell-edge: 1px;
+        --kp-heat-cell-ink: hsl(from var(--foreground) h s l / 0.7);
+        --kp-heat-cell-gap: 3px;
+        --kp-heat-cell-hover: none;
+        --kp-matrix-cell-hover: none;
+    }
+    [data-theme='blueprint'] .kp-heat__cell:hover:not(.kp-skeleton, [aria-disabled='true']),
+    [data-theme='blueprint'] .kp-matrix__cell:hover:not([data-kp-inert]) {
+        outline: 1px solid var(--foreground);
+        outline-offset: 2px;
+    }
+    [data-theme='blueprint'] .kp-heat__cell[data-kp-picked] {
+        outline: 1px dashed var(--accent, var(--primary));
+        outline-offset: 2px;
+    }
+    [data-theme='blueprint'] .kp-heat__label,
+    [data-theme='blueprint'] .kp-matrix__row,
+    [data-theme='blueprint'] .kp-matrix__col {
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='blueprint'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 1px dashed var(--accent, var(--primary));
+        outline-offset: 2px;
+    }
+    [data-theme='blueprint'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='blueprint'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='blueprint'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */

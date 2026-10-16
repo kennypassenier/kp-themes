@@ -1013,6 +1013,36 @@ the arithmetic. Knobs: `--kp-meter-height` (0.375rem), `--kp-meter-fill`,
 `--kp-meter-halo` (the card colour around the tick),
 `--kp-meter-inline-size` (3rem).
 
+### A heat grid, a matrix and a bar in a table cell
+
+`.kp-heat` is rows by columns of small cells, each toned by a state (`data-kp-tone`
+`ok`, `warn`, `bad`, `muted`, `future`, `before`, `none`: the words of the month heatmap) or by a value (`level`, with
+`--kp-heat-level` from 0 to 1). `setHeat(el, spec)` (`js/heat.js`) writes the label column, the column axis, an optional
+summary row whose cells fill from the bottom (`share`), and the rows; the grid keeps its columns and its heights in every
+state, and `state: 'loading'` draws the theme's own skeleton cells in the same places:
+
+```js
+import { setHeat } from '@kp-soft/themes/js/heat';
+
+setHeat(grid, {
+    columns: [{ key: '2026-10-14', label: '14' }, { key: '2026-10-15', label: '15' }],
+    rows: [{ key: 'media', label: 'media', cells: [{ tone: 'ok', label: 'backed up', tip: 'Snapshot at 03:12' }, { tone: 'bad', label: 'missed' }] }],
+});
+```
+
+The root listens for the page: `kp-heat-pick` (a column was picked or dropped), `kp-heat-row` (a label was pressed, with
+`data-kp-heat-toggle`) and `kp-heat-page` (Page Up and Page Down). `data-kp-heat-owned` leaves the state to the page.
+`tip` is the hover card's text (`js/hovercard.js`). A legend is a `ul.kp-heat__legend` of `.kp-heat__swatch[data-kp-tone]`.
+
+`.kp-matrix` is source by destination: `setMatrix(el, { rows, columns, cell: (row, column) => ({ tone, text, label }) })`. Each
+cell has a plate, a word or a glyph, and a label for the screen reader; the headers are buttons that light their row and
+column and stay in place while the grid scrolls (under 36rem the box scrolls). `kp-matrix-pick` and `kp-matrix-light` are its
+events; `data-kp-matrix-select="follow"` pins the cell the arrow keys land on.
+
+`.kp-bar-cell` is a value with its bar inside a table cell: `<td><span class="kp-bar-cell" data-kp-bar="0.62"></span></td>`
+or `setBarCell(span, { value: 0.62, text: '62%' })`. A data table sorts a cell by `data-kp-sort-value` (on the `td`) when it
+has one, else by its text; `setBarCell` writes it for the cell it is in.
+
 ### Key figures on allowed column counts
 
 A strip whose number of tiles changes can leave one tile alone on its last

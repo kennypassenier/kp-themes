@@ -124,6 +124,13 @@ export const PAGES = [
                 label: 'Feedback components: a toast that waits, a live step list, a diff hunk header',
                 about: 'The dashboard draws these itself because the package lacks them: toast() gains pause, linger, close and sticky; .kp-steplist (pending, running, done, failed, skipped, announced to a screen reader); .kp-diff__hunk.',
             },
+            // Kenny, 2026-10-16 (kp-adopt rest, round 2): the dashboard still draws its coverage heatmap (bk-heat), reachability matrix (fw-mx) and bars in table cells (mp-caps, mp-growth) itself; built here first, formal only until he approves it.
+            {
+                href: 'research/kpadopt2-grids/demo.html',
+                label: 'Heat grid, matrix and a bar in a table cell',
+                about: 'The Backups coverage heatmap (stacks by nights), the Firewall reachability matrix (source by destination, sticky headers, scrolls when narrow) and a value with a proportional bar inside a data table cell, with the table’s new data-kp-sort-value. Formal first.',
+                affects: 'the admin dashboard swaps bk-heat, fw-mx, mp-caps/mp-growth and the hidden data-kp-edit-value sort span for these.',
+            },
             // Kenny, 2026-10-15 (kp-adopt rest, kpa-33): three pieces the homelab dashboard still draws by hand, built into the package first: a top bar that folds what does not fit behind a More menu, a bottom tab bar for phones with a More drawer, and the running-job button.
             {
                 href: 'research/kpadopt-nav/demo.html',

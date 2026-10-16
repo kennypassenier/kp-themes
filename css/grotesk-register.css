@@ -280,7 +280,6 @@
         border-block-end: 0;
     }
 
-
     [data-theme='grotesk'] .kp-nav__brand {
         grid-column: 1 / 4;
         font-family: var(--theme-font-display);
@@ -974,7 +973,6 @@
         color: var(--foreground);
         font-weight: 700;
     }
-
 
     [data-theme='grotesk'] .kp-timeline {
         border-inline-start: 3px solid var(--foreground);
@@ -2838,8 +2836,7 @@
 
     /* The windows that slip most: the palette, the shortcuts sheet, the tour's card, the picker's
        panel, the combobox's list, the bar's panels. */
-    [data-theme='grotesk']
-        :is(.kp-palette, .kp-shortcuts, .kp-tour, .kp-datepicker__panel, .kp-combobox__list, .kp-nav__menu, .kp-alarm__panel) {
+    [data-theme='grotesk'] :is(.kp-palette, .kp-shortcuts, .kp-tour, .kp-datepicker__panel, .kp-combobox__list, .kp-nav__menu, .kp-alarm__panel) {
         --kp-sig-gr-r: 8px;
     }
 
@@ -3246,3 +3243,49 @@
         border-block-end: 1px solid var(--foreground);
     }
 }
+
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* Flat squares on the twelve-column grid: no rounding, no shadow, an even 2 px gutter; labels in capitals; the pick is a red rule under the column, never a ring. */
+    [data-theme='grotesk'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 0;
+        --kp-heat-cell-gap: 2px;
+        --kp-heat-cell-hover: none;
+        --kp-matrix-cell-hover: none;
+    }
+    [data-theme='grotesk'] .kp-heat__cell:hover:not(.kp-skeleton, [aria-disabled='true']),
+    [data-theme='grotesk'] .kp-matrix__cell:hover:not([data-kp-inert]) {
+        outline: 2px solid var(--foreground);
+        outline-offset: 0;
+    }
+    [data-theme='grotesk'] .kp-heat__cell[data-kp-picked] {
+        outline: none;
+        box-shadow: 0 4px 0 -1px var(--destructive);
+    }
+    [data-theme='grotesk'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 3px solid var(--foreground);
+        outline-offset: 0;
+    }
+    [data-theme='grotesk'] .kp-heat__label,
+    [data-theme='grotesk'] .kp-matrix__row,
+    [data-theme='grotesk'] .kp-matrix__col {
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        font-weight: 700;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='grotesk'] .kp-heat__col {
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='grotesk'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='grotesk'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='grotesk'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */

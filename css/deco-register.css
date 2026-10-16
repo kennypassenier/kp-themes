@@ -4227,7 +4227,9 @@
         --kp-kbd-edge: var(--primary);
         --kp-kbd-ground: var(--card);
         --kp-kbd-foot: 1px;
-        box-shadow: inset 0 0 0 2px var(--card), inset 0 0 0 3px hsl(from var(--primary) h s l / 0.5);
+        box-shadow:
+            inset 0 0 0 2px var(--card),
+            inset 0 0 0 3px hsl(from var(--primary) h s l / 0.5);
         padding-inline: 0.4rem;
     }
     [data-theme='deco'] .kp-segmented--chips > .kp-segmented__item[aria-pressed='true'] {
@@ -4236,3 +4238,41 @@
             inset 0 0 0 3px hsl(from var(--primary) h s l / 0.7);
     }
 }
+
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* Inlaid tiles: a thin gold inlay inside each tile's frame, pressed 1 px down into it on a press; gold fine rules for the axis; the pick is a double gold ring. */
+    [data-theme='deco'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 1px;
+        --kp-heat-cell-ink: hsl(from var(--primary) h s l / 0.55);
+        --kp-heat-cell-lift: inset 0 0 0 1px hsl(from var(--background) h s l / 0.5);
+        --kp-heat-cell-hover: translateY(1px);
+        --kp-matrix-cell-hover: translateY(1px);
+    }
+    [data-theme='deco'] .kp-heat__cell[data-kp-picked],
+    [data-theme='deco'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 3px double var(--primary);
+        outline-offset: 2px;
+    }
+    [data-theme='deco'] .kp-heat__label,
+    [data-theme='deco'] .kp-matrix__row,
+    [data-theme='deco'] .kp-matrix__col {
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='deco'] .kp-heat__sep {
+        border-block-start: 1px solid var(--primary);
+    }
+    [data-theme='deco'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='deco'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='deco'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */

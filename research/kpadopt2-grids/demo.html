@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="kpadopt2-grids" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Heat grid, matrix and bar in a table cell · kp-themes research demo</title>
+        <link rel="stylesheet" href="../../catalogue/deps.css" />
+        <link rel="stylesheet" href="demo.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+        <header class="cat-bar">
+            <a class="cat-bar__home" href="../../catalogue/index.html">kp-themes catalogue</a>
+            <span class="cat-bar__spacer"></span>
+            <button type="button" class="kp-button kp-button--ghost" data-cat-devtools>Devtools (Alt+D)</button>
+        </header>
+
+        <main id="main" class="cat-main">
+            <h1>Heat grid, matrix and a bar in a table cell</h1>
+            <p class="cat-intro">
+                Three things the admin dashboard still drew itself (the Backups coverage heatmap <code>bk-heat</code>, the Firewall reachability
+                matrix <code>fw-mx</code>, the capacity and disk-growth bars <code>mp-caps</code> / <code>mp-growth</code>), now in the package
+                (Kenny’s rule: a consumer draws nothing). Everything you see in a grid is the package’s own: <code>.kp-heat</code>,
+                <code>.kp-matrix</code>, <code>.kp-bar-cell</code> with <code>.kp-meter</code> and the data table’s new
+                <code>data-kp-sort-value</code>, written by <code>js/heat.js</code> and <code>js/barcell.js</code>. The tones are the month heatmap’s
+                words (<code>data-kp-tone</code>). A green <b>package</b> tag marks that. The amber <b>mock</b> tag marks the made-up data, the state
+                buttons and the detail lines, all in <code>demo.js</code>.
+            </p>
+
+            <section class="cat-block" id="heat" data-review-item="heat" data-review-title="Heat grid" data-review-components="heat">
+                <h2>
+                    Heat grid: stacks by nights<span class="gd-tag gd-tag--package">package</span><span class="gd-tag gd-tag--mock">mock data</span>
+                </h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the tiles are the theme’s own small plates; the grid never changes height when the state changes; nothing wraps
+                    (the long scratch-volume name is cut with an ellipsis); the whole-fleet row fills from its foot; the pinned night is ringed in
+                    every row; at 390 px the label column narrows and the tiles stay in thirty columns.
+                </div>
+                <div class="gd-expect">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>The grid</b> shows seven stacks (rows) by thirty nights (columns). Each cell is a small tile in the theme’s own shape.
+                            Green-ish <b>filled</b> is backed up, <b>striped red</b> is missed, <b>ruled amber</b> (only in the whole-fleet row) is
+                            some stacks missed. A <b>dashed outline</b> is the night that has not run yet (the last column), a <b>hatched</b> tile is
+                            before the stack had any history (docs), an <b>empty outline</b> is a stack that keeps no data by design (the long-named
+                            scratch volume, whose name is cut with an ellipsis).
+                        </li>
+                        <li>
+                            <b>Whole fleet</b> row: each tile fills from the bottom by how many stacks were backed up that night. Under it a rule,
+                            then one row per stack, and the day numbers above (every third one is written).
+                        </li>
+                        <li>
+                            <b>Hover or Tab</b> to a tile: after a short pause a card says what that tile is (stack, date, snapshot time).
+                            <b>Press a tile</b> (or Enter): its whole night gets a ring in every row and the line under the grid names who missed it;
+                            press it again, or Esc, to unpin. <b>Arrow keys</b> move between tiles, Home and End go to the ends of the row, Page Up
+                            and Page Down earlier and later.
+                        </li>
+                        <li>
+                            <b>Press a stack name</b>: it stays pressed (accent plate) and the line under the grid lists the pressed names; the page
+                            would filter, the grid only reports. <b>Earlier, Later, Today</b> move the thirty nights; Later is disabled on today.
+                        </li>
+                        <li>
+                            <b>Ready, Loading, Empty, Failed</b> swap the same grid: loading keeps every tile in place and animates them in the
+                            theme’s own busy picture; empty and failed show one centred sentence, with the grid’s own minimum height so the page does
+                            not jump.
+                        </li>
+                        <li>
+                            <b>Requests per hour</b> (below) is the same grid toned by a value: the darker the tile, the more requests; the legend is
+                            a five-step ramp. Three small boxes at the end show loading, empty and failed.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The tiles are ruled ledger squares (a hairline frame, nearly square corners); a pinned night takes the double rule round every
+                        tile of its column; the row names are small capitals, a pressed name takes a navy underline instead of a plate; the rule under
+                        the whole-fleet row is a double rule. Nothing moves when the state changes.
+                    </p>
+                </div>
+                <div class="gd-panel">
+                    <h3>Snapshots per stack per night</h3>
+                    <div class="gd-bar">
+                        <button type="button" class="kp-button kp-button--sm kp-button--ghost" data-gd-earlier>‹ Earlier</button>
+                        <button type="button" class="kp-button kp-button--sm kp-button--ghost" data-gd-later>Later ›</button>
+                        <button type="button" class="kp-button kp-button--sm kp-button--secondary" data-gd-today>Today</button>
+                        <span class="gd-note" data-gd-range></span>
+                        <span class="gd-grow"></span>
+                        <span class="gd-note">State</span>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-gd-state="ready">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-gd-state="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-gd-state="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-gd-state="error">Failed</button>
+                    </div>
+                    <div class="kp-heat" data-kp-heat data-kp-heat-toggle data-gd-heat="main"></div>
+                    <ul class="kp-heat__legend" aria-label="Legend">
+                        <li><span class="kp-heat__swatch" data-kp-tone="ok"></span> backed up</li>
+                        <li><span class="kp-heat__swatch" data-kp-tone="warn"></span> some stacks missed</li>
+                        <li><span class="kp-heat__swatch" data-kp-tone="bad"></span> missed</li>
+                        <li><span class="kp-heat__swatch" data-kp-tone="before"></span> before any history</li>
+                        <li><span class="kp-heat__swatch" data-kp-tone="future"></span> not run yet</li>
+                        <li><span class="kp-heat__swatch" data-kp-tone="none"></span> keeps no data</li>
+                        <li data-kp-end><span class="kp-keys" data-gd-keys="heat"></span></li>
+                    </ul>
+                    <p class="gd-note" role="status" data-gd-heat-detail>No night pinned. Press a cell to pin its night.</p>
+                    <p class="gd-note" role="status" data-gd-heat-filter>All stacks shown. Press stack names to show only them.</p>
+                </div>
+                <div class="gd-grid">
+                    <div class="gd-panel">
+                        <h3>The same grid toned by a value</h3>
+                        <div class="kp-heat" data-kp-heat data-gd-heat="level"></div>
+                        <ul class="kp-heat__legend" aria-label="Legend">
+                            <li>
+                                fewer
+                                <span class="kp-heat__ramp">
+                                    <span class="kp-heat__swatch" data-kp-tone="level" data-gd-level="0.1"></span>
+                                    <span class="kp-heat__swatch" data-kp-tone="level" data-gd-level="0.3"></span>
+                                    <span class="kp-heat__swatch" data-kp-tone="level" data-gd-level="0.5"></span>
+                                    <span class="kp-heat__swatch" data-kp-tone="level" data-gd-level="0.7"></span>
+                                    <span class="kp-heat__swatch" data-kp-tone="level" data-gd-level="0.9"></span>
+                                </span>
+                                more requests
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="gd-panel">
+                        <h3>Loading, empty, failed</h3>
+                        <div class="kp-heat" data-kp-heat data-gd-heat="loading"></div>
+                        <div class="kp-heat" data-kp-heat data-gd-heat="empty"></div>
+                        <div class="kp-heat" data-kp-heat data-gd-heat="error"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="matrix" data-review-item="matrix" data-review-title="Matrix" data-review-components="matrix">
+                <h2>
+                    Matrix: which stack can reach which<span class="gd-tag gd-tag--package">package</span
+                    ><span class="gd-tag gd-tag--mock">mock data</span>
+                </h2>
+                <div class="cat-look">
+                    <b>Look at:</b> state is told by the plate <i>and</i> a word or glyph (cover the colours in your mind: it still reads); the pinned
+                    cell, the lit row and column and the dashed rule marker are three different looks; the headers stay put while the narrow box
+                    scrolls; the grid does not change height between ready, loading, empty and failed.
+                </div>
+                <div class="gd-expect">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>The matrix</b> has the sources down the side and the destinations across the top; the corner says “from ↓ to →”. Each
+                            pressable cell shows its state in a plate colour <b>and</b> a word or glyph: a number is the ports open (allowed, as
+                            declared), <b>open</b> is a mismatch (more open than declared), <b>×</b> is blocked, <b>0</b> is nothing declared. A
+                            <b>dashed empty</b> cell is a stack with itself, a <b>dashed</b> cell with a dash is “unknown”. A <b>red inner ring</b> on
+                            a cell means the traffic was dropped on the way out of the source.
+                        </li>
+                        <li>
+                            <b>Press a name</b> (side or top): its row and column stay bright and everything else dims; press more names to add them;
+                            <b>Esc</b> or the name again turns it off. <b>Press a cell</b>: it gets a ring and the line under the matrix names the
+                            pair. In the first matrix the <b>arrow keys</b> also pin the cell they land on (the dashboard’s behaviour); the cells that
+                            cannot be pressed are skipped and the arrows wrap round.
+                        </li>
+                        <li><b>backup → database</b> carries a dashed outline: that is a rule being read touching that pair.</li>
+                        <li><b>Hover or Tab</b> to a cell: a card says the pair and its state in words.</li>
+                        <li>
+                            <b>The second matrix</b> sits in a box 22 rem wide: the box scrolls sideways, and the
+                            <b>names on the top and the side stay in place</b> (sticky) with the corner; scroll it and look at the headers. At the
+                            narrow width the side names get shorter and lose their colour mark.
+                        </li>
+                        <li>
+                            <b>Ready, Loading, Empty, Failed</b> swap both matrices: loading keeps the shape (names and cells are skeletons); empty
+                            and failed show one sentence.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Cells are paper plates with a navy start rule (allowed), red ink (mismatch) and two red rules (blocked), the way the formal
+                        month calendar draws its days; the pinned cell has the double rule; names are small capitals; the headers stay while the
+                        narrow box scrolls.
+                    </p>
+                </div>
+                <div class="gd-panel">
+                    <h3>Reachability matrix</h3>
+                    <div class="gd-bar">
+                        <span class="gd-grow"></span>
+                        <span class="gd-note">State</span>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-gd-mstate="ready">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-gd-mstate="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-gd-mstate="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-gd-mstate="error">Failed</button>
+                    </div>
+                    <div class="kp-matrix" data-kp-matrix data-kp-matrix-select="follow" data-gd-matrix="main"></div>
+                    <ul class="kp-heat__legend" aria-label="Legend">
+                        <li><span class="kp-heat__swatch kp-heat__swatch--plate" data-kp-tone="ok"></span> allowed, as declared (ports open)</li>
+                        <li><span class="kp-heat__swatch kp-heat__swatch--plate" data-kp-tone="warn"></span> mismatch</li>
+                        <li><span class="kp-heat__swatch kp-heat__swatch--plate" data-kp-tone="bad"></span> blocked</li>
+                        <li><span class="kp-heat__swatch kp-heat__swatch--plate" data-kp-tone="muted"></span> nothing open</li>
+                        <li><span class="kp-heat__swatch kp-heat__swatch--plate" data-kp-tone="none"></span> unknown</li>
+                        <li><span class="kp-heat__swatch kp-heat__swatch--plate" data-kp-tone="self"></span> itself</li>
+                        <li><span class="kp-heat__swatch kp-heat__swatch--plate" data-kp-tone="ok" data-kp-ringed></span> dropped on the way out</li>
+                        <li data-kp-end><span class="kp-keys" data-gd-keys="matrix"></span></li>
+                    </ul>
+                    <p class="gd-note" role="status" data-gd-matrix-detail>No cell pinned. Press a cell, or use the arrow keys.</p>
+                    <p class="gd-note" role="status" data-gd-matrix-light>Nothing lit. Press a name to light its row and column.</p>
+                </div>
+                <div class="gd-panel">
+                    <h3>The same matrix in a box 22 rem wide: it scrolls, the names stay</h3>
+                    <div class="gd-narrow">
+                        <div class="kp-matrix" data-kp-matrix data-gd-matrix="narrow"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="cat-block"
+                id="barcell"
+                data-review-item="barcell"
+                data-review-title="Bar in a table cell"
+                data-review-components="bar-cell"
+            >
+                <h2>
+                    A value with a bar in a data table cell<span class="gd-tag gd-tag--package">package</span
+                    ><span class="gd-tag gd-tag--mock">mock data</span>
+                </h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the bar and the figure in one cell, the figures aligned on their end edge, bars starting in one place; the sort by
+                    the value (not by the text); a row with no reading keeps the row height; the warning and destructive fills are the theme’s; at 390
+                    px the rows are cards and the bars keep their width.
+                </div>
+                <div class="gd-expect">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Capacity per stack</b>: each of CPU, Memory and Disk is a bar with its number on the end edge. The numbers line up on
+                            their right edge and the bars start in the same place in every row. From 75 % the bar turns warning, from 90 % destructive
+                            (platform’s disk is 94 %, backups’ disk 87 %, media’s memory 91 %); docs’ memory is 112 %: the bar is full and says so
+                            with its mark at the end. <b>network</b> has no reading: an empty track and the words “not read”, the same height as every
+                            other row.
+                        </li>
+                        <li>
+                            <b>Press a column heading</b> (CPU, Memory, Disk, On disk): the rows sort by the <b>value</b> under the bar, not by the
+                            text. Press again to reverse. “On disk” shows “440 MB” and “12.1 GB” but sorts by bytes (it carries
+                            <code>data-kp-sort-value</code>). Shift + click adds a second sort key. The row for network (no reading) sorts first
+                            ascending.
+                        </li>
+                        <li>
+                            <b>Show loading</b> turns every bar into the theme’s busy track at the same size, the numbers empty; pressing it again
+                            brings the readings back.
+                        </li>
+                        <li>
+                            <b>Disk growth</b> (second table) is written in markup only: <code>data-kp-bar="0.82"</code> on a span, and a sort value
+                            on the cell for “Full in”. Sort it by “Full in”: 6 days comes before 41 days and “never” comes last, because the sort
+                            value is 9999, not the text.
+                        </li>
+                        <li>
+                            On a narrow window the table becomes one card per row with the column names in front of each bar; the bars still line up.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The bar is the formal meter (ruled column, navy entry) with its figure on the end edge in tabular figures; warning and
+                        destructive are the ledger’s ochre and red. Sorting follows the value under the bar.
+                    </p>
+                </div>
+                <div class="gd-stack">
+                    <div class="gd-panel">
+                        <h3>Capacity per stack (cells written by script)</h3>
+                        <div class="gd-bar">
+                            <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-gd-bar-load>Show loading</button>
+                        </div>
+                        <div class="kp-datatable" data-kp-datatable data-kp-cards data-kp-page-sizes="none" data-kp-sort-multi>
+                            <div class="kp-table-wrap">
+                                <table class="kp-table">
+                                    <caption class="kp-sr-only">
+                                        Capacity per stack. CPU, memory and disk are bars; sorting uses the share, not the text.
+                                    </caption>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" data-kp-sort="text">Stack</th>
+                                            <th scope="col" data-kp-sort="number">CPU</th>
+                                            <th scope="col" data-kp-sort="number">Memory</th>
+                                            <th scope="col" data-kp-sort="number">Disk</th>
+                                            <th scope="col" data-kp-sort="number" class="kp-text-end">On disk</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody data-gd-cap></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gd-panel">
+                        <h3>Disk growth (cells written in markup)</h3>
+                        <div class="kp-datatable" data-kp-datatable data-kp-cards data-kp-page-sizes="none">
+                            <div class="kp-table-wrap">
+                                <table class="kp-table">
+                                    <caption class="kp-sr-only">
+                                        Disk growth per filesystem. The first bar is how full the disk is now; the last column is days until full.
+                                    </caption>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" data-kp-sort="text">Where</th>
+                                            <th scope="col" data-kp-sort="number">Now</th>
+                                            <th scope="col" data-kp-sort="number" class="kp-text-end">Trend</th>
+                                            <th scope="col" data-kp-sort="number" class="kp-text-end">Full in</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td data-label="Where">Host <b class="kp-mono">/</b></td>
+                                            <td data-label="Now"><span class="kp-bar-cell" data-kp-bar="0.82" data-kp-bar-label="full"></span></td>
+                                            <td data-label="Trend" class="kp-text-end kp-numeric" data-kp-sort-value="0.42">+0.42 %/day</td>
+                                            <td data-label="Full in" class="kp-text-end" data-kp-sort-value="6">6 days</td>
+                                        </tr>
+                                        <tr>
+                                            <td data-label="Where">Stack <b class="kp-mono">media</b></td>
+                                            <td data-label="Now"><span class="kp-bar-cell" data-kp-bar="0.57" data-kp-bar-label="full"></span></td>
+                                            <td data-label="Trend" class="kp-text-end kp-numeric" data-kp-sort-value="0.1">+0.10 %/day</td>
+                                            <td data-label="Full in" class="kp-text-end" data-kp-sort-value="41">41 days</td>
+                                        </tr>
+                                        <tr>
+                                            <td data-label="Where">Stack <b class="kp-mono">backups</b></td>
+                                            <td data-label="Now"><span class="kp-bar-cell" data-kp-bar="0.93" data-kp-bar-label="full"></span></td>
+                                            <td data-label="Trend" class="kp-text-end kp-numeric" data-kp-sort-value="-0.05">−0.05 %/day</td>
+                                            <td data-label="Full in" class="kp-text-end" data-kp-sort-value="9999">never</td>
+                                        </tr>
+                                        <tr>
+                                            <td data-label="Where">Stack <b class="kp-mono">home</b></td>
+                                            <td data-label="Now"><span class="kp-bar-cell" data-kp-bar="0.31" data-kp-bar-label="full"></span></td>
+                                            <td data-label="Trend" class="kp-text-end kp-numeric" data-kp-sort-value="0.02">+0.02 %/day</td>
+                                            <td data-label="Full in" class="kp-text-end" data-kp-sort-value="9999">never</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

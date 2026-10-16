@@ -112,6 +112,11 @@
  * @property {string} toolbarShowingOnly  The word before the filters that are on, in a list toolbar's active row (js/toolbar.js) [kpadopt-controls]
  * @property {string} toolbarClearAll       The toolbar's button that turns every filter off [kpadopt-controls]
  * @property {string} keysLabel            The accessible name of a line of keyboard shortcuts (js/keys.js) [kpadopt-controls]
+ * @property {string} heatLoading           What a heat grid's or matrix's cell says while its value is being read (js/heat.js) [kpadopt2-grids]
+ * @property {string} heatEmpty             A heat grid or matrix with no rows [kpadopt2-grids]
+ * @property {string} heatFailed            A heat grid or matrix that could not be read [kpadopt2-grids]
+ * @property {string} matrixSelf            A matrix cell that pairs a row with itself, for a screen reader [kpadopt2-grids]
+ * @property {string} matrixUnknown         A matrix cell with no answer, for a screen reader [kpadopt2-grids]
  * @property {string} tableClearSearch      The way out of the no-match state
  * @property {(active: number) => string} tableAddFilter  The "+ Add filter" button of a table in the add-filter mode, with the number of active filters
  * @property {string} tableAddFilterMenu    The name of its menu of filterable columns
@@ -453,6 +458,11 @@ export const DEFAULT_STRINGS = Object.freeze({
     toolbarShowingOnly: 'Showing only',
     toolbarClearAll: 'Clear all',
     keysLabel: 'Keyboard shortcuts',
+    heatLoading: 'Reading…',
+    heatEmpty: 'Nothing to show.',
+    heatFailed: 'Could not be read.',
+    matrixSelf: 'itself',
+    matrixUnknown: 'unknown',
     tableClearSearch: 'Clear the search and filters',
     // The add-filter mode [Kenny, 2026-09-14, "Allebei, per tabel"], in the
     // words of the approved mock, research/datatable/demo.html#filter-add.

@@ -2650,7 +2650,9 @@
             :is(.kp-calendar--busy-days, .kp-calendar--busy-whole:not(:has(> .kp-calendar__grid[aria-busy='true'])))
             .kp-calendar__day[data-kp-tone='loading']
             > .kp-calendar__day-busy:not([data-kp-leaving])::after,
-        [data-theme='titanium'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy:not([data-kp-leaving])::after {
+        [data-theme='titanium']
+            .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true'])
+            > .kp-calendar__busy:not([data-kp-leaving])::after {
             content: '';
             position: absolute;
             inset: 0;
@@ -3455,3 +3457,45 @@
         );
     }
 }
+
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* Machined tiles: square, a bright chamfer on the top and start edges and a dark one on the others, nothing eased; the pick is an engraved bracket round the column. */
+    [data-theme='titanium'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 0;
+        --kp-heat-cell-lift: inset 1px 1px 0 hsl(from var(--foreground) h s l / 0.28), inset -1px -1px 0 hsl(from var(--background) h s 0% / 0.4);
+        --kp-heat-cell-hover: none;
+        --kp-matrix-cell-hover: none;
+        --kp-heat-cell-gap: 2px;
+    }
+    [data-theme='titanium'] .kp-heat__cell:hover:not(.kp-skeleton, [aria-disabled='true']),
+    [data-theme='titanium'] .kp-matrix__cell:hover:not([data-kp-inert]) {
+        filter: brightness(1.2);
+    }
+    [data-theme='titanium'] .kp-heat__cell[data-kp-picked] {
+        outline: 1px solid var(--foreground);
+        outline-offset: 1px;
+    }
+    [data-theme='titanium'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 1px solid var(--foreground);
+        outline-offset: 2px;
+    }
+    [data-theme='titanium'] .kp-heat__label,
+    [data-theme='titanium'] .kp-matrix__row,
+    [data-theme='titanium'] .kp-matrix__col {
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='titanium'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='titanium'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='titanium'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */

@@ -4223,11 +4223,7 @@
         inset-block-start: calc(-1 * var(--kp-tabbar-pad, 0.25rem) - 0.4rem);
         block-size: 0.7rem;
         border-radius: 2px;
-        background: repeating-linear-gradient(
-            -45deg,
-            hsl(from var(--primary) h s l / 0.85) 0 5px,
-            hsl(from var(--primary) h s l / 0.55) 5px 10px
-        );
+        background: repeating-linear-gradient(-45deg, hsl(from var(--primary) h s l / 0.85) 0 5px, hsl(from var(--primary) h s l / 0.55) 5px 10px);
         rotate: -1.5deg;
         scale: 0 1;
     }
@@ -4257,3 +4253,44 @@
         border: 2px solid var(--card);
     }
 }
+
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* Gummy sweets: round, glossy, a flat shadow under each; a pressed sweet drops into its shadow; the pick is a plum ring. */
+    [data-theme='pastel'] .kp-heat {
+        --kp-heat-cell-radius: 999px;
+        --kp-heat-cell-gap: 4px;
+        --kp-heat-cell-lift: 0 2px 0 hsl(from var(--foreground) h s l / 0.18);
+        --kp-heat-cell-hover: translateY(-2px);
+    }
+    [data-theme='pastel'] .kp-matrix {
+        --kp-heat-cell-radius: 14px;
+        --kp-heat-cell-lift: 0 3px 0 hsl(from var(--foreground) h s l / 0.16);
+        --kp-matrix-cell-hover: translateY(-2px);
+    }
+    [data-theme='pastel']
+        .kp-heat__cell:is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad'], [data-kp-tone='level']):not([data-kp-share]) {
+        background-image: linear-gradient(to bottom, hsl(from var(--background) h s 100% / 0.55) 0 30%, transparent 30%), var(--kp-heat-pattern);
+    }
+    [data-theme='pastel'] .kp-heat__cell:active:not(.kp-skeleton),
+    [data-theme='pastel'] .kp-matrix__cell:active:not([data-kp-inert]) {
+        transform: translateY(2px);
+        box-shadow: none;
+    }
+    [data-theme='pastel'] .kp-heat__cell[data-kp-picked],
+    [data-theme='pastel'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 3px solid var(--primary);
+        outline-offset: 1px;
+    }
+    [data-theme='pastel'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='pastel'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='pastel'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */

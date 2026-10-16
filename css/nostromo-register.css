@@ -3718,3 +3718,48 @@
             0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring);
     }
 }
+
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* Vents lit from behind: a dark slot per tile with the tone as the light inside it (a bright core, a soft bloom); nothing scales; the pick is an orange tab under the column. */
+    [data-theme='nostromo'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 2px;
+        --kp-heat-cell-gap: 3px;
+        --kp-heat-cell-hover: none;
+        --kp-matrix-cell-hover: none;
+    }
+    [data-theme='nostromo']
+        .kp-heat__cell:is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad'], [data-kp-tone='level']):not([data-kp-share]),
+    [data-theme='nostromo'] .kp-heat__swatch:is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad'], [data-kp-tone='level']) {
+        background-image: radial-gradient(ellipse at 50% 50%, hsl(from var(--background) h s 100% / 0.28), transparent 70%), var(--kp-heat-pattern);
+        box-shadow:
+            inset 0 0 0 1px hsl(from var(--background) h s 0% / 0.6),
+            0 0 6px hsl(from var(--kp-heat-fill) h s l / 0.45);
+    }
+    [data-theme='nostromo'] .kp-heat__cell:hover:not(.kp-skeleton, [aria-disabled='true']),
+    [data-theme='nostromo'] .kp-matrix__cell:hover:not([data-kp-inert]) {
+        filter: brightness(1.25);
+    }
+    [data-theme='nostromo'] .kp-heat__cell[data-kp-picked] {
+        outline: none;
+        box-shadow: 0 4px 0 -1px var(--primary);
+    }
+    [data-theme='nostromo'] .kp-heat__label,
+    [data-theme='nostromo'] .kp-matrix__row,
+    [data-theme='nostromo'] .kp-matrix__col {
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='nostromo'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='nostromo'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='nostromo'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */

@@ -82,6 +82,7 @@
 //   data-kp-fixed-columns    the key column stays while the box scrolls sideways
 //   data-kp-server           the rows come from the consumer's `load`, stale answers dropped
 //   th data-kp-edit          a value is edited in its cell; the app hears it and may refuse it
+//   td data-kp-sort-value    the value a cell sorts and range/date-filters by in place of the text it shows
 //   data-kp-grid             a roving focus grid: arrows, Home/End, Page Up/Down
 //
 // And the add-filter mode of Kenny's form of 2026-09-14 ("Allebei, per
@@ -956,6 +957,13 @@ export function attachDataTables(
             if (cell === undefined) return '';
             return ((cell.querySelector(EDIT_VALUE) ?? cell).textContent ?? '').trim();
         };
+        /**
+         * What a cell sorts and range-filters by: its `data-kp-sort-value` [kpadopt2-grids] when it has one (a
+         * bar cell shows "62%" and sorts by 62; a size shows "1.4 GB" and sorts by its bytes), else what it shows.
+         * Search and choice filters keep reading the shown text.
+         * @param {HTMLTableRowElement} row @param {number} at
+         */
+        const cellValue = (row, at) => row.cells[at]?.getAttribute('data-kp-sort-value') ?? cellText(row, at);
         /** @param {HTMLTableRowElement} row */
         const keyOf = (row) => row.dataset.kpRowKey ?? row.id ?? '';
 
@@ -2604,8 +2612,8 @@ export function attachDataTables(
                 const order = orders[key.column];
                 /** @param {string} x @param {string} y */
                 const by = (x, y) => compareFn(x, y, kind, locale);
-                const left = cellText(a, key.column);
-                const right = cellText(b, key.column);
+                const left = cellValue(a, key.column);
+                const right = cellValue(b, key.column);
                 const c = order ? compareByOrder(order, left, right, by) : by(left, right);
                 if (c !== 0) return key.direction === 'ascending' ? c : -c;
             }
@@ -2637,7 +2645,7 @@ export function attachDataTables(
                 }
                 for (const [at, value] of filters) {
                     const kind = filterKinds[at];
-                    if (kind && !matchesFilter(kind, value, cellText(row, at), locale)) return false;
+                    if (kind && !matchesFilter(kind, value, kind === 'choice' ? cellText(row, at) : cellValue(row, at), locale)) return false;
                 }
                 return true;
             });

@@ -3521,7 +3521,9 @@
             :is(.kp-calendar--busy-days, .kp-calendar--busy-whole:not(:has(> .kp-calendar__grid[aria-busy='true'])))
             .kp-calendar__day[data-kp-tone='loading']
             > .kp-calendar__day-busy:not([data-kp-leaving])::after,
-        [data-theme='synthwave'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy:not([data-kp-leaving])::after {
+        [data-theme='synthwave']
+            .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true'])
+            > .kp-calendar__busy:not([data-kp-leaving])::after {
             content: '';
             position: absolute;
             inset: 0;
@@ -4405,3 +4407,47 @@
             0 0 8px hsl(from var(--primary) h s l / 0.55);
     }
 }
+
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* A glowing core in a pale tube: each tile is a rounded tube lit from inside, its glow the tone's own light; the pick is a cyan rail pair. */
+    [data-theme='synthwave'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 999px;
+        --kp-heat-cell-gap: 3px;
+    }
+    [data-theme='synthwave'] .kp-matrix {
+        --kp-heat-cell-radius: 8px;
+    }
+    [data-theme='synthwave']
+        .kp-heat__cell:is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad'], [data-kp-tone='level']):not([data-kp-share]),
+    [data-theme='synthwave'] .kp-heat__swatch:is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad'], [data-kp-tone='level']) {
+        background-image: linear-gradient(to bottom, hsl(from var(--background) h s 100% / 0.45), transparent 55%), var(--kp-heat-pattern);
+        box-shadow: 0 0 8px hsl(from var(--kp-heat-fill) h s l / 0.7);
+    }
+    [data-theme='synthwave'] .kp-heat__cell[data-kp-share] {
+        box-shadow: 0 0 6px hsl(from var(--kp-heat-fill) h s l / 0.5);
+    }
+    [data-theme='synthwave'] .kp-heat__cell[data-kp-picked] {
+        outline: none;
+        box-shadow:
+            0 -3px 0 -1px var(--accent),
+            0 3px 0 -1px var(--accent);
+    }
+    [data-theme='synthwave'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: none;
+        box-shadow:
+            0 0 0 2px var(--accent),
+            0 0 12px var(--accent);
+    }
+    [data-theme='synthwave'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='synthwave'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='synthwave'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */

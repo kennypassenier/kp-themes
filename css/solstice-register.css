@@ -2464,10 +2464,7 @@
         }
 
         [data-theme='solstice']
-            :is(
-                .kp-combobox__list:popover-open,
-                .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open
-            ) {
+            :is(.kp-combobox__list:popover-open, .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open) {
             animation: kp-sig-solstice-kindled var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) backwards;
         }
 
@@ -2679,3 +2676,34 @@
         box-shadow: 0 0 14px hsl(from var(--primary) h s l / 0.4);
     }
 }
+
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* Low sun: each tile is a hillside lit from its foot (a warm band along the bottom edge), and a tile under the pointer lets the sun rise 2 px; the pick is a gold ring. */
+    [data-theme='solstice'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 6px;
+        --kp-heat-cell-hover: translateY(-2px);
+        --kp-matrix-cell-hover: translateY(-2px);
+    }
+    [data-theme='solstice']
+        .kp-heat__cell:is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad'], [data-kp-tone='level']):not([data-kp-share]),
+    [data-theme='solstice'] .kp-heat__swatch:is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad'], [data-kp-tone='level']) {
+        background-image: linear-gradient(to top, hsl(from var(--primary) h s 85% / 0.7) 0 22%, transparent 22%), var(--kp-heat-pattern);
+    }
+    [data-theme='solstice'] .kp-heat__cell[data-kp-picked],
+    [data-theme='solstice'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+    [data-theme='solstice'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='solstice'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='solstice'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */

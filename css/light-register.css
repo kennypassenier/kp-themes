@@ -2703,3 +2703,38 @@
         box-shadow: 0 1px 2px hsl(from var(--foreground) h s l / 0.12);
     }
 }
+
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* Paper tiles with a hairline shadow that settles 2 px on a press; the pick is a slim indigo bar under the column's tiles. */
+    [data-theme='light'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 5px;
+        --kp-heat-cell-lift: 0 1px 2px hsl(from var(--foreground) h s l / 0.14);
+        --kp-heat-cell-hover: translateY(-1px);
+        --kp-matrix-cell-hover: translateY(-1px);
+    }
+    [data-theme='light'] .kp-heat__cell:active:not(.kp-skeleton),
+    [data-theme='light'] .kp-matrix__cell:active:not([data-kp-inert]) {
+        transform: translateY(2px);
+        box-shadow: none;
+    }
+    [data-theme='light'] .kp-heat__cell[data-kp-picked] {
+        outline: none;
+        box-shadow: 0 3px 0 -1px var(--primary);
+    }
+    [data-theme='light'] .kp-heat__label-button[aria-pressed='true'] {
+        background: color-mix(in oklab, var(--primary) 12%, var(--card));
+        color: var(--primary);
+    }
+    [data-theme='light'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='light'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='light'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */

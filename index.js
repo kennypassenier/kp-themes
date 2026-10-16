@@ -123,6 +123,28 @@ export {
 export { TOOLBAR, TOOLBAR_CLEAR_EVENT, TOOLBAR_REMOVE_EVENT, attachToolbars, setToolbarActive, toolbarSearch } from './js/toolbar.js';
 /** @typedef {import('./js/toolbar.js').ToolbarFilter} ToolbarFilter */
 export { KEYS, attachKeys, setKeys } from './js/keys.js';
+// The heat grid, the matrix and the bar in a table cell [kpadopt2-grids].
+export {
+    HEAT,
+    HEAT_PAGE_EVENT,
+    HEAT_PICK_EVENT,
+    HEAT_ROW_EVENT,
+    MATRIX,
+    MATRIX_LIGHT_EVENT,
+    MATRIX_PICK_EVENT,
+    attachHeats,
+    attachMatrices,
+    setHeat,
+    setHeatPick,
+    setHeatRows,
+    setMatrix,
+    setMatrixLit,
+    setMatrixPick,
+} from './js/heat.js';
+/** @typedef {import('./js/heat.js').HeatSpec} HeatSpec */
+/** @typedef {import('./js/heat.js').MatrixSpec} MatrixSpec */
+export { BAR_CELL, SORT_VALUE_ATTRIBUTE, attachBarCells, setBarCell } from './js/barcell.js';
+/** @typedef {import('./js/barcell.js').BarCell} BarCell */
 /** @typedef {import('./js/keys.js').KeyPair} KeyPair */
 export { HOVERCARD_ATTRIBUTE, HOVERCARD_CARD, HOVERCARD_EVENT, attachHoverCards } from './js/hovercard.js';
 // Information that updates in place, the theme's way [research/update-motion, 2026-10-05].
