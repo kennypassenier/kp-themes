@@ -11541,7 +11541,9 @@
  * `--kp-g-now`, seconds from a base moment) and its own two (`--kp-g-s`,
  * `--kp-g-e`), so a growing bar and a moving window repaint nothing else.
  * A lane's height is its rows times --kp-gantt-row and never shrinks while
- * the window stays: a run that finishes moves nothing.
+ * the window stays: a run that finishes moves nothing. The viewport keeps
+ * the height it first had with data (js/gantt.js), so a start that needs a
+ * new row scrolls inside the frame and the page does not jump.
  *
  * The state is a shape as well as a colour [DI4]: ok is solid; failed is
  * solid, taller, with a cap at its end and a cross where the bar is wide
@@ -11566,17 +11568,32 @@
         gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
     }
 
+    /* The chip floats over the foot of the plot, inside the frame: absent it
+ * takes no height (no empty row at any width), present it moves nothing. */
     .kp-gantt__selection {
+        position: absolute;
+        inset-block-end: var(--kp-space-sm, 0.5rem);
+        inset-inline: var(--kp-space-sm, 0.5rem);
+        z-index: 5;
+        box-sizing: border-box;
+        inline-size: fit-content;
+        max-inline-size: calc(100% - 2 * var(--kp-space-sm, 0.5rem));
+        margin-inline-start: auto;
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-        gap: var(--kp-space-sm, 0.5rem);
-        margin-inline-start: auto;
-        visibility: hidden;
+        justify-content: flex-end;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        border: 1px solid var(--border-strong, var(--border));
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground, var(--foreground));
+        box-shadow: 0 2px 8px color-mix(in oklab, var(--foreground) 18%, transparent);
     }
 
-    .kp-gantt__selection[data-kp-active] {
-        visibility: visible;
+    .kp-gantt__selection[hidden] {
+        display: none;
     }
 
     .kp-gantt__selected {
@@ -76670,6 +76687,27 @@
         --kp-kbd-ground: var(--card);
         --kp-kbd-foot: 1px;
         font-family: var(--theme-font-body);
+    }
+
+    /* Loading in the ledger keeps the shape of what is loading: each ghost is a plate of the pill's or the bar's own size (a pale ground,
+       a ruled edge, 2 px corners) and the navy rule of the skeleton is ruled along its foot, as on every other waiting surface. Without
+       this the skeleton's single ruled line would replace the pills and bars. */
+    [data-theme='formal'] .kp-gantt__ghost .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block),
+    [data-theme='formal'] .kp-week__ghost.kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        border: 1px solid var(--border);
+        border-radius: 2px;
+        background: var(--muted);
+    }
+    [data-theme='formal'] .kp-gantt__ghost .kp-gantt__run.kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        position: absolute;
+        block-size: var(--kp-gantt-bar, 1.125rem);
+    }
+    [data-theme='formal'] .kp-week__ghost.kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        position: absolute;
+        block-size: var(--kp-week-pill, 1.5rem);
+    }
+    [data-theme='formal'] .kp-gantt__ghost.kp-gantt__lane > .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        block-size: 0.75rem;
     }
 }
 

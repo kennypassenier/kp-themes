@@ -106,7 +106,7 @@ SECTIONS.push({
     about: 'A column holds as many pills as its height fits. The rest is folded into a +N button at the end of the stack; its menu (the package’s menu button) lists them. The column never grows.',
     expected: [
         'Thursday has fourteen items between 01:00 and 04:30. Its column shows a stack of pills and, at the foot of the stack, a <b>+N</b> button instead of one more pill. No pill sits on another and the column keeps its height.',
-        'The menu under +N is open now (its opened state): it lists the folded items with their time and name. Pick one: it is reported like a pill.',
+        'The menu under +N opens by itself, joined to its button, as soon as that button is in view (it is not open while the button is below the fold); it closes again when the button leaves the view. It lists the folded items with their time and name. Pick one: it is reported like a pill.',
         '<b>Open the +N menu</b> opens it again; Esc closes it and returns the focus to +N; a click elsewhere closes it too.',
         '<b>Add an item</b> puts a fifteenth item on Thursday, <b>Remove one</b> takes one away: the number on +N follows and nothing else moves. Fewer items than the column holds: no +N at all.',
         'The 360 px column shows all fourteen items as rows and no +N.',
@@ -167,7 +167,7 @@ SECTIONS.push({
         'Hover a bar: a card with name, times, length and state (a running one counts up). Click it or press Enter: the readout under the timeline logs it. Tab enters once; the arrows move along a lane (left, right) and between lanes (up, down).',
         'The range buttons <b>1h 6h 24h 7d</b> change how much time shows. <b>Live</b> (pressed) makes the right edge follow now; press it to freeze the window, press again to follow.',
         'Drag across the plot: a dashed band, then a chip with the range, <b>Zoom</b> (the window becomes the range and stops following) and <b>Clear</b>. A click on a bar without a drag still opens it.',
-        'The buttons under the timeline drive it: <b>Start a run</b> adds a running bar, <b>Finish</b> turns the oldest running one solid, <b>Fail</b> turns it failed, <b>Queue a run</b> adds a hollow one, <b>Start the queued run</b> turns it striped. <b>Fast time</b> runs the clock sixty times faster so growth is visible; no lane changes height when a run ends.',
+        'The buttons under the timeline drive it: <b>Start a run</b> adds a running bar, <b>Finish</b> turns the oldest running one solid, <b>Fail</b> turns it failed, <b>Queue a run</b> adds a hollow one, <b>Start the queued run</b> turns it striped. <b>Fast time</b> runs the clock sixty times faster so growth is visible. The frame does not change height when a run starts or ends: the lanes with a run still open already hold a spare row, and a start that needs more scrolls inside the frame. Pressing a range button, <b>Live</b> or <b>Zoom</b> lays the lanes out again.',
     ],
     look: 'Press Start a run, then Fast time, and watch a bar grow; then drag across the plot.',
     body: `
@@ -182,11 +182,11 @@ SECTIONS.push({
                 <div class="kt-cols kt-cols--gantt">
                     <div>
                         <p class="kt-label">Full width</p>
-                        <div class="kp-gantt" data-kp-gantt data-kp-gantt-range="6h" id="kt-gantt-wide" aria-label="Operations of the dashboard"></div>
+                        <div class="kp-gantt" data-kp-gantt data-kp-gantt-range="6h" data-kp-gantt-ghosts="2 3 2 1 1" id="kt-gantt-wide" aria-label="Operations of the dashboard"></div>
                     </div>
                     <div>
                         <p class="kt-label">Phone, 360 px</p>
-                        <div class="kt-phone"><div class="kp-gantt" data-kp-gantt data-kp-gantt-range="6h" id="kt-gantt-phone" aria-label="Operations of the dashboard"></div></div>
+                        <div class="kt-phone"><div class="kp-gantt" data-kp-gantt data-kp-gantt-range="6h" data-kp-gantt-ghosts="2 3 2 1 1" id="kt-gantt-phone" aria-label="Operations of the dashboard"></div></div>
                     </div>
                 </div>
                 <pre class="kt-log" id="kt-gantt-log" aria-label="What the timeline reported" aria-live="off"></pre>`,
@@ -198,9 +198,9 @@ SECTIONS.push({
     title: 'Run timeline: loading, empty, error, a held window, the hover card',
     about: 'The states of the whole timeline at their final size, a window held in the past with a selected range, and the hover card opened on a failed run.',
     expected: [
-        '<b>Loading</b>: three ghost lanes with pulsing ghost bars; the axis is already there.',
+        '<b>Loading</b>: five ghost lanes as tall as the real ones, each ghost bar a plate of a bar’s size with the navy rule ruled along its foot (formal’s own loading); the axis is already there.',
         '<b>Empty</b>: the axis and the sentence “No run in this window.” over a lane-sized space. <b>Error</b>: the page’s words in the destructive colour.',
-        '<b>A held window</b>: the Live button is not pressed, the window ends two hours ago and does not move; a range is already selected (a band across the plot and a chip with its times, Zoom and Clear). <b>Zoom</b> makes the band the window; <b>Clear</b> lifts it.',
+        '<b>A held window</b>: the Live button is not pressed, the window ends two hours ago and does not move; a range is already selected (a band across the plot and a chip floating over the foot of the plot with its times, Zoom and Clear; the chip takes no room of its own, so the other timelines have no gap where it would be). <b>Zoom</b> makes the band the window; <b>Clear</b> lifts it.',
         '<b>Show the hover card on the failed run</b> opens the card on the failed bar of the held window: name, times, length and state, joined to its bar, with its edge whole in this theme.',
     ],
     look: 'Check the ghost lanes against the real lanes above, and the card against its bar.',
@@ -209,7 +209,7 @@ SECTIONS.push({
                     <button type="button" class="kp-button" id="kt-hover-open">Show the hover card on the failed run</button>
                 </div>
                 <div class="kt-stack">
-                    <div><p class="kt-label">Loading</p><div class="kp-gantt" data-kp-gantt id="kt-gstate-loading" aria-label="Loading history"></div></div>
+                    <div><p class="kt-label">Loading</p><div class="kp-gantt" data-kp-gantt data-kp-gantt-ghosts="2 3 2 1 1" id="kt-gstate-loading" aria-label="Loading history"></div></div>
                     <div><p class="kt-label">Empty</p><div class="kp-gantt" data-kp-gantt id="kt-gstate-empty" aria-label="Empty history"></div></div>
                     <div><p class="kt-label">Error</p><div class="kp-gantt" data-kp-gantt id="kt-gstate-error" aria-label="Failed history"></div></div>
                     <div><p class="kt-label">A held window with a selected range</p><div class="kp-gantt" data-kp-gantt data-kp-gantt-live="false" data-kp-gantt-range="6h" id="kt-gstate-held" aria-label="History held in the past"></div></div>

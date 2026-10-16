@@ -12,7 +12,7 @@ import {
     GANTT_WINDOW_EVENT,
 } from '../../js/gantt.js';
 import { attachHoverCards } from '../../js/hovercard.js';
-import { openMenu } from '../../js/menu-button.js';
+import { closeMenu, openMenu } from '../../js/menu-button.js';
 import { dayKey, shiftDay } from '../../js/calendar.js';
 import { zonedTime } from '../../js/chart.js';
 
@@ -191,8 +191,21 @@ byId('kt-more-open').addEventListener('click', () => {
     const wrapper = moreWrapper();
     if (wrapper) openMenu(wrapper, { focus: 'first' });
 });
-// The opened state, shown once the menu module has filled the menu.
-window.setTimeout(showMore, 700);
+// The opened state: shown while the +N button is wholly in view, so it opens joined to its button and never above it from
+// below the fold; closed again when the button leaves the view.
+window.setTimeout(() => {
+    const wrapper = moreWrapper();
+    if (!wrapper) return;
+    new IntersectionObserver(
+        (entries) => {
+            const last = entries[entries.length - 1];
+            if (!last) return;
+            if (last.intersectionRatio >= 0.99) window.setTimeout(() => last.target.isConnected && showMore(), 250);
+            else closeMenu(wrapper);
+        },
+        { threshold: [0, 0.99] },
+    ).observe(/** @type {Element} */ (wrapper.querySelector('button')));
+}, 700);
 
 /* ------------------------------------------------------------ week states */
 

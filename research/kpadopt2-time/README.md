@@ -20,7 +20,8 @@ Kenny's rule (2026-10-15): the dashboard draws nothing itself, so what the packa
 
 ## Open for Kenny to judge in the demo
 
-1. A lane gains a row when a run starts that overlaps another (the frame grows by one row); lanes never shrink while the window stays. Right trade-off?
+1. A run that overlaps another needs a row, and the frame must not jump while a person watches. Decided in the build: a lane with a run still open reserves one spare row (the next start overlaps it), and the scrolling viewport keeps the height it first had with data, so a start that needs yet another row scrolls inside the frame (the pattern of a table with a fixed-height body, not a page that grows under the cursor). Only an act of the person (a range button, Live, Zoom) or the page's own `loading` lays the lanes out again. The alternative, reserving the rows of every lane for every window, leaves empty ruled rows on a calm day. Right trade-off?
 2. Pills mark time by their top edge, not their centre; the axis labels sit on the hour lines.
 3. `+N` sits at the foot of the stack and opens the package's menu button, not a custom popover.
 4. Running bars march stripes; the other themes’ motion grammar waits for the formal verdict.
+5. The selected range is a chip floating over the foot of the plot, not a row of the toolbar: absent it costs no height at any width, present it moves nothing, but it can cover the lowest lane's bars until Clear.

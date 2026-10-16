@@ -34,7 +34,15 @@
 //            following now) and Clear. Live returns to following now
 //   lanes    a run takes the first row of its lane where no other run is
 //            in its way; a lane's rows never fewer while the window stays
-//            the same, so a run finishing moves nothing
+//            the same, so a run finishing moves nothing. A lane with a run
+//            still open reserves one spare row, and the frame keeps the
+//            height it had with data: a start that needs more rows scrolls
+//            inside the frame, the page never jumps. Only what a person
+//            asks for (range, Live, Zoom) lays the lanes out again.
+//            `data-kp-gantt-ghosts="2 3 2 1 1"` sets the rows of the
+//            loading lanes, so loading and loaded are as tall
+//   chip     the selected range floats over the foot of the plot and is
+//            absent (no height, no gap) until a range is selected
 //   keys     one tab stop: ← → move along a lane, ↑ ↓ to the nearest bar
 //            of the neighbouring lane, Home and End to the lane's first and
 //            last, Enter or Space opens; the range, Live, Zoom and Clear
@@ -99,7 +107,7 @@ export const GANTT_STEPS = Object.freeze([60, 300, 900, 1800, 3600, 10_800, 21_6
  *   plot: HTMLElement, lines: HTMLElement, nowLine: HTMLElement, brushBox: HTMLElement, selectBox: HTMLElement,
  *   stateLine: HTMLElement, announcer: HTMLElement, ranges: HTMLElement, liveButton: HTMLButtonElement,
  *   selection: HTMLElement, selectionText: HTMLElement, ticks: Map<number, { label: HTMLElement, line: HTMLElement }>,
- *   ghosts: HTMLElement[], timer: number, observer: ResizeObserver | null, drag: { a: number, b: number } | null, dragMoved: boolean, tickKey: string }} GanttModel
+ *   ghosts: HTMLElement[], held: number | null, timer: number, observer: ResizeObserver | null, drag: { a: number, b: number } | null, dragMoved: boolean, tickKey: string }} GanttModel
  */
 
 /** @type {WeakMap<Element, GanttModel>} */
@@ -277,7 +285,7 @@ function build(c) {
     clear.title = s.ganttClearTitle;
     clear.dataset.kpGanttClear = '';
     c.selection.append(c.selectionText, zoom, clear);
-    bar.append(c.ranges, c.liveButton, c.selection);
+    bar.append(c.ranges, c.liveButton);
     c.decorate?.(c.liveButton, { kind: 'live', host: c.el, key: keyOf(c.el) });
     c.decorate?.(zoom, { kind: 'zoom', host: c.el, key: keyOf(c.el) });
     c.decorate?.(clear, { kind: 'clear', host: c.el, key: keyOf(c.el) });
@@ -307,7 +315,9 @@ function build(c) {
     c.announcer = make(doc, 'p', 'kp-gantt__announce');
     c.announcer.setAttribute('role', 'status');
     const frame = make(doc, 'div', 'kp-gantt__frame');
-    frame.append(c.scroll, c.stateLine);
+    // The chip floats over the plot's foot: it takes no height when absent and moves nothing when it comes.
+    c.selection.hidden = true;
+    frame.append(c.scroll, c.stateLine, c.selection);
     const hint = make(doc, 'p', 'kp-gantt__hint', s.ganttHint);
     const legend = make(doc, 'ul', 'kp-gantt__legend');
     for (const state of /** @type {const} */ (['ok', 'failed', 'running', 'queued'])) {
@@ -444,8 +454,10 @@ function paint(c) {
         model.label.firstElementChild && (model.label.firstElementChild.textContent = lane.label);
         model.label.title = lane.label;
         model.track.setAttribute('aria-label', lane.label);
-        // Rows never fewer while the window stays the same.
-        model.rows = Math.max(model.rows, packed.count);
+        // Rows never fewer while the window stays the same. A lane with a run still open reserves one spare row: the next start in it
+        // overlaps that run, so the frame already has the room and does not grow when the start comes.
+        const spare = bars.some((b) => b.e == null) ? 1 : 0;
+        model.rows = Math.max(model.rows, packed.count + spare);
         for (const b of bars) b.row = packed.rows.get(b.run.id) ?? 0;
         model.bars = bars;
         lanes.push(model);
@@ -483,9 +495,24 @@ function paint(c) {
     c.stateLine.textContent = c.state === 'ready' && !empty ? '' : words;
     c.stateLine.dataset.kpState = empty && c.state === 'ready' ? 'empty' : c.state;
     paintGhosts(c);
+    holdHeight(c);
     visible(c);
     refresh(c, nowMs);
     syncTabStops(c);
+}
+
+/**
+ * The scrolling viewport keeps the height it first had with data: a start that needs more rows than the lanes reserved scrolls
+ * inside the frame instead of moving the page. A change the person asks for (range, Live, Zoom) or the page's own `loading`
+ * releases it. @param {GanttModel} c
+ */
+function holdHeight(c) {
+    if (c.state !== 'ready' || c.lanes.length === 0) return;
+    if (c.held === null) {
+        c.scroll.style.removeProperty('block-size');
+        c.held = c.scroll.getBoundingClientRect().height;
+    }
+    if (c.held > 0) c.scroll.style.setProperty('block-size', `${c.held}px`);
 }
 
 /** Ghost lanes while loading with no lanes yet. @param {GanttModel} c */
@@ -501,8 +528,14 @@ function paintGhosts(c) {
         [0.08, 0.2, 0.52, 0.12],
         [0.3, 0.28],
         [0.14, 0.1, 0.6],
+        [0.4, 0.2],
+        [0.05, 0.5],
+        [0.25, 0.1],
     ];
-    shapes.forEach((bars, i) => {
+    // `data-kp-gantt-ghosts="2 3 2 1 1"`: the rows of each ghost lane, so the loading frame is as tall as the lanes will be.
+    const rows = (c.el.dataset.kpGanttGhosts ?? '1 1 1').split(/\s+/).map((n) => Math.max(1, Math.min(6, Number.parseInt(n, 10) || 1)));
+    rows.forEach((count, i) => {
+        const bars = /** @type {number[]} */ (shapes[i % shapes.length]);
         const label = make(doc, 'div', 'kp-gantt__lane kp-gantt__ghost');
         label.setAttribute('aria-hidden', 'true');
         label.append(make(doc, 'span', 'kp-skeleton'));
@@ -510,9 +543,10 @@ function paintGhosts(c) {
         const track = make(doc, 'div', 'kp-gantt__track kp-gantt__ghost');
         track.setAttribute('aria-hidden', 'true');
         track.style.setProperty('grid-row', String(i + 2));
-        track.style.setProperty('--kp-g-rows', '1');
+        track.style.setProperty('--kp-g-rows', String(count));
         for (const [k, at] of bars.entries()) {
             const piece = make(doc, 'span', 'kp-gantt__run kp-skeleton');
+            piece.style.setProperty('--kp-g-row', String(k % count));
             piece.style.setProperty('--kp-g-at', String(at));
             piece.style.setProperty('--kp-g-width', String(0.05 + ((i + k) % 3) * 0.05));
             track.append(piece);
@@ -521,7 +555,7 @@ function paintGhosts(c) {
         c.body.insertBefore(track, c.plot);
         c.ghosts.push(label, track);
     });
-    c.body.style.setProperty('--kp-g-lanes', String(shapes.length));
+    c.body.style.setProperty('--kp-g-lanes', String(rows.length));
 }
 
 /** Hide a bar wholly outside the window (it takes no tab stop). @param {GanttModel} c */
@@ -571,6 +605,7 @@ function focusBar(c, to) {
 function paintSelection(c) {
     const sel = c.selected;
     c.selection.toggleAttribute('data-kp-active', sel !== null);
+    c.selection.hidden = sel === null;
     c.selectBox.hidden = sel === null;
     if (!sel) {
         c.selectionText.textContent = '';
@@ -650,6 +685,7 @@ export function attachGantts(root = document, options = {}) {
             selectionText: el,
             ticks: new Map(),
             ghosts: [],
+            held: null,
             timer: 0,
             observer: null,
             drag: null,
@@ -828,6 +864,7 @@ export function attachGantts(root = document, options = {}) {
 /** A new window: lanes may need fewer rows again, the axis starts over. @param {GanttModel} c */
 function freshWindow(c) {
     for (const lane of c.lanes) lane.rows = 1;
+    c.held = null;
     c.tickKey = '';
     paint(c);
     tick(c);

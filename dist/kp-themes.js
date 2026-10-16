@@ -20609,7 +20609,7 @@ function build2(c) {
   clear.title = s2.ganttClearTitle;
   clear.dataset.kpGanttClear = "";
   c.selection.append(c.selectionText, zoom, clear);
-  bar.append(c.ranges, c.liveButton, c.selection);
+  bar.append(c.ranges, c.liveButton);
   c.decorate?.(c.liveButton, { kind: "live", host: c.el, key: keyOf4(c.el) });
   c.decorate?.(zoom, { kind: "zoom", host: c.el, key: keyOf4(c.el) });
   c.decorate?.(clear, { kind: "clear", host: c.el, key: keyOf4(c.el) });
@@ -20637,7 +20637,8 @@ function build2(c) {
   c.announcer = make4(doc, "p", "kp-gantt__announce");
   c.announcer.setAttribute("role", "status");
   const frame2 = make4(doc, "div", "kp-gantt__frame");
-  frame2.append(c.scroll, c.stateLine);
+  c.selection.hidden = true;
+  frame2.append(c.scroll, c.stateLine, c.selection);
   const hint = make4(doc, "p", "kp-gantt__hint", s2.ganttHint);
   const legend = make4(doc, "ul", "kp-gantt__legend");
   for (
@@ -20766,7 +20767,8 @@ function paint4(c) {
     model.label.firstElementChild && (model.label.firstElementChild.textContent = lane.label);
     model.label.title = lane.label;
     model.track.setAttribute("aria-label", lane.label);
-    model.rows = Math.max(model.rows, packed.count);
+    const spare = bars.some((b) => b.e == null) ? 1 : 0;
+    model.rows = Math.max(model.rows, packed.count + spare);
     for (const b of bars) b.row = packed.rows.get(b.run.id) ?? 0;
     model.bars = bars;
     lanes.push(model);
@@ -20806,9 +20808,18 @@ function paint4(c) {
   c.stateLine.textContent = c.state === "ready" && !empty ? "" : words;
   c.stateLine.dataset.kpState = empty && c.state === "ready" ? "empty" : c.state;
   paintGhosts(c);
+  holdHeight(c);
   visible2(c);
   refresh(c, nowMs);
   syncTabStops2(c);
+}
+function holdHeight(c) {
+  if (c.state !== "ready" || c.lanes.length === 0) return;
+  if (c.held === null) {
+    c.scroll.style.removeProperty("block-size");
+    c.held = c.scroll.getBoundingClientRect().height;
+  }
+  if (c.held > 0) c.scroll.style.setProperty("block-size", `${c.held}px`);
 }
 function paintGhosts(c) {
   const doc = c.el.ownerDocument;
@@ -20821,9 +20832,17 @@ function paintGhosts(c) {
   const shapes = [
     [0.08, 0.2, 0.52, 0.12],
     [0.3, 0.28],
-    [0.14, 0.1, 0.6]
+    [0.14, 0.1, 0.6],
+    [0.4, 0.2],
+    [0.05, 0.5],
+    [0.25, 0.1]
   ];
-  shapes.forEach((bars, i) => {
+  const rows = (c.el.dataset.kpGanttGhosts ?? "1 1 1").split(/\s+/).map((n) => Math.max(1, Math.min(6, Number.parseInt(n, 10) || 1)));
+  rows.forEach((count, i) => {
+    const bars = (
+      /** @type {number[]} */
+      shapes[i % shapes.length]
+    );
     const label = make4(doc, "div", "kp-gantt__lane kp-gantt__ghost");
     label.setAttribute("aria-hidden", "true");
     label.append(make4(doc, "span", "kp-skeleton"));
@@ -20831,9 +20850,10 @@ function paintGhosts(c) {
     const track = make4(doc, "div", "kp-gantt__track kp-gantt__ghost");
     track.setAttribute("aria-hidden", "true");
     track.style.setProperty("grid-row", String(i + 2));
-    track.style.setProperty("--kp-g-rows", "1");
+    track.style.setProperty("--kp-g-rows", String(count));
     for (const [k, at] of bars.entries()) {
       const piece = make4(doc, "span", "kp-gantt__run kp-skeleton");
+      piece.style.setProperty("--kp-g-row", String(k % count));
       piece.style.setProperty("--kp-g-at", String(at));
       piece.style.setProperty("--kp-g-width", String(0.05 + (i + k) % 3 * 0.05));
       track.append(piece);
@@ -20842,7 +20862,7 @@ function paintGhosts(c) {
     c.body.insertBefore(track, c.plot);
     c.ghosts.push(label, track);
   });
-  c.body.style.setProperty("--kp-g-lanes", String(shapes.length));
+  c.body.style.setProperty("--kp-g-lanes", String(rows.length));
 }
 function visible2(c) {
   const w = windowOf(c);
@@ -20880,6 +20900,7 @@ function focusBar(c, to) {
 function paintSelection(c) {
   const sel = c.selected;
   c.selection.toggleAttribute("data-kp-active", sel !== null);
+  c.selection.hidden = sel === null;
   c.selectBox.hidden = sel === null;
   if (!sel) {
     c.selectionText.textContent = "";
@@ -20954,6 +20975,7 @@ function attachGantts(root = document, options = {}) {
       selectionText: el2,
       ticks: /* @__PURE__ */ new Map(),
       ghosts: [],
+      held: null,
       timer: 0,
       observer: null,
       drag: null,
@@ -21122,6 +21144,7 @@ function attachGantts(root = document, options = {}) {
 }
 function freshWindow(c) {
   for (const lane of c.lanes) lane.rows = 1;
+  c.held = null;
   c.tickKey = "";
   paint4(c);
   tick3(c);

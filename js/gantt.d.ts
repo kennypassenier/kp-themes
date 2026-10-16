@@ -119,6 +119,7 @@ export type GanttModel = {
         line: HTMLElement;
     }>;
     ghosts: HTMLElement[];
+    held: number | null;
     timer: number;
     observer: ResizeObserver | null;
     drag: {

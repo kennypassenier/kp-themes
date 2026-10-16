@@ -126,8 +126,9 @@
                             <b>+N</b> button instead of one more pill. No pill sits on another and the column keeps its height.
                         </li>
                         <li>
-                            The menu under +N is open now (its opened state): it lists the folded items with their time and name. Pick one: it is
-                            reported like a pill.
+                            The menu under +N opens by itself, joined to its button, as soon as that button is in view (it is not open while the
+                            button is below the fold); it closes again when the button leaves the view. It lists the folded items with their time and
+                            name. Pick one: it is reported like a pill.
                         </li>
                         <li><b>Open the +N menu</b> opens it again; Esc closes it and returns the focus to +N; a click elsewhere closes it too.</li>
                         <li>
@@ -263,7 +264,9 @@
                         <li>
                             The buttons under the timeline drive it: <b>Start a run</b> adds a running bar, <b>Finish</b> turns the oldest running one
                             solid, <b>Fail</b> turns it failed, <b>Queue a run</b> adds a hollow one, <b>Start the queued run</b> turns it striped.
-                            <b>Fast time</b> runs the clock sixty times faster so growth is visible; no lane changes height when a run ends.
+                            <b>Fast time</b> runs the clock sixty times faster so growth is visible. The frame does not change height when a run
+                            starts or ends: the lanes with a run still open already hold a spare row, and a start that needs more scrolls inside the
+                            frame. Pressing a range button, <b>Live</b> or <b>Zoom</b> lays the lanes out again.
                         </li>
                     </ul>
                 </div>
@@ -288,6 +291,7 @@
                             class="kp-gantt"
                             data-kp-gantt
                             data-kp-gantt-range="6h"
+                            data-kp-gantt-ghosts="2 3 2 1 1"
                             id="kt-gantt-wide"
                             aria-label="Operations of the dashboard"
                         ></div>
@@ -299,6 +303,7 @@
                                 class="kp-gantt"
                                 data-kp-gantt
                                 data-kp-gantt-range="6h"
+                                data-kp-gantt-ghosts="2 3 2 1 1"
                                 id="kt-gantt-phone"
                                 aria-label="Operations of the dashboard"
                             ></div>
@@ -326,14 +331,18 @@
                 <div class="kt-expected">
                     <p><b>Expected:</b></p>
                     <ul>
-                        <li><b>Loading</b>: three ghost lanes with pulsing ghost bars; the axis is already there.</li>
+                        <li>
+                            <b>Loading</b>: five ghost lanes as tall as the real ones, each ghost bar a plate of a bar’s size with the navy rule ruled
+                            along its foot (formal’s own loading); the axis is already there.
+                        </li>
                         <li>
                             <b>Empty</b>: the axis and the sentence “No run in this window.” over a lane-sized space. <b>Error</b>: the page’s words
                             in the destructive colour.
                         </li>
                         <li>
                             <b>A held window</b>: the Live button is not pressed, the window ends two hours ago and does not move; a range is already
-                            selected (a band across the plot and a chip with its times, Zoom and Clear). <b>Zoom</b> makes the band the window;
+                            selected (a band across the plot and a chip floating over the foot of the plot with its times, Zoom and Clear; the chip
+                            takes no room of its own, so the other timelines have no gap where it would be). <b>Zoom</b> makes the band the window;
                             <b>Clear</b> lifts it.
                         </li>
                         <li>
@@ -354,7 +363,13 @@
                 <div class="kt-stack">
                     <div>
                         <p class="kt-label">Loading</p>
-                        <div class="kp-gantt" data-kp-gantt id="kt-gstate-loading" aria-label="Loading history"></div>
+                        <div
+                            class="kp-gantt"
+                            data-kp-gantt
+                            data-kp-gantt-ghosts="2 3 2 1 1"
+                            id="kt-gstate-loading"
+                            aria-label="Loading history"
+                        ></div>
                     </div>
                     <div>
                         <p class="kt-label">Empty</p>

@@ -4042,6 +4042,27 @@
         --kp-kbd-foot: 1px;
         font-family: var(--theme-font-body);
     }
+
+    /* Loading in the ledger keeps the shape of what is loading: each ghost is a plate of the pill's or the bar's own size (a pale ground,
+       a ruled edge, 2 px corners) and the navy rule of the skeleton is ruled along its foot, as on every other waiting surface. Without
+       this the skeleton's single ruled line would replace the pills and bars. */
+    [data-theme='formal'] .kp-gantt__ghost .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block),
+    [data-theme='formal'] .kp-week__ghost.kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        border: 1px solid var(--border);
+        border-radius: 2px;
+        background: var(--muted);
+    }
+    [data-theme='formal'] .kp-gantt__ghost .kp-gantt__run.kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        position: absolute;
+        block-size: var(--kp-gantt-bar, 1.125rem);
+    }
+    [data-theme='formal'] .kp-week__ghost.kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        position: absolute;
+        block-size: var(--kp-week-pill, 1.5rem);
+    }
+    [data-theme='formal'] .kp-gantt__ghost.kp-gantt__lane > .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        block-size: 0.75rem;
+    }
 }
 
 @layer kp.register {
