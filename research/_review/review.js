@@ -540,6 +540,8 @@ const steps = ORDER.flatMap((theme) => {
         theme,
         item,
     }));
+    // A theme with no section asked in it is no step: a re-review that asks a few pairs counts and walks only those.
+    if (!themePairs.length) return [];
     if (!ASPECT_MODE) return [{ title: LABEL[theme] || theme, theme, pairs: themePairs }];
     const aspectSteps = themePairs.flatMap((pair) =>
         pair.item.choices

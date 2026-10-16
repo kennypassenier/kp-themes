@@ -259,6 +259,7 @@ export function progressOf(shape, stored = storedFor(shape.id)) {
     const pairs = steps.flat();
     const pairsLeft = pairs.filter(open).length;
     const themeSteps = steps.slice(0, shape.themes.length);
+    // A theme with no section asked in it is no step, nor a theme of this round.
     const themesLeft = themeSteps.filter((step) => step.some(open)).length;
     const extrasLeft = shape.extras.length > 0 && shape.extras.some(open);
 
@@ -276,7 +277,7 @@ export function progressOf(shape, stored = storedFor(shape.id)) {
     else if (pairsLeft === pairs.length) state = 'new';
     return {
         state,
-        themes: shape.themes.length,
+        themes: themeSteps.filter((step) => step.length).length,
         themesLeft,
         extrasLeft,
         updated,
