@@ -4673,6 +4673,7 @@
         --kp-week-now: var(--primary);
     }
     [data-theme='synthwave'] .kp-gantt {
+        --kp-gantt-state-ground: var(--card);
         --kp-gantt-bar-radius: 2px;
         --kp-gantt-now: var(--primary);
     }

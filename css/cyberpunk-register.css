@@ -6275,6 +6275,7 @@
         --kp-week-now: var(--primary);
     }
     [data-theme='cyberpunk'] .kp-gantt {
+        --kp-gantt-state-ground: var(--card);
         --kp-gantt-bar-radius: 0;
         --kp-gantt-now: var(--primary);
     }

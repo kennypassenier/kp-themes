@@ -932,6 +932,8 @@ export const TIMINGS = Object.freeze({
     'kp-sig-synthwave-chase': { durationMs: 900, cycles: Infinity, property: 'background-position', luminanceSteps: [] },
     'kp-sig-synthwave-lane': { durationMs: 600, cycles: Infinity, property: 'transform', luminanceSteps: [] },
     'kp-sig-pastel-tape-drift': { durationMs: 600, cycles: Infinity, property: 'background-position', luminanceSteps: [] },
+    'kp-sig-blueprint-hatch': { durationMs: 2880, cycles: Infinity, property: 'background-size', luminanceSteps: [] },
+    'kp-sig-blueprint-chain': { durationMs: 960, cycles: Infinity, property: 'background-position', luminanceSteps: [] },
     'kp-sig-dark-run': { durationMs: 2400, cycles: Infinity, property: 'background-position', luminanceSteps: [] },
     'kp-sig-dark-bars': { durationMs: 2400, cycles: Infinity, property: '--kp-sig-dk-ph', luminanceSteps: [] },
     'kp-sig-dark-tap': { durationMs: 220, cycles: 1, property: 'background-position', luminanceSteps: [] },

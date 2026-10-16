@@ -8812,14 +8812,21 @@
         background: var(--muted);
     }
 
+    /* The sentence of a loading, empty or failed timeline stands centred over the plot, as wide as its words: a
+     * register that gives it a ground (--kp-gantt-state-ground, none by default) lifts it clear of the rules and the
+     * ghost bars under it, as the week agenda's sentence stands on its plate. */
     .kp-gantt__state {
         position: absolute;
         inset: var(--kp-gantt-axis, 1.75rem) 0 0;
         z-index: 4;
-        display: grid;
-        place-items: center;
-        margin: 0;
-        padding: var(--kp-space-md, 0.75rem);
+        box-sizing: border-box;
+        inline-size: fit-content;
+        max-inline-size: calc(100% - 2 * var(--kp-space-md, 0.75rem));
+        block-size: fit-content;
+        margin: auto;
+        padding: var(--kp-gantt-state-pad, var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem));
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--kp-gantt-state-ground, transparent);
         color: var(--muted-foreground);
         font-size: var(--kp-text-sm, 0.8125rem);
         text-align: center;

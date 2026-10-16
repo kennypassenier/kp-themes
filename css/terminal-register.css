@@ -4344,6 +4344,7 @@
         font-family: var(--theme-font-mono, var(--font-mono, monospace));
     }
     [data-theme='terminal'] .kp-gantt {
+        --kp-gantt-state-ground: var(--background);
         --kp-gantt-bar-radius: 0;
         font-family: var(--theme-font-mono, var(--font-mono, monospace));
     }
@@ -4370,7 +4371,7 @@
     }
     [data-theme='terminal'] .kp-week__col,
     [data-theme='terminal'] .kp-gantt__rule {
-        border-inline-style: dashed;
+        border-inline-start-style: dashed;
     }
     [data-theme='terminal'] .kp-week__now,
     [data-theme='terminal'] .kp-gantt__now {

@@ -4506,6 +4506,7 @@
         --kp-week-now: var(--primary);
     }
     [data-theme='pastel'] .kp-gantt {
+        --kp-gantt-state-ground: var(--card);
         --kp-gantt-bar-radius: var(--kp-sig-pa-r-chip);
         --kp-gantt-now: var(--primary);
     }

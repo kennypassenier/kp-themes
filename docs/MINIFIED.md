@@ -16,11 +16,11 @@ the selectors and their order are identical, which is what
 | File | Authored | Minified | Saved |
 | ---- | -------: | -------: | ----: |
 | `css/_rules.css` | 39.4 kB | 20.2 kB | 49% |
-| `css/blueprint-register.css` | 178.9 kB | 91.6 kB | 49% |
+| `css/blueprint-register.css` | 188.1 kB | 97.0 kB | 48% |
 | `css/brutalism-register.css` | 169.9 kB | 89.8 kB | 47% |
-| `css/components.css` | 471.6 kB | 205.8 kB | 56% |
-| `css/cyberpunk-register.css` | 261.5 kB | 149.5 kB | 43% |
-| `css/dark-register.css` | 174.6 kB | 82.9 kB | 53% |
+| `css/components.css` | 472.2 kB | 206.1 kB | 56% |
+| `css/cyberpunk-register.css` | 261.6 kB | 149.5 kB | 43% |
+| `css/dark-register.css` | 174.6 kB | 83.0 kB | 52% |
 | `css/deco-register.css` | 170.7 kB | 93.4 kB | 45% |
 | `css/fonts.css` | 21.3 kB | 15.8 kB | 26% |
 | `css/forest-register.css` | 186.8 kB | 95.6 kB | 49% |
@@ -32,16 +32,16 @@ the selectors and their order are identical, which is what
 | `css/pastel-register.css` | 177.3 kB | 91.7 kB | 48% |
 | `css/phantom-register.css` | 161.2 kB | 81.3 kB | 50% |
 | `css/solstice-register.css` | 107.9 kB | 56.7 kB | 47% |
-| `css/synthwave-register.css` | 185.6 kB | 97.5 kB | 47% |
+| `css/synthwave-register.css` | 185.7 kB | 97.5 kB | 47% |
 | `css/terminal-register.css` | 164.3 kB | 87.3 kB | 47% |
 | `css/themes.css` | 153.4 kB | 99.3 kB | 35% |
 | `css/titanium-register.css` | 137.4 kB | 68.8 kB | 50% |
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 45% |
-| `dist/kp-themes.css` | 3290.2 kB | 1680.2 kB | 49% |
-| `dist/kp-themes.js` | 1005.2 kB | 555.1 kB | 45% |
+| `dist/kp-themes.css` | 3300.3 kB | 1686.2 kB | 49% |
+| `dist/kp-themes.js` | 1005.4 kB | 555.3 kB | 45% |
 
-The loose stylesheets together weigh **3350.3 kB** authored and
-**1717.2 kB** minified, 49% less. A page loading one theme's
+The loose stylesheets together weigh **3360.4 kB** authored and
+**1723.2 kB** minified, 49% less. A page loading one theme's
 register rather than the whole bundle carries only that register's row.
 
 The wire is smaller again: gzip takes the minified bundle to roughly a

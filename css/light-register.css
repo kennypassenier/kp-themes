@@ -2860,6 +2860,7 @@
         --kp-week-now: var(--fx-signal);
     }
     [data-theme='light'] .kp-gantt {
+        --kp-gantt-state-ground: var(--card);
         --kp-gantt-bar-radius: var(--kp-radius-pill, 999px);
         --kp-gantt-now: var(--fx-signal);
     }

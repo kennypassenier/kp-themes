@@ -4579,6 +4579,7 @@
         --kp-week-now: var(--accent-foreground);
     }
     [data-theme='forest'] .kp-gantt {
+        --kp-gantt-state-ground: var(--card);
         --kp-gantt-bar-radius: 0 0.45rem;
         --kp-gantt-now: var(--accent-foreground);
     }
