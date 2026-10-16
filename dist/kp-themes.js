@@ -21577,7 +21577,13 @@ function paint3(c) {
   c.el.dataset.kpState = c.state;
   c.grid.toggleAttribute("aria-busy", c.state === "loading");
   const words = c.state === "loading" ? s2.weekLoading : c.state === "empty" ? s2.weekEmpty : c.stateLine.dataset.kpWords || "";
-  c.stateLine.textContent = c.state === "ready" ? "" : words;
+  const said = c.state === "ready" ? "" : words;
+  if ((c.stateLine.textContent ?? "") !== said) {
+    if (said) {
+      const plate = make4(doc, "span", "kp-week__state-words", said);
+      c.stateLine.replaceChildren(plate);
+    } else c.stateLine.replaceChildren();
+  }
   c.stateLine.dataset.kpState = c.state;
   for (const col of c.cols) {
     const nodes = c.state === "loading" ? [] : col.items.map((item) => item.button);

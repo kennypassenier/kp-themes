@@ -11472,6 +11472,13 @@
         pointer-events: none;
     }
 
+    .kp-week__state-words {
+        max-inline-size: 36rem;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--kp-week-state-ground, var(--card));
+    }
+
     .kp-week__state:empty {
         display: none;
     }

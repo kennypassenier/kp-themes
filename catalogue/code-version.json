@@ -51,7 +51,7 @@
         "js/tiles.js": { "digest": "a93919ec458ab18b", "when": "[data-kp-tiles-set]" },
         "js/toolbar.js": { "digest": "ca22723058dcfe13", "when": "[data-kp-toolbar]" },
         "js/upload.js": { "digest": "fe77364297c65175", "when": "[data-kp-upload]" },
-        "js/week.js": { "digest": "f500456752b0847a", "when": "[data-kp-week]" },
+        "js/week.js": { "digest": "09f7ee108501df87", "when": "[data-kp-week]" },
         "js/wizard.js": { "digest": "511924d0f81de6b2", "when": "[data-kp-wizard]" }
     },
     "themes": {
@@ -7087,6 +7087,7 @@
         "||||.kp-week__pill[data-kp-state='next']": "79688d4bb4be3a0c",
         "||||.kp-week__pill[data-kp-state='reference']": "391ddd22b31c5033",
         "||||.kp-week__state": "36afac2bd3dcdefb",
+        "||||.kp-week__state-words": "862dc4ef6a467f46",
         "||||.kp-week__state:empty": "fcc14d00025ecdd6",
         "||||.kp-week__state[data-kp-state='error']": "fe900f093a2feda8",
         "||||.kp-week__swatch": "2c3bc10a0361e84d",
