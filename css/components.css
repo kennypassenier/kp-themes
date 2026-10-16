@@ -8072,19 +8072,15 @@
         background: var(--kp-week-now, var(--destructive));
     }
 
-    /* Loading keeps the pills' size: ghosts, pulsing only without reduced motion. */
-    .kp-week__ghost {
-        box-sizing: border-box;
-        position: absolute;
-        inset-inline: 0.25rem;
-        inset-block-start: calc(var(--kp-week-at, 0) * (100% - var(--kp-week-pill, 1.5rem)));
-        block-size: var(--kp-week-pill, 1.5rem);
-        border-radius: var(--kp-week-pill-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
-        display: none;
-    }
-
-    .kp-week[data-kp-state='loading'] .kp-week__ghost {
-        display: block;
+    /* Loading is the data table's own loading picture [Kenny, 2026-10-16: "zoals bij table waarbij de hele table het
+ * laadicoon centraal krijgt"]: js/week.js puts the busy table's layer and panel (`.kp-datatable__busy-overlay` >
+ * `.kp-datatable__busy-panel`, the theme's spinner and the words) centred over the days' columns, which stay empty
+ * and steady under it. The days hold nothing to dim, so the layer draws no veil: the grid's rules read the same
+ * while it loads and once it has loaded. */
+    .kp-week__busy {
+        --kp-busy-overlay-veil: 0%;
+        /* In rows the layer is only the items' column wide: the panel keeps a margin from its edges there. */
+        padding-inline: var(--kp-space-sm, 0.5rem);
     }
 
     .kp-week[data-kp-state='loading'] .kp-week__now {
@@ -8117,8 +8113,8 @@
         display: none;
     }
 
-    /* While the week loads, its ghosts say so; the sentence is still read out (role="status") but drawn nowhere, so no
-     * plate stands over a ghost (Kenny, 2026-10-16: the words alone in the middle were not enough and sat over the week). */
+    /* While the week loads, the busy panel says so; the sentence is still read out (role="status") but drawn nowhere, so
+     * no second plate stands beside the panel (Kenny, 2026-10-16: the words alone in the middle were not enough). */
     .kp-week__state[data-kp-state='loading'] {
         inset: auto;
         inline-size: 1px;
@@ -8225,7 +8221,8 @@
             display: flex;
             flex-direction: column;
             gap: var(--kp-week-gap, 0.25rem);
-            min-block-size: var(--kp-week-pill, 1.5rem);
+            /* --kp-week-hold: the height a day keeps while the week loads again (js/week.js holdRows()). */
+            min-block-size: max(var(--kp-week-pill, 1.5rem), var(--kp-week-hold, 0px));
             border: 0;
             background: none;
         }
@@ -8243,11 +8240,6 @@
             position: static;
             inset: auto;
             flex: none;
-        }
-
-        .kp-week__ghost {
-            position: static;
-            inset: auto;
         }
     }
 

@@ -21441,6 +21441,7 @@ function build(c) {
     parts.push(nav);
   }
   const frame2 = make4(doc, "div", "kp-week__frame");
+  c.frame = frame2;
   c.grid = make4(doc, "div", "kp-week__grid");
   c.grid.setAttribute("role", "group");
   if (!c.el.hasAttribute("aria-label") && !c.el.hasAttribute("aria-labelledby")) c.grid.setAttribute("aria-label", s2.weekGroup);
@@ -21486,19 +21487,9 @@ function buildDays(c) {
     now.setAttribute("role", "separator");
     now.hidden = true;
     track.append(now);
-    const ghosts = GHOST_TIMES[i % GHOST_TIMES.length].map((at, g) => {
-      const ghost = make4(doc, "span", "kp-week__ghost kp-skeleton");
-      ghost.setAttribute("aria-hidden", "true");
-      ghost.style.setProperty("--kp-week-at", String(at));
-      ghost.style.setProperty("--kp-week-seq", String(i + g));
-      ghost.style.setProperty("--kp-week-ghost-label", `${GHOST_LABELS[(i + g) % GHOST_LABELS.length]}%`);
-      ghost.append(make4(doc, "span", "kp-week__ghost-time"), make4(doc, "span", "kp-week__ghost-label"));
-      return ghost;
-    });
-    track.append(...ghosts);
     cell.append(head, track);
     c.grid.append(cell);
-    c.cols.push({ iso, cell, head, track, items: [], now, more: null, moreButton: null, ghosts, hidden: [] });
+    c.cols.push({ iso, cell, head, track, items: [], now, more: null, moreButton: null, hidden: [] });
     if (iso === today) {
       cell.dataset.kpToday = "";
       head.setAttribute("aria-current", "date");
@@ -21531,6 +21522,87 @@ function pillFor(c, e) {
   }
   button.dataset.kpId = e.id;
   return button;
+}
+function holdRows(c) {
+  if (c.state === "loading") {
+    if (c.held === null && c.mode === "list") c.held = c.cols.map((col) => col.track.offsetHeight);
+    if (c.held) for (const [i, col] of c.cols.entries()) col.track.style.setProperty("--kp-week-hold", `${c.held[i] ?? 0}px`);
+    return;
+  }
+  if (c.held === null) return;
+  const held2 = c.held;
+  const until = performance.now() + 6e3;
+  const win = c.el.ownerDocument.defaultView ?? window;
+  const letGo = () => {
+    if (c.held !== held2 || c.state === "loading") return;
+    const busy = c.leaving || c.grid.querySelector("[data-kp-arriving], [data-kp-leaving], [data-kp-reversing]");
+    if (busy && performance.now() < until) {
+      win.requestAnimationFrame(letGo);
+      return;
+    }
+    c.held = null;
+    for (const col of c.cols) col.track.style.removeProperty("--kp-week-hold");
+  };
+  win.requestAnimationFrame(() => win.requestAnimationFrame(letGo));
+}
+function placeBusy(c) {
+  const layer = c.busy;
+  if (!layer || !c.cols.length) return;
+  const host = c.frame.getBoundingClientRect();
+  const boxes = c.cols.map((col) => col.track.getBoundingClientRect());
+  const top = Math.min(...boxes.map((b) => b.top));
+  const bottom = Math.max(...boxes.map((b) => b.bottom));
+  const left = Math.min(...boxes.map((b) => b.left));
+  const right = Math.max(...boxes.map((b) => b.right));
+  layer.style.setProperty("--kp-busy-overlay-top", `${Math.max(0, Math.round(top - host.top))}px`);
+  layer.style.setProperty("--kp-busy-overlay-bottom", `${Math.max(0, Math.round(host.bottom - bottom))}px`);
+  layer.style.setProperty("--kp-busy-overlay-left", `${Math.max(0, Math.round(left - host.left))}px`);
+  layer.style.setProperty("--kp-busy-overlay-right", `${Math.max(0, Math.round(host.right - right))}px`);
+}
+function drawBusy(c) {
+  const want = c.state === "loading";
+  if (want === (c.busy !== null)) {
+    placeBusy(c);
+    return;
+  }
+  const doc = c.el.ownerDocument;
+  if (!want) {
+    const layer2 = (
+      /** @type {HTMLElement} */
+      c.busy
+    );
+    c.busy = null;
+    const panel2 = (
+      /** @type {HTMLElement | null} */
+      layer2.querySelector(".kp-datatable__busy-panel")
+    );
+    const gone = Promise.resolve().then(() => (init_motion(), motion_exports)).then((m) => {
+      if (!layer2.isConnected || !panel2) {
+        layer2.remove();
+        return void 0;
+      }
+      if (m.leavesState(layer2)) return m.leave(layer2);
+      layer2.setAttribute(m.CLOSING_ATTRIBUTE, "");
+      return m.playClose(panel2).then(() => layer2.remove());
+    });
+    c.leaving = gone;
+    void gone.catch(() => layer2.remove()).then(() => {
+      if (c.leaving !== gone) return;
+      c.leaving = null;
+      if (!c.motion.gone) paint3(c);
+    });
+    return;
+  }
+  for (const old of c.frame.querySelectorAll(":scope > .kp-week__busy")) old.remove();
+  c.leaving = null;
+  const layer = make4(doc, "div", "kp-datatable__busy-overlay kp-week__busy");
+  layer.setAttribute("aria-hidden", "true");
+  const panel = make4(doc, "div", "kp-datatable__busy-panel");
+  panel.append(make4(doc, "span", "kp-spinner"), make4(doc, "span", "kp-datatable__busy-words", c.strings.weekLoading));
+  layer.append(panel);
+  c.busy = layer;
+  placeBusy(c);
+  c.frame.append(layer);
 }
 function paint3(c) {
   const s2 = c.strings;
@@ -21588,9 +21660,11 @@ function paint3(c) {
     } else c.stateLine.replaceChildren();
   }
   c.stateLine.dataset.kpState = c.state;
+  drawBusy(c);
+  holdRows(c);
   for (const col of c.cols) {
-    const nodes = c.state === "loading" ? [] : col.items.map((item) => item.button);
-    const wanted = [col.now, ...col.ghosts, ...nodes];
+    const nodes = c.state === "loading" || c.leaving ? [] : col.items.map((item) => item.button);
+    const wanted = [col.now, ...nodes];
     const have = [...col.track.children].filter((n) => n !== col.moreButton?.parentElement);
     const same = wanted.length === have.length && wanted.every((n, i) => n === have[i]);
     if (!same) {
@@ -21773,6 +21847,10 @@ function attachWeeks(root = document, options = {}) {
       grid: el4,
       axis: el4,
       cols: [],
+      frame: el4,
+      busy: null,
+      leaving: null,
+      held: null,
       stateLine: el4,
       title: null,
       today: null,
@@ -21855,6 +21933,7 @@ function attachWeeks(root = document, options = {}) {
     if (typeof ResizeObserver !== "undefined") {
       let last = "";
       c.observer = new ResizeObserver(() => {
+        placeBusy(c);
         const key = `${c.grid.clientWidth}x${c.cols[0]?.track.clientHeight ?? 0}`;
         if (key === last) return;
         last = key;
@@ -21915,7 +21994,7 @@ function setWeekLegend(el4, entries) {
   );
   c.legend.hidden = entries.length === 0;
 }
-var WEEK, WEEK_OPEN_EVENT, WEEK_RANGE_EVENT, WEEK_TICK_MS, weeks, GAP, AXIS_HOURS, GHOST_TIMES, GHOST_LABELS, two3, make4, toMs, keyOf3, dayName, dm, menuModule;
+var WEEK, WEEK_OPEN_EVENT, WEEK_RANGE_EVENT, WEEK_TICK_MS, weeks, GAP, AXIS_HOURS, two3, make4, toMs, keyOf3, dayName, dm, menuModule;
 var init_week = __esm({
   "js/week.js"() {
     "use strict";
@@ -21930,16 +22009,6 @@ var init_week = __esm({
     weeks = /* @__PURE__ */ new WeakMap();
     GAP = 2;
     AXIS_HOURS = [0, 6, 12, 18, 24];
-    GHOST_TIMES = [
-      [0.08, 0.29],
-      [0.08, 0.3, 0.62],
-      [0.1, 0.42, 0.78],
-      [0.29, 0.55],
-      [0.08, 0.3],
-      [0.12, 0.33, 0.62],
-      [0.29, 0.5, 0.74]
-    ];
-    GHOST_LABELS = [72, 54, 86, 62, 78, 48];
     two3 = (n) => String(n).padStart(2, "0");
     make4 = (doc, tag, className, text) => {
       const el4 = doc.createElement(tag);

@@ -77,7 +77,6 @@ export type WeekDay = {
     now: HTMLElement;
     more: HTMLElement | null;
     moreButton: HTMLButtonElement | null;
-    ghosts: HTMLElement[];
     hidden: WeekItem[];
 };
 export type WeekModel = {
@@ -95,6 +94,10 @@ export type WeekModel = {
     grid: HTMLElement;
     axis: HTMLElement;
     cols: WeekDay[];
+    frame: HTMLElement;
+    busy: HTMLElement | null;
+    leaving: Promise<unknown> | null;
+    held: number[] | null;
     stateLine: HTMLElement;
     title: HTMLElement | null;
     today: HTMLButtonElement | null;
@@ -145,7 +148,7 @@ export declare function attachWeeks(root?: ParentNode, options?: WeekOptions): (
  */
 export declare function setWeekEvents(el: Element, events: WeekEvent[]): void;
 /**
- * The agenda as a whole: `loading` (ghost pills at the final size), `ready`,
+ * The agenda as a whole: `loading` (the data table's busy panel over the empty days), `ready`,
  * `empty` or `error` (`words` over the grid; an error says it in the page's
  * words).
  * @param {Element} el

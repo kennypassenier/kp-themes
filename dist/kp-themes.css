@@ -11438,19 +11438,15 @@
         background: var(--kp-week-now, var(--destructive));
     }
 
-    /* Loading keeps the pills' size: ghosts, pulsing only without reduced motion. */
-    .kp-week__ghost {
-        box-sizing: border-box;
-        position: absolute;
-        inset-inline: 0.25rem;
-        inset-block-start: calc(var(--kp-week-at, 0) * (100% - var(--kp-week-pill, 1.5rem)));
-        block-size: var(--kp-week-pill, 1.5rem);
-        border-radius: var(--kp-week-pill-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
-        display: none;
-    }
-
-    .kp-week[data-kp-state='loading'] .kp-week__ghost {
-        display: block;
+    /* Loading is the data table's own loading picture [Kenny, 2026-10-16: "zoals bij table waarbij de hele table het
+ * laadicoon centraal krijgt"]: js/week.js puts the busy table's layer and panel (`.kp-datatable__busy-overlay` >
+ * `.kp-datatable__busy-panel`, the theme's spinner and the words) centred over the days' columns, which stay empty
+ * and steady under it. The days hold nothing to dim, so the layer draws no veil: the grid's rules read the same
+ * while it loads and once it has loaded. */
+    .kp-week__busy {
+        --kp-busy-overlay-veil: 0%;
+        /* In rows the layer is only the items' column wide: the panel keeps a margin from its edges there. */
+        padding-inline: var(--kp-space-sm, 0.5rem);
     }
 
     .kp-week[data-kp-state='loading'] .kp-week__now {
@@ -11483,8 +11479,8 @@
         display: none;
     }
 
-    /* While the week loads, its ghosts say so; the sentence is still read out (role="status") but drawn nowhere, so no
-     * plate stands over a ghost (Kenny, 2026-10-16: the words alone in the middle were not enough and sat over the week). */
+    /* While the week loads, the busy panel says so; the sentence is still read out (role="status") but drawn nowhere, so
+     * no second plate stands beside the panel (Kenny, 2026-10-16: the words alone in the middle were not enough). */
     .kp-week__state[data-kp-state='loading'] {
         inset: auto;
         inline-size: 1px;
@@ -11591,7 +11587,8 @@
             display: flex;
             flex-direction: column;
             gap: var(--kp-week-gap, 0.25rem);
-            min-block-size: var(--kp-week-pill, 1.5rem);
+            /* --kp-week-hold: the height a day keeps while the week loads again (js/week.js holdRows()). */
+            min-block-size: max(var(--kp-week-pill, 1.5rem), var(--kp-week-hold, 0px));
             border: 0;
             background: none;
         }
@@ -11609,11 +11606,6 @@
             position: static;
             inset: auto;
             flex: none;
-        }
-
-        .kp-week__ghost {
-            position: static;
-            inset: auto;
         }
     }
 
@@ -79449,11 +79441,10 @@
         font-family: var(--theme-font-body);
     }
 
-    /* Loading in the ledger keeps the shape of what is loading: each ghost is a plate of the pill's or the bar's own size (a pale ground,
-       a ruled edge, 2 px corners) and the navy rule of the skeleton is ruled along its foot, as on every other waiting surface. Without
-       this the skeleton's single ruled line would replace the pills and bars. */
-    [data-theme='formal'] .kp-gantt__ghost .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block),
-    [data-theme='formal'] .kp-week__ghost.kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+    /* Loading in the ledger keeps the shape of what is loading: each ghost is a plate of the bar's own size (a pale ground, a ruled
+       edge, 2 px corners) and the navy rule of the skeleton is ruled along its foot, as on every other waiting surface. Without this
+       the skeleton's single ruled line would replace the bars. (A loading week shows the busy table's panel instead, js/week.js.) */
+    [data-theme='formal'] .kp-gantt__ghost .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
         border: 1px solid var(--border);
         border-radius: 2px;
         background: var(--muted);
@@ -79462,70 +79453,12 @@
         position: absolute;
         block-size: var(--kp-gantt-bar, 1.125rem);
     }
-    [data-theme='formal'] .kp-week__ghost.kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
-        position: absolute;
-        block-size: var(--kp-week-pill, 1.5rem);
-    }
-    /* A loading week is the ledger being ruled [G10, G2; Kenny, 2026-10-16: "de loading animatie moet die van het thema zijn"].
-       Each ghost is an entry of the week not yet written: a plate of paper the pill's size with the entry's heavy 4px rule on
-       its start edge in the strong hairline, a short ledger line where the time goes and a longer one where the label goes.
-       The navy rule is ruled along each entry's foot at the ruling pace, held, lifted from the start and ruled again
-       (the skeleton's loop, 2400 ms), entry after entry, start to end and top down:
-       one step (300 ms) later per day and per line down from the week's first entry, so the clerk's pen visibly runs
-       through the week. Standing still (reduced motion) every entry is
-       ruled. Nothing pulses, nothing is grey. */
-    [data-theme='formal'] .kp-week__col > .kp-week__ghost.kp-week__ghost {
-        position: absolute;
-        display: none;
-        align-items: center;
-        gap: 0.375rem;
-        block-size: var(--kp-week-pill, 1.5rem);
-        padding-inline: 0.375rem;
-        border: 1px solid var(--border);
-        border-inline-start: 4px solid var(--border-strong);
-        border-radius: 2px;
-        background: var(--card);
-    }
-    [data-theme='formal'] .kp-week[data-kp-state='loading'] .kp-week__col > .kp-week__ghost.kp-week__ghost {
-        display: flex;
-    }
-    /* In rows (below 40rem) the ghosts stand in the day's row like its pills. */
-    @container kp-week (max-width: 39.99rem) {
-        [data-theme='formal'] .kp-week__col > .kp-week__ghost.kp-week__ghost {
-            position: relative;
-            inset: auto;
-            flex: none;
-        }
-    }
     /* In rows a pill that arrives first opens its room, then is ruled in at its full height [G13: the frame first, then
        the words]: the reversed leave runs its fold before its words (`--kp-leave-fold-start: 1`), so no pill shows its
        words squeezed into a half-open row or reaches over its neighbour while the gap is swallowed. */
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='formal'] .kp-week[data-kp-week-mode='list'] .kp-week__pill {
             --kp-leave-fold-start: 1;
-        }
-    }
-    [data-theme='formal'] :is(.kp-week__ghost-time, .kp-week__ghost-label) {
-        block-size: 0;
-        border-block-end: 1px solid var(--border-strong);
-        translate: 0 0.25rem;
-    }
-    [data-theme='formal'] .kp-week__ghost-time {
-        flex: none;
-        inline-size: 2.25em;
-        font-size: var(--kp-text-xs, 0.75rem);
-    }
-    [data-theme='formal'] .kp-week__ghost-label {
-        flex: 0 1 var(--kp-week-ghost-label, 66%);
-        min-inline-size: 0;
-    }
-    [data-theme='formal'] .kp-week__col > .kp-week__ghost.kp-week__ghost.kp-week__ghost::before {
-        inset-inline: -4px -1px;
-        inset-block-end: -1px;
-    }
-    @media (prefers-reduced-motion: no-preference) {
-        [data-theme='formal'] .kp-week__col > .kp-week__ghost.kp-week__ghost.kp-week__ghost::before {
-            animation-delay: calc(var(--kp-week-seq, 0) * var(--kp-sig-fm-loop) / 8);
         }
     }
     [data-theme='formal'] .kp-gantt__ghost.kp-gantt__lane > .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
