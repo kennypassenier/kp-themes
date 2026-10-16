@@ -119,6 +119,7 @@ var init_strings = __esm({
       stackbarLoading: "Reading\u2026",
       stackbarEmpty: "Not read yet.",
       stackbarError: "Could not be read.",
+      stackbarRetry: "Retry",
       bulletsLoading: "Reading\u2026",
       bulletsEmpty: "Nothing to show.",
       bulletsError: "Could not be read.",
@@ -21748,6 +21749,7 @@ var stackbar_exports = {};
 __export(stackbar_exports, {
   STACKBAR: () => STACKBAR,
   STACKBAR_PICK_EVENT: () => STACKBAR_PICK_EVENT,
+  STACKBAR_RETRY_EVENT: () => STACKBAR_RETRY_EVENT,
   attachStackbars: () => attachStackbars,
   setStackbar: () => setStackbar,
   shareText: () => shareText,
@@ -21789,7 +21791,7 @@ function setStackbar(el9, spec) {
   const strings = getStrings();
   const lang = langOf(el9);
   const state = spec.state ?? "ready";
-  const memory = MEMORY.get(el9) ?? { parts: 2, wired: false };
+  const memory = MEMORY.get(el9) ?? { parts: 2, wired: false, height: 0 };
   MEMORY.set(el9, memory);
   const format = spec.format ?? ((value) => new Intl.NumberFormat(lang).format(value));
   const focusedKey = (
@@ -21815,10 +21817,21 @@ function setStackbar(el9, spec) {
     nodes.push(head);
   }
   const bar = make2(doc, "kp-stackbar__bar", "div");
-  nodes.push(bar);
   const legendWanted = spec.legend !== false;
+  const noted = (state === "empty" || state === "error" || state === "ready" && calc.parts.length === 0) && legendWanted;
+  if (!noted) nodes.push(bar);
+  const body = [...el9.querySelectorAll(":scope > :is(.kp-stackbar__bar, .kp-stackbar__legend, .kp-stackbar__note)")].map(
+    (n) => n.getBoundingClientRect()
+  );
+  if (body.length) memory.height = Math.max(...body.map((r) => r.bottom)) - Math.min(...body.map((r) => r.top));
+  let refocus = false;
   if (state === "loading") {
-    bar.append(make2(doc, "kp-skeleton kp-skeleton--block kp-stackbar__wait"));
+    const wait = make2(doc, "kp-meter kp-stackbar__wait");
+    setMeter(wait, { loading: true });
+    wait.removeAttribute("role");
+    wait.removeAttribute("aria-valuetext");
+    wait.setAttribute("aria-hidden", "true");
+    bar.append(wait);
     bar.setAttribute("role", "img");
     bar.setAttribute("aria-label", strings.stackbarLoading);
     if (legendWanted) {
@@ -21836,15 +21849,30 @@ function setStackbar(el9, spec) {
       nodes.push(legend);
     }
   } else if (state === "empty" || state === "error" || calc.parts.length === 0) {
-    bar.setAttribute("role", "img");
-    const words = spec.message ?? (state === "error" ? strings.stackbarError : strings.stackbarEmpty);
-    bar.setAttribute("aria-label", words);
-    const note = make2(doc, "kp-stackbar__note", "p");
-    const was = el9.querySelector(":scope > :is(.kp-stackbar__legend, .kp-stackbar__note)")?.getBoundingClientRect().height ?? 0;
-    if (was > 0) note.style.minBlockSize = `${was}px`;
-    note.setAttribute("role", "status");
-    note.textContent = words;
-    nodes.push(note);
+    const failed = state === "error";
+    const words = spec.message ?? (failed ? strings.stackbarError : strings.stackbarEmpty);
+    if (!noted) {
+      bar.setAttribute("role", "img");
+      bar.setAttribute("aria-label", words);
+      bar.setAttribute("data-kp-hovercard", words);
+      bar.setAttribute("tabindex", "0");
+    } else {
+      refocus = el9.querySelector(":scope > .kp-stackbar__note")?.contains(doc.activeElement) ?? false;
+      const note = make2(doc, "kp-empty kp-stackbar__note", "div");
+      if (memory.height > 0) note.style.minBlockSize = `${memory.height}px`;
+      note.setAttribute("role", failed ? "alert" : "status");
+      const said = make2(doc, "kp-empty__title kp-stackbar__note-title", "p");
+      said.textContent = words;
+      note.append(said);
+      if (failed && spec.retry !== false) {
+        const retry = make2(doc, "kp-button kp-stackbar__retry", "button");
+        retry.setAttribute("type", "button");
+        retry.setAttribute("data-kp-stackbar-retry", "");
+        retry.textContent = strings.stackbarRetry;
+        note.append(retry);
+      }
+      nodes.push(note);
+    }
   } else {
     memory.parts = Math.max(2, calc.parts.length + (calc.rest > 0 || calc.over > 0 ? 1 : 0));
     bar.setAttribute("role", "group");
@@ -21899,7 +21927,10 @@ function setStackbar(el9, spec) {
     }
     bar.toggleAttribute("data-kp-over", calc.over > 0);
     bar.toggleAttribute("data-kp-stackbar-full", calc.rest === 0);
-    bar.setAttribute("aria-label", spec.label ?? (spec.title ? `${spec.title}. ${strings.stackbarLabel(spoken)}` : strings.stackbarLabel(spoken)));
+    bar.setAttribute(
+      "aria-label",
+      spec.label ?? (spec.title ? `${spec.title}. ${strings.stackbarLabel(spoken)}` : strings.stackbarLabel(spoken))
+    );
     for (const mark of spec.marks ?? []) {
       const tick5 = make2(doc, "kp-stackbar__mark");
       tick5.setAttribute("aria-hidden", "true");
@@ -21916,8 +21947,12 @@ function setStackbar(el9, spec) {
     if (legend) nodes.push(legend);
   }
   el9.replaceChildren(...nodes);
+  if (refocus) {
+    el9.tabIndex = -1;
+    el9.focus({ preventScroll: true });
+  }
   if (focusedKey) el9.querySelector(`.kp-stackbar__seg[tabindex="0"]`)?.focus();
-  if (state === "ready") attachHoverCards(doc);
+  if (state !== "loading") attachHoverCards(doc);
   if (!memory.wired) {
     memory.wired = true;
     wire2(el9);
@@ -21938,13 +21973,20 @@ function wire2(el9) {
       ) node.setAttribute("data-kp-stackbar-lit", "");
   };
   el9.addEventListener("pointerover", (event) => light(keyOf6(event.target)));
-  el9.addEventListener("pointerleave", () => light(
-    /** @type {HTMLElement | null} */
-    el9.querySelector(".kp-stackbar__seg:focus")?.dataset.kpStackbarKey
-  ));
+  el9.addEventListener(
+    "pointerleave",
+    () => light(
+      /** @type {HTMLElement | null} */
+      el9.querySelector(".kp-stackbar__seg:focus")?.dataset.kpStackbarKey
+    )
+  );
   el9.addEventListener("focusin", (event) => light(keyOf6(event.target)));
   el9.addEventListener("focusout", () => light(void 0));
   el9.addEventListener("click", (event) => {
+    if (event.target instanceof Element && event.target.closest("[data-kp-stackbar-retry]")) {
+      el9.dispatchEvent(new CustomEvent(STACKBAR_RETRY_EVENT, { bubbles: true }));
+      return;
+    }
     const key = keyOf6(event.target);
     if (key === void 0) return;
     el9.dispatchEvent(new CustomEvent(STACKBAR_PICK_EVENT, { bubbles: true, detail: { key, part: event.target } }));
@@ -21993,14 +22035,16 @@ function attachStackbars(root = document) {
   return () => {
   };
 }
-var STACKBAR, STACKBAR_PICK_EVENT, MEMORY, make2, langOf;
+var STACKBAR, STACKBAR_PICK_EVENT, STACKBAR_RETRY_EVENT, MEMORY, make2, langOf;
 var init_stackbar = __esm({
   "js/stackbar.js"() {
     "use strict";
     init_strings();
     init_hovercard();
+    init_kpi();
     STACKBAR = "[data-kp-stackbar]";
     STACKBAR_PICK_EVENT = "kp-stackbar-pick";
+    STACKBAR_RETRY_EVENT = "kp-stackbar-retry";
     MEMORY = /* @__PURE__ */ new WeakMap();
     make2 = (doc, className, tag = "span") => {
       const node = doc.createElement(tag);
@@ -33081,6 +33125,7 @@ export {
   SPLIT_EVENT,
   STACKBAR,
   STACKBAR_PICK_EVENT,
+  STACKBAR_RETRY_EVENT,
   STATE,
   STATUS_EVENT,
   STATUS_ID_ATTRIBUTE,

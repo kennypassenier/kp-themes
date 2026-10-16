@@ -212,7 +212,10 @@ function draw(el, spec, memory) {
     el.setAttribute('data-kp-state', 'ready');
     const threshold = spec.threshold;
     const max = spec.max ?? threshold * 2;
-    const format = spec.format ?? ((/** @type {number} */ value) => new Intl.NumberFormat(/** @type {HTMLElement | null} */ (el.closest('[lang]'))?.lang || undefined).format(value));
+    const format =
+        spec.format ??
+        ((/** @type {number} */ value) =>
+            new Intl.NumberFormat(/** @type {HTMLElement | null} */ (el.closest('[lang]'))?.lang || undefined).format(value));
     if (spec.sort !== 'none') rows.sort((a, b) => (b.value ?? -Infinity) - (a.value ?? -Infinity));
     memory.rows = rows.length;
     memory.leads = rows.some((row) => row.lead !== undefined);
@@ -276,7 +279,9 @@ function draw(el, spec, memory) {
     }
     el.replaceChildren(list);
     if (focusedKey !== undefined)
-        /** @type {HTMLElement | null} */ ([...el.querySelectorAll('.kp-bullets__link')].find((link) => /** @type {HTMLElement} */ (link).dataset.kpBulletsKey === focusedKey))?.focus();
+        /** @type {HTMLElement | null} */ (
+            [...el.querySelectorAll('.kp-bullets__link')].find((link) => /** @type {HTMLElement} */ (link).dataset.kpBulletsKey === focusedKey)
+        )?.focus();
 }
 
 /**

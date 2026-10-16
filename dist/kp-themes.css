@@ -20466,15 +20466,17 @@
         font-weight: 600;
     }
 
-    /* Loading: the bar pulses at its height; the legend keeps two rows. */
+    /* Loading: the bar is the meter's own loading picture at the bar's size
+     * (each theme's way a bar waits); the legend keeps its rows. */
     .kp-stackbar[aria-busy='true'] .kp-stackbar__bar {
         background: transparent;
     }
 
-    .kp-stackbar__wait {
+    .kp-stackbar__bar > .kp-meter.kp-stackbar__wait {
         flex: 1;
         block-size: 100%;
         min-block-size: 0;
+        margin: 0;
         border-radius: inherit;
     }
 
@@ -20509,18 +20511,29 @@
         --kp-skeleton-height: 0.75em;
     }
 
-    /* Not read, or failed: one sentence where the legend goes, the bar kept
-     * at its height so nothing under it moves. */
+    /* Not read, or failed: the package's empty state (each theme's own) over
+     * the bar's and the legend's whole footprint, the height they had (the
+     * script writes it; a bar never drawn takes --kp-stackbar-state-min), the
+     * sentence and a normal-size Retry centred in it (Kenny, 2026-10-16). A
+     * bar without a legend keeps its track, its words in its hover card. */
     .kp-stackbar__note {
         box-sizing: border-box;
+        display: grid;
+        align-content: center;
+        justify-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-block-size: var(--kp-stackbar-state-min, 6rem);
         margin: 0;
-        min-block-size: 1.5rem;
-        color: var(--muted-foreground);
-        font-size: var(--kp-text-sm, 0.8125rem);
+        text-align: center;
     }
 
-    .kp-stackbar[data-kp-state='error'] .kp-stackbar__note {
-        color: var(--foreground);
+    .kp-stackbar__note > .kp-stackbar__note-title {
+        max-inline-size: 100%;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-stackbar__note > .kp-stackbar__retry {
+        margin-block-start: var(--kp-space-sm, 0.5rem);
     }
 
     @media (forced-colors: active) {

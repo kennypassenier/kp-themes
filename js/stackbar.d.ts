@@ -2,6 +2,8 @@
 export declare const STACKBAR = "[data-kp-stackbar]";
 /** Fired on the root when a part or its legend row is pressed: `{ key, part }`. */
 export declare const STACKBAR_PICK_EVENT = "kp-stackbar-pick";
+/** Fired on the root when the Retry of a failed share bar is pressed. */
+export declare const STACKBAR_RETRY_EVENT = "kp-stackbar-retry";
 export type StackbarPart = {
     /**
      * stable id (default the label)
@@ -63,6 +65,10 @@ export type StackbarSpec = {
      * the sentence of an empty or failed bar
      */
     message?: string;
+    /**
+     * false leaves Retry out of a failed bar (a read the page cannot repeat)
+     */
+    retry?: boolean;
     /**
      * the bar's accessible name (default: every part in order)
      */

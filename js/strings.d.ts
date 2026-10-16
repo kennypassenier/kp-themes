@@ -192,6 +192,10 @@ export type Strings = {
      */
     stackbarError: string;
     /**
+     * The Retry button of a failed share bar
+     */
+    stackbarRetry: string;
+    /**
      * What the busy card over a bullet list says (js/bullets.js)
      */
     bulletsLoading: string;
@@ -1817,6 +1821,7 @@ export type Strings = {
  * @property {string} stackbarLoading  A share bar being read
  * @property {string} stackbarEmpty  A share bar with nothing read yet
  * @property {string} stackbarError  A share bar that could not be read
+ * @property {string} stackbarRetry  The Retry button of a failed share bar
  * @property {string} bulletsLoading  What the busy card over a bullet list says (js/bullets.js)
  * @property {string} bulletsEmpty  A bullet list with no rows, when the page gives no reason
  * @property {string} bulletsError  A bullet list that could not be read, when the page gives no sentence
