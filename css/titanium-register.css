@@ -5148,17 +5148,30 @@
 
 /* ── kpadopt4 repairs found at 390 px [kpadopt4] ──
    A label set in this theme's wide letters needs more room than the aside leaves it in a narrow form: below 36rem of the
-   form's own width the aside stands under the control, on its own line, so no label ever runs into it. The countdown's
+   form's own width each row is its own column (label, control, then the aside under it), so no label ever runs into the aside. The countdown's
    colon takes the room of a monospaced character. */
 @layer kp.signature {
     @container kp-formrows (max-width: 36rem) {
+        [data-theme='titanium'] .kp-formrow {
+            grid-template-columns: minmax(0, 1fr);
+        }
         [data-theme='titanium'] .kp-formrow__label {
-            grid-column: 1 / -1;
+            grid-column: 1;
+            grid-row: 1;
+        }
+        [data-theme='titanium'] .kp-formrow__control,
+        [data-theme='titanium'] .kp-formrow--wide .kp-formrow__control {
+            grid-column: 1;
+            grid-row: 2;
         }
         [data-theme='titanium'] .kp-formrow__aside {
-            grid-column: 1 / -1;
+            grid-column: 1;
             grid-row: 3;
             justify-content: flex-start;
+            margin-block-start: 0.25rem;
+        }
+        [data-theme='titanium'] .kp-formrow__aside:empty {
+            display: none;
         }
     }
     [data-theme='titanium'] .kp-countdown__colon {
@@ -5210,5 +5223,16 @@
         [data-theme='titanium'] :is(.kp-stackbar__item:nth-child(3n), .kp-kv__row:nth-child(3n), .kp-bullets__row:nth-child(3n)) .kp-skeleton {
             animation-delay: -600ms;
         }
+    }
+}
+
+@layer kp.signature {
+    /* A dialog's buttons stay whole words in this theme's wide letters: in a narrow dialog they take a second row rather
+       than break inside a word. */
+    [data-theme='titanium'] .kp-dialog__actions {
+        flex-wrap: wrap;
+    }
+    [data-theme='titanium'] .kp-dialog__actions > .kp-button {
+        white-space: nowrap;
     }
 }
