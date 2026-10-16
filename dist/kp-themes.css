@@ -59665,61 +59665,112 @@
     }
 }
 
-/* ── Action tiles, status rows, facet list [kpadopt2-tiles] ── */
+/* ── The dashboard parts: action tiles, status rows, the facet list, the heat grid, the matrix, the bar in a cell, the
+   week agenda and the run timeline [kpadopt2] ──
+   Light's own (themes/light/CHARACTER.md): a white card told apart by its hairline and the small shadow (G7), 0.5 rem
+   for what is read and pills for what is acted on (G6); pointing settles a part 2 px toward the paper and tightens its
+   shadow, a press lands it flat and flashes it (G15, G17); a warning or a failure is a 3 px band along the top, never a
+   frame all round (G8); what waits is out of focus and breathing (G10); a line's head is the bead, and what runs is the
+   bead running the line (G11, G19). */
 @layer kp.signature {
-    /* Light: a white card that settles toward the paper. Rest is a hair of shadow; pointing settles it 1 px, a press lands it flat (the shadow gone) 2 px down. */
+    /* Tiles and rows are light's cards: the hairline, the small shadow, 0.5 rem. */
+    [data-theme='light'] .kp-actions {
+        --kp-actions-gap: 0.75rem;
+    }
     [data-theme='light'] .kp-action {
-        --kp-action-radius: calc(var(--radius) * 1.25);
-        --kp-action-shadow: 0 1px 2px hsl(from var(--foreground) h s l / 0.06);
-        --kp-action-shadow-hover: 0 1px 2px hsl(from var(--foreground) h s l / 0.1);
+        --kp-action-radius: var(--radius);
+        --kp-action-shadow: var(--kp-shadow-sm);
+        --kp-action-shadow-hover: 0 1px 2px hsl(from var(--foreground) h s l / 0.08);
         --kp-action-shadow-active: 0 0 0 0 transparent;
         --kp-action-edge-hover: var(--border-strong);
-        --kp-action-lift: 0 1px;
+        --kp-action-ground-active: var(--muted);
+        --kp-action-lift: 0 2px;
         --kp-action-press: 0 2px;
+        --kp-sig-light-band: 0 0 0 0 transparent;
     }
+    /* Destructive: the band along the top (an inset shadow, so it follows the corner) and the title in the ink; the
+       frame stays the hairline and the start bar is retired. */
+    [data-theme='light'] .kp-action--destructive {
+        --kp-action-tone-edge: var(--border);
+        --kp-action-tone-edge-hover: var(--border-strong);
+        --kp-sig-light-band: inset 0 3px 0 0 var(--destructive);
+        --kp-action-shadow: var(--kp-sig-light-band), var(--kp-shadow-sm);
+        --kp-action-shadow-hover: var(--kp-sig-light-band), 0 1px 2px hsl(from var(--foreground) h s l / 0.08);
+        --kp-action-shadow-active: var(--kp-sig-light-band);
+    }
+    [data-theme='light'] .kp-action--destructive::after {
+        display: none;
+    }
+    [data-theme='light'] .kp-action--destructive:is(:disabled, [aria-disabled='true']) {
+        box-shadow: inset 0 3px 0 0 var(--muted-foreground);
+    }
+    [data-theme='light'] .kp-action:focus-visible {
+        translate: 0 2px;
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            var(--kp-sig-light-band, 0 0 0 0 transparent);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='light'] .kp-action {
+            transition:
+                background-color var(--fx-duration) var(--fx-ease),
+                border-color var(--fx-duration) var(--fx-ease),
+                box-shadow var(--fx-duration) var(--fx-ease),
+                translate var(--fx-duration) var(--fx-ease);
+        }
+        [data-theme='light'] .kp-action:active:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'])) {
+            animation: kp-sig-light-flash var(--fx-duration, 200ms) linear 1;
+        }
+    }
+
     [data-theme='light'] .kp-statuslist {
         --kp-statuslist-gap: 0.625rem;
     }
     [data-theme='light'] .kp-statusrow {
-        --kp-statusrow-radius: calc(var(--radius) * 1.25);
-        box-shadow: 0 1px 2px hsl(from var(--foreground) h s l / 0.06);
+        --kp-statusrow-radius: var(--radius);
+        box-shadow: var(--kp-shadow-sm);
     }
-    [data-theme='light'] .kp-facets {
-        --kp-facet-radius: 999px;
-        --kp-facet-pad-inline: 0.625rem;
+    /* Failed: the band along the top and Retry, the frame stays the hairline. */
+    [data-theme='light'] .kp-statusrow[data-state='failed'] {
+        --kp-statusrow-state-edge: var(--border);
+        box-shadow:
+            inset 0 3px 0 0 var(--destructive),
+            var(--kp-shadow-sm);
     }
-}
+    /* Empty: nothing to show, so nothing is exposed: the hairline on the paper, no shadow. */
+    [data-theme='light'] .kp-statusrow[data-state='empty'] {
+        --kp-statusrow-ground: transparent;
+        border-style: solid;
+        box-shadow: none;
+    }
 
-/* The grid's gap leaves room for the tile's own shadow, glow or outline; the facet row's wash. */
-@layer kp.signature {
-    [data-theme='light'] .kp-actions {
-        --kp-actions-gap: 0.75rem;
+    /* The facet rows are acted on: pills that take a menu entry's muted wash; a press lands and flashes. */
+    [data-theme='light'] .kp-facets {
+        --kp-facet-radius: var(--kp-radius-pill, 999px);
+        --kp-facet-pad-inline: 0.625rem;
     }
     [data-theme='light'] .kp-facet {
         --kp-facet-hover: var(--muted);
     }
-}
-/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
-@layer kp.signature {
-    /* Paper tiles with a hairline shadow that settles 2 px on a press; the pick is a slim indigo bar under the column's tiles. */
+    /* The counts on their way are out of focus, breathing, on a soft pill. */
+    [data-theme='light'] .kp-facets[aria-busy='true'] .kp-facet__count {
+        border-radius: var(--kp-radius-pill, 999px);
+        background: var(--muted);
+        filter: var(--kp-sig-light-dim, blur(3px) brightness(1.3));
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='light'] .kp-facets[aria-busy='true'] .kp-facet__count {
+            animation: kp-sig-light-breathe var(--kp-sig-light-loop, 3600ms) ease-in-out infinite;
+        }
+    }
+
+    /* Heat grid and matrix: small cards of the grid, 4 px, a hair of shadow; pointing settles a cell 2 px toward the
+       paper, a press lands it flat and flashes it; the pin is the indigo ring that acts. */
     [data-theme='light'] :is(.kp-heat, .kp-matrix) {
-        --kp-heat-cell-radius: 5px;
-        --kp-heat-cell-lift: 0 1px 2px hsl(from var(--foreground) h s l / 0.14);
-        --kp-heat-cell-hover: translateY(-1px);
-        --kp-matrix-cell-hover: translateY(-1px);
-    }
-    [data-theme='light'] .kp-heat__cell:active:not(.kp-skeleton),
-    [data-theme='light'] .kp-matrix__cell:active:not([data-kp-inert]) {
-        transform: translateY(2px);
-        box-shadow: none;
-    }
-    [data-theme='light'] .kp-heat__cell[data-kp-picked] {
-        outline: none;
-        box-shadow: 0 3px 0 -1px var(--primary);
-    }
-    [data-theme='light'] .kp-heat__label-button[aria-pressed='true'] {
-        background: color-mix(in oklab, var(--primary) 12%, var(--card));
-        color: var(--primary);
+        --kp-heat-cell-radius: 4px;
+        --kp-heat-cell-lift: 0 1px 2px hsl(from var(--foreground) h s l / 0.12);
+        --kp-heat-cell-hover: translateY(2px);
+        --kp-matrix-cell-hover: translateY(2px);
     }
     [data-theme='light'] .kp-heat {
         --kp-heat-gap-y: 6px;
@@ -59727,23 +59778,96 @@
     [data-theme='light'] .kp-matrix {
         --kp-matrix-gap: 4px;
     }
+    [data-theme='light'] .kp-heat__cell:hover:not([aria-disabled='true'], .kp-skeleton),
+    [data-theme='light'] .kp-matrix__cell:hover:not([data-kp-inert], [aria-disabled='true'], .kp-skeleton) {
+        box-shadow: 0 0 0 0 transparent;
+    }
+    [data-theme='light'] .kp-heat__cell[data-kp-picked],
+    [data-theme='light'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 2px solid var(--primary);
+        outline-offset: 1px;
+    }
+    [data-theme='light'] .kp-heat__label-button,
+    [data-theme='light'] .kp-matrix__name {
+        border-radius: var(--kp-radius-pill, 999px);
+    }
+    [data-theme='light'] .kp-heat__label-button[aria-pressed='true'] {
+        background: color-mix(in oklab, var(--primary) 12%, var(--card));
+        color: var(--primary);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='light'] :is(.kp-heat__cell, .kp-matrix__cell) {
+            transition:
+                transform var(--fx-duration) var(--fx-ease),
+                box-shadow var(--fx-duration) var(--fx-ease);
+        }
+        [data-theme='light'] .kp-heat__cell:active:not([aria-disabled='true'], .kp-skeleton),
+        [data-theme='light'] .kp-matrix__cell:active:not([data-kp-inert], [aria-disabled='true'], .kp-skeleton) {
+            animation: kp-sig-light-flash var(--fx-duration, 200ms) linear 1;
+        }
+    }
     [data-theme='light'] .kp-bar-cell {
-        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        --kp-bar-cell-gap: 0.625rem;
         font-variant-numeric: tabular-nums;
     }
-}
-/* ── end heat grid, matrix, bar cell ── */
-@layer kp.register {
-    /* Week agenda and run timeline [kpadopt-time]: daylight. Pills and bars are soft capsules; the column dividers are the faintest line there is. */
+    [data-theme='light'] .kp-bar-cell__ghost.kp-skeleton {
+        border-radius: var(--kp-radius-pill, 999px);
+    }
+
+    /* Week agenda and run timeline: pills on white with the faintest rules; the line for now is a cyan hairline with
+       the bead at its head (light is literally shown in cyan, G5, G19). */
     [data-theme='light'] .kp-week {
-        --kp-week-pill-radius: 999px;
+        --kp-week-pill-radius: var(--kp-radius-pill, 999px);
+        --kp-week-now: var(--fx-signal);
     }
     [data-theme='light'] .kp-gantt {
-        --kp-gantt-bar-radius: 999px;
+        --kp-gantt-bar-radius: var(--kp-radius-pill, 999px);
+        --kp-gantt-now: var(--fx-signal);
+    }
+    /* One face, no capitals (G18): the day is written as it is said. */
+    [data-theme='light'] .kp-week__head {
+        letter-spacing: 0;
+        text-transform: none;
+        font-weight: 500;
     }
     [data-theme='light'] .kp-week__pill {
         padding-inline: 0.625rem;
         border-color: transparent;
+        box-shadow: 0 1px 2px hsl(from var(--foreground) h s l / 0.08);
+    }
+    [data-theme='light'] .kp-week__pill:is(button):hover {
+        translate: 0 2px;
+        box-shadow: 0 0 0 1px var(--border-strong);
+    }
+    [data-theme='light'] .kp-week__pill[data-kp-state='next'] {
+        box-shadow: 0 0 0 2px var(--primary);
+    }
+    [data-theme='light'] .kp-week__pill[data-kp-state='next']:hover {
+        box-shadow: 0 0 0 2px var(--primary);
+    }
+    [data-theme='light'] .kp-week__pill:is([data-kp-state='off'], [data-kp-state='skipped'], [data-kp-state='reference']) {
+        box-shadow: none;
+    }
+    [data-theme='light'] .kp-week__pill[data-kp-state='reference'] {
+        border-color: var(--border-strong);
+    }
+    [data-theme='light'] .kp-week__now::before,
+    [data-theme='light'] .kp-gantt__now::before {
+        content: '';
+        position: absolute;
+        inline-size: 8px;
+        block-size: 8px;
+        border-radius: 50%;
+        background: var(--fx-signal);
+        box-shadow: 0 0 0 2px var(--card);
+    }
+    [data-theme='light'] .kp-week__now::before {
+        inset-inline-start: -4px;
+        inset-block-start: -5px;
+    }
+    [data-theme='light'] .kp-gantt__now::before {
+        inset-block-start: 0;
+        inset-inline-start: -5px;
     }
     [data-theme='light'] .kp-gantt__label {
         padding-inline: 0.625rem;
@@ -59754,6 +59878,44 @@
     }
     [data-theme='light'] .kp-gantt__run[data-kp-state='queued'] {
         border-color: var(--border-strong);
+    }
+    [data-theme='light'] .kp-gantt__run:is(button):hover {
+        translate: 0 2px;
+    }
+    /* A running run is a line being drawn: no marching stripes; the bead, white-ringed cyan, runs it to its growing end
+       and back, as the busy bar's bead runs its hairline (G11). */
+    [data-theme='light'] :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='running'] {
+        background-image: none;
+    }
+    [data-theme='light'] .kp-gantt__run[data-kp-state='running']::after {
+        --kp-ps-bead: max(0px, min(calc(var(--kp-gantt-bar, 1.125rem) - 6px), calc(100cqi - 6px)));
+        content: '';
+        position: absolute;
+        inset-block-start: calc(50% - var(--kp-ps-bead) / 2);
+        inset-inline-start: 0;
+        inline-size: var(--kp-ps-bead);
+        block-size: var(--kp-ps-bead);
+        border-radius: 50%;
+        background: var(--fx-signal);
+        box-shadow: 0 0 0 2px var(--card);
+        transform: translateX(calc(100cqi - var(--kp-ps-bead) - 4px));
+        pointer-events: none;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='light'] .kp-gantt__run[data-kp-state='running'] {
+            animation: none;
+        }
+        [data-theme='light'] .kp-gantt__run[data-kp-state='running']::after {
+            animation: kp-sig-light-line var(--kp-sig-light-loop, 3600ms) ease-in-out infinite alternate;
+        }
+        [data-theme='light'] :is(.kp-week__pill, .kp-gantt__run) {
+            transition:
+                translate var(--fx-duration) var(--fx-ease),
+                box-shadow var(--fx-duration) var(--fx-ease);
+        }
+        [data-theme='light'] :is(.kp-week__pill, .kp-gantt__run):is(button):active {
+            animation: kp-sig-light-flash var(--fx-duration, 200ms) linear 1;
+        }
     }
 }
 
