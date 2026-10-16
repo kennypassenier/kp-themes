@@ -4814,3 +4814,1076 @@
         outline-offset: 1px;
     }
 }
+
+/* ── The fourth adoption round in this theme [kpadopt4]: data pieces ──
+   Blueprint's own (themes/blueprint/CHARACTER.md): a part that does not exist yet, drawn on a ruled sheet and measured.
+   A plate has no fill and no closed frame, the sheet shows through and a ruler runs along its start edge and its foot
+   (G7); a section is hatched (G16); pointing sets the amber witness lines at a part's two ends (G8); a press takes the
+   dimension (G14); a change is revised (G9); a warning is flagged with the triangle before its words, outlined for a
+   warning, filled for a failure (G13); the lettering names, the sans speaks (G15). Every stroke is on the plotter's
+   feed (G1) and under no-preference (G18). */
+@layer kp.signature {
+    /* Identity mark: a section drawn on the sheet: a square frame in the name's own ink with its hatch inside, the
+       letters in the lettering; a round one is the compass's circle; the current one in a list has the amber witness
+       lines at its ends and the pen's frame round it; the glyph is a small registration square. */
+    [data-theme='blueprint'] .kp-idmark {
+        --kp-idmark-radius: 0;
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='blueprint'] .kp-idmark--round {
+        border-radius: 50%;
+    }
+    [data-theme='blueprint'] .kp-idmark:not(.kp-skeleton, [data-kp-idmark-empty], .kp-idmark--pattern) {
+        background: repeating-linear-gradient(45deg, hsl(from var(--kp-idmark-c) h s l / 0.5) 0 1px, transparent 1px 5px), transparent;
+    }
+    [data-theme='blueprint'] .kp-idmark:not(.kp-skeleton, [data-kp-idmark-empty], .kp-idmark--pattern) > .kp-idmark__letters {
+        padding: 0 0.15em;
+        background: var(--background);
+    }
+    [data-theme='blueprint'] .kp-idmark--glyph::after {
+        border-radius: 0;
+        box-shadow: none;
+    }
+    [data-theme='blueprint'] .kp-idmark[aria-current]:not([aria-current='false']),
+    [data-theme='blueprint'] .kp-idmark[data-kp-idmark-selected] {
+        outline: 1px solid var(--primary);
+        outline-offset: 2px;
+        box-shadow:
+            -6px 0 0 -5px var(--accent),
+            6px 0 0 -5px var(--accent);
+    }
+    [data-theme='blueprint'] .kp-idmark-group > :is(.kp-idmark, .kp-idmark-group__more) {
+        box-shadow: 0 0 0 2px var(--background);
+    }
+    [data-theme='blueprint'] .kp-idmark-group__more {
+        border-radius: 0;
+        font-family: var(--theme-font-mono);
+    }
+
+    /* Share bar: a dimensioned measure: every part a hatched section in its own ink, framed square, the free rest an
+       empty frame; the threshold is the amber pointer on the scale; the part pointed at has the pen's frame and its
+       legend row the amber witness lines; the legend's names are lettering, its figures the readout. */
+    [data-theme='blueprint'] .kp-stackbar {
+        --kp-stackbar-radius: 0;
+    }
+    [data-theme='blueprint'] .kp-stackbar:not([aria-busy='true']) .kp-stackbar__bar {
+        background: transparent;
+        box-shadow: inset 0 0 0 1px var(--border-strong);
+    }
+    [data-theme='blueprint'] .kp-stackbar__seg {
+        background:
+            repeating-linear-gradient(45deg, var(--kp-stackbar-colour, var(--chart-1)) 0 1px, transparent 1px 4px),
+            color-mix(in oklab, var(--kp-stackbar-colour, var(--chart-1)) 22%, transparent);
+        box-shadow: inset 0 0 0 1px var(--kp-stackbar-colour, var(--chart-1));
+    }
+    [data-theme='blueprint'] .kp-stackbar__seg[data-kp-stackbar-hatch] {
+        background-image:
+            repeating-linear-gradient(-45deg, var(--kp-stackbar-colour, var(--chart-1)) 0 1px, transparent 1px 4px),
+            repeating-linear-gradient(45deg, var(--kp-stackbar-colour, var(--chart-1)) 0 1px, transparent 1px 4px);
+    }
+    [data-theme='blueprint'] .kp-stackbar__seg[data-kp-stackbar-lit] {
+        outline: 1px solid var(--primary);
+        outline-offset: 2px;
+        box-shadow: inset 0 0 0 1px var(--kp-stackbar-colour, var(--chart-1));
+    }
+    [data-theme='blueprint'] .kp-stackbar__bar[data-kp-stackbar-full] .kp-stackbar__seg:last-of-type {
+        box-shadow: inset 0 0 0 1px var(--kp-stackbar-colour, var(--chart-1));
+    }
+    [data-theme='blueprint'] .kp-stackbar__mark {
+        inline-size: 1px;
+        inset-block: -5px;
+        background: var(--accent);
+        box-shadow: none;
+    }
+    [data-theme='blueprint'] .kp-stackbar__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-end: -5px;
+        inset-inline-start: 50%;
+        inline-size: 9px;
+        block-size: 6px;
+        translate: -4.5px 0;
+        background: conic-gradient(from 135deg at 50% 0, var(--accent) 90deg, transparent 0);
+    }
+    [data-theme='blueprint'] .kp-stackbar__item {
+        border-radius: 0;
+    }
+    [data-theme='blueprint'] .kp-stackbar__item[data-kp-stackbar-lit] {
+        background:
+            linear-gradient(var(--accent), var(--accent)) 2px 0 / 1px 100% no-repeat,
+            linear-gradient(var(--accent), var(--accent)) calc(100% - 2px) 0 / 1px 100% no-repeat;
+    }
+    [data-theme='blueprint'] .kp-stackbar__swatch {
+        border-radius: 0;
+        background:
+            repeating-linear-gradient(45deg, var(--kp-stackbar-colour, var(--chart-1)) 0 1px, transparent 1px 3px),
+            transparent;
+        box-shadow: inset 0 0 0 1px var(--kp-stackbar-colour, var(--chart-1));
+    }
+    [data-theme='blueprint'] .kp-stackbar__item[data-kp-stackbar-rest] .kp-stackbar__swatch {
+        background: transparent;
+    }
+    [data-theme='blueprint'] .kp-stackbar__label {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        font-size: 0.75rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='blueprint'] .kp-stackbar__value {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='blueprint'] .kp-stackbar__note {
+        border-radius: 0;
+    }
+
+    /* Bullet rows: a row that leads somewhere is read on a scale when pointed at, two witness lines at its ends and no
+       wash; the detail is lettering, the figure the readout; a warning is flagged △ before its figure, a failure ▲,
+       in the tone's ink, on no plate. */
+    [data-theme='blueprint'] .kp-bullets__row {
+        border-radius: 0;
+    }
+    [data-theme='blueprint'] .kp-bullets__row:has(.kp-bullets__link:hover) {
+        background:
+            linear-gradient(var(--accent), var(--accent)) 2px 0 / 1px 100% no-repeat,
+            linear-gradient(var(--accent), var(--accent)) calc(100% - 2px) 0 / 1px 100% no-repeat;
+    }
+    [data-theme='blueprint'] .kp-bullets__row:has(.kp-bullets__link:hover) .kp-bullets__label {
+        text-decoration: none;
+    }
+    [data-theme='blueprint'] .kp-bullets__detail {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='blueprint'] .kp-bullets__figure {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='blueprint'] .kp-bullets__row:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-bullets__figure {
+        padding-inline: 0;
+        background: transparent;
+    }
+    [data-theme='blueprint'] .kp-bullets__row[data-kp-tone='warning'] .kp-bullets__figure {
+        color: hsl(from var(--warning) h s 62%);
+    }
+    [data-theme='blueprint'] .kp-bullets__row[data-kp-tone='destructive'] .kp-bullets__figure {
+        color: var(--destructive);
+    }
+    [data-theme='blueprint'] .kp-bullets__row[data-kp-tone='warning'] .kp-bullets__figure::before {
+        content: '\25B3\00a0';
+        font-size: 0.8em;
+    }
+    [data-theme='blueprint'] .kp-bullets__row[data-kp-tone='destructive'] .kp-bullets__figure::before {
+        content: '\25B2\00a0';
+        font-size: 0.8em;
+    }
+
+    /* Key-value grid and form rows: labels are lettering, values the sans (identifiers and readouts the mono); a ruled
+       line is a ruler with its ticks; a row changed and not saved carries the amber revision mark △ after its label,
+       one that could not be read the filled red flag ▲ before it. */
+    [data-theme='blueprint'] :is(.kp-kv__row > dt, .kp-formrow__aside) {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='blueprint'] .kp-formrow__label {
+        font-weight: 600;
+    }
+    [data-theme='blueprint'] .kp-formrow__label > small {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='blueprint'] :is(.kp-kv--lines > .kp-kv__row, .kp-formrows--lines > .kp-formrow) {
+        border-block-end: 0;
+        background:
+            linear-gradient(var(--border-strong), var(--border-strong)) left bottom / 100% 1px no-repeat,
+            repeating-linear-gradient(90deg, var(--border-strong) 0 1px, transparent 1px 8px) left bottom / 100% 4px no-repeat;
+    }
+    [data-theme='blueprint'] :is(.kp-kv--lines > .kp-kv__row:last-child, .kp-formrows--lines > .kp-formrow:last-child) {
+        background: none;
+    }
+    [data-theme='blueprint'] .kp-kv {
+        --kp-glyph-changed: '\00a0\25B3';
+    }
+    [data-theme='blueprint'] .kp-kv__row[data-kp-changed] > dt::after {
+        color: var(--accent);
+    }
+    [data-theme='blueprint'] .kp-kv__row[data-kp-state='error']::before,
+    [data-theme='blueprint'] .kp-formrow[data-kp-state='error']::before {
+        content: '\25B2';
+        inset-block: auto;
+        inset-block-start: 0.1em;
+        inset-inline-start: calc(var(--kp-space-sm, 0.5rem) * -1 - 0.35rem);
+        inline-size: auto;
+        background: none;
+        color: var(--destructive);
+        font-size: 0.7em;
+        line-height: 1.5;
+    }
+    [data-theme='blueprint'] .kp-formrow[data-kp-changed]:not([data-kp-state='error'])::before {
+        content: '\25B3';
+        inset-block: auto;
+        inset-block-start: 0.35rem;
+        inset-inline-start: calc(var(--kp-space-sm, 0.5rem) * -1 - 0.35rem);
+        inline-size: auto;
+        background: none;
+        color: var(--accent);
+        font-size: 0.7em;
+        line-height: 1.5;
+    }
+    [data-theme='blueprint'] .kp-formrow__lock {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+    [data-theme='blueprint'] .kp-formrow__lock::before {
+        border-radius: 0;
+    }
+
+    /* Code block: a plate on the sheet (a ruler along its start edge and its foot, no fill, no closed frame); the head
+       is lettered, the text sits on a faint field of its own, the keys are the pen's cyan. */
+    [data-theme='blueprint'] .kp-code {
+        border-color: transparent;
+        border-radius: 0;
+        background-color: transparent;
+        background-repeat: no-repeat;
+        background-image: var(--kp-bp-axes-img);
+        background-size: var(--kp-bp-axes-size);
+        background-position: var(--kp-bp-axes-pos);
+    }
+    [data-theme='blueprint'] :is(.kp-code__title, .kp-code__meta) {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='blueprint'] .kp-code__body,
+    [data-theme='blueprint'] .kp-code__note {
+        background: hsl(from var(--foreground) h s l / 0.04);
+        border-radius: 0;
+    }
+    [data-theme='blueprint'] .kp-code__foot {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    /* A live number is read again as it counts: a short ruler is set under it with an amber pointer that slides from the
+       old reading to the new on the feed (G9, as every live change here); the number itself never moves. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] [data-kp-tick][data-kp-tick-state='running'] {
+            position: relative;
+            display: inline-block;
+        }
+        [data-theme='blueprint'] [data-kp-tick][data-kp-tick-state='running']::after {
+            content: '';
+            position: absolute;
+            inset-block-start: calc(100% + 2px);
+            inset-inline: 0;
+            block-size: 12px;
+            pointer-events: none;
+            --kp-bp-n1: hsl(from var(--accent) h s l / var(--kp-bp-rv));
+            background-repeat: no-repeat;
+            background-image:
+                conic-gradient(from 135deg at 50% 0, var(--kp-bp-n1) 90deg, transparent 0), linear-gradient(var(--kp-bp-n1), var(--kp-bp-n1)),
+                repeating-linear-gradient(90deg, var(--kp-bp-n1) 0 1px, transparent 1px 5px);
+            background-size:
+                9px 6px,
+                100% 1px,
+                100% 4px;
+            background-position:
+                calc(var(--kp-bp-p) * 100%) bottom,
+                left 5px,
+                left 1px;
+            animation: kp-sig-blueprint-update-read var(--kp-sig-bp-revision) linear both;
+        }
+    }
+}
+
+/* ── Rows, cards and choices [kpadopt4]: tiles, status rows, the action list, secrets, dialogs ── */
+@layer kp.signature {
+    /* Choice tiles: a part on the sheet, no fill and no frame, a ruler along its start edge and its foot; pointing sets
+       the amber witness lines at its two ends, a press adds the dimension across its foot; the chosen tile is a hatched
+       section in the pen's frame; focus is the package's ring; a disabled one is the dashed ruler of a part not drawn. */
+    [data-theme='blueprint'] .kp-fieldset[data-kp-layout='tiles'] {
+        --kp-field-tile-radius: 0;
+    }
+    [data-theme='blueprint'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option {
+        border-color: transparent;
+        background-color: transparent;
+        background-repeat: no-repeat;
+        background-image: var(--kp-bp-axes-img);
+        background-size: var(--kp-bp-axes-size);
+        background-position: var(--kp-bp-axes-pos);
+    }
+    [data-theme='blueprint'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:hover:not(:has(> .kp-field__check:disabled)) {
+        border-color: transparent;
+        box-shadow:
+            -5px 0 0 -4px var(--accent),
+            5px 0 0 -4px var(--accent);
+    }
+    [data-theme='blueprint'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:active:not(:has(> .kp-field__check:disabled)) {
+        box-shadow:
+            -5px 0 0 -4px var(--accent),
+            5px 0 0 -4px var(--accent),
+            inset 0 -1px 0 var(--accent);
+    }
+    [data-theme='blueprint'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:checked) {
+        border-color: var(--primary);
+        background-image: repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / 0.22) 0 1px, transparent 1px 6px);
+        box-shadow: none;
+    }
+    [data-theme='blueprint'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:disabled) {
+        background-color: transparent;
+        background-image: repeating-linear-gradient(90deg, var(--border-strong) 0 4px, transparent 4px 8px);
+        background-size: 100% 1px;
+        background-position: left bottom;
+        border-color: transparent;
+    }
+    [data-theme='blueprint'] .kp-fieldset[data-kp-layout='tiles'][aria-invalid='true'],
+    [data-theme='blueprint'] .kp-fieldset[data-kp-layout='tiles'][data-kp-invalid] {
+        outline: 1px solid var(--destructive);
+        outline-offset: 4px;
+    }
+
+    /* A check with a reservation is flagged: the outlined triangle before its name, in the warning's ink, the way a
+       failed one has the filled triangle in the red; the fix is a note under an amber leader line. */
+    [data-theme='blueprint'] .kp-statusrow[data-state='warn'] .kp-statusrow__label::before {
+        content: '\25B3\00a0';
+        color: hsl(from var(--warning) h s 62%);
+        font-size: 0.8em;
+    }
+    [data-theme='blueprint'] .kp-statusrow[data-state='warn'] .kp-statusrow__detail {
+        color: hsl(from var(--warning) h s 62%);
+    }
+    [data-theme='blueprint'] .kp-statusrow__fix {
+        padding-inline-start: 0.6rem;
+        border-inline-start: 1px solid var(--accent);
+    }
+
+    /* The action list with a lead: a row's state is a chain line on its start edge in the state's ink, not a bar; a
+       warning row is flagged △, a failed one ▲; the next one is held between two amber witness lines; the group's
+       heading and the date are lettering; the payload a dashed frame of the mono. */
+    [data-theme='blueprint'] .kp-action-list--lead {
+        --kp-action-list-next-wash: 0%;
+    }
+    [data-theme='blueprint'] .kp-action-list--lead > li {
+        border-radius: 0;
+    }
+    [data-theme='blueprint'] .kp-action-list--lead > li[data-kp-state='new'] {
+        --kp-bp-state: var(--primary);
+    }
+    [data-theme='blueprint'] .kp-action-list--lead > li[data-kp-state='active'] {
+        --kp-bp-state: var(--info-foreground);
+    }
+    [data-theme='blueprint'] .kp-action-list--lead > li[data-kp-state='warn'] {
+        --kp-bp-state: hsl(from var(--warning) h s 62%);
+    }
+    [data-theme='blueprint'] .kp-action-list--lead > li[data-kp-state='failed'] {
+        --kp-bp-state: var(--destructive);
+    }
+    [data-theme='blueprint'] .kp-action-list--lead > li[data-kp-state='next'] {
+        --kp-bp-state: var(--accent);
+        background:
+            linear-gradient(var(--accent), var(--accent)) 0 0 / 1px 100% no-repeat,
+            linear-gradient(var(--accent), var(--accent)) 100% 0 / 1px 100% no-repeat;
+    }
+    [data-theme='blueprint'] .kp-action-list--lead > li:is([data-kp-state='new'], [data-kp-state='active'], [data-kp-state='warn'], [data-kp-state='failed'], [data-kp-state='next']) {
+        border-image: repeating-linear-gradient(to bottom, var(--kp-bp-state) 0 6px, transparent 6px 9px) 1;
+    }
+    [data-theme='blueprint'] .kp-action-list--lead > li[data-kp-state='warn'] .kp-action-list__title::before {
+        content: '\25B3\00a0';
+        color: hsl(from var(--warning) h s 62%);
+        font-size: 0.8em;
+    }
+    [data-theme='blueprint'] .kp-action-list--lead > li[data-kp-state='failed'] .kp-action-list__title::before {
+        content: '\25B2\00a0';
+        color: var(--destructive);
+        font-size: 0.8em;
+    }
+    [data-theme='blueprint'] :is(.kp-action-list__meta, .kp-action-list > li.kp-action-list__group) {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='blueprint'] .kp-action-list__when {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='blueprint'] .kp-action-list__payload {
+        border-style: dashed;
+        border-radius: 0;
+        background: transparent;
+    }
+
+    /* A secret: the value is a readout in the mono; while it is hidden it is a covered section, hatched; the time left
+       is a dimension line in amber with a tick at each end, shortening from its end to nothing; a failure is flagged ▲. */
+    [data-theme='blueprint'] .kp-secret {
+        --kp-secret-drain-size: 7px;
+    }
+    [data-theme='blueprint'] .kp-secret__value {
+        border-color: var(--border-strong);
+        border-radius: 0;
+        background: transparent;
+    }
+    [data-theme='blueprint'] .kp-secret__value.kp-masked {
+        background: repeating-linear-gradient(45deg, hsl(from var(--border-strong) h s l / 0.55) 0 1px, transparent 1px 5px);
+    }
+    [data-theme='blueprint'] .kp-secret[data-kp-secret-state='disabled'] .kp-secret__value {
+        border-style: dashed;
+    }
+    [data-theme='blueprint'] .kp-secret__drain {
+        background:
+            linear-gradient(var(--accent), var(--accent)) 0 50% / 100% 1px no-repeat,
+            linear-gradient(var(--accent), var(--accent)) 0 50% / 1px 100% no-repeat,
+            linear-gradient(var(--accent), var(--accent)) 100% 50% / 1px 100% no-repeat;
+    }
+    [data-theme='blueprint'] .kp-secret[data-kp-secret-state='error'] .kp-secret__words {
+        border-inline-start: 0;
+        padding-inline-start: 0;
+    }
+    [data-theme='blueprint'] .kp-secret[data-kp-secret-state='error'] .kp-secret__words::before {
+        content: '\25B2';
+        color: var(--destructive);
+        font-size: 0.8em;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] .kp-secret:not([data-kp-secret-ttl='0'], [data-kp-secret-reveal-on='hold'])[data-kp-secret-state='shown'] .kp-secret__drain {
+            animation-timing-function: var(--kp-sig-bp-feed);
+        }
+    }
+
+    /* A dialog in sections: a section is divided by a ruler, a danger section is flagged ▲ before its heading and
+       carries no bar; what still depends on the thing and what would be lost are plates on the sheet (a ruler along the
+       start edge and the foot); the name to type is the readout, underlined by an amber dimension. */
+    [data-theme='blueprint'] .kp-dialog__section {
+        border-block-start: 0;
+        background: linear-gradient(var(--border-strong), var(--border-strong)) left top / 100% 1px no-repeat;
+    }
+    [data-theme='blueprint'] .kp-dialog__section:first-child {
+        background: none;
+    }
+    [data-theme='blueprint'] .kp-dialog__heading {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='blueprint'] .kp-dialog__section--danger {
+        padding-inline-start: 0;
+        border-inline-start: 0;
+    }
+    [data-theme='blueprint'] .kp-dialog__section--danger > .kp-dialog__heading::before {
+        content: '\25B2\00a0';
+        color: var(--destructive);
+        font-size: 0.8em;
+    }
+    [data-theme='blueprint'] .kp-dialog__note {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+    [data-theme='blueprint'] :is(.kp-confirm__dependents, .kp-type-confirm__loses) {
+        border-color: transparent;
+        border-radius: 0;
+        background-color: transparent;
+        background-repeat: no-repeat;
+        background-image: var(--kp-bp-axes-img);
+        background-size: var(--kp-bp-axes-size);
+        background-position: var(--kp-bp-axes-pos);
+    }
+    [data-theme='blueprint'] .kp-type-confirm__loses-title {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='blueprint'] .kp-type-confirm__loses-title::before {
+        content: '\25B2\00a0';
+        color: var(--destructive);
+        font-size: 0.8em;
+    }
+    [data-theme='blueprint'] .kp-type-confirm__name {
+        border-radius: 0;
+        background: transparent;
+        box-shadow: inset 0 -1px 0 var(--accent);
+    }
+}
+
+/* ── Time and flows [kpadopt4]: moments, the journey, the pipeline, the drawings ── */
+@layer kp.signature {
+    /* Moments on the run timeline: a moment is a hatched mark in its own ink, a planned one hollow; pointing sets the
+       pen's frame round it; a count on a cluster is lettering; a stretch under them is a hatched section, an area across
+       the lanes between chain-dashed edges. */
+    [data-theme='blueprint'] :is(.kp-gantt__point, .kp-gantt__mark)::before {
+        background:
+            repeating-linear-gradient(45deg, var(--kp-gantt-mark) 0 1px, transparent 1px 3px),
+            transparent;
+    }
+    [data-theme='blueprint'] :is(.kp-gantt__point, .kp-gantt__mark)[data-kp-shape='square']::before {
+        border-radius: 0;
+    }
+    [data-theme='blueprint'] :is(.kp-gantt__point, .kp-gantt__mark)[data-kp-shape='triangle']:not([data-kp-planned])::before {
+        background: var(--kp-gantt-mark);
+    }
+    [data-theme='blueprint'] .kp-gantt__point[data-kp-planned]::before {
+        background: transparent;
+        border-style: dashed;
+    }
+    [data-theme='blueprint'] .kp-gantt__point:hover::before {
+        box-shadow: none;
+        outline: 1px solid var(--primary);
+        outline-offset: 3px;
+    }
+    [data-theme='blueprint'] .kp-gantt__count {
+        border-radius: 0;
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+    }
+    [data-theme='blueprint'] .kp-gantt__zone[data-kp-lane-zone] {
+        border-radius: 0;
+        background: repeating-linear-gradient(45deg, hsl(from var(--kp-gantt-mark) h s l / 0.8) 0 1px, transparent 1px 4px);
+        box-shadow: inset 0 0 0 1px hsl(from var(--kp-gantt-mark) h s l / 0.8);
+    }
+    [data-theme='blueprint'] .kp-gantt__sub {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+    [data-theme='blueprint'] .kp-gantt__legend-kind,
+    [data-theme='blueprint'] .kp-gantt__legend-zone {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    /* A journey: square marks drawn on one line; a reached step is a hatched square in the pen's cyan or the step's
+       own ink, joined by a solid rule; the ones to come by a chain line; the step it stands at has the amber witness
+       lines at its two sides; a closed path ends in the red cross and its dashes; names are lettering, dates the readout. */
+    [data-theme='blueprint'] .kp-steplist--journey {
+        --kp-journey-rule: 1px;
+    }
+    [data-theme='blueprint'] .kp-steplist--journey > .kp-steplist__item {
+        border-radius: 0;
+    }
+    [data-theme='blueprint'] .kp-steplist--journey > .kp-steplist__item + .kp-steplist__item::before {
+        background: repeating-linear-gradient(90deg, var(--border-strong) 0 6px, transparent 6px 8px);
+    }
+    [data-theme='blueprint'] .kp-steplist--journey > .kp-steplist__item:is([data-state='done'], [data-state='current'])::before {
+        background: var(--kp-step-tone, var(--primary));
+    }
+    [data-theme='blueprint'] .kp-steplist--journey .kp-steplist__item[data-state='done']:not([data-kp-tone]) .kp-steplist__mark {
+        border-color: var(--primary);
+        background-color: hsl(from var(--primary) h s l / 0.22);
+        color: var(--foreground);
+    }
+    [data-theme='blueprint'] .kp-steplist--journey .kp-steplist__item[data-state='done'] .kp-steplist__mark {
+        border-width: 1px;
+    }
+    [data-theme='blueprint'] .kp-steplist--journey .kp-steplist__item[data-state='current'] .kp-steplist__mark {
+        border-width: 1px;
+        box-shadow:
+            -6px 0 0 -5px var(--accent),
+            6px 0 0 -5px var(--accent);
+    }
+    [data-theme='blueprint'] .kp-steplist--journey .kp-steplist__title,
+    [data-theme='blueprint'] .kp-steplist--journey .kp-steplist__time {
+        font-family: var(--theme-font-mono);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='blueprint'] .kp-steplist--journey .kp-steplist__title {
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    @container kp-journey (max-width: 30rem) {
+        [data-theme='blueprint'] .kp-steplist--journey > .kp-steplist__item:not(:last-child)::after {
+            background: repeating-linear-gradient(180deg, var(--border-strong) 0 6px, transparent 6px 8px);
+        }
+        [data-theme='blueprint']
+            .kp-steplist--journey
+            > .kp-steplist__item:has(+ .kp-steplist__item:is([data-state='done'], [data-state='current']))::after {
+            background: var(--kp-step-tone, var(--primary));
+        }
+    }
+
+    /* The pipeline: a lane is a plate on the sheet (a ruler along its start edge and its foot, no fill, no frame), its
+       head a hatched section in the stage's own ink, the name lettering; a card is a part framed square, with the amber
+       witness lines when pointed at and the dimension across its foot when pressed; the open one has the pen's frame; a
+       dimmed one is dashed; a failure of the board is flagged ▲. */
+    [data-theme='blueprint'] .kp-pipeline__lane {
+        border-color: transparent;
+        border-radius: 0;
+        background-color: transparent;
+        background-repeat: no-repeat;
+        background-image: var(--kp-bp-axes-img);
+        background-size: var(--kp-bp-axes-size);
+        background-position: var(--kp-bp-axes-pos);
+    }
+    [data-theme='blueprint'] .kp-pipeline__head {
+        border-radius: 0;
+        background:
+            repeating-linear-gradient(45deg, hsl(from var(--kp-pipeline-tone) h s l / 0.5) 0 1px, transparent 1px 5px),
+            transparent;
+    }
+    [data-theme='blueprint'] :is(.kp-pipeline__name, .kp-pipeline__share, .kp-pipeline__sub, .kp-pipeline__meta, .kp-pipeline__none) {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='blueprint'] .kp-pipeline__card {
+        border-radius: 0;
+        background: var(--background);
+        border-color: var(--border-strong);
+    }
+    [data-theme='blueprint'] .kp-pipeline__card:is(button, a):hover:not([aria-current='true']) {
+        box-shadow:
+            -5px 0 0 -4px var(--accent),
+            5px 0 0 -4px var(--accent);
+    }
+    [data-theme='blueprint'] .kp-pipeline__card:is(button, a):active:not([aria-current='true']) {
+        box-shadow:
+            -5px 0 0 -4px var(--accent),
+            5px 0 0 -4px var(--accent),
+            inset 0 -1px 0 var(--accent);
+    }
+    [data-theme='blueprint'] .kp-pipeline__card[aria-current='true'] {
+        border-color: var(--primary);
+        box-shadow: none;
+        outline: 1px solid var(--primary);
+        outline-offset: 2px;
+    }
+    [data-theme='blueprint'] .kp-pipeline__card[data-kp-dimmed] {
+        background: transparent;
+        border-style: dashed;
+    }
+    [data-theme='blueprint'] .kp-pipeline__mark {
+        border: 1px solid var(--kp-pipeline-tone, var(--border-strong));
+        border-radius: 0;
+        background: repeating-linear-gradient(45deg, hsl(from var(--kp-pipeline-tone, var(--muted-foreground)) h s l / 0.5) 0 1px, transparent 1px 4px);
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+    }
+    [data-theme='blueprint'] .kp-pipeline__state {
+        border-color: var(--border-strong);
+        border-radius: 0;
+    }
+    [data-theme='blueprint'] .kp-pipeline__state[data-kp-state='error'] .kp-pipeline__words {
+        border-inline-start: 0;
+        padding-inline-start: 0;
+    }
+    [data-theme='blueprint'] .kp-pipeline__state[data-kp-state='error'] .kp-pipeline__words::before {
+        content: '\25B2\00a0';
+        color: var(--destructive);
+        font-size: 0.8em;
+    }
+    [data-theme='blueprint'] .kp-pipeline__retry,
+    [data-theme='blueprint'] .kp-pipeline__more {
+        font-family: var(--theme-font-mono);
+    }
+
+    /* Drawings for an empty state: the working drawing (js/art.js). The pen draws each stroke in cyan along its line on the
+       plotter's feed, three units, half a unit after the one before; when the line is drawn it is inked in the finished
+       line. Reduced, the drawing is inked. */
+    [data-theme='blueprint'] .kp-art {
+        display: block;
+        --kp-art-ink: var(--border-strong);
+        --kp-art-line: hsl(from var(--border-strong) h s l / 0.55);
+        --kp-art-stroke: 1.25px;
+    }
+    [data-theme='blueprint'] .kp-art > g[data-kp-art-set='drawing'] {
+        display: inline;
+    }
+    [data-theme='blueprint'] .kp-art path {
+        stroke-linecap: butt;
+        stroke-linejoin: miter;
+    }
+    [data-theme='blueprint'] .kp-empty[data-kp-art]::before {
+        content: none;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] .kp-art > g[data-kp-art-set='drawing'] > path {
+            stroke-dasharray: 1;
+            animation: kp-sig-blueprint-art-pen calc(3 * var(--kp-sig-bp-unit)) var(--kp-sig-bp-feed) both;
+            animation-delay: calc(var(--kp-art-i, 0) * 0.5 * var(--kp-sig-bp-unit));
+        }
+    }
+    @keyframes kp-sig-blueprint-art-pen {
+        from {
+            stroke-dashoffset: 1;
+            stroke: var(--primary);
+        }
+        65% {
+            stroke-dashoffset: 0;
+            stroke: var(--primary);
+        }
+        to {
+            stroke-dashoffset: 0;
+        }
+    }
+}
+
+/* ── The calm components and the seven new ones [kpadopt4] ── */
+@layer kp.signature {
+    /* Three-way chips: a square mark; the chip that is in is a hatched section in the pen's frame, the one that is out
+       has the red frame with its word struck through; pointing sets the amber witness lines. */
+    [data-theme='blueprint'] .kp-segmented--chips[data-kp-segmented='tri'] {
+        --kp-tri-mark-radius: 0;
+    }
+    [data-theme='blueprint'] .kp-segmented--chips[data-kp-segmented='tri'] > .kp-segmented__item {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='blueprint'] .kp-segmented--chips[data-kp-segmented='tri'] > .kp-segmented__item[data-kp-segmented-tri='include'] {
+        border-color: var(--primary);
+        background: repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / 0.34) 0 1px, transparent 1px 5px), hsl(from var(--primary) h s l / 0.1);
+        color: var(--foreground);
+    }
+    [data-theme='blueprint'] .kp-segmented--chips[data-kp-segmented='tri'] > .kp-segmented__item[data-kp-segmented-tri='include'] > .kp-segmented__mark::before {
+        color: var(--background);
+    }
+    [data-theme='blueprint'] .kp-segmented--chips[data-kp-segmented='tri'] > .kp-segmented__item[data-kp-segmented-tri='exclude'] {
+        background: transparent;
+    }
+    [data-theme='blueprint'] .kp-segmented__item[data-kp-segmented-tri='exclude'] > .kp-segmented__label {
+        text-decoration-thickness: 1px;
+    }
+    @media (hover: hover) {
+        [data-theme='blueprint'] .kp-segmented--chips[data-kp-segmented='tri']:not([aria-disabled='true']) > .kp-segmented__item:hover {
+            box-shadow:
+                -5px 0 0 -4px var(--accent),
+                5px 0 0 -4px var(--accent);
+        }
+    }
+
+    /* Quantity: the number is a readout in the mono in a square frame; the unit is lettering; the steps are blueprint's
+       own buttons. */
+    [data-theme='blueprint'] .kp-quantity__field {
+        border-color: var(--border-strong);
+        border-radius: 0;
+        background: transparent;
+    }
+    [data-theme='blueprint'] .kp-quantity__input {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='blueprint'] .kp-quantity__unit {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    /* Checklist: a row is read on a scale when pointed at (the two amber witness lines and a ruler along its foot, no
+       wash); a ticked item is struck through in amber, the redline; heads and counts are lettering. */
+    [data-theme='blueprint'] .kp-checklist__row {
+        border-radius: 0;
+    }
+    @media (hover: hover) {
+        [data-theme='blueprint'] .kp-checklist__row:hover {
+            background:
+                linear-gradient(var(--accent), var(--accent)) 2px 0 / 1px 100% no-repeat,
+                linear-gradient(var(--accent), var(--accent)) calc(100% - 2px) 0 / 1px 100% no-repeat,
+                repeating-linear-gradient(90deg, var(--accent) 0 1px, transparent 1px 5px) 2px 100% / calc(100% - 4px) 3px no-repeat;
+        }
+    }
+    [data-theme='blueprint'] .kp-checklist__item[data-kp-checklist-checked] .kp-checklist__label {
+        text-decoration-color: var(--accent);
+        text-decoration-thickness: 1px;
+    }
+    [data-theme='blueprint'] :is(.kp-checklist__title, .kp-checklist__count, .kp-checklist__status, .kp-checklist__detail) {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='blueprint'] :is(.kp-checklist__empty, .kp-timers__empty) {
+        border-radius: 0;
+    }
+
+    /* Kitchen timers: a card is a plate on the sheet (a ruler along its start edge and its foot, no fill); a finished
+       timer is flagged ▲ before its state, never filled; a ringing one draws the amber dimension across its foot,
+       three times, on the feed. */
+    [data-theme='blueprint'] .kp-timer {
+        position: relative;
+        border-color: transparent;
+        border-radius: 0;
+        background-color: transparent;
+        background-repeat: no-repeat;
+        background-image: var(--kp-bp-axes-img);
+        background-size: var(--kp-bp-axes-size);
+        background-position: var(--kp-bp-axes-pos);
+    }
+    [data-theme='blueprint'] .kp-timer[data-kp-timer-state='done'] {
+        --kp-timer-done-ground: transparent;
+        --kp-timer-done-ink: var(--foreground);
+        --kp-timer-done-edge: transparent;
+    }
+    [data-theme='blueprint'] .kp-timer[data-kp-timer-state='done'] .kp-timer__state::before {
+        content: '\25B2\00a0';
+        color: hsl(from var(--warning) h s 62%);
+        font-size: 0.8em;
+    }
+    [data-theme='blueprint'] .kp-timer__state {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='blueprint'] .kp-timer__time {
+        font-variant-numeric: tabular-nums lining-nums;
+    }
+    [data-theme='blueprint'] .kp-timer[data-kp-timer-ringing]::after,
+    [data-theme='blueprint'] .kp-countdown[data-kp-countdown-state='ended']::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: -5px;
+        block-size: 7px;
+        pointer-events: none;
+        background:
+            linear-gradient(var(--accent), var(--accent)) 0 50% / 100% 1px no-repeat,
+            linear-gradient(to top left, transparent calc(50% - 0.5px), var(--accent) calc(50% - 0.5px) calc(50% + 0.5px), transparent calc(50% + 0.5px)) 0 50% / 7px 7px no-repeat,
+            linear-gradient(to top left, transparent calc(50% - 0.5px), var(--accent) calc(50% - 0.5px) calc(50% + 0.5px), transparent calc(50% + 0.5px)) 100% 50% / 7px 7px no-repeat;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] .kp-timer[data-kp-timer-ringing]::after,
+        [data-theme='blueprint'] .kp-countdown[data-kp-countdown-state='ended']::after {
+            transform-origin: 0 50%;
+            animation: kp-sig-blueprint-dimension calc(6 * var(--kp-sig-bp-unit)) var(--kp-sig-bp-feed) 3 both;
+        }
+    }
+    @keyframes kp-sig-blueprint-dimension {
+        from {
+            scale: 0 1;
+        }
+        50%,
+        to {
+            scale: 1 1;
+        }
+    }
+
+    /* Cook mode: what the step needs is a plate on the sheet; its title and the amounts are the lettering and the
+       readout; the screen lamp is a square. */
+    [data-theme='blueprint'] .kp-focus-steps__needs {
+        padding: var(--kp-space-md, 0.75rem) 1rem;
+        border: 0;
+        background-repeat: no-repeat;
+        background-image: var(--kp-bp-axes-img);
+        background-size: var(--kp-bp-axes-size);
+        background-position: var(--kp-bp-axes-pos);
+    }
+    [data-theme='blueprint'] :is(.kp-focus-steps__needs-title, .kp-focus-steps__count, .kp-focus-steps__wake) {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='blueprint'] .kp-focus-steps__amount {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='blueprint'] .kp-focus-steps__wake::before {
+        border-radius: 0;
+    }
+
+    /* Wheel: a compass drawing: wedges are light washes between thin drawn lines, the rim one line, the pointer the
+       amber pointer of the scale; it turns on the plotter's feed (up to speed, at speed, down) and stops. */
+    [data-theme='blueprint'] .kp-wheel {
+        --kp-wheel-ease: var(--kp-sig-bp-feed);
+        --kp-wheel-tint: 16%;
+        --kp-wheel-tint-chosen: 40%;
+        --kp-wheel-pointer: var(--accent);
+    }
+    [data-theme='blueprint'] .kp-wheel__segment {
+        stroke: var(--border-strong);
+        stroke-width: 0.8;
+    }
+    [data-theme='blueprint'] .kp-wheel__rim {
+        stroke-width: 1;
+    }
+    [data-theme='blueprint'] .kp-wheel__pointer {
+        stroke: none;
+    }
+    [data-theme='blueprint'] .kp-wheel__caption {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='blueprint'] .kp-wheel__outcome[data-kp-wheel-note] {
+        border-radius: 0;
+    }
+
+    /* Uptime: square sections side by side, thin; a pointed or focused one is framed by the pen; a failure to read is
+       flagged ▲ before its words on no plate; the axis is lettering. */
+    [data-theme='blueprint'] .kp-uptime {
+        --kp-uptime-cell-radius: 0;
+    }
+    [data-theme='blueprint'] .kp-uptime__cell:is(:focus-visible, [aria-expanded='true']) {
+        outline-color: var(--primary);
+        outline-width: 1px;
+    }
+    [data-theme='blueprint'] .kp-uptime__summary[data-kp-tone='error'] {
+        padding: 0;
+        border-radius: 0;
+        background: transparent;
+        color: var(--destructive);
+    }
+    [data-theme='blueprint'] .kp-uptime__summary[data-kp-tone='error']::before {
+        content: '\25B2\00a0';
+        font-size: 0.8em;
+    }
+    [data-theme='blueprint'] :is(.kp-uptime__axis, .kp-uptime__info-figures) {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='blueprint'] .kp-uptime__percent,
+    [data-theme='blueprint'] .kp-uptime__summary {
+        font-family: var(--theme-font-mono);
+    }
+
+    /* Command: a plate on the sheet (a ruler along its start edge and its foot, no fill), the head lettered, the shell
+       and the place in the lettering, the prompt in the pen's cyan. */
+    [data-theme='blueprint'] .kp-command {
+        --kp-command-prompt-ink: var(--primary);
+        border-color: transparent;
+        border-radius: 0;
+        background-color: transparent;
+        background-repeat: no-repeat;
+        background-image: var(--kp-bp-axes-img);
+        background-size: var(--kp-bp-axes-size);
+        background-position: var(--kp-bp-axes-pos);
+    }
+    [data-theme='blueprint'] .kp-command__shell,
+    [data-theme='blueprint'] .kp-command__where {
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+    [data-theme='blueprint'] .kp-command__where {
+        font-family: var(--theme-font-mono);
+    }
+
+    /* Visual timer and countdown: the timer is the compass's circle with its centre lines; the time left is a hatched
+       section (the pen's hatch, 45 degrees) in the cyan; a finished one is ringed by an amber dashed revision line; the
+       countdown is a plate on the sheet and its digits are the readout. */
+    [data-theme='blueprint'] .kp-timer-disc__face {
+        border-width: 1px;
+        background:
+            linear-gradient(var(--border-strong), var(--border-strong)) 50% 50% / 100% 1px no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 50% 50% / 1px 100% no-repeat,
+            transparent;
+    }
+    [data-theme='blueprint'] .kp-timer-disc {
+        --kp-timer-disc-marks: var(--border-strong);
+    }
+    [data-theme='blueprint'] .kp-timer-disc__sector {
+        background: repeating-linear-gradient(45deg, var(--kp-timer-disc-fill, var(--primary)) 0 1px, transparent 1px 4px);
+        mask-image: conic-gradient(var(--foreground) calc(var(--kp-timer-disc-left, 1) * 360deg), transparent 0);
+        box-shadow: inset 0 0 0 1px var(--kp-timer-disc-fill, var(--primary));
+    }
+    [data-theme='blueprint'] .kp-timer-disc__hub {
+        inset: 47%;
+        border: 1px solid var(--foreground);
+        background: var(--background);
+    }
+    [data-theme='blueprint'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face {
+        box-shadow: none;
+        animation: none;
+        outline: 1px dashed var(--accent);
+        outline-offset: 5px;
+    }
+    [data-theme='blueprint'] .kp-countdown {
+        border-color: transparent;
+        border-radius: 0;
+        background-color: transparent;
+        background-repeat: no-repeat;
+        background-image: var(--kp-bp-axes-img);
+        background-size: var(--kp-bp-axes-size);
+        background-position: var(--kp-bp-axes-pos);
+        position: relative;
+    }
+    [data-theme='blueprint'] .kp-countdown__time {
+        font-family: var(--theme-font-mono);
+        font-weight: 400;
+    }
+    [data-theme='blueprint'] .kp-countdown[data-kp-countdown-state='ended'] {
+        box-shadow: none;
+        animation: none;
+    }
+    [data-theme='blueprint'] :is(.kp-timer-disc__status, .kp-countdown__status) {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    /* Range picker: the custom window in force is a hatched section in the pen's frame; its label is lettering. */
+    [data-theme='blueprint'] .kp-range__custom[aria-pressed='true'] {
+        border-color: var(--primary);
+        background: repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / 0.34) 0 1px, transparent 1px 5px), hsl(from var(--primary) h s l / 0.1);
+        box-shadow: none;
+    }
+    [data-theme='blueprint'] .kp-range__label {
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='blueprint'] .kp-range__panel .kp-field__input[aria-invalid='true'] {
+        box-shadow: none;
+    }
+
+    /* Compare slider: a square frame; the divider is the pen's line, the handle the compass's circle with its centre
+       lines; the labels are lettering on the sheet's ground; the divider glides on the plotter's feed. */
+    [data-theme='blueprint'] .kp-compare {
+        --kp-compare-line: 1px;
+        --kp-compare-ink: var(--primary);
+        border-color: var(--border-strong);
+        border-radius: 0;
+    }
+    [data-theme='blueprint'] .kp-compare__handle {
+        border-width: 1px;
+        background:
+            linear-gradient(var(--primary), var(--primary)) 50% 50% / 100% 1px no-repeat,
+            var(--background);
+    }
+    [data-theme='blueprint'] .kp-compare__label {
+        border-radius: 0;
+        font-family: var(--theme-font-mono);
+        font-style: oblique 15deg;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        background: var(--background);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] .kp-compare[data-kp-compare-glide] :is(.kp-compare__pane, .kp-compare__divider) {
+            transition-timing-function: var(--kp-sig-bp-feed);
+        }
+    }
+}

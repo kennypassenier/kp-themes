@@ -4672,3 +4672,961 @@
         }
     }
 }
+
+/* ── The fourth adoption round in this theme [kpadopt4]: data pieces ──
+   Pastel's own (themes/pastel/CHARACTER.md): a mark, a plate or a part is a sticker or a taped-in note. A mark stands on
+   its flat peel, a figure that says a tone is a sticker on the tone's plate with its own peel (G8), what is pointed at
+   lifts on its peel (G14), a live number wobbles round its foot (G9), a ruled line is a thread of pearls (G18), and a
+   plate that is stuck to the page carries one strip of washi tape (G7). The part that is held in the hand carries none.
+   Every colour is a token; every motion sits under no-preference and lands on the soft landing (G1). */
+@layer kp.signature {
+    /* Identity mark: a sticker, its flat peel under it in its own darker colour; the current one in a list is ringed by
+       the dashed plum line, kept off its neighbours by the paper's edge; a group of marks is stuck down overlapping. */
+    [data-theme='pastel'] .kp-idmark {
+        box-shadow: 0 calc(var(--kp-idmark-s) * 0.05) 0 hsl(from var(--kp-idmark-c) h s calc(l * 0.6));
+        font-weight: 700;
+    }
+    [data-theme='pastel'] .kp-idmark:is(.kp-skeleton, [data-kp-idmark-empty]) {
+        box-shadow: none;
+    }
+    [data-theme='pastel'] .kp-idmark[aria-current]:not([aria-current='false']),
+    [data-theme='pastel'] .kp-idmark[data-kp-idmark-selected] {
+        outline: 2px dashed var(--primary);
+        outline-offset: 3px;
+        box-shadow: 0 calc(var(--kp-idmark-s) * 0.05) 0 hsl(from var(--kp-idmark-c) h s calc(l * 0.6));
+    }
+    [data-theme='pastel'] .kp-idmark-group > :is(.kp-idmark, .kp-idmark-group__more) {
+        box-shadow: 0 0 0 2px var(--card);
+    }
+    [data-theme='pastel'] .kp-idmark-group__more {
+        border-radius: var(--kp-idmark-radius, min(var(--radius, 1rem), calc(var(--kp-idmark-s) * 0.28)));
+        font-weight: 700;
+    }
+    [data-theme='pastel'] .kp-idmark--glyph::after {
+        border-radius: 3px;
+    }
+    [data-theme='pastel'] .kp-idmark--glyph[data-kp-idmark-glyph='circle']::after {
+        border-radius: 50%;
+    }
+
+    /* Share bar: one pill with its sky pass beside it; the part pointed at lifts out of the bar on its own peel and its
+       legend row takes the mint wash; the threshold is a pearl on its thread; a swatch is a pearl. */
+    [data-theme='pastel'] .kp-stackbar {
+        --kp-stackbar-radius: 999px;
+    }
+    [data-theme='pastel'] .kp-stackbar:not([aria-busy='true']) .kp-stackbar__bar {
+        box-shadow: calc(3px * var(--kp-sig-pa-dir)) 3px 0 var(--kp-sig-pa-pass-c);
+    }
+    [data-theme='pastel'] .kp-stackbar__seg[data-kp-stackbar-lit] {
+        border-radius: 999px;
+        translate: 0 -2px;
+        box-shadow:
+            inset calc(var(--kp-stackbar-gap, 2px) * -1) 0 0 var(--card),
+            0 3px 0 hsl(from var(--kp-stackbar-colour, var(--chart-1)) h s calc(l * 0.6));
+    }
+    [data-theme='pastel'] .kp-stackbar__mark {
+        inline-size: 2px;
+        background: var(--primary);
+        box-shadow: none;
+    }
+    [data-theme='pastel'] .kp-stackbar__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-start: -0.3rem;
+        inset-inline-start: 50%;
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        translate: calc(-50% * var(--kp-sig-pa-dir)) 0;
+        border-radius: 50%;
+        background: var(--primary);
+        box-shadow: 0 0 0 2px var(--card);
+    }
+    [data-theme='pastel'] .kp-stackbar__swatch {
+        border-radius: 50%;
+        box-shadow: 0 1.5px 0 hsl(from var(--kp-stackbar-colour, var(--chart-1)) h s calc(l * 0.6));
+    }
+    [data-theme='pastel'] .kp-stackbar__item {
+        border-radius: var(--kp-sig-pa-r-ctl);
+    }
+    [data-theme='pastel'] .kp-stackbar__item[data-kp-stackbar-lit] {
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+    [data-theme='pastel'] .kp-stackbar__item[data-kp-stackbar-lit] .kp-stackbar__value {
+        color: inherit;
+    }
+    [data-theme='pastel'] .kp-stackbar__note {
+        border-radius: var(--kp-sig-pa-r-plate);
+        border-width: 2px;
+    }
+
+    /* Bullet rows: a row that leads somewhere takes the mint wash of a hovered entry on its menu corner; a figure that
+       says a tone is a sticker on the tone's plate with its own peel. */
+    [data-theme='pastel'] .kp-bullets__row {
+        border-radius: var(--kp-sig-pa-r-ctl);
+    }
+    [data-theme='pastel'] .kp-bullets__row:has(.kp-bullets__link:hover) {
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+    [data-theme='pastel'] .kp-bullets__row:has(.kp-bullets__link:hover) .kp-bullets__label {
+        text-decoration: none;
+    }
+    [data-theme='pastel'] .kp-bullets__row:has(.kp-bullets__link:hover) .kp-bullets__detail {
+        color: inherit;
+    }
+    [data-theme='pastel'] .kp-bullets__row:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-bullets__figure {
+        padding-inline: 0.55em;
+        border-radius: var(--kp-sig-pa-r-ctl);
+    }
+    [data-theme='pastel'] .kp-bullets__row[data-kp-tone='warning'] .kp-bullets__figure {
+        box-shadow: 0 2px 0 hsl(from var(--warning) h s calc(l * 0.6));
+    }
+    [data-theme='pastel'] .kp-bullets__row[data-kp-tone='destructive'] .kp-bullets__figure {
+        box-shadow: 0 2px 0 hsl(from var(--destructive) h s calc(l * 0.6));
+    }
+
+    /* Key-value grid and form rows: a ruled line is a thread of pearls; a row changed and not saved, or one that could
+       not be read, is marked by a pearl in the gap before its label, never a bar. */
+    [data-theme='pastel'] :is(.kp-kv--lines > .kp-kv__row, .kp-formrows--lines > .kp-formrow) {
+        border-block-end: 2px dotted var(--border-strong);
+    }
+    [data-theme='pastel'] :is(.kp-kv--lines > .kp-kv__row:last-child, .kp-formrows--lines > .kp-formrow:last-child) {
+        border-block-end: 0;
+    }
+    [data-theme='pastel'] .kp-kv__row[data-kp-state='error']::before,
+    [data-theme='pastel'] .kp-formrow[data-kp-changed]::before,
+    [data-theme='pastel'] .kp-formrow[data-kp-state='error']::before {
+        inset-block: 0.65em auto;
+        inset-inline-start: calc(var(--kp-space-sm, 0.5rem) * -1 - 4px);
+        inline-size: 8px;
+        block-size: 8px;
+        border-radius: 50%;
+    }
+    [data-theme='pastel'] .kp-formrow:is([data-kp-changed], [data-kp-state='error'])::before {
+        inset-block-start: 1rem;
+    }
+    [data-theme='pastel'] .kp-kv__row[data-kp-changed] > dt::after {
+        font-size: 1.25em;
+        line-height: 0;
+    }
+    [data-theme='pastel'] .kp-formrow__lock {
+        padding-inline: 0.55em;
+        border-radius: var(--kp-sig-pa-r-chip);
+        background: var(--muted);
+    }
+
+    /* Code block: a plate stuck to the page, its sky pass 6 px off register and one strip of washi tape across its top
+       start edge; the head is cut from the body by the tape's dashed edge, the keys are plum. */
+    [data-theme='pastel'] .kp-code {
+        border-radius: var(--kp-sig-pa-r-plate);
+        box-shadow: calc(var(--kp-sig-pa-off) * var(--kp-sig-pa-dir)) var(--kp-sig-pa-off) 0 var(--kp-sig-pa-pass-c);
+    }
+    [data-theme='pastel'] .kp-code::before {
+        content: '';
+        position: absolute;
+        z-index: 2;
+        inset-block-start: -0.35rem;
+        inset-inline-start: 1.25rem;
+        inline-size: 3.5rem;
+        block-size: 0.8rem;
+        border-radius: 2px;
+        background: var(--kp-sig-pa-tape-bg);
+        rotate: -2deg;
+        pointer-events: none;
+    }
+    [data-theme='pastel'] :is(.kp-code__head, .kp-code__foot) {
+        border-color: var(--border-strong);
+        border-style: dashed;
+        border-width: 0;
+    }
+    [data-theme='pastel'] .kp-code__head {
+        border-block-end-width: 2px;
+        padding-block-start: calc(var(--kp-space-xs, 0.25rem) + 0.25rem);
+    }
+    [data-theme='pastel'] .kp-code__foot {
+        border-block-start-width: 2px;
+    }
+    [data-theme='pastel'] .kp-code__head {
+        border-start-start-radius: inherit;
+        border-start-end-radius: inherit;
+    }
+
+    /* A live number wobbles once round its foot as it counts (G9), 800 ms, its second pass staying where it is. */
+    [data-theme='pastel'] [data-kp-tick] {
+        display: inline-block;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] [data-kp-tick][data-kp-tick-state='running'] {
+            transform-origin: 50% 100%;
+            animation: kp-sig-pastel-update-wobble var(--kp-sig-pa-wobble) ease-out;
+        }
+    }
+}
+
+/* ── Rows, cards and choices [kpadopt4]: tiles, status rows, the action list ── */
+@layer kp.signature {
+    /* Choice tiles: a sticker on its flat peel; pointing lifts it 2 px on its peel, a press sticks it down flat, the
+       chosen one is mint paper with a plum edge and no peel of its own (it is stuck down), focus is the dashed line. */
+    [data-theme='pastel'] .kp-fieldset[data-kp-layout='tiles'] {
+        --kp-field-tile-radius: var(--kp-sig-pa-r-plate);
+        --kp-field-tiles-gap: 0.875rem;
+    }
+    [data-theme='pastel'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option {
+        border-color: var(--border-strong);
+        box-shadow: 0 3px 0 var(--kp-sig-pa-peel);
+    }
+    [data-theme='pastel'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:hover:not(:has(> .kp-field__check:disabled)) {
+        border-color: var(--border-strong);
+        translate: 0 -2px;
+        box-shadow: 0 5px 0 var(--kp-sig-pa-peel);
+    }
+    [data-theme='pastel'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:active:not(:has(> .kp-field__check:disabled)) {
+        translate: 0 3px;
+        box-shadow: 0 0 0 var(--kp-sig-pa-peel);
+    }
+    [data-theme='pastel'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:checked) {
+        --kp-field-tile-ground-checked: color-mix(in oklab, var(--accent) 55%, var(--card));
+        border-color: var(--primary);
+        box-shadow: 0 0 0 1px var(--primary);
+        translate: 0 3px;
+    }
+    [data-theme='pastel'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:focus-visible) {
+        outline: 2px dashed var(--ring);
+        outline-offset: 3px;
+    }
+    [data-theme='pastel'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:disabled) {
+        box-shadow: 0 3px 0 var(--border);
+    }
+    [data-theme='pastel'] .kp-fieldset[data-kp-layout='tiles'][aria-invalid='true'],
+    [data-theme='pastel'] .kp-fieldset[data-kp-layout='tiles'][data-kp-invalid] {
+        outline: 2px dashed var(--destructive);
+        outline-offset: 4px;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option {
+            transition:
+                translate var(--fx-duration) var(--kp-sig-pa-land),
+                box-shadow var(--fx-duration) var(--kp-sig-pa-land),
+                background-color var(--fx-duration) ease,
+                border-color var(--fx-duration) ease;
+        }
+    }
+
+    /* A check that passes with a reservation: a sticker on the warning's plate with its own peel, as the failed row's
+       reason is on the red's. The fix, written out, is a taped-in note: mint paper in a dashed edge. */
+    [data-theme='pastel'] .kp-statusrow[data-state='warn'] {
+        --kp-statusrow-state-edge: var(--border-strong);
+    }
+    [data-theme='pastel'] .kp-statusrow[data-state='warn'] .kp-statusrow__mark {
+        box-shadow: 0 2px 0 hsl(from var(--warning) h s calc(l * 0.6));
+    }
+    [data-theme='pastel'] .kp-statusrow[data-state='warn'] .kp-statusrow__detail {
+        justify-self: start;
+        margin-block-start: 0.2rem;
+        padding: 0 0.45rem;
+        border-radius: var(--kp-sig-pa-r-ctl);
+        background: var(--warning);
+        color: var(--warning-foreground);
+        box-shadow: 0 2px 0 hsl(from var(--warning) h s calc(l * 0.6));
+    }
+    [data-theme='pastel'] .kp-statusrow__fix {
+        padding: 0.25rem 0.7rem;
+        border: 2px dashed hsl(from var(--accent-foreground) h s l / 0.45);
+        border-radius: var(--kp-sig-pa-r-ctl);
+        background: color-mix(in oklab, var(--accent) 45%, var(--card));
+        color: var(--foreground);
+    }
+
+    /* The action list with a lead: a row is a strip of paper on a rule of pearls; its state is a washi bar on the start
+       edge with round ends, the severity dot a pearl; the next one is mint and its date a mint sticker; a group's
+       heading is a sentence, not capitals (G17); a payload is a taped-in note. */
+    [data-theme='pastel'] .kp-action-list--lead > li {
+        border-radius: var(--kp-sig-pa-r-ctl);
+    }
+    [data-theme='pastel'] .kp-action-list--lead > li:not(.kp-action-list__group) {
+        border-inline-start-width: 5px;
+        border-start-start-radius: 5px;
+        border-end-start-radius: 5px;
+    }
+    [data-theme='pastel'] .kp-action-list--lead > li[data-kp-state='next'] {
+        background: color-mix(in oklab, var(--accent) 38%, transparent);
+    }
+    [data-theme='pastel'] .kp-action-list--lead > li[data-kp-state='next'] > .kp-action-list__lead .kp-action-list__when {
+        padding: 0.2rem 0.6rem;
+        border-radius: var(--kp-sig-pa-r-ctl);
+        background: var(--accent);
+        color: var(--accent-foreground);
+        box-shadow: 0 2px 0 hsl(from var(--accent) h s calc(l * 0.6));
+    }
+    [data-theme='pastel'] .kp-action-list > li.kp-action-list__group {
+        font-size: var(--kp-text-sm, 0.8125rem);
+        letter-spacing: 0;
+        text-transform: none;
+    }
+    [data-theme='pastel'] .kp-action-list__payload {
+        border: 2px dashed var(--border-strong);
+        border-radius: var(--kp-sig-pa-r-ctl);
+    }
+    [data-theme='pastel'] .kp-action-list__more > summary {
+        border-radius: var(--kp-sig-pa-r-chip);
+    }
+
+    /* A secret: the value is a label taped on (a dashed edge); the time left drains as a strip of washi tape, peeled
+       from its end along the line; a failure to read is a sticker on the red's plate. */
+    [data-theme='pastel'] .kp-secret {
+        --kp-secret-drain-size: 6px;
+    }
+    [data-theme='pastel'] .kp-secret__value {
+        border: 2px dashed var(--border-strong);
+        border-radius: var(--kp-sig-pa-r-ctl);
+        background: var(--card);
+    }
+    [data-theme='pastel'] .kp-secret[data-kp-secret-state='disabled'] .kp-secret__value {
+        background: var(--muted);
+    }
+    [data-theme='pastel'] .kp-secret__drain {
+        border-radius: 2px;
+        background: var(--kp-sig-pa-tape-bg);
+        transform-origin: 0 50%;
+    }
+    [data-theme='pastel'] .kp-secret__drain:dir(rtl) {
+        transform-origin: 100% 50%;
+    }
+    [data-theme='pastel'] .kp-secret[data-kp-secret-state='error'] .kp-secret__words {
+        padding: 0 0.55rem;
+        border-inline-start: 0;
+        border-radius: var(--kp-sig-pa-r-ctl);
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        box-shadow: 0 2px 0 hsl(from var(--destructive) h s calc(l * 0.6));
+    }
+
+    /* A dialog in sections: a section's rule is a thread of pearls; a danger section has a round-ended bar; what still
+       depends on the thing is a taped-in note (a dashed edge on paper); the name to type is a marked word on mint. */
+    [data-theme='pastel'] .kp-dialog__section {
+        border-block-start: 2px dotted var(--border-strong);
+    }
+    [data-theme='pastel'] .kp-dialog__section:first-child {
+        border-block-start: 0;
+    }
+    [data-theme='pastel'] .kp-dialog__section--danger {
+        border-inline-start-width: 5px;
+        border-radius: 5px;
+    }
+    [data-theme='pastel'] :is(.kp-confirm__dependents, .kp-type-confirm__loses) {
+        border: 2px dashed var(--border-strong);
+        border-radius: var(--kp-sig-pa-r-ctl);
+        background: var(--card);
+    }
+    [data-theme='pastel'] .kp-type-confirm__loses-title {
+        justify-self: start;
+        padding: 0 0.55rem;
+        border-radius: var(--kp-sig-pa-r-ctl);
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        box-shadow: 0 2px 0 hsl(from var(--destructive) h s calc(l * 0.6));
+    }
+    [data-theme='pastel'] .kp-type-confirm__name {
+        padding: 0 0.4em;
+        border-radius: 0.4rem;
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+    [data-theme='pastel'] .kp-type-confirm__status[data-kp-matched] {
+        color: var(--foreground);
+        font-weight: 600;
+    }
+}
+
+/* ── Time and flows [kpadopt4]: moments, the journey, the pipeline, the drawings ── */
+@layer kp.signature {
+    /* Moments on the run timeline: a moment is a pearl with its flat peel, a planned one a dashed ring; pointing lifts
+       it 2 px on a longer peel; a count on a cluster is a sticker; a stretch is washi tape in the tone's own stripes,
+       an area across the lanes the dotted edge of a cut-out; the dated line stands on a thread of pearls. */
+    [data-theme='pastel'] :is(.kp-gantt__point, .kp-gantt__mark)::before {
+        box-shadow: 0 1.5px 0 hsl(from var(--kp-gantt-mark) h s calc(l * 0.6));
+    }
+    [data-theme='pastel'] .kp-gantt__point[data-kp-planned]::before {
+        border-style: dashed;
+        box-shadow: none;
+    }
+    [data-theme='pastel'] .kp-gantt__point:hover::before {
+        translate: 0 -2px;
+        box-shadow: 0 3.5px 0 hsl(from var(--kp-gantt-mark) h s calc(l * 0.6));
+    }
+    [data-theme='pastel'] .kp-gantt__count {
+        border: 0;
+        border-radius: var(--kp-sig-pa-r-chip);
+        box-shadow: 0 1.5px 0 var(--kp-sig-pa-peel);
+        padding-inline: 0.3125rem;
+    }
+    [data-theme='pastel'] .kp-gantt__zone {
+        border-inline-style: dotted;
+        border-inline-width: 2px;
+    }
+    [data-theme='pastel'] .kp-gantt__zone[data-kp-lane-zone] {
+        background: repeating-linear-gradient(
+            90deg,
+            hsl(from var(--kp-gantt-mark) h s l / 0.7) 0 6px,
+            hsl(from var(--kp-gantt-mark) h s l / 0.3) 6px 12px
+        );
+    }
+    [data-theme='pastel'] .kp-gantt--line :is(.kp-gantt__corner, .kp-gantt__axis) {
+        border-block-start: 3px dotted var(--border-strong);
+    }
+    [data-theme='pastel'] .kp-gantt__lane-link {
+        text-decoration-style: dotted;
+        text-decoration-thickness: 2px;
+    }
+
+    /* A journey: the steps are stickers strung on a thread of pearls; a reached step is a plum sticker on its peel, the
+       step it stands at a paper sticker with its sky pass off register and the dot of the step's colour. */
+    [data-theme='pastel'] .kp-steplist--journey {
+        --kp-journey-rule: 4px;
+    }
+    [data-theme='pastel'] .kp-steplist--journey > .kp-steplist__item + .kp-steplist__item::before {
+        background: radial-gradient(circle closest-side, var(--border-strong) 0 1.5px, transparent 2px) 0 50% / 8px 100% repeat-x;
+    }
+    [data-theme='pastel'] .kp-steplist--journey > .kp-steplist__item:is([data-state='done'], [data-state='current'])::before {
+        background: radial-gradient(circle closest-side, var(--kp-step-tone, var(--primary)) 0 1.5px, transparent 2px) 0 50% / 8px 100% repeat-x;
+    }
+    [data-theme='pastel'] .kp-steplist--journey > .kp-steplist__item[data-state='failed']::before {
+        background: repeating-linear-gradient(90deg, var(--destructive) 0 0.375rem, transparent 0.375rem 0.625rem);
+    }
+    [data-theme='pastel'] .kp-steplist--journey .kp-steplist__mark {
+        border-width: 2px;
+        box-shadow: 0 2px 0 hsl(from var(--kp-step-tone, var(--border-strong)) h s calc(l * 0.6));
+    }
+    [data-theme='pastel'] .kp-steplist--journey .kp-steplist__item[data-state='done']:not([data-kp-tone]) .kp-steplist__mark {
+        border-color: var(--primary);
+        background-color: var(--primary);
+        color: var(--primary-foreground);
+        box-shadow: 0 2px 0 var(--kp-sig-pa-peel);
+    }
+    [data-theme='pastel'] .kp-steplist--journey .kp-steplist__item[data-state='current'] .kp-steplist__mark {
+        box-shadow: calc(3px * var(--kp-sig-pa-dir)) 3px 0 var(--kp-sig-pa-pass-c);
+    }
+    [data-theme='pastel'] .kp-steplist--journey .kp-steplist__item:is([data-state='skipped'], [data-state='pending'], :not([data-state])) .kp-steplist__mark {
+        box-shadow: none;
+    }
+    @container kp-journey (max-width: 30rem) {
+        [data-theme='pastel'] .kp-steplist--journey > .kp-steplist__item:not(:last-child)::after {
+            background: radial-gradient(circle closest-side, var(--border-strong) 0 1.5px, transparent 2px) 50% 0 / 100% 8px repeat-y;
+        }
+        [data-theme='pastel']
+            .kp-steplist--journey
+            > .kp-steplist__item:has(+ .kp-steplist__item:is([data-state='done'], [data-state='current']))::after {
+            background: radial-gradient(circle closest-side, var(--kp-step-tone, var(--primary)) 0 1.5px, transparent 2px) 50% 0 / 100% 8px repeat-y;
+        }
+    }
+
+    /* The pipeline: a lane is a sheet of paper with its sky pass off register, its head a sticker on the stage's own
+       plate and peel; a card is a sticker that lifts 2 px on its peel when pointed at and sticks down when pressed;
+       the open one is ringed in plum; a dimmed one is a dashed outline with no pass; the board's sentence is paper. */
+    [data-theme='pastel'] .kp-pipeline {
+        --kp-pipeline-gap: 1rem;
+    }
+    [data-theme='pastel'] .kp-pipeline__lane {
+        border-color: var(--border-strong);
+        border-radius: var(--kp-sig-pa-r-plate);
+        background: var(--muted);
+        box-shadow: calc(var(--kp-sig-pa-off) * var(--kp-sig-pa-dir)) var(--kp-sig-pa-off) 0 var(--kp-sig-pa-pass-c);
+    }
+    [data-theme='pastel'] .kp-pipeline__head {
+        border-color: transparent;
+        border-radius: var(--kp-sig-pa-r-ctl);
+        box-shadow: 0 3px 0 hsl(from var(--kp-pipeline-tone) h s calc(l * 0.6));
+    }
+    [data-theme='pastel'] .kp-pipeline__share {
+        font-weight: 600;
+    }
+    [data-theme='pastel'] .kp-pipeline__card {
+        border-color: var(--border-strong);
+        border-radius: var(--kp-sig-pa-r-ctl);
+        box-shadow: 0 3px 0 var(--kp-sig-pa-peel);
+    }
+    [data-theme='pastel'] .kp-pipeline__card:is(button, a):hover {
+        translate: 0 -2px;
+        border-color: var(--border-strong);
+        box-shadow: 0 5px 0 var(--kp-sig-pa-peel);
+    }
+    [data-theme='pastel'] .kp-pipeline__card:is(button, a):active {
+        translate: 0 3px;
+        box-shadow: 0 0 0 var(--kp-sig-pa-peel);
+    }
+    [data-theme='pastel'] .kp-pipeline__card:focus-visible {
+        outline: 2px dashed var(--ring);
+        outline-offset: 3px;
+    }
+    [data-theme='pastel'] .kp-pipeline__card[aria-current='true'] {
+        border-color: var(--primary);
+        box-shadow:
+            0 0 0 2px var(--primary),
+            0 4px 0 1px var(--kp-sig-pa-peel);
+    }
+    [data-theme='pastel'] .kp-pipeline__card[data-kp-dimmed] {
+        border-width: 2px;
+        box-shadow: none;
+    }
+    [data-theme='pastel'] .kp-pipeline__mark {
+        border-radius: calc(var(--kp-sig-pa-r-ctl) * 0.6);
+        box-shadow: 0 2px 0 hsl(from var(--kp-pipeline-tone, var(--muted-foreground)) h s calc(l * 0.6));
+    }
+    [data-theme='pastel'] .kp-pipeline__state {
+        border: 2px dashed var(--border-strong);
+        border-radius: var(--kp-sig-pa-r-plate);
+    }
+    [data-theme='pastel'] .kp-pipeline__state[data-kp-state='error'] .kp-pipeline__words {
+        padding: 0 0.55rem;
+        border-inline-start: 0;
+        border-radius: var(--kp-sig-pa-r-ctl);
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        box-shadow: 0 2px 0 hsl(from var(--destructive) h s calc(l * 0.6));
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] :is(.kp-pipeline__card, .kp-pipeline__mark) {
+            transition:
+                translate var(--fx-duration) var(--kp-sig-pa-land),
+                box-shadow var(--fx-duration) var(--kp-sig-pa-land);
+        }
+    }
+
+    /* Drawings for an empty state: the sticker sheet (js/art.js). Each stroke is stuck on in reading order, 60 ms apart
+       on the soft landing: the second pass slides in along the misregistration line, the paper swings down from its
+       top-start corner, the tape last. The tape is the last stroke of every drawing, mint. Reduced, the drawing is
+       stuck on. */
+    [data-theme='pastel'] .kp-art {
+        display: block;
+        --kp-art-stroke: 1.5px;
+    }
+    [data-theme='pastel'] .kp-art > g[data-kp-art-set='stickers'] {
+        display: inline;
+    }
+    /* The drawing takes the place of the empty state's halftone disc; the fold stays. */
+    [data-theme='pastel'] .kp-empty[data-kp-art]::before {
+        content: none;
+    }
+    [data-theme='pastel'] .kp-art path {
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+    [data-theme='pastel'] .kp-art__line {
+        fill: var(--kp-sig-pa-pass-c);
+        stroke: none;
+    }
+    [data-theme='pastel'] .kp-art__ink {
+        fill: var(--card);
+        stroke: var(--primary);
+    }
+    [data-theme='pastel'] .kp-art > g[data-kp-art-set='stickers'] > path:last-child {
+        fill: var(--accent);
+        stroke: var(--kp-sig-pa-tape-stripe);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-art > g[data-kp-art-set='stickers'] > path {
+            transform-box: fill-box;
+            transform-origin: 0 0;
+            animation: kp-sig-pastel-stuck-in var(--kp-sig-pa-window) var(--kp-sig-pa-land) both;
+            animation-delay: calc(var(--kp-art-i, 0) * 60ms);
+        }
+        [data-theme='pastel'] .kp-art > g[data-kp-art-set='stickers'] > path.kp-art__line {
+            animation-name: kp-sig-pastel-pass-in;
+        }
+    }
+}
+
+/* ── The calm components and the seven new ones [kpadopt4]: chips, quantity, checklist, timers, steps, wheel,
+   uptime, command, disc, countdown, range, compare ── */
+@layer kp.signature {
+    /* Three-way chips: the chip that is in is plum on its peel (the chips' own), the one that is out a dashed outline
+       with the word struck through and a red sticker for its mark; pointing lifts any of them 2 px. */
+    [data-theme='pastel'] .kp-segmented--chips[data-kp-segmented='tri'] > .kp-segmented__item[data-kp-segmented-tri='include'] {
+        box-shadow: 0 3px 0 var(--kp-sig-pa-peel);
+    }
+    [data-theme='pastel'] .kp-segmented--chips[data-kp-segmented='tri'] > .kp-segmented__item[data-kp-segmented-tri='exclude'] {
+        border-style: dashed;
+        border-width: 2px;
+        box-shadow: none;
+    }
+    [data-theme='pastel'] .kp-segmented__item[data-kp-segmented-tri='exclude'] > .kp-segmented__mark {
+        box-shadow: 0 2px 0 hsl(from var(--destructive) h s calc(l * 0.6));
+    }
+    [data-theme='pastel'] .kp-segmented__mark {
+        border-width: 2px;
+    }
+    @media (hover: hover) {
+        [data-theme='pastel'] .kp-segmented--chips[data-kp-segmented='tri']:not([aria-disabled='true']) > .kp-segmented__item:hover {
+            box-shadow: 0 5px 0 var(--kp-sig-pa-peel);
+            translate: 0 -2px;
+        }
+        [data-theme='pastel'] .kp-segmented--chips[data-kp-segmented='tri']:not([aria-disabled='true']) > .kp-segmented__item[data-kp-segmented-tri='exclude']:hover {
+            box-shadow: none;
+        }
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-segmented--chips[data-kp-segmented='tri'] > .kp-segmented__item {
+            transition:
+                translate var(--fx-duration) var(--kp-sig-pa-land),
+                box-shadow var(--fx-duration) var(--kp-sig-pa-land);
+        }
+    }
+
+    /* Quantity: the steps are pastel's own buttons; the number sits on paper with its sky pass, focus is the dashed line. */
+    [data-theme='pastel'] .kp-quantity__field {
+        border-radius: var(--kp-sig-pa-r-ctl);
+        border-color: var(--border-strong);
+        box-shadow: calc(3px * var(--kp-sig-pa-dir)) 3px 0 var(--kp-sig-pa-pass-c);
+    }
+    [data-theme='pastel'] .kp-quantity__field:has(.kp-quantity__input:focus-visible) {
+        outline: 2px dashed var(--ring);
+        outline-offset: 3px;
+        box-shadow: calc(3px * var(--kp-sig-pa-dir)) 3px 0 var(--kp-sig-pa-pass-c);
+    }
+    [data-theme='pastel'] .kp-quantity__input {
+        font-weight: 700;
+    }
+
+    /* Checklist: a row is lifted onto the mint wash when pointed at; a ticked item is struck through in plum; the rules
+       are threads of pearls, the bar's a dashed cut; a finished group's count carries a tick sticker. */
+    [data-theme='pastel'] .kp-checklist__bar {
+        border-block-end: 2px dashed var(--border-strong);
+    }
+    [data-theme='pastel'] .kp-checklist__list {
+        border-block-start: 2px dotted var(--border-strong);
+    }
+    [data-theme='pastel'] .kp-checklist__item {
+        border-block-end: 2px dotted var(--border-strong);
+    }
+    [data-theme='pastel'] .kp-checklist__row {
+        border-radius: var(--kp-sig-pa-r-ctl);
+    }
+    @media (hover: hover) {
+        [data-theme='pastel'] .kp-checklist__row:hover {
+            background: var(--accent);
+            color: var(--accent-foreground);
+        }
+        [data-theme='pastel'] .kp-checklist__row:hover :is(.kp-checklist__detail, .kp-checklist__label) {
+            color: inherit;
+        }
+    }
+    [data-theme='pastel'] .kp-checklist__item[data-kp-checklist-checked] .kp-checklist__label {
+        text-decoration-color: var(--primary);
+        text-decoration-thickness: 2px;
+    }
+    [data-theme='pastel'] .kp-checklist__group[data-kp-checklist-done] .kp-checklist__count::before {
+        display: inline-block;
+        padding: 0 0.35em;
+        border-radius: var(--kp-sig-pa-r-chip);
+        background: var(--success);
+        color: var(--success-foreground);
+        box-shadow: 0 1.5px 0 hsl(from var(--success) h s calc(l * 0.6));
+    }
+    [data-theme='pastel'] :is(.kp-checklist__empty, .kp-timers__empty) {
+        border: 2px dashed var(--border-strong);
+        border-radius: var(--kp-sig-pa-r-plate);
+    }
+    [data-theme='pastel'] .kp-checklist__empty[data-kp-checklist-failed] {
+        border-style: solid;
+        border-color: var(--destructive);
+    }
+
+    /* Kitchen timers: a card is a plate with its sky pass, a strip of washi tape across its top start edge; a paused
+       timer's tape lifts at its end; a finished one wobbles round its foot three times and stays on its plate. */
+    [data-theme='pastel'] .kp-timer {
+        position: relative;
+        border-color: var(--border-strong);
+        border-radius: var(--kp-sig-pa-r-plate);
+        box-shadow: calc(var(--kp-sig-pa-off) * var(--kp-sig-pa-dir)) var(--kp-sig-pa-off) 0 var(--kp-sig-pa-pass-c);
+    }
+    [data-theme='pastel'] .kp-timer::before {
+        content: '';
+        position: absolute;
+        inset-block-start: -0.35rem;
+        inset-inline-start: 1rem;
+        inline-size: 3rem;
+        block-size: 0.7rem;
+        border-radius: 2px;
+        background: var(--kp-sig-pa-tape-bg);
+        rotate: -2deg;
+        transform-origin: 0 50%;
+        pointer-events: none;
+    }
+    [data-theme='pastel'] .kp-timer[data-kp-timer-state='paused']::before {
+        rotate: -14deg;
+        translate: 0 -0.05rem;
+    }
+    [data-theme='pastel'] .kp-timer[data-kp-timer-state='done'] {
+        border-color: var(--border-strong);
+    }
+    [data-theme='pastel'] .kp-timer[data-kp-timer-state='done']::before {
+        opacity: 0;
+    }
+    [data-theme='pastel'] .kp-timer__time {
+        color: var(--primary);
+    }
+    [data-theme='pastel'] .kp-timer[data-kp-timer-state='paused'] .kp-timer__time {
+        color: var(--muted-foreground);
+    }
+    [data-theme='pastel'] .kp-timer[data-kp-timer-state='done'] .kp-timer__time {
+        color: inherit;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-timer::before {
+            transition: rotate var(--fx-duration) var(--kp-sig-pa-land);
+        }
+        [data-theme='pastel'] .kp-timer[data-kp-timer-ringing] {
+            transform-origin: 50% 100%;
+            animation: kp-sig-pastel-update-wobble var(--kp-sig-pa-wobble) ease-out 3;
+        }
+    }
+
+    /* Cook mode: what the step needs is a note taped in (a dashed edge on paper) under a mint sticker for its title;
+       the screen lamp is a pearl; each step arrives stuck on (the package's own arrival). */
+    [data-theme='pastel'] .kp-focus-steps__needs {
+        padding: var(--kp-space-md, 0.75rem) 1rem;
+        border: 2px dashed var(--border-strong);
+        border-radius: var(--kp-sig-pa-r-plate);
+        background: var(--card);
+    }
+    [data-theme='pastel'] .kp-focus-steps__needs-title {
+        justify-self: start;
+        display: inline-block;
+        padding: 0 0.6rem;
+        border-radius: var(--kp-sig-pa-r-chip);
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+    [data-theme='pastel'] .kp-focus-steps__count {
+        font-weight: 700;
+    }
+    [data-theme='pastel'] .kp-focus-steps__amount {
+        color: var(--primary);
+    }
+    [data-theme='pastel'] .kp-focus-steps[data-kp-focus-steps-screen='on'] .kp-focus-steps__wake::before {
+        box-shadow: 0 1.5px 0 var(--kp-sig-pa-peel);
+    }
+
+    /* Wheel: a sticker sheet round, its sky pass off register on the stage; every wedge die-cut with a paper gap, the
+       rim plum; it spins on the soft landing and settles back once past its mark; the winner's name wobbles. */
+    [data-theme='pastel'] .kp-wheel {
+        --kp-wheel-ease: var(--kp-sig-pa-land);
+        --kp-wheel-hub-ring: 5px;
+    }
+    [data-theme='pastel'] .kp-wheel__stage {
+        filter: drop-shadow(calc(5px * var(--kp-sig-pa-dir)) 5px 0 var(--kp-sig-pa-pass-c));
+    }
+    /* The hub stays centred: pastel's button lifts and presses with `translate`, which the hub also uses to sit on the
+       disc's centre, so each state keeps the centring and adds its own lift. */
+    [data-theme='pastel'] .kp-wheel__spin.kp-button {
+        translate: -50% -50%;
+    }
+    [data-theme='pastel'] .kp-wheel__spin.kp-button:hover:not([aria-disabled='true']) {
+        translate: -50% calc(-50% - 2px);
+    }
+    [data-theme='pastel'] .kp-wheel__spin.kp-button:active:not([aria-disabled='true']) {
+        translate: -50% calc(-50% + 3px);
+    }
+    [data-theme='pastel'] .kp-wheel__segment {
+        stroke-width: 2.4;
+    }
+    [data-theme='pastel'] .kp-wheel__rim {
+        stroke: var(--primary);
+        stroke-width: 2;
+    }
+    [data-theme='pastel'] .kp-wheel__label {
+        font-weight: 600;
+    }
+    [data-theme='pastel'] .kp-wheel__outcome:not([data-kp-wheel-note]) {
+        color: var(--primary);
+        font-weight: 700;
+    }
+    [data-theme='pastel'] .kp-wheel__outcome[data-kp-wheel-note] {
+        border: 2px dashed var(--border-strong);
+        border-radius: var(--kp-sig-pa-r-ctl);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-wheel[data-kp-wheel-won] .kp-wheel__outcome:not([data-kp-wheel-note]) {
+            transform-origin: 50% 100%;
+            animation: kp-sig-pastel-update-wobble var(--kp-sig-pa-wobble) ease-out;
+        }
+    }
+
+    /* Uptime: every period is a small sticker standing on its own peel; the one pointed at grows into the room above,
+       its ring the dashed plum line; a failure to read is a sticker on the red's plate. */
+    [data-theme='pastel'] .kp-uptime {
+        --kp-uptime-cell-radius: 4px;
+        --kp-uptime-gap: 3px;
+    }
+    [data-theme='pastel'] .kp-uptime__cell:not(.kp-skeleton) {
+        box-shadow: inset 0 -2px 0 hsl(from var(--kp-uptime-fill) h s calc(l * 0.6));
+    }
+    [data-theme='pastel'] .kp-uptime__cell:is(:focus-visible, [aria-expanded='true']) {
+        outline: 2px dashed var(--ring);
+        outline-offset: 2px;
+    }
+    [data-theme='pastel'] .kp-uptime__percent {
+        color: var(--primary);
+    }
+    [data-theme='pastel'] .kp-uptime__summary[data-kp-tone='error'] {
+        border-radius: var(--kp-sig-pa-r-ctl);
+        box-shadow: 0 2px 0 hsl(from var(--destructive) h s calc(l * 0.6));
+    }
+    [data-theme='pastel'] .kp-uptime__swatch {
+        border-radius: 3px;
+    }
+
+    /* Command: a plate stuck to the page, its sky pass off register and a strip of tape over its top edge; the shell
+       is a mint sticker, the prompt plum, the head cut from the line by a dashed edge. */
+    [data-theme='pastel'] .kp-command {
+        --kp-command-prompt-ink: var(--primary);
+        position: relative;
+        border-color: var(--border-strong);
+        border-radius: var(--kp-sig-pa-r-plate);
+        overflow: visible;
+        box-shadow: calc(var(--kp-sig-pa-off) * var(--kp-sig-pa-dir)) var(--kp-sig-pa-off) 0 var(--kp-sig-pa-pass-c);
+    }
+    [data-theme='pastel'] .kp-command::after {
+        content: '';
+        position: absolute;
+        z-index: 2;
+        inset-block-start: -0.35rem;
+        inset-inline-start: 1.25rem;
+        inline-size: 3.25rem;
+        block-size: 0.75rem;
+        border-radius: 2px;
+        background: var(--kp-sig-pa-tape-bg);
+        rotate: -2deg;
+        pointer-events: none;
+    }
+    [data-theme='pastel'] .kp-command__head,
+    [data-theme='pastel'] .kp-command:not([data-kp-command-ready])::before {
+        border-block-end: 2px dashed var(--border-strong);
+        border-start-start-radius: inherit;
+        border-start-end-radius: inherit;
+    }
+    [data-theme='pastel'] .kp-command__head {
+        padding-block-start: calc(var(--kp-space-xs, 0.25rem) + 0.25rem);
+    }
+    [data-theme='pastel'] .kp-command__shell {
+        padding: 0 0.6rem;
+        border-radius: var(--kp-sig-pa-r-chip);
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+    [data-theme='pastel'] .kp-command__where {
+        border-block-start: 2px dashed var(--border-strong);
+    }
+    [data-theme='pastel'] .kp-command__code {
+        border-end-start-radius: inherit;
+        border-end-end-radius: inherit;
+    }
+
+    /* Visual timer and countdown: the timer is a round sticker with its sky pass off register, the time left plum on
+       paper, the hub a pearl; a finished one wobbles round its foot and keeps its pass; the countdown is a plate with
+       its pass and a strip of tape, its digits plum. */
+    [data-theme='pastel'] .kp-timer-disc__face {
+        border-width: 2px;
+        box-shadow: calc(var(--kp-sig-pa-off) * var(--kp-sig-pa-dir)) var(--kp-sig-pa-off) 0 var(--kp-sig-pa-pass-c);
+    }
+    [data-theme='pastel'] .kp-timer-disc {
+        --kp-timer-disc-marks: var(--border-strong);
+        --kp-timer-disc-ring: var(--kp-sig-pa-pass-c);
+    }
+    [data-theme='pastel'] .kp-timer-disc__hub {
+        background: var(--primary);
+        border-color: var(--card);
+    }
+    [data-theme='pastel'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face {
+        box-shadow: calc(var(--kp-sig-pa-off) * var(--kp-sig-pa-dir)) var(--kp-sig-pa-off) 0 var(--kp-sig-pa-pass-c);
+    }
+    [data-theme='pastel'] .kp-countdown {
+        --kp-countdown-ink: var(--primary);
+        position: relative;
+        border-color: var(--border-strong);
+        border-radius: var(--kp-sig-pa-r-plate);
+        box-shadow: calc(var(--kp-sig-pa-off) * var(--kp-sig-pa-dir)) var(--kp-sig-pa-off) 0 var(--kp-sig-pa-pass-c);
+    }
+    [data-theme='pastel'] .kp-countdown::before {
+        content: '';
+        position: absolute;
+        inset-block-start: -0.35rem;
+        inset-inline-start: 1rem;
+        inline-size: 3rem;
+        block-size: 0.7rem;
+        border-radius: 2px;
+        background: var(--kp-sig-pa-tape-bg);
+        rotate: -2deg;
+        pointer-events: none;
+    }
+    [data-theme='pastel'] .kp-countdown[data-kp-countdown-state='paused'] .kp-countdown__time {
+        color: var(--muted-foreground);
+    }
+    [data-theme='pastel'] .kp-countdown[data-kp-countdown-state='ended'] {
+        box-shadow: calc(var(--kp-sig-pa-off) * var(--kp-sig-pa-dir)) var(--kp-sig-pa-off) 0 var(--kp-sig-pa-pass-c);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face,
+        [data-theme='pastel'] .kp-countdown[data-kp-countdown-state='ended'] {
+            transform-origin: 50% 100%;
+            animation: kp-sig-pastel-update-wobble var(--kp-sig-pa-wobble) ease-out 3;
+        }
+    }
+
+    /* Range picker: the custom window in force is a sticker pressed on, ringed in plum; its panel is the popover's own
+       plate (opaque); an invalid time takes the dashed red line. */
+    [data-theme='pastel'] .kp-range__custom[aria-pressed='true'] {
+        border-color: var(--primary);
+        box-shadow:
+            0 0 0 2px var(--primary),
+            0 4px 0 1px var(--kp-sig-pa-peel);
+    }
+    [data-theme='pastel'] .kp-range__panel .kp-field__input[aria-invalid='true'] {
+        border-style: dashed;
+        box-shadow: none;
+    }
+
+    /* Compare slider: a photo stuck down in a frame with its sky pass; the divider is a strip of washi tape laid across
+       it; the handle is a round sticker on its peel that lifts when pointed at; the two labels are stickers. */
+    [data-theme='pastel'] .kp-compare {
+        --kp-compare-line: 10px;
+        --kp-compare-ink: var(--primary);
+        border-color: var(--border-strong);
+        border-radius: var(--kp-sig-pa-r-plate);
+        box-shadow: calc(var(--kp-sig-pa-off) * var(--kp-sig-pa-dir)) var(--kp-sig-pa-off) 0 var(--kp-sig-pa-pass-c);
+    }
+    [data-theme='pastel'] .kp-compare__divider {
+        border-inline-start-color: transparent;
+        background:
+            repeating-linear-gradient(0deg, var(--accent) 0 6px, transparent 6px 12px),
+            var(--kp-sig-pa-tape-stripe);
+    }
+    [data-theme='pastel'] .kp-compare__handle {
+        box-shadow: 0 3px 0 var(--kp-sig-pa-peel);
+    }
+    [data-theme='pastel'] .kp-compare__handle:hover {
+        box-shadow: 0 5px 0 var(--kp-sig-pa-peel);
+    }
+    [data-theme='pastel'] .kp-compare__handle:active {
+        box-shadow: 0 0 0 var(--kp-sig-pa-peel);
+    }
+    [data-theme='pastel'] .kp-compare__handle:focus-visible {
+        outline: 2px dashed var(--ring);
+        outline-offset: 3px;
+    }
+    [data-theme='pastel'] .kp-compare__label {
+        border: 0;
+        border-radius: var(--kp-sig-pa-r-chip);
+        padding-inline: 0.7rem;
+        box-shadow: 0 2px 0 var(--kp-sig-pa-peel);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-compare__handle {
+            transition: box-shadow var(--fx-duration) var(--kp-sig-pa-land);
+        }
+        [data-theme='pastel'] .kp-compare[data-kp-compare-glide] :is(.kp-compare__pane, .kp-compare__divider) {
+            transition-timing-function: var(--kp-sig-pa-land-size);
+        }
+    }
+}
