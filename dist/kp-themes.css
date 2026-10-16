@@ -8689,6 +8689,94 @@
         padding-inline-end: calc(var(--kp-dialog-close-size, 2.25rem) + var(--kp-space-sm, 0.5rem) + 0.5rem);
     }
 
+    /* A dialog in sections [kpadopt4; chassis's client dialog, almanac's calendars]: a head that holds the title, a state
+ * badge beside it and the description under both; a body of sections, each with a heading and an optional note, the
+ * last one the danger section; and a wide variant for a dialog that manages one thing. The wide dialog takes its full
+ * width at once, so a section that fills later (a revealed token, a list of requests) moves nothing sideways. Knobs
+ * [KT6]: `--kp-dialog-wide` (42rem), `--kp-dialog-section-gap` (the room between sections, 0.75rem). */
+    .kp-dialog--wide {
+        --kp-dialog-max-width: min(var(--kp-dialog-wide, 42rem), calc(100vw - 2rem));
+        inline-size: var(--kp-dialog-max-width);
+        box-sizing: border-box;
+    }
+
+    .kp-dialog__head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        margin-block-end: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-dialog__head > .kp-dialog__title {
+        margin: 0;
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-dialog__head > .kp-dialog__description {
+        flex-basis: 100%;
+        margin: 0;
+    }
+
+    .kp-dialog:has(> .kp-dialog__close) > .kp-dialog__head {
+        padding-inline-end: calc(var(--kp-dialog-close-size, 2.25rem) + var(--kp-space-sm, 0.5rem) + 0.5rem);
+    }
+
+    .kp-dialog__section {
+        padding-block: var(--kp-dialog-section-gap, 0.75rem);
+        border-block-start: 1px solid var(--border);
+    }
+
+    .kp-dialog__section:first-child {
+        padding-block-start: 0;
+        border-block-start: 0;
+    }
+
+    .kp-dialog__section:last-child {
+        padding-block-end: 0;
+    }
+
+    .kp-dialog__heading {
+        margin: 0 0 var(--kp-space-sm, 0.5rem);
+        font-size: var(--kp-text-sm, 0.875rem);
+        font-weight: 600;
+        line-height: 1.3;
+    }
+
+    .kp-dialog__note {
+        margin: var(--kp-space-sm, 0.5rem) 0 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    /* The danger section: an entry ruled off along its start edge in the destructive ink, its words in the page's own ink. */
+    .kp-dialog__section--danger {
+        padding-inline-start: var(--kp-space-md, 0.75rem);
+        border-inline-start: 3px solid var(--destructive);
+    }
+
+    /* What still uses the thing a confirmation would remove [kpadopt4], and the field a name is typed into. */
+    .kp-confirm__dependents {
+        margin: 0 0 var(--kp-space-md, 0.75rem);
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--border);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--muted);
+    }
+
+    .kp-confirm__list {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin: 0;
+        padding-inline-start: 1.25rem;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-confirm__type {
+        margin-block-end: var(--kp-space-sm, 0.5rem);
+    }
+
     .kp-menu__separator {
         margin: var(--kp-space-xs) 0;
         border: 0;
@@ -84428,6 +84516,45 @@
     }
 }
 /* ── end flows and records ── */
+
+/* ── Flows and records [kpadopt4]: a dialog in sections, a confirmation that depends on something ── */
+@layer kp.register {
+    /* Formal: the dialog is a ledger page. Its sections are divided by the docket cut (G19: a hairline with a short navy tick
+       at its start), their headings are labels in small capitals (G18), and the danger section is the red-ink entry (G8: a
+       3 px red rule along its start edge, the words in the ledger's ink). What still uses a thing is a list on the muted
+       paper inside a hairline, square-cornered as a plate inside a rule (G6). */
+    [data-theme='formal'] .kp-dialog__section {
+        position: relative;
+    }
+
+    [data-theme='formal'] .kp-dialog__section:not(:first-child)::before {
+        content: '';
+        position: absolute;
+        inset-block-start: -1px;
+        inset-inline-start: 0;
+        inline-size: 1.5rem;
+        block-size: 2px;
+        background: var(--primary);
+    }
+
+    [data-theme='formal'] .kp-dialog__section--danger:not(:first-child)::before {
+        inset-inline-start: -3px;
+        background: var(--destructive);
+    }
+
+    [data-theme='formal'] :is(.kp-dialog__heading, .kp-confirm__dependents .kp-dialog__heading) {
+        font-family: var(--theme-font-body);
+        font-variant-caps: all-small-caps;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        color: var(--foreground);
+    }
+
+    [data-theme='formal'] .kp-confirm__dependents {
+        border-radius: 0;
+    }
+}
+/* ── end flows and records: dialog ── */
 
 /* Pointing and pressing run on one number each [Kenny, 2026-10-07]: 0 at
    rest, 1 at the end of the unit. Registered so the browser can transition

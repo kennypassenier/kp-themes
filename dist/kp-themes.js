@@ -356,6 +356,10 @@ var init_strings = __esm({
       confirmAccept: "Yes, do it",
       confirmCancel: "Cancel",
       confirmDescription: "This cannot be undone. Cancel leaves everything as it is.",
+      confirmDependents: (count) => `Still in use by ${count}`,
+      confirmBlocked: "Remove what uses it first, then try again.",
+      confirmClose: "Close",
+      confirmTypeLabel: (word) => `Type ${word} to confirm`,
       // The alarm [scope-94]. The headline, the detail and the code line are
       // the caller's words; these are the ones the component adds itself. The
       // countdown and the key hint are hidden from a screen reader, which hears
@@ -6134,9 +6138,13 @@ __export(components_exports, {
   skipTo: () => skipTo,
   stickyNav: () => stickyNav
 });
-function openConfirmation(button, { phrase, strings, onAccept, onCancel, className = "", initialFocus = "cancel" } = {}) {
+function openConfirmation(button, { phrase, strings, onAccept, onCancel, className = "", initialFocus = "cancel", dependents, blocked, typeToConfirm } = {}) {
   const s2 = { ...getStrings(), ...strings };
   const text = phrase ?? button.getAttribute("data-kp-confirm") ?? s2.confirm;
+  const users = (dependents ?? (button.getAttribute("data-kp-confirm-dependents") ?? "").split(";").map((name) => name.trim()).filter(Boolean)).slice();
+  const blockedAttribute = button.getAttribute("data-kp-confirm-blocked");
+  const stop = blocked === void 0 ? blockedAttribute === null ? null : blockedAttribute.trim() || s2.confirmBlocked : blocked === false ? null : blocked === true ? s2.confirmBlocked : blocked;
+  const word = (typeToConfirm ?? button.getAttribute("data-kp-confirm-type") ?? "").trim();
   const displaced = [...document.querySelectorAll("[popover]")].filter((el4) => el4.matches(":popover-open"));
   const id = `kp-confirm-${++dialogSeq}`;
   const dialog = document.createElement("dialog");
@@ -6151,12 +6159,12 @@ function openConfirmation(button, { phrase, strings, onAccept, onCancel, classNa
   const description = document.createElement("p");
   description.className = "kp-dialog__description";
   description.id = `${id}-description`;
-  description.textContent = s2.confirmDescription;
+  description.textContent = stop ?? s2.confirmDescription;
   const cancel = document.createElement("button");
   cancel.type = "button";
   cancel.className = "kp-button";
   cancel.setAttribute("data-kp-confirm-cancel", "");
-  cancel.textContent = s2.confirmCancel;
+  cancel.textContent = stop === null ? s2.confirmCancel : s2.confirmClose;
   cancel.addEventListener("click", () => dialog.close(""));
   const accept = document.createElement("button");
   accept.type = "button";
@@ -6166,8 +6174,60 @@ function openConfirmation(button, { phrase, strings, onAccept, onCancel, classNa
   accept.addEventListener("click", () => dialog.close("accept"));
   const actions = document.createElement("div");
   actions.className = "kp-dialog__actions";
-  actions.append(cancel, accept);
-  dialog.append(title, description, actions);
+  if (stop === null) actions.append(cancel, accept);
+  else actions.append(cancel);
+  dialog.append(title, description);
+  if (users.length > 0) {
+    const block = document.createElement("section");
+    block.className = "kp-confirm__dependents";
+    block.setAttribute("aria-labelledby", `${id}-dependents`);
+    const heading = document.createElement("h3");
+    heading.className = "kp-dialog__heading";
+    heading.id = `${id}-dependents`;
+    heading.textContent = s2.confirmDependents(users.length);
+    const list = document.createElement("ul");
+    list.className = "kp-confirm__list";
+    for (const name of users) {
+      const item = document.createElement("li");
+      item.textContent = name;
+      list.append(item);
+    }
+    block.append(heading, list);
+    dialog.append(block);
+    dialog.setAttribute("aria-describedby", `${id}-description ${id}-dependents`);
+  }
+  let typed = null;
+  if (word !== "" && stop === null) {
+    const field = document.createElement("div");
+    field.className = "kp-field kp-confirm__type";
+    const label = document.createElement("label");
+    label.className = "kp-field__label";
+    label.htmlFor = `${id}-type`;
+    label.textContent = s2.confirmTypeLabel(word);
+    const input = document.createElement("input");
+    input.className = "kp-field__input";
+    input.id = `${id}-type`;
+    input.type = "text";
+    input.autocomplete = "off";
+    input.spellcheck = false;
+    field.append(label, input);
+    dialog.append(field);
+    typed = input;
+    const sync = () => {
+      const match = input.value.trim() === word;
+      accept.disabled = !match;
+      accept.setAttribute("aria-disabled", String(!match));
+    };
+    input.addEventListener("input", sync);
+    input.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" && !accept.disabled) {
+        event.preventDefault();
+        dialog.close("accept");
+      }
+    });
+    sync();
+  }
+  dialog.append(actions);
   document.body.append(dialog);
   dialog.addEventListener("close", () => {
     const taken = dialog.returnValue === "accept";
@@ -6180,7 +6240,8 @@ function openConfirmation(button, { phrase, strings, onAccept, onCancel, classNa
     else onCancel?.();
   });
   dialog.showModal();
-  (initialFocus === "accept" ? accept : cancel).focus();
+  if (typed !== null) typed.focus();
+  else (initialFocus === "accept" && stop === null ? accept : cancel).focus();
   return dialog;
 }
 function findViolations(root = document, { rules = ["DI10", "DI4"], exempt = EXEMPT } = {}) {

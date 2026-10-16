@@ -576,6 +576,22 @@ export type Strings = {
     confirmCancel: string;
     confirmDescription: string;
     /**
+     * The heading over what still uses the thing a confirmation would remove, "Still in use by 2" (`data-kp-confirm-dependents`) [kpadopt4]
+     */
+    confirmDependents: (count: number) => string;
+    /**
+     * What a confirmation that may not go ahead says when the page gives no sentence (`data-kp-confirm-blocked`) [kpadopt4]
+     */
+    confirmBlocked: string;
+    /**
+     * The one button of a confirmation that may not go ahead [kpadopt4]
+     */
+    confirmClose: string;
+    /**
+     * The label of the field a person types the name into before Confirm is offered, "Type Household to confirm" (`data-kp-confirm-type`) [kpadopt4]
+     */
+    confirmTypeLabel: (word: string) => string;
+    /**
      * The button that closes an alarm that must be acknowledged, when the caller names none [scope-94]
      */
     alarmAction: string;
@@ -1298,6 +1314,10 @@ export type Strings = {
  * @property {string} confirmAccept
  * @property {string} confirmCancel
  * @property {string} confirmDescription
+ * @property {(count: number) => string} confirmDependents  The heading over what still uses the thing a confirmation would remove, "Still in use by 2" (`data-kp-confirm-dependents`) [kpadopt4]
+ * @property {string} confirmBlocked  What a confirmation that may not go ahead says when the page gives no sentence (`data-kp-confirm-blocked`) [kpadopt4]
+ * @property {string} confirmClose  The one button of a confirmation that may not go ahead [kpadopt4]
+ * @property {(word: string) => string} confirmTypeLabel  The label of the field a person types the name into before Confirm is offered, "Type Household to confirm" (`data-kp-confirm-type`) [kpadopt4]
  * @property {string} alarmAction  The button that closes an alarm that must be acknowledged, when the caller names none [scope-94]
  * @property {string} alarmKeepOpen  The button that stops an alarm's countdown and keeps it open [scope-94]
  * @property {string} alarmHint  The key hint beside the acknowledge button; hidden from a screen reader [scope-94]

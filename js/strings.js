@@ -254,6 +254,10 @@
  * @property {string} confirmAccept
  * @property {string} confirmCancel
  * @property {string} confirmDescription
+ * @property {(count: number) => string} confirmDependents  The heading over what still uses the thing a confirmation would remove, "Still in use by 2" (`data-kp-confirm-dependents`) [kpadopt4]
+ * @property {string} confirmBlocked  What a confirmation that may not go ahead says when the page gives no sentence (`data-kp-confirm-blocked`) [kpadopt4]
+ * @property {string} confirmClose  The one button of a confirmation that may not go ahead [kpadopt4]
+ * @property {(word: string) => string} confirmTypeLabel  The label of the field a person types the name into before Confirm is offered, "Type Household to confirm" (`data-kp-confirm-type`) [kpadopt4]
  * @property {string} alarmAction  The button that closes an alarm that must be acknowledged, when the caller names none [scope-94]
  * @property {string} alarmKeepOpen  The button that stops an alarm's countdown and keeps it open [scope-94]
  * @property {string} alarmHint  The key hint beside the acknowledge button; hidden from a screen reader [scope-94]
@@ -709,6 +713,10 @@ export const DEFAULT_STRINGS = Object.freeze({
     confirmAccept: 'Yes, do it',
     confirmCancel: 'Cancel',
     confirmDescription: 'This cannot be undone. Cancel leaves everything as it is.',
+    confirmDependents: (count) => `Still in use by ${count}`,
+    confirmBlocked: 'Remove what uses it first, then try again.',
+    confirmClose: 'Close',
+    confirmTypeLabel: (word) => `Type ${word} to confirm`,
     // The alarm [scope-94]. The headline, the detail and the code line are
     // the caller's words; these are the ones the component adds itself. The
     // countdown and the key hint are hidden from a screen reader, which hears

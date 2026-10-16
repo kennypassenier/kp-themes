@@ -241,6 +241,16 @@
 &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--destructive&quot;</span> <span class="kp-code__keyword">data-kp-destructive</span> <span class="kp-code__keyword">data-kp-confirm</span><span class="kp-code__string">=&quot;Delete this application?&quot;</span> <span class="kp-code__keyword">data-kp-confirm-mode</span><span class="kp-code__string">=&quot;inline&quot;</span>&gt;Delete, the 3.x way&lt;/<span class="kp-code__keyword">button</span>&gt;</code></pre>
                     </figure>
                     <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A removal that depends on something</figcaption>
+                        <p class="kp-text-muted">The confirmation lists what still uses the thing (`data-kp-confirm-dependents`, one name per `;`, under a heading with the exact count). `data-kp-confirm-blocked` makes it a notice with one Close button and the sentence that says what to do first; `data-kp-confirm-type` offers Confirm only once that name is typed.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-kp-confirm="Delete the calendar Household?" data-kp-confirm-dependents="kyu-runner; Home Assistant" data-kp-confirm-blocked="Delete those two sources first, on the Sources page.">Delete</button>
+<button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-kp-confirm="Delete the calendar Holidays and everything on it?" data-kp-confirm-type="Holidays">Delete</button>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--destructive&quot;</span> <span class="kp-code__keyword">data-kp-destructive</span> <span class="kp-code__keyword">data-kp-confirm</span><span class="kp-code__string">=&quot;Delete the calendar Household?&quot;</span> <span class="kp-code__keyword">data-kp-confirm-dependents</span><span class="kp-code__string">=&quot;kyu-runner; Home Assistant&quot;</span> <span class="kp-code__keyword">data-kp-confirm-blocked</span><span class="kp-code__string">=&quot;Delete those two sources first, on the Sources page.&quot;</span>&gt;Delete&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--destructive&quot;</span> <span class="kp-code__keyword">data-kp-destructive</span> <span class="kp-code__keyword">data-kp-confirm</span><span class="kp-code__string">=&quot;Delete the calendar Holidays and everything on it?&quot;</span> <span class="kp-code__keyword">data-kp-confirm-type</span><span class="kp-code__string">=&quot;Holidays&quot;</span>&gt;Delete&lt;/<span class="kp-code__keyword">button</span>&gt;</code></pre>
+                    </figure>
+                    <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">A row action that acts at once and offers the way back</figcaption>
                         <p class="kp-text-muted">The optimistic half: the row goes away immediately, an undo appears beside it, and the action commits only when the window closes. The consumer hears both outcomes as events.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
@@ -694,11 +704,14 @@ Revoke key
                             <tr><td><code>data-kp-confirm</code></td><td>selector, read</td></tr>
                             <tr><td><code>data-kp-confirm-accept</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-confirm-attached</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-confirm-blocked</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-confirm-cancel</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-confirm-dependents</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-confirm-dialog</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-confirm-mode</code></td><td>written, read</td></tr>
                             <tr><td><code>data-kp-confirm-ms</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-confirm-owner</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-confirm-type</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-contract-error</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-contract-ignore</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-destructive</code></td><td>selector</td></tr>
@@ -799,6 +812,8 @@ Revoke key
                             <tr><td><code>--kp-glyph-open</code></td><td><code>'▾'</code></td></tr>
                             <tr><td><code>--kp-highlight</code></td><td><code>hsl(from var(--foreground) h s l / 0.08)</code></td></tr>
                             <tr><td><code>--kp-live-max</code></td><td><code>30rem</code></td></tr>
+                            <tr><td><code>--kp-radius-sm</code></td><td><code>calc(var(--radius, 0.5rem) / 2)</code></td></tr>
+                            <tr><td><code>--kp-space-md</code></td><td><code>1rem</code></td></tr>
                             <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
                             <tr><td><code>--kp-space-xl</code></td><td><code>1.5rem</code></td></tr>
                             <tr><td><code>--kp-space-xs</code></td><td><code>0.25rem</code></td></tr>
@@ -830,6 +845,9 @@ Revoke key
                             <tr><td><code>.kp-button__text</code></td><td>The words of a label that also holds an icon or another element. Public: use it whenever the label is more than bare text. A label of text alone needs none, and a label that marks its own access key with `data-kp-key` is left as written.</td></tr>
                             <tr><td><code>.kp-button__undo</code></td><td>The undo the pattern puts beside a committed action, inline rather than in a toast that may already be gone.</td></tr>
                             <tr><td><code>.kp-confirm</code></td><td>The dialog the confirmation opens, on top of `.kp-dialog`. It also carries `data-kp-confirm-dialog`, which is what a consumer reaches it by.</td></tr>
+                            <tr><td><code>data-kp-confirm-dependents</code></td><td>What still uses the thing, one name per `;`: listed in the confirmation (`.kp-confirm__dependents`, `.kp-confirm__list`) under a heading with the exact count.</td></tr>
+                            <tr><td><code>data-kp-confirm-blocked</code></td><td>The removal may not go ahead: the confirmation says this sentence (empty: the dictionary’s) and offers only Close.</td></tr>
+                            <tr><td><code>data-kp-confirm-type</code></td><td>Confirm is offered only once this word is typed into the field the confirmation shows (`.kp-confirm__type`); Enter in the field confirms.</td></tr>
                             <tr><td><code>:hover / :active</code></td><td>Both are derived colours; on a theme that lifts its controls the button also rises, and by nothing at all where the theme answers zero.</td></tr>
                             <tr><td><code>:disabled</code></td><td>A dimmed ground and a refusing cursor. DI8 records the decision that a disabled control may fall below the contrast floor.</td></tr>
                             <tr><td><code>armed</code></td><td>A confirming button between its first and second click, in the `inline` variant only. The module writes the state, the label changes, and a timeout disarms it. The default variant opens a dialog instead and writes nothing on the button.</td></tr>

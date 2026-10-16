@@ -260,6 +260,14 @@ export const DESCRIPTORS = [
 `,
             },
             {
+                title: 'A removal that depends on something',
+                why: 'The confirmation lists what still uses the thing (`data-kp-confirm-dependents`, one name per `;`, under a heading with the exact count). `data-kp-confirm-blocked` makes it a notice with one Close button and the sentence that says what to do first; `data-kp-confirm-type` offers Confirm only once that name is typed.',
+                markup: `
+<button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-kp-confirm="Delete the calendar Household?" data-kp-confirm-dependents="kyu-runner; Home Assistant" data-kp-confirm-blocked="Delete those two sources first, on the Sources page.">Delete</button>
+<button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-kp-confirm="Delete the calendar Holidays and everything on it?" data-kp-confirm-type="Holidays">Delete</button>
+`,
+            },
+            {
                 title: 'A row action that acts at once and offers the way back',
                 why: 'The optimistic half: the row goes away immediately, an undo appears beside it, and the action commits only when the window closes. The consumer hears both outcomes as events.',
                 markup: `
@@ -290,6 +298,9 @@ export const DESCRIPTORS = [
                 name: '.kp-confirm',
                 what: 'The dialog the confirmation opens, on top of `.kp-dialog`. It also carries `data-kp-confirm-dialog`, which is what a consumer reaches it by.',
             },
+            { name: 'data-kp-confirm-dependents', what: 'What still uses the thing, one name per `;`: listed in the confirmation (`.kp-confirm__dependents`, `.kp-confirm__list`) under a heading with the exact count.' },
+            { name: 'data-kp-confirm-blocked', what: 'The removal may not go ahead: the confirmation says this sentence (empty: the dictionary’s) and offers only Close.' },
+            { name: 'data-kp-confirm-type', what: 'Confirm is offered only once this word is typed into the field the confirmation shows (`.kp-confirm__type`); Enter in the field confirms.' },
             { name: ':hover / :active', what: 'Both are derived colours; on a theme that lifts its controls the button also rises, and by nothing at all where the theme answers zero.' },
             { name: ':disabled', what: 'A dimmed ground and a refusing cursor. DI8 records the decision that a disabled control may fall below the contrast floor.' },
             {
@@ -4173,6 +4184,34 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
 `,
             },
             {
+                title: 'A dialog that manages one thing, in sections',
+                why: 'The head holds the title, a state badge and the description; the body holds sections with a heading and a note, the danger section last. The wide variant takes its full width at once, so a section that fills later moves nothing sideways.',
+                markup: `
+<dialog class="kp-dialog kp-dialog--wide" open aria-labelledby="doc-manage-title">
+<div class="kp-dialog__head">
+<h2 class="kp-dialog__title" id="doc-manage-title">home-assistant</h2>
+<span class="kp-badge kp-badge--success">active</span>
+<p class="kp-dialog__description">Issued 02/10/2026 09:14 · last used 16/10/2026 18:40 (412×)</p>
+</div>
+<div class="kp-dialog__body">
+<section class="kp-dialog__section">
+<h3 class="kp-dialog__heading">Token</h3>
+<div class="kp-secret" data-kp-secret data-kp-secret-label="Token of home-assistant" data-kp-secret-value="kp_live_7Hq2v9XcLm4TzR8sWb3N"></div>
+<p class="kp-dialog__note">Hides itself again after 30 seconds.</p>
+</section>
+<section class="kp-dialog__section kp-dialog__section--danger">
+<h3 class="kp-dialog__heading">Danger zone</h3>
+<button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-kp-confirm="Revoke this token?">Revoke</button>
+<p class="kp-dialog__note">Revoking keeps the row and its history; deleting does not.</p>
+</section>
+</div>
+<div class="kp-dialog__actions">
+<button type="button" class="kp-button">Close</button>
+</div>
+</dialog>
+`,
+            },
+            {
                 title: 'The parts, with the dialog left open',
                 why: 'Printed open so the pieces can be seen at rest: the title, the description under it, the close in the corner and the actions at the end.',
                 markup: `
@@ -4198,6 +4237,10 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
             { name: '.kp-dialog__title / __description', what: 'The heading and the sentence under it, which are also what name and describe the dialog.' },
             { name: '.kp-dialog__close', what: 'The close in the corner, on top of the padding rather than in the flow.' },
             { name: '.kp-dialog__actions', what: 'The buttons at the end, pushed to the trailing edge, primary last.' },
+            { name: '.kp-dialog--wide', what: 'A dialog that manages one thing: 42rem wide at once, so a section that fills later moves nothing sideways.' },
+            { name: '.kp-dialog__head', what: 'The title with a state badge beside it and the description under both.' },
+            { name: '.kp-dialog__section / __heading / __note', what: 'One part of the body under its heading, with an optional note under it; sections are divided by a rule.' },
+            { name: '.kp-dialog__section--danger', what: 'The last section, for what cannot be undone: ruled along its start edge in the destructive colour.' },
             { name: 'backdrop', what: 'A dimming rather than a theme colour: a tinted backdrop paints the page instead of pushing it back.' },
             { name: 'pastel', what: 'In pastel a dialog is printed twice and stuck on: its second pass, a flat silhouette in the second ink drawn by its ::backdrop and placed on it by anchor positioning, springs into its rest 6 px off register, then the dialog swings down onto it from its top-start corner on the soft landing (one 8 % overshoot, settled once); a strip of washi tape crosses its top-start corner, and the modal’s dim is the backdrop’s border, so a click outside still reaches it. The close is that opening played backwards. Without anchor positioning the pass rests as a flat shadow and the dialog opens with the swing alone; under reduced motion it is simply there.' },
         ],
