@@ -17,6 +17,7 @@
         "kp-steplist",
         "kp-tabbar",
         "kp-toolbar",
+        "kp-uptime",
         "kp-week"
     ]
 }

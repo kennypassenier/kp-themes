@@ -968,6 +968,46 @@ export type Strings = {
      */
     ganttHint: string;
     /**
+     * The uptime strip's busy card and its summary while the history is read (js/uptime.js) [kpadopt4-ideas]
+     */
+    uptimeLoading: string;
+    /**
+     * Its summary when no period has data yet [kpadopt4-ideas]
+     */
+    uptimeEmpty: string;
+    /**
+     * Its summary when the history could not be read and the page gave no sentence [kpadopt4-ideas]
+     */
+    uptimeError: string;
+    /**
+     * The window's share up, from "99.4" to "99.4%" [kpadopt4-ideas]
+     */
+    uptimePercent: (percent: string) => string;
+    /**
+     * The window's incident count, exact: "1 incident", "12 incidents" [kpadopt4-ideas]
+     */
+    uptimeIncidents: (n: number) => string;
+    /**
+     * The summary as one sentence, for a screen reader [kpadopt4-ideas]
+     */
+    uptimeSummary: (percent: string, incidents: number) => string;
+    /**
+     * The strip's name: its title and its summary [kpadopt4-ideas]
+     */
+    uptimeTrack: (label: string, summary: string) => string;
+    /**
+     * A period's state as a word: up, degraded, down, no data [kpadopt4-ideas]
+     */
+    uptimeStateWord: (state: string) => string;
+    /**
+     * A cell's name and hover card: its period, its state and its figures [kpadopt4-ideas]
+     */
+    uptimeCell: (label: string, state: string, percent: string | null, incidents: number | null) => string;
+    /**
+     * Under a strip too narrow for every cell: "55 of 90 shown" [kpadopt4-ideas]
+     */
+    uptimeShown: (shown: number, total: number) => string;
+    /**
      * The network graph's way back to every node and every kind of link (js/graph.js) [scope-143]
      */
     graphShowAll: string;
@@ -1342,6 +1382,16 @@ export type Strings = {
  * @property {string} ganttZoomTitle  Its title
  * @property {(seconds: number) => string} ganttDuration  A length of time as a person reads it, "14 min", "1 h 5 min", "45 s"
  * @property {string} ganttHint  The one-line hint under the timeline on how to read and use it
+ * @property {string} uptimeLoading  The uptime strip's busy card and its summary while the history is read (js/uptime.js) [kpadopt4-ideas]
+ * @property {string} uptimeEmpty  Its summary when no period has data yet [kpadopt4-ideas]
+ * @property {string} uptimeError  Its summary when the history could not be read and the page gave no sentence [kpadopt4-ideas]
+ * @property {(percent: string) => string} uptimePercent  The window's share up, from "99.4" to "99.4%" [kpadopt4-ideas]
+ * @property {(n: number) => string} uptimeIncidents  The window's incident count, exact: "1 incident", "12 incidents" [kpadopt4-ideas]
+ * @property {(percent: string, incidents: number) => string} uptimeSummary  The summary as one sentence, for a screen reader [kpadopt4-ideas]
+ * @property {(label: string, summary: string) => string} uptimeTrack  The strip's name: its title and its summary [kpadopt4-ideas]
+ * @property {(state: string) => string} uptimeStateWord  A period's state as a word: up, degraded, down, no data [kpadopt4-ideas]
+ * @property {(label: string, state: string, percent: string | null, incidents: number | null) => string} uptimeCell  A cell's name and hover card: its period, its state and its figures [kpadopt4-ideas]
+ * @property {(shown: number, total: number) => string} uptimeShown  Under a strip too narrow for every cell: "55 of 90 shown" [kpadopt4-ideas]
  * @property {string} graphShowAll  The network graph's way back to every node and every kind of link (js/graph.js) [scope-143]
  * @property {string} graphShowAllTitle  Its title [scope-143]
  * @property {string} graphHint  The hint under the graph, and the second half of its picture's accessible name: what a pointer, a click and the keys do [scope-143]

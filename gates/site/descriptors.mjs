@@ -2820,6 +2820,40 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
         ],
     },
     {
+        id: 'uptime',
+        title: 'Uptime strip',
+        group: 'Data',
+        classes: ['kp-uptime'],
+        exports: [],
+        intro: 'One thin strip of cells, one per period (90 days, 48 hours), each toned up, degraded (ruled), down (striped) or no data (an empty frame), with the window’s summary over it in exact figures and the first and the latest period’s names under it. `setUptime(el, { label, periods, from, to, state })` in js/uptime.js draws it; until then the strip waits as skeleton cells under the data table’s busy card. The share is cut to one decimal and never rounded up; the incident count is the number. On a narrow page the strip shows the latest periods that fit and says how many; `data-kp-uptime-fit="scroll"` keeps every period and scrolls.',
+        whenToUse:
+            'When a reader asks how a service or a queue did over the last days or hours, at a glance, with the detail of any period on hover. Not for a series of values (use the chart) and not for many services by many days at once (use the heat grid).',
+        examples: [
+            {
+                title: 'A service over 90 days',
+                why: 'The markup is the empty strip with its name and its number of periods; the script draws the cells from the periods the page hands over, and draws the loading state before that.',
+                markup: `
+<div class="kp-uptime" data-kp-uptime data-kp-uptime-label="jellyfin" data-kp-uptime-count="90"></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-uptime', what: 'Marks the strip; `attachUptimes` wires it and draws its loading state until `setUptime` is called.' },
+            { name: 'data-kp-uptime-label', what: 'The strip’s title (the service) when `setUptime` is given none.' },
+            { name: 'data-kp-uptime-count', what: 'How many cells a loading or empty strip waits with; 90 by default.' },
+            { name: 'data-kp-uptime-state', what: 'Set by the script: `ready`, `loading`, `empty` or `error`. Given in the markup, the state the strip starts in.' },
+            { name: 'data-kp-uptime-fit', what: '`scroll`: every period is kept and the strip scrolls sideways, starting at the latest; without it the latest periods that fit are shown.' },
+            { name: 'data-kp-uptime-before', what: 'Set by the script on a scrolling strip with periods before the view: the start edge fades.' },
+            { name: 'data-kp-uptime-after', what: 'Set by the script on a scrolling strip with periods after the view: the end edge fades.' },
+            { name: 'data-kp-uptime-attached', what: 'Set by the script once the strip is wired.' },
+        ],
+        accessibility: [
+            'Built in — one tab stop: the arrow keys move through the cells that are shown, Home and End jump to the first and the latest, Enter and Space pick (`kp-uptime-pick`); the hover card opens at once on focus.',
+            'Built in — every cell is a button named by its period, state and figures; the strip is a group named by its title and its summary; a state is a pattern as well as a colour.',
+            'Yours — name each period the way a person reads it (dd/mm/yyyy, HH:MM), keep an error sentence short, and give `tip` a sentence when a period has more to say.',
+        ],
+    },
+    {
         id: 'toolbar',
         title: 'List toolbar',
         group: 'Data',

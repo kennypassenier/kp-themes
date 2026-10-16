@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="kpadopt4-ideas" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>
+            Seven new components: uptime strip, typed confirmation, command block, two timers, range picker, compare slider · kp-themes research demo
+        </title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="demo.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main k4-page">
+            <header class="k4-intro">
+                <h1>Seven new components, in formal</h1>
+                <p class="cat-intro">
+                    The seven you marked “Onmisbaar” on 16/10/2026, each built from the package’s own parts (the buttons, the segmented control, the
+                    date picker, the hover card, the busy card, the badge, the dialog) and shown here in formal only, in every state. Every section
+                    says what you should see under <b>Expected</b>. Everything with a <code>kp-</code> class and every script under
+                    <code>js/</code> is the package; the sample data, the frames, the event readouts and the controls marked “demo” are this page’s.
+                </p>
+            </header>
+
+            <!-- 1 · uptime strip -->
+            <section
+                class="k4-sec"
+                id="uptime"
+                data-review-item="uptime"
+                data-review-topic="uptime"
+                data-review-topic-title="1 · Uptime strip"
+                data-review-title="1 · Uptime strip: 90 days and 48 hours"
+                aria-labelledby="h-uptime"
+            >
+                <div class="k4-sec__head">
+                    <h2 id="h-uptime">1 · Uptime strip: 90 days and 48 hours</h2>
+                    <p>
+                        <code>.kp-uptime[data-kp-uptime]</code> with <code>setUptime(el, { label, periods, from, to })</code> (js/uptime.js): one cell
+                        per period, toned up, degraded, down or no data, the window’s summary in exact figures over it. For the homelab Health page
+                        per service and for kyu’s delivery per hour.
+                    </p>
+                </div>
+                <div class="k4-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Four strips, each one line high: the name on the left, the summary on the right (<b>100% · 0 incidents</b> for jellyfin;
+                            kyu’s share is cut, never rounded up, and its incident count is the exact number). The cells never wrap.
+                        </li>
+                        <li>
+                            Up is a soft green bar, degraded a lighter amber bar with fine horizontal rules, down a red bar with diagonal stripes, no
+                            data an empty frame (almanac’s first 26 days). So every state is a shape as well as a colour.
+                        </li>
+                        <li>
+                            Point at a cell: it grows a little upwards (nothing beside it moves) and the hover card opens under it with the day, its
+                            state and its figures. Tab into a strip: one stop, on today’s cell, with the card open; the arrow keys walk the days, Home
+                            and End jump to the first and today. Enter or a click writes the pick in the grey box below.
+                        </li>
+                        <li>Under each strip: “90 days ago” at the start and “Today” at the end (“48 hours ago” and “This hour” for the hours).</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The strips in formal’s ink: the title in its body face at semibold, the share in bold tabular figures, the cells thin with a 1
+                        px corner, and the hover card is formal’s own tooltip plate.
+                    </p>
+                </div>
+                <div class="k4-strips">
+                    <div class="kp-uptime" data-kp-uptime id="k4-uptime-jellyfin" data-kp-uptime-label="jellyfin"></div>
+                    <div class="kp-uptime" data-kp-uptime id="k4-uptime-kyu" data-kp-uptime-label="kyu"></div>
+                    <div class="kp-uptime" data-kp-uptime id="k4-uptime-almanac" data-kp-uptime-label="almanac"></div>
+                    <div class="kp-uptime" data-kp-uptime id="k4-uptime-hours" data-kp-uptime-label="kyu delivery" data-kp-uptime-count="48"></div>
+                </div>
+                <pre class="k4-log" id="k4-uptime-log" aria-live="polite"></pre>
+            </section>
+
+            <section
+                class="k4-sec"
+                id="uptime-states"
+                data-review-item="uptime-states"
+                data-review-topic="uptime"
+                data-review-title="1 · Uptime strip: loading, empty, error, a long name"
+                aria-labelledby="h-uptime-states"
+            >
+                <div class="k4-sec__head">
+                    <h2 id="h-uptime-states">1 · Uptime strip: loading, empty, error, a long name</h2>
+                    <p>One strip, its state chosen with the control (demo). Every state keeps the same height and the same place.</p>
+                </div>
+                <div class="k4-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Loading</b> (the start): the cells pulse as skeleton bars, the summary is a pulsing bar, and the data table’s loading
+                            card (formal’s spinner and “Reading the history…”) stands in the middle of the strip, on its opaque plate.
+                        </li>
+                        <li>
+                            <b>Ready</b>: the loading card leaves the formal way, then kyu’s 90 days are drawn. Nothing above or below the strip
+                            moves.
+                        </li>
+                        <li><b>Empty</b>: 90 empty frames and “No data yet” in muted ink where the summary stands.</li>
+                        <li>
+                            <b>Error</b>: 90 empty frames and the page’s sentence on the red plate where the summary stands; the strip keeps its
+                            place.
+                        </li>
+                        <li>
+                            <b>Long name</b>: the name is cut with an ellipsis (the full name is in its tooltip); the summary is never cut and never
+                            touches the name.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The busy card is the data table’s own in formal; the error plate is formal’s destructive pair.</p>
+                </div>
+                <div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="State of the strip (demo)" id="k4-uptime-states">
+                    <button type="button" class="kp-segmented__item" data-value="loading" role="radio" aria-checked="true">
+                        <span class="kp-segmented__label">Loading</span>
+                    </button>
+                    <button type="button" class="kp-segmented__item" data-value="ready" role="radio" aria-checked="false">
+                        <span class="kp-segmented__label">Ready</span>
+                    </button>
+                    <button type="button" class="kp-segmented__item" data-value="empty" role="radio" aria-checked="false">
+                        <span class="kp-segmented__label">Empty</span>
+                    </button>
+                    <button type="button" class="kp-segmented__item" data-value="error" role="radio" aria-checked="false">
+                        <span class="kp-segmented__label">Error</span>
+                    </button>
+                    <button type="button" class="kp-segmented__item" data-value="long" role="radio" aria-checked="false">
+                        <span class="kp-segmented__label">Long name</span>
+                    </button>
+                </div>
+                <div class="kp-uptime" data-kp-uptime id="k4-uptime-state" data-kp-uptime-label="kyu"></div>
+            </section>
+
+            <section
+                class="k4-sec"
+                id="uptime-phone"
+                data-review-item="uptime-phone"
+                data-review-topic="uptime"
+                data-review-title="1 · Uptime strip at phone width"
+                aria-labelledby="h-uptime-phone"
+            >
+                <div class="k4-sec__head">
+                    <h2 id="h-uptime-phone">1 · Uptime strip at phone width</h2>
+                    <p>
+                        The same 90 days in a 360 px frame: by default the latest days that fit; with <code>data-kp-uptime-fit="scroll"</code> every
+                        day, scrolling sideways.
+                    </p>
+                </div>
+                <div class="k4-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Fewer cells</b>: the strip still fills one line; it shows the latest days that fit, and under it the first shown day’s
+                            date, “N of 90 shown” in the middle (the exact number) and “Today”. The summary still speaks of all 90 days.
+                        </li>
+                        <li><b>Scroll</b>: all 90 cells, a little wider, scrolled to today; drag or swipe sideways to see the older days.</li>
+                        <li><b>Loading</b>: the busy card fits in the frame, its words on at most a few lines, never cut.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Formal at a phone’s width; nothing wraps onto a second line and no text touches the frame.</p>
+                </div>
+                <div class="k4-pair">
+                    <div class="k4-frame k4-frame--phone">
+                        <p class="k4-label">Fewer cells (default)</p>
+                        <div class="kp-uptime" data-kp-uptime id="k4-uptime-phone-fit" data-kp-uptime-label="kyu"></div>
+                    </div>
+                    <div class="k4-frame k4-frame--phone">
+                        <p class="k4-label">Scroll</p>
+                        <div
+                            class="kp-uptime"
+                            data-kp-uptime
+                            data-kp-uptime-fit="scroll"
+                            id="k4-uptime-phone-scroll"
+                            data-kp-uptime-label="kyu"
+                        ></div>
+                    </div>
+                    <div class="k4-frame k4-frame--phone">
+                        <p class="k4-label">Loading</p>
+                        <div class="kp-uptime" data-kp-uptime id="k4-uptime-phone-loading" data-kp-uptime-label="kyu"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- next sections -->
+        </main>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

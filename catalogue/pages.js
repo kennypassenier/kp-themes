@@ -107,6 +107,12 @@ export const PAGES = [
             // Kenny, 2026-10-12: "Cyberpunk lijkt af, zie dat dezelfde fouten nu niet terugkomen in andere thema's": every other theme mended so a close is its open backwards with the theme's own effect; only what changed, each block in the themes where it did (research/all-themes).
             // Kenny, 2026-10-16 (kp-adopt-rest, round 2): eight things the admin dashboard still draws itself (action tiles, status rows, the facet list, the coverage heat grid, the reachability matrix, bars in table cells with data-kp-sort-value, the week agenda, the run timeline), built in the package first as ONE demo, formal only until Kenny approves it.
             // Kenny, 2026-10-16 (kp-adopt-rest, round 3): six things the dashboard still drew itself, each an opt-in option of an approved component (nav separator, choice-filter value, timeline day buttons and series legend, the week's next-N phone list, facet identity patterns, the heat grid's jump to the latest), formal only.
+            // Kenny, 2026-10-16 19:32: seven new components, all "Onmisbaar" (uptime strip, typed confirmation, command block, a visual and a numeric timer, range picker, compare slider), formal only.
+            {
+                href: 'research/kpadopt4-ideas/demo.html',
+                label: 'Seven new components: uptime strip, typed confirmation, command block, two timers, range picker, compare slider',
+                about: 'Built from the package’s own parts and shown in formal only, every state: .kp-uptime (one cell per day or hour, exact figures), the typed confirmation (data-kp-confirm-type), .kp-command (shell label, admin badge, copy), .kp-timer-disc (a shrinking disc), .kp-countdown (digits that never shift), .kp-range (presets and a custom from–to), .kp-compare (a before/after divider).',
+            },
         ],
     },
     {

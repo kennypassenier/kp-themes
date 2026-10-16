@@ -354,6 +354,16 @@
  * @property {string} ganttZoomTitle  Its title
  * @property {(seconds: number) => string} ganttDuration  A length of time as a person reads it, "14 min", "1 h 5 min", "45 s"
  * @property {string} ganttHint  The one-line hint under the timeline on how to read and use it
+ * @property {string} uptimeLoading  The uptime strip's busy card and its summary while the history is read (js/uptime.js) [kpadopt4-ideas]
+ * @property {string} uptimeEmpty  Its summary when no period has data yet [kpadopt4-ideas]
+ * @property {string} uptimeError  Its summary when the history could not be read and the page gave no sentence [kpadopt4-ideas]
+ * @property {(percent: string) => string} uptimePercent  The window's share up, from "99.4" to "99.4%" [kpadopt4-ideas]
+ * @property {(n: number) => string} uptimeIncidents  The window's incident count, exact: "1 incident", "12 incidents" [kpadopt4-ideas]
+ * @property {(percent: string, incidents: number) => string} uptimeSummary  The summary as one sentence, for a screen reader [kpadopt4-ideas]
+ * @property {(label: string, summary: string) => string} uptimeTrack  The strip's name: its title and its summary [kpadopt4-ideas]
+ * @property {(state: string) => string} uptimeStateWord  A period's state as a word: up, degraded, down, no data [kpadopt4-ideas]
+ * @property {(label: string, state: string, percent: string | null, incidents: number | null) => string} uptimeCell  A cell's name and hover card: its period, its state and its figures [kpadopt4-ideas]
+ * @property {(shown: number, total: number) => string} uptimeShown  Under a strip too narrow for every cell: "55 of 90 shown" [kpadopt4-ideas]
  * @property {string} graphShowAll  The network graph's way back to every node and every kind of link (js/graph.js) [scope-143]
  * @property {string} graphShowAllTitle  Its title [scope-143]
  * @property {string} graphHint  The hint under the graph, and the second half of its picture's accessible name: what a pointer, a click and the keys do [scope-143]
@@ -817,6 +827,25 @@ export const DEFAULT_STRINGS = Object.freeze({
         return rest ? `${hours} h ${rest} min` : `${hours} h`;
     },
     ganttHint: 'Click a bar to open it · drag across the time to select a range',
+    // The uptime strip [kpadopt4-ideas]: the figures are exact, never "9+".
+    uptimeLoading: 'Reading the history…',
+    uptimeEmpty: 'No data yet',
+    uptimeError: 'The history could not be read.',
+    uptimePercent: (percent) => `${percent}%`,
+    uptimeIncidents: (n) => (n === 1 ? '1 incident' : `${n} incidents`),
+    uptimeSummary: (percent, incidents) => `${percent}% up, ${incidents === 1 ? '1 incident' : `${incidents} incidents`}`,
+    uptimeTrack: (label, summary) => `${label}: ${summary}`,
+    uptimeStateWord: (state) => ({ up: 'up', degraded: 'degraded', down: 'down' })[state] ?? 'no data',
+    uptimeCell: (label, state, percent, incidents) =>
+        [
+            label,
+            state,
+            percent === null ? null : `${percent} up`,
+            incidents === null ? null : incidents === 1 ? '1 incident' : `${incidents} incidents`,
+        ]
+            .filter(Boolean)
+            .join(' · '),
+    uptimeShown: (shown, total) => `${shown} of ${total} shown`,
     // The network graph [scope-143]: its own words; the nodes, kinds and
     // the sentences of its states are the page's.
     graphShowAll: 'Show all',

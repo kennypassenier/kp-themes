@@ -1768,6 +1768,59 @@ helpTourButton.addEventListener('click', () => {
 - `decorate(part, info)` is handed the card's three buttons
   (`tour-next`, `tour-back`, `tour-skip`) each time a tour builds them;
   `strings` overrides the dictionary's `tour…` words for this tour.
+## Seven everyday components [kpadopt4-ideas]
+
+Seven things Kenny's apps kept drawing by hand, approved as components on 2026-10-16 and demoed in formal
+(`research/kpadopt4-ideas/`). The registers do not answer them yet (they are on `gates/register-pending.json`), so every
+theme draws them from its tokens and its own buttons, segmented control, date picker, hover card and busy card.
+`js/auto.js` fetches each module only on a page that carries its markup; each attach function returns a detach.
+
+### An uptime strip
+
+One thin strip of cells, one per period (90 days, 48 hours), each toned up, degraded, down or no data, with the window's
+summary over it in exact figures and the first and the latest period's names under it:
+
+```html
+<div class="kp-uptime" data-kp-uptime data-kp-uptime-label="jellyfin" data-kp-uptime-count="90"></div>
+```
+
+```js
+import { setUptime } from '@kp-soft/themes/js/uptime';
+
+setUptime(strip, {
+    label: 'jellyfin',
+    from: '90 days ago',
+    to: 'Today',
+    periods: [
+        { key: '2026-10-15', label: '15/10/2026', state: 'degraded', uptime: 0.981, incidents: 1, tip: 'Slow answers for 27 min' },
+        { key: '2026-10-16', label: '16/10/2026', state: 'up' },
+    ],
+});
+```
+
+Until the page calls `setUptime()` the strip shows its loading state from its attributes (`data-kp-uptime-count`
+skeleton cells under the data table's busy card), so it is loading from the first frame. `state` is `ready` (the
+default), `loading`, `empty` (every cell without data, "No data yet") or `error` (the page's short `error` sentence on
+the destructive plate where the summary stands); the strip keeps its height and place in every one.
+
+The figures are exact: the share is cut to one decimal, never rounded up, so only a window without any time down reads
+100%, and the incident count is the number. A period counts with its `uptime` (0 to 1) when given, else 1 for up and
+degraded and 0 for down; a period without data does not count. Its incidents are `incidents`, else 1 for a degraded or
+down period. `uptimeFigures(periods)`, `uptimePercent(share)` and `uptimeFit(count, width, min, gap)` are the arithmetic.
+
+A strip never wraps. Narrower than its cells at `--kp-uptime-cell-min` (4px) each, it shows the latest periods that fit
+and says "N of M shown" under them; with `data-kp-uptime-fit="scroll"` it keeps every period, scrolls sideways,
+starts at the latest and fades the edge it has more behind. Every cell is a button with the hover card for its detail
+(`tip`, else its label, state and figures): the strip is one tab stop, the arrows walk the cells, Home and End jump,
+and a press fires `kp-uptime-pick` (`{ key, index, period }`). The dictionary words are `uptime…`
+(`uptimeLoading`, `uptimeEmpty`, `uptimeError`, `uptimePercent`, `uptimeIncidents`, `uptimeSummary`, `uptimeTrack`,
+`uptimeStateWord`, `uptimeCell`, `uptimeShown`). Knobs: `--kp-uptime-height` (1.75rem), `--kp-uptime-cell-min`,
+`--kp-uptime-gap` (2px), `--kp-uptime-cell-radius`, `--kp-uptime-up`, `--kp-uptime-degraded`, `--kp-uptime-down`,
+`--kp-uptime-lift`. Exports: `attachUptimes`, `setUptime`, `uptimeFigures`, `uptimePercent`, `uptimeFit`, `UPTIME`,
+`UPTIME_PICK_EVENT`, `UPTIME_STATES`, `UPTIME_COUNT`.
+
+<!-- kpadopt4-ideas: next component -->
+
 ## Tables that fit [TH95, TH96]
 
 A table is the widest thing on most pages, and everything below is about

@@ -148,6 +148,10 @@
             "types": "./js/busy-card.d.ts",
             "default": "./js/busy-card.js"
         },
+        "./js/uptime": {
+            "types": "./js/uptime.d.ts",
+            "default": "./js/uptime.js"
+        },
         "./js/loading-pieces": {
             "types": "./js/loading-pieces.d.ts",
             "default": "./js/loading-pieces.js"

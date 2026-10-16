@@ -120,6 +120,17 @@ export {
 export { BUSY_CARD, openBusyCard } from './js/busy-card.js';
 /** @typedef {import('./js/busy-card.js').BusyCard} BusyCard */
 /** @typedef {import('./js/busy-card.js').BusyCardOptions} BusyCardOptions */
+export {
+    UPTIME,
+    UPTIME_COUNT,
+    UPTIME_PICK_EVENT,
+    UPTIME_STATES,
+    attachUptimes,
+    setUptime,
+    uptimeFigures,
+    uptimeFit,
+    uptimePercent,
+} from './js/uptime.js';
 // The dashboard components [scope-143].
 export { ACTION_LIST, ROW_ACTIONS, attachActionColumns, fitActionColumns, mergeRoles, rowRoles } from './js/actions.js';
 export {
