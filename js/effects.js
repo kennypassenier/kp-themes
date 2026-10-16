@@ -935,6 +935,7 @@ export const TIMINGS = Object.freeze({
     'kp-sig-blueprint-hatch': { durationMs: 2880, cycles: Infinity, property: 'background-size', luminanceSteps: [] },
     'kp-sig-blueprint-chain': { durationMs: 960, cycles: Infinity, property: 'background-position', luminanceSteps: [] },
     'kp-sig-phantom-screen': { durationMs: 1500, cycles: Infinity, property: 'background-position', luminanceSteps: [] },
+    'kp-sig-grotesk-train': { durationMs: 2640, cycles: Infinity, property: 'translate', luminanceSteps: [] },
     'kp-sig-dark-run': { durationMs: 2400, cycles: Infinity, property: 'background-position', luminanceSteps: [] },
     'kp-sig-dark-bars': { durationMs: 2400, cycles: Infinity, property: '--kp-sig-dk-ph', luminanceSteps: [] },
     'kp-sig-dark-tap': { durationMs: 220, cycles: 1, property: 'background-position', luminanceSteps: [] },
