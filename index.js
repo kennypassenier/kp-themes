@@ -193,6 +193,17 @@ export {
 /** @typedef {import('./js/statusrow.js').StatusRow} StatusRow */
 export { FACETS, FACET_EVENT, attachFacets, getFacetValues, setFacetCounts, setFacetItems, setFacetValues } from './js/facets.js';
 /** @typedef {import('./js/facets.js').FacetItem} FacetItem */
+// The identity mark, the share bar, the bullet list, the code block and the live tick [kpadopt4-data].
+export { IDMARK, IDMARK_GLYPHS, IDMARK_SLOTS, attachIdmarks, idmarkColours, idmarkFor, idmarkLetters, setIdmark } from './js/idmark.js';
+export { STACKBAR, STACKBAR_PICK_EVENT, attachStackbars, setStackbar, shareText, stackbarParts } from './js/stackbar.js';
+/** @typedef {import('./js/stackbar.js').StackbarPart} StackbarPart */
+/** @typedef {import('./js/stackbar.js').StackbarSpec} StackbarSpec */
+export { BULLETS, BULLETS_PICK_EVENT, BULLETS_RETRY_EVENT, attachBullets, bulletTone, setBullets } from './js/bullets.js';
+/** @typedef {import('./js/bullets.js').BulletRow} BulletRow */
+/** @typedef {import('./js/bullets.js').BulletsSpec} BulletsSpec */
+export { CODE, CODE_COPIED_MS, attachCodes, prettyJson, setCode } from './js/code.js';
+/** @typedef {import('./js/code.js').CodeSpec} CodeSpec */
+export { TICK, TICK_EVENT, TICK_KNOB, TICK_MS, attachTicks, parseTick, tickTo } from './js/tick.js';
 export { HOVERCARD_ATTRIBUTE, HOVERCARD_CARD, HOVERCARD_EVENT, attachHoverCards } from './js/hovercard.js';
 // Information that updates in place, the theme's way [research/update-motion, 2026-10-05].
 export {

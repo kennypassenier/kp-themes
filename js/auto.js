@@ -153,6 +153,12 @@ export const NEEDS = [
     { name: 'action-tiles', when: '.kp-action', load: () => import('./action-tiles.js'), attach: (m, root) => [m.attachActionTiles(root)] },
     { name: 'statusrow', when: '.kp-statuslist', load: () => import('./statusrow.js'), attach: (m, root) => [m.attachStatusLists(root)] },
     { name: 'facets', when: '[data-kp-facets]', load: () => import('./facets.js'), attach: (m, root) => [m.attachFacets(root)] },
+    // The identity mark, the share bar, the bullet list, the code block and the live tick [kpadopt4-data].
+    { name: 'idmark', when: '[data-kp-idmark]', load: () => import('./idmark.js'), attach: (m, root) => [m.attachIdmarks(root)] },
+    { name: 'stackbar', when: '[data-kp-stackbar]', load: () => import('./stackbar.js'), attach: (m, root) => [m.attachStackbars(root)] },
+    { name: 'bullets', when: '[data-kp-bullets]', load: () => import('./bullets.js'), attach: (m, root) => [m.attachBullets(root)] },
+    { name: 'code', when: '[data-kp-code]', load: () => import('./code.js'), attach: (m, root) => [m.attachCodes(root)] },
+    { name: 'tick', when: '[data-kp-tick]', load: () => import('./tick.js'), attach: (m, root) => [m.attachTicks(root)] },
     { name: 'toolbar', when: '[data-kp-toolbar]', load: () => import('./toolbar.js'), attach: (m, root) => [m.attachToolbars(root)] },
     { name: 'keys', when: '.kp-kbd[data-kp-key]', load: () => import('./keys.js'), attach: (m, root) => [m.attachKeys(root)] },
     // The month heatmap [scope-143]: a month of days, each a plate in the

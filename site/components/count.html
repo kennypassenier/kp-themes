@@ -85,6 +85,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/upload.html">File upload</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/wizard.html">Wizard</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/segmented.html">Segmented control and filter chips</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/formrows.html">Form rows</a></li>
                         </ul>
                     </div>
                     <div class="sc-nav__group">
@@ -118,6 +119,11 @@
                             <li><a class="sc-nav__link" href="../../site/components/gantt.html">Run timeline</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/toolbar.html">List toolbar</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/facets.html">Facet list</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/idmark.html">Identity mark</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/stackbar.html">Share bar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/bullets.html">Bullet rows</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/kv.html">Key-value grid</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/code.html">Code block</a></li>
                         </ul>
                     </div>
                     <div class="sc-nav__group">
@@ -225,6 +231,8 @@
                     <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
                             <tr><td><code>data-kp-count</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-count-state</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-tick</code></td><td>selector</td></tr>
+                            <tr><td><code>data-kp-tick-state</code></td><td>written</td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="react" id="react">
@@ -237,7 +245,9 @@
                 </section>
                 <section class="kp-section" data-sc-section="events" id="events">
                     <h2 class="kp-fw-semibold">Events</h2>
-                    <p class="kp-text-muted">This unit fires no events.</p>
+                    <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
+                            <tr><td><code>kp-tick</code></td><td>Fired when a tick lands: `{ value }`.</td></tr>
+                    </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
                     <h2 class="kp-fw-semibold">Knobs</h2>

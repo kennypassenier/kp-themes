@@ -1582,7 +1582,7 @@ export const DESCRIPTORS = [
         group: 'Feedback',
         classes: [],
         exports: [],
-        aliases: ['count', 'counter', 'odometer'],
+        aliases: ['count', 'counter', 'odometer', 'tick'],
         intro: 'A number that counts up to what it already says. The page writes the final figure; the effects module reads it, counts to it and puts the same string back — so a page that never loads the module, and a reader who asked for less movement, both simply see the number.',
         whenToUse:
             'For one or two figures that are the point of a page — a total, a score, a count of things done. Not for a table of numbers, where the movement makes the column unreadable, and not for anything a reader needs at once. The final number is authored in the HTML, so nothing is ever hidden behind the animation.',
@@ -5265,5 +5265,160 @@ for (const button of document.querySelectorAll('[data-doc-tab]')) {
             'Yours — prefer visible words. Hidden text is unread by everyone who is looking at the screen.',
             'Yours — do not put a focusable control inside it unless it becomes visible when focused, as the skip link does.',
         ],
+    },
+    {
+        id: 'idmark',
+        title: 'Identity mark',
+        group: 'Data',
+        classes: ['kp-idmark', 'kp-idmark-group', 'kp-idmark-name'],
+        exports: [],
+        intro: 'A small plate made from a name, so a company or a stack is found in a list before its name is read: two letters on a wash of one of the theme’s five chart colours, or (`--pattern`) a mirrored 5 by 5 pattern. The same name gives the same mark on every page. js/idmark.js (`idmarkFor`, `idmarkColours`, `setIdmark`, `attachIdmarks`) fills every `[data-kp-idmark]`.',
+        whenToUse: 'Beside the name of a company, a stack or a person in a list, a header or a cell. It is decoration: the name always stands beside it.',
+        examples: [
+            {
+                title: 'Letters, a pattern and a group',
+                why: 'Marks inside one `data-kp-idmark-set` never share a colour while one of the five is free.',
+                markup: `
+<div data-kp-idmark-set>
+<span class="kp-idmark-name"><span class="kp-idmark" data-kp-idmark="Acme Logistics" aria-hidden="true"></span><span>Acme Logistics</span></span>
+<span class="kp-idmark-name"><span class="kp-idmark kp-idmark--sm kp-idmark--pattern" data-kp-idmark="media" aria-hidden="true"></span><span>media</span></span>
+<span class="kp-idmark-group" role="img" aria-label="Acme, Contoso and 7 more"><span class="kp-idmark kp-idmark--round" data-kp-idmark="Acme" aria-hidden="true"></span><span class="kp-idmark kp-idmark--round" data-kp-idmark="Contoso" aria-hidden="true"></span><span class="kp-idmark-group__more" aria-hidden="true">+7</span></span>
+</div>
+`,
+            },
+        ],
+        variants: [
+            { name: '.kp-idmark--xs / --sm / --lg / --xl', what: 'Sizes 20, 24, 44 and 56 px around the 32 px default; extra small shows one letter.' },
+            { name: '.kp-idmark--pattern / --round / --glyph', what: 'The pattern instead of letters; a round plate; a small corner shape picked by the name.' },
+            { name: 'data-kp-idmark-hue="free"', what: 'A hue of its own from the name, on the lightness and strength of the first chart colour.' },
+            { name: 'aria-current / data-kp-idmark-selected', what: 'The current one in a list: a ring kept off its neighbours by a halo.' },
+            { name: '.kp-idmark.kp-skeleton.kp-skeleton--block', what: 'Loading: the plate’s own shape, drawn as the theme draws a waiting block.' },
+        ],
+        accessibility: ['Built in — the mark is hidden from a screen reader.', 'Yours — always put the name beside it, and name a group in words.'],
+    },
+    {
+        id: 'stackbar',
+        title: 'Share bar',
+        group: 'Data',
+        classes: ['kp-stackbar'],
+        exports: [],
+        intro: 'One bar split into the parts of a whole, in the chart colours, the free rest as the track, with a legend that gives every part its exact value. js/stackbar.js (`setStackbar`, `stackbarParts`, `attachStackbars`) draws it from a list; every part has a hover card, the arrow keys walk them, and `kp-stackbar-pick` names a pressed part.',
+        whenToUse: 'For what fills a disk, a budget or a quota. For one share of a whole use the meter; for shares over time use the chart.',
+        examples: [
+            {
+                title: 'From a spec in the markup',
+                why: 'A page that draws later calls `setStackbar(el, spec)`; `state` is `loading`, `empty` or `error`, each at the bar’s height.',
+                markup: `
+<figure class="kp-stackbar" data-kp-stackbar='{"title":"Root volume","total":120,"parts":[{"label":"Docker images","value":41},{"label":"Volumes","value":18.5},{"label":"Logs","value":6.5}]}'></figure>
+`,
+            },
+        ],
+        variants: [
+            { name: '.kp-stackbar--sm / --lg', what: 'An 8 px or a 20 px bar around the 12 px default.' },
+            { name: 'other, marks', what: 'Parts under a share merged into “Other”; ticks across the bar at a share.' },
+            { name: 'over the whole', what: 'Parts adding up past the total: the bar is their sum, a ▸ at its end, “Over by …” in the legend.' },
+        ],
+        accessibility: ['Built in — the bar is a group of parts, each named with its value and share; one tab stop, arrow keys within.', 'Built in — the legend holds every exact value.'],
+    },
+    {
+        id: 'bullets',
+        title: 'Bullet rows',
+        group: 'Data',
+        classes: ['kp-bullets'],
+        exports: [],
+        intro: 'Rows of a value against a threshold: a lead, the label and a detail, a meter whose tick is the threshold, and the exact figure; worst first. js/bullets.js (`setBullets`, `bulletTone`, `attachBullets`); loading lays the data table’s busy card over waiting rows; a failed list has a Retry (`kp-bullets-retry`).',
+        whenToUse: 'Days since the last contact against a limit, a backup’s age, days to an expiry. For one value use the meter.',
+        examples: [
+            {
+                title: 'From a spec in the markup',
+                why: 'Past the threshold the warning tone, past `bad` the destructive one.',
+                markup: `
+<div class="kp-bullets" data-kp-bullets='{"threshold":14,"bad":21,"rows":[{"key":"a","label":"Data engineer","detail":"due since 02/10/2026","value":22,"lead":"Acme"},{"key":"b","label":"Project lead","value":9,"lead":"Contoso"}]}'></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'href / pick', what: 'A row that is a link, or a button that fires `kp-bullets-pick`; its press area is the whole row.' },
+            { name: 'value: null', what: 'Nothing to measure: a dash and no bar, the row keeping its height.' },
+        ],
+        accessibility: ['Built in — each meter reads its figure and the threshold.', 'Yours — say in the card what the threshold is.'],
+    },
+    {
+        id: 'kv',
+        title: 'Key-value grid',
+        group: 'Data',
+        classes: ['kp-kv'],
+        exports: [],
+        intro: 'A read-only list of facts: `dl.kp-kv` with `div.kp-kv__row` rows of a `dt` and a `dd`. The label column is as wide as the longest label and every value starts on one edge.',
+        whenToUse: 'The facts about one thing: a host, a release, a message. For editable settings use the form rows.',
+        examples: [
+            {
+                title: 'With lines',
+                why: 'Values reuse the package: `.kp-id`, `.kp-copyable`, `.kp-badge`, `.kp-ago`.',
+                markup: `
+<dl class="kp-kv kp-kv--lines">
+<div class="kp-kv__row"><dt>Host</dt><dd>pve-01</dd></div>
+<div class="kp-kv__row" data-kp-changed><dt>Retention</dt><dd>30 days</dd></div>
+<div class="kp-kv__row"><dt>Image digest</dt><dd><span class="kp-kv__none">—<span class="kp-sr-only">not known</span></span></dd></div>
+</dl>
+`,
+            },
+        ],
+        variants: [
+            { name: '.kp-kv--lines / --stack / --columns', what: 'A hairline between rows; each label over its value; lists side by side where there is room.' },
+            { name: 'data-kp-changed / data-kp-state="error"', what: 'A dot after the label; a red rule on the row’s start edge.' },
+            { name: '.kp-kv__wait', what: 'A waiting line one text line high with the theme’s skeleton in it.' },
+        ],
+        accessibility: ['Built in — a real description list.', 'Yours — give an unknown value its words for a screen reader.'],
+    },
+    {
+        id: 'formrows',
+        title: 'Form rows',
+        group: 'Forms',
+        classes: ['kp-formrows', 'kp-formrow'],
+        exports: [],
+        intro: 'A settings form as rows: the label, the package’s own control with its help or error under it, and an aside for where the value comes from or an Edit button. The label column is as wide as the longest label; under 36rem each row reads top to bottom.',
+        whenToUse: 'A settings page or a long form of independent values.',
+        examples: [
+            {
+                title: 'Two rows',
+                why: 'Mark a changed row with `data-kp-changed`, a failed one with `data-kp-state="error"`, a locked one with `data-kp-locked`.',
+                markup: `
+<div class="kp-formrows kp-formrows--lines">
+<div class="kp-formrow" data-kp-changed><label class="kp-formrow__label" for="doc-ret">Retention<small>backup.retention_days</small></label><div class="kp-formrow__control"><input class="kp-field__input" id="doc-ret" value="30" /><p class="kp-field__help">Days of nightly copies to keep.</p></div><div class="kp-formrow__aside">Not saved</div></div>
+<div class="kp-formrow" data-kp-locked><label class="kp-formrow__label" for="doc-dir">Data folder</label><div class="kp-formrow__control"><input class="kp-field__input" id="doc-dir" value="/srv/data" disabled /></div><div class="kp-formrow__aside"><span class="kp-formrow__lock">Set at install</span></div></div>
+</div>
+`,
+            },
+        ],
+        variants: [
+            { name: '.kp-formrows--lines', what: 'A hairline between rows.' },
+            { name: '.kp-formrow--top / --wide', what: 'The label at the top for a tall control; the control takes the aside’s column too.' },
+        ],
+        accessibility: ['Built in — the label is a real label.', 'Yours — tie help and errors to the control with aria-describedby.'],
+    },
+    {
+        id: 'code',
+        title: 'Code block',
+        group: 'Data',
+        classes: ['kp-code'],
+        exports: [],
+        intro: 'A payload, a request or a snippet: a head with its title, what it is and its tools (Pretty and Raw for JSON, Wrap, Copy), and the text in the mono face. js/code.js (`setCode`, `prettyJson`, `attachCodes`) fills every `[data-kp-code]`; loading lays the busy card, empty, binary and failed say so at the body’s height.',
+        whenToUse: 'A message body, an HTTP request, a command to copy. For a running log use the log; for a change use the diff.',
+        examples: [
+            {
+                title: 'A JSON payload',
+                why: '`data-kp-code-max` folds a long block with “Show all N lines”; `data-kp-code-lines` adds line numbers.',
+                markup: `
+<figure class="kp-code" data-kp-code data-kp-code-title="Payload" data-kp-code-language="JSON" data-kp-code-lines><pre class="kp-code__body"><code>{"topic":"backup.done","ok":true,"volumes":["media","photos"]}</code></pre></figure>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-code-wrap / -max / -layout', what: 'Wrapped from the start; folded past N lines; Raw instead of Pretty.' },
+            { name: 'state', what: '`loading`, `empty`, `binary` (with `size`) and `error`.' },
+            { name: 'truncated', what: '`{ shown, total }`: the foot says only the start was sent.' },
+        ],
+        accessibility: ['Built in — the body is a named region that takes focus, so a keyboard can scroll it; a copy is announced.', 'Built in — line numbers are never copied or read.'],
     },
 ];

@@ -70,6 +70,21 @@ export type StatusRow = import('./js/statusrow.js').StatusRow;
 export { FACETS, FACET_EVENT, attachFacets, getFacetValues, setFacetCounts, setFacetItems, setFacetValues } from './js/facets.js';
 export type FacetItem = import('./js/facets.js').FacetItem;
 /** @typedef {import('./js/facets.js').FacetItem} FacetItem */
+export { IDMARK, IDMARK_GLYPHS, IDMARK_SLOTS, attachIdmarks, idmarkColours, idmarkFor, idmarkLetters, setIdmark } from './js/idmark.js';
+export { STACKBAR, STACKBAR_PICK_EVENT, attachStackbars, setStackbar, shareText, stackbarParts } from './js/stackbar.js';
+export type StackbarPart = import('./js/stackbar.js').StackbarPart;
+export type StackbarSpec = import('./js/stackbar.js').StackbarSpec;
+/** @typedef {import('./js/stackbar.js').StackbarPart} StackbarPart */
+/** @typedef {import('./js/stackbar.js').StackbarSpec} StackbarSpec */
+export { BULLETS, BULLETS_PICK_EVENT, BULLETS_RETRY_EVENT, attachBullets, bulletTone, setBullets } from './js/bullets.js';
+export type BulletRow = import('./js/bullets.js').BulletRow;
+export type BulletsSpec = import('./js/bullets.js').BulletsSpec;
+/** @typedef {import('./js/bullets.js').BulletRow} BulletRow */
+/** @typedef {import('./js/bullets.js').BulletsSpec} BulletsSpec */
+export { CODE, CODE_COPIED_MS, attachCodes, prettyJson, setCode } from './js/code.js';
+export type CodeSpec = import('./js/code.js').CodeSpec;
+/** @typedef {import('./js/code.js').CodeSpec} CodeSpec */
+export { TICK, TICK_EVENT, TICK_KNOB, TICK_MS, attachTicks, parseTick, tickTo } from './js/tick.js';
 export { HOVERCARD_ATTRIBUTE, HOVERCARD_CARD, HOVERCARD_EVENT, attachHoverCards } from './js/hovercard.js';
 export { UPDATE_PROPERTY, UPDATE_STYLE, UPDATING_ATTRIBUTE, markUpdating, unmarkUpdating, update, updateIdea, updatePlays, updateTiming, updateTimingOf, } from './js/update.js';
 export { ATTENTION, SEVERITIES, attachAttention, setAttention, sortAttention } from './js/attention.js';
