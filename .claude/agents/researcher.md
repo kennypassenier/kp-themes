@@ -42,6 +42,11 @@ A re-review round shows only the pairs (section × theme) Kenny has not approved
 answer in `research/<topic>/VERDICTS.json` (format in `research/_review/README.md`), then take the approved sections and themes out of the
 page and restrict the rest with `data-review-themes`. `gates/check-rereview.mjs` refuses a page that offers an approved pair.
 
+Anything that opens over the page (a menu, a popover, a hover card) keeps its theme's opaque plate wherever it stands, inside a
+dialog or the review dialog's stage too [Kenny, 2026-10-16: "het geopende menu heeft geen achtergrond"]. `gates/check-raised-plate.mjs`
+refuses a register rule that strips it; open the section in the review dialog and run `research/_review/measure-plate.mjs` before you
+hand a demo over.
+
 Measure before you claim: a byte count comes from `wc -c`, a class name
 from grep. Finish with the absolute paths and a five-line summary.
 

@@ -1,0 +1,85 @@
+<!doctype html>
+<!-- research/_review/measure-plate.mjs opens every raised surface of this page in every theme and reads its plate (Kenny, 2026-10-16). -->
+<html lang="en" data-theme="formal">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/formal-register.css" data-kp-register="formal" />
+    </head>
+    <body>
+        <template id="set">
+            <div class="kp-menu-button">
+                <button class="kp-button" type="button">Open</button>
+                <div class="kp-menu kp-menu--rich" role="menu" popover="manual" data-s="menu-button">
+                    <button class="kp-menu__item" role="menuitem"><span class="kp-menu__label">Stacks</span></button
+                    ><button class="kp-menu__item" role="menuitem"><span class="kp-menu__label">Logs</span></button>
+                </div>
+            </div>
+            <div class="kp-menu-button">
+                <button class="kp-button" type="button">Open</button>
+                <div class="kp-menu" role="menu" data-s="menu-button-plain">
+                    <button class="kp-menu__item" role="menuitem"><span class="kp-menu__label">Stacks</span></button>
+                </div>
+            </div>
+            <nav class="kp-nav" data-kp-nav-fold>
+                <ul class="kp-nav__links">
+                    <li class="kp-nav__more" data-kp-nav-more>
+                        <div class="kp-menu-button">
+                            <button type="button" class="kp-nav__link kp-nav__more-button">More</button>
+                            <div class="kp-menu kp-menu--rich kp-nav__more-menu" role="menu" popover="manual" data-s="nav-more">
+                                <a class="kp-menu__item" href="#a"><span class="kp-menu__label">Backups</span></a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+            <div class="kp-popover" popover="manual" data-s="popover"><p>Popover body text</p></div>
+            <div class="kp-popover kp-tooltip" popover="manual" data-s="hovercard"><p>Hovercard</p></div>
+            <div class="kp-tooltip" role="tooltip" data-s="tooltip">Tooltip</div>
+            <div class="kp-toasts">
+                <div class="kp-toast" data-s="toast"><div class="kp-toast__body">Saved</div></div>
+            </div>
+            <div class="kp-combobox">
+                <ul class="kp-combobox__list" role="listbox" data-s="combobox">
+                    <li class="kp-combobox__option" role="option">One</li>
+                    <li class="kp-combobox__option" role="option">Two</li>
+                </ul>
+            </div>
+            <div class="kp-datepicker"><div class="kp-datepicker__panel" data-s="datepicker">Calendar</div></div>
+            <nav class="kp-nav">
+                <ul class="kp-nav__links">
+                    <li data-kp-nav-menu-open>
+                        <a class="kp-nav__link" href="#">Menu</a>
+                        <ul class="kp-nav__menu" data-s="nav-menu">
+                            <li><a href="#">Item</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+            <div class="kp-palette" data-s="palette">
+                <input class="kp-palette__input" />
+                <ul class="kp-palette__list">
+                    <li class="kp-palette__option">Cmd</li>
+                </ul>
+            </div>
+            <div class="kp-theme-menu">
+                <div class="kp-theme-menu__list kp-popover" popover="manual" data-s="theme-menu">
+                    <div class="kp-menu" role="menu"><button class="kp-menu__item">formal</button></div>
+                </div>
+            </div>
+            <div class="kp-popover kp-datatable__add-menu" popover="manual" data-s="dt-add-menu">Add column</div>
+            <div class="kp-tour" data-s="tour">Tour card</div>
+        </template>
+        <section data-ctx="page"></section>
+        <div class="kp-card" data-ctx="card"></div>
+        <dialog class="kp-dialog" data-ctx="dialog"></dialog>
+        <dialog class="kp-drawer" data-ctx="drawer"></dialog>
+        <div class="kp-popover" popover="manual" data-ctx="popover"></div>
+        <script>
+            for (const ctx of document.querySelectorAll('[data-ctx]')) ctx.append(document.getElementById('set').content.cloneNode(true));
+        </script>
+    </body>
+</html>

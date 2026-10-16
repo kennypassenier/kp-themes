@@ -253,6 +253,20 @@ dialog takes that class away and gives it back on a loop, so each option's
 hover plays as the pointer arrives and leaves, at the dialog's speed. Replay
 starts it over, Pause holds it, and reduced motion keeps the still frame.
 
+## A raised surface keeps its plate
+
+Kenny, 2026-10-16, on the folding bar's More menu in phantom: "het geopende menu heeft geen achtergrond waardoor het niet goed
+leesbaar is", and "zie dat het in de toekomst niet meer gebeurt". The menu was fine on the page and see-through in the review dialog:
+phantom makes a list inside a dialog bare (it is part of that surface), and the review dialog is a `.kp-dialog`. A menu that floats out
+of its own button is never part of the surface its button stands in. `gates/check-raised-plate.mjs` (in `npm run gates`) refuses a
+register rule that takes the background from a menu or popover inside another surface without excluding the raised ones. To measure
+instead of read, `plate-fixture.html` opens every raised surface on the page, in a card, a dialog, a drawer and a popover:
+
+```sh
+python3 -m http.server 8743 --bind 127.0.0.1   # from the repository root
+node research/_review/measure-plate.mjs [theme …] [--port 8743]
+```
+
 ## Measuring the motion of a character demo
 
 `measure-motion.mjs` measures what the motion scenes of a character demo
