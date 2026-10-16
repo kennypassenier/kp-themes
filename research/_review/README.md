@@ -55,9 +55,9 @@ catalogue page itself):
   look-at line and a "Not approved" box. The reviewer ticks only what is
   wrong, writes why, and approves the theme in one click (or Up); the dialog
   then loads the next theme's register and switches by itself. Left/Right
-  move between steps, Escape closes, and after the last open step the dialog
-  closes on a small one whose first button goes back to the Agenda. Twenty-two
-  themes are twenty-two clicks.
+  move between steps, Escape closes, and after the last open step the page
+  goes straight back to the Agenda (or the `?next=` hub). Twenty-two themes
+  are twenty-two clicks.
 - Full screen on a phone: the sections on top, the rows and buttons below.
 - At the foot of the page, the answer:
 
@@ -140,14 +140,12 @@ quarter of its rate (Web Animations `playbackRate`), so a demo needs no speed co
 
 ## Finishing a demo, and the answer kept
 
-After **Approve** the dialog goes to the next open pair, across themes. The last open pair judged, the review dialog
-closes on the answer and a small dialog says the demo is judged, with three buttons: **Back to the Agenda** (first and
-focused, one press or Enter: the answer is already kept for the Agenda's prompt), **Copy answer, back to the Agenda**
-(copies, then returns) and **Stay on this page** (the answer at the page's foot). Opened from a hub (`?next=`), the
-buttons lead back to that hub; opened on its own, to `catalogue/agenda.html` (Kenny, 2026-10-16: "after finishing a
-demo's review, the dialog must not only close, there must be a direct way back to agenda.html"). Nothing opens the next
-item, or the same one again, by itself (Kenny, 2026-10-14, retiring the auto-next of 2026-10-13, which sent a finished
-demo back to the Agenda, reopened it there and lost his two notes). The answer is kept per demo (`progress.js`, `keepAnswer`, under `kp-demo-review:<id>:answer`); the
+After **Approve** the dialog goes to the next open pair, across themes. The last open pair judged, the dialog closes and
+the page goes straight to the hub it was opened from (`?next=`), else to `catalogue/agenda.html`: no end dialog, no
+choice and no copy option (Kenny, 2026-10-16, retiring the small end dialog of that morning with Back to the Agenda,
+Copy answer and Stay on this page). The answer is already kept for the Agenda's **Answers to paste**, so leaving loses
+nothing. Nothing opens the next item, or the same one again, by itself (Kenny, 2026-10-14, retiring the auto-next of
+2026-10-13, which sent a finished demo back to the Agenda, reopened it there and lost his two notes). The answer is kept per demo (`progress.js`, `keepAnswer`, under `kp-demo-review:<id>:answer`); the
 Agenda shows **Answers to paste** for every answer not yet copied and copies them together in one press, and the demo's
 own **Copy answer** marks its answer copied too. When a round, an update or a republished demo opens questions again
 and wipes their words before the answer was copied, that answer is carried along (`carryAnswer`) and stands at the top

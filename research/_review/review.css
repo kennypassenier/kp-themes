@@ -687,27 +687,3 @@
     min-block-size: 12rem;
     border: 1px dashed var(--border);
 }
-
-/* The end of a review: one small dialog, its first button straight back to the Agenda (Kenny, 2026-10-16). The three
-   buttons stand on one line from the start; on a phone they stack at full width, the way back on top. */
-.rv-done {
-    inline-size: min(42rem, 92vw);
-}
-
-.rv-done__actions {
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    gap: var(--kp-space-sm, 0.5rem);
-}
-
-.rv-done [data-rv-done-status]:empty {
-    display: none;
-}
-
-@media (max-width: 40rem) {
-    .rv-done__actions {
-        flex-direction: column;
-        align-items: stretch;
-    }
-}

@@ -106,9 +106,8 @@ const NEXT = (() => {
 /** The hub's name in the page's words. */
 const HUB_NAME = NEXT && /\/agenda\.html$/.test(new URL(NEXT).pathname) ? 'the Agenda' : 'To judge';
 /**
- * Where the end of a review leads: the hub the demo was opened from, else the Agenda, the one page Kenny starts from
- * (Kenny, 2026-10-16: "after finishing a demo's review, the dialog must not only close, there must be a direct way
- * back to agenda.html").
+ * Where the end of a review goes by itself: the hub the demo was opened from, else the Agenda, the one page Kenny
+ * starts from (Kenny, 2026-10-16: straight back to agenda.html, no end dialog).
  */
 const AGENDA = new URL('../../catalogue/agenda.html', import.meta.url).href;
 const DONE_HREF = NEXT || AGENDA;
@@ -858,25 +857,15 @@ function render() {
 }
 
 /**
- * The last open pair judged: the dialog closes on the answer, and stays there. Nothing opens the next item, or this
- * one again, by itself (Kenny, 2026-10-14: auto-next reopened the same demo and his two notes left the prompt).
+ * The last open pair judged: the kit goes straight back to the hub the demo was opened from, else to the Agenda, with
+ * no choice to make (Kenny, 2026-10-16: no end dialog, no copy option). The answer is already kept for the Agenda's
+ * "Answers to paste" (render() keepAnswer, run before this), so leaving loses nothing. Nothing opens the next item, or
+ * this one again, by itself (Kenny, 2026-10-14: auto-next reopened the same demo and his two notes left the prompt).
  */
 function finished() {
     dialog.close();
-    foot.scrollIntoView({ block: 'start' });
-    say(
-        NEXT
-            ? `Everything is judged. This answer is added to the prompt on ${HUB_NAME}, which gathers every demo until you copy it there.`
-            : 'Everything is judged. Copy the answer and paste it into the conversation.',
-    );
-    // The review ends on one small dialog whose first button goes straight back (Kenny, 2026-10-16): the answer is
-    // already kept for the Agenda's prompt (render() keepAnswer), so going back loses nothing.
-    const { judged, rejected } = answer();
-    doneDialog.querySelector('[data-rv-done-count]').textContent =
-        `${judged} of ${pairs.length} pairs judged: ${judged - rejected} approved, ${rejected} not approved.`;
-    doneDialog.querySelector('[data-rv-done-status]').textContent = '';
-    doneDialog.showModal();
-    /** @type {HTMLElement} */ (doneDialog.querySelector('[data-rv-done-back]')).focus();
+    say(`Everything is judged. This answer waits in the prompt on ${DONE_NAME}; going there now.`);
+    location.assign(DONE_HREF);
 }
 
 const say = (message) => {
@@ -922,43 +911,6 @@ if (NEXT) {
         `Every verdict and note from the dialog. It is kept in this browser and added to the prompt on ${HUB_NAME}, which gathers every demo you judge until you copy it there.`;
 }
 nextButton.addEventListener('click', () => location.assign(NEXT));
-
-// The end of a review: back to the hub (or the Agenda) in one press, the answer copied on the way if wanted, or stay
-// on the page with the answer at its foot.
-const doneDialog = document.createElement('dialog');
-doneDialog.className = 'kp-dialog rv-done';
-doneDialog.setAttribute('aria-labelledby', 'rv-done-title');
-doneDialog.setAttribute('aria-describedby', 'rv-done-about');
-doneDialog.innerHTML = `
-    <h2 class="kp-dialog__title" id="rv-done-title">This demo is judged</h2>
-    <div class="kp-dialog__body">
-        <p data-rv-done-count></p>
-        <p class="rv-meta" id="rv-done-about"></p>
-    </div>
-    <div class="kp-dialog__actions rv-done__actions">
-        <a class="kp-button kp-button--primary" data-rv-done-back></a>
-        <button type="button" class="kp-button" data-rv-done-copy>Copy answer, back to ${DONE_NAME}</button>
-        <button type="button" class="kp-button kp-button--ghost" data-rv-done-stay>Stay on this page</button>
-    </div>
-    <p class="rv-meta" role="status" aria-live="polite" data-rv-done-status></p>`;
-document.body.append(doneDialog);
-{
-    const back = /** @type {HTMLAnchorElement} */ (doneDialog.querySelector('[data-rv-done-back]'));
-    back.href = DONE_HREF;
-    back.textContent = `Back to ${DONE_NAME}`;
-    doneDialog.querySelector('#rv-done-about').textContent =
-        `Your answer is kept in this browser and waits in the prompt on ${DONE_NAME}, which gathers every demo until you copy it there.`;
-    doneDialog.querySelector('[data-rv-done-copy]').addEventListener('click', async () => {
-        if (await copyAnswer()) location.assign(DONE_HREF);
-        else {
-            doneDialog.close();
-            doneDialog.querySelector('[data-rv-done-status]').textContent = '';
-        }
-    });
-    doneDialog.querySelector('[data-rv-done-stay]').addEventListener('click', () => doneDialog.close());
-    // Staying puts the focus on the answer's own way on, as the end of a review did before.
-    doneDialog.addEventListener('close', () => /** @type {HTMLElement | null} */ (NEXT ? nextButton : foot.querySelector('[data-rv-copy]'))?.focus());
-}
 
 foot.querySelector('[data-rv-clear]').addEventListener('click', () => {
     if (!confirm('Clear every verdict and note on this demo, in every theme?')) return;
