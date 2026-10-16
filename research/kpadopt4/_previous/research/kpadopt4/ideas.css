@@ -1,0 +1,175 @@
+/* research/kpadopt4 (ideas sections): the page's own frame. Everything with a kp- class is the package; these ki- rules only lay the
+   sections out, frame the widths and draw the readouts. */
+
+.ki-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+}
+
+.ki-intro,
+.ki-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.ki-intro :is(h1, p),
+.ki-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+.ki-intro p,
+.ki-sec__head p {
+    max-inline-size: 80ch;
+    color: var(--muted-foreground);
+}
+
+.ki-sec {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+/* The "Expected:" block: what to see and what each control does. */
+.ki-expected {
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-inline-start: 3px solid var(--primary);
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.ki-expected p {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+}
+
+.ki-expected ul {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding-inline-start: 1.25rem;
+}
+
+.ki-label {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    font-weight: 600;
+}
+
+.ki-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.ki-stack {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-lg, 1.5rem);
+    min-inline-size: 0;
+}
+
+.ki-stack > * {
+    min-inline-size: 0;
+}
+
+/* Two or three columns side by side where there is room, one under the other on a phone. */
+.ki-pair {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr));
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+.ki-pair > * {
+    min-inline-size: 0;
+}
+
+/* A frame of a fixed width: what the component does at that width, whatever the page's. */
+.ki-frame {
+    box-sizing: border-box;
+    max-inline-size: 100%;
+    padding: var(--kp-space-md, 1rem);
+    border: 1px dashed var(--border-strong, var(--border));
+    border-radius: var(--radius, 0.5rem);
+}
+
+.ki-frame--phone {
+    inline-size: min(360px, 100%);
+}
+
+/* The last event a section's component fired, as the page received it. */
+.ki-log {
+    box-sizing: border-box;
+    min-block-size: calc(3lh + 2 * var(--kp-space-sm, 0.5rem));
+    margin: 0;
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-radius: var(--kp-radius-sm, 0.25rem);
+    background: var(--muted);
+    color: var(--muted-foreground);
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: var(--kp-text-xs, 0.75rem);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.ki-strips {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-lg, 1.5rem);
+}
+
+/* A confirmation dialog drawn open in the flow, so every state can be seen at once (the package's .kp-dialog). */
+.ki-static-dialog {
+    position: static;
+    display: block;
+    box-sizing: border-box;
+    inline-size: 100%;
+    margin: 0;
+}
+
+/* Siblings in one row share one height (the command blocks). */
+.ki-pair--even {
+    align-items: stretch;
+}
+
+/* Timers in a row: equal columns, every card as tall as its neighbours. */
+.ki-states,
+.ki-four {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(13rem, 100%), 1fr));
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: stretch;
+}
+
+.ki-states > *,
+.ki-four > * {
+    min-inline-size: 0;
+}
+
+/* Countdowns hold three buttons on one line: their columns are wider. */
+.ki-states--wide {
+    grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+}
+
+/* The live panes of the compare slider: each version on the same ground, the same size. */
+.ki-live-pane {
+    display: grid;
+    padding: var(--kp-space-md, 1rem);
+    background: var(--background);
+}
+
+.ki-live-card {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    align-content: start;
+}

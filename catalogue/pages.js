@@ -109,9 +109,10 @@ export const PAGES = [
             // Kenny, 2026-10-16 (kp-adopt-rest, round 3): six things the dashboard still drew itself, each an opt-in option of an approved component (nav separator, choice-filter value, timeline day buttons and series legend, the week's next-N phone list, facet identity patterns, the heat grid's jump to the latest), formal only.
             // Kenny, 2026-10-16: one central demo for the fourth adoption round (the data pieces, the rows, cards and choices,
             // the flows and records, the AuDHD recipe components and the seven "Onmisbaar" ideas), formal only, nine topics.
+            // Round 2 (2026-10-16): 45 of 51 approved; the six open sections only (share bar, bullet rows, uptime, journey, contact timeline, compare).
             {
                 href: 'research/kpadopt4/demo.html',
-                label: 'The fourth adoption round: 51 sections in nine topics, formal',
+                label: 'The fourth adoption round, round 2: six sections, formal',
                 about: 'Everything the component survey of 16/10/2026 found missing from the apps, built in the package and shown in formal only, every state, grouped into nine topics: values and figures (.kp-idmark, .kp-stackbar, .kp-bullets, data-kp-tick, .kp-uptime), rows and lists (.kp-action-list--lead, status rows with warn and the fix, a sort the page carries out), records and forms (.kp-kv, .kp-formrows, choices as tiles), cards and states (.kp-card[data-kp-state], the page header with a mark, drawings for an empty state), flows and timelines (.kp-pipeline, the journey stepper, the contact timeline), secrets and confirmation (.kp-secret, dialog sections, a confirmation that depends on something, the typed confirmation), time and timers (.kp-timer-disc, .kp-countdown, .kp-range), cooking for the AuDHD recipe app (.kp-wheel, .kp-focus-steps, .kp-timers, .kp-quantity, .kp-checklist, three-way filter chips) and commands and comparison (.kp-code, .kp-command, .kp-compare).',
             },
         ],

@@ -1,0 +1,226 @@
+{
+    "demo": "kpadopt4",
+    "rounds": [
+        {
+            "round": "1",
+            "page": "2026-10-16-r1",
+            "allJudged": false,
+            "comment": "Kenny, 2026-10-16 23:07: 51 of 51 judged in formal, 45 approved, 6 not approved. The page asked formal only: the approved pairs are listed, so the pairs a later round asks of the other themes are not read as judged.",
+            "approved": [
+                {
+                    "item": "mark",
+                    "theme": "formal"
+                },
+                {
+                    "item": "tick",
+                    "theme": "formal"
+                },
+                {
+                    "item": "uptime-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "uptime-phone",
+                    "theme": "formal"
+                },
+                {
+                    "item": "inbox",
+                    "theme": "formal"
+                },
+                {
+                    "item": "backlog",
+                    "theme": "formal"
+                },
+                {
+                    "item": "files",
+                    "theme": "formal"
+                },
+                {
+                    "item": "appointments",
+                    "theme": "formal"
+                },
+                {
+                    "item": "checks",
+                    "theme": "formal"
+                },
+                {
+                    "item": "sort",
+                    "theme": "formal"
+                },
+                {
+                    "item": "kv",
+                    "theme": "formal"
+                },
+                {
+                    "item": "formrows",
+                    "theme": "formal"
+                },
+                {
+                    "item": "tiles",
+                    "theme": "formal"
+                },
+                {
+                    "item": "card-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "header",
+                    "theme": "formal"
+                },
+                {
+                    "item": "art",
+                    "theme": "formal"
+                },
+                {
+                    "item": "pipeline",
+                    "theme": "formal"
+                },
+                {
+                    "item": "pipeline-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "journey-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "contact-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "secret",
+                    "theme": "formal"
+                },
+                {
+                    "item": "secret-phone",
+                    "theme": "formal"
+                },
+                {
+                    "item": "manage",
+                    "theme": "formal"
+                },
+                {
+                    "item": "confirm",
+                    "theme": "formal"
+                },
+                {
+                    "item": "type-dialog",
+                    "theme": "formal"
+                },
+                {
+                    "item": "type-own",
+                    "theme": "formal"
+                },
+                {
+                    "item": "type-phone",
+                    "theme": "formal"
+                },
+                {
+                    "item": "disc",
+                    "theme": "formal"
+                },
+                {
+                    "item": "disc-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "disc-phone",
+                    "theme": "formal"
+                },
+                {
+                    "item": "countdown",
+                    "theme": "formal"
+                },
+                {
+                    "item": "countdown-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "range",
+                    "theme": "formal"
+                },
+                {
+                    "item": "range-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "wheel",
+                    "theme": "formal"
+                },
+                {
+                    "item": "cook",
+                    "theme": "formal"
+                },
+                {
+                    "item": "timers",
+                    "theme": "formal"
+                },
+                {
+                    "item": "quantity",
+                    "theme": "formal"
+                },
+                {
+                    "item": "checklist",
+                    "theme": "formal"
+                },
+                {
+                    "item": "tri",
+                    "theme": "formal"
+                },
+                {
+                    "item": "code",
+                    "theme": "formal"
+                },
+                {
+                    "item": "command",
+                    "theme": "formal"
+                },
+                {
+                    "item": "command-long",
+                    "theme": "formal"
+                },
+                {
+                    "item": "command-phone",
+                    "theme": "formal"
+                },
+                {
+                    "item": "compare-live",
+                    "theme": "formal"
+                }
+            ],
+            "notApproved": [
+                {
+                    "item": "stackbar",
+                    "theme": "formal",
+                    "note": "voor loading, is dat de default loading animatie van het thema? indien ja is het goed, anders niet"
+                },
+                {
+                    "item": "bullets",
+                    "theme": "formal",
+                    "note": "Bij failed staat de \"Retry\" knop er, maar hij is heel kort en veel te hoog, is niet mooi, en bij failed en nothing due zou ik graag hebben dat je voortaan probeert om de hele grootte van de component te gebruiken zoals die anders ook zou zijn. Dit is een nieuwe regel voor alle componenten vanaf nu waar toepasbaar"
+                },
+                {
+                    "item": "uptime",
+                    "theme": "formal",
+                    "note": "ziet er goed uit, zie dat de items zelf klikbaar zijn zodat ze bv iets kunnen openen, ofwel een pagina, ofwel mss een tooltip ofzo met wat snelle info?"
+                },
+                {
+                    "item": "journey",
+                    "theme": "formal",
+                    "note": "is die niet gewoon de wizard opnieuw? Hoe is dit distinct?"
+                },
+                {
+                    "item": "contact",
+                    "theme": "formal",
+                    "note": "zelfde hier, we hadden toch al een timeline? Het is de bedoeling dat onze componenten dynamisch zijn zodat ze multi-purpose worden, als dit toch distinct is, dan wil ik horen hoe/waarom en dan mag het alsnog blijven bestaan, toon misschien beide na elkaar eerst zodt ik het vershcil kan zien?"
+                },
+                {
+                    "item": "compare",
+                    "theme": "formal",
+                    "note": "De loader is hier niet goed, het laadstreepje is super dun ten opzichte- van het laadveld. Doe iets in de aard van een table die laadt met centraal de laadanimatie"
+                }
+            ],
+            "generalNote": "New standing rule (Kenny, in the bullets note): failed, empty (\"nothing due\") and loading states fill the component's full normal footprint, with a normal-size action (Retry), for every component from now on where applicable."
+        }
+    ]
+}

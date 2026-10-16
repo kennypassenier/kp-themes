@@ -1,0 +1,50 @@
+/* research/kpadopt4: the one page of the fourth adoption round. Everything with a kp- class is the package; these kd-
+   rules lay out the page around the topics (the intro, the topic list, a heading per topic). Each source's sections keep
+   their own rules: data.css (dd-), rows.css (kr-), flows.css (fd-), recipes.css (kc-), ideas.css (ki-). */
+
+.kd-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+}
+
+.kd-intro {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.kd-intro :is(h1, p) {
+    margin: 0;
+}
+
+.kd-intro p {
+    max-inline-size: 80ch;
+    color: var(--muted-foreground);
+}
+
+.kd-toc ol {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-lg, 1.5rem);
+    margin: 0;
+    padding-inline-start: 1.5rem;
+}
+
+.kd-toc li {
+    padding-inline-start: var(--kp-space-xs, 0.25rem);
+}
+
+.kd-toc__count {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    white-space: nowrap;
+}
+
+/* A topic opens with its own heading, ruled off from the topic above it. */
+.kd-topic {
+    margin: var(--kp-space-lg, 1.5rem) 0 0;
+    padding-block-start: var(--kp-space-md, 1rem);
+    border-block-start: 2px solid var(--border);
+    scroll-margin-block-start: var(--kp-space-xl, 2rem);
+}

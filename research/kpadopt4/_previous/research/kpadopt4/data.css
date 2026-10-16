@@ -1,0 +1,180 @@
+/* research/kpadopt4 (data sections): the page around the components. Nothing here
+ * styles a kp-* part; it lays out the sections, the captions and the
+ * narrow frames that stand for a phone. */
+
+.dd-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-lg, 1rem);
+    max-inline-size: 76rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1rem);
+}
+
+.dd-intro,
+.dd-sec__head,
+.dd-block {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+.dd-intro :is(h1, p),
+.dd-sec__head :is(h2, p),
+.dd-block :is(h3, p) {
+    margin: 0;
+}
+
+.dd-intro p,
+.dd-sec__head p,
+.dd-caption {
+    max-inline-size: 80ch;
+}
+
+.dd-caption,
+.dd-readout {
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+}
+
+.dd-sec {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-lg, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1rem);
+    border: 1px solid var(--border);
+    background: var(--background);
+    color: var(--foreground);
+}
+
+.dd-block + .dd-block {
+    padding-block-start: var(--kp-space-lg, 1rem);
+    border-block-start: 1px solid var(--border);
+}
+
+.dd-expect {
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-inline-start: 3px solid var(--primary);
+    background: var(--card);
+    font-size: 0.875rem;
+}
+
+.dd-expect p,
+.dd-expect ul {
+    margin: 0;
+}
+
+.dd-expect ul {
+    padding-inline-start: 1.25rem;
+}
+
+.dd-expect li + li {
+    margin-block-start: 0.25rem;
+}
+
+.dd-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1rem);
+}
+
+.dd-controls > [role='group'] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.dd-controls b {
+    margin-inline-end: var(--kp-space-xs, 0.25rem);
+    font-size: 0.875rem;
+}
+
+/* A card to stand the component on, as a page would. */
+.dd-card {
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+/* The desk width first, then the phone frame under it. */
+.dd-pair {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-lg, 1rem);
+    align-items: start;
+}
+
+.dd-pair > * {
+    min-inline-size: 0;
+}
+
+/* The phone frame: 390 px wide (24.375rem), with the page's own padding. */
+.dd-phone {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    inline-size: 100%;
+    max-inline-size: 24.375rem;
+}
+
+.dd-phone > .dd-caption {
+    font-size: 0.75rem;
+}
+
+.dd-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+    gap: var(--kp-space-lg, 1rem);
+}
+
+/* The mark table: one row per look, one column per size. */
+.dd-marks {
+    display: grid;
+    grid-template-columns: minmax(8rem, max-content) repeat(5, minmax(3.75rem, max-content));
+    align-items: center;
+    gap: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1rem);
+    overflow-x: auto;
+    padding: 0.5rem;
+}
+
+.dd-marks > b {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--muted-foreground);
+}
+
+.dd-marks > .dd-name {
+    font-size: 0.875rem;
+}
+
+.dd-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1rem);
+}
+
+.dd-stack {
+    display: grid;
+    gap: var(--kp-space-lg, 1rem);
+}
+
+.dd-table {
+    inline-size: 100%;
+}
+
+.dd-table td,
+.dd-table th {
+    max-inline-size: 16rem;
+}
+
+/* The live numbers: a tile wide enough for "€ 1.118.204,75" in the tile's figure face, so on a phone the strip goes to
+   one column instead of pushing the figure past the tile's edge (the package's own knob). */
+.dd-block > .kp-kpis {
+    --kp-kpi-min: 14rem;
+}
