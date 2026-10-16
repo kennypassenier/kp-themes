@@ -1969,6 +1969,30 @@ and `rangeOf(el)` reads it. `presetMs`, `parseTime`, `rangeFaults` and `rangeMom
 `rangeCancel`, `rangeLabel`, `rangeErrorDate`, `rangeErrorTime`, `rangeErrorOrder`, `rangeErrorFuture`,
 `rangeErrorSpan`). Knobs: `--kp-range-gap`, `--kp-range-panel-width` (24rem), `--kp-range-time-width` (5.5rem).
 
+### Before and after, with a divider
+
+```html
+<div class="kp-compare" data-kp-compare aria-label="Pressure chart, before and after">
+    <div data-kp-compare-pane="before"><img src="before.png" width="1200" height="675" alt="The chart before" /></div>
+    <div data-kp-compare-pane="after"><img src="after.png" width="1200" height="675" alt="The chart after" /></div>
+</div>
+```
+
+`attachCompares(root)` (`js/compare.js`, attached by `js/auto.js`) lays the two panes on top of each other and shows
+the before pane on the start side of a divider and the after pane on the end side (each cut by `clip-path`, so a pane
+is only hit where it shows). The divider is a slider: drag its handle, or use the arrow keys (1%, with Shift 10%), Page
+Up and Down (10%), Home (all after) and End (all before). On images a press anywhere moves the divider there, gliding in
+the theme's own time, and a drag follows at once; on live HTML panes (a pane holding a link, a button or a field) only
+the handle drags, so the panes stay usable (`data-kp-compare-drag` sets either). The labels are "Before" and "After",
+or `data-kp-compare-before` and `-after`, and step aside while the divider covers them.
+
+Give images their width and height, or the box `data-kp-compare-ratio="16/9"`, so the box has its size from the
+first frame; while an image loads the theme's skeleton covers the box, and an image that fails says so in its pane.
+`data-kp-compare-position` is where the divider starts (50), `setCompare(el, position)` moves it from a script, and
+`kp-compare-change` (`{ position }`) says where a person moved it. `compareKey` is the key rule. The words are
+`compareBefore`, `compareAfter`, `compareSlider`, `compareValue` and `compareFailed`. Knobs: `--kp-compare-ratio`,
+`--kp-compare-line` (2px), `--kp-compare-handle` (2.25rem), `--kp-compare-ink` (--primary).
+
 <!-- kpadopt4-ideas: next component -->
 
 ## Tables that fit [TH95, TH96]

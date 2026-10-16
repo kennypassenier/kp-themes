@@ -1196,6 +1196,26 @@ export type Strings = {
      */
     rangeErrorSpan: (days: number) => string;
     /**
+     * The compare slider's label on the before side (js/compare.js) [kpadopt4-ideas]
+     */
+    compareBefore: string;
+    /**
+     * Its label on the after side [kpadopt4-ideas]
+     */
+    compareAfter: string;
+    /**
+     * The divider's name for a screen reader [kpadopt4-ideas]
+     */
+    compareSlider: (before: string, after: string) => string;
+    /**
+     * Where the divider stands: "40% Before, 60% After" [kpadopt4-ideas]
+     */
+    compareValue: (percent: number, before: string, after: string) => string;
+    /**
+     * A pane whose image could not be loaded [kpadopt4-ideas]
+     */
+    compareFailed: string;
+    /**
      * The network graph's way back to every node and every kind of link (js/graph.js) [scope-143]
      */
     graphShowAll: string;
@@ -1627,6 +1647,11 @@ export type Strings = {
  * @property {string} rangeErrorOrder  A window whose end does not come after its start [kpadopt4-ideas]
  * @property {string} rangeErrorFuture  A window that ends in the future [kpadopt4-ideas]
  * @property {(days: number) => string} rangeErrorSpan  A window longer than the picker allows [kpadopt4-ideas]
+ * @property {string} compareBefore  The compare slider's label on the before side (js/compare.js) [kpadopt4-ideas]
+ * @property {string} compareAfter  Its label on the after side [kpadopt4-ideas]
+ * @property {(before: string, after: string) => string} compareSlider  The divider's name for a screen reader [kpadopt4-ideas]
+ * @property {(percent: number, before: string, after: string) => string} compareValue  Where the divider stands: "40% Before, 60% After" [kpadopt4-ideas]
+ * @property {string} compareFailed  A pane whose image could not be loaded [kpadopt4-ideas]
  * @property {string} graphShowAll  The network graph's way back to every node and every kind of link (js/graph.js) [scope-143]
  * @property {string} graphShowAllTitle  Its title [scope-143]
  * @property {string} graphHint  The hint under the graph, and the second half of its picture's accessible name: what a pointer, a click and the keys do [scope-143]

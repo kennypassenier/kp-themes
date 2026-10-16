@@ -17234,6 +17234,181 @@
             grid-column: 1;
         }
     }
+
+    /* --- Compare slider: two versions, a divider between them [kpadopt4-ideas] ---
+ * `.kp-compare[data-kp-compare]` (js/compare.js). The before and after panes lie on top of each other in one grid
+ * cell; the before pane shows on the start side of the divider and the after pane on the end side, each cut by
+ * `clip-path` at `--kp-compare-pos` (0 to 100), so a pane is only hit where it shows. The divider is a line with a round
+ * handle (the slider); a label on each side steps aside while the divider covers it. While an image loads, the theme's
+ * skeleton covers the box; a failed image says so in its pane. The divider glides to a press in the theme's own time
+ * and curve, follows a drag at once, and never glides under reduced motion.
+ * Knobs [KT6]: --kp-compare-ratio (none: the panes' own size), --kp-compare-line (2px), --kp-compare-handle (2.25rem),
+ * --kp-compare-ink (--primary, the line and the handle's ring). */
+    .kp-compare {
+        --kp-compare-pos: 50;
+        position: relative;
+        display: grid;
+        grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+        aspect-ratio: var(--kp-compare-ratio, auto);
+        min-inline-size: 0;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        touch-action: pan-y;
+        user-select: none;
+    }
+
+    .kp-compare[data-kp-compare-drag='anywhere'] {
+        cursor: ew-resize;
+    }
+
+    .kp-compare > * {
+        grid-area: 1 / 1;
+        min-inline-size: 0;
+    }
+
+    .kp-compare__pane {
+        position: relative;
+        min-block-size: 0;
+    }
+
+    .kp-compare__pane > img {
+        display: block;
+        inline-size: 100%;
+        block-size: 100%;
+        object-fit: cover;
+        -webkit-user-drag: none;
+    }
+
+    .kp-compare__pane--before {
+        clip-path: inset(0 calc(100% - var(--kp-compare-pos) * 1%) 0 0);
+    }
+
+    .kp-compare__pane--after {
+        clip-path: inset(0 0 0 calc(var(--kp-compare-pos) * 1%));
+    }
+
+    .kp-compare:dir(rtl) .kp-compare__pane--before {
+        clip-path: inset(0 0 0 calc(100% - var(--kp-compare-pos) * 1%));
+    }
+
+    .kp-compare:dir(rtl) .kp-compare__pane--after {
+        clip-path: inset(0 calc(var(--kp-compare-pos) * 1%) 0 0);
+    }
+
+    .kp-compare__divider {
+        position: relative;
+        z-index: 2;
+        inline-size: 0;
+        margin-inline-start: calc(var(--kp-compare-pos) * 1%);
+        border-inline-start: var(--kp-compare-line, 2px) solid var(--kp-compare-ink, var(--primary));
+        translate: calc(var(--kp-compare-line, 2px) / -2) 0;
+        pointer-events: none;
+    }
+
+    .kp-compare__handle {
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: calc(var(--kp-compare-line, 2px) / -2);
+        display: grid;
+        place-items: center;
+        box-sizing: border-box;
+        inline-size: var(--kp-compare-handle, 2.25rem);
+        block-size: var(--kp-compare-handle, 2.25rem);
+        border: 2px solid var(--kp-compare-ink, var(--primary));
+        border-radius: 50%;
+        background: var(--card);
+        color: var(--kp-compare-ink, var(--primary));
+        translate: -50% -50%;
+        cursor: ew-resize;
+        pointer-events: auto;
+        touch-action: none;
+    }
+
+    .kp-compare__handle:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+    }
+
+    /* Two small chevrons, drawn: ‹ › */
+    .kp-compare__grip {
+        inline-size: 0.875rem;
+        block-size: 0.5rem;
+        background:
+            linear-gradient(to bottom right, transparent 45%, currentColor 45% 60%, transparent 60%) 0 0 / 35% 50% no-repeat,
+            linear-gradient(to top right, transparent 45%, currentColor 45% 60%, transparent 60%) 0 100% / 35% 50% no-repeat,
+            linear-gradient(to bottom left, transparent 45%, currentColor 45% 60%, transparent 60%) 100% 0 / 35% 50% no-repeat,
+            linear-gradient(to top left, transparent 45%, currentColor 45% 60%, transparent 60%) 100% 100% / 35% 50% no-repeat;
+    }
+
+    .kp-compare__label {
+        z-index: 1;
+        align-self: start;
+        margin: var(--kp-space-sm, 0.5rem);
+        padding: 0.125rem var(--kp-space-sm, 0.5rem);
+        border: 1px solid var(--border);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--card);
+        color: var(--card-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-weight: 600;
+        pointer-events: none;
+        transition: opacity var(--fx-duration, 160ms) var(--fx-ease, ease-out);
+    }
+
+    .kp-compare__label--before {
+        justify-self: start;
+    }
+
+    .kp-compare__label--after {
+        justify-self: end;
+    }
+
+    .kp-compare[data-kp-compare-before-hidden] .kp-compare__label--before,
+    .kp-compare[data-kp-compare-after-hidden] .kp-compare__label--after {
+        opacity: 0;
+    }
+
+    .kp-compare[data-kp-compare-glide] :is(.kp-compare__pane, .kp-compare__divider) {
+        transition:
+            clip-path var(--fx-duration, 200ms) var(--fx-ease, ease-out),
+            margin-inline-start var(--fx-duration, 200ms) var(--fx-ease, ease-out);
+    }
+
+    .kp-compare[data-kp-compare-dragging] :is(.kp-compare__pane, .kp-compare__divider) {
+        transition: none;
+    }
+
+    .kp-compare .kp-compare__wait {
+        z-index: 3;
+        block-size: auto;
+        margin: 0;
+        border-radius: 0;
+    }
+
+    .kp-compare:not([data-kp-compare-state='loading']) .kp-compare__wait {
+        display: none;
+    }
+
+    .kp-compare__failed {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        margin: 0;
+        padding: var(--kp-space-md, 1rem);
+        background: var(--muted);
+        color: var(--muted-foreground);
+        text-align: center;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .kp-compare[data-kp-compare-glide] :is(.kp-compare__pane, .kp-compare__divider),
+        .kp-compare__label {
+            transition: none;
+        }
+    }
 }
 
 /* The tour's dim is the target's box-shadow, and a register that gives the part a shadow of its own (a card's rim) wins over

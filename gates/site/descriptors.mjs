@@ -3034,6 +3034,45 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
         ],
     },
     {
+        id: 'compare',
+        title: 'Compare slider',
+        group: 'Content',
+        classes: ['kp-compare'],
+        aliases: ['pane', 'position', 'ratio', 'state'],
+        exports: [],
+        intro: 'Two versions stacked with a draggable divider: the before pane shows on the start side, the after pane on the end side. `attachCompares(root)` in js/compare.js adds the divider (a slider: arrow keys by 1, with Shift by 10, Page Up and Down, Home and End), a label on each side that steps aside while the divider covers it, and the waiting state. On images a press anywhere moves the divider and a drag follows; on live HTML panes only the handle drags, so both panes stay usable. Give images their width and height, or the box `data-kp-compare-ratio`, so nothing moves while they load; the theme’s skeleton covers the box meanwhile, and a failed image says so in its pane.',
+        whenToUse:
+            'To show what a change did: a redesign before and after, two renders of a chart, a photo before and after an edit. For two things that differ in more than looks, put them side by side instead.',
+        examples: [
+            {
+                title: 'A chart before and after',
+                why: 'Each pane is marked with its side; the script adds the divider, the labels and the waiting state.',
+                markup: `
+<div class="kp-compare" data-kp-compare aria-label="Pressure chart, before and after"><div data-kp-compare-pane="before"><img src="before.png" width="1200" height="675" alt="The chart before" /></div><div data-kp-compare-pane="after"><img src="after.png" width="1200" height="675" alt="The chart after" /></div></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-compare', what: 'Marks the slider; `attachCompares` wires it.' },
+            { name: 'data-kp-compare-pane', what: '`before` or `after` on each of the two panes.' },
+            { name: 'data-kp-compare-position', what: 'Where the divider starts, 0 (all after) to 100 (all before); 50 by default.' },
+            { name: 'data-kp-compare-before', what: 'The before side’s label; “Before” by default.' },
+            { name: 'data-kp-compare-after', what: 'The after side’s label; “After” by default.' },
+            { name: 'data-kp-compare-ratio', what: 'The box’s aspect ratio (`16/9`) when the panes do not give their size.' },
+            { name: 'data-kp-compare-drag', what: '`anywhere` (images: a press moves the divider) or `handle` (live panes); set by the script when not given.' },
+            { name: 'data-kp-compare-state', what: 'Set by the script: `loading` while an image is on its way, else `ready`.' },
+            { name: 'data-kp-compare-dragging', what: 'Set by the script during a drag: the divider follows at once.' },
+            { name: 'data-kp-compare-glide', what: 'Set by the script when the divider moves to a press: it glides in the theme’s own time.' },
+            { name: 'data-kp-compare-before-hidden', what: 'Set by the script while the divider covers the before label.' },
+            { name: 'data-kp-compare-after-hidden', what: 'Set by the script while the divider covers the after label.' },
+        ],
+        accessibility: [
+            'Built in — the divider is a slider with a name, its value and a value text (“40% Before, 60% After”); one tab stop; the arrow keys, Page Up and Down, Home and End move it.',
+            'Built in — a finger moving up and down scrolls the page; sideways on the handle it moves the divider. The labels are drawn, the slider says the sides.',
+            'Yours — give each image an `alt` that says what it shows, and the slider a name (`aria-label`).',
+        ],
+    },
+    {
         id: 'toolbar',
         title: 'List toolbar',
         group: 'Data',

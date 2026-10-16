@@ -411,6 +411,11 @@
  * @property {string} rangeErrorOrder  A window whose end does not come after its start [kpadopt4-ideas]
  * @property {string} rangeErrorFuture  A window that ends in the future [kpadopt4-ideas]
  * @property {(days: number) => string} rangeErrorSpan  A window longer than the picker allows [kpadopt4-ideas]
+ * @property {string} compareBefore  The compare slider's label on the before side (js/compare.js) [kpadopt4-ideas]
+ * @property {string} compareAfter  Its label on the after side [kpadopt4-ideas]
+ * @property {(before: string, after: string) => string} compareSlider  The divider's name for a screen reader [kpadopt4-ideas]
+ * @property {(percent: number, before: string, after: string) => string} compareValue  Where the divider stands: "40% Before, 60% After" [kpadopt4-ideas]
+ * @property {string} compareFailed  A pane whose image could not be loaded [kpadopt4-ideas]
  * @property {string} graphShowAll  The network graph's way back to every node and every kind of link (js/graph.js) [scope-143]
  * @property {string} graphShowAllTitle  Its title [scope-143]
  * @property {string} graphHint  The hint under the graph, and the second half of its picture's accessible name: what a pointer, a click and the keys do [scope-143]
@@ -956,6 +961,12 @@ export const DEFAULT_STRINGS = Object.freeze({
     rangeErrorOrder: 'The end must come after the start.',
     rangeErrorFuture: 'The end lies in the future.',
     rangeErrorSpan: (days) => `A range spans at most ${days} days.`,
+    // The compare slider [kpadopt4-ideas].
+    compareBefore: 'Before',
+    compareAfter: 'After',
+    compareSlider: (before, after) => `Divider between ${before} and ${after}`,
+    compareValue: (percent, before, after) => `${percent}% ${before}, ${100 - percent}% ${after}`,
+    compareFailed: 'This image could not be loaded.',
     // The network graph [scope-143]: its own words; the nodes, kinds and
     // the sentences of its states are the page's.
     graphShowAll: 'Show all',

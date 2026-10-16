@@ -176,6 +176,8 @@ export const NEEDS = [
     { name: 'timer-disc', when: '[data-kp-timer-disc]', load: () => import('./timer-disc.js'), attach: (m, root) => [m.attachTimerDiscs(root)] },
     // The range picker [kpadopt4-ideas]: presets as the segmented control, and a custom from–to with the date picker.
     { name: 'range', when: '[data-kp-range]', load: () => import('./range.js'), attach: (m, root) => [m.attachRanges(root)] },
+    // The compare slider [kpadopt4-ideas]: two versions stacked with a divider between them.
+    { name: 'compare', when: '[data-kp-compare]', load: () => import('./compare.js'), attach: (m, root) => [m.attachCompares(root)] },
     { name: 'graph', when: '[data-kp-graph]', load: () => import('./graph.js'), attach: (m, root) => [m.attachGraphs(root)] },
     {
         // A theme's loading picture made of pieces (`--kp-loading-pieces`,

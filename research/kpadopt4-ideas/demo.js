@@ -256,3 +256,19 @@ byId('k4-range-wrong').addEventListener('click', () => {
         /** @type {HTMLButtonElement} */ (main.querySelector('.kp-range__actions .kp-button--primary')).click();
     });
 });
+
+/* ------------------------------------------------------------ 7 · the compare slider */
+
+import { COMPARE_EVENT } from '../../js/compare.js';
+
+const compareLog = byId('k4-compare-log');
+document.addEventListener(COMPARE_EVENT, (event) => {
+    say(compareLog, `kp-compare-change · ${/** @type {CustomEvent} */ (event).detail.position}`);
+});
+// Demo only: hold the first box in its loading state, as if its images were still on their way.
+const loadingToggle = byId('k4-compare-loading');
+loadingToggle.addEventListener('click', () => {
+    const on = loadingToggle.getAttribute('aria-pressed') !== 'true';
+    loadingToggle.setAttribute('aria-pressed', String(on));
+    byId('k4-compare-img').dataset.kpCompareState = on ? 'loading' : 'ready';
+});

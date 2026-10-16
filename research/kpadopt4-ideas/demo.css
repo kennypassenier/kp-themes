@@ -160,3 +160,16 @@
 .k4-states--wide {
     grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
 }
+
+/* The live panes of the compare slider: each version on the same ground, the same size. */
+.k4-live-pane {
+    display: grid;
+    padding: var(--kp-space-md, 1rem);
+    background: var(--background);
+}
+
+.k4-live-card {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    align-content: start;
+}

@@ -986,6 +986,137 @@ pct config 109</code></pre>
                 </div>
             </section>
 
+            <!-- 7 · compare slider -->
+            <section
+                class="k4-sec"
+                id="compare"
+                data-review-item="compare"
+                data-review-components="compare"
+                data-review-topic="compare"
+                data-review-topic-title="7 · Compare slider"
+                data-review-title="7 · Compare slider: two images"
+                aria-labelledby="h-compare"
+            >
+                <div class="k4-sec__head">
+                    <h2 id="h-compare">7 · Compare slider: two images</h2>
+                    <p>
+                        <code>&lt;div class="kp-compare" data-kp-compare&gt;</code> with a <code>data-kp-compare-pane="before"</code> and an
+                        <code>"after"</code> pane (js/compare.js). The two sample images are this page’s.
+                    </p>
+                </div>
+                <div class="k4-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            The chart before (grey bars) on the left of a navy line, the chart after (one navy line) on the right; a round handle with
+                            two small chevrons in the middle; a <b>Before</b> label top left and an <b>After</b> label top right, each on its own
+                            plate.
+                        </li>
+                        <li>
+                            Drag the handle, or press anywhere on the image: the divider glides to the press in formal’s own time, then follows the
+                            drag at once. A label fades when the divider comes over it.
+                        </li>
+                        <li>
+                            Tab to the handle (a focus ring): the arrow keys move it by 1%, with Shift by 10%, Page Up/Down by 10%, Home to all after
+                            and End to all before. The grey box logs <code>kp-compare-change</code>.
+                        </li>
+                        <li>
+                            <b>Show loading</b> (demo) puts the box in its loading state: formal’s skeleton covers it at the same size. The image on
+                            the right of the second box does not exist: its pane says it could not be loaded.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Formal’s card frame, the line and the handle’s ring in formal’s navy, its focus ring, its skeleton.</p>
+                </div>
+                <div class="kp-compare" data-kp-compare id="k4-compare-img" aria-label="Pressure chart, before and after">
+                    <div data-kp-compare-pane="before">
+                        <img src="before.svg" width="1200" height="675" alt="The pressure chart before: one grey bar per reading" />
+                    </div>
+                    <div data-kp-compare-pane="after"><img src="after.svg" width="1200" height="675" alt="The pressure chart after: one line" /></div>
+                </div>
+                <div class="k4-actions">
+                    <button type="button" class="kp-button" aria-pressed="false" id="k4-compare-loading">Show loading (demo)</button>
+                </div>
+                <div class="k4-pair">
+                    <div class="kp-compare" data-kp-compare data-kp-compare-position="30" aria-label="A chart whose new image is missing">
+                        <div data-kp-compare-pane="before"><img src="before.svg" width="1200" height="675" alt="The chart before" /></div>
+                        <div data-kp-compare-pane="after"><img src="missing-after.svg" width="1200" height="675" alt="The chart after" /></div>
+                    </div>
+                </div>
+                <pre class="k4-log" id="k4-compare-log" aria-live="polite"></pre>
+            </section>
+
+            <section
+                class="k4-sec"
+                id="compare-live"
+                data-review-item="compare-live"
+                data-review-components="compare"
+                data-review-topic="compare"
+                data-review-title="7 · Compare slider: live HTML, and at phone width"
+                aria-labelledby="h-compare-live"
+            >
+                <div class="k4-sec__head">
+                    <h2 id="h-compare-live">7 · Compare slider: live HTML, and at phone width</h2>
+                    <p>
+                        Two versions of a real part of the package, both live: the old and the new sign-in card, with
+                        <code>data-kp-compare-before="Old" data-kp-compare-after="New"</code>.
+                    </p>
+                </div>
+                <div class="k4-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            The panes are live: type in a field, press a button, on either side of the divider. A press on a pane does not move the
+                            divider; only the handle drags (it stays the only thing with the sideways cursor).
+                        </li>
+                        <li>The labels read <b>Old</b> and <b>New</b>.</li>
+                        <li>
+                            In the 360 px frame the same slider fits the width; a finger dragging up and down scrolls the page, sideways on the handle
+                            moves the divider.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Formal’s cards, fields and buttons on both sides.</p>
+                </div>
+                <div class="k4-pair">
+                    <div
+                        class="kp-compare"
+                        data-kp-compare
+                        data-kp-compare-before="Old"
+                        data-kp-compare-after="New"
+                        aria-label="Sign-in card, old and new"
+                    >
+                        <div data-kp-compare-pane="before" class="k4-live-pane">
+                            <div class="kp-card k4-live-card">
+                                <h3 class="kp-card__title">Sign in</h3>
+                                <label class="kp-field__label" for="k4-old-user">User</label>
+                                <input class="kp-field__input" id="k4-old-user" type="text" />
+                                <label class="kp-field__label" for="k4-old-pass">Password</label>
+                                <input class="kp-field__input" id="k4-old-pass" type="password" />
+                                <div class="k4-actions"><button type="button" class="kp-button">OK</button></div>
+                            </div>
+                        </div>
+                        <div data-kp-compare-pane="after" class="k4-live-pane">
+                            <div class="kp-card k4-live-card">
+                                <h3 class="kp-card__title">Sign in to the dashboard</h3>
+                                <p class="kp-card__body">Use the account you sign in to Home Assistant with.</p>
+                                <label class="kp-field__label" for="k4-new-user">Account name</label>
+                                <input class="kp-field__input" id="k4-new-user" type="text" autocomplete="username" />
+                                <div class="k4-actions"><button type="button" class="kp-button kp-button--primary">Continue</button></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="k4-frame k4-frame--phone">
+                        <div class="kp-compare" data-kp-compare data-kp-compare-ratio="16/9" aria-label="Pressure chart on a phone">
+                            <div data-kp-compare-pane="before"><img src="before.svg" width="1200" height="675" alt="The chart before" /></div>
+                            <div data-kp-compare-pane="after"><img src="after.svg" width="1200" height="675" alt="The chart after" /></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <!-- next sections -->
         </main>
         <script type="module" src="demo.js"></script>
