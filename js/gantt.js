@@ -68,9 +68,27 @@
 //            queued keep their own look, so the state still reads first.
 //            setGanttLegend(el, [{ series, label }]) names the series after
 //            the states in the legend
+//   points   opt-in [kpadopt4]: setGanttPoints(el, points) puts moments, not
+//            runs, in the lanes (applied, a call, a mail, a planned follow-up),
+//            each a small mark in the colour and shape of its kind;
+//            setGanttKinds(el, kinds) names the kinds in the legend (shape
+//            `dot`, `diamond`, `square`, `triangle`, `ring`; a `series` 1 to
+//            5 or a `tone`). A `planned` point is hollow. Marks closer than
+//            the eye can tell apart become one mark with a count (`+2`) whose
+//            card names them all. setGanttZones(el, zones) lays stretches
+//            under them: a lane's own (`lane`, a thin band: waiting since the
+//            last contact) or the whole plot's (a band: the follow-up is due).
+//            A lane with `href` is a link; `sub` is a second line under its
+//            label. The range word `all` fits the window to everything on the
+//            timeline and now, and stays fitted as the data changes. The axis
+//            steps go up to four weeks, a week starting on Monday
+//   line     `.kp-gantt--line` [kpadopt4]: one lane and no toolbar, no lane
+//            names and no brush, fitted to its data: the dated line under a
+//            journey stepper
 //
 // Events (bubbling, on the timeline):
-//   kp-gantt-open     { id, run, source: 'pointer' | 'keyboard' }  a bar was opened
+//   kp-gantt-open     { id, run, source: 'pointer' | 'keyboard' }  a bar was opened;
+//                     { id, point, points, source } for a point (points: every point of a mark with a count)
 //   kp-gantt-select   { from, to, source: 'brush' | 'day' | 'clear', day? } | detail null-ish ({ from: null, to: null }) when lifted; epoch ms
 //   kp-gantt-window   { from, to, span, live }                  the window moved (a range button, Zoom, Live); epoch ms
 //
@@ -95,7 +113,11 @@ export const GANTT_WINDOW_EVENT = 'kp-gantt-window';
 /** How often a live window moves, in ms. */
 export const GANTT_TICK_MS = 1000;
 /** The steps an axis chooses from, in seconds. */
-export const GANTT_STEPS = Object.freeze([60, 300, 900, 1800, 3600, 10_800, 21_600, 43_200, 86_400, 172_800]);
+export const GANTT_STEPS = Object.freeze([60, 300, 900, 1800, 3600, 10_800, 21_600, 43_200, 86_400, 172_800, 604_800, 1_209_600, 2_419_200]);
+/** A week step and longer starts on a Monday: 1970-01-05, in seconds [kpadopt4]. */
+const MONDAY = 345_600;
+/** Point marks closer than this, in px, are one mark with a count [kpadopt4]. */
+const CLUSTER_PX = 14;
 
 /**
  * @typedef {'queued' | 'running' | 'ok' | 'failed'} GanttRunState
@@ -108,7 +130,18 @@ export const GANTT_STEPS = Object.freeze([60, 300, 900, 1800, 3600, 10_800, 21_6
  * @property {GanttRunState} state
  * @property {string} [detail] more words for the hover card
  * @property {1 | 2 | 3 | 4 | 5} [series] a finished run's colour, `--chart-1` … `--chart-5`, in place of the success colour [kpadopt3]
- * @typedef {{ id: string, label: string }} GanttLane
+ * @typedef {{ id: string, label: string, href?: string, sub?: string }} GanttLane
+ * @typedef {object} GanttPoint
+ * @property {string} id what the page calls the moment; reported by `kp-gantt-open`
+ * @property {string} lane the lane's id
+ * @property {number | string} at epoch ms or an ISO string; a date alone (`2026-10-02`) reads as that day
+ * @property {string} kind the kind's key, named in the legend by setGanttKinds
+ * @property {string} label what happened, one line
+ * @property {string} [detail] more words for the hover card
+ * @property {boolean} [planned] still to come: a hollow mark
+ * @typedef {'dot' | 'diamond' | 'square' | 'triangle' | 'ring'} GanttShape
+ * @typedef {{ kind: string, label: string, shape?: GanttShape, series?: 1 | 2 | 3 | 4 | 5, tone?: 'success' | 'warning' | 'destructive' | 'info' | 'muted' }} GanttKind
+ * @typedef {{ id?: string, lane?: string, from: number | string, to: number | string, label: string, tone?: 'warning' | 'info' | 'muted' }} GanttZone
  * @typedef {{ series: 1 | 2 | 3 | 4 | 5, label: string }} GanttLegendEntry
  * @typedef {'loading' | 'ready' | 'empty' | 'error'} GanttState
  * @typedef {import('./strings.js').Strings} Strings
@@ -121,7 +154,7 @@ export const GANTT_STEPS = Object.freeze([60, 300, 900, 1800, 3600, 10_800, 21_6
  * @property {(part: HTMLElement, info: GanttDecorateInfo) => void} [decorate]
  *
  * @typedef {{ run: GanttRun, s: number, e: number | null, bar: HTMLButtonElement, row: number }} GanttBar
- * @typedef {{ lane: GanttLane, label: HTMLElement, track: HTMLElement, bars: GanttBar[], rows: number }} GanttLaneModel
+ * @typedef {{ lane: GanttLane, label: HTMLElement, track: HTMLElement, bars: GanttBar[], points: HTMLButtonElement[], rows: number }} GanttLaneModel
  * @typedef {{ el: HTMLElement, zone: string, now: () => number, strings: Strings, decorate?: GanttOptions['decorate'],
  *   base: number, span: number, live: boolean, to: number, runs: GanttRun[], lanesGiven: GanttLane[], lanes: GanttLaneModel[],
  *   bars: Map<string, HTMLButtonElement>, states: Map<string, GanttRunState>, state: GanttState, active: string | null,
@@ -130,6 +163,7 @@ export const GANTT_STEPS = Object.freeze([60, 300, 900, 1800, 3600, 10_800, 21_6
  *   stateLine: HTMLElement, announcer: HTMLElement, ranges: HTMLElement, liveButton: HTMLButtonElement,
  *   selection: HTMLElement, selectionText: HTMLElement, ticks: Map<number, { label: HTMLElement, line: HTMLElement }>,
  *   legend: HTMLElement, days: boolean, dayStop: string | null,
+ *   points: GanttPoint[], pointEls: Map<string, HTMLButtonElement>, kinds: GanttKind[], zones: GanttZone[], fit: boolean, line: boolean,
  *   ghosts: HTMLElement[], held: number | null, busy: import('./busy-card.js').BusyCard | null, leaving: Promise<void> | null, drawn: boolean, timer: number, observer: ResizeObserver | null, drag: { a: number, b: number } | null, dragMoved: boolean, tickKey: string }} GanttModel
  */
 
@@ -245,6 +279,33 @@ const stateWord = (c, state) =>
 /** The seconds, relative to the base, of a moment. @param {GanttModel} c @param {number} ms */
 const rel = (c, ms) => ms / 1000 - c.base;
 
+/**
+ * Fit the window to everything the timeline holds and now [kpadopt4]: a margin of a twentieth on each side, at least an hour.
+ * @param {GanttModel} c
+ */
+function fitWindow(c) {
+    if (!c.fit) return;
+    const moments = [c.now()];
+    for (const run of c.runs) {
+        const start = toMs(run.start);
+        if (Number.isFinite(start)) moments.push(start);
+        const end = run.end == null ? Number.NaN : toMs(run.end);
+        if (Number.isFinite(end)) moments.push(end);
+    }
+    for (const point of c.points) {
+        const at = toMs(point.at);
+        if (Number.isFinite(at)) moments.push(at);
+    }
+    for (const zone of c.zones) for (const edge of [toMs(zone.from), toMs(zone.to)]) if (Number.isFinite(edge)) moments.push(edge);
+    const lo = Math.min(...moments) / 1000;
+    const hi = Math.max(...moments) / 1000;
+    const span = Math.max(3600, hi - lo);
+    const pad = span / 20;
+    c.span = span + 2 * pad;
+    c.to = hi - c.base + pad;
+    c.live = false;
+}
+
 /** The window now: its edges in relative seconds. @param {GanttModel} c */
 function windowOf(c) {
     const now = rel(c, c.now());
@@ -278,18 +339,23 @@ function build(c) {
     c.ranges.setAttribute('data-kp-segmented', 'single');
     c.ranges.setAttribute('role', 'radiogroup');
     c.ranges.setAttribute('aria-label', s.ganttRange);
-    const words = (c.el.dataset.kpGanttRanges ?? '1h 6h 24h 7d').split(/[\s,]+/).filter((w) => Number.isFinite(rangeSeconds(w)));
-    const wanted = c.el.dataset.kpGanttRange ?? words[Math.min(1, words.length - 1)] ?? '6h';
+    const words = (c.el.dataset.kpGanttRanges ?? (c.line ? 'all' : '1h 6h 24h 7d'))
+        .split(/[\s,]+/)
+        .filter((w) => w === 'all' || Number.isFinite(rangeSeconds(w)));
+    const wanted = c.el.dataset.kpGanttRange ?? (c.line ? 'all' : (words[Math.min(1, words.length - 1)] ?? '6h'));
     for (const word of words) {
         const item = make(doc, 'button', 'kp-segmented__item');
         item.type = 'button';
         item.dataset.value = word;
         item.setAttribute('role', 'radio');
         item.setAttribute('aria-checked', String(word === wanted));
-        item.title = s.ganttRangeTitle(word);
-        item.append(make(doc, 'span', 'kp-segmented__label', word));
+        item.title = word === 'all' ? s.ganttAllTitle : s.ganttRangeTitle(word);
+        item.append(make(doc, 'span', 'kp-segmented__label', word === 'all' ? s.ganttAll : word));
         c.ranges.append(item);
     }
+    // `all` fits the window to what the timeline holds [kpadopt4].
+    c.fit = wanted === 'all';
+    if (c.fit) c.live = false;
     c.span = rangeSeconds(wanted) || 21_600;
     c.liveButton = make(doc, 'button', 'kp-button kp-button--sm kp-gantt__live', s.ganttLive);
     c.liveButton.type = 'button';
@@ -343,11 +409,11 @@ function build(c) {
     const frame = make(doc, 'div', 'kp-gantt__frame');
     c.selection.hidden = true;
     frame.append(c.scroll, c.stateLine);
-    const hint = make(doc, 'p', 'kp-gantt__hint', s.ganttHint);
+    const hint = make(doc, 'p', 'kp-gantt__hint', c.el.hasAttribute('data-kp-gantt-points') ? s.ganttPointsHint : s.ganttHint);
     const legend = make(doc, 'ul', 'kp-gantt__legend');
     c.legend = legend;
     for (const state of /** @type {const} */ (['ok', 'failed', 'running', 'queued'])) {
-        const li = make(doc, 'li');
+        const li = make(doc, 'li', 'kp-gantt__legend-state');
         const swatch = make(doc, 'span', 'kp-gantt__swatch');
         swatch.dataset.kpState = state;
         swatch.setAttribute('aria-hidden', 'true');
@@ -377,7 +443,9 @@ function syncTicks(c, w) {
     const step = axisStep(c.span, room);
     const fromMs = (w.from + c.base) * 1000;
     const offset = zoneOffset(fromMs, c.zone);
-    const firstAbs = Math.ceil((w.from + c.base + offset) / step) * step - offset;
+    // A week or longer starts on a Monday [kpadopt4]; shorter steps keep the clock's own multiples.
+    const anchor = step >= 604_800 ? MONDAY : 0;
+    const firstAbs = anchor + Math.ceil((w.from + c.base + offset - anchor) / step) * step - offset;
     /** @type {number[]} */
     const list = [];
     for (let t = firstAbs; t <= w.end + c.base + 1; t += step) list.push(t - c.base);
@@ -500,6 +568,7 @@ function paint(c) {
     const doc = c.el.ownerDocument;
     const s = c.strings;
     const nowMs = c.now();
+    fitWindow(c);
     /** @type {Map<string, GanttLane>} */
     const laneById = new Map(c.lanesGiven.map((l) => [l.id, l]));
     /** @type {Map<string, GanttBar[]>} */
@@ -540,6 +609,12 @@ function paint(c) {
             c.bars.delete(id);
             c.states.delete(id);
         }
+    // A lane a point names on its own, as a run's [kpadopt4].
+    for (const point of c.points)
+        if (!laneById.has(point.lane)) {
+            laneById.set(point.lane, { id: point.lane, label: point.lane });
+            byLane.set(point.lane, []);
+        }
     // Lanes: build in the given order, then any a run named on its own.
     const pad = c.span * 0.006;
     const before = new Map(c.lanes.flatMap((l) => l.bars.map((b) => [b.run.id, b.row])));
@@ -556,15 +631,12 @@ function paint(c) {
         let model = old.get(id);
         if (!model) {
             const label = make(doc, 'div', 'kp-gantt__lane');
-            label.title = lane.label;
-            label.append(make(doc, 'span', '', lane.label));
             const track = make(doc, 'div', 'kp-gantt__track');
             track.setAttribute('role', 'group');
-            model = { lane, label, track, bars: [], rows: 1 };
+            model = { lane, label, track, bars: [], points: [], rows: 1 };
         }
         model.lane = lane;
-        model.label.firstElementChild && (model.label.firstElementChild.textContent = lane.label);
-        model.label.title = lane.label;
+        fillLaneLabel(c, model.label, lane);
         model.track.setAttribute('aria-label', lane.label);
         // Rows never fewer while the window stays the same. A lane with a run still open reserves one spare row: the next start in it
         // overlaps that run, so the frame already has the room and does not grow when the start comes.
@@ -587,8 +659,9 @@ function paint(c) {
         lane.track.style.setProperty('--kp-g-rows', String(lane.rows));
         if (lane.label.parentElement !== c.body) c.body.insertBefore(lane.label, anchor);
         if (lane.track.parentElement !== c.body) c.body.insertBefore(lane.track, anchor);
-        // Order in the document: the lane's bars in time order.
-        const have = [...lane.track.children];
+        // Order in the document: the lane's bars in time order, then its points (only those are compared, so a zone or a
+        // point in the track does not make every bar move, and a focused bar keeps its focus).
+        const have = [...lane.track.querySelectorAll(':scope > .kp-gantt__run')];
         const want = lane.bars.map((b) => b.bar);
         if (want.length !== have.length || want.some((n, k) => n !== have[k])) lane.track.append(...want);
         for (const b of lane.bars) {
@@ -600,10 +673,17 @@ function paint(c) {
         }
     });
     c.body.style.setProperty('--kp-g-lanes', String(Math.max(1, lanes.length)));
+    c.body.toggleAttribute(
+        'data-kp-gantt-subs',
+        lanes.some((l) => Boolean(l.lane.sub)),
+    );
+    paintPoints(c, lanes);
+    paintZones(c, lanes);
+    paintKinds(c);
     c.el.dataset.kpState = c.state;
     c.body.toggleAttribute('aria-busy', c.state === 'loading');
     drawBusy(c);
-    const empty = c.state === 'ready' && c.runs.length === 0 && lanes.length === 0;
+    const empty = c.state === 'ready' && c.runs.length === 0 && c.points.length === 0 && lanes.length === 0;
     const words = c.state === 'loading' ? s.ganttLoading : c.state === 'empty' || empty ? s.ganttEmpty : c.stateLine.dataset.kpWords || '';
     // An empty or failed sentence waits, as the runs do, until the card has gone.
     c.stateLine.textContent = (c.state === 'ready' && !empty) || c.leaving !== null ? '' : words;
@@ -693,10 +773,11 @@ function drawBusy(c) {
             const boxes = tracks.map((t) => t.getBoundingClientRect());
             return [
                 {
-                    top: Math.max(axis.bottom, Math.min(...boxes.map((b) => b.top))),
+                    // A dated line has its axis under the lane [kpadopt4].
+                    top: c.line ? Math.min(...boxes.map((b) => b.top)) : Math.max(axis.bottom, Math.min(...boxes.map((b) => b.top))),
                     left: Math.min(...boxes.map((b) => b.left)),
                     right: Math.max(...boxes.map((b) => b.right)),
-                    bottom: Math.min(scroll.bottom, Math.max(...boxes.map((b) => b.bottom))),
+                    bottom: Math.min(c.line ? axis.top : scroll.bottom, Math.max(...boxes.map((b) => b.bottom))),
                 },
             ];
         },
@@ -749,15 +830,227 @@ function paintGhosts(c) {
     c.body.style.setProperty('--kp-g-lanes', String(rows.length));
 }
 
+/**
+ * A lane's name: a link when the lane has `href`, and a second line when it has `sub` [kpadopt4].
+ * @param {GanttModel} c @param {HTMLElement} label @param {GanttLane} lane
+ */
+function fillLaneLabel(c, label, lane) {
+    const doc = c.el.ownerDocument;
+    const key = `${lane.label}\u0000${lane.sub ?? ''}\u0000${lane.href ?? ''}`;
+    if (label.dataset.kpLaneKey === key) return;
+    label.dataset.kpLaneKey = key;
+    label.title = lane.sub ? `${lane.label} · ${lane.sub}` : lane.label;
+    const name = make(doc, 'span', 'kp-gantt__name', lane.label);
+    /** @type {HTMLElement} */
+    let holder = name;
+    if (lane.href) {
+        const link = make(doc, 'a', 'kp-gantt__lane-link');
+        link.href = lane.href;
+        link.append(name);
+        holder = link;
+    }
+    if (lane.sub) {
+        const words = make(doc, 'span', 'kp-gantt__words');
+        if (holder === name) words.append(name, make(doc, 'span', 'kp-gantt__sub', lane.sub));
+        else {
+            holder.append(make(doc, 'span', 'kp-gantt__sub', lane.sub));
+            words.append(holder);
+        }
+        holder = words;
+    }
+    label.replaceChildren(holder);
+}
+
+/** When a point happened, as a person reads it: a day alone, or the day and the time. @param {GanttModel} c @param {GanttPoint} point @param {number} ms */
+function pointWhen(c, point, ms) {
+    const day = formatDayKey(dayKey(ms, c.zone));
+    return typeof point.at === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(point.at) ? day : `${day} ${clock(c, ms)}`;
+}
+
+/** The name and the card of one point. @param {GanttModel} c @param {GanttPoint} point */
+function pointWords(c, point) {
+    const ms = toMs(point.at);
+    const when = pointWhen(c, point, ms);
+    const kind = c.kinds.find((k) => k.kind === point.kind);
+    const planned = point.planned ? `, ${c.strings.ganttPlanned}` : '';
+    return {
+        name: `${c.strings.ganttPoint(point.label, when)}${planned}`,
+        card: [point.label, when + planned, kind && kind.label !== point.label ? kind.label : '', point.detail ?? ''].filter(Boolean).join(' · '),
+    };
+}
+
+/** The points as marks in their lanes, by id, in time order [kpadopt4]. @param {GanttModel} c @param {GanttLaneModel[]} lanes */
+function paintPoints(c, lanes) {
+    const doc = c.el.ownerDocument;
+    /** @type {Map<string, HTMLButtonElement[]>} */
+    const byLane = new Map();
+    const live = new Set();
+    const sorted = [...c.points].filter((p) => Number.isFinite(toMs(p.at))).sort((a, b) => toMs(a.at) - toMs(b.at));
+    for (const point of sorted) {
+        let el = c.pointEls.get(point.id);
+        if (!el) {
+            el = make(doc, 'button', 'kp-gantt__point');
+            el.type = 'button';
+            el.append(make(doc, 'span', 'kp-gantt__count'));
+            c.pointEls.set(point.id, el);
+            c.decorate?.(el, { kind: 'bar', host: c.el, key: keyOf(c.el), id: point.id });
+        }
+        const kind = c.kinds.find((k) => k.kind === point.kind);
+        el.dataset.kpId = point.id;
+        el.dataset.kpKind = point.kind;
+        el.dataset.kpShape = kind?.shape ?? 'dot';
+        if (kind?.series) el.dataset.kpSeries = String(kind.series);
+        else delete el.dataset.kpSeries;
+        if (kind?.tone) el.dataset.kpTone = kind.tone;
+        else delete el.dataset.kpTone;
+        el.toggleAttribute('data-kp-planned', point.planned === true);
+        el.style.setProperty('--kp-g-s', rel(c, toMs(point.at)).toFixed(2));
+        const words = pointWords(c, point);
+        el.dataset.kpName = words.name;
+        el.dataset.kpCard = words.card;
+        live.add(point.id);
+        const list = byLane.get(point.lane) ?? [];
+        list.push(el);
+        byLane.set(point.lane, list);
+    }
+    for (const [id, el] of c.pointEls)
+        if (!live.has(id)) {
+            el.remove();
+            c.pointEls.delete(id);
+        }
+    for (const lane of lanes) {
+        const want = byLane.get(lane.lane.id) ?? [];
+        const have = [...lane.track.querySelectorAll(':scope > .kp-gantt__point')];
+        if (want.length !== have.length || want.some((n, k) => n !== have[k])) lane.track.append(...want);
+        lane.points = want;
+    }
+}
+
+/**
+ * Marks closer than the eye can tell apart become one mark with a count, whose name and card name them all [kpadopt4].
+ * Measured against the plot's width, so it follows a resize and a new window.
+ * @param {GanttModel} c
+ */
+function clusterPoints(c) {
+    const width = c.plot.clientWidth || 1;
+    for (const lane of c.lanes) {
+        /** @type {HTMLButtonElement[][]} */
+        const groups = [];
+        let headAt = Number.NEGATIVE_INFINITY;
+        for (const el of lane.points) {
+            if (el.hidden) continue;
+            const at = Number.parseFloat(el.style.getPropertyValue('--kp-g-s'));
+            const px = ((at - headAt) / c.span) * width;
+            const last = groups[groups.length - 1];
+            if (last && px < CLUSTER_PX) last.push(el);
+            else {
+                groups.push([el]);
+                headAt = at;
+            }
+        }
+        for (const el of lane.points) {
+            if (!el.hidden) continue;
+            el.removeAttribute('data-kp-clustered');
+            el.removeAttribute('data-kp-cluster');
+        }
+        for (const group of groups) {
+            const [head, ...rest] = /** @type {[HTMLButtonElement, ...HTMLButtonElement[]]} */ (group);
+            const count = /** @type {HTMLElement} */ (head.querySelector('.kp-gantt__count'));
+            head.removeAttribute('data-kp-clustered');
+            for (const el of rest) el.setAttribute('data-kp-clustered', '');
+            if (rest.length === 0) {
+                head.removeAttribute('data-kp-cluster');
+                count.textContent = '';
+                head.setAttribute('aria-label', head.dataset.kpName ?? '');
+                head.setAttribute('data-kp-hovercard', head.dataset.kpCard ?? '');
+                continue;
+            }
+            head.setAttribute('data-kp-cluster', String(group.length));
+            count.textContent = c.strings.ganttClusterMore(rest.length);
+            head.setAttribute('aria-label', c.strings.ganttCluster(group.length, group.map((el) => el.dataset.kpName ?? '').join('; ')));
+            head.setAttribute('data-kp-hovercard', group.map((el) => el.dataset.kpCard ?? '').join('  |  '));
+        }
+    }
+}
+
+/**
+ * The stretches under the marks [kpadopt4]: a lane's own as a thin band in its track, the whole plot's as a band behind
+ * every lane, named in the legend. Drawn again on every paint; they hold no focus.
+ * @param {GanttModel} c @param {GanttLaneModel[]} lanes
+ */
+function paintZones(c, lanes) {
+    const doc = c.el.ownerDocument;
+    for (const old of c.body.querySelectorAll('.kp-gantt__zone')) old.remove();
+    /** @type {Map<string, string[]>} */
+    const laneWords = new Map();
+    for (const [i, zone] of c.zones.entries()) {
+        const from = toMs(zone.from);
+        const to = toMs(zone.to);
+        if (!Number.isFinite(from) || !Number.isFinite(to)) continue;
+        const band = make(doc, 'i', 'kp-gantt__zone');
+        band.setAttribute('aria-hidden', 'true');
+        band.dataset.kpTone = zone.tone ?? 'warning';
+        band.dataset.kpZone = zone.id ?? String(i);
+        band.style.setProperty('--kp-g-s', rel(c, Math.min(from, to)).toFixed(2));
+        band.style.setProperty('--kp-g-e', rel(c, Math.max(from, to)).toFixed(2));
+        const lane = zone.lane === undefined ? null : lanes.find((l) => l.lane.id === zone.lane);
+        if (lane) {
+            band.dataset.kpLaneZone = '';
+            lane.track.prepend(band);
+            laneWords.set(lane.lane.id, [...(laneWords.get(lane.lane.id) ?? []), zone.label]);
+        } else if (zone.lane === undefined) c.lines.append(band);
+    }
+    // A lane's stretches are part of its name, for a reader who cannot see the band.
+    for (const lane of lanes) {
+        const extra = laneWords.get(lane.lane.id);
+        lane.track.setAttribute('aria-label', extra ? `${lane.lane.label}; ${extra.join('; ')}` : lane.lane.label);
+    }
+}
+
+/** The kinds and the plot's stretches in the legend, after the states; the states go when there are no runs [kpadopt4]. @param {GanttModel} c */
+function paintKinds(c) {
+    const doc = c.el.ownerDocument;
+    for (const old of c.legend.querySelectorAll(':scope > .kp-gantt__legend-kind, :scope > .kp-gantt__legend-zone')) old.remove();
+    for (const kind of c.kinds) {
+        const li = make(doc, 'li', 'kp-gantt__legend-kind');
+        const mark = make(doc, 'span', 'kp-gantt__mark');
+        mark.dataset.kpShape = kind.shape ?? 'dot';
+        if (kind.series) mark.dataset.kpSeries = String(kind.series);
+        if (kind.tone) mark.dataset.kpTone = kind.tone;
+        mark.setAttribute('aria-hidden', 'true');
+        li.append(mark, make(doc, 'span', '', kind.label));
+        c.legend.append(li);
+    }
+    const seen = new Set();
+    for (const zone of c.zones) {
+        if (zone.lane !== undefined || seen.has(zone.label)) continue;
+        seen.add(zone.label);
+        const li = make(doc, 'li', 'kp-gantt__legend-zone');
+        const swatch = make(doc, 'span', 'kp-gantt__band');
+        swatch.dataset.kpTone = zone.tone ?? 'warning';
+        swatch.setAttribute('aria-hidden', 'true');
+        li.append(swatch, make(doc, 'span', '', zone.label));
+        c.legend.append(li);
+    }
+    const runless = c.runs.length === 0 && (c.points.length > 0 || c.kinds.length > 0);
+    for (const li of c.legend.querySelectorAll(':scope > .kp-gantt__legend-state')) /** @type {HTMLElement} */ (li).hidden = runless;
+}
+
 /** Hide a bar wholly outside the window (it takes no tab stop). @param {GanttModel} c */
 function visible(c) {
     const w = windowOf(c);
     const now = w.now;
-    for (const lane of c.lanes)
+    for (const lane of c.lanes) {
         for (const b of lane.bars) {
             const end = b.e ?? now;
             b.bar.hidden = c.state === 'loading' || c.leaving !== null || end < w.from || b.s > w.end;
         }
+        for (const point of lane.points) {
+            const at = Number.parseFloat(point.style.getPropertyValue('--kp-g-s'));
+            point.hidden = c.state === 'loading' || c.leaving !== null || at < w.from || at > w.end;
+        }
+    }
+    clusterPoints(c);
 }
 
 /** Words that grow with the clock: a running bar's name and card. @param {GanttModel} c @param {number} nowMs */
@@ -773,14 +1066,22 @@ function refresh(c, nowMs) {
 
 /** The bars a person can reach, per lane, in time order. @param {GanttModel} c */
 function reachableLanes(c) {
-    return c.lanes.map((lane) => lane.bars.filter((b) => !b.bar.hidden).map((b) => b.bar)).filter((l) => l.length);
+    const startOf = (/** @type {HTMLElement} */ el) => Number.parseFloat(el.style.getPropertyValue('--kp-g-s'));
+    return c.lanes
+        .map((lane) =>
+            [
+                ...lane.bars.filter((b) => !b.bar.hidden).map((b) => b.bar),
+                ...lane.points.filter((p) => !p.hidden && !p.hasAttribute('data-kp-clustered')),
+            ].sort((a, b) => startOf(a) - startOf(b)),
+        )
+        .filter((l) => l.length);
 }
 
 /** One tab stop: the active bar. @param {GanttModel} c */
 function syncTabStops(c) {
-    const all = [...c.bars.values()];
+    const all = [...c.bars.values(), ...c.pointEls.values()];
     const reach = reachableLanes(c).flat();
-    let target = c.active ? c.bars.get(c.active) : undefined;
+    let target = c.active ? (c.bars.get(c.active) ?? c.pointEls.get(c.active)) : undefined;
     if (!target || !reach.includes(target)) target = reach[0];
     for (const el of all) el.tabIndex = el === target ? 0 : -1;
 }
@@ -883,6 +1184,12 @@ export function attachGantts(root = document, options = {}) {
             legend: el,
             days: el.hasAttribute('data-kp-gantt-days'),
             dayStop: null,
+            points: [],
+            pointEls: new Map(),
+            kinds: [],
+            zones: [],
+            fit: false,
+            line: el.classList.contains('kp-gantt--line'),
             ghosts: [],
             held: null,
             busy: null,
@@ -906,10 +1213,36 @@ export function attachGantts(root = document, options = {}) {
 
         /** @param {Event} event */
         const barOf = (event) =>
-            event.target instanceof Element ? /** @type {HTMLButtonElement | null} */ (event.target.closest('.kp-gantt__run')) : null;
+            event.target instanceof Element
+                ? /** @type {HTMLButtonElement | null} */ (event.target.closest('.kp-gantt__run, .kp-gantt__point'))
+                : null;
         /** @param {MouseEvent} event */
         const onClick = (event) => {
             const bar = barOf(event);
+            if (bar && bar.dataset.kpId && bar.classList.contains('kp-gantt__point')) {
+                if (c.dragMoved) return;
+                const point = c.points.find((p) => p.id === bar.dataset.kpId);
+                if (!point) return;
+                c.active = point.id;
+                syncTabStops(c);
+                // A mark with a count opens with every point it stands for.
+                const lane = c.lanes.find((l) => l.points.includes(bar));
+                const at = lane ? lane.points.indexOf(bar) : -1;
+                const together = [point];
+                if (lane && bar.hasAttribute('data-kp-cluster'))
+                    for (const next of lane.points.slice(at + 1)) {
+                        if (!next.hasAttribute('data-kp-clustered')) break;
+                        const p = c.points.find((q) => q.id === next.dataset.kpId);
+                        if (p) together.push(p);
+                    }
+                el.dispatchEvent(
+                    new CustomEvent(GANTT_OPEN_EVENT, {
+                        bubbles: true,
+                        detail: { id: point.id, point, points: together, source: event.detail === 0 ? 'keyboard' : 'pointer' },
+                    }),
+                );
+                return;
+            }
             if (bar && bar.dataset.kpId) {
                 if (c.dragMoved) return;
                 const run = c.runs.find((r) => r.id === bar.dataset.kpId);
@@ -956,8 +1289,16 @@ export function attachGantts(root = document, options = {}) {
         /** @param {Event} event */
         const onRange = (event) => {
             const value = /** @type {CustomEvent} */ (event).detail?.value;
+            if (value === 'all') {
+                c.fit = true;
+                c.live = false;
+                freshWindow(c);
+                announceWindow(c, 'range');
+                return;
+            }
             const seconds = typeof value === 'string' ? rangeSeconds(value) : Number.NaN;
             if (!Number.isFinite(seconds)) return;
+            c.fit = false;
             c.span = seconds;
             if (!c.live) c.to = Math.max(c.to, rel(c, c.now()));
             freshWindow(c);
@@ -1028,7 +1369,8 @@ export function attachGantts(root = document, options = {}) {
         };
         /** @param {PointerEvent} event */
         const onDown = (event) => {
-            if (event.button !== 0 || c.state === 'loading') return;
+            // A dated line has no brush: it is read, not searched [kpadopt4].
+            if (event.button !== 0 || c.state === 'loading' || c.line) return;
             const x = plotX(event);
             if (x < 0 || x > c.plot.clientWidth) return;
             c.drag = { a: x, b: x };
@@ -1115,6 +1457,17 @@ function freshWindow(c) {
 function setLive(c, live) {
     if (live === c.live) return;
     c.live = live;
+    // Following now leaves the fitted window; the first range that is a length takes its place [kpadopt4].
+    if (live && c.fit) {
+        c.fit = false;
+        const first = [...c.ranges.querySelectorAll('[data-value]')]
+            .map((b) => /** @type {HTMLElement} */ (b).dataset.value ?? '')
+            .find((w) => w !== 'all');
+        if (first) {
+            c.span = rangeSeconds(first);
+            void import('./segmented.js').then((m) => m.setSegmentedValues(c.ranges, [first]));
+        }
+    }
     if (!live) c.to = windowOf({ ...c, live: true }).end;
     freshWindow(c);
     announceWindow(c, 'live');
@@ -1163,7 +1516,10 @@ export function setGanttState(el, state, words = '') {
 export function setGanttWindow(el, window) {
     const c = gantts.get(el);
     if (!c) return;
-    if (window.span !== undefined) c.span = window.span;
+    if (window.span !== undefined) {
+        c.span = window.span;
+        c.fit = false;
+    }
     if (window.live !== undefined) c.live = window.live;
     if (window.to !== undefined) c.to = rel(c, window.to);
     else if (!c.live) c.to = windowOf({ ...c, live: true }).end;
@@ -1208,4 +1564,48 @@ export function setGanttLegend(el, entries) {
         li.append(swatch, make(doc, 'span', '', label));
         c.legend.append(li);
     }
+}
+
+/**
+ * The moments on the timeline [kpadopt4]: each point a mark in its lane, in the colour and shape of its kind. Repaints in
+ * place, by id, as setGanttRuns does; a timeline that was loading is ready from here on. `lanes` may be left out, as there.
+ * @param {Element} el
+ * @param {GanttPoint[]} points
+ * @param {GanttLane[]} [lanes]
+ */
+export function setGanttPoints(el, points, lanes) {
+    const c = gantts.get(el);
+    if (!c) return;
+    c.points = points;
+    if (lanes) c.lanesGiven = lanes;
+    if (c.state === 'loading' || c.state === 'empty') c.state = 'ready';
+    paint(c);
+    tick(c);
+}
+
+/**
+ * The kinds of the points, named in the legend in the order given [kpadopt4]: `shape` (`dot` by default, `diamond`,
+ * `square`, `triangle`, `ring`) and a colour, `series` 1 to 5 (`--chart-N`) or `tone`. A timeline with points and no runs
+ * leaves the run states out of its legend.
+ * @param {Element} el
+ * @param {GanttKind[]} kinds
+ */
+export function setGanttKinds(el, kinds) {
+    const c = gantts.get(el);
+    if (!c) return;
+    c.kinds = kinds;
+    paint(c);
+}
+
+/**
+ * The stretches under the marks [kpadopt4]: with `lane`, a thin band in that lane (waiting since the last contact); without,
+ * a band behind every lane (the days a follow-up is due), named in the legend. `tone` `warning` (default), `info`, `muted`.
+ * @param {Element} el
+ * @param {GanttZone[]} zones
+ */
+export function setGanttZones(el, zones) {
+    const c = gantts.get(el);
+    if (!c) return;
+    c.zones = zones;
+    paint(c);
 }

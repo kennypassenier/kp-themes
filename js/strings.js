@@ -372,6 +372,13 @@
  * @property {string} ganttZoomTitle  Its title
  * @property {(seconds: number) => string} ganttDuration  A length of time as a person reads it, "14 min", "1 h 5 min", "45 s"
  * @property {string} ganttHint  The one-line hint under the timeline on how to read and use it
+ * @property {string} ganttAll  The range button that fits the window to everything on the timeline (`all` in `data-kp-gantt-ranges`) [kpadopt4]
+ * @property {string} ganttAllTitle  Its title
+ * @property {(label: string, when: string) => string} ganttPoint  A point event's name, "Applied, 02/10/2026" [kpadopt4]
+ * @property {string} ganttPlanned  The word after a planned point's name, still to come
+ * @property {(count: number, labels: string) => string} ganttCluster  The name of marks too close to tell apart, "3 events: Applied, Mail, Call"
+ * @property {(more: number) => string} ganttClusterMore  The count on such a mark, "+2"
+ * @property {string} ganttPointsHint  The hint under a timeline of point events
  * @property {string} graphShowAll  The network graph's way back to every node and every kind of link (js/graph.js) [scope-143]
  * @property {string} graphShowAllTitle  Its title [scope-143]
  * @property {string} graphHint  The hint under the graph, and the second half of its picture's accessible name: what a pointer, a click and the keys do [scope-143]
@@ -854,6 +861,13 @@ export const DEFAULT_STRINGS = Object.freeze({
         return rest ? `${hours} h ${rest} min` : `${hours} h`;
     },
     ganttHint: 'Click a bar to open it · drag across the time to select a range',
+    ganttAll: 'All',
+    ganttAllTitle: 'Show everything on the timeline',
+    ganttPoint: (label, when) => `${label}, ${when}`,
+    ganttPlanned: 'planned',
+    ganttCluster: (count, labels) => `${count} events: ${labels}`,
+    ganttClusterMore: (more) => `+${more}`,
+    ganttPointsHint: 'Point at a mark to read it · arrows walk the marks · Enter opens one',
     // The network graph [scope-143]: its own words; the nodes, kinds and
     // the sentences of its states are the page's.
     graphShowAll: 'Show all',

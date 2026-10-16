@@ -1040,6 +1040,34 @@ export type Strings = {
      */
     ganttHint: string;
     /**
+     * The range button that fits the window to everything on the timeline (`all` in `data-kp-gantt-ranges`) [kpadopt4]
+     */
+    ganttAll: string;
+    /**
+     * Its title
+     */
+    ganttAllTitle: string;
+    /**
+     * A point event's name, "Applied, 02/10/2026" [kpadopt4]
+     */
+    ganttPoint: (label: string, when: string) => string;
+    /**
+     * The word after a planned point's name, still to come
+     */
+    ganttPlanned: string;
+    /**
+     * The name of marks too close to tell apart, "3 events: Applied, Mail, Call"
+     */
+    ganttCluster: (count: number, labels: string) => string;
+    /**
+     * The count on such a mark, "+2"
+     */
+    ganttClusterMore: (more: number) => string;
+    /**
+     * The hint under a timeline of point events
+     */
+    ganttPointsHint: string;
+    /**
      * The network graph's way back to every node and every kind of link (js/graph.js) [scope-143]
      */
     graphShowAll: string;
@@ -1432,6 +1460,13 @@ export type Strings = {
  * @property {string} ganttZoomTitle  Its title
  * @property {(seconds: number) => string} ganttDuration  A length of time as a person reads it, "14 min", "1 h 5 min", "45 s"
  * @property {string} ganttHint  The one-line hint under the timeline on how to read and use it
+ * @property {string} ganttAll  The range button that fits the window to everything on the timeline (`all` in `data-kp-gantt-ranges`) [kpadopt4]
+ * @property {string} ganttAllTitle  Its title
+ * @property {(label: string, when: string) => string} ganttPoint  A point event's name, "Applied, 02/10/2026" [kpadopt4]
+ * @property {string} ganttPlanned  The word after a planned point's name, still to come
+ * @property {(count: number, labels: string) => string} ganttCluster  The name of marks too close to tell apart, "3 events: Applied, Mail, Call"
+ * @property {(more: number) => string} ganttClusterMore  The count on such a mark, "+2"
+ * @property {string} ganttPointsHint  The hint under a timeline of point events
  * @property {string} graphShowAll  The network graph's way back to every node and every kind of link (js/graph.js) [scope-143]
  * @property {string} graphShowAllTitle  Its title [scope-143]
  * @property {string} graphHint  The hint under the graph, and the second half of its picture's accessible name: what a pointer, a click and the keys do [scope-143]

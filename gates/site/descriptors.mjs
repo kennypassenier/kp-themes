@@ -2853,7 +2853,7 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
         title: 'Run timeline',
         group: 'Data',
         classes: ['kp-gantt'],
-        aliases: ['active', 'out'],
+        aliases: ['active', 'out', 'cluster', 'clustered', 'lane-key', 'lane-zone', 'name', 'planned', 'shape', 'zone'],
         exports: [],
         intro: 'One bar per run on a time axis, a lane per job, stack or host, and a line for now. `attachGantts(root)` in js/gantt.js fills `section.kp-gantt[data-kp-gantt]` with range buttons (`data-kp-gantt-ranges`, the one in force in `data-kp-gantt-range`), a Live button and the selected range; the page gives the lanes and the runs (`setGanttRuns`) and the state of the whole (`setGanttState`). A run is `queued` (dashed and hollow, from queueing to now), `running` (striped and growing to now), `ok` (solid) or `failed` (solid, taller, with a cap and a cross): the tone is never the only carrier. A running bar is placed by one custom property that moves every second, so the page repaints nothing. While the window is Live its right edge follows now (`data-kp-gantt-live`); dragging across the plot selects a range, shown in a chip with Zoom and Clear (`data-kp-gantt-zoom`, `data-kp-gantt-clear`). `data-kp-gantt-ghosts="2 3 2 1"` sets the rows of the loading lanes so loading and loaded are as tall.',
         whenToUse:
@@ -2880,6 +2880,13 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
             { name: 'data-kp-active', what: 'On the selection chip while a range is selected.' },
             { name: 'data-kp-out', what: 'On the now-line when now lies outside the window; it is hidden.' },
             { name: 'data-kp-gantt-edge', what: 'On an axis label too close to the end edge for its name: an hour label stands before its rule and ends at it in a register that flips it; a day button stands against the end, whole.' },
+            { name: 'setGanttPoints / setGanttKinds / setGanttZones', what: 'Moments instead of runs [kpadopt4]: a point (`id`, `lane`, `at`, `kind`, `label`, `detail`, `planned`) is a `.kp-gantt__point` mark in its lane, in the colour and shape of its kind (`data-kp-shape` dot, diamond, square, triangle or ring; `data-kp-series` or `data-kp-tone`), hollow when `data-kp-planned`. A kind is named in the legend (`.kp-gantt__mark`); the run states leave the legend when there are no runs. A zone is a thin band in its lane (`data-kp-lane-zone`) or a band behind every lane, named in the legend (`.kp-gantt__band`); `data-kp-zone` carries its id.' },
+            { name: 'data-kp-cluster / data-kp-clustered', what: 'Marks closer than the eye can tell apart: the first carries the number it stands for and a count plate (`.kp-gantt__count`, “+2”), its name and card name them all; the others are `data-kp-clustered` and step aside. Opening it reports every point in `points`.' },
+            { name: 'data-kp-name / data-kp-card', what: 'Written on a mark: its own accessible name and card words, which a mark with a count joins.' },
+            { name: 'data-kp-gantt-points', what: 'On the timeline: its hint speaks of marks, not bars.' },
+            { name: 'all', what: 'A range word: the window fits everything on the timeline and now, and stays fitted while the data changes.' },
+            { name: 'href / sub', what: 'A lane with `href` is a link (`.kp-gantt__lane-link`); `sub` is a second line under its name (`.kp-gantt__sub`), and the lanes grow to hold it. `data-kp-lane-key` on the name is what it was drawn from.' },
+            { name: '.kp-gantt--line', what: 'One lane, no toolbar, no lane names, no hint and no brush, the axis under the line, fitted to its data: the dated line under a journey stepper.' },
         ],
         accessibility: [
             'Built in — one tab stop: left and right move along a lane, up and down to the nearest bar of the neighbouring lane, Home and End to the lane’s first and last, Enter and Space open the run; range, Live, Zoom and Clear are buttons.',

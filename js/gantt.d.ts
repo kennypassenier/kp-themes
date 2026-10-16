@@ -45,6 +45,54 @@ export type GanttRun = {
 export type GanttLane = {
     id: string;
     label: string;
+    href?: string;
+    sub?: string;
+};
+export type GanttPoint = {
+    /**
+     * what the page calls the moment; reported by `kp-gantt-open`
+     */
+    id: string;
+    /**
+     * the lane's id
+     */
+    lane: string;
+    /**
+     * epoch ms or an ISO string; a date alone (`2026-10-02`) reads as that day
+     */
+    at: number | string;
+    /**
+     * the kind's key, named in the legend by setGanttKinds
+     */
+    kind: string;
+    /**
+     * what happened, one line
+     */
+    label: string;
+    /**
+     * more words for the hover card
+     */
+    detail?: string;
+    /**
+     * still to come: a hollow mark
+     */
+    planned?: boolean;
+};
+export type GanttShape = 'dot' | 'diamond' | 'square' | 'triangle' | 'ring';
+export type GanttKind = {
+    kind: string;
+    label: string;
+    shape?: GanttShape;
+    series?: 1 | 2 | 3 | 4 | 5;
+    tone?: 'success' | 'warning' | 'destructive' | 'info' | 'muted';
+};
+export type GanttZone = {
+    id?: string;
+    lane?: string;
+    from: number | string;
+    to: number | string;
+    label: string;
+    tone?: 'warning' | 'info' | 'muted';
 };
 export type GanttLegendEntry = {
     series: 1 | 2 | 3 | 4 | 5;
@@ -85,6 +133,7 @@ export type GanttLaneModel = {
     label: HTMLElement;
     track: HTMLElement;
     bars: GanttBar[];
+    points: HTMLButtonElement[];
     rows: number;
 };
 export type GanttModel = {
@@ -129,6 +178,12 @@ export type GanttModel = {
     legend: HTMLElement;
     days: boolean;
     dayStop: string | null;
+    points: GanttPoint[];
+    pointEls: Map<string, HTMLButtonElement>;
+    kinds: GanttKind[];
+    zones: GanttZone[];
+    fit: boolean;
+    line: boolean;
     ghosts: HTMLElement[];
     held: number | null;
     busy: import('./busy-card.js').BusyCard | null;
@@ -228,3 +283,26 @@ export declare function setGanttSelection(el: Element, selection: {
  * @param {GanttLegendEntry[]} entries
  */
 export declare function setGanttLegend(el: Element, entries: GanttLegendEntry[]): void;
+/**
+ * The moments on the timeline [kpadopt4]: each point a mark in its lane, in the colour and shape of its kind. Repaints in
+ * place, by id, as setGanttRuns does; a timeline that was loading is ready from here on. `lanes` may be left out, as there.
+ * @param {Element} el
+ * @param {GanttPoint[]} points
+ * @param {GanttLane[]} [lanes]
+ */
+export declare function setGanttPoints(el: Element, points: GanttPoint[], lanes?: GanttLane[]): void;
+/**
+ * The kinds of the points, named in the legend in the order given [kpadopt4]: `shape` (`dot` by default, `diamond`,
+ * `square`, `triangle`, `ring`) and a colour, `series` 1 to 5 (`--chart-N`) or `tone`. A timeline with points and no runs
+ * leaves the run states out of its legend.
+ * @param {Element} el
+ * @param {GanttKind[]} kinds
+ */
+export declare function setGanttKinds(el: Element, kinds: GanttKind[]): void;
+/**
+ * The stretches under the marks [kpadopt4]: with `lane`, a thin band in that lane (waiting since the last contact); without,
+ * a band behind every lane (the days a follow-up is due), named in the legend. `tone` `warning` (default), `info`, `muted`.
+ * @param {Element} el
+ * @param {GanttZone[]} zones
+ */
+export declare function setGanttZones(el: Element, zones: GanttZone[]): void;

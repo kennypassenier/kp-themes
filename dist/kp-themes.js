@@ -497,6 +497,13 @@ var init_strings = __esm({
         return rest ? `${hours} h ${rest} min` : `${hours} h`;
       },
       ganttHint: "Click a bar to open it \xB7 drag across the time to select a range",
+      ganttAll: "All",
+      ganttAllTitle: "Show everything on the timeline",
+      ganttPoint: (label, when) => `${label}, ${when}`,
+      ganttPlanned: "planned",
+      ganttCluster: (count, labels) => `${count} events: ${labels}`,
+      ganttClusterMore: (more) => `+${more}`,
+      ganttPointsHint: "Point at a mark to read it \xB7 arrows walk the marks \xB7 Enter opens one",
       // The network graph [scope-143]: its own words; the nodes, kinds and
       // the sentences of its states are the page's.
       graphShowAll: "Show all",
@@ -22909,11 +22916,14 @@ __export(gantt_exports, {
   axisStep: () => axisStep,
   packRows: () => packRows,
   rangeSeconds: () => rangeSeconds,
+  setGanttKinds: () => setGanttKinds,
   setGanttLegend: () => setGanttLegend,
+  setGanttPoints: () => setGanttPoints,
   setGanttRuns: () => setGanttRuns,
   setGanttSelection: () => setGanttSelection,
   setGanttState: () => setGanttState,
-  setGanttWindow: () => setGanttWindow
+  setGanttWindow: () => setGanttWindow,
+  setGanttZones: () => setGanttZones
 });
 function rangeSeconds(word) {
   const m = /^(\d+(?:\.\d+)?)\s*(m|h|d)$/.exec(word.trim());
@@ -22959,6 +22969,28 @@ function clock(c, ms) {
 function stamp(c, ms) {
   return `${formatDayKey(dayKey(ms, c.zone)).slice(0, 5)} ${clock(c, ms)}`;
 }
+function fitWindow(c) {
+  if (!c.fit) return;
+  const moments = [c.now()];
+  for (const run of c.runs) {
+    const start = toMs2(run.start);
+    if (Number.isFinite(start)) moments.push(start);
+    const end = run.end == null ? Number.NaN : toMs2(run.end);
+    if (Number.isFinite(end)) moments.push(end);
+  }
+  for (const point of c.points) {
+    const at = toMs2(point.at);
+    if (Number.isFinite(at)) moments.push(at);
+  }
+  for (const zone of c.zones) for (const edge of [toMs2(zone.from), toMs2(zone.to)]) if (Number.isFinite(edge)) moments.push(edge);
+  const lo = Math.min(...moments) / 1e3;
+  const hi = Math.max(...moments) / 1e3;
+  const span3 = Math.max(3600, hi - lo);
+  const pad = span3 / 20;
+  c.span = span3 + 2 * pad;
+  c.to = hi - c.base + pad;
+  c.live = false;
+}
 function windowOf(c) {
   const now = rel(c, c.now());
   const end = c.live ? now + Math.max(30, c.span * 0.03) : c.to;
@@ -22982,18 +23014,20 @@ function build2(c) {
   c.ranges.setAttribute("data-kp-segmented", "single");
   c.ranges.setAttribute("role", "radiogroup");
   c.ranges.setAttribute("aria-label", s2.ganttRange);
-  const words = (c.el.dataset.kpGanttRanges ?? "1h 6h 24h 7d").split(/[\s,]+/).filter((w) => Number.isFinite(rangeSeconds(w)));
-  const wanted = c.el.dataset.kpGanttRange ?? words[Math.min(1, words.length - 1)] ?? "6h";
+  const words = (c.el.dataset.kpGanttRanges ?? (c.line ? "all" : "1h 6h 24h 7d")).split(/[\s,]+/).filter((w) => w === "all" || Number.isFinite(rangeSeconds(w)));
+  const wanted = c.el.dataset.kpGanttRange ?? (c.line ? "all" : words[Math.min(1, words.length - 1)] ?? "6h");
   for (const word of words) {
     const item = make5(doc, "button", "kp-segmented__item");
     item.type = "button";
     item.dataset.value = word;
     item.setAttribute("role", "radio");
     item.setAttribute("aria-checked", String(word === wanted));
-    item.title = s2.ganttRangeTitle(word);
-    item.append(make5(doc, "span", "kp-segmented__label", word));
+    item.title = word === "all" ? s2.ganttAllTitle : s2.ganttRangeTitle(word);
+    item.append(make5(doc, "span", "kp-segmented__label", word === "all" ? s2.ganttAll : word));
     c.ranges.append(item);
   }
+  c.fit = wanted === "all";
+  if (c.fit) c.live = false;
   c.span = rangeSeconds(wanted) || 21600;
   c.liveButton = make5(doc, "button", "kp-button kp-button--sm kp-gantt__live", s2.ganttLive);
   c.liveButton.type = "button";
@@ -23042,7 +23076,7 @@ function build2(c) {
   const frame2 = make5(doc, "div", "kp-gantt__frame");
   c.selection.hidden = true;
   frame2.append(c.scroll, c.stateLine);
-  const hint = make5(doc, "p", "kp-gantt__hint", s2.ganttHint);
+  const hint = make5(doc, "p", "kp-gantt__hint", c.el.hasAttribute("data-kp-gantt-points") ? s2.ganttPointsHint : s2.ganttHint);
   const legend = make5(doc, "ul", "kp-gantt__legend");
   c.legend = legend;
   for (
@@ -23050,7 +23084,7 @@ function build2(c) {
     /** @type {const} */
     ["ok", "failed", "running", "queued"]
   ) {
-    const li = make5(doc, "li");
+    const li = make5(doc, "li", "kp-gantt__legend-state");
     const swatch = make5(doc, "span", "kp-gantt__swatch");
     swatch.dataset.kpState = state;
     swatch.setAttribute("aria-hidden", "true");
@@ -23075,7 +23109,8 @@ function syncTicks(c, w) {
   const step = axisStep(c.span, room);
   const fromMs = (w.from + c.base) * 1e3;
   const offset = zoneOffset(fromMs, c.zone);
-  const firstAbs = Math.ceil((w.from + c.base + offset) / step) * step - offset;
+  const anchor = step >= 604800 ? MONDAY : 0;
+  const firstAbs = anchor + Math.ceil((w.from + c.base + offset - anchor) / step) * step - offset;
   const list = [];
   for (let t = firstAbs; t <= w.end + c.base + 1; t += step) list.push(t - c.base);
   const key = `${step}:${list.map((t) => t.toFixed(0)).join(",")}`;
@@ -23185,6 +23220,7 @@ function paint4(c) {
   const doc = c.el.ownerDocument;
   const s2 = c.strings;
   const nowMs = c.now();
+  fitWindow(c);
   const laneById = new Map(c.lanesGiven.map((l) => [l.id, l]));
   const byLane = new Map(c.lanesGiven.map((l) => [l.id, []]));
   const live2 = /* @__PURE__ */ new Set();
@@ -23223,6 +23259,11 @@ function paint4(c) {
       c.bars.delete(id);
       c.states.delete(id);
     }
+  for (const point of c.points)
+    if (!laneById.has(point.lane)) {
+      laneById.set(point.lane, { id: point.lane, label: point.lane });
+      byLane.set(point.lane, []);
+    }
   const pad = c.span * 6e-3;
   const before = new Map(c.lanes.flatMap((l) => l.bars.map((b) => [b.run.id, b.row])));
   const old = new Map(c.lanes.map((l) => [l.lane.id, l]));
@@ -23237,15 +23278,12 @@ function paint4(c) {
     let model = old.get(id);
     if (!model) {
       const label = make5(doc, "div", "kp-gantt__lane");
-      label.title = lane.label;
-      label.append(make5(doc, "span", "", lane.label));
       const track = make5(doc, "div", "kp-gantt__track");
       track.setAttribute("role", "group");
-      model = { lane, label, track, bars: [], rows: 1 };
+      model = { lane, label, track, bars: [], points: [], rows: 1 };
     }
     model.lane = lane;
-    model.label.firstElementChild && (model.label.firstElementChild.textContent = lane.label);
-    model.label.title = lane.label;
+    fillLaneLabel(c, model.label, lane);
     model.track.setAttribute("aria-label", lane.label);
     const spare = bars.some((b) => b.e == null) ? 1 : 0;
     model.rows = Math.max(model.rows, packed.count + spare);
@@ -23266,7 +23304,7 @@ function paint4(c) {
     lane.track.style.setProperty("--kp-g-rows", String(lane.rows));
     if (lane.label.parentElement !== c.body) c.body.insertBefore(lane.label, anchor);
     if (lane.track.parentElement !== c.body) c.body.insertBefore(lane.track, anchor);
-    const have = [...lane.track.children];
+    const have = [...lane.track.querySelectorAll(":scope > .kp-gantt__run")];
     const want = lane.bars.map((b) => b.bar);
     if (want.length !== have.length || want.some((n, k) => n !== have[k])) lane.track.append(...want);
     for (const b of lane.bars) {
@@ -23281,10 +23319,17 @@ function paint4(c) {
     }
   });
   c.body.style.setProperty("--kp-g-lanes", String(Math.max(1, lanes.length)));
+  c.body.toggleAttribute(
+    "data-kp-gantt-subs",
+    lanes.some((l) => Boolean(l.lane.sub))
+  );
+  paintPoints(c, lanes);
+  paintZones(c, lanes);
+  paintKinds(c);
   c.el.dataset.kpState = c.state;
   c.body.toggleAttribute("aria-busy", c.state === "loading");
   drawBusy2(c);
-  const empty = c.state === "ready" && c.runs.length === 0 && lanes.length === 0;
+  const empty = c.state === "ready" && c.runs.length === 0 && c.points.length === 0 && lanes.length === 0;
   const words = c.state === "loading" ? s2.ganttLoading : c.state === "empty" || empty ? s2.ganttEmpty : c.stateLine.dataset.kpWords || "";
   c.stateLine.textContent = c.state === "ready" && !empty || c.leaving !== null ? "" : words;
   c.stateLine.dataset.kpState = empty && c.state === "ready" ? "empty" : c.state;
@@ -23358,10 +23403,11 @@ function drawBusy2(c) {
       const boxes = tracks.map((t) => t.getBoundingClientRect());
       return [
         {
-          top: Math.max(axis.bottom, Math.min(...boxes.map((b) => b.top))),
+          // A dated line has its axis under the lane [kpadopt4].
+          top: c.line ? Math.min(...boxes.map((b) => b.top)) : Math.max(axis.bottom, Math.min(...boxes.map((b) => b.top))),
           left: Math.min(...boxes.map((b) => b.left)),
           right: Math.max(...boxes.map((b) => b.right)),
-          bottom: Math.min(scroll.bottom, Math.max(...boxes.map((b) => b.bottom)))
+          bottom: Math.min(c.line ? axis.top : scroll.bottom, Math.max(...boxes.map((b) => b.bottom)))
         }
       ];
     },
@@ -23412,14 +23458,202 @@ function paintGhosts(c) {
   });
   c.body.style.setProperty("--kp-g-lanes", String(rows.length));
 }
+function fillLaneLabel(c, label, lane) {
+  const doc = c.el.ownerDocument;
+  const key = `${lane.label}\0${lane.sub ?? ""}\0${lane.href ?? ""}`;
+  if (label.dataset.kpLaneKey === key) return;
+  label.dataset.kpLaneKey = key;
+  label.title = lane.sub ? `${lane.label} \xB7 ${lane.sub}` : lane.label;
+  const name = make5(doc, "span", "kp-gantt__name", lane.label);
+  let holder = name;
+  if (lane.href) {
+    const link = make5(doc, "a", "kp-gantt__lane-link");
+    link.href = lane.href;
+    link.append(name);
+    holder = link;
+  }
+  if (lane.sub) {
+    const words = make5(doc, "span", "kp-gantt__words");
+    if (holder === name) words.append(name, make5(doc, "span", "kp-gantt__sub", lane.sub));
+    else {
+      holder.append(make5(doc, "span", "kp-gantt__sub", lane.sub));
+      words.append(holder);
+    }
+    holder = words;
+  }
+  label.replaceChildren(holder);
+}
+function pointWhen(c, point, ms) {
+  const day = formatDayKey(dayKey(ms, c.zone));
+  return typeof point.at === "string" && /^\d{4}-\d{2}-\d{2}$/.test(point.at) ? day : `${day} ${clock(c, ms)}`;
+}
+function pointWords(c, point) {
+  const ms = toMs2(point.at);
+  const when = pointWhen(c, point, ms);
+  const kind = c.kinds.find((k) => k.kind === point.kind);
+  const planned = point.planned ? `, ${c.strings.ganttPlanned}` : "";
+  return {
+    name: `${c.strings.ganttPoint(point.label, when)}${planned}`,
+    card: [point.label, when + planned, kind && kind.label !== point.label ? kind.label : "", point.detail ?? ""].filter(Boolean).join(" \xB7 ")
+  };
+}
+function paintPoints(c, lanes) {
+  const doc = c.el.ownerDocument;
+  const byLane = /* @__PURE__ */ new Map();
+  const live2 = /* @__PURE__ */ new Set();
+  const sorted = [...c.points].filter((p) => Number.isFinite(toMs2(p.at))).sort((a, b) => toMs2(a.at) - toMs2(b.at));
+  for (const point of sorted) {
+    let el4 = c.pointEls.get(point.id);
+    if (!el4) {
+      el4 = make5(doc, "button", "kp-gantt__point");
+      el4.type = "button";
+      el4.append(make5(doc, "span", "kp-gantt__count"));
+      c.pointEls.set(point.id, el4);
+      c.decorate?.(el4, { kind: "bar", host: c.el, key: keyOf4(c.el), id: point.id });
+    }
+    const kind = c.kinds.find((k) => k.kind === point.kind);
+    el4.dataset.kpId = point.id;
+    el4.dataset.kpKind = point.kind;
+    el4.dataset.kpShape = kind?.shape ?? "dot";
+    if (kind?.series) el4.dataset.kpSeries = String(kind.series);
+    else delete el4.dataset.kpSeries;
+    if (kind?.tone) el4.dataset.kpTone = kind.tone;
+    else delete el4.dataset.kpTone;
+    el4.toggleAttribute("data-kp-planned", point.planned === true);
+    el4.style.setProperty("--kp-g-s", rel(c, toMs2(point.at)).toFixed(2));
+    const words = pointWords(c, point);
+    el4.dataset.kpName = words.name;
+    el4.dataset.kpCard = words.card;
+    live2.add(point.id);
+    const list = byLane.get(point.lane) ?? [];
+    list.push(el4);
+    byLane.set(point.lane, list);
+  }
+  for (const [id, el4] of c.pointEls)
+    if (!live2.has(id)) {
+      el4.remove();
+      c.pointEls.delete(id);
+    }
+  for (const lane of lanes) {
+    const want = byLane.get(lane.lane.id) ?? [];
+    const have = [...lane.track.querySelectorAll(":scope > .kp-gantt__point")];
+    if (want.length !== have.length || want.some((n, k) => n !== have[k])) lane.track.append(...want);
+    lane.points = want;
+  }
+}
+function clusterPoints(c) {
+  const width = c.plot.clientWidth || 1;
+  for (const lane of c.lanes) {
+    const groups = [];
+    let headAt = Number.NEGATIVE_INFINITY;
+    for (const el4 of lane.points) {
+      if (el4.hidden) continue;
+      const at = Number.parseFloat(el4.style.getPropertyValue("--kp-g-s"));
+      const px3 = (at - headAt) / c.span * width;
+      const last = groups[groups.length - 1];
+      if (last && px3 < CLUSTER_PX) last.push(el4);
+      else {
+        groups.push([el4]);
+        headAt = at;
+      }
+    }
+    for (const el4 of lane.points) {
+      if (!el4.hidden) continue;
+      el4.removeAttribute("data-kp-clustered");
+      el4.removeAttribute("data-kp-cluster");
+    }
+    for (const group of groups) {
+      const [head, ...rest] = (
+        /** @type {[HTMLButtonElement, ...HTMLButtonElement[]]} */
+        group
+      );
+      const count = (
+        /** @type {HTMLElement} */
+        head.querySelector(".kp-gantt__count")
+      );
+      head.removeAttribute("data-kp-clustered");
+      for (const el4 of rest) el4.setAttribute("data-kp-clustered", "");
+      if (rest.length === 0) {
+        head.removeAttribute("data-kp-cluster");
+        count.textContent = "";
+        head.setAttribute("aria-label", head.dataset.kpName ?? "");
+        head.setAttribute("data-kp-hovercard", head.dataset.kpCard ?? "");
+        continue;
+      }
+      head.setAttribute("data-kp-cluster", String(group.length));
+      count.textContent = c.strings.ganttClusterMore(rest.length);
+      head.setAttribute("aria-label", c.strings.ganttCluster(group.length, group.map((el4) => el4.dataset.kpName ?? "").join("; ")));
+      head.setAttribute("data-kp-hovercard", group.map((el4) => el4.dataset.kpCard ?? "").join("  |  "));
+    }
+  }
+}
+function paintZones(c, lanes) {
+  const doc = c.el.ownerDocument;
+  for (const old of c.body.querySelectorAll(".kp-gantt__zone")) old.remove();
+  const laneWords = /* @__PURE__ */ new Map();
+  for (const [i, zone] of c.zones.entries()) {
+    const from = toMs2(zone.from);
+    const to = toMs2(zone.to);
+    if (!Number.isFinite(from) || !Number.isFinite(to)) continue;
+    const band = make5(doc, "i", "kp-gantt__zone");
+    band.setAttribute("aria-hidden", "true");
+    band.dataset.kpTone = zone.tone ?? "warning";
+    band.dataset.kpZone = zone.id ?? String(i);
+    band.style.setProperty("--kp-g-s", rel(c, Math.min(from, to)).toFixed(2));
+    band.style.setProperty("--kp-g-e", rel(c, Math.max(from, to)).toFixed(2));
+    const lane = zone.lane === void 0 ? null : lanes.find((l) => l.lane.id === zone.lane);
+    if (lane) {
+      band.dataset.kpLaneZone = "";
+      lane.track.prepend(band);
+      laneWords.set(lane.lane.id, [...laneWords.get(lane.lane.id) ?? [], zone.label]);
+    } else if (zone.lane === void 0) c.lines.append(band);
+  }
+  for (const lane of lanes) {
+    const extra = laneWords.get(lane.lane.id);
+    lane.track.setAttribute("aria-label", extra ? `${lane.lane.label}; ${extra.join("; ")}` : lane.lane.label);
+  }
+}
+function paintKinds(c) {
+  const doc = c.el.ownerDocument;
+  for (const old of c.legend.querySelectorAll(":scope > .kp-gantt__legend-kind, :scope > .kp-gantt__legend-zone")) old.remove();
+  for (const kind of c.kinds) {
+    const li = make5(doc, "li", "kp-gantt__legend-kind");
+    const mark = make5(doc, "span", "kp-gantt__mark");
+    mark.dataset.kpShape = kind.shape ?? "dot";
+    if (kind.series) mark.dataset.kpSeries = String(kind.series);
+    if (kind.tone) mark.dataset.kpTone = kind.tone;
+    mark.setAttribute("aria-hidden", "true");
+    li.append(mark, make5(doc, "span", "", kind.label));
+    c.legend.append(li);
+  }
+  const seen = /* @__PURE__ */ new Set();
+  for (const zone of c.zones) {
+    if (zone.lane !== void 0 || seen.has(zone.label)) continue;
+    seen.add(zone.label);
+    const li = make5(doc, "li", "kp-gantt__legend-zone");
+    const swatch = make5(doc, "span", "kp-gantt__band");
+    swatch.dataset.kpTone = zone.tone ?? "warning";
+    swatch.setAttribute("aria-hidden", "true");
+    li.append(swatch, make5(doc, "span", "", zone.label));
+    c.legend.append(li);
+  }
+  const runless = c.runs.length === 0 && (c.points.length > 0 || c.kinds.length > 0);
+  for (const li of c.legend.querySelectorAll(":scope > .kp-gantt__legend-state")) li.hidden = runless;
+}
 function visible2(c) {
   const w = windowOf(c);
   const now = w.now;
-  for (const lane of c.lanes)
+  for (const lane of c.lanes) {
     for (const b of lane.bars) {
       const end = b.e ?? now;
       b.bar.hidden = c.state === "loading" || c.leaving !== null || end < w.from || b.s > w.end;
     }
+    for (const point of lane.points) {
+      const at = Number.parseFloat(point.style.getPropertyValue("--kp-g-s"));
+      point.hidden = c.state === "loading" || c.leaving !== null || at < w.from || at > w.end;
+    }
+  }
+  clusterPoints(c);
 }
 function refresh(c, nowMs) {
   void nowMs;
@@ -23431,12 +23665,18 @@ function refresh(c, nowMs) {
     }
 }
 function reachableLanes(c) {
-  return c.lanes.map((lane) => lane.bars.filter((b) => !b.bar.hidden).map((b) => b.bar)).filter((l) => l.length);
+  const startOf = (el4) => Number.parseFloat(el4.style.getPropertyValue("--kp-g-s"));
+  return c.lanes.map(
+    (lane) => [
+      ...lane.bars.filter((b) => !b.bar.hidden).map((b) => b.bar),
+      ...lane.points.filter((p) => !p.hidden && !p.hasAttribute("data-kp-clustered"))
+    ].sort((a, b) => startOf(a) - startOf(b))
+  ).filter((l) => l.length);
 }
 function syncTabStops2(c) {
-  const all = [...c.bars.values()];
+  const all = [...c.bars.values(), ...c.pointEls.values()];
   const reach = reachableLanes(c).flat();
-  let target = c.active ? c.bars.get(c.active) : void 0;
+  let target = c.active ? c.bars.get(c.active) ?? c.pointEls.get(c.active) : void 0;
   if (!target || !reach.includes(target)) target = reach[0];
   for (const el4 of all) el4.tabIndex = el4 === target ? 0 : -1;
 }
@@ -23529,6 +23769,12 @@ function attachGantts(root = document, options = {}) {
       legend: el4,
       days: el4.hasAttribute("data-kp-gantt-days"),
       dayStop: null,
+      points: [],
+      pointEls: /* @__PURE__ */ new Map(),
+      kinds: [],
+      zones: [],
+      fit: false,
+      line: el4.classList.contains("kp-gantt--line"),
       ghosts: [],
       held: null,
       busy: null,
@@ -23550,10 +23796,33 @@ function attachGantts(root = document, options = {}) {
     window.requestAnimationFrame(() => c.drawn = true);
     const barOf = (event) => event.target instanceof Element ? (
       /** @type {HTMLButtonElement | null} */
-      event.target.closest(".kp-gantt__run")
+      event.target.closest(".kp-gantt__run, .kp-gantt__point")
     ) : null;
     const onClick = (event) => {
       const bar = barOf(event);
+      if (bar && bar.dataset.kpId && bar.classList.contains("kp-gantt__point")) {
+        if (c.dragMoved) return;
+        const point = c.points.find((p) => p.id === bar.dataset.kpId);
+        if (!point) return;
+        c.active = point.id;
+        syncTabStops2(c);
+        const lane = c.lanes.find((l) => l.points.includes(bar));
+        const at = lane ? lane.points.indexOf(bar) : -1;
+        const together = [point];
+        if (lane && bar.hasAttribute("data-kp-cluster"))
+          for (const next of lane.points.slice(at + 1)) {
+            if (!next.hasAttribute("data-kp-clustered")) break;
+            const p = c.points.find((q) => q.id === next.dataset.kpId);
+            if (p) together.push(p);
+          }
+        el4.dispatchEvent(
+          new CustomEvent(GANTT_OPEN_EVENT, {
+            bubbles: true,
+            detail: { id: point.id, point, points: together, source: event.detail === 0 ? "keyboard" : "pointer" }
+          })
+        );
+        return;
+      }
       if (bar && bar.dataset.kpId) {
         if (c.dragMoved) return;
         const run = c.runs.find((r) => r.id === bar.dataset.kpId);
@@ -23602,8 +23871,16 @@ function attachGantts(root = document, options = {}) {
         /** @type {CustomEvent} */
         event.detail?.value
       );
+      if (value === "all") {
+        c.fit = true;
+        c.live = false;
+        freshWindow(c);
+        announceWindow(c, "range");
+        return;
+      }
       const seconds = typeof value === "string" ? rangeSeconds(value) : Number.NaN;
       if (!Number.isFinite(seconds)) return;
+      c.fit = false;
       c.span = seconds;
       if (!c.live) c.to = Math.max(c.to, rel(c, c.now()));
       freshWindow(c);
@@ -23664,7 +23941,7 @@ function attachGantts(root = document, options = {}) {
       return (w.from + Math.min(Math.max(x, 0), width) / width * c.span + c.base) * 1e3;
     };
     const onDown = (event) => {
-      if (event.button !== 0 || c.state === "loading") return;
+      if (event.button !== 0 || c.state === "loading" || c.line) return;
       const x = plotX(event);
       if (x < 0 || x > c.plot.clientWidth) return;
       c.drag = { a: x, b: x };
@@ -23744,6 +24021,17 @@ function freshWindow(c) {
 function setLive(c, live2) {
   if (live2 === c.live) return;
   c.live = live2;
+  if (live2 && c.fit) {
+    c.fit = false;
+    const first = [...c.ranges.querySelectorAll("[data-value]")].map((b) => (
+      /** @type {HTMLElement} */
+      b.dataset.value ?? ""
+    )).find((w) => w !== "all");
+    if (first) {
+      c.span = rangeSeconds(first);
+      void Promise.resolve().then(() => (init_segmented(), segmented_exports)).then((m) => m.setSegmentedValues(c.ranges, [first]));
+    }
+  }
   if (!live2) c.to = windowOf({ ...c, live: true }).end;
   freshWindow(c);
   announceWindow(c, "live");
@@ -23767,7 +24055,10 @@ function setGanttState(el4, state, words = "") {
 function setGanttWindow(el4, window2) {
   const c = gantts.get(el4);
   if (!c) return;
-  if (window2.span !== void 0) c.span = window2.span;
+  if (window2.span !== void 0) {
+    c.span = window2.span;
+    c.fit = false;
+  }
   if (window2.live !== void 0) c.live = window2.live;
   if (window2.to !== void 0) c.to = rel(c, window2.to);
   else if (!c.live) c.to = windowOf({ ...c, live: true }).end;
@@ -23806,7 +24097,28 @@ function setGanttLegend(el4, entries) {
     c.legend.append(li);
   }
 }
-var GANTT, GANTT_OPEN_EVENT, GANTT_SELECT_EVENT, GANTT_WINDOW_EVENT, GANTT_TICK_MS, GANTT_STEPS, gantts, idSeq3, two4, make5, toMs2, keyOf4, stateWord3, rel;
+function setGanttPoints(el4, points, lanes) {
+  const c = gantts.get(el4);
+  if (!c) return;
+  c.points = points;
+  if (lanes) c.lanesGiven = lanes;
+  if (c.state === "loading" || c.state === "empty") c.state = "ready";
+  paint4(c);
+  tick3(c);
+}
+function setGanttKinds(el4, kinds) {
+  const c = gantts.get(el4);
+  if (!c) return;
+  c.kinds = kinds;
+  paint4(c);
+}
+function setGanttZones(el4, zones) {
+  const c = gantts.get(el4);
+  if (!c) return;
+  c.zones = zones;
+  paint4(c);
+}
+var GANTT, GANTT_OPEN_EVENT, GANTT_SELECT_EVENT, GANTT_WINDOW_EVENT, GANTT_TICK_MS, GANTT_STEPS, MONDAY, CLUSTER_PX, gantts, idSeq3, two4, make5, toMs2, keyOf4, stateWord3, rel;
 var init_gantt = __esm({
   "js/gantt.js"() {
     "use strict";
@@ -23819,7 +24131,9 @@ var init_gantt = __esm({
     GANTT_SELECT_EVENT = "kp-gantt-select";
     GANTT_WINDOW_EVENT = "kp-gantt-window";
     GANTT_TICK_MS = 1e3;
-    GANTT_STEPS = Object.freeze([60, 300, 900, 1800, 3600, 10800, 21600, 43200, 86400, 172800]);
+    GANTT_STEPS = Object.freeze([60, 300, 900, 1800, 3600, 10800, 21600, 43200, 86400, 172800, 604800, 1209600, 2419200]);
+    MONDAY = 345600;
+    CLUSTER_PX = 14;
     gantts = /* @__PURE__ */ new WeakMap();
     idSeq3 = 0;
     two4 = (n) => String(n).padStart(2, "0");
@@ -26633,11 +26947,14 @@ export {
   setFacetCounts,
   setFacetItems,
   setFacetValues,
+  setGanttKinds,
   setGanttLegend,
+  setGanttPoints,
   setGanttRuns,
   setGanttSelection,
   setGanttState,
   setGanttWindow,
+  setGanttZones,
   setGraphData,
   setGraphState,
   setHeat,
