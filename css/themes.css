@@ -37,7 +37,7 @@
    version meets a registry from another. js/diagnostics.js reads them. */
 :root {
     --kp-themes-version: '10.1.1';
-    --kp-themes-names: 'formal dark cyberpunk synthwave pastel forest blueprint solstice brutalism deco grotesk nostromo titanium';
+    --kp-themes-names: 'formal dark cyberpunk synthwave pastel forest blueprint solstice brutalism deco nostromo titanium';
 }
 
 :root,
@@ -1330,135 +1330,6 @@
     --destructive-disabled: hsl(350, 83%, 43%);
 }
 
-[data-theme='grotesk'] {
-    /* Grotesk: the International Typographic Style — white, black, one red, and a grid. Identity by letter, not by colour. */
-    --background: hsl(0, 0%, 100%);
-    --foreground: hsl(0, 0%, 7%);
-    --card: hsl(0, 0%, 100%);
-    --card-foreground: hsl(0, 0%, 7%);
-    --popover: hsl(0, 0%, 100%);
-    --popover-foreground: hsl(0, 0%, 7%);
-    --primary: hsl(355, 95%, 45%);
-    --primary-foreground: hsl(0, 0%, 100%);
-    --secondary: hsl(0, 0%, 94%);
-    --secondary-foreground: hsl(0, 0%, 7%);
-    --muted: hsl(0, 0%, 96%);
-    --muted-foreground: hsl(0, 0%, 40%);
-    --accent: hsl(0, 0%, 7%);
-    --accent-foreground: hsl(0, 0%, 100%);
-    --destructive: hsl(355, 95%, 40%);
-    --destructive-foreground: hsl(0, 0%, 100%);
-    --success: hsl(150, 60%, 26%);
-    --success-foreground: hsl(0, 0%, 100%);
-    --warning: hsl(40, 100%, 38%);
-    --warning-foreground: hsl(0, 0%, 7%);
-    --info: hsl(220, 70%, 40%);
-    --info-foreground: hsl(0, 0%, 100%);
-    --border: hsl(0, 0%, 85%);
-    --border-strong: hsl(0, 0%, 7%);
-    --input: hsl(0, 0%, 7%);
-    --ring: hsl(355, 95%, 45%);
-    --selected: hsl(355, 95%, 45%);
-    --chart-1: hsl(355, 95%, 45%);
-    --chart-2: hsl(0, 0%, 7%);
-    --chart-3: hsl(0, 0%, 45%);
-    --chart-4: hsl(220, 70%, 40%);
-    --chart-5: hsl(40, 100%, 38%);
-    /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
-    --code-keyword: hsl(355, 95%, 45%);
-    --code-string: hsl(0, 0%, 7%);
-    --sidebar-background: hsl(0, 0%, 7%);
-    --sidebar-foreground: hsl(0, 0%, 100%);
-    --sidebar-primary: hsl(0, 0%, 100%);
-    --sidebar-primary-foreground: hsl(0, 0%, 7%);
-    --sidebar-accent: hsl(0, 0%, 16%);
-    --sidebar-accent-foreground: hsl(0, 0%, 100%);
-    --sidebar-border: hsl(0, 0%, 25%);
-    --sidebar-ring: hsl(0, 0%, 100%);
-
-    /* Status badges (application pipeline): black, red and the grid's greys as plates. */
-    --status-draft: hsl(0, 0%, 90%);
-    --status-draft-foreground: hsl(0, 0%, 7%);
-    --status-sent: hsl(220, 70%, 40%);
-    --status-sent-foreground: hsl(0, 0%, 100%);
-    --status-screening: hsl(40, 100%, 50%);
-    --status-screening-foreground: hsl(0, 0%, 7%);
-    --status-interview: hsl(0, 0%, 40%);
-    --status-interview-foreground: hsl(0, 0%, 100%);
-    --status-offer: hsl(160, 70%, 30%);
-    --status-offer-foreground: hsl(0, 0%, 100%);
-    --status-rejected: hsl(0, 100%, 30%);
-    --status-rejected-foreground: hsl(0, 0%, 100%);
-    --status-withdrawn: hsl(0, 0%, 70%);
-    --status-withdrawn-foreground: hsl(0, 0%, 7%);
-    --color-scheme: light;
-    --theme-font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
-    --radius: 0rem;
-    --fx-signal: hsl(355, 95%, 45%);
-    --fx-signal-foreground: hsl(0, 0%, 100%);
-    --fx-notch: 0px;
-    --fx-duration: 120ms;
-    --fx-ease: linear;
-    --theme-font-display: 'Archivo', 'Inter', ui-sans-serif, sans-serif;
-    --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
-    --fx-overprint: hsl(355, 95%, 45%);
-    --fx-scanline: hsl(0, 0%, 7%);
-    --fx-lift: 0px;
-    --fx-hot: hsl(0, 0%, 25%);
-    --fx-hot-alarm: hsl(355, 95%, 30%);
-    --fx-shadow-offset: 0px;
-    --chart-pattern-1: none;
-    --chart-pattern-2: none;
-    --chart-pattern-3: none;
-    --chart-pattern-4: none;
-    --chart-pattern-5: none;
-
-    /* The spacing scale [TH94, AR18]. xs, sm and md carry the values they already had as fallbacks in css/components.css, so declaring them shifts nothing (S20); lg, xl and 2xl are the new steps above them. A theme may retune the whole rhythm here. */
-    --kp-space-xs: 0.25rem;
-    --kp-space-sm: 0.5rem;
-    --kp-space-md: 0.75rem;
-    --kp-space-lg: 1rem;
-    --kp-space-xl: 1.5rem;
-    --kp-space-2xl: 2rem;
-    --kp-text-xs: 0.75rem;
-    --kp-text-sm: 0.8125rem;
-    --kp-text-md: 1rem;
-
-    /* The hero surface: the sources AR38 names, so a theme can give the opening surface its own ground [TH116, S47]. A one-ground theme points them at its app values. */
-    --surface-hero-bg: hsl(0, 0%, 100%);
-    --surface-hero-fg: hsl(0, 0%, 7%);
-    --surface-hero-fg-2: hsl(355, 95%, 45%);
-    --surface-hero-muted: hsl(0, 0%, 40%);
-    --surface-hero-border: hsl(0, 0%, 7%);
-    --surface-hero-primary: hsl(355, 95%, 45%);
-    --surface-hero-primary-foreground: hsl(0, 0%, 100%);
-    --surface-hero-danger: hsl(355, 95%, 40%);
-    --surface-hero-danger-foreground: hsl(0, 0%, 100%);
-    --surface-hero-card: hsl(0, 0%, 100%);
-    --surface-hero-card-foreground: hsl(0, 0%, 7%);
-
-    /* The display step of the typography scale: the size of a headline on a hero [S47, critic #19]. The approved concept demo ("Twelve Columns", 2026-09-08) sets its h1 to clamp(2rem, 4vw, 3.4rem); the token wins per S49 — measured against docs/DESIGN_INVARIANTS.md's DI11 at 320px, the 4vw middle step keeps the line under the viewport at every width the overflow gate checks. */
-    --kp-text-display: clamp(2rem, 4vw, 3.4rem);
-
-    /* Derived interaction states — see gates/generate-themes.mjs. */
-    --link: hsl(355, 95%, 45%);
-    --link-visited: hsl(317, 60%, 48%);
-    --focus-ring: hsl(0, 0%, 7%);
-    --focus-ring-contrast: hsl(0, 0%, 100%);
-    --primary-hover: hsl(0, 100%, 40%);
-    --primary-active: hsl(4, 78%, 38%);
-    --primary-disabled: hsl(1, 100%, 61%);
-    --secondary-hover: hsl(44, 0%, 86%);
-    --secondary-active: hsl(44, 0%, 79%);
-    --secondary-disabled: hsl(60, 100%, 100%);
-    --accent-hover: hsl(44, 0%, 2%);
-    --accent-active: hsl(44, 0%, 0%);
-    --accent-disabled: hsl(44, 0%, 15%);
-    --destructive-hover: hsl(0, 100%, 35%);
-    --destructive-active: hsl(4, 78%, 33%);
-    --destructive-disabled: hsl(1, 79%, 56%);
-}
-
 [data-theme='nostromo'] {
     /* Nostromo: cassette futurism — the beige plastic of 1979 hardware, orange indicator LEDs, label tape, vent slots. The case, not the screen. */
     --background: hsl(38, 28%, 78%);
@@ -1990,29 +1861,6 @@
         --destructive-active: hsl(358, 88%, 71%);
         --destructive-disabled: hsl(350, 83%, 43%);
     }
-    [data-theme='grotesk'] [data-kp-surface='hero'] {
-        --background: var(--surface-hero-bg);
-        --foreground: var(--surface-hero-fg);
-        --muted-foreground: var(--surface-hero-muted);
-        --border-strong: var(--surface-hero-border);
-        --input: var(--surface-hero-border);
-        --selected: var(--surface-hero-primary);
-        --primary: var(--surface-hero-primary);
-        --primary-foreground: var(--surface-hero-primary-foreground);
-        --destructive: var(--surface-hero-danger);
-        --destructive-foreground: var(--surface-hero-danger-foreground);
-        --card: var(--surface-hero-card);
-        --card-foreground: var(--surface-hero-card-foreground);
-        --link: var(--surface-hero-fg-2);
-        --focus-ring: var(--surface-hero-fg);
-        --focus-ring-contrast: var(--surface-hero-bg);
-        --primary-hover: hsl(0, 100%, 40%);
-        --primary-active: hsl(4, 78%, 38%);
-        --primary-disabled: hsl(1, 100%, 61%);
-        --destructive-hover: hsl(0, 100%, 35%);
-        --destructive-active: hsl(4, 78%, 33%);
-        --destructive-disabled: hsl(1, 79%, 56%);
-    }
     [data-theme='nostromo'] [data-kp-surface='hero'] {
         --background: var(--surface-hero-bg);
         --foreground: var(--surface-hero-fg);
@@ -2201,32 +2049,6 @@
  * checked box would look like an unchecked one [KT8]. */
     [data-theme='mono'] {
         --kp-control-accent: var(--muted-foreground);
-    }
-
-    /* Grotesk: twelve columns, the grid every Swiss poster was set on [TH73].
- * Columns, not squares — that is what separates it from light's
- * millimetre grid. */
-    [data-theme='grotesk'] {
-        --fx-texture: linear-gradient(to right, hsl(from var(--foreground) h s l / 1) 0 1px, transparent 1px);
-        --fx-texture-size: calc(100% / 12) 100%;
-        --fx-texture-opacity: 0.05;
-    }
-
-    [data-theme='grotesk'] h1,
-    [data-theme='grotesk'] h2 {
-        font-weight: 800;
-        letter-spacing: -0.03em;
-    }
-
-    /* The red square before a heading: Müller-Brockmann's mark, static. */
-    [data-theme='grotesk'] h1::before,
-    [data-theme='grotesk'] h2::before {
-        content: '';
-        display: inline-block;
-        inline-size: 0.5em;
-        block-size: 0.5em;
-        margin-inline-end: 0.3em;
-        background: var(--primary);
     }
 
     /* Nostromo: vent slots, the horizontal ribs of a moulded case [TH75]. */

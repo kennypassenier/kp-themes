@@ -86,13 +86,6 @@
             "tone": "3",
             "mark": "3"
         },
-        "grotesk": {
-            "shape": "1",
-            "loading": "2",
-            "arrival": "3",
-            "tone": "3",
-            "mark": "2"
-        },
         "nostromo": {
             "shape": "1",
             "loading": "1",

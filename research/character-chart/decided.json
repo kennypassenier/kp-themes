@@ -98,14 +98,6 @@
             "events": "r3c-deco-ev-1",
             "tip": "a"
         },
-        "grotesk": {
-            "shape": "a",
-            "loading": "r3-gr-load-2",
-            "arrival": "linear",
-            "update": "none",
-            "events": "shape",
-            "tip": "r3-gr-tip-3"
-        },
         "nostromo": {
             "shape": "a",
             "loading": "r3-no-load-1",

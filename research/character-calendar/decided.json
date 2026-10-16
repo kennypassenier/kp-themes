@@ -86,13 +86,6 @@
             "tone": "1",
             "select": "1"
         },
-        "grotesk": {
-            "shape": "3",
-            "loading": "3",
-            "arrival": "1",
-            "tone": "1",
-            "select": "1"
-        },
         "nostromo": {
             "shape": "1",
             "loading": "2",

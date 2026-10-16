@@ -937,78 +937,6 @@ const IDEAS = {
             },
         ],
     },
-    grotesk: {
-        shape: [
-            {
-                name: 'The Swiss grid',
-                text: 'The month set on the Swiss grid: every day under a heavy black rule, the figure in bold grotesque flush left at the top, the count flush left at the foot, the nights in flat solid colour.',
-            },
-            {
-                name: 'The transit bullets',
-                text: "Every day a round bullet, as on a transit map, filled in its state's colour with the figure in it, the days still to come drawn as open rings.",
-            },
-            {
-                name: 'The poster grid',
-                text: 'No frames at all: the figure huge and flush left in the bold grotesk, the count small beneath it, the days aligned on a strict baseline.',
-            },
-        ],
-        loading: [
-            {
-                name: 'The Swiss grid: its loading',
-                text: 'Loading cuts in three black squares, one after another, in hard steps.',
-            },
-            {
-                name: 'The transit bullets: its loading',
-                text: 'Loading hops the zebra along every bullet.',
-            },
-            {
-                name: 'Out of register',
-                text: 'A waiting day is printed in two plates: the ink, and a red copy that closes in clockwise, falls into register, dwells and opens out again, 2640 ms.',
-            },
-        ],
-        arrival: [
-            {
-                name: 'Printed',
-                text: 'Each day is printed in black and its red plate falls into register on it along the closing spiral, clockwise, in 8 units; a week half a unit after the one before.',
-            },
-            {
-                name: 'Column drop',
-                text: 'The columns drop in one after another.',
-            },
-            {
-                name: 'Hard cut',
-                text: 'Each week cuts in at once.',
-            },
-        ],
-        tone: [
-            {
-                name: 'The Swiss grid: its tones and today',
-                text: 'The month set on the Swiss grid: every day under a heavy black rule, the figure in bold grotesque flush left at the top, the count flush left at the foot, the nights in flat solid colour. Today is boxed in black; the picked day in red.',
-            },
-            {
-                name: 'The transit bullets: its tones and today',
-                text: 'Today is ringed in black; the picked day in red.',
-            },
-            {
-                name: 'The rule',
-                text: "A heavy rule of the night's colour over each figure; today boxed in black.",
-            },
-        ],
-        select: [
-            {
-                name: 'The Swiss grid: its pick',
-                text: 'Today is boxed in black; the picked day in red. New: the figure underlined on hover, the picked count in heavy type.',
-            },
-            {
-                name: 'The transit bullets: its pick',
-                text: 'Today is ringed in black; the picked day in red. New: the day nudged aside on hover, the picked count on an inverted label.',
-            },
-            {
-                name: 'The red bar',
-                text: 'A heavy red frame flush on the picked day; a dashed ring on hover; the count in capitals.',
-            },
-        ],
-    },
     nostromo: {
         shape: [
             {
@@ -1177,7 +1105,6 @@ const PICKED = {
     solstice: ['2', '2', '2', '2', '3'],
     brutalism: ['1', '1', '1', '1', '3'],
     deco: ['1', '1', '2', '1', '1'],
-    grotesk: ['3', '3', '1', '1', '1'],
     nostromo: ['1', '2', '2', '1', '1'],
     titanium: ['1', '1', '2', '1', '1'],
 };

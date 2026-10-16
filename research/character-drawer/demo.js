@@ -913,72 +913,6 @@ const IDEAS = {
             },
         ],
     },
-    grotesk: {
-        shape: [
-            {
-                name: 'The bold-type panel',
-                text: 'A panel with a thick black border and a solid black head bar carrying the title in a huge bold weight, the body plain white.',
-            },
-            {
-                name: 'The poster tray',
-                text: 'A panel with an oversized, cropped-looking title that bleeds slightly past the head’s edge, the body plain, a heavy black foot rule.',
-            },
-            {
-                name: 'The block slab',
-                text: 'A panel with no border at all, relying on a hard colour block (solid black head, solid white body) for its shape, square corners.',
-            },
-        ],
-        openclose: [
-            {
-                name: 'It slams open',
-                text: 'The panel appears at full size with a single hard, fast slide and an abrupt stop (no easing, no overshoot); closing slides out just as abruptly, reversed.',
-            },
-            {
-                name: 'It is printed',
-                text: 'The panel does not travel: it is printed where it stands in black and its red plate falls into register on it along the closing spiral, clockwise, in 8 units; closing plays that fall backwards.',
-            },
-            {
-                name: 'It is stamped down',
-                text: 'The panel scales from 90% to 100% in one fast, hard step (no bounce) as it slides in, like a stamp striking; closing scales back down to 90% as it slides out, reversed.',
-            },
-        ],
-        highlight: [
-            {
-                name: 'The thick-rule ring',
-                text: 'A very thick black ring (bold, blocky) surrounds the target with no softness; the rest of the stage goes flat and dark.',
-            },
-            {
-                name: 'The block bracket',
-                text: 'Solid black block-shaped corner brackets (filled rectangles, not lines) sit at the target’s corners; the stage dims to flat grey elsewhere.',
-            },
-            {
-                name: 'The poster frame',
-                text: 'A heavy black frame, uneven in thickness (thicker at top, like a poster’s header), surrounds the target; the stage dims flat.',
-            },
-        ],
-        card: [
-            {
-                name: 'The headline tag',
-                text: 'A card with a huge bold title that nearly fills its width, thick black border, the foot plain and small by contrast.',
-            },
-            { name: 'The poster card', text: 'A card with a solid black band behind the title (reverse video), the count in bold tabular digits.' },
-            { name: 'The stamp chip', text: 'A small, square, heavily bordered card with the title set tight and bold, no decoration.' },
-        ],
-        next: [
-            {
-                name: 'The rule re-stamps',
-                text: 'The thick ring vanishes in a hard cut and reappears at full thickness on the new target in the next frame; the card’s text changes on that same cut.',
-            },
-            {
-                name: 'The block re-slams',
-                text: 'The card slams a short distance toward the new target in one hard move and stops dead, text changed on the stop.',
-            },
-            {
-                name: 'The frame re-snaps',
-                text: 'The block brackets snap from the old target’s corners directly to the new ones with no travel; the card’s text changes on the snap.',
-            },
-        ],
-    },
     nostromo: {
         shape: [
             {
@@ -1140,7 +1074,6 @@ const PICKED = {
     solstice: ['1', '2', '1', '1', '3'],
     brutalism: ['2', '2', '1', '1', '3'],
     deco: ['3', '2', '3', '1', '2'],
-    grotesk: ['2', '2', '1', '1', '1'],
     nostromo: ['2', '2', '2', '1', '3'],
     titanium: ['3', '1', '1', '1', '2'],
 };

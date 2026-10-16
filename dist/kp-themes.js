@@ -4748,7 +4748,6 @@ var init_effects = __esm({
       // dark (loading and arrival redrawn), cyberpunk and grotesk
       // (high-contrast and retro have since been removed). Every loading picture loops while loading.
       "kp-sig-cyberpunk-meter-slip-o": { durationMs: 320, cycles: 1, property: "translate", luminanceSteps: [] },
-      "kp-sig-grotesk-meter-grow-o": { durationMs: 400, cycles: 1, property: "scale", luminanceSteps: [] },
       // ── Rows added by the port session [scope-143, 2026-10-08]: every keyframe the
       // character rounds declared without a row. Generated from the stylesheets,
       // not measured in a browser: the duration is the literal, else the shortest
@@ -4866,16 +4865,6 @@ var init_effects = __esm({
       // and its leave (opacity, 0 to 1 and 1 to 0), the filter keyframes (a
       // re-exposure, out of focus, the burnt bead, the shutter), the bead on the
       // hairline and the line exposed start to end.
-      // grotesk-register
-      "kp-sig-grotesk-fall": { durationMs: 34, cycles: 1, property: "filter", luminanceSteps: [] },
-      "kp-sig-grotesk-fall-again": { durationMs: 960, cycles: 1, property: "filter", luminanceSteps: [] },
-      "kp-sig-grotesk-update-plate": { durationMs: 34, cycles: 1, property: "filter", luminanceSteps: [] },
-      "kp-sig-grotesk-loop": { durationMs: 2640, cycles: Infinity, property: "--kp-sig-gr-a, --kp-sig-gr-q", luminanceSteps: [] },
-      "kp-sig-grotesk-turn": { durationMs: 2640, cycles: Infinity, property: "rotate", luminanceSteps: [] },
-      "kp-sig-grotesk-gr-cut": { durationMs: 34, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-grotesk-gr-disc": { durationMs: 34, cycles: 1, property: "transform", luminanceSteps: [] },
-      "kp-sig-grotesk-gr-rule": { durationMs: 34, cycles: 1, property: "transform", luminanceSteps: [] },
-      "kp-sig-grotesk-leave": { durationMs: 960, cycles: 1, property: "--kp-sig-gr-a, --kp-sig-gr-q, visibility", luminanceSteps: [] },
       // blueprint-register
       "kp-sig-blueprint-callout": { durationMs: 300, cycles: 1, property: "color, border-color, background-color, --kp-bp-r", luminanceSteps: [] },
       "kp-sig-blueprint-leader": { durationMs: 360, cycles: 1, property: "transform", luminanceSteps: [] },
@@ -4956,7 +4945,6 @@ var init_effects = __esm({
       "kp-sig-pastel-tape-drift": { durationMs: 600, cycles: Infinity, property: "background-position", luminanceSteps: [] },
       "kp-sig-blueprint-hatch": { durationMs: 2880, cycles: Infinity, property: "background-size", luminanceSteps: [] },
       "kp-sig-blueprint-chain": { durationMs: 960, cycles: Infinity, property: "background-position", luminanceSteps: [] },
-      "kp-sig-grotesk-train": { durationMs: 2640, cycles: Infinity, property: "translate", luminanceSteps: [] },
       "kp-sig-nostromo-bank": { durationMs: 1600, cycles: Infinity, property: "background-position", luminanceSteps: [] },
       "kp-sig-dark-run": { durationMs: 2400, cycles: Infinity, property: "background-position", luminanceSteps: [] },
       "kp-sig-dark-bars": { durationMs: 2400, cycles: Infinity, property: "--kp-sig-dk-ph", luminanceSteps: [] },
@@ -31592,7 +31580,6 @@ var THEMES = Object.freeze([
   { name: "solstice", label: "Solstice", dark: true },
   { name: "brutalism", label: "Brutalism", dark: false },
   { name: "deco", label: "Art Deco", dark: true },
-  { name: "grotesk", label: "Grotesk", dark: false },
   { name: "nostromo", label: "Nostromo", dark: false },
   { name: "titanium", label: "Titanium", dark: true }
 ]);

@@ -944,78 +944,6 @@ const IDEAS = {
             },
         ],
     },
-    grotesk: {
-        shape: [
-            {
-                name: 'The transit board',
-                text: 'A thick bar in the series colour sits across the top of the panel.',
-            },
-            {
-                name: 'The Swiss poster',
-                text: 'The words sit huge and flush to one side, a hairline frame.',
-            },
-            {
-                name: 'The index card',
-                text: 'A thin rule under the words, the panel otherwise unornamented.',
-            },
-        ],
-        loading: [
-            {
-                name: 'The board flips',
-                text: 'A short strip across the top flips through a few positions, hard, looping.',
-            },
-            {
-                name: 'Out of register',
-                text: 'The huge word is printed in two plates: the ink, and a red copy that closes in clockwise, falls into register, dwells and opens out again, 2640 ms.',
-            },
-            {
-                name: 'The index turns',
-                text: 'The rule under the words redraws itself left to right and starts again, looping.',
-            },
-        ],
-        arrival: [
-            {
-                name: 'At once',
-                text: 'The panel is there the moment the table turns busy, full size, no entrance of its own.',
-            },
-            {
-                name: 'Printed',
-                text: 'The panel is printed in black and its red plate falls into register on it along the closing spiral, clockwise, in 8 units.',
-            },
-            {
-                name: 'The board flips in',
-                text: 'The panel flips up from the row below it in one hard step.',
-            },
-        ],
-        failure: [
-            {
-                name: 'The index colour',
-                text: 'The failed alert’s rule turns to the destructive colour, the rest unornamented.',
-            },
-            {
-                name: 'The red bar',
-                text: 'The thick top bar turns to the destructive colour, shape kept.',
-            },
-            {
-                name: 'The poster warning',
-                text: 'The huge word takes the destructive colour, the frame unchanged.',
-            },
-        ],
-        phone: [
-            {
-                name: 'The flat board',
-                text: 'The panel flattens, the top bar kept as the one accent.',
-            },
-            {
-                name: 'The flat poster',
-                text: 'The words shrink to a normal size on the flattened panel, the hairline kept.',
-            },
-            {
-                name: 'The flat index',
-                text: 'The rule under the words is kept as the only accent on the flattened panel.',
-            },
-        ],
-    },
     nostromo: {
         shape: [
             {
@@ -1189,7 +1117,6 @@ const KEPT = {
     solstice: { loading: '3', arrival: '3', failure: '1', shape: '2', phone: '1' },
     brutalism: { loading: '2', arrival: '2', failure: '2', shape: '2', phone: '1' },
     deco: { loading: '2', arrival: '2', failure: '1', shape: '1', phone: '1' },
-    grotesk: { loading: '2', arrival: '2', failure: '1', phone: '1', shape: '3' },
     nostromo: { loading: '1', arrival: '2', failure: '1', shape: '1', phone: '1' },
     titanium: { loading: '2', arrival: '2', failure: '1', shape: '2', phone: '1' },
 };

@@ -55,13 +55,6 @@
                     "shot": "d29744bcedbda97eee54b07566297ef892d43230dd0e389e60bce9641c6c19e6"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "2240403178a342694fdb6891aa0d95c2e0f3a1bff8b1b228e8e19cc63a1a0666"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -146,13 +139,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "237b74f890b3603cbed1d26e14233c7295ef16302988ccd73d23c8e0ba48be08"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "0eca0b28bb7b875d724fd1b1bb61d8efb8e0438b37bd4f5e45cbf9d9e245a735"
                 }
             },
             "nostromo": {
@@ -241,13 +227,6 @@
                     "shot": "dbb96c66e87c511bfc120d70a33a4b4a89f547f558f0802065adeabab3c52dd1"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "aeae90540eda4c2aa35d7f49ee0ce90915f7bdb0f5f77d4c62a05e6750280a55"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -332,13 +311,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "da63c1f54375651d890f6cccf3c03cd9a9e4b6fb030e419ef0201fbf0250d1f9"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "4e38f88ce2f6367eed587b500df540e5722fccec50ba0d2c18dd133808f524dd"
                 }
             },
             "nostromo": {
@@ -427,13 +399,6 @@
                     "shot": "405805ddf11be740e92e80f845edf5eddd109dbbfab4c69a2b621c148c1036f2"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "e49b7199112cd31757a2dc9ba888967dd98d962898aeca2c818ce26abcc91466"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -518,13 +483,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "2bb6e88ef5852e6c63eb8efa9b248a533e3201649e804e8e261e7966e0bf5bb0"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "c6ec28121d74b7e0abb0a364e3987d4e0090fa01a9840bb94e22563741f37de3"
                 }
             },
             "nostromo": {
@@ -613,13 +571,6 @@
                     "shot": "ea16d391ee1d49ef8439b27ca89eec7df2277cf9f2b437daa977d2097b55a458"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "e83c72fc947662a083b38299271fc0cd0d1a9bffcab1a4968f171149ca4fd27b"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -704,13 +655,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "b207fed81df60c81617264dbdf34427ad055ec75ca94551e369b1359b2bc3f85"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "5e7e770dc5ff2469e20199b90b711acc91fb3b6dfa44ec32564be9546ab26327"
                 }
             },
             "nostromo": {
@@ -799,13 +743,6 @@
                     "shot": "9d6835c193b69ffeec78f446b01e8eed507c4898416e5f42fbac4220c3247986"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "10d66965b7a330f6fc88ec2fd3635d3936e4e2d65fa296287bdbdba0d7918b05"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -890,13 +827,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "97dba42de660c8b2c7c7d5bd05960d7fd64782a69a7741d29f400a831adbcb71"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "e3ef4590e31648f3a8d8cda27f70b6e3776d00b7911ca7b98b78c9003f40b449"
                 }
             },
             "nostromo": {
@@ -985,13 +915,6 @@
                     "shot": "09e9f6528ae22df3bec5b17800a5c19d1f11f2d61c03628bb1a3132e81d17f2b"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "108ade498b60c254f90cb4d4a38acc8b11517f85c3162651374857c3fcd150e7"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -1076,13 +999,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "c5e8023318428fcb6a3e0d90aac00348731ff4645b096e7d28219536e763f24a"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "882b3f4eab39bde7aa328f7564ed9fe8875b44c23a5bd016a3b9a689da95908b"
                 }
             },
             "nostromo": {
@@ -1171,13 +1087,6 @@
                     "shot": "5906f1d07e4e298a7fb7a69d9543639785e77c15f47ce365b45b1e3b0a7f9d7a"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "8e35490004ceefd9bd06687083d6a0e9f34c5d5bd820b2823f85fe779277c82a"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -1262,13 +1171,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "e257f6241ce4ecfc28f9c2350ab9a29d9520b3dd3252ad8dd17c5238c8cfd377"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "d540782213d4f0450b5ae30915d7ad8106b104bc7662b30e8dcba2b152933d96"
                 }
             },
             "nostromo": {
@@ -1357,13 +1259,6 @@
                     "shot": "8e46315be8db517c94105c4f485b8615115abfabae9891610bb83e341b639c06"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "38fb712ac64103a1964f96526e2234fc41caff5911293ebb6fc904e6e970032a"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -1448,13 +1343,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "8963adeae50b24a7f602809f4fef293a14c5a2d7bc3fef3e32f3a1fcd6abfece"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "d3cc308519229b7ecfaa424faeb476c729023677d2b2acc7bea5383fea905bd4"
                 }
             },
             "nostromo": {
@@ -1543,13 +1431,6 @@
                     "shot": "a50429cbd3840c0e02b840fae16371612b121d3fcfdb78cf1804988b25140fa6"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "702a6518e876832570ec882118a4d10e3c09efb70920eb9ee1433a6511122442"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -1634,13 +1515,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "d61a321558ff3cbb468a27088c9e0118790ae7fc6ac708cbac5aaa19e3087f3a"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "719932e392f113112e1d1a08efdd9490e3bf061143fa46601488b2e50cf378d4"
                 }
             },
             "nostromo": {
@@ -1729,13 +1603,6 @@
                     "shot": "0b4e416727d4f2a991041de7b2c9e2abbfdb7e9fc087116623c0e815b33a1024"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "b78df2c1959e817cdd1e1de1b89d54a175a62f7e899f7e549e76373d0642be23"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -1820,13 +1687,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "a948309e8cd004ce81acb1ac7f3ce1e31b11dbdf2eab8fdf1fd2b5330e5828ed"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "acc7db83421b7bb1491ddb389a843a29a31b8b8ba4ca085a5f0f5d0822d8244e"
                 }
             },
             "nostromo": {
@@ -1915,13 +1775,6 @@
                     "shot": "cfe152f291ae2f894c8d9003f556c630a1d304039879a895788d45432e999b0e"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "496ff94ceb2f3fb6ab4ffd62065a3837243c6862036af948ecc0bafff098672b"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -2006,13 +1859,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "c1a0e69704d112cdc5ef63d03ab351dcbab4de11dfd782a0b513a928228f197b"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "edd4790e811b6315a55429c04c2a38f7f921e4fa6e5760deb90af99e313d7f3e"
                 }
             },
             "nostromo": {
@@ -2101,13 +1947,6 @@
                     "shot": "9ba894d306dd3f13b3217bb0e28c3b93fdb87ca2bb630eef31fcefd99fb60fcc"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "0658307bf128eb791b81f114b10668cc5a0fd16ea1a50cd843406f0c3c585c65"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -2192,13 +2031,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "d90659240d6a01de992a3fa514a34c33422a69dfbdb081a9dbf6e3b34219ddba"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "e3a8d40435e15216a907529b895bc4813876e71b64b45749c43540e733f02a96"
                 }
             },
             "nostromo": {
@@ -2287,13 +2119,6 @@
                     "shot": "8435c76453ea16fc77dc0a134a747feaac5a5d71fe2c3eb11b0545d5ef86b759"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "80917a04b5ba384ad0f9e2382ab711c9c536ab99750e4aa883eadf27766d6efd"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -2378,13 +2203,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "e01dcc3c2e943336b79c3e9b785118da2190aad1a8c8de7496dbbf0c71ae3371"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "b33962ea30116a5ab74f24e10155b2ad2462cd6a66ca1bf06797f61e141a44ee"
                 }
             },
             "nostromo": {
@@ -2473,13 +2291,6 @@
                     "shot": "154219622ccdbd3b1174b5486880d7ad39a8a8e8516ddae48440f34d4217f382"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "1a5682bf172e6c976cccc373c98f70df199bf0afd48dd042aa235a8ced9e8fb5"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -2564,13 +2375,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "be74ca93c3b9268aa246a04222c6d6cf047a68a1954e38ec24608004aba03342"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "9fa550234b9c2a14d8ae66c5b68feaf3cbd3b61d73fae671058c1a8791d05494"
                 }
             },
             "nostromo": {
@@ -2659,13 +2463,6 @@
                     "shot": "2ea58143d407354dd180579b8aae5ee86b36b3a19bc959abbbfc5886eaccdd86"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "9a6d4b748f083ad97b0fb5954c70757d3e47f3ad4c367d17ec685c4dcfbbacb6"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -2750,13 +2547,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "9488cba22a00365d9e28572a1d87c3b5fd2fc1a27890bf9d0c5dc64a8e289c7f"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "3d0a5d5a82d9268b003171c37c549da9fecc02f0f302ba5a1867ef23a214e45e"
                 }
             },
             "nostromo": {
@@ -2845,13 +2635,6 @@
                     "shot": "295f3c68c065a58a95edf43890fe9ad50cd50da676ea0a217ca13493b9b6cba3"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "0c9d747f5beb1ad4f4ffb876511289c74b2a69ac69b669bee5c35495221f8d5e"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -2936,13 +2719,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "ec1d1cb2cb98ad47a17847e33d524a3553f50d7bda23cc1e9a85c618e9ce55d0"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "338594c641986a1db45f93e6f45f818a0fb14de62b4c8a4a45ed6fc8b1da5c9e"
                 }
             },
             "nostromo": {
@@ -3031,13 +2807,6 @@
                     "shot": "587142e538e80904d94b0140a12d05e6eeba7fdf8f268db9f2c7cc039759af27"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "6828863a869b3d071bc4ae81c3d0e06fad5cb6d1373066b0d96b256b8c8ad840"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -3122,13 +2891,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "5fef4b80072f39e63d801eeb1c40073153247ab6d4ced41efceeceef2c9c45bb"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "bce73e8aa3f29978adb51a157a0c34285f8197ddfd70c11ce5187582a1ba1751"
                 }
             },
             "nostromo": {
@@ -3217,13 +2979,6 @@
                     "shot": "8d9e97daa01ae8881c41eddb2d7bd8d56e7226ad992a55855dba0d904a79baa0"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "cf3dd0e0c0813fa8756bfa4cc57a1c145f1e5e613d207a269cee94de55cfa80c"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -3308,13 +3063,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "561aefb472749c0d70ff313ab96339dd5d528b2601285c1d65c0449d9a8fb96d"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "a6fd9a3904cbaa51b7f8387fed80cc222899b8153f2847545a93ec7cceec5ab6"
                 }
             },
             "nostromo": {
@@ -3403,13 +3151,6 @@
                     "shot": "922eeea29112525fec74c26121b36357a7034d75920bf0f070cabc762b342285"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "ea3390a2af81c0c8a3089ac9114057cf721da894e70ea15eec2fc78eeb15cd28"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -3494,13 +3235,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "af5b6a4986cd5cea1a6a2ac906d4cb33ac5e680911aaa4fdde0ba590a569a8a5"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "9bf5c712291320de8566f5dccee54bce44b51a0ecbd03a0db0e2faa23bc8015d"
                 }
             },
             "nostromo": {
@@ -3589,13 +3323,6 @@
                     "shot": "1e53fd0f974e53c4e4a284fc25fd1170151ff4e1dc39018017c44eb9332636d2"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "34483b844006dd93cfa3921633c1e7380da609f4fcf4167714270b851a1027b1"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -3673,13 +3400,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "239ac8a2ea4b96cc0d7f9e13d5d1335d7907de0bdbce04993d2549e976dedfce"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "9490d85fa4fa0be5d3b39e6ecda744ab76f504656dbe79589f1ba72e15a02e99"
                 }
             },
             "nostromo": {
@@ -3775,13 +3495,6 @@
                     "shot": "56f220dae4542facab0e18edd5131e624baad46d98e4fe3e9658ab7b49054521"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "8a9e180d4818cb738c2ea95611eb50e437692410e071afb08f5635f0210679dc"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -3866,13 +3579,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "e2ecc10a9a400090eb83a32f4b239a7d2d03fe69e1f2ad7e404483a7b915f34e"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "86bd4c7455697f633e59523ed5fb111f8c1b2ab7ad8b79adf99d80be1ccf6d72"
                 }
             },
             "nostromo": {
@@ -3961,13 +3667,6 @@
                     "shot": "d081b43a5517c4e287dd29c69dc6271cd1235f1ce34288f108bf71c8fca74120"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "a7c24c0ad2bb310c74a24539a73487eee2f21702ce6d3c7ea2f798a89cbd4592"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -4052,13 +3751,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "bdd2c868815d4d62cfe45fe6c5dc7c06758bcc0d6cc4d49f8e232d4b3af1cee8"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "80685868ad9f8503ee32d948ab0907f88c79f746fa47ae6d9124af0bc2bc4d1c"
                 }
             },
             "nostromo": {
@@ -4147,13 +3839,6 @@
                     "shot": "ff74052928c1c7641c67c2f3a7db5ac2f6584f829591288c80209dceb8a4dd93"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "4c8874515e80ca98f57189eb2e461f84796adac4c9fc388c5539c9483d80c0d8"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -4238,13 +3923,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "4d343cb7af052f29d555d08fcef6de2f8bc269043ecc85b5525d4b7cc73e6380"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "6003c39a7d42d2b61a3eeb047eef841be6ed9e4a58e34b2316e89693de9ab81c"
                 }
             },
             "nostromo": {
@@ -4387,13 +4065,6 @@
                     "shot": "122b82fc11a1c3c4153518a56bb2107428d0fed9f1ac88d8cdf7429e9c340daf"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "da6990403095ad00df042cf48d92827a84da3beb656b2131de54673cd3fb252a"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -4478,13 +4149,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "064c9f0072e6c498233fefdcc08fe5f7be2c31820ddb6c154d35de3023233a19"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "d98eb294e8b0d79240d92cbdbcc8cef4e0f5d0d5ee3eb2f22edac23628b5bf6b"
                 }
             },
             "nostromo": {
@@ -4573,13 +4237,6 @@
                     "shot": "8fd4937e4062361c2885be30aa413bf7c982a6aec2a5daf6ed57e14fa4048193"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "37224e354ead76e0bdf0982d807a84df4e1884384c9f8a99634560b9903e0894"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -4664,13 +4321,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "7064e1d47d3970be427e57db59c2ab04b6083d8708d4cbba455c84a03fb182d2"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "47c312dd580061d2957520356d40ccd343b7c0e17aaa1ecfc9e6051430861c76"
                 }
             },
             "nostromo": {
@@ -4759,13 +4409,6 @@
                     "shot": "4e8d36bbb1a331c6e324d9de56ced418195d3f5bcafab6c7ea2019c6c72fe082"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "65e480ae0715a4a0821b43ca56ef3267db81c735d099ba42889762c2f7f8daab"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -4850,13 +4493,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "cea4f9468a091b46b4661ba84cfd5d3a62392bb1c40f21162bc397103abca120"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "7c3e779a8ffe03efbf9dbb2d6165a1e7bd3ecb2879c6d1ae77df4d87bca6d822"
                 }
             },
             "nostromo": {
@@ -4945,13 +4581,6 @@
                     "shot": "f08a1be36af19495c47ad79eca80fe325bbec452d0a6ff8bfee491d84638f779"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "e3e87242b448fcd7a660bced9499943e8c2661596f20a4a3f1c055e461fded9d"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -5036,13 +4665,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "52e7f18b2d9aa59f19f4e85f2afbd322add74a840b99f9da9b37766343590cdb"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "fd19af375b67f4de6c430edc68148f4aba8570fd87115a0ee84012c7b824a7c1"
                 }
             },
             "nostromo": {
@@ -5131,13 +4753,6 @@
                     "shot": "ed4f0f6794ae2b917802397d249f8426b6ffffd9a79b6b169b247de2136f8731"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "e0613c2887ba0ded134133cd22e6ac6dfdedb2bff558d8ea3d984dd7af31ab78"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -5222,13 +4837,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "cc637c6e3c5794b13a6ce1e64e8cef7f7dc345b81a3fc843168193838e204ec8"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "1a552b9f411373fc7f1b342135e79d88b8f7fe309cf77943f4baf6acc7f07ffb"
                 }
             },
             "nostromo": {
@@ -5317,13 +4925,6 @@
                     "shot": "c92957e820e5ded3b237f2ff2f241379bf17e0aa4510a0b935fe153491f674d2"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "e535d0102bf8430457ae3a5bb03510ac1388bb52573ea64d518e0c0f7948bfb4"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -5408,13 +5009,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "fe313f9fed9b7151668c2f7dd4495ccf534a6a6b255260029af8d381f02733e2"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "fe323a06bd2baf3f6751fd012422936b8e5092ae2647cccae69120e3d539eca6"
                 }
             },
             "nostromo": {
@@ -5503,13 +5097,6 @@
                     "shot": "8ff95fc0a69324ac1c0a4412cb2839f273cc824321bdf511f4b99d86a4bf5519"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "ed8917a8dffbc3a7de3b7bda369a0e4297a33461e89bc42a5f0fa08e41135f07"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -5594,13 +5181,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "b0a33c662836182c30bc911ecc373fda971d1f76a8639ef1b5290b6dd830673e"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "218ea3ce8440ad550e16e9f54f12acebaefb84bb06fbd125afa5c17588450195"
                 }
             },
             "nostromo": {
@@ -5689,13 +5269,6 @@
                     "shot": "69b508e0619c99dd237dcd7ec8b10592c752871d12d04feca35622e9369567c2"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "eda43bf6cd07e8633a30f233857e7e57c2e5ccbbd0313b586b11c551892a8766"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -5780,13 +5353,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "9ed1eef2cf95bfa0d9a4b33e44913d570ea4000984dd7a726babe67bf8ee755b"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "5776a6b68d2a466f3ef2b8d3f233733f85fe38baaa29a73eac38d9199096ee93"
                 }
             },
             "nostromo": {
@@ -5875,13 +5441,6 @@
                     "shot": "f8a827d5164e2a78e0d42f1ff9c38217130287badd0a5a3b8e7ba77daed3fe9f"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "774ed9adcb0ca7444952d005e5a89c2c57eecf2326ded17d6005971aadaa313a"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -5966,13 +5525,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "2a4398fa4cc2e8b0b58d63241b5b86fbcc9744fac880e25289778ac7573778e5"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "e8f8491a0733385d2000efc7affad7c63d02de08c1be15126f691c7be7f0870f"
                 }
             },
             "nostromo": {
@@ -6061,13 +5613,6 @@
                     "shot": "b3ebed5d8416c5c3a7c6759a2819717897a5cac0860194ed8d0fd40ec36ef613"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "cc2233e260092a99debdb142c7cc4de09abcf3f928702e28f9318f55005e0321"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -6152,13 +5697,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "4b3a3241af6e6a80d68bf3b3cba300497988679f79259aee173a796dbda5eafc"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "d35ebe9c86f4d752fb6c076c9698a558ad4831381169f03be167d9dacc92bd9d"
                 }
             },
             "nostromo": {
@@ -6247,13 +5785,6 @@
                     "shot": "75161e5c61c4838c73f0ca2ceb5e061d26c58a5253170f87db2d74119b72dcf2"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "7d29fc64514c3977b6bbe3972c323e14aa770d41131fb3c4e0276ecadb7d4ba0"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -6338,13 +5869,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "603a699ced80d14b4671ef3688e5d82f3848457ae55a91236f2fcbaa520cd6ef"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "58bb7cd271a62a1f8f24c182c6e3ca09c4930dc4eebf6a17ce92e9b68dcab02b"
                 }
             },
             "nostromo": {
@@ -6433,13 +5957,6 @@
                     "shot": "3f95709ae282921db0e7ec4ac2a4649219673b2c3d90448b8cdc43772e3d5ca8"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "41d22eb1f7118d3198044d3e11a62faf585735d8906aa6bb12361fed5174e167"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -6524,13 +6041,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "3c8098b1f44d8174225fbceda5cf10611113e9526a7ec229a8216e0f40a152f1"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "7370d4e540f65a78eac5536cc6caa8dd3da6cafd8d2619736ee8b5bbf45eddad"
                 }
             },
             "nostromo": {
@@ -6619,13 +6129,6 @@
                     "shot": "ae6f64d9d57ed781ba9b6628c3850f8416f53325d146b9a38f63d02ad5da3c88"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "4cb471ba8f81477579d34f21f16fbc20a43ffb72429631fcbaf50cb4c5e20999"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -6710,13 +6213,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "eb3d97f3780a4e11288be38e9504783a114b929fba11452a4228f9fa457a727e"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "6e3d79fc9d7a900cc07d833bee6867c2c05e58511f120fdd733cdb03825f8a52"
                 }
             },
             "nostromo": {
@@ -6805,13 +6301,6 @@
                     "shot": "37b04f3e495b398f4e81b6ee35cc2f7825b0b11dfc0a7bc94ca2f5eb6d1260be"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "fc09fa13fb6262935a178f91bcd2983a322b87e2835a5c02e0e0cabae5496f61"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -6896,13 +6385,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "faedfec255799406d007f32d241e3e2f2e3dd925f50820161e2d2ea1a025e249"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "ed86a38579461b5e72e4e35563015693001bd79b59a5cce506e56af1a12ccd92"
                 }
             },
             "nostromo": {
@@ -6991,13 +6473,6 @@
                     "shot": "75379020bc9606025b60f3f105aa495384d4a19906e382a5211ac2478e615de1"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "4f35ced16430ca42db090617486148a82dc626e2155602393da496eb4803d713"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -7082,13 +6557,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "29f1d739d026b57127c7ad3ab53adc993531b65fc2b7ec691c8a26c1eaa54cb1"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "0f6b54a91e7daaf0662e9a9fa5b8f15621b250b359a683ca62318e80550a39f2"
                 }
             },
             "nostromo": {
@@ -7177,13 +6645,6 @@
                     "shot": "00af6cfd8074ffac9c0fe9c87b65a81c480c4bab1eb0f86b87773b709dab1933"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "a1bb3ce9efe5630698b8e01855195d5647d8b4a598bb192b3d9f15a0554cc0ee"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -7268,13 +6729,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "d90210ac10aa882fb75c1e7fb45bcd4590e9e326f09850d7c9de917fd7c1bdb1"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "5749e5060e9b540e898f1bae466375fda652b9da19442006100d20fb2cd2af09"
                 }
             },
             "nostromo": {
@@ -7363,13 +6817,6 @@
                     "shot": "a54488c92ab4028079aa93ee0296a0139b23edda81fbc8a8fb8571a2033b7743"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "90cf029590d8537ddf02506b3b383ed9644e194221b69015d771ad45905774f9"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -7454,13 +6901,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "a26c3f0a78a793025ca9e34c51f18a92d801c6a481400cf6f18e8d3e0fcbaf60"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "a20d46e9553b0af654fcbfd0199c1ffdd4e0855e8ce14134538cf7c95c20928f"
                 }
             },
             "nostromo": {
@@ -7549,13 +6989,6 @@
                     "shot": "ef34cf8883ed61d3a209d4896179c899330d395b685cbdbc582d61f803255b08"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "05553be195f82190ba275a72afa7ed73765bc7f32ae6a8f3bf9df75cbc66b543"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -7640,13 +7073,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "f47a9e9e99ca8d0c0f3137148e5973f2c38e2f8519feed7baa667716def049ed"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "c2969f4ae78c43a8e00401fe3ad853d3213e50253e69f6aa23a2fc6a4c7b747f"
                 }
             },
             "nostromo": {
@@ -7744,13 +7170,6 @@
                     "shot": "d8c269b1be5c82ac6b9b7607a382190540774ba46ec65b57dba484d657ec53ce"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "19fa16a77b37128a4d0cd3f9373777f241efa0c0409a7bced966208d450d0e4f"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -7835,13 +7254,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "b0893407dd4ce485895433d9dbfdf9f36196a5ef6c2bd152b58b8ef1db6a3d1e"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "259278cca386127ec2a0e758d1ebe9588326b32fc4c884d70da6e86e6e5d48f8"
                 }
             },
             "nostromo": {
@@ -7930,13 +7342,6 @@
                     "shot": "f0bc84c781c7fed6c96369f745938b7d59a221064f2ce46156e50e94d9d1741a"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "1261c2b2f2d9e5c9cc1d2db2ee84f0d1fd16c53c97e07b02aa7ffa815ba89e1a"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -8021,13 +7426,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "96aabf5397a3ec4ca0f1b47e97c55c9f7300a20d5a8fb49defb89bc08729e8cc"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "588438a03c57de4d28cef112592ba86ff901d8ae191295c9a05368371432555d"
                 }
             },
             "nostromo": {
@@ -8116,13 +7514,6 @@
                     "shot": "e132a62de45a8fb515ff39f224349a9d2eeaad52a991737cabee8a254b874498"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "9f178a28624272f138302512655769985da5831ad661bb89c685cef55d7caef9"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -8207,13 +7598,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "5f9d38532a3cb51baf5fa141b4f752701e2f59ba3fc1228181d6d92a9fb31e17"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "f6766b934ef7273397b5b7cc4dca6eb88d8c3bdcbf84e42375d9c606af7dd68a"
                 }
             },
             "nostromo": {
@@ -8302,13 +7686,6 @@
                     "shot": "996b65828e9e779fba5571b666cdd3892f7d93fd2758f688f93f0e86b1d4bc12"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "95f9ca542f86163b2772bb077081e06b41fd3461a443c9e602861211c13b69e9"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -8393,13 +7770,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "6b5c1dcd72973ed359fb3fe7a70647ce2cf746d90d81373280d17985b2855d10"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "907f75475119cead781790f4af0e975718242999c18d07f3e6e3c8a53da4ee69"
                 }
             },
             "nostromo": {
@@ -8488,13 +7858,6 @@
                     "shot": "58263f4a0811132f9daf82c26a7438f54cbc705d8fe1e5d98a74ffed2bafc0e1"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "8d835929f895c5f47b802bc76c933a6a6caa3074b3bc1c3f83e2d978ce976c24"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -8579,13 +7942,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "250db5800877b6ee7d0352540622e2cb875d274078ed6822ac85d0b1ec836e9e"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "dcad17116c57545e8bc7f63c14a84667cf239a3925188b4b18e8715608aba41d"
                 }
             },
             "nostromo": {
@@ -8674,13 +8030,6 @@
                     "shot": "672445aca55b147ef3b88fe65fbdf19947542b939fb9b63acbad64a073c80c22"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "7ab48b4b9050354cb6144da309b260f0690b574a7ee796086482261d7754b430"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -8765,13 +8114,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "e8dd55e32a7587627eae686708aa2e6dbed993d5cc06e740fc8a885a2d543e80"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "fd8543972ea990f7964c844a94bbbb05e041a8815e5443612484855ea0805bc3"
                 }
             },
             "nostromo": {
@@ -8860,13 +8202,6 @@
                     "shot": "2fffa31056905b0ade4bc2236feb5be71e709ea2f23130079c82ccd267ad03b2"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "5f9714c4c132b5a4b28b463ceb7b925705c378aaad266a98874ec7f226f16327"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -8953,13 +8288,6 @@
                     "shot": "1dc0eec104b2562d86520d63ba6433d20e5bb2d2afac07f44c24d44b4f096fca"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "20ae704c02ac9ae613aac1f33de48abf966a7782fa4d1f64c034f338c25ce3e7"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -9044,13 +8372,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "e89f5e778810f6ab01765ed7d86f8c654149c0885e41f54ca812d543cc314786"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "422db164adb9882a8bc91f826fe706016d62bdd2debcd46aff780114f4e1da3c"
                 }
             },
             "nostromo": {
@@ -9301,13 +8622,6 @@
                     "shot": "cc0c215903a7860746c2fe3772eaeb0ecd3cd4b705caae34080b223e2a465d00"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "c83c68eed3254882d3929fd0faf905a0817361064cef2cd85689ae46c6e78e51"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -9392,13 +8706,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "08ef3710026f91d70975429575cd257a5d482daec8ade8b3fcc9aecbc41d2a36"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "a652f4dac54789bfb9e2b0e2e7aa1eb42984e0cfbbb60b1a601866535165c897"
                 }
             },
             "nostromo": {
@@ -9487,13 +8794,6 @@
                     "shot": "c3a1e810bc234dbb7e33c7f1ccbbb95d2e2ed212b5528dcc5077a1514361ef74"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "fdcd9c9df4b5ce2bdc0f9d5ce0d2a517708344d29fd9e179eacdd4d7bed3d17f"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -9578,13 +8878,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "d9e0a8edfaf0089af7416702862aa5dbef63e2b2d76a39231d6d19bf6e9f51e7"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "e5e5e494780aa86a2542dc6b2a7f84789136ec235035d592fae4658729fc0486"
                 }
             },
             "nostromo": {
@@ -9673,13 +8966,6 @@
                     "shot": "aabf1630b89a3d22e4217ac7c1456a6c2ea9d776b76e626342d0231fdd7542e2"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "87eba5e9283d52cbafa07f5c1f9a9f02ce84e2fc4771f3f9b694e397635f45d7"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -9764,13 +9050,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "00c774cb4d176b2d296eaf4d48c06c3aa4c57c12fbe0d2aa8c8f4d1718b951e5"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "2e1eb313ce89146fdebd4c42dd2bbf62a78286d00a6fd94dafec1fafcaf63105"
                 }
             },
             "nostromo": {
@@ -9866,13 +9145,6 @@
                     "shot": "4879e8f33e26270bd2467a260900fd3f2fec343d900410fe5a94c5b20b1c0c8f"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "e3d72b1495b8a5bbf2ec3674e98558a095347c184909b345fec7b0d70011293e"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -9950,13 +9222,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "553e880fd24af585d544cfb75f0ea4e8e4a8f35b79759ec33f6fc8a6fcb59cd6"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "0518af93728c79794ab7c37fc09f79e76e53144300554eaa02ed99244139c5ea"
                 }
             },
             "nostromo": {
@@ -10045,13 +9310,6 @@
                     "shot": "182dbff35bb9acf47dd729bc0ddf6ca0e0df3820ca093c17c2d72027ae56fb9a"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "6323885d5aa5f3e162e3caea53ee674ca25dc1cf0a1341581c8645e05a805050"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -10136,13 +9394,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "9cef1e01a34558aa1327c7af542a5db33001a3ecee389e7c6ad080bff3f1c8a9"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "77a5c62c7b771f5778db4a731e10b95a25ba2a597eb7514f6692dda604004f50"
                 }
             },
             "nostromo": {
@@ -10231,13 +9482,6 @@
                     "shot": "c4689d89f5716bb872261ac7c7e2b17f098397d58d4b834c678465e3e38ac740"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "8123f83744898240351c8629053d1c70103f1b20c8397ed8dfb74244a4223d07"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -10322,13 +9566,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "7a6162a2ca7af464b71976a0316379059d67833c704cff52dcc79032c1639153"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "1ed7dd4030ba58b08a445a9424b5c4cf80fe29ddbc47eefc09e7b19a68d275c6"
                 }
             },
             "nostromo": {
@@ -10417,13 +9654,6 @@
                     "shot": "84ce90fdd78cf5187e59b7c2bbbd84e72868e1ca29fcf4acb86f558a83318e1d"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "12039e8b380d06f2e32befd99351a5fb4c8d8d5bc58eb19ab77d74c9b5b83798"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -10508,13 +9738,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "4ca2ae31f72deb02eab44a78fbe1d7cf9c7ed9546f76e0030261f2edfb21d2a7"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "efa82b42f5e840373a56c3e5f3760084a6b176919b1d3a49fdab180173c8ea68"
                 }
             },
             "nostromo": {
@@ -10603,13 +9826,6 @@
                     "shot": "cba5ab7c504cef78835e324995274f87ac6544ab3cc14fd0c5b152a88698d563"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "56b6bc5adbb94b1110021c6205436577fb00193b6811d0e6c630dbd7682f36d3"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -10694,13 +9910,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "8eff0bec126fcfcdd0d15050807f538512a965ecabbad1e1d98e56c87f9392d3"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "1045dac9cff65d20394c08c5f93b99fa92a93c3e10700888ad9ba912746a5e33"
                 }
             },
             "nostromo": {
@@ -10789,13 +9998,6 @@
                     "shot": "7d7d09d82755becf9472f5c9384daca6f9b686e2a68a01c6d04b0fda67df8513"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "338bebeeb41636d2df77c73f9a3539e38453542d128bfdb4aeb3d605789eb207"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -10880,13 +10082,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "6087d816b6987140d20421e3e41227487f007245e2d3282697e0c9a092f9197b"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "43231b9d0312435d98a4600b099058cb11dfdb00932cdb6b44951c85986c3394"
                 }
             },
             "nostromo": {
@@ -10975,13 +10170,6 @@
                     "shot": "df0fdd3a9a8b45103fc9ecd92b877fc9b4c91890b41885b61f824648899224f5"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "0cd71f2fc36d2323ce6d8ec4ab4b46df6c44d562f3dabe68ccdad47c50ae246b"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -11066,13 +10254,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "c6a36ced4d179ef46c212fce52790a7685f1ad31d044080759248ccb5e991af1"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "6c5e6582c192508b230b6023b2320ef9d3440440953686bad8fe38c83b8ce43c"
                 }
             },
             "nostromo": {
@@ -11161,13 +10342,6 @@
                     "shot": "f778dce4ca3bc7e9ebb692878cf16cf57a12221c70bb860270acbd5b431f6d7d"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "aacb788e7fbaba910668bf2384a8c17fdf3861cdf392f9f87a174138274c1347"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -11238,13 +10412,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "248b361cc614da8e6143e6a655b06a986d4f52c8bcb0f58347b583ff3762e70e"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "3cb93b55b37880448ae09ec0ecded622f3787d67e96233d01ba966ff82b49c75"
                 }
             },
             "nostromo": {
@@ -11331,13 +10498,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "731689c52ac1891ade211eeb268257cf12fa050fb56de308f123fa6d317c2795"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "d8ea1d229c70e10c07678f9af5bef7c9f27033218ded25107f3489860b9a68a6"
                 }
             },
             "nostromo": {
@@ -11440,13 +10600,6 @@
                     "shot": "3dd08784a084b87e0f627269e8b6924a7d3fde509759dfe729200422b93a0b81"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "13c394aa479ae9c9c7b595dc3c565b08db4afb41a4f33c8e03d92cc605f3b0d6"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -11531,13 +10684,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "a6963ac827082cf48409cc9c70a4e3bde14c5ad4631d47550306b02a667677a7"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "e37acc344e9106ea000246b3c875f5e9934d6b9df8f4f43e5866bb748ebd5d70"
                 }
             },
             "nostromo": {
@@ -11626,13 +10772,6 @@
                     "shot": "9dc4aed60e67ac46d18fc523607b9da018b56ffe9638d44abc3d928c03896f93"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "2b99639f444ac2165969a404127f3c48c0d1b28bf33c72dedb03688e111caf66"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -11717,13 +10856,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "fd1bebbf0c5be4dd0680a5fece482aa861556c025c0793ef52af6c982f3e6b65"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "6f0cba9f092cbf4b2e85c60d5420d79ec9c88c40a3388ba18424c278ea2058e0"
                 }
             },
             "nostromo": {
@@ -11812,13 +10944,6 @@
                     "shot": "a8938cc4a15dee61372aa384961d7697f2c65a264fcfdd94e9384634ab7ffcf0"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "b479da59534f57d1ca81f301b275f871fb56170ef1d03480ba52aa20f4e07acb"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -11875,13 +11000,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "05aa5b0f050d657ad4530bbded6d37f468020f7538082e2184f5081af7df5d65"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "e6da4d0f3e5672a8a8f848b93f9f23910697d6910004fa564b1cc60d2545f67b"
                 }
             },
             "nostromo": {
@@ -11998,13 +11116,6 @@
                     "shot": "54bcdfce6081c67974fdfab310702e7df5445998c8804ad76f43fce605ddb873"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "c6bd1c9a677012f776306911e0c8e5224df42d67613df15c22cf1aaa31059a9c"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -12089,13 +11200,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "139eb7aa061c9ba9212f35084809c9c2415df2b13c04117dca44001d902688c0"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "8ef8bcdd661743e6ce6543215449093d1587646f8976a53eee6be0cb5c86cb04"
                 }
             },
             "nostromo": {
@@ -12184,13 +11288,6 @@
                     "shot": "2637c3f241aa0d0b97d93872a0da176f70c9e4769e18e441607f3433d887ccc0"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "8aa39968bb7e835a3833e8494ba4757f7c4c11391755faedb4f2f16b3a77f452"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -12275,13 +11372,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "3720f0ca26be15e0cf3244082d8eb0d3e78232cb69fc19912ec489dcc5f31214"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "13878e8f65179386782db61a0c6104244d14ae65e786cdc91718f573dc32c264"
                 }
             },
             "nostromo": {
@@ -12370,13 +11460,6 @@
                     "shot": "58fe6c5363bbf6b45c132cb0adccd9b6260d1a4e094c15a2257bbed7925477aa"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "df15331942b18db6a02a387c6fc3de423fab518b451c675a81af282192de6ca7"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -12461,13 +11544,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "80bf4119f5ab1259b1bbc86ad27672faeb6a6568cd448e8a8a71758b12d3951a"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "8708c1f28992622ec13d59c099d09c4745a1cde4d744a46ad6faf709b0f937cd"
                 }
             },
             "nostromo": {
@@ -12556,13 +11632,6 @@
                     "shot": "8514da24acdb5d2eed3093846b39f1c2f9f158a71d0dff8e1948f67c5e2e6314"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "523c823086e817413ca605fcda4190f8e16a82a326631c1d8a217e83702e191e"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -12647,13 +11716,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "4441f64fbc96a17c1856b0f6f2493a494eae56e1492b6ce18be289085b5542fc"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "644eeb4a440aade26dfbd4749ad7ac35c275ce59a0399428b58db703954d42be"
                 }
             },
             "nostromo": {
@@ -12742,13 +11804,6 @@
                     "shot": "bb786f291ea66c6eef4621cedc83eae3bc833eeb27410470dff9ce85b272fa71"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "d7e1442fea00dfb680b554c737ccaac7a3ee6719e92b1c60fb518068e85a7925"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -12833,13 +11888,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "15e3d3634ffabc873a0ef66090553b2e53184cad0b13a55a033530476ffa14df"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "c57d79d14e1992a911567655fc15d184a5894c2255cb82431ca85d6d98d6af16"
                 }
             },
             "nostromo": {
@@ -12928,13 +11976,6 @@
                     "shot": "c230e533e3cb671e3289b41997a1221cd208fdb977f541491e30e3c9e7f3e8af"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "3f4a76764a7491aec49511d8b49dd8c4d2e849e446bbe13ae7d2004bd146f5c3"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -13021,13 +12062,6 @@
                     "shot": "fd501bc91830344091de2db23d1cc6472ca10dfa4d535072d0632b4ac4ac7b0d"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "b0848e39c645f87ea0ca05f2852c5d84946b5c81f0824d7ec632c56f3115c439"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -13105,13 +12139,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "785363571e750eff4f961290799080c84f1308da8147b9ac835b897b992367f1"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "491bcd702e240bf1f1a5fb1144072dd588e3aeaec46299fa74cc711ed2408e2d"
                 }
             },
             "nostromo": {
@@ -13207,13 +12234,6 @@
                     "shot": "cec9b052c6771fd8b42ecbd38897b1fc9b6a6933f902f38fa45fbdb3139683f4"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "4db3ce9885194baad3712d8b7f08ef71ede3592e0f5b4b47e956e76a11fed6ab"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -13298,13 +12318,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "2ecbe007a0c79dc8fb193f4336fa45f91cadd2ddf680ca08b10ab0241449d1bd"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "c9e82e99730c2c95a13191dd65084bfb4a42b9bcc003fd5727528c7bd44bfa04"
                 }
             },
             "nostromo": {
@@ -13393,13 +12406,6 @@
                     "shot": "f39ccafb279ad564703c2529727090db1f846e758d947dffe71460908e4d1a5f"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "4a99839d4236c376a97e2027daec533bffe1a21f7e7cea81243267dff7bdf354"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -13484,13 +12490,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "298975a316c70f4609609b8f0b1b2fed7084bfeab35b31abd3d335c0ac93d4fd"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "330208a957cabf982c855c3ccb308bd14237c8428aaa746cc14a41d4b29cce52"
                 }
             },
             "nostromo": {
@@ -13579,13 +12578,6 @@
                     "shot": "e5118e3663b149f0996e8a88148d3a67dd67efafefdcddd8d7e137eca7b84be2"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "c9eeaff850d4cccf5929d3079dd5a37a771acdd3b8f6e59bc2bc06c2689dec18"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -13670,13 +12662,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "1d30ee01f4adcc33839b2e206a77090757dc8497614d13070f7e368cbbc60bb3"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "210071093b1f6f7755134f8d411bd5c891ee3792e4e160dab687dcef0092e25d"
                 }
             },
             "nostromo": {
@@ -13765,13 +12750,6 @@
                     "shot": "81c2932d1656e9bf27d087d020f660b127d55e95f1203bbd3d1a5503585d76eb"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "ed1e69366d8535ce34edcc6f4713bc793a043efc2d96d66f0c804b569f04ab0b"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -13856,13 +12834,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "310856f2e92053b8a781766fdc3d56f235774a646be5067773f1f74ccc810c34"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "41a6e57ab7979bea2e78f9f56ba6782261495d9910d44b461fdb3a0b1e85080d"
                 }
             },
             "nostromo": {
@@ -13951,13 +12922,6 @@
                     "shot": "980a8b18c2373e8738e06041e3e0da5e57c0f46a93aa60b813dd35705eb382f4"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "63b2e4605b375f54fa8cf975af452590dbbb746fc22f61cf5e86a73b964e64b6"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -14042,13 +13006,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "094e16d947813f22e7e5e17bda1cdbb28c72a468954e865ba482c3efafa466cd"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "64dea8bc256bc3c444f592ed818dbaa7431916547f53e935569224999f04f758"
                 }
             },
             "nostromo": {
@@ -14137,13 +13094,6 @@
                     "shot": "e2ffcbe3d2471de6b5da87b3d77529611db1d0a6962e3776029d3be4cf641bf8"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "836febc83683894d726dd577f1a77ef0907b4f4af3c1142b3576ed763a2d5f6f"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -14228,13 +13178,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "0b61e880a5a9ddff550afbc66f1161831a00e501b2b79e6da97b11ec0397e259"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "1c6131b7b414edbedd549e0deb7f7c6b0c31c69b5afcf52c9737d77deaf8b986"
                 }
             },
             "nostromo": {
@@ -14323,13 +13266,6 @@
                     "shot": "99cb5d8e61c6bc2cbcf7a6ff7c2ba286445edd30e4ec96f0e3444aa752c8e0bf"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "aedb3e28f0168459fea88234a6a77f9c8ecc5fc96374f3ac7776e8f2f79f18e6"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -14414,13 +13350,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "affeed04d04374b60bb91db3701867dc25e179707319bdc34d8f846e896120a7"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "02b388e241bda67e2509a772944bafae94ef10ef7d6c506bf8103b60f61c4e25"
                 }
             },
             "nostromo": {
@@ -14509,13 +13438,6 @@
                     "shot": "e9b4fe880a723e828f550181a54caf9398d415de2848c5fa001228c75c66ef7c"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "5a4437665be8fa037f2f49a2d725c6c90128374e05c55d48b4ed4c90b82f9420"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -14600,13 +13522,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "050749e4aaf82b6c75c8fdfd3e2021edf684f244fd7f9a27feca7b509ad6ee11"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "2c250105dbcf84fd41e516c8f86a31d37c658b2ca9d939d2a0092f4e41106930"
                 }
             },
             "nostromo": {
@@ -14695,13 +13610,6 @@
                     "shot": "6ed688944c88fcbe3e0df79c93fc95fa90a5fe8ac268330f5adedc618389e0c5"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "1e065369a9f4d0405147d1921317a36a9ac00228a7a37818c58a09a55310bd95"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -14786,13 +13694,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "6397735986473a8514e23898b5c43fdbcd0a0a4988d9193f6a6018a300150d87"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "e9c05d6d930fbbed31a9da6cf1878330878bd22f9715dd5aa9bb961e8a557e17"
                 }
             },
             "nostromo": {
@@ -14881,13 +13782,6 @@
                     "shot": "fbd6a529ea7cf083da136c7d592894096e300f7fb04623bd32bed5d265241f82"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "b98d297a7c22d8e68e7ac7b1b2e03f20f2ce0707395e19b83456b4afd371a568"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -14972,13 +13866,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "3142797c843fa4f118bf5f22c5a928eb6a25d337ff014e06d31014f8a7ff7f38"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "d6cd06e63ac882f11d4ad43aec8ceee08837cdb510c165a44d34a12fe3262fdd"
                 }
             },
             "nostromo": {
@@ -15067,13 +13954,6 @@
                     "shot": "6fa3787011844da28699d5a6024d49de5770167166de7d1124270834b647477f"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "fd1338cddc644daf713ae6d2da44c45894e81546f2648362851cf18b8be687d8"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -15158,13 +14038,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "d67fd9185eda25e8213f447efa24a4765923609a74a438406fbac0fa9e3e2b13"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "3055ecebb78c5cbbd59734186fa5963b9b0d1edf97c6425b770a8f362a10e78e"
                 }
             },
             "nostromo": {
@@ -15253,13 +14126,6 @@
                     "shot": "228a5ba74b6574ac4b2eed7dc710c280f0deb91737cd1e7602e183e77ce5a458"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "86889cc17f4eed8b6149bc9b5fe698122c9ef3fb3b5320d9a6c8b88bb6c54060"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -15344,13 +14210,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "757ee9c1dda8bc180c66e36cca308946845056daf4022b533835c6cb02c6bd40"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "109b9f05a65b77d0de17029200173cbfc9f1c09e94002433281d73b65aa7815f"
                 }
             },
             "nostromo": {
@@ -15439,13 +14298,6 @@
                     "shot": "b263b72840ac376bcedf389c4d766cbf054f88c437a761012779bb8c1246e44c"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "25a5e9f9d8194f38eed52bc1ad410be1aaad1bb2bd45b14a6c709cb1f834cf8f"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -15530,13 +14382,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "e1d40e031ba4a2d16c9c815c91b3342d361196f6139b791f5cd67bee4fa94ba2"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "982de05530dbe9b07912d76a016c7bc8f05308ffad5da41c7532f44538a40738"
                 }
             },
             "nostromo": {
@@ -15625,13 +14470,6 @@
                     "shot": "bf1e51385e5efe403d44239a138976baeea82e86d517a092ec06bdf16fb22256"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "80c6bed57fccadbb68502d3420e0f12241861147fa1cb041b0798aea2c27e3f1"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -15716,13 +14554,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "b475b0610043be81433e96c47eee6dcd94a0a1462d8f9610960ec72e0d64f9f0"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "4255f142b927d13b77cdce262461b6b472f0c7cf12e0352888f86741f7c5973c"
                 }
             },
             "nostromo": {
@@ -15811,13 +14642,6 @@
                     "shot": "2e34bd16eb909f055f2866c0e7b4f667e6034dea876c4b150ef35b8a10494a32"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "92168582c5b7adb5953dc733839731c4e9d4cc8ae7ec9870d4e1f6a612d3729f"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -15902,13 +14726,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "299da16b75ce005934b404d2caaba9d4cac8dff2a132d7553482849f0ab8f7e7"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "d008eedb9ea40de7406552bb4fcbc723bed99ea9f6b0cd3c6c8145d7b3e94141"
                 }
             },
             "nostromo": {
@@ -15997,13 +14814,6 @@
                     "shot": "6cc8195c609fa0c52f0f0848327bb8cf4c16081c6d8c79a53d9e7f2dceb4535a"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "271b1bd26a0e8925b5128bb959062dc240e45efe32a6d5f7c813a3ab6591f19b"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -16088,13 +14898,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "bc130acad5aa2e11b5519cb207a2cade7ac5a29d656ee75052207c79ce725abd"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "8294148bbfe8435cf93270ecfd1fe416d4ab29444cc862dba1c01df6679cc9b6"
                 }
             },
             "nostromo": {
@@ -16183,13 +14986,6 @@
                     "shot": "b6dca76f83777560caa10b2c58e1a01984b8ef07ef91d17a1812798dd33d3965"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "9397c7e000bb8a120066dd184f219c8769f3229501a893cc984fba18a12945bc"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -16276,13 +15072,6 @@
                     "shot": "d14cebcd9c667edd75e9281a46eaf4c4cc5686fb95f295d6f5463363a3a61dd3"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "f18c08b66ba78724e530b143ce5d75aa9f63adef35b7dad77999132adfe24ac4"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -16367,13 +15156,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "4e3ef20661739f0f7ed25338967104e8c04a1f2511cb50c430a41a8336415807"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "7383ca111ad069190162e5b9aa7b8347477e83bdeaea94c61f02200ce48c0c01"
                 }
             },
             "nostromo": {
@@ -16498,13 +15280,6 @@
                     "shot": "5c4e31989e3de41f82d3bd677457d317a60effe874acb8ead47153b0fe85eeb5"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "f9f204bd617dd2ee4f7f35365b50f763e8accc8baebeb0203f9e32688f7be722"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -16589,13 +15364,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "928712cc0158c3663cfd5789bd5db875e9575e71ad813c1f41785ad708dbb774"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "8e25bdeee6da6a83c9f91e109d9cfa3cf1f24a55521f563fc9fc88e89fac8893"
                 }
             },
             "nostromo": {
@@ -16684,13 +15452,6 @@
                     "shot": "099557fd563f0ea812af902efe7473a2d309a2d011cd99ddd4aa6b215ca481c8"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "b9f4b30868b76773370a7a0094fb899977a8504cdcdcd27674f04f6387460d34"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -16775,13 +15536,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "0275978b01abf670718cf4a377d593c8bef68155d796a8d4f0ff5659c56bc637"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "535f24f1b146c6d6f33a4ad46dd234f722a5d8e092d516caa3cb5950dc670640"
                 }
             },
             "nostromo": {
@@ -16870,13 +15624,6 @@
                     "shot": "025c1beab47c6008f9a64a5c8107d97a446dfbb2a2eeaaca2a2079ca3179aa43"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "ea17041d2946b20b2724e079467f197b6db617fbfa17f36a3328ad88a13fe6ef"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -16961,13 +15708,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "47acf2c7f7cf6128760c79547391f92ba08fe3ed4317fd71f208458c6e9a8770"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "4827a98eebf735fdd18325c3b40649f93cb0a325d802353a654d55d6adc76cc9"
                 }
             },
             "nostromo": {
@@ -17056,13 +15796,6 @@
                     "shot": "ad1b550b6a586a9bfe85d2c0cdd89bc5116293b7d95349223518244db4be1041"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "79929aad95464eeecd554c3f71134b6d089c87a9a61ad9ecbf8798e6fda1ede1"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -17147,13 +15880,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "2aeb7e80278a430126af623878a8fcaeb2b405f207af8eca00f3466d1965ce6e"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "c3809218c7014c9bd6125dc7f0e52b166e9378ef94de0818ad9ae136b9a0a230"
                 }
             },
             "nostromo": {
@@ -17242,13 +15968,6 @@
                     "shot": "5a71f88883759f21a4752175d6616aa77ccb4433ce17a52169b9d88a66349c98"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "f157e030f42f5820344c6fa662f9f2885d6edeba7fcee569b79ab5b8c89f45dc"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -17333,13 +16052,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "28335c4b33eeb59ce8d469a1c19423989669bce401f68a02b2af4737cf1b88a9"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "bb91a439bc6bf88516f7d5edcc8d002b9320b37ad05a3b8eb2abf3bc057b8c1f"
                 }
             },
             "nostromo": {
@@ -17428,13 +16140,6 @@
                     "shot": "e872004cc4856626d49d6e0e9efe6b06f8fcefc0f20744ffef3b02c2cb16cd3a"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "237d8bf8bb2b93b7a4e424e9f654fd2562af0c3172536224ed1df54b3451d92c"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -17519,13 +16224,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "0a01e195a1ec7bc01fee1c0d9194dd72105a156215af3d40b0f6790cfb18eac1"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "754a31e90dac1ac82ae636b0735fed3d77e3f7fdb5fab45b6ba6eb7b9f633940"
                 }
             },
             "nostromo": {
@@ -17614,13 +16312,6 @@
                     "shot": "930be9c5d83c4bbaa5748c5e98584f3db5006e7219c39b3c90a302c21bfbca92"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "a57f6bfce69e657cf85738cdd10b49edaeeed0c2b52e6eeed3acdc81dd9c0447"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -17705,13 +16396,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "af440ad38199535f15433c916aea14d257c12cc3df3cd99e739254b931cd1cd6"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "3f014d2555edadf3515376a5c002274c07309f6d6bb1c58aeeb15d21ca605e5b"
                 }
             },
             "nostromo": {
@@ -17800,13 +16484,6 @@
                     "shot": "63b0c310ac3dadd0a76eba2283be05bf2bd43f82540a84a94cc7eab240d65d0b"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "f51134a1d76009c8d88953ef559e729e5c41da304a5970642995c276ed91b7d4"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -17891,13 +16568,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "977b3eeffec457e8d506f660904e3696d4f85c984778399e50d8b5a5f84918a5"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "c68139f49941e6f1f019f449c766450b08d6faaec94e5b59ab73e91fcc81d269"
                 }
             },
             "nostromo": {
@@ -17986,13 +16656,6 @@
                     "shot": "61317792bb5ae6f6e0313e268f5b7439cb27a4ac43e9267636138d8ef2cbeb93"
                 }
             },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "638b159627566af7f04d7402ea1b6a41a0793db31c8eb2fee5bc34088df89ef9"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -18077,13 +16740,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "f1ba312008b7c3df975ca5a14bc1c45bc8fba85cc743a34cc8a3fc1a3e6dbaa9"
-                }
-            },
-            "grotesk": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "831bfd3c07e85d648e8ed56f2598d4923a0c7e10ca51d74b05422c93f9c64c35"
                 }
             },
             "nostromo": {

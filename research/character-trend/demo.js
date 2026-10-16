@@ -919,78 +919,6 @@ const IDEAS = {
             },
         ],
     },
-    grotesk: {
-        shape: [
-            {
-                name: 'The transit board',
-                text: 'A Swiss transit board: a column under a heavy ink rule, the number in bold grotesque, the line 3px round-capped, the change as a flat colour bar.',
-            },
-            {
-                name: 'The Swiss poster',
-                text: 'A Swiss poster: the number huge and flush left, the line a hairline, the change in the red index colour on its own plate.',
-            },
-            {
-                name: 'The index card',
-                text: 'A Swiss index card: a red rule down the left margin, a hairline along the top, the number large and tight, the line 2px over no wash.',
-            },
-        ],
-        loading: [
-            {
-                name: 'Out of register',
-                text: 'The tile’s lines and the plot are printed in two plates: the ink, and a red copy that closes in clockwise, falls into register, dwells and opens out again, 2640 ms.',
-            },
-            {
-                name: 'The Swiss poster',
-                text: 'Three blocks cut in.',
-            },
-            {
-                name: 'The flap board',
-                text: 'Three bars flip over one after the other, as a departure board’s flaps.',
-            },
-        ],
-        arrival: [
-            {
-                name: 'At once',
-                text: 'The number and the line are there the moment loading ends, as both characters had them.',
-            },
-            {
-                name: 'Printed',
-                text: 'The line and the number are printed in black and their red plate falls into register on them along the closing spiral, clockwise, in 8 units.',
-            },
-            {
-                name: 'The board flips',
-                text: 'The line rises from the baseline, in 3 hard steps; the number rises into its line.',
-            },
-        ],
-        tone: [
-            {
-                name: 'The transit board',
-                text: 'The change as a flat colour bar; a warning or destructive figure shows the note in the label on the tone’s plate.',
-            },
-            {
-                name: 'The underlined figure',
-                text: 'The change on a flat plate with a heavy rule under it, square.',
-            },
-            {
-                name: 'The index colour',
-                text: 'The change on a flat plate; a warning or destructive figure carries a 6 px bar of its tone down the start edge and the tone’s word before the number, the number ink on paper.',
-            },
-        ],
-        live: [
-            {
-                name: 'Re-registered',
-                text: 'A new reading redraws the line at once and its red plate falls back into register on it, clockwise, in 8 units.',
-            },
-            {
-                name: 'Flipped',
-                text: 'The line jolts once, as a needle does, in 2 hard steps.',
-            },
-            {
-                name: 'Shifted',
-                text: 'The line steps one reading to the left, as chart paper advances, easing in and out.',
-            },
-        ],
-    },
     nostromo: {
         shape: [
             {
@@ -1159,7 +1087,6 @@ const PICKED = {
     solstice: ['2', '2', '2', '3', '2'],
     brutalism: ['1', '1', '1', '3', '1'],
     deco: ['3', '1', '2', '3', '3'],
-    grotesk: ['1', '1', '2', '3', '1'],
     nostromo: ['1', '1', '2', '3', '2'],
     titanium: ['2', '3', '2', '3', '3'],
 };

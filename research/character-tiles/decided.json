@@ -98,14 +98,6 @@
             "hover": "2",
             "live": "2"
         },
-        "grotesk": {
-            "shape": "1",
-            "loading": "3",
-            "arrival": "2",
-            "tone": "2",
-            "hover": "1",
-            "live": "2"
-        },
         "nostromo": {
             "shape": "2",
             "loading": "1",

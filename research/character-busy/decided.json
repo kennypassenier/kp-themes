@@ -86,13 +86,6 @@
             "failure": "1",
             "phone": "1"
         },
-        "grotesk": {
-            "shape": "r3-gk-shape-3",
-            "loading": "2",
-            "arrival": "2",
-            "failure": "1",
-            "phone": "1"
-        },
         "nostromo": {
             "shape": "r3-b-no-shape-1",
             "loading": "1",

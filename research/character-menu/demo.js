@@ -620,54 +620,6 @@ const IDEAS = {
             { name: 'The curtain parts', text: 'A hovered or focused entry’s rule parts a touch wider; a press closes it back in.' },
         ],
     },
-    grotesk: {
-        shape: [
-            {
-                name: 'The transit board',
-                text: 'A heavy ink rule runs along the plate’s top inside the 3 px frame a floating menu keeps, headings in bold grotesque, a flat rule between groups.',
-            },
-            { name: 'The Swiss poster', text: 'Headings huge and flush left, a hairline between groups, entries tight and plain.' },
-            { name: 'The index card', text: 'A red rule runs down the plate’s left margin, a hairline along the top, entries large and tight.' },
-        ],
-        loading: [
-            { name: 'The line runs', text: 'A line runs across the loading row, then starts again.' },
-            { name: 'Three blocks cut in', text: 'Three blocks cut into the loading row in turn.' },
-            { name: 'The flap board', text: 'Three bars flip over one after the other, as a departure board’s flaps.' },
-        ],
-        open: [
-            {
-                name: 'Printed',
-                text: 'The menu is printed in black and its red plate falls into register on it, clockwise, in 8 units; the same fall played backwards closes it.',
-            },
-            {
-                name: 'The board flips',
-                text: 'The menu rises from the bottom in three hard steps like flap-board tiles, and flips back down to close.',
-            },
-            { name: 'Snapped in', text: 'The menu snaps into place in one hard step, and snaps back out in one step to close.' },
-        ],
-        tone: [
-            {
-                name: 'The index colour',
-                text: 'The destructive entry carries a 6 px bar of its tone down the start edge and the tone’s word before it; the disabled reason reads under a heavy rule.',
-            },
-            {
-                name: 'The underlined figure',
-                text: 'The destructive entry’s label sits under a heavy rule in its colour; the disabled reason reads plain and small.',
-            },
-            {
-                name: 'The red margin',
-                text: 'The destructive entry’s margin rule turns to its colour; the disabled reason reads in a lighter weight.',
-            },
-        ],
-        interact: [
-            { name: 'Flipped', text: 'A hovered or focused entry flips a few degrees like a departure-board tile; a press holds the flip.' },
-            {
-                name: 'The bar runs',
-                text: 'A hovered entry draws a red bar along its top edge; focus is the ring with the red plate falling into register; a press thickens the bar in the deeper red.',
-            },
-            { name: 'Shifted', text: 'A hovered or focused entry shifts a hair toward the margin rule; a press shifts it back flush.' },
-        ],
-    },
     nostromo: {
         shape: [
             {
@@ -802,7 +754,6 @@ const PICKED = {
     solstice: ['2', '2', '2', '1', '1'],
     brutalism: ['2', '5', '1', '1', '1'],
     deco: ['1', '1', '3', '1', '1'],
-    grotesk: ['1', '2', '1', '1', '2'],
     nostromo: ['1', '2', '3', '1', '2'],
     titanium: ['3', '1', '2', '1', '3'],
     cyberpunk: ['1', '3', '1', '3', '3'],

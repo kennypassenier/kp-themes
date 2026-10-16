@@ -76,7 +76,6 @@ ${noFlashSnippet()}
         <link rel="stylesheet" href="${up}css/pastel-register.css" />
         <link rel="stylesheet" href="${up}css/forest-register.css" />
         <link rel="stylesheet" href="${up}css/deco-register.css" />
-        <link rel="stylesheet" href="${up}css/grotesk-register.css" />
         <link rel="stylesheet" href="${up}css/blueprint-register.css" />
         <link rel="stylesheet" href="${up}css/nostromo-register.css" />
         <link rel="stylesheet" href="${up}css/dark-register.css" />

@@ -25,7 +25,7 @@ const grids = readFileSync(new URL('./parts/grids.html', import.meta.url), 'utf8
 // Round 5 (2026-10-16) asks the fifteen other themes for every section, all approved in formal in rounds 1 to 4
 // (research/kpadopt2/VERDICTS.json; gates/check-rereview.mjs refuses a page that offers an approved pair). Formal leaves the page.
 const OPEN = ['actions', 'status', 'facets', 'heat', 'matrix', 'barcell', 'week', 'week-crowd', 'week-states', 'gantt', 'gantt-states'];
-const THEMES = 'dark,cyberpunk,synthwave,pastel,forest,blueprint,solstice,brutalism,deco,grotesk,nostromo,titanium';
+const THEMES = 'dark,cyberpunk,synthwave,pastel,forest,blueprint,solstice,brutalism,deco,nostromo,titanium';
 // Kenny reopened four faults in formal on 2026-10-16 15:46 ("formal-faults: Herstellen"; research/approved-formal-notes.md):
 // the sections that show them ask formal again in this same round, beside the fifteen other themes. The page names formal
 // too (the review dialog walks the page's themes); every other section names only the fifteen.

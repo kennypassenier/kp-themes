@@ -912,78 +912,6 @@ const IDEAS = {
             },
         ],
     },
-    grotesk: {
-        shape: [
-            {
-                name: 'The rule and its cursor',
-                text: 'A steel rule: a white strip in a black outline, a long tick every tenth and a short one every fiftieth hanging from its top edge; the share is a red band along its lower half, under the ticks; the mark is a black cursor triangle pointing up from below, with a hairline across the rule; past the end a bold red +.',
-            },
-            {
-                name: 'The poster bar and its slash',
-                text: 'A poster’s heavy bar: a thick black outline on white with the share set solid red inside it; the mark is a black oblique slash cut through the bar, standing out above and below; past the end a bold black !.',
-            },
-            {
-                name: 'The twelve-column grid',
-                text: 'The Swiss layout grid as a meter: twelve columns marked by hairline guides between a top and a bottom rule, the share set flush in red over them; the mark is a black rule with an open grid node on top; past the end the guides run on, three more columns in red hairline.',
-            },
-        ],
-        loading: [
-            {
-                name: 'Departure',
-                text: 'A black train stops at each station.',
-            },
-            {
-                name: 'Out of register',
-                text: 'The meter’s own ruler (a hairline above and below it and a tick every tenth) is printed in ink and, under it, in red: the red copy closes in clockwise, falls into register, dwells and opens out again, 2640 ms.',
-            },
-            {
-                name: 'Timetable',
-                text: 'The station ticks are printed one by one.',
-            },
-        ],
-        arrival: [
-            {
-                name: 'Departure',
-                text: 'The share is drawn in from the left in 6 hard steps.',
-            },
-            {
-                name: 'Express',
-                text: 'The share is drawn in from the left slowing as it lands.',
-            },
-            {
-                name: 'Timetable',
-                text: 'The share stretches out from the start in 4 hard steps, 480 ms.',
-            },
-        ],
-        tone: [
-            {
-                name: 'Departure',
-                text: 'A new tone draws the share again in the new colour, the way the picked arrival brings it.',
-            },
-            {
-                name: 'Express',
-                text: 'A new tone knocks the meter up and back once, slowing as it lands.',
-            },
-            {
-                name: 'The plate',
-                text: 'A new tone prints the meter again: its red plate falls back into register on it once, clockwise, in 8 units.',
-            },
-        ],
-        mark: [
-            {
-                name: 'Departure',
-                text: "The mark moves in 6 hard steps; a mark past the end stops at the meter's end, → after it.",
-            },
-            {
-                name: 'Express',
-                text: 'The mark moves at an even pace, 480 ms; a mark past the end stands just outside the end, → after it.',
-            },
-            {
-                name: 'Timetable',
-                text: 'The mark moves in 3 hard steps; a mark past the end leans over the end, + beside it.',
-            },
-        ],
-    },
     nostromo: {
         shape: [
             {
@@ -1154,7 +1082,6 @@ const PICKED = {
     titanium: ['1', '1', '3', '3', '3'],
     cyberpunk: ['2', '', '', '3', '3'],
     'high-contrast': ['2', '', '1', '1', '3'],
-    grotesk: ['', '2', '3', '3', '2'],
 };
 /** The aspect's pick from round 3, or '' when it is open in round 4. */
 const keptOf = (/** @type {string} */ theme, /** @type {Aspect} */ aspect) => PICKED[theme]?.[ASPECTS.findIndex((a) => a.id === aspect)] ?? '';

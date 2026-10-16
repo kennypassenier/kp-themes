@@ -223,14 +223,10 @@ export const PAGES = [
             { href: 'research/cyberpunk-character/demo.html', label: 'What makes cyberpunk cyberpunk' },
             // Decided 2026-10-07 23:44: Kenny approved all nineteen brutalism character questions after three updates; Loading = Hoisted as a lintel, the progress bar = Ruled and labelled a lot slower (research/brutalism-character/decided.json).
             { href: 'research/brutalism-character/demo.html', label: 'What makes brutalism brutalism' },
-            // Decided 2026-10-07 23:43: Kenny approved all nineteen grotesk character questions after three updates (research/grotesk-character/decided.json).
-            { href: 'research/grotesk-character/demo.html', label: 'What makes grotesk grotesk' },
             // Decided 2026-10-07 23:41: Kenny approved the sixteen blueprint character picks (research/blueprint-character/decided.json).
             { href: 'research/blueprint-character/demo.html', label: 'What makes blueprint blueprint' },
             // Decided 2026-10-07 23:18: Kenny approved solstice's grammar, every recommendation except the focus ring = a halo and the leave = the morning mist (research/solstice-character/decided.json); applied in css/solstice-register.css.
             { href: 'research/solstice-character/demo.html', label: 'What makes solstice solstice' },
-            // Decided 2026-10-07 21:23: Kenny picked out of register as grotesk's anchor element (research/grotesk-anchor/decided.json).
-            { href: 'research/grotesk-anchor/demo.html', label: "What is grotesk's anchor element" },
             // Decided 2026-10-07 21:21: Kenny picked the page horizon as synthwave's anchor element (research/synthwave-anchor/decided.json).
             { href: 'research/synthwave-anchor/demo.html', label: "Synthwave's anchor element" },
             // Decided 2026-10-07 21:19: Kenny picked the tracing pen as blueprint's anchor element (research/blueprint-anchor/decided.json).
@@ -303,7 +299,6 @@ export const PAGES = [
             { href: 'research/futuristic/demo.html', label: 'Futuristic layouts' },
             { href: 'research/loading/demo.html', label: 'Loading per theme' },
             { href: 'research/datatable/demo.html', label: 'Data tables' },
-            { href: 'research/grotesk-hover/demo.html', label: 'Grotesk hover options' },
             { href: 'research/control-height/demo.html', label: 'Control heights' },
             { href: 'research/uniform-size/demo.html', label: 'Uniform sizes' },
             { href: 'research/intro-loading/demo.html', label: 'Intros and loading' },

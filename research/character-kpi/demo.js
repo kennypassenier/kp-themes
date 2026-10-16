@@ -875,69 +875,6 @@ const IDEAS = {
             { name: 'Gilded', text: 'A new reading: the number flares gold and swells once, settling back to lacquer, as if freshly gilded.' },
         ],
     },
-    grotesk: {
-        shape: [
-            {
-                name: 'The transit board',
-                text: 'A Swiss transit board, a thick bar in the series colour across the top, bold grotesque, the change as its own status plate.',
-            },
-            {
-                name: 'The underlined figure',
-                text: 'A Swiss poster, the number huge and flush left, a hairline under the label, the change as its own status plate.',
-            },
-            {
-                name: 'The index colour',
-                text: 'A Swiss index card, a red rule down the left margin, a hairline along the top, the change as its own status plate.',
-            },
-        ],
-        loading: [
-            {
-                name: 'The transit board',
-                text: 'While the figure loads, a line runs across under the label; it keeps moving until the reading is drawn.',
-            },
-            { name: 'The Swiss poster', text: 'While the figure loads, three blocks cut in; it keeps moving until the reading is drawn.' },
-            {
-                name: 'The flap board',
-                text: 'While the figure loads, three bars flip over one after the other, as a departure board’s flaps; it keeps moving until the reading is drawn.',
-            },
-        ],
-        tone: [
-            {
-                name: 'Indexed',
-                text: 'The change on a square plate with the arrows ↗ and ↘; a warning or destructive figure carries a 6 px bar of its tone down the start edge and the tone’s word before the number, the number itself ink on paper.',
-            },
-            { name: 'The underlined figure', text: 'The change on a flat plate with a heavy rule under it, square.' },
-            {
-                name: 'The index colour',
-                text: 'The change on a flat plate; a warning or destructive figure prints its number on the tone’s plate, the poster’s index colour.',
-            },
-        ],
-        interactive: [
-            {
-                name: 'The bar thickens',
-                text: 'As a link or a filter: the colour bar across the top thickens on hover, a red rule-width ring marks focus, and the bar thins back the instant it is pressed.',
-            },
-            {
-                name: 'The rule thickens',
-                text: 'As a link or a filter: on hover the rule turns red and 7 px thick over a faint red wash, focus is the two-channel ring with the red plate falling into register on the tile, and a press thickens the rule in the deeper red, never grey.',
-            },
-            {
-                name: 'The flap turns',
-                text: 'As a link or a filter: a departure-board flap turns halfway on hover, flips fully for focus, and settles back the instant it is pressed.',
-            },
-        ],
-        live: [
-            { name: 'Redrawn', text: 'A new reading: the number is replaced at once, as both characters had it.' },
-            {
-                name: 'Re-registered',
-                text: 'A new reading: the number is written at once; behind it a red copy of the number starts a few pixels off and falls into register along the closing spiral, clockwise, in 8 units.',
-            },
-            {
-                name: 'Shifted',
-                text: 'A new reading: the old figure slides out to the left and the new one slides in from the right, easing to a stop.',
-            },
-        ],
-    },
     nostromo: {
         shape: [
             {
@@ -1091,7 +1028,6 @@ const PICKED = {
     solstice: ['2', '3', '1', '1', '2'],
     brutalism: ['2', '3', '2', '3', '1'],
     deco: ['1', '3', '1', '1', '3'],
-    grotesk: ['1', '6', '1', '2', '2'],
     nostromo: ['2', '2', '1', '2', '2'],
     titanium: ['1', '1', '1', '2', '3'],
 };

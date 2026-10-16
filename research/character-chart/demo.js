@@ -159,16 +159,6 @@ const IDEAS = {
             text: 'A gold sunburst fans out from the foot of the plot behind the lines, under an arched gold frame. The tooltip is a deep emerald plaque between gold rules; the legend jewelled lamps that light when pressed. Loading opens the fan.',
         },
     },
-    grotesk: {
-        a: {
-            name: 'The Swiss grid',
-            text: 'White paper, one heavy black baseline, hairline grid, the tick labels in bold grotesque set flush. The lines are flat with sharp corners, the first in red. The tooltip is a black plate with white figures; the legend plain words, a red square before the pressed one. Loading cuts in three black squares, one after another, in hard steps.',
-        },
-        b: {
-            name: 'The zebra scale',
-            text: 'A zebra time scale of twelve columns along the foot of the plot and a column grid above it; the lines black and red. The tooltip is a red plate with white text; the legend numbered 01, 02, 03 in the grotesque. Loading hops the zebra one column and back.',
-        },
-    },
     nostromo: {
         a: {
             name: 'The amber CRT',
@@ -223,7 +213,6 @@ const PICK = {
     sepia: 'a',
     blueprint: 'a',
     deco: 'a',
-    grotesk: 'a',
     nostromo: 'a',
     titanium: 'a',
 };
@@ -532,25 +521,6 @@ const R2 = {
             ['ring', 'Gold rings'],
         ],
     },
-    grotesk: {
-        loading: [
-            ['segments', 'The ruled bar', '--foreground', '--primary'],
-            ['dash', 'The column count', '--foreground', '--primary'],
-            ['drop', 'The square drops', '--foreground', '--primary'],
-        ],
-        arrival: [
-            ['steps', 'Column by column'],
-            ['linear', 'At an even pace'],
-        ],
-        update: [
-            ['tick', 'One column on'],
-            ['tail', 'The new column'],
-        ],
-        events: [
-            ['pin', 'Black pins'],
-            ['target', 'Red marks'],
-        ],
-    },
     nostromo: {
         loading: [
             ['type', 'MU-TH-UR at the prompt', '--primary', , "'INTERFACE 2037 READY'"],
@@ -709,7 +679,6 @@ const PICKED = {
     blueprint: ['1', '5', '3', '1', '3', '1'],
     brutalism: ['1', '3', '1', '3', '2', '1'],
     deco: ['1', '1', '3', '1', '1', '1'],
-    grotesk: ['1', '2', '3', '1', '1', '3'],
     nostromo: ['1', '1', '3', '1', '2', '1'],
     titanium: ['1', '1', '3', '1', '2', '1'],
 };

@@ -54,7 +54,6 @@
         "css/pastel-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/forest-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/deco-register.css": ["authored", "bundled", "classes", "motion", "texture"],
-        "css/grotesk-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/blueprint-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/nostromo-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/dark-register.css": ["authored", "bundled", "classes", "motion", "texture"],

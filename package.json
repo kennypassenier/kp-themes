@@ -367,8 +367,6 @@
         "./css/forest-register/min": "./dist/css/forest-register.min.css",
         "./css/deco-register": "./css/deco-register.css",
         "./css/deco-register/min": "./dist/css/deco-register.min.css",
-        "./css/grotesk-register": "./css/grotesk-register.css",
-        "./css/grotesk-register/min": "./dist/css/grotesk-register.min.css",
         "./css/blueprint-register": "./css/blueprint-register.css",
         "./css/blueprint-register/min": "./dist/css/blueprint-register.min.css",
         "./css/nostromo-register": "./css/nostromo-register.css",

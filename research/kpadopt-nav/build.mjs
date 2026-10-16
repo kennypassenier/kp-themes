@@ -17,21 +17,7 @@ const here = dirname(fileURLToPath(import.meta.url));
 /** @param {string} text */
 const esc = (text) => text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('"', '&quot;');
 
-const THEMES = [
-    'formal',
-    'dark',
-    'cyberpunk',
-    'synthwave',
-    'pastel',
-    'forest',
-    'blueprint',
-    'solstice',
-    'brutalism',
-    'deco',
-    'grotesk',
-    'nostromo',
-    'titanium',
-];
+const THEMES = ['formal', 'dark', 'cyberpunk', 'synthwave', 'pastel', 'forest', 'blueprint', 'solstice', 'brutalism', 'deco', 'nostromo', 'titanium'];
 
 /** How each theme opens a menu under its button (CHARACTER.md, rule 3), for the More menu. */
 const MENU = {

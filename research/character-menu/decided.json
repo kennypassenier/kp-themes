@@ -86,13 +86,6 @@
             "tone": "1",
             "interact": "1"
         },
-        "grotesk": {
-            "shape": "1",
-            "loading": "r2-gro-load-2",
-            "open": "1",
-            "tone": "1",
-            "interact": "2"
-        },
         "nostromo": {
             "shape": "1",
             "loading": "r2-nos-load-2",

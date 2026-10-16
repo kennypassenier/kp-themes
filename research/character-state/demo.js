@@ -277,26 +277,6 @@ const IDEAS = {
             { name: 'Regilded', text: 'The gold dot gleams once, easing in and out.' },
         ],
     },
-    grotesk: {
-        shape: [
-            { name: 'The colour bar dot', text: 'A small flat-colour square sits before the word, the word in bold grotesque on no plate.' },
-            { name: 'The transit tag', text: 'A thick bar in the state’s colour crosses a small tag holding the word.' },
-            { name: 'The index chip', text: 'The dot and the word sit on one plate with a red index tick at its corner.' },
-        ],
-        tone: [
-            { name: 'The flat colour only', text: 'Only the flat-colour square takes the state’s colour; the word stays bold black.' },
-            { name: 'The bar colour', text: 'The transit tag’s bar takes the state’s colour, the word kept bold black on it.' },
-            { name: 'The index warning', text: 'A warning or failed state turns the index tick itself that colour.' },
-        ],
-        change: [
-            {
-                name: 'Re-registered',
-                text: 'The word and its square are written at once; behind them a red copy falls back into register along the closing spiral, clockwise, in 8 units.',
-            },
-            { name: 'The bar redraws', text: 'The transit bar redraws left to right once under the new word.' },
-            { name: 'Ticked', text: 'The index tick snaps to a new mark once, in a hard jump.' },
-        ],
-    },
     nostromo: {
         shape: [
             { name: 'The CRT dot', text: 'A small phosphor dot sits before the word, the word in mono capitals on no plate.' },
@@ -356,7 +336,6 @@ const PICKED = {
     solstice: ['3', '3', '1'],
     brutalism: ['1', '3', '2'],
     deco: ['3', '3', '1'],
-    grotesk: ['3', '3', '1'],
     nostromo: ['3', '3', '1'],
     titanium: ['3', '2', '3'],
 };

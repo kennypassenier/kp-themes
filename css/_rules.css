@@ -141,32 +141,6 @@
         --kp-control-accent: var(--muted-foreground);
     }
 
-    /* Grotesk: twelve columns, the grid every Swiss poster was set on [TH73].
- * Columns, not squares — that is what separates it from light's
- * millimetre grid. */
-    [data-theme='grotesk'] {
-        --fx-texture: linear-gradient(to right, hsl(from var(--foreground) h s l / 1) 0 1px, transparent 1px);
-        --fx-texture-size: calc(100% / 12) 100%;
-        --fx-texture-opacity: 0.05;
-    }
-
-    [data-theme='grotesk'] h1,
-    [data-theme='grotesk'] h2 {
-        font-weight: 800;
-        letter-spacing: -0.03em;
-    }
-
-    /* The red square before a heading: Müller-Brockmann's mark, static. */
-    [data-theme='grotesk'] h1::before,
-    [data-theme='grotesk'] h2::before {
-        content: '';
-        display: inline-block;
-        inline-size: 0.5em;
-        block-size: 0.5em;
-        margin-inline-end: 0.3em;
-        background: var(--primary);
-    }
-
     /* Nostromo: vent slots, the horizontal ribs of a moulded case [TH75]. */
     [data-theme='nostromo'] {
         --fx-texture: repeating-linear-gradient(to bottom, hsl(from var(--foreground) h s l / 1) 0 1px, transparent 1px 6px);

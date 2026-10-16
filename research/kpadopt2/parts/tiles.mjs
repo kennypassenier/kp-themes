@@ -12,7 +12,6 @@ const THEMES = [
     ['solstice', 'Solstice'],
     ['brutalism', 'Brutalism'],
     ['deco', 'Art Deco'],
-    ['grotesk', 'Grotesk'],
     ['nostromo', 'Nostromo'],
     ['titanium', 'Titanium'],
 ];

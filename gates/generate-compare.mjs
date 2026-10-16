@@ -304,7 +304,6 @@ const CURRENT = [
     'pastel-register.css',
     'forest-register.css',
     'deco-register.css',
-    'grotesk-register.css',
     'blueprint-register.css',
     'nostromo-register.css',
     'dark-register.css',

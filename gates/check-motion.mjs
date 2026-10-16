@@ -298,7 +298,6 @@ const OUT_OF_SCOPE = {
         "a registered number driving the heights of the spinner's five bars over 2400 ms a loop; the bars keep their colours, only their heights change, under 341x256 px",
     'kp-sig-dark-meter-lay': "a mask revealing a meter's share from its start once; the share keeps its colour, under 341x256 px",
     'kp-sig-cyberpunk-meter-slip-o': "a meter's share landing with a few px sideways jumps and offset ghosts once; a transform, under 341x256 px",
-    'kp-sig-grotesk-meter-grow-o': "a meter's share scaling in from its start once; a transform, under 341x256 px",
     // Information that updates in place [research/update-motion, 2026-10-05].
     'kp-sig-cyberpunk-update-stutter':
         'two unblurred text-shadow copies of a changed value ticking home from 6px to nothing in four steps, once per update for 480 ms; the value itself keeps its colour and place, far under 341x256 px [research/cyberpunk-live]',
@@ -351,15 +350,6 @@ const OUT_OF_SCOPE = {
         'the withering above played as an arrival once (it grows up out of its line from a desaturating filter to none); one monotone change',
     'kp-sig-forest-ground':
         "the alarm's ground coming in once, from transparent to its own colour, on the growth curve over 1 s; one monotone change",
-    'kp-sig-grotesk-fall':
-        'the red plate falling into register once: a drop-shadow filter offset that closes to nothing; the plate keeps its colour, only its offset moves',
-    'kp-sig-grotesk-fall-again': 'the same fall replayed once when a meter turns destructive',
-    'kp-sig-grotesk-leave':
-        'a part spiralling out once (custom properties for the angle and the radius of a translate) and hidden at the end; one change from shown to hidden',
-    'kp-sig-grotesk-loop':
-        'custom properties for the angle and radius of a translate on a busy mark, looping; the mark keeps its colour, only its position moves',
-    'kp-sig-grotesk-update-plate':
-        'the red plate falling into register once on a changed value (a drop-shadow filter offset closing); far under 341x256 px',
     'kp-sig-nostromo-size-scan':
         'an arriving part revealed in four scan frames (clip-path) while a brightness filter settles from 1.8 to none once; one monotone change, 80 ms a frame',
     'kp-sig-synthwave-sun': 'the sun sinking below the horizon once (a translate) and hidden at the end; one change from shown to hidden',

@@ -498,39 +498,6 @@ const IDEAS = {
             ['The bulb flash', 'The changed site flashes on and off like a marquee bulb; its ray thickens.'],
         ],
     },
-    grotesk: {
-        shape: [
-            ['The transit map', '5px round-capped coloured lines, white interchange rings, bold labels; flat colour bars.'],
-            ['The Swiss grid', 'Hairline links, solid black discs, a red hub, bold labels flush beside them; boxed bold kinds.'],
-            [
-                'The Bauhaus primer',
-                'Primary geometry: links as straight black rules, every site a flat disc in red, blue or yellow with no ring, the hub a black square; the kinds as flat primary blocks.',
-            ],
-        ],
-        loading: [
-            ['A line runs', 'As character 1 had it: a coloured line runs round.'],
-            ['Three blocks cut in', 'As character 2 had it: three black blocks cut round in steps.'],
-            ['The rotating square', 'A heavy red quarter turns round the ring in four exact steps, like a Swiss clock.'],
-        ],
-        arrival: [
-            ['At once', 'As both characters had it: when the reading is done the whole network stands there in one frame; nothing moves in.'],
-            ['Lines laid', 'The lines are laid one after the other, then the stations are set down on them.'],
-            ['The grid snaps', 'Every site slides in on its axis and snaps into the grid.'],
-        ],
-        focus: [
-            [
-                'The package’s dimming',
-                'As character 2 had it: a pick takes a heavier ring in its own colour, the rest drops back to 30 %, a hidden kind’s key turns grey.',
-            ],
-            ['Red pick', 'The pick takes a red ring; the rest drops to 25 %; a hidden kind is struck through.'],
-            ['Black frame', 'The pick takes a square black frame; the rest loses its colour; a hidden kind’s bar gets a dashed outline.'],
-        ],
-        live: [
-            ['In place', 'As both characters had it: the new numbers are simply there; nothing marks which site or link changed.'],
-            ['The train passes', 'A train runs along the changed line and the station’s ring flashes red.'],
-            ['Re-set', 'The changed station pops and its line is laid again.'],
-        ],
-    },
     nostromo: {
         shape: [
             ['The CRT radar', 'A green-black CRT in the beige bezel under scanlines, phosphor traces and blips; phosphor tabs.'],
@@ -628,7 +595,6 @@ const PICKED = {
     solstice: ['1', '2', '3', '2', '2'],
     brutalism: ['2', '3', '2', '2', '3'],
     deco: ['2', '3', '2', '3', '2'],
-    grotesk: ['1', '3', '2', '2', '2'],
     nostromo: ['1', '2', '3', '3', '3'],
     titanium: ['2', '3', '1', '2', '2'],
 };

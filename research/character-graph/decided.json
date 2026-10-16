@@ -86,13 +86,6 @@
             "focus": "3",
             "live": "2"
         },
-        "grotesk": {
-            "shape": "1",
-            "loading": "r5-gk-load-3",
-            "arrival": "2",
-            "focus": "2",
-            "live": "2"
-        },
         "nostromo": {
             "shape": "1",
             "loading": "r3-no-load-2",
