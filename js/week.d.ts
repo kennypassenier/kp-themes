@@ -111,6 +111,13 @@ export type WeekModel = {
     timer: number;
     observer: ResizeObserver | null;
     mode: 'grid' | 'list';
+    upcoming: {
+        n: number;
+        on: boolean;
+        list: HTMLOListElement | null;
+        rows: Map<string, HTMLLIElement>;
+        items: WeekItem[];
+    };
 };
 /**
  * Where the pills of one column stand: each at its time of day, pushed down

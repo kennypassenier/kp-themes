@@ -32,6 +32,14 @@
 //   - A visually hidden `role="status"` region after the group says "Showing
 //     only Host" or "Showing everything" after an "only" or an "Everything".
 //
+//   - A swatch can carry an identity pattern as well as a hue [kpadopt3]: the
+//     item's `pattern` (or `data-kp-facet-pattern` on a hand-written
+//     `.kp-facet__swatch`) is a seed, a name, from which a 5 by 5 pattern
+//     mirrored about its middle column is drawn over the swatch's colour, the
+//     same for the same name wherever it is drawn (identityCells()). So two
+//     sources whose hues are close are still told apart, and the colour never
+//     carries the identity alone.
+//
 // Every word it adds is in js/strings.js. Nothing runs on import.
 
 import { getStrings } from './strings.js';
@@ -47,11 +55,69 @@ export const FACET_EVENT = 'kp-facet-change';
  * @property {string} label
  * @property {number | string | null} [count] shown at the end of the row; null leaves its place empty
  * @property {string} [swatch] a CSS colour for the small square before the name
+ * @property {string} [pattern] a seed (a name) for an identity pattern drawn over the swatch [kpadopt3]; '' takes it away
  * @property {boolean} [checked] a new row is on when absent; a row that is already there keeps its state when absent
  * @property {boolean} [disabled] cannot be turned on or off, and has no "only"
  */
 
 let serial = 0;
+
+/**
+ * The cells of an identity pattern: FNV-1a over the seed, then a 5 by 5 grid mirrored about its middle column, a cell
+ * filled where its bit is set. Pure and the same everywhere, so a name has one pattern on every page [kpadopt3].
+ * @param {string} seed
+ * @returns {[number, number][]} filled cells as [column, row], 0 to 4
+ */
+export function identityCells(seed) {
+    let hash = 2166136261;
+    for (const ch of seed) hash = Math.imul(hash ^ (ch.codePointAt(0) ?? 0), 16777619);
+    hash >>>= 0;
+    /** @type {[number, number][]} */
+    const cells = [];
+    for (let y = 0; y < 5; y += 1)
+        for (let x = 0; x < 3; x += 1)
+            if ((hash >>> (y * 3 + x + 4)) & 1) {
+                cells.push([x, y]);
+                if (x < 2) cells.push([4 - x, y]);
+            }
+    return cells;
+}
+
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
+/**
+ * Draw (or take away) the identity pattern over a swatch: an SVG of the filled cells in the pattern's ink, inside a
+ * one-cell margin, so the swatch's colour stays its ground.
+ * @param {HTMLElement} swatch
+ * @param {string | null} seed
+ */
+function drawPattern(swatch, seed) {
+    const old = swatch.querySelector(':scope > .kp-facet__pattern');
+    if (!seed) {
+        old?.remove();
+        swatch.removeAttribute('data-kp-facet-pattern');
+        return;
+    }
+    if (old && swatch.getAttribute('data-kp-facet-drawn') === seed) return;
+    swatch.setAttribute('data-kp-facet-pattern', seed);
+    swatch.setAttribute('data-kp-facet-drawn', seed);
+    const svg = document.createElementNS(SVG_NS, 'svg');
+    svg.setAttribute('class', 'kp-facet__pattern');
+    svg.setAttribute('viewBox', '0 0 7 7');
+    svg.setAttribute('aria-hidden', 'true');
+    svg.setAttribute('focusable', 'false');
+    svg.setAttribute('shape-rendering', 'crispEdges');
+    const path = document.createElementNS(SVG_NS, 'path');
+    path.setAttribute(
+        'd',
+        identityCells(seed)
+            .map(([x, y]) => `M${x + 1} ${y + 1}h1v1h-1z`)
+            .join(''),
+    );
+    svg.append(path);
+    if (old) old.replaceWith(svg);
+    else swatch.append(svg);
+}
 
 /** @param {string} className @param {string} [tag] */
 const el = (className, tag = 'span') => {
@@ -89,6 +155,8 @@ const nameOf = (row) => row.querySelector('.kp-facet__name')?.textContent?.trim(
  */
 function wireRow(row) {
     const check = checkOf(row);
+    const swatch = /** @type {HTMLElement | null} */ (row.querySelector('.kp-facet__swatch[data-kp-facet-pattern]'));
+    if (swatch) drawPattern(swatch, swatch.getAttribute('data-kp-facet-pattern'));
     const name = row.querySelector('.kp-facet__name');
     const count = row.querySelector('.kp-facet__count');
     serial += 1;
@@ -119,7 +187,7 @@ function buildRow(item) {
     check.className = 'kp-field__check kp-facet__check';
     check.checked = item.checked ?? true;
     option.append(check);
-    if (item.swatch !== undefined) option.append(el('kp-facet__swatch'));
+    if (item.swatch !== undefined || item.pattern) option.append(el('kp-facet__swatch'));
     option.append(el('kp-facet__name'), el('kp-facet__count'));
     const only = document.createElement('button');
     only.type = 'button';
@@ -140,6 +208,7 @@ function paintRow(row, item) {
     if (count && item.count !== undefined) count.textContent = String(countText(item.count));
     const swatch = /** @type {HTMLElement | null} */ (row.querySelector('.kp-facet__swatch'));
     if (swatch && item.swatch !== undefined) swatch.style.setProperty('--kp-facet-swatch-colour', item.swatch);
+    if (swatch && item.pattern !== undefined) drawPattern(swatch, item.pattern || null);
     const check = checkOf(row);
     if (check) {
         if (item.disabled !== undefined) check.disabled = item.disabled;

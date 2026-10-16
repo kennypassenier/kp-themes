@@ -273,6 +273,31 @@
         color: var(--primary);
     }
 
+    /* A separator between groups of links [kpadopt3] is the docket cut stood upright [G19]: the strong hairline and,
+       beside it at its head, the short navy tick, as the divider marks a section closed. Static. */
+    [data-theme='formal'] .kp-nav__sep {
+        position: relative;
+    }
+
+    [data-theme='formal'] .kp-nav__sep::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline-start: 2px;
+        inline-size: 3px;
+        block-size: min(0.75rem, 50%);
+        background: var(--primary);
+    }
+
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep::after {
+            inset-block-start: 2px;
+            inset-inline-start: 0;
+            inline-size: 3rem;
+            block-size: 3px;
+        }
+    }
+
     /* The call to action: a primary plate with the radius. The words sit
        one lg step in from either side of it [Kenny, 2026-09-15: "barely any
        spacing between the letters and the blue box"]; the plate had 0px of
@@ -4091,6 +4116,35 @@
     [data-theme='formal'] .kp-gantt__tick {
         font-variant-caps: all-small-caps;
         letter-spacing: 0.08em;
+    }
+}
+@layer kp.signature {
+    /* A day on the axis that can be pressed [kpadopt3]: pointing rules the navy rule under its label (G15); pressed, the
+       account is closed under it, the double rule (G7), on the paper with no tint. */
+    [data-theme='formal'] .kp-gantt__tick:is(button) {
+        border-radius: 0;
+        text-decoration: none;
+    }
+    [data-theme='formal'] .kp-gantt__tick:is(button):hover {
+        color: var(--foreground);
+        box-shadow: inset 0 -2px 0 var(--primary);
+    }
+    [data-theme='formal'] .kp-gantt__tick:is(button)[aria-pressed='true'] {
+        background: none;
+        color: var(--primary);
+        box-shadow:
+            inset 0 -2px 0 var(--primary),
+            inset 0 -4px 0 var(--card),
+            inset 0 -5px 0 var(--primary);
+    }
+    /* A series' finished run is an entry in that series' ink: the ledger's heavy rule on its start edge. */
+    [data-theme='formal'] .kp-gantt__run[data-kp-state='ok'][data-kp-series] {
+        box-shadow: inset 3px 0 0 var(--kp-gantt-series);
+    }
+    [data-theme='formal'] .kp-gantt__run[data-kp-state='ok'][data-kp-series]:hover {
+        box-shadow:
+            inset 3px 0 0 var(--kp-gantt-series),
+            0 0 0 2px var(--foreground);
     }
 }
 

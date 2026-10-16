@@ -39,6 +39,19 @@
 //   loading  the days stay empty and the data table's busy panel (the
 //            theme's spinner and "Reading the week") stands centred over
 //            them, arriving and leaving as the busy table's does
+//   upcoming opt-in, `data-kp-week-upcoming="8"` [kpadopt3]: below 40rem the
+//            agenda lists the next 8 items instead of its day rows, the way
+//            a phone reads a schedule: one row per item, its day on the left
+//            on one line (named once for a run of the same day, Today for
+//            today), the item's own pill on
+//            the right. "Next" is from now within the range shown, and an
+//            item that is off, skipped or only there for reference is not
+//            one; an item that passes leaves the list on the next tick. The
+//            same pills, keys (↑ ↓ Home End), hover card, events, loading
+//            card and arrivals as the rows; `data-kp-week-upcoming-label`
+//            names the list for a screen reader, `data-kp-week-upcoming-empty`
+//            is its sentence when nothing is still to come (else the
+//            dictionary's weekEmpty). Wider, the week is the week
 //
 // Events (bubbling, on the agenda):
 //   kp-week-open    { id, event, source: 'pointer' | 'keyboard' }  an item was opened
@@ -96,7 +109,8 @@ export const WEEK_TICK_MS = 30_000;
  *   start: string, days: number, events: WeekEvent[], state: WeekState, active: string | null, grid: HTMLElement,
  *   axis: HTMLElement, cols: WeekDay[], frame: HTMLElement, busy: HTMLElement | null, leaving: Promise<unknown> | null, held: number[] | null, stateLine: HTMLElement, title: HTMLElement | null, today: HTMLButtonElement | null, legend: HTMLElement,
  *   motion: { gone: boolean, stop: (() => void) | null, asked: boolean },
- *   pills: Map<string, HTMLButtonElement>, timer: number, observer: ResizeObserver | null, mode: 'grid' | 'list' }} WeekModel
+ *   pills: Map<string, HTMLButtonElement>, timer: number, observer: ResizeObserver | null, mode: 'grid' | 'list',
+ *   upcoming: { n: number, on: boolean, list: HTMLOListElement | null, rows: Map<string, HTMLLIElement>, items: WeekItem[] } }} WeekModel
  */
 
 /** @type {WeakMap<Element, WeekModel>} */
@@ -281,7 +295,16 @@ function build(c) {
     c.grid.append(c.axis);
     c.stateLine = make(doc, 'p', 'kp-week__state');
     c.stateLine.setAttribute('role', 'status');
-    frame.append(c.grid, c.stateLine);
+    frame.append(c.grid);
+    if (c.upcoming.n > 0) {
+        // The phone's list of what comes next [kpadopt3]; shown only below 40rem, in place of the day rows.
+        const list = /** @type {HTMLOListElement} */ (make(doc, 'ol', 'kp-week__upcoming'));
+        const named = c.el.dataset.kpWeekUpcomingLabel;
+        if (named) list.setAttribute('aria-label', named);
+        c.upcoming.list = list;
+        frame.append(list);
+    }
+    frame.append(c.stateLine);
     c.legend = make(doc, 'ul', 'kp-week__legend');
     c.legend.hidden = true;
     parts.push(frame, c.legend);
@@ -354,6 +377,94 @@ function pillFor(c, e) {
     return button;
 }
 
+/** Grid or list, as the container query has it now. @param {WeekModel} c @returns {'grid' | 'list'} */
+const modeOf = (c) => (getComputedStyle(c.grid).getPropertyValue('--kp-week-mode').trim() === 'list' ? 'list' : 'grid');
+
+/** Whether the agenda shows its upcoming list now: asked for, and in rows. @param {WeekModel} c */
+const upcomingOn = (c) => c.upcoming.n > 0 && c.upcoming.list !== null && modeOf(c) === 'list';
+
+/** The states that are not a coming run. */
+const NOT_UPCOMING = new Set(['off', 'skipped', 'reference']);
+
+/**
+ * The next `n` items from now, in time order, of every day of the range.
+ * @param {WeekModel} c @param {number} now
+ * @returns {WeekItem[]}
+ */
+function upcomingItems(c, now) {
+    return c.cols
+        .flatMap((col) => col.items)
+        .filter((item) => item.ms >= now && !NOT_UPCOMING.has(item.event.state ?? ''))
+        .sort((a, b) => a.ms - b.ms)
+        .slice(0, c.upcoming.n);
+}
+
+/**
+ * Fill the upcoming list: a row per item, the day named on the first row of each day, the item's own pill. Rows are kept
+ * by id and moved only when the order changed, so a focused pill keeps its focus.
+ * @param {WeekModel} c @param {WeekItem[]} items
+ */
+function paintUpcoming(c, items) {
+    const list = c.upcoming.list;
+    if (!list) return;
+    const doc = c.el.ownerDocument;
+    const today = dayKey(c.now(), c.zone);
+    /** @type {HTMLLIElement[]} */
+    const wanted = [];
+    let lastDay = '';
+    for (const item of items) {
+        let row = c.upcoming.rows.get(item.event.id);
+        if (!row) {
+            row = /** @type {HTMLLIElement} */ (make(doc, 'li', 'kp-week__next'));
+            const head = make(doc, 'div', 'kp-week__head');
+            head.setAttribute('aria-hidden', 'true');
+            row.append(head);
+            c.upcoming.rows.set(item.event.id, row);
+        }
+        const head = /** @type {HTMLElement} */ (row.firstElementChild);
+        const first = item.day !== lastDay;
+        lastDay = item.day;
+        const key = `${item.day}|${first}|${item.day === today}`;
+        if (head.dataset.kpKey !== key) {
+            head.dataset.kpKey = key;
+            head.replaceChildren(
+                // One line, as tall as a pill: the weekday (or Today) and the date.
+                ...(first
+                    ? [
+                          make(doc, 'span', 'kp-week__dow', dayName(c, item.day)),
+                          make(doc, 'span', 'kp-week__today', c.strings.weekToday),
+                          make(doc, 'span', 'kp-week__date', dm(item.day)),
+                      ]
+                    : []),
+            );
+        }
+        row.toggleAttribute('data-kp-today', item.day === today);
+        row.toggleAttribute('data-kp-day-start', first);
+        if (row.lastElementChild !== item.button) row.append(item.button);
+        wanted.push(row);
+    }
+    const have = /** @type {HTMLElement[]} */ ([...list.children]);
+    if (wanted.length !== have.length || wanted.some((row, i) => row !== have[i])) {
+        const keep = new Set(/** @type {Element[]} */ (wanted));
+        for (const row of have) if (!keep.has(row)) row.remove();
+        list.append(...wanted);
+    }
+    for (const [id, row] of c.upcoming.rows) if (!row.isConnected) c.upcoming.rows.delete(id);
+    c.upcoming.items = items;
+    // A week with nothing still to come says so in the list's own row; loading and failing say it over the list.
+    const none = c.upcoming.on && c.state === 'ready' && c.leaving === null && items.length === 0;
+    let empty = /** @type {HTMLLIElement | null} */ (list.querySelector(':scope > .kp-week__next--empty'));
+    if (none && !empty) {
+        empty = /** @type {HTMLLIElement} */ (make(doc, 'li', 'kp-week__next kp-week__next--empty'));
+        empty.append(make(doc, 'span', 'kp-week__head'), make(doc, 'span', 'kp-week__none'));
+        list.append(empty);
+    }
+    if (empty && !none) empty.remove();
+    const words = c.el.dataset.kpWeekUpcomingEmpty || c.strings.weekEmpty;
+    const none2 = empty?.querySelector('.kp-week__none');
+    if (none && none2 && none2.textContent !== words) none2.textContent = words;
+}
+
 /**
  * In rows (below 40rem) a day is as tall as its items, so a week that loads again would fold every day shut and open
  * it again when the items come. Instead each day keeps the height it had while the week loads, and lets go of it only
@@ -362,9 +473,13 @@ function pillFor(c, e) {
  * @param {WeekModel} c
  */
 function holdRows(c) {
+    // The upcoming list holds as one [kpadopt3]; the day rows each hold their own.
+    const boxes = c.upcoming.on && c.upcoming.list ? [c.upcoming.list] : c.cols.map((col) => col.track);
     if (c.state === 'loading') {
-        if (c.held === null && c.mode === 'list') c.held = c.cols.map((col) => col.track.offsetHeight);
-        if (c.held) for (const [i, col] of c.cols.entries()) col.track.style.setProperty('--kp-week-hold', `${c.held[i] ?? 0}px`);
+        // The list is held to the fraction of a pixel, so its 8 rows and its hold are the same height.
+        if (c.held === null && c.mode === 'list')
+            c.held = boxes.map((box) => (c.upcoming.on ? box.getBoundingClientRect().height : box.offsetHeight));
+        if (c.held) for (const [i, box] of boxes.entries()) box.style.setProperty('--kp-week-hold', `${c.held[i] ?? 0}px`);
         return;
     }
     if (c.held === null) return;
@@ -379,7 +494,7 @@ function holdRows(c) {
             return;
         }
         c.held = null;
-        for (const col of c.cols) col.track.style.removeProperty('--kp-week-hold');
+        for (const box of boxes) box.style.removeProperty('--kp-week-hold');
     };
     // Two frames first: the arrivals are set going by the theme's watcher after this paint.
     win.requestAnimationFrame(() => win.requestAnimationFrame(letGo));
@@ -394,7 +509,7 @@ function placeBusy(c) {
     const layer = c.busy;
     if (!layer || !c.cols.length) return;
     const host = c.frame.getBoundingClientRect();
-    const boxes = c.cols.map((col) => col.track.getBoundingClientRect());
+    const boxes = (c.upcoming.on && c.upcoming.list ? [c.upcoming.list] : c.cols.map((col) => col.track)).map((box) => box.getBoundingClientRect());
     const top = Math.min(...boxes.map((b) => b.top));
     const bottom = Math.max(...boxes.map((b) => b.bottom));
     const left = Math.min(...boxes.map((b) => b.left));
@@ -507,10 +622,17 @@ function paint(c) {
         } else c.stateLine.replaceChildren();
     }
     c.stateLine.dataset.kpState = c.state;
+    const was = c.upcoming.on;
+    c.upcoming.on = upcomingOn(c);
+    // The rows of the last mode let go of their hold: the other mode holds its own boxes.
+    if (was !== c.upcoming.on) c.held = null;
+    const waiting = c.state === 'loading' || c.leaving !== null;
     drawBusy(c);
+    // The boxes are held at the height they have before their items leave them.
     holdRows(c);
+    if (c.upcoming.list) paintUpcoming(c, c.upcoming.on && !waiting ? upcomingItems(c, c.now()) : []);
     for (const col of c.cols) {
-        const nodes = c.state === 'loading' || c.leaving ? [] : col.items.map((item) => item.button);
+        const nodes = c.state === 'loading' || c.leaving || c.upcoming.on ? [] : col.items.map((item) => item.button);
         const wanted = [col.now, ...nodes];
         // Re-order only when the order differs: moving a focused node loses its focus.
         const have = [...col.track.children].filter((n) => n !== col.moreButton?.parentElement);
@@ -537,7 +659,7 @@ function paint(c) {
 
 /** Place the pills of every column, fold what does not fit. @param {WeekModel} c */
 function layout(c) {
-    c.mode = getComputedStyle(c.grid).getPropertyValue('--kp-week-mode').trim() === 'list' ? 'list' : 'grid';
+    c.mode = modeOf(c);
     c.el.dataset.kpWeekMode = c.mode;
     for (const col of c.cols) {
         for (const item of col.items) {
@@ -641,6 +763,13 @@ function syncTabStops(c) {
     const all = /** @type {HTMLElement[]} */ (
         c.cols.flatMap((col) => [...col.items.map((i) => i.button), ...(col.moreButton ? [col.moreButton] : [])])
     );
+    if (c.upcoming.on) {
+        // The upcoming list [kpadopt3]: the tab stop is the active pill when it is listed, else the first listed.
+        const listed = c.upcoming.items.map((i) => i.button).filter((b) => b.tagName === 'BUTTON');
+        const stop = listed.find((b) => b.dataset.kpId === c.active) ?? listed[0];
+        for (const el of all) el.tabIndex = el === stop ? 0 : -1;
+        return;
+    }
     let target = c.active ? c.pills.get(c.active) : undefined;
     if (!target || !all.includes(target) || (c.mode === 'grid' && target.hasAttribute('data-kp-overflow'))) {
         target = /** @type {HTMLButtonElement | undefined} */ (c.cols.flatMap((col) => reachable(c, col))[0]);
@@ -670,6 +799,8 @@ function tick(c) {
         }
         for (const item of col.items) item.button.toggleAttribute('data-kp-past', item.ms < now);
     }
+    // An item of the upcoming list that has passed leaves it, and the next one comes in [kpadopt3].
+    if (c.upcoming.on && c.upcoming.items.some((item) => item.ms < now)) paint(c);
 }
 
 /** Move the roving focus. @param {WeekModel} c @param {HTMLElement} to */
@@ -723,6 +854,13 @@ export function attachWeeks(root = document, options = {}) {
             timer: 0,
             observer: null,
             mode: 'grid',
+            upcoming: {
+                n: Math.max(0, Math.min(50, Number.parseInt(el.dataset.kpWeekUpcoming ?? '', 10) || 0)),
+                on: false,
+                list: null,
+                rows: new Map(),
+                items: [],
+            },
         };
         weeks.set(el, c);
         build(c);
@@ -749,6 +887,24 @@ export function attachWeeks(root = document, options = {}) {
         const onKey = (event) => {
             const pill = pillOf(event);
             if (!pill || event.altKey || event.ctrlKey || event.metaKey) return;
+            if (c.upcoming.on && c.upcoming.list?.contains(pill)) {
+                const listed = c.upcoming.items.map((i) => i.button).filter((b) => b.tagName === 'BUTTON');
+                const at = listed.indexOf(/** @type {HTMLButtonElement} */ (pill));
+                const to =
+                    event.key === 'ArrowDown'
+                        ? listed[Math.min(listed.length - 1, at + 1)]
+                        : event.key === 'ArrowUp'
+                          ? listed[Math.max(0, at - 1)]
+                          : event.key === 'Home'
+                            ? listed[0]
+                            : event.key === 'End'
+                              ? listed[listed.length - 1]
+                              : undefined;
+                if (!to) return;
+                event.preventDefault();
+                focusPill(c, to);
+                return;
+            }
             const colIndex = c.cols.findIndex((col) => col.track.contains(pill));
             const col = c.cols[colIndex];
             if (!col) return;
@@ -805,10 +961,16 @@ export function attachWeeks(root = document, options = {}) {
                 const key = `${c.grid.clientWidth}x${c.cols[0]?.track.clientHeight ?? 0}`;
                 if (key === last) return;
                 last = key;
+                // Crossing 40rem with an upcoming list moves the pills between the list and the days: a paint, not a layout.
+                if (c.upcoming.n > 0 && upcomingOn(c) !== c.upcoming.on) {
+                    paint(c);
+                    return;
+                }
                 layout(c);
                 syncTabStops(c);
             });
             c.observer.observe(c.grid);
+            if (c.upcoming.list) c.observer.observe(c.upcoming.list);
         }
         undo.push(() => {
             el.removeEventListener('click', onClick);

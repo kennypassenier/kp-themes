@@ -218,6 +218,8 @@
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
                     <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
                             <tr><td><code>data-kp-facet-all</code></td><td>selector, read, written</td></tr>
+                            <tr><td><code>data-kp-facet-drawn</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-facet-pattern</code></td><td>selector, read, written</td></tr>
                             <tr><td><code>data-kp-facets</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-facets-all</code></td><td>read</td></tr>
                     </tbody></table></div>
@@ -248,6 +250,8 @@
                             <tr><td><code>--kp-facet-pad</code></td><td><code>0.25rem 0.5rem</code></td></tr>
                             <tr><td><code>--kp-facet-pad-end</code></td><td><code>0.25rem</code></td></tr>
                             <tr><td><code>--kp-facet-pad-inline</code></td><td><code>0.5rem</code></td></tr>
+                            <tr><td><code>--kp-facet-pattern-ink</code></td><td><code>color-mix(in oklab, var(--kp-facet-swatch-colour, var(--muted-foreground)) 10%, white)</code></td></tr>
+                            <tr><td><code>--kp-facet-pattern-size</code></td><td><code>1.125rem</code></td></tr>
                             <tr><td><code>--kp-facet-radius</code></td><td><code>calc(var(--radius, 0.5rem) * 0.75)</code></td></tr>
                             <tr><td><code>--kp-facet-swatch</code></td><td><code>3px</code></td></tr>
                             <tr><td><code>--kp-facet-swatch-colour</code></td><td><code>var(--muted-foreground)</code></td></tr>

@@ -50,10 +50,24 @@
 //            are buttons
 //   hover    the run's name, times, length and state in the page's one hover
 //            card (js/hovercard.js), refreshed while a run grows
+//   days     opt-in, `data-kp-gantt-days` [kpadopt3]: every day named on the
+//            axis is a button (one tab stop, ← → Home End between them) that
+//            selects that whole day, 00:00 to 00:00 in the zone, as a brush
+//            would: the band, the chip with Zoom and Clear, and
+//            `kp-gantt-select` with `source: 'day'` and `day` so the page can
+//            jump to it. It is `aria-pressed` while that day is the selection;
+//            pressed again it lifts it. A window too short to hold a midnight
+//            names no day and has no button
+//   series   opt-in [kpadopt3]: a run's `series` (1 to 5) inks a finished
+//            run in `--chart-1` … `--chart-5` instead of the success colour,
+//            a category (a nightly round, a kind of job); failed, running and
+//            queued keep their own look, so the state still reads first.
+//            setGanttLegend(el, [{ series, label }]) names the series after
+//            the states in the legend
 //
 // Events (bubbling, on the timeline):
 //   kp-gantt-open     { id, run, source: 'pointer' | 'keyboard' }  a bar was opened
-//   kp-gantt-select   { from, to, source: 'brush' | 'clear' } | detail null-ish ({ from: null, to: null }) when lifted; epoch ms
+//   kp-gantt-select   { from, to, source: 'brush' | 'day' | 'clear', day? } | detail null-ish ({ from: null, to: null }) when lifted; epoch ms
 //   kp-gantt-window   { from, to, span, live }                  the window moved (a range button, Zoom, Live); epoch ms
 //
 // A screen reader hears a run change state ("Backup: failed") in a polite
@@ -61,8 +75,8 @@
 // Nothing runs on import; attachGantts(root) returns a detach. `decorate`
 // marks every control the timeline builds (`bar`, `live`, `zoom`, `clear`).
 
-import { CHART_TIME_ZONE, wallTime } from './chart.js';
-import { dayKey, formatDayKey } from './calendar.js';
+import { CHART_TIME_ZONE, wallTime, zonedTime } from './chart.js';
+import { dayKey, formatDayKey, shiftDay } from './calendar.js';
 import { resolveStrings } from './strings.js';
 
 /** A run timeline: `section.kp-gantt[data-kp-gantt]`. */
@@ -88,7 +102,9 @@ export const GANTT_STEPS = Object.freeze([60, 300, 900, 1800, 3600, 10_800, 21_6
  * @property {number | string | null} [end] when it ended; ignored for a queued or running run
  * @property {GanttRunState} state
  * @property {string} [detail] more words for the hover card
+ * @property {1 | 2 | 3 | 4 | 5} [series] a finished run's colour, `--chart-1` … `--chart-5`, in place of the success colour [kpadopt3]
  * @typedef {{ id: string, label: string }} GanttLane
+ * @typedef {{ series: 1 | 2 | 3 | 4 | 5, label: string }} GanttLegendEntry
  * @typedef {'loading' | 'ready' | 'empty' | 'error'} GanttState
  * @typedef {import('./strings.js').Strings} Strings
  *
@@ -108,6 +124,7 @@ export const GANTT_STEPS = Object.freeze([60, 300, 900, 1800, 3600, 10_800, 21_6
  *   plot: HTMLElement, lines: HTMLElement, nowLine: HTMLElement, brushBox: HTMLElement, selectBox: HTMLElement,
  *   stateLine: HTMLElement, announcer: HTMLElement, ranges: HTMLElement, liveButton: HTMLButtonElement,
  *   selection: HTMLElement, selectionText: HTMLElement, ticks: Map<number, { label: HTMLElement, line: HTMLElement }>,
+ *   legend: HTMLElement, days: boolean, dayStop: string | null,
  *   ghosts: HTMLElement[], held: number | null, timer: number, observer: ResizeObserver | null, drag: { a: number, b: number } | null, dragMoved: boolean, tickKey: string }} GanttModel
  */
 
@@ -299,7 +316,8 @@ function build(c) {
     if (!c.el.hasAttribute('aria-label') && !c.el.hasAttribute('aria-labelledby')) c.body.setAttribute('aria-label', s.ganttGroup);
     const corner = make(doc, 'div', 'kp-gantt__corner');
     c.axis = make(doc, 'div', 'kp-gantt__axis');
-    c.axis.setAttribute('aria-hidden', 'true');
+    // With day buttons the axis holds controls; its other labels are hidden one by one (syncTicks).
+    if (!c.days) c.axis.setAttribute('aria-hidden', 'true');
     c.plot = make(doc, 'div', 'kp-gantt__plot');
     c.lines = make(doc, 'div', 'kp-gantt__lines');
     c.lines.setAttribute('aria-hidden', 'true');
@@ -322,6 +340,7 @@ function build(c) {
     frame.append(c.scroll, c.stateLine);
     const hint = make(doc, 'p', 'kp-gantt__hint', s.ganttHint);
     const legend = make(doc, 'ul', 'kp-gantt__legend');
+    c.legend = legend;
     for (const state of /** @type {const} */ (['ok', 'failed', 'running', 'queued'])) {
         const li = make(doc, 'li');
         const swatch = make(doc, 'span', 'kp-gantt__swatch');
@@ -370,6 +389,12 @@ function syncTicks(c, w) {
         }
     for (const t of list) {
         const id = Math.round(t);
+        const ms = (id + c.base) * 1000;
+        const w2 = wallTime(ms, c.zone);
+        const midnight = w2.hour === 0 && w2.minute === 0;
+        const isDay = step >= 86_400 || midnight;
+        // A day the axis names is a button when the timeline asks for them [kpadopt3].
+        const tag = c.days && isDay ? 'BUTTON' : 'SPAN';
         let parts = c.ticks.get(id);
         if (!parts) {
             parts = { label: make(doc, 'span', 'kp-gantt__tick'), line: make(doc, 'i', 'kp-gantt__rule') };
@@ -377,14 +402,76 @@ function syncTicks(c, w) {
             c.lines.append(parts.line);
             c.ticks.set(id, parts);
         }
-        const ms = (id + c.base) * 1000;
-        const w2 = wallTime(ms, c.zone);
-        const midnight = w2.hour === 0 && w2.minute === 0;
-        parts.label.textContent = step >= 86_400 || midnight ? formatDayKey(dayKey(ms, c.zone)).slice(0, 5) : clock(c, ms);
-        parts.label.toggleAttribute('data-kp-day', step >= 86_400 || midnight);
+        if (parts.label.tagName !== tag) {
+            const fresh = make(doc, tag === 'BUTTON' ? 'button' : 'span', 'kp-gantt__tick');
+            if (fresh instanceof HTMLButtonElement) fresh.type = 'button';
+            parts.label.replaceWith(fresh);
+            parts.label = fresh;
+        }
+        const day = dayKey(ms, c.zone);
+        parts.label.textContent = isDay ? formatDayKey(day).slice(0, 5) : clock(c, ms);
+        parts.label.toggleAttribute('data-kp-day', isDay);
+        if (tag === 'BUTTON') {
+            parts.label.dataset.kpGanttDay = day;
+            parts.label.setAttribute('aria-label', dayWords(c, day));
+            parts.label.title = dayWords(c, day);
+        } else if (c.days) parts.label.setAttribute('aria-hidden', 'true');
         parts.label.style.setProperty('--kp-g-t', String(id));
         parts.line.style.setProperty('--kp-g-t', String(id));
     }
+    // A day button is pressed whole: one that would run past the end of the axis stands against its end instead, and
+    // one that has no room there without touching the label before it is not offered (its day is the window's last, partial one).
+    if (c.days) {
+        const room = c.axis.clientWidth;
+        let before = -Infinity;
+        for (const id of [...c.ticks.keys()].sort((a, b) => a - b)) {
+            const label = /** @type {{ label: HTMLElement }} */ (c.ticks.get(id)).label;
+            const x = ((id - w.from) / c.span) * room;
+            const width = label.offsetWidth;
+            const edge = label.tagName === 'BUTTON' && x + width > room;
+            const start = edge ? room - width : x;
+            const crowded = edge && start < before + 6;
+            label.toggleAttribute('data-kp-gantt-edge', edge);
+            label.toggleAttribute('data-kp-gantt-crowded', crowded);
+            if (!crowded) before = start + width;
+        }
+    }
+    syncDays(c);
+}
+
+/**
+ * A day as a person reads it on a button: `We 14/10/2026`, the dictionary's weekday (rule 52: dd/mm, the year in the name).
+ * @param {GanttModel} c @param {string} day
+ */
+function dayWords(c, day) {
+    const weekday = c.strings.weekdays[(new Date(`${day}T12:00:00Z`).getUTCDay() + 6) % 7] ?? '';
+    return `${weekday} ${formatDayKey(day)}`.trim();
+}
+
+/** The moments a day of the zone starts and ends, epoch ms. @param {GanttModel} c @param {string} day */
+function dayBounds(c, day) {
+    const at = (/** @type {string} */ iso) =>
+        zonedTime(Number(iso.slice(0, 4)), Number(iso.slice(5, 7)), Number(iso.slice(8, 10)), 0, 0, c.zone) ?? Date.parse(`${iso}T00:00:00Z`);
+    return { from: at(day), to: at(shiftDay(day, 1)) };
+}
+
+/** The day buttons: pressed while their day is the selection, one tab stop among them. @param {GanttModel} c */
+function syncDays(c) {
+    if (!c.days) return;
+    for (const b of /** @type {HTMLButtonElement[]} */ ([...c.axis.querySelectorAll('button[data-kp-gantt-day][data-kp-gantt-crowded]')]))
+        b.tabIndex = -1;
+    const buttons = /** @type {HTMLButtonElement[]} */ ([...c.axis.querySelectorAll('button[data-kp-gantt-day]:not([data-kp-gantt-crowded])')]);
+    const sel = c.selected;
+    let picked = '';
+    for (const b of buttons) {
+        const day = b.dataset.kpGanttDay ?? '';
+        const { from, to } = dayBounds(c, day);
+        const on = sel !== null && sel.from === from && sel.to === to;
+        if (on) picked = day;
+        b.setAttribute('aria-pressed', String(on));
+    }
+    const stop = buttons.find((b) => b.dataset.kpGanttDay === c.dayStop) ?? buttons.find((b) => b.dataset.kpGanttDay === picked) ?? buttons[0];
+    for (const b of buttons) b.tabIndex = b === stop ? 0 : -1;
 }
 
 /** Everything the timeline shows, from the model. @param {GanttModel} c */
@@ -417,6 +504,8 @@ function paint(c) {
         }
         bar.dataset.kpId = run.id;
         bar.dataset.kpState = run.state;
+        if (run.series) bar.dataset.kpSeries = String(run.series);
+        else delete bar.dataset.kpSeries;
         live.add(run.id);
         const before = c.states.get(run.id);
         if (before && before !== run.state) c.announcer.textContent = s.ganttAnnounce(run.label, stateWord(c, run.state));
@@ -612,6 +701,7 @@ function paintSelection(c) {
     c.ranges.toggleAttribute('inert', sel !== null);
     c.liveButton.toggleAttribute('inert', sel !== null);
     c.selectBox.hidden = sel === null;
+    syncDays(c);
     if (!sel) {
         c.selectionText.textContent = '';
         return;
@@ -689,6 +779,9 @@ export function attachGantts(root = document, options = {}) {
             selection: el,
             selectionText: el,
             ticks: new Map(),
+            legend: el,
+            days: el.hasAttribute('data-kp-gantt-days'),
+            dayStop: null,
             ghosts: [],
             held: null,
             timer: 0,
@@ -729,6 +822,18 @@ export function attachGantts(root = document, options = {}) {
             if (!button) return;
             if (button === c.liveButton) {
                 setLive(c, !c.live);
+            } else if (button.hasAttribute('data-kp-gantt-day')) {
+                const day = button.dataset.kpGanttDay ?? '';
+                c.dayStop = day;
+                const bounds = dayBounds(c, day);
+                const lift = button.getAttribute('aria-pressed') === 'true';
+                setGanttSelection(el, lift ? null : bounds);
+                el.dispatchEvent(
+                    new CustomEvent(GANTT_SELECT_EVENT, {
+                        bubbles: true,
+                        detail: lift ? { from: null, to: null, source: 'clear' } : { ...bounds, source: 'day', day },
+                    }),
+                );
             } else if (button.hasAttribute('data-kp-gantt-clear')) {
                 setGanttSelection(el, null);
                 el.dispatchEvent(new CustomEvent(GANTT_SELECT_EVENT, { bubbles: true, detail: { from: null, to: null, source: 'clear' } }));
@@ -754,6 +859,29 @@ export function attachGantts(root = document, options = {}) {
         };
         /** @param {KeyboardEvent} event */
         const onKey = (event) => {
+            const dayButton = event.target instanceof HTMLButtonElement && event.target.hasAttribute('data-kp-gantt-day') ? event.target : null;
+            if (dayButton && !(event.altKey || event.ctrlKey || event.metaKey)) {
+                const buttons = /** @type {HTMLButtonElement[]} */ ([
+                    ...c.axis.querySelectorAll('button[data-kp-gantt-day]:not([data-kp-gantt-crowded])'),
+                ]);
+                const at = buttons.indexOf(dayButton);
+                const rtl = getComputedStyle(c.axis).direction === 'rtl';
+                const step = event.key === 'ArrowRight' ? (rtl ? -1 : 1) : event.key === 'ArrowLeft' ? (rtl ? 1 : -1) : 0;
+                const to =
+                    event.key === 'Home'
+                        ? buttons[0]
+                        : event.key === 'End'
+                          ? buttons[buttons.length - 1]
+                          : step
+                            ? buttons[Math.min(buttons.length - 1, Math.max(0, at + step))]
+                            : undefined;
+                if (!to) return;
+                event.preventDefault();
+                c.dayStop = to.dataset.kpGanttDay ?? null;
+                syncDays(c);
+                to.focus();
+                return;
+            }
             const bar = barOf(event);
             if (!bar || event.altKey || event.ctrlKey || event.metaKey) return;
             const lanes = reachableLanes(c);
@@ -951,4 +1079,26 @@ export function setGanttSelection(el, selection) {
     if (!c) return;
     c.selected = selection;
     paintSelection(c);
+}
+
+/**
+ * Name the series of the runs in the legend, after the states [kpadopt3]: a swatch in the series' colour and its words per
+ * entry, in the order given; none takes them away again. The states stay as they are.
+ * @param {Element} el
+ * @param {GanttLegendEntry[]} entries
+ */
+export function setGanttLegend(el, entries) {
+    const c = gantts.get(el);
+    if (!c) return;
+    const doc = c.el.ownerDocument;
+    for (const old of c.legend.querySelectorAll(':scope > .kp-gantt__legend-series')) old.remove();
+    for (const { series, label } of entries) {
+        const li = make(doc, 'li', 'kp-gantt__legend-series');
+        const swatch = make(doc, 'span', 'kp-gantt__swatch');
+        swatch.dataset.kpState = 'ok';
+        swatch.dataset.kpSeries = String(series);
+        swatch.setAttribute('aria-hidden', 'true');
+        li.append(swatch, make(doc, 'span', '', label));
+        c.legend.append(li);
+    }
 }

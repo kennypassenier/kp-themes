@@ -7147,6 +7147,35 @@
         display: none;
     }
 
+    /* A separator between two groups of links [kpadopt3]: `<li class="kp-nav__sep" aria-hidden="true">`, a hairline as
+     * tall as a link, in the list's own gap. Never a target and never focused. In a folding bar (js/nav-fold.js) it stands
+     * only between two shown links and becomes the More menu's own `.kp-menu__separator`; in the phone's open list it is
+     * a rule across the list. Knobs: --kp-nav-sep-colour (--border-strong), --kp-nav-sep-inset (the room above and below
+     * it, 0.25rem). */
+    .kp-nav__sep {
+        flex: none;
+        align-self: stretch;
+        box-sizing: border-box;
+        inline-size: 0;
+        min-block-size: 1em;
+        margin-block: var(--kp-nav-sep-inset, 0.25rem);
+        padding: 0;
+        border-inline-start: 1px solid var(--kp-nav-sep-colour, var(--border-strong));
+        list-style: none;
+        pointer-events: none;
+    }
+
+    @container kp-nav (max-width: 40rem) {
+        .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep {
+            inline-size: auto;
+            min-block-size: 0;
+            block-size: 0;
+            margin-block: var(--kp-nav-sep-inset, 0.25rem);
+            border-inline-start: 0;
+            border-block-start: 1px solid var(--kp-nav-sep-colour, var(--border-strong));
+        }
+    }
+
     /* The bar's own toggle shown: the bar collapses as it always did. */
     @container kp-nav (max-width: 40rem) {
         .kp-nav:where([data-kp-nav-fold]):has(> .kp-nav__toggle) > .kp-nav__links {
@@ -11609,6 +11638,93 @@
         }
     }
 
+    /* The upcoming list [kpadopt3] (`data-kp-week-upcoming="8"`, js/week.js): below 40rem the agenda lists its next items
+     * in place of the day rows, in the rows' own columns and rules: the day on the start side, named on the first row of
+     * each day, the item's own pill beside it. Wider it is not drawn. It keeps its height while the week loads again
+     * (--kp-week-hold, as a day row does). */
+    .kp-week__upcoming {
+        display: none;
+    }
+
+    @container kp-week (max-width: 39.99rem) {
+        .kp-week:has(> .kp-week__frame > .kp-week__upcoming) .kp-week__grid {
+            display: none;
+        }
+
+        .kp-week__upcoming {
+            display: grid;
+            min-block-size: var(--kp-week-hold, 0px);
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            align-content: start;
+        }
+
+        .kp-week__next {
+            display: grid;
+            grid-template-columns: var(--kp-week-day-label, 5.5rem) minmax(0, 1fr);
+            column-gap: var(--kp-space-sm, 0.5rem);
+            align-items: center;
+            padding-block: var(--kp-week-next-pad, 0.375rem);
+            border-block-end: 1px solid var(--border);
+        }
+
+        /* A run of the same day reads as one block: the rule falls only where the next day starts. */
+        .kp-week__next:has(+ .kp-week__next:not([data-kp-day-start])) {
+            border-block-end-color: transparent;
+        }
+
+        .kp-week__next[data-kp-day-start] {
+            padding-block-start: var(--kp-space-sm, 0.5rem);
+        }
+
+        .kp-week__next > .kp-week__pill {
+            grid-column: 2;
+            min-inline-size: 0;
+        }
+
+        /* The day on one line, as tall as a pill, so every row is a pill's height: the weekday and the date; today's
+         * says Today in the today colour in place of its weekday. */
+        .kp-week__next > .kp-week__head {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            min-block-size: var(--kp-week-pill, 1.5rem);
+            padding: 0;
+            white-space: nowrap;
+        }
+
+        .kp-week__next > .kp-week__head > .kp-week__today {
+            display: none;
+            font-size: inherit;
+            line-height: inherit;
+        }
+
+        .kp-week__next[data-kp-today] > .kp-week__head {
+            color: var(--foreground);
+            font-weight: 600;
+        }
+
+        .kp-week__next[data-kp-today] > .kp-week__head > .kp-week__dow {
+            display: none;
+        }
+
+        .kp-week__next[data-kp-today] > .kp-week__head > .kp-week__today {
+            display: inline;
+            visibility: visible;
+            color: var(--kp-week-today, var(--primary));
+        }
+
+        .kp-week__none {
+            grid-column: 2;
+            display: flex;
+            align-items: center;
+            min-block-size: var(--kp-week-pill, 1.5rem);
+            color: var(--muted-foreground);
+            font-size: var(--kp-text-sm, 0.8125rem);
+        }
+    }
+
     /* --- Run timeline: one bar per run on a time axis ----------------------
  * `section.kp-gantt[data-kp-gantt]` (js/gantt.js). A bar of range buttons, a
  * Live button and the selected range; under it a frame with the axis on top
@@ -11757,6 +11873,52 @@
     .kp-gantt__tick[data-kp-day] {
         color: var(--foreground);
         font-weight: 600;
+    }
+
+    /* A day on the axis that can be pressed [kpadopt3] (`data-kp-gantt-days`, js/gantt.js): the same label, as a button as
+     * tall as the axis. Pointing underlines it; pressed (its day is the selection) it stands on the selection's tint with
+     * the selection's edge under it, so the label and the band in the plot read as one choice. Its focus ring is drawn
+     * inside, where the axis does not clip it. */
+    .kp-gantt__tick:is(button) {
+        box-sizing: border-box;
+        block-size: var(--kp-gantt-axis, 1.75rem);
+        margin: 0;
+        padding-block: 0;
+        padding-inline-end: 0.3125rem;
+        border: 0;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: none;
+        font-family: inherit;
+        font-size: 0.6875rem;
+        letter-spacing: inherit;
+        cursor: pointer;
+        text-decoration: underline 1px transparent;
+        text-underline-offset: 0.25em;
+    }
+
+    .kp-gantt__tick:is(button):hover {
+        color: var(--primary);
+        text-decoration-color: currentColor;
+    }
+
+    .kp-gantt__tick:is(button)[aria-pressed='true'] {
+        background: color-mix(in oklab, var(--primary) 14%, transparent);
+        box-shadow: inset 0 -2px 0 var(--primary);
+        color: var(--foreground);
+    }
+
+    .kp-gantt__tick:is(button)[data-kp-gantt-edge] {
+        inset-inline-start: auto;
+        inset-inline-end: 0;
+    }
+
+    .kp-gantt__tick:is(button)[data-kp-gantt-crowded] {
+        visibility: hidden;
+    }
+
+    .kp-gantt__tick:is(button):focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: -2px;
     }
 
     .kp-gantt__lines {
@@ -11937,6 +12099,32 @@
         --kp-gantt-ink: var(--foreground);
         background: transparent;
         border-style: dashed;
+    }
+
+    /* A finished run of a series [kpadopt3] (`series` 1 to 5, js/gantt.js) is a category, not a state: a plate of its chart
+     * colour, tinted into the card with its edge in the full colour, the words in the page's ink so every series reads
+     * the same. Failed, running and queued keep their own look; the legend names the series after the states. */
+    :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='ok'][data-kp-series] {
+        --kp-gantt-series: var(--chart-1);
+        --kp-gantt-fill: color-mix(in oklab, var(--kp-gantt-series) 34%, var(--card));
+        --kp-gantt-ink: var(--foreground);
+        border-color: var(--kp-gantt-series);
+    }
+
+    :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='ok'][data-kp-series='2'] {
+        --kp-gantt-series: var(--chart-2);
+    }
+
+    :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='ok'][data-kp-series='3'] {
+        --kp-gantt-series: var(--chart-3);
+    }
+
+    :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='ok'][data-kp-series='4'] {
+        --kp-gantt-series: var(--chart-4);
+    }
+
+    :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='ok'][data-kp-series='5'] {
+        --kp-gantt-series: var(--chart-5);
     }
 
     .kp-gantt__run[data-kp-state='failed'] .kp-gantt__label::before {
@@ -16094,6 +16282,25 @@
         block-size: 0.75rem;
         border-radius: var(--kp-facet-swatch, 3px);
         background: var(--kp-facet-swatch-colour, var(--muted-foreground));
+    }
+
+    /* A swatch with an identity pattern [kpadopt3] (`pattern`, `data-kp-facet-pattern`; js/facets.js draws it): the hue as
+     * its ground and a 5 by 5 mirrored pattern of the seed in a pale ink of that hue over it, one cell in from its edge, so
+     * two close hues are still told apart. Larger than a plain swatch so a cell stays two pixels or more. Knobs:
+     * --kp-facet-pattern-size (1.125rem), --kp-facet-pattern-ink (the hue lifted nearly to white). */
+    .kp-facet__swatch[data-kp-facet-pattern] {
+        position: relative;
+        inline-size: var(--kp-facet-pattern-size, 1.125rem);
+        block-size: var(--kp-facet-pattern-size, 1.125rem);
+        overflow: hidden;
+    }
+
+    .kp-facet__pattern {
+        position: absolute;
+        inset: 0;
+        inline-size: 100%;
+        block-size: 100%;
+        fill: var(--kp-facet-pattern-ink, color-mix(in oklab, var(--kp-facet-swatch-colour, var(--muted-foreground)) 10%, white));
     }
 
     .kp-facet__name {
@@ -75666,6 +75873,31 @@
         color: var(--primary);
     }
 
+    /* A separator between groups of links [kpadopt3] is the docket cut stood upright [G19]: the strong hairline and,
+       beside it at its head, the short navy tick, as the divider marks a section closed. Static. */
+    [data-theme='formal'] .kp-nav__sep {
+        position: relative;
+    }
+
+    [data-theme='formal'] .kp-nav__sep::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline-start: 2px;
+        inline-size: 3px;
+        block-size: min(0.75rem, 50%);
+        background: var(--primary);
+    }
+
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='formal'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep::after {
+            inset-block-start: 2px;
+            inset-inline-start: 0;
+            inline-size: 3rem;
+            block-size: 3px;
+        }
+    }
+
     /* The call to action: a primary plate with the radius. The words sit
        one lg step in from either side of it [Kenny, 2026-09-15: "barely any
        spacing between the letters and the blue box"]; the plate had 0px of
@@ -79484,6 +79716,35 @@
     [data-theme='formal'] .kp-gantt__tick {
         font-variant-caps: all-small-caps;
         letter-spacing: 0.08em;
+    }
+}
+@layer kp.signature {
+    /* A day on the axis that can be pressed [kpadopt3]: pointing rules the navy rule under its label (G15); pressed, the
+       account is closed under it, the double rule (G7), on the paper with no tint. */
+    [data-theme='formal'] .kp-gantt__tick:is(button) {
+        border-radius: 0;
+        text-decoration: none;
+    }
+    [data-theme='formal'] .kp-gantt__tick:is(button):hover {
+        color: var(--foreground);
+        box-shadow: inset 0 -2px 0 var(--primary);
+    }
+    [data-theme='formal'] .kp-gantt__tick:is(button)[aria-pressed='true'] {
+        background: none;
+        color: var(--primary);
+        box-shadow:
+            inset 0 -2px 0 var(--primary),
+            inset 0 -4px 0 var(--card),
+            inset 0 -5px 0 var(--primary);
+    }
+    /* A series' finished run is an entry in that series' ink: the ledger's heavy rule on its start edge. */
+    [data-theme='formal'] .kp-gantt__run[data-kp-state='ok'][data-kp-series] {
+        box-shadow: inset 3px 0 0 var(--kp-gantt-series);
+    }
+    [data-theme='formal'] .kp-gantt__run[data-kp-state='ok'][data-kp-series]:hover {
+        box-shadow:
+            inset 3px 0 0 var(--kp-gantt-series),
+            0 0 0 2px var(--foreground);
     }
 }
 

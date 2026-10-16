@@ -83,6 +83,8 @@
 //   data-kp-server           the rows come from the consumer's `load`, stale answers dropped
 //   th data-kp-edit          a value is edited in its cell; the app hears it and may refuse it
 //   td data-kp-sort-value    the value a cell sorts and range/date-filters by in place of the text it shows
+//   td data-kp-filter-value  the word a choice filter lists and matches a cell by in place of the text it shows [kpadopt3]
+//                            (on a header the same attribute is the filter the page opens with)
 //   data-kp-grid             a roving focus grid: arrows, Home/End, Page Up/Down
 //
 // And the add-filter mode of Kenny's form of 2026-09-14 ("Allebei, per
@@ -964,6 +966,13 @@ export function attachDataTables(
          * @param {HTMLTableRowElement} row @param {number} at
          */
         const cellValue = (row, at) => row.cells[at]?.getAttribute('data-kp-sort-value') ?? cellText(row, at);
+        /**
+         * What a choice filter reads of a cell: its `data-kp-filter-value` [kpadopt3] when it has one (a status cell shows a
+         * dot, a word and a time, and is listed and matched as "running"), else what it shows. Search keeps the shown text.
+         * On a header the same attribute is the filter the page opens with (read below, from `headers`).
+         * @param {HTMLTableRowElement} row @param {number} at
+         */
+        const choiceText = (row, at) => row.cells[at]?.getAttribute('data-kp-filter-value')?.trim() ?? cellText(row, at);
         /** @param {HTMLTableRowElement} row */
         const keyOf = (row) => row.dataset.kpRowKey ?? row.id ?? '';
 
@@ -1372,7 +1381,7 @@ export function attachDataTables(
         function choiceValues(at) {
             const declared = splitList(headers[at]?.dataset.kpFilterOptions);
             if (declared.length > 0) return declared;
-            const values = [...new Set(all.map((row) => cellText(row, at)).filter((v) => v !== ''))];
+            const values = [...new Set(all.map((row) => choiceText(row, at)).filter((v) => v !== ''))];
             const order = orders[at];
             return values.sort((a, b) => (order ? compareByOrder(order, a, b, collator(locale).compare) : collator(locale).compare(a, b)));
         }
@@ -2645,7 +2654,7 @@ export function attachDataTables(
                 }
                 for (const [at, value] of filters) {
                     const kind = filterKinds[at];
-                    if (kind && !matchesFilter(kind, value, kind === 'choice' ? cellText(row, at) : cellValue(row, at), locale)) return false;
+                    if (kind && !matchesFilter(kind, value, kind === 'choice' ? choiceText(row, at) : cellValue(row, at), locale)) return false;
                 }
                 return true;
             });

@@ -27,6 +27,20 @@ export declare function planFold({ widths, gap, room, moreWidth, keep }: {
     moreWidth: number;
     keep?: readonly boolean[];
 }): boolean[];
+/** A separator between two groups of links [kpadopt3]. */
+export declare const NAV_SEP = ".kp-nav__sep";
+/**
+ * Which separators fold with the links around them: pure, beside planFold().
+ *
+ * Nothing folds while no link folds. Once one does, a separator stays only
+ * where a shown link stands both before and after it in the bar, so no rule
+ * is left at the start of the bar or against the More button.
+ *
+ * @param {readonly boolean[]} plan per item: true when it folds (planFold)
+ * @param {readonly boolean[]} seps per item: true when it is a separator
+ * @returns {boolean[]} the plan with the separators decided
+ */
+export declare function planSeparators(plan: readonly boolean[], seps: readonly boolean[]): boolean[];
 export type NavFoldOptions = {
     /**
      * any of the dictionary's `navMore…` words, for this bar only

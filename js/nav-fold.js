@@ -44,6 +44,14 @@
 // the nav when the folded set changes: `{ folded, items }`. Every word is in
 // the dictionary (`navMore`, `navMoreMenu`, `navMoreAlert`, `navMoreUnavailable`).
 //
+// A separator between two groups of links [kpadopt3] is a list item of its own,
+// `<li class="kp-nav__sep" aria-hidden="true"></li>`: a rule in the bar, never a
+// target. The fold reads it as part of the bar: a separator stands only between
+// two links that are shown, so one whose links on either side have folded folds
+// with them (no rule dangles before More or at the start), and in the More menu
+// the links that followed it start a group below the menu's own separator
+// (`.kp-menu__separator`). A separator is never counted as a folded item.
+//
 // Nothing runs on import; attachNavFolds(root) returns a detach.
 
 import { resolveStrings } from './strings.js';
@@ -104,6 +112,32 @@ function wordsOf(el) {
 function counterOf(el) {
     const badge = el.querySelector('.kp-badge:not([hidden])');
     return (badge?.textContent ?? '').replace(/\s+/g, ' ').trim();
+}
+
+/** A separator between two groups of links [kpadopt3]. */
+export const NAV_SEP = '.kp-nav__sep';
+
+/** @param {Element} li @returns {boolean} */
+const isSep = (li) => li.matches(NAV_SEP);
+
+/**
+ * Which separators fold with the links around them: pure, beside planFold().
+ *
+ * Nothing folds while no link folds. Once one does, a separator stays only
+ * where a shown link stands both before and after it in the bar, so no rule
+ * is left at the start of the bar or against the More button.
+ *
+ * @param {readonly boolean[]} plan per item: true when it folds (planFold)
+ * @param {readonly boolean[]} seps per item: true when it is a separator
+ * @returns {boolean[]} the plan with the separators decided
+ */
+export function planSeparators(plan, seps) {
+    const shown = plan.map((folds, i) => !folds && !seps[i]);
+    if (!plan.some((folds, i) => folds && !seps[i])) return plan.map((folds, i) => (seps[i] ? false : folds));
+    return plan.map((folds, i) => {
+        if (!seps[i]) return folds;
+        return !(shown.slice(0, i).includes(true) && shown.slice(i + 1).includes(true));
+    });
 }
 
 /** @param {HTMLElement} el @returns {boolean} */
@@ -170,6 +204,10 @@ export function foldNav(nav, { strings } = {}) {
 
     /** @type {HTMLElement[]} */
     let sources = [];
+    /** The menu's groups that follow a folded separator. @type {Set<import('./menu-button.js').MenuGroup>} */
+    let ruled = new Set();
+    /** Their places among the groups the menu draws (menu-button.js leaves out an empty group). @type {number[]} */
+    let ruledAt = [];
     let signature = '';
     let foldedNow = /** @type {HTMLElement[]} */ ([]);
 
@@ -192,6 +230,9 @@ export function foldNav(nav, { strings } = {}) {
         const groups = [];
         /** @type {import('./menu-button.js').MenuItem[] | null} */
         let plain = null;
+        // A folded separator: the next group stands below a rule in the menu.
+        let rule = false;
+        ruled = new Set();
         sources = [];
         /** @param {HTMLElement} el @returns {import('./menu-button.js').MenuItem} */
         const entry = (el) => {
@@ -207,14 +248,25 @@ export function foldNav(nav, { strings } = {}) {
             sources.push(el);
             return item;
         };
+        /** @param {import('./menu-button.js').MenuGroup} group */
+        const open = (group) => {
+            if (rule && groups.some((g) => g.items.length)) ruled.add(group);
+            rule = false;
+            groups.push(group);
+        };
         for (const li of folded) {
+            if (isSep(li)) {
+                plain = null;
+                rule = true;
+                continue;
+            }
             const primary = /** @type {HTMLElement | null} */ (li.querySelector(':scope > a, :scope > button'));
             const panel = li.querySelector(':scope > .kp-nav__menu');
             if (!panel) {
                 if (!primary) continue;
                 if (!plain) {
                     plain = [];
-                    groups.push({ group: '', items: plain });
+                    open({ group: '', items: plain });
                 }
                 plain.push(entry(primary));
                 continue;
@@ -228,7 +280,7 @@ export function foldNav(nav, { strings } = {}) {
                 if (link.matches('[data-kp-nav-disclosure]')) continue;
                 items.push(entry(link));
             }
-            groups.push({ group: primary ? wordsOf(primary) : '', items });
+            open({ group: primary ? wordsOf(primary) : '', items });
         }
         return groups;
     };
@@ -242,6 +294,29 @@ export function foldNav(nav, { strings } = {}) {
         const rtl = view.getComputedStyle(list).direction === 'rtl';
         list.style.setProperty('--kp-nav-fold-used', `${Math.max(0, Math.round(rtl ? box.right - end.left : end.right - box.left))}px`);
     };
+
+    /**
+     * The menu's separators where the bar had one: the menu's own `.kp-menu__separator` before each group that followed a
+     * folded separator. The menu draws its groups itself (and later, while it is open), so this runs after every draw.
+     */
+    const ruleMenu = () => {
+        const blocks = /** @type {HTMLElement[]} */ ([...menu.children]).filter((n) => n.classList.contains('kp-menu__group'));
+        for (const old of menu.querySelectorAll(':scope > .kp-menu__separator[data-kp-nav-sep]')) {
+            const at = blocks.indexOf(/** @type {HTMLElement} */ (old.nextElementSibling));
+            if (!ruledAt.includes(at)) old.remove();
+        }
+        for (const at of ruledAt) {
+            const block = blocks[at];
+            if (!block || block.previousElementSibling?.matches('.kp-menu__separator[data-kp-nav-sep]')) continue;
+            const line = doc.createElement('div');
+            line.className = 'kp-menu__separator';
+            line.setAttribute('role', 'separator');
+            line.setAttribute('data-kp-nav-sep', '');
+            block.before(line);
+        }
+    };
+    const drawn = new MutationObserver(ruleMenu);
+    drawn.observe(menu, { childList: true });
 
     const fit = () => {
         // The More item belongs at the end, wherever a render added an item after it.
@@ -261,13 +336,17 @@ export function foldNav(nav, { strings } = {}) {
                 keep: items.map((li) => li.hasAttribute('data-kp-nav-keep')),
             });
         }
-        const folded = items.filter((_, i) => plan[i]);
+        const seps = items.map(isSep);
+        if (seps.includes(true)) plan = planSeparators(plan, seps);
+        // Every item that leaves the bar, separators too; `folded` is the links among them.
+        const leaving = items.filter((_, i) => plan[i]);
+        const folded = leaving.filter((li) => !isSep(li));
         // The list keeps at least the More button's room while something is folded (css/components.css).
         if (folded.length) list.style.setProperty('--kp-nav-fold-more', `${more.offsetWidth}px`);
         else list.style.removeProperty('--kp-nav-fold-more');
-        const now = items.map((li, i) => (plan[i] ? i : -1)).filter((i) => i >= 0);
+        const now = items.map((li, i) => (plan[i] && !seps[i] ? i : -1)).filter((i) => i >= 0);
         const same = now.join(',') === foldedNow.map((li) => items.indexOf(li)).join(',') && folded.length === foldedNow.length;
-        for (const li of items) li.toggleAttribute('data-kp-nav-folded', folded.includes(li));
+        for (const li of items) li.toggleAttribute('data-kp-nav-folded', leaving.includes(li));
         more.toggleAttribute('data-kp-nav-idle', folded.length === 0);
         nav.toggleAttribute('data-kp-nav-folding', folded.length > 0);
         if (folded.length === 0 && foldedNow.length > 0) closeMenu(wrapper);
@@ -276,7 +355,11 @@ export function foldNav(nav, { strings } = {}) {
         if (active && folded.some((li) => li.contains(active))) button.focus();
         foldedNow = folded;
 
-        const groups = groupsOf(folded);
+        const groups = groupsOf(leaving);
+        ruledAt = groups
+            .filter((g) => g.items.length)
+            .map((g, i) => (ruled.has(g) ? i : -1))
+            .filter((i) => i > 0);
         more.toggleAttribute(
             'data-kp-nav-more-current',
             folded.some((li) => li.querySelector('[aria-current]:not([aria-current="false"])') !== null),
@@ -288,11 +371,16 @@ export function foldNav(nav, { strings } = {}) {
         // The button holds the current page: it reads as a current item of the bar (`true`, not `page`: it is a set).
         if (more.hasAttribute('data-kp-nav-more-current')) button.setAttribute('aria-current', 'true');
         else button.removeAttribute('aria-current');
-        const next = JSON.stringify(groups.map((g) => [g.group, g.items.map((i) => [i.label, i.href ?? '', i.disabled ?? '', i.attrs ?? null])]));
+        const next = JSON.stringify([
+            groups.map((g) => [g.group, g.items.map((i) => [i.label, i.href ?? '', i.disabled ?? '', i.attrs ?? null])]),
+            ruledAt,
+        ]);
         if (next !== signature) {
             signature = next;
             if (groups.length) setMenu(wrapper, groups);
         }
+        // An open menu keeps what it shows until it closes (menu-button.js); its next draw rules it then.
+        if (menu.hidden) ruleMenu();
         nav.setAttribute('data-kp-nav-fold-ready', '');
         publishUsed();
         if (!same) nav.dispatchEvent(new CustomEvent(NAV_FOLD_EVENT, { bubbles: true, detail: { folded: folded.length, items: folded } }));
@@ -350,6 +438,7 @@ export function foldNav(nav, { strings } = {}) {
     return () => {
         resize?.disconnect();
         mutations.disconnect();
+        drawn.disconnect();
         view.removeEventListener('resize', fit);
         menu.removeEventListener('click', onPick, true);
         detachMenu();

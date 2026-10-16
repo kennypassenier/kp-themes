@@ -4593,8 +4593,8 @@ function easeSize(box, { arrive: fallback2 = "all", arriveKeys = [] } = {}) {
   };
   watch();
   const list = new MutationObserver((records) => {
-    const modeOf = (target) => fresh() ? "none" : arriveMode(target instanceof Element ? target : box, fallback2);
-    const any = records.some((record) => modeOf(record.target) !== "none");
+    const modeOf2 = (target) => fresh() ? "none" : arriveMode(target instanceof Element ? target : box, fallback2);
+    const any = records.some((record) => modeOf2(record.target) !== "none");
     const motion = records.length && any ? arrival(box) : null;
     let repainted = null;
     const hiddenBefore = /* @__PURE__ */ new Map();
@@ -4604,7 +4604,7 @@ function easeSize(box, { arrive: fallback2 = "all", arriveKeys = [] } = {}) {
       if (record.type === "childList") for (const node of record.removedNodes) moved.add(node);
     }
     for (const record of records) {
-      const mode = modeOf(record.target);
+      const mode = modeOf2(record.target);
       if (mode === "none") continue;
       if (record.type === "attributes" && record.target instanceof HTMLElement && !record.target.hidden && hiddenBefore.get(record.target)) {
         hiddenBefore.delete(record.target);
@@ -10621,7 +10621,7 @@ function attachDataTables(root = document, {
     }, choiceValues2 = function(at) {
       const declared = splitList2(headers[at]?.dataset.kpFilterOptions);
       if (declared.length > 0) return declared;
-      const values = [...new Set(all.map((row) => cellText(row, at)).filter((v) => v !== ""))];
+      const values = [...new Set(all.map((row) => choiceText(row, at)).filter((v) => v !== ""))];
       const order = orders[at];
       return values.sort((a, b) => order ? compareByOrder(order, a, b, collator(locale).compare) : collator(locale).compare(a, b));
     }, fillChoices2 = function(set, at, ticked) {
@@ -10849,6 +10849,7 @@ function attachDataTables(root = document, {
       return ((cell.querySelector(EDIT_VALUE) ?? cell).textContent ?? "").trim();
     };
     const cellValue = (row, at) => row.cells[at]?.getAttribute("data-kp-sort-value") ?? cellText(row, at);
+    const choiceText = (row, at) => row.cells[at]?.getAttribute("data-kp-filter-value")?.trim() ?? cellText(row, at);
     const keyOf6 = (row) => row.dataset.kpRowKey ?? row.id ?? "";
     const isRow = (row) => !row.matches(DETAIL) && !row.matches(SKELETON_ROW) && !row.matches(GROUP_ROW);
     let all = (
@@ -12389,7 +12390,7 @@ function attachDataTables(root = document, {
         }
         for (const [at, value] of filters) {
           const kind = filterKinds[at];
-          if (kind && !matchesFilter(kind, value, kind === "choice" ? cellText(row, at) : cellValue(row, at), locale)) return false;
+          if (kind && !matchesFilter(kind, value, kind === "choice" ? choiceText(row, at) : cellValue(row, at), locale)) return false;
         }
         return true;
       });
@@ -18716,9 +18717,11 @@ __export(nav_fold_exports, {
   NAV_FOLD_EVENT: () => NAV_FOLD_EVENT,
   NAV_FOLD_OWNED: () => NAV_FOLD_OWNED,
   NAV_MORE: () => NAV_MORE,
+  NAV_SEP: () => NAV_SEP,
   attachNavFolds: () => attachNavFolds,
   foldNav: () => foldNav,
-  planFold: () => planFold
+  planFold: () => planFold,
+  planSeparators: () => planSeparators
 });
 function planFold({ widths: widths2, gap, room, moreWidth, keep = [] }) {
   const n = widths2.length;
@@ -18749,6 +18752,14 @@ function wordsOf(el4) {
 function counterOf(el4) {
   const badge = el4.querySelector(".kp-badge:not([hidden])");
   return (badge?.textContent ?? "").replace(/\s+/g, " ").trim();
+}
+function planSeparators(plan, seps) {
+  const shown2 = plan.map((folds2, i) => !folds2 && !seps[i]);
+  if (!plan.some((folds2, i) => folds2 && !seps[i])) return plan.map((folds2, i) => seps[i] ? false : folds2);
+  return plan.map((folds2, i) => {
+    if (!seps[i]) return folds2;
+    return !(shown2.slice(0, i).includes(true) && shown2.slice(i + 1).includes(true));
+  });
 }
 function foldNav(nav, { strings } = {}) {
   if (folds.has(nav)) return () => {
@@ -18796,6 +18807,8 @@ function foldNav(nav, { strings } = {}) {
   list.append(more);
   const detachMenu = attachMenuButtons(more, { strings });
   let sources = [];
+  let ruled = /* @__PURE__ */ new Set();
+  let ruledAt = [];
   let signature = "";
   let foldedNow = (
     /** @type {HTMLElement[]} */
@@ -18813,6 +18826,8 @@ function foldNav(nav, { strings } = {}) {
     const s2 = words();
     const groups = [];
     let plain = null;
+    let rule = false;
+    ruled = /* @__PURE__ */ new Set();
     sources = [];
     const entry = (el4) => {
       const name = wordsOf(el4) || (el4.getAttribute("aria-label") ?? "");
@@ -18826,7 +18841,17 @@ function foldNav(nav, { strings } = {}) {
       sources.push(el4);
       return item;
     };
+    const open2 = (group) => {
+      if (rule && groups.some((g) => g.items.length)) ruled.add(group);
+      rule = false;
+      groups.push(group);
+    };
     for (const li of folded) {
+      if (isSep(li)) {
+        plain = null;
+        rule = true;
+        continue;
+      }
       const primary = (
         /** @type {HTMLElement | null} */
         li.querySelector(":scope > a, :scope > button")
@@ -18836,7 +18861,7 @@ function foldNav(nav, { strings } = {}) {
         if (!primary) continue;
         if (!plain) {
           plain = [];
-          groups.push({ group: "", items: plain });
+          open2({ group: "", items: plain });
         }
         plain.push(entry(primary));
         continue;
@@ -18853,7 +18878,7 @@ function foldNav(nav, { strings } = {}) {
         if (link.matches("[data-kp-nav-disclosure]")) continue;
         items.push(entry(link));
       }
-      groups.push({ group: primary ? wordsOf(primary) : "", items });
+      open2({ group: primary ? wordsOf(primary) : "", items });
     }
     return groups;
   };
@@ -18865,6 +18890,30 @@ function foldNav(nav, { strings } = {}) {
     const rtl = view.getComputedStyle(list).direction === "rtl";
     list.style.setProperty("--kp-nav-fold-used", `${Math.max(0, Math.round(rtl ? box.right - end.left : end.right - box.left))}px`);
   };
+  const ruleMenu = () => {
+    const blocks = (
+      /** @type {HTMLElement[]} */
+      [...menu.children].filter((n) => n.classList.contains("kp-menu__group"))
+    );
+    for (const old of menu.querySelectorAll(":scope > .kp-menu__separator[data-kp-nav-sep]")) {
+      const at = blocks.indexOf(
+        /** @type {HTMLElement} */
+        old.nextElementSibling
+      );
+      if (!ruledAt.includes(at)) old.remove();
+    }
+    for (const at of ruledAt) {
+      const block = blocks[at];
+      if (!block || block.previousElementSibling?.matches(".kp-menu__separator[data-kp-nav-sep]")) continue;
+      const line = doc.createElement("div");
+      line.className = "kp-menu__separator";
+      line.setAttribute("role", "separator");
+      line.setAttribute("data-kp-nav-sep", "");
+      block.before(line);
+    }
+  };
+  const drawn = new MutationObserver(ruleMenu);
+  drawn.observe(menu, { childList: true });
   const fit = () => {
     if (list.lastElementChild !== more) list.append(more);
     const items = itemsOf2();
@@ -18880,19 +18929,23 @@ function foldNav(nav, { strings } = {}) {
         keep: items.map((li) => li.hasAttribute("data-kp-nav-keep"))
       });
     }
-    const folded = items.filter((_, i) => plan[i]);
+    const seps = items.map(isSep);
+    if (seps.includes(true)) plan = planSeparators(plan, seps);
+    const leaving = items.filter((_, i) => plan[i]);
+    const folded = leaving.filter((li) => !isSep(li));
     if (folded.length) list.style.setProperty("--kp-nav-fold-more", `${more.offsetWidth}px`);
     else list.style.removeProperty("--kp-nav-fold-more");
-    const now = items.map((li, i) => plan[i] ? i : -1).filter((i) => i >= 0);
+    const now = items.map((li, i) => plan[i] && !seps[i] ? i : -1).filter((i) => i >= 0);
     const same = now.join(",") === foldedNow.map((li) => items.indexOf(li)).join(",") && folded.length === foldedNow.length;
-    for (const li of items) li.toggleAttribute("data-kp-nav-folded", folded.includes(li));
+    for (const li of items) li.toggleAttribute("data-kp-nav-folded", leaving.includes(li));
     more.toggleAttribute("data-kp-nav-idle", folded.length === 0);
     nav.toggleAttribute("data-kp-nav-folding", folded.length > 0);
     if (folded.length === 0 && foldedNow.length > 0) closeMenu(wrapper);
     const active = doc.activeElement;
     if (active && folded.some((li) => li.contains(active))) button.focus();
     foldedNow = folded;
-    const groups = groupsOf(folded);
+    const groups = groupsOf(leaving);
+    ruledAt = groups.filter((g) => g.items.length).map((g, i) => ruled.has(g) ? i : -1).filter((i) => i > 0);
     more.toggleAttribute(
       "data-kp-nav-more-current",
       folded.some((li) => li.querySelector('[aria-current]:not([aria-current="false"])') !== null)
@@ -18903,11 +18956,15 @@ function foldNav(nav, { strings } = {}) {
     alertText.hidden = !alert;
     if (more.hasAttribute("data-kp-nav-more-current")) button.setAttribute("aria-current", "true");
     else button.removeAttribute("aria-current");
-    const next = JSON.stringify(groups.map((g) => [g.group, g.items.map((i) => [i.label, i.href ?? "", i.disabled ?? "", i.attrs ?? null])]));
+    const next = JSON.stringify([
+      groups.map((g) => [g.group, g.items.map((i) => [i.label, i.href ?? "", i.disabled ?? "", i.attrs ?? null])]),
+      ruledAt
+    ]);
     if (next !== signature) {
       signature = next;
       if (groups.length) setMenu(wrapper, groups);
     }
+    if (menu.hidden) ruleMenu();
     nav.setAttribute("data-kp-nav-fold-ready", "");
     publishUsed();
     if (!same) nav.dispatchEvent(new CustomEvent(NAV_FOLD_EVENT, { bubbles: true, detail: { folded: folded.length, items: folded } }));
@@ -18953,6 +19010,7 @@ function foldNav(nav, { strings } = {}) {
   return () => {
     resize?.disconnect();
     mutations.disconnect();
+    drawn.disconnect();
     view.removeEventListener("resize", fit);
     menu.removeEventListener("click", onPick, true);
     detachMenu();
@@ -18979,7 +19037,7 @@ function attachNavFolds(root = document, { ownedBy = NAV_FOLD_OWNED, ...options 
   }
   return () => undo.splice(0).forEach((off) => off());
 }
-var NAV_FOLD, NAV_FOLD_EVENT, NAV_MORE, unavailable, folds, NAV_FOLD_OWNED;
+var NAV_FOLD, NAV_FOLD_EVENT, NAV_MORE, NAV_SEP, isSep, unavailable, folds, NAV_FOLD_OWNED;
 var init_nav_fold = __esm({
   "js/nav-fold.js"() {
     "use strict";
@@ -18988,6 +19046,8 @@ var init_nav_fold = __esm({
     NAV_FOLD = "[data-kp-nav-fold]";
     NAV_FOLD_EVENT = "kp-nav-fold";
     NAV_MORE = "[data-kp-nav-more]";
+    NAV_SEP = ".kp-nav__sep";
+    isSep = (li) => li.matches(NAV_SEP);
     unavailable = (el4) => el4.hasAttribute("disabled") || el4.getAttribute("aria-disabled") === "true";
     folds = /* @__PURE__ */ new WeakMap();
     NAV_FOLD_OWNED = "[data-kp-nav-owner]";
@@ -19677,10 +19737,49 @@ __export(facets_exports, {
   FACET_EVENT: () => FACET_EVENT,
   attachFacets: () => attachFacets,
   getFacetValues: () => getFacetValues,
+  identityCells: () => identityCells,
   setFacetCounts: () => setFacetCounts,
   setFacetItems: () => setFacetItems,
   setFacetValues: () => setFacetValues
 });
+function identityCells(seed) {
+  let hash = 2166136261;
+  for (const ch of seed) hash = Math.imul(hash ^ (ch.codePointAt(0) ?? 0), 16777619);
+  hash >>>= 0;
+  const cells = [];
+  for (let y = 0; y < 5; y += 1)
+    for (let x = 0; x < 3; x += 1)
+      if (hash >>> y * 3 + x + 4 & 1) {
+        cells.push([x, y]);
+        if (x < 2) cells.push([4 - x, y]);
+      }
+  return cells;
+}
+function drawPattern(swatch, seed) {
+  const old = swatch.querySelector(":scope > .kp-facet__pattern");
+  if (!seed) {
+    old?.remove();
+    swatch.removeAttribute("data-kp-facet-pattern");
+    return;
+  }
+  if (old && swatch.getAttribute("data-kp-facet-drawn") === seed) return;
+  swatch.setAttribute("data-kp-facet-pattern", seed);
+  swatch.setAttribute("data-kp-facet-drawn", seed);
+  const svg = document.createElementNS(SVG_NS, "svg");
+  svg.setAttribute("class", "kp-facet__pattern");
+  svg.setAttribute("viewBox", "0 0 7 7");
+  svg.setAttribute("aria-hidden", "true");
+  svg.setAttribute("focusable", "false");
+  svg.setAttribute("shape-rendering", "crispEdges");
+  const path = document.createElementNS(SVG_NS, "path");
+  path.setAttribute(
+    "d",
+    identityCells(seed).map(([x, y]) => `M${x + 1} ${y + 1}h1v1h-1z`).join("")
+  );
+  svg.append(path);
+  if (old) old.replaceWith(svg);
+  else swatch.append(svg);
+}
 function listOf(group) {
   let list = (
     /** @type {HTMLElement | null} */
@@ -19694,6 +19793,11 @@ function listOf(group) {
 }
 function wireRow(row) {
   const check = checkOf(row);
+  const swatch = (
+    /** @type {HTMLElement | null} */
+    row.querySelector(".kp-facet__swatch[data-kp-facet-pattern]")
+  );
+  if (swatch) drawPattern(swatch, swatch.getAttribute("data-kp-facet-pattern"));
   const name = row.querySelector(".kp-facet__name");
   const count = row.querySelector(".kp-facet__count");
   serial2 += 1;
@@ -19721,7 +19825,7 @@ function buildRow(item) {
   check.className = "kp-field__check kp-facet__check";
   check.checked = item.checked ?? true;
   option.append(check);
-  if (item.swatch !== void 0) option.append(el3("kp-facet__swatch"));
+  if (item.swatch !== void 0 || item.pattern) option.append(el3("kp-facet__swatch"));
   option.append(el3("kp-facet__name"), el3("kp-facet__count"));
   const only = document.createElement("button");
   only.type = "button";
@@ -19739,6 +19843,7 @@ function paintRow(row, item) {
     row.querySelector(".kp-facet__swatch")
   );
   if (swatch && item.swatch !== void 0) swatch.style.setProperty("--kp-facet-swatch-colour", item.swatch);
+  if (swatch && item.pattern !== void 0) drawPattern(swatch, item.pattern || null);
   const check = checkOf(row);
   if (check) {
     if (item.disabled !== void 0) check.disabled = item.disabled;
@@ -19885,7 +19990,7 @@ function attachFacets(root = document) {
   }
   return () => undo.forEach((u) => u());
 }
-var FACETS, FACET_EVENT, serial2, el3, countText, rowsOf, checkOf, nameOf2;
+var FACETS, FACET_EVENT, serial2, SVG_NS, el3, countText, rowsOf, checkOf, nameOf2;
 var init_facets = __esm({
   "js/facets.js"() {
     "use strict";
@@ -19893,6 +19998,7 @@ var init_facets = __esm({
     FACETS = "[data-kp-facets]";
     FACET_EVENT = "kp-facet-change";
     serial2 = 0;
+    SVG_NS = "http://www.w3.org/2000/svg";
     el3 = (className, tag = "span") => {
       const node = document.createElement(tag);
       node.className = className;
@@ -20795,16 +20901,16 @@ function wireHeat(el4) {
     const rowsN = grid2.length;
     const colsN = (grid2[r] ?? []).length;
     const key = event.key;
+    let askLatest = false;
     if (key === "ArrowRight") c = Math.min(colsN - 1, c + 1);
     else if (key === "ArrowLeft") c = Math.max(0, c - 1);
     else if (key === "ArrowDown") r = Math.min(rowsN - 1, r + 1);
     else if (key === "ArrowUp") r = Math.max(0, r - 1);
-    else if (key === "Home") {
-      c = 0;
-      if (event.ctrlKey) r = 0;
-    } else if (key === "End") {
-      c = colsN - 1;
-      if (event.ctrlKey) r = rowsN - 1;
+    else if (key === "Home" || key === "End") {
+      c = key === "Home" ? 0 : colsN - 1;
+      if (event.ctrlKey) r = key === "Home" ? 0 : rowsN - 1;
+      const latest = el4.getAttribute("data-kp-heat-latest");
+      askLatest = latest !== null && key === (latest === "start" ? "Home" : "End");
     } else if (key === "PageUp" || key === "PageDown") {
       event.preventDefault();
       el4.dispatchEvent(new CustomEvent(HEAT_PAGE_EVENT, { bubbles: true, detail: { direction: key === "PageUp" ? "earlier" : "later" } }));
@@ -20824,6 +20930,7 @@ function wireHeat(el4) {
     STOPS.set(el4, { r, c });
     placeStop(el4, HEAT_CELL, { r, c });
     to.focus();
+    if (askLatest) el4.dispatchEvent(new CustomEvent(HEAT_PAGE_EVENT, { bubbles: true, detail: { direction: "latest" } }));
   };
   const onFocus = (event) => {
     const cell = (
@@ -21455,7 +21562,18 @@ function build(c) {
   c.grid.append(c.axis);
   c.stateLine = make4(doc, "p", "kp-week__state");
   c.stateLine.setAttribute("role", "status");
-  frame2.append(c.grid, c.stateLine);
+  frame2.append(c.grid);
+  if (c.upcoming.n > 0) {
+    const list = (
+      /** @type {HTMLOListElement} */
+      make4(doc, "ol", "kp-week__upcoming")
+    );
+    const named = c.el.dataset.kpWeekUpcomingLabel;
+    if (named) list.setAttribute("aria-label", named);
+    c.upcoming.list = list;
+    frame2.append(list);
+  }
+  frame2.append(c.stateLine);
   c.legend = make4(doc, "ul", "kp-week__legend");
   c.legend.hidden = true;
   parts.push(frame2, c.legend);
@@ -21523,10 +21641,84 @@ function pillFor(c, e) {
   button.dataset.kpId = e.id;
   return button;
 }
+function upcomingItems(c, now) {
+  return c.cols.flatMap((col) => col.items).filter((item) => item.ms >= now && !NOT_UPCOMING.has(item.event.state ?? "")).sort((a, b) => a.ms - b.ms).slice(0, c.upcoming.n);
+}
+function paintUpcoming(c, items) {
+  const list = c.upcoming.list;
+  if (!list) return;
+  const doc = c.el.ownerDocument;
+  const today = dayKey(c.now(), c.zone);
+  const wanted = [];
+  let lastDay = "";
+  for (const item of items) {
+    let row = c.upcoming.rows.get(item.event.id);
+    if (!row) {
+      row = /** @type {HTMLLIElement} */
+      make4(doc, "li", "kp-week__next");
+      const head2 = make4(doc, "div", "kp-week__head");
+      head2.setAttribute("aria-hidden", "true");
+      row.append(head2);
+      c.upcoming.rows.set(item.event.id, row);
+    }
+    const head = (
+      /** @type {HTMLElement} */
+      row.firstElementChild
+    );
+    const first = item.day !== lastDay;
+    lastDay = item.day;
+    const key = `${item.day}|${first}|${item.day === today}`;
+    if (head.dataset.kpKey !== key) {
+      head.dataset.kpKey = key;
+      head.replaceChildren(
+        ...first ? [
+          make4(doc, "span", "kp-week__dow", dayName(c, item.day)),
+          make4(doc, "span", "kp-week__today", c.strings.weekToday),
+          make4(doc, "span", "kp-week__date", dm(item.day))
+        ] : []
+      );
+    }
+    row.toggleAttribute("data-kp-today", item.day === today);
+    row.toggleAttribute("data-kp-day-start", first);
+    if (row.lastElementChild !== item.button) row.append(item.button);
+    wanted.push(row);
+  }
+  const have = (
+    /** @type {HTMLElement[]} */
+    [...list.children]
+  );
+  if (wanted.length !== have.length || wanted.some((row, i) => row !== have[i])) {
+    const keep = new Set(
+      /** @type {Element[]} */
+      wanted
+    );
+    for (const row of have) if (!keep.has(row)) row.remove();
+    list.append(...wanted);
+  }
+  for (const [id, row] of c.upcoming.rows) if (!row.isConnected) c.upcoming.rows.delete(id);
+  c.upcoming.items = items;
+  const none = c.upcoming.on && c.state === "ready" && c.leaving === null && items.length === 0;
+  let empty = (
+    /** @type {HTMLLIElement | null} */
+    list.querySelector(":scope > .kp-week__next--empty")
+  );
+  if (none && !empty) {
+    empty = /** @type {HTMLLIElement} */
+    make4(doc, "li", "kp-week__next kp-week__next--empty");
+    empty.append(make4(doc, "span", "kp-week__head"), make4(doc, "span", "kp-week__none"));
+    list.append(empty);
+  }
+  if (empty && !none) empty.remove();
+  const words = c.el.dataset.kpWeekUpcomingEmpty || c.strings.weekEmpty;
+  const none2 = empty?.querySelector(".kp-week__none");
+  if (none && none2 && none2.textContent !== words) none2.textContent = words;
+}
 function holdRows(c) {
+  const boxes = c.upcoming.on && c.upcoming.list ? [c.upcoming.list] : c.cols.map((col) => col.track);
   if (c.state === "loading") {
-    if (c.held === null && c.mode === "list") c.held = c.cols.map((col) => col.track.offsetHeight);
-    if (c.held) for (const [i, col] of c.cols.entries()) col.track.style.setProperty("--kp-week-hold", `${c.held[i] ?? 0}px`);
+    if (c.held === null && c.mode === "list")
+      c.held = boxes.map((box) => c.upcoming.on ? box.getBoundingClientRect().height : box.offsetHeight);
+    if (c.held) for (const [i, box] of boxes.entries()) box.style.setProperty("--kp-week-hold", `${c.held[i] ?? 0}px`);
     return;
   }
   if (c.held === null) return;
@@ -21541,7 +21733,7 @@ function holdRows(c) {
       return;
     }
     c.held = null;
-    for (const col of c.cols) col.track.style.removeProperty("--kp-week-hold");
+    for (const box of boxes) box.style.removeProperty("--kp-week-hold");
   };
   win.requestAnimationFrame(() => win.requestAnimationFrame(letGo));
 }
@@ -21549,7 +21741,7 @@ function placeBusy(c) {
   const layer = c.busy;
   if (!layer || !c.cols.length) return;
   const host = c.frame.getBoundingClientRect();
-  const boxes = c.cols.map((col) => col.track.getBoundingClientRect());
+  const boxes = (c.upcoming.on && c.upcoming.list ? [c.upcoming.list] : c.cols.map((col) => col.track)).map((box) => box.getBoundingClientRect());
   const top = Math.min(...boxes.map((b) => b.top));
   const bottom = Math.max(...boxes.map((b) => b.bottom));
   const left = Math.min(...boxes.map((b) => b.left));
@@ -21660,10 +21852,15 @@ function paint3(c) {
     } else c.stateLine.replaceChildren();
   }
   c.stateLine.dataset.kpState = c.state;
+  const was = c.upcoming.on;
+  c.upcoming.on = upcomingOn(c);
+  if (was !== c.upcoming.on) c.held = null;
+  const waiting = c.state === "loading" || c.leaving !== null;
   drawBusy(c);
   holdRows(c);
+  if (c.upcoming.list) paintUpcoming(c, c.upcoming.on && !waiting ? upcomingItems(c, c.now()) : []);
   for (const col of c.cols) {
-    const nodes = c.state === "loading" || c.leaving ? [] : col.items.map((item) => item.button);
+    const nodes = c.state === "loading" || c.leaving || c.upcoming.on ? [] : col.items.map((item) => item.button);
     const wanted = [col.now, ...nodes];
     const have = [...col.track.children].filter((n) => n !== col.moreButton?.parentElement);
     const same = wanted.length === have.length && wanted.every((n, i) => n === have[i]);
@@ -21687,7 +21884,7 @@ function paint3(c) {
   void doc;
 }
 function layout2(c) {
-  c.mode = getComputedStyle(c.grid).getPropertyValue("--kp-week-mode").trim() === "list" ? "list" : "grid";
+  c.mode = modeOf(c);
   c.el.dataset.kpWeekMode = c.mode;
   for (const col of c.cols) {
     for (const item of col.items) {
@@ -21788,6 +21985,12 @@ function syncTabStops(c) {
     /** @type {HTMLElement[]} */
     c.cols.flatMap((col) => [...col.items.map((i) => i.button), ...col.moreButton ? [col.moreButton] : []])
   );
+  if (c.upcoming.on) {
+    const listed = c.upcoming.items.map((i) => i.button).filter((b) => b.tagName === "BUTTON");
+    const stop = listed.find((b) => b.dataset.kpId === c.active) ?? listed[0];
+    for (const el4 of all) el4.tabIndex = el4 === stop ? 0 : -1;
+    return;
+  }
   let target = c.active ? c.pills.get(c.active) : void 0;
   if (!target || !all.includes(target) || c.mode === "grid" && target.hasAttribute("data-kp-overflow")) {
     target = /** @type {HTMLButtonElement | undefined} */
@@ -21814,6 +22017,7 @@ function tick2(c) {
     }
     for (const item of col.items) item.button.toggleAttribute("data-kp-past", item.ms < now);
   }
+  if (c.upcoming.on && c.upcoming.items.some((item) => item.ms < now)) paint3(c);
 }
 function focusPill(c, to) {
   c.active = to.dataset.kpId ?? c.active;
@@ -21859,7 +22063,14 @@ function attachWeeks(root = document, options = {}) {
       pills: /* @__PURE__ */ new Map(),
       timer: 0,
       observer: null,
-      mode: "grid"
+      mode: "grid",
+      upcoming: {
+        n: Math.max(0, Math.min(50, Number.parseInt(el4.dataset.kpWeekUpcoming ?? "", 10) || 0)),
+        on: false,
+        list: null,
+        rows: /* @__PURE__ */ new Map(),
+        items: []
+      }
     };
     weeks.set(el4, c);
     build(c);
@@ -21883,6 +22094,18 @@ function attachWeeks(root = document, options = {}) {
     const onKey = (event) => {
       const pill = pillOf(event);
       if (!pill || event.altKey || event.ctrlKey || event.metaKey) return;
+      if (c.upcoming.on && c.upcoming.list?.contains(pill)) {
+        const listed = c.upcoming.items.map((i) => i.button).filter((b) => b.tagName === "BUTTON");
+        const at2 = listed.indexOf(
+          /** @type {HTMLButtonElement} */
+          pill
+        );
+        const to2 = event.key === "ArrowDown" ? listed[Math.min(listed.length - 1, at2 + 1)] : event.key === "ArrowUp" ? listed[Math.max(0, at2 - 1)] : event.key === "Home" ? listed[0] : event.key === "End" ? listed[listed.length - 1] : void 0;
+        if (!to2) return;
+        event.preventDefault();
+        focusPill(c, to2);
+        return;
+      }
       const colIndex = c.cols.findIndex((col2) => col2.track.contains(pill));
       const col = c.cols[colIndex];
       if (!col) return;
@@ -21937,10 +22160,15 @@ function attachWeeks(root = document, options = {}) {
         const key = `${c.grid.clientWidth}x${c.cols[0]?.track.clientHeight ?? 0}`;
         if (key === last) return;
         last = key;
+        if (c.upcoming.n > 0 && upcomingOn(c) !== c.upcoming.on) {
+          paint3(c);
+          return;
+        }
         layout2(c);
         syncTabStops(c);
       });
       c.observer.observe(c.grid);
+      if (c.upcoming.list) c.observer.observe(c.upcoming.list);
     }
     undo.push(() => {
       el4.removeEventListener("click", onClick);
@@ -21994,7 +22222,7 @@ function setWeekLegend(el4, entries) {
   );
   c.legend.hidden = entries.length === 0;
 }
-var WEEK, WEEK_OPEN_EVENT, WEEK_RANGE_EVENT, WEEK_TICK_MS, weeks, GAP, AXIS_HOURS, two3, make4, toMs, keyOf3, dayName, dm, menuModule;
+var WEEK, WEEK_OPEN_EVENT, WEEK_RANGE_EVENT, WEEK_TICK_MS, weeks, GAP, AXIS_HOURS, two3, make4, toMs, keyOf3, dayName, dm, modeOf, upcomingOn, NOT_UPCOMING, menuModule;
 var init_week = __esm({
   "js/week.js"() {
     "use strict";
@@ -22023,6 +22251,9 @@ var init_week = __esm({
       "short"
     )) => new Intl.DateTimeFormat(c.locale, { weekday: style, timeZone: "UTC" }).format(Date.parse(`${iso}T12:00:00Z`));
     dm = (iso, year = false) => `${iso.slice(8, 10)}/${iso.slice(5, 7)}${year ? `/${iso.slice(0, 4)}` : ""}`;
+    modeOf = (c) => getComputedStyle(c.grid).getPropertyValue("--kp-week-mode").trim() === "list" ? "list" : "grid";
+    upcomingOn = (c) => c.upcoming.n > 0 && c.upcoming.list !== null && modeOf(c) === "list";
+    NOT_UPCOMING = /* @__PURE__ */ new Set(["off", "skipped", "reference"]);
     menuModule = /** @type {Promise<typeof import('./menu-button.js')> | null} */
     null;
   }
@@ -22041,6 +22272,7 @@ __export(gantt_exports, {
   axisStep: () => axisStep,
   packRows: () => packRows,
   rangeSeconds: () => rangeSeconds,
+  setGanttLegend: () => setGanttLegend,
   setGanttRuns: () => setGanttRuns,
   setGanttSelection: () => setGanttSelection,
   setGanttState: () => setGanttState,
@@ -22153,7 +22385,7 @@ function build2(c) {
   if (!c.el.hasAttribute("aria-label") && !c.el.hasAttribute("aria-labelledby")) c.body.setAttribute("aria-label", s2.ganttGroup);
   const corner = make5(doc, "div", "kp-gantt__corner");
   c.axis = make5(doc, "div", "kp-gantt__axis");
-  c.axis.setAttribute("aria-hidden", "true");
+  if (!c.days) c.axis.setAttribute("aria-hidden", "true");
   c.plot = make5(doc, "div", "kp-gantt__plot");
   c.lines = make5(doc, "div", "kp-gantt__lines");
   c.lines.setAttribute("aria-hidden", "true");
@@ -22175,6 +22407,7 @@ function build2(c) {
   frame2.append(c.scroll, c.stateLine);
   const hint = make5(doc, "p", "kp-gantt__hint", s2.ganttHint);
   const legend = make5(doc, "ul", "kp-gantt__legend");
+  c.legend = legend;
   for (
     const state of
     /** @type {const} */
@@ -22221,6 +22454,11 @@ function syncTicks(c, w) {
     }
   for (const t of list) {
     const id = Math.round(t);
+    const ms = (id + c.base) * 1e3;
+    const w2 = wallTime(ms, c.zone);
+    const midnight = w2.hour === 0 && w2.minute === 0;
+    const isDay = step >= 86400 || midnight;
+    const tag = c.days && isDay ? "BUTTON" : "SPAN";
     let parts = c.ticks.get(id);
     if (!parts) {
       parts = { label: make5(doc, "span", "kp-gantt__tick"), line: make5(doc, "i", "kp-gantt__rule") };
@@ -22228,14 +22466,74 @@ function syncTicks(c, w) {
       c.lines.append(parts.line);
       c.ticks.set(id, parts);
     }
-    const ms = (id + c.base) * 1e3;
-    const w2 = wallTime(ms, c.zone);
-    const midnight = w2.hour === 0 && w2.minute === 0;
-    parts.label.textContent = step >= 86400 || midnight ? formatDayKey(dayKey(ms, c.zone)).slice(0, 5) : clock(c, ms);
-    parts.label.toggleAttribute("data-kp-day", step >= 86400 || midnight);
+    if (parts.label.tagName !== tag) {
+      const fresh = make5(doc, tag === "BUTTON" ? "button" : "span", "kp-gantt__tick");
+      if (fresh instanceof HTMLButtonElement) fresh.type = "button";
+      parts.label.replaceWith(fresh);
+      parts.label = fresh;
+    }
+    const day = dayKey(ms, c.zone);
+    parts.label.textContent = isDay ? formatDayKey(day).slice(0, 5) : clock(c, ms);
+    parts.label.toggleAttribute("data-kp-day", isDay);
+    if (tag === "BUTTON") {
+      parts.label.dataset.kpGanttDay = day;
+      parts.label.setAttribute("aria-label", dayWords(c, day));
+      parts.label.title = dayWords(c, day);
+    } else if (c.days) parts.label.setAttribute("aria-hidden", "true");
     parts.label.style.setProperty("--kp-g-t", String(id));
     parts.line.style.setProperty("--kp-g-t", String(id));
   }
+  if (c.days) {
+    const room2 = c.axis.clientWidth;
+    let before = -Infinity;
+    for (const id of [...c.ticks.keys()].sort((a, b) => a - b)) {
+      const label = (
+        /** @type {{ label: HTMLElement }} */
+        c.ticks.get(id).label
+      );
+      const x = (id - w.from) / c.span * room2;
+      const width = label.offsetWidth;
+      const edge = label.tagName === "BUTTON" && x + width > room2;
+      const start = edge ? room2 - width : x;
+      const crowded = edge && start < before + 6;
+      label.toggleAttribute("data-kp-gantt-edge", edge);
+      label.toggleAttribute("data-kp-gantt-crowded", crowded);
+      if (!crowded) before = start + width;
+    }
+  }
+  syncDays(c);
+}
+function dayWords(c, day) {
+  const weekday2 = c.strings.weekdays[((/* @__PURE__ */ new Date(`${day}T12:00:00Z`)).getUTCDay() + 6) % 7] ?? "";
+  return `${weekday2} ${formatDayKey(day)}`.trim();
+}
+function dayBounds(c, day) {
+  const at = (iso) => zonedTime(Number(iso.slice(0, 4)), Number(iso.slice(5, 7)), Number(iso.slice(8, 10)), 0, 0, c.zone) ?? Date.parse(`${iso}T00:00:00Z`);
+  return { from: at(day), to: at(shiftDay(day, 1)) };
+}
+function syncDays(c) {
+  if (!c.days) return;
+  for (
+    const b of
+    /** @type {HTMLButtonElement[]} */
+    [...c.axis.querySelectorAll("button[data-kp-gantt-day][data-kp-gantt-crowded]")]
+  )
+    b.tabIndex = -1;
+  const buttons = (
+    /** @type {HTMLButtonElement[]} */
+    [...c.axis.querySelectorAll("button[data-kp-gantt-day]:not([data-kp-gantt-crowded])")]
+  );
+  const sel = c.selected;
+  let picked = "";
+  for (const b of buttons) {
+    const day = b.dataset.kpGanttDay ?? "";
+    const { from, to } = dayBounds(c, day);
+    const on = sel !== null && sel.from === from && sel.to === to;
+    if (on) picked = day;
+    b.setAttribute("aria-pressed", String(on));
+  }
+  const stop = buttons.find((b) => b.dataset.kpGanttDay === c.dayStop) ?? buttons.find((b) => b.dataset.kpGanttDay === picked) ?? buttons[0];
+  for (const b of buttons) b.tabIndex = b === stop ? 0 : -1;
 }
 function paint4(c) {
   const doc = c.el.ownerDocument;
@@ -22264,6 +22562,8 @@ function paint4(c) {
     }
     bar.dataset.kpId = run.id;
     bar.dataset.kpState = run.state;
+    if (run.series) bar.dataset.kpSeries = String(run.series);
+    else delete bar.dataset.kpSeries;
     live2.add(run.id);
     const before2 = c.states.get(run.id);
     if (before2 && before2 !== run.state) c.announcer.textContent = s2.ganttAnnounce(run.label, stateWord3(c, run.state));
@@ -22438,6 +22738,7 @@ function paintSelection(c) {
   c.ranges.toggleAttribute("inert", sel !== null);
   c.liveButton.toggleAttribute("inert", sel !== null);
   c.selectBox.hidden = sel === null;
+  syncDays(c);
   if (!sel) {
     c.selectionText.textContent = "";
     return;
@@ -22510,6 +22811,9 @@ function attachGantts(root = document, options = {}) {
       selection: el4,
       selectionText: el4,
       ticks: /* @__PURE__ */ new Map(),
+      legend: el4,
+      days: el4.hasAttribute("data-kp-gantt-days"),
+      dayStop: null,
       ghosts: [],
       held: null,
       timer: 0,
@@ -22549,6 +22853,18 @@ function attachGantts(root = document, options = {}) {
       if (!button) return;
       if (button === c.liveButton) {
         setLive(c, !c.live);
+      } else if (button.hasAttribute("data-kp-gantt-day")) {
+        const day = button.dataset.kpGanttDay ?? "";
+        c.dayStop = day;
+        const bounds = dayBounds(c, day);
+        const lift = button.getAttribute("aria-pressed") === "true";
+        setGanttSelection(el4, lift ? null : bounds);
+        el4.dispatchEvent(
+          new CustomEvent(GANTT_SELECT_EVENT, {
+            bubbles: true,
+            detail: lift ? { from: null, to: null, source: "clear" } : { ...bounds, source: "day", day }
+          })
+        );
       } else if (button.hasAttribute("data-kp-gantt-clear")) {
         setGanttSelection(el4, null);
         el4.dispatchEvent(new CustomEvent(GANTT_SELECT_EVENT, { bubbles: true, detail: { from: null, to: null, source: "clear" } }));
@@ -22575,6 +22891,25 @@ function attachGantts(root = document, options = {}) {
       announceWindow(c, "range");
     };
     const onKey = (event) => {
+      const dayButton = event.target instanceof HTMLButtonElement && event.target.hasAttribute("data-kp-gantt-day") ? event.target : null;
+      if (dayButton && !(event.altKey || event.ctrlKey || event.metaKey)) {
+        const buttons = (
+          /** @type {HTMLButtonElement[]} */
+          [
+            ...c.axis.querySelectorAll("button[data-kp-gantt-day]:not([data-kp-gantt-crowded])")
+          ]
+        );
+        const at2 = buttons.indexOf(dayButton);
+        const rtl = getComputedStyle(c.axis).direction === "rtl";
+        const step = event.key === "ArrowRight" ? rtl ? -1 : 1 : event.key === "ArrowLeft" ? rtl ? 1 : -1 : 0;
+        const to2 = event.key === "Home" ? buttons[0] : event.key === "End" ? buttons[buttons.length - 1] : step ? buttons[Math.min(buttons.length - 1, Math.max(0, at2 + step))] : void 0;
+        if (!to2) return;
+        event.preventDefault();
+        c.dayStop = to2.dataset.kpGanttDay ?? null;
+        syncDays(c);
+        to2.focus();
+        return;
+      }
       const bar = barOf(event);
       if (!bar || event.altKey || event.ctrlKey || event.metaKey) return;
       const lanes = reachableLanes(c);
@@ -22735,6 +23070,21 @@ function setGanttSelection(el4, selection) {
   if (!c) return;
   c.selected = selection;
   paintSelection(c);
+}
+function setGanttLegend(el4, entries) {
+  const c = gantts.get(el4);
+  if (!c) return;
+  const doc = c.el.ownerDocument;
+  for (const old of c.legend.querySelectorAll(":scope > .kp-gantt__legend-series")) old.remove();
+  for (const { series, label } of entries) {
+    const li = make5(doc, "li", "kp-gantt__legend-series");
+    const swatch = make5(doc, "span", "kp-gantt__swatch");
+    swatch.dataset.kpState = "ok";
+    swatch.dataset.kpSeries = String(series);
+    swatch.setAttribute("aria-hidden", "true");
+    li.append(swatch, make5(doc, "span", "", label));
+    c.legend.append(li);
+  }
 }
 var GANTT, GANTT_OPEN_EVENT, GANTT_SELECT_EVENT, GANTT_WINDOW_EVENT, GANTT_TICK_MS, GANTT_STEPS, gantts, idSeq3, two4, make5, toMs2, keyOf4, stateWord3, rel;
 var init_gantt = __esm({
@@ -23333,7 +23683,7 @@ function attachGraphs(root = document, { decorate, strings } = {}) {
   }
   return () => undo.splice(0).forEach((off) => off());
 }
-var GRAPH, GRAPH_CHANGE_EVENT, keyOf5, ringOf, graphLabelText, radiusOf, isShown, make6, SVG_NS, svgEl, graphs;
+var GRAPH, GRAPH_CHANGE_EVENT, keyOf5, ringOf, graphLabelText, radiusOf, isShown, make6, SVG_NS2, svgEl, graphs;
 var init_graph = __esm({
   "js/graph.js"() {
     "use strict";
@@ -23351,11 +23701,11 @@ var init_graph = __esm({
       if (text != null) el4.textContent = text;
       return el4;
     };
-    SVG_NS = "http://www.w3.org/2000/svg";
+    SVG_NS2 = "http://www.w3.org/2000/svg";
     svgEl = (doc, tag, attrs = {}) => {
       const el4 = (
         /** @type {SVGElement} */
-        doc.createElementNS(SVG_NS, tag)
+        doc.createElementNS(SVG_NS2, tag)
       );
       for (const [name, value] of Object.entries(attrs)) el4.setAttribute(name, String(value));
       return el4;
@@ -24568,7 +24918,7 @@ var UPDATE_STYLE = (
   /** @type {readonly string[]} */
   Object.freeze(["display", "--kp-update-duration", "--kp-update-ease"])
 );
-var SVG_NS2 = "http://www.w3.org/2000/svg";
+var SVG_NS3 = "http://www.w3.org/2000/svg";
 function updateIdea(value) {
   const idea = String(value ?? "").trim();
   return idea === "none" ? "" : idea;
@@ -24598,7 +24948,7 @@ function unmarkUpdating(host, before) {
   }
 }
 var running = /* @__PURE__ */ new WeakMap();
-var isSvg = (el4) => el4.namespaceURI === SVG_NS2 && el4.localName === "svg";
+var isSvg = (el4) => el4.namespaceURI === SVG_NS3 && el4.localName === "svg";
 async function writeSpark(svg, values) {
   const oldLine = svg.querySelector('[class$="-line"]');
   const parts = /(\S+)-line\b/.exec(oldLine?.getAttribute("class") ?? "")?.[1] ?? "kp-kpi__spark";
@@ -25138,6 +25488,7 @@ export {
   NAV_FOLD_OWNED,
   NAV_MORE,
   NAV_OWNED,
+  NAV_SEP,
   NAV_STICKY_OWNED,
   NAV_TOGGLE_EVENT,
   NEEDS,
@@ -25439,6 +25790,7 @@ export {
   hslToRgb,
   hubOf,
   humanDuration,
+  identityCells,
   indexAt,
   initializeTheme,
   isMac,
@@ -25503,6 +25855,7 @@ export {
   placeNavMenu,
   placeNavPanel,
   planFold,
+  planSeparators,
   playArrivalBackwards,
   playClose,
   playEntranceBackwards,
@@ -25544,6 +25897,7 @@ export {
   setFacetCounts,
   setFacetItems,
   setFacetValues,
+  setGanttLegend,
   setGanttRuns,
   setGanttSelection,
   setGanttState,

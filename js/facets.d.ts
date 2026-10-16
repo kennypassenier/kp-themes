@@ -17,6 +17,10 @@ export type FacetItem = {
      */
     swatch?: string;
     /**
+     * a seed (a name) for an identity pattern drawn over the swatch [kpadopt3]; '' takes it away
+     */
+    pattern?: string;
+    /**
      * a new row is on when absent; a row that is already there keeps its state when absent
      */
     checked?: boolean;
@@ -25,6 +29,13 @@ export type FacetItem = {
      */
     disabled?: boolean;
 };
+/**
+ * The cells of an identity pattern: FNV-1a over the seed, then a 5 by 5 grid mirrored about its middle column, a cell
+ * filled where its bit is set. Pure and the same everywhere, so a name has one pattern on every page [kpadopt3].
+ * @param {string} seed
+ * @returns {[number, number][]} filled cells as [column, row], 0 to 4
+ */
+export declare function identityCells(seed: string): [number, number][];
 /**
  * The values that are on.
  * @param {Element} group

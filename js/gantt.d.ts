@@ -37,9 +37,17 @@ export type GanttRun = {
      * more words for the hover card
      */
     detail?: string;
+    /**
+     * a finished run's colour, `--chart-1` … `--chart-5`, in place of the success colour [kpadopt3]
+     */
+    series?: 1 | 2 | 3 | 4 | 5;
 };
 export type GanttLane = {
     id: string;
+    label: string;
+};
+export type GanttLegendEntry = {
+    series: 1 | 2 | 3 | 4 | 5;
     label: string;
 };
 export type GanttState = 'loading' | 'ready' | 'empty' | 'error';
@@ -118,6 +126,9 @@ export type GanttModel = {
         label: HTMLElement;
         line: HTMLElement;
     }>;
+    legend: HTMLElement;
+    days: boolean;
+    dayStop: string | null;
     ghosts: HTMLElement[];
     held: number | null;
     timer: number;
@@ -207,3 +218,10 @@ export declare function setGanttSelection(el: Element, selection: {
     from: number;
     to: number;
 } | null): void;
+/**
+ * Name the series of the runs in the legend, after the states [kpadopt3]: a swatch in the series' colour and its words per
+ * entry, in the order given; none takes them away again. The states stay as they are.
+ * @param {Element} el
+ * @param {GanttLegendEntry[]} entries
+ */
+export declare function setGanttLegend(el: Element, entries: GanttLegendEntry[]): void;

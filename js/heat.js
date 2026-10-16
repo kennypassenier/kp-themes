@@ -40,12 +40,22 @@
 // column; a matrix skips the cells that cannot be pressed. Enter and Space
 // press.
 //
+// The latest column, opt-in [kpadopt3]: `data-kp-heat-latest="end"` (or
+// `"start"`, for a grid whose newest column comes first) says which edge the
+// newest column stands on. The key that goes to that edge (End, or Home)
+// still moves to the end of the row as it always does, and also sends
+// `kp-heat-page { direction: 'latest' }`, so a grid paged back to older
+// columns comes back to the newest in the same press, the way Page Up and
+// Page Down already page; with Ctrl it goes to that corner and sends it too.
+// The page answers as it answers Page Up and Page Down (it shows the newest
+// columns, and may drop its pick); setHeat() keeps the focus on the edge.
+//
 // Events (bubbling, on the grid), unless the grid is marked `data-kp-heat-owned`
 // or `data-kp-matrix-owned`, in which case the page keeps the state itself and
 // only hears them:
 //   kp-heat-pick     { rowKey, colKey, cell, picked }    a column was picked or dropped (picked false)
 //   kp-heat-row      { key, pressed, keys }               a row label was pressed
-//   kp-heat-page     { direction: 'earlier' | 'later' }   Page Up, Page Down
+//   kp-heat-page     { direction: 'earlier' | 'later' | 'latest' }   Page Up, Page Down; End or Home towards the latest
 //   kp-matrix-pick   { rowKey, colKey, cell, source }     a cell was pinned
 //   kp-matrix-light  { keys }                             the headers that are lit changed
 //
@@ -425,16 +435,17 @@ function wireHeat(el) {
         const rowsN = grid.length;
         const colsN = (grid[r] ?? []).length;
         const key = event.key;
+        let askLatest = false;
         if (key === 'ArrowRight') c = Math.min(colsN - 1, c + 1);
         else if (key === 'ArrowLeft') c = Math.max(0, c - 1);
         else if (key === 'ArrowDown') r = Math.min(rowsN - 1, r + 1);
         else if (key === 'ArrowUp') r = Math.max(0, r - 1);
-        else if (key === 'Home') {
-            c = 0;
-            if (event.ctrlKey) r = 0;
-        } else if (key === 'End') {
-            c = colsN - 1;
-            if (event.ctrlKey) r = rowsN - 1;
+        else if (key === 'Home' || key === 'End') {
+            c = key === 'Home' ? 0 : colsN - 1;
+            if (event.ctrlKey) r = key === 'Home' ? 0 : rowsN - 1;
+            // The key towards the newest column asks the page for the newest columns too [kpadopt3].
+            const latest = el.getAttribute('data-kp-heat-latest');
+            askLatest = latest !== null && key === (latest === 'start' ? 'Home' : 'End');
         } else if (key === 'PageUp' || key === 'PageDown') {
             event.preventDefault();
             el.dispatchEvent(new CustomEvent(HEAT_PAGE_EVENT, { bubbles: true, detail: { direction: key === 'PageUp' ? 'earlier' : 'later' } }));
@@ -454,6 +465,8 @@ function wireHeat(el) {
         STOPS.set(el, { r, c });
         placeStop(el, HEAT_CELL, { r, c });
         to.focus();
+        // Asked once the focus stands on the edge: a page that redraws the grid keeps it there.
+        if (askLatest) el.dispatchEvent(new CustomEvent(HEAT_PAGE_EVENT, { bubbles: true, detail: { direction: 'latest' } }));
     };
     /** @param {FocusEvent} event */
     const onFocus = (event) => {
