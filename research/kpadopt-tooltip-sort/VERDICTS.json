@@ -1,0 +1,21 @@
+{
+    "demo": "kpadopt-tooltip-sort",
+    "rounds": [
+        {
+            "round": "1",
+            "allJudged": true,
+            "notApproved": [
+                { "item": "hovercard", "theme": "light", "note": "the popup window is rounded for some reason? like really oval? why?" },
+                { "item": "hovercard", "theme": "pastel", "note": "also very much oval, doesn't look right when hovering over Traefik" },
+                {
+                    "item": "groupalways",
+                    "theme": "forest",
+                    "note": "there's a weird effect on open/close where the text seems to fall through the page"
+                },
+                { "item": "hovercard", "theme": "solstice", "note": "also very much oval, doesn't look right when hovering over Traefik" }
+            ]
+        },
+        { "round": "2", "allJudged": true, "notApproved": [] }
+    ],
+    "reopened": []
+}

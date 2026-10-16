@@ -1,5 +1,7 @@
 # research/kpadopt-controls
 
+**Decided (2026-10-16 04:39):** Kenny approved it in full in the review dialog: 48 of 48 approved in round 2 (round 1: the toolbar in formal jumped while its buttons opened, mended). Recorded in `VERDICTS.json`; the demo is not offered again.
+
 Three parts the admin dashboard (the homelab repo) still draws itself, because kp-themes 10.1.1 has no component for them
 (docs/admin/KP_THEMES_ADOPTION.md, kpa-18, kpa-19, kpa-33). Kenny's rule: a consumer draws nothing itself, so each is built in
 kp-themes first. This folder is the review demo; the implementation is in the package (css/components.css, the sixteen

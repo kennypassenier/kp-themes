@@ -1,0 +1,32 @@
+{
+    "demo": "kpadopt-nav",
+    "rounds": [
+        {
+            "round": "1",
+            "allJudged": false,
+            "approved": [],
+            "notApproved": [
+                { "item": "tabbar", "theme": "formal", "note": "it opened on a full page screen in the right corner and was hard to get out," }
+            ]
+        },
+        {
+            "round": "2",
+            "allJudged": true,
+            "notApproved": [
+                { "item": "nav-fold", "theme": "cyberpunk", "note": "the more button is detached from the actual bar in all these examples" },
+                {
+                    "item": "nav-fold",
+                    "theme": "phantom",
+                    "note": "het eerste more menu dat opent opent helemaal bovenaan de pagina ipv aan de more knop zelf, bij anderen is het dan weer helemaal op een andere plek, maar niet de juiste"
+                },
+                {
+                    "item": "nav-fold",
+                    "theme": "grotesk",
+                    "note": "al deze bars zijn veel te hoog horizontaal, de search knop staat telkens op de volgende rij? en het wordt alleen maar erger en erger"
+                },
+                { "item": "together", "theme": "grotesk", "note": "ook hier is de navbar niet mooi, vaak door de Search button" }
+            ]
+        }
+    ],
+    "reopened": []
+}

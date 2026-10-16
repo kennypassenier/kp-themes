@@ -1,5 +1,7 @@
 # Feedback components the admin dashboard still draws itself
 
+**Decided (2026-10-16 04:39):** Kenny approved it in full in the review dialog: 48 of 48 approved in round 1. Recorded in `VERDICTS.json`; the demo is not offered again.
+
 Kenny's rule (2026-10-15): the dashboard draws nothing itself, so what the package lacks is built here first. Three gaps from `docs/admin/KP_THEMES_ADOPTION.md` of the homelab repo (kpa-9, kpa-14, kpa-18, kpa-19, kpa-32, kpa-33). Demo: `demo.html` (all 16 themes, review kit, one section per component).
 
 | Component                                    | What it is for                                                                        | Dashboard source                                                                                            | What the package reused                                                              | Build cost | Recommendation                                                                        |

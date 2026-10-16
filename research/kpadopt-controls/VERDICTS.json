@@ -1,0 +1,22 @@
+{
+    "demo": "kpadopt-controls",
+    "rounds": [
+        {
+            "round": "1",
+            "allJudged": false,
+            "approved": [
+                { "item": "keys", "theme": "formal" },
+                { "item": "segmented", "theme": "formal" }
+            ],
+            "notApproved": [
+                {
+                    "item": "toolbar",
+                    "theme": "formal",
+                    "note": "als ik klik op een item, dan toont het de knoppen (bv STATUS:RUNNING) maar die knop is initieel heel lang (verticaal) waardoor de opmaak van de pagina wat verschuift tot de animatie klaar is"
+                }
+            ]
+        },
+        { "round": "2", "allJudged": true, "notApproved": [] }
+    ],
+    "reopened": []
+}

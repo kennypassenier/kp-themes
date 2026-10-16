@@ -6806,3 +6806,33 @@ warnings) and passes on main. The loop closes when JobTracker builds on
 
 **8 · Fallback.** If a strict consumer still refuses a file the gate passed,
 the gate parses with that consumer's parser (lightningcss) instead.
+
+
+## rereview-1016 · Re-review rounds showed approved pairs (2026-10-16)
+
+Kenny, 2026-10-16: approved.
+
+**1 · What went wrong.** Rounds 2 and 3 of the kpadopt demos offered sections and themes Kenny had approved, against his
+standing rule of 2026-10-13 (a re-review shows only what is not approved yet). Round 3 of kpadopt-nav offered 48 pairs
+while 4 were open; rounds 2 of kpadopt-controls, kpadopt-nav and kpadopt-tooltip-sort did the same.
+
+**2 · Which gate let it through.** None: no gate checked a re-review for approved pairs; the rule lived only in Claude's
+memory.
+
+**3 · Where else the same fault sits.** The memory index was 28.3 KB, over the 24.4 KB load limit, so its last 26 entries
+(this rule, "demos in formal only", "rejection = do far better", "tests on Firefox only") never loaded; found with
+`awk 'NR>=157' MEMORY.md | grep -c '^- \['`.
+
+**4 · How we prevent recurrence.** The index is trimmed to 21.6 KB; gates/check-rereview.mjs checks every page against the
+verdicts recorded per demo (research/<topic>/VERDICTS.json); the rule is in AGENTS.md and the researcher brief.
+
+**5 · What the remedy costs.** One step per round: the session records Kenny's pasted verdict before it touches the demo.
+
+**6 · Who enforces it.** Code: the gate in `npm run gates`.
+
+**7 · How we measure it, and when.** At the next re-review, before the link goes to Kenny: the gate is green and the
+dialog walks only the open pairs.
+
+**8 · Fallback.** If it fails, no link goes to Kenny until the approved pairs are removed by hand.
+
+**9 · When we review the measure.** At the retrospective of this kp-themes release.

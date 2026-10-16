@@ -1,5 +1,7 @@
 # Hover card, plain-click multi-sort, group headings that stay
 
+**Decided (2026-10-16 04:39):** Kenny approved it in full in the review dialog: 48 of 48 approved in round 2 (round 1: oval hover card in light, pastel and solstice, groupalways in forest, mended). Recorded in `VERDICTS.json`; the demo is not offered again.
+
 Kenny's rule: a consumer draws nothing itself. The admin dashboard still drew three things because kp-themes 10.1.1 lacked them. Demo: [`demo.html`](demo.html) (package parts tagged **package**, page-only script **mock**).
 
 | Gap                      | What the dashboard did                                                                            | What the package now offers                                                                                                                  | Build cost | Recommendation                                                    |

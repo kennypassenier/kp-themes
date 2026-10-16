@@ -93,13 +93,6 @@ export const PAGES = [
         // (Kenny, 2026-10-07: only fresh verdicts left to give).
         group: 'Research to look at',
         pages: [
-            // Kenny, 2026-10-15: the admin dashboard still draws these itself; the package gets them first (kpadopt-9, kpadopt-14 notes).
-            {
-                href: 'research/kpadopt-tooltip-sort/demo.html',
-                label: 'Hover card, plain-click multi-sort, group headings that stay',
-                about: 'One hover card filled when it opens (survives a table rebuilt every 30 s), a data table where every plain header click adds a sort key, and group headings that stay visible while loading, failed or empty.',
-                affects: 'the admin dashboard swaps its own hover card (ui.js .nx-tip), sortclick.js and the Backups repository headings for these.',
-            },
             // Kenny, 2026-10-08: the anchor round for the nine themes without one, the grotesk way (one question, six to ten candidates, each in its own scene, as a progress bar and as a button press, the recommendation first).
             // Kenny, 2026-10-08: what makes formal, light and deco themselves, the forest way (the analysis in themes/<theme>/CHARACTER.md), the nineteen questions each, every option a live scene that follows from the theme's decided anchor, the recommendation first.
             // Kenny, 2026-10-08 (update 1): deco's grammar did not convince him ("fancy, distinguished … lots of gold accents and fancy blue backgrounds … elegance without being too in your face"); thirteen questions redrawn as thin gold on lacquer with the wallpaper, his six picks kept.
@@ -112,18 +105,6 @@ export const PAGES = [
             // Kenny, 2026-10-07 04:23: what makes brutalism brutalism, the same way (the analysis in themes/brutalism/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the sixth theme of the one-by-one series, after solstice.
             // Kenny, 2026-10-07 04:23: what makes grotesk grotesk, the same way (the analysis in themes/grotesk/CHARACTER.md), nineteen rules of its grammar as questions, each option a live scene, the recommendation first; the seventh theme of the one-by-one series, after brutalism. Questions 9 to 12 are the grotesk-only loading demo Kenny asked for on 2026-10-06 21:37, from the graph's Out of register.
             // Kenny, 2026-10-12: "Cyberpunk lijkt af, zie dat dezelfde fouten nu niet terugkomen in andere thema's": every other theme mended so a close is its open backwards with the theme's own effect; only what changed, each block in the themes where it did (research/all-themes).
-            // Kenny, 2026-10-15: the dashboard still draws its segmented control, list toolbar and key line itself; built here on the package first (research/kpadopt-controls).
-            {
-                href: 'research/kpadopt-controls/demo.html',
-                label: 'Segmented control, list toolbar and key line',
-                about: 'Three parts the admin dashboard draws itself: the segmented control and filter chips, the toolbar above a list (search, filter groups, the filters that are on), and the inline line of keyboard shortcuts. Every state, in all sixteen themes.',
-            },
-            // Kenny, 2026-10-15 (kp-adopt-rest, kpa-9/14/18/19/32/33): three things the admin dashboard still draws itself, built in the package first: a toast that waits while it is hovered or focused (and can stay until closed), a live list of the steps of a run (.kp-steplist), and the @@ header row of a diff hunk (.kp-diff__hunk). 16 themes.
-            {
-                href: 'research/kpadopt-feedback/demo.html',
-                label: 'Feedback components: a toast that waits, a live step list, a diff hunk header',
-                about: 'The dashboard draws these itself because the package lacks them: toast() gains pause, linger, close and sticky; .kp-steplist (pending, running, done, failed, skipped, announced to a screen reader); .kp-diff__hunk.',
-            },
             // Kenny, 2026-10-15 (kp-adopt rest, kpa-33): three pieces the homelab dashboard still draws by hand, built into the package first: a top bar that folds what does not fit behind a More menu, a bottom tab bar for phones with a More drawer, and the running-job button.
             {
                 href: 'research/kpadopt-nav/demo.html',
@@ -140,6 +121,23 @@ export const PAGES = [
         // Decided demos stay reachable from the Agenda's Done list, not from the side navigation (Kenny, 2026-10-13).
         nav: false,
         pages: [
+            // Decided 2026-10-16: Kenny approved all three in full (kpadopt-controls 48 of 48 in round 2, kpadopt-feedback 48 of 48 in round 1, kpadopt-tooltip-sort 48 of 48 in round 2); recorded in each folder's VERDICTS.json.
+            {
+                href: 'research/kpadopt-controls/demo.html',
+                label: 'Segmented control, list toolbar and key line',
+                about: 'Three parts the admin dashboard draws itself: the segmented control and filter chips, the toolbar above a list (search, filter groups, the filters that are on), and the inline line of keyboard shortcuts. Every state, in all sixteen themes.',
+            },
+            {
+                href: 'research/kpadopt-feedback/demo.html',
+                label: 'Feedback components: a toast that waits, a live step list, a diff hunk header',
+                about: 'The dashboard draws these itself because the package lacks them: toast() gains pause, linger, close and sticky; .kp-steplist (pending, running, done, failed, skipped, announced to a screen reader); .kp-diff__hunk.',
+            },
+            {
+                href: 'research/kpadopt-tooltip-sort/demo.html',
+                label: 'Hover card, plain-click multi-sort, group headings that stay',
+                about: 'One hover card filled when it opens (survives a table rebuilt every 30 s), a data table where every plain header click adds a sort key, and group headings that stay visible while loading, failed or empty.',
+                affects: 'the admin dashboard swaps its own hover card (ui.js .nx-tip), sortclick.js and the Backups repository headings for these.',
+            },
             // Decided 2026-10-15 02:30: Kenny approved both in full: phantom's one hard plate (option 1) and deco's inlay under the button that opened it; both ported to the package.
             {
                 href: 'research/leftover-looks/demo.html',

@@ -38,6 +38,10 @@ Every deliverable is two files under `research/<topic>/`:
    circle, block, invalid…); `npm run gates` refuses a demo under review that
    leaves one out [fix-90].
 
+A re-review round shows only the pairs (section × theme) Kenny has not approved yet [Kenny, 2026-10-13 and 2026-10-16]: first record his
+answer in `research/<topic>/VERDICTS.json` (format in `research/_review/README.md`), then take the approved sections and themes out of the
+page and restrict the rest with `data-review-themes`. `gates/check-rereview.mjs` refuses a page that offers an approved pair.
+
 Measure before you claim: a byte count comes from `wc -c`, a class name
 from grep. Finish with the absolute paths and a five-line summary.
 

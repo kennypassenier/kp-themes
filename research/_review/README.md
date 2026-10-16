@@ -157,6 +157,39 @@ see them again. When a round, an update or a republished demo opens a question a
 dialog says only that the question is open again and, with an `update.json`, the session's answer; the comment is not
 repeated. The first round, before anything is approved, shows the whole page.
 
+## A re-review shows only the open pairs, and the verdicts are recorded
+
+Kenny, 2026-10-13 and again 2026-10-16: a re-review round shows ONLY the pairs (section × theme) he has not approved yet.
+Approved sections and themes leave the demo (the page, not just the dialog), old comments are wiped (a reopened pair does
+that by itself), because approved items only confuse him. To keep a page honest the verdicts are recorded beside the demo in
+`research/<topic>/VERDICTS.json`, one file per demo, per round, per section, per theme:
+
+```json
+{
+    "demo": "my-topic",
+    "rounds": [
+        {
+            "round": "1",
+            "allJudged": false,
+            "approved": [{ "item": "keys", "theme": "formal" }],
+            "notApproved": [{ "item": "toolbar", "theme": "formal", "note": "Kenny's words" }]
+        },
+        { "round": "2", "allJudged": true, "notApproved": [] }
+    ],
+    "reopened": [{ "item": "toolbar", "theme": "formal", "reason": "the component itself was redrawn after the approval" }]
+}
+```
+
+A round with `"allJudged": true` approved every pair of the page that is not in its `notApproved`; otherwise only the pairs in
+`approved` were judged. The latest round that names a pair wins. The session that receives Kenny's answer adds the round
+before it touches the demo. To re-review: delete the approved sections from the page, give the others
+`data-review-themes` naming only their open themes, and name the redrawn pairs in the round's `reopen`.
+
+`gates/check-rereview.mjs` (in `npm run gates`) refuses a demo with a `VERDICTS.json` whose page still offers a pair whose
+latest verdict is approved, and names the pairs. The only way past is a `reopened` entry with a written `reason` (the
+component changed after the approval). A demo whose every pair is approved is Decided instead: `decided.json`, the README's
+"**Decided (" line and a place under "Archived research" in `catalogue/pages.js`; it is not offered again.
+
 ## An update after a verdict
 
 When a session republishes a demo after Kenny's verdict, it writes

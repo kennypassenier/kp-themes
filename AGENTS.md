@@ -38,6 +38,8 @@ gedeelte tijdelijk weg, tot ik het terugwil"): `playwright.config.mjs` runs
 Firefox only; `KP_TEST_CHROMIUM=1` brings the Chromium project back. Turn it
 on again only when Kenny asks.
 
+A re-review round shows only the pairs Kenny has not approved; approved sections and themes leave the demo, enforced by gates/check-rereview.mjs (Kenny, 2026-10-13 and 2026-10-16).
+
 **Rules:** the project rules and the corrections they came from are in
 [docs/RULES.md](docs/RULES.md); the ones that are code run in
 `npm run gates`. Two that shape every turn: a released theme never
