@@ -180,6 +180,26 @@
             "types": "./js/facets.d.ts",
             "default": "./js/facets.js"
         },
+        "./js/idmark": {
+            "types": "./js/idmark.d.ts",
+            "default": "./js/idmark.js"
+        },
+        "./js/stackbar": {
+            "types": "./js/stackbar.d.ts",
+            "default": "./js/stackbar.js"
+        },
+        "./js/bullets": {
+            "types": "./js/bullets.d.ts",
+            "default": "./js/bullets.js"
+        },
+        "./js/code": {
+            "types": "./js/code.d.ts",
+            "default": "./js/code.js"
+        },
+        "./js/tick": {
+            "types": "./js/tick.d.ts",
+            "default": "./js/tick.js"
+        },
         "./js/heat": {
             "types": "./js/heat.d.ts",
             "default": "./js/heat.js"

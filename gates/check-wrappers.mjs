@@ -116,6 +116,24 @@ export const REQUIRED = [
         why: 'The layout measures its own width and puts the page’s detail under the calendar when narrow; the query reaches only its own children [scope-143].',
     },
     {
+        container: 'kp-bullets',
+        class: 'kp-bullets',
+        self: true,
+        why: 'The list measures its own width and puts each bar under its row when narrow; the query reaches only its own rows [kpadopt4-data].',
+    },
+    {
+        container: 'kp-formrows',
+        class: 'kp-formrows',
+        self: true,
+        why: 'The form measures its own width and reads each row top to bottom when narrow; the query reaches only the rows’ parts [kpadopt4-data].',
+    },
+    {
+        container: 'kp-code',
+        class: 'kp-code',
+        self: true,
+        why: 'The block measures its own width and puts its tools under its title when narrow; the query reaches only its head [kpadopt4-data].',
+    },
+    {
         container: 'kp-matrix',
         class: 'kp-matrix',
         self: true,

@@ -3390,6 +3390,61 @@ The element carries `data-kp-count-state`: `running` while it counts,
 `done` afterwards. A `kp-count` event fires when it lands, with the value
 in `detail`.
 
+### A number that ticks when it changes [kpadopt4-data]
+
+`data-kp-count` counts once, when a number arrives. A live counter changes after that; mark it `data-kp-tick` and write the
+new number as always (text, or a framework re-render). `js/tick.js` counts from the number shown to the new one in its own
+precision and the page's language, and lands on exactly the text written. `--kp-tick` is the length in ms (600; `0` none);
+reduced motion writes the number at once. `tickTo(el, text)` does the same by call.
+
+```html
+<span class="kp-kpi__value" data-kp-tick>1,204</span>
+```
+
+## Data pieces [kpadopt4-data]
+
+Five things Kenny's apps drew by hand, drawn from the tokens until each register answers them.
+
+**The identity mark.** `<span class="kp-idmark" data-kp-idmark="Acme Logistics" aria-hidden="true"></span>`: two letters on a
+wash of one of the theme's five chart colours, the same for a name everywhere. `--pattern` draws a mirrored 5 by 5 pattern
+instead, `--round`, `--glyph` (a corner shape), sizes `--xs` to `--xl`, `data-kp-idmark-hue="free"` for a hue of its own.
+Marks inside one `data-kp-idmark-set` never share a colour while one is free (`idmarkColours(names)`). Put the name beside it in
+`.kp-idmark-name`; `.kp-idmark-group` overlaps several with an exact `.kp-idmark-group__more`. `js/idmark.js`: `idmarkFor`, `setIdmark`.
+
+**The share bar.** `setStackbar(el, { title, total, format, parts: [{ key, label, value }], marks })` on a
+`figure.kp-stackbar` (`js/stackbar.js`) draws the parts in the chart colours, the rest as the track, and a legend with every
+exact value. Each part has a hover card and the arrow keys walk them; `kp-stackbar-pick` tells the page which. `state` is
+`loading`, `empty` or `error`, each at the bar's height.
+
+**Bullet rows.** `setBullets(el, { threshold, rows: [{ key, label, detail, value, lead, href }] })` on a `.kp-bullets`
+(`js/bullets.js`): one meter per row with its tick on the threshold, the exact figure beside it, worst first; past the threshold
+the warning tone, past `bad` the destructive one. Loading lays the data table's busy card over waiting rows.
+
+**Key-value grids and form rows.** CSS only:
+
+```html
+<dl class="kp-kv kp-kv--lines">
+    <div class="kp-kv__row"><dt>Host</dt><dd>pve-01</dd></div>
+</dl>
+<div class="kp-formrows">
+    <div class="kp-formrow">
+        <label class="kp-formrow__label" for="ret">Retention</label>
+        <div class="kp-formrow__control"><input class="kp-field__input" id="ret" /></div>
+        <div class="kp-formrow__aside">Default 14</div>
+    </div>
+</div>
+```
+
+The label column is as wide as the longest label; `--stack` and `--columns` for the grid, `--top`, `--wide`,
+`data-kp-changed`, `data-kp-state="error"` and `data-kp-locked` for a row. Under 36rem a form row reads top to bottom.
+
+**The code block.** `<figure class="kp-code" data-kp-code data-kp-code-title="Payload" data-kp-code-language="JSON"><pre><code>…</code></pre></figure>`
+or `setCode(el, { text, title, language, lines, maxLines, truncated, state })` (`js/code.js`): Pretty and Raw for JSON, Wrap,
+Copy (its word keeps one width), line numbers outside the text, a fold with "Show all N lines", and loading under the busy card.
+
+**The page header's heading line.** `.kp-page-header__heading` holds a `.kp-page-header__lead` (a mark) and a
+`.kp-page-header__line` with the title, a badge and the freshness line (`.kp-ago.kp-page-header__meta`).
+
 ## Two surfaces a theme may paint on a button [scope-16, scope-17]
 
 Every button carries an empty `.kp-button__edge`, out of flow and inert
