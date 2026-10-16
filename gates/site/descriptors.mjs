@@ -1016,6 +1016,10 @@ export const DESCRIPTORS = [
             { name: '.kp-datatable__pager / __page', what: 'The page controls and the “page m of n” label, in same-width digits.' },
             { name: '.kp-datatable__page-size', what: 'The rows-per-page control, before the pager.' },
             { name: '.kp-datatable__sort-order / __sort-summary', what: 'With `data-kp-sort-multi`: each sorted header’s place in the sort, and the sort said in words above the table.' },
+            {
+                name: 'data-kp-sort-external',
+                what: 'The page sorts: a header press draws the arrow, `aria-sort`, the key numbers, the summary and Reset, remembers the sort and fires `kp-datatable-sort`; the rows keep the order the page renders, which it changes and then calls `refresh()` (`view().sorts` has every key). A sortable header with `aria-disabled="true"` cannot be pressed now and keeps an arrow it already has. Also the `sortExternal` option.',
+            },
             { name: '.kp-datatable__columns / __column-option', what: 'With `data-kp-column-menu`: the menu of columns, on the popover layer, and one checkbox per column; the key column is locked.' },
             { name: '.kp-datatable__expand / __detail', what: 'With `data-kp-expandable`: the button that opens a row, and the detail row under it that spans every column.' },
             { name: 'fixed columns', what: 'With `data-kp-fixed-columns`: the key column stays at the left edge on an opaque ground, with a hairline, while the box scrolls sideways.' },

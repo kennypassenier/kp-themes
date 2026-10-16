@@ -405,6 +405,10 @@ export type DataTableOptions = {
      */
     multiSort?: boolean | 'click';
     /**
+     * The page sorts: the table draws and announces the sort, the rows keep the order the page renders [kpadopt4]. Default false; per table `data-kp-sort-external`.
+     */
+    sortExternal?: boolean;
+    /**
      * How the header-declared filters are set: a panel of every filter, or "+ Add filter" with one pill per filter. Default panel; per table `data-kp-filter-mode`.
      */
     filterMode?: 'panel' | 'add';
@@ -467,6 +471,7 @@ export type DataTableDecorateInfo = {
  * @property {number} [debounceMs]  Default 0, and 300 for a server-backed table.
  * @property {'two' | 'three'} [sortCycle]
  * @property {boolean | 'click'} [multiSort]  Shift + click adds a sort key; 'click': a plain click adds it and Shift + click sorts on the column alone. Default false; per table `data-kp-sort-multi` (`="click"`).
+ * @property {boolean} [sortExternal]  The page sorts: the table draws and announces the sort, the rows keep the order the page renders [kpadopt4]. Default false; per table `data-kp-sort-external`.
  * @property {'panel' | 'add'} [filterMode]  How the header-declared filters are set: a panel of every filter, or "+ Add filter" with one pill per filter. Default panel; per table `data-kp-filter-mode`.
  * @property {string} [pagerClassName]
  * @property {(at: number, of: number) => string} [pageLabel]
@@ -500,6 +505,6 @@ export type DataTableDecorateInfo = {
  *   wrapper untouched.
  * @returns {(() => void) & { handles: DataTableHandle[] }} detach
  */
-export declare function attachDataTables(root?: ParentNode, { locale: localeOption, compare: compareFn, filter: filterFn, debounceMs, sortCycle, multiSort, filterMode, pagerClassName, pageLabel, regions, pageSizes: pageSizesOption, removeGlyph, detail: detailFn, load: loadFn, rowKey: rowKeyFn, onEdit, expandGlyph, collapseGlyph, gridPageRows, expandSingle, decorate, }?: DataTableOptions): (() => void) & {
+export declare function attachDataTables(root?: ParentNode, { locale: localeOption, compare: compareFn, filter: filterFn, debounceMs, sortCycle, multiSort, sortExternal, filterMode, pagerClassName, pageLabel, regions, pageSizes: pageSizesOption, removeGlyph, detail: detailFn, load: loadFn, rowKey: rowKeyFn, onEdit, expandGlyph, collapseGlyph, gridPageRows, expandSingle, decorate, }?: DataTableOptions): (() => void) & {
     handles: DataTableHandle[];
 };

@@ -10782,6 +10782,16 @@
         opacity: 1;
     }
 
+    /* A column that cannot be sorted now [kpadopt4] (`aria-disabled="true"`): no pointer, no sortable mark; a sort it
+ * already carries keeps its arrow. */
+    .kp-table th[data-kp-sort][aria-disabled='true'] {
+        cursor: default;
+    }
+
+    .kp-table th[data-kp-sort][aria-disabled='true']:not([aria-sort='ascending'], [aria-sort='descending'])::after {
+        content: none;
+    }
+
     .kp-datatable__status {
         margin: 0;
         color: var(--muted-foreground);

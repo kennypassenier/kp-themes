@@ -10677,6 +10677,7 @@ function attachDataTables(root = document, {
   debounceMs,
   sortCycle = "two",
   multiSort = false,
+  sortExternal = false,
   filterMode = "panel",
   // The theme's own button, not the ghost: a ghost is text alone at rest
   // in eleven of the twenty-two themes, so the pager did not read as
@@ -10826,6 +10827,7 @@ function attachDataTables(root = document, {
     let size = Number.parseInt(wrap.dataset.kpPageSize ?? "", 10) || PAGE_SIZE;
     const locale = resolveLocale(wrap.dataset.kpLocale ?? localeOption, wrap);
     const serverMode = wrap.dataset.kpServer !== void 0;
+    const externalSort = wrap.dataset.kpSortExternal === void 0 ? sortExternal : wrap.dataset.kpSortExternal !== "false";
     const debounce = Number.parseInt(wrap.dataset.kpDebounce ?? "", 10) || debounceMs || (serverMode ? SERVER_DEBOUNCE_MS : 0);
     const cycle = wrap.dataset.kpSortCycle ?? sortCycle;
     const cycleName = cycle === "three" ? "three" : "two";
@@ -12458,6 +12460,11 @@ function attachDataTables(root = document, {
       return 0;
     };
     const applySorts = () => {
+      if (externalSort) {
+        const keep = new Set(shownRows);
+        shownRows = arrange(all.filter((row) => keep.has(row)));
+        return;
+      }
       if (sorts.length === 0) {
         const keep = new Set(shownRows);
         shownRows = rendered.filter((row) => keep.has(row));
@@ -12679,6 +12686,7 @@ function attachDataTables(root = document, {
     const toggleSort = (header, addKey) => {
       const at = headers.indexOf(header);
       if (at === -1) return;
+      if (header.getAttribute("aria-disabled") === "true") return;
       const next = nextSorts(sorts, at, { add: multi && (addOnClick ? !addKey : addKey), cycle: cycleName });
       if (next.length === 0) commitSorts([], { column: at, direction: "none" });
       else commitSorts(next);
