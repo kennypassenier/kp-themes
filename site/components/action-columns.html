@@ -112,6 +112,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/freshness.html">Freshness line</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/calendar.html">Month heatmap</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/toolbar.html">List toolbar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/facets.html">Facet list</a></li>
                         </ul>
                     </div>
                     <div class="sc-nav__group">
@@ -128,6 +129,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/spinner.html">Spinner</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/skeleton.html">Skeleton</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/health.html">Health</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/status-row.html">Status rows</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/steplist.html">Step list</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/tooltip.html">Tooltip</a></li>
                         </ul>
@@ -723,6 +725,7 @@
                 <section class="kp-section" data-sc-section="events" id="events">
                     <h2 class="kp-fw-semibold">Events</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
+                            <tr><td><code>kp-action-busy</code></td><td>Fired on the tile, bubbling, when it becomes busy or stops being busy: `{ tile, busy }`.</td></tr>
                             <tr><td><code>kp-action-commit</code></td><td>Fired on the row when an optimistic action commits — the undo window closed [TH26]. Detail: ActionDetail.</td></tr>
                             <tr><td><code>kp-action-undo</code></td><td>Fired on the row when it is undone instead. Detail: ActionDetail.</td></tr>
                     </tbody></table></div>
@@ -730,13 +733,42 @@
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
                     <h2 class="kp-fw-semibold">Knobs</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
+                            <tr><td><code>--kp-action-bar</code></td><td><code>3px</code></td></tr>
+                            <tr><td><code>--kp-action-bar-inset</code></td><td><code>0.5rem</code></td></tr>
                             <tr><td><code>--kp-action-col</code></td><td><code>auto</code></td></tr>
                             <tr><td><code>--kp-action-count</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-action-edge</code></td><td><code>var(--border)</code></td></tr>
+                            <tr><td><code>--kp-action-edge-active</code></td><td><code>var(--kp-action-edge-hover, var(--ring))</code></td></tr>
+                            <tr><td><code>--kp-action-edge-hover</code></td><td><code>var(--ring)</code></td></tr>
                             <tr><td><code>--kp-action-gap</code></td><td><code>var(--kp-space-sm, 0.5rem)</code></td></tr>
+                            <tr><td><code>--kp-action-ground</code></td><td><code>var(--card)</code></td></tr>
+                            <tr><td><code>--kp-action-ground-active</code></td><td><code>var(--muted)</code></td></tr>
+                            <tr><td><code>--kp-action-ground-disabled</code></td><td><code>var(--muted)</code></td></tr>
+                            <tr><td><code>--kp-action-ground-hover</code></td><td><code>var(--kp-action-ground, var(--card))</code></td></tr>
+                            <tr><td><code>--kp-action-lift</code></td><td><code>0 0</code></td></tr>
+                            <tr><td><code>--kp-action-line</code></td><td><code>1px</code></td></tr>
+                            <tr><td><code>--kp-action-mark</code></td><td><code>1.25rem</code></td></tr>
+                            <tr><td><code>--kp-action-pad</code></td><td><code>0.625rem 0.75rem</code></td></tr>
+                            <tr><td><code>--kp-action-press</code></td><td><code>0 1px</code></td></tr>
+                            <tr><td><code>--kp-action-radius</code></td><td><code>var(--radius, 0.5rem)</code></td></tr>
+                            <tr><td><code>--kp-action-shadow</code></td><td><code>0 0 0 0 transparent</code></td></tr>
+                            <tr><td><code>--kp-action-shadow-active</code></td><td><code>var(--kp-action-shadow, 0 0 0 0 transparent)</code></td></tr>
+                            <tr><td><code>--kp-action-shadow-hover</code></td><td><code>var(--kp-action-shadow, 0 0 0 0 transparent)</code></td></tr>
                             <tr><td><code>--kp-action-stack</code></td><td><code>max-content</code></td></tr>
+                            <tr><td><code>--kp-action-title-case</code></td><td><code>none</code></td></tr>
+                            <tr><td><code>--kp-action-title-font</code></td><td><code>inherit</code></td></tr>
+                            <tr><td><code>--kp-action-title-size</code></td><td><code>inherit</code></td></tr>
+                            <tr><td><code>--kp-action-title-tracking</code></td><td><code>normal</code></td></tr>
+                            <tr><td><code>--kp-action-title-weight</code></td><td><code>600</code></td></tr>
+                            <tr><td><code>--kp-action-tone-edge</code></td><td><code>var(--kp-action-edge, var(--border))</code></td></tr>
+                            <tr><td><code>--kp-action-tone-edge-hover</code></td><td><code>var(--kp-action-edge-hover, var(--ring))</code></td></tr>
                             <tr><td><code>--kp-action-widths</code></td><td><code>none</code></td></tr>
+                            <tr><td><code>--kp-focus-ring-inner-width</code></td><td><code>2px</code></td></tr>
+                            <tr><td><code>--kp-glyph-open</code></td><td><code>'▾'</code></td></tr>
                             <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
                             <tr><td><code>--kp-space-xs</code></td><td><code>0.25rem</code></td></tr>
+                            <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
+                            <tr><td><code>--kp-text-xs</code></td><td><code>0.75rem</code></td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="a11y" id="a11y">

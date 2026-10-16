@@ -124,6 +124,12 @@ export const PAGES = [
                 label: 'Feedback components: a toast that waits, a live step list, a diff hunk header',
                 about: 'The dashboard draws these itself because the package lacks them: toast() gains pause, linger, close and sticky; .kp-steplist (pending, running, done, failed, skipped, announced to a screen reader); .kp-diff__hunk.',
             },
+            // Kenny, 2026-10-16 (kp-adopt-rest, nx-action / perstack-chip / hl-opt): three more things the admin dashboard draws itself, built in the package first and shown in formal only until Kenny approves it.
+            {
+                href: 'research/kpadopt2-tiles/demo.html',
+                label: 'Action tiles, status rows and the facet list',
+                about: 'The dashboard draws these itself: .kp-action tiles (button or link, title and one sentence, busy, destructive, equal heights), .kp-statusrow (ok, loading, failed with Retry, empty with the reason), .kp-facets (checkbox rows with a count and an "only" button).',
+            },
             // Kenny, 2026-10-15 (kp-adopt rest, kpa-33): three pieces the homelab dashboard still draws by hand, built into the package first: a top bar that folds what does not fit behind a More menu, a bottom tab bar for phones with a More drawer, and the running-job button.
             {
                 href: 'research/kpadopt-nav/demo.html',

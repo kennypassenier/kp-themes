@@ -4365,3 +4365,54 @@
         border-radius: var(--kp-sig-fo-plate, var(--radius));
     }
 }
+
+/* ── Action tiles, status rows, facet list [kpadopt2-tiles] ── */
+@layer kp.signature {
+    /* Forest: a herbarium sheet with the leaf corner. Pointing lays the dashed trail ring round it (the blaze) and takes the shadow away; a press is the moss wash; the title is the italic field-note voice. */
+    [data-theme='forest'] .kp-action {
+        --kp-action-radius: var(--kp-sig-fo-plate, var(--radius));
+        --kp-action-edge-hover: var(--border-strong);
+        --kp-action-ground-active: color-mix(in oklab, var(--primary) 9%, var(--card));
+        --kp-action-title-font: var(--theme-font-body);
+        outline: 2px dashed transparent;
+        outline-offset: 2px;
+    }
+    [data-theme='forest'] .kp-action:hover:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'])):not(:focus-visible) {
+        outline-color: var(--primary);
+    }
+    [data-theme='forest'] .kp-action__title {
+        font-style: italic;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-action {
+            transition:
+                background-color var(--fx-duration) var(--fx-ease),
+                border-color var(--fx-duration) var(--fx-ease),
+                box-shadow var(--fx-duration) var(--fx-ease),
+                outline-color var(--fx-duration) var(--fx-ease),
+                translate var(--fx-duration) var(--fx-ease);
+        }
+    }
+    [data-theme='forest'] .kp-statuslist {
+        --kp-statuslist-gap: 0.5rem;
+    }
+    [data-theme='forest'] .kp-statusrow {
+        border-inline-start: 4px solid var(--kp-statusrow-state-edge, var(--foreground));
+    }
+    [data-theme='forest'] .kp-statusrow[data-state='loading'] {
+        border-inline-start-color: var(--primary);
+    }
+    [data-theme='forest'] .kp-facets {
+        --kp-facet-radius: var(--kp-sig-fo-plate, var(--radius));
+    }
+}
+
+/* The grid's gap leaves room for the tile's own shadow, glow or outline; the facet row's wash. */
+@layer kp.signature {
+    [data-theme='forest'] .kp-actions {
+        --kp-actions-gap: 0.625rem;
+    }
+    [data-theme='forest'] .kp-facet {
+        --kp-facet-hover: hsl(from var(--primary) h s l / 0.08);
+    }
+}

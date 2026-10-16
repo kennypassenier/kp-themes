@@ -4357,3 +4357,79 @@
         font-family: var(--theme-font-mono);
     }
 }
+
+/* ── Action tiles, status rows, facet list [kpadopt2-tiles] ── */
+@layer kp.signature {
+    /* Blueprint: a drawn box. A dashed frame; pointing lights the 8 px drafting grid in the primary over the tile and closes the frame to a line; the title is mono capitals; a press is a wash of the ink. */
+    [data-theme='blueprint'] .kp-action {
+        --kp-action-radius: 2px;
+        --kp-action-ground: transparent;
+        --kp-action-edge: var(--border-strong);
+        --kp-action-edge-hover: var(--primary);
+        --kp-action-ground-active: hsl(from var(--primary) h s l / 0.14);
+        --kp-action-title-font: var(--theme-font-mono);
+        --kp-action-title-size: 0.8125rem;
+        --kp-action-title-case: uppercase;
+        --kp-action-title-tracking: 0.08em;
+        --kp-action-press: 0 0;
+        border-style: dashed;
+    }
+    [data-theme='blueprint'] .kp-action:hover:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'])) {
+        border-style: solid;
+    }
+    [data-theme='blueprint'] .kp-action:focus-visible {
+        outline-style: dashed;
+    }
+    [data-theme='blueprint'] .kp-action > :not(.kp-action__state) {
+        position: relative;
+    }
+    [data-theme='blueprint'] .kp-action::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background-image:
+            linear-gradient(hsl(from var(--primary) h s l / 0.14) 1px, transparent 1px),
+            linear-gradient(90deg, hsl(from var(--primary) h s l / 0.14) 1px, transparent 1px);
+        background-size: 8px 8px;
+        opacity: 0;
+        pointer-events: none;
+    }
+    [data-theme='blueprint'] .kp-action:hover:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true']))::before {
+        opacity: 1;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] .kp-action::before {
+            transition: opacity var(--fx-duration) var(--fx-ease);
+        }
+    }
+    [data-theme='blueprint'] .kp-statuslist {
+        --kp-statusrow-mark-radius: 0;
+    }
+    [data-theme='blueprint'] .kp-statusrow {
+        --kp-statusrow-edge: var(--border-strong);
+        --kp-statusrow-ground: transparent;
+        --kp-statusrow-radius: 2px;
+        border-style: dashed;
+    }
+    [data-theme='blueprint'] .kp-statusrow[data-state='loading'] {
+        border-style: solid;
+    }
+    [data-theme='blueprint'] .kp-statusrow__detail,
+    [data-theme='blueprint'] .kp-facet__count {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='blueprint'] .kp-facets {
+        --kp-facet-radius: 1px;
+    }
+}
+
+/* The grid's gap leaves room for the tile's own shadow, glow or outline; the facet row's wash. */
+@layer kp.signature {
+    [data-theme='blueprint'] .kp-actions {
+        --kp-actions-gap: 0.5rem;
+    }
+    [data-theme='blueprint'] .kp-facet {
+        --kp-facet-hover: hsl(from var(--primary) h s l / 0.08);
+    }
+}

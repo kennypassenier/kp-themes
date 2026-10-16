@@ -4257,3 +4257,43 @@
         border: 2px solid var(--card);
     }
 }
+
+/* ── Action tiles, status rows, facet list [kpadopt2-tiles] ── */
+@layer kp.signature {
+    /* Pastel: a sticker on dashed washi. Pointing lifts the sticker on its shadow; a press sticks it down flat; the outline is the dashed candy line. */
+    [data-theme='pastel'] .kp-action {
+        --kp-action-radius: 1.1rem;
+        --kp-action-line: 2px;
+        --kp-action-edge: var(--border-strong);
+        --kp-action-edge-hover: var(--primary);
+        --kp-action-shadow: 0 3px 0 hsl(from var(--border-strong) h s l / 0.45);
+        --kp-action-shadow-hover: 0 5px 0 hsl(from var(--border-strong) h s l / 0.45);
+        --kp-action-shadow-active: 0 1px 0 hsl(from var(--border-strong) h s l / 0.45);
+        --kp-action-lift: 0 -2px;
+        --kp-action-press: 0 2px;
+        border-style: dashed;
+    }
+    [data-theme='pastel'] .kp-statuslist {
+        --kp-statuslist-gap: 0.625rem;
+    }
+    [data-theme='pastel'] .kp-statusrow {
+        --kp-statusrow-line: 2px;
+        --kp-statusrow-radius: 1.1rem;
+    }
+    [data-theme='pastel'] .kp-statusrow[data-state='ok'] .kp-statusrow__mark {
+        rotate: -8deg;
+    }
+    [data-theme='pastel'] .kp-facets {
+        --kp-facet-radius: 0.85rem;
+    }
+}
+
+/* The grid's gap leaves room for the tile's own shadow, glow or outline; the facet row's wash. */
+@layer kp.signature {
+    [data-theme='pastel'] .kp-actions {
+        --kp-actions-gap: 0.875rem;
+    }
+    [data-theme='pastel'] .kp-facet {
+        --kp-facet-hover: var(--secondary);
+    }
+}

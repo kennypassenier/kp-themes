@@ -61,6 +61,19 @@
  * @property {string} stepFailed  A step that failed
  * @property {string} stepSkipped  A step that was left out
  * @property {(title: string, state: string) => string} stepAnnounce  What the list's status region says when a step changes, "Pull the images: running"
+ * @property {string} statusOk  A status row that is fine, as a screen reader hears it (js/statusrow.js)
+ * @property {string} statusLoading  A status row still being read
+ * @property {string} statusFailed  A status row that failed
+ * @property {string} statusEmpty  A status row with nothing to show
+ * @property {string} statusRetry  The Retry button of a failed status row
+ * @property {(label: string) => string} statusRetryLabel  That button's accessible name, "Retry vault"
+ * @property {(label: string, state: string, detail: string) => string} statusAnnounce  What the list's status region says when a row changes, "vault: failed, The host did not answer"
+ * @property {(count: number, failed: number) => string} statusAnnounceMany  What it says when more than three rows change in one tick, "12 updated, 2 failed"
+ * @property {string} facetOnly  The "only" button's text on a facet row (js/facets.js)
+ * @property {(label: string) => string} facetOnlyLabel  That button's accessible name, "Show only Host"
+ * @property {string} facetAll  The "Everything" row's text when the group gives none
+ * @property {(label: string) => string} facetShowingOnly  What a facet group's status region says after "only", "Showing only Host"
+ * @property {string} facetShowingAll  What it says after "Everything"
  * @property {string} busy
  * @property {string} close
  * @property {string} menu          The accessible name of a collapsed navigation's toggle
@@ -371,6 +384,21 @@ export const DEFAULT_STRINGS = Object.freeze({
     stepFailed: 'failed',
     stepSkipped: 'skipped',
     stepAnnounce: (title, state) => `${title}: ${state}`,
+    // A status row's states, its Retry and its announcement (js/statusrow.js).
+    statusOk: 'ok',
+    statusLoading: 'loading',
+    statusFailed: 'failed',
+    statusEmpty: 'nothing to show',
+    statusRetry: 'Retry',
+    statusRetryLabel: (label) => `Retry ${label}`,
+    statusAnnounce: (label, state, detail) => (detail ? `${label}: ${state}, ${detail}` : `${label}: ${state}`),
+    statusAnnounceMany: (count, failed) => (failed ? `${count} updated, ${failed} failed` : `${count} updated`),
+    // A facet list's "only" button and its announcements (js/facets.js).
+    facetOnly: 'only',
+    facetOnlyLabel: (label) => `Show only ${label}`,
+    facetAll: 'Everything',
+    facetShowingOnly: (label) => `Showing only ${label}`,
+    facetShowingAll: 'Showing everything',
     busy: 'Working…',
     close: 'Close',
     // The nav toggle carries no glyph of its own — this package ships

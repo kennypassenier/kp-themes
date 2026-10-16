@@ -1,0 +1,426 @@
+/* research/kpadopt2-tiles: the page. The package's CSS is untouched here; the only rules are this page's layout,
+   the mock list, and the "hover" and "focus" stand-ins (which read the package's own knobs). Every rule hangs on a
+   class of its own, because the review dialog moves the sections into its stage. */
+
+.ta-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) var(--kp-space-md, 1rem) var(--kp-space-2xl, 3rem);
+}
+
+.ta-intro,
+.ta-sec__head,
+.ta-block {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+.ta-intro :is(h1, p),
+.ta-sec__head :is(h2, p),
+.ta-block :is(h3, p) {
+    margin: 0;
+}
+
+.ta-intro p,
+.ta-sec__head p,
+.ta-caption {
+    max-inline-size: 80ch;
+}
+
+.ta-motion,
+.ta-caption,
+.ta-readout,
+.ta-mark {
+    color: var(--muted-foreground);
+}
+
+.ta-caption,
+.ta-readout,
+.ta-mark {
+    font-size: 0.875rem;
+}
+
+.ta-themes,
+.ta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.ta-themes > b,
+.ta-actions > b {
+    margin-inline-end: var(--kp-space-sm, 0.5rem);
+}
+
+.ta-themes .kp-button[aria-pressed='true'] {
+    outline: 2px solid var(--primary);
+    outline-offset: 1px;
+}
+
+.ta-sec {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-lg, 1.5rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    background: var(--background);
+    color: var(--foreground);
+}
+
+.ta-block + .ta-block {
+    padding-block-start: var(--kp-space-lg, 1.5rem);
+    border-block-start: 1px solid var(--border);
+}
+
+.ta-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1.5rem);
+}
+
+.ta-sentence {
+    margin: 0;
+}
+
+/* ---- the states grid: one label column, then segmented and chips on shared tracks */
+
+.ta-states {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+.ta-states__row {
+    display: grid;
+    grid-template-columns: minmax(8rem, 12rem) minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+    padding-block: var(--kp-space-xs, 0.25rem);
+    border-block-end: 1px solid var(--border);
+}
+
+.ta-states__row--head p {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+}
+
+.ta-states__row p {
+    margin: 0;
+}
+
+.ta-states__name {
+    font-size: 0.875rem;
+}
+
+.ta-states__cell {
+    min-inline-size: 0;
+}
+
+@media (max-width: 48rem) {
+    .ta-states__row {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .ta-states__row--head {
+        display: none;
+    }
+}
+
+.kp-segmented--chips > /* ---- cards, stacks, the mock list */
+
+.ta-card {
+    display: grid;
+    gap: var(--kp-space-md, 0.75rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-md, 0.75rem);
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.ta-card--narrow {
+    max-inline-size: 24rem;
+}
+
+.ta-stack {
+    display: grid;
+    gap: var(--kp-space-md, 0.75rem);
+    min-inline-size: 0;
+}
+
+.ta-stack--two {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+    align-items: start;
+}
+
+.ta-mark {
+    margin: 0;
+    padding-block-start: var(--kp-space-sm, 0.5rem);
+    border-block-start: 1px dashed var(--border);
+}
+
+.ta-list[data-view='cards'] /* ---- the sixteen side by side */
+
+.ta-lineup {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 0.75rem);
+}
+
+.ta-lineup :is(h2, p) {
+    margin: 0;
+    max-inline-size: 80ch;
+}
+
+.ta-lineup__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 24rem), 1fr));
+    gap: var(--kp-space-md, 0.75rem);
+}
+
+.ta-stage {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    justify-items: start;
+    gap: var(--kp-space-md, 0.75rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-md, 1rem);
+    border: 1px solid var(--border);
+    background: var(--background);
+    color: var(--foreground);
+}
+
+.ta-stage__name {
+    margin: 0;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+}
+
+/* The page shows the look-at line of the theme it is in, not all sixteen stacked; the review dialog reads the
+   paragraphs from the markup, so it still gets every theme's. */
+[data-review-look] > [data-for] {
+    display: none;
+}
+
+html[data-theme='formal'] [data-review-look] > [data-for='formal'],
+html[data-theme='light'] [data-review-look] > [data-for='light'],
+html[data-theme='dark'] [data-review-look] > [data-for='dark'],
+html[data-theme='cyberpunk'] [data-review-look] > [data-for='cyberpunk'],
+html[data-theme='synthwave'] [data-review-look] > [data-for='synthwave'],
+html[data-theme='pastel'] [data-review-look] > [data-for='pastel'],
+html[data-theme='terminal'] [data-review-look] > [data-for='terminal'],
+html[data-theme='forest'] [data-review-look] > [data-for='forest'],
+html[data-theme='blueprint'] [data-review-look] > [data-for='blueprint'],
+html[data-theme='solstice'] [data-review-look] > [data-for='solstice'],
+html[data-theme='brutalism'] [data-review-look] > [data-for='brutalism'],
+html[data-theme='deco'] [data-review-look] > [data-for='deco'],
+html[data-theme='phantom'] [data-review-look] > [data-for='phantom'],
+html[data-theme='grotesk'] [data-review-look] > [data-for='grotesk'],
+html[data-theme='nostromo'] [data-review-look] > [data-for='nostromo'],
+html[data-theme='titanium'] [data-review-look] > [data-for='titanium'] {
+    display: block;
+}
+
+/* The plain statement of what to see and what each control does, one per section [Kenny, 2026-10-16]. */
+.ta-expect {
+    margin: 0 0 var(--kp-space-md, 1rem);
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+    border: 1px solid var(--border-strong);
+    border-inline-start-width: 4px;
+    border-radius: var(--radius, 0);
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.ta-expect p {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+}
+
+.ta-expect ul {
+    margin: 0;
+    padding-inline-start: 1.25rem;
+}
+
+.ta-expect li + li {
+    margin-block-start: var(--kp-space-xs, 0.25rem);
+}
+
+.ta-states--one .ta-states__row {
+    grid-template-columns: minmax(8rem, 12rem) minmax(0, 24rem);
+}
+
+.ta-note {
+    margin: 0;
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+    border: 1px solid var(--border);
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.ta-note[hidden] {
+    display: none;
+}
+
+.ta-narrow {
+    max-inline-size: 17rem;
+}
+
+.ta-narrow-grid {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.ta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.ta-readout {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+    font-variant-numeric: tabular-nums;
+}
+
+/* The status lists: the compact list keeps one detail line; the reserved one two. */
+.ta-reserve {
+    --kp-statusrow-detail-lines: 2;
+}
+
+/* The host log: facets on the side, the lines beside them. */
+.ta-log {
+    display: grid;
+    grid-template-columns: minmax(12rem, 16rem) minmax(0, 1fr);
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+.ta-log__side {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    align-content: start;
+    min-inline-size: 0;
+}
+
+.ta-log__side .kp-facets__title {
+    margin-block: var(--kp-space-sm, 0.5rem) 0;
+}
+
+.ta-log__main {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+.ta-log__lines {
+    display: grid;
+    align-content: start;
+    gap: 0;
+    block-size: 20rem;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    list-style: none;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--card-foreground);
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 0.8125rem;
+}
+
+.ta-log__lines li {
+    display: grid;
+    grid-template-columns: 4.5rem 7rem 4.5rem minmax(0, 1fr);
+    gap: var(--kp-space-sm, 0.5rem);
+    padding: 0.125rem var(--kp-space-sm, 0.5rem);
+    border-block-end: 1px solid var(--border);
+}
+
+.ta-log__lines li > span {
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ta-log__time {
+    color: var(--muted-foreground);
+}
+
+.ta-log__lines li[data-level='error'] .ta-log__level {
+    color: var(--destructive);
+    font-weight: 700;
+}
+
+.ta-log__lines li[data-level='warn'] .ta-log__level {
+    font-weight: 700;
+}
+
+.ta-log__empty {
+    padding: var(--kp-space-md, 1rem);
+    color: var(--muted-foreground);
+}
+
+@media (max-width: 48rem) {
+    .ta-log {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* Swatches for the facet rows: the theme's own chart colours. */
+.ta-sw-a {
+    --kp-facet-swatch-colour: var(--chart-1);
+}
+
+.ta-sw-b {
+    --kp-facet-swatch-colour: var(--chart-2);
+}
+
+.ta-sw-c {
+    --kp-facet-swatch-colour: var(--chart-3);
+}
+
+.ta-sw-d {
+    --kp-facet-swatch-colour: var(--chart-4);
+}
+
+.ta-sw-e {
+    --kp-facet-swatch-colour: var(--chart-5);
+}
+
+.ta-stage__actions {
+    --kp-actions-min: 9rem;
+    width: 100%;
+}
+
+.ta-stage > * {
+    min-inline-size: 0;
+    inline-size: 100%;
+}
+
+@media (max-width: 48rem) {
+    .ta-states--one .ta-states__row {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .ta-log__lines li {
+        min-inline-size: 30rem;
+    }
+}
