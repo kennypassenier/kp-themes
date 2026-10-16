@@ -2679,7 +2679,6 @@
         pointer-events: none;
     }
 
-
     [data-theme='phantom'] .kp-dialog__title {
         /* The title at the package's metrics [scope-87]: Kenny chose the fixed size
            over the theme's own on 2026-10-03 (research/dialog-title). */
@@ -4007,13 +4006,15 @@
         }
 
         /* A rail (slim) keeps its width glide beside the throw. */
-        [data-theme='phantom'] .kp-sidenav[data-kp-sidenav-slim]:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+        [data-theme='phantom']
+            .kp-sidenav[data-kp-sidenav-slim]:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
             transition:
                 translate 400ms cubic-bezier(0.81, 0, 0, 1),
                 inline-size 400ms cubic-bezier(0.81, 0, 0, 1);
         }
 
-        [data-theme='phantom'] .kp-sidenav[data-kp-sidenav-slim]:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='false'] {
+        [data-theme='phantom']
+            .kp-sidenav[data-kp-sidenav-slim]:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='false'] {
             transition:
                 translate 400ms cubic-bezier(1, 0, 0.19, 1) 300ms,
                 inline-size 400ms cubic-bezier(1, 0, 0.19, 1);
@@ -4228,5 +4229,25 @@
     }
     [data-theme='phantom'] .kp-segmented--chips > .kp-segmented__item[aria-pressed='true'] {
         box-shadow: 3px 3px 0 var(--kp-red-deep, var(--border-strong));
+    }
+}
+
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: slanted plates. Pills and bars lean with the theme's skew, in the display face, as its badges do; the text keeps the lean. */
+    [data-theme='phantom'] .kp-week {
+        --kp-week-pill-radius: 0;
+    }
+    [data-theme='phantom'] .kp-gantt {
+        --kp-gantt-bar-radius: 0;
+    }
+    [data-theme='phantom'] :is(.kp-week__pill, .kp-gantt__run) {
+        transform: skewX(var(--kp-skew));
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    [data-theme='phantom'] .kp-week__pill:is(button)[data-kp-state='next'] {
+        transform: skewX(var(--kp-skew));
     }
 }

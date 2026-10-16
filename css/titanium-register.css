@@ -2650,7 +2650,9 @@
             :is(.kp-calendar--busy-days, .kp-calendar--busy-whole:not(:has(> .kp-calendar__grid[aria-busy='true'])))
             .kp-calendar__day[data-kp-tone='loading']
             > .kp-calendar__day-busy:not([data-kp-leaving])::after,
-        [data-theme='titanium'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy:not([data-kp-leaving])::after {
+        [data-theme='titanium']
+            .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true'])
+            > .kp-calendar__busy:not([data-kp-leaving])::after {
             content: '';
             position: absolute;
             inset: 0;
@@ -3453,5 +3455,29 @@
             0 100%,
             0 var(--kp-chamfer, 0.4rem)
         );
+    }
+}
+
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: machined plates. The chamfer cuts the top-left and the bottom-right corner (cut outwards past the box so the focus ring stays whole); the running bar's feed is constant and linear, as everything here moves. */
+    [data-theme='titanium'] .kp-week {
+        --kp-week-pill-radius: 0;
+    }
+    [data-theme='titanium'] .kp-gantt {
+        --kp-gantt-bar-radius: 0;
+    }
+    [data-theme='titanium'] :is(.kp-week__pill, .kp-gantt__run) {
+        clip-path: polygon(
+            calc(var(--kp-chamfer, 0.5rem) * 0.6 + 8px) -8px,
+            calc(100% + 8px) -8px,
+            calc(100% + 8px) calc(100% - var(--kp-chamfer, 0.5rem) * 0.6 - 8px),
+            calc(100% - var(--kp-chamfer, 0.5rem) * 0.6 - 8px) calc(100% + 8px),
+            -8px calc(100% + 8px),
+            -8px calc(var(--kp-chamfer, 0.5rem) * 0.6 + 8px)
+        );
+        border-color: var(--border-strong);
+    }
+    [data-theme='titanium'] :is(.kp-week__time, .kp-gantt__tick, .kp-week__axis > span) {
+        font-family: var(--theme-font-mono);
     }
 }

@@ -124,6 +124,12 @@ export const PAGES = [
                 label: 'Feedback components: a toast that waits, a live step list, a diff hunk header',
                 about: 'The dashboard draws these itself because the package lacks them: toast() gains pause, linger, close and sticky; .kp-steplist (pending, running, done, failed, skipped, announced to a screen reader); .kp-diff__hunk.',
             },
+            // Kenny, 2026-10-16 (kp-adopt-rest, round 2): the week of the schedules page and the timeline of the Activity page, built in the package first. 16 themes.
+            {
+                href: 'research/kpadopt2-time/demo.html',
+                label: 'Time components: a week agenda and a live run timeline',
+                about: 'The dashboard draws these itself because the package lacks them: .kp-week (seven days, items at their time, now-line, +N menu for a crowded day, rows on a phone) and .kp-gantt (bars per job on a live axis, running bars growing, ranges, a brushed selection).',
+            },
             // Kenny, 2026-10-15 (kp-adopt rest, kpa-33): three pieces the homelab dashboard still draws by hand, built into the package first: a top bar that folds what does not fit behind a More menu, a bottom tab bar for phones with a More drawer, and the running-job button.
             {
                 href: 'research/kpadopt-nav/demo.html',

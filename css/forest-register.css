@@ -3744,13 +3744,17 @@
             flex-wrap: nowrap;
             max-block-size: 0;
             opacity: 0;
-            transition: max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-wither), opacity var(--kp-sig-fo-time) var(--kp-sig-fo-wither);
+            transition:
+                max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-wither),
+                opacity var(--kp-sig-fo-time) var(--kp-sig-fo-wither);
         }
 
         [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
             max-block-size: var(--kp-nav-links-height, 25rem);
             opacity: 1;
-            transition: max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-grow), opacity var(--kp-sig-fo-time) var(--kp-sig-fo-grow);
+            transition:
+                max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-grow),
+                opacity var(--kp-sig-fo-time) var(--kp-sig-fo-grow);
         }
 
         @starting-style {
@@ -3763,7 +3767,9 @@
         [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__links {
             max-block-size: 0;
             opacity: 0;
-            transition: max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-wither), opacity var(--kp-sig-fo-time) var(--kp-sig-fo-wither);
+            transition:
+                max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-wither),
+                opacity var(--kp-sig-fo-time) var(--kp-sig-fo-wither);
         }
 
         @media (prefers-reduced-motion: no-preference) {
@@ -3829,7 +3835,10 @@
         [data-theme='forest']
             .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']):is(
                 [data-kp-sidenav-open='false'],
-                [data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-peek='open'], [data-kp-sidenav-expand-on-hover]:not([data-kp-sidenav-attached]):hover)
+                [data-kp-sidenav-slim-collapsed]:not(
+                    [data-kp-sidenav-peek='open'],
+                    [data-kp-sidenav-expand-on-hover]:not([data-kp-sidenav-attached]):hover
+                )
             ) {
             transition:
                 translate var(--kp-sig-fo-time) var(--kp-sig-fo-wither),
@@ -4363,5 +4372,24 @@
 
     [data-theme='forest'] .kp-tabbar__badge {
         border-radius: var(--kp-sig-fo-plate, var(--radius));
+    }
+}
+
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: leaves. Two rounded corners and two nearly square on every pill and bar, the way the forest cuts a chip. */
+    [data-theme='forest'] .kp-week {
+        --kp-week-pill-radius: 0.7rem 0.15rem 0.7rem 0.15rem;
+    }
+    [data-theme='forest'] .kp-gantt {
+        --kp-gantt-bar-radius: 0.6rem 0.12rem 0.6rem 0.12rem;
+    }
+    [data-theme='forest'] .kp-week__pill {
+        padding-inline: 0.625rem;
+    }
+    [data-theme='forest'] .kp-gantt__label {
+        padding-inline: 0.625rem;
+    }
+    [data-theme='forest'] .kp-gantt__lane {
+        font-style: italic;
     }
 }

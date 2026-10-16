@@ -2464,10 +2464,7 @@
         }
 
         [data-theme='solstice']
-            :is(
-                .kp-combobox__list:popover-open,
-                .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open
-            ) {
+            :is(.kp-combobox__list:popover-open, .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open) {
             animation: kp-sig-solstice-kindled var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) backwards;
         }
 
@@ -2677,5 +2674,22 @@
     }
     [data-theme='solstice'] .kp-segmented--chips > .kp-segmented__item[aria-pressed='true'] {
         box-shadow: 0 0 14px hsl(from var(--primary) h s l / 0.4);
+    }
+}
+
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: embers. Warm gradient plates with a halo on what runs next or runs now; the halo is a drop shadow, so it never fights the focus ring. */
+    [data-theme='solstice'] .kp-week {
+        --kp-week-pill-radius: 0.5rem;
+    }
+    [data-theme='solstice'] .kp-gantt {
+        --kp-gantt-bar-radius: 0.5rem;
+    }
+    [data-theme='solstice'] .kp-week__pill:not([data-kp-state='off'], [data-kp-state='skipped'], [data-kp-state='reference']) {
+        background-image: linear-gradient(90deg, hsl(from var(--kp-week-ink) h s l / 0.22), transparent 85%);
+    }
+    [data-theme='solstice'] .kp-week__pill[data-kp-state='next'],
+    [data-theme='solstice'] .kp-gantt__run[data-kp-state='running'] {
+        filter: drop-shadow(0 0 5px hsl(from var(--ring) h s l / 0.55));
     }
 }

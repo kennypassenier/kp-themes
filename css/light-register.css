@@ -2703,3 +2703,27 @@
         box-shadow: 0 1px 2px hsl(from var(--foreground) h s l / 0.12);
     }
 }
+
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: daylight. Pills and bars are soft capsules; the column dividers are the faintest line there is. */
+    [data-theme='light'] .kp-week {
+        --kp-week-pill-radius: 999px;
+    }
+    [data-theme='light'] .kp-gantt {
+        --kp-gantt-bar-radius: 999px;
+    }
+    [data-theme='light'] .kp-week__pill {
+        padding-inline: 0.625rem;
+        border-color: transparent;
+    }
+    [data-theme='light'] .kp-gantt__label {
+        padding-inline: 0.625rem;
+    }
+    [data-theme='light'] .kp-week__col,
+    [data-theme='light'] .kp-gantt__rule {
+        border-inline-color: hsl(from var(--border) h s l / 0.6);
+    }
+    [data-theme='light'] .kp-gantt__run[data-kp-state='queued'] {
+        border-color: var(--border-strong);
+    }
+}

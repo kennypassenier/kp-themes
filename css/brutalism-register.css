@@ -3870,10 +3870,7 @@
            (js/motion.js), and the date picker's playClose(), whose name stays the same on the
            union of its opening mark and the closing marks (lesson 10). */
         [data-theme='brutalism']
-            :is(
-                .kp-combobox__list:popover-open,
-                .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open
-            ) {
+            :is(.kp-combobox__list:popover-open, .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open) {
             --kp-sig-br-h: var(--kp-sig-br-h-plate);
             --kp-sig-br-sh: var(--kp-sig-br-drop);
             animation: kp-sig-brutalism-drop var(--kp-sig-br-time) var(--kp-sig-br-fall) backwards;
@@ -3940,7 +3937,11 @@
                 animation: kp-sig-brutalism-leave var(--kp-sig-br-time) var(--kp-sig-br-up) forwards;
             }
 
-            [data-theme='brutalism'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu {
+            [data-theme='brutalism']
+                .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing])
+                .kp-nav__links
+                > li
+                > .kp-nav__menu {
                 animation: none;
                 transition: none;
             }
@@ -4040,7 +4041,9 @@
 
         /* Each slab's shadow stays on the ground while the panel is up (the current one sits in
            its footprint, so its shadow shows only while it is lifted). */
-        [data-theme='brutalism'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) :is(.kp-sidenav__link, .kp-sidenav__category-toggle):not([aria-current='page'], :hover, :focus-visible) {
+        [data-theme='brutalism']
+            .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])
+            :is(.kp-sidenav__link, .kp-sidenav__category-toggle):not([aria-current='page'], :hover, :focus-visible) {
             box-shadow: calc(3px + var(--kp-sig-br-lift)) calc(3px + var(--kp-sig-br-lift)) 0 var(--foreground);
         }
 
@@ -4232,5 +4235,40 @@
     }
     [data-theme='brutalism'] .kp-segmented--chips > .kp-segmented__item[aria-pressed='true'] {
         box-shadow: var(--kp-shadow);
+    }
+}
+
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: black boxes. A 2px black frame and a hard offset shadow on every pill and bar, no radius, no glide on the stripes. */
+    [data-theme='brutalism'] .kp-week {
+        --kp-week-pill-radius: 0;
+    }
+    [data-theme='brutalism'] .kp-gantt {
+        --kp-gantt-bar-radius: 0;
+        --kp-gantt-row: 2rem;
+        --kp-gantt-bar: 1.25rem;
+        --kp-gantt-bar-failed: 1.625rem;
+    }
+    [data-theme='brutalism'] :is(.kp-week__pill, .kp-gantt__run) {
+        border: 2px solid var(--foreground);
+        filter: drop-shadow(2px 2px 0 var(--foreground));
+    }
+    [data-theme='brutalism'] .kp-week__pill:is([data-kp-state='reference'], [data-kp-state='off'], [data-kp-state='skipped']) {
+        filter: none;
+    }
+    [data-theme='brutalism'] .kp-gantt__run[data-kp-state='running'] {
+        animation: none;
+    }
+    [data-theme='brutalism'] .kp-gantt__run[data-kp-state='queued'] {
+        border-style: dashed;
+        filter: none;
+    }
+    [data-theme='brutalism'] :is(.kp-week__col, .kp-gantt__rule) {
+        border-inline-color: var(--foreground);
+    }
+    [data-theme='brutalism'] :is(.kp-week__dow, .kp-gantt__tick, .kp-gantt__lane) {
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
     }
 }

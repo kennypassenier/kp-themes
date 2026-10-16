@@ -88,6 +88,35 @@ export {
     syncProgressbar,
 } from './js/progressbar.js';
 export { STEPLIST_EVENT, STEP_ID_ATTRIBUTE, STEP_STATES, attachSteplists, buildSteplist, setStep } from './js/steplist.js';
+export {
+    WEEK,
+    WEEK_OPEN_EVENT,
+    WEEK_RANGE_EVENT,
+    WEEK_TICK_MS,
+    attachWeeks,
+    pillCapacity,
+    setWeekEvents,
+    setWeekLegend,
+    setWeekStart,
+    setWeekState,
+    stackPills,
+} from './js/week.js';
+export {
+    GANTT,
+    GANTT_OPEN_EVENT,
+    GANTT_SELECT_EVENT,
+    GANTT_STEPS,
+    GANTT_TICK_MS,
+    GANTT_WINDOW_EVENT,
+    attachGantts,
+    axisStep,
+    packRows,
+    rangeSeconds,
+    setGanttRuns,
+    setGanttSelection,
+    setGanttState,
+    setGanttWindow,
+} from './js/gantt.js';
 // The dashboard components [scope-143].
 export { ACTION_LIST, ROW_ACTIONS, attachActionColumns, fitActionColumns, mergeRoles, rowRoles } from './js/actions.js';
 export {

@@ -280,7 +280,6 @@
         border-block-end: 0;
     }
 
-
     [data-theme='grotesk'] .kp-nav__brand {
         grid-column: 1 / 4;
         font-family: var(--theme-font-display);
@@ -974,7 +973,6 @@
         color: var(--foreground);
         font-weight: 700;
     }
-
 
     [data-theme='grotesk'] .kp-timeline {
         border-inline-start: 3px solid var(--foreground);
@@ -2838,8 +2836,7 @@
 
     /* The windows that slip most: the palette, the shortcuts sheet, the tour's card, the picker's
        panel, the combobox's list, the bar's panels. */
-    [data-theme='grotesk']
-        :is(.kp-palette, .kp-shortcuts, .kp-tour, .kp-datepicker__panel, .kp-combobox__list, .kp-nav__menu, .kp-alarm__panel) {
+    [data-theme='grotesk'] :is(.kp-palette, .kp-shortcuts, .kp-tour, .kp-datepicker__panel, .kp-combobox__list, .kp-nav__menu, .kp-alarm__panel) {
         --kp-sig-gr-r: 8px;
     }
 
@@ -3244,5 +3241,28 @@
        red bar under its word. The rule is the track's own foot. */
     [data-theme='grotesk'] .kp-segmented:not(.kp-segmented--chips) {
         border-block-end: 1px solid var(--foreground);
+    }
+}
+
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: flat and heavy. Hard-edged blocks in the bold grotesque, a thick leading rule, never wrapping: the type is wide, so the pill and the bar clip it instead. */
+    [data-theme='grotesk'] .kp-week {
+        --kp-week-pill-radius: 0;
+    }
+    [data-theme='grotesk'] .kp-gantt {
+        --kp-gantt-bar-radius: 0;
+    }
+    [data-theme='grotesk'] :is(.kp-week__pill, .kp-gantt__run) {
+        font-weight: 700;
+        letter-spacing: -0.01em;
+    }
+    [data-theme='grotesk'] .kp-week__pill {
+        border-inline-start-width: 5px;
+    }
+    [data-theme='grotesk'] .kp-gantt__bar {
+        flex-wrap: wrap;
+    }
+    [data-theme='grotesk'] :is(.kp-week__col, .kp-gantt__rule) {
+        border-inline-width: 2px;
     }
 }

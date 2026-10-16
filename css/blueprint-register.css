@@ -3033,12 +3033,20 @@
                 animation: kp-sig-blueprint-trace-out var(--kp-sig-bp-panel) linear reverse forwards;
             }
 
-            [data-theme='blueprint'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu {
+            [data-theme='blueprint']
+                .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing])
+                .kp-nav__links
+                > li
+                > .kp-nav__menu {
                 animation: none;
                 transition: none;
             }
 
-            [data-theme='blueprint'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu::after {
+            [data-theme='blueprint']
+                .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing])
+                .kp-nav__links
+                > li
+                > .kp-nav__menu::after {
                 content: none;
             }
         }
@@ -4175,7 +4183,11 @@
         /* The pen and the construction line, the dialog's (its ::after). On the side navigation the
            line runs on the panel's own edge; on the alarm it runs on the alarm's frame, so the frame
            is what the pen constructs before the screen is inked. */
-        [data-theme='blueprint'] :is(.kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']), .kp-alarm[open]:not([data-kp-alarm-motion='still']))::after {
+        [data-theme='blueprint']
+            :is(
+                .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']),
+                .kp-alarm[open]:not([data-kp-alarm-motion='still'])
+            )::after {
             content: '';
             position: absolute;
             z-index: 4;
@@ -4330,7 +4342,8 @@
         --kp-seg-tracking: 0.08em;
         --kp-seg-case: uppercase;
         --kp-seg-track: transparent;
-        --kp-seg-thumb: repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / 0.34) 0 1px, transparent 1px 5px), hsl(from var(--primary) h s l / 0.1);
+        --kp-seg-thumb:
+            repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / 0.34) 0 1px, transparent 1px 5px), hsl(from var(--primary) h s l / 0.1);
         --kp-seg-thumb-ink: var(--foreground);
         --kp-seg-thumb-edge: 0 0 0 1px var(--primary);
         --kp-seg-thumb-lift: 0 0 0 0 transparent;
@@ -4355,5 +4368,25 @@
         --kp-kbd-foot: 1px;
         border-style: dashed;
         font-family: var(--theme-font-mono);
+    }
+}
+
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: a drawing. Open frames with a hatch for a fill, square corners, dashed witness lines. */
+    [data-theme='blueprint'] .kp-week {
+        --kp-week-pill-radius: 0;
+    }
+    [data-theme='blueprint'] .kp-gantt {
+        --kp-gantt-bar-radius: 0;
+    }
+    [data-theme='blueprint'] .kp-week__pill:not([data-kp-state='off'], [data-kp-state='skipped'], [data-kp-state='reference']) {
+        background-image: repeating-linear-gradient(45deg, hsl(from var(--kp-week-ink) h s l / 0.28) 0 1px, transparent 1px 5px);
+    }
+    [data-theme='blueprint'] .kp-week__col,
+    [data-theme='blueprint'] .kp-gantt__rule {
+        border-inline-style: dashed;
+    }
+    [data-theme='blueprint'] :is(.kp-week__time, .kp-gantt__tick, .kp-week__axis > span) {
+        font-family: var(--theme-font-mono, var(--font-mono, monospace));
     }
 }

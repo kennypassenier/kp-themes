@@ -135,6 +135,8 @@ export const FILES = [
     'js/patterns.js',
     'js/progressbar.js',
     'js/steplist.js',
+    'js/week.js',
+    'js/gantt.js',
     'js/loading-pieces.js',
     'js/motion.js',
     'js/update.js',

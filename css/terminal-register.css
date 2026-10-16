@@ -2432,7 +2432,8 @@
 
     /* The cursor at the line a menu or popover is printing; at rest it is not
        drawn (nothing sits on a part that is not waiting, G16). */
-    [data-theme='terminal'] :is(.kp-popover[popover], .kp-menu-button > .kp-menu, .kp-combobox__list, .kp-datepicker__panel, .kp-tour):not(.kp-tooltip)::before,
+    [data-theme='terminal']
+        :is(.kp-popover[popover], .kp-menu-button > .kp-menu, .kp-combobox__list, .kp-datepicker__panel, .kp-tour):not(.kp-tooltip)::before,
     [data-theme='terminal'] .kp-nav__links > li > .kp-nav__menu::after {
         content: '';
         position: absolute;
@@ -3523,7 +3524,9 @@
             :is(.kp-calendar--busy-days, .kp-calendar--busy-whole:not(:has(> .kp-calendar__grid[aria-busy='true'])))
             .kp-calendar__day[data-kp-tone='loading']
             > .kp-calendar__day-busy:not([data-kp-leaving])::after,
-        [data-theme='terminal'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy:not([data-kp-leaving])::after {
+        [data-theme='terminal']
+            .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true'])
+            > .kp-calendar__busy:not([data-kp-leaving])::after {
             content: '';
             position: absolute;
             inset-block: 0;
@@ -3991,5 +3994,41 @@
     }
     [data-theme='terminal'] .kp-toolbar__key.kp-kbd {
         color: var(--muted-foreground);
+    }
+}
+
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: program output. No plates: the time is in brackets, bars are blocks of the phosphor, the running bar steps instead of gliding, rules are dashed. */
+    [data-theme='terminal'] .kp-week {
+        --kp-week-pill-radius: 0;
+        font-family: var(--theme-font-mono, var(--font-mono, monospace));
+    }
+    [data-theme='terminal'] .kp-gantt {
+        --kp-gantt-bar-radius: 0;
+        font-family: var(--theme-font-mono, var(--font-mono, monospace));
+    }
+    [data-theme='terminal'] .kp-week__pill {
+        background: transparent;
+    }
+    [data-theme='terminal'] .kp-week__time::before {
+        content: '[';
+    }
+    [data-theme='terminal'] .kp-week__time::after {
+        content: ']';
+    }
+    [data-theme='terminal'] .kp-week__col,
+    [data-theme='terminal'] .kp-gantt__rule {
+        border-inline-style: dashed;
+    }
+    [data-theme='terminal'] .kp-gantt__run[data-kp-state='running'] {
+        animation-timing-function: steps(6, end);
+    }
+    [data-theme='terminal'] .kp-week__now,
+    [data-theme='terminal'] .kp-gantt__now {
+        border-color: var(--primary);
+        box-shadow: var(--kp-bloom);
+    }
+    [data-theme='terminal'] .kp-week {
+        --kp-week-now: var(--primary);
     }
 }

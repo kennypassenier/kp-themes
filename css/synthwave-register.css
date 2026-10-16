@@ -3521,7 +3521,9 @@
             :is(.kp-calendar--busy-days, .kp-calendar--busy-whole:not(:has(> .kp-calendar__grid[aria-busy='true'])))
             .kp-calendar__day[data-kp-tone='loading']
             > .kp-calendar__day-busy:not([data-kp-leaving])::after,
-        [data-theme='synthwave'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy:not([data-kp-leaving])::after {
+        [data-theme='synthwave']
+            .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true'])
+            > .kp-calendar__busy:not([data-kp-leaving])::after {
             content: '';
             position: absolute;
             inset: 0;
@@ -4403,5 +4405,31 @@
         box-shadow:
             inset 0 0 0 1.5px var(--primary),
             0 0 8px hsl(from var(--primary) h s l / 0.55);
+    }
+}
+
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: the arcade floor. A running bar is the pink-to-cyan beam with its stripes over it and a neon halo; the grid lines are the floor's. */
+    [data-theme='synthwave'] .kp-week {
+        --kp-week-pill-radius: 3px;
+        --kp-week-now: var(--primary);
+    }
+    [data-theme='synthwave'] .kp-gantt {
+        --kp-gantt-bar-radius: 3px;
+        --kp-gantt-now: var(--primary);
+    }
+    [data-theme='synthwave'] .kp-gantt__run[data-kp-state='running'] {
+        background-image:
+            repeating-linear-gradient(135deg, transparent 0 0.375rem, hsl(from var(--warning-foreground) h s l / 0.22) 0.375rem 0.75rem),
+            linear-gradient(90deg, var(--primary), var(--secondary, var(--accent, var(--primary))));
+        filter: drop-shadow(0 0 4px hsl(from var(--primary) h s l / 0.7));
+    }
+    [data-theme='synthwave'] .kp-week__pill[data-kp-state='next'] {
+        filter: drop-shadow(0 0 4px hsl(from var(--ring) h s l / 0.7));
+    }
+    [data-theme='synthwave'] .kp-gantt__tick,
+    [data-theme='synthwave'] .kp-week__dow {
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
     }
 }

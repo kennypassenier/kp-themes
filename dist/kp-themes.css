@@ -11093,6 +11093,878 @@
         content: var(--kp-glyph-skipped, '–');
     }
 
+    /* --- Week agenda: seven days, the items of the week placed in time -----
+ * `section.kp-week[data-kp-week]` (js/week.js). A grid of an hour axis and
+ * one column per day; every item is a pill at its time of day. The column's
+ * height is fixed (--kp-week-height), so nothing moves when items arrive,
+ * when a day is crowded or when the week is loading: what does not fit is
+ * folded into a `+N` menu button at the end of the stack. Below the agenda's
+ * own width of 40rem (a container query, so it follows the pane and not the
+ * window) the columns become rows: the day on the left, its items in time
+ * order on the right, every item shown.
+ *
+ * Every state is a shape or a word as well as a colour [DI4]: the day that
+ * is today wears the word and a filled number; the next run a ring; an item
+ * that is off or skipped is struck through and quieter by ink, not by
+ * opacity; the host's own round is dashed and is not a button.
+ * Knobs [KT6]: `--kp-week-height` (15rem, the day column), `--kp-week-pill`
+ * (1.5rem, one pill's height), `--kp-week-axis` (3.25rem, the hour labels'
+ * column), `--kp-week-day-label` (5.5rem, the day's column in the list),
+ * `--kp-week-pill-radius`, `--kp-week-now` (the line for now, --destructive),
+ * `--kp-week-today` (the today plate, --primary), `--kp-week-gap`. */
+    .kp-week {
+        container: kp-week / inline-size;
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+    }
+
+    .kp-week__nav {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-week__title {
+        flex: 1 1 auto;
+        margin: 0;
+        font-size: var(--kp-text-base, 1rem);
+        font-variant-numeric: tabular-nums;
+        text-align: center;
+    }
+
+    .kp-week__frame {
+        position: relative;
+    }
+
+    .kp-week__grid {
+        --kp-week-mode: grid;
+        display: grid;
+        grid-template-columns: var(--kp-week-axis, 3.25rem) repeat(var(--kp-week-days, 7), minmax(0, 1fr));
+        grid-template-rows: auto var(--kp-week-height, 15rem);
+        padding-block-end: 0.5rem;
+        min-inline-size: 0;
+    }
+
+    .kp-week__day {
+        display: contents;
+    }
+
+    .kp-week__head {
+        grid-row: 1;
+        grid-column: calc(var(--kp-week-i, 0) + 2);
+        display: grid;
+        grid-template-columns: auto auto;
+        justify-content: start;
+        align-content: end;
+        align-items: baseline;
+        column-gap: 0.375rem;
+        padding: 0 var(--kp-space-sm, 0.5rem) 0.75rem;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    .kp-week__num {
+        font-variant-numeric: tabular-nums;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+    }
+
+    .kp-week__date {
+        display: none;
+    }
+
+    /* The mark's room is always there, so today moving from one day to the
+ * next changes no height. */
+    .kp-week__today {
+        grid-column: 1 / -1;
+        visibility: hidden;
+        font-size: 0.625rem;
+        line-height: 1;
+    }
+
+    .kp-week__day[data-kp-today] .kp-week__head {
+        color: var(--foreground);
+        font-weight: 600;
+    }
+
+    .kp-week__day[data-kp-today] .kp-week__today {
+        visibility: visible;
+        color: var(--kp-week-today, var(--primary));
+    }
+
+    .kp-week__day[data-kp-today] .kp-week__num {
+        color: var(--kp-week-today, var(--primary));
+    }
+
+    .kp-week__axis {
+        grid-row: 2;
+        grid-column: 1;
+        position: relative;
+    }
+
+    .kp-week__axis > span {
+        position: absolute;
+        inset-inline-end: var(--kp-space-sm, 0.5rem);
+        inset-block-start: calc(var(--kp-week-at, 0) * 100%);
+        translate: 0 -50%;
+        color: var(--muted-foreground);
+        font-size: 0.6875rem;
+        font-variant-numeric: tabular-nums;
+        line-height: 1;
+    }
+
+    .kp-week__col {
+        grid-row: 2;
+        grid-column: calc(var(--kp-week-i, 0) + 2);
+        position: relative;
+        min-inline-size: 0;
+        border-inline-start: 1px solid var(--border);
+        border-block-end: 1px solid var(--border);
+        background-image: linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+        background-size: 100% 25%;
+        background-repeat: no-repeat repeat;
+    }
+
+    .kp-week__day[data-kp-today] .kp-week__col {
+        background-color: color-mix(in oklab, var(--kp-week-today, var(--primary)) 6%, transparent);
+    }
+
+    .kp-week__pill {
+        --kp-week-ink: var(--chart-1);
+        box-sizing: border-box;
+        position: absolute;
+        inset-inline: 0.25rem;
+        inset-block-start: var(--kp-week-top, 0);
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        block-size: var(--kp-week-pill, 1.5rem);
+        margin: 0;
+        padding: 0 0.375rem;
+        overflow: hidden;
+        border: 1px solid color-mix(in oklab, var(--kp-week-ink) 45%, var(--border));
+        border-radius: var(--kp-week-pill-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
+        background: color-mix(in oklab, var(--kp-week-ink) 14%, var(--card));
+        color: var(--foreground);
+        font: inherit;
+        font-size: var(--kp-text-xs, 0.75rem);
+        line-height: 1;
+        text-align: start;
+        white-space: nowrap;
+        cursor: pointer;
+    }
+
+    .kp-week__pill[data-kp-series='2'],
+    .kp-week__swatch[data-kp-series='2'] {
+        --kp-week-ink: var(--chart-2);
+    }
+
+    .kp-week__pill[data-kp-series='3'],
+    .kp-week__swatch[data-kp-series='3'] {
+        --kp-week-ink: var(--chart-3);
+    }
+
+    .kp-week__pill[data-kp-series='4'],
+    .kp-week__swatch[data-kp-series='4'] {
+        --kp-week-ink: var(--chart-4);
+    }
+
+    .kp-week__pill[data-kp-series='5'],
+    .kp-week__swatch[data-kp-series='5'] {
+        --kp-week-ink: var(--chart-5);
+    }
+
+    .kp-week__time {
+        flex: none;
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+    }
+
+    .kp-week__label {
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .kp-week__pill:is(button):hover {
+        box-shadow: 0 0 0 1px var(--foreground);
+    }
+
+    .kp-week__pill[data-kp-state='next'] {
+        box-shadow: 0 0 0 2px var(--ring);
+    }
+
+    .kp-week__pill[data-kp-state='next']:hover {
+        box-shadow:
+            0 0 0 2px var(--ring),
+            0 0 0 3px var(--foreground);
+    }
+
+    /* Off and skipped: quieter by ink and a strike, so the words keep their contrast. */
+    .kp-week__pill:is([data-kp-state='off'], [data-kp-state='skipped']) {
+        background: transparent;
+        color: var(--muted-foreground);
+        text-decoration: line-through;
+    }
+
+    .kp-week__pill[data-kp-state='reference'] {
+        background: transparent;
+        border-style: dashed;
+        border-color: var(--border-strong);
+        color: var(--muted-foreground);
+        cursor: default;
+    }
+
+    .kp-week__pill[data-kp-past]:not([data-kp-state='next']) .kp-week__label {
+        color: var(--muted-foreground);
+    }
+
+    .kp-week .kp-week__pill--more {
+        position: static;
+        inset: auto;
+        justify-content: center;
+        inline-size: 100%;
+        border-style: solid;
+        border-color: var(--border-strong);
+        background: var(--card);
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-week .kp-week__more {
+        position: absolute;
+        display: block;
+        inset-inline: 0.25rem;
+        inset-block-start: var(--kp-week-top, 0);
+        block-size: var(--kp-week-pill, 1.5rem);
+    }
+
+    .kp-week__more[hidden] {
+        display: none;
+    }
+
+    .kp-week__now {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: calc(var(--kp-week-at, 0) * 100%);
+        z-index: 2;
+        border-block-start: 2px solid var(--kp-week-now, var(--destructive));
+        pointer-events: none;
+    }
+
+    .kp-week__now[hidden] {
+        display: none;
+    }
+
+    .kp-week__now::before {
+        content: '';
+        position: absolute;
+        inset-inline-start: -4px;
+        inset-block-start: -5px;
+        inline-size: 8px;
+        block-size: 8px;
+        border-radius: 50%;
+        background: var(--kp-week-now, var(--destructive));
+    }
+
+    /* Loading keeps the pills' size: ghosts, pulsing only without reduced motion. */
+    .kp-week__ghost {
+        box-sizing: border-box;
+        position: absolute;
+        inset-inline: 0.25rem;
+        inset-block-start: calc(var(--kp-week-at, 0) * (100% - var(--kp-week-pill, 1.5rem)));
+        block-size: var(--kp-week-pill, 1.5rem);
+        border-radius: var(--kp-week-pill-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
+        display: none;
+    }
+
+    .kp-week[data-kp-state='loading'] .kp-week__ghost {
+        display: block;
+    }
+
+    .kp-week[data-kp-state='loading'] .kp-week__now {
+        display: none;
+    }
+
+    /* The sentence of an empty, loading or failed week sits over the grid:
+ * it takes no room, so nothing moves when it comes and goes. */
+    .kp-week__state {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        margin: 0;
+        padding: var(--kp-space-md, 0.75rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        text-align: center;
+        pointer-events: none;
+    }
+
+    .kp-week__state:empty {
+        display: none;
+    }
+
+    .kp-week__state[data-kp-state='error'] {
+        color: var(--destructive);
+    }
+
+    .kp-week__legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-week__legend[hidden] {
+        display: none;
+    }
+
+    .kp-week__legend li {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+    }
+
+    .kp-week__swatch {
+        --kp-week-ink: var(--chart-1);
+        inline-size: 0.875rem;
+        block-size: 0.625rem;
+        border: 1px solid color-mix(in oklab, var(--kp-week-ink) 45%, var(--border));
+        border-radius: var(--kp-week-pill-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
+        background: color-mix(in oklab, var(--kp-week-ink) 14%, var(--card));
+    }
+
+    /* The items that did not fit are listed in the `+N` menu; the narrow
+ * layout shows every item and needs none of it. */
+    @container kp-week (min-width: 40rem) {
+        .kp-week__pill[data-kp-overflow] {
+            display: none;
+        }
+    }
+
+    @container kp-week (max-width: 39.99rem) {
+        .kp-week__grid {
+            --kp-week-mode: list;
+            grid-template-columns: minmax(0, 1fr);
+            grid-template-rows: none;
+            padding-block-end: 0;
+        }
+
+        .kp-week__nav {
+            display: grid;
+            grid-template-columns: auto auto auto;
+            justify-content: start;
+        }
+
+        .kp-week__title {
+            grid-column: 1 / -1;
+            grid-row: 1;
+        }
+
+        .kp-week__axis,
+        .kp-week__now,
+        .kp-week__more {
+            display: none;
+        }
+
+        .kp-week__day {
+            display: grid;
+            grid-template-columns: var(--kp-week-day-label, 5.5rem) minmax(0, 1fr);
+            column-gap: var(--kp-space-sm, 0.5rem);
+            align-items: start;
+            padding-block: var(--kp-space-sm, 0.5rem);
+            border-block-end: 1px solid var(--border);
+        }
+
+        .kp-week__head {
+            grid-row: auto;
+            grid-column: 1;
+            grid-template-columns: auto auto;
+            align-content: start;
+            padding: 0.125rem 0 0;
+        }
+
+        .kp-week__date {
+            display: inline;
+            grid-column: 1 / -1;
+            letter-spacing: 0;
+            text-transform: none;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .kp-week__today {
+            grid-column: 1 / -1;
+        }
+
+        .kp-week__col {
+            grid-row: auto;
+            grid-column: 2;
+            display: flex;
+            flex-direction: column;
+            gap: var(--kp-week-gap, 0.25rem);
+            min-block-size: var(--kp-week-pill, 1.5rem);
+            border: 0;
+            background: none;
+        }
+
+        .kp-week__day[data-kp-today] .kp-week__col {
+            background: none;
+        }
+
+        .kp-week__pill {
+            position: static;
+            inset: auto;
+            flex: none;
+        }
+
+        .kp-week__ghost {
+            position: static;
+            inset: auto;
+        }
+    }
+
+    /* --- Run timeline: one bar per run on a time axis ----------------------
+ * `section.kp-gantt[data-kp-gantt]` (js/gantt.js). A bar of range buttons, a
+ * Live button and the selected range; under it a frame with the axis on top
+ * (it stays while the lanes scroll), one lane per job with its label on the
+ * left, and the runs as bars. Every bar is placed by the stylesheet from
+ * three numbers the script keeps current (`--kp-g-from`, `--kp-g-span`,
+ * `--kp-g-now`, seconds from a base moment) and its own two (`--kp-g-s`,
+ * `--kp-g-e`), so a growing bar and a moving window repaint nothing else.
+ * A lane's height is its rows times --kp-gantt-row and never shrinks while
+ * the window stays: a run that finishes moves nothing.
+ *
+ * The state is a shape as well as a colour [DI4]: ok is solid; failed is
+ * solid, taller, with a cap at its end and a cross where the bar is wide
+ * enough; running is striped with a bright leading edge; queued is hollow
+ * and dashed. Knobs [KT6]: `--kp-gantt-label` (9rem, the lanes' labels),
+ * `--kp-gantt-row` (1.75rem), `--kp-gantt-bar` (1.125rem),
+ * `--kp-gantt-bar-failed` (1.5rem), `--kp-gantt-bar-min` (0.5rem),
+ * `--kp-gantt-height` (22rem, past which the lanes scroll),
+ * `--kp-gantt-bar-radius`, `--kp-gantt-now` (the line for now),
+ * `--kp-gantt-axis` (1.75rem, the axis row). */
+    .kp-gantt {
+        container: kp-gantt / inline-size;
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+    }
+
+    .kp-gantt__bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-gantt__selection {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        margin-inline-start: auto;
+        visibility: hidden;
+    }
+
+    .kp-gantt__selection[data-kp-active] {
+        visibility: visible;
+    }
+
+    .kp-gantt__selected {
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-gantt__live[aria-pressed='true']::before {
+        content: '';
+        display: inline-block;
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        margin-inline-end: 0.375rem;
+        border-radius: 50%;
+        background: var(--success);
+    }
+
+    .kp-gantt__frame {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground, var(--foreground));
+    }
+
+    .kp-gantt__scroll {
+        max-block-size: var(--kp-gantt-height, 22rem);
+        overflow-x: hidden;
+        overflow-y: auto;
+        touch-action: pan-y;
+        user-select: none;
+    }
+
+    .kp-gantt__body {
+        --kp-gantt-pad: 0.25rem;
+        position: relative;
+        display: grid;
+        grid-template-columns: var(--kp-gantt-label, 9rem) minmax(0, 1fr);
+        isolation: isolate;
+    }
+
+    .kp-gantt__corner,
+    .kp-gantt__axis {
+        grid-row: 1;
+        position: sticky;
+        inset-block-start: 0;
+        z-index: 3;
+        box-sizing: border-box;
+        block-size: var(--kp-gantt-axis, 1.75rem);
+        border-block-end: 1px solid var(--border-strong);
+        background: var(--card);
+    }
+
+    .kp-gantt__corner {
+        grid-column: 1;
+    }
+
+    .kp-gantt__axis {
+        grid-column: 2;
+        overflow: hidden;
+    }
+
+    .kp-gantt__tick {
+        position: absolute;
+        inset-inline-start: calc((var(--kp-g-t, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 21600) * 100%);
+        inset-block-start: 0;
+        padding-inline-start: 0.3125rem;
+        color: var(--muted-foreground);
+        font-size: 0.6875rem;
+        font-variant-numeric: tabular-nums;
+        line-height: var(--kp-gantt-axis, 1.75rem);
+        white-space: nowrap;
+    }
+
+    .kp-gantt__tick[data-kp-day] {
+        color: var(--foreground);
+        font-weight: 600;
+    }
+
+    .kp-gantt__lines {
+        grid-column: 2;
+        grid-row: 2 / span var(--kp-g-lanes, 1);
+        position: relative;
+        overflow: hidden;
+        pointer-events: none;
+    }
+
+    .kp-gantt__rule {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: calc((var(--kp-g-t, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 21600) * 100%);
+        inline-size: 0;
+        border-inline-start: 1px solid var(--border);
+    }
+
+    .kp-gantt__lane {
+        grid-column: 1;
+        display: flex;
+        align-items: center;
+        min-inline-size: 0;
+        box-sizing: border-box;
+        padding: 0 var(--kp-space-sm, 0.5rem);
+        border-block-end: 1px solid var(--border);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-gantt__lane > span {
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kp-gantt__track {
+        grid-column: 2;
+        position: relative;
+        overflow: hidden;
+        box-sizing: border-box;
+        block-size: calc(var(--kp-g-rows, 1) * var(--kp-gantt-row, 1.75rem) + 2 * var(--kp-gantt-pad));
+        border-block-end: 1px solid var(--border);
+    }
+
+    .kp-gantt__plot {
+        grid-column: 2;
+        grid-row: 2 / span var(--kp-g-lanes, 1);
+        position: relative;
+        overflow: hidden;
+        pointer-events: none;
+    }
+
+    .kp-gantt__now {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: calc((var(--kp-g-now, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 21600) * 100%);
+        inline-size: 0;
+        border-inline-start: 2px solid var(--kp-gantt-now, var(--destructive));
+    }
+
+    .kp-gantt__now[data-kp-out] {
+        display: none;
+    }
+
+    .kp-gantt__select,
+    .kp-gantt__brush {
+        position: absolute;
+        inset-block: 0;
+        background: color-mix(in oklab, var(--primary) 14%, transparent);
+        border-inline: 1px solid var(--primary);
+    }
+
+    .kp-gantt__select {
+        inset-inline-start: calc((var(--kp-g-s, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 21600) * 100%);
+        inline-size: calc((var(--kp-g-e, 0) - var(--kp-g-s, 0)) / var(--kp-g-span, 21600) * 100%);
+    }
+
+    .kp-gantt__brush {
+        inset-inline-start: var(--kp-g-x, 0);
+        inline-size: var(--kp-g-w, 0);
+        border-style: dashed;
+    }
+
+    .kp-gantt__select[hidden],
+    .kp-gantt__brush[hidden] {
+        display: none;
+    }
+
+    .kp-gantt__run {
+        --kp-gantt-fill: var(--success);
+        --kp-gantt-ink: var(--success-foreground);
+        container: kp-gantt-run / inline-size;
+        box-sizing: border-box;
+        position: absolute;
+        inset-block-start: calc(
+            var(--kp-gantt-pad) + var(--kp-g-row, 0) * var(--kp-gantt-row, 1.75rem) + (var(--kp-gantt-row, 1.75rem) - var(--kp-gantt-bar, 1.125rem)) /
+                2
+        );
+        inset-inline-start: calc((var(--kp-g-s, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 21600) * 100%);
+        inline-size: max(var(--kp-gantt-bar-min, 0.5rem), calc((var(--kp-g-e, 0) - var(--kp-g-s, 0)) / var(--kp-g-span, 21600) * 100%));
+        block-size: var(--kp-gantt-bar, 1.125rem);
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        border: 1px solid var(--kp-gantt-fill);
+        border-radius: var(--kp-gantt-bar-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
+        background: var(--kp-gantt-fill);
+        color: var(--kp-gantt-ink);
+        font: inherit;
+        font-size: 0.6875rem;
+        text-align: start;
+        cursor: pointer;
+    }
+
+    .kp-gantt__run[hidden] {
+        display: none;
+    }
+
+    .kp-gantt__run:is(button):hover {
+        z-index: 1;
+        box-shadow: 0 0 0 2px var(--foreground);
+    }
+
+    .kp-gantt__label {
+        display: block;
+        padding-inline: 0.375rem;
+        overflow: hidden;
+        line-height: calc(var(--kp-gantt-bar, 1.125rem) - 2px);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    .kp-gantt__run[data-kp-state='failed'] {
+        --kp-gantt-fill: var(--destructive);
+        --kp-gantt-ink: var(--destructive-foreground);
+        inset-block-start: calc(
+            var(--kp-gantt-pad) + var(--kp-g-row, 0) * var(--kp-gantt-row, 1.75rem) +
+                (var(--kp-gantt-row, 1.75rem) - var(--kp-gantt-bar-failed, 1.5rem)) / 2
+        );
+        block-size: var(--kp-gantt-bar-failed, 1.5rem);
+        box-shadow: inset -3px 0 0 var(--kp-gantt-ink);
+    }
+
+    .kp-gantt__run[data-kp-state='failed'] .kp-gantt__label {
+        line-height: calc(var(--kp-gantt-bar-failed, 1.5rem) - 2px);
+    }
+
+    .kp-gantt__run[data-kp-state='failed']:hover {
+        box-shadow:
+            inset -3px 0 0 var(--kp-gantt-ink),
+            0 0 0 2px var(--foreground);
+    }
+
+    .kp-gantt__run[data-kp-state='running'],
+    .kp-gantt__swatch[data-kp-state='running'] {
+        --kp-gantt-fill: var(--warning);
+        --kp-gantt-ink: var(--warning-foreground);
+        background-image: repeating-linear-gradient(
+            135deg,
+            transparent 0 0.375rem,
+            hsl(from var(--warning-foreground) h s l / 0.22) 0.375rem 0.75rem
+        );
+        background-size: 1.0607rem 1.0607rem;
+        box-shadow: inset -3px 0 0 var(--kp-gantt-ink);
+    }
+
+    .kp-gantt__run[data-kp-state='running']:hover {
+        box-shadow:
+            inset -3px 0 0 var(--kp-gantt-ink),
+            0 0 0 2px var(--foreground);
+    }
+
+    .kp-gantt__run[data-kp-state='queued'],
+    .kp-gantt__swatch[data-kp-state='queued'] {
+        --kp-gantt-fill: var(--muted-foreground);
+        --kp-gantt-ink: var(--foreground);
+        background: transparent;
+        border-style: dashed;
+    }
+
+    .kp-gantt__run[data-kp-state='failed'] .kp-gantt__label::before {
+        content: var(--kp-glyph-failed, '✕');
+        margin-inline-end: 0.25rem;
+        font-weight: 700;
+    }
+
+    @container kp-gantt-run (max-width: 2rem) {
+        .kp-gantt__label {
+            display: none;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-gantt__run[data-kp-state='running'] {
+            animation: kp-gantt-march 1600ms linear infinite;
+        }
+    }
+
+    @keyframes kp-gantt-march {
+        to {
+            background-position: 1.0607rem 0;
+        }
+    }
+
+    .kp-gantt__ghost.kp-gantt__lane {
+        border-block-end-color: var(--border);
+    }
+
+    .kp-gantt__ghost.kp-gantt__lane > .kp-skeleton {
+        inline-size: 70%;
+        block-size: 0.75rem;
+    }
+
+    .kp-gantt__ghost .kp-gantt__run {
+        inset-inline-start: calc(var(--kp-g-at, 0) * 100%);
+        inline-size: calc(var(--kp-g-width, 0.1) * 100%);
+        border: 0;
+        cursor: default;
+        background: var(--muted);
+    }
+
+    .kp-gantt__state {
+        position: absolute;
+        inset: var(--kp-gantt-axis, 1.75rem) 0 0;
+        z-index: 4;
+        display: grid;
+        place-items: center;
+        margin: 0;
+        padding: var(--kp-space-md, 0.75rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        text-align: center;
+        pointer-events: none;
+    }
+
+    .kp-gantt__state:empty {
+        display: none;
+    }
+
+    .kp-gantt__state[data-kp-state='error'] {
+        color: var(--destructive);
+    }
+
+    .kp-gantt[data-kp-state='ready'] .kp-gantt__body:not(:has(.kp-gantt__lane)) {
+        min-block-size: 5.25rem;
+    }
+
+    .kp-gantt__legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-gantt__legend li {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+    }
+
+    .kp-gantt__swatch {
+        --kp-gantt-fill: var(--success);
+        box-sizing: border-box;
+        inline-size: 1.25rem;
+        block-size: 0.625rem;
+        border: 1px solid var(--kp-gantt-fill);
+        border-radius: var(--kp-gantt-bar-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
+        background: var(--kp-gantt-fill);
+    }
+
+    .kp-gantt__swatch[data-kp-state='failed'] {
+        --kp-gantt-fill: var(--destructive);
+        block-size: 0.8125rem;
+        box-shadow: inset -3px 0 0 var(--destructive-foreground);
+    }
+
+    .kp-gantt__hint {
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-gantt__announce {
+        position: absolute;
+        inline-size: 1px;
+        block-size: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        border: 0;
+        clip-path: inset(50%);
+    }
+
+    @container kp-gantt (max-width: 32rem) {
+        .kp-gantt__body {
+            --kp-gantt-label: 5.5rem;
+        }
+
+        .kp-gantt__lane {
+            font-size: var(--kp-text-xs, 0.75rem);
+        }
+    }
+
     /* Diff view [TH54] */
     .kp-diff {
         margin: 0;
@@ -20163,6 +21035,41 @@
 }
 
 @layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: a HUD readout. One notched corner (cut outwards past the box so the focus ring stays whole), a hard 3px bar on the leading edge, a running bar that burns. */
+    [data-theme='cyberpunk'] .kp-week {
+        --kp-week-pill-radius: 0;
+        --kp-week-now: var(--primary);
+    }
+    [data-theme='cyberpunk'] .kp-gantt {
+        --kp-gantt-bar-radius: 0;
+        --kp-gantt-now: var(--primary);
+    }
+    [data-theme='cyberpunk'] :is(.kp-week__pill, .kp-gantt__run) {
+        clip-path: polygon(
+            -8px -8px,
+            calc(100% + 8px) -8px,
+            calc(100% + 8px) calc(100% - var(--fx-notch-sm) - 8px),
+            calc(100% - var(--fx-notch-sm) - 8px) calc(100% + 8px),
+            -8px calc(100% + 8px)
+        );
+    }
+    [data-theme='cyberpunk'] .kp-week__pill {
+        border-color: var(--kp-hairline);
+        border-inline-start: 3px solid var(--kp-week-ink);
+    }
+    [data-theme='cyberpunk'] .kp-week__time {
+        font-family: var(--kp-mono);
+    }
+    [data-theme='cyberpunk'] .kp-gantt__run[data-kp-state='running'] {
+        filter: drop-shadow(0 0 3px var(--kp-gantt-fill));
+    }
+    [data-theme='cyberpunk'] .kp-gantt__tick,
+    [data-theme='cyberpunk'] .kp-week__axis > span {
+        font-family: var(--kp-mono);
+    }
+}
+
+@layer kp.register {
     /* @kp-soft/themes — css/synthwave-register.css
    The synthwave register, 5.0.0 [S48, LIFT_PLAN row 1]: the horizon
    register. Scoped to [data-theme='synthwave'] and inert elsewhere;
@@ -23685,7 +24592,9 @@
             :is(.kp-calendar--busy-days, .kp-calendar--busy-whole:not(:has(> .kp-calendar__grid[aria-busy='true'])))
             .kp-calendar__day[data-kp-tone='loading']
             > .kp-calendar__day-busy:not([data-kp-leaving])::after,
-        [data-theme='synthwave'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy:not([data-kp-leaving])::after {
+        [data-theme='synthwave']
+            .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true'])
+            > .kp-calendar__busy:not([data-kp-leaving])::after {
             content: '';
             position: absolute;
             inset: 0;
@@ -24567,6 +25476,32 @@
         box-shadow:
             inset 0 0 0 1.5px var(--primary),
             0 0 8px hsl(from var(--primary) h s l / 0.55);
+    }
+}
+
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: the arcade floor. A running bar is the pink-to-cyan beam with its stripes over it and a neon halo; the grid lines are the floor's. */
+    [data-theme='synthwave'] .kp-week {
+        --kp-week-pill-radius: 3px;
+        --kp-week-now: var(--primary);
+    }
+    [data-theme='synthwave'] .kp-gantt {
+        --kp-gantt-bar-radius: 3px;
+        --kp-gantt-now: var(--primary);
+    }
+    [data-theme='synthwave'] .kp-gantt__run[data-kp-state='running'] {
+        background-image:
+            repeating-linear-gradient(135deg, transparent 0 0.375rem, hsl(from var(--warning-foreground) h s l / 0.22) 0.375rem 0.75rem),
+            linear-gradient(90deg, var(--primary), var(--secondary, var(--accent, var(--primary))));
+        filter: drop-shadow(0 0 4px hsl(from var(--primary) h s l / 0.7));
+    }
+    [data-theme='synthwave'] .kp-week__pill[data-kp-state='next'] {
+        filter: drop-shadow(0 0 4px hsl(from var(--ring) h s l / 0.7));
+    }
+    [data-theme='synthwave'] .kp-gantt__tick,
+    [data-theme='synthwave'] .kp-week__dow {
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
     }
 }
 
@@ -27251,7 +28186,6 @@
         pointer-events: none;
     }
 
-
     [data-theme='phantom'] .kp-dialog__title {
         /* The title at the package's metrics [scope-87]: Kenny chose the fixed size
            over the theme's own on 2026-10-03 (research/dialog-title). */
@@ -28579,13 +29513,15 @@
         }
 
         /* A rail (slim) keeps its width glide beside the throw. */
-        [data-theme='phantom'] .kp-sidenav[data-kp-sidenav-slim]:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+        [data-theme='phantom']
+            .kp-sidenav[data-kp-sidenav-slim]:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
             transition:
                 translate 400ms cubic-bezier(0.81, 0, 0, 1),
                 inline-size 400ms cubic-bezier(0.81, 0, 0, 1);
         }
 
-        [data-theme='phantom'] .kp-sidenav[data-kp-sidenav-slim]:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='false'] {
+        [data-theme='phantom']
+            .kp-sidenav[data-kp-sidenav-slim]:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='false'] {
             transition:
                 translate 400ms cubic-bezier(1, 0, 0.19, 1) 300ms,
                 inline-size 400ms cubic-bezier(1, 0, 0.19, 1);
@@ -28800,6 +29736,26 @@
     }
     [data-theme='phantom'] .kp-segmented--chips > .kp-segmented__item[aria-pressed='true'] {
         box-shadow: 3px 3px 0 var(--kp-red-deep, var(--border-strong));
+    }
+}
+
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: slanted plates. Pills and bars lean with the theme's skew, in the display face, as its badges do; the text keeps the lean. */
+    [data-theme='phantom'] .kp-week {
+        --kp-week-pill-radius: 0;
+    }
+    [data-theme='phantom'] .kp-gantt {
+        --kp-gantt-bar-radius: 0;
+    }
+    [data-theme='phantom'] :is(.kp-week__pill, .kp-gantt__run) {
+        transform: skewX(var(--kp-skew));
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    [data-theme='phantom'] .kp-week__pill:is(button)[data-kp-state='next'] {
+        transform: skewX(var(--kp-skew));
     }
 }
 
@@ -31237,7 +32193,8 @@
 
     /* The cursor at the line a menu or popover is printing; at rest it is not
        drawn (nothing sits on a part that is not waiting, G16). */
-    [data-theme='terminal'] :is(.kp-popover[popover], .kp-menu-button > .kp-menu, .kp-combobox__list, .kp-datepicker__panel, .kp-tour):not(.kp-tooltip)::before,
+    [data-theme='terminal']
+        :is(.kp-popover[popover], .kp-menu-button > .kp-menu, .kp-combobox__list, .kp-datepicker__panel, .kp-tour):not(.kp-tooltip)::before,
     [data-theme='terminal'] .kp-nav__links > li > .kp-nav__menu::after {
         content: '';
         position: absolute;
@@ -32328,7 +33285,9 @@
             :is(.kp-calendar--busy-days, .kp-calendar--busy-whole:not(:has(> .kp-calendar__grid[aria-busy='true'])))
             .kp-calendar__day[data-kp-tone='loading']
             > .kp-calendar__day-busy:not([data-kp-leaving])::after,
-        [data-theme='terminal'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy:not([data-kp-leaving])::after {
+        [data-theme='terminal']
+            .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true'])
+            > .kp-calendar__busy:not([data-kp-leaving])::after {
             content: '';
             position: absolute;
             inset-block: 0;
@@ -32796,6 +33755,42 @@
     }
     [data-theme='terminal'] .kp-toolbar__key.kp-kbd {
         color: var(--muted-foreground);
+    }
+}
+
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: program output. No plates: the time is in brackets, bars are blocks of the phosphor, the running bar steps instead of gliding, rules are dashed. */
+    [data-theme='terminal'] .kp-week {
+        --kp-week-pill-radius: 0;
+        font-family: var(--theme-font-mono, var(--font-mono, monospace));
+    }
+    [data-theme='terminal'] .kp-gantt {
+        --kp-gantt-bar-radius: 0;
+        font-family: var(--theme-font-mono, var(--font-mono, monospace));
+    }
+    [data-theme='terminal'] .kp-week__pill {
+        background: transparent;
+    }
+    [data-theme='terminal'] .kp-week__time::before {
+        content: '[';
+    }
+    [data-theme='terminal'] .kp-week__time::after {
+        content: ']';
+    }
+    [data-theme='terminal'] .kp-week__col,
+    [data-theme='terminal'] .kp-gantt__rule {
+        border-inline-style: dashed;
+    }
+    [data-theme='terminal'] .kp-gantt__run[data-kp-state='running'] {
+        animation-timing-function: steps(6, end);
+    }
+    [data-theme='terminal'] .kp-week__now,
+    [data-theme='terminal'] .kp-gantt__now {
+        border-color: var(--primary);
+        box-shadow: var(--kp-bloom);
+    }
+    [data-theme='terminal'] .kp-week {
+        --kp-week-now: var(--primary);
     }
 }
 
@@ -36671,10 +37666,7 @@
            (js/motion.js), and the date picker's playClose(), whose name stays the same on the
            union of its opening mark and the closing marks (lesson 10). */
         [data-theme='brutalism']
-            :is(
-                .kp-combobox__list:popover-open,
-                .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open
-            ) {
+            :is(.kp-combobox__list:popover-open, .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open) {
             --kp-sig-br-h: var(--kp-sig-br-h-plate);
             --kp-sig-br-sh: var(--kp-sig-br-drop);
             animation: kp-sig-brutalism-drop var(--kp-sig-br-time) var(--kp-sig-br-fall) backwards;
@@ -36741,7 +37733,11 @@
                 animation: kp-sig-brutalism-leave var(--kp-sig-br-time) var(--kp-sig-br-up) forwards;
             }
 
-            [data-theme='brutalism'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu {
+            [data-theme='brutalism']
+                .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing])
+                .kp-nav__links
+                > li
+                > .kp-nav__menu {
                 animation: none;
                 transition: none;
             }
@@ -36841,7 +37837,9 @@
 
         /* Each slab's shadow stays on the ground while the panel is up (the current one sits in
            its footprint, so its shadow shows only while it is lifted). */
-        [data-theme='brutalism'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) :is(.kp-sidenav__link, .kp-sidenav__category-toggle):not([aria-current='page'], :hover, :focus-visible) {
+        [data-theme='brutalism']
+            .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])
+            :is(.kp-sidenav__link, .kp-sidenav__category-toggle):not([aria-current='page'], :hover, :focus-visible) {
             box-shadow: calc(3px + var(--kp-sig-br-lift)) calc(3px + var(--kp-sig-br-lift)) 0 var(--foreground);
         }
 
@@ -37033,6 +38031,41 @@
     }
     [data-theme='brutalism'] .kp-segmented--chips > .kp-segmented__item[aria-pressed='true'] {
         box-shadow: var(--kp-shadow);
+    }
+}
+
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: black boxes. A 2px black frame and a hard offset shadow on every pill and bar, no radius, no glide on the stripes. */
+    [data-theme='brutalism'] .kp-week {
+        --kp-week-pill-radius: 0;
+    }
+    [data-theme='brutalism'] .kp-gantt {
+        --kp-gantt-bar-radius: 0;
+        --kp-gantt-row: 2rem;
+        --kp-gantt-bar: 1.25rem;
+        --kp-gantt-bar-failed: 1.625rem;
+    }
+    [data-theme='brutalism'] :is(.kp-week__pill, .kp-gantt__run) {
+        border: 2px solid var(--foreground);
+        filter: drop-shadow(2px 2px 0 var(--foreground));
+    }
+    [data-theme='brutalism'] .kp-week__pill:is([data-kp-state='reference'], [data-kp-state='off'], [data-kp-state='skipped']) {
+        filter: none;
+    }
+    [data-theme='brutalism'] .kp-gantt__run[data-kp-state='running'] {
+        animation: none;
+    }
+    [data-theme='brutalism'] .kp-gantt__run[data-kp-state='queued'] {
+        border-style: dashed;
+        filter: none;
+    }
+    [data-theme='brutalism'] :is(.kp-week__col, .kp-gantt__rule) {
+        border-inline-color: var(--foreground);
+    }
+    [data-theme='brutalism'] :is(.kp-week__dow, .kp-gantt__tick, .kp-gantt__lane) {
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
     }
 }
 
@@ -39688,7 +40721,9 @@
             :is(.kp-calendar--busy-days, .kp-calendar--busy-whole:not(:has(> .kp-calendar__grid[aria-busy='true'])))
             .kp-calendar__day[data-kp-tone='loading']
             > .kp-calendar__day-busy:not([data-kp-leaving])::after,
-        [data-theme='titanium'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy:not([data-kp-leaving])::after {
+        [data-theme='titanium']
+            .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true'])
+            > .kp-calendar__busy:not([data-kp-leaving])::after {
             content: '';
             position: absolute;
             inset: 0;
@@ -40491,6 +41526,30 @@
             0 100%,
             0 var(--kp-chamfer, 0.4rem)
         );
+    }
+}
+
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: machined plates. The chamfer cuts the top-left and the bottom-right corner (cut outwards past the box so the focus ring stays whole); the running bar's feed is constant and linear, as everything here moves. */
+    [data-theme='titanium'] .kp-week {
+        --kp-week-pill-radius: 0;
+    }
+    [data-theme='titanium'] .kp-gantt {
+        --kp-gantt-bar-radius: 0;
+    }
+    [data-theme='titanium'] :is(.kp-week__pill, .kp-gantt__run) {
+        clip-path: polygon(
+            calc(var(--kp-chamfer, 0.5rem) * 0.6 + 8px) -8px,
+            calc(100% + 8px) -8px,
+            calc(100% + 8px) calc(100% - var(--kp-chamfer, 0.5rem) * 0.6 - 8px),
+            calc(100% - var(--kp-chamfer, 0.5rem) * 0.6 - 8px) calc(100% + 8px),
+            -8px calc(100% + 8px),
+            -8px calc(var(--kp-chamfer, 0.5rem) * 0.6 + 8px)
+        );
+        border-color: var(--border-strong);
+    }
+    [data-theme='titanium'] :is(.kp-week__time, .kp-gantt__tick, .kp-week__axis > span) {
+        font-family: var(--theme-font-mono);
     }
 }
 
@@ -44719,11 +45778,7 @@
         inset-block-start: calc(-1 * var(--kp-tabbar-pad, 0.25rem) - 0.4rem);
         block-size: 0.7rem;
         border-radius: 2px;
-        background: repeating-linear-gradient(
-            -45deg,
-            hsl(from var(--primary) h s l / 0.85) 0 5px,
-            hsl(from var(--primary) h s l / 0.55) 5px 10px
-        );
+        background: repeating-linear-gradient(-45deg, hsl(from var(--primary) h s l / 0.85) 0 5px, hsl(from var(--primary) h s l / 0.55) 5px 10px);
         rotate: -1.5deg;
         scale: 0 1;
     }
@@ -44751,6 +45806,29 @@
     [data-theme='pastel'] .kp-tabbar__badge {
         rotate: 6deg;
         border: 2px solid var(--card);
+    }
+}
+
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: stickers. Round, with a 2px edge and a solid peel under them; the running bar is a candy stripe. */
+    [data-theme='pastel'] .kp-week {
+        --kp-week-pill-radius: 999px;
+    }
+    [data-theme='pastel'] .kp-gantt {
+        --kp-gantt-bar-radius: 999px;
+    }
+    [data-theme='pastel'] :is(.kp-week__pill, .kp-gantt__run) {
+        border-width: 2px;
+        filter: drop-shadow(0 2px 0 hsl(from var(--foreground) h s l / 0.22));
+    }
+    [data-theme='pastel'] .kp-week__pill {
+        padding-inline: 0.625rem;
+    }
+    [data-theme='pastel'] .kp-gantt__label {
+        padding-inline: 0.625rem;
+    }
+    [data-theme='pastel'] .kp-gantt__run[data-kp-state='queued'] {
+        border-style: dashed;
     }
 }
 
@@ -48500,13 +49578,17 @@
             flex-wrap: nowrap;
             max-block-size: 0;
             opacity: 0;
-            transition: max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-wither), opacity var(--kp-sig-fo-time) var(--kp-sig-fo-wither);
+            transition:
+                max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-wither),
+                opacity var(--kp-sig-fo-time) var(--kp-sig-fo-wither);
         }
 
         [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
             max-block-size: var(--kp-nav-links-height, 25rem);
             opacity: 1;
-            transition: max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-grow), opacity var(--kp-sig-fo-time) var(--kp-sig-fo-grow);
+            transition:
+                max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-grow),
+                opacity var(--kp-sig-fo-time) var(--kp-sig-fo-grow);
         }
 
         @starting-style {
@@ -48519,7 +49601,9 @@
         [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__links {
             max-block-size: 0;
             opacity: 0;
-            transition: max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-wither), opacity var(--kp-sig-fo-time) var(--kp-sig-fo-wither);
+            transition:
+                max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-wither),
+                opacity var(--kp-sig-fo-time) var(--kp-sig-fo-wither);
         }
 
         @media (prefers-reduced-motion: no-preference) {
@@ -48585,7 +49669,10 @@
         [data-theme='forest']
             .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']):is(
                 [data-kp-sidenav-open='false'],
-                [data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-peek='open'], [data-kp-sidenav-expand-on-hover]:not([data-kp-sidenav-attached]):hover)
+                [data-kp-sidenav-slim-collapsed]:not(
+                    [data-kp-sidenav-peek='open'],
+                    [data-kp-sidenav-expand-on-hover]:not([data-kp-sidenav-attached]):hover
+                )
             ) {
             transition:
                 translate var(--kp-sig-fo-time) var(--kp-sig-fo-wither),
@@ -49119,6 +50206,25 @@
 
     [data-theme='forest'] .kp-tabbar__badge {
         border-radius: var(--kp-sig-fo-plate, var(--radius));
+    }
+}
+
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: leaves. Two rounded corners and two nearly square on every pill and bar, the way the forest cuts a chip. */
+    [data-theme='forest'] .kp-week {
+        --kp-week-pill-radius: 0.7rem 0.15rem 0.7rem 0.15rem;
+    }
+    [data-theme='forest'] .kp-gantt {
+        --kp-gantt-bar-radius: 0.6rem 0.12rem 0.6rem 0.12rem;
+    }
+    [data-theme='forest'] .kp-week__pill {
+        padding-inline: 0.625rem;
+    }
+    [data-theme='forest'] .kp-gantt__label {
+        padding-inline: 0.625rem;
+    }
+    [data-theme='forest'] .kp-gantt__lane {
+        font-style: italic;
     }
 }
 
@@ -53351,13 +54457,38 @@
         --kp-kbd-edge: var(--primary);
         --kp-kbd-ground: var(--card);
         --kp-kbd-foot: 1px;
-        box-shadow: inset 0 0 0 2px var(--card), inset 0 0 0 3px hsl(from var(--primary) h s l / 0.5);
+        box-shadow:
+            inset 0 0 0 2px var(--card),
+            inset 0 0 0 3px hsl(from var(--primary) h s l / 0.5);
         padding-inline: 0.4rem;
     }
     [data-theme='deco'] .kp-segmented--chips > .kp-segmented__item[aria-pressed='true'] {
         box-shadow:
             inset 0 0 0 2px var(--background),
             inset 0 0 0 3px hsl(from var(--primary) h s l / 0.7);
+    }
+}
+
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: an inlay. Pills are a double rule in the series ink, bars a double rule at their ends, the axis in spaced capitals. */
+    [data-theme='deco'] .kp-week {
+        --kp-week-pill-radius: 0;
+    }
+    [data-theme='deco'] .kp-gantt {
+        --kp-gantt-bar-radius: 0;
+    }
+    [data-theme='deco'] .kp-week__pill:not([data-kp-state='reference']) {
+        border-style: double;
+        border-width: 3px;
+        padding-inline: 0.25rem;
+    }
+    [data-theme='deco'] .kp-gantt__run:not([data-kp-state='queued']) {
+        border-inline-style: double;
+        border-inline-width: 3px;
+    }
+    [data-theme='deco'] :is(.kp-week__dow, .kp-gantt__tick, .kp-gantt__lane) {
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
     }
 }
 
@@ -56067,6 +57198,30 @@
     }
 }
 
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: daylight. Pills and bars are soft capsules; the column dividers are the faintest line there is. */
+    [data-theme='light'] .kp-week {
+        --kp-week-pill-radius: 999px;
+    }
+    [data-theme='light'] .kp-gantt {
+        --kp-gantt-bar-radius: 999px;
+    }
+    [data-theme='light'] .kp-week__pill {
+        padding-inline: 0.625rem;
+        border-color: transparent;
+    }
+    [data-theme='light'] .kp-gantt__label {
+        padding-inline: 0.625rem;
+    }
+    [data-theme='light'] .kp-week__col,
+    [data-theme='light'] .kp-gantt__rule {
+        border-inline-color: hsl(from var(--border) h s l / 0.6);
+    }
+    [data-theme='light'] .kp-gantt__run[data-kp-state='queued'] {
+        border-color: var(--border-strong);
+    }
+}
+
 /* The red plate's polar position round the black ink: --kp-sig-gr-a is its
    angle (it only ever grows: screen y points down, so a growing angle is
    clockwise, in either text direction) and --kp-sig-gr-q its distance (1 the
@@ -56348,7 +57503,6 @@
         background: var(--background);
         border-block-end: 0;
     }
-
 
     [data-theme='grotesk'] .kp-nav__brand {
         grid-column: 1 / 4;
@@ -57043,7 +58197,6 @@
         color: var(--foreground);
         font-weight: 700;
     }
-
 
     [data-theme='grotesk'] .kp-timeline {
         border-inline-start: 3px solid var(--foreground);
@@ -58907,8 +60060,7 @@
 
     /* The windows that slip most: the palette, the shortcuts sheet, the tour's card, the picker's
        panel, the combobox's list, the bar's panels. */
-    [data-theme='grotesk']
-        :is(.kp-palette, .kp-shortcuts, .kp-tour, .kp-datepicker__panel, .kp-combobox__list, .kp-nav__menu, .kp-alarm__panel) {
+    [data-theme='grotesk'] :is(.kp-palette, .kp-shortcuts, .kp-tour, .kp-datepicker__panel, .kp-combobox__list, .kp-nav__menu, .kp-alarm__panel) {
         --kp-sig-gr-r: 8px;
     }
 
@@ -59313,6 +60465,29 @@
        red bar under its word. The rule is the track's own foot. */
     [data-theme='grotesk'] .kp-segmented:not(.kp-segmented--chips) {
         border-block-end: 1px solid var(--foreground);
+    }
+}
+
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: flat and heavy. Hard-edged blocks in the bold grotesque, a thick leading rule, never wrapping: the type is wide, so the pill and the bar clip it instead. */
+    [data-theme='grotesk'] .kp-week {
+        --kp-week-pill-radius: 0;
+    }
+    [data-theme='grotesk'] .kp-gantt {
+        --kp-gantt-bar-radius: 0;
+    }
+    [data-theme='grotesk'] :is(.kp-week__pill, .kp-gantt__run) {
+        font-weight: 700;
+        letter-spacing: -0.01em;
+    }
+    [data-theme='grotesk'] .kp-week__pill {
+        border-inline-start-width: 5px;
+    }
+    [data-theme='grotesk'] .kp-gantt__bar {
+        flex-wrap: wrap;
+    }
+    [data-theme='grotesk'] :is(.kp-week__col, .kp-gantt__rule) {
+        border-inline-width: 2px;
     }
 }
 
@@ -62351,12 +63526,20 @@
                 animation: kp-sig-blueprint-trace-out var(--kp-sig-bp-panel) linear reverse forwards;
             }
 
-            [data-theme='blueprint'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu {
+            [data-theme='blueprint']
+                .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing])
+                .kp-nav__links
+                > li
+                > .kp-nav__menu {
                 animation: none;
                 transition: none;
             }
 
-            [data-theme='blueprint'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu::after {
+            [data-theme='blueprint']
+                .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing])
+                .kp-nav__links
+                > li
+                > .kp-nav__menu::after {
                 content: none;
             }
         }
@@ -63493,7 +64676,11 @@
         /* The pen and the construction line, the dialog's (its ::after). On the side navigation the
            line runs on the panel's own edge; on the alarm it runs on the alarm's frame, so the frame
            is what the pen constructs before the screen is inked. */
-        [data-theme='blueprint'] :is(.kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']), .kp-alarm[open]:not([data-kp-alarm-motion='still']))::after {
+        [data-theme='blueprint']
+            :is(
+                .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']),
+                .kp-alarm[open]:not([data-kp-alarm-motion='still'])
+            )::after {
             content: '';
             position: absolute;
             z-index: 4;
@@ -63648,7 +64835,8 @@
         --kp-seg-tracking: 0.08em;
         --kp-seg-case: uppercase;
         --kp-seg-track: transparent;
-        --kp-seg-thumb: repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / 0.34) 0 1px, transparent 1px 5px), hsl(from var(--primary) h s l / 0.1);
+        --kp-seg-thumb:
+            repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / 0.34) 0 1px, transparent 1px 5px), hsl(from var(--primary) h s l / 0.1);
         --kp-seg-thumb-ink: var(--foreground);
         --kp-seg-thumb-edge: 0 0 0 1px var(--primary);
         --kp-seg-thumb-lift: 0 0 0 0 transparent;
@@ -63673,6 +64861,26 @@
         --kp-kbd-foot: 1px;
         border-style: dashed;
         font-family: var(--theme-font-mono);
+    }
+}
+
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: a drawing. Open frames with a hatch for a fill, square corners, dashed witness lines. */
+    [data-theme='blueprint'] .kp-week {
+        --kp-week-pill-radius: 0;
+    }
+    [data-theme='blueprint'] .kp-gantt {
+        --kp-gantt-bar-radius: 0;
+    }
+    [data-theme='blueprint'] .kp-week__pill:not([data-kp-state='off'], [data-kp-state='skipped'], [data-kp-state='reference']) {
+        background-image: repeating-linear-gradient(45deg, hsl(from var(--kp-week-ink) h s l / 0.28) 0 1px, transparent 1px 5px);
+    }
+    [data-theme='blueprint'] .kp-week__col,
+    [data-theme='blueprint'] .kp-gantt__rule {
+        border-inline-style: dashed;
+    }
+    [data-theme='blueprint'] :is(.kp-week__time, .kp-gantt__tick, .kp-week__axis > span) {
+        font-family: var(--theme-font-mono, var(--font-mono, monospace));
     }
 }
 
@@ -67394,6 +68602,21 @@
         box-shadow:
             inset 0 1px 0 hsl(from var(--background) h s l / 0.7),
             0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring);
+    }
+}
+
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: label tape. Mono capitals on a 2px-cut strip, a hairline frame, the axis in the same tape face. */
+    [data-theme='nostromo'] .kp-week {
+        --kp-week-pill-radius: var(--kp-sig-no-tape, 2px);
+    }
+    [data-theme='nostromo'] .kp-gantt {
+        --kp-gantt-bar-radius: var(--kp-sig-no-tape, 2px);
+    }
+    [data-theme='nostromo'] :is(.kp-week__pill, .kp-gantt__run, .kp-week__dow, .kp-gantt__tick, .kp-gantt__lane) {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
     }
 }
 
@@ -71387,6 +72610,23 @@
     }
 }
 
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: machined slots. Square ends, a bright top edge where the tool left the surface, small capitals on the axis. */
+    [data-theme='dark'] .kp-week {
+        --kp-week-pill-radius: 2px;
+    }
+    [data-theme='dark'] .kp-gantt {
+        --kp-gantt-bar-radius: 2px;
+    }
+    [data-theme='dark'] :is(.kp-week__pill, .kp-gantt__run) {
+        border-block-start-color: color-mix(in oklab, var(--kp-week-ink, var(--kp-gantt-fill, var(--foreground))) 55%, var(--foreground));
+    }
+    [data-theme='dark'] :is(.kp-week__dow, .kp-gantt__tick) {
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+}
+
 /* The numbers formal's motion is made of, registered at the top level
    because Firefox does not register an @property inside a cascade layer;
    with no registration every keyframe below would flip between its two
@@ -74938,11 +76178,7 @@
         [data-theme='formal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']),
         [data-theme='formal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) > * {
             --kp-fm-f: clamp(0, (var(--kp-fm-t) * 740 - var(--kp-fm-k, 0) * var(--kp-sig-fm-st)) / var(--kp-sig-fm-len), 1);
-            --kp-fm-lf: clamp(
-                0,
-                (var(--kp-fm-t) * 740 - var(--kp-fm-k, 0) * var(--kp-sig-fm-st) - var(--kp-sig-fm-len)) / var(--kp-sig-fm-lift),
-                1
-            );
+            --kp-fm-lf: clamp(0, (var(--kp-fm-t) * 740 - var(--kp-fm-k, 0) * var(--kp-sig-fm-st) - var(--kp-sig-fm-len)) / var(--kp-sig-fm-lift), 1);
             --kp-fm-open: calc(100% - var(--kp-fm-f) * (100% + var(--kp-sig-fm-reach)));
             clip-path: inset(
                 calc(-1 * var(--kp-sig-fm-reach)) calc(var(--kp-fm-open) * var(--kp-fm-ltr) - var(--kp-sig-fm-reach) * (1 - var(--kp-fm-ltr)))
@@ -75434,6 +76670,27 @@
         --kp-kbd-ground: var(--card);
         --kp-kbd-foot: 1px;
         font-family: var(--theme-font-body);
+    }
+}
+
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: a ledger. Entries are ruled lines with a heavy rule on their left edge, bars are inked strips with a 2px cut, and the axis rules are dotted leaders. */
+    [data-theme='formal'] .kp-week {
+        --kp-week-pill-radius: 2px;
+    }
+    [data-theme='formal'] .kp-gantt {
+        --kp-gantt-bar-radius: 2px;
+    }
+    [data-theme='formal'] .kp-week__pill {
+        border-inline-start-width: 4px;
+    }
+    [data-theme='formal'] .kp-week__col {
+        border-inline-start-style: dotted;
+    }
+    [data-theme='formal'] .kp-week__dow,
+    [data-theme='formal'] .kp-gantt__tick {
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.08em;
     }
 }
 
@@ -77903,10 +79160,7 @@
         }
 
         [data-theme='solstice']
-            :is(
-                .kp-combobox__list:popover-open,
-                .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open
-            ) {
+            :is(.kp-combobox__list:popover-open, .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open) {
             animation: kp-sig-solstice-kindled var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) backwards;
         }
 
@@ -78116,6 +79370,23 @@
     }
     [data-theme='solstice'] .kp-segmented--chips > .kp-segmented__item[aria-pressed='true'] {
         box-shadow: 0 0 14px hsl(from var(--primary) h s l / 0.4);
+    }
+}
+
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: embers. Warm gradient plates with a halo on what runs next or runs now; the halo is a drop shadow, so it never fights the focus ring. */
+    [data-theme='solstice'] .kp-week {
+        --kp-week-pill-radius: 0.5rem;
+    }
+    [data-theme='solstice'] .kp-gantt {
+        --kp-gantt-bar-radius: 0.5rem;
+    }
+    [data-theme='solstice'] .kp-week__pill:not([data-kp-state='off'], [data-kp-state='skipped'], [data-kp-state='reference']) {
+        background-image: linear-gradient(90deg, hsl(from var(--kp-week-ink) h s l / 0.22), transparent 85%);
+    }
+    [data-theme='solstice'] .kp-week__pill[data-kp-state='next'],
+    [data-theme='solstice'] .kp-gantt__run[data-kp-state='running'] {
+        filter: drop-shadow(0 0 5px hsl(from var(--ring) h s l / 0.55));
     }
 }
 

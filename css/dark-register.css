@@ -3987,3 +3987,20 @@
         --kp-kbd-ground: var(--secondary);
     }
 }
+
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: machined slots. Square ends, a bright top edge where the tool left the surface, small capitals on the axis. */
+    [data-theme='dark'] .kp-week {
+        --kp-week-pill-radius: 2px;
+    }
+    [data-theme='dark'] .kp-gantt {
+        --kp-gantt-bar-radius: 2px;
+    }
+    [data-theme='dark'] :is(.kp-week__pill, .kp-gantt__run) {
+        border-block-start-color: color-mix(in oklab, var(--kp-week-ink, var(--kp-gantt-fill, var(--foreground))) 55%, var(--foreground));
+    }
+    [data-theme='dark'] :is(.kp-week__dow, .kp-gantt__tick) {
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+}
