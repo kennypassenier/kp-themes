@@ -361,11 +361,10 @@ ${SECTIONS}
         </main>
         <script type="module" src="../../js/auto.js"></script>
         <script type="module" src="demo.js"></script>
-        <!-- Round five (2026-10-16): only the one pair Kenny has not approved (research/kpadopt-nav/VERDICTS.json): the folding bar in
-             phantom. The approved sections and themes are gone from the page; gates/check-rereview.mjs refuses a page that offers an
-             approved pair. -->
+        <!-- Round five (2026-10-16): only the one pair Kenny had not approved (research/kpadopt-nav/VERDICTS.json): the folding bar in
+             phantom. He approved it, so the demo is Decided and filed under "Archived research"; its answer is received. -->
         <script type="application/json" data-review-round>
-            { "round": "2026-10-16-r5", "received": ["2026-10-16-r2", "2026-10-16-r4"], "reopen": ["phantom|nav-fold"] }
+            { "round": "2026-10-16-r5", "received": ["2026-10-16-r2", "2026-10-16-r4", "2026-10-16-r5"], "reopen": ["phantom|nav-fold"] }
         </script>
         <script type="module" src="../_review/review.js"></script>
         <script src="../../catalogue/boot-check.js"></script>

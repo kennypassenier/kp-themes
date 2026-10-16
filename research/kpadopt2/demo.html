@@ -4,7 +4,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Round 2 of the dashboard adoption, the four still open · kp-themes research demo</title>
+        <title>Round 2 of the dashboard adoption, the one still open · kp-themes research demo</title>
         <link rel="stylesheet" href="../../css/fonts.css" />
         <link rel="stylesheet" href="../../css/themes.css" />
         <link rel="stylesheet" href="../../css/components.css" />
@@ -33,303 +33,17 @@
 
         <main id="main" class="cat-main r2-page">
             <header class="r2-intro">
-                <h1>Round 2 of the dashboard adoption: the four still open</h1>
+                <h1>Round 2 of the dashboard adoption: the one still open</h1>
                 <p class="cat-intro">
-                    Round 2. Kenny approved seven of the eleven sections in formal (the action tiles, the status rows, the facet list, the heat grid,
-                    the crowded week and both run timeline sections), so only the four still open are on this page, each rebuilt from the package’s
-                    own parts: the <b>matrix</b> (every name the same room from its mark and its edges; the state picked with the package’s segmented
-                    control), the <b>bar in a table cell</b> (loading in the theme’s own loading picture, the table’s busy panel over the rows), the
-                    <b>week agenda</b> (its steps one control in the theme’s segmented track, a new week waits and its items arrive the theme’s way)
-                    and the <b>week agenda’s states</b> (the loading agenda loads, then its items arrive). Everything with a <code>kp-</code> class
-                    and every script under <code>js/</code> is the package; the sample data and the buttons that drive a demo are this page’s. Every
-                    section says what you should see under <b>Expected</b>. Formal only, judged in the review dialog (“Review in a dialog” at the
-                    top).
+                    Review round 3. Kenny approved ten of the eleven sections in formal, so only the <b>week agenda’s states</b> is on this page.
+                    While it loads, the week is now formal’s own loading picture, the ledger being ruled: every day holds unwritten entries of a
+                    pill’s shape and size, and a navy rule is ruled along them one after the other across the week. A week that loads again takes all
+                    of its items out first, so no old item stays under or beside the new ones and no words are drawn twice. Everything with a
+                    <code>kp-</code> class and every script under <code>js/</code> is the package; the sample data and the button that drives the demo
+                    are this page’s. The section says what you should see under <b>Expected</b>. Formal only, judged in the review dialog (“Review in
+                    a dialog” at the top).
                 </p>
             </header>
-
-            <section class="cat-block" id="matrix" data-review-item="matrix" data-review-title="Matrix" data-review-components="matrix">
-                <h2>
-                    Matrix: which stack can reach which<span class="gd-tag gd-tag--package">package</span
-                    ><span class="gd-tag gd-tag--mock">mock data</span>
-                </h2>
-                <div class="cat-look">
-                    <b>Look at:</b> state is told by the plate <i>and</i> a word or glyph (cover the colours in your mind: it still reads); the pinned
-                    cell, the lit row and column and the dashed rule marker are three different looks; the headers stay put while the narrow box
-                    scrolls; the grid does not change height between ready, loading, empty and failed.
-                </div>
-                <div class="gd-expect">
-                    <p><b>Expected:</b></p>
-                    <ul>
-                        <li>
-                            <b>The matrix</b> has the sources down the side and the destinations across the top; the corner says “from ↓ to →”. Every
-                            name keeps the same room from its colour mark and from the edges of its header, along the top as down the side. Each
-                            pressable cell shows its state in a plate colour <b>and</b> a word or glyph: a number is the ports open (allowed, as
-                            declared), <b>open</b> is a mismatch (more open than declared), <b>×</b> is blocked, <b>0</b> is nothing declared. A
-                            <b>dashed empty</b> cell is a stack with itself, a <b>dashed</b> cell with a dash is “unknown”. A <b>red inner ring</b> on
-                            a cell means the traffic was dropped on the way out of the source.
-                        </li>
-                        <li>
-                            <b>Press a name</b> (side or top): its row and column stay bright and everything else dims; press more names to add them;
-                            <b>Esc</b> or the name again turns it off. <b>Press a cell</b>: it gets a ring and the line under the matrix names the
-                            pair. In the first matrix the <b>arrow keys</b> also pin the cell they land on (the dashboard’s behaviour); the cells that
-                            cannot be pressed are skipped and the arrows wrap round.
-                        </li>
-                        <li><b>backup → database</b> carries a dashed outline: that is a rule being read touching that pair.</li>
-                        <li><b>Hover or Tab</b> to a cell: a card says the pair and its state in words.</li>
-                        <li>
-                            <b>The second matrix</b> sits in a box 22 rem wide: the box scrolls sideways, and the
-                            <b>names on the top and the side stay in place</b> (sticky) with the corner; scroll it and look at the headers. At the
-                            narrow width the side names get shorter and lose their colour mark.
-                        </li>
-                        <li>
-                            <b>State</b> is the package’s segmented control (<b>Ready</b>, <b>Loading</b>, <b>Empty</b>, <b>Failed</b>) and swaps both
-                            matrices: loading keeps the shape, the names stay and every cell waits in the theme’s loading picture (formal: its lines
-                            ruled in, again and again); empty and failed show one sentence. The grid does not change height.
-                        </li>
-                    </ul>
-                </div>
-                <div data-review-look>
-                    <p data-for="formal">
-                        Cells are paper plates with a navy start rule (allowed), red ink (mismatch) and two red rules (blocked), the way the formal
-                        month calendar draws its days; the pinned cell has the double rule; names are small capitals; the headers stay while the
-                        narrow box scrolls.
-                    </p>
-                </div>
-                <div class="gd-panel">
-                    <h3>Reachability matrix</h3>
-                    <div class="gd-bar">
-                        <span class="gd-grow"></span>
-                        <span class="gd-field">
-                            <span class="gd-note" id="gd-mstate-label">State</span>
-                            <div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-labelledby="gd-mstate-label" data-gd-mstates>
-                                <button type="button" class="kp-segmented__item" role="radio" aria-checked="true" data-value="ready">Ready</button>
-                                <button type="button" class="kp-segmented__item" role="radio" aria-checked="false" data-value="loading">
-                                    Loading
-                                </button>
-                                <button type="button" class="kp-segmented__item" role="radio" aria-checked="false" data-value="empty">Empty</button>
-                                <button type="button" class="kp-segmented__item" role="radio" aria-checked="false" data-value="error">Failed</button>
-                            </div>
-                        </span>
-                    </div>
-                    <div class="kp-matrix" data-kp-matrix data-kp-matrix-select="follow" data-gd-matrix="main"></div>
-                    <ul class="kp-heat__legend" aria-label="Legend">
-                        <li><span class="kp-heat__swatch kp-heat__swatch--plate" data-kp-tone="ok"></span> allowed, as declared (ports open)</li>
-                        <li><span class="kp-heat__swatch kp-heat__swatch--plate" data-kp-tone="warn"></span> mismatch</li>
-                        <li><span class="kp-heat__swatch kp-heat__swatch--plate" data-kp-tone="bad"></span> blocked</li>
-                        <li><span class="kp-heat__swatch kp-heat__swatch--plate" data-kp-tone="muted"></span> nothing open</li>
-                        <li><span class="kp-heat__swatch kp-heat__swatch--plate" data-kp-tone="none"></span> unknown</li>
-                        <li><span class="kp-heat__swatch kp-heat__swatch--plate" data-kp-tone="self"></span> itself</li>
-                        <li><span class="kp-heat__swatch kp-heat__swatch--plate" data-kp-tone="ok" data-kp-ringed></span> dropped on the way out</li>
-                        <li data-kp-end><span class="kp-keys" data-gd-keys="matrix"></span></li>
-                    </ul>
-                    <p class="gd-note" role="status" data-gd-matrix-detail>No cell pinned. Press a cell, or use the arrow keys.</p>
-                    <p class="gd-note" role="status" data-gd-matrix-light>Nothing lit. Press a name to light its row and column.</p>
-                </div>
-                <div class="gd-panel">
-                    <h3>The same matrix in a box 22 rem wide: it scrolls, the names stay</h3>
-                    <div class="gd-narrow">
-                        <div class="kp-matrix" data-kp-matrix data-gd-matrix="narrow"></div>
-                    </div>
-                </div>
-            </section>
-
-            <section
-                class="cat-block"
-                id="barcell"
-                data-review-item="barcell"
-                data-review-title="Bar in a table cell"
-                data-review-components="bar-cell"
-            >
-                <h2>
-                    A value with a bar in a data table cell<span class="gd-tag gd-tag--package">package</span
-                    ><span class="gd-tag gd-tag--mock">mock data</span>
-                </h2>
-                <div class="cat-look">
-                    <b>Look at:</b> the bar and the figure in one cell, the figures aligned on their end edge, bars starting in one place; the sort by
-                    the value (not by the text); a row with no reading keeps the row height; the warning and destructive fills are the theme’s; at 390
-                    px the rows are cards and the bars keep their width.
-                </div>
-                <div class="gd-expect">
-                    <p><b>Expected:</b></p>
-                    <ul>
-                        <li>
-                            <b>Capacity per stack</b>: each of CPU, Memory and Disk is a bar with its number on the end edge. The numbers line up on
-                            their right edge and the bars start in the same place in every row. From 75 % the bar turns warning, from 90 % destructive
-                            (platform’s disk is 94 %, backups’ disk 87 %, media’s memory 91 %); docs’ memory is 112 %: the bar is full and says so
-                            with its mark at the end. <b>network</b> has no reading: an empty track and the words “not read”, the same height as every
-                            other row.
-                        </li>
-                        <li>
-                            <b>Press a column heading</b> (CPU, Memory, Disk, On disk): the rows sort by the <b>value</b> under the bar, not by the
-                            text. Press again to reverse. “On disk” shows “440 MB” and “12.1 GB” but sorts by bytes (it carries
-                            <code>data-kp-sort-value</code>). Shift + click adds a second sort key. The row for network (no reading) sorts first
-                            ascending.
-                        </li>
-                        <li>
-                            <b>Show loading</b> puts the table in its loading state, as a page that reads the readings again: the rows dim and the
-                            table’s busy panel stands over them with the theme’s spinner and “Reading CPU, memory and disk”; every bar and every
-                            figure waits in the theme’s own loading picture at its final size (formal: a navy rule ruled across the groove, again and
-                            again, and a ruled line where the figure stands). Nothing moves sideways. Press it again: the panel goes and the readings
-                            are back.
-                        </li>
-                        <li>
-                            <b>Disk growth</b> (second table) is written in markup only: <code>data-kp-bar="0.82"</code> on a span, and a sort value
-                            on the cell for “Full in”. Sort it by “Full in”: 6 days comes before 41 days and “never” comes last, because the sort
-                            value is 9999, not the text.
-                        </li>
-                        <li>
-                            On a narrow window the table becomes one card per row with the column names in front of each bar; the bars still line up.
-                        </li>
-                    </ul>
-                </div>
-                <div data-review-look>
-                    <p data-for="formal">
-                        The bar is the formal meter (ruled column, navy entry) with its figure on the end edge in tabular figures; warning and
-                        destructive are the ledger’s ochre and red. Sorting follows the value under the bar.
-                    </p>
-                </div>
-                <div class="gd-stack">
-                    <div class="gd-panel">
-                        <h3>Capacity per stack (cells written by script)</h3>
-                        <div class="gd-bar">
-                            <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-gd-bar-load>Show loading</button>
-                        </div>
-                        <div class="kp-datatable" data-kp-datatable data-kp-cards data-kp-page-sizes="none" data-kp-sort-multi>
-                            <div class="kp-table-wrap">
-                                <table class="kp-table">
-                                    <caption class="kp-sr-only">
-                                        Capacity per stack. CPU, memory and disk are bars; sorting uses the share, not the text.
-                                    </caption>
-                                    <thead>
-                                        <tr>
-                                            <th scope="col" data-kp-sort="text">Stack</th>
-                                            <th scope="col" data-kp-sort="number">CPU</th>
-                                            <th scope="col" data-kp-sort="number">Memory</th>
-                                            <th scope="col" data-kp-sort="number">Disk</th>
-                                            <th scope="col" data-kp-sort="number" class="kp-text-end">On disk</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody data-gd-cap></tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="gd-panel">
-                        <h3>Disk growth (cells written in markup)</h3>
-                        <div class="kp-datatable" data-kp-datatable data-kp-cards data-kp-page-sizes="none">
-                            <div class="kp-table-wrap">
-                                <table class="kp-table">
-                                    <caption class="kp-sr-only">
-                                        Disk growth per filesystem. The first bar is how full the disk is now; the last column is days until full.
-                                    </caption>
-                                    <thead>
-                                        <tr>
-                                            <th scope="col" data-kp-sort="text">Where</th>
-                                            <th scope="col" data-kp-sort="number">Now</th>
-                                            <th scope="col" data-kp-sort="number" class="kp-text-end">Trend</th>
-                                            <th scope="col" data-kp-sort="number" class="kp-text-end">Full in</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td data-label="Where">Host <b class="kp-mono">/</b></td>
-                                            <td data-label="Now"><span class="kp-bar-cell" data-kp-bar="0.82" data-kp-bar-label="full"></span></td>
-                                            <td data-label="Trend" class="kp-text-end kp-numeric" data-kp-sort-value="0.42">+0.42 %/day</td>
-                                            <td data-label="Full in" class="kp-text-end" data-kp-sort-value="6">6 days</td>
-                                        </tr>
-                                        <tr>
-                                            <td data-label="Where">Stack <b class="kp-mono">media</b></td>
-                                            <td data-label="Now"><span class="kp-bar-cell" data-kp-bar="0.57" data-kp-bar-label="full"></span></td>
-                                            <td data-label="Trend" class="kp-text-end kp-numeric" data-kp-sort-value="0.1">+0.10 %/day</td>
-                                            <td data-label="Full in" class="kp-text-end" data-kp-sort-value="41">41 days</td>
-                                        </tr>
-                                        <tr>
-                                            <td data-label="Where">Stack <b class="kp-mono">backups</b></td>
-                                            <td data-label="Now"><span class="kp-bar-cell" data-kp-bar="0.93" data-kp-bar-label="full"></span></td>
-                                            <td data-label="Trend" class="kp-text-end kp-numeric" data-kp-sort-value="-0.05">−0.05 %/day</td>
-                                            <td data-label="Full in" class="kp-text-end" data-kp-sort-value="9999">never</td>
-                                        </tr>
-                                        <tr>
-                                            <td data-label="Where">Stack <b class="kp-mono">home</b></td>
-                                            <td data-label="Now"><span class="kp-bar-cell" data-kp-bar="0.31" data-kp-bar-label="full"></span></td>
-                                            <td data-label="Trend" class="kp-text-end kp-numeric" data-kp-sort-value="0.02">+0.02 %/day</td>
-                                            <td data-label="Full in" class="kp-text-end" data-kp-sort-value="9999">never</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section
-                class="kt-sec"
-                id="week"
-                data-review-item="week"
-                data-review-components="week"
-                data-review-title="Week agenda: seven days, every item at its time"
-                aria-labelledby="h-week"
-            >
-                <div class="kt-sec__head">
-                    <h2 id="h-week">Week agenda: seven days, every item at its time</h2>
-                    <p>
-                        A column per day, an hour axis, every item a pill at its time of day, a line across today at the current time. Below 40rem of
-                        its own width the days become rows. Items open with a click or Enter.
-                    </p>
-                </div>
-                <div class="kt-expected">
-                    <p><b>Expected:</b></p>
-                    <ul>
-                        <li>
-                            Seven day columns starting today. Today carries the word <b>Today</b> under its number, a coloured number and a tinted
-                            column; a line crosses it at the current time and the pills above the line are quieter.
-                        </li>
-                        <li>
-                            Every pill shows its time and its name, ending in an ellipsis when the name is long. The pill with a ring is the
-                            <b>next run</b>; the struck-through ones are <b>off</b> or <b>skipped</b>; the dashed one is the host’s own round,
-                            <b>for reference</b>, and does nothing when pressed.
-                        </li>
-                        <li>
-                            Hover a pill (not the dashed one): a card with its detail. Click it or press Enter: the readout under the agenda logs the
-                            item.
-                        </li>
-                        <li>
-                            Tab enters the agenda once, on a pill. The arrows move: up and down inside a day, left and right to the nearest item of
-                            the next day. Tab leaves.
-                        </li>
-                        <li>
-                            Above the agenda: the range as its title on the left (in the theme’s display face) and, on the right, one control in the
-                            theme’s own segmented track: a chevron back, <b>Today</b>, a chevron on. Hover a chevron: its tooltip names it (Previous,
-                            Next), as a screen reader does. <b>Today</b> is greyed while the seven days from today are shown, and stays in the Tab
-                            order.
-                        </li>
-                        <li>
-                            Press a chevron: the title moves by seven days, the days of the new range arrive the theme’s way, both agendas wait in
-                            their loading ghosts for a moment (a real page reads the new items), then the items arrive one after the other.
-                            <b>Today</b> brings the first range back the same way.
-                        </li>
-                        <li>The 360 px column holds the same days as rows, with every item shown and nothing cut off.</li>
-                    </ul>
-                </div>
-                <div data-review-look>
-                    <p data-for="formal">
-                        Check the full-width agenda and the 360 px one. Ledger entries: a heavy 4px rule on the left of each pill, 2px corners, the
-                        weekday in small capitals, dotted dividers between the days like leaders.
-                    </p>
-                </div>
-                <div class="kt-cols">
-                    <div>
-                        <p class="kt-label">Full width, with the week buttons</p>
-                        <div class="kp-week" data-kp-week data-kp-week-nav id="kt-week-wide" aria-label="Runs in the next 7 days"></div>
-                    </div>
-                    <div>
-                        <p class="kt-label">Phone, 360 px</p>
-                        <div class="kt-phone"><div class="kp-week" data-kp-week id="kt-week-phone" aria-label="Runs in the next 7 days"></div></div>
-                    </div>
-                </div>
-                <pre class="kt-log" id="kt-week-log" aria-label="What the agenda reported" aria-live="off"></pre>
-            </section>
 
             <section
                 class="kt-sec"
@@ -347,8 +61,11 @@
                     <p><b>Expected:</b></p>
                     <ul>
                         <li>
-                            <b>Loading</b>: ghost pills of the final size pulse in the columns (still without reduced motion); the day heads and the
-                            axis are already there. Nothing moves when the real items arrive.
+                            <b>Loading</b>: the week is the ledger being ruled. Every day holds two or three unwritten entries the size and shape of a
+                            pill (paper, the heavy rule on the start edge, a short line where the time goes, a longer one where the label goes), never
+                            touching each other; a navy rule is ruled along each entry’s foot, held, lifted and ruled again, entry after entry from
+                            the first day’s top across the week. The day heads and the axis are already there; no sentence stands over the week (it is
+                            still read out). Nothing moves when the real items arrive.
                         </li>
                         <li><b>Empty</b>: the same grid, the sentence “Nothing is planned in this week.” over it.</li>
                         <li><b>Error</b>: the grid, with the page’s own words in the destructive colour over it.</li>
@@ -358,15 +75,17 @@
                         </li>
                         <li>
                             <b>Make it load, then arrive</b> (above the first agenda): the button shows the theme’s spinner and says the items arrive
-                            in 2 s; the first agenda goes back to its loading ghosts, and after two seconds its items arrive the theme’s way, one
-                            after the other (formal rules them in). No column changes height and no head moves; the button can then play it again.
+                            in 2 s; the first agenda’s items leave at once and only its unwritten entries stand (no old item stays under or beside
+                            them, no words drawn twice), and after two seconds its items arrive the theme’s way, one after the other (formal rules
+                            them in). No column changes height and no head moves; the button can then play it again, as often as you like.
                         </li>
                     </ul>
                 </div>
                 <div data-review-look>
                     <p data-for="formal">
-                        Check that the three agendas have the same height and that the sentence sits over the grid, not in it. Ledger entries: a heavy
-                        4px rule on the left of each pill, 2px corners, the weekday in small capitals, dotted dividers between the days like leaders.
+                        Press Make it load, then arrive three times in a row and watch the first agenda: only unwritten entries while it loads, then
+                        its items, never both. Ledger entries: a heavy 4px rule on the left of each pill, 2px corners, the weekday in small capitals,
+                        dotted dividers between the days like leaders.
                     </p>
                 </div>
                 <div class="kt-actions">
@@ -395,15 +114,10 @@
                 </div>
             </section>
         </main>
-        <script type="module" src="demo-grids.js"></script>
         <script type="module" src="demo-time.js"></script>
         <script type="module" src="../../js/auto.js"></script>
         <script type="application/json" data-review-round>
-            {
-                "round": "2026-10-16-r2",
-                "received": ["2026-10-16-r1"],
-                "reopen": ["formal|matrix", "formal|barcell", "formal|week", "formal|week-states"]
-            }
+            { "round": "2026-10-16-r3", "received": ["2026-10-16-r1", "2026-10-16-r2"], "reopen": ["formal|week-states"] }
         </script>
         <script type="module" src="../_review/review.js"></script>
         <script src="../../catalogue/boot-check.js"></script>

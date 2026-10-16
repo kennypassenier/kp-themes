@@ -134,13 +134,13 @@ SECTIONS.push({
     title: 'Week agenda: loading, empty, error, focus',
     about: 'The three states of the whole agenda, each at the agenda’s final size, and a pill that has the keyboard focus.',
     expected: [
-        '<b>Loading</b>: ghost pills of the final size pulse in the columns (still without reduced motion); the day heads and the axis are already there. Nothing moves when the real items arrive.',
+        '<b>Loading</b>: the week is the ledger being ruled. Every day holds two or three unwritten entries the size and shape of a pill (paper, the heavy rule on the start edge, a short line where the time goes, a longer one where the label goes), never touching each other; a navy rule is ruled along each entry’s foot, held, lifted and ruled again, entry after entry from the first day’s top across the week. The day heads and the axis are already there; no sentence stands over the week (it is still read out). Nothing moves when the real items arrive.',
         '<b>Empty</b>: the same grid, the sentence “Nothing is planned in this week.” over it.',
         '<b>Error</b>: the grid, with the page’s own words in the destructive colour over it.',
         '<b>Focus</b>: the third agenda has its first pill focused as a keyboard user would see it; the ring must be whole, not cut by the pill’s corners, and clearly visible against the neighbours.',
-        '<b>Make it load, then arrive</b> (above the first agenda): the button shows the theme’s spinner and says the items arrive in 2 s; the first agenda goes back to its loading ghosts, and after two seconds its items arrive the theme’s way, one after the other (formal rules them in). No column changes height and no head moves; the button can then play it again.',
+        '<b>Make it load, then arrive</b> (above the first agenda): the button shows the theme’s spinner and says the items arrive in 2 s; the first agenda’s items leave at once and only its unwritten entries stand (no old item stays under or beside them, no words drawn twice), and after two seconds its items arrive the theme’s way, one after the other (formal rules them in). No column changes height and no head moves; the button can then play it again, as often as you like.',
     ],
-    look: 'Check that the three agendas have the same height and that the sentence sits over the grid, not in it.',
+    look: 'Press Make it load, then arrive three times in a row and watch the first agenda: only unwritten entries while it loads, then its items, never both.',
     body: `
                 <div class="kt-actions">
                     <button type="button" class="kp-button kp-button--live" id="kt-states-cycle"><span class="kp-spinner kp-button__spin" aria-hidden="true" hidden></span><span class="kp-button__long" data-kt-cycle-words>Make it load, then arrive</span></button>

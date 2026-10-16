@@ -1,5 +1,7 @@
 # kpadopt-nav: a folding top bar, a bottom tab bar, the running-job button
 
+**Decided (2026-10-16 13:29):** Kenny approved it in full in the review dialog: every pair approved by round 5, the last one phantom's folding bar (round 4: its opened More menu had no ground, mended). Recorded in `VERDICTS.json`; the demo is not offered again.
+
 Three things the homelab dashboard (`admin/web`) still draws by hand because kp-themes 10.1.1 has no component for them
 (KP_THEMES_ADOPTION.md kpa-33). Built into the package first, so the dashboard can draw nothing itself.
 

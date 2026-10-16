@@ -28,6 +28,19 @@
                 }
             ],
             "generalNote": "in the second demo the base was there, but e.g. the buttons were not per theme. When you build these components, take the existing elements/components/spirit/animations of the themes into the design."
+        },
+        {
+            "round": "2",
+            "page": "2026-10-16-r2",
+            "allJudged": true,
+            "notApproved": [
+                {
+                    "item": "week-states",
+                    "theme": "formal",
+                    "note": "de loading animatie moet die van het thema zijn, nu staat er enkel in het midden \"reading the week\" maar dat is niet genoeg. Ook is er een overlap van items of tekst als het aan het laden is, ik heb een screenshot bijgevoegd om dit aan te tonen"
+                }
+            ],
+            "generalNote": "(review kit) after finishing a demo's review, the dialog must not only close, there must be a direct way back to agenda.html."
         }
     ],
     "reopened": []
