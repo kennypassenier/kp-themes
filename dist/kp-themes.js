@@ -21272,7 +21272,12 @@ function setBarCell(el4, { value = null, text, tone, warnAt = 0.75, badAt = 0.9,
     )
   );
   setMeter(meter, { value: measured2 ? value : null, mark, tone: tone === void 0 ? auto : tone, label, markLabel, loading });
-  number.textContent = text ?? (measured2 ? `${Math.round(
+  if (loading) {
+    const ghost = el4.ownerDocument.createElement("span");
+    ghost.className = "kp-skeleton kp-bar-cell__ghost";
+    ghost.setAttribute("aria-hidden", "true");
+    number.replaceChildren(ghost);
+  } else number.textContent = text ?? (measured2 ? `${Math.round(
     /** @type {number} */
     value * 100
   )}%` : "");

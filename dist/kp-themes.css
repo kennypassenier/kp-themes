@@ -14314,6 +14314,20 @@
         min-inline-size: 0;
     }
 
+    /* The figure's column while it loads: one skeleton line, the column's width, the line's height. */
+    .kp-bar-cell[data-kp-loading] > .kp-bar-cell__value {
+        display: grid;
+        align-items: center;
+        align-self: stretch;
+    }
+
+    .kp-bar-cell__ghost.kp-skeleton {
+        display: block;
+        inline-size: 100%;
+        min-inline-size: 2ch;
+        block-size: var(--kp-bar-cell-ghost-height, 0.625rem);
+    }
+
     .kp-bar-cell--start {
         grid-template-columns: var(--kp-bar-cell-value, 4ch) minmax(var(--kp-bar-cell-bar, 3rem), 1fr);
     }
