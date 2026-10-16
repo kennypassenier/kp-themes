@@ -424,6 +424,20 @@
  * @property {(name: string) => string} timerLastMinute  Said once when a timer has a minute left [kpadopt4]
  * @property {(name: string, clock: string) => string} timerStarted  Said when a timer starts [kpadopt4]
  * @property {(name: string) => string} timerAlready  Said when a starter is pressed while its timer runs [kpadopt4]
+ * @property {(n: number, total: number) => string} focusCount  The count over a step shown on its own, "Step 3 of 8" (js/focus-steps.js) [kpadopt4]
+ * @property {string} focusNext  The button that goes on to the next step [kpadopt4]
+ * @property {string} focusPrevious  The button that goes back a step [kpadopt4]
+ * @property {string} focusDone  The next button on the last step [kpadopt4]
+ * @property {string} focusNeeds  The heading over what a step needs [kpadopt4]
+ * @property {(duration: string) => string} focusTimer  A step's timer button, "Start a timer · 10 min" [kpadopt4]
+ * @property {string} focusReadAloud  The button that reads the step aloud [kpadopt4]
+ * @property {string} focusStopReading  The same button while it reads [kpadopt4]
+ * @property {string} focusWakeOn  The screen line while the screen is kept on [kpadopt4]
+ * @property {string} focusWakeOff  The screen line when it is not [kpadopt4]
+ * @property {string} focusWakeUnsupported  The screen line in a browser that cannot keep it on [kpadopt4]
+ * @property {string} focusEmpty  A view with no steps [kpadopt4]
+ * @property {string} focusLoading  The words under its spinner while the steps load [kpadopt4]
+ * @property {string} focusFailed  Steps that could not be read, when the page gives no message [kpadopt4]
  */
 
 /**
@@ -954,6 +968,21 @@ export const DEFAULT_STRINGS = Object.freeze({
     timerLastMinute: (name) => `${name}: one minute left`,
     timerStarted: (name, clock) => `${name} started, ${clock}`,
     timerAlready: (name) => `${name} is already running`,
+    // One step at a time (js/focus-steps.js) [kpadopt4].
+    focusCount: (n, total) => `Step ${n} of ${total}`,
+    focusNext: 'Next',
+    focusPrevious: 'Back',
+    focusDone: 'Done',
+    focusNeeds: 'For this step',
+    focusTimer: (duration) => `Start a timer · ${duration}`,
+    focusReadAloud: 'Read aloud',
+    focusStopReading: 'Stop reading',
+    focusWakeOn: 'Screen stays on',
+    focusWakeOff: 'Screen may dim',
+    focusWakeUnsupported: 'Screen may dim: this browser cannot keep it on',
+    focusEmpty: 'This recipe has no steps yet.',
+    focusLoading: 'Loading the steps…',
+    focusFailed: 'The steps could not be read.',
 });
 
 // STRINGS_NL was removed in 4.0.0 [D3]. Kenny decided that on

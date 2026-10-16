@@ -44,6 +44,98 @@
 
             <section
                 class="k4-sec"
+                id="cook"
+                data-review-item="cook"
+                data-review-topic="cook"
+                data-review-topic-title="One step at a time (cook mode)"
+                data-review-components="focus-steps"
+                data-review-title="2 · One step at a time (cook mode)"
+                aria-labelledby="h-cook"
+            >
+                <div class="k4-sec__head">
+                    <h2 id="h-cook">2 · One step at a time (cook mode)</h2>
+                    <p>
+                        <code>.kp-focus-steps</code> with <code>js/focus-steps.js</code>: one step of a recipe large on the screen, for a phone or a
+                        tablet on the counter, with the screen kept on. Not the wizard (a form) nor the step list (a whole run at once).
+                    </p>
+                </div>
+                <div class="k4-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            The large frame opens at <b>Step 3 of 6</b> (as if you came back where you stopped): the count, formal’s progress bar at a
+                            half, the step in large type, “For this step” with the amounts in one column and the names beside them, a
+                            <b>Start a timer · 10 min</b> button and a warning note. At the foot, <b>Back</b> and <b>Next</b>, each half the width and
+                            4 rem high.
+                        </li>
+                        <li>
+                            The head says <b>Screen stays on</b> with a filled dot when the browser kept the screen on, else <b>Screen may dim</b>
+                            with a hollow dot (Firefox without a press, or a browser without Wake Lock says why).
+                        </li>
+                        <li>
+                            Next and Back turn the step; the new step arrives formal’s way, the buttons and the head never move, a long step scrolls
+                            inside. On step 1 Back dims; on step 6 Next says <b>Done ✓</b> and fires done. Keys (click in the frame first): → or
+                            PageDown or Space goes on, ← or PageUp goes back, Home and End jump. On a touch screen a swipe across the step turns it.
+                        </li>
+                        <li>
+                            <b>Read aloud</b> reads the step in the browser’s voice and becomes <b>Stop reading</b> in the same width. The timer
+                            button starts a timer in the list beside it (section 3’s component).
+                        </li>
+                        <li>
+                            <b>Load again</b> shows formal’s busy card over the step (2.5 s, the spinner turning) with both buttons dimmed;
+                            <b>Fail</b> shows a red alert in the step’s place; <b>Empty</b> the dashed empty line. The 390 px frame is the phone.
+                        </li>
+                        <li>The log shows each <code>kp-focus-steps-change</code>, done, and the screen line’s state.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Walk to step 6 and back with the keys; start the step’s timer; then Load again.</p>
+                </div>
+                <div class="k4-grid">
+                    <div>
+                        <p class="k4-label">A tablet on the counter (44 rem high)</p>
+                        <div class="k4-frame k4-frame--tall">
+                            <div
+                                class="kp-focus-steps"
+                                id="k4-cook"
+                                data-kp-focus-steps
+                                data-kp-focus-steps-timers="k4-cook-timers"
+                                aria-label="Chicken curry"
+                            ></div>
+                        </div>
+                        <div class="k4-actions">
+                            <button type="button" class="kp-button kp-button--sm" id="k4-cook-load">Load again</button>
+                            <button type="button" class="kp-button kp-button--sm" id="k4-cook-fail">Fail</button>
+                            <button type="button" class="kp-button kp-button--sm" id="k4-cook-empty">Empty</button>
+                            <button type="button" class="kp-button kp-button--sm" id="k4-cook-reset">Back to the recipe</button>
+                        </div>
+                        <p class="k4-label">The timers this recipe starts</p>
+                        <div
+                            class="kp-timers"
+                            id="k4-cook-timers"
+                            data-kp-timers
+                            data-kp-timers-empty="No timer started from the recipe yet."
+                            aria-label="Recipe timers"
+                        ></div>
+                    </div>
+                    <div>
+                        <p class="k4-label">A phone (390 px)</p>
+                        <div class="k4-frame k4-frame--phone k4-frame--tall">
+                            <div
+                                class="kp-focus-steps"
+                                id="k4-cook-phone"
+                                data-kp-focus-steps
+                                data-kp-focus-steps-wake="false"
+                                aria-label="Chicken curry, phone"
+                            ></div>
+                        </div>
+                    </div>
+                </div>
+                <pre class="k4-log" id="k4-cook-log" aria-label="Events"></pre>
+            </section>
+
+            <section
+                class="k4-sec"
                 id="timers"
                 data-review-item="timers"
                 data-review-topic="timers"

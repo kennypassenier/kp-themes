@@ -17015,6 +17015,201 @@
             --kp-timer-target: 3rem;
         }
     }
+
+    /* --- One step at a time [kpadopt4] ------------------------------------
+ *
+ * Cook mode: the count and the theme's progress bar on top, one step in
+ * large type with what it needs, and two buttons a knuckle can hit at the
+ * foot. Three rows of a grid: the head and the buttons keep their place
+ * whatever the step's length, and a long step scrolls inside its body. Give
+ * the root its height (`--kp-focus-steps-height`, the whole screen in an
+ * app: `100dvh`). */
+    .kp-focus-steps {
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr) auto;
+        gap: var(--kp-space-md, 0.75rem);
+        box-sizing: border-box;
+        block-size: var(--kp-focus-steps-height, 100%);
+        min-block-size: var(--kp-focus-steps-min, 24rem);
+        min-inline-size: 0;
+        padding: var(--kp-focus-steps-pad, var(--kp-space-md, 0.75rem));
+        background: var(--background);
+        color: var(--foreground);
+    }
+
+    .kp-focus-steps:focus {
+        outline: none;
+    }
+
+    .kp-focus-steps__head {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-focus-steps__count {
+        font-size: var(--kp-text-md, 1rem);
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-focus-steps__tools {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-end;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+    }
+
+    /* The screen line: a dot that is filled while the screen is kept on. */
+    .kp-focus-steps__wake {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4em;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-focus-steps__wake::before {
+        content: '';
+        flex: none;
+        inline-size: 0.6em;
+        block-size: 0.6em;
+        border: 1.5px solid currentColor;
+        border-radius: 50%;
+    }
+
+    .kp-focus-steps[data-kp-focus-steps-screen='on'] .kp-focus-steps__wake::before {
+        border-color: var(--primary);
+        background: var(--primary);
+    }
+
+    .kp-focus-steps__speak-text {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .kp-focus-steps__speak-text::after {
+        content: attr(data-kp-words);
+        block-size: 0;
+        overflow: hidden;
+        visibility: hidden;
+        white-space: pre;
+    }
+
+    .kp-focus-steps__bar {
+        grid-column: 1 / -1;
+    }
+
+    .kp-focus-steps__body {
+        position: relative;
+        min-block-size: 0;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        padding: var(--kp-space-xs, 0.25rem);
+        touch-action: pan-y;
+    }
+
+    .kp-focus-steps__step {
+        display: grid;
+        align-content: start;
+        gap: var(--kp-space-lg, 1.5rem);
+        max-inline-size: var(--kp-focus-steps-measure, 44ch);
+    }
+
+    .kp-focus-steps__step:focus {
+        outline: none;
+    }
+
+    .kp-focus-steps__text {
+        margin: 0;
+        font-size: var(--kp-focus-steps-text, clamp(1.25rem, 1.05rem + 1vw, 1.75rem));
+        line-height: 1.45;
+        text-wrap: pretty;
+    }
+
+    .kp-focus-steps__needs {
+        padding-block-start: var(--kp-space-md, 0.75rem);
+        border-block-start: 1px solid var(--border);
+    }
+
+    .kp-focus-steps__needs-title {
+        margin: 0 0 var(--kp-space-sm, 0.5rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+    }
+
+    /* The amounts in one column as wide as the longest, the names in the next [fix-64]. */
+    .kp-focus-steps__needs-list {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        margin: 0;
+        padding: 0;
+        font-size: var(--kp-focus-steps-needs, 1.125rem);
+        list-style: none;
+    }
+
+    .kp-focus-steps__need {
+        display: contents;
+    }
+
+    .kp-focus-steps__amount {
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+        text-align: end;
+        white-space: nowrap;
+    }
+
+    .kp-focus-steps__name {
+        overflow-wrap: anywhere;
+    }
+
+    .kp-focus-steps__timer.kp-button {
+        justify-self: start;
+        min-block-size: var(--kp-focus-steps-tool, 2.75rem);
+    }
+
+    .kp-focus-steps__note,
+    .kp-focus-steps__message {
+        margin: 0;
+    }
+
+    .kp-focus-steps[aria-busy='true'] .kp-focus-steps__body {
+        min-block-size: var(--kp-focus-steps-busy-height, 12rem);
+    }
+
+    .kp-focus-steps__nav {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-focus-steps__nav > .kp-button {
+        gap: var(--kp-space-sm, 0.5rem);
+        min-block-size: var(--kp-focus-steps-target, 4rem);
+        font-size: var(--kp-focus-steps-button-text, 1.125rem);
+    }
+
+    .kp-focus-steps__nav > .kp-button[aria-disabled='true'] {
+        opacity: 0.45;
+        cursor: not-allowed;
+    }
+
+    .kp-focus-steps__glyph--prev::before {
+        content: var(--kp-glyph-back, '←');
+    }
+
+    .kp-focus-steps__glyph--next::before {
+        content: var(--kp-glyph-forward, '→');
+    }
+
+    .kp-focus-steps__next[data-kp-focus-steps-last] .kp-focus-steps__glyph--next::before {
+        content: var(--kp-glyph-check, '✓');
+    }
 }
 
 /* The tour's dim is the target's box-shadow, and a register that gives the part a shadow of its own (a card's rim) wins over

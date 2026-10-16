@@ -153,6 +153,7 @@ export const NEEDS = [
     { name: 'action-tiles', when: '.kp-action', load: () => import('./action-tiles.js'), attach: (m, root) => [m.attachActionTiles(root)] },
     { name: 'statusrow', when: '.kp-statuslist', load: () => import('./statusrow.js'), attach: (m, root) => [m.attachStatusLists(root)] },
     { name: 'facets', when: '[data-kp-facets]', load: () => import('./facets.js'), attach: (m, root) => [m.attachFacets(root)] },
+    { name: 'focus-steps', when: '[data-kp-focus-steps]', load: () => import('./focus-steps.js'), attach: (m, root) => [m.attachFocusSteps(root)] },
     { name: 'timer', when: '[data-kp-timers], [data-kp-timer-start]', load: () => import('./timer.js'), attach: (m, root) => [m.attachTimers(root)] },
     { name: 'checklist', when: '[data-kp-checklist]', load: () => import('./checklist.js'), attach: (m, root) => [m.attachChecklists(root)] },
     // A quantity with minus and plus, the kitchen timers, the checklist, one step at a time and the wheel [kpadopt4].

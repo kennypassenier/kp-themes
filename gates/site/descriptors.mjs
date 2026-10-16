@@ -3084,6 +3084,35 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
         ],
     },
     {
+        id: 'focus-steps',
+        title: 'One step at a time',
+        group: 'Navigation',
+        classes: ['kp-focus-steps'],
+        exports: [],
+        intro: 'Cook mode: one step of a recipe large on the screen, with what that step needs, a timer button and a note, the count and the theme’s progress bar on top, and two big buttons at the foot. `data-kp-focus-steps` on the root; js/focus-steps.js (`setFocusSteps`, `goToStep`, `getStepIndex`, `setFocusStepsState`, `attachFocusSteps`) keeps the screen on with the Wake Lock API while it is attached, turns the step with the arrows, PageUp/PageDown, Space and a swipe, reads it aloud on request and fires `kp-focus-steps-change` so the page can remember where a person stopped.',
+        whenToUse: 'For instructions followed with the hands busy: a recipe, a repair, an exercise. For a form filled in parts use the wizard; for the steps of a running process use the step list.',
+        examples: [
+            {
+                title: 'A recipe',
+                why: 'The module draws the parts from the steps it is given; the root needs a height.',
+                markup: `
+<div class="kp-focus-steps" data-kp-focus-steps aria-label="Chicken curry"></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-focus-steps-wake="false"', what: 'Do not ask for the screen to stay on.' },
+            { name: 'data-kp-focus-steps-timers', what: 'The id of the timer list a step’s timer button starts in.' },
+            { name: 'data-kp-focus-steps-empty', what: 'The sentence of a recipe with no steps.' },
+            { name: 'data-kp-focus-steps-screen', what: 'Written: on, off or unsupported, and said in the head.' },
+        ],
+        accessibility: [
+            'Built in — every change says “Step 3 of 8” and the step; the buttons are real buttons, a step boundary is `aria-disabled` and keeps the focus.',
+            'Built in — keys and a swipe do what the buttons do; Read aloud uses the browser’s own voice.',
+            'Yours — give the view a name and a height, and remember the index the event gives.',
+        ],
+    },
+    {
         id: 'steplist',
         title: 'Step list',
         group: 'Feedback',

@@ -158,6 +158,7 @@ export const FILES = [
     'js/action-tiles.js',
     'js/statusrow.js',
     'js/facets.js',
+    'js/focus-steps.js',
     'js/timer.js',
     'js/checklist.js',
     'js/quantity.js',

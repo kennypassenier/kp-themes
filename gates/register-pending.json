@@ -23,5 +23,6 @@
     "quantity": "a component for the AuDHD recipe app [kpadopt4], built from the package's parts and judged in formal only first (research/kpadopt4-recipes); each register answers it once it is judged in that theme",
     "checklist": "a component for the AuDHD recipe app [kpadopt4], built from the package's parts and judged in formal only first (research/kpadopt4-recipes); each register answers it once it is judged in that theme",
     "timers": "a component for the AuDHD recipe app [kpadopt4], built from the package's parts and judged in formal only first (research/kpadopt4-recipes); each register answers it once it is judged in that theme",
-    "timer": "a component for the AuDHD recipe app [kpadopt4], built from the package's parts and judged in formal only first (research/kpadopt4-recipes); each register answers it once it is judged in that theme"
+    "timer": "a component for the AuDHD recipe app [kpadopt4], built from the package's parts and judged in formal only first (research/kpadopt4-recipes); each register answers it once it is judged in that theme",
+    "focus-steps": "a component for the AuDHD recipe app [kpadopt4], built from the package's parts and judged in formal only first (research/kpadopt4-recipes); each register answers it once it is judged in that theme"
 }

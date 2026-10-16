@@ -145,6 +145,7 @@
                     <div class="sc-nav__group">
                         <h2 class="sc-nav__title kp-tt-upper kp-fw-semibold">Navigation</h2>
                         <ul class="sc-nav__list">
+                            <li><a class="sc-nav__link" href="../../site/components/focus-steps.html">One step at a time</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/nav-bar.html">Navigation bar</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/sidenav.html">Side navigation</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/to-top.html">Back to top</a></li>
@@ -210,12 +211,12 @@
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
                     <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
-                            <tr><td><code>data-kp-timer-for</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-timer-for</code></td><td>written, read</td></tr>
                             <tr><td><code>data-kp-timer-id</code></td><td>read, written</td></tr>
-                            <tr><td><code>data-kp-timer-name</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-timer-name</code></td><td>written, read</td></tr>
                             <tr><td><code>data-kp-timer-ringing</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-timer-running</code></td><td>selector, written</td></tr>
-                            <tr><td><code>data-kp-timer-start</code></td><td>selector, read</td></tr>
+                            <tr><td><code>data-kp-timer-start</code></td><td>selector, written, read</td></tr>
                             <tr><td><code>data-kp-timer-state</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-timers</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-timers-empty</code></td><td>read</td></tr>

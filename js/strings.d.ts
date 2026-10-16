@@ -1171,6 +1171,62 @@ export type Strings = {
      * Said when a starter is pressed while its timer runs [kpadopt4]
      */
     timerAlready: (name: string) => string;
+    /**
+     * The count over a step shown on its own, "Step 3 of 8" (js/focus-steps.js) [kpadopt4]
+     */
+    focusCount: (n: number, total: number) => string;
+    /**
+     * The button that goes on to the next step [kpadopt4]
+     */
+    focusNext: string;
+    /**
+     * The button that goes back a step [kpadopt4]
+     */
+    focusPrevious: string;
+    /**
+     * The next button on the last step [kpadopt4]
+     */
+    focusDone: string;
+    /**
+     * The heading over what a step needs [kpadopt4]
+     */
+    focusNeeds: string;
+    /**
+     * A step's timer button, "Start a timer · 10 min" [kpadopt4]
+     */
+    focusTimer: (duration: string) => string;
+    /**
+     * The button that reads the step aloud [kpadopt4]
+     */
+    focusReadAloud: string;
+    /**
+     * The same button while it reads [kpadopt4]
+     */
+    focusStopReading: string;
+    /**
+     * The screen line while the screen is kept on [kpadopt4]
+     */
+    focusWakeOn: string;
+    /**
+     * The screen line when it is not [kpadopt4]
+     */
+    focusWakeOff: string;
+    /**
+     * The screen line in a browser that cannot keep it on [kpadopt4]
+     */
+    focusWakeUnsupported: string;
+    /**
+     * A view with no steps [kpadopt4]
+     */
+    focusEmpty: string;
+    /**
+     * The words under its spinner while the steps load [kpadopt4]
+     */
+    focusLoading: string;
+    /**
+     * Steps that could not be read, when the page gives no message [kpadopt4]
+     */
+    focusFailed: string;
 };
 /**
  * @typedef {object} Strings
@@ -1560,6 +1616,20 @@ export type Strings = {
  * @property {(name: string) => string} timerLastMinute  Said once when a timer has a minute left [kpadopt4]
  * @property {(name: string, clock: string) => string} timerStarted  Said when a timer starts [kpadopt4]
  * @property {(name: string) => string} timerAlready  Said when a starter is pressed while its timer runs [kpadopt4]
+ * @property {(n: number, total: number) => string} focusCount  The count over a step shown on its own, "Step 3 of 8" (js/focus-steps.js) [kpadopt4]
+ * @property {string} focusNext  The button that goes on to the next step [kpadopt4]
+ * @property {string} focusPrevious  The button that goes back a step [kpadopt4]
+ * @property {string} focusDone  The next button on the last step [kpadopt4]
+ * @property {string} focusNeeds  The heading over what a step needs [kpadopt4]
+ * @property {(duration: string) => string} focusTimer  A step's timer button, "Start a timer · 10 min" [kpadopt4]
+ * @property {string} focusReadAloud  The button that reads the step aloud [kpadopt4]
+ * @property {string} focusStopReading  The same button while it reads [kpadopt4]
+ * @property {string} focusWakeOn  The screen line while the screen is kept on [kpadopt4]
+ * @property {string} focusWakeOff  The screen line when it is not [kpadopt4]
+ * @property {string} focusWakeUnsupported  The screen line in a browser that cannot keep it on [kpadopt4]
+ * @property {string} focusEmpty  A view with no steps [kpadopt4]
+ * @property {string} focusLoading  The words under its spinner while the steps load [kpadopt4]
+ * @property {string} focusFailed  Steps that could not be read, when the page gives no message [kpadopt4]
  */
 /**
  * The defaults. English, by Kenny's decision of 2026-09-04 — the package

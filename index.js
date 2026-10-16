@@ -195,6 +195,21 @@ export {
 /** @typedef {import('./js/statusrow.js').StatusRow} StatusRow */
 export { FACETS, FACET_EVENT, attachFacets, getFacetValues, setFacetCounts, setFacetItems, setFacetValues } from './js/facets.js';
 /** @typedef {import('./js/facets.js').FacetItem} FacetItem */
+// One step at a time, with the screen kept on: cook mode [kpadopt4].
+export {
+    FOCUS_STEPS,
+    FOCUS_STEPS_DONE_EVENT,
+    FOCUS_STEPS_EVENT,
+    FOCUS_STEPS_WAKE_EVENT,
+    SWIPE_DISTANCE,
+    attachFocusSteps,
+    getStepIndex,
+    goToStep,
+    setFocusSteps,
+    setFocusStepsState,
+} from './js/focus-steps.js';
+/** @typedef {import('./js/focus-steps.js').FocusStep} FocusStep */
+/** @typedef {import('./js/focus-steps.js').FocusIngredient} FocusIngredient */
 // Kitchen timers: named countdowns that keep running [kpadopt4].
 export {
     TIMERS,

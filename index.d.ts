@@ -70,6 +70,11 @@ export type StatusRow = import('./js/statusrow.js').StatusRow;
 export { FACETS, FACET_EVENT, attachFacets, getFacetValues, setFacetCounts, setFacetItems, setFacetValues } from './js/facets.js';
 export type FacetItem = import('./js/facets.js').FacetItem;
 /** @typedef {import('./js/facets.js').FacetItem} FacetItem */
+export { FOCUS_STEPS, FOCUS_STEPS_DONE_EVENT, FOCUS_STEPS_EVENT, FOCUS_STEPS_WAKE_EVENT, SWIPE_DISTANCE, attachFocusSteps, getStepIndex, goToStep, setFocusSteps, setFocusStepsState, } from './js/focus-steps.js';
+export type FocusStep = import('./js/focus-steps.js').FocusStep;
+export type FocusIngredient = import('./js/focus-steps.js').FocusIngredient;
+/** @typedef {import('./js/focus-steps.js').FocusStep} FocusStep */
+/** @typedef {import('./js/focus-steps.js').FocusIngredient} FocusIngredient */
 export { TIMERS, TIMER_CHANGE_EVENT, TIMER_DONE_EVENT, TIMER_START, TIMER_START_EVENT, TIMER_STOP_EVENT, TIMER_TICK_MS, addTimerTime, askTimerNotifications, attachTimers, formatClock, getTimers, parseDuration, pauseTimer, restoreTimers, resumeTimer, startTimer, stopTimer, stopTimerRing, } from './js/timer.js';
 export type TimerState = import('./js/timer.js').TimerState;
 /** @typedef {import('./js/timer.js').TimerState} TimerState */
