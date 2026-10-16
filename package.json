@@ -176,6 +176,10 @@
             "types": "./js/statusrow.d.ts",
             "default": "./js/statusrow.js"
         },
+        "./js/card-state": {
+            "types": "./js/card-state.d.ts",
+            "default": "./js/card-state.js"
+        },
         "./js/facets": {
             "types": "./js/facets.d.ts",
             "default": "./js/facets.js"

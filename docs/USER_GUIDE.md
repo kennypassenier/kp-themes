@@ -1832,6 +1832,50 @@ attention" (`statusWarn`). `buildStatusList(rows)` and
 card's header: `data-kp-status-retry="false"` leaves out the Retry per
 row. Knob: `--kp-statusrow-fix-gap`.
 
+### A card in four data states
+
+A card that shows data read from somewhere is loading, empty, failed or
+filled, and keeps its place and size in all four: `data-kp-state` on a
+`.kp-card`, the data in `.kp-card__stage > .kp-card__data`.
+
+```html
+<section class="kp-card" data-kp-state="loading" aria-labelledby="files-t">
+    <div class="kp-card__header">
+        <h2 class="kp-card__title" id="files-t">Files</h2>
+        <div class="kp-card__actions"><span class="kp-timestamp">3 files</span></div>
+    </div>
+    <p class="kp-card__body">Everything in this application's folder.</p>
+    <div class="kp-card__stage"><div class="kp-card__data"></div></div>
+</section>
+```
+
+```js
+import { setCardState } from '@kp-soft/themes/js/card-state';
+
+setCardState(card, 'loading', { words: 'Reading the folder…' });
+setCardState(card, 'error', { title: 'Could not list the files', text: 'The server answered 502 Bad Gateway.' });
+setCardState(card, 'empty', { title: 'No files yet', text: 'Files the procedure writes land here.', action: uploadButton });
+setCardState(card, 'ready');
+card.addEventListener('kp-card-retry', () => reload());
+```
+
+Loading lays the data table's own loading card over the stage (the
+theme's spinner and plate, `js/busy-card.js`); data already there stays
+under it, dimmed and inert, so a refresh never blanks the card, and a
+first load has `--kp-card-stage-min` (7.5rem) of room. Empty fills the
+stage with the package's empty state (title, sentence, optional action);
+error is the destructive alert with Try again, which fires `kp-card-retry`
+on the card. In both the data keeps its room, so a failed refresh of a full
+card does not collapse it; clear the data yourself when it no longer
+holds. When the focused Try again goes with its state, the focus moves to
+the stage. A framework that writes `data-kp-state` itself is followed by
+`attachCardStates(root)` (loaded by `js/auto.js`), and may render its own
+note in a `.kp-card__state` inside the stage. Exports: `setCardState`,
+`attachCardStates`, `CARD_STATE`, `CARD_STATES`, `CARD_STATE_EVENT`
+(`kp-card-state`, `{ card, state, previous }`), `CARD_RETRY_EVENT`.
+Strings: `cardLoading`, `cardEmpty`, `cardFailed`, `cardRetry`. Knobs:
+`--kp-card-stage-min`, `--kp-card-stage-gap`.
+
 ## Tables that fit [TH95, TH96]
 
 A table is the widest thing on most pages, and everything below is about

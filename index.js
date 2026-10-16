@@ -192,6 +192,9 @@ export {
     setStatus,
 } from './js/statusrow.js';
 /** @typedef {import('./js/statusrow.js').StatusRow} StatusRow */
+// A card in four data states [kpadopt4-rows].
+export { CARD_RETRY_EVENT, CARD_STATE, CARD_STATES, CARD_STATE_EVENT, attachCardStates, setCardState } from './js/card-state.js';
+/** @typedef {import('./js/card-state.js').CardStateOptions} CardStateOptions */
 export { FACETS, FACET_EVENT, attachFacets, getFacetValues, setFacetCounts, setFacetItems, setFacetValues } from './js/facets.js';
 /** @typedef {import('./js/facets.js').FacetItem} FacetItem */
 export { HOVERCARD_ATTRIBUTE, HOVERCARD_CARD, HOVERCARD_EVENT, attachHoverCards } from './js/hovercard.js';

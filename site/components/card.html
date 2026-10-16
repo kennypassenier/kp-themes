@@ -778,7 +778,10 @@
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
-                    <p class="kp-text-muted">This unit reads no data attributes of its own.</p>
+                    <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-card-built</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-card-retry</code></td><td>selector, written</td></tr>
+                    </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="react" id="react">
                     <h2 class="kp-fw-semibold">React usage</h2>
@@ -803,11 +806,16 @@
                 </section>
                 <section class="kp-section" data-sc-section="events" id="events">
                     <h2 class="kp-fw-semibold">Events</h2>
-                    <p class="kp-text-muted">This unit fires no events.</p>
+                    <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
+                            <tr><td><code>kp-card-state</code></td><td>Fired on the card, bubbling, when its state changed after attach: `{ card, state, previous }`.</td></tr>
+                            <tr><td><code>kp-card-retry</code></td><td>Fired on the card, bubbling, when its Try again is pressed: `{ card }`.</td></tr>
+                    </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
                     <h2 class="kp-fw-semibold">Knobs</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
+                            <tr><td><code>--kp-card-stage-gap</code></td><td><code>var(--kp-space-md, 1rem)</code></td></tr>
+                            <tr><td><code>--kp-card-stage-min</code></td><td><code>7.5rem</code></td></tr>
                             <tr><td><code>--kp-card-title-size</code></td><td><code>1.5rem</code></td></tr>
                             <tr><td><code>--kp-heading-line-height</code></td><td><code>1.1</code></td></tr>
                             <tr><td><code>--kp-space-md</code></td><td><code>1rem</code></td></tr>

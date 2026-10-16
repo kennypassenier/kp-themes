@@ -30,7 +30,7 @@ import process from 'node:process';
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 
 /** Data components whose loading state lays the busy card. */
-export const CARD = ['js/datatable.js', 'js/week.js', 'js/heat.js', 'js/gantt.js'];
+export const CARD = ['js/datatable.js', 'js/week.js', 'js/heat.js', 'js/gantt.js', 'js/card-state.js'];
 
 /** Approved before the rule, each with its own central loading picture. @type {Record<string, string>} */
 export const OWN = {

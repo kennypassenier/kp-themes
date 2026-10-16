@@ -152,6 +152,8 @@ export const NEEDS = [
     // Action tiles, status rows and the facet list [kpadopt2-tiles].
     { name: 'action-tiles', when: '.kp-action', load: () => import('./action-tiles.js'), attach: (m, root) => [m.attachActionTiles(root)] },
     { name: 'statusrow', when: '.kp-statuslist', load: () => import('./statusrow.js'), attach: (m, root) => [m.attachStatusLists(root)] },
+    // A card in four data states [kpadopt4-rows].
+    { name: 'card-state', when: '.kp-card[data-kp-state]', load: () => import('./card-state.js'), attach: (m, root) => [m.attachCardStates(root)] },
     { name: 'facets', when: '[data-kp-facets]', load: () => import('./facets.js'), attach: (m, root) => [m.attachFacets(root)] },
     { name: 'toolbar', when: '[data-kp-toolbar]', load: () => import('./toolbar.js'), attach: (m, root) => [m.attachToolbars(root)] },
     { name: 'keys', when: '.kp-kbd[data-kp-key]', load: () => import('./keys.js'), attach: (m, root) => [m.attachKeys(root)] },

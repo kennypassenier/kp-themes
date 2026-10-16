@@ -67,6 +67,9 @@ export { ACTION_BUSY_EVENT, ACTION_TILE, attachActionTiles, setActionBusy } from
 export { STATUS_EVENT, STATUS_ID_ATTRIBUTE, STATUS_LIST, STATUS_RETRY_EVENT, STATUS_STATES, attachStatusLists, buildStatusList, countStatus, setStatus, } from './js/statusrow.js';
 export type StatusRow = import('./js/statusrow.js').StatusRow;
 /** @typedef {import('./js/statusrow.js').StatusRow} StatusRow */
+export { CARD_RETRY_EVENT, CARD_STATE, CARD_STATES, CARD_STATE_EVENT, attachCardStates, setCardState } from './js/card-state.js';
+export type CardStateOptions = import('./js/card-state.js').CardStateOptions;
+/** @typedef {import('./js/card-state.js').CardStateOptions} CardStateOptions */
 export { FACETS, FACET_EVENT, attachFacets, getFacetValues, setFacetCounts, setFacetItems, setFacetValues } from './js/facets.js';
 export type FacetItem = import('./js/facets.js').FacetItem;
 /** @typedef {import('./js/facets.js').FacetItem} FacetItem */

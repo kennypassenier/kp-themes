@@ -4282,6 +4282,93 @@
         border-block-start: 1px solid var(--border);
     }
 
+    /* A card in four data states [kpadopt4-rows] (js/card-state.js):
+ * `data-kp-state` loading, empty, error or ready on a `.kp-card`, its data
+ * in `.kp-card__stage > .kp-card__data`. The data and the state's note
+ * share one grid cell, so a state never moves the header, the footer or a
+ * neighbouring card; in empty and error the data keeps its room, hidden;
+ * a first load has `--kp-card-stage-min` (7.5rem) for the loading card,
+ * which is the data table's own (js/busy-card.js). Knobs [KT6]:
+ * `--kp-card-stage-min`, `--kp-card-stage-gap` (the room above the stage). */
+    .kp-card__stage {
+        position: relative;
+        display: grid;
+        min-block-size: var(--kp-card-stage-min, 7.5rem);
+        margin-block-start: var(--kp-card-stage-gap, var(--kp-space-md, 1rem));
+    }
+
+    .kp-card__stage > :is(.kp-card__data, .kp-card__state) {
+        grid-area: 1 / 1;
+        min-inline-size: 0;
+    }
+
+    .kp-card__stage:focus {
+        outline: none;
+    }
+
+    .kp-card__state {
+        display: grid;
+        align-content: center;
+    }
+
+    .kp-card__state[hidden] {
+        display: none;
+    }
+
+    .kp-card:is([data-kp-state='empty'], [data-kp-state='error']) > .kp-card__stage > .kp-card__data {
+        visibility: hidden;
+    }
+
+    /* Empty: the package's empty state, filling the stage, its title in the
+     * page's ink over the muted sentence. */
+    .kp-card__state > .kp-card__empty {
+        display: grid;
+        align-content: center;
+        justify-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        block-size: 100%;
+        box-sizing: border-box;
+    }
+
+    .kp-card__state-title {
+        color: var(--foreground);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-card__state-text {
+        overflow-wrap: anywhere;
+    }
+
+    .kp-card__state-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        margin-block-start: var(--kp-space-sm, 0.5rem);
+    }
+
+    /* Error: the destructive alert, what failed in bold over why, Try again
+     * at its end (under the words in a narrow card). */
+    .kp-card__failure {
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .kp-card__failure > .kp-alert__body {
+        display: grid;
+        gap: calc(var(--kp-space-xs, 0.25rem) / 2);
+        flex: 1 1 14rem;
+        min-inline-size: 0;
+    }
+
+    .kp-card__failure > .kp-card__retry {
+        flex: none;
+    }
+
+    .kp-card[data-kp-state='loading'] > .kp-card__stage > .kp-card__data {
+        cursor: progress;
+    }
+
     /* One rule per status, so a plate comes from a class rather than from
  * a style attribute [R5-BADGE, TH109]. Before this, the only way to
  * colour a badge was `style="background: var(--status-offer)"` — which
