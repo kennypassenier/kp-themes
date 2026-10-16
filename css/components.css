@@ -13553,6 +13553,189 @@
         font-size: var(--kp-text-xs, 0.75rem);
         overflow-wrap: anywhere;
     }
+
+    /* --- Visual timer: the time left as a shrinking disc [kpadopt4-ideas] ---
+ * `.kp-timer-disc[data-kp-timer-disc="25m"]` (js/timer-disc.js). A round face with twelve marks on its rim and a disc
+ * in the theme's primary colour that turns back towards twelve o'clock as the time goes, drawn by one number
+ * (`--kp-timer-disc-left`, 1 full, 0 gone); under it the name and length (still), one line for Paused or Time is up,
+ * and the package's buttons. No figure ticks. Paused, the disc rests a shade lighter; at the end the face breathes
+ * three times and then stands with a ring, still under reduced motion.
+ * Knobs [KT6]: --kp-timer-disc-size (12rem, never wider than 70% of the window), --kp-timer-disc-fill (--primary),
+ * --kp-timer-disc-inset (7%, the disc inside the rim), --kp-timer-disc-marks (--muted-foreground), --kp-timer-disc-ring
+ * (the end ring's colour). */
+    /* Timers side by side are as tall as the tallest: the room goes under the name, so the status lines and the
+     * buttons of a row stand on one line. */
+    .kp-timer-disc {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto 1fr auto auto;
+        align-content: start;
+        justify-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+        text-align: center;
+    }
+
+    .kp-timer-disc__face {
+        position: relative;
+        box-sizing: border-box;
+        inline-size: min(var(--kp-timer-disc-size, 12rem), 70vw);
+        aspect-ratio: 1;
+        border: 1px solid var(--border-strong, var(--border));
+        border-radius: 50%;
+        background: var(--card);
+        transition: box-shadow var(--fx-duration, 200ms) var(--fx-ease, ease-out);
+    }
+
+    .kp-timer-disc__sector,
+    .kp-timer-disc__marks,
+    .kp-timer-disc__hub {
+        position: absolute;
+        border-radius: 50%;
+    }
+
+    .kp-timer-disc__sector {
+        inset: var(--kp-timer-disc-inset, 7%);
+        background: conic-gradient(var(--kp-timer-disc-fill, var(--primary)) calc(var(--kp-timer-disc-left, 1) * 360deg), transparent 0);
+        transition: opacity var(--fx-duration, 200ms) var(--fx-ease, ease-out);
+    }
+
+    /* Twelve marks round the rim, outside the disc. */
+    .kp-timer-disc__marks {
+        inset: 1.5%;
+        background: repeating-conic-gradient(from -0.6deg, var(--kp-timer-disc-marks, var(--muted-foreground)) 0 1.2deg, transparent 1.2deg 30deg);
+        mask-image: radial-gradient(closest-side, transparent calc(100% - 4.5%), var(--foreground) calc(100% - 4.5%));
+    }
+
+    .kp-timer-disc__hub {
+        inset: 46%;
+        border: 2px solid var(--card);
+        background: var(--foreground);
+    }
+
+    .kp-timer-disc[data-kp-timer-disc-state='paused'] .kp-timer-disc__sector {
+        opacity: 0.55;
+    }
+
+    .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face {
+        box-shadow: 0 0 0 4px var(--kp-timer-disc-ring, color-mix(in oklab, var(--kp-timer-disc-fill, var(--primary)) 35%, transparent));
+    }
+
+    .kp-timer-disc__caption {
+        align-self: start;
+    }
+
+    .kp-countdown__name {
+        align-self: end;
+    }
+
+    .kp-timer-disc__caption,
+    .kp-countdown__name {
+        margin: 0;
+        max-inline-size: 100%;
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    /* One line, always there, so the buttons never move when it fills. */
+    .kp-timer-disc__status,
+    .kp-countdown__status {
+        min-block-size: 1lh;
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__status,
+    .kp-countdown[data-kp-countdown-state='ended'] .kp-countdown__status {
+        color: var(--foreground);
+        font-weight: 600;
+    }
+
+    .kp-timer-disc__controls,
+    .kp-countdown__controls {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    /* --- Countdown: a named timer in digits [kpadopt4-ideas] ---
+ * `.kp-countdown[data-kp-countdown="25:00"]` (js/countdown.js). The name, the digits (every digit in a cell one `ch`
+ * wide, so the time never moves the layout, in the theme's display face), one line for Paused or Time is up, and Start,
+ * a minute more and Reset. At the end the plate breathes three times and keeps a ring, still under reduced motion.
+ * Knobs [KT6]: --kp-countdown-size (3rem, the digits), --kp-countdown-ink (--foreground), --kp-countdown-ring (the end
+ * ring's colour). */
+    /* The room of a taller neighbour goes over the name, so the digits and the buttons of a row stand on one line. */
+    .kp-countdown {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: 1fr auto auto auto;
+        justify-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        box-sizing: border-box;
+        min-inline-size: 0;
+        padding: var(--kp-space-md, 1rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        text-align: center;
+        transition: box-shadow var(--fx-duration, 200ms) var(--fx-ease, ease-out);
+    }
+
+    .kp-countdown__time {
+        margin: 0;
+        color: var(--kp-countdown-ink, var(--foreground));
+        font-family: var(--theme-font-display, inherit);
+        font-size: var(--kp-countdown-size, 3rem);
+        font-variant-numeric: tabular-nums lining-nums;
+        font-weight: 600;
+        line-height: 1.1;
+        white-space: nowrap;
+    }
+
+    .kp-countdown__digit {
+        display: inline-block;
+        inline-size: 1ch;
+        text-align: center;
+    }
+
+    .kp-countdown__colon {
+        display: inline-block;
+        inline-size: 0.4ch;
+        text-align: center;
+    }
+
+    .kp-countdown[data-kp-countdown-state='paused'] .kp-countdown__time {
+        color: var(--muted-foreground);
+    }
+
+    .kp-countdown[data-kp-countdown-state='ended'] {
+        box-shadow: 0 0 0 3px var(--kp-countdown-ring, color-mix(in oklab, var(--primary) 35%, transparent));
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face,
+        .kp-countdown[data-kp-countdown-state='ended'] {
+            /* A literal, not a knob: three slow breaths, far under the flash threshold of DI5. */
+            animation: kp-timer-breathe 1600ms ease-in-out 3;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .kp-timer-disc__face,
+        .kp-timer-disc__sector,
+        .kp-countdown {
+            transition: none;
+        }
+    }
+
+    @keyframes kp-timer-breathe {
+        50% {
+            box-shadow: 0 0 0 10px color-mix(in oklab, var(--primary) 12%, transparent);
+        }
+    }
 }
 
 /* The tour's dim is the target's box-shadow, and a register that gives the part a shadow of its own (a card's rim) wins over

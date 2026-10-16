@@ -1896,6 +1896,49 @@ edge fades on the side with more. Before the script runs the block keeps its hea
 copy button's own `copy` and `copied`. Knobs: `--kp-command-prompt`, `--kp-command-prompt-width`,
 `--kp-command-prompt-ink`, `--kp-command-head-height` (2.75rem), `--kp-command-code-max`.
 
+### Two timers: a disc and digits
+
+Two separate components, on one clock (`countdownClock()` in `js/countdown.js`: the time left is the end moment minus
+`now()`, so neither drifts or loses time in a hidden tab, and a test hands in its own `now`).
+
+**The visual timer** shows the time left as a shrinking disc, with no figures ticking:
+
+```html
+<div class="kp-timer-disc" data-kp-timer-disc="25m" data-kp-timer-disc-name="Focus"></div>
+```
+
+`attachTimerDiscs(root)` (`js/timer-disc.js`) draws a round face with twelve marks on its rim and a disc in the
+theme's primary colour that turns back towards twelve o'clock; under it the name and length ("Focus · 25 min"), one
+line for Paused or Time is up, and Start (Pause, Resume, one width) and Reset as package buttons. The whole disc is the
+set length; `data-kp-timer-disc-scale="60"` makes the face a 60-minute dial instead. The disc is one number,
+`--kp-timer-disc-left` (1 full, 0 gone), written only when its edge has moved a tenth of a degree; Reset fills it again
+in the theme's `--fx-duration` and `--fx-ease`. Paused, the disc rests a shade lighter; at the end the face breathes
+three slow times and keeps a ring. Under reduced motion the disc steps once a minute (each second in the last minute)
+and nothing glides or breathes. The face is an image named by the time left in whole minutes. `timerDiscOf(el)` is
+the clock of an attached timer, `discShare(remaining, scale)` the arithmetic. Knobs: `--kp-timer-disc-size` (12rem,
+at most 70vw), `--kp-timer-disc-fill`, `--kp-timer-disc-inset`, `--kp-timer-disc-marks`, `--kp-timer-disc-ring`.
+
+**The countdown** counts down in digits:
+
+```html
+<div class="kp-countdown" data-kp-countdown="3:00" data-kp-countdown-name="Tea"></div>
+```
+
+`attachCountdowns(root)` draws the name, the digits, one line for Paused or Time is up, and Start, "+1 min"
+(`data-kp-countdown-step` sets the amount) and Reset. Every digit stands in a cell one `ch` wide and only the digits
+that change are written, so the time never moves the layout, whatever the theme's face. The format is mm:ss, or
+h:mm:ss once the timer holds an hour; it changes only on a press, never while it runs. The time shown is rounded up,
+so 0:00 is the end; a minute more on a timer whose time is up starts it again. `countdownOf(el)` is its clock
+(`start`, `pause`, `reset(seconds)`, `add(seconds)`, `remaining`, `state`); `parseDuration('1h30m')` and
+`formatCountdown(ms, hours)` are the rules. Knobs: `--kp-countdown-size` (3rem), `--kp-countdown-ink`,
+`--kp-countdown-ring`.
+
+Both fire `kp-countdown-change` (`{ state, remaining, total }`, on a start, a pause, a reset or more time) and
+`kp-countdown-end` (`{ total }`), and take `data-kp-…-disabled`. Their words are `timer…` (`timerStart`, `timerPause`,
+`timerResume`, `timerReset`, `timerAddMinute`, `timerAddMinuteTitle`, `timerPaused`, `timerEnded`, `timerEndedNamed`,
+`timerStarted`, `timerResumed`, `timerLeft`, `timerDuration`, `timerDiscLeft`, `timerUnderMinute`, `timerDiscCaption`).
+The recipes app's named kitchen timers are their own component; they may run on `countdownClock()` too.
+
 <!-- kpadopt4-ideas: next component -->
 
 ## Tables that fit [TH95, TH96]

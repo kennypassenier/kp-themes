@@ -164,6 +164,12 @@
         { "path": "js/gantt.js", "tags": ["@component:data"], "why": "the run timeline [kpadopt-time]" },
         { "path": "js/uptime.js", "tags": ["@component:data"], "why": "the uptime strip [kpadopt4-ideas]" },
         { "path": "js/command.js", "tags": ["@component:data"], "why": "the command block [kpadopt4-ideas]" },
+        {
+            "path": "js/countdown.js",
+            "tags": ["@component:data"],
+            "why": "the countdown in digits and the clock both timers run on [kpadopt4-ideas]"
+        },
+        { "path": "js/timer-disc.js", "tags": ["@component:data"], "why": "the visual timer, a shrinking disc [kpadopt4-ideas]" },
         { "path": "js/calendar.js", "tags": ["@component:data"], "why": "the month heatmap [scope-143]" },
         { "path": "js/graph.js", "tags": ["@component:data"], "why": "the network graph [scope-143]" },
         { "path": "js/segmented.js", "tags": ["@component:data"], "why": "the segmented control and filter chips [kpadopt-controls]" },
@@ -284,6 +290,8 @@
         "kp-calendar": ["@component:data"],
         "kp-week": ["@component:data"],
         "kp-gantt": ["@component:data"],
+        "kp-timer-disc": ["@component:data"],
+        "kp-countdown": ["@component:data"],
         "kp-command": ["@component:data"],
         "kp-uptime": ["@component:data"],
         "kp-type-confirm": ["@component:feedback"],

@@ -376,6 +376,22 @@
  * @property {string} commandSudo  The badge of a Linux command that runs with root rights [kpadopt4-ideas]
  * @property {string} commandSudoTitle  Its tooltip [kpadopt4-ideas]
  * @property {(where: string) => string} commandRunsOn  The note under a command that says where it runs [kpadopt4-ideas]
+ * @property {string} timerStart  A timer's Start button (js/countdown.js, js/timer-disc.js) [kpadopt4-ideas]
+ * @property {string} timerPause  The same button while it runs [kpadopt4-ideas]
+ * @property {string} timerResume  The same button while it is paused [kpadopt4-ideas]
+ * @property {string} timerReset  A timer's Reset button [kpadopt4-ideas]
+ * @property {(seconds: number) => string} timerAddMinute  The countdown's button that adds time: "+1 min" [kpadopt4-ideas]
+ * @property {(seconds: number) => string} timerAddMinuteTitle  Its tooltip: "Add 1 min" [kpadopt4-ideas]
+ * @property {string} timerPaused  The line under a paused timer, and what a screen reader hears [kpadopt4-ideas]
+ * @property {string} timerEnded  The line under a timer whose time is up [kpadopt4-ideas]
+ * @property {(name: string) => string} timerEndedNamed  What a screen reader hears when a named timer ends [kpadopt4-ideas]
+ * @property {string} timerStarted  What a screen reader hears when a timer starts [kpadopt4-ideas]
+ * @property {string} timerResumed  What a screen reader hears when it goes on after a pause [kpadopt4-ideas]
+ * @property {(duration: string) => string} timerLeft  The countdown's time left for a screen reader: "25 min left" [kpadopt4-ideas]
+ * @property {(seconds: number) => string} timerDuration  A timer's length in words: "25 min", "1 h 30 min", "45 s" [kpadopt4-ideas]
+ * @property {(left: string, total: string) => string} timerDiscLeft  The visual timer's face for a screen reader: "12 min left of 25 min" [kpadopt4-ideas]
+ * @property {string} timerUnderMinute  The time left on the face in its last minute [kpadopt4-ideas]
+ * @property {(name: string, duration: string) => string} timerDiscCaption  The still line under the disc: "Focus · 25 min" [kpadopt4-ideas]
  * @property {string} graphShowAll  The network graph's way back to every node and every kind of link (js/graph.js) [scope-143]
  * @property {string} graphShowAllTitle  Its title [scope-143]
  * @property {string} graphHint  The hint under the graph, and the second half of its picture's accessible name: what a pointer, a click and the keys do [scope-143]
@@ -872,6 +888,29 @@ export const DEFAULT_STRINGS = Object.freeze({
     commandSudo: 'sudo',
     commandSudoTitle: 'Runs with root rights; the terminal asks for your password',
     commandRunsOn: (where) => `Runs on ${where}`,
+    // The two timers [kpadopt4-ideas].
+    timerStart: 'Start',
+    timerPause: 'Pause',
+    timerResume: 'Resume',
+    timerReset: 'Reset',
+    timerAddMinute: (seconds) => (seconds % 60 === 0 ? `+${seconds / 60} min` : `+${seconds} s`),
+    timerAddMinuteTitle: (seconds) => (seconds % 60 === 0 ? `Add ${seconds / 60} min` : `Add ${seconds} s`),
+    timerPaused: 'Paused',
+    timerEnded: 'Time is up',
+    timerEndedNamed: (name) => `${name}: time is up`,
+    timerStarted: 'Started',
+    timerResumed: 'Going on',
+    timerLeft: (duration) => `${duration} left`,
+    timerDuration: (seconds) => {
+        if (seconds < 60) return `${seconds} s`;
+        const h = Math.floor(seconds / 3600);
+        const m = Math.floor((seconds % 3600) / 60);
+        const s = seconds % 60;
+        return [h ? `${h} h` : '', m ? `${m} min` : '', s ? `${s} s` : ''].filter(Boolean).join(' ');
+    },
+    timerDiscLeft: (left, total) => `${left} left of ${total}`,
+    timerUnderMinute: 'under a minute',
+    timerDiscCaption: (name, duration) => `${name} · ${duration}`,
     // The network graph [scope-143]: its own words; the nodes, kinds and
     // the sentences of its states are the page's.
     graphShowAll: 'Show all',

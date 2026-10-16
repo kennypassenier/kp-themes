@@ -141,3 +141,22 @@
 .k4-pair--even {
     align-items: stretch;
 }
+
+/* Timers in a row: equal columns, every card as tall as its neighbours. */
+.k4-states,
+.k4-four {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(13rem, 100%), 1fr));
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: stretch;
+}
+
+.k4-states > *,
+.k4-four > * {
+    min-inline-size: 0;
+}
+
+/* Countdowns hold three buttons on one line: their columns are wider. */
+.k4-states--wide {
+    grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+}

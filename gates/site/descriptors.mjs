@@ -2937,6 +2937,68 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
         ],
     },
     {
+        id: 'timer-disc',
+        title: 'Visual timer',
+        group: 'Feedback',
+        classes: ['kp-timer-disc'],
+        exports: [],
+        intro: 'The time left as a shrinking disc, the Time Timer’s idea: no figures tick, a coloured disc grows smaller as the time goes, so the time left is seen at a glance. `attachTimerDiscs(root)` in js/timer-disc.js draws the face with twelve marks on its rim, the disc (drawn by one number, written only when its edge has moved a tenth of a degree), the name and length under it, one line for Paused or Time is up, and Start and Reset as the package’s buttons. Reset fills the disc in the theme’s own time and curve; at the end the face breathes three times. Under reduced motion the disc steps once a minute and nothing glides or breathes.',
+        whenToUse:
+            'For a span of time a person should feel rather than read: focus, a break, homework, a child’s turn. When the exact seconds matter, use the countdown in digits.',
+        examples: [
+            {
+                title: 'Twenty-five minutes of focus',
+                why: '`data-kp-timer-disc` takes a length (`25m`, `1h30m`, `90`, `25:00`); `data-kp-timer-disc-scale="60"` makes the face a 60-minute dial.',
+                markup: `
+<div class="kp-timer-disc" data-kp-timer-disc="25m" data-kp-timer-disc-name="Focus"></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-timer-disc', what: 'The length: `25m`, `1h30m`, `45s`, `90` (seconds) or `25:00`.' },
+            { name: 'data-kp-timer-disc-name', what: 'The timer’s name, under the face with its length.' },
+            { name: 'data-kp-timer-disc-scale', what: 'Minutes for a whole turn of the face (`60`: the classic dial); without it the whole disc is the set length.' },
+            { name: 'data-kp-timer-disc-disabled', what: 'Every button is off.' },
+            { name: 'data-kp-timer-disc-state', what: 'Set by the script: `idle`, `running`, `paused` or `ended`.' },
+        ],
+        accessibility: [
+            'Built in — the face is an image named by the time left in whole minutes, so a screen reader is not told every second; a status region says when it starts, pauses and ends.',
+            'Built in — Start keeps one width for Start, Pause and Resume; Reset is off while there is nothing to reset; the end is a word and a ring as well as a breath, and nothing moves under reduced motion.',
+            'Yours — name the timer, and say elsewhere what happens at the end if anything does.',
+        ],
+    },
+    {
+        id: 'countdown',
+        title: 'Countdown',
+        group: 'Feedback',
+        classes: ['kp-countdown'],
+        exports: [],
+        intro: 'A named timer in digits, mm:ss or h:mm:ss, with Start, a minute more and Reset, and a gentle signal at the end. `attachCountdowns(root)` in js/countdown.js draws it; every digit stands in a cell one `ch` wide and only the digits that change are written, so the time never moves the layout in any theme’s face. The format follows the timer’s length and changes only on a press (a minute more past the hour). The time shown is rounded up: 0:00 is the end. The clock is the end moment minus now, so a hidden tab never loses time; `countdownClock()` is that clock on its own.',
+        whenToUse:
+            'When the exact time left matters: a tea, an oven, a call that has to end, a step that must wait so many minutes. For a span to feel rather than read, use the visual timer.',
+        examples: [
+            {
+                title: 'Tea, three minutes',
+                why: '`data-kp-countdown` takes a length; `data-kp-countdown-step` sets what “a minute more” adds.',
+                markup: `
+<div class="kp-countdown" data-kp-countdown="3:00" data-kp-countdown-name="Tea"></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-countdown', what: 'The length: `3:00`, `1:30:00`, `25m`, `90` (seconds).' },
+            { name: 'data-kp-countdown-name', what: 'The timer’s name, over the digits.' },
+            { name: 'data-kp-countdown-step', what: 'What the add button adds; 60 seconds by default.' },
+            { name: 'data-kp-countdown-disabled', what: 'Every button is off.' },
+            { name: 'data-kp-countdown-state', what: 'Set by the script: `idle`, `running`, `paused` or `ended`.' },
+        ],
+        accessibility: [
+            'Built in — the digits are a timer (`role="timer"`, not announced every second) with the time left in words for a screen reader; a status region says when it starts, pauses, goes on and ends, with the timer’s name.',
+            'Built in — Start keeps one width for Start, Pause and Resume; the end is a word and a ring as well as a breath, still under reduced motion.',
+            'Yours — name the timer, and keep one countdown per task: several running at once need their names to be told apart.',
+        ],
+    },
+    {
         id: 'toolbar',
         title: 'List toolbar',
         group: 'Data',

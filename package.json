@@ -156,6 +156,14 @@
             "types": "./js/command.d.ts",
             "default": "./js/command.js"
         },
+        "./js/countdown": {
+            "types": "./js/countdown.d.ts",
+            "default": "./js/countdown.js"
+        },
+        "./js/timer-disc": {
+            "types": "./js/timer-disc.d.ts",
+            "default": "./js/timer-disc.js"
+        },
         "./js/loading-pieces": {
             "types": "./js/loading-pieces.d.ts",
             "default": "./js/loading-pieces.js"

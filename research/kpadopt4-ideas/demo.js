@@ -185,3 +185,43 @@ refuse.addEventListener('click', () => {
     if (navigator.clipboard)
         navigator.clipboard.writeText = on ? () => Promise.reject(new DOMException('Refused for the demo', 'NotAllowedError')) : realWrite;
 });
+
+/* ------------------------------------------------------------ 4 and 5 · the timers */
+
+import { attachTimerDiscs } from '../../js/timer-disc.js';
+import { attachCountdowns, countdownOf, COUNTDOWN_EVENT, COUNTDOWN_END_EVENT } from '../../js/countdown.js';
+import { timerDiscOf } from '../../js/timer-disc.js';
+
+// The states shown at once run on demo clocks the page moves by hand (mock), one per state; the live timers above run
+// on the real one.
+const times = { idle: 0, running: 0, paused: 0, ended: 0 };
+const held = /** @type {HTMLElement[]} */ ([...document.querySelectorAll('[data-k4-clock]')]);
+for (const el of held) {
+    const state = /** @type {keyof typeof times} */ (el.dataset.k4Clock);
+    const now = () => times[state];
+    if (el.matches('.kp-timer-disc')) attachTimerDiscs(el, { now });
+    else attachCountdowns(el, { now });
+}
+const clockOf = (/** @type {HTMLElement} */ el) => timerDiscOf(el) ?? countdownOf(el);
+for (const el of held) if (el.dataset.k4Clock !== 'idle') clockOf(el)?.start();
+times.running = 3 * 60000; // seven of ten minutes left
+times.paused = 6 * 60000; // four left, then paused
+for (const el of held) if (el.dataset.k4Clock === 'paused') clockOf(el)?.pause();
+times.ended = 11 * 60000; // the time is up
+for (const el of held) if (el.dataset.k4Clock === 'ended') clockOf(el)?.state();
+
+const discLog = byId('k4-disc-log');
+const countLog = byId('k4-countdown-log');
+for (const [event, word] of [
+    [COUNTDOWN_EVENT, 'kp-countdown-change'],
+    [COUNTDOWN_END_EVENT, 'kp-countdown-end'],
+]) {
+    document.addEventListener(event, (e) => {
+        const target = /** @type {HTMLElement} */ (e.target);
+        if (target.dataset.k4Clock) return;
+        const d = /** @type {CustomEvent} */ (e).detail;
+        const name = target.dataset.kpTimerDiscName ?? target.dataset.kpCountdownName;
+        const line = `${word} · ${name} · ${d.state ?? 'ended'}${d.remaining !== undefined ? ` · ${Math.ceil(d.remaining / 1000)} s left` : ''}`;
+        say(target.matches('.kp-timer-disc') ? discLog : countLog, line);
+    });
+}

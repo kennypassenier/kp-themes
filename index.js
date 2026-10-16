@@ -137,6 +137,19 @@ export {
     uptimePercent,
 } from './js/uptime.js';
 export { COMMAND, COMMAND_SHELLS, attachCommands, commandLines } from './js/command.js';
+export {
+    COUNTDOWN,
+    COUNTDOWN_END_EVENT,
+    COUNTDOWN_EVENT,
+    COUNTDOWN_STEP,
+    attachCountdowns,
+    countdownClock,
+    countdownOf,
+    formatCountdown,
+    parseDuration,
+    timerButton,
+} from './js/countdown.js';
+export { TIMER_DISC, TIMER_DISC_LEFT, attachTimerDiscs, discShare, timerDiscOf } from './js/timer-disc.js';
 // The dashboard components [scope-143].
 export { ACTION_LIST, ROW_ACTIONS, attachActionColumns, fitActionColumns, mergeRoles, rowRoles } from './js/actions.js';
 export {

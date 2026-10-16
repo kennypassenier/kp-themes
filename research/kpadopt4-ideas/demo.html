@@ -622,6 +622,243 @@ pct config 109</code></pre>
                 </div>
             </section>
 
+            <!-- 4 · visual timer -->
+            <section
+                class="k4-sec"
+                id="disc"
+                data-review-item="disc"
+                data-review-components="timer-disc"
+                data-review-topic="timer-disc"
+                data-review-topic-title="4 · Visual timer"
+                data-review-title="4 · Visual timer: a shrinking disc"
+                aria-labelledby="h-disc"
+            >
+                <div class="k4-sec__head">
+                    <h2 id="h-disc">4 · Visual timer: a shrinking disc</h2>
+                    <p>
+                        <code>&lt;div class="kp-timer-disc" data-kp-timer-disc="25m" data-kp-timer-disc-name="Focus"&gt;</code> (js/timer-disc.js):
+                        the time left as a disc, no ticking numbers. Live timers: press Start.
+                    </p>
+                </div>
+                <div class="k4-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Three round faces with twelve marks on the rim and a full navy disc. Under each: its name and length (“Focus · 25 min”),
+                            an empty line, then <b>Start</b> and <b>Reset</b> (Reset is off while the timer is full).
+                        </li>
+                        <li>
+                            <b>Tea</b> (20 s): press Start. The disc’s edge turns back towards twelve o’clock, smoothly, with nothing flickering;
+                            <b>Start</b> becomes <b>Pause</b> without changing width. After 20 s the disc is gone, the face breathes three slow times
+                            and keeps a soft ring, the line says <b>Time is up</b> and the grey box logs <code>kp-countdown-end</code>.
+                        </li>
+                        <li>
+                            <b>Pause</b>: the disc stops and rests a shade lighter, the line says <b>Paused</b>, the button says <b>Resume</b>.
+                            <b>Reset</b>: the disc fills again in formal’s own time and curve.
+                        </li>
+                        <li>
+                            <b>Break</b> uses the classic 60-minute dial (<code>data-kp-timer-disc-scale="60"</code>): 5 minutes is a thin sector of
+                            30°, not a full disc.
+                        </li>
+                        <li>With reduced motion on in your system, the disc steps once a minute and nothing glides or breathes.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal’s card for the face with its strong hairline rim, the disc in formal’s navy, the marks in its muted ink, its display
+                        face for nothing (the face has no figures), and its own primary and ghost buttons.
+                    </p>
+                </div>
+                <div class="k4-pair">
+                    <div class="kp-timer-disc" data-kp-timer-disc="20s" data-kp-timer-disc-name="Tea"></div>
+                    <div class="kp-timer-disc" data-kp-timer-disc="25m" data-kp-timer-disc-name="Focus"></div>
+                    <div class="kp-timer-disc" data-kp-timer-disc="5m" data-kp-timer-disc-scale="60" data-kp-timer-disc-name="Break"></div>
+                </div>
+                <pre class="k4-log" id="k4-disc-log" aria-live="polite"></pre>
+            </section>
+
+            <section
+                class="k4-sec"
+                id="disc-states"
+                data-review-item="disc-states"
+                data-review-components="timer-disc"
+                data-review-topic="timer-disc"
+                data-review-title="4 · Visual timer: every state at once"
+                aria-labelledby="h-disc-states"
+            >
+                <div class="k4-sec__head">
+                    <h2 id="h-disc-states">4 · Visual timer: every state at once</h2>
+                    <p>
+                        Five 10-minute timers held in a state by a demo clock (the package’s clock takes any <code>now()</code>): set, running,
+                        paused, time up, disabled, and one with a long name.
+                    </p>
+                </div>
+                <div class="k4-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Set</b>: a full disc; Start on, Reset off.</li>
+                        <li><b>Running</b>: 70% of the disc left (from twelve o’clock clockwise to about eight); Pause on, Reset on.</li>
+                        <li><b>Paused</b>: 40% left, a shade lighter; the line says Paused; Resume and Reset on.</li>
+                        <li><b>Time is up</b>: no disc, the soft ring round the face, “Time is up” in the line; Start off, Reset on.</li>
+                        <li><b>Disabled</b>: a full disc and both buttons off.</li>
+                        <li>
+                            <b>Long name</b>: the name wraps under the face, centred, and never touches the frame. Every face is the same size and the
+                            buttons of the row stand on one line.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Formal’s face, disc and buttons in each state.</p>
+                </div>
+                <div class="k4-states">
+                    <div class="kp-timer-disc" data-kp-timer-disc="10m" data-kp-timer-disc-name="Set" data-k4-clock="idle"></div>
+                    <div class="kp-timer-disc" data-kp-timer-disc="10m" data-kp-timer-disc-name="Running" data-k4-clock="running"></div>
+                    <div class="kp-timer-disc" data-kp-timer-disc="10m" data-kp-timer-disc-name="Paused" data-k4-clock="paused"></div>
+                    <div class="kp-timer-disc" data-kp-timer-disc="10m" data-kp-timer-disc-name="Time is up" data-k4-clock="ended"></div>
+                    <div
+                        class="kp-timer-disc"
+                        data-kp-timer-disc="10m"
+                        data-kp-timer-disc-name="Disabled"
+                        data-kp-timer-disc-disabled
+                        data-k4-clock="idle"
+                    ></div>
+                    <div
+                        class="kp-timer-disc"
+                        data-kp-timer-disc="10m"
+                        data-kp-timer-disc-name="Quiet reading before the evening round of medicine"
+                        data-k4-clock="idle"
+                    ></div>
+                </div>
+            </section>
+
+            <section
+                class="k4-sec"
+                id="disc-phone"
+                data-review-item="disc-phone"
+                data-review-components="timer-disc"
+                data-review-topic="timer-disc"
+                data-review-title="4 · Visual timer at phone width"
+                aria-labelledby="h-disc-phone"
+            >
+                <div class="k4-sec__head">
+                    <h2 id="h-disc-phone">4 · Visual timer at phone width</h2>
+                    <p>One timer in a 360 px frame.</p>
+                </div>
+                <div class="k4-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>The face keeps its size (it never grows past 70% of the screen’s width), the buttons stand side by side under it.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Formal at a phone’s width.</p>
+                </div>
+                <div class="k4-frame k4-frame--phone">
+                    <div class="kp-timer-disc" data-kp-timer-disc="15m" data-kp-timer-disc-name="Homework"></div>
+                </div>
+            </section>
+
+            <!-- 5 · countdown -->
+            <section
+                class="k4-sec"
+                id="countdown"
+                data-review-item="countdown"
+                data-review-components="countdown"
+                data-review-topic="countdown"
+                data-review-topic-title="5 · Countdown in digits"
+                data-review-title="5 · Countdown in digits"
+                aria-labelledby="h-countdown"
+            >
+                <div class="k4-sec__head">
+                    <h2 id="h-countdown">5 · Countdown in digits</h2>
+                    <p>
+                        <code>&lt;div class="kp-countdown" data-kp-countdown="3:00" data-kp-countdown-name="Tea"&gt;</code> (js/countdown.js): a named
+                        timer in digits, apart from the visual one. Live timers: press Start.
+                    </p>
+                </div>
+                <div class="k4-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Four cards: the name, big digits in formal’s display face (<b>00:10</b>, <b>03:00</b>, <b>12:00</b>, <b>1:30:00</b> with
+                            hours), an empty line, then <b>Start</b>, <b>+1 min</b> and <b>Reset</b>.
+                        </li>
+                        <li>
+                            Press Start on <b>Quick check</b>: the digits count down each second and <b>nothing moves</b>, not the digits beside the
+                            one that changes, not the card, not the buttons (watch 00:10 → 00:09 → 00:01). At 00:00 the card breathes three slow times
+                            and keeps a soft ring, the line says <b>Time is up</b>, the grey box logs it.
+                        </li>
+                        <li>
+                            <b>+1 min</b> adds a minute, running or not (a timer whose time is up starts again with it). On <b>Pizza</b>, pressing it
+                            until past an hour switches the digits to h:mm:ss once, on that press; Reset goes back to 12:00.
+                        </li>
+                        <li><b>Pause</b>: the digits stop in muted ink, the line says Paused, the button says Resume, without changing width.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Formal’s card, its display face for the digits, its primary, plain and ghost buttons.</p>
+                </div>
+                <div class="k4-four k4-states--wide">
+                    <div class="kp-countdown" data-kp-countdown="0:10" data-kp-countdown-name="Quick check"></div>
+                    <div class="kp-countdown" data-kp-countdown="3:00" data-kp-countdown-name="Tea"></div>
+                    <div class="kp-countdown" data-kp-countdown="12:00" data-kp-countdown-name="Pizza"></div>
+                    <div class="kp-countdown" data-kp-countdown="1:30:00" data-kp-countdown-name="Bread proofing"></div>
+                </div>
+                <pre class="k4-log" id="k4-countdown-log" aria-live="polite"></pre>
+            </section>
+
+            <section
+                class="k4-sec"
+                id="countdown-states"
+                data-review-item="countdown-states"
+                data-review-components="countdown"
+                data-review-topic="countdown"
+                data-review-title="5 · Countdown: every state at once, and at phone width"
+                aria-labelledby="h-countdown-states"
+            >
+                <div class="k4-sec__head">
+                    <h2 id="h-countdown-states">5 · Countdown: every state at once, and at phone width</h2>
+                    <p>Ten-minute timers held in a state by a demo clock; then one in a 360 px frame.</p>
+                </div>
+                <div class="k4-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Set</b> 10:00; <b>Running</b> 07:00 with Pause; <b>Paused</b> 04:00 in muted ink with Resume and “Paused”.</li>
+                        <li><b>Time is up</b>: 00:00, the ring, “Time is up”, Start off. <b>Disabled</b>: every button off.</li>
+                        <li><b>Long name</b>: the name wraps, centred; the digits stay on one line.</li>
+                        <li>
+                            Every card in a row is as tall as its neighbours and its digits sit at the same height. In the 360 px frame the three
+                            buttons stand on one line and no text touches the edge.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Formal’s card, digits and buttons in each state.</p>
+                </div>
+                <div class="k4-states k4-states--wide">
+                    <div class="kp-countdown" data-kp-countdown="10:00" data-kp-countdown-name="Set" data-k4-clock="idle"></div>
+                    <div class="kp-countdown" data-kp-countdown="10:00" data-kp-countdown-name="Running" data-k4-clock="running"></div>
+                    <div class="kp-countdown" data-kp-countdown="10:00" data-kp-countdown-name="Paused" data-k4-clock="paused"></div>
+                    <div class="kp-countdown" data-kp-countdown="10:00" data-kp-countdown-name="Time is up" data-k4-clock="ended"></div>
+                    <div
+                        class="kp-countdown"
+                        data-kp-countdown="10:00"
+                        data-kp-countdown-name="Disabled"
+                        data-kp-countdown-disabled
+                        data-k4-clock="idle"
+                    ></div>
+                    <div
+                        class="kp-countdown"
+                        data-kp-countdown="10:00"
+                        data-kp-countdown-name="Soak the chickpeas for the stew tomorrow"
+                        data-k4-clock="idle"
+                    ></div>
+                </div>
+                <div class="k4-frame k4-frame--phone">
+                    <div class="kp-countdown" data-kp-countdown="45:00" data-kp-countdown-name="Oven"></div>
+                </div>
+            </section>
+
             <!-- next sections -->
         </main>
         <script type="module" src="demo.js"></script>

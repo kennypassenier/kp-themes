@@ -171,6 +171,9 @@ export const NEEDS = [
     { name: 'uptime', when: '[data-kp-uptime]', load: () => import('./uptime.js'), attach: (m, root) => [m.attachUptimes(root)] },
     // The command block [kpadopt4-ideas]: one command with its terminal, its admin or sudo badge and a copy that confirms.
     { name: 'command', when: '[data-kp-command]', load: () => import('./command.js'), attach: (m, root) => [m.attachCommands(root)] },
+    // The two timers [kpadopt4-ideas]: a countdown in digits, and the time left as a shrinking disc.
+    { name: 'countdown', when: '[data-kp-countdown]', load: () => import('./countdown.js'), attach: (m, root) => [m.attachCountdowns(root)] },
+    { name: 'timer-disc', when: '[data-kp-timer-disc]', load: () => import('./timer-disc.js'), attach: (m, root) => [m.attachTimerDiscs(root)] },
     { name: 'graph', when: '[data-kp-graph]', load: () => import('./graph.js'), attach: (m, root) => [m.attachGraphs(root)] },
     {
         // A theme's loading picture made of pieces (`--kp-loading-pieces`,

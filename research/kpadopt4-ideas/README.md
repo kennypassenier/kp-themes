@@ -13,3 +13,5 @@ topic per component, every state (loading, empty, error, disabled, busy, long te
 | uptime-strip  | `.kp-uptime`, `js/uptime.js` (`setUptime`, `kp-uptime-pick`)                  | heat grid fills, hover card, busy card, skeleton    | medium | built    |
 | type-confirm  | `data-kp-confirm-type` on the confirmation (extended), `data-kp-type-confirm` | the confirmation dialog, kp-field, kp-badge, button | small  | extended |
 | command-block | `.kp-command`, `js/command.js` (`attachCommands`)                             | copy button (js/patterns.js), kp-badge, `pre`       | small  | built    |
+| visual-timer  | `.kp-timer-disc`, `js/timer-disc.js` (`attachTimerDiscs`)                     | kp buttons, the state word, the countdown's clock   | medium | built    |
+| numeric timer | `.kp-countdown`, `js/countdown.js` (`attachCountdowns`, `countdownClock`)     | kp buttons, the state word                          | medium | built    |

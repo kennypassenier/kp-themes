@@ -1056,6 +1056,70 @@ export type Strings = {
      */
     commandRunsOn: (where: string) => string;
     /**
+     * A timer's Start button (js/countdown.js, js/timer-disc.js) [kpadopt4-ideas]
+     */
+    timerStart: string;
+    /**
+     * The same button while it runs [kpadopt4-ideas]
+     */
+    timerPause: string;
+    /**
+     * The same button while it is paused [kpadopt4-ideas]
+     */
+    timerResume: string;
+    /**
+     * A timer's Reset button [kpadopt4-ideas]
+     */
+    timerReset: string;
+    /**
+     * The countdown's button that adds time: "+1 min" [kpadopt4-ideas]
+     */
+    timerAddMinute: (seconds: number) => string;
+    /**
+     * Its tooltip: "Add 1 min" [kpadopt4-ideas]
+     */
+    timerAddMinuteTitle: (seconds: number) => string;
+    /**
+     * The line under a paused timer, and what a screen reader hears [kpadopt4-ideas]
+     */
+    timerPaused: string;
+    /**
+     * The line under a timer whose time is up [kpadopt4-ideas]
+     */
+    timerEnded: string;
+    /**
+     * What a screen reader hears when a named timer ends [kpadopt4-ideas]
+     */
+    timerEndedNamed: (name: string) => string;
+    /**
+     * What a screen reader hears when a timer starts [kpadopt4-ideas]
+     */
+    timerStarted: string;
+    /**
+     * What a screen reader hears when it goes on after a pause [kpadopt4-ideas]
+     */
+    timerResumed: string;
+    /**
+     * The countdown's time left for a screen reader: "25 min left" [kpadopt4-ideas]
+     */
+    timerLeft: (duration: string) => string;
+    /**
+     * A timer's length in words: "25 min", "1 h 30 min", "45 s" [kpadopt4-ideas]
+     */
+    timerDuration: (seconds: number) => string;
+    /**
+     * The visual timer's face for a screen reader: "12 min left of 25 min" [kpadopt4-ideas]
+     */
+    timerDiscLeft: (left: string, total: string) => string;
+    /**
+     * The time left on the face in its last minute [kpadopt4-ideas]
+     */
+    timerUnderMinute: string;
+    /**
+     * The still line under the disc: "Focus · 25 min" [kpadopt4-ideas]
+     */
+    timerDiscCaption: (name: string, duration: string) => string;
+    /**
      * The network graph's way back to every node and every kind of link (js/graph.js) [scope-143]
      */
     graphShowAll: string;
@@ -1452,6 +1516,22 @@ export type Strings = {
  * @property {string} commandSudo  The badge of a Linux command that runs with root rights [kpadopt4-ideas]
  * @property {string} commandSudoTitle  Its tooltip [kpadopt4-ideas]
  * @property {(where: string) => string} commandRunsOn  The note under a command that says where it runs [kpadopt4-ideas]
+ * @property {string} timerStart  A timer's Start button (js/countdown.js, js/timer-disc.js) [kpadopt4-ideas]
+ * @property {string} timerPause  The same button while it runs [kpadopt4-ideas]
+ * @property {string} timerResume  The same button while it is paused [kpadopt4-ideas]
+ * @property {string} timerReset  A timer's Reset button [kpadopt4-ideas]
+ * @property {(seconds: number) => string} timerAddMinute  The countdown's button that adds time: "+1 min" [kpadopt4-ideas]
+ * @property {(seconds: number) => string} timerAddMinuteTitle  Its tooltip: "Add 1 min" [kpadopt4-ideas]
+ * @property {string} timerPaused  The line under a paused timer, and what a screen reader hears [kpadopt4-ideas]
+ * @property {string} timerEnded  The line under a timer whose time is up [kpadopt4-ideas]
+ * @property {(name: string) => string} timerEndedNamed  What a screen reader hears when a named timer ends [kpadopt4-ideas]
+ * @property {string} timerStarted  What a screen reader hears when a timer starts [kpadopt4-ideas]
+ * @property {string} timerResumed  What a screen reader hears when it goes on after a pause [kpadopt4-ideas]
+ * @property {(duration: string) => string} timerLeft  The countdown's time left for a screen reader: "25 min left" [kpadopt4-ideas]
+ * @property {(seconds: number) => string} timerDuration  A timer's length in words: "25 min", "1 h 30 min", "45 s" [kpadopt4-ideas]
+ * @property {(left: string, total: string) => string} timerDiscLeft  The visual timer's face for a screen reader: "12 min left of 25 min" [kpadopt4-ideas]
+ * @property {string} timerUnderMinute  The time left on the face in its last minute [kpadopt4-ideas]
+ * @property {(name: string, duration: string) => string} timerDiscCaption  The still line under the disc: "Focus · 25 min" [kpadopt4-ideas]
  * @property {string} graphShowAll  The network graph's way back to every node and every kind of link (js/graph.js) [scope-143]
  * @property {string} graphShowAllTitle  Its title [scope-143]
  * @property {string} graphHint  The hint under the graph, and the second half of its picture's accessible name: what a pointer, a click and the keys do [scope-143]

@@ -44,6 +44,8 @@ export type BusyCardOptions = import('./js/busy-card.js').BusyCardOptions;
 /** @typedef {import('./js/busy-card.js').BusyCardOptions} BusyCardOptions */
 export { UPTIME, UPTIME_COUNT, UPTIME_PICK_EVENT, UPTIME_STATES, attachUptimes, setUptime, uptimeFigures, uptimeFit, uptimePercent, } from './js/uptime.js';
 export { COMMAND, COMMAND_SHELLS, attachCommands, commandLines } from './js/command.js';
+export { COUNTDOWN, COUNTDOWN_END_EVENT, COUNTDOWN_EVENT, COUNTDOWN_STEP, attachCountdowns, countdownClock, countdownOf, formatCountdown, parseDuration, timerButton, } from './js/countdown.js';
+export { TIMER_DISC, TIMER_DISC_LEFT, attachTimerDiscs, discShare, timerDiscOf } from './js/timer-disc.js';
 export { ACTION_LIST, ROW_ACTIONS, attachActionColumns, fitActionColumns, mergeRoles, rowRoles } from './js/actions.js';
 export { KPI_STRIP, KPI_TOGGLE, KPI_TOGGLE_EVENT, METER, SPARK, attachKpiStrips, attachKpiToggles, attachSparklines, drawSparkline, fitKpiStrip, kpiColumns, meterParts, meterText, setMeter, sparkPaths, } from './js/kpi.js';
 export type Meter = import('./js/kpi.js').Meter;
