@@ -14,6 +14,15 @@
 //               headers stay while the grid scrolls, headers that light up a
 //               row and a column, one cell pinned.
 //
+// Loading (both): the waiting cells keep the grid's shape, and the data
+// table's own loading card (js/busy-card.js: the theme's spinner and
+// "Reading…") stands centred over the cells, the axis, the headers and the
+// names readable beside it [Kenny, 2026-10-16: "zoals bij een table waar het
+// icoon in het midden van de matrix staat en lijkt te laden"]. It arrives the
+// theme's way (not on a first render) and leaves as the busy table's card
+// leaves; a grid that leaves its loading state is drawn once the card has
+// gone, so nothing is drawn under a card on its way out.
+//
 // Both share the tone words of the month heatmap (js/calendar.js):
 // `data-kp-tone` ok, warn, bad, muted, future, before, none, loading; a heat
 // cell also takes `level` (a value, `--kp-heat-level` 0 to 1) and a matrix
@@ -66,6 +75,7 @@
 
 import { getStrings } from './strings.js';
 import { attachHoverCards } from './hovercard.js';
+import { openBusyCard } from './busy-card.js';
 
 /** A heat grid. */
 export const HEAT = '[data-kp-heat]';
@@ -173,6 +183,89 @@ const STOPS = new WeakMap();
 /** The keys of the labels or headers that are pressed. @type {WeakMap<Element, Set<string>>} */
 const LIT = new WeakMap();
 
+/* ------------------------------------------------------------- the busy card */
+
+/** The busy card over a loading grid's cells (js/busy-card.js). @type {WeakMap<Element, import('./busy-card.js').BusyCard>} */
+const CARDS = new WeakMap();
+/** A card on its way out and the spec that waits for it: the latest one asked for. @type {WeakMap<Element, { card: import('./busy-card.js').BusyCard, spec: any }>} */
+const WAITING = new WeakMap();
+/** The grids drawn before: a card on a grid's first render is the page, not news, and does not arrive. @type {WeakSet<Element>} */
+const DRAWN = new WeakSet();
+
+/**
+ * Before a grid is written: a grid that leaves its loading state lets its card leave first, and the data is drawn once
+ * the card has gone (nothing under a card on its way out; a later spec replaces the waiting one). A grid that loads
+ * again while its card is leaving takes the leaving card out at once: one card at a time.
+ * @param {HTMLElement} el @param {any} spec @param {boolean} loading @param {(el: HTMLElement, spec: any) => void} draw
+ * @returns {boolean} true when the spec waits for the card
+ */
+function waitForCard(el, spec, loading, draw) {
+    const waiting = WAITING.get(el);
+    if (loading) {
+        if (waiting) {
+            WAITING.delete(el);
+            waiting.card.remove();
+        }
+        return false;
+    }
+    if (waiting) {
+        waiting.spec = spec;
+        return true;
+    }
+    const card = CARDS.get(el);
+    if (!card) return false;
+    CARDS.delete(el);
+    const entry = { card, spec };
+    WAITING.set(el, entry);
+    void card.close().then(() => {
+        if (WAITING.get(el) !== entry) return;
+        WAITING.delete(el);
+        draw(el, entry.spec);
+    });
+    return true;
+}
+
+/**
+ * After a grid is written: a loading grid holds the data table's busy card, centred over its cells (the axis, the
+ * headers and the labels stay beside it), and keeps the one it had; a grid that is not loading holds none.
+ * @param {HTMLElement} el the box the card is placed in @param {boolean} loading @param {string} words
+ * @param {import('./busy-card.js').BusyCardOptions['area']} area @param {string} className
+ */
+function syncCard(el, loading, words, area, className) {
+    const first = !DRAWN.has(el);
+    markDrawn(el);
+    const card = CARDS.get(el);
+    if (!loading) {
+        if (card) {
+            CARDS.delete(el);
+            card.remove();
+        }
+        return;
+    }
+    if (card) {
+        if (card.layer.parentElement !== el) el.append(card.layer);
+        card.place();
+        return;
+    }
+    CARDS.set(el, openBusyCard(el, { words, area, className, arrive: !first }));
+}
+
+/** A grid is drawn once its first render has been painted. @param {Element} el */
+function markDrawn(el) {
+    if (DRAWN.has(el)) return;
+    const view = el.ownerDocument.defaultView;
+    if (view) view.requestAnimationFrame(() => DRAWN.add(el));
+    else DRAWN.add(el);
+}
+
+/** Take every child of `el` out but its busy card, and put `nodes` in before it. @param {HTMLElement} el @param {Node[]} nodes */
+function replaceKeepingCard(el, nodes) {
+    const keep = CARDS.get(el)?.layer;
+    for (const child of [...el.childNodes]) if (child !== keep) child.remove();
+    if (keep && keep.parentElement === el) keep.before(...nodes);
+    else el.append(...nodes);
+}
+
 /**
  * The cells a key may land on, in reading order, with their row and column.
  * @param {Element} grid @param {string} cellSelector
@@ -220,6 +313,7 @@ export function setHeat(el, spec) {
     const s = getStrings();
     const state = spec.state ?? 'ready';
     const loading = state === 'loading';
+    if (waitForCard(el, spec, loading, setHeat)) return;
     const every = Math.max(1, spec.every ?? 3);
     const toggle = spec.toggle ?? el.hasAttribute('data-kp-heat-toggle');
     const pressedKeys = LIT.get(el) ?? new Set();
@@ -250,6 +344,7 @@ export function setHeat(el, spec) {
     if (state === 'empty' || state === 'error') {
         const note = make(doc, 'div', 'kp-heat__state', { role: state === 'error' ? 'alert' : 'status', 'data-kp-state': state });
         note.textContent = spec.message ?? (state === 'error' ? s.heatFailed : s.heatEmpty);
+        markDrawn(el);
         el.replaceChildren(note);
         return;
     }
@@ -352,7 +447,15 @@ export function setHeat(el, spec) {
     }
     for (const row of rows) body.push(rowNode(row, false));
     if (spec.axis === 'end') body.push(axis);
-    el.replaceChildren(...body);
+    replaceKeepingCard(el, body);
+    // Loading: the busy card over the rows' cells, the axis and the row names beside it.
+    syncCard(
+        el,
+        loading,
+        s.heatLoading,
+        () => [...el.querySelectorAll(':scope > .kp-heat__row:not(.kp-heat__axis) > .kp-heat__cells')],
+        'kp-heat__busy',
+    );
 
     const stop = focusAt ?? STOPS.get(el);
     placeStop(el, HEAT_CELL, stop);
@@ -535,6 +638,7 @@ export function setMatrix(el, spec) {
     const s = getStrings();
     const state = spec.state ?? 'ready';
     const loading = state === 'loading';
+    if (waitForCard(el, spec, loading, setMatrix)) return;
     const hadFocus = el.contains(doc.activeElement) && doc.activeElement?.matches(MATRIX_CELL);
     const focusAt = hadFocus
         ? { r: Number(/** @type {HTMLElement} */ (doc.activeElement).dataset.r), c: Number(/** @type {HTMLElement} */ (doc.activeElement).dataset.c) }
@@ -557,7 +661,7 @@ export function setMatrix(el, spec) {
     let grid = /** @type {HTMLElement | null} */ (el.querySelector(':scope > .kp-matrix__grid'));
     if (!grid) {
         grid = make(doc, 'div', 'kp-matrix__grid', { role: 'grid' });
-        el.replaceChildren(grid);
+        replaceKeepingCard(el, [grid]);
     }
     if (spec.label && !grid.hasAttribute('aria-label')) grid.setAttribute('aria-label', spec.label);
     grid.style.setProperty('--kp-matrix-cols', String(Math.max(1, columns.length)));
@@ -565,10 +669,11 @@ export function setMatrix(el, spec) {
     if (state === 'empty' || state === 'error') {
         const note = make(doc, 'div', 'kp-matrix__state', { role: state === 'error' ? 'alert' : 'status' });
         note.textContent = spec.message ?? (state === 'error' ? s.heatFailed : s.heatEmpty);
+        markDrawn(el);
         el.replaceChildren(note);
         return;
     }
-    if (grid.parentElement !== el) el.replaceChildren(grid);
+    if (grid.parentElement !== el) replaceKeepingCard(el, [grid]);
 
     /** @param {{ key: string, label: string, mark?: string }} item @param {'col' | 'row'} kind */
     const header = (item, kind) => {
@@ -656,10 +761,32 @@ export function setMatrix(el, spec) {
         body.push(node);
     });
     grid.replaceChildren(...body);
+    // Loading: the busy card over the cells in view, under the sticky corner, so the headers stay readable beside it.
+    syncCard(el, loading, s.heatLoading, () => matrixArea(el), 'kp-matrix__busy');
     markHot(el);
 
     placeStop(el, MATRIX_CELL, focusAt ?? (picked ? findStop(el, picked) : STOPS.get(el)));
     if (focusAt) /** @type {HTMLElement | null} */ (el.querySelector(`${MATRIX_CELL}[tabindex="0"]`))?.focus({ preventScroll: true });
+}
+
+/**
+ * The matrix's cells, clear of its sticky corner: the column headers stay above the card and the row headers beside it,
+ * however far the matrix is scrolled.
+ * @param {HTMLElement} el
+ * @returns {{ top: number, right: number, bottom: number, left: number }[]}
+ */
+function matrixArea(el) {
+    const cells = [...el.querySelectorAll('.kp-matrix__cell')].map((cell) => cell.getBoundingClientRect());
+    if (!cells.length) return [];
+    const corner = el.querySelector('.kp-matrix__corner')?.getBoundingClientRect();
+    return [
+        {
+            top: Math.max(Math.min(...cells.map((r) => r.top)), corner?.bottom ?? -Infinity),
+            left: Math.max(Math.min(...cells.map((r) => r.left)), corner?.right ?? -Infinity),
+            bottom: Math.max(...cells.map((r) => r.bottom)),
+            right: Math.max(...cells.map((r) => r.right)),
+        },
+    ];
 }
 
 /** @param {HTMLElement} el @returns {{ row: string, column: string } | null} */

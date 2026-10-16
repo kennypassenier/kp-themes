@@ -144,6 +144,10 @@
             "types": "./js/gantt.d.ts",
             "default": "./js/gantt.js"
         },
+        "./js/busy-card": {
+            "types": "./js/busy-card.d.ts",
+            "default": "./js/busy-card.js"
+        },
         "./js/loading-pieces": {
             "types": "./js/loading-pieces.d.ts",
             "default": "./js/loading-pieces.js"

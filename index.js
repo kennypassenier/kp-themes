@@ -117,6 +117,9 @@ export {
     setGanttState,
     setGanttWindow,
 } from './js/gantt.js';
+export { BUSY_CARD, openBusyCard } from './js/busy-card.js';
+/** @typedef {import('./js/busy-card.js').BusyCard} BusyCard */
+/** @typedef {import('./js/busy-card.js').BusyCardOptions} BusyCardOptions */
 // The dashboard components [scope-143].
 export { ACTION_LIST, ROW_ACTIONS, attachActionColumns, fitActionColumns, mergeRoles, rowRoles } from './js/actions.js';
 export {

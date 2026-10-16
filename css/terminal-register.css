@@ -4252,6 +4252,11 @@
             linear-gradient(var(--border-strong), var(--border-strong)) 100% 0 / 3px 1px no-repeat,
             linear-gradient(var(--border-strong), var(--border-strong)) 100% 100% / 3px 1px no-repeat;
     }
+    /* Under the busy card (js/busy-card.js: the data table's loading card, centred over the data) the card is the
+       matrix's one loading picture: the htop row across the matrix gives way to it. */
+    [data-theme='terminal'] .kp-matrix:has(> .kp-datatable__busy-card.kp-datatable__busy-overlay)::after {
+        content: none;
+    }
     [data-theme='terminal'] .kp-heat__cells:has(> .kp-heat__cell.kp-skeleton)::before {
         --kp-sig-tm-w: 12;
         position: absolute;

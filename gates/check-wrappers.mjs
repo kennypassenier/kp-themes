@@ -122,6 +122,12 @@ export const REQUIRED = [
         why: 'The matrix scrolls inside its own box and narrows its row headers when that box is narrow; the query reaches only its own grid [kpadopt2-grids].',
     },
     {
+        container: 'kp-busy-card',
+        class: 'kp-datatable__busy-card',
+        self: true,
+        why: 'The busy card measures the data area it covers and lays its panel flat over a short one; the query reaches only its own panel [kpadopt2].',
+    },
+    {
         container: 'kp-week',
         class: 'kp-week',
         self: true,

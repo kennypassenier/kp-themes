@@ -37,6 +37,11 @@ export { attachProgressbars, buildProgressbar, setIndeterminate as setProgressba
 export { STEPLIST_EVENT, STEP_ID_ATTRIBUTE, STEP_STATES, attachSteplists, buildSteplist, setStep } from './js/steplist.js';
 export { WEEK, WEEK_OPEN_EVENT, WEEK_RANGE_EVENT, WEEK_TICK_MS, attachWeeks, pillCapacity, setWeekEvents, setWeekLegend, setWeekStart, setWeekState, stackPills, } from './js/week.js';
 export { GANTT, GANTT_OPEN_EVENT, GANTT_SELECT_EVENT, GANTT_STEPS, GANTT_TICK_MS, GANTT_WINDOW_EVENT, attachGantts, axisStep, packRows, rangeSeconds, setGanttRuns, setGanttSelection, setGanttState, setGanttWindow, } from './js/gantt.js';
+export { BUSY_CARD, openBusyCard } from './js/busy-card.js';
+export type BusyCard = import('./js/busy-card.js').BusyCard;
+export type BusyCardOptions = import('./js/busy-card.js').BusyCardOptions;
+/** @typedef {import('./js/busy-card.js').BusyCard} BusyCard */
+/** @typedef {import('./js/busy-card.js').BusyCardOptions} BusyCardOptions */
 export { ACTION_LIST, ROW_ACTIONS, attachActionColumns, fitActionColumns, mergeRoles, rowRoles } from './js/actions.js';
 export { KPI_STRIP, KPI_TOGGLE, KPI_TOGGLE_EVENT, METER, SPARK, attachKpiStrips, attachKpiToggles, attachSparklines, drawSparkline, fitKpiStrip, kpiColumns, meterParts, meterText, setMeter, sparkPaths, } from './js/kpi.js';
 export type Meter = import('./js/kpi.js').Meter;

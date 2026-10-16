@@ -6254,6 +6254,13 @@
     [data-theme='cyberpunk'] :is(.kp-matrix, .kp-gantt[data-kp-state='loading'] .kp-gantt__plot)::after {
         inset: 0;
     }
+    /* Under the busy card (js/busy-card.js: the data table's loading card, centred over the data) the card is the one
+       loading picture: the deciphered LOADING gives way to it, never stands beside or on it. */
+    [data-theme='cyberpunk'] :is(.kp-heat, .kp-matrix):has(> .kp-datatable__busy-card.kp-datatable__busy-overlay)::after,
+    [data-theme='cyberpunk'] .kp-gantt[data-kp-state='loading']:has(.kp-datatable__busy-card) .kp-gantt__plot::after {
+        content: none;
+        animation: none;
+    }
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='cyberpunk'] .kp-heat:has(.kp-heat__cell.kp-skeleton)::after,
         [data-theme='cyberpunk'] .kp-matrix:has(.kp-matrix__cell.kp-skeleton)::after,

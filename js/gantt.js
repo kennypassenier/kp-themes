@@ -41,6 +41,10 @@
 //            asks for (range, Live, Zoom) lays the lanes out again.
 //            `data-kp-gantt-ghosts="2 3 2 1 1"` sets the rows of the
 //            loading lanes, so loading and loaded are as tall
+//   loading  the data table's own loading card (js/busy-card.js: the
+//            theme's spinner and "Reading the history") stands centred
+//            over the lanes, the toolbar, axis and lane names beside it;
+//            the runs are drawn once it has left
 //   chip     the selected range takes the toolbar row over (the range
 //            buttons and Live are inert under it): it lies on no lane and
 //            adds no height when it comes, at any width
@@ -78,6 +82,7 @@
 import { CHART_TIME_ZONE, wallTime, zonedTime } from './chart.js';
 import { dayKey, formatDayKey, shiftDay } from './calendar.js';
 import { resolveStrings } from './strings.js';
+import { openBusyCard } from './busy-card.js';
 
 /** A run timeline: `section.kp-gantt[data-kp-gantt]`. */
 export const GANTT = '[data-kp-gantt]';
@@ -125,7 +130,7 @@ export const GANTT_STEPS = Object.freeze([60, 300, 900, 1800, 3600, 10_800, 21_6
  *   stateLine: HTMLElement, announcer: HTMLElement, ranges: HTMLElement, liveButton: HTMLButtonElement,
  *   selection: HTMLElement, selectionText: HTMLElement, ticks: Map<number, { label: HTMLElement, line: HTMLElement }>,
  *   legend: HTMLElement, days: boolean, dayStop: string | null,
- *   ghosts: HTMLElement[], held: number | null, timer: number, observer: ResizeObserver | null, drag: { a: number, b: number } | null, dragMoved: boolean, tickKey: string }} GanttModel
+ *   ghosts: HTMLElement[], held: number | null, busy: import('./busy-card.js').BusyCard | null, leaving: Promise<void> | null, drawn: boolean, timer: number, observer: ResizeObserver | null, drag: { a: number, b: number } | null, dragMoved: boolean, tickKey: string }} GanttModel
  */
 
 /** @type {WeakMap<Element, GanttModel>} */
@@ -597,11 +602,14 @@ function paint(c) {
     c.body.style.setProperty('--kp-g-lanes', String(Math.max(1, lanes.length)));
     c.el.dataset.kpState = c.state;
     c.body.toggleAttribute('aria-busy', c.state === 'loading');
+    drawBusy(c);
     const empty = c.state === 'ready' && c.runs.length === 0 && lanes.length === 0;
     const words = c.state === 'loading' ? s.ganttLoading : c.state === 'empty' || empty ? s.ganttEmpty : c.stateLine.dataset.kpWords || '';
-    c.stateLine.textContent = c.state === 'ready' && !empty ? '' : words;
+    // An empty or failed sentence waits, as the runs do, until the card has gone.
+    c.stateLine.textContent = (c.state === 'ready' && !empty) || c.leaving !== null ? '' : words;
     c.stateLine.dataset.kpState = empty && c.state === 'ready' ? 'empty' : c.state;
     paintGhosts(c);
+    c.busy?.place();
     roomForWords(c);
     holdHeight(c);
     visible(c);
@@ -641,10 +649,67 @@ function holdHeight(c) {
     if (c.held > 0) c.scroll.style.setProperty('block-size', `${c.held}px`);
 }
 
+/**
+ * While the timeline loads, the data table's own loading card stands centred over its lanes (Kenny, 2026-10-16:
+ * "zoals bij een table waar het icoon in het midden van de matrix staat en lijkt te laden"): js/busy-card.js, the
+ * layer and panel js/datatable.js drawOverlay() builds, so every theme dresses it as it dresses its busy table. The
+ * toolbar, the axis and the lane names stay readable beside it; the frame keeps its height (the ghost lanes, or the
+ * lanes it had). It arrives the theme's way, except on the first render, and leaves as the busy table's layer leaves;
+ * the runs are drawn once it has gone. The sentence is still read out (`role="status"`), no longer drawn.
+ * @param {GanttModel} c
+ */
+function drawBusy(c) {
+    const want = c.state === 'loading';
+    if (want === (c.busy !== null)) {
+        c.busy?.place();
+        return;
+    }
+    const frameBox = /** @type {HTMLElement} */ (c.scroll.parentElement);
+    if (!want) {
+        const card = /** @type {import('./busy-card.js').BusyCard} */ (c.busy);
+        c.busy = null;
+        const gone = card.close();
+        c.leaving = gone;
+        void gone.then(() => {
+            if (c.leaving !== gone) return;
+            c.leaving = null;
+            if (gantts.get(c.el) === c) {
+                paint(c);
+                tick(c);
+            }
+        });
+        return;
+    }
+    for (const old of frameBox.querySelectorAll(':scope > .kp-gantt__busy')) old.remove();
+    c.leaving = null;
+    c.busy = openBusyCard(frameBox, {
+        words: c.strings.ganttLoading,
+        area: () => {
+            const tracks = /** @type {HTMLElement[]} */ ([...c.body.querySelectorAll(':scope > .kp-gantt__track')]);
+            const scroll = c.scroll.getBoundingClientRect();
+            const axis = c.axis.getBoundingClientRect();
+            if (!tracks.length) return [];
+            // The lanes in view, under the axis.
+            const boxes = tracks.map((t) => t.getBoundingClientRect());
+            return [
+                {
+                    top: Math.max(axis.bottom, Math.min(...boxes.map((b) => b.top))),
+                    left: Math.min(...boxes.map((b) => b.left)),
+                    right: Math.max(...boxes.map((b) => b.right)),
+                    bottom: Math.min(scroll.bottom, Math.max(...boxes.map((b) => b.bottom))),
+                },
+            ];
+        },
+        className: 'kp-gantt__busy',
+        arrive: c.drawn,
+    });
+}
+
 /** Ghost lanes while loading with no lanes yet. @param {GanttModel} c */
 function paintGhosts(c) {
     const doc = c.el.ownerDocument;
-    const need = c.state === 'loading' && c.lanes.length === 0;
+    // While the busy card leaves the ghosts stay: nothing of the runs is drawn under a card on its way out.
+    const need = (c.state === 'loading' || c.leaving !== null) && c.lanes.length === 0;
     if (!need) {
         for (const g of c.ghosts.splice(0)) g.remove();
         return;
@@ -691,7 +756,7 @@ function visible(c) {
     for (const lane of c.lanes)
         for (const b of lane.bars) {
             const end = b.e ?? now;
-            b.bar.hidden = c.state === 'loading' || end < w.from || b.s > w.end;
+            b.bar.hidden = c.state === 'loading' || c.leaving !== null || end < w.from || b.s > w.end;
         }
 }
 
@@ -820,6 +885,9 @@ export function attachGantts(root = document, options = {}) {
             dayStop: null,
             ghosts: [],
             held: null,
+            busy: null,
+            leaving: null,
+            drawn: false,
             timer: 0,
             observer: null,
             drag: null,
@@ -833,6 +901,8 @@ export function attachGantts(root = document, options = {}) {
         void import('./hovercard.js').then((m) => m.attachHoverCards(el.ownerDocument));
         paint(c);
         tick(c);
+        // What the first frame shows is the page, not news: a busy card laid before it is painted does not arrive.
+        window.requestAnimationFrame(() => (c.drawn = true));
 
         /** @param {Event} event */
         const barOf = (event) =>

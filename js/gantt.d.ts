@@ -131,6 +131,9 @@ export type GanttModel = {
     dayStop: string | null;
     ghosts: HTMLElement[];
     held: number | null;
+    busy: import('./busy-card.js').BusyCard | null;
+    leaving: Promise<void> | null;
+    drawn: boolean;
     timer: number;
     observer: ResizeObserver | null;
     drag: {

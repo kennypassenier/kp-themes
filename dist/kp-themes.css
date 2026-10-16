@@ -12197,6 +12197,20 @@
         display: none;
     }
 
+    /* Loading is the data table's own loading card [Kenny, 2026-10-16: "zoals bij een table waar het icoon in het
+ * midden van de matrix staat en lijkt te laden"]: js/gantt.js lays js/busy-card.js's layer and panel centred over
+ * the lanes, so the sentence is read out but no longer drawn. */
+    .kp-gantt[data-kp-state='loading'] .kp-gantt__state {
+        inset: auto;
+        inline-size: 1px;
+        block-size: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        clip-path: inset(50%);
+    }
+
     .kp-gantt__state[data-kp-state='error'] {
         color: var(--destructive);
     }
@@ -14210,6 +14224,46 @@
 
     .kp-heat__state[data-kp-state='error'] {
         color: var(--destructive);
+    }
+
+    /* Loading: js/heat.js lays the data table's own loading card (js/busy-card.js) centred over the cells of a
+ * loading heat grid or matrix [Kenny, 2026-10-16: "zoals bij een table waar het icoon in het midden van de matrix
+ * staat en lijkt te laden"]; the axis, the headers and the names stay beside it, the waiting cells keep the shape. */
+    .kp-heat:has(> .kp-datatable__busy-card) {
+        position: relative;
+    }
+
+    /* The busy card of any data area (js/busy-card.js) measures the area it covers: its panel never grows wider than
+ * the area (the words wrap), and over a short one (a heat grid of three rows) it lies flat, the spinner beside the
+ * words, as the busy table's panel does in a narrow table, so the card is never cut by the area it stands in. */
+    .kp-datatable__busy-card {
+        container: kp-busy-card / size;
+    }
+
+    .kp-datatable__busy-card > .kp-datatable__busy-panel {
+        box-sizing: border-box;
+        max-inline-size: calc(100% - 2 * var(--kp-space-sm, 0.5rem));
+    }
+
+    @container kp-busy-card (max-height: 7.5rem) {
+        .kp-datatable__busy-card > .kp-datatable__busy-panel {
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr);
+            align-items: center;
+            gap: 0 var(--kp-space-md, 1rem);
+            padding-inline: var(--kp-space-md, 1rem);
+            text-align: start;
+        }
+
+        .kp-datatable__busy-card > .kp-datatable__busy-panel > .kp-spinner {
+            --kp-spinner-size: var(--kp-busy-overlay-spinner-narrow, 1.75rem);
+        }
+
+        .kp-datatable__busy-card > .kp-datatable__busy-panel > .kp-datatable__busy-words {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
     }
 
     /* The legend, under the grid: a swatch and its words, wrapping by whole
@@ -22865,6 +22919,13 @@
     }
     [data-theme='cyberpunk'] :is(.kp-matrix, .kp-gantt[data-kp-state='loading'] .kp-gantt__plot)::after {
         inset: 0;
+    }
+    /* Under the busy card (js/busy-card.js: the data table's loading card, centred over the data) the card is the one
+       loading picture: the deciphered LOADING gives way to it, never stands beside or on it. */
+    [data-theme='cyberpunk'] :is(.kp-heat, .kp-matrix):has(> .kp-datatable__busy-card.kp-datatable__busy-overlay)::after,
+    [data-theme='cyberpunk'] .kp-gantt[data-kp-state='loading']:has(.kp-datatable__busy-card) .kp-gantt__plot::after {
+        content: none;
+        animation: none;
     }
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='cyberpunk'] .kp-heat:has(.kp-heat__cell.kp-skeleton)::after,
@@ -36920,6 +36981,11 @@
             linear-gradient(var(--border-strong), var(--border-strong)) 100% 0 / 1px 100% no-repeat,
             linear-gradient(var(--border-strong), var(--border-strong)) 100% 0 / 3px 1px no-repeat,
             linear-gradient(var(--border-strong), var(--border-strong)) 100% 100% / 3px 1px no-repeat;
+    }
+    /* Under the busy card (js/busy-card.js: the data table's loading card, centred over the data) the card is the
+       matrix's one loading picture: the htop row across the matrix gives way to it. */
+    [data-theme='terminal'] .kp-matrix:has(> .kp-datatable__busy-card.kp-datatable__busy-overlay)::after {
+        content: none;
     }
     [data-theme='terminal'] .kp-heat__cells:has(> .kp-heat__cell.kp-skeleton)::before {
         --kp-sig-tm-w: 12;
