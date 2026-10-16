@@ -4406,6 +4406,10 @@
         letter-spacing: 0.1em;
         font-size: var(--kp-text-xs, 0.75rem);
     }
+    [data-theme='deco'] .kp-matrix__corner {
+        letter-spacing: 0.04em;
+        text-wrap: balance;
+    }
     [data-theme='deco'] :is(.kp-heat__label-button, .kp-matrix__name) {
         border-radius: 0;
     }
@@ -4525,5 +4529,9 @@
         padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
         border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
         background: var(--kp-gantt-state-ground, transparent);
+    }
+    /* The matrix's corner key breaks as two balanced lines when it has to, never leaving an arrow alone. */
+    [data-theme='deco'] .kp-matrix__corner {
+        text-wrap: balance;
     }
 }

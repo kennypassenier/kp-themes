@@ -23016,6 +23016,10 @@
         border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
         background: var(--kp-gantt-state-ground, transparent);
     }
+    /* The matrix's corner key breaks as two balanced lines when it has to, never leaving an arrow alone. */
+    [data-theme='cyberpunk'] .kp-matrix__corner {
+        text-wrap: balance;
+    }
 }
 
 @layer kp.register {
@@ -27836,6 +27840,10 @@
         border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
         background: var(--kp-gantt-state-ground, transparent);
     }
+    /* The matrix's corner key breaks as two balanced lines when it has to, never leaving an arrow alone. */
+    [data-theme='synthwave'] .kp-matrix__corner {
+        text-wrap: balance;
+    }
 }
 
 /* --kp-sig-ph-hold: a number the bar's mega menu transitions while it
@@ -32435,6 +32443,10 @@
         border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
         background: var(--kp-gantt-state-ground, transparent);
     }
+    /* The matrix's corner key breaks as two balanced lines when it has to, never leaving an arrow alone. */
+    [data-theme='phantom'] .kp-matrix__corner {
+        text-wrap: balance;
+    }
 }
 
 /* Two numbers the writing runs on, registered so a keyframe can step them:
@@ -36871,6 +36883,10 @@
         padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
         border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
         background: var(--kp-gantt-state-ground, transparent);
+    }
+    /* The matrix's corner key breaks as two balanced lines when it has to, never leaving an arrow alone. */
+    [data-theme='terminal'] .kp-matrix__corner {
+        text-wrap: balance;
     }
 }
 
@@ -41454,6 +41470,10 @@
         border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
         background: var(--kp-gantt-state-ground, transparent);
     }
+    /* The matrix's corner key breaks as two balanced lines when it has to, never leaving an arrow alone. */
+    [data-theme='brutalism'] .kp-matrix__corner {
+        text-wrap: balance;
+    }
 }
 
 /* The header's mega menu is held on screen while a transition on its panel runs
@@ -45105,6 +45125,11 @@
         letter-spacing: 0.02em;
         font-size: var(--kp-text-xs, 0.75rem);
     }
+    [data-theme='titanium'] .kp-matrix__corner {
+        font-size: 0.6875rem;
+        letter-spacing: 0;
+        text-wrap: balance;
+    }
     [data-theme='titanium'] :is(.kp-heat__label-button, .kp-matrix__name) {
         border-radius: 0;
     }
@@ -45217,6 +45242,10 @@
         padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
         border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
         background: var(--kp-gantt-state-ground, transparent);
+    }
+    /* The matrix's corner key breaks as two balanced lines when it has to, never leaving an arrow alone. */
+    [data-theme='titanium'] .kp-matrix__corner {
+        text-wrap: balance;
     }
 }
 
@@ -49823,6 +49852,10 @@
         padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
         border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
         background: var(--kp-gantt-state-ground, transparent);
+    }
+    /* The matrix's corner key breaks as two balanced lines when it has to, never leaving an arrow alone. */
+    [data-theme='pastel'] .kp-matrix__corner {
+        text-wrap: balance;
     }
 }
 
@@ -54499,6 +54532,10 @@
         border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
         background: var(--kp-gantt-state-ground, transparent);
     }
+    /* The matrix's corner key breaks as two balanced lines when it has to, never leaving an arrow alone. */
+    [data-theme='forest'] .kp-matrix__corner {
+        text-wrap: balance;
+    }
 }
 
 /* The numbers deco's motion is made of, registered at the top level because
@@ -58909,6 +58946,10 @@
         letter-spacing: 0.1em;
         font-size: var(--kp-text-xs, 0.75rem);
     }
+    [data-theme='deco'] .kp-matrix__corner {
+        letter-spacing: 0.04em;
+        text-wrap: balance;
+    }
     [data-theme='deco'] :is(.kp-heat__label-button, .kp-matrix__name) {
         border-radius: 0;
     }
@@ -59028,6 +59069,10 @@
         padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
         border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
         background: var(--kp-gantt-state-ground, transparent);
+    }
+    /* The matrix's corner key breaks as two balanced lines when it has to, never leaving an arrow alone. */
+    [data-theme='deco'] .kp-matrix__corner {
+        text-wrap: balance;
     }
 }
 
@@ -62017,6 +62062,10 @@
         padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
         border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
         background: var(--kp-gantt-state-ground, transparent);
+    }
+    /* The matrix's corner key breaks as two balanced lines when it has to, never leaving an arrow alone. */
+    [data-theme='light'] .kp-matrix__corner {
+        text-wrap: balance;
     }
 }
 
@@ -65615,6 +65664,10 @@
         padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
         border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
         background: var(--kp-gantt-state-ground, transparent);
+    }
+    /* The matrix's corner key breaks as two balanced lines when it has to, never leaving an arrow alone. */
+    [data-theme='grotesk'] .kp-matrix__corner {
+        text-wrap: balance;
     }
 }
 
@@ -70359,6 +70412,10 @@
         border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
         background: var(--kp-gantt-state-ground, transparent);
     }
+    /* The matrix's corner key breaks as two balanced lines when it has to, never leaving an arrow alone. */
+    [data-theme='blueprint'] .kp-matrix__corner {
+        text-wrap: balance;
+    }
 }
 
 @layer kp.register {
@@ -74457,6 +74514,10 @@
         padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
         border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
         background: var(--kp-gantt-state-ground, transparent);
+    }
+    /* The matrix's corner key breaks as two balanced lines when it has to, never leaving an arrow alone. */
+    [data-theme='nostromo'] .kp-matrix__corner {
+        text-wrap: balance;
     }
 }
 
@@ -78795,6 +78856,10 @@
         padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
         border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
         background: var(--kp-gantt-state-ground, transparent);
+    }
+    /* The matrix's corner key breaks as two balanced lines when it has to, never leaving an arrow alone. */
+    [data-theme='dark'] .kp-matrix__corner {
+        text-wrap: balance;
     }
 }
 
@@ -86130,6 +86195,10 @@
         padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
         border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
         background: var(--kp-gantt-state-ground, transparent);
+    }
+    /* The matrix's corner key breaks as two balanced lines when it has to, never leaving an arrow alone. */
+    [data-theme='solstice'] .kp-matrix__corner {
+        text-wrap: balance;
     }
 }
 

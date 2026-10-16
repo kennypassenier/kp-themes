@@ -4334,4 +4334,8 @@
         border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
         background: var(--kp-gantt-state-ground, transparent);
     }
+    /* The matrix's corner key breaks as two balanced lines when it has to, never leaving an arrow alone. */
+    [data-theme='dark'] .kp-matrix__corner {
+        text-wrap: balance;
+    }
 }
