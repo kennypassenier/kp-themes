@@ -1,0 +1,736 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="kpadopt4-rows" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Rows, cards and choices: inbox rows, a card in four states, check lists, choice tiles · kp-themes research demo</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="demo.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main k4-page">
+            <header class="k4-intro">
+                <h1>Rows, cards and choices: what the apps still draw around their lists</h1>
+                <p class="cat-intro">
+                    Five things JobTracker, the homelab dashboard and kyu still draw themselves, each built as an <b>opt-in option of a component the
+                    package already had</b>, in formal only: rows with a lead column for an inbox, a message backlog, a file list and appointments
+                    (<code>.kp-action-list--lead</code>), a card in four data states (<code>.kp-card[data-kp-state]</code>), a check list with the fix
+                    written out (<code>.kp-statusrow</code> warn and fix) and choices as tiles (<code>.kp-fieldset[data-kp-layout="tiles"]</code>). The
+                    "Needs you" band was already the package's <code>.kp-attention</code> and is not on this page. Every section says under
+                    <b>Expected</b> what you should see and what each control does, and shows the component again in a 360 px column (a phone).
+                </p>
+                <p class="cat-intro">
+                    Mock on this page: everything prefixed <code>k4-</code> (the frames, the readouts, the buttons that drive a demo) and the sample
+                    data. Package: every <code>kp-</code> class and the scripts <code>js/actions.js</code>, <code>js/card-state.js</code>,
+                    <code>js/statusrow.js</code>, loaded by <code>js/auto.js</code>.
+                </p>
+            </header>
+
+            <!-- ============================================================ 1 · Inbox rows -->
+            <section
+                class="k4-sec"
+                id="inbox"
+                data-review-item="inbox"
+                data-review-topic="rows"
+                data-review-topic-title="1 · Rows with a lead: inbox, backlog, files, appointments"
+                data-review-components="action-list"
+                data-review-title="1a · Inbox rows (homelab Inbox)"
+                aria-labelledby="h-inbox"
+            >
+                <div class="k4-sec__head">
+                    <h2 id="h-inbox">1a · Inbox rows (homelab Inbox)</h2>
+                    <p>
+                        <code>.kp-action-list.kp-action-list--lead</code>: per row a lead (<code>.kp-action-list__lead</code>, here the severity dot),
+                        the words (<code>.kp-action-list__main</code>: <code>__title</code>, <code>__text</code>, <code>__meta</code>) and the shared
+                        button columns. <code>data-kp-state</code> on a row draws a bar along its start edge. <code>data-kp-row-keys</code> lets j / k
+                        walk the rows; <code>setRowBusy()</code> and <code>removeRow()</code> from <code>js/actions.js</code> run "Mark seen".
+                    </p>
+                </div>
+                <div class="k4-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Five rows. Every title starts at one edge after the dots; the buttons of one role line up from row to row (Open in one
+                            column, Mark seen in the next). Nothing touches: dot, words and buttons each keep a gap, and the long fifth title
+                            wraps inside its column without pushing the buttons.
+                        </li>
+                        <li>
+                            The bar on the start edge: blue for the two <b>new</b> rows, the info ink for the <b>in flight</b> row, none for the
+                            <b>done</b> row, whose title and dot are quieter (grey, not faded). Every row reserves the bar's room, so no state moves
+                            the words.
+                        </li>
+                        <li>
+                            <b>Mark seen</b>: the row dims, the pressed button shows the theme's spinner in place of its words (the button keeps its
+                            width, no column moves), the other button stops answering; after 1.2 s the row folds away and the focus moves to the same
+                            button of the next row. <b>Make the next press fail</b> makes the next Mark seen end with the row back as it was.
+                            <b>Put the rows back</b> restores all five.
+                        </li>
+                        <li>
+                            Click a row's words, then press <b>j</b> / <b>k</b> (or ↓ / ↑): the focus ring walks the rows; <b>Enter</b> on a row
+                            writes "Opened: …" in the readout. Tab reaches the list once.
+                        </li>
+                        <li>The 360 px column: the dot and the words side by side, the buttons centred under them, each label on one line.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal's list: hairline rules between rows, the navy primary as the new-row bar, the theme's own buttons and spinner. Check
+                        the columns (titles and buttons on fixed edges), the busy press (no width change) and the leave.
+                    </p>
+                </div>
+                <div class="k4-actions">
+                    <button type="button" class="kp-button kp-button--sm" data-k4-inbox-reset>Put the rows back</button>
+                    <button type="button" class="kp-button kp-button--sm" data-k4-inbox-fail aria-pressed="false">Make the next press fail</button>
+                    <span class="k4-readout" data-k4-inbox-readout role="status">Nothing opened yet.</span>
+                </div>
+                <div class="k4-pair">
+                    <div class="k4-stack">
+                        <p class="k4-label">The Inbox, full width</p>
+                        <ul class="kp-action-list kp-action-list--lead" aria-label="Inbox" data-kp-row-keys data-k4-inbox></ul>
+                    </div>
+                    <div class="k4-stack">
+                        <p class="k4-label">360 px (a phone)</p>
+                        <div class="k4-frame k4-frame--phone">
+                            <ul class="kp-action-list kp-action-list--lead" aria-label="Inbox on a phone" data-kp-row-keys data-k4-inbox-phone></ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ 1b · Backlog rows -->
+            <section
+                class="k4-sec"
+                id="backlog"
+                data-review-item="backlog"
+                data-review-topic="rows"
+                data-review-components="action-list"
+                data-review-title="1b · A message backlog with payloads (kyu, JobTracker queue)"
+                aria-labelledby="h-backlog"
+            >
+                <div class="k4-sec__head">
+                    <h2 id="h-backlog">1b · A message backlog with payloads (kyu, JobTracker queue)</h2>
+                    <p>
+                        The same rows with a state word as the lead (the package's <code>.kp-badge</code>), the message id as title, a meta line and
+                        a folded payload: <code>details.kp-accordion__item.kp-accordion__item--bare.kp-action-list__more</code> with a
+                        <code>pre.kp-action-list__payload</code>, so it opens with the accordion's own fold motion. The list sits in a card in four
+                        states (section 2), so when the last row goes the card says it is empty.
+                    </p>
+                </div>
+                <div class="k4-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Four messages. The lead column is as wide as its widest word ("claimed") and the ids all start after it; the badges are
+                            centred in it. <b>dead</b> is the destructive badge with a destructive bar, <b>claimed</b> the warning badge with the info
+                            bar (in flight), <b>pending</b> plain.
+                        </li>
+                        <li>
+                            <b>Payload</b> folds open under the meta line: a muted, bordered block in the mono face, the JSON wrapped inside it (the
+                            long line never widens the page), at most 16rem tall and then scrolling inside. The buttons stay on the row's first line.
+                        </li>
+                        <li>
+                            <b>Requeue</b> on the dead row: spinner in the button, then the row turns <b>pending</b> (badge and bar change, nothing
+                            else moves). <b>Delete</b>: spinner, then the row folds away. Delete all four: the card turns into its empty state at the
+                            same height. <b>Put the messages back</b> restores them.
+                        </li>
+                        <li>
+                            The 360 px column: badge and id side by side, the meta wrapping by whole parts (a dot never starts a line), the buttons
+                            under them.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal's badges and buttons in the rows, the destructive Delete in its own column; the payload block is the muted plate with a
+                        hairline border. Check the fold (opens and closes with the fold motion) and that no id or payload touches an edge.
+                    </p>
+                </div>
+                <div class="k4-actions">
+                    <button type="button" class="kp-button kp-button--sm" data-k4-backlog-reset>Put the messages back</button>
+                </div>
+                <div class="k4-pair">
+                    <section class="kp-card" data-kp-state="ready" aria-labelledby="k4-backlog-t" data-k4-backlog-card>
+                        <div class="kp-card__header">
+                            <h3 class="kp-card__title" id="k4-backlog-t">Backlog of backups-hourly</h3>
+                            <div class="kp-card__actions"><span class="kp-timestamp" data-k4-backlog-count>4 messages</span></div>
+                        </div>
+                        <p class="kp-card__body">What this subscription still holds, oldest first. Deleting one removes only this copy.</p>
+                        <div class="kp-card__stage">
+                            <div class="kp-card__data">
+                                <ul class="kp-action-list kp-action-list--lead" aria-label="Backlog" data-kp-row-keys data-k4-backlog></ul>
+                            </div>
+                        </div>
+                    </section>
+                    <div class="k4-stack">
+                        <p class="k4-label">360 px (a phone)</p>
+                        <div class="k4-frame k4-frame--phone">
+                            <ul class="kp-action-list kp-action-list--lead" aria-label="Backlog on a phone" data-k4-backlog-phone></ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ 1c · File rows -->
+            <section
+                class="k4-sec"
+                id="files"
+                data-review-item="files"
+                data-review-topic="rows"
+                data-review-components="action-list"
+                data-review-title="1c · A file list (JobTracker Files)"
+                aria-labelledby="h-files"
+            >
+                <div class="k4-sec__head">
+                    <h2 id="h-files">1c · A file list (JobTracker Files)</h2>
+                    <p>
+                        The same rows for stored files: the format as the lead (<code>.kp-badge</code>), the plain name as title, format, size and
+                        date in the meta, the documents that use it as badges, View and ↗ as buttons. The upload's own rows
+                        (<code>.kp-upload__file</code>) stay what they are: they show files being sent, not files kept.
+                    </p>
+                </div>
+                <div class="k4-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Five files. The format badges (PDF, TXT, IMG, DATA) sit centred in one column; every name starts at one edge. Sizes and
+                            dates are human (182 KB, 1.4 MB, dd/mm/yyyy HH:MM).
+                        </li>
+                        <li>
+                            The <b>missing</b> file: the destructive bar, its meta says why ("missing from the folder since 15/10/2026"), View is the
+                            theme's disabled button (its title explains on hover) and ↗ is gone, its column left empty.
+                        </li>
+                        <li>The long file name wraps inside its column; the badges of "used by" wrap as whole badges.</li>
+                        <li>The 360 px column: the format beside the name, the buttons centred under them.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Formal's badges as the format marks, the theme's small buttons. Check the one lead column and the missing row.</p>
+                </div>
+                <div class="k4-pair">
+                    <ul class="kp-action-list kp-action-list--lead" aria-label="Files of Acme · Platform engineer" data-k4-files></ul>
+                    <div class="k4-stack">
+                        <p class="k4-label">360 px (a phone)</p>
+                        <div class="k4-frame k4-frame--phone">
+                            <ul class="kp-action-list kp-action-list--lead" aria-label="Files on a phone" data-k4-files-phone></ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ 1d · Appointments -->
+            <section
+                class="k4-sec"
+                id="appointments"
+                data-review-item="appointments"
+                data-review-topic="rows"
+                data-review-components="action-list"
+                data-review-title="1d · Appointments with the next one up (JobTracker)"
+                aria-labelledby="h-appointments"
+            >
+                <div class="k4-sec__head">
+                    <h2 id="h-appointments">1d · Appointments with the next one up (JobTracker)</h2>
+                    <p>
+                        The moment as the lead (<code>time.kp-action-list__when</code>: the day over the hour), heading rows
+                        (<code>li.kp-action-list__group</code>) for Upcoming and Past, <code>data-kp-state="next"</code> on the next one up and
+                        <code>"past"</code> on what is over.
+                    </p>
+                </div>
+                <div class="k4-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Upcoming</b> and <b>Past</b> as small capitals across the list. The next appointment (Thu 23/10/2026 14:00) carries the
+                            primary bar, a light primary wash and its day and hour in the primary; its meta has the badge "Next · in 7 days".
+                        </li>
+                        <li>
+                            The past ones: day, hour and title in grey (not faded), the buttons as usual. Every title starts at one edge after the
+                            moments.
+                        </li>
+                        <li>
+                            <b>Delete</b> on the next appointment is the theme's disabled button, because it is in the calendar; its meta says so in
+                            words ("In your calendar: remove it there before deleting it here").
+                        </li>
+                        <li>The 360 px column: moment and words side by side, buttons under them.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal's navy as the next-up bar and ink, on a wash light enough that the text keeps its contrast. Check the heading rows and
+                        the one moment column.
+                    </p>
+                </div>
+                <div class="k4-pair">
+                    <ul class="kp-action-list kp-action-list--lead" aria-label="Appointments" data-k4-appointments></ul>
+                    <div class="k4-stack">
+                        <p class="k4-label">360 px (a phone)</p>
+                        <div class="k4-frame k4-frame--phone">
+                            <ul class="kp-action-list kp-action-list--lead" aria-label="Appointments on a phone" data-k4-appointments-phone></ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ 2 · Card states -->
+            <section
+                class="k4-sec"
+                id="card-states"
+                data-review-item="card-states"
+                data-review-topic="card-states"
+                data-review-topic-title="2 · A card in four data states"
+                data-review-components="card"
+                data-review-title="2 · A card in four data states"
+                aria-labelledby="h-card-states"
+            >
+                <div class="k4-sec__head">
+                    <h2 id="h-card-states">2 · A card in four data states</h2>
+                    <p>
+                        <code>data-kp-state</code> loading, empty, error or ready on a <code>.kp-card</code>, its data in
+                        <code>.kp-card__stage &gt; .kp-card__data</code>; <code>setCardState()</code> from <code>js/card-state.js</code>. Loading is
+                        the data table's own loading card over the stage; empty the package's empty state; error the destructive alert with Try again
+                        (event <code>kp-card-retry</code>).
+                    </p>
+                </div>
+                <div class="k4-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            The live card on the left: pick a state in the segmented control. The card's header ("Files", "5 files", the
+                            sentence) and its footer never move, and the card keeps its height in every state: the list keeps its room, hidden, and the
+                            empty box or the alert stands in it.
+                        </li>
+                        <li>
+                            <b>Loading</b>: the theme's spinner turning on its plate in the middle, "Reading the folder…" under it; the list under it
+                            dimmed, not clickable. <b>Reload</b> plays loading for 1.5 s and comes back filled; the card arrives and leaves the way the
+                            busy table's card does.
+                        </li>
+                        <li>
+                            <b>Empty</b>: the dashed empty box filling the stage, "No files yet" over its sentence and the "Open the folder" button.
+                            <b>Error</b>: the destructive alert, "Could not list the files" over the server's reason, <b>Try again</b> at its end;
+                            pressing it reloads (loading, then filled) and the focus stays in the card.
+                        </li>
+                        <li>
+                            The five still cards on the right: the first load (no data yet, the card at its least height with the loading card), a
+                            refresh (data under the loading card), empty, error and filled, each as tall as its row.
+                        </li>
+                        <li>The 360 px column: the same card; the alert's Try again goes under its words, nothing touches.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal's card with its hairline footer; the loading card is the busy table's (formal's ring spinner on the card plate). Check
+                        that nothing jumps when you switch states.
+                    </p>
+                </div>
+                <div class="k4-actions">
+                    <div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="State of the live card" data-k4-state-pick>
+                        <button type="button" class="kp-segmented__item" data-value="loading" role="radio" aria-checked="false">
+                            <span class="kp-segmented__label">Loading</span>
+                        </button>
+                        <button type="button" class="kp-segmented__item" data-value="empty" role="radio" aria-checked="false">
+                            <span class="kp-segmented__label">Empty</span>
+                        </button>
+                        <button type="button" class="kp-segmented__item" data-value="error" role="radio" aria-checked="false">
+                            <span class="kp-segmented__label">Error</span>
+                        </button>
+                        <button type="button" class="kp-segmented__item" data-value="ready" role="radio" aria-checked="true">
+                            <span class="kp-segmented__label">Filled</span>
+                        </button>
+                    </div>
+                    <button type="button" class="kp-button kp-button--sm" data-k4-reload>Reload</button>
+                    <span class="k4-readout" data-k4-card-readout role="status">State: filled.</span>
+                </div>
+                <div class="k4-cards">
+                    <div class="k4-pair">
+                    <div class="k4-stack">
+                        <p class="k4-label">The live card</p>
+                        <section class="kp-card k4-files-card" data-kp-state="ready" aria-labelledby="k4-live-t" data-k4-live-card>
+                            <div class="kp-card__header">
+                                <h3 class="kp-card__title" id="k4-live-t">Files</h3>
+                                <div class="kp-card__actions"><span class="kp-timestamp">5 files</span></div>
+                            </div>
+                            <p class="kp-card__body">Everything in this application's folder; View opens it here, ↗ in a new tab.</p>
+                            <div class="kp-card__stage">
+                                <div class="kp-card__data"><ul class="kp-action-list kp-action-list--lead" aria-label="Files" data-k4-files-mini></ul></div>
+                            </div>
+                            <div class="kp-card__footer"><span class="kp-timestamp">Read 16/10/2026 14:02</span></div>
+                        </section>
+                    </div>
+                    <div class="k4-stack">
+                        <p class="k4-label">360 px (a phone), its first read failed</p>
+                        <div class="k4-frame k4-frame--phone">
+                            <section class="kp-card k4-files-card" data-kp-state="error" aria-labelledby="k4-phone-t" data-k4-phone-card>
+                                <div class="kp-card__header">
+                                    <h3 class="kp-card__title" id="k4-phone-t">Files</h3>
+                                    <div class="kp-card__actions"><span class="kp-timestamp">5 files</span></div>
+                                </div>
+                                <p class="kp-card__body">Everything in this application's folder.</p>
+                                <div class="kp-card__stage"><div class="kp-card__data"></div></div>
+                            </section>
+                        </div>
+                    </div>
+                    </div>
+                    <p class="k4-label">The five states side by side</p>
+                    <div class="k4-still">
+                        <section class="kp-card" data-kp-state="loading" aria-labelledby="k4-s1-t" data-k4-still="first">
+                            <div class="kp-card__header"><h3 class="kp-card__title" id="k4-s1-t">First load</h3></div>
+                            <p class="kp-card__body">Loading, no data yet: the stage's least height.</p>
+                            <div class="kp-card__stage"><div class="kp-card__data"></div></div>
+                        </section>
+                        <section class="kp-card" data-kp-state="loading" aria-labelledby="k4-s2-t" data-k4-still="refresh">
+                            <div class="kp-card__header"><h3 class="kp-card__title" id="k4-s2-t">Refresh</h3></div>
+                            <p class="kp-card__body">Loading again, the data under the card.</p>
+                            <div class="kp-card__stage">
+                                <div class="kp-card__data"><ul class="kp-action-list kp-action-list--lead" aria-label="Files" data-k4-files-mini="3"></ul></div>
+                            </div>
+                        </section>
+                        <section class="kp-card" data-kp-state="empty" aria-labelledby="k4-s3-t" data-k4-still="empty">
+                            <div class="kp-card__header"><h3 class="kp-card__title" id="k4-s3-t">Empty</h3></div>
+                            <p class="kp-card__body">Nothing in the folder yet.</p>
+                            <div class="kp-card__stage"><div class="kp-card__data"></div></div>
+                        </section>
+                        <section class="kp-card" data-kp-state="error" aria-labelledby="k4-s4-t" data-k4-still="error">
+                            <div class="kp-card__header"><h3 class="kp-card__title" id="k4-s4-t">Error</h3></div>
+                            <p class="kp-card__body">The read failed; Try again reads it again.</p>
+                            <div class="kp-card__stage"><div class="kp-card__data"></div></div>
+                        </section>
+                        <section class="kp-card" data-kp-state="ready" aria-labelledby="k4-s5-t" data-k4-still="ready">
+                            <div class="kp-card__header"><h3 class="kp-card__title" id="k4-s5-t">Filled</h3></div>
+                            <p class="kp-card__body">The data.</p>
+                            <div class="kp-card__stage">
+                                <div class="kp-card__data"><ul class="kp-action-list kp-action-list--lead" aria-label="Files" data-k4-files-mini="3"></ul></div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ 3 · Check list -->
+            <section
+                class="k4-sec"
+                id="checks"
+                data-review-item="checks"
+                data-review-topic="checks"
+                data-review-topic-title="3 · A check list with the fix written out"
+                data-review-components="statuslist statusrow"
+                data-review-title="3 · A check list with the fix written out (JobTracker System card)"
+                aria-labelledby="h-checks"
+            >
+                <div class="k4-sec__head">
+                    <h2 id="h-checks">3 · A check list with the fix written out (JobTracker System card)</h2>
+                    <p>
+                        The status rows (<code>.kp-statusrow</code>) with two opt-in parts: <code>data-state="warn"</code> and
+                        <code>.kp-statusrow__fix</code>, shown on a failed or warn row only. <code>countStatus(list)</code> gives the summary line;
+                        the card's <b>Check again</b> puts the card in its loading state (section 2) while the checks are read.
+                    </p>
+                </div>
+                <div class="k4-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Four checks: two <b>ok</b> (green disc with a tick), <b>Calendar</b> as <b>warn</b> (the warning plate on the mark with
+                            "!", its rule in the warning ink) and <b>Git</b> as <b>failed</b> (red disc with a cross, red edge). Each says its state in a
+                            word under its name, and the two that need you have their fix written under that, in the page's ink.
+                        </li>
+                        <li>The summary over the list reads "2 of 4 checks pass" with the moment it was read; no Retry per row.</li>
+                        <li>
+                            <b>Check again</b>: the card's loading card for 1.5 s, then Git passes: its mark turns green, its fix goes (its line keeps its
+                            room, so the card does not move), the summary reads "3 of 4 checks pass". Press again to flip Git back. The card keeps its place throughout.
+                        </li>
+                        <li>The second list shows every state together (loading with the theme's spinner, empty, and a long fix that wraps).</li>
+                        <li>The 360 px column: one check per row, the fix wrapping under its word, nothing touching the edge.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal's status rows; the new warn mark uses formal's warning pair. Check that the fix line is clearly an instruction and
+                        that Check again moves nothing.
+                    </p>
+                </div>
+                <div class="k4-pair">
+                    <section class="kp-card" data-kp-state="ready" aria-labelledby="k4-sys-t" data-k4-system>
+                        <div class="kp-card__header">
+                            <h3 class="kp-card__title" id="k4-sys-t">System</h3>
+                            <div class="kp-card__actions">
+                                <button type="button" class="kp-button kp-button--sm kp-button--ghost" data-k4-recheck>Check again</button>
+                            </div>
+                        </div>
+                        <p class="kp-card__body">What JobTracker needs to work; a failing check says how to fix it.</p>
+                        <div class="kp-card__stage">
+                            <div class="kp-card__data">
+                                <p class="k4-summary" data-k4-summary>2 of 4 checks pass · read 16/10/2026 14:02</p>
+                                <ul class="kp-statuslist kp-statuslist--rows" aria-label="Checks" data-kp-status-retry="false" data-k4-checks>
+                                    <li class="kp-statusrow" data-state="ok" data-kp-status-id="root">
+                                        <span class="kp-statusrow__mark" aria-hidden="true"></span>
+                                        <span class="kp-statusrow__body">
+                                            <span class="kp-statusrow__label">Data folder</span>
+                                            <span class="kp-statusrow__detail">readable and writable</span>
+                                        </span>
+                                    </li>
+                                    <li class="kp-statusrow" data-state="ok" data-kp-status-id="start">
+                                        <span class="kp-statusrow__mark" aria-hidden="true"></span>
+                                        <span class="kp-statusrow__body">
+                                            <span class="kp-statusrow__label">Session launcher</span>
+                                            <span class="kp-statusrow__detail">ready</span>
+                                        </span>
+                                    </li>
+                                    <li class="kp-statusrow" data-state="warn" data-kp-status-id="almanac">
+                                        <span class="kp-statusrow__mark" aria-hidden="true"></span>
+                                        <span class="kp-statusrow__body">
+                                            <span class="kp-statusrow__label">Calendar (Almanac)</span>
+                                            <span class="kp-statusrow__detail">partly set up</span>
+                                            <span class="kp-statusrow__fix">Add the Almanac token to the configuration to send follow-ups and interviews.</span>
+                                        </span>
+                                    </li>
+                                    <li class="kp-statusrow" data-state="failed" data-kp-status-id="git">
+                                        <span class="kp-statusrow__mark" aria-hidden="true"></span>
+                                        <span class="kp-statusrow__body">
+                                            <span class="kp-statusrow__label">Git</span>
+                                            <span class="kp-statusrow__detail">2 commits not pushed</span>
+                                            <span class="kp-statusrow__fix">Pull and push from the repository; the dashboard never rebases.</span>
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+                    <div class="k4-stack">
+                        <p class="k4-label">Every state, and a long fix</p>
+                        <ul class="kp-statuslist kp-statuslist--rows" aria-label="Every state" data-kp-status-retry="false">
+                            <li class="kp-statusrow" data-state="loading">
+                                <span class="kp-statusrow__mark" aria-hidden="true"></span>
+                                <span class="kp-statusrow__body">
+                                    <span class="kp-statusrow__label">Backup target</span>
+                                    <span class="kp-statusrow__detail">reading (3 s)</span>
+                                </span>
+                            </li>
+                            <li class="kp-statusrow" data-state="empty">
+                                <span class="kp-statusrow__mark" aria-hidden="true"></span>
+                                <span class="kp-statusrow__body">
+                                    <span class="kp-statusrow__label">Schedules</span>
+                                    <span class="kp-statusrow__detail">none set up, so nothing to check</span>
+                                </span>
+                            </li>
+                            <li class="kp-statusrow" data-state="warn">
+                                <span class="kp-statusrow__mark" aria-hidden="true"></span>
+                                <span class="kp-statusrow__body">
+                                    <span class="kp-statusrow__label">Certificate of media.kp-soft.dev</span>
+                                    <span class="kp-statusrow__detail">expires in 9 days</span>
+                                    <span class="kp-statusrow__fix"
+                                        >Traefik renews it by itself from 30 days before; it has not, so look at the Traefik log for the ACME error
+                                        (usually the DNS token) and renew it by hand from the Certificates page once the token works again.</span
+                                    >
+                                </span>
+                            </li>
+                            <li class="kp-statusrow" data-state="failed">
+                                <span class="kp-statusrow__mark" aria-hidden="true"></span>
+                                <span class="kp-statusrow__body">
+                                    <span class="kp-statusrow__label">Disk of the host</span>
+                                    <span class="kp-statusrow__detail">96 % full</span>
+                                    <span class="kp-statusrow__fix">Free space: the oldest snapshots go first.</span>
+                                </span>
+                            </li>
+                        </ul>
+                        <p class="k4-label">360 px (a phone)</p>
+                        <div class="k4-frame k4-frame--phone">
+                            <ul class="kp-statuslist kp-statuslist--rows" aria-label="Checks on a phone" data-kp-status-retry="false">
+                                <li class="kp-statusrow" data-state="ok">
+                                    <span class="kp-statusrow__mark" aria-hidden="true"></span>
+                                    <span class="kp-statusrow__body">
+                                        <span class="kp-statusrow__label">Data folder</span>
+                                        <span class="kp-statusrow__detail">readable and writable</span>
+                                    </span>
+                                </li>
+                                <li class="kp-statusrow" data-state="warn">
+                                    <span class="kp-statusrow__mark" aria-hidden="true"></span>
+                                    <span class="kp-statusrow__body">
+                                        <span class="kp-statusrow__label">Calendar (Almanac)</span>
+                                        <span class="kp-statusrow__detail">partly set up</span>
+                                        <span class="kp-statusrow__fix">Add the Almanac token to the configuration to send follow-ups and interviews.</span>
+                                    </span>
+                                </li>
+                                <li class="kp-statusrow" data-state="failed">
+                                    <span class="kp-statusrow__mark" aria-hidden="true"></span>
+                                    <span class="kp-statusrow__body">
+                                        <span class="kp-statusrow__label">Git</span>
+                                        <span class="kp-statusrow__detail">2 commits not pushed</span>
+                                        <span class="kp-statusrow__fix">Pull and push from the repository; the dashboard never rebases.</span>
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ 4 · Choice tiles -->
+            <section
+                class="k4-sec"
+                id="tiles"
+                data-review-item="tiles"
+                data-review-topic="tiles"
+                data-review-topic-title="4 · Choices as tiles"
+                data-review-components="fieldset"
+                data-review-title="4 · Choices as tiles (JobTracker Draft a reply)"
+                aria-labelledby="h-tiles"
+            >
+                <div class="k4-sec__head">
+                    <h2 id="h-tiles">4 · Choices as tiles (JobTracker Draft a reply)</h2>
+                    <p>
+                        <code>data-kp-layout="tiles"</code> on a <code>.kp-fieldset</code>: every <code>.kp-field__option</code> becomes a tile with
+                        the native checkbox or radio, <code>.kp-field__option-title</code> and <code>.kp-field__option-hint</code>. No script.
+                    </p>
+                </div>
+                <div class="k4-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>What should the reply do?</b>: five tiles, as many per row as fit, one height per row; the box on the title's first
+                            line, the hint under the title. Click anywhere on a tile: it ticks and the tile takes the navy edge, a 1 px inner ring and
+                            a faint navy wash; again: it unticks. The readout lists what is ticked.
+                        </li>
+                        <li>
+                            <b>Send the portfolio again</b> is disabled: dashed edge on the grey ground, no hover, the not-allowed cursor; its hint
+                            says why. The fifth tile's long text wraps inside the tile.
+                        </li>
+                        <li>
+                            Tab into a group: the whole tile wears the focus ring. In <b>Tone</b> (one choice) the arrow keys move the choice; Space
+                            ticks a checkbox.
+                        </li>
+                        <li>
+                            <b>Which CV goes with it?</b> is invalid: the group's red outline round legend and tiles, and the message under it.
+                            Picking one clears it.
+                        </li>
+                        <li>The plain checkbox above the groups is the old look, unchanged. The 360 px column: one tile per row.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Formal's hairline tiles with its navy as the chosen edge. Check one height per row and the focus ring.</p>
+                </div>
+                <div class="k4-pair">
+                    <form class="k4-stack" data-k4-tiles-form>
+                        <div class="kp-field kp-field--check">
+                            <input class="kp-field__check" id="k4-cc" type="checkbox" />
+                            <label class="kp-field__label" for="k4-cc">Send me a copy of the reply (a plain checkbox, unchanged)</label>
+                        </div>
+                        <fieldset class="kp-fieldset" data-kp-layout="tiles">
+                            <legend class="kp-field__label">What should the reply do?</legend>
+                            <label class="kp-field__option">
+                                <input class="kp-field__check" type="checkbox" name="act" value="thank" checked />
+                                <span class="kp-field__option-title">Thank them for the interview</span>
+                                <span class="kp-field__option-hint">One sentence about Tuesday's talk with Hanne.</span>
+                            </label>
+                            <label class="kp-field__option">
+                                <input class="kp-field__check" type="checkbox" name="act" value="confirm" />
+                                <span class="kp-field__option-title">Confirm the second round</span>
+                                <span class="kp-field__option-hint">Accept Thursday 23/10 at 14:00 and ask who joins.</span>
+                            </label>
+                            <label class="kp-field__option">
+                                <input class="kp-field__check" type="checkbox" name="act" value="salary" />
+                                <span class="kp-field__option-title">Ask about the salary range</span>
+                                <span class="kp-field__option-hint">Politely, before the second round.</span>
+                            </label>
+                            <label class="kp-field__option">
+                                <input class="kp-field__check" type="checkbox" name="act" value="portfolio" disabled />
+                                <span class="kp-field__option-title">Send the portfolio again</span>
+                                <span class="kp-field__option-hint">Not possible: this dossier has no portfolio file.</span>
+                            </label>
+                            <label class="kp-field__option">
+                                <input class="kp-field__check" type="checkbox" name="act" value="hybrid" />
+                                <span class="kp-field__option-title">Ask whether the role can be done four days a week from the Ghent office</span>
+                                <span class="kp-field__option-hint"
+                                    >Mention the commute from Brussels and that Fridays could be at home; keep it a question, not a condition, at this
+                                    stage of the procedure.</span
+                                >
+                            </label>
+                        </fieldset>
+                        <fieldset class="kp-fieldset" data-kp-layout="tiles">
+                            <legend class="kp-field__label">Tone</legend>
+                            <label class="kp-field__option">
+                                <input class="kp-field__check" type="radio" name="tone" value="formal" />
+                                <span class="kp-field__option-title">Formal</span>
+                                <span class="kp-field__option-hint">Dear Ms Peeters, …</span>
+                            </label>
+                            <label class="kp-field__option">
+                                <input class="kp-field__check" type="radio" name="tone" value="warm" checked />
+                                <span class="kp-field__option-title">Warm</span>
+                                <span class="kp-field__option-hint">Hi Hanne, …</span>
+                            </label>
+                            <label class="kp-field__option">
+                                <input class="kp-field__check" type="radio" name="tone" value="short" />
+                                <span class="kp-field__option-title">Short</span>
+                                <span class="kp-field__option-hint">Three lines at most.</span>
+                            </label>
+                        </fieldset>
+                        <div class="k4-stack" data-k4-cv-field>
+                            <fieldset class="kp-fieldset" data-kp-layout="tiles" aria-invalid="true" aria-describedby="k4-cv-error" data-k4-cv>
+                                <legend class="kp-field__label">Which CV goes with it?</legend>
+                                <label class="kp-field__option">
+                                    <input class="kp-field__check" type="radio" name="cv" value="master" />
+                                    <span class="kp-field__option-title">Master CV</span>
+                                    <span class="kp-field__option-hint">Two pages, 12/10/2026.</span>
+                                </label>
+                                <label class="kp-field__option">
+                                    <input class="kp-field__check" type="radio" name="cv" value="platform" />
+                                    <span class="kp-field__option-title">Platform variant</span>
+                                    <span class="kp-field__option-hint">Leads with Kubernetes and Rust.</span>
+                                </label>
+                            </fieldset>
+                            <p class="kp-field__error" id="k4-cv-error">Choose a CV: the reply needs one attached.</p>
+                        </div>
+                        <p class="k4-readout" data-k4-tiles-readout role="status">Ticked: Thank them for the interview · Tone: Warm</p>
+                    </form>
+                    <div class="k4-stack">
+                        <p class="k4-label">360 px (a phone)</p>
+                        <div class="k4-frame k4-frame--phone">
+                            <fieldset class="kp-fieldset" data-kp-layout="tiles">
+                                <legend class="kp-field__label">What should the reply do?</legend>
+                                <label class="kp-field__option">
+                                    <input class="kp-field__check" type="checkbox" name="act-phone" value="thank" checked />
+                                    <span class="kp-field__option-title">Thank them for the interview</span>
+                                    <span class="kp-field__option-hint">One sentence about Tuesday's talk with Hanne.</span>
+                                </label>
+                                <label class="kp-field__option">
+                                    <input class="kp-field__check" type="checkbox" name="act-phone" value="confirm" />
+                                    <span class="kp-field__option-title">Confirm the second round</span>
+                                    <span class="kp-field__option-hint">Accept Thursday 23/10 at 14:00 and ask who joins.</span>
+                                </label>
+                                <label class="kp-field__option">
+                                    <input class="kp-field__check" type="checkbox" name="act-phone" value="portfolio" disabled />
+                                    <span class="kp-field__option-title">Send the portfolio again</span>
+                                    <span class="kp-field__option-hint">Not possible: this dossier has no portfolio file.</span>
+                                </label>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

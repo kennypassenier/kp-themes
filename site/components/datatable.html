@@ -7208,10 +7208,12 @@ data-cat-server
                             <tr><td><code>data-kp-max-height</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-page-size</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-page-sizes</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-row-blocked</code></td><td>selector, read, written</td></tr>
                             <tr><td><code>data-kp-row-detail</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-row-group</code></td><td>selector, read</td></tr>
                             <tr><td><code>data-kp-row-key</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-row-key-field</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-row-keys</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-row-toggle</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-scrolled</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-search</code></td><td>written</td></tr>
@@ -7225,7 +7227,7 @@ data-cat-server
                             <tr><td><code>data-kp-sort-order</code></td><td>written, read</td></tr>
                             <tr><td><code>data-kp-sort-priority</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-sort-value</code></td><td>written, read</td></tr>
-                            <tr><td><code>data-kp-state</code></td><td>written, read</td></tr>
+                            <tr><td><code>data-kp-state</code></td><td>selector, written, read</td></tr>
                             <tr><td><code>data-kp-total</code></td><td>read</td></tr>
                     </tbody></table></div>
                 </section>
@@ -7324,6 +7326,7 @@ data-cat-server
                 <section class="kp-section" data-sc-section="events" id="events">
                     <h2 class="kp-fw-semibold">Events</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
+                            <tr><td><code>kp-row-open</code></td><td>Fired on a row, bubbling, when Enter is pressed on the row itself: `{ row }`.</td></tr>
                             <tr><td><code>kp-datatable-view</code></td><td>Fired on the wrapper when the visible set changes. A contract value [TH26]. Detail: View, plus `rows` and `pageRows` (the elements).</td></tr>
                             <tr><td><code>kp-datatable-select</code></td><td>Fired when the selection changes; the detail carries the selected row keys and rows.</td></tr>
                             <tr><td><code>kp-datatable-sort</code></td><td>Fired when the sort changes: `{ column, direction }` or null — the first key; the view carries all of them as `sorts`.</td></tr>

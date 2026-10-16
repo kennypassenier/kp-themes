@@ -125,6 +125,8 @@ export const NEEDS = [
     // the KPI tile's sparkline and filter toggle, the attention band and
     // the time chart.
     { name: 'actions', when: '.kp-row-actions', load: () => import('./actions.js'), attach: (m, root) => [m.attachActionColumns(root)] },
+    // Rows the keyboard walks, j / k [kpadopt4-rows].
+    { name: 'row-keys', when: '[data-kp-row-keys]', load: () => import('./actions.js'), attach: (m, root) => [m.attachRowKeys(root)] },
     {
         name: 'kpi',
         when: 'svg[data-kp-spark], button.kp-kpi--toggle, .kp-kpis[data-kp-kpis-columns]',
@@ -152,6 +154,8 @@ export const NEEDS = [
     // Action tiles, status rows and the facet list [kpadopt2-tiles].
     { name: 'action-tiles', when: '.kp-action', load: () => import('./action-tiles.js'), attach: (m, root) => [m.attachActionTiles(root)] },
     { name: 'statusrow', when: '.kp-statuslist', load: () => import('./statusrow.js'), attach: (m, root) => [m.attachStatusLists(root)] },
+    // A card in four data states [kpadopt4-rows].
+    { name: 'card-state', when: '.kp-card[data-kp-state]', load: () => import('./card-state.js'), attach: (m, root) => [m.attachCardStates(root)] },
     { name: 'facets', when: '[data-kp-facets]', load: () => import('./facets.js'), attach: (m, root) => [m.attachFacets(root)] },
     // The identity mark, the share bar, the bullet list, the code block and the live tick [kpadopt4-data].
     { name: 'idmark', when: '[data-kp-idmark]', load: () => import('./idmark.js'), attach: (m, root) => [m.attachIdmarks(root)] },

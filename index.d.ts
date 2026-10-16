@@ -42,7 +42,7 @@ export type BusyCard = import('./js/busy-card.js').BusyCard;
 export type BusyCardOptions = import('./js/busy-card.js').BusyCardOptions;
 /** @typedef {import('./js/busy-card.js').BusyCard} BusyCard */
 /** @typedef {import('./js/busy-card.js').BusyCardOptions} BusyCardOptions */
-export { ACTION_LIST, ROW_ACTIONS, attachActionColumns, fitActionColumns, mergeRoles, rowRoles } from './js/actions.js';
+export { ACTION_LIST, ROW_ACTIONS, ROW_KEYS, ROW_OPEN_EVENT, attachActionColumns, attachRowKeys, fitActionColumns, mergeRoles, removeRow, rowRoles, setRowBusy, } from './js/actions.js';
 export { KPI_STRIP, KPI_TOGGLE, KPI_TOGGLE_EVENT, METER, SPARK, attachKpiStrips, attachKpiToggles, attachSparklines, drawSparkline, fitKpiStrip, kpiColumns, meterParts, meterText, setMeter, sparkPaths, } from './js/kpi.js';
 export type Meter = import('./js/kpi.js').Meter;
 /** @typedef {import('./js/kpi.js').Meter} Meter */
@@ -64,9 +64,12 @@ export type KeyPair = import('./js/keys.js').KeyPair;
 /** @typedef {import('./js/barcell.js').BarCell} BarCell */
 /** @typedef {import('./js/keys.js').KeyPair} KeyPair */
 export { ACTION_BUSY_EVENT, ACTION_TILE, attachActionTiles, setActionBusy } from './js/action-tiles.js';
-export { STATUS_EVENT, STATUS_ID_ATTRIBUTE, STATUS_LIST, STATUS_RETRY_EVENT, STATUS_STATES, attachStatusLists, buildStatusList, setStatus, } from './js/statusrow.js';
+export { STATUS_EVENT, STATUS_ID_ATTRIBUTE, STATUS_LIST, STATUS_RETRY_EVENT, STATUS_STATES, attachStatusLists, buildStatusList, countStatus, setStatus, } from './js/statusrow.js';
 export type StatusRow = import('./js/statusrow.js').StatusRow;
 /** @typedef {import('./js/statusrow.js').StatusRow} StatusRow */
+export { CARD_RETRY_EVENT, CARD_STATE, CARD_STATES, CARD_STATE_EVENT, attachCardStates, setCardState } from './js/card-state.js';
+export type CardStateOptions = import('./js/card-state.js').CardStateOptions;
+/** @typedef {import('./js/card-state.js').CardStateOptions} CardStateOptions */
 export { FACETS, FACET_EVENT, attachFacets, getFacetValues, setFacetCounts, setFacetItems, setFacetValues } from './js/facets.js';
 export type FacetItem = import('./js/facets.js').FacetItem;
 /** @typedef {import('./js/facets.js').FacetItem} FacetItem */

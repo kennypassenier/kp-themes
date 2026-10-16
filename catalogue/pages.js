@@ -113,6 +113,12 @@ export const PAGES = [
                 label: 'Identity marks, share bars, bullet rows, key-value grids, form rows, code blocks and live numbers',
                 about: 'Seven things the homelab dashboard, JobTracker, kyu and chassis still draw themselves: .kp-idmark (a plate made from a name), .kp-stackbar (parts of a whole with a legend), .kp-bullets (a value against a threshold per row), .kp-kv and .kp-formrows, .kp-code (payload block with Pretty/Raw, Wrap, Copy, fold), the page header line with a mark and the freshness line, and data-kp-tick (a live number that counts to its new value).',
             },
+            // Kenny's apps survey, 2026-10-16 (G14-G25): what JobTracker, the homelab dashboard and kyu still draw around their lists, each an opt-in option of a component the package had, formal only.
+            {
+                href: 'research/kpadopt4-rows/demo.html',
+                label: 'Rows, cards and choices: inbox rows, a card in four states, check lists, choice tiles',
+                about: 'Rows with a lead for an inbox, a message backlog, a file list and appointments (.kp-action-list--lead, setRowBusy, removeRow, j/k), a card in four data states (.kp-card[data-kp-state], js/card-state.js), status rows with warn and the fix written out, and choices as tiles (data-kp-layout="tiles"). Formal only.',
+            },
         ],
     },
     {

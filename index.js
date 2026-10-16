@@ -121,7 +121,19 @@ export { BUSY_CARD, openBusyCard } from './js/busy-card.js';
 /** @typedef {import('./js/busy-card.js').BusyCard} BusyCard */
 /** @typedef {import('./js/busy-card.js').BusyCardOptions} BusyCardOptions */
 // The dashboard components [scope-143].
-export { ACTION_LIST, ROW_ACTIONS, attachActionColumns, fitActionColumns, mergeRoles, rowRoles } from './js/actions.js';
+export {
+    ACTION_LIST,
+    ROW_ACTIONS,
+    ROW_KEYS,
+    ROW_OPEN_EVENT,
+    attachActionColumns,
+    attachRowKeys,
+    fitActionColumns,
+    mergeRoles,
+    removeRow,
+    rowRoles,
+    setRowBusy,
+} from './js/actions.js';
 export {
     KPI_STRIP,
     KPI_TOGGLE,
@@ -188,9 +200,13 @@ export {
     STATUS_STATES,
     attachStatusLists,
     buildStatusList,
+    countStatus,
     setStatus,
 } from './js/statusrow.js';
 /** @typedef {import('./js/statusrow.js').StatusRow} StatusRow */
+// A card in four data states [kpadopt4-rows].
+export { CARD_RETRY_EVENT, CARD_STATE, CARD_STATES, CARD_STATE_EVENT, attachCardStates, setCardState } from './js/card-state.js';
+/** @typedef {import('./js/card-state.js').CardStateOptions} CardStateOptions */
 export { FACETS, FACET_EVENT, attachFacets, getFacetValues, setFacetCounts, setFacetItems, setFacetValues } from './js/facets.js';
 /** @typedef {import('./js/facets.js').FacetItem} FacetItem */
 // The identity mark, the share bar, the bullet list, the code block and the live tick [kpadopt4-data].

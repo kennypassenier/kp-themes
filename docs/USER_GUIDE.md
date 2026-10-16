@@ -1768,6 +1768,170 @@ helpTourButton.addEventListener('click', () => {
 - `decorate(part, info)` is handed the card's three buttons
   (`tour-next`, `tour-back`, `tour-skip`) each time a tour builds them;
   `strings` overrides the dictionary's `tour…` words for this tour.
+## Rows, cards and choices [kpadopt4-rows]
+
+What Kenny's apps still drew themselves around their lists (the homelab
+Inbox, JobTracker's queue, files, appointments and readiness card, kyu's
+dead letters), built as opt-in options on components the package already
+had. Nothing changes for a page that does not ask for them.
+
+### Choices as tiles
+
+A group of checkboxes or radios where each answer needs a sentence of its
+own: the fieldset and labels of any group, with `data-kp-layout="tiles"`.
+
+```html
+<fieldset class="kp-fieldset" data-kp-layout="tiles">
+    <legend class="kp-field__label">What should the reply do?</legend>
+    <label class="kp-field__option">
+        <input class="kp-field__check" type="checkbox" name="act" value="thank" checked />
+        <span class="kp-field__option-title">Thank them for the interview</span>
+        <span class="kp-field__option-hint">One sentence about Tuesday's talk.</span>
+    </label>
+</fieldset>
+```
+
+The whole tile is the target; the box stays the native input, so Space,
+a radio group's arrows and the form's own submit work unchanged. Tiles
+share one height per row and fall to one column under
+`--kp-field-tiles-min` (14rem). Checked: the primary edge, a 1 px inner
+ring and a 6 % primary plate; focus: the ring around the tile; disabled:
+a dashed edge on the muted ground. An invalid group is the fieldset's own
+outline (`aria-invalid="true"` on the fieldset, the message in a
+`.kp-field__error` after it). Knobs: `--kp-field-tiles-min`,
+`--kp-field-tiles-gap`, `--kp-field-tile-pad`, `--kp-field-tile-radius`,
+`--kp-field-tile-ground`, `--kp-field-tile-ground-checked`,
+`--kp-field-tile-edge-checked`. No script.
+
+### A check list with the fix written out
+
+The status rows (`.kp-statuslist`, `js/statusrow.js`) carry a system's
+checks too: two opt-in parts, a `warn` state for a check that passes with
+a reservation and `.kp-statusrow__fix`, the fix written out, shown on a
+failed or warn row only. A row that carries a fix keeps its room in every
+state, so a check that passes on the next read moves nothing; leave the
+part out of a check that cannot fail.
+
+```html
+<ul class="kp-statuslist kp-statuslist--rows" aria-label="What JobTracker needs" data-kp-status-retry="false">
+    <li class="kp-statusrow" data-state="warn" data-kp-status-id="almanac">
+        <span class="kp-statusrow__mark" aria-hidden="true"></span>
+        <span class="kp-statusrow__body">
+            <span class="kp-statusrow__label">Calendar (Almanac)</span>
+            <span class="kp-statusrow__detail">partly set up</span>
+            <span class="kp-statusrow__fix">Add the Almanac token to the configuration to send follow-ups and interviews.</span>
+        </span>
+    </li>
+</ul>
+```
+
+The warn mark is the warning pair (its plate, its own ink on it) with "!"
+as its shape (`--kp-glyph-warn`), and a screen reader hears "needs
+attention" (`statusWarn`). `buildStatusList(rows)` and
+`setStatus(list, id, { state, detail, fix })` take `fix`;
+`countStatus(list)` counts the rows per state for the summary line ("3 of
+4 checks pass"). A list of checks usually re-checks as a whole, from its
+card's header: `data-kp-status-retry="false"` leaves out the Retry per
+row. Knob: `--kp-statusrow-fix-gap`.
+
+### A card in four data states
+
+A card that shows data read from somewhere is loading, empty, failed or
+filled, and keeps its place and size in all four: `data-kp-state` on a
+`.kp-card`, the data in `.kp-card__stage > .kp-card__data`.
+
+```html
+<section class="kp-card" data-kp-state="loading" aria-labelledby="files-t">
+    <div class="kp-card__header">
+        <h2 class="kp-card__title" id="files-t">Files</h2>
+        <div class="kp-card__actions"><span class="kp-timestamp">3 files</span></div>
+    </div>
+    <p class="kp-card__body">Everything in this application's folder.</p>
+    <div class="kp-card__stage"><div class="kp-card__data"></div></div>
+</section>
+```
+
+```js
+import { setCardState } from '@kp-soft/themes/js/card-state';
+
+setCardState(card, 'loading', { words: 'Reading the folder…' });
+setCardState(card, 'error', { title: 'Could not list the files', text: 'The server answered 502 Bad Gateway.' });
+setCardState(card, 'empty', { title: 'No files yet', text: 'Files the procedure writes land here.', action: uploadButton });
+setCardState(card, 'ready');
+card.addEventListener('kp-card-retry', () => reload());
+```
+
+Loading lays the data table's own loading card over the stage (the
+theme's spinner and plate, `js/busy-card.js`); data already there stays
+under it, dimmed and inert, so a refresh never blanks the card, and a
+first load has `--kp-card-stage-min` (7.5rem) of room. Empty fills the
+stage with the package's empty state (title, sentence, optional action);
+error is the destructive alert with Try again, which fires `kp-card-retry`
+on the card. In both the data keeps its room, hidden, with the note
+centred in it, so a failed refresh of a full card does not collapse it;
+clear the data when it no longer holds and the stage falls back to its
+least height. When the focused Try again goes with its state, the focus moves to
+the stage. A framework that writes `data-kp-state` itself is followed by
+`attachCardStates(root)` (loaded by `js/auto.js`), and may render its own
+note in a `.kp-card__state` inside the stage. Exports: `setCardState`,
+`attachCardStates`, `CARD_STATE`, `CARD_STATES`, `CARD_STATE_EVENT`
+(`kp-card-state`, `{ card, state, previous }`), `CARD_RETRY_EVENT`.
+Strings: `cardLoading`, `cardEmpty`, `cardFailed`, `cardRetry`. Knobs:
+`--kp-card-stage-min`, `--kp-card-stage-gap`.
+
+### Rows with a lead: an inbox, a backlog, files, appointments
+
+`.kp-action-list--lead` adds a lead column before the words of the list's
+rows (the buttons in shared columns stay as they are): a state badge or
+dot, a file's format, an appointment's day and hour. The column is as wide
+as the widest lead of the list, so every title starts at one edge, on a
+phone too.
+
+```html
+<ul class="kp-action-list kp-action-list--lead" aria-label="Inbox" data-kp-row-keys>
+    <li data-kp-state="new">
+        <span class="kp-action-list__lead"><span class="kp-badge kp-badge--destructive">dead</span></span>
+        <div class="kp-action-list__main">
+            <strong class="kp-action-list__title">Backups of vault failed twice</strong>
+            <span class="kp-action-list__text">The backup target refused the connection.</span>
+            <span class="kp-action-list__meta"><span>Backups</span><span>12 min ago</span></span>
+            <details class="kp-accordion__item kp-accordion__item--bare kp-action-list__more">
+                <summary>Payload</summary>
+                <pre class="kp-action-list__payload">{ "job": "backup" }</pre>
+            </details>
+        </div>
+        <div class="kp-row-actions">
+            <button type="button" class="kp-button kp-button--sm">Mark seen</button>
+            <button type="button" class="kp-button kp-button--sm kp-button--primary">Open</button>
+        </div>
+    </li>
+</ul>
+```
+
+Parts: `__lead` (every row carries one, empty if need be), `__main` with
+`__title`, `__text`, `__meta` (its plain parts set apart by a dot that
+stays with the part before it; badges stand on their own plate) and the
+folded payload `__more` > `__payload` (at most
+`--kp-action-list-payload-max`, 16rem, then scrolling); `time.__when` for
+a moment (the day over the hour); `li.__group` for a heading row across
+the list (Upcoming, Past). `data-kp-state` on a row is `new`, `active`,
+`warn`, `failed`, `next` (the bar, a primary wash and the lead in the
+primary) or `done` / `past` (quieter ink); each draws a bar along the
+start edge that every row reserves, so a state moves nothing.
+
+`js/actions.js` runs the row's work: `setRowBusy(row, busy, button)`
+dims the row (`aria-busy`), makes its buttons refuse a press
+(`aria-disabled`, the focus stays) and lays the theme's spinner over the
+pressed button's words at its own width; `removeRow(row)` lets the row
+leave the theme's way (`leave()`), the focus first going to the same
+button of the next row; `attachRowKeys(root)` (loaded by `js/auto.js` for
+`data-kp-row-keys`) walks the rows with j / k or the arrows, Home and End,
+one row in the tab order, and fires `kp-row-open` (`{ row }`) on Enter on
+a row. Exports: `setRowBusy`, `removeRow`, `attachRowKeys`, `ROW_KEYS`,
+`ROW_OPEN_EVENT`. Knobs: `--kp-action-list-lead-gap`,
+`--kp-action-list-bar`, `--kp-action-list-pad`,
+`--kp-action-list-next-wash`, `--kp-action-list-payload-max`.
+
 ## Tables that fit [TH95, TH96]
 
 A table is the widest thing on most pages, and everything below is about

@@ -30,7 +30,7 @@ import process from 'node:process';
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 
 /** Data components whose loading state lays the busy card. */
-export const CARD = ['js/datatable.js', 'js/week.js', 'js/heat.js', 'js/gantt.js', 'js/bullets.js', 'js/code.js'];
+export const CARD = ['js/datatable.js', 'js/week.js', 'js/heat.js', 'js/gantt.js', 'js/bullets.js', 'js/code.js', 'js/card-state.js'];
 
 /** Approved before the rule, each with its own central loading picture. @type {Record<string, string>} */
 export const OWN = {
@@ -44,6 +44,7 @@ export const OWN = {
 export const NOT_DATA = {
     'js/action-tiles.js': "a tile is a button: its spinner stands in the tile's own mark",
     'js/statusrow.js': 'each row carries its own spinner while that one item is read; the list stays usable',
+    'js/actions.js': "a row's own action at work (setRowBusy: the pressed button's spinner); the list stays usable",
     'js/facets.js': 'only the counts wait (quiet bars); the rows stay usable to filter with',
     'js/idmark.js': "a mark is one small plate: a loading mark is the plate's own skeleton",
     'js/stackbar.js': 'one figure, as a meter is: its own bar pulses at its height and the legend keeps its rows',

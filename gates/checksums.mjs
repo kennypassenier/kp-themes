@@ -157,6 +157,7 @@ export const FILES = [
     'js/segmented.js',
     'js/action-tiles.js',
     'js/statusrow.js',
+    'js/card-state.js',
     'js/facets.js',
     'js/idmark.js',
     'js/stackbar.js',

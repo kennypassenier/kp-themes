@@ -65,6 +65,11 @@
  * @property {string} statusLoading  A status row still being read
  * @property {string} statusFailed  A status row that failed
  * @property {string} statusEmpty  A status row with nothing to show
+ * @property {string} statusWarn  A status row that passes with a reservation, `data-state="warn"` [kpadopt4-rows]
+ * @property {string} cardLoading  What a loading card's busy card says under its spinner (js/card-state.js) [kpadopt4-rows]
+ * @property {string} cardEmpty  An empty card's note when the page gives no title [kpadopt4-rows]
+ * @property {string} cardFailed  A failed card's note when the page gives no title [kpadopt4-rows]
+ * @property {string} cardRetry  The Try again button of a failed card [kpadopt4-rows]
  * @property {string} statusRetry  The Retry button of a failed status row
  * @property {(label: string) => string} statusRetryLabel  That button's accessible name, "Retry vault"
  * @property {(label: string, state: string, detail: string) => string} statusAnnounce  What the list's status region says when a row changes, "vault: failed, The host did not answer"
@@ -459,6 +464,12 @@ export const DEFAULT_STRINGS = Object.freeze({
     statusLoading: 'loading',
     statusFailed: 'failed',
     statusEmpty: 'nothing to show',
+    statusWarn: 'needs attention',
+    // A card's data states (js/card-state.js).
+    cardLoading: 'Loading…',
+    cardEmpty: 'Nothing to show yet.',
+    cardFailed: 'Could not be read.',
+    cardRetry: 'Try again',
     statusRetry: 'Retry',
     statusRetryLabel: (label) => `Retry ${label}`,
     statusAnnounce: (label, state, detail) => (detail ? `${label}: ${state}, ${detail}` : `${label}: ${state}`),
