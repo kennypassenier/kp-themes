@@ -155,7 +155,7 @@ export function foldNav(nav, { strings } = {}) {
     dot.setAttribute('aria-hidden', 'true');
     dot.hidden = true;
     const alertText = doc.createElement('span');
-    alertText.className = 'sr-only';
+    alertText.className = 'kp-sr-only';
     alertText.hidden = true;
     button.append(label, dot, alertText);
     const writeWords = () => {
@@ -262,6 +262,9 @@ export function foldNav(nav, { strings } = {}) {
             });
         }
         const folded = items.filter((_, i) => plan[i]);
+        // The list keeps at least the More button's room while something is folded (css/components.css).
+        if (folded.length) list.style.setProperty('--kp-nav-fold-more', `${more.offsetWidth}px`);
+        else list.style.removeProperty('--kp-nav-fold-more');
         const now = items.map((li, i) => (plan[i] ? i : -1)).filter((i) => i >= 0);
         const same = now.join(',') === foldedNow.map((li) => items.indexOf(li)).join(',') && folded.length === foldedNow.length;
         for (const li of items) li.toggleAttribute('data-kp-nav-folded', folded.includes(li));
@@ -355,6 +358,7 @@ export function foldNav(nav, { strings } = {}) {
         nav.removeAttribute('data-kp-nav-folding');
         nav.removeAttribute('data-kp-nav-fold-ready');
         list.style.removeProperty('--kp-nav-fold-used');
+        list.style.removeProperty('--kp-nav-fold-more');
         folds.delete(nav);
     };
 }

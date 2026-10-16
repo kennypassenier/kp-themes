@@ -304,6 +304,21 @@
         gap: 1.5rem;
     }
 
+    /* A bar that folds [kpadopt-nav] is one row at every width, so it is a flex row, not the fourteen columns: a
+       search field or a running-job button placed after the links had no column of its own there, fell to a second row
+       one column wide, and the bar grew with every step the window narrowed (Kenny, 2026-10-16: "veel te hoog, de
+       search knop staat telkens op de volgende rij"). The brand keeps Grilli's three fourteenths, the strip of links
+       takes the rest and the job and the search stand at their natural width. */
+    [data-theme='grotesk'] .kp-nav[data-kp-nav-fold] {
+        display: flex;
+        flex-wrap: nowrap;
+    }
+
+    [data-theme='grotesk'] .kp-nav[data-kp-nav-fold] > .kp-nav__brand {
+        flex: none;
+        min-inline-size: calc(100% * 3 / 14);
+    }
+
     /* Collapsed, the track is the brand and the toggle on one row and the
        links on their own row under them, from the start edge. This sits after
        the wide placement above on purpose: written before it, at the same
@@ -312,12 +327,23 @@
        items appearing in the phone version are weirdly aligned to the
        right"). */
     @container kp-nav (max-width: 40rem) {
-        [data-theme='grotesk'] .kp-nav {
+        [data-theme='grotesk'] .kp-nav:has(> .kp-nav__toggle) {
+            display: grid;
             grid-template-columns: minmax(0, 1fr) auto;
             row-gap: 0.75rem;
         }
 
-        [data-theme='grotesk'] .kp-nav__brand {
+        /* The search stays on the brand's row, after the toggle, instead of falling to a row of its own. */
+        [data-theme='grotesk'] .kp-nav[data-kp-nav-fold]:has(> .kp-nav__toggle) {
+            grid-template-columns: minmax(0, 1fr) auto auto;
+        }
+
+        [data-theme='grotesk'] .kp-nav[data-kp-nav-fold]:has(> .kp-nav__toggle) > .kp-nav__search {
+            grid-column: 3;
+            grid-row: 1;
+        }
+
+        [data-theme='grotesk'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__brand {
             grid-column: 1;
         }
 
@@ -325,7 +351,7 @@
             grid-column: 2;
         }
 
-        [data-theme='grotesk'] .kp-nav__links {
+        [data-theme='grotesk'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links {
             grid-column: 1 / -1;
             flex-direction: column;
             align-items: flex-start;

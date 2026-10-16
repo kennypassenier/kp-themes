@@ -334,8 +334,8 @@ const SECTIONS = `
                     <p class="nf-how"><code>data-kp-nav-fold</code> on the nav. Nothing else is written by hand: the More button and its menu are added by the script, and the menu is the package’s menu button.</p>
                 </div>
                 ${expected(`<ul>
-                    <li>Drag the slider above the first bar: the links that do not fit leave the bar from the end and are listed behind a <b>More</b> button; the bar stays one row tall at every width, and nothing jumps when a link folds.</li>
-                    <li>Press <b>More</b> (or the button under the “More opened” bar): a menu hangs from it with the folded links; picking an entry follows its link, <b>Escape</b> closes the menu and the focus is back on More.</li>
+                    <li>Drag the slider above the first bar: the links that do not fit leave the bar from the end and are listed behind a <b>More</b> button; the bar stays one row tall at every width (at 18rem the brand gives way to an ellipsis before anything wraps), and nothing jumps when a link folds. The More button is always inside the bar, after the links that stay and before Search.</li>
+                    <li>Press <b>More</b> (or the button under the “More opened” bar): a menu hangs from its left edge (its right edge in the right-to-left bar), straight under the button, wherever it is on the page, with the folded links; picking an entry follows its link, <b>Escape</b> closes the menu and the focus is back on More.</li>
                     <li>The three-link bar at 26rem has no More at all. The bar that keeps Settings (<code>data-kp-nav-keep</code>) keeps it however narrow it gets.</li>
                     <li>Tab through a bar: the links that stay, then More, then Search. Folded links are skipped.</li>
                 </ul>`)}
@@ -506,12 +506,12 @@ ${DRAWER}
                 ${expected(`<ul>
                     <li>Every button in the first row shows the theme’s spinner turning in front of the word “Running”, in its own variant (default, primary, secondary, ghost, destructive, small, large, mirrored).</li>
                     <li>The disabled button does not answer the pointer. The very long label is cut with an ellipsis, never wrapped.</li>
-                    <li>In the wide bar the button reads “Updating gateway · step 3 of 35”; in the 22rem bar it reads only “Running”. In the last frame no job is running: the button is hidden and the bar closes over the gap.</li>
+                    <li>In the wide bar the button reads “Updating gateway · step 3 of 35”; in the 30rem bar it reads only “Running”. In the last frame no job is running: the button is hidden and the bar closes over the gap.</li>
                 </ul>`)}
                 <div class="nf-look" data-review-look>
 ${looks(
     (theme) =>
-        `In ${theme}, the spinner is ${SPIN[theme]} and the button around it is the theme’s own button in each of its seven variants (default, primary, secondary, ghost, destructive, small, large; the mirror one reads the other way). Check that the spinner sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 22rem bar shows the short word instead of the long, and that the hidden button leaves no gap in the bar.`,
+        `In ${theme}, the spinner is ${SPIN[theme]} and the button around it is the theme’s own button in each of its seven variants (default, primary, secondary, ghost, destructive, small, large; the mirror one reads the other way). Check that the spinner sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 30rem bar shows the short word instead of the long, and that the hidden button leaves no gap in the bar.`,
 )}
                 </div>
                 <div class="lv-row">
@@ -534,7 +534,7 @@ ${looks(
                     <figure class="nf-fig">${bar({ id: 'live-wide', width: 'nf-w-xl', links: LINKS.few, live: true, label: 'Main with a running job' })}
                         <figcaption>In a wide bar: the long label.</figcaption></figure>
                     <figure class="nf-fig">${bar({ id: 'live-narrow', width: 'nf-w-xs', links: LINKS.few, live: true, label: 'Main with a running job, narrow' })}
-                        <figcaption>In a bar under 40rem (22rem): the short word.</figcaption></figure>
+                        <figcaption>In a bar under 40rem (30rem): the short word.</figcaption></figure>
                     <figure class="nf-fig">
                         <div class="nf-frame nf-w-m" data-nf="live-hidden">
                             <div class="kp-nav-wrap">
@@ -607,9 +607,10 @@ ${SECTIONS}
         </main>
         <script type="module" src="../../js/auto.js"></script>
         <script type="module" src="demo.js"></script>
-        <!-- Round two (2026-10-16): Kenny's rejections of round one reopen by themselves; every pair he has not judged is still open. -->
+        <!-- Round three (2026-10-16): Kenny's four rejections of round two reopen by themselves; the pairs this round redrew
+             (the More menu's edge, the one-row bar, the narrow running-job bar) are named, the rest stays approved. -->
         <script type="application/json" data-review-round>
-            { "round": "2026-10-16-r2", "reopen": [] }
+            { "round": "2026-10-16-r3", "reopen": ${JSON.stringify(THEMES.flatMap((t) => ['nav-fold', 'live-button', 'together'].map((item) => `${t}|${item}`)))} }
         </script>
         <script type="module" src="../_review/review.js"></script>
         <script src="../../catalogue/boot-check.js"></script>

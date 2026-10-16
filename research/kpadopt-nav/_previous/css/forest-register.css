@@ -2266,9 +2266,17 @@
         /* A toast arrives as its leave played backwards, so that its leave
            (the theme's, on [data-kp-leaving], below) is its arrival turned
            around frame for frame: it grows out of its own base line,
-           turning from autumn to green. */
+           turning from autumn to green. The arrival is written forwards
+           (kp-sig-forest-arrive on the growth curve: the leave's frames and
+           curve, reversed) and not as the leave with `reverse`: a table row
+           borrows the toast's entrance, and js/motion.js turns an entrance
+           round by forcing `animation-direction: reverse` on it (css/components.css),
+           which on a `reverse` entrance changes nothing. Folding a group then
+           played the rows' growth again and hid them at its end, the text
+           rising out of the ground and vanishing (Kenny, kpadopt-tooltip-sort
+           groupalways · forest, 2026-10-16). */
         [data-theme='forest'] .kp-toast {
-            animation: kp-sig-forest-leave var(--kp-sig-dur) var(--kp-sig-fo-wither) reverse backwards;
+            animation: kp-sig-forest-arrive var(--kp-sig-dur) var(--kp-sig-fo-grow) backwards;
         }
 
         /* A dialog grows up out of its base line, its top edge first

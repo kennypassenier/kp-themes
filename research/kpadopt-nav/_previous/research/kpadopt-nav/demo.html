@@ -45,6 +45,24 @@
                         script, and the menu is the package’s menu button.
                     </p>
                 </div>
+                <div class="nf-expect">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Drag the slider above the first bar: the links that do not fit leave the bar from the end and are listed behind a
+                            <b>More</b> button; the bar stays one row tall at every width, and nothing jumps when a link folds.
+                        </li>
+                        <li>
+                            Press <b>More</b> (or the button under the “More opened” bar): a menu hangs from it with the folded links; picking an
+                            entry follows its link, <b>Escape</b> closes the menu and the focus is back on More.
+                        </li>
+                        <li>
+                            The three-link bar at 26rem has no More at all. The bar that keeps Settings (<code>data-kp-nav-keep</code>) keeps it
+                            however narrow it gets.
+                        </li>
+                        <li>Tab through a bar: the links that stay, then More, then Search. Folded links are skipped.</li>
+                    </ul>
+                </div>
                 <div class="nf-look" data-review-look>
                     <p data-for="formal">
                         In formal, drag the slider and watch the first bar: the links that do not fit fold from the end behind More, one after the
@@ -562,6 +580,34 @@
                         <code>kp-tabbar--always kp-tabbar--static</code>; the section below shows the real, fixed bar in a window of its own.
                     </p>
                 </div>
+                <div class="nf-expect">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Five tabs sit at the foot of each phone: Home, Needs you, Overview, Activity and <b>More</b>, each with an icon over its
+                            label. The current tab is marked the way the theme marks it (see the look-at line).
+                        </li>
+                        <li>
+                            Press Home, Needs you, Overview or Activity in the first phone: the mark moves to the tab you pressed. (A busy or disabled
+                            tab does not take the mark.)
+                        </li>
+                        <li>
+                            The buttons under the phones act on the first phone: <b>Add a count</b> raises the number on Needs you by one;
+                            <b>Clear the count</b> removes it; <b>Toggle busy</b> swaps the icon of Overview for the theme’s spinner and back, the tab
+                            keeps its size; <b>Show keyboard focus</b> draws the focus ring on Activity.
+                        </li>
+                        <li>
+                            Press <b>More</b> in any phone: a panel opens at the right edge of the window, full height, and on a phone-sized window it
+                            leaves a dimmed strip of the page at the left. It lists four entries: Backups, System, Search or do anything, Help and the
+                            words. A <b>×</b> sits at its top right.
+                        </li>
+                        <li>
+                            The panel closes four ways: the <b>×</b>, <b>Escape</b>, a press on the dimmed strip, or a press on one of its entries
+                            (Backups and System also follow their link). Open it again and the same four entries are there. After it closes the focus
+                            is back on the More tab.
+                        </li>
+                    </ul>
+                </div>
                 <div class="nf-look" data-review-look>
                     <p data-for="formal">
                         In formal, look at the current tab in the first phone. A navy rule is ruled along the bar’s top edge over the current tab, at
@@ -821,7 +867,7 @@
                                     <p class="kp-drawer__desc">The two areas you need less often, plus search and help.</p>
                                 </header>
                                 <div class="kp-drawer__body">
-                                    <div class="kp-menu" role="group" aria-label="More">
+                                    <div class="kp-menu kp-menu--rich" role="group" aria-label="More">
                                         <a class="kp-menu__item" href="#backups"
                                             ><span class="kp-menu__label">Backups</span
                                             ><span class="kp-menu__hint">Snapshots, restores and the nightly run</span></a
@@ -1184,6 +1230,33 @@
                     Pointing a tab and pressing it are the theme’s, and live: hover and press them. Contrast: a resting tab’s label is the muted ink,
                     as a bar link is; where a theme’s muted ink is under 4.5:1 on the bar it is the theme’s own muted ink and is not changed here.
                 </p>
+
+                <dialog class="kp-drawer kp-dialog" id="tb-more" aria-labelledby="tb-more-title">
+                    <header class="kp-drawer__head">
+                        <h2 class="kp-dialog__title" id="tb-more-title">More</h2>
+                        <button type="button" class="kp-icon-button kp-dialog__close" data-kp-dialog-close aria-label="Close">×</button>
+                        <p class="kp-drawer__desc">The two areas you need less often, plus search and help.</p>
+                    </header>
+                    <div class="kp-drawer__body">
+                        <div class="kp-menu kp-menu--rich" role="group" aria-label="More">
+                            <a class="kp-menu__item" href="#backups"
+                                ><span class="kp-menu__label">Backups</span
+                                ><span class="kp-menu__hint">Snapshots, restores and the nightly run</span></a
+                            >
+                            <a class="kp-menu__item" href="#system"
+                                ><span class="kp-menu__label">System</span><span class="kp-menu__hint">The host, its disks and updates</span></a
+                            >
+                            <button type="button" class="kp-menu__item">
+                                <span class="kp-menu__label">Search or do anything</span
+                                ><span class="kp-menu__hint">Pages, stacks and actions in one box</span>
+                            </button>
+                            <button type="button" class="kp-menu__item">
+                                <span class="kp-menu__label">Help and the words</span
+                                ><span class="kp-menu__hint">What a stack, a deploy or a snapshot is</span>
+                            </button>
+                        </div>
+                    </div>
+                </dialog>
             </section>
 
             <section
@@ -1203,6 +1276,20 @@
                         cuts a long label with an ellipsis, gives way to the short label in a container under 40rem, and <code>hidden</code> removes
                         it without a gap.
                     </p>
+                </div>
+                <div class="nf-expect">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Every button in the first row shows the theme’s spinner turning in front of the word “Running”, in its own variant
+                            (default, primary, secondary, ghost, destructive, small, large, mirrored).
+                        </li>
+                        <li>The disabled button does not answer the pointer. The very long label is cut with an ellipsis, never wrapped.</li>
+                        <li>
+                            In the wide bar the button reads “Updating gateway · step 3 of 35”; in the 22rem bar it reads only “Running”. In the last
+                            frame no job is running: the button is hidden and the bar closes over the gap.
+                        </li>
+                    </ul>
                 </div>
                 <div class="nf-look" data-review-look>
                     <p data-for="formal">
@@ -1435,6 +1522,21 @@
                         button and the drawer are the package’s.
                     </p>
                 </div>
+                <div class="nf-expect">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Three real pages in three windows. <b>Phone</b> (22.5rem): brand, search, the job button (“Running”) at the top, the four
+                            areas and More in a tab bar at the foot, the last line of the page clear of the bar. <b>Tablet</b> (48rem): the same tab
+                            bar. <b>Desktop</b> (70rem): all links in the top bar, no tab bar.
+                        </li>
+                        <li>
+                            Press More in the phone or tablet window: its panel opens inside that window (not over this page) and closes with its ×,
+                            Escape, a press on the strip beside it or a press on an entry.
+                        </li>
+                        <li>Nothing in the three windows should overlap, cut or shift when you press the controls.</li>
+                    </ul>
+                </div>
                 <div class="nf-look" data-review-look>
                     <p data-for="formal">
                         In formal, compare the three windows. Phone (22.5rem): the top bar keeps only the brand, the search box, the running-job
@@ -1573,32 +1675,11 @@
                 </div>
             </section>
         </main>
-        <dialog class="kp-drawer kp-dialog" id="tb-more" aria-labelledby="tb-more-title">
-            <header class="kp-drawer__head">
-                <h2 class="kp-dialog__title" id="tb-more-title">More</h2>
-                <button type="button" class="kp-icon-button kp-dialog__close" data-kp-dialog-close aria-label="Close"></button>
-                <p class="kp-drawer__desc">The two areas you need less often, plus search and help.</p>
-            </header>
-            <div class="kp-drawer__body">
-                <div class="kp-menu" role="group" aria-label="More">
-                    <a class="kp-menu__item" href="#backups"
-                        ><span class="kp-menu__label">Backups</span><span class="kp-menu__hint">Snapshots, restores and the nightly run</span></a
-                    >
-                    <a class="kp-menu__item" href="#system"
-                        ><span class="kp-menu__label">System</span><span class="kp-menu__hint">The host, its disks and updates</span></a
-                    >
-                    <button type="button" class="kp-menu__item">
-                        <span class="kp-menu__label">Search or do anything</span
-                        ><span class="kp-menu__hint">Pages, stacks and actions in one box</span>
-                    </button>
-                    <button type="button" class="kp-menu__item">
-                        <span class="kp-menu__label">Help and the words</span
-                        ><span class="kp-menu__hint">What a stack, a deploy or a snapshot is</span>
-                    </button>
-                </div>
-            </div>
-        </dialog>
         <script type="module" src="../../js/auto.js"></script>
         <script type="module" src="demo.js"></script>
+        <!-- Round two (2026-10-16): Kenny's rejections of round one reopen by themselves; every pair he has not judged is still open. -->
+        <script type="application/json" data-review-round>
+            { "round": "2026-10-16-r2", "reopen": [] }
+        </script>
         </body>
 </html>

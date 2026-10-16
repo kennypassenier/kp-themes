@@ -50,11 +50,14 @@
                     <ul>
                         <li>
                             Drag the slider above the first bar: the links that do not fit leave the bar from the end and are listed behind a
-                            <b>More</b> button; the bar stays one row tall at every width, and nothing jumps when a link folds.
+                            <b>More</b> button; the bar stays one row tall at every width (at 18rem the brand gives way to an ellipsis before anything
+                            wraps), and nothing jumps when a link folds. The More button is always inside the bar, after the links that stay and
+                            before Search.
                         </li>
                         <li>
-                            Press <b>More</b> (or the button under the “More opened” bar): a menu hangs from it with the folded links; picking an
-                            entry follows its link, <b>Escape</b> closes the menu and the focus is back on More.
+                            Press <b>More</b> (or the button under the “More opened” bar): a menu hangs from its left edge (its right edge in the
+                            right-to-left bar), straight under the button, wherever it is on the page, with the folded links; picking an entry follows
+                            its link, <b>Escape</b> closes the menu and the focus is back on More.
                         </li>
                         <li>
                             The three-link bar at 26rem has no More at all. The bar that keeps Settings (<code>data-kp-nav-keep</code>) keeps it
@@ -1286,7 +1289,7 @@
                         </li>
                         <li>The disabled button does not answer the pointer. The very long label is cut with an ellipsis, never wrapped.</li>
                         <li>
-                            In the wide bar the button reads “Updating gateway · step 3 of 35”; in the 22rem bar it reads only “Running”. In the last
+                            In the wide bar the button reads “Updating gateway · step 3 of 35”; in the 30rem bar it reads only “Running”. In the last
                             frame no job is running: the button is hidden and the bar closes over the gap.
                         </li>
                     </ul>
@@ -1295,97 +1298,97 @@
                     <p data-for="formal">
                         In formal, the spinner is an arc ruled round a double ring and the button around it is the theme’s own button in each of its
                         seven variants (default, primary, secondary, ghost, destructive, small, large; the mirror one reads the other way). Check that
-                        the spinner sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 22rem
+                        the spinner sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 30rem
                         bar shows the short word instead of the long, and that the hidden button leaves no gap in the bar.
                     </p>
                     <p data-for="light">
                         In light, the spinner is a bead that burns out and comes back and the button around it is the theme’s own button in each of
                         its seven variants (default, primary, secondary, ghost, destructive, small, large; the mirror one reads the other way). Check
                         that the spinner sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the
-                        22rem bar shows the short word instead of the long, and that the hidden button leaves no gap in the bar.
+                        30rem bar shows the short word instead of the long, and that the hidden button leaves no gap in the bar.
                     </p>
                     <p data-for="dark">
                         In dark, the spinner is the line running the ring and the button around it is the theme’s own button in each of its seven
                         variants (default, primary, secondary, ghost, destructive, small, large; the mirror one reads the other way). Check that the
-                        spinner sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 22rem bar
+                        spinner sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 30rem bar
                         shows the short word instead of the long, and that the hidden button leaves no gap in the bar.
                     </p>
                     <p data-for="cyberpunk">
                         In cyberpunk, the spinner is the reticle locking on its core and the button around it is the theme’s own button in each of its
                         seven variants (default, primary, secondary, ghost, destructive, small, large; the mirror one reads the other way). Check that
-                        the spinner sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 22rem
+                        the spinner sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 30rem
                         bar shows the short word instead of the long, and that the hidden button leaves no gap in the bar.
                     </p>
                     <p data-for="synthwave">
                         In synthwave, the spinner is the sun setting and the button around it is the theme’s own button in each of its seven variants
                         (default, primary, secondary, ghost, destructive, small, large; the mirror one reads the other way). Check that the spinner
-                        sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 22rem bar shows
+                        sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 30rem bar shows
                         the short word instead of the long, and that the hidden button leaves no gap in the bar.
                     </p>
                     <p data-for="pastel">
                         In pastel, the spinner is the caterpillar and the button around it is the theme’s own button in each of its seven variants
                         (default, primary, secondary, ghost, destructive, small, large; the mirror one reads the other way). Check that the spinner
-                        sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 22rem bar shows
+                        sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 30rem bar shows
                         the short word instead of the long, and that the hidden button leaves no gap in the bar.
                     </p>
                     <p data-for="terminal">
                         In terminal, the spinner is the braille cell and the button around it is the theme’s own button in each of its seven variants
                         (default, primary, secondary, ghost, destructive, small, large; the mirror one reads the other way). Check that the spinner
-                        sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 22rem bar shows
+                        sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 30rem bar shows
                         the short word instead of the long, and that the hidden button leaves no gap in the bar.
                     </p>
                     <p data-for="forest">
                         In forest, the spinner is forest’s own spinner and the button around it is the theme’s own button in each of its seven
                         variants (default, primary, secondary, ghost, destructive, small, large; the mirror one reads the other way). Check that the
-                        spinner sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 22rem bar
+                        spinner sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 30rem bar
                         shows the short word instead of the long, and that the hidden button leaves no gap in the bar.
                     </p>
                     <p data-for="blueprint">
                         In blueprint, the spinner is the compass and the button around it is the theme’s own button in each of its seven variants
                         (default, primary, secondary, ghost, destructive, small, large; the mirror one reads the other way). Check that the spinner
-                        sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 22rem bar shows
+                        sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 30rem bar shows
                         the short word instead of the long, and that the hidden button leaves no gap in the bar.
                     </p>
                     <p data-for="solstice">
                         In solstice, the spinner is the sun’s arc and the button around it is the theme’s own button in each of its seven variants
                         (default, primary, secondary, ghost, destructive, small, large; the mirror one reads the other way). Check that the spinner
-                        sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 22rem bar shows
+                        sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 30rem bar shows
                         the short word instead of the long, and that the hidden button leaves no gap in the bar.
                     </p>
                     <p data-for="brutalism">
                         In brutalism, the spinner is the block tipped over and the button around it is the theme’s own button in each of its seven
                         variants (default, primary, secondary, ghost, destructive, small, large; the mirror one reads the other way). Check that the
-                        spinner sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 22rem bar
+                        spinner sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 30rem bar
                         shows the short word instead of the long, and that the hidden button leaves no gap in the bar.
                     </p>
                     <p data-for="deco">
                         In deco, the spinner is the sunburst turning and the button around it is the theme’s own button in each of its seven variants
                         (default, primary, secondary, ghost, destructive, small, large; the mirror one reads the other way). Check that the spinner
-                        sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 22rem bar shows
+                        sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 30rem bar shows
                         the short word instead of the long, and that the hidden button leaves no gap in the bar.
                     </p>
                     <p data-for="phantom">
                         In phantom, the spinner is the star that snaps and resolves and the button around it is the theme’s own button in each of its
                         seven variants (default, primary, secondary, ghost, destructive, small, large; the mirror one reads the other way). Check that
-                        the spinner sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 22rem
+                        the spinner sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 30rem
                         bar shows the short word instead of the long, and that the hidden button leaves no gap in the bar.
                     </p>
                     <p data-for="grotesk">
                         In grotesk, the spinner is the plate and the button around it is the theme’s own button in each of its seven variants
                         (default, primary, secondary, ghost, destructive, small, large; the mirror one reads the other way). Check that the spinner
-                        sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 22rem bar shows
+                        sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 30rem bar shows
                         the short word instead of the long, and that the hidden button leaves no gap in the bar.
                     </p>
                     <p data-for="nostromo">
                         In nostromo, the spinner is the tape reel and the button around it is the theme’s own button in each of its seven variants
                         (default, primary, secondary, ghost, destructive, small, large; the mirror one reads the other way). Check that the spinner
-                        sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 22rem bar shows
+                        sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 30rem bar shows
                         the short word instead of the long, and that the hidden button leaves no gap in the bar.
                     </p>
                     <p data-for="titanium">
                         In titanium, the spinner is the facing cut and the button around it is the theme’s own button in each of its seven variants
                         (default, primary, secondary, ghost, destructive, small, large; the mirror one reads the other way). Check that the spinner
-                        sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 22rem bar shows
+                        sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 30rem bar shows
                         the short word instead of the long, and that the hidden button leaves no gap in the bar.
                     </p>
                 </div>
@@ -1482,7 +1485,7 @@
                                 </nav>
                             </div>
                         </div>
-                        <figcaption>In a bar under 40rem (22rem): the short word.</figcaption>
+                        <figcaption>In a bar under 40rem (30rem): the short word.</figcaption>
                     </figure>
                     <figure class="nf-fig">
                         <div class="nf-frame nf-w-m" data-nf="live-hidden">
@@ -1677,9 +1680,62 @@
         </main>
         <script type="module" src="../../js/auto.js"></script>
         <script type="module" src="demo.js"></script>
-        <!-- Round two (2026-10-16): Kenny's rejections of round one reopen by themselves; every pair he has not judged is still open. -->
+        <!-- Round three (2026-10-16): Kenny's four rejections of round two reopen by themselves; the pairs this round redrew
+             (the More menu's edge, the one-row bar, the narrow running-job bar) are named, the rest stays approved. -->
         <script type="application/json" data-review-round>
-            { "round": "2026-10-16-r2", "reopen": [] }
+            {
+                "round": "2026-10-16-r3",
+                "reopen": [
+                    "formal|nav-fold",
+                    "formal|live-button",
+                    "formal|together",
+                    "light|nav-fold",
+                    "light|live-button",
+                    "light|together",
+                    "dark|nav-fold",
+                    "dark|live-button",
+                    "dark|together",
+                    "cyberpunk|nav-fold",
+                    "cyberpunk|live-button",
+                    "cyberpunk|together",
+                    "synthwave|nav-fold",
+                    "synthwave|live-button",
+                    "synthwave|together",
+                    "pastel|nav-fold",
+                    "pastel|live-button",
+                    "pastel|together",
+                    "terminal|nav-fold",
+                    "terminal|live-button",
+                    "terminal|together",
+                    "forest|nav-fold",
+                    "forest|live-button",
+                    "forest|together",
+                    "blueprint|nav-fold",
+                    "blueprint|live-button",
+                    "blueprint|together",
+                    "solstice|nav-fold",
+                    "solstice|live-button",
+                    "solstice|together",
+                    "brutalism|nav-fold",
+                    "brutalism|live-button",
+                    "brutalism|together",
+                    "deco|nav-fold",
+                    "deco|live-button",
+                    "deco|together",
+                    "phantom|nav-fold",
+                    "phantom|live-button",
+                    "phantom|together",
+                    "grotesk|nav-fold",
+                    "grotesk|live-button",
+                    "grotesk|together",
+                    "nostromo|nav-fold",
+                    "nostromo|live-button",
+                    "nostromo|together",
+                    "titanium|nav-fold",
+                    "titanium|live-button",
+                    "titanium|together"
+                ]
+            }
         </script>
         <script type="module" src="../_review/review.js"></script>
         <script src="../../catalogue/boot-check.js"></script>

@@ -2662,8 +2662,9 @@
         --kp-sig-ph-corner: var(--kp-red-deep);
     }
 
-    /* A static part holds its pseudo-element (the weakest rule: a menu button's menu stays absolute). */
-    :where([data-theme='phantom']) :is(.kp-card, .kp-menu, .kp-toast) {
+    /* A static part holds its pseudo-element (a menu button's menu is left out: this layer is later than the one that makes it absolute, so `relative` here
+       put an open menu back in the flow of its bar, and the raised one at the page's scroll, not at its button). */
+    :where([data-theme='phantom']) :is(.kp-card, .kp-menu:not(.kp-menu-button > .kp-menu), .kp-toast) {
         position: relative;
     }
 

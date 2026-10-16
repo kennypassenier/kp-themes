@@ -3681,11 +3681,34 @@
  * where it is shown, and the script stands down there.
  * Knob: --kp-nav-more-dot (0.5rem), the dot that tells a counter is behind
  * the button. */
+    /* One row: a bar that folds never wraps its brand, list, job and search onto a second line; the list is what gives. */
+    .kp-nav:where([data-kp-nav-fold]:not(:has(> .kp-nav__toggle))) {
+        flex-wrap: nowrap;
+    }
+
+    /* The list is the one that gives, but never below the More button while something is folded (the script writes
+     * --kp-nav-fold-more): the brand gives way first, to an ellipsis, so the folded links stay reachable. The job and the
+     * search keep their size. */
     .kp-nav:where([data-kp-nav-fold]) > .kp-nav__links {
         position: relative;
         flex: 1 1 0;
-        min-inline-size: 0;
+        min-inline-size: var(--kp-nav-fold-more, 0px);
         flex-wrap: nowrap;
+    }
+
+    .kp-nav:where([data-kp-nav-fold]:not(:has(> .kp-nav__toggle))) > .kp-nav__brand {
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kp-nav:where([data-kp-nav-fold]:not(:has(> .kp-nav__toggle))) > .kp-nav__search {
+        flex: none;
+    }
+
+    .kp-nav:where([data-kp-nav-fold]:not(:has(> .kp-nav__toggle))) > .kp-nav__search .kp-button {
+        white-space: nowrap;
     }
 
     .kp-nav:where([data-kp-nav-fold]):not([data-kp-nav-fold-ready]) > .kp-nav__links {
@@ -3699,11 +3722,14 @@
 
     .kp-nav:where([data-kp-nav-fold]) > .kp-nav__links > li[data-kp-nav-folded],
     .kp-nav:where([data-kp-nav-fold]) > .kp-nav__links > [data-kp-nav-more][data-kp-nav-idle] {
-        position: absolute;
+        /* !important: a register that dresses the list items (cyberpunk's `position: relative` on every one) sits in a
+         * later layer and would put a folded item, and the idle More, back in the flow; it would push the More button
+         * out of the bar. An important declaration of this layer beats every normal one of a later layer. */
+        position: absolute !important;
         inset-block-start: 0;
         inset-inline-start: 0;
         inline-size: max-content;
-        visibility: hidden;
+        visibility: hidden !important;
         pointer-events: none;
     }
 
@@ -3713,6 +3739,13 @@
         display: flex;
         flex-direction: column;
         align-items: flex-start;
+    }
+
+    /* The menu hangs from the button's start edge, as a menu under a link of a bar does; the script moves it back in
+     * only where that would leave the window (menuPlacement). Not the menu button's default, its end edge. */
+    .kp-nav__more > .kp-menu-button > .kp-menu {
+        inset-inline-start: 0;
+        inset-inline-end: auto;
     }
 
     .kp-nav__more-button {
@@ -9734,7 +9767,9 @@
  * layer): placed in window coordinates by the script, the popover's UA
  * inset and margin put back to the menu's own. */
     .kp-menu-button > .kp-menu:popover-open {
-        position: fixed;
+        /* !important: the script writes window coordinates, so a register's own `position` on its menus (phantom's
+         * `relative`, in a later layer) must not turn them back into a box that follows the page's scroll. */
+        position: fixed !important;
         inset: auto;
         margin: 0;
     }

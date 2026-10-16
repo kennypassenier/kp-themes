@@ -3705,6 +3705,13 @@
         box-shadow: none;
     }
 
+    /* The hover card holds several lines: the chip's 999px would make it an oval (Kenny, kpadopt-tooltip-sort,
+       2026-10-16), so it is a plate like every popover. */
+    [data-theme='pastel'] .kp-tooltip[data-kp-hovercard-card] {
+        padding-block: 0.55rem;
+        border-radius: var(--kp-sig-pa-r-plate);
+    }
+
     /* A hovered button lifts 2px (translate, no layout), and its tooltip's gap is
        measured from where the button stands: the tooltip goes up with it, so the
        gap stays the 12px it is at rest and never reads 14 [scope-143]. */

@@ -53,7 +53,22 @@ for (const button of document.querySelectorAll('[data-nf-open]')) {
         void showOpen(/** @type {HTMLElement} */ (button).dataset.nfOpen ?? '');
     });
 }
-void showOpen('open');
+
+/**
+ * The "More opened" bar shows its menu open once the bar is on screen, and again each time it comes back to it: a menu
+ * opened at load, while its bar was far below the window, was placed for a window it was not in, and a section the
+ * review dialog moves into its stage loses its place in the top layer. A menu that is open and was left behind is
+ * placed again by the window's own resize (the menu button listens to it); one that was closed (a press outside) opens.
+ */
+const openFrame = frameOf('open');
+if (openFrame && 'IntersectionObserver' in window) {
+    new IntersectionObserver((entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        const button = openFrame.querySelector('.kp-nav__more-button');
+        if (button?.getAttribute('aria-expanded') === 'true') window.dispatchEvent(new Event('resize'));
+        else void showOpen('open');
+    }).observe(openFrame);
+} else void showOpen('open');
 
 /** Keyboard focus on More, on the button's press only: a focus on load scrolls the page. */
 for (const button of document.querySelectorAll('[data-nf-focus]')) {

@@ -7047,11 +7047,34 @@
  * where it is shown, and the script stands down there.
  * Knob: --kp-nav-more-dot (0.5rem), the dot that tells a counter is behind
  * the button. */
+    /* One row: a bar that folds never wraps its brand, list, job and search onto a second line; the list is what gives. */
+    .kp-nav:where([data-kp-nav-fold]:not(:has(> .kp-nav__toggle))) {
+        flex-wrap: nowrap;
+    }
+
+    /* The list is the one that gives, but never below the More button while something is folded (the script writes
+     * --kp-nav-fold-more): the brand gives way first, to an ellipsis, so the folded links stay reachable. The job and the
+     * search keep their size. */
     .kp-nav:where([data-kp-nav-fold]) > .kp-nav__links {
         position: relative;
         flex: 1 1 0;
-        min-inline-size: 0;
+        min-inline-size: var(--kp-nav-fold-more, 0px);
         flex-wrap: nowrap;
+    }
+
+    .kp-nav:where([data-kp-nav-fold]:not(:has(> .kp-nav__toggle))) > .kp-nav__brand {
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kp-nav:where([data-kp-nav-fold]:not(:has(> .kp-nav__toggle))) > .kp-nav__search {
+        flex: none;
+    }
+
+    .kp-nav:where([data-kp-nav-fold]:not(:has(> .kp-nav__toggle))) > .kp-nav__search .kp-button {
+        white-space: nowrap;
     }
 
     .kp-nav:where([data-kp-nav-fold]):not([data-kp-nav-fold-ready]) > .kp-nav__links {
@@ -7065,11 +7088,14 @@
 
     .kp-nav:where([data-kp-nav-fold]) > .kp-nav__links > li[data-kp-nav-folded],
     .kp-nav:where([data-kp-nav-fold]) > .kp-nav__links > [data-kp-nav-more][data-kp-nav-idle] {
-        position: absolute;
+        /* !important: a register that dresses the list items (cyberpunk's `position: relative` on every one) sits in a
+         * later layer and would put a folded item, and the idle More, back in the flow; it would push the More button
+         * out of the bar. An important declaration of this layer beats every normal one of a later layer. */
+        position: absolute !important;
         inset-block-start: 0;
         inset-inline-start: 0;
         inline-size: max-content;
-        visibility: hidden;
+        visibility: hidden !important;
         pointer-events: none;
     }
 
@@ -7079,6 +7105,13 @@
         display: flex;
         flex-direction: column;
         align-items: flex-start;
+    }
+
+    /* The menu hangs from the button's start edge, as a menu under a link of a bar does; the script moves it back in
+     * only where that would leave the window (menuPlacement). Not the menu button's default, its end edge. */
+    .kp-nav__more > .kp-menu-button > .kp-menu {
+        inset-inline-start: 0;
+        inset-inline-end: auto;
     }
 
     .kp-nav__more-button {
@@ -13100,7 +13133,9 @@
  * layer): placed in window coordinates by the script, the popover's UA
  * inset and margin put back to the menu's own. */
     .kp-menu-button > .kp-menu:popover-open {
-        position: fixed;
+        /* !important: the script writes window coordinates, so a register's own `position` on its menus (phantom's
+         * `relative`, in a later layer) must not turn them back into a box that follows the page's scroll. */
+        position: fixed !important;
         inset: auto;
         margin: 0;
     }
@@ -27234,8 +27269,9 @@
         --kp-sig-ph-corner: var(--kp-red-deep);
     }
 
-    /* A static part holds its pseudo-element (the weakest rule: a menu button's menu stays absolute). */
-    :where([data-theme='phantom']) :is(.kp-card, .kp-menu, .kp-toast) {
+    /* A static part holds its pseudo-element (a menu button's menu is left out: this layer is later than the one that makes it absolute, so `relative` here
+       put an open menu back in the flow of its bar, and the raised one at the page's scroll, not at its button). */
+    :where([data-theme='phantom']) :is(.kp-card, .kp-menu:not(.kp-menu-button > .kp-menu), .kp-toast) {
         position: relative;
     }
 
@@ -56373,6 +56409,21 @@
         gap: 1.5rem;
     }
 
+    /* A bar that folds [kpadopt-nav] is one row at every width, so it is a flex row, not the fourteen columns: a
+       search field or a running-job button placed after the links had no column of its own there, fell to a second row
+       one column wide, and the bar grew with every step the window narrowed (Kenny, 2026-10-16: "veel te hoog, de
+       search knop staat telkens op de volgende rij"). The brand keeps Grilli's three fourteenths, the strip of links
+       takes the rest and the job and the search stand at their natural width. */
+    [data-theme='grotesk'] .kp-nav[data-kp-nav-fold] {
+        display: flex;
+        flex-wrap: nowrap;
+    }
+
+    [data-theme='grotesk'] .kp-nav[data-kp-nav-fold] > .kp-nav__brand {
+        flex: none;
+        min-inline-size: calc(100% * 3 / 14);
+    }
+
     /* Collapsed, the track is the brand and the toggle on one row and the
        links on their own row under them, from the start edge. This sits after
        the wide placement above on purpose: written before it, at the same
@@ -56381,12 +56432,23 @@
        items appearing in the phone version are weirdly aligned to the
        right"). */
     @container kp-nav (max-width: 40rem) {
-        [data-theme='grotesk'] .kp-nav {
+        [data-theme='grotesk'] .kp-nav:has(> .kp-nav__toggle) {
+            display: grid;
             grid-template-columns: minmax(0, 1fr) auto;
             row-gap: 0.75rem;
         }
 
-        [data-theme='grotesk'] .kp-nav__brand {
+        /* The search stays on the brand's row, after the toggle, instead of falling to a row of its own. */
+        [data-theme='grotesk'] .kp-nav[data-kp-nav-fold]:has(> .kp-nav__toggle) {
+            grid-template-columns: minmax(0, 1fr) auto auto;
+        }
+
+        [data-theme='grotesk'] .kp-nav[data-kp-nav-fold]:has(> .kp-nav__toggle) > .kp-nav__search {
+            grid-column: 3;
+            grid-row: 1;
+        }
+
+        [data-theme='grotesk'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__brand {
             grid-column: 1;
         }
 
@@ -56394,7 +56456,7 @@
             grid-column: 2;
         }
 
-        [data-theme='grotesk'] .kp-nav__links {
+        [data-theme='grotesk'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links {
             grid-column: 1 / -1;
             flex-direction: column;
             align-items: flex-start;
