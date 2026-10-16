@@ -4266,28 +4266,69 @@
     }
 }
 
-/* ── Action tiles, status rows, facet list [kpadopt2-tiles] ── */
+/* ── The dashboard parts: action tiles, status rows, the facet list, the heat grid, the matrix, the bar in a cell, the
+   week agenda and the run timeline [kpadopt2] ──
+   Phantom's own (themes/phantom/CHARACTER.md): a tile is cut paper, the card's plate with its red edge and the
+   paperclip corners (G6, G7); pointing throws the red bar in behind the title and resolves it in two cuts, the ink
+   flipping to black, and the tile does not move (G15); a press drops it onto its shadow and its face resolves from the
+   screen in two cuts (G17); focus stands inside the cut (G16); red is a plate with black ink, never a word: a
+   destructive title and a failed name are stamped on the red plate (G5, G8); waiting is the red slash across a halftone
+   block, once per row of cells (the register's loading); Barlow Condensed shouts (G18). */
 @layer kp.signature {
-    /* Phantom: cut paper. Pointing throws a red bar in behind the title from the start edge, in two cuts, and flips its ink to black; the tile does not move. A press drops the slab 3 px onto its deep-red shadow. */
+    [data-theme='phantom'] .kp-actions {
+        --kp-actions-gap: 0.875rem;
+    }
     [data-theme='phantom'] .kp-action {
         --kp-action-radius: 0;
-        --kp-action-edge: var(--border-strong);
-        --kp-action-edge-hover: var(--border-strong);
-        --kp-action-shadow: 3px 3px 0 var(--kp-red-deep, var(--border-strong));
-        --kp-action-shadow-active: 0 0 0 0 transparent;
+        --kp-action-edge: transparent;
+        --kp-action-edge-hover: transparent;
+        --kp-action-shadow: none;
+        --kp-action-shadow-hover: none;
+        --kp-action-shadow-active: none;
         --kp-action-press: 3px 3px;
+        --kp-action-pad: 0.75rem 1rem 0.75rem 1.125rem;
         --kp-action-title-font: var(--theme-font-display);
         --kp-action-title-case: uppercase;
-        --kp-action-title-tracking: 0.1em;
+        --kp-action-title-tracking: 0.04em;
+        --kp-action-title-weight: 900;
+        --kp-action-title-size: 1.0625rem;
+        border-inline-start: 5px solid var(--primary);
+        clip-path: var(--kp-paperclip);
     }
     [data-theme='phantom'] .kp-action__title {
         justify-self: start;
         margin-inline-start: -0.375rem;
         padding-inline: 0.375rem;
+        font-style: italic;
         background: linear-gradient(var(--primary), var(--primary)) no-repeat;
         background-size: 0% 100%;
     }
     [data-theme='phantom'] .kp-action:hover:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'])) .kp-action__title {
+        background-size: 100% 100%;
+        color: var(--primary-foreground);
+    }
+    [data-theme='phantom'] .kp-action__meta {
+        font-family: var(--theme-font-mono);
+    }
+    /* Focus stands inside the cut, as on a key figure that is a link. */
+    [data-theme='phantom'] .kp-action:focus-visible {
+        outline: var(--focus-ring-width, 3px) dashed var(--primary);
+        outline-offset: -6px;
+        box-shadow: inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring-contrast);
+    }
+    [data-theme='phantom'] .kp-action:is(:disabled, [aria-disabled='true']) {
+        border-inline-start-color: var(--muted-foreground);
+    }
+    /* Destructive: the title stamped on the red plate in black ink; no side bar beyond the card's own red edge. */
+    [data-theme='phantom'] .kp-action--destructive {
+        --kp-action-tone-edge: transparent;
+        --kp-action-tone-edge-hover: transparent;
+    }
+    [data-theme='phantom'] .kp-action--destructive::after {
+        display: none;
+    }
+    [data-theme='phantom'] .kp-action--destructive:not(:is(:disabled, [aria-disabled='true'])) > .kp-action__title,
+    [data-theme='phantom'] .kp-statusrow[data-state='failed'] .kp-statusrow__label {
         background-size: 100% 100%;
         color: var(--primary-foreground);
     }
@@ -4297,53 +4338,116 @@
                 background-size var(--fx-duration) steps(2, jump-end),
                 color var(--fx-duration) steps(2, jump-end);
         }
+        [data-theme='phantom'] .kp-action:active:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'])) {
+            animation: kp-sig-phantom-face var(--fx-duration) linear both;
+        }
     }
+
+    /* Status rows: cut paper with the red edge; the name in the condensed capitals; a failed row's name stamped on the
+       red plate; a loading row's edge is red. */
     [data-theme='phantom'] .kp-statuslist {
         --kp-statusrow-mark-radius: 0;
+        --kp-statuslist-gap: 0.625rem;
     }
     [data-theme='phantom'] .kp-statusrow {
         --kp-statusrow-radius: 0;
-        border-inline-start: 4px solid var(--kp-statusrow-state-edge, var(--border-strong));
+        --kp-statusrow-edge: transparent;
+        border-inline-start: 4px solid var(--border-strong);
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
     }
-    [data-theme='phantom'] .kp-statusrow[data-state='loading'] {
+    [data-theme='phantom'] .kp-statusrow[data-state='loading'],
+    [data-theme='phantom'] .kp-statusrow[data-state='failed'] {
         border-inline-start-color: var(--primary);
     }
+    [data-theme='phantom'] .kp-statusrow__label {
+        justify-self: start;
+        padding-inline: 0.3rem;
+        margin-inline-start: -0.3rem;
+        font-family: var(--theme-font-display);
+        font-style: italic;
+        font-weight: 800;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        background: linear-gradient(var(--primary), var(--primary)) no-repeat;
+        background-size: 0% 100%;
+    }
+    [data-theme='phantom'] .kp-statusrow__detail {
+        font-family: var(--theme-font-mono);
+    }
+
+    /* Facets: square rows; pointing throws the red bar behind the name, the ink flips to black; the title shouts. The
+       counts on their way are halftone blocks with the red slash across them. */
     [data-theme='phantom'] .kp-facets {
         --kp-facet-radius: 0;
     }
+    [data-theme='phantom'] .kp-facet {
+        --kp-facet-hover: transparent;
+    }
+    [data-theme='phantom'] .kp-facet__name {
+        background: linear-gradient(var(--primary), var(--primary)) no-repeat;
+        background-size: 0% 100%;
+    }
+    [data-theme='phantom'] .kp-facet:hover .kp-facet__name {
+        background-size: 100% 100%;
+        color: var(--primary-foreground);
+    }
     [data-theme='phantom'] .kp-facets__title {
         font-family: var(--theme-font-display);
-        letter-spacing: 0.2em;
+        font-style: italic;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
     }
-}
+    [data-theme='phantom'] .kp-facets[aria-busy='true'] .kp-facet__count {
+        position: relative;
+        overflow: hidden;
+        border-radius: 0;
+        background: var(--kp-sig-ph-block);
+        clip-path: var(--kp-sig-ph-cut);
+        animation: none;
+    }
+    [data-theme='phantom'] .kp-facets[aria-busy='true'] .kp-facet__count::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--primary);
+        clip-path: polygon(0.4rem 0, 1.3rem 0, 0.9rem 100%, 0 100%);
+        translate: -1.4rem 0;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] .kp-facets[aria-busy='true'] .kp-facet__count::after {
+            animation: kp-sig-phantom-phantom-slash 1400ms cubic-bezier(0.6, 0, 0.4, 1) infinite;
+        }
+        [data-theme='phantom'] :is(.kp-facet__name, .kp-statusrow__label) {
+            transition:
+                background-size var(--fx-duration) steps(2, jump-end),
+                color var(--fx-duration) steps(2, jump-end);
+        }
+    }
 
-/* The grid's gap leaves room for the tile's own shadow, glow or outline; the facet row's wash. */
-@layer kp.signature {
-    [data-theme='phantom'] .kp-actions {
-        --kp-actions-gap: 0.75rem;
-    }
-    [data-theme='phantom'] .kp-facet {
-        --kp-facet-hover: var(--muted);
-    }
-}
-/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
-@layer kp.signature {
-    /* Cut-out plates: each tile is thrown in off the square (a slight slant) with a hard black shadow; a press drops it 3 px; the pick is a white bar under the column. */
+    /* Heat grid and matrix: cut-out plates, a degree and a half askew with a hard shadow; pointing lifts a plate,
+       a press drops it onto its shadow; the pick is the white frame. Waiting: the cells are halftone blocks and ONE red
+       slash crosses each row. */
     [data-theme='phantom'] :is(.kp-heat, .kp-matrix) {
         --kp-heat-cell-radius: 0;
-        --kp-heat-cell-lift: 2px 2px 0 hsl(from var(--foreground) h s l / 0.55);
+        --kp-heat-cell-lift: 2px 2px 0 var(--kp-red-deep);
         --kp-heat-cell-hover: translate(-1px, -1px);
         --kp-matrix-cell-hover: translate(-2px, -2px);
     }
+    [data-theme='phantom'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='phantom'] .kp-matrix {
+        --kp-matrix-gap: 5px;
+    }
     [data-theme='phantom'] .kp-heat__cell {
-        rotate: -2deg;
+        rotate: var(--kp-land, -1.5deg);
     }
     [data-theme='phantom'] .kp-heat__cell:is([data-kp-tone='future'], [data-kp-tone='none'], [data-kp-tone='before'], [data-kp-share]) {
         box-shadow: none;
     }
-    [data-theme='phantom'] .kp-heat__cell:active:not(.kp-skeleton),
-    [data-theme='phantom'] .kp-matrix__cell:active:not([data-kp-inert]) {
-        transform: translate(3px, 3px);
+    [data-theme='phantom'] .kp-heat__cell:active:not(.kp-skeleton, [aria-disabled='true']),
+    [data-theme='phantom'] .kp-matrix__cell:active:not([data-kp-inert], [aria-disabled='true'], .kp-skeleton) {
+        transform: translate(2px, 2px);
         box-shadow: none;
     }
     [data-theme='phantom'] .kp-heat__cell[data-kp-picked],
@@ -4351,32 +4455,64 @@
         outline: 3px solid var(--foreground);
         outline-offset: 1px;
     }
-    [data-theme='phantom'] .kp-heat__label,
-    [data-theme='phantom'] .kp-matrix__row,
-    [data-theme='phantom'] .kp-matrix__col {
+    [data-theme='phantom'] :is(.kp-heat__label, .kp-matrix__name) {
+        font-family: var(--theme-font-display);
+        font-style: italic;
         text-transform: uppercase;
-        letter-spacing: 0.06em;
+        letter-spacing: 0.04em;
         font-weight: 800;
     }
-    [data-theme='phantom'] .kp-heat {
-        --kp-heat-gap-y: 6px;
+    [data-theme='phantom'] :is(.kp-heat__label-button, .kp-matrix__name) {
+        border-radius: 0;
     }
-    [data-theme='phantom'] .kp-matrix {
-        --kp-matrix-gap: 4px;
+    [data-theme='phantom'] .kp-heat__label-button[aria-pressed='true'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+    [data-theme='phantom'] .kp-heat__cell.kp-skeleton {
+        rotate: none;
+    }
+    [data-theme='phantom'] .kp-heat__cell.kp-skeleton::after {
+        content: none;
+        animation: none;
+    }
+    [data-theme='phantom'] .kp-heat__cells:has(> .kp-heat__cell.kp-skeleton) {
+        position: relative;
+        overflow: clip;
+    }
+    [data-theme='phantom'] .kp-heat__cells:has(> .kp-heat__cell.kp-skeleton)::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--primary);
+        clip-path: var(--kp-sig-ph-slash);
+        translate: -2.8rem 0;
+        pointer-events: none;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] .kp-heat__cells:has(> .kp-heat__cell.kp-skeleton)::after {
+            animation: kp-sig-phantom-phantom-slash 1400ms cubic-bezier(0.6, 0, 0.4, 1) infinite;
+        }
+        [data-theme='phantom'] .kp-heat__row:nth-child(2n) .kp-heat__cells::after {
+            animation-delay: 80ms;
+        }
     }
     [data-theme='phantom'] .kp-bar-cell {
         --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
         font-variant-numeric: tabular-nums;
     }
-}
-/* ── end heat grid, matrix, bar cell ── */
-@layer kp.register {
-    /* Week agenda and run timeline [kpadopt-time]: slanted plates. Pills and bars lean with the theme's skew, in the display face, as its badges do; the text keeps the lean. */
+
+    /* Week agenda and run timeline: slanted plates in the display face, leaning with the theme's skew; pointing throws
+       the red plate in under a pill, the ink black; the next run is the red plate; the line for now is red. A running
+       run is the red slab shoved across as a screen: its halftone dots run along it and never resolve. */
     [data-theme='phantom'] .kp-week {
         --kp-week-pill-radius: 0;
+        --kp-week-now: var(--primary);
     }
     [data-theme='phantom'] .kp-gantt {
         --kp-gantt-bar-radius: 0;
+        --kp-gantt-now: var(--primary);
+        --kp-gantt-state-ground: var(--card);
     }
     [data-theme='phantom'] :is(.kp-week__pill, .kp-gantt__run) {
         transform: skewX(var(--kp-skew));
@@ -4385,7 +4521,78 @@
         letter-spacing: 0.06em;
         text-transform: uppercase;
     }
-    [data-theme='phantom'] .kp-week__pill:is(button)[data-kp-state='next'] {
-        transform: skewX(var(--kp-skew));
+    [data-theme='phantom'] .kp-week__pill:is(button):hover,
+    [data-theme='phantom'] .kp-week__pill[data-kp-state='next'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        box-shadow: 3px 3px 0 var(--kp-red-deep);
+    }
+    [data-theme='phantom'] .kp-week__pill:is(button):hover .kp-week__label,
+    [data-theme='phantom'] .kp-week__pill[data-kp-state='next'] .kp-week__label {
+        color: inherit;
+    }
+    [data-theme='phantom'] .kp-week__now::before {
+        border-radius: 0;
+        clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+    }
+    [data-theme='phantom'] .kp-week__head {
+        font-family: var(--theme-font-display);
+        font-style: italic;
+    }
+    [data-theme='phantom'] :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='running'] {
+        --kp-gantt-fill: var(--primary);
+        --kp-gantt-ink: var(--primary-foreground);
+        background:
+            radial-gradient(circle, var(--primary-foreground) 1px, transparent 1.4px) 0 0 / 5px 5px,
+            var(--primary);
+        box-shadow: inset -3px 0 0 var(--primary-foreground);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] .kp-gantt__run[data-kp-state='running'] {
+            animation: kp-sig-phantom-screen 1500ms linear infinite;
+        }
+    }
+
+    /* The screen over a running slab runs start to end, one dot pitch a loop. */
+    @keyframes kp-sig-phantom-screen {
+        from {
+            background-position:
+                0 0,
+                0 0;
+        }
+
+        to {
+            background-position:
+                5px 0,
+                0 0;
+        }
+    }
+}
+
+/* ── The dashboard parts: what the package leaves to a register [kpadopt2-repairs] ──
+   Formal keeps these parts exactly as Kenny approved them; this theme takes the three repairs the review asks for: a
+   loading heat grid or matrix row as tall as its ready row (no skeleton gap between cells), an empty or failed run
+   timeline with a lane-sized space for its sentence (never over the legend), the sentence as wide as its words on the
+   theme's ground (never through a rule or a ghost bar), and an axis label near the end edge standing before its rule. */
+@layer kp.signature {
+    [data-theme='phantom'] :is(.kp-heat__cell, .kp-matrix__cell).kp-skeleton {
+        margin-block: 0;
+    }
+    [data-theme='phantom'] .kp-gantt {
+        --kp-gantt-tick-flip: 1;
+    }
+    [data-theme='phantom'] .kp-gantt:is([data-kp-state='empty'], [data-kp-state='error']) .kp-gantt__body:not(:has(.kp-gantt__lane)) {
+        min-block-size: 5.25rem;
+    }
+    [data-theme='phantom'] .kp-gantt__state {
+        box-sizing: border-box;
+        display: block;
+        inline-size: fit-content;
+        max-inline-size: calc(100% - 2 * var(--kp-space-md, 0.75rem));
+        block-size: fit-content;
+        margin: auto;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--kp-gantt-state-ground, transparent);
     }
 }
