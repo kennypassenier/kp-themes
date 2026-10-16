@@ -18,9 +18,15 @@
 //
 // The panes keep their size from the first frame: give the images their
 // width and height, or the box `data-kp-compare-ratio="16/9"`. While an image
-// loads the box shows the theme's skeleton over its whole size; an image that
-// fails says so in its own pane. setCompare(el, position) moves the divider
-// from a script; `kp-compare-change` ({ position }) says where it went.
+// loads, the box is a quiet plate at its whole size with the data table's own
+// loading card in its middle (js/busy-card.js: the theme's spinner and its
+// words), as a table that loads (Kenny, 2026-10-16: "Doe iets in de aard van
+// een table die laadt met centraal de laadanimatie"); setCompareBusy(el, true)
+// holds it there for a page that reads its panes itself. An image that fails
+// says so over the whole visible part of its pane, with a normal-size Retry
+// that loads it again and fires `kp-compare-retry` ({ pane }). setCompare(el,
+// position) moves the divider from a script; `kp-compare-change`
+// ({ position }) says where it went.
 //
 // The divider glides to a press in the theme's own time and curve, follows a
 // drag at once, and never glides under reduced motion.
@@ -28,6 +34,7 @@
 // Nothing runs on import; attachCompares(root) returns a detach.
 
 import { getStrings } from './strings.js';
+import { openBusyCard } from './busy-card.js';
 
 /** A compare slider. */
 export const COMPARE = '[data-kp-compare]';
@@ -36,8 +43,21 @@ export const COMPARE_EVENT = 'kp-compare-change';
 /** What makes a pane live HTML: the panes stay usable and only the handle drags. */
 const INTERACTIVE = 'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"]), [contenteditable="true"]';
 
+/** Fired on the slider when the Retry of a failed image is pressed: `{ pane }` ('before' or 'after'). */
+export const COMPARE_RETRY_EVENT = 'kp-compare-retry';
+
 /** @type {WeakMap<HTMLElement, (position: number, fire: boolean, glide: boolean) => void>} */
 const MOVE = new WeakMap();
+/** @type {WeakMap<HTMLElement, (busy: boolean) => void>} */
+const HOLD = new WeakMap();
+
+/**
+ * Hold a slider in its loading state (the busy card over the box) while the page reads its panes, or let it go.
+ * @param {Element} el @param {boolean} busy
+ */
+export function setCompareBusy(el, busy) {
+    HOLD.get(/** @type {HTMLElement} */ (el))?.(busy);
+}
 
 /**
  * Move a slider's divider from a script, without the event.
@@ -118,9 +138,10 @@ export function attachCompares(root = document) {
         handle.append(grip);
         divider.append(handle);
 
-        // While an image loads, the theme's skeleton covers the box; a failed image says so in its pane.
+        // While an image loads, a quiet plate covers the box and the busy card stands in its middle; a failed image says
+        // so in its pane.
         const wait = doc.createElement('span');
-        wait.className = 'kp-skeleton kp-skeleton--block kp-compare__wait';
+        wait.className = 'kp-compare__wait';
         wait.setAttribute('aria-hidden', 'true');
         el.append(labelBefore, labelAfter, divider, wait);
 
@@ -152,6 +173,8 @@ export function attachCompares(root = document) {
         /** @param {PointerEvent} event */
         const onDown = (event) => {
             if (event.button !== 0) return;
+            // A failed pane's Retry is pressed, not dragged.
+            if (event.target instanceof Element && event.target.closest('.kp-compare__failed')) return;
             const onHandle = handle.contains(/** @type {Node} */ (event.target));
             if (!onHandle && el.dataset.kpCompareDrag !== 'anywhere') return;
             dragging = true;
@@ -187,27 +210,63 @@ export function attachCompares(root = document) {
         el.addEventListener('pointercancel', onUp);
         handle.addEventListener('keydown', onKey);
 
-        // Loading: the box waits until every image in it has arrived or failed.
+        // Loading: the box waits until every image in it has arrived or failed, or while the page holds it.
         const images = /** @type {HTMLImageElement[]} */ ([...before.querySelectorAll('img'), ...after.querySelectorAll('img')]);
         /** @type {HTMLElement[]} */
         const notes = [];
+        /** @type {import('./busy-card.js').BusyCard | null} */
+        let card = null;
+        let held = false;
+        let drawn = false;
         const settle = () => {
-            const waiting = images.some((img) => !img.complete);
+            const waiting = held || images.some((img) => !img.complete);
             el.dataset.kpCompareState = waiting ? 'loading' : 'ready';
             el.setAttribute('aria-busy', String(waiting));
+            if (waiting && !card)
+                card = openBusyCard(el, { words: s.compareLoading, area: () => [el], className: 'kp-compare__busy', arrive: drawn });
+            else if (!waiting && card) {
+                const leaving = card;
+                card = null;
+                void leaving.close();
+            }
+            drawn = true;
             for (const img of images) {
                 const pane = /** @type {HTMLElement} */ (img.closest('.kp-compare__pane'));
-                const failed = img.complete && img.naturalWidth === 0;
+                const failed = !held && img.complete && img.naturalWidth === 0;
                 const known = notes.find((n) => n.parentElement === pane);
                 if (failed && !known) {
-                    const note = doc.createElement('p');
+                    const note = doc.createElement('div');
                     note.className = 'kp-compare__failed';
-                    note.textContent = s.compareFailed;
+                    note.setAttribute('role', 'alert');
+                    const said = doc.createElement('p');
+                    said.className = 'kp-compare__failed-words';
+                    said.textContent = s.compareFailed;
+                    const retry = doc.createElement('button');
+                    retry.type = 'button';
+                    retry.className = 'kp-button kp-compare__retry';
+                    retry.textContent = s.compareRetry;
+                    retry.addEventListener('click', () => {
+                        const side = pane === before ? 'before' : 'after';
+                        note.remove();
+                        notes.splice(notes.indexOf(note), 1);
+                        for (const one of pane.querySelectorAll('img')) {
+                            // Setting the address again asks for the image again.
+                            const src = one.getAttribute('src');
+                            if (src !== null) one.setAttribute('src', src);
+                        }
+                        settle();
+                        el.dispatchEvent(new CustomEvent(COMPARE_RETRY_EVENT, { bubbles: true, detail: { pane: side } }));
+                    });
+                    note.append(said, retry);
                     pane.append(note);
                     notes.push(note);
                 }
             }
         };
+        HOLD.set(el, (busy) => {
+            held = busy;
+            settle();
+        });
         for (const img of images) {
             img.addEventListener('load', settle);
             img.addEventListener('error', settle);
@@ -224,7 +283,10 @@ export function attachCompares(root = document) {
                 img.removeEventListener('error', settle);
             }
             for (const n of [labelBefore, labelAfter, divider, wait, ...notes]) n.remove();
+            card?.remove();
+            card = null;
             MOVE.delete(el);
+            HOLD.delete(el);
             el.style.removeProperty('--kp-compare-pos');
             el.removeAttribute('aria-busy');
             delete el.dataset.kpCompareState;

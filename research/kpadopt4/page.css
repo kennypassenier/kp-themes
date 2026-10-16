@@ -1,6 +1,6 @@
 /* research/kpadopt4: the one page of the fourth adoption round. Everything with a kp- class is the package; these kd-
    rules lay out the page around the topics (the intro, the topic list, a heading per topic). Each source's sections keep
-   their own rules: data.css (dd-), flows.css (fd-), ideas.css (ki-); round 1 also had rows.css (kr-) and recipes.css (kc-). */
+   their own rules: data.css (dd-), rows.css (kr-), flows.css (fd-), recipes.css (kc-), ideas.css (ki-). */
 
 .kd-page {
     display: grid;

@@ -1,11 +1,13 @@
-// research/kpadopt4 (data sections, round 2: the share bar and the bullet rows): what this page does that the package
-// does not.
+// research/kpadopt4 (data sections): what this page does that the package does not.
 //   1. the sample data and the buttons that switch each section between its states;
-//   2. the readouts under the live examples, and a Retry that reads again.
-// Everything drawn is drawn by the package's own functions. The sections Kenny approved in round 1 left the page
-// (research/_review/README.md); their wiring is in _previous/ and in git at c1e907a8.
+//   2. the readouts under the live examples;
+//   3. the mark table (every look at every size) and the freshness lines' moments.
+// Everything drawn is drawn by the package's own functions.
+import { setIdmark } from '../../js/idmark.js';
 import { setStackbar, STACKBAR_RETRY_EVENT } from '../../js/stackbar.js';
 import { setBullets, BULLETS_RETRY_EVENT } from '../../js/bullets.js';
+import { setCode } from '../../js/code.js';
+import { setAgo } from '../../js/freshness.js';
 
 /** @param {string} selector @param {ParentNode} [root] */
 const all = (selector, root = document) => /** @type {HTMLElement[]} */ ([...root.querySelectorAll(selector)]);
@@ -27,6 +29,43 @@ function onButtons(attr, run) {
         });
     }
 }
+
+// ---- the freshness lines: a moment a few seconds ago -----------------------------------
+for (const line of all('[data-dd-ago]')) setAgo(line, Date.now() - 4000);
+
+// ---- 1 · the mark table -----------------------------------------------------------------
+const table = one('[data-dd-mark-table]');
+const sizes = ['xs', 'sm', '', 'lg', 'xl'];
+const looks = [
+    { name: 'Letters', className: '', who: 'Acme Logistics' },
+    { name: 'Pattern', className: 'kp-idmark--pattern', who: 'media' },
+    { name: 'Round', className: 'kp-idmark--round', who: 'Contoso' },
+    { name: 'Corner glyph', className: 'kp-idmark--glyph', who: 'Brightline Health' },
+    { name: 'Free hue', className: '', who: 'home-assistant', free: true },
+];
+table.append(
+    Object.assign(document.createElement('b'), { textContent: 'Look' }),
+    ...sizes.map((size) => Object.assign(document.createElement('b'), { textContent: size || 'md' })),
+);
+for (const look of looks) {
+    table.append(Object.assign(document.createElement('span'), { className: 'dd-name', textContent: `${look.name} · ${look.who}` }));
+    for (const size of sizes) {
+        const cell = document.createElement('span');
+        const mark = document.createElement('span');
+        mark.className = ['kp-idmark', size ? `kp-idmark--${size}` : '', look.className].filter(Boolean).join(' ');
+        if (look.free) mark.setAttribute('data-kp-idmark-hue', 'free');
+        setIdmark(mark, look.who);
+        cell.append(mark);
+        table.append(cell);
+    }
+}
+
+onButtons('data-dd-rename', (name) => {
+    const mark = one('[data-dd-renamed]');
+    mark.setAttribute('data-kp-idmark', name);
+    setIdmark(mark, name);
+    one('[data-dd-renamed-name]').textContent = name || 'No name on file';
+});
 
 // ---- 2 · the share bar ------------------------------------------------------------------
 const gb = (/** @type {number} */ value) => `${new Intl.NumberFormat('en', { maximumFractionDigits: 1 }).format(value)} GB`;
@@ -128,5 +167,104 @@ for (const el of all('[data-dd-bullets-list]')) {
         if (!link) return;
         event.preventDefault();
         one('[data-dd-readout="bullets"]').textContent = `Followed: ${link.textContent}.`;
+    });
+}
+
+// ---- 4 · the key-value grid's loading state ---------------------------------------------
+const kv = one('[data-dd-kv-list]');
+/** @type {Map<HTMLElement, Node[]>} */
+const kvValues = new Map(all('dd', kv).map((dd) => [dd, [...dd.childNodes]]));
+onButtons('data-dd-kv', (state) => {
+    for (const [dd, nodes] of kvValues) {
+        // The page knows how tall each value was, so its waiting line keeps that room (nothing under the list moves).
+        dd.style.minBlockSize = state === 'loading' ? `${dd.getBoundingClientRect().height}px` : '';
+        if (state === 'loading') {
+            const wait = document.createElement('span');
+            wait.className = 'kp-kv__wait';
+            wait.append(Object.assign(document.createElement('span'), { className: 'kp-skeleton' }));
+            dd.replaceChildren(wait);
+        } else dd.replaceChildren(...nodes);
+    }
+    kv.toggleAttribute('aria-busy', state === 'loading');
+});
+
+// ---- 5 · the form rows ------------------------------------------------------------------
+const retention = /** @type {HTMLInputElement} */ (one('#dd-retention'));
+const retentionRow = one('[data-dd-retention]');
+const retentionAside = one('[data-dd-retention-aside]');
+retention.addEventListener('input', () => {
+    retentionRow.setAttribute('data-kp-changed', '');
+    retentionAside.replaceChildren(Object.assign(document.createElement('span'), { className: 'kp-badge kp-badge--info', textContent: 'Not saved' }));
+});
+one('[data-dd-save]').addEventListener('click', () => {
+    retentionRow.removeAttribute('data-kp-changed');
+    retentionAside.replaceChildren(Object.assign(document.createElement('span'), { textContent: 'Saved 16/10/2026 14:02' }));
+});
+
+// ---- 6 · the code blocks ----------------------------------------------------------------
+const payload = JSON.stringify({
+    topic: 'backup.done',
+    id: 'msg-01J9ZK4Q7W',
+    at: '2026-10-16T03:12:44Z',
+    host: 'pve-01',
+    ok: true,
+    stats: { files: 18422, bytes: 87312650240, seconds: 1312.4 },
+    volumes: ['media', 'photos', 'vault'],
+    warnings: [],
+    next: null,
+    note: 'Nightly copy of every container volume to the NAS, checked after it is written; the NAS was asleep and was woken first.',
+});
+const request = Array.from({ length: 31 }, (_, i) =>
+    i === 0
+        ? 'POST /api/v1/notify HTTP/1.1'
+        : i < 6
+          ? ['Host: kyu.home.example.net', 'Content-Type: application/json', 'Authorization: Bearer ••••••••', 'X-Request-Id: 7c1e9f', ''][i - 1]
+          : `line ${i}: {"step":${i},"state":"ok"}`,
+).join('\n');
+/** @param {string} state */
+function drawCode(state) {
+    const s = /** @type {any} */ (state);
+    for (const el of [one('[data-dd-code-main]'), one('[data-dd-code-phone]')])
+        setCode(el, {
+            title: 'Payload',
+            language: 'JSON',
+            size: '612 B',
+            lines: true,
+            text: payload,
+            state: s,
+            message: state === 'error' ? 'Could not read the message: it was removed from the queue.' : undefined,
+        });
+    setCode(one('[data-dd-code-long]'), {
+        title: 'Request',
+        language: 'HTTP',
+        size: '210 KB',
+        text: request,
+        maxLines: 8,
+        truncated: { shown: '64 KB', total: '210 KB' },
+        state: s,
+    });
+}
+drawCode('ready');
+onButtons('data-dd-code', drawCode);
+
+// ---- 8 · the live numbers ---------------------------------------------------------------
+/** @type {Record<string, { value: number, write: (n: number) => string }>} */
+const numbers = {
+    open: { value: 12, write: (n) => String(n) },
+    requests: { value: 1204, write: (n) => new Intl.NumberFormat('en').format(n) },
+    euro: { value: 1118204.75, write: (n) => `€ ${new Intl.NumberFormat('nl', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n)}` },
+};
+for (const button of all('[data-dd-tick]')) {
+    button.addEventListener('click', () => {
+        const [name, by] = (button.getAttribute('data-dd-tick') ?? '').split(':');
+        const number = numbers[name];
+        number.value = Math.round((number.value + Number(by)) * 100) / 100;
+        const el = one(`[data-dd-tick-value="${name}"]`);
+        // The page writes the new number as it always would (here as text, as a framework re-render does);
+        // js/tick.js, attached by js/auto.js for [data-kp-tick], ticks from the number shown to it.
+        el.textContent = number.write(number.value);
+        one('[data-dd-readout="tick"]').textContent = `Written: ${Object.values(numbers)
+            .map((n) => n.write(n.value))
+            .join(' · ')}`;
     });
 }

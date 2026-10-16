@@ -25,19 +25,31 @@
 // part or its legend row lights both. A press on either fires
 // `kp-stackbar-pick` `{ key, part }` on the root (the page may filter).
 //
-// States: `state: 'loading'` (the bar pulses at its height and the legend
-// keeps its rows as waiting lines, `aria-busy`), `'empty'` (nothing read yet)
-// and `'error'` (a sentence; `message` replaces the default), all at the
-// bar's own height so nothing under it moves. A share bar is one figure,
-// as a meter is, not a data area: its own bar waits, not the busy card.
+// States: `state: 'loading'` (the bar shows the meter's own loading picture,
+// js/kpi.js setMeter, the one every theme draws for a bar that waits: formal
+// rules a navy line along it [G10]; the legend keeps its rows as the theme's
+// waiting lines, `aria-busy`), `'empty'` (nothing read yet) and `'error'` (a
+// sentence; `message` replaces the default, with a normal-size Retry that
+// fires `kp-stackbar-retry`, `retry: false` leaves it out). Empty and error
+// are one calm note over the bar's and the legend's whole footprint (the
+// empty state's frame and each theme's empty-state title, the sentence and
+// Retry side by side so the note fits the small footprint), the height they had, the words and
+// the button centred in it (Kenny, 2026-10-16: failed, empty and loading fill
+// the component's full normal size); a bar without a legend keeps its track
+// and says it in its accessible name and hover card. Nothing under it moves.
+// A share bar is one figure, as a meter is, not a data area: its own bar
+// waits, not the busy card.
 
 import { getStrings } from './strings.js';
 import { attachHoverCards } from './hovercard.js';
+import { setMeter } from './kpi.js';
 
 /** A share bar the page fills with setStackbar(). */
 export const STACKBAR = '[data-kp-stackbar]';
 /** Fired on the root when a part or its legend row is pressed: `{ key, part }`. */
 export const STACKBAR_PICK_EVENT = 'kp-stackbar-pick';
+/** Fired on the root when the Retry of a failed share bar is pressed. */
+export const STACKBAR_RETRY_EVENT = 'kp-stackbar-retry';
 
 /**
  * @typedef {object} StackbarPart
@@ -61,10 +73,11 @@ export const STACKBAR_PICK_EVENT = 'kp-stackbar-pick';
  * @property {boolean} [legend]     default true
  * @property {'ready' | 'loading' | 'empty' | 'error'} [state]
  * @property {string} [message]     the sentence of an empty or failed bar
+ * @property {boolean} [retry]      false leaves Retry out of a failed bar (a read the page cannot repeat)
  * @property {string} [label]       the bar's accessible name (default: every part in order)
  */
 
-/** @type {WeakMap<HTMLElement, { parts: number, wired: boolean }>} */
+/** @type {WeakMap<HTMLElement, { parts: number, wired: boolean, height: number }>} */
 const MEMORY = new WeakMap();
 
 /** @param {Document} doc @param {string} className @param {string} [tag] */
@@ -125,7 +138,7 @@ export function setStackbar(el, spec) {
     const strings = getStrings();
     const lang = langOf(el);
     const state = spec.state ?? 'ready';
-    const memory = MEMORY.get(el) ?? { parts: 2, wired: false };
+    const memory = MEMORY.get(el) ?? { parts: 2, wired: false, height: 0 };
     MEMORY.set(el, memory);
     const format = spec.format ?? ((/** @type {number} */ value) => new Intl.NumberFormat(lang).format(value));
     const focusedKey = /** @type {HTMLElement | null} */ (el.querySelector('.kp-stackbar__seg:focus'))?.dataset.kpStackbarKey;
@@ -151,11 +164,24 @@ export function setStackbar(el, spec) {
     }
 
     const bar = make(doc, 'kp-stackbar__bar', 'div');
-    nodes.push(bar);
     const legendWanted = spec.legend !== false;
+    const noted = (state === 'empty' || state === 'error' || (state === 'ready' && calc.parts.length === 0)) && legendWanted;
+    if (!noted) nodes.push(bar);
+    // The footprint of the bar and its legend, kept by an empty or failed note.
+    const body = [...el.querySelectorAll(':scope > :is(.kp-stackbar__bar, .kp-stackbar__legend, .kp-stackbar__note)')].map((n) =>
+        n.getBoundingClientRect(),
+    );
+    if (body.length) memory.height = Math.max(...body.map((r) => r.bottom)) - Math.min(...body.map((r) => r.top));
+    let refocus = false;
 
     if (state === 'loading') {
-        bar.append(make(doc, 'kp-skeleton kp-skeleton--block kp-stackbar__wait'));
+        // The meter's own loading picture, at the bar's size: the theme's way a bar waits.
+        const wait = make(doc, 'kp-meter kp-stackbar__wait');
+        setMeter(wait, { loading: true });
+        wait.removeAttribute('role');
+        wait.removeAttribute('aria-valuetext');
+        wait.setAttribute('aria-hidden', 'true');
+        bar.append(wait);
         bar.setAttribute('role', 'img');
         bar.setAttribute('aria-label', strings.stackbarLoading);
         if (legendWanted) {
@@ -173,15 +199,31 @@ export function setStackbar(el, spec) {
             nodes.push(legend);
         }
     } else if (state === 'empty' || state === 'error' || calc.parts.length === 0) {
-        bar.setAttribute('role', 'img');
-        const words = spec.message ?? (state === 'error' ? strings.stackbarError : strings.stackbarEmpty);
-        bar.setAttribute('aria-label', words);
-        const note = make(doc, 'kp-stackbar__note', 'p');
-        const was = el.querySelector(':scope > :is(.kp-stackbar__legend, .kp-stackbar__note)')?.getBoundingClientRect().height ?? 0;
-        if (was > 0) note.style.minBlockSize = `${was}px`;
-        note.setAttribute('role', 'status');
-        note.textContent = words;
-        nodes.push(note);
+        const failed = state === 'error';
+        const words = spec.message ?? (failed ? strings.stackbarError : strings.stackbarEmpty);
+        if (!noted) {
+            // No legend, no room for words: the track stays and says it.
+            bar.setAttribute('role', 'img');
+            bar.setAttribute('aria-label', words);
+            bar.setAttribute('data-kp-hovercard', words);
+            bar.setAttribute('tabindex', '0');
+        } else {
+            refocus = el.querySelector(':scope > .kp-stackbar__note')?.contains(doc.activeElement) ?? false;
+            const note = make(doc, 'kp-stackbar__note', 'div');
+            if (memory.height > 0) note.style.minBlockSize = `${memory.height}px`;
+            note.setAttribute('role', failed ? 'alert' : 'status');
+            const said = make(doc, 'kp-empty__title kp-stackbar__note-title', 'p');
+            said.textContent = words;
+            note.append(said);
+            if (failed && spec.retry !== false) {
+                const retry = make(doc, 'kp-button kp-stackbar__retry', 'button');
+                retry.setAttribute('type', 'button');
+                retry.setAttribute('data-kp-stackbar-retry', '');
+                retry.textContent = strings.stackbarRetry;
+                note.append(retry);
+            }
+            nodes.push(note);
+        }
     } else {
         memory.parts = Math.max(2, calc.parts.length + (calc.rest > 0 || calc.over > 0 ? 1 : 0));
         bar.setAttribute('role', 'group');
@@ -237,7 +279,10 @@ export function setStackbar(el, spec) {
         }
         bar.toggleAttribute('data-kp-over', calc.over > 0);
         bar.toggleAttribute('data-kp-stackbar-full', calc.rest === 0);
-        bar.setAttribute('aria-label', spec.label ?? (spec.title ? `${spec.title}. ${strings.stackbarLabel(spoken)}` : strings.stackbarLabel(spoken)));
+        bar.setAttribute(
+            'aria-label',
+            spec.label ?? (spec.title ? `${spec.title}. ${strings.stackbarLabel(spoken)}` : strings.stackbarLabel(spoken)),
+        );
         for (const mark of spec.marks ?? []) {
             const tick = make(doc, 'kp-stackbar__mark');
             tick.setAttribute('aria-hidden', 'true');
@@ -252,8 +297,12 @@ export function setStackbar(el, spec) {
     }
 
     el.replaceChildren(...nodes);
+    if (refocus) {
+        el.tabIndex = -1;
+        el.focus({ preventScroll: true });
+    }
     if (focusedKey) /** @type {HTMLElement | null} */ (el.querySelector(`.kp-stackbar__seg[tabindex="0"]`))?.focus();
-    if (state === 'ready') attachHoverCards(doc);
+    if (state !== 'loading') attachHoverCards(doc);
     if (!memory.wired) {
         memory.wired = true;
         wire(el);
@@ -273,10 +322,16 @@ function wire(el) {
             if (/** @type {HTMLElement} */ (node).dataset.kpStackbarKey === key) node.setAttribute('data-kp-stackbar-lit', '');
     };
     el.addEventListener('pointerover', (event) => light(keyOf(event.target)));
-    el.addEventListener('pointerleave', () => light(/** @type {HTMLElement | null} */ (el.querySelector('.kp-stackbar__seg:focus'))?.dataset.kpStackbarKey));
+    el.addEventListener('pointerleave', () =>
+        light(/** @type {HTMLElement | null} */ (el.querySelector('.kp-stackbar__seg:focus'))?.dataset.kpStackbarKey),
+    );
     el.addEventListener('focusin', (event) => light(keyOf(event.target)));
     el.addEventListener('focusout', () => light(undefined));
     el.addEventListener('click', (event) => {
+        if (event.target instanceof Element && event.target.closest('[data-kp-stackbar-retry]')) {
+            el.dispatchEvent(new CustomEvent(STACKBAR_RETRY_EVENT, { bubbles: true }));
+            return;
+        }
         const key = keyOf(event.target);
         if (key === undefined) return;
         el.dispatchEvent(new CustomEvent(STACKBAR_PICK_EVENT, { bubbles: true, detail: { key, part: event.target } }));

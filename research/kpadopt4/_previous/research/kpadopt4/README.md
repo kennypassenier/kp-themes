@@ -1,5 +1,14 @@
 # research/kpadopt4: the fourth adoption round, one page
 
+**Round 2 (2026-10-16):** Kenny approved 45 of 51 sections in formal (VERDICTS.json, page round `2026-10-16-r1`). The page
+now holds only the six he did not approve, each reworked: the share bar's loading is the meter's loading picture (formal's
+approved loading for a bar) and its not-read and failed note keeps the footprint; the bullet rows' nothing-due and failed
+states fill the list with a normal Retry; uptime cells open a period's page or its quick info; the journey stands after the
+wizard and the step list, the contact timeline after the run timeline, each with "How this differs"; the compare slider
+loads with the data table's loading card. The approved sections' files (rows._, recipes_) left the folder; round 1 is in
+`_previous/` and in git at c1e907a8. New standing rule from this round: failed, empty and loading states fill the
+component's full normal size, with a normal-size Retry.
+
 Everything the component survey of 2026-10-16 found missing from Kenny's apps, built in the package and shown on
 **one** page, [`demo.html`](demo.html), **formal only** (`data-review-themes="formal"`): 51 sections in nine review
 topics (Values and figures; Rows and lists; Records and forms; Cards and states; Flows and timelines; Secrets and
