@@ -36,6 +36,9 @@
 //            last, Enter or Space opens; Tab leaves the agenda
 //   hover    the item's `detail` (else its name and time) in the page's one
 //            hover card (js/hovercard.js)
+//   loading  the days stay empty and the data table's busy panel (the
+//            theme's spinner and "Reading the week") stands centred over
+//            them, arriving and leaving as the busy table's does
 //
 // Events (bubbling, on the agenda):
 //   kp-week-open    { id, event, source: 'pointer' | 'keyboard' }  an item was opened
@@ -88,10 +91,10 @@ export const WEEK_TICK_MS = 30_000;
  *
  * @typedef {{ event: WeekEvent, ms: number, at: number, hhmm: string, button: HTMLButtonElement, day: string }} WeekItem
  * @typedef {{ iso: string, cell: HTMLElement, head: HTMLElement, track: HTMLElement, items: WeekItem[], now: HTMLElement,
- *   more: HTMLElement | null, moreButton: HTMLButtonElement | null, ghosts: HTMLElement[], hidden: WeekItem[] }} WeekDay
+ *   more: HTMLElement | null, moreButton: HTMLButtonElement | null, hidden: WeekItem[] }} WeekDay
  * @typedef {{ el: HTMLElement, zone: string, locale: string, now: () => number, strings: Strings, decorate?: WeekOptions['decorate'],
  *   start: string, days: number, events: WeekEvent[], state: WeekState, active: string | null, grid: HTMLElement,
- *   axis: HTMLElement, cols: WeekDay[], stateLine: HTMLElement, title: HTMLElement | null, today: HTMLButtonElement | null, legend: HTMLElement,
+ *   axis: HTMLElement, cols: WeekDay[], frame: HTMLElement, busy: HTMLElement | null, leaving: Promise<unknown> | null, held: number[] | null, stateLine: HTMLElement, title: HTMLElement | null, today: HTMLButtonElement | null, legend: HTMLElement,
  *   motion: { gone: boolean, stop: (() => void) | null, asked: boolean },
  *   pills: Map<string, HTMLButtonElement>, timer: number, observer: ResizeObserver | null, mode: 'grid' | 'list' }} WeekModel
  */
@@ -103,20 +106,6 @@ let idSeq = 0;
 const GAP = 2;
 /** The hours the axis names. */
 const AXIS_HOURS = [0, 6, 12, 18, 24];
-
-/** Where a loading day's ghosts stand (0 is the top of the column, 1 its foot), day by day; at least 0.2 apart. */
-const GHOST_TIMES = [
-    [0.08, 0.29],
-    [0.08, 0.3, 0.62],
-    [0.1, 0.42, 0.78],
-    [0.29, 0.55],
-    [0.08, 0.3],
-    [0.12, 0.33, 0.62],
-    [0.29, 0.5, 0.74],
-];
-
-/** How far a ghost's label stub reaches, in % of the room after its time stub. */
-const GHOST_LABELS = [72, 54, 86, 62, 78, 48];
 
 /** Two digits. @param {number} n */
 const two = (n) => String(n).padStart(2, '0');
@@ -278,6 +267,7 @@ function build(c) {
         parts.push(nav);
     }
     const frame = make(doc, 'div', 'kp-week__frame');
+    c.frame = frame;
     c.grid = make(doc, 'div', 'kp-week__grid');
     c.grid.setAttribute('role', 'group');
     if (!c.el.hasAttribute('aria-label') && !c.el.hasAttribute('aria-labelledby')) c.grid.setAttribute('aria-label', s.weekGroup);
@@ -325,23 +315,9 @@ function buildDays(c) {
         now.setAttribute('role', 'separator');
         now.hidden = true;
         track.append(now);
-        // Ghosts for the loading state: a pill's size and shape, a short stub where its time goes and a longer one where its
-        // label goes, at times a household week has (night, morning, evening), never closer than two pills' height in a
-        // column of the default height, so no ghost touches another. `--kp-week-seq` is the ghost's place in the week (day
-        // after day, top down), for a theme that runs its loading picture across the week in that order.
-        const ghosts = GHOST_TIMES[i % GHOST_TIMES.length].map((at, g) => {
-            const ghost = make(doc, 'span', 'kp-week__ghost kp-skeleton');
-            ghost.setAttribute('aria-hidden', 'true');
-            ghost.style.setProperty('--kp-week-at', String(at));
-            ghost.style.setProperty('--kp-week-seq', String(i + g));
-            ghost.style.setProperty('--kp-week-ghost-label', `${GHOST_LABELS[(i + g) % GHOST_LABELS.length]}%`);
-            ghost.append(make(doc, 'span', 'kp-week__ghost-time'), make(doc, 'span', 'kp-week__ghost-label'));
-            return ghost;
-        });
-        track.append(...ghosts);
         cell.append(head, track);
         c.grid.append(cell);
-        c.cols.push({ iso, cell, head, track, items: [], now, more: null, moreButton: null, ghosts, hidden: [] });
+        c.cols.push({ iso, cell, head, track, items: [], now, more: null, moreButton: null, hidden: [] });
         if (iso === today) {
             cell.dataset.kpToday = '';
             head.setAttribute('aria-current', 'date');
@@ -376,6 +352,111 @@ function pillFor(c, e) {
     }
     button.dataset.kpId = e.id;
     return button;
+}
+
+/**
+ * In rows (below 40rem) a day is as tall as its items, so a week that loads again would fold every day shut and open
+ * it again when the items come. Instead each day keeps the height it had while the week loads, and lets go of it only
+ * once the items that end the load have arrived, so the same items move nothing; a first load starts from the days'
+ * own height, as a data table's first load starts from its skeleton rows. In columns the days have a fixed height.
+ * @param {WeekModel} c
+ */
+function holdRows(c) {
+    if (c.state === 'loading') {
+        if (c.held === null && c.mode === 'list') c.held = c.cols.map((col) => col.track.offsetHeight);
+        if (c.held) for (const [i, col] of c.cols.entries()) col.track.style.setProperty('--kp-week-hold', `${c.held[i] ?? 0}px`);
+        return;
+    }
+    if (c.held === null) return;
+    const held = c.held;
+    const until = performance.now() + 6000;
+    const win = c.el.ownerDocument.defaultView ?? window;
+    const letGo = () => {
+        if (c.held !== held || c.state === 'loading') return;
+        const busy = c.leaving || c.grid.querySelector('[data-kp-arriving], [data-kp-leaving], [data-kp-reversing]');
+        if (busy && performance.now() < until) {
+            win.requestAnimationFrame(letGo);
+            return;
+        }
+        c.held = null;
+        for (const col of c.cols) col.track.style.removeProperty('--kp-week-hold');
+    };
+    // Two frames first: the arrivals are set going by the theme's watcher after this paint.
+    win.requestAnimationFrame(() => win.requestAnimationFrame(letGo));
+}
+
+/**
+ * Lays the busy layer over the days' columns (in rows, over the items' column), measured from the columns themselves:
+ * the day heads and the hour axis stay readable beside it, as the data table's header stays above its layer.
+ * @param {WeekModel} c
+ */
+function placeBusy(c) {
+    const layer = c.busy;
+    if (!layer || !c.cols.length) return;
+    const host = c.frame.getBoundingClientRect();
+    const boxes = c.cols.map((col) => col.track.getBoundingClientRect());
+    const top = Math.min(...boxes.map((b) => b.top));
+    const bottom = Math.max(...boxes.map((b) => b.bottom));
+    const left = Math.min(...boxes.map((b) => b.left));
+    const right = Math.max(...boxes.map((b) => b.right));
+    layer.style.setProperty('--kp-busy-overlay-top', `${Math.max(0, Math.round(top - host.top))}px`);
+    layer.style.setProperty('--kp-busy-overlay-bottom', `${Math.max(0, Math.round(host.bottom - bottom))}px`);
+    layer.style.setProperty('--kp-busy-overlay-left', `${Math.max(0, Math.round(left - host.left))}px`);
+    layer.style.setProperty('--kp-busy-overlay-right', `${Math.max(0, Math.round(host.right - right))}px`);
+}
+
+/**
+ * While the week loads, the data table's own loading picture stands over the empty days (Kenny, 2026-10-16: "zoals
+ * bij table waarbij de hele table het laadicoon centraal krijgt"): the same layer, panel, spinner and words as
+ * js/datatable.js drawOverlay() builds (`.kp-datatable__busy-overlay` > `.kp-datatable__busy-panel` > `.kp-spinner`
+ * + `.kp-datatable__busy-words`), so every theme dresses it as it dresses its busy table, and it arrives and leaves
+ * as that layer does: it arrives the theme's way (easeSize(), asked by the first loading state) and leaves by leave()
+ * where the theme leaves its states whole, else its panel closes. Absolutely placed in the frame, so nothing moves
+ * when it comes or goes; hidden from assistive technology, which hears the state line.
+ * @param {WeekModel} c
+ */
+function drawBusy(c) {
+    const want = c.state === 'loading';
+    if (want === (c.busy !== null)) {
+        placeBusy(c);
+        return;
+    }
+    const doc = c.el.ownerDocument;
+    if (!want) {
+        const layer = /** @type {HTMLElement} */ (c.busy);
+        c.busy = null;
+        const panel = /** @type {HTMLElement | null} */ (layer.querySelector('.kp-datatable__busy-panel'));
+        // The items wait until the panel has gone, then arrive: nothing of the week is drawn under a panel on its way out.
+        const gone = import('./motion.js').then((m) => {
+            if (!layer.isConnected || !panel) {
+                layer.remove();
+                return undefined;
+            }
+            if (m.leavesState(layer)) return m.leave(layer);
+            layer.setAttribute(m.CLOSING_ATTRIBUTE, '');
+            return m.playClose(panel).then(() => layer.remove());
+        });
+        c.leaving = gone;
+        void gone
+            .catch(() => layer.remove())
+            .then(() => {
+                if (c.leaving !== gone) return;
+                c.leaving = null;
+                if (!c.motion.gone) paint(c);
+            });
+        return;
+    }
+    // A layer still leaving from the last load goes at once: one panel at a time, never two over each other.
+    for (const old of c.frame.querySelectorAll(':scope > .kp-week__busy')) old.remove();
+    c.leaving = null;
+    const layer = make(doc, 'div', 'kp-datatable__busy-overlay kp-week__busy');
+    layer.setAttribute('aria-hidden', 'true');
+    const panel = make(doc, 'div', 'kp-datatable__busy-panel');
+    panel.append(make(doc, 'span', 'kp-spinner'), make(doc, 'span', 'kp-datatable__busy-words', c.strings.weekLoading));
+    layer.append(panel);
+    c.busy = layer;
+    placeBusy(c);
+    c.frame.append(layer);
 }
 
 /** Everything the week shows, from the model. @param {WeekModel} c */
@@ -426,16 +507,18 @@ function paint(c) {
         } else c.stateLine.replaceChildren();
     }
     c.stateLine.dataset.kpState = c.state;
+    drawBusy(c);
+    holdRows(c);
     for (const col of c.cols) {
-        const nodes = c.state === 'loading' ? [] : col.items.map((item) => item.button);
-        const wanted = [col.now, ...col.ghosts, ...nodes];
+        const nodes = c.state === 'loading' || c.leaving ? [] : col.items.map((item) => item.button);
+        const wanted = [col.now, ...nodes];
         // Re-order only when the order differs: moving a focused node loses its focus.
         const have = [...col.track.children].filter((n) => n !== col.moreButton?.parentElement);
         const same = wanted.length === have.length && wanted.every((n, i) => n === have[i]);
         if (!same) {
             // What the track holds and is no longer wanted leaves it: a loading state takes every pill out (it once
             // only re-appended the wanted nodes, so the old pills stayed, lost their place and stood stacked at the
-            // top of the day under the ghosts, two items' words drawn on top of each other).
+            // top of the day, two items' words drawn on top of each other).
             const keep = new Set(/** @type {Element[]} */ (wanted));
             for (const n of have) if (!keep.has(n)) n.remove();
             for (const n of nodes) n.remove();
@@ -627,6 +710,10 @@ export function attachWeeks(root = document, options = {}) {
             grid: el,
             axis: el,
             cols: [],
+            frame: el,
+            busy: null,
+            leaving: null,
+            held: null,
             stateLine: el,
             title: null,
             today: null,
@@ -714,6 +801,7 @@ export function attachWeeks(root = document, options = {}) {
         if (typeof ResizeObserver !== 'undefined') {
             let last = '';
             c.observer = new ResizeObserver(() => {
+                placeBusy(c);
                 const key = `${c.grid.clientWidth}x${c.cols[0]?.track.clientHeight ?? 0}`;
                 if (key === last) return;
                 last = key;
@@ -753,7 +841,7 @@ export function setWeekEvents(el, events) {
 }
 
 /**
- * The agenda as a whole: `loading` (ghost pills at the final size), `ready`,
+ * The agenda as a whole: `loading` (the data table's busy panel over the empty days), `ready`,
  * `empty` or `error` (`words` over the grid; an error says it in the page's
  * words).
  * @param {Element} el

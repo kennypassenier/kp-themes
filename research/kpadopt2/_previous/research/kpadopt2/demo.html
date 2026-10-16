@@ -35,13 +35,12 @@
             <header class="r2-intro">
                 <h1>Round 2 of the dashboard adoption: the one still open</h1>
                 <p class="cat-intro">
-                    Review round 3. Kenny approved ten of the eleven sections in formal, so only the <b>week agenda’s states</b> is on this page.
-                    While it loads, the week is now formal’s own loading picture, the ledger being ruled: every day holds unwritten entries of a
-                    pill’s shape and size, and a navy rule is ruled along them one after the other across the week. A week that loads again takes all
-                    of its items out first, so no old item stays under or beside the new ones and no words are drawn twice. Everything with a
-                    <code>kp-</code> class and every script under <code>js/</code> is the package; the sample data and the button that drives the demo
-                    are this page’s. The section says what you should see under <b>Expected</b>. Formal only, judged in the review dialog (“Review in
-                    a dialog” at the top).
+                    Review round 4. Kenny approved ten of the eleven sections in formal, so only the <b>week agenda’s states</b> is on this page. A
+                    loading week no longer draws skeleton entries: its days stay empty and steady, and the data table’s own loading card (the theme’s
+                    large spinner, the words, formal’s ruled lines) stands in the middle of the days, arriving and leaving as it does over a table.
+                    The items arrive only once the card has gone. Everything with a <code>kp-</code> class and every script under <code>js/</code> is
+                    the package; the sample data and the button that drives the demo are this page’s. The section says what you should see under
+                    <b>Expected</b>. Formal only, judged in the review dialog (“Review in a dialog” at the top).
                 </p>
             </header>
 
@@ -61,11 +60,10 @@
                     <p><b>Expected:</b></p>
                     <ul>
                         <li>
-                            <b>Loading</b>: the week is the ledger being ruled. Every day holds two or three unwritten entries the size and shape of a
-                            pill (paper, the heavy rule on the start edge, a short line where the time goes, a longer one where the label goes), never
-                            touching each other; a navy rule is ruled along each entry’s foot, held, lifted and ruled again, entry after entry from
-                            the first day’s top across the week. The day heads and the axis are already there; no sentence stands over the week (it is
-                            still read out). Nothing moves when the real items arrive.
+                            <b>Loading</b>: the week loads as the data table loads. The days, the hours and the lines are all there and stay empty; in
+                            the middle of the days stands the same card as a loading table shows: formal’s large ring spinner, the words “Reading the
+                            week” and the navy rules ruled under them. Nothing else is drawn in the days, and the card covers neither the day heads
+                            nor the hours. It is the card of the data table’s “Loading, with a layer over the rows”.
                         </li>
                         <li><b>Empty</b>: the same grid, the sentence “Nothing is planned in this week.” over it.</li>
                         <li><b>Error</b>: the grid, with the page’s own words in the destructive colour over it.</li>
@@ -75,17 +73,18 @@
                         </li>
                         <li>
                             <b>Make it load, then arrive</b> (above the first agenda): the button shows the theme’s spinner and says the items arrive
-                            in 2 s; the first agenda’s items leave at once and only its unwritten entries stand (no old item stays under or beside
-                            them, no words drawn twice), and after two seconds its items arrive the theme’s way, one after the other (formal rules
-                            them in). No column changes height and no head moves; the button can then play it again, as often as you like.
+                            in 2 s; the first agenda’s items leave at once and the loading card arrives in the middle as it does over a table. After
+                            two seconds the card is ruled off first, then the items arrive the theme’s way, one after the other (formal rules them
+                            in); no item is ever drawn under the card. No column changes height and no head moves, here and in the 390 px view (where
+                            a day keeps its height while it loads again); the button can play it again, as often as you like.
                         </li>
                     </ul>
                 </div>
                 <div data-review-look>
                     <p data-for="formal">
-                        Press Make it load, then arrive three times in a row and watch the first agenda: only unwritten entries while it loads, then
-                        its items, never both. Ledger entries: a heavy 4px rule on the left of each pill, 2px corners, the weekday in small capitals,
-                        dotted dividers between the days like leaders.
+                        Press Make it load, then arrive three times in a row and watch the first agenda: an empty week with the table’s loading card
+                        in the middle, then its items, never both. Ledger entries: a heavy 4px rule on the left of each pill, 2px corners, the weekday
+                        in small capitals, dotted dividers between the days like leaders.
                     </p>
                 </div>
                 <div class="kt-actions">
@@ -117,7 +116,7 @@
         <script type="module" src="demo-time.js"></script>
         <script type="module" src="../../js/auto.js"></script>
         <script type="application/json" data-review-round>
-            { "round": "2026-10-16-r3", "received": ["2026-10-16-r1", "2026-10-16-r2"], "reopen": ["formal|week-states"] }
+            { "round": "2026-10-16-r4", "received": ["2026-10-16-r1", "2026-10-16-r2", "2026-10-16-r3"], "reopen": ["formal|week-states"] }
         </script>
         </body>
 </html>

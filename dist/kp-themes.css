@@ -11870,14 +11870,15 @@
         white-space: nowrap;
     }
 
-    /* Near the end edge the label stands before its rule and ends at it (js/gantt.js marks it), never cut. */
+    /* Near the end edge js/gantt.js marks a label `data-kp-gantt-edge`; a register that sets --kp-gantt-tick-flip to 1
+     * stands such a label before its rule, ending at it, so the edge never cuts it (0 by default: the label as it was). */
     .kp-gantt__tick[data-kp-gantt-edge] {
-        translate: -100% 0;
-        padding-inline: 0 0.3125rem;
+        translate: calc(-100% * var(--kp-gantt-tick-flip, 0)) 0;
+        padding-inline: calc(0.3125rem * (1 - var(--kp-gantt-tick-flip, 0))) calc(0.3125rem * var(--kp-gantt-tick-flip, 0));
     }
 
     .kp-gantt__tick[data-kp-gantt-edge]:dir(rtl) {
-        translate: 100% 0;
+        translate: calc(100% * var(--kp-gantt-tick-flip, 0)) 0;
     }
 
     .kp-gantt__tick[data-kp-day] {
@@ -12178,21 +12179,14 @@
         background: var(--muted);
     }
 
-    /* The sentence of a loading, empty or failed timeline stands centred over the plot, as wide as its words: a
-     * register that gives it a ground (--kp-gantt-state-ground, none by default) lifts it clear of the rules and the
-     * ghost bars under it, as the week agenda's sentence stands on its plate. */
     .kp-gantt__state {
         position: absolute;
         inset: var(--kp-gantt-axis, 1.75rem) 0 0;
         z-index: 4;
-        box-sizing: border-box;
-        inline-size: fit-content;
-        max-inline-size: calc(100% - 2 * var(--kp-space-md, 0.75rem));
-        block-size: fit-content;
-        margin: auto;
-        padding: var(--kp-gantt-state-pad, var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem));
-        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
-        background: var(--kp-gantt-state-ground, transparent);
+        display: grid;
+        place-items: center;
+        margin: 0;
+        padding: var(--kp-space-md, 0.75rem);
         color: var(--muted-foreground);
         font-size: var(--kp-text-sm, 0.8125rem);
         text-align: center;
@@ -12207,9 +12201,7 @@
         color: var(--destructive);
     }
 
-    /* With no lane (no run in the window, or the history failed) the body keeps a lane-sized space, so the state's
-     * sentence stands over the plot and never over the legend under it. */
-    .kp-gantt:is([data-kp-state='ready'], [data-kp-state='empty'], [data-kp-state='error']) .kp-gantt__body:not(:has(.kp-gantt__lane)) {
+    .kp-gantt[data-kp-state='ready'] .kp-gantt__body:not(:has(.kp-gantt__lane)) {
         min-block-size: 5.25rem;
     }
 
@@ -14194,12 +14186,6 @@
     .kp-heat__cell.kp-skeleton {
         block-size: var(--kp-heat-cell-height, 22px);
         cursor: progress;
-    }
-
-    /* A skeleton's gap to the skeleton before it (`.kp-skeleton + .kp-skeleton`) is for lines in a column; the cells of a
-     * row are side by side, and the gap made every loading row taller than its ready row. */
-    :is(.kp-heat__cell, .kp-matrix__cell).kp-skeleton {
-        margin-block: 0;
     }
 
     .kp-heat__row--summary .kp-heat__cell.kp-skeleton {
@@ -23004,6 +22990,34 @@
     }
 }
 
+/* ── The dashboard parts: what the package leaves to a register [kpadopt2-repairs] ──
+   Formal keeps these parts exactly as Kenny approved them; this theme takes the three repairs the review asks for: a
+   loading heat grid or matrix row as tall as its ready row (no skeleton gap between cells), an empty or failed run
+   timeline with a lane-sized space for its sentence (never over the legend), the sentence as wide as its words on the
+   theme's ground (never through a rule or a ghost bar), and an axis label near the end edge standing before its rule. */
+@layer kp.signature {
+    [data-theme='cyberpunk'] :is(.kp-heat__cell, .kp-matrix__cell).kp-skeleton {
+        margin-block: 0;
+    }
+    [data-theme='cyberpunk'] .kp-gantt {
+        --kp-gantt-tick-flip: 1;
+    }
+    [data-theme='cyberpunk'] .kp-gantt:is([data-kp-state='empty'], [data-kp-state='error']) .kp-gantt__body:not(:has(.kp-gantt__lane)) {
+        min-block-size: 5.25rem;
+    }
+    [data-theme='cyberpunk'] .kp-gantt__state {
+        box-sizing: border-box;
+        display: block;
+        inline-size: fit-content;
+        max-inline-size: calc(100% - 2 * var(--kp-space-md, 0.75rem));
+        block-size: fit-content;
+        margin: auto;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--kp-gantt-state-ground, transparent);
+    }
+}
+
 @layer kp.register {
     /* @kp-soft/themes — css/synthwave-register.css
    The synthwave register, 5.0.0 [S48, LIFT_PLAN row 1]: the horizon
@@ -27793,6 +27807,34 @@
         to {
             transform: translateX(var(--kp-sw-lane, 1.5rem));
         }
+    }
+}
+
+/* ── The dashboard parts: what the package leaves to a register [kpadopt2-repairs] ──
+   Formal keeps these parts exactly as Kenny approved them; this theme takes the three repairs the review asks for: a
+   loading heat grid or matrix row as tall as its ready row (no skeleton gap between cells), an empty or failed run
+   timeline with a lane-sized space for its sentence (never over the legend), the sentence as wide as its words on the
+   theme's ground (never through a rule or a ghost bar), and an axis label near the end edge standing before its rule. */
+@layer kp.signature {
+    [data-theme='synthwave'] :is(.kp-heat__cell, .kp-matrix__cell).kp-skeleton {
+        margin-block: 0;
+    }
+    [data-theme='synthwave'] .kp-gantt {
+        --kp-gantt-tick-flip: 1;
+    }
+    [data-theme='synthwave'] .kp-gantt:is([data-kp-state='empty'], [data-kp-state='error']) .kp-gantt__body:not(:has(.kp-gantt__lane)) {
+        min-block-size: 5.25rem;
+    }
+    [data-theme='synthwave'] .kp-gantt__state {
+        box-sizing: border-box;
+        display: block;
+        inline-size: fit-content;
+        max-inline-size: calc(100% - 2 * var(--kp-space-md, 0.75rem));
+        block-size: fit-content;
+        margin: auto;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--kp-gantt-state-ground, transparent);
     }
 }
 
@@ -36594,6 +36636,34 @@
         [data-theme='terminal'] .kp-gantt__run[data-kp-state='running']::after {
             animation: kp-caret var(--kp-sig-tm-slow) steps(1) infinite;
         }
+    }
+}
+
+/* ── The dashboard parts: what the package leaves to a register [kpadopt2-repairs] ──
+   Formal keeps these parts exactly as Kenny approved them; this theme takes the three repairs the review asks for: a
+   loading heat grid or matrix row as tall as its ready row (no skeleton gap between cells), an empty or failed run
+   timeline with a lane-sized space for its sentence (never over the legend), the sentence as wide as its words on the
+   theme's ground (never through a rule or a ghost bar), and an axis label near the end edge standing before its rule. */
+@layer kp.signature {
+    [data-theme='terminal'] :is(.kp-heat__cell, .kp-matrix__cell).kp-skeleton {
+        margin-block: 0;
+    }
+    [data-theme='terminal'] .kp-gantt {
+        --kp-gantt-tick-flip: 1;
+    }
+    [data-theme='terminal'] .kp-gantt:is([data-kp-state='empty'], [data-kp-state='error']) .kp-gantt__body:not(:has(.kp-gantt__lane)) {
+        min-block-size: 5.25rem;
+    }
+    [data-theme='terminal'] .kp-gantt__state {
+        box-sizing: border-box;
+        display: block;
+        inline-size: fit-content;
+        max-inline-size: calc(100% - 2 * var(--kp-space-md, 0.75rem));
+        block-size: fit-content;
+        margin: auto;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--kp-gantt-state-ground, transparent);
     }
 }
 
@@ -49142,6 +49212,34 @@
     }
 }
 
+/* ── The dashboard parts: what the package leaves to a register [kpadopt2-repairs] ──
+   Formal keeps these parts exactly as Kenny approved them; this theme takes the three repairs the review asks for: a
+   loading heat grid or matrix row as tall as its ready row (no skeleton gap between cells), an empty or failed run
+   timeline with a lane-sized space for its sentence (never over the legend), the sentence as wide as its words on the
+   theme's ground (never through a rule or a ghost bar), and an axis label near the end edge standing before its rule. */
+@layer kp.signature {
+    [data-theme='pastel'] :is(.kp-heat__cell, .kp-matrix__cell).kp-skeleton {
+        margin-block: 0;
+    }
+    [data-theme='pastel'] .kp-gantt {
+        --kp-gantt-tick-flip: 1;
+    }
+    [data-theme='pastel'] .kp-gantt:is([data-kp-state='empty'], [data-kp-state='error']) .kp-gantt__body:not(:has(.kp-gantt__lane)) {
+        min-block-size: 5.25rem;
+    }
+    [data-theme='pastel'] .kp-gantt__state {
+        box-sizing: border-box;
+        display: block;
+        inline-size: fit-content;
+        max-inline-size: calc(100% - 2 * var(--kp-space-md, 0.75rem));
+        block-size: fit-content;
+        margin: auto;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--kp-gantt-state-ground, transparent);
+    }
+}
+
 /* The busy progress bar's breath, 0 (bare ground) to 1 (the full row),
    registered so the keyframes interpolate it; at the top level because
    Firefox does not register an @property inside a layer. */
@@ -53786,6 +53884,34 @@
                 outline-color var(--fx-duration) var(--fx-ease),
                 outline-offset var(--fx-duration) var(--fx-ease);
         }
+    }
+}
+
+/* ── The dashboard parts: what the package leaves to a register [kpadopt2-repairs] ──
+   Formal keeps these parts exactly as Kenny approved them; this theme takes the three repairs the review asks for: a
+   loading heat grid or matrix row as tall as its ready row (no skeleton gap between cells), an empty or failed run
+   timeline with a lane-sized space for its sentence (never over the legend), the sentence as wide as its words on the
+   theme's ground (never through a rule or a ghost bar), and an axis label near the end edge standing before its rule. */
+@layer kp.signature {
+    [data-theme='forest'] :is(.kp-heat__cell, .kp-matrix__cell).kp-skeleton {
+        margin-block: 0;
+    }
+    [data-theme='forest'] .kp-gantt {
+        --kp-gantt-tick-flip: 1;
+    }
+    [data-theme='forest'] .kp-gantt:is([data-kp-state='empty'], [data-kp-state='error']) .kp-gantt__body:not(:has(.kp-gantt__lane)) {
+        min-block-size: 5.25rem;
+    }
+    [data-theme='forest'] .kp-gantt__state {
+        box-sizing: border-box;
+        display: block;
+        inline-size: fit-content;
+        max-inline-size: calc(100% - 2 * var(--kp-space-md, 0.75rem));
+        block-size: fit-content;
+        margin: auto;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--kp-gantt-state-ground, transparent);
     }
 }
 
@@ -61091,6 +61217,34 @@
         [data-theme='light'] :is(.kp-week__pill, .kp-gantt__run):is(button):active {
             animation: kp-sig-light-flash var(--fx-duration, 200ms) linear 1;
         }
+    }
+}
+
+/* ── The dashboard parts: what the package leaves to a register [kpadopt2-repairs] ──
+   Formal keeps these parts exactly as Kenny approved them; this theme takes the three repairs the review asks for: a
+   loading heat grid or matrix row as tall as its ready row (no skeleton gap between cells), an empty or failed run
+   timeline with a lane-sized space for its sentence (never over the legend), the sentence as wide as its words on the
+   theme's ground (never through a rule or a ghost bar), and an axis label near the end edge standing before its rule. */
+@layer kp.signature {
+    [data-theme='light'] :is(.kp-heat__cell, .kp-matrix__cell).kp-skeleton {
+        margin-block: 0;
+    }
+    [data-theme='light'] .kp-gantt {
+        --kp-gantt-tick-flip: 1;
+    }
+    [data-theme='light'] .kp-gantt:is([data-kp-state='empty'], [data-kp-state='error']) .kp-gantt__body:not(:has(.kp-gantt__lane)) {
+        min-block-size: 5.25rem;
+    }
+    [data-theme='light'] .kp-gantt__state {
+        box-sizing: border-box;
+        display: block;
+        inline-size: fit-content;
+        max-inline-size: calc(100% - 2 * var(--kp-space-md, 0.75rem));
+        block-size: fit-content;
+        margin: auto;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--kp-gantt-state-ground, transparent);
     }
 }
 
@@ -69200,6 +69354,34 @@
                 1.375rem 50%,
                 0 0;
         }
+    }
+}
+
+/* ── The dashboard parts: what the package leaves to a register [kpadopt2-repairs] ──
+   Formal keeps these parts exactly as Kenny approved them; this theme takes the three repairs the review asks for: a
+   loading heat grid or matrix row as tall as its ready row (no skeleton gap between cells), an empty or failed run
+   timeline with a lane-sized space for its sentence (never over the legend), the sentence as wide as its words on the
+   theme's ground (never through a rule or a ghost bar), and an axis label near the end edge standing before its rule. */
+@layer kp.signature {
+    [data-theme='blueprint'] :is(.kp-heat__cell, .kp-matrix__cell).kp-skeleton {
+        margin-block: 0;
+    }
+    [data-theme='blueprint'] .kp-gantt {
+        --kp-gantt-tick-flip: 1;
+    }
+    [data-theme='blueprint'] .kp-gantt:is([data-kp-state='empty'], [data-kp-state='error']) .kp-gantt__body:not(:has(.kp-gantt__lane)) {
+        min-block-size: 5.25rem;
+    }
+    [data-theme='blueprint'] .kp-gantt__state {
+        box-sizing: border-box;
+        display: block;
+        inline-size: fit-content;
+        max-inline-size: calc(100% - 2 * var(--kp-space-md, 0.75rem));
+        block-size: fit-content;
+        margin: auto;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--kp-gantt-state-ground, transparent);
     }
 }
 
@@ -77355,6 +77537,34 @@
                 0 0,
                 0 0;
         }
+    }
+}
+
+/* ── The dashboard parts: what the package leaves to a register [kpadopt2-repairs] ──
+   Formal keeps these parts exactly as Kenny approved them; this theme takes the three repairs the review asks for: a
+   loading heat grid or matrix row as tall as its ready row (no skeleton gap between cells), an empty or failed run
+   timeline with a lane-sized space for its sentence (never over the legend), the sentence as wide as its words on the
+   theme's ground (never through a rule or a ghost bar), and an axis label near the end edge standing before its rule. */
+@layer kp.signature {
+    [data-theme='dark'] :is(.kp-heat__cell, .kp-matrix__cell).kp-skeleton {
+        margin-block: 0;
+    }
+    [data-theme='dark'] .kp-gantt {
+        --kp-gantt-tick-flip: 1;
+    }
+    [data-theme='dark'] .kp-gantt:is([data-kp-state='empty'], [data-kp-state='error']) .kp-gantt__body:not(:has(.kp-gantt__lane)) {
+        min-block-size: 5.25rem;
+    }
+    [data-theme='dark'] .kp-gantt__state {
+        box-sizing: border-box;
+        display: block;
+        inline-size: fit-content;
+        max-inline-size: calc(100% - 2 * var(--kp-space-md, 0.75rem));
+        block-size: fit-content;
+        margin: auto;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--kp-gantt-state-ground, transparent);
     }
 }
 
