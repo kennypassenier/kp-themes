@@ -263,7 +263,7 @@ export const DESCRIPTORS = [
             },
             {
                 title: 'A removal that depends on something',
-                why: 'The confirmation lists what still uses the thing (`data-kp-confirm-dependents`, one name per `;`, under a heading with the exact count). `data-kp-confirm-blocked` makes it a notice with one Close button and the sentence that says what to do first; `data-kp-confirm-type` offers Confirm only once that name is typed.',
+                why: 'The confirmation lists what still uses the thing (`data-kp-confirm-dependents`, one name per `;`, under a heading with the exact count). `data-kp-confirm-blocked` makes it a notice with one Close button and the sentence that says what to do first; `data-kp-confirm-type` turns Confirm on only once that name is typed (the typed confirmation).',
                 markup: `
 <button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-kp-confirm="Delete the calendar Household?" data-kp-confirm-dependents="kyu-runner; Home Assistant" data-kp-confirm-blocked="Delete those two sources first, on the Sources page.">Delete</button>
 <button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-kp-confirm="Delete the calendar Holidays and everything on it?" data-kp-confirm-type="Holidays">Delete</button>
@@ -315,7 +315,7 @@ export const DESCRIPTORS = [
             },
             { name: 'data-kp-confirm-dependents', what: 'What still uses the thing, one name per `;`: listed in the confirmation (`.kp-confirm__dependents`, `.kp-confirm__list`) under a heading with the exact count.' },
             { name: 'data-kp-confirm-blocked', what: 'The removal may not go ahead: the confirmation says this sentence (empty: the dictionary’s) and offers only Close.' },
-            { name: 'data-kp-confirm-type', what: 'Confirm is offered only once this word is typed into the field the confirmation shows (`.kp-confirm__type`); Enter in the field confirms.' },
+            { name: 'data-kp-confirm-type', what: 'Confirm turns on only once this name is typed: the typed confirmation (its own page), with what will be lost, the rule and a line that says whether it matches; Enter in the field confirms. A blocked removal shows no field.' },
             { name: ':hover / :active', what: 'Both are derived colours; on a theme that lifts its controls the button also rises, and by nothing at all where the theme answers zero.' },
             { name: ':disabled', what: 'A dimmed ground and a refusing cursor. DI8 records the decision that a disabled control may fall below the contrast floor.' },
             {
@@ -3326,6 +3326,259 @@ setGanttState(timeline, 'loading');
             'Built in — the board is a list of lanes named by their plates, each a list of cards; a count is the exact number.',
             'Built in — one tab stop: left and right to the neighbouring lane, up and down along a lane, Home and End to its first and last; Enter follows a link or presses a button.',
             'Yours — name the board (`aria-label`), and give a card a title that says what it is without its colour.',
+        ],
+    },
+    {
+        id: 'uptime',
+        title: 'Uptime strip',
+        group: 'Data',
+        classes: ['kp-uptime'],
+        exports: [],
+        intro: 'One thin strip of cells, one per period (90 days, 48 hours), each toned up, degraded (ruled), down (striped) or no data (an empty frame), with the window’s summary over it in exact figures and the first and the latest period’s names under it. `setUptime(el, { label, periods, from, to, state })` in js/uptime.js draws it; until then the strip waits as skeleton cells under the data table’s busy card. The share is cut to one decimal and never rounded up; the incident count is the number. On a narrow page the strip shows the latest periods that fit and says how many; `data-kp-uptime-fit="scroll"` keeps every period and scrolls.',
+        whenToUse:
+            'When a reader asks how a service or a queue did over the last days or hours, at a glance, with the detail of any period on hover. Not for a series of values (use the chart) and not for many services by many days at once (use the heat grid).',
+        examples: [
+            {
+                title: 'A service over 90 days',
+                why: 'The markup is the empty strip with its name and its number of periods; the script draws the cells from the periods the page hands over, and draws the loading state before that.',
+                markup: `
+<div class="kp-uptime" data-kp-uptime data-kp-uptime-label="jellyfin" data-kp-uptime-count="90"></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-uptime', what: 'Marks the strip; `attachUptimes` wires it and draws its loading state until `setUptime` is called.' },
+            { name: 'data-kp-uptime-label', what: 'The strip’s title (the service) when `setUptime` is given none.' },
+            { name: 'data-kp-uptime-count', what: 'How many cells a loading or empty strip waits with; 90 by default.' },
+            { name: 'data-kp-uptime-state', what: 'Set by the script: `ready`, `loading`, `empty` or `error`. Given in the markup, the state the strip starts in.' },
+            { name: 'data-kp-uptime-fit', what: '`scroll`: every period is kept and the strip scrolls sideways, starting at the latest; without it the latest periods that fit are shown.' },
+            { name: 'data-kp-uptime-before', what: 'Set by the script on a scrolling strip with periods before the view: the start edge fades.' },
+            { name: 'data-kp-uptime-after', what: 'Set by the script on a scrolling strip with periods after the view: the end edge fades.' },
+            { name: 'data-kp-uptime-attached', what: 'Set by the script once the strip is wired.' },
+        ],
+        accessibility: [
+            'Built in — one tab stop: the arrow keys move through the cells that are shown, Home and End jump to the first and the latest, Enter and Space pick (`kp-uptime-pick`); the hover card opens at once on focus.',
+            'Built in — every cell is a button named by its period, state and figures; the strip is a group named by its title and its summary; a state is a pattern as well as a colour.',
+            'Yours — name each period the way a person reads it (dd/mm/yyyy, HH:MM), keep an error sentence short, and give `tip` a sentence when a period has more to say.',
+        ],
+    },
+    {
+        id: 'type-confirm',
+        title: 'Typed confirmation',
+        group: 'Feedback',
+        classes: ['kp-type-confirm'],
+        aliases: ['matched'],
+        exports: [],
+        intro: 'A destructive action that turns on only once the reader has typed its name. On a button that already asks for a confirmation, `data-kp-confirm-type="media"` makes the package’s confirmation dialog show what will be lost (`data-kp-confirm-loses`, the id of a template or an element), the field, the rule it is matched by and a line that says whether it matches; Confirm stays disabled until it does, carries the button’s own words (or `data-kp-confirm-label`), and Enter in the field confirms a match. Spaces at the start and the end never count; capitals count unless `data-kp-confirm-case="any"`. In a page’s own dialog or form, `data-kp-type-confirm="media"` with `data-kp-type-confirm-for="<button id>"` builds the same block and holds that button off.',
+        whenToUse:
+            'For the few actions that delete something that cannot come back and whose name the reader should look at first: wiping a stack, removing a service, deleting a backup set. For an everyday delete the plain confirmation or an undo is enough.',
+        examples: [
+            {
+                title: 'In the confirmation dialog',
+                why: 'The button keeps its own handler: the dialog swallows the click, and re-fires it once the name is typed and Confirm is pressed.',
+                markup: `
+<button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-kp-confirm="Wipe the stack media?" data-kp-confirm-type="media" data-kp-confirm-loses="lost-media">Wipe media…</button>
+<template id="lost-media"><ul class="kp-type-confirm__list"><li>3 containers: jellyfin, jellyseerr, tdarr</li><li>/srv/media/config (2.4 GB)</li></ul></template>
+`,
+            },
+            {
+                title: 'In a page’s own dialog',
+                why: 'The block fills itself and keeps the button it names disabled until the name matches; a button the page disabled itself stays disabled.',
+                markup: `
+<div data-kp-type-confirm="media" data-kp-type-confirm-for="wipe"></div>
+<button type="button" class="kp-button kp-button--destructive" id="wipe">Wipe media</button>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-confirm-type', what: 'On a button with `data-kp-confirm`: the name the reader types before Confirm turns on.' },
+            { name: 'data-kp-confirm-case', what: '`any`: capitals do not count. Spaces at the start and the end never do.' },
+            { name: 'data-kp-confirm-loses', what: 'The id of a `<template>` or an element whose content says what will be lost; shown above the field.' },
+            { name: 'data-kp-confirm-label', what: 'The words on Confirm; else the button’s own words without a trailing “…”.' },
+            { name: 'data-kp-type-confirm', what: 'A block a page puts in its own dialog or form: the name to type.' },
+            { name: 'data-kp-type-confirm-for', what: 'The id of the button the block holds off until the name matches.' },
+            { name: 'data-kp-type-confirm-case', what: '`any`: capitals do not count.' },
+            { name: 'data-kp-type-confirm-loses', what: 'The id of a template or an element with what will be lost.' },
+            { name: 'data-kp-type-confirm-attached', what: 'Set by the script once the block is filled.' },
+            { name: 'data-kp-matched', what: 'Set by the script on the block: `true` while what is typed matches the name.' },
+        ],
+        accessibility: [
+            'Built in — the field is labelled by the sentence with the name in it and described by the rule and the match line; the match line is a polite live region; the field has the focus when the dialog opens.',
+            'Built in — Confirm is disabled until the name matches, so neither a click nor Enter can act before; a match is a word on the success plate as well as a colour.',
+            'Yours — list what will be lost in plain words, keep the name the one the reader knows it by, and keep the action rare: a typed name asked every day is typed without reading.',
+        ],
+    },
+    {
+        id: 'command',
+        title: 'Command block',
+        group: 'Content',
+        classes: ['kp-command'],
+        aliases: ['continued'],
+        exports: [],
+        intro: 'One command to run, with the terminal it runs in, whether it needs admin or sudo, a copy button that confirms and where it runs. `attachCommands(root)` in js/command.js writes the head (the terminal’s name from `data-kp-command`: `wsl`, `powershell`, `cmd`, `garuda`, `bash`; the amber `admin` or `sudo` badge with `data-kp-command-elevated`; the package’s copy button) and the note `data-kp-command-where` under the code, and puts every line behind the terminal’s prompt, which the stylesheet draws so it is never copied. A line ending in a continuation mark or a pipe carries on, indented, on the next. A long line wraps under its first character; `data-kp-command-wrap="scroll"` keeps it whole and the code scrolls.',
+        whenToUse:
+            'Whenever a page asks a person to run something: a fix in a runbook, the next step of a release, a command a dialog shows for a workstation. Not for a code listing to read (use a plain `pre`) and not for a value to copy (use the copyable value).',
+        examples: [
+            {
+                title: 'A WSL command that needs sudo',
+                why: 'The markup is the code and three attributes; the head, the prompt and the copy button are the script’s, and the copy is the command as written.',
+                markup: `
+<div class="kp-command" data-kp-command="wsl" data-kp-command-elevated data-kp-command-where="CT 109 (kyu)"><pre class="kp-command__code"><code>sudo systemctl restart kyu</code></pre></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-command', what: 'The terminal: `wsl`, `powershell`, `cmd`, `garuda` or `bash`; it decides the name, the prompt and the continuation marks.' },
+            { name: 'data-kp-command-label', what: 'The terminal’s name when it is not one the dictionary knows.' },
+            { name: 'data-kp-command-elevated', what: 'The command needs a terminal opened as administrator (Windows) or runs with sudo (Linux): the amber badge.' },
+            { name: 'data-kp-command-where', what: 'Where it runs; shown under the code as “Runs on …”.' },
+            { name: 'data-kp-command-wrap', what: '`scroll`: long lines stay whole and the code scrolls sideways, its edge fading on the side with more.' },
+            { name: 'data-kp-command-shell', what: 'Set by the script: the terminal the prompt is drawn for, or `other`.' },
+            { name: 'data-kp-command-ready', what: 'Set by the script once the block is drawn; before it the head’s room is kept.' },
+            { name: 'data-kp-command-before', what: 'Set by the script on scrolling code with more before the view.' },
+            { name: 'data-kp-command-after', what: 'Set by the script on scrolling code with more after the view.' },
+            { name: 'data-kp-continued', what: 'Set by the script on a line that carries on from the line before: indented, without a prompt.' },
+        ],
+        accessibility: [
+            'Built in — the block is a group named by its terminal; the copy button is described by it, says “Copied” on itself and announces it; a refused copy says so in a toast and on the button.',
+            'Built in — the prompts are drawn, not written, so neither a screen reader nor a copy reads them; scrolling code is a focusable region a keyboard can scroll.',
+            'Yours — say what the command does in the sentence before it, and name where it runs when that is not the obvious machine.',
+        ],
+    },
+    {
+        id: 'timer-disc',
+        title: 'Visual timer',
+        group: 'Feedback',
+        classes: ['kp-timer-disc'],
+        exports: [],
+        intro: 'The time left as a shrinking disc, the Time Timer’s idea: no figures tick, a coloured disc grows smaller as the time goes, so the time left is seen at a glance. `attachTimerDiscs(root)` in js/timer-disc.js draws the face with twelve marks on its rim, the disc (drawn by one number, written only when its edge has moved a tenth of a degree), the name and length under it, one line for Paused or Time is up, and Start and Reset as the package’s buttons. Reset fills the disc in the theme’s own time and curve; at the end the face breathes three times. Under reduced motion the disc steps once a minute and nothing glides or breathes.',
+        whenToUse:
+            'For a span of time a person should feel rather than read: focus, a break, homework, a child’s turn. When the exact seconds matter, use the countdown in digits.',
+        examples: [
+            {
+                title: 'Twenty-five minutes of focus',
+                why: '`data-kp-timer-disc` takes a length (`25m`, `1h30m`, `90`, `25:00`); `data-kp-timer-disc-scale="60"` makes the face a 60-minute dial.',
+                markup: `
+<div class="kp-timer-disc" data-kp-timer-disc="25m" data-kp-timer-disc-name="Focus"></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-timer-disc', what: 'The length: `25m`, `1h30m`, `45s`, `90` (seconds) or `25:00`.' },
+            { name: 'data-kp-timer-disc-name', what: 'The timer’s name, under the face with its length.' },
+            { name: 'data-kp-timer-disc-scale', what: 'Minutes for a whole turn of the face (`60`: the classic dial); without it the whole disc is the set length.' },
+            { name: 'data-kp-timer-disc-disabled', what: 'Every button is off.' },
+            { name: 'data-kp-timer-disc-state', what: 'Set by the script: `idle`, `running`, `paused` or `ended`.' },
+        ],
+        accessibility: [
+            'Built in — the face is an image named by the time left in whole minutes, so a screen reader is not told every second; a status region says when it starts, pauses and ends.',
+            'Built in — Start keeps one width for Start, Pause and Resume; Reset is off while there is nothing to reset; the end is a word and a ring as well as a breath, and nothing moves under reduced motion.',
+            'Yours — name the timer, and say elsewhere what happens at the end if anything does.',
+        ],
+    },
+    {
+        id: 'countdown',
+        title: 'Countdown',
+        group: 'Feedback',
+        classes: ['kp-countdown'],
+        exports: [],
+        intro: 'A named timer in digits, mm:ss or h:mm:ss, with Start, a minute more and Reset, and a gentle signal at the end. `attachCountdowns(root)` in js/countdown.js draws it; every digit stands in a cell one `ch` wide and only the digits that change are written, so the time never moves the layout in any theme’s face. The format follows the timer’s length and changes only on a press (a minute more past the hour). The time shown is rounded up: 0:00 is the end. The clock is the end moment minus now, so a hidden tab never loses time; `countdownClock()` is that clock on its own.',
+        whenToUse:
+            'When the exact time left matters: a tea, an oven, a call that has to end, a step that must wait so many minutes. For a span to feel rather than read, use the visual timer.',
+        examples: [
+            {
+                title: 'Tea, three minutes',
+                why: '`data-kp-countdown` takes a length; `data-kp-countdown-step` sets what “a minute more” adds.',
+                markup: `
+<div class="kp-countdown" data-kp-countdown="3:00" data-kp-countdown-name="Tea"></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-countdown', what: 'The length: `3:00`, `1:30:00`, `25m`, `90` (seconds).' },
+            { name: 'data-kp-countdown-name', what: 'The timer’s name, over the digits.' },
+            { name: 'data-kp-countdown-step', what: 'What the add button adds; 60 seconds by default.' },
+            { name: 'data-kp-countdown-disabled', what: 'Every button is off.' },
+            { name: 'data-kp-countdown-state', what: 'Set by the script: `idle`, `running`, `paused` or `ended`.' },
+        ],
+        accessibility: [
+            'Built in — the digits are a timer (`role="timer"`, not announced every second) with the time left in words for a screen reader; a status region says when it starts, pauses, goes on and ends, with the timer’s name.',
+            'Built in — Start keeps one width for Start, Pause and Resume; the end is a word and a ring as well as a breath, still under reduced motion.',
+            'Yours — name the timer, and keep one countdown per task: several running at once need their names to be told apart.',
+        ],
+    },
+    {
+        id: 'range',
+        title: 'Range picker',
+        group: 'Forms',
+        classes: ['kp-range'],
+        exports: [],
+        intro: 'The time window of a metrics page: the presets as the package’s segmented control and a Custom… button that opens a panel with two of the package’s date pickers (dd/mm/yyyy) and two times (HH:MM), checked before Apply. Under the control one line says exactly which window is chosen, “Last 24 hours · 15/10/2026 14:05 – 16/10/2026 14:05”, in Europe/Brussels unless `data-kp-time-zone` says otherwise. Choosing fires `kp-range-change` with the preset’s key (or null), ISO start and end, and the line. The panel says what is wrong (a date or time that is not whole, the end before the start, an end in the future, a window longer than `data-kp-range-max-days`) under the fields and marks them; Cancel, Escape or a press outside keeps the window as it was.',
+        whenToUse:
+            'Above a chart, a log or a table that shows a stretch of time. For one date use the date picker; for a range inside a table’s filter use the table’s own date filter.',
+        examples: [
+            {
+                title: 'Metrics, the last 24 hours',
+                why: 'The markup is the empty box with its presets; the script builds the control, the line and the panel.',
+                markup: `
+<div class="kp-range" data-kp-range="24h" data-kp-range-presets="1h 6h 24h 7d 30d" aria-label="Metrics range"></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-range', what: 'The preset chosen at first (a key of the presets); empty for the third preset.' },
+            { name: 'data-kp-range-presets', what: 'The presets, space separated: a number and m, h, d or w (`1h 6h 24h 7d 30d`).' },
+            { name: 'data-kp-range-start', what: 'With `data-kp-range-end`: a custom window to start with, as ISO moments.' },
+            { name: 'data-kp-range-end', what: 'The end of that custom window.' },
+            { name: 'data-kp-range-max-days', what: 'The longest custom window, in days; none by default.' },
+            { name: 'data-kp-range-future', what: 'A custom window may end in the future.' },
+            { name: 'data-kp-range-disabled', what: 'The presets and Custom… are off; the line still names the window.' },
+            { name: 'data-kp-range-value', what: 'Set by the script: the preset in force, or `custom`.' },
+            { name: 'data-kp-time-zone', what: 'The zone the line and the custom times are read in; Europe/Brussels by default.' },
+        ],
+        accessibility: [
+            'Built in — the presets are a radio group with one tab stop and arrow keys; Custom… says it opens a dialog and is pressed while a custom window is in force; the line is the picker’s description and is read when it changes.',
+            'Built in — the panel takes the focus and gives it back; Escape closes a calendar first, then the panel; a wrong field is marked invalid and points at the sentence that says why.',
+            'Yours — name the picker (`aria-label`) after what it narrows, and redraw the chart from the event’s ISO moments.',
+        ],
+    },
+    {
+        id: 'compare',
+        title: 'Compare slider',
+        group: 'Content',
+        classes: ['kp-compare'],
+        aliases: ['pane', 'position', 'ratio', 'state'],
+        exports: [],
+        intro: 'Two versions stacked with a draggable divider: the before pane shows on the start side, the after pane on the end side. `attachCompares(root)` in js/compare.js adds the divider (a slider: arrow keys by 1, with Shift by 10, Page Up and Down, Home and End), a label on each side that steps aside while the divider covers it, and the waiting state. On images a press anywhere moves the divider and a drag follows; on live HTML panes only the handle drags, so both panes stay usable. Give images their width and height, or the box `data-kp-compare-ratio`, so nothing moves while they load; the theme’s skeleton covers the box meanwhile, and a failed image says so in its pane.',
+        whenToUse:
+            'To show what a change did: a redesign before and after, two renders of a chart, a photo before and after an edit. For two things that differ in more than looks, put them side by side instead.',
+        examples: [
+            {
+                title: 'A chart before and after',
+                why: 'Each pane is marked with its side; the script adds the divider, the labels and the waiting state.',
+                markup: `
+<div class="kp-compare" data-kp-compare aria-label="Pressure chart, before and after"><div data-kp-compare-pane="before"><img src="before.png" width="1200" height="675" alt="The chart before" /></div><div data-kp-compare-pane="after"><img src="after.png" width="1200" height="675" alt="The chart after" /></div></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-compare', what: 'Marks the slider; `attachCompares` wires it.' },
+            { name: 'data-kp-compare-pane', what: '`before` or `after` on each of the two panes.' },
+            { name: 'data-kp-compare-position', what: 'Where the divider starts, 0 (all after) to 100 (all before); 50 by default.' },
+            { name: 'data-kp-compare-before', what: 'The before side’s label; “Before” by default.' },
+            { name: 'data-kp-compare-after', what: 'The after side’s label; “After” by default.' },
+            { name: 'data-kp-compare-ratio', what: 'The box’s aspect ratio (`16/9`) when the panes do not give their size.' },
+            { name: 'data-kp-compare-drag', what: '`anywhere` (images: a press moves the divider) or `handle` (live panes); set by the script when not given.' },
+            { name: 'data-kp-compare-state', what: 'Set by the script: `loading` while an image is on its way, else `ready`.' },
+            { name: 'data-kp-compare-dragging', what: 'Set by the script during a drag: the divider follows at once.' },
+            { name: 'data-kp-compare-glide', what: 'Set by the script when the divider moves to a press: it glides in the theme’s own time.' },
+            { name: 'data-kp-compare-before-hidden', what: 'Set by the script while the divider covers the before label.' },
+            { name: 'data-kp-compare-after-hidden', what: 'Set by the script while the divider covers the after label.' },
+        ],
+        accessibility: [
+            'Built in — the divider is a slider with a name, its value and a value text (“40% Before, 60% After”); one tab stop; the arrow keys, Page Up and Down, Home and End move it.',
+            'Built in — a finger moving up and down scrolls the page; sideways on the handle it moves the divider. The labels are drawn, the slider says the sides.',
+            'Yours — give each image an `alt` that says what it shows, and the slider a name (`aria-label`).',
         ],
     },
     {

@@ -23,6 +23,11 @@ export {
     placeNavMenu,
     setStateWord,
     skipTo,
+    TYPE_CONFIRM,
+    TYPE_CONFIRM_EVENT,
+    attachTypeConfirms,
+    buildTypeConfirm,
+    typeConfirmMatches,
 } from './js/components.js';
 export {
     Accordion,
@@ -137,6 +142,33 @@ export {
 export { BUSY_CARD, openBusyCard } from './js/busy-card.js';
 /** @typedef {import('./js/busy-card.js').BusyCard} BusyCard */
 /** @typedef {import('./js/busy-card.js').BusyCardOptions} BusyCardOptions */
+export {
+    UPTIME,
+    UPTIME_COUNT,
+    UPTIME_PICK_EVENT,
+    UPTIME_STATES,
+    attachUptimes,
+    setUptime,
+    uptimeFigures,
+    uptimeFit,
+    uptimePercent,
+} from './js/uptime.js';
+export { COMMAND, COMMAND_SHELLS, attachCommands, commandLines } from './js/command.js';
+export {
+    COUNTDOWN,
+    COUNTDOWN_END_EVENT,
+    COUNTDOWN_EVENT,
+    COUNTDOWN_STEP,
+    attachCountdowns,
+    countdownClock,
+    countdownOf,
+    formatCountdown,
+    parseDuration,
+    timerButton,
+} from './js/countdown.js';
+export { TIMER_DISC, TIMER_DISC_LEFT, attachTimerDiscs, discShare, timerDiscOf } from './js/timer-disc.js';
+export { RANGE, RANGE_EVENT, RANGE_PRESETS, attachRanges, parseTime, presetMs, rangeFaults, rangeMoment, rangeOf, setRange } from './js/range.js';
+export { COMPARE, COMPARE_EVENT, attachCompares, compareKey, setCompare } from './js/compare.js';
 // The dashboard components [scope-143].
 export {
     ACTION_LIST,
@@ -293,9 +325,7 @@ export {
     addTimerTime,
     askTimerNotifications,
     attachTimers,
-    formatClock,
     getTimers,
-    parseDuration,
     pauseTimer,
     restoreTimers,
     resumeTimer,

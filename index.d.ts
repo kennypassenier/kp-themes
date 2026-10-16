@@ -8,7 +8,7 @@ export { default as Table } from './components/table.jsx';
 export { default as NavBar } from './components/nav-bar.jsx';
 export { default as Marquee } from './components/marquee.jsx';
 export { default as Sidenav, SidenavSlimToggle, SidenavToggle } from './components/sidenav.jsx';
-export { CONFIRM_MODES, CONFIRM_OWNED, CONFIRM_WINDOW_MS, EXEMPT as CONTRACT_EXEMPT, VIOLATION_EVENT as CONTRACT_VIOLATION_EVENT, attachConfirmations, attachNavMenus, attachSkipLinks, enforceContracts, findViolations, openConfirmation, placeNavMenu, setStateWord, skipTo, } from './js/components.js';
+export { CONFIRM_MODES, CONFIRM_OWNED, CONFIRM_WINDOW_MS, EXEMPT as CONTRACT_EXEMPT, VIOLATION_EVENT as CONTRACT_VIOLATION_EVENT, attachConfirmations, attachNavMenus, attachSkipLinks, enforceContracts, findViolations, openConfirmation, placeNavMenu, setStateWord, skipTo, TYPE_CONFIRM, TYPE_CONFIRM_EVENT, attachTypeConfirms, buildTypeConfirm, typeConfirmMatches, } from './js/components.js';
 export { Accordion, Breadcrumb, Dialog, DropdownMenu, Pagination, Progress, Skeleton, Spinner, Tabs, Toasts, Tooltip, } from './components/overlays.jsx';
 export { TOAST_LINGER_MS, TOAST_MS, TOAST_PAUSE_EVENT, attachDialogs, attachDismissals, attachTabs, attachTooltips, toast } from './js/overlays.js';
 export { Alarm, useAlarm } from './components/alarm.jsx';
@@ -42,6 +42,12 @@ export type BusyCard = import('./js/busy-card.js').BusyCard;
 export type BusyCardOptions = import('./js/busy-card.js').BusyCardOptions;
 /** @typedef {import('./js/busy-card.js').BusyCard} BusyCard */
 /** @typedef {import('./js/busy-card.js').BusyCardOptions} BusyCardOptions */
+export { UPTIME, UPTIME_COUNT, UPTIME_PICK_EVENT, UPTIME_STATES, attachUptimes, setUptime, uptimeFigures, uptimeFit, uptimePercent, } from './js/uptime.js';
+export { COMMAND, COMMAND_SHELLS, attachCommands, commandLines } from './js/command.js';
+export { COUNTDOWN, COUNTDOWN_END_EVENT, COUNTDOWN_EVENT, COUNTDOWN_STEP, attachCountdowns, countdownClock, countdownOf, formatCountdown, parseDuration, timerButton, } from './js/countdown.js';
+export { TIMER_DISC, TIMER_DISC_LEFT, attachTimerDiscs, discShare, timerDiscOf } from './js/timer-disc.js';
+export { RANGE, RANGE_EVENT, RANGE_PRESETS, attachRanges, parseTime, presetMs, rangeFaults, rangeMoment, rangeOf, setRange } from './js/range.js';
+export { COMPARE, COMPARE_EVENT, attachCompares, compareKey, setCompare } from './js/compare.js';
 export { ACTION_LIST, ROW_ACTIONS, ROW_KEYS, ROW_OPEN_EVENT, attachActionColumns, attachRowKeys, fitActionColumns, mergeRoles, removeRow, rowRoles, setRowBusy, } from './js/actions.js';
 export { KPI_STRIP, KPI_TOGGLE, KPI_TOGGLE_EVENT, METER, SPARK, attachKpiStrips, attachKpiToggles, attachSparklines, drawSparkline, fitKpiStrip, kpiColumns, meterParts, meterText, setMeter, sparkPaths, } from './js/kpi.js';
 export type Meter = import('./js/kpi.js').Meter;
@@ -102,7 +108,7 @@ export type FocusStep = import('./js/focus-steps.js').FocusStep;
 export type FocusIngredient = import('./js/focus-steps.js').FocusIngredient;
 /** @typedef {import('./js/focus-steps.js').FocusStep} FocusStep */
 /** @typedef {import('./js/focus-steps.js').FocusIngredient} FocusIngredient */
-export { TIMERS, TIMER_CHANGE_EVENT, TIMER_DONE_EVENT, TIMER_START, TIMER_START_EVENT, TIMER_STOP_EVENT, TIMER_TICK_MS, addTimerTime, askTimerNotifications, attachTimers, formatClock, getTimers, parseDuration, pauseTimer, restoreTimers, resumeTimer, startTimer, stopTimer, stopTimerRing, } from './js/timer.js';
+export { TIMERS, TIMER_CHANGE_EVENT, TIMER_DONE_EVENT, TIMER_START, TIMER_START_EVENT, TIMER_STOP_EVENT, TIMER_TICK_MS, addTimerTime, askTimerNotifications, attachTimers, getTimers, pauseTimer, restoreTimers, resumeTimer, startTimer, stopTimer, stopTimerRing, } from './js/timer.js';
 export type TimerState = import('./js/timer.js').TimerState;
 /** @typedef {import('./js/timer.js').TimerState} TimerState */
 export { CHECKLIST, CHECKLIST_CLEAR_EVENT, CHECKLIST_EVENT, CHECKLIST_UNDO_EVENT, CHECKLIST_UNDO_MS, attachChecklists, getChecklistItems, setChecklistChecked, setChecklistItems, setChecklistState, } from './js/checklist.js';

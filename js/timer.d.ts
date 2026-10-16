@@ -1,3 +1,4 @@
+import { parseDuration } from './countdown.js';
 /** The lists this module looks after. */
 export declare const TIMERS = "[data-kp-timers]";
 /** A button anywhere in the page that starts a timer. */
@@ -48,19 +49,7 @@ export type Timer = {
     ring: ReturnType<typeof setInterval> | null;
     card: HTMLElement;
 };
-/**
- * A duration in seconds from "10m", "1h30m", "90s", "1h 5m 30s", "10:00",
- * "1:30:00" or a bare number of seconds. NaN when it is none of those.
- * @param {string | number} text
- * @returns {number}
- */
-export declare function parseDuration(text: string | number): number;
-/**
- * The time left as a clock: "9:05", "1:02:03". Rounded up to the whole
- * second, so it shows 0:00 only when it is done.
- * @param {number} ms
- */
-export declare function formatClock(ms: number): string;
+export { parseDuration };
 /** @param {Element} list @returns {TimerState[]} */
 export declare function getTimers(list: Element): TimerState[];
 /**

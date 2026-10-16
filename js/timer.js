@@ -47,6 +47,7 @@
 
 import { getStrings } from './strings.js';
 import { buildProgressbar } from './progressbar.js';
+import { formatCountdown, parseDuration } from './countdown.js';
 
 /** The lists this module looks after. */
 export const TIMERS = '[data-kp-timers]';
@@ -94,42 +95,12 @@ const HANDLED = new WeakSet();
 let audio = null;
 let serial = 0;
 
-/**
- * A duration in seconds from "10m", "1h30m", "90s", "1h 5m 30s", "10:00",
- * "1:30:00" or a bare number of seconds. NaN when it is none of those.
- * @param {string | number} text
- * @returns {number}
- */
-export function parseDuration(text) {
-    if (typeof text === 'number') return text;
-    const t = text.trim().toLowerCase();
-    if (/^\d+(\.\d+)?$/.test(t)) return Number(t);
-    if (/^\d+(:\d{1,2}){1,2}$/.test(t)) return t.split(':').reduce((sum, part) => sum * 60 + Number(part), 0);
-    const parts = [...t.matchAll(/(\d+(?:\.\d+)?)\s*(h|m|s)/g)];
-    if (
-        !parts.length ||
-        parts
-            .map((m) => m[0])
-            .join('')
-            .replace(/\s/g, '') !== t.replace(/\s/g, '')
-    )
-        return NaN;
-    return parts.reduce((sum, [, n, unit]) => sum + Number(n) * (unit === 'h' ? 3600 : unit === 'm' ? 60 : 1), 0);
-}
+// One duration reader and one clock face for the package: the countdown's [kpadopt4]. The kitchen timer re-exports
+// the reader for its own subpath; a timer that holds an hour or more shows its hours from the start, so its digits never jump.
+export { parseDuration };
 
-/**
- * The time left as a clock: "9:05", "1:02:03". Rounded up to the whole
- * second, so it shows 0:00 only when it is done.
- * @param {number} ms
- */
-export function formatClock(ms) {
-    const total = Math.max(0, Math.ceil(ms / 1000));
-    const h = Math.floor(total / 3600);
-    const m = Math.floor((total % 3600) / 60);
-    const s = total % 60;
-    const two = (/** @type {number} */ n) => String(n).padStart(2, '0');
-    return h > 0 ? `${h}:${two(m)}:${two(s)}` : `${m}:${two(s)}`;
-}
+/** @param {Timer} timer @param {number} ms */
+const clockOf = (timer, ms) => formatCountdown(ms, timer.total >= 3_600_000);
 
 /** @param {Timer} timer */
 const leftOf = (timer) => (timer.state === 'running' && timer.endsAt !== null ? Math.max(0, timer.endsAt - Date.now()) : timer.left);
@@ -244,7 +215,7 @@ function paint(timer) {
     const word = /** @type {HTMLElement} */ (card.querySelector('.kp-timer__state'));
     word.textContent = timer.state === 'running' ? strings.timerRunning : timer.state === 'paused' ? strings.timerPaused : strings.timerDoneWord;
     const time = /** @type {HTMLElement} */ (card.querySelector('.kp-timer__time'));
-    const shown = timer.state === 'done' ? strings.timerDone(timer.name) : formatClock(left);
+    const shown = timer.state === 'done' ? strings.timerDone(timer.name) : clockOf(timer, left);
     if (time.textContent !== shown) time.textContent = shown;
     time.title = timer.state === 'done' ? shown : '';
     const bar = /** @type {HTMLElement} */ (card.querySelector('.kp-timer__bar'));
@@ -255,7 +226,7 @@ function paint(timer) {
     toggle.classList.toggle('kp-button--primary', timer.state === 'done');
     toggle.setAttribute('data-kp-words', [strings.timerPause, strings.timerResume, strings.timerStopRing].join('\n'));
     const more = /** @type {HTMLButtonElement} */ (card.querySelector('.kp-timer__more'));
-    more.textContent = strings.timerAddMinute;
+    more.textContent = strings.timerAddMinute(60);
     more.setAttribute('aria-label', strings.timerAddMinuteTo(timer.name));
     const remove = /** @type {HTMLButtonElement} */ (card.querySelector('.kp-timer__remove'));
     remove.setAttribute('aria-label', strings.timerRemove(timer.name));
@@ -432,7 +403,7 @@ export function startTimer(list, { name, seconds, id }) {
     part(list, 'list').append(card);
     void import('./motion.js').then((m) => card.isConnected && m.arriveShown(card));
     sync(list);
-    say(list, getStrings().timerStarted(name, formatClock(timer.total)));
+    say(list, getStrings().timerStartedNamed(name, clockOf(timer, timer.total)));
     emit(list, timer, TIMER_START_EVENT);
     return key;
 }

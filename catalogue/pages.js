@@ -131,6 +131,12 @@ export const PAGES = [
                 label: 'Six calm components: wheel, cook mode, timers, quantity, checklist, three-way filter',
                 about: 'The recipe app for someone with AuDHD asked for six things the package lacked: a weighted wheel that picks for you, one step at a time with the screen kept on, named kitchen timers, a quantity with minus and plus, a checklist whose ticked items sink, and filter chips with with, without and either way. Formal only, every state.',
             },
+            // Kenny, 2026-10-16 19:32: seven new components, all "Onmisbaar" (uptime strip, typed confirmation, command block, a visual and a numeric timer, range picker, compare slider), formal only.
+            {
+                href: 'research/kpadopt4-ideas/demo.html',
+                label: 'Seven new components: uptime strip, typed confirmation, command block, two timers, range picker, compare slider',
+                about: 'Built from the package’s own parts and shown in formal only, every state: .kp-uptime (one cell per day or hour, exact figures), the typed confirmation (data-kp-confirm-type), .kp-command (shell label, admin badge, copy), .kp-timer-disc (a shrinking disc), .kp-countdown (digits that never shift), .kp-range (presets and a custom from–to), .kp-compare (a before/after divider).',
+            },
         ],
     },
     {

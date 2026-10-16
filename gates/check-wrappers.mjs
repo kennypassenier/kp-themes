@@ -134,6 +134,12 @@ export const REQUIRED = [
         why: 'The block measures its own width and puts its tools under its title when narrow; the query reaches only its head [kpadopt4-data].',
     },
     {
+        container: 'kp-range',
+        class: 'kp-range',
+        self: true,
+        why: 'The range picker measures its own width and puts Custom… under its presets when narrow; the query reaches only its own parts [kpadopt4-ideas].',
+    },
+    {
         container: 'kp-matrix',
         class: 'kp-matrix',
         self: true,

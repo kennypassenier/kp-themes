@@ -30,7 +30,7 @@ import process from 'node:process';
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 
 /** Data components whose loading state lays the busy card. */
-export const CARD = ['js/datatable.js', 'js/week.js', 'js/heat.js', 'js/gantt.js', 'js/bullets.js', 'js/code.js', 'js/card-state.js', 'js/pipeline.js', 'js/checklist.js', 'js/focus-steps.js', 'js/wheel.js'];
+export const CARD = ['js/datatable.js', 'js/week.js', 'js/heat.js', 'js/gantt.js', 'js/bullets.js', 'js/code.js', 'js/card-state.js', 'js/pipeline.js', 'js/checklist.js', 'js/focus-steps.js', 'js/wheel.js', 'js/uptime.js'];
 
 /** Approved before the rule, each with its own central loading picture. @type {Record<string, string>} */
 export const OWN = {
@@ -60,6 +60,7 @@ export const NOT_DATA = {
     'js/motion.js': 'the motion a loading state arrives and leaves with',
     'js/loading-pieces.js': 'the pieces a theme dresses a waiting part with (the card included)',
     'js/busy-card.js': 'the busy card itself',
+    'js/compare.js': "a pair of images, not a data area: while they load the box shows the theme's skeleton block over its whole size",
 };
 
 /** What makes a module one that takes a loading state. */

@@ -1932,6 +1932,233 @@ a row. Exports: `setRowBusy`, `removeRow`, `attachRowKeys`, `ROW_KEYS`,
 `--kp-action-list-bar`, `--kp-action-list-pad`,
 `--kp-action-list-next-wash`, `--kp-action-list-payload-max`.
 
+## Seven everyday components [kpadopt4-ideas]
+
+Seven things Kenny's apps kept drawing by hand, approved as components on 2026-10-16 and demoed in formal
+(`research/kpadopt4-ideas/`). The registers do not answer them yet (they are on `gates/register-pending.json`), so every
+theme draws them from its tokens and its own buttons, segmented control, date picker, hover card and busy card.
+`js/auto.js` fetches each module only on a page that carries its markup; each attach function returns a detach.
+
+### An uptime strip
+
+One thin strip of cells, one per period (90 days, 48 hours), each toned up, degraded, down or no data, with the window's
+summary over it in exact figures and the first and the latest period's names under it:
+
+```html
+<div class="kp-uptime" data-kp-uptime data-kp-uptime-label="jellyfin" data-kp-uptime-count="90"></div>
+```
+
+```js
+import { setUptime } from '@kp-soft/themes/js/uptime';
+
+setUptime(strip, {
+    label: 'jellyfin',
+    from: '90 days ago',
+    to: 'Today',
+    periods: [
+        { key: '2026-10-15', label: '15/10/2026', state: 'degraded', uptime: 0.981, incidents: 1, tip: 'Slow answers for 27 min' },
+        { key: '2026-10-16', label: '16/10/2026', state: 'up' },
+    ],
+});
+```
+
+Until the page calls `setUptime()` the strip shows its loading state from its attributes (`data-kp-uptime-count`
+skeleton cells under the data table's busy card), so it is loading from the first frame. `state` is `ready` (the
+default), `loading`, `empty` (every cell without data, "No data yet") or `error` (the page's short `error` sentence on
+the destructive plate where the summary stands); the strip keeps its height and place in every one.
+
+The figures are exact: the share is cut to one decimal, never rounded up, so only a window without any time down reads
+100%, and the incident count is the number. A period counts with its `uptime` (0 to 1) when given, else 1 for up and
+degraded and 0 for down; a period without data does not count. Its incidents are `incidents`, else 1 for a degraded or
+down period. `uptimeFigures(periods)`, `uptimePercent(share)` and `uptimeFit(count, width, min, gap)` are the arithmetic.
+
+A strip never wraps. Narrower than its cells at `--kp-uptime-cell-min` (4px) each, it shows the latest periods that fit
+and says "N of M shown" under them; with `data-kp-uptime-fit="scroll"` it keeps every period, scrolls sideways,
+starts at the latest and fades the edge it has more behind. Every cell is a button with the hover card for its detail
+(`tip`, else its label, state and figures): the strip is one tab stop, the arrows walk the cells, Home and End jump,
+and a press fires `kp-uptime-pick` (`{ key, index, period }`). The dictionary words are `uptime…`
+(`uptimeLoading`, `uptimeEmpty`, `uptimeError`, `uptimePercent`, `uptimeIncidents`, `uptimeSummary`, `uptimeTrack`,
+`uptimeStateWord`, `uptimeCell`, `uptimeShown`). Knobs: `--kp-uptime-height` (1.75rem), `--kp-uptime-cell-min`,
+`--kp-uptime-gap` (2px), `--kp-uptime-cell-radius`, `--kp-uptime-up`, `--kp-uptime-degraded`, `--kp-uptime-down`,
+`--kp-uptime-lift`. Exports: `attachUptimes`, `setUptime`, `uptimeFigures`, `uptimePercent`, `uptimeFit`, `UPTIME`,
+`UPTIME_PICK_EVENT`, `UPTIME_STATES`, `UPTIME_COUNT`.
+
+### A typed confirmation
+
+For the few actions that delete what cannot come back, the confirmation dialog of the destructive button can ask for
+the name first. Add `data-kp-confirm-type` to a button that already has `data-kp-confirm`:
+
+```html
+<button
+    type="button"
+    class="kp-button kp-button--destructive"
+    data-kp-destructive
+    data-kp-confirm="Wipe the stack media?"
+    data-kp-confirm-type="media"
+    data-kp-confirm-loses="lost-media"
+>
+    Wipe media…
+</button>
+<template id="lost-media">
+    <ul class="kp-type-confirm__list">
+        <li>3 containers: jellyfin, jellyseerr, tdarr</li>
+        <li>/srv/media/config (2.4 GB)</li>
+    </ul>
+</template>
+```
+
+The dialog then shows what will be lost (the template's content, under "This deletes, for good:"), the label "Type
+media to confirm" with the name in a code chip, the field (it has the focus), the rule and one line that says whether
+it matches. Confirm stays disabled until it does and carries the button's own words without the trailing "…"
+(`data-kp-confirm-label` sets others); Enter in the field confirms a match; your handler runs once, as with every
+confirmation. Spaces at the start and the end never count, capitals do unless `data-kp-confirm-case="any"`; the rule
+under the field says which. From a script, `openConfirmation(button, { typeName, anyCase, loses, acceptLabel })`.
+Without the attribute the confirmation is exactly what it was.
+
+Inside a dialog or form of your own (a wizard's review step), put the block where it belongs and name the button it
+holds off:
+
+```html
+<div data-kp-type-confirm="media" data-kp-type-confirm-for="wipe" data-kp-type-confirm-loses="lost-media"></div>
+<button type="button" class="kp-button kp-button--destructive" id="wipe">Wipe media</button>
+```
+
+`attachTypeConfirms(root)` (in `js/components.js`, attached by `js/auto.js`) fills it and keeps the button disabled
+until the name matches; a button you disabled yourself stays disabled. The block fires `kp-type-confirm`
+(`{ matched, value, name }`) when the answer turns and carries `data-kp-matched`. `typeConfirmMatches(typed, name, {
+anyCase })` is the rule and `buildTypeConfirm(document, { name, anyCase, loses, onChange })` builds the block for a
+page that draws its own. The words are `typeConfirmLabel`, `typeConfirmRuleExact`, `typeConfirmRuleAnyCase`,
+`typeConfirmMatched`, `typeConfirmMismatch` and `typeConfirmLoses`. Knobs: `--kp-type-confirm-gap`,
+`--kp-type-confirm-list-max` (12rem; a longer list scrolls), `--kp-confirm-typed-max-width` (30rem).
+
+### A command to run
+
+One command with the terminal it runs in, an admin or sudo badge, a copy button that confirms and where it runs:
+
+```html
+<div class="kp-command" data-kp-command="powershell" data-kp-command-elevated data-kp-command-where="the Windows PC">
+    <pre class="kp-command__code"><code>Get-Service -Name "Claude*" |
+    Restart-Service -Force</code></pre>
+</div>
+```
+
+`attachCommands(root)` (`js/command.js`, attached by `js/auto.js`) writes the head: the terminal's name
+(`data-kp-command` is `wsl`, `powershell`, `cmd`, `garuda` or `bash`; `data-kp-command-label` names another), the
+warning badge `admin` (Windows) or `sudo` (Linux) for `data-kp-command-elevated`, and the package's copy button
+(`[data-kp-copy]`, js/patterns.js: "Copied" on the button and announced, `kp-copy`; a refused clipboard marks the
+button and says so in a toast, `kp-copy-failed`). The button keeps one width for both words. `data-kp-command-where`
+becomes "Runs on …" under the code.
+
+Every line stands behind its terminal's prompt (`$`, `PS>`, `>`), drawn by the stylesheet (`--kp-command-prompt`), so
+it is never selected or copied: the copy is the command as written, newlines and all. A line that ends in the
+terminal's continuation mark (`\` in a Linux shell, a backtick in PowerShell, `^` in cmd) or in a pipe (and `&&` or
+`||` in a Linux shell) carries on, indented, on the next. A long line wraps under its first character after the
+prompt; with `data-kp-command-wrap="scroll"` it stays whole and the code scrolls sideways, a focusable region whose
+edge fades on the side with more. Before the script runs the block keeps its head's room, so the code does not move.
+`commandLines(text, continues)` is the line rule and `COMMAND_SHELLS` the table of terminals. The words are
+`commandShell`, `commandAdmin`, `commandAdminTitle`, `commandSudo`, `commandSudoTitle` and `commandRunsOn`, beside the
+copy button's own `copy` and `copied`. Knobs: `--kp-command-prompt`, `--kp-command-prompt-width`,
+`--kp-command-prompt-ink`, `--kp-command-head-height` (2.75rem), `--kp-command-code-max`.
+
+### Two timers: a disc and digits
+
+Two separate components, on one clock (`countdownClock()` in `js/countdown.js`: the time left is the end moment minus
+`now()`, so neither drifts or loses time in a hidden tab, and a test hands in its own `now`).
+
+**The visual timer** shows the time left as a shrinking disc, with no figures ticking:
+
+```html
+<div class="kp-timer-disc" data-kp-timer-disc="25m" data-kp-timer-disc-name="Focus"></div>
+```
+
+`attachTimerDiscs(root)` (`js/timer-disc.js`) draws a round face with twelve marks on its rim and a disc in the
+theme's primary colour that turns back towards twelve o'clock; under it the name and length ("Focus · 25 min"), one
+line for Paused or Time is up, and Start (Pause, Resume, one width) and Reset as package buttons. The whole disc is the
+set length; `data-kp-timer-disc-scale="60"` makes the face a 60-minute dial instead. The disc is one number,
+`--kp-timer-disc-left` (1 full, 0 gone), written only when its edge has moved a tenth of a degree; Reset fills it again
+in the theme's `--fx-duration` and `--fx-ease`. Paused, the disc rests a shade lighter; at the end the face breathes
+three slow times and keeps a ring. Under reduced motion the disc steps once a minute (each second in the last minute)
+and nothing glides or breathes. The face is an image named by the time left in whole minutes. `timerDiscOf(el)` is
+the clock of an attached timer, `discShare(remaining, scale)` the arithmetic. Knobs: `--kp-timer-disc-size` (12rem,
+at most 70vw), `--kp-timer-disc-fill`, `--kp-timer-disc-inset`, `--kp-timer-disc-marks`, `--kp-timer-disc-ring`.
+
+**The countdown** counts down in digits:
+
+```html
+<div class="kp-countdown" data-kp-countdown="3:00" data-kp-countdown-name="Tea"></div>
+```
+
+`attachCountdowns(root)` draws the name, the digits, one line for Paused or Time is up, and Start, "+1 min"
+(`data-kp-countdown-step` sets the amount) and Reset. Every digit stands in a cell one `ch` wide and only the digits
+that change are written, so the time never moves the layout, whatever the theme's face. The format is mm:ss, or
+h:mm:ss once the timer holds an hour; it changes only on a press, never while it runs. The time shown is rounded up,
+so 0:00 is the end; a minute more on a timer whose time is up starts it again. `countdownOf(el)` is its clock
+(`start`, `pause`, `reset(seconds)`, `add(seconds)`, `remaining`, `state`); `parseDuration('1h30m')` and
+`formatCountdown(ms, hours)` are the rules. Knobs: `--kp-countdown-size` (3rem), `--kp-countdown-ink`,
+`--kp-countdown-ring`.
+
+Both fire `kp-countdown-change` (`{ state, remaining, total }`, on a start, a pause, a reset or more time) and
+`kp-countdown-end` (`{ total }`), and take `data-kp-…-disabled`. Their words are `timer…` (`timerStart`, `timerPause`,
+`timerResume`, `timerReset`, `timerAddMinute`, `timerAddMinuteTitle`, `timerPaused`, `timerEnded`, `timerEndedNamed`,
+`timerStarted`, `timerResumed`, `timerLeft`, `timerDuration`, `timerDiscLeft`, `timerUnderMinute`, `timerDiscCaption`).
+The recipes app's named kitchen timers are their own component; they may run on `countdownClock()` too.
+
+### A range of time
+
+The window of a metrics page, as presets or a custom from–to:
+
+```html
+<div class="kp-range" data-kp-range="24h" data-kp-range-presets="1h 6h 24h 7d 30d" aria-label="Metrics range"></div>
+```
+
+`attachRanges(root)` (`js/range.js`, attached by `js/auto.js`) builds the presets as the package's segmented control
+(a radio group, one tab stop, arrow keys) and a Custom… button, and under them one line that names the window exactly:
+"Last 24 hours · 15/10/2026 14:05 – 16/10/2026 14:05" (rule 52, in Europe/Brussels unless `data-kp-time-zone` names
+another zone). A preset is a length back from now: a number and `m`, `h`, `d` or `w`. Choosing one, or applying a
+custom window, fires `kp-range-change` with `{ preset, start, end, label }`: the preset's key or null, the moments as
+ISO strings, and the line.
+
+Custom… opens a panel under the control on the theme's popover plate, with From and To, each the package's date picker
+(dd/mm/yyyy, with its calendar) and a time (HH:MM, 24 hours; `1405` and `14.05` are read too), filled with the window in
+force. Apply checks that both are whole, that the end comes after the start, that it is not in the future (unless
+`data-kp-range-future`) and that it spans at most `data-kp-range-max-days`; what is wrong is said under the fields,
+which are marked, and the panel stays. Cancel, Escape (after an open calendar) or a press outside closes it and keeps
+the window. `data-kp-range-start` and `-end` start with a custom window, `data-kp-range-disabled` turns the picker off.
+Narrower than 26rem of its own, the presets take the whole line and Custom… stands under them beside the line.
+
+From a script: `setRange(el, { preset: '7d' })` or `setRange(el, { start, end })` sets the window without the event,
+and `rangeOf(el)` reads it. `presetMs`, `parseTime`, `rangeFaults` and `rangeMoment` are the rules. The words are
+`range…` (`rangePresets`, `rangePresetName`, `rangePresetShort`, `rangeCustom`, `rangeCustomTitle`,
+`rangeCustomName`, `rangeFrom`, `rangeTo`, `rangeDateLabel`, `rangeTimeLabel`, `rangeTimeHint`, `rangeApply`,
+`rangeCancel`, `rangeLabel`, `rangeErrorDate`, `rangeErrorTime`, `rangeErrorOrder`, `rangeErrorFuture`,
+`rangeErrorSpan`). Knobs: `--kp-range-gap`, `--kp-range-panel-width` (24rem), `--kp-range-time-width` (5.5rem).
+
+### Before and after, with a divider
+
+```html
+<div class="kp-compare" data-kp-compare aria-label="Pressure chart, before and after">
+    <div data-kp-compare-pane="before"><img src="before.png" width="1200" height="675" alt="The chart before" /></div>
+    <div data-kp-compare-pane="after"><img src="after.png" width="1200" height="675" alt="The chart after" /></div>
+</div>
+```
+
+`attachCompares(root)` (`js/compare.js`, attached by `js/auto.js`) lays the two panes on top of each other and shows
+the before pane on the start side of a divider and the after pane on the end side (each cut by `clip-path`, so a pane
+is only hit where it shows). The divider is a slider: drag its handle, or use the arrow keys (1%, with Shift 10%), Page
+Up and Down (10%), Home (all after) and End (all before). On images a press anywhere moves the divider there, gliding in
+the theme's own time, and a drag follows at once; on live HTML panes (a pane holding a link, a button or a field) only
+the handle drags, so the panes stay usable (`data-kp-compare-drag` sets either). The labels are "Before" and "After",
+or `data-kp-compare-before` and `-after`, and step aside while the divider covers them.
+
+Give images their width and height, or the box `data-kp-compare-ratio="16/9"`, so the box has its size from the
+first frame; while an image loads the theme's skeleton covers the box, and an image that fails says so in its pane.
+`data-kp-compare-position` is where the divider starts (50), `setCompare(el, position)` moves it from a script, and
+`kp-compare-change` (`{ position }`) says where a person moved it. `compareKey` is the key rule. The words are
+`compareBefore`, `compareAfter`, `compareSlider`, `compareValue` and `compareFailed`. Knobs: `--kp-compare-ratio`,
+`--kp-compare-line` (2px), `--kp-compare-handle` (2.25rem), `--kp-compare-ink` (--primary).
+
+<!-- kpadopt4-ideas: next component -->
+
 ## Tables that fit [TH95, TH96]
 
 A table is the widest thing on most pages, and everything below is about

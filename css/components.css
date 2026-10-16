@@ -5743,10 +5743,6 @@
         overflow-wrap: anywhere;
     }
 
-    .kp-confirm__type {
-        margin-block-end: var(--kp-space-sm, 0.5rem);
-    }
-
     .kp-menu__separator {
         margin: var(--kp-space-xs) 0;
         border: 0;
@@ -15552,6 +15548,953 @@
     .kp-wheel__result[data-kp-wheel-failed] .kp-wheel__outcome {
         background: var(--destructive);
         color: var(--destructive-foreground);
+    }
+
+    /* --- Uptime strip: one cell per period, in exact figures [kpadopt4-ideas] ---
+ * `.kp-uptime[data-kp-uptime]` (js/uptime.js). A title and the window's summary on one line, a thin strip of cells
+ * (one per day or hour, oldest first) that never wraps, and the first and the latest period's names under it. A cell
+ * is toned with the heat grid's own fills and patterns, so a state is never told by colour alone: degraded is ruled,
+ * down is striped, a period without data is an empty frame. The summary is the figures only (the share cut to one
+ * decimal, the incidents counted); an empty strip says so in muted ink and a failed one carries the page's sentence on
+ * the destructive plate, in the same slot. Loading draws the cells as the theme's skeleton with the data table's busy
+ * card over them. Every state keeps the same footprint, and an empty strip before its script ran keeps it too.
+ * Knobs [KT6]: --kp-uptime-height (1.75rem, the strip), --kp-uptime-cell-min (4px, a cell's least width; fewer cells
+ * show below it), --kp-uptime-gap (2px), --kp-uptime-cell-radius (1px), --kp-uptime-up, --kp-uptime-degraded,
+ * --kp-uptime-down (the fills), --kp-uptime-lift (the pointed cell's growth, 0.1875rem). */
+    .kp-uptime {
+        --kp-uptime-up: color-mix(in oklab, var(--success-foreground) 70%, var(--card));
+        --kp-uptime-degraded: color-mix(in oklab, var(--warning-foreground) 78%, var(--card));
+        --kp-uptime-down: var(--destructive);
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto var(--kp-uptime-height, 1.75rem) auto;
+        row-gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+    }
+
+    /* Before the script draws it, the strip already takes the room it will have. */
+    .kp-uptime:empty {
+        min-block-size: calc(var(--kp-uptime-height, 1.75rem) + 2lh + 2 * var(--kp-space-xs, 0.25rem));
+    }
+
+    /* One line whatever it holds: a theme's waiting line (formal rules a 1.5rem ledger line) stands inside it. */
+    .kp-uptime__head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--kp-space-md, 1rem);
+        block-size: max(1lh, 1.5rem);
+        min-inline-size: 0;
+    }
+
+    .kp-uptime__title {
+        flex: 0 1 auto;
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-weight: 600;
+    }
+
+    .kp-uptime__summary {
+        display: inline-flex;
+        flex: none;
+        align-items: baseline;
+        min-block-size: 1lh;
+        gap: 0.375em;
+        margin-inline-start: auto;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+
+    .kp-uptime__percent {
+        color: var(--foreground);
+        font-weight: 700;
+    }
+
+    /* The page's sentence on the destructive plate, on the summary's one line: a sentence longer than the room left
+     * beside the title ends in an ellipsis and is whole in its tooltip, so keep it short. */
+    .kp-uptime__summary[data-kp-tone='error'] {
+        display: block;
+        flex: 0 1 auto;
+        max-inline-size: 80%;
+        min-inline-size: 0;
+        overflow: hidden;
+        padding: 0 var(--kp-space-sm, 0.5rem);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        text-overflow: ellipsis;
+    }
+
+    .kp-uptime__summary[data-kp-tone='loading'] {
+        align-items: center;
+    }
+
+    .kp-uptime__summary-skeleton {
+        inline-size: 8.5rem;
+        block-size: 0.75em;
+    }
+
+    /* The strip: as many columns as cells are shown, each at least --kp-uptime-cell-min wide; with
+     * `data-kp-uptime-fit="scroll"` every cell keeps that width and the strip scrolls sideways instead. */
+    .kp-uptime__track {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(var(--kp-uptime-cell-min, 4px), 1fr);
+        column-gap: var(--kp-uptime-gap, 2px);
+        align-items: end;
+        block-size: var(--kp-uptime-height, 1.75rem);
+        min-inline-size: 0;
+        overflow: hidden;
+    }
+
+    .kp-uptime[data-kp-uptime-fit='scroll'] .kp-uptime__track {
+        grid-auto-columns: max(var(--kp-uptime-cell-min, 4px), 6px);
+        overflow-x: auto;
+        scrollbar-width: thin;
+        padding-block-start: var(--kp-uptime-lift, 0.1875rem);
+    }
+
+    /* A scrolling strip fades the edge it has more periods behind. */
+    .kp-uptime[data-kp-uptime-before] .kp-uptime__track {
+        mask-image: linear-gradient(to right, transparent, var(--foreground) 1.5rem);
+    }
+
+    .kp-uptime[data-kp-uptime-after] .kp-uptime__track {
+        mask-image: linear-gradient(to left, transparent, var(--foreground) 1.5rem);
+    }
+
+    .kp-uptime[data-kp-uptime-before][data-kp-uptime-after] .kp-uptime__track {
+        mask-image: linear-gradient(to right, transparent, var(--foreground) 1.5rem calc(100% - 1.5rem), transparent);
+    }
+
+    .kp-uptime__cell {
+        --kp-uptime-fill: var(--muted);
+        --kp-uptime-pattern: none;
+        appearance: none;
+        box-sizing: border-box;
+        display: block;
+        min-inline-size: 0;
+        block-size: calc(100% - var(--kp-uptime-lift, 0.1875rem));
+        margin: 0;
+        padding: 0;
+        border: 1px solid transparent;
+        border-radius: var(--kp-uptime-cell-radius, 1px);
+        background-color: var(--kp-uptime-fill);
+        background-image: var(--kp-uptime-pattern);
+        color: inherit;
+        font: inherit;
+        cursor: pointer;
+        transition: block-size var(--fx-duration, 160ms) var(--fx-ease, ease-out);
+    }
+
+    .kp-uptime__cell[hidden] {
+        display: none;
+    }
+
+    .kp-uptime__cell[data-kp-tone='up'] {
+        --kp-uptime-fill: var(--kp-uptime-up);
+    }
+
+    .kp-uptime__cell[data-kp-tone='degraded'] {
+        --kp-uptime-fill: var(--kp-uptime-degraded);
+        --kp-uptime-pattern: repeating-linear-gradient(0deg, color-mix(in oklab, var(--card) 55%, transparent) 0 1px, transparent 1px 4px);
+    }
+
+    .kp-uptime__cell[data-kp-tone='down'] {
+        --kp-uptime-fill: var(--kp-uptime-down);
+        --kp-uptime-pattern: repeating-linear-gradient(135deg, color-mix(in oklab, var(--card) 38%, transparent) 0 2px, transparent 2px 5px);
+    }
+
+    .kp-uptime__cell[data-kp-tone='none'] {
+        --kp-uptime-fill: transparent;
+        border-color: var(--border);
+    }
+
+    /* The pointed or focused cell grows into the room left above the strip; nothing beside it moves. */
+    .kp-uptime__cell:is(:hover, :focus-visible) {
+        block-size: 100%;
+    }
+
+    .kp-uptime__cell:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 1px;
+    }
+
+    .kp-uptime .kp-uptime__cell.kp-skeleton {
+        margin: 0;
+        block-size: calc(100% - var(--kp-uptime-lift, 0.1875rem));
+        border-radius: var(--kp-uptime-cell-radius, 1px);
+        cursor: default;
+    }
+
+    /* The axis: the first period shown at the start, the latest at the end, and how many are shown between them when
+     * not every one fits. One line; it keeps its height when it is empty. */
+    .kp-uptime__axis {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-block-size: 1lh;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+
+    .kp-uptime__shown {
+        min-inline-size: 0;
+        overflow: hidden;
+        text-align: center;
+        text-overflow: ellipsis;
+    }
+
+    .kp-uptime__to {
+        text-align: end;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .kp-uptime__cell {
+            transition: none;
+        }
+    }
+
+    /* --- Typed confirmation: the name typed before a destructive action [kpadopt4-ideas] ---
+ * `.kp-type-confirm` (js/components.js): what will be lost, the label with the name set in as code, the field, the
+ * rule it is matched by and one line that says whether it matches. It stands in the confirmation dialog a button with
+ * `data-kp-confirm-type` opens (`.kp-confirm--typed`, a little wider than a plain question), or in a page's own
+ * dialog or form (`data-kp-type-confirm`). The match line is always there, one badge high, so nothing moves while
+ * the reader types; a match is a word on the success plate, never a colour alone.
+ * Knobs [KT6]: --kp-type-confirm-gap (--kp-space-xs), --kp-type-confirm-list-max (12rem, then the list scrolls),
+ * --kp-confirm-typed-max-width (30rem). */
+    .kp-confirm.kp-confirm--typed {
+        max-inline-size: var(--kp-confirm-typed-max-width, min(30rem, calc(100vw - 2rem)));
+    }
+
+    .kp-type-confirm {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--kp-type-confirm-gap, var(--kp-space-xs, 0.25rem));
+        min-inline-size: 0;
+    }
+
+    .kp-type-confirm__loses {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin-block-end: var(--kp-space-sm, 0.5rem);
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--border);
+        border-inline-start: 3px solid var(--destructive);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--muted);
+        color: var(--foreground);
+    }
+
+    .kp-type-confirm__loses-title {
+        margin: 0;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+    }
+
+    .kp-type-confirm__list {
+        max-block-size: var(--kp-type-confirm-list-max, 12rem);
+        margin: 0;
+        padding-inline-start: 1.25rem;
+        overflow-y: auto;
+        font-family: var(--font-mono, ui-monospace, monospace);
+        font-size: var(--kp-text-xs, 0.75rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-type-confirm__list > li + li {
+        margin-block-start: 2px;
+    }
+
+    .kp-type-confirm__name {
+        padding: 0 0.3em;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--muted);
+        color: var(--foreground);
+        font-family: var(--font-mono, ui-monospace, monospace);
+        font-weight: 600;
+        overflow-wrap: anywhere;
+        user-select: all;
+        /* A long name that breaks keeps its chip's room on every line. */
+        box-decoration-break: clone;
+    }
+
+    .kp-type-confirm__input {
+        font-family: var(--font-mono, ui-monospace, monospace);
+    }
+
+    .kp-type-confirm__rule {
+        margin: 0;
+    }
+
+    .kp-type-confirm__status {
+        display: flex;
+        align-items: center;
+        min-block-size: max(1.5rem, 1lh);
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    /* --- Command block: one command, its terminal, a copy that confirms [kpadopt4-ideas] ---
+ * `.kp-command[data-kp-command="wsl|powershell|cmd|garuda|bash"]` (js/command.js). A head with the terminal's name,
+ * the admin or sudo badge (the warning badge) and the package's copy button, then the code on the muted ground of a
+ * `pre`, every line behind the terminal's prompt (drawn here, so it is never selected or copied), then an optional
+ * note on where it runs. A long line wraps under its own first character after the prompt; with
+ * `data-kp-command-wrap="scroll"` it stays whole and the code scrolls inside its block. The head keeps its height
+ * before the script has drawn it, and the copy button keeps one width for "Copy" and "Copied".
+ * Knobs [KT6]: --kp-command-prompt (the prompt, per terminal), --kp-command-prompt-width (its width in ch),
+ * --kp-command-prompt-ink (--muted-foreground), --kp-command-head-height (2.75rem), --kp-command-code-max (none: a
+ * very long command scrolls inside the block past this height). */
+    .kp-command {
+        --kp-command-prompt: '$ ';
+        --kp-command-prompt-width: 2ch;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        /* Blocks side by side in a grid are as tall as the tallest: the code's ground takes the room. */
+        grid-template-rows: auto 1fr;
+        min-inline-size: 0;
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        overflow: hidden;
+    }
+
+    .kp-command:has(> .kp-command__where) {
+        grid-template-rows: auto 1fr auto;
+    }
+
+    .kp-command[data-kp-command-shell='powershell'] {
+        --kp-command-prompt: 'PS> ';
+        --kp-command-prompt-width: 4ch;
+    }
+
+    .kp-command[data-kp-command-shell='cmd'] {
+        --kp-command-prompt: '> ';
+        --kp-command-prompt-width: 2ch;
+    }
+
+    /* The head's room is there before the script draws it, so the code does not move down when it arrives. */
+    .kp-command:not([data-kp-command-ready])::before {
+        content: '';
+        display: block;
+        box-sizing: border-box;
+        block-size: var(--kp-command-head-height, 2.75rem);
+        border-block-end: 1px solid var(--border);
+    }
+
+    .kp-command__head {
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        box-sizing: border-box;
+        min-block-size: var(--kp-command-head-height, 2.75rem);
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-xs, 0.25rem) var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.875rem);
+        border-block-end: 1px solid var(--border);
+    }
+
+    .kp-command__shell {
+        font-family: var(--font-mono, ui-monospace, monospace);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .kp-command__elevated {
+        flex: none;
+    }
+
+    /* The copy button and its two invisible copies share one cell, as wide as the wider word. */
+    .kp-command__copy-slot {
+        display: inline-grid;
+        margin-inline-start: auto;
+    }
+
+    .kp-command__copy-slot > * {
+        grid-area: 1 / 1;
+    }
+
+    .kp-command__ghost {
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    .kp-command__copy-slot > .kp-command__copy:not(.kp-command__ghost) {
+        inline-size: 100%;
+    }
+
+    .kp-command__code {
+        margin: 0;
+        max-block-size: var(--kp-command-code-max, none);
+        padding: var(--kp-space-sm, 0.625rem) var(--kp-space-md, 0.875rem);
+        border-radius: 0;
+        overflow: auto;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        line-height: 1.6;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-command__code > code {
+        display: block;
+        padding: 0;
+        background: none;
+        font-size: inherit;
+    }
+
+    /* A line hangs under its first character after the prompt when it wraps. */
+    .kp-command__line {
+        display: block;
+        padding-inline-start: var(--kp-command-prompt-width, 2ch);
+        text-indent: calc(-1 * var(--kp-command-prompt-width, 2ch));
+    }
+
+    .kp-command__line::before {
+        content: var(--kp-command-prompt, '$ ');
+        color: var(--kp-command-prompt-ink, var(--muted-foreground));
+        user-select: none;
+    }
+
+    .kp-command__line[data-kp-continued]::before {
+        content: '';
+        display: inline-block;
+        inline-size: var(--kp-command-prompt-width, 2ch);
+    }
+
+    .kp-command[data-kp-command-wrap='scroll'] .kp-command__code {
+        white-space: pre;
+        overflow-wrap: normal;
+        scrollbar-width: thin;
+    }
+
+    .kp-command[data-kp-command-wrap='scroll'] .kp-command__line {
+        display: block;
+        inline-size: max-content;
+        min-inline-size: 100%;
+    }
+
+    .kp-command__code[data-kp-command-before] {
+        mask-image: linear-gradient(to right, transparent, var(--foreground) 2rem);
+    }
+
+    .kp-command__code[data-kp-command-after] {
+        mask-image: linear-gradient(to left, transparent, var(--foreground) 2rem);
+    }
+
+    .kp-command__code[data-kp-command-before][data-kp-command-after] {
+        mask-image: linear-gradient(to right, transparent, var(--foreground) 2rem calc(100% - 2rem), transparent);
+    }
+
+    .kp-command__code:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: -2px;
+    }
+
+    .kp-command__where {
+        margin: 0;
+        padding: var(--kp-space-xs, 0.375rem) var(--kp-space-md, 0.875rem);
+        border-block-start: 1px solid var(--border);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        overflow-wrap: anywhere;
+    }
+
+    /* --- Visual timer: the time left as a shrinking disc [kpadopt4-ideas] ---
+ * `.kp-timer-disc[data-kp-timer-disc="25m"]` (js/timer-disc.js). A round face with twelve marks on its rim and a disc
+ * in the theme's primary colour that turns back towards twelve o'clock as the time goes, drawn by one number
+ * (`--kp-timer-disc-left`, 1 full, 0 gone); under it the name and length (still), one line for Paused or Time is up,
+ * and the package's buttons. No figure ticks. Paused, the disc rests a shade lighter; at the end the face breathes
+ * three times and then stands with a ring, still under reduced motion.
+ * Knobs [KT6]: --kp-timer-disc-size (12rem, never wider than 70% of the window), --kp-timer-disc-fill (--primary),
+ * --kp-timer-disc-inset (7%, the disc inside the rim), --kp-timer-disc-marks (--muted-foreground), --kp-timer-disc-ring
+ * (the end ring's colour). */
+    /* Timers side by side are as tall as the tallest: the room goes under the name, so the status lines and the
+     * buttons of a row stand on one line. */
+    .kp-timer-disc {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto 1fr auto auto;
+        align-content: start;
+        justify-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+        text-align: center;
+    }
+
+    .kp-timer-disc__face {
+        position: relative;
+        box-sizing: border-box;
+        inline-size: min(var(--kp-timer-disc-size, 12rem), 70vw);
+        aspect-ratio: 1;
+        border: 1px solid var(--border-strong, var(--border));
+        border-radius: 50%;
+        background: var(--card);
+        transition: box-shadow var(--fx-duration, 200ms) var(--fx-ease, ease-out);
+    }
+
+    .kp-timer-disc__sector,
+    .kp-timer-disc__marks,
+    .kp-timer-disc__hub {
+        position: absolute;
+        border-radius: 50%;
+    }
+
+    .kp-timer-disc__sector {
+        inset: var(--kp-timer-disc-inset, 7%);
+        background: conic-gradient(var(--kp-timer-disc-fill, var(--primary)) calc(var(--kp-timer-disc-left, 1) * 360deg), transparent 0);
+        transition: opacity var(--fx-duration, 200ms) var(--fx-ease, ease-out);
+    }
+
+    /* Twelve marks round the rim, outside the disc. */
+    .kp-timer-disc__marks {
+        inset: 1.5%;
+        background: repeating-conic-gradient(from -0.6deg, var(--kp-timer-disc-marks, var(--muted-foreground)) 0 1.2deg, transparent 1.2deg 30deg);
+        mask-image: radial-gradient(closest-side, transparent calc(100% - 4.5%), var(--foreground) calc(100% - 4.5%));
+    }
+
+    .kp-timer-disc__hub {
+        inset: 46%;
+        border: 2px solid var(--card);
+        background: var(--foreground);
+    }
+
+    .kp-timer-disc[data-kp-timer-disc-state='paused'] .kp-timer-disc__sector {
+        opacity: 0.55;
+    }
+
+    .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face {
+        box-shadow: 0 0 0 4px var(--kp-timer-disc-ring, color-mix(in oklab, var(--kp-timer-disc-fill, var(--primary)) 35%, transparent));
+    }
+
+    .kp-timer-disc__caption {
+        align-self: start;
+    }
+
+    .kp-countdown__name {
+        align-self: end;
+    }
+
+    .kp-timer-disc__caption,
+    .kp-countdown__name {
+        margin: 0;
+        max-inline-size: 100%;
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    /* One line, always there, so the buttons never move when it fills. */
+    .kp-timer-disc__status,
+    .kp-countdown__status {
+        min-block-size: 1lh;
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__status,
+    .kp-countdown[data-kp-countdown-state='ended'] .kp-countdown__status {
+        color: var(--foreground);
+        font-weight: 600;
+    }
+
+    .kp-timer-disc__controls,
+    .kp-countdown__controls {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    /* --- Countdown: a named timer in digits [kpadopt4-ideas] ---
+ * `.kp-countdown[data-kp-countdown="25:00"]` (js/countdown.js). The name, the digits (every digit in a cell one `ch`
+ * wide, so the time never moves the layout, in the theme's display face), one line for Paused or Time is up, and Start,
+ * a minute more and Reset. At the end the plate breathes three times and keeps a ring, still under reduced motion.
+ * Knobs [KT6]: --kp-countdown-size (3rem, the digits), --kp-countdown-ink (--foreground), --kp-countdown-ring (the end
+ * ring's colour). */
+    /* The room of a taller neighbour goes over the name, so the digits and the buttons of a row stand on one line. */
+    .kp-countdown {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: 1fr auto auto auto;
+        justify-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        box-sizing: border-box;
+        min-inline-size: 0;
+        padding: var(--kp-space-md, 1rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        text-align: center;
+        transition: box-shadow var(--fx-duration, 200ms) var(--fx-ease, ease-out);
+    }
+
+    .kp-countdown__time {
+        margin: 0;
+        color: var(--kp-countdown-ink, var(--foreground));
+        font-family: var(--theme-font-display, inherit);
+        font-size: var(--kp-countdown-size, 3rem);
+        font-variant-numeric: tabular-nums lining-nums;
+        font-weight: 600;
+        line-height: 1.1;
+        white-space: nowrap;
+    }
+
+    .kp-countdown__digit {
+        display: inline-block;
+        inline-size: 1ch;
+        text-align: center;
+    }
+
+    .kp-countdown__colon {
+        display: inline-block;
+        inline-size: 0.4ch;
+        text-align: center;
+    }
+
+    .kp-countdown[data-kp-countdown-state='paused'] .kp-countdown__time {
+        color: var(--muted-foreground);
+    }
+
+    .kp-countdown[data-kp-countdown-state='ended'] {
+        box-shadow: 0 0 0 3px var(--kp-countdown-ring, color-mix(in oklab, var(--primary) 35%, transparent));
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face,
+        .kp-countdown[data-kp-countdown-state='ended'] {
+            /* A literal, not a knob: three slow breaths, far under the flash threshold of DI5. */
+            animation: kp-timer-breathe 1600ms ease-in-out 3;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .kp-timer-disc__face,
+        .kp-timer-disc__sector,
+        .kp-countdown {
+            transition: none;
+        }
+    }
+
+    @keyframes kp-timer-breathe {
+        50% {
+            box-shadow: 0 0 0 10px color-mix(in oklab, var(--primary) 12%, transparent);
+        }
+    }
+
+    /* --- Range picker: a preset or a custom from–to [kpadopt4-ideas] ---
+ * `.kp-range[data-kp-range]` (js/range.js). The presets as the package's segmented control and a Custom… button on one
+ * line, and under it one line that names the chosen window exactly; narrower than 26rem of its own the presets take the
+ * whole line and Custom… stands beside the name under them (nothing wraps, nothing is cut). Custom… opens a panel on the theme's popover plate under the control: From and To,
+ * each the package's date picker and a time, an error line that keeps its room, Cancel and Apply.
+ * Knobs [KT6]: --kp-range-gap (--kp-space-sm), --kp-range-panel-width (24rem), --kp-range-time-width (5.5rem). */
+    .kp-range {
+        container: kp-range / inline-size;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+    }
+
+    .kp-range__bar {
+        display: flex;
+        align-items: center;
+        gap: var(--kp-range-gap, var(--kp-space-sm, 0.5rem));
+        min-inline-size: 0;
+    }
+
+    .kp-range__presets {
+        flex: 0 1 auto;
+        min-inline-size: 0;
+    }
+
+    .kp-range__custom {
+        flex: none;
+        white-space: nowrap;
+    }
+
+    /* The custom window is the one in force: the button reads as chosen, the way a pressed toggle does. */
+    .kp-range__custom[aria-pressed='true'] {
+        border-color: var(--primary);
+        box-shadow: inset 0 0 0 1px var(--primary);
+    }
+
+    .kp-range__label {
+        min-block-size: 1lh;
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        overflow-wrap: anywhere;
+    }
+
+    /* The panel is placed by the script in window coordinates, in the top layer. */
+    .kp-popover.kp-range__panel {
+        position: fixed;
+        position-area: none;
+        box-sizing: border-box;
+        inline-size: min(var(--kp-range-panel-width, 24rem), calc(100vw - 1rem));
+        margin: 0;
+        padding: var(--kp-space-md, 1rem);
+        overflow: visible;
+    }
+
+    .kp-range__panel[hidden] {
+        display: none;
+    }
+
+    .kp-range__title {
+        margin: 0 0 var(--kp-space-sm, 0.5rem);
+        font-weight: 600;
+    }
+
+    .kp-range__bound {
+        min-inline-size: 0;
+        margin: 0 0 var(--kp-space-sm, 0.5rem);
+        padding: 0;
+        border: 0;
+    }
+
+    .kp-range__inputs {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) var(--kp-range-time-width, 5.5rem);
+        gap: var(--kp-space-sm, 0.5rem);
+        align-items: start;
+    }
+
+    .kp-range__date {
+        min-inline-size: 0;
+    }
+
+    .kp-range__time {
+        inline-size: 100%;
+        box-sizing: border-box;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-range__panel .kp-field__input[aria-invalid='true'] {
+        border-color: var(--destructive);
+        box-shadow: inset 0 0 0 1px var(--destructive);
+    }
+
+    .kp-range__error {
+        min-block-size: 1lh;
+        margin: 0 0 var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-range__actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    /* Narrower than the presets and Custom… side by side: the presets take the whole line, each segment as wide as the
+     * next, and Custom… stands at the end of the line under them, beside the window's name. Nothing is cut or scrolled. */
+    @container kp-range (max-width: 26rem) {
+        .kp-range__bar {
+            display: contents;
+        }
+
+        .kp-range__presets {
+            grid-row: 1;
+            grid-column: 1 / span 2;
+            inline-size: 100%;
+            grid-auto-columns: minmax(0, 1fr);
+        }
+
+        .kp-range__custom {
+            grid-row: 2;
+            grid-column: 2;
+            align-self: start;
+        }
+
+        .kp-range__label {
+            grid-row: 2;
+            grid-column: 1;
+        }
+    }
+
+    /* --- Compare slider: two versions, a divider between them [kpadopt4-ideas] ---
+ * `.kp-compare[data-kp-compare]` (js/compare.js). The before and after panes lie on top of each other in one grid
+ * cell; the before pane shows on the start side of the divider and the after pane on the end side, each cut by
+ * `clip-path` at `--kp-compare-pos` (0 to 100), so a pane is only hit where it shows. The divider is a line with a round
+ * handle (the slider); a label on each side steps aside while the divider covers it. While an image loads, the theme's
+ * skeleton covers the box; a failed image says so in its pane. The divider glides to a press in the theme's own time
+ * and curve, follows a drag at once, and never glides under reduced motion.
+ * Knobs [KT6]: --kp-compare-ratio (none: the panes' own size), --kp-compare-line (2px), --kp-compare-handle (2.25rem),
+ * --kp-compare-ink (--primary, the line and the handle's ring). */
+    .kp-compare {
+        --kp-compare-pos: 50;
+        position: relative;
+        display: grid;
+        grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+        aspect-ratio: var(--kp-compare-ratio, auto);
+        min-inline-size: 0;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        touch-action: pan-y;
+        user-select: none;
+    }
+
+    .kp-compare[data-kp-compare-drag='anywhere'] {
+        cursor: ew-resize;
+    }
+
+    .kp-compare > * {
+        grid-area: 1 / 1;
+        min-inline-size: 0;
+    }
+
+    .kp-compare__pane {
+        position: relative;
+        min-block-size: 0;
+    }
+
+    .kp-compare__pane > img {
+        display: block;
+        inline-size: 100%;
+        block-size: 100%;
+        object-fit: cover;
+        -webkit-user-drag: none;
+    }
+
+    .kp-compare__pane--before {
+        clip-path: inset(0 calc(100% - var(--kp-compare-pos) * 1%) 0 0);
+    }
+
+    .kp-compare__pane--after {
+        clip-path: inset(0 0 0 calc(var(--kp-compare-pos) * 1%));
+    }
+
+    .kp-compare:dir(rtl) .kp-compare__pane--before {
+        clip-path: inset(0 0 0 calc(100% - var(--kp-compare-pos) * 1%));
+    }
+
+    .kp-compare:dir(rtl) .kp-compare__pane--after {
+        clip-path: inset(0 calc(var(--kp-compare-pos) * 1%) 0 0);
+    }
+
+    .kp-compare__divider {
+        position: relative;
+        z-index: 2;
+        inline-size: 0;
+        margin-inline-start: calc(var(--kp-compare-pos) * 1%);
+        border-inline-start: var(--kp-compare-line, 2px) solid var(--kp-compare-ink, var(--primary));
+        translate: calc(var(--kp-compare-line, 2px) / -2) 0;
+        pointer-events: none;
+    }
+
+    .kp-compare__handle {
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: calc(var(--kp-compare-line, 2px) / -2);
+        display: grid;
+        place-items: center;
+        box-sizing: border-box;
+        inline-size: var(--kp-compare-handle, 2.25rem);
+        block-size: var(--kp-compare-handle, 2.25rem);
+        border: 2px solid var(--kp-compare-ink, var(--primary));
+        border-radius: 50%;
+        background: var(--card);
+        color: var(--kp-compare-ink, var(--primary));
+        translate: -50% -50%;
+        cursor: ew-resize;
+        pointer-events: auto;
+        touch-action: none;
+    }
+
+    .kp-compare__handle:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+    }
+
+    /* Two small chevrons, drawn: ‹ › */
+    .kp-compare__grip {
+        inline-size: 0.875rem;
+        block-size: 0.5rem;
+        background:
+            linear-gradient(to bottom right, transparent 45%, currentColor 45% 60%, transparent 60%) 0 0 / 35% 50% no-repeat,
+            linear-gradient(to top right, transparent 45%, currentColor 45% 60%, transparent 60%) 0 100% / 35% 50% no-repeat,
+            linear-gradient(to bottom left, transparent 45%, currentColor 45% 60%, transparent 60%) 100% 0 / 35% 50% no-repeat,
+            linear-gradient(to top left, transparent 45%, currentColor 45% 60%, transparent 60%) 100% 100% / 35% 50% no-repeat;
+    }
+
+    .kp-compare__label {
+        z-index: 1;
+        align-self: start;
+        margin: var(--kp-space-sm, 0.5rem);
+        padding: 0.125rem var(--kp-space-sm, 0.5rem);
+        border: 1px solid var(--border);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--card);
+        color: var(--card-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-weight: 600;
+        pointer-events: none;
+        transition: opacity var(--fx-duration, 160ms) var(--fx-ease, ease-out);
+    }
+
+    .kp-compare__label--before {
+        justify-self: start;
+    }
+
+    .kp-compare__label--after {
+        justify-self: end;
+    }
+
+    .kp-compare[data-kp-compare-before-hidden] .kp-compare__label--before,
+    .kp-compare[data-kp-compare-after-hidden] .kp-compare__label--after {
+        opacity: 0;
+    }
+
+    .kp-compare[data-kp-compare-glide] :is(.kp-compare__pane, .kp-compare__divider) {
+        transition:
+            clip-path var(--fx-duration, 200ms) var(--fx-ease, ease-out),
+            margin-inline-start var(--fx-duration, 200ms) var(--fx-ease, ease-out);
+    }
+
+    .kp-compare[data-kp-compare-dragging] :is(.kp-compare__pane, .kp-compare__divider) {
+        transition: none;
+    }
+
+    .kp-compare .kp-compare__wait {
+        z-index: 3;
+        block-size: auto;
+        margin: 0;
+        border-radius: 0;
+    }
+
+    .kp-compare:not([data-kp-compare-state='loading']) .kp-compare__wait {
+        display: none;
+    }
+
+    .kp-compare__failed {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        margin: 0;
+        padding: var(--kp-space-md, 1rem);
+        background: var(--muted);
+        color: var(--muted-foreground);
+        text-align: center;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .kp-compare[data-kp-compare-glide] :is(.kp-compare__pane, .kp-compare__divider),
+        .kp-compare__label {
+            transition: none;
+        }
     }
 }
 

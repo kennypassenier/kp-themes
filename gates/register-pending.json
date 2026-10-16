@@ -37,5 +37,12 @@
     "timers": "a component for the AuDHD recipe app [kpadopt4], built from the package's parts and judged in formal only first (research/kpadopt4-recipes); each register answers it once it is judged in that theme",
     "timer": "a component for the AuDHD recipe app [kpadopt4], built from the package's parts and judged in formal only first (research/kpadopt4-recipes); each register answers it once it is judged in that theme",
     "focus-steps": "a component for the AuDHD recipe app [kpadopt4], built from the package's parts and judged in formal only first (research/kpadopt4-recipes); each register answers it once it is judged in that theme",
-    "wheel": "a component for the AuDHD recipe app [kpadopt4], built from the package's parts and judged in formal only first (research/kpadopt4-recipes); each register answers it once it is judged in that theme"
+    "wheel": "a component for the AuDHD recipe app [kpadopt4], built from the package's parts and judged in formal only first (research/kpadopt4-recipes); each register answers it once it is judged in that theme",
+    "uptime": "a new component approved by Kenny on 2026-10-16 (research/kpadopt4-ideas), demoed in formal only; each register answers it once it is judged in that theme",
+    "type-confirm": "a new component approved by Kenny on 2026-10-16 (research/kpadopt4-ideas), demoed in formal only; each register answers it once it is judged in that theme",
+    "command": "a new component approved by Kenny on 2026-10-16 (research/kpadopt4-ideas), demoed in formal only; each register answers it once it is judged in that theme",
+    "countdown": "a new component approved by Kenny on 2026-10-16 (research/kpadopt4-ideas), demoed in formal only; each register answers it once it is judged in that theme",
+    "timer-disc": "a new component approved by Kenny on 2026-10-16 (research/kpadopt4-ideas), demoed in formal only; each register answers it once it is judged in that theme",
+    "range": "a new component approved by Kenny on 2026-10-16 (research/kpadopt4-ideas), demoed in formal only; each register answers it once it is judged in that theme",
+    "compare": "a new component approved by Kenny on 2026-10-16 (research/kpadopt4-ideas), demoed in formal only; each register answers it once it is judged in that theme"
 }

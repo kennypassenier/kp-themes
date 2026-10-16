@@ -728,10 +728,6 @@ export type Strings = {
      */
     confirmClose: string;
     /**
-     * The label of the field a person types the name into before Confirm is offered, "Type Household to confirm" (`data-kp-confirm-type`) [kpadopt4]
-     */
-    confirmTypeLabel: (word: string) => string;
-    /**
      * The button that closes an alarm that must be acknowledged, when the caller names none [scope-94]
      */
     alarmAction: string;
@@ -1240,6 +1236,254 @@ export type Strings = {
      */
     pipelineShare: (percent: number) => string;
     /**
+     * The uptime strip's busy card and its summary while the history is read (js/uptime.js) [kpadopt4-ideas]
+     */
+    uptimeLoading: string;
+    /**
+     * Its summary when no period has data yet [kpadopt4-ideas]
+     */
+    uptimeEmpty: string;
+    /**
+     * Its summary when the history could not be read and the page gave no sentence [kpadopt4-ideas]
+     */
+    uptimeError: string;
+    /**
+     * The window's share up, from "99.4" to "99.4%" [kpadopt4-ideas]
+     */
+    uptimePercent: (percent: string) => string;
+    /**
+     * The window's incident count, exact: "1 incident", "12 incidents" [kpadopt4-ideas]
+     */
+    uptimeIncidents: (n: number) => string;
+    /**
+     * The summary as one sentence, for a screen reader [kpadopt4-ideas]
+     */
+    uptimeSummary: (percent: string, incidents: number) => string;
+    /**
+     * The strip's name: its title and its summary [kpadopt4-ideas]
+     */
+    uptimeTrack: (label: string, summary: string) => string;
+    /**
+     * A period's state as a word: up, degraded, down, no data [kpadopt4-ideas]
+     */
+    uptimeStateWord: (state: string) => string;
+    /**
+     * A cell's name and hover card: its period, its state and its figures [kpadopt4-ideas]
+     */
+    uptimeCell: (label: string, state: string, percent: string | null, incidents: number | null) => string;
+    /**
+     * Under a strip too narrow for every cell: "55 of 90 shown" [kpadopt4-ideas]
+     */
+    uptimeShown: (shown: number, total: number) => string;
+    /**
+     * The typed confirmation's label; the name is set in as code where this sentence puts it (js/components.js) [kpadopt4-ideas]
+     */
+    typeConfirmLabel: (name: string) => string;
+    /**
+     * Its rule when capitals count [kpadopt4-ideas]
+     */
+    typeConfirmRuleExact: string;
+    /**
+     * Its rule when capitals do not count (`data-kp-confirm-case="any"`) [kpadopt4-ideas]
+     */
+    typeConfirmRuleAnyCase: string;
+    /**
+     * The badge once the typed name matches [kpadopt4-ideas]
+     */
+    typeConfirmMatched: string;
+    /**
+     * The line while what is typed does not match yet [kpadopt4-ideas]
+     */
+    typeConfirmMismatch: string;
+    /**
+     * The heading over what the action will delete [kpadopt4-ideas]
+     */
+    typeConfirmLoses: string;
+    /**
+     * A command block's terminal by its key: WSL, PowerShell, cmd, Garuda, bash; another key as written (js/command.js) [kpadopt4-ideas]
+     */
+    commandShell: (shell: string) => string;
+    /**
+     * The badge of a Windows command that needs a terminal opened as administrator [kpadopt4-ideas]
+     */
+    commandAdmin: string;
+    /**
+     * Its tooltip [kpadopt4-ideas]
+     */
+    commandAdminTitle: string;
+    /**
+     * The badge of a Linux command that runs with root rights [kpadopt4-ideas]
+     */
+    commandSudo: string;
+    /**
+     * Its tooltip [kpadopt4-ideas]
+     */
+    commandSudoTitle: string;
+    /**
+     * The note under a command that says where it runs [kpadopt4-ideas]
+     */
+    commandRunsOn: (where: string) => string;
+    /**
+     * A timer's Start button (js/countdown.js, js/timer-disc.js) [kpadopt4-ideas]
+     */
+    timerStart: string;
+    /**
+     * The same button while it runs [kpadopt4-ideas]
+     */
+    timerPause: string;
+    /**
+     * The same button while it is paused [kpadopt4-ideas]
+     */
+    timerResume: string;
+    /**
+     * A timer's Reset button [kpadopt4-ideas]
+     */
+    timerReset: string;
+    /**
+     * The countdown's button that adds time: "+1 min" [kpadopt4-ideas]
+     */
+    timerAddMinute: (seconds: number) => string;
+    /**
+     * Its tooltip: "Add 1 min" [kpadopt4-ideas]
+     */
+    timerAddMinuteTitle: (seconds: number) => string;
+    /**
+     * The line under a paused timer, and what a screen reader hears [kpadopt4-ideas]
+     */
+    timerPaused: string;
+    /**
+     * The line under a timer whose time is up [kpadopt4-ideas]
+     */
+    timerEnded: string;
+    /**
+     * What a screen reader hears when a named timer ends [kpadopt4-ideas]
+     */
+    timerEndedNamed: (name: string) => string;
+    /**
+     * What a screen reader hears when a timer starts [kpadopt4-ideas]
+     */
+    timerStarted: string;
+    /**
+     * What a screen reader hears when it goes on after a pause [kpadopt4-ideas]
+     */
+    timerResumed: string;
+    /**
+     * The countdown's time left for a screen reader: "25 min left" [kpadopt4-ideas]
+     */
+    timerLeft: (duration: string) => string;
+    /**
+     * A timer's length in words: "25 min", "1 h 30 min", "45 s" [kpadopt4-ideas]
+     */
+    timerDuration: (seconds: number) => string;
+    /**
+     * The visual timer's face for a screen reader: "12 min left of 25 min" [kpadopt4-ideas]
+     */
+    timerDiscLeft: (left: string, total: string) => string;
+    /**
+     * The time left on the face in its last minute [kpadopt4-ideas]
+     */
+    timerUnderMinute: string;
+    /**
+     * The still line under the disc: "Focus · 25 min" [kpadopt4-ideas]
+     */
+    timerDiscCaption: (name: string, duration: string) => string;
+    /**
+     * The range picker's preset group, for a screen reader (js/range.js) [kpadopt4-ideas]
+     */
+    rangePresets: string;
+    /**
+     * A preset in words: "Last 24 hours" [kpadopt4-ideas]
+     */
+    rangePresetName: (key: string) => string;
+    /**
+     * A preset on its segment: "24h" [kpadopt4-ideas]
+     */
+    rangePresetShort: (key: string) => string;
+    /**
+     * The button that opens the custom range [kpadopt4-ideas]
+     */
+    rangeCustom: string;
+    /**
+     * The custom panel's title [kpadopt4-ideas]
+     */
+    rangeCustomTitle: string;
+    /**
+     * A custom window's name in the line under the picker [kpadopt4-ideas]
+     */
+    rangeCustomName: string;
+    /**
+     * The start's label [kpadopt4-ideas]
+     */
+    rangeFrom: string;
+    /**
+     * The end's label [kpadopt4-ideas]
+     */
+    rangeTo: string;
+    /**
+     * A date field's name: "From, date (dd/mm/yyyy)" [kpadopt4-ideas]
+     */
+    rangeDateLabel: (bound: string) => string;
+    /**
+     * A time field's name [kpadopt4-ideas]
+     */
+    rangeTimeLabel: (bound: string) => string;
+    /**
+     * The time field's placeholder [kpadopt4-ideas]
+     */
+    rangeTimeHint: string;
+    /**
+     * The custom panel's Apply [kpadopt4-ideas]
+     */
+    rangeApply: string;
+    /**
+     * The custom panel's Cancel [kpadopt4-ideas]
+     */
+    rangeCancel: string;
+    /**
+     * The line under the picker: "Last 24 hours · 15/10/2026 14:05 – 16/10/2026 14:05" [kpadopt4-ideas]
+     */
+    rangeLabel: (name: string, from: string, to: string) => string;
+    /**
+     * A date that is not a whole dd/mm/yyyy [kpadopt4-ideas]
+     */
+    rangeErrorDate: (bound: string) => string;
+    /**
+     * A time that is not a time of day [kpadopt4-ideas]
+     */
+    rangeErrorTime: (bound: string) => string;
+    /**
+     * A window whose end does not come after its start [kpadopt4-ideas]
+     */
+    rangeErrorOrder: string;
+    /**
+     * A window that ends in the future [kpadopt4-ideas]
+     */
+    rangeErrorFuture: string;
+    /**
+     * A window longer than the picker allows [kpadopt4-ideas]
+     */
+    rangeErrorSpan: (days: number) => string;
+    /**
+     * The compare slider's label on the before side (js/compare.js) [kpadopt4-ideas]
+     */
+    compareBefore: string;
+    /**
+     * Its label on the after side [kpadopt4-ideas]
+     */
+    compareAfter: string;
+    /**
+     * The divider's name for a screen reader [kpadopt4-ideas]
+     */
+    compareSlider: (before: string, after: string) => string;
+    /**
+     * Where the divider stands: "40% Before, 60% After" [kpadopt4-ideas]
+     */
+    compareValue: (percent: number, before: string, after: string) => string;
+    /**
+     * A pane whose image could not be loaded [kpadopt4-ideas]
+     */
+    compareFailed: string;
+    /**
      * The network graph's way back to every node and every kind of link (js/graph.js) [scope-143]
      */
     graphShowAll: string;
@@ -1392,10 +1636,6 @@ export type Strings = {
      */
     timerRunning: string;
     /**
-     * Its state word while paused [kpadopt4]
-     */
-    timerPaused: string;
-    /**
      * Its state word once it has ended [kpadopt4]
      */
     timerDoneWord: string;
@@ -1404,21 +1644,9 @@ export type Strings = {
      */
     timerDone: (name: string) => string;
     /**
-     * The button that pauses a timer [kpadopt4]
-     */
-    timerPause: string;
-    /**
-     * The button that resumes it [kpadopt4]
-     */
-    timerResume: string;
-    /**
      * The button on an ended timer that stops it and takes it away [kpadopt4]
      */
     timerStopRing: string;
-    /**
-     * The button that adds a minute, "+1 min" [kpadopt4]
-     */
-    timerAddMinute: string;
     /**
      * That button's accessible name [kpadopt4]
      */
@@ -1436,9 +1664,9 @@ export type Strings = {
      */
     timerLastMinute: (name: string) => string;
     /**
-     * Said when a timer starts [kpadopt4]
+     * Said when a kitchen timer starts, with its name and its clock [kpadopt4]
      */
-    timerStarted: (name: string, clock: string) => string;
+    timerStartedNamed: (name: string, clock: string) => string;
     /**
      * Said when a starter is pressed while its timer runs [kpadopt4]
      */
@@ -1792,7 +2020,6 @@ export type Strings = {
  * @property {(count: number) => string} confirmDependents  The heading over what still uses the thing a confirmation would remove, "Still in use by 2" (`data-kp-confirm-dependents`) [kpadopt4]
  * @property {string} confirmBlocked  What a confirmation that may not go ahead says when the page gives no sentence (`data-kp-confirm-blocked`) [kpadopt4]
  * @property {string} confirmClose  The one button of a confirmation that may not go ahead [kpadopt4]
- * @property {(word: string) => string} confirmTypeLabel  The label of the field a person types the name into before Confirm is offered, "Type Household to confirm" (`data-kp-confirm-type`) [kpadopt4]
  * @property {string} alarmAction  The button that closes an alarm that must be acknowledged, when the caller names none [scope-94]
  * @property {string} alarmKeepOpen  The button that stops an alarm's countdown and keeps it open [scope-94]
  * @property {string} alarmHint  The key hint beside the acknowledge button; hidden from a screen reader [scope-94]
@@ -1922,6 +2149,68 @@ export type Strings = {
  * @property {(more: number) => string} pipelineMore  The button under a lane's first cards, "+4 more"
  * @property {string} pipelineLess  The same button while the lane shows every card
  * @property {(percent: number) => string} pipelineShare  A lane's share of all cards, "25 % of all"
+ * @property {string} uptimeLoading  The uptime strip's busy card and its summary while the history is read (js/uptime.js) [kpadopt4-ideas]
+ * @property {string} uptimeEmpty  Its summary when no period has data yet [kpadopt4-ideas]
+ * @property {string} uptimeError  Its summary when the history could not be read and the page gave no sentence [kpadopt4-ideas]
+ * @property {(percent: string) => string} uptimePercent  The window's share up, from "99.4" to "99.4%" [kpadopt4-ideas]
+ * @property {(n: number) => string} uptimeIncidents  The window's incident count, exact: "1 incident", "12 incidents" [kpadopt4-ideas]
+ * @property {(percent: string, incidents: number) => string} uptimeSummary  The summary as one sentence, for a screen reader [kpadopt4-ideas]
+ * @property {(label: string, summary: string) => string} uptimeTrack  The strip's name: its title and its summary [kpadopt4-ideas]
+ * @property {(state: string) => string} uptimeStateWord  A period's state as a word: up, degraded, down, no data [kpadopt4-ideas]
+ * @property {(label: string, state: string, percent: string | null, incidents: number | null) => string} uptimeCell  A cell's name and hover card: its period, its state and its figures [kpadopt4-ideas]
+ * @property {(shown: number, total: number) => string} uptimeShown  Under a strip too narrow for every cell: "55 of 90 shown" [kpadopt4-ideas]
+ * @property {(name: string) => string} typeConfirmLabel  The typed confirmation's label; the name is set in as code where this sentence puts it (js/components.js) [kpadopt4-ideas]
+ * @property {string} typeConfirmRuleExact  Its rule when capitals count [kpadopt4-ideas]
+ * @property {string} typeConfirmRuleAnyCase  Its rule when capitals do not count (`data-kp-confirm-case="any"`) [kpadopt4-ideas]
+ * @property {string} typeConfirmMatched  The badge once the typed name matches [kpadopt4-ideas]
+ * @property {string} typeConfirmMismatch  The line while what is typed does not match yet [kpadopt4-ideas]
+ * @property {string} typeConfirmLoses  The heading over what the action will delete [kpadopt4-ideas]
+ * @property {(shell: string) => string} commandShell  A command block's terminal by its key: WSL, PowerShell, cmd, Garuda, bash; another key as written (js/command.js) [kpadopt4-ideas]
+ * @property {string} commandAdmin  The badge of a Windows command that needs a terminal opened as administrator [kpadopt4-ideas]
+ * @property {string} commandAdminTitle  Its tooltip [kpadopt4-ideas]
+ * @property {string} commandSudo  The badge of a Linux command that runs with root rights [kpadopt4-ideas]
+ * @property {string} commandSudoTitle  Its tooltip [kpadopt4-ideas]
+ * @property {(where: string) => string} commandRunsOn  The note under a command that says where it runs [kpadopt4-ideas]
+ * @property {string} timerStart  A timer's Start button (js/countdown.js, js/timer-disc.js) [kpadopt4-ideas]
+ * @property {string} timerPause  The same button while it runs [kpadopt4-ideas]
+ * @property {string} timerResume  The same button while it is paused [kpadopt4-ideas]
+ * @property {string} timerReset  A timer's Reset button [kpadopt4-ideas]
+ * @property {(seconds: number) => string} timerAddMinute  The countdown's button that adds time: "+1 min" [kpadopt4-ideas]
+ * @property {(seconds: number) => string} timerAddMinuteTitle  Its tooltip: "Add 1 min" [kpadopt4-ideas]
+ * @property {string} timerPaused  The line under a paused timer, and what a screen reader hears [kpadopt4-ideas]
+ * @property {string} timerEnded  The line under a timer whose time is up [kpadopt4-ideas]
+ * @property {(name: string) => string} timerEndedNamed  What a screen reader hears when a named timer ends [kpadopt4-ideas]
+ * @property {string} timerStarted  What a screen reader hears when a timer starts [kpadopt4-ideas]
+ * @property {string} timerResumed  What a screen reader hears when it goes on after a pause [kpadopt4-ideas]
+ * @property {(duration: string) => string} timerLeft  The countdown's time left for a screen reader: "25 min left" [kpadopt4-ideas]
+ * @property {(seconds: number) => string} timerDuration  A timer's length in words: "25 min", "1 h 30 min", "45 s" [kpadopt4-ideas]
+ * @property {(left: string, total: string) => string} timerDiscLeft  The visual timer's face for a screen reader: "12 min left of 25 min" [kpadopt4-ideas]
+ * @property {string} timerUnderMinute  The time left on the face in its last minute [kpadopt4-ideas]
+ * @property {(name: string, duration: string) => string} timerDiscCaption  The still line under the disc: "Focus · 25 min" [kpadopt4-ideas]
+ * @property {string} rangePresets  The range picker's preset group, for a screen reader (js/range.js) [kpadopt4-ideas]
+ * @property {(key: string) => string} rangePresetName  A preset in words: "Last 24 hours" [kpadopt4-ideas]
+ * @property {(key: string) => string} rangePresetShort  A preset on its segment: "24h" [kpadopt4-ideas]
+ * @property {string} rangeCustom  The button that opens the custom range [kpadopt4-ideas]
+ * @property {string} rangeCustomTitle  The custom panel's title [kpadopt4-ideas]
+ * @property {string} rangeCustomName  A custom window's name in the line under the picker [kpadopt4-ideas]
+ * @property {string} rangeFrom  The start's label [kpadopt4-ideas]
+ * @property {string} rangeTo  The end's label [kpadopt4-ideas]
+ * @property {(bound: string) => string} rangeDateLabel  A date field's name: "From, date (dd/mm/yyyy)" [kpadopt4-ideas]
+ * @property {(bound: string) => string} rangeTimeLabel  A time field's name [kpadopt4-ideas]
+ * @property {string} rangeTimeHint  The time field's placeholder [kpadopt4-ideas]
+ * @property {string} rangeApply  The custom panel's Apply [kpadopt4-ideas]
+ * @property {string} rangeCancel  The custom panel's Cancel [kpadopt4-ideas]
+ * @property {(name: string, from: string, to: string) => string} rangeLabel  The line under the picker: "Last 24 hours · 15/10/2026 14:05 – 16/10/2026 14:05" [kpadopt4-ideas]
+ * @property {(bound: string) => string} rangeErrorDate  A date that is not a whole dd/mm/yyyy [kpadopt4-ideas]
+ * @property {(bound: string) => string} rangeErrorTime  A time that is not a time of day [kpadopt4-ideas]
+ * @property {string} rangeErrorOrder  A window whose end does not come after its start [kpadopt4-ideas]
+ * @property {string} rangeErrorFuture  A window that ends in the future [kpadopt4-ideas]
+ * @property {(days: number) => string} rangeErrorSpan  A window longer than the picker allows [kpadopt4-ideas]
+ * @property {string} compareBefore  The compare slider's label on the before side (js/compare.js) [kpadopt4-ideas]
+ * @property {string} compareAfter  Its label on the after side [kpadopt4-ideas]
+ * @property {(before: string, after: string) => string} compareSlider  The divider's name for a screen reader [kpadopt4-ideas]
+ * @property {(percent: number, before: string, after: string) => string} compareValue  Where the divider stands: "40% Before, 60% After" [kpadopt4-ideas]
+ * @property {string} compareFailed  A pane whose image could not be loaded [kpadopt4-ideas]
  * @property {string} graphShowAll  The network graph's way back to every node and every kind of link (js/graph.js) [scope-143]
  * @property {string} graphShowAllTitle  Its title [scope-143]
  * @property {string} graphHint  The hint under the graph, and the second half of its picture's accessible name: what a pointer, a click and the keys do [scope-143]
@@ -1979,18 +2268,14 @@ export type Strings = {
  * @property {(label: string) => string} checklistDoneMoved  Said when an item is ticked with the keyboard and sank [kpadopt4]
  * @property {(label: string) => string} checklistOpen  Said when an item is unticked [kpadopt4]
  * @property {string} timerRunning  A kitchen timer's state word while it runs (js/timer.js) [kpadopt4]
- * @property {string} timerPaused  Its state word while paused [kpadopt4]
  * @property {string} timerDoneWord  Its state word once it has ended [kpadopt4]
  * @property {(name: string) => string} timerDone  The large line on an ended timer, its notification and its alert, "Rice is done" [kpadopt4]
- * @property {string} timerPause  The button that pauses a timer [kpadopt4]
- * @property {string} timerResume  The button that resumes it [kpadopt4]
  * @property {string} timerStopRing  The button on an ended timer that stops it and takes it away [kpadopt4]
- * @property {string} timerAddMinute  The button that adds a minute, "+1 min" [kpadopt4]
  * @property {(name: string) => string} timerAddMinuteTo  That button's accessible name [kpadopt4]
  * @property {(name: string) => string} timerRemove  The remove button's accessible name and tooltip [kpadopt4]
  * @property {string} timerEmpty  A list with no timer [kpadopt4]
  * @property {(name: string) => string} timerLastMinute  Said once when a timer has a minute left [kpadopt4]
- * @property {(name: string, clock: string) => string} timerStarted  Said when a timer starts [kpadopt4]
+ * @property {(name: string, clock: string) => string} timerStartedNamed  Said when a kitchen timer starts, with its name and its clock [kpadopt4]
  * @property {(name: string) => string} timerAlready  Said when a starter is pressed while its timer runs [kpadopt4]
  * @property {(n: number, total: number) => string} focusCount  The count over a step shown on its own, "Step 3 of 8" (js/focus-steps.js) [kpadopt4]
  * @property {string} focusNext  The button that goes on to the next step [kpadopt4]

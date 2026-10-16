@@ -60,6 +60,7 @@ export const NEEDS = [
             '[data-kp-destructive]',
             '[data-kp-semantic]',
             '[data-kp-confirm]',
+            '[data-kp-type-confirm]',
             '.kp-skip-link',
             '[data-kp-skip]',
             '[data-kp-to-top]',
@@ -71,6 +72,7 @@ export const NEEDS = [
         attach: (m, root) => [
             m.enforceContracts(root),
             m.attachConfirmations(root),
+            m.attachTypeConfirms(root),
             m.attachSkipLinks(root),
             m.attachToTop(root),
             m.attachNavToggles(root),
@@ -185,6 +187,17 @@ export const NEEDS = [
     { name: 'art', when: '[data-kp-art]', load: () => import('./art.js'), attach: (m, root) => [m.attachArt(root)] },
     // The pipeline [kpadopt4]: a read-only board, a lane per stage with its cards.
     { name: 'pipeline', when: '[data-kp-pipeline]', load: () => import('./pipeline.js'), attach: (m, root) => [m.attachPipelines(root)] },
+    // The uptime strip [kpadopt4-ideas]: one cell per period, toned up, degraded, down or without data, in exact figures.
+    { name: 'uptime', when: '[data-kp-uptime]', load: () => import('./uptime.js'), attach: (m, root) => [m.attachUptimes(root)] },
+    // The command block [kpadopt4-ideas]: one command with its terminal, its admin or sudo badge and a copy that confirms.
+    { name: 'command', when: '[data-kp-command]', load: () => import('./command.js'), attach: (m, root) => [m.attachCommands(root)] },
+    // The two timers [kpadopt4-ideas]: a countdown in digits, and the time left as a shrinking disc.
+    { name: 'countdown', when: '[data-kp-countdown]', load: () => import('./countdown.js'), attach: (m, root) => [m.attachCountdowns(root)] },
+    { name: 'timer-disc', when: '[data-kp-timer-disc]', load: () => import('./timer-disc.js'), attach: (m, root) => [m.attachTimerDiscs(root)] },
+    // The range picker [kpadopt4-ideas]: presets as the segmented control, and a custom from–to with the date picker.
+    { name: 'range', when: '[data-kp-range]', load: () => import('./range.js'), attach: (m, root) => [m.attachRanges(root)] },
+    // The compare slider [kpadopt4-ideas]: two versions stacked with a divider between them.
+    { name: 'compare', when: '[data-kp-compare]', load: () => import('./compare.js'), attach: (m, root) => [m.attachCompares(root)] },
     { name: 'graph', when: '[data-kp-graph]', load: () => import('./graph.js'), attach: (m, root) => [m.attachGraphs(root)] },
     {
         // A theme's loading picture made of pieces (`--kp-loading-pieces`,
