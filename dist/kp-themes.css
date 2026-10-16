@@ -27571,7 +27571,9 @@
         --kp-stripe-from: var(--kp-pink-text);
         --kp-stripe-to: var(--kp-core);
     }
-    [data-theme='synthwave'] .kp-action:is(:hover, :focus-visible):not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'])) > .kp-action__title {
+    [data-theme='synthwave']
+        .kp-action:is(:hover, :focus-visible):not(:is(:disabled, [aria-disabled='true'], [aria-busy='true']))
+        > .kp-action__title {
         text-shadow: var(--kp-sw-tube-up, var(--kp-tube-pink));
     }
     /* A press charges the tile, as it charges a button: the top edge burns near-white, the bloom gathers above it, the
@@ -27838,7 +27840,9 @@
     }
     [data-theme='synthwave'] .kp-gantt__swatch[data-kp-state='running'] {
         border-color: var(--primary);
-        background: linear-gradient(90deg, var(--kp-core) 0 3px, transparent 3px) 0 50% / 6px 2px repeat-x, var(--sidebar-background);
+        background:
+            linear-gradient(90deg, var(--kp-core) 0 3px, transparent 3px) 0 50% / 6px 2px repeat-x,
+            var(--sidebar-background);
     }
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='synthwave'] .kp-gantt__run[data-kp-state='running'] {
@@ -27935,6 +27939,70 @@
        drops under the first and out of the timeline onto the legend. */
     [data-theme='synthwave'] .kp-gantt__ghost .kp-gantt__run.kp-skeleton {
         position: absolute;
+    }
+}
+
+/* ── The six opt-in options of the dashboard adoption, round 3, in this theme [kpadopt3] ──
+   The nav bar's separator, the timeline's day buttons and series runs, the week agenda's upcoming list on a phone and
+   the facet swatch's identity pattern (the choice-filter value and the heat grid's End are behaviour only).
+   Synthwave's own (themes/synthwave/CHARACTER.md): the separator is the horizon stood upright, the pink
+   tube with its white core glowing; lying down across the phone's list it is the horizon itself. A day on the axis is
+   swept by the laser under the pointer; pressed it is lit in the pink tube with its glow, the date in the core's white.
+   A series' finished run glows in its own neon; the upcoming list's day rule is a line of the grid floor; the facet
+   pattern glows in its hue. */
+@layer kp.signature {
+    [data-theme='synthwave'] .kp-nav__sep {
+        inline-size: 2px;
+        border-inline-start: 0;
+        border-radius: 1px;
+        background: var(--kp-pink-text, var(--primary));
+        box-shadow:
+            0 0 6px var(--primary),
+            0 0 14px hsl(from var(--primary) h s l / 0.5);
+    }
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='synthwave'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep {
+            inline-size: auto;
+            block-size: 2px;
+            border-block-start: 0;
+        }
+    }
+
+    [data-theme='synthwave'] .kp-gantt__tick:is(button) {
+        border-radius: 2px;
+        text-decoration: none;
+    }
+    [data-theme='synthwave'] .kp-gantt__tick:is(button):hover {
+        color: var(--kp-core);
+        box-shadow: inset 0 -2px 0 var(--primary);
+    }
+    [data-theme='synthwave'] .kp-gantt__tick:is(button)[aria-pressed='true'] {
+        background: hsl(from var(--primary) h s l / 0.18);
+        color: var(--kp-core);
+        box-shadow:
+            inset 0 0 0 1px var(--primary),
+            0 0 10px hsl(from var(--primary) h s l / 0.6);
+        text-shadow: 0 0 6px var(--primary);
+    }
+    [data-theme='synthwave'] .kp-gantt__run[data-kp-state='ok'][data-kp-series] {
+        box-shadow: 0 0 7px hsl(from var(--kp-gantt-series) h s l / 0.7);
+    }
+    [data-theme='synthwave'] .kp-gantt__run[data-kp-state='ok'][data-kp-series]:hover {
+        box-shadow:
+            0 0 0 1px var(--kp-core),
+            0 0 12px hsl(from var(--primary) h s l / 0.7);
+    }
+    [data-theme='synthwave'] .kp-week__next:not(:has(+ .kp-week__next:not([data-kp-day-start]))) {
+        border-block-end-color: hsl(from var(--primary) h s l / 0.35);
+    }
+    [data-theme='synthwave'] .kp-facet__swatch[data-kp-facet-pattern] {
+        border-radius: 2px;
+        box-shadow: 0 0 6px hsl(from var(--kp-facet-swatch-colour, var(--primary)) h s l / 0.7);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] .kp-gantt__tick:is(button) {
+            transition: box-shadow var(--fx-duration) var(--fx-ease);
+        }
     }
 }
 
@@ -36594,7 +36662,9 @@
         --kp-tm-bk: var(--primary);
         box-shadow: 0 0 0 1px var(--ring);
     }
-    [data-theme='terminal'] .kp-action:is(:hover, :focus-visible):not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'], :active)) .kp-action__title::after {
+    [data-theme='terminal']
+        .kp-action:is(:hover, :focus-visible):not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'], :active))
+        .kp-action__title::after {
         visibility: visible;
     }
     /* A press: reverse video, the plate the bright phosphor and the ink the ground; nothing moves. */
@@ -36989,6 +37059,65 @@
        drops under the first and out of the timeline onto the legend. */
     [data-theme='terminal'] .kp-gantt__ghost .kp-gantt__run.kp-skeleton {
         position: absolute;
+    }
+}
+
+/* ── The six opt-in options of the dashboard adoption, round 3, in this theme [kpadopt3] ──
+   The nav bar's separator, the timeline's day buttons and series runs, the week agenda's upcoming list on a phone and
+   the facet swatch's identity pattern (the choice-filter value and the heat grid's End are behaviour only).
+   Terminal's own (themes/terminal/CHARACTER.md): the separator is written, not drawn: the box-drawing
+   character │ in the dim phosphor between two groups, and a line of ─ across the phone's list. A day on the axis takes
+   the cursor ring under the pointer; pressed it is reverse video, the phosphor block with the date in the ground's ink
+   (the menu's Reverse). The upcoming list's day rule is dashed, as the week's rules are; a facet pattern blooms in its
+   hue on a square cell. Nothing eases: the screen redraws. */
+@layer kp.signature {
+    [data-theme='terminal'] .kp-nav__sep {
+        display: grid;
+        place-items: center;
+        inline-size: 1ch;
+        border-inline-start: 0;
+        color: var(--muted-foreground);
+        font-size: 1.25em;
+        line-height: 1;
+    }
+    [data-theme='terminal'] .kp-nav__sep::before {
+        content: '│';
+    }
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='terminal'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep {
+            display: block;
+            contain: inline-size;
+            inline-size: auto;
+            block-size: 1em;
+            overflow: hidden;
+            border-block-start: 0;
+            font-size: 1em;
+            white-space: nowrap;
+        }
+        [data-theme='terminal'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep::before {
+            content: '────────────────────────────────────────────────────────────';
+        }
+    }
+
+    [data-theme='terminal'] .kp-gantt__tick:is(button) {
+        border-radius: 0;
+        text-decoration: none;
+    }
+    [data-theme='terminal'] .kp-gantt__tick:is(button):hover {
+        color: var(--primary);
+        box-shadow: var(--kp-sig-tm-ring);
+    }
+    [data-theme='terminal'] .kp-gantt__tick:is(button)[aria-pressed='true'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        box-shadow: none;
+    }
+    [data-theme='terminal'] .kp-week__next:not(:has(+ .kp-week__next:not([data-kp-day-start]))) {
+        border-block-end-style: dashed;
+    }
+    [data-theme='terminal'] .kp-facet__swatch[data-kp-facet-pattern] {
+        border-radius: 0;
+        box-shadow: 0 0 4px hsl(from var(--kp-facet-swatch-colour, var(--primary)) h s l / 0.6);
     }
 }
 
@@ -49822,8 +49951,7 @@
             radial-gradient(circle at calc(50% + 0.3rem * var(--kp-sig-pa-dir)) 42%, var(--primary) 0 0.12rem, transparent 0.16rem),
             radial-gradient(circle at calc(50% + 0.75rem * var(--kp-sig-pa-dir)) 42%, var(--primary) 0 0.12rem, transparent 0.16rem),
             radial-gradient(circle at calc(50% + 0.3rem * var(--kp-sig-pa-dir)) 42%, var(--card) 0 0.3rem, transparent 0.34rem),
-            radial-gradient(circle at calc(50% + 0.75rem * var(--kp-sig-pa-dir)) 42%, var(--card) 0 0.3rem, transparent 0.34rem),
-            var(--primary);
+            radial-gradient(circle at calc(50% + 0.75rem * var(--kp-sig-pa-dir)) 42%, var(--card) 0 0.3rem, transparent 0.34rem), var(--primary);
     }
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='pastel'] .kp-matrix__cell.kp-skeleton {
@@ -49973,6 +50101,67 @@
        drops under the first and out of the timeline onto the legend. */
     [data-theme='pastel'] .kp-gantt__ghost .kp-gantt__run.kp-skeleton {
         position: absolute;
+    }
+}
+
+/* ── The six opt-in options of the dashboard adoption, round 3, in this theme [kpadopt3] ──
+   The nav bar's separator, the timeline's day buttons and series runs, the week agenda's upcoming list on a phone and
+   the facet swatch's identity pattern (the choice-filter value and the heat grid's End are behaviour only).
+   Pastel's own (themes/pastel/CHARACTER.md): the separator is the divider's row of plum beads, stood upright,
+   and lying down across the phone's list as a dotted bead line. A day on the axis is a sticker: pointing lifts it on
+   its plum peel, pressed it is stuck down, the pink chip in a plum ring (G5). A series' finished run stands on a peel of
+   its own colour; the upcoming list's day rule is the beads; the facet pattern is a rounded sticker on a little peel. */
+@layer kp.signature {
+    [data-theme='pastel'] .kp-nav__sep {
+        inline-size: 4px;
+        border-inline-start: 0;
+        background: radial-gradient(circle, var(--primary) 0 1.5px, transparent 2px) center / 4px 7px repeat-y;
+    }
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='pastel'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep {
+            inline-size: auto;
+            block-size: 4px;
+            border-block-start: 0;
+            background: radial-gradient(circle, var(--primary) 0 1.5px, transparent 2px) center / 7px 4px repeat-x;
+        }
+    }
+
+    [data-theme='pastel'] .kp-gantt__tick:is(button) {
+        border-radius: var(--kp-sig-pa-r-chip, 999px);
+        text-decoration: none;
+    }
+    [data-theme='pastel'] .kp-gantt__tick:is(button):hover {
+        background: var(--card);
+        color: var(--foreground);
+        box-shadow:
+            inset 0 0 0 1px var(--border),
+            0 2px 0 var(--kp-sig-pa-peel);
+        translate: 0 -1px;
+    }
+    [data-theme='pastel'] .kp-gantt__tick:is(button)[aria-pressed='true'] {
+        background: color-mix(in oklab, var(--primary) 18%, var(--card));
+        color: var(--primary);
+        box-shadow: inset 0 0 0 1.5px var(--primary);
+        translate: 0 0;
+    }
+    [data-theme='pastel'] .kp-gantt__run[data-kp-state='ok'][data-kp-series] {
+        box-shadow: 0 2px 0 hsl(from var(--kp-gantt-series) h s calc(l * 0.6));
+    }
+    [data-theme='pastel'] .kp-week__next:not(:has(+ .kp-week__next:not([data-kp-day-start]))) {
+        border-block-end-style: dotted;
+        border-block-end-width: 2px;
+        border-block-end-color: hsl(from var(--primary) h s l / 0.55);
+    }
+    [data-theme='pastel'] .kp-facet__swatch[data-kp-facet-pattern] {
+        border-radius: 5px;
+        box-shadow: 0 1.5px 0 hsl(from var(--kp-facet-swatch-colour, var(--primary)) h s calc(l * 0.6));
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='pastel'] .kp-gantt__tick:is(button) {
+            transition:
+                translate var(--fx-duration) var(--kp-sig-pa-land, var(--fx-ease)),
+                box-shadow var(--fx-duration) var(--kp-sig-pa-land, var(--fx-ease));
+        }
     }
 }
 
