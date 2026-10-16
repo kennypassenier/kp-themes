@@ -45,6 +45,15 @@ missing pieces were the row, the ellipsis and the short/long swap, which are CSS
   second, as asked for by a class, not a number.
 - The dashboard's `nx-count` badge in the tab is the package's `.kp-badge` made small and placed at the icon's corner.
 
+## Round 5 of the page (2026-10-16-r5): phantom's More menu
+
+Only the folding bar in phantom is open. Its opened More menu had no background in the review dialog: phantom's register makes a list
+inside a dialog, popover, toast, confirm, date picker or palette bare (`background: transparent`, no edge, no paperclip), and the
+review dialog's stage is a `.kp-dialog`. A rule of its own on `.kp-nav__more-menu` gives that menu its ground, edge, cut and
+fold back (css/phantom-register.css, "Nor is the folding bar's More menu"); the bare rule and every approved surface stay as they were.
+`gates/check-raised-plate.mjs` refuses the next register rule that strips a raised menu's plate; `research/_review/measure-plate.mjs`
+measures it in Firefox.
+
 ## Open design questions for the demo
 
 1. Decided in round 2 (Kenny, 2026-10-16, after the drawer opened over the whole window with no way back): the phone's More stays

@@ -153,59 +153,69 @@ weekWide.addEventListener(WEEK_OPEN_EVENT, (e) =>
     say(weekLog, `opened: ${/** @type {CustomEvent} */ (e).detail.event.label} (${/** @type {CustomEvent} */ (e).detail.source})`),
 );
 weekPhone.addEventListener(WEEK_OPEN_EVENT, (e) => say(weekLog, `phone opened: ${/** @type {CustomEvent} */ (e).detail.event.label}`));
+// A real page fetches the new range: both agendas wait in the theme's loading picture, then the items arrive the theme's
+// way. A second press during the wait asks for the newest range only.
+let rangeAsk = 0;
 weekWide.addEventListener(WEEK_RANGE_EVENT, (e) => {
     start = /** @type {CustomEvent} */ (e).detail.start;
-    say(weekLog, `range moved to ${start}; the page gives the items for it`);
-    setWeekEvents(weekWide, plan(start));
+    say(weekLog, `range moved to ${start}; the page reads its items`);
     setWeekStart(weekPhone, start);
-    setWeekEvents(weekPhone, plan(start));
+    for (const el of [weekWide, weekPhone]) setWeekState(el, 'loading');
+    const ask = ++rangeAsk;
+    window.setTimeout(() => {
+        if (ask !== rangeAsk) return;
+        for (const el of [weekWide, weekPhone]) setWeekEvents(el, plan(start));
+    }, 900);
 });
 
-/* ----------------------------------------------------------- crowded day */
+// Each part runs only when its section is on the page: a re-review round shows only the open sections.
+if (document.getElementById('kt-crowd-wide')) {
+    /* ----------------------------------------------------------- crowded day */
 
-const crowdWide = byId('kt-crowd-wide');
-const crowdPhone = byId('kt-crowd-phone');
-const crowdLog = byId('kt-crowd-log');
-let crowded = 14;
-const feedCrowd = () => {
-    const day = shiftDay(today(), 3);
-    const events = [...plan(today()).filter((e) => !e.id.includes(day)), ...crowd(day, crowded)];
-    for (const el of [crowdWide, crowdPhone]) setWeekEvents(el, events);
-};
-feedCrowd();
-crowdWide.addEventListener(WEEK_OPEN_EVENT, (e) => say(crowdLog, `opened: ${/** @type {CustomEvent} */ (e).detail.event.label}`));
-byId('kt-crowd-add').addEventListener('click', () => {
-    crowded = Math.min(15, crowded + 1);
+    const crowdWide = byId('kt-crowd-wide');
+    const crowdPhone = byId('kt-crowd-phone');
+    const crowdLog = byId('kt-crowd-log');
+    let crowded = 14;
+    const feedCrowd = () => {
+        const day = shiftDay(today(), 3);
+        const events = [...plan(today()).filter((e) => !e.id.includes(day)), ...crowd(day, crowded)];
+        for (const el of [crowdWide, crowdPhone]) setWeekEvents(el, events);
+    };
     feedCrowd();
-});
-byId('kt-crowd-remove').addEventListener('click', () => {
-    crowded = Math.max(0, crowded - 1);
-    feedCrowd();
-});
-const moreWrapper = () => /** @type {HTMLElement | null} */ (crowdWide.querySelector('.kp-week__more:not([hidden])'));
-const showMore = () => {
-    const wrapper = moreWrapper();
-    if (wrapper) openMenu(wrapper, { focus: 'none' });
-};
-byId('kt-more-open').addEventListener('click', () => {
-    const wrapper = moreWrapper();
-    if (wrapper) openMenu(wrapper, { focus: 'first' });
-});
-// The opened state: shown while the +N button is wholly in view, so it opens joined to its button and never above it from
-// below the fold; closed again when the button leaves the view.
-window.setTimeout(() => {
-    const wrapper = moreWrapper();
-    if (!wrapper) return;
-    new IntersectionObserver(
-        (entries) => {
-            const last = entries[entries.length - 1];
-            if (!last) return;
-            if (last.intersectionRatio >= 0.99) window.setTimeout(() => last.target.isConnected && showMore(), 250);
-            else closeMenu(wrapper);
-        },
-        { threshold: [0, 0.99] },
-    ).observe(/** @type {Element} */ (wrapper.querySelector('button')));
-}, 700);
+    crowdWide.addEventListener(WEEK_OPEN_EVENT, (e) => say(crowdLog, `opened: ${/** @type {CustomEvent} */ (e).detail.event.label}`));
+    byId('kt-crowd-add').addEventListener('click', () => {
+        crowded = Math.min(15, crowded + 1);
+        feedCrowd();
+    });
+    byId('kt-crowd-remove').addEventListener('click', () => {
+        crowded = Math.max(0, crowded - 1);
+        feedCrowd();
+    });
+    const moreWrapper = () => /** @type {HTMLElement | null} */ (crowdWide.querySelector('.kp-week__more:not([hidden])'));
+    const showMore = () => {
+        const wrapper = moreWrapper();
+        if (wrapper) openMenu(wrapper, { focus: 'none' });
+    };
+    byId('kt-more-open').addEventListener('click', () => {
+        const wrapper = moreWrapper();
+        if (wrapper) openMenu(wrapper, { focus: 'first' });
+    });
+    // The opened state: shown while the +N button is wholly in view, so it opens joined to its button and never above it from
+    // below the fold; closed again when the button leaves the view.
+    window.setTimeout(() => {
+        const wrapper = moreWrapper();
+        if (!wrapper) return;
+        new IntersectionObserver(
+            (entries) => {
+                const last = entries[entries.length - 1];
+                if (!last) return;
+                if (last.intersectionRatio >= 0.99) window.setTimeout(() => last.target.isConnected && showMore(), 250);
+                else closeMenu(wrapper);
+            },
+            { threshold: [0, 0.99] },
+        ).observe(/** @type {Element} */ (wrapper.querySelector('button')));
+    }, 700);
+}
 
 /* ------------------------------------------------------------ week states */
 
@@ -221,177 +231,194 @@ window.setTimeout(() => {
     const first = /** @type {HTMLElement | null} */ (stateFocus.querySelector('.kp-week__pill[tabindex="0"]'));
     first?.focus({ preventScroll: true, focusVisible: true });
 }, 400);
-byId('kt-states-cycle').addEventListener('click', () => {
-    setWeekState(weekWide, 'loading');
-    window.setTimeout(() => setWeekEvents(weekWide, plan(start)), 2000);
+// The first agenda of this section, the loading one: it is shown loading again, and after two seconds its items arrive the
+// theme's way. The button waits (aria-disabled, its words say so) until they have come, then can play it again.
+const cycle = byId('kt-states-cycle');
+const cycleSpin = /** @type {HTMLElement} */ (cycle.querySelector('.kp-spinner'));
+const cycleWords = /** @type {HTMLElement} */ (cycle.querySelector('[data-kt-cycle-words]'));
+const cycleRest = cycleWords.textContent ?? '';
+cycle.addEventListener('click', () => {
+    if (cycle.getAttribute('aria-disabled') === 'true') return;
+    cycle.setAttribute('aria-disabled', 'true');
+    cycleSpin.hidden = false;
+    cycleWords.textContent = 'Loading · the items arrive in 2 s';
+    setWeekState(stateLoading, 'loading');
+    window.setTimeout(() => {
+        setWeekEvents(stateLoading, plan(today()));
+        cycle.removeAttribute('aria-disabled');
+        cycleSpin.hidden = true;
+        cycleWords.textContent = cycleRest;
+    }, 2000);
 });
 
-/* ------------------------------------------------------------- the timeline */
+if (document.getElementById('kt-gantt-wide')) {
+    /* ------------------------------------------------------------- the timeline */
 
-let origin = Date.now();
-let virtual = origin;
-let speed = 1;
-const clock = () => virtual + (Date.now() - origin) * speed;
-const MIN = 60_000;
+    let origin = Date.now();
+    let virtual = origin;
+    let speed = 1;
+    const clock = () => virtual + (Date.now() - origin) * speed;
+    const MIN = 60_000;
 
-/** @type {import('../../js/gantt.js').GanttLane[]} */
-const LANES = [
-    { id: 'backup', label: 'Backups' },
-    { id: 'update', label: 'Updates' },
-    { id: 'prune', label: 'Prune' },
-    { id: 'report', label: 'Reports' },
-    { id: 'certs', label: 'Certificates' },
-];
+    /** @type {import('../../js/gantt.js').GanttLane[]} */
+    const LANES = [
+        { id: 'backup', label: 'Backups' },
+        { id: 'update', label: 'Updates' },
+        { id: 'prune', label: 'Prune' },
+        { id: 'report', label: 'Reports' },
+        { id: 'certs', label: 'Certificates' },
+    ];
 
-/** @type {import('../../js/gantt.js').GanttRun[]} */
-let runs = [];
-let seq = 100;
-/** @param {string} id @param {string} lane @param {string} label @param {number} agoMin @param {number} lengthMin @param {import('../../js/gantt.js').GanttRunState} state @param {string} [detail] */
-const run = (id, lane, label, agoMin, lengthMin, state, detail) => {
-    const startMs = Date.now() - agoMin * MIN;
-    runs.push({
-        id,
-        lane,
-        label,
-        start: startMs,
-        end: state === 'running' || state === 'queued' ? null : startMs + lengthMin * MIN,
-        state,
-        ...(detail ? { detail } : {}),
-    });
-};
-run('b1', 'backup', 'Backup photos', 340, 12, 'ok', 'Nightly photos, 4.1 GB.');
-run('b2', 'backup', 'Backup databases', 180, 4, 'failed', 'The dump stopped: no space left on the target.');
-run('b3', 'backup', 'Backup photos', 135, 11, 'ok', 'Nightly photos, 4.0 GB.');
-run('b4', 'backup', 'Backup documents', 7, 0, 'running', 'Started by the schedule.');
-run('u1', 'update', 'Update images', 290, 9, 'ok');
-run('u2', 'update', 'Update dashboard', 285, 5, 'ok', 'Runs beside the images update.');
-run('u3', 'update', 'Update images', 80, 2, 'failed', 'The registry did not answer.');
-run('u4', 'update', 'Update images', 2, 0, 'queued', 'Waits for the backup to finish.');
-run('p1', 'prune', 'Prune snapshots', 310, 3, 'ok');
-run('p2', 'prune', 'Prune snapshots', 110, 4, 'ok');
-run('p3', 'prune', 'Prune snapshots', 1, 0, 'running');
-for (let k = 0; k < 6; k += 1)
-    run(
-        `r${k}`,
-        'report',
-        'Mail the report',
-        330 - k * 60,
-        1.5,
-        k === 3 ? 'failed' : 'ok',
-        k === 3 ? 'The mail server refused the message.' : 'A summary of the last hour.',
-    );
-run('c1', 'certs', 'Check certificates', 355, 0.7, 'ok');
-run('c2', 'certs', 'Check certificates', 1415, 0.7, 'ok');
-// Older days, for the 24 h and 7 d ranges.
-for (let d = 1; d <= 6; d += 1) {
-    run(`bd${d}`, 'backup', 'Backup photos', d * 1440 - 380, 12, d === 4 ? 'failed' : 'ok');
-    run(`pd${d}`, 'prune', 'Prune snapshots', d * 1440 - 320, 3, 'ok');
-    if (d % 3 === 0) run(`ud${d}`, 'update', 'Update images', d * 1440 - 300, 9, 'ok');
-}
-
-const ganttWide = byId('kt-gantt-wide');
-const ganttPhone = byId('kt-gantt-phone');
-const ganttLog = byId('kt-gantt-log');
-attachGantts(document, { now: clock });
-const feed = () => {
-    for (const el of [ganttWide, ganttPhone]) setGanttRuns(el, runs, LANES);
-};
-setGanttState(ganttWide, 'loading');
-setGanttState(ganttPhone, 'loading');
-window.setTimeout(feed, 900);
-for (const el of [ganttWide, ganttPhone]) {
-    el.addEventListener(GANTT_OPEN_EVENT, (e) =>
-        say(ganttLog, `opened: ${/** @type {CustomEvent} */ (e).detail.run.label} (${/** @type {CustomEvent} */ (e).detail.source})`),
-    );
-    el.addEventListener(GANTT_SELECT_EVENT, (e) => {
-        const d = /** @type {CustomEvent} */ (e).detail;
-        say(
-            ganttLog,
-            d.from === null
-                ? 'selection lifted'
-                : `selected ${new Date(d.from).toLocaleTimeString('en-GB')} to ${new Date(d.to).toLocaleTimeString('en-GB')} (${d.source})`,
+    /** @type {import('../../js/gantt.js').GanttRun[]} */
+    let runs = [];
+    let seq = 100;
+    /** @param {string} id @param {string} lane @param {string} label @param {number} agoMin @param {number} lengthMin @param {import('../../js/gantt.js').GanttRunState} state @param {string} [detail] */
+    const run = (id, lane, label, agoMin, lengthMin, state, detail) => {
+        const startMs = Date.now() - agoMin * MIN;
+        runs.push({
+            id,
+            lane,
+            label,
+            start: startMs,
+            end: state === 'running' || state === 'queued' ? null : startMs + lengthMin * MIN,
+            state,
+            ...(detail ? { detail } : {}),
+        });
+    };
+    run('b1', 'backup', 'Backup photos', 340, 12, 'ok', 'Nightly photos, 4.1 GB.');
+    run('b2', 'backup', 'Backup databases', 180, 4, 'failed', 'The dump stopped: no space left on the target.');
+    run('b3', 'backup', 'Backup photos', 135, 11, 'ok', 'Nightly photos, 4.0 GB.');
+    run('b4', 'backup', 'Backup documents', 7, 0, 'running', 'Started by the schedule.');
+    run('u1', 'update', 'Update images', 290, 9, 'ok');
+    run('u2', 'update', 'Update dashboard', 285, 5, 'ok', 'Runs beside the images update.');
+    run('u3', 'update', 'Update images', 80, 2, 'failed', 'The registry did not answer.');
+    run('u4', 'update', 'Update images', 2, 0, 'queued', 'Waits for the backup to finish.');
+    run('p1', 'prune', 'Prune snapshots', 310, 3, 'ok');
+    run('p2', 'prune', 'Prune snapshots', 110, 4, 'ok');
+    run('p3', 'prune', 'Prune snapshots', 1, 0, 'running');
+    for (let k = 0; k < 6; k += 1)
+        run(
+            `r${k}`,
+            'report',
+            'Mail the report',
+            330 - k * 60,
+            1.5,
+            k === 3 ? 'failed' : 'ok',
+            k === 3 ? 'The mail server refused the message.' : 'A summary of the last hour.',
         );
+    run('c1', 'certs', 'Check certificates', 355, 0.7, 'ok');
+    run('c2', 'certs', 'Check certificates', 1415, 0.7, 'ok');
+    // Older days, for the 24 h and 7 d ranges.
+    for (let d = 1; d <= 6; d += 1) {
+        run(`bd${d}`, 'backup', 'Backup photos', d * 1440 - 380, 12, d === 4 ? 'failed' : 'ok');
+        run(`pd${d}`, 'prune', 'Prune snapshots', d * 1440 - 320, 3, 'ok');
+        if (d % 3 === 0) run(`ud${d}`, 'update', 'Update images', d * 1440 - 300, 9, 'ok');
+    }
+
+    const ganttWide = byId('kt-gantt-wide');
+    const ganttPhone = byId('kt-gantt-phone');
+    const ganttLog = byId('kt-gantt-log');
+    attachGantts(document, { now: clock });
+    const feed = () => {
+        for (const el of [ganttWide, ganttPhone]) setGanttRuns(el, runs, LANES);
+    };
+    setGanttState(ganttWide, 'loading');
+    setGanttState(ganttPhone, 'loading');
+    window.setTimeout(feed, 900);
+    for (const el of [ganttWide, ganttPhone]) {
+        el.addEventListener(GANTT_OPEN_EVENT, (e) =>
+            say(ganttLog, `opened: ${/** @type {CustomEvent} */ (e).detail.run.label} (${/** @type {CustomEvent} */ (e).detail.source})`),
+        );
+        el.addEventListener(GANTT_SELECT_EVENT, (e) => {
+            const d = /** @type {CustomEvent} */ (e).detail;
+            say(
+                ganttLog,
+                d.from === null
+                    ? 'selection lifted'
+                    : `selected ${new Date(d.from).toLocaleTimeString('en-GB')} to ${new Date(d.to).toLocaleTimeString('en-GB')} (${d.source})`,
+            );
+        });
+        el.addEventListener(GANTT_WINDOW_EVENT, (e) => {
+            const d = /** @type {CustomEvent} */ (e).detail;
+            say(ganttLog, `window: ${Math.round(d.span / 60)} min, ${d.live ? 'live' : 'held'}`);
+        });
+    }
+
+    const LABELS = ['Backup documents', 'Update images', 'Prune snapshots', 'Mail the report', 'Check certificates'];
+    let rotate = 0;
+    const nowMs = () => Math.round(clock());
+    byId('kt-run-start').addEventListener('click', () => {
+        const k = rotate % LANES.length;
+        rotate += 1;
+        seq += 1;
+        runs = [
+            ...runs,
+            {
+                id: `n${seq}`,
+                lane: LANES[k]?.id ?? 'backup',
+                label: LABELS[k] ?? 'Job',
+                start: nowMs(),
+                end: null,
+                state: 'running',
+                detail: 'Started from this page.',
+            },
+        ];
+        feed();
     });
-    el.addEventListener(GANTT_WINDOW_EVENT, (e) => {
-        const d = /** @type {CustomEvent} */ (e).detail;
-        say(ganttLog, `window: ${Math.round(d.span / 60)} min, ${d.live ? 'live' : 'held'}`);
+    /** @param {'ok' | 'failed'} to */
+    const finishOldest = (to) => {
+        const oldest = runs.filter((r) => r.state === 'running').sort((a, b) => Number(a.start) - Number(b.start))[0];
+        if (!oldest) return;
+        runs = runs.map((r) => (r === oldest ? { ...r, state: to, end: nowMs(), detail: to === 'failed' ? 'Stopped by the demo.' : r.detail } : r));
+        feed();
+    };
+    byId('kt-run-finish').addEventListener('click', () => finishOldest('ok'));
+    byId('kt-run-fail').addEventListener('click', () => finishOldest('failed'));
+    byId('kt-run-queue').addEventListener('click', () => {
+        seq += 1;
+        runs = [
+            ...runs,
+            { id: `n${seq}`, lane: 'update', label: 'Update images', start: nowMs(), end: null, state: 'queued', detail: 'Waits for a free slot.' },
+        ];
+        feed();
+    });
+    byId('kt-run-promote').addEventListener('click', () => {
+        const queued = runs.find((r) => r.state === 'queued');
+        if (!queued) return;
+        runs = runs.map((r) => (r === queued ? { ...r, state: 'running', start: nowMs() } : r));
+        feed();
+    });
+    const fast = byId('kt-run-fast');
+    fast.addEventListener('click', () => {
+        virtual = clock();
+        origin = Date.now();
+        speed = speed === 1 ? 60 : 1;
+        fast.setAttribute('aria-pressed', String(speed !== 1));
+        fast.textContent = speed === 1 ? 'Fast time (x60)' : 'Real time (x1)';
+    });
+
+    /* ------------------------------------------------------- timeline states */
+
+    const gLoading = byId('kt-gstate-loading');
+    const gEmpty = byId('kt-gstate-empty');
+    const gError = byId('kt-gstate-error');
+    const gHeld = byId('kt-gstate-held');
+    setGanttState(gLoading, 'loading');
+    setGanttState(gEmpty, 'empty');
+    setGanttState(gError, 'error', 'The history could not be read: the host did not answer.');
+    const held = Date.now() - 2 * 3_600_000;
+    setGanttRuns(
+        gHeld,
+        runs.filter((r) => Number(r.start) < held + 10 * MIN),
+        LANES,
+    );
+    setGanttWindow(gHeld, { span: 6 * 3600, live: false, to: held });
+    setGanttSelection(gHeld, { from: held - 3 * 3_600_000, to: held - 2 * 3_600_000 });
+    byId('kt-hover-open').addEventListener('click', () => {
+        const bar = /** @type {HTMLElement | null} */ (gHeld.querySelector('.kp-gantt__run[data-kp-state="failed"]:not([hidden])'));
+        if (bar) {
+            bar.scrollIntoView({ block: 'center' });
+            hover.open(bar);
+        }
     });
 }
-
-const LABELS = ['Backup documents', 'Update images', 'Prune snapshots', 'Mail the report', 'Check certificates'];
-let rotate = 0;
-const nowMs = () => Math.round(clock());
-byId('kt-run-start').addEventListener('click', () => {
-    const k = rotate % LANES.length;
-    rotate += 1;
-    seq += 1;
-    runs = [
-        ...runs,
-        {
-            id: `n${seq}`,
-            lane: LANES[k]?.id ?? 'backup',
-            label: LABELS[k] ?? 'Job',
-            start: nowMs(),
-            end: null,
-            state: 'running',
-            detail: 'Started from this page.',
-        },
-    ];
-    feed();
-});
-/** @param {'ok' | 'failed'} to */
-const finishOldest = (to) => {
-    const oldest = runs.filter((r) => r.state === 'running').sort((a, b) => Number(a.start) - Number(b.start))[0];
-    if (!oldest) return;
-    runs = runs.map((r) => (r === oldest ? { ...r, state: to, end: nowMs(), detail: to === 'failed' ? 'Stopped by the demo.' : r.detail } : r));
-    feed();
-};
-byId('kt-run-finish').addEventListener('click', () => finishOldest('ok'));
-byId('kt-run-fail').addEventListener('click', () => finishOldest('failed'));
-byId('kt-run-queue').addEventListener('click', () => {
-    seq += 1;
-    runs = [
-        ...runs,
-        { id: `n${seq}`, lane: 'update', label: 'Update images', start: nowMs(), end: null, state: 'queued', detail: 'Waits for a free slot.' },
-    ];
-    feed();
-});
-byId('kt-run-promote').addEventListener('click', () => {
-    const queued = runs.find((r) => r.state === 'queued');
-    if (!queued) return;
-    runs = runs.map((r) => (r === queued ? { ...r, state: 'running', start: nowMs() } : r));
-    feed();
-});
-const fast = byId('kt-run-fast');
-fast.addEventListener('click', () => {
-    virtual = clock();
-    origin = Date.now();
-    speed = speed === 1 ? 60 : 1;
-    fast.setAttribute('aria-pressed', String(speed !== 1));
-    fast.textContent = speed === 1 ? 'Fast time (x60)' : 'Real time (x1)';
-});
-
-/* ------------------------------------------------------- timeline states */
-
-const gLoading = byId('kt-gstate-loading');
-const gEmpty = byId('kt-gstate-empty');
-const gError = byId('kt-gstate-error');
-const gHeld = byId('kt-gstate-held');
-setGanttState(gLoading, 'loading');
-setGanttState(gEmpty, 'empty');
-setGanttState(gError, 'error', 'The history could not be read: the host did not answer.');
-const held = Date.now() - 2 * 3_600_000;
-setGanttRuns(
-    gHeld,
-    runs.filter((r) => Number(r.start) < held + 10 * MIN),
-    LANES,
-);
-setGanttWindow(gHeld, { span: 6 * 3600, live: false, to: held });
-setGanttSelection(gHeld, { from: held - 3 * 3_600_000, to: held - 2 * 3_600_000 });
-byId('kt-hover-open').addEventListener('click', () => {
-    const bar = /** @type {HTMLElement | null} */ (gHeld.querySelector('.kp-gantt__run[data-kp-state="failed"]:not([hidden])'));
-    if (bar) {
-        bar.scrollIntoView({ block: 'center' });
-        hover.open(bar);
-    }
-});

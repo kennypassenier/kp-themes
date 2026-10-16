@@ -61,6 +61,19 @@
  * @property {string} stepFailed  A step that failed
  * @property {string} stepSkipped  A step that was left out
  * @property {(title: string, state: string) => string} stepAnnounce  What the list's status region says when a step changes, "Pull the images: running"
+ * @property {string} statusOk  A status row that is fine, as a screen reader hears it (js/statusrow.js)
+ * @property {string} statusLoading  A status row still being read
+ * @property {string} statusFailed  A status row that failed
+ * @property {string} statusEmpty  A status row with nothing to show
+ * @property {string} statusRetry  The Retry button of a failed status row
+ * @property {(label: string) => string} statusRetryLabel  That button's accessible name, "Retry vault"
+ * @property {(label: string, state: string, detail: string) => string} statusAnnounce  What the list's status region says when a row changes, "vault: failed, The host did not answer"
+ * @property {(count: number, failed: number) => string} statusAnnounceMany  What it says when more than three rows change in one tick, "12 updated, 2 failed"
+ * @property {string} facetOnly  The "only" button's text on a facet row (js/facets.js)
+ * @property {(label: string) => string} facetOnlyLabel  That button's accessible name, "Show only Host"
+ * @property {string} facetAll  The "Everything" row's text when the group gives none
+ * @property {(label: string) => string} facetShowingOnly  What a facet group's status region says after "only", "Showing only Host"
+ * @property {string} facetShowingAll  What it says after "Everything"
  * @property {string} busy
  * @property {string} close
  * @property {string} menu          The accessible name of a collapsed navigation's toggle
@@ -112,6 +125,11 @@
  * @property {string} toolbarShowingOnly  The word before the filters that are on, in a list toolbar's active row (js/toolbar.js) [kpadopt-controls]
  * @property {string} toolbarClearAll       The toolbar's button that turns every filter off [kpadopt-controls]
  * @property {string} keysLabel            The accessible name of a line of keyboard shortcuts (js/keys.js) [kpadopt-controls]
+ * @property {string} heatLoading           What a heat grid's or matrix's cell says while its value is being read (js/heat.js) [kpadopt2-grids]
+ * @property {string} heatEmpty             A heat grid or matrix with no rows [kpadopt2-grids]
+ * @property {string} heatFailed            A heat grid or matrix that could not be read [kpadopt2-grids]
+ * @property {string} matrixSelf            A matrix cell that pairs a row with itself, for a screen reader [kpadopt2-grids]
+ * @property {string} matrixUnknown         A matrix cell with no answer, for a screen reader [kpadopt2-grids]
  * @property {string} tableClearSearch      The way out of the no-match state
  * @property {(active: number) => string} tableAddFilter  The "+ Add filter" button of a table in the add-filter mode, with the number of active filters
  * @property {string} tableAddFilterMenu    The name of its menu of filterable columns
@@ -300,6 +318,42 @@
  * @property {string} calendarFuture  What a day still to come is, when the page says nothing about it [scope-143]
  * @property {string} calendarLoading  What every day is while the calendar loads [scope-143]
  * @property {string} calendarUnknown  What a past day is when the page says nothing about it [scope-143]
+ * @property {string} weekGroup  The name of a week agenda when the page gives none (js/week.js)
+ * @property {string} weekPrev  The week agenda's button to the week before
+ * @property {string} weekNext  Its button to the week after
+ * @property {string} weekToday  Its button back to the current week; also the word under today's date
+ * @property {string} weekNow  The now-line's name
+ * @property {(time: string) => string} weekNowAt  The now-line's name with the time, "now, 14:32"
+ * @property {(n: number) => string} weekMore  The overflow pill's text, "+3"
+ * @property {(n: number, day: string) => string} weekMoreLabel  The overflow pill's name, "3 more runs on Tue 17/10"
+ * @property {string} weekNextRun  What a next run is called in a pill's name
+ * @property {string} weekOff  What a switched-off item is called in a pill's name
+ * @property {string} weekSkipped  What a skipped item is called in a pill's name
+ * @property {string} weekReference  What a reference item (the host's own round) is called in a pill's name
+ * @property {string} weekEmpty  The sentence of a week with nothing in it
+ * @property {string} weekLoading  The sentence of a week being read
+ * @property {string} ganttGroup  The name of a run timeline when the page gives none (js/gantt.js)
+ * @property {string} ganttRange  The name of the range buttons
+ * @property {(label: string) => string} ganttRangeTitle  A range button's title, "Show the last 6 hours"
+ * @property {string} ganttNow  The now-line's name
+ * @property {string} ganttSelection  The selected range's chip label
+ * @property {string} ganttClear  The button that lifts the selected range
+ * @property {string} ganttClearTitle  Its title
+ * @property {(from: string, to: string) => string} ganttSelected  The chip's text, "Selected 14:00 to 16:30"
+ * @property {string} ganttEmpty  The sentence of a timeline with no run in the window
+ * @property {string} ganttLoading  The sentence of a timeline being read
+ * @property {string} ganttQueued  A queued run's state word
+ * @property {string} ganttRunning  A running run's state word
+ * @property {string} ganttOk  A finished run's state word
+ * @property {string} ganttFailed  A failed run's state word
+ * @property {(label: string, state: string) => string} ganttAnnounce  What the timeline's status region says when a run changes state, "Backup: failed"
+ * @property {(label: string, when: string, state: string) => string} ganttBar  A bar's name, "Backup, 02:00 to 02:14, failed"
+ * @property {string} ganttLive  The button that makes the window follow now
+ * @property {string} ganttLiveTitle  Its title
+ * @property {string} ganttZoom  The button that makes the selected range the window
+ * @property {string} ganttZoomTitle  Its title
+ * @property {(seconds: number) => string} ganttDuration  A length of time as a person reads it, "14 min", "1 h 5 min", "45 s"
+ * @property {string} ganttHint  The one-line hint under the timeline on how to read and use it
  * @property {string} graphShowAll  The network graph's way back to every node and every kind of link (js/graph.js) [scope-143]
  * @property {string} graphShowAllTitle  Its title [scope-143]
  * @property {string} graphHint  The hint under the graph, and the second half of its picture's accessible name: what a pointer, a click and the keys do [scope-143]
@@ -371,6 +425,21 @@ export const DEFAULT_STRINGS = Object.freeze({
     stepFailed: 'failed',
     stepSkipped: 'skipped',
     stepAnnounce: (title, state) => `${title}: ${state}`,
+    // A status row's states, its Retry and its announcement (js/statusrow.js).
+    statusOk: 'ok',
+    statusLoading: 'loading',
+    statusFailed: 'failed',
+    statusEmpty: 'nothing to show',
+    statusRetry: 'Retry',
+    statusRetryLabel: (label) => `Retry ${label}`,
+    statusAnnounce: (label, state, detail) => (detail ? `${label}: ${state}, ${detail}` : `${label}: ${state}`),
+    statusAnnounceMany: (count, failed) => (failed ? `${count} updated, ${failed} failed` : `${count} updated`),
+    // A facet list's "only" button and its announcements (js/facets.js).
+    facetOnly: 'only',
+    facetOnlyLabel: (label) => `Show only ${label}`,
+    facetAll: 'Everything',
+    facetShowingOnly: (label) => `Showing only ${label}`,
+    facetShowingAll: 'Showing everything',
     busy: 'Working…',
     close: 'Close',
     // The nav toggle carries no glyph of its own — this package ships
@@ -453,6 +522,11 @@ export const DEFAULT_STRINGS = Object.freeze({
     toolbarShowingOnly: 'Showing only',
     toolbarClearAll: 'Clear all',
     keysLabel: 'Keyboard shortcuts',
+    heatLoading: 'Reading…',
+    heatEmpty: 'Nothing to show.',
+    heatFailed: 'Could not be read.',
+    matrixSelf: 'itself',
+    matrixUnknown: 'unknown',
     tableClearSearch: 'Clear the search and filters',
     // The add-filter mode [Kenny, 2026-09-14, "Allebei, per tabel"], in the
     // words of the approved mock, research/datatable/demo.html#filter-add.
@@ -699,6 +773,50 @@ export const DEFAULT_STRINGS = Object.freeze({
     calendarFuture: 'a day still to come',
     calendarLoading: 'being read',
     calendarUnknown: 'nothing known about this day',
+    // The week agenda and the run timeline [kpadopt-time].
+    weekGroup: 'Week agenda',
+    weekPrev: '‹ Prev',
+    weekNext: 'Next ›',
+    weekToday: 'Today',
+    weekNow: 'now',
+    weekNowAt: (time) => `now, ${time}`,
+    weekMore: (n) => `+${n}`,
+    weekMoreLabel: (n, day) => `${n} more on ${day}`,
+    weekNextRun: 'next run',
+    weekOff: 'off',
+    weekSkipped: 'skipped',
+    weekReference: 'for reference',
+    weekEmpty: 'Nothing is planned in this week.',
+    weekLoading: 'Reading the week',
+    ganttGroup: 'Run timeline',
+    ganttRange: 'Range',
+    ganttRangeTitle: (label) => `Show ${label}`,
+    ganttNow: 'now',
+    ganttSelection: 'Selected',
+    ganttClear: 'Clear',
+    ganttClearTitle: 'Lift the selected range',
+    ganttSelected: (from, to) => `${from} to ${to}`,
+    ganttEmpty: 'No run in this window.',
+    ganttLoading: 'Reading the history',
+    ganttQueued: 'queued',
+    ganttRunning: 'running',
+    ganttOk: 'succeeded',
+    ganttFailed: 'failed',
+    ganttAnnounce: (label, state) => `${label}: ${state}`,
+    ganttBar: (label, when, state) => `${label}, ${when}, ${state}`,
+    ganttLive: 'Live',
+    ganttLiveTitle: 'Follow now: the window moves with the clock',
+    ganttZoom: 'Zoom',
+    ganttZoomTitle: 'Make the selected range the window',
+    ganttDuration: (seconds) => {
+        if (seconds < 60) return `${seconds} s`;
+        const minutes = Math.round(seconds / 60);
+        if (minutes < 60) return `${minutes} min`;
+        const hours = Math.floor(minutes / 60);
+        const rest = minutes % 60;
+        return rest ? `${hours} h ${rest} min` : `${hours} h`;
+    },
+    ganttHint: 'Click a bar to open it · drag across the time to select a range',
     // The network graph [scope-143]: its own words; the nodes, kinds and
     // the sentences of its states are the page's.
     graphShowAll: 'Show all',

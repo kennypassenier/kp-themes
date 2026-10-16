@@ -3681,11 +3681,34 @@
  * where it is shown, and the script stands down there.
  * Knob: --kp-nav-more-dot (0.5rem), the dot that tells a counter is behind
  * the button. */
+    /* One row: a bar that folds never wraps its brand, list, job and search onto a second line; the list is what gives. */
+    .kp-nav:where([data-kp-nav-fold]:not(:has(> .kp-nav__toggle))) {
+        flex-wrap: nowrap;
+    }
+
+    /* The list is the one that gives, but never below the More button while something is folded (the script writes
+     * --kp-nav-fold-more): the brand gives way first, to an ellipsis, so the folded links stay reachable. The job and the
+     * search keep their size. */
     .kp-nav:where([data-kp-nav-fold]) > .kp-nav__links {
         position: relative;
         flex: 1 1 0;
-        min-inline-size: 0;
+        min-inline-size: var(--kp-nav-fold-more, 0px);
         flex-wrap: nowrap;
+    }
+
+    .kp-nav:where([data-kp-nav-fold]:not(:has(> .kp-nav__toggle))) > .kp-nav__brand {
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kp-nav:where([data-kp-nav-fold]:not(:has(> .kp-nav__toggle))) > .kp-nav__search {
+        flex: none;
+    }
+
+    .kp-nav:where([data-kp-nav-fold]:not(:has(> .kp-nav__toggle))) > .kp-nav__search .kp-button {
+        white-space: nowrap;
     }
 
     .kp-nav:where([data-kp-nav-fold]):not([data-kp-nav-fold-ready]) > .kp-nav__links {
@@ -3699,11 +3722,14 @@
 
     .kp-nav:where([data-kp-nav-fold]) > .kp-nav__links > li[data-kp-nav-folded],
     .kp-nav:where([data-kp-nav-fold]) > .kp-nav__links > [data-kp-nav-more][data-kp-nav-idle] {
-        position: absolute;
+        /* !important: a register that dresses the list items (cyberpunk's `position: relative` on every one) sits in a
+         * later layer and would put a folded item, and the idle More, back in the flow; it would push the More button
+         * out of the bar. An important declaration of this layer beats every normal one of a later layer. */
+        position: absolute !important;
         inset-block-start: 0;
         inset-inline-start: 0;
         inline-size: max-content;
-        visibility: hidden;
+        visibility: hidden !important;
         pointer-events: none;
     }
 
@@ -3713,6 +3739,13 @@
         display: flex;
         flex-direction: column;
         align-items: flex-start;
+    }
+
+    /* The menu hangs from the button's start edge, as a menu under a link of a bar does; the script moves it back in
+     * only where that would leave the window (menuPlacement). Not the menu button's default, its end edge. */
+    .kp-nav__more > .kp-menu-button > .kp-menu {
+        inset-inline-start: 0;
+        inset-inline-end: auto;
     }
 
     .kp-nav__more-button {
@@ -7727,6 +7760,903 @@
         content: var(--kp-glyph-skipped, '–');
     }
 
+    /* --- Week agenda: seven days, the items of the week placed in time -----
+ * `section.kp-week[data-kp-week]` (js/week.js). A grid of an hour axis and
+ * one column per day; every item is a pill at its time of day. The column's
+ * height is fixed (--kp-week-height), so nothing moves when items arrive,
+ * when a day is crowded or when the week is loading: what does not fit is
+ * folded into a `+N` menu button at the end of the stack. Below the agenda's
+ * own width of 40rem (a container query, so it follows the pane and not the
+ * window) the columns become rows: the day on the left, its items in time
+ * order on the right, every item shown.
+ *
+ * Every state is a shape or a word as well as a colour [DI4]: the day that
+ * is today wears the word and a filled number; the next run a ring; an item
+ * that is off or skipped is struck through and quieter by ink, not by
+ * opacity; the host's own round is dashed and is not a button.
+ * Knobs [KT6]: `--kp-week-height` (15rem, the day column), `--kp-week-pill`
+ * (1.5rem, one pill's height), `--kp-week-axis` (3.25rem, the hour labels'
+ * column), `--kp-week-day-label` (5.5rem, the day's column in the list),
+ * `--kp-week-pill-radius`, `--kp-week-now` (the line for now, --destructive),
+ * `--kp-week-today` (the today plate, --primary), `--kp-week-gap`. */
+    .kp-week {
+        container: kp-week / inline-size;
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+    }
+
+    .kp-week__nav {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-week__title {
+        flex: 1 1 auto;
+        margin: 0;
+        font-size: var(--kp-text-base, 1rem);
+        font-variant-numeric: tabular-nums;
+        text-align: center;
+    }
+
+    .kp-week__frame {
+        position: relative;
+    }
+
+    .kp-week__grid {
+        --kp-week-mode: grid;
+        display: grid;
+        grid-template-columns: var(--kp-week-axis, 3.25rem) repeat(var(--kp-week-days, 7), minmax(0, 1fr));
+        grid-template-rows: auto var(--kp-week-height, 15rem);
+        padding-block-end: 0.5rem;
+        min-inline-size: 0;
+    }
+
+    .kp-week__day {
+        display: contents;
+    }
+
+    .kp-week__head {
+        grid-row: 1;
+        grid-column: calc(var(--kp-week-i, 0) + 2);
+        display: grid;
+        grid-template-columns: auto auto;
+        justify-content: start;
+        align-content: end;
+        align-items: baseline;
+        column-gap: 0.375rem;
+        padding: 0 var(--kp-space-sm, 0.5rem) 0.75rem;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    .kp-week__num {
+        font-variant-numeric: tabular-nums;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+    }
+
+    .kp-week__date {
+        display: none;
+    }
+
+    /* The mark's room is always there, so today moving from one day to the
+ * next changes no height. */
+    .kp-week__today {
+        grid-column: 1 / -1;
+        visibility: hidden;
+        font-size: 0.625rem;
+        line-height: 1;
+    }
+
+    .kp-week__day[data-kp-today] .kp-week__head {
+        color: var(--foreground);
+        font-weight: 600;
+    }
+
+    .kp-week__day[data-kp-today] .kp-week__today {
+        visibility: visible;
+        color: var(--kp-week-today, var(--primary));
+    }
+
+    .kp-week__day[data-kp-today] .kp-week__num {
+        color: var(--kp-week-today, var(--primary));
+    }
+
+    .kp-week__axis {
+        grid-row: 2;
+        grid-column: 1;
+        position: relative;
+    }
+
+    .kp-week__axis > span {
+        position: absolute;
+        inset-inline-end: var(--kp-space-sm, 0.5rem);
+        inset-block-start: calc(var(--kp-week-at, 0) * 100%);
+        translate: 0 -50%;
+        color: var(--muted-foreground);
+        font-size: 0.6875rem;
+        font-variant-numeric: tabular-nums;
+        line-height: 1;
+    }
+
+    .kp-week__col {
+        grid-row: 2;
+        grid-column: calc(var(--kp-week-i, 0) + 2);
+        position: relative;
+        min-inline-size: 0;
+        border-inline-start: 1px solid var(--border);
+        border-block-end: 1px solid var(--border);
+        background-image: linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+        background-size: 100% 25%;
+        background-repeat: no-repeat repeat;
+    }
+
+    .kp-week__day[data-kp-today] .kp-week__col {
+        background-color: color-mix(in oklab, var(--kp-week-today, var(--primary)) 6%, transparent);
+    }
+
+    .kp-week__pill {
+        --kp-week-ink: var(--chart-1);
+        box-sizing: border-box;
+        position: absolute;
+        inset-inline: 0.25rem;
+        inset-block-start: var(--kp-week-top, 0);
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        block-size: var(--kp-week-pill, 1.5rem);
+        margin: 0;
+        padding: 0 0.375rem;
+        overflow: hidden;
+        border: 1px solid color-mix(in oklab, var(--kp-week-ink) 45%, var(--border));
+        border-radius: var(--kp-week-pill-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
+        background: color-mix(in oklab, var(--kp-week-ink) 14%, var(--card));
+        color: var(--foreground);
+        font: inherit;
+        font-size: var(--kp-text-xs, 0.75rem);
+        line-height: 1;
+        text-align: start;
+        white-space: nowrap;
+        cursor: pointer;
+    }
+
+    .kp-week__pill[data-kp-series='2'],
+    .kp-week__swatch[data-kp-series='2'] {
+        --kp-week-ink: var(--chart-2);
+    }
+
+    .kp-week__pill[data-kp-series='3'],
+    .kp-week__swatch[data-kp-series='3'] {
+        --kp-week-ink: var(--chart-3);
+    }
+
+    .kp-week__pill[data-kp-series='4'],
+    .kp-week__swatch[data-kp-series='4'] {
+        --kp-week-ink: var(--chart-4);
+    }
+
+    .kp-week__pill[data-kp-series='5'],
+    .kp-week__swatch[data-kp-series='5'] {
+        --kp-week-ink: var(--chart-5);
+    }
+
+    .kp-week__time {
+        flex: none;
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+    }
+
+    .kp-week__label {
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .kp-week__pill:is(button):hover {
+        box-shadow: 0 0 0 1px var(--foreground);
+    }
+
+    .kp-week__pill[data-kp-state='next'] {
+        box-shadow: 0 0 0 2px var(--ring);
+    }
+
+    .kp-week__pill[data-kp-state='next']:hover {
+        box-shadow:
+            0 0 0 2px var(--ring),
+            0 0 0 3px var(--foreground);
+    }
+
+    /* Off and skipped: quieter by ink and a strike, so the words keep their contrast. */
+    .kp-week__pill:is([data-kp-state='off'], [data-kp-state='skipped']) {
+        background: transparent;
+        color: var(--muted-foreground);
+        text-decoration: line-through;
+    }
+
+    .kp-week__pill[data-kp-state='reference'] {
+        background: transparent;
+        border-style: dashed;
+        border-color: var(--border-strong);
+        color: var(--muted-foreground);
+        cursor: default;
+    }
+
+    .kp-week__pill[data-kp-past]:not([data-kp-state='next']) .kp-week__label {
+        color: var(--muted-foreground);
+    }
+
+    .kp-week .kp-week__pill--more {
+        position: static;
+        inset: auto;
+        justify-content: center;
+        inline-size: 100%;
+        border-style: solid;
+        border-color: var(--border-strong);
+        background: var(--card);
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-week .kp-week__more {
+        position: absolute;
+        display: block;
+        inset-inline: 0.25rem;
+        inset-block-start: var(--kp-week-top, 0);
+        block-size: var(--kp-week-pill, 1.5rem);
+    }
+
+    .kp-week__more[hidden] {
+        display: none;
+    }
+
+    .kp-week__now {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: calc(var(--kp-week-at, 0) * 100%);
+        z-index: 2;
+        border-block-start: 2px solid var(--kp-week-now, var(--destructive));
+        pointer-events: none;
+    }
+
+    .kp-week__now[hidden] {
+        display: none;
+    }
+
+    .kp-week__now::before {
+        content: '';
+        position: absolute;
+        inset-inline-start: -4px;
+        inset-block-start: -5px;
+        inline-size: 8px;
+        block-size: 8px;
+        border-radius: 50%;
+        background: var(--kp-week-now, var(--destructive));
+    }
+
+    /* Loading keeps the pills' size: ghosts, pulsing only without reduced motion. */
+    .kp-week__ghost {
+        box-sizing: border-box;
+        position: absolute;
+        inset-inline: 0.25rem;
+        inset-block-start: calc(var(--kp-week-at, 0) * (100% - var(--kp-week-pill, 1.5rem)));
+        block-size: var(--kp-week-pill, 1.5rem);
+        border-radius: var(--kp-week-pill-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
+        display: none;
+    }
+
+    .kp-week[data-kp-state='loading'] .kp-week__ghost {
+        display: block;
+    }
+
+    .kp-week[data-kp-state='loading'] .kp-week__now {
+        display: none;
+    }
+
+    /* The sentence of an empty, loading or failed week sits over the grid:
+ * it takes no room, so nothing moves when it comes and goes. */
+    .kp-week__state {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        margin: 0;
+        padding: var(--kp-space-md, 0.75rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        text-align: center;
+        pointer-events: none;
+    }
+
+    .kp-week__state:empty {
+        display: none;
+    }
+
+    .kp-week__state[data-kp-state='error'] {
+        color: var(--destructive);
+    }
+
+    .kp-week__legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-week__legend[hidden] {
+        display: none;
+    }
+
+    .kp-week__legend li {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+    }
+
+    .kp-week__swatch {
+        --kp-week-ink: var(--chart-1);
+        inline-size: 0.875rem;
+        block-size: 0.625rem;
+        border: 1px solid color-mix(in oklab, var(--kp-week-ink) 45%, var(--border));
+        border-radius: var(--kp-week-pill-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
+        background: color-mix(in oklab, var(--kp-week-ink) 14%, var(--card));
+    }
+
+    /* The items that did not fit are listed in the `+N` menu; the narrow
+ * layout shows every item and needs none of it. */
+    @container kp-week (min-width: 40rem) {
+        .kp-week__pill[data-kp-overflow] {
+            display: none;
+        }
+    }
+
+    @container kp-week (max-width: 39.99rem) {
+        .kp-week__grid {
+            --kp-week-mode: list;
+            grid-template-columns: minmax(0, 1fr);
+            grid-template-rows: none;
+            padding-block-end: 0;
+        }
+
+        .kp-week__nav {
+            display: grid;
+            grid-template-columns: auto auto auto;
+            justify-content: start;
+        }
+
+        .kp-week__title {
+            grid-column: 1 / -1;
+            grid-row: 1;
+        }
+
+        .kp-week__axis,
+        .kp-week__now,
+        .kp-week__more {
+            display: none;
+        }
+
+        .kp-week__day {
+            display: grid;
+            grid-template-columns: var(--kp-week-day-label, 5.5rem) minmax(0, 1fr);
+            column-gap: var(--kp-space-sm, 0.5rem);
+            align-items: start;
+            padding-block: var(--kp-space-sm, 0.5rem);
+            border-block-end: 1px solid var(--border);
+        }
+
+        .kp-week__head {
+            grid-row: auto;
+            grid-column: 1;
+            grid-template-columns: auto auto;
+            align-content: start;
+            padding: 0.125rem 0 0;
+        }
+
+        .kp-week__date {
+            display: inline;
+            grid-column: 1 / -1;
+            letter-spacing: 0;
+            text-transform: none;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .kp-week__today {
+            grid-column: 1 / -1;
+        }
+
+        .kp-week__col {
+            grid-row: auto;
+            grid-column: 2;
+            display: flex;
+            flex-direction: column;
+            gap: var(--kp-week-gap, 0.25rem);
+            min-block-size: var(--kp-week-pill, 1.5rem);
+            border: 0;
+            background: none;
+        }
+
+        .kp-week__day[data-kp-today] .kp-week__col {
+            background: none;
+        }
+
+        .kp-week__pill {
+            position: static;
+            inset: auto;
+            flex: none;
+        }
+
+        .kp-week__ghost {
+            position: static;
+            inset: auto;
+        }
+    }
+
+    /* --- Run timeline: one bar per run on a time axis ----------------------
+ * `section.kp-gantt[data-kp-gantt]` (js/gantt.js). A bar of range buttons, a
+ * Live button and the selected range; under it a frame with the axis on top
+ * (it stays while the lanes scroll), one lane per job with its label on the
+ * left, and the runs as bars. Every bar is placed by the stylesheet from
+ * three numbers the script keeps current (`--kp-g-from`, `--kp-g-span`,
+ * `--kp-g-now`, seconds from a base moment) and its own two (`--kp-g-s`,
+ * `--kp-g-e`), so a growing bar and a moving window repaint nothing else.
+ * A lane's height is its rows times --kp-gantt-row and never shrinks while
+ * the window stays: a run that finishes moves nothing. The viewport keeps
+ * the height it first had with data (js/gantt.js), so a start that needs a
+ * new row scrolls inside the frame and the page does not jump.
+ *
+ * The state is a shape as well as a colour [DI4]: ok is solid; failed is
+ * solid, taller, with a cap at its end and a cross where the bar is wide
+ * enough; running is striped with a bright leading edge; queued is hollow
+ * and dashed. Knobs [KT6]: `--kp-gantt-label` (9rem, the lanes' labels),
+ * `--kp-gantt-row` (1.75rem), `--kp-gantt-bar` (1.125rem),
+ * `--kp-gantt-bar-failed` (1.5rem), `--kp-gantt-bar-min` (0.5rem),
+ * `--kp-gantt-height` (22rem, past which the lanes scroll),
+ * `--kp-gantt-bar-radius`, `--kp-gantt-now` (the line for now),
+ * `--kp-gantt-axis` (1.75rem, the axis row). */
+    .kp-gantt {
+        container: kp-gantt / inline-size;
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+    }
+
+    .kp-gantt__bar {
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    }
+
+    /* The selected-range chip takes the toolbar row over (inset 0): while a range is selected it stands where the range
+ * buttons and Live are, so it lies on no lane and adds no height at any width; Clear gives the buttons back. */
+    .kp-gantt__selection {
+        position: absolute;
+        inset: 0;
+        z-index: 5;
+        box-sizing: border-box;
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+        padding-inline: var(--kp-space-sm, 0.5rem);
+        border: 1px solid var(--border-strong, var(--border));
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground, var(--foreground));
+    }
+
+    .kp-gantt__selection > .kp-button {
+        flex: none;
+    }
+
+    .kp-gantt__selection > .kp-gantt__selected {
+        flex: 1 1 0;
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kp-gantt__selection[hidden] {
+        display: none;
+    }
+
+    .kp-gantt__selected {
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-gantt__live[aria-pressed='true']::before {
+        content: '';
+        display: inline-block;
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        margin-inline-end: 0.375rem;
+        border-radius: 50%;
+        background: var(--success);
+    }
+
+    .kp-gantt__frame {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground, var(--foreground));
+    }
+
+    .kp-gantt__scroll {
+        max-block-size: var(--kp-gantt-height, 22rem);
+        overflow-x: hidden;
+        overflow-y: auto;
+        touch-action: pan-y;
+        user-select: none;
+    }
+
+    .kp-gantt__body {
+        --kp-gantt-pad: 0.25rem;
+        position: relative;
+        display: grid;
+        grid-template-columns: var(--kp-gantt-label, 9rem) minmax(0, 1fr);
+        isolation: isolate;
+    }
+
+    .kp-gantt__corner,
+    .kp-gantt__axis {
+        grid-row: 1;
+        position: sticky;
+        inset-block-start: 0;
+        z-index: 3;
+        box-sizing: border-box;
+        block-size: var(--kp-gantt-axis, 1.75rem);
+        border-block-end: 1px solid var(--border-strong);
+        background: var(--card);
+    }
+
+    .kp-gantt__corner {
+        grid-column: 1;
+    }
+
+    .kp-gantt__axis {
+        grid-column: 2;
+        overflow: hidden;
+    }
+
+    .kp-gantt__tick {
+        position: absolute;
+        inset-inline-start: calc((var(--kp-g-t, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 21600) * 100%);
+        inset-block-start: 0;
+        padding-inline-start: 0.3125rem;
+        color: var(--muted-foreground);
+        font-size: 0.6875rem;
+        font-variant-numeric: tabular-nums;
+        line-height: var(--kp-gantt-axis, 1.75rem);
+        white-space: nowrap;
+    }
+
+    .kp-gantt__tick[data-kp-day] {
+        color: var(--foreground);
+        font-weight: 600;
+    }
+
+    .kp-gantt__lines {
+        grid-column: 2;
+        grid-row: 2 / span var(--kp-g-lanes, 1);
+        position: relative;
+        overflow: hidden;
+        pointer-events: none;
+    }
+
+    .kp-gantt__rule {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: calc((var(--kp-g-t, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 21600) * 100%);
+        inline-size: 0;
+        border-inline-start: 1px solid var(--border);
+    }
+
+    .kp-gantt__lane {
+        grid-column: 1;
+        display: flex;
+        align-items: center;
+        min-inline-size: 0;
+        box-sizing: border-box;
+        padding: 0 var(--kp-space-sm, 0.5rem);
+        border-block-end: 1px solid var(--border);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-gantt__lane > span {
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kp-gantt__track {
+        grid-column: 2;
+        position: relative;
+        overflow: hidden;
+        box-sizing: border-box;
+        block-size: calc(var(--kp-g-rows, 1) * var(--kp-gantt-row, 1.75rem) + 2 * var(--kp-gantt-pad));
+        border-block-end: 1px solid var(--border);
+    }
+
+    .kp-gantt__plot {
+        grid-column: 2;
+        grid-row: 2 / span var(--kp-g-lanes, 1);
+        position: relative;
+        overflow: hidden;
+        pointer-events: none;
+    }
+
+    .kp-gantt__now {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: calc((var(--kp-g-now, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 21600) * 100%);
+        inline-size: 0;
+        border-inline-start: 2px solid var(--kp-gantt-now, var(--destructive));
+    }
+
+    .kp-gantt__now[data-kp-out] {
+        display: none;
+    }
+
+    .kp-gantt__select,
+    .kp-gantt__brush {
+        position: absolute;
+        inset-block: 0;
+        background: color-mix(in oklab, var(--primary) 14%, transparent);
+        border-inline: 1px solid var(--primary);
+    }
+
+    .kp-gantt__select {
+        inset-inline-start: calc((var(--kp-g-s, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 21600) * 100%);
+        inline-size: calc((var(--kp-g-e, 0) - var(--kp-g-s, 0)) / var(--kp-g-span, 21600) * 100%);
+    }
+
+    .kp-gantt__brush {
+        inset-inline-start: var(--kp-g-x, 0);
+        inline-size: var(--kp-g-w, 0);
+        border-style: dashed;
+    }
+
+    .kp-gantt__select[hidden],
+    .kp-gantt__brush[hidden] {
+        display: none;
+    }
+
+    .kp-gantt__run {
+        --kp-gantt-fill: var(--success);
+        --kp-gantt-ink: var(--success-foreground);
+        container: kp-gantt-run / inline-size;
+        box-sizing: border-box;
+        position: absolute;
+        inset-block-start: calc(
+            var(--kp-gantt-pad) + var(--kp-g-row, 0) * var(--kp-gantt-row, 1.75rem) + (var(--kp-gantt-row, 1.75rem) - var(--kp-gantt-bar, 1.125rem)) /
+                2
+        );
+        inset-inline-start: calc((var(--kp-g-s, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 21600) * 100%);
+        inline-size: max(var(--kp-gantt-bar-min, 0.5rem), calc((var(--kp-g-e, 0) - var(--kp-g-s, 0)) / var(--kp-g-span, 21600) * 100%));
+        block-size: var(--kp-gantt-bar, 1.125rem);
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        border: 1px solid var(--kp-gantt-fill);
+        border-radius: var(--kp-gantt-bar-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
+        background: var(--kp-gantt-fill);
+        color: var(--kp-gantt-ink);
+        font: inherit;
+        font-size: 0.6875rem;
+        text-align: start;
+        cursor: pointer;
+    }
+
+    .kp-gantt__run[hidden] {
+        display: none;
+    }
+
+    .kp-gantt__run:is(button):hover {
+        z-index: 1;
+        box-shadow: 0 0 0 2px var(--foreground);
+    }
+
+    .kp-gantt__label {
+        display: block;
+        padding-inline: 0.375rem;
+        overflow: hidden;
+        line-height: calc(var(--kp-gantt-bar, 1.125rem) - 2px);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    .kp-gantt__run[data-kp-state='failed'] {
+        --kp-gantt-fill: var(--destructive);
+        --kp-gantt-ink: var(--destructive-foreground);
+        inset-block-start: calc(
+            var(--kp-gantt-pad) + var(--kp-g-row, 0) * var(--kp-gantt-row, 1.75rem) +
+                (var(--kp-gantt-row, 1.75rem) - var(--kp-gantt-bar-failed, 1.5rem)) / 2
+        );
+        block-size: var(--kp-gantt-bar-failed, 1.5rem);
+        box-shadow: inset -3px 0 0 var(--kp-gantt-ink);
+    }
+
+    .kp-gantt__run[data-kp-state='failed'] .kp-gantt__label {
+        line-height: calc(var(--kp-gantt-bar-failed, 1.5rem) - 2px);
+    }
+
+    .kp-gantt__run[data-kp-state='failed']:hover {
+        box-shadow:
+            inset -3px 0 0 var(--kp-gantt-ink),
+            0 0 0 2px var(--foreground);
+    }
+
+    .kp-gantt__run[data-kp-state='running'],
+    .kp-gantt__swatch[data-kp-state='running'] {
+        --kp-gantt-fill: var(--warning);
+        --kp-gantt-ink: var(--warning-foreground);
+        background-image: repeating-linear-gradient(
+            135deg,
+            transparent 0 0.375rem,
+            hsl(from var(--warning-foreground) h s l / 0.22) 0.375rem 0.75rem
+        );
+        background-size: 1.0607rem 1.0607rem;
+        box-shadow: inset -3px 0 0 var(--kp-gantt-ink);
+    }
+
+    .kp-gantt__run[data-kp-state='running']:hover {
+        box-shadow:
+            inset -3px 0 0 var(--kp-gantt-ink),
+            0 0 0 2px var(--foreground);
+    }
+
+    .kp-gantt__run[data-kp-state='queued'],
+    .kp-gantt__swatch[data-kp-state='queued'] {
+        --kp-gantt-fill: var(--muted-foreground);
+        --kp-gantt-ink: var(--foreground);
+        background: transparent;
+        border-style: dashed;
+    }
+
+    .kp-gantt__run[data-kp-state='failed'] .kp-gantt__label::before {
+        content: var(--kp-glyph-failed, '✕');
+        margin-inline-end: 0.25rem;
+        font-weight: 700;
+    }
+
+    @container kp-gantt-run (max-width: 2rem) {
+        .kp-gantt__label {
+            display: none;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-gantt__run[data-kp-state='running'] {
+            animation: kp-gantt-march 1600ms linear infinite;
+        }
+    }
+
+    @keyframes kp-gantt-march {
+        to {
+            background-position: 1.0607rem 0;
+        }
+    }
+
+    .kp-gantt__ghost.kp-gantt__lane {
+        border-block-end-color: var(--border);
+    }
+
+    .kp-gantt__ghost.kp-gantt__lane > .kp-skeleton {
+        inline-size: 70%;
+        block-size: 0.75rem;
+    }
+
+    .kp-gantt__ghost .kp-gantt__run {
+        inset-inline-start: calc(var(--kp-g-at, 0) * 100%);
+        inline-size: calc(var(--kp-g-width, 0.1) * 100%);
+        border: 0;
+        cursor: default;
+        background: var(--muted);
+    }
+
+    .kp-gantt__state {
+        position: absolute;
+        inset: var(--kp-gantt-axis, 1.75rem) 0 0;
+        z-index: 4;
+        display: grid;
+        place-items: center;
+        margin: 0;
+        padding: var(--kp-space-md, 0.75rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        text-align: center;
+        pointer-events: none;
+    }
+
+    .kp-gantt__state:empty {
+        display: none;
+    }
+
+    .kp-gantt__state[data-kp-state='error'] {
+        color: var(--destructive);
+    }
+
+    .kp-gantt[data-kp-state='ready'] .kp-gantt__body:not(:has(.kp-gantt__lane)) {
+        min-block-size: 5.25rem;
+    }
+
+    .kp-gantt__legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-gantt__legend li {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+    }
+
+    .kp-gantt__swatch {
+        --kp-gantt-fill: var(--success);
+        box-sizing: border-box;
+        inline-size: 1.25rem;
+        block-size: 0.625rem;
+        border: 1px solid var(--kp-gantt-fill);
+        border-radius: var(--kp-gantt-bar-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
+        background: var(--kp-gantt-fill);
+    }
+
+    .kp-gantt__swatch[data-kp-state='failed'] {
+        --kp-gantt-fill: var(--destructive);
+        block-size: 0.8125rem;
+        box-shadow: inset -3px 0 0 var(--destructive-foreground);
+    }
+
+    .kp-gantt__hint {
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-gantt__announce {
+        position: absolute;
+        inline-size: 1px;
+        block-size: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        border: 0;
+        clip-path: inset(50%);
+    }
+
+    @container kp-gantt (max-width: 32rem) {
+        .kp-gantt__body {
+            --kp-gantt-label: 5.5rem;
+        }
+
+        .kp-gantt__lane {
+            font-size: var(--kp-text-xs, 0.75rem);
+        }
+    }
+
     /* Diff view [TH54] */
     .kp-diff {
         margin: 0;
@@ -9349,6 +10279,682 @@
         border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
     }
 
+    /* --- Heat grid [kpadopt2-grids] ----------------------------------------- */
+
+    /* Rows x many columns of small cells, each toned by a state (ok, warn,
+ * bad, muted, future, before, none: the month heatmap's words) or by a
+ * value (`data-kp-tone="level"` with `--kp-heat-level` 0 to 1). A label
+ * column on the start side (the label is a button that toggles when the
+ * grid is `data-kp-heat-toggle`), the column axis above (or below,
+ * `axis: 'end'`), an optional summary row whose cells fill from the bottom
+ * by `--kp-heat-share`, a legend (`.kp-heat__legend`), a picked column
+ * (`data-kp-picked`) and hover detail through the hover card. js/heat.js
+ * writes and wires it; the markup is complete without the script.
+ *
+ * Every row is a subgrid of the label column and the cell columns, so the
+ * labels and the cells line up in every state, a loading grid keeps the
+ * same footprint (the cells are the theme's own `.kp-skeleton--block`), and
+ * a state is never told by colour alone: a bad cell is striped, a warn
+ * cell ruled, a future cell dashed, a cell before the record hatched.
+ * Knobs: --kp-heat-cols (set by the script), --kp-heat-label (8rem, at most
+ * a quarter of the grid on a narrow page), --kp-heat-gap-x (0.75rem),
+ * --kp-heat-gap-y (6px), --kp-heat-cell-gap (3px), --kp-heat-cell-edge (1px, a cell's frame),
+ * --kp-heat-cell-ink (the frame's colour), --kp-heat-cell-lift (a shadow),
+ * --kp-heat-cell-hover (the hover transform), --kp-heat-cell-height
+ * (22px), --kp-heat-summary-height (30px), --kp-heat-cell-radius,
+ * --kp-heat-state-height (6rem, the empty and failed states), and the
+ * fills --kp-heat-ok, --kp-heat-warn, --kp-heat-bad, --kp-heat-level-ink. */
+    :is(.kp-heat, .kp-heat__legend, .kp-heat__swatch) {
+        --kp-heat-ok: color-mix(in oklab, var(--success-foreground) 70%, var(--card));
+        --kp-heat-warn: color-mix(in oklab, var(--warning-foreground) 78%, var(--card));
+        --kp-heat-bad: var(--destructive);
+        --kp-heat-level-ink: var(--primary);
+    }
+
+    .kp-heat {
+        display: grid;
+        grid-template-columns: clamp(4.5rem, 26%, var(--kp-heat-label, 8rem)) minmax(0, 1fr);
+        column-gap: var(--kp-heat-gap-x, 0.75rem);
+        row-gap: var(--kp-heat-gap-y, 6px);
+        align-content: start;
+        align-items: center;
+        min-inline-size: 0;
+    }
+
+    .kp-heat__row {
+        display: grid;
+        grid-column: 1 / -1;
+        grid-template-columns: subgrid;
+        align-items: center;
+        min-block-size: var(--kp-heat-cell-height, 22px);
+    }
+
+    .kp-heat__cells {
+        display: grid;
+        grid-template-columns: repeat(var(--kp-heat-cols, 30), minmax(0, 1fr));
+        gap: var(--kp-heat-cell-gap, 3px);
+        min-inline-size: 0;
+    }
+
+    .kp-heat__label {
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 500;
+    }
+
+    .kp-heat__label-button {
+        appearance: none;
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        box-sizing: border-box;
+        inline-size: calc(100% + 12px);
+        min-inline-size: 0;
+        margin-inline: -6px;
+        padding: 2px 6px;
+        border: 0;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: none;
+        color: inherit;
+        font: inherit;
+        text-align: start;
+        cursor: pointer;
+    }
+
+    .kp-heat__label-button:hover {
+        background: color-mix(in oklab, var(--muted) 70%, transparent);
+    }
+
+    .kp-heat__label-button[aria-pressed='true'] {
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+
+    .kp-heat__label-button:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 1px;
+    }
+
+    .kp-heat__label-text {
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kp-heat__label-text--muted {
+        color: var(--muted-foreground);
+    }
+
+    .kp-heat__mark {
+        flex: none;
+        inline-size: 0.625rem;
+        block-size: 0.625rem;
+        border-radius: 2px;
+        background: var(--kp-heat-mark, var(--primary));
+    }
+
+    .kp-heat__label-skeleton {
+        inline-size: 70%;
+        block-size: 0.75rem;
+    }
+
+    .kp-heat__sep {
+        grid-column: 1 / -1;
+        margin-block: 4px;
+        border-block-start: 1px solid var(--border);
+    }
+
+    /* The column axis: one name per few columns; the others stay in their
+ * column, in no colour, so every name keeps its own column and a screen
+ * reader still has every header. */
+    .kp-heat__col {
+        display: flex;
+        justify-content: center;
+        min-inline-size: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+
+    .kp-heat__col:last-child:not([data-kp-minor]) {
+        justify-content: flex-end;
+    }
+
+    .kp-heat__col[data-kp-minor] {
+        overflow: hidden;
+        color: transparent;
+        user-select: none;
+    }
+
+    /* On a phone every second name goes: thirty columns are 8 px each there. */
+    @media (max-width: 40rem) {
+        .kp-heat__col:not([data-kp-minor], :last-child):nth-child(6n + 4) {
+            color: transparent;
+            user-select: none;
+        }
+    }
+
+    .kp-heat__col[data-kp-picked] {
+        color: var(--foreground);
+        font-weight: 700;
+    }
+
+    .kp-heat__cell,
+    .kp-heat__swatch {
+        --kp-heat-fill: var(--muted);
+        --kp-heat-pattern: none;
+        box-sizing: border-box;
+        border: var(--kp-heat-cell-edge, 1px) solid var(--kp-heat-cell-ink, transparent);
+        border-radius: var(--kp-heat-cell-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
+        box-shadow: var(--kp-heat-cell-lift, none);
+        background-color: var(--kp-heat-fill);
+        background-image: var(--kp-heat-pattern);
+    }
+
+    .kp-heat__cell {
+        position: relative;
+        display: block;
+        min-inline-size: 0;
+        block-size: var(--kp-heat-cell-height, 22px);
+        padding: 0;
+        cursor: pointer;
+    }
+
+    .kp-heat__swatch {
+        display: inline-block;
+        inline-size: 0.75rem;
+        block-size: 0.75rem;
+        vertical-align: -0.125rem;
+    }
+
+    :is(.kp-heat__cell, .kp-heat__swatch)[data-kp-tone='ok'] {
+        --kp-heat-fill: var(--kp-heat-ok);
+    }
+
+    :is(.kp-heat__cell, .kp-heat__swatch)[data-kp-tone='warn'] {
+        --kp-heat-fill: var(--kp-heat-warn);
+        --kp-heat-pattern: repeating-linear-gradient(0deg, color-mix(in oklab, var(--card) 55%, transparent) 0 1px, transparent 1px 4px);
+    }
+
+    :is(.kp-heat__cell, .kp-heat__swatch)[data-kp-tone='bad'] {
+        --kp-heat-fill: var(--kp-heat-bad);
+        --kp-heat-pattern: repeating-linear-gradient(135deg, color-mix(in oklab, var(--card) 38%, transparent) 0 2px, transparent 2px 5px);
+    }
+
+    :is(.kp-heat__cell, .kp-heat__swatch)[data-kp-tone='future'] {
+        --kp-heat-fill: transparent;
+        border-style: dashed;
+        border-color: var(--muted-foreground);
+    }
+
+    :is(.kp-heat__cell, .kp-heat__swatch)[data-kp-tone='before'] {
+        --kp-heat-fill: transparent;
+        --kp-heat-pattern: repeating-linear-gradient(135deg, var(--muted) 0 3px, transparent 3px 6px);
+    }
+
+    :is(.kp-heat__cell, .kp-heat__swatch)[data-kp-tone='none'] {
+        --kp-heat-fill: transparent;
+        border-color: var(--border);
+    }
+
+    :is(.kp-heat__cell, .kp-heat__swatch)[data-kp-tone='level'] {
+        --kp-heat-fill: color-mix(in oklab, var(--kp-heat-level-ink) calc(var(--kp-heat-level, 0) * 100%), var(--muted));
+    }
+
+    /* The summary row: the cell is a track and the tone fills it from the
+ * bottom by the share (a night in which four of five stacks were backed up). */
+    .kp-heat__row--summary {
+        min-block-size: var(--kp-heat-summary-height, 30px);
+    }
+
+    .kp-heat__row--summary .kp-heat__cell {
+        block-size: var(--kp-heat-summary-height, 30px);
+    }
+
+    .kp-heat__cell[data-kp-share] {
+        overflow: hidden;
+        background-color: var(--muted);
+        background-image: none;
+    }
+
+    .kp-heat__cell[data-kp-share]::before {
+        content: '';
+        position: absolute;
+        inset: auto 0 0 0;
+        block-size: calc(var(--kp-heat-share, 0) * 100%);
+        background-color: var(--kp-heat-fill);
+        background-image: var(--kp-heat-pattern);
+    }
+
+    .kp-heat__cell[data-kp-share]:is([data-kp-tone='future'], [data-kp-tone='before'], [data-kp-tone='none'], [data-kp-tone='muted']) {
+        background-color: transparent;
+        background-image: var(--kp-heat-pattern);
+    }
+
+    .kp-heat__cell[data-kp-share]:is([data-kp-tone='future'], [data-kp-tone='before'], [data-kp-tone='none'], [data-kp-tone='muted'])::before {
+        display: none;
+    }
+
+    /* Hover, focus, the picked column. The cell grows a little on the block
+ * axis only, so no neighbour moves. */
+    .kp-heat__cell[aria-disabled='true'] {
+        cursor: default;
+    }
+
+    .kp-heat__cell:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+        z-index: 1;
+    }
+
+    .kp-heat__cell[data-kp-picked] {
+        outline: 2px solid var(--primary);
+        outline-offset: 1px;
+    }
+
+    .kp-heat__cell[data-kp-picked]:focus-visible {
+        outline-color: var(--ring);
+        outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-heat__cell {
+            transition: transform var(--fx-duration, 110ms) var(--fx-ease, ease);
+        }
+
+        .kp-heat__cell:hover:not([aria-disabled='true'], .kp-skeleton) {
+            transform: var(--kp-heat-cell-hover, scaleY(1.15));
+        }
+    }
+
+    /* Loading keeps the footprint: the cells are the theme's skeleton block
+ * at the cell's own size. */
+    .kp-heat__cell.kp-skeleton {
+        block-size: var(--kp-heat-cell-height, 22px);
+        cursor: progress;
+    }
+
+    .kp-heat__row--summary .kp-heat__cell.kp-skeleton {
+        block-size: var(--kp-heat-summary-height, 30px);
+    }
+
+    .kp-heat__state {
+        grid-column: 1 / -1;
+        display: grid;
+        place-items: center;
+        min-block-size: var(--kp-heat-state-height, 6rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        text-align: center;
+    }
+
+    .kp-heat__state[data-kp-state='error'] {
+        color: var(--destructive);
+    }
+
+    /* The legend, under the grid: a swatch and its words, wrapping by whole
+ * entries. `.kp-heat__ramp` is a value scale, less to more. */
+    .kp-heat__legend {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 1rem);
+        margin: var(--kp-space-sm, 0.5rem) 0 0;
+        padding: 0;
+        list-style: none;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-heat__legend > li {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-heat__legend > li[data-kp-end] {
+        display: flex;
+        flex: 1 1 auto;
+        justify-content: flex-end;
+        min-inline-size: 0;
+    }
+
+    .kp-heat__legend > li[data-kp-end] > .kp-keys {
+        flex: 0 1 auto;
+        min-inline-size: 0;
+        justify-content: flex-end;
+    }
+
+    .kp-heat__ramp {
+        display: inline-flex;
+        gap: 2px;
+    }
+
+    /* --- Matrix [kpadopt2-grids] -------------------------------------------- */
+
+    /* Source x destination: a cell per pair, each in words and a glyph as
+ * well as a tone (allowed, mismatch, blocked, unknown; `self` is the pair
+ * with itself, dashed and inert). The grid scrolls inside its own box when
+ * the cells cannot be narrower than --kp-matrix-cell-min; the column
+ * headers stay on the top and the row headers on the start side, and the
+ * corner holds the key ("from down to across"). A header is a button that
+ * lights its row and its column (`data-kp-lit` on the matrix dims the cells
+ * it does not touch); one cell can be pinned (`aria-pressed`); a rule
+ * being read marks the cells it touches (`data-kp-mark`).
+ * Knobs: --kp-matrix-cols (set by the script), --kp-matrix-head (6.5rem, 4.6rem
+ * in a box under 36rem), --kp-matrix-cell-min (3.5rem), --kp-matrix-cell-height
+ * (44px), --kp-matrix-gap (4px), --kp-matrix-ground (the card colour: what the
+ * sticky headers are painted with), --kp-matrix-dim (0.4). */
+    .kp-matrix {
+        --kp-matrix-ground: var(--card);
+        container: kp-matrix / inline-size;
+        position: relative;
+        max-inline-size: 100%;
+        overflow: auto;
+        overscroll-behavior-x: contain;
+        scroll-padding-inline-start: var(--kp-matrix-head, 6.5rem);
+        scroll-padding-block-start: 2.5rem;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-matrix__grid {
+        display: grid;
+        grid-template-columns: var(--kp-matrix-head, 6.5rem) repeat(var(--kp-matrix-cols, 5), minmax(var(--kp-matrix-cell-min, 3.5rem), 1fr));
+        gap: var(--kp-matrix-gap, 4px);
+        inline-size: max-content;
+        min-inline-size: 100%;
+        align-content: start;
+    }
+
+    .kp-matrix__line {
+        display: contents;
+    }
+
+    @container kp-matrix (max-width: 36rem) {
+        .kp-matrix__grid {
+            --kp-matrix-head: 4.6rem;
+            --kp-matrix-gap: 3px;
+        }
+    }
+
+    .kp-matrix__corner {
+        position: sticky;
+        inset: 0 auto auto 0;
+        z-index: 3;
+        display: flex;
+        align-items: flex-end;
+        padding: 4px 2px;
+        background: var(--kp-matrix-ground);
+        color: var(--muted-foreground);
+        box-shadow: 0 var(--kp-matrix-gap, 4px) 0 var(--kp-matrix-ground);
+    }
+
+    .kp-matrix__col,
+    .kp-matrix__row {
+        appearance: none;
+        box-sizing: border-box;
+        min-inline-size: 0;
+        margin: 0;
+        border: 0;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--kp-matrix-ground);
+        color: var(--muted-foreground);
+        font: inherit;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    .kp-matrix__col {
+        position: sticky;
+        inset-block-start: 0;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4px 2px;
+        box-shadow: 0 var(--kp-matrix-gap, 4px) 0 var(--kp-matrix-ground);
+    }
+
+    .kp-matrix__row {
+        position: sticky;
+        inset-inline-start: 0;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.375rem);
+        padding: 0 6px;
+        color: var(--foreground);
+        text-align: start;
+        box-shadow: var(--kp-matrix-gap, 4px) 0 0 var(--kp-matrix-ground);
+    }
+
+    .kp-matrix__name {
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kp-matrix__mark {
+        flex: none;
+        inline-size: 0.75rem;
+        block-size: 0.75rem;
+        border-radius: 2px;
+        background: var(--kp-heat-mark, var(--primary));
+    }
+
+    @container kp-matrix (max-width: 36rem) {
+        .kp-matrix__row .kp-matrix__mark {
+            display: none;
+        }
+    }
+
+    :is(.kp-matrix__col, .kp-matrix__row):hover {
+        background: color-mix(in oklab, var(--muted) 70%, var(--kp-matrix-ground));
+    }
+
+    :is(.kp-matrix__col, .kp-matrix__row)[aria-pressed='true'] {
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+
+    :is(.kp-matrix__col, .kp-matrix__row):focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: -2px;
+    }
+
+    .kp-matrix__cell {
+        appearance: none;
+        box-sizing: border-box;
+        display: grid;
+        place-items: center;
+        min-inline-size: 0;
+        min-block-size: var(--kp-matrix-cell-height, 44px);
+        margin: 0;
+        padding: 2px;
+        border: 2px solid transparent;
+        border-radius: var(--kp-heat-cell-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
+        background: var(--muted);
+        color: var(--muted-foreground);
+        font: inherit;
+        font-variant-numeric: tabular-nums;
+        line-height: 1.2;
+        text-align: center;
+        overflow-wrap: anywhere;
+        cursor: pointer;
+    }
+
+    .kp-matrix__cell[data-kp-glyph]::before {
+        content: attr(data-kp-glyph);
+        font-size: 1.25em;
+        font-weight: 700;
+    }
+
+    .kp-matrix__cell[data-kp-tone='ok'] {
+        background: var(--success);
+        color: var(--success-foreground);
+        font-weight: 600;
+    }
+
+    .kp-matrix__cell[data-kp-tone='warn'] {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        font-weight: 600;
+    }
+
+    .kp-matrix__cell[data-kp-tone='bad'] {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        font-weight: 600;
+    }
+
+    .kp-matrix__cell[data-kp-tone='muted'] {
+        background: var(--muted);
+        color: var(--muted-foreground);
+    }
+
+    .kp-matrix__cell:is([data-kp-tone='self'], [data-kp-tone='none']) {
+        border-style: dashed;
+        border-color: var(--border);
+        background: transparent;
+        cursor: default;
+    }
+
+    .kp-matrix__cell[data-kp-tone='none'] {
+        border-color: var(--border-strong);
+    }
+
+    .kp-matrix__cell[data-kp-ringed] {
+        box-shadow:
+            inset 0 0 0 2px var(--destructive),
+            inset 0 0 0 4px var(--kp-matrix-ground);
+    }
+
+    .kp-matrix__cell[aria-pressed='true'] {
+        outline: 2px solid var(--primary);
+        outline-offset: 1px;
+    }
+
+    .kp-matrix__cell:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+    }
+
+    .kp-matrix__cell[data-kp-mark] {
+        outline: 2px dashed var(--primary);
+        outline-offset: 1px;
+    }
+
+    .kp-matrix[data-kp-lit] .kp-matrix__cell:not([data-kp-hot], [data-kp-mark], [data-kp-inert]) {
+        opacity: var(--kp-matrix-dim, 0.4);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-matrix__cell {
+            transition:
+                transform var(--fx-duration, 110ms) var(--fx-ease, ease),
+                opacity var(--fx-duration, 110ms) var(--fx-ease, ease);
+        }
+
+        .kp-matrix__cell:hover:not([data-kp-inert], [aria-disabled='true']) {
+            transform: var(--kp-matrix-cell-hover, scale(1.05));
+        }
+    }
+
+    .kp-matrix__cell.kp-skeleton {
+        min-block-size: var(--kp-matrix-cell-height, 44px);
+        block-size: auto;
+        cursor: progress;
+    }
+
+    .kp-matrix__col--skeleton,
+    .kp-matrix__row--skeleton {
+        block-size: 1rem;
+        align-self: center;
+    }
+
+    .kp-matrix__state {
+        display: grid;
+        place-items: center;
+        min-block-size: var(--kp-heat-state-height, 6rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    /* The legend under a matrix is the heat grid's. A matrix swatch shows the
+ * cell's plate. */
+    .kp-heat__swatch--plate {
+        inline-size: 1rem;
+        block-size: 1rem;
+        border-width: 2px;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+    }
+
+    .kp-heat__swatch--plate[data-kp-tone='ok'] {
+        background: var(--success);
+    }
+
+    .kp-heat__swatch--plate[data-kp-tone='warn'] {
+        background: var(--warning);
+    }
+
+    .kp-heat__swatch--plate[data-kp-tone='bad'] {
+        background: var(--destructive);
+    }
+
+    .kp-heat__swatch--plate[data-kp-tone='muted'] {
+        background: var(--muted);
+    }
+
+    .kp-heat__swatch--plate:is([data-kp-tone='self'], [data-kp-tone='none']) {
+        border-style: dashed;
+        border-color: var(--border-strong);
+        background: transparent;
+    }
+
+    .kp-heat__swatch--plate[data-kp-ringed] {
+        box-shadow:
+            inset 0 0 0 2px var(--destructive),
+            inset 0 0 0 4px var(--card);
+    }
+
+    /* --- A value with a bar, in a table cell [kpadopt2-grids] ---------------- */
+
+    /* The meter and its number in one cell: the bar takes the room that is
+ * left, the number a column of its own on the end edge, so a column of
+ * these lines up its bars and its figures whatever the figures say. A data
+ * table sorts it by the cell's `data-kp-sort-value`. js/barcell.js writes
+ * it; `data-kp-bar="0.62"` on the span is enough. Knobs:
+ * --kp-bar-cell-bar (3rem, the least the bar takes), --kp-bar-cell-value
+ * (4ch, the number's column), --kp-bar-cell-gap (0.5rem). */
+    .kp-bar-cell {
+        display: grid;
+        grid-template-columns: minmax(var(--kp-bar-cell-bar, 3rem), 1fr) var(--kp-bar-cell-value, 4ch);
+        align-items: center;
+        gap: var(--kp-bar-cell-gap, var(--kp-space-sm, 0.5rem));
+        min-inline-size: 0;
+    }
+
+    .kp-bar-cell--start {
+        grid-template-columns: var(--kp-bar-cell-value, 4ch) minmax(var(--kp-bar-cell-bar, 3rem), 1fr);
+    }
+
+    .kp-bar-cell--start > .kp-bar-cell__value {
+        order: -1;
+    }
+
+    .kp-bar-cell__value {
+        min-inline-size: 0;
+        font-variant-numeric: tabular-nums;
+        text-align: end;
+        white-space: nowrap;
+    }
+
     /* --- Bottom tab bar [kpadopt-nav] -------------------------------------- */
 
     /* The phone's navigation: the frequent areas within thumb reach, then a
@@ -9570,6 +11176,14 @@
         font-variant-numeric: tabular-nums;
         white-space: nowrap;
         pointer-events: none;
+        /* The whole number, never capped (12, 1534): the badge is out of the flow and anchored at its start
+         * edge, so it grows outward over the icon's corner, sizes to its digits (no ellipsis, no clip) and
+         * moves no neighbour. */
+        flex: none;
+        inline-size: max-content;
+        max-inline-size: none;
+        overflow: visible;
+        text-overflow: clip;
     }
 
     .kp-tabbar__badge:empty {
@@ -9734,7 +11348,9 @@
  * layer): placed in window coordinates by the script, the popover's UA
  * inset and margin put back to the menu's own. */
     .kp-menu-button > .kp-menu:popover-open {
-        position: fixed;
+        /* !important: the script writes window coordinates, so a register's own `position` on its menus (phantom's
+         * `relative`, in a later layer) must not turn them back into a box that follows the page's scroll. */
+        position: fixed !important;
         inset: auto;
         margin: 0;
     }
@@ -10604,6 +12220,531 @@
         display: inline-flex;
         align-items: center;
         gap: var(--kp-keys-caps-gap, 0.125rem);
+    }
+
+    /* --- Action tiles, status rows, facet list [kpadopt2-tiles] ---------------
+ *
+ * Three parts the admin dashboard drew for itself (`nx-action`,
+ * `perstack-chip`, `hl-opt`):
+ *
+ *   .kp-actions / .kp-action   a button or link tile: a title and the one
+ *                              sentence that says what it does, in a grid
+ *                              whose tiles are all as tall as the tallest
+ *   .kp-statuslist / .kp-statusrow
+ *                              one state per item (ok, loading, failed with a
+ *                              Retry, empty with its reason)
+ *   .kp-facets / .kp-facet     checkbox rows with a count and an "only"
+ *                              button that selects just that row
+ *
+ * Behaviour: js/action-tiles.js, js/statusrow.js, js/facets.js. Every look is
+ * a knob a register may turn (--kp-action-*, --kp-statusrow-*, --kp-facet-*);
+ * nothing in a part changes size when its state does: a tile's mark column,
+ * a row's detail line and a facet's "only" and count columns are always
+ * there, so a spinner, a reason or a number arriving moves nothing. */
+
+    .kp-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--kp-actions-min, 15rem)), 1fr));
+        align-items: stretch;
+        gap: var(--kp-actions-gap, var(--kp-space-sm, 0.5rem));
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    /* A list of tiles: the item is the grid cell, the tile fills it. */
+    .kp-actions > li {
+        display: grid;
+        min-inline-size: 0;
+    }
+
+    .kp-action {
+        position: relative;
+        box-sizing: border-box;
+        display: grid;
+        /* The mark column is always there (a chevron, a spinner, or nothing),
+         * so the title's width, and with it the tile's height, is the same in
+         * every state. */
+        grid-template-columns: minmax(0, 1fr) var(--kp-action-mark, 1.25rem);
+        align-content: start;
+        align-items: center;
+        column-gap: var(--kp-space-sm, 0.5rem);
+        row-gap: var(--kp-action-gap, 0.125rem);
+        inline-size: 100%;
+        min-inline-size: 0;
+        margin: 0;
+        padding: var(--kp-action-pad, 0.625rem 0.75rem);
+        border: var(--kp-action-line, 1px) solid var(--kp-action-tone-edge, var(--kp-action-edge, var(--border)));
+        border-radius: var(--kp-action-radius, var(--radius, 0.5rem));
+        background: var(--kp-action-ground, var(--card));
+        color: var(--card-foreground, var(--foreground));
+        box-shadow: var(--kp-action-shadow, 0 0 0 0 transparent);
+        font: inherit;
+        text-align: start;
+        text-decoration: none;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .kp-action__title {
+        grid-column: 1;
+        font-family: var(--kp-action-title-font, inherit);
+        font-size: var(--kp-action-title-size, inherit);
+        font-weight: var(--kp-action-title-weight, 600);
+        letter-spacing: var(--kp-action-title-tracking, normal);
+        text-transform: var(--kp-action-title-case, none);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-action__text,
+    .kp-action__meta {
+        grid-column: 1 / -1;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-action__meta {
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-action__meta[hidden] {
+        display: none;
+    }
+
+    /* The mark: a chevron on a link, the theme's spinner while busy. */
+    .kp-action__mark {
+        grid-column: 2;
+        grid-row: 1;
+        display: grid;
+        place-items: center;
+        inline-size: var(--kp-action-mark, 1.25rem);
+        block-size: var(--kp-action-mark, 1.25rem);
+        color: var(--muted-foreground);
+        line-height: 1;
+    }
+
+    a.kp-action > .kp-action__mark:empty::before {
+        content: var(--kp-glyph-open, '›');
+    }
+
+    .kp-action__mark:dir(rtl)::before {
+        scale: -1 1;
+    }
+
+    .kp-action__mark > .kp-spinner {
+        --kp-spinner-size: var(--kp-action-mark, 1.25rem);
+    }
+
+    /* The state's word, for a screen reader: the spinner is a picture. */
+    .kp-action__state {
+        position: absolute;
+        inline-size: 1px;
+        block-size: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        border: 0;
+        clip-path: inset(50%);
+    }
+
+    /* Hover and press only answer a tile that can be pressed. */
+    .kp-action:hover:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'])) {
+        border-color: var(--kp-action-tone-edge-hover, var(--kp-action-edge-hover, var(--ring)));
+        background: var(--kp-action-ground-hover, var(--kp-action-ground, var(--card)));
+        box-shadow: var(--kp-action-shadow-hover, var(--kp-action-shadow, 0 0 0 0 transparent));
+        translate: var(--kp-action-lift, 0 0);
+    }
+
+    .kp-action:active:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'])) {
+        border-color: var(--kp-action-tone-edge-hover, var(--kp-action-edge-active, var(--kp-action-edge-hover, var(--ring))));
+        background: var(--kp-action-ground-active, var(--muted));
+        box-shadow: var(--kp-action-shadow-active, var(--kp-action-shadow, 0 0 0 0 transparent));
+        translate: var(--kp-action-press, 0 1px);
+    }
+
+    /* The global ring (css/_rules.css) paints its inner half with box-shadow, which a tile's own
+     * shadow would replace; restated with both so the ring is whole in every theme [AR30, DI2]. */
+    .kp-action:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast);
+        outline-offset: var(--kp-focus-ring-inner-width, 2px);
+        box-shadow:
+            0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            var(--kp-action-shadow, 0 0 0 0 transparent);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-action {
+            transition:
+                background-color var(--fx-duration, 150ms) var(--fx-ease, ease),
+                border-color var(--fx-duration, 150ms) var(--fx-ease, ease),
+                box-shadow var(--fx-duration, 150ms) var(--fx-ease, ease),
+                translate var(--fx-duration, 150ms) var(--fx-ease, ease);
+        }
+    }
+
+    /* Destructive: the edge, the title's ink and a bar along the start edge; the title's words say it
+     * too. The ink is mixed toward the card's so it reads on every plate. */
+    .kp-action--destructive {
+        --kp-action-tone-edge: color-mix(in oklab, var(--destructive) 45%, var(--border-strong));
+        --kp-action-tone-edge-hover: var(--destructive);
+    }
+
+    .kp-action--destructive > .kp-action__title {
+        color: color-mix(in oklab, var(--destructive) 78%, var(--foreground));
+    }
+
+    .kp-action--destructive::after {
+        content: '';
+        position: absolute;
+        inset-block: var(--kp-action-bar-inset, 0.5rem);
+        inset-inline-start: 0;
+        inline-size: var(--kp-action-bar, 3px);
+        border-radius: 0 2px 2px 0;
+        background: var(--destructive);
+        pointer-events: none;
+    }
+
+    .kp-action--destructive:dir(rtl)::after {
+        border-radius: 2px 0 0 2px;
+    }
+
+    /* Disabled: quieter by ink and ground, not by opacity. A disabled control may fall below the contrast
+     * floor [DI8]; the cursor and the state carry the meaning as well. */
+    .kp-action:is(:disabled, [aria-disabled='true']) {
+        border-color: var(--border);
+        background: var(--kp-action-ground-disabled, var(--muted));
+        box-shadow: 0 0 0 0 transparent;
+        color: var(--muted-foreground);
+        cursor: not-allowed;
+    }
+
+    .kp-action:is(:disabled, [aria-disabled='true']) > .kp-action__title {
+        color: inherit;
+    }
+
+    .kp-action:is(:disabled, [aria-disabled='true'])::after {
+        background: var(--muted-foreground);
+    }
+
+    .kp-action[aria-busy='true'] {
+        cursor: progress;
+    }
+
+    /* --- Status rows ----------------------------------------------------------
+ * One state per item, in a grid of rows: a mark, the item's name, a short
+ * detail and, when it failed, a Retry. The state is a shape and a word as
+ * well as a colour [DI4]: a disc with a tick, the theme's spinner, a disc with
+ * a cross, a dashed ring with a dash. The marks are the step list's, so a
+ * theme's step marks and status marks are one family. The mark has one box
+ * and the detail keeps its line (`--kp-statusrow-detail-lines`), so a state
+ * arriving moves nothing. Knobs [KT6]: `--kp-statuslist-min` (the column's
+ * floor, 16rem), `--kp-statuslist-gap`, `--kp-statusrow-mark`,
+ * `--kp-statusrow-mark-radius`, `--kp-statusrow-pad`, `--kp-statusrow-radius`,
+ * `--kp-statusrow-detail-lines`, and the glyphs `--kp-glyph-done`,
+ * `--kp-glyph-failed`, `--kp-glyph-empty`. */
+    .kp-statuslist {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--kp-statuslist-min, 16rem)), 1fr));
+        align-items: stretch;
+        gap: var(--kp-statuslist-gap, var(--kp-space-sm, 0.5rem));
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-statuslist--rows {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .kp-statusrow {
+        box-sizing: border-box;
+        display: grid;
+        grid-template-columns: var(--kp-statusrow-mark, 1.25rem) minmax(0, 1fr) auto;
+        align-items: start;
+        column-gap: var(--kp-space-sm, 0.625rem);
+        min-inline-size: 0;
+        padding: var(--kp-statusrow-pad, 0.5rem 0.75rem);
+        border: var(--kp-statusrow-line, 1px) solid var(--kp-statusrow-state-edge, var(--kp-statusrow-edge, var(--border)));
+        border-radius: var(--kp-statusrow-radius, var(--radius, 0.5rem));
+        background: var(--kp-statusrow-ground, var(--card));
+        color: var(--card-foreground, var(--foreground));
+    }
+
+    .kp-statusrow__mark {
+        box-sizing: border-box;
+        display: grid;
+        place-items: center;
+        inline-size: var(--kp-statusrow-mark, 1.25rem);
+        block-size: var(--kp-statusrow-mark, 1.25rem);
+        margin-block-start: calc((1lh - var(--kp-statusrow-mark, 1.25rem)) / 2);
+        border: 2px solid var(--border-strong);
+        border-radius: var(--kp-statusrow-mark-radius, var(--kp-steplist-mark-radius, var(--kp-radius-pill, 999px)));
+        font-size: 0.75rem;
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .kp-statusrow__mark > .kp-spinner {
+        --kp-spinner-size: var(--kp-statusrow-mark, 1.25rem);
+    }
+
+    .kp-statusrow__body {
+        display: grid;
+        min-inline-size: 0;
+    }
+
+    .kp-statusrow__label {
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-statusrow__detail {
+        min-block-size: calc(var(--kp-statusrow-detail-lines, 1) * 1lh);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-statusrow__action {
+        align-self: start;
+        margin-inline-start: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-statusrow__action[hidden] {
+        display: none;
+    }
+
+    .kp-statusrow__state {
+        position: absolute;
+        inline-size: 1px;
+        block-size: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        border: 0;
+        clip-path: inset(50%);
+    }
+
+    /* The status regions the scripts add after a list or a group: out of the flow, and pinned to the start edge so
+     * a grid's static position never gives the page a sideways scroll. */
+    :is(.kp-statuslist__live, .kp-facets__live) {
+        inset-inline-start: 0;
+    }
+
+    .kp-statusrow[data-state='loading'] .kp-statusrow__mark {
+        border-color: transparent;
+    }
+
+    .kp-statusrow[data-state='ok'] .kp-statusrow__mark {
+        border-color: var(--success-foreground);
+        background: var(--success);
+        color: var(--success-foreground);
+    }
+
+    .kp-statusrow[data-state='ok'] .kp-statusrow__mark::after {
+        content: var(--kp-glyph-done, var(--kp-glyph-check, '✓'));
+    }
+
+    .kp-statusrow[data-state='failed'] {
+        --kp-statusrow-state-edge: var(--destructive);
+    }
+
+    .kp-statusrow[data-state='failed'] .kp-statusrow__mark {
+        border-color: var(--destructive);
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    .kp-statusrow[data-state='failed'] .kp-statusrow__mark::after {
+        content: var(--kp-glyph-failed, '✕');
+    }
+
+    /* Empty is quieter by ink and a dashed edge, not by opacity: the reason keeps its contrast. */
+    .kp-statusrow[data-state='empty'] {
+        border-style: dashed;
+        color: var(--muted-foreground);
+    }
+
+    .kp-statusrow[data-state='empty'] .kp-statusrow__mark {
+        border-style: dashed;
+        color: var(--muted-foreground);
+    }
+
+    .kp-statusrow[data-state='empty'] .kp-statusrow__mark::after {
+        content: var(--kp-glyph-empty, '–');
+    }
+
+    /* --- Facet list -----------------------------------------------------------
+ * Checkbox rows, each with its count and an "only" button that selects
+ * just that row. The row is a grid of two cells, the label (the checkbox,
+ * an optional swatch, the name, the count) and the button, which is never a
+ * child of the label: a control inside a label is a second, hidden target.
+ * The "only" button takes the space it needs in every row whether it is
+ * shown or not, so the counts never move; it is shown on hover and while
+ * focus is in the row, and always on a device that cannot hover. The count
+ * keeps a floor (`--kp-facet-count-min`) and tabular figures. Knobs [KT6]:
+ * `--kp-facet-pad`, `--kp-facet-radius`, `--kp-facet-gap`,
+ * `--kp-facet-count-min`, `--kp-facet-hover`, `--kp-facet-swatch`. */
+    .kp-facets {
+        display: grid;
+        gap: var(--kp-facet-list-gap, 0.125rem);
+        min-inline-size: 0;
+    }
+
+    .kp-facets__title {
+        margin: 0 0 var(--kp-space-xs, 0.375rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    .kp-facets__list {
+        display: grid;
+        /* One pair of columns for every row (the rows are subgrids), so the counts line up whether a row has an
+         * "only" button or not (the Everything row has none). */
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: var(--kp-facet-list-gap, 0.125rem) 0;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-facets__empty {
+        margin: 0;
+        padding: var(--kp-facet-pad, 0.25rem 0.5rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-facets__empty[hidden] {
+        display: none;
+    }
+
+    .kp-facet {
+        display: grid;
+        grid-column: 1 / -1;
+        grid-template-columns: subgrid;
+        align-items: center;
+        min-inline-size: 0;
+        min-block-size: var(--kp-facet-height, 2rem);
+        padding-inline: var(--kp-facet-pad-inline, 0.5rem) var(--kp-facet-pad-end, 0.25rem);
+        border-radius: var(--kp-facet-radius, calc(var(--radius, 0.5rem) * 0.75));
+        font-size: var(--kp-text-sm, 0.875rem);
+    }
+
+    .kp-facet:hover {
+        background: var(--kp-facet-hover, hsl(from var(--foreground) h s l / 0.06));
+    }
+
+    .kp-facet__option {
+        display: flex;
+        align-items: center;
+        gap: var(--kp-facet-gap, 0.5rem);
+        min-inline-size: 0;
+        min-block-size: var(--kp-facet-height, 2rem);
+        cursor: pointer;
+    }
+
+    .kp-facet__check {
+        margin: 0;
+    }
+
+    .kp-facet__swatch {
+        flex: none;
+        inline-size: 0.75rem;
+        block-size: 0.75rem;
+        border-radius: var(--kp-facet-swatch, 3px);
+        background: var(--kp-facet-swatch-colour, var(--muted-foreground));
+    }
+
+    .kp-facet__name {
+        flex: 1 1 0;
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kp-facet__count {
+        flex: none;
+        min-inline-size: var(--kp-facet-count-min, 2.5ch);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-variant-numeric: tabular-nums;
+        text-align: end;
+    }
+
+    /* A row that is off is quieter by ink, not by opacity. */
+    .kp-facet:has(.kp-facet__check:not(:checked, :indeterminate)) .kp-facet__name {
+        color: var(--muted-foreground);
+    }
+
+    .kp-facet:has(.kp-facet__check:disabled) .kp-facet__option {
+        cursor: not-allowed;
+    }
+
+    .kp-facet:has(.kp-facet__check:disabled) {
+        color: var(--muted-foreground);
+    }
+
+    .kp-facet__only {
+        justify-self: end;
+    }
+
+    .kp-facet:has(.kp-facet__check:disabled) .kp-facet__only {
+        visibility: hidden;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+        .kp-facet:not(:hover, :focus-within) > .kp-facet__only {
+            visibility: hidden;
+        }
+    }
+
+    @media (pointer: coarse) {
+        .kp-facet,
+        .kp-facet__option {
+            min-block-size: var(--kp-facet-height-touch, 2.75rem);
+        }
+    }
+
+    /* The counts are on their way: each keeps its place as a quiet bar. */
+    .kp-facets[aria-busy='true'] .kp-facet__count {
+        color: transparent;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--muted);
+        user-select: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-facets[aria-busy='true'] .kp-facet__count {
+            animation: kp-pulse 1600ms ease-in-out infinite;
+        }
+    }
+
+    /* In a row: the facets as one line of bordered rows that scrolls sideways, for a phone or a bar above the
+     * list. The padding leaves room for the focus ring, which the scroll container would otherwise cut. */
+    .kp-facets--row .kp-facets__list {
+        grid-template-columns: none;
+        grid-auto-flow: column;
+        grid-auto-columns: max-content;
+        padding: 3px;
+        overflow-x: auto;
+        scrollbar-width: thin;
+    }
+
+    .kp-facets--row .kp-facet {
+        grid-column: auto;
+        grid-template-columns: minmax(0, 1fr) auto;
+        border: 1px solid var(--border);
+        white-space: nowrap;
     }
 }
 

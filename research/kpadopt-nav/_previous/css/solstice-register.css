@@ -2464,10 +2464,7 @@
         }
 
         [data-theme='solstice']
-            :is(
-                .kp-combobox__list:popover-open,
-                .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open
-            ) {
+            :is(.kp-combobox__list:popover-open, .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open) {
             animation: kp-sig-solstice-kindled var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) backwards;
         }
 
@@ -2677,5 +2674,86 @@
     }
     [data-theme='solstice'] .kp-segmented--chips > .kp-segmented__item[aria-pressed='true'] {
         box-shadow: 0 0 14px hsl(from var(--primary) h s l / 0.4);
+    }
+}
+
+/* ── Action tiles, status rows, facet list [kpadopt2-tiles] ── */
+@layer kp.signature {
+    /* Solstice: the horizon. An amber line along the foot of the tile with a warm glow rising from it; pointing thickens the line to 3 px, a press thins it and lowers the tile. */
+    [data-theme='solstice'] .kp-action {
+        --kp-action-edge: var(--border-strong);
+        --kp-action-edge-hover: var(--border-strong);
+        --kp-action-shadow: inset 0 -2px 0 var(--primary), 0 0.4rem 0.75rem -0.5rem hsl(from var(--primary) h s l / 0.45);
+        --kp-action-shadow-hover: inset 0 -3px 0 var(--primary), 0 0.5rem 0.9rem -0.5rem hsl(from var(--primary) h s l / 0.6);
+        --kp-action-shadow-active: inset 0 -1px 0 var(--primary), 0 0 0 0 transparent;
+        --kp-action-press: 0 1px;
+    }
+    [data-theme='solstice'] .kp-statuslist {
+        --kp-statuslist-gap: 0.5rem;
+    }
+    [data-theme='solstice'] .kp-statusrow[data-state='ok'] .kp-statusrow__mark {
+        box-shadow: 0 0 0 3px hsl(from var(--success) h s l / 0.25);
+    }
+    [data-theme='solstice'] .kp-facets {
+        --kp-facet-radius: 0.6rem;
+    }
+}
+
+/* The grid's gap leaves room for the tile's own shadow, glow or outline; the facet row's wash. */
+@layer kp.signature {
+    [data-theme='solstice'] .kp-actions {
+        --kp-actions-gap: 0.75rem;
+    }
+    [data-theme='solstice'] .kp-facet {
+        --kp-facet-hover: hsl(from var(--primary) h s l / 0.08);
+    }
+    [data-theme='solstice'] .kp-statusrow {
+        --kp-statusrow-radius: 0.6rem;
+    }
+}
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* Low sun: each tile is a hillside lit from its foot (a warm band along the bottom edge), and a tile under the pointer lets the sun rise 2 px; the pick is a gold ring. */
+    [data-theme='solstice'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 6px;
+        --kp-heat-cell-hover: translateY(-2px);
+        --kp-matrix-cell-hover: translateY(-2px);
+    }
+    [data-theme='solstice']
+        .kp-heat__cell:is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad'], [data-kp-tone='level']):not([data-kp-share]),
+    [data-theme='solstice'] .kp-heat__swatch:is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad'], [data-kp-tone='level']) {
+        background-image: linear-gradient(to top, hsl(from var(--primary) h s 85% / 0.7) 0 22%, transparent 22%), var(--kp-heat-pattern);
+    }
+    [data-theme='solstice'] .kp-heat__cell[data-kp-picked],
+    [data-theme='solstice'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+    [data-theme='solstice'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='solstice'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='solstice'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: embers. Warm gradient plates with a halo on what runs next or runs now; the halo is a drop shadow, so it never fights the focus ring. */
+    [data-theme='solstice'] .kp-week {
+        --kp-week-pill-radius: 0.5rem;
+    }
+    [data-theme='solstice'] .kp-gantt {
+        --kp-gantt-bar-radius: 0.5rem;
+    }
+    [data-theme='solstice'] .kp-week__pill:not([data-kp-state='off'], [data-kp-state='skipped'], [data-kp-state='reference']) {
+        background-image: linear-gradient(90deg, hsl(from var(--kp-week-ink) h s l / 0.22), transparent 85%);
+    }
+    [data-theme='solstice'] .kp-week__pill[data-kp-state='next'],
+    [data-theme='solstice'] .kp-gantt__run[data-kp-state='running'] {
+        filter: drop-shadow(0 0 5px hsl(from var(--ring) h s l / 0.55));
     }
 }

@@ -77,7 +77,8 @@ SECTIONS.push({
         'Every pill shows its time and its name, ending in an ellipsis when the name is long. The pill with a ring is the <b>next run</b>; the struck-through ones are <b>off</b> or <b>skipped</b>; the dashed one is the host’s own round, <b>for reference</b>, and does nothing when pressed.',
         'Hover a pill (not the dashed one): a card with its detail. Click it or press Enter: the readout under the agenda logs the item.',
         'Tab enters the agenda once, on a pill. The arrows move: up and down inside a day, left and right to the nearest item of the next day. Tab leaves.',
-        '<b>Prev</b>, <b>Next</b> and <b>Today</b> move the range by seven days and the title follows; the demo then hands the agenda the same weekly pattern for the new days (a real page would load them).',
+        'Above the agenda: the range as its title on the left (in the theme’s display face) and, on the right, one control in the theme’s own segmented track: a chevron back, <b>Today</b>, a chevron on. Hover a chevron: its tooltip names it (Previous, Next), as a screen reader does. <b>Today</b> is greyed while the seven days from today are shown, and stays in the Tab order.',
+        'Press a chevron: the title moves by seven days, the days of the new range arrive the theme’s way, both agendas wait in their loading ghosts for a moment (a real page reads the new items), then the items arrive one after the other. <b>Today</b> brings the first range back the same way.',
         'The 360 px column holds the same days as rows, with every item shown and nothing cut off.',
     ],
     look: 'Check the full-width agenda and the 360 px one.',
@@ -137,12 +138,12 @@ SECTIONS.push({
         '<b>Empty</b>: the same grid, the sentence “Nothing is planned in this week.” over it.',
         '<b>Error</b>: the grid, with the page’s own words in the destructive colour over it.',
         '<b>Focus</b>: the third agenda has its first pill focused as a keyboard user would see it; the ring must be whole, not cut by the pill’s corners, and clearly visible against the neighbours.',
-        '<b>Make it load, then arrive</b> runs the loading state for two seconds and then gives the first agenda its items: no column changes height and no head moves.',
+        '<b>Make it load, then arrive</b> (above the first agenda): the button shows the theme’s spinner and says the items arrive in 2 s; the first agenda goes back to its loading ghosts, and after two seconds its items arrive the theme’s way, one after the other (formal rules them in). No column changes height and no head moves; the button can then play it again.',
     ],
     look: 'Check that the three agendas have the same height and that the sentence sits over the grid, not in it.',
     body: `
                 <div class="kt-actions">
-                    <button type="button" class="kp-button" id="kt-states-cycle">Make it load, then arrive</button>
+                    <button type="button" class="kp-button kp-button--live" id="kt-states-cycle"><span class="kp-spinner kp-button__spin" aria-hidden="true" hidden></span><span class="kp-button__long" data-kt-cycle-words>Make it load, then arrive</span></button>
                 </div>
                 <div class="kt-stack">
                     <div><p class="kt-label">Loading</p><div class="kp-week" data-kp-week id="kt-state-loading" aria-label="Loading week"></div></div>

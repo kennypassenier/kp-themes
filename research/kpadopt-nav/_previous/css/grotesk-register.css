@@ -280,7 +280,6 @@
         border-block-end: 0;
     }
 
-
     [data-theme='grotesk'] .kp-nav__brand {
         grid-column: 1 / 4;
         font-family: var(--theme-font-display);
@@ -304,6 +303,21 @@
         gap: 1.5rem;
     }
 
+    /* A bar that folds [kpadopt-nav] is one row at every width, so it is a flex row, not the fourteen columns: a
+       search field or a running-job button placed after the links had no column of its own there, fell to a second row
+       one column wide, and the bar grew with every step the window narrowed (Kenny, 2026-10-16: "veel te hoog, de
+       search knop staat telkens op de volgende rij"). The brand keeps Grilli's three fourteenths, the strip of links
+       takes the rest and the job and the search stand at their natural width. */
+    [data-theme='grotesk'] .kp-nav[data-kp-nav-fold] {
+        display: flex;
+        flex-wrap: nowrap;
+    }
+
+    [data-theme='grotesk'] .kp-nav[data-kp-nav-fold] > .kp-nav__brand {
+        flex: none;
+        min-inline-size: calc(100% * 3 / 14);
+    }
+
     /* Collapsed, the track is the brand and the toggle on one row and the
        links on their own row under them, from the start edge. This sits after
        the wide placement above on purpose: written before it, at the same
@@ -312,12 +326,23 @@
        items appearing in the phone version are weirdly aligned to the
        right"). */
     @container kp-nav (max-width: 40rem) {
-        [data-theme='grotesk'] .kp-nav {
+        [data-theme='grotesk'] .kp-nav:has(> .kp-nav__toggle) {
+            display: grid;
             grid-template-columns: minmax(0, 1fr) auto;
             row-gap: 0.75rem;
         }
 
-        [data-theme='grotesk'] .kp-nav__brand {
+        /* The search stays on the brand's row, after the toggle, instead of falling to a row of its own. */
+        [data-theme='grotesk'] .kp-nav[data-kp-nav-fold]:has(> .kp-nav__toggle) {
+            grid-template-columns: minmax(0, 1fr) auto auto;
+        }
+
+        [data-theme='grotesk'] .kp-nav[data-kp-nav-fold]:has(> .kp-nav__toggle) > .kp-nav__search {
+            grid-column: 3;
+            grid-row: 1;
+        }
+
+        [data-theme='grotesk'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__brand {
             grid-column: 1;
         }
 
@@ -325,7 +350,7 @@
             grid-column: 2;
         }
 
-        [data-theme='grotesk'] .kp-nav__links {
+        [data-theme='grotesk'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links {
             grid-column: 1 / -1;
             flex-direction: column;
             align-items: flex-start;
@@ -974,7 +999,6 @@
         color: var(--foreground);
         font-weight: 700;
     }
-
 
     [data-theme='grotesk'] .kp-timeline {
         border-inline-start: 3px solid var(--foreground);
@@ -2838,8 +2862,7 @@
 
     /* The windows that slip most: the palette, the shortcuts sheet, the tour's card, the picker's
        panel, the combobox's list, the bar's panels. */
-    [data-theme='grotesk']
-        :is(.kp-palette, .kp-shortcuts, .kp-tour, .kp-datepicker__panel, .kp-combobox__list, .kp-nav__menu, .kp-alarm__panel) {
+    [data-theme='grotesk'] :is(.kp-palette, .kp-shortcuts, .kp-tour, .kp-datepicker__panel, .kp-combobox__list, .kp-nav__menu, .kp-alarm__panel) {
         --kp-sig-gr-r: 8px;
     }
 
@@ -3244,5 +3267,127 @@
        red bar under its word. The rule is the track's own foot. */
     [data-theme='grotesk'] .kp-segmented:not(.kp-segmented--chips) {
         border-block-end: 1px solid var(--foreground);
+    }
+}
+
+/* ── Action tiles, status rows, facet list [kpadopt2-tiles] ── */
+@layer kp.signature {
+    /* Grotesk: a transit board. No frame: the tile hangs from a red bar along its top, which grows from 6 to 10 px when pointed at and to 14 px under a press. The bar is an inset shadow, so the tile never changes size. */
+    [data-theme='grotesk'] .kp-action {
+        --kp-action-radius: 0;
+        --kp-action-line: 0px;
+        --kp-action-pad: 1rem 0.875rem 0.75rem;
+        --kp-action-shadow: inset 0 6px 0 var(--primary);
+        --kp-action-shadow-hover: inset 0 10px 0 var(--primary);
+        --kp-action-shadow-active: inset 0 14px 0 var(--primary);
+        --kp-action-ground-hover: var(--muted);
+        --kp-action-ground-active: var(--muted);
+        --kp-action-press: 0 0;
+        --kp-action-title-weight: 700;
+    }
+    [data-theme='grotesk'] .kp-action--destructive {
+        --kp-action-shadow: inset 0 6px 0 var(--destructive);
+        --kp-action-shadow-hover: inset 0 10px 0 var(--destructive);
+        --kp-action-shadow-active: inset 0 14px 0 var(--destructive);
+    }
+    [data-theme='grotesk'] .kp-action--destructive::after {
+        content: none;
+    }
+    [data-theme='grotesk'] .kp-statuslist {
+        --kp-statuslist-gap: 0;
+        --kp-statusrow-mark-radius: 0;
+    }
+    [data-theme='grotesk'] .kp-statusrow {
+        --kp-statusrow-radius: 0;
+        --kp-statusrow-ground: transparent;
+        --kp-statusrow-edge: var(--foreground);
+        border-width: 0 0 2px;
+    }
+    [data-theme='grotesk'] .kp-statusrow__label {
+        font-weight: 700;
+    }
+    [data-theme='grotesk'] .kp-facets {
+        --kp-facet-radius: 0;
+    }
+    [data-theme='grotesk'] .kp-facet__count {
+        color: var(--foreground);
+        font-weight: 700;
+    }
+}
+
+/* The grid's gap leaves room for the tile's own shadow, glow or outline; the facet row's wash. */
+@layer kp.signature {
+    [data-theme='grotesk'] .kp-actions {
+        --kp-actions-gap: 0.5rem;
+    }
+    [data-theme='grotesk'] .kp-facet {
+        --kp-facet-hover: var(--muted);
+    }
+}
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* Flat squares on the twelve-column grid: no rounding, no shadow, an even 2 px gutter; labels in capitals; the pick is a red rule under the column, never a ring. */
+    [data-theme='grotesk'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 0;
+        --kp-heat-cell-gap: 2px;
+        --kp-heat-cell-hover: none;
+        --kp-matrix-cell-hover: none;
+    }
+    [data-theme='grotesk'] .kp-heat__cell:hover:not(.kp-skeleton, [aria-disabled='true']),
+    [data-theme='grotesk'] .kp-matrix__cell:hover:not([data-kp-inert]) {
+        outline: 2px solid var(--foreground);
+        outline-offset: 0;
+    }
+    [data-theme='grotesk'] .kp-heat__cell[data-kp-picked] {
+        outline: none;
+        box-shadow: 0 4px 0 -1px var(--destructive);
+    }
+    [data-theme='grotesk'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 3px solid var(--foreground);
+        outline-offset: 0;
+    }
+    [data-theme='grotesk'] .kp-heat__label,
+    [data-theme='grotesk'] .kp-matrix__row,
+    [data-theme='grotesk'] .kp-matrix__col {
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        font-weight: 700;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='grotesk'] .kp-heat__col {
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='grotesk'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='grotesk'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='grotesk'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: flat and heavy. Hard-edged blocks in the bold grotesque, a thick leading rule, never wrapping: the type is wide, so the pill and the bar clip it instead. */
+    [data-theme='grotesk'] .kp-week {
+        --kp-week-pill-radius: 0;
+    }
+    [data-theme='grotesk'] .kp-gantt {
+        --kp-gantt-bar-radius: 0;
+    }
+    [data-theme='grotesk'] :is(.kp-week__pill, .kp-gantt__run) {
+        font-weight: 700;
+        letter-spacing: -0.01em;
+    }
+    [data-theme='grotesk'] .kp-week__pill {
+        border-inline-start-width: 5px;
+    }
+    [data-theme='grotesk'] .kp-gantt__bar {
+        flex-wrap: wrap;
+    }
+    [data-theme='grotesk'] :is(.kp-week__col, .kp-gantt__rule) {
+        border-inline-width: 2px;
     }
 }

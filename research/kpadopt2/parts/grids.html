@@ -110,11 +110,12 @@
         <p><b>Expected:</b></p>
         <ul>
             <li>
-                <b>The matrix</b> has the sources down the side and the destinations across the top; the corner says “from ↓ to →”. Each pressable
-                cell shows its state in a plate colour <b>and</b> a word or glyph: a number is the ports open (allowed, as declared), <b>open</b> is a
-                mismatch (more open than declared), <b>×</b> is blocked, <b>0</b> is nothing declared. A <b>dashed empty</b> cell is a stack with
-                itself, a <b>dashed</b> cell with a dash is “unknown”. A <b>red inner ring</b> on a cell means the traffic was dropped on the way out
-                of the source.
+                <b>The matrix</b> has the sources down the side and the destinations across the top; the corner says “from ↓ to →”. Every name keeps
+                the same room from its colour mark and from the edges of its header, along the top as down the side. Each pressable cell shows its
+                state in a plate colour <b>and</b> a word or glyph: a number is the ports open (allowed, as declared), <b>open</b> is a mismatch (more
+                open than declared), <b>×</b> is blocked, <b>0</b> is nothing declared. A <b>dashed empty</b> cell is a stack with itself, a
+                <b>dashed</b> cell with a dash is “unknown”. A <b>red inner ring</b> on a cell means the traffic was dropped on the way out of the
+                source.
             </li>
             <li>
                 <b>Press a name</b> (side or top): its row and column stay bright and everything else dims; press more names to add them;
@@ -130,8 +131,9 @@
                 the side names get shorter and lose their colour mark.
             </li>
             <li>
-                <b>Ready, Loading, Empty, Failed</b> swap both matrices: loading keeps the shape (names and cells are skeletons); empty and failed
-                show one sentence.
+                <b>State</b> is the package’s segmented control (<b>Ready</b>, <b>Loading</b>, <b>Empty</b>, <b>Failed</b>) and swaps both matrices:
+                loading keeps the shape, the names stay and every cell waits in the theme’s loading picture (formal: its lines ruled in, again and
+                again); empty and failed show one sentence. The grid does not change height.
             </li>
         </ul>
     </div>
@@ -145,11 +147,15 @@
         <h3>Reachability matrix</h3>
         <div class="gd-bar">
             <span class="gd-grow"></span>
-            <span class="gd-note">State</span>
-            <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-gd-mstate="ready">Ready</button>
-            <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-gd-mstate="loading">Loading</button>
-            <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-gd-mstate="empty">Empty</button>
-            <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-gd-mstate="error">Failed</button>
+            <span class="gd-field">
+                <span class="gd-note" id="gd-mstate-label">State</span>
+                <div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-labelledby="gd-mstate-label" data-gd-mstates>
+                    <button type="button" class="kp-segmented__item" role="radio" aria-checked="true" data-value="ready">Ready</button>
+                    <button type="button" class="kp-segmented__item" role="radio" aria-checked="false" data-value="loading">Loading</button>
+                    <button type="button" class="kp-segmented__item" role="radio" aria-checked="false" data-value="empty">Empty</button>
+                    <button type="button" class="kp-segmented__item" role="radio" aria-checked="false" data-value="error">Failed</button>
+                </div>
+            </span>
         </div>
         <div class="kp-matrix" data-kp-matrix data-kp-matrix-select="follow" data-gd-matrix="main"></div>
         <ul class="kp-heat__legend" aria-label="Legend">
@@ -197,8 +203,10 @@
                 click adds a second sort key. The row for network (no reading) sorts first ascending.
             </li>
             <li>
-                <b>Show loading</b> turns every bar into the theme’s busy track at the same size, the numbers empty; pressing it again brings the
-                readings back.
+                <b>Show loading</b> puts the table in its loading state, as a page that reads the readings again: the rows dim and the table’s busy
+                panel stands over them with the theme’s spinner and “Reading CPU, memory and disk”; every bar and every figure waits in the theme’s
+                own loading picture at its final size (formal: a navy rule ruled across the groove, again and again, and a ruled line where the figure
+                stands). Nothing moves sideways. Press it again: the panel goes and the readings are back.
             </li>
             <li>
                 <b>Disk growth</b> (second table) is written in markup only: <code>data-kp-bar="0.82"</code> on a span, and a sort value on the cell

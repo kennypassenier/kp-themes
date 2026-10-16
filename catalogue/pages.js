@@ -114,7 +114,7 @@ export const PAGES = [
             // Kenny, 2026-10-16 (kp-adopt-rest, round 2): eight things the admin dashboard still draws itself (action tiles, status rows, the facet list, the coverage heat grid, the reachability matrix, bars in table cells with data-kp-sort-value, the week agenda, the run timeline), built in the package first as ONE demo, formal only until Kenny approves it.
             {
                 href: 'research/kpadopt2/demo.html',
-                label: 'Round 2: tiles, status rows, facets, heat grid, matrix, bar cell, week agenda, run timeline',
+                label: 'Round 2: matrix, bar cell, week agenda and its states, still open',
                 about: 'Eight components the dashboard draws itself, each section judged in one review dialog: .kp-action tiles, .kp-statusrow, .kp-facets, .kp-heat, .kp-matrix, .kp-bar-cell with the table’s data-kp-sort-value, .kp-week, .kp-gantt. Formal first.',
             },
         ],

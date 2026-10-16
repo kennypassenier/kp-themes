@@ -2641,17 +2641,17 @@
        with the tone's hue, a neon edge, bright ink. The ink and the edge come from the theme's own
        tokens (the status ink, red alarms in its hot tint); the tint is derived, never a colour of
        its own. Every state is measured against its ground, AA 4.5:1. */
-    [data-theme='cyberpunk'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-alert) {
+    [data-theme='cyberpunk'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate, .kp-alert) {
         --kp-cp-neon-ground: hsl(from var(--kp-cp-neon-edge, transparent) h calc(s * 0.6) 8%);
     }
 
-    [data-theme='cyberpunk'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='ok'],
+    [data-theme='cyberpunk'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate)[data-kp-tone='ok'],
     [data-theme='cyberpunk'] .kp-alert--success {
         --kp-cp-neon: var(--success-foreground);
         --kp-cp-neon-edge: var(--success-foreground);
     }
 
-    [data-theme='cyberpunk'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='warn'],
+    [data-theme='cyberpunk'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate)[data-kp-tone='warn'],
     [data-theme='cyberpunk'] .kp-alert--warning {
         --kp-cp-neon: var(--warning-foreground);
         --kp-cp-neon-edge: var(--warning-foreground);
@@ -2662,7 +2662,7 @@
         --kp-cp-neon-edge: var(--info-foreground);
     }
 
-    [data-theme='cyberpunk'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='bad'],
+    [data-theme='cyberpunk'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate)[data-kp-tone='bad'],
     [data-theme='cyberpunk'] .kp-alert--destructive {
         --kp-cp-neon: var(--fx-hot-alarm, var(--destructive));
         --kp-cp-neon-edge: var(--destructive);
@@ -2674,8 +2674,14 @@
             .kp-calendar__day[data-kp-tone='warn'],
             .kp-calendar__day[data-kp-tone='bad'],
             .kp-calendar__swatch[data-kp-tone='ok'],
+            .kp-matrix__cell[data-kp-tone='ok'],
+            .kp-heat__swatch--plate[data-kp-tone='ok'],
             .kp-calendar__swatch[data-kp-tone='warn'],
+            .kp-matrix__cell[data-kp-tone='warn'],
+            .kp-heat__swatch--plate[data-kp-tone='warn'],
             .kp-calendar__swatch[data-kp-tone='bad'],
+            .kp-matrix__cell[data-kp-tone='bad'],
+            .kp-heat__swatch--plate[data-kp-tone='bad'],
             .kp-alert--success,
             .kp-alert--warning,
             .kp-alert--info,
@@ -5984,5 +5990,152 @@
                 2px 0 var(--accent),
                 -2px 0 var(--destructive);
         }
+    }
+}
+
+/* ── Action tiles, status rows, facet list [kpadopt2-tiles] ── */
+@layer kp.signature {
+    /* Cyberpunk: pointing lights the circuit, a 14 px grid in the primary over the tile; the rim goes to the primary with a glow, the title is spaced capitals. A press fills the tile with a wash of the primary. */
+    [data-theme='cyberpunk'] .kp-action {
+        --kp-action-radius: 0.3rem;
+        --kp-action-edge: var(--kp-hairline);
+        --kp-action-edge-hover: var(--primary);
+        --kp-action-shadow-hover: 0 0 10px hsl(from var(--primary) h s l / 0.3);
+        --kp-action-ground-active: hsl(from var(--primary) h s l / 0.14);
+        --kp-action-press: 0 1px;
+        --kp-action-title-case: uppercase;
+        --kp-action-title-tracking: 0.08em;
+        --kp-action-title-size: 0.9375rem;
+    }
+    [data-theme='cyberpunk'] .kp-action > :not(.kp-action__state) {
+        position: relative;
+    }
+    [data-theme='cyberpunk'] .kp-action::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background-image:
+            linear-gradient(hsl(from var(--primary) h s l / 0.2) 1px, transparent 1px),
+            linear-gradient(90deg, hsl(from var(--primary) h s l / 0.2) 1px, transparent 1px);
+        background-size: 14px 14px;
+        opacity: 0;
+        pointer-events: none;
+    }
+    [data-theme='cyberpunk'] .kp-action:hover:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true']))::before {
+        opacity: 1;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='cyberpunk'] .kp-action::before {
+            transition: opacity var(--fx-duration) var(--fx-ease);
+        }
+    }
+    [data-theme='cyberpunk'] .kp-statuslist {
+        --kp-statusrow-mark-radius: 0;
+    }
+    [data-theme='cyberpunk'] .kp-statusrow {
+        --kp-statusrow-radius: 0;
+        --kp-statusrow-edge: var(--kp-hairline);
+    }
+    [data-theme='cyberpunk'] .kp-statusrow:is([data-state='loading'], [data-state='failed']) {
+        border-inline-start-width: 3px;
+    }
+    [data-theme='cyberpunk'] .kp-statusrow__detail {
+        font-family: var(--kp-mono);
+    }
+    [data-theme='cyberpunk'] .kp-facets {
+        --kp-facet-radius: 0;
+    }
+    [data-theme='cyberpunk'] .kp-facets__title,
+    [data-theme='cyberpunk'] .kp-facet__count {
+        font-family: var(--kp-mono);
+    }
+}
+
+/* The grid's gap leaves room for the tile's own shadow, glow or outline; the facet row's wash. */
+@layer kp.signature {
+    [data-theme='cyberpunk'] .kp-actions {
+        --kp-actions-gap: 0.625rem;
+    }
+    [data-theme='cyberpunk'] .kp-facet {
+        --kp-facet-hover: hsl(from var(--primary) h s l / 0.1);
+    }
+}
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* Neon tubes in a void: a cell is a dark tinted ground in its tone's neon edge, a glow of the same hue; the pick is a cyan tube. */
+    [data-theme='cyberpunk'] .kp-heat {
+        --kp-heat-cell-radius: 1px;
+        --kp-heat-cell-gap: 2px;
+    }
+    [data-theme='cyberpunk']
+        .kp-heat__cell:is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad'], [data-kp-tone='level']):not([data-kp-share]),
+    [data-theme='cyberpunk'] .kp-heat__swatch:is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad'], [data-kp-tone='level']) {
+        background-color: hsl(from var(--kp-heat-fill) h calc(s * 0.6) 11%);
+        background-image: linear-gradient(to top, var(--kp-heat-fill) 0 3px, transparent 3px), var(--kp-heat-pattern);
+        border-color: var(--kp-heat-fill);
+        box-shadow: 0 0 6px hsl(from var(--kp-heat-fill) h s l / 0.55);
+    }
+    [data-theme='cyberpunk'] .kp-heat__cell[data-kp-share] {
+        background-color: hsl(from var(--muted) h s 8%);
+        border-color: hsl(from var(--kp-heat-fill) h s l / 0.7);
+    }
+    [data-theme='cyberpunk'] .kp-heat__cell[data-kp-picked] {
+        outline: 2px solid var(--accent);
+        outline-offset: 1px;
+        box-shadow: 0 0 10px var(--accent);
+    }
+    [data-theme='cyberpunk'] .kp-heat__label {
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='cyberpunk'] .kp-matrix__cell[data-kp-hovercard]:hover:not([data-kp-inert]) {
+        box-shadow: 0 0 10px var(--kp-cp-neon, var(--accent));
+    }
+    [data-theme='cyberpunk'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='cyberpunk'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='cyberpunk'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: a HUD readout. One notched corner (cut outwards past the box so the focus ring stays whole), a hard 3px bar on the leading edge, a running bar that burns. */
+    [data-theme='cyberpunk'] .kp-week {
+        --kp-week-pill-radius: 0;
+        --kp-week-now: var(--primary);
+    }
+    [data-theme='cyberpunk'] .kp-gantt {
+        --kp-gantt-bar-radius: 0;
+        --kp-gantt-now: var(--primary);
+    }
+    [data-theme='cyberpunk'] :is(.kp-week__pill, .kp-gantt__run) {
+        clip-path: polygon(
+            -8px -8px,
+            calc(100% + 8px) -8px,
+            calc(100% + 8px) calc(100% - var(--fx-notch-sm) - 8px),
+            calc(100% - var(--fx-notch-sm) - 8px) calc(100% + 8px),
+            -8px calc(100% + 8px)
+        );
+    }
+    [data-theme='cyberpunk'] .kp-week__pill {
+        border-color: var(--kp-hairline);
+        border-inline-start: 3px solid var(--kp-week-ink);
+    }
+    [data-theme='cyberpunk'] .kp-week__time {
+        font-family: var(--kp-mono);
+    }
+    [data-theme='cyberpunk'] .kp-gantt__run[data-kp-state='running'] {
+        filter: drop-shadow(0 0 3px var(--kp-gantt-fill));
+    }
+    [data-theme='cyberpunk'] .kp-gantt__tick,
+    [data-theme='cyberpunk'] .kp-week__axis > span {
+        font-family: var(--kp-mono);
     }
 }

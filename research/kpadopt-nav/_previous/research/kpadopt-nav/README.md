@@ -55,6 +55,11 @@ missing pieces were the row, the ellipsis and the short/long swap, which are CSS
    shows a visible **×** (the demo's close button had no glyph), closes on Escape, on a press on the strip and on a press on an entry
    (`js/tabbar.js`), and the demo's drawer now sits inside its review section, so the review dialog's Escape no longer closed the
    dialog and left the drawer open. Say so if a sheet from the bar is still wanted.
+   Kenny's two reports on round 1 both happened, and their causes are found (docs/CORRECTIONS.md, tabbar-facts-1016): the drawer was
+   a plain phone-wide `dialog.kp-drawer` whose close button had no glyph and whose entries did not close it, so a touch screen had no
+   way back (fixed above); and the review dialog dropped the row of a pair marked not approved ("option 2", the bottom tab bar) from its
+   list when the page was reopened in the same round (`show()` in research/_review/review.js listed only open pairs; fixed, a rejected
+   pair stays listed until a round reopens it). Counts show every digit: `setTabbarBadge` has no cap.
 2. Should the folded entry for a link with a counter read “Needs you · 3”, or show the count as a badge on the entry?
 3. Should More be kept visible at all widths (greyed when empty) rather than appearing and disappearing? It is out of the
    flow when idle, so nothing moves either way.

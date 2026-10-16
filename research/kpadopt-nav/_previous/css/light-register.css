@@ -2703,3 +2703,95 @@
         box-shadow: 0 1px 2px hsl(from var(--foreground) h s l / 0.12);
     }
 }
+
+/* ── Action tiles, status rows, facet list [kpadopt2-tiles] ── */
+@layer kp.signature {
+    /* Light: a white card that settles toward the paper. Rest is a hair of shadow; pointing settles it 1 px, a press lands it flat (the shadow gone) 2 px down. */
+    [data-theme='light'] .kp-action {
+        --kp-action-radius: calc(var(--radius) * 1.25);
+        --kp-action-shadow: 0 1px 2px hsl(from var(--foreground) h s l / 0.06);
+        --kp-action-shadow-hover: 0 1px 2px hsl(from var(--foreground) h s l / 0.1);
+        --kp-action-shadow-active: 0 0 0 0 transparent;
+        --kp-action-edge-hover: var(--border-strong);
+        --kp-action-lift: 0 1px;
+        --kp-action-press: 0 2px;
+    }
+    [data-theme='light'] .kp-statuslist {
+        --kp-statuslist-gap: 0.625rem;
+    }
+    [data-theme='light'] .kp-statusrow {
+        --kp-statusrow-radius: calc(var(--radius) * 1.25);
+        box-shadow: 0 1px 2px hsl(from var(--foreground) h s l / 0.06);
+    }
+    [data-theme='light'] .kp-facets {
+        --kp-facet-radius: 999px;
+        --kp-facet-pad-inline: 0.625rem;
+    }
+}
+
+/* The grid's gap leaves room for the tile's own shadow, glow or outline; the facet row's wash. */
+@layer kp.signature {
+    [data-theme='light'] .kp-actions {
+        --kp-actions-gap: 0.75rem;
+    }
+    [data-theme='light'] .kp-facet {
+        --kp-facet-hover: var(--muted);
+    }
+}
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* Paper tiles with a hairline shadow that settles 2 px on a press; the pick is a slim indigo bar under the column's tiles. */
+    [data-theme='light'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 5px;
+        --kp-heat-cell-lift: 0 1px 2px hsl(from var(--foreground) h s l / 0.14);
+        --kp-heat-cell-hover: translateY(-1px);
+        --kp-matrix-cell-hover: translateY(-1px);
+    }
+    [data-theme='light'] .kp-heat__cell:active:not(.kp-skeleton),
+    [data-theme='light'] .kp-matrix__cell:active:not([data-kp-inert]) {
+        transform: translateY(2px);
+        box-shadow: none;
+    }
+    [data-theme='light'] .kp-heat__cell[data-kp-picked] {
+        outline: none;
+        box-shadow: 0 3px 0 -1px var(--primary);
+    }
+    [data-theme='light'] .kp-heat__label-button[aria-pressed='true'] {
+        background: color-mix(in oklab, var(--primary) 12%, var(--card));
+        color: var(--primary);
+    }
+    [data-theme='light'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='light'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='light'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: daylight. Pills and bars are soft capsules; the column dividers are the faintest line there is. */
+    [data-theme='light'] .kp-week {
+        --kp-week-pill-radius: 999px;
+    }
+    [data-theme='light'] .kp-gantt {
+        --kp-gantt-bar-radius: 999px;
+    }
+    [data-theme='light'] .kp-week__pill {
+        padding-inline: 0.625rem;
+        border-color: transparent;
+    }
+    [data-theme='light'] .kp-gantt__label {
+        padding-inline: 0.625rem;
+    }
+    [data-theme='light'] .kp-week__col,
+    [data-theme='light'] .kp-gantt__rule {
+        border-inline-color: hsl(from var(--border) h s l / 0.6);
+    }
+    [data-theme='light'] .kp-gantt__run[data-kp-state='queued'] {
+        border-color: var(--border-strong);
+    }
+}

@@ -4223,11 +4223,7 @@
         inset-block-start: calc(-1 * var(--kp-tabbar-pad, 0.25rem) - 0.4rem);
         block-size: 0.7rem;
         border-radius: 2px;
-        background: repeating-linear-gradient(
-            -45deg,
-            hsl(from var(--primary) h s l / 0.85) 0 5px,
-            hsl(from var(--primary) h s l / 0.55) 5px 10px
-        );
+        background: repeating-linear-gradient(-45deg, hsl(from var(--primary) h s l / 0.85) 0 5px, hsl(from var(--primary) h s l / 0.55) 5px 10px);
         rotate: -1.5deg;
         scale: 0 1;
     }
@@ -4255,5 +4251,107 @@
     [data-theme='pastel'] .kp-tabbar__badge {
         rotate: 6deg;
         border: 2px solid var(--card);
+    }
+}
+
+/* ── Action tiles, status rows, facet list [kpadopt2-tiles] ── */
+@layer kp.signature {
+    /* Pastel: a sticker on dashed washi. Pointing lifts the sticker on its shadow; a press sticks it down flat; the outline is the dashed candy line. */
+    [data-theme='pastel'] .kp-action {
+        --kp-action-radius: 1.1rem;
+        --kp-action-line: 2px;
+        --kp-action-edge: var(--border-strong);
+        --kp-action-edge-hover: var(--primary);
+        --kp-action-shadow: 0 3px 0 hsl(from var(--border-strong) h s l / 0.45);
+        --kp-action-shadow-hover: 0 5px 0 hsl(from var(--border-strong) h s l / 0.45);
+        --kp-action-shadow-active: 0 1px 0 hsl(from var(--border-strong) h s l / 0.45);
+        --kp-action-lift: 0 -2px;
+        --kp-action-press: 0 2px;
+        border-style: dashed;
+    }
+    [data-theme='pastel'] .kp-statuslist {
+        --kp-statuslist-gap: 0.625rem;
+    }
+    [data-theme='pastel'] .kp-statusrow {
+        --kp-statusrow-line: 2px;
+        --kp-statusrow-radius: 1.1rem;
+    }
+    [data-theme='pastel'] .kp-statusrow[data-state='ok'] .kp-statusrow__mark {
+        rotate: -8deg;
+    }
+    [data-theme='pastel'] .kp-facets {
+        --kp-facet-radius: 0.85rem;
+    }
+}
+
+/* The grid's gap leaves room for the tile's own shadow, glow or outline; the facet row's wash. */
+@layer kp.signature {
+    [data-theme='pastel'] .kp-actions {
+        --kp-actions-gap: 0.875rem;
+    }
+    [data-theme='pastel'] .kp-facet {
+        --kp-facet-hover: var(--secondary);
+    }
+}
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* Gummy sweets: round, glossy, a flat shadow under each; a pressed sweet drops into its shadow; the pick is a plum ring. */
+    [data-theme='pastel'] .kp-heat {
+        --kp-heat-cell-radius: 999px;
+        --kp-heat-cell-gap: 4px;
+        --kp-heat-cell-lift: 0 2px 0 hsl(from var(--foreground) h s l / 0.18);
+        --kp-heat-cell-hover: translateY(-2px);
+    }
+    [data-theme='pastel'] .kp-matrix {
+        --kp-heat-cell-radius: 14px;
+        --kp-heat-cell-lift: 0 3px 0 hsl(from var(--foreground) h s l / 0.16);
+        --kp-matrix-cell-hover: translateY(-2px);
+    }
+    [data-theme='pastel']
+        .kp-heat__cell:is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad'], [data-kp-tone='level']):not([data-kp-share]) {
+        background-image: linear-gradient(to bottom, hsl(from var(--background) h s 100% / 0.55) 0 30%, transparent 30%), var(--kp-heat-pattern);
+    }
+    [data-theme='pastel'] .kp-heat__cell:active:not(.kp-skeleton),
+    [data-theme='pastel'] .kp-matrix__cell:active:not([data-kp-inert]) {
+        transform: translateY(2px);
+        box-shadow: none;
+    }
+    [data-theme='pastel'] .kp-heat__cell[data-kp-picked],
+    [data-theme='pastel'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 3px solid var(--primary);
+        outline-offset: 1px;
+    }
+    [data-theme='pastel'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='pastel'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='pastel'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: stickers. Round, with a 2px edge and a solid peel under them; the running bar is a candy stripe. */
+    [data-theme='pastel'] .kp-week {
+        --kp-week-pill-radius: 999px;
+    }
+    [data-theme='pastel'] .kp-gantt {
+        --kp-gantt-bar-radius: 999px;
+    }
+    [data-theme='pastel'] :is(.kp-week__pill, .kp-gantt__run) {
+        border-width: 2px;
+        filter: drop-shadow(0 2px 0 hsl(from var(--foreground) h s l / 0.22));
+    }
+    [data-theme='pastel'] .kp-week__pill {
+        padding-inline: 0.625rem;
+    }
+    [data-theme='pastel'] .kp-gantt__label {
+        padding-inline: 0.625rem;
+    }
+    [data-theme='pastel'] .kp-gantt__run[data-kp-state='queued'] {
+        border-style: dashed;
     }
 }

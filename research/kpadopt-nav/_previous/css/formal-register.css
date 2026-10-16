@@ -3245,7 +3245,12 @@
     /* A day of the month: paper with a rule, not a tinted plate. A kept night
        is ruled along its start edge in navy, a night to look at in red ink, a
        failed one in two red rules; today stands in the double rule. */
-    [data-theme='formal'] :is(.kp-calendar__day, .kp-calendar__swatch):is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad']) {
+    [data-theme='formal']
+        :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate):is(
+            [data-kp-tone='ok'],
+            [data-kp-tone='warn'],
+            [data-kp-tone='bad']
+        ) {
         --kp-fm-edge: inset 3px 0 0 var(--primary);
         border-color: var(--border);
         background: var(--card);
@@ -3253,12 +3258,12 @@
         color: var(--foreground);
     }
 
-    [data-theme='formal'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='warn'] {
+    [data-theme='formal'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate)[data-kp-tone='warn'] {
         --kp-fm-edge: inset 3px 0 0 var(--destructive);
         color: var(--destructive);
     }
 
-    [data-theme='formal'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='bad'] {
+    [data-theme='formal'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate)[data-kp-tone='bad'] {
         --kp-fm-edge: inset 3px 0 0 var(--destructive), inset 6px 0 0 var(--card), inset 8px 0 0 var(--destructive);
         color: var(--destructive);
     }
@@ -3549,11 +3554,7 @@
         [data-theme='formal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']),
         [data-theme='formal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) > * {
             --kp-fm-f: clamp(0, (var(--kp-fm-t) * 740 - var(--kp-fm-k, 0) * var(--kp-sig-fm-st)) / var(--kp-sig-fm-len), 1);
-            --kp-fm-lf: clamp(
-                0,
-                (var(--kp-fm-t) * 740 - var(--kp-fm-k, 0) * var(--kp-sig-fm-st) - var(--kp-sig-fm-len)) / var(--kp-sig-fm-lift),
-                1
-            );
+            --kp-fm-lf: clamp(0, (var(--kp-fm-t) * 740 - var(--kp-fm-k, 0) * var(--kp-sig-fm-st) - var(--kp-sig-fm-len)) / var(--kp-sig-fm-lift), 1);
             --kp-fm-open: calc(100% - var(--kp-fm-f) * (100% + var(--kp-sig-fm-reach)));
             clip-path: inset(
                 calc(-1 * var(--kp-sig-fm-reach)) calc(var(--kp-fm-open) * var(--kp-fm-ltr) - var(--kp-sig-fm-reach) * (1 - var(--kp-fm-ltr)))
@@ -4046,4 +4047,147 @@
         --kp-kbd-foot: 1px;
         font-family: var(--theme-font-body);
     }
+
+    /* Loading in the ledger keeps the shape of what is loading: each ghost is a plate of the pill's or the bar's own size (a pale ground,
+       a ruled edge, 2 px corners) and the navy rule of the skeleton is ruled along its foot, as on every other waiting surface. Without
+       this the skeleton's single ruled line would replace the pills and bars. */
+    [data-theme='formal'] .kp-gantt__ghost .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block),
+    [data-theme='formal'] .kp-week__ghost.kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        border: 1px solid var(--border);
+        border-radius: 2px;
+        background: var(--muted);
+    }
+    [data-theme='formal'] .kp-gantt__ghost .kp-gantt__run.kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        position: absolute;
+        block-size: var(--kp-gantt-bar, 1.125rem);
+    }
+    [data-theme='formal'] .kp-week__ghost.kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        position: absolute;
+        block-size: var(--kp-week-pill, 1.5rem);
+    }
+    [data-theme='formal'] .kp-gantt__ghost.kp-gantt__lane > .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        block-size: 0.75rem;
+    }
 }
+
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: a ledger. Entries are ruled lines with a heavy rule on their left edge, bars are inked strips with a 2px cut, and the axis rules are dotted leaders. */
+    [data-theme='formal'] .kp-week {
+        --kp-week-pill-radius: 2px;
+    }
+    [data-theme='formal'] .kp-gantt {
+        --kp-gantt-bar-radius: 2px;
+    }
+    [data-theme='formal'] .kp-week__pill {
+        border-inline-start-width: 4px;
+    }
+    [data-theme='formal'] .kp-week__col {
+        border-inline-start-style: dotted;
+    }
+    [data-theme='formal'] .kp-week__dow,
+    [data-theme='formal'] .kp-gantt__tick {
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.08em;
+    }
+}
+
+/* ── Action tiles, status rows, facet list [kpadopt2-tiles] ── */
+@layer kp.signature {
+    /* Formal: the engraved plate. Nothing moves; the title takes the quill underline in the primary on hover (as a key figure's label does), and a press is the seal, a double rule laid inside the plate. */
+    [data-theme='formal'] .kp-action {
+        --kp-action-radius: 3px;
+        --kp-action-edge-hover: var(--border-strong);
+        --kp-action-ground-active: color-mix(in oklab, var(--secondary-active) 35%, var(--card));
+        --kp-action-shadow-active:
+            inset 0 0 0 2px var(--card), inset 0 0 0 3px var(--primary), inset 0 0 0 5px var(--card), inset 0 0 0 6px var(--primary);
+        --kp-action-press: 0 0;
+    }
+    [data-theme='formal'] .kp-action__title {
+        text-decoration: underline 2px transparent;
+        text-decoration-skip-ink: none;
+        text-underline-offset: 0.3em;
+    }
+    [data-theme='formal'] .kp-action:hover:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'])) .kp-action__title {
+        text-decoration-color: var(--primary);
+    }
+    [data-theme='formal'] .kp-action--destructive:hover:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'])) .kp-action__title {
+        text-decoration-color: var(--destructive);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] .kp-action__title {
+            transition: text-decoration-color var(--fx-duration) var(--fx-ease);
+        }
+    }
+    [data-theme='formal'] .kp-statuslist {
+        --kp-statuslist-gap: 0;
+    }
+    [data-theme='formal'] .kp-statusrow {
+        --kp-statusrow-radius: 0;
+        --kp-statusrow-ground: transparent;
+        border-width: 0 0 1px;
+    }
+    [data-theme='formal'] .kp-facets {
+        --kp-facet-radius: 2px;
+    }
+    /* A checkbox that is neither on nor off (the facet list's Everything row while only some rows are on). */
+    [data-theme='formal'] .kp-field__check[type='checkbox']:indeterminate {
+        border-color: var(--primary);
+        background: var(--primary);
+    }
+    [data-theme='formal'] .kp-field__check[type='checkbox']:indeterminate::before {
+        content: '';
+        inline-size: 0.5rem;
+        block-size: 0;
+        border-block-end: 2px solid var(--primary-foreground);
+    }
+}
+
+/* The grid's gap leaves room for the tile's own shadow, glow or outline; the facet row's wash. */
+@layer kp.signature {
+    [data-theme='formal'] .kp-actions {
+        --kp-actions-gap: 0.5rem;
+    }
+    [data-theme='formal'] .kp-facet {
+        --kp-facet-hover: var(--muted);
+    }
+}
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* Ledger entries: a cell is a ruled square of the ledger, the pick is the double rule, labels are small capitals. */
+    [data-theme='formal'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 1px;
+        --kp-heat-cell-ink: hsl(from var(--foreground) h s l / 0.3);
+        --kp-heat-cell-gap: 3px;
+    }
+    [data-theme='formal'] .kp-heat__cell[data-kp-picked],
+    [data-theme='formal'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 3px double var(--primary);
+        outline-offset: 1px;
+    }
+    [data-theme='formal'] .kp-heat__label,
+    [data-theme='formal'] .kp-matrix__row,
+    [data-theme='formal'] .kp-matrix__col {
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.08em;
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+    [data-theme='formal'] .kp-heat__label-button[aria-pressed='true'] {
+        background: none;
+        color: var(--primary);
+        box-shadow: inset 0 -2px 0 var(--primary);
+    }
+    [data-theme='formal'] .kp-heat__sep {
+        border-block-start: 3px double var(--border-strong);
+    }
+    [data-theme='formal'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='formal'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='formal'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */

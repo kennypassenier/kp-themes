@@ -270,7 +270,7 @@ const MORE_ITEMS = `<a class="kp-menu__item" href="#backups"><span class="kp-men
 /* ------------------------------------------------------------------ the page */
 
 const SECTIONS = `
-            <section class="nf-sec" id="nav-fold" data-review-item="nav-fold" data-review-themes="cyberpunk,phantom,grotesk" data-review-title="1 · A bar that folds behind More" data-review-components="nav-fold" aria-labelledby="h-nav-fold">
+            <section class="nf-sec" id="nav-fold" data-review-item="nav-fold" data-review-themes="phantom" data-review-title="1 · A bar that folds behind More" data-review-components="nav-fold" aria-labelledby="h-nav-fold">
                 <div class="nf-sec__head">
                     <p class="nf-num">1 · Top bar</p>
                     <h2 id="h-nav-fold">What does not fit goes behind More, and the bar never changes height.</h2>
@@ -279,6 +279,7 @@ const SECTIONS = `
                 ${expected(`<ul>
                     <li>Drag the slider above the first bar: the links that do not fit leave the bar from the end and are listed behind a <b>More</b> button; the bar stays one row tall at every width (at 18rem the brand gives way to an ellipsis before anything wraps), and nothing jumps when a link folds. The More button is always inside the bar, after the links that stay and before Search.</li>
                     <li>Press <b>More</b> (or the button under the “More opened” bar): a menu hangs from its left edge (its right edge in the right-to-left bar), straight under the button, wherever it is on the page, with the folded links; picking an entry follows its link, <b>Escape</b> closes the menu and the focus is back on More.</li>
+                    <li>The opened menu stands on phantom’s own plate, on the page and in the review dialog alike: the dark ground, the red edge on its left, the cut corner and its red fold, a degree and a half askew; nothing of the page reads through it.</li>
                     <li>The three-link bar at 26rem has no More at all. The bar that keeps Settings (<code>data-kp-nav-keep</code>) keeps it however narrow it gets.</li>
                     <li>Tab through a bar: the links that stay, then More, then Search. Folded links are skipped.</li>
                 </ul>`)}
@@ -323,30 +324,6 @@ ${bar({ id: 'nf-live', width: 'nf-w-live', links: LINKS.plain })}
                         <figcaption>A bar that also has the phone toggle: below 40rem the toggle’s own collapse wins, as before, and the fold stands down (More is not drawn).</figcaption></figure>
                 </div>
                 <p class="nf-note">Not shown: loading. The fold has no loading state of its own; the More menu shows the menu button’s loading entry when a page fills it that way. Hovering a link is the theme’s, and not repeated here.</p>
-            </section>
-
-            <section class="nf-sec" id="together" data-review-item="together" data-review-themes="grotesk" data-review-title="2 · Together, in a real window" data-review-components="tabbar nav-fold" aria-labelledby="h-together">
-                <div class="nf-sec__head">
-                    <p class="nf-num">2 · Together</p>
-                    <h2 id="h-together">The dashboard’s shell in three real windows.</h2>
-                    <p class="nf-how">Three pages in frames, each a window of its own width: the media queries answer to the frame, so this is what a phone, a tablet and a desktop get. The mock page behind is the demo’s; the top bar, the tab bar, the running-job button, the menu button and the drawer are the package’s.</p>
-                </div>
-                ${expected(`<ul>
-                    <li>Three real pages in three windows. <b>Phone</b> (22.5rem): brand, search, the job button (“Running”) at the top, the four areas and More in a tab bar at the foot, the last line of the page clear of the bar. <b>Tablet</b> (48rem): the same tab bar. <b>Desktop</b> (70rem): all links in the top bar, no tab bar.</li>
-                    <li>Press More in the phone or tablet window: its panel opens inside that window (not over this page) and closes with its ×, Escape, a press on the strip beside it or a press on an entry.</li>
-                    <li>Nothing in the three windows should overlap, cut or shift when you press the controls.</li>
-                </ul>`)}
-                <div class="nf-look" data-review-look>
-${looks(
-    (theme) =>
-        `In ${theme}, compare the three windows. Phone (22.5rem): the top bar keeps only the brand, the search box, the running-job button (its short word) and the theme; the areas are in the tab bar at the foot, fixed, with room kept under the last line of the page; pressing More opens the drawer. Tablet (48rem): the tab bar is the wide one (shown below 60rem) and the top bar has no links. Desktop (70rem): no tab bar, the top bar folds what does not fit behind More. ${TAB[theme]}`,
-)}
-                </div>
-                <div class="tg-windows">
-                    <figure class="tg-fig"><iframe class="tg-window tg-window--phone" src="app.html" title="The shell in a phone-sized window" loading="lazy"></iframe><figcaption>Phone, 22.5rem</figcaption></figure>
-                    <figure class="tg-fig"><iframe class="tg-window tg-window--tablet" src="app.html" title="The shell in a tablet-sized window" loading="lazy"></iframe><figcaption>Tablet, 48rem</figcaption></figure>
-                    <figure class="tg-fig"><iframe class="tg-window tg-window--desktop" src="app.html" title="The shell in a desktop-sized window" loading="lazy"></iframe><figcaption>Desktop, 70rem</figcaption></figure>
-                </div>
             </section>`;
 
 const demo = `<!doctype html>
@@ -355,7 +332,7 @@ const demo = `<!doctype html>
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>kp-themes: the folding top bar and the shell, still open</title>
+        <title>kp-themes: the folding top bar in phantom, still open</title>
         <link rel="stylesheet" href="../../css/fonts.css" />
         <link rel="stylesheet" href="../../css/themes.css" />
         <link rel="stylesheet" href="../../css/components.css" />
@@ -367,13 +344,14 @@ const demo = `<!doctype html>
     <body>
         <main class="nf-page">
             <header class="nf-intro">
-                <h1>The folding top bar and the shell, still open</h1>
+                <h1>The folding top bar in phantom, still open</h1>
                 <p>
-                    Round 4. Kenny approved the bottom tab bar and the running-job button in every theme, and the folding bar and the shell in every
-                    other theme, so only what is still open is on this page: the folding bar in cyberpunk, phantom and grotesk, and the shell in three
-                    windows in grotesk. Everything inside the frames is the package’s own classes and scripts (<code>kp-nav</code> with
-                    <code>data-kp-nav-fold</code>, the tab bar and running-job button inside the shell windows, the menu button and the drawer); the
-                    frames, the slider and the mock page are this demo’s. Judge the four in the review dialog (“Review in a dialog” at the top).
+                    Round 5. Kenny approved the folding bar in cyberpunk and grotesk and the shell in grotesk, so only phantom’s folding bar is
+                    left. Its opened More menu had no plate in the review dialog: phantom makes a list inside a dialog bare, and the review dialog is
+                    a dialog. The More menu now keeps phantom’s own plate there too: the dark ground, the red edge, the cut corner and its red fold,
+                    the same as phantom’s menus everywhere else. Everything inside the frames is the package’s own (<code>kp-nav</code> with
+                    <code>data-kp-nav-fold</code>, the menu button); the frames and the slider are this demo’s. Judge it in the review dialog
+                    (“Review in a dialog” at the top).
                 </p>
                 <p class="nf-motion" data-nf-motion hidden>
                     <b>Your system asks for reduced motion</b>, so the marks and menus appear without moving. Turn it off to judge the movement.
@@ -383,11 +361,11 @@ ${SECTIONS}
         </main>
         <script type="module" src="../../js/auto.js"></script>
         <script type="module" src="demo.js"></script>
-        <!-- Round four (2026-10-16): only the four pairs Kenny has not approved (research/kpadopt-nav/VERDICTS.json): the folding bar in
-             cyberpunk, phantom and grotesk, and the shell in grotesk. The approved sections (tab bar, running-job button) and themes are gone
-             from the page; gates/check-rereview.mjs refuses a page that offers an approved pair. -->
+        <!-- Round five (2026-10-16): only the one pair Kenny has not approved (research/kpadopt-nav/VERDICTS.json): the folding bar in
+             phantom. The approved sections and themes are gone from the page; gates/check-rereview.mjs refuses a page that offers an
+             approved pair. -->
         <script type="application/json" data-review-round>
-            { "round": "2026-10-16-r4", "received": ["2026-10-16-r2"], "reopen": ["cyberpunk|nav-fold", "phantom|nav-fold", "grotesk|nav-fold", "grotesk|together"] }
+            { "round": "2026-10-16-r5", "received": ["2026-10-16-r2", "2026-10-16-r4"], "reopen": ["phantom|nav-fold"] }
         </script>
         <script type="module" src="../_review/review.js"></script>
         <script src="../../catalogue/boot-check.js"></script>

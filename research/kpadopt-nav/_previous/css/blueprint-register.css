@@ -3033,12 +3033,20 @@
                 animation: kp-sig-blueprint-trace-out var(--kp-sig-bp-panel) linear reverse forwards;
             }
 
-            [data-theme='blueprint'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu {
+            [data-theme='blueprint']
+                .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing])
+                .kp-nav__links
+                > li
+                > .kp-nav__menu {
                 animation: none;
                 transition: none;
             }
 
-            [data-theme='blueprint'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu::after {
+            [data-theme='blueprint']
+                .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing])
+                .kp-nav__links
+                > li
+                > .kp-nav__menu::after {
                 content: none;
             }
         }
@@ -4175,7 +4183,11 @@
         /* The pen and the construction line, the dialog's (its ::after). On the side navigation the
            line runs on the panel's own edge; on the alarm it runs on the alarm's frame, so the frame
            is what the pen constructs before the screen is inked. */
-        [data-theme='blueprint'] :is(.kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']), .kp-alarm[open]:not([data-kp-alarm-motion='still']))::after {
+        [data-theme='blueprint']
+            :is(
+                .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']),
+                .kp-alarm[open]:not([data-kp-alarm-motion='still'])
+            )::after {
             content: '';
             position: absolute;
             z-index: 4;
@@ -4330,7 +4342,8 @@
         --kp-seg-tracking: 0.08em;
         --kp-seg-case: uppercase;
         --kp-seg-track: transparent;
-        --kp-seg-thumb: repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / 0.34) 0 1px, transparent 1px 5px), hsl(from var(--primary) h s l / 0.1);
+        --kp-seg-thumb:
+            repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / 0.34) 0 1px, transparent 1px 5px), hsl(from var(--primary) h s l / 0.1);
         --kp-seg-thumb-ink: var(--foreground);
         --kp-seg-thumb-edge: 0 0 0 1px var(--primary);
         --kp-seg-thumb-lift: 0 0 0 0 transparent;
@@ -4355,5 +4368,143 @@
         --kp-kbd-foot: 1px;
         border-style: dashed;
         font-family: var(--theme-font-mono);
+    }
+}
+
+/* ── Action tiles, status rows, facet list [kpadopt2-tiles] ── */
+@layer kp.signature {
+    /* Blueprint: a drawn box. A dashed frame; pointing lights the 8 px drafting grid in the primary over the tile and closes the frame to a line; the title is mono capitals; a press is a wash of the ink. */
+    [data-theme='blueprint'] .kp-action {
+        --kp-action-radius: 2px;
+        --kp-action-ground: transparent;
+        --kp-action-edge: var(--border-strong);
+        --kp-action-edge-hover: var(--primary);
+        --kp-action-ground-active: hsl(from var(--primary) h s l / 0.14);
+        --kp-action-title-font: var(--theme-font-mono);
+        --kp-action-title-size: 0.8125rem;
+        --kp-action-title-case: uppercase;
+        --kp-action-title-tracking: 0.08em;
+        --kp-action-press: 0 0;
+        border-style: dashed;
+    }
+    [data-theme='blueprint'] .kp-action:hover:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'])) {
+        border-style: solid;
+    }
+    [data-theme='blueprint'] .kp-action:focus-visible {
+        outline-style: dashed;
+    }
+    [data-theme='blueprint'] .kp-action > :not(.kp-action__state) {
+        position: relative;
+    }
+    [data-theme='blueprint'] .kp-action::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background-image:
+            linear-gradient(hsl(from var(--primary) h s l / 0.14) 1px, transparent 1px),
+            linear-gradient(90deg, hsl(from var(--primary) h s l / 0.14) 1px, transparent 1px);
+        background-size: 8px 8px;
+        opacity: 0;
+        pointer-events: none;
+    }
+    [data-theme='blueprint'] .kp-action:hover:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true']))::before {
+        opacity: 1;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] .kp-action::before {
+            transition: opacity var(--fx-duration) var(--fx-ease);
+        }
+    }
+    [data-theme='blueprint'] .kp-statuslist {
+        --kp-statusrow-mark-radius: 0;
+    }
+    [data-theme='blueprint'] .kp-statusrow {
+        --kp-statusrow-edge: var(--border-strong);
+        --kp-statusrow-ground: transparent;
+        --kp-statusrow-radius: 2px;
+        border-style: dashed;
+    }
+    [data-theme='blueprint'] .kp-statusrow[data-state='loading'] {
+        border-style: solid;
+    }
+    [data-theme='blueprint'] .kp-statusrow__detail,
+    [data-theme='blueprint'] .kp-facet__count {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='blueprint'] .kp-facets {
+        --kp-facet-radius: 1px;
+    }
+}
+
+/* The grid's gap leaves room for the tile's own shadow, glow or outline; the facet row's wash. */
+@layer kp.signature {
+    [data-theme='blueprint'] .kp-actions {
+        --kp-actions-gap: 0.5rem;
+    }
+    [data-theme='blueprint'] .kp-facet {
+        --kp-facet-hover: hsl(from var(--primary) h s l / 0.08);
+    }
+}
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* Drafted cells: ruled squares in line weight, hatching for what is not there; the pick is a dashed amber datum line round the column. */
+    [data-theme='blueprint'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 0;
+        --kp-heat-cell-edge: 1px;
+        --kp-heat-cell-ink: hsl(from var(--foreground) h s l / 0.7);
+        --kp-heat-cell-gap: 3px;
+        --kp-heat-cell-hover: none;
+        --kp-matrix-cell-hover: none;
+    }
+    [data-theme='blueprint'] .kp-heat__cell:hover:not(.kp-skeleton, [aria-disabled='true']),
+    [data-theme='blueprint'] .kp-matrix__cell:hover:not([data-kp-inert]) {
+        outline: 1px solid var(--foreground);
+        outline-offset: 2px;
+    }
+    [data-theme='blueprint'] .kp-heat__cell[data-kp-picked] {
+        outline: 1px dashed var(--accent, var(--primary));
+        outline-offset: 2px;
+    }
+    [data-theme='blueprint'] .kp-heat__label,
+    [data-theme='blueprint'] .kp-matrix__row,
+    [data-theme='blueprint'] .kp-matrix__col {
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='blueprint'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 1px dashed var(--accent, var(--primary));
+        outline-offset: 2px;
+    }
+    [data-theme='blueprint'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='blueprint'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='blueprint'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: a drawing. Open frames with a hatch for a fill, square corners, dashed witness lines. */
+    [data-theme='blueprint'] .kp-week {
+        --kp-week-pill-radius: 0;
+    }
+    [data-theme='blueprint'] .kp-gantt {
+        --kp-gantt-bar-radius: 0;
+    }
+    [data-theme='blueprint'] .kp-week__pill:not([data-kp-state='off'], [data-kp-state='skipped'], [data-kp-state='reference']) {
+        background-image: repeating-linear-gradient(45deg, hsl(from var(--kp-week-ink) h s l / 0.28) 0 1px, transparent 1px 5px);
+    }
+    [data-theme='blueprint'] .kp-week__col,
+    [data-theme='blueprint'] .kp-gantt__rule {
+        border-inline-style: dashed;
+    }
+    [data-theme='blueprint'] :is(.kp-week__time, .kp-gantt__tick, .kp-week__axis > span) {
+        font-family: var(--theme-font-mono, var(--font-mono, monospace));
     }
 }

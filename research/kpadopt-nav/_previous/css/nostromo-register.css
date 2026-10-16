@@ -3718,3 +3718,127 @@
             0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring);
     }
 }
+
+/* ── Action tiles, status rows, facet list [kpadopt2-tiles] ── */
+@layer kp.signature {
+    /* Nostromo: an indicator panel. A muted plate with a well along its top and a mono capital label; pointing wakes the console, heavy scanlines over the plate; a press darkens the plate and seats it in. */
+    [data-theme='nostromo'] .kp-action {
+        --kp-action-radius: 3px;
+        --kp-action-ground: var(--muted);
+        --kp-action-edge: var(--border-strong);
+        --kp-action-edge-hover: var(--primary);
+        --kp-action-shadow: inset 0 3px 0 hsl(from var(--foreground) h s l / 0.14);
+        --kp-action-ground-active: var(--secondary-active);
+        --kp-action-shadow-active: inset 0 3px 0 hsl(from var(--foreground) h s l / 0.3);
+        --kp-action-press: 0 1px;
+        --kp-action-title-font: var(--theme-font-mono);
+        --kp-action-title-case: uppercase;
+        --kp-action-title-tracking: 0.08em;
+        --kp-action-title-size: 0.8125rem;
+    }
+    [data-theme='nostromo'] .kp-action > :not(.kp-action__state) {
+        position: relative;
+    }
+    [data-theme='nostromo'] .kp-action::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: repeating-linear-gradient(0deg, hsl(from var(--foreground) h s l / 0.16) 0 1px, transparent 1px 3px);
+        opacity: 0;
+        pointer-events: none;
+    }
+    [data-theme='nostromo'] .kp-action:hover:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true']))::before {
+        opacity: 1;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='nostromo'] .kp-action::before {
+            transition: opacity var(--fx-duration) var(--fx-ease);
+        }
+    }
+    [data-theme='nostromo'] .kp-statuslist {
+        --kp-statusrow-mark-radius: 2px;
+    }
+    [data-theme='nostromo'] .kp-statusrow {
+        --kp-statusrow-edge: var(--border-strong);
+        --kp-statusrow-radius: 3px;
+    }
+    [data-theme='nostromo'] .kp-statusrow[data-state='loading'] {
+        box-shadow: inset 0 0 0 1px var(--primary);
+    }
+    [data-theme='nostromo'] .kp-statusrow__detail,
+    [data-theme='nostromo'] .kp-facet__count {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='nostromo'] .kp-facets {
+        --kp-facet-radius: 2px;
+    }
+}
+
+/* The grid's gap leaves room for the tile's own shadow, glow or outline; the facet row's wash. */
+@layer kp.signature {
+    [data-theme='nostromo'] .kp-actions {
+        --kp-actions-gap: 0.5rem;
+    }
+    [data-theme='nostromo'] .kp-facet {
+        --kp-facet-hover: var(--muted);
+    }
+}
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* Vents lit from behind: a dark slot per tile with the tone as the light inside it (a bright core, a soft bloom); nothing scales; the pick is an orange tab under the column. */
+    [data-theme='nostromo'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 2px;
+        --kp-heat-cell-gap: 3px;
+        --kp-heat-cell-hover: none;
+        --kp-matrix-cell-hover: none;
+    }
+    [data-theme='nostromo']
+        .kp-heat__cell:is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad'], [data-kp-tone='level']):not([data-kp-share]),
+    [data-theme='nostromo'] .kp-heat__swatch:is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad'], [data-kp-tone='level']) {
+        background-image: radial-gradient(ellipse at 50% 50%, hsl(from var(--background) h s 100% / 0.28), transparent 70%), var(--kp-heat-pattern);
+        box-shadow:
+            inset 0 0 0 1px hsl(from var(--background) h s 0% / 0.6),
+            0 0 6px hsl(from var(--kp-heat-fill) h s l / 0.45);
+    }
+    [data-theme='nostromo'] .kp-heat__cell:hover:not(.kp-skeleton, [aria-disabled='true']),
+    [data-theme='nostromo'] .kp-matrix__cell:hover:not([data-kp-inert]) {
+        filter: brightness(1.25);
+    }
+    [data-theme='nostromo'] .kp-heat__cell[data-kp-picked] {
+        outline: none;
+        box-shadow: 0 4px 0 -1px var(--primary);
+    }
+    [data-theme='nostromo'] .kp-heat__label,
+    [data-theme='nostromo'] .kp-matrix__row,
+    [data-theme='nostromo'] .kp-matrix__col {
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='nostromo'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='nostromo'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='nostromo'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: label tape. Mono capitals on a 2px-cut strip, a hairline frame, the axis in the same tape face. */
+    [data-theme='nostromo'] .kp-week {
+        --kp-week-pill-radius: var(--kp-sig-no-tape, 2px);
+    }
+    [data-theme='nostromo'] .kp-gantt {
+        --kp-gantt-bar-radius: var(--kp-sig-no-tape, 2px);
+    }
+    [data-theme='nostromo'] :is(.kp-week__pill, .kp-gantt__run, .kp-week__dow, .kp-gantt__tick, .kp-gantt__lane) {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+}

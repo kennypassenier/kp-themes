@@ -7,10 +7,19 @@
 //
 //   node research/kpadopt2/build.mjs
 import { readFileSync, writeFileSync } from 'node:fs';
-import { sections as tiles } from './parts/tiles.mjs';
 import { sections as time } from './parts/time.mjs';
 
 const grids = readFileSync(new URL('./parts/grids.html', import.meta.url), 'utf8');
+
+// Round 2 (2026-10-16) shows only the sections Kenny has not approved (research/kpadopt2/VERDICTS.json; gates/check-rereview.mjs
+// refuses a page that offers an approved pair): the matrix, the bar in a table cell, the week agenda and its states. The other
+// seven sections stay in parts/ for the record and leave the page.
+const OPEN = ['matrix', 'barcell', 'week', 'week-states'];
+/** Keep only the open sections of a run of sections. @param {string} html */
+const openOnly = (html) =>
+    html.replace(/[ \t]*<section\b[\s\S]*?<\/section>\n?/g, (block) =>
+        OPEN.includes(/\bdata-review-item="([^"]+)"/.exec(block)?.[1] ?? '') ? block : '',
+    );
 
 const html = `<!doctype html>
 <!-- Written by research/kpadopt2/build.mjs; edit build.mjs, parts/, demo-*.css and demo-*.js, not this file. -->
@@ -18,7 +27,7 @@ const html = `<!doctype html>
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Round 2 of the dashboard adoption · kp-themes research demo</title>
+        <title>Round 2 of the dashboard adoption, the four still open · kp-themes research demo</title>
         <link rel="stylesheet" href="../../css/fonts.css" />
         <link rel="stylesheet" href="../../css/themes.css" />
         <link rel="stylesheet" href="../../css/components.css" />
@@ -47,34 +56,26 @@ const html = `<!doctype html>
 
         <main id="main" class="cat-main r2-page">
             <header class="r2-intro">
-                <h1>Round 2 of the dashboard adoption: eight components</h1>
+                <h1>Round 2 of the dashboard adoption: the four still open</h1>
                 <p class="cat-intro">
-                    Eight things the admin dashboard still draws itself, now built in the package (Kenny’s rule: a consumer draws nothing). One page,
-                    eleven sections, judged one after the other in the review dialog (“Review in a dialog” at the top), formal only until it is
-                    approved: <b>action tiles</b>, <b>status rows</b> and the <b>facet list</b> (<code>nx-action</code>, <code>perstack-chip</code>,
-                    <code>hl-opt</code>); the <b>heat grid</b>, the <b>matrix</b> and the <b>bar in a table cell</b> with the table’s
-                    <code>data-kp-sort-value</code> (<code>bk-heat</code>, <code>fw-mx</code>, <code>mp-caps</code>, <code>mp-growth</code>); the
-                    <b>week agenda</b> and the <b>run timeline</b> (<code>sch-week</code>, <code>ac-tl</code>). Everything with a <code>kp-</code> class
-                    and every script under <code>js/</code> is the package; the sample data, the buttons that drive a demo and the rows that stand in for
-                    hover, focus and press are this page’s. Every section says what you should see under <b>Expected</b>.
+                    Round 2. Kenny approved seven of the eleven sections in formal (the action tiles, the status rows, the facet list, the heat grid, the
+                    crowded week and both run timeline sections), so only the four still open are on this page, each rebuilt from the package’s own
+                    parts: the <b>matrix</b> (every name the same room from its mark and its edges; the state picked with the package’s segmented
+                    control), the <b>bar in a table cell</b> (loading in the theme’s own loading picture, the table’s busy panel over the rows), the
+                    <b>week agenda</b> (its steps one control in the theme’s segmented track, a new week waits and its items arrive the theme’s way)
+                    and the <b>week agenda’s states</b> (the loading agenda loads, then its items arrive). Everything with a <code>kp-</code> class and
+                    every script under <code>js/</code> is the package; the sample data and the buttons that drive a demo are this page’s. Every
+                    section says what you should see under <b>Expected</b>. Formal only, judged in the review dialog (“Review in a dialog” at the top).
                 </p>
-                <p class="ta-note" data-ta-mirror-note hidden>
-                    <b>Hover, focus and press rows are drawn by copying the package’s own rules</b> (the page reads the stylesheets and re-writes
-                    <code>:hover</code> as a class), so they show the theme’s real look. That needs the page to be served over http (as the catalogue
-                    does); opened as a file, those rows show only the plain tile.
-                </p>
-                <p class="ta-note" data-ta-motion hidden><b>Your system asks for reduced motion</b>, so hover and press change the look but nothing moves or fades.</p>
             </header>
-${tiles}
-${grids}
-${time}
+${openOnly(grids)}
+${openOnly(time)}
         </main>
         <script type="module" src="demo-grids.js"></script>
         <script type="module" src="demo-time.js"></script>
         <script type="module" src="../../js/auto.js"></script>
-        <script type="module" src="demo-tiles.js"></script>
         <script type="application/json" data-review-round>
-            { "round": "2026-10-16-r1", "reopen": [] }
+            { "round": "2026-10-16-r2", "received": ["2026-10-16-r1"], "reopen": ["formal|matrix", "formal|barcell", "formal|week", "formal|week-states"] }
         </script>
         <script type="module" src="../_review/review.js"></script>
         <script src="../../catalogue/boot-check.js"></script>

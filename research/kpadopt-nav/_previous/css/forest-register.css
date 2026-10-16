@@ -3433,24 +3433,29 @@
        night with nothing done a double blaze; a night not known is a dashed
        patch with a question mark, a day to come a dotted one, a day before
        the record hatched; today is ringed in green with a map pin. */
-    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch):is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad']) {
+    [data-theme='forest']
+        :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate):is(
+            [data-kp-tone='ok'],
+            [data-kp-tone='warn'],
+            [data-kp-tone='bad']
+        ) {
         background-image: linear-gradient(var(--kp-fo-blaze) 0 0);
         background-position: left 3px center;
         background-size: 4px calc(100% - 10px);
         background-repeat: no-repeat;
     }
 
-    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='ok'] {
+    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate)[data-kp-tone='ok'] {
         --kp-fo-blaze: var(--success-foreground);
         border-color: hsl(from var(--success-foreground) h s l / 0.3);
     }
 
-    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='warn'] {
+    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate)[data-kp-tone='warn'] {
         --kp-fo-blaze: var(--warning-foreground);
         border-color: hsl(from var(--warning-foreground) h s l / 0.3);
     }
 
-    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='bad'] {
+    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate)[data-kp-tone='bad'] {
         --kp-fo-blaze: var(--destructive-foreground);
         background-image: linear-gradient(var(--kp-fo-blaze) 0 0), linear-gradient(var(--kp-fo-blaze) 0 0);
         background-position:
@@ -3463,11 +3468,11 @@
         padding-inline-start: 0.8rem;
     }
 
-    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='muted'] {
+    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate)[data-kp-tone='muted'] {
         border-color: var(--border);
     }
 
-    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='none'] {
+    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate)[data-kp-tone='none'] {
         border-style: dashed;
         border-color: var(--border-strong);
         background: var(--card);
@@ -3486,13 +3491,13 @@
         pointer-events: none;
     }
 
-    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='future'] {
+    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate)[data-kp-tone='future'] {
         border-style: dotted;
         border-color: var(--border-strong);
         background: transparent;
     }
 
-    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='before'] {
+    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate)[data-kp-tone='before'] {
         border-color: transparent;
         background: repeating-linear-gradient(-45deg, hsl(from var(--border-strong) h s l / 0.3) 0 1px, transparent 1px 5px);
     }
@@ -3744,13 +3749,17 @@
             flex-wrap: nowrap;
             max-block-size: 0;
             opacity: 0;
-            transition: max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-wither), opacity var(--kp-sig-fo-time) var(--kp-sig-fo-wither);
+            transition:
+                max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-wither),
+                opacity var(--kp-sig-fo-time) var(--kp-sig-fo-wither);
         }
 
         [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
             max-block-size: var(--kp-nav-links-height, 25rem);
             opacity: 1;
-            transition: max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-grow), opacity var(--kp-sig-fo-time) var(--kp-sig-fo-grow);
+            transition:
+                max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-grow),
+                opacity var(--kp-sig-fo-time) var(--kp-sig-fo-grow);
         }
 
         @starting-style {
@@ -3763,7 +3772,9 @@
         [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__links {
             max-block-size: 0;
             opacity: 0;
-            transition: max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-wither), opacity var(--kp-sig-fo-time) var(--kp-sig-fo-wither);
+            transition:
+                max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-wither),
+                opacity var(--kp-sig-fo-time) var(--kp-sig-fo-wither);
         }
 
         @media (prefers-reduced-motion: no-preference) {
@@ -3829,7 +3840,10 @@
         [data-theme='forest']
             .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']):is(
                 [data-kp-sidenav-open='false'],
-                [data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-peek='open'], [data-kp-sidenav-expand-on-hover]:not([data-kp-sidenav-attached]):hover)
+                [data-kp-sidenav-slim-collapsed]:not(
+                    [data-kp-sidenav-peek='open'],
+                    [data-kp-sidenav-expand-on-hover]:not([data-kp-sidenav-attached]):hover
+                )
             ) {
             transition:
                 translate var(--kp-sig-fo-time) var(--kp-sig-fo-wither),
@@ -4363,5 +4377,111 @@
 
     [data-theme='forest'] .kp-tabbar__badge {
         border-radius: var(--kp-sig-fo-plate, var(--radius));
+    }
+}
+
+/* ── Action tiles, status rows, facet list [kpadopt2-tiles] ── */
+@layer kp.signature {
+    /* Forest: a herbarium sheet with the leaf corner. Pointing lays the dashed trail ring round it (the blaze) and takes the shadow away; a press is the moss wash; the title is the italic field-note voice. */
+    [data-theme='forest'] .kp-action {
+        --kp-action-radius: var(--kp-sig-fo-plate, var(--radius));
+        --kp-action-edge-hover: var(--border-strong);
+        --kp-action-ground-active: color-mix(in oklab, var(--primary) 9%, var(--card));
+        --kp-action-title-font: var(--theme-font-body);
+        outline: 2px dashed transparent;
+        outline-offset: 2px;
+    }
+    [data-theme='forest'] .kp-action:hover:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'])):not(:focus-visible) {
+        outline-color: var(--primary);
+    }
+    [data-theme='forest'] .kp-action__title {
+        font-style: italic;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-action {
+            transition:
+                background-color var(--fx-duration) var(--fx-ease),
+                border-color var(--fx-duration) var(--fx-ease),
+                box-shadow var(--fx-duration) var(--fx-ease),
+                outline-color var(--fx-duration) var(--fx-ease),
+                translate var(--fx-duration) var(--fx-ease);
+        }
+    }
+    [data-theme='forest'] .kp-statuslist {
+        --kp-statuslist-gap: 0.5rem;
+    }
+    [data-theme='forest'] .kp-statusrow {
+        border-inline-start: 4px solid var(--kp-statusrow-state-edge, var(--foreground));
+    }
+    [data-theme='forest'] .kp-statusrow[data-state='loading'] {
+        border-inline-start-color: var(--primary);
+    }
+    [data-theme='forest'] .kp-facets {
+        --kp-facet-radius: var(--kp-sig-fo-plate, var(--radius));
+    }
+}
+
+/* The grid's gap leaves room for the tile's own shadow, glow or outline; the facet row's wash. */
+@layer kp.signature {
+    [data-theme='forest'] .kp-actions {
+        --kp-actions-gap: 0.625rem;
+    }
+    [data-theme='forest'] .kp-facet {
+        --kp-facet-hover: hsl(from var(--primary) h s l / 0.08);
+    }
+}
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* Leaves on a trail: each tile is a leaf (two opposite corners rounded hard); a summary tile is a sapling that grows from the ground up; the pick is a green ring with a map pin. */
+    [data-theme='forest'] .kp-heat {
+        --kp-heat-cell-radius: 999px 3px;
+        --kp-heat-cell-gap: 3px;
+    }
+    [data-theme='forest'] .kp-matrix {
+        --kp-heat-cell-radius: 14px 4px;
+    }
+    [data-theme='forest'] .kp-heat__cell[data-kp-picked],
+    [data-theme='forest'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+    [data-theme='forest'] .kp-heat__col[data-kp-picked]::before {
+        content: '▾';
+        margin-inline-end: 1px;
+        color: var(--primary);
+    }
+    [data-theme='forest'] .kp-heat__label-button[aria-pressed='true'] {
+        background: color-mix(in oklab, var(--primary) 16%, var(--card));
+        color: var(--foreground);
+        box-shadow: inset 3px 0 0 var(--primary);
+    }
+    [data-theme='forest'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='forest'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='forest'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: leaves. Two rounded corners and two nearly square on every pill and bar, the way the forest cuts a chip. */
+    [data-theme='forest'] .kp-week {
+        --kp-week-pill-radius: 0.7rem 0.15rem 0.7rem 0.15rem;
+    }
+    [data-theme='forest'] .kp-gantt {
+        --kp-gantt-bar-radius: 0.6rem 0.12rem 0.6rem 0.12rem;
+    }
+    [data-theme='forest'] .kp-week__pill {
+        padding-inline: 0.625rem;
+    }
+    [data-theme='forest'] .kp-gantt__label {
+        padding-inline: 0.625rem;
+    }
+    [data-theme='forest'] .kp-gantt__lane {
+        font-style: italic;
     }
 }

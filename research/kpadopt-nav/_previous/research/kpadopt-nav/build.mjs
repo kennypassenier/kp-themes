@@ -101,26 +101,6 @@ const TAB = {
         'The current tab is a chamfered accent plate (top-start and bottom-end cut) with a bright tool edge along its top, fed in from the start and slowing as it lands; counts are in the mono.',
 };
 
-/** The spinner each theme draws (CHARACTER.md), for the running-job button. */
-const SPIN = {
-    formal: 'an arc ruled round a double ring',
-    light: 'a bead that burns out and comes back',
-    dark: 'the line running the ring',
-    cyberpunk: 'the reticle locking on its core',
-    synthwave: 'the sun setting',
-    pastel: 'the caterpillar',
-    terminal: 'the braille cell',
-    forest: 'forest’s own spinner',
-    blueprint: 'the compass',
-    solstice: 'the sun’s arc',
-    brutalism: 'the block tipped over',
-    deco: 'the sunburst turning',
-    phantom: 'the star that snaps and resolves',
-    grotesk: 'the plate',
-    nostromo: 'the tape reel',
-    titanium: 'the facing cut',
-};
-
 /** @param {(theme: string) => string} text */
 const looks = (text) => THEMES.map((theme) => `                    <p data-for="${theme}">${esc(text(theme))}</p>`).join('\n');
 
@@ -282,60 +262,23 @@ const FOUR = {
     activity: (/** @type {Partial<Parameters<typeof tab>[0]>} */ o = {}) => tab({ id: 'activity', label: 'Activity', icon: 'activity', ...o }),
 };
 
-/**
- * A phone: a frame that holds a mock page and the real tab bar. The bar is `--static` inside it and sits at the
- * frame's foot (the frame is its own positioning box), which is where a fixed bar stands on a real phone.
- * @param {{ id: string, caption: string, tabs: string[], dir?: string, label?: string, busyBar?: boolean, safe?: boolean, sheet?: boolean, note?: string }} o
- */
-const phone = ({ id, caption, tabs, dir, label = 'Areas', busyBar = false, safe = false, sheet = false, note = '' }) => `
-                    <figure class="tb-fig">
-                        <div class="tb-phone${safe ? ' tb-phone--safe' : ''}"${dir ? ` dir="${dir}"` : ''} data-tb="${id}">
-                            <div class="tb-page" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>${sheet ? `\n                            ${SHEET}` : ''}
-                            <nav class="kp-tabbar kp-tabbar--always kp-tabbar--static" aria-label="${label}"${busyBar ? ' aria-busy="true"' : ''}>
-                                ${tabs.join('\n                                ')}
-                            </nav>
-                        </div>
-                        <figcaption>${caption}${note ? `<span>${note}</span>` : ''}</figcaption>
-                    </figure>`;
-
 const MORE_ITEMS = `<a class="kp-menu__item" href="#backups"><span class="kp-menu__label">Backups</span><span class="kp-menu__hint">Snapshots, restores and the nightly run</span></a>
                                     <a class="kp-menu__item" href="#system"><span class="kp-menu__label">System</span><span class="kp-menu__hint">The host, its disks and updates</span></a>
                                     <button type="button" class="kp-menu__item"><span class="kp-menu__label">Search or do anything</span><span class="kp-menu__hint">Pages, stacks and actions in one box</span></button>
                                     <button type="button" class="kp-menu__item"><span class="kp-menu__label">Help and the words</span><span class="kp-menu__hint">What a stack, a deploy or a snapshot is</span></button>`;
 
-/** The More sheet drawn open inside a phone (the real one is the dialog below). */
-const SHEET = `<div class="kp-drawer kp-dialog tb-sheet" role="group" aria-label="More, shown open">
-                                <header class="kp-drawer__head"><h3 class="kp-dialog__title">More</h3><p class="kp-drawer__desc">The two areas you need less often, plus search and help.</p></header>
-                                <div class="kp-drawer__body"><div class="kp-menu kp-menu--rich" role="group" aria-label="More">
-                                    ${MORE_ITEMS}
-                                </div></div>
-                            </div>`;
-
-/** The real More drawer a More tab opens. */
-const DRAWER = `
-        <dialog class="kp-drawer kp-dialog" id="tb-more" aria-labelledby="tb-more-title">
-            <header class="kp-drawer__head">
-                <h2 class="kp-dialog__title" id="tb-more-title">More</h2>
-                <button type="button" class="kp-icon-button kp-dialog__close" data-kp-dialog-close aria-label="Close">×</button>
-                <p class="kp-drawer__desc">The two areas you need less often, plus search and help.</p>
-            </header>
-            <div class="kp-drawer__body"><div class="kp-menu kp-menu--rich" role="group" aria-label="More">
-                ${MORE_ITEMS}
-            </div></div>
-        </dialog>`;
-
 /* ------------------------------------------------------------------ the page */
 
 const SECTIONS = `
-            <section class="nf-sec" id="nav-fold" data-review-item="nav-fold" data-review-title="1 · A bar that folds behind More" data-review-components="nav-fold" aria-labelledby="h-nav-fold">
+            <section class="nf-sec" id="nav-fold" data-review-item="nav-fold" data-review-themes="cyberpunk,phantom,grotesk" data-review-title="1 · A bar that folds behind More" data-review-components="nav-fold" aria-labelledby="h-nav-fold">
                 <div class="nf-sec__head">
                     <p class="nf-num">1 · Top bar</p>
                     <h2 id="h-nav-fold">What does not fit goes behind More, and the bar never changes height.</h2>
                     <p class="nf-how"><code>data-kp-nav-fold</code> on the nav. Nothing else is written by hand: the More button and its menu are added by the script, and the menu is the package’s menu button.</p>
                 </div>
                 ${expected(`<ul>
-                    <li>Drag the slider above the first bar: the links that do not fit leave the bar from the end and are listed behind a <b>More</b> button; the bar stays one row tall at every width, and nothing jumps when a link folds.</li>
-                    <li>Press <b>More</b> (or the button under the “More opened” bar): a menu hangs from it with the folded links; picking an entry follows its link, <b>Escape</b> closes the menu and the focus is back on More.</li>
+                    <li>Drag the slider above the first bar: the links that do not fit leave the bar from the end and are listed behind a <b>More</b> button; the bar stays one row tall at every width (at 18rem the brand gives way to an ellipsis before anything wraps), and nothing jumps when a link folds. The More button is always inside the bar, after the links that stay and before Search.</li>
+                    <li>Press <b>More</b> (or the button under the “More opened” bar): a menu hangs from its left edge (its right edge in the right-to-left bar), straight under the button, wherever it is on the page, with the folded links; picking an entry follows its link, <b>Escape</b> closes the menu and the focus is back on More.</li>
                     <li>The three-link bar at 26rem has no More at all. The bar that keeps Settings (<code>data-kp-nav-keep</code>) keeps it however narrow it gets.</li>
                     <li>Tab through a bar: the links that stay, then More, then Search. Folded links are skipped.</li>
                 </ul>`)}
@@ -382,176 +325,9 @@ ${bar({ id: 'nf-live', width: 'nf-w-live', links: LINKS.plain })}
                 <p class="nf-note">Not shown: loading. The fold has no loading state of its own; the More menu shows the menu button’s loading entry when a page fills it that way. Hovering a link is the theme’s, and not repeated here.</p>
             </section>
 
-            <section class="nf-sec" id="tabbar" data-review-item="tabbar" data-review-title="2 · The bottom tab bar" data-review-components="tabbar badge" aria-labelledby="h-tabbar">
+            <section class="nf-sec" id="together" data-review-item="together" data-review-themes="grotesk" data-review-title="2 · Together, in a real window" data-review-components="tabbar nav-fold" aria-labelledby="h-together">
                 <div class="nf-sec__head">
-                    <p class="nf-num">2 · Bottom tab bar</p>
-                    <h2 id="h-tabbar">Four areas within thumb reach, then More.</h2>
-                    <p class="nf-how"><code>nav.kp-tabbar</code> of <code>.kp-tabbar__tab</code>s (icon over label, a count at the icon’s corner). The More tab is a <code>data-kp-dialog</code> button that opens the package’s drawer. Shown here inside phone frames with <code>kp-tabbar--always kp-tabbar--static</code>; the section below shows the real, fixed bar in a window of its own.</p>
-                </div>
-                ${expected(`<ul>
-                    <li>Five tabs sit at the foot of each phone: Home, Needs you, Overview, Activity and <b>More</b>, each with an icon over its label. The current tab is marked the way the theme marks it (see the look-at line).</li>
-                    <li>Press Home, Needs you, Overview or Activity in the first phone: the mark moves to the tab you pressed. (A busy or disabled tab does not take the mark.)</li>
-                    <li>The buttons under the phones act on the first phone: <b>Add a count</b> raises the number on Needs you by one; <b>Clear the count</b> removes it; <b>Toggle busy</b> swaps the icon of Overview for the theme’s spinner and back, the tab keeps its size; <b>Show keyboard focus</b> draws the focus ring on Activity.</li>
-                    <li>Press <b>More</b> in any phone: a panel opens at the right edge of the window, full height, and on a phone-sized window it leaves a dimmed strip of the page at the left. It lists four entries: Backups, System, Search or do anything, Help and the words. A <b>×</b> sits at its top right.</li>
-                    <li>The panel closes four ways: the <b>×</b>, <b>Escape</b>, a press on the dimmed strip, or a press on one of its entries (Backups and System also follow their link). Open it again and the same four entries are there. After it closes the focus is back on the More tab.</li>
-                </ul>`)}
-                <div class="nf-look" data-review-look>
-${looks(
-    (theme) =>
-        `In ${theme}, look at the current tab in the first phone. ${TAB[theme]} Then press the tabs: the mark moves to the one you press. Check the count on Needs you (placed at the icon’s corner, the tab does not move when the count appears or goes), the busy tab (the theme’s spinner takes the icon’s place at the same size), the disabled tab, the long label (cut with an ellipsis, never wrapped), the loading bar (grey places, no links), and More opened (the sheet in the frame is the same drawer the More tab opens).`,
-)}
-                </div>
-                <div class="tb-grid">${phone({
-                    id: 'home',
-                    caption: 'Home is current; Needs you has a count.',
-                    tabs: [FOUR.home, FOUR.inbox({ count: 3 }), FOUR.overview(), FOUR.activity(), more()],
-                    note: 'Press the tabs: the mark moves.',
-                })}${phone({
-                    id: 'inbox',
-                    caption: 'Needs you is current; the count is 99+.',
-                    tabs: [FOUR.homeIdle, FOUR.inbox({ count: '99+', current: true }), FOUR.overview(), FOUR.activity(), more()],
-                })}${phone({
-                    id: 'held',
-                    caption: 'The current page is behind More: the More tab reads as current.',
-                    tabs: [
-                        FOUR.homeIdle,
-                        FOUR.inbox({ count: 'dot' }),
-                        FOUR.overview(),
-                        FOUR.activity(),
-                        more().replace('class="kp-tabbar__tab', 'aria-current="true" class="kp-tabbar__tab'),
-                    ],
-                    note: 'The dot on Needs you is an empty badge.',
-                })}${phone({
-                    id: 'sheet',
-                    caption: 'More opened: the sheet is the drawer’s own content.',
-                    tabs: [
-                        FOUR.homeIdle,
-                        FOUR.inbox({ count: 3 }),
-                        FOUR.overview(),
-                        FOUR.activity(),
-                        more().replace('class="kp-tabbar__tab', 'aria-expanded="true" aria-current="true" class="kp-tabbar__tab'),
-                    ],
-                    sheet: true,
-                })}${phone({
-                    id: 'states',
-                    caption: 'A tab waiting (busy), a disabled tab, a long label.',
-                    tabs: [
-                        FOUR.home,
-                        FOUR.inbox({ busy: true }),
-                        FOUR.overview({ disabled: true }),
-                        tab({ id: 'logs', label: 'Notifications and logs', icon: 'logs' }),
-                        more(),
-                    ],
-                    note: 'Busy and disabled tabs: the busy one is not a link to follow yet.',
-                })}${phone({
-                    id: 'loading',
-                    caption: 'The bar loading: places, not links.',
-                    tabs: [FOUR.home, FOUR.inbox({ count: 3 }), FOUR.overview(), FOUR.activity(), more()],
-                    busyBar: true,
-                })}${phone({
-                    id: 'three',
-                    caption: 'Three tabs share the width equally.',
-                    tabs: [FOUR.home, FOUR.inbox({ count: 3 }), more()],
-                })}${phone({
-                    id: 'six',
-                    caption: 'Six tabs, at 22rem: labels shrink to an ellipsis before anything wraps.',
-                    tabs: [
-                        FOUR.home,
-                        FOUR.inbox({ count: 3 }),
-                        FOUR.overview(),
-                        FOUR.activity(),
-                        tab({ id: 'logs', label: 'Logs', icon: 'logs' }),
-                        more(),
-                    ],
-                })}${phone({
-                    id: 'safe',
-                    caption: 'Safe area: 1.25rem kept under the bar, as a home indicator needs.',
-                    tabs: [FOUR.home, FOUR.inbox({ count: 3 }), FOUR.overview(), FOUR.activity(), more()],
-                    safe: true,
-                    note: 'Set by <code>--kp-tabbar-safe-bottom</code> here; a phone gives <code>env(safe-area-inset-bottom)</code>.',
-                })}${phone({
-                    id: 'rtl',
-                    caption: 'Right to left: the order and the marks mirror.',
-                    tabs: [FOUR.home, FOUR.inbox({ count: 3 }), FOUR.overview(), FOUR.activity(), more()],
-                    dir: 'rtl',
-                })}${phone({
-                    id: 'tones',
-                    caption: 'Every badge tone on a tab: success, info, warning, destructive.',
-                    tabs: [
-                        tab({ id: 'home', label: 'Home', icon: 'home', count: 2, tone: 'success', current: true }),
-                        tab({ id: 'inbox', label: 'Needs you', icon: 'inbox', count: 4, tone: 'info' }),
-                        tab({ id: 'overview', label: 'Overview', icon: 'overview', count: 5, tone: 'warning' }),
-                        tab({ id: 'activity', label: 'Activity', icon: 'activity', count: 6, tone: 'destructive' }),
-                        more(),
-                    ],
-                })}
-                </div>
-                <div class="tb-play">
-                    <button type="button" class="kp-button kp-button--sm" data-tb-count>Add a count to Needs you</button>
-                    <button type="button" class="kp-button kp-button--sm" data-tb-clear>Clear the count</button>
-                    <button type="button" class="kp-button kp-button--sm" data-tb-busy>Toggle busy on Overview</button>
-                    <button type="button" class="kp-button kp-button--sm" data-tb-focus>Show keyboard focus on Activity</button>
-                    <span class="tb-play__note">These act on the first phone. The More tab of any phone opens the real drawer.</span>
-                </div>
-                <p class="nf-note">Pointing a tab and pressing it are the theme’s, and live: hover and press them. Contrast: a resting tab’s label is the muted ink, as a bar link is; where a theme’s muted ink is under 4.5:1 on the bar it is the theme’s own muted ink and is not changed here.</p>
-${DRAWER}
-            </section>
-
-            <section class="nf-sec" id="live-button" data-review-item="live-button" data-review-title="3 · The running-job button" data-review-components="button" aria-labelledby="h-live">
-                <div class="nf-sec__head">
-                    <p class="nf-num">3 · Running job</p>
-                    <h2 id="h-live">The dashboard’s pill is a button with the theme’s spinner in front.</h2>
-                    <p class="nf-how"><code>kp-button kp-button--live</code> with a <code>kp-spinner kp-button__spin</code>, a <code>kp-button__short</code> and a <code>kp-button__long</code> label. No new look: it is the theme’s button, so it wears the theme’s button in every variant. It cuts a long label with an ellipsis, gives way to the short label in a container under 40rem, and <code>hidden</code> removes it without a gap.</p>
-                </div>
-                ${expected(`<ul>
-                    <li>Every button in the first row shows the theme’s spinner turning in front of the word “Running”, in its own variant (default, primary, secondary, ghost, destructive, small, large, mirrored).</li>
-                    <li>The disabled button does not answer the pointer. The very long label is cut with an ellipsis, never wrapped.</li>
-                    <li>In the wide bar the button reads “Updating gateway · step 3 of 35”; in the 22rem bar it reads only “Running”. In the last frame no job is running: the button is hidden and the bar closes over the gap.</li>
-                </ul>`)}
-                <div class="nf-look" data-review-look>
-${looks(
-    (theme) =>
-        `In ${theme}, the spinner is ${SPIN[theme]} and the button around it is the theme’s own button in each of its seven variants (default, primary, secondary, ghost, destructive, small, large; the mirror one reads the other way). Check that the spinner sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 22rem bar shows the short word instead of the long, and that the hidden button leaves no gap in the bar.`,
-)}
-                </div>
-                <div class="lv-row">
-                    ${LIVE_BUTTON('Updating gateway · step 3 of 35', 'Running', '')}
-                    ${LIVE_BUTTON('Updating gateway · step 3 of 35', 'Running', 'kp-button--primary')}
-                    ${LIVE_BUTTON('Updating gateway · step 3 of 35', 'Running', 'kp-button--secondary')}
-                    ${LIVE_BUTTON('Updating gateway · step 3 of 35', 'Running', 'kp-button--ghost')}
-                    ${LIVE_BUTTON('Updating gateway · step 3 of 35', 'Running', 'kp-button--destructive')}
-                    ${LIVE_BUTTON('Updating gateway · step 3 of 35', 'Running', 'kp-button--secondary kp-button--sm')}
-                    ${LIVE_BUTTON('Updating gateway · step 3 of 35', 'Running', 'kp-button--secondary kp-button--lg')}
-                    ${LIVE_BUTTON('Updating gateway · step 3 of 35', 'Running', 'kp-button--secondary kp-button--mirror')}
-                </div>
-                <div class="lv-row">
-                    ${LIVE_BUTTON('Updating gateway · step 3 of 35', 'Running', 'kp-button--secondary', ' disabled')}
-                    <span class="lv-cap">disabled</span>
-                    ${LIVE_BUTTON('Restoring the media library from last night’s snapshot on the second backup disk · step 12 of 35 · 2 more waiting', 'Running +2', 'kp-button--secondary', '')}
-                    <span class="lv-cap">a very long label, cut at 30rem with an ellipsis</span>
-                </div>
-                <div class="nf-grid">
-                    <figure class="nf-fig">${bar({ id: 'live-wide', width: 'nf-w-xl', links: LINKS.few, live: true, label: 'Main with a running job' })}
-                        <figcaption>In a wide bar: the long label.</figcaption></figure>
-                    <figure class="nf-fig">${bar({ id: 'live-narrow', width: 'nf-w-xs', links: LINKS.few, live: true, label: 'Main with a running job, narrow' })}
-                        <figcaption>In a bar under 40rem (22rem): the short word.</figcaption></figure>
-                    <figure class="nf-fig">
-                        <div class="nf-frame nf-w-m" data-nf="live-hidden">
-                            <div class="kp-nav-wrap">
-                                <nav class="kp-nav" aria-label="Main, no job">
-                                    <span class="kp-nav__brand">Homelab</span>
-                                    ${LIVE_BUTTON('Updating gateway · step 3 of 35', 'Running', 'kp-button--secondary kp-button--sm', ' hidden')}
-                                    ${SEARCH}
-                                </nav>
-                            </div>
-                        </div>
-                        <figcaption>No job running: the button is <code>hidden</code> and the bar closes over it.</figcaption></figure>
-                </div>
-            </section>
-
-            <section class="nf-sec" id="together" data-review-item="together" data-review-title="4 · Together, in a real window" data-review-components="tabbar nav-fold" aria-labelledby="h-together">
-                <div class="nf-sec__head">
-                    <p class="nf-num">4 · Together</p>
+                    <p class="nf-num">2 · Together</p>
                     <h2 id="h-together">The dashboard’s shell in three real windows.</h2>
                     <p class="nf-how">Three pages in frames, each a window of its own width: the media queries answer to the frame, so this is what a phone, a tablet and a desktop get. The mock page behind is the demo’s; the top bar, the tab bar, the running-job button, the menu button and the drawer are the package’s.</p>
                 </div>
@@ -579,7 +355,7 @@ const demo = `<!doctype html>
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>kp-themes: a folding top bar, a bottom tab bar and the running-job button</title>
+        <title>kp-themes: the folding top bar and the shell, still open</title>
         <link rel="stylesheet" href="../../css/fonts.css" />
         <link rel="stylesheet" href="../../css/themes.css" />
         <link rel="stylesheet" href="../../css/components.css" />
@@ -591,13 +367,13 @@ const demo = `<!doctype html>
     <body>
         <main class="nf-page">
             <header class="nf-intro">
-                <h1>A folding top bar, a bottom tab bar and the running-job button</h1>
+                <h1>The folding top bar and the shell, still open</h1>
                 <p>
-                    Three things the homelab dashboard still draws by hand, built into the package so it can draw nothing itself. Everything inside the
-                    frames is the package’s own classes and scripts (<code>kp-nav</code> with <code>data-kp-nav-fold</code>,
-                    <code>kp-tabbar</code>, <code>kp-button--live</code>, the menu button and the drawer); the frames, the slider, the mock page behind
-                    the phones and the buttons that play a state are this demo’s. Judge them in the review dialog (“Review in a dialog” at the top),
-                    one theme at a time.
+                    Round 4. Kenny approved the bottom tab bar and the running-job button in every theme, and the folding bar and the shell in every
+                    other theme, so only what is still open is on this page: the folding bar in cyberpunk, phantom and grotesk, and the shell in three
+                    windows in grotesk. Everything inside the frames is the package’s own classes and scripts (<code>kp-nav</code> with
+                    <code>data-kp-nav-fold</code>, the tab bar and running-job button inside the shell windows, the menu button and the drawer); the
+                    frames, the slider and the mock page are this demo’s. Judge the four in the review dialog (“Review in a dialog” at the top).
                 </p>
                 <p class="nf-motion" data-nf-motion hidden>
                     <b>Your system asks for reduced motion</b>, so the marks and menus appear without moving. Turn it off to judge the movement.
@@ -607,9 +383,11 @@ ${SECTIONS}
         </main>
         <script type="module" src="../../js/auto.js"></script>
         <script type="module" src="demo.js"></script>
-        <!-- Round two (2026-10-16): Kenny's rejections of round one reopen by themselves; every pair he has not judged is still open. -->
+        <!-- Round four (2026-10-16): only the four pairs Kenny has not approved (research/kpadopt-nav/VERDICTS.json): the folding bar in
+             cyberpunk, phantom and grotesk, and the shell in grotesk. The approved sections (tab bar, running-job button) and themes are gone
+             from the page; gates/check-rereview.mjs refuses a page that offers an approved pair. -->
         <script type="application/json" data-review-round>
-            { "round": "2026-10-16-r2", "reopen": [] }
+            { "round": "2026-10-16-r4", "received": ["2026-10-16-r2"], "reopen": ["cyberpunk|nav-fold", "phantom|nav-fold", "grotesk|nav-fold", "grotesk|together"] }
         </script>
         <script type="module" src="../_review/review.js"></script>
         <script src="../../catalogue/boot-check.js"></script>

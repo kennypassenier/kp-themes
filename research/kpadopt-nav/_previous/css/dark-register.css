@@ -3987,3 +3987,112 @@
         --kp-kbd-ground: var(--secondary);
     }
 }
+
+/* ── Action tiles, status rows, facet list [kpadopt2-tiles] ── */
+@layer kp.signature {
+    /* Dark: a machined panel. Pointing lights a 2 px line down the start edge in the four chart colours, as it does on a key figure; focus is the inset double ring; a press is a colour step. */
+    [data-theme='dark'] .kp-action {
+        --kp-action-radius: 2px;
+        --kp-action-edge: var(--border-strong);
+        --kp-action-edge-hover: var(--border-strong);
+        --kp-action-ground-active: var(--accent);
+        --kp-action-press: 0 0;
+    }
+    [data-theme='dark'] .kp-action::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: 2px;
+        background: var(--kp-sig-dk-line);
+        box-shadow: 0 0 9px hsl(from var(--chart-1) h s l / 0.4);
+        opacity: 0;
+        pointer-events: none;
+    }
+    [data-theme='dark'] .kp-action:hover:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true']))::before {
+        opacity: 1;
+    }
+    [data-theme='dark'] .kp-action:focus-visible {
+        outline: none;
+        box-shadow:
+            inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
+            inset 0 0 0 calc(var(--kp-focus-ring-inner-width, 2px) + 2px) var(--focus-ring-contrast);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] .kp-action::before {
+            transition: opacity var(--fx-duration) var(--fx-ease);
+        }
+    }
+    [data-theme='dark'] .kp-statuslist {
+        --kp-statusrow-mark-radius: 3px;
+    }
+    [data-theme='dark'] .kp-statusrow {
+        --kp-statusrow-edge: var(--border-strong);
+        --kp-statusrow-radius: 2px;
+    }
+    [data-theme='dark'] .kp-statusrow__detail {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='dark'] .kp-facets {
+        --kp-facet-radius: 2px;
+    }
+    [data-theme='dark'] .kp-facet__count {
+        font-family: var(--theme-font-mono);
+    }
+}
+
+/* The grid's gap leaves room for the tile's own shadow, glow or outline; the facet row's wash. */
+@layer kp.signature {
+    [data-theme='dark'] .kp-actions {
+        --kp-actions-gap: 0.5rem;
+    }
+    [data-theme='dark'] .kp-facet {
+        --kp-facet-hover: var(--accent);
+    }
+}
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* Instrument cells: a lit top edge in the oxide film's light, nothing else moves; the pick is a film-coloured ring. */
+    [data-theme='dark'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 3px;
+        --kp-heat-cell-lift: inset 0 1px 0 hsl(from var(--foreground) h s l / 0.16);
+        --kp-heat-cell-hover: none;
+        --kp-matrix-cell-hover: none;
+    }
+    [data-theme='dark'] .kp-heat__cell:hover:not(.kp-skeleton, [aria-disabled='true']),
+    [data-theme='dark'] .kp-matrix__cell:hover:not([data-kp-inert]) {
+        filter: brightness(1.18);
+    }
+    [data-theme='dark'] .kp-heat__cell[data-kp-picked] {
+        outline: 1px solid var(--primary);
+        outline-offset: 2px;
+        box-shadow: 0 0 10px hsl(from var(--primary) h s l / 0.35);
+    }
+    [data-theme='dark'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='dark'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='dark'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: machined slots. Square ends, a bright top edge where the tool left the surface, small capitals on the axis. */
+    [data-theme='dark'] .kp-week {
+        --kp-week-pill-radius: 2px;
+    }
+    [data-theme='dark'] .kp-gantt {
+        --kp-gantt-bar-radius: 2px;
+    }
+    [data-theme='dark'] :is(.kp-week__pill, .kp-gantt__run) {
+        border-block-start-color: color-mix(in oklab, var(--kp-week-ink, var(--kp-gantt-fill, var(--foreground))) 55%, var(--foreground));
+    }
+    [data-theme='dark'] :is(.kp-week__dow, .kp-gantt__tick) {
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+}
