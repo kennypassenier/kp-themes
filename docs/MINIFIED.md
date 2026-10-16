@@ -18,7 +18,7 @@ the selectors and their order are identical, which is what
 | `css/_rules.css` | 39.4 kB | 20.2 kB | 49% |
 | `css/blueprint-register.css` | 190.0 kB | 97.8 kB | 49% |
 | `css/brutalism-register.css` | 179.2 kB | 95.2 kB | 47% |
-| `css/components.css` | 472.1 kB | 206.0 kB | 56% |
+| `css/components.css` | 472.3 kB | 206.1 kB | 56% |
 | `css/cyberpunk-register.css` | 263.5 kB | 150.3 kB | 43% |
 | `css/dark-register.css` | 176.5 kB | 83.7 kB | 53% |
 | `css/deco-register.css` | 180.5 kB | 99.4 kB | 45% |
@@ -37,10 +37,10 @@ the selectors and their order are identical, which is what
 | `css/themes.css` | 153.4 kB | 99.3 kB | 35% |
 | `css/titanium-register.css` | 147.7 kB | 75.0 kB | 49% |
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 45% |
-| `dist/kp-themes.css` | 3390.7 kB | 1738.4 kB | 49% |
+| `dist/kp-themes.css` | 3391.0 kB | 1738.4 kB | 49% |
 | `dist/kp-themes.js` | 1006.4 kB | 556.0 kB | 45% |
 
-The loose stylesheets together weigh **3450.7 kB** authored and
+The loose stylesheets together weigh **3451.0 kB** authored and
 **1775.4 kB** minified, 49% less. A page loading one theme's
 register rather than the whole bundle carries only that register's row.
 
