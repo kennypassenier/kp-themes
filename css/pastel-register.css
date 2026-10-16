@@ -4787,17 +4787,24 @@
     }
 
     /* Key-value grid and form rows: a ruled line is a thread of pearls; a row changed and not saved, or one that could
-       not be read, is marked by a pearl on its start edge, never a bar. */
+       not be read, is marked by a pearl in the gap before its label, never a bar. */
     [data-theme='pastel'] :is(.kp-kv--lines > .kp-kv__row, .kp-formrows--lines > .kp-formrow) {
         border-block-end: 2px dotted var(--border-strong);
     }
     [data-theme='pastel'] :is(.kp-kv--lines > .kp-kv__row:last-child, .kp-formrows--lines > .kp-formrow:last-child) {
         border-block-end: 0;
     }
-    [data-theme='pastel'] :is(.kp-kv__row[data-kp-state='error']::before, .kp-formrow:is([data-kp-changed], [data-kp-state='error'])::before) {
-        inset-inline-start: calc(var(--kp-space-sm, 0.5rem) * -1 - 2px);
-        inline-size: 6px;
-        border-radius: 3px;
+    [data-theme='pastel'] .kp-kv__row[data-kp-state='error']::before,
+    [data-theme='pastel'] .kp-formrow[data-kp-changed]::before,
+    [data-theme='pastel'] .kp-formrow[data-kp-state='error']::before {
+        inset-block: 0.65em auto;
+        inset-inline-start: calc(var(--kp-space-sm, 0.5rem) * -1 - 4px);
+        inline-size: 8px;
+        block-size: 8px;
+        border-radius: 50%;
+    }
+    [data-theme='pastel'] .kp-formrow:is([data-kp-changed], [data-kp-state='error'])::before {
+        inset-block-start: 1rem;
     }
     [data-theme='pastel'] .kp-kv__row[data-kp-changed] > dt::after {
         font-size: 1.25em;
