@@ -19914,27 +19914,54 @@
         transition: none;
     }
 
+    /* Loading: a quiet plate over the whole box (the divider and the labels under it) and the data table's own
+     * loading card in its middle (js/busy-card.js), as a table that loads (Kenny, 2026-10-16). The plate holds
+     * nothing to dim, so the card's layer draws no veil. */
     .kp-compare .kp-compare__wait {
         z-index: 3;
-        block-size: auto;
         margin: 0;
-        border-radius: 0;
+        background: var(--muted);
     }
 
     .kp-compare:not([data-kp-compare-state='loading']) .kp-compare__wait {
         display: none;
     }
 
+    .kp-compare > .kp-compare__busy {
+        --kp-busy-overlay-veil: 0%;
+        z-index: 4;
+    }
+
+    /* A failed image: the sentence and a normal-size Retry over the whole visible part of its pane (Kenny,
+     * 2026-10-16: failed fills the component's footprint), centred in it wherever the divider stands. */
     .kp-compare__failed {
         position: absolute;
         inset: 0;
         display: grid;
-        place-items: center;
+        align-content: center;
+        justify-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
         margin: 0;
         padding: var(--kp-space-md, 1rem);
+        overflow: hidden;
         background: var(--muted);
         color: var(--muted-foreground);
         text-align: center;
+        cursor: default;
+    }
+
+    .kp-compare__pane--after > .kp-compare__failed {
+        inset-inline-start: calc(var(--kp-compare-pos) * 1%);
+    }
+
+    .kp-compare__pane--before > .kp-compare__failed {
+        inset-inline-end: calc(100% - var(--kp-compare-pos) * 1%);
+    }
+
+    .kp-compare__failed-words {
+        max-inline-size: 100%;
+        margin: 0;
+        overflow-wrap: anywhere;
     }
 
     @media (prefers-reduced-motion: reduce) {

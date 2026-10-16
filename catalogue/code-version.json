@@ -1,6 +1,6 @@
 {
     "$comment": "What a block is made of [scope-114, scope-116]: per CSS family and per component, the code that shapes it, as digests. catalogue/block-hash.js reads the families a block names, the components those belong to and the modules its markup asks the loader for, so a change asks only about the blocks it touches. Written by gates/generate-code-version.mjs.",
-    "base": "823fd0f521d8e521",
+    "base": "2e753e2b00bb9ac7",
     "modules": {
         "js/action-tiles.js": { "digest": "2a754bcf60877e19", "when": ".kp-action" },
         "js/actions.js": { "digest": "7254ebf2bbcb9da0", "when": ".kp-row-actions" },
@@ -17,7 +17,7 @@
         "js/colorpicker.js": { "digest": "6792f52017de9605", "when": "[data-kp-colorpicker]" },
         "js/combobox.js": { "digest": "bde31486373be932", "when": "[data-kp-combobox], select" },
         "js/command.js": { "digest": "ab80478d40ba7776", "when": "[data-kp-command]" },
-        "js/compare.js": { "digest": "541572f00e842220", "when": "[data-kp-compare]" },
+        "js/compare.js": { "digest": "dcef5bea97a3e554", "when": "[data-kp-compare]" },
         "js/components.js": {
             "digest": "2bc8860b017e2452",
             "when": "[data-kp-contract-error], [data-kp-destructive], [data-kp-semantic], [data-kp-confirm], [data-kp-type-confirm], .kp-skip-link, [data-kp-skip], [data-kp-to-top], [data-kp-nav-toggle], .kp-nav-wrap--sticky, .kp-nav"
@@ -7003,9 +7003,11 @@
         "||||.kp-command__where)": "35dadedf4fc09104",
         "||||.kp-compare": "0c5c561ce5c0f584",
         "||||.kp-compare[data-kp-compare-drag='anywhere']": "bf81f3d0de5d0db5",
+        "||||.kp-compare__busy": "366cd8c65206c1d7",
         "||||.kp-compare__divider": "44eff67a5903a678",
         "||||.kp-compare__divider)": "f24226d0eacc1a29",
-        "||||.kp-compare__failed": "ac0936b4f4814cfd",
+        "||||.kp-compare__failed": "f6aaf88313386525",
+        "||||.kp-compare__failed-words": "505703f419c1d29a",
         "||||.kp-compare__grip": "79d5693b790d37b4",
         "||||.kp-compare__handle": "68b28339299c7ee3",
         "||||.kp-compare__handle-visible": "a8bcff1df0528087",
@@ -7015,7 +7017,7 @@
         "||||.kp-compare__pane": "387b819c1ae47591",
         "||||.kp-compare__pane--after": "b690862a5d3efd5b",
         "||||.kp-compare__pane--before": "a873e82cbb8a4a2d",
-        "||||.kp-compare__wait": "6310d58560bfac44",
+        "||||.kp-compare__wait": "a3c61e03d8717b20",
         "||||.kp-confirm": "0c25bcd27a04752c",
         "||||.kp-confirm.kp-confirm--typed": "072275e682f06213",
         "||||.kp-confirm__dependents": "4b8a422f6a6562c8",
@@ -9363,6 +9365,7 @@
                 "kp-clip-reveal",
                 "kp-compare",
                 "kp-compare-change",
+                "kp-compare-retry",
                 "kp-count",
                 "kp-cp-charge",
                 "kp-cp-stream-144",

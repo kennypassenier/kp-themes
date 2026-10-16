@@ -639,6 +639,8 @@ var init_strings = __esm({
       compareSlider: (before, after) => `Divider between ${before} and ${after}`,
       compareValue: (percent, before, after) => `${percent}% ${before}, ${100 - percent}% ${after}`,
       compareFailed: "This image could not be loaded.",
+      compareRetry: "Retry",
+      compareLoading: "Loading the images\u2026",
       // The network graph [scope-143]: its own words; the nodes, kinds and
       // the sentences of its states are the page's.
       graphShowAll: "Show all",
@@ -30540,10 +30542,18 @@ var compare_exports = {};
 __export(compare_exports, {
   COMPARE: () => COMPARE,
   COMPARE_EVENT: () => COMPARE_EVENT,
+  COMPARE_RETRY_EVENT: () => COMPARE_RETRY_EVENT,
   attachCompares: () => attachCompares,
   compareKey: () => compareKey,
-  setCompare: () => setCompare
+  setCompare: () => setCompare,
+  setCompareBusy: () => setCompareBusy
 });
+function setCompareBusy(el9, busy) {
+  HOLD.get(
+    /** @type {HTMLElement} */
+    el9
+  )?.(busy);
+}
 function setCompare(el9, position) {
   MOVE.get(
     /** @type {HTMLElement} */
@@ -30616,7 +30626,7 @@ function attachCompares(root = document) {
     handle.append(grip);
     divider.append(handle);
     const wait = doc.createElement("span");
-    wait.className = "kp-skeleton kp-skeleton--block kp-compare__wait";
+    wait.className = "kp-compare__wait";
     wait.setAttribute("aria-hidden", "true");
     el9.append(labelBefore, labelAfter, divider, wait);
     let position = Math.min(100, Math.max(0, Number(el9.dataset.kpComparePosition ?? 50) || 0));
@@ -30642,6 +30652,7 @@ function attachCompares(root = document) {
     let dragging = false;
     const onDown = (event) => {
       if (event.button !== 0) return;
+      if (event.target instanceof Element && event.target.closest(".kp-compare__failed")) return;
       const onHandle = handle.contains(
         /** @type {Node} */
         event.target
@@ -30681,26 +30692,60 @@ function attachCompares(root = document) {
       [...before.querySelectorAll("img"), ...after.querySelectorAll("img")]
     );
     const notes = [];
+    let card = null;
+    let held2 = false;
+    let drawn2 = false;
     const settle = () => {
-      const waiting = images.some((img) => !img.complete);
+      const waiting = held2 || images.some((img) => !img.complete);
       el9.dataset.kpCompareState = waiting ? "loading" : "ready";
       el9.setAttribute("aria-busy", String(waiting));
+      if (waiting && !card)
+        card = openBusyCard(el9, { words: s2.compareLoading, area: () => [el9], className: "kp-compare__busy", arrive: drawn2 });
+      else if (!waiting && card) {
+        const leaving = card;
+        card = null;
+        void leaving.close();
+      }
+      drawn2 = true;
       for (const img of images) {
         const pane = (
           /** @type {HTMLElement} */
           img.closest(".kp-compare__pane")
         );
-        const failed = img.complete && img.naturalWidth === 0;
+        const failed = !held2 && img.complete && img.naturalWidth === 0;
         const known4 = notes.find((n) => n.parentElement === pane);
         if (failed && !known4) {
-          const note = doc.createElement("p");
+          const note = doc.createElement("div");
           note.className = "kp-compare__failed";
-          note.textContent = s2.compareFailed;
+          note.setAttribute("role", "alert");
+          const said = doc.createElement("p");
+          said.className = "kp-compare__failed-words";
+          said.textContent = s2.compareFailed;
+          const retry = doc.createElement("button");
+          retry.type = "button";
+          retry.className = "kp-button kp-compare__retry";
+          retry.textContent = s2.compareRetry;
+          retry.addEventListener("click", () => {
+            const side = pane === before ? "before" : "after";
+            note.remove();
+            notes.splice(notes.indexOf(note), 1);
+            for (const one of pane.querySelectorAll("img")) {
+              const src = one.getAttribute("src");
+              if (src !== null) one.setAttribute("src", src);
+            }
+            settle();
+            el9.dispatchEvent(new CustomEvent(COMPARE_RETRY_EVENT, { bubbles: true, detail: { pane: side } }));
+          });
+          note.append(said, retry);
           pane.append(note);
           notes.push(note);
         }
       }
     };
+    HOLD.set(el9, (busy) => {
+      held2 = busy;
+      settle();
+    });
     for (const img of images) {
       img.addEventListener("load", settle);
       img.addEventListener("error", settle);
@@ -30716,7 +30761,10 @@ function attachCompares(root = document) {
         img.removeEventListener("error", settle);
       }
       for (const n of [labelBefore, labelAfter, divider, wait, ...notes]) n.remove();
+      card?.remove();
+      card = null;
       MOVE.delete(el9);
+      HOLD.delete(el9);
       el9.style.removeProperty("--kp-compare-pos");
       el9.removeAttribute("aria-busy");
       delete el9.dataset.kpCompareState;
@@ -30726,15 +30774,18 @@ function attachCompares(root = document) {
     for (const c of cleanups) c();
   };
 }
-var COMPARE, COMPARE_EVENT, INTERACTIVE, MOVE;
+var COMPARE, COMPARE_EVENT, INTERACTIVE, COMPARE_RETRY_EVENT, MOVE, HOLD;
 var init_compare = __esm({
   "js/compare.js"() {
     "use strict";
     init_strings();
+    init_busy_card();
     COMPARE = "[data-kp-compare]";
     COMPARE_EVENT = "kp-compare-change";
     INTERACTIVE = 'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"]), [contenteditable="true"]';
+    COMPARE_RETRY_EVENT = "kp-compare-retry";
     MOVE = /* @__PURE__ */ new WeakMap();
+    HOLD = /* @__PURE__ */ new WeakMap();
   }
 });
 
@@ -33118,6 +33169,7 @@ export {
   COMMIT_MS,
   COMPARE,
   COMPARE_EVENT,
+  COMPARE_RETRY_EVENT,
   CONFIRM_MODES,
   CONFIRM_OWNED,
   CONFIRM_WINDOW_MS,
@@ -33755,6 +33807,7 @@ export {
   setChecklistState,
   setCode,
   setCompare,
+  setCompareBusy,
   setDone,
   setError,
   setFacetCounts,

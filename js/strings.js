@@ -486,6 +486,8 @@
  * @property {(before: string, after: string) => string} compareSlider  The divider's name for a screen reader [kpadopt4-ideas]
  * @property {(percent: number, before: string, after: string) => string} compareValue  Where the divider stands: "40% Before, 60% After" [kpadopt4-ideas]
  * @property {string} compareFailed  A pane whose image could not be loaded [kpadopt4-ideas]
+ * @property {string} compareRetry  The Retry button of a pane whose image could not be loaded [kpadopt4 r2]
+ * @property {string} compareLoading  What the busy card over a compare slider says while its images load [kpadopt4 r2]
  * @property {string} graphShowAll  The network graph's way back to every node and every kind of link (js/graph.js) [scope-143]
  * @property {string} graphShowAllTitle  Its title [scope-143]
  * @property {string} graphHint  The hint under the graph, and the second half of its picture's accessible name: what a pointer, a click and the keys do [scope-143]
@@ -1169,6 +1171,8 @@ export const DEFAULT_STRINGS = Object.freeze({
     compareSlider: (before, after) => `Divider between ${before} and ${after}`,
     compareValue: (percent, before, after) => `${percent}% ${before}, ${100 - percent}% ${after}`,
     compareFailed: 'This image could not be loaded.',
+    compareRetry: 'Retry',
+    compareLoading: 'Loading the images…',
     // The network graph [scope-143]: its own words; the nodes, kinds and
     // the sentences of its states are the page's.
     graphShowAll: 'Show all',
